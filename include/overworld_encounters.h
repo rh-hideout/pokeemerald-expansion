@@ -25,13 +25,34 @@
 
 #define INVALID_SPAWN_SLOT 0xFF
 
+/*
+Compile Errors when moving here
+enum OverworldEncounterSpawnAnim
+{
+    OWE_SPAWN_ANIM_GRASS,
+    OWE_SPAWN_ANIM_WATER,
+    OWE_SPAWN_ANIM_CAVE,
+    OWE_SPAWN_ANIM_SHINY,
+};
+
+Combine OWE Type Checks into one function using these.
+Need to figure a clean way to adjust SemiManual check as takes template.
+enum OverworldObjectEncounterType
+{
+    OWE_NONE,
+    OWE_GENERATED,
+    OWE_SEMI_MANUAL,
+    OWE_MANUAL,
+};
+*/
+
 extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
 void LoadOverworldEncounterData(void);
 void UpdateOverworldEncounters(void);
 u32 GetOldestSlot(void);
 void CreateOverworldWildEncounter(void);
-void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
+void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
 void ClearOverworldEncounterData(void);
@@ -40,15 +61,17 @@ void RemoveAllOverworldEncounterObjects(void);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent);
-bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId);
+bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId, u32 trainerType);
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
 u32 RemoveOldestOverworldEncounter(void);
+void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent);
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void TryRemoveOverworldWildEncounter(u32 localId);
+bool32 OWE_CheckRestrictedMovement(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew);
 void DespawnOldestOWE_Pal(void);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

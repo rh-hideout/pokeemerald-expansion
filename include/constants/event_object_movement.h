@@ -83,10 +83,8 @@
 #define MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT        0x4F
 #define MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT       0x50
 #define MOVEMENT_TYPE_FOLLOW_PLAYER                    0x51
-#define MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER         0x52
-#define MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER        0x53
-#define MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER       0x54
-#define NUM_MOVEMENT_TYPES                             0x55
+#define MOVEMENT_TYPE_WANDER_AROUND_OWE                0x52
+#define NUM_MOVEMENT_TYPES                             0x53
 
 #define MOVEMENT_ACTION_FACE_DOWN                       0x0
 #define MOVEMENT_ACTION_FACE_UP                         0x1

@@ -37,6 +37,7 @@ static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
+static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
 
 void LoadOverworldEncounterData(void)
 {
@@ -88,23 +89,8 @@ void UpdateOverworldEncounters(void)
         }
         
         bool32 waterMons = OWE_ShouldSpawnWaterMons();
-        bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-        u32 numFreePalSlots = CountFreePaletteSlots();
-        u32 movementType, level;
-        if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
-        {
-            if (waterMons)
-                movementType = MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER;
-            else if (indoors)
-                movementType = MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER;
-            else
-                movementType = MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER;
-        }
-        else
-        {
-            movementType = MOVEMENT_TYPE_WANDER_AROUND;
-        }
+        u32 level;
         
         struct ObjectEventTemplate objectEventTemplate = {
             .localId = localId,
@@ -112,30 +98,18 @@ void UpdateOverworldEncounters(void)
             .x = x - MAP_OFFSET,
             .y = y - MAP_OFFSET,
             .elevation = MapGridGetElevationAt(x, y),
-            .movementType = movementType,
+            .movementType = MOVEMENT_TYPE_WANDER_AROUND_OWE,
             .trainerType = TRAINER_TYPE_ENCOUNTER,
         };
 
-        // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
-        // Add this and tiles to seperate graphics check function
-        if (numFreePalSlots == 1)
+        if (speciesId == SPECIES_NONE)
         {
-            u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
-
-            if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
-                palTag += OBJ_EVENT_MON_FEMALE;
-                
-            // If the mon's palette isn't already loaded, don't spawn.
-            if (IndexOfSpritePaletteTag(palTag) == 0xFF)
-                return;
-
-            // Add check if field effect pallete is already loaded
-            // Bubbles field effect occurs on every movement
-        }
-        else if (numFreePalSlots == 0)
-        {
+            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
             return;
         }
+
+        if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
+            return;
 
         u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
@@ -150,6 +124,9 @@ void UpdateOverworldEncounters(void)
         gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
         gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
 
+        u8 directions[4] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
+        ObjectEventTurn(&gObjectEvents[objectEventId], directions[Random() & 3]);
+
         // Hide reflections for spawns in water
         // (It just looks weird)
         if (waterMons)
@@ -157,36 +134,80 @@ void UpdateOverworldEncounters(void)
 
         // Slower replacement spawning
         sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
-        
-        enum OverworldEncounterSpawnAnim spawnAnimType;
-
-        // Play spawn animation.
-        if (speciesId == SPECIES_NONE)
-        {
-            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            return;
-        }
-
-        u32 pan = (Random() % 88) + 212;
-        u32 volume = (Random() % 30) + 50;
-        PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
-        if (isShiny)
-        {
-            PlaySE(SE_SHINY);
-            spawnAnimType = OWE_SPAWN_ANIM_SHINY;
-        }
-        else 
-        {
-            if (OWE_ShouldSpawnWaterMons())
-                spawnAnimType = OWE_SPAWN_ANIM_WATER;
-            else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
-                spawnAnimType = OWE_SPAWN_ANIM_CAVE;
-            else
-                spawnAnimType = OWE_SPAWN_ANIM_GRASS;
-        }
-        // Instantly play a small animation to ground the spawning a bit
-        MovementAction_OverworldEncounterSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
     }
+}
+
+static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny)
+{
+    u32 numFreePalSlots = CountFreePaletteSlots();
+
+    // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
+    // Add this and tiles to seperate graphics check function
+    if (numFreePalSlots == 1)
+    {
+        u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
+
+        if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
+            palTag += OBJ_EVENT_MON_FEMALE;
+            
+        // If the mon's palette isn't already loaded, don't spawn.
+        if (IndexOfSpritePaletteTag(palTag) == 0xFF)
+            return FALSE;
+
+        // Add check if field effect pallete is already loaded
+        // Bubbles field effect occurs on every movement
+    }
+    else if (numFreePalSlots == 0)
+    {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
+{
+    // Need to edit anims:
+    // If object is on water then use water anim.
+    // If object is indoor, need an indoor anim?
+    enum OverworldEncounterSpawnAnim spawnAnimType;
+    u32 speciesId = OW_SPECIES(objectEvent);
+    bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
+    u32 volume = (Random() % 30) + 50;
+    s32 pan;
+
+    switch (DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent))
+    {
+    case DIR_WEST:
+        pan = (Random() % 44);
+        break;
+    
+    case DIR_EAST:
+        pan = -(Random() % 44);
+        break;
+
+    default:
+        pan = 0;
+    }
+    PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
+    // Also move this to a dedicated ambient cries function that plays spawned mon cries, when spawn timer gets to 0 but no new mons are spawned.
+    // Do a calculation of coordinate distance from player, north south edits volume, east west edits pan.
+
+    if (isShiny)
+    {
+        PlaySE(SE_SHINY);
+        spawnAnimType = OWE_SPAWN_ANIM_SHINY;
+    }
+    else 
+    {
+        if (OWE_ShouldSpawnWaterMons())
+            spawnAnimType = OWE_SPAWN_ANIM_WATER;
+        else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
+            spawnAnimType = OWE_SPAWN_ANIM_CAVE;
+        else
+            spawnAnimType = OWE_SPAWN_ANIM_GRASS;
+    }
+    MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
 
 static u8 GetMaxOverworldEncounterSpawns(void)
@@ -449,18 +470,19 @@ static void SortOWEMonAges(void)
     }
 }
 
-void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
+void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
-    if (!IsGeneratedOverworldWildEncounter(objectEvent))
-        return;
-    
-    SortOWEMonAges();
+    if (IsGeneratedOverworldWildEncounter(objectEvent))
+        SortOWEMonAges();
+
+    if (IsOverworldWildEncounter(objectEvent))
+        OWE_DoSpawnAnim(objectEvent);
 }
 
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-    if (!IsGeneratedOverworldWildEncounter(objectEvent))
-        return;
+    // Currently Unused
+    if (IsGeneratedOverworldWildEncounter(objectEvent)) {}
 }
 
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
@@ -482,26 +504,32 @@ void ClearOverworldEncounterData(void)
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
-static void SetOverworldEncounterSpeciesInfo_Helper(u32 x, u32 y, u32 *encounterIndex, u32 headerId, enum TimeOfDay *timeOfDay, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 personality)
+static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
 {
     const struct WildPokemonInfo *wildMonInfo;
+    enum TimeOfDay timeOfDay;
+    u32 encounterIndex;
+    u32 personality = Random32();
+    u32 headerId = GetCurrentMapWildMonHeaderId();
 
     if (MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y)))
     {
-        *encounterIndex = ChooseWildMonIndex_Water();
-        *timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[*timeOfDay].waterMonsInfo;
-        *speciesId = wildMonInfo->wildPokemon[*encounterIndex].species;
-        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, *encounterIndex, WILD_AREA_WATER);
+        encounterIndex = ChooseWildMonIndex_Water();
+        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
+        *speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
+        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_WATER);
     }
     else
     {
-        *encounterIndex = ChooseWildMonIndex_Land();
-        *timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[*timeOfDay].landMonsInfo;
-        *speciesId = wildMonInfo->wildPokemon[*encounterIndex].species;
-        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, *encounterIndex, WILD_AREA_LAND);
+        encounterIndex = ChooseWildMonIndex_Land();
+        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+        *speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
+        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_LAND);
     }
+
+    // Fallback for species here? Should it be earlier in code?
 
     if (*speciesId == SPECIES_UNOWN)
         *speciesId = GetUnownSpeciesId(personality);
@@ -511,27 +539,6 @@ static void SetOverworldEncounterSpeciesInfo_Helper(u32 x, u32 y, u32 *encounter
         *isFemale = TRUE;
     else
         *isFemale = FALSE;
-}
-
-static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
-{
-    u32 headerId = GetCurrentMapWildMonHeaderId();
-    u32 encounterIndex;
-    u32 personality = Random32();
-    enum TimeOfDay timeOfDay;
-
-    SetOverworldEncounterSpeciesInfo_Helper(
-        x,
-        y,
-        &encounterIndex,
-        headerId,
-        &timeOfDay,
-        speciesId,
-        isShiny,
-        isFemale,
-        level,
-        personality
-    );
 }
 
 static bool8 IsSafeToSpawnObjectEvents(void)
@@ -620,9 +627,9 @@ bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
         || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
 }
 
-bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId)
+bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId, u32 trainerType)
 {
-    return graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER;
+    return graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER && trainerType == TRAINER_TYPE_ENCOUNTER;
 }
 
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
@@ -727,7 +734,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
 struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
-    if (!IsSemiManualOverworldWildEncounter(template->graphicsId))
+    if (!IsSemiManualOverworldWildEncounter(template->graphicsId, template->trainerType))
         return *template;
 
     struct ObjectEventTemplate templateOWE = *template;
@@ -738,22 +745,14 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
     u32 level;
-    u32 headerId = GetCurrentMapWildMonHeaderId();
-    u32 encounterIndex;
-    u32 personality = Random32();
-    enum TimeOfDay timeOfDay;
 
-    SetOverworldEncounterSpeciesInfo_Helper(
+    SetOverworldEncounterSpeciesInfo(
         template->x - MAP_OFFSET,
         template->y - MAP_OFFSET,
-        &encounterIndex,
-        headerId,
-        &timeOfDay,
         &speciesId,
         &isShiny,
         &isFemale,
-        &level,
-        personality
+        &level
     );
     // Have a fallback incase of no header mons
 
@@ -798,6 +797,26 @@ void TryRemoveOverworldWildEncounter(u32 localId)
         RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
         gSpecialVar_LastTalked = LOCALID_NONE;
     }
+}
+
+bool32 OWE_CheckRestrictedMovement(s32 xInitial, s32 yInitial, s32 xNew, s32 yNew)
+{
+    u32 metatileBehaviourInitial = MapGridGetMetatileBehaviorAt(xInitial, yInitial);
+    u32 metatileBehaviourNew = MapGridGetMetatileBehaviorAt(xNew, yNew);
+
+    if (MetatileBehavior_IsLandWildEncounter(metatileBehaviourInitial)
+        && MetatileBehavior_IsLandWildEncounter(metatileBehaviourNew))
+        return FALSE;
+
+    if (MetatileBehavior_IsWaterWildEncounter(metatileBehaviourInitial)
+        && MetatileBehavior_IsWaterWildEncounter(metatileBehaviourNew))
+        return FALSE;
+
+    if (MetatileBehavior_IsIndoorEncounter(metatileBehaviourInitial)
+        && MetatileBehavior_IsIndoorEncounter(metatileBehaviourNew))
+        return FALSE;
+
+    return TRUE;
 }
 
 void DespawnOldestOWE_Pal(void)
