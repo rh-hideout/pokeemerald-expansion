@@ -5241,6 +5241,9 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
             return FALSE;
         }
 
+        if (GetMoveEffect(chosenMove) == EFFECT_LAST_RESORT && !CanUseLastResort(battlerAtk))
+            return TRUE;
+
         uq4_12_t effectiveness;
         struct SimulatedDamage dmg;
 
