@@ -52,7 +52,7 @@ DOUBLE_BATTLE_TEST("Lunar Dance causes the user to faint and fully heals the rep
 SINGLE_BATTLE_TEST("Healing Wish effect activates even if the the switched Pokémon can't be healed (Gen4-7)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_HEALING_WISH_SWITCH, GEN_7);
+        WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_7);
         PLAYER(SPECIES_GARDEVOIR) { Speed(300); }
         PLAYER(SPECIES_NINJASK) { Speed(400); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Healing Wish effect activates even if the the switched Poké
 SINGLE_BATTLE_TEST("Healing Wish effect activates only if the switched Pokémon can be healed (Gen8+)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_HEALING_WISH_SWITCH, GEN_8);
+        WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_8);
         PLAYER(SPECIES_GARDEVOIR) { Speed(300); }
         PLAYER(SPECIES_NINJASK) { Speed(400); }
         PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); Status1(STATUS1_PARALYSIS); Speed(50); }

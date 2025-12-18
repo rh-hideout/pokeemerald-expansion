@@ -252,9 +252,20 @@ void CanHyperTrain(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    if (stat < NUM_STATS
-     && partyIndex < PARTY_SIZE
-     && !GetMonData(&gPlayerParty[partyIndex], MON_DATA_HYPER_TRAINED_HP + stat)
+    assertf(stat < NUM_STATS, "invalid stat: %d", stat)
+    {
+        gSpecialVar_Result = FALSE;
+        return;
+    }
+
+    CalculatePlayerPartyCount();
+    assertf(partyIndex < gPlayerPartyCount, "invalid party index: %d", partyIndex)
+    {
+        gSpecialVar_Result = FALSE;
+        return;
+    }
+
+    if (!GetMonData(&gPlayerParty[partyIndex], MON_DATA_HYPER_TRAINED_HP + stat)
      && GetMonData(&gPlayerParty[partyIndex], MON_DATA_HP_IV + stat) < MAX_PER_STAT_IVS)
     {
         gSpecialVar_Result = TRUE;
@@ -272,12 +283,20 @@ void HyperTrain(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 
-    if (stat < NUM_STATS && partyIndex < PARTY_SIZE)
+    assertf(stat < NUM_STATS, "invalid stat: %d", stat)
     {
-        bool32 data = TRUE;
-        SetMonData(&gPlayerParty[partyIndex], MON_DATA_HYPER_TRAINED_HP + stat, &data);
-        CalculateMonStats(&gPlayerParty[partyIndex]);
+        return;
     }
+
+    CalculatePlayerPartyCount();
+    assertf(partyIndex < gPlayerPartyCount, "invalid party index: %d", partyIndex)
+    {
+        return;
+    }
+
+    bool32 data = TRUE;
+    SetMonData(&gPlayerParty[partyIndex], MON_DATA_HYPER_TRAINED_HP + stat, &data);
+    CalculateMonStats(&gPlayerParty[partyIndex]);
 }
 
 void HasGigantamaxFactor(struct ScriptContext *ctx)
@@ -401,14 +420,15 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
         }
         else
         {
-            // TODO: write error for invalid move number
+            assertf(FALSE, "invalid move: %d", moves[i]) {}
         }
     }
 
     // ability
     if (abilityNum != NUM_ABILITY_PERSONALITY)
     {
-        if (abilityNum >= NUM_ABILITY_SLOTS || GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE)
+        assertf(abilityNum < NUM_ABILITY_SLOTS && GetAbilityBySpecies(species, abilityNum) != ABILITY_NONE,
+                "invalid ability num %d for species %d", abilityNum, species)
         {
             // If the ability num is invalid, we loop to find a valid one
             do {
@@ -431,17 +451,15 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     if (targetSpecies != SPECIES_NONE)
         SetMonData(&mon, MON_DATA_SPECIES, &targetSpecies);
 
-    if (side == 0)
+    if (side == B_SIDE_PLAYER)
         return GiveScriptedMonToPlayer(&mon, slot);
 
-    if (slot < PARTY_SIZE)
+    assertf(slot < PARTY_SIZE, "invalid slot: %d", slot)
     {
-        CopyMon(&gEnemyParty[slot], &mon, sizeof(struct Pokemon));
-        return MON_GIVEN_TO_PARTY;
+        return MON_CANT_GIVE;
     }
-
-    //TODO: write error for invalid enemy party slot
-    return MON_CANT_GIVE;
+    CopyMon(&gEnemyParty[slot], &mon, sizeof(struct Pokemon));
+    return MON_GIVEN_TO_PARTY;
 }
 
 u32 ScriptGiveMon(u16 species, u8 level, u16 item)

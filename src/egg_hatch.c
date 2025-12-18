@@ -440,9 +440,9 @@ static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesL
         // Load mon sprite gfx
         {
             u32 pid = GetMonData(mon, MON_DATA_PERSONALITY);
-            HandleLoadSpecialPokePic(TRUE,
+            HandleLoadSpecialPokePicIsEgg(TRUE,
                                      gMonSpritesGfxPtr->spritesGfx[(useAlt * 2) + B_POSITION_OPPONENT_LEFT],
-                                     species, pid);
+                                     species, pid, FALSE);
             LoadSpritePaletteWithTag(GetMonFrontSpritePal(mon), species);
             *speciesLoc = species;
         }
@@ -532,11 +532,43 @@ static void CB2_LoadEggHatch(void)
         gMain.state++;
         break;
     case 3:
-        LoadSpriteSheet(&sEggHatch_Sheet);
-        LoadSpriteSheet(&sEggShards_Sheet);
-        LoadSpritePalette(&sEgg_SpritePalette);
+    {
+        u32 species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
+        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
+        {
+            u32 *tempSprite = malloc_and_decompress(gEggDatas[gSpeciesInfo[species].eggId].eggHatchGfx, NULL);
+            struct SpriteSheet tempSheet;
+            tempSheet.data = tempSprite;
+            tempSheet.size = 2048;
+            tempSheet.tag = GFXTAG_EGG;
+            LoadSpriteSheet(&tempSheet);
+            Free(tempSprite);
+
+            struct SpritePalette tempPal;
+            tempPal.data = gEggDatas[gSpeciesInfo[species].eggId].eggHatchPal;
+            tempPal.tag = PALTAG_EGG;
+            LoadSpritePalette(&tempPal);
+            if (gEggDatas[gSpeciesInfo[species].eggId].eggShardsGfx != NULL)
+            {
+                tempSheet.data = gEggDatas[gSpeciesInfo[species].eggId].eggShardsGfx;
+                tempSheet.size = 128;
+                tempSheet.tag = GFXTAG_EGG_SHARD;
+                LoadSpriteSheet(&tempSheet);
+            }
+            else
+            {
+                LoadSpriteSheet(&sEggShards_Sheet);
+            }
+        }
+        else
+        {
+            LoadSpriteSheet(&sEggHatch_Sheet);
+            LoadSpriteSheet(&sEggShards_Sheet);
+            LoadSpritePalette(&sEgg_SpritePalette);
+        }
         gMain.state++;
         break;
+    }
     case 4:
         CopyBgTilemapBufferToVram(0);
         AddHatchedMonToParty(sEggHatchData->eggPartyId);

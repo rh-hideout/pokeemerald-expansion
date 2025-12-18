@@ -654,7 +654,7 @@ static void Intr_Timer2(void)
     }
 }
 
-void Test_ExitWithResult(enum TestResult result, u32 stopLine, const char *fmt, ...)
+void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *return1, const char *fmt, ...)
 {
     gTestRunnerState.result = result;
     gTestRunnerState.failedAssumptionsBlockLine = stopLine;
@@ -665,6 +665,11 @@ void Test_ExitWithResult(enum TestResult result, u32 stopLine, const char *fmt, 
         if (!gTestRunnerState.test->runner->handleExitWithResult
          || !gTestRunnerState.test->runner->handleExitWithResult(gTestRunnerState.test->data, result))
         {
+            if (result == TEST_RESULT_INVALID)
+            {
+                const void *return0 = __builtin_return_address(0);
+                Test_MgbaPrintf("in %p\nin %p", return1, return0);
+            }
             va_list va;
             va_start(va, fmt);
             MgbaVPrintf_(fmt, va);
