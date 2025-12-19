@@ -11745,7 +11745,7 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step4(struct ObjectEvent *
         s16 y = objectEvent->currentCoords.y;
         MoveCoords(objectEvent->movementDirection, &x, &y);
         // If colliding with the player object, don't try to walk around it.
-        if (GetObjectEventIdByXY(x, y) == gPlayerAvatar.objectEventId)
+        if (GetObjectObjectCollidesWith(objectEvent, x, y, FALSE) == gPlayerAvatar.objectEventId)
         {
             objectEvent->movementActionId = MOVEMENT_ACTION_NONE;
             sprite->sActionFuncId = 0;

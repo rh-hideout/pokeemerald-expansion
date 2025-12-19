@@ -779,7 +779,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle));
     bool32 playerIsObstacle = (obstacle->isPlayer && IsOverworldWildEncounter(collider));
 
-    if (playerIsCollider || playerIsObstacle)
+    if ((playerIsCollider || playerIsObstacle) && FindTaskIdByFunc(Task_OWE_WaitMovements) == TASK_NONE)
     {
         struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
 
