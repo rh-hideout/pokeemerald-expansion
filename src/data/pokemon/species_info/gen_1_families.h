@@ -4021,7 +4021,6 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sRaichuAlolaLevelUpLearnset,
         .teachableLearnset = sRaichuAlolaTeachableLearnset,
         .formSpeciesIdTable = sRaichuFormSpeciesIdTable,
-        .formChangeTable = sRaichuFormChangeTable,
     },
 #endif //P_ALOLAN_FORMS
 

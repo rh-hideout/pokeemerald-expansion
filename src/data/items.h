@@ -6910,7 +6910,7 @@ const struct Item gItemsInfo[] =
 
     [ITEM_RAICHUNITE_Y] =
     {
-        .name = ITEM_NAME("Raichunite X"),
+        .name = ITEM_NAME("Raichunite Y"),
         .price = 0,
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
         .description = sRaichuniteDesc,
@@ -6919,8 +6919,8 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
-        .iconPic = gItemIcon_QuestionMark, // gItemIcon_RaichuniteX,
-        .iconPalette = gItemIconPalette_QuestionMark, // gItemIconPalette_RaichuniteX,
+        .iconPic = gItemIcon_QuestionMark, // gItemIcon_RaichuniteY,
+        .iconPalette = gItemIconPalette_QuestionMark, // gItemIconPalette_RaichuniteY,
     },
 
     [ITEM_CHIMECHITE] =
@@ -7000,7 +7000,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
-        .iconPic = gItemIcon_QuestionMark, // gItemIcon_Lucarionite Z,
+        .iconPic = gItemIcon_QuestionMark, // gItemIcon_LucarioniteZ,
         .iconPalette = gItemIconPalette_QuestionMark, // gItemIconPalette_LucarioniteZ,
     },
 

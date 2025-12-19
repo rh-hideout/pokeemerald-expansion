@@ -10170,7 +10170,6 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gOverworldPalette_Chingling,
             gShinyOverworldPalette_Chingling
         )
-        .isMegaEvolution = TRUE,
         .levelUpLearnset = sChinglingLevelUpLearnset,
         .teachableLearnset = sChinglingTeachableLearnset,
         .eggMoveLearnset = sChinglingEggMoveLearnset,
