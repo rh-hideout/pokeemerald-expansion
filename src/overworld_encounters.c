@@ -909,7 +909,7 @@ u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
     return mon->movementDirection;
 }
 
-static bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon)
+bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon)
 {
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
