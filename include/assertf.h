@@ -61,7 +61,7 @@
  *       return i;
  *   }
  *   errorf("member not found"); */
-#define errorf(fmt, ...) _ASSERTF_HANDLE(fmt __VA_OPT__(,) __VA_ARGS__)
+#define errorf(...) _ASSERTF_HANDLE(__VA_ARGS__)
 
 #define _ASSERTF_COND(cond) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: %s", __FILE__, __LINE__, STR(cond)), TRUE); _recover = FALSE)
 
