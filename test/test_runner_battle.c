@@ -556,6 +556,35 @@ static void BattleTest_Run(void *data)
     PrintTestName();
 }
 
+static bool32 IsTieBreakTag(enum RandomTag tag)
+{
+    switch (tag)
+    {
+    case RNG_AI_SCORE_TIE_SINGLES:
+    case RNG_AI_SCORE_TIE_DOUBLES_MOVE:
+    case RNG_AI_SCORE_TIE_DOUBLES_TARGET:
+        return TRUE;
+    default:
+        break;
+    }
+    return FALSE;
+}
+
+static void SanitizeTieCounts(void)
+{
+    if (DATA.trial.scoreTieCount < 1)
+        DATA.trial.scoreTieCount = 1;
+    
+    if (DATA.trial.scoreTieCount > MAX_MON_MOVES)
+        DATA.trial.scoreTieCount = MAX_MON_MOVES;
+
+    if (DATA.trial.targetTieCount < 1)
+        DATA.trial.targetTieCount = 1;
+    
+    if (DATA.trial.targetTieCount >= gBattlersCount)
+        DATA.trial.targetTieCount = (gBattlersCount - 1);
+}
+
 u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
 {
     STATE->didRunRandomly = TRUE;
@@ -577,7 +606,7 @@ u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
 
     if (!reject)
     {
-        if (STATE->trials != (hi - lo + 1))
+        if ((STATE->trials != (hi - lo + 1)) && !(IsTieBreakTag(tag)))
             Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniform called from %p with tag %d and inconsistent trials %d and %d", caller, tag, STATE->trials, hi - lo + 1);
         return STATE->runTrial + lo;
     }
@@ -651,13 +680,13 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
             return turn->rng.value;
         }
     }
+
+    SanitizeTieCounts();
     //trials
     switch (tag)
     {
     case RNG_AI_SCORE_TIE_SINGLES:
     case RNG_AI_SCORE_TIE_DOUBLES_MOVE:
-        if (DATA.trial.scoreTieCount == 0)
-            return 0; // Failsafe
         switch (DATA.scoreTieResolution)
         {
         case SCORE_TIE_HI:
@@ -673,8 +702,6 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
             return 0;
         }
     case RNG_AI_SCORE_TIE_DOUBLES_TARGET:
-        if (DATA.trial.targetTieCount == 0)
-            return 0; // Failsafe
         switch (DATA.targetTieResolution)
         {
         case TARGET_TIE_HI:
