@@ -4962,7 +4962,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         score += AI_ShouldCopyStatChanges(battlerAtk, battlerDef);
         break;
     case EFFECT_SEMI_INVULNERABLE:
-        if (predictedMove != MOVE_NONE && isBattle1v1)
+        if (predictedMove != MOVE_NONE && isBattle1v1 && !IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move))
         {
             enum BattleMoveEffects predictedEffect = GetMoveEffect(predictedMove);
             if ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))

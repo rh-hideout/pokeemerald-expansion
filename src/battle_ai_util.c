@@ -3285,6 +3285,12 @@ bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move)
     case EFFECT_TWO_TURNS_ATTACK:
         return !(gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_POWER_HERB
               || (AI_GetWeather() & GetMoveTwoTurnAttackWeather(move)));
+    case EFFECT_SEMI_INVULNERABLE:
+        if (gAiLogicData->abilities[battlerAtk] == ABILITY_NO_GUARD
+            || AI_IsAbilityOnSide(LEFT_FOE(battlerAtk), ABILITY_NO_GUARD))
+            return !(gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_POWER_HERB);
+        else
+            return FALSE;
     default:
         return FALSE;
     }
