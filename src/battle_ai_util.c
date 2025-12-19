@@ -5344,8 +5344,20 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 
         dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK);
 
+        // don't waste a damaging z move if the normal move will KO
         if (!IsBattleMoveStatus(chosenMove) && dmg.minimum >= gBattleMons[battlerDef].hp)
-            return FALSE;   // don't waste damaging z move if can otherwise faint target
+        {
+            // Risky AI skips accuracy check.
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)
+                return FALSE;
+
+            u32 acc = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex];
+
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)
+                return (acc < 100);
+
+            return acc < LOW_ACCURACY_THRESHOLD;
+        }
 
         return TRUE;
     }
