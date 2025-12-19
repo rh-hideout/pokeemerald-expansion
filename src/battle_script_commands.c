@@ -3213,9 +3213,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         else
         {
             if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_GRIP_CLAW)
-                gDisableStructs[gEffectBattler].wrapTurns = B_BINDING_TURNS >= GEN_5 ? 7 : 5;
+                gDisableStructs[gEffectBattler].wrapTurns = GetConfig(CONFIG_BINDING_TURNS) >= GEN_5 ? 7 : 5;
             else
-                gDisableStructs[gEffectBattler].wrapTurns = B_BINDING_TURNS >= GEN_5 ? RandomUniform(RNG_WRAP, 4, 5) : RandomUniform(RNG_WRAP, 2, 5);
+                gDisableStructs[gEffectBattler].wrapTurns = GetConfig(CONFIG_BINDING_TURNS) >= GEN_5 ? RandomUniform(RNG_WRAP, 4, 5) : RandomUniform(RNG_WRAP, 2, 5);
             gBattleMons[gEffectBattler].volatiles.wrapped = TRUE;
             gBattleMons[gEffectBattler].volatiles.wrappedMove = gCurrentMove;
             gBattleMons[gEffectBattler].volatiles.wrappedBy = gBattlerAttacker;
@@ -3975,7 +3975,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             {
                 gBattleMons[battler].volatiles.wrapped = TRUE;
                 if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_GRIP_CLAW)
-                    gDisableStructs[battler].wrapTurns = (B_BINDING_TURNS >= GEN_5) ? 7 : 5;
+                    gDisableStructs[battler].wrapTurns = (GetConfig(CONFIG_BINDING_TURNS) >= GEN_5) ? 7 : 5;
                 else
                     gDisableStructs[battler].wrapTurns = (Random() % 2) + 4;
                 // The Wrap effect does not expire when the user switches, so here's some cheese.
