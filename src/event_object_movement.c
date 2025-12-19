@@ -11711,14 +11711,19 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step1(struct ObjectEvent *
     {
         ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK);
         PlaySE(SE_PIN);
+        sprite->sTypeFuncId = 2;
     }
-    sprite->sTypeFuncId = 2;
+    else
+    {
+        sprite->sTypeFuncId = 3;
+    }
+
     return TRUE;
 }
 
 bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (!objectEvent->singleMovementActive || ObjectEventExecSingleMovementAction(objectEvent, sprite))
+    if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
     {
         sprite->sTypeFuncId = 3;
     }
