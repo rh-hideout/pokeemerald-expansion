@@ -99,7 +99,7 @@ void UpdateOverworldEncounters(void)
             .x = x - MAP_OFFSET,
             .y = y - MAP_OFFSET,
             .elevation = MapGridGetElevationAt(x, y),
-            .movementType = MOVEMENT_TYPE_WANDER_AROUND_OWE,
+            .movementType = MOVEMENT_TYPE_CHASE_PLAYER_OWE,
             .trainerType = TRAINER_TYPE_ENCOUNTER,
         };
 

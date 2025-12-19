@@ -507,12 +507,12 @@ u8 MovementType_Invisible_Step2(struct ObjectEvent *objectEvent, struct Sprite *
 u8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_WanderAround_OverworldWildEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-u8 MovementType_ChasePlayer_OverworldWildEncounter_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-u8 MovementType_ChasePlayer_OverworldWildEncounter_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-u8 MovementType_ChasePlayer_OverworldWildEncounter_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-u8 MovementType_ChasePlayer_OverworldWildEncounter_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-u8 MovementType_ChasePlayer_OverworldWildEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
-u8 MovementType_ChasePlayer_OverworldWildEncounter_Step5(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ChasePlayer_OverworldWildEncounter_Step7(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ChasePlayer_OverworldWildEncounter_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ChasePlayer_OverworldWildEncounter_Step9(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ChasePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ChasePlayer_OverworldWildEncounter_Step12(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 
 u8 CreateVirtualObject(u16 graphicsId, u8 virtualObjId, s16 x, s16 y, u8 elevation, u8 direction);
 void TurnVirtualObject(u8 virtualObjId, u8 direction);
