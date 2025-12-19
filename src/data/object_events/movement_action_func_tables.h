@@ -1722,7 +1722,7 @@ u8 (*const gMovementActionFuncs_WalkFastDiagonalDownRight[])(struct ObjectEvent 
 u8 (*const gMovementTypeFuncs_WanderAround_OverworldWildEncounter[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WanderAround_Step0,
     MovementType_WanderAround_Step1,
-    MovementType_WanderAround_Step2,
+    MovementType_WanderAround_OverworldWildEncounter_Step2,
     MovementType_WanderAround_OverworldWildEncounter_Step3,
     MovementType_WanderAround_OverworldWildEncounter_Step4,
     MovementType_WanderAround_Step5,

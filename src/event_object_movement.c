@@ -760,6 +760,8 @@ static const s16 sMovementDelaysMedium[] = {32, 64,  96, 128};
 static const s16 sMovementDelaysLong[] =   {32, 64, 128, 192}; // Unused
 static const s16 sMovementDelaysShort[] =  {32, 48,  64,  80};
 
+static const s16 sMovementDelaysOWE[] =    {64, 80,  96, 128};
+
 #include "data/object_events/movement_type_func_tables.h"
 
 static const u8 sFaceDirectionAnimNums[] = {
@@ -11682,6 +11684,15 @@ bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim sp
 }
 
 movement_type_def(MovementType_WanderAround_OverworldWildEncounter, gMovementTypeFuncs_WanderAround_OverworldWildEncounter)
+
+bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (!ObjectEventExecSingleMovementAction(objectEvent, sprite))
+        return FALSE;
+    SetMovementDelay(sprite, sMovementDelaysOWE[Random() % ARRAY_COUNT(sMovementDelaysOWE)]);
+    sprite->sTypeFuncId = 3;
+    return TRUE;
+}
 
 bool8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {

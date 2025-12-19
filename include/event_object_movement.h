@@ -504,6 +504,7 @@ u8 MovementType_RunInPlace_Step0(struct ObjectEvent *objectEvent, struct Sprite 
 u8 MovementType_Invisible_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_Invisible_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_Invisible_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_WanderAround_OverworldWildEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_ChasePlayer_OverworldWildEncounter_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
