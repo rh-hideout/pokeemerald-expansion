@@ -810,6 +810,59 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     return FALSE;
 }
 
+static bool32 GetFlipTurnTransformState(u32 battler)
+{
+    u32 moveIndex;
+    bool32 hasValidTarget = FALSE;
+    bool32 isFasterThanAll = TRUE;
+    bool32 stormDrainOnField = FALSE;
+
+    if (gBattleMons[battler].species != SPECIES_PALAFIN_ZERO
+     || gBattleMons[battler].ability != ABILITY_ZERO_TO_HERO
+     || (AI_GetWeather() & B_WEATHER_SUN_PRIMAL))
+        return FALSE;
+
+    moveIndex = GetIndexInMoveArray(battler, MOVE_FLIP_TURN);
+    if (moveIndex >= MAX_MON_MOVES)
+        return FALSE;
+
+    for (u32 opposingBattler = 0; opposingBattler < MAX_BATTLERS_COUNT; opposingBattler++)
+    {
+        if (!IsBattlerAlive(opposingBattler) || IsBattlerAlly(opposingBattler, battler))
+            continue;
+
+        enum Ability abilityDef = GetBattlerAbility(opposingBattler);
+
+        if (abilityDef == ABILITY_STORM_DRAIN
+         || (IsBattlerAlive(BATTLE_PARTNER(opposingBattler))
+             && GetBattlerAbility(BATTLE_PARTNER(opposingBattler)) == ABILITY_STORM_DRAIN))
+        {
+            stormDrainOnField = TRUE;
+            continue;
+        }
+
+        if (CanAbilityAbsorbMove(battler, opposingBattler, abilityDef, MOVE_FLIP_TURN, TYPE_WATER, AI_CHECK))
+        {
+            gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] = UQ_4_12(0.0);
+            continue;
+        }
+
+        if (gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] > UQ_4_12(0.0))
+        {
+            u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battler, opposingBattler, gAiLogicData);
+
+            hasValidTarget = TRUE;
+            if (!AI_IsFaster(battler, opposingBattler, MOVE_FLIP_TURN, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
+                isFasterThanAll = FALSE;
+        }
+    }
+
+    if (stormDrainOnField || !hasValidTarget)
+        return FALSE; // Can't meaningfully use Flip Turn
+
+    return isFasterThanAll;
+}
+
 static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
 {
     bool32 hasStatRaised = AnyUsefulStatIsRaised(battler);
@@ -848,9 +901,10 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
             return FALSE;
 
         case ABILITY_ZERO_TO_HERO:
-            // Want to activate Palafin-Zero at all costs
-            if (gBattleMons[battler].species == SPECIES_PALAFIN_ZERO)
-                break;
+            // Prefer to use Flip Turn if Palafin will move first and can hit
+            if (GetFlipTurnTransformState(battler))
+                return FALSE;
+            break;
 
         default:
             return FALSE;
@@ -1283,6 +1337,10 @@ bool32 ShouldStayInToUseMove(u32 battler)
         aiMoveEffect = GetMoveEffect(aiMove);
         if (aiMoveEffect == EFFECT_REVIVAL_BLESSING || IsSwitchOutEffect(aiMoveEffect))
         {
+            // Palafin should not stay in for Flip Turn if it can't use it effectively (slower or no target)
+            if (aiMove == MOVE_FLIP_TURN && !GetFlipTurnTransformState(battler))
+                continue;
+
             if (gAiBattleData->finalScore[battler][opposingBattler][i] > AI_GOOD_SCORE_THRESHOLD)
                 return TRUE;
         }
