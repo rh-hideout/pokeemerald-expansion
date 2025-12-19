@@ -11641,6 +11641,35 @@ u8 GetObjectEventApricornTreeId(u8 objectEventId)
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }
 
+static u32 TurnDirectionNinetyDegrees(u32 direction, bool32 counterclockwise)
+{
+    switch (direction)
+    {
+    case DIR_NORTH:
+        if (counterclockwise)
+            return DIR_WEST;
+        else
+            return DIR_EAST;
+    case DIR_SOUTH:
+        if (counterclockwise)
+            return DIR_EAST;
+        else
+            return DIR_WEST;
+    case DIR_EAST:
+        if (counterclockwise)
+            return DIR_NORTH;
+        else
+            return DIR_SOUTH;
+    case DIR_WEST:
+        if (counterclockwise)
+            return DIR_SOUTH;
+        else
+            return DIR_NORTH;
+    }
+
+    return DIR_NONE;
+}
+
 bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent)
 {
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
@@ -11679,10 +11708,11 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent 
 
 bool8 MovementType_WanderAround_OverworldWildEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u8 directions[4];
-    u8 chosenDirection;
-    memcpy(directions, gStandardDirections, sizeof directions);
-    chosenDirection = directions[Random() & 3];
+    u8 chosenDirection = objectEvent->movementDirection;
+
+    if ((Random() & 3) != 0)
+        chosenDirection = TurnDirectionNinetyDegrees(chosenDirection, Random() & 2);
+
     SetObjectEventDirection(objectEvent, chosenDirection);
     sprite->sTypeFuncId = 5;
     if ((OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT && OWE_CheckRestrictedMovement(objectEvent, chosenDirection))
