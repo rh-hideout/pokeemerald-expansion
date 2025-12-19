@@ -656,32 +656,36 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
     {
     case RNG_AI_SCORE_TIE_SINGLES:
     case RNG_AI_SCORE_TIE_DOUBLES_MOVE:
+        if (DATA.trial.scoreTieCount == 0)
+            return 0; // Failsafe
         switch (DATA.scoreTieResolution)
         {
         case SCORE_TIE_HI:
             return (DATA.trial.scoreTieCount - 1);
         case SCORE_TIE_RANDOM:
-            if (DATA.trial.scoreTieCount == 0)
-                return 0; // Failsafe
-            else
-                return RandomUniformTrials(tag, lo, hi, reject, caller);
+            return RandomUniformTrials(tag, lo, hi, reject, caller);
         case SCORE_TIE_CHOSEN:
-            return DATA.scoreTieOverride;
+            if (DATA.scoreTieOverride >= DATA.trial.scoreTieCount)
+                return (DATA.trial.scoreTieCount - 1);
+            else
+                return DATA.scoreTieOverride;
         default:
             return 0;
         }
     case RNG_AI_SCORE_TIE_DOUBLES_TARGET:
+        if (DATA.trial.targetTieCount == 0)
+            return 0; // Failsafe
         switch (DATA.targetTieResolution)
         {
         case TARGET_TIE_HI:
             return (DATA.trial.targetTieCount - 1);
         case TARGET_TIE_RANDOM:
-            if (DATA.trial.targetTieCount == 0)
-                return 0; // Failsafe
-            else
-                return RandomUniformTrials(tag, lo, hi, reject, caller);
+            return RandomUniformTrials(tag, lo, hi, reject, caller);
         case TARGET_TIE_CHOSEN:
-            return DATA.targetTieOverride;
+            if (DATA.targetTieOverride >= DATA.trial.targetTieCount)
+                return (DATA.trial.targetTieCount - 1);
+            else
+                return DATA.targetTieOverride;
         default:
             return 0;
         }
