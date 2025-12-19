@@ -56,22 +56,24 @@ SINGLE_BATTLE_TEST("Fling fails if Pokémon is under the effects of Embargo or M
     }
 }
 
-SINGLE_BATTLE_TEST("Fling fails for Pokémon with Klutz ability")
+SINGLE_BATTLE_TEST("Fling fails for Pokémon with Klutz ability (Gen5+)")
 {
     enum Ability ability;
+    u32 config;
 
-    PARAMETRIZE {ability = ABILITY_KLUTZ; }
-    PARAMETRIZE {ability = ABILITY_RUN_AWAY; }
+    PARAMETRIZE { ability = ABILITY_RUN_AWAY; config = GEN_4; }
+    PARAMETRIZE { ability = ABILITY_KLUTZ;    config = GEN_4; }
+    PARAMETRIZE { ability = ABILITY_KLUTZ;    config = GEN_5; }
 
     GIVEN {
-        ASSUME(B_KLUTZ_FLING_INTERACTION >= GEN_5);
+        WITH_CONFIG(CONFIG_KLUTZ_FLING_INTERACTION, config);
         PLAYER(SPECIES_BUNEARY) { Item(ITEM_RAZOR_CLAW); Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
         MESSAGE("Buneary used Fling!");
-        if (ability != ABILITY_KLUTZ) {
+        if (ability != ABILITY_KLUTZ || config == GEN_4) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
             HP_BAR(opponent);
         } else {

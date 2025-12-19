@@ -23,7 +23,7 @@ The best bug reports have enough information that we won't have to contact you f
 
 - A maintainer will [label](https://github.com/rh-hideout/pokeemerald-expansion/labels) the bug report.
 - A maintainer will try to reproduce the bug with your provided steps.
-    - If there are no reproduction steps or no obvious way to reproduce the issue, somebody will ask you for those steps. Until the bug can be reproduced, the bug will retain the `bug:unconfirmed` label. Unconfirmed bugs are less likely get fixed.
+    - If there are no reproduction steps or no obvious way to reproduce the issue, somebody will ask you for those steps. Until the bug can be reproduced, the bug will retain the `bug:unconfirmed` label. Unconfirmed bugs are less likely to get fixed.
 - If the team is able to reproduce the bug, it will be labeled `bug:confirmed`, and the bug will be left to be [fixed by someone](#Pull-Requests).
     - If the issue is particularly game-breaking, a maintainer will add it to a future version's [milestone](), meaning that version will not be released until the problem is solved.
 

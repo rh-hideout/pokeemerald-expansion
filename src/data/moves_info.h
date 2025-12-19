@@ -12073,7 +12073,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Lunar Dance"),
         .description = sHealingWishDescription,
-        .effect = EFFECT_HEALING_WISH,
+        .effect = EFFECT_LUNAR_DANCE,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 0,

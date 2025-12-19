@@ -315,6 +315,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
         case EFFECT_LAST_RESORT:
         case EFFECT_AQUA_RING:
         case EFFECT_HEALING_WISH:
+        case EFFECT_LUNAR_DANCE:
 
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
@@ -383,6 +384,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
         {
         //TODO: AI HANDLING
         case EFFECT_HEALING_WISH:
+        case EFFECT_LUNAR_DANCE:
         case EFFECT_WONDER_ROOM:
         case EFFECT_FOLLOW_ME:
         case EFFECT_MAGIC_ROOM:
