@@ -32,7 +32,7 @@
     F(HIDDEN_POWER_DMG,          hiddenPowerDmg,          (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(ROUGH_SKIN_DMG,            roughSkinDmg,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(KNOCK_OFF_DMG,             knockOffDmg,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(SPORT_DMG_REDUCTION,       sportDmgReduction,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(SPORT_DMG_REDUCTION,       sportDmgReduction,       (u32, GEN_COUNT - 1)) \
     F(EXPLOSION_DEFENSE,         explosionDefense,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(PARENTAL_BOND_DMG,         parentalBondDmg,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(MULTIPLE_TARGETS_DMG,      multipleTargetsDmg,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
