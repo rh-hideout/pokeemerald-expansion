@@ -11822,7 +11822,7 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step5(struct ObjectEvent *
     {
         objectEvent->singleMovementActive = FALSE;
 
-        if (!OWE_IsPlayerInsideChaseRange(objectEvent))
+        if (!OWE_IsPlayerInsideRangeFromMon(objectEvent, OWE_CHASE_RANGE))
         {
             SetTrainerMovementType(objectEvent, MOVEMENT_TYPE_WANDER_AROUND_OWE);
             sprite->sTypeFuncId = 0;

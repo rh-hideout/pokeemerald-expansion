@@ -850,8 +850,7 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
 
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
     {
-        if (player->currentCoords.y <= mon->currentCoords.y + OWE_MON_SIGHT_LENGTH && player->currentCoords.y >= mon->currentCoords.y - OWE_MON_SIGHT_LENGTH
-         && player->currentCoords.x <= mon->currentCoords.x + OWE_MON_SIGHT_LENGTH && player->currentCoords.x >= mon->currentCoords.x - OWE_MON_SIGHT_LENGTH)
+        if (OWE_IsPlayerInsideRangeFromMon(mon, OWE_MON_SIGHT_LENGTH))
             return TRUE;
     }
     else
@@ -884,12 +883,12 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
     return FALSE;
 }
 
-bool32 OWE_IsPlayerInsideChaseRange(struct ObjectEvent *mon)
+bool32 OWE_IsPlayerInsideRangeFromMon(struct ObjectEvent *mon, u32 distance)
 {
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
-    if (player->currentCoords.y <= mon->currentCoords.y + OWE_CHASE_RANGE && player->currentCoords.y >= mon->currentCoords.y - OWE_CHASE_RANGE
-     && player->currentCoords.x <= mon->currentCoords.x + OWE_CHASE_RANGE && player->currentCoords.x >= mon->currentCoords.x - OWE_CHASE_RANGE)
+    if (player->currentCoords.y <= mon->currentCoords.y + distance && player->currentCoords.y >= mon->currentCoords.y - distance
+     && player->currentCoords.x <= mon->currentCoords.x + distance && player->currentCoords.x >= mon->currentCoords.x - distance)
         return TRUE;
 
     return FALSE;
