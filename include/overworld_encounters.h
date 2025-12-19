@@ -81,5 +81,6 @@ void DespawnOldestOWE_Pal(void);
 bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon);
 bool32 OWE_IsPlayerInsideChaseRange(struct ObjectEvent *mon);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
+void Task_OWE_WaitMovements(u8 taskId);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

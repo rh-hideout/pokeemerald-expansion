@@ -12,6 +12,7 @@
 #include "script.h"
 #include "sprite.h"
 #include "sound.h"
+#include "task.h"
 #include "wild_encounter.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
@@ -782,9 +783,10 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     {
         struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
 
-        gSpecialVar_LastTalked = wildMon->localId;
-        gSpecialVar_0x8004 = OW_SPECIES(wildMon);
-        ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
+        LockPlayerFieldControls();
+        // Wait for both the player and the mon to finish their current movements.
+        u8 taskId = CreateTask(Task_OWE_WaitMovements, 0);
+        gTasks[taskId].data[0] = wildMon->localId;
     }
 }
 
@@ -905,6 +907,34 @@ u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
     }
 
     return mon->movementDirection;
+}
+
+static bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon)
+{
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if ((mon->currentCoords.x != player->currentCoords.x && mon->currentCoords.y != player->currentCoords.y) || (mon->currentCoords.x < player->currentCoords.x - 1 || mon->currentCoords.x > player->currentCoords.x + 1 || mon->currentCoords.y < player->currentCoords.y - 1 || mon->currentCoords.y > player->currentCoords.y + 1))
+        return FALSE;
+
+    return TRUE;
+}
+
+void Task_OWE_WaitMovements(u8 taskId)
+{
+    struct ObjectEvent *mon = &gObjectEvents[GetObjectEventIdByLocalId(gTasks[taskId].data[0])];
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (mon->singleMovementActive == 0 && player->singleMovementActive == 0)
+    {
+        // Let the mon continue to take steps until right next to the player.
+        if (OWE_IsMonNextToPlayer(mon))
+        {
+            gSpecialVar_LastTalked = gTasks[taskId].data[0];
+            gSpecialVar_0x8004 = OW_SPECIES(&gObjectEvents[GetObjectEventIdByLocalId(gTasks[taskId].data[0])]);
+            ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
+            DestroyTask(taskId);
+        }
+    }
 }
 
 #undef sOverworldEncounterLevel
