@@ -848,7 +848,7 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
 {
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) || TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE))
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
     {
         if (player->currentCoords.y <= mon->currentCoords.y + OWE_MON_SIGHT_LENGTH && player->currentCoords.y >= mon->currentCoords.y - OWE_MON_SIGHT_LENGTH
          && player->currentCoords.x <= mon->currentCoords.x + OWE_MON_SIGHT_LENGTH && player->currentCoords.x >= mon->currentCoords.x - OWE_MON_SIGHT_LENGTH)
