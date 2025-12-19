@@ -73,7 +73,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose He
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); }
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND, MOVE_EXPLOSION); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_BIBAREL) { Moves(MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); Ability(ABILITY_SIMPLE); Item(ITEM_WHITE_HERB); }
     } WHEN {
             TURN {  EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND);
                     NOT_EXPECT_MOVE(opponentRight, statusMove);
