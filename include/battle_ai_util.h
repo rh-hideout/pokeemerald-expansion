@@ -157,7 +157,7 @@ bool32 IsAIUsingGimmick(u32 battler);
 void DecideTerastal(u32 battler);
 bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move);
 bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster);
-bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects effect, bool32 aiIsFaster);
+bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, u32 move, bool32 aiIsFaster);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
@@ -237,8 +237,7 @@ bool32 IsUngroundingEffect(enum BattleMoveEffects effect);
 bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlag);
 bool32 IsHazardClearingMove(u32 move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
-bool32 IsExplosionEffect(enum BattleMoveEffects effect);
-bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect);
+bool32 IsSelfSacrificeEffect(u32 move);
 u32 GetAIExplosionChanceFromHP(u32 hpPercent);
 
 // status checks

@@ -82,6 +82,7 @@ struct MoveInfo
     s32 priority:4;
     u32 strikeCount:4; // Max 15 hits. Defaults to 1 if not set. May apply its effect on each hit.
     u32 multiHit:1; // Takes presendance over strikeCount
+    u32 explosion:1;
     u32 criticalHitStage:2;
     bool32 alwaysCriticalHit:1;
     u32 numAdditionalEffects:3; // limited to 7
@@ -102,8 +103,8 @@ struct MoveInfo
     bool32 slicingMove:1;
     bool32 healingMove:1;
     bool32 minimizeDoubleDamage:1;
-    bool32 ignoresTargetAbility:1;
     // end of word
+    bool32 ignoresTargetAbility:1;
     bool32 ignoresTargetDefenseEvasionStages:1;
     bool32 damagesUnderground:1;
     bool32 damagesUnderwater:1;
@@ -134,7 +135,7 @@ struct MoveInfo
     bool32 dampBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:4;
+    u32 padding:3;
     // end of word
 
     union {
@@ -267,6 +268,11 @@ static inline u32 GetMoveStrikeCount(u32 moveId)
 static inline u32 IsMultiHitMove(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].multiHit;
+}
+
+static inline u32 IsExplosionMove(u32 move)
+{
+    return gMovesInfo[SanitizeMoveId(move)].explosion;
 }
 
 static inline u32 GetMoveCriticalHitStage(u32 moveId)

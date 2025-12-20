@@ -1158,7 +1158,7 @@ static void Cmd_attackcanceler(void)
 
     enum BattleMoveEffects moveEffect = GetMoveEffect(ctx.move);
 
-    if (!IsBattlerAlive(gBattlerAttacker) && !IsExplosionEffect(moveEffect))
+    if (!IsBattlerAlive(gBattlerAttacker) && !IsExplosionMove(ctx.move))
     {
         gBattleStruct->unableToUseMove = TRUE;
         gBattlescriptCurrInstr = BattleScript_MoveEnd;
@@ -5602,6 +5602,16 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
 {
     bool32 effect = FALSE;
     enum BattleSide side = GetBattlerSide(gBattlerTarget);
+
+    if (IsExplosionMove(gCurrentMove) &&
+       !gBattleStruct->unableToUseMove &&
+       !IsAbilityOnField(ABILITY_DAMP))
+    {
+        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
+        BattleScriptCall(BattleScript_FaintAttackerForExplosion);
+        return TRUE;
+    }
+
     switch (moveEffect)
     {
     case EFFECT_KNOCK_OFF:
@@ -5753,15 +5763,6 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
             SetPassiveDamageAmount(gBattlerAttacker, gBattleScripting.savedDmg * max(1, GetMoveRecoil(gCurrentMove)) / 100);
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);
-            effect = TRUE;
-        }
-        break;
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
-        if (!gBattleStruct->unableToUseMove && !IsAbilityOnField(ABILITY_DAMP))
-        {
-            gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
-            BattleScriptCall(BattleScript_FaintAttackerForExplosion);
             effect = TRUE;
         }
         break;
@@ -6358,7 +6359,7 @@ static void Cmd_moveend(void)
                     MoveValuesCleanUp();
 
                     // Edge cases for moves that shouldn't repeat their own script
-                    if (IsExplosionEffect(moveEffect)
+                    if (IsExplosionMove(gCurrentMove)
                      || moveEffect == EFFECT_MAGNITUDE
                      || moveEffect == EFFECT_SYNCHRONOISE
                      || gBattleMoveEffects[moveEffect].battleScript == BattleScript_EffectTwoTurnsAttack)

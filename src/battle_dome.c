@@ -3924,8 +3924,7 @@ static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
+    // TODO: Bring back Misty Explosion and Explosion. Also non of those functions have been updated from gen3
     case EFFECT_SPITE:
     case EFFECT_DESTINY_BOND:
     case EFFECT_PERISH_SONG:
@@ -5098,7 +5097,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
 {
     int i, j, k;
     int moveScores[MAX_MON_MOVES * FRONTIER_PARTY_SIZE];
-    u16 moves[MAX_MON_MOVES * FRONTIER_PARTY_SIZE];
+    u16 moves[MAX_MON_MOVES * FRONTIER_PARTY_SIZE] = {MOVE_NONE};
     u16 bestScore = 0;
     u16 bestId = 0;
     int movePower = 0;
@@ -5109,20 +5108,22 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
     {
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
-            // TODO: Clean this up, looks like a different data structure (2D array)
-            moveScores[i * MAX_MON_MOVES + j] = 0;
-            if (DOME_TRAINERS[winnerTournamentId].trainerId == TRAINER_FRONTIER_BRAIN)
-                moves[i * MAX_MON_MOVES + j] = GetFrontierBrainMonMove(i, j);
-            else
-                moves[i * MAX_MON_MOVES + j] = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
+            u32 moveIndex = i * MAX_MON_MOVES + j;
+            u32 move = moves[moveIndex];
 
-            movePower = GetMovePower(moves[i * MAX_MON_MOVES + j]);
-            enum BattleMoveEffects effect = GetMoveEffect(moves[i * MAX_MON_MOVES + j]);
-            if (IsBattleMoveStatus(moves[i * MAX_MON_MOVES + j]))
+            moveScores[moveIndex] = 0;
+            if (DOME_TRAINERS[winnerTournamentId].trainerId == TRAINER_FRONTIER_BRAIN)
+                move = GetFrontierBrainMonMove(i, j);
+            else
+                move = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
+
+            movePower = GetMovePower(move);
+            enum BattleMoveEffects effect = GetMoveEffect(move);
+            if (IsBattleMoveStatus(move))
                 movePower = 40;
             else if (movePower == 1)
                 movePower = 60;
-            else if (GetConfig(CONFIG_EXPLOSION_DEFENSE) < GEN_5 && (IsExplosionEffect(effect)))
+            else if (GetConfig(CONFIG_EXPLOSION_DEFENSE) < GEN_5 && (IsExplosionMove(effect)))
                 movePower /= 2;
 
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
@@ -5145,24 +5146,24 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
 
                 typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(moves[i * 4 + j], targetSpecies, targetAbility);
                 if (typeMultiplier == UQ_4_12(0))
-                    moveScores[i * MAX_MON_MOVES + j] += 0;
+                    moveScores[moveIndex] += 0;
                 else if (typeMultiplier >= UQ_4_12(2.0))
-                    moveScores[i * MAX_MON_MOVES + j] += movePower * 2;
+                    moveScores[moveIndex] += movePower * 2;
                 else if (typeMultiplier <= UQ_4_12(0.5))
-                    moveScores[i * MAX_MON_MOVES + j] += movePower / 2;
+                    moveScores[moveIndex] += movePower / 2;
                 else
-                    moveScores[i * MAX_MON_MOVES + j] += movePower;
+                    moveScores[moveIndex] += movePower;
             }
 
-            if (bestScore < moveScores[i * MAX_MON_MOVES + j])
+            if (bestScore < moveScores[moveIndex])
             {
-                bestId = i * MAX_MON_MOVES + j;
-                bestScore = moveScores[i * MAX_MON_MOVES + j];
+                bestId = moveIndex;
+                bestScore = moveScores[moveIndex];
             }
-            else if (bestScore == moveScores[i * MAX_MON_MOVES + j])
+            else if (bestScore == moveScores[moveIndex])
             {
-                if (moves[bestId] < moves[i * MAX_MON_MOVES + j]) // Why not use (Random() & 1) instead of promoting moves with a higher id?
-                    bestId = i * MAX_MON_MOVES + j;
+                if (moves[bestId] < move) // Why not use (Random() & 1) instead of promoting moves with a higher id?
+                    bestId = moveIndex;
             }
         }
     }

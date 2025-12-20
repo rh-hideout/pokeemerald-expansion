@@ -1434,6 +1434,27 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         }
     }
 
+    if (IsExplosionMove(move))
+    {
+        if (!aiData->shouldConsiderExplosion)
+            ADJUST_SCORE(-5);
+        if (effectiveness == UQ_4_12(0.0))
+        {
+            ADJUST_SCORE(-10);
+        }
+        else if (IsAbilityOnField(ABILITY_DAMP) && !DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move))
+        {
+            ADJUST_SCORE(-10);
+        }
+        else if (CountUsablePartyMons(battlerAtk) == 0 && LAST_MON_PREFERS_NOT_SACRIFICE)
+        {
+            if (CountUsablePartyMons(battlerDef) != 0)
+                ADJUST_SCORE(-10);
+            else
+                ADJUST_SCORE(-1);
+        }
+    }
+
     // check move effects
     switch (moveEffect)
     {
@@ -1443,26 +1464,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         default:
             break;  // check move damage
-        case EFFECT_EXPLOSION:
-        case EFFECT_MISTY_EXPLOSION:
-            if (!aiData->shouldConsiderExplosion)
-                ADJUST_SCORE(-5);
-            if (effectiveness == UQ_4_12(0.0))
-            {
-                ADJUST_SCORE(-10);
-            }
-            else if (IsAbilityOnField(ABILITY_DAMP) && !DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move))
-            {
-                ADJUST_SCORE(-10);
-            }
-            else if (CountUsablePartyMons(battlerAtk) == 0 && LAST_MON_PREFERS_NOT_SACRIFICE)
-            {
-                if (CountUsablePartyMons(battlerDef) != 0)
-                    ADJUST_SCORE(-10);
-                else
-                    ADJUST_SCORE(-1);
-            }
-            break;
         case EFFECT_FINAL_GAMBIT:
             if (!aiData->shouldConsiderFinalGambit)
             {
@@ -3162,9 +3163,8 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (IsBattleMoveStatus(move))
         return score; // status moves aren't accounted here
 
-    enum BattleMoveEffects effect = GetMoveEffect(move);
     if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, movesetIndex, AI_ATTACKING)
-        && (!IsSelfSacrificeEffect(effect) || ShouldConsiderSelfSacrificeDamageEffect(battlerAtk, battlerDef, effect, aiIsFaster)))
+        && (!IsSelfSacrificeEffect(move) || ShouldConsiderSelfSacrificeDamageEffect(battlerAtk, battlerDef, move, aiIsFaster)))
     {
         if (aiIsFaster)
             ADJUST_SCORE(FAST_KILL);
@@ -3386,18 +3386,16 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtk), gAiThinkingStruct->movesetIndex, AI_ATTACKING)
                 && CanIndexMoveFaintTarget(battlerAtk, BATTLE_OPPOSITE(battlerAtkPartner), gAiThinkingStruct->movesetIndex, AI_ATTACKING))
             {
-                switch (effect)
+                if (IsExplosionMove(move))
                 {
-                case EFFECT_EXPLOSION:
-                case EFFECT_MISTY_EXPLOSION:
                     if (gAiThinkingStruct->aiFlags[battlerAtk] & (AI_FLAG_RISKY | AI_FLAG_WILL_SUICIDE))
                     {
                         RETURN_SCORE_PLUS(10);
                     }
-                    break;
-                default:
+                }
+                else
+                {
                     RETURN_SCORE_PLUS(10);
-                    break;
                 }
             }
             // Both opponents can kill the partner
@@ -4003,8 +4001,8 @@ static enum MoveComparisonResult CompareResistBerryEffects(u32 battlerAtk, u32 b
 
 static enum MoveComparisonResult CompareMoveSelfSacrifice(u32 battlerAtk, u32 battlerDef, u16 move1, u16 move2)
 {
-    bool32 selfSacrifice1 = IsSelfSacrificeEffect(GetMoveEffect(move1));
-    bool32 selfSacrifice2 = IsSelfSacrificeEffect(GetMoveEffect(move2));
+    bool32 selfSacrifice1 = IsSelfSacrificeEffect(move1);
+    bool32 selfSacrifice2 = IsSelfSacrificeEffect(move2);
 
     if (selfSacrifice1 && !selfSacrifice2)
         return MOVE_LOST_COMPARISON;
@@ -4074,8 +4072,7 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                     leastHits = noOfHits[i];
                 }
                 // Decided against using self sacrifice effect this turn
-                enum BattleMoveEffects effect = GetMoveEffect(moves[i]);
-                if (IsSelfSacrificeEffect(effect) && !ShouldConsiderSelfSacrificeDamageEffect(battlerAtk, battlerDef, effect, moveIsFaster[i]))
+                if (IsSelfSacrificeEffect(moves[i]) && !ShouldConsiderSelfSacrificeDamageEffect(battlerAtk, battlerDef, moves[i], moveIsFaster[i]))
                 {
                     noOfHits[i] = gBattleMons[battlerDef].maxHP;
                     tempMoveScores[i] = 0;
@@ -4300,6 +4297,9 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     if (IsFlinchGuaranteed(battlerAtk, battlerDef, move))
         ADJUST_SCORE(BEST_EFFECT);
 
+    if (IsExplosionMove(move) && gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE && gBattleMons[battlerDef].statStages[STAT_EVASION] < 7)
+        ADJUST_SCORE(DECENT_EFFECT);
+
     // Non-volatile statuses
     switch(GetMoveNonVolatileStatus(move))
     {
@@ -4347,8 +4347,6 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         }
         break;
     }
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
     case EFFECT_MEMENTO:
         if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE && gBattleMons[battlerDef].statStages[STAT_EVASION] < 7)
             ADJUST_SCORE(DECENT_EFFECT);
@@ -4991,7 +4989,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         {
             enum BattleMoveEffects predictedEffect = GetMoveEffect(predictedMove);
             if ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
-             && (IsExplosionEffect(predictedEffect) || predictedEffect == EFFECT_PROTECT))
+             && (IsExplosionMove(predictedMove) || predictedEffect == EFFECT_PROTECT))
                 ADJUST_SCORE(GOOD_EFFECT);
             else if (predictedEffect == EFFECT_SEMI_INVULNERABLE && !IsSemiInvulnerable(battlerDef, CHECK_ALL))
                 ADJUST_SCORE(GOOD_EFFECT);
@@ -6373,6 +6371,12 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (GetMoveCriticalHitStage(move) > 0)
         ADJUST_SCORE(DECENT_EFFECT);
 
+    if (IsExplosionMove(move))
+    {
+        ADJUST_SCORE(STRONG_RISKY_EFFECT);
+        return score;
+    }
+
     // +3 Score
     switch (GetMoveEffect(move))
     {
@@ -6383,10 +6387,6 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         else if (GetMoveReflectDamage_DamageCategories(move) & (1u << DAMAGE_CATEGORY_SPECIAL) // Can reflect special damage
               && GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseAttack(gBattleMons[battlerDef].species) + 10)
             ADJUST_SCORE(STRONG_RISKY_EFFECT);
-        break;
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
-        ADJUST_SCORE(STRONG_RISKY_EFFECT);
         break;
 
     // +2 Score
@@ -6558,13 +6558,15 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     else
     {
         // Consider AI HP
-        if (gAiLogicData->hpPercents[battlerAtk] > 70)
+        if (IsExplosionMove(move) && gAiLogicData->hpPercents[battlerAtk] > 70)
+        {
+            ADJUST_SCORE(-2);
+        }
+        else if (gAiLogicData->hpPercents[battlerAtk] > 70)
         {
             // high hp
             switch (effect)
             {
-            case EFFECT_EXPLOSION:
-            case EFFECT_MISTY_EXPLOSION:
             case EFFECT_RESTORE_HP:
             case EFFECT_REST:
             case EFFECT_DESTINY_BOND:
@@ -6587,13 +6589,13 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         else if (gAiLogicData->hpPercents[battlerAtk] > 30)
         {
             // med hp
-            if (IsStatRaisingEffect(effect) || IsStatLoweringEffect(effect))
+            if (IsStatRaisingEffect(effect)
+             || IsStatLoweringEffect(effect)
+             || IsExplosionMove(move))
                 ADJUST_SCORE(-2);
 
             switch (effect)
             {
-            case EFFECT_EXPLOSION:
-            case EFFECT_MISTY_EXPLOSION:
             case EFFECT_BIDE:
             case EFFECT_CONVERSION:
             case EFFECT_LIGHT_SCREEN:

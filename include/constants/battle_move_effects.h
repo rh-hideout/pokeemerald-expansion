@@ -7,8 +7,7 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_HIT,
     EFFECT_NON_VOLATILE_STATUS,
     EFFECT_ABSORB,
-    EFFECT_EXPLOSION,
-    EFFECT_MISTY_EXPLOSION, // Same as EFFECT_EXPLOSION but it's boosted on Misty Terrain
+    EFFECT_MISTY_EXPLOSION, 
     EFFECT_DREAM_EATER, // Same as EFFECT_ABSORB but it can only be used on sleeping targets
     EFFECT_MIRROR_MOVE,
     EFFECT_ATTACK_UP,

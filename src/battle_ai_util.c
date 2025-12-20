@@ -1226,12 +1226,13 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
             return TRUE;
     }
 
+    if (IsExplosionMove(move))
+        return TRUE;
+
     switch (GetMoveEffect(move))
     {
     case EFFECT_MAX_HP_50_RECOIL:
     case EFFECT_CHLOROBLAST:
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
     case EFFECT_FINAL_GAMBIT:
         return TRUE;
     case EFFECT_RECOIL:
@@ -3131,25 +3132,13 @@ bool32 IsSwitchOutEffect(enum BattleMoveEffects effect)
     }
 }
 
-bool32 IsExplosionEffect(enum BattleMoveEffects effect)
-{
-    // Damaging self destruction effects like Explosion, Misty Explosion, Self Destruct, etc.
-    switch (effect)
-    {
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
-bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect)
+bool32 IsSelfSacrificeEffect(u32 move)
 {
     // All self sacrificing effects like Explosion, Final Gambit, Memento, etc.
-    if (IsExplosionEffect(effect))
+    if (IsExplosionMove(move))
         return TRUE;
-    switch (effect)
+
+    switch (GetMoveEffect(move))
     {
     case EFFECT_FINAL_GAMBIT:
     case EFFECT_MEMENTO:
@@ -6297,13 +6286,13 @@ bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster)
     return FALSE;
 }
 
-bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects effect, bool32 aiIsFaster)
+bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, u32 move, bool32 aiIsFaster)
 {
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE)
         return TRUE;
-    if (!IsDoubleBattle() && IsExplosionEffect(effect) && gAiLogicData->shouldConsiderExplosion)
+    if (!IsDoubleBattle() && IsExplosionMove(move) && gAiLogicData->shouldConsiderExplosion)
         return TRUE;
-    if (effect == EFFECT_FINAL_GAMBIT)
+    if (GetMoveEffect(move) == EFFECT_FINAL_GAMBIT)
         return ShouldFinalGambit(battlerAtk, battlerDef, aiIsFaster);
     return FALSE;
 }

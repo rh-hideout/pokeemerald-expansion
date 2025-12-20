@@ -500,6 +500,7 @@ extern const u8 BattleScript_AlreadyBurned[];
 extern const u8 BattleScript_PrintAbilityMadeIneffective[];
 extern const u8 BattleScript_ItDoesntAffectFoe[];
 extern const u8 BattleScript_FirstTurnSwitchInEvents[];
+extern const u8 BattleScript_Explosion[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -547,7 +548,6 @@ extern const u8 BattleScript_MoveBlockedByDynamax[];
 // Battle move scripts
 extern const u8 BattleScript_EffectAbsorb[];
 extern const u8 BattleScript_EffectAbsorbLiquidOoze[];
-extern const u8 BattleScript_EffectExplosion[];
 extern const u8 BattleScript_EffectDreamEater[];
 extern const u8 BattleScript_EffectAttackUp[];
 extern const u8 BattleScript_EffectDefenseUp[];
