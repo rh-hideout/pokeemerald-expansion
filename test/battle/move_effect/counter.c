@@ -167,6 +167,43 @@ SINGLE_BATTLE_TEST("Counter deals 1 damage when the attack received is blocked b
     }
 }
 
+SINGLE_BATTLE_TEST("Counter work when surviving OHKO move")
+{
+    s16 normalDmg;
+    s16 counterDmg;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) {MaxHP(100); HP(100); Item(ITEM_FOCUS_SASH);};
+        OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FISSURE); MOVE(player, MOVE_COUNTER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, opponent);
+        HP_BAR(player, captureDamage: &normalDmg);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COUNTER, player);
+        HP_BAR(opponent, captureDamage: &counterDmg);
+    } THEN {
+        EXPECT_MUL_EQ(normalDmg, Q_4_12(2.0), counterDmg);
+    }
+}
+
+SINGLE_BATTLE_TEST("Counter work when surviving OHKO move with Disguise")
+{
+    s16 counterDmg;
+    GIVEN {
+        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_8);
+        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); MaxHP(64); HP(64);};
+        OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FISSURE); MOVE(player, MOVE_COUNTER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COUNTER, player);
+        HP_BAR(opponent, captureDamage: &counterDmg);
+    } THEN {
+        EXPECT_EQ(counterDmg, 1);
+    }
+}
+
 // Gen 1
 TO_DO_BATTLE_TEST("Counter can only counter Normal and Fighting-type moves (Gen 1)");
 TO_DO_BATTLE_TEST("Counter can hit ghost-type Pokémon (Gen 1)");

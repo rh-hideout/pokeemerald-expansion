@@ -689,19 +689,26 @@ enum BattleEnvironments
 // Indicator for the party summary bar to display an empty slot.
 #define HP_EMPTY_SLOT 0xFFFF
 
-#define MOVE_TARGET_SELECTED            0
-#define MOVE_TARGET_DEPENDS             (1 << 0)
-#define MOVE_TARGET_OPPONENT            (1 << 1)
-#define MOVE_TARGET_RANDOM              (1 << 2)
-#define MOVE_TARGET_BOTH                (1 << 3)
-#define MOVE_TARGET_USER                (1 << 4)
-#define MOVE_TARGET_FOES_AND_ALLY       (1 << 5)
-#define MOVE_TARGET_OPPONENTS_FIELD     (1 << 6)
-#define MOVE_TARGET_ALLY                (1 << 7)
-#define MOVE_TARGET_ALL_BATTLERS        ((1 << 8) | MOVE_TARGET_USER) // No functionality for status moves
+ // (TARGET_USER | TARGET_ALLY)
 
-// For the second argument of GetBattleMoveTarget, when no target override is needed
-#define NO_TARGET_OVERRIDE 0
+
+enum MoveTarget
+{
+    TARGET_NONE,
+    TARGET_SELECTED,
+    TARGET_DEPENDS,
+    TARGET_OPPONENT,
+    TARGET_RANDOM,
+    TARGET_BOTH,
+    TARGET_USER,
+    TARGET_ALLY,
+    TARGET_USER_AND_ALLY, // TODO: No functionality yet but would be used for howl in the future
+    TARGET_USER_OR_ALLY, // Acupressure
+    TARGET_FOES_AND_ALLY,
+    TARGET_FIELD, // Moves that target the field, e.g. Rain Dance
+    TARGET_OPPONENTS_FIELD, // Targets all other battlers and self, e.g. Teatime
+    TARGET_ALL_BATTLERS,
+};
 
 // Constants for Parental Bond
 #define PARENTAL_BOND_1ST_HIT 2

@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_SNATCH) == EFFECT_SNATCH);
-    ASSUME(MoveCanBeSnatched(MOVE_SWORDS_DANCE) == TRUE);
+    ASSUME(MoveCanBeSnatched(MOVE_SWORDS_DANCE));
     ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
     ASSUME(MoveCanBeSnatched(MOVE_CELEBRATE) == FALSE);
 }
@@ -111,3 +111,42 @@ DOUBLE_BATTLE_TEST("Snatch steals from the correct target when multiple snatchab
         EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
     }
 }
+
+SINGLE_BATTLE_TEST("Snatch fails if user moves last")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SNATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Snatch fails when the only slower battler is a fainted ally")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
+        TURN {
+            MOVE(opponentLeft, MOVE_CELEBRATE);
+            MOVE(opponentRight, MOVE_CELEBRATE);
+            MOVE(playerLeft, MOVE_SNATCH);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        MESSAGE("Wynaut fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
+    }
+}
+
+TO_DO_BATTLE_TEST("Snatch does not steal moves that cannot be snatched");
+TO_DO_BATTLE_TEST("Snatch can steal healing moves");
