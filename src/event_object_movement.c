@@ -9980,9 +9980,45 @@ u32 DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struc
         if (absX == absY)
         {
             if (distanceY < 0)
-                return DIR_NORTH;
+            {
+                if (objectTwo->movementDirection == DIR_NORTH)
+                    return DIR_NORTH;
+
+                if (distanceX < 0)
+                {
+                    if (objectTwo->movementDirection == DIR_WEST)
+                        return DIR_WEST;
+                    else
+                        return (Random() % 2) == 0 ? DIR_NORTH : DIR_WEST;
+                }
+                else
+                {
+                    if (objectTwo->movementDirection == DIR_EAST)
+                        return DIR_EAST;
+                    else
+                        return (Random() % 2) == 0 ? DIR_NORTH : DIR_EAST;
+                }
+            }
             else
-                return DIR_SOUTH;
+            {
+                if (objectTwo->movementDirection == DIR_SOUTH)
+                    return DIR_SOUTH;
+
+                if (distanceX < 0)
+                {
+                    if (objectTwo->movementDirection == DIR_WEST)
+                        return DIR_WEST;
+                    else
+                        return (Random() % 2) == 0 ? DIR_SOUTH : DIR_WEST;
+                }
+                else
+                {
+                    if (objectTwo->movementDirection == DIR_EAST)
+                        return DIR_EAST;
+                    else
+                        return (Random() % 2) == 0 ? DIR_SOUTH : DIR_EAST;
+                }
+            }
         }
     }
     
