@@ -11788,6 +11788,7 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent 
 
     collision = GetCollisionInDirection(objectEvent, objectEvent->movementDirection);
     movementActionId = GetWalkSlowMovementAction(objectEvent->movementDirection);
+    sprite->sTypeFuncId = 12;
 
     if ((OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT && OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection)) || collision)
     {
@@ -11797,10 +11798,8 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent 
         // If colliding with the player object, don't try to walk around it.
         if (GetObjectObjectCollidesWith(objectEvent, x, y, FALSE) == gPlayerAvatar.objectEventId)
         {
-            objectEvent->movementActionId = MOVEMENT_ACTION_NONE;
-            sprite->sActionFuncId = 0;
-            objectEvent->singleMovementActive = FALSE;
-            sprite->sTypeFuncId = 10;
+            ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(objectEvent->facingDirection));
+            objectEvent->singleMovementActive = TRUE;
             return FALSE;
         }
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
@@ -11813,7 +11812,6 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent 
 
     ObjectEventSetSingleMovement(objectEvent, sprite, movementActionId);
     objectEvent->singleMovementActive = TRUE;
-    sprite->sTypeFuncId = 12;
     return TRUE;
 }
 
