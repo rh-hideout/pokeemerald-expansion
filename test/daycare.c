@@ -71,9 +71,6 @@ TEST("(Daycare) Pokémon can breed with Ditto if they don't belong to the Ditto 
 TEST("(Daycare) Shellos' form is always based on the mother's form")
 {
     u32 offspring = 0;
-    ASSUME(P_FAMILY_MEOWTH == TRUE);
-    ASSUME(P_ALOLAN_FORMS == TRUE);
-    ASSUME(P_GALARIAN_FORMS == TRUE);
 
     ZeroPlayerPartyMons();
     PARAMETRIZE { offspring = SPECIES_SHELLOS_WEST; RUN_OVERWORLD_SCRIPT(givemon SPECIES_SHELLOS_EAST, 1, gender=MON_MALE; givemon SPECIES_SHELLOS_WEST, 1, gender=MON_FEMALE, item=ITEM_NONE;     ); }

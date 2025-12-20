@@ -689,6 +689,9 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
 #include "data/pokemon/trainer_class_lookups.h"
 #include "data/pokemon/experience_tables.h"
 
+#if TESTING
+#include "data/pokemon/level_up_learnsets/test.h"
+#else
 #if P_LVL_UP_LEARNSETS >= GEN_9
 #include "data/pokemon/level_up_learnsets/gen_9.h" // Scarlet/Violet
 #elif P_LVL_UP_LEARNSETS >= GEN_8
@@ -708,6 +711,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
 #elif P_LVL_UP_LEARNSETS >= GEN_1
 #include "data/pokemon/level_up_learnsets/gen_1.h" // Yellow
 #endif
+#endif // TESTING
 
 #include "data/pokemon/teachable_learnsets.h"
 #include "data/pokemon/egg_moves.h"

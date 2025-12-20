@@ -27,6 +27,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Wood Gecko"),
         .height = 5,
         .weight = 50,
+        .description = COMPOUND_STRING(
+            "It makes its nest in a giant tree in the\n"
+            "forest. It ferociously guards against\n"
+            "anything nearing its territory. It is said\n"
+            "to be the protector of the forest's trees."),
         .pokemonScale = 541,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -47,6 +52,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(-3, 4, SHADOW_SIZE_S)
+        .levelUpLearnset = sTreeckoLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_GROVYLE}),
     },
 
@@ -74,6 +80,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Wood Gecko"),
         .height = 9,
         .weight = 216,
+        .description = COMPOUND_STRING(
+            "Leaves grow out of this Pokémon's body.\n"
+            "They help obscure a Grovyle from the eyes\n"
+            "of its enemies while it is in a thickly\n"
+            "overgrown forest."),
         .pokemonScale = 360,
         .pokemonOffset = 5,
         .trainerScale = 256,
@@ -94,6 +105,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 7, SHADOW_SIZE_M)
+        .levelUpLearnset = sGrovyleLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_SCEPTILE}),
     },
 
@@ -127,6 +139,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Forest"),
         .height = 17,
         .weight = 522,
+        .description = COMPOUND_STRING(
+            "In the jungle, its power is without equal.\n"
+            "This Pokémon carefully grows trees and\n"
+            "plants. It regulates its body temperature\n"
+            "by basking in sunlight."),
         .pokemonScale = 256,
         .pokemonOffset = -1,
         .trainerScale = 275,
@@ -145,10 +162,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 11, SHADOW_SIZE_L)
+        .levelUpLearnset = sSceptileLevelUpLearnset,
         .formSpeciesIdTable = sSceptileFormSpeciesIdTable,
         .formChangeTable = sSceptileFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_SCEPTILE_MEGA] =
     {
         .baseHP        = 70,
@@ -173,6 +192,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Forest"),
         .height = 19,
         .weight = 552,
+        .description = COMPOUND_STRING(
+            "Thanks to the power in its quick legs,\n"
+            "Mega Sceptile can be on its opponent in a\n"
+            "flash. It can cut off a portion of its tail\n"
+            "to fire it like a missile at an opponent."),
         .pokemonScale = 256,
         .pokemonOffset = -1,
         .trainerScale = 275,
@@ -188,11 +212,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(3, 11, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sSceptileLevelUpLearnset,
         .formSpeciesIdTable = sSceptileFormSpeciesIdTable,
         .formChangeTable = sSceptileFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_TORCHIC] =
     {
@@ -218,6 +245,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Chick"),
         .height = 4,
         .weight = 25,
+        .description = COMPOUND_STRING(
+            "If attacked, it strikes back by spitting\n"
+            "balls of fire it forms in its stomach.\n"
+            "A Torchic dislikes darkness because it\n"
+            "can't see its surroundings."),
         .pokemonScale = 566,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -238,9 +270,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 5 : 10,
         .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
         .iconPalIndex = 0,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .backPicSizeFemale = MON_COORDS_SIZE(40, 48),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(-1, 1, SHADOW_SIZE_S)
+        .levelUpLearnset = sTorchicLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_COMBUSKEN}),
     },
 
@@ -269,6 +304,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Young Fowl"),
         .height = 9,
         .weight = 195,
+        .description = COMPOUND_STRING(
+            "It lashes out with 10 kicks per second.\n"
+            "Its strong fighting instinct compels it\n"
+            "to keep up its offensive until the\n"
+            "opponent gives up."),
         .pokemonScale = 343,
         .pokemonOffset = 5,
         .trainerScale = 256,
@@ -285,10 +325,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 0 : 1,
         .backAnimId = BACK_ANIM_CONCAVE_ARC_LARGE,
         .iconPalIndex = 0,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(48, 64),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 8, SHADOW_SIZE_M)
+        .levelUpLearnset = sCombuskenLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_BLAZIKEN}),
     },
 
@@ -322,6 +365,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Blaze"),
         .height = 19,
         .weight = 520,
+        .description = COMPOUND_STRING(
+            "It learns martial arts that use punches\n"
+            "and kicks. Every several years, its old\n"
+            "feathers burn off, and new, supple\n"
+            "feathers grow back in their place."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 301,
@@ -340,14 +388,18 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = 0,
         .backAnimId = BACK_ANIM_SHAKE_GLOW_RED,
         .iconPalIndex = 0,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(56, 64),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(4, 8, SHADOW_SIZE_M)
+        .levelUpLearnset = sBlazikenLevelUpLearnset,
         .formSpeciesIdTable = sBlazikenFormSpeciesIdTable,
         .formChangeTable = sBlazikenFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_BLAZIKEN_MEGA] =
     {
         .baseHP        = 80,
@@ -372,6 +424,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Blaze"),
         .height = 19,
         .weight = 520,
+        .description = COMPOUND_STRING(
+            "As it unleashes a flurry of savage kicks,\n"
+            "its legs can begin to burn from the\n"
+            "friction of the surrounding atmosphere.\n"
+            "They're always a source of pride to it."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 301,
@@ -387,11 +444,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 11, SHADOW_SIZE_M)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sBlazikenLevelUpLearnset,
         .formSpeciesIdTable = sBlazikenFormSpeciesIdTable,
         .formChangeTable = sBlazikenFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_MUDKIP] =
     {
@@ -417,6 +477,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Mud Fish"),
         .height = 4,
         .weight = 76,
+        .description = COMPOUND_STRING(
+            "On land, it can powerfully lift large\n"
+            "boulders by planting its four feet and\n"
+            "heaving. It sleeps by burying itself in soil\n"
+            "at the water's edge."),
         .pokemonScale = 535,
         .pokemonOffset = 20,
         .trainerScale = 256,
@@ -437,6 +502,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(1, 1, SHADOW_SIZE_S)
+        .levelUpLearnset = sMudkipLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_MARSHTOMP}),
     },
 
@@ -464,6 +530,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Mud Fish"),
         .height = 7,
         .weight = 280,
+        .description = COMPOUND_STRING(
+            "Its toughened hind legs enable it to stand\n"
+            "upright. Because it weakens if its skin\n"
+            "dries out, it replenishes fluids by playing\n"
+            "in mud."),
         .pokemonScale = 340,
         .pokemonOffset = 7,
         .trainerScale = 256,
@@ -488,6 +559,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-1, 7, SHADOW_SIZE_M)
+        .levelUpLearnset = sMarshtompLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_SWAMPERT}),
     },
 
@@ -521,6 +593,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Mud Fish"),
         .height = 15,
         .weight = 819,
+        .description = COMPOUND_STRING(
+            "If it senses the approach of a storm and\n"
+            "a tidal wave, it protects its seaside nest\n"
+            "by piling up boulders. It swims as fast as\n"
+            "a jet ski."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -541,10 +618,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(5, 7, SHADOW_SIZE_L)
+        .levelUpLearnset = sSwampertLevelUpLearnset,
         .formSpeciesIdTable = sSwampertFormSpeciesIdTable,
         .formChangeTable = sSwampertFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_SWAMPERT_MEGA] =
     {
         .baseHP        = 100,
@@ -569,6 +648,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Mud Fish"),
         .height = 19,
         .weight = 1020,
+        .description = COMPOUND_STRING(
+            "When it Mega Evolves, the strength that it\n"
+            "needs to act in the water is increased.\n"
+            "It can use its tenacious power\n"
+            "both on land and in the water."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -584,11 +668,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(6, 8, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sSwampertLevelUpLearnset,
         .formSpeciesIdTable = sSwampertFormSpeciesIdTable,
         .formChangeTable = sSwampertFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_POOCHYENA] =
     {
@@ -624,6 +711,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Bite"),
         .height = 5,
         .weight = 136,
+        .description = COMPOUND_STRING(
+            "It savagely threatens foes with bared\n"
+            "fangs. It chases after fleeing targets\n"
+            "tenaciously. It turns tail and runs,\n"
+            "however, if the foe strikes back."),
         .pokemonScale = 481,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -642,6 +734,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(0, 2, SHADOW_SIZE_M)
+        .levelUpLearnset = sPoochyenaLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 18, SPECIES_MIGHTYENA}),
     },
 
@@ -673,6 +766,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Bite"),
         .height = 10,
         .weight = 370,
+        .description = COMPOUND_STRING(
+            "In the wild, Mightyena live in a pack.\n"
+            "They never defy their leader's orders.\n"
+            "They defeat foes with perfectly\n"
+            "coordinated teamwork."),
         .pokemonScale = 362,
         .pokemonOffset = 9,
         .trainerScale = 256,
@@ -693,6 +791,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 6, SHADOW_SIZE_L)
+        .levelUpLearnset = sMightyenaLevelUpLearnset,
     },
 
 #if P_UPDATED_EXP_YIELDS >= GEN_7
@@ -733,6 +832,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Tiny Raccoon"),
         .height = 4,
         .weight = 175,
+        .description = COMPOUND_STRING(
+            "Rubbing its nose against the ground, it\n"
+            "always wanders about back and forth in\n"
+            "search of something. It is distinguished\n"
+            "by the zigzag footprints it leaves."),
         .pokemonScale = 560,
         .pokemonOffset = 22,
         .trainerScale = 256,
@@ -753,6 +857,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-4, 0, SHADOW_SIZE_M)
+        .levelUpLearnset = sZigzagoonLevelUpLearnset,
         .formSpeciesIdTable = sZigzagoonFormSpeciesIdTable,
         .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_LINOONE}),
     },
@@ -787,6 +892,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Rushing"),
         .height = 5,
         .weight = 325,
+        .description = COMPOUND_STRING(
+            "It is exceedingly fast if it only has to run\n"
+            "in a straight line. When it spots pond-\n"
+            "dwelling prey underwater, it quickly leaps\n"
+            "in and catches it with its sharp claws."),
         .pokemonScale = 321,
         .pokemonOffset = 7,
         .trainerScale = 256,
@@ -807,6 +917,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-6, 0, SHADOW_SIZE_L)
+        .levelUpLearnset = sLinooneLevelUpLearnset,
         .formSpeciesIdTable = sLinooneFormSpeciesIdTable,
     },
 
@@ -834,6 +945,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Tiny Raccoon"),
         .height = 4,
         .weight = 175,
+        .description = COMPOUND_STRING(
+            "Its restlessness has it constantly moving\n"
+            "in zigzags. It will purposely run into other\n"
+            "Pokémon to start fights. It's thought to\n"
+            "be the oldest form of Zigzagoon."),
         .pokemonScale = 560,
         .pokemonOffset = 22,
         .trainerScale = 256,
@@ -848,7 +964,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-5, 0, SHADOW_SIZE_M)
+
         .isGalarianForm = TRUE,
+        .levelUpLearnset = sZigzagoonGalarLevelUpLearnset,
         .formSpeciesIdTable = sZigzagoonFormSpeciesIdTable,
         .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_LINOONE_GALAR}),
     },
@@ -877,6 +995,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Rushing"),
         .height = 5,
         .weight = 325,
+        .description = COMPOUND_STRING(
+            "This very aggressive Pokémon will\n"
+            "recklessly challenge opponents stronger\n"
+            "than itself. It uses its long tongue to\n"
+            "taunt them to then tackle forcefully."),
         .pokemonScale = 321,
         .pokemonOffset = 7,
         .trainerScale = 256,
@@ -891,7 +1014,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-4, 0, SHADOW_SIZE_L)
+
         .isGalarianForm = TRUE,
+        .levelUpLearnset = sLinooneGalarLevelUpLearnset,
         .formSpeciesIdTable = sLinooneFormSpeciesIdTable,
         .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_OBSTAGOON, CONDITIONS({IF_TIME, TIME_NIGHT})}),
     },
@@ -920,6 +1045,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Blocking"),
         .height = 16,
         .weight = 460,
+        .description = COMPOUND_STRING(
+            "Its voice is staggering in volume.\n"
+            "Obstagoon has a tendency to take on a\n"
+            "threatening posture and shout--this move\n"
+            "is known as Obstruct."),
         .pokemonScale = 259,
         .pokemonOffset = 1,
         .trainerScale = 296,
@@ -934,6 +1064,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 13, SHADOW_SIZE_M)
+        .levelUpLearnset = sObstagoonLevelUpLearnset,
     },
 
     [SPECIES_WURMPLE] =
@@ -968,6 +1099,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Worm"),
         .height = 3,
         .weight = 36,
+        .description = COMPOUND_STRING(
+            "It sticks to tree branches and eats\n"
+            "leaves. The thread it spits from its mouth,\n"
+            "which becomes gooey when it touches\n"
+            "air, slows the movement of its foes."),
         .pokemonScale = 711,
         .pokemonOffset = 24,
         .trainerScale = 256,
@@ -986,7 +1122,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(0, 1, SHADOW_SIZE_S)
+
         .tmIlliterate = TRUE,
+        .levelUpLearnset = sWurmpleLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 7, SPECIES_SILCOON, CONDITIONS({IF_PID_UPPER_MODULO_10_GT, 4})},
                                 {EVO_LEVEL, 7, SPECIES_CASCOON, CONDITIONS({IF_PID_UPPER_MODULO_10_LT, 5})}),
     },
@@ -1015,6 +1153,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Cocoon"),
         .height = 6,
         .weight = 100,
+        .description = COMPOUND_STRING(
+            "It prepares for evolution using the\n"
+            "energy it stored while it was a Wurmple.\n"
+            "It keeps watch over the surroundings with\n"
+            "its two eyes."),
         .pokemonScale = 431,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -1033,7 +1176,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(0, -4, SHADOW_SIZE_M)
+
         .tmIlliterate = TRUE,
+        .levelUpLearnset = sSilcoonLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 10, SPECIES_BEAUTIFLY}),
     },
 
@@ -1070,6 +1215,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Butterfly"),
         .height = 10,
         .weight = 284,
+        .description = COMPOUND_STRING(
+            "Its colorfully patterned wings are its\n"
+            "most prominent feature. It flies through\n"
+            "flower-covered fields collecting pollen.\n"
+            "It attacks ferociously when angered."),
         .pokemonScale = 298,
         .pokemonOffset = -1,
         .trainerScale = 256,
@@ -1093,10 +1243,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = 0,
         .backAnimId = BACK_ANIM_CONVEX_DOUBLE_ARC,
         .iconPalIndex = 0,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-5, 12, SHADOW_SIZE_S)
+        .levelUpLearnset = sBeautiflyLevelUpLearnset,
     },
 
     [SPECIES_CASCOON] =
@@ -1129,6 +1282,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Cocoon"),
         .height = 7,
         .weight = 115,
+        .description = COMPOUND_STRING(
+            "To avoid detection by its enemies, it hides\n"
+            "motionlessly beneath large leaves and in\n"
+            "the gaps of branches. It also attaches\n"
+            "dead leaves to its body for camouflage."),
         .pokemonScale = 391,
         .pokemonOffset = 20,
         .trainerScale = 256,
@@ -1149,7 +1307,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(0, -4, SHADOW_SIZE_M)
+
         .tmIlliterate = TRUE,
+        .levelUpLearnset = sCascoonLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 10, SPECIES_DUSTOX}),
     },
 
@@ -1188,6 +1348,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Poison Moth"),
         .height = 12,
         .weight = 316,
+        .description = COMPOUND_STRING(
+            "It is a nocturnal Pokémon that flies from\n"
+            "fields and mountains to the attraction of\n"
+            "streetlights at night. It looses highly\n"
+            "toxic powder from its wings."),
         .pokemonScale = 269,
         .pokemonOffset = 1,
         .trainerScale = 256,
@@ -1217,10 +1382,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 20 : 1,
         .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 5,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 48),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 11, SHADOW_SIZE_S)
+        .levelUpLearnset = sDustoxLevelUpLearnset,
     },
 
     [SPECIES_LOTAD] =
@@ -1248,6 +1416,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Water Weed"),
         .height = 5,
         .weight = 26,
+        .description = COMPOUND_STRING(
+            "This Pokémon lives in ponds with clean\n"
+            "water. It is known to ferry small Pokémon\n"
+            "across ponds by carrying them on the\n"
+            "broad leaf on its head."),
         .pokemonScale = 406,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -1266,6 +1439,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 4,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(2, -3, SHADOW_SIZE_S)
+        .levelUpLearnset = sLotadLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 14, SPECIES_LOMBRE}),
     },
 
@@ -1294,6 +1468,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Jolly"),
         .height = 12,
         .weight = 325,
+        .description = COMPOUND_STRING(
+            "In the evening, it takes great delight in\n"
+            "popping out of rivers and startling people.\n"
+            "It feeds on aquatic moss that grows on\n"
+            "rocks in the riverbed."),
         .pokemonScale = 277,
         .pokemonOffset = 9,
         .trainerScale = 256,
@@ -1314,6 +1493,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(4, 2, SHADOW_SIZE_S)
+        .levelUpLearnset = sLombreLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_WATER_STONE, SPECIES_LUDICOLO}),
     },
 
@@ -1348,6 +1528,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Carefree"),
         .height = 15,
         .weight = 550,
+        .description = COMPOUND_STRING(
+            "When it hears festive music, all the cells\n"
+            "in its body become stimulated, and it\n"
+            "begins moving in rhythm. It does not\n"
+            "quail even when it faces a tough opponent."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 268,
@@ -1368,10 +1553,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 10 : 6,
         .backAnimId = BACK_ANIM_CONCAVE_ARC_LARGE,
         .iconPalIndex = 1,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(56, 64),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 14, SHADOW_SIZE_M)
+        .levelUpLearnset = sLudicoloLevelUpLearnset,
     },
 
     [SPECIES_SEEDOT] =
@@ -1399,6 +1587,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Acorn"),
         .height = 5,
         .weight = 40,
+        .description = COMPOUND_STRING(
+            "It hangs off branches and absorbs\n"
+            "nutrients. When it finishes eating, its\n"
+            "body becomes so heavy that it drops to\n"
+            "the ground with a thump."),
         .pokemonScale = 472,
         .pokemonOffset = 20,
         .trainerScale = 256,
@@ -1423,6 +1616,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(0, 1, SHADOW_SIZE_S)
+        .levelUpLearnset = sSeedotLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 14, SPECIES_NUZLEAF}),
     },
 
@@ -1451,6 +1645,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Wily"),
         .height = 10,
         .weight = 280,
+        .description = COMPOUND_STRING(
+            "A forest-dwelling Pokémon that is skilled\n"
+            "at climbing trees. Its long and pointed\n"
+            "nose is its weak point. It loses power if\n"
+            "the nose is gripped."),
         .pokemonScale = 299,
         .pokemonOffset = 10,
         .trainerScale = 256,
@@ -1473,10 +1672,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 10 : 9,
         .backAnimId = BACK_ANIM_V_SHAKE,
         .iconPalIndex = 1,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(40, 56),
         .backPicSizeFemale = MON_COORDS_SIZE(56, 48),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 5, SHADOW_SIZE_S)
+        .levelUpLearnset = sNuzleafLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_LEAF_STONE, SPECIES_SHIFTRY}),
     },
 
@@ -1515,6 +1717,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Wicked"),
         .height = 13,
         .weight = 596,
+        .description = COMPOUND_STRING(
+            "It is said to arrive on chilly, wintry winds.\n"
+            "Feared from long ago as the guardian of\n"
+            "forests, this Pokémon lives in a deep\n"
+            "forest where people do not venture."),
         .pokemonScale = 290,
         .pokemonOffset = 4,
         .trainerScale = 256,
@@ -1531,10 +1738,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 8 : 9,
         .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 5,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-5, 5, SHADOW_SIZE_M)
+        .levelUpLearnset = sShiftryLevelUpLearnset,
     },
 
     [SPECIES_TAILLOW] =
@@ -1561,6 +1771,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Tiny Swallow"),
         .height = 3,
         .weight = 23,
+        .description = COMPOUND_STRING(
+            "Although it is small, it is very courageous.\n"
+            "It will take on a larger Skarmory on an\n"
+            "equal footing. However, its will weakens if\n"
+            "it becomes hungry."),
         .pokemonScale = 465,
         .pokemonOffset = 21,
         .trainerScale = 256,
@@ -1585,6 +1800,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 1, SHADOW_SIZE_S)
+        .levelUpLearnset = sTaillowLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 22, SPECIES_SWELLOW}),
     },
 
@@ -1618,6 +1834,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Swallow"),
         .height = 7,
         .weight = 198,
+        .description = COMPOUND_STRING(
+            "A Swellow dives upon prey from far above.\n"
+            "It never misses its targets. It takes to\n"
+            "the skies in search of lands with a warm\n"
+            "climate."),
         .pokemonScale = 428,
         .pokemonOffset = 15,
         .trainerScale = 256,
@@ -1636,6 +1857,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-7, 7, SHADOW_SIZE_M)
+        .levelUpLearnset = sSwellowLevelUpLearnset,
     },
 
     [SPECIES_WINGULL] =
@@ -1667,6 +1889,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Seagull"),
         .height = 6,
         .weight = 95,
+        .description = COMPOUND_STRING(
+            "It makes its nest on a sheer cliff at the\n"
+            "edge of the sea. It has trouble keeping\n"
+            "its wings flapping in flight. Instead, it\n"
+            "soars on updrafts."),
         .pokemonScale = 295,
         .pokemonOffset = -2,
         .trainerScale = 256,
@@ -1686,6 +1913,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 15, SHADOW_SIZE_S)
+        .levelUpLearnset = sWingullLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 25, SPECIES_PELIPPER}),
     },
 
@@ -1724,6 +1952,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Water Bird"),
         .height = 12,
         .weight = 280,
+        .description = COMPOUND_STRING(
+            "It skims the tops of waves as it flies.\n"
+            "When it spots prey, it uses its large beak\n"
+            "to scoop up the victim with water.\n"
+            "It protects its eggs in its beak."),
         .pokemonScale = 288,
         .pokemonOffset = 1,
         .trainerScale = 256,
@@ -1749,6 +1982,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 17, SHADOW_SIZE_M)
+        .levelUpLearnset = sPelipperLevelUpLearnset,
     },
 
 #define RALTS_FAMILY_TYPE2 (P_UPDATED_TYPES >= GEN_6 ? TYPE_FAIRY : TYPE_PSYCHIC)
@@ -1783,6 +2017,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Feeling"),
         .height = 4,
         .weight = 66,
+        .description = COMPOUND_STRING(
+            "A Ralts has the power to sense the\n"
+            "emotions of people and Pokémon with the\n"
+            "horns on its head. It takes cover if it\n"
+            "senses any hostility."),
         .pokemonScale = 457,
         .pokemonOffset = -3,
         .trainerScale = 256,
@@ -1801,6 +2040,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(0, 1, SHADOW_SIZE_S)
+        .levelUpLearnset = sRaltsLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_KIRLIA}),
     },
 
@@ -1828,6 +2068,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Emotion"),
         .height = 8,
         .weight = 202,
+        .description = COMPOUND_STRING(
+            "A Kirlia has the psychic power to create \n"
+            "a rip in the dimensions and see into the\n"
+            "future. It is said to dance with pleasure\n"
+            "on sunny mornings."),
         .pokemonScale = 354,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -1846,8 +2091,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-2, 7, SHADOW_SIZE_S)
+        .levelUpLearnset = sKirliaLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_GARDEVOIR}
+                            #if P_GEN_4_CROSS_EVOS
                                 ,{EVO_ITEM, ITEM_DAWN_STONE, SPECIES_GALLADE, CONDITIONS({IF_GENDER, MON_MALE})}
+                            #endif
                             ),
     },
 
@@ -1881,6 +2129,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Embrace"),
         .height = 16,
         .weight = 484,
+        .description = COMPOUND_STRING(
+            "It apparently does not feel the pull of\n"
+            "gravity because it supports itself with\n"
+            "psychic power. It will give its life to\n"
+            "protect its Trainer."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -1899,10 +2152,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 14, SHADOW_SIZE_L)
+        .levelUpLearnset = sGardevoirLevelUpLearnset,
         .formSpeciesIdTable = sGardevoirFormSpeciesIdTable,
         .formChangeTable = sGardevoirFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_GARDEVOIR_MEGA] =
     {
         .baseHP        = 68,
@@ -1927,6 +2182,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Embrace"),
         .height = 16,
         .weight = 484,
+        .description = COMPOUND_STRING(
+            "By opening its heart, Mega Gardevoir\n"
+            "becomes able to use tremendous psychic\n"
+            "power. The red plate in its chest is said to\n"
+            "be a physical manifestation of its heart."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -1942,12 +2202,16 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 14, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sGardevoirLevelUpLearnset,
         .formSpeciesIdTable = sGardevoirFormSpeciesIdTable,
         .formChangeTable = sGardevoirFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
+#if P_GEN_4_CROSS_EVOS
     [SPECIES_GALLADE] =
     {
         .baseHP        = 68,
@@ -1982,6 +2246,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Blade"),
         .height = 16,
         .weight = 520,
+        .description = COMPOUND_STRING(
+            "A master of courtesy and swordsmanship,\n"
+            "it fights using extending swords on its\n"
+            "elbows when trying to protect someone.\n"
+            "It can sense what its foe is thinking."),
         .pokemonScale = 259,
         .pokemonOffset = 1,
         .trainerScale = 296,
@@ -1999,10 +2268,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(4, 13, SHADOW_SIZE_L)
+        .levelUpLearnset = sGalladeLevelUpLearnset,
         .formSpeciesIdTable = sGalladeFormSpeciesIdTable,
         .formChangeTable = sGalladeFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_GALLADE_MEGA] =
     {
         .baseHP        = 68,
@@ -2027,6 +2298,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Blade"),
         .height = 16,
         .weight = 564,
+        .description = COMPOUND_STRING(
+            "Mega Gallade has a knightly appearance.\n"
+            "It can use its psychic power to reshape\n"
+            "both arms into blades simultaneously and\n"
+            "fight using a dual-wielding style."),
         .pokemonScale = 259,
         .pokemonOffset = 1,
         .trainerScale = 296,
@@ -2042,11 +2318,15 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 13, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sGalladeLevelUpLearnset,
         .formSpeciesIdTable = sGalladeFormSpeciesIdTable,
         .formChangeTable = sGalladeFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
+#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_SURSKIT] =
     {
@@ -2073,6 +2353,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Pond Skater"),
         .height = 5,
         .weight = 17,
+        .description = COMPOUND_STRING(
+            "They gather on puddles after evening\n"
+            "downpours, gliding across the surface\n"
+            "of water as if sliding. It secretes honey\n"
+            "with a sweet aroma from its head."),
         .pokemonScale = 375,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -2093,6 +2378,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 2 : 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(-1, -3, SHADOW_SIZE_S)
+        .levelUpLearnset = sSurskitLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 22, SPECIES_MASQUERAIN}),
     },
 
@@ -2128,6 +2414,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Eyeball"),
         .height = 8,
         .weight = 36,
+        .description = COMPOUND_STRING(
+            "It intimidates foes with the large eyelike\n"
+            "patterns on its antennae. Because it can't\n"
+            "fly if its wings get wet, it shelters itself\n"
+            "from rain under large trees and eaves."),
         .pokemonScale = 378,
         .pokemonOffset = 8,
         .trainerScale = 256,
@@ -2153,6 +2444,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-4, 17, SHADOW_SIZE_M)
+        .levelUpLearnset = sMasquerainLevelUpLearnset,
     },
 
     [SPECIES_SHROOMISH] =
@@ -2185,6 +2477,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Mushroom"),
         .height = 4,
         .weight = 45,
+        .description = COMPOUND_STRING(
+            "It loves to eat damp, composted soil in\n"
+            "forests. If you enter a forest after a\n"
+            "long rain, you can see many Shroomish\n"
+            "feasting on composted soil."),
         .pokemonScale = 513,
         .pokemonOffset = 22,
         .trainerScale = 256,
@@ -2211,6 +2508,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(0, 0, SHADOW_SIZE_S)
+        .levelUpLearnset = sShroomishLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 23, SPECIES_BRELOOM}),
     },
 
@@ -2244,6 +2542,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Mushroom"),
         .height = 12,
         .weight = 392,
+        .description = COMPOUND_STRING(
+            "It scatters spores from holes in the cap\n"
+            "on its head. It loves warm and humid\n"
+            "climates. It feeds on trees and plants in\n"
+            "fields and forests."),
         .pokemonScale = 324,
         .pokemonOffset = 6,
         .trainerScale = 256,
@@ -2264,6 +2567,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-4, 9, SHADOW_SIZE_M)
+        .levelUpLearnset = sBreloomLevelUpLearnset,
     },
 
     [SPECIES_SLAKOTH] =
@@ -2290,6 +2594,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Slacker"),
         .height = 8,
         .weight = 240,
+        .description = COMPOUND_STRING(
+            "It sleeps virtually all day and night long.\n"
+            "It doesn't change its nest its entire life,\n"
+            "but it sometimes travels great distances\n"
+            "by swimming in rivers."),
         .pokemonScale = 291,
         .pokemonOffset = 16,
         .trainerScale = 256,
@@ -2311,6 +2620,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, -4, SHADOW_SIZE_M)
+        .levelUpLearnset = sSlakothLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 18, SPECIES_VIGOROTH}),
     },
 
@@ -2338,6 +2648,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Wild Monkey"),
         .height = 14,
         .weight = 465,
+        .description = COMPOUND_STRING(
+            "It can't keep still because its blood boils\n"
+            "with energy. It runs through the fields\n"
+            "and mountains all day to calm itself. If it\n"
+            "doesn't, it can't sleep at night."),
         .pokemonScale = 301,
         .pokemonOffset = 2,
         .trainerScale = 256,
@@ -2360,6 +2675,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(4, 6, SHADOW_SIZE_M)
+        .levelUpLearnset = sVigorothLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_SLAKING}),
     },
 
@@ -2393,6 +2709,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Lazy"),
         .height = 20,
         .weight = 1305,
+        .description = COMPOUND_STRING(
+            "Hordes of Slaking gather around trees\n"
+            "when fruits come into season. They wait\n"
+            "around patiently for ripened fruits to fall\n"
+            "out of the trees."),
         .pokemonScale = 256,
         .pokemonOffset = 2,
         .trainerScale = 300,
@@ -2415,6 +2736,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 6, SHADOW_SIZE_XL_BATTLE_ONLY)
+        .levelUpLearnset = sSlakingLevelUpLearnset,
     },
 
     [SPECIES_NINCADA] =
@@ -2442,6 +2764,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Trainee"),
         .height = 5,
         .weight = 55,
+        .description = COMPOUND_STRING(
+            "It makes its nest at the roots of a mighty\n"
+            "tree. Using its whiskerlike antennae, it\n"
+            "probes its surroundings in the\n"
+            "pitch-black darkness of soil."),
         .pokemonScale = 405,
         .pokemonOffset = 21,
         .trainerScale = 256,
@@ -2462,6 +2789,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(2, -3, SHADOW_SIZE_M)
+        .levelUpLearnset = sNincadaLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_NINJASK},
                             #if P_SHEDINJA_BALL >= GEN_4
                                 {EVO_SPLIT_FROM_EVO, SPECIES_NINJASK, SPECIES_SHEDINJA, CONDITIONS({IF_BAG_ITEM_COUNT, ITEM_POKE_BALL, 1})}),
@@ -2494,6 +2822,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Ninja"),
         .height = 8,
         .weight = 120,
+        .description = COMPOUND_STRING(
+            "Because it darts about vigorously at high\n"
+            "speed, it is very difficult to see. Hearing\n"
+            "its distinctive cries for too long induces\n"
+            "a headache."),
         .pokemonScale = 383,
         .pokemonOffset = -9,
         .trainerScale = 256,
@@ -2528,6 +2861,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 10, SHADOW_SIZE_S)
+        .levelUpLearnset = sNinjaskLevelUpLearnset,
     },
 
     [SPECIES_SHEDINJA] =
@@ -2554,6 +2888,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Shed"),
         .height = 8,
         .weight = 12,
+        .description = COMPOUND_STRING(
+            "A peculiar Pokémon that floats in air even\n"
+            "though its wings remain completely still.\n"
+            "The inside of its body is hollow and\n"
+            "utterly dark."),
         .pokemonScale = 372,
         .pokemonOffset = -8,
         .trainerScale = 256,
@@ -2575,6 +2914,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 9, SHADOW_SIZE_S)
+        .levelUpLearnset = sShedinjaLevelUpLearnset,
     },
 
     [SPECIES_WHISMUR] =
@@ -2601,6 +2941,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Whisper"),
         .height = 6,
         .weight = 163,
+        .description = COMPOUND_STRING(
+            "Its cries equal a jet plane in volume.\n"
+            "It inhales through its ear canals. Because\n"
+            "of this system, it can cry continually\n"
+            "without having to catch its breath."),
         .pokemonScale = 373,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -2626,6 +2971,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(1, 0, SHADOW_SIZE_S)
+        .levelUpLearnset = sWhismurLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_LOUDRED}),
     },
 
@@ -2653,6 +2999,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Big Voice"),
         .height = 10,
         .weight = 405,
+        .description = COMPOUND_STRING(
+            "It positions the round speakers on its\n"
+            "head to assail foes with ultrasonic waves\n"
+            "at massive volume. It builds power by\n"
+            "stomping the ground."),
         .pokemonScale = 356,
         .pokemonOffset = 10,
         .trainerScale = 256,
@@ -2673,6 +3024,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 9, SHADOW_SIZE_M)
+        .levelUpLearnset = sLoudredLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_EXPLOUD}),
     },
 
@@ -2708,6 +3060,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Loud Noise"),
         .height = 15,
         .weight = 840,
+        .description = COMPOUND_STRING(
+            "It has sound-generating organs all over\n"
+            "its body. It communicates with others by\n"
+            "adjusting the tone and volume of the cries\n"
+            "it emits."),
         .pokemonScale = 284,
         .pokemonOffset = 1,
         .trainerScale = 256,
@@ -2726,6 +3083,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 12, SHADOW_SIZE_L)
+        .levelUpLearnset = sExploudLevelUpLearnset,
     },
 
     [SPECIES_MAKUHITA] =
@@ -2753,6 +3111,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Guts"),
         .height = 10,
         .weight = 864,
+        .description = COMPOUND_STRING(
+            "It loves to toughen up its body above all\n"
+            "else. If you hear quaking rumbles in a cave,\n"
+            "it is the sound of Makuhita undertaking\n"
+            "strenuous training."),
         .pokemonScale = 256,
         .pokemonOffset = 10,
         .trainerScale = 256,
@@ -2777,6 +3140,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 2 : 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 5, SHADOW_SIZE_M)
+        .levelUpLearnset = sMakuhitaLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 24, SPECIES_HARIYAMA}),
     },
 
@@ -2805,6 +3169,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Arm Thrust"),
         .height = 23,
         .weight = 2538,
+        .description = COMPOUND_STRING(
+            "It has the habit of challenging others\n"
+            "without hesitation to tests of strength.\n"
+            "It's been known to stand on train tracks\n"
+            "and stop trains using forearm thrusts."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 343,
@@ -2824,6 +3193,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 9, SHADOW_SIZE_L)
+        .levelUpLearnset = sHariyamaLevelUpLearnset,
     },
 
     [SPECIES_NOSEPASS] =
@@ -2851,6 +3221,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Compass"),
         .height = 10,
         .weight = 970,
+        .description = COMPOUND_STRING(
+            "Its body emits a powerful magnetism.\n"
+            "It feeds on prey that is pulled in by the\n"
+            "force. Its magnetism is stronger in cold\n"
+            "seasons."),
         .pokemonScale = 256,
         .pokemonOffset = 9,
         .trainerScale = 289,
@@ -2873,10 +3248,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 3, SHADOW_SIZE_M)
+        .levelUpLearnset = sNosepassLevelUpLearnset,
+    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_PROBOPASS, CONDITIONS({IF_IN_MAPSEC, MAPSEC_NEW_MAUVILLE})},
                                 {EVO_ITEM, ITEM_THUNDER_STONE, SPECIES_PROBOPASS}),
+    #endif
     },
 
+#if P_GEN_4_CROSS_EVOS
     [SPECIES_PROBOPASS] =
     {
         .baseHP        = 60,
@@ -2903,6 +3282,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Compass"),
         .height = 14,
         .weight = 3400,
+        .description = COMPOUND_STRING(
+            "It freely controls three units called\n"
+            "Mini-Noses using magnetic force.\n"
+            "With them, it can attack its foes from\n"
+            "three directions."),
         .pokemonScale = 265,
         .pokemonOffset = 2,
         .trainerScale = 262,
@@ -2924,7 +3308,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 13, SHADOW_SIZE_L)
+        .levelUpLearnset = sProbopassLevelUpLearnset,
     },
+#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_SKITTY] =
     {
@@ -2954,6 +3340,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Kitten"),
         .height = 6,
         .weight = 110,
+        .description = COMPOUND_STRING(
+            "A Skitty's adorably cute behavior makes it\n"
+            "highly popular. In battle, it makes its tail\n"
+            "puff out. It threatens foes with a sharp\n"
+            "growl."),
         .pokemonScale = 492,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -2972,6 +3363,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-3, 1, SHADOW_SIZE_S)
+        .levelUpLearnset = sSkittyLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_MOON_STONE, SPECIES_DELCATTY}),
     },
 
@@ -3010,6 +3402,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Prim"),
         .height = 11,
         .weight = 326,
+        .description = COMPOUND_STRING(
+            "Rather than keeping a permanent lair,\n"
+            "it habitually seeks comfortable spots and\n"
+            "sleeps there. It is nocturnal and becomes\n"
+            "active at dusk."),
         .pokemonScale = 322,
         .pokemonOffset = 10,
         .trainerScale = 256,
@@ -3028,6 +3425,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 9, SHADOW_SIZE_S)
+        .levelUpLearnset = sDelcattyLevelUpLearnset,
     },
 
     [SPECIES_SABLEYE] =
@@ -3060,6 +3458,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Darkness"),
         .height = 5,
         .weight = 110,
+        .description = COMPOUND_STRING(
+            "It digs branching holes in caves using its\n"
+            "sharp claws in search of food--raw gems.\n"
+            "A Sableye lurks in darkness and is seen\n"
+            "only rarely."),
         .pokemonScale = 451,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -3080,10 +3483,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(2, 3, SHADOW_SIZE_S)
+        .levelUpLearnset = sSableyeLevelUpLearnset,
         .formSpeciesIdTable = sSableyeFormSpeciesIdTable,
         .formChangeTable = sSableyeFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_SABLEYE_MEGA] =
     {
         .baseHP        = 50,
@@ -3109,6 +3514,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Darkness"),
         .height = 5,
         .weight = 1610,
+        .description = COMPOUND_STRING(
+            "Bathed in the energy of Mega Evolution,\n"
+            "the gemstone on its chest expands, rips\n"
+            "through its skin, and falls out."),
         .pokemonScale = 451,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -3124,11 +3533,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(3, 7, SHADOW_SIZE_S)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sSableyeLevelUpLearnset,
         .formSpeciesIdTable = sSableyeFormSpeciesIdTable,
         .formChangeTable = sSableyeFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
 #if P_UPDATED_TYPES >= GEN_6
     #define MAWILE_TYPES { TYPE_STEEL, TYPE_FAIRY }
@@ -3162,6 +3574,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Deceiver"),
         .height = 6,
         .weight = 115,
+        .description = COMPOUND_STRING(
+            "Its giant jaws are actually steel horns\n"
+            "that transformed. It fools foes into\n"
+            "complacency with its adorable gestures,\n"
+            "then chomps them with its huge jaws."),
         .pokemonScale = 466,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -3184,10 +3601,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(1, 4, SHADOW_SIZE_L)
+        .levelUpLearnset = sMawileLevelUpLearnset,
         .formSpeciesIdTable = sMawileFormSpeciesIdTable,
         .formChangeTable = sMawileFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_MAWILE_MEGA] =
     {
         .baseHP        = 50,
@@ -3213,6 +3632,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Deceiver"),
         .height = 10,
         .weight = 235,
+        .description = COMPOUND_STRING(
+            "Its two sets of jaws thrash about\n"
+            "violently as if they each had a will of\n"
+            "their own. One gnash from them can turn a\n"
+            "boulder to dust."),
         .pokemonScale = 466,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -3228,11 +3652,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 9, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sMawileLevelUpLearnset,
         .formSpeciesIdTable = sMawileFormSpeciesIdTable,
         .formChangeTable = sMawileFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_ARON] =
     {
@@ -3259,6 +3686,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iron Armor"),
         .height = 4,
         .weight = 600,
+        .description = COMPOUND_STRING(
+            "A Pokémon that is clad in steel armor.\n"
+            "A new suit of armor is made when it evolves.\n"
+            "The old, discarded armor is salvaged as\n"
+            "metal for making iron products."),
         .pokemonScale = 419,
         .pokemonOffset = 23,
         .trainerScale = 256,
@@ -3279,6 +3711,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(2, -3, SHADOW_SIZE_S)
+        .levelUpLearnset = sAronLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_LAIRON}),
     },
 
@@ -3307,6 +3740,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iron Armor"),
         .height = 9,
         .weight = 1200,
+        .description = COMPOUND_STRING(
+            "When two Lairon meet in the wild, they\n"
+            "fight for territory by bashing into each\n"
+            "other with their steel bodies. The sound\n"
+            "of their collision carries for miles."),
         .pokemonScale = 275,
         .pokemonOffset = 12,
         .trainerScale = 256,
@@ -3327,6 +3765,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(4, 2, SHADOW_SIZE_L)
+        .levelUpLearnset = sLaironLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 42, SPECIES_AGGRON}),
     },
 
@@ -3361,6 +3800,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iron Armor"),
         .height = 21,
         .weight = 3600,
+        .description = COMPOUND_STRING(
+            "Its iron horns grow longer a little at\n"
+            "a time. They are used to determine the\n"
+            "Aggron's age. The gouges in its armor are\n"
+            "worn with pride as mementos from battles."),
         .pokemonScale = 256,
         .pokemonOffset = -1,
         .trainerScale = 350,
@@ -3379,10 +3823,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(5, 12, SHADOW_SIZE_L)
+        .levelUpLearnset = sAggronLevelUpLearnset,
         .formSpeciesIdTable = sAggronFormSpeciesIdTable,
         .formChangeTable = sAggronFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_AGGRON_MEGA] =
     {
         .baseHP        = 70,
@@ -3408,6 +3854,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iron Armor"),
         .height = 22,
         .weight = 3950,
+        .description = COMPOUND_STRING(
+            "When Aggron Mega Evolves into\n"
+            "Mega Aggron, the destructive ability of\n"
+            "its fearsome horns can turn a steel-clad\n"
+            "tank into so much scrap metal."),
         .pokemonScale = 256,
         .pokemonOffset = -1,
         .trainerScale = 350,
@@ -3423,11 +3874,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 12, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sAggronLevelUpLearnset,
         .formSpeciesIdTable = sAggronFormSpeciesIdTable,
         .formChangeTable = sAggronFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_MEDITITE] =
     {
@@ -3453,6 +3907,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Meditate"),
         .height = 6,
         .weight = 112,
+        .description = COMPOUND_STRING(
+            "It continually meditates for hours every\n"
+            "day. As a result of rigorous and dedicated\n"
+            "yoga training, it has tempered its\n"
+            "spiritual power so much it can fly."),
         .pokemonScale = 465,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -3469,10 +3928,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 11 : 9,
         .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
         .iconPalIndex = 0,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(48, 48),
         .backPicSizeFemale = MON_COORDS_SIZE(48, 48),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(0, 1, SHADOW_SIZE_S)
+        .levelUpLearnset = sMedititeLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 37, SPECIES_MEDICHAM}),
     },
 
@@ -3500,6 +3962,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Meditate"),
         .height = 13,
         .weight = 315,
+        .description = COMPOUND_STRING(
+            "Through crushingly harsh yoga training, it\n"
+            "gained the power to foretell its foe's\n"
+            "actions. It battles with elegant, dance-\n"
+            "like movement."),
         .pokemonScale = 298,
         .pokemonOffset = 5,
         .trainerScale = 256,
@@ -3520,14 +3987,18 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 3 : 0,
         .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
         .iconPalIndex = 0,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(40, 64),
         .backPicSizeFemale = MON_COORDS_SIZE(56, 64),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 13, SHADOW_SIZE_S)
+        .levelUpLearnset = sMedichamLevelUpLearnset,
         .formSpeciesIdTable = sMedichamFormSpeciesIdTable,
         .formChangeTable = sMedichamFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_MEDICHAM_MEGA] =
     {
         .baseHP        = 60,
@@ -3552,6 +4023,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Meditate"),
         .height = 13,
         .weight = 315,
+        .description = COMPOUND_STRING(
+            "It uses its amped-up willpower to create\n"
+            "additional arms for itself. The more it\n"
+            "has trained its spirit, the more realistic\n"
+            "and dexterous these arms become."),
         .pokemonScale = 298,
         .pokemonOffset = 5,
         .trainerScale = 256,
@@ -3567,11 +4043,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 13, SHADOW_SIZE_S)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sMedichamLevelUpLearnset,
         .formSpeciesIdTable = sMedichamFormSpeciesIdTable,
         .formChangeTable = sMedichamFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_ELECTRIKE] =
     {
@@ -3597,6 +4076,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Lightning"),
         .height = 6,
         .weight = 152,
+        .description = COMPOUND_STRING(
+            "It generates electricity using friction\n"
+            "from the atmosphere. In seasons with\n"
+            "especially arid air, its entire body blazes\n"
+            "with violent showers of sparks."),
         .pokemonScale = 290,
         .pokemonOffset = 15,
         .trainerScale = 256,
@@ -3617,6 +4101,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(3, -1, SHADOW_SIZE_M)
+        .levelUpLearnset = sElectrikeLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 26, SPECIES_MANECTRIC}),
     },
 
@@ -3644,6 +4129,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Discharge"),
         .height = 15,
         .weight = 402,
+        .description = COMPOUND_STRING(
+            "Because lightning falls in their vicinities,\n"
+            "Manectric were thought to have been born\n"
+            "from lightning. In battle, they create\n"
+            "thunderclouds."),
         .pokemonScale = 256,
         .pokemonOffset = 3,
         .trainerScale = 257,
@@ -3664,10 +4154,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 10, SHADOW_SIZE_M)
+        .levelUpLearnset = sManectricLevelUpLearnset,
         .formSpeciesIdTable = sManectricFormSpeciesIdTable,
         .formChangeTable = sManectricFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_MANECTRIC_MEGA] =
     {
         .baseHP        = 70,
@@ -3692,6 +4184,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Discharge"),
         .height = 18,
         .weight = 440,
+        .description = COMPOUND_STRING(
+            "Too much electricity has built up in its\n"
+            "body, irritating Manectric. Its explosive\n"
+            "speed is equal to that of a lightning bolt."),
         .pokemonScale = 256,
         .pokemonOffset = 3,
         .trainerScale = 257,
@@ -3707,11 +4203,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 10, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sManectricLevelUpLearnset,
         .formSpeciesIdTable = sManectricFormSpeciesIdTable,
         .formChangeTable = sManectricFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_PLUSLE] =
     {
@@ -3742,6 +4241,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Cheering"),
         .height = 4,
         .weight = 42,
+        .description = COMPOUND_STRING(
+            "It has the trait of cheering on its fellow\n"
+            "Pokémon. By shorting out the electricity\n"
+            "it releases from its paws, it creates\n"
+            "pom-poms for cheering."),
         .pokemonScale = 515,
         .pokemonOffset = -9,
         .trainerScale = 256,
@@ -3762,6 +4266,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(2, 3, SHADOW_SIZE_S)
+        .levelUpLearnset = sPlusleLevelUpLearnset,
     },
 
     [SPECIES_MINUN] =
@@ -3793,6 +4298,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Cheering"),
         .height = 4,
         .weight = 42,
+        .description = COMPOUND_STRING(
+            "At a meeting of Pokémon academics, it was\n"
+            "announced that simultaneous exposure to\n"
+            "electricity from a Plusle and Minun will\n"
+            "promote circulation and boost vitality."),
         .pokemonScale = 512,
         .pokemonOffset = -7,
         .trainerScale = 256,
@@ -3813,6 +4323,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(-4, 3, SHADOW_SIZE_S)
+        .levelUpLearnset = sMinunLevelUpLearnset,
     },
 
     [SPECIES_VOLBEAT] =
@@ -3846,6 +4357,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Firefly"),
         .height = 7,
         .weight = 177,
+        .description = COMPOUND_STRING(
+            "With their taillights lit, Volbeat fly in\n"
+            "a swarm, drawing geometric designs in the\n"
+            "night sky. They move their nests if their\n"
+            "pond water becomes dirty."),
         .pokemonScale = 442,
         .pokemonOffset = 16,
         .trainerScale = 256,
@@ -3868,6 +4384,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(0, 5, SHADOW_SIZE_S)
+        .levelUpLearnset = sVolbeatLevelUpLearnset,
     },
 
     [SPECIES_ILLUMISE] =
@@ -3905,6 +4422,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Firefly"),
         .height = 6,
         .weight = 177,
+        .description = COMPOUND_STRING(
+            "A nocturnal Pokémon that becomes active\n"
+            "upon nightfall. It leads a Volbeat swarm\n"
+            "to draw patterns in the night sky. Over 200\n"
+            "different patterns have been confirmed."),
         .pokemonScale = 572,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -3925,8 +4447,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(0, 5, SHADOW_SIZE_S)
+        .levelUpLearnset = sIllumiseLevelUpLearnset,
     },
 
+#if P_GEN_4_CROSS_EVOS
     [SPECIES_BUDEW] =
     {
         .baseHP        = 40,
@@ -3953,6 +4477,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Bud"),
         .height = 2,
         .weight = 12,
+        .description = COMPOUND_STRING(
+            "Over the winter, it closes its bud and\n"
+            "endures the cold. Sensitive to changing\n"
+            "temperature, the bud is said to bloom\n"
+            "when it feels the sun's warm touch."),
         .pokemonScale = 682,
         .pokemonOffset = 24,
         .trainerScale = 256,
@@ -3971,8 +4500,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(-3, 0, SHADOW_SIZE_S)
+        .levelUpLearnset = sBudewLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_ROSELIA, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD},{IF_NOT_TIME, TIME_NIGHT})}),
     },
+#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_ROSELIA] =
     {
@@ -4000,6 +4531,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Thorn"),
         .height = 3,
         .weight = 20,
+        .description = COMPOUND_STRING(
+            "A Roselia that drinks nutritionally rich\n"
+            "springwater blooms with lovely flowers.\n"
+            "The fragrance of its flowers has the\n"
+            "effect of making its foes careless."),
         .pokemonScale = 677,
         .pokemonOffset = 20,
         .trainerScale = 256,
@@ -4016,13 +4552,19 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = 8,
         .backAnimId = BACK_ANIM_SHAKE_GLOW_GREEN,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 4,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(56, 48),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(-2, 3, SHADOW_SIZE_S)
+        .levelUpLearnset = sRoseliaLevelUpLearnset,
+    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_SHINY_STONE, SPECIES_ROSERADE}),
+    #endif
     },
 
+#if P_GEN_4_CROSS_EVOS
     [SPECIES_ROSERADE] =
     {
         .baseHP        = 60,
@@ -4057,6 +4599,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Bouquet"),
         .height = 9,
         .weight = 145,
+        .description = COMPOUND_STRING(
+            "Its sweet aroma attracts prey.\n"
+            "With the movements of a dancer,\n"
+            "it strikes with whips that are densely\n"
+            "lined with poison thorns."),
         .pokemonScale = 338,
         .pokemonOffset = 10,
         .trainerScale = 256,
@@ -4072,11 +4619,15 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = 6,
         .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
         .iconPalIndex = 0,
+#if P_GENDER_DIFFERENCES
         .frontPicSizeFemale = MON_COORDS_SIZE(48, 56),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
+#endif //P_GENDER_DIFFERENCES
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 6, SHADOW_SIZE_S)
+        .levelUpLearnset = sRoseradeLevelUpLearnset,
     },
+#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_GULPIN] =
     {
@@ -4104,6 +4655,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Stomach"),
         .height = 4,
         .weight = 103,
+        .description = COMPOUND_STRING(
+            "This Pokémon's stomach fluid can even\n"
+            "digest scrap iron. In one gulp, it can\n"
+            "swallow something that is as large as\n"
+            "itself."),
         .pokemonScale = 593,
         .pokemonOffset = 23,
         .trainerScale = 256,
@@ -4122,10 +4678,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 11 : 9,
         .backAnimId = BACK_ANIM_V_STRETCH,
         .iconPalIndex = 1,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(40, 48),
         .backPicSizeFemale = MON_COORDS_SIZE(56, 48),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(1, -2, SHADOW_SIZE_S)
+        .levelUpLearnset = sGulpinLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 26, SPECIES_SWALOT}),
     },
 
@@ -4155,6 +4714,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Poison Bag"),
         .height = 17,
         .weight = 800,
+        .description = COMPOUND_STRING(
+            "Its powerful stomach acid is capable of\n"
+            "digesting almost anything. The one thing\n"
+            "in the whole world a Swalot can't digest is\n"
+            "its own stomach."),
         .pokemonScale = 256,
         .pokemonOffset = 6,
         .trainerScale = 345,
@@ -4172,10 +4736,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 6 : 2,
         .backAnimId = BACK_ANIM_V_STRETCH,
         .iconPalIndex = 2,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(56, 56),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(4, 3, SHADOW_SIZE_L)
+        .levelUpLearnset = sSwalotLevelUpLearnset,
     },
 
     [SPECIES_CARVANHA] =
@@ -4203,6 +4770,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Savage"),
         .height = 8,
         .weight = 208,
+        .description = COMPOUND_STRING(
+            "Carvanha attack ships in swarms, making\n"
+            "them sink. Although it is said to be a very\n"
+            "vicious Pokémon, it timidly flees as soon\n"
+            "as it finds itself alone."),
         .pokemonScale = 362,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -4227,6 +4799,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 8, SHADOW_SIZE_S)
+        .levelUpLearnset = sCarvanhaLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_SHARPEDO}),
     },
 
@@ -4255,6 +4828,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Brutal"),
         .height = 18,
         .weight = 888,
+        .description = COMPOUND_STRING(
+            "The vicious and sly gangster of the sea.\n"
+            "Its skin is specially textured to minimize\n"
+            "drag in water. Its speed tops out at over\n"
+            "75 miles per hour."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 317,
@@ -4279,10 +4857,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 14, SHADOW_SIZE_M)
+        .levelUpLearnset = sSharpedoLevelUpLearnset,
         .formSpeciesIdTable = sSharpedoFormSpeciesIdTable,
         .formChangeTable = sSharpedoFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_SHARPEDO_MEGA] =
     {
         .baseHP        = 70,
@@ -4308,6 +4888,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Brutal"),
         .height = 25,
         .weight = 1303,
+        .description = COMPOUND_STRING(
+            "The yellow patterns it bears are old scars.\n"
+            "The energy from Mega Evolution runs\n"
+            "through them, causing it sharp pain and\n"
+            "suffering."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 317,
@@ -4324,11 +4909,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 14, SHADOW_SIZE_M)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sSharpedoLevelUpLearnset,
         .formSpeciesIdTable = sSharpedoFormSpeciesIdTable,
         .formChangeTable = sSharpedoFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_WAILMER] =
     {
@@ -4354,6 +4942,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Ball Whale"),
         .height = 20,
         .weight = 1300,
+        .description = COMPOUND_STRING(
+            "While this Pokémon usually lives in the sea,\n"
+            "it can survive on land, although not too\n"
+            "long. It loses vitality if its body becomes\n"
+            "dried out."),
         .pokemonScale = 256,
         .pokemonOffset = 2,
         .trainerScale = 493,
@@ -4376,6 +4969,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 3, SHADOW_SIZE_L)
+        .levelUpLearnset = sWailmerLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_WAILORD}),
     },
 
@@ -4403,6 +4997,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Float Whale"),
         .height = 145,
         .weight = 3980,
+        .description = COMPOUND_STRING(
+            "It breathes through nostrils that it\n"
+            "raises above the sea. By inhaling to its\n"
+            "maximum capacity, a Wailord can dive close\n"
+            "to 10,000 feet beneath the waves."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 1352,
@@ -4422,6 +5021,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 7, SHADOW_SIZE_XL_BATTLE_ONLY)
+        .levelUpLearnset = sWailordLevelUpLearnset,
     },
 
     [SPECIES_NUMEL] =
@@ -4452,6 +5052,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Numb"),
         .height = 7,
         .weight = 240,
+        .description = COMPOUND_STRING(
+            "A Numel stores boiling magma in the hump\n"
+            "on its back. It is a hardy Pokémon that can\n"
+            "transport a 220-pound load. It has served\n"
+            "humans at work since long ago."),
         .pokemonScale = 342,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -4470,10 +5075,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 11 : 6,
         .backAnimId = BACK_ANIM_V_SHAKE_LOW,
         .iconPalIndex = 1,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(40, 48),
         .backPicSizeFemale = MON_COORDS_SIZE(56, 56),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(4, 2, SHADOW_SIZE_S)
+        .levelUpLearnset = sNumelLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 33, SPECIES_CAMERUPT}),
     },
 
@@ -4506,6 +5114,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Eruption"),
         .height = 19,
         .weight = 2200,
+        .description = COMPOUND_STRING(
+            "A Pokémon that lives in the crater of\n"
+            "a volcano. Every 10 years, the volcanoes\n"
+            "on its back erupt violently. Research is\n"
+            "under way on the cause of eruption."),
         .pokemonScale = 256,
         .pokemonOffset = 7,
         .trainerScale = 345,
@@ -4526,14 +5139,18 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 19 : 13,
         .backAnimId = BACK_ANIM_SHAKE_GLOW_RED,
         .iconPalIndex = 0,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 40),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 4, SHADOW_SIZE_L)
+        .levelUpLearnset = sCameruptLevelUpLearnset,
         .formSpeciesIdTable = sCameruptFormSpeciesIdTable,
         .formChangeTable = sCameruptFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_CAMERUPT_MEGA] =
     {
         .baseHP        = 70,
@@ -4559,6 +5176,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Eruption"),
         .height = 25,
         .weight = 3205,
+        .description = COMPOUND_STRING(
+            "The humps on its back have transformed\n"
+            "into one large and very active volcano. It\n"
+            "has a deep hatred of water or any moisture\n"
+            "and has an explosive personality."),
         .pokemonScale = 256,
         .pokemonOffset = 7,
         .trainerScale = 345,
@@ -4574,11 +5196,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 6, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sCameruptLevelUpLearnset,
         .formSpeciesIdTable = sCameruptFormSpeciesIdTable,
         .formChangeTable = sCameruptFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_TORKOAL] =
     {
@@ -4609,6 +5234,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Coal"),
         .height = 5,
         .weight = 804,
+        .description = COMPOUND_STRING(
+            "It battles using energy it gets from\n"
+            "burning coal. When loosing smoke from its\n"
+            "nostrils, it lets off a sound that is\n"
+            "similar to a locomotive's horn."),
         .pokemonScale = 390,
         .pokemonOffset = 9,
         .trainerScale = 256,
@@ -4629,6 +5259,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(2, 7, SHADOW_SIZE_L)
+        .levelUpLearnset = sTorkoalLevelUpLearnset,
     },
 
     [SPECIES_SPOINK] =
@@ -4655,6 +5286,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Bounce"),
         .height = 7,
         .weight = 306,
+        .description = COMPOUND_STRING(
+            "A Pokémon that manipulates psychic power\n"
+            "at will. It doesn't stop bouncing even when\n"
+            "it is asleep. It loves eating mushrooms\n"
+            "that grow underground."),
         .pokemonScale = 423,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -4681,6 +5317,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-1, 5, SHADOW_SIZE_S)
+        .levelUpLearnset = sSpoinkLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_GRUMPIG}),
     },
 
@@ -4708,6 +5345,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Manipulate"),
         .height = 9,
         .weight = 715,
+        .description = COMPOUND_STRING(
+            "It stores power in the black pearls on its\n"
+            "forehead. When it uses psychic power, it\n"
+            "performs an odd dance step. Its style of\n"
+            "dancing became hugely popular overseas."),
         .pokemonScale = 358,
         .pokemonOffset = 10,
         .trainerScale = 256,
@@ -4729,6 +5371,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 8, SHADOW_SIZE_M)
+        .levelUpLearnset = sGrumpigLevelUpLearnset,
     },
 
     [SPECIES_SPINDA] =
@@ -4760,6 +5403,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Spot Panda"),
         .height = 11,
         .weight = 50,
+        .description = COMPOUND_STRING(
+            "It is distinguished by a pattern of\n"
+            "spots that is always different. Its\n"
+            "unsteady, tottering walk has the\n"
+            "effect of fouling its foe's aim."),
         .pokemonScale = 321,
         .pokemonOffset = 4,
         .trainerScale = 256,
@@ -4784,6 +5432,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 6, SHADOW_SIZE_S)
+        .levelUpLearnset = sSpindaLevelUpLearnset,
     },
 
     [SPECIES_TRAPINCH] =
@@ -4815,6 +5464,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Ant Pit"),
         .height = 7,
         .weight = 150,
+        .description = COMPOUND_STRING(
+            "Its big jaws crunch through boulders.\n"
+            "Because its head is so big, it has a hard\n"
+            "time getting back upright if it tips over\n"
+            "onto its back."),
         .pokemonScale = 298,
         .pokemonOffset = 17,
         .trainerScale = 256,
@@ -4835,6 +5489,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(4, -1, SHADOW_SIZE_S)
+        .levelUpLearnset = sTrapinchLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_VIBRAVA}),
     },
 
@@ -4867,6 +5522,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Vibration"),
         .height = 11,
         .weight = 153,
+        .description = COMPOUND_STRING(
+            "It looses ultrasonic waves by rubbing its\n"
+            "wings together. Since a Vibrava's wings\n"
+            "are still in the process of growing, it can\n"
+            "only fly short distances."),
         .pokemonScale = 370,
         .pokemonOffset = 11,
         .trainerScale = 256,
@@ -4889,6 +5549,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 0, SHADOW_SIZE_L)
+        .levelUpLearnset = sVibravaLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 45, SPECIES_FLYGON}),
     },
 
@@ -4927,6 +5588,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Mystic"),
         .height = 20,
         .weight = 820,
+        .description = COMPOUND_STRING(
+            "The flapping of its wings sounds like\n"
+            "singing. To prevent detection by enemies,\n"
+            "it hides itself by flapping up a cloud of\n"
+            "desert sand."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 268,
@@ -4950,6 +5616,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 17, SHADOW_SIZE_M)
+        .levelUpLearnset = sFlygonLevelUpLearnset,
     },
 
     [SPECIES_CACNEA] =
@@ -4977,6 +5644,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Cactus"),
         .height = 4,
         .weight = 513,
+        .description = COMPOUND_STRING(
+            "Cacnea live in deserts with virtually no\n"
+            "rainfall. It battles by swinging its thick,\n"
+            "spiked arms. Once a year, a yellow flower\n"
+            "blooms."),
         .pokemonScale = 455,
         .pokemonOffset = 20,
         .trainerScale = 256,
@@ -5003,6 +5675,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
         SHADOW(0, 1, SHADOW_SIZE_S)
+        .levelUpLearnset = sCacneaLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_CACTURNE}),
     },
 
@@ -5032,6 +5705,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Scarecrow"),
         .height = 13,
         .weight = 774,
+        .description = COMPOUND_STRING(
+            "After spending thousands of years in\n"
+            "harsh deserts, its blood transformed into\n"
+            "the same substances as sand. It is\n"
+            "nocturnal, so it hunts at night."),
         .pokemonScale = 327,
         .pokemonOffset = 5,
         .trainerScale = 256,
@@ -5050,9 +5728,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 7 : 0,
         .backAnimId = BACK_ANIM_H_SHAKE,
         .iconPalIndex = 1,
+#if P_GENDER_DIFFERENCES
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
+#endif //P_GENDER_DIFFERENCES
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 14, SHADOW_SIZE_M)
+        .levelUpLearnset = sCacturneLevelUpLearnset,
     },
 
     [SPECIES_SWABLU] =
@@ -5079,6 +5760,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Cotton Bird"),
         .height = 4,
         .weight = 12,
+        .description = COMPOUND_STRING(
+            "A Pokémon that has wings like cottony\n"
+            "clouds. After enduring winter, in which\n"
+            "little food is available, Swablu flocks\n"
+            "move closer to towns in the spring."),
         .pokemonScale = 422,
         .pokemonOffset = -8,
         .trainerScale = 256,
@@ -5102,6 +5788,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 0, SHADOW_SIZE_S)
+        .levelUpLearnset = sSwabluLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_ALTARIA}),
     },
 
@@ -5129,6 +5816,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Humming"),
         .height = 11,
         .weight = 206,
+        .description = COMPOUND_STRING(
+            "It hums in a beautiful soprano voice.\n"
+            "It flies among white clouds in the blue\n"
+            "sky. It launches intensely hot fireballs\n"
+            "from its mouth."),
         .pokemonScale = 327,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -5150,10 +5842,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 14, SHADOW_SIZE_L)
+        .levelUpLearnset = sAltariaLevelUpLearnset,
         .formSpeciesIdTable = sAltariaFormSpeciesIdTable,
         .formChangeTable = sAltariaFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_ALTARIA_MEGA] =
     {
         .baseHP        = 75,
@@ -5178,6 +5872,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Humming"),
         .height = 15,
         .weight = 206,
+        .description = COMPOUND_STRING(
+            "It sings with a voice that is even more\n"
+            "beautiful than before it Mega Evolved.\n"
+            "Its feathers became larger for protection\n"
+            "and glimmer with an iridescent sheen."),
         .pokemonScale = 327,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -5194,11 +5893,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 17, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sAltariaLevelUpLearnset,
         .formSpeciesIdTable = sAltariaFormSpeciesIdTable,
         .formChangeTable = sAltariaFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_ZANGOOSE] =
     {
@@ -5226,6 +5928,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Cat Ferret"),
         .height = 13,
         .weight = 403,
+        .description = COMPOUND_STRING(
+            "When it battles, it stands on its hind legs\n"
+            "and attacks with its sharply clawed\n"
+            "forelegs. Its fur bristles if it encounters\n"
+            "any Seviper."),
         .pokemonScale = 256,
         .pokemonOffset = 3,
         .trainerScale = 256,
@@ -5248,6 +5955,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 8, SHADOW_SIZE_M)
+        .levelUpLearnset = sZangooseLevelUpLearnset,
     },
 
     [SPECIES_SEVIPER] =
@@ -5277,6 +5985,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Fang Snake"),
         .height = 27,
         .weight = 525,
+        .description = COMPOUND_STRING(
+            "Seviper and Zangoose are eternal rivals.\n"
+            "It counters a Zangoose's dazzling agility\n"
+            "with its swordlike tail, which also oozes\n"
+            "a horrible poison."),
         .pokemonScale = 275,
         .pokemonOffset = 7,
         .trainerScale = 256,
@@ -5299,6 +6012,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 7, SHADOW_SIZE_L)
+        .levelUpLearnset = sSeviperLevelUpLearnset,
     },
 
     [SPECIES_LUNATONE] =
@@ -5333,6 +6047,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Meteorite"),
         .height = 10,
         .weight = 1680,
+        .description = COMPOUND_STRING(
+            "It becomes very active on the night of\n"
+            "a full moon. This Pokémon was first\n"
+            "discovered 40 years ago at the site of\n"
+            "a meteor strike."),
         .pokemonScale = 300,
         .pokemonOffset = 3,
         .trainerScale = 256,
@@ -5354,6 +6073,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 15, SHADOW_SIZE_S)
+        .levelUpLearnset = sLunatoneLevelUpLearnset,
     },
 
     [SPECIES_SOLROCK] =
@@ -5388,6 +6108,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Meteorite"),
         .height = 12,
         .weight = 1540,
+        .description = COMPOUND_STRING(
+            "Solar energy is the source of this \n"
+            "Pokémon's power. On sunny days, groups of\n"
+            "Solrock line up facing the sun and absorb\n"
+            "its light."),
         .pokemonScale = 328,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -5409,6 +6134,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 15, SHADOW_SIZE_M)
+        .levelUpLearnset = sSolrockLevelUpLearnset,
     },
 
     [SPECIES_BARBOACH] =
@@ -5439,6 +6165,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Whiskers"),
         .height = 4,
         .weight = 19,
+        .description = COMPOUND_STRING(
+            "Its body is covered with a slimy film.\n"
+            "The film acts as a barrier to prevent germs\n"
+            "in muddy water from entering the\n"
+            "Barboach's body."),
         .pokemonScale = 581,
         .pokemonOffset = -3,
         .trainerScale = 256,
@@ -5468,6 +6199,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 3, SHADOW_SIZE_M)
+        .levelUpLearnset = sBarboachLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_WHISCASH}),
     },
 
@@ -5499,6 +6231,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Whiskers"),
         .height = 9,
         .weight = 236,
+        .description = COMPOUND_STRING(
+            "Mysteriously, it can foretell earthquakes.\n"
+            "In the daytime, it sleeps in mud at the\n"
+            "bottom of a pond. When it awakens, it\n"
+            "continually feeds throughout the night."),
         .pokemonScale = 317,
         .pokemonOffset = 1,
         .trainerScale = 256,
@@ -5527,6 +6264,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 3, SHADOW_SIZE_L)
+        .levelUpLearnset = sWhiscashLevelUpLearnset,
     },
 
     [SPECIES_CORPHISH] =
@@ -5553,6 +6291,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Ruffian"),
         .height = 6,
         .weight = 115,
+        .description = COMPOUND_STRING(
+            "Once it grips prey with its large pincers,\n"
+            "it will never let go, no matter what.\n"
+            "It is a hardy Pokémon that can thrive\n"
+            "in any environment."),
         .pokemonScale = 484,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -5575,6 +6318,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 5, SHADOW_SIZE_M)
+        .levelUpLearnset = sCorphishLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_CRAWDAUNT}),
     },
 
@@ -5602,6 +6346,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Rogue"),
         .height = 11,
         .weight = 328,
+        .description = COMPOUND_STRING(
+            "A brutish Pokémon that loves to battle.\n"
+            "A veteran Crawdaunt that has prevailed in\n"
+            "hundreds of battles has giant pincers\n"
+            "marked with countless scars."),
         .pokemonScale = 365,
         .pokemonOffset = 9,
         .trainerScale = 256,
@@ -5622,6 +6371,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(6, 9, SHADOW_SIZE_M)
+        .levelUpLearnset = sCrawdauntLevelUpLearnset,
     },
 
     [SPECIES_BALTOY] =
@@ -5649,6 +6399,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Clay Doll"),
         .height = 5,
         .weight = 215,
+        .description = COMPOUND_STRING(
+            "A Baltoy moves by spinning on its single\n"
+            "foot. It has been depicted in murals \n"
+            "adorning the walls of a once-bustling city\n"
+            "in an ancient age."),
         .pokemonScale = 457,
         .pokemonOffset = 21,
         .trainerScale = 256,
@@ -5672,6 +6427,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 5, SHADOW_SIZE_S)
+        .levelUpLearnset = sBaltoyLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_CLAYDOL}),
     },
 
@@ -5700,6 +6456,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Clay Doll"),
         .height = 15,
         .weight = 1080,
+        .description = COMPOUND_STRING(
+            "A Claydol sleeps while hovering in midair.\n"
+            "Its arms are separate from its body.\n"
+            "They are kept floating by the Pokémon's\n"
+            "manipulation of psychic power."),
         .pokemonScale = 256,
         .pokemonOffset = 3,
         .trainerScale = 280,
@@ -5723,6 +6484,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 18, SHADOW_SIZE_M)
+        .levelUpLearnset = sClaydolLevelUpLearnset,
     },
 
     [SPECIES_LILEEP] =
@@ -5756,6 +6518,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Sea Lily"),
         .height = 10,
         .weight = 238,
+        .description = COMPOUND_STRING(
+            "It disguises itself as seaweed by making\n"
+            "its tentacles sway. Unsuspecting prey\n"
+            "that come too close are swallowed whole.\n"
+            "It became extinct 100 million years ago."),
         .pokemonScale = 305,
         .pokemonOffset = 8,
         .trainerScale = 256,
@@ -5776,6 +6543,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 5, SHADOW_SIZE_S)
+        .levelUpLearnset = sLileepLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_CRADILY}),
     },
 
@@ -5810,6 +6578,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Barnacle"),
         .height = 15,
         .weight = 604,
+        .description = COMPOUND_STRING(
+            "It drags its heavy body along the\n"
+            "seafloor. It makes its nest in the shallows\n"
+            "of warm seas. Cradily can be seen on\n"
+            "beaches when the tide goes out."),
         .pokemonScale = 267,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -5832,6 +6605,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 11, SHADOW_SIZE_M)
+        .levelUpLearnset = sCradilyLevelUpLearnset,
     },
 
     [SPECIES_ANORITH] =
@@ -5864,6 +6638,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Old Shrimp"),
         .height = 7,
         .weight = 125,
+        .description = COMPOUND_STRING(
+            "It was resurrected from a fossil using the\n"
+            "power of science. It swims by undulating\n"
+            "the eight wings at its sides. They were\n"
+            "feet that adapted to life in the sea."),
         .pokemonScale = 296,
         .pokemonOffset = 4,
         .trainerScale = 256,
@@ -5886,6 +6665,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(0, 4, SHADOW_SIZE_S)
+        .levelUpLearnset = sAnorithLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_ARMALDO}),
     },
 
@@ -5919,6 +6699,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Plate"),
         .height = 15,
         .weight = 682,
+        .description = COMPOUND_STRING(
+            "Armaldo usually lives on land. However,\n"
+            "when it hunts for prey, it dives beneath\n"
+            "the ocean. It swims around using its two\n"
+            "large wings."),
         .pokemonScale = 312,
         .pokemonOffset = 3,
         .trainerScale = 271,
@@ -5939,6 +6724,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 11, SHADOW_SIZE_L)
+        .levelUpLearnset = sArmaldoLevelUpLearnset,
     },
 
     [SPECIES_FEEBAS] =
@@ -5969,6 +6755,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Fish"),
         .height = 6,
         .weight = 74,
+        .description = COMPOUND_STRING(
+            "Feebas live in ponds that are heavily\n"
+            "infested with weeds. Because of its\n"
+            "hopelessly shabby appearance, it\n"
+            "seems as if few Trainers raise it."),
         .pokemonScale = 423,
         .pokemonOffset = -4,
         .trainerScale = 256,
@@ -5991,6 +6782,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 2, SHADOW_SIZE_S)
+        .levelUpLearnset = sFeebasLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_MILOTIC, CONDITIONS({IF_MIN_BEAUTY, 170})},
                                 {EVO_TRADE, 0, SPECIES_MILOTIC, CONDITIONS({IF_HOLD_ITEM, ITEM_PRISM_SCALE})},
                                 {EVO_ITEM, ITEM_PRISM_SCALE, SPECIES_MILOTIC}),
@@ -6024,6 +6816,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Tender"),
         .height = 62,
         .weight = 1620,
+        .description = COMPOUND_STRING(
+            "It is said to live at the bottom of\n"
+            "large lakes. Considered to be the most\n"
+            "beautiful of all Pokémon, it has been\n"
+            "depicted in paintings and statues."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 360,
@@ -6045,10 +6842,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 2 : 0,
         .backAnimId = BACK_ANIM_SHAKE_GLOW_BLUE,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 2,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 12, SHADOW_SIZE_M)
+        .levelUpLearnset = sMiloticLevelUpLearnset,
     },
 
     [SPECIES_CASTFORM_NORMAL] =
@@ -6077,6 +6877,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Weather"),
         .height = 3,
         .weight = 8,
+        .description = COMPOUND_STRING(
+            "It alters its form depending on the\n"
+            "weather. Changes in the climate such as\n"
+            "the temperature and humidity appear to\n"
+            "affect its cellular structure."),
         .pokemonScale = 435,
         .pokemonOffset = -5,
         .trainerScale = 256,
@@ -6102,6 +6907,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 10, SHADOW_SIZE_S)
+        .levelUpLearnset = sCastformLevelUpLearnset,
         .formSpeciesIdTable = sCastformFormSpeciesIdTable,
         .formChangeTable = sCastformFormChangeTable,
     },
@@ -6132,6 +6938,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Weather"),
         .height = 3,
         .weight = 8,
+        .description = COMPOUND_STRING(
+            "Castform takes this form on bright days.\n"
+            "In an experiment where is was placed in\n"
+            "front of a heater, it didn't change to this\n"
+            "form. Its body is warm and toasty."),
         .pokemonScale = 435,
         .pokemonOffset = -5,
         .trainerScale = 256,
@@ -6159,6 +6970,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 7, SHADOW_SIZE_S)
+        .levelUpLearnset = sCastformLevelUpLearnset,
         .formSpeciesIdTable = sCastformFormSpeciesIdTable,
         .formChangeTable = sCastformFormChangeTable,
     },
@@ -6189,6 +7001,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Weather"),
         .height = 3,
         .weight = 8,
+        .description = COMPOUND_STRING(
+            "This is Castform's form while it's raining.\n"
+            "In an experiment where it was placed in a\n"
+            "shower, it didn't change to this form. Its\n"
+            "body is soft, slightly swollen with water."),
         .pokemonScale = 435,
         .pokemonOffset = -5,
         .trainerScale = 256,
@@ -6214,6 +7031,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 7, SHADOW_SIZE_S)
+        .levelUpLearnset = sCastformLevelUpLearnset,
         .formSpeciesIdTable = sCastformFormSpeciesIdTable,
         .formChangeTable = sCastformFormChangeTable,
     },
@@ -6244,6 +7062,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Weather"),
         .height = 3,
         .weight = 8,
+        .description = COMPOUND_STRING(
+            "This is Castform's form in a hailstorm.\n"
+            "In an experiment where it was placed\n"
+            "in a freezer, it didn't change to this form.\n"
+            "Its cold skin is as smooth as ice."),
         .pokemonScale = 435,
         .pokemonOffset = -5,
         .trainerScale = 256,
@@ -6269,6 +7092,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 8, SHADOW_SIZE_S)
+        .levelUpLearnset = sCastformLevelUpLearnset,
         .formSpeciesIdTable = sCastformFormSpeciesIdTable,
         .formChangeTable = sCastformFormChangeTable,
     },
@@ -6301,6 +7125,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Color Swap"),
         .height = 10,
         .weight = 220,
+        .description = COMPOUND_STRING(
+            "A Pokémon that has the ability to alter its\n"
+            "body colors to match its surroundings.\n"
+            "A Kecleon reverts to its original colors if\n"
+            "it is startled."),
         .pokemonScale = 316,
         .pokemonOffset = 10,
         .trainerScale = 256,
@@ -6322,6 +7151,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 8, SHADOW_SIZE_S)
+        .levelUpLearnset = sKecleonLevelUpLearnset,
     },
 
     [SPECIES_SHUPPET] =
@@ -6353,6 +7183,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Puppet"),
         .height = 6,
         .weight = 23,
+        .description = COMPOUND_STRING(
+            "This Pokémon roams about deep in the\n"
+            "night seeking such negative emotions as\n"
+            "grudges and envy. It retreats to its nest\n"
+            "when the sun begins to rise."),
         .pokemonScale = 440,
         .pokemonOffset = 20,
         .trainerScale = 256,
@@ -6376,6 +7211,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 12, SHADOW_SIZE_S)
+        .levelUpLearnset = sShuppetLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 37, SPECIES_BANETTE}),
     },
 
@@ -6408,6 +7244,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Marionette"),
         .height = 11,
         .weight = 125,
+        .description = COMPOUND_STRING(
+            "An abandoned plush doll became this\n"
+            "Pokémon. They are said to live in garbage\n"
+            "dumps and wander about in search of the\n"
+            "children that threw them away."),
         .pokemonScale = 262,
         .pokemonOffset = 9,
         .trainerScale = 256,
@@ -6431,10 +7272,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 7, SHADOW_SIZE_S)
+        .levelUpLearnset = sBanetteLevelUpLearnset,
         .formSpeciesIdTable = sBanetteFormSpeciesIdTable,
         .formChangeTable = sBanetteFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_BANETTE_MEGA] =
     {
         .baseHP        = 64,
@@ -6460,6 +7303,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Marionette"),
         .height = 12,
         .weight = 130,
+        .description = COMPOUND_STRING(
+            "Extraordinary energy amplifies its\n"
+            "cursing power to such an extent that it\n"
+            "can't help but curse its own Trainer."),
         .pokemonScale = 262,
         .pokemonOffset = 9,
         .trainerScale = 256,
@@ -6476,11 +7323,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 16, SHADOW_SIZE_M)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sBanetteLevelUpLearnset,
         .formSpeciesIdTable = sBanetteFormSpeciesIdTable,
         .formChangeTable = sBanetteFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_DUSKULL] =
     {
@@ -6512,6 +7362,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Requiem"),
         .height = 8,
         .weight = 150,
+        .description = COMPOUND_STRING(
+            "A glare from its single scarlet eye makes\n"
+            "even burly grown-ups freeze in utter fear.\n"
+            "It is a nocturnal Pokémon that roams\n"
+            "about under the cloak of darkness."),
         .pokemonScale = 406,
         .pokemonOffset = -4,
         .trainerScale = 256,
@@ -6533,6 +7388,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 12, SHADOW_SIZE_S)
+        .levelUpLearnset = sDuskullLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 37, SPECIES_DUSCLOPS}),
     },
 
@@ -6566,6 +7422,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Beckon"),
         .height = 16,
         .weight = 306,
+        .description = COMPOUND_STRING(
+            "It is thought that its body is hollow with\n"
+            "only a spectral ball of fire burning inside.\n"
+            "However, no one has been able to\n"
+            "confirm this theory as fact."),
         .pokemonScale = 256,
         .pokemonOffset = 3,
         .trainerScale = 299,
@@ -6587,10 +7448,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 8, SHADOW_SIZE_M)
+        .levelUpLearnset = sDusclopsLevelUpLearnset,
+    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_TRADE, 0, SPECIES_DUSKNOIR, CONDITIONS({IF_HOLD_ITEM, ITEM_REAPER_CLOTH})},
                                 {EVO_ITEM, ITEM_REAPER_CLOTH, SPECIES_DUSKNOIR}),
+    #endif
     },
 
+#if P_GEN_4_CROSS_EVOS
     [SPECIES_DUSKNOIR] =
     {
         .baseHP        = 45,
@@ -6627,6 +7492,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Gripper"),
         .height = 22,
         .weight = 1066,
+        .description = COMPOUND_STRING(
+            "This feared Pokémon is said to travel to\n"
+            "worlds unknown. Some even believe that\n"
+            "it takes lost spirits into its pliant body\n"
+            "and guides them home."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 348,
@@ -6653,7 +7523,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(6, 13, SHADOW_SIZE_M)
+        .levelUpLearnset = sDusknoirLevelUpLearnset,
     },
+#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_TROPIUS] =
     {
@@ -6683,6 +7555,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Fruit"),
         .height = 20,
         .weight = 1000,
+        .description = COMPOUND_STRING(
+            "It flies by flapping its broad leaves.\n"
+            "The bunch of fruit that grows around its\n"
+            "neck is deliciously sweet. In the spring,\n"
+            "it scatters pollen from its neck."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 344,
@@ -6703,8 +7580,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-6, 13, SHADOW_SIZE_L)
+        .levelUpLearnset = sTropiusLevelUpLearnset,
     },
 
+#if P_GEN_4_CROSS_EVOS
     [SPECIES_CHINGLING] =
     {
         .baseHP        = 45,
@@ -6730,6 +7609,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Bell"),
         .height = 2,
         .weight = 6,
+        .description = COMPOUND_STRING(
+            "There is an orb inside its mouth.\n"
+            "When it hops, the orb bounces all\n"
+            "over and makes a ringing sound.\n"
+            "It can cry for an awfully long time."),
         .pokemonScale = 682,
         .pokemonOffset = 24,
         .trainerScale = 256,
@@ -6753,8 +7637,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, -2, SHADOW_SIZE_S)
+        .levelUpLearnset = sChinglingLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_CHIMECHO, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD},{IF_TIME, TIME_NIGHT})}),
     },
+#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_CHIMECHO] =
     {
@@ -6788,6 +7674,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Wind Chime"),
         .height = 6,
         .weight = 10,
+        .description = COMPOUND_STRING(
+            "They fly about very actively when the hot\n"
+            "season arrives. They communicate among\n"
+            "themselves using seven different and\n"
+            "distinguishing cries."),
         .pokemonScale = 505,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -6813,6 +7704,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 16, SHADOW_SIZE_S)
+        .levelUpLearnset = sChimechoLevelUpLearnset,
     },
 
     [SPECIES_ABSOL] =
@@ -6844,6 +7736,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Disaster"),
         .height = 12,
         .weight = 470,
+        .description = COMPOUND_STRING(
+            "It sharply senses even subtle changes in\n"
+            "the sky and the land to predict natural\n"
+            "disasters. It is a long-lived Pokémon that\n"
+            "has a life-span of 100 years."),
         .pokemonScale = 301,
         .pokemonOffset = 3,
         .trainerScale = 256,
@@ -6865,10 +7762,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(4, 6, SHADOW_SIZE_L)
+        .levelUpLearnset = sAbsolLevelUpLearnset,
         .formSpeciesIdTable = sAbsolFormSpeciesIdTable,
         .formChangeTable = sAbsolFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_ABSOL_MEGA] =
     {
         .baseHP        = 65,
@@ -6894,6 +7793,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Disaster"),
         .height = 12,
         .weight = 490,
+        .description = COMPOUND_STRING(
+            "As the energy of Mega Evolution fills it,\n"
+            "its fur bristles. What you see on its back\n"
+            "are not true wings, and this Pokémon isn't\n"
+            "able to fly."),
         .pokemonScale = 301,
         .pokemonOffset = 3,
         .trainerScale = 256,
@@ -6909,11 +7813,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 7, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sAbsolLevelUpLearnset,
         .formSpeciesIdTable = sAbsolFormSpeciesIdTable,
         .formChangeTable = sAbsolFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_SNORUNT] =
     {
@@ -6944,6 +7851,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Snow Hat"),
         .height = 7,
         .weight = 168,
+        .description = COMPOUND_STRING(
+            "They tend to move about in groups of\n"
+            "around five Snorunt. In snowy regions,\n"
+            "it is said that when they are seen late at\n"
+            "night, snowfall will arrive by morning."),
         .pokemonScale = 380,
         .pokemonOffset = 15,
         .trainerScale = 256,
@@ -6965,8 +7877,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(1, 2, SHADOW_SIZE_S)
+        .levelUpLearnset = sSnoruntLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 42, SPECIES_GLALIE}
+                            #if P_GEN_4_CROSS_EVOS
                                 ,{EVO_ITEM, ITEM_DAWN_STONE, SPECIES_FROSLASS, CONDITIONS({IF_GENDER, MON_FEMALE})}
+                            #endif
                             ),
     },
 
@@ -6998,6 +7913,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Face"),
         .height = 15,
         .weight = 2565,
+        .description = COMPOUND_STRING(
+            "A Glalie has the power to instantaneously\n"
+            "freeze moisture in the atmosphere.\n"
+            "A dazzling cloud of diamondlike ice\n"
+            "crystals forms around its body."),
         .pokemonScale = 256,
         .pokemonOffset = 3,
         .trainerScale = 344,
@@ -7019,10 +7939,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 15, SHADOW_SIZE_M)
+        .levelUpLearnset = sGlalieLevelUpLearnset,
         .formSpeciesIdTable = sGlalieFormSpeciesIdTable,
         .formChangeTable = sGlalieFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_GLALIE_MEGA] =
     {
         .baseHP        = 80,
@@ -7047,6 +7969,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Face"),
         .height = 21,
         .weight = 3502,
+        .description = COMPOUND_STRING(
+            "The power of Mega Evolution was so strong\n"
+            "that it smashed Glalie's jaw. Its inability\n"
+            "to eat very well leaves Glalie irritated."),
         .pokemonScale = 256,
         .pokemonOffset = 3,
         .trainerScale = 344,
@@ -7063,12 +7989,16 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(3, 18, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sGlalieLevelUpLearnset,
         .formSpeciesIdTable = sGlalieFormSpeciesIdTable,
         .formChangeTable = sGlalieFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
+#if P_GEN_4_CROSS_EVOS
     [SPECIES_FROSLASS] =
     {
         .baseHP        = 70,
@@ -7093,6 +8023,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Snow Land"),
         .height = 13,
         .weight = 266,
+        .description = COMPOUND_STRING(
+            "When it finds people or Pokémon it likes,\n"
+            "it freezes them and takes them to its\n"
+            "chilly den, where they become its\n"
+            "decorations."),
         .pokemonScale = 272,
         .pokemonOffset = 3,
         .trainerScale = 256,
@@ -7112,10 +8047,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 10, SHADOW_SIZE_S)
+        .levelUpLearnset = sFroslassLevelUpLearnset,
         .formSpeciesIdTable = sFroslassFormSpeciesIdTable,
         .formChangeTable = sFroslassFormChangeTable,
     },
 
+#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_FROSLASS_MEGA] =
     {
         .baseHP        = 70,
@@ -7140,6 +8077,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Snow Land"),
         .height = 26,
         .weight = 296,
+        .description = COMPOUND_STRING(
+            "This Pokémon can use eerie cold\n"
+            "air imbued with ghost energy to\n"
+            "freeze even insubstantial things,\n"
+            "such as flames or the wind."),
         .frontPicSize = MON_COORDS_SIZE(40, 40),
         .frontPicYOffset = 12,
         .frontAnimFrames = sAnims_TwoFramePlaceHolder,
@@ -7171,9 +8113,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         },
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sFroslassLevelUpLearnset,
         .formSpeciesIdTable = sFroslassFormSpeciesIdTable,
         .formChangeTable = sFroslassFormChangeTable,
     },
+#endif //P_GEN_9_MEGA_EVOLUTIONS
+#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_SPHEAL] =
     {
@@ -7203,6 +8148,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Clap"),
         .height = 8,
         .weight = 395,
+        .description = COMPOUND_STRING(
+            "It is completely covered with plushy fur.\n"
+            "As a result, it never feels the cold even\n"
+            "when it is rolling about on ice floes or\n"
+            "diving in the sea."),
         .pokemonScale = 315,
         .pokemonOffset = 16,
         .trainerScale = 256,
@@ -7227,6 +8177,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, -1, SHADOW_SIZE_M)
+        .levelUpLearnset = sSphealLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_SEALEO}),
     },
 
@@ -7258,6 +8209,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Ball Roll"),
         .height = 11,
         .weight = 876,
+        .description = COMPOUND_STRING(
+            "Sealeo live in herds on ice floes. Using its\n"
+            "powerful flippers, it shatters ice.\n"
+            "It dives into the sea to hunt prey five\n"
+            "times a day."),
         .pokemonScale = 338,
         .pokemonOffset = 13,
         .trainerScale = 256,
@@ -7278,6 +8234,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 2, SHADOW_SIZE_L)
+        .levelUpLearnset = sSealeoLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 44, SPECIES_WALREIN}),
     },
 
@@ -7315,6 +8272,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Ice Break"),
         .height = 14,
         .weight = 1506,
+        .description = COMPOUND_STRING(
+            "To protect its herd, the leader battles\n"
+            "anything that invades its territory, even\n"
+            "at the cost of its life. Its tusks may snap\n"
+            "off in battle."),
         .pokemonScale = 316,
         .pokemonOffset = 4,
         .trainerScale = 256,
@@ -7335,6 +8297,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 8, SHADOW_SIZE_L)
+        .levelUpLearnset = sWalreinLevelUpLearnset,
     },
 
     [SPECIES_CLAMPERL] =
@@ -7363,6 +8326,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Bivalve"),
         .height = 4,
         .weight = 525,
+        .description = COMPOUND_STRING(
+            "A Clamperl slams its shell closed on prey\n"
+            "to prevent escape. The pearl it creates\n"
+            "upon evolution is said to be infused with\n"
+            "a mysterious energy."),
         .pokemonScale = 691,
         .pokemonOffset = 22,
         .trainerScale = 256,
@@ -7383,6 +8351,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(-1, 1, SHADOW_SIZE_M)
+        .levelUpLearnset = sClamperlLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_TRADE, 0, SPECIES_HUNTAIL, CONDITIONS({IF_HOLD_ITEM, ITEM_DEEP_SEA_TOOTH})},
                                 {EVO_TRADE, 0, SPECIES_GOREBYSS, CONDITIONS({IF_HOLD_ITEM, ITEM_DEEP_SEA_SCALE})},
                                 {EVO_ITEM, ITEM_DEEP_SEA_TOOTH, SPECIES_HUNTAIL},
@@ -7415,6 +8384,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Deep Sea"),
         .height = 17,
         .weight = 270,
+        .description = COMPOUND_STRING(
+            "To withstand the crushing pressure of\n"
+            "water deep under the sea, its spine is very\n"
+            "thick and sturdy. Its tail, which is shaped\n"
+            "like a small fish, has eyes that light up."),
         .pokemonScale = 307,
         .pokemonOffset = 1,
         .trainerScale = 256,
@@ -7435,6 +8409,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 7, SHADOW_SIZE_L)
+        .levelUpLearnset = sHuntailLevelUpLearnset,
     },
 
     [SPECIES_GOREBYSS] =
@@ -7462,6 +8437,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("South Sea"),
         .height = 18,
         .weight = 226,
+        .description = COMPOUND_STRING(
+            "A Gorebyss siphons the body fluids of prey\n"
+            "through its thin, tubular mouth. Its light\n"
+            "pink body color turns vivid when it\n"
+            "finishes feeding."),
         .pokemonScale = 278,
         .pokemonOffset = 5,
         .trainerScale = 256,
@@ -7482,6 +8462,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 5, SHADOW_SIZE_M)
+        .levelUpLearnset = sGorebyssLevelUpLearnset,
     },
 
     [SPECIES_RELICANTH] =
@@ -7510,6 +8491,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Longevity"),
         .height = 10,
         .weight = 234,
+        .description = COMPOUND_STRING(
+            "A Pokémon that was once believed to have\n"
+            "been extinct. The species has not changed\n"
+            "its form for 100 million years. It walks on\n"
+            "the seafloor using its pectoral fins."),
         .pokemonScale = 316,
         .pokemonOffset = 7,
         .trainerScale = 256,
@@ -7528,10 +8514,13 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 10 : 12,
         .backAnimId = BACK_ANIM_H_SLIDE,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 2,
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicSizeFemale = MON_COORDS_SIZE(56, 56),
         .backPicSizeFemale = MON_COORDS_SIZE(64, 40),
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 3, SHADOW_SIZE_M)
+        .levelUpLearnset = sRelicanthLevelUpLearnset,
     },
 
     [SPECIES_LUVDISC] =
@@ -7559,6 +8548,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Rendezvous"),
         .height = 6,
         .weight = 87,
+        .description = COMPOUND_STRING(
+            "Luvdisc make the branches of Corsola\n"
+            "their nests. There is a custom from long\n"
+            "ago of giving a Luvdisc as a gift to\n"
+            "express one's feelings of love."),
         .pokemonScale = 371,
         .pokemonOffset = 2,
         .trainerScale = 256,
@@ -7579,6 +8573,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 0, SHADOW_SIZE_S)
+        .levelUpLearnset = sLuvdiscLevelUpLearnset,
     },
 
     [SPECIES_BAGON] =
@@ -7606,6 +8601,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Rock Head"),
         .height = 6,
         .weight = 421,
+        .description = COMPOUND_STRING(
+            "Although it is small, this Pokémon is very\n"
+            "powerful because its body is a bundle of\n"
+            "muscles. It launches head-butts with its\n"
+            "ironlike skull."),
         .pokemonScale = 448,
         .pokemonOffset = 18,
         .trainerScale = 256,
@@ -7626,6 +8626,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 2 : 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(4, 3, SHADOW_SIZE_S)
+        .levelUpLearnset = sBagonLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_SHELGON}),
     },
 
@@ -7654,6 +8655,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Endurance"),
         .height = 11,
         .weight = 1105,
+        .description = COMPOUND_STRING(
+            "It hardly eats while it awaits evolution.\n"
+            "It becomes hardier by enduring hunger.\n"
+            "Its shell peels off the instant it begins\n"
+            "to evolve."),
         .pokemonScale = 311,
         .pokemonOffset = 12,
         .trainerScale = 256,
@@ -7674,6 +8680,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 2, SHADOW_SIZE_M)
+        .levelUpLearnset = sShelgonLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 50, SPECIES_SALAMENCE}),
     },
 
@@ -7708,6 +8715,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Dragon"),
         .height = 15,
         .weight = 1026,
+        .description = COMPOUND_STRING(
+            "After many long years, its cellular\n"
+            "structure underwent a sudden mutation to\n"
+            "grow wings. When angered, it loses all\n"
+            "thought and rampages out of control."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -7729,10 +8741,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(3, 8, SHADOW_SIZE_L)
+        .levelUpLearnset = sSalamenceLevelUpLearnset,
         .formSpeciesIdTable = sSalamenceFormSpeciesIdTable,
         .formChangeTable = sSalamenceFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_SALAMENCE_MEGA] =
     {
         .baseHP        = 95,
@@ -7758,6 +8772,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Dragon"),
         .height = 18,
         .weight = 1126,
+        .description = COMPOUND_STRING(
+            "Mega Evolution fuels its brutality, and it\n"
+            "may even turn on the Trainer who raised it.\n"
+            "It's been dubbed the blood-soaked.\n"
+            "crescent."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 256,
@@ -7773,11 +8792,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(3, 8, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sSalamenceLevelUpLearnset,
         .formSpeciesIdTable = sSalamenceFormSpeciesIdTable,
         .formChangeTable = sSalamenceFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_BELDUM] =
     {
@@ -7804,6 +8826,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iron Ball"),
         .height = 6,
         .weight = 952,
+        .description = COMPOUND_STRING(
+            "When Beldum gather in a swarm, they move\n"
+            "in perfect unison as if they were but one\n"
+            "Pokémon. They communicate with each other\n"
+            "using brain waves."),
         .pokemonScale = 414,
         .pokemonOffset = -1,
         .trainerScale = 256,
@@ -7825,7 +8852,9 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 4, SHADOW_SIZE_S)
+
         .tmIlliterate = TRUE,
+        .levelUpLearnset = sBeldumLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_METANG}),
     },
 
@@ -7854,6 +8883,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iron Claw"),
         .height = 12,
         .weight = 2025,
+        .description = COMPOUND_STRING(
+            "The claws tipping its arms pack the\n"
+            "destructive power to tear through thick\n"
+            "iron sheets as if they were silk. It flies\n"
+            "at over 60 miles per hour."),
         .pokemonScale = 256,
         .pokemonOffset = 6,
         .trainerScale = 256,
@@ -7874,6 +8908,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 2, SHADOW_SIZE_M)
+        .levelUpLearnset = sMetangLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 45, SPECIES_METAGROSS}),
     },
 
@@ -7908,6 +8943,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iron Leg"),
         .height = 16,
         .weight = 5500,
+        .description = COMPOUND_STRING(
+            "Metagross has four brains that are joined\n"
+            "by a complex neural network. As a result of\n"
+            "integration, this Pokémon is smarter than\n"
+            "a supercomputer."),
         .pokemonScale = 256,
         .pokemonOffset = 4,
         .trainerScale = 447,
@@ -7928,10 +8968,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, -2, SHADOW_SIZE_XL_BATTLE_ONLY)
+        .levelUpLearnset = sMetagrossLevelUpLearnset,
         .formSpeciesIdTable = sMetagrossFormSpeciesIdTable,
         .formChangeTable = sMetagrossFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_METAGROSS_MEGA] =
     {
         .baseHP        = 80,
@@ -7957,6 +8999,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iron Leg"),
         .height = 25,
         .weight = 9429,
+        .description = COMPOUND_STRING(
+            "When it knows it can't win, it digs the\n"
+            "claws on its legs into its opponent and\n"
+            "starts the countdown to a big explosion."),
         .pokemonScale = 256,
         .pokemonOffset = 4,
         .trainerScale = 447,
@@ -7973,11 +9019,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 15, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isMegaEvolution = TRUE,
+        .levelUpLearnset = sMetagrossLevelUpLearnset,
         .formSpeciesIdTable = sMetagrossFormSpeciesIdTable,
         .formChangeTable = sMetagrossFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_REGIROCK] =
     {
@@ -8010,6 +9059,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Rock Peak"),
         .height = 17,
         .weight = 2300,
+        .description = COMPOUND_STRING(
+            "A Pokémon that is made entirely of rocks\n"
+            "and boulders. If parts of its body chip off\n"
+            "in battle, Regirock repairs itself by\n"
+            "adding new rocks."),
         .pokemonScale = 256,
         .pokemonOffset = 2,
         .trainerScale = 309,
@@ -8030,8 +9084,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 10, SHADOW_SIZE_L)
+
         .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sRegirockLevelUpLearnset,
     },
 
     [SPECIES_REGICE] =
@@ -8064,6 +9120,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iceberg"),
         .height = 18,
         .weight = 1750,
+        .description = COMPOUND_STRING(
+            "Its entire body is made of Antarctic ice.\n"
+            "After extensive studies, researchers\n"
+            "believe the ice was formed during an\n"
+            "ice age."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 301,
@@ -8084,8 +9145,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 2 : 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 10, SHADOW_SIZE_L)
+
         .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sRegiceLevelUpLearnset,
     },
 
     [SPECIES_REGISTEEL] =
@@ -8119,6 +9182,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Iron"),
         .height = 19,
         .weight = 2050,
+        .description = COMPOUND_STRING(
+            "Its body is harder than any other kind of\n"
+            "metal. The body metal is composed of a\n"
+            "mysterious substance. Not only is it hard,\n"
+            "it shrinks and stretches flexibly."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 359,
@@ -8139,8 +9207,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(4, 8, SHADOW_SIZE_L)
+
         .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sRegisteelLevelUpLearnset,
     },
 
     [SPECIES_LATIAS] =
@@ -8173,6 +9243,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Eon"),
         .height = 14,
         .weight = 400,
+        .description = COMPOUND_STRING(
+            "They make a small herd of only several\n"
+            "members. They rarely make contact with\n"
+            "people or other Pokémon. They disappear\n"
+            "if they sense enemies."),
         .pokemonScale = 304,
         .pokemonOffset = 3,
         .trainerScale = 256,
@@ -8194,12 +9269,15 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(3, 15, SHADOW_SIZE_M)
+
         .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sLatiasLevelUpLearnset,
         .formSpeciesIdTable = sLatiasFormSpeciesIdTable,
         .formChangeTable = sLatiasFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_LATIAS_MEGA] =
     {
         .baseHP        = 80,
@@ -8224,6 +9302,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Eon"),
         .height = 18,
         .weight = 520,
+        .description = COMPOUND_STRING(
+            "Its body is smaller than Mega Latios's\n"
+            "body. It is more agile and can make very\n"
+            "sharp turns. When it Mega Evolves, its\n"
+            "defensive strength grows substantially."),
         .pokemonScale = 304,
         .pokemonOffset = 3,
         .trainerScale = 256,
@@ -8240,13 +9323,16 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 19, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isLegendary = TRUE,
         .isMegaEvolution = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sLatiasLevelUpLearnset,
         .formSpeciesIdTable = sLatiasFormSpeciesIdTable,
         .formChangeTable = sLatiasFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_LATIOS] =
     {
@@ -8278,6 +9364,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Eon"),
         .height = 20,
         .weight = 600,
+        .description = COMPOUND_STRING(
+            "Even in hiding, it can detect the locations\n"
+            "of others and sense their emotions since\n"
+            "it has telepathy. Its intelligence allows\n"
+            "it to understand human languages."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 294,
@@ -8299,12 +9390,15 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 2 : 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 17, SHADOW_SIZE_M)
+
         .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sLatiosLevelUpLearnset,
         .formSpeciesIdTable = sLatiosFormSpeciesIdTable,
         .formChangeTable = sLatiosFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_LATIOS_MEGA] =
     {
         .baseHP        = 80,
@@ -8329,6 +9423,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Eon"),
         .height = 23,
         .weight = 700,
+        .description = COMPOUND_STRING(
+            "It's larger than Mega Latias, and can\n"
+            "achieve higher speeds in flight.\n"
+            "This Pokémon can use its speed in battle\n"
+            "to unleash a flurry of attacks."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 294,
@@ -8345,13 +9444,16 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 19, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isLegendary = TRUE,
         .isMegaEvolution = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sLatiosLevelUpLearnset,
         .formSpeciesIdTable = sLatiosFormSpeciesIdTable,
         .formChangeTable = sLatiosFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_KYOGRE] =
     {
@@ -8383,6 +9485,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Sea Basin"),
         .height = 45,
         .weight = 3520,
+        .description = COMPOUND_STRING(
+            "Kyogre has appeared in mythology as the\n"
+            "creator of the sea. After long years of\n"
+            "feuding with Groudon, it took to sleep at\n"
+            "the bottom of the sea."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 614,
@@ -8404,12 +9511,15 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
+
         .isLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sKyogreLevelUpLearnset,
         .formSpeciesIdTable = sKyogreFormSpeciesIdTable,
         .formChangeTable = sKyogreFormChangeTable,
     },
+#if P_PRIMAL_REVERSIONS
     [SPECIES_KYOGRE_PRIMAL] =
     {
         .baseHP        = 100,
@@ -8434,6 +9544,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Sea Basin"),
         .height = 98,
         .weight = 4300,
+        .description = COMPOUND_STRING(
+            "When Kyogre roared, water poured forth\n"
+            "and the seas spread outward.\n"
+            "Dark clouds enshrouded the world,\n"
+            "and the deluge fell upon all…"),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 515,
@@ -8449,14 +9564,17 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isLegendary = TRUE,
         .isPrimalReversion = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sKyogreLevelUpLearnset,
         .formSpeciesIdTable = sKyogreFormSpeciesIdTable,
         .formChangeTable = sKyogreFormChangeTable,
     },
+#endif //P_PRIMAL_REVERSIONS
 
     [SPECIES_GROUDON] =
     {
@@ -8488,6 +9606,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Continent"),
         .height = 35,
         .weight = 9500,
+        .description = COMPOUND_STRING(
+            "Groudon has appeared in mythology as the\n"
+            "creator of the land. It sleeps in magma\n"
+            "underground and is said to make volcanoes\n"
+            "erupt on awakening."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 515,
@@ -8508,13 +9631,16 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
+
         .isLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sGroudonLevelUpLearnset,
         .formSpeciesIdTable = sGroudonFormSpeciesIdTable,
         .formChangeTable = sGroudonFormChangeTable,
     },
 
+#if P_PRIMAL_REVERSIONS
     [SPECIES_GROUDON_PRIMAL] =
     {
         .baseHP        = 100,
@@ -8539,6 +9665,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Continent"),
         .height = 50,
         .weight = 9997,
+        .description = COMPOUND_STRING(
+            "When Groudon howled, the earth swelled and\n"
+            "the land grew wide. The sun blazed atop\n"
+            "and all the world around the creature\n"
+            "was enveloped in incandescent heat."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 515,
@@ -8554,14 +9685,17 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isLegendary = TRUE,
         .isPrimalReversion = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sGroudonLevelUpLearnset,
         .formSpeciesIdTable = sGroudonFormSpeciesIdTable,
         .formChangeTable = sGroudonFormChangeTable,
     },
+#endif //P_PRIMAL_REVERSIONS
 
     [SPECIES_RAYQUAZA] =
     {
@@ -8594,6 +9728,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Sky High"),
         .height = 70,
         .weight = 2065,
+        .description = COMPOUND_STRING(
+            "A Pokémon that flies endlessly in the\n"
+            "ozone layer. It is said it would descend\n"
+            "to the ground if Kyogre and Groudon\n"
+            "were to fight."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 448,
@@ -8616,13 +9755,16 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 17, SHADOW_SIZE_L)
+
         .isLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sRayquazaLevelUpLearnset,
         .formSpeciesIdTable = sRayquazaFormSpeciesIdTable,
         .formChangeTable = sRayquazaFormChangeTable,
     },
 
+#if P_MEGA_EVOLUTIONS
     [SPECIES_RAYQUAZA_MEGA] =
     {
         .baseHP        = 105,
@@ -8648,6 +9790,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Sky High"),
         .height = 108,
         .weight = 3920,
+        .description = COMPOUND_STRING(
+            "Particles stream from the filaments that\n"
+            "extend from its jaw. They can control the\n"
+            "density and humidity of the air, allowing\n"
+            "Rayquaza to manipulate the weather."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 448,
@@ -8664,14 +9811,17 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 15, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
+
     #endif //OW_BATTLE_ONLY_FORMS
         .isLegendary = TRUE,
         .isMegaEvolution = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sRayquazaLevelUpLearnset,
         .formSpeciesIdTable = sRayquazaFormSpeciesIdTable,
         .formChangeTable = sRayquazaFormChangeTable,
     },
+#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_JIRACHI] =
     {
@@ -8705,6 +9855,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .categoryName = _("Wish"),
         .height = 3,
         .weight = 11,
+        .description = COMPOUND_STRING(
+            "Jirachi is said to make wishes come true.\n"
+            "While it sleeps, a tough crystalline shell\n"
+            "envelops the body to protect it from\n"
+            "enemies."),
         .pokemonScale = 608,
         .pokemonOffset = -8,
         .trainerScale = 256,
@@ -8731,9 +9886,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 12, SHADOW_SIZE_S)
+
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sJirachiLevelUpLearnset,
     },
 
 #if P_UPDATED_EXP_YIELDS >= GEN_8
@@ -8796,9 +9953,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 14, SHADOW_SIZE_M)
+
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sDeoxysNormalLevelUpLearnset,
         .formSpeciesIdTable = sDeoxysFormSpeciesIdTable,
         .formChangeTable = sDeoxysNormalFormChangeTable,
     },
@@ -8854,9 +10013,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 14, SHADOW_SIZE_M)
+
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sDeoxysAttackLevelUpLearnset,
         .formSpeciesIdTable = sDeoxysFormSpeciesIdTable,
         .formChangeTable = sDeoxysAttackFormChangeTable,
     },
@@ -8912,9 +10073,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 13, SHADOW_SIZE_M)
+
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sDeoxysDefenseLevelUpLearnset,
         .formSpeciesIdTable = sDeoxysFormSpeciesIdTable,
         .formChangeTable = sDeoxysDefenseFormChangeTable,
     },
@@ -8970,9 +10133,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(3, 13, SHADOW_SIZE_M)
+
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
+        .levelUpLearnset = sDeoxysSpeedLevelUpLearnset,
         .formSpeciesIdTable = sDeoxysFormSpeciesIdTable,
         .formChangeTable = sDeoxysSpeedFormChangeTable,
     },
