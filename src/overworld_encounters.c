@@ -99,7 +99,7 @@ void UpdateOverworldEncounters(void)
             .x = x - MAP_OFFSET,
             .y = y - MAP_OFFSET,
             .elevation = MapGridGetElevationAt(x, y),
-            .movementType = MOVEMENT_TYPE_CHASE_PLAYER_OWE,
+            .movementType = MOVEMENT_TYPE_FLEE_PLAYER_OWE,
             .trainerType = TRAINER_TYPE_ENCOUNTER,
         };
 
@@ -769,6 +769,8 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
     return templateOWE;
 }
 
+#define tLocalId           gTasks[taskId].data[0]
+
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
     // The only automatically interacts with an OW Encounter when;
@@ -786,7 +788,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         LockPlayerFieldControls();
         // Wait for both the player and the mon to finish their current movements.
         u8 taskId = CreateTask(Task_OWE_WaitMovements, 0);
-        gTasks[taskId].data[0] = wildMon->localId;
+        tLocalId = wildMon->localId;
     }
 }
 
@@ -904,12 +906,16 @@ u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
     case DIR_SOUTH:
         if (player->currentCoords.x < mon->currentCoords.x)
             return DIR_WEST;
+        else if (player->currentCoords.x == mon->currentCoords.x)
+            return (Random() % 2) == 0 ? DIR_EAST : DIR_WEST;
         else
             return DIR_EAST;
     case DIR_EAST:
     case DIR_WEST:
         if (player->currentCoords.y < mon->currentCoords.y)
             return DIR_NORTH;
+        else if (player->currentCoords.y == mon->currentCoords.y)
+            return (Random() % 2) == 0 ? DIR_NORTH : DIR_SOUTH;
         else
             return DIR_SOUTH;
     }
@@ -927,18 +933,29 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon)
     return TRUE;
 }
 
+#define tTaskStarted        gTasks[taskId].data[1]
+#define sSpriteTaskState    gSprites[mon->spriteId].data[6]
+#define NOT_STARTED         0
+#define STARTED             1
+
 void Task_OWE_WaitMovements(u8 taskId)
 {
-    struct ObjectEvent *mon = &gObjectEvents[GetObjectEventIdByLocalId(gTasks[taskId].data[0])];
+    struct ObjectEvent *mon = &gObjectEvents[GetObjectEventIdByLocalId(tLocalId)];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    
+    if (tTaskStarted == NOT_STARTED)
+    {
+        sSpriteTaskState = STARTED;
+        tTaskStarted = STARTED;
+    }
 
     if (mon->singleMovementActive == 0 && player->singleMovementActive == 0)
     {
         // Let the mon continue to take steps until right next to the player.
         if (OWE_IsMonNextToPlayer(mon))
         {
-            gSpecialVar_LastTalked = gTasks[taskId].data[0];
-            gSpecialVar_0x8004 = OW_SPECIES(&gObjectEvents[GetObjectEventIdByLocalId(gTasks[taskId].data[0])]);
+            gSpecialVar_LastTalked = tLocalId;
+            gSpecialVar_0x8004 = OW_SPECIES(&gObjectEvents[GetObjectEventIdByLocalId(tLocalId)]);
             ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
             FreezeObjectEvent(mon);
             DestroyTask(taskId);
@@ -946,5 +963,10 @@ void Task_OWE_WaitMovements(u8 taskId)
     }
 }
 
+#undef tLocalId
+#undef tTaskStarted
+#undef sSpriteTaskState
+#undef NOT_STARTED
+#undef STARTED
 #undef sOverworldEncounterLevel
 #undef sAge

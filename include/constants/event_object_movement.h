@@ -85,7 +85,8 @@
 #define MOVEMENT_TYPE_FOLLOW_PLAYER                    0x51
 #define MOVEMENT_TYPE_WANDER_AROUND_OWE                0x52
 #define MOVEMENT_TYPE_CHASE_PLAYER_OWE                 0x53
-#define NUM_MOVEMENT_TYPES                             0x54
+#define MOVEMENT_TYPE_FLEE_PLAYER_OWE                  0x54
+#define NUM_MOVEMENT_TYPES                             0x55
 
 #define MOVEMENT_ACTION_FACE_DOWN                       0x0
 #define MOVEMENT_ACTION_FACE_UP                         0x1
