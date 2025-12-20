@@ -58,9 +58,9 @@ SINGLE_BATTLE_TEST("Effect Spore causes poison 3.3% (Gen3), 10% (Gen4) and 9% (G
 SINGLE_BATTLE_TEST("Effect Spore causes paralysis 3.3% (Gen3) and 10% (Gen4+) of the time")
 {
     u32 config, passes, trials;
-    PARAMETRIZE { config = GEN_3; passes = 1; trials = 3; } // 3.3%
-    PARAMETRIZE { config = GEN_4; passes = 1; trials = 1; } // 10%
-    PARAMETRIZE { config = GEN_5; passes = 1; trials = 1; } // 10%
+    PARAMETRIZE { config = GEN_3; passes = 1; trials = 30; } // 3.3%
+    PARAMETRIZE { config = GEN_4; passes = 1; trials = 10; } // 10%
+    PARAMETRIZE { config = GEN_5; passes = 1; trials = 10; } // 10%
     PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
         WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
