@@ -391,7 +391,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formChangeTable = sEmboarFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_EMBOAR_MEGA] =
     {
         .baseHP        = 110,
@@ -457,7 +456,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formSpeciesIdTable = sEmboarFormSpeciesIdTable,
         .formChangeTable = sEmboarFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_OSHAWOTT] =
     {
@@ -2134,7 +2132,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formChangeTable = sExcadrillFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_EXCADRILL_MEGA] =
     {
         .baseHP        = 110,
@@ -2200,7 +2197,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formSpeciesIdTable = sExcadrillFormSpeciesIdTable,
         .formChangeTable = sExcadrillFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_AUDINO] =
     {
@@ -2256,7 +2252,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formChangeTable = sAudinoFormChangeTable,
     },
 
-#if P_MEGA_EVOLUTIONS
     [SPECIES_AUDINO_MEGA] =
     {
         .baseHP        = 103,
@@ -2310,7 +2305,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formSpeciesIdTable = sAudinoFormSpeciesIdTable,
         .formChangeTable = sAudinoFormChangeTable,
     },
-#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_TIMBURR] =
     {
@@ -3079,7 +3073,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formChangeTable = sScolipedeFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_SCOLIPEDE_MEGA] =
     {
         .baseHP        = 60,
@@ -3150,7 +3143,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formSpeciesIdTable = sScolipedeFormSpeciesIdTable,
         .formChangeTable = sScolipedeFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
 #if P_UPDATED_TYPES >= GEN_6
     #define COTTONEE_FAMILY_TYPES { TYPE_GRASS, TYPE_FAIRY }
@@ -4408,7 +4400,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formChangeTable = sScraftyFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_SCRAFTY_MEGA] =
     {
         .baseHP        = 65,
@@ -4475,7 +4466,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formSpeciesIdTable = sScraftyFormSpeciesIdTable,
         .formChangeTable = sScraftyFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_SIGILYPH] =
     {
@@ -7381,7 +7371,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formChangeTable = sEelektrossFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_EELEKTROSS_MEGA] =
     {
         .baseHP        = 85,
@@ -7446,7 +7435,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formSpeciesIdTable = sEelektrossFormSpeciesIdTable,
         .formChangeTable = sEelektrossFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_ELGYEM] =
     {
@@ -7724,7 +7712,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formChangeTable = sChandelureFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_CHANDELURE_MEGA] =
     {
         .baseHP        = 60,
@@ -7789,7 +7776,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formSpeciesIdTable = sChandelureFormSpeciesIdTable,
         .formChangeTable = sChandelureFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_AXEW] =
     {
@@ -8675,12 +8661,9 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 14, SHADOW_SIZE_M)
         .levelUpLearnset = sBisharpLevelUpLearnset,
-    #if P_GEN_9_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_KINGAMBIT, CONDITIONS({IF_DEFEAT_X_WITH_ITEMS, SPECIES_BISHARP, ITEM_LEADERS_CREST, 3})}),
-    #endif
     },
 
-#if P_GEN_9_CROSS_EVOS
     [SPECIES_KINGAMBIT] =
     {
         .baseHP        = 100,
@@ -8726,7 +8709,6 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         SHADOW(-2, 14, SHADOW_SIZE_M)
         .levelUpLearnset = sKingambitLevelUpLearnset,
     },
-#endif //P_GEN_9_CROSS_EVOS
 
     [SPECIES_BOUFFALANT] =
     {

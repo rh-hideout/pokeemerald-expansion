@@ -16,9 +16,6 @@
 
 TEST("(Daycare) Pokémon generate Eggs of the lowest member of the evolutionary family")
 {
-    ASSUME(P_FAMILY_PIKACHU == TRUE);
-    ASSUME(P_GEN_2_CROSS_EVOS == TRUE);
-
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
         givemon SPECIES_PIKACHU, 100, gender=MON_MALE;
@@ -32,9 +29,6 @@ TEST("(Daycare) Pokémon generate Eggs of the lowest member of the evolutionary 
 TEST("(Daycare) Pokémon offspring species is based off the mother's species")
 {
     u32 offspring = 0;
-    ASSUME(P_FAMILY_PIKACHU == TRUE);
-    ASSUME(P_GEN_2_CROSS_EVOS == TRUE);
-    ASSUME(P_FAMILY_RIOLU == TRUE);
 
     ZeroPlayerPartyMons();
     PARAMETRIZE { offspring = SPECIES_RIOLU; RUN_OVERWORLD_SCRIPT(givemon SPECIES_PIKACHU, 100, gender=MON_MALE;   givemon SPECIES_LUCARIO, 100, gender=MON_FEMALE, item=ITEM_NONE;     ); }

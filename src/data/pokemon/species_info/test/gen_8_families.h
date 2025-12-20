@@ -1834,9 +1834,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sApplinLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_TART_APPLE, SPECIES_FLAPPLE},
                                 {EVO_ITEM, ITEM_SWEET_APPLE, SPECIES_APPLETUN}
-                            #if P_GEN_9_CROSS_EVOS
                                 ,{EVO_ITEM, ITEM_SYRUPY_APPLE, SPECIES_DIPPLIN}
-                            #endif
                             ),
     },
 
@@ -2033,7 +2031,6 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formChangeTable = sAppletunFormChangeTable,
     },
 
-#if P_GEN_9_CROSS_EVOS
     [SPECIES_DIPPLIN] =
     {
         .baseHP        = 80,
@@ -2125,7 +2122,6 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         SHADOW(1, 12, SHADOW_SIZE_L)
         .levelUpLearnset = sHydrappleLevelUpLearnset,
     },
-#endif //P_GEN_9_CROSS_EVOS
 
     [SPECIES_SILICOBRA] =
     {
@@ -3981,7 +3977,6 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formChangeTable = sFalinksFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_FALINKS_MEGA] =
     {
         .baseHP        = 65,
@@ -4047,7 +4042,6 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sFalinksFormSpeciesIdTable,
         .formChangeTable = sFalinksFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_PINCURCHIN] =
     {
@@ -4899,9 +4893,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sDuraludonLevelUpLearnset,
         .formSpeciesIdTable = sDuraludonFormSpeciesIdTable,
         .formChangeTable = sDuraludonFormChangeTable,
-    #if P_GEN_9_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_METAL_ALLOY, SPECIES_ARCHALUDON}),
-    #endif
     },
 
     [SPECIES_DURALUDON_GMAX] =
@@ -4953,7 +4945,6 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formChangeTable = sDuraludonFormChangeTable,
     },
 
-#if P_GEN_9_CROSS_EVOS
     [SPECIES_ARCHALUDON] =
     {
         .baseHP        = 90,
@@ -4999,7 +4990,6 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         SHADOW(4, 14, SHADOW_SIZE_XL_BATTLE_ONLY)
         .levelUpLearnset = sArchaludonLevelUpLearnset,
     },
-#endif //P_GEN_9_CROSS_EVOS
 
     [SPECIES_DREEPY] =
     {

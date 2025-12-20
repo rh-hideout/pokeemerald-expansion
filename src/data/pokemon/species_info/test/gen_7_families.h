@@ -3814,7 +3814,6 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .formChangeTable = sDrampaFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_DRAMPA_MEGA] =
     {
         .baseHP        = 78,
@@ -3880,7 +3879,6 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .formSpeciesIdTable = sDrampaFormSpeciesIdTable,
         .formChangeTable = sDrampaFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_DHELMISE] =
     {

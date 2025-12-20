@@ -2501,7 +2501,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formChangeTable = sLopunnyFormChangeTable,
     },
 
-#if P_MEGA_EVOLUTIONS
     [SPECIES_LOPUNNY_MEGA] =
     {
         .baseHP        = 65,
@@ -2553,7 +2552,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formSpeciesIdTable = sLopunnyFormSpeciesIdTable,
         .formChangeTable = sLopunnyFormChangeTable,
     },
-#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_GLAMEOW] =
     {
@@ -3165,7 +3163,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formChangeTable = sGarchompFormChangeTable,
     },
 
-#if P_MEGA_EVOLUTIONS
     [SPECIES_GARCHOMP_MEGA] =
     {
         .baseHP        = 108,
@@ -3217,7 +3214,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formSpeciesIdTable = sGarchompFormSpeciesIdTable,
         .formChangeTable = sGarchompFormChangeTable,
     },
-#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_RIOLU] =
     {
@@ -3323,7 +3319,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formChangeTable = sLucarioFormChangeTable,
     },
 
-#if P_MEGA_EVOLUTIONS
     [SPECIES_LUCARIO_MEGA] =
     {
         .baseHP        = 70,
@@ -3376,7 +3371,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formSpeciesIdTable = sLucarioFormSpeciesIdTable,
         .formChangeTable = sLucarioFormChangeTable,
     },
-#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_HIPPOPOTAS] =
     {
@@ -4014,7 +4008,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formChangeTable = sAbomasnowFormChangeTable,
     },
 
-#if P_MEGA_EVOLUTIONS
     [SPECIES_ABOMASNOW_MEGA] =
     {
         .baseHP        = 90,
@@ -4068,7 +4061,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formSpeciesIdTable = sAbomasnowFormSpeciesIdTable,
         .formChangeTable = sAbomasnowFormChangeTable,
     },
-#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_ROTOM] =
     {

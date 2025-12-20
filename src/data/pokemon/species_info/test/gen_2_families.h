@@ -167,7 +167,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formChangeTable = sMeganiumFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_MEGANIUM_MEGA] =
     {
         .baseHP        = 80,
@@ -239,7 +238,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formSpeciesIdTable = sMeganiumFormSpeciesIdTable,
         .formChangeTable = sMeganiumFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_CYNDAQUIL] =
     {
@@ -620,7 +618,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formChangeTable = sFeraligatrFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_FERALIGATR_MEGA] =
     {
         .baseHP        = 85,
@@ -692,7 +689,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formSpeciesIdTable = sFeraligatrFormSpeciesIdTable,
         .formChangeTable = sFeraligatrFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_SENTRET] =
     {
@@ -1343,12 +1339,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 6, SHADOW_SIZE_S)
         .levelUpLearnset = sTogeticLevelUpLearnset,
-    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_SHINY_STONE, SPECIES_TOGEKISS}),
-    #endif
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_TOGEKISS] =
     {
         .baseHP        = 85,
@@ -1411,7 +1404,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(4, 15, SHADOW_SIZE_M)
         .levelUpLearnset = sTogekissLevelUpLearnset,
     },
-#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_NATU] =
     {
@@ -1696,7 +1688,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formChangeTable = sAmpharosFormChangeTable,
     },
 
-#if P_MEGA_EVOLUTIONS
     [SPECIES_AMPHAROS_MEGA] =
     {
         .baseHP        = 90,
@@ -1748,9 +1739,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formSpeciesIdTable = sAmpharosFormSpeciesIdTable,
         .formChangeTable = sAmpharosFormChangeTable,
     },
-#endif //P_MEGA_EVOLUTIONS
 
-#if P_GEN_3_CROSS_EVOS
     [SPECIES_AZURILL] =
     {
         .baseHP        = 50,
@@ -1809,7 +1798,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sAzurillLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_MARILL, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD})}),
     },
-#endif //P_GEN_3_CROSS_EVOS
 
     [SPECIES_MARILL] =
     {
@@ -1930,7 +1918,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sAzumarillLevelUpLearnset,
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_BONSLY] =
     {
         .baseHP        = 50,
@@ -1983,7 +1970,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sBonslyLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_SUDOWOODO, CONDITIONS({IF_KNOWS_MOVE, MOVE_MIMIC})}),
     },
-#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_SUDOWOODO] =
     {
@@ -2277,12 +2263,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 12, SHADOW_SIZE_S)
         .levelUpLearnset = sAipomLevelUpLearnset,
-    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_AMBIPOM, CONDITIONS({IF_KNOWS_MOVE, MOVE_DOUBLE_HIT})}),
-    #endif
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_AMBIPOM] =
     {
         .baseHP        = 75,
@@ -2336,7 +2319,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(-1, 13, SHADOW_SIZE_S)
         .levelUpLearnset = sAmbipomLevelUpLearnset,
     },
-#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_SUNKERN] =
     {
@@ -2519,12 +2501,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 10, SHADOW_SIZE_S)
         .levelUpLearnset = sYanmaLevelUpLearnset,
-    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_YANMEGA, CONDITIONS({IF_KNOWS_MOVE, MOVE_ANCIENT_POWER})}),
-    #endif
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_YANMEGA] =
     {
         .baseHP        = 86,
@@ -2599,7 +2578,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(-1, 12, SHADOW_SIZE_M)
         .levelUpLearnset = sYanmegaLevelUpLearnset,
     },
-#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_WOOPER] =
     {
@@ -2862,12 +2840,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-2, 8, SHADOW_SIZE_S)
         .levelUpLearnset = sMurkrowLevelUpLearnset,
-    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_DUSK_STONE, SPECIES_HONCHKROW}),
-    #endif
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_HONCHKROW] =
     {
         .baseHP        = 100,
@@ -2918,7 +2893,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(5, 7, SHADOW_SIZE_M)
         .levelUpLearnset = sHonchkrowLevelUpLearnset,
     },
-#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_MISDREAVUS] =
     {
@@ -2977,12 +2951,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 10, SHADOW_SIZE_S)
         .levelUpLearnset = sMisdreavusLevelUpLearnset,
-    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_DUSK_STONE, SPECIES_MISMAGIUS}),
-    #endif
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_MISMAGIUS] =
     {
         .baseHP        = 60,
@@ -3041,7 +3012,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(1, 11, SHADOW_SIZE_M)
         .levelUpLearnset = sMismagiusLevelUpLearnset,
     },
-#endif //P_GEN_4_CROSS_EVOS
 
 #define UNOWN_MISC_INFO(letter, _noFlip, frontWidth, frontHeight, backWidth, backHeight, backYOffset)   \
     {                                                                                                   \
@@ -3119,7 +3089,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
     [SPECIES_UNOWN_EXCLAMATION] = UNOWN_MISC_INFO(Exclamation, FALSE, 24, 40, 24, 56,  6 ),
     [SPECIES_UNOWN_QUESTION]    = UNOWN_MISC_INFO(Question,    TRUE,  24, 40, 32, 56,  6 ),
 
-#if P_GEN_3_CROSS_EVOS
     [SPECIES_WYNAUT] =
     {
         .baseHP        = 95,
@@ -3175,7 +3144,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sWynautLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 15, SPECIES_WOBBUFFET}),
     },
-#endif //P_GEN_3_CROSS_EVOS
 
     [SPECIES_WOBBUFFET] =
     {
@@ -3289,12 +3257,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 13, SHADOW_SIZE_M)
         .levelUpLearnset = sGirafarigLevelUpLearnset,
-    #if P_GEN_9_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_FARIGIRAF, CONDITIONS({IF_KNOWS_MOVE, MOVE_TWIN_BEAM})}),
-    #endif
     },
 
-#if P_GEN_9_CROSS_EVOS
     [SPECIES_FARIGIRAF] =
     {
         .baseHP        = 120,
@@ -3340,7 +3305,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(11, 13, SHADOW_SIZE_L)
         .levelUpLearnset = sFarigirafLevelUpLearnset,
     },
-#endif //P_GEN_9_CROSS_EVOS
 
     [SPECIES_PINECO] =
     {
@@ -3505,13 +3469,10 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, -4, SHADOW_SIZE_M)
         .levelUpLearnset = sDunsparceLevelUpLearnset,
-    #if P_GEN_9_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_DUDUNSPARCE_TWO_SEGMENT, CONDITIONS({IF_KNOWS_MOVE, MOVE_HYPER_DRILL}, {IF_PID_MODULO_100_GT, 0})},
                                 {EVO_LEVEL, 0, SPECIES_DUDUNSPARCE_THREE_SEGMENT, CONDITIONS({IF_KNOWS_MOVE, MOVE_HYPER_DRILL}, {IF_PID_MODULO_100_EQ, 0})}),
-    #endif
     },
 
-#if P_GEN_9_CROSS_EVOS
     [SPECIES_DUDUNSPARCE_TWO_SEGMENT] =
     {
         .baseHP        = 125,
@@ -3605,7 +3566,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sDudunsparceLevelUpLearnset,
         .formSpeciesIdTable = sDudunsparceFormSpeciesIdTable,
     },
-#endif //P_GEN_9_CROSS_EVOS
 
     [SPECIES_GLIGAR] =
     {
@@ -3659,13 +3619,10 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 15, SHADOW_SIZE_S)
         .levelUpLearnset = sGligarLevelUpLearnset,
-    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_GLISCOR, CONDITIONS({IF_TIME, TIME_NIGHT}, {IF_HOLD_ITEM, ITEM_RAZOR_FANG})},
                                 {EVO_ITEM, ITEM_RAZOR_FANG, SPECIES_GLISCOR, CONDITIONS({IF_TIME, TIME_NIGHT})}),
-    #endif
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_GLISCOR] =
     {
         .baseHP        = 75,
@@ -3717,7 +3674,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(-1, 13, SHADOW_SIZE_M)
         .levelUpLearnset = sGliscorLevelUpLearnset,
     },
-#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_SNUBBULL] =
     {
@@ -4109,7 +4065,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formChangeTable = sHeracrossFormChangeTable,
     },
 
-#if P_MEGA_EVOLUTIONS
     [SPECIES_HERACROSS_MEGA] =
     {
         .baseHP        = 80,
@@ -4161,7 +4116,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formSpeciesIdTable = sHeracrossFormSpeciesIdTable,
         .formChangeTable = sHeracrossFormChangeTable,
     },
-#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_SNEASEL] =
     {
@@ -4221,13 +4175,10 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(-1, 5, SHADOW_SIZE_S)
         .levelUpLearnset = sSneaselLevelUpLearnset,
         .formSpeciesIdTable = sSneaselFormSpeciesIdTable,
-    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_WEAVILE, CONDITIONS({IF_TIME, TIME_NIGHT}, {IF_HOLD_ITEM, ITEM_RAZOR_CLAW})},
                                 {EVO_ITEM, ITEM_RAZOR_CLAW, SPECIES_WEAVILE, CONDITIONS({IF_TIME, TIME_NIGHT})}),
-    #endif
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_WEAVILE] =
     {
         .baseHP        = 70,
@@ -4282,7 +4233,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(-4, 10, SHADOW_SIZE_M)
         .levelUpLearnset = sWeavileLevelUpLearnset,
     },
-#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_SNEASEL_HISUI] =
     {
@@ -4497,13 +4447,10 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 14, SHADOW_SIZE_L)
         .levelUpLearnset = sUrsaringLevelUpLearnset,
-    #if P_GEN_8_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_PEAT_BLOCK, SPECIES_URSALUNA, CONDITIONS({IF_REGION, REGION_HISUI}, {IF_TIME, TIME_NIGHT})},
                                 {EVO_NONE, 0, SPECIES_URSALUNA_BLOODMOON}),
-    #endif
     },
 
-#if P_GEN_8_CROSS_EVOS
     [SPECIES_URSALUNA] =
     {
         .baseHP        = 130,
@@ -4596,7 +4543,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sUrsalunaBloodmoonLevelUpLearnset,
         .formSpeciesIdTable = sUrsalunaFormSpeciesIdTable,
     },
-#endif //P_GEN_8_CROSS_EVOS
 
     [SPECIES_SLUGMA] =
     {
@@ -4824,12 +4770,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 3, SHADOW_SIZE_M)
         .levelUpLearnset = sPiloswineLevelUpLearnset,
-    #if P_GEN_4_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_MAMOSWINE, CONDITIONS({IF_KNOWS_MOVE, MOVE_ANCIENT_POWER})}),
-    #endif
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_MAMOSWINE] =
     {
         .baseHP        = 110,
@@ -4888,7 +4831,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(7, 7, SHADOW_SIZE_L)
         .levelUpLearnset = sMamoswineLevelUpLearnset,
     },
-#endif //P_GEN_4_CROSS_EVOS
 
 #if P_UPDATED_EXP_YIELDS >= GEN_7
     #define CORSOLA_EXP_YIELD 144
@@ -5216,7 +5158,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sDelibirdLevelUpLearnset,
     },
 
-#if P_GEN_4_CROSS_EVOS
     [SPECIES_MANTYKE] =
     {
         .baseHP        = 45,
@@ -5268,7 +5209,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sMantykeLevelUpLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_MANTINE, CONDITIONS({IF_SPECIES_IN_PARTY, SPECIES_REMORAID})}),
     },
-#endif //P_GEN_4_CROSS_EVOS
 
     [SPECIES_MANTINE] =
     {
@@ -5380,7 +5320,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formChangeTable = sSkarmoryFormChangeTable,
     },
 
-#if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_SKARMORY_MEGA] =
     {
         .baseHP        = 65,
@@ -5446,7 +5385,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formSpeciesIdTable = sSkarmoryFormSpeciesIdTable,
         .formChangeTable = sSkarmoryFormChangeTable,
     },
-#endif //P_GEN_9_MEGA_EVOLUTIONS
 
     [SPECIES_HOUNDOUR] =
     {
@@ -5553,7 +5491,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formChangeTable = sHoundoomFormChangeTable,
     },
 
-#if P_MEGA_EVOLUTIONS
     [SPECIES_HOUNDOOM_MEGA] =
     {
         .baseHP        = 75,
@@ -5604,7 +5541,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formSpeciesIdTable = sHoundoomFormSpeciesIdTable,
         .formChangeTable = sHoundoomFormChangeTable,
     },
-#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_PHANPY] =
     {
@@ -5767,12 +5703,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(3, 13, SHADOW_SIZE_M)
         .levelUpLearnset = sStantlerLevelUpLearnset,
-    #if P_GEN_8_CROSS_EVOS
         .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_WYRDEER, CONDITIONS({IF_USED_MOVE_X_TIMES, MOVE_PSYSHIELD_BASH, 20})}),
-    #endif
     },
 
-#if P_GEN_8_CROSS_EVOS
     [SPECIES_WYRDEER] =
     {
         .baseHP        = 103,
@@ -5819,7 +5752,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         SHADOW(-1, 13, SHADOW_SIZE_M)
         .levelUpLearnset = sWyrdeerLevelUpLearnset,
     },
-#endif //P_GEN_8_CROSS_EVOS
 
     [SPECIES_SMEARGLE] =
     {
@@ -6284,7 +6216,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formChangeTable = sTyranitarFormChangeTable,
     },
 
-#if P_MEGA_EVOLUTIONS
     [SPECIES_TYRANITAR_MEGA] =
     {
         .baseHP        = 100,
@@ -6336,7 +6267,6 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .formSpeciesIdTable = sTyranitarFormSpeciesIdTable,
         .formChangeTable = sTyranitarFormChangeTable,
     },
-#endif //P_MEGA_EVOLUTIONS
 
     [SPECIES_LUGIA] =
     {
