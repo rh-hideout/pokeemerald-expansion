@@ -424,9 +424,9 @@ bool32 HandleMoveTargetRedirection(void)
         enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(gBattlerAttacker, gCurrentMove);
         
         if (reflectCategory == DAMAGE_CATEGORY_PHYSICAL)
-            battlerTarget = gBattleStruct->moveTarget[gBattlerAttacker] = gProtectStructs[gBattlerAttacker].physicalBattlerId;
+            gBattleStruct->moveTarget[gBattlerAttacker] = gProtectStructs[gBattlerAttacker].physicalBattlerId;
         else
-            battlerTarget = gBattleStruct->moveTarget[gBattlerAttacker] = gProtectStructs[gBattlerAttacker].specialBattlerId;
+            gBattleStruct->moveTarget[gBattlerAttacker] = gProtectStructs[gBattlerAttacker].specialBattlerId;
     }
 
     if (IsAffectedByFollowMe(gBattlerAttacker, side, gCurrentMove)
