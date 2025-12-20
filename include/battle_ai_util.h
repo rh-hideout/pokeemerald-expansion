@@ -84,6 +84,7 @@ bool32 AI_IsPartyMonSlower(u32 battlerAi, u32 battlerDef, struct BattlePokemon s
 bool32 AI_RandLessThan(u32 val);
 bool32 AI_IsBattlerGrounded(u32 battler);
 u32 AI_GetBattlerMoveTargetType(u32 battler, u32 move);
+u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, u32 holdEffectDef, u32 move);
 u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(u32 battlerId);

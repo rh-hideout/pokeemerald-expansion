@@ -27,7 +27,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(u32 battler, u32 move);
 
 // Functions
-static u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, u32 holdEffectDef, u32 move)
+u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, u32 holdEffectDef, u32 move)
 {
     if (MoveIgnoresTargetAbility(move))
         return ABILITY_NONE;
