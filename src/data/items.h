@@ -9347,14 +9347,14 @@ const struct Item gItemsInfo[] =
                 "This device gives\n"
                 "exp. to other\n"
                 "party members."),
-            .pocket = POCKET_KEY_ITEMS
+            .pocket = POCKET_KEY_ITEMS,
         #else
             .price = (I_PRICE == GEN_1) ? 1 : 3000,
             .description = COMPOUND_STRING(
                 "A hold item that\n"
                 "gets Exp. points\n"
                 "from battles."),
-            .pocket = POCKET_ITEMS
+            .pocket = POCKET_ITEMS,
         #endif
         .sortType = ITEM_TYPE_HELD_ITEM,
         .type = ITEM_USE_FIELD,
