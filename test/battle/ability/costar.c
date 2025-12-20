@@ -8,7 +8,7 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle")
         PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(TEST_SPECIES_WYNAUT);
-        OPPONENT(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_COSTAR); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SWORDS_DANCE); }
         TURN { SWITCH(opponentRight, 2); MOVE(playerLeft, MOVE_CELEBRATE); }
@@ -17,9 +17,9 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle")
         MESSAGE("The opposing Wobbuffet used Swords Dance!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         // Turn 2 - Switch into Flamigo
-        MESSAGE("2 sent out Flamigo!");
+        MESSAGE("2 sent out Wobbuffet!");
         ABILITY_POPUP(opponentRight, ABILITY_COSTAR);
-        MESSAGE("The opposing Flamigo copied the opposing Wobbuffet's stat changes!");
+        MESSAGE("The opposing Wobbuffet copied the opposing Wobbuffet's stat changes!");
     } THEN {
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
@@ -33,7 +33,7 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost")
         ASSUME(gMovesInfo[MOVE_TACKLE].criticalHitStage == 0);
         PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(TEST_SPECIES_WYNAUT);
-        PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_COSTAR); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
@@ -54,7 +54,7 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's lowered stat stages")
         ASSUME(gMovesInfo[MOVE_GROWL].effect == EFFECT_ATTACK_DOWN);
         PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(TEST_SPECIES_WYNAUT);
-        PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_COSTAR); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
@@ -77,7 +77,7 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Focus Energy critical hit boost")
         ASSUME(gMovesInfo[MOVE_TACKLE].criticalHitStage == 0);
         PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(TEST_SPECIES_WYNAUT);
-        PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_COSTAR); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
@@ -102,7 +102,7 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost")
         ASSUME(gMovesInfo[MOVE_TACKLE].criticalHitStage == 0);
         PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(TEST_SPECIES_WYNAUT);
-        PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_COSTAR); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
