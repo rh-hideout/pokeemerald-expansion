@@ -822,7 +822,7 @@ static bool32 GetHitEscapeTransformState(u32 battlerAtk, u32 move)
      || gAiLogicData->abilities[battlerAtk] != ABILITY_ZERO_TO_HERO)
         return FALSE;
 
-    if (move == MOVE_NONE || GetMoveEffect(move) != EFFECT_HIT_ESCAPE)
+    if (GetMoveEffect(move) != EFFECT_HIT_ESCAPE)
         return FALSE;
 
     moveIndex = GetIndexInMoveArray(battlerAtk, move);
@@ -830,10 +830,11 @@ static bool32 GetHitEscapeTransformState(u32 battlerAtk, u32 move)
         return FALSE;
 
     moveType = GetBattleMoveType(move);
-    if (moveType == TYPE_WATER && (AI_GetWeather() & B_WEATHER_SUN_PRIMAL))
+    if ((moveType == TYPE_WATER && (AI_GetWeather() & B_WEATHER_SUN_PRIMAL))
+     || (moveType == TYPE_FIRE && (AI_GetWeather() & B_WEATHER_RAIN_PRIMAL)))
         return FALSE;
 
-    for (u32 battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
+    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (!IsBattlerAlive(battlerDef) || IsBattlerAlly(battlerDef, battlerAtk))
             continue;
