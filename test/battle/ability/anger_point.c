@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Anger Point raises Attack stage to maximum after receiving a
 {
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_FROST_BREATH));
-        PLAYER(SPECIES_PRIMEAPE) { Ability(ABILITY_ANGER_POINT); }
-        OPPONENT(SPECIES_SNORUNT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANGER_POINT); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FROST_BREATH); }
     } SCENE {
@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Anger Point raises Attack stage to maximum after receiving a
         MESSAGE("A critical hit!");
         ABILITY_POPUP(player, ABILITY_ANGER_POINT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Primeape's Anger Point maxed its Attack!");
+        MESSAGE("Wobbuffet's Anger Point maxed its Attack!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
     }
@@ -25,20 +25,20 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when already at maximum Attack 
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_FROST_BREATH));
         ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
-        PLAYER(SPECIES_PRIMEAPE) { Ability(ABILITY_ANGER_POINT); Speed(2); }
-        OPPONENT(SPECIES_SNORUNT) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANGER_POINT); Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_BELLY_DRUM); MOVE(opponent, MOVE_FROST_BREATH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Primeape cut its own HP and maximized its Attack!");
+        MESSAGE("Wobbuffet cut its own HP and maximized its Attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FROST_BREATH, opponent);
         MESSAGE("A critical hit!");
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_ANGER_POINT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Primeape's Anger Point maxed its Attack!");
+            MESSAGE("Wobbuffet's Anger Point maxed its Attack!");
         }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
@@ -52,19 +52,19 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_FROST_BREATH));
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
-        PLAYER(SPECIES_PRIMEAPE) { Ability(ABILITY_ANGER_POINT); Speed(2); }
-        OPPONENT(SPECIES_SNORUNT) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANGER_POINT); Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_FROST_BREATH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
-        MESSAGE("Primeape put in a substitute!");
+        MESSAGE("Wobbuffet put in a substitute!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FROST_BREATH, opponent);
         MESSAGE("A critical hit!");
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_ANGER_POINT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Primeape's Anger Point maxed its Attack!");
+            MESSAGE("Wobbuffet's Anger Point maxed its Attack!");
         }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);

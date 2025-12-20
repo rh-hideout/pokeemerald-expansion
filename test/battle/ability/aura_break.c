@@ -8,10 +8,10 @@ DOUBLE_BATTLE_TEST("Aura Break inverts Fairy Aura's effect")
     GIVEN {
         PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(TEST_SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_FAIRY_AURA); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(TEST_SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_ZYGARDE_50) { Ability(ABILITY_AURA_BREAK); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_AURA_BREAK); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_PLAY_ROUGH, target:opponentLeft); }
         TURN { MOVE(playerLeft, MOVE_PLAY_ROUGH, target:opponentLeft); SWITCH(playerRight, 2); }
@@ -39,10 +39,10 @@ DOUBLE_BATTLE_TEST("Aura Break inverts Dark Aura's effect")
     GIVEN {
         PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(TEST_SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_YVELTAL) { Ability(ABILITY_DARK_AURA); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_DARK_AURA); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(TEST_SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_ZYGARDE_50) { Ability(ABILITY_AURA_BREAK); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_AURA_BREAK); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_BITE, target:opponentLeft); }
         TURN { MOVE(playerLeft, MOVE_BITE, target:opponentLeft); SWITCH(playerRight, 2); }

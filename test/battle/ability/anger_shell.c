@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Anger Shell activates only if the target had more than 50% o
 
     GIVEN {
         ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
-        PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(hp); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(hp); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Anger Shell lowers Def/Sp.Def by 1 and raises Atk/Sp.Atk/Spd
     u16 maxHp = 500;
     GIVEN {
         ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
-        PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -50,15 +50,15 @@ SINGLE_BATTLE_TEST("Anger Shell lowers Def/Sp.Def by 1 and raises Atk/Sp.Atk/Spd
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_ANGER_SHELL);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Klawf's Defense fell!");
+        MESSAGE("Wobbuffet's Defense fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Klawf's Sp. Def fell!");
+        MESSAGE("Wobbuffet's Sp. Def fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Klawf's Attack rose!");
+        MESSAGE("Wobbuffet's Attack rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Klawf's Sp. Atk rose!");
+        MESSAGE("Wobbuffet's Sp. Atk rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Klawf's Speed rose!");
+        MESSAGE("Wobbuffet's Speed rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE - 1);
@@ -74,8 +74,8 @@ SINGLE_BATTLE_TEST("Anger Shell activates after all hits from a multi-hit move")
     u16 maxHp = 500;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DOUBLE_SLAP) == EFFECT_MULTI_HIT);
-        PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
-        OPPONENT(SPECIES_SHELLDER) { Ability(ABILITY_SKILL_LINK); } // Always hits 5 times.
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_SKILL_LINK); } // Always hits 5 times.
     } WHEN {
         TURN { MOVE(opponent, MOVE_DOUBLE_SLAP); }
     } SCENE {
@@ -98,8 +98,8 @@ SINGLE_BATTLE_TEST("Anger Shell does not activate if move is boosted by Sheer Fo
 {
     u16 maxHp = 500;
     GIVEN {
-        PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
-        OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); }
     } SCENE {

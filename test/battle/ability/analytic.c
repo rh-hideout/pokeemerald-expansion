@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Analytic increases the power of moves by 30% if it's the las
     PARAMETRIZE { speed = 1; }
 
     GIVEN {
-        PLAYER(SPECIES_MAGNEMITE) { Ability(ABILITY_ANALYTIC); Speed(speed); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANALYTIC); Speed(speed); }
         OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -28,7 +28,7 @@ DOUBLE_BATTLE_TEST("Analytic activates correctly with empty slot after fainting"
     PARAMETRIZE { speed = 5; }
 
     GIVEN {
-        PLAYER(SPECIES_MAGNEMITE) { Ability(ABILITY_ANALYTIC); Speed(speed); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANALYTIC); Speed(speed); }
         PLAYER(TEST_SPECIES_WYNAUT) { HP(1); Speed(1); }
         OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(TEST_SPECIES_WYNAUT) { Speed(10); }
@@ -53,7 +53,7 @@ DOUBLE_BATTLE_TEST("Analytic does not activate when not moving last with empty s
     PARAMETRIZE { speed = 15; }
 
     GIVEN {
-        PLAYER(SPECIES_MAGNEMITE) { Ability(ABILITY_ANALYTIC); Speed(speed); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_ANALYTIC); Speed(speed); }
         PLAYER(TEST_SPECIES_WYNAUT) { HP(1); Speed(1); }
         OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(TEST_SPECIES_WYNAUT) { Speed(10); }

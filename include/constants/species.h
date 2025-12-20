@@ -1667,9 +1667,23 @@
 
 #define SPECIES_EGG                                     (SPECIES_FALINKS_MEGA + 1)
 
-#define TEST_SPECIES_WOBBUFFET                          (SPECIES_EGG + 1)
-#define TEST_SPECIES_WYNAUT                             (SPECIES_EGG + 2)
-#define TEST_SPECIES_END                                (TEST_SPECIES_WYNAUT + 1)
+#define TEST_SPECIES_WOBBUFFET                          (SPECIES_EGG + 1)  // Generic mon
+#define TEST_SPECIES_WYNAUT                             (SPECIES_EGG + 2)  // Generic partner
+#define TEST_SPECIES_MEGANIUM                           (SPECIES_EGG + 3)  // Generic Grass
+#define TEST_SPECIES_ENTEI                              (SPECIES_EGG + 4)  // Generic Fire
+#define TEST_SPECIES_BLASTOISE                          (SPECIES_EGG + 5)  // Generic Water
+#define TEST_SPECIES_DONPHAN                            (SPECIES_EGG + 6)  // Generic Ground
+#define TEST_SPECIES_CORVISQUIRE                        (SPECIES_EGG + 7)  // Generic Flying
+#define TEST_SPECIES_PINSIR                             (SPECIES_EGG + 8)  // Generic Bug
+#define TEST_SPECIES_SNORLAX                            (SPECIES_EGG + 9)  // Generic Normal
+#define TEST_SPECIES_REGISTEEL                          (SPECIES_EGG + 10) // Generic Steel
+#define TEST_SPECIES_WEEZING                            (SPECIES_EGG + 11) // Generic Poison
+#define TEST_SPECIES_GARGANACL                          (SPECIES_EGG + 12) // Generic Rock
+#define TEST_SPECIES_DUSKNOIR                           (SPECIES_EGG + 13) // Generic Ghost
+#define TEST_SPECIES_REGICE                             (SPECIES_EGG + 14) // Generic Ice
+#define TEST_SPECIES_PIKACHU                            (SPECIES_EGG + 15) // Generic Electric
+#define TEST_SPECIES_SWAMPERT                           (SPECIES_EGG + 16) // Generic Water/Ground
+#define TEST_SPECIES_END                                (TEST_SPECIES_SWAMPERT + 1)
 #if TESTING
 #define NUM_SPECIES                                     TEST_SPECIES_END
 #else

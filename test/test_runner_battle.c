@@ -1834,12 +1834,23 @@ void ClearFlagAfterTest(void)
     }
 }
 
+static bool32 IsValidSpecies(u32 species)
+{
+    switch (species)
+    {
+    case SPECIES_MORPEKO:
+        return TRUE;
+    }
+    return species > SPECIES_EGG && species < NUM_SPECIES;
+}
+
 void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species)
 {
     s32 i, data;
     u8 *partySize;
     struct Pokemon *party;
-    INVALID_IF(species <= SPECIES_EGG, "Invalid species: %d", species);
+
+    INVALID_IF(!IsValidSpecies(species), "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
     if ((position & BIT_SIDE) == B_SIDE_PLAYER)
     {
@@ -1878,7 +1889,7 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
     s32 i, data;
     u8 *partySize;
     struct Pokemon *party;
-    INVALID_IF(species <= SPECIES_EGG, "Invalid species: %d", species);
+    INVALID_IF(!IsValidSpecies(species), "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
     if (position == B_POSITION_PLAYER_LEFT) // MULTI_PLAYER
     {

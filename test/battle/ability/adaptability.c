@@ -7,12 +7,12 @@ SINGLE_BATTLE_TEST("Adaptability increases same-type attack bonus from x1.5 to x
     PARAMETRIZE { ability = ABILITY_HYPER_CUTTER; }
     PARAMETRIZE { ability = ABILITY_ADAPTABILITY; }
     GIVEN {
-        PLAYER(SPECIES_CRAWDAUNT) { Ability(ability); }
+        PLAYER(TEST_SPECIES_BLASTOISE) { Ability(ability); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
-        MESSAGE("Crawdaunt used Water Gun!");
+        MESSAGE("Blastoise used Water Gun!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -27,12 +27,12 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into a different type with Adaptabilit
     PARAMETRIZE { tera = GIMMICK_NONE; }
     PARAMETRIZE { tera = GIMMICK_TERA; }
     GIVEN {
-        PLAYER(SPECIES_CRAWDAUNT) { Ability(ABILITY_ADAPTABILITY); TeraType(TYPE_NORMAL); }
+        PLAYER(TEST_SPECIES_BLASTOISE) { Ability(ABILITY_ADAPTABILITY); TeraType(TYPE_NORMAL); }
         OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HEADBUTT, gimmick: tera); }
     } SCENE {
-        MESSAGE("Crawdaunt used Headbutt!");
+        MESSAGE("Blastoise used Headbutt!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -47,12 +47,12 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the same type with Adaptability g
     PARAMETRIZE { tera = GIMMICK_NONE; }
     PARAMETRIZE { tera = GIMMICK_TERA; }
     GIVEN {
-        PLAYER(SPECIES_CRAWDAUNT) { Ability(ABILITY_ADAPTABILITY); TeraType(TYPE_WATER); }
-        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_BLASTOISE) { Ability(ABILITY_ADAPTABILITY); TeraType(TYPE_WATER); }
+        OPPONENT(TEST_SPECIES_BLASTOISE);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_PULSE, gimmick: tera); }
     } SCENE {
-        MESSAGE("Crawdaunt used Water Pulse!");
+        MESSAGE("Blastoise used Water Pulse!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PULSE, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
