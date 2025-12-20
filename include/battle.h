@@ -110,22 +110,22 @@ struct ProtectStruct
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
-    u8 physicalBattlerId:4;
-    u8 specialBattlerId:4;
+    u8 physicalBattlerId:3;
+    u8 specialBattlerId:3;
+    u8 lastHitBySpecialMove:1;
+    u8 padding3:1;
 };
 
 // Cleared at the start of HandleAction_ActionFinished
 struct SpecialStatus
 {
-    s32 physicalDmg;
-    s32 specialDmg;
     u8 changedStatsBattlerId; // Battler that was responsible for the latest stat change. Can be self.
     u8 statLowered:1;
     u8 abilityRedirected:1;
     u8 restoredBattlerSprite: 1;
     u8 faintedHasReplacement:1;
     u8 afterYou:1;
-    u8 enduredDamage:1;
+    u8 damagedByAttack:1;
     u8 dancerUsedMove:1;
     u8 rototillerAffected:1;  // to be affected by rototiller
     // End of byte
@@ -1078,9 +1078,7 @@ static inline bool32 IsBattlerAlive(u32 battler)
 
 static inline bool32 IsBattlerTurnDamaged(u32 battler)
 {
-    return gSpecialStatuses[battler].physicalDmg != 0
-        || gSpecialStatuses[battler].specialDmg != 0
-        || gSpecialStatuses[battler].enduredDamage;
+    return gSpecialStatuses[battler].damagedByAttack;
 }
 
 static inline bool32 IsBattlerAtMaxHp(u32 battler)

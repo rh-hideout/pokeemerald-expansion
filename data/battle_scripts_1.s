@@ -2009,15 +2009,6 @@ BattleScript_EffectLuckyChant::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectMetalBurst::
-	attackcanceler
-	metalburstdamagecalculator BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	typecalc
-	clearmoveresultflags MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
-
 BattleScript_EffectHealingWish::
 	attackcanceler
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
@@ -3197,15 +3188,6 @@ BattleScript_EffectDisable::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectCounter::
-	attackcanceler
-	counterdamagecalculator BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	typecalc
-	clearmoveresultflags MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
-
 BattleScript_EffectEncore::
 	attackcanceler
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
@@ -3658,15 +3640,6 @@ BattleScript_EffectPsychUp::
 	printstring STRINGID_PKMNCOPIEDSTATCHANGES
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-
-BattleScript_EffectMirrorCoat::
-	attackcanceler
-	mirrorcoatdamagecalculator BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	typecalc
-	clearmoveresultflags MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
 
 BattleScript_EffectFutureSight::
 	attackcanceler

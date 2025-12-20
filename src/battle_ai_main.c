@@ -1804,8 +1804,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (HasNonVolatileMoveEffect(battlerAtk, MOVE_EFFECT_SLEEP) && ! (gBattleMons[battlerDef].status1 & STATUS1_SLEEP))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_COUNTER:
-        case EFFECT_MIRROR_COAT:
+        case EFFECT_REFLECT_DAMAGE:
             if (IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef])
             || gBattleMons[battlerDef].volatiles.infatuation
             || gBattleMons[battlerDef].volatiles.confusionTurns > 0)
@@ -3831,7 +3830,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 if (AI_IsSlower(battlerAtkPartner, LEFT_FOE(battlerAtk), aiData->partnerMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY)  // Opponent mon 1 goes before partner
                  && AI_IsSlower(battlerAtkPartner, RIGHT_FOE(battlerAtk), aiData->partnerMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Opponent mon 2 goes before partner
                 {
-                    if (partnerEffect == EFFECT_COUNTER || partnerEffect == EFFECT_MIRROR_COAT)
+                    if (partnerEffect == EFFECT_REFLECT_DAMAGE)
                         break; // These moves need to go last
                     ADJUST_SCORE(WEAK_EFFECT);
                 }
@@ -5725,16 +5724,10 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED));
         break;
-    case EFFECT_COUNTER:
+    case EFFECT_REFLECT_DAMAGE:
         if ((!IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef]) && predictedMove != MOVE_NONE)
          && (GetNoOfHitsToKOBattler(battlerDef, battlerAtk, predictedMoveSlot, AI_DEFENDING, CONSIDER_ENDURE) >= 2)
-         && (GetBattleMoveCategory(predictedMove) == DAMAGE_CATEGORY_PHYSICAL))
-            ADJUST_SCORE(GOOD_EFFECT);
-        break;
-    case EFFECT_MIRROR_COAT:
-        if ((!IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef]) && predictedMove != MOVE_NONE)
-         && (GetNoOfHitsToKOBattler(battlerDef, battlerAtk, predictedMoveSlot, AI_DEFENDING, CONSIDER_ENDURE) >= 2)
-         && (GetBattleMoveCategory(predictedMove) == DAMAGE_CATEGORY_SPECIAL))
+         && GetMoveReflectDamage_DamageCategories(move) & (1u << GetBattleMoveCategory(predictedMove))) // Can reflect back damage
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_SHORE_UP:
@@ -6383,12 +6376,12 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     // +3 Score
     switch (GetMoveEffect(move))
     {
-    case EFFECT_COUNTER:
-        if (GetSpeciesBaseAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) + 10)
+    case EFFECT_REFLECT_DAMAGE:
+        if (GetMoveReflectDamage_DamageCategories(move) & (1u << DAMAGE_CATEGORY_PHYSICAL) // Can reflect physical damage
+         && GetSpeciesBaseAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) + 10)
             ADJUST_SCORE(STRONG_RISKY_EFFECT);
-        break;
-    case EFFECT_MIRROR_COAT:
-        if (GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseAttack(gBattleMons[battlerDef].species) + 10)
+        else if (GetMoveReflectDamage_DamageCategories(move) & (1u << DAMAGE_CATEGORY_SPECIAL) // Can reflect special damage
+              && GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseAttack(gBattleMons[battlerDef].species) + 10)
             ADJUST_SCORE(STRONG_RISKY_EFFECT);
         break;
     case EFFECT_EXPLOSION:
@@ -6945,10 +6938,8 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
     // Fails if opponent switches
     case EFFECT_PROTECT:
-    case EFFECT_COUNTER:
-    case EFFECT_MIRROR_COAT:
+    case EFFECT_REFLECT_DAMAGE:
     case EFFECT_SHELL_TRAP:
-    case EFFECT_METAL_BURST:
     case EFFECT_SUCKER_PUNCH:
     case EFFECT_UPPER_HAND:
     case EFFECT_ENCORE:

@@ -3257,9 +3257,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     gBattleStruct->eventState.arenaTurn = 0xFF;
 
     // Reset damage to prevent things like red card activating if the switched-in mon is holding it
-    gSpecialStatuses[battler].physicalDmg = 0;
-    gSpecialStatuses[battler].specialDmg = 0;
-    gSpecialStatuses[battler].enduredDamage = FALSE;
+    gSpecialStatuses[battler].damagedByAttack = FALSE;
 
     // Reset Eject Button / Eject Pack switch detection
     gAiLogicData->ejectButtonSwitch = FALSE;

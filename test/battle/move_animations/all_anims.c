@@ -131,11 +131,9 @@ static bool32 GetParametrizedShinyness(u32 move, u32 variation)
 static bool32 TargetHasToMove(u32 move) // Opponent needs to hit the player first
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (effect == EFFECT_COUNTER
+    if (effect == EFFECT_REFLECT_DAMAGE
      || effect == EFFECT_MIRROR_MOVE
      || effect == EFFECT_CONVERSION_2
-     || effect == EFFECT_MIRROR_COAT
-     || effect == EFFECT_METAL_BURST
      || effect == EFFECT_COPYCAT
      || effect == EFFECT_SUCKER_PUNCH
      || effect == EFFECT_INSTRUCT
@@ -297,9 +295,15 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
     }
     // Effective turn
     TURN {
-        if (TargetHasToMove(move))
+        if (effect == EFFECT_REFLECT_DAMAGE)
         {
-            MOVE(defender, effect == EFFECT_MIRROR_COAT ? MOVE_SWIFT : MOVE_POUND);
+            bool32 useSpecialMove = GetMoveReflectDamage_DamageCategories(move) == 1u << DAMAGE_CATEGORY_SPECIAL;
+            MOVE(defender, useSpecialMove ? MOVE_SWIFT : MOVE_POUND);
+            MOVE(attacker, move);
+        }
+        else if (TargetHasToMove(move))
+        {
+            MOVE(defender, MOVE_POUND);
             MOVE(attacker, move);
         }
         else if (effect == EFFECT_SNATCH)
@@ -507,9 +511,15 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
     }
     // Effective turn
     TURN {
-        if (TargetHasToMove(move))
-        { // Opponent needs to hit the player first
-            MOVE(target, effect == EFFECT_MIRROR_COAT ? MOVE_SWIFT : MOVE_POUND, target: attacker);
+        if (effect == EFFECT_REFLECT_DAMAGE)
+        {
+            bool32 useSpecialMove = GetMoveReflectDamage_DamageCategories(move) == 1u << DAMAGE_CATEGORY_SPECIAL;
+            MOVE(target, useSpecialMove ? MOVE_SWIFT : MOVE_POUND, target: attacker);
+            MOVE(attacker, move);
+        }
+        else if (TargetHasToMove(move))
+        {
+            MOVE(target, MOVE_POUND, target: attacker);
             MOVE(attacker, move, target: target);
         }
         else if (effect == EFFECT_SNATCH)

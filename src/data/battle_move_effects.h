@@ -498,9 +498,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_COUNTER] =
+    [EFFECT_REFLECT_DAMAGE] =
     {
-        .battleScript = BattleScript_EffectCounter,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 5,
         .battleFactoryStyle = FACTORY_STYLE_HIGH_RISK,
         .encourageEncore = TRUE,
@@ -831,14 +831,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectPsychUp,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
-        .encourageEncore = TRUE,
-    },
-
-    [EFFECT_MIRROR_COAT] =
-    {
-        .battleScript = BattleScript_EffectMirrorCoat,
-        .battleTvScore = 6,
-        .battleFactoryStyle = FACTORY_STYLE_HIGH_RISK,
         .encourageEncore = TRUE,
     },
 
@@ -1487,12 +1479,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectStickyWeb,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
-    },
-
-    [EFFECT_METAL_BURST] =
-    {
-        .battleScript = BattleScript_EffectMetalBurst,
-        .battleTvScore = 0, // TODO: Assign points
     },
 
     [EFFECT_LUCKY_CHANT] =
