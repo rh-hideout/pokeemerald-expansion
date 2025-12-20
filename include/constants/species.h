@@ -1667,7 +1667,14 @@
 
 #define SPECIES_EGG                                     (SPECIES_FALINKS_MEGA + 1)
 
-#define NUM_SPECIES SPECIES_EGG
+#define TEST_SPECIES_WOBBUFFET                          (SPECIES_EGG + 1)
+#define TEST_SPECIES_WYNAUT                             (SPECIES_EGG + 2)
+#define TEST_SPECIES_END                                (TEST_SPECIES_WYNAUT + 1)
+#if TESTING
+#define NUM_SPECIES                                     TEST_SPECIES_END
+#else
+#define NUM_SPECIES                                     SPECIES_EGG
+#endif
 
 #define SPECIES_SHINY_TAG 5000
 

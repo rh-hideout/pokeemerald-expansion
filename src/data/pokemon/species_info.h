@@ -161,8 +161,14 @@ const struct SpeciesInfo gSpeciesInfo[] =
     #include "species_info/gen_8_families.h"
     #include "species_info/gen_9_families.h"
 
+#if TESTING
+    #include "species_info/test.h"
+#endif
+
     [SPECIES_EGG] =
     {
+        .speciesName = _("Egg"),
+        .description = COMPOUND_STRING("Egg"),
         .frontPic = gMonFrontPic_Egg,
         .frontPicSize = MON_COORDS_SIZE(24, 24),
         .frontPicYOffset = 20,

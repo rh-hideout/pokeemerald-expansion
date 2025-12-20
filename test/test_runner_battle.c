@@ -1839,7 +1839,7 @@ void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species)
     s32 i, data;
     u8 *partySize;
     struct Pokemon *party;
-    INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
+    INVALID_IF(species >= NUM_SPECIES, "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
     if ((position & BIT_SIDE) == B_SIDE_PLAYER)
     {
@@ -1878,7 +1878,7 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
     s32 i, data;
     u8 *partySize;
     struct Pokemon *party;
-    INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
+    INVALID_IF(species >= NUM_SPECIES, "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
     if (position == B_POSITION_PLAYER_LEFT) // MULTI_PLAYER
     {
