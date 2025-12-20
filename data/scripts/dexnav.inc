@@ -4,28 +4,33 @@ EventScript_StartDexNavBattle::
 	applymovement OBJ_EVENT_ID_PLAYER Common_Movement_ExclamationMark
 	waitmovement 0
 	waitse
-	dowildbattle	
+	dowildbattle
 	release
 	end
 
 EventScript_NotFoundNearby::
 	msgbox sText_NotFoundNearby, MSGBOX_SIGN
+	checktrigger
 	end
 
 EventScript_MovedTooFast::
 	msgbox sText_TryMovingSlower, MSGBOX_SIGN
+	checktrigger
 	end
 
 EventScript_PokemonGotAway::
 	msgbox sText_PokemonGotAway, MSGBOX_SIGN
+	checktrigger
 	end
 
 EventScript_LostSignal::
 	msgbox sText_LostSignal, MSGBOX_SIGN
+	checktrigger
 	end
 
 EventScript_TooDark::
 	msgbox sText_TooDark, MSGBOX_SIGN
+	checktrigger
 	end
 
 sText_NotFoundNearby:
