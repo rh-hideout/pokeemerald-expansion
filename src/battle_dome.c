@@ -3893,11 +3893,7 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
-    case EFFECT_REFLECT_DAMAGE:
-        if (GetMoveReflectDamage_DamageCategories(move) != (1u << DAMAGE_CATEGORY_PHYSICAL)
-         && GetMoveReflectDamage_DamageCategories(move) != (1u << DAMAGE_CATEGORY_SPECIAL)) // if not Counter or Mirror Coat
-            break;
-        // fallthrough
+    case EFFECT_REFLECT_DAMAGE: // TODO: handle Metal Burst/Comeuppance
     case EFFECT_EVASION_UP:
     case EFFECT_DEFENSE_UP:
     case EFFECT_DEFENSE_UP_2:
