@@ -45,12 +45,8 @@ SINGLE_BATTLE_TEST("Reflect Damage: Counter is not affected by Protect effects i
                 STATUS_ICON(player, STATUS1_POISON);
             } else if (move == MOVE_BURNING_BULWARK) {
                 STATUS_ICON(player, STATUS1_BURN);
-            } else if (move == MOVE_KINGS_SHIELD) {
-                MESSAGE("Wobbuffet's Attack fell!");
-            } else if (move == MOVE_SILK_TRAP) {
-                MESSAGE("Wobbuffet's Speed fell!");
-            } else if (move == MOVE_OBSTRUCT) {
-                MESSAGE("Wobbuffet's Defense harshly fell!");
+            } else { // all others cause a stat drop
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             }
         }
     }
@@ -235,6 +231,7 @@ SINGLE_BATTLE_TEST("Reflect Damage: Counter works when surviving OHKO move")
     s16 normalDmg;
     s16 counterDmg;
     GIVEN {
+        ASSUME(GetMoveCategory(MOVE_FISSURE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET) {MaxHP(100); HP(100); Item(ITEM_FOCUS_SASH);};
         OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
     } WHEN {
@@ -254,6 +251,7 @@ SINGLE_BATTLE_TEST("Reflect Damage: Counter works when surviving OHKO move with 
     s16 counterDmg;
     GIVEN {
         WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_8);
+        ASSUME(GetMoveCategory(MOVE_FISSURE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); MaxHP(64); HP(64);};
         OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
     } WHEN {
@@ -422,6 +420,45 @@ SINGLE_BATTLE_TEST("Reflect Damage: Mirror Coat deals 1 damage when the attack r
     }
 }
 
+SINGLE_BATTLE_TEST("Reflect Damage: Mirror Coat works when surviving OHKO move")
+{
+    s16 normalDmg;
+    s16 mirrorCoatDmg;
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SHEER_COLD) == DAMAGE_CATEGORY_SPECIAL);
+        PLAYER(SPECIES_WOBBUFFET) {MaxHP(100); HP(100); Item(ITEM_FOCUS_SASH);};
+        OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SHEER_COLD); MOVE(player, MOVE_MIRROR_COAT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHEER_COLD, opponent);
+        HP_BAR(player, captureDamage: &normalDmg);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIRROR_COAT, player);
+        HP_BAR(opponent, captureDamage: &mirrorCoatDmg);
+    } THEN {
+        EXPECT_MUL_EQ(normalDmg, Q_4_12(2.0), mirrorCoatDmg);
+    }
+}
+
+SINGLE_BATTLE_TEST("Reflect Damage: Mirror Coat works when surviving OHKO move with Disguise")
+{
+    s16 mirrorCoatDmg;
+    GIVEN {
+        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_8);
+        ASSUME(GetMoveCategory(MOVE_SHEER_COLD) == DAMAGE_CATEGORY_SPECIAL);
+        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); MaxHP(64); HP(64);};
+        OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SHEER_COLD); MOVE(player, MOVE_MIRROR_COAT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHEER_COLD, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIRROR_COAT, player);
+        HP_BAR(opponent, captureDamage: &mirrorCoatDmg);
+    } THEN {
+        EXPECT_EQ(mirrorCoatDmg, 1);
+    }
+}
+
 SINGLE_BATTLE_TEST("Reflect Damage: Metal Burst will do 150% of the damage received from the opponent")
 {
     s16 normalDmg;
@@ -486,12 +523,12 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Metal Burst hits the last opponent that hit 
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN {
-            MOVE(opponentLeft, MOVE_ROUND, target: playerLeft);
+            MOVE(opponentLeft, MOVE_POUND, target: playerLeft);
             MOVE(opponentRight, MOVE_ROUND, target: playerLeft);
             MOVE(playerLeft, MOVE_METAL_BURST);
         }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponentRight);
         HP_BAR(playerLeft, captureDamage: &normalDmg);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_BURST, playerLeft);
@@ -553,6 +590,43 @@ SINGLE_BATTLE_TEST("Reflect Damage: Metal Burst deals 1 damage when the attack r
         TURN { MOVE(opponent, MOVE_HEX); MOVE(player, MOVE_METAL_BURST); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEX, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_BURST, player);
+        HP_BAR(opponent, captureDamage: &metalBurstDmg);
+    } THEN {
+        EXPECT_EQ(metalBurstDmg, 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Reflect Damage: Metal Burst works when surviving OHKO move")
+{
+    s16 normalDmg;
+    s16 metalBurstDmg;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) {MaxHP(100); HP(100); Item(ITEM_FOCUS_SASH);};
+        OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FISSURE); MOVE(player, MOVE_METAL_BURST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, opponent);
+        HP_BAR(player, captureDamage: &normalDmg);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_BURST, player);
+        HP_BAR(opponent, captureDamage: &metalBurstDmg);
+    } THEN {
+        EXPECT_MUL_EQ(normalDmg, Q_4_12(2.0), metalBurstDmg);
+    }
+}
+
+SINGLE_BATTLE_TEST("Reflect Damage: Metal Burst works when surviving OHKO move with Disguise")
+{
+    s16 metalBurstDmg;
+    GIVEN {
+        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_8);
+        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); MaxHP(64); HP(64);};
+        OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FISSURE); MOVE(player, MOVE_METAL_BURST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_BURST, player);
         HP_BAR(opponent, captureDamage: &metalBurstDmg);
     } THEN {
