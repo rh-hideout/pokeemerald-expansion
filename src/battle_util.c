@@ -8766,19 +8766,20 @@ s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
             return INT32_MAX;
         break;
     case EFFECT_REFLECT_DAMAGE:
-    {
-        u32 percentMultiplier = GetMoveReflectDamage_DamagePercent(ctx->move);
-        enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(ctx->battlerAtk, ctx->move);
-        s32 baseDamage;
+        if (!ctx->aiCalc)
+        {
+            u32 percentMultiplier = GetMoveReflectDamage_DamagePercent(ctx->move);
+            enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(ctx->battlerAtk, ctx->move);
+            s32 baseDamage;
+            
+            if (reflectCategory == DAMAGE_CATEGORY_PHYSICAL)
+                baseDamage = gProtectStructs[ctx->battlerAtk].physicalDmg;
+            else
+                baseDamage = gProtectStructs[ctx->battlerAtk].specialDmg;
         
-        if (reflectCategory == DAMAGE_CATEGORY_PHYSICAL)
-            baseDamage = gProtectStructs[ctx->battlerAtk].physicalDmg;
-        else
-            baseDamage = gProtectStructs[ctx->battlerAtk].specialDmg;
-    
-        dmg = (baseDamage - 1) * percentMultiplier / 100;
+            dmg = (baseDamage - 1) * percentMultiplier / 100;
+        }
         break;
-    }
     default:
         return INT32_MAX;
     }
