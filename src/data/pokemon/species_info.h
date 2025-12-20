@@ -151,6 +151,17 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .eggMoveLearnset = sNoneEggMoveLearnset,
     },
 
+#if TESTING
+    #include "species_info/test/gen_1_families.h"
+    #include "species_info/test/gen_2_families.h"
+    #include "species_info/test/gen_3_families.h"
+    #include "species_info/test/gen_4_families.h"
+    #include "species_info/test/gen_5_families.h"
+    #include "species_info/test/gen_6_families.h"
+    #include "species_info/test/gen_7_families.h"
+    #include "species_info/test/gen_8_families.h"
+    #include "species_info/test/gen_9_families.h"
+#else
     #include "species_info/gen_1_families.h"
     #include "species_info/gen_2_families.h"
     #include "species_info/gen_3_families.h"
@@ -160,6 +171,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
     #include "species_info/gen_7_families.h"
     #include "species_info/gen_8_families.h"
     #include "species_info/gen_9_families.h"
+#endif
 
     [SPECIES_EGG] =
     {
