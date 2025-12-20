@@ -9977,7 +9977,7 @@ u32 DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struc
             else
                 return DIR_SOUTH;
         }
-        if (absX == absY)
+        else
         {
             if (distanceY < 0)
             {
