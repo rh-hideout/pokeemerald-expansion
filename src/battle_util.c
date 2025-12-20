@@ -8779,6 +8779,10 @@ s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
         
             dmg = (baseDamage - 1) * percentMultiplier / 100;
         }
+        else
+        {
+            return INT32_MAX;
+        }
         break;
     default:
         return INT32_MAX;
