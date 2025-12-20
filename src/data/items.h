@@ -3124,7 +3124,7 @@ const struct Item gItemsInfo[] =
     [ITEM_RELIC_GOLD] =
     {
         .name = ITEM_NAME("Relic Gold"),
-        .price = (I_PRICE >= GEN_6) ? 60000 * TREASURE_FACTOR: 0,
+        .price = (I_PRICE >= GEN_6) ? 60000 : 0,
         .description = COMPOUND_STRING(
             "A gold coin used\n"
             "long ago. It sells\n"
@@ -6914,11 +6914,11 @@ const struct Item gItemsInfo[] =
 
 // Gems
     #if I_PRICE >= GEN_9
-        #define GEM_PRICE 15000,
+        #define GEM_PRICE 15000
     #elif I_PRICE >= GEN_7
-        #define GEM_PRICE 4000,
+        #define GEM_PRICE 4000
     #else
-        #define GEM_PRICE 200,
+        #define GEM_PRICE 200
     #endif
 
     [ITEM_NORMAL_GEM] =
