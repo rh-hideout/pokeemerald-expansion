@@ -940,6 +940,7 @@ void Task_OWE_WaitMovements(u8 taskId)
             gSpecialVar_LastTalked = gTasks[taskId].data[0];
             gSpecialVar_0x8004 = OW_SPECIES(&gObjectEvents[GetObjectEventIdByLocalId(gTasks[taskId].data[0])]);
             ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
+            FreezeObjectEvent(mon);
             DestroyTask(taskId);
         }
     }
