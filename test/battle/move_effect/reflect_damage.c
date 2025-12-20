@@ -612,7 +612,7 @@ SINGLE_BATTLE_TEST("Reflect Damage: Metal Burst works when surviving OHKO move")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_BURST, player);
         HP_BAR(opponent, captureDamage: &metalBurstDmg);
     } THEN {
-        EXPECT_MUL_EQ(normalDmg, Q_4_12(2.0), metalBurstDmg);
+        EXPECT_MUL_EQ(normalDmg, Q_4_12(1.5), metalBurstDmg);
     }
 }
 
