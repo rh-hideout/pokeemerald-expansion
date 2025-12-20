@@ -129,9 +129,9 @@ TO_DO_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
 SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is about to get hit")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { MOVE(player, MOVE_CELEBRATE); }
@@ -151,9 +151,9 @@ SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is 
 SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints by residual damage")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(10); }
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(10); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { MOVE(player, MOVE_CELEBRATE); }
@@ -174,7 +174,7 @@ SINGLE_BATTLE_TEST("Future Sight breaks Focus Sash and doesn't make the holder e
     GIVEN {
         ASSUME(GetMovePower(MOVE_PSYCHIC) > 0);
         ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Level(1); Item(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }

@@ -12,8 +12,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Steel Roller removes Terrain even if user faints during attack execution")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_STEEL_ROLLER); }
     } SCENE {
@@ -26,9 +26,9 @@ SINGLE_BATTLE_TEST("Steel Roller removes Terrain even if user faints during atta
 SINGLE_BATTLE_TEST("Steel Roller removes Terrain if user is switched out due to Red Card")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_STEEL_ROLLER); }
     } SCENE {
@@ -42,8 +42,8 @@ SINGLE_BATTLE_TEST("Steel Roller removes Terrain if user is switched out due to 
 SINGLE_BATTLE_TEST("Steel Roller will fail if there is no Terrain")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_STEEL_ROLLER); }
     } SCENE {
@@ -62,8 +62,8 @@ AI_SINGLE_BATTLE_TEST("Steel Roller wont be chosen by AI if there is no terrain 
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_STEEL_ROLLER, MOVE_ICE_SHARD); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_STEEL_ROLLER, MOVE_ICE_SHARD); }
     } WHEN {
         if (move == MOVE_ELECTRIC_TERRAIN) {
             TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); EXPECT_MOVE(opponent, MOVE_ICE_SHARD); }

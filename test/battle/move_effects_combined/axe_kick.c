@@ -10,8 +10,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Axe Kick confuses the target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_AXE_KICK); }
     } SCENE {
@@ -24,8 +24,8 @@ SINGLE_BATTLE_TEST("Axe Kick confuses the target")
 SINGLE_BATTLE_TEST("Axe Kick deals damage half the hp to user if def battler protected")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_AXE_KICK); }
     } SCENE {
@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Axe Kick deals damage half the hp to user if def battler pro
 SINGLE_BATTLE_TEST("Axe Kick deals damage half the hp to user if it fails")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_AXE_KICK, hit: FALSE); }
     } SCENE {

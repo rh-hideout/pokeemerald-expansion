@@ -4,10 +4,10 @@
 DOUBLE_BATTLE_TEST("Defrost: A fire type spread move will thaw both targets")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HEAT_WAVE); }
     } SCENE {
@@ -20,8 +20,8 @@ DOUBLE_BATTLE_TEST("Defrost: A fire type spread move will thaw both targets")
 SINGLE_BATTLE_TEST("Defrost: Scald does not thaw targets if user is asleep")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP_TURN(3)); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP_TURN(3)); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCALD); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {

@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Ally Switch fails in a single battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ALLY_SWITCH); }
     } SCENE {
@@ -23,10 +23,10 @@ SINGLE_BATTLE_TEST("Ally Switch fails in a single battle")
 DOUBLE_BATTLE_TEST("Ally Switch fails if there is no partner")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target:playerRight); }
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
@@ -43,8 +43,8 @@ DOUBLE_BATTLE_TEST("Ally Switch changes the position of battlers")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
         ASSUME(GetMoveTarget(MOVE_SCREECH) == MOVE_TARGET_SELECTED);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); } // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
-        PLAYER(SPECIES_WYNAUT) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); } // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(4); }
         OPPONENT(SPECIES_KADABRA) { Speed(3); }
         OPPONENT(SPECIES_ABRA) { Speed(2); }
     } WHEN {
@@ -63,9 +63,9 @@ DOUBLE_BATTLE_TEST("Ally Switch changes the position of battlers")
         MESSAGE("Wynaut's Defense harshly fell!");
     } THEN {
         EXPECT_EQ(playerLeft->speed, 4);
-        EXPECT_EQ(playerLeft->species, SPECIES_WYNAUT);
+        EXPECT_EQ(playerLeft->species, TEST_SPECIES_WYNAUT);
         EXPECT_EQ(playerRight->speed, 5);
-        EXPECT_EQ(playerRight->species, SPECIES_WOBBUFFET);
+        EXPECT_EQ(playerRight->species, TEST_SPECIES_WOBBUFFET);
     }
 }
 
@@ -73,8 +73,8 @@ DOUBLE_BATTLE_TEST("Ally Switch does not redirect the target of Snipe Shot")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SNIPE_SHOT) == EFFECT_SNIPE_SHOT);
-        PLAYER(SPECIES_WOBBUFFET); // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET); // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_KADABRA);
         OPPONENT(SPECIES_ABRA);
     } WHEN {
@@ -98,8 +98,8 @@ DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with St
     PARAMETRIZE { ability = ABILITY_TELEPATHY; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET); // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET); // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_KADABRA) { Ability(ability); }
         OPPONENT(SPECIES_ABRA);
     } WHEN {
@@ -126,8 +126,8 @@ DOUBLE_BATTLE_TEST("Ally Switch has no effect on partner's chosen move")
     PARAMETRIZE { chosenMove = MOVE_POUND; chosenTarget = opponentRight; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE, MOVE_SCRATCH); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE, MOVE_SCRATCH); }
         OPPONENT(SPECIES_KADABRA);
         OPPONENT(SPECIES_ABRA);
     } WHEN {
@@ -151,8 +151,8 @@ DOUBLE_BATTLE_TEST("Ally Switch - move fails if the target was ally which change
     PARAMETRIZE { move = MOVE_HOLD_HANDS; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_KADABRA);
         OPPONENT(SPECIES_ABRA);
     } WHEN {
@@ -171,10 +171,10 @@ DOUBLE_BATTLE_TEST("Ally Switch doesn't make self-targeting status moves fail")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_HARDEN) == MOVE_TARGET_USER);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(playerRight, MOVE_HARDEN); }
     } SCENE {
@@ -189,10 +189,10 @@ DOUBLE_BATTLE_TEST("Ally Switch doesn't increase the Protect-like moves counter 
 {
     GIVEN {
         WITH_CONFIG(CONFIG_ALLY_SWITCH_FAIL_CHANCE, GEN_8);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
     } THEN {
@@ -204,10 +204,10 @@ DOUBLE_BATTLE_TEST("Ally Switch increases the Protect-like moves counter (Gen9+)
 {
     GIVEN {
         WITH_CONFIG(CONFIG_ALLY_SWITCH_FAIL_CHANCE, GEN_9);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
     } THEN {
@@ -218,10 +218,10 @@ DOUBLE_BATTLE_TEST("Ally Switch increases the Protect-like moves counter (Gen9+)
 DOUBLE_BATTLE_TEST("Ally Switch works if ally used two-turn move like Dig")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_DIG, target:opponentRight); }
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); SKIP_TURN(playerRight); }
@@ -244,7 +244,7 @@ DOUBLE_BATTLE_TEST("Ally switch swaps sky drop targets if being used by partner"
         PLAYER(SPECIES_FEAROW) { Speed(100); }
         PLAYER(SPECIES_XATU)   { Speed(150); }
         OPPONENT(SPECIES_ARON) { Speed(25); Ability(ABILITY_STURDY); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(30); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(30); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft); }
         TURN { MOVE(playerRight, MOVE_ALLY_SWITCH); SKIP_TURN(playerLeft); MOVE(opponentRight, MOVE_MUD_SPORT); MOVE(opponentLeft, MOVE_IRON_DEFENSE); }
@@ -279,7 +279,7 @@ DOUBLE_BATTLE_TEST("Ally switch swaps opposing sky drop targets if partner is be
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
         PLAYER(SPECIES_ARON) { Speed(25); Ability(ABILITY_STURDY); }
-        PLAYER(SPECIES_WYNAUT) { Speed(30); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(30); }
         OPPONENT(SPECIES_FEAROW) { Speed(100); }
         OPPONENT(SPECIES_XATU)   { Speed(150); }
     } WHEN {
@@ -317,8 +317,8 @@ DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
         PLAYER(SPECIES_HOOPA);
         PLAYER(SPECIES_ZOROARK);
         PLAYER(SPECIES_MAMOSWINE); // the third member here is required for zoroark
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
     } THEN {
@@ -351,7 +351,7 @@ DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
 DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_SOLOSIS);
         OPPONENT(SPECIES_BULBASAUR) { HP(50); MaxHP(100); }
         OPPONENT(SPECIES_RALTS)  { HP(50); MaxHP(100); }
@@ -382,7 +382,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
 DOUBLE_BATTLE_TEST("Ally Switch updates attract battler")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Gender(MON_MALE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(100); Gender(MON_MALE); }
         PLAYER(SPECIES_SOLOSIS)   { Speed(50); }
         OPPONENT(SPECIES_CLEFAIRY) { Speed(20); Gender(MON_FEMALE); Ability(ABILITY_CUTE_CHARM); }
         OPPONENT(SPECIES_RALTS)    { Speed(30); }

@@ -17,8 +17,8 @@ AI_DOUBLE_BATTLE_TEST("AI prefers Entrainment'ing good abilities onto partner wi
 SINGLE_BATTLE_TEST("Entrainment changes the target's Ability to match the user's")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
     } WHEN {
         TURN { MOVE(player, MOVE_ENTRAINMENT); }
     } THEN {
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Entrainment fails if the user's ability has cantBeCopied fla
     GIVEN {
         ASSUME(gAbilitiesInfo[ABILITY_MULTITYPE].cantBeCopied);
         PLAYER(SPECIES_ARCEUS)   { Ability(ABILITY_MULTITYPE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
     } WHEN {
         TURN { MOVE(player, MOVE_ENTRAINMENT); }
     } SCENE {
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Entrainment fails if the target's ability has cantBeOverwrit
 {
     GIVEN {
         ASSUME(gAbilitiesInfo[ABILITY_MULTITYPE].cantBeOverwritten);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(SPECIES_ARCEUS)  { Ability(ABILITY_MULTITYPE); }
     } WHEN {
         TURN { MOVE(player, MOVE_ENTRAINMENT); }
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Entrainment fails if the target's ability has cantBeOverwrit
 SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
     } WHEN {
         TURN { MOVE(player, MOVE_ENTRAINMENT); }

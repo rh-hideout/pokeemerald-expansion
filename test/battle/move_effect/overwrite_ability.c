@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Simple Beam replaces target's ability with Simple")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SIMPLE_BEAM) == EFFECT_OVERWRITE_ABILITY);
         ASSUME(GetMoveOverwriteAbility(MOVE_SIMPLE_BEAM) == ABILITY_SIMPLE);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); }
     }WHEN {
         TURN { MOVE(player, MOVE_SIMPLE_BEAM); }
@@ -23,7 +23,7 @@ DOUBLE_BATTLE_TEST("Simple Beam fails if the target already has Simple")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SIMPLE_BEAM) == EFFECT_OVERWRITE_ABILITY);
         ASSUME(GetMoveOverwriteAbility(MOVE_SIMPLE_BEAM) == ABILITY_SIMPLE);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         PLAYER(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); }
         OPPONENT(SPECIES_BULBASAUR) { Ability(ABILITY_OVERGROW); }
         OPPONENT(SPECIES_SQUIRTLE) { Ability(ABILITY_TORRENT); }
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Simple Beam fails if target has an ability that can't be ove
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SIMPLE_BEAM) == EFFECT_OVERWRITE_ABILITY);
         ASSUME(GetMoveOverwriteAbility(MOVE_SIMPLE_BEAM) == ABILITY_SIMPLE);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SIMPLE_BEAM); }
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Worry Seed replaces target's ability with Insomnia")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
         ASSUME(GetMoveOverwriteAbility(MOVE_WORRY_SEED) == ABILITY_INSOMNIA);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); }
     }WHEN {
         TURN { MOVE(player, MOVE_WORRY_SEED); }
@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Worry Seed fails if the target already has Insomnia")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
         ASSUME(GetMoveOverwriteAbility(MOVE_WORRY_SEED) == ABILITY_INSOMNIA);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         PLAYER(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); }
         OPPONENT(SPECIES_BULBASAUR) { Ability(ABILITY_OVERGROW); }
         OPPONENT(SPECIES_SQUIRTLE) { Ability(ABILITY_TORRENT); }
@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Worry Seed fails if target has an ability that can't be over
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
         ASSUME(GetMoveOverwriteAbility(MOVE_WORRY_SEED) == ABILITY_INSOMNIA);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_WORRY_SEED); }

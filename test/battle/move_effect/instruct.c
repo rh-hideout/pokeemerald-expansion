@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Instruct causes the target to use its last used move again")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_CELEBRATE); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_INSTRUCT); }
     } SCENE {
@@ -24,10 +24,10 @@ SINGLE_BATTLE_TEST("Instruct causes the target to use its last used move again")
 DOUBLE_BATTLE_TEST("Instruct fails if target hasn't made a move")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_CELEBRATE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
@@ -40,10 +40,10 @@ DOUBLE_BATTLE_TEST("Instruct fails if move is banned by Instruct")
 {
     GIVEN {
         ASSUME(IsMoveInstructBanned(MOVE_BIDE));
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_BIDE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_BIDE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_BIDE); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
@@ -55,10 +55,10 @@ DOUBLE_BATTLE_TEST("Instruct fails if move is banned by Instruct")
 DOUBLE_BATTLE_TEST("Instruct-called move targets the target of the move picked on its last use")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_FAKE_OUT); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_FAKE_OUT); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
@@ -77,10 +77,10 @@ DOUBLE_BATTLE_TEST("Instruct doesn't bypass sleep")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(opponentLeft, MOVE_SPORE, target: playerRight); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
@@ -96,10 +96,10 @@ DOUBLE_BATTLE_TEST("Instruct fails if target doesn't know the last move it used"
 {
     GIVEN {
         ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ORICORIO) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_DRAGON_DANCE); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
@@ -117,10 +117,10 @@ DOUBLE_BATTLE_TEST("Instruct-called move fails if it can only be used on the fir
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FAKE_OUT) == EFFECT_FIRST_TURN_ONLY);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_FAKE_OUT); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_FAKE_OUT); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_FAKE_OUT, target: opponentLeft); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
@@ -136,10 +136,10 @@ DOUBLE_BATTLE_TEST("Instruct-called move doesn't fail if tormented")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TORMENT) == EFFECT_TORMENT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_FAKE_OUT); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_FAKE_OUT); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TORMENT, target: playerRight); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
@@ -155,10 +155,10 @@ DOUBLE_BATTLE_TEST("Instruct-called status moves don't fail if holding Assault V
     GIVEN {
         ASSUME(gItemsInfo[ITEM_ASSAULT_VEST].holdEffect == HOLD_EFFECT_ASSAULT_VEST);
         ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_TRICK); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ASSAULT_VEST); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_TRICK); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ASSAULT_VEST); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_TRICK, target: opponentLeft); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
@@ -172,10 +172,10 @@ DOUBLE_BATTLE_TEST("Instruct-called status move fails if taunted")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_GROWL); MOVE(opponentLeft, MOVE_TAUNT, target: playerRight); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
@@ -198,10 +198,10 @@ DOUBLE_BATTLE_TEST("Instruct-called moves fail if disabled")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DISABLE) == EFFECT_DISABLE);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_GROWL); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(opponentLeft, MOVE_DISABLE, target: playerRight); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
@@ -219,10 +219,10 @@ DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority")
     GIVEN {
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
         ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_QUICK_ATTACK); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_QUICK_ATTACK); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft); MOVE(opponentLeft, MOVE_PSYCHIC_TERRAIN, target: playerRight); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
@@ -240,10 +240,10 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected and absorbed by Lightning
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
         WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_SCRATCH, target: moveTarget);
@@ -270,8 +270,8 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Follow Me after instru
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_DURALUDON) { Ability(ABILITY_STALWART); }
         PLAYER(SPECIES_DURALUDON) { Ability(ABILITY_STALWART); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_SCRATCH, target: moveTarget);
@@ -302,8 +302,8 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after inst
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
         PLAYER(SPECIES_TREECKO);
         PLAYER(SPECIES_SCEPTILE);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_SCRATCH, target: moveTarget);

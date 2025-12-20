@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Stance Change changes Aegislash from Shield to Blade when us
     PARAMETRIZE { move = MOVE_GROWL; }
     GIVEN {
         PLAYER(SPECIES_AEGISLASH_SHIELD);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Stance Change changes Aegislash from Blade to Shield when us
     PARAMETRIZE { move = MOVE_KINGS_SHIELD; }
     GIVEN {
         PLAYER(SPECIES_AEGISLASH_BLADE);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Stance Change doesn't change Aegislash to Shield if King's S
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SLEEP_TALK) == EFFECT_SLEEP_TALK);
         PLAYER(SPECIES_AEGISLASH_BLADE) { Moves(MOVE_KINGS_SHIELD, MOVE_SLEEP_TALK); Status1(STATUS1_SLEEP_TURN(3)); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SLEEP_TALK); }
     } SCENE {

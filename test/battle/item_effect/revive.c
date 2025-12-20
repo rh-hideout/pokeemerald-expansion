@@ -5,9 +5,9 @@ SINGLE_BATTLE_TEST("Revive restores a fainted battler's HP to half")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
-        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); MaxHP(200); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
         TURN { USE_ITEM(player, ITEM_REVIVE, partyIndex: 0); }
@@ -23,9 +23,9 @@ SINGLE_BATTLE_TEST("Max Revive restores a fainted battler's HP fully")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_MAX_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
-        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); MaxHP(200); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
         TURN { USE_ITEM(player, ITEM_MAX_REVIVE, partyIndex: 0); }
@@ -41,9 +41,9 @@ SINGLE_BATTLE_TEST("Revival Herb restores a fainted battler's HP fully")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_REVIVAL_HERB].battleUsage == EFFECT_ITEM_REVIVE);
-        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); MaxHP(200); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
         TURN { USE_ITEM(player, ITEM_REVIVAL_HERB, partyIndex: 0); }
@@ -59,9 +59,9 @@ SINGLE_BATTLE_TEST("Max Honey restores a fainted battler's HP fully")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_MAX_HONEY].battleUsage == EFFECT_ITEM_REVIVE);
-        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); MaxHP(200); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
         TURN { USE_ITEM(player, ITEM_MAX_HONEY, partyIndex: 0); }
@@ -78,8 +78,8 @@ DOUBLE_BATTLE_TEST("Revive works for a partner in a double battle")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
-        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); Moves(MOVE_IRON_DEFENSE, MOVE_CELEBRATE); Speed(5); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); MaxHP(200); Moves(MOVE_IRON_DEFENSE, MOVE_CELEBRATE); Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(4); }
         OPPONENT(SPECIES_ABRA) { Speed(3); Moves(MOVE_SCRATCH, MOVE_PSYCHIC, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_KADABRA) { Speed(2); Moves(MOVE_SCRATCH, MOVE_PSYCHIC, MOVE_CELEBRATE, MOVE_EXPLOSION); }
     } WHEN {
@@ -103,9 +103,9 @@ DOUBLE_BATTLE_TEST("Revive can trigger switch-in abilities")
 {
     GIVEN {
         PLAYER(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
         TURN { USE_ITEM(playerRight, ITEM_REVIVE, partyIndex: 0); SKIP_TURN(playerLeft); }
@@ -126,9 +126,9 @@ DOUBLE_BATTLE_TEST("Revive does reset abilities")
 {
     GIVEN {
         PLAYER(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {  MOVE(opponentRight, MOVE_WORRY_SEED, target: playerLeft); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
         TURN { USE_ITEM(playerRight, ITEM_REVIVE, partyIndex: 0); SKIP_TURN(playerLeft); MOVE(opponentRight, MOVE_SPORE, target: playerLeft);}
@@ -148,10 +148,10 @@ DOUBLE_BATTLE_TEST("Revive does reset abilities")
 DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death status condition")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { Status1(STATUS1_SLEEP); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { Status1(STATUS1_SLEEP); HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
         TURN { USE_ITEM(playerLeft, ITEM_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); }
@@ -163,10 +163,10 @@ DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death status condition")
 DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death stat change")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SWORDS_DANCE); MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
         TURN { USE_ITEM(playerLeft, ITEM_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); }
@@ -178,9 +178,9 @@ DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death stat change")
 DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death types")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_POOCHYENA);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_REFLECT_TYPE, target: opponentRight); MOVE(opponentLeft, MOVE_PSYSHOCK, target: playerRight); MOVE(opponentRight, MOVE_SCRATCH, target: playerRight); }
@@ -202,11 +202,11 @@ DOUBLE_BATTLE_TEST("Revive force revived pokemon to replace absent battler immed
     PARAMETRIZE { ability = ABILITY_SHED_SKIN; }
 
     GIVEN {
-        PLAYER(SPECIES_WYNAUT) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET) { };
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { };
         PLAYER(SPECIES_ARBOK) { Ability(ability); HP(0) ;} ;
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);}
         TURN { USE_ITEM(playerRight, ITEM_REVIVE, partyIndex: 2); SKIP_TURN(playerLeft); MOVE(opponentRight, MOVE_SCRATCH, target: playerRight); }

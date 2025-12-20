@@ -9,10 +9,10 @@ ASSUMPTIONS
 DOUBLE_BATTLE_TEST("Doodle gives the target's ability to user and ally")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft);  }
     } SCENE {
@@ -28,10 +28,10 @@ DOUBLE_BATTLE_TEST("Doodle gives the target's ability to user and ally")
 DOUBLE_BATTLE_TEST("Doodle can't copy a banned ability")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft);  }
     } SCENE {
@@ -50,9 +50,9 @@ DOUBLE_BATTLE_TEST("Doodle fails if user has a banned Ability")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
-        PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft);  }
     } SCENE {
@@ -67,10 +67,10 @@ DOUBLE_BATTLE_TEST("Doodle fails if user has a banned Ability")
 DOUBLE_BATTLE_TEST("Doodle fails if partner has a banned Ability")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); }
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft);  }
     } SCENE {
@@ -105,9 +105,9 @@ DOUBLE_BATTLE_TEST("Doodle fails if ally's ability can't be suppressed")
     PARAMETRIZE { species = SPECIES_TATSUGIRI; ability = ABILITY_COMMANDER; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_DOODLE, target: playerLeft); }

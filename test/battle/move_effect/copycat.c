@@ -31,8 +31,8 @@ SINGLE_BATTLE_TEST("Copycat deducts power points from itself, not the copied mov
     ASSUME(GetMovePP(MOVE_COPYCAT) == 20);
     ASSUME(GetMovePP(MOVE_POUND) == 35);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_COPYCAT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_POUND); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_COPYCAT); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_POUND); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_POUND); MOVE(player, MOVE_COPYCAT); }
     } SCENE {
@@ -46,10 +46,10 @@ DOUBLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can have their base moves copied
 {
     GIVEN {
         WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7); // TODO: Decouple this config from other gimmicks
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_TRICK_ROOM, gimmick: GIMMICK_DYNAMAX, target: opponentLeft); MOVE(playerRight, MOVE_COPYCAT, target: opponentLeft); }
     } SCENE {

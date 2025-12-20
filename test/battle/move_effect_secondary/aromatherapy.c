@@ -18,17 +18,17 @@ DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party of the user from primar
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) {
+        PLAYER(TEST_SPECIES_WOBBUFFET) {
             if (status != STATUS1_SLEEP && status != STATUS1_FREEZE)
                 Status1(status);
         }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(status); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(status); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(status); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(status); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(status); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SPARKLY_SWIRL, target: opponentLeft); }
         TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); }

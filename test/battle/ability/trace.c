@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Trace copies opponents ability")
 SINGLE_BATTLE_TEST("Trace copies opponents ability on switch-in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET)
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
     } WHEN {
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Trace copies opponents ability on switch-in")
 SINGLE_BATTLE_TEST("Trace copies opponents ability on switch-in even if opponent switched in at the same time")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET)
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
         OPPONENT(SPECIES_TREECKO) { HP(1); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
@@ -54,7 +54,7 @@ DOUBLE_BATTLE_TEST("Trace copies opponents ability randomly")
     PASSES_RANDOMLY(1, 2, RNG_TRACE);
     GIVEN {
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TORCHIC) { Ability(ability1); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ability2); }
     } WHEN {

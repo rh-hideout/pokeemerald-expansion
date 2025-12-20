@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Kee Berry effect again on the next tu
     GIVEN {
         ASSUME(gItemsInfo[ITEM_KEE_BERRY].holdEffect == HOLD_EFFECT_KEE_BERRY);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TAUROS_PALDEA_COMBAT) { Ability(ABILITY_CUD_CHEW); Item(ITEM_KEE_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Oran Berry effect again on the next t
         ASSUME(gItemsInfo[ITEM_ORAN_BERRY].holdEffectParam == 10);
         ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TAUROS_PALDEA_COMBAT) { MaxHP(60); HP(60); Ability(ABILITY_CUD_CHEW); Item(ITEM_ORAN_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_RAGE); }

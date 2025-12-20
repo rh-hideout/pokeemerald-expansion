@@ -8,8 +8,8 @@ SINGLE_BATTLE_TEST("Expanding Force's power increases by 50% if the user is affe
     PARAMETRIZE { terrain = TRUE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPANDING_FORCE) == EFFECT_EXPANDING_FORCE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (terrain)
             TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }

@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Ion Duldge turns normal moves into electric for the remainde
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ION_DELUGE) == EFFECT_ION_DELUGE);
         PLAYER(SPECIES_KRABBY);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ION_DELUGE); MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Plasma Fists turns normal moves into electric for the remain
 {
     GIVEN {
         PLAYER(SPECIES_KRABBY);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PLASMA_FISTS); MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Plasma Fists turns normal type dynamax-moves into electric t
 {
     GIVEN {
         PLAYER(SPECIES_KRABBY) { Speed(100); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_PLASMA_FISTS); MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {

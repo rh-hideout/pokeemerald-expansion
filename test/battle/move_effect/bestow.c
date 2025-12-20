@@ -4,8 +4,8 @@
 SINGLE_BATTLE_TEST("Bestow transfers its held item to the target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } THEN {
@@ -17,8 +17,8 @@ SINGLE_BATTLE_TEST("Bestow transfers its held item to the target")
 SINGLE_BATTLE_TEST("Bestow fails if the user has no held item")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
@@ -32,8 +32,8 @@ SINGLE_BATTLE_TEST("Bestow fails if the user has no held item")
 SINGLE_BATTLE_TEST("Bestow fails if the target already has a held item")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
@@ -49,8 +49,8 @@ SINGLE_BATTLE_TEST("Bestow fails if the user is holding Mail")
 {
     GIVEN {
         ASSUME(ItemIsMail(ITEM_ORANGE_MAIL));
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_ORANGE_MAIL); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ORANGE_MAIL); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Mega Stone")
 {
     GIVEN {
         PLAYER(SPECIES_BLAZIKEN) { Item(ITEM_BLAZIKENITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
@@ -80,8 +80,8 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Z-Crystal")
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_FIGHTINIUM_Z) == HOLD_EFFECT_Z_CRYSTAL);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FIGHTINIUM_Z); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_FIGHTINIUM_Z); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
@@ -95,8 +95,8 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Z-Crystal")
 SINGLE_BATTLE_TEST("Bestow fails if the user has Sticky Hold")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
@@ -110,8 +110,8 @@ SINGLE_BATTLE_TEST("Bestow fails if the user has Sticky Hold")
 SINGLE_BATTLE_TEST("Bestow fails if the target is behind a Substitute (Gen 6+)")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); Speed(50); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); Speed(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_BESTOW); }
     } SCENE {
@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item changes its form")
 {
     GIVEN {
         PLAYER(SPECIES_GIRATINA_ORIGIN) { Item(ITEM_GRISEOUS_CORE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {

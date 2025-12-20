@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it tr
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SURF); }
     } SCENE {
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it tr
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(120); MaxHP(250); Ability(ABILITY_GULP_MISSILE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SURF); }
     } SCENE {
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant is under water it transform
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DIVE); }
     } SCENE {
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from tr
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Item(ITEM_POWER_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DIVE); }
     } SCENE {
@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant deal 1/4 of damage oppo
 
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SURF); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Cramorant in Gorging paralyzes the target if 
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(120); MaxHP(250); Ability(ABILITY_GULP_MISSILE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SURF); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -120,8 +120,8 @@ SINGLE_BATTLE_TEST("(Gulp Missile) triggers even if the user is fainted by oppos
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(1); MaxHP(250); Ability(ABILITY_GULP_MISSILE); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SURF); MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
     } SCENE {
@@ -195,7 +195,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense 
 SINGLE_BATTLE_TEST("Gulp Missile triggered by explosion doesn't freeze the game")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CRAMORANT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SURF); MOVE(player, MOVE_EXPLOSION); }

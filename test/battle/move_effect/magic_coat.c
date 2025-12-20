@@ -36,8 +36,8 @@ SINGLE_BATTLE_TEST("Magic Coat prints the correct message when bouncing back a m
 SINGLE_BATTLE_TEST("Magic Coat fails if user moves last")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_MAGIC_COAT); }
     } SCENE {
@@ -49,10 +49,10 @@ SINGLE_BATTLE_TEST("Magic Coat fails if user moves last")
 DOUBLE_BATTLE_TEST("Magic Coat fails when the only slower battler is a fainted ally")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
         TURN {
@@ -78,10 +78,10 @@ DOUBLE_BATTLE_TEST("Magic Coat reflects hazards regardless of the user's positio
     ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(coatUser, MOVE_MAGIC_COAT); MOVE(opponentRight, MOVE_STEALTH_ROCK); MOVE(opponentLeft, MOVE_SPIKES); }
     } SCENE {

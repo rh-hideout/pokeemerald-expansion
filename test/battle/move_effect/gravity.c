@@ -14,8 +14,8 @@ DOUBLE_BATTLE_TEST("Gravity cancels Fly and Sky Drop if they are in the air")
 {
     u8 visibility;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
-        PLAYER(SPECIES_WYNAUT) { Speed(90); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(100); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(90); }
         OPPONENT(SPECIES_PIDGEY) { Speed(50); }
         OPPONENT(SPECIES_ROOKIDEE) { Speed(45); }
     } WHEN {
@@ -70,10 +70,10 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gravity")
 
     GIVEN {
         AI_FLAGS(aiFlags);
-        PLAYER(SPECIES_WOBBUFFET) { Item(foeItem); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_GRAVITY, MOVE_HEADBUTT, MOVE_TAUNT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_EARTH_POWER); Item(friendItem);  }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(foeItem); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_GRAVITY, MOVE_HEADBUTT, MOVE_TAUNT); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(move, MOVE_EARTH_POWER); Item(friendItem);  }
     } WHEN {
     if (move == MOVE_THUNDER || (foeItem == ITEM_AIR_BALLOON && friendItem != ITEM_AIR_BALLOON))
         TURN { EXPECT_MOVE(opponentLeft, MOVE_GRAVITY); }

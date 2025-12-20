@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Tail Whip lowers Defense by 1 stage", s16 damage)
     PARAMETRIZE { lowerDefense = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (lowerDefense) TURN { MOVE(player, MOVE_TAIL_WHIP); }
         TURN { MOVE(player, MOVE_SCRATCH); }

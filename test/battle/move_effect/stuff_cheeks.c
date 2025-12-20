@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks cannot be used if the user doesn't hold a berry
     PARAMETRIZE { item = ITEM_LIECHI_BERRY; }
     GIVEN {
         PLAYER(SPECIES_SKWOVET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (item == ITEM_NONE)
             TURN { MOVE(player, MOVE_STUFF_CHEEKS, allowed: FALSE); MOVE(player, MOVE_CELEBRATE); }
@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks forces Struggle if it's the only move is blocke
 {
     GIVEN {
         PLAYER(SPECIES_SKWOVET) { Moves(MOVE_STUFF_CHEEKS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STUFF_CHEEKS, allowed: FALSE); }
     } SCENE {
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks raises Defense by 2 stages after consuming the 
 {
     GIVEN {
         PLAYER(SPECIES_SKWOVET) { Item(ITEM_LIECHI_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STUFF_CHEEKS); }
     } SCENE {
@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks can be used even if Magic Room is active")
 {
     GIVEN {
         PLAYER(SPECIES_SKWOVET) { Item(ITEM_LIECHI_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(opponent, MOVE_MAGIC_ROOM);
@@ -94,7 +94,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks fails if the user's berry is removed before the
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         PLAYER(SPECIES_SKWOVET) { Item(ITEM_LIECHI_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_KNOCK_OFF); MOVE(player, MOVE_STUFF_CHEEKS); }
     } SCENE {
@@ -109,9 +109,9 @@ AI_SINGLE_BATTLE_TEST("AI uses Stuff Cheeks")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HEADBUTT); }
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HEADBUTT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIECHI_BERRY); Moves(MOVE_HEADBUTT, MOVE_STUFF_CHEEKS); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HEADBUTT); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HEADBUTT); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LIECHI_BERRY); Moves(MOVE_HEADBUTT, MOVE_STUFF_CHEEKS); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_STUFF_CHEEKS); }
     }

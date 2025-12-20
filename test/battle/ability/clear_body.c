@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
         ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_SPEED_DOWN_2);
         ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_EVASION_DOWN_2 : EFFECT_EVASION_DOWN));
         ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
-        PLAYER(SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET)
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -95,8 +95,8 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky 
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
-        PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET)
+        OPPONENT(TEST_SPECIES_WOBBUFFET)
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); }
@@ -124,7 +124,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent s
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
     GIVEN {
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_SUPERPOWER, MOVE_EFFECT_ATK_DEF_DOWN) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET)
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUPERPOWER); }
@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
         ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_SPEED_DOWN_2);
         ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_EVASION_DOWN_2 : EFFECT_EVASION_DOWN));
         ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(breakerAbility); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(breakerAbility); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -217,7 +217,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(species) { Speed(6); Ability(ability); Item(heldItem); }
     } WHEN {
         TURN { }
@@ -253,7 +253,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(species) { Speed(6); Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER_WAVE); }
@@ -293,7 +293,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent A
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; burned = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET)
         OPPONENT(species) { Ability(ability); if (burned) Status1(STATUS1_BURN); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -317,8 +317,8 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent r
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_SPEED_DOWN_2);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(species) { Speed(6); Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCARY_FACE); MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
@@ -349,8 +349,8 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent T
         ASSUME(GetMoveEffect(MOVE_TOPSY_TURVY) == EFFECT_TOPSY_TURVY);
         ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_SPEED_DOWN_2);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(species) { Speed(6); Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCARY_FACE); MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
@@ -390,7 +390,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SPECTRAL_THIEF) == EFFECT_SPECTRAL_THIEF);
         ASSUME(GetMoveEffect(MOVE_AGILITY) == EFFECT_SPEED_UP_2);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(species) { Speed(5); Ability(ability); }
     } WHEN {
         TURN{ MOVE(opponent, MOVE_AGILITY); }
@@ -446,7 +446,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke protect from Pr
 
     GIVEN {
         PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SCRATCH); }
     } SCENE {

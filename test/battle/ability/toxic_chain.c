@@ -8,7 +8,7 @@ SINGLE_BATTLE_TEST("Toxic Chain inflicts bad poison when attacking")
         ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Toxic Chain inflicts bad poison on any hit of a multi-hit mo
         ASSUME(GetMovePower(MOVE_DOUBLE_SLAP) > 0);
         ASSUME(gItemsInfo[ITEM_PECHA_BERRY].holdEffect == HOLD_EFFECT_CURE_PSN);
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_DOUBLE_SLAP); }
     } SCENE {
@@ -55,9 +55,9 @@ DOUBLE_BATTLE_TEST("Toxic Chain can inflict bad poison on both foes")
         ASSUME(GetMoveTarget(MOVE_RAZOR_LEAF) == MOVE_TARGET_BOTH);
         ASSUME(GetMovePower(MOVE_RAZOR_LEAF) > 0);
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_RAZOR_LEAF, WITH_RNG(RNG_TOXIC_CHAIN, TRUE)); }
     } SCENE {
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Toxic Chain makes Lum/Pecha Berry trigger before being knock
         ASSUME(gItemsInfo[ITEM_PECHA_BERRY].holdEffect == HOLD_EFFECT_CURE_PSN);
         ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF, WITH_RNG(RNG_TOXIC_CHAIN, TRUE)); }
     } SCENE {

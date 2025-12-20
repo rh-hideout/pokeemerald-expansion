@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Mummy/Lingering Aroma replace the attacker's ability on cont
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_AQUA_JET));
         ASSUME(!MoveMakesContact(MOVE_WATER_GUN));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, move); }

@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Tailwind applies for 3 turns (Gen4) or 4 turns (Gen5+)")
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
         WITH_CONFIG(CONFIG_TAILWIND_TURNS, config);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(15); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_TAILWIND); }
         TURN {}
@@ -45,10 +45,10 @@ DOUBLE_BATTLE_TEST("Tailwind doesn't affect the partner on the same turn it's us
 {
     GIVEN {
         WITH_CONFIG(CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_7);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
-        PLAYER(SPECIES_WYNAUT) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(15); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(14); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(10); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(15); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(14); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_TAILWIND); }
     } SCENE {
@@ -63,10 +63,10 @@ DOUBLE_BATTLE_TEST("Tailwind affects the partner on the same turn it's used (Gen
 {
     GIVEN {
         WITH_CONFIG(CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_8);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
-        PLAYER(SPECIES_WYNAUT) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(15); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(14); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(10); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(15); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(14); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_TAILWIND); }
     } SCENE {

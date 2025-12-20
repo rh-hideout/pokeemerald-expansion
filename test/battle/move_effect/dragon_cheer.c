@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Dragon Cheer fails in a single battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_CHEER); }
     } SCENE {
@@ -30,10 +30,10 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 1 on non-Dragon
     GIVEN {
         WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveCriticalHitStage(MOVE_SCRATCH) == 0);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             if (useDragonCheer)
@@ -65,10 +65,10 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 2 on Dragon typ
         WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveCriticalHitStage(MOVE_SCRATCH) == 0);
         ASSUME(GetSpeciesBaseSpeed(SPECIES_DRATINI) == 50);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_DRATINI);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             if (useDragonCheer)
@@ -90,10 +90,10 @@ DOUBLE_BATTLE_TEST("Dragon Cheer fails if critical hit stage was already increas
     GIVEN {
         ASSUME(GetMoveCriticalHitStage(MOVE_SLASH) == 1);
         ASSUME(GetMoveEffect(MOVE_FOCUS_ENERGY) == EFFECT_FOCUS_ENERGY);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FOCUS_ENERGY); MOVE(playerRight, MOVE_DRAGON_CHEER, target: playerLeft); }
     } SCENE {
@@ -108,15 +108,15 @@ AI_DOUBLE_BATTLE_TEST("AI uses Dragon Cheer")
 {
     u32 species;
     PARAMETRIZE { species = SPECIES_DRATINI; }
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { species = TEST_SPECIES_WOBBUFFET; }
 
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_DRATINI, 0) == TYPE_DRAGON);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_DRAGON);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_DRAGON);
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 0) != TYPE_DRAGON);
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 1) != TYPE_DRAGON);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
         OPPONENT(species) { Moves(MOVE_DRAGON_CHEER, MOVE_POUND); }
         OPPONENT(species) { Moves(MOVE_DRAGON_CHEER, MOVE_POUND); }
     } WHEN {
@@ -126,6 +126,3 @@ AI_DOUBLE_BATTLE_TEST("AI uses Dragon Cheer")
             TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_DRAGON_CHEER); }
     }
 }
-
-
-

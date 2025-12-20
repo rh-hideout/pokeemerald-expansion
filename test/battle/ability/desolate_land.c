@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves")
 {
     GIVEN {
         PLAYER(SPECIES_GROUDON) {Item(ITEM_RED_ORB);}
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
@@ -36,9 +36,9 @@ DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints th
         ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
         ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_GROUDON) {Item(ITEM_RED_ORB); {Speed(5);}}
-        PLAYER(SPECIES_WOBBUFFET) {Speed(5);}
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(10);}
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(8);}
+        PLAYER(TEST_SPECIES_WOBBUFFET) {Speed(5);}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Speed(10);}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Speed(8);}
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SURF); }
     } SCENE {
@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Desolate Land does not block a move if Pokémon is asleep an
 {
     GIVEN {
         PLAYER(SPECIES_GROUDON) {Item(ITEM_RED_ORB);}
-        OPPONENT(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
     } SCENE {
@@ -69,8 +69,8 @@ SINGLE_BATTLE_TEST("Desolate Land does not block a move if Pokémon is asleep an
 SINGLE_BATTLE_TEST("Desolate Land will not create a softlock when move in semi invulnerable position is blocked")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
     } WHEN {
         TURN { MOVE(player, MOVE_DIVE); }
@@ -88,8 +88,8 @@ SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
 {
     GIVEN {
         PLAYER(SPECIES_GROUDON) { HP(1); Item(ITEM_RED_ORB); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POUND); SEND_OUT(player, 1); }
     } SCENE {

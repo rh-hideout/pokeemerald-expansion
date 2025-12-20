@@ -12,8 +12,8 @@ SINGLE_BATTLE_TEST("Hurricane's accuracy is lowered to 50% in Sunlight")
 {
     PASSES_RANDOMLY(50, 100, RNG_ACCURACY);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); MOVE(opponent, MOVE_HURRICANE); }
     } SCENE {
@@ -25,8 +25,8 @@ SINGLE_BATTLE_TEST("Hurricane bypasses accuracy checks in Rain")
 {
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_RAIN_DANCE); MOVE(player, MOVE_HURRICANE); }
     } SCENE {
@@ -44,8 +44,8 @@ SINGLE_BATTLE_TEST("Hurricane can hit airborne targets (Fly, Bounce)")
         ASSUME(GetMoveTwoTurnAttackStatus(MOVE_FLY) == STATE_ON_AIR);
         ASSUME(GetMoveEffect(MOVE_BOUNCE) == EFFECT_SEMI_INVULNERABLE);
         ASSUME(GetMoveTwoTurnAttackStatus(MOVE_BOUNCE) == STATE_ON_AIR);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(move); }
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_HURRICANE); }
     } SCENE {
@@ -60,10 +60,10 @@ DOUBLE_BATTLE_TEST("Hurricane can hit airborne targets (Sky Drop)")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
         ASSUME(GetMoveTwoTurnAttackStatus(MOVE_SKY_DROP) == STATE_ON_AIR);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft); MOVE(playerRight, MOVE_HURRICANE, target: playerLeft); }
     } SCENE {

@@ -5,7 +5,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
-    ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
+    ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 0) != TYPE_ICE && GetSpeciesType(TEST_SPECIES_WOBBUFFET, 1) != TYPE_ICE);
     ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE || GetSpeciesType(SPECIES_GLALIE, 1) == TYPE_ICE);
     ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
 }
@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Snow multiplies the defense of Ice-types by 1.5x", s16 damag
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GLALIE);
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -33,13 +33,13 @@ SINGLE_BATTLE_TEST("Snowscape fails if Desolate Land or Primordial Sea are activ
     u32 species;
     u32 item;
 
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; item = ITEM_NONE; }
+    PARAMETRIZE { species = TEST_SPECIES_WOBBUFFET; item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }
     PARAMETRIZE { species = SPECIES_KYOGRE; item = ITEM_BLUE_ORB; }
 
     GIVEN {
         PLAYER(species) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SNOWSCAPE); }
     } SCENE {

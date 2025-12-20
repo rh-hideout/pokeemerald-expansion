@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Fillet Away cuts the user's HP in half")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FILLET_AWAY); }
     } SCENE {
@@ -22,8 +22,8 @@ SINGLE_BATTLE_TEST("Fillet Away cuts the user's HP in half")
 SINGLE_BATTLE_TEST("Fillet Away sharply raises Attack, Sp. Atk, and Speed")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FILLET_AWAY); }
     } SCENE {
@@ -43,8 +43,8 @@ SINGLE_BATTLE_TEST("Fillet Away sharply raises Attack, Sp. Atk, and Speed")
 SINGLE_BATTLE_TEST("Fillet Away fails if user's current HP is half or less than half its maximum")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(50);}
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(50);}
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FILLET_AWAY); }
     } SCENE {
@@ -60,8 +60,8 @@ SINGLE_BATTLE_TEST("Fillet Away fails if user's current HP is half or less than 
 SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger on damage taken")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FILLET_AWAY); }
     } SCENE {

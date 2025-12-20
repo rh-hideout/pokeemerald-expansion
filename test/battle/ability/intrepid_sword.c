@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
     } WHEN {
         TURN { }
@@ -21,9 +21,9 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage every time it swit
 {
     GIVEN {
         WITH_CONFIG(CONFIG_INTREPID_SWORD, GEN_8);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { SWITCH(opponent, 1); }
         TURN { SWITCH(opponent, 0); }
@@ -43,9 +43,9 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage only once per batt
 {
     GIVEN {
         WITH_CONFIG(CONFIG_INTREPID_SWORD, GEN_9);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { SWITCH(opponent, 1); }
         TURN { SWITCH(opponent, 0); }
@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword activates when it's no longer effected by Neu
 {
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
     } WHEN {
         TURN { SWITCH(player, 1); }
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield both can be Skill Swappe
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
         OPPONENT(SPECIES_ZAMAZENTA) { Ability(ABILITY_DAUNTLESS_SHIELD); }
     } WHEN {

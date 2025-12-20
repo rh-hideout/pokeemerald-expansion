@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Sucker Punch hits targets that are about to attack")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUCKER_PUNCH); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -21,8 +21,8 @@ SINGLE_BATTLE_TEST("Sucker Punch doesn't hit targets using status moves")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_GROWL) == DAMAGE_CATEGORY_STATUS);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUCKER_PUNCH); MOVE(opponent, MOVE_GROWL); }
     } SCENE {
@@ -38,8 +38,8 @@ SINGLE_BATTLE_TEST("Sucker Punch doesn't hit targets that has already moved")
 {
     GIVEN {
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == GetMovePriority(MOVE_SUCKER_PUNCH));
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_QUICK_ATTACK); MOVE(player, MOVE_SUCKER_PUNCH); }
     } SCENE {
@@ -56,10 +56,10 @@ DOUBLE_BATTLE_TEST("Sucker Punch fails if the target has attempted to act even i
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(playerLeft, MOVE_SUCKER_PUNCH, target: opponentLeft); MOVE(playerRight, MOVE_INSTRUCT, target: playerLeft); }
     } SCENE {

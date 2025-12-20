@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Defense Curl raises Defense by 1 stage", s16 damage)
     PARAMETRIZE { raiseDefense = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (raiseDefense) TURN { MOVE(player, MOVE_DEFENSE_CURL); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }

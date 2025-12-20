@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Recharge moves make the user unable to attack for exactly one turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { }
-        OPPONENT(SPECIES_WOBBUFFET) { }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { }
     } WHEN {
         TURN { MOVE(player, MOVE_METEOR_ASSAULT);}
         TURN { SKIP_TURN(player);}
@@ -26,8 +26,8 @@ SINGLE_BATTLE_TEST("Recharge moves don't timeout when all battlers are rechargin
 {
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { }
-        OPPONENT(SPECIES_WOBBUFFET) { }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { }
     } WHEN {
         TURN { MOVE(player, MOVE_METEOR_ASSAULT); MOVE(opponent, MOVE_METEOR_ASSAULT);}
     }
@@ -37,10 +37,10 @@ DOUBLE_BATTLE_TEST("Recharge moves don't timeout when all battlers are rechargin
 {
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { }
-        PLAYER(SPECIES_WYNAUT) { }
-        OPPONENT(SPECIES_WOBBUFFET) { }
-        OPPONENT(SPECIES_WYNAUT) { }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { }
+        PLAYER(TEST_SPECIES_WYNAUT) { }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { }
+        OPPONENT(TEST_SPECIES_WYNAUT) { }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_METEOR_ASSAULT, target: opponentLeft);

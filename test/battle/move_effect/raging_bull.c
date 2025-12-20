@@ -19,8 +19,8 @@ SINGLE_BATTLE_TEST("Raging Bull removes Light Screen, Reflect and Aurora Veil fr
     PARAMETRIZE { move = MOVE_AURORA_VEIL; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SNOWSCAPE); }
         TURN { MOVE(opponent, move); MOVE(player, MOVE_RAGING_BULL); }
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora 
     PARAMETRIZE { move = MOVE_AURORA_VEIL; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTLY);
     } WHEN {
         TURN { MOVE(player, MOVE_SNOWSCAPE); }
@@ -67,8 +67,8 @@ SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora 
     PARAMETRIZE { move = MOVE_AURORA_VEIL; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SNOWSCAPE); MOVE(opponent, move); }
         TURN { MOVE(player, MOVE_RAGING_BULL); MOVE(opponent, MOVE_PROTECT); }
@@ -93,8 +93,8 @@ SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora 
     PARAMETRIZE { move = MOVE_AURORA_VEIL; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
     } WHEN {
         TURN { MOVE(player, MOVE_SNOWSCAPE); MOVE(opponent, move); }
         TURN { MOVE(player, MOVE_RAGING_BULL, hit: FALSE); }
@@ -118,10 +118,10 @@ DOUBLE_BATTLE_TEST("Raging Bull can remove Light Screen, Reflect and Aurora Veil
     PARAMETRIZE { move = MOVE_AURORA_VEIL; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_SNOWSCAPE);

@@ -5,7 +5,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes an
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_ROOM_SERVICE].holdEffect == HOLD_EFFECT_ROOM_SERVICE);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_ROOM_SERVICE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ROOM_SERVICE); }
         PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_KIRLIA);
         OPPONENT(SPECIES_SHUCKLE);
@@ -33,7 +33,7 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partners berry eaten from bug bite"
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIECHI_BERRY].holdEffect == HOLD_EFFECT_ATTACK_UP);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIECHI_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LIECHI_BERRY); }
         PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_STARAVIA);
         OPPONENT(SPECIES_SHUCKLE);
@@ -60,7 +60,7 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partners berry eaten from bug bite"
 DOUBLE_BATTLE_TEST("Symbiosis triggers after partner bestows its item")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_FLAME_ORB); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_FLAME_ORB); }
         PLAYER(SPECIES_ORANGURU) { Speed(75); Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_STARAVIA) { Speed(50); }
         OPPONENT(SPECIES_SHUCKLE) { Speed(25); }
@@ -89,7 +89,7 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner bestows its item")
 DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_FLAME_ORB); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_FLAME_ORB); }
         PLAYER(SPECIES_ORANGURU) { Speed(75); Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_STARAVIA) { Speed(50); }
         OPPONENT(SPECIES_SHUCKLE) { Speed(25); }
@@ -116,10 +116,10 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHILAN_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_CHILAN_BERRY); }
         PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); }
     } SCENE {
@@ -138,10 +138,10 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption and move 
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_NORMAL_GEM) == HOLD_EFFECT_GEMS);
         WITH_CONFIG(CONFIG_SYMBIOSIS_GEMS, GEN_7);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
         PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
@@ -161,10 +161,10 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption, but befo
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_NORMAL_GEM) == HOLD_EFFECT_GEMS);
         WITH_CONFIG(CONFIG_SYMBIOSIS_GEMS, GEN_6);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
         PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {

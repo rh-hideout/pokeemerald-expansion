@@ -20,11 +20,11 @@ SINGLE_BATTLE_TEST("Battle Bond transforms player's Greninja - Singles")
         WITH_CONFIG(CONFIG_BATTLE_BOND, GEN_8);
         PLAYER(SPECIES_GRENINJA_BATTLE_BOND);
         if (monsCountPlayer == 2) {
-            PLAYER(SPECIES_WOBBUFFET);
+            PLAYER(TEST_SPECIES_WOBBUFFET);
         }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
         if (monsCountOpponent == 2) {
-            OPPONENT(SPECIES_WOBBUFFET);
+            OPPONENT(TEST_SPECIES_WOBBUFFET);
         }
     } WHEN {
         if (monsCountOpponent == 2) {
@@ -68,11 +68,11 @@ SINGLE_BATTLE_TEST("Battle Bond transforms opponent's Greninja - Singles")
         WITH_CONFIG(CONFIG_BATTLE_BOND, GEN_8);
         OPPONENT(SPECIES_GRENINJA_BATTLE_BOND);
         if (monsCountOpponent == 2) {
-            OPPONENT(SPECIES_WOBBUFFET);
+            OPPONENT(TEST_SPECIES_WOBBUFFET);
         }
-        PLAYER(SPECIES_WOBBUFFET) {HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) {HP(1); }
         if (monsCountPlayer == 2) {
-            PLAYER(SPECIES_WOBBUFFET);
+            PLAYER(TEST_SPECIES_WOBBUFFET);
         }
     } WHEN {
         if (monsCountPlayer == 2) {
@@ -115,14 +115,14 @@ DOUBLE_BATTLE_TEST("Battle Bond transforms player's Greninja when fainting its A
     GIVEN {
         WITH_CONFIG(CONFIG_BATTLE_BOND, GEN_8);
         PLAYER(SPECIES_GRENINJA_BATTLE_BOND);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
         if (monsCountPlayer == 3) {
-            PLAYER(SPECIES_WOBBUFFET);
+            PLAYER(TEST_SPECIES_WOBBUFFET);
         }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         if (monsCountOpponent == 3) {
-            OPPONENT(SPECIES_WOBBUFFET);
+            OPPONENT(TEST_SPECIES_WOBBUFFET);
         }
     } WHEN {
         if (monsCountPlayer == 3) {
@@ -147,8 +147,8 @@ SINGLE_BATTLE_TEST("Battle Bond increases Atk, SpAtk and Speed by 1 stage (Gen9+
     GIVEN {
         WITH_CONFIG(CONFIG_BATTLE_BOND, GEN_9);
         PLAYER(SPECIES_GRENINJA_BATTLE_BOND) { Ability(ABILITY_BATTLE_BOND); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_GUN); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -168,8 +168,8 @@ SINGLE_BATTLE_TEST("Battle Bond increases a Stat even if only one can be increas
     GIVEN {
         WITH_CONFIG(CONFIG_BATTLE_BOND, GEN_9);
         PLAYER(SPECIES_GRENINJA_BATTLE_BOND) { Ability(ABILITY_BATTLE_BOND); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_DANCE); }
         TURN { MOVE(player, MOVE_DRAGON_DANCE); }

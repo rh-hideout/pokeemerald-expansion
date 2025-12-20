@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Quark Drive boosts the highest stat")
 {
     GIVEN {
         PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_QUARK_DRIVE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); }
     } SCENE {
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Quark Drive boosts either Attack or Special Attack, not both
 
     GIVEN {
         PLAYER(species) { Ability(ABILITY_QUARK_DRIVE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
         TURN { MOVE(opponent, MOVE_ELECTRIC_TERRAIN); MOVE(player, move); }
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Quark Drive retains its boosted stat after Neutralizing Gas 
 
     GIVEN {
         PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_QUARK_DRIVE); Attack(10); Defense(10); SpAttack(150); SpDefense(120); Speed(180); Moves(MOVE_ELECTRIC_TERRAIN, MOVE_ROUND, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Moves(MOVE_CELEBRATE); Speed(70); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_CELEBRATE); }
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Quark Drive ability pop up activates only once during the du
 
     GIVEN {
         PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_QUARK_DRIVE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); }
         for (turns = 0; turns < 4; turns++)
@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Quark Drive ability pop up activates only once during the du
 SINGLE_BATTLE_TEST("Quark Drive activates on switch-in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_QUARK_DRIVE); }
         OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); };
     } WHEN {
@@ -204,7 +204,7 @@ SINGLE_BATTLE_TEST("Quark Drive prioritizes stats in the case of a tie in the fo
 SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Energy")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
@@ -220,7 +220,7 @@ SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Ene
 SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); Item(ITEM_BOOSTER_ENERGY); }
     } WHEN {

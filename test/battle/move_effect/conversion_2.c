@@ -7,8 +7,8 @@ SINGLE_BATTLE_TEST("Conversion 2 randomly changes the type of the user to a type
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_4);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_OMINOUS_WIND); MOVE(opponent, MOVE_CONVERSION_2); }
     } SCENE {
@@ -26,8 +26,8 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers Struggle to be Normal t
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_4);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_STRUGGLE); }
         TURN { MOVE(player, MOVE_CONVERSION_2); }
@@ -47,8 +47,8 @@ SINGLE_BATTLE_TEST("Conversion 2 randomly changes the type of the user to a type
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_OMINOUS_WIND); MOVE(opponent, MOVE_CONVERSION_2); }
     } SCENE {
@@ -66,8 +66,8 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers status moves (Gen 5+)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_CURSE); }
         TURN { MOVE(player, MOVE_CONVERSION_2); }
@@ -86,8 +86,8 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers the type of moves calle
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_OMINOUS_WIND); MOVE(opponent, MOVE_MIRROR_MOVE); }
         TURN { MOVE(player, MOVE_CONVERSION_2); }
@@ -106,8 +106,8 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers dynamic type moves")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HAIL); MOVE(opponent, MOVE_WEATHER_BALL); }
         TURN { MOVE(player, MOVE_CONVERSION_2); }
@@ -128,8 +128,8 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers move types changed by N
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_NORMALIZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_NORMALIZE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIFY); MOVE(opponent, MOVE_POUND); }
         TURN { MOVE(player, MOVE_CONVERSION_2); }
@@ -159,8 +159,8 @@ SINGLE_BATTLE_TEST("Conversion 2's type change fails targeting Struggle (Gen 5+)
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_STRUGGLE); }
         TURN { MOVE(player, MOVE_CONVERSION_2); }
@@ -177,7 +177,7 @@ SINGLE_BATTLE_TEST("Conversion 2 fails if the move used is of typeless damage (G
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ENTEI);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BURN_UP); }
@@ -197,8 +197,8 @@ SINGLE_BATTLE_TEST("Conversion 2 fails if the move used is of typeless damage (G
 SINGLE_BATTLE_TEST("Conversion 2 fails if the targeted move is Stellar Type")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_CONVERSION_2); }
     } SCENE {
@@ -214,8 +214,8 @@ SINGLE_BATTLE_TEST("Conversion 2 fails if the targeted move is Stellar Type")
 SINGLE_BATTLE_TEST("Conversion 2 fails if used by a Terastallized Pokemon")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_PSYCHIC); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { TeraType(TYPE_PSYCHIC); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TACKLE); }
         TURN { MOVE(player, MOVE_CONVERSION_2, gimmick: GIMMICK_TERA); }
@@ -229,8 +229,8 @@ SINGLE_BATTLE_TEST("Conversion 2 fails if last hit by a Stellar-type move (Gen 1
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_4);
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_CONVERSION_2); }
     } SCENE {

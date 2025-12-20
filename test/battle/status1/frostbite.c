@@ -8,8 +8,8 @@ SINGLE_BATTLE_TEST("Frostbite reduces the special attack by 50 percent")
 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SWIFT); MOVE(player, MOVE_FLAME_WHEEL); }
         TURN { MOVE(opponent, MOVE_SWIFT); }
@@ -31,8 +31,8 @@ SINGLE_BATTLE_TEST("Frostbite deals 1/8th damage (Gen1-6) or 1/16th (Gen7+) per 
     PARAMETRIZE { config = GEN_6; value = 8; }
     GIVEN {
         WITH_CONFIG(CONFIG_BURN_DAMAGE, config);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
     } WHEN {
         TURN {}
     } SCENE {
@@ -55,8 +55,8 @@ SINGLE_BATTLE_TEST("Frostbite is healed if hit with a thawing move")
     PARAMETRIZE { move = MOVE_EMBER; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -82,8 +82,8 @@ SINGLE_BATTLE_TEST("Frostbite is healed when the user uses a thawing move")
     PARAMETRIZE { move = MOVE_EMBER; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {

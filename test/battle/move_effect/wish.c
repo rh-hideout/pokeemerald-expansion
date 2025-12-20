@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when not switching")
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
         WITH_CONFIG(CONFIG_WISH_HP_SOURCE, config);
-        PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(50); MaxHP(100); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WISH); }
         TURN { }
@@ -31,9 +31,9 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when switching (Gen5+)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_WISH_HP_SOURCE, GEN_5);
-        PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(100); MaxHP(200); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(50); MaxHP(100); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(100); MaxHP(200); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WISH); }
         TURN { SWITCH(player, 1); }
@@ -51,9 +51,9 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the recipient's HP when switching (Gen3
 {
     GIVEN {
         WITH_CONFIG(CONFIG_WISH_HP_SOURCE, GEN_4);
-        PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(100); MaxHP(200); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(50); MaxHP(100); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(100); MaxHP(200); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WISH); }
         TURN { SWITCH(player, 1); }
@@ -70,8 +70,8 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the recipient's HP when switching (Gen3
 SINGLE_BATTLE_TEST("Wish heals the user at the end of the next turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WISH); MOVE(opponent, MOVE_POUND); }
         TURN { }
@@ -89,8 +89,8 @@ SINGLE_BATTLE_TEST("Wish heals the user at the end of the next turn")
 SINGLE_BATTLE_TEST("Wish is blocked by Heal Block")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WISH); MOVE(opponent, MOVE_POUND); }
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); }

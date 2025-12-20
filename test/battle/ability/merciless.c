@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Merciless causes a move to result in a critical hit if the t
 {
     GIVEN {
         PLAYER(SPECIES_MAREANIE) { Ability(ABILITY_MERCILESS); }
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {

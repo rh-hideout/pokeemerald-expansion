@@ -11,8 +11,8 @@ TO_DO_BATTLE_TEST("Acupressure fails on its ally if it's behind a Substitute");
 DOUBLE_BATTLE_TEST("Acupressure fails on the user if it targeted its ally but switched positions via Ally Switch")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_KADABRA);
         OPPONENT(SPECIES_ABRA);
     } WHEN {
@@ -33,8 +33,8 @@ DOUBLE_BATTLE_TEST("Acupressure fails on the user if it targeted its ally but sw
 DOUBLE_BATTLE_TEST("Acupressure works on the ally if it targeted itself but switched positions via Ally Switch")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_KADABRA);
         OPPONENT(SPECIES_ABRA);
     } WHEN {

@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Magician gets self-damage recoil after stealing Life Orb")
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
         ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
         PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); Item(ITEM_NONE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -37,9 +37,9 @@ DOUBLE_BATTLE_TEST("Magician steal the item from the fastest possible target")
 
     GIVEN {
         PLAYER(SPECIES_DELPHOX) { Speed(1); Ability(ABILITY_MAGICIAN); Item(ITEM_NONE); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(playerRightSpeed); Item(ITEM_POKE_BALL); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(opponentLeftSpeed); Item(ITEM_GREAT_BALL); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(opponentRightSpeed); Item(ITEM_ULTRA_BALL); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(playerRightSpeed); Item(ITEM_POKE_BALL); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(opponentLeftSpeed); Item(ITEM_GREAT_BALL); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(opponentRightSpeed); Item(ITEM_ULTRA_BALL); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SURF); }
     } SCENE {

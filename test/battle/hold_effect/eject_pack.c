@@ -10,9 +10,9 @@ SINGLE_BATTLE_TEST("Eject Pack does not cause the new Pokémon to lose HP due to
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT) { Item(ITEM_LIFE_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Item(ITEM_LIFE_ORB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(player, 1); }
     } SCENE {
@@ -29,8 +29,8 @@ SINGLE_BATTLE_TEST("Eject Pack does not cause the new Pokémon to lose HP due to
 SINGLE_BATTLE_TEST("Eject Pack does not activate if there are no Pokémon left to battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(0); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(0); }
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { }
@@ -47,10 +47,10 @@ SINGLE_BATTLE_TEST("Eject Pack is triggered by self-inflicting stat decreases")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET)  { Item(ITEM_EJECT_PACK); }
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET)  { Item(ITEM_EJECT_PACK); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(player, 1); }
     } SCENE {
@@ -67,10 +67,10 @@ SINGLE_BATTLE_TEST("Eject Pack is triggered by self-inflicting stat decreases")
 SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Emergency Exit was activated on target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); };
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -82,17 +82,17 @@ SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Emergency 
         }
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     } THEN {
-        EXPECT(player->species == SPECIES_WOBBUFFET);
-        EXPECT(opponent->species == SPECIES_WYNAUT);
+        EXPECT(player->species == TEST_SPECIES_WOBBUFFET);
+        EXPECT(opponent->species == TEST_SPECIES_WYNAUT);
     }
 }
 
 SINGLE_BATTLE_TEST("Eject Pack activates once intimidate mon switches in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { SWITCH(opponent, 1); SEND_OUT(player, 1); }
@@ -106,10 +106,10 @@ SINGLE_BATTLE_TEST("Eject Pack activates once intimidate mon switches in")
 SINGLE_BATTLE_TEST("Eject Pack will not activate if Parting Shot user can switch out")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PARTING_SHOT); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -124,12 +124,12 @@ SINGLE_BATTLE_TEST("Eject Pack will not activate if Parting Shot user can switch
 DOUBLE_BATTLE_TEST("Eject Pack will not trigger if the conditions are not met")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
         PLAYER(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); };
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { SWITCH(opponentLeft, 2); SEND_OUT(playerLeft, 2); }
@@ -141,10 +141,10 @@ DOUBLE_BATTLE_TEST("Eject Pack will not trigger if the conditions are not met")
 SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Eject Button was activated on target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Item(ITEM_EJECT_BUTTON); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(10); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -156,8 +156,8 @@ SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Eject Butt
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     } THEN {
-        EXPECT(player->species == SPECIES_WOBBUFFET);
-        EXPECT(opponent->species == SPECIES_WYNAUT);
+        EXPECT(player->species == TEST_SPECIES_WOBBUFFET);
+        EXPECT(opponent->species == TEST_SPECIES_WYNAUT);
     }
 }
 
@@ -173,11 +173,11 @@ DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after 
     PARAMETRIZE { species = SPECIES_DIPPLIN; ability = ABILITY_SUPERSWEET_SYRUP; speed = 11; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WYNAUT)  { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET)  { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WYNAUT)  { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET)  { Speed(5); }
         OPPONENT(species) { Speed(6); Ability(ability); }
     } WHEN {
         TURN {
@@ -213,11 +213,11 @@ DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after 
     PARAMETRIZE { speed = 11; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WYNAUT)  { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET)  { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WYNAUT)  { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET)  { Speed(5); }
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_BUBBLE);
@@ -248,11 +248,11 @@ DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after 
     PARAMETRIZE { speed = 11; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WYNAUT)  { HP(1); Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET)  { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WYNAUT)  { HP(1); Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET)  { Speed(5); }
         OPPONENT(SPECIES_EKANS) { Speed(6); Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN {
@@ -286,12 +286,12 @@ DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after 
     PARAMETRIZE { speed = 11; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
-        OPPONENT(SPECIES_WYNAUT)  { HP(1); Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET)  { Speed(5); }
-        OPPONENT(SPECIES_WYNAUT)  { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WYNAUT)  { HP(1); Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET)  { Speed(5); }
+        OPPONENT(TEST_SPECIES_WYNAUT)  { Speed(4); }
         OPPONENT(SPECIES_EKANS) { Speed(6); Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN {
@@ -322,9 +322,9 @@ SINGLE_BATTLE_TEST("Eject Pack does not activate if mon is switched in due to Ej
 {
     GIVEN {
         PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_ARENA_TRAP); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(player, MOVE_BULLDOZE);
@@ -343,11 +343,11 @@ DOUBLE_BATTLE_TEST("Eject Pack will trigger on the fastest mon at the end of the
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_SYRUP_BOMB, MOVE_EFFECT_SYRUP_BOMB) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT) { Speed(10); Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(10); Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_SYRUP_BOMB, target: playerLeft);

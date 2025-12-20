@@ -4,10 +4,10 @@
 SINGLE_BATTLE_TEST("Hazards are applied based on order of set up")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_GRIMER);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
         TURN { MOVE(opponent, MOVE_STEALTH_ROCK); }
@@ -43,10 +43,10 @@ SINGLE_BATTLE_TEST("Hazards are applied correctly after a battler faints")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_STEALTH_ROCK);
                MOVE(player, MOVE_FINAL_GAMBIT);
@@ -67,9 +67,9 @@ SINGLE_BATTLE_TEST("Toxic Spikes can be removed after fainting to other hazards"
     KNOWN_FAILING; // tryfaintmon changes something that doesn't allow other switch-in effects on the battler
 
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_GRIMER) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_STEALTH_ROCK); }
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
@@ -101,9 +101,9 @@ SINGLE_BATTLE_TEST("Toxic Spikes can be removed after fainting to other hazards"
 SINGLE_BATTLE_TEST("Hazards can trigger Emergency Exit and other hazards don't activate")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_GOLISOPOD) { HP(105); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_STEALTH_ROCK); }
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
@@ -134,13 +134,13 @@ DOUBLE_BATTLE_TEST("Hazards can trigger Emergency Exit and hazards still activat
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_GOLISOPOD) { HP(105); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_STEALTH_ROCK); MOVE(opponentRight, MOVE_TOXIC_SPIKES); }
         TURN { MOVE(opponentLeft, MOVE_STICKY_WEB); MOVE(opponentRight, MOVE_SPIKES); }

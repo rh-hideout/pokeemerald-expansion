@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Flare Boost increases Sp. Attack by 50% when the Pokémon is
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_FLARE_BOOST); Status1(status1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SWIFT); }
     } SCENE {

@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Shaymin-Sky reverts to Shaymin-Land when frozen or frostbitt
         ASSUME(MoveHasAdditionalEffect(MOVE_POISON_STING, MOVE_EFFECT_POISON));
         ASSUME(MoveHasAdditionalEffect(MOVE_POISON_FANG, MOVE_EFFECT_TOXIC));
         PLAYER(SPECIES_SHAYMIN_SKY);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {

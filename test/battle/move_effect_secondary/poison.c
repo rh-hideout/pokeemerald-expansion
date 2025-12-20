@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Poison Sting inflicts poison")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_POISON_STING, MOVE_EFFECT_POISON) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_POISON_STING); }
         TURN {}
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Poison cannot be inflicted on Poison and Steel-type Pokémon
         ASSUME(MoveHasAdditionalEffect(MOVE_TWINEEDLE, MOVE_EFFECT_POISON) == TRUE);
         ASSUME(GetSpeciesType(SPECIES_NIDORAN_M, 0) == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_REGISTEEL, 0) == TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(mon);
     } WHEN {
         TURN { MOVE(player, MOVE_TWINEEDLE); }

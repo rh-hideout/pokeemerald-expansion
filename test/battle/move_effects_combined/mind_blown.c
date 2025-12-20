@@ -10,8 +10,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Mind Blown makes the user lose 1/2 of its Max HP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MIND_BLOWN); }
     } SCENE {
@@ -24,10 +24,10 @@ SINGLE_BATTLE_TEST("Mind Blown makes the user lose 1/2 of its Max HP")
 DOUBLE_BATTLE_TEST("Mind Blown makes the user lose 1/2 of its Max HP in a double battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_MIND_BLOWN); }
     } SCENE {
@@ -40,8 +40,8 @@ DOUBLE_BATTLE_TEST("Mind Blown makes the user lose 1/2 of its Max HP in a double
 SINGLE_BATTLE_TEST("Mind Blown causes the user to faint when below 1/2 of its Max HP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(200); MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MIND_BLOWN); }
     } SCENE {
@@ -54,10 +54,10 @@ SINGLE_BATTLE_TEST("Mind Blown causes the user to faint when below 1/2 of its Ma
 DOUBLE_BATTLE_TEST("Mind Blown causes the user to faint when below 1/2 of its Max HP in a double battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); MaxHP(400); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(200); MaxHP(400); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_MIND_BLOWN); }
     } SCENE {
@@ -70,9 +70,9 @@ DOUBLE_BATTLE_TEST("Mind Blown causes the user to faint when below 1/2 of its Ma
 SINGLE_BATTLE_TEST("Mind Blown causes the user & the target to faint when below 1/2 of its Max HP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200) ; MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(200) ; MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MIND_BLOWN); }
     } SCENE {
@@ -87,8 +87,8 @@ SINGLE_BATTLE_TEST("Mind Blown causes the user & the target to faint when below 
 DOUBLE_BATTLE_TEST("Mind Blown causes everyone to faint in a double battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); MaxHP(400); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(200); MaxHP(400); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_ABRA) { HP(1); }
         OPPONENT(SPECIES_KADABRA) { HP(1); }
         OPPONENT(SPECIES_KADABRA);
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Mind Blown hp loss is prevented by Magic Guard")
 {
     GIVEN {
         PLAYER(SPECIES_CLEFAIRY) { Ability(ABILITY_MAGIC_GUARD); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MIND_BLOWN); }
     } SCENE {
@@ -124,7 +124,7 @@ SINGLE_BATTLE_TEST("Mind Blown hp loss is prevented by Magic Guard")
 SINGLE_BATTLE_TEST("Mind Blown is blocked by Damp")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
         OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_DAMP); }
     } WHEN {
         TURN { MOVE(player, MOVE_MIND_BLOWN); }
@@ -141,8 +141,8 @@ SINGLE_BATTLE_TEST("Mind Blown is blocked by Damp")
 SINGLE_BATTLE_TEST("Mind Blown makes the user lose HP even if the opposing mon protected")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_MIND_BLOWN); }
     } SCENE {
@@ -156,7 +156,7 @@ SINGLE_BATTLE_TEST("Mind Blown makes the user lose HP even if it is absorbed by 
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_MIND_BLOWN) == TYPE_FIRE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CYNDAQUIL) { Ability(ABILITY_FLASH_FIRE); }
     } WHEN {
         TURN { MOVE(player, MOVE_MIND_BLOWN); }
@@ -170,9 +170,9 @@ SINGLE_BATTLE_TEST("Mind Blown makes the user lose HP even if it is absorbed by 
 SINGLE_BATTLE_TEST("Mind Blown does not cause the user to lose HP if there is no target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_MEMENTO); MOVE(player, MOVE_MIND_BLOWN); SEND_OUT(opponent, 1); }
     } SCENE {

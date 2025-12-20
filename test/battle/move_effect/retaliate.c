@@ -10,9 +10,9 @@ SINGLE_BATTLE_TEST("Retaliate doubles in base power the turn after an ally faint
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WYNAUT) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_RETALIATE); }
@@ -29,9 +29,9 @@ SINGLE_BATTLE_TEST("Retaliate doubles in base power the turn after an ally faint
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
         TURN { MOVE(opponent, MOVE_RETALIATE); }
@@ -77,9 +77,9 @@ DOUBLE_BATTLE_TEST("Retaliate works with passive damage")
         ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
         ASSUME(GetMoveAdditionalEffectById(MOVE_MAGMA_STORM, 0)->moveEffect == MOVE_EFFECT_WRAP);
         ASSUME(GetMoveAdditionalEffectById(MOVE_FLAME_BURST, 0)->moveEffect == MOVE_EFFECT_FLAME_BURST);
-        PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); HP(18); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); HP(18); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CLEFABLE) { Ability(ABILITY_MAGIC_GUARD); Level(1); }
         OPPONENT(SPECIES_CLEFABLE) { Ability(ABILITY_MAGIC_GUARD); }
     } WHEN {
@@ -101,8 +101,8 @@ SINGLE_BATTLE_TEST("Retaliate works with Perish Song")
     s16 damage[2];
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_PERISH_SONG) == EFFECT_PERISH_SONG);
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KOMMO_O) { Ability(ABILITY_SOUNDPROOF); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_PERISH_SONG); }
@@ -124,9 +124,9 @@ SINGLE_BATTLE_TEST("Retaliate works with self-inflicted fainting")
     s16 damage[2];
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HEALING_WISH) == EFFECT_HEALING_WISH);
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HEALING_WISH); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_RETALIATE); }

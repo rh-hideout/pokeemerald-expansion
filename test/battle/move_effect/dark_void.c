@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Dark Void inflicts 1-3 turns of sleep")
     PASSES_RANDOMLY(1, 3, RNG_SLEEP_TURNS);
     GIVEN {
         PLAYER(SPECIES_DARKRAI);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DARK_VOID); MOVE(opponent, MOVE_CELEBRATE); }
         for (count = 0; count < turns; ++count)

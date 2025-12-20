@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Magic Guard prevents recoil damage to the user")
     GIVEN {
         ASSUME(GetMoveRecoil(MOVE_DOUBLE_EDGE) == 33);
         PLAYER(SPECIES_CLEFABLE) { Ability(ABILITY_MAGIC_GUARD); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DOUBLE_EDGE); }
     } SCENE {
@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Magic Guard ignores immobilization that can be caused by par
         PASSES_RANDOMLY(75, 100, RNG_PARALYSIS);
     GIVEN {
         PLAYER(SPECIES_CLEFABLE) { Ability(ABILITY_MAGIC_GUARD); Status1(STATUS1_PARALYSIS);}
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Magic Guard does not ignore speed stat changes caused by par
 {
     GIVEN {
         PLAYER(SPECIES_CLEFABLE) { Speed(100); Ability(ABILITY_MAGIC_GUARD); Status1(STATUS1_PARALYSIS);}
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(99); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(99); }
     } WHEN {
         TURN { }
     } SCENE {

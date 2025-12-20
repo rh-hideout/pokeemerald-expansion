@@ -5,7 +5,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
-    ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
+    ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 0) != TYPE_ICE && GetSpeciesType(TEST_SPECIES_WOBBUFFET, 1) != TYPE_ICE);
     ASSUME(GetSpeciesType(SPECIES_WYNAUT, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WYNAUT, 1) != TYPE_ICE);
     ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE || GetSpeciesType(SPECIES_GLALIE, 1) == TYPE_ICE);
 }
@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Hail deals 1/16 damage per turn")
 
     GIVEN {
         PLAYER(SPECIES_GLALIE);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {MOVE(player, MOVE_HAIL);}
     } SCENE {
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Hail damage does not affect Ice-type Pokémon")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GLALIE);
     } WHEN {
         TURN {MOVE(player, MOVE_HAIL);}
@@ -43,13 +43,13 @@ SINGLE_BATTLE_TEST("Hail fails if Desolate Land or Primordial Sea are active")
     u32 species;
     u32 item;
 
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; item = ITEM_NONE; }
+    PARAMETRIZE { species = TEST_SPECIES_WOBBUFFET; item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }
     PARAMETRIZE { species = SPECIES_KYOGRE; item = ITEM_BLUE_ORB; }
 
     GIVEN {
         PLAYER(species) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HAIL); }
     } SCENE {
@@ -66,9 +66,9 @@ DOUBLE_BATTLE_TEST("Hail deals damage based on turn order")
 {
     GIVEN {
         PLAYER(SPECIES_GLALIE) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(3); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(3); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HAIL); }
     } SCENE {
@@ -94,9 +94,9 @@ SINGLE_BATTLE_TEST("Hail damage rounds properly when maxHP < 16")
 SINGLE_BATTLE_TEST("Hail doesn't do damage when weather is negated")
 {
     GIVEN {
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
-        PLAYER(SPECIES_WOBBUFFET);
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 0) != TYPE_ICE);
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 1) != TYPE_ICE);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_CLOUD_NINE); }
     } WHEN {
         TURN { MOVE(player, MOVE_HAIL); }

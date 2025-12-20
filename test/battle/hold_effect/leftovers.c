@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Leftovers recovers 1/16th HP at end of turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
     } SCENE {
@@ -24,8 +24,8 @@ SINGLE_BATTLE_TEST("Leftovers recovers 1/16th HP at end of turn")
 SINGLE_BATTLE_TEST("Leftovers does nothing if max HP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
     } SCENE {
@@ -40,8 +40,8 @@ SINGLE_BATTLE_TEST("Leftovers does nothing if max HP")
 SINGLE_BATTLE_TEST("Leftovers does nothing if Heal Block applies")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); }
     } SCENE {

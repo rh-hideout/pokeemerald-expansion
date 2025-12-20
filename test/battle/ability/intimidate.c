@@ -12,8 +12,8 @@ SINGLE_BATTLE_TEST("Intimidate (opponent) lowers player's attack after switch ou
     PARAMETRIZE { ability = ABILITY_INTIMIDATE; }
     PARAMETRIZE { ability = ABILITY_SHED_SKIN; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Ability(ability); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
@@ -37,8 +37,8 @@ SINGLE_BATTLE_TEST("Intimidate (opponent) lowers player's attack after KO", s16 
     PARAMETRIZE { ability = ABILITY_INTIMIDATE; }
     PARAMETRIZE { ability = ABILITY_SHED_SKIN; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         OPPONENT(SPECIES_ARBOK) { Ability(ability); Speed(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
@@ -61,14 +61,14 @@ DOUBLE_BATTLE_TEST("Intimidate doesn't activate on an empty field in a double ba
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
         PLAYER(SPECIES_ABRA);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 2); SEND_OUT(opponentLeft, 2); SEND_OUT(playerRight, 3); SEND_OUT(opponentRight, 3); }
         TURN { MOVE(playerLeft, MOVE_CELEBRATE); }
@@ -108,8 +108,8 @@ SINGLE_BATTLE_TEST("Intimidate and Eject Button don't force the opponent to Atta
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_HITMONTOP) { Moves(MOVE_SCRATCH); }
     } WHEN {
         TURN {
@@ -134,9 +134,9 @@ SINGLE_BATTLE_TEST("Intimidate and Eject Button don't force the opponent to Atta
 DOUBLE_BATTLE_TEST("Intimidate activates on an empty slot")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CROAGUNK);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_HITMONTOP) { Ability(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_RALTS);
         OPPONENT(SPECIES_AZURILL);
@@ -172,11 +172,11 @@ DOUBLE_BATTLE_TEST("Intimidate activates immediately after the mon was switched 
 {
     GIVEN {
         PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); };
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); Item(ITEM_ELECTRIC_SEED); }
-        OPPONENT(SPECIES_WYNAUT) { HP(1); }
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_U_TURN, target: opponentLeft); SEND_OUT(playerLeft, 2); SEND_OUT(opponentLeft, 2); }
     } SCENE {
@@ -194,8 +194,8 @@ DOUBLE_BATTLE_TEST("Intimidate activates immediately after the mon was switched 
 SINGLE_BATTLE_TEST("Intimidate can not further lower opponents Atk stat if it is at minimum stages")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CHARM); }
@@ -220,11 +220,11 @@ SINGLE_BATTLE_TEST("Intimidate can not further lower opponents Atk stat if it is
 DOUBLE_BATTLE_TEST("Intimidate is not going to trigger if a mon switches out through u-turn and the opposing field is empty")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WYNAUT) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TREECKO);
         OPPONENT(SPECIES_TORCHIC);
     } WHEN {
@@ -251,7 +251,7 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer effected by Neutral
 {
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { SWITCH(player, 1); }
@@ -276,10 +276,10 @@ DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
         ASSUME(GetMoveEffect(MOVE_HEALING_WISH) == EFFECT_HEALING_WISH);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             if (move == MOVE_U_TURN)
@@ -312,7 +312,7 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
         ASSUME(GetMoveEffect(MOVE_ROAR) == EFFECT_ROAR);
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Item(item); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         if (item != ITEM_NONE) {
@@ -341,10 +341,10 @@ DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FELL_STINGER) == EFFECT_FELL_STINGER);
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FELL_STINGER, target: playerLeft); SEND_OUT(playerLeft, 2); }
     } SCENE {
@@ -362,11 +362,11 @@ DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
 DOUBLE_BATTLE_TEST("Intimidate will correctly decrease the attack of the second mon after Protosynthesis activated")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { SWITCH(opponentLeft, 2); SEND_OUT(playerLeft, 2); }
@@ -388,7 +388,7 @@ SINGLE_BATTLE_TEST("Intimidate does not lose timing after mega evolution and swi
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MANECTRIC) { Item(ITEM_MANECTITE); }
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
@@ -402,11 +402,11 @@ SINGLE_BATTLE_TEST("Intimidate does not lose timing after mega evolution and swi
 DOUBLE_BATTLE_TEST("Intimidate drop down both opposing atk before eject pack has the chance to activate")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { SWITCH(opponentLeft, 2); SEND_OUT(playerLeft, 2); }
@@ -424,11 +424,11 @@ DOUBLE_BATTLE_TEST("Intimidate drop down both opposing atk before eject pack has
 DOUBLE_BATTLE_TEST("Intimidate will not miss timing for competitive")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
         PLAYER(SPECIES_MILOTIC) { Ability(ABILITY_COMPETITIVE); }
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { SWITCH(opponentLeft, 2); SEND_OUT(playerLeft, 2); }

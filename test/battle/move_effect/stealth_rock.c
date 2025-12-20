@@ -17,8 +17,8 @@ SINGLE_BATTLE_TEST("Stealth Rock damage on switch in based on typing")
     PARAMETRIZE { species = SPECIES_STEELIX; divisor = 32; } // Ground/Steel not very effective
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_STEALTH_ROCK); }
@@ -60,7 +60,7 @@ DOUBLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button 
         PLAYER(SPECIES_METAPOD) { Item(ITEM_EJECT_BUTTON); }
         PLAYER(SPECIES_METAPOD);
         OPPONENT(SPECIES_JOLTEON);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_STEALTH_ROCK); MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); SEND_OUT(playerLeft, 2); }
     } SCENE {
@@ -83,8 +83,8 @@ SINGLE_BATTLE_TEST("Stealth Rock damage terastalized mons with the correct amoun
 
     GIVEN {
         PLAYER(SPECIES_CHARIZARD) { TeraType(TYPE_NORMAL); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (tera == TRUE)
             TURN { MOVE(opponent, MOVE_STEALTH_ROCK); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }

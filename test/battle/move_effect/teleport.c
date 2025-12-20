@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Teleport fails to switch out when there is no Pokémon to sw
 {
     GIVEN {
         WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_8);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TELEPORT); }
     } SCENE {
@@ -23,9 +23,9 @@ SINGLE_BATTLE_TEST("Teleport fails to switch out the user when there no alive Po
 {
     GIVEN {
         WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_8);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { HP(0); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(0); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_TELEPORT); }
     } SCENE {
@@ -37,9 +37,9 @@ SINGLE_BATTLE_TEST("Teleport fails in Trainer Battles (Gen 1-7)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_7);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TELEPORT); }
     } SCENE {
@@ -56,9 +56,9 @@ SINGLE_BATTLE_TEST("Teleport forces the Pokémon to switch out in Trainer Battle
 {
     GIVEN {
         WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_8);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TELEPORT); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -71,9 +71,9 @@ SINGLE_BATTLE_TEST("Teleport does not fail if the user is trapped")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_8);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_FIRE_SPIN); MOVE(opponent, MOVE_TELEPORT); SEND_OUT(opponent, 1); }
     } SCENE {

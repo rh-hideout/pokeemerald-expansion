@@ -13,7 +13,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Bubble over Water Gun if it's slower")
         ASSUME(GetMovePower(MOVE_WATER_GUN) == GetMovePower(MOVE_BUBBLE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_SCIZOR) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(speedAi); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(speedAi); }
     } WHEN {
         if (speedPlayer > speedAi)
         {
@@ -81,8 +81,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they b
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(hp); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(hp); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         ASSUME(GetMoveAccuracy(MOVE_SWIFT) == 0);
         ASSUME(GetMovePower(MOVE_SLAM) == GetMovePower(MOVE_STRENGTH));
         ASSUME(GetMovePower(MOVE_MEGA_KICK) > GetMovePower(MOVE_STRENGTH));
@@ -157,7 +157,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves which deal more damage instead of moves 
         ASSUME(GetSpeciesBaseAttack(SPECIES_NIDOQUEEN) == 92); // Gen 5's 82 Base Attack causes the test to fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_TYPHLOSION) { Ability(abilityDef); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_NIDOQUEEN) { Moves(move1, move2, move3, move4); Ability(abilityAtk); }
     } WHEN {
             switch (turns)
@@ -185,7 +185,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Earthquake over Drill Run if both require the 
         ASSUME(GetMoveCategory(MOVE_DRILL_RUN) == DAMAGE_CATEGORY_PHYSICAL);  // Added because Geodude has to KO Typhlosion
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_TYPHLOSION);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_EARTHQUAKE, MOVE_DRILL_RUN); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
@@ -213,8 +213,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over a one with a downside effec
         ASSUME(GetMovePower(MOVE_FLAMETHROWER) == 90); // In Gen 5, it's 95
         ASSUME(GetMovePower(MOVE_OVERHEAT) == 130); // In Gen 5, it's 140.
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(hp); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(hp); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TYPHLOSION) { Moves(move1, move2, move3, move4); }
     } WHEN {
         switch (turns)
@@ -236,9 +236,9 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with the best possible score, chosen ran
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(5); };
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_SLUDGE_BOMB, MOVE_TAKE_DOWN); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(5); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_SLUDGE_BOMB, MOVE_TAKE_DOWN); }
     } WHEN {
         TURN { EXPECT_MOVES(opponent, MOVE_THUNDERBOLT, MOVE_SLUDGE_BOMB); SEND_OUT(player, 1); }
     }
@@ -253,8 +253,8 @@ AI_SINGLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two
         ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_HORN_ATTACK) == DAMAGE_CATEGORY_PHYSICAL);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(277); };
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(277); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KANGASKHAN) { Moves(MOVE_STRENGTH, MOVE_HORN_ATTACK, MOVE_SWORDS_DANCE); }
     } WHEN {
         TURN { EXPECT_MOVES(opponent, MOVE_STRENGTH, MOVE_SWORDS_DANCE); }
@@ -287,8 +287,8 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(5); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Item(holdItemAtk); }
     } WHEN {
         TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
@@ -317,8 +317,8 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
     KNOWN_FAILING;
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(5); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Item(holdItemAtk); }
     } WHEN {
         TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
@@ -344,8 +344,8 @@ AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user
         ASSUME(GetMoveCategory(MOVE_GRASS_PLEDGE) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMovePower(MOVE_GRASS_PLEDGE) == 80); // Gen 5's 50 power causes the test to fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(211); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(211); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TYPHLOSION) { Moves(MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); Ability(abilityAtk); Item(holdItemAtk); }
     } WHEN {
         if (abilityAtk == ABILITY_DROUGHT) {
@@ -369,7 +369,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use ground type attacks against flying type Poke
         ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL); // Otherwise, it doesn't KO Crobat
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_CROBAT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_NIDOQUEEN) { Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH, MOVE_POISON_STING, MOVE_GUST); }
     } WHEN {
         TURN { NOT_EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
@@ -385,7 +385,7 @@ AI_SINGLE_BATTLE_TEST("AI without any flags chooses moves at random - singles")
 {
     GIVEN {
         AI_FLAGS(0);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_NIDOQUEEN) { Moves(MOVE_SPLASH, MOVE_EXPLOSION, MOVE_RAGE, MOVE_HELPING_HAND); }
     } WHEN {
             TURN { EXPECT_MOVES(opponent, MOVE_SPLASH, MOVE_EXPLOSION, MOVE_RAGE, MOVE_HELPING_HAND);
@@ -401,8 +401,8 @@ AI_DOUBLE_BATTLE_TEST("AI without any flags chooses moves at random - doubles")
 {
     GIVEN {
         AI_FLAGS(0);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_NIDOQUEEN) { Moves(MOVE_SPLASH, MOVE_EXPLOSION, MOVE_RAGE, MOVE_HELPING_HAND); }
         OPPONENT(SPECIES_NIDOQUEEN) { Moves(MOVE_SPLASH, MOVE_EXPLOSION, MOVE_RAGE, MOVE_HELPING_HAND); }
     } WHEN {
@@ -424,9 +424,9 @@ AI_SINGLE_BATTLE_TEST("AI will choose either Rock Tomb or Bulldoze if Stat drop 
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(46); Speed(20); }
-        PLAYER(SPECIES_WYNAUT) { Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_BULLDOZE, MOVE_ROCK_TOMB); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(46); Speed(20); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(20); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_BULLDOZE, MOVE_ROCK_TOMB); }
     } WHEN {
             TURN { EXPECT_MOVES(opponent, MOVE_BULLDOZE, MOVE_ROCK_TOMB); }
             TURN { EXPECT_MOVES(opponent, MOVE_BULLDOZE, MOVE_ROCK_TOMB); SEND_OUT(player, 1); }
@@ -443,7 +443,7 @@ AI_SINGLE_BATTLE_TEST("First Impression is preferred on the first turn of the sp
         ASSUME(GetMovePower(MOVE_LUNGE) == 80);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_KANGASKHAN);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FIRST_IMPRESSION, MOVE_LUNGE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_FIRST_IMPRESSION, MOVE_LUNGE); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_FIRST_IMPRESSION); }
         TURN { EXPECT_MOVE(opponent, MOVE_LUNGE); }
@@ -465,7 +465,7 @@ AI_SINGLE_BATTLE_TEST("First Impression is not chosen if it's blocked by certain
         ASSUME(GetMovePower(MOVE_LUNGE) == 80);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FIRST_IMPRESSION, MOVE_LUNGE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_FIRST_IMPRESSION, MOVE_LUNGE); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_LUNGE); }
     }
@@ -476,7 +476,7 @@ AI_SINGLE_BATTLE_TEST("AI will not choose Burn Up if the user lost the Fire typi
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BURN_UP) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CYNDAQUIL) { Moves(MOVE_BURN_UP, MOVE_EXTRASENSORY, MOVE_FLAMETHROWER); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_BURN_UP); }
@@ -584,7 +584,7 @@ AI_SINGLE_BATTLE_TEST("AI calculates guaranteed criticals and detects critical i
         ASSUME(GetMoveCategory(MOVE_STORM_THROW) == GetMoveCategory(MOVE_BRICK_BREAK));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_OMASTAR) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_STORM_THROW, MOVE_BRICK_BREAK); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_STORM_THROW, MOVE_BRICK_BREAK); }
     } WHEN {
         if (ability == ABILITY_SHELL_ARMOR)
             TURN { EXPECT_MOVE(opponent, MOVE_BRICK_BREAK); }
@@ -607,8 +607,8 @@ AI_SINGLE_BATTLE_TEST("AI avoids contact moves against rocky helmet")
         ASSUME(GetMoveType(MOVE_BRANCH_POKE) == GetMoveType(MOVE_LEAFAGE));
         ASSUME(GetMoveCategory(MOVE_BRANCH_POKE) == GetMoveCategory(MOVE_LEAFAGE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BRANCH_POKE, MOVE_LEAFAGE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_BRANCH_POKE, MOVE_LEAFAGE); }
     } WHEN {
         if (item == ITEM_ROCKY_HELMET)
             TURN { EXPECT_MOVE(opponent, MOVE_LEAFAGE); }
@@ -631,7 +631,7 @@ AI_SINGLE_BATTLE_TEST("AI uses a guaranteed KO move instead of the move with the
         ASSUME(GetMoveType(MOVE_SLASH) == GetMoveType(MOVE_STRENGTH));
         ASSUME(GetMoveCategory(MOVE_SLASH) == GetMoveCategory(MOVE_STRENGTH));
         AI_FLAGS(flags);
-        PLAYER(SPECIES_WOBBUFFET) { HP(225); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(225); }
         OPPONENT(SPECIES_ABSOL) { Ability(ABILITY_SUPER_LUCK); Moves(MOVE_SLASH, MOVE_STRENGTH); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_SLASH); }
@@ -664,7 +664,7 @@ AI_SINGLE_BATTLE_TEST("AI stays choice locked into moves in spite of the player'
         ASSUME(IsBallisticMove(MOVE_BULLET_SEED));
         ASSUME(GetMoveCategory(MOVE_TAIL_WHIP) == DAMAGE_CATEGORY_STATUS);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(playerMon) { Ability(ability); }
         OPPONENT(SPECIES_SMEARGLE) { Item(ITEM_CHOICE_BAND); Moves(aiMove, MOVE_SCRATCH); }
     } WHEN {
@@ -705,7 +705,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use thawing moves if target is frozen unless it 
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(MoveThawsUser(MOVE_SCALD) == TRUE);
         AI_FLAGS(aiFlags | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); Status1(status); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); Status1(status); }
         OPPONENT(SPECIES_VULPIX) { Moves(MOVE_TACKLE, aiMove); }
     } WHEN {
         if (aiFlags == AI_FLAG_CHECK_BAD_MOVE)
@@ -775,8 +775,8 @@ AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon after Air Balloon mon switches
 SINGLE_BATTLE_TEST("AI correctly records used moves")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_GROWL, MOVE_FLOWER_TRICK, MOVE_TORCH_SONG); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_RAGE_FIST, MOVE_PSYCHIC, MOVE_SCRATCH, MOVE_EARTHQUAKE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_GROWL, MOVE_FLOWER_TRICK, MOVE_TORCH_SONG); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_RAGE_FIST, MOVE_PSYCHIC, MOVE_SCRATCH, MOVE_EARTHQUAKE); }
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE);       MOVE(opponent, MOVE_EARTHQUAKE); }
         TURN { MOVE(player, MOVE_FLOWER_TRICK); MOVE(opponent, MOVE_SCRATCH);    }
@@ -822,7 +822,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use status moves against opponents that would be
         ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_SWELLOW) { Ability(ABILITY_GUTS); Moves(MOVE_TACKLE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, aiMove); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, aiMove); }
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
     }
@@ -851,7 +851,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees opposing drain ability")
         PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_KRABBY) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_MAGNETON) { Moves(MOVE_THUNDERBOLT, MOVE_RAZOR_LEAF); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_METAL_CLAW); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_METAL_CLAW); }
     } WHEN {
         TURN {
             NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDERBOLT);

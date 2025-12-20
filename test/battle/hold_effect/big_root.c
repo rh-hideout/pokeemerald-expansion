@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Big Root increases healing from absorbing moves", s16 damage
 
     GIVEN {
         PLAYER(SPECIES_XURKITREE) { HP(200); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ABSORB); }
     } SCENE {
@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Big Root increases the damage restored from Leech Seed, Ingr
     PARAMETRIZE { item = ITEM_BIG_ROOT; move = MOVE_AQUA_RING;  }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(200); Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {

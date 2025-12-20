@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Bad poison deals 1/16th cumulative damage per turn")
 {
     u32 j;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_TOXIC_POISON); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_TOXIC_POISON); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         for (j = 0; j < 4; j++)
             TURN {}
@@ -21,9 +21,9 @@ SINGLE_BATTLE_TEST("Bad poison cumulative damage resets on switch")
 {
     u32 j;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_TOXIC_POISON); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_TOXIC_POISON); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
         TURN {}

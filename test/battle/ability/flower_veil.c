@@ -26,8 +26,8 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - right ta
     PARAMETRIZE { move = MOVE_HYPNOSIS; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }
         OPPONENT(SPECIES_CHIKORITA);
     } WHEN {
@@ -50,8 +50,8 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - left tar
     PARAMETRIZE { move = MOVE_HYPNOSIS; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_CHIKORITA);
         OPPONENT(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }
     } WHEN {

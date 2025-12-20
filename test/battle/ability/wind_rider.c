@@ -10,7 +10,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if it sets up Tailwind")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRAMBLIN) { Ability(ABILITY_WIND_RIDER); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_TAILWIND); }
@@ -27,9 +27,9 @@ SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if it sets up Tailwind
 DOUBLE_BATTLE_TEST("Wind Rider raises Attack by one stage if Tailwind is setup by its partner")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRAMBLIN) { Ability(ABILITY_WIND_RIDER); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TAILWIND); }
@@ -46,7 +46,7 @@ DOUBLE_BATTLE_TEST("Wind Rider raises Attack by one stage if Tailwind is setup b
 SINGLE_BATTLE_TEST("Wind Rider doesn't raise Attack if opponent sets up Tailwind")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRAMBLIN) { Ability(ABILITY_WIND_RIDER); }
     } WHEN {
         TURN { MOVE(player, MOVE_TAILWIND); }
@@ -65,8 +65,8 @@ SINGLE_BATTLE_TEST("Wind Rider doesn't raise Attack if opponent sets up Tailwind
 SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if switched into Tailwind on its side of the field")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_BRAMBLIN) { Ability(ABILITY_WIND_RIDER); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_TAILWIND); }
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Wind Rider activates when it's no longer effected by Neutral
 {
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRAMBLIN) { Ability(ABILITY_WIND_RIDER); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_TAILWIND); }
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Wind Rider absorbs Wind moves and raises Attack by one stage
 {
     GIVEN {
         ASSUME(IsWindMove(MOVE_GUST));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRAMBLIN) { Ability(ABILITY_WIND_RIDER); }
     } WHEN {
         TURN { MOVE(player, MOVE_GUST); }

@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a single 
     PARAMETRIZE { item = ITEM_BERSERK_GENE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_CONFUSION, FALSE)); }
     } SCENE {
@@ -38,10 +38,10 @@ DOUBLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a double 
     PARAMETRIZE { item = ITEM_BERSERK_GENE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SCRATCH, target:opponentLeft, WITH_RNG(RNG_CONFUSION, FALSE)); }
     } SCENE {
@@ -65,9 +65,9 @@ SINGLE_BATTLE_TEST("Berserk Gene activates on switch in", s16 damage)
     PARAMETRIZE { item = ITEM_BERSERK_GENE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(player, 1); }
         TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_CONFUSION, FALSE)); }
@@ -93,7 +93,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_SLOWBRO) { Ability(ABILITY_OWN_TEMPO); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(player, MOVE_SCRATCH);
@@ -125,13 +125,13 @@ DOUBLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         if (positionLeft) {
             PLAYER(SPECIES_SLOWBRO) { Ability(ABILITY_OWN_TEMPO); Item(item); }
-            PLAYER(SPECIES_WOBBUFFET);
+            PLAYER(TEST_SPECIES_WOBBUFFET);
         } else {
-            PLAYER(SPECIES_WOBBUFFET);
+            PLAYER(TEST_SPECIES_WOBBUFFET);
             PLAYER(SPECIES_SLOWBRO) { Ability(ABILITY_OWN_TEMPO); Item(item); }
         }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE((positionLeft != 0) ? playerLeft : playerRight, MOVE_SCRATCH, target: opponentLeft);
@@ -158,7 +158,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse on Misty Terrain but still rai
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_TAPU_FINI) { Ability(ABILITY_MISTY_SURGE); Item(ITEM_BERSERK_GENE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(player, MOVE_SCRATCH);
@@ -173,9 +173,9 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse on Misty Terrain but still rai
 SINGLE_BATTLE_TEST("Berserk Gene does not confuse when Safeguard is active")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SAFEGUARD); }
         TURN { SWITCH(player, 1); }
@@ -190,8 +190,8 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse when Safeguard is active")
 SINGLE_BATTLE_TEST("Berserk Gene causes confusion for more than 5 turns") // how else would be check for infinite?
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
         TURN {}
@@ -207,8 +207,8 @@ SINGLE_BATTLE_TEST("Berserk Gene causes confusion for more than 5 turns") // how
 SINGLE_BATTLE_TEST("Berserk Gene causes infinite confusion") // check if bit is set
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
     } SCENE {
@@ -223,8 +223,8 @@ SINGLE_BATTLE_TEST("Berserk Gene causes confusion timer to not tick down", u32 c
     PARAMETRIZE { turns = 1; }
     PARAMETRIZE { turns = 2; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         u32 count;
         for (count = 0; count < turns; count++) {
@@ -242,9 +242,9 @@ SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BESTOW) == EFFECT_BESTOW);
         PLAYER(SPECIES_TOXEL) { Item(ITEM_BERSERK_GENE); Ability(ABILITY_KLUTZ); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
@@ -269,7 +269,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
     PARAMETRIZE { item = ITEM_JUBILIFE_MUFFIN; }
     GIVEN {
         ASSUME(gItemsInfo[item].battleUsage == EFFECT_ITEM_CURE_STATUS);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE);};
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE);};
         OPPONENT(SPECIES_GENGAR);
     } WHEN {
         TURN { USE_ITEM(player, item, partyIndex: 0); }
@@ -290,8 +290,8 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items"
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_PERSIM_BERRY].holdEffect == HOLD_EFFECT_CURE_CONFUSION);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE);};
-        OPPONENT(SPECIES_WOBBUFFET) { Item(item);};
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE);};
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(item);};
     } WHEN {
         TURN { MOVE(player, MOVE_COVET, WITH_RNG(RNG_CONFUSION, FALSE)); }
         TURN {}

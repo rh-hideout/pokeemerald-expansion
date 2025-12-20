@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("OHKO moves can hit semi-invulnerable mons when the user has 
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_NO_GUARD); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_NO_GUARD); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLY); }
         TURN { MOVE(player, MOVE_FISSURE); }
@@ -24,8 +24,8 @@ SINGLE_BATTLE_TEST("OHKO moves can hit semi-invulnerable mons when the user has 
 SINGLE_BATTLE_TEST("OHKO moves can not hit semi-invulnerable")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLY); MOVE(player, MOVE_FISSURE); }
     } SCENE {
@@ -36,8 +36,8 @@ SINGLE_BATTLE_TEST("OHKO moves can not hit semi-invulnerable")
 SINGLE_BATTLE_TEST("OHKO moves can can be endured by Focus Sash")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_FISSURE); }
     } SCENE {
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("OHKO moves can can be endured by Focus Sash")
 SINGLE_BATTLE_TEST("OHKO moves can can be endured by Sturdy")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GEODUDE) { Ability(ABILITY_STURDY); }
     } WHEN {
         TURN { MOVE(player, MOVE_FISSURE); }
@@ -63,8 +63,8 @@ SINGLE_BATTLE_TEST("OHKO moves can can be endured by Sturdy")
 SINGLE_BATTLE_TEST("OHKO moves always fails if the target has a higher level than the user")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Level(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Level(2); }
     } WHEN {
         TURN { MOVE(player, MOVE_FISSURE); }
     } SCENE {
@@ -75,8 +75,8 @@ SINGLE_BATTLE_TEST("OHKO moves always fails if the target has a higher level tha
 SINGLE_BATTLE_TEST("OHKO moves fail if target protects")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_FISSURE); }
     } SCENE {

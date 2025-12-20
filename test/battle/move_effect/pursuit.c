@@ -9,9 +9,9 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Pursuit attacks a switching foe")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
     } SCENE {
@@ -32,9 +32,9 @@ SINGLE_BATTLE_TEST("Pursuit attacks a foe using Volt Switch / U-Turn / Parting S
         ASSUME(GetMoveEffect(MOVE_VOLT_SWITCH) == EFFECT_HIT_ESCAPE);
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
         ASSUME(GetMoveEffect(MOVE_PARTING_SHOT) == EFFECT_PARTING_SHOT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, move); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 1); }
     } SCENE {
@@ -55,10 +55,10 @@ DOUBLE_BATTLE_TEST("Pursuit doesn't attack a foe using Teleport / Baton Pass to 
         ASSUME(GetMoveEffect(MOVE_QUASH) == EFFECT_QUASH);
         ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_NIDOKING);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_QUASH, target: opponentLeft); MOVE(playerLeft, move); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); }
@@ -74,9 +74,9 @@ DOUBLE_BATTLE_TEST("Pursuit doesn't attack a foe using Teleport / Baton Pass to 
 SINGLE_BATTLE_TEST("Pursuit doesn't attack switching foe if user already acted that turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PURSUIT); MOVE(player, MOVE_VOLT_SWITCH); SEND_OUT(player, 1); }
     } SCENE {
@@ -94,9 +94,9 @@ SINGLE_BATTLE_TEST("Pursuit doubles in power if attacking while target switches 
     PARAMETRIZE { speed = 5; }
     PARAMETRIZE { speed = 3; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
         PLAYER(SPECIES_ZIGZAGOON) { Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(speed); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(speed); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_PURSUIT); MOVE(player, MOVE_VOLT_SWITCH); SEND_OUT(player, 1); }
     } SCENE {
@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Pursuit ignores accuracy checks when attacking a switching t
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
         PLAYER(SPECIES_GLACEON) { Ability(ABILITY_SNOW_CLOAK); }
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SAND_ATTACK); MOVE(opponent, MOVE_HAIL); }
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
@@ -137,10 +137,10 @@ DOUBLE_BATTLE_TEST("Pursuit attacks switching foes even if not targetting them (
 {
     GIVEN {
         ASSUME(B_PURSUIT_TARGET >= GEN_4);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_GRIMER);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
         TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_PURSUIT, target: playerRight); MOVE(opponentRight, MOVE_PURSUIT, target: playerRight); }
@@ -161,10 +161,10 @@ DOUBLE_BATTLE_TEST("Pursuit attacks a switching foe from fastest to slowest")
     PARAMETRIZE { speedLeft = 5; speedRight = 3; }
     PARAMETRIZE { speedLeft = 3; speedRight = 5; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_ZIGZAGOON) { Speed(4); }
         PLAYER(SPECIES_GRIMER) { Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(speedLeft); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(speedLeft); }
         OPPONENT(SPECIES_LINOONE) { Speed(speedRight); }
     } WHEN {
         TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); MOVE(opponentRight, MOVE_PURSUIT, target: playerLeft); }
@@ -189,10 +189,10 @@ DOUBLE_BATTLE_TEST("Pursuit attacks a switching foe from fastest to slowest")
 DOUBLE_BATTLE_TEST("Pursuit attacks a switching foe but not switching allies")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_GRIMER);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
         OPPONENT(SPECIES_ABRA);
     } WHEN {
@@ -212,11 +212,11 @@ DOUBLE_BATTLE_TEST("Pursuit only attacks the first switching foe")
 {
     // This test does not make sense for B_PURSUIT_TARGET < GEN_4
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_GRIMER);
         PLAYER(SPECIES_SUNKERN);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
         TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); MOVE(opponentRight, MOVE_PURSUIT, target: playerLeft); }
@@ -241,11 +241,11 @@ DOUBLE_BATTLE_TEST("Pursuit only attacks the first switching foe")
 DOUBLE_BATTLE_TEST("Pursuit only attacks a switching foe if foe is alive")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_GRIMER);
         PLAYER(SPECIES_SUNKERN);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
         TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); MOVE(opponentRight, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); }
@@ -264,11 +264,11 @@ DOUBLE_BATTLE_TEST("Pursuit attacks the second switching foe if the first faints
 {
     // This test does not make sense for B_PURSUIT_TARGET < GEN_4
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_GRIMER);
         PLAYER(SPECIES_SUNKERN);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
         TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); MOVE(opponentRight, MOVE_PURSUIT, target: playerRight); SEND_OUT(playerLeft, 2); }
@@ -289,10 +289,10 @@ DOUBLE_BATTLE_TEST("Pursuit attacks the second switching foe if the first faints
 DOUBLE_BATTLE_TEST("Pursuit only attacks a switching foe if user is alive")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_GRIMER);
-        OPPONENT(SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_LINOONE);
         OPPONENT(SPECIES_SUNKERN);
     } WHEN {
@@ -308,9 +308,9 @@ DOUBLE_BATTLE_TEST("Pursuit only attacks a switching foe if user is alive")
 SINGLE_BATTLE_TEST("Pursuit attacks a switching foe but fails if user is asleep")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT) { Status1(STATUS1_SLEEP_TURN(2)); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Status1(STATUS1_SLEEP_TURN(2)); }
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
     } SCENE {
@@ -325,9 +325,9 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and takes Life Orb damage")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_LIFE_ORB); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Item(ITEM_LIFE_ORB); }
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
     } SCENE {
@@ -342,10 +342,10 @@ DOUBLE_BATTLE_TEST("Pursuit attacks a switching foe but isn't affected by Follow
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CLEFABLE);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_FOLLOW_ME); MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); }
@@ -360,7 +360,7 @@ DOUBLE_BATTLE_TEST("Pursuit attacks a switching foe but isn't affected by Follow
 SINGLE_BATTLE_TEST("Pursuit user mega evolves before attacking a switching foe and hits twice if user has Parental Bond")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
         OPPONENT(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
     } WHEN {
@@ -379,9 +379,9 @@ DOUBLE_BATTLE_TEST("Pursuit user mega evolves before attacking a switching foe a
 {
     GIVEN {
         PLAYER(SPECIES_CHARIZARD) { Item(ITEM_CHARIZARDITE_X); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
     } WHEN {
         TURN { SWITCH(playerRight, 2); MOVE(opponentRight, MOVE_PURSUIT, gimmick: GIMMICK_MEGA, target: playerRight); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
@@ -403,7 +403,7 @@ SINGLE_BATTLE_TEST("Pursuit user terastalizes before attacking a switching foe a
     PARAMETRIZE { tera = GIMMICK_NONE; }
     PARAMETRIZE { tera = GIMMICK_TERA; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
         OPPONENT(SPECIES_KANGASKHAN) { TeraType(TYPE_DARK); }
     } WHEN {
@@ -427,7 +427,7 @@ DOUBLE_BATTLE_TEST("Pursuit affected by Electrify fails against immune target")
         PLAYER(SPECIES_DONPHAN);
         PLAYER(SPECIES_HELIOLISK);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_ELECTRIFY, target: opponentLeft); MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); }
@@ -446,7 +446,7 @@ DOUBLE_BATTLE_TEST("Pursuit affected by Electrify fails against target with Volt
         PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
         PLAYER(SPECIES_HELIOLISK);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_ELECTRIFY, target: opponentLeft); MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); }
@@ -463,9 +463,9 @@ SINGLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and ac
 {
     GIVEN {
         PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_TANGLING_HAIR); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
     } SCENE {
@@ -482,10 +482,10 @@ DOUBLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and ac
 {
     GIVEN {
         PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_TANGLING_HAIR); }
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); MOVE(opponentRight, MOVE_PURSUIT, target: playerLeft); }
     } SCENE {
@@ -506,9 +506,9 @@ SINGLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and ac
 {
     GIVEN {
         PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_TANGLING_HAIR); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
     } SCENE {
@@ -524,10 +524,10 @@ DOUBLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and ac
 {
     GIVEN {
         PLAYER(SPECIES_ELDEGOSS) { Ability(ABILITY_COTTON_DOWN); }
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); MOVE(opponentRight, MOVE_PURSUIT, target: playerLeft); }
     } SCENE {
@@ -557,9 +557,9 @@ SINGLE_BATTLE_TEST("Pursuit becomes a locked move after being used on switch-out
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_BAND); MovesWithPP({MOVE_PURSUIT, 1}, {MOVE_CELEBRATE, 10}, {MOVE_WATER_GUN, 10}, {MOVE_SCRATCH, 10}); }
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_BAND); MovesWithPP({MOVE_PURSUIT, 1}, {MOVE_CELEBRATE, 10}, {MOVE_WATER_GUN, 10}, {MOVE_SCRATCH, 10}); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(opponent, 1); MOVE(player, MOVE_PURSUIT); }
         TURN { FORCED_MOVE(player); }
@@ -582,12 +582,12 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and switchin is correctly st
     PARAMETRIZE { switchin = 4; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_AIPOM);
         PLAYER(SPECIES_ABRA);
         PLAYER(SPECIES_VENIPEDE);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { SWITCH(player, switchin); MOVE(opponent, MOVE_PURSUIT); }
     } SCENE {
@@ -615,9 +615,9 @@ SINGLE_BATTLE_TEST("Pursuit doesn't cause mon with Emergency Exit to switch twic
 {
     GIVEN {
         PLAYER(SPECIES_GOLISOPOD) { HP(101); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_VOLTORB);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 2); }
     } SCENE {
@@ -634,9 +634,9 @@ SINGLE_BATTLE_TEST("Pursuit user gets forced out by Red Card and target still sw
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         PLAYER(SPECIES_VOLTORB);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VOLTORB);
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
@@ -656,9 +656,9 @@ SINGLE_BATTLE_TEST("Pursuit user faints to Life Orb and target still switches ou
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_VOLTORB);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
         OPPONENT(SPECIES_VOLTORB);
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(opponent, 1); }
@@ -678,11 +678,11 @@ DOUBLE_BATTLE_TEST("Pursuit user switches out due to Red Card and partner's swit
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_RED_CARD) == HOLD_EFFECT_RED_CARD);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_ARCEUS);
-        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_RED_CARD); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { Item(ITEM_RED_CARD); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARCEUS);
     } WHEN {
         TURN { SWITCH(opponentLeft, 2); SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_PURSUIT, target: opponentLeft); }
@@ -690,7 +690,7 @@ DOUBLE_BATTLE_TEST("Pursuit user switches out due to Red Card and partner's swit
         // playerLeft switches to Arceus
         EXPECT_EQ(playerLeft->species, SPECIES_ARCEUS);
         // playerRight has their switch cancelled
-        EXPECT_EQ(playerRight->species, SPECIES_WYNAUT);
+        EXPECT_EQ(playerRight->species, TEST_SPECIES_WYNAUT);
     }
 }
 

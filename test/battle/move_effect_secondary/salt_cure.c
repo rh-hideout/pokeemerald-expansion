@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Salt Cure inflicts 1/8 of the target's maximum HP as damage 
 {
     u32 j;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SALT_CURE); }
         for (j = 0; j < 3; j++)
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Salt Cure inflicts 1/4 to Water/Steel types of their maximum
     PARAMETRIZE { species = SPECIES_JIRACHI; };
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_SALT_CURE); }
@@ -54,9 +54,9 @@ SINGLE_BATTLE_TEST("Salt Cure inflicts 1/4 to Water/Steel types of their maximum
 SINGLE_BATTLE_TEST("Salt Cure is removed when the afflicted Pokémon is switched out")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_SALT_CURE); }
         TURN { SWITCH(opponent, 1); }
@@ -75,8 +75,8 @@ SINGLE_BATTLE_TEST("Salt Cure is removed when the afflicted Pokémon is switched
 SINGLE_BATTLE_TEST("If Salt Cure faints the target no status will be applied")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SALT_CURE); }
     } SCENE {
@@ -89,8 +89,8 @@ SINGLE_BATTLE_TEST("If Salt Cure faints the target no status will be applied")
 SINGLE_BATTLE_TEST("Salt Cure does not get applied if hitting a Substitute")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_SALT_CURE); }
     } SCENE {
@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("Salt Cure does not get applied if hitting a Substitute")
 SINGLE_BATTLE_TEST("Salt Cure residual damage does not inflict any damage against Magic Guard")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CLEFABLE) { Ability(ABILITY_MAGIC_GUARD); };
     } WHEN {
         TURN { MOVE(player, MOVE_SALT_CURE); }
@@ -121,8 +121,8 @@ SINGLE_BATTLE_TEST("Salt Cure residual damage does not inflict any damage agains
 SINGLE_BATTLE_TEST("If Salt Cure faints the target, messages will be applied in the correct order")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(25); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(25); }
     } WHEN {
         TURN { MOVE(player, MOVE_SALT_CURE); }
     } SCENE {
@@ -136,10 +136,10 @@ SINGLE_BATTLE_TEST("If Salt Cure faints the target, messages will be applied in 
 DOUBLE_BATTLE_TEST("Salt Cure works in double battles")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SALT_CURE, target: opponentLeft); }
     } SCENE {

@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Neutralizing Gas activates on switch-in")
 {
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { }
     } SCENE {
@@ -35,8 +35,8 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas prevents ally's switch-in ability from acti
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
         PLAYER(SPECIES_ZEKROM) { Ability(ABILITY_TERAVOLT); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { }
     } SCENE {
@@ -53,7 +53,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas ignores all battlers' ability effects")
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_WATER_ABSORB); }
         OPPONENT(SPECIES_BELLIBOLT) { Ability(ABILITY_ELECTROMORPHOSIS); }
     } WHEN {
@@ -127,8 +127,8 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from target's ally's ab
     PARAMETRIZE { ability = ABILITY_LEVITATE; }
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ability); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(SPECIES_CLEFAIRY) { Ability(ABILITY_FRIEND_GUARD); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
@@ -149,8 +149,8 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from ally's ability", s
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WEEZING) { Ability(ability); }
         PLAYER(SPECIES_WO_CHIEN) { Ability(ABILITY_TABLETS_OF_RUIN); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
@@ -173,7 +173,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas leaving the field allows abilities to activ
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Speed(4); }
         PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); Speed(speedPlayerRight); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); Speed(speedOppLeft); }
         OPPONENT(SPECIES_ZEKROM) { Ability(ABILITY_TERAVOLT); Speed(speedOppRight); }
     } WHEN {
@@ -285,7 +285,7 @@ SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate abiliti
         ASSUME(gAbilitiesInfo[ability].cantBeSuppressed);
         PLAYER(species) { Ability(ability); }
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
@@ -298,10 +298,10 @@ SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate abiliti
 SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate Imposter even if it did not activate before")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_DITTO) { Ability(ABILITY_IMPOSTER); }
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
     } SCENE {
@@ -320,7 +320,7 @@ SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate Air Loc
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(species) { Ability(ability); }
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
         OPPONENT(SPECIES_LUDICOLO) { Ability(ABILITY_RAIN_DISH); }
@@ -340,9 +340,9 @@ SINGLE_BATTLE_TEST("Neutralizing Gas only displays exiting message for the last 
 {
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
     } SCENE {
@@ -361,7 +361,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas is active for the duration of a Spread Move
         PLAYER(SPECIES_WEEZING) { HP(1); Ability(ABILITY_NEUTRALIZING_GAS); }
         PLAYER(SPECIES_GOLEM) { Ability(ABILITY_STURDY); }
         OPPONENT(SPECIES_BASCULEGION) { Ability(ABILITY_MOLD_BREAKER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_ORIGIN_PULSE); }
     } SCENE {
@@ -382,7 +382,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas is active until the last Dragon Darts hit e
         PLAYER(SPECIES_WEEZING) { HP(1); Ability(ABILITY_NEUTRALIZING_GAS); }
         PLAYER(SPECIES_GOLEM) { HP(2); MaxHP(2); Ability(ABILITY_STURDY); }
         OPPONENT(SPECIES_BASCULEGION) { Ability(ABILITY_MOLD_BREAKER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_DRAGON_DARTS, target: playerLeft); }
     } SCENE {

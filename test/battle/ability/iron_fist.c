@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Iron Fist increases the power of punching moves by 20%", s16
         ASSUME(!IsPunchingMove(MOVE_SCRATCH));
         ASSUME(GetMovePower(MOVE_BULLET_PUNCH) == GetMovePower(MOVE_SCRATCH));
         PLAYER(SPECIES_CHIMCHAR) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {

@@ -12,9 +12,9 @@ SINGLE_BATTLE_TEST("Substitute creates a Substitute at the cost of 1/4 users max
     s16 costHP = 0;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {
@@ -30,9 +30,9 @@ SINGLE_BATTLE_TEST("Substitute creates a Substitute at the cost of 1/4 users max
 SINGLE_BATTLE_TEST("Substitute fails if the user doesn't have enough HP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {
@@ -44,9 +44,9 @@ SINGLE_BATTLE_TEST("Substitute's HP cost can trigger a berry")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET) { HP(300); Item(ITEM_SITRUS_BERRY); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(300); Item(ITEM_SITRUS_BERRY); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {
@@ -58,8 +58,8 @@ SINGLE_BATTLE_TEST("Substitute's HP cost can trigger a berry")
 SINGLE_BATTLE_TEST("Substitute's HP cost doesn't trigger effects that trigger on damage taken")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {
@@ -72,8 +72,8 @@ SINGLE_BATTLE_TEST("Substitute's HP cost doesn't trigger effects that trigger on
 SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -84,8 +84,8 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT")
 SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break TRUE")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -96,8 +96,8 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break TRUE")
 SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break FALSE")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Level(100); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -109,8 +109,8 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, records damage")
 {
     u16 damage;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -124,8 +124,8 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, records damage, bre
 {
     u16 damage;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -139,8 +139,8 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, records damage, bre
 {
     u16 damage;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -154,8 +154,8 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break TRUE, failing
 {
     KNOWN_FAILING;  //  For testing purposes
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Level(100); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -167,8 +167,8 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break FALSE, failin
 {
     KNOWN_FAILING;  //  For testing purposes
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {

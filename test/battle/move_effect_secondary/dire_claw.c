@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Dire Claw can inflict poison, paralysis or sleep")
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_SLP; }
     PASSES_RANDOMLY(1, 3, RNG_DIRE_CLAW);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DIRE_CLAW); }
         TURN {}
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze poison/electric types respe
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = MOVE_EFFECT_POISON; species = SPECIES_ARBOK; }
     GIVEN {
         WITH_CONFIG(CONFIG_PARALYZE_ELECTRIC, GEN_6);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_DIRE_CLAW, WITH_RNG(RNG_DIRE_CLAW, rng)); }
@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep Pokém
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_SLP; rng = MOVE_EFFECT_SLEEP;     species = SPECIES_HYPNO;    ability = ABILITY_INSOMNIA; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_DIRE_CLAW, WITH_RNG(RNG_DIRE_CLAW, rng)); }
@@ -102,8 +102,8 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep a mon 
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = MOVE_EFFECT_PARALYSIS; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_SLP; rng = MOVE_EFFECT_SLEEP; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
     } WHEN {
         TURN { MOVE(player, MOVE_DIRE_CLAW, WITH_RNG(RNG_DIRE_CLAW, rng)); }
         TURN {}

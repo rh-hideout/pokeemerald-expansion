@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Protective Pads protected moves still make direct contact", 
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Protective Pads doesn't reduce tough claws damage", s16 dama
     PARAMETRIZE { item = ITEM_PROTECTIVE_PADS; }
     GIVEN {
         PLAYER(SPECIES_BINACLE) { Ability(ABILITY_TOUGH_CLAWS); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Protective Pads doesn't invalid unseen fist")
 {
     GIVEN {
         PLAYER(SPECIES_URSHIFU_RAPID_STRIKE) { Ability(ABILITY_UNSEEN_FIST); Item(ITEM_PROTECTIVE_PADS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -60,8 +60,8 @@ SINGLE_BATTLE_TEST("Protective Pads doesn't invalid unseen fist")
 SINGLE_BATTLE_TEST("Protective Pads protects from Rocly Helmet Damage")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -86,8 +86,8 @@ SINGLE_BATTLE_TEST("Protective Pads protects from Protect's secondary effects")
     PARAMETRIZE { move = MOVE_OBSTRUCT; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SCRATCH); }
     } SCENE {

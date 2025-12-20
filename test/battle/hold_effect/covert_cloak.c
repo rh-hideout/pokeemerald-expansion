@@ -25,8 +25,8 @@ SINGLE_BATTLE_TEST("Covert Cloak blocks secondary effects")
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_ROCK_TOMB, MOVE_EFFECT_SPD_MINUS_1, 100) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_SPIRIT_SHACKLE, MOVE_EFFECT_PREVENT_ESCAPE, 100) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_PSYCHIC_NOISE, MOVE_EFFECT_PSYCHIC_NOISE, 100) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block primary effects")
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_INFESTATION, MOVE_EFFECT_WRAP, 0) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_JAW_LOCK, MOVE_EFFECT_TRAP_BOTH, 0) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_PAY_DAY, MOVE_EFFECT_PAYDAY, 0) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SKARMORY) { Item(ITEM_COVERT_CLOAK); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -101,8 +101,8 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary 
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_UP_PUNCH, MOVE_EFFECT_ATK_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_LEAF_STORM, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_METEOR_ASSAULT, MOVE_EFFECT_RECHARGE) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
     } WHEN {
         TURN { MOVE(player, move); }
         if (move == MOVE_METEOR_ASSAULT) {
@@ -130,10 +130,10 @@ DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending
     PARAMETRIZE { moveToUse = MOVE_FINAL_GAMBIT; }
     PARAMETRIZE { moveToUse = MOVE_SCRATCH; }
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, moveToUse, target: opponentRight); MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
     } SCENE {
@@ -157,10 +157,10 @@ DOUBLE_BATTLE_TEST("Covert Cloak does block Sparkling Aria when only one mon is 
     PARAMETRIZE { move = MOVE_FLY; }
 
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentRight, move, target: playerLeft);
                MOVE(playerRight, move, target: opponentRight);
@@ -178,8 +178,8 @@ DOUBLE_BATTLE_TEST("Covert Cloak does block Sparkling Aria when only one mon is 
 SINGLE_BATTLE_TEST("Covert Cloak blocks Sparkling Aria in singles")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(STATUS1_BURN); }
     } WHEN {
         TURN { MOVE(player, MOVE_SPARKLING_ARIA); }
     } SCENE {
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Covert Cloak blocks Sparkling Aria in singles")
 SINGLE_BATTLE_TEST("Covert Cloak does not prevent ability stat changes")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
         OPPONENT(SPECIES_ELDEGOSS) { Ability(ABILITY_COTTON_DOWN); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }

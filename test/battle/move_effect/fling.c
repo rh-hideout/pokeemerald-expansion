@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Fling fails if Pokémon holds no item")
     PARAMETRIZE {item = ITEM_RAZOR_CLAW; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING);}
     } SCENE {
@@ -40,8 +40,8 @@ SINGLE_BATTLE_TEST("Fling fails if Pokémon is under the effects of Embargo or M
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EMBARGO) == EFFECT_EMBARGO);
         ASSUME(GetMoveEffect(MOVE_MAGIC_ROOM) == EFFECT_MAGIC_ROOM);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RAZOR_CLAW); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_RAZOR_CLAW); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
         TURN { MOVE(player, MOVE_FLING); }
@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Fling fails for Pokémon with Klutz ability (Gen5+)")
     GIVEN {
         WITH_CONFIG(CONFIG_KLUTZ_FLING_INTERACTION, config);
         PLAYER(SPECIES_BUNEARY) { Item(ITEM_RAZOR_CLAW); Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Fling fails if the item changes the Pokémon's form")
 {
     GIVEN {
         PLAYER(SPECIES_GIRATINA_ORIGIN) { Item(ITEM_GRISEOUS_CORE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Fling works if the item changes a Pokémon's form but not th
 {
     GIVEN {
         PLAYER(SPECIES_VENUSAUR) { Item(ITEM_BLASTOISINITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
@@ -116,8 +116,8 @@ SINGLE_BATTLE_TEST("Fling's thrown item can be regained with Recycle")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
-        PLAYER(SPECIES_WOBBUFFET) {Item(ITEM_RAZOR_CLAW); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) {Item(ITEM_RAZOR_CLAW); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING);}
         TURN { MOVE(player, MOVE_RECYCLE);}
@@ -139,9 +139,9 @@ SINGLE_BATTLE_TEST("Fling - Item is lost even when there is no target")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SELF_DESTRUCT) == EFFECT_EXPLOSION);
-        PLAYER(SPECIES_WOBBUFFET) {Item(ITEM_RAZOR_CLAW); Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) {Item(ITEM_RAZOR_CLAW); Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Speed(5); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SELF_DESTRUCT); MOVE(player, MOVE_FLING); SEND_OUT(opponent, 1); }
         TURN { MOVE(player, MOVE_FLING); }
@@ -164,8 +164,8 @@ SINGLE_BATTLE_TEST("Fling - Item is lost when target protects itself")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
-        PLAYER(SPECIES_WOBBUFFET) {Item(ITEM_RAZOR_CLAW); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) {Item(ITEM_RAZOR_CLAW); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_FLING);}
         TURN { MOVE(player, MOVE_FLING); }
@@ -187,7 +187,7 @@ SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a b
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
         PLAYER(SPECIES_CALYREX) { Item(ITEM_MENTAL_HERB); Ability(ABILITY_UNNERVE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TAUNT); MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_FLING); MOVE(opponent, MOVE_SCRATCH); }
@@ -212,8 +212,8 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if Pokémon is asleep/frozen/
     PARAMETRIZE {status = STATUS1_FREEZE; item = ITEM_NONE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) {Item(item); Status1(status); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) {Item(item); Status1(status); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (status == STATUS1_FREEZE) {
             TURN { MOVE(player, MOVE_FLING, WITH_RNG(RNG_FROZEN, FALSE)); }
@@ -262,8 +262,8 @@ SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
     PARAMETRIZE {item = ITEM_KINGS_ROCK; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
@@ -318,8 +318,8 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
     PARAMETRIZE {item = ITEM_KINGS_ROCK; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHIELD_DUST); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_SHIELD_DUST); }
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
@@ -412,8 +412,8 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_FLING) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); Attack(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(status1); HP(399); MaxHP(400); MovesWithPP({MOVE_CELEBRATE, 35}); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); Attack(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(status1); HP(399); MaxHP(400); MovesWithPP({MOVE_CELEBRATE, 35}); }
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
@@ -492,7 +492,7 @@ SINGLE_BATTLE_TEST("Fling deals damage based on items fling power")
     GIVEN {
         ASSUME(GetMovePower(MOVE_CRUNCH) == 80);
         ASSUME(gItemsInfo[ITEM_VENUSAURITE].flingPower == 80);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_VENUSAURITE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_VENUSAURITE); }
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
@@ -513,8 +513,8 @@ SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_EARTHQUAKE) == GetMovePower(MOVE_EGG_BOMB));
-        ASSUME(!IsSpeciesOfType(SPECIES_WOBBUFFET, TYPE_DARK));
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
+        ASSUME(!IsSpeciesOfType(TEST_SPECIES_WOBBUFFET, TYPE_DARK));
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
         OPPONENT(SPECIES_HIPPOWDON);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
@@ -535,8 +535,8 @@ SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_EARTHQUAKE) == GetMovePower(MOVE_EGG_BOMB));
-        ASSUME(!IsSpeciesOfType(SPECIES_WOBBUFFET, TYPE_DARK));
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
+        ASSUME(!IsSpeciesOfType(TEST_SPECIES_WOBBUFFET, TYPE_DARK));
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
         OPPONENT(SPECIES_HIPPOWDON);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }

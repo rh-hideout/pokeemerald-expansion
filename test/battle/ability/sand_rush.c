@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Sand Rush prevents damage from sandstorm")
         ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
         ASSUME(type1 != TYPE_STEEL && type2 != TYPE_STEEL);
         PLAYER(SPECIES_STOUTLAND) { Ability(ABILITY_SAND_RUSH); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SANDSTORM); }
     } SCENE {
@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Sand Rush doubles speed from sandstorm")
 {
     GIVEN {
         PLAYER(SPECIES_SANDSLASH) { Ability(ABILITY_SAND_RUSH); Speed(100); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(199); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(199); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SANDSTORM); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }

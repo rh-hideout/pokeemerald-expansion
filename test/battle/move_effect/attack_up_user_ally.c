@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Howl raises user's Attack by 1 stage", s16 damage)
         ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP
             || GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (raiseAttack) TURN { MOVE(player, MOVE_HOWL); }
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -36,10 +36,10 @@ DOUBLE_BATTLE_TEST("Howl raises user's and partner's Attack by 1 stage", s16 dam
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
-        PLAYER(SPECIES_WYNAUT) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(13); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(12); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(10); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(13); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(12); }
     } WHEN {
         if (raiseAttack) TURN { MOVE(playerLeft, MOVE_HOWL); }
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
@@ -69,10 +69,10 @@ DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(15); }
         PLAYER(SPECIES_VOLTORB) { Speed(10); Ability(ABILITY_SOUNDPROOF); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(1); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
         TURN { MOVE(playerLeft, MOVE_HOWL); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }

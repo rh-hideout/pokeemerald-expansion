@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Cotton Guard raises Defense by 3 stages", s16 damage)
     PARAMETRIZE { raiseDefense = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (raiseDefense) TURN { MOVE(player, MOVE_COTTON_GUARD); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }

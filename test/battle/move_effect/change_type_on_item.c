@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Techno Blast changes type depending on the drive the user ho
     PARAMETRIZE { species = SPECIES_DRATINI; item = ITEM_CHILL_DRIVE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_TECHNO_BLAST); }

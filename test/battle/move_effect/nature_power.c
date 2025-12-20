@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Nature power plays a move correctly in any background")
         PARAMETRIZE {environment = i;}
     }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         Environment(environment);
         if (gBattleEnvironmentInfo[environment].naturePower)
             move = gBattleEnvironmentInfo[environment].naturePower;

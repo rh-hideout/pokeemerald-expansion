@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Sword of Ruin reduces Defense if opposing mon's ability does
 
     GIVEN {
         PLAYER(SPECIES_CHIEN_PAO) { Ability(ABILITY_SWORD_OF_RUIN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_ROLE_PLAY); }
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -34,10 +34,10 @@ SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battler
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1);}
         PLAYER(SPECIES_CHIEN_PAO);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_RUINATION); }
@@ -56,9 +56,9 @@ SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battler
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1);}
         OPPONENT(SPECIES_CHIEN_PAO);
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
@@ -89,9 +89,9 @@ DOUBLE_BATTLE_TEST("Sword of Ruin increases damage taken by special moves in Won
         ASSUME(GetMoveCategory(MOVE_ROUND) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveEffect(MOVE_ROUND) != EFFECT_PSYSHOCK);
         PLAYER(SPECIES_CHIEN_PAO) { Ability(ABILITY_SWORD_OF_RUIN); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (useWonderRoom)
             TURN { MOVE(opponentLeft, MOVE_WONDER_ROOM); MOVE(playerRight, move, target: opponentLeft); }
@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Brea
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CHIEN_PAO) { Ability(ABILITY_SWORD_OF_RUIN); }
         OPPONENT(SPECIES_EXCADRILL) { Ability(ability); }
     } WHEN {
@@ -148,9 +148,9 @@ DOUBLE_BATTLE_TEST("Sword of Ruin's Defense reduction is not ignored by Mold Bre
 
     GIVEN {
         PLAYER(SPECIES_CHIEN_PAO) { Ability(ABILITY_SWORD_OF_RUIN); }
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_EXCADRILL) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
     } SCENE {
@@ -173,9 +173,9 @@ DOUBLE_BATTLE_TEST("Sword of Ruin's Defense reduction is ignored by Gastro Acid"
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
         PLAYER(SPECIES_CHIEN_PAO) { Ability(ABILITY_SWORD_OF_RUIN); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentRight, move, target: playerLeft); MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
     } SCENE {

@@ -17,8 +17,8 @@ SINGLE_BATTLE_TEST("Full Restore restores a battler's HP and cures any primary s
     PARAMETRIZE { status = STATUS1_SLEEP; }
     PARAMETRIZE { status = STATUS1_NONE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(300); Status1(status); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(300); Status1(status); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 0); }
     } SCENE {
@@ -43,9 +43,9 @@ SINGLE_BATTLE_TEST("Full Restore restores a party members HP and cures any prima
     PARAMETRIZE { status = STATUS1_SLEEP; }
     PARAMETRIZE { status = STATUS1_NONE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(100); MaxHP(300); Status1(status); }
-        PLAYER(SPECIES_WYNAUT) { HP(100); MaxHP(300); Status1(status); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(100); MaxHP(300); Status1(status); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(100); MaxHP(300); Status1(status); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 1); }
         TURN { SWITCH(player, 1); }
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Full Restore restores a party members HP and cures any prima
         }
     } THEN {
         EXPECT_EQ(player->hp, player->maxHP);
-        EXPECT_EQ(player->species, SPECIES_WYNAUT);
+        EXPECT_EQ(player->species, TEST_SPECIES_WYNAUT);
         EXPECT_EQ(player->status1, STATUS1_NONE);
     }
 }
@@ -71,8 +71,8 @@ SINGLE_BATTLE_TEST("Full Restore heals a battler from any primary status")
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_SLEEP; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(status); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 0); }
     } SCENE {
@@ -93,9 +93,9 @@ SINGLE_BATTLE_TEST("Full Restore heals a party member from any primary status")
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status = STATUS1_SLEEP; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { Status1(status); }
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { Status1(status); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 1); }
         TURN { SWITCH(player, 1); }
@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("Full Restore heals a party member from any primary status")
         NOT MESSAGE("Wynaut had its HP restored."); // The message is not printed if mon has max HP.
         MESSAGE("Wynaut had its status healed!");
     } THEN {
-        EXPECT_EQ(player->species, SPECIES_WYNAUT);
+        EXPECT_EQ(player->species, TEST_SPECIES_WYNAUT);
         EXPECT_EQ(player->status1, STATUS1_NONE);
     }
 }
@@ -111,8 +111,8 @@ SINGLE_BATTLE_TEST("Full Restore heals a party member from any primary status")
 SINGLE_BATTLE_TEST("Full Restore restores a battler's HP and cures confusion")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(300); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(300); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN{ MOVE(opponent, MOVE_CONFUSE_RAY); }
         TURN{ USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 0); }
@@ -128,8 +128,8 @@ SINGLE_BATTLE_TEST("Full Restore restores a battler's HP and cures confusion")
 SINGLE_BATTLE_TEST("Full Restore resets Toxic Counter")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC); }
         TURN { ; }

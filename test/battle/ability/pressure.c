@@ -4,8 +4,8 @@
 SINGLE_BATTLE_TEST("Pressure causes opponent's moves to use up 1 additional PP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_POUND, 35}); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MovesWithPP({MOVE_POUND, 35}); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
     } WHEN {
         TURN { MOVE(player, MOVE_POUND); }
     } THEN {
@@ -16,10 +16,10 @@ SINGLE_BATTLE_TEST("Pressure causes opponent's moves to use up 1 additional PP")
 DOUBLE_BATTLE_TEST("Pressure's effect stacks with multiple Pokémon")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SWIFT, 20}); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
-        OPPONENT(SPECIES_WYNAUT) { Ability(ABILITY_PRESSURE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SWIFT, 20}); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Ability(ABILITY_PRESSURE); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SWIFT); }
     } THEN {
@@ -30,8 +30,8 @@ DOUBLE_BATTLE_TEST("Pressure's effect stacks with multiple Pokémon")
 SINGLE_BATTLE_TEST("Pressure's effect applies to Imprison and Snatch")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_IMPRISON, 10}, {MOVE_SNATCH, 10}); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MovesWithPP({MOVE_IMPRISON, 10}, {MOVE_SNATCH, 10}); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
     } WHEN {
         TURN { MOVE(player, MOVE_IMPRISON); }
         TURN { MOVE(player, MOVE_SNATCH); }
@@ -44,8 +44,8 @@ SINGLE_BATTLE_TEST("Pressure's effect applies to Imprison and Snatch")
 SINGLE_BATTLE_TEST("Pressure's effect applies to Spikes, Stealth Rock and Toxic Spikes")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SPIKES, 20}, {MOVE_STEALTH_ROCK, 20}, {MOVE_TOXIC_SPIKES, 20}); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SPIKES, 20}, {MOVE_STEALTH_ROCK, 20}, {MOVE_TOXIC_SPIKES, 20}); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
     } WHEN {
         TURN { MOVE(player, MOVE_SPIKES); }
         TURN { MOVE(player, MOVE_STEALTH_ROCK); }
@@ -60,8 +60,8 @@ SINGLE_BATTLE_TEST("Pressure's effect applies to Spikes, Stealth Rock and Toxic 
 SINGLE_BATTLE_TEST("Pressure's effect doesn't apply to Sticky Web")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_STICKY_WEB, 20}); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MovesWithPP({MOVE_STICKY_WEB, 20}); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); }
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); }
     } THEN {

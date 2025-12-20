@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Revenge doubles in power if False Swipe connected but didn't
     s16 hits[3];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_REVENGE); }
         TURN { MOVE(opponent, MOVE_FALSE_SWIPE); MOVE(player, MOVE_REVENGE); }
@@ -36,10 +36,10 @@ DOUBLE_BATTLE_TEST("Revenge doesn't double in power if user was not hit by targe
     s16 hits[3];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_REVENGE, target: playerRight); }

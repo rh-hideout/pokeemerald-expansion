@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Sand Attack lowers Accuracy by 1 stage")
     PASSES_RANDOMLY(GetMoveAccuracy(MOVE_SCRATCH) * 3 / 4, 100, RNG_ACCURACY);
     GIVEN {
         ASSUME(GetMoveAccuracy(MOVE_SCRATCH) == 100);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SAND_ATTACK); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {

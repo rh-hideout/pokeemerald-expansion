@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Triple Kick damage is increased by its base damage for each 
     s16 thirdHit;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TRIPLE_KICK); }
     } SCENE {

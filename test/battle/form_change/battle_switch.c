@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon switching out")
 {
     GIVEN {
         PLAYER(SPECIES_AEGISLASH_SHIELD);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { SWITCH(player, 1); }

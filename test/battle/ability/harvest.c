@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Harvest has a 50% chance to restore a Berry at the end of th
 {
     PASSES_RANDOMLY(1, 2, RNG_HARVEST);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Harvest always restores a Berry in Sunlight")
 {
     PASSES_RANDOMLY(1, 1, RNG_HARVEST);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SUNNY_DAY); }
@@ -62,9 +62,9 @@ SINGLE_BATTLE_TEST("Harvest restores a Berry even after being switched out and b
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_PARTING_SHOT) == EFFECT_PARTING_SHOT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_PARTING_SHOT); SEND_OUT(opponent, 1); }
         TURN { MOVE(player, MOVE_SUNNY_DAY); MOVE(opponent, MOVE_PARTING_SHOT); SEND_OUT(opponent, 0); }
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Harvest restores a Berry consumed by Fling")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); MOVE(opponent, MOVE_FLING); }
@@ -98,7 +98,7 @@ SINGLE_BATTLE_TEST("Harvest restores a Berry consumed by Natural Gift")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); MOVE(opponent, MOVE_NATURAL_GIFT); }
@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("Harvest doesn't restore a Berry when destroyed by Incinerate
     PASSES_RANDOMLY(1, 1, RNG_HARVEST);
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_INCINERATE, MOVE_EFFECT_INCINERATE));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_INCINERATE); MOVE(opponent, MOVE_SUNNY_DAY); }
@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Harvest doesn't restore a Berry when knocked off by Knock Of
     PASSES_RANDOMLY(1, 1, RNG_HARVEST);
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); MOVE(opponent, MOVE_SUNNY_DAY); }
@@ -154,7 +154,7 @@ SINGLE_BATTLE_TEST("Harvest doesn't restore a Berry when eaten by Bug Bite/Pluck
     PASSES_RANDOMLY(1, 1, RNG_HARVEST);
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_BUG_BITE, MOVE_EFFECT_BUG_BITE));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_BUG_BITE); MOVE(opponent, MOVE_SUNNY_DAY); }
@@ -190,9 +190,9 @@ DOUBLE_BATTLE_TEST("Harvest order is affected by speed")
 {
     GIVEN {
         PLAYER(SPECIES_EXEGGUTOR) { Speed(2); Ability(ABILITY_HARVEST); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_EXEGGUTOR) { Speed(10); Ability(ABILITY_HARVEST); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_BULLDOZE); MOVE(playerLeft, MOVE_SUNNY_DAY); }
     } SCENE {
@@ -210,7 +210,7 @@ SINGLE_BATTLE_TEST("Harvest doesn't restore a Berry when transfered to another P
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); MOVE(opponent, MOVE_TRICK); }

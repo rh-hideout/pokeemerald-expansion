@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Rest causes the user to fall asleep and restores HP to full")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(300); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(300); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REST); }
     } SCENE {
@@ -24,8 +24,8 @@ SINGLE_BATTLE_TEST("Rest causes the user to fall asleep and restores HP to full"
 SINGLE_BATTLE_TEST("Rest fails if the user is at full HP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(300); MaxHP(300); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(300); MaxHP(300); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REST); }
     } SCENE {
@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down")
 {
     GIVEN {
         PLAYER(SPECIES_MINIOR_METEOR) { Ability(ABILITY_SHIELDS_DOWN); HP(299); MaxHP(300); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REST); }
     } SCENE {
@@ -58,8 +58,8 @@ SINGLE_BATTLE_TEST("Rest fails if the user is protected by Electric/Misty Terrai
         ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
         ASSUME(GetMoveEffect(MOVE_MISTY_TERRAIN) == EFFECT_MISTY_TERRAIN);
         ASSUME(GetSpeciesType(SPECIES_WYNAUT, 0) != TYPE_FLYING && GetSpeciesType(SPECIES_WYNAUT, 1) != TYPE_FLYING);
-        PLAYER(SPECIES_WYNAUT) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_REST); }
     } SCENE {
@@ -73,8 +73,8 @@ SINGLE_BATTLE_TEST("Rest doesn't fail if the user is protected by Safeguard")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SAFEGUARD) == EFFECT_SAFEGUARD);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SAFEGUARD); }
         TURN { MOVE(player, MOVE_REST); }
@@ -91,8 +91,8 @@ DOUBLE_BATTLE_TEST("Rest doesn't fail if the user is protected by Flower Veil")
         ASSUME(GetSpeciesType(SPECIES_CHIKORITA, 0) == TYPE_GRASS || GetSpeciesType(SPECIES_CHIKORITA, 1) == TYPE_GRASS);
         PLAYER(SPECIES_CHIKORITA) { HP(1); }
         PLAYER(SPECIES_FLORGES) { Ability(ABILITY_FLOWER_VEIL); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_REST); }
     } SCENE {

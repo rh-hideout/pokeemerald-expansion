@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Return's power increases the higher friendship of the user i
     PARAMETRIZE { friendship = 200; }
     PARAMETRIZE { friendship = 255; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Friendship(friendship); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Friendship(friendship); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RETURN); }
     } SCENE {
@@ -33,8 +33,8 @@ SINGLE_BATTLE_TEST("Return does 1 damage at min Friendship (Gen3+)")
 {
     s16 damage;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Friendship(0); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Friendship(0); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RETURN); }
     } SCENE {

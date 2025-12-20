@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Aurora Veil can only be used in Hail and Snow")
     PARAMETRIZE { move = MOVE_HAIL; }
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_AURORA_VEIL); }
     } SCENE {
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Aurora Veil will prevent Protean activation if it fails due 
 {
     GIVEN {
         PLAYER(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_AURORA_VEIL); }
     } SCENE {
@@ -41,9 +41,9 @@ SINGLE_BATTLE_TEST("Aurora Veil will prevent Protean activation if it fails due 
 SINGLE_BATTLE_TEST("Aurora Veil wont prevent Protean activation when it fails due to being set up already")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SNOWSCAPE); MOVE(player, MOVE_AURORA_VEIL); }
         TURN { SWITCH(player, 1); }

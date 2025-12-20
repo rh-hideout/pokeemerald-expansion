@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Galvanize boosts power of affected moves by 20% (Gen7+) or 3
     GIVEN {
         WITH_CONFIG(CONFIG_ATE_MULTIPLIER, genConfig);
         PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ability); Moves(MOVE_TACKLE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE); }
     } SCENE {

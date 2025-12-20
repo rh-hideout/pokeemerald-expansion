@@ -10,9 +10,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Taunt")
         ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
         ASSUME(GetMoveCategory(MOVE_HARDEN) == DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TAUNT, target: moveTarget); MOVE(moveTarget, MOVE_HARDEN); }
     } SCENE {
@@ -31,9 +31,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Torment")
         ASSUME(GetMoveEffect(MOVE_TORMENT) == EFFECT_TORMENT);
         ASSUME(GetMoveCategory(MOVE_HARDEN) == DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TORMENT, target: moveTarget); MOVE(moveTarget, MOVE_HARDEN); }
         TURN { MOVE(moveTarget, MOVE_HARDEN); }
@@ -54,9 +54,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Encore")
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         ASSUME(GetMoveCategory(MOVE_HARDEN) == DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_ENCORE, target: moveTarget); MOVE(moveTarget, MOVE_HARDEN); }
         TURN { MOVE(moveTarget, MOVE_CELEBRATE); }
@@ -77,9 +77,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Disable")
         ASSUME(GetMoveEffect(MOVE_DISABLE) == EFFECT_DISABLE);
         ASSUME(GetMoveCategory(MOVE_HARDEN) == DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_DISABLE, target: moveTarget); MOVE(moveTarget, MOVE_HARDEN); }
         TURN { MOVE(moveTarget, MOVE_HARDEN); }
@@ -96,9 +96,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Cursed Body")
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_PECK));
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_JELLICENT) { Ability(ABILITY_CURSED_BODY); }
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_PECK, target: opponentLeft); MOVE(playerRight, MOVE_PECK, target: opponentLeft); }
         TURN { MOVE(playerLeft, MOVE_PECK, target: opponentLeft); MOVE(playerRight, MOVE_PECK, target: opponentLeft); }
@@ -121,9 +121,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Heal Block")
         ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
         ASSUME(GetMoveEffect(MOVE_RECOVER) == EFFECT_RESTORE_HP);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); HP(1); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_HEAL_BLOCK, target: moveTarget); MOVE(moveTarget, MOVE_RECOVER); }
     } SCENE {
@@ -141,9 +141,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Infatuation")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ATTRACT) == EFFECT_ATTRACT);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_ATTRACT, target: moveTarget); MOVE(moveTarget, MOVE_CELEBRATE); }
     } SCENE {
@@ -158,9 +158,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil does not protect the Pokémon's side from Impriso
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_IMPRISON) == EFFECT_IMPRISON);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) {Moves(MOVE_IMPRISON, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Moves(MOVE_IMPRISON, MOVE_CELEBRATE); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_IMPRISON); MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_SPLASH); }
     } SCENE {
@@ -182,9 +182,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil prevents Psychic Noise's effect")
     GIVEN {
         ASSUME(GetMoveAdditionalEffectById(MOVE_PSYCHIC_NOISE, 0)->moveEffect == MOVE_EFFECT_PSYCHIC_NOISE);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_PSYCHIC_NOISE, target: moveTarget); MOVE(moveTarget, MOVE_RECOVER); }
     } SCENE {

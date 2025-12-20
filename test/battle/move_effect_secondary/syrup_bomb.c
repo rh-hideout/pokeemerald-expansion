@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Syrup Bomb covers the foe in sticky syrup for 3 turns")
     u8 j;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
         for (j = 0; j < 4; j++)
@@ -37,8 +37,8 @@ SINGLE_BATTLE_TEST("Syrup Bomb covers the foe in sticky syrup for 3 turns")
 SINGLE_BATTLE_TEST("Sticky Syrup isn't applied again if the target is already covered")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup isn't applied again if the target is already co
 SINGLE_BATTLE_TEST("Syrup Bomb is prevented by Bulletproof")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHESPIN) { Ability(ABILITY_BULLETPROOF); }
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, Whi
     PARAMETRIZE { species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
@@ -126,8 +126,8 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, Whi
 SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Amulet")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); }
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
     } SCENE {
@@ -147,8 +147,8 @@ SINGLE_BATTLE_TEST("Sticky syrup will not decrease speed further then minus six"
     u8 j;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         for (j = 0; j < 3; j++)
             TURN { MOVE(player, MOVE_SCARY_FACE); }
@@ -173,9 +173,9 @@ SINGLE_BATTLE_TEST("Sticky syrup will not decrease speed further then minus six"
 SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user switches out")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
         TURN { SWITCH(player, 1); }
@@ -195,9 +195,9 @@ SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user switches out")
 SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user faints")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB);
                MOVE(opponent, MOVE_SCRATCH);

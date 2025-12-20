@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Static inflicts paralysis on contact")
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(!MoveMakesContact(MOVE_SWIFT));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Static triggers 30% of the time")
     GIVEN {
         ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_4);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Static triggers even if attacker is under substitute")
 {
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_TACKLE));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }

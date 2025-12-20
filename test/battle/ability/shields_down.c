@@ -4,8 +4,8 @@
 SINGLE_BATTLE_TEST("Minior Core doesn't transform into Minior Meteor on switch-in if it has 1/2 or less health")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); HP(50); MaxHP(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
@@ -22,8 +22,8 @@ SINGLE_BATTLE_TEST("Minior Core doesn't transform into Minior Meteor on switch-i
 SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on switch-in if it has more than 1/2 health")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); HP(51); MaxHP(101); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on switch-in if it
 SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on battle start if it has more than 1/2 health")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); HP(51); MaxHP(101); }
     } WHEN {
         TURN { }
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Shields Down protects Minior Meteor from status conditions")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(species) { Ability(ABILITY_SHIELDS_DOWN); HP(hp); MaxHP(300); }
     } WHEN {
         TURN { MOVE(player, MOVE_WILL_O_WISP); }

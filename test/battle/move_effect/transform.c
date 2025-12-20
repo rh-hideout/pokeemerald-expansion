@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("(TERA) Transform does not copy the target's Tera Type, and i
     PARAMETRIZE { playerDoTera = GIMMICK_TERA; }
     PARAMETRIZE { playerDoTera = GIMMICK_NONE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_EARTHQUAKE); TeraType(TYPE_GHOST); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_EARTHQUAKE); TeraType(TYPE_GHOST); }
         OPPONENT(SPECIES_DITTO) { TeraType(TYPE_FLYING); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: playerDoTera); MOVE(opponent, MOVE_TRANSFORM); }

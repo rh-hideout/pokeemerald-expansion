@@ -9,8 +9,8 @@ SINGLE_BATTLE_TEST("MinimizeDoubleDamage flag makes moves cause double damage to
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MINIMIZE) == EFFECT_MINIMIZE);
         ASSUME(MoveIncreasesPowerToMinimizedTargets(MOVE_STEAMROLLER));
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         if (useMinimize)
             TURN { MOVE(opponent, MOVE_MINIMIZE); MOVE(player, MOVE_STEAMROLLER); }

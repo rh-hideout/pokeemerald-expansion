@@ -15,8 +15,8 @@ SINGLE_BATTLE_TEST("Headbutt flinches the target if attacker is faster")
     PARAMETRIZE { isFaster = FALSE; spdPlayer = 5; spdOpponent = 10; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(spdPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(spdOpponent); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(spdPlayer); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(spdOpponent); }
     } WHEN {
         TURN { MOVE(player, MOVE_HEADBUTT); }
         TURN { MOVE(player, MOVE_HEADBUTT); }
@@ -46,8 +46,8 @@ SINGLE_BATTLE_TEST("Headbutt flinches the target if attacker is faster")
 SINGLE_BATTLE_TEST("Protect always works when used after flinching")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_PROTECT); MOVE(opponent, MOVE_HEADBUTT); }
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_HEADBUTT); }
@@ -74,8 +74,8 @@ SINGLE_BATTLE_TEST("Headbutt flinches 30% of the time")
 {
     PASSES_RANDOMLY(30, 100, RNG_SECONDARY_EFFECT);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HEADBUTT); }
     } SCENE {

@@ -7,8 +7,8 @@ SINGLE_BATTLE_TEST("Move Animation Test: Smack Down works when used 15 times in 
     FORCE_MOVE_ANIM(TRUE);
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         for (j = 0; j < nTurns; j++)
         {

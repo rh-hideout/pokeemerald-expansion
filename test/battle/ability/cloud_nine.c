@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Cloud Nine/Air Lock prevent basic weather effects, but witho
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
         PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SANDSTORM); }
         TURN {}

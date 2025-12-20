@@ -23,8 +23,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 stage")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DEFOG); }
     } SCENE {
@@ -39,8 +39,8 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 stage")
 SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) {Ability(ABILITY_SIMPLE);};
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Ability(ABILITY_SIMPLE);};
     } WHEN {
         TURN { MOVE(player, MOVE_DEFOG); }
         TURN { MOVE(player, MOVE_DEFOG); }
@@ -60,8 +60,8 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4)"
 {
     GIVEN {
         WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
     } SCENE {
@@ -79,8 +79,8 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change behind
 {
     GIVEN {
         WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Ability(ABILITY_SIMPLE);}
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); Ability(ABILITY_SIMPLE);}
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
         TURN { MOVE(player, MOVE_DEFOG); }
@@ -106,8 +106,8 @@ SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute
 
     GIVEN {
         WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
         TURN { MOVE(opponent, move); }
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
@@ -141,10 +141,10 @@ DOUBLE_BATTLE_TEST("Defog doesn't remove Reflect or Light Screen from the user's
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_REFLECT); MOVE(playerRight, MOVE_LIGHT_SCREEN); }
         TURN { MOVE(playerLeft, move, target: opponentLeft); }
@@ -174,10 +174,10 @@ DOUBLE_BATTLE_TEST("Defog removes Reflect and Light Screen from target's side", 
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_REFLECT); MOVE(opponentRight, MOVE_LIGHT_SCREEN); }
         TURN { MOVE(playerLeft, move, target: opponentLeft); }
@@ -207,10 +207,10 @@ DOUBLE_BATTLE_TEST("Defog doesn't remove Mist or Safeguard from the user's side"
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_MIST); MOVE(playerRight, MOVE_SAFEGUARD); }
         TURN { MOVE(playerLeft, move, target: opponentLeft); }
@@ -239,10 +239,10 @@ DOUBLE_BATTLE_TEST("Defog removes Mist and Safeguard from target's side")
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_MIST); MOVE(opponentRight, MOVE_SAFEGUARD); }
         TURN { MOVE(playerLeft, move, target: opponentLeft); }
@@ -281,11 +281,11 @@ DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from target's side
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_DEFOG; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_STEALTH_ROCK); MOVE(opponentRight, MOVE_STICKY_WEB); }
         TURN { MOVE(opponentLeft, move, target: playerLeft); }
@@ -334,11 +334,11 @@ DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from user's side (
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_6; }
     GIVEN {
         WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_STEALTH_ROCK); MOVE(opponentRight, MOVE_STICKY_WEB); }
         TURN { MOVE(playerLeft, move, target: opponentLeft); }
@@ -385,9 +385,9 @@ SINGLE_BATTLE_TEST("Defog removes Spikes from target's side")
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_DEFOG;     }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
         TURN { MOVE(player, MOVE_SPIKES); }
         TURN { MOVE(player, move); }
@@ -418,9 +418,9 @@ SINGLE_BATTLE_TEST("Defog removes Spikes from user's side (Gen 6+)")
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_6; }
     GIVEN {
         WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SPIKES); MOVE(player, move); }
         TURN { SWITCH(player, 1); }
@@ -458,8 +458,8 @@ SINGLE_BATTLE_TEST("Defog removes terrain (Gen 8+)")
     PARAMETRIZE { move = MOVE_GRASSY_TERRAIN;   config = GEN_8; }
     GIVEN {
         WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
         TURN { MOVE(player, move); MOVE(opponent, MOVE_DEFOG); }
     } SCENE {
@@ -498,9 +498,9 @@ SINGLE_BATTLE_TEST("Defog removes Toxic Spikes from target's side")
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_DEFOG; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
         TURN { MOVE(player, move); }
@@ -535,9 +535,9 @@ SINGLE_BATTLE_TEST("Defog removes Toxic Spikes from user's side (Gen 6+)")
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_6; }
     GIVEN {
         WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, move); }
         TURN { SWITCH(opponent, 1); }
@@ -729,8 +729,8 @@ SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind 
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
         WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_LIGHT_SCREEN); }
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }

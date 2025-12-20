@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Heal Pulse heals the target by 1/2 of it's maxHP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_PULSE); }
     } SCENE {
@@ -23,10 +23,10 @@ SINGLE_BATTLE_TEST("Heal Pulse heals the target by 1/2 of it's maxHP")
 DOUBLE_BATTLE_TEST("Heal Pulse can heal partner")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_HEAL_PULSE, target: playerLeft); }
     } SCENE {
@@ -39,7 +39,7 @@ DOUBLE_BATTLE_TEST("Heal Pulse can heal partner")
 SINGLE_BATTLE_TEST("Heal Pulse is boosted by Mega Launcher")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
         OPPONENT(SPECIES_CLAWITZER);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_PULSE); }
@@ -54,8 +54,8 @@ SINGLE_BATTLE_TEST("Heal Pulse ignores accurace checks")
 {
     GIVEN {
         PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_BRIGHT_POWDER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_BRIGHT_POWDER); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_PULSE); }
     } SCENE {
@@ -69,8 +69,8 @@ SINGLE_BATTLE_TEST("Heal Pulse is blocked by Substitute")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(50); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_HEAL_PULSE); }
     } SCENE {
@@ -89,8 +89,8 @@ SINGLE_BATTLE_TEST("Floral Healing heals the target by 2/3rd of it's maxHP if Gr
         ASSUME(GetMoveEffect(MOVE_FLORAL_HEALING) == EFFECT_HEAL_PULSE);
         ASSUME(GetMoveEffectArg_MoveProperty(MOVE_FLORAL_HEALING) == MOVE_EFFECT_FLORAL_HEALING);
         ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_GRASSY_TERRAIN); MOVE(opponent, MOVE_FLORAL_HEALING); }
     } SCENE {

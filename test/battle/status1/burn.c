@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Burn deals 1/8th damage (Gen1-6) or 1/16th (Gen7+) per turn"
     PARAMETRIZE { config = GEN_6; value = 8; }
     GIVEN {
         WITH_CONFIG(CONFIG_BURN_DAMAGE, config);
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         for (j = 0; j < 4; j++)
             TURN {}
@@ -33,8 +33,8 @@ SINGLE_BATTLE_TEST("Burn reduces Attack by 50%", s16 damage)
     PARAMETRIZE { burned = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { if (burned) Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { if (burned) Status1(STATUS1_BURN); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -47,8 +47,8 @@ SINGLE_BATTLE_TEST("Burn reduces Attack by 50%", s16 damage)
 SINGLE_BATTLE_TEST("Will-O-Wisp burns target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WILL_O_WISP); }
     } SCENE {
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Will-O-Wisp burns target")
 SINGLE_BATTLE_TEST("Will-O-Wisp can't burn a fire type")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {
         TURN { MOVE(player, MOVE_WILL_O_WISP); }
@@ -90,7 +90,7 @@ AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target")
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_WILL_O_WISP); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_WILL_O_WISP); }
     } WHEN {
         TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_WILL_O_WISP); } // Both get -10
     }

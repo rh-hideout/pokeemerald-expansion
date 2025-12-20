@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Minimize increases the user's Evasion by 2 stages (Gen5+) or
 
     GIVEN {
         WITH_CONFIG(CONFIG_MINIMIZE_EVASION, config);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MINIMIZE); }
     } SCENE {

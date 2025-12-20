@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta if used successfully")
 {
     GIVEN {
         PLAYER(SPECIES_MELOETTA_ARIA);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RELIC_SONG); }
     } SCENE {
@@ -20,8 +20,8 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta if used successfully")
 SINGLE_BATTLE_TEST("Relic Song does not transform Pokemon other than Meloetta")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RELIC_SONG); }
     } SCENE {
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Relic Song does not transform Pokemon other than Meloetta")
             MESSAGE("Wobbuffet transformed!");
         }
     } THEN {
-        EXPECT_EQ(player->species, SPECIES_WOBBUFFET);
+        EXPECT_EQ(player->species, TEST_SPECIES_WOBBUFFET);
     }
 }
 
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta twice if used successfully")
 {
     GIVEN {
         PLAYER(SPECIES_MELOETTA_ARIA);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RELIC_SONG); }
         TURN { MOVE(player, MOVE_RELIC_SONG); }
@@ -79,9 +79,9 @@ DOUBLE_BATTLE_TEST("Relic Song transforms once Meloetta in a double battle")
 {
     GIVEN {
         PLAYER(SPECIES_MELOETTA_ARIA);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_RELIC_SONG); }
     } SCENE {

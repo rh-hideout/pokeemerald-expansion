@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Sticky Barb hurts its holder at the end of the turn")
 {
     s16 damage;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_STICKY_BARB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_STICKY_BARB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { }
     } SCENE {
@@ -31,8 +31,8 @@ SINGLE_BATTLE_TEST("Sticky Barb gets transferred if its holder is hit by a conta
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(!MoveMakesContact(MOVE_GROWL));
         ASSUME(!MoveMakesContact(MOVE_HYPER_VOICE));
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_STICKY_BARB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_STICKY_BARB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {

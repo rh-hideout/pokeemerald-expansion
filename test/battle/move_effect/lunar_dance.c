@@ -15,9 +15,9 @@ SINGLE_BATTLE_TEST("Lunar Dance causes the user to faint and heals the replaceme
         ASSUME(GetMovePP(MOVE_LEAFAGE) == 40);
         ASSUME(GetMovePP(MOVE_EMBER) == 25);
         PLAYER(SPECIES_GARDEVOIR);
-        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(100); Status1(STATUS1_POISON);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); MaxHP(100); Status1(STATUS1_POISON);
             MovesWithPP({MOVE_SCRATCH, 5}, {MOVE_WATER_GUN, 5}, {MOVE_LEAFAGE, 5}, {MOVE_EMBER, 0}); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_LUNAR_DANCE); SEND_OUT(player, 1); }
     } SCENE {
@@ -48,11 +48,11 @@ DOUBLE_BATTLE_TEST("Lunar Dance causes the user to faint and heals the replaceme
         ASSUME(GetMovePP(MOVE_LEAFAGE) == 40);
         ASSUME(GetMovePP(MOVE_EMBER) == 25);
         PLAYER(SPECIES_GARDEVOIR) { Speed(300); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(100); Status1(STATUS1_BURN); Speed(50);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(50); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); MaxHP(100); Status1(STATUS1_BURN); Speed(50);
             MovesWithPP({MOVE_SCRATCH, 5}, {MOVE_WATER_GUN, 5}, {MOVE_LEAFAGE, 5}, {MOVE_EMBER, 0}); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_LUNAR_DANCE); SEND_OUT(playerLeft, 2); }
     } SCENE {
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Lunar Dance effect activates even if the the switched Pokém
         WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_7);
         PLAYER(SPECIES_GARDEVOIR) { Speed(300); }
         PLAYER(SPECIES_NINJASK) { Speed(400); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN { MOVE(player, MOVE_LUNAR_DANCE); SEND_OUT(player, 1); }
     } SCENE {
@@ -102,10 +102,10 @@ SINGLE_BATTLE_TEST("Lunar Dance effect activates only if the switched Pokémon c
         WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_8);
         PLAYER(SPECIES_GARDEVOIR) { Speed(300); }
         PLAYER(SPECIES_NINJASK) { Speed(400); }
-        PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); Speed(50); }
-        PLAYER(SPECIES_WYNAUT) { Status1(STATUS1_PARALYSIS); Speed(50); }
-        PLAYER(SPECIES_WYNAUT) { MovesWithPP({MOVE_SCRATCH, 5}); Speed(50); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(50); MaxHP(100); Speed(50); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Status1(STATUS1_PARALYSIS); Speed(50); }
+        PLAYER(TEST_SPECIES_WYNAUT) { MovesWithPP({MOVE_SCRATCH, 5}); Speed(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN { MOVE(player, MOVE_LUNAR_DANCE); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, switchTo); }

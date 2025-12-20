@@ -64,10 +64,10 @@ DOUBLE_BATTLE_TEST("Fairy Aura's effect doesn't stack multiple times")
 
     GIVEN {
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_PLAY_ROUGH, target:opponentLeft, secondaryEffect:FALSE);

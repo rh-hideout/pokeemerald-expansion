@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Poison Heal heals from (Toxic) Poison damage")
 
     GIVEN {
         PLAYER(SPECIES_SHROOMISH) { Ability(ABILITY_POISON_HEAL); Status1(status);  HP(1), MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Poison Heal heals from Toxic Poison damage are constant")
 
     GIVEN {
         PLAYER(SPECIES_SHROOMISH) { Ability(ABILITY_POISON_HEAL); Status1(STATUS1_TOXIC_POISON);  HP(1), MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { }
         TURN { }
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Poison Heal does not heal or cause damage when under Heal Bl
 {
     GIVEN {
         PLAYER(SPECIES_SHROOMISH) { Ability(ABILITY_POISON_HEAL); Status1(STATUS1_POISON);  HP(1), MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); }
     } SCENE {
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Poison Heal activates before Toxic Orb")
 {
     GIVEN {
         PLAYER(SPECIES_SHROOMISH) { Ability(ABILITY_POISON_HEAL); Item(ITEM_TOXIC_ORB);  HP(1), MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {

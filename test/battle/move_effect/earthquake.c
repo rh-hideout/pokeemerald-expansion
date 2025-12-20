@@ -12,8 +12,8 @@ SINGLE_BATTLE_TEST("Earthquake's and Bulldoze's damage is halved when Grassy Ter
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EARTHQUAKE) == EFFECT_EARTHQUAKE);
         ASSUME(GetMoveEffect(MOVE_BULLDOZE) == EFFECT_EARTHQUAKE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (terrain)
             TURN { MOVE(player, MOVE_GRASSY_TERRAIN); }

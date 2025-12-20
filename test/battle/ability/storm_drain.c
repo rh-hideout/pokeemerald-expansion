@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Storm Drain absorbs Water-type moves and increases the Sp. A
     GIVEN {
         WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTRODON_EAST) { Ability(ABILITY_STORM_DRAIN); }
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_GUN); MOVE(opponent, MOVE_CELEBRATE); }
@@ -43,10 +43,10 @@ DOUBLE_BATTLE_TEST("Storm Drain forces single-target Water-type moves to target 
     GIVEN {
         WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTRODON_EAST) { Ability(ABILITY_STORM_DRAIN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_WATER_GUN, target: opponentRight);

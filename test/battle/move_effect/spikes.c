@@ -14,9 +14,9 @@ SINGLE_BATTLE_TEST("Spikes damage on switch in")
     PARAMETRIZE { layers = 2; divisor = 6; }
     PARAMETRIZE { layers = 3; divisor = 4; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         u32 count;
         for (count = 0; count < layers; ++count) {
@@ -39,9 +39,9 @@ SINGLE_BATTLE_TEST("Spikes damage on switch in")
 SINGLE_BATTLE_TEST("Spikes fails after 3 layers")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_SPIKES); }
         TURN { MOVE(player, MOVE_SPIKES); }
@@ -67,9 +67,9 @@ SINGLE_BATTLE_TEST("Spikes fails after 3 layers")
 SINGLE_BATTLE_TEST("Spikes damage on subsequent switch ins")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_SPIKES); }
         TURN { SWITCH(opponent, 1); }
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Spikes damage on subsequent switch ins")
 
 SINGLE_BATTLE_TEST("Spikes do not damage airborne Pokemon")
 {
-    u32 species = SPECIES_WOBBUFFET;
+    u32 species = TEST_SPECIES_WOBBUFFET;
     u32 item = ITEM_NONE;
     u32 move1 = MOVE_CELEBRATE;
     u32 move2 = MOVE_CELEBRATE;
@@ -117,8 +117,8 @@ SINGLE_BATTLE_TEST("Spikes do not damage airborne Pokemon")
     PARAMETRIZE { item = ITEM_AIR_BALLOON; move1 = MOVE_INGRAIN; airborne = FALSE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_SPIKES); MOVE(opponent, move1); }
@@ -137,8 +137,8 @@ SINGLE_BATTLE_TEST("Spikes do not damage airborne Pokemon")
 SINGLE_BATTLE_TEST("Toxic Spikes: Only three layers can be set up")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SPIKES); }
         TURN { MOVE(opponent, MOVE_SPIKES); }

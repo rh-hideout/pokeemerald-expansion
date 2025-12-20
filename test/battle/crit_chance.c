@@ -14,9 +14,9 @@ SINGLE_BATTLE_TEST("Critical hits without modifiers occur at different rates by 
     PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
     GIVEN {
         WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
-        ASSUME(GetSpeciesBaseSpeed(SPECIES_WOBBUFFET) == 33);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        ASSUME(GetSpeciesBaseSpeed(TEST_SPECIES_WOBBUFFET) == 33);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Crit Chance: Raising critical hit rate to 3 guarantees a cri
         ASSUME(GetMoveCriticalHitStage(MOVE_SLASH) == 1);
         ASSUME(gItemsInfo[ITEM_SCOPE_LENS].holdEffect == HOLD_EFFECT_SCOPE_LENS);
         PLAYER(SPECIES_TOGEKISS) { Ability(ABILITY_SUPER_LUCK); Item(ITEM_SCOPE_LENS); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SLASH); }
     } SCENE {

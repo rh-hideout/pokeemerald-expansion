@@ -12,8 +12,8 @@ SINGLE_BATTLE_TEST("Mirror Coat will do twice as much damage received from the o
     s16 normalDmg;
     s16 mirrorCoatDmg;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_ROUND); MOVE(player, MOVE_MIRROR_COAT); }
     } SCENE {
@@ -29,10 +29,10 @@ SINGLE_BATTLE_TEST("Mirror Coat will do twice as much damage received from the o
 DOUBLE_BATTLE_TEST("Mirror Coat cannot affect ally Pokémon")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_ROUND, target: playerRight);
@@ -50,10 +50,10 @@ DOUBLE_BATTLE_TEST("Mirror Coat hits the last opponent that hit the user")
     s16 mirrorCoatDmg;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_ROUND, target: playerLeft);
@@ -74,10 +74,10 @@ DOUBLE_BATTLE_TEST("Mirror Coat hits the last opponent that hit the user")
 DOUBLE_BATTLE_TEST("Mirror Coat respects Follow Me")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(opponentRight, MOVE_FOLLOW_ME);
@@ -95,10 +95,10 @@ DOUBLE_BATTLE_TEST("Mirror Coat respects Follow Me")
 DOUBLE_BATTLE_TEST("Mirror Coat fails if mon that damaged Mirror Coat user is no longer on the field (Gen 1-4)")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_ROUND, target: playerLeft);
@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("Mirror Coat deals 1 damage when the attack received is block
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_HEX) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEX); MOVE(player, MOVE_MIRROR_COAT); }
     } SCENE {

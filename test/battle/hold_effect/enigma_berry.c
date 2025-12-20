@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Enigma Berry recovers 25% of HP if hit by super effective move")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT) { MaxHP(100); HP(2); Item(ITEM_ENIGMA_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { MaxHP(100); HP(2); Item(ITEM_ENIGMA_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ENDURE); MOVE(opponent, MOVE_BITE); }
     } SCENE {
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Enigma Berry does nothing if not hit by super effective move
 {
     GIVEN {
         PLAYER(SPECIES_MIGHTYENA) { MaxHP(100); HP(2); Item(ITEM_ENIGMA_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ENDURE); MOVE(opponent, MOVE_BITE); }
     } SCENE {
@@ -43,8 +43,8 @@ SINGLE_BATTLE_TEST("Enigma Berry does nothing if not hit by super effective move
 SINGLE_BATTLE_TEST("Enigma Berry does nothing if Heal Block applies")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT) { MaxHP(100); HP(2); Item(ITEM_ENIGMA_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { MaxHP(100); HP(2); Item(ITEM_ENIGMA_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); }
         TURN { MOVE(player, MOVE_ENDURE); MOVE(opponent, MOVE_BITE); }
@@ -62,10 +62,10 @@ SINGLE_BATTLE_TEST("Enigma Berry does nothing if Heal Block applies")
 DOUBLE_BATTLE_TEST("Enigma Berry doesn't trigger if partner was hit")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_ENIGMA_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { Item(ITEM_ENIGMA_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {

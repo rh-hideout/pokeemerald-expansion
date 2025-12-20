@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Corrosion cannot bypass moves that prevent poisoning such as
         ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
         PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SAFEGUARD); MOVE(player, move); }
     } SCENE {
@@ -222,7 +222,7 @@ SINGLE_BATTLE_TEST("Corrosion's effect is lost if the move used by the Pokémon 
         ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
         ASSUME(GetMoveEffect(MOVE_MAGIC_COAT) == EFFECT_MAGIC_COAT);
         PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_MAGIC_COAT); MOVE(player, move); }
     } SCENE {

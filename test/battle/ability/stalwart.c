@@ -5,9 +5,9 @@ DOUBLE_BATTLE_TEST("Stalwart ignores redirection from Follow-Me")
 {
     GIVEN {
         PLAYER(SPECIES_ARCHALUDON) { Ability(ABILITY_STALWART); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FOLLOW_ME); MOVE(playerLeft, MOVE_DRACO_METEOR, target: opponentRight); }
     } SCENE {
@@ -30,10 +30,10 @@ DOUBLE_BATTLE_TEST("Stalwart stops Lightning Rod and Storm Drain from redirectin
         WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
         ASSUME(GetMoveType(MOVE_SPARK) == TYPE_ELECTRIC);
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STALWART); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_STALWART); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             if (ability == ABILITY_LIGHTNING_ROD)

@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Thunder Shock inflicts paralysis")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER_SHOCK); }
     } SCENE {
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Thunder Shock cannot paralyze an Electric-type (Gen6+)")
     GIVEN {
         WITH_CONFIG(CONFIG_PARALYZE_ELECTRIC, gen);
         ASSUME(GetSpeciesType(SPECIES_PIKACHU, 0) == TYPE_ELECTRIC);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU);
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER_SHOCK, secondaryEffect: TRUE); }

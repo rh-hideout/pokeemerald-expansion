@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Baddy Bad sets up Reflect when it was succesful")
     PARAMETRIZE { moveSuccess = TRUE; }
 
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(opponent, MOVE_SAND_ATTACK);

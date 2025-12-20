@@ -7,9 +7,9 @@ SINGLE_BATTLE_TEST("Wandering Spirit copied ability should not trigger on fainte
 {
     GIVEN {
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
-        PLAYER(SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET)
         OPPONENT(SPECIES_YAMASK_GALAR) { HP(1); Ability(ABILITY_WANDERING_SPIRIT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_POISON_FANG); SEND_OUT(opponent, 1); }
     } SCENE {

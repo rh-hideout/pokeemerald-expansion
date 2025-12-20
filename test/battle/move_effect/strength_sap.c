@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Strength Sap lowers Attack by 1 and restores HP based on tar
     PARAMETRIZE { atkStat = 50; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); }
-        OPPONENT(SPECIES_WOBBUFFET) { Attack(atkStat); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(200); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Attack(atkStat); }
     } WHEN {
         TURN { MOVE(player, MOVE_STRENGTH_SAP); }
     } SCENE {
@@ -39,8 +39,8 @@ SINGLE_BATTLE_TEST("Strength Sap works exactly the same when attacker is behind 
     PARAMETRIZE { atkStat = 50; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); }
-        OPPONENT(SPECIES_WOBBUFFET) { Attack(atkStat); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(200); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Attack(atkStat); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
         TURN { MOVE(player, MOVE_STRENGTH_SAP); }
@@ -71,8 +71,8 @@ SINGLE_BATTLE_TEST("Strength Sap lowers Attack by 1 and restores HP based on tar
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WORK_UP) == EFFECT_ATTACK_SPATK_UP);
         ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
-        PLAYER(SPECIES_WOBBUFFET) { HP(50); }
-        OPPONENT(SPECIES_WOBBUFFET) { Attack(60); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Attack(60); }
     } WHEN {
         if (statStage > DEFAULT_STAT_STAGE) { // +
             for (j = statStage; j > DEFAULT_STAT_STAGE; j--) {
@@ -118,8 +118,8 @@ SINGLE_BATTLE_TEST("Strength Sap fails if target is at -6 Atk")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_ATTACK_DOWN_2);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CHARM); }
         TURN { MOVE(player, MOVE_CHARM); }
@@ -152,8 +152,8 @@ SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_BIG_ROOT].holdEffect == HOLD_EFFECT_BIG_ROOT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET) { Attack(100); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(200); Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Attack(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_STRENGTH_SAP); }
     } SCENE {

@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Freeze has a 20% chance of being thawed")
 {
     PASSES_RANDOMLY(20, 100, RNG_FROZEN);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
@@ -18,8 +18,8 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
@@ -33,8 +33,8 @@ SINGLE_BATTLE_TEST("Freeze is thawed by user's Flame Wheel")
 {
     GIVEN {
         ASSUME(MoveThawsUser(MOVE_FLAME_WHEEL));
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLAME_WHEEL); }
     } SCENE {
@@ -49,8 +49,8 @@ SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing att
     PASSES_RANDOMLY(80, 100, RNG_FROZEN);
     GIVEN {
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); };
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
@@ -66,8 +66,8 @@ SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing att
 {
     PASSES_RANDOMLY(80, 100, RNG_FROZEN);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCALD); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {

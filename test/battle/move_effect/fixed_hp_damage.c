@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Sonic Boom deals fixed damage", s16 damage)
 
     GIVEN {
         ASSUME(GetMoveFixedHPDamage(MOVE_SONIC_BOOM) == 20);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(mon);
     } WHEN {
         TURN { MOVE(player, MOVE_SONIC_BOOM); }
@@ -32,7 +32,7 @@ TO_DO_BATTLE_TEST("Sonic Boom affects ghost types (Gen1)")
 SINGLE_BATTLE_TEST("Sonic Boom doesn't affect ghost types (Gen2+)")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTLY);
     } WHEN {
         TURN { MOVE(player, MOVE_SONIC_BOOM); }

@@ -12,8 +12,8 @@ SINGLE_BATTLE_TEST("Endure does not prevent multiple hits and stat changes occur
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ENDURE); MOVE(player, MOVE_SCALE_SHOT); }
     } SCENE {
@@ -34,12 +34,12 @@ SINGLE_BATTLE_TEST("Endure does not prevent multiple hits and stat changes occur
 DOUBLE_BATTLE_TEST("Endure is not transferred to a mon that is switched in due to Eject Button")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { HP(1); Item(ITEM_EJECT_BUTTON); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(1); Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_SQUIRTLE) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(opponentRight, MOVE_ENDURE);
@@ -61,8 +61,8 @@ DOUBLE_BATTLE_TEST("Endure is not transferred to a mon that is switched in due t
 SINGLE_BATTLE_TEST("Endure only lasts for one turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ENDURE); MOVE(player, MOVE_POUND); }
         TURN { MOVE(player, MOVE_POUND); }

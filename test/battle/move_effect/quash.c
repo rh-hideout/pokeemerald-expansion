@@ -10,7 +10,7 @@ DOUBLE_BATTLE_TEST("Quash-affected target will move last in the priority bracket
 {
     GIVEN {
         PLAYER(SPECIES_VOLBEAT) { Speed(10); Ability(ABILITY_PRANKSTER); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(30); }
         OPPONENT(SPECIES_TORCHIC) { Speed(20); }
         OPPONENT(SPECIES_TREECKO) { Speed(40); }
     } WHEN {
@@ -29,7 +29,7 @@ DOUBLE_BATTLE_TEST("Quash is not affected by dynamic speed")
         WITH_CONFIG(CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_8);
         ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         PLAYER(SPECIES_VOLBEAT) { Speed(10); Ability(ABILITY_PRANKSTER); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(30); }
         OPPONENT(SPECIES_TORCHIC) { Speed(50); }
         OPPONENT(SPECIES_TREECKO) { Speed(40); }
     } WHEN {
@@ -84,7 +84,7 @@ DOUBLE_BATTLE_TEST("Quash-affected targets move from fastest to slowest (Gen 8+)
     PARAMETRIZE { speedLeft = 50; speedRight = 60; }
     GIVEN {
         PLAYER(SPECIES_VOLBEAT) { Speed(10); Ability(ABILITY_PRANKSTER); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(70); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(70); }
         OPPONENT(SPECIES_TORCHIC) { Speed(speedLeft); }
         OPPONENT(SPECIES_TREECKO) { Speed(speedRight); }
     } WHEN {
@@ -116,7 +116,7 @@ DOUBLE_BATTLE_TEST("Quash-affected mon that acted early via After You is not aff
         ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         ASSUME(GetMoveEffect(MOVE_AFTER_YOU) == EFFECT_AFTER_YOU);
         PLAYER(SPECIES_VOLBEAT) { Speed(20); Ability(ABILITY_PRANKSTER); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(30); }
         OPPONENT(SPECIES_TORCHIC) { Speed(10); }
         OPPONENT(SPECIES_TREECKO) { Speed(40); }
     } WHEN {

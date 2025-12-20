@@ -4,10 +4,10 @@
 DOUBLE_BATTLE_TEST("Life Dew fails if user and partner are both at full hp")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_LIFE_DEW); }
     } SCENE {
@@ -21,10 +21,10 @@ DOUBLE_BATTLE_TEST("Life Dew recovers 25% of hp for both user and partner")
     s16 healing[2];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_LIFE_DEW); }
     } SCENE {
@@ -42,8 +42,8 @@ DOUBLE_BATTLE_TEST("Life Dew recovers 25% of hp for both user and partner")
 SINGLE_BATTLE_TEST("Life Dew works in singles on user")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_LIFE_DEW); }
     } SCENE {
@@ -56,10 +56,10 @@ SINGLE_BATTLE_TEST("Life Dew works in singles on user")
 DOUBLE_BATTLE_TEST("Life Dew only works on user if partner is at full hp")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_LIFE_DEW); }
     } SCENE {
@@ -72,10 +72,10 @@ DOUBLE_BATTLE_TEST("Life Dew only works on user if partner is at full hp")
 DOUBLE_BATTLE_TEST("Life Dew only works on partner if user is at full hp")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_LIFE_DEW); }
     } SCENE {
@@ -90,8 +90,8 @@ AI_SINGLE_BATTLE_TEST("AI uses Life Dew if it outheals your damage and outspeeds
     PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_TACKLE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_SCALD, MOVE_LIFE_DEW); HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_TACKLE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_SCALD, MOVE_LIFE_DEW); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_LIFE_DEW); }
     }
@@ -102,12 +102,11 @@ AI_DOUBLE_BATTLE_TEST("AI uses Life Dew if it outheals your damage and outspeeds
     PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_TACKLE); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_TACKLE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_SCALD, MOVE_LIFE_DEW); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_SCALD); HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_TACKLE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_TACKLE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_SCALD, MOVE_LIFE_DEW); HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_SCALD); HP(1); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_TACKLE); MOVE(playerRight, MOVE_TACKLE); EXPECT_MOVE(opponentLeft, MOVE_LIFE_DEW); }
     }
 }
-

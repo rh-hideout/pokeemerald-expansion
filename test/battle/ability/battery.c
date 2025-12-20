@@ -7,9 +7,9 @@ DOUBLE_BATTLE_TEST("Battery increases Sp. Attack damage of allies by ~30%")
 
     GIVEN {
         PLAYER(SPECIES_CHARJABUG) { Speed(1); Ability(ABILITY_BATTERY); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_SHOCK_WAVE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_CELEBRATE, MOVE_GASTRO_ACID); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_SHOCK_WAVE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_CELEBRATE, MOVE_GASTRO_ACID); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SHOCK_WAVE, target: opponentLeft); }
         TURN { MOVE(opponentLeft, MOVE_GASTRO_ACID, target: playerLeft); MOVE(playerRight, MOVE_SHOCK_WAVE, target: opponentLeft); }
@@ -32,9 +32,9 @@ DOUBLE_BATTLE_TEST("Battery does not increase its own Sp. Attack damage")
 
     GIVEN {
         PLAYER(SPECIES_CHARJABUG) { Speed(1); Ability(ABILITY_BATTERY); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_CELEBRATE, MOVE_GASTRO_ACID); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_CELEBRATE, MOVE_GASTRO_ACID); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SHOCK_WAVE, target: opponentLeft); }
         TURN { MOVE(opponentLeft, MOVE_GASTRO_ACID, target: playerLeft); MOVE(playerLeft, MOVE_SHOCK_WAVE, target: opponentLeft); }

@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Hydro Steam deals 1.5x damage under both Sunlight and Rain",
     PARAMETRIZE { setupMove = MOVE_SUNNY_DAY; }
     PARAMETRIZE { setupMove = MOVE_RAIN_DANCE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, setupMove); }
         TURN { MOVE(player, MOVE_HYDRO_STEAM); }
@@ -35,8 +35,8 @@ SINGLE_BATTLE_TEST("Hydro Steam is affected by Utility Umbrella", s16 damage)
     PARAMETRIZE { itemPlayer = ITEM_NONE;             itemOpponent = ITEM_UTILITY_UMBRELLA; }
     PARAMETRIZE { itemPlayer = ITEM_UTILITY_UMBRELLA; itemOpponent = ITEM_UTILITY_UMBRELLA; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(itemPlayer); };
-        OPPONENT(SPECIES_WOBBUFFET) {Item(itemOpponent); };
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(itemPlayer); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Item(itemOpponent); };
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); }
         TURN { MOVE(player, MOVE_HYDRO_STEAM); }

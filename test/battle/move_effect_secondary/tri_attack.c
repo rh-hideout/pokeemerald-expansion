@@ -18,8 +18,8 @@ SINGLE_BATTLE_TEST("Tri Attack can inflict paralysis, burn or freeze")
     PARAMETRIZE { statusAnim = (B_USE_FROSTBITE ? B_ANIM_STATUS_FRB : B_ANIM_STATUS_FRZ); }
     PASSES_RANDOMLY(1, 3, RNG_TRI_ATTACK);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TRI_ATTACK); }
         TURN {}
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze electric/fire/ice typ
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_FRZ; rng = MOVE_EFFECT_FREEZE_OR_FROSTBITE; species = SPECIES_GLALIE; }
     GIVEN {
         WITH_CONFIG(CONFIG_PARALYZE_ELECTRIC, GEN_6);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_TRI_ATTACK, WITH_RNG(RNG_TRI_ATTACK, rng)); }
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze Pokémon with abiliti
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_FRZ; rng = MOVE_EFFECT_FREEZE_OR_FROSTBITE; species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRI_ATTACK, WITH_RNG(RNG_TRI_ATTACK, rng)); }
@@ -124,8 +124,8 @@ SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze a mon which is alread
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_BRN; rng = MOVE_EFFECT_BURN; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_FRZ; rng = MOVE_EFFECT_FREEZE_OR_FROSTBITE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRI_ATTACK, WITH_RNG(RNG_TRI_ATTACK, rng)); }
         TURN {}

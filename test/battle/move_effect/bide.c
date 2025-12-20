@@ -12,8 +12,8 @@ SINGLE_BATTLE_TEST("Bide deals twice the taken damage over two turns")
     s16 damage2;
     s16 bideDamage;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BIDE); MOVE(opponent, MOVE_SCRATCH); }
         TURN { SKIP_TURN(player); MOVE(opponent, MOVE_SCRATCH); }

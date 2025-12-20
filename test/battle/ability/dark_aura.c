@@ -64,10 +64,10 @@ DOUBLE_BATTLE_TEST("Dark Aura's effect doesn't stack multiple times")
 
     GIVEN {
         PLAYER(SPECIES_YVELTAL) { Ability(ABILITY_DARK_AURA); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
         PLAYER(SPECIES_YVELTAL) { Ability(ABILITY_DARK_AURA); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_BITE, target:opponentLeft, secondaryEffect:FALSE);

@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Moody randomly raises the user's Attack, Defense, Sp. Atk, S
     GIVEN {
         WITH_CONFIG(CONFIG_MOODY_ACC_EVASION, config);
         PLAYER(SPECIES_OCTILLERY) { Ability(ABILITY_MOODY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { }
     } SCENE {
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Moody randomly lowers the user's Attack, Defense, Sp. Atk, S
     GIVEN {
         WITH_CONFIG(CONFIG_MOODY_ACC_EVASION, config);
         PLAYER(SPECIES_OCTILLERY) { Ability(ABILITY_MOODY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { }
     } SCENE {
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Moody randomly raises the holder's Attack, Defense, Sp. Atk,
     GIVEN {
         WITH_CONFIG(CONFIG_MOODY_ACC_EVASION, config);
         PLAYER(SPECIES_OCTILLERY) { Ability(ABILITY_MOODY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { }
     } SCENE {

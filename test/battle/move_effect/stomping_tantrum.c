@@ -10,9 +10,9 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user flinched on
 {
     s16 damage[3];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); SWITCH(opponent, 1); }
         TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_CELEBRATE); }
@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user failed to a
     s16 damage[3];
     PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_POTION); };
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_LUM_BERRY); };
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_POTION); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_LUM_BERRY); };
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); MOVE(opponent, MOVE_THUNDER_WAVE); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRICK);  }
@@ -70,8 +70,8 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will not deal double damage if target prote
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_STOMPING_TANTRUM); }
@@ -94,8 +94,8 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user failed a Pr
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
         TURN { MOVE(player, MOVE_PROTECT); }
@@ -119,8 +119,8 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will not deal double if it missed")
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHTPOWDER); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BRIGHTPOWDER); };
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM, hit: FALSE); }
@@ -140,9 +140,9 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user was immune 
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); SWITCH(opponent, 1); }
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); SWITCH(opponent, 0); }

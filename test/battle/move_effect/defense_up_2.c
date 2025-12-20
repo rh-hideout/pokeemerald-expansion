@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Iron Defense raises Defense by 2 stages", s16 damage)
     PARAMETRIZE { raiseDefense = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (raiseDefense) TURN { MOVE(player, MOVE_IRON_DEFENSE); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }

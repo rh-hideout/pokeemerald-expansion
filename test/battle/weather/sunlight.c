@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Sunlight multiplies the power of Fire-type moves by 1.5x", s
     PARAMETRIZE { setupMove = MOVE_CELEBRATE; }
     PARAMETRIZE { setupMove = MOVE_SUNNY_DAY; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, setupMove); }
         TURN { MOVE(player, MOVE_EMBER); }
@@ -33,8 +33,8 @@ SINGLE_BATTLE_TEST("Sunlight multiplies the power of Water-type moves by 0.5x", 
     PARAMETRIZE { setupMove = MOVE_CELEBRATE; }
     PARAMETRIZE { setupMove = MOVE_SUNNY_DAY; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, setupMove); }
         TURN { MOVE(player, MOVE_WATER_GUN); }
@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Sunny Day fails if Primordial Sea is active")
 
     GIVEN {
         PLAYER(SPECIES_KYOGRE) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
     } SCENE {

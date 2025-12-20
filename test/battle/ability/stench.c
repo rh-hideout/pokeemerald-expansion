@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Stench has a 10% chance to flinch")
     GIVEN {
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
         PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STENCH); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Stench does not stack with King's Rock")
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
 
         PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STENCH); Item(ITEM_KINGS_ROCK); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
@@ -36,10 +36,10 @@ DOUBLE_BATTLE_TEST("Stench only triggers if target takes damage")
     GIVEN {
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_GRIMER) { Ability(ABILITY_STENCH); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_FAKE_OUT, target: opponentLeft);
@@ -60,10 +60,10 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move")
     GIVEN {
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
-        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
-        PLAYER(SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(10); }
         OPPONENT(SPECIES_GRIMER) { Speed(100); Ability(ABILITY_STENCH); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Speed(50); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_FAKE_OUT, target: opponentLeft);

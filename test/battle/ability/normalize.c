@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Normalize doesn't boost power of unaffected moves by 20% (< 
     GIVEN {
         WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_6);
         PLAYER(SPECIES_DELCATTY) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_POUND); }
     } SCENE {
@@ -108,7 +108,7 @@ SINGLE_BATTLE_TEST("Normalize boosts power of unaffected moves by 20% (Gen7+)", 
     GIVEN {
         WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_7);
         PLAYER(SPECIES_DELCATTY) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_POUND); }
     } SCENE {
@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Normalize doesn't boost power of affected moves by 20% (< Ge
     GIVEN {
         WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_6);
         PLAYER(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_WATER_GUN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Normalize boosts power of affected moves by 20% (Gen7+)", s1
     GIVEN {
         WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_7);
         PLAYER(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_WATER_GUN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_GUN); }
     } SCENE {

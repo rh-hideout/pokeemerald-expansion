@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Power Construct switches Zygarde's form when HP is below hal
             Ability(ABILITY_POWER_CONSTRUCT);
             HP((GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP) / 2) + 1);
         }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
@@ -34,7 +34,7 @@ WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catc
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(baseSpecies)
         {
             Ability(ABILITY_POWER_CONSTRUCT);

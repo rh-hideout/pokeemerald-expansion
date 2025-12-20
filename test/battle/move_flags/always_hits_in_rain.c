@@ -12,8 +12,8 @@ SINGLE_BATTLE_TEST("Thunder and Bleakwind/Wildbolt/Sandsear Storm bypass accurac
     GIVEN {
         ASSUME(GetMoveAccuracy(move) < 100 && GetMoveAccuracy(move) > 0);
         ASSUME(MoveAlwaysHitsInRain(move) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_RAIN_DANCE); MOVE(player, move); }
     } SCENE {

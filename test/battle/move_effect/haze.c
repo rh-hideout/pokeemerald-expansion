@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Haze resets stat changes", s16 damage)
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MEDITATE) == EFFECT_ATTACK_UP);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (haze) TURN { MOVE(player, MOVE_MEDITATE); MOVE(opponent, MOVE_HAZE); }
         TURN { MOVE(player, MOVE_SCRATCH); }

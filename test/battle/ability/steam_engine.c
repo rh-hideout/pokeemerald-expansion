@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Steam Engine raises speed when hit by a Fire or Water move")
 
     GIVEN {
         PLAYER(SPECIES_COALOSSAL) { Ability(ABILITY_STEAM_ENGINE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {

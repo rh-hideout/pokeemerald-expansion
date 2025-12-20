@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Belch cannot be used if the user has not eaten a berry")
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }
     GIVEN {
         PLAYER(SPECIES_SKWOVET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (item == ITEM_NONE)
             TURN { MOVE(player, MOVE_BELCH, allowed: FALSE); MOVE(player, MOVE_CELEBRATE); }
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Belch can still be used after switching out")
         ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
         PLAYER(SPECIES_GREEDENT) { Item(ITEM_ORAN_BERRY); }
         PLAYER(SPECIES_SKWOVET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STUFF_CHEEKS); }
         TURN { SWITCH(player, 1); }
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Belch can still be used after fainting")
         ASSUME(GetMoveEffect(MOVE_REVIVAL_BLESSING) == EFFECT_REVIVAL_BLESSING);
         PLAYER(SPECIES_GREEDENT) { Item(ITEM_ORAN_BERRY); }
         PLAYER(SPECIES_SKWOVET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STUFF_CHEEKS); MOVE(opponent, MOVE_FISSURE); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_REVIVAL_BLESSING, partyIndex: 0); }
@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("Belch can still be used after restoring the consumed berry")
         ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
         PLAYER(SPECIES_GREEDENT) { Item(ITEM_ORAN_BERRY); }
         PLAYER(SPECIES_SKWOVET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STUFF_CHEEKS); }
         TURN { MOVE(player, MOVE_RECYCLE); }

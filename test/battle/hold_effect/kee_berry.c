@@ -16,8 +16,8 @@ SINGLE_BATTLE_TEST("Kee Berry raises the holder's Defense by one stage when hit 
 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_KEE_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_KEE_BERRY); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Kee Berry raises the holder's Defense by one stage when hit 
 SINGLE_BATTLE_TEST("Kee Berry raises the holder's Defense by two stages with Ripen when hit by a physical move")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_APPLIN) { Item(ITEM_KEE_BERRY); Ability(ABILITY_RIPEN); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -58,8 +58,8 @@ SINGLE_BATTLE_TEST("Kee Berry raises the holder's Defense by two stages with Rip
 SINGLE_BATTLE_TEST("Kee Berry doesn't trigger if the item hold user used a physical move")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_KEE_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_KEE_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -77,10 +77,10 @@ SINGLE_BATTLE_TEST("Kee Berry doesn't trigger if the item hold user used a physi
 DOUBLE_BATTLE_TEST("Kee Berry doesn't trigger if partner was hit")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_KEE_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { Item(ITEM_KEE_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
@@ -93,7 +93,7 @@ DOUBLE_BATTLE_TEST("Kee Berry doesn't trigger if partner was hit")
 SINGLE_BATTLE_TEST("Kee Berry doesn't trigger if the move was boosted by Sheer Force")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_KEE_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_KEE_BERRY); }
         OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); }

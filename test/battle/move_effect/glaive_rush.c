@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("If Glaive Rush is successful moves targeted at the user do n
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
         ASSUME(GetMoveAccuracy(MOVE_MEGA_PUNCH) == 85);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_GLAIVE_RUSH); MOVE(opponent, MOVE_MEGA_PUNCH); }
     } SCENE {
@@ -28,8 +28,8 @@ SINGLE_BATTLE_TEST("If Glaive Rush is successful, moves targeted at the user dea
     s16 normalDmg;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_GLAIVE_RUSH); MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_SCRATCH); }
@@ -51,8 +51,8 @@ SINGLE_BATTLE_TEST("If Glaive Rush is successful, moves targeted at the user dea
     s16 normalDmg;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_GLAIVE_RUSH); }
         TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_CELEBRATE);  }
@@ -76,8 +76,8 @@ SINGLE_BATTLE_TEST("If Glaive Rush isn't successful moves targeted at the user d
     PARAMETRIZE { missesGlaiveRush = TRUE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
     } WHEN {
         TURN { MOVE(player, MOVE_GLAIVE_RUSH, hit: missesGlaiveRush); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Glaive Rush doesn't affect the user if the effect is blocked
     PARAMETRIZE { species = SPECIES_MAGNEMITE; } // Closest mon in both Defense and Sp. Defense
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Attack(50); }
     } WHEN {
         TURN { MOVE(player, MOVE_GLAIVE_RUSH); MOVE(opponent, MOVE_SCRATCH); }
@@ -122,8 +122,8 @@ SINGLE_BATTLE_TEST("Glaive Rush status last until the the user's next turn")
     s16 normalDmgSecondHit;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_GLAIVE_RUSH); MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_SCRATCH); }

@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Gem is consumed when it corresponds to the type of a move")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EMBER); }
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -38,8 +38,8 @@ SINGLE_BATTLE_TEST("Gem is not consumed when using Struggle", s16 damage)
             ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_GEMS);
             ASSUME(GetItemSecondaryId(item) == GetMoveType(MOVE_STRUGGLE));
         }
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STRUGGLE); }
     } SCENE {
@@ -60,8 +60,8 @@ SINGLE_BATTLE_TEST("Gem boost is only applied once")
     s16 normalHit;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -86,8 +86,8 @@ SINGLE_BATTLE_TEST("Gem modifier is used for all hits of Multi Hit Moves")
     s16 secondHit;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(player, MOVE_DOUBLE_HIT);
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Gem is consumed if the move type is changed")
 {
     GIVEN {
         PLAYER(SPECIES_DELCATTY) { Ability(ABILITY_NORMALIZE); Item(ITEM_NORMAL_GEM); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(player, MOVE_FEINT_ATTACK);

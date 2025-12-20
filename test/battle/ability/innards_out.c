@@ -11,9 +11,9 @@ SINGLE_BATTLE_TEST("Innards Out deal dmg on fainting equal to the amount of dmg 
 
     GIVEN {
         PLAYER(SPECIES_PYUKUMUKU) { HP(hp); Ability(ABILITY_INNARDS_OUT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(70); SpAttack(1000); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(70); SpAttack(1000); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         ASSUME(!IsBattleMoveStatus(MOVE_PSYCHIC));
         ASSUME(GetMoveCategory(MOVE_PSYCHIC) == DAMAGE_CATEGORY_SPECIAL);
     } WHEN {
@@ -30,8 +30,8 @@ SINGLE_BATTLE_TEST("Innards Out does not trigger after Gastro Acid has been used
 {
     GIVEN {
         PLAYER(SPECIES_PYUKUMUKU) { HP(1); Ability(ABILITY_INNARDS_OUT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         ASSUME(!IsBattleMoveStatus(MOVE_PSYCHIC));
         ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
     } WHEN {
@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Innards Out does not damage Magic Guard Pokemon")
 {
     GIVEN {
         PLAYER(SPECIES_PYUKUMUKU) { HP(1); Ability(ABILITY_INNARDS_OUT); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CLEFABLE) { Ability(ABILITY_MAGIC_GUARD); }
         ASSUME(!IsBattleMoveStatus(MOVE_PSYCHIC));
     } WHEN {
@@ -71,8 +71,8 @@ SINGLE_BATTLE_TEST("Innards Out uses correct damage amount for Future Sight")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
         PLAYER(SPECIES_PYUKUMUKU) { HP(1); Ability(ABILITY_INNARDS_OUT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FUTURE_SIGHT); }
         TURN { }
@@ -91,9 +91,9 @@ SINGLE_BATTLE_TEST("Innards Out doesn't trigger if Future Sight user is not on f
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
         PLAYER(SPECIES_PYUKUMUKU) { HP(1); Ability(ABILITY_INNARDS_OUT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(opponent, 1); }
@@ -114,8 +114,8 @@ SINGLE_BATTLE_TEST("Innards Out triggers if Future Sight user is back on the fie
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
         PLAYER(SPECIES_PYUKUMUKU) { HP(1); Ability(ABILITY_INNARDS_OUT); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(opponent, 1); }

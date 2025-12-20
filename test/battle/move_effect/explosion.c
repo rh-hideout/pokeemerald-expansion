@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Explosion causes the user to faint")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); }
     } SCENE {
@@ -23,9 +23,9 @@ SINGLE_BATTLE_TEST("Explosion causes the user to faint")
 SINGLE_BATTLE_TEST("Explosion causes the user & the target to faint")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); }
     } SCENE {
@@ -40,8 +40,8 @@ SINGLE_BATTLE_TEST("Explosion causes the user & the target to faint")
 SINGLE_BATTLE_TEST("Explosion causes the user to faint even if it misses")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION, hit: FALSE); }
     } SCENE {
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Explosion causes the user to faint even if it has no effect"
     GIVEN {
         ASSUME(GetMoveType(MOVE_EXPLOSION) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTLY);
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); }
@@ -71,8 +71,8 @@ SINGLE_BATTLE_TEST("Explosion causes the user to faint even if it has no effect"
 DOUBLE_BATTLE_TEST("Explosion causes everyone to faint in a double battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_ABRA) { HP(1); }
         OPPONENT(SPECIES_KADABRA) { HP(1); }
         OPPONENT(SPECIES_KADABRA);
@@ -94,7 +94,7 @@ DOUBLE_BATTLE_TEST("Explosion causes everyone to faint in a double battle")
 SINGLE_BATTLE_TEST("Explosion is blocked by Ability Damp")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_DAMP); }
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); }
@@ -111,8 +111,8 @@ SINGLE_BATTLE_TEST("Explosion is blocked by Ability Damp")
 SINGLE_BATTLE_TEST("Explosion does not trigger Destiny Bond")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DESTINY_BOND); MOVE(opponent, MOVE_EXPLOSION);}
     } SCENE {
@@ -128,9 +128,9 @@ DOUBLE_BATTLE_TEST("Explosion boosted by Galvanize is correctly blocked by Volt 
 {
     GIVEN {
         PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {

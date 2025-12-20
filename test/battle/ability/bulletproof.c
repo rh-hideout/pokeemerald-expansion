@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Bulletproof makes ballistic moves fail against the ability u
 {
     GIVEN {
         ASSUME(IsBallisticMove(MOVE_ELECTRO_BALL));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHESPIN) { Ability(ABILITY_BULLETPROOF); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRO_BALL); }

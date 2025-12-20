@@ -11,10 +11,10 @@ DOUBLE_BATTLE_TEST("Flame Burst Substitute")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SUBSTITUTE); MOVE(playerRight, MOVE_FLAME_BURST, target: opponentRight); }
     } SCENE {
@@ -26,10 +26,10 @@ DOUBLE_BATTLE_TEST("Flame Burst Substitute")
 DOUBLE_BATTLE_TEST("Flame Burst doesn't crash, opponent to player")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_FLAME_BURST, target: playerLeft); }
     } SCENE {
@@ -42,10 +42,10 @@ DOUBLE_BATTLE_TEST("Flame Burst doesn't crash, opponent to player")
 DOUBLE_BATTLE_TEST("Flame Burst doesn't crash, player to opponent")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WYNAUT) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FLAME_BURST, target: opponentLeft); }
     } SCENE {

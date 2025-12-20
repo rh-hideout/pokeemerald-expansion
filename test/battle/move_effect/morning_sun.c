@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Morning Sun recovers 1/2 of the user's max HP (Gen3+)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_TIME_OF_DAY_HEALING_MOVES, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(200); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(200); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MORNING_SUN); }
     } SCENE {
@@ -23,8 +23,8 @@ SINGLE_BATTLE_TEST("Morning Sun recovers 2/3 of the user's max HP in Sunlight (G
 {
     GIVEN {
         WITH_CONFIG(CONFIG_TIME_OF_DAY_HEALING_MOVES, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(300); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(300); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); MOVE(player, MOVE_MORNING_SUN); }
     } SCENE {
@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Morning Sun recovers 1/4 of the user's max HP in Rain, Sands
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     GIVEN {
         WITH_CONFIG(CONFIG_TIME_OF_DAY_HEALING_MOVES, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_MORNING_SUN); }
     } SCENE {

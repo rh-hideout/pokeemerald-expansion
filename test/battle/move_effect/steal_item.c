@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Thief and Covet steal target's held item")
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -34,8 +34,8 @@ SINGLE_BATTLE_TEST("Thief and Covet steal player's held item if opponent is a tr
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
         ASSUME(B_TRAINERS_KNOCK_OFF_ITEMS == TRUE);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {
@@ -55,8 +55,8 @@ WILD_BATTLE_TEST("Thief and Covet don't steal player's held item if opponent is 
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
         ASSUME(B_TRAINERS_KNOCK_OFF_ITEMS == TRUE);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {
@@ -75,8 +75,8 @@ SINGLE_BATTLE_TEST("Thief and Covet don't steal target's held item if user is ho
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POTION); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_POTION); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -95,8 +95,8 @@ SINGLE_BATTLE_TEST("Thief and Covet don't steal target's held item if target has
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -114,8 +114,8 @@ WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
         WITH_CONFIG(CONFIG_STEAL_WILD_ITEMS, GEN_9);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -134,8 +134,8 @@ SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faint
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); };
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -155,8 +155,8 @@ SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on HP thresholds are 
     PARAMETRIZE { move = MOVE_COVET; }
 
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(200); HP(101); Item(ITEM_ORAN_BERRY); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(200); HP(101); Item(ITEM_ORAN_BERRY); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -175,7 +175,7 @@ SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on a Status activate 
 
     GIVEN {
         PLAYER(SPECIES_TOXICROAK) { Ability(ABILITY_POISON_TOUCH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {

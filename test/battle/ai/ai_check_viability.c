@@ -21,8 +21,8 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Facade")
         WITH_CONFIG(CONFIG_BURN_FACADE_DMG, GEN_6);
         ASSUME(GetMoveEffect(MOVE_FACADE) == EFFECT_FACADE);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(60); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_FACADE); Status1(status1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(60); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_FACADE); Status1(status1); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     } SCENE {
@@ -43,8 +43,8 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Smelling Salt")
         ASSUME(GetMoveEffect(MOVE_SMELLING_SALTS) == EFFECT_DOUBLE_POWER_ON_ARG_STATUS);
         ASSUME(GetMoveEffectArg_Status(MOVE_SMELLING_SALTS) == STATUS1_PARALYSIS);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(60); Status1(status1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_SMELLING_SALTS); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(60); Status1(status1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_SMELLING_SALTS); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     } SCENE {
@@ -66,7 +66,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Wake Up Slap")
         ASSUME(GetMoveEffectArg_Status(MOVE_WAKE_UP_SLAP) == STATUS1_SLEEP);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_MEGANIUM) { HP(35); Status1(status1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_WAKE_UP_SLAP); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_WAKE_UP_SLAP); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     } SCENE {
@@ -88,8 +88,8 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Grav Apple")
         ASSUME(GetMovePower(MOVE_GRAV_APPLE) == GetMovePower(MOVE_DRUM_BEATING));
         ASSUME(MoveHasAdditionalEffect(MOVE_DRUM_BEATING, MOVE_EFFECT_SPD_MINUS_1) == TRUE);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(81); Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_DRUM_BEATING, MOVE_GRAV_APPLE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(81); Speed(20); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_DRUM_BEATING, MOVE_GRAV_APPLE); }
     } WHEN {
         TURN { MOVE(player, movePlayer); EXPECT_MOVE(opponent, MOVE_DRUM_BEATING); }
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, expectedMove); }
@@ -109,8 +109,8 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Flail")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLAIL) == EFFECT_FLAIL);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(hp); MaxHP(490); Speed(20); Moves(MOVE_BODY_SLAM, MOVE_FLAIL); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(hp); MaxHP(490); Speed(20); Moves(MOVE_BODY_SLAM, MOVE_FLAIL); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     }
@@ -126,7 +126,7 @@ AI_SINGLE_BATTLE_TEST("AI will only use Dream Eater if target is asleep")
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_MEGANIUM) { HP(38); Status1(status1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_DREAM_EATER); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_DREAM_EATER); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     } SCENE {
@@ -141,8 +141,8 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Spit Up")
         ASSUME(GetMoveEffect(MOVE_STOCKPILE) == EFFECT_STOCKPILE);
         ASSUME(GetMoveEffect(MOVE_SPIT_UP) == EFFECT_SPIT_UP);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(43); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_STOCKPILE, MOVE_SPIT_UP, MOVE_SCRATCH); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(43); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_STOCKPILE, MOVE_SPIT_UP, MOVE_SCRATCH); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_STOCKPILE); }
         TURN { EXPECT_MOVE(opponent, MOVE_SPIT_UP); }
@@ -165,8 +165,8 @@ AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted mov
         ASSUME(GetMoveCategory(MOVE_POWER_GEM) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMovePower(MOVE_POWER_GEM) == 80); // Gen 5's 70 power causes the test to fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(102); Speed(100); Moves(opponentMove, MOVE_STRENGTH); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(102); Speed(100); Moves(opponentMove, MOVE_STRENGTH); }
     } WHEN {
         TURN { MOVE(player, playerMove); EXPECT_MOVE(opponent, MOVE_STRENGTH); }
         TURN { MOVE(player, playerMove); EXPECT_MOVE(opponent, opponentMove); }
@@ -220,8 +220,8 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
         ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
         WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, GEN_8);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK) { Moves(MOVE_ROCK_SLIDE, move, MOVE_ACID); Status1(status1_0); }
         OPPONENT(SPECIES_EXPLOUD) { Status1(status1_1); Ability(partnerAbility); }
     } WHEN {
@@ -246,8 +246,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Refresh only when curing status is worthwhile")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_REFRESH) == EFFECT_REFRESH);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK) { Moves(MOVE_ROCK_SLIDE, MOVE_REFRESH); Status1(status1); Ability(ability); }
         OPPONENT(SPECIES_EXPLOUD) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -269,7 +269,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves that cure inactive party members")
         ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
         WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK) { Moves(MOVE_BODY_PRESS, MOVE_HEAL_BELL); }
         OPPONENT(SPECIES_EXPLOUD) { Status1(status); Ability(ability); }
     } WHEN {
@@ -384,8 +384,8 @@ AI_SINGLE_BATTLE_TEST("AI uses Trick Room (singles)")
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(11); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speed); Moves(MOVE_TACKLE, MOVE_TRICK_ROOM); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(11); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(speed); Moves(MOVE_TACKLE, MOVE_TRICK_ROOM); }
     } WHEN {
         if (speed == 10)
             TURN { EXPECT_MOVE(opponent, MOVE_TRICK_ROOM); }
@@ -427,7 +427,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Shield Dust immunity to additional effects")
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_VENOMOTH) { Ability(ability); Moves(MOVE_CELEBRATE, MOVE_POUND); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CHILLING_WATER, MOVE_BRINE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_CHILLING_WATER, MOVE_BRINE); }
     } WHEN {
     if (ability == ABILITY_SHIELD_DUST)
         TURN { EXPECT_MOVE(opponent, MOVE_BRINE); }
@@ -453,9 +453,9 @@ AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
 
     GIVEN {
         AI_FLAGS(aiFlags);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(fieldStatus, MOVE_RETURN, MOVE_TAUNT); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(fieldStatus, MOVE_RETURN, MOVE_TAUNT); }
         OPPONENT(species) { Ability(ability); Moves(MOVE_HYPER_VOICE);  }
     } WHEN {
         if (ability != ABILITY_NONE)

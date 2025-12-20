@@ -16,7 +16,7 @@ DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form")
     GIVEN {
         PLAYER(species) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); };
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_HAZE); MOVE(playerRight, MOVE_ORDER_UP, target: opponentLeft); }
@@ -64,7 +64,7 @@ DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form even if 
     GIVEN {
         PLAYER(species) { HP(1); Status1(STATUS1_POISON); Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); };
     } WHEN {
         TURN { }
@@ -109,10 +109,10 @@ DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form even if 
 DOUBLE_BATTLE_TEST("Order up does not boosts any stats if Dondozo is not affected by Commander")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_DONDOZO);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_ORDER_UP, target: opponentLeft); }
     } SCENE {
@@ -126,7 +126,7 @@ DOUBLE_BATTLE_TEST("Order Up is boosted by Sheer Force without removing the stat
         ASSUME(GetMoveEffect(MOVE_ENTRAINMENT) == EFFECT_ENTRAINMENT);
         PLAYER(SPECIES_DONDOZO) { Speed(10); }
         PLAYER(SPECIES_TATSUGIRI_CURLY) { Speed(9); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
         OPPONENT(SPECIES_TAUROS) { Speed(21); Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_ENTRAINMENT, target: playerLeft); MOVE(playerLeft, MOVE_ORDER_UP, target: opponentLeft); }
@@ -151,7 +151,7 @@ DOUBLE_BATTLE_TEST("Order Up is always boosted by Sheer Force", s16 damage)
         PLAYER(SPECIES_DONDOZO) { Speed(10); }
         PLAYER(SPECIES_TATSUGIRI_CURLY) { Speed(9); Ability(ability); }
         OPPONENT(SPECIES_TAUROS) { Speed(21); Ability(ABILITY_SHEER_FORCE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(22); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(22); }
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_HAZE);
                MOVE(opponentLeft, move, target: playerLeft);

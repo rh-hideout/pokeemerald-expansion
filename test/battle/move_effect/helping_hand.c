@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Helping Hand fails in a Single Battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HELPING_HAND); }
     } SCENE {
@@ -22,10 +22,10 @@ SINGLE_BATTLE_TEST("Helping Hand fails in a Single Battle")
 DOUBLE_BATTLE_TEST("Helping Hand fails if ally already acted")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HELPING_HAND, target: playerRight); MOVE(playerRight, MOVE_HELPING_HAND, target: playerLeft); }
     } SCENE {
@@ -42,10 +42,10 @@ DOUBLE_BATTLE_TEST("Helping Hand boosts the power of attacking moves by 50%", s1
     PARAMETRIZE { useHelpingHand = TRUE;  }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (useHelpingHand)
             TURN { MOVE(playerRight, MOVE_HELPING_HAND, target: playerLeft); MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
@@ -68,10 +68,10 @@ DOUBLE_BATTLE_TEST("Helping Hand still boosts moves used due to Instruct", s16 d
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (useHelpingHand)
         {
@@ -103,10 +103,10 @@ DOUBLE_BATTLE_TEST("Helping Hand boosts the power of attacking moves by 125% if 
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (useHelpingHandTwice)
             TURN { MOVE(playerRight, MOVE_HELPING_HAND, target: playerLeft);

@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Water Bubble prevents burn from Will-o-Wisp")
         ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
         PLAYER(SPECIES_DEWPIDER) { Ability(ABILITY_WATER_BUBBLE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_WILL_O_WISP); }
     } SCENE {

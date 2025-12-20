@@ -14,10 +14,10 @@ DOUBLE_BATTLE_TEST("Follow Me redirects single target moves used by opponents to
     PARAMETRIZE { moveUser = opponentLeft; partner = opponentRight; }
     PARAMETRIZE { moveUser = opponentRight; partner = opponentLeft; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: moveUser);
                MOVE(playerRight, MOVE_SCRATCH, target: partner);
@@ -54,10 +54,10 @@ DOUBLE_BATTLE_TEST("Spotlight redirects single target moves used by the opposing
     PARAMETRIZE { moveTarget = opponentLeft; }
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SPOTLIGHT, target: moveTarget);
                MOVE(playerRight, MOVE_SCRATCH, target: opponentRight);

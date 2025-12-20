@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Triple Arrows may lower Defense by one stage")
     PASSES_RANDOMLY(chance, 100, RNG_SECONDARY_EFFECT);
     GIVEN {
         PLAYER(SPECIES_TOGEPI) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TRIPLE_ARROWS); }
     } SCENE {
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Triple Arrows makes the foe flinch 30% of the time")
     PASSES_RANDOMLY(chance, 100, RNG_SECONDARY_EFFECT_2);
     GIVEN {
         PLAYER(SPECIES_TOGEPI) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TRIPLE_ARROWS); }
     } SCENE {
@@ -56,8 +56,8 @@ SINGLE_BATTLE_TEST("Triple Arrows has an increased critical hit ratio")
     GIVEN {
         WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveCriticalHitStage(MOVE_TRIPLE_ARROWS) == 1);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TRIPLE_ARROWS); }
     } SCENE {
@@ -69,8 +69,8 @@ SINGLE_BATTLE_TEST("Triple Arrows has an increased critical hit ratio")
 SINGLE_BATTLE_TEST("Triple Arrows can lower Defense and cause flinch at the time")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TRIPLE_ARROWS); }
     } SCENE {
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Triple Arrows can lower Defense and cause flinch at the time
 SINGLE_BATTLE_TEST("Triple Arrows's flinching is prevented by Inner Focus")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_RIOLU) { Ability(ABILITY_INNER_FOCUS); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRIPLE_ARROWS);

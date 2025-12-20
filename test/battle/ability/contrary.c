@@ -44,7 +44,7 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
 
     GIVEN {
         PLAYER(SPECIES_MIGHTYENA) { Ability(ABILITY_INTIMIDATE); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SPINDA) { Ability(abilityLeft); }
         OPPONENT(SPECIES_SPINDA) { Ability(abilityRight); }
     } WHEN {
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Contrary raises stats after using a move which would normall
     GIVEN {
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_OVERHEAT, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
         ASSUME(GetMoveCategory(MOVE_OVERHEAT) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SPINDA) { Ability(ability); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_OVERHEAT); }
@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
-        PLAYER(SPECIES_WOBBUFFET) { Defense(102); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Defense(102); }
         OPPONENT(SPECIES_SPINDA) { Ability(ability); Attack(100); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Contrary raises a stat after using a move which would normal
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(SPECIES_SPINDA) { Ability(ability); Speed(2); }
     } WHEN {
         TURN { MOVE(player, MOVE_GROWL); MOVE(opponent, MOVE_SCRATCH); }
@@ -195,7 +195,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SPINDA) { Ability(ability); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -225,8 +225,8 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
 SINGLE_BATTLE_TEST("Sticky Web raises Speed by 1 for Contrary mon on switch-in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); }

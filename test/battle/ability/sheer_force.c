@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Magnitude", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MAGNITUDE); }
     } SCENE {
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Eruption", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ERUPTION); }
     } SCENE {
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Water Spout", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_SPOUT); }
     } SCENE {
@@ -64,11 +64,11 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Present", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         //Test will fail if present heals because the hp change would be 0
         //so we want a damaging version of present
-        TURN { MOVE(player, MOVE_PRESENT, WITH_RNG(RNG_PRESENT, 1)); } 
+        TURN { MOVE(player, MOVE_PRESENT, WITH_RNG(RNG_PRESENT, 1)); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Psywave", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PSYWAVE); }
     } SCENE {
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Round", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROUND); }
     } SCENE {
@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Gyro Ball", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_GYRO_BALL); }
     } SCENE {
@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Electro Ball", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRO_BALL); }
     } SCENE {
@@ -151,7 +151,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Dragon Energy", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_ENERGY); }
     } SCENE {
@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Belch", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); HP(1); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BELCH); }
     } SCENE {
@@ -185,7 +185,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Shell Trap", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -202,7 +202,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Burn Up", s16 damage)
     PARAMETRIZE { ability = ABILITY_ZEN_MODE; }
     GIVEN {
         PLAYER(SPECIES_DARMANITAN) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BURN_UP); }
     } SCENE {
@@ -236,7 +236,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Steel Roller", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_GRASSY_TERRAIN); MOVE(player, MOVE_STEEL_ROLLER); }
     } SCENE {
@@ -304,7 +304,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Bolt Beak", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BOLT_BEAK); }
     } SCENE {
@@ -321,7 +321,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Fishious Rend", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FISHIOUS_REND); }
     } SCENE {
@@ -338,7 +338,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Comeuppance", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_COMEUPPANCE); }
     } SCENE {
@@ -355,7 +355,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Payback", s16 damage)
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PAYBACK); }
     } SCENE {
@@ -624,9 +624,9 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
         OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -712,9 +712,9 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
         OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -800,9 +800,9 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
         OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -888,9 +888,9 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
         OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -976,9 +976,9 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
         OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1064,9 +1064,9 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
         OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1152,9 +1152,9 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
         OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1240,9 +1240,9 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
         OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1329,9 +1329,9 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     }
     GIVEN {
         PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
         OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1416,7 +1416,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects")
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_DRUDDIGON) { Ability(ability); Moves(MOVE_POWER_UP_PUNCH, move); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }

@@ -9,10 +9,10 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Revival Blessing revives a chosen fainted party member for the player")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { HP(0); }
-        PLAYER(SPECIES_WYNAUT) { HP(0); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(0); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(0); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REVIVAL_BLESSING, partyIndex:2); }
     } SCENE {
@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Revival Blessing revives a chosen fainted party member for t
 SINGLE_BATTLE_TEST("Revival Blessing revives a fainted party member for an opponent")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_RAICHU);
         OPPONENT(SPECIES_PICHU) { HP(0); }
         OPPONENT(SPECIES_PIKACHU) { HP(0); }
@@ -39,8 +39,8 @@ SINGLE_BATTLE_TEST("Revival Blessing revives a fainted party member for an oppon
 SINGLE_BATTLE_TEST("Revival Blessing fails if no party members are fainted")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REVIVAL_BLESSING); }
     } SCENE {
@@ -61,15 +61,15 @@ AI_MULTI_BATTLE_TEST("Revival Blessing cannot revive a partner's party member")
         MULTI_PLAYER(SPECIES_CLEFABLE);
         MULTI_PLAYER(SPECIES_CLEFABLE) { HP(0); }
         MULTI_PLAYER(SPECIES_CLEFABLE);
-        MULTI_PARTNER(SPECIES_CLEFAIRY) { Moves(move2); } 
+        MULTI_PARTNER(SPECIES_CLEFAIRY) { Moves(move2); }
         MULTI_PARTNER(SPECIES_CLEFAIRY);
         MULTI_PARTNER(SPECIES_CLEFAIRY);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(move1); } 
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(move3); } 
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { HP(0); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT);
+        MULTI_OPPONENT_A(TEST_SPECIES_WOBBUFFET) { Moves(move1); }
+        MULTI_OPPONENT_A(TEST_SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_A(TEST_SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_B(TEST_SPECIES_WYNAUT) { Moves(move3); }
+        MULTI_OPPONENT_B(TEST_SPECIES_WYNAUT) { HP(0); }
+        MULTI_OPPONENT_B(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { EXPECT_MOVE(playerRight, move2); } // EXPECT_MOVE makes battler2 AI-controlled
     } SCENE {
@@ -89,10 +89,10 @@ AI_MULTI_BATTLE_TEST("Revival Blessing cannot revive a partner's party member")
 DOUBLE_BATTLE_TEST("Revival Blessing doesn't prevent revived battlers from losing their turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(1); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight);
                MOVE(opponentLeft, MOVE_REVIVAL_BLESSING, partyIndex: 1); }

@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority at full HP (Gen 7+)")
         WITH_CONFIG(CONFIG_GALE_WINGS, config);
         ASSUME(GetMoveType(MOVE_AERIAL_ACE) == TYPE_FLYING);
         PLAYER(SPECIES_TALONFLAME) { Ability(ABILITY_GALE_WINGS); HP(hp); MaxHP(100); Speed(1);}
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100);};
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(100);};
     } WHEN {
         TURN { MOVE(player, MOVE_AERIAL_ACE); }
     } SCENE {
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority to Flying-type moves")
         ASSUME(GetMoveType(MOVE_AERIAL_ACE) == TYPE_FLYING);
         ASSUME(GetMoveType(MOVE_FLARE_BLITZ) == TYPE_FIRE);
         PLAYER(SPECIES_TALONFLAME) { Ability(ABILITY_GALE_WINGS); HP(100); MaxHP(100); Speed(1);}
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100);};
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(100);};
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural 
         ASSUME(gItemsInfo[ITEM_SKY_PLATE].secondaryId == TYPE_FLYING);
         ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_LUM_BERRY)].type == TYPE_FLYING);
         OPPONENT(SPECIES_TALONFLAME) { Ability(ABILITY_GALE_WINGS); Speed(1); Item(heldItem); HPIV(31); AttackIV(3); DefenseIV(31); SpAttackIV(30); SpDefenseIV(30); SpeedIV(30); TeraType(TYPE_FLYING); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); };
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(100); };
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {

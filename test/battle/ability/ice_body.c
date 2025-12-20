@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Ice Body prevents damage from hail")
     PARAMETRIZE { move = MOVE_HAIL; }
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GLALIE) { Ability(ABILITY_ICE_BODY); }
     } WHEN {
         TURN { MOVE(player, move); MOVE(opponent, MOVE_SKILL_SWAP); }
@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Ice Body recovers 1/16th of Max HP in hail.")
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     GIVEN {
         PLAYER(SPECIES_GLALIE) { Ability(ABILITY_ICE_BODY); HP(1); MaxHP(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {

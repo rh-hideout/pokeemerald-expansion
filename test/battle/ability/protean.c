@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user to the move used
         WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_6);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user only once per sw
         WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_9);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }

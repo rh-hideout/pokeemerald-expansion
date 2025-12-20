@@ -18,8 +18,8 @@ SINGLE_BATTLE_TEST("Work Up raises Attack and Sp. Attack by 1 stage each", s16 d
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (raiseStats) TURN { MOVE(player, MOVE_WORK_UP); }
         TURN { MOVE(player, move); }

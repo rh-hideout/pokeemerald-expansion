@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Overcoat blocks powder and spore moves (Gen6+)")
     GIVEN {
         WITH_CONFIG(CONFIG_POWDER_OVERCOAT, gen);
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_PINECO) { Ability(ABILITY_OVERCOAT); }
     } WHEN {
         TURN { MOVE(player, MOVE_STUN_SPORE); }
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Overcoat blocks powder and spore moves (Gen6+)")
 DOUBLE_BATTLE_TEST("Overcoat blocks damage from sandstorm")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT)    { Speed(50); }
+        PLAYER(TEST_SPECIES_WYNAUT)    { Speed(50); }
         PLAYER(SPECIES_HELIOLISK) { Speed(40); Ability(ABILITY_SAND_VEIL); }
         OPPONENT(SPECIES_PINECO)  { Speed(30); Ability(ABILITY_OVERCOAT); }
         OPPONENT(SPECIES_STARLY)     { Speed(20); }
@@ -53,7 +53,7 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from hail")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
-        PLAYER(SPECIES_WYNAUT)    { Speed(50); Ability(ABILITY_SNOW_CLOAK); }
+        PLAYER(TEST_SPECIES_WYNAUT)    { Speed(50); Ability(ABILITY_SNOW_CLOAK); }
         PLAYER(SPECIES_SOLOSIS)   { Speed(40); Ability(ABILITY_RUN_AWAY); }
         OPPONENT(SPECIES_PINECO)  { Speed(30); Ability(ABILITY_OVERCOAT); }
         OPPONENT(SPECIES_SNORUNT) { Speed(20); }

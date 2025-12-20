@@ -15,8 +15,8 @@ SINGLE_BATTLE_TEST("Focus Punch activates only if not damaged")
     PARAMETRIZE { move = MOVE_LEER; activate = TRUE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, move); }
     } SCENE {
@@ -42,10 +42,10 @@ SINGLE_BATTLE_TEST("Focus Punch activates only if not damaged")
 DOUBLE_BATTLE_TEST("Focus Punch activation is based on Speed")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_FOCUS_PUNCH, target: playerLeft); MOVE(playerRight, MOVE_FOCUS_PUNCH, target: opponentLeft); MOVE(playerLeft, MOVE_FOCUS_PUNCH, target: opponentLeft); MOVE(opponentLeft, MOVE_FOCUS_PUNCH, target: playerLeft); }
     }

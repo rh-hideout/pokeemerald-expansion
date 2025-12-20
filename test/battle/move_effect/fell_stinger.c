@@ -10,9 +10,9 @@ SINGLE_BATTLE_TEST("Fell Stinger raises user's Attack by 2 stages (Gen6) or 3 st
 
     GIVEN {
         WITH_CONFIG(CONFIG_FELL_STINGER_STAT_RAISE, config);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FELL_STINGER); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_FELL_STINGER); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FELL_STINGER); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -29,9 +29,9 @@ SINGLE_BATTLE_TEST("Fell Stinger raises user's Attack by 2 stages (Gen6) or 3 st
 SINGLE_BATTLE_TEST("Fell Stinger doesn't raise user's Attack if it doesn't faint target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FELL_STINGER); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_FELL_STINGER); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FELL_STINGER); }
     } SCENE {

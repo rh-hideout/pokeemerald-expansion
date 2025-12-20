@@ -9,10 +9,10 @@ DOUBLE_BATTLE_TEST("Curious Medicine resets ally's stat stages upon entering bat
     PARAMETRIZE { ability = ABILITY_OWN_TEMPO; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SCOLIPEDE);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_SLOWKING_GALAR) { Ability(ability); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_QUIVER_DANCE); MOVE(playerLeft, MOVE_CHARM, target: opponentLeft); }

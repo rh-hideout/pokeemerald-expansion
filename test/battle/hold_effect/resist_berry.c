@@ -3,14 +3,14 @@
 
 static const u16 sMoveItemTable[][4] =
 {
-    { TYPE_NORMAL,   MOVE_SCRATCH,         ITEM_CHILAN_BERRY, SPECIES_WOBBUFFET },
+    { TYPE_NORMAL,   MOVE_SCRATCH,         ITEM_CHILAN_BERRY, TEST_SPECIES_WOBBUFFET },
     { TYPE_FIGHTING, MOVE_KARATE_CHOP,     ITEM_CHOPLE_BERRY, SPECIES_RAMPARDOS },
     { TYPE_FLYING,   MOVE_WING_ATTACK,     ITEM_COBA_BERRY,   SPECIES_HARIYAMA },
     { TYPE_POISON,   MOVE_POISON_STING,    ITEM_KEBIA_BERRY,  SPECIES_GOGOAT },
     { TYPE_GROUND,   MOVE_MUD_SHOT,        ITEM_SHUCA_BERRY,  SPECIES_RAMPARDOS },
     { TYPE_ROCK,     MOVE_ROCK_THROW,      ITEM_CHARTI_BERRY, SPECIES_CORVISQUIRE },
-    { TYPE_BUG,      MOVE_BUG_BITE,        ITEM_TANGA_BERRY,  SPECIES_WOBBUFFET },
-    { TYPE_GHOST,    MOVE_SHADOW_PUNCH,    ITEM_KASIB_BERRY,  SPECIES_WOBBUFFET },
+    { TYPE_BUG,      MOVE_BUG_BITE,        ITEM_TANGA_BERRY,  TEST_SPECIES_WOBBUFFET },
+    { TYPE_GHOST,    MOVE_SHADOW_PUNCH,    ITEM_KASIB_BERRY,  TEST_SPECIES_WOBBUFFET },
     { TYPE_STEEL,    MOVE_METAL_CLAW,      ITEM_BABIRI_BERRY, SPECIES_RAMPARDOS },
     { TYPE_FIRE,     MOVE_EMBER,           ITEM_OCCA_BERRY,   SPECIES_GOGOAT },
     { TYPE_WATER,    MOVE_WATER_GUN,       ITEM_PASSHO_BERRY, SPECIES_RAMPARDOS },
@@ -19,7 +19,7 @@ static const u16 sMoveItemTable[][4] =
     { TYPE_PSYCHIC,  MOVE_CONFUSION,       ITEM_PAYAPA_BERRY, SPECIES_HARIYAMA },
     { TYPE_ICE,      MOVE_AURORA_BEAM,     ITEM_YACHE_BERRY,  SPECIES_DRAGONAIR },
     { TYPE_DRAGON,   MOVE_DRAGON_BREATH,   ITEM_HABAN_BERRY,  SPECIES_DRAGONAIR },
-    { TYPE_DARK,     MOVE_BITE,            ITEM_COLBUR_BERRY, SPECIES_WOBBUFFET },
+    { TYPE_DARK,     MOVE_BITE,            ITEM_COLBUR_BERRY, TEST_SPECIES_WOBBUFFET },
     { TYPE_FAIRY,    MOVE_DISARMING_VOICE, ITEM_ROSELI_BERRY, SPECIES_DRAGONAIR },
 };
 
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
             ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_RESIST_BERRY);
             ASSUME(GetItemHoldEffectParam(item) == type);
         }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(defender) { Item(item); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effe
         }
         else if (TYPE_FAIRY == type)
         {
-            PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; item = sMoveItemTable[j][2]; defender = SPECIES_WOBBUFFET; }
+            PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; item = sMoveItemTable[j][2]; defender = TEST_SPECIES_WOBBUFFET; }
         }
         else
         {
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effe
                 gTypeEffectivenessTable[type][GetSpeciesType(defender, 1)]) <= UQ_4_12(1.0));
         ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_RESIST_BERRY);
         ASSUME(GetItemHoldEffectParam(item) == type);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(defender) { Item(item); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -109,8 +109,8 @@ SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle", s16
             ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_RESIST_BERRY);
             ASSUME(GetItemHoldEffectParam(item) == TYPE_NORMAL);
         }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_STRUGGLE); }
     } SCENE {
@@ -131,7 +131,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate if Disguise blocks the dama
         ASSUME(GetItemHoldEffect(ITEM_BABIRI_BERRY) == HOLD_EFFECT_RESIST_BERRY);
         ASSUME(GetItemHoldEffectParam(ITEM_BABIRI_BERRY) == TYPE_STEEL);
         ASSUME(GetMoveType(MOVE_METAL_CLAW) == TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MIMIKYU) { Item(ITEM_BABIRI_BERRY); Ability(ABILITY_DISGUISE); }
     } WHEN {
         TURN { MOVE(player, MOVE_METAL_CLAW); }

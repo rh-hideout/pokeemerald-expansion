@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Levitate activates when targeted by ground type moves")
     GIVEN {
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
         PLAYER(SPECIES_LUNATONE) { Ability(ABILITY_LEVITATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_MUD_SLAP); }
     } SCENE {
@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Levitate does not activate if protected")
     GIVEN {
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
         PLAYER(SPECIES_LUNATONE) { Ability(ABILITY_LEVITATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PROTECT); MOVE(opponent, MOVE_MUD_SLAP); }
     } SCENE {
@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Levitate does not activate on status moves")
         ASSUME(GetMoveType(MOVE_SAND_ATTACK) == TYPE_GROUND);
         ASSUME(GetMoveCategory(MOVE_SAND_ATTACK) == DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_LUNATONE) { Ability(ABILITY_LEVITATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SAND_ATTACK); }
     } SCENE {
@@ -69,9 +69,9 @@ DOUBLE_BATTLE_TEST("Levitate does not cause single remaining target to take high
     s16 damage[3];
     GIVEN {
         PLAYER(SPECIES_REGIROCK)  { Speed(1); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_LUNATONE) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_EARTHQUAKE); }
         TURN { MOVE(playerRight, MOVE_MEMENTO, target:opponentLeft); MOVE(playerLeft, MOVE_EARTHQUAKE); }
@@ -112,4 +112,3 @@ AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI")
             TURN { MOVE(player, MOVE_MUD_SLAP); EXPECT_SEND_OUT(opponent, 1); }
     }
 }
-

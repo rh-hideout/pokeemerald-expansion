@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Soul Heart boosts Sp. Atk after opponent uses Memento")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MAGEARNA) { Ability(ABILITY_SOUL_HEART); }
     } WHEN {
         TURN { MOVE(player, MOVE_MEMENTO); SEND_OUT(player, 1); }

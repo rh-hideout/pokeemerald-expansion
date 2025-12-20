@@ -11,10 +11,10 @@ ASSUMPTIONS
 DOUBLE_BATTLE_TEST("Water and Fire Pledge create a rainbow on the user's side of the field for four turns")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_WATER_PLEDGE, target: opponentLeft);
                MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentRight);
@@ -39,10 +39,10 @@ DOUBLE_BATTLE_TEST("Rainbow doubles the chance of secondary move effects")
     PASSES_RANDOMLY(20, 100, RNG_SECONDARY_EFFECT);
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_EMBER, MOVE_EFFECT_BURN) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_WATER_PLEDGE, target: opponentLeft);
                MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentRight);
@@ -61,9 +61,9 @@ DOUBLE_BATTLE_TEST("Rainbow flinch chance does not stack with Serene Grace")
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_BITE, MOVE_EFFECT_FLINCH) == TRUE);
         PLAYER(SPECIES_TOGEPI) { Speed(8); Ability(ABILITY_SERENE_GRACE); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(3); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_WATER_PLEDGE, target: opponentLeft);
                MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentRight);
@@ -79,10 +79,10 @@ DOUBLE_BATTLE_TEST("Rainbow flinch chance does not stack with Serene Grace")
 DOUBLE_BATTLE_TEST("Fire and Grass Pledge summons Sea Of Fire for four turns that damages the opponent")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentLeft);
                MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight);
@@ -118,10 +118,10 @@ DOUBLE_BATTLE_TEST("Fire and Grass Pledge summons Sea Of Fire for four turns tha
 DOUBLE_BATTLE_TEST("Sea Of Fire deals 1/8th damage per turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentLeft);
                MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight);
@@ -137,10 +137,10 @@ DOUBLE_BATTLE_TEST("Sea Of Fire deals 1/8th damage per turn")
 DOUBLE_BATTLE_TEST("Grass and Water Pledge create a swamp on the user's side of the field for four turns")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_GRASS_PLEDGE, target: opponentLeft);
                MOVE(playerRight, MOVE_WATER_PLEDGE, target: opponentRight);
@@ -163,10 +163,10 @@ DOUBLE_BATTLE_TEST("Grass and Water Pledge create a swamp on the user's side of 
 DOUBLE_BATTLE_TEST("Swamp reduces the speed of the effected side by 1/4th")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        PLAYER(SPECIES_WYNAUT) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(12); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(8); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(12); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(8); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_GRASS_PLEDGE, target: opponentLeft);
                MOVE(playerRight, MOVE_WATER_PLEDGE, target: opponentRight);
@@ -190,10 +190,10 @@ DOUBLE_BATTLE_TEST("The base power of a combined pledge move effect is 150")
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_HYPER_BEAM) == 150);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_HYPER_BEAM, target: playerRight);
                MOVE(playerLeft, MOVE_WATER_PLEDGE, target: opponentLeft);
@@ -212,10 +212,10 @@ DOUBLE_BATTLE_TEST("The base power of a combined pledge move effect is 150")
 DOUBLE_BATTLE_TEST("Pledge moves can not be redirected by absorbing abilities")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_LILEEP) { Ability(ABILITY_STORM_DRAIN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_WATER_PLEDGE, target: opponentRight);}
     } SCENE {
@@ -233,10 +233,10 @@ DOUBLE_BATTLE_TEST("Pledge status timer does not reset if combined move is used 
     PARAMETRIZE { pledgeMove1 = MOVE_GRASS_PLEDGE; pledgeMove2 = MOVE_WATER_PLEDGE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(playerLeft, pledgeMove1, target: opponentLeft);
                MOVE(playerRight, pledgeMove2, target: opponentRight);
@@ -272,14 +272,14 @@ DOUBLE_BATTLE_TEST("Pledge moves get same attack type bonus from partner", s16 d
 {
     u32 species;
 
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { species = TEST_SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_CHARMANDER; }
 
     GIVEN {
         PLAYER(species) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentLeft);
                MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight);
@@ -314,8 +314,8 @@ DOUBLE_BATTLE_TEST("Damage calculation: Combined pledge move")
     PARAMETRIZE { expectedDamage = 135; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_GRASS_PLEDGE) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(521); SpDefense(152); Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(521); SpDefense(152); Speed(3); }
         OPPONENT(SPECIES_CHARIZARD) { Speed(8); }
         OPPONENT(SPECIES_EEVEE) { SpAttack(126); Speed(5); }
     } WHEN {
@@ -345,9 +345,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo interactions with Powder are correct")
     PARAMETRIZE { moveLeft = MOVE_GRASS_PLEDGE; moveRight = MOVE_FIRE_PLEDGE; speedLeft = 3; speedRight = 4; } // FAIL 2
     GIVEN {
         ASSUME(GetMoveType(MOVE_FIRE_PLEDGE) == TYPE_FIRE);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedLeft); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speedRight); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(speedLeft); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speedRight); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
         OPPONENT(SPECIES_VIVILLON) { Speed(5); }
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_POWDER, target: playerLeft); MOVE(playerLeft, moveLeft, target: opponentLeft); MOVE(playerRight, moveRight, target: opponentLeft); }
@@ -392,10 +392,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Right")
     PARAMETRIZE { speedPLeft = 30; speedPRight = 40; speedOLeft = 8; speedORight = 5; }
     PARAMETRIZE { speedPLeft = 30; speedPRight = 40; speedOLeft = 8; speedORight = 1; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPLeft); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speedPRight); Status1(STATUS1_SLEEP_TURN(2)); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOLeft); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(speedORight); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(speedPLeft); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speedPRight); Status1(STATUS1_SLEEP_TURN(2)); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(speedOLeft); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(speedORight); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -430,10 +430,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Left")
     PARAMETRIZE { speedPLeft = 30; speedPRight = 40; speedOLeft = 8; speedORight = 5; }
     PARAMETRIZE { speedPLeft = 30; speedPRight = 40; speedOLeft = 8; speedORight = 1; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPLeft); Status1(STATUS1_SLEEP_TURN(2)); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speedPRight); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOLeft); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(speedORight); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(speedPLeft); Status1(STATUS1_SLEEP_TURN(2)); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speedPRight); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(speedOLeft); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(speedORight); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerLeft, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -463,10 +463,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Flinch Right"
     PARAMETRIZE { speedPLeft = 3; speedPRight = 4; speedOLeft = 8; speedORight = 1; }
     GIVEN {
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPLeft); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speedPRight); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOLeft); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(speedORight); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(speedPLeft); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speedPRight); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(speedOLeft); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(speedORight); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerRight); MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -496,10 +496,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Flinch Left")
     PARAMETRIZE { speedPLeft = 3; speedPRight = 4; speedOLeft = 8; speedORight = 1; }
     GIVEN {
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPLeft); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speedPRight); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOLeft); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(speedORight); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(speedPLeft); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speedPRight); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(speedOLeft); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(speedORight); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerLeft); MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerLeft, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -525,10 +525,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't fail if any mon wakes up")
     PARAMETRIZE { statusLeft = 0; statusRight = STATUS1_SLEEP_TURN(1); }
     PARAMETRIZE { statusLeft = STATUS1_SLEEP_TURN(1); statusRight = STATUS1_SLEEP_TURN(1); }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Status1(statusLeft); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); Status1(statusRight); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); Status1(statusLeft); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); Status1(statusRight); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -550,10 +550,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't fail if any mon thaws out")
     PARAMETRIZE { statusLeft = 0; statusRight = STATUS1_FREEZE; }
     PARAMETRIZE { statusLeft = STATUS1_FREEZE; statusRight = STATUS1_FREEZE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Status1(statusLeft); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); Status1(statusRight); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); Status1(statusLeft); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); Status1(statusRight); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 1)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 1)); }
     } SCENE {
@@ -574,10 +574,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Both Le
     PARAMETRIZE { speedLeft = 4; speedRight = 3; }
     PARAMETRIZE { speedLeft = 3; speedRight = 4; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedLeft); Status1(STATUS1_SLEEP_TURN(1)); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speedRight); Status1(STATUS1_SLEEP_TURN(2)); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(speedLeft); Status1(STATUS1_SLEEP_TURN(1)); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speedRight); Status1(STATUS1_SLEEP_TURN(2)); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -602,10 +602,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Both Ri
     PARAMETRIZE { speedLeft = 4; speedRight = 3; }
     PARAMETRIZE { speedLeft = 3; speedRight = 4; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedLeft); Status1(STATUS1_SLEEP_TURN(2)); }
-        PLAYER(SPECIES_WYNAUT) { Speed(speedRight); Status1(STATUS1_SLEEP_TURN(1)); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(speedLeft); Status1(STATUS1_SLEEP_TURN(2)); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(speedRight); Status1(STATUS1_SLEEP_TURN(1)); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -631,10 +631,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Both Le
     PARAMETRIZE { status1 = STATUS1_SLEEP_TURN(3); }
     PARAMETRIZE { status1 = STATUS1_SLEEP_TURN(4); }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Status1(status1); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); Status1(status1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); Status1(status1); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); Status1(status1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -657,10 +657,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Both Ri
     PARAMETRIZE { status1 = STATUS1_SLEEP_TURN(3); }
     PARAMETRIZE { status1 = STATUS1_SLEEP_TURN(4); }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Status1(status1); }
-        PLAYER(SPECIES_WYNAUT) { Speed(4); Status1(status1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); Status1(status1); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(4); Status1(status1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -679,10 +679,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Both Ri
 DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Frozen Both Left Faster")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Status1(STATUS1_FREEZE); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); Status1(STATUS1_FREEZE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); Status1(STATUS1_FREEZE); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); Status1(STATUS1_FREEZE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 0)); }
     } SCENE {
@@ -701,10 +701,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Frozen Both L
 DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Frozen Both Right Faster")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Status1(STATUS1_FREEZE); }
-        PLAYER(SPECIES_WYNAUT) { Speed(4); Status1(STATUS1_FREEZE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); Status1(STATUS1_FREEZE); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(4); Status1(STATUS1_FREEZE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 0)); }
     } SCENE {
@@ -723,10 +723,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Frozen Both R
 DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Both Left Faster")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(40); Status1(STATUS1_PARALYSIS); }
-        PLAYER(SPECIES_WYNAUT) { Speed(30); Status1(STATUS1_PARALYSIS); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(80); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(40); Status1(STATUS1_PARALYSIS); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(30); Status1(STATUS1_PARALYSIS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(80); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); }
     } SCENE {
@@ -745,10 +745,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Bot
 DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Both Right Faster")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(30); Status1(STATUS1_PARALYSIS); }
-        PLAYER(SPECIES_WYNAUT) { Speed(40); Status1(STATUS1_PARALYSIS); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(80); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(30); Status1(STATUS1_PARALYSIS); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(40); Status1(STATUS1_PARALYSIS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(80); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); }
     } SCENE {
@@ -768,10 +768,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Flinch Both L
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerLeft); MOVE(opponentRight, MOVE_FAKE_OUT, target: playerRight); MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerLeft, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -793,10 +793,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Flinch Both R
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        PLAYER(SPECIES_WYNAUT) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerLeft); MOVE(opponentRight, MOVE_FAKE_OUT, target: playerRight); MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerLeft, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -817,10 +817,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Flinch Both R
 DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move - Sleep")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); Status1(STATUS1_SLEEP_TURN(2)); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); Status1(STATUS1_SLEEP_TURN(2)); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FIRE_PLEDGE, target: playerLeft);
                MOVE(opponentRight, MOVE_GRASS_PLEDGE, target: playerLeft);
@@ -840,10 +840,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
 DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move - Freeze")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); Status1(STATUS1_FREEZE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(8); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); Status1(STATUS1_FREEZE); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FIRE_PLEDGE, target: playerLeft); MOVE(opponentRight, MOVE_GRASS_PLEDGE, target: playerLeft, WITH_RNG(RNG_FROZEN, 0)); MOVE(playerLeft, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
@@ -861,10 +861,10 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
 DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move - Powder")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_POWDER, target: opponentRight);
                MOVE(opponentLeft, MOVE_GRASS_PLEDGE, target: playerLeft);
@@ -887,9 +887,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_ELECTIVIRE) { Ability(ABILITY_MOTOR_DRIVE); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_ELECTRIFY, target: opponentRight);
                MOVE(opponentLeft, MOVE_GRASS_PLEDGE, target: playerLeft);
@@ -912,9 +912,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
     GIVEN {
         WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         PLAYER(SPECIES_GASTRODON) { Ability(ABILITY_STORM_DRAIN); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FIRE_PLEDGE, target: playerLeft);
                MOVE(opponentRight, MOVE_WATER_PLEDGE, target: playerLeft);
@@ -935,9 +935,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
 {
     GIVEN {
         PLAYER(SPECIES_GOODRA) { Ability(ABILITY_SAP_SIPPER); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_WATER_PLEDGE, target: playerLeft);
                MOVE(opponentRight, MOVE_GRASS_PLEDGE, target: playerLeft);
@@ -958,9 +958,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
 {
     GIVEN {
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FIRE_PLEDGE, target: playerLeft);
                MOVE(opponentRight, MOVE_WATER_PLEDGE, target: playerLeft);
@@ -981,9 +981,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
 {
     GIVEN {
         PLAYER(SPECIES_HEATRAN) { Ability(ABILITY_FLASH_FIRE); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_GRASS_PLEDGE, target: playerLeft);
                MOVE(opponentRight, MOVE_FIRE_PLEDGE, target: playerLeft);
@@ -1005,9 +1005,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_ELECTIVIRE) { Ability(ABILITY_MOTOR_DRIVE); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_ELECTRIFY, target: opponentRight);
                MOVE(opponentLeft, MOVE_WATER_PLEDGE, target: playerLeft);
@@ -1030,9 +1030,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_ELECTRIFY, target: opponentRight);
                MOVE(opponentLeft, MOVE_WATER_PLEDGE, target: playerLeft);
@@ -1054,9 +1054,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
 {
     GIVEN {
         PLAYER(SPECIES_VAPOREON) { Ability(ABILITY_WATER_ABSORB); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FIRE_PLEDGE, target: playerLeft);
                MOVE(opponentRight, MOVE_WATER_PLEDGE, target: playerLeft);
@@ -1077,9 +1077,9 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
 {
     GIVEN {
         PLAYER(SPECIES_DACHSBUN) { Ability(ABILITY_WELL_BAKED_BODY); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_GRASS_PLEDGE, target: playerLeft);
                MOVE(opponentRight, MOVE_FIRE_PLEDGE, target: playerLeft);

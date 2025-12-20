@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Water Compaction raises Defense 2 stages when hit by a water
     GIVEN {
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
         PLAYER(SPECIES_SANDYGAST) { Ability(ABILITY_WATER_COMPACTION); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
     } SCENE {
@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Water Compaction raises Defense 2 stages on each hit of a mu
         ASSUME(GetMoveType(MOVE_SURGING_STRIKES) == TYPE_WATER);
         ASSUME(GetMoveStrikeCount(MOVE_SURGING_STRIKES) == 3);
         PLAYER(SPECIES_SANDYGAST) { Ability(ABILITY_WATER_COMPACTION); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SURGING_STRIKES); }
     } SCENE {
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Water Compaction does not affect damage taken from Water typ
     GIVEN {
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
         PLAYER(SPECIES_SANDYGAST) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
     } SCENE {

@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon for 5 turns 50% of the time"
 {
     PASSES_RANDOMLY(50, 100, RNG_WRAP);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WRAP); }
         TURN {}
@@ -36,8 +36,8 @@ SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon for 4 turns 50% of the time"
 {
     PASSES_RANDOMLY(50, 100, RNG_WRAP);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WRAP); }
         TURN {}
@@ -59,8 +59,8 @@ SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon for 4 turns 50% of the time"
 SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon 7 turns while holding a Grip Claw")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_GRIP_CLAW); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_GRIP_CLAW); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WRAP); }
         TURN {}

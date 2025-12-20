@@ -4,8 +4,8 @@
 SINGLE_BATTLE_TEST("Clear Smog removes stat changes even if it did no damage")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SWORDS_DANCE); }
         TURN { MOVE(player, MOVE_ENDURE); MOVE(opponent, MOVE_CLEAR_SMOG); }

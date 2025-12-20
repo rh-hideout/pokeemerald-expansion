@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Safety Goggles block powder and spore moves")
 {
     GIVEN {
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_ABRA) { Item(ITEM_SAFETY_GOGGLES); }
     } WHEN {
         TURN { MOVE(player, MOVE_STUN_SPORE); }
@@ -23,8 +23,8 @@ SINGLE_BATTLE_TEST("Safety Goggles block powder and spore moves")
 SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Hail")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); };
     } WHEN {
         TURN { MOVE(player, MOVE_HAIL); }
     } SCENE {
@@ -35,8 +35,8 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Hail")
 SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Sandstorm")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); };
     } WHEN {
         TURN { MOVE(player, MOVE_SANDSTORM); }
     } SCENE {
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect")
     GIVEN {
         WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_5); // Setting it to Gen 6 causes it to pass
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_EFFECT_SPORE); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }

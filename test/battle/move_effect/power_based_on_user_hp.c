@@ -16,8 +16,8 @@ SINGLE_BATTLE_TEST("Eruption's damage is affected by the user's current HP", s16
     PARAMETRIZE { hp = 1; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(hp); MaxHP(maxHp); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(hp); MaxHP(maxHp); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ERUPTION); }
     } SCENE {

@@ -4,9 +4,9 @@
 SINGLE_BATTLE_TEST("Supersweet Syrup lowers evasion once per battle by one stage")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_DIPPLIN) { Ability(ABILITY_SUPERSWEET_SYRUP); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(opponent, 1); }
         TURN { SWITCH(opponent, 0); }
@@ -29,10 +29,10 @@ SINGLE_BATTLE_TEST("Supersweet Syrup lowers evasion once per battle by one stage
 DOUBLE_BATTLE_TEST("Supersweet Syrup lowers evasion of both opposing mon's in battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_DIPPLIN) { Ability(ABILITY_SUPERSWEET_SYRUP); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { }
     } SCENE {

@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Flame Body inflicts burn on contact")
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(!MoveMakesContact(MOVE_SWIFT));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MAGMAR) { Ability(ABILITY_FLAME_BODY); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Flame Body triggers 30% of the time")
     GIVEN {
         ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_4);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MAGMAR) { Ability(ABILITY_FLAME_BODY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }

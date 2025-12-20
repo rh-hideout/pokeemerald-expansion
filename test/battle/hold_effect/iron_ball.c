@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Ground-type moves do neutral damage to non-grounded Flying t
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
         WITH_CONFIG(CONFIG_IRON_BALL, config);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SKARMORY) { Item(ITEM_IRON_BALL); };
     } WHEN {
         TURN { MOVE(player, MOVE_EARTHQUAKE); };

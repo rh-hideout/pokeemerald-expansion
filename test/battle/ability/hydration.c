@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Hydration cures non-volatile Status conditions if it is rain
 {
     GIVEN {
         PLAYER(SPECIES_VAPOREON) { Ability(ABILITY_HYDRATION); Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RAIN_DANCE); }
     } SCENE {

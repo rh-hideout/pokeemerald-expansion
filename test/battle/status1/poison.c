@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Poison deals 1/8th damage per turn")
 {
     u32 j;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         for (j = 0; j < 4; j++)
             TURN {}
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Poison can't bad poison a poison or steel type")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_GAS) == MOVE_EFFECT_POISON);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_POISON_GAS); }

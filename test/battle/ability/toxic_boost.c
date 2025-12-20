@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Toxic Boost increases Attack by 50% when the Pokémon is poi
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_ZANGOOSE) { Ability(ABILITY_TOXIC_BOOST); Status1(status1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {

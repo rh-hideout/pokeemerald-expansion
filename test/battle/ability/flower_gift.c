@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim in harsh sunlight")
 {
     GIVEN {
         PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_FLOWER_GIFT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
     } SCENE {
@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when weather c
 {
     GIVEN {
         PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_FLOWER_GIFT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
         TURN { MOVE(opponent, MOVE_RAIN_DANCE); }
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when its abili
     GIVEN {
         ASSUME(B_WEATHER_FORMS >= GEN_5);
         PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_FLOWER_GIFT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
         TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
@@ -71,7 +71,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal under Cloud Ni
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     GIVEN {
         PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_FLOWER_GIFT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); }
@@ -99,9 +99,9 @@ DOUBLE_BATTLE_TEST("Flower Gift increases the attack of Cherrim and its allies b
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_FLOWER_GIFT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (sunny)
             TURN { MOVE(playerLeft, MOVE_SUNNY_DAY); }
@@ -134,9 +134,9 @@ DOUBLE_BATTLE_TEST("Flower Gift increases the Sp. Def of Cherrim and its allies 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_HYPER_VOICE) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_FLOWER_GIFT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (sunny)
             TURN { MOVE(playerLeft, MOVE_SUNNY_DAY); }
@@ -163,8 +163,8 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it switches out")
     GIVEN {
         ASSUME(B_WEATHER_FORMS >= GEN_5);
         PLAYER(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
         TURN { SWITCH(player, 1); }
@@ -184,8 +184,8 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it uses a move that
     GIVEN {
         ASSUME(B_WEATHER_FORMS >= GEN_5);
         PLAYER(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
         TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
@@ -206,7 +206,7 @@ DOUBLE_BATTLE_TEST("Flower Gift reverts Cherrim back after Teraform Zero clears 
         PLAYER(SPECIES_TERAPAGOS_TERASTAL);
         PLAYER(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); }
         OPPONENT(SPECIES_GROUDON) { Ability(ABILITY_DROUGHT); }
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {

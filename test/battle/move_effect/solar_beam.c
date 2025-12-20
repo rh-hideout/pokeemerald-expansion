@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if Sun is up")
 
     GIVEN {
         PLAYER(SPECIES_TORKOAL) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SOLAR_BEAM); }
         if (ability == ABILITY_WHITE_SMOKE) {

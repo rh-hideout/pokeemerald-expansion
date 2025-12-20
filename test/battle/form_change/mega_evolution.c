@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Venusaur can Mega Evolve holding Venusaurite")
 {
     GIVEN {
         PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -21,9 +21,9 @@ DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - opponent fas
 {
     GIVEN {
         PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); Speed(1); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(4); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -40,9 +40,9 @@ DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - player faste
 {
     GIVEN {
         PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); Speed(5); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(4); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Rayquaza can Mega Evolve knowing Dragon Ascent")
 {
     GIVEN {
         PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
     GIVEN {
         WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_6);
         PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
-        OPPONENT(SPECIES_WOBBUFFET) {}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {}
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
     GIVEN {
         WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
         PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE);}
-        OPPONENT(SPECIES_WOBBUFFET) {}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {}
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn orde
         ASSUME(GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 0) != ABILITY_STALL
             && GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 1) != ABILITY_STALL);
         PLAYER(SPECIES_SABLEYE) { Item(ITEM_SABLENITE); Ability(ABILITY_STALL); Speed(105); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(44); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(44); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -125,11 +125,11 @@ DOUBLE_BATTLE_TEST("Mega Evolution happens after switching, but before Focus Pun
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); }
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(opponentRight, 2); MOVE(playerRight, MOVE_FOCUS_PUNCH, gimmick: GIMMICK_MEGA, target: opponentLeft); MOVE(playerLeft, MOVE_FOCUS_PUNCH, target: opponentLeft); }
         TURN {}
@@ -177,7 +177,7 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
         ASSUME(GetSpeciesAbility(SPECIES_GARCHOMP_MEGA, 0) != ABILITY_ROUGH_SKIN);
         ASSUME(GetSpeciesAbility(SPECIES_GARCHOMP_MEGA, 1) != ABILITY_ROUGH_SKIN);
         ASSUME(GetSpeciesAbility(SPECIES_GARCHOMP_MEGA, 2) != ABILITY_ROUGH_SKIN);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GARCHOMP) { Ability(ABILITY_ROUGH_SKIN); Item(ITEM_GARCHOMPITE); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_CRUNCH); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }

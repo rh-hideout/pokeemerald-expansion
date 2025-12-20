@@ -119,9 +119,9 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises opponent's Attack after Intimidate")
 SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_STICKY_WEB); }
         TURN { SWITCH(player, 1); }
@@ -146,9 +146,9 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Co
         ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); MOVE(opponent, MOVE_COURT_CHANGE); }
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL);}
@@ -183,9 +183,9 @@ SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed if Court Cha
         ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); MOVE(opponent, MOVE_COURT_CHANGE); }
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL);}
@@ -255,7 +255,7 @@ SINGLE_BATTLE_TEST("Defiant activates before White Herb")
 
     GIVEN {
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); Item(ITEM_WHITE_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {
@@ -290,7 +290,7 @@ SINGLE_BATTLE_TEST("Defiant activates for each stat that is lowered")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TICKLE); }
     } SCENE {
@@ -326,7 +326,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate if the Pokémon lowers it's own sta
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_MAKE_IT_RAIN, MOVE_EFFECT_SP_ATK_MINUS_1));
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_SPIN_OUT, MOVE_EFFECT_SPD_MINUS_2));
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -352,7 +352,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
         ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
         ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BELLY_DRUM); MOVE(opponent, MOVE_TICKLE); }
     } SCENE {

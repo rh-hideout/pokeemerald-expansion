@@ -8,8 +8,8 @@ SINGLE_BATTLE_TEST("Recoil: Take Down deals 25% of recoil damage to the user")
 
     GIVEN {
         ASSUME(GetMoveRecoil(MOVE_TAKE_DOWN) == 25);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TAKE_DOWN); }
     } SCENE {
@@ -28,8 +28,8 @@ SINGLE_BATTLE_TEST("Recoil: Double Edge deals 33% of recoil damage to the user")
 
     GIVEN {
         ASSUME(GetMoveRecoil(MOVE_DOUBLE_EDGE) == 33);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DOUBLE_EDGE); }
     } SCENE {
@@ -48,8 +48,8 @@ SINGLE_BATTLE_TEST("Recoil: Head Smash deals 50% of recoil damage to the user")
 
     GIVEN {
         ASSUME(GetMoveRecoil(MOVE_HEAD_SMASH) == 50);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HEAD_SMASH); }
     } SCENE {
@@ -69,8 +69,8 @@ SINGLE_BATTLE_TEST("Recoil: Flare Blitz deals 33% of recoil damage to the user a
     GIVEN {
         ASSUME(GetMoveRecoil(MOVE_FLARE_BLITZ) == 33);
         ASSUME(MoveHasAdditionalEffect(MOVE_FLARE_BLITZ, MOVE_EFFECT_BURN));
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLARE_BLITZ); }
     } SCENE {
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Recoil: Flare Blitz is absorbed by Flash Fire and no recoil 
 {
     GIVEN {
         ASSUME(GetMoveRecoil(MOVE_FLARE_BLITZ) > 0);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VULPIX) { Ability(ABILITY_FLASH_FIRE); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_FLARE_BLITZ); }
@@ -110,8 +110,8 @@ SINGLE_BATTLE_TEST("Recoil: The correct amount of recoil damage is dealt after t
 
     GIVEN {
         ASSUME(GetMoveRecoil(MOVE_TAKE_DOWN) == 25);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); };
     } WHEN {
         TURN { MOVE(player, MOVE_TAKE_DOWN); }
     } SCENE {
@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Recoil: No recoil is taken if the move is blocked by Disguis
 {
     GIVEN {
         ASSUME(GetMoveRecoil(MOVE_FLARE_BLITZ) > 0);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
     } WHEN {
         TURN { MOVE(player, MOVE_FLARE_BLITZ); }

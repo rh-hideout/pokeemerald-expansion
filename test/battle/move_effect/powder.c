@@ -12,7 +12,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Powder blocks the target's Fire type moves and deals 25% of maximum HP to target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POWDER); MOVE(player, MOVE_EMBER); }
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Powder blocks the target's Fire type moves and deals 25% of 
 SINGLE_BATTLE_TEST("Powder blocks the target's Fire type moves and consumes PP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_EMBER); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_EMBER); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POWDER); MOVE(player, MOVE_EMBER); }
@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Powder blocks the target's Fire type moves and consumes PP")
 SINGLE_BATTLE_TEST("Powder only blocks the target's Fire type moves on the same turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POWDER); }
@@ -119,9 +119,9 @@ SINGLE_BATTLE_TEST("Powder doesn't damage target under heavy rain (Gen 7+)")
 DOUBLE_BATTLE_TEST("Powder blocks the target's Fire type moves even if it doesn't target Powder user")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_POWDER, target: playerLeft); MOVE(playerLeft, MOVE_EMBER, target: opponentLeft); }
@@ -137,8 +137,8 @@ DOUBLE_BATTLE_TEST("Powder blocks the target's Fire type moves even if it doesn'
 DOUBLE_BATTLE_TEST("Powder fails if target is already affected by Powder")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VIVILLON);
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
@@ -185,8 +185,8 @@ DOUBLE_BATTLE_TEST("Powder still blocks the target's Fire type moves even if it 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FORESTS_CURSE) == EFFECT_THIRD_TYPE);
         ASSUME(GetMoveArgType(MOVE_FORESTS_CURSE) == TYPE_GRASS);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TREVENANT);
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
@@ -205,8 +205,8 @@ DOUBLE_BATTLE_TEST("Powder still blocks the target's Fire type moves even if it 
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DOODLE) == EFFECT_DOODLE);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_FORRETRESS) { Ability(ABILITY_OVERCOAT); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
@@ -248,7 +248,7 @@ SINGLE_BATTLE_TEST("Powder doesn't prevent a Fire move from thawing its user out
     GIVEN {
         ASSUME(MoveThawsUser(MOVE_FLAME_WHEEL));
         ASSUME(GetMoveType(MOVE_FLAME_WHEEL) == TYPE_FIRE);
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POWDER); MOVE(player, MOVE_FLAME_WHEEL); }
@@ -267,7 +267,7 @@ SINGLE_BATTLE_TEST("Powder doesn't consume Berry from Fire type Natural Gift but
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHERI_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_CHERI_BERRY); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POWDER); MOVE(player, MOVE_NATURAL_GIFT); }
@@ -296,8 +296,8 @@ DOUBLE_BATTLE_TEST("Powder damages a target using Shell Trap even if it wasn't h
         ASSUME(GetMoveCategory(MOVE_TICKLE) == DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
         PLAYER(SPECIES_TURTONATOR);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SHELL_TRAP); MOVE(opponentRight, MOVE_POWDER, target: playerLeft); MOVE(opponentLeft, move, target: playerLeft); }

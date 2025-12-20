@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Mycelium Might causes the user to move last in the priority 
 {
     GIVEN {
         PLAYER(SPECIES_TOEDSCOOL) { Speed(100); Ability(ABILITY_MYCELIUM_MIGHT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SPORE); }
     } SCENE {
@@ -72,9 +72,9 @@ DOUBLE_BATTLE_TEST("Mycelium Might priority bracket will not change if the abili
 {
     GIVEN {
         PLAYER(SPECIES_TOEDSCOOL) { Speed(100); Ability(ABILITY_MYCELIUM_MIGHT); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(30); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(20); }
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_WORRY_SEED, target: playerLeft);

@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Lucky Chant prevents critical hits on the user's side")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LUCKY_CHANT) == EFFECT_LUCKY_CHANT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_LUCKY_CHANT); MOVE(player, MOVE_SCRATCH, criticalHit: TRUE); }
     } SCENE {

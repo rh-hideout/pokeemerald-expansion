@@ -9,8 +9,8 @@ ASSUMPTIONS
 WILD_BATTLE_TEST("Knock Off does not remove item when used by Wild Pokemon (Gen 5+)")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EVIOLITE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_EVIOLITE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
@@ -36,8 +36,8 @@ WILD_BATTLE_TEST("Knock Off does not remove item when used by Wild Pokemon (Gen 
 SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to activate")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); MaxHP(500); HP(255); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); MaxHP(500); HP(255); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -61,8 +61,8 @@ SINGLE_BATTLE_TEST("Knock Off activates after Rocky Helmet and Weakness Policy")
     PARAMETRIZE { item = ITEM_ROCKY_HELMET; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -91,8 +91,8 @@ SINGLE_BATTLE_TEST("Knock Off deals additional damage to opponents holding an it
     PARAMETRIZE { item = ITEM_LEFTOVERS; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(item); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(item); };
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -114,8 +114,8 @@ SINGLE_BATTLE_TEST("Knock Off deals additional damage to opponents holding an it
 SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -129,8 +129,8 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute")
 SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute even if it breaks it")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(4); HP(4); Item(ITEM_LEFTOVERS); };
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(4); HP(4); Item(ITEM_LEFTOVERS); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -145,8 +145,8 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute even if i
 SINGLE_BATTLE_TEST("Knock Off does not remove items through Protect")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items if target is immune")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         ASSUME(GetSpeciesType(SPECIES_DONPHAN, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_DONPHAN, 1) == TYPE_GROUND);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_DONPHAN) { Item(ITEM_LEFTOVERS); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_KNOCK_OFF); }
@@ -181,8 +181,8 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items if target is immune")
 SINGLE_BATTLE_TEST("Recycle cannot recover an item removed by Knock Off")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF);
                MOVE(opponent, MOVE_RECYCLE); }
@@ -201,8 +201,8 @@ SINGLE_BATTLE_TEST("Recycle cannot recover an item removed by Knock Off")
 SINGLE_BATTLE_TEST("Knock Off does not prevent targets from receiving another item in Gen 5+")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
         TURN { MOVE(player, MOVE_BESTOW); }
@@ -232,8 +232,8 @@ SINGLE_BATTLE_TEST("Knock Off does not prevent targets from receiving another it
 SINGLE_BATTLE_TEST("Knock Off triggers Unburden")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(60); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_UNBURDEN); Item(ITEM_LEFTOVERS); Speed(50); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(60); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_UNBURDEN); Item(ITEM_LEFTOVERS); Speed(50); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
         TURN { MOVE(player, MOVE_CELEBRATE); }
@@ -253,10 +253,10 @@ SINGLE_BATTLE_TEST("Knock Off triggers Unburden")
 DOUBLE_BATTLE_TEST("Knock Off does not trigger the opposing ally's Symbiosis")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
         PLAYER(SPECIES_FLORGES) { Item(ITEM_LEFTOVERS); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_KNOCK_OFF, target: playerLeft); }
     } SCENE {
@@ -275,8 +275,8 @@ DOUBLE_BATTLE_TEST("Knock Off does not trigger the opposing ally's Symbiosis")
 SINGLE_BATTLE_TEST("Knock Off does knock off Mega Stones from Pokemon that don't actually use them")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ABSOLITE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ABSOLITE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -287,7 +287,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off Mega Stones from Pokemon that don't
 SINGLE_BATTLE_TEST("Knock Off doesn't knock off Mega Stones from Pokemon that actually use them")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ABSOL) { Item(ITEM_ABSOLITE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
@@ -299,8 +299,8 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off Mega Stones from Pokemon that ac
 SINGLE_BATTLE_TEST("Knock Off does knock off Orbs for Primal Reversion from Pokemon that don't actually use them")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_ORB); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_RED_ORB); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -311,7 +311,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off Orbs for Primal Reversion from Poke
 SINGLE_BATTLE_TEST("Knock Off doesn't knock off Orbs for Primal Reversion from Pokemon that actually use them")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
@@ -323,8 +323,8 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off Orbs for Primal Reversion from P
 SINGLE_BATTLE_TEST("Knock Off doesn't knock off Z-Crystals")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ELECTRIUM_Z); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ELECTRIUM_Z); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -335,7 +335,7 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off Z-Crystals")
 SINGLE_BATTLE_TEST("Knock Off doesn't knock off Ultranecrozium Z from Pokemon that actually use it")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
@@ -347,8 +347,8 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off Ultranecrozium Z from Pokemon th
 SINGLE_BATTLE_TEST("Knock Off does knock off other form-change hold items from Pokemon that don't actually use them")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SKY_PLATE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SKY_PLATE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -359,7 +359,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off other form-change hold items from P
 SINGLE_BATTLE_TEST("Knock Off doesn't knock off other form-change hold items from Pokemon that actually use them")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARCEUS) { Item(ITEM_SKY_PLATE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
@@ -371,8 +371,8 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off other form-change hold items fro
 SINGLE_BATTLE_TEST("Knock Off does knock off begin-battle form-change hold items from Pokemon that don't actually use them")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RUSTED_SHIELD); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_RUSTED_SHIELD); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -383,7 +383,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off begin-battle form-change hold items
 SINGLE_BATTLE_TEST("Knock Off doesn't knock off begin-battle form-change hold items from Pokemon that actually use them")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZAMAZENTA_HERO) { Item(ITEM_RUSTED_SHIELD); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
@@ -395,8 +395,8 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off begin-battle form-change hold it
 SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -412,7 +412,7 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
 SINGLE_BATTLE_TEST("Knock Off doesn't remove item if it's prevented by Sticky Hold")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MUK) { MaxHP(100); HP(51); Item(ITEM_ORAN_BERRY); Ability(ABILITY_STICKY_HOLD); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
@@ -425,8 +425,8 @@ SINGLE_BATTLE_TEST("Knock Off doesn't remove item if it's prevented by Sticky Ho
 SINGLE_BATTLE_TEST("Knock Off does not activate if the item was previously consumed")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {

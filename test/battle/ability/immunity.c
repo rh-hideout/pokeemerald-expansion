@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Immunity prevents Poison Sting poison")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_POISON_STING, MOVE_EFFECT_POISON) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
     } WHEN {
         TURN { MOVE(player, MOVE_POISON_STING); }
@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Immunity prevents Toxic bad poison")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC); }
@@ -36,8 +36,8 @@ SINGLE_BATTLE_TEST("Immunity prevents Toxic Spikes poison")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Immunity doesn't prevent Pokémon from being poisoned by Tox
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
         OPPONENT(SPECIES_PINSIR) { Ability(ABILITY_MOLD_BREAKER); }
     } WHEN {
@@ -71,7 +71,7 @@ SINGLE_BATTLE_TEST("Immunity cures existing poison on turn 0")
             Ability(ABILITY_IMMUNITY);
             Status1(STATUS1_POISON);
         }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } SCENE {
         ABILITY_POPUP(player, ABILITY_IMMUNITY);
         TURN { MOVE(player, MOVE_SPLASH); }

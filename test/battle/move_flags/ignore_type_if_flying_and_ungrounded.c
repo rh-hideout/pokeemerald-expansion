@@ -8,7 +8,7 @@ SINGLE_BATTLE_TEST("Thousand Arrows does neutral damage to non-grounded Flying t
     PARAMETRIZE { pokemon = SPECIES_SCYTHER; }
     GIVEN {
         ASSUME(MoveIgnoresTypeIfFlyingAndUngrounded(MOVE_THOUSAND_ARROWS) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(pokemon);
     } WHEN {
         TURN { MOVE(player, MOVE_THOUSAND_ARROWS); }

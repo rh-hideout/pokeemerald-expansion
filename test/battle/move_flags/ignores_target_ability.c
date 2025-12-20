@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility allows Pokémon with Battle Armor and S
 
     GIVEN {
         ASSUME(MoveIgnoresTargetAbility(MOVE_SUNSTEEL_STRIKE));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUNSTEEL_STRIKE, criticalHit: TRUE); }

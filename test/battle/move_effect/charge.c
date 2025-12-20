@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Charge doubles the damage of the next Electric move of the u
 {
     s16 damage[2] = {0};
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT); }
         TURN { MOVE(player, MOVE_CHARGE); }
@@ -32,8 +32,8 @@ SINGLE_BATTLE_TEST("Charge's effect is kept until the user uses an Electric move
 {
     s16 damage[2] = {0};
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT); }
         TURN { MOVE(player, MOVE_CHARGE); }
@@ -55,8 +55,8 @@ SINGLE_BATTLE_TEST("Charge's effect is removed if the user fails using an Electr
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER); }
         TURN { MOVE(player, MOVE_CHARGE); }
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Charge's effect does not stack with Electromorphosis or Wind
     GIVEN {
         ASSUME(IsWindMove(MOVE_AIR_CUTTER));
         PLAYER(species) { Ability(ability);  }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT); }
         TURN { MOVE(player, MOVE_CHARGE); MOVE(opponent, MOVE_AIR_CUTTER); }
@@ -109,8 +109,8 @@ SINGLE_BATTLE_TEST("Charge's effect is removed regardless if the next move is El
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) != TYPE_ELECTRIC);
         ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT); }
         TURN { MOVE(player, MOVE_CHARGE); }
@@ -136,8 +136,8 @@ SINGLE_BATTLE_TEST("Charge will expire if user flinches while using an electric 
     s16 damage[2];
     GIVEN {
          ASSUME(GetMoveAdditionalEffectById(MOVE_IRON_HEAD, 0)->moveEffect == MOVE_EFFECT_FLINCH);
-         PLAYER(SPECIES_WOBBUFFET);
-         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+         PLAYER(TEST_SPECIES_WOBBUFFET);
+         OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
     } WHEN {
          TURN { MOVE(player, MOVE_THUNDERBOLT); }
          TURN { MOVE(player, MOVE_CHARGE); }

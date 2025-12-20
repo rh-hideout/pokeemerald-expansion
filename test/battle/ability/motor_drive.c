@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Motor Drive absorbs status moves")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EMOLGA) { Ability(ABILITY_MOTOR_DRIVE); }
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER_WAVE); }
@@ -17,9 +17,9 @@ DOUBLE_BATTLE_TEST("Motor Drive absorbs moves that target all battlers but does 
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EMOLGA) { Ability(ABILITY_MOTOR_DRIVE); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DISCHARGE); }

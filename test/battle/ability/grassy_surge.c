@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Grassy Surge creates Grassy Terrain when entering the battle
 {
     GIVEN {
         PLAYER(SPECIES_TAPU_BULU) { Ability(ABILITY_GRASSY_SURGE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
     } SCENE {

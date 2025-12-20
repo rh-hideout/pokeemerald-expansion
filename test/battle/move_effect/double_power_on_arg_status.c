@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Hex deals double damage to foes with a status", s16 damage)
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HEX) == EFFECT_DOUBLE_POWER_ON_ARG_STATUS);
         ASSUME(GetMoveEffectArg_Status(MOVE_HEX) == STATUS1_ANY);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(status1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(status1); }
     } WHEN {
         TURN { MOVE(player, MOVE_HEX); }
     } SCENE {
@@ -40,8 +40,8 @@ SINGLE_BATTLE_TEST("Venoshock's power doubles if the target is poisoned/badly po
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_VENOSHOCK) == EFFECT_DOUBLE_POWER_ON_ARG_STATUS);
         ASSUME(GetMoveEffectArg_Status(MOVE_VENOSHOCK) == STATUS1_PSN_ANY);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(status1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(status1); }
     } WHEN {
         TURN { MOVE(player, MOVE_VENOSHOCK); }
     } SCENE {

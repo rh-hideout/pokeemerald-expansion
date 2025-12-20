@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Ogerpon Masks increase the base power of moves by 20%", s16 
     GIVEN {
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
         PLAYER(species) { Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {

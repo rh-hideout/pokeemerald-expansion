@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Echoed Voice's power is multiplied for every consecutive tur
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SOFT_BOILED) == EFFECT_SOFTBOILED);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BLISSEY);
     } WHEN {
         TURN { MOVE(player, MOVE_ECHOED_VOICE); }
@@ -48,8 +48,8 @@ SINGLE_BATTLE_TEST("Echoed Voice's power increases even if used by another battl
     s16 damage[2];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_ECHOED_VOICE); }
         TURN { MOVE(player, MOVE_ECHOED_VOICE); }
@@ -68,8 +68,8 @@ SINGLE_BATTLE_TEST("Echoed Voice's power does not change until the end of the tu
     s16 damage[3];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ECHOED_VOICE); MOVE(opponent, MOVE_ECHOED_VOICE); }
         TURN { MOVE(player, MOVE_ECHOED_VOICE); }
@@ -92,8 +92,8 @@ SINGLE_BATTLE_TEST("Echoed Voice's power increase is reset when no battler uses 
 
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_BITE, MOVE_EFFECT_FLINCH));
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ECHOED_VOICE); }
         TURN { MOVE(player, MOVE_ECHOED_VOICE); }
@@ -120,8 +120,8 @@ SINGLE_BATTLE_TEST("Echoed Voice's power is increased even if it misses")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ECHOED_VOICE); }
         TURN { MOVE(player, MOVE_ECHOED_VOICE); MOVE(opponent, MOVE_SAND_ATTACK); }
@@ -147,8 +147,8 @@ SINGLE_BATTLE_TEST("Echoed Voice's power is increased even if it's blocked by Pr
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ECHOED_VOICE); }
         TURN { MOVE(player, MOVE_ECHOED_VOICE); }

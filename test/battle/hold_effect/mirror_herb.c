@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Mirror Herb copies all of foe's positive stat changes in a t
     PARAMETRIZE { item = ITEM_MIRROR_HERB; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Item(item); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_DANCE); }
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Mirror Herb copies all of Stuff Cheeks' stat boosts")
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIECHI_BERRY].holdEffect == HOLD_EFFECT_ATTACK_UP);
         PLAYER(SPECIES_SKWOVET) { Item(ITEM_LIECHI_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
     } WHEN {
         TURN { MOVE(player, MOVE_STUFF_CHEEKS); }
     } THEN {
@@ -52,10 +52,10 @@ SINGLE_BATTLE_TEST("Mirror Herb copies all of Stuff Cheeks' stat boosts")
 DOUBLE_BATTLE_TEST("Mirror Herb does not trigger for Ally's Soul Heart's stat raise")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
-        PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_SOUL_HEART); } // Raises Sp. Atk after fainting am on
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Ability(ABILITY_SOUL_HEART); } // Raises Sp. Atk after fainting am on
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SCRATCH, target:opponentLeft); }
     } SCENE {
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Mirror Herb copies the boost gained by an ability")
 {
     GIVEN {
         PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
     } WHEN {
         TURN { }
     } SCENE {

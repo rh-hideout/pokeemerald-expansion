@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Double Team raises Evasion by 1 stage")
     PASSES_RANDOMLY(GetMoveAccuracy(MOVE_SCRATCH) * 3 / 5, 100, RNG_ACCURACY);
     GIVEN {
         ASSUME(GetMoveAccuracy(MOVE_SCRATCH) == 100);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_X); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {

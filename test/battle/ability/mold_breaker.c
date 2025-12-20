@@ -8,7 +8,7 @@ SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales", s16 
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_PSYCHIC) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ability); }
         OPPONENT(SPECIES_FROSMOTH) { Ability(ABILITY_ICE_SCALES); }
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC); }

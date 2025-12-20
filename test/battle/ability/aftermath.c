@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Aftermath damages the attacker by 1/4th of its max HP if fai
 
     GIVEN {
         PLAYER(SPECIES_VOLTORB) { HP(1); Ability(ABILITY_AFTERMATH); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {MOVE(opponent, MOVE_SCRATCH);}
     } SCENE {

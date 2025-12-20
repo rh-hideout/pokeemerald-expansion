@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Shield Dust blocks secondary effects")
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_ROCK_TOMB, MOVE_EFFECT_SPD_MINUS_1, 100) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_SPIRIT_SHACKLE, MOVE_EFFECT_PREVENT_ESCAPE, 100) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_PSYCHIC_NOISE, MOVE_EFFECT_PSYCHIC_NOISE, 100) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Shield Dust does not block primary effects")
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_INFESTATION, MOVE_EFFECT_WRAP, 0) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_JAW_LOCK, MOVE_EFFECT_TRAP_BOTH, 0) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_PAY_DAY, MOVE_EFFECT_PAYDAY, 0) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary o
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_UP_PUNCH, MOVE_EFFECT_ATK_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_LEAF_STORM, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_METEOR_ASSAULT, MOVE_EFFECT_RECHARGE) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -127,10 +127,10 @@ DOUBLE_BATTLE_TEST("Shield Dust does or does not block Sparkling Aria depending 
     PARAMETRIZE { moveToUse = MOVE_FINAL_GAMBIT; }
     PARAMETRIZE { moveToUse = MOVE_SCRATCH; }
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, moveToUse, target: opponentRight); MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
     } SCENE {
@@ -152,8 +152,8 @@ DOUBLE_BATTLE_TEST("Shield Dust blocks Sparkling Aria if all other targets avoid
     GIVEN {
         PLAYER(SPECIES_PRIMARINA);
         PLAYER(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WYNAUT) { Status1(STATUS1_BURN); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Status1(STATUS1_BURN); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FLY, target:playerLeft); MOVE(opponentRight, MOVE_PROTECT); MOVE(playerRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
     } SCENE {
@@ -164,7 +164,7 @@ DOUBLE_BATTLE_TEST("Shield Dust blocks Sparkling Aria if all other targets avoid
 SINGLE_BATTLE_TEST("Shield Dust blocks Sparkling Aria in singles")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); Status1(STATUS1_BURN); }
     } WHEN {
         TURN { MOVE(player, MOVE_SPARKLING_ARIA); }

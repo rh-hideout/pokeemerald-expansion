@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Kings Rock holder will flinch the target 10% of the time")
 {
     PASSES_RANDOMLY(10, 100, RNG_HOLD_EFFECT_FLINCH);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_KINGS_ROCK); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_KINGS_ROCK); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -25,8 +25,8 @@ SINGLE_BATTLE_TEST("Kings Rock does not increase flinch chance of a move that ha
     PASSES_RANDOMLY(30, 100, RNG_SECONDARY_EFFECT);
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_HEADBUTT, MOVE_EFFECT_FLINCH));
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_KINGS_ROCK); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_KINGS_ROCK); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HEADBUTT); }
     } SCENE {

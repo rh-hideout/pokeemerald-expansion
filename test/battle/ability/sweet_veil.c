@@ -10,10 +10,10 @@ ASSUMPTIONS
 DOUBLE_BATTLE_TEST("Sweet Veil prevents Sleep on partner - right target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_BOUNSWEET) { Ability(ABILITY_SWEET_VEIL); }
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); }
     } SCENE {
@@ -26,9 +26,9 @@ DOUBLE_BATTLE_TEST("Sweet Veil prevents Sleep on partner - right target")
 DOUBLE_BATTLE_TEST("Sweet Veil prevents Sleep on partner - left target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_BOUNSWEET) { Ability(ABILITY_SWEET_VEIL); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentLeft); }
@@ -42,10 +42,10 @@ DOUBLE_BATTLE_TEST("Sweet Veil prevents Sleep on partner - left target")
 DOUBLE_BATTLE_TEST("Sweet Veil prevents Yawn activation")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_BOUNSWEET) { Ability(ABILITY_SWEET_VEIL); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_YAWN, target: opponentLeft); }

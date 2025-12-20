@@ -8,7 +8,7 @@ SINGLE_BATTLE_TEST("Sandstorm deals 1/16 damage per turn")
 
     GIVEN {
         PLAYER(SPECIES_SANDSLASH);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {MOVE(player, MOVE_SANDSTORM);}
     } SCENE {
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Sandstorm multiplies the special defense of Rock-types by 1.
     GIVEN {
         WITH_CONFIG(CONFIG_SANDSTORM_SPDEF_BOOST, config);
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_WOBBUFFET) ;
+        PLAYER(TEST_SPECIES_WOBBUFFET) ;
         OPPONENT(SPECIES_NOSEPASS);
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Sandstorm damage does not hurt Ground, Rock, and Steel-type 
         ASSUME(GetSpeciesType(SPECIES_SANDSLASH, 0) == TYPE_GROUND);
         ASSUME(GetSpeciesType(SPECIES_NOSEPASS, 0) == TYPE_ROCK);
         ASSUME(GetSpeciesType(SPECIES_REGISTEEL, 0) == TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(mon);
     } WHEN {
         TURN { MOVE(player, MOVE_SANDSTORM); }
@@ -73,9 +73,9 @@ DOUBLE_BATTLE_TEST("Sandstorm deals damage based on turn order")
 {
     GIVEN {
         PLAYER(SPECIES_PHANPY) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(3); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(3); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SANDSTORM); }
     } SCENE {
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Sandstorm doesn't do damage when weather is negated")
         ASSUME(type1 != TYPE_ROCK && type2 != TYPE_ROCK);
         ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
         ASSUME(type1 != TYPE_STEEL && type2 != TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_CLOUD_NINE); }
     } WHEN {
         TURN { MOVE(player, MOVE_SANDSTORM); }

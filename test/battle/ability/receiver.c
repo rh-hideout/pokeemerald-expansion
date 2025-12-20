@@ -5,8 +5,8 @@ DOUBLE_BATTLE_TEST("Receiver copies ally's ability when they faint and immediate
 {
     GIVEN {
         ASSUME(!gAbilitiesInfo[ABILITY_INTIMIDATE].cantBeCopied);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PASSIMIAN) { Ability(ABILITY_RECEIVER); }
         OPPONENT(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); HP(1); }
     } WHEN {
@@ -27,8 +27,8 @@ DOUBLE_BATTLE_TEST("Receiver copies ally's ability when they faint and can activ
     GIVEN {
         ASSUME(!gAbilitiesInfo[ABILITY_WATER_ABSORB].cantBeCopied);
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PASSIMIAN) { Ability(ABILITY_RECEIVER); }
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_WATER_ABSORB); HP(1); }
     } WHEN {
@@ -45,8 +45,8 @@ DOUBLE_BATTLE_TEST("Receiver copies ally's Soul Heart and immediately activates 
 {
     GIVEN {
         ASSUME(!gAbilitiesInfo[ABILITY_SOUL_HEART].cantBeCopied);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PASSIMIAN) { Ability(ABILITY_RECEIVER); }
         OPPONENT(SPECIES_MAGEARNA) { Ability(ABILITY_SOUL_HEART); HP(1); }
     } WHEN {

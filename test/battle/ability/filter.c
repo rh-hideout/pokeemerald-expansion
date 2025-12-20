@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Filter reduces damage to Super Effective moves by 0.75", s16
         ASSUME(gTypeEffectivenessTable[TYPE_POISON][TYPE_FAIRY] > UQ_4_12(1.0));
         ASSUME(gTypeEffectivenessTable[TYPE_POISON][TYPE_PSYCHIC] == UQ_4_12(1.0));
         PLAYER(SPECIES_MR_MIME) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POISON_JAB); }
     } SCENE {

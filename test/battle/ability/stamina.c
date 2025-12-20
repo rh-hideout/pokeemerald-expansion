@@ -28,8 +28,8 @@ SINGLE_BATTLE_TEST("Stamina raises Defense by 1 when hit by a move")
         ASSUME(!IsBattleMoveStatus(MOVE_GUST));
         ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STAMINA); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_STAMINA); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
         TURN { MOVE(opponent, move); }
@@ -57,10 +57,10 @@ DOUBLE_BATTLE_TEST("Stamina activates correctly for every battler with the abili
 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(abilityLeft); Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(abilityRight); Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(15); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(abilityLeft); Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(abilityRight); Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Speed(20); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Speed(15); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_EARTHQUAKE);}
     } SCENE {
@@ -92,7 +92,7 @@ DOUBLE_BATTLE_TEST("Stamina activates correctly for every battler with the abili
 SINGLE_BATTLE_TEST("Stamina activates for every hit of a multi hit move")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MUDBRAY) { Ability(ABILITY_STAMINA); }
     } WHEN {
         TURN { MOVE(player, MOVE_DOUBLE_KICK); }
@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Stamina is not activated by users own Substitute")
 {
     GIVEN {
         PLAYER(SPECIES_MUDBRAY) { Ability(ABILITY_STAMINA); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {

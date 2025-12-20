@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Dry Skin causes 1/8th Max HP damage in Sun")
 {
     GIVEN {
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); }
     } SCENE {
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Dry Skin heals 1/8th Max HP in Rain")
 {
     GIVEN {
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RAIN_DANCE); }
     } SCENE {
@@ -43,9 +43,9 @@ SINGLE_BATTLE_TEST("Dry Skin increases damage taken from Fire-type moves by 25%"
         ASSUME(GetMovePower(MOVE_EMBER) == 40);
         ASSUME(GetSpeciesType(SPECIES_PARASECT, 0) == TYPE_BUG);
         ASSUME(GetSpeciesType(SPECIES_PARASECT, 1) == TYPE_GRASS);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) == TYPE_PSYCHIC);
-        PLAYER(SPECIES_WOBBUFFET) { SpAttack(71); }
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 1) == TYPE_PSYCHIC);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { SpAttack(71); }
         OPPONENT(SPECIES_PARASECT) { Ability(ability); SpDefense(165); }
     } WHEN {
         TURN { MOVE(player, MOVE_EMBER); }
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Dry Skin heals 25% when hit by water type moves")
     GIVEN {
         ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BUBBLE); }
     } SCENE {
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Dry Skin does not activate if protected")
     GIVEN {
         ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PROTECT); MOVE(opponent, MOVE_BUBBLE); }
     } SCENE {
@@ -95,7 +95,7 @@ SINGLE_BATTLE_TEST("Dry Skin is only triggered once on multi strike moves")
         ASSUME(GetMoveType(MOVE_WATER_SHURIKEN) == TYPE_WATER);
         ASSUME(GetMoveEffect(MOVE_WATER_SHURIKEN) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_SHURIKEN); }
     } SCENE {
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activat
     GIVEN {
         ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BUBBLE); }
     } SCENE {

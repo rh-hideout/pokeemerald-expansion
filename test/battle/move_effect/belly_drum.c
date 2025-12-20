@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Belly Drum cuts the user's HP in half")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
@@ -26,8 +26,8 @@ SINGLE_BATTLE_TEST("Belly Drum maximizes the user's Attack stat", s16 damage)
     PARAMETRIZE { raiseAttack = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (raiseAttack) TURN { MOVE(player, MOVE_BELLY_DRUM); }
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -47,8 +47,8 @@ SINGLE_BATTLE_TEST("Belly Drum maximizes the user's Attack stat", s16 damage)
 SINGLE_BATTLE_TEST("Belly Drum fails if user's current HP is half or less than half its maximum")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(50);}
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(50);}
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
@@ -65,8 +65,8 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SWORDS_DANCE); }
         TURN { MOVE(player, MOVE_SWORDS_DANCE); }
@@ -94,8 +94,8 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6")
 SINGLE_BATTLE_TEST("Belly Drum's HP cost doesn't trigger effects that trigger on damage taken")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
@@ -112,8 +112,8 @@ SINGLE_BATTLE_TEST("Belly Drum minimizes the user's Attack stat with Contrary", 
     PARAMETRIZE { raiseAttack = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_CONTRARY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_CONTRARY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (raiseAttack) TURN { MOVE(player, MOVE_BELLY_DRUM); }
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -137,8 +137,8 @@ SINGLE_BATTLE_TEST("Belly Drum maximizes the user's Attack stat, even when below
     PARAMETRIZE { raiseAttack = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (raiseAttack) TURN { MOVE(opponent, MOVE_GROWL); MOVE(player, MOVE_BELLY_DRUM); }
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6, even
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_ATTACK_DOWN_2);
         PLAYER(SPECIES_SERPERIOR) { Ability(ABILITY_CONTRARY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_CHARM); }
         TURN { MOVE(opponent, MOVE_CHARM); }
@@ -192,7 +192,7 @@ SINGLE_BATTLE_TEST("Belly Drum deducts HP if the user has Contrary and is at -6"
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
         PLAYER(SPECIES_SERPERIOR) { Ability(ABILITY_CONTRARY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SWORDS_DANCE); }
         TURN { MOVE(player, MOVE_SWORDS_DANCE); }

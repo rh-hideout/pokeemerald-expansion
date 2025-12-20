@@ -20,8 +20,8 @@ SINGLE_BATTLE_TEST("Items can restore a battler's HP by a fixed amount (singles,
 #endif
     GIVEN {
         ASSUME(gItemsInfo[item].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { USE_ITEM(player, item, partyIndex: 0); }
     } SCENE {
@@ -48,8 +48,8 @@ SINGLE_BATTLE_TEST("Items can restore a battler's HP by a fixed amount (singles,
 #endif
     GIVEN {
         ASSUME(gItemsInfo[item].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
     } WHEN {
         TURN { USE_ITEM(opponent, item, partyIndex: 0); }
     } SCENE {
@@ -62,10 +62,10 @@ DOUBLE_BATTLE_TEST("Items can restore a battler's HP (doubles, playerLeft)")
     s32 hp = gItemsInfo[ITEM_POTION].holdEffectParam;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { USE_ITEM(playerLeft, ITEM_POTION, partyIndex: 0); }
     } SCENE {
@@ -78,10 +78,10 @@ DOUBLE_BATTLE_TEST("Items can restore a battler's HP (doubles, playerRight)")
     s32 hp = gItemsInfo[ITEM_POTION].holdEffectParam;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { USE_ITEM(playerRight, ITEM_POTION, partyIndex: 1); }
     } SCENE {
@@ -94,10 +94,10 @@ DOUBLE_BATTLE_TEST("Items can restore a battler's HP (doubles, opponentLeft)")
     s32 hp = gItemsInfo[ITEM_POTION].holdEffectParam;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { USE_ITEM(opponentLeft, ITEM_POTION, partyIndex: 0); }
     } SCENE {
@@ -110,10 +110,10 @@ DOUBLE_BATTLE_TEST("Items can restore a battler's HP (doubles, opponentRight)")
     s32 hp = gItemsInfo[ITEM_POTION].holdEffectParam;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
     } WHEN {
         TURN { USE_ITEM(opponentRight, ITEM_POTION, partyIndex: 1); }
     } SCENE {
@@ -126,10 +126,10 @@ DOUBLE_BATTLE_TEST("Items can restore a partner battler's HP (playerRight to pla
     s32 hp = gItemsInfo[ITEM_POTION].holdEffectParam;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { USE_ITEM(playerRight, ITEM_POTION, partyIndex: 0); }
     } SCENE {
@@ -142,10 +142,10 @@ DOUBLE_BATTLE_TEST("Items can restore a partner battler's HP (playerLeft to play
     s32 hp = gItemsInfo[ITEM_POTION].holdEffectParam;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { USE_ITEM(playerLeft, ITEM_POTION, partyIndex: 1); }
     } SCENE {
@@ -158,10 +158,10 @@ DOUBLE_BATTLE_TEST("Items can restore a partner battler's HP (opponentRight to o
     s32 hp = gItemsInfo[ITEM_POTION].holdEffectParam;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { USE_ITEM(opponentRight, ITEM_POTION, partyIndex: 0); }
     } SCENE {
@@ -174,10 +174,10 @@ DOUBLE_BATTLE_TEST("Items can restore a partner battler's HP (opponentLeft to op
     s32 hp = gItemsInfo[ITEM_POTION].holdEffectParam;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
     } WHEN {
         TURN { USE_ITEM(opponentLeft, ITEM_POTION, partyIndex: 1); }
     } SCENE {
@@ -194,8 +194,8 @@ SINGLE_BATTLE_TEST("Items can restore a battler's HP by a percentage")
 #endif
     GIVEN {
         ASSUME(gItemsInfo[item].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { USE_ITEM(player, item, partyIndex: 0); }
     } SCENE {

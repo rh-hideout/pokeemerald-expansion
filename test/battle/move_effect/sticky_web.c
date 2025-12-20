@@ -9,9 +9,9 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Sticky Web lowers Speed by 1 on switch-in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); }
         TURN { SWITCH(opponent, 1); }
@@ -29,8 +29,8 @@ SINGLE_BATTLE_TEST("Sticky Web lowers Speed by 1 on switch-in")
 SINGLE_BATTLE_TEST("Sticky Web can only be set up 1 time")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); }
         TURN { MOVE(player, MOVE_STICKY_WEB); }
@@ -50,12 +50,12 @@ DOUBLE_BATTLE_TEST("Sticky Web lowers Speed by 1 in a double battle after Explos
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
-        PLAYER(SPECIES_WOBBUFFET) {Speed(5);}
-        PLAYER(SPECIES_WOBBUFFET) {HP(1500); Speed(10);}
-        PLAYER(SPECIES_WOBBUFFET) {Speed(10);}
-        OPPONENT(SPECIES_WOBBUFFET) {HP(1); Speed(1);}
-        OPPONENT(SPECIES_WOBBUFFET) {HP(1); Speed(1);}
-        OPPONENT(SPECIES_WYNAUT) {Speed(10);}
+        PLAYER(TEST_SPECIES_WOBBUFFET) {Speed(5);}
+        PLAYER(TEST_SPECIES_WOBBUFFET) {HP(1500); Speed(10);}
+        PLAYER(TEST_SPECIES_WOBBUFFET) {Speed(10);}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {HP(1); Speed(1);}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {HP(1); Speed(1);}
+        OPPONENT(TEST_SPECIES_WYNAUT) {Speed(10);}
         OPPONENT(SPECIES_ALAKAZAM) {Speed(100);}
     } WHEN {
         TURN { MOVE(playerRight, MOVE_STICKY_WEB); MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 2); SEND_OUT(opponentLeft, 2); SEND_OUT(opponentRight, 3); }
@@ -78,8 +78,8 @@ DOUBLE_BATTLE_TEST("Sticky Web lowers Speed by 1 in a double battle after Explos
 SINGLE_BATTLE_TEST("Sticky Web raises Speed by 1 for a Pokemon with Contrary")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SHUCKLE) { Ability(ABILITY_CONTRARY); }
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); }
@@ -241,9 +241,9 @@ DOUBLE_BATTLE_TEST("Sticky Web has correct interactions with Mirror Armor - no o
 SINGLE_BATTLE_TEST("Sticky Web is placed on the correct side after Explosion")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); MOVE(opponent, MOVE_STICKY_WEB); SEND_OUT(player, 1);}
     } SCENE {
@@ -258,9 +258,9 @@ SINGLE_BATTLE_TEST("Sticky Web is placed on the correct side after Explosion")
 SINGLE_BATTLE_TEST("Sticky Web is placed on the correct side after Memento")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MEMENTO); MOVE(opponent, MOVE_STICKY_WEB); SEND_OUT(player, 1); }
     } SCENE {

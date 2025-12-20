@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking ou
     PARAMETRIZE { stats[4] = 255; }
     GIVEN {
         PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(stats[0]); Defense(stats[1]); SpAttack(stats[2]); SpDefense(stats[3]); Speed(stats[4]); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -42,10 +42,10 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't trigger if user is fainted")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DESTINY_BOND) == EFFECT_DESTINY_BOND);
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_KARTANA) { Ability(ABILITY_BEAST_BOOST); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DESTINY_BOND); MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -67,8 +67,8 @@ SINGLE_BATTLE_TEST("Beast Boost prioritizes stats in the case of a tie in the fo
     PARAMETRIZE { stats[4] = 255; stats[3] = 255; }
     GIVEN {
         PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(stats[0]); Defense(stats[1]); SpAttack(stats[2]); SpDefense(stats[3]); Speed(stats[4]); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
     } SCENE {

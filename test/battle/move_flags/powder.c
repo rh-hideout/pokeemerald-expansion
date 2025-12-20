@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Powder moves are blocked by Grass-type Pokémon (Gen6+)")
         WITH_CONFIG(CONFIG_POWDER_GRASS, gen);
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_ODDISH);
     } WHEN {
         TURN { MOVE(player, MOVE_STUN_SPORE); }

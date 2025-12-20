@@ -19,8 +19,8 @@ SINGLE_BATTLE_TEST("Counter is not affected by Protect effects")
     PARAMETRIZE { move = MOVE_OBSTRUCT; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_COUNTER); }
     } SCENE {
@@ -49,8 +49,8 @@ SINGLE_BATTLE_TEST("Counter will do twice as much damage received from the oppon
     s16 normalDmg;
     s16 counterDmg;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POUND); MOVE(player, MOVE_COUNTER); }
     } SCENE {
@@ -66,10 +66,10 @@ SINGLE_BATTLE_TEST("Counter will do twice as much damage received from the oppon
 DOUBLE_BATTLE_TEST("Counter cannot affect ally Pokémon")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_POUND, target: playerRight);
@@ -87,10 +87,10 @@ DOUBLE_BATTLE_TEST("Counter hits the last opponent that hit the user")
     s16 counterDmg;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_POUND, target: playerLeft);
@@ -111,10 +111,10 @@ DOUBLE_BATTLE_TEST("Counter hits the last opponent that hit the user")
 DOUBLE_BATTLE_TEST("Counter respects Follow me")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(opponentRight, MOVE_FOLLOW_ME);
@@ -132,10 +132,10 @@ DOUBLE_BATTLE_TEST("Counter respects Follow me")
 DOUBLE_BATTLE_TEST("Counter fails if mon that damaged Counter user is no longer on the field (Gen 1-4)")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_POUND, target: playerLeft);
@@ -155,7 +155,7 @@ SINGLE_BATTLE_TEST("Counter deals 1 damage when the attack received is blocked b
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SHADOW_SNEAK) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SHADOW_SNEAK); MOVE(player, MOVE_COUNTER); }
     } SCENE {

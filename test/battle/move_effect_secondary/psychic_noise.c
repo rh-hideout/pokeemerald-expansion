@@ -10,8 +10,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Psychic Noise blocks healing moves for 2 turns")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC_NOISE); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(opponent, MOVE_RECOVER, allowed: FALSE); }
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Psychic Noise blocks healing moves for 2 turns")
 SINGLE_BATTLE_TEST("Psychic Noise is blocked by Soundproof")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VOLTORB) { HP(1); Ability(ABILITY_SOUNDPROOF); }
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC_NOISE); MOVE(opponent, MOVE_RECOVER); }
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Psychic Noise is blocked by Soundproof")
 SINGLE_BATTLE_TEST("Psychic Noise heal block effect is blocked by Aroma Veil")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MILCERY) { Ability(ABILITY_AROMA_VEIL); }
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC_NOISE); MOVE(opponent, MOVE_RECOVER); }
@@ -58,9 +58,9 @@ SINGLE_BATTLE_TEST("Psychic Noise heal block effect is blocked by Aroma Veil")
 DOUBLE_BATTLE_TEST("Psychic Noise heal block effect is blocked by partners Aroma Veil in doubles")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MILCERY) { Ability(ABILITY_AROMA_VEIL); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_PSYCHIC_NOISE, target: opponentLeft); MOVE(opponentLeft, MOVE_RECOVER); }

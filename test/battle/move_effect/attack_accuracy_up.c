@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Hone Claws increases Attack and Accuracy by one stage each")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HONE_CLAWS) == EFFECT_ATTACK_ACCURACY_UP);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HONE_CLAWS); }
     } SCENE {

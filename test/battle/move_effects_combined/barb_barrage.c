@@ -11,8 +11,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Barb Barrage inflicts poison")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BARB_BARRAGE); }
         TURN {}
@@ -31,8 +31,8 @@ SINGLE_BATTLE_TEST("Barb Barrage's power doubles if the target is poisoned/badly
     PARAMETRIZE { status1 = STATUS1_POISON; }
     PARAMETRIZE { status1 = STATUS1_TOXIC_POISON; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(status1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(status1); }
     } WHEN {
         TURN { MOVE(player, MOVE_BARB_BARRAGE); }
     } SCENE {

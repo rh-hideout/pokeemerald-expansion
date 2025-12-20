@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Sand Force prevents damage from sandstorm")
         ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
         ASSUME(type1 != TYPE_STEEL && type2 != TYPE_STEEL);
         PLAYER(SPECIES_SHELLOS) { Ability(ABILITY_SAND_FORCE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SANDSTORM); }
     } SCENE {
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Sand Force increases the power of Rock-, Ground- and Steel-t
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
         ASSUME(GetMoveType(MOVE_IRON_HEAD) == TYPE_STEEL);
         PLAYER(SPECIES_SHELLOS) { Ability(ABILITY_SAND_FORCE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, moveOpponent); MOVE(player, movePlayer); }
     } SCENE {

@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Blizzard bypasses accuracy checks in Hail and Snow")
     GIVEN {
         ASSUME(GetMoveAccuracy(MOVE_BLIZZARD) == 70);
         ASSUME(MoveAlwaysHitsInHailSnow(MOVE_BLIZZARD));
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_BLIZZARD); }
     } SCENE {

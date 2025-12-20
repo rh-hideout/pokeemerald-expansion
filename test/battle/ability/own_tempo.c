@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from moves by the opponent")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); };
     } WHEN {
         TURN { MOVE(player, MOVE_CONFUSE_RAY); }
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from moves by the user")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_PETAL_DANCE, MOVE_EFFECT_THRASH));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_PETAL_DANCE); }
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Own Tempo cures confusion if it's obtained via Skill Swap")
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CONFUSE_RAY); }
         TURN { MOVE(player, MOVE_SKILL_SWAP);
@@ -133,7 +133,7 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_BERSERK_GENE].holdEffect == HOLD_EFFECT_BERSERK_GENE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); Item(ITEM_BERSERK_GENE); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }

@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Meditate raises Attack by 1 stage", s16 damage)
     PARAMETRIZE { raiseAttack = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (raiseAttack) TURN { MOVE(player, MOVE_MEDITATE); }
         TURN { MOVE(player, MOVE_SCRATCH); }

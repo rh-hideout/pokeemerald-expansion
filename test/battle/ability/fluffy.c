@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Fluffy halves damage taken from moves that make direct conta
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Fluffy doubles damage taken from fire type moves", s16 damag
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_EMBER); }
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Fluffy does not alter damage of fire-type moves that make di
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_FIRE_PUNCH); }
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Fluffy halves damage taken from moves that make direct conta
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Fluffy does not halve damage taken from moves that make dire
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PUNCHING_GLOVE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PUNCHING_GLOVE); }
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER_PUNCH); }

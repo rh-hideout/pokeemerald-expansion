@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Reflect reduces physical damage", s16 damage)
     PARAMETRIZE { move = MOVE_REFLECT; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -31,8 +31,8 @@ SINGLE_BATTLE_TEST("Reflect applies for 5 turns")
     s16 damage[6];
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REFLECT); MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -66,8 +66,8 @@ SINGLE_BATTLE_TEST("Reflect applies for 5 turns")
 SINGLE_BATTLE_TEST("Reflect fails if already active")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REFLECT); }
         TURN { MOVE(player, MOVE_REFLECT); }

@@ -10,11 +10,11 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Aura Wheel raises Speed; fails if the user is not Morpeko")
 {
     u16 species;
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { species = TEST_SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_MORPEKO; }
     GIVEN {
         PLAYER(species);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_AURA_WHEEL); }
     } SCENE {
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Aura Wheel changes type depending on Morpeko's form")
 {
     GIVEN {
         PLAYER(SPECIES_MORPEKO) { Ability(ABILITY_HUNGER_SWITCH); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_AURA_WHEEL); }
         TURN { MOVE(player, MOVE_AURA_WHEEL); }

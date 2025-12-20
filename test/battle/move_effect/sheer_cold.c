@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Sheer Cold doesn't affect Ice-type Pokémon (Gen3-6)")
     GIVEN {
         WITH_CONFIG(CONFIG_SHEER_COLD_IMMUNITY, GEN_6);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_GLALIE);
     } WHEN {
         TURN { MOVE(player, MOVE_SHEER_COLD); }
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Sheer Cold doesn't affect Ice-type Pokémon (Gen7+)")
     GIVEN {
         WITH_CONFIG(CONFIG_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_GLALIE);
     } WHEN {
         TURN { MOVE(player, MOVE_SHEER_COLD); }
@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Sheer Cold can hit semi-invulnerable mons when the user has 
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_NO_GUARD); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_NO_GUARD); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLY); }
         TURN { MOVE(player, MOVE_SHEER_COLD); }
@@ -55,8 +55,8 @@ SINGLE_BATTLE_TEST("Sheer Cold can hit semi-invulnerable mons when the user has 
 SINGLE_BATTLE_TEST("Sheer Cold can be endured by Focus Sash")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_SHEER_COLD); }
     } SCENE {
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Sheer Cold can be endured by Focus Sash")
 SINGLE_BATTLE_TEST("Sheer Cold can be endured by Sturdy")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GEODUDE) { Ability(ABILITY_STURDY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SHEER_COLD); }

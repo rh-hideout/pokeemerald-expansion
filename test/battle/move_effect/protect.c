@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and B
     }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, protectMove); MOVE(player, usedMove); }
         TURN {}
@@ -80,8 +80,8 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
     }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, protectMove); MOVE(player, usedMove); }
         TURN {}
@@ -136,9 +136,9 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
     PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(hp); MaxHP(maxHp); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(hp); MaxHP(maxHp); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (hp == 1) {
             TURN { MOVE(opponent, MOVE_SPIKY_SHIELD); MOVE(player, usedMove); SEND_OUT(player, 1); }
@@ -171,9 +171,9 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making co
     PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BANEFUL_BUNKER); MOVE(player, usedMove); }
         TURN {}
@@ -197,8 +197,8 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making co
 SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are already statused")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_WILL_O_WISP); }
         TURN { MOVE(opponent, MOVE_BANEFUL_BUNKER); MOVE(player, MOVE_SCRATCH); }
@@ -223,9 +223,9 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making con
     PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BURNING_BULWARK); MOVE(player, usedMove); }
         TURN {}
@@ -249,8 +249,8 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making con
 SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are already statused")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC); }
         TURN { MOVE(opponent, MOVE_BURNING_BULWARK); MOVE(player, MOVE_SCRATCH); }
@@ -359,8 +359,8 @@ SINGLE_BATTLE_TEST("Protect: Multi-hit moves don't hit a protected target and fa
 SINGLE_BATTLE_TEST("Protect fails if user moves last")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_PROTECT); }
     } SCENE {
@@ -372,10 +372,10 @@ SINGLE_BATTLE_TEST("Protect fails if user moves last")
 DOUBLE_BATTLE_TEST("Protect fails when the only slower battler is a fainted ally")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
         TURN {
@@ -404,10 +404,10 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target
         ASSUME(GetMoveTarget(MOVE_SCRATCH) == MOVE_TARGET_SELECTED);
         ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_WIDE_GUARD); MOVE(playerLeft, move, target: opponentLeft); }
         TURN {}
@@ -444,10 +444,10 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns (Gen6+
     GIVEN {
         WITH_CONFIG(CONFIG_WIDE_GUARD, config);
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_WIDE_GUARD); MOVE(playerLeft, MOVE_HYPER_VOICE, target: opponentLeft); }
         TURN { MOVE(opponentLeft, MOVE_WIDE_GUARD); MOVE(playerLeft, MOVE_HYPER_VOICE, target: opponentLeft); }
@@ -478,10 +478,10 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard protects self and ally from priority mo
     GIVEN {
         ASSUME(GetMovePriority(MOVE_SCRATCH) == 0);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_QUICK_GUARD); MOVE(playerLeft, move, target:targetOpponent); }
         TURN {}
@@ -510,10 +510,10 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6
     GIVEN {
         WITH_CONFIG(CONFIG_QUICK_GUARD, config);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_QUICK_GUARD); MOVE(playerLeft, MOVE_QUICK_ATTACK, target: opponentRight); }
         TURN { MOVE(opponentLeft, MOVE_QUICK_GUARD); MOVE(playerLeft, MOVE_QUICK_ATTACK, target: opponentRight); }
@@ -542,10 +542,10 @@ DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status mo
         ASSUME(GetMoveTarget(MOVE_LEER) == MOVE_TARGET_BOTH);
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
         ASSUME(GetMoveCategory(MOVE_HYPER_VOICE) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); (move == MOVE_SCRATCH) ? MOVE(playerLeft, move, target:targetOpponent) : MOVE(playerLeft, move); }
         TURN {}
@@ -580,8 +580,8 @@ SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
         ASSUME(MoveIgnoresProtect(MOVE_CONFIDE));
         ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
         ASSUME(MoveIgnoresProtect(MOVE_DECORATE));
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, move); }
     } SCENE {
@@ -602,10 +602,10 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
         ASSUME(MoveIgnoresProtect(MOVE_CONFIDE));
         ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
         ASSUME(MoveIgnoresProtect(MOVE_DECORATE));
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(playerLeft, move, target: opponentLeft); MOVE(playerRight, move, target: opponentRight); }
     } SCENE {
@@ -656,8 +656,8 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
     PARAMETRIZE { move = MOVE_CRAFTY_SHIELD; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, move); }
@@ -685,8 +685,8 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
 
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (protected)
             TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); MOVE(opponent, move); }
@@ -704,8 +704,8 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
 SINGLE_BATTLE_TEST("Protect: Protective Pads protects from secondary effects")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BURNING_BULWARK); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -722,11 +722,11 @@ DOUBLE_BATTLE_TEST("Protect is not transferred to a mon that is switched in due 
 {
     GIVEN {
         PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); };
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_SQUIRTLE);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(opponentRight, MOVE_PROTECT);
@@ -747,12 +747,12 @@ DOUBLE_BATTLE_TEST("Protect is not transferred to a mon that is switched in due 
 DOUBLE_BATTLE_TEST("Wide Guard is still activate even if user is switched out due to Eject Button")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_SQUIRTLE);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(opponentRight, MOVE_WIDE_GUARD);

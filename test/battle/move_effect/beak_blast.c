@@ -10,10 +10,10 @@ DOUBLE_BATTLE_TEST("Beak Blast's charging message is shown before other moves ar
 {
     GIVEN {
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
-        PLAYER(SPECIES_WYNAUT) { Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_BEAK_BLAST, target: opponentLeft); }
     } SCENE {
@@ -38,10 +38,10 @@ DOUBLE_BATTLE_TEST("Beak Blast burns all who make contact with the Pokémon")
     GIVEN {
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_WYNAUT) { Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerLeft, MOVE_BEAK_BLAST, target: opponentLeft); }
     } SCENE {
@@ -83,8 +83,8 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(!MoveMakesContact(MOVE_WATER_GUN));
         ASSUME(!MoveMakesContact(MOVE_LEER));
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_BEAK_BLAST); }
         TURN {}
@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn fire types")
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_ARCANINE].types[0] == TYPE_FIRE || gSpeciesInfo[SPECIES_ARCANINE].types[1] == TYPE_FIRE);
         PLAYER(SPECIES_ARCANINE);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_BEAK_BLAST); }
     } SCENE {
@@ -131,8 +131,8 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn after being used")
 {
     GIVEN {
         ASSUME(GetMovePriority(MOVE_COUNTER) < GetMovePriority(MOVE_BEAK_BLAST));
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BEAK_BLAST); MOVE(player, MOVE_COUNTER); }
     } SCENE {

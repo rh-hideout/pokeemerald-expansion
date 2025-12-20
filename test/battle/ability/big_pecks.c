@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Big Pecks prevents Defense stage reduction from moves")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_BIG_PECKS); }
     } WHEN {
         TURN { MOVE(player, MOVE_LEER); }
@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Defense stage reduction from moves
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_SUPERPOWER, MOVE_EFFECT_ATK_DEF_DOWN) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_BIG_PECKS); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUPERPOWER); }
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Topsy-Turvy")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HARDEN) == EFFECT_DEFENSE_UP);
         ASSUME(GetMoveEffect(MOVE_TOPSY_TURVY) == EFFECT_TOPSY_TURVY);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_BIG_PECKS); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_HARDEN); MOVE(player, MOVE_TOPSY_TURVY); }
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Spectral Thief from resetting posi
         ASSUME(GetMoveEffect(MOVE_HARDEN) == EFFECT_DEFENSE_UP);
         ASSUME(GetMoveEffect(MOVE_SPECTRAL_THIEF) == EFFECT_SPECTRAL_THIEF);
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_BIG_PECKS); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player,MOVE_SOAK); }
@@ -98,8 +98,8 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent receiving negative Defense stage c
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_BIG_PECKS); }
     } WHEN {
         TURN { MOVE(player, MOVE_LEER);

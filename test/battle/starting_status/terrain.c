@@ -17,8 +17,8 @@ SINGLE_BATTLE_TEST("B_VAR_STARTING_STATUS starts a chosen terrain at the beginni
     VarSet(B_VAR_STARTING_STATUS_TIMER, 0);
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         // More than 5 turns
         TURN { ; }
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
 
     GIVEN {
         PLAYER(SPECIES_TAPU_BULU) { Ability(viaMove == TRUE ? ABILITY_TELEPATHY : ABILITY_GRASSY_SURGE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         // More than 5 turns
         TURN { MOVE(player, viaMove == TRUE ? MOVE_GRASSY_TERRAIN : MOVE_CELEBRATE); }

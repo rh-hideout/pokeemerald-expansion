@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Tera Shift transforms Terapagos into its Terastal form on sw
 {
     GIVEN {
         PLAYER(SPECIES_TERAPAGOS_NORMAL) { Ability(ABILITY_TERA_SHIFT); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { ; }
     } SCENE {

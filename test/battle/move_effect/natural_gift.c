@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Natural Gift removes berry if move fails due to an immunity")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
         OPPONENT(SPECIES_PHANPY);
     } WHEN {
         TURN { MOVE(player, MOVE_NATURAL_GIFT); }
@@ -18,9 +18,9 @@ SINGLE_BATTLE_TEST("Natural Gift removes berry if move fails due to an immunity"
 SINGLE_BATTLE_TEST("Natural Gift does not remove berry if user is ejected out")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
     } WHEN {
         TURN { MOVE(player, MOVE_NATURAL_GIFT); }
         TURN { SWITCH(player, 0); }
@@ -35,8 +35,8 @@ SINGLE_BATTLE_TEST("Natural Gift does not remove berry if user is ejected out")
 SINGLE_BATTLE_TEST("Natural Gift does not remove berry if user is unable to use a move")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_THUNDER_WAVE); MOVE(player, MOVE_NATURAL_GIFT, WITH_RNG(RNG_PARALYSIS, FALSE)); }
     } SCENE {
@@ -50,8 +50,8 @@ SINGLE_BATTLE_TEST("Natural Gift does not remove berry if user is unable to use 
 SINGLE_BATTLE_TEST("Natural Gift removes the berry if user missed")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SAND_ATTACK); MOVE(player, MOVE_NATURAL_GIFT, hit: FALSE); }
     } SCENE {

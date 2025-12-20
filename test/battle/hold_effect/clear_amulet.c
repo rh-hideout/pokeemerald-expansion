@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents Intimidate")
     GIVEN {
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_SHED_SKIN); };
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); };
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_SCRATCH); }
@@ -49,8 +49,8 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents stat reducing effects")
         ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_SPEED_DOWN_2);
         ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_EVASION_DOWN_2 : EFFECT_EVASION_DOWN));
         ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); };
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -77,8 +77,8 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents secondary effects that reduce stats")
         ASSUME(MoveHasAdditionalEffect(MOVE_SNARL, MOVE_EFFECT_SP_ATK_MINUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffect(MOVE_PSYCHIC, MOVE_EFFECT_SP_DEF_MINUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffect(MOVE_MUD_SLAP, MOVE_EFFECT_ACC_MINUS_1) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); };
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); };
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -101,8 +101,8 @@ SINGLE_BATTLE_TEST("Clear Amulet protects from Protect's secondary effects")
     PARAMETRIZE { move = MOVE_OBSTRUCT; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SCRATCH); }
     } SCENE {

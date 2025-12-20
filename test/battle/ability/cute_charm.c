@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Cute Charm inflicts infatuation on contact")
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(!MoveMakesContact(MOVE_SWIFT));
-        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Gender(MON_MALE); }
         OPPONENT(SPECIES_CLEFAIRY) { Gender(MON_FEMALE); Ability(ABILITY_CUTE_CHARM); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Cute Charm inflicts infatuation on contact")
 SINGLE_BATTLE_TEST("Cute Charm cannot infatuate same gender")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Gender(MON_MALE); }
         OPPONENT(SPECIES_CLEFAIRY) { Gender(MON_MALE); Ability(ABILITY_CUTE_CHARM); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Cute Charm triggers 30% of the time (Gen 4+)")
     GIVEN {
         ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_4);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Gender(MON_MALE); }
         OPPONENT(SPECIES_CLEFAIRY) { Gender(MON_FEMALE); Ability(ABILITY_CUTE_CHARM); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }

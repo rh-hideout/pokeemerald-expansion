@@ -23,8 +23,8 @@ SINGLE_BATTLE_TEST("Electric Seed raises the holder's Defense on Electric Terrai
     PARAMETRIZE { ability = ABILITY_ELECTRIC_SURGE; item = ITEM_NONE; }
     PARAMETRIZE { ability = ABILITY_ELECTRIC_SURGE; item = ITEM_ELECTRIC_SEED; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_ELECTRIC_SEED); }
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_ELECTRIC_SEED); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ELECTRIC_SEED); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ELECTRIC_SEED); }
         OPPONENT(SPECIES_TAPU_KOKO) { Ability(ability); Item(item); }
     } WHEN {
         if (ability == ABILITY_TELEPATHY)
@@ -55,8 +55,8 @@ SINGLE_BATTLE_TEST("Grassy Seed raises the holder's Defense on Grassy Terrain")
     PARAMETRIZE { ability = ABILITY_GRASSY_SURGE; item = ITEM_NONE; }
     PARAMETRIZE { ability = ABILITY_GRASSY_SURGE; item = ITEM_GRASSY_SEED; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_GRASSY_SEED); }
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_GRASSY_SEED); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_GRASSY_SEED); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_GRASSY_SEED); }
         OPPONENT(SPECIES_TAPU_BULU) { Ability(ability); Item(item); }
     } WHEN {
         if (ability == ABILITY_TELEPATHY)
@@ -87,8 +87,8 @@ SINGLE_BATTLE_TEST("Misty Seed raises the holder's Sp. Defense on Misty Terrain"
     PARAMETRIZE { ability = ABILITY_MISTY_SURGE; item = ITEM_NONE; }
     PARAMETRIZE { ability = ABILITY_MISTY_SURGE; item = ITEM_MISTY_SEED; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MISTY_SEED); }
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MISTY_SEED); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_MISTY_SEED); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_MISTY_SEED); }
         OPPONENT(SPECIES_TAPU_FINI) { Ability(ability); Item(item); }
     } WHEN {
         if (ability == ABILITY_TELEPATHY)
@@ -119,8 +119,8 @@ SINGLE_BATTLE_TEST("Psychic Seed raises the holder's Sp. Defense on Psychic Terr
     PARAMETRIZE { ability = ABILITY_PSYCHIC_SURGE; item = ITEM_NONE; }
     PARAMETRIZE { ability = ABILITY_PSYCHIC_SURGE; item = ITEM_PSYCHIC_SEED; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PSYCHIC_SEED); }
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PSYCHIC_SEED); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PSYCHIC_SEED); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PSYCHIC_SEED); }
         OPPONENT(SPECIES_TAPU_LELE) { Ability(ability); Item(item); }
     } WHEN {
         if (ability == ABILITY_TELEPATHY)
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Electric Seed is consumed on Electric Terrain before other a
 SINGLE_BATTLE_TEST("Electric Seed doesn't activate on existing Electric Terrain before user's ability changes the terrain")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_TAPU_BULU) { Ability(ABILITY_GRASSY_SURGE); Item(ITEM_ELECTRIC_SEED); }
         OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {

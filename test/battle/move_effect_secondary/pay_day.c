@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Pay Day Scatters coins around after it hits - singles")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET)
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PAY_DAY); }
     } SCENE {
@@ -23,10 +23,10 @@ SINGLE_BATTLE_TEST("Pay Day Scatters coins around after it hits - singles")
 DOUBLE_BATTLE_TEST("Pay Day Scatters coins around after it hits - doubles")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_PAY_DAY, target: opponentLeft); }
     } SCENE {

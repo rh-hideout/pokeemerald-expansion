@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon fainting (start as Shi
 {
     GIVEN {
         PLAYER(SPECIES_AEGISLASH_SHIELD) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_GUST); SEND_OUT(player, 1); }
     } SCENE {
@@ -21,8 +21,8 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon fainting (start as Bla
 {
     GIVEN {
         PLAYER(SPECIES_AEGISLASH_BLADE) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_GUST); SEND_OUT(player, 1); }
     } SCENE {
@@ -39,8 +39,8 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
     PARAMETRIZE { species = SPECIES_CASTFORM; }
     PARAMETRIZE { species = SPECIES_CHERRIM; }
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VULPIX) { Ability(ABILITY_DROUGHT); }
         OPPONENT(species) { HP(1); }
     } WHEN {

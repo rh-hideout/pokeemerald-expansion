@@ -35,8 +35,8 @@ SINGLE_BATTLE_TEST("Body Press's damage depends on the user's base Defense inste
     PARAMETRIZE { def = 150; atk = 179; } // Atk is higher
     PARAMETRIZE { atk = 150; def = 179; } // Atk is lower
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Attack(atk); Defense(def); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Attack(atk); Defense(def); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_BODY_PRESS); }
     } SCENE {
@@ -57,8 +57,8 @@ SINGLE_BATTLE_TEST("Body Press's damage depends on the user's Defense and not At
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Attack(150); Defense(150); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Attack(150); Defense(150); }
     } WHEN {
         TURN { MOVE(opponent, move); }
         TURN { MOVE(opponent, MOVE_BODY_PRESS); }
@@ -80,8 +80,8 @@ SINGLE_BATTLE_TEST("Body Press uses Defense Stat even in Wonder Room", s16 damag
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { SpDefense(50); Defense(150); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { SpDefense(50); Defense(150); }
     } WHEN {
         TURN { MOVE(opponent, move); }
         TURN { MOVE(opponent, MOVE_BODY_PRESS); }
@@ -104,8 +104,8 @@ SINGLE_BATTLE_TEST("Body Press uses Special Defense stat Stages in Wonder Room",
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
         ASSUME(GetMoveEffect(MOVE_AMNESIA) == EFFECT_SPECIAL_DEFENSE_UP_2);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { SpDefense(150); Defense(150); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { SpDefense(150); Defense(150); }
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_WONDER_ROOM); }
         TURN { MOVE(opponent, MOVE_BODY_PRESS); }

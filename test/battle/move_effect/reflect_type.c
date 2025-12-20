@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Reflect Type does not affect any of Arceus' forms")
     }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_REFLECT_TYPE); }
@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Reflect Type does not affect any of Silvally's forms")
     }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_REFLECT_TYPE); }
@@ -151,11 +151,11 @@ SINGLE_BATTLE_TEST("Reflect Type copies a target's pure type")
 SINGLE_BATTLE_TEST("Reflect Type defaults to Normal type for the user's 1st and 2nd types if the target only has a 3rd type")
 {
     GIVEN {
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 1) == TYPE_PSYCHIC);
         ASSUME(GetSpeciesType(SPECIES_ARCANINE, 0) == TYPE_FIRE);
         ASSUME(GetSpeciesType(SPECIES_ARCANINE, 1) == TYPE_FIRE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARCANINE);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BURN_UP); }

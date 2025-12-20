@@ -9,9 +9,9 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Stone Axe sets up hazards after hitting the target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STONE_AXE); }
         TURN { SWITCH(opponent, 1); }
@@ -29,9 +29,9 @@ SINGLE_BATTLE_TEST("Stone Axe sets up hazards after hitting the target")
 SINGLE_BATTLE_TEST("Stone Axe can set up pointed stones only once")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_STONE_AXE); }
         TURN { MOVE(player, MOVE_STONE_AXE); }
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Stone Axe can set up pointed stones only once")
 SINGLE_BATTLE_TEST("Stone Axe sets up hazards after any ability activation")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SKARMORY) { Ability(ABILITY_WEAK_ARMOR); }
     } WHEN {
         TURN { MOVE(player, MOVE_STONE_AXE); }
@@ -80,9 +80,9 @@ SINGLE_BATTLE_TEST("Stone Axe sets up hazards after any ability activation")
 SINGLE_BATTLE_TEST("Stone Axe fails to set up hazards if user faints")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
         TURN { MOVE(player, MOVE_STONE_AXE); SEND_OUT(player, 1); }
     } SCENE {

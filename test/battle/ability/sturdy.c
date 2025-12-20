@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Sturdy prevents OHKO moves")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
         PLAYER(SPECIES_GEODUDE) { Ability(ABILITY_STURDY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FISSURE); }
     } SCENE {
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Sturdy prevents OHKOs (Gen5+)")
         WITH_CONFIG(CONFIG_STURDY, config);
         PLAYER(SPECIES_GEODUDE) { Ability(ABILITY_STURDY); MaxHP(100); HP(100); }
         PLAYER(SPECIES_GEODUDE);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(opponent, MOVE_SEISMIC_TOSS);
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Sturdy does not prevent non-OHKOs")
 {
     GIVEN {
         PLAYER(SPECIES_GEODUDE) { Ability(ABILITY_STURDY); MaxHP(100); HP(99); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SEISMIC_TOSS); }
     } SCENE {

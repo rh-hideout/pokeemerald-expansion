@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Infatuation")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ATTRACT) == EFFECT_ATTRACT);
         PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); Gender(MON_MALE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Gender(MON_FEMALE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ATTRACT); }
     } SCENE {
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Captivate")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CAPTIVATE) == EFFECT_CAPTIVATE);
         PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); Gender(MON_MALE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Gender(MON_FEMALE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CAPTIVATE); }
     } SCENE {
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Taunt (Gen6+)")
         WITH_CONFIG(CONFIG_OBLIVIOUS_TAUNT, gen);
         ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
         PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TAUNT); }
         TURN { MOVE(player, MOVE_SPORE, allowed: gen == GEN_6); }
@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Oblivious doesn't prevent Intimidate (Gen3-7)")
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_7);
         PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+)")
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_8);
         PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }

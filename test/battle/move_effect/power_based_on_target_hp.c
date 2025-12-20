@@ -16,8 +16,8 @@ SINGLE_BATTLE_TEST("Crush Grip's damage is affected by the target's current HP",
     PARAMETRIZE { hp = 1; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(hp); MaxHP(maxHp); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(hp); MaxHP(maxHp); }
     } WHEN {
         TURN { MOVE(player, MOVE_CRUSH_GRIP); }
     } SCENE {

@@ -29,8 +29,8 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves make the user semi-invulnerable turn
     PARAMETRIZE { move = MOVE_SHADOW_FORCE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); MOVE(opponent, MOVE_AERIAL_ACE); }
         TURN { SKIP_TURN(player); }
@@ -135,8 +135,8 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves don't need to charge with Power Herb
     PARAMETRIZE { move = MOVE_SHADOW_FORCE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POWER_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_POWER_HERB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -238,8 +238,8 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves apply a status that won't block cert
     PARAMETRIZE { move = MOVE_DIVE; opMove = MOVE_SURF; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); MOVE(opponent, opMove); }
     } SCENE {

@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Spicy Extract raises target's Attack by 2 stages and lowers target's Defense by 2 stages")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
     } SCENE {
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Spicy Extract is prevented by target's ability if it's Attac
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BELDUM) { Ability(ability); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SWORDS_DANCE); }
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Spicy Extract is prevented by target's ability if it's Attac
 SINGLE_BATTLE_TEST("Spicy Extract Defense loss is prevented by Big Pecks")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_BIG_PECKS); }
     } WHEN {
         TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
@@ -87,8 +87,8 @@ SINGLE_BATTLE_TEST("Spicy Extract bypasses accuracy checks")
 {
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHTPOWDER); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BRIGHTPOWDER); }
     } WHEN {
         TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
     } SCENE {
@@ -105,8 +105,8 @@ SINGLE_BATTLE_TEST("Spicy Extract bypasses accuracy checks")
 SINGLE_BATTLE_TEST("Spicy Extract will fail if target is in a semi-invulnerability state")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHTPOWDER); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BRIGHTPOWDER); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_DIVE); MOVE(player, MOVE_SPICY_EXTRACT); }
     } SCENE {
@@ -121,7 +121,7 @@ SINGLE_BATTLE_TEST("Spicy Extract will fail if target is in a semi-invulnerabili
 SINGLE_BATTLE_TEST("Spicy Extract stat changes will be inverted by Contrary")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
@@ -143,7 +143,7 @@ SINGLE_BATTLE_TEST("Spicy Extract stat changes will be inverted by Contrary")
 SINGLE_BATTLE_TEST("Spicy Extract against Clear Amulet and Contrary raises Defense only")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); Item(ITEM_CLEAR_AMULET); }
     } WHEN {
         TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
@@ -172,10 +172,10 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will use it if partner holds Clear Amu
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_CLEAR_AMULET); Moves(move); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SCRATCH, MOVE_SPICY_EXTRACT); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_CLEAR_AMULET); Moves(move); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SCRATCH, MOVE_SPICY_EXTRACT); }
     } WHEN {
         TURN {
             if (move == MOVE_SCRATCH)
@@ -196,10 +196,10 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does no
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); }
         OPPONENT(species) { Speed(20); Ability(ability); Moves(MOVE_SCRATCH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SCRATCH, MOVE_SPICY_EXTRACT); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SCRATCH, MOVE_SPICY_EXTRACT); }
     } WHEN {
         TURN {
             EXPECT_MOVE(opponentRight, MOVE_SCRATCH);

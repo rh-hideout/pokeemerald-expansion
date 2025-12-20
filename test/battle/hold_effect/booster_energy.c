@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Protosynthesis boost is preserved when weat
 {
     GIVEN {
         PLAYER(SPECIES_RAGING_BOLT) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_SUNNY_DAY, MOVE_CELEBRATE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_SUNNY_DAY, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
         TURN { }
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Protosynthesis and increases highes
 
     GIVEN {
         PLAYER(SPECIES_RAGING_BOLT) { Attack(attack); Defense(defense); Speed(speed); SpAttack(spAttack); SpDefense(spDefense); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(50); };
     } WHEN {
         TURN { }
     } SCENE {
@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Quark Drive and increases highest s
 
     GIVEN {
         PLAYER(SPECIES_IRON_MOTH) { Attack(attack); Defense(defense); Speed(speed); SpAttack(spAttack); SpDefense(spDefense); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(50); };
     } WHEN {
         TURN { }
     } SCENE {
@@ -158,7 +158,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain
 {
     GIVEN {
         PLAYER(SPECIES_IRON_MOTH) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); Moves(MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASSY_TERRAIN, MOVE_CELEBRATE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASSY_TERRAIN, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_GRASSY_TERRAIN); }
         TURN { }
@@ -192,7 +192,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special attack by 30% if it is the 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_ROUND) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(species) { Attack(100); Defense(100); Speed(100); SpAttack(110); SpDefense(100); Ability(ability); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(100); };
     } WHEN {
         TURN { MOVE(player, MOVE_ROUND); }
     } SCENE {
@@ -218,7 +218,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_ROUND) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(species) { Attack(100); Defense(100); Speed(100); SpAttack(100); SpDefense(110); Ability(ability); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(100); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_ROUND); }
     } SCENE {
@@ -234,7 +234,7 @@ SINGLE_BATTLE_TEST("Booster Energy can't be flung if a Paradox species is involv
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_IRON_MOTH].isParadox == TRUE);
         PLAYER(SPECIES_IRON_MOTH);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLING); }
     } SCENE {
@@ -248,7 +248,7 @@ SINGLE_BATTLE_TEST("Booster Energy can't be tricked if a Paradox species is invo
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_IRON_MOTH].isParadox == TRUE);
         PLAYER(SPECIES_IRON_MOTH) { Item(ITEM_BERRY_JUICE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_TRICK); }
     } SCENE {
@@ -260,7 +260,7 @@ SINGLE_BATTLE_TEST("Booster Energy can't be tricked if a Paradox species is invo
 DOUBLE_BATTLE_TEST("Booster Energy triggers correctly for all battlers if multiple fainted the previous turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CATERPIE) { HP(1); }
         PLAYER(SPECIES_GOUGING_FIRE) { Item(ITEM_BOOSTER_ENERGY); }
         PLAYER(SPECIES_IRON_MOTH) { Item(ITEM_BOOSTER_ENERGY); }
@@ -286,7 +286,7 @@ DOUBLE_BATTLE_TEST("Booster Energy activates on any terrain")
 {
     GIVEN {
         PLAYER(SPECIES_IRON_MOTH) { Speed(110); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(80); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(80); }
         OPPONENT(SPECIES_TAPU_BULU) { Speed(100); Ability(ABILITY_GRASSY_SURGE); }
         OPPONENT(SPECIES_TAPU_KOKO) { Speed(10); Ability(ABILITY_ELECTRIC_SURGE); };
     } WHEN {
@@ -301,8 +301,8 @@ DOUBLE_BATTLE_TEST("Booster Energy activates on any terrain")
 DOUBLE_BATTLE_TEST("Booster Energy activates on air locked sun")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_RAGING_BOLT) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_PSYDUCK) { Ability(ABILITY_CLOUD_NINE); }
         OPPONENT(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); };
@@ -319,7 +319,7 @@ DOUBLE_BATTLE_TEST("Booster Energy will not activate on terrain if user has Prot
 {
     GIVEN {
         PLAYER(SPECIES_RAGING_BOLT) { Speed(110); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(80); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(80); }
         OPPONENT(SPECIES_TAPU_BULU) { Speed(100); Ability(ABILITY_GRASSY_SURGE); }
         OPPONENT(SPECIES_TAPU_KOKO) { Speed(10); Ability(ABILITY_ELECTRIC_SURGE); };
     } WHEN {

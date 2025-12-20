@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("White Herb restores stats when they're lowered")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_LEER); }
     } SCENE {
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats when they're lowered")
 SINGLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimidate in singles")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { ; }
@@ -45,10 +45,10 @@ SINGLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
 DOUBLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimidate in doubles")
 {
     GIVEN {
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
-        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_WHITE_HERB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Item(ITEM_WHITE_HERB); }
         PLAYER(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { ; }
     } SCENE {
@@ -72,8 +72,8 @@ DOUBLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
 SINGLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimidate while switching in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { SWITCH(opponent, 1); MOVE(player, MOVE_CLOSE_COMBAT); }
@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after all hits of a multi hit move
 
     GIVEN {
         ASSUME(GetMoveStrikeCount(MOVE_DUAL_WINGBEAT) == 2);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_DUAL_WINGBEAT); }
@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if it is knocked off o
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
         PLAYER(SPECIES_SLUGMA) {  Ability(ABILITY_WEAK_ARMOR); Item(ITEM_WHITE_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {
@@ -220,10 +220,10 @@ SINGLE_BATTLE_TEST("White Herb has correct interactions with Intimidate triggere
 DOUBLE_BATTLE_TEST("White Herb is correctly displayed")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { Item(ITEM_WHITE_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT) { Item(ITEM_WHITE_HERB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SUPERPOWER, target: opponentRight); }
     } SCENE {

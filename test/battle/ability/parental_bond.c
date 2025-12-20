@@ -8,7 +8,7 @@ SINGLE_BATTLE_TEST("Parental Bond converts Scratch into a two-strike move")
         ASSUME(GetMoveStrikeCount(MOVE_SCRATCH) < 2);
         ASSUME(GetMoveEffect(MOVE_SCRATCH) == EFFECT_HIT);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Parental Bond does not convert a move with three or more str
         ASSUME(GetMoveCategory(MOVE_TRIPLE_KICK) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveStrikeCount(MOVE_TRIPLE_KICK) == 3);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TRIPLE_KICK, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Parental Bond converts multi-target moves into a two-strike 
         ASSUME(GetMoveStrikeCount(MOVE_ICY_WIND) < 2);
         ASSUME(GetMoveTarget(MOVE_ICY_WIND) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
@@ -83,7 +83,7 @@ DOUBLE_BATTLE_TEST("Parental Bond does not convert multi-target moves into a two
         ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
         PLAYER(SPECIES_PIDGEY);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE, gimmick: GIMMICK_MEGA); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentLeft, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_CELEBRATE); }
@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
         ASSUME(GetMoveCategory(MOVE_COMET_PUNCH) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_COMET_PUNCH) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_COMET_PUNCH, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -175,7 +175,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
         ASSUME(GetMoveCategory(MOVE_COMET_PUNCH) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_COMET_PUNCH) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_COMET_PUNCH, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -205,7 +205,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
         ASSUME(GetMoveCategory(MOVE_COMET_PUNCH) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_COMET_PUNCH) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_COMET_PUNCH, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -236,7 +236,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
         ASSUME(GetMoveCategory(MOVE_COMET_PUNCH) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_COMET_PUNCH) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_COMET_PUNCH, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -284,7 +284,7 @@ SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SNORE) == EFFECT_SNORE);
         PLAYER(SPECIES_KANGASKHAN_MEGA) { Status1(STATUS1_SLEEP); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SNORE); }
     } SCENE {
@@ -306,8 +306,8 @@ SINGLE_BATTLE_TEST("Parental Bond only triggers Dragon Tail's target switch out 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_DRAGON_TAIL, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -328,7 +328,7 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on semi-invulnerable moves")
         ASSUME(GetMoveStrikeCount(MOVE_FLY) < 2);
         ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FLY, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { SKIP_TURN(player); }
@@ -345,7 +345,7 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on two turn attacks")
         ASSUME(GetMoveStrikeCount(MOVE_RAZOR_WIND) < 2);
         ASSUME(GetMoveEffect(MOVE_RAZOR_WIND) == EFFECT_TWO_TURNS_ATTACK);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RAZOR_WIND, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { SKIP_TURN(player); }
@@ -359,7 +359,7 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger Scale Shot effect on Drain Pu
 {
     GIVEN {
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DRAIN_PUNCH, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {

@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Leek increases critical hit ratio by 2 stages for the Farfet
         ASSUME(GetSpeciesBaseSpeed(SPECIES_FARFETCHD_GALAR) == 55);
         ASSUME(GetSpeciesBaseSpeed(SPECIES_SIRFETCHD) == 65);
         ASSUME(gItemsInfo[ITEM_LEEK].holdEffect == HOLD_EFFECT_LEEK);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Item(ITEM_LEEK); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }

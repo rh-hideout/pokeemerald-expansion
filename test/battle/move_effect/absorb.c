@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Absorb recovers 50% of the damage dealt")
     s16 damage;
     s16 healed;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ABSORB); }
     } SCENE {
@@ -28,8 +28,8 @@ SINGLE_BATTLE_TEST("Absorb fails if Heal Block applies")
 {
     GIVEN {
         ASSUME(B_HEAL_BLOCKING >= GEN_6);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_ABSORB); }
     } SCENE {
@@ -52,7 +52,7 @@ DOUBLE_BATTLE_TEST("Matcha Gatcha recovers 50% of the damage dealt from both tar
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MATCHA_GOTCHA) == EFFECT_ABSORB);
         PLAYER(SPECIES_PIKACHU) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STARYU);
         OPPONENT(SPECIES_STARYU);
     } WHEN {
@@ -74,8 +74,8 @@ SINGLE_BATTLE_TEST("Draining Kiss recovers 75% of the damage dealt")
     s16 damage;
     s16 healed;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DRAINING_KISS); }
     } SCENE {
@@ -90,8 +90,8 @@ SINGLE_BATTLE_TEST("Draining Kiss recovers 75% of the damage dealt")
 SINGLE_BATTLE_TEST("Absorb does not drain any HP if user flinched")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_ABSORB); }
     } SCENE {
@@ -108,8 +108,8 @@ TO_DO_BATTLE_TEST("Absorb recovers 50% of the damage dealt to a Substitute");
 SINGLE_BATTLE_TEST("Absorb does not drain any HP if user does 0 damage")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ENDURE); MOVE(player, MOVE_ABSORB); }
     } SCENE {
@@ -122,7 +122,7 @@ SINGLE_BATTLE_TEST("Absorb does not drain any HP if user does 0 damage")
 SINGLE_BATTLE_TEST("Absorb does not drain any HP if the move is blocked by Disguise")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
     } WHEN {
         TURN { MOVE(player, MOVE_ABSORB); }

@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Roar switches the target with a random non-fainted replaceme
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BULBASAUR);
         OPPONENT(SPECIES_CHARMANDER);
         OPPONENT(SPECIES_SQUIRTLE) { HP(0); }
@@ -29,10 +29,10 @@ DOUBLE_BATTLE_TEST("Roar switches the target with a random non-battler, non-fain
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_BULBASAUR);
         OPPONENT(SPECIES_CHARMANDER);
         OPPONENT(SPECIES_SQUIRTLE) { HP(0); }
@@ -47,8 +47,8 @@ DOUBLE_BATTLE_TEST("Roar switches the target with a random non-battler, non-fain
 SINGLE_BATTLE_TEST("Roar fails if no replacements")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROAR); }
     } SCENE {
@@ -60,9 +60,9 @@ SINGLE_BATTLE_TEST("Roar fails if no replacements")
 SINGLE_BATTLE_TEST("Roar fails if replacements fainted")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { HP(0); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(0); }
     } WHEN {
         TURN { MOVE(player, MOVE_ROAR); }
     } SCENE {
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Roar fails if replacements fainted")
 SINGLE_BATTLE_TEST("Roar fails against target with Guard Dog")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_OKIDOGI) { Ability(ABILITY_GUARD_DOG); }
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Roar fails against target with Guard Dog")
 SINGLE_BATTLE_TEST("Roar fails to switch out target with Suction Cups")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_OCTILLERY) { Ability(ABILITY_SUCTION_CUPS); }
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {

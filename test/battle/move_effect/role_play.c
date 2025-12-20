@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Role Play copies target's ability")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); }
     }WHEN {
         TURN { MOVE(player, MOVE_ROLE_PLAY); }
@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Role Play copies target's ability")
 DOUBLE_BATTLE_TEST("Role Play copies target's current ability even if it changed during that turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         PLAYER(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); }
         OPPONENT(SPECIES_BULBASAUR) { Ability(ABILITY_OVERGROW); }
         OPPONENT(SPECIES_SQUIRTLE) { Ability(ABILITY_TORRENT); }
@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Role Play and Doodle fail if target's ability can't be copie
     PARAMETRIZE { species = SPECIES_TATSUGIRI; ability = ABILITY_COMMANDER; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_ROLE_PLAY); }
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Role Play fails if user's ability can't be suppressed")
     PARAMETRIZE { species = SPECIES_TATSUGIRI; ability = ABILITY_COMMANDER; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ROLE_PLAY); }

@@ -9,9 +9,9 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Destiny Bond faints the opposing mon if it fainted from the attack")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(player, MOVE_DESTINY_BOND);
@@ -106,8 +106,8 @@ SINGLE_BATTLE_TEST("Destiny Bond does not fail if used after failing (Gen7+)")
 SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are not affected by Destiny Bond")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(50); };
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(100); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(50); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(100); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_DESTINY_BOND); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {

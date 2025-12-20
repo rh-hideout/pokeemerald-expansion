@@ -4,8 +4,8 @@
 SINGLE_BATTLE_TEST("Aqua Ring recovers 1/16th HP at end of turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(50); MaxHP(128); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(50); MaxHP(128); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_AQUA_RING); }
     } SCENE {
@@ -18,8 +18,8 @@ SINGLE_BATTLE_TEST("Aqua Ring recovers 1/16th HP at end of turn")
 SINGLE_BATTLE_TEST("Aqua Ring can be used under Heal Block but will not heal the user")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(50); MaxHP(128); Speed(50); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(50); MaxHP(128); Speed(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_AQUA_RING); }
     } SCENE {

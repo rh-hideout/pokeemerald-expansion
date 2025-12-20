@@ -9,8 +9,8 @@ SINGLE_BATTLE_TEST("Regenerator heals 1/3 of max HP upon switching out")
     PARAMETRIZE { currHP = 3; }
     GIVEN {
         PLAYER(SPECIES_SLOWBRO) { Ability(ABILITY_REGENERATOR); HP(currHP); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(player, 1); }
         TURN { SWITCH(player, 0); }
@@ -34,8 +34,8 @@ SINGLE_BATTLE_TEST("Regenerator heals 1/3 of max HP upon switching out but doesn
     PARAMETRIZE { currHP = 1; }
     GIVEN {
         PLAYER(SPECIES_SLOWBRO) { Ability(ABILITY_REGENERATOR); HP(currHP); MaxHP(5); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(player, 1); }
         TURN { SWITCH(player, 0); }

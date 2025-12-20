@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Level Damage: Seismic Toss deals damage based on user's leve
 {
     s16 dmg;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(50); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Level(50); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SEISMIC_TOSS); }
     } SCENE {

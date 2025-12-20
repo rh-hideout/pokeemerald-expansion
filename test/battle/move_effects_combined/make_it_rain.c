@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Make It Rain lowers special attack by one stage")
 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_MAKE_IT_RAIN) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MAKE_IT_RAIN); }
         TURN { MOVE(player, MOVE_MAKE_IT_RAIN); }
@@ -38,10 +38,10 @@ SINGLE_BATTLE_TEST("Make It Rain lowers special attack by one stage")
 DOUBLE_BATTLE_TEST("Make It Rain lowers special attack by one stage if it hits both targets")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_MAKE_IT_RAIN); }
     } SCENE {
@@ -62,10 +62,10 @@ DOUBLE_BATTLE_TEST("Make It Rain lowers special attack by one stage if it hits b
 DOUBLE_BATTLE_TEST("Make It Rain lowers special attack by one stage if it hits both targets")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_MAKE_IT_RAIN); }
     } SCENE {
@@ -85,10 +85,10 @@ DOUBLE_BATTLE_TEST("Make It Rain lowers special attack by one stage if it hits b
 DOUBLE_BATTLE_TEST("Make It Rain lowers special attack by one stage if second target Protects")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_PROTECT); MOVE(playerLeft, MOVE_MAKE_IT_RAIN); }
     } SCENE {

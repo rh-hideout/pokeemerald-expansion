@@ -19,7 +19,7 @@ AI_SINGLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
         WITH_CONFIG(CONFIG_ILLUMINATE_EFFECT, GEN_9);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_OMNISCIENT);
         PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, move); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, move); }
     } WHEN {
         TURN { SCORE_LT_VAL(opponent, move, AI_SCORE_DEFAULT); }
     }
@@ -42,8 +42,8 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }
         PLAYER(SPECIES_BULBASAUR);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, move); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, move); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SCORE_LT_VAL(opponentLeft, move, AI_SCORE_DEFAULT, target: playerRight); }
     }

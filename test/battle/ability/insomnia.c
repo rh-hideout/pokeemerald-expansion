@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Insomnia prevents sleep")
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         PLAYER(SPECIES_DROWZEE) { Ability(ABILITY_INSOMNIA); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SPORE); }
     } SCENE {
@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Insomnia prevents yawn")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         PLAYER(SPECIES_DROWZEE) { Ability(ABILITY_INSOMNIA); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_YAWN); }
         TURN {}
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Insomnia prevents Rest")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_REST) == EFFECT_REST);
         PLAYER(SPECIES_DROWZEE) { Ability(ABILITY_INSOMNIA); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REST); }
     } SCENE {

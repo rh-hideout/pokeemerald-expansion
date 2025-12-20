@@ -10,8 +10,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Snatch steals stat-boosting moves from the opponent")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(5); }
     } WHEN {
         TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_SWORDS_DANCE); }
     } SCENE {
@@ -27,8 +27,8 @@ SINGLE_BATTLE_TEST("Snatch steals stat-boosting moves from the opponent")
 SINGLE_BATTLE_TEST("Snatch fails if user moves last")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SNATCH); }
     } SCENE {
@@ -40,10 +40,10 @@ SINGLE_BATTLE_TEST("Snatch fails if user moves last")
 DOUBLE_BATTLE_TEST("Snatch fails when the only slower battler is a fainted ally")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(TEST_SPECIES_WYNAUT) { HP(1); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
         TURN {

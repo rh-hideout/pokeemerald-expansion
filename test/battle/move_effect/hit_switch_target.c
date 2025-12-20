@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target with a random non-fainted re
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BULBASAUR);
         OPPONENT(SPECIES_CHARMANDER);
         OPPONENT(SPECIES_SQUIRTLE) { HP(0); }
@@ -28,10 +28,10 @@ DOUBLE_BATTLE_TEST("Dragon Tail switches the target with a random non-battler, n
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_BULBASAUR);
         OPPONENT(SPECIES_CHARMANDER);
         OPPONENT(SPECIES_SQUIRTLE) { HP(0); }
@@ -46,8 +46,8 @@ DOUBLE_BATTLE_TEST("Dragon Tail switches the target with a random non-battler, n
 SINGLE_BATTLE_TEST("Dragon Tail fails if no replacements")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_TAIL); }
     } SCENE {
@@ -59,9 +59,9 @@ SINGLE_BATTLE_TEST("Dragon Tail fails if no replacements")
 SINGLE_BATTLE_TEST("Dragon Tail fails if replacements fainted")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { HP(0); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { HP(0); }
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_TAIL); }
     } SCENE {
@@ -74,9 +74,9 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron 
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_IRON_BARBS); Item(ITEM_ROCKY_HELMET); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_TAIL); }
@@ -93,7 +93,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron 
 SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Guard Dog")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_OKIDOGI) { Ability(ABILITY_GUARD_DOG); }
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {
@@ -107,7 +107,7 @@ SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Guard Dog")
 SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Suction Cups")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_OCTILLERY) { Ability(ABILITY_SUCTION_CUPS); }
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {
@@ -125,7 +125,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Immunit
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
         PLAYER(SPECIES_PANCHAM) { Ability(ABILITY_MOLD_BREAKER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
         ASSUME(GetSpeciesType(SPECIES_WEEZING, 0) == TYPE_POISON || GetSpeciesType(SPECIES_WEEZING, 1) == TYPE_POISON);
         PLAYER(SPECIES_PANCHAM) { Ability(ABILITY_MOLD_BREAKER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_LEVITATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }

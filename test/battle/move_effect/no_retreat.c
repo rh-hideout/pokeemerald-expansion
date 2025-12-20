@@ -6,8 +6,8 @@ TO_DO_BATTLE_TEST("TODO: Write No Retreat (Move Effect) test titles")
 SINGLE_BATTLE_TEST("No Retreat raises user's Atk/Def/Sp.Atk/Sp.Def/Speed unless No Retreat was already used by user")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_NO_RETREAT); }
         TURN { MOVE(player, MOVE_NO_RETREAT); }
@@ -30,8 +30,8 @@ SINGLE_BATTLE_TEST("No Retreat raises user's Atk/Def/Sp.Atk/Sp.Def/Speed unless 
 SINGLE_BATTLE_TEST("No Retreat won't fail if user is prevented from escaping")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_MEAN_LOOK);  MOVE(player, MOVE_NO_RETREAT); }
     } SCENE {
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("No Retreat won't fail if user is prevented from escaping")
 SINGLE_BATTLE_TEST("No Retreat won't activate Protean if it fails due to already being used by the user")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
     } WHEN {
         TURN { MOVE(player, MOVE_NO_RETREAT); MOVE(opponent, MOVE_SKILL_SWAP); }

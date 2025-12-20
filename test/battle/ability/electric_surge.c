@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Electric Surge creates Electric Terrain when entering the ba
 {
     GIVEN {
         PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
     } SCENE {

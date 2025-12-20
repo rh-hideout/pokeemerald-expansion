@@ -4,8 +4,8 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_ROOST) == EFFECT_ROOST);
-    ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_FLYING);
-    ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_FLYING);
+    ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 0) != TYPE_FLYING);
+    ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 1) != TYPE_FLYING);
     // One attack of each type to verify typelessness
     ASSUME(GetMoveType(MOVE_POUND) == TYPE_NORMAL);
     ASSUME(GetMoveType(MOVE_KARATE_CHOP) == TYPE_FIGHTING);
@@ -30,8 +30,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Roost fails when user is at full HP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); }
     } SCENE {
@@ -46,8 +46,8 @@ SINGLE_BATTLE_TEST("Roost fails when user is at full HP")
 SINGLE_BATTLE_TEST("Roost fails if the user is under the effects of Heal Block")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(100); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_ROOST); }
     } SCENE {
@@ -67,8 +67,8 @@ SINGLE_BATTLE_TEST("Roost recovers 50% of the user's Max HP")
 
     KNOWN_FAILING; // All healing is currently rounded down
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(99); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); MaxHP(99); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); }
     } SCENE {
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Roost suppresses the user's Flying-typing this turn, then re
         ASSUME(GetSpeciesType(SPECIES_SKARMORY, 0) == TYPE_STEEL);
         ASSUME(GetSpeciesType(SPECIES_SKARMORY, 1) == TYPE_FLYING);
         PLAYER(SPECIES_SKARMORY) { HP(50); MaxHP(100); Ability(ABILITY_STURDY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
         TURN { MOVE(opponent, MOVE_EARTHQUAKE); }
@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Roost, if used by a Flying/Flying type, treats the user as a
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 0) == TYPE_FLYING);
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 1) == TYPE_FLYING);
         PLAYER(SPECIES_TORNADUS) { HP(50); MaxHP(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, damagingMove); }
     } SCENE {
@@ -202,7 +202,7 @@ SINGLE_BATTLE_TEST("Roost, if used by a Mystery/Flying type, treats the user as 
         ASSUME(GetSpeciesType(SPECIES_MOLTRES, 0) == TYPE_FIRE);
         ASSUME(GetSpeciesType(SPECIES_MOLTRES, 1) == TYPE_FLYING);
         PLAYER(SPECIES_MOLTRES) { HP(300); MaxHP(400); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BURN_UP); }
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, damagingMove); }
@@ -231,7 +231,7 @@ DOUBLE_BATTLE_TEST("Roost suppresses the user's not-yet-aquired Flying-type this
         ASSUME(GetSpeciesType(SPECIES_KECLEON, 0) != TYPE_FLYING);
         ASSUME(GetSpeciesType(SPECIES_KECLEON, 1) != TYPE_FLYING);
         PLAYER(SPECIES_KECLEON) { Speed(40); HP(150); Ability(ABILITY_COLOR_CHANGE); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); }
         OPPONENT(SPECIES_PIDGEY) { Speed(30); }
         OPPONENT(SPECIES_SANDSHREW) { Speed(20); }
     } WHEN {
@@ -257,7 +257,7 @@ SINGLE_BATTLE_TEST("Roost prevents a Flying-type user from being protected by De
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_RAYQUAZA, 1) == TYPE_FLYING);
         PLAYER(SPECIES_RAYQUAZA) { HP(1); Ability(ABILITY_DELTA_STREAM); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_ICE_BEAM); }
     } SCENE {
@@ -275,7 +275,7 @@ SINGLE_BATTLE_TEST("Roost does not undo other type-changing effects at the end o
         ASSUME(GetSpeciesType(SPECIES_SWELLOW, 0) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_SWELLOW, 1) == TYPE_FLYING);
         PLAYER(SPECIES_SWELLOW) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_SOAK); }
         TURN { MOVE(opponent, MOVE_VINE_WHIP); }
@@ -299,7 +299,7 @@ SINGLE_BATTLE_TEST("Roost's effect is lifted after Grassy Terrain's healing")
         ASSUME(GetSpeciesType(SPECIES_SWELLOW, 0) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_SWELLOW, 1) == TYPE_FLYING);
         PLAYER(SPECIES_SWELLOW) { HP(1); Ability(ABILITY_GRASSY_SURGE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); }
     } SCENE {
@@ -317,10 +317,10 @@ SINGLE_BATTLE_TEST("Roost's suppression prevents Reflect Type from copying any F
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SWELLOW, 0) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_SWELLOW, 1) == TYPE_FLYING);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(TEST_SPECIES_WOBBUFFET, 1) == TYPE_PSYCHIC);
         PLAYER(SPECIES_SWELLOW) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_REFLECT_TYPE); }
         TURN { MOVE(player, MOVE_EARTHQUAKE); MOVE(opponent, MOVE_REFLECT_TYPE); }
@@ -354,7 +354,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate")
 {
     GIVEN {
         PLAYER(SPECIES_FLYGON) { HP(1); Ability(ABILITY_LEVITATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
@@ -372,8 +372,8 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate")
 SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); Item(ITEM_AIR_BALLOON); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
@@ -391,8 +391,8 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon
 SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Magnet Rise")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MAGNET_RISE); }
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
@@ -416,8 +416,8 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Magnet Rise
 SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Telekinesis")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TELEKINESIS); }
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }

@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
 {
     GIVEN {
         PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LEVITATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
         TURN { MOVE(player, MOVE_QUICK_ATTACK); MOVE(opponent, MOVE_QUICK_ATTACK); }
@@ -24,8 +24,8 @@ SINGLE_BATTLE_TEST("Psychic Terrain increases power of Psychic-type moves by 30/
     PARAMETRIZE { terrain = FALSE; }
     PARAMETRIZE { terrain = TRUE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (terrain)
             TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't blocks priority moves that target th
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_PRANKSTER); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
         TURN { MOVE(player, MOVE_RECOVER); }
@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_PRANKSTER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
         TURN { MOVE(player, MOVE_HAZE); }
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_PRANKSTER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
         TURN { MOVE(player, MOVE_SPIKES); }
@@ -88,9 +88,9 @@ DOUBLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_PRANKSTER); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_PSYCHIC_TERRAIN); }
         TURN { MOVE(playerLeft, MOVE_HEAL_PULSE, target: playerRight); }
@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority field moves")
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_PRANKSTER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
         TURN { MOVE(player, MOVE_SUNNY_DAY); }
@@ -123,7 +123,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-in
         WITH_CONFIG(CONFIG_TOXIC_NEVER_MISS, GEN_6);
         ASSUME(IsSpeciesOfType(SPECIES_SHROODLE, TYPE_POISON));
         PLAYER(SPECIES_SHROODLE) { Ability(ABILITY_PRANKSTER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); MOVE(opponent,move);}
         TURN { MOVE(player, MOVE_TOXIC); SKIP_TURN(opponent);}
@@ -151,8 +151,8 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-in
 SINGLE_BATTLE_TEST("Psychic Terrain lasts for 5 turns")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_PSYCHIC_TERRAIN); }
         TURN {}
@@ -183,7 +183,7 @@ DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
         PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LEVITATE); }
         PLAYER(SPECIES_TAPU_LELE) { Ability(ABILITY_PSYCHIC_SURGE); }
         OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_COTTON_SPORE); }
     } SCENE {
@@ -200,7 +200,7 @@ DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
         PLAYER(SPECIES_TAPU_LELE) { Ability(ABILITY_PSYCHIC_SURGE); }
         PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LEVITATE); }
         OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_COTTON_SPORE); }
     } SCENE {

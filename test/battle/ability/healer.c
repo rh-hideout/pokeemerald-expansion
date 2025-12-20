@@ -13,9 +13,9 @@ DOUBLE_BATTLE_TEST("Healer cures adjacent ally's status condition 30% of the tim
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
     PASSES_RANDOMLY(30, 100, RNG_HEALER);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(status); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Status1(status); }
         OPPONENT(SPECIES_CHANSEY) { Ability(ABILITY_HEALER); }
     } WHEN {
         TURN { }
@@ -33,9 +33,9 @@ DOUBLE_BATTLE_TEST("Healer cures status condition before burn or poison damage i
     PARAMETRIZE { status = STATUS1_FROSTBITE; }
     PASSES_RANDOMLY(30, 100, RNG_HEALER);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Status1(status); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); Status1(status); }
         OPPONENT(SPECIES_CHANSEY) { Ability(ABILITY_HEALER); }
     } WHEN {
         TURN {}

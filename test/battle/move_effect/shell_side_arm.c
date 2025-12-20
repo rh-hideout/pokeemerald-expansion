@@ -10,7 +10,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Shell Side Arm can be countered if it is physical")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SHELL_SIDE_ARM); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SHELL_SIDE_ARM); }
         OPPONENT(SPECIES_REGICE) { Defense(100); SpDefense(200); }
     } WHEN {
         TURN { MOVE(player, MOVE_SHELL_SIDE_ARM); MOVE(opponent, MOVE_COUNTER); }
@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Shell Side Arm can be countered if it is physical")
 SINGLE_BATTLE_TEST("Shell Side Arm can be mirror coated if it is special")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SHELL_SIDE_ARM); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_SHELL_SIDE_ARM); }
         OPPONENT(SPECIES_REGIROCK) { Defense(200); SpDefense(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_SHELL_SIDE_ARM); MOVE(opponent, MOVE_MIRROR_COAT); }
@@ -41,10 +41,10 @@ DOUBLE_BATTLE_TEST("Shell Side Arm does not change category mid-turn")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_SHUCKLE) { Ability(ABILITY_CONTRARY); Defense(100); SpDefense(120); }
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SHELL_SIDE_ARM, target: opponentLeft); MOVE(opponentLeft, MOVE_MIRROR_COAT, target: opponentLeft); }
         TURN { MOVE(playerRight, MOVE_SCREECH, target: opponentLeft); MOVE(playerLeft, MOVE_SHELL_SIDE_ARM, target: opponentLeft); MOVE(opponentLeft, MOVE_MIRROR_COAT, target: opponentLeft); }
@@ -67,8 +67,8 @@ DOUBLE_BATTLE_TEST("Shell Side Arm does not change category mid-turn")
 DOUBLE_BATTLE_TEST("Shell Side Arm chooses its category for each battler on the field")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SHELL_SIDE_ARM); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SHELL_SIDE_ARM); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_REGIROCK) { Speed(30); Defense(200); SpDefense(100); }
         OPPONENT(SPECIES_REGICE) { Speed(30); Defense(100); SpDefense(200); }
     } WHEN {

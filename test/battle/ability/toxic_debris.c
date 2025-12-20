@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side if hit b
 
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Toxic Debris does not activate if two layers of Toxic Spikes
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("If a Substitute is hit, Toxic Debris does not set Toxic Spik
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Each hit of a Multi Hit move activates Toxic Debris")
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FURY_SWIPES); }
     } SCENE {
@@ -95,7 +95,7 @@ SINGLE_BATTLE_TEST("Toxic Debris activates if user faints after physical hit")
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { HP(1); Ability(ABILITY_TOXIC_DEBRIS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Air Balloon is popped after Toxic Debris activates")
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); Item(ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -130,9 +130,9 @@ DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even whe
     PARAMETRIZE{ user = playerRight; }
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }
-        PLAYER(SPECIES_WYNAUT) { }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { }
+        PLAYER(TEST_SPECIES_WYNAUT) { }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT) { }
     } WHEN {
         TURN { MOVE(user, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {

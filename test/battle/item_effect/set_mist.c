@@ -5,8 +5,8 @@ SINGLE_BATTLE_TEST("Guard Spec. sets Mist effect on the battlers side")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_GUARD_SPEC].battleUsage == EFFECT_ITEM_SET_MIST);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_GUARD_SPEC, partyIndex: 0); }
         TURN { MOVE(opponent, MOVE_GROWL); }

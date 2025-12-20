@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Curse lowers Speed, raises Attack, and raises Defense when used by non-Ghost-types")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CURSE); }
     } SCENE {
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Curse cuts the user's HP in half when used by Ghost-types")
 {
     GIVEN {
         PLAYER(SPECIES_MISDREAVUS);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CURSE); }
     } SCENE {
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Curse applies to the user if used with Protean/Libero")
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
         PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CURSE, target: player); }
     } SCENE {
@@ -59,8 +59,8 @@ SINGLE_BATTLE_TEST("Curse applies to the user if used with Protean/Libero")
 SINGLE_BATTLE_TEST("Curse applies to the opponent if user is afflicted by Trick-or-Treat in the same turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TRICK_OR_TREAT); MOVE(player, MOVE_CURSE, target: player); }
     } SCENE {

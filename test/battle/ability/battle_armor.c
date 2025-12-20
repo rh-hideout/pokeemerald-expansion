@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Battle Armor and Shell Armor block critical hits")
     PARAMETRIZE { species = SPECIES_ARMALDO; ability = ABILITY_BATTLE_ARMOR; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, criticalHit: TRUE); }

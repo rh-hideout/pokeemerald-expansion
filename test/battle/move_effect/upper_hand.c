@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Upper Hand succeeds if the target is using a priority attack
         ASSUME(GetMoveCategory(MOVE_EXTREME_SPEED) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMovePriority(MOVE_EXTREME_SPEED) == 2);
         PLAYER(SPECIES_MIENSHAO);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EXTREME_SPEED); MOVE(player, MOVE_UPPER_HAND); }
     } SCENE {
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Upper Hand fails if the target is using a status move")
         ASSUME(GetMoveCategory(MOVE_BABY_DOLL_EYES) == DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMovePriority(MOVE_BABY_DOLL_EYES) == 1);
         PLAYER(SPECIES_MIENSHAO);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BABY_DOLL_EYES); MOVE(player, MOVE_UPPER_HAND); }
     } SCENE {
@@ -108,7 +108,7 @@ SINGLE_BATTLE_TEST("Upper Hand is boosted by Sheer Force")
         ASSUME(GetMovePriority(MOVE_EXTREME_SPEED) == 2);
         ASSUME(MoveIsAffectedBySheerForce(MOVE_UPPER_HAND) == TRUE);
         PLAYER(SPECIES_HARIYAMA) { Ability(ABILITY_SHEER_FORCE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EXTREME_SPEED); MOVE(player, MOVE_UPPER_HAND); }
     } SCENE {
@@ -127,8 +127,8 @@ AI_SINGLE_BATTLE_TEST("AI won't use Upper Hand unless it has seen a priority mov
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
-        PLAYER(SPECIES_WOBBUFFET) {Moves(move); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_UPPER_HAND, MOVE_KARATE_CHOP); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) {Moves(move); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_UPPER_HAND, MOVE_KARATE_CHOP); }
     } WHEN {
         TURN { MOVE(player, move); EXPECT_MOVE(opponent, MOVE_KARATE_CHOP); }
         TURN { MOVE(player, move); EXPECT_MOVE(opponent, move == MOVE_QUICK_ATTACK ? MOVE_UPPER_HAND : MOVE_KARATE_CHOP); }
@@ -142,9 +142,9 @@ DOUBLE_BATTLE_TEST("Upper Hand fails if the target has attempted to act even if 
         ASSUME(GetMovePriority(MOVE_EXTREME_SPEED) == 2);
         ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
         PLAYER(SPECIES_MIENSHAO);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_EXTREME_SPEED, target: playerLeft); MOVE(playerLeft, MOVE_UPPER_HAND, target: opponentLeft); MOVE(playerRight, MOVE_INSTRUCT, target: playerLeft); }
     } SCENE {
@@ -163,7 +163,7 @@ SINGLE_BATTLE_TEST("Upper Hand failing will prevent Protean activation")
         WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_6);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_UPPER_HAND); }
     } SCENE {

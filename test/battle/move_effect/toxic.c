@@ -10,8 +10,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Toxic inflicts bad poison")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC); }
         TURN {}
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Toxic can't bad poison a poison or steel type")
     PARAMETRIZE { species = SPECIES_BULBASAUR; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC); }
@@ -47,15 +47,15 @@ SINGLE_BATTLE_TEST("Toxic cannot miss if used by a Poison-type (Gen6+)")
 {
     u32 species, gen;
     bool32 hit;
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; hit = FALSE; gen = GEN_5; }
+    PARAMETRIZE { species = TEST_SPECIES_WOBBUFFET; hit = FALSE; gen = GEN_5; }
     PARAMETRIZE { species = SPECIES_NIDORAN_M; hit = FALSE; gen = GEN_5; }
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; hit = FALSE; gen = GEN_6; }
+    PARAMETRIZE { species = TEST_SPECIES_WOBBUFFET; hit = FALSE; gen = GEN_6; }
     PARAMETRIZE { species = SPECIES_NIDORAN_M; hit = TRUE;  gen = GEN_6; }
     GIVEN {
         WITH_CONFIG(CONFIG_TOXIC_NEVER_MISS, gen);
         ASSUME(GetSpeciesType(SPECIES_NIDORAN_M, 0) == TYPE_POISON);
         PLAYER(species);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC, hit: FALSE); }
     } SCENE {
@@ -86,7 +86,7 @@ AI_SINGLE_BATTLE_TEST("AI avoids toxic when it can not poison target")
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_TOXIC); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_TOXIC); }
     } WHEN {
         TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_TOXIC); } // Both get -10
     }

@@ -21,8 +21,8 @@ SINGLE_BATTLE_TEST("Thunder, Ice and Fire Fang inflict status 10% of the time")
 
     PASSES_RANDOMLY(10, 100, RNG_SECONDARY_EFFECT);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -51,8 +51,8 @@ SINGLE_BATTLE_TEST("Thunder, Ice and Fire Fang cause the opponent to flinch 10% 
 
     PASSES_RANDOMLY(10, 100, RNG_SECONDARY_EFFECT_2);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(100); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {

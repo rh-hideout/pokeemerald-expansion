@@ -8,8 +8,8 @@ SINGLE_BATTLE_TEST("Water Sport reduces the damage of Fire Type moves by 67% (Ge
     s16 playerDmg[2];
     s16 opponentDmg[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FIRE_PLEDGE); MOVE(opponent, MOVE_FIRE_PLEDGE); }
         TURN { MOVE(player, MOVE_WATER_SPORT); }

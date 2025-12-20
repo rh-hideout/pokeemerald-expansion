@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Steadfast boosts Speed when the user attempts to move but is
     GIVEN {
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
         PLAYER(SPECIES_LUCARIO) { Ability(ABILITY_STEADFAST); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Steadfast doesn't activate if the user wasn't flinched")
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
         ASSUME(GetItemHoldEffect(ITEM_COVERT_CLOAK) == HOLD_EFFECT_COVERT_CLOAK);
         PLAYER(SPECIES_LUCARIO) { Ability(ABILITY_STEADFAST); Item(ITEM_COVERT_CLOAK); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
@@ -40,9 +40,9 @@ DOUBLE_BATTLE_TEST("Steadfast doesn't activate if the user has already moved")
         ASSUME(MoveHasAdditionalEffect(MOVE_BITE, MOVE_EFFECT_FLINCH));
         ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
         PLAYER(SPECIES_LUCARIO) { Ability(ABILITY_STEADFAST); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SWORDS_DANCE); MOVE(opponentLeft, MOVE_BITE, target: playerLeft); MOVE(playerRight, MOVE_INSTRUCT, target: playerLeft); }
     } SCENE {

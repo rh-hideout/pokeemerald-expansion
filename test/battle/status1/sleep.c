@@ -8,8 +8,8 @@ SINGLE_BATTLE_TEST("Sleep prevents the battler from using a move")
     PARAMETRIZE { turns = 2; }
     PARAMETRIZE { turns = 3; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP_TURN(turns)); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP_TURN(turns)); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         for (j = 0; j < turns; j++)
             TURN { MOVE(player, MOVE_CELEBRATE); }
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Sleep: Spore affects grass types (Gen1-5)")
     GIVEN {
         WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_5);
         ASSUME(IsPowderMove(MOVE_SPORE));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHIKORITA);
     } WHEN {
         TURN { MOVE(player, MOVE_SPORE); }
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Sleep: Spore doesn't affect grass types (Gen6+)")
     GIVEN {
         WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
         ASSUME(IsPowderMove(MOVE_SPORE));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHIKORITA);
     } WHEN {
         TURN { MOVE(player, MOVE_SPORE); }
@@ -63,7 +63,7 @@ AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep")
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HYPNOSIS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HYPNOSIS); }
     } WHEN {
         TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_HYPNOSIS); } // Both get -10
     }

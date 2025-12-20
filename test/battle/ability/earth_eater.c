@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Earth Eater heals 25% when hit by ground type moves")
     GIVEN {
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
         PLAYER(SPECIES_ORTHWORM) { Ability(ABILITY_EARTH_EATER); HP(1); MaxHP(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_MUD_SLAP); }
     } SCENE {
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Earth Eater does not activate if protected")
     GIVEN {
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
         PLAYER(SPECIES_ORTHWORM) { Ability(ABILITY_EARTH_EATER); HP(1); MaxHP(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_PROTECT); MOVE(opponent, MOVE_MUD_SLAP); }
     } SCENE {
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Earth Eater activates on status moves")
         ASSUME(GetMoveType(MOVE_SAND_ATTACK) == TYPE_GROUND);
         ASSUME(GetMoveCategory(MOVE_SAND_ATTACK) == DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_ORTHWORM) { Ability(ABILITY_EARTH_EATER); HP(1); MaxHP(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SAND_ATTACK); }
     } SCENE {

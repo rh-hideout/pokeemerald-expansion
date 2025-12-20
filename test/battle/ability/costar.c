@@ -4,10 +4,10 @@
 DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SWORDS_DANCE); }
@@ -31,11 +31,11 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost")
     GIVEN {
         ASSUME(gMovesInfo[MOVE_DRAGON_CHEER].effect == EFFECT_DRAGON_CHEER);
         ASSUME(gMovesInfo[MOVE_TACKLE].criticalHitStage == 0);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_DRAGON_CHEER, target: playerLeft); MOVE(playerLeft, MOVE_CELEBRATE); }
         TURN { SWITCH(playerRight, 2); }
@@ -52,11 +52,11 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's lowered stat stages")
 {
     GIVEN {
         ASSUME(gMovesInfo[MOVE_GROWL].effect == EFFECT_ATTACK_DOWN);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_GROWL); MOVE(opponentRight, MOVE_CELEBRATE); }
         TURN { SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_CELEBRATE); }
@@ -75,11 +75,11 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Focus Energy critical hit boost")
     GIVEN {
         ASSUME(gMovesInfo[MOVE_FOCUS_ENERGY].effect == EFFECT_FOCUS_ENERGY);
         ASSUME(gMovesInfo[MOVE_TACKLE].criticalHitStage == 0);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SWORDS_DANCE); MOVE(playerRight, MOVE_CELEBRATE); }
         TURN { MOVE(playerLeft, MOVE_FOCUS_ENERGY); MOVE(playerRight, MOVE_CELEBRATE); }
@@ -100,11 +100,11 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost")
     GIVEN {
         ASSUME(gMovesInfo[MOVE_DRAGON_CHEER].effect == EFFECT_DRAGON_CHEER);
         ASSUME(gMovesInfo[MOVE_TACKLE].criticalHitStage == 0);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_DRAGON_CHEER, target: playerLeft); MOVE(playerLeft, MOVE_SWORDS_DANCE); }
         TURN { SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_CELEBRATE); }

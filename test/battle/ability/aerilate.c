@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Aerilate boosts power of affected moves by 20% (Gen7+) or 30
         WITH_CONFIG(CONFIG_ATE_MULTIPLIER, genConfig);
         ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SALAMENCE) { Ability(ABILITY_MOXIE); Item(ITEM_SALAMENCITE); }
     } WHEN {
         TURN { MOVE(opponent, move, gimmick: GIMMICK_MEGA); MOVE(player, MOVE_TACKLE); }
@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Weather Ball's type", s16 damage)
         ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         ASSUME(GetSpeciesType(SPECIES_PINSIR, 0) == TYPE_BUG);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PINSIR) { Ability(ABILITY_HYPER_CUTTER); Item(ITEM_PINSIRITE); }
     } WHEN {
         TURN { MOVE(opponent, move2, gimmick: GIMMICK_MEGA); MOVE(player, move1); }
@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Natural Gift's type")
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_PERSIM_BERRY)].type == TYPE_GROUND);
         ASSUME(GetSpeciesType(SPECIES_SALAMENCE_MEGA, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_SALAMENCE_MEGA, 1) == TYPE_FLYING);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PERSIM_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_PERSIM_BERRY); }
         OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); }
     } WHEN {
         TURN { MOVE(opponent, move, gimmick: GIMMICK_MEGA); MOVE(player, MOVE_NATURAL_GIFT); }
@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Judgment / Techno Blast / Multi-Atta
         ASSUME(gItemsInfo[ITEM_ELECTRIC_MEMORY].holdEffect == HOLD_EFFECT_MEMORY);
         ASSUME(gItemsInfo[ITEM_ELECTRIC_MEMORY].secondaryId == TYPE_ELECTRIC);
         ASSUME(GetSpeciesType(SPECIES_DIGLETT, 0) == TYPE_GROUND);
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
         OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); }
         OPPONENT(SPECIES_DIGLETT);
     } WHEN {

@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat")
 {
     GIVEN {
         PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); }
     } SCENE {
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not b
 
     GIVEN {
         PLAYER(species) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); MOVE(player, move); }
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
 SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ROARING_MOON) { Ability(ABILITY_PROTOSYNTHESIS); }
         OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); };
     } WHEN {
@@ -137,7 +137,7 @@ SINGLE_BATTLE_TEST("Protosynthesis prioritizes stats in the case of a tie in the
 SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
@@ -153,7 +153,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy")
 SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); Item(ITEM_BOOSTER_ENERGY); }
     } WHEN {
@@ -206,7 +206,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates after weather was reset")
 {
     GIVEN {
         PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); }
         TURN { MOVE(player, MOVE_RAIN_DANCE); }
@@ -223,10 +223,10 @@ SINGLE_BATTLE_TEST("Protosynthesis activates after weather was reset")
 SINGLE_BATTLE_TEST("Protosynthesis accounts for Sticky Web when determining the boosted stat")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_FLUTTER_MANE) { Ability(ABILITY_PROTOSYNTHESIS); Attack(50); Defense(50); SpAttack(150); SpDefense(140); Speed(180); }
         OPPONENT(SPECIES_GALVANTULA) { Speed(60); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_STICKY_WEB); MOVE(player, MOVE_SUNNY_DAY); }
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_SPLASH); }
@@ -267,7 +267,7 @@ SINGLE_BATTLE_TEST("Protosynthesis recalculates the boosted stat after Neutraliz
     GIVEN {
         PLAYER(SPECIES_FLUTTER_MANE) { Ability(ABILITY_PROTOSYNTHESIS); Attack(10); Defense(10); SpAttack(150); SpDefense(120); Speed(180); }
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Moves(MOVE_ICY_WIND); Speed(70); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); MOVE(opponent, MOVE_ICY_WIND); }
         TURN { SWITCH(opponent, 1); }
@@ -289,7 +289,7 @@ SINGLE_BATTLE_TEST("Protosynthesis retains its boosted stat after Neutralizing G
 
     GIVEN {
         PLAYER(SPECIES_FLUTTER_MANE) { Ability(ABILITY_PROTOSYNTHESIS); Attack(10); Defense(10); SpAttack(150); SpDefense(120); Speed(180); Moves(MOVE_SUNNY_DAY, MOVE_ROUND, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Moves(MOVE_CELEBRATE); Speed(70); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); MOVE(opponent, MOVE_CELEBRATE); }

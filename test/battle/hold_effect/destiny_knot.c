@@ -9,8 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is targeted")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE);  }
-        OPPONENT(SPECIES_WOBBUFFET)  { Gender(MON_FEMALE); Item(ITEM_DESTINY_KNOT); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Gender(MON_MALE);  }
+        OPPONENT(TEST_SPECIES_WOBBUFFET)  { Gender(MON_FEMALE); Item(ITEM_DESTINY_KNOT); }
     } WHEN {
         TURN {  MOVE(player, MOVE_ATTRACT); }
     } SCENE {
@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is targeted")
 SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is attacking")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); Item(ITEM_DESTINY_KNOT);}
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Gender(MON_MALE); Item(ITEM_DESTINY_KNOT);}
         OPPONENT(SPECIES_CLEFAIRY)  { Gender(MON_FEMALE); Ability(ABILITY_CUTE_CHARM);}
     } WHEN {
         TURN {  MOVE(player, MOVE_TACKLE); }
@@ -40,8 +40,8 @@ SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is attacking")
 SINGLE_BATTLE_TEST("Destiny Knot procs but fails if the target is already infatuated")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE);  }
-        OPPONENT(SPECIES_WOBBUFFET)  { Gender(MON_FEMALE); Item(ITEM_DESTINY_KNOT); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Gender(MON_MALE);  }
+        OPPONENT(TEST_SPECIES_WOBBUFFET)  { Gender(MON_FEMALE); Item(ITEM_DESTINY_KNOT); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ATTRACT); MOVE(player, MOVE_ATTRACT,  WITH_RNG(RNG_INFATUATION, FALSE)); }
     } SCENE {
@@ -53,8 +53,8 @@ SINGLE_BATTLE_TEST("Destiny Knot procs but fails if the target is already infatu
 SINGLE_BATTLE_TEST("Destiny Knot procs but fails if the target is oblivious")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); Ability(ABILITY_OBLIVIOUS); }
-        OPPONENT(SPECIES_WOBBUFFET)  { Gender(MON_FEMALE); Item(ITEM_DESTINY_KNOT); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Gender(MON_MALE); Ability(ABILITY_OBLIVIOUS); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET)  { Gender(MON_FEMALE); Item(ITEM_DESTINY_KNOT); }
     } WHEN {
         TURN { MOVE(player, MOVE_ATTRACT); }
     } SCENE {
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Destiny Knot procs but fails if the target is already infatu
 {
     GIVEN {
         PLAYER(SPECIES_CLEFAIRY) { Gender(MON_MALE); Ability(ABILITY_CUTE_CHARM);}
-        OPPONENT(SPECIES_WOBBUFFET)  { Gender(MON_FEMALE); Item(ITEM_DESTINY_KNOT); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET)  { Gender(MON_FEMALE); Item(ITEM_DESTINY_KNOT); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ATTRACT);}
         TURN { MOVE(opponent, MOVE_TACKLE);}

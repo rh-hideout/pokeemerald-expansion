@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Special Attack", s16 damage)
         } else {
             PLAYER(species) { Item(item); }
         }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (species == SPECIES_PIKACHU_GMAX) {
             TURN { MOVE(player, MOVE_THUNDERSHOCK, gimmick: GIMMICK_DYNAMAX); }
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Attack (Gen4+)", s16 damage)
         } else {
             PLAYER(species) { Item(item); }
         }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (species == SPECIES_PIKACHU_GMAX) {
             TURN { MOVE(player, MOVE_SPARK, gimmick: GIMMICK_DYNAMAX); }

@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Cotton Down drops speed by one of opposing battler if hit by a damaging move")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ELDEGOSS) { Ability(ABILITY_COTTON_DOWN); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Cotton Down drops speed by one of opposing battler if hit by
 SINGLE_BATTLE_TEST("Cotton Down drops speed by one for each multi hit")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ELDEGOSS) { Ability(ABILITY_COTTON_DOWN); }
     } WHEN {
         TURN { MOVE(player, MOVE_DOUBLE_KICK); }
@@ -41,10 +41,10 @@ SINGLE_BATTLE_TEST("Cotton Down drops speed by one for each multi hit")
 DOUBLE_BATTLE_TEST("Cotton Down drops speed by one of all other battlers on the field")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_ELDEGOSS) { Ability(ABILITY_COTTON_DOWN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
@@ -67,7 +67,7 @@ DOUBLE_BATTLE_TEST("Cotton Down correctly gets blocked by stat reduction prevent
 {
     GIVEN {
         PLAYER(SPECIES_METAGROSS) { Ability(ABILITY_CLEAR_BODY); }
-        PLAYER(SPECIES_WYNAUT) { Item(ITEM_CLEAR_AMULET); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Item(ITEM_CLEAR_AMULET); }
         OPPONENT(SPECIES_ELDEGOSS) { Ability(ABILITY_COTTON_DOWN); }
         OPPONENT(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
     } WHEN {

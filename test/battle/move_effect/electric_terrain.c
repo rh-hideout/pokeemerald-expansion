@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Electric Terrain protects grounded battlers from falling asleep")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CLAYDOL) { Ability(ABILITY_LEVITATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_SPORE); }
@@ -25,8 +25,8 @@ SINGLE_BATTLE_TEST("Electric Terrain increases power of Electric-type moves by 3
     PARAMETRIZE { terrain = FALSE; }
     PARAMETRIZE { terrain = TRUE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (terrain)
             TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); }
@@ -45,8 +45,8 @@ SINGLE_BATTLE_TEST("Electric Terrain increases power of Electric-type moves by 3
 SINGLE_BATTLE_TEST("Electric Terrain lasts for 5 turns")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_ELECTRIC_TERRAIN); }
         TURN {}

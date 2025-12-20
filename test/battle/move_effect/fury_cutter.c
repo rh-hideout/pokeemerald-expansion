@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Fury Cutter counter is the same for both hits of Parental Bo
     s16 damage[4];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_PARENTAL_BOND); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_PARENTAL_BOND); }
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         TURN { MOVE(player, MOVE_FURY_CUTTER); }

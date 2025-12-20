@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Soak/Magic Powder's type change is overwitten if the target 
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }

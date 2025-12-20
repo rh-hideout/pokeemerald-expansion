@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Solar Power increases a Sp. Attack by x1.5 in Sun", s16 dama
         ASSUME(GetMovePower(MOVE_HYPER_VOICE) > 0);
         ASSUME(GetMoveCategory(MOVE_HYPER_VOICE) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_CHARIZARD) { Ability(ABILITY_SOLAR_POWER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_HYPER_VOICE); }
     } SCENE {
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Solar Power causes the Pokémon to lose 1/8 max HP in Sun")
 {
     GIVEN {
         PLAYER(SPECIES_CHARIZARD) { Ability(ABILITY_SOLAR_POWER); MaxHP(80); HP(80); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } SCENE {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
     } SCENE {

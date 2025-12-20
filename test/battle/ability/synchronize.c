@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         WITH_CONFIG(CONFIG_SYNCHRONIZE_TOXIC, config);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC); }
@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back static activation")
 {
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_TACKLE));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
         OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
     } WHEN {

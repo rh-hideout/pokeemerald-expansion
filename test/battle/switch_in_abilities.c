@@ -67,9 +67,9 @@ SINGLE_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO swi
     PARAMETRIZE { spdOpponent = 5; spdPlayer = 1; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         PLAYER(SPECIES_EKANS) { Speed(spdPlayer); Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         OPPONENT(SPECIES_PORYGON2) { Speed(spdOpponent); Ability(ABILITY_DOWNLOAD); }
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
@@ -95,12 +95,12 @@ DOUBLE_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO swi
     PARAMETRIZE { spdPlayer1 = 4; spdPlayer2 = 3; spdOpponent1 = 5; spdOpponent2 = 2; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
         PLAYER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         OPPONENT(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
         OPPONENT(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
@@ -136,13 +136,13 @@ MULTI_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO swit
     PARAMETRIZE { spdPlayer1 = 4; spdPlayer2 = 3; spdOpponent1 = 5; spdOpponent2 = 2; }
 
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         MULTI_PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_PARTNER(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         MULTI_PARTNER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_OPPONENT_A(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         MULTI_OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_OPPONENT_B(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         MULTI_OPPONENT_B(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 1); SEND_OUT(opponentLeft, 1); SEND_OUT(playerRight, 4); SEND_OUT(opponentRight, 4); }
@@ -177,12 +177,12 @@ TWO_VS_ONE_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO
     PARAMETRIZE { spdPlayer1 = 4; spdPlayer2 = 3; spdOpponent1 = 5; spdOpponent2 = 2; }
 
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         MULTI_PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
-        MULTI_PARTNER(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        MULTI_PARTNER(TEST_SPECIES_WYNAUT) { HP(1); Speed(1); }
         MULTI_PARTNER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        MULTI_OPPONENT_A(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_OPPONENT_A(TEST_SPECIES_WYNAUT) { HP(1); Speed(1); }
         MULTI_OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
         MULTI_OPPONENT_A(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
@@ -217,13 +217,13 @@ ONE_VS_TWO_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO
     PARAMETRIZE { spdPlayer1 = 4; spdPlayer2 = 3; spdOpponent1 = 5; spdOpponent2 = 2; }
 
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        MULTI_PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_PLAYER(TEST_SPECIES_WYNAUT) { HP(1); Speed(1); }
         MULTI_PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
         MULTI_PLAYER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_OPPONENT_A(TEST_SPECIES_WOBBUFFET) { HP(1); Speed(1); }
         MULTI_OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        MULTI_OPPONENT_B(TEST_SPECIES_WYNAUT) { HP(1); Speed(1); }
         MULTI_OPPONENT_B(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 2); SEND_OUT(opponentLeft, 1); SEND_OUT(playerRight, 3); SEND_OUT(opponentRight, 4); }

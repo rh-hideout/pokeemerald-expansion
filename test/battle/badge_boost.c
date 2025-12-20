@@ -17,8 +17,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_ATTACK boost Attack", s16 dmg)
         else
             FlagClear(B_FLAG_BADGE_BOOST_ATTACK);
         WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
-        PLAYER(SPECIES_WOBBUFFET) {}
-        OPPONENT(SPECIES_WOBBUFFET) {}
+        PLAYER(TEST_SPECIES_WOBBUFFET) {}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {}
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -49,8 +49,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPATK boost Special Attack", s
         else
             FlagClear(B_FLAG_BADGE_BOOST_SPATK);
         WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
-        PLAYER(SPECIES_WOBBUFFET) {}
-        OPPONENT(SPECIES_WOBBUFFET) {}
+        PLAYER(TEST_SPECIES_WOBBUFFET) {}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {}
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER_SHOCK); }
     } SCENE {
@@ -82,8 +82,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_DEFENSE boost Defense", s16 dm
         else
             FlagClear(B_FLAG_BADGE_BOOST_DEFENSE);
         WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
-        PLAYER(SPECIES_WOBBUFFET) {}
-        OPPONENT(SPECIES_WOBBUFFET) {}
+        PLAYER(TEST_SPECIES_WOBBUFFET) {}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {}
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -115,8 +115,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPDEF boost Special Defense", 
         else
             FlagClear(B_FLAG_BADGE_BOOST_SPDEF);
         WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
-        PLAYER(SPECIES_WOBBUFFET) {}
-        OPPONENT(SPECIES_WOBBUFFET) {}
+        PLAYER(TEST_SPECIES_WOBBUFFET) {}
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {}
     } WHEN {
         TURN { MOVE(opponent, MOVE_THUNDER_SHOCK); }
     } SCENE {
@@ -147,8 +147,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPEED boost Speed", s16 dmg)
         else
             FlagClear(B_FLAG_BADGE_BOOST_SPEED);
         WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(101); HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(100); HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(101); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH);}
     } THEN {

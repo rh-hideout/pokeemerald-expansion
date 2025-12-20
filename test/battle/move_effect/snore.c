@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Snore fails if not asleep")
     PARAMETRIZE { status = STATUS1_NONE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(status); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SNORE); }
     } SCENE {
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Snore works if user has Comatose")
 
     GIVEN {
         PLAYER(SPECIES_KOMALA);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SNORE); }
     } SCENE {
@@ -48,8 +48,8 @@ SINGLE_BATTLE_TEST("Snore fails if user is throat chopped")
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_THROAT_CHOP, MOVE_EFFECT_THROAT_CHOP));
         ASSUME(IsSoundMove(MOVE_SNORE) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_THROAT_CHOP); MOVE(player, MOVE_SNORE); }
     } SCENE {

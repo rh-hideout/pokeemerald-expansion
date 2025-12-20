@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Ivy Cudgel does not change the move type if used by Pokémon
     PARAMETRIZE { item = ITEM_HEARTHFLAME_MASK; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(item); }
         OPPONENT(SPECIES_BLASTOISE);
     } WHEN {
         TURN { MOVE(player, MOVE_IVY_CUDGEL); }

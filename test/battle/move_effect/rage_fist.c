@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 if the user takes da
     s16 timesGotHit[2];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         for (turns = 0; turns < 2; turns++) {
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by each multi hit")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BULLET_SEED) == EFFECT_MULTI_HIT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         for (turns = 0; turns < 2; turns++) {
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is not increased by a confusion hit")
     s16 timesGotHit[2];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         TURN { MOVE(player, MOVE_RAGE_FIST); MOVE(opponent, MOVE_CONFUSE_RAY); }
@@ -89,10 +89,10 @@ DOUBLE_BATTLE_TEST("Rage Fist maximum base power is 350")
     s16 timesGotHit[2];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_REGIROCK);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         for (turns = 1; turns <= 3; turns++) {
             TURN {
@@ -131,7 +131,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is not increased if a substitute was hi
 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_CRUNCH) == DAMAGE_CATEGORY_PHYSICAL); // Substitute doesn't fade otherwise
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         TURN { MOVE(player, MOVE_RAGE_FIST); }
@@ -156,8 +156,8 @@ SINGLE_BATTLE_TEST("Rage Fist base power is not lost if user switches out")
     s16 timesGotHit[2];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         TURN { MOVE(player, MOVE_RAGE_FIST); MOVE(opponent, MOVE_SCRATCH); }
@@ -183,7 +183,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 even if a damaging m
     s16 timesGotHit[2];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         for (turns = 0; turns < 2; turns++) {
@@ -206,7 +206,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 even if a damaging m
     s16 timesGotHit[2];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(2); }
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         TURN { MOVE(player, MOVE_RAGE_FIST); MOVE(opponent, MOVE_FALSE_SWIPE); }
@@ -332,7 +332,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 if user was hit and 
     GIVEN {
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_REGIROCK);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_RAGE_FIST); MOVE(player, MOVE_DRAGON_TAIL); }
         TURN { MOVE(player, MOVE_CELEBRATE); SWITCH(opponent, 0); }
@@ -355,8 +355,8 @@ SINGLE_BATTLE_TEST("Rage Fist doesn't get increased power if Substitute is hit")
     s16 timesGotHit[2];
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_RAGE_FIST); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_SCRATCH); }
@@ -377,8 +377,8 @@ SINGLE_BATTLE_TEST("Rage Fist counter will be updated correctly after absorb mov
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GIGA_DRAIN) == EFFECT_ABSORB);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RAGE_FIST); MOVE(opponent, MOVE_GIGA_DRAIN); }
         TURN { MOVE(player, MOVE_RAGE_FIST); }

@@ -18,8 +18,8 @@ SINGLE_BATTLE_TEST("Shell Trap activates only if hit by a physical move")
     PARAMETRIZE { move = MOVE_LEER; activate = FALSE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, move); }
     } SCENE {
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Shell Trap does not activate if attacker's Sheer Force appli
     PARAMETRIZE { move = MOVE_STOMP; activate = FALSE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
         TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, move); }
@@ -76,9 +76,9 @@ SINGLE_BATTLE_TEST("Shell Trap does not activate if attacker's Sheer Force appli
 SINGLE_BATTLE_TEST("Shell Trap does not activate if battler faints before being able to activate it")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
     } SCENE {
@@ -99,10 +99,10 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 1 a
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SHELL_TRAP) == MOVE_TARGET_BOTH);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(1); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SHELL_TRAP); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_CELEBRATE); }
     } SCENE {
@@ -123,10 +123,10 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 2 a
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SHELL_TRAP) == MOVE_TARGET_BOTH);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(6); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(6); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SHELL_TRAP); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_CELEBRATE); }
     } SCENE {
@@ -147,10 +147,10 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 3 a
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SHELL_TRAP) == MOVE_TARGET_BOTH);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(7); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(6); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(7); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(6); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SHELL_TRAP); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_CELEBRATE); }
     } SCENE {
@@ -203,8 +203,8 @@ SINGLE_BATTLE_TEST("Shell Trap activates if user is hit with a physical move but
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, MOVE_FALSE_SWIPE); }
     } SCENE {
@@ -219,8 +219,8 @@ SINGLE_BATTLE_TEST("Encore fails if target has active Shell Trap waiting")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, MOVE_ENCORE); }
@@ -239,9 +239,9 @@ SINGLE_BATTLE_TEST("Shell Trap fails if an other -3 or lower priority Move is us
 {
     GIVEN {
         ASSUME(GetMovePriority(MOVE_DRAGON_TAIL) <= -3);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(player, MOVE_SHELL_TRAP);
@@ -258,10 +258,10 @@ DOUBLE_BATTLE_TEST("Shell Trap does not trigger when hit into Substitute")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_DOUBLE_EDGE) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNORLAX);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SUBSTITUTE); }
         TURN {

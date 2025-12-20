@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Sunsteel Strike (no message)
     GIVEN {
         ASSUME(MoveIgnoresTargetAbility(MOVE_SUNSTEEL_STRIKE));
         PLAYER(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNSTEEL_STRIKE); }
     } SCENE {
@@ -132,7 +132,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects the user's ability from being suppre
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
         PLAYER(SPECIES_BLAZIKEN) { Ability(ABILITY_SPEED_BOOST); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
     } SCENE {
@@ -156,7 +156,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
     } SCENE {
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap even if user has 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_LOPUNNY) { Ability(ABILITY_KLUTZ); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
     } SCENE {

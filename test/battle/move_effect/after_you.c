@@ -9,10 +9,10 @@ ASSUMPTIONS
 DOUBLE_BATTLE_TEST("After You makes the target move after user")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_AFTER_YOU, target: playerRight);
@@ -32,10 +32,10 @@ DOUBLE_BATTLE_TEST("After You makes the target move after user")
 DOUBLE_BATTLE_TEST("After You does nothing if the target has already moved")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(2); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_CELEBRATE);
@@ -90,10 +90,10 @@ DOUBLE_BATTLE_TEST("After You fails if the turn order remains the same after Aft
 {
     GIVEN {
         WITH_CONFIG(CONFIG_AFTER_YOU_TURN_ORDER, GEN_7);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(3); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_CELEBRATE);
@@ -115,10 +115,10 @@ DOUBLE_BATTLE_TEST("After You doesn't fail if the turn order remains the same af
 {
     GIVEN {
         WITH_CONFIG(CONFIG_AFTER_YOU_TURN_ORDER, GEN_8);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(3); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_CELEBRATE);
@@ -138,10 +138,10 @@ DOUBLE_BATTLE_TEST("After You ignores the effects of Quash")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_QUASH) == EFFECT_QUASH);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        PLAYER(SPECIES_WYNAUT) { Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(3); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(TEST_SPECIES_WYNAUT) { Speed(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Speed(3); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_QUASH, target: opponentLeft);

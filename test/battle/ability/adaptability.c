@@ -8,7 +8,7 @@ SINGLE_BATTLE_TEST("Adaptability increases same-type attack bonus from x1.5 to x
     PARAMETRIZE { ability = ABILITY_ADAPTABILITY; }
     GIVEN {
         PLAYER(SPECIES_CRAWDAUNT) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into a different type with Adaptabilit
     PARAMETRIZE { tera = GIMMICK_TERA; }
     GIVEN {
         PLAYER(SPECIES_CRAWDAUNT) { Ability(ABILITY_ADAPTABILITY); TeraType(TYPE_NORMAL); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HEADBUTT, gimmick: tera); }
     } SCENE {
@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the same type with Adaptability g
     PARAMETRIZE { tera = GIMMICK_TERA; }
     GIVEN {
         PLAYER(SPECIES_CRAWDAUNT) { Ability(ABILITY_ADAPTABILITY); TeraType(TYPE_WATER); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_PULSE, gimmick: tera); }
     } SCENE {

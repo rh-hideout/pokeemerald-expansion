@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Psychic Surge creates Psychic Terrain when entering the batt
 {
     GIVEN {
         PLAYER(SPECIES_TAPU_LELE) { Ability(ABILITY_PSYCHIC_SURGE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
     } SCENE {

@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Pickup grants an item used by another Pokémon")
 {
     GIVEN {
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -28,7 +28,7 @@ WILD_BATTLE_TEST("Pickup grants an item used by itself in wild battles (Gen9+)")
     GIVEN {
         WITH_CONFIG(CONFIG_PICKUP_WILD, GEN_9);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -43,7 +43,7 @@ WILD_BATTLE_TEST("Pickup grants an item used by itself in wild battles (Gen9+)")
 SINGLE_BATTLE_TEST("Pickup doesn't grant the user their item outside wild battles")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant another Pokémon's popped Air Balloon")
     GIVEN {
         ASSUME(gItemsInfo[ITEM_AIR_BALLOON].holdEffect == HOLD_EFFECT_AIR_BALLOON);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -80,9 +80,9 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant another Pokémon's popped Air Balloon")
 SINGLE_BATTLE_TEST("Pickup doesn't grant an item not used that turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { SWITCH(player, 1); }
@@ -102,8 +102,8 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item after its holder faints")
 {
     GIVEN {
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_MEMENTO); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -121,10 +121,10 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an used item if holder is replaced")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_PARTING_SHOT) == EFFECT_PARTING_SHOT);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(300); HP(151); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(300); HP(151); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(300); HP(151); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(300); HP(151); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_PARTING_SHOT); SEND_OUT(opponent, 1); }
         TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); MOVE(opponent, MOVE_PARTING_SHOT); SEND_OUT(opponent, 0); }
@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item if it destroyed the item with I
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_INCINERATE, MOVE_EFFECT_INCINERATE));
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_INCINERATE); }
     } SCENE {
@@ -166,7 +166,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item if it knocked off that item")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -185,7 +185,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item if the user eats it with Bug Bi
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_BUG_BITE, MOVE_EFFECT_BUG_BITE));
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_BUG_BITE); }
     } SCENE {
@@ -204,7 +204,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an used item if its user already restor
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_RECYCLE); }
     } SCENE {
@@ -224,7 +224,7 @@ SINGLE_BATTLE_TEST("Pickup restores an item that has been Flinged")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLING); }
     } SCENE {
@@ -241,7 +241,7 @@ SINGLE_BATTLE_TEST("Pickup restores an item that was used by Natural Gift")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_NATURAL_GIFT); }
     } SCENE {
@@ -257,8 +257,8 @@ DOUBLE_BATTLE_TEST("Pickup triggers based on Speed order")
 {
     GIVEN {
         PLAYER(SPECIES_ZIGZAGOON) { Speed(1); Ability(ABILITY_PICKUP); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Speed(3); MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_ZIGZAGOON) { Speed(50); Ability(ABILITY_PICKUP); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
@@ -278,9 +278,9 @@ DOUBLE_BATTLE_TEST("Pickup grants a random item used by another Pokémon")
     GIVEN {
         ASSUME(gItemsInfo[ITEM_WHITE_HERB].holdEffect == HOLD_EFFECT_WHITE_HERB);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); }
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_BULLDOZE); }
     } SCENE {
@@ -295,9 +295,9 @@ DOUBLE_BATTLE_TEST("Pickup doesn't trigger more than once per turn")
 {
     GIVEN {
         PLAYER(SPECIES_ZIGZAGOON) { HP(1); Ability(ABILITY_PICKUP); }
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_BULLDOZE); }
     } SCENE {

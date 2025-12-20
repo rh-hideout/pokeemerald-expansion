@@ -10,9 +10,9 @@ DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health")
 
     GIVEN {
         PLAYER(SPECIES_POLTCHAGEIST) { Ability(ABILITY_HOSPITALITY); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(health); MaxHP(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(health); MaxHP(100); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { }
     } SCENE {
@@ -33,11 +33,11 @@ DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health")
 DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health on switch-in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
-        PLAYER(SPECIES_WOBBUFFET) { HP(75); MaxHP(100); }
+        PLAYER(TEST_SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(75); MaxHP(100); }
         PLAYER(SPECIES_POLTCHAGEIST) { Ability(ABILITY_HOSPITALITY); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SWITCH(playerLeft, 2); }
     } SCENE {
@@ -52,11 +52,11 @@ DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health on switch-in"
 DOUBLE_BATTLE_TEST("Hospitality ignores Substitute")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_POLTCHAGEIST) { Ability(ABILITY_HOSPITALITY); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SUBSTITUTE); }
         TURN { SWITCH(playerLeft, 2); }
@@ -72,11 +72,11 @@ DOUBLE_BATTLE_TEST("Hospitality ignores Substitute")
 DOUBLE_BATTLE_TEST("Hospitality does not trigger if there is no ally on the field")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);  }
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);  }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1);  }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1);  }
         PLAYER(SPECIES_POLTCHAGEIST) { Ability(ABILITY_HOSPITALITY); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_BLIZZARD); SEND_OUT(playerLeft, 2); }
     } SCENE {
@@ -94,11 +94,11 @@ DOUBLE_BATTLE_TEST("Hospitality is blocked by Heal Block")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
-        PLAYER(SPECIES_WOBBUFFET)
-        PLAYER(SPECIES_WOBBUFFET) { HP(75); MaxHP(100); }
+        PLAYER(TEST_SPECIES_WOBBUFFET)
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(75); MaxHP(100); }
         PLAYER(SPECIES_POLTCHAGEIST) { Ability(ABILITY_HOSPITALITY); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_HEAL_BLOCK, target: playerRight); }
         TURN { SWITCH(playerLeft, 2); }

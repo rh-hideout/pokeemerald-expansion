@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 1 (Gen5-6
     GIVEN {
         WITH_CONFIG(CONFIG_WEAK_ARMOR_SPEED, gen);
         PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {
@@ -52,9 +52,9 @@ SINGLE_BATTLE_TEST("Weak Armor does not trigger when brought in by Dragon Tail a
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_STEALTH_ROCK); }
         TURN { MOVE(opponent, MOVE_DRAGON_TAIL); }
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Weak Armor still boosts Speed if Defense can't go any lower"
     GIVEN {
         WITH_CONFIG(CONFIG_WEAK_ARMOR_SPEED, gen);
         PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCREECH); }
         TURN { MOVE(opponent, MOVE_SCREECH); }
@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Weak Armor still lowers Defense if Speed can't go any higher
 {
     GIVEN {
         PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_AGILITY); }
         TURN { MOVE(player, MOVE_AGILITY); }

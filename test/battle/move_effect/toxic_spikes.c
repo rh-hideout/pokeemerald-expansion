@@ -9,9 +9,9 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on switch in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(opponent, 1); }
@@ -28,9 +28,9 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on switch in")
 SINGLE_BATTLE_TEST("Toxic Spikes inflicts bad poison on switch in")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
@@ -50,9 +50,9 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts bad poison on switch in")
 SINGLE_BATTLE_TEST("Toxic Spikes fails after 2 layers")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
@@ -75,9 +75,9 @@ SINGLE_BATTLE_TEST("Toxic Spikes fails after 2 layers")
 SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on subsequent switch ins")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(opponent, 1); }
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on subsequent switch ins")
 
 SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon")
 {
-    u32 species = SPECIES_WOBBUFFET;
+    u32 species = TEST_SPECIES_WOBBUFFET;
     u32 item = ITEM_NONE;
     u32 move1 = MOVE_CELEBRATE;
     u32 move2 = MOVE_CELEBRATE;
@@ -120,8 +120,8 @@ SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon")
     PARAMETRIZE { item = ITEM_AIR_BALLOON; move1 = MOVE_INGRAIN; airborne = FALSE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, move1); }
@@ -140,8 +140,8 @@ SINGLE_BATTLE_TEST("Toxic Spikes do not affect Steel-types")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_STEELIX, 0) == TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STEELIX);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
@@ -166,8 +166,8 @@ SINGLE_BATTLE_TEST("Toxic Spikes are removed by grounded Poison-type Pokémon on
         ASSUME(GetSpeciesType(SPECIES_EKANS, 0) == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_ZUBAT, 0) == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_ZUBAT, 1) == TYPE_FLYING);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(species) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, move); }
@@ -191,8 +191,8 @@ SINGLE_BATTLE_TEST("Toxic Spikes are not removed by Poison-type Pokémon affecte
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_EKANS, 0) == TYPE_POISON);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS);
     } WHEN {
         TURN { MOVE(opponent, MOVE_MAGNET_RISE); }
@@ -208,10 +208,10 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on switch in after Primal Rever
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO); // Faints the user.
-        PLAYER(SPECIES_WOBBUFFET) {Speed(5); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) {Speed(5); }
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(1); }
-        PLAYER(SPECIES_WYNAUT) {Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(15); }
+        PLAYER(TEST_SPECIES_WYNAUT) {Speed(5); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) {Speed(15); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(player, 1); }
@@ -239,9 +239,9 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on switch in after Primal Rever
 SINGLE_BATTLE_TEST("Toxic Spikes print normal poison for 1 layer")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(opponent, 1); }
@@ -254,9 +254,9 @@ SINGLE_BATTLE_TEST("Toxic Spikes print normal poison for 1 layer")
 SINGLE_BATTLE_TEST("Toxic Spikes print bad poison for 2 layers")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
@@ -270,8 +270,8 @@ SINGLE_BATTLE_TEST("Toxic Spikes print bad poison for 2 layers")
 SINGLE_BATTLE_TEST("Toxic Spikes: Only two layers can be set up")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WYNAUT);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }

@@ -24,8 +24,8 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs remove Light Screen, Reflect a
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SNOWSCAPE); }
         TURN { MOVE(opponent, move); MOVE(player, breakingMove); }
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SABLEYE);
     } WHEN {
         TURN { MOVE(player, MOVE_SNOWSCAPE); }
@@ -80,8 +80,8 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SNOWSCAPE); MOVE(opponent, move); }
         TURN { MOVE(player, breakingMove); MOVE(opponent, MOVE_PROTECT); }
@@ -110,8 +110,8 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
     } WHEN {
         TURN { MOVE(player, MOVE_SNOWSCAPE); MOVE(opponent, move); }
         TURN { MOVE(player, breakingMove, hit: FALSE); }
@@ -139,10 +139,10 @@ DOUBLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove Light Screen, Refle
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_SNOWSCAPE);

@@ -25,9 +25,9 @@ SINGLE_BATTLE_TEST("Focus Energy increases the user's critical hit ratio by 1 st
     GIVEN {
         WITH_CONFIG(CONFIG_CRIT_CHANCE, (genConfig == GEN_1)? GEN_2 : genConfig);
         WITH_CONFIG(CONFIG_FOCUS_ENERGY_CRIT_RATIO, genConfig);
-        ASSUME(GetSpeciesBaseSpeed(SPECIES_WOBBUFFET) == 33);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        ASSUME(GetSpeciesBaseSpeed(TEST_SPECIES_WOBBUFFET) == 33);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (useFocusEnergy)
             TURN { MOVE(player, MOVE_FOCUS_ENERGY); }
@@ -52,9 +52,9 @@ SINGLE_BATTLE_TEST("Focus Energy multiplies crit chance by 4 with gen 1 crit cha
     GIVEN {
         WITH_CONFIG(CONFIG_CRIT_CHANCE, GEN_1);
         WITH_CONFIG(CONFIG_FOCUS_ENERGY_CRIT_RATIO, genConfig);
-        ASSUME(GetSpeciesBaseSpeed(SPECIES_WOBBUFFET) == 33);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        ASSUME(GetSpeciesBaseSpeed(TEST_SPECIES_WOBBUFFET) == 33);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (useFocusEnergy)
             TURN { MOVE(player, MOVE_FOCUS_ENERGY); }

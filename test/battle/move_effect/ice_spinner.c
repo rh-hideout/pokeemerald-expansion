@@ -32,8 +32,8 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
         ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
         ASSUME(GetMoveEffect(MOVE_MISTY_TERRAIN) == EFFECT_MISTY_TERRAIN);
         ASSUME(GetMoveEffect(MOVE_STEEL_ROLLER) == EFFECT_STEEL_ROLLER);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, terrainMove); MOVE(player, removeTerrainMove); }
     } SCENE {
@@ -60,8 +60,8 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
 SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during attack execution")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_ICE_SPINNER); }
     } SCENE {
@@ -74,9 +74,9 @@ SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during at
 SINGLE_BATTLE_TEST("Ice Spinner will not be remove Terrain if user is switched out due to Red Card")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_ICE_SPINNER); }
     } SCENE {
@@ -90,8 +90,8 @@ SINGLE_BATTLE_TEST("Ice Spinner will not be remove Terrain if user is switched o
 SINGLE_BATTLE_TEST("Ice Spinner doesn't fail if there is no terrain on the field")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ICE_SPINNER); }
     } SCENE {
@@ -112,8 +112,8 @@ AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a 
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ICE_SPINNER, MOVE_ICE_SHARD); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Moves(MOVE_ICE_SPINNER, MOVE_ICE_SHARD); }
     } WHEN {
         if (move == MOVE_ELECTRIC_TERRAIN) {
             TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }

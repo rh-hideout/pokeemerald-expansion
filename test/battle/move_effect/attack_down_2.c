@@ -13,8 +13,8 @@ SINGLE_BATTLE_TEST("Charm lowers Attack by 2 stages", s16 damage)
     PARAMETRIZE { lowerAttack = TRUE; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         if (lowerAttack) TURN { MOVE(player, MOVE_CHARM); }
         TURN { MOVE(opponent, MOVE_SCRATCH); }

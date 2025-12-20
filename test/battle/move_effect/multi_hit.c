@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit the maximum amount with Skill Link")
     PASSES_RANDOMLY(100, 100, RNG_HITS);
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SKILL_LINK); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Ability(ABILITY_SKILL_LINK); };
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BULLET_SEED); }
     } SCENE {
@@ -34,8 +34,8 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit twice 37.5/35% of the time")
 
     GIVEN {
         WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BULLET_SEED); }
     } SCENE {
@@ -54,8 +54,8 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit thrice 37.5/35% of the time")
 
     GIVEN {
         WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BULLET_SEED); }
     } SCENE {
@@ -75,8 +75,8 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit four times 12.5/15% of the time")
 
     GIVEN {
         WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BULLET_SEED); }
     } SCENE {
@@ -97,8 +97,8 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit five times 12.5/15% of the time")
 
     GIVEN {
         WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BULLET_SEED); }
     } SCENE {
@@ -117,8 +117,8 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit at least four times with Loaded Dice")
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LOADED_DICE].holdEffect == HOLD_EFFECT_LOADED_DICE);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LOADED_DICE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LOADED_DICE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BULLET_SEED); }
     } SCENE {
@@ -136,8 +136,8 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit five times 50 Percent of the time with L
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LOADED_DICE].holdEffect == HOLD_EFFECT_LOADED_DICE);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LOADED_DICE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LOADED_DICE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BULLET_SEED); }
     } SCENE {
@@ -154,8 +154,8 @@ SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after final
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCALE_SHOT); }
     } SCENE {
@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("Scale Shot is immune to Fairy types and will end the move co
         ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
         ASSUME(GetMoveType(MOVE_SCALE_SHOT) == TYPE_DRAGON);
         ASSUME(GetSpeciesType(SPECIES_FIDOUGH, 0) == TYPE_FAIRY || GetSpeciesType(SPECIES_FIDOUGH, 1) == TYPE_FAIRY);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_FIDOUGH) { HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCALE_SHOT); }
@@ -192,12 +192,12 @@ DOUBLE_BATTLE_TEST("Scale Shot does not corrupt the next turn move used")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SCALE_SHOT, target: opponentRight); SWITCH(playerLeft, 2); SEND_OUT(opponentRight, 2); }
         TURN { MOVE(playerRight, MOVE_BULLDOZE); MOVE(playerLeft, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(opponentLeft, MOVE_CELEBRATE); }
@@ -217,8 +217,8 @@ SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after the 4
     PASSES_RANDOMLY(50, 100, RNG_LOADED_DICE);
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LOADED_DICE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { Item(ITEM_LOADED_DICE); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCALE_SHOT); }
     } SCENE {
@@ -244,7 +244,7 @@ SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after killi
         ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_BAGON) { Item(item); }
         OPPONENT(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCALE_SHOT); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -266,8 +266,8 @@ SINGLE_BATTLE_TEST("Multi Hit moves will not disrupt Destiny Bond flag")
     PARAMETRIZE { hp = 11; }
     PARAMETRIZE { hp = 55; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(55); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(55); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DESTINY_BOND); MOVE(opponent, MOVE_BULLET_SEED); }
     } SCENE {

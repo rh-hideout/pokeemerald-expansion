@@ -9,9 +9,9 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Ceaseless Edge sets up hazards after hitting the target")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CEASELESS_EDGE); }
         TURN { SWITCH(opponent, 1); }
@@ -29,9 +29,9 @@ SINGLE_BATTLE_TEST("Ceaseless Edge sets up hazards after hitting the target")
 SINGLE_BATTLE_TEST("Ceaseless Edge can set up to 3 layers of Spikes")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_CEASELESS_EDGE); }
         TURN { MOVE(player, MOVE_CEASELESS_EDGE); }
@@ -66,9 +66,9 @@ SINGLE_BATTLE_TEST("Ceaseless Edge can set up to 3 layers of Spikes")
 SINGLE_BATTLE_TEST("Ceaseless Edge fails to set up hazards if user faints")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+        PLAYER(TEST_SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
         TURN { MOVE(player, MOVE_CEASELESS_EDGE); SEND_OUT(player, 1); }
     } SCENE {
@@ -82,8 +82,8 @@ SINGLE_BATTLE_TEST("Ceaseless Edge fails to set up hazards if user faints")
 SINGLE_BATTLE_TEST("Ceaseless Edge does not set up hazards if target was not hit")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT);  MOVE(player, MOVE_CEASELESS_EDGE); }
     } SCENE {

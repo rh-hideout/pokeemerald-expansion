@@ -16,8 +16,8 @@ SINGLE_BATTLE_TEST("Struggle deals recoil 1/4 of user's hp (Gen 4+)")
     PARAMETRIZE { atkStat = 100; hpStat = 300; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(hpStat); HP(hpStat); Attack(atkStat); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET) { MaxHP(hpStat); HP(hpStat); Attack(atkStat); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STRUGGLE); }
     } SCENE {
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Struggle can hit ghost types")
     s16 damage;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_DRIFBLIM);
     } WHEN {
         TURN { MOVE(player, MOVE_STRUGGLE); }
@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Struggle does not receive normal-type STAB")
 
     GIVEN {
         PLAYER(SPECIES_ZANGOOSE);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CUT); }
         TURN { MOVE(player, MOVE_STRUGGLE); }

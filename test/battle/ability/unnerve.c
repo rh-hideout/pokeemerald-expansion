@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own ber
     GIVEN {
         ASSUME(gItemsInfo[ITEM_RAWST_BERRY].holdEffect == HOLD_EFFECT_CURE_BRN);
         PLAYER(mon) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RAWST_BERRY); Status1(STATUS1_BURN); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_RAWST_BERRY); Status1(STATUS1_BURN); }
     } WHEN {
         TURN { }
     } SCENE {
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Unnerve doesn't prevent opposing Pokémon from using Natural
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         PLAYER(mon) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_NATURAL_GIFT); }
     } SCENE {
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (player)")
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
         PLAYER(mon) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
     } SCENE {
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (opponent)")
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         OPPONENT(mon) { Ability(ability); }
     } WHEN {
         TURN {}
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Unnerve activates only once per switch-in")
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
         OPPONENT(mon) { Ability(ability); }
         OPPONENT(mon) { Ability(ability); }
@@ -109,10 +109,10 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
     GIVEN {
         ASSUME(gItemsInfo[ITEM_RAWST_BERRY].holdEffect == HOLD_EFFECT_CURE_BRN);
         ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(TEST_SPECIES_WOBBUFFET);
         PLAYER(mon) { Ability(ability); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RAWST_BERRY); Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_RAWST_BERRY); }
+        OPPONENT(TEST_SPECIES_WOBBUFFET) { Item(ITEM_RAWST_BERRY); Status1(STATUS1_BURN); }
+        OPPONENT(TEST_SPECIES_WYNAUT) { Item(ITEM_RAWST_BERRY); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
         TURN {  USE_ITEM(playerLeft, ITEM_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); MOVE(opponentLeft, MOVE_WILL_O_WISP, target: opponentRight); }

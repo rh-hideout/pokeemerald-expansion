@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Rocky Helmet damages attacker even if damage is blocked by D
 {
     GIVEN {
         PLAYER(SPECIES_MIMIKYU) { Item(ITEM_ROCKY_HELMET); Ability(ABILITY_DISGUISE); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(TEST_SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SHADOW_SNEAK); }
     } SCENE {
