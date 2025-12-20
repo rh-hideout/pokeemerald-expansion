@@ -3893,7 +3893,7 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
-    case EFFECT_REFLECT_DAMAGE: // TODO: handle Metal Burst/Comeuppance
+    case EFFECT_REFLECT_DAMAGE:
     case EFFECT_EVASION_UP:
     case EFFECT_DEFENSE_UP:
     case EFFECT_DEFENSE_UP_2:
@@ -3943,7 +3943,7 @@ static bool32 IsDomeLuckyMove(u32 move)
     {
     case EFFECT_REFLECT_DAMAGE:
         if (GetMoveReflectDamage_DamageCategories(move) != (1u << DAMAGE_CATEGORY_PHYSICAL)) // if not Counter
-            break;
+            return FALSE;
         // fallthrough
     case EFFECT_OHKO:
     case EFFECT_SHEER_COLD:
