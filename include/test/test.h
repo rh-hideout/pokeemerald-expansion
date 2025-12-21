@@ -99,6 +99,8 @@ u32 SourceLineOffset(u32 sourceLine);
 void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value);
 void ClearRiggedRng();
 
+bool32 CheckSpeciesIsChanged(u32 species);
+
 s32 Test_MgbaPrintf(const char *fmt, ...);
 
 #define TEST(_name) \
