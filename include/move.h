@@ -3,6 +3,7 @@
 
 #include "contest_effect.h"
 #include "constants/battle.h"
+#include "constants/battle_factory.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_string_ids.h"
 #include "constants/moves.h"
@@ -12,11 +13,12 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 {
     const u8 *battleScript;
     u16 battleTvScore:3;
+    enum FactoryStyle battleFactoryStyle:4;
     u16 encourageEncore:1;
     u16 twoTurnEffect:1;
     u16 semiInvulnerableEffect:1;
     u16 usesProtectCounter:1;
-    u16 padding:9;
+    u16 padding:5;
 };
 
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
@@ -546,7 +548,7 @@ static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_PROTECT || effect == EFFECT_ENDURE, "not a protect move: %S", gMovesInfo[moveId].name);
+    assertf(effect == EFFECT_PROTECT || effect == EFFECT_ENDURE || effect == EFFECT_MAT_BLOCK, "not a protect move: %S", GetMoveName(moveId));
     return gMovesInfo[moveId].argument.protectMethod;
 }
 

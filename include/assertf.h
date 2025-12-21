@@ -44,6 +44,25 @@
  *   letter. */
 #define assertf(cond, ...) CAT(_ASSERTF, FIRST(__VA_OPT__(_FMT,) _COND))(cond __VA_OPT__(,) __VA_ARGS__)
 
+/* errorf(fmt, ...);
+ *
+ * Equivalent to assertf(FALSE, fmt, ...);
+ * Useful for situations like:
+ *   if (cond1)
+ *     code1;
+ *   else if (cond2)
+ *     code2;
+ *   else
+ *     errorf("neither cond1 nor cond2");
+ * Or:
+ *   for (i = 0; i < n; i++)
+ *   {
+ *     if (array[i].member == value)
+ *       return i;
+ *   }
+ *   errorf("member not found"); */
+#define errorf(fmt, ...) _ASSERTF_HANDLE("%s:%d: " fmt, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__)
+
 #define _ASSERTF_COND(cond) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: %s", __FILE__, __LINE__, STR(cond)), TRUE); _recover = FALSE)
 
 #define _ASSERTF_FMT(cond, fmt, ...) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: " fmt, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__), TRUE); _recover = FALSE)

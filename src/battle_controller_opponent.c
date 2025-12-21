@@ -454,9 +454,12 @@ static void OpponentHandleChooseMove(u32 battler)
             gBattlerTarget = gAiBattleData->chosenTarget[battler];
 
             u32 chosenMove = moveInfo->moves[chosenMoveIndex];
-            if (GetBattlerMoveTargetType(battler, chosenMove) & MOVE_TARGET_USER)
+            enum MoveTarget target = GetBattlerMoveTargetType(battler, chosenMove);
+
+            if (target == TARGET_USER || target == TARGET_USER_OR_ALLY)
                 gBattlerTarget = battler;
-            if (GetBattlerMoveTargetType(battler, chosenMove) & MOVE_TARGET_BOTH)
+
+            if (target == TARGET_BOTH)
             {
                 gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
                 if (gAbsentBattlerFlags & (1u << gBattlerTarget))
@@ -480,14 +483,14 @@ static void OpponentHandleChooseMove(u32 battler)
     else // Wild pokemon - use random move
     {
         u32 move;
-        u32 target;
         do
         {
             chosenMoveIndex = Random() & (MAX_MON_MOVES - 1);
             move = moveInfo->moves[chosenMoveIndex];
         } while (move == MOVE_NONE);
 
-        if (GetBattlerMoveTargetType(battler, move) & MOVE_TARGET_USER)
+        enum MoveTarget target = GetBattlerMoveTargetType(battler, move);
+        if (target == TARGET_USER || target == TARGET_USER_OR_ALLY)
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (battler << 8));
         }
@@ -498,7 +501,7 @@ static void OpponentHandleChooseMove(u32 battler)
             } while (!CanTargetBattler(battler, target, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
-            if (B_WILD_NATURAL_ENEMIES == TRUE && !(GetBattlerMoveTargetType(battler, move) & MOVE_TARGET_BOTH))
+            if (B_WILD_NATURAL_ENEMIES == TRUE && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
             {
                 u32 speciesAttacker, speciesTarget;
                 speciesAttacker = gBattleMons[battler].species;
