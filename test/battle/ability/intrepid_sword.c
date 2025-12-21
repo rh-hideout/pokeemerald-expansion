@@ -117,6 +117,8 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
         PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
         OPPONENT(SPECIES_ZAMAZENTA) { Ability(ABILITY_DAUNTLESS_SHIELD); }
     } WHEN {
@@ -136,6 +138,8 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZAMAZENTA) { Ability(ABILITY_DAUNTLESS_SHIELD); }
         OPPONENT(SPECIES_WOBBUFFET);
