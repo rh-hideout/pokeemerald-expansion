@@ -105,6 +105,7 @@ void UpdateOverworldEncounters(void)
         bool32 waterMons = OWE_ShouldSpawnWaterMons();
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
         u32 level;
+        u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level);
 
         if (speciesId == SPECIES_NONE)
         {
@@ -115,7 +116,7 @@ void UpdateOverworldEncounters(void)
         
         struct ObjectEventTemplate objectEventTemplate = {
             .localId = localId,
-            .graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level),
+            .graphicsId = graphicsId,
             .x = x - MAP_OFFSET,
             .y = y - MAP_OFFSET,
             .elevation = MapGridGetElevationAt(x, y),
