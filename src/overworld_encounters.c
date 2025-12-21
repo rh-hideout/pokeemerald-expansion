@@ -51,6 +51,8 @@ static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
 
 void LoadOverworldEncounterData(void)
 {
+    // This and ClearOverworldEncounterData is the same
+    // Consolidate these and use one of these to call OWE_DoAmbientCry
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
