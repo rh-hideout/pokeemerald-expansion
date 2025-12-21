@@ -2593,12 +2593,6 @@
 	cant_see_if 5
 	.endm
 
-	@ Check if the player is standing on a coord event and triggers the script if conditions are met
-	@ Can be used to avoid script happening on input (like dexnav) to prevent trigger script from happening
-	.macro checktrigger
-	callnative TryCoordEventOnPlayerPosition
-	.endm
-
 @ Follower NPCs
 
 	@ Sets an existing NPC up to follow the player.

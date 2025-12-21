@@ -107,6 +107,7 @@ struct DexNavSearch
     u8 starSpriteIds[3];
     u8 ownedIconSpriteId;
     u8 exclamationSpriteId;
+    u32 startingTime;
     u8 hiddenSearch:1;
     u8 isHiddenMon:1;
     u8 unk:6;
@@ -155,8 +156,6 @@ static u8 DexNavPickTile(enum EncounterType environment, u8 xSize, u8 ySize, boo
 static void DexNavProximityUpdate(void);
 static void DexNavDrawIcons(void);
 static void DexNavUpdateSearchWindow(u8 proximity, u8 searchLevel);
-static void Task_DexNavSearch(u8 taskId);
-static void EndDexNavSearchSetupScript(const u8 *script, u8 taskId);
 // HIDDEN MONS
 static void DexNavDrawHiddenIcons(void);
 static void DrawHiddenSearchWindow(u8 width);
@@ -818,16 +817,8 @@ static u8 GetSearchLevel(u16 species)
     return searchLevel;
 }
 
-#define tProximity          data[0]
-#define tFrameCount         data[1]
-#define tSpecies            data[2]
-#define tEnvironment        data[3]
-#define tRevealed           data[4]
-
-static void Task_SetUpDexNavSearch(u8 taskId)
+static void SetUpDexNavSearch(void)
 {
-    struct Task *task = &gTasks[taskId];
-
     u16 species = sDexNavSearchDataPtr->species;
     u8 searchLevel = GetSearchLevel(species);
 
@@ -861,31 +852,25 @@ static void Task_SetUpDexNavSearch(u8 taskId)
 
     FlagSet(DN_FLAG_SEARCHING);
     gPlayerAvatar.creeping = TRUE;  //initialize as true in case mon appears beside you
-    task->tProximity = gSprites[gPlayerAvatar.spriteId].x;
-    task->tFrameCount = 0;
-    task->func = Task_DexNavSearch;
+    sDexNavSearchDataPtr->proximity = gSprites[gPlayerAvatar.spriteId].x;
+    sDexNavSearchDataPtr->startingTime = gMain.vblankCounter1;
     IncrementGameStat(GAME_STAT_DEXNAV_SCANNED);
 }
 
-static void DexNavSearchBail(u8 taskId, const u8 *script)
+static void DexNavSearchBail(const u8 *script)
 {
     TRY_FREE_AND_SET_NULL(sDexNavSearchDataPtr);
     FreeMonIconPalettes();
     ScriptContext_SetupScript(script);
-    DestroyTask(taskId);
 }
 
-static void Task_InitDexNavSearch(u8 taskId)
+static bool8 InitDexNavSearch(u32 species, u32 environment)
 {
-    struct Task *task = &gTasks[taskId];
-    u16 species = task->tSpecies;
-    u8 environment = task->tEnvironment;
-
     sDexNavSearchDataPtr = AllocZeroed(sizeof(struct DexNavSearch));
     if (sDexNavSearchDataPtr == NULL)
     {
-        DexNavSearchBail(taskId, EventScript_NotFoundNearby);
-        return;
+        DexNavSearchBail(EventScript_NotFoundNearby);
+        return TRUE;
     }
 
     // assign non-objects to struct
@@ -896,19 +881,19 @@ static void Task_InitDexNavSearch(u8 taskId)
 
     if (GetFlashLevel() > 0)
     {
-        DexNavSearchBail(taskId, EventScript_TooDark);
-        return;
+        DexNavSearchBail(EventScript_TooDark);
+        return TRUE;
     }
 
     if (sDexNavSearchDataPtr->monLevel == MON_LEVEL_NONEXISTENT || !TryStartHiddenMonFieldEffect(sDexNavSearchDataPtr->environment, 12, 12, FALSE))
     {
-        DexNavSearchBail(taskId, EventScript_NotFoundNearby);
-        return;
+        DexNavSearchBail(EventScript_NotFoundNearby);
+        return TRUE;
     }
 
     sDexNavSearchDataPtr->hiddenSearch = FALSE;
-    task->tRevealed = TRUE; //search window revealed
-    task->func = Task_SetUpDexNavSearch;
+    SetUpDexNavSearch();
+    return FALSE;
 }
 
 static void DexNavDrawPotentialStars(u8 potential, u8 *dst)
@@ -977,9 +962,8 @@ static void DexNavDrawIcons(void)
 /////////////////////
 //// SEARCH TASK ////
 /////////////////////
-bool8 TryStartDexNavSearch(void)
+bool32 TryStartDexNavSearch(void)
 {
-    u8 taskId;
     u16 val = VarGet(DN_VAR_SPECIES);
 
     if (FlagGet(DN_FLAG_SEARCHING) || (val & DEXNAV_MASK_SPECIES) == SPECIES_NONE)
@@ -987,27 +971,16 @@ bool8 TryStartDexNavSearch(void)
 
     HideMapNamePopUpWindow();
     ChangeBgY_ScreenOff(0, 0, 0);
-    taskId = CreateTask(Task_InitDexNavSearch, 0);
-    gTasks[taskId].tSpecies = val & DEXNAV_MASK_SPECIES;
-    gTasks[taskId].tEnvironment = val >> 14;
     PlaySE(SE_DEX_SEARCH);
-    return FALSE;   //we dont actually want to enable the script context
+    return InitDexNavSearch(val & DEXNAV_MASK_SPECIES, val >> 14);
 }
 
-void EndDexNavSearch(u8 taskId)
+static void EndDexNavSearch(void)
 {
     FlagClear(DN_FLAG_SEARCHING);
-    DestroyTask(taskId);
     RemoveDexNavWindowAndGfx();
     FieldEffectStop(&gSprites[sDexNavSearchDataPtr->fldEffSpriteId], sDexNavSearchDataPtr->fldEffId);
     Free(sDexNavSearchDataPtr);
-}
-
-static void EndDexNavSearchSetupScript(const u8 *script, u8 taskId)
-{
-    gSaveBlock3Ptr->dexNavChain = 0;   //reset chain
-    EndDexNavSearch(taskId);
-    ScriptContext_SetupScript(script);
 }
 
 static u8 GetMovementProximityBySearchLevel(void)
@@ -1020,9 +993,8 @@ static u8 GetMovementProximityBySearchLevel(void)
         return 4;
 }
 
-static void Task_RevealHiddenMon(u8 taskId)
+static void RevealHiddenMon(void)
 {
-    struct Task *task = &gTasks[taskId];
     u16 species = sDexNavSearchDataPtr->species;
 
     // remove owned icon if it exists
@@ -1059,53 +1031,63 @@ static void Task_RevealHiddenMon(u8 taskId)
         DrawDexNavSearchMonIcon(species, &sDexNavSearchDataPtr->iconSpriteId, GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT));
     }
 
+    sDexNavSearchDataPtr->startingTime = gMain.vblankCounter1;
     DexNavUpdateDirectionArrow();
-    task->func = Task_DexNavSearch;
-    task->tFrameCount = 0;  //restart search clock
 }
 
-static void Task_DexNavSearch(u8 taskId)
+bool32 OnStep_DexNavSearch(void)
 {
-    struct Task *task = &gTasks[taskId];
+    if (sDexNavSearchDataPtr == NULL)
+        return FALSE;
+
+    u32 frameCount = gMain.vblankCounter1 - sDexNavSearchDataPtr->startingTime;
+    DexNavProximityUpdate();
+    if (!sDexNavSearchDataPtr->hiddenSearch)    //update search window info only if revealed mon
+        DexNavUpdateSearchWindow(sDexNavSearchDataPtr->proximity, sDexNavSearchDataPtr->searchLevel);
 
     if (sDexNavSearchDataPtr->proximity > MAX_PROXIMITY)
     { // out of range
-        if (sDexNavSearchDataPtr->hiddenSearch && !task->tRevealed)
-            EndDexNavSearch(taskId);
-        else
-            EndDexNavSearchSetupScript(EventScript_LostSignal, taskId);
-        return;
+        EndDexNavSearch();
+        if (!sDexNavSearchDataPtr->hiddenSearch)
+        {
+            gSaveBlock3Ptr->dexNavChain = 0;
+            ScriptContext_SetupScript(EventScript_LostSignal);
+            return TRUE;
+        }
+        return FALSE;
     }
 
-    if (sDexNavSearchDataPtr->proximity <= CREEPING_PROXIMITY && !gPlayerAvatar.creeping && task->tFrameCount > 60)
+    if (sDexNavSearchDataPtr->proximity <= CREEPING_PROXIMITY && !gPlayerAvatar.creeping && frameCount > 60)
     { //should be creeping but player walks normally
-        if (sDexNavSearchDataPtr->hiddenSearch && !task->tRevealed)
-            EndDexNavSearch(taskId);
-        else
-            EndDexNavSearchSetupScript(EventScript_MovedTooFast, taskId);
-        return;
+        EndDexNavSearch();
+        if (!sDexNavSearchDataPtr->hiddenSearch)
+        {
+            gSaveBlock3Ptr->dexNavChain = 0;
+            ScriptContext_SetupScript(EventScript_MovedTooFast);
+            return TRUE;
+        }
+        return FALSE;
     }
 
     if (sDexNavSearchDataPtr->proximity <= SNEAKING_PROXIMITY && TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH | PLAYER_AVATAR_FLAG_BIKE))
     { // running/biking too close
         //always do event script, even if player hasn't revealed a hidden mon. It's assumed they would be creeping towards it
-        EndDexNavSearchSetupScript(EventScript_MovedTooFast, taskId);
-        return;
+        EndDexNavSearch();
+        gSaveBlock3Ptr->dexNavChain = 0;
+        ScriptContext_SetupScript(EventScript_MovedTooFast);
+        return TRUE;
     }
 
-    if (ArePlayerFieldControlsLocked() == TRUE)
-    { // check if script just executed
-        EndDexNavSearch(taskId);
-        return;
-    }
-
-    if (gTasks[taskId].tFrameCount > DEXNAV_TIMEOUT * 60)
+    if (frameCount > DEXNAV_TIMEOUT * 60)
     { // player took too long
-        if (sDexNavSearchDataPtr->hiddenSearch && !task->tRevealed)
-            EndDexNavSearch(taskId);
-        else
-            EndDexNavSearchSetupScript(EventScript_PokemonGotAway, taskId);
-        return;
+         EndDexNavSearch();
+        if (!sDexNavSearchDataPtr->hiddenSearch)
+        {
+            gSaveBlock3Ptr->dexNavChain = 0;
+            ScriptContext_SetupScript(EventScript_PokemonGotAway);
+            return TRUE;
+        }
+        return FALSE;
     }
 
     if (sDexNavSearchDataPtr->proximity < 1)
@@ -1117,11 +1099,10 @@ static void Task_DexNavSearch(u8 taskId)
         FlagClear(DN_FLAG_SEARCHING);
         ScriptContext_SetupScript(EventScript_StartDexNavBattle);
         Free(sDexNavSearchDataPtr);
-        DestroyTask(taskId);
-        return;
+        return TRUE;
     }
 
-    if (sDexNavSearchDataPtr->hiddenSearch && !task->tRevealed &&
+    if (sDexNavSearchDataPtr->hiddenSearch &&
         (JOY_NEW(R_BUTTON) || (sDexNavSearchDataPtr->proximity < CREEPING_PROXIMITY)))
     {
         PlaySE(SE_DEX_SEARCH);
@@ -1129,39 +1110,29 @@ static void Task_DexNavSearch(u8 taskId)
         CopyWindowToVram(sDexNavSearchDataPtr->windowId, 3);
         RemoveWindow(sDexNavSearchDataPtr->windowId);
         DestroySprite(&gSprites[sDexNavSearchDataPtr->iconSpriteId]);
-        task->tRevealed = TRUE; //regular dexnav search
-        //sDexNavSearchDataPtr->hiddenSearch = FALSE; //now its a regular dexnav search
-        task->func = Task_RevealHiddenMon;
-        return;
+        sDexNavSearchDataPtr->hiddenSearch = FALSE; //now its a regular dexnav search
+        RevealHiddenMon();
+        return FALSE;
     }
 
     //Caves and water the pokemon moves around
     if ((sDexNavSearchDataPtr->environment == ENCOUNTER_TYPE_WATER || GetCurrentMapType() == MAP_TYPE_UNDERGROUND)
         && sDexNavSearchDataPtr->proximity < GetMovementProximityBySearchLevel() && sDexNavSearchDataPtr->movementCount < 2
-        && task->tRevealed)
+        && !sDexNavSearchDataPtr->hiddenSearch)
     {
         FieldEffectStop(&gSprites[sDexNavSearchDataPtr->fldEffSpriteId], sDexNavSearchDataPtr->fldEffId);
 
         if (!TryStartHiddenMonFieldEffect(sDexNavSearchDataPtr->environment, 10, 10, TRUE))
         {
-            EndDexNavSearchSetupScript(EventScript_PokemonGotAway, taskId);
-            return;
+            EndDexNavSearch();
+            gSaveBlock3Ptr->dexNavChain = 0;
+            ScriptContext_SetupScript(EventScript_PokemonGotAway);
+            return TRUE;
         }
 
         sDexNavSearchDataPtr->movementCount++;
     }
-
-    DexNavProximityUpdate();
-    if (task->tProximity != sDexNavSearchDataPtr->proximity)
-    {
-        //player has moved
-        if (task->tRevealed)    //update search window info only if hidden mon has been revealed (always true for search mode)
-            DexNavUpdateSearchWindow(sDexNavSearchDataPtr->proximity, sDexNavSearchDataPtr->searchLevel);
-
-        task->tProximity = sDexNavSearchDataPtr->proximity;
-    }
-
-    task->tFrameCount++;
+    return FALSE;
 }
 
 static void DexNavUpdateSearchWindow(u8 proximity, u8 searchLevel)
@@ -1864,14 +1835,10 @@ static void DexNavGuiFreeResources(void)
 
 static void CB1_InitDexNavSearch(void)
 {
-    u8 taskId;
-
     if (!gPaletteFade.active && !ArePlayerFieldControlsLocked() && gMain.callback2 == CB2_Overworld)
     {
         SetMainCallback1(CB1_Overworld);
-        taskId = CreateTask(Task_InitDexNavSearch, 0);
-        gTasks[taskId].tSpecies = gSpecialVar_0x8000;
-        gTasks[taskId].tEnvironment = gSpecialVar_0x8001;
+        InitDexNavSearch(gSpecialVar_0x8000, gSpecialVar_0x8001);
     }
 }
 
@@ -2232,6 +2199,9 @@ static void CreateTypeIconSprites(void)
     }
 }
 
+#define tSpecies            data[2]
+#define tEnvironment        data[3]
+
 static bool8 DexNav_DoGfxSetup(void)
 {
     u8 taskId;
@@ -2508,7 +2478,7 @@ static void Task_DexNavMain(u8 taskId)
 /////////////////////////
 //// HIDDEN POKEMON /////
 /////////////////////////
-bool8 TryFindHiddenPokemon(void)
+bool32 TryFindHiddenPokemon(void)
 {
     u16 *stepPtr = GetVarPointer(DN_VAR_STEP_COUNTER);
 
@@ -2531,7 +2501,6 @@ bool8 TryFindHiddenPokemon(void)
         u8 index;
         u16 species;
         enum EncounterType environment;
-        u8 taskId;
         enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
 
         const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
@@ -2622,10 +2591,6 @@ bool8 TryFindHiddenPokemon(void)
         FieldEffectStart(FLDEFF_EXCLAMATION_MARK_ICON);
 
         PlayCry_Script(species, 0);
-        taskId = CreateTask(Task_SetUpDexNavSearch, 0);
-        gTasks[taskId].tSpecies = sDexNavSearchDataPtr->species;
-        gTasks[taskId].tEnvironment = sDexNavSearchDataPtr->environment;
-        gTasks[taskId].tRevealed = FALSE;
         HideMapNamePopUpWindow();
         ChangeBgY_ScreenOff(0, 0, 0);
         return FALSE;   // we dont actually want to enable the script context or the game will freeze
@@ -2699,7 +2664,7 @@ void ResetDexNavSearch(void)
     gSaveBlock3Ptr->dexNavChain = 0;    //reset dex nav chaining on new map
     VarSet(DN_VAR_STEP_COUNTER, 0); //reset hidden pokemon step counter
     if (FlagGet(DN_FLAG_SEARCHING))
-        EndDexNavSearch(FindTaskIdByFunc(Task_DexNavSearch));   //moving to new map ends dexnav search
+        EndDexNavSearch();   //moving to new map ends dexnav search
 }
 
 void IncrementDexNavChain(void)

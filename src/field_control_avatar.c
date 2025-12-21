@@ -618,6 +618,8 @@ static bool8 TryStartStepBasedScript(struct MapPosition *position, u16 metatileB
         return TRUE;
     if (UpdateRepelCounter() == TRUE)
         return TRUE;
+    if (OnStep_DexNavSearch())
+        return TRUE;
     return FALSE;
 }
 
@@ -1100,14 +1102,6 @@ static const u8 *GetCoordEventScriptAtPosition(struct MapHeader *mapHeader, u16 
 const u8 *GetCoordEventScriptAtMapPosition(struct MapPosition *position)
 {
     return GetCoordEventScriptAtPosition(&gMapHeader, position->x - MAP_OFFSET, position->y - MAP_OFFSET, position->elevation);
-}
-
-void TryCoordEventOnPlayerPosition(struct ScriptContext *ctx)
-{
-    struct MapPosition position;
-    GetPlayerPosition(&position);
-    const u8 *script = GetCoordEventScriptAtMapPosition(&position);
-    ScriptCall(ctx, script);
 }
 
 static const struct BgEvent *GetBackgroundEventAtPosition(struct MapHeader *mapHeader, u16 x, u16 y, u8 elevation)
