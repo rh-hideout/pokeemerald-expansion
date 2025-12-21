@@ -92,22 +92,3 @@ SINGLE_BATTLE_TEST("Misty Explosion does not trigger Destiny Bond")
         NOT HP_BAR(opponent);
     }
 }
-
-ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12(u32 percent)
-{
-    return (4096 * percent + 50) / 100;
-}
-
-#include "fpmath.h"
-
-ARM_FUNC NOINLINE static uq4_12_t testMathFunc(u32 percent)
-{
-    return uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12(percent));
-}
-
-TEST("asa")
-{
-    u32 basePower = 100;
-
-    DebugPrintf("bp 1: %d", uq4_12_multiply(basePower,  testMathFunc(50) ) );
-}

@@ -41,11 +41,11 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will only explode and kill everything on the field
     u32 battler;
 
     PARAMETRIZE { aiFlags = 0; battler = 1; }
-    // PARAMETRIZE { aiFlags = 0; battler = 3; }
-    // PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 3; }
-    // PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 1; }
-    // PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 1; }
-    // PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 3; }
+    PARAMETRIZE { aiFlags = 0; battler = 3; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 3; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 1; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 1; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 3; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
