@@ -73,7 +73,7 @@ static u32 AI_CanBattlerHitBothFoesInTerrain(u32 battler, u32 move)
 {
     return GetMoveEffect(move) == EFFECT_TERRAIN_BOOST
         && GetMoveTerrainBoost_HitsBothFoes(move)
-        && IsPsychicTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses);
+        && IsBattlerTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses, GetMoveTerrainBoost_Terrain(move));
 }
 
 u32 AI_GetBattlerMoveTargetType(u32 battler, u32 move)
