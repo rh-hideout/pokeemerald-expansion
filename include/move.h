@@ -62,6 +62,13 @@ enum ProtectMethod
     PROTECT_MAT_BLOCK,
 };
 
+enum TerrainGroundCheck
+{
+    GROUND_CHECK_NONE,
+    GROUND_CHECK_USER,
+    GROUND_CHECK_TARGET,
+};
+
 struct MoveInfo
 {
     const u8 *name;
@@ -157,8 +164,9 @@ struct MoveInfo
         } reflectDamage;
         struct {
             u16 terrain;
-            u16 percent:15;
-            u16 self:1;
+            u16 percent:14;
+            enum TerrainGroundCheck groundCheck:2;
+            u16 hitsBothFoes:1;
         } terrainBoost;
         u32 protectMethod;
         u32 status;
@@ -593,11 +601,18 @@ static inline u32 GetMoveTerrainBoost_Percent(u32 moveId)
     return gMovesInfo[moveId].argument.terrainBoost.percent;
 }
 
-static inline u32 GetMoveTerrainBoost_Self(u32 moveId)
+static inline u32 GetMoveTerrainBoost_GroundCheck(u32 moveId)
 {
     moveId = SanitizeMoveId(moveId);
     assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
-    return gMovesInfo[moveId].argument.terrainBoost.self;
+    return gMovesInfo[moveId].argument.terrainBoost.groundCheck;
+}
+
+static inline u32 GetMoveTerrainBoost_HitsBothFoes(u32 moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.terrainBoost.hitsBothFoes;
 }
 
 static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)

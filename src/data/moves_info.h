@@ -18576,7 +18576,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Power goes up and damages\n"
             "all foes on Psychic Terrain."),
-        .effect = EFFECT_EXPANDING_FORCE,
+        .effect = EFFECT_TERRAIN_BOOST,
         .power = 80,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -18584,6 +18584,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument.terrainBoost = {
+            .terrain = STATUS_FIELD_PSYCHIC_TERRAIN,
+            .percent = 50,
+            .groundCheck = GROUND_CHECK_USER,
+            .hitsBothFoes = TRUE,
+        },
         .contestEffect = CONTEST_EFFECT_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -18711,7 +18717,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .argument.terrainBoost = {
             .terrain =  STATUS_FIELD_MISTY_TERRAIN,
             .percent = 50,
-            .self = TRUE,
+            .groundCheck = GROUND_CHECK_USER,
         },
         .contestEffect = CONTEST_EFFECT_GREAT_APPEAL_BUT_NO_MORE_MOVES,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -18749,7 +18755,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "This move's power doubles\n"
             "when on Electric Terrain."),
-        .effect = EFFECT_RISING_VOLTAGE,
+        .effect = EFFECT_TERRAIN_BOOST,
         .power = 70,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
@@ -18757,6 +18763,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument.terrainBoost = {
+            .terrain = STATUS_FIELD_ELECTRIC_TERRAIN,
+            .percent = 100,
+            .groundCheck = GROUND_CHECK_TARGET,
+        },
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = 0,
@@ -20926,7 +20937,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "This move's power increases\n"
             "when on Electric Terrain."),
-        .effect = EFFECT_PSYBLADE,
+        .effect = EFFECT_TERRAIN_BOOST,
         .power = 80,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -20934,6 +20945,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument.terrainBoost = {
+            .terrain = STATUS_FIELD_ELECTRIC_TERRAIN,
+            .percent = 50,
+            .groundCheck = GROUND_CHECK_NONE,
+        },
         .makesContact = TRUE,
         .slicingMove = TRUE,
         .battleAnimScript = gBattleAnimMove_Psyblade,

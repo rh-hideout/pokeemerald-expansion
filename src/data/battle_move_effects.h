@@ -2029,18 +2029,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .semiInvulnerableEffect = TRUE,
     },
 
-    [EFFECT_EXPANDING_FORCE] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
-    [EFFECT_RISING_VOLTAGE] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
     [EFFECT_BEAK_BLAST] =
     {
         .battleScript = BattleScript_EffectHit,
@@ -2101,12 +2089,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_SHELL_TRAP] =
     {
         .battleScript = BattleScript_EffectShellTrap,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
-    [EFFECT_PSYBLADE] =
-    {
-        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 

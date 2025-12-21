@@ -422,7 +422,7 @@ bool32 HandleMoveTargetRedirection(void)
     if (moveEffect == EFFECT_REFLECT_DAMAGE)
     {
         enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(gBattlerAttacker, gCurrentMove);
-        
+
         if (reflectCategory == DAMAGE_CATEGORY_PHYSICAL)
             gBattleStruct->moveTarget[gBattlerAttacker] = gProtectStructs[gBattlerAttacker].physicalBattlerId;
         else
@@ -7232,14 +7232,16 @@ static inline u32 CalcFuryCutterBasePower(u32 battlerAtk, u32 basePower)
 
 static inline u32 CalcTerrainBoostedPower(struct BattleContext *ctx, u32 basePower)
 {
-    bool32 isMistyTerrainAffected = FALSE;
+    bool32 isTerrainAffected = FALSE;
 
-    if (GetMoveTerrainBoost_Self(ctx->move))
-        isMistyTerrainAffected = IsBattlerTerrainAffected(ctx->battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, ctx->fieldStatuses, GetMoveTerrainBoost_Terrain(ctx->move));
-    else
-        isMistyTerrainAffected = IsBattlerTerrainAffected(ctx->battlerDef, ctx->abilityDef, ctx->holdEffectDef, ctx->fieldStatuses, GetMoveTerrainBoost_Terrain(ctx->move));
+    if (GetMoveTerrainBoost_GroundCheck(ctx->move) == GROUND_CHECK_USER)
+        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, ctx->fieldStatuses, GetMoveTerrainBoost_Terrain(ctx->move));
+    if (GetMoveTerrainBoost_GroundCheck(ctx->move) == GROUND_CHECK_TARGET)
+        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerDef, ctx->abilityDef, ctx->holdEffectDef, ctx->fieldStatuses, GetMoveTerrainBoost_Terrain(ctx->move));
+    else if (ctx->fieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN) // no ground check (Psyblade)
+        isTerrainAffected = TRUE;
 
-    if (isMistyTerrainAffected)
+    if (isTerrainAffected)
         basePower = uq4_12_multiply(basePower, PercentToUQ4_12AddOne(GetMoveTerrainBoost_Percent(ctx->move)));
 
     return basePower;
@@ -7497,21 +7499,9 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
         if (IsAnyTerrainAffected(battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, ctx->fieldStatuses))
             basePower *= 2;
         break;
-    case EFFECT_EXPANDING_FORCE:
-        if (IsPsychicTerrainAffected(battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, ctx->fieldStatuses))
-            basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
-        break;
-    case EFFECT_RISING_VOLTAGE:
-        if (IsElectricTerrainAffected(battlerDef, ctx->abilityDef, ctx->holdEffectDef, ctx->fieldStatuses))
-            basePower *= 2;
-        break;
     case EFFECT_BEAT_UP:
         if (GetConfig(CONFIG_BEAT_UP) >= GEN_5)
             basePower = CalcBeatUpPower();
-        break;
-    case EFFECT_PSYBLADE:
-        if (ctx->fieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN) // Is this correct? Does psyblade not care about being grounded?
-            basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
         break;
     case EFFECT_MAX_MOVE:
         basePower = GetMaxMovePower(GetChosenMoveFromPosition(battlerAtk));
@@ -8800,12 +8790,12 @@ s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
             u32 percentMultiplier = GetMoveReflectDamage_DamagePercent(ctx->move);
             enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(ctx->battlerAtk, ctx->move);
             s32 baseDamage;
-            
+
             if (reflectCategory == DAMAGE_CATEGORY_PHYSICAL)
                 baseDamage = gProtectStructs[ctx->battlerAtk].physicalDmg;
             else
                 baseDamage = gProtectStructs[ctx->battlerAtk].specialDmg;
-        
+
             dmg = (baseDamage - 1) * percentMultiplier / 100;
         }
         break;
@@ -10464,12 +10454,19 @@ bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags)
     return FALSE;
 }
 
+static u32 CanBattlerHitBothFoesInTerrain(u32 battler, u32 move)
+{
+    return GetMoveEffect(move) == EFFECT_TERRAIN_BOOST
+        && GetMoveTerrainBoost_HitsBothFoes(move)
+        && IsPsychicTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), gFieldStatuses);
+}
+
 u32 GetBattlerMoveTargetType(u32 battler, u32 move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_CURSE && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TARGET_USER;
-    if (effect == EFFECT_EXPANDING_FORCE && IsPsychicTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), gFieldStatuses))
+    if (CanBattlerHitBothFoesInTerrain(battler, move))
         return TARGET_BOTH;
     if (effect == EFFECT_TERA_STARSTORM && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
         return TARGET_BOTH;
