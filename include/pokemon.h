@@ -680,6 +680,7 @@ extern u32 removeBagItemCount;
 extern const u16 gFacilityClassToPicIndex[];
 extern const enum TrainerClassID gFacilityClassToTrainerClass[];
 extern const struct SpeciesInfo gSpeciesInfo[];
+extern const struct SpeciesInfo gTestSpecies[];
 extern const u32 gExperienceTables[][MAX_LEVEL + 1];
 extern const u8 gPPUpGetMask[];
 extern const u8 gPPUpClearMask[];

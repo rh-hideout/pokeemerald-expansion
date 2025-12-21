@@ -1687,6 +1687,26 @@ static bool32 BattleTest_CheckProgress(void *data)
     return madeProgress;
 }
 
+static bool32 IsSpeciesChanged(u32 species)
+{
+    const struct SpeciesInfo *a = &gSpeciesInfo[species];
+    const struct SpeciesInfo *b = &gTestSpecies[species];
+    if (a->types[0] != b->types[0]
+     || a->types[1] != b->types[1]
+     || a->abilities[0] != b->abilities[0]
+     || a->baseHP != b->baseHP
+     || a->baseAttack != b->baseAttack
+     || a->baseSpeed != b->baseSpeed
+     || a->baseDefense != b->baseDefense
+     || a->baseSpAttack != b->baseSpAttack
+     || a->baseSpDefense != b->baseSpDefense)
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 static bool32 BattleTest_HandleExitWithResult(void *data, enum TestResult result)
 {
     if (result != TEST_RESULT_ASSUMPTION_FAIL
@@ -1700,6 +1720,22 @@ static bool32 BattleTest_HandleExitWithResult(void *data, enum TestResult result
     }
     else
     {
+        //  Check if a species changed from upstream
+        for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+        {
+            u32 playerSpecies = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
+            u32 enemySpecies = GetMonData(&gEnemyParty[partyIndex], MON_DATA_SPECIES);
+            if (playerSpecies != SPECIES_NONE)
+            {
+                if (IsSpeciesChanged(playerSpecies))
+                    DebugPrintf("%S is changed", GetSpeciesName(playerSpecies));
+            }
+            if (enemySpecies != SPECIES_NONE)
+            {
+                if (IsSpeciesChanged(enemySpecies))
+                    DebugPrintf("%S is changed", GetSpeciesName(enemySpecies));
+            }
+        }
         return FALSE;
     }
 }
