@@ -6961,7 +6961,10 @@ u32 CalcFuryCutterBasePower(u32 basePower, u32 furyCutterCounter)
 
 static inline u32 IsFieldMudSportAffected(enum Type moveType)
 {
-    if (moveType == TYPE_ELECTRIC && (gFieldStatuses & STATUS_FIELD_MUDSPORT))
+    if (moveType != TYPE_ELECTRIC)
+        return FALSE;
+
+    if (gFieldStatuses & STATUS_FIELD_MUDSPORT)
         return TRUE;
 
     if (B_SPORT_TURNS < GEN_6)
@@ -6978,7 +6981,10 @@ static inline u32 IsFieldMudSportAffected(enum Type moveType)
 
 static inline u32 IsFieldWaterSportAffected(enum Type moveType)
 {
-    if (moveType == TYPE_FIRE && (gFieldStatuses & STATUS_FIELD_WATERSPORT))
+    if (moveType != TYPE_FIRE)
+        return FALSE;
+    
+    if (gFieldStatuses & STATUS_FIELD_WATERSPORT)
         return TRUE;
 
     if (B_SPORT_TURNS < GEN_6)
