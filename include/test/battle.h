@@ -750,7 +750,7 @@ struct BattleTestData
     u8 gender;
     u8 nature;
     bool8 isShiny;
-    enum Ability forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
+    enum Ability forcedAbilities[MAX_BATTLERS_COUNT][PARTY_SIZE];
     u8 chosenGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 forcedEnvironment;
 

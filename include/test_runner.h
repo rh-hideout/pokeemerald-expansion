@@ -31,7 +31,7 @@ void TestRunner_CheckMemory(void);
 
 void TestRunner_Battle_CheckBattleRecordActionType(u32 battlerId, u32 recordIndex, u32 actionType);
 
-u32 TestRunner_Battle_GetForcedAbility(u32 side, u32 partyIndex);
+u32 TestRunner_Battle_GetForcedAbility(u32 array, u32 partyIndex);
 u32 TestRunner_Battle_GetChosenGimmick(u32 side, u32 partyIndex);
 u32 TestRunner_Battle_GetForcedEnvironment(void);
 

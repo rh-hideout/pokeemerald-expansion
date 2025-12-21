@@ -3284,10 +3284,10 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     #if TESTING
     if (gTestRunnerEnabled)
     {
-        u32 side = GetBattlerSide(battler);
+        u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
         u32 partyIndex = gBattlerPartyIndexes[battler];
-        if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-            gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+        if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
+            gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
     }
     #endif // TESTING
 
@@ -3495,10 +3495,10 @@ static void DoBattleIntro(void)
                 #if TESTING
                 if (gTestRunnerEnabled)
                 {
-                    u32 side = GetBattlerSide(battler);
+                    u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
                     u32 partyIndex = gBattlerPartyIndexes[battler];
-                    if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                        gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+                    if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
+                        gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
                 }
                 #endif
             }
@@ -3794,10 +3794,10 @@ static void TryDoEventsBeforeFirstTurn(void)
         {
             for (i = 0; i < gBattlersCount; ++i)
             {
-                u32 side = GetBattlerSide(i);
+                u32 array = (!IsPartnerMonFromSameTrainer(i)) ? i : GetBattlerSide(i);
                 u32 partyIndex = gBattlerPartyIndexes[i];
-                if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                    gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+                if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
+                    gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
             }
         }
         #endif // TESTING
