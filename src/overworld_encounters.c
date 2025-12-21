@@ -87,6 +87,7 @@ void UpdateOverworldEncounters(void)
 
     if (!IsSafeToSpawnObjectEvents() || !TrySelectTile(&x, &y))
     {
+        sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
         OWE_DoAmbientCry();
         return;
     }
@@ -989,6 +990,7 @@ static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
 
 static void OWE_DoAmbientCry(void)
 {
+    // This can be used to determine how often the UpdateOverworldEncounters function reaches various points.
     struct ObjectEvent objectEventTemp =
     {
         .graphicsId = OBJ_EVENT_GFX_SPECIES(PIKACHU),
