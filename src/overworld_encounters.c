@@ -191,9 +191,6 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
 
 void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
 {
-    // Need to edit anims:
-    // If object is on water then use water anim.
-    // If object is indoor, need an indoor anim?
     enum OverworldEncounterSpawnAnim spawnAnimType;
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
     OWE_DoAmbientCry();
@@ -205,12 +202,7 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
     }
     else 
     {
-        if (OWE_ShouldSpawnWaterMons())
-            spawnAnimType = OWE_SPAWN_ANIM_WATER;
-        else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
-            spawnAnimType = OWE_SPAWN_ANIM_CAVE;
-        else
-            spawnAnimType = OWE_SPAWN_ANIM_GRASS;
+        spawnAnimType = OWE_GetDespawnAnimType(objectEvent->currentMetatileBehavior);
     }
     MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
@@ -976,6 +968,11 @@ void Task_OWE_WaitMovements(u8 taskId)
 
 u32 OWE_GetDespawnAnimType(u32 metatileBehavior)
 {
+    // Need to edit anims:
+    // If object is on water then use water anim.
+    // If object is indoor, need an indoor anim?
+    // Long grass anim?
+
     if (MetatileBehavior_IsPokeGrass(metatileBehavior) || MetatileBehavior_IsAshGrass(metatileBehavior))
         return OWE_SPAWN_ANIM_GRASS;
     else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior))
