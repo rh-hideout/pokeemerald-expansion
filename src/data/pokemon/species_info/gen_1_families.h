@@ -2871,7 +2871,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 #endif //P_GEN_2_CROSS_EVOS
 
 #define PIKACHU_DEFENSE (P_UPDATED_STATS >= GEN_6 ? 40 : 30)
-#define PIKACHU_SP_DEF (P_UPDATED_STATS >= GEN_6 || P_UPDATED_STATS == GEN_1 ? 50 : 40)
+#define PIKACHU_SP_DEF (P_UPDATED_STATS >= GEN_6 ? 50 : 40)
 
 #if P_UPDATED_EXP_YIELDS >= GEN_6
     #define PIKACHU_EXP_YIELD 112
@@ -2888,7 +2888,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseDefense   = PIKACHU_DEFENSE,
         .baseSpeed     = 90,
         .baseSpAttack  = 50,
-        .baseSpDefense = PIKACHU_SP_DEF,
+        .baseSpDefense = P_UPDATED_STATS >= GEN_6 || P_UPDATED_STATS == GEN_1 ? 50 : 40,
         .types = MON_TYPES(TYPE_ELECTRIC),
         .catchRate = 190,
         .expYield = PIKACHU_EXP_YIELD,
@@ -3746,7 +3746,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseDefense   = PIKACHU_DEFENSE,
         .baseSpeed     = 90,
         .baseSpAttack  = 50,
-        .baseSpDefense = PIKACHU_SP_DEF,
+        .baseSpDefense = P_UPDATED_STATS >= GEN_6 || P_UPDATED_STATS == GEN_1 ? 50 : 40,
         .types = MON_TYPES(TYPE_ELECTRIC),
         .catchRate = 190,
         .expYield = PIKACHU_EXP_YIELD,
@@ -5552,11 +5552,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     },
 
 #if P_UPDATED_STATS >= GEN_6
-    #define WIGGLYTUFF_SP_ATK   85
+#define WIGGLYTUFF_SP_ATK   85
 #elif P_UPDATED_STATS >= GEN_2
-    #define WIGGLYTUFF_SP_ATK   75
+#define WIGGLYTUFF_SP_ATK   75
 #else
-    #define WIGGLYTUFF_SP_ATK   50
+#define WIGGLYTUFF_SP_ATK   50
 #endif
 
     [SPECIES_WIGGLYTUFF] =
@@ -8521,11 +8521,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     },
 
 #if P_UPDATED_STATS >= GEN_6
-    #define ALAKAZAM_SP_DEF 95
+#define ALAKAZAM_SP_DEF 95
 #elif P_UPDATED_STATS >= GEN_2
-    #define ALAKAZAM_SP_DEF 85
+#define ALAKAZAM_SP_DEF 85
 #else
-    #define ALAKAZAM_SP_DEF 135
+#define ALAKAZAM_SP_DEF 135
 #endif
 
     [SPECIES_ALAKAZAM] =
