@@ -251,3 +251,16 @@ const struct EggData gEggDatas[EGG_ID_COUNT] =
 {
 #include "egg_data.h"
 };
+
+const struct SpeciesInfo gTestSpecies[] =
+{
+    #include "../test/species_info/gen_1_families.h"
+    #include "../test/species_info/gen_2_families.h"
+    #include "../test/species_info/gen_3_families.h"
+    #include "../test/species_info/gen_4_families.h"
+    #include "../test/species_info/gen_5_families.h"
+    #include "../test/species_info/gen_6_families.h"
+    #include "../test/species_info/gen_7_families.h"
+    #include "../test/species_info/gen_8_families.h"
+    #include "../test/species_info/gen_9_families.h"
+};
