@@ -155,6 +155,11 @@ struct MoveInfo
             u16 damagePercent:12;
             u16 damageCategories:4; // bit field
         } reflectDamage;
+        struct {
+            u16 terrain;
+            u16 percent:15;
+            u16 self:1;
+        } terrainBoost;
         u32 protectMethod;
         u32 status;
         u32 moveProperty;
@@ -541,16 +546,22 @@ static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
 
 static inline u32 GetMoveSpeciesPowerOverride_Species(u32 moveId)
 {
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_SPECIES_POWER_OVERRIDE, "not a species power override move: %S", GetMoveName(moveId));
     return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.species;
 }
 
 static inline u32 GetMoveSpeciesPowerOverride_Power(u32 moveId)
 {
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_SPECIES_POWER_OVERRIDE, "not a species power override move: %S", GetMoveName(moveId));
     return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.power;
 }
 
 static inline u32 GetMoveSpeciesPowerOverride_NumOfHits(u32 moveId)
 {
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_SPECIES_POWER_OVERRIDE, "not a species power override move: %S", GetMoveName(moveId));
     return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.numOfHits;
 }
 
@@ -566,6 +577,27 @@ static inline u32 GetMoveReflectDamage_DamageCategories(u32 moveId)
     moveId = SanitizeMoveId(moveId);
     assertf(gMovesInfo[moveId].effect == EFFECT_REFLECT_DAMAGE, "not a damage reflection move: %S", GetMoveName(moveId));
     return gMovesInfo[SanitizeMoveId(moveId)].argument.reflectDamage.damageCategories;
+}
+
+static inline u32 GetMoveTerrainBoost_Terrain(u32 moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.terrainBoost.terrain;
+}
+
+static inline u32 GetMoveTerrainBoost_Percent(u32 moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.terrainBoost.percent;
+}
+
+static inline u32 GetMoveTerrainBoost_Self(u32 moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.terrainBoost.self;
 }
 
 static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)

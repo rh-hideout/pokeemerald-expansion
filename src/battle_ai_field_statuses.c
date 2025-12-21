@@ -364,7 +364,7 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
     if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_MISTY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerSideMoveWithEffect(battler, EFFECT_MISTY_EXPLOSION))
+    if (HasBattlerSideMoveWithEffect(battler, EFFECT_TERRAIN_BOOST))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
