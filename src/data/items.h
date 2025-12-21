@@ -15057,6 +15057,54 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+
+    [ITEM_SILVER_LEAF] =
+    {
+        .name = ITEM_NAME("Silver Leaf"),
+        .price = 1000,
+        .description = COMPOUND_STRING(
+            "A mysterious silver\n"
+            "leaf. No trees with\n"
+            "it have been found."),
+        .pocket = POCKET_ITEMS,
+        .sortType = ITEM_TYPE_SELLABLE,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_Leaf,
+        .iconPalette = gItemIconPalette_SilverLeaf,
+    },
+
+    [ITEM_GOLD_LEAF] =
+    {
+        .name = ITEM_NAME("Gold Leaf"),
+        .price = (I_PRICE >= GEN_7) ? 1000 : 2000,
+        .description = COMPOUND_STRING(
+            "A mysterious gold\n"
+            "leaf. No trees with\n"
+            "it have been found."),
+        .pocket = POCKET_ITEMS,
+        .sortType = ITEM_TYPE_SELLABLE,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_Leaf,
+        .iconPalette = gItemIconPalette_GoldLeaf,
+    },
+
+    [ITEM_SLOWPOKE_TAIL] =
+    {
+        .name = ITEM_NAME("Slowpoke Tail"),
+        .price = 9800,
+        .description = COMPOUND_STRING(
+            "A very tasty tail\n"
+            "of something. It\n"
+            "can be sold."),
+        .pocket = POCKET_ITEMS,
+        .sortType = ITEM_TYPE_SELLABLE,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_SlowpokeTail,
+        .iconPalette = gItemIconPalette_SlowpokeTail,
+    },
 };
 
 #undef ITEM_NAME

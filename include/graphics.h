@@ -1740,6 +1740,12 @@ extern const u16 gItemIconPalette_SwapSnack[];
 extern const u32 gItemIcon_TwiceSpicedRadish[];
 extern const u16 gItemIconPalette_TwiceSpicedRadish[];
 
+extern const u32 gItemIcon_Leaf[];
+extern const u16 gItemIconPalette_SilverLeaf[];
+extern const u16 gItemIconPalette_GoldLeaf[];
+extern const u32 gItemIcon_SlowpokeTail[];
+extern const u16 gItemIconPalette_SlowpokeTail[];
+
 extern const u32 gItemIcon_ReturnToFieldArrow[];
 extern const u16 gItemIconPalette_ReturnToFieldArrow[];
 

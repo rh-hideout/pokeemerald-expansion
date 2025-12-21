@@ -1021,7 +1021,12 @@
 #define ITEM_DRAMPANITE 853
 #define ITEM_FALINKSITE 854
 
-#define ITEMS_COUNT 855
+#define ITEM_SILVER_LEAF 855
+#define ITEM_GOLD_LEAF 856
+#define ITEM_SLOWPOKE_TAIL 857
+#define ITEM_SLOWPOKETAIL ITEM_SLOWPOKE_TAIL // Gen II name
+
+#define ITEMS_COUNT 858
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
