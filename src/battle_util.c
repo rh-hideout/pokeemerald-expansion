@@ -8738,7 +8738,7 @@ s32 ApplyModifiersAfterDmgRoll(struct BattleContext *ctx, s32 dmg)
 
 s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
 {
-    s32 dmg = 0;
+    s32 dmg = INT32_MAX;
     s32 randDamage;
 
     switch (GetMoveEffect(ctx->move))
@@ -8762,8 +8762,6 @@ s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
     case EFFECT_BEAT_UP:
         if (GetConfig(CONFIG_BEAT_UP) < GEN_5)
             dmg = CalcBeatUpDamage(ctx);
-        else
-            return INT32_MAX;
         break;
     case EFFECT_REFLECT_DAMAGE:
         if (!ctx->aiCalc)
@@ -8779,14 +8777,13 @@ s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
         
             dmg = (baseDamage - 1) * percentMultiplier / 100;
         }
-        else
-        {
-            return INT32_MAX;
-        }
         break;
     default:
-        return INT32_MAX;
+        break;
     }
+
+    if (dmg == INT32_MAX)
+        return dmg;
 
     gBattleStruct->moveResultFlags[ctx->battlerDef] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
 
