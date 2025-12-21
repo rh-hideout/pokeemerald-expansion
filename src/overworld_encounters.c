@@ -40,6 +40,7 @@ static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
 static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId);
+static void OWE_DoAmbientCry(void);
 
 static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
 {
@@ -85,7 +86,10 @@ void UpdateOverworldEncounters(void)
     }
 
     if (!IsSafeToSpawnObjectEvents() || !TrySelectTile(&x, &y))
+    {
+        OWE_DoAmbientCry();
         return;
+    }
     
     if (GetActiveEncounterTable(OWE_ShouldSpawnWaterMons()))
     {
@@ -94,6 +98,7 @@ void UpdateOverworldEncounters(void)
         if (spawnSlot == INVALID_SPAWN_SLOT)
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+            OWE_DoAmbientCry();
             return;
         }
         
@@ -104,6 +109,7 @@ void UpdateOverworldEncounters(void)
         if (speciesId == SPECIES_NONE)
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+            OWE_DoAmbientCry();
             return;
         }
         
@@ -118,13 +124,18 @@ void UpdateOverworldEncounters(void)
         };
 
         if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
+        {
+            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+            OWE_DoAmbientCry();
             return;
+        }
 
         u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
         if (objectEventId >= OBJECT_EVENTS_COUNT)
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+            OWE_DoAmbientCry();
             return;
         }
 
@@ -180,27 +191,8 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
     // If object is on water then use water anim.
     // If object is indoor, need an indoor anim?
     enum OverworldEncounterSpawnAnim spawnAnimType;
-    u32 speciesId = OW_SPECIES(objectEvent);
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
-    u32 volume = (Random() % 30) + 50;
-    s32 pan;
-
-    switch (DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent))
-    {
-    case DIR_WEST:
-        pan = (Random() % 44);
-        break;
-    
-    case DIR_EAST:
-        pan = -(Random() % 44);
-        break;
-
-    default:
-        pan = 0;
-    }
-    PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
-    // Also move this to a dedicated ambient cries function that plays spawned mon cries, when spawn timer gets to 0 but no new mons are spawned.
-    // Do a calculation of coordinate distance from player, north south edits volume, east west edits pan.
+    OWE_DoAmbientCry();
 
     if (isShiny)
     {
@@ -992,6 +984,39 @@ static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
 {
     return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
     return sOWE_MovementBehaviorType[gSpeciesInfo[speciesId].overworldEncounterBehavior];
+}
+
+static void OWE_DoAmbientCry(void)
+{
+    struct ObjectEvent objectEventTemp =
+    {
+        .graphicsId = OBJ_EVENT_GFX_SPECIES(PIKACHU),
+        .currentCoords.x = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x,
+        .currentCoords.y = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y,
+    };
+    struct ObjectEvent *objectEvent = &objectEventTemp;
+    // Will need to pass the object instead of this.
+    // All cases other than in OWE_DoSpawnAnim will need to randomise an active encounter.
+    // Currently bugs out, and should calculate values for pan and volume based on location.
+    
+    u32 speciesId = OW_SPECIES(objectEvent);
+    u32 volume = (Random() % 30) + 50;
+    s32 pan;
+
+    switch (DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent))
+    {
+    case DIR_WEST:
+        pan = (Random() % 44);
+        break;
+    
+    case DIR_EAST:
+        pan = -(Random() % 44);
+        break;
+
+    default:
+        pan = 0;
+    }
+    PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
 }
 
 #undef tLocalId
