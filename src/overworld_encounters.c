@@ -517,29 +517,33 @@ void ClearOverworldEncounterData(void)
 static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
 {
     const struct WildPokemonInfo *wildMonInfo;
+    enum WildPokemonArea wildArea;
     enum TimeOfDay timeOfDay;
-    u32 encounterIndex;
-    u32 personality = Random32();
+    u32 personality;
     u32 headerId = GetCurrentMapWildMonHeaderId();
 
     if (MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y)))
     {
-        encounterIndex = ChooseWildMonIndex_Water();
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
+        wildArea = WILD_AREA_WATER;
+        timeOfDay = GetTimeOfDayForEncounters(headerId, wildArea);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
-        *speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
-        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_WATER);
     }
     else
     {
-        encounterIndex = ChooseWildMonIndex_Land();
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+        wildArea = WILD_AREA_WATER;
+        timeOfDay = GetTimeOfDayForEncounters(headerId, wildArea);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
-        *speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
-        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_LAND);
     }
 
-    // Fallback for species here? Should it be earlier in code?
+    if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE))
+    {
+        *speciesId = SPECIES_NONE;
+        return;
+    }
+
+    *speciesId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+    *level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+    personality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);
 
     if (*speciesId == SPECIES_UNOWN)
         *speciesId = GetUnownSpeciesId(personality);
@@ -549,6 +553,8 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
         *isFemale = TRUE;
     else
         *isFemale = FALSE;
+
+    ZeroEnemyPartyMons();
 }
 
 static bool8 IsSafeToSpawnObjectEvents(void)
