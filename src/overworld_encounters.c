@@ -579,6 +579,7 @@ u8 CountActiveOverworldEncounters(void)
 
 static bool32 OWE_ShouldSpawnWaterMons(void)
 {
+    // Needs refactoring, and this replacing with a check for coords in many cases.
     return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
