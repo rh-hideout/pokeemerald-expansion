@@ -9343,6 +9343,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_EXP_SHARE,
         #if I_EXP_SHARE_ITEM >= GEN_6
             .price = 0,
+            .importance = 1,
             .description = COMPOUND_STRING(
                 "This device gives\n"
                 "exp. to other\n"
@@ -13462,6 +13463,7 @@ const struct Item gItemsInfo[] =
     {
         .name = ITEM_NAME("Dynamax Band"),
         .price = 0,
+        .importance = 1,
         .description = COMPOUND_STRING(
             "A band carrying a\n"
             "Wishing Star that\n"
