@@ -963,6 +963,16 @@ void Task_OWE_WaitMovements(u8 taskId)
     }
 }
 
+u32 OWE_GetDespawnAnimType(u32 metatileBehavior)
+{
+    if (MetatileBehavior_IsPokeGrass(metatileBehavior) || MetatileBehavior_IsAshGrass(metatileBehavior))
+        return OWE_SPAWN_ANIM_GRASS;
+    else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior))
+        return OWE_SPAWN_ANIM_WATER;
+    else
+        return OWE_SPAWN_ANIM_CAVE;
+}
+
 #undef tLocalId
 #undef tTaskStarted
 #undef sSpriteTaskState

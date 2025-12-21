@@ -11718,7 +11718,6 @@ bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim sp
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
     gFieldEffectArguments[3] = spawnAnimType;
-    gFieldEffectArguments[4] = objEvent->spriteId;
     objEvent->fieldEffectSpriteId = FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
     return TRUE;
 }
@@ -11894,11 +11893,20 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step9(struct ObjectEvent *o
     return TRUE;
 }
 
+#define sCollisionTimer     sprite->data[4]
 #define sSpriteTaskState    sprite->data[6]
 #define STARTED             1
 
 bool8 MovementType_FleePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
+    if (OW_WILD_ENCOUNTERS_FLEE_DESPAWN && sCollisionTimer >= OWE_FLEE_COLLISION_TIME)
+    {
+        u32 animType = OWE_GetDespawnAnimType(objectEvent->currentMetatileBehavior);
+        MovementAction_OverworldEncounterSpawn(animType, objectEvent);
+        RemoveObjectEvent(objectEvent);
+        return FALSE;
+    }
+
     u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
 
     if (sSpriteTaskState != STARTED)
@@ -11930,7 +11938,18 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
         collision = GetCollisionInDirection(objectEvent, newDirection);
 
         if ((OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT && OWE_CheckRestrictedMovement(objectEvent, newDirection)) || collision)
+        {
+            sCollisionTimer++;
             movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
+        }
+        else
+        {
+            sCollisionTimer = 0;
+        }
+    }
+    else
+    {
+        sCollisionTimer = 0;
     }
 
     ObjectEventSetSingleMovement(objectEvent, sprite, movementActionId);
@@ -11939,5 +11958,6 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
     return TRUE;
 }
 
+#undef sCollisionTimer
 #undef sSpriteTaskState
 #undef STARTED

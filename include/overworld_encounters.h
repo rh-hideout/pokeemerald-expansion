@@ -28,6 +28,8 @@
 
 #define OWE_CHASE_RANGE             5
 
+#define OWE_FLEE_COLLISION_TIME     6  // If a fleeing mon is unable to take a step for this many tries it will despawn. (Multiply this value by 16 to get number of frames.)
+
 #define INVALID_SPAWN_SLOT 0xFF
 
 /*
@@ -83,5 +85,6 @@ bool32 OWE_IsPlayerInsideRangeFromMon(struct ObjectEvent *mon, u32 distance);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 void Task_OWE_WaitMovements(u8 taskId);
+u32 OWE_GetDespawnAnimType(u32 metatileBehavior);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
