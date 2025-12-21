@@ -50,17 +50,14 @@ static bool32 HasBattlerTerrainBoostMove(u32 battler, u32 terrain)
     if (!IsBattlerAlive(battler))
         return FALSE;
 
-    u32 move = MOVE_NONE;
     u16 *moves = GetMovesArray(battler);
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        move = moves[moveIndex];
-        if (GetMoveEffect(move) == EFFECT_TERRAIN_BOOST)
-            break;
+        u32 move = moves[moveIndex];
+        if (GetMoveEffect(move) == EFFECT_TERRAIN_BOOST
+         && GetMoveTerrainBoost_Terrain(move) == terrain)
+            return TRUE;
     }
-
-    if (GetMoveTerrainBoost_Terrain(move) == terrain)
-        return TRUE;
 
     return FALSE;
 }
