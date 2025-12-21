@@ -39,6 +39,14 @@ static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
+static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId);
+
+static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
+{
+    [OWE_BEHAVIOR_WANDER_AROUND] =  MOVEMENT_TYPE_WANDER_AROUND_OWE,
+    [OWE_BEHAVIOR_CHASE] =          MOVEMENT_TYPE_CHASE_PLAYER_OWE,
+    [OWE_BEHAVIOR_FLEE] =           MOVEMENT_TYPE_FLEE_PLAYER_OWE,
+};
 
 void LoadOverworldEncounterData(void)
 {
@@ -92,22 +100,23 @@ void UpdateOverworldEncounters(void)
         bool32 waterMons = OWE_ShouldSpawnWaterMons();
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
         u32 level;
-        
-        struct ObjectEventTemplate objectEventTemplate = {
-            .localId = localId,
-            .graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level),
-            .x = x - MAP_OFFSET,
-            .y = y - MAP_OFFSET,
-            .elevation = MapGridGetElevationAt(x, y),
-            .movementType = MOVEMENT_TYPE_FLEE_PLAYER_OWE,
-            .trainerType = TRAINER_TYPE_ENCOUNTER,
-        };
+        u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level);
 
         if (speciesId == SPECIES_NONE)
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
             return;
         }
+        
+        struct ObjectEventTemplate objectEventTemplate = {
+            .localId = localId,
+            .graphicsId = graphicsId,
+            .x = x - MAP_OFFSET,
+            .y = y - MAP_OFFSET,
+            .elevation = MapGridGetElevationAt(x, y),
+            .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
+            .trainerType = TRAINER_TYPE_ENCOUNTER,
+        };
 
         if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
             return;
@@ -971,6 +980,12 @@ u32 OWE_GetDespawnAnimType(u32 metatileBehavior)
         return OWE_SPAWN_ANIM_WATER;
     else
         return OWE_SPAWN_ANIM_CAVE;
+}
+
+static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
+{
+    return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
+    return sOWE_MovementBehaviorType[gSpeciesInfo[speciesId].overworldEncounterBehavior];
 }
 
 #undef tLocalId

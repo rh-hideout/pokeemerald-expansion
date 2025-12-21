@@ -53,6 +53,14 @@ enum OverworldObjectEncounterType
 };
 */
 
+enum OverworldEncounterBehaviors
+{
+    OWE_BEHAVIOR_WANDER_AROUND,
+    OWE_BEHAVIOR_CHASE,
+    OWE_BEHAVIOR_FLEE,
+    OWE_BEHAVIOR_COUNT
+};
+
 extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
 void LoadOverworldEncounterData(void);

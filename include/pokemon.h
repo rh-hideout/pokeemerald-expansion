@@ -2,6 +2,7 @@
 #define GUARD_POKEMON_H
 
 #include "contest_effect.h"
+#include "overworld_encounters.h"
 #include "sprite.h"
 #include "constants/battle.h"
 #include "constants/cries.h"
@@ -536,6 +537,7 @@ struct SpeciesInfo /*0xC4*/
 #endif //P_GENDER_DIFFERENCES
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
+    enum OverworldEncounterBehaviors overworldEncounterBehavior;
 };
 
 struct AbilityInfo
