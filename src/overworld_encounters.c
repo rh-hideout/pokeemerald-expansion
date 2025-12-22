@@ -40,7 +40,8 @@ static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
 static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId);
-static void OWE_DoAmbientCry(void);
+static void OWE_DoAmbientCry(struct ObjectEvent *objectEvent);
+static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 
 static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
 {
@@ -90,7 +91,7 @@ void UpdateOverworldEncounters(void)
     if (!IsSafeToSpawnObjectEvents() || !TrySelectTile(&x, &y))
     {
         sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-        OWE_DoAmbientCry();
+        OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
         return;
     }
     
@@ -101,7 +102,7 @@ void UpdateOverworldEncounters(void)
         if (spawnSlot == INVALID_SPAWN_SLOT)
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            OWE_DoAmbientCry();
+            OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
             return;
         }
         
@@ -113,7 +114,7 @@ void UpdateOverworldEncounters(void)
         if (speciesId == SPECIES_NONE)
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            OWE_DoAmbientCry();
+            OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
             return;
         }
         
@@ -130,7 +131,7 @@ void UpdateOverworldEncounters(void)
         if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            OWE_DoAmbientCry();
+            OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
             return;
         }
 
@@ -139,7 +140,7 @@ void UpdateOverworldEncounters(void)
         if (objectEventId >= OBJECT_EVENTS_COUNT)
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            OWE_DoAmbientCry();
+            OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
             return;
         }
 
@@ -193,7 +194,7 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
 {
     enum OverworldEncounterSpawnAnim spawnAnimType;
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
-    OWE_DoAmbientCry();
+    OWE_DoAmbientCry(objectEvent);
 
     if (isShiny)
     {
@@ -981,45 +982,51 @@ u32 OWE_GetDespawnAnimType(u32 metatileBehavior)
         return OWE_SPAWN_ANIM_CAVE;
 }
 
+static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
+{
+    return &gObjectEvents[gPlayerAvatar.objectEventId];
+}
+
+
 static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
 {
     return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
     return sOWE_MovementBehaviorType[gSpeciesInfo[speciesId].overworldEncounterBehavior];
 }
 
-static void OWE_DoAmbientCry(void)
+// Are these needed? Not defined elsewhere? I don't think so.
+#define MAP_METATILE_VIEW_X 7
+#define MAP_METATILE_VIEW_Y 5
+static void OWE_DoAmbientCry(struct ObjectEvent *objectEvent)
 {
     // This can be used to determine how often the UpdateOverworldEncounters function reaches various points.
-    struct ObjectEvent objectEventTemp =
-    {
-        .graphicsId = OBJ_EVENT_GFX_SPECIES(PIKACHU),
-        .currentCoords.x = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x,
-        .currentCoords.y = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y,
-    };
-    struct ObjectEvent *objectEvent = &objectEventTemp;
-    // Will need to pass the object instead of this.
-    // All cases other than in OWE_DoSpawnAnim will need to randomise an active encounter.
-    // Currently bugs out, and should calculate values for pan and volume based on location.
-    
     u32 speciesId = OW_SPECIES(objectEvent);
-    u32 volume = (Random() % 30) + 50;
+    if (objectEvent->isPlayer) // Testing
+        speciesId = SPECIES_NONE;
+    u32 volume;
     s32 pan;
+    s32 distanceX = objectEvent->currentCoords.x - gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x;
+    s32 distanceY = objectEvent->currentCoords.y - gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y;
 
-    switch (DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent))
-    {
-    case DIR_WEST:
-        pan = (Random() % 44);
-        break;
+    if (distanceX > MAP_METATILE_VIEW_X)
+        distanceX = MAP_METATILE_VIEW_X;
+
+    if (distanceX < -MAP_METATILE_VIEW_X)
+        distanceX = -MAP_METATILE_VIEW_X;
+
+    if (distanceY > MAP_METATILE_VIEW_Y)
+        distanceY = MAP_METATILE_VIEW_Y;
+
+    if (distanceY < -MAP_METATILE_VIEW_Y)
+        distanceY = -MAP_METATILE_VIEW_Y;
+
+    pan = (distanceX * 44) / MAP_METATILE_VIEW_X;
+    volume = 50 + ((distanceY + MAP_METATILE_VIEW_Y) * 30) / (2 * MAP_METATILE_VIEW_Y);
     
-    case DIR_EAST:
-        pan = -(Random() % 44);
-        break;
-
-    default:
-        pan = 0;
-    }
     PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
 }
+#undef MAP_METATILE_VIEW_X
+#undef MAP_METATILE_VIEW_Y
 
 #undef tLocalId
 #undef tTaskStarted
