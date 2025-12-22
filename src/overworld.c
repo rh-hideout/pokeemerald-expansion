@@ -542,7 +542,7 @@ static struct ObjectEventTemplate *GetObjectEventTemplate(u8 localId)
             return &gSaveBlock1Ptr->objectEventTemplates[i];
     }
 
-    assertf(0, "no object event template for localId %d", localId);
+    errorf("no object event template for localId %d", localId);
     return NULL;
 }
 

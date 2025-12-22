@@ -84,6 +84,7 @@ bool32 AI_IsPartyMonSlower(u32 battlerAi, u32 battlerDef, struct BattlePokemon s
 bool32 AI_RandLessThan(u32 val);
 bool32 AI_IsBattlerGrounded(u32 battler);
 u32 AI_GetBattlerMoveTargetType(u32 battler, u32 move);
+u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, u32 holdEffectDef, u32 move);
 u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(u32 battlerId);
@@ -157,7 +158,7 @@ bool32 IsAIUsingGimmick(u32 battler);
 void DecideTerastal(u32 battler);
 bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move);
 bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster);
-bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects effect, bool32 aiIsFaster);
+bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, u32 move, bool32 aiIsFaster);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
@@ -185,7 +186,6 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef);
 u16 *GetMovesArray(u32 battler);
 bool32 IsConfusionMoveEffect(enum BattleMoveEffects moveEffect);
 bool32 HasMove(u32 battlerId, u32 move);
-u32 GetIndexInMoveArray(u32 battler, u32 move);
 u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect);
 bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext);
 bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive);
@@ -237,8 +237,7 @@ bool32 IsUngroundingEffect(enum BattleMoveEffects effect);
 bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlag);
 bool32 IsHazardClearingMove(u32 move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
-bool32 IsExplosionEffect(enum BattleMoveEffects effect);
-bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect);
+bool32 IsSelfSacrificeEffect(u32 move);
 u32 GetAIExplosionChanceFromHP(u32 hpPercent);
 
 // status checks

@@ -98,3 +98,15 @@ SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
         MESSAGE("The extremely harsh sunlight faded!");
     }
 }
+
+TO_DO_BATTLE_TEST("Desolate Land makes Sunny Day fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Rain Dance fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Sandstorm fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Hail fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Snowscape fail") // Extrapolation
+TO_DO_BATTLE_TEST("Desolate Land makes Drought fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land makes Drizzle fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land makes Sand Stream fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land makes Snow Warning fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land can be replaced by Delta Stream")
+TO_DO_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea")

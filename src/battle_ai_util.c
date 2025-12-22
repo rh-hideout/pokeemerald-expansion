@@ -27,7 +27,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(u32 battler, u32 move);
 
 // Functions
-static u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, u32 holdEffectDef, u32 move)
+u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, u32 holdEffectDef, u32 move)
 {
     if (MoveIgnoresTargetAbility(move))
         return ABILITY_NONE;
@@ -69,12 +69,19 @@ bool32 AI_IsBattlerGrounded(u32 battler)
     return IsBattlerGrounded(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler]);
 }
 
+static u32 AI_CanBattlerHitBothFoesInTerrain(u32 battler, u32 move, enum BattleMoveEffects effect)
+{
+    return effect == EFFECT_TERRAIN_BOOST
+        && GetMoveTerrainBoost_HitsBothFoes(move)
+        && IsBattlerTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses, GetMoveTerrainBoost_Terrain(move));
+}
+
 u32 AI_GetBattlerMoveTargetType(u32 battler, u32 move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_CURSE && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TARGET_USER;
-    if (effect == EFFECT_EXPANDING_FORCE && IsPsychicTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses))
+    if (AI_CanBattlerHitBothFoesInTerrain(battler, move, effect))
         return TARGET_BOTH;
     if (effect == EFFECT_TERA_STARSTORM && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
         return TARGET_BOTH;
@@ -754,12 +761,8 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
     u16 maximum = *maximumDamage;
 
     u32 strikeCount = GetMoveStrikeCount(ctx->move);
-    if (effect == EFFECT_ENDEAVOR)
-    {
-        // If target has less HP than user, Endeavor does no damage
-        median = maximum = minimum = max(0, gBattleMons[ctx->battlerDef].hp - gBattleMons[ctx->battlerAtk].hp);
-    }
-    else if (effect == EFFECT_BEAT_UP && GetConfig(CONFIG_BEAT_UP) >= GEN_5)
+
+    if (effect == EFFECT_BEAT_UP && GetConfig(CONFIG_BEAT_UP) >= GEN_5)
     {
         u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
         u32 i;
@@ -1211,12 +1214,13 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
             return TRUE;
     }
 
+    if (IsExplosionMove(move))
+        return TRUE;
+
     switch (GetMoveEffect(move))
     {
     case EFFECT_MAX_HP_50_RECOIL:
     case EFFECT_CHLOROBLAST:
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
     case EFFECT_FINAL_GAMBIT:
         return TRUE;
     case EFFECT_RECOIL:
@@ -1484,7 +1488,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
 
     if (!DoesBattlerIgnoreAbilityChecks(battler, gAiLogicData->abilities[battler], move))
     {
-        if (B_STURDY >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
+        if (GetConfig(CONFIG_STURDY) >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
             return TRUE;
         if (IsMimikyuDisguised(battlerTarget))
             return TRUE;
@@ -1903,7 +1907,7 @@ u32 AI_GetSwitchinWeather(u32 battler)
     case ABILITY_SAND_STREAM:
         return B_WEATHER_SANDSTORM;
     case ABILITY_SNOW_WARNING:
-        return B_SNOW_WARNING >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
+        return GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
     default:
         return gBattleWeather;
     }
@@ -2482,17 +2486,6 @@ u16 *GetMovesArray(u32 battler)
         return gBattleMons[battler].moves;
     else
         return gBattleHistory->usedMoves[battler];
-}
-
-u32 GetIndexInMoveArray(u32 battler, u32 move)
-{
-    u16 *moves = GetMovesArray(battler);
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-    {
-        if (moves[moveIndex] == move)
-            return moveIndex;
-    }
-    return MAX_MON_MOVES;
 }
 
 u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect)
@@ -3082,25 +3075,13 @@ bool32 IsSwitchOutEffect(enum BattleMoveEffects effect)
     }
 }
 
-bool32 IsExplosionEffect(enum BattleMoveEffects effect)
-{
-    // Damaging self destruction effects like Explosion, Misty Explosion, Self Destruct, etc.
-    switch (effect)
-    {
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
-bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect)
+bool32 IsSelfSacrificeEffect(u32 move)
 {
     // All self sacrificing effects like Explosion, Final Gambit, Memento, etc.
-    if (IsExplosionEffect(effect))
+    if (IsExplosionMove(move))
         return TRUE;
-    switch (effect)
+
+    switch (GetMoveEffect(move))
     {
     case EFFECT_FINAL_GAMBIT:
     case EFFECT_MEMENTO:
@@ -3471,6 +3452,9 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 move)
         return SHOULD_PIVOT;
     // Would benefit from Regenerator and have a good switchin
     if (gAiLogicData->abilities[battlerAtk] == ABILITY_REGENERATOR && ShouldRecover(battlerAtk, battlerDef, move, 33) && hasGoodSwitchin)
+        return SHOULD_PIVOT;
+    // Palafin always wants to activate Zero to Hero via pivoting when able
+    if (gAiLogicData->abilities[battlerAtk] == ABILITY_ZERO_TO_HERO && gBattleMons[battlerAtk].species == SPECIES_PALAFIN_ZERO && CountUsablePartyMons(battlerAtk) != 0)
         return SHOULD_PIVOT;
     // If no good switchin candidate and can't KO to change the situation, not good to pivot
     if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE) && !hasGoodSwitchin)
@@ -4889,7 +4873,7 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         }
         break;
     case STAT_ACC:
-        if (gBattleMons[battlerAtk].statStages[statId] <= 3) // Increase only if necessary
+        if (gBattleMons[battlerAtk].statStages[statId] <= DEFAULT_STAT_STAGE - 3) // Increase only if necessary
             tempScore += DECENT_EFFECT;
         break;
     case STAT_EVASION:
@@ -5268,6 +5252,9 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
             return FALSE;
         }
 
+        if (GetMoveEffect(chosenMove) == EFFECT_LAST_RESORT && !CanUseLastResort(battlerAtk))
+            return TRUE;
+
         uq4_12_t effectiveness;
         struct SimulatedDamage dmg;
 
@@ -5282,8 +5269,20 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 
         dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK);
 
+        // don't waste a damaging z move if the normal move will KO
         if (!IsBattleMoveStatus(chosenMove) && dmg.minimum >= gBattleMons[battlerDef].hp)
-            return FALSE;   // don't waste damaging z move if can otherwise faint target
+        {
+            // Risky AI skips accuracy check.
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)
+                return FALSE;
+
+            u32 acc = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex];
+
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)
+                return (acc < 100);
+
+            return acc < LOW_ACCURACY_THRESHOLD;
+        }
 
         return TRUE;
     }
@@ -5792,7 +5791,7 @@ bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, enum Ability ability
         {
         case ABILITY_LIGHTNING_ROD:
         case ABILITY_STORM_DRAIN:
-            if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5)
+            if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5)
                 return FALSE;
             else
                 return (BattlerStatCanRise(battlerDef, ability, STAT_SPATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));
@@ -6219,13 +6218,13 @@ bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster)
     return FALSE;
 }
 
-bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects effect, bool32 aiIsFaster)
+bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, u32 move, bool32 aiIsFaster)
 {
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE)
         return TRUE;
-    if (!IsDoubleBattle() && IsExplosionEffect(effect) && gAiLogicData->shouldConsiderExplosion)
+    if (!IsDoubleBattle() && IsExplosionMove(move) && gAiLogicData->shouldConsiderExplosion)
         return TRUE;
-    if (effect == EFFECT_FINAL_GAMBIT)
+    if (GetMoveEffect(move) == EFFECT_FINAL_GAMBIT)
         return ShouldFinalGambit(battlerAtk, battlerDef, aiIsFaster);
     return FALSE;
 }

@@ -56,7 +56,7 @@ static void InitializeSwitchinCandidate(u32 switchinBattler, struct Pokemon *mon
         CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
         CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
     }
-    
+
     gAiThinkingStruct->saved[switchinBattler].saved = FALSE;
 }
 
@@ -64,15 +64,15 @@ static u32 GetWishHealAmountForBattler(u32 battler)
 {
     u32 wishHeal = 0;
 
-    if (gWishFutureKnock.wishCounter[battler] == 0)
+    if (gBattleStruct->wish.counter[battler] == 0)
         return wishHeal;
 
     if (B_WISH_HP_SOURCE >= GEN_5)
     {
         if (IsOnPlayerSide(battler))
-            wishHeal = GetMonData(&gPlayerParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&gPlayerParty[gBattleStruct->wish.partyId[battler]], MON_DATA_MAX_HP) / 2;
         else
-            wishHeal = GetMonData(&gEnemyParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&gEnemyParty[gBattleStruct->wish.partyId[battler]], MON_DATA_MAX_HP) / 2;
     }
     else
     {
@@ -108,11 +108,11 @@ static void GetIncomingHealInfo(u32 battler, struct IncomingHealInfo *healInfo)
     }
 
     // Wish heals at end of turn
-    if (gWishFutureKnock.wishCounter[battler] > 0)
+    if (gBattleStruct->wish.counter[battler] > 0)
     {
         healInfo->hasHealing = TRUE;
         healInfo->healEndOfTurn = TRUE;
-        healInfo->wishCounter = gWishFutureKnock.wishCounter[battler];
+        healInfo->wishCounter = gBattleStruct->wish.counter[battler];
         healInfo->healAmount = GetWishHealAmountForBattler(battler);
     }
 }
@@ -313,7 +313,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             // Check if mon has an "important" status move
             if (aiMoveEffect == EFFECT_REFLECT || aiMoveEffect == EFFECT_LIGHT_SCREEN
             || aiMoveEffect == EFFECT_SPIKES || aiMoveEffect == EFFECT_TOXIC_SPIKES || aiMoveEffect == EFFECT_STEALTH_ROCK || aiMoveEffect == EFFECT_STICKY_WEB || aiMoveEffect == EFFECT_LEECH_SEED
-            || IsExplosionEffect(aiMoveEffect)
+            || IsExplosionMove(aiMove)
             || nonVolatileStatus == MOVE_EFFECT_SLEEP
             || nonVolatileStatus == MOVE_EFFECT_TOXIC
             || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
@@ -577,14 +577,14 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_WATER_ABSORB;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_DRY_SKIN;
-        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5)
+        if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_STORM_DRAIN;
     }
     else if (incomingType == TYPE_ELECTRIC || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_ELECTRIC))
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_VOLT_ABSORB;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_MOTOR_DRIVE;
-        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5)
+        if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_LIGHTNING_ROD;
     }
     else if (incomingType == TYPE_GRASS || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_GRASS))
@@ -805,6 +805,69 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     return FALSE;
 }
 
+static bool32 GetHitEscapeTransformState(u32 battlerAtk, u32 move)
+{
+    u32 moveIndex;
+    bool32 hasValidTarget = FALSE;
+    bool32 isFasterThanAll = TRUE;
+    bool32 absorberOnField = FALSE;
+    enum Type moveType;
+
+    if (gBattleMons[battlerAtk].species != SPECIES_PALAFIN_ZERO
+     || gAiLogicData->abilities[battlerAtk] != ABILITY_ZERO_TO_HERO)
+        return FALSE;
+
+    if (GetMoveEffect(move) != EFFECT_HIT_ESCAPE)
+        return FALSE;
+
+    moveIndex = GetMoveIndex(battlerAtk, move);
+    if (moveIndex >= MAX_MON_MOVES)
+        return FALSE;
+
+    moveType = GetBattleMoveType(move);
+    if ((moveType == TYPE_WATER && (AI_GetWeather() & B_WEATHER_SUN_PRIMAL))
+     || (moveType == TYPE_FIRE && (AI_GetWeather() & B_WEATHER_RAIN_PRIMAL)))
+        return FALSE;
+
+    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        if (!IsBattlerAlive(battlerDef) || IsBattlerAlly(battlerDef, battlerAtk))
+            continue;
+
+        enum Ability abilityDef = AI_GetMoldBreakerSanitizedAbility(
+            battlerAtk,
+            gAiLogicData->abilities[battlerAtk],
+            gAiLogicData->abilities[battlerDef],
+            gAiLogicData->holdEffects[battlerDef],
+            move
+        );
+
+        if (CanAbilityAbsorbMove(battlerAtk, battlerDef, abilityDef, move, moveType, AI_CHECK)
+         || CanAbilityBlockMove(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk], abilityDef, move, AI_CHECK))
+        {
+            if ((moveType == TYPE_WATER && abilityDef == ABILITY_STORM_DRAIN)
+             || (moveType == TYPE_ELECTRIC && abilityDef == ABILITY_LIGHTNING_ROD))
+                absorberOnField = TRUE;
+            gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex] = UQ_4_12(0.0);
+            continue;
+        }
+
+        if (gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex] > UQ_4_12(0.0))
+        {
+            u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+
+            hasValidTarget = TRUE;
+            if (!AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
+                isFasterThanAll = FALSE;
+        }
+    }
+
+    if (absorberOnField || !hasValidTarget)
+        return FALSE; // Can't meaningfully use a hit escape move
+
+    return isFasterThanAll;
+}
+
 static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
 {
     bool32 hasStatRaised = AnyUsefulStatIsRaised(battler);
@@ -843,9 +906,25 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
             return FALSE;
 
         case ABILITY_ZERO_TO_HERO:
-            // Want to activate Palafin-Zero at all costs
-            if (gBattleMons[battler].species == SPECIES_PALAFIN_ZERO)
-                break;
+        {
+            u32 hitEscapeMove = MOVE_NONE;
+
+            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+            {
+                u32 move = gBattleMons[battler].moves[moveIndex];
+
+                if (move != MOVE_NONE && GetMoveEffect(move) == EFFECT_HIT_ESCAPE)
+                {
+                    hitEscapeMove = move;
+                    break;
+                }
+            }
+
+            // Prefer to use a hit escape move if Palafin will move first and can hit
+            if (hitEscapeMove != MOVE_NONE && GetHitEscapeTransformState(battler, hitEscapeMove))
+                return FALSE;
+            break;
+        }
 
         default:
             return FALSE;
@@ -1054,7 +1133,7 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
     // Stay in if effective move
-    else if (gAiLogicData->effectiveness[battler][opposingBattler][GetIndexInMoveArray(battler, encoredMove)] >= UQ_4_12(2.0))
+    else if (gAiLogicData->effectiveness[battler][opposingBattler][GetMoveIndex(battler, encoredMove)] >= UQ_4_12(2.0))
         return FALSE;
 
     // Switch out 50% of the time otherwise
@@ -1259,7 +1338,7 @@ bool32 ShouldSwitchIfAllScoresBad(u32 battler)
         if (score > AI_BAD_SCORE_THRESHOLD)
             return FALSE;
     }
-    if (RandomPercentage(RNG_AI_SWITCH_ALL_SCORES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_SCORES_BAD)) 
+    if (RandomPercentage(RNG_AI_SWITCH_ALL_SCORES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_SCORES_BAD))
         && (gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE || !ALL_SCORES_BAD_NEEDS_GOOD_SWITCHIN))
         return TRUE;
     return FALSE;
@@ -1275,6 +1354,13 @@ bool32 ShouldStayInToUseMove(u32 battler)
         aiMoveEffect = GetMoveEffect(aiMove);
         if (aiMoveEffect == EFFECT_REVIVAL_BLESSING || IsSwitchOutEffect(aiMoveEffect))
         {
+            // Palafin should not stay in for a hit escape move if it can't use it effectively (slower or no target)
+            if (gBattleMons[battler].species == SPECIES_PALAFIN_ZERO
+             && gAiLogicData->abilities[battler] == ABILITY_ZERO_TO_HERO
+             && aiMoveEffect == EFFECT_HIT_ESCAPE
+             && !GetHitEscapeTransformState(battler, aiMove))
+                continue;
+
             if (gAiBattleData->finalScore[battler][opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD)
                 return TRUE;
         }
@@ -1578,7 +1664,7 @@ static u32 GetSwitchinStatusDamage(u32 battler)
     {
         if (status & STATUS1_BURN)
         {
-            if (B_BURN_DAMAGE >= GEN_7)
+            if (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7)
                 statusDamage = maxHP / 16;
             else
                 statusDamage = maxHP / 8;
@@ -1589,7 +1675,7 @@ static u32 GetSwitchinStatusDamage(u32 battler)
         }
         else if (status & STATUS1_FROSTBITE)
         {
-            if (B_BURN_DAMAGE >= GEN_7)
+            if (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7)
                 statusDamage = maxHP / 16;
             else
                 statusDamage = maxHP / 8;
@@ -1663,7 +1749,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
     u32 statusDamage = GetSwitchinStatusDamage(battler);
     u32 hitsToKO = 0;
     u16 maxHP = gBattleMons[battler].maxHP, item = gAiLogicData->items[battler], heldItemEffect = GetItemHoldEffect(item);
-    u8 weatherDuration = gWishFutureKnock.weatherDuration, holdEffectParam = GetItemHoldEffectParam(item);
+    u8 weatherDuration = gBattleStruct->weatherDuration, holdEffectParam = GetItemHoldEffectParam(item);
     u32 opposingBattler = GetOppositeBattler(battler);
     enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->abilities[battler];
     bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility);
@@ -1689,7 +1775,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
         currentHP = currentHP - damageTaken;
 
         // One shot prevention effects
-        if (damageTaken >= maxHP && startingHP == maxHP && (heldItemEffect == HOLD_EFFECT_FOCUS_SASH || (!opponentCanBreakMold && B_STURDY >= GEN_5 && ability == ABILITY_STURDY)) && hitsToKO < 1)
+        if (damageTaken >= maxHP && startingHP == maxHP && (heldItemEffect == HOLD_EFFECT_FOCUS_SASH || (!opponentCanBreakMold && GetConfig(CONFIG_STURDY) >= GEN_5 && ability == ABILITY_STURDY)) && hitsToKO < 1)
             currentHP = 1;
 
         // If mon is still alive, apply weather impact first, as it might KO the mon before it can heal with its item (order is weather -> item -> status)
@@ -2113,7 +2199,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 }
 
                 // If a self destruction move doesn't OHKO, don't factor it into revenge killing
-                if (IsExplosionEffect(GetMoveEffect(aiMove)) && damageDealt < playerMonHP)
+                if (IsExplosionMove(aiMove) && damageDealt < playerMonHP)
                     continue;
 
                 // Check that mon isn't one shot and set best damage mon
