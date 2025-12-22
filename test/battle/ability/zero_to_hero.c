@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Imposter doesn't apply the heroic transformation message whe
 SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers fainted - Player")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_PALAFIN_ZERO);
         PLAYER(SPECIES_WOBBUFFET) { HP(1);}
         OPPONENT(SPECIES_WOBBUFFET);
@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
 SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers fainted - Opponent")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PALAFIN_ZERO);

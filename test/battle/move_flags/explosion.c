@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 }
 
 SINGLE_BATTLE_TEST("Explosion causes the user to faint")

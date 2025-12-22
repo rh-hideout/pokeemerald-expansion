@@ -2314,12 +2314,13 @@ static void DexNavGuiInit(MainCallback callback)
 
 void Task_OpenDexNavFromStartMenu(u8 taskId)
 {
-    if (DEXNAV_ENABLED == FALSE)
-    {   // must have it enabled to enter
-        DebugPrintfLevel(MGBA_LOG_ERROR, "DexNav was opened when DEXNAV_ENABLED config was disabled! Check include/config/dexnav.h");
+    assertf(DEXNAV_ENABLED, "DexNav was opened when DEXNAV_ENABLED config was disabled! Check include/config/dexnav.h")
+    {
         DestroyTask(taskId);
+        return;
     }
-    else if (!gPaletteFade.active)
+
+    if (!gPaletteFade.active)
     {
         CleanupOverworldWindowsAndTilemaps();
         DexNavGuiInit(CB2_ReturnToFieldWithOpenMenu);

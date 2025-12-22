@@ -307,7 +307,7 @@ void DoMoveAnim(u16 move)
     gBattleAnimAttacker = gBattlerAttacker;
     gBattleAnimTarget = gBattlerTarget;
     // Make sure the anim target of moves hitting everyone is at the opposite side.
-    if (GetBattlerMoveTargetType(gBattlerAttacker, move) & MOVE_TARGET_FOES_AND_ALLY && IsDoubleBattle())
+    if (GetBattlerMoveTargetType(gBattleAnimAttacker, move) == TARGET_FOES_AND_ALLY && IsDoubleBattle())
     {
         while (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         {
@@ -552,7 +552,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
 
     switch (target)
     {
-    case MOVE_TARGET_FOES_AND_ALLY:
+    case TARGET_FOES_AND_ALLY:
         if (battlerAnimId == ANIM_ATTACKER)
         {
             targets[numTargets++] = gBattleAnimAttacker;
@@ -566,7 +566,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
             }
         }
         break;
-    case MOVE_TARGET_BOTH: // all opponents
+    case TARGET_BOTH: // all opponents
         for (i = 0; i < gBattlersCount; i++)
         {
             if (i != ignoredTgt && !IsBattlerAlly(i, ignoredTgt) && IS_ALIVE_AND_PRESENT(i))
@@ -880,9 +880,7 @@ static void Cmd_end(void)
 
     if (!continuousAnim) // May have been used for debug?
     {
-        // Debugging - ensure no hanging mon bg tasks
-        if (FuncIsActiveTask(Task_UpdateMonBg))
-            DebugPrintf("Move %d animation still has Task_UpdateMonBg active at the end!", gAnimMoveIndex);
+        assertf(!FuncIsActiveTask(Task_UpdateMonBg), "move %d still has Task_UpdateMonBg active at the end", gAnimMoveIndex);
 
         m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 256);
         if (!IsContest())
