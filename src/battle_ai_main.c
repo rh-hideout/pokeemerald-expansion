@@ -1194,17 +1194,26 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
 
+    if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
+        RETURN_SCORE_MINUS(20);
+
     if (IsPowderMove(move) && !IsAffectedByPowderMove(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef]))
         RETURN_SCORE_MINUS(10);
 
-    if (!BreaksThroughSemiInvulnerablity(battlerDef, move) && moveEffect != EFFECT_SEMI_INVULNERABLE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
+    if (!BreaksThroughSemiInvulnerablity(battlerDef, move) && moveEffect != EFFECT_SEMI_INVULNERABLE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) && abilityAtk != ABILITY_NO_GUARD && abilityDef != ABILITY_NO_GUARD)
         RETURN_SCORE_MINUS(10);
 
-    if (IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move) && CanTargetFaintAi(battlerDef, battlerAtk))
-        RETURN_SCORE_MINUS(10);
+    if (CanTargetFaintAi(battlerDef, battlerAtk))
+    {
+        if (IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move))
+            RETURN_SCORE_MINUS(10);
 
-    if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
-        RETURN_SCORE_MINUS(20);
+        if (moveEffect == EFFECT_SEMI_INVULNERABLE && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_NEGATE_UNAWARE))
+        {
+            if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
+                RETURN_SCORE_MINUS(10);
+        }
+    }
 
     // Don't setup into expected Focus Punch.
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS
@@ -2534,6 +2543,12 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_SEMI_INVULNERABLE:
+            if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_NEGATE_UNAWARE))
+            {
+                if (aiData->abilities[battlerAtk] == ABILITY_NO_GUARD || aiData->abilities[battlerDef] == ABILITY_NO_GUARD)
+                    ADJUST_SCORE(-1);
+            }
+
             if (predictedMove != MOVE_NONE
               && AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
               && GetMoveEffect(predictedMove) == EFFECT_SEMI_INVULNERABLE)
@@ -4962,8 +4977,14 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         score += AI_ShouldCopyStatChanges(battlerAtk, battlerDef);
         break;
     case EFFECT_SEMI_INVULNERABLE:
-        if (predictedMove != MOVE_NONE && isBattle1v1 && !IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move))
+        if (predictedMove != MOVE_NONE && isBattle1v1)
         {
+            if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_NEGATE_UNAWARE))
+            {
+                if (aiData->abilities[battlerAtk] == ABILITY_NO_GUARD || aiData->abilities[battlerDef] == ABILITY_NO_GUARD)
+                    break;
+            }
+
             enum BattleMoveEffects predictedEffect = GetMoveEffect(predictedMove);
             if ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
              && (IsExplosionEffect(predictedEffect) || predictedEffect == EFFECT_PROTECT))
