@@ -1,6 +1,10 @@
 import json
 import re
 
+TIME_OF_DAY_ENCOUNTERS_PAT = re.compile(r'\s*#\s*define OW_TIME_OF_DAY_ENCOUNTERS\s+(\w+)')
+TIME_OF_DAY_DISABLE_FALLBACK_PAT = re.compile(r'\s*#\s*define OW_TIME_OF_DAY_DISABLE_FALLBACK\s+(\w+)')
+TIME_OF_DAY_FALLBACK_PAT = re.compile(r'\s*#\s*define OW_TIME_OF_DAY_FALLBACK\s+(\w+)')
+
 class Config:
     def __init__(self, config_file_name, rtc_constants_file_name, encounters_json_data):
         self.times_of_day = None
@@ -12,10 +16,6 @@ class Config:
         self.ParseTimeEnum(rtc_constants_file_name)
         if self.times_of_day == None:
             raise Exception(f"Failed to parse 'enum TimeOfDay' in '{rtc_constants_file_name}'")
-
-        self.ParseMonTypes(encounters_json_data)
-        if self.mon_types == None:
-            raise Exception("No fields defined in 'wild_encounters.json'")
 
         with open(config_file_name, 'r') as config_file:
             lines = config_file.readlines()
@@ -37,10 +37,11 @@ class Config:
             m = DEFAULT_TIME_PAT.search(file)
             if m:
                 txt = m.group('rtc_val')
-                values = re.findall(r'TIME_\w+', txt)
-                self.times_of_day = {}
-                for value in values:
-                    self.times_of_day[value] = value.title().replace("Time_", "").replace("_", "")
+                time_constants = re.findall(r'TIME_\w+', txt)
+                self.times_of_day = {
+                    constant: constant.removeprefix("TIME_").title().replace("_", "")
+                    for constant in time_constants
+                }
 
     def ParseMonTypes(self, encounters_json_data):
         for group in encounters_json_data["wild_encounter_groups"]:
@@ -52,15 +53,15 @@ class Config:
                     self.mon_types.append(field_type)
 
     def ParseTimeConfig(self, line):
-        m = re.search(r'#define OW_TIME_OF_DAY_ENCOUNTERS\s+(\w+)', line)
+        m = TIME_OF_DAY_ENCOUNTERS_PAT.match(line)
         if m:
-            self.time_encounters = m.group(1) == "TRUE"
+            self.time_encounters = m.group(1) in ["TRUE", "1"]
 
-        m = re.search(r'#define OW_TIME_OF_DAY_DISABLE_FALLBACK\s+(\w+)', line)
+        m = TIME_OF_DAY_DISABLE_FALLBACK_PAT.match(line)
         if m:
-            self.disable_time_fallback = m.group(1) == "TRUE"
+            self.disable_time_fallback = m.group(1) in ["TRUE", "1"]
 
-        m = re.search(r'#define OW_TIME_OF_DAY_FALLBACK\s+(\w+)', line)
+        m = TIME_OF_DAY_FALLBACK_PAT.match(line)
         if m:
             self.time_fallback = m.group(1)
 
@@ -70,7 +71,8 @@ class WildEncounterAssembler:
         self.output_file = output_file
         self.json_data = json_data
         self.config = config
-    
+        self.encounter_types = set()
+
     def WriteLine(self, line="", indents = 0):
         self.output_file.write(4 * indents * " " + line + "\n")
 
@@ -80,93 +82,46 @@ class WildEncounterAssembler:
         self.WriteLine("//")
         self.output_file.write("\n\n")
 
-    def WriteMacro(self, macro, value):
-        self.output_file.write("#define " + macro + " " + value + "\n")
-
-    def WriteMacros(self):
-        wild_encounter_groups = self.json_data["wild_encounter_groups"]
-        for wild_encounter_group in wild_encounter_groups:
-            if "fields" in wild_encounter_group:
-                fields = wild_encounter_group["fields"]
-                for field in fields:
-                    field_type = field["type"]
-                    macro_base = "ENCOUNTER_CHANCE_" + field_type.upper()
-                    previous_group = None
-                    previous_macro = None
-                    encounter_rates = field["encounter_rates"]
-
-                    group_name_mapping = len(encounter_rates) * [""]
-                    if "groups" in field:
-                        groups = field["groups"]
-                        for group_name, indices in groups.items():
-                            for index in indices:
-                                group_name_mapping[index] = "_" + group_name.upper()
-                    
-                    for idx, rate in enumerate(encounter_rates):
-                        macro_name = macro_base + group_name_mapping[idx] + "_SLOT_" + str(idx)
-                        macro_value = str(rate)
-                        if previous_group == group_name_mapping[idx]:
-                            macro_value = "(" + previous_macro + " + " + macro_value + ")"
-                        elif idx > 0:
-                            macro_total_name = macro_base + group_name_mapping[idx - 1] + "_TOTAL"
-                            self.WriteMacro(macro_total_name, "(" + previous_macro + ")")
-                        self.WriteMacro(macro_name, macro_value)
-                        previous_group = group_name_mapping[idx]
-                        previous_macro = macro_name
-                        if idx == len(encounter_rates) - 1:
-                            macro_total_name = macro_base + group_name_mapping[idx] + "_TOTAL"
-                            self.WriteMacro(macro_total_name, "(" + previous_macro + ")")
-                    macro_total_name = macro_base + group_name_mapping[-1] + "_TOTAL"
-                    self.WriteLine()
-    
     def WriteMonInfos(self, name, mons, encounter_rate):
-        info_name = name + "Info"
-        self.WriteLine(f"const struct WildPokemon {name}[] =")
+        self.WriteLine(f"const struct WildPokemonInfo {name}Info =")
         self.WriteLine("{")
+        self.WriteLine(f".encounterRate = {encounter_rate},", 1)
+        self.WriteLine(f".numSlots = {len(mons)},", 1)
+        self.WriteLine(f".totalWeight = {sum(mon.get("weight", 1) for mon in mons)},", 1)
+        self.WriteLine(".wildPokemon =", 1)
+        self.WriteLine("{", 1)
+
         for mon in mons:
             species = mon["species"]
-            min_level = 2 if "min_level" not in mon else mon["min_level"]
-            max_level = 100 if "max_level" not in mon else mon["max_level"]
-            self.WriteLine(f"{{ {min_level}, {max_level}, {species} }},", 1)
+            min_level = mon.get("min_level", 2)
+            max_level = mon.get("max_level", 100)
+            weight = mon.get("weight", 1)
+            self.WriteLine(f"{{ .minLevel={min_level}, .maxLevel={max_level}, .species={species}, .weight={weight} }},", 2)
 
+        self.WriteLine("},", 1)
         self.WriteLine("};")
         self.WriteLine()
-        self.WriteLine(f"const struct WildPokemonInfo {info_name} = {{ {encounter_rate}, {name} }};")
-        self.WriteLine()
-    
+
     def WriteTerminator(self):
         self.WriteLine("{", 1)
         self.WriteLine(".mapGroup = MAP_GROUP(MAP_UNDEFINED),", 2)
         self.WriteLine(".mapNum = MAP_NUM(MAP_UNDEFINED),", 2)
-        self.WriteLine(".encounterTypes =", 2)
-        self.WriteLine("{", 2)
-        for time in self.config.times_of_day:
-            if not self.config.time_encounters and time != self.config.time_fallback:
-                continue
-            self.WriteLine(f"[{time}] =", 3)
-            self.WriteLine("{", 3)
-            for mon_type in self.config.mon_types:
-                member_name = mon_type.title().replace("_", "")
-                member_name = member_name[0].lower() + member_name[1:] + "Info"
-                self.WriteLine(f".{member_name} = NULL,", 4)
-            self.WriteLine("},", 3)
-        self.WriteLine("},", 2)
+        self.WriteLine(".encounterTypes =  {{ 0 }},", 2)
         self.WriteLine("},", 1)
 
     def WritePokemonHeaders(self, headers):
         label = headers["label"]
         self.WriteLine(f"const struct WildPokemonHeader {label}[] =")
         self.WriteLine("{")
-        for shared_label in headers["data"]:
+        for label, map_data in headers["data"].items():
             self.WriteLine()
-            map_data = headers["data"][shared_label]
-            encounter_data = map_data
+            encounter_data = map_data["encounters"]
             map_group = map_data["mapGroup"]
             map_num = map_data["mapNum"]
             version = "EMERALD"
-            if "FireRed" in shared_label:
+            if "FireRed" in label:
                 version = "FIRERED"
-            elif "LeafGreen" in shared_label:
+            elif "LeafGreen" in label:
                 version = "LEAFGREEN"
             
             self.WriteLine(f"#ifdef {version}")
@@ -174,22 +129,23 @@ class WildEncounterAssembler:
             self.WriteLine("{", 1)
             self.WriteLine(f".mapGroup = {map_group},", 2)
             self.WriteLine(f".mapNum = {map_num},", 2)
+            if not encounter_data:
+                continue
             self.WriteLine(".encounterTypes =", 2)
             self.WriteLine("{", 2)
             for time in self.config.times_of_day:
-                if not self.config.time_encounters and time != self.config.time_fallback:
+                if time not in encounter_data:
                     continue
-                self.WriteLine(f"[{time}] =", 4)
-                self.WriteLine("{", 4)
-                for mon_type in self.config.mon_types:
-                    member_name = mon_type.title().replace("_", "")
+                if not encounter_data[time]:
+                    self.WriteLine(f"[{time}] = {{ 0 }},", 3)
+                    continue
+                self.WriteLine(f"[{time}] =", 3)
+                self.WriteLine("{", 3)
+
+                for encounter_type, encounter_table_name in encounter_data[time].items():
+                    member_name = encounter_type.title().replace("_", "")
                     member_name = member_name[0].lower() + member_name[1:] + "Info"
-                    value = "NULL"
-                    if time in encounter_data and mon_type in encounter_data[time]:
-                        value = encounter_data[time][mon_type]
-                    if value != "NULL":
-                        value = "&" + value
-                    self.WriteLine(f".{member_name} = {value},", 5)
+                    self.WriteLine(f".{member_name} = &{encounter_table_name},", 4)
 
                 self.WriteLine("},", 3)
             
@@ -206,10 +162,8 @@ class WildEncounterAssembler:
             headers = {}
             headers["label"] = wild_encounter_group["label"]
             headers["data"] = {}
-            for_maps = False
+            for_maps = wild_encounter_group.get("for_maps", False)
             map_num_counter = 1
-            if "for_maps" in wild_encounter_group:
-                for_maps = wild_encounter_group["for_maps"]
             encounters = wild_encounter_group["encounters"]
 
             for map_encounters in encounters:
@@ -224,36 +178,38 @@ class WildEncounterAssembler:
                 shared_label = base_label
                 time = self.config.time_fallback
 
-                for time_ident in self.config.times_of_day:
-                    if self.config.times_of_day[time_ident] in base_label:
-                        time = time_ident
-                        shared_label = shared_label.replace('_' + self.config.times_of_day[time_ident], '')
+                for time_const, time_label in self.config.times_of_day.items():
+                    if base_label.endswith(time_label):
+                        time = time_const
+                        shared_label = base_label.removesuffix('_' + time_label)
 
                 if shared_label not in headers["data"]:
-                    headers["data"][shared_label] = {}
-                if time not in headers["data"][shared_label]:
-                    headers["data"][shared_label][time] = {}
-                headers["data"][shared_label]["mapGroup"] = map_group
-                headers["data"][shared_label]["mapNum"] = map_num
+                    headers["data"][shared_label] = {
+                        "mapGroup": map_group,
+                        "mapNum": map_num,
+                        "encounters": {}
+                    }
+                if time in headers["data"][shared_label]:
+                    print(f"Warning: ignoring redefinition of encounter data for label {shared_label} and time {time}! (Entry has {base_label=}.)")
+                    continue
+                encounter_table_names = {}
 
                 version = "EMERALD"
                 if "FireRed" in shared_label:
                     version = "FIRERED"
                 elif "LeafGreen" in shared_label:
                     version = "LEAFGREEN"
+
                 self.WriteLine(f"#ifdef {version}")
-                for mon_type in self.config.mon_types:
-                    if mon_type not in map_encounters:
-                        headers["data"][shared_label][mon_type] = "NULL"
-                        continue
-                    
-                    mons_entry = map_encounters[mon_type]
+                for encounter_type, mons_entry in map_encounters["encounter_sets"].items():
                     encounter_rate = mons_entry["encounter_rate"]
                     mons = mons_entry["mons"]
 
-                    mon_array_name = base_label + "_" + mon_type.title().replace("_", "")
+                    mon_array_name = base_label + "_" + encounter_type.title().replace("_", "")
                     self.WriteMonInfos(mon_array_name, mons, encounter_rate)
-                    headers["data"][shared_label][time][mon_type] = mon_array_name + "Info"
+                    encounter_table_names[encounter_type] = mon_array_name + "Info"
+
+                headers["data"][shared_label]["encounters"][time] = encounter_table_names
                 self.WriteLine(f"#endif")
 
             self.WritePokemonHeaders(headers)
@@ -264,7 +220,6 @@ def ConvertToHeaderFile(json_data):
         config = Config('include/config/overworld.h', 'include/constants/rtc.h', json_data)
         assembler = WildEncounterAssembler(output_file, json_data, config)
         assembler.WriteHeader()
-        assembler.WriteMacros()
         assembler.WriteEncounters()
 
 def main():
