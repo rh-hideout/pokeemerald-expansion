@@ -2449,22 +2449,10 @@ bool8 ScrCmd_updatecoinsbox(struct ScriptContext *ctx)
 
 bool8 ScrCmd_trainerbattle(struct ScriptContext *ctx)
 {
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     Script_RequestEffects(SCREFF_V1 | SCREFF_TRAINERBATTLE);
     
-    struct ScriptStack trainerBattleScriptStack;
-    InitScriptStack(&trainerBattleScriptStack);
-    
-    TrainerBattleLoadArgs(ctx->scriptPtr);
-    BattleSetup_ConfigureTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack, FALSE);
-
-    const u8 *ptr;
-    while ((ptr = ScriptStackPop(&trainerBattleScriptStack)) != NULL)
-    {
-        ScriptPush(ctx, ptr);
-    }
-
-    ctx->scriptPtr = ScriptPop(ctx);
-    
+    ConfigureTrainerBattle(ctx);
     return FALSE;
 }
 
@@ -2478,6 +2466,7 @@ bool8 ScrCmd_dotrainerbattle(struct ScriptContext *ctx)
 
 bool8 ScrCmd_gotopostbattlescript(struct ScriptContext *ctx)
 {
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     Script_RequestEffects(SCREFF_V1);
 
     ctx->scriptPtr = BattleSetup_GetScriptAddrAfterBattle();

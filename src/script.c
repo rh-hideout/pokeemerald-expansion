@@ -304,26 +304,41 @@ void ScriptContext_Enable(void)
     LockPlayerFieldControls();
 }
 
-bool8 ScriptContext_PushFromStack(struct ScriptStack *scrStack)
+bool8 ScriptContext_ScriptPushStackToContext(struct ScriptStack *stk, struct ScriptContext *ctx)
 {
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
+
     const u8 *ptr;
-    while ((ptr = ScriptStackPop(scrStack)) != NULL)
+    while ((ptr = ScriptStackPop(stk)) != NULL)
     {
-        if (ScriptPush(&sGlobalScriptContext, ptr))
+        if (ScriptPush(ctx, ptr))
             return FALSE;
     }
 
     return TRUE;
 }
 
-// Pops the top script from the stack and enables the context
-void ScriptContext_RunFromTop(void)
+bool8 ScriptContext_ScriptPushStackToGlobal(struct ScriptStack *stk)
 {
-    sGlobalScriptContext.scriptPtr = ScriptPop(&sGlobalScriptContext);
-    sGlobalScriptContext.mode = SCRIPT_MODE_BYTECODE;
+    return ScriptContext_ScriptPushStackToContext(stk, &sGlobalScriptContext);
+}
+
+// Pops the top script from the stack and enables the context
+void ScriptContext_RunContextFromTop(struct ScriptContext *ctx)
+{
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
+
+    ctx->scriptPtr = ScriptPop(ctx);
+    ctx->mode = SCRIPT_MODE_BYTECODE;
     LockPlayerFieldControls();
+
     if (OW_FOLLOWERS_SCRIPT_MOVEMENT)
         FlagSet(FLAG_SAFE_FOLLOWER_MOVEMENT);
+}
+
+void ScriptContext_RunGlobalFromTop(void)
+{
+    ScriptContext_RunContextFromTop(&sGlobalScriptContext);
     sGlobalScriptContextStatus = CONTEXT_RUNNING;
 }
 
@@ -635,6 +650,7 @@ void Script_GotoBreak_Internal(void)
 
 bool32 RunScriptImmediatelyUntilEffect_Internal(u32 effects, const u8 *ptr, struct ScriptContext *ctx)
 {
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     bool32 result;
     struct ScriptEffectContext seCtx;
     seCtx.breakOn = effects & 0x7FFFFFFF;
@@ -647,6 +663,7 @@ bool32 RunScriptImmediatelyUntilEffect_Internal(u32 effects, const u8 *ptr, stru
         ctx->breakOnTrainerBattle = TRUE;
     SetupBytecodeScript(ctx, ptr);
 
+    //DebugPrintfLevel(MGBA_LOG_DEBUG, "imm ctx: %x", ctx);
     rng_value_t rngValue = gRngValue;
     gScriptEffectContext = &seCtx;
     result = RunScriptImmediatelyUntilEffect_InternalLoop(ctx);

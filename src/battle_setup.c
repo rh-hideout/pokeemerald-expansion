@@ -1047,6 +1047,7 @@ else                \
 
 static const u8* BattleSetup_ConfigureApproachingFacilityTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
     PUSH(EventSnippet_StartTrainerApproach)
@@ -1069,8 +1070,9 @@ static const u8* BattleSetup_ConfigureApproachingFacilityTrainerBattle(TrainerBa
     return NULL;
 }
 
-const u8* BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
+static const u8* BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
     PUSH(EventSnippet_Lock)
@@ -1092,6 +1094,7 @@ const u8* BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParameter *bat
 
 static const u8* BattleSetup_ConfigureApproachingTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
     PUSH       (EventSnippet_StartTrainerApproach)
@@ -1114,13 +1117,9 @@ static const u8* BattleSetup_ConfigureApproachingTrainerBattle(TrainerBattlePara
     return NULL;
 }
 
-const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack, bool32 isApproaching)
+static const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
-    if (isApproaching) 
-    {
-        return BattleSetup_ConfigureApproachingTrainerBattle(battleParams, scrStack);
-    }
-
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
     PUSH(EventSnippet_Lock)
@@ -1131,7 +1130,7 @@ const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParam
         PUSH(EventSnippet_GotoPostBattleScript)
         return NULL;
     }
-    
+
     if (battleParams->params.isDoubleBattle && !HasEnoughMonsForDoubleBattle2())
     {
         PUSH(EventScript_NotEnoughMonsForDoubleBattle)
@@ -1152,7 +1151,21 @@ const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParam
     return NULL;
 }
 
+void ConfigureTrainerBattle(struct ScriptContext *ctx)
+{
+    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
+    InitTrainerBattleParameter();
 
+    struct ScriptStack trainerBattleScriptStack;
+    InitScriptStack(&trainerBattleScriptStack);
+    
+    TrainerBattleParameter *battleParams = (TrainerBattleParameter*)(ctx->scriptPtr);
+    TrainerBattleLoadArgs(battleParams->data);
+
+    BattleSetup_ConfigureTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
+    ScriptContext_ScriptPushStackToContext(&trainerBattleScriptStack, ctx);
+    ScriptContext_RunContextFromTop(ctx);
+}
 
 void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTrainer)
 {
@@ -1170,10 +1183,9 @@ void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTra
         TrainerBattleLoadArgsSecondTrainer(battleParams->data);
     }
 
-    BattleSetup_ConfigureTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack, TRUE);
-    ScriptContext_PushFromStack(&trainerBattleScriptStack);
-    ScriptContext_RunFromTop();
-
+    BattleSetup_ConfigureApproachingTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
+    ScriptContext_ScriptPushStackToGlobal(&trainerBattleScriptStack);
+    ScriptContext_RunGlobalFromTop();
 }
 
 static bool8 SetFacilityOpponent(u8 facility, u8 localId, bool8 isTrainerA)
@@ -1211,8 +1223,8 @@ void ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr)
     sTrainerBattleEndScript = (u8*)scriptEndPtr;
 
     BattleSetup_ConfigureFacilityTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
-    ScriptContext_PushFromStack(&trainerBattleScriptStack);
-    ScriptContext_RunFromTop();
+    ScriptContext_ScriptPushStackToGlobal(&trainerBattleScriptStack);
+    ScriptContext_RunGlobalFromTop();
 }
 
 void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *approachingTrainer)
@@ -1245,8 +1257,8 @@ void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *approa
     gApproachingTrainerId = 0;
 
     BattleSetup_ConfigureApproachingFacilityTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
-    ScriptContext_PushFromStack(&trainerBattleScriptStack);
-    ScriptContext_RunFromTop();
+    ScriptContext_ScriptPushStackToGlobal(&trainerBattleScriptStack);
+    ScriptContext_RunGlobalFromTop();
 }
 
 bool32 GetTrainerFlagFromScriptPointer(const u8 *data)
