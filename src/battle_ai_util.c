@@ -2515,18 +2515,6 @@ u16 *GetMovesArray(u32 battler)
         return gBattleHistory->usedMoves[battler];
 }
 
-u32 GetIndexInMoveArray(u32 battler, u32 move)
-{
-    u16 *moves = GetMovesArray(battler);
-    u32 i;
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (moves[i] == move)
-            return i;
-    }
-    return MAX_MON_MOVES;
-}
-
 u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect)
 {
     u16 *moves = GetMovesArray(battler);

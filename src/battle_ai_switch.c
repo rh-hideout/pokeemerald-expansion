@@ -825,7 +825,7 @@ static bool32 GetHitEscapeTransformState(u32 battlerAtk, u32 move)
     if (GetMoveEffect(move) != EFFECT_HIT_ESCAPE)
         return FALSE;
 
-    moveIndex = GetIndexInMoveArray(battlerAtk, move);
+    moveIndex = GetMoveIndex(battlerAtk, move);
     if (moveIndex >= MAX_MON_MOVES)
         return FALSE;
 
@@ -1140,7 +1140,7 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
     // Stay in if effective move
-    else if (gAiLogicData->effectiveness[battler][opposingBattler][GetIndexInMoveArray(battler, encoredMove)] >= UQ_4_12(2.0))
+    else if (gAiLogicData->effectiveness[battler][opposingBattler][GetMoveIndex(battler, encoredMove)] >= UQ_4_12(2.0))
         return FALSE;
 
     // Switch out 50% of the time otherwise
