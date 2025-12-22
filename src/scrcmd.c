@@ -2755,6 +2755,43 @@ bool8 ScrCmd_setmetatile(struct ScriptContext *ctx)
     return FALSE;
 }
 
+void NativeFunc_SetMetatileInRange(struct ScriptContext *ctx)
+{
+    u8 xmin = ScriptReadByte(ctx);
+    u8 ymin = ScriptReadByte(ctx);
+    u8 xmax = ScriptReadByte(ctx);
+    u8 ymax = ScriptReadByte(ctx);
+    u16 tileId = VarGet(ScriptReadHalfword(ctx));
+    bool8 hasCollision = ScriptReadByte(ctx);
+    u8 elevation = ScriptReadByte(ctx);
+    u32 i, j;
+    
+    if (xmin > xmax)
+        SWAP(xmin, xmax, i);
+
+    if (ymin > ymax)
+        SWAP(ymin, ymax, i);
+    
+    xmin += MAP_OFFSET;
+    ymin += MAP_OFFSET;
+    xmax += MAP_OFFSET;
+    ymax += MAP_OFFSET;
+
+    // try set impassable
+    if (hasCollision)
+        tileId |= MAPGRID_COLLISION_MASK;
+
+    // set elevation
+    if (elevation < 15)
+        tileId |= (elevation << MAPGRID_ELEVATION_SHIFT);
+
+    for (i = xmin; i <= xmax; i++)
+    {
+        for (j = ymin; j <= ymax; j++)
+            MapGridSetMetatileEntryAt(i, j, tileId);
+    }
+}
+
 bool8 ScrCmd_opendoor(struct ScriptContext *ctx)
 {
     u16 x = VarGet(ScriptReadHalfword(ctx));
