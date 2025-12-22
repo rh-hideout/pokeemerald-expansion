@@ -116,11 +116,12 @@ struct DexNavSearch
 struct DexNavGUI
 {
     MainCallback savedCallback;
+    struct WildEncounterTypes *areaEncounterTypes;
+    u16 *landSpecies;
+    u16 *waterSpecies;
+    u16 *hiddenSpecies;
     u8 state;
     u8 cursorSpriteId;
-    u16 landSpecies[LAND_WILD_COUNT];
-    u16 waterSpecies[WATER_WILD_COUNT];
-    u16 hiddenSpecies[HIDDEN_WILD_COUNT];
     u8 cursorRow;
     u8 cursorCol;
     u8 environment;
@@ -1502,7 +1503,7 @@ static u8 GetEncounterLevelFromMapData(u16 species, enum EncounterType environme
         if (landMonsInfo == NULL)
             return MON_LEVEL_NONEXISTENT; //Hidden pokemon should only appear on walkable tiles or surf tiles
 
-        for (i = 0; i < LAND_WILD_COUNT; i++)
+        for (i = 0; i < landMonsInfo->numSlots; i++)
         {
             if (landMonsInfo->wildPokemon[i].species == species)
             {
@@ -1518,7 +1519,7 @@ static u8 GetEncounterLevelFromMapData(u16 species, enum EncounterType environme
         if (waterMonsInfo == NULL)
             return MON_LEVEL_NONEXISTENT; //Hidden pokemon should only appear on walkable tiles or surf tiles
 
-        for (i = 0; i < WATER_WILD_COUNT; i++)
+        for (i = 0; i < waterMonsInfo->numSlots; i++)
         {
             if (waterMonsInfo->wildPokemon[i].species == species)
             {
@@ -1534,7 +1535,7 @@ static u8 GetEncounterLevelFromMapData(u16 species, enum EncounterType environme
         if (hiddenMonsInfo == NULL)
             return MON_LEVEL_NONEXISTENT;
 
-        for (i = 0; i < HIDDEN_WILD_COUNT; i++)
+        for (i = 0; i < hiddenMonsInfo->numSlots; i++)
         {
             if (hiddenMonsInfo->wildPokemon[i].species == species)
             {
@@ -1713,7 +1714,7 @@ static bool8 CapturedAllLandMons(u32 headerId)
 
     if (landMonsInfo != NULL)
     {
-        for (i = 0; i < LAND_WILD_COUNT; ++i)
+        for (i = 0; i < landMonsInfo->numSlots; ++i)
         {
             species = landMonsInfo->wildPokemon[i].species;
             if (species != SPECIES_NONE)
@@ -1725,7 +1726,7 @@ static bool8 CapturedAllLandMons(u32 headerId)
             }
         }
 
-        if (i >= LAND_WILD_COUNT && count > 0) //All land mons caught
+        if (i >= landMonsInfo->numSlots && count > 0) //All land mons caught
             return TRUE;
     }
     else
@@ -1748,7 +1749,7 @@ static bool8 CapturedAllWaterMons(u32 headerId)
 
     if (waterMonsInfo != NULL)
     {
-        for (i = 0; i < WATER_WILD_COUNT; ++i)
+        for (i = 0; i < waterMonsInfo->numSlots; ++i)
         {
             species = waterMonsInfo->wildPokemon[i].species;
             if (species != SPECIES_NONE)
@@ -1759,7 +1760,7 @@ static bool8 CapturedAllWaterMons(u32 headerId)
             }
         }
 
-        if (i >= WATER_WILD_COUNT && count > 0)
+        if (i >= waterMonsInfo->numSlots && count > 0)
             return TRUE;
     }
     else
@@ -1781,7 +1782,7 @@ static bool8 CapturedAllHiddenMons(u32 headerId)
 
     if (hiddenMonsInfo != NULL)
     {
-        for (i = 0; i < HIDDEN_WILD_COUNT; ++i)
+        for (i = 0; i < hiddenMonsInfo->numSlots; ++i)
         {
             species = hiddenMonsInfo->wildPokemon[i].species;
             if (species != SPECIES_NONE)
@@ -1792,7 +1793,7 @@ static bool8 CapturedAllHiddenMons(u32 headerId)
             }
         }
 
-        if (i >= HIDDEN_WILD_COUNT && count > 0)
+        if (i >= hiddenMonsInfo->numSlots && count > 0)
             return TRUE;
     }
     else
@@ -1886,21 +1887,21 @@ static bool8 SpeciesInArray(u16 species, u8 section)
     switch (section)
     {
     case 0: //land
-        for (i = 0; i < LAND_WILD_COUNT; i++)
+        for (i = 0; sDexNavUiDataPtr->landSpecies[i] != SPECIES_NONE; i++)
         {
             if (SpeciesToNationalPokedexNum(sDexNavUiDataPtr->landSpecies[i]) == dexNum)
                 return TRUE;
         }
         break;
     case 1: //water
-        for (i = 0; i < WATER_WILD_COUNT; i++)
+        for (i = 0; sDexNavUiDataPtr->waterSpecies[i] != SPECIES_NONE; i++)
         {
             if (SpeciesToNationalPokedexNum(sDexNavUiDataPtr->waterSpecies[i]) == dexNum)
                 return TRUE;
         }
         break;
     case 2: //hidden
-        for (i = 0; i < HIDDEN_WILD_COUNT; i++)
+        for (i = 0; sDexNavUiDataPtr->hiddenSpecies[i] != SPECIES_NONE; i++)
         {
             if (SpeciesToNationalPokedexNum(sDexNavUiDataPtr->hiddenSpecies[i]) == dexNum)
                 return TRUE;
@@ -1931,15 +1932,18 @@ static void DexNavLoadEncounterData(void)
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
     const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
 
-    // nop struct data
-    memset(sDexNavUiDataPtr->landSpecies, 0, sizeof(sDexNavUiDataPtr->landSpecies));
-    memset(sDexNavUiDataPtr->waterSpecies, 0, sizeof(sDexNavUiDataPtr->waterSpecies));
-    memset(sDexNavUiDataPtr->hiddenSpecies, 0, sizeof(sDexNavUiDataPtr->hiddenSpecies));
+    Free(sDexNavUiDataPtr->landSpecies);
+    Free(sDexNavUiDataPtr->waterSpecies);
+    Free(sDexNavUiDataPtr->hiddenSpecies);
+
+    sDexNavUiDataPtr->landSpecies = AllocZeroed((landMonsInfo->numSlots + 1) * sizeof(*sDexNavUiDataPtr->landSpecies));
+    sDexNavUiDataPtr->waterSpecies = AllocZeroed((waterMonsInfo->numSlots + 1) * sizeof(*sDexNavUiDataPtr->waterSpecies));
+    sDexNavUiDataPtr->hiddenSpecies = AllocZeroed((hiddenMonsInfo->numSlots + 1) * sizeof(*sDexNavUiDataPtr->hiddenSpecies));
 
     // land mons
     if (landMonsInfo != NULL && landMonsInfo->encounterRate != 0)
     {
-        for (i = 0; i < LAND_WILD_COUNT; i++)
+        for (i = 0; i < landMonsInfo->numSlots; i++)
         {
             species = landMonsInfo->wildPokemon[i].species;
             if (species != SPECIES_NONE && !SpeciesInArray(species, 0))
@@ -1950,7 +1954,7 @@ static void DexNavLoadEncounterData(void)
     // water mons
     if (waterMonsInfo != NULL && waterMonsInfo->encounterRate != 0)
     {
-        for (i = 0; i < WATER_WILD_COUNT; i++)
+        for (i = 0; i < waterMonsInfo->numSlots; i++)
         {
             species = waterMonsInfo->wildPokemon[i].species;
             if (species != SPECIES_NONE && !SpeciesInArray(species, 1))
@@ -1961,7 +1965,7 @@ static void DexNavLoadEncounterData(void)
     // hidden mons
     if (hiddenMonsInfo != NULL) // no encounter rate check since 0 means land, 1 means water encounters
     {
-        for (i = 0; i < HIDDEN_WILD_COUNT; i++)
+        for (i = 0; i < hiddenMonsInfo->numSlots; i++)
         {
             species = hiddenMonsInfo->wildPokemon[i].species;
             if (species != SPECIES_NONE && !SpeciesInArray(species, 2))
@@ -1987,7 +1991,7 @@ static void DrawSpeciesIcons(void)
     u16 species;
 
     LoadCompressedSpriteSheetUsingHeap(&sNoDataIconSpriteSheet);
-    for (i = 0; i < LAND_WILD_COUNT; i++)
+    for (i = 0; sDexNavUiDataPtr->landSpecies[i] !=  SPECIES_NONE; i++)
     {
         species = sDexNavUiDataPtr->landSpecies[i];
         x = ROW_LAND_ICON_X + (24 * (i % COL_LAND_COUNT));
@@ -1995,7 +1999,7 @@ static void DrawSpeciesIcons(void)
         TryDrawIconInSlot(species, x, y);
     }
 
-    for (i = 0; i < WATER_WILD_COUNT; i++)
+    for (i = 0; sDexNavUiDataPtr->waterSpecies[i] !=  SPECIES_NONE; i++)
     {
         species = sDexNavUiDataPtr->waterSpecies[i];
         x = ROW_WATER_ICON_X + 24 * i;
@@ -2003,14 +2007,14 @@ static void DrawSpeciesIcons(void)
         TryDrawIconInSlot(species, x, y);
     }
 
-    for (i = 0; i < HIDDEN_WILD_COUNT; i++)
+    for (i = 0; sDexNavUiDataPtr->hiddenSpecies[i] !=  SPECIES_NONE; i++)
     {
         species = sDexNavUiDataPtr->hiddenSpecies[i];
         x = ROW_HIDDEN_ICON_X + 24 * i;
         y = ROW_HIDDEN_ICON_Y;
         if (FlagGet(DN_FLAG_DETECTOR_MODE))
             TryDrawIconInSlot(species, x, y);
-       else if (species == SPECIES_NONE || species > NUM_SPECIES)
+        else if (species == SPECIES_NONE || species > NUM_SPECIES)
             CreateNoDataIcon(x, y);
         else
             CreateMonIcon(SPECIES_NONE, SpriteCB_MonIcon, x, y, 0, 0xFFFFFFFF); //question mark if detector mode inactive
@@ -2523,7 +2527,7 @@ bool8 TryFindHiddenPokemon(void)
             // there are surely better ways to do this, but this allows greatest flexibility
             if (Random() % 100 < HIDDEN_MON_PROBABILTY)
             {
-                index = ChooseHiddenMonIndex();
+                index = ChooseWildMonIndex(hiddenMonsInfo);
                 if (index == 0xFF)
                     return FALSE;//no hidden info
                 species = hiddenMonsInfo->wildPokemon[index].species;
@@ -2532,7 +2536,8 @@ bool8 TryFindHiddenPokemon(void)
             }
             else
             {
-                species = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[ChooseWildMonIndex_Land()].species;
+                const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+                species = landMonsInfo->wildPokemon[ChooseWildMonIndex(landMonsInfo)].species;
                 environment = ENCOUNTER_TYPE_LAND;
             }
             break;
@@ -2541,7 +2546,7 @@ bool8 TryFindHiddenPokemon(void)
             {
                 if (Random() % 100 < HIDDEN_MON_PROBABILTY)
                 {
-                    index = ChooseHiddenMonIndex();
+                    index = ChooseWildMonIndex(hiddenMonsInfo);
                     if (index == 0xFF)
                         return FALSE;//no hidden info
                     species = hiddenMonsInfo->wildPokemon[index].species;
@@ -2550,7 +2555,8 @@ bool8 TryFindHiddenPokemon(void)
                 }
                 else
                 {
-                    species = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water()].species;
+                    const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
+                    species = waterMonsInfo->wildPokemon[ChooseWildMonIndex(waterMonsInfo)].species;
                     environment = ENCOUNTER_TYPE_WATER;
 
                 }
