@@ -1254,6 +1254,7 @@ BattleScript_EffectMagneticFluxEnd:
 
 BattleScript_EffectGearUp::
 	attackcanceler
+	savetarget
 	setbyte gBattleCommunication, 0
 BattleScript_EffectGearUpStart:
 	jumpifability BS_TARGET, ABILITY_MINUS, BattleScript_EffectGearUpCheckStats
@@ -1284,6 +1285,7 @@ BattleScript_EffectGearUpLoop:
 	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_EffectGearUpEnd
 	setallytonexttarget BattleScript_EffectGearUpStart
 BattleScript_EffectGearUpEnd:
+	restoretarget
 	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, 0, BattleScript_MoveEnd
 	goto BattleScript_ButItFailed
 
@@ -2007,15 +2009,6 @@ BattleScript_EffectLuckyChant::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectMetalBurst::
-	attackcanceler
-	metalburstdamagecalculator BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	typecalc
-	clearmoveresultflags MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
-
 BattleScript_EffectHealingWish::
 	attackcanceler
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
@@ -2054,7 +2047,10 @@ BattleScript_HealingWishActivates::
 	goto BattleScript_EffectHealingWishRestore
 BattleScript_LunarDanceActivates::
 	setbyte cMULTISTRING_CHOOSER, 1
+	saveattacker
+	copybyte gBattlerAttacker, sBATTLER
 	restoremovepp
+	restoreattacker
 BattleScript_EffectHealingWishRestore:
 	printfromtable gHealingWishStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -2551,14 +2547,10 @@ BattleScript_EffectAbsorb::
 BattleScript_EffectAbsorbRet:
 	return
 
-BattleScript_EffectExplosion::
-	attackcanceler
+BattleScript_Explosion::
 	tryexplosion
 	setatkhptozero
-	waitstate
-	jumpiffainted BS_TARGET, TRUE, BattleScript_MoveEnd
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	goto BattleScript_HitFromDamageCalc
+	return
 
 BattleScript_FaintAttackerForExplosion::
 	tryfaintmon BS_ATTACKER
@@ -3192,15 +3184,6 @@ BattleScript_EffectDisable::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectCounter::
-	attackcanceler
-	counterdamagecalculator BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	typecalc
-	clearmoveresultflags MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
-
 BattleScript_EffectEncore::
 	attackcanceler
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
@@ -3355,11 +3338,11 @@ BattleScript_NightmareWorked::
 BattleScript_EffectMinimize::
 	attackcanceler
 	setvolatile BS_ATTACKER, VOLATILE_MINIMIZE
-.if B_MINIMIZE_EVASION >= GEN_5
+	jumpifgenconfiglowerthan CONFIG_MINIMIZE_EVASION, GEN_5, BattleScript_EffectMinimizeGen4
 	setstatchanger STAT_EVASION, 2, FALSE
-.else
+	goto BattleScript_EffectStatUpAfterAtkCanceler
+BattleScript_EffectMinimizeGen4:
 	setstatchanger STAT_EVASION, 1, FALSE
-.endif
 	goto BattleScript_EffectStatUpAfterAtkCanceler
 
 BattleScript_EffectCurse::
@@ -3653,15 +3636,6 @@ BattleScript_EffectPsychUp::
 	printstring STRINGID_PKMNCOPIEDSTATCHANGES
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-
-BattleScript_EffectMirrorCoat::
-	attackcanceler
-	mirrorcoatdamagecalculator BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	typecalc
-	clearmoveresultflags MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
 
 BattleScript_EffectFutureSight::
 	attackcanceler
@@ -4100,16 +4074,6 @@ BattleScript_PrintAbilityMadeIneffective::
 	printstring STRINGID_PKMNSXMADEITINEFFECTIVE
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-
-BattleScript_EffectEndeavor::
-	attackcanceler
-	setdamagetohealthdifference BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	typecalc
-	jumpifmovehadnoeffect BattleScript_HitFromAtkAnimation
-	clearmoveresultflags MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
 
 BattleScript_EffectSkillSwap::
 	attackcanceler

@@ -43,7 +43,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
     u32 numOfTargets = 0;
     u32 moveTargetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
 
-    if (!IsSpreadMove(moveTargetType))
+    if (!IsSpreadMove(moveTargetType, CHECK_BATTLE_TYPE))
         return FALSE;
 
     for (u32 battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
@@ -51,7 +51,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
         if (battlerAtk == battlerDef)
             continue;
 
-        if (moveTargetType == MOVE_TARGET_BOTH && battlerAtk == BATTLE_PARTNER(battlerDef))
+        if (moveTargetType == TARGET_BOTH && battlerAtk == BATTLE_PARTNER(battlerDef))
             continue;
 
         if (IsBattlerAlive(battlerDef) && !IsSemiInvulnerable(battlerDef, move))
@@ -69,15 +69,22 @@ bool32 AI_IsBattlerGrounded(u32 battler)
     return IsBattlerGrounded(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler]);
 }
 
+static u32 AI_CanBattlerHitBothFoesInTerrain(u32 battler, u32 move, enum BattleMoveEffects effect)
+{
+    return effect == EFFECT_TERRAIN_BOOST
+        && GetMoveTerrainBoost_HitsBothFoes(move)
+        && IsBattlerTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses, GetMoveTerrainBoost_Terrain(move));
+}
+
 u32 AI_GetBattlerMoveTargetType(u32 battler, u32 move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_CURSE && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
-        return MOVE_TARGET_USER;
-    if (effect == EFFECT_EXPANDING_FORCE && IsPsychicTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses))
-        return MOVE_TARGET_BOTH;
+        return TARGET_USER;
+    if (AI_CanBattlerHitBothFoesInTerrain(battler, move, effect))
+        return TARGET_BOTH;
     if (effect == EFFECT_TERA_STARSTORM && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
-        return MOVE_TARGET_BOTH;
+        return TARGET_BOTH;
 
     return GetMoveTarget(move);
 }
@@ -759,12 +766,8 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
     u16 maximum = *maximumDamage;
 
     u32 strikeCount = GetMoveStrikeCount(ctx->move);
-    if (effect == EFFECT_ENDEAVOR)
-    {
-        // If target has less HP than user, Endeavor does no damage
-        median = maximum = minimum = max(0, gBattleMons[ctx->battlerDef].hp - gBattleMons[ctx->battlerAtk].hp);
-    }
-    else if (effect == EFFECT_BEAT_UP && GetConfig(CONFIG_BEAT_UP) >= GEN_5)
+
+    if (effect == EFFECT_BEAT_UP && GetConfig(CONFIG_BEAT_UP) >= GEN_5)
     {
         u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
         u32 i;
@@ -1226,12 +1229,13 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
             return TRUE;
     }
 
+    if (IsExplosionMove(move))
+        return TRUE;
+
     switch (GetMoveEffect(move))
     {
     case EFFECT_MAX_HP_50_RECOIL:
     case EFFECT_CHLOROBLAST:
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
     case EFFECT_FINAL_GAMBIT:
         return TRUE;
     case EFFECT_RECOIL:
@@ -1500,7 +1504,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
 
     if (!DoesBattlerIgnoreAbilityChecks(battler, gAiLogicData->abilities[battler], move))
     {
-        if (B_STURDY >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
+        if (GetConfig(CONFIG_STURDY) >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
             return TRUE;
         if (IsMimikyuDisguised(battlerTarget))
             return TRUE;
@@ -1925,7 +1929,7 @@ u32 AI_GetSwitchinWeather(u32 battler)
     case ABILITY_SAND_STREAM:
         return B_WEATHER_SANDSTORM;
     case ABILITY_SNOW_WARNING:
-        return B_SNOW_WARNING >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
+        return GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
     default:
         return gBattleWeather;
     }
@@ -2853,8 +2857,12 @@ bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool
 
         if (ignoreStatus && IsBattleMoveStatus(moves[i]))
             continue;
-        else if ((!IsBattleMoveStatus(moves[i]) && GetMoveAccuracy(moves[i]) == 0)
-              || AI_GetBattlerMoveTargetType(battlerAtk, moves[i]) & (MOVE_TARGET_USER | MOVE_TARGET_OPPONENTS_FIELD))
+
+        if (!IsBattleMoveStatus(moves[i]) && GetMoveAccuracy(moves[i]) == 0)
+            continue;
+
+        enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAtk, moves[i]);
+        if (target == TARGET_USER || target == TARGET_OPPONENTS_FIELD)
             continue;
 
         if (gAiLogicData->moveAccuracy[battlerAtk][battlerDef][i] <= accCheck)
@@ -3127,25 +3135,13 @@ bool32 IsSwitchOutEffect(enum BattleMoveEffects effect)
     }
 }
 
-bool32 IsExplosionEffect(enum BattleMoveEffects effect)
-{
-    // Damaging self destruction effects like Explosion, Misty Explosion, Self Destruct, etc.
-    switch (effect)
-    {
-    case EFFECT_EXPLOSION:
-    case EFFECT_MISTY_EXPLOSION:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
-bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect)
+bool32 IsSelfSacrificeEffect(u32 move)
 {
     // All self sacrificing effects like Explosion, Final Gambit, Memento, etc.
-    if (IsExplosionEffect(effect))
+    if (IsExplosionMove(move))
         return TRUE;
-    switch (effect)
+
+    switch (GetMoveEffect(move))
     {
     case EFFECT_FINAL_GAMBIT:
     case EFFECT_MEMENTO:
@@ -3709,7 +3705,7 @@ bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability a
 
 bool32 AI_CanConfuse(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, u32 battlerAtkPartner, u32 move, u32 partnerMove)
 {
-    if (AI_GetBattlerMoveTargetType(battlerAtk, move) == MOVE_TARGET_FOES_AND_ALLY
+    if (AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_FOES_AND_ALLY
      && AI_CanBeConfused(battlerAtk, battlerDef, move, defAbility)
      && !AI_CanBeConfused(battlerAtk, BATTLE_PARTNER(battlerDef), move, gAiLogicData->abilities[BATTLE_PARTNER(battlerDef)]))
         return FALSE;
@@ -4223,7 +4219,7 @@ bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, u32 move, u32 p
     // shared bits indicate they're meaningfully the same in some way
     if (atkEffect & partnerEffect)
     {
-        if (GetMoveTarget(move) == MOVE_TARGET_SELECTED && GetMoveTarget(partnerMove) == MOVE_TARGET_SELECTED)
+        if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
             if (battlerDef == gBattleStruct->moveTarget[battlerAtkPartner])
                 return TRUE;
@@ -4368,7 +4364,7 @@ bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 
     if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
       && partnerMove != MOVE_NONE)
     {
-        if (GetMoveTarget(move) == MOVE_TARGET_SELECTED && GetMoveTarget(partnerMove) == MOVE_TARGET_SELECTED)
+        if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
             return gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef;
         }
@@ -4947,7 +4943,7 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         }
         break;
     case STAT_ACC:
-        if (gBattleMons[battlerAtk].statStages[statId] <= 3) // Increase only if necessary
+        if (gBattleMons[battlerAtk].statStages[statId] <= DEFAULT_STAT_STAGE - 3) // Increase only if necessary
             tempScore += DECENT_EFFECT;
         break;
     case STAT_EVASION:
@@ -5196,9 +5192,9 @@ bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, u32 move)
 //TODO - this could use some more sophisticated logic
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 {
-
     // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
-    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && !(AI_GetBattlerMoveTargetType(battlerAtk, chosenMove) & MOVE_TARGET_ALLY))
+    enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAtk, chosenMove);
+    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && target != TARGET_ALLY && target != TARGET_USER_OR_ALLY)
         return FALSE;   // don't use z move on partner
     if (HasTrainerUsedGimmick(battlerAtk, GIMMICK_Z_MOVE))
         return FALSE;   // can't use z move twice
@@ -5326,6 +5322,9 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
             return FALSE;
         }
 
+        if (GetMoveEffect(chosenMove) == EFFECT_LAST_RESORT && !CanUseLastResort(battlerAtk))
+            return TRUE;
+
         uq4_12_t effectiveness;
         struct SimulatedDamage dmg;
 
@@ -5340,8 +5339,20 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 
         dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK);
 
+        // don't waste a damaging z move if the normal move will KO
         if (!IsBattleMoveStatus(chosenMove) && dmg.minimum >= gBattleMons[battlerDef].hp)
-            return FALSE;   // don't waste damaging z move if can otherwise faint target
+        {
+            // Risky AI skips accuracy check.
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)
+                return FALSE;
+
+            u32 acc = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex];
+
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)
+                return (acc < 100);
+
+            return acc < LOW_ACCURACY_THRESHOLD;
+        }
 
         return TRUE;
     }
@@ -5851,7 +5862,7 @@ bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, enum Ability ability
         {
         case ABILITY_LIGHTNING_ROD:
         case ABILITY_STORM_DRAIN:
-            if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5)
+            if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5)
                 return FALSE;
             else
                 return (BattlerStatCanRise(battlerDef, ability, STAT_SPATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));
@@ -6278,13 +6289,13 @@ bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster)
     return FALSE;
 }
 
-bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects effect, bool32 aiIsFaster)
+bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, u32 move, bool32 aiIsFaster)
 {
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE)
         return TRUE;
-    if (!IsDoubleBattle() && IsExplosionEffect(effect) && gAiLogicData->shouldConsiderExplosion)
+    if (!IsDoubleBattle() && IsExplosionMove(move) && gAiLogicData->shouldConsiderExplosion)
         return TRUE;
-    if (effect == EFFECT_FINAL_GAMBIT)
+    if (GetMoveEffect(move) == EFFECT_FINAL_GAMBIT)
         return ShouldFinalGambit(battlerAtk, battlerDef, aiIsFaster);
     return FALSE;
 }
@@ -6339,4 +6350,45 @@ void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
     {
         *firstId = 0, *lastId = PARTY_SIZE;
     }
+}
+
+bool32 ShouldInstructPartner(u32 partner, u32 move)
+{
+    if (GetMoveEffect(move) == EFFECT_MAX_HP_50_RECOIL && gAiLogicData->abilities[partner] != ABILITY_MAGIC_GUARD)
+        return FALSE;
+
+    enum MoveTarget type = AI_GetBattlerMoveTargetType(partner, move);
+    switch (type)
+    {
+    case TARGET_SELECTED:
+    case TARGET_DEPENDS:
+    case TARGET_RANDOM:
+    case TARGET_BOTH:
+    case TARGET_FOES_AND_ALLY:
+    case TARGET_OPPONENTS_FIELD:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+
+    return FALSE;
+}
+
+bool32 CanMoveBeBouncedBack(u32 battler, u32 move)
+{
+    if (!MoveCanBeBouncedBack(move) || !IsBattleMoveStatus(move))
+        return FALSE;
+
+    enum MoveTarget type = AI_GetBattlerMoveTargetType(battler, move);
+    switch (type)
+    {
+    case TARGET_SELECTED:
+    case TARGET_OPPONENTS_FIELD:
+    case TARGET_BOTH:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+
+    return FALSE;
 }

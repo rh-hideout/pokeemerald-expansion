@@ -386,20 +386,18 @@ static u32 GetMaxPowerTier(u32 move)
         case EFFECT_FIXED_PERCENT_DAMAGE:
         case EFFECT_LEVEL_DAMAGE:
         case EFFECT_PSYWAVE:
-        case EFFECT_COUNTER:
+        case EFFECT_REFLECT_DAMAGE:
         case EFFECT_PRESENT:
         case EFFECT_BEAT_UP:
         case EFFECT_WEATHER_BALL:
         case EFFECT_FLING:
         case EFFECT_ELECTRO_BALL:
-        case EFFECT_METAL_BURST:
         case EFFECT_TERRAIN_PULSE:
         case EFFECT_PUNISHMENT:
         case EFFECT_TRUMP_CARD:
         case EFFECT_FIXED_HP_DAMAGE:
         case EFFECT_SPIT_UP:
         case EFFECT_NATURAL_GIFT:
-        case EFFECT_MIRROR_COAT:
         case EFFECT_FINAL_GAMBIT:
             return MAX_POWER_TIER_2;
         case EFFECT_OHKO:

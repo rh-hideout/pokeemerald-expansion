@@ -139,6 +139,8 @@
                                                // In Gens 5-6, check if the selected move is Focus Punch.
                                                // In Gen7+, check if the current move and the selected move are Focus Punch.
                                                // Also in Gen4-, the check for Focus Punch fail will occur after effects like pp consumption and flinching while it happens before in Gen5+
+#define B_COUNTER_MIRROR_COAT_ALLY  GEN_LATEST // In Gen5+, an ally's attack does not count for uses of Counter/Mirror Coat/Metal Burst. In Gen4-, if the last attack taken was from an ally, Counter/Mirror Coat/Metal Burst would fail.
+#define B_COUNTER_TRY_HIT_PARTNER   GEN_LATEST // In Gen5+, if the user of the last attack is not on the field, it will be redirected to the partner. In Gen4-, Counter/Mirror Coat/Metal Burst would fail.
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+ requires full HP to trigger.

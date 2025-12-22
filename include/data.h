@@ -233,8 +233,24 @@ static inline bool8 IsPartnerTrainerId(u16 trainerId)
 
 static inline u16 SanitizeTrainerId(u16 trainerId)
 {
-    if (trainerId >= TRAINERS_COUNT && !IsPartnerTrainerId(trainerId))
+    switch (trainerId)
+    {
+    case TRAINER_RECORD_MIXING_FRIEND:
+    case TRAINER_RECORD_MIXING_APPRENTICE:
+    case TRAINER_EREADER:
+    case TRAINER_FRONTIER_BRAIN:
+    case TRAINER_PLAYER:
+    case TRAINER_SECRET_BASE:
+    case TRAINER_LINK_OPPONENT:
+    case TRAINER_UNION_ROOM:
         return TRAINER_NONE;
+    }
+
+    assertf(trainerId < TRAINERS_COUNT || IsPartnerTrainerId(trainerId), "invalid trainer: %d", trainerId)
+    {
+        return TRAINER_NONE;
+    }
+
     return trainerId;
 }
 
