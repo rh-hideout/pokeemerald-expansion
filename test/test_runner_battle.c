@@ -574,7 +574,6 @@ static void SanitizeTieCounts(void)
 {
     if (DATA.trial.scoreTieCount < 1)
         DATA.trial.scoreTieCount = 1;
-    
     if (DATA.trial.scoreTieCount > MAX_MON_MOVES)
         DATA.trial.scoreTieCount = MAX_MON_MOVES;
 
