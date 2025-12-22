@@ -2477,5 +2477,3 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
 
     return bestMonId;
 }
-
-
