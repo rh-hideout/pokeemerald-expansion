@@ -49,6 +49,7 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef);
 // ewram
 EWRAM_DATA const u8 *gAIScriptPtr = NULL;   // Still used in contests
 EWRAM_DATA AiScoreFunc sDynamicAiFunc = NULL;
+EWRAM_DATA AiSwitchFunc gDynamicAiSwitchFunc = NULL;
 
 // const rom data
 static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
@@ -417,10 +418,9 @@ static void SetupRandomRollsForAIMoveSelection(u32 battler)
 void AI_TrySwitchOrUseItem(u32 battler)
 {
     struct Pokemon *party;
-    u8 battlerIn1, battlerIn2;
+    u32 battlerIn1, battlerIn2;
     s32 firstId;
     s32 lastId; // + 1
-    u8 battlerPosition = GetBattlerPosition(battler);
     party = GetBattlerParty(battler);
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
@@ -434,30 +434,14 @@ void AI_TrySwitchOrUseItem(u32 battler)
                 s32 monToSwitchId = gAiLogicData->mostSuitableMonId[battler];
                 if (monToSwitchId == PARTY_SIZE)
                 {
-                    if (!IsDoubleBattle())
-                    {
-                        battlerIn1 = GetBattlerAtPosition(battlerPosition);
-                        battlerIn2 = battlerIn1;
-                    }
-                    else
-                    {
-                        battlerIn1 = GetBattlerAtPosition(battlerPosition);
-                        battlerIn2 = GetBattlerAtPosition(BATTLE_PARTNER(battlerPosition));
-                    }
-
+                    GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
                     GetAIPartyIndexes(battler, &firstId, &lastId);
 
                     for (monToSwitchId = (lastId-1); monToSwitchId >= firstId; monToSwitchId--)
                     {
                         if (!IsValidForBattle(&party[monToSwitchId]))
                             continue;
-                        if (monToSwitchId == gBattlerPartyIndexes[battlerIn1])
-                            continue;
-                        if (monToSwitchId == gBattlerPartyIndexes[battlerIn2])
-                            continue;
-                        if (monToSwitchId == gBattleStruct->monToSwitchIntoId[battlerIn1])
-                            continue;
-                        if (monToSwitchId == gBattleStruct->monToSwitchIntoId[battlerIn2])
+                        if (IsPartyMonOnFieldOrChosenToSwitch(monToSwitchId, battlerIn1, battlerIn2))
                             continue;
                         if (IsAceMon(battler, monToSwitchId))
                             continue;
@@ -7081,7 +7065,16 @@ void ScriptSetDynamicAiFunc(struct ScriptContext *ctx)
     sDynamicAiFunc = func;
 }
 
-void ResetDynamicAiFunc(void)
+void ScriptSetDynamicAiSwitchFunc(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    AiSwitchFunc func = (AiSwitchFunc)ScriptReadWord(ctx);
+    gDynamicAiSwitchFunc = func;
+}
+
+void ResetDynamicAiFunctions(void)
 {
     sDynamicAiFunc = NULL;
+    gDynamicAiSwitchFunc = NULL;
 }

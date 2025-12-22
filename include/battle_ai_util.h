@@ -302,6 +302,8 @@ bool32 IsPartyFullyHealedExceptBattler(u32 battler);
 bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category);
 bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category);
 void GetAIPartyIndexes(u32 battlerId, s32 *firstId, s32 *lastId);
+u32 GetActiveBattlerIds(u32 battler, u32 *battlerIn1, u32 *battlerIn2);
+bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, u32 battlerIn1, u32 battlerIn2);
 
 // score increases
 u32 IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statId);

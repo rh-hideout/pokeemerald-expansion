@@ -6320,3 +6320,40 @@ bool32 CanMoveBeBouncedBack(u32 battler, u32 move)
 
     return FALSE;
 }
+
+u32 GetActiveBattlerIds(u32 battler, u32 *battlerIn1, u32 *battlerIn2)
+{
+    u32 opposingBattler = 0;
+    u32 battlerPosition = GetBattlerPosition(battler);
+    if (IsDoubleBattle())
+    {
+        *battlerIn1 = battler;
+        if (gAbsentBattlerFlags & (1u << BATTLE_PARTNER(battler)))
+            *battlerIn2 = battler;
+        else
+            *battlerIn2 = GetBattlerAtPosition(BATTLE_PARTNER(battlerPosition));
+
+        opposingBattler = BATTLE_OPPOSITE(*battlerIn1);
+        if (gAbsentBattlerFlags & (1u << opposingBattler))
+            opposingBattler ^= BIT_FLANK;
+    }
+    else
+    {
+        opposingBattler = GetBattlerAtPosition(BATTLE_OPPOSITE(battlerPosition));
+        *battlerIn1 = battler;
+        *battlerIn2 = battler;
+    }
+
+    return opposingBattler;
+}
+
+bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, u32 battlerIn1, u32 battlerIn2)
+{
+    if (partyIndex == gBattlerPartyIndexes[battlerIn1]
+            || partyIndex == gBattlerPartyIndexes[battlerIn2])
+        return TRUE;
+    if (partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn1]
+            || partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
+        return TRUE;
+    return FALSE;
+}
