@@ -791,11 +791,11 @@ OldaleTown_EventScript_MeowthCarePackage::
 # 399 "data/maps/OldaleTown/scripts.pory"
 	compare VAR_RESULT, YES
 	goto_if_eq OldaleTown_EventScript_MeowthCarePackage_1
-# 414 "data/maps/OldaleTown/scripts.pory"
+# 417 "data/maps/OldaleTown/scripts.pory"
 	msgbox OldaleTown_EventScript_MeowthCarePackage_Text_1, MSGBOX_AUTOCLOSE
-# 415 "data/maps/OldaleTown/scripts.pory"
+# 418 "data/maps/OldaleTown/scripts.pory"
 	waitmessage
-# 416 "data/maps/OldaleTown/scripts.pory"
+# 419 "data/maps/OldaleTown/scripts.pory"
 	release
 	end
 
@@ -803,7 +803,7 @@ OldaleTown_EventScript_MeowthCarePackage_1:
 # 401 "data/maps/OldaleTown/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
 # 402 "data/maps/OldaleTown/scripts.pory"
-	giveitem ITEM_RARE_CANDY, 999
+	giveitem ITEM_ORAN_BERRY, 500
 # 403 "data/maps/OldaleTown/scripts.pory"
 	waitfanfare
 # 404 "data/maps/OldaleTown/scripts.pory"
@@ -819,56 +819,62 @@ OldaleTown_EventScript_MeowthCarePackage_1:
 # 409 "data/maps/OldaleTown/scripts.pory"
 	waitfanfare
 # 410 "data/maps/OldaleTown/scripts.pory"
+	playfanfare MUS_OBTAIN_ITEM
+# 411 "data/maps/OldaleTown/scripts.pory"
+	giveitem ITEM_POMEG_BERRY, 500
+# 412 "data/maps/OldaleTown/scripts.pory"
+	waitfanfare
+# 413 "data/maps/OldaleTown/scripts.pory"
 	release
 	end
 
 
 OldaleTown_EventScript_OldRodFisherman::
-# 422 "data/maps/OldaleTown/scripts.pory"
+# 425 "data/maps/OldaleTown/scripts.pory"
 	faceplayer
-# 423 "data/maps/OldaleTown/scripts.pory"
+# 426 "data/maps/OldaleTown/scripts.pory"
 	lock
-# 424 "data/maps/OldaleTown/scripts.pory"
+# 427 "data/maps/OldaleTown/scripts.pory"
 	goto_if_set FLAG_RECEIVED_OLD_ROD, OldaleTown_EventScript_OldRodFisherman_1
-# 433 "data/maps/OldaleTown/scripts.pory"
+# 436 "data/maps/OldaleTown/scripts.pory"
 	msgbox OldaleTown_EventScript_OldRodFisherman_Text_1, MSGBOX_YESNO
-# 434 "data/maps/OldaleTown/scripts.pory"
+# 437 "data/maps/OldaleTown/scripts.pory"
 	compare VAR_RESULT, 0
 	goto_if_eq OldaleTown_EventScript_OldRodFisherman_5
-# 438 "data/maps/OldaleTown/scripts.pory"
+# 441 "data/maps/OldaleTown/scripts.pory"
 	compare VAR_RESULT, 1
 	goto_if_eq OldaleTown_EventScript_OldRodFisherman_6
 OldaleTown_EventScript_OldRodFisherman_4:
-# 446 "data/maps/OldaleTown/scripts.pory"
+# 449 "data/maps/OldaleTown/scripts.pory"
 	release
 	end
 
 OldaleTown_EventScript_OldRodFisherman_1:
-# 426 "data/maps/OldaleTown/scripts.pory"
+# 429 "data/maps/OldaleTown/scripts.pory"
 	msgbox OldaleTown_EventScript_OldRodFisherman_Text_0, MSGBOX_AUTOCLOSE
-# 427 "data/maps/OldaleTown/scripts.pory"
+# 430 "data/maps/OldaleTown/scripts.pory"
 	waitmessage
-# 428 "data/maps/OldaleTown/scripts.pory"
+# 431 "data/maps/OldaleTown/scripts.pory"
 	releaseall
 	end
 
 OldaleTown_EventScript_OldRodFisherman_5:
-# 436 "data/maps/OldaleTown/scripts.pory"
+# 439 "data/maps/OldaleTown/scripts.pory"
 	msgbox OldaleTown_EventScript_OldRodFisherman_Text_2, MSGBOX_AUTOCLOSE
 	goto OldaleTown_EventScript_OldRodFisherman_4
 
 OldaleTown_EventScript_OldRodFisherman_6:
-# 439 "data/maps/OldaleTown/scripts.pory"
-	msgbox OldaleTown_EventScript_OldRodFisherman_Text_3, MSGBOX_AUTOCLOSE
-# 440 "data/maps/OldaleTown/scripts.pory"
-	lock
-# 441 "data/maps/OldaleTown/scripts.pory"
-	setflag FLAG_RECEIVED_OLD_ROD
 # 442 "data/maps/OldaleTown/scripts.pory"
-	giveitem ITEM_OLD_ROD, 1
+	msgbox OldaleTown_EventScript_OldRodFisherman_Text_3, MSGBOX_AUTOCLOSE
 # 443 "data/maps/OldaleTown/scripts.pory"
-	playfanfare MUS_RG_OBTAIN_KEY_ITEM
+	lock
 # 444 "data/maps/OldaleTown/scripts.pory"
+	setflag FLAG_RECEIVED_OLD_ROD
+# 445 "data/maps/OldaleTown/scripts.pory"
+	giveitem ITEM_OLD_ROD, 1
+# 446 "data/maps/OldaleTown/scripts.pory"
+	playfanfare MUS_RG_OBTAIN_KEY_ITEM
+# 447 "data/maps/OldaleTown/scripts.pory"
 	waitfanfare
 	goto OldaleTown_EventScript_OldRodFisherman_4
 
@@ -879,23 +885,23 @@ OldaleTown_EventScript_MeowthCarePackage_Text_0:
 	.string "items! Do you accept?$"
 
 OldaleTown_EventScript_MeowthCarePackage_Text_1:
-# 414 "data/maps/OldaleTown/scripts.pory"
+# 417 "data/maps/OldaleTown/scripts.pory"
 	.string "Meowth smirks at you.$"
 
 OldaleTown_EventScript_OldRodFisherman_Text_0:
-# 426 "data/maps/OldaleTown/scripts.pory"
+# 429 "data/maps/OldaleTown/scripts.pory"
 	.string "Howdy. How are the fish biting?$"
 
 OldaleTown_EventScript_OldRodFisherman_Text_1:
-# 433 "data/maps/OldaleTown/scripts.pory"
+# 436 "data/maps/OldaleTown/scripts.pory"
 	.string "Howdy! Tell me- do you like fishing?$"
 
 OldaleTown_EventScript_OldRodFisherman_Text_2:
-# 436 "data/maps/OldaleTown/scripts.pory"
+# 439 "data/maps/OldaleTown/scripts.pory"
 	.string "Alright. If you ever change your mind,\n"
 	.string "come back and talk to me.$"
 
 OldaleTown_EventScript_OldRodFisherman_Text_3:
-# 439 "data/maps/OldaleTown/scripts.pory"
+# 442 "data/maps/OldaleTown/scripts.pory"
 	.string "Well, I think I'll have an item you'll\n"
 	.string "want to have!$"

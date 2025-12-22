@@ -1016,11 +1016,11 @@ PetalburgWoods_EventScript_Route_Rewards::
 	lock
 # 518 "data/maps/PetalburgWoods/scripts.pory"
 	goto_if_unset FLAG_ITEM_PETALBURG_WOODS_ROUTE_REWARD, PetalburgWoods_EventScript_Route_Rewards_1
-# 538 "data/maps/PetalburgWoods/scripts.pory"
-	msgbox PetalburgWoods_EventScript_Route_Rewards_Text_2, MSGBOX_AUTOCLOSE
 # 539 "data/maps/PetalburgWoods/scripts.pory"
-	waitmessage
+	msgbox PetalburgWoods_EventScript_Route_Rewards_Text_2, MSGBOX_AUTOCLOSE
 # 540 "data/maps/PetalburgWoods/scripts.pory"
+	waitmessage
+# 541 "data/maps/PetalburgWoods/scripts.pory"
 	release
 	end
 
@@ -1030,11 +1030,11 @@ PetalburgWoods_EventScript_Route_Rewards_1:
 # 520 "data/maps/PetalburgWoods/scripts.pory"
 	compare VAR_RESULT, YES
 	goto_if_eq PetalburgWoods_EventScript_Route_Rewards_4
-# 531 "data/maps/PetalburgWoods/scripts.pory"
-	msgbox PetalburgWoods_EventScript_Route_Rewards_Text_1, MSGBOX_DEFAULT
 # 532 "data/maps/PetalburgWoods/scripts.pory"
-	waitmessage
+	msgbox PetalburgWoods_EventScript_Route_Rewards_Text_1, MSGBOX_DEFAULT
 # 533 "data/maps/PetalburgWoods/scripts.pory"
+	waitmessage
+# 534 "data/maps/PetalburgWoods/scripts.pory"
 	release
 	end
 
@@ -1044,12 +1044,14 @@ PetalburgWoods_EventScript_Route_Rewards_4:
 # 523 "data/maps/PetalburgWoods/scripts.pory"
 	giveitem ITEM_SILVER_POWDER, 1
 # 524 "data/maps/PetalburgWoods/scripts.pory"
-	giveitem ITEM_BIG_ROOT, 1
+	giveitem ITEM_SHARP_BEAK, 1
 # 525 "data/maps/PetalburgWoods/scripts.pory"
-	giveitem ITEM_NUGGET, 10
+	giveitem ITEM_POISON_BARB, 1
 # 526 "data/maps/PetalburgWoods/scripts.pory"
-	setflag FLAG_ITEM_PETALBURG_WOODS_ROUTE_REWARD
+	giveitem ITEM_NUGGET, 3
 # 527 "data/maps/PetalburgWoods/scripts.pory"
+	setflag FLAG_ITEM_PETALBURG_WOODS_ROUTE_REWARD
+# 528 "data/maps/PetalburgWoods/scripts.pory"
 	release
 	end
 
@@ -1089,9 +1091,9 @@ PetalburgWoods_EventScript_Route_Rewards_Text_0:
 	.string "Would you like the route rewards?$"
 
 PetalburgWoods_EventScript_Route_Rewards_Text_1:
-# 531 "data/maps/PetalburgWoods/scripts.pory"
+# 532 "data/maps/PetalburgWoods/scripts.pory"
 	.string "You didn't take the route rewards.$"
 
 PetalburgWoods_EventScript_Route_Rewards_Text_2:
-# 538 "data/maps/PetalburgWoods/scripts.pory"
+# 539 "data/maps/PetalburgWoods/scripts.pory"
 	.string "An error occurred.$"

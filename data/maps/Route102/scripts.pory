@@ -150,8 +150,9 @@ script Route102_EventScript_Route_Rewards{
 		if(var(VAR_RESULT) == YES)
 		{
 			removeobject(11)
-			giveitem(ITEM_SILK_SCARF, 1)
-			giveitem(ITEM_SOOTHE_BELL, 1)
+			giveitem(ITEM_WISE_GLASSES, 1)
+			giveitem(ITEM_MUSCLE_BAND, 1)
+			giveitem(ITEM_NUGGET, 2)
 			setflag(FLAG_ROUTE102_REWARD)
 			release
 			end

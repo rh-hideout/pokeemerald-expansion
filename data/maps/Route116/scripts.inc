@@ -982,9 +982,9 @@ Route116_EventScript_RouteReward::
 	lock
 # 502 "data/maps/Route116/scripts.pory"
 	goto_if_unset FLAG_ITEM_ROUTE_116_REWARD, Route116_EventScript_RouteReward_1
-# 515 "data/maps/Route116/scripts.pory"
-	msgbox Route116_EventScript_RouteReward_Text_0
 # 516 "data/maps/Route116/scripts.pory"
+	msgbox Route116_EventScript_RouteReward_Text_0
+# 517 "data/maps/Route116/scripts.pory"
 	releaseall
 	end
 
@@ -992,16 +992,18 @@ Route116_EventScript_RouteReward_1:
 # 504 "data/maps/Route116/scripts.pory"
 	removeobject 7
 # 505 "data/maps/Route116/scripts.pory"
-	giveitem ITEM_WISE_GLASSES, 1
+	giveitem ITEM_HARD_STONE, 1
 # 506 "data/maps/Route116/scripts.pory"
-	giveitem ITEM_MUSCLE_BAND, 1
+	giveitem ITEM_MAGNET, 1
 # 507 "data/maps/Route116/scripts.pory"
-	giveitem ITEM_CHILAN_BERRY, 10
+	giveitem ITEM_BLACK_BELT, 1
 # 508 "data/maps/Route116/scripts.pory"
-	giveitem ITEM_BIG_NUGGET, 5
+	giveitem ITEM_CHILAN_BERRY, 10
 # 509 "data/maps/Route116/scripts.pory"
-	setflag FLAG_ITEM_ROUTE_116_REWARD
+	giveitem ITEM_ABILITY_CAPSULE, 5
 # 510 "data/maps/Route116/scripts.pory"
+	setflag FLAG_ITEM_ROUTE_116_REWARD
+# 511 "data/maps/Route116/scripts.pory"
 	releaseall
 	end
 
@@ -1017,5 +1019,5 @@ Route116_EventScript_WhismurBlockade_Text_0:
 	.string "trainers!$"
 
 Route116_EventScript_RouteReward_Text_0:
-# 515 "data/maps/Route116/scripts.pory"
+# 516 "data/maps/Route116/scripts.pory"
 	.string "Something went wrong.$"

@@ -2562,9 +2562,9 @@ Route104_Pt_2_EventScript_Rewards::
 	faceplayer
 # 1333 "data/maps/Route104/scripts.pory"
 	goto_if_unset FLAG_ROUTE104_PT2_REWARD, Route104_Pt_2_EventScript_Rewards_1
-# 1356 "data/maps/Route104/scripts.pory"
-	msgbox Route104_Pt_2_EventScript_Rewards_Text_1, MSGBOX_DEFAULT
 # 1357 "data/maps/Route104/scripts.pory"
+	msgbox Route104_Pt_2_EventScript_Rewards_Text_1, MSGBOX_DEFAULT
+# 1358 "data/maps/Route104/scripts.pory"
 	release
 	end
 
@@ -2574,9 +2574,9 @@ Route104_Pt_2_EventScript_Rewards_1:
 # 1336 "data/maps/Route104/scripts.pory"
 	compare VAR_RESULT, YES
 	goto_if_eq Route104_Pt_2_EventScript_Rewards_4
-# 1349 "data/maps/Route104/scripts.pory"
-	msgbox Route104_Pt1_EventScript_RouteRewards_Text_1, MSGBOX_DEFAULT
 # 1350 "data/maps/Route104/scripts.pory"
+	msgbox Route104_Pt1_EventScript_RouteRewards_Text_1, MSGBOX_DEFAULT
+# 1351 "data/maps/Route104/scripts.pory"
 	release
 	end
 
@@ -2586,14 +2586,16 @@ Route104_Pt_2_EventScript_Rewards_4:
 # 1339 "data/maps/Route104/scripts.pory"
 	giveitem ITEM_SOFT_SAND, 1
 # 1340 "data/maps/Route104/scripts.pory"
-	giveitem ITEM_BLACK_BELT, 1
+	giveitem ITEM_SPELL_TAG, 1
 # 1341 "data/maps/Route104/scripts.pory"
-	giveitem ITEM_BLACK_GLASSES, 1
+	giveitem ITEM_TWISTED_SPOON, 1
 # 1342 "data/maps/Route104/scripts.pory"
-	giveitem ITEM_BIG_NUGGET, 2
+	giveitem ITEM_BLACK_GLASSES, 1
 # 1343 "data/maps/Route104/scripts.pory"
-	setflag FLAG_ROUTE104_PT2_REWARD
+	giveitem ITEM_BIG_NUGGET, 2
 # 1344 "data/maps/Route104/scripts.pory"
+	setflag FLAG_ROUTE104_PT2_REWARD
+# 1345 "data/maps/Route104/scripts.pory"
 	release
 	end
 
@@ -2694,5 +2696,5 @@ Route104_Pt_2_EventScript_Rewards_Text_0:
 	.string "Would you like the reward?$"
 
 Route104_Pt_2_EventScript_Rewards_Text_1:
-# 1356 "data/maps/Route104/scripts.pory"
+# 1357 "data/maps/Route104/scripts.pory"
 	.string "I think Lillipup is the cutest!$"

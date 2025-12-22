@@ -502,10 +502,11 @@ script Route116_EventScript_RouteReward
     if(!flag(FLAG_ITEM_ROUTE_116_REWARD))
     {
         removeobject(7)
-        giveitem(ITEM_WISE_GLASSES, 1)
-        giveitem(ITEM_MUSCLE_BAND, 1)
+        giveitem(ITEM_HARD_STONE, 1)
+        giveitem(ITEM_MAGNET, 1)
+		giveitem(ITEM_BLACK_BELT, 1)
         giveitem(ITEM_CHILAN_BERRY, 10)
-		giveitem(ITEM_BIG_NUGGET, 5)
+		giveitem(ITEM_ABILITY_CAPSULE, 5)
         setflag(FLAG_ITEM_ROUTE_116_REWARD)
         releaseall
         end

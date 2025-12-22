@@ -254,11 +254,11 @@ Route102_EventScript_Route_Rewards::
 	lock
 # 148 "data/maps/Route102/scripts.pory"
 	goto_if_unset FLAG_ROUTE102_REWARD, Route102_EventScript_Route_Rewards_1
-# 167 "data/maps/Route102/scripts.pory"
-	msgbox Route102_EventScript_Route_Rewards_Text_2, MSGBOX_AUTOCLOSE
 # 168 "data/maps/Route102/scripts.pory"
-	waitmessage
+	msgbox Route102_EventScript_Route_Rewards_Text_2, MSGBOX_AUTOCLOSE
 # 169 "data/maps/Route102/scripts.pory"
+	waitmessage
+# 170 "data/maps/Route102/scripts.pory"
 	release
 	end
 
@@ -268,11 +268,11 @@ Route102_EventScript_Route_Rewards_1:
 # 150 "data/maps/Route102/scripts.pory"
 	compare VAR_RESULT, YES
 	goto_if_eq Route102_EventScript_Route_Rewards_4
-# 160 "data/maps/Route102/scripts.pory"
-	msgbox Route102_EventScript_Route_Rewards_Text_1, MSGBOX_DEFAULT
 # 161 "data/maps/Route102/scripts.pory"
-	waitmessage
+	msgbox Route102_EventScript_Route_Rewards_Text_1, MSGBOX_DEFAULT
 # 162 "data/maps/Route102/scripts.pory"
+	waitmessage
+# 163 "data/maps/Route102/scripts.pory"
 	release
 	end
 
@@ -280,24 +280,26 @@ Route102_EventScript_Route_Rewards_4:
 # 152 "data/maps/Route102/scripts.pory"
 	removeobject 11
 # 153 "data/maps/Route102/scripts.pory"
-	giveitem ITEM_SILK_SCARF, 1
+	giveitem ITEM_WISE_GLASSES, 1
 # 154 "data/maps/Route102/scripts.pory"
-	giveitem ITEM_SOOTHE_BELL, 1
+	giveitem ITEM_MUSCLE_BAND, 1
 # 155 "data/maps/Route102/scripts.pory"
-	setflag FLAG_ROUTE102_REWARD
+	giveitem ITEM_NUGGET, 2
 # 156 "data/maps/Route102/scripts.pory"
+	setflag FLAG_ROUTE102_REWARD
+# 157 "data/maps/Route102/scripts.pory"
 	release
 	end
 
 
 Route102_EventScript_LittleBoy::
-# 177 "data/maps/Route102/scripts.pory"
-	faceplayer
 # 178 "data/maps/Route102/scripts.pory"
-	lock
+	faceplayer
 # 179 "data/maps/Route102/scripts.pory"
+	lock
+# 180 "data/maps/Route102/scripts.pory"
 	msgbox Route102_EventScript_LittleBoy_Text_0, MSGBOX_DEFAULT
-# 181 "data/maps/Route102/scripts.pory"
+# 182 "data/maps/Route102/scripts.pory"
 	release
 	end
 
@@ -331,15 +333,15 @@ Route102_EventScript_Route_Rewards_Text_0:
 	.string "Would you like the route rewards?$"
 
 Route102_EventScript_Route_Rewards_Text_1:
-# 160 "data/maps/Route102/scripts.pory"
+# 161 "data/maps/Route102/scripts.pory"
 	.string "You didn't take the route rewards.$"
 
 Route102_EventScript_Route_Rewards_Text_2:
-# 167 "data/maps/Route102/scripts.pory"
+# 168 "data/maps/Route102/scripts.pory"
 	.string "An error occurred.$"
 
 Route102_EventScript_LittleBoy_Text_0:
-# 179 "data/maps/Route102/scripts.pory"
+# 180 "data/maps/Route102/scripts.pory"
 	.string "I'm hiding from my parents. They got mad\n"
 	.string "at me for eating off the berry trees\l"
 	.string "before dinner. How was I supposed to\l"

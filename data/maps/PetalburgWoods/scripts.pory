@@ -521,8 +521,9 @@ script PetalburgWoods_EventScript_Route_Rewards{
 		{
 			removeobject(12)
 			giveitem(ITEM_SILVER_POWDER, 1)
-			giveitem(ITEM_BIG_ROOT, 1)
-            giveitem(ITEM_NUGGET, 10)
+			giveitem(ITEM_SHARP_BEAK, 1)
+			giveitem(ITEM_POISON_BARB, 1)
+            giveitem(ITEM_NUGGET, 3)
 			setflag(FLAG_ITEM_PETALBURG_WOODS_ROUTE_REWARD)
 			release
 			end

@@ -399,13 +399,16 @@ script OldaleTown_EventScript_MeowthCarePackage{
 	if (var(VAR_RESULT) == YES)
 	{
 		playfanfare(MUS_OBTAIN_ITEM)
-		giveitem(ITEM_RARE_CANDY, 999)
+		giveitem(ITEM_ORAN_BERRY, 500)
 		waitfanfare
 		playfanfare(MUS_OBTAIN_ITEM)
 		giveitem(ITEM_QUICK_BALL, 500)
 		waitfanfare
 		playfanfare(MUS_OBTAIN_ITEM)
 		giveitem(ITEM_TIMER_BALL, 500)
+		waitfanfare
+		playfanfare(MUS_OBTAIN_ITEM)
+		giveitem(ITEM_POMEG_BERRY, 500)
 		waitfanfare
 		release
 		end

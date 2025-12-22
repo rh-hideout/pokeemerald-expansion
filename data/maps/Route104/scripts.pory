@@ -1337,7 +1337,8 @@ script Route104_Pt_2_EventScript_Rewards
 		{
 			giveitem(ITEM_HARD_STONE, 1)
 			giveitem(ITEM_SOFT_SAND, 1)
-			giveitem(ITEM_BLACK_BELT, 1)
+			giveitem(ITEM_SPELL_TAG, 1)
+			giveitem(ITEM_TWISTED_SPOON, 1)
 			giveitem(ITEM_BLACK_GLASSES, 1)
 			giveitem(ITEM_BIG_NUGGET, 2)
 			setflag(FLAG_ROUTE104_PT2_REWARD)

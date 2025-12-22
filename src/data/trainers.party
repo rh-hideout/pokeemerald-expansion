@@ -229,7 +229,7 @@ Pic: Aqua Grunt M
 Gender: Male
 Music: Aqua
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Rattata-Alola @ Silver Powder
 Ability: Hustle  
@@ -250,7 +250,7 @@ Jolly Nature
 Mareanie @ Oran Berry  
 Ability: Regenerator  
 Level: 12   
-- Mud Shot  
+- Venoshock  
 - Water Pulse  
 - Poison Sting
 
@@ -339,12 +339,35 @@ Class: Team Aqua
 Pic: Aqua Grunt M
 Gender: Male
 Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Double Battle: Yes
+AI: DEFAULT_ASSUME_BASIC
 
-Poochyena
-Level: 11
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Haunter @ Spell Tag  
+Ability: Levitate  
+Level: 17  
+Timid Nature  
+- Venoshock  
+- Hex  
+- Giga Drain  
+- Thunderbolt  
+
+Linoone-Galar @ Toxic Orb  
+Ability: Quick Feet  
+Level: 17  
+Jolly Nature  
+- Facade  
+- Night Slash  
+- Stomping Tantrum  
+- Protect  
+
+Ariados @ Focus Sash  
+Ability: Sniper  
+Level: 17  
+Adamant Nature  
+- Toxic Thread  
+- Shadow Sneak  
+- Poison Jab  
+- Stomping Tantrum  
 
 === TRAINER_GRUNT_WEATHER_INST_1 ===
 Name: GRUNT
@@ -2140,7 +2163,7 @@ Pic: Lady
 Gender: Female
 Music: Female
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Skorupi  
 Ability: Keen Eye  
@@ -2154,15 +2177,16 @@ Ability: Chlorophyll
 Brave Nature
 Level: 7  
 - Bullet Seed  
-- Clear Smog  
+- Acid 
 - Stun Spore
 
-Kirlia  
+Kirlia  @ Wise Glasses
 Ability: Trace  
 Level: 8 
 Timid Nature 
 - Confusion  
 - Disarming Voice 
+- Charge Beam
 
 === TRAINER_DAPHNE ===
 Name: DAPHNE
@@ -2561,14 +2585,15 @@ Pic: Rich Boy
 Gender: Male
 Music: Rich
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Yanma @ Iron Ball  
 Ability: Speed Boost  
 Level: 11  
 Jolly Nature  
 - Sonic Boom  
-
+- Air Cutter
+- Struggle Bug
 
 Stunky @ Oran Berry  
 Ability: Aftermath  
@@ -4844,9 +4869,9 @@ Name: ROXANNE
 Class: Leader
 Pic: Leader Roxanne
 Gender: Female
-Music: Female
+Music: Intense
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC 
+AI: DEFAULT_ASSUME_BASIC
 
 Corsola-Galar 
 Ability: Cursed Body  
@@ -4859,7 +4884,7 @@ Docile Nature
 
 Anorith @ Hard Stone  
 Ability: Swift Swim  
-Level: 13  
+Level: 14  
 Adamant Nature  
 - Smack Down  
 - Aqua Jet  
@@ -4867,28 +4892,30 @@ Adamant Nature
 - Metal Claw
 
 Binacle @ Mystic Water  
-Ability: Tough Claws  
+Ability: Sniper 
 Level: 13  
 - Ancient Power  
 - Water Pulse  
 - Slash
+- Accelerock
 
 Raticate @ Toxic Orb  
 Ability: Guts  
 Level: 15  
 Shiny: Yes  
-Hasty Nature  
-- Rock Smash  
+Brave Nature  
+- Double Kick 
 - Bite  
 - Stomp
+- Fire Fang
 
 Shuppet @ Eviolite  
 Ability: Insomnia  
-Level: 13   
+Level: 14   
 - Ominous Wind  
 - Feint Attack
 - Shadow Sneak
-
+- Shock Wave
 
 === TRAINER_BRAWLY_1 ===  /* Poison & Fighting */ 
 Name: BRAWLY
@@ -5311,7 +5338,7 @@ Pic: School Kid F
 Gender: Female
 Music: Girl
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Marill @ Oran Berry  
 Ability: Huge Power  
@@ -5320,6 +5347,7 @@ Naive Nature
 - Power Up Punch 
 - Covet  
 - Aqua Jet
+- Bulldoze
 
 Litleo @ Charcoal  
 Ability: Unnerve  
@@ -5328,6 +5356,7 @@ Adamant Nature
 - Fire Fang  
 - Take Down  
 - Yawn
+- Thunder Fang
 
 Buneary @ Silk Scarf 
 Ability: Limber  
@@ -5336,6 +5365,7 @@ Jolly Nature
 - Fake Out  
 - Low Sweep
 - Double Hit
+- Quick Attack
 
 === TRAINER_GEORGIA ===
 Name: GEORGIA
@@ -6028,16 +6058,15 @@ Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
-Pichu  
-Ability: Static  
-Level: 5   
+Tadbulb @ Oran Berry  
+Ability: Damp  
+Level: 5  
 Bashful Nature  
-IVs: 0 Atk  
 - Thunder Shock  
-- Disarming Voice  
-- Double Slap
+- Water Gun  
+- Soak
 
 Poochyena  
 Ability: Quick Feet  
@@ -6064,7 +6093,7 @@ Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC / STALL
 
 Clobbopus @ Black Belt  
 Ability: Limber  
@@ -6072,7 +6101,6 @@ Level: 7
 - Low Sweep  
 - Bind  
 - Detect  
-- Feint
 
 Houndour @ Oran Berry  
 Ability: Flash Fire  
@@ -6096,7 +6124,7 @@ Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Cufant @ Berry Juice  
 Ability: Sheer Force  
@@ -6106,7 +6134,7 @@ Adamant Nature
 - Rock Smash  
 - Bulldoze  
 
-Amaura @ Chople Berry  
+Amaura @ Focus Sash  
 Ability: Refrigerate  
 Level: 13  
 Modest Nature  
@@ -6114,14 +6142,14 @@ Modest Nature
 - Aurora Beam  
 - Thunder Wave
 
-Glameow @ Silk Scarf  
-Ability: Limber  
+Staravia @ Sharp Beak  
+Ability: Intimidate  
 Level: 14   
-Adamant Nature  
-- Fake Out  
-- Bite  
-- Scratch  
-- Attract
+Jolly Nature  
+- Steel Wing  
+- Aerial Ace  
+- Quick Attack  
+- Pursuit
 
 === TRAINER_TOMMY === /* Rustboro Gym */
 Name: TOMMY
@@ -6130,7 +6158,7 @@ Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Geodude-Alola @ Magnet  
 Ability: Sturdy  
@@ -6150,14 +6178,14 @@ Jolly Nature
 - Bullet Seed  
 - Screech
 
-Wooper @ Eviolite  
-Ability: Water Absorb  
-Level: 13  
-Sassy Nature  
-- Water Gun  
-- Mud Shot  
-- Tail Whip  
-- Slam
+Larvitar @ Toxic Orb  
+Ability: Guts  
+Level: 14  
+Jolly Nature  
+- Smack Down  
+- Bulldoze  
+- Rock Smash  
+- Bite
 
 === TRAINER_JOEY ===        /* Route 116 */
 Name: JOEY
@@ -6166,7 +6194,7 @@ Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Ekans @ Poison Barb  
 Ability: Intimidate  
@@ -6505,7 +6533,7 @@ Pic: Fisherman
 Gender: Male
 Music: Hiker
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC / FORCE_SETUP_FIRST_TURN 
+AI: DEFAULT_ASSUME_BASIC / FORCE_SETUP_FIRST_TURN 
 
 Tentacool @ Oran Berry  
 Ability: Clear Body  
@@ -8991,7 +9019,7 @@ Pic: Twins
 Gender: Male
 Music: Twins
 Double Battle: Yes
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Shinx @ Oran Berry  
 Ability: Guts 
@@ -9000,13 +9028,14 @@ Gentle Nature
 - Spark  
 - Bite  
 - Scary Face
+- Fire Fang
 
 Bidoof @ Oran Berry  
 Ability: Simple  
 Level: 13    
 Brave Nature  
 - Curse  
-- Tackle 
+- Headbutt
 - Aqua Jet 
 
 Turtwig @ Miracle Seed  
@@ -9015,6 +9044,7 @@ Level: 13
 Adamant Nature  
 - Razor Leaf   
 - Iron Head
+- Leech Seed
 
 Chimchar @ Berry Juice  
 Ability: Blaze  
@@ -9023,7 +9053,7 @@ Hasty Nature
 - Flame Wheel  
 - Encore 
 - Low Kick 
-
+- Rock Tomb
 
 
 === TRAINER_MIU_AND_YUKI ===
@@ -10766,7 +10796,7 @@ Pic: Hiker
 Gender: Male
 Music: Hiker
 Double Battle: Yes
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Mudbray @ Oran Berry  
 Ability: Stamina  
@@ -10793,6 +10823,15 @@ Adamant Nature
 - Chip Away  
 - Bite  
 - Lick
+
+Dolliv @ Sitrus Berry  
+Ability: Harvest  
+Level: 14  
+Modest Nature  
+- Leech Seed  
+- Charm  
+- Swift  
+- Magical Leaf
 
 === TRAINER_BRENDEN ===
 Name: BRENDEN
@@ -11277,15 +11316,14 @@ Pic: Lass
 Gender: Female
 Music: Female
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Capsakid @ Lum Berry  
 Ability: Chlorophyll  
 Level: 6  
 Jolly Nature  
 - Leafage  
-- Rollout  
-- Leer  
+- Rollout   
 - Bite
 
 Lotad @ Oran Berry  
@@ -11309,15 +11347,14 @@ Pic: Lass
 Gender: Female
 Music: Female
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
-Wormadam-Sandy @ Oran Berry  
+Wormadam-Trash @ Occa Berry  
 Ability: Overcoat  
-Level: 12   
-Bashful Nature  
-- Confusion  
+Level: 12  
 - Bug Bite  
-- Mud Shot
+- Mirror Shot  
+- Confusion
 
 
 Pancham @ Black Belt  
@@ -11328,12 +11365,13 @@ Adamant Nature
 - Fire Punch  
 - Rock Tomb
 
-Dewpider @ Silver Powder  
-Ability: Water Bubble  
-Level: 12    
-- Water Gun  
-- Bug Bite  
-- Hidden Power
+Palpitoad @ Rindo Berry  
+Ability: Swift Swim  
+Level: 12  
+- Water Pulse  
+- Mud Bomb  
+- Screech  
+- Acid
 
 === TRAINER_JANICE ===
 Name: JANICE
@@ -11512,28 +11550,28 @@ Pic: Bug Catcher
 Gender: Male
 Music: Male
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Weedle  
 Ability: Shield Dust  
 Level: 5  
 - Bug Bite  
 - Poison Sting  
-- String Shot  
 
-Wurmple  
-Ability: Shield Dust  
-Level: 5  
-- Bug Bite  
-- Poison Sting  
-- String Shot  
-
-Burmy  
-Ability: Shed Skin  
+Hoppip @ Oran Berry  
+Ability: Chlorophyll  
 Level: 6  
-- Struggle Bug 
-- Detect
-- Tackle
+- Silver Wind  
+- Aerial Ace  
+- Mega Drain
+
+
+Combee @ Oran Berry  
+Ability: Hustle  
+Level: 6  
+- Gust  
+- Swift  
+- Struggle Bug
 
 
 === TRAINER_LYLE ===        /* PB Woods */
@@ -11543,14 +11581,16 @@ Pic: Bug Catcher
 Gender: Male
 Music: Male
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
-Bonsly  
-Ability: Sturdy  
-Level: 9  
-- Mud Shot  
-- Rock Tomb  
-- Feint Attack  
+Nidoran-M @ Muscle Band  
+Ability: Poison Point  
+Level: 9   
+Jolly Nature  
+- Pounce  
+- Bite  
+- Double Kick  
+- Poison Fang  
 
 Exeggcute @ Oran Berry  
 Ability: Harvest  
@@ -11565,10 +11605,8 @@ Ability: Shield Dust
 Level: 9  
 Hardy Nature  
 - Bug Bite
-- Gust  
-- Poison Powder  
+- Gust   
 - Swift
-
 
 
 === TRAINER_JOSE ===            /* UNUSED */
@@ -11643,7 +11681,7 @@ Pic: Bug Catcher
 Gender: Male
 Music: Male
 Double Battle: Yes
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Lombre @ Miracle Seed  
 Ability: Own Tempo  
@@ -11656,8 +11694,9 @@ Cottonee @ Kebia Berry
 Ability: Prankster  
 Level: 10 
 - Tailwind  
-- Encore  
+- Dazzling Gleam  
 - Toxic
+- Encore
 
 Togepi @ Eviolite  
 Ability: Super Luck  
@@ -11841,7 +11880,7 @@ Pic: Hiker
 Gender: Male
 Music: Hiker
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC 
+AI: DEFAULT_ASSUME_BASIC 
 
 Cranidos @ Black Belt  
 Ability: Sheer Force  
@@ -11857,7 +11896,9 @@ Level: 13
 Timid Nature  
 - Rapid Spin 
 - Confusion  
-- Mud Shot
+- Scorching Sands
+- Grass Knot
+
 
 Dartrix @ Miracle Seed  
 Ability: Overgrow  
@@ -11865,7 +11906,8 @@ Level: 12
 Docile Nature  
 - Aerial Ace  
 - Razor Leaf 
-- Astonish
+- Shadow Sneak
+- Fury Attack 
 
 === TRAINER_ERIC ===
 Name: ERIC
@@ -13288,7 +13330,7 @@ Pic: Fisherman
 Gender: Male
 Music: Hiker
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Lotad @ Oran Berry  
 Ability: Swift Swim 
@@ -14191,7 +14233,7 @@ Pic: Hiker
 Gender: Male
 Music: Hiker
 Double Battle: Yes
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Mienfoo @ Black Belt  
 Ability: Regenerator  
@@ -14217,6 +14259,14 @@ Quiet Nature
 - Confusion  
 - Headbutt
 
+Sandile @ Black Glasses  
+Ability: Intimidate  
+Level: 13  
+- Bite  
+- Rock Tomb  
+- Snarl  
+- Payback
+
 === TRAINER_JOHNSON ===         /* Route 116 */
 Name: JOHNSON
 Class: Pokefan
@@ -14224,7 +14274,7 @@ Pic: Pokefan M
 Gender: Male
 Music: Male
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_ASSUME_BASIC
 
 Elekid @ Magnet  
 Ability: Static  
@@ -14238,9 +14288,9 @@ Adamant Nature
 Magby @ Berry Juice  
 Ability: Flame Body  
 Level: 13  
-Modest Nature  
+Bold Nature  
 - Smog  
-- Ember  
+- Dual Chop  
 - Will-O-Wisp  
 - Fire Spin
 
@@ -16196,7 +16246,6 @@ Class: Rival
 Pic: Steven
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
 AI: Basic Trainer
 

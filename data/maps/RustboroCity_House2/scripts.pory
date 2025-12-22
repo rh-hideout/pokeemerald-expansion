@@ -5,24 +5,15 @@ RustboroCity_House2_MapScripts::
 
 
 `
-script RustboroCity_House2_EventScript_Give_LowKick
+script RustboroCity_House2_EventScript_Girl
 {
-    faceplayer
-    lock
-    if (!flag(FLAG_LOW_SWEEP_TM))
-    {
-        msgbox(format("Here, take this!!"))
-        giveitem(ITEM_TM_LOW_SWEEP, 1)
-        setflag(FLAG_LOW_SWEEP_TM)
-        release
-        end
-    }
-    else{
-        msgbox(format("My mom says that move is really powerful!"), MSGBOX_DEFAULT)
-        release
-        end
-    }
+   faceplayer
+   lock
+   msgbox(format("Bulbasaur is my favorite! But Squirtle is tough! And Charmander is so cute..."), MSGBOX_DEFAULT)
+   release
+   end
 }
+
 script RustboroCity_House2_EventScript_KantoStarter
 {
     faceplayer

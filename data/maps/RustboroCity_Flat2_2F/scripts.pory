@@ -1,0 +1,39 @@
+raw `
+RustboroCity_Flat2_2F_MapScripts::
+	.byte 0
+
+RustboroCity_Flat2_2F_EventScript_OldMan::
+	msgbox RustboroCity_Flat2_2F_Text_DevonWasTinyInOldDays, MSGBOX_NPC
+	end
+
+RustboroCity_Flat2_2F_EventScript_NinjaBoy::
+	lock
+	faceplayer
+	goto_if_set FLAG_LOW_SWEEP_TM, RustboroCity_Flat2_2F_EventScript_GavePremierBall
+	msgbox RustboroCity_Flat2_2F_Text_MyDaddyMadeThisYouCanHaveIt, MSGBOX_DEFAULT
+	giveitem ITEM_TM_LOW_SWEEP
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+	setflag FLAG_LOW_SWEEP_TM
+	release
+	end
+
+RustboroCity_Flat2_2F_EventScript_GavePremierBall::
+	msgbox RustboroCity_Flat2_2F_Text_GoingToWorkAtDevonToo, MSGBOX_DEFAULT
+	release
+	end
+
+RustboroCity_Flat2_2F_Text_DevonWasTinyInOldDays:
+	.string "Way back in the old days, DEVON was just\n"
+	.string "a teeny, tiny company.$"
+
+
+RustboroCity_Flat2_2F_Text_GoingToWorkAtDevonToo:
+	.string "My daddy's working at the CORPORATION.\p"
+	.string "When I grow up, I'm going to work for\n"
+	.string "DEVON, too.$"
+
+
+RustboroCity_Flat2_2F_Text_MyDaddyMadeThisYouCanHaveIt:
+    .string "My dad got this from his job!\n"
+    .string "This move is so tough!$"
+`
