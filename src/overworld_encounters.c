@@ -202,7 +202,8 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
     }
     else 
     {
-        spawnAnimType = OWE_GetDespawnAnimType(objectEvent->currentMetatileBehavior);
+        u32 metatileBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
+        spawnAnimType = OWE_GetDespawnAnimType(metatileBehavior);
     }
     MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
