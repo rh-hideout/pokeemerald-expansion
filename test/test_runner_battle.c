@@ -580,7 +580,6 @@ static void SanitizeTieCounts(void)
 
     if (DATA.trial.targetTieCount < 1)
         DATA.trial.targetTieCount = 1;
-    
     if (DATA.trial.targetTieCount >= gBattlersCount)
         DATA.trial.targetTieCount = (gBattlersCount - 1);
 }
