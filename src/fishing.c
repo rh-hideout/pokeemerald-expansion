@@ -260,7 +260,7 @@ static bool32 Fishing_CheckForBite(struct Task *task)
     task->tStep = FISHING_GOT_BITE;
     bite = FALSE;
 
-    if (!DoesCurrentMapHaveFishingMons())
+    if (!DoesCurrentMapHaveFishingMons(task->tFishingRod))
     {
         task->tStep = FISHING_NOT_EVEN_NIBBLE;
         return TRUE;
