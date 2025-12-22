@@ -679,7 +679,9 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
         }
     }
 
-    SanitizeTieCounts();
+    if (IsTieBreakTag(tag))
+        SanitizeTieCounts();
+
     //trials
     switch (tag)
     {
