@@ -1102,7 +1102,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ENDEAVOR] =
     {
-        .battleScript = BattleScript_EffectEndeavor,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
     },
 

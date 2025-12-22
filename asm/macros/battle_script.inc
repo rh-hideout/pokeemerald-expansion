@@ -1162,9 +1162,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setdamagetohealthdifference failInstr:req
+	.macro Cmd_unused0xd8
 	.byte 0xd8
-	.4byte \failInstr
 	.endm
 
 	.macro setroom

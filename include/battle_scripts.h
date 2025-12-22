@@ -671,7 +671,6 @@ extern const u8 BattleScript_EffectMagicCoat[];
 extern const u8 BattleScript_EffectRecycle[];
 extern const u8 BattleScript_EffectBrickBreak[];
 extern const u8 BattleScript_EffectYawn[];
-extern const u8 BattleScript_EffectEndeavor[];
 extern const u8 BattleScript_EffectSkillSwap[];
 extern const u8 BattleScript_EffectImprison[];
 extern const u8 BattleScript_EffectRefresh[];
