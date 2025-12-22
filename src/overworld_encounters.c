@@ -358,7 +358,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
             *outX = x;
             *outY = y;
 
-            if(!CheckForObjectEventAtLocation(x, y))
+            if (!CheckForObjectEventAtLocation(x, y))
                 return TRUE;
         }
     }
@@ -369,7 +369,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
             *outX = x;
             *outY = y;
 
-            if(!CheckForObjectEventAtLocation(x, y))
+            if (!CheckForObjectEventAtLocation(x, y))
                 return TRUE;
         }
     }
@@ -583,11 +583,10 @@ void RemoveAllOverworldEncounterObjects(void)
 
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y)
 {
-    u8 i;
-
-    for(i = 0; i < OBJECT_EVENTS_COUNT; ++i)
+    for (u8 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        if(gObjectEvents[i].active && gObjectEvents[i].currentCoords.x == x && gObjectEvents[i].currentCoords.y == y)
+        if (gObjectEvents[i].active && gObjectEvents[i].currentCoords.x == x
+            && gObjectEvents[i].currentCoords.y == y)
             return TRUE;
     }
 
