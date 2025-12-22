@@ -150,6 +150,10 @@ struct MoveInfo
             u16 power:9;
             u16 numOfHits:7;
         } speciesPowerOverride;
+        struct {
+            u16 damagePercent:12;
+            u16 damageCategories:4; // bit field
+        } reflectDamage;
         u32 protectMethod;
         u32 status;
         u32 moveProperty;
@@ -542,6 +546,20 @@ static inline u32 GetMoveSpeciesPowerOverride_Power(u32 moveId)
 static inline u32 GetMoveSpeciesPowerOverride_NumOfHits(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.numOfHits;
+}
+
+static inline u32 GetMoveReflectDamage_DamagePercent(u32 moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_REFLECT_DAMAGE, "not a damage reflection move: %S", GetMoveName(moveId));
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.reflectDamage.damagePercent;
+}
+
+static inline u32 GetMoveReflectDamage_DamageCategories(u32 moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_REFLECT_DAMAGE, "not a damage reflection move: %S", GetMoveName(moveId));
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.reflectDamage.damageCategories;
 }
 
 static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)

@@ -310,6 +310,22 @@ static s32 CalcBeatUpDamage(struct BattleContext *ctx)
     return dmg;
 }
 
+static enum DamageCategory GetReflectDamageMoveDamageCategory(u32 battler, u32 move)
+{
+    u32 damageCategories = GetMoveReflectDamage_DamageCategories(move);
+
+    if (damageCategories == 1u << DAMAGE_CATEGORY_PHYSICAL) // Counter
+        return DAMAGE_CATEGORY_PHYSICAL;
+    if (damageCategories == 1u << DAMAGE_CATEGORY_SPECIAL) // Mirror Coat
+        return DAMAGE_CATEGORY_SPECIAL;
+
+    // Metal Burst / Comeuppance
+    if (gProtectStructs[battler].lastHitBySpecialMove)
+        return DAMAGE_CATEGORY_SPECIAL;
+    else
+        return DAMAGE_CATEGORY_PHYSICAL;
+}
+
 static bool32 ShouldTeraShellDistortTypeMatchups(u32 move, u32 battlerDef, enum Ability abilityDef)
 {
     if (!gSpecialStatuses[battlerDef].distortedTypeMatchups
@@ -403,8 +419,18 @@ bool32 HandleMoveTargetRedirection(void)
     u32 side = BATTLE_OPPOSITE(GetBattlerSide(gBattlerAttacker));
     enum Ability ability = GetBattlerAbility(gBattleStruct->moveTarget[gBattlerAttacker]);
 
+    if (moveEffect == EFFECT_REFLECT_DAMAGE)
+    {
+        enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(gBattlerAttacker, gCurrentMove);
+        
+        if (reflectCategory == DAMAGE_CATEGORY_PHYSICAL)
+            gBattleStruct->moveTarget[gBattlerAttacker] = gProtectStructs[gBattlerAttacker].physicalBattlerId;
+        else
+            gBattleStruct->moveTarget[gBattlerAttacker] = gProtectStructs[gBattlerAttacker].specialBattlerId;
+    }
+
     if (IsAffectedByFollowMe(gBattlerAttacker, side, gCurrentMove)
-     && moveTarget == TARGET_SELECTED
+     && (moveTarget == TARGET_SELECTED || moveEffect == EFFECT_REFLECT_DAMAGE)
      && !IsBattlerAlly(gBattlerAttacker, gSideTimers[side].followmeTarget))
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = gSideTimers[side].followmeTarget; // follow me moxie fix
@@ -1214,6 +1240,27 @@ const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState)
     gBattleMons[battler].volatiles.furyCutterCounter = 0;
 
     return result;
+}
+
+
+// Returns TRUE if no other battler after this one in turn order will use a move
+bool32 IsLastMonToMove(u32 battler)
+{
+    u32 i;
+    u32 battlerTurnOrderNum = GetBattlerTurnOrderNum(battler);
+
+    if (battlerTurnOrderNum >= gBattlersCount - 1)
+        return TRUE;
+
+    for (i = battlerTurnOrderNum + 1; i < gBattlersCount; i++)
+    {
+        u32 otherBattler = gBattlerByTurnOrder[i];
+        if (!IsBattlerAlive(otherBattler))
+            continue;
+        if (gActionsByTurnOrder[i] == B_ACTION_USE_MOVE)
+            return FALSE;
+    }
+    return TRUE;
 }
 
 bool32 ShouldDefiantCompetitiveActivate(u32 battler, enum Ability ability)
@@ -2645,11 +2692,25 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
         if (gBattleMons[ctx->battlerAtk].hp <= max(1, GetNonDynamaxMaxHP(ctx->battlerAtk) / 3))
             battleScript = BattleScript_ButItFailed;
         break;
-    case EFFECT_COUNTER:
-    case EFFECT_MIRROR_COAT:
-    case EFFECT_METAL_BURST:
-        // TODO: Needs a refactor because the moves currently don't work according to new gens
+    case EFFECT_REFLECT_DAMAGE:
+    {
+        enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(ctx->battlerAtk, ctx->move);
+        if (IsBattlerAlly(ctx->battlerAtk, ctx->battlerDef))
+            battleScript = BattleScript_ButItFailed;
+        // Counter / Metal Burst and took physical damage
+        else if (reflectCategory == DAMAGE_CATEGORY_PHYSICAL
+              && gProtectStructs[ctx->battlerAtk].physicalDmg > 0
+              && (GetConfig(CONFIG_COUNTER_TRY_HIT_PARTNER) >= GEN_5 || gBattleMons[gProtectStructs[ctx->battlerAtk].physicalBattlerId].hp))
+            break;
+        // Mirror Coat / Metal Burst and took special damage
+        else if (reflectCategory == DAMAGE_CATEGORY_SPECIAL
+              && gProtectStructs[ctx->battlerAtk].specialDmg > 0
+              && (GetConfig(CONFIG_COUNTER_TRY_HIT_PARTNER) >= GEN_5 || gBattleMons[gProtectStructs[ctx->battlerAtk].specialBattlerId].hp))
+            break;
+        else
+            battleScript = BattleScript_ButItFailed;
         break;
+    }
     case EFFECT_DESTINY_BOND:
         if (DoesDestinyBondFail(ctx->battlerAtk))
             battleScript = BattleScript_ButItFailed;
@@ -3295,9 +3356,7 @@ static void ForewarnChooseMove(u32 battler)
                 case EFFECT_SHEER_COLD:
                     data[count].power = 150;
                     break;
-                case EFFECT_COUNTER:
-                case EFFECT_MIRROR_COAT:
-                case EFFECT_METAL_BURST:
+                case EFFECT_REFLECT_DAMAGE:
                     data[count].power = 120;
                     break;
                 default:
@@ -3541,14 +3600,14 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
         }
         break;
     case ABILITY_LIGHTNING_ROD:
-        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && moveType == TYPE_ELECTRIC && target != TARGET_ALL_BATTLERS)
+        if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && moveType == TYPE_ELECTRIC && GetBattlerMoveTargetType(battlerAtk, move) != TARGET_ALL_BATTLERS)
         {
             effect = MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY;
             statId = STAT_SPATK;
         }
         break;
     case ABILITY_STORM_DRAIN:
-        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && moveType == TYPE_WATER)
+        if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && moveType == TYPE_WATER)
         {
             effect = MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY;
             statId = STAT_SPATK;
@@ -5578,7 +5637,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
             RecordAbilityBattle(gBattlerTarget, ABILITY_SYNCHRONIZE);
 
-            if (B_SYNCHRONIZE_TOXIC < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
+            if (GetConfig(CONFIG_SYNCHRONIZE_TOXIC) < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
                 gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
             if (CanSetNonVolatileStatus(
@@ -5608,7 +5667,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
             RecordAbilityBattle(gBattlerAttacker, ABILITY_SYNCHRONIZE);
 
-            if (B_SYNCHRONIZE_TOXIC < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
+            if (GetConfig(CONFIG_SYNCHRONIZE_TOXIC) < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
                 gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
             if (CanSetNonVolatileStatus(
@@ -7568,7 +7627,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
         break;
     case ABILITY_ANALYTIC:
-        if (GetBattlerTurnOrderNum(battlerAtk) == gBattlersCount - 1 && moveEffect != EFFECT_FUTURE_SIGHT)
+        if (IsLastMonToMove(battlerAtk) && moveEffect != EFFECT_FUTURE_SIGHT)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         break;
     case ABILITY_TOUGH_CLAWS:
@@ -8066,7 +8125,7 @@ static inline u32 CalcAttackStat(struct BattleContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     case HOLD_EFFECT_LIGHT_BALL:
-        if (atkBaseSpeciesId == SPECIES_PIKACHU && (B_LIGHT_BALL_ATTACK_BOOST >= GEN_4 || IsBattleMoveSpecial(move)))
+        if (atkBaseSpeciesId == SPECIES_PIKACHU && (GetConfig(CONFIG_LIGHT_BALL_ATTACK_BOOST) >= GEN_4 || IsBattleMoveSpecial(move)))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     case HOLD_EFFECT_CHOICE_BAND:
@@ -8255,7 +8314,7 @@ static inline u32 CalcDefenseStat(struct BattleContext *ctx)
     }
 
     // sandstorm sp.def boost for rock types
-    if (B_SANDSTORM_SPDEF_BOOST >= GEN_4 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK) && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SANDSTORM) && !usesDefStat)
+    if (GetConfig(CONFIG_SANDSTORM_SPDEF_BOOST) >= GEN_4 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK) && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SANDSTORM) && !usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     // snow def boost for ice types
     if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE) && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SNOW) && usesDefStat)
@@ -8679,7 +8738,7 @@ s32 ApplyModifiersAfterDmgRoll(struct BattleContext *ctx, s32 dmg)
 
 s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
 {
-    s32 dmg = 0;
+    s32 dmg = INT32_MAX;
     s32 randDamage;
 
     switch (GetMoveEffect(ctx->move))
@@ -8703,12 +8762,28 @@ s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
     case EFFECT_BEAT_UP:
         if (GetConfig(CONFIG_BEAT_UP) < GEN_5)
             dmg = CalcBeatUpDamage(ctx);
-        else
-            return INT32_MAX;
+        break;
+    case EFFECT_REFLECT_DAMAGE:
+        if (!ctx->aiCalc)
+        {
+            u32 percentMultiplier = GetMoveReflectDamage_DamagePercent(ctx->move);
+            enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(ctx->battlerAtk, ctx->move);
+            s32 baseDamage;
+            
+            if (reflectCategory == DAMAGE_CATEGORY_PHYSICAL)
+                baseDamage = gProtectStructs[ctx->battlerAtk].physicalDmg;
+            else
+                baseDamage = gProtectStructs[ctx->battlerAtk].specialDmg;
+        
+            dmg = (baseDamage - 1) * percentMultiplier / 100;
+        }
         break;
     default:
-        return INT32_MAX;
+        break;
     }
+
+    if (dmg == INT32_MAX)
+        return dmg;
 
     gBattleStruct->moveResultFlags[ctx->battlerDef] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
 
@@ -9167,7 +9242,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct BattleCont
     }
 
     // Iron Ball ignores type modifiers for flying-type mons if it is the only source of grounding
-    if (B_IRON_BALL >= GEN_5
+    if (GetConfig(CONFIG_IRON_BALL) >= GEN_5
         && ctx->moveType == TYPE_GROUND
         && ctx->holdEffectDef == HOLD_EFFECT_IRON_BALL
         && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING)
@@ -10097,7 +10172,7 @@ bool32 CanFling(u32 battlerAtk, u32 battlerDef)
     u16 item = gBattleMons[battlerAtk].item;
 
     if (item == ITEM_NONE
-      || (B_KLUTZ_FLING_INTERACTION >= GEN_5 && GetBattlerAbility(battlerAtk) == ABILITY_KLUTZ)
+      || (GetConfig(CONFIG_KLUTZ_FLING_INTERACTION) >= GEN_5 && GetBattlerAbility(battlerAtk) == ABILITY_KLUTZ)
       || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
       || gBattleMons[battlerAtk].volatiles.embargo
       || GetFlingPowerFromItemId(item) == 0
@@ -10812,6 +10887,7 @@ void ClearDamageCalcResults(void)
         gBattleStruct->noResultString[battler] = CAN_DAMAGE;
         gBattleStruct->missStringId[battler] = 0;
         gSpecialStatuses[battler].criticalHit = FALSE;
+        gSpecialStatuses[battler].damagedByAttack = FALSE;
     }
 
     gBattleStruct->doneDoublesSpreadHit = FALSE;

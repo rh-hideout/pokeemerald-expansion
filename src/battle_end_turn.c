@@ -266,8 +266,10 @@ static bool32 HandleEndTurnWish(u32 battler)
         s32 wishHeal = 0;
         gBattlerTarget = battler;
         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gWishFutureKnock.wishPartyId[battler])
-        if (B_WISH_HP_SOURCE >= GEN_5)
+        if (GetConfig(CONFIG_WISH_HP_SOURCE) >= GEN_5)
+        {
             wishHeal = GetMonData(&GetBattlerParty(battler)[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;
+        }
         else
             wishHeal = GetNonDynamaxMaxHP(battler) / 2;
 
@@ -520,7 +522,7 @@ static bool32 HandleEndTurnBurn(u32 battler)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
-        s32 burnDamage = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
+        s32 burnDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7 ? 16 : 8);
         if (ability == ABILITY_HEATPROOF)
         {
             if (burnDamage > (burnDamage / 2) + 1) // Record ability if the burn takes less damage than it normally would.
@@ -545,7 +547,7 @@ static bool32 HandleEndTurnFrostbite(u32 battler)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8));
+        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7 ? 16 : 8));
         BattleScriptExecute(BattleScript_FrostbiteTurnDmg);
         effect = TRUE;
     }

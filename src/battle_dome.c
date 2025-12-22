@@ -3893,7 +3893,7 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
-    case EFFECT_COUNTER:
+    case EFFECT_REFLECT_DAMAGE:
     case EFFECT_EVASION_UP:
     case EFFECT_DEFENSE_UP:
     case EFFECT_DEFENSE_UP_2:
@@ -3910,7 +3910,6 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
     case EFFECT_MAT_BLOCK:
     case EFFECT_ENDURE:
     case EFFECT_SAFEGUARD:
-    case EFFECT_MIRROR_COAT:
     case EFFECT_MAGIC_COAT:
     case EFFECT_INGRAIN:
     case EFFECT_AQUA_RING:
@@ -3942,7 +3941,10 @@ static bool32 IsDomeLuckyMove(u32 move)
         return TRUE;
     switch(GetMoveEffect(move))
     {
-    case EFFECT_COUNTER:
+    case EFFECT_REFLECT_DAMAGE:
+        if (GetMoveReflectDamage_DamageCategories(move) != (1u << DAMAGE_CATEGORY_PHYSICAL)) // if not Counter
+            return FALSE;
+        // fallthrough
     case EFFECT_OHKO:
     case EFFECT_SHEER_COLD:
     case EFFECT_METRONOME:
@@ -5144,7 +5146,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
                 typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(moves[i * 4 + j], targetSpecies, targetAbility);
                 if (typeMultiplier == UQ_4_12(0))
                     moveScores[i * MAX_MON_MOVES + j] += 0;
-                else if (typeMultiplier >= UQ_4_12(2))
+                else if (typeMultiplier >= UQ_4_12(2.0))
                     moveScores[i * MAX_MON_MOVES + j] += movePower * 2;
                 else if (typeMultiplier <= UQ_4_12(0.5))
                     moveScores[i * MAX_MON_MOVES + j] += movePower / 2;
