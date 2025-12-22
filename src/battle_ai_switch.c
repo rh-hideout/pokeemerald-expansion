@@ -1816,7 +1816,7 @@ static u32 GetSwitchinCandidate(u32 switchinCategory, u32 battler, int firstId, 
     }
 
     // Pick last eligible mon in party order
-    for (u32 monIndex = (lastId-1); monIndex >= firstId; monIndex--)
+    for (s32 monIndex = (lastId-1); monIndex >= firstId; monIndex--)
     {
         if (switchinCategory & (1 << monIndex))
             return monIndex;
@@ -1841,7 +1841,7 @@ static u32 GetValidSwitchinCandidate(u32 validMonIds, u32 battler, u32 firstId, 
     }
 
     // Pick last valid mon in party order
-    for (u32 monIndex = (lastId-1); monIndex > firstId; monIndex--)
+    for (s32 monIndex = (lastId-1); monIndex > firstId; monIndex--)
     {
         if (validMonIds & (1 << monIndex))
             return monIndex;
