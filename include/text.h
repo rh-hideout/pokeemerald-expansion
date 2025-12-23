@@ -13,7 +13,7 @@ STATIC_ASSERT(   TEXT_SPEED_SLOW_MODIFIER    <= 31
 // Given as a text speed when all the text should be
 // loaded at once but not copied to vram yet.
 #define TEXT_SKIP_DRAW 0xFF
-#define NUM_TEXT_PRINTERS 32
+#define NUM_TEXT_PRINTERS 2
 
 enum {
     FONT_SMALL,

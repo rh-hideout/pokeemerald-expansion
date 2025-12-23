@@ -410,7 +410,7 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
         sTempTextPrinter.isInUse = TRUE;
         u32 printerId = GetUnusedTextPrinter();
         if (printerId != NUM_TEXT_PRINTERS + 1)
-            sTextPrinters[GetUnusedTextPrinter()] = sTempTextPrinter;
+            sTextPrinters[printerId] = sTempTextPrinter;
         else
             return FALSE;
     }
@@ -2589,5 +2589,6 @@ static u32 GetUnusedTextPrinter(void)
     for (u32 i = 0; i < NUM_TEXT_PRINTERS; i++)
         if (!sTextPrinters[i].isInUse)
             return i;
+    errorf("\nAll text printers are already in use.\nIncrease NUM_TEXT_PRINTERS");
     return NUM_TEXT_PRINTERS + 1;
 }
