@@ -121,7 +121,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents Rest during sun (Gen 5+)")
     PARAMETRIZE { gen = GEN_4; }
     PARAMETRIZE { gen = GEN_5; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_LEAF_GUARD_PREVENTS_REST, gen);
+        WITH_CONFIG(CONFIG_LEAF_GUARD_PREVENTS_REST, gen);
         ASSUME(GetMoveEffect(MOVE_REST) == EFFECT_REST);
         PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); HP(100); MaxHP(200); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -151,7 +151,7 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_LEAF_GUARD_PREVENTS_REST, GEN_5);
+        WITH_CONFIG(CONFIG_LEAF_GUARD_PREVENTS_REST, GEN_5);
         ASSUME(GetMoveEffect(MOVE_REST) == EFFECT_REST);
         PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); HP(100); MaxHP(200); }
         OPPONENT(species) { Ability(ability); }

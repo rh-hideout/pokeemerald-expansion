@@ -23,6 +23,7 @@
 #undef TestRunner_Battle_RecordAbilityPopUp
 #undef TestRunner_Battle_RecordAnimation
 #undef TestRunner_Battle_RecordHP
+#undef TestRunner_Battle_RecordSubHit
 #undef TestRunner_Battle_RecordMessage
 #undef TestRunner_Battle_RecordStatus1
 #undef TestRunner_Battle_AfterLastTurn
@@ -235,6 +236,7 @@ static u32 BattleTest_EstimateCost(void *data)
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
     STATE->runRandomly = TRUE;
+    ResetStartingStatuses();
     InvokeTestFunction(test);
     cost = 1;
     if (STATE->parametersCount != 0)
@@ -528,7 +530,7 @@ static void BattleTest_Run(void *data)
 
         if (((DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] + DATA.explicitSpeeds[B_POSITION_PLAYER_RIGHT]) != (revisedPlayerExplicitSpeeds + revisedPartnerExplicitSpeeds)
          || (DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] + DATA.explicitSpeeds[B_POSITION_OPPONENT_RIGHT]) != (revisedOpponentAExplicitSpeeds + revisedOpponentBExplicitSpeeds)))
-         
+
         {
             Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LSpeed required for all PLAYERs and OPPONENTs");
         }
@@ -554,6 +556,33 @@ static void BattleTest_Run(void *data)
     PrintTestName();
 }
 
+static bool32 IsTieBreakTag(enum RandomTag tag)
+{
+    switch (tag)
+    {
+    case RNG_AI_SCORE_TIE_SINGLES:
+    case RNG_AI_SCORE_TIE_DOUBLES_MOVE:
+    case RNG_AI_SCORE_TIE_DOUBLES_TARGET:
+        return TRUE;
+    default:
+        break;
+    }
+    return FALSE;
+}
+
+static void SanitizeTieCounts(void)
+{
+    if (DATA.trial.scoreTieCount < 1)
+        DATA.trial.scoreTieCount = 1;
+    if (DATA.trial.scoreTieCount > MAX_MON_MOVES)
+        DATA.trial.scoreTieCount = MAX_MON_MOVES;
+
+    if (DATA.trial.targetTieCount < 1)
+        DATA.trial.targetTieCount = 1;
+    if (DATA.trial.targetTieCount >= gBattlersCount)
+        DATA.trial.targetTieCount = (gBattlersCount - 1);
+}
+
 u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
 {
     STATE->didRunRandomly = TRUE;
@@ -575,7 +604,7 @@ u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
 
     if (!reject)
     {
-        if (STATE->trials != (hi - lo + 1))
+        if ((STATE->trials != (hi - lo + 1)) && !(IsTieBreakTag(tag)))
             Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniform called from %p with tag %d and inconsistent trials %d and %d", caller, tag, STATE->trials, hi - lo + 1);
         return STATE->runTrial + lo;
     }
@@ -649,6 +678,10 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
             return turn->rng.value;
         }
     }
+
+    if (IsTieBreakTag(tag))
+        SanitizeTieCounts();
+
     //trials
     switch (tag)
     {
@@ -659,12 +692,12 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
         case SCORE_TIE_HI:
             return (DATA.trial.scoreTieCount - 1);
         case SCORE_TIE_RANDOM:
-            if (DATA.trial.scoreTieCount == 0)
-                return 0; // Failsafe
-            else
-                return RandomUniformTrials(tag, lo, hi, reject, caller);
+            return RandomUniformTrials(tag, lo, hi, reject, caller);
         case SCORE_TIE_CHOSEN:
-            return DATA.scoreTieOverride;
+            if (DATA.scoreTieOverride >= DATA.trial.scoreTieCount)
+                return (DATA.trial.scoreTieCount - 1);
+            else
+                return DATA.scoreTieOverride;
         default:
             return 0;
         }
@@ -674,17 +707,17 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
         case TARGET_TIE_HI:
             return (DATA.trial.targetTieCount - 1);
         case TARGET_TIE_RANDOM:
-            if (DATA.trial.targetTieCount == 0)
-                return 0; // Failsafe
-            else
-                return RandomUniformTrials(tag, lo, hi, reject, caller);
+            return RandomUniformTrials(tag, lo, hi, reject, caller);
         case TARGET_TIE_CHOSEN:
-            return DATA.targetTieOverride;
+            if (DATA.targetTieOverride >= DATA.trial.targetTieCount)
+                return (DATA.trial.targetTieCount - 1);
+            else
+                return DATA.targetTieOverride;
         default:
             return 0;
         }
     default:
-    if (tag == STATE->rngTag)
+    if (tag && tag == STATE->rngTag)
         return RandomUniformTrials(tag, lo, hi, reject, caller);
     }
 
@@ -705,7 +738,7 @@ static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, co
     }
 
     //trials
-    if (tag == STATE->rngTag)
+    if (tag && tag == STATE->rngTag)
         return RandomWeightedArrayTrials(tag, sum, n, weights, caller);
 
     //default
@@ -760,7 +793,7 @@ static const void *BattleTest_RandomElementArray(enum RandomTag tag, const void 
 
 
     //trials
-    if (tag == STATE->rngTag)
+    if (tag && tag == STATE->rngTag)
         return RandomElementArrayTrials(tag, array, size, count, caller);
 
     //default
@@ -981,6 +1014,85 @@ void TestRunner_Battle_RecordHP(u32 battlerId, u32 oldHP, u32 newHP)
     }
 }
 
+static s32 TrySubHit(s32 i, s32 n, u32 battlerId, u32 damage, bool32 broke)
+{
+    struct QueuedSubHitEvent *event;
+    s32 iMax = i + n;
+    for (; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type != QUEUED_SUB_HIT_EVENT)
+            continue;
+
+        event = &DATA.queuedEvents[i].as.subHit;
+
+        if (event->battlerId == battlerId)
+        {
+            if (event->checkBreak)
+            {
+                if (event->breakSub && !broke)
+                    return -1;
+                else if (!event->breakSub && broke)
+                    return -1;
+            }
+
+            if (event->address <= 0xFFFF)
+            {
+                event->address = damage;
+                return i;
+            }
+            else
+            {
+                *(u16 *)(u32)(event->address) = damage;
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+void TestRunner_Battle_RecordSubHit(u32 battlerId, u32 damage, bool32 broke)
+{
+    s32 queuedEvent;
+    s32 match;
+    struct QueuedEvent *event;
+
+    if (DATA.trial.queuedEvent == DATA.queuedEventsCount)
+        return;
+
+    event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+    switch (event->groupType)
+    {
+    case QUEUE_GROUP_NONE:
+    case QUEUE_GROUP_ONE_OF:
+        if (TrySubHit(DATA.trial.queuedEvent, event->groupSize, battlerId, damage, broke) != -1)
+            DATA.trial.queuedEvent += event->groupSize;
+        break;
+    case QUEUE_GROUP_NONE_OF:
+        queuedEvent = DATA.trial.queuedEvent;
+        do
+        {
+            if ((match = TrySubHit(queuedEvent, event->groupSize, battlerId, damage, broke)) != -1)
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched SUB_HIT", filename, line);
+            }
+
+            queuedEvent += event->groupSize;
+            if (queuedEvent == DATA.queuedEventsCount)
+                break;
+
+            event = &DATA.queuedEvents[queuedEvent];
+            if (event->groupType == QUEUE_GROUP_NONE_OF)
+                continue;
+
+            if (TrySubHit(queuedEvent, event->groupSize, battlerId, damage, broke) != -1)
+                DATA.trial.queuedEvent = queuedEvent + event->groupSize;
+        } while (FALSE);
+        break;
+    }
+}
+
 static const char *const sBattleActionNames[] =
 {
     [B_ACTION_USE_MOVE] = "MOVE",
@@ -1110,12 +1222,6 @@ void TestRunner_Battle_CheckSwitch(u32 battlerId, u32 partyIndex)
             Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected partyIndex %d, got %d", filename, expectedAction->sourceLine, expectedAction->target, partyIndex);
     }
     DATA.trial.aiActionsPlayed[battlerId]++;
-}
-
-void TestRunner_Battle_InvalidNoHPMon(u32 battlerId, u32 partyIndex)
-{
-    Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%s: INVALID: %s trying to send out a mon(id: %d) with 0 HP.",
-                        gTestRunnerState.test->filename, BattlerIdentifier(battlerId), gBattlerPartyIndexes[battlerId]);
 }
 
 static bool32 CheckComparision(s32 val1, s32 val2, u32 cmp)
@@ -1545,6 +1651,7 @@ static const char *const sEventTypeMacros[] =
     [QUEUED_ABILITY_POPUP_EVENT] = "ABILITY_POPUP",
     [QUEUED_ANIMATION_EVENT] = "ANIMATION",
     [QUEUED_HP_EVENT] = "HP_BAR",
+    [QUEUED_SUB_HIT_EVENT] = "SUB_HIT",
     [QUEUED_EXP_EVENT] = "EXPERIENCE_BAR",
     [QUEUED_MESSAGE_EVENT] = "MESSAGE",
     [QUEUED_STATUS_EVENT] = "STATUS_ICON",
@@ -1784,10 +1891,10 @@ void SetFlagForTest(u32 sourceLine, u16 flagId)
     FlagSet(flagId);
 }
 
-void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value)
+void TestSetConfig(u32 sourceLine, enum ConfigTag configTag, u32 value)
 {
     INVALID_IF(!STATE->runGiven, "WITH_CONFIG outside of GIVEN");
-    SetGenConfig(configTag, value);
+    SetConfig(configTag, value);
 }
 
 void TieBreakScore(u32 sourceLine, enum RandomTag rngTag, enum ScoreTieResolution scoreTieRes, u32 value)
@@ -1872,19 +1979,19 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
         if ((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
             *partySize = 3;
         party = DATA.recordedBattle.playerParty;
-    } 
+    }
     else if (position == B_POSITION_OPPONENT_LEFT) // MULTI_OPPONENT_A
     {
         partySize = &DATA.opponentPartySize;
         party = DATA.recordedBattle.opponentParty;
-    } 
+    }
     else // MULTI_OPPONENT_B
     {
         partySize = &DATA.opponentPartySize;
         if ((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
             *partySize = 3;
         party = DATA.recordedBattle.opponentParty;
-    } 
+    }
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
     DATA.currentPosition = position;
     DATA.currentPartyIndex = *partySize;
@@ -2273,7 +2380,7 @@ static const char *BattlerIdentifier(s32 battlerId)
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
-        return sBattlerIdentifiersDoubles[battlerId]; 
+        return sBattlerIdentifiersDoubles[battlerId];
     }
     return "<unknown>";
 }
@@ -2443,16 +2550,16 @@ s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 source
     }
     else
     {
-        u32 moveTarget = GetMoveTarget(moveId);
-        if (moveTarget == MOVE_TARGET_RANDOM
-         || moveTarget == MOVE_TARGET_BOTH
-         || moveTarget == MOVE_TARGET_DEPENDS
-         || moveTarget == MOVE_TARGET_FOES_AND_ALLY
-         || moveTarget == MOVE_TARGET_OPPONENTS_FIELD)
+        enum MoveTarget moveTarget = GetMoveTarget(moveId);
+        if (moveTarget == TARGET_RANDOM
+         || moveTarget == TARGET_BOTH
+         || moveTarget == TARGET_DEPENDS
+         || moveTarget == TARGET_FOES_AND_ALLY
+         || moveTarget == TARGET_OPPONENTS_FIELD)
         {
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == MOVE_TARGET_SELECTED || moveTarget == MOVE_TARGET_OPPONENT)
+        else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_OPPONENT)
         {
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
             if (GetBattleTest()->type != BATTLE_TEST_AI_DOUBLES)
@@ -2462,11 +2569,11 @@ s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 source
 
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == MOVE_TARGET_USER || moveTarget == MOVE_TARGET_ALL_BATTLERS)
+        else if (moveTarget == TARGET_USER || moveTarget == TARGET_ALL_BATTLERS || moveTarget == TARGET_FIELD)
         {
             target = battlerId;
         }
-        else if (moveTarget == MOVE_TARGET_ALLY)
+        else if (moveTarget == TARGET_ALLY)
         {
             target = BATTLE_PARTNER(battlerId);
         }
@@ -2503,7 +2610,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
                 INVALID_IF(DATA.explicitMoves[battlerId & BIT_SIDE] & (1 << DATA.currentMonIndexes[battlerId]), "Missing explicit %S", GetMoveName(ctx->move));
                 SetMonData(mon, MON_DATA_MOVE1 + i, &ctx->move);
                 u32 pp = GetMovePP(ctx->move);
-                SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &pp);
+                SetMonData(mon, MON_DATA_PP1 + i, &pp);
                 *moveSlot = i;
                 *moveId = ctx->move;
                 INVALID_IF(GetMovePP(ctx->move) == 0, "%S has 0 PP!", GetMoveName(ctx->move));
@@ -3054,6 +3161,46 @@ void QueueHP(u32 sourceLine, struct BattlePokemon *battler, struct HPEventContex
         .as = { .hp = {
             .battlerId = battlerId,
             .type = type,
+            .address = address,
+        }},
+    };
+}
+
+void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEventContext ctx)
+{
+    s32 battlerId = battler - gBattleMons;
+    bool32 breakSub = FALSE;
+    bool32 checkBreak = FALSE;
+    uintptr_t address;
+
+    INVALID_IF(!STATE->runScene, "SUB_HIT outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, ":L%s:%d: SUB_HIT exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+
+    address = 0;
+    if (ctx.explicitCaptureDamage)
+    {
+        INVALID_IF(ctx.captureDamage == NULL, "captureDamage is NULL");
+        *ctx.captureDamage = 0;
+        address = (uintptr_t)ctx.captureDamage;
+    }
+
+    if (ctx.explicitSubBreak)
+    {
+        checkBreak = TRUE;
+        if (ctx.subBreak)
+            breakSub = TRUE;
+    }
+
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_SUB_HIT_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .subHit = {
+            .battlerId = battlerId,
+            .checkBreak = checkBreak,
+            .breakSub = breakSub,
             .address = address,
         }},
     };

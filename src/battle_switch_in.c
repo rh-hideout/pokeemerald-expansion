@@ -173,11 +173,20 @@ bool32 DoSwitchInEvents(void)
 
 static bool32 CanBattlerBeHealed(u32 battler)
 {
-    if (GetGenConfig(GEN_CONFIG_HEALING_WISH_SWITCH) < GEN_8)
+    if (GetConfig(CONFIG_HEALING_WISH_SWITCH) < GEN_8)
         return TRUE;
 
     if (gBattleMons[battler].hp != gBattleMons[battler].maxHP || gBattleMons[battler].status1)
         return TRUE;
+
+    if (gBattleStruct->battlerState[battler].storedLunarDance
+     && (gBattleMons[battler].pp[0] < CalculatePPWithBonus(gBattleMons[battler].moves[0], gBattleMons[battler].ppBonuses, 0)
+      || gBattleMons[battler].pp[1] < CalculatePPWithBonus(gBattleMons[battler].moves[1], gBattleMons[battler].ppBonuses, 1)
+      || gBattleMons[battler].pp[2] < CalculatePPWithBonus(gBattleMons[battler].moves[2], gBattleMons[battler].ppBonuses, 2)
+      || gBattleMons[battler].pp[3] < CalculatePPWithBonus(gBattleMons[battler].moves[3], gBattleMons[battler].ppBonuses, 3)))
+    {
+        return TRUE;
+    }
 
     return FALSE;
 }

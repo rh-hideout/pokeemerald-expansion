@@ -34,7 +34,7 @@ DOUBLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves and prints th
     GIVEN {
         ASSUME(!IsBattleMoveStatus(MOVE_ERUPTION));
         ASSUME(GetMoveType(MOVE_ERUPTION) == TYPE_FIRE);
-        ASSUME(GetMoveTarget(MOVE_ERUPTION) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_ERUPTION) == TARGET_BOTH);
         PLAYER(SPECIES_KYOGRE) {Item(ITEM_BLUE_ORB); {Speed(5);}}
         PLAYER(SPECIES_WOBBUFFET) {Speed(5);}
         OPPONENT(SPECIES_WOBBUFFET) {Speed(10);}
@@ -64,3 +64,15 @@ SINGLE_BATTLE_TEST("Primordial Sea does not block a move if Pokémon is asleep a
         MESSAGE("The opposing Wobbuffet is fast asleep.");
     }
 }
+
+TO_DO_BATTLE_TEST("Primordial Sea makes Sunny Day fail")
+TO_DO_BATTLE_TEST("Primordial Sea makes Rain Dance fail")
+TO_DO_BATTLE_TEST("Primordial Sea makes Sandstorm fail")
+TO_DO_BATTLE_TEST("Primordial Sea makes Hail fail")
+TO_DO_BATTLE_TEST("Primordial Sea makes Snowscape fail") // Extrapolation
+TO_DO_BATTLE_TEST("Primordial Sea makes Drought fail to activate")
+TO_DO_BATTLE_TEST("Primordial Sea makes Drizzle fail to activate")
+TO_DO_BATTLE_TEST("Primordial Sea makes Sand Stream fail to activate")
+TO_DO_BATTLE_TEST("Primordial Sea makes Snow Warning fail to activate")
+TO_DO_BATTLE_TEST("Primordial Sea can be replaced by Delta Stream")
+TO_DO_BATTLE_TEST("Primordial Sea can be replaced by Desolate Land")

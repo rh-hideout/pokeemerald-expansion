@@ -154,7 +154,6 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
     #define minGroupNum var2
     #define selectedGroup percent
     #define selectedMoves var2
-    #define moveTarget var1
     #define numMovesPerGroup var1
     #define numMultipleMoveGroups var2
     #define randSelectGroup var2
@@ -297,11 +296,11 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
         }
     }
 
-    moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
 
-    if (moveTarget & MOVE_TARGET_USER)
+    if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
         chosenMoveIndex |= (battler << 8);
-    else if (moveTarget == MOVE_TARGET_SELECTED)
+    else if (moveTarget == TARGET_SELECTED)
         chosenMoveIndex |= GetBattlePalaceTarget(battler);
     else
         chosenMoveIndex |= (GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler))) << 8);
@@ -322,22 +321,24 @@ static u8 GetBattlePalaceMoveGroup(u8 battler, u16 move)
 {
     switch (GetBattlerMoveTargetType(battler, move))
     {
-    case MOVE_TARGET_SELECTED:
-    case MOVE_TARGET_OPPONENT:
-    case MOVE_TARGET_RANDOM:
-    case MOVE_TARGET_BOTH:
-    case MOVE_TARGET_FOES_AND_ALLY:
-    case MOVE_TARGET_ALL_BATTLERS:
+    case TARGET_SELECTED:
+    case TARGET_OPPONENT:
+    case TARGET_RANDOM:
+    case TARGET_BOTH:
+    case TARGET_FOES_AND_ALLY:
+    case TARGET_ALL_BATTLERS:
+    case TARGET_FIELD:
         if (IsBattleMoveStatus(move))
             return PALACE_MOVE_GROUP_SUPPORT;
         else
             return PALACE_MOVE_GROUP_ATTACK;
         break;
-    case MOVE_TARGET_DEPENDS:
-    case MOVE_TARGET_OPPONENTS_FIELD:
-    case MOVE_TARGET_ALLY:
+    case TARGET_DEPENDS:
+    case TARGET_OPPONENTS_FIELD:
+    case TARGET_ALLY:
+    case TARGET_USER_OR_ALLY:
         return PALACE_MOVE_GROUP_SUPPORT;
-    case MOVE_TARGET_USER:
+    case TARGET_USER:
         return PALACE_MOVE_GROUP_DEFENSE;
     default:
         return PALACE_MOVE_GROUP_ATTACK;
@@ -542,6 +543,10 @@ static bool8 ShouldAnimBeDoneRegardlessOfSubstitute(u8 animId)
 {
     switch (animId)
     {
+    case B_ANIM_ILLUSION_OFF:
+    case B_ANIM_FOCUS_PUNCH_SETUP:
+    case B_ANIM_SWAP_TO_SUBSTITUTE:
+    case B_ANIM_SWAP_FROM_SUBSTITUTE:
     case B_ANIM_SUBSTITUTE_FADE:
     case B_ANIM_RAIN_CONTINUES:
     case B_ANIM_SUN_CONTINUES:
@@ -550,6 +555,7 @@ static bool8 ShouldAnimBeDoneRegardlessOfSubstitute(u8 animId)
     case B_ANIM_SNOW_CONTINUES:
     case B_ANIM_FOG_CONTINUES:
     case B_ANIM_SNATCH_MOVE:
+    case B_ANIM_STATS_CHANGE:
         return TRUE;
     default:
         return FALSE;
@@ -651,7 +657,7 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, u32 battler)
     LoadPalette(paletteData, BG_PLTT_ID(8) + BG_PLTT_ID(battler), PLTT_SIZE_4BPP);
 
     // transform's pink color
-    if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies != SPECIES_NONE)
+    if (gBattleMons[battler].volatiles.transformed)
     {
         BlendPalette(paletteOffset, 16, 6, RGB_WHITE);
         CpuCopy32(&gPlttBufferFaded[paletteOffset], &gPlttBufferUnfaded[paletteOffset], PLTT_SIZEOF(16));
@@ -930,7 +936,7 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
     else
     {
         position = GetBattlerPosition(battlerAtk);
-        if (gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies == SPECIES_NONE)
+        if (changeType == SPECIES_GFX_CHANGE_TRANSFORM)
         {
             // Get base form if its currently Gigantamax
             if (IsGigantamaxed(battlerDef))
@@ -939,17 +945,17 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
                 targetSpecies = GetIllusionMonSpecies(battlerDef);
             else
                 targetSpecies = GetMonData(monDef, MON_DATA_SPECIES);
-            gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies = targetSpecies;
         }
         else
         {
-            targetSpecies = gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies;
+            targetSpecies = GetMonData(monAtk, MON_DATA_SPECIES);
         }
+        gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies = targetSpecies;
 
         if (changeType == SPECIES_GFX_CHANGE_TRANSFORM)
         {
-            personalityValue = gDisableStructs[battlerAtk].transformedMonPersonality;
-            isShiny = gDisableStructs[battlerAtk].transformedMonShininess;
+            personalityValue = gBattleMons[battlerAtk].volatiles.transformedMonPID;
+            isShiny = gBattleMons[battlerAtk].volatiles.isTransformedMonShiny;
         }
         else
         {
