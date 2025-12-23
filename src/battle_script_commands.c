@@ -2952,9 +2952,11 @@ static void SetNonVolatileStatus(u32 effectBattler, enum MoveEffect effect, cons
     {
     case MOVE_EFFECT_SLEEP:
         if (B_SLEEP_TURNS >= GEN_5)
-            gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(1 + RandomUniform(RNG_SLEEP_TURNS, 1, 3));
+            gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 2, 4));
+        else if (B_SLEEP_TURNS >= GEN_3)
+            gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 2, 5));
         else
-            gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(1 + RandomUniform(RNG_SLEEP_TURNS, 2, 5));
+            gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 2, 8));
         TryActivateSleepClause(effectBattler, gBattlerPartyIndexes[effectBattler]);
         gBattlescriptCurrInstr = BattleScript_MoveEffectSleep;
         break;
@@ -11491,11 +11493,27 @@ static void Cmd_trysetencore(void)
         if (gDisableStructs[gBattlerTarget].encoredMove != GetChosenMoveFromPosition(gBattlerTarget))
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
-        // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
-        if (HasBattlerActedThisTurn(gBattlerTarget))
-            gDisableStructs[gBattlerTarget].encoreTimer = 4;
+        if (B_ENCORE_TURNS >= GEN_5)
+        {
+            if (HasBattlerActedThisTurn(gBattlerTarget))
+                gDisableStructs[gBattlerTarget].encoreTimer = 4; // We need to account for a scenario where Encore changes the move during the same turn.
+            else
+                gDisableStructs[gBattlerTarget].encoreTimer = 3;
+        }
+        else if (B_ENCORE_TURNS == GEN_4)
+        {
+            if (HasBattlerActedThisTurn(gBattlerTarget))
+                gDisableStructs[gBattlerTarget].encoreTimer = (((Random() % 5) + 4) + 1);
+            else
+                gDisableStructs[gBattlerTarget].encoreTimer = ((Random() % 5) + 4);
+        }
         else
-            gDisableStructs[gBattlerTarget].encoreTimer = 3;
+        {
+            if (HasBattlerActedThisTurn(gBattlerTarget))
+                gDisableStructs[gBattlerTarget].encoreTimer = (((Random() % 4) + 3) + 1);
+            else
+                gDisableStructs[gBattlerTarget].encoreTimer = ((Random() % 4) + 3);
+        }
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -13576,6 +13594,8 @@ static void Cmd_handleballthrow(void)
             case BALL_SAFARI:
                 if (B_SAFARI_BALL_MODIFIER <= GEN_7)
                     ballMultiplier = 150;
+                else if (B_SAFARI_BALL_MODIFIER == GEN_1)
+                    ballMultiplier = 200;
                 break;
             case BALL_NET:
                 if (IS_BATTLER_ANY_TYPE(gBattlerTarget, TYPE_WATER, TYPE_BUG))
@@ -13663,8 +13683,16 @@ static void Cmd_handleballthrow(void)
                     u8 gender1 = GetMonGender(GetBattlerMon(gBattlerTarget));
                     u8 gender2 = GetMonGender(GetBattlerMon(gBattlerAttacker));
 
-                    if (gender1 != gender2 && gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS)
-                        ballMultiplier = 800;
+                    if (B_LOVE_BALL_MODIFIER >= GEN_4)
+                    {
+                        if (gender1 != gender2 && gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS)
+                            ballMultiplier = 800;
+                    }
+                    else
+                    {
+                        if (gender1 == gender2 && gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS)
+                            ballMultiplier = 800;
+                    }
                 }
                 break;
             case BALL_FAST:

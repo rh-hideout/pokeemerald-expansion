@@ -8503,8 +8503,18 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
         dmg = gBattleMons[ctx->battlerAtk].level;
         break;
     case EFFECT_PSYWAVE:
-        randDamage = B_PSYWAVE_DMG >= GEN_5 ? (Random() % 101) : ((Random() % 11) * 10);
-        dmg = gBattleMons[ctx->battlerAtk].level * (randDamage + 50) / 100;
+        if (B_PSYWAVE_DMG >= GEN_5)
+        {
+            randDamage = Random() % 101;
+            dmg = gBattleMons[ctx->battlerAtk].level * (randDamage + 50) / 100;
+        }
+        else if (B_PSYWAVE_DMG >= GEN_3)
+        {
+            randDamage = Random() % 11;
+            dmg = gBattleMons[ctx->battlerAtk].level * ((randDamage * 10) + 50) / 100;
+        }
+        else
+            dmg = Random() % ((gBattleMons[ctx->battlerAtk].level + (gBattleMons[ctx->battlerAtk].level / 2)) + 1);
         break;
     case EFFECT_FIXED_HP_DAMAGE:
         dmg = GetMoveFixedHPDamage(ctx->move);
