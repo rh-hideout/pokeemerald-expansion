@@ -1146,7 +1146,7 @@ static const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *batt
     PUSH       (EventSnippet_SetTrainerFacingDirection);
     PUSH_IF_SET(EventSnippet_ShowTrainerIntroMsg, battleParams->params.introTextA)
     PUSH_IF_ELSE(EventSnippet_DoRematchTrainerBattle, EventSnippet_DoTrainerBattle, battleParams->params.isRematch)
-    PUSH       (EventSnippet_EndTrainerBattle);
+    PUSH_IF_ELSE(EventSnippet_GotoPostBattleScript, EventSnippet_EndTrainerBattle, battleParams->params.continueScript)
 
     return NULL;
 }
@@ -1284,11 +1284,6 @@ void SetTrainerFacingDirection(void)
 {
     struct ObjectEvent *objectEvent = &gObjectEvents[gSelectedObjectEvent];
     SetTrainerMovementType(objectEvent, GetTrainerFacingDirectionMovementType(objectEvent->facingDirection));
-}
-
-u8 GetTrainerBattleMode(void)
-{
-    return TRAINER_BATTLE_PARAM.mode;
 }
 
 bool8 GetTrainerFlag(void)
@@ -1577,55 +1572,52 @@ void PlayTrainerEncounterMusic(void)
     else
         trainerId = TRAINER_BATTLE_PARAM.opponentB;
 
-    if (TRAINER_BATTLE_PARAM.mode != TRAINER_BATTLE_CONTINUE_SCRIPT_NO_MUSIC
-        && TRAINER_BATTLE_PARAM.mode != TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE_NO_MUSIC)
+    switch (GetTrainerEncounterMusicId(trainerId))
     {
-        switch (GetTrainerEncounterMusicId(trainerId))
-        {
-        case TRAINER_ENCOUNTER_MUSIC_MALE:
-            music = MUS_ENCOUNTER_MALE;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_FEMALE:
-            music = MUS_ENCOUNTER_FEMALE;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_GIRL:
-            music = MUS_ENCOUNTER_GIRL;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_INTENSE:
-            music = MUS_ENCOUNTER_INTENSE;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_COOL:
-            music = MUS_ENCOUNTER_COOL;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_AQUA:
-            music = MUS_ENCOUNTER_AQUA;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_MAGMA:
-            music = MUS_ENCOUNTER_MAGMA;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_SWIMMER:
-            music = MUS_ENCOUNTER_SWIMMER;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_TWINS:
-            music = MUS_ENCOUNTER_TWINS;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR:
-            music = MUS_ENCOUNTER_ELITE_FOUR;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_HIKER:
-            music = MUS_ENCOUNTER_HIKER;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_INTERVIEWER:
-            music = MUS_ENCOUNTER_INTERVIEWER;
-            break;
-        case TRAINER_ENCOUNTER_MUSIC_RICH:
-            music = MUS_ENCOUNTER_RICH;
-            break;
-        default:
-            music = MUS_ENCOUNTER_SUSPICIOUS;
-        }
-        PlayNewMapMusic(music);
+    case TRAINER_ENCOUNTER_MUSIC_MALE:
+        music = MUS_ENCOUNTER_MALE;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_FEMALE:
+        music = MUS_ENCOUNTER_FEMALE;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_GIRL:
+        music = MUS_ENCOUNTER_GIRL;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_INTENSE:
+        music = MUS_ENCOUNTER_INTENSE;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_COOL:
+        music = MUS_ENCOUNTER_COOL;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_AQUA:
+        music = MUS_ENCOUNTER_AQUA;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_MAGMA:
+        music = MUS_ENCOUNTER_MAGMA;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_SWIMMER:
+        music = MUS_ENCOUNTER_SWIMMER;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_TWINS:
+        music = MUS_ENCOUNTER_TWINS;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR:
+        music = MUS_ENCOUNTER_ELITE_FOUR;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_HIKER:
+        music = MUS_ENCOUNTER_HIKER;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_INTERVIEWER:
+        music = MUS_ENCOUNTER_INTERVIEWER;
+        break;
+    case TRAINER_ENCOUNTER_MUSIC_RICH:
+        music = MUS_ENCOUNTER_RICH;
+        break;
+    default:
+        music = MUS_ENCOUNTER_SUSPICIOUS;
     }
+    PlayNewMapMusic(music);
+
 }
 
 static const u8 *ReturnEmptyStringIfNull(const u8 *string)

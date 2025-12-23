@@ -30,7 +30,8 @@ typedef union PACKED TrainerBattleParameter
         u8 isRematch:1;
         u8 playMusicA:1;
         u8 playMusicB:1;
-        u8 mode:4;
+        u8 continueScript:1;
+        u8 padding:3;
         u8 objEventLocalIdA;
         u16 opponentA;
         u8 *introTextA;
@@ -54,12 +55,13 @@ extern u16 gPartnerTrainerId;
 
 #define TRAINER_BATTLE_PARAM gTrainerBattleParameter.params
 
-#define DebugPrintTrainerParams(battleParameter) DebugPrintfLevel(MGBA_LOG_DEBUG, "\nisDouble: %d\nisRematch: %d\nplayMusicA: %d\nplayMusicB: %d\nmode: %d\nlocalIdA: %d\ntrainerA: %d\nintroA: %x\ndefeatA: %x\neventA: %x\nlocalIdB: %d\ntrainerB: %d\nintroB: %x\ndefeatB: %x\neventB: %x\nvictory: %x\nnotBattle:%x\n", \
+#define DebugPrintTrainerParams(battleParameter) DebugPrintfLevel(MGBA_LOG_DEBUG, "\nisDouble: %d\nisRematch: %d\nplayMusicA: %d\nplayMusicB: %d\ncotinueScript: %d\npadding: %d\nlocalIdA: %d\ntrainerA: %d\nintroA: %x\ndefeatA: %x\neventA: %x\nlocalIdB: %d\ntrainerB: %d\nintroB: %x\ndefeatB: %x\neventB: %x\nvictory: %x\nnotBattle:%x\n", \
         battleParameter->params.isDoubleBattle, \
         battleParameter->params.isRematch, \
         battleParameter->params.playMusicA, \
         battleParameter->params.playMusicB, \
-        battleParameter->params.mode, \
+        battleParameter->params.continueScript, \
+        battleParameter->params.padding, \
         battleParameter->params.objEventLocalIdA, \
         battleParameter->params.opponentA, \
         battleParameter->params.introTextA, \
@@ -99,7 +101,6 @@ void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *Approa
 bool32 GetTrainerFlagFromScriptPointer(const u8 *data);
 bool32 GetRematchFromScriptPointer(const u8 *data);
 void SetTrainerFacingDirection(void);
-u8 GetTrainerBattleMode(void);
 bool8 GetTrainerFlag(void);
 bool8 HasTrainerBeenFought(u16 trainerId);
 void SetTrainerFlag(u16 trainerId);
