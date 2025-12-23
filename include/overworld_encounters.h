@@ -32,8 +32,6 @@
 
 #define INVALID_SPAWN_SLOT 0xFF
 
-/*
-Compile Errors when moving here
 enum OverworldEncounterSpawnAnim
 {
     OWE_SPAWN_ANIM_GRASS,
@@ -42,6 +40,7 @@ enum OverworldEncounterSpawnAnim
     OWE_SPAWN_ANIM_SHINY,
 };
 
+/*
 Combine OWE Type Checks into one function using these.
 Need to figure a clean way to adjust SemiManual check as takes template.
 enum OverworldObjectEncounterType

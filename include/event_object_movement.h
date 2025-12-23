@@ -60,14 +60,6 @@ enum FollowerTransformTypes
     TRANSFORM_TYPE_WEATHER,
 };
 
-enum OverworldEncounterSpawnAnim
-{
-    OWE_SPAWN_ANIM_GRASS,
-    OWE_SPAWN_ANIM_WATER,
-    OWE_SPAWN_ANIM_CAVE,
-    OWE_SPAWN_ANIM_SHINY,
-};
-
 #define FIGURE_8_LENGTH 72
 
 #define GROUND_EFFECT_FLAG_TALL_GRASS_ON_SPAWN   (1 << 0)
