@@ -300,7 +300,7 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
 
     if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
         chosenMoveIndex |= (battler << 8);
-    else if (moveTarget == TARGET_SELECTED)
+    else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART)
         chosenMoveIndex |= GetBattlePalaceTarget(battler);
     else
         chosenMoveIndex |= (GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler))) << 8);
@@ -322,6 +322,7 @@ static u8 GetBattlePalaceMoveGroup(u8 battler, u16 move)
     switch (GetBattlerMoveTargetType(battler, move))
     {
     case TARGET_SELECTED:
+    case TARGET_SMART:
     case TARGET_OPPONENT:
     case TARGET_RANDOM:
     case TARGET_BOTH:

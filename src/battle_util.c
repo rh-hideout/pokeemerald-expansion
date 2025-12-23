@@ -338,17 +338,6 @@ static bool32 ShouldTeraShellDistortTypeMatchups(u32 move, u32 battlerDef, enum 
     return FALSE;
 }
 
-static inline bool32 IsDragonDartsSecondHit(u32 effect)
-{
-    if (effect != EFFECT_DRAGON_DARTS)
-        return FALSE;
-
-    if (gMultiHitCounter == 1)
-        return TRUE;
-
-    return FALSE;
-}
-
 bool32 IsUnnerveBlocked(u32 battler, u32 itemId)
 {
     if (GetItemPocket(itemId) != POCKET_BERRIES)
@@ -388,13 +377,24 @@ static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler)
     return FALSE;
 }
 
+static inline bool32 IsDragonDartsSecondHit(void)
+{
+    if (GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove) == TARGET_SMART)
+        return FALSE;
+
+    if (gMultiHitCounter == 1)
+        return TRUE;
+
+    return FALSE;
+}
+
 bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
 {
     enum Ability ability = GetBattlerAbility(battlerAtk);
     enum BattleMoveEffects effect = GetMoveEffect(move);
 
     if (gSideTimers[defSide].followmeTimer == 0
-        || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit(effect))
+        || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit())
         || effect == EFFECT_SNIPE_SHOT
         || effect == EFFECT_SKY_DROP
         || IsAbilityAndRecord(battlerAtk, ability, ABILITY_PROPELLER_TAIL)
@@ -430,7 +430,7 @@ bool32 HandleMoveTargetRedirection(void)
     }
 
     if (IsAffectedByFollowMe(gBattlerAttacker, side, gCurrentMove)
-     && (moveTarget == TARGET_SELECTED || moveEffect == EFFECT_REFLECT_DAMAGE)
+     && (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveEffect == EFFECT_REFLECT_DAMAGE)
      && !IsBattlerAlly(gBattlerAttacker, gSideTimers[side].followmeTarget))
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = gSideTimers[side].followmeTarget; // follow me moxie fix
@@ -2964,7 +2964,7 @@ static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
         {
             gMultiHitCounter = GetMoveStrikeCount(ctx->move);
 
-            if (GetMoveEffect(ctx->move) == EFFECT_DRAGON_DARTS
+            if (GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move) == TARGET_SMART
              && !IsAffectedByFollowMe(ctx->battlerAtk, GetBattlerSide(ctx->battlerDef), ctx->move)
              && CanTargetPartner(ctx->battlerAtk, ctx->battlerDef)
              && TargetFullyImmuneToCurrMove(ctx->battlerAtk, ctx->battlerDef))
@@ -11008,7 +11008,12 @@ void UpdateStallMons(void)
 {
     if (IsBattlerTurnDamaged(gBattlerTarget) || IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove) || GetMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_STATUS)
         return;
-    if (!IsDoubleBattle() || GetMoveTarget(gCurrentMove) == TARGET_SELECTED)
+
+    enum MoveTarget target = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+
+    if (!IsDoubleBattle()
+     || target == TARGET_SELECTED
+     || target == TARGET_SMART)
     {
         enum Type moveType = GetBattleMoveType(gCurrentMove); //  Probably doesn't handle dynamic move types right now
         enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
