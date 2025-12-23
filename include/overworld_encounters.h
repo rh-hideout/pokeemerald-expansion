@@ -92,6 +92,7 @@ bool32 OWE_IsPlayerInsideRangeFromMon(struct ObjectEvent *mon, u32 distance);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 void Task_OWE_WaitMovements(u8 taskId);
+bool32 OWE_IsWaitTaskActive(void);
 u32 OWE_GetDespawnAnimType(u32 metatileBehavior);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

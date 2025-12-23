@@ -11893,8 +11893,7 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step9(struct ObjectEvent *o
     return TRUE;
 }
 
-#define sCollisionTimer     sprite->data[4]
-#define sSpriteTaskState    sprite->data[6]
+#define sCollisionTimer     sprite->data[6]
 #define STARTED             1
 
 bool8 MovementType_FleePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
@@ -11909,7 +11908,7 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *
 
     u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
 
-    if (sSpriteTaskState != STARTED)
+    if (!OWE_IsWaitTaskActive())
     {
         direction = GetOppositeDirection(direction);
     }
@@ -11930,7 +11929,7 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
     {
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
 
-        if (sSpriteTaskState != STARTED)
+        if (!OWE_IsWaitTaskActive())
         {
             newDirection = GetOppositeDirection(newDirection);
         }
@@ -11959,5 +11958,4 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
 }
 
 #undef sCollisionTimer
-#undef sSpriteTaskState
 #undef STARTED

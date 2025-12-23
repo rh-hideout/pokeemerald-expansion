@@ -785,7 +785,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle));
     bool32 playerIsObstacle = (obstacle->isPlayer && IsOverworldWildEncounter(collider));
 
-    if ((playerIsCollider || playerIsObstacle) && FindTaskIdByFunc(Task_OWE_WaitMovements) == TASK_NONE)
+    if ((playerIsCollider || playerIsObstacle) && !OWE_IsWaitTaskActive())
     {
         struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
 
@@ -937,8 +937,6 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon)
     return TRUE;
 }
 
-#define tTaskStarted        gTasks[taskId].data[1]
-#define sSpriteTaskState    gSprites[mon->spriteId].data[6]
 #define NOT_STARTED         0
 #define STARTED             1
 
@@ -946,12 +944,6 @@ void Task_OWE_WaitMovements(u8 taskId)
 {
     struct ObjectEvent *mon = &gObjectEvents[GetObjectEventIdByLocalId(tLocalId)];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    
-    if (tTaskStarted == NOT_STARTED)
-    {
-        sSpriteTaskState = STARTED;
-        tTaskStarted = STARTED;
-    }
 
     if (mon->singleMovementActive == 0 && player->singleMovementActive == 0)
     {
@@ -965,6 +957,14 @@ void Task_OWE_WaitMovements(u8 taskId)
             DestroyTask(taskId);
         }
     }
+}
+
+bool32 OWE_IsWaitTaskActive(void)
+{
+    if (FindTaskIdByFunc(Task_OWE_WaitMovements) != TASK_NONE)
+        return TRUE;
+
+    return FALSE;
 }
 
 u32 OWE_GetDespawnAnimType(u32 metatileBehavior)
@@ -1029,8 +1029,6 @@ static void OWE_DoAmbientCry(struct ObjectEvent *objectEvent)
 #undef MAP_METATILE_VIEW_Y
 
 #undef tLocalId
-#undef tTaskStarted
-#undef sSpriteTaskState
 #undef NOT_STARTED
 #undef STARTED
 #undef sOverworldEncounterLevel
