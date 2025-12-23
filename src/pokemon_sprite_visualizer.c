@@ -1294,8 +1294,8 @@ void CB2_Pokemon_Sprite_Visualizer(void)
                                                         VISUALIZER_FOLLOWER_X,
                                                         VISUALIZER_FOLLOWER_Y,
                                                         0);
-            const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
             gSprites[data->followerspriteId].oam.priority = 0;
+            const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
             if (graphicsInfo != NULL)
             {
                 gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
