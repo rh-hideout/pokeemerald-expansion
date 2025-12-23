@@ -1296,11 +1296,14 @@ void CB2_Pokemon_Sprite_Visualizer(void)
                                                         0);
             const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
             gSprites[data->followerspriteId].oam.priority = 0;
-            gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
-            gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
-            gSprites[data->followerspriteId].images = graphicsInfo->images;
-            gSprites[data->followerspriteId].anims = graphicsInfo->anims;
-            gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
+            if (graphicsInfo != NULL)
+            {
+                gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
+                gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
+                gSprites[data->followerspriteId].images = graphicsInfo->images;
+                gSprites[data->followerspriteId].anims = graphicsInfo->anims;
+                gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
+            }
 
             //Modify Arrows
             SetUpModifyArrows(data);
@@ -1999,13 +2002,16 @@ static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
                                                         VISUALIZER_FOLLOWER_X,
                                                         VISUALIZER_FOLLOWER_Y,
                                                         0);
-    const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
     gSprites[data->followerspriteId].oam.priority = 0;
-    gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
-    gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
-    gSprites[data->followerspriteId].images = graphicsInfo->images;
-    gSprites[data->followerspriteId].anims = graphicsInfo->anims;
-    gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
+    const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
+    if (graphicsInfo != NULL)
+    {
+        gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
+        gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
+        gSprites[data->followerspriteId].images = graphicsInfo->images;
+        gSprites[data->followerspriteId].anims = graphicsInfo->anims;
+        gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
+    }
 
     //Modify Arrows
     LoadSpritePalette(&gSpritePalette_Arrow);
