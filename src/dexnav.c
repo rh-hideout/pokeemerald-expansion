@@ -994,7 +994,7 @@ bool32 TryStartDexNavSearch(void)
     return InitDexNavSearch(val & DEXNAV_MASK_SPECIES, val >> 14);
 }
 
-void EndDexNavSearch(const u8 *script)
+void EndDexNavSearch(void)
 {
     if (!FlagGet(DN_FLAG_SEARCHING))
         return;
@@ -1002,13 +1002,12 @@ void EndDexNavSearch(const u8 *script)
     FieldEffectStop(&gSprites[sDexNavSearchDataPtr->fldEffSpriteId], sDexNavSearchDataPtr->fldEffId);
     FREE_AND_SET_NULL(sDexNavSearchDataPtr);
     FlagClear(DN_FLAG_SEARCHING);
-    return silentEnd;
 }
 
-static void EndDexNavSearchSetupScript(const u8 *script, u8 taskId)
+static void EndDexNavSearchSetupScript(const u8 *script)
 {
     gSaveBlock3Ptr->dexNavChain = 0;   //reset chain
-    EndDexNavSearch(taskId);
+    EndDexNavSearch();
     ScriptContext_SetupScript(script);
 }
 
@@ -1078,7 +1077,7 @@ bool32 OnStep_DexNavSearch(void)
     { // out of range
         if (sDexNavSearchDataPtr->hiddenSearch)
         {
-            EndDexNavSearch(taskId);
+            EndDexNavSearch();
             return FALSE;
         }
         else
@@ -1092,7 +1091,7 @@ bool32 OnStep_DexNavSearch(void)
     { //should be creeping but player walks normally
         if (sDexNavSearchDataPtr->hiddenSearch)
         {
-            EndDexNavSearch(taskId);
+            EndDexNavSearch();
             return FALSE;
         }
         else
@@ -1113,7 +1112,7 @@ bool32 OnStep_DexNavSearch(void)
     { // player took too long
         if (sDexNavSearchDataPtr->hiddenSearch)
         {
-            EndDexNavSearch(taskId);
+            EndDexNavSearch();
             return FALSE;
         }
         else
