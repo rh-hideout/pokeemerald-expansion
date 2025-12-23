@@ -116,8 +116,6 @@ SINGLE_BATTLE_TEST("Rage does not build Attack when user's Attack is at max stag
     }
 }
 
-// Gen4+: Rage volatile is not set when the move is blocked by Protect
-// Gen3: Rage volatile is set even when blocked by Protect
 SINGLE_BATTLE_TEST("Rage volatile behavior on Protect depends on generation")
 {
     u32 config;
@@ -135,18 +133,14 @@ SINGLE_BATTLE_TEST("Rage volatile behavior on Protect depends on generation")
         MESSAGE("The opposing Wobbuffet protected itself!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         if (config == GEN_3) {
-            // Gen3: Rage volatile was set on turn 1 despite protect, so Tackle triggers build
             MESSAGE("Wobbuffet's rage is building!");
         } else {
-            // Gen4+: Rage volatile was NOT set on turn 1 due to protect
             NOT MESSAGE("Wobbuffet's rage is building!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE, player);
     }
 }
 
-// Gen4+: Rage volatile is cleared when the move misses
-// Gen3: Rage volatile persists even when the move misses
 SINGLE_BATTLE_TEST("Rage volatile behavior on miss depends on generation")
 {
     u32 config;
@@ -166,10 +160,8 @@ SINGLE_BATTLE_TEST("Rage volatile behavior on miss depends on generation")
         MESSAGE("Wobbuffet's attack missed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         if (config == GEN_3) {
-            // Gen3: Rage volatile persists, still builds
             MESSAGE("Wobbuffet's rage is building!");
         } else {
-            // Gen4+: Rage volatile cleared on miss, doesn't build
             NOT MESSAGE("Wobbuffet's rage is building!");
         }
     }
