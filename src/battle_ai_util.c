@@ -6340,3 +6340,45 @@ bool32 ShouldUseRound(u32 battler)
     return FALSE;
 
 }
+
+bool32 ShouldUsePledgeMove(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    u32 partner = BATTLE_PARTNER(battlerAtk);
+    u32 partnerMove = gBattleMons[partner].moves[gAiBattleData->chosenMoveIndex[partner]];
+
+    if (partnerMove == move) // Same pledge move
+        return FALSE;
+    if (gAiLogicData->comboState == COMBO_SECOND_BATTLER_NO_SCORE_INCREASE)
+        return FALSE;
+
+    if (battlerAtk < partner || GetMoveEffect(partnerMove) == EFFECT_PLEDGE)
+    {
+        u32 atkSide = GetBattlerSide(battlerAtk);
+        u32 defSide = GetBattlerSide(battlerDef);
+
+        switch (move)
+        {
+        case MOVE_GRASS_PLEDGE:
+            if (HasMove(partner, MOVE_FIRE_PLEDGE))
+                return gSideTimers[defSide].seaOfFireTimer == 0;
+            if (HasMove(partner, MOVE_WATER_PLEDGE))
+                return gSideTimers[defSide].swampTimer == 0;
+            break;
+        case MOVE_FIRE_PLEDGE:
+            if (HasMove(partner, MOVE_WATER_PLEDGE))
+                return gSideTimers[atkSide].rainbowTimer == 0;
+            if (HasMove(partner, MOVE_GRASS_PLEDGE))
+                return gSideTimers[defSide].seaOfFireTimer == 0;
+            break;
+        case MOVE_WATER_PLEDGE:
+            if (HasMove(partner, MOVE_GRASS_PLEDGE))
+                return gSideTimers[defSide].swampTimer == 0;
+            if (HasMove(partner, MOVE_FIRE_PLEDGE))
+                return gSideTimers[atkSide].rainbowTimer == 0;
+            break;
+        default: break;
+        }
+    }
+
+    return FALSE;
+}

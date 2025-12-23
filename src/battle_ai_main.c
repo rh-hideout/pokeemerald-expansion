@@ -362,7 +362,9 @@ static void TryResetComboAttackState(u32 battler, u32 moveIndex)
     enum BattleMoveEffects effect = GetMoveEffect(gBattleMons[battler].moves[moveIndex]);
 
     // partner (high id) didn't choose Round, recalculate move
-    if (effect != EFFECT_ROUND && gAiLogicData->comboState == COMBO_FIRST_BATTLER_SCORE_INCREASE)
+    if (effect != EFFECT_ROUND
+     && effect != EFFECT_PLEDGE
+     && gAiLogicData->comboState == COMBO_FIRST_BATTLER_SCORE_INCREASE)
     {
         u32 partner = BATTLE_PARTNER(battler);
         gAiLogicData->comboState = COMBO_SECOND_BATTLER_NO_SCORE_INCREASE;
@@ -3269,6 +3271,14 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     {
     case EFFECT_ROUND:
         if (ShouldUseRound(battlerAtk))
+        {
+            if (gAiLogicData->comboState == COMBO_INITIAL_STATE)
+                gAiLogicData->comboState = COMBO_FIRST_BATTLER_SCORE_INCREASE;
+            ADJUST_SCORE(BEST_EFFECT);
+        }
+        break;
+    case EFFECT_PLEDGE:
+        if (ShouldUsePledgeMove(battlerAtk, battlerDef, move))
         {
             if (gAiLogicData->comboState == COMBO_INITIAL_STATE)
                 gAiLogicData->comboState = COMBO_FIRST_BATTLER_SCORE_INCREASE;
