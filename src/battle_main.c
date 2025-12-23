@@ -303,8 +303,8 @@ static const s8 sCenterToCornerVecXs[8] ={-32, -16, -16, -32, -32};
 // [TRAINER_CLASS_XYZ] = { _("name"), <money=5>, <ball=BALL_POKE> }
 const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
 {
-    [TRAINER_CLASS_PKMN_TRAINER_1] = { _("{PKMN} Trainer") },
-    [TRAINER_CLASS_PKMN_TRAINER_2] = { _("{PKMN} Trainer") },
+    [TRAINER_CLASS_PKMN_TRAINER_1] = { _("{PKMN} Trainer") }, // Unused
+    [TRAINER_CLASS_PKMN_TRAINER_2] = { _("{PKMN} Trainer"), 10, BALL_ULTRA }, // Wally & Steven
     [TRAINER_CLASS_HIKER] = { _("Hiker"), 8, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
     [TRAINER_CLASS_TEAM_AQUA] = { _("Team Aqua"), 10 },
     [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} Breeder"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
@@ -351,9 +351,9 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_SWIMMER_F] = { _("Swimmer"), 4, BALL_DIVE },
     [TRAINER_CLASS_TWINS] = { _("Twins"), 1 },
     [TRAINER_CLASS_SAILOR] = { _("Sailor"), 10 },
-    [TRAINER_CLASS_COOLTRAINER_2] = { _("Ace Trainer"), 15, BALL_ULTRA },
+    [TRAINER_CLASS_COOLTRAINER_2] = { _("Ace Trainer"), 15, BALL_ULTRA }, // Jazmyn
     [TRAINER_CLASS_MAGMA_ADMIN] = { _("Magma Admin"), 20 },
-    [TRAINER_CLASS_RIVAL] = { _("{PKMN} Trainer"), 10 },
+    [TRAINER_CLASS_RIVAL] = { _("{PKMN} Trainer"), 10 }, // Brendan & May
     [TRAINER_CLASS_BUG_CATCHER] = { _("Bug Catcher"), 4 },
     [TRAINER_CLASS_PKMN_RANGER] = { _("{PKMN} Ranger"), 15 },
     [TRAINER_CLASS_MAGMA_LEADER] = { _("Magma Leader"), 40, BALL_MASTER },
