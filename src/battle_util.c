@@ -379,7 +379,7 @@ static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler)
 
 static inline bool32 IsDragonDartsSecondHit(void)
 {
-    if (GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove) == TARGET_SMART)
+    if (GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove) != TARGET_SMART)
         return FALSE;
 
     if (gMultiHitCounter == 1)
