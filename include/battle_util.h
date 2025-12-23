@@ -148,7 +148,7 @@ enum MoveCanceler
     MOVE_STEP_SUCCESS,
     MOVE_STEP_BREAK, // Breaks out of the function to run a script
     MOVE_STEP_FAILURE, // Same as break but breaks out of it due to move failure and jumps to script that handles the failure
-    MOVE_STEP_REMOVES_STATUS,
+    MOVE_STEP_STATUS_CHANGE,
 };
 
 extern const struct TypePower gNaturalGiftTable[];
