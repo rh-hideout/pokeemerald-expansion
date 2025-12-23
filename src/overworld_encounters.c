@@ -343,8 +343,8 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     elevation = MapGridGetElevationAt(x, y);
 
     layout = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum)->mapLayout;
-    if ((x + MAP_OFFSET) < 0 || (x + MAP_OFFSET) >= layout->width ||
-        (y + MAP_OFFSET) < 0 || (y + MAP_OFFSET) >= layout->height)
+    if ((x - MAP_OFFSET) < 0 || (x - MAP_OFFSET) >= layout->width ||
+        (y - MAP_OFFSET) < 0 || (y - MAP_OFFSET) >= layout->height)
         return FALSE;
 
     // 0 is change of elevation, 15 is multiple elevation e.g. bridges
