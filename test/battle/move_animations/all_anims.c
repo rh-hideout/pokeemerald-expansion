@@ -152,6 +152,7 @@ static bool32 AttackerHasToSwitch(u32 move) // User needs to send out a differen
      || effect == EFFECT_BATON_PASS
      || effect == EFFECT_MEMENTO
      || effect == EFFECT_HEALING_WISH
+     || effect == EFFECT_LUNAR_DANCE
      || effect == EFFECT_HIT_ESCAPE
      || effect == EFFECT_FINAL_GAMBIT
      || effect == EFFECT_PARTING_SHOT

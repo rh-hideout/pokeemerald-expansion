@@ -130,9 +130,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_CAVE] =
     {
     #if B_NATURE_POWER_MOVES >= GEN_6
-        .naturePower = MOVE_EARTH_POWER,
-    #elif B_NATURE_POWER_MOVES >= GEN_5
-        .naturePower = MOVE_EARTHQUAKE,
+        .naturePower = MOVE_POWER_GEM,
     #elif B_NATURE_POWER_MOVES >= GEN_4
         .naturePower = MOVE_ROCK_SLIDE,
     #else
@@ -160,8 +158,8 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     #else
         .naturePower = MOVE_SWIFT,
     #endif
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
-        .camouflageType = B_CAMOUFLAGE_TYPES >= GEN_4 ? TYPE_GROUND : TYPE_NORMAL,
+        .secretPowerEffect = (B_SECRET_POWER_EFFECT == GEN_4 || B_SECRET_POWER_EFFECT == GEN_5) ? MOVE_EFFECT_ACC_MINUS_1 : MOVE_EFFECT_PARALYSIS,
+        .camouflageType = (B_CAMOUFLAGE_TYPES == GEN_4 || B_CAMOUFLAGE_TYPES == GEN_5) ? TYPE_GROUND : TYPE_NORMAL,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Building,
