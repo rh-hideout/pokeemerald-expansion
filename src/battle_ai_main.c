@@ -357,6 +357,19 @@ void SetupAIPredictionData(u32 battler, enum SwitchType switchType)
     gAiLogicData->aiPredictionInProgress = FALSE;
 }
 
+static void TryResetComboAttackState(u32 battler, u32 moveIndex)
+{
+    enum BattleMoveEffects effect = GetMoveEffect(gBattleMons[battler].moves[moveIndex]);
+
+    // partner (high id) didn't choose Round, recalculate move
+    if (effect != EFFECT_ROUND && gAiLogicData->comboState == COMBO_FIRST_BATTLER_SCORE_INCREASE)
+    {
+        u32 partner = BATTLE_PARTNER(battler);
+        gAiLogicData->comboState = COMBO_SECOND_BATTLER_NO_SCORE_INCREASE;
+        gAiBattleData->chosenMoveIndex[partner] = BattleAI_ChooseMoveIndex(partner);
+    }
+}
+
 void ComputeBattlerDecisions(u32 battler)
 {
     bool32 isAiBattler = (gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart()) && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE));
@@ -382,6 +395,8 @@ void ComputeBattlerDecisions(u32 battler)
 
         // AI's move scoring
         gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
+        if (IsDoubleBattle())
+            TryResetComboAttackState(battler, gAiBattleData->chosenMoveIndex[battler]);
         if (isAiBattler)
             BattlerChooseNonMoveAction();
         ModifySwitchAfterMoveScoring(battler);
@@ -718,6 +733,7 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
 
     memset(aiData, 0, sizeof(struct AiLogicData));
     gAiBattleData->aiUsingGimmick = 0;
+
     if (!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
         return;
 
@@ -3251,6 +3267,14 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     // consider our move effect relative to partner state
     switch (effect)
     {
+    case EFFECT_ROUND:
+        if (ShouldUseRound(battlerAtk))
+        {
+            if (gAiLogicData->comboState == COMBO_INITIAL_STATE)
+                gAiLogicData->comboState = COMBO_FIRST_BATTLER_SCORE_INCREASE;
+            ADJUST_SCORE(BEST_EFFECT);
+        }
+        break;
     case EFFECT_HELPING_HAND:
         if (!hasPartner
          || !HasDamagingMove(battlerAtkPartner)

@@ -6320,3 +6320,23 @@ bool32 CanMoveBeBouncedBack(u32 battler, u32 move)
 
     return FALSE;
 }
+
+bool32 ShouldUseRound(u32 battler)
+{
+    u32 partner = BATTLE_PARTNER(battler);
+    u32 partnerMove = gBattleMons[partner].moves[gAiBattleData->chosenMoveIndex[partner]];
+
+    if (!IsBattlerAlive(partner))
+        return FALSE;
+
+    // Second time we get into the function with the first battler since partner didn't choose Round
+    if (gAiLogicData->comboState == COMBO_SECOND_BATTLER_NO_SCORE_INCREASE)
+        return FALSE;
+
+    // Check if battler chooses move first or partner has chosen Round
+    if (battler < partner || GetMoveEffect(partnerMove) == EFFECT_ROUND)
+        return HasMoveWithEffect(partner, EFFECT_ROUND);
+
+    return FALSE;
+
+}

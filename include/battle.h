@@ -222,6 +222,13 @@ struct SimulatedDamage
     u16 maximum;
 };
 
+enum ComboAttack
+{
+    COMBO_INITIAL_STATE,
+    COMBO_FIRST_BATTLER_SCORE_INCREASE,
+    COMBO_SECOND_BATTLER_NO_SCORE_INCREASE,
+};
+
 // Ai Data used when deciding which move to use, computed only once before each turn's start.
 struct AiLogicData
 {
@@ -253,6 +260,7 @@ struct AiLogicData
     u32 shouldConsiderExplosion:1; // Determines whether AI should consider explosion moves this turn
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
+    enum ComboAttack comboState:2;
     u32 padding2:19;
 };
 
