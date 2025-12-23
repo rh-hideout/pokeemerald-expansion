@@ -519,7 +519,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     }
     else
     {
-        wildArea = WILD_AREA_WATER;
+        wildArea = WILD_AREA_LAND;
         timeOfDay = GetTimeOfDayForEncounters(headerId, wildArea);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
     }
