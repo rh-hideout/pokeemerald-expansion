@@ -246,3 +246,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
     },
     */
 };
+
+const struct EggData gEggDatas[EGG_ID_COUNT] =
+{
+#include "egg_data.h"
+};

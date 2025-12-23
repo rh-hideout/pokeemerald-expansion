@@ -108,7 +108,7 @@ enum MoveSuccessOrder
     CANCELER_POWER_POINTS,
     CANCELER_OBEDIENCE,
     CANCELER_TRUANT,
-    CANCELER_FOCUS,
+    CANCELER_FOCUS_GEN5,
     CANCELER_FLINCH,
     CANCELER_DISABLED,
     CANCELER_VOLATILE_BLOCKED, // Gravity / Heal Block / Throat Chop
@@ -126,11 +126,13 @@ enum MoveSuccessOrder
     CANCELER_ATTACKSTRING,
     CANCELER_PPDEDUCTION,
     CANCELER_WEATHER_PRIMAL,
+    CANCELER_FOCUS_PRE_GEN5,
     CANCELER_MOVE_FAILURE,
     CANCELER_POWDER_STATUS,
     CANCELER_PRIORITY_BLOCK,
     CANCELER_PROTEAN,
     CANCELER_EXPLODING_DAMP,
+    CANCELER_EXPLOSION,
     CANCELER_MULTIHIT_MOVES,
     CANCELER_MULTI_TARGET_MOVES,
     CANCELER_END,
@@ -248,6 +250,7 @@ bool32 IsBattlerMarkedForControllerExec(u32 battler);
 void MarkBattlerForControllerExec(u32 battler);
 void MarkBattlerReceivedLinkData(u32 battler);
 const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState);
+bool32 IsLastMonToMove(u32 battler);
 bool32 ShouldDefiantCompetitiveActivate(u32 battler, enum Ability ability);
 void PrepareStringBattle(enum StringID stringId, u32 battler);
 void ResetSentPokesToOpponentValue(void);
@@ -294,7 +297,7 @@ void BattleScriptPushCursorAndCallback(const u8 *BS_ptr);
 void ClearVariousBattlerFlags(u32 battler);
 void HandleAction_RunBattleScript(void);
 u32 SetRandomTarget(u32 battler);
-u32 GetBattleMoveTarget(u16 move, u8 setTarget);
+u32 GetBattleMoveTarget(u32 move, enum MoveTarget moveTarget);
 u8 GetAttackerObedienceForAction();
 enum HoldEffect GetBattlerHoldEffect(u32 battler);
 enum HoldEffect GetBattlerHoldEffectIgnoreAbility(u32 battler);
@@ -433,7 +436,7 @@ void UpdateStallMons(void);
 bool32 TrySwitchInEjectPack(enum EjectPackTiming timing);
 bool32 TryEmergencyExit(void);
 bool32 EmergencyExitCanBeTriggered(u32 battler);
-u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile);
+ARM_FUNC u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile);
 void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue);
 bool32 ItemHealMonVolatile(u32 battler, u16 itemId);
 void PushHazardTypeToQueue(u32 side, enum Hazards hazardType);
@@ -457,5 +460,7 @@ bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsMimikyuDisguised(u32 battler);
 void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
+bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
+void SetWrapTurns(u32 battler, enum HoldEffect holdEffect);
 
 #endif // GUARD_BATTLE_UTIL_H
