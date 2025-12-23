@@ -40,7 +40,7 @@ static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
 static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId);
-static void OWE_DoAmbientCry(struct ObjectEvent *objectEvent);
+static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 
 static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
@@ -50,11 +50,11 @@ static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
     [OWE_BEHAVIOR_FLEE] =           MOVEMENT_TYPE_FLEE_PLAYER_OWE,
 };
 
-void LoadOverworldEncounterData(void)
+void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
-    // This and ClearOverworldEncounterData is the same
-    // Consolidate these and use one of these to call OWE_DoAmbientCry
-    sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+    OverworldWildEncounter_SetMinimumSpawnTimer();
+    if (OW_WILD_ENCOUNTERS_AMBIENT_CRIES)
+        OWE_PlayMonObjectCry(OWE_GetRandomActiveEncounterObject());
 }
 
 void UpdateOverworldEncounters(void)
@@ -74,7 +74,7 @@ void UpdateOverworldEncounters(void)
     }
     else if (sOWESpawnCountdown == 255)
     {
-        sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+        OverworldWildEncounter_SetMinimumSpawnTimer();
     }
 
     u16 speciesId = SPECIES_NONE;
@@ -90,8 +90,7 @@ void UpdateOverworldEncounters(void)
 
     if (!IsSafeToSpawnObjectEvents() || !TrySelectTile(&x, &y))
     {
-        sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-        OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
+        OWE_ResetSpawnCounterPlayAmbientCry();
         return;
     }
     
@@ -101,8 +100,7 @@ void UpdateOverworldEncounters(void)
 
         if (spawnSlot == INVALID_SPAWN_SLOT)
         {
-            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
+            OWE_ResetSpawnCounterPlayAmbientCry();
             return;
         }
         
@@ -113,8 +111,7 @@ void UpdateOverworldEncounters(void)
 
         if (speciesId == SPECIES_NONE)
         {
-            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
+            OWE_ResetSpawnCounterPlayAmbientCry();
             return;
         }
         
@@ -130,8 +127,7 @@ void UpdateOverworldEncounters(void)
 
         if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
         {
-            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
+            OWE_ResetSpawnCounterPlayAmbientCry();
             return;
         }
 
@@ -139,8 +135,7 @@ void UpdateOverworldEncounters(void)
 
         if (objectEventId >= OBJECT_EVENTS_COUNT)
         {
-            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            OWE_DoAmbientCry(OWE_GetRandomActiveEncounterObject());
+            OWE_ResetSpawnCounterPlayAmbientCry();
             return;
         }
 
@@ -194,7 +189,7 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
 {
     enum OverworldEncounterSpawnAnim spawnAnimType;
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
-    OWE_DoAmbientCry(objectEvent);
+    OWE_PlayMonObjectCry(objectEvent);
 
     if (isShiny)
     {
@@ -498,7 +493,7 @@ u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, boo
     return graphicsId;
 }
 
-void ClearOverworldEncounterData(void)
+void OverworldWildEncounter_SetMinimumSpawnTimer(void)
 {
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
@@ -997,27 +992,31 @@ static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
 // Are these needed? Not defined elsewhere? I don't think so.
 #define MAP_METATILE_VIEW_X 7
 #define MAP_METATILE_VIEW_Y 5
-static void OWE_DoAmbientCry(struct ObjectEvent *objectEvent)
+static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
 {
-    // This can be used to determine how often the UpdateOverworldEncounters function reaches various points.
+    if (!IS_OW_MON_OBJ(objectEvent))
+        return;
+    
     u32 speciesId = OW_SPECIES(objectEvent);
-    if (objectEvent->isPlayer) // Testing
-        speciesId = SPECIES_NONE;
     u32 volume;
     s32 pan;
     s32 distanceX = objectEvent->currentCoords.x - gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x;
     s32 distanceY = objectEvent->currentCoords.y - gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y;
 
+    // TESTING: Setting this species can be used as a test to play a consistent sound to check how often the
+    //          code in UpdateOverworldEncounters runs, as OWE_GetRandomActiveEncounterObject cuurently returns
+    //          the player object.
+    if (objectEvent->isPlayer)
+        speciesId = SPECIES_NONE;
+
     if (distanceX > MAP_METATILE_VIEW_X)
         distanceX = MAP_METATILE_VIEW_X;
-
-    if (distanceX < -MAP_METATILE_VIEW_X)
+    else if (distanceX < -MAP_METATILE_VIEW_X)
         distanceX = -MAP_METATILE_VIEW_X;
 
     if (distanceY > MAP_METATILE_VIEW_Y)
         distanceY = MAP_METATILE_VIEW_Y;
-
-    if (distanceY < -MAP_METATILE_VIEW_Y)
+    else if (distanceY < -MAP_METATILE_VIEW_Y)
         distanceY = -MAP_METATILE_VIEW_Y;
 
     pan = (distanceX * 44) / MAP_METATILE_VIEW_X;

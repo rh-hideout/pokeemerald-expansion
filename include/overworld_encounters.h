@@ -62,14 +62,14 @@ enum OverworldEncounterBehaviors
 
 extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
-void LoadOverworldEncounterData(void);
+void OWE_ResetSpawnCounterPlayAmbientCry(void);
 void UpdateOverworldEncounters(void);
 u32 GetOldestSlot(void);
 void CreateOverworldWildEncounter(void);
 void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
-void ClearOverworldEncounterData(void);
+void OverworldWildEncounter_SetMinimumSpawnTimer(void);
 u8 CountActiveOverworldEncounters(void);
 void RemoveAllOverworldEncounterObjects(void);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
