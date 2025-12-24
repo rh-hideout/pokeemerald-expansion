@@ -152,11 +152,6 @@ EventSnippet_RevealTrainer::
 	clearflag FLAG_SAFE_FOLLOWER_MOVEMENT
 	return
 
-EventScript_IsTrainerFlagSet::
-	specialvar VAR_RESULT, GetTrainerFlag
-	goto_if_ne VAR_RESULT, FALSE, EventScript_NoNormalTrainerBattle
-	return
-
 EventSnippet_PlayTrainerEncounterMusic::
 	special PlayTrainerEncounterMusic
 	return
