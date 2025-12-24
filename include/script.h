@@ -11,8 +11,7 @@ struct ScriptContext
     u8 stackDepth;
     u8 mode;
     u8 comparisonResult;
-    bool8 breakOnTrainerBattle:1;
-    bool8 waitAfterCallNative:1;
+    bool8 breakOnTrainerBattle;
     u8 (*nativePtr)(void);
     const u8 *scriptPtr;
     const u8 *stack[20];

@@ -46,6 +46,8 @@ static const struct SpriteTemplate sFlickeringOrbSpriteTemplate =
     .paletteTag = ANIM_TAG_ORB,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_FlickeringOrb,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimTranslateLinearAndFlicker,
 };
 
@@ -56,6 +58,8 @@ static const struct SpriteTemplate sFlickeringOrbFlippedSpriteTemplate =
     .paletteTag = ANIM_TAG_ORB,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_FlickeringOrb,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimTranslateLinearAndFlicker_Flipped,
 };
 
@@ -76,6 +80,8 @@ const struct SpriteTemplate gWeatherBallUpSpriteTemplate =
     .paletteTag = ANIM_TAG_WEATHER_BALL,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_WeatherBallNormal,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimWeatherBallUp,
 };
 
@@ -85,6 +91,8 @@ const struct SpriteTemplate gWeatherBallNormalDownSpriteTemplate =
     .paletteTag = ANIM_TAG_WEATHER_BALL,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_WeatherBallNormal,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimWeatherBallDown,
 };
 
@@ -109,6 +117,8 @@ const struct SpriteTemplate gSpinningSparkleSpriteTemplate =
     .paletteTag = ANIM_TAG_SPARKLE_4,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_SpinningSparkle,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSpinningSparkle,
 };
 
@@ -118,6 +128,9 @@ static const struct SpriteTemplate sFlickeringFootSpriteTemplate =
     .tileTag = ANIM_TAG_MONSTER_FOOT,
     .paletteTag = ANIM_TAG_MONSTER_FOOT,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimTranslateLinearAndFlicker,
 };
 
@@ -153,6 +166,8 @@ static const struct SpriteTemplate sFlickeringImpactSpriteTemplate =
     .paletteTag = ANIM_TAG_IMPACT,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_FlickeringImpact,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimTranslateLinearAndFlicker,
 };
 
@@ -186,6 +201,7 @@ static const struct SpriteTemplate sFlickeringShrinkOrbSpriteTemplate =
     .paletteTag = ANIM_TAG_ORB,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = sAnims_FlickeringShrinkOrb,
+    .images = NULL,
     .affineAnims = sAffineAnims_FlickeringShrinkOrb,
     .callback = AnimTranslateLinearAndFlicker_Flipped,
 };
@@ -236,6 +252,10 @@ static const struct SpriteTemplate sFrozenIceCubeSpriteTemplate =
     .tileTag = ANIM_TAG_ICE_CUBE,
     .paletteTag = ANIM_TAG_ICE_CUBE,
     .oam = &gOamData_AffineOff_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sFlashingCircleImpactSpriteTemplate =
@@ -243,6 +263,9 @@ static const struct SpriteTemplate sFlashingCircleImpactSpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_IMPACT,
     .paletteTag = ANIM_TAG_CIRCLE_IMPACT,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFlashingCircleImpact,
 };
 

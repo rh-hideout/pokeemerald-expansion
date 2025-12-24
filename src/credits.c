@@ -318,6 +318,8 @@ static const struct SpriteTemplate sSpriteTemplate_CreditsMonBg =
     .paletteTag = TAG_MON_BG,
     .oam = &sOamData_MonBg,
     .anims = sAnims_MonBg,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CreditsMonBg,
 };
 

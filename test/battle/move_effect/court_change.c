@@ -173,7 +173,9 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Steelsurge")
         MESSAGE("Copperajah used G-Max Steelsurge!");
         SEND_IN_MESSAGE("Wobbuffet");
         MESSAGE("The sharp steel bit into Wobbuffet!");
-        NOT MESSAGE("The sharp steel bit into the opposing Wynaut!");
+        NONE_OF {
+            MESSAGE("The sharp steel bit into the opposing Wynaut!");
+        }
     }
 }
 

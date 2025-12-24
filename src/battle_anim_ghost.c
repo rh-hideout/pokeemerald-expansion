@@ -59,6 +59,8 @@ const struct SpriteTemplate gConfuseRayBallBounceSpriteTemplate =
     .tileTag = ANIM_TAG_YELLOW_BALL,
     .paletteTag = ANIM_TAG_YELLOW_BALL,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = sAffineAnims_ConfuseRayBallBounce,
     .callback = AnimConfuseRayBallBounce,
 };
@@ -68,6 +70,9 @@ const struct SpriteTemplate gConfuseRayBallSpiralSpriteTemplate =
     .tileTag = ANIM_TAG_YELLOW_BALL,
     .paletteTag = ANIM_TAG_YELLOW_BALL,
     .oam = &gOamData_AffineOff_ObjBlend_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimConfuseRayBallSpiral,
 };
 
@@ -87,6 +92,8 @@ const struct SpriteTemplate gShadowBallSpriteTemplate =
     .tileTag = ANIM_TAG_SHADOW_BALL,
     .paletteTag = ANIM_TAG_SHADOW_BALL,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_ShadowBall,
     .callback = AnimShadowBall,
 };
@@ -96,6 +103,8 @@ const struct SpriteTemplate gEnergyBallSpriteTemplate =
     .tileTag = ANIM_TAG_ENERGY_BALL,
     .paletteTag = ANIM_TAG_ENERGY_BALL,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_ShadowBall,
     .callback = AnimShadowBall,
 };
@@ -106,6 +115,8 @@ const struct SpriteTemplate gBattleAnimSpriteTemplate_LeafStorm =
     .paletteTag = ANIM_TAG_RAZOR_LEAF,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
     .anims = gAffineAnims_AirWaveCrescent,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimAirWaveCrescent,
 };
 
@@ -115,6 +126,7 @@ const struct SpriteTemplate gBattleAnimSpriteTemplate_LeafStorm2 =
     .paletteTag = ANIM_TAG_LEAF,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = gRazorLeafParticleAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_PoisonProjectile,
     .callback = AnimNeedleArmSpike,
 };
@@ -140,6 +152,8 @@ const struct SpriteTemplate gLickSpriteTemplate =
     .paletteTag = ANIM_TAG_LICK,
     .oam = &gOamData_AffineOff_ObjNormal_16x32,
     .anims = sAnims_Lick,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimLick,
 };
 
@@ -160,6 +174,9 @@ const struct SpriteTemplate gDestinyBondWhiteShadowSpriteTemplate =
     .tileTag = ANIM_TAG_WHITE_SHADOW,
     .paletteTag = ANIM_TAG_WHITE_SHADOW,
     .oam = &gOamData_AffineOff_ObjBlend_64x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDestinyBondWhiteShadow,
 };
 
@@ -168,6 +185,9 @@ const struct SpriteTemplate gDarkVoidBlackHoleTemplate =
     .tileTag = ANIM_TAG_WHITE_SHADOW,
     .paletteTag = ANIM_TAG_QUICK_GUARD_HAND,
     .oam = &gOamData_AffineOff_ObjBlend_64x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDestinyBondWhiteShadow
 };
 
@@ -176,6 +196,9 @@ const struct SpriteTemplate gCurseNailSpriteTemplate =
     .tileTag = ANIM_TAG_NAIL,
     .paletteTag = ANIM_TAG_NAIL,
     .oam = &gOamData_AffineOff_ObjBlend_32x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimCurseNail,
 };
 
@@ -184,6 +207,9 @@ const struct SpriteTemplate gCurseGhostSpriteTemplate =
     .tileTag = ANIM_TAG_GHOSTLY_SPIRIT,
     .paletteTag = ANIM_TAG_GHOSTLY_SPIRIT,
     .oam = &gOamData_AffineOff_ObjBlend_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimGhostStatusSprite,
 };
 
@@ -192,6 +218,9 @@ const struct SpriteTemplate gNightmareDevilSpriteTemplate =
     .tileTag = ANIM_TAG_DEVIL,
     .paletteTag = ANIM_TAG_DEVIL,
     .oam = &gOamData_AffineOff_ObjBlend_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimGhostStatusSprite,
 };
 
@@ -215,6 +244,8 @@ const struct SpriteTemplate gGrudgeFlameSpriteTemplate =
     .paletteTag = ANIM_TAG_PURPLE_FLAME,
     .oam = &gOamData_AffineOff_ObjBlend_16x32,
     .anims = gAnims_GrudgeFlame,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimGrudgeFlame,
 };
 
@@ -224,6 +255,9 @@ static const struct SpriteTemplate sMonMoveCircularSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimMonMoveCircular,
 };
 
@@ -232,6 +266,8 @@ const struct SpriteTemplate gFlashCannonBallMovementTemplate =
     .tileTag = ANIM_TAG_FLASH_CANNON_BALL,
     .paletteTag = ANIM_TAG_FLASH_CANNON_BALL,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_ShadowBall,
     .callback = AnimShadowBall
 };
@@ -241,6 +277,8 @@ const struct SpriteTemplate gPoltergeistEffectTemplate =
     .tileTag = ANIM_TAG_POLTERGEIST,
     .paletteTag = ANIM_TAG_POLTERGEIST,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_ShadowBall,
     .callback = AnimPoltergeistItem,
 };

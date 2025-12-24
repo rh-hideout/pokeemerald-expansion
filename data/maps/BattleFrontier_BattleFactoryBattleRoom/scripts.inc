@@ -80,7 +80,9 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleOpponent::
 	closemessage
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, FALSE
 	special HealPlayerParty
-	dofacilitytrainerbattle FRONTIER_FACILITY_FACTORY
+	setvar VAR_0x8004, SPECIAL_BATTLE_FACTORY
+	setvar VAR_0x8005, 0
+	special DoSpecialTrainerBattle
 	waitstate
 	switch VAR_RESULT
 	case 1, BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedOpponent
@@ -169,7 +171,9 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_DoNolandBattle::
 	closemessage
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, FALSE
 	special HealPlayerParty
-	dofacilitytrainerbattle FACILITY_BATTLE_FACTORY
+	setvar VAR_0x8004, SPECIAL_BATTLE_FACTORY
+	setvar VAR_0x8005, 0
+	special DoSpecialTrainerBattle
 	waitstate
 	return
 

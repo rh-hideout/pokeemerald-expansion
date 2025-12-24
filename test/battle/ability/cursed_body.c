@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Cursed Body cannot trigger if the target is behind a Substit
 SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution")
 {
     GIVEN {
-        ASSUME(IsMultiHitMove(MOVE_ROCK_BLAST));
+        ASSUME(GetMoveEffect(MOVE_ROCK_BLAST) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
     } WHEN {

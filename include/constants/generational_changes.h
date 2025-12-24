@@ -114,7 +114,7 @@
     F(KNOCK_OFF_REMOVAL,         knockOffRemoval,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(HEAL_BELL_SOUNDPROOF,      healBellSoundproof,      (u32, GEN_COUNT - 1)) \
     F(CHARGE,                    charge,                  (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(POWDER_STATUS_HEAVY_RAIN,  powderStatusHeavyRain,   (u32, GEN_COUNT - 1)) \
+    F(POWDER_RAIN,               powderRain,              (u32, GEN_COUNT - 1)) \
     F(AFTER_YOU_TURN_ORDER,      afterYouTurnOrder,       (u32, GEN_COUNT - 1)) \
     F(QUASH_TURN_ORDER,          quashTurnOrder,          (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(DESTINY_BOND_FAIL,         destinyBondFail,         (u32, GEN_COUNT - 1)) \
@@ -123,7 +123,6 @@
     F(ENCORE_TARGET,             encoreTarget,            (u32, GEN_COUNT - 1)) \
     F(TIME_OF_DAY_HEALING_MOVES, timeOfDayHealingMoves,   (u32, GEN_COUNT - 1)) \
     F(DREAM_EATER_LIQUID_OOZE,   dreamEaterLiquidOoze,    (u32, GEN_COUNT - 1)) \
-    F(FOCUS_PUNCH_FAILURE,       focusPunchFailure,       (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -196,9 +195,6 @@
     F(AFFECTION_MECHANICS,       affectionMechanics,      (u32, TRUE))          /* TODO: use in tests */ \
     F(OBEDIENCE_MECHANICS,       obedienceMechanics,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(USE_FROSTBITE,             useFrostbite,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(SANDSTORM_SOLAR_BEAM,      standstormSolarBeam,     (u32, GEN_COUNT - 1)) \
-    F(COUNTER_MIRROR_COAT_ALLY,  counterMirrorCoatAlly,   (u32, GEN_COUNT - 1)) \
-    F(COUNTER_TRY_HIT_PARTNER,   counterTryHitPartner,    (u32, GEN_COUNT - 1)) \
 
 
 #define GET_CONFIG_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_CONFIG_MAXIMUM_, _typeMaxValue)

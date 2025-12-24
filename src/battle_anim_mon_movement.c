@@ -37,6 +37,9 @@ const struct SpriteTemplate gHorizontalLungeSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = DoHorizontalLunge,
 };
 
@@ -45,6 +48,9 @@ const struct SpriteTemplate gVerticalDipSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = DoVerticalDip,
 };
 
@@ -53,6 +59,9 @@ const struct SpriteTemplate gSlideMonToOriginalPosSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SlideMonToOriginalPos,
 };
 
@@ -61,6 +70,9 @@ const struct SpriteTemplate gSlideMonToOriginalPosPartnerSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SlideMonToOriginalPosPartner,
 };
 
@@ -69,6 +81,9 @@ const struct SpriteTemplate gSlideMonToOffsetSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SlideMonToOffset,
 };
 
@@ -77,6 +92,9 @@ const struct SpriteTemplate gSlideMonToOffsetPartnerSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SlideMonToOffsetPartner,
 };
 
@@ -85,6 +103,9 @@ const struct SpriteTemplate gSlideMonToOffsetAndBackSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SlideMonToOffsetAndBack,
 };
 

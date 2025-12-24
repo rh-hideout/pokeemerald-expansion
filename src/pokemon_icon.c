@@ -136,16 +136,11 @@ static const u16 sSpriteImageSizes[3][4] =
 
 u8 CreateMonIcon(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality)
 {
-    return CreateMonIconIsEgg(species, callback, x, y, subpriority, personality, FALSE);
-}
-
-u8 CreateMonIconIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality, bool32 isEgg)
-{
     u8 spriteId;
     struct MonIconSpriteTemplate iconTemplate =
     {
         .oam = &sMonIconOamData,
-        .image = GetMonIconPtrIsEgg(species, personality, isEgg),
+        .image = GetMonIconPtr(species, personality),
         .anims = sMonIconAnims,
         .affineAnims = sMonIconAffineAnims,
         .callback = callback,
@@ -153,22 +148,11 @@ u8 CreateMonIconIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16
     };
     species = SanitizeSpeciesId(species);
 
-    if (isEgg)
-    {
-        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
-            iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG + gEggDatas[gSpeciesInfo[species].eggId].eggIconPalIndex;
-        else
-            iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG + gSpeciesInfo[SPECIES_EGG].iconPalIndex;
-    }
-    else if (species > NUM_SPECIES)
-    {
+    if (species > NUM_SPECIES)
         iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG;
-    }
 #if P_GENDER_DIFFERENCES
     else if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
-    {
         iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG + gSpeciesInfo[species].iconPalIndexFemale;
-    }
 #endif
 
     spriteId = CreateMonIconSprite(&iconTemplate, x, y, subpriority);
@@ -181,10 +165,6 @@ u8 CreateMonIconIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16
 
 u8 CreateMonIconNoPersonality(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority)
 {
-    return CreateMonIconNoPersonalityIsEgg(species, callback, x, y, subpriority, FALSE);
-}
-u8 CreateMonIconNoPersonalityIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, bool32 isEgg)
-{
     u8 spriteId;
     struct MonIconSpriteTemplate iconTemplate =
     {
@@ -196,7 +176,7 @@ u8 CreateMonIconNoPersonalityIsEgg(u16 species, void (*callback)(struct Sprite *
         .paletteTag = POKE_ICON_BASE_PAL_TAG + gSpeciesInfo[species].iconPalIndex,
     };
 
-    iconTemplate.image = GetMonIconTilesIsEgg(species, 0, isEgg);
+    iconTemplate.image = GetMonIconTiles(species, 0);
     spriteId = CreateMonIconSprite(&iconTemplate, x, y, subpriority);
 
     UpdateMonIconFrame(&gSprites[spriteId]);
@@ -231,12 +211,7 @@ u16 GetIconSpeciesNoPersonality(u16 species)
 
 const u8 *GetMonIconPtr(u16 species, u32 personality)
 {
-    return GetMonIconPtrIsEgg(species, personality, FALSE);
-}
-
-const u8 *GetMonIconPtrIsEgg(u16 species, u32 personality, bool32 isEgg)
-{
-    return GetMonIconTilesIsEgg(GetIconSpecies(species, personality), personality, isEgg);
+    return GetMonIconTiles(GetIconSpecies(species, personality), personality);
 }
 
 void FreeAndDestroyMonIconSprite(struct Sprite *sprite)
@@ -310,35 +285,20 @@ void SpriteCB_MonIcon(struct Sprite *sprite)
 
 const u8 *GetMonIconTiles(u16 species, u32 personality)
 {
-    return GetMonIconTilesIsEgg(species, personality, FALSE);
-}
-
-const u8 *GetMonIconTilesIsEgg(u16 species, u32 personality, bool32 isEgg)
-{
     const u8 *iconSprite;
 
     if (species > NUM_SPECIES)
         species = SPECIES_NONE;
 
-    if (isEgg)
-    {
-        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
-            iconSprite = gEggDatas[gSpeciesInfo[species].eggId].eggIcon;
-        else
-            iconSprite = gSpeciesInfo[SPECIES_EGG].iconSprite;
-    }
-    else
-    {
 #if P_GENDER_DIFFERENCES
-        if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
-            iconSprite = gSpeciesInfo[species].iconSpriteFemale;
-        else
+    if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
+        iconSprite = gSpeciesInfo[species].iconSpriteFemale;
+    else
 #endif
-        if (gSpeciesInfo[species].iconSprite != NULL)
-            iconSprite = gSpeciesInfo[species].iconSprite;
-        else
-            iconSprite = gSpeciesInfo[SPECIES_NONE].iconSprite;
-    }
+    if (gSpeciesInfo[species].iconSprite != NULL)
+        iconSprite = gSpeciesInfo[species].iconSprite;
+    else
+        iconSprite = gSpeciesInfo[SPECIES_NONE].iconSprite;
 
     return iconSprite;
 }

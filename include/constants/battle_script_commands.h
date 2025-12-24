@@ -88,10 +88,17 @@
 #define CMP_COMMON_BITS         4
 #define CMP_NO_COMMON_BITS      5
 
+// Veriouses have been deprecated but the enum and function will be supported for one more release cycle
+enum CmdVarious
+{
+    VARIOUS_NONE,
+};
+
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN         1
 #define DMG_1_8_TARGET_HP       2
-#define DMG_BIG_ROOT            3
+#define DMG_FULL_ATTACKER_HP    3
+#define DMG_BIG_ROOT            4
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
@@ -172,6 +179,7 @@ enum MoveEndEffects
     MOVEEND_PICKPOCKET,
     MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_CHANGED_ITEMS,
+    MOVEEND_SAME_MOVE_TURNS,
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
     MOVEEND_PURSUIT_NEXT_ACTION,
@@ -181,12 +189,10 @@ enum MoveEndEffects
     MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE = (MOVEEND_HIT_ESCAPE + 1),
 };
 
-enum SwitchInCases
-{
-    B_SWITCH_NORMAL,
-    B_SWITCH_HIT, // dragon tail, circle throw
-    B_SWITCH_RED_CARD,
-};
+// switch cases
+#define B_SWITCH_NORMAL     0
+#define B_SWITCH_HIT        1   // dragon tail, circle throw
+#define B_SWITCH_RED_CARD   2
 
 enum StatusTrigger
 {

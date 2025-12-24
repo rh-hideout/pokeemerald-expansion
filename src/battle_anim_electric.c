@@ -53,6 +53,8 @@ const struct SpriteTemplate gLightningSpriteTemplate =
     .paletteTag = ANIM_TAG_LIGHTNING,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_Lightning,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimLightning,
 };
 
@@ -75,6 +77,8 @@ static const struct SpriteTemplate sUnusedSpinningFistSpriteTemplate =
     .tileTag = ANIM_TAG_HANDS_AND_FEET,
     .paletteTag = ANIM_TAG_HANDS_AND_FEET,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = sAffineAnims_UnusedSpinningFist,
     .callback = AnimUnusedSpinningFist,
 };
@@ -107,6 +111,8 @@ static const struct SpriteTemplate sCirclingElectricShockSpriteTemplate =
     .paletteTag = ANIM_TAG_SHOCK,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_CirclingElectricShock,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimCirclingElectricShock,
 };
 
@@ -115,6 +121,9 @@ const struct SpriteTemplate gSparkElectricitySpriteTemplate =
     .tileTag = ANIM_TAG_SPARK_2,
     .paletteTag = ANIM_TAG_SPARK_2,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSparkElectricity,
 };
 
@@ -123,6 +132,9 @@ const struct SpriteTemplate gZapCannonBallSpriteTemplate =
     .tileTag = ANIM_TAG_BLACK_BALL_2,
     .paletteTag = ANIM_TAG_BLACK_BALL_2,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
 
@@ -142,6 +154,8 @@ const struct SpriteTemplate gZapCannonSparkSpriteTemplate =
     .tileTag = ANIM_TAG_SPARK_2,
     .paletteTag = ANIM_TAG_SPARK_2,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_FlashingSpark,
     .callback = AnimZapCannonSpark,
 };
@@ -178,6 +192,7 @@ const struct SpriteTemplate gThunderboltOrbSpriteTemplate =
     .paletteTag = ANIM_TAG_SHOCK_3,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
     .anims = gAnims_ThunderboltOrb,
+    .images = NULL,
     .affineAnims = sAffineAnims_ThunderboltOrb,
     .callback = AnimThunderboltOrb,
 };
@@ -187,6 +202,8 @@ const struct SpriteTemplate gSparkElectricityFlashingSpriteTemplate =
     .tileTag = ANIM_TAG_SPARK_2,
     .paletteTag = ANIM_TAG_SPARK_2,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_FlashingSpark,
     .callback = AnimSparkElectricityFlashing,
 };
@@ -196,6 +213,9 @@ const struct SpriteTemplate gElectricitySpriteTemplate =
     .tileTag = ANIM_TAG_SPARK_2,
     .paletteTag = ANIM_TAG_SPARK_2,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimElectricity,
 };
 
@@ -204,6 +224,9 @@ const struct SpriteTemplate gElectricBoltSegmentSpriteTemplate =
     .tileTag = ANIM_TAG_SPARK,
     .paletteTag = ANIM_TAG_SPARK,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimElectricBoltSegment,
 };
 
@@ -212,6 +235,9 @@ const struct SpriteTemplate gThunderWaveSpriteTemplate =
     .tileTag = ANIM_TAG_SPARK_H,
     .paletteTag = ANIM_TAG_SPARK_H,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimThunderWave,
 };
 
@@ -220,6 +246,9 @@ const struct SpriteTemplate gAnchorShotChainTemplate =
     .tileTag = ANIM_TAG_CHAIN_LINK,
     .paletteTag = ANIM_TAG_CHAIN_LINK,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimThunderWave
 };
 
@@ -273,6 +302,9 @@ const struct SpriteTemplate gElectricChargingParticlesSpriteTemplate =
     .paletteTag = ANIM_TAG_ELECTRIC_ORBS,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
     .anims = gAnims_ElectricChargingParticles,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 const struct SpriteTemplate gLightOfRuinGrayChargeTemplate =
@@ -281,6 +313,9 @@ const struct SpriteTemplate gLightOfRuinGrayChargeTemplate =
     .paletteTag = ANIM_TAG_GUST,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
     .anims = gAnims_ElectricChargingParticles,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const union AffineAnimCmd sAffineAnim_GrowingElectricOrb_0[] =
@@ -361,6 +396,8 @@ const struct SpriteTemplate gGrowingChargeOrbSpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
@@ -371,6 +408,8 @@ const struct SpriteTemplate gGrowingChargeOrb2SpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_GrowingElectricOrb2,
     .callback = AnimGrowingChargeOrb,
 };
@@ -381,6 +420,8 @@ const struct SpriteTemplate gGrowingChargeOrb3SpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_GrowingElectricOrb3,
     .callback = AnimGrowingChargeOrb,
 };
@@ -405,6 +446,8 @@ const struct SpriteTemplate gElectricPuffSpriteTemplate =
     .paletteTag = ANIM_TAG_ELECTRICITY,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_ElectricPuff,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimElectricPuff,
 };
 
@@ -413,6 +456,8 @@ const struct SpriteTemplate gVoltTackleOrbSlideSpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimVoltTackleOrbSlide,
 };
@@ -466,6 +511,7 @@ const struct SpriteTemplate gVoltTackleBoltSpriteTemplate =
     .paletteTag = ANIM_TAG_SPARK,
     .oam = &gOamData_AffineDouble_ObjNormal_8x16,
     .anims = sAnims_VoltTackleBolt,
+    .images = NULL,
     .affineAnims = sAffineAnims_VoltTackleBolt,
     .callback = AnimVoltTackleBolt,
 };
@@ -475,6 +521,9 @@ const struct SpriteTemplate gFairyLockChainsSpriteTemplate =
     .tileTag = ANIM_TAG_FAIRY_LOCK_CHAINS,
     .paletteTag = ANIM_TAG_FAIRY_LOCK_CHAINS,
     .oam = &gOamData_AffineOff_ObjNormal_64x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimVoltTackleBolt,
 };
 
@@ -483,6 +532,9 @@ const struct SpriteTemplate gCollisionCourseSpriteTemplate =
     .tileTag = ANIM_TAG_SMALL_EMBER,
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_64x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimVoltTackleBolt,
 };
 
@@ -491,6 +543,8 @@ const struct SpriteTemplate gGrowingShockWaveOrbSpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingShockWaveOrb,
 };
@@ -500,6 +554,9 @@ const struct SpriteTemplate gShockWaveProgressingBoltSpriteTemplate =
     .tileTag = ANIM_TAG_SPARK,
     .paletteTag = ANIM_TAG_SPARK,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimShockWaveProgressingBolt,
 };
 
@@ -508,6 +565,8 @@ const struct SpriteTemplate gFlashCannonGrayChargeTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_HANDS_AND_FEET,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb
 };
@@ -531,6 +590,8 @@ const struct SpriteTemplate gJudgmentBlackChargeTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_HANDS_AND_FEET,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = sSpriteAffineAnimTable_JudgmentBall,
     .callback = AnimGrowingChargeOrb
 };
@@ -540,6 +601,8 @@ const struct SpriteTemplate gSeedFlareGreenChargeTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_LEAF,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb
 };
@@ -567,6 +630,8 @@ const struct SpriteTemplate gIonSpriteTemplate =
     .paletteTag = ANIM_TAG_IONS,
     .oam = &gOamData_AffineOff_ObjNormal_16x32,
     .anims = sAnims_Ion,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimIon,
 };
 
@@ -575,6 +640,8 @@ const struct SpriteTemplate gVoltSwitchSpriteTemplate =
     .tileTag = ANIM_TAG_SHADOW_BALL,
     .paletteTag = ANIM_TAG_IONS,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_ShadowBall,
     .callback = AnimTask_VoltSwitch,
 };
