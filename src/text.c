@@ -489,7 +489,7 @@ void RunTextPrinters(void)
             }
         }
 
-        if (numEmpty == WINDOWS_MAX)
+        if (numEmpty == NUM_TEXT_PRINTERS)
             return;
     } while (isInstantText);
 }
