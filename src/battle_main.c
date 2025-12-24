@@ -302,57 +302,57 @@ static const s8 sCenterToCornerVecXs[8] ={-32, -16, -16, -32, -32};
 const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
 {
     [TRAINER_CLASS_PKMN_TRAINER_1] = { _("{PKMN} Trainer") }, // Unused
-    [TRAINER_CLASS_PKMN_TRAINER_2] = { _("{PKMN} Trainer"), (B_ORAS_PRIZE_MONEY == TRUE ? 10 : 15), BALL_ULTRA }, // Wally & Steven
-    [TRAINER_CLASS_HIKER] = { _("Hiker"), (B_ORAS_PRIZE_MONEY == TRUE ? 8 : 10), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
-    [TRAINER_CLASS_TEAM_AQUA] = { _("Team Aqua"), B_ORAS_PRIZE_MONEY == TRUE ? 10 : 5 },
+    [TRAINER_CLASS_PKMN_TRAINER_2] = { _("{PKMN} Trainer"), (B_ORAS_PRIZE_MONEY ? 10 : 15), BALL_ULTRA }, // Wally & Steven
+    [TRAINER_CLASS_HIKER] = { _("Hiker"), (B_ORAS_PRIZE_MONEY ? 8 : 10), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
+    [TRAINER_CLASS_TEAM_AQUA] = { _("Team Aqua"), B_ORAS_PRIZE_MONEY ? 10 : 5 },
     [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} Breeder"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
     #if B_TRAINER_CLASS_NAMES >= GEN_4
-        [TRAINER_CLASS_COOLTRAINER] = { _("Ace Trainer"), (B_ORAS_PRIZE_MONEY == TRUE ? 15 : 12), BALL_ULTRA },
+        [TRAINER_CLASS_COOLTRAINER] = { _("Ace Trainer"), (B_ORAS_PRIZE_MONEY ? 15 : 12), BALL_ULTRA },
         [TRAINER_CLASS_INTERVIEWER] = { _("Interviewers"), 10 },
-        [TRAINER_CLASS_POKEMANIAC] = { _("Poké Maniac"), B_ORAS_PRIZE_MONEY == TRUE ? 7 : 15 },
-        [TRAINER_CLASS_COOLTRAINER_2] = { _("Ace Trainer"), (B_ORAS_PRIZE_MONEY == TRUE ? 15 : 5), BALL_ULTRA }, // Jazmyn
-        [TRAINER_CLASS_SALON_MAIDEN] = { _("Tower Tycoon"), 0, BALL_ULTRA },
+        [TRAINER_CLASS_POKEMANIAC] = { _("Poké Maniac"), B_ORAS_PRIZE_MONEY ? 7 : 15 },
+        [TRAINER_CLASS_COOLTRAINER_2] = { _("Ace Trainer"), (B_ORAS_PRIZE_MONEY ? 15 : 5), BALL_ULTRA }, // Jazmyn
+        [TRAINER_CLASS_SALON_MAIDEN] = { _("Tower Tycoon"), 5, BALL_ULTRA },
     #else
-        [TRAINER_CLASS_COOLTRAINER] = { _("Cooltrainer"), (B_ORAS_PRIZE_MONEY == TRUE ? 15 : 12), BALL_ULTRA },
+        [TRAINER_CLASS_COOLTRAINER] = { _("Cooltrainer"), (B_ORAS_PRIZE_MONEY ? 15 : 12), BALL_ULTRA },
         [TRAINER_CLASS_INTERVIEWER] = { _("Interviewer"), 10 },
-        [TRAINER_CLASS_POKEMANIAC] = { _("Pokémaniac"), B_ORAS_PRIZE_MONEY == TRUE ? 7 : 15 },
-        [TRAINER_CLASS_COOLTRAINER_2] = { _("Cooltrainer"), (B_ORAS_PRIZE_MONEY == TRUE ? 15 : 5), BALL_ULTRA }, // Jazmyn
-        [TRAINER_CLASS_SALON_MAIDEN] = { _("Salon Maiden"), 0, BALL_ULTRA },
+        [TRAINER_CLASS_POKEMANIAC] = { _("Pokémaniac"), B_ORAS_PRIZE_MONEY ? 7 : 15 },
+        [TRAINER_CLASS_COOLTRAINER_2] = { _("Cooltrainer"), (B_ORAS_PRIZE_MONEY ? 15 : 5), BALL_ULTRA }, // Jazmyn
+        [TRAINER_CLASS_SALON_MAIDEN] = { _("Salon Maiden"), 5, BALL_ULTRA },
     #endif
-    [TRAINER_CLASS_BIRD_KEEPER] = { _("Bird Keeper"), B_ORAS_PRIZE_MONEY == TRUE ? 10 : 8 },
-    [TRAINER_CLASS_COLLECTOR] = { _("Collector"), (B_ORAS_PRIZE_MONEY == TRUE ? 7 : 15), BALL_PREMIER },
+    [TRAINER_CLASS_BIRD_KEEPER] = { _("Bird Keeper"), B_ORAS_PRIZE_MONEY ? 10 : 8 },
+    [TRAINER_CLASS_COLLECTOR] = { _("Collector"), (B_ORAS_PRIZE_MONEY ? 7 : 15), BALL_PREMIER },
     #if B_TRAINER_CLASS_NAMES >= GEN_5
-        [TRAINER_CLASS_SWIMMER_M] = { _("Swimmer"), (B_ORAS_PRIZE_MONEY == TRUE ? 4 : 2), BALL_DIVE },
-        [TRAINER_CLASS_SWIMMER_F] = { _("Swimmer"), (B_ORAS_PRIZE_MONEY == TRUE ? 4 : 2), BALL_DIVE },
+        [TRAINER_CLASS_SWIMMER_M] = { _("Swimmer"), (B_ORAS_PRIZE_MONEY ? 4 : 2), BALL_DIVE },
+        [TRAINER_CLASS_SWIMMER_F] = { _("Swimmer"), (B_ORAS_PRIZE_MONEY ? 4 : 2), BALL_DIVE },
     #else
-        [TRAINER_CLASS_SWIMMER_M] = { _("Swimmer♂"), (B_ORAS_PRIZE_MONEY == TRUE ? 4 : 2), BALL_DIVE },
-        [TRAINER_CLASS_SWIMMER_F] = { _("Swimmer♀"), (B_ORAS_PRIZE_MONEY == TRUE ? 4 : 2), BALL_DIVE },
+        [TRAINER_CLASS_SWIMMER_M] = { _("Swimmer♂"), (B_ORAS_PRIZE_MONEY ? 4 : 2), BALL_DIVE },
+        [TRAINER_CLASS_SWIMMER_F] = { _("Swimmer♀"), (B_ORAS_PRIZE_MONEY ? 4 : 2), BALL_DIVE },
     #endif
-    [TRAINER_CLASS_TEAM_MAGMA] = { _("Team Magma"), B_ORAS_PRIZE_MONEY == TRUE ? 10 : 5 },
-    [TRAINER_CLASS_EXPERT] = { _("Expert"), B_ORAS_PRIZE_MONEY == TRUE ? 20 : 10 },
-    [TRAINER_CLASS_AQUA_ADMIN] = { _("Aqua Admin"), B_ORAS_PRIZE_MONEY == TRUE ? 20 : 10 },
+    [TRAINER_CLASS_TEAM_MAGMA] = { _("Team Magma"), B_ORAS_PRIZE_MONEY ? 10 : 5 },
+    [TRAINER_CLASS_EXPERT] = { _("Expert"), B_ORAS_PRIZE_MONEY ? 20 : 10 },
+    [TRAINER_CLASS_AQUA_ADMIN] = { _("Aqua Admin"), B_ORAS_PRIZE_MONEY ? 20 : 10 },
     [TRAINER_CLASS_BLACK_BELT] = { _("Black Belt"), 8, BALL_ULTRA },
-    [TRAINER_CLASS_AQUA_LEADER] = { _("Aqua Leader"), (B_ORAS_PRIZE_MONEY == TRUE ? 40 : 20), BALL_MASTER },
-    [TRAINER_CLASS_HEX_MANIAC] = { _("Hex Maniac"), B_ORAS_PRIZE_MONEY == TRUE ? 7 : 6 },
-    [TRAINER_CLASS_AROMA_LADY] = { _("Aroma Lady"), B_ORAS_PRIZE_MONEY == TRUE ? 8 : 10 },
-    [TRAINER_CLASS_RUIN_MANIAC] = { _("Ruin Maniac"), B_ORAS_PRIZE_MONEY == TRUE ? 7 : 15 },
+    [TRAINER_CLASS_AQUA_LEADER] = { _("Aqua Leader"), (B_ORAS_PRIZE_MONEY ? 40 : 20), BALL_MASTER },
+    [TRAINER_CLASS_HEX_MANIAC] = { _("Hex Maniac"), B_ORAS_PRIZE_MONEY ? 7 : 6 },
+    [TRAINER_CLASS_AROMA_LADY] = { _("Aroma Lady"), B_ORAS_PRIZE_MONEY ? 8 : 10 },
+    [TRAINER_CLASS_RUIN_MANIAC] = { _("Ruin Maniac"), B_ORAS_PRIZE_MONEY ? 7 : 15 },
     [TRAINER_CLASS_TUBER_F] = { _("Tuber"), 1 },
     [TRAINER_CLASS_TUBER_M] = { _("Tuber"), 1 },
-    [TRAINER_CLASS_LADY] = { _("Lady"), B_ORAS_PRIZE_MONEY == TRUE ? 30 : 50 },
-    [TRAINER_CLASS_BEAUTY] = { _("Beauty"), (B_ORAS_PRIZE_MONEY == TRUE ? 14 : 20), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_GREAT : BALL_POKE },
-    [TRAINER_CLASS_RICH_BOY] = { _("Rich Boy"), B_ORAS_PRIZE_MONEY == TRUE ? 30 : 50 },
-    [TRAINER_CLASS_GUITARIST] = { _("Guitarist"), B_ORAS_PRIZE_MONEY == TRUE ? 7 : 8 },
+    [TRAINER_CLASS_LADY] = { _("Lady"), B_ORAS_PRIZE_MONEY ? 30 : 50 },
+    [TRAINER_CLASS_BEAUTY] = { _("Beauty"), (B_ORAS_PRIZE_MONEY ? 14 : 20), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_GREAT : BALL_POKE },
+    [TRAINER_CLASS_RICH_BOY] = { _("Rich Boy"), B_ORAS_PRIZE_MONEY ? 30 : 50 },
+    [TRAINER_CLASS_GUITARIST] = { _("Guitarist"), B_ORAS_PRIZE_MONEY ? 7 : 8 },
     [TRAINER_CLASS_KINDLER] = { _("Kindler"), 8 },
     [TRAINER_CLASS_CAMPER] = { _("Camper"), 4 },
     [TRAINER_CLASS_PICNICKER] = { _("Picnicker"), 4 },
-    [TRAINER_CLASS_BUG_MANIAC] = { _("Bug Maniac"), B_ORAS_PRIZE_MONEY == TRUE ? 7 : 15 },
-    [TRAINER_CLASS_PSYCHIC] = { _("Psychic"), B_ORAS_PRIZE_MONEY == TRUE ? 8 : 6 },
-    [TRAINER_CLASS_GENTLEMAN] = { _("Gentleman"), (B_ORAS_PRIZE_MONEY == TRUE ? 50 : 20), BALL_LUXURY },
-    [TRAINER_CLASS_ELITE_FOUR] = { _("Elite Four"), (B_ORAS_PRIZE_MONEY == TRUE ? 40 : 25), BALL_ULTRA },
+    [TRAINER_CLASS_BUG_MANIAC] = { _("Bug Maniac"), B_ORAS_PRIZE_MONEY ? 7 : 15 },
+    [TRAINER_CLASS_PSYCHIC] = { _("Psychic"), B_ORAS_PRIZE_MONEY ? 8 : 6 },
+    [TRAINER_CLASS_GENTLEMAN] = { _("Gentleman"), (B_ORAS_PRIZE_MONEY ? 50 : 20), BALL_LUXURY },
+    [TRAINER_CLASS_ELITE_FOUR] = { _("Elite Four"), (B_ORAS_PRIZE_MONEY ? 40 : 25), BALL_ULTRA },
     #if B_TRAINER_CLASS_NAMES >= GEN_7
-        [TRAINER_CLASS_LEADER] = { _("Gym Leader"), (B_ORAS_PRIZE_MONEY == TRUE ? 30 : 25), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
+        [TRAINER_CLASS_LEADER] = { _("Gym Leader"), (B_ORAS_PRIZE_MONEY ? 30 : 25), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
     #else
-        [TRAINER_CLASS_LEADER] = { _("Leader"), (B_ORAS_PRIZE_MONEY == TRUE ? 30 : 25), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
+        [TRAINER_CLASS_LEADER] = { _("Leader"), (B_ORAS_PRIZE_MONEY ? 30 : 25), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
     #endif
     #if B_TRAINER_CLASS_NAMES == GEN_6
         [TRAINER_CLASS_SCHOOL_KID] = { _("Schoolkid") },
@@ -360,34 +360,34 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
         [TRAINER_CLASS_SCHOOL_KID] = { _("School Kid") },
     #endif
     #if B_TRAINER_CLASS_NAMES >= GEN_6
-        [TRAINER_CLASS_SR_AND_JR] = { _("Teammates"), B_ORAS_PRIZE_MONEY == TRUE ? 3 : 4 },
-        [TRAINER_CLASS_POKEFAN] = { _("Poké Fan"), B_ORAS_PRIZE_MONEY == TRUE ? 16 : 20 },
+        [TRAINER_CLASS_SR_AND_JR] = { _("Teammates"), B_ORAS_PRIZE_MONEY ? 3 : 4 },
+        [TRAINER_CLASS_POKEFAN] = { _("Poké Fan"), B_ORAS_PRIZE_MONEY ? 16 : 20 },
         [TRAINER_CLASS_SIS_AND_BRO] = { _("Sis & Bro"), 3 },
     #else
-        [TRAINER_CLASS_SR_AND_JR] = { _("Sr. and Jr."), B_ORAS_PRIZE_MONEY == TRUE ? 3 : 4 },
-        [TRAINER_CLASS_POKEFAN] = { _("Pokéfan"), B_ORAS_PRIZE_MONEY == TRUE ? 16 : 20 },
+        [TRAINER_CLASS_SR_AND_JR] = { _("Sr. and Jr."), B_ORAS_PRIZE_MONEY ? 3 : 4 },
+        [TRAINER_CLASS_POKEFAN] = { _("Pokéfan"), B_ORAS_PRIZE_MONEY ? 16 : 20 },
         [TRAINER_CLASS_SIS_AND_BRO] = { _("Sis and Bro"), 3 },
     #endif
     [TRAINER_CLASS_WINSTRATE] = { _("Winstrate"), 10 },
     [TRAINER_CLASS_YOUNGSTER] = { _("Youngster"), 4 },
     [TRAINER_CLASS_CHAMPION] = { _("Champion"), 50, BALL_ULTRA },
     #if B_TRAINER_CLASS_NAMES >= GEN_8 || B_TRAINER_CLASS_NAMES == GEN_2
-        [TRAINER_CLASS_FISHERMAN] = { _("Fisher"), (B_ORAS_PRIZE_MONEY == TRUE ? 8 : 10), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_DIVE : BALL_LURE },
+        [TRAINER_CLASS_FISHERMAN] = { _("Fisher"), (B_ORAS_PRIZE_MONEY ? 8 : 10), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_DIVE : BALL_LURE },
     #else
-        [TRAINER_CLASS_FISHERMAN] = { _("Fisherman"), (B_ORAS_PRIZE_MONEY == TRUE ? 8 : 10), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_DIVE : BALL_LURE },
+        [TRAINER_CLASS_FISHERMAN] = { _("Fisherman"), (B_ORAS_PRIZE_MONEY ? 8 : 10), B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_DIVE : BALL_LURE },
     #endif
     [TRAINER_CLASS_TRIATHLETE] = { _("Triathlete"), 10 },
-    [TRAINER_CLASS_DRAGON_TAMER] = { _("Dragon Tamer"), B_ORAS_PRIZE_MONEY == TRUE ? 15 : 12 },
-    [TRAINER_CLASS_NINJA_BOY] = { _("Ninja Boy"), B_ORAS_PRIZE_MONEY == TRUE ? 4 : 3 },
-    [TRAINER_CLASS_BATTLE_GIRL] = { _("Battle Girl"), B_ORAS_PRIZE_MONEY == TRUE ? 8 : 6 },
-    [TRAINER_CLASS_PARASOL_LADY] = { _("Parasol Lady"), B_ORAS_PRIZE_MONEY == TRUE ? 8 : 10 },
-    [TRAINER_CLASS_TWINS] = { _("Twins"), B_ORAS_PRIZE_MONEY == TRUE ? 1 : 3 },
-    [TRAINER_CLASS_SAILOR] = { _("Sailor"), B_ORAS_PRIZE_MONEY == TRUE ? 10 : 8 },
-    [TRAINER_CLASS_MAGMA_ADMIN] = { _("Magma Admin"), B_ORAS_PRIZE_MONEY == TRUE ? 20 : 10 },
-    [TRAINER_CLASS_RIVAL] = { _("{PKMN} Trainer"), B_ORAS_PRIZE_MONEY == TRUE ? 10 : 15 }, // Brendan & May
+    [TRAINER_CLASS_DRAGON_TAMER] = { _("Dragon Tamer"), B_ORAS_PRIZE_MONEY ? 15 : 12 },
+    [TRAINER_CLASS_NINJA_BOY] = { _("Ninja Boy"), B_ORAS_PRIZE_MONEY ? 4 : 3 },
+    [TRAINER_CLASS_BATTLE_GIRL] = { _("Battle Girl"), B_ORAS_PRIZE_MONEY ? 8 : 6 },
+    [TRAINER_CLASS_PARASOL_LADY] = { _("Parasol Lady"), B_ORAS_PRIZE_MONEY ? 8 : 10 },
+    [TRAINER_CLASS_TWINS] = { _("Twins"), B_ORAS_PRIZE_MONEY ? 1 : 3 },
+    [TRAINER_CLASS_SAILOR] = { _("Sailor"), B_ORAS_PRIZE_MONEY ? 10 : 8 },
+    [TRAINER_CLASS_MAGMA_ADMIN] = { _("Magma Admin"), B_ORAS_PRIZE_MONEY ? 20 : 10 },
+    [TRAINER_CLASS_RIVAL] = { _("{PKMN} Trainer"), B_ORAS_PRIZE_MONEY ? 10 : 15 }, // Brendan & May
     [TRAINER_CLASS_BUG_CATCHER] = { _("Bug Catcher"), 4 },
-    [TRAINER_CLASS_PKMN_RANGER] = { _("{PKMN} Ranger"), B_ORAS_PRIZE_MONEY == TRUE ? 15 : 12 },
-    [TRAINER_CLASS_MAGMA_LEADER] = { _("Magma Leader"), (B_ORAS_PRIZE_MONEY == TRUE ? 40 : 20), BALL_MASTER },
+    [TRAINER_CLASS_PKMN_RANGER] = { _("{PKMN} Ranger"), B_ORAS_PRIZE_MONEY ? 15 : 12 },
+    [TRAINER_CLASS_MAGMA_LEADER] = { _("Magma Leader"), (B_ORAS_PRIZE_MONEY ? 40 : 20), BALL_MASTER },
     [TRAINER_CLASS_LASS] = { _("Lass"), 4 },
     [TRAINER_CLASS_YOUNG_COUPLE] = { _("Young Couple"), 8 },
     [TRAINER_CLASS_OLD_COUPLE] = { _("Old Couple"), 20 },
