@@ -45,7 +45,6 @@
 #include "item.h"
 #include "field_name_box.h"
 #include "constants/battle_frontier.h"
-#include "constants/battle_setup.h"
 #include "constants/event_objects.h"
 #include "constants/game_stat.h"
 #include "constants/items.h"
