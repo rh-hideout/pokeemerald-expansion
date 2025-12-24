@@ -60,13 +60,13 @@ enum OverworldEncounterBehaviors
     OWE_BEHAVIOR_COUNT
 };
 
+// OWE_SPEED_FASTER seems to visually bug out sometimes.
 enum OWESpeeds
 {
     OWE_SPEED_NORMAL,
-    OWE_SPEED_FAST,
-    OWE_SPEED_FASTER,
     OWE_SPEED_SLOW,
-    OWE_SPEED_SLOWER
+    OWE_SPEED_FAST,
+    OWE_SPEED_FASTER
 };
 
 struct MonSpeciesOWEData

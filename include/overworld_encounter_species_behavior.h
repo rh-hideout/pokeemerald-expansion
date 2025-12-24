@@ -1,7 +1,7 @@
 #ifndef GUARD_OVERWORLD_ENCOUNTER_SPECIES_BEHAVIOR_H
 #define GUARD_OVERWORLD_ENCOUNTER_SPECIES_BEHAVIOR_H
 
-const struct MonSpeciesOWEData sOWESpeciesBehaviors[OWE_SPECIES_BEHAVIOR_COUNT] = {
+static const struct MonSpeciesOWEData sOWESpeciesBehaviors[OWE_SPECIES_BEHAVIOR_COUNT] = {
     [OWE_IGNORE_PLAYER] = {
         .behavior = OWE_BEHAVIOR_WANDER_AROUND,
     },
