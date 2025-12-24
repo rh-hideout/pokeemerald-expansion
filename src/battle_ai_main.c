@@ -3972,7 +3972,7 @@ static enum MoveComparisonResult CompareGuaranteeFaintTarget(u32 battlerAtk, u32
     return MOVE_NEUTRAL_COMPARISON;
 }
 
-static enum MoveComparisonResult CompareResistBerryEffects(u32 battlerAtk, u32 battlerDef, u32 move1, u32 moveSlot1, u32 move2, u32 moveSlot2)
+static enum MoveComparisonResult CompareResistBerryEffects(u32 battlerAtk, u32 battlerDef, u32 moveSlot1, u32 moveSlot2)
 {
     // Check for resist berries in OHKOs
     if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_RESIST_BERRY)
@@ -3995,6 +3995,18 @@ static enum MoveComparisonResult CompareMoveSelfSacrifice(u32 battlerAtk, u32 ba
     if (selfSacrifice1 && !selfSacrifice2)
         return MOVE_LOST_COMPARISON;
     if (selfSacrifice2 && !selfSacrifice1)
+        return MOVE_WON_COMPARISON;
+    return MOVE_NEUTRAL_COMPARISON;
+}
+
+static enum MoveComparisonResult CompareMoveTwoTurnEffect(u32 battlerAtk, u16 move1, u16 move2)
+{
+    bool32 twoTurn1 = IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move1);
+    bool32 twoTurn2 = IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move2);
+
+    if (twoTurn1 && !twoTurn2)
+        return MOVE_LOST_COMPARISON;
+    if (twoTurn2 && !twoTurn1)
         return MOVE_WON_COMPARISON;
     return MOVE_NEUTRAL_COMPARISON;
 }
@@ -4033,7 +4045,6 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
     s32 noOfHits[MAX_MON_MOVES];
     s32 leastHits = 1000;
     u16 *moves = GetMovesArray(battlerAtk);
-    bool8 isTwoTurnNotSemiInvulnerableMove[MAX_MON_MOVES];
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     bool32 moveIsFaster[MAX_MON_MOVES];
 
@@ -4048,7 +4059,6 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
             {
                 noOfHits[compareId] = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, compareId, AI_ATTACKING, CONSIDER_ENDURE);
                 moveIsFaster[compareId] = AI_IsFaster(battlerAtk, battlerDef, moves[compareId], predictedMoveSpeedCheck, CONSIDER_PRIORITY);
-                isTwoTurnNotSemiInvulnerableMove[compareId] = IsTwoTurnNotSemiInvulnerableMove(battlerAtk, moves[compareId]);
                 tempMoveScores[compareId] = AI_SCORE_DEFAULT;
                 if (ShouldUseSpreadDamageMove(battlerAtk,moves[compareId], compareId, noOfHits[compareId]))
                 {
@@ -4069,16 +4079,15 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
             {
                 noOfHits[compareId] = -1;
                 tempMoveScores[compareId] = 0;
-                isTwoTurnNotSemiInvulnerableMove[compareId] = FALSE;
             }
         }
 
         // Priority list:
-        // 1. Less no of hits to ko
+        // 1. Lower number of hits to KO
             // 2. Move not affected by resist berry (if two moves OHKO)
-            // 3. Priority if outsped and a OHKO (if two moves OHKO)
-        // 4. Not self sacrificing
-        // 5. Not charging
+        // 3. Not charging
+            // 4. Priority if outsped and a OHKO (if two moves OHKO)
+        // 5. Not self sacrificing
             // 6. Guaranteed KO (if two moves OHKO)
         // 7. More accuracy
         // 8. Better effect
@@ -4093,17 +4102,11 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                 if (noOfHits[currId] == noOfHits[compareId])
                 {
                     multipleBestMoves = TRUE;
-                    // We need to make sure it's the current move which is objectively better.
-                    if (isTwoTurnNotSemiInvulnerableMove[compareId] && !isTwoTurnNotSemiInvulnerableMove[currId])
-                        tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
-                    else if (!isTwoTurnNotSemiInvulnerableMove[compareId] && isTwoTurnNotSemiInvulnerableMove[currId])
-                        tempMoveScores[compareId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
-
                     // Comparing KOs
                     if (noOfHits[currId] == 1)
                     {
                         // If one move is berry-resisted, use the other one
-                        switch (CompareResistBerryEffects(battlerAtk, battlerDef, moves[currId], currId, moves[compareId], compareId))
+                        switch (CompareResistBerryEffects(battlerAtk, battlerDef, currId, compareId))
                         {
                         case MOVE_WON_COMPARISON:
                             tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_RESIST_BERRY);
@@ -4138,6 +4141,17 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                         case MOVE_NEUTRAL_COMPARISON:
                             break;
                         }
+                    }
+                    switch (CompareMoveTwoTurnEffect(battlerAtk, moves[currId], moves[compareId]))
+                    {
+                    case MOVE_WON_COMPARISON:
+                        tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
+                        break;
+                    case MOVE_LOST_COMPARISON:
+                        tempMoveScores[compareId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
+                        break;
+                    case MOVE_NEUTRAL_COMPARISON:
+                        break;
                     }
                     switch (CompareMoveAccuracies(battlerAtk, battlerDef, currId, compareId))
                     {
