@@ -806,9 +806,6 @@ static const struct SpriteTemplate sSpriteTemplate_RightArrow =
     .tileTag = GFXTAG_ARROW,
     .paletteTag = PALTAG_ARROW,
     .oam = &sOamData_RightArrow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_RightArrow
 };
 
@@ -831,10 +828,6 @@ static const struct SpriteTemplate sSpriteTemplate_UpDownArrow =
     .tileTag = GFXTAG_ARROW,
     .paletteTag = PALTAG_ARROW,
     .oam = &sOamData_UpDownArrow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static void LoadListArrowGfx(void)
