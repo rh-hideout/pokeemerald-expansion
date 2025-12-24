@@ -53,7 +53,7 @@ static u32 GetGlyphWidth_ShortNarrower(u16, bool32);
 
 static u32 GetUnusedTextPrinter(void);
 
-static EWRAM_DATA struct TextPrinter sTempTextPrinter = {0};
+//static EWRAM_DATA struct TextPrinter sTempTextPrinter = {0};
 static EWRAM_DATA struct TextPrinter sTextPrinters[NUM_TEXT_PRINTERS] = {0};
 
 static EWRAM_DATA u16 sFontHalfRowLookupTable[0x100];
@@ -383,20 +383,16 @@ u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 
 
 bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16))
 {
-    int i;
-    u16 j;
-
     if (!gFonts)
         return FALSE;
+
+    struct TextPrinter sTempTextPrinter = {0};
 
     sTempTextPrinter.active = TRUE;
     sTempTextPrinter.state = RENDER_STATE_HANDLE_CHAR;
     sTempTextPrinter.textSpeed = speed;
     sTempTextPrinter.delayCounter = 0;
     sTempTextPrinter.scrollDistance = 0;
-
-    for (i = 0; i < (int)ARRAY_COUNT(sTempTextPrinter.subStructFields); i++)
-        sTempTextPrinter.subStructFields[i] = 0;
 
     sTempTextPrinter.printerTemplate = *printerTemplate;
     sTempTextPrinter.callback = callback;
@@ -419,7 +415,7 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
         sTempTextPrinter.textSpeed = 0;
 
         // Render all text (up to limit) at once
-        for (j = 0; j < 0x400; ++j)
+        for (u32 j = 0; j < 0x400; ++j)
         {
             if (RenderFont(&sTempTextPrinter) == RENDER_FINISH)
                 break;
@@ -925,173 +921,146 @@ void ClearTextSpan(struct TextPrinter *textPrinter, u32 width)
 
 static u16 FontFunc_Small(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_SMALL;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_SMALL;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_Normal(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_NORMAL;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_NORMAL;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_Short(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_SHORT;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_SHORT;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_ShortCopy1(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_SHORT_COPY_1;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_SHORT_COPY_1;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_ShortCopy2(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_SHORT_COPY_2;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_SHORT_COPY_2;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_ShortCopy3(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_SHORT_COPY_3;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_SHORT_COPY_3;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_Narrow(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_NARROW;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_NARROW;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_SmallNarrow(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_SMALL_NARROW;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_SMALL_NARROW;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_Narrower(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_NARROWER;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_NARROWER;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_SmallNarrower(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_SMALL_NARROWER;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_SMALL_NARROWER;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_ShortNarrow(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_SHORT_NARROW;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_SHORT_NARROW;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 static u16 FontFunc_ShortNarrower(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->hasFontIdBeenSet == FALSE)
+    if (textPrinter->hasFontIdBeenSet == FALSE)
     {
-        subStruct->fontId = FONT_SHORT_NARROWER;
-        subStruct->hasFontIdBeenSet = TRUE;
+        textPrinter->fontId = FONT_SHORT_NARROWER;
+        textPrinter->hasFontIdBeenSet = TRUE;
     }
     return RenderText(textPrinter);
 }
 
 void TextPrinterInitDownArrowCounters(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
     if (gTextFlags.autoScroll == 1)
     {
-        subStruct->autoScrollDelay = 0;
+        textPrinter->autoScrollDelay = 0;
     }
     else
     {
-        subStruct->downArrowYPosIdx = 0;
-        subStruct->utilityCounter = 0;
+        textPrinter->downArrowYPosIdx = 0;
+        textPrinter->utilityCounter = 0;
     }
 }
 
 void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
     const u8 *arrowTiles;
 
     if (gTextFlags.autoScroll == 0)
     {
-        if (subStruct->utilityCounter != 0)
+        if (textPrinter->utilityCounter != 0)
         {
-            subStruct->utilityCounter--;
+            textPrinter->utilityCounter--;
         }
         else
         {
@@ -1118,7 +1087,7 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
                 textPrinter->printerTemplate.windowId,
                 arrowTiles,
                 0,
-                sDownArrowYCoords[subStruct->downArrowYPosIdx],
+                sDownArrowYCoords[textPrinter->downArrowYPosIdx],
                 8,
                 16,
                 textPrinter->printerTemplate.currentX,
@@ -1127,8 +1096,8 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
                 16);
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
 
-            subStruct->utilityCounter = 8 * GetPlayerTextSpeedModifier();
-            subStruct->downArrowYPosIdx++;
+            textPrinter->utilityCounter = 8 * GetPlayerTextSpeedModifier();
+            textPrinter->downArrowYPosIdx++;
         }
     }
 }
@@ -1147,16 +1116,14 @@ void TextPrinterClearDownArrow(struct TextPrinter *textPrinter)
 
 bool32 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
-
-    if (subStruct->autoScrollDelay == NUM_FRAMES_AUTO_SCROLL_DELAY)
+    if (textPrinter->autoScrollDelay == NUM_FRAMES_AUTO_SCROLL_DELAY)
     {
-        subStruct->autoScrollDelay = 0;
+        textPrinter->autoScrollDelay = 0;
         return TRUE;
     }
     else
     {
-        subStruct->autoScrollDelay++;
+        textPrinter->autoScrollDelay++;
         return FALSE;
     }
 }
@@ -1239,7 +1206,6 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
 
 static u16 RenderText(struct TextPrinter *textPrinter)
 {
-    struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
     u16 currChar;
     s32 width;
     s32 widthHelper;
@@ -1247,7 +1213,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     switch (textPrinter->state)
     {
     case RENDER_STATE_HANDLE_CHAR:
-        if ((JOY_HELD(A_BUTTON | B_BUTTON) && subStruct->hasPrintBeenSpedUp) || IsPlayerTextSpeedInstant())
+        if ((JOY_HELD(A_BUTTON | B_BUTTON) && textPrinter->hasPrintBeenSpedUp) || IsPlayerTextSpeedInstant())
             textPrinter->delayCounter = 0;
 
         if (textPrinter->delayCounter && textPrinter->textSpeed)
@@ -1255,7 +1221,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             textPrinter->delayCounter--;
             if (gTextFlags.canABSpeedUpPrint && (JOY_NEW(A_BUTTON | B_BUTTON)))
             {
-                subStruct->hasPrintBeenSpedUp = TRUE;
+                textPrinter->hasPrintBeenSpedUp = TRUE;
                 textPrinter->delayCounter = 0;
             }
             return RENDER_UPDATE;
@@ -1344,7 +1310,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
                 textPrinter->printerTemplate.currentChar++;
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_FONT:
-                subStruct->fontId = *textPrinter->printerTemplate.currentChar;
+                textPrinter->fontId = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_RESET_FONT:
@@ -1357,7 +1323,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             case EXT_CTRL_CODE_PAUSE_UNTIL_PRESS:
                 textPrinter->state = RENDER_STATE_WAIT;
                 if (gTextFlags.autoScroll)
-                    subStruct->autoScrollDelay = 0;
+                    textPrinter->autoScrollDelay = 0;
                 return RENDER_UPDATE;
             case EXT_CTRL_CODE_WAIT_SE:
                 textPrinter->state = RENDER_STATE_WAIT_SE;
@@ -1491,7 +1457,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             return RENDER_FINISH;
         }
 
-        switch (subStruct->fontId)
+        switch (textPrinter->fontId)
         {
         case FONT_SMALL:
             DecompressGlyph_Small(currChar, textPrinter->japanese);
@@ -1546,7 +1512,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL_START:
         if (TextPrinterWaitWithDownArrow(textPrinter))
         {
-            subStruct->utilityCounter = 0;
+            textPrinter->utilityCounter = 0;
             TextPrinterClearDownArrow(textPrinter);
             textPrinter->scrollDistance = gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing;
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
@@ -1559,9 +1525,9 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             u32 scrollSpeed = GetPlayerTextScrollSpeed();
             u32 speedModifier = GetPlayerTextSpeedModifier();
 
-            if (subStruct->utilityCounter != 0)
+            if (textPrinter->utilityCounter != 0)
             {
-                subStruct->utilityCounter--;
+                textPrinter->utilityCounter--;
                 return RENDER_UPDATE;
             }
 
@@ -1577,9 +1543,9 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             }
 
             if (speedModifier > 1)
-                subStruct->utilityCounter = speedModifier;
+                textPrinter->utilityCounter = speedModifier;
             else
-                subStruct->utilityCounter = 0;
+                textPrinter->utilityCounter = 0;
 
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
         }

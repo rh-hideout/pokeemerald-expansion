@@ -119,15 +119,25 @@ struct TextPrinter
 
     void (*callback)(struct TextPrinterTemplate *, u16); // 0x10
 
-    u8 subStructFields[7]; // always cast to struct TextPrinterSubStruct... so why bother
-    u8 active;
+    u16 utilityCounter:13;
+    u16 downArrowYPosIdx:2;
+    bool16 hasFontIdBeenSet:1;
+    u8 autoScrollDelay;
+    u8 fontId:4;  // 0x14
+    bool8 hasPrintBeenSpedUp:1;
+    u8 japanese:1;
+    u8 active:1;
+    u8 isInUse:1;
+    //  word
+
     u8 state;       // 0x1C
-    u8 textSpeed;
     u8 delayCounter;
     u8 scrollDistance;
-    u8 minLetterSpacing;  // 0x20
-    u8 japanese;
-    u8 isInUse;
+    u8 minLetterSpacing:4;  // 0x20
+    u8 textSpeed:4;
+    //  word
+    struct TextPrinter *nextPrinter;
+
 };
 
 struct FontInfo
