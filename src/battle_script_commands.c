@@ -11503,16 +11503,16 @@ static void Cmd_trysetencore(void)
         else if (B_ENCORE_TURNS == GEN_4)
         {
             if (HasBattlerActedThisTurn(gBattlerTarget))
-                gDisableStructs[gBattlerTarget].encoreTimer = (((Random() % 5) + 4) + 1);
+                gDisableStructs[gBattlerTarget].encoreTimer = (((Random() % 5) + 3) + 1);
             else
-                gDisableStructs[gBattlerTarget].encoreTimer = ((Random() % 5) + 4);
+                gDisableStructs[gBattlerTarget].encoreTimer = ((Random() % 5) + 3);
         }
         else
         {
             if (HasBattlerActedThisTurn(gBattlerTarget))
-                gDisableStructs[gBattlerTarget].encoreTimer = (((Random() % 4) + 3) + 1);
+                gDisableStructs[gBattlerTarget].encoreTimer = (((Random() % 5) + 2) + 1);
             else
-                gDisableStructs[gBattlerTarget].encoreTimer = ((Random() % 4) + 3);
+                gDisableStructs[gBattlerTarget].encoreTimer = ((Random() % 5) + 2);
         }
         gBattlescriptCurrInstr = cmd->nextInstr;
     }

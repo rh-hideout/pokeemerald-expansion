@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Trace will copy an opponent's ability whenever it has the ch
 }
 
 
-SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and triggers it immediately")
+SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and triggers it immediately (Gen4+)")
 {
     GIVEN {
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
