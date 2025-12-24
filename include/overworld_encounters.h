@@ -60,6 +60,34 @@ enum OverworldEncounterBehaviors
     OWE_BEHAVIOR_COUNT
 };
 
+enum OWESpeeds
+{
+    OWE_SPEED_NORMAL,
+    OWE_SPEED_FAST,
+    OWE_SPEED_FASTER,
+    OWE_SPEED_SLOW,
+    OWE_SPEED_SLOWER
+};
+
+struct MonSpeciesOWEData
+{
+    enum OverworldEncounterBehaviors behavior;
+    enum OWESpeeds idleSpeed;
+    enum OWESpeeds activeSpeed;
+    u16 viewDistance:4;
+    u16 viewWidth:4;
+    u16 activeDistance:4;
+    u16 padding:4;
+};
+
+enum OWESpeciesBehaviors
+{
+    OWE_IGNORE_PLAYER,
+    OWE_CHASE_PLAYER_SLOW,
+    OWE_FLEE_PLAYER_NORMAL,
+    OWE_SPECIES_BEHAVIOR_COUNT
+};
+
 extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
 void LoadOverworldEncounterData(void);

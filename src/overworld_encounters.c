@@ -1,5 +1,6 @@
 #include "global.h"
 #include "overworld_encounters.h"
+#include "overworld_encounter_species_behavior.h"
 #include "battle_setup.h"
 #include "event_data.h"
 #include "event_object_movement.h"
@@ -1017,8 +1018,8 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
 
 static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
 {
-    return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
-    return sOWE_MovementBehaviorType[gSpeciesInfo[speciesId].overworldEncounterBehavior];
+    //return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
+    return sOWE_MovementBehaviorType[sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].behavior];
 }
 
 // Are these needed? Not defined elsewhere? I don't think so.
