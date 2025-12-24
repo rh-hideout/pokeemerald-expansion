@@ -2076,7 +2076,7 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
             gEffectBattler = ctx->battlerAtk;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP_UPROAR;
             BattleScriptCall(BattleScript_MoveUsedWokeUp);
-            return MOVE_STEP_REMOVES_STATUS;
+            return MOVE_STEP_STATUS_CHANGE;
         }
         else
         {
@@ -2096,7 +2096,7 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
                 if (!IsUsableWhileAsleepEffect(moveEffect))
                 {
                     gBattlescriptCurrInstr = BattleScript_MoveUsedIsAsleep;
-                    return MOVE_STEP_FAILURE;
+                    gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
                 }
             }
             else
@@ -2105,8 +2105,8 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
                 gBattleMons[ctx->battlerAtk].volatiles.nightmare = FALSE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP;
                 BattleScriptCall(BattleScript_MoveUsedWokeUp);
-                return MOVE_STEP_REMOVES_STATUS;
             }
+            return MOVE_STEP_STATUS_CHANGE;
         }
     }
     else if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_FREEZE && !MoveThawsUser(ctx->move))
@@ -2123,6 +2123,7 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
             return MOVE_STEP_REMOVES_STATUS;
         }
+        return MOVE_STEP_STATUS_CHANGE; // Move failure but also removes status
     }
     return MOVE_STEP_SUCCESS;
 }
@@ -2534,7 +2535,7 @@ static enum MoveCanceler CancelerThaw(struct BattleContext *ctx)
             BattleScriptCall(BattleScript_MoveUsedUnfroze);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED_BY_MOVE;
         }
-        return MOVE_STEP_REMOVES_STATUS;
+        return MOVE_STEP_STATUS_CHANGE;
     }
     if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_FROSTBITE && MoveThawsUser(ctx->move))
     {
@@ -2544,7 +2545,7 @@ static enum MoveCanceler CancelerThaw(struct BattleContext *ctx)
             BattleScriptCall(BattleScript_MoveUsedUnfrostbite);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FROSTBITE_HEALED_BY_MOVE;
         }
-        return MOVE_STEP_REMOVES_STATUS;
+        return MOVE_STEP_STATUS_CHANGE;
     }
     return MOVE_STEP_SUCCESS;
 }
@@ -3104,7 +3105,7 @@ enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx)
         gBattleStruct->eventState.atkCanceler++;
     }
 
-    if (effect == MOVE_STEP_REMOVES_STATUS)
+    if (effect == MOVE_STEP_STATUS_CHANGE)
     {
         BtlController_EmitSetMonData(
             ctx->battlerAtk,
@@ -7249,7 +7250,10 @@ static inline u32 CalcTerrainBoostedPower(struct BattleContext *ctx, u32 basePow
 
 static inline u32 IsFieldMudSportAffected(enum Type moveType)
 {
-    if (moveType == TYPE_ELECTRIC && (gFieldStatuses & STATUS_FIELD_MUDSPORT))
+    if (moveType != TYPE_ELECTRIC)
+        return FALSE;
+
+    if (gFieldStatuses & STATUS_FIELD_MUDSPORT)
         return TRUE;
 
     if (B_SPORT_TURNS < GEN_6)
@@ -7266,7 +7270,10 @@ static inline u32 IsFieldMudSportAffected(enum Type moveType)
 
 static inline u32 IsFieldWaterSportAffected(enum Type moveType)
 {
-    if (moveType == TYPE_FIRE && (gFieldStatuses & STATUS_FIELD_WATERSPORT))
+    if (moveType != TYPE_FIRE)
+        return FALSE;
+
+    if (gFieldStatuses & STATUS_FIELD_WATERSPORT)
         return TRUE;
 
     if (B_SPORT_TURNS < GEN_6)
@@ -7605,9 +7612,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
     if (IsPsychicTerrainAffected(battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, ctx->fieldStatuses) && moveType == TYPE_PSYCHIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
     if (IsFieldMudSportAffected(ctx->moveType))
-        modifier = uq4_12_multiply(modifier, UQ_4_12(B_SPORT_DMG_REDUCTION >= GEN_5 ? 0.33 : 0.5));
+        modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(CONFIG_SPORT_DMG_REDUCTION) >= GEN_5 ? 0.33 : 0.5));
     if (IsFieldWaterSportAffected(ctx->moveType))
-        modifier = uq4_12_multiply(modifier, UQ_4_12(B_SPORT_DMG_REDUCTION >= GEN_5 ? 0.33 : 0.5));
+        modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(CONFIG_SPORT_DMG_REDUCTION) >= GEN_5 ? 0.33 : 0.5));
 
     // attacker's abilities
     switch (ctx->abilityAtk)
@@ -10352,9 +10359,9 @@ bool32 IsBattlerAffectedByHazards(u32 battler, enum HoldEffect holdEffect, bool3
     return ret;
 }
 
-bool32 TestIfSheerForceAffected(u32 battler, u16 move)
+bool32 IsSheerForceAffected(u16 move, enum Ability ability)
 {
-    return GetBattlerAbility(battler) == ABILITY_SHEER_FORCE && MoveIsAffectedBySheerForce(move);
+    return ability == ABILITY_SHEER_FORCE && MoveIsAffectedBySheerForce(move);
 }
 
 // This function is the body of "jumpifstat", but can be used dynamically in a function

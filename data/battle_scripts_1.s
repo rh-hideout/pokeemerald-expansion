@@ -5035,7 +5035,37 @@ BattleScript_DestinyBondTakesLife::
 	tryfaintmon BS_ATTACKER
 	return
 
-BattleScript_DmgHazardsOnBattler::
+BattleScript_DmgHazardsOnAttacker::
+	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	call BattleScript_PrintHurtByDmgHazards
+	tryfaintmon BS_ATTACKER
+	tryfaintmon_spikes BS_ATTACKER, BattleScript_DmgHazardsOnAttackerFainted
+	return
+
+BattleScript_DmgHazardsOnAttackerFainted::
+	setbyte sGIVEEXP_STATE, 0
+	getexp BS_ATTACKER
+	moveendall
+	tryabsorbtoxicspikesonfaint
+	goto BattleScript_HandleFaintedMon
+
+BattleScript_DmgHazardsOnTarget::
+	healthbarupdate BS_TARGET, PASSIVE_HP_UPDATE
+	datahpupdate BS_TARGET, PASSIVE_HP_UPDATE
+	call BattleScript_PrintHurtByDmgHazards
+	tryfaintmon BS_TARGET
+	tryfaintmon_spikes BS_TARGET, BattleScript_DmgHazardsOnTargetFainted
+	return
+
+BattleScript_DmgHazardsOnTargetFainted::
+	setbyte sGIVEEXP_STATE, 0
+	getexp BS_TARGET
+	moveendall
+	tryabsorbtoxicspikesonfaint
+	goto BattleScript_HandleFaintedMon
+
+BattleScript_DmgHazardsOnBattlerScripting::
 	healthbarupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	call BattleScript_PrintHurtByDmgHazards
@@ -5045,7 +5075,24 @@ BattleScript_DmgHazardsOnBattler::
 BattleScript_DmgHazardsOnBattlerScriptingFainted::
 	setbyte sGIVEEXP_STATE, 0
 	getexp BS_SCRIPTING
+	moveendall
+	tryabsorbtoxicspikesonfaint
+	goto BattleScript_HandleFaintedMon
+
+BattleScript_DmgHazardsOnFaintedBattler::
+	healthbarupdate BS_FAINTED, PASSIVE_HP_UPDATE
+	datahpupdate BS_FAINTED, PASSIVE_HP_UPDATE
+	call BattleScript_PrintHurtByDmgHazards
+	tryfaintmon BS_FAINTED
+	tryfaintmon_spikes BS_FAINTED, BattleScript_DmgHazardsOnFaintedBattlerFainted
 	return
+
+BattleScript_DmgHazardsOnFaintedBattlerFainted::
+	setbyte sGIVEEXP_STATE, 0
+	getexp BS_FAINTED
+	moveendall
+	tryabsorbtoxicspikesonfaint
+	goto BattleScript_HandleFaintedMon
 
 BattleScript_PrintHurtByDmgHazards::
 	printfromtable gDmgHazardsStringIds
