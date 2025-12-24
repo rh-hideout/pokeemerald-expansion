@@ -900,6 +900,33 @@ bool32 OWE_IsPlayerInsideRangeFromMon(struct ObjectEvent *mon, u32 distance)
     return FALSE;
 }
 
+static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, u32 newDirection)
+{
+    s16 x = mon->currentCoords.x;
+    s16 y = mon->currentCoords.y;
+
+    MoveCoords(newDirection, &x, &y);
+    if (!GetCollisionAtCoords(mon, x, y, newDirection))
+    {
+        MoveCoords(mon->movementDirection, &x, &y);
+        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection))
+            return newDirection;
+    }
+
+    x = mon->currentCoords.x;
+    y = mon->currentCoords.y;
+
+    MoveCoords(GetOppositeDirection(newDirection), &x, &y);
+    if (!GetCollisionAtCoords(mon, x, y, GetOppositeDirection(newDirection)))
+    {
+        MoveCoords(mon->movementDirection, &x, &y);
+        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection))
+            return GetOppositeDirection(newDirection);
+    }
+
+    return mon->movementDirection;
+}
+
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
 {
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -911,7 +938,7 @@ u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
         if (player->currentCoords.x < mon->currentCoords.x)
             return DIR_WEST;
         else if (player->currentCoords.x == mon->currentCoords.x)
-            return (Random() % 2) == 0 ? DIR_EAST : DIR_WEST;
+            return OWE_CheckPathToPlayerFromCollision(mon, (Random() % 2) == 0 ? DIR_EAST : DIR_WEST);
         else
             return DIR_EAST;
     case DIR_EAST:
@@ -919,7 +946,7 @@ u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
         if (player->currentCoords.y < mon->currentCoords.y)
             return DIR_NORTH;
         else if (player->currentCoords.y == mon->currentCoords.y)
-            return (Random() % 2) == 0 ? DIR_NORTH : DIR_SOUTH;
+            return OWE_CheckPathToPlayerFromCollision(mon, (Random() % 2) == 0 ? DIR_NORTH : DIR_SOUTH);
         else
             return DIR_SOUTH;
     }

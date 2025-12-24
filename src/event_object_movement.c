@@ -11927,9 +11927,10 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
 
     if ((OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT && OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection)) || collision)
     {
+        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
 
-        if (!OWE_IsWaitTaskActive())
+        if (!OWE_IsWaitTaskActive() && !(objectEvent->currentCoords.x == player->currentCoords.x || objectEvent->currentCoords.y == player->currentCoords.y))
         {
             newDirection = GetOppositeDirection(newDirection);
         }
