@@ -3,15 +3,11 @@
 
 TO_DO_BATTLE_TEST("TODO: Write Water Sport (Move Effect) test titles")
 
-SINGLE_BATTLE_TEST("Water Sport reduces the damage of Fire Type moves by 50% (Gen3-4) or 67% (Gen5+)")
+SINGLE_BATTLE_TEST("Water Sport reduces the damage of Fire Type moves by 67% (Gen5+)")
 {
-    u32 config;
     s16 playerDmg[2];
     s16 opponentDmg[2];
-    PARAMETRIZE { config = GEN_4; }
-    PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_SPORT_DMG_REDUCTION, config);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -32,13 +28,7 @@ SINGLE_BATTLE_TEST("Water Sport reduces the damage of Fire Type moves by 50% (Ge
         HP_BAR(player, captureDamage: &playerDmg[1]);
 
     } THEN {
-        if (config >= GEN_5) {
-            EXPECT_MUL_EQ(opponentDmg[0], Q_4_12(0.33), opponentDmg[1]);
-            EXPECT_MUL_EQ(playerDmg[0], Q_4_12(0.33), playerDmg[1]);
-        }
-        else {
-            EXPECT_MUL_EQ(opponentDmg[0], Q_4_12(0.5), opponentDmg[1]);
-            EXPECT_MUL_EQ(playerDmg[0], Q_4_12(0.5), playerDmg[1]);
-        }
+        EXPECT_MUL_EQ(opponentDmg[0], Q_4_12(0.33), opponentDmg[1]);
+        EXPECT_MUL_EQ(playerDmg[0], Q_4_12(0.33), playerDmg[1]);
     }
 }

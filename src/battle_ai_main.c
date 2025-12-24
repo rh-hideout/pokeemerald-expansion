@@ -5683,7 +5683,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_MAGNET_RISE:
-        if (AI_IsBattlerGrounded(battlerAtk) && HasDamagingMoveOfType(battlerDef, TYPE_GROUND)
+        if (AI_IsBattlerGrounded(battlerAtk) && HasDamagingMoveOfType(battlerDef, TYPE_ELECTRIC)
           && !(effectiveness == UQ_4_12(0.0))) // Doesn't resist ground move
         {
             if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Attacker goes first
@@ -5694,7 +5694,8 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             }
             else // Opponent Goes First
             {
-                ADJUST_SCORE(DECENT_EFFECT);
+                if (HasDamagingMoveOfType(battlerDef, TYPE_GROUND))
+                    ADJUST_SCORE(DECENT_EFFECT);
                 break;
             }
         }
@@ -5872,13 +5873,16 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
     // Set battlerDef best dmg moves
     GetBestDmgMovesFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
 
-    if (IsSheerForceAffected(move, aiData->abilities[battlerAtk]))
-        return score;
-
     // check move additional effects that are likely to happen
     for (u32 effectId = 0; effectId < additionalEffectCount; effectId++)
     {
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, effectId);
+
+        if (aiData->abilities[battlerAtk] == ABILITY_SHEER_FORCE)
+        {
+            if ((additionalEffect->chance > 0) != additionalEffect->sheerForceOverride)
+                continue;
+        }
 
         // Only consider effects with a guaranteed chance to happen
         if (!MoveEffectIsGuaranteed(battlerAtk, aiData->abilities[battlerAtk], additionalEffect))

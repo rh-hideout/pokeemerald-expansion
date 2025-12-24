@@ -1707,12 +1707,11 @@ static void OverworldBasic(void)
         gTimeUpdateCounter = (SECONDS_PER_MINUTE * 60 / FakeRtc_GetSecondsRatio());
         UpdateTimeOfDay();
         FormChangeTimeUpdate();
-        if (MapHasNaturalLight(gMapHeader.mapType) &&
-           (bld0[0] != bld1[0]
+        if (bld0[0] != bld1[0]
          || bld0[1] != bld1[1]
-         || bld0[2] != bld1[2]))
+         || bld0[2] != bld1[2])
         {
-            ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
+           ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
 }

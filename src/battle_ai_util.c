@@ -1027,9 +1027,6 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
 
-    if (IsSheerForceAffected(move, abilityAtk))
-        return FALSE;
-
     switch (GetMoveEffect(move))
     {
     case EFFECT_ABSORB:
