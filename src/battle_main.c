@@ -306,10 +306,28 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_HIKER] = { _("Hiker"), 8, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
     [TRAINER_CLASS_TEAM_AQUA] = { _("Team Aqua"), 10 },
     [TRAINER_CLASS_PKMN_BREEDER] = { _("{PKMN} Breeder"), 10, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
-    [TRAINER_CLASS_COOLTRAINER] = { (B_TRAINER_CLASS_NAMES >= GEN_4 ? _("Ace Trainer") : _("Cooltrainer")), 15, BALL_ULTRA },
+    #if B_TRAINER_CLASS_NAMES >= GEN_4
+        [TRAINER_CLASS_COOLTRAINER] = { _("Ace Trainer"), 15, BALL_ULTRA },
+        [TRAINER_CLASS_INTERVIEWER] = { _("Interviewers"), 10 },
+        [TRAINER_CLASS_POKEMANIAC] = { _("Poké Maniac"), 7 },
+        [TRAINER_CLASS_COOLTRAINER_2] = { _("Ace Trainer"), 15, BALL_ULTRA }, // Jazmyn
+        [TRAINER_CLASS_SALON_MAIDEN] = { _("Tower Tycoon"), 0, BALL_ULTRA },
+    #else
+        [TRAINER_CLASS_COOLTRAINER] = { _("Cooltrainer"), 15, BALL_ULTRA },
+        [TRAINER_CLASS_INTERVIEWER] = { _("Interviewer"), 10 },
+        [TRAINER_CLASS_POKEMANIAC] = { _("Pokémaniac"), 7 },
+        [TRAINER_CLASS_COOLTRAINER_2] = { _("Cooltrainer"), 15, BALL_ULTRA }, // Jazmyn
+        [TRAINER_CLASS_SALON_MAIDEN] = { _("Salon Maiden"), 0, BALL_ULTRA },
+    #endif
     [TRAINER_CLASS_BIRD_KEEPER] = { _("Bird Keeper"), 10 },
     [TRAINER_CLASS_COLLECTOR] = { _("Collector"), 7, BALL_PREMIER },
-    [TRAINER_CLASS_SWIMMER_M] = { (B_TRAINER_CLASS_NAMES >= GEN_5 ? _("Swimmer") : _("Swimmer♂")), 4, BALL_DIVE },
+    #if B_TRAINER_CLASS_NAMES >= GEN_5
+        [TRAINER_CLASS_SWIMMER_M] = { _("Swimmer"), 4, BALL_DIVE },
+        [TRAINER_CLASS_SWIMMER_F] = { _("Swimmer"), 4, BALL_DIVE },
+    #else
+        [TRAINER_CLASS_SWIMMER_M] = { _("Swimmer♂"), 4, BALL_DIVE },
+        [TRAINER_CLASS_SWIMMER_F] = { _("Swimmer♀"), 4, BALL_DIVE },
+    #endif
     [TRAINER_CLASS_TEAM_MAGMA] = { _("Team Magma"), 10 },
     [TRAINER_CLASS_EXPERT] = { _("Expert"), 20 },
     [TRAINER_CLASS_AQUA_ADMIN] = { _("Aqua Admin"), 20 },
@@ -318,13 +336,11 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_HEX_MANIAC] = { _("Hex Maniac"), 7 },
     [TRAINER_CLASS_AROMA_LADY] = { _("Aroma Lady"), 8 },
     [TRAINER_CLASS_RUIN_MANIAC] = { _("Ruin Maniac"), 7 },
-    [TRAINER_CLASS_INTERVIEWER] = { (B_TRAINER_CLASS_NAMES >= GEN_4 ? _("Interviewers") : _("Interviewer")), 10 },
     [TRAINER_CLASS_TUBER_F] = { _("Tuber"), 1 },
     [TRAINER_CLASS_TUBER_M] = { _("Tuber"), 1 },
     [TRAINER_CLASS_LADY] = { _("Lady"), 30 },
     [TRAINER_CLASS_BEAUTY] = { _("Beauty"), 14, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_GREAT : BALL_POKE },
     [TRAINER_CLASS_RICH_BOY] = { _("Rich Boy"), 30 },
-    [TRAINER_CLASS_POKEMANIAC] = { (B_TRAINER_CLASS_NAMES >= GEN_4 ? _("Poké Maniac") : _("Pokémaniac")), 7 },
     [TRAINER_CLASS_GUITARIST] = { _("Guitarist"), 7 },
     [TRAINER_CLASS_KINDLER] = { _("Kindler"), 8 },
     [TRAINER_CLASS_CAMPER] = { _("Camper"), 4 },
@@ -333,23 +349,40 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_PSYCHIC] = { _("Psychic"), 8 },
     [TRAINER_CLASS_GENTLEMAN] = { _("Gentleman"), 50, BALL_LUXURY },
     [TRAINER_CLASS_ELITE_FOUR] = { _("Elite Four"), 40, BALL_ULTRA },
-    [TRAINER_CLASS_LEADER] = { (B_TRAINER_CLASS_NAMES >= GEN_7 ? _("Gym Leader") : _("Leader")), 30, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
-    [TRAINER_CLASS_SCHOOL_KID] = { (B_TRAINER_CLASS_NAMES == GEN_6 ? _("Schoolkid") : _("School Kid") },
-    [TRAINER_CLASS_SR_AND_JR] = { (B_TRAINER_CLASS_NAMES >= GEN_6 ? _("Teammates") : _("Sr. and Jr."), 3 },
+    #if B_TRAINER_CLASS_NAMES >= GEN_7
+        [TRAINER_CLASS_LEADER] = { _("Gym Leader"), 30, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
+    #else
+        [TRAINER_CLASS_LEADER] = { _("Leader"), 30, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_ULTRA : BALL_POKE },
+    #endif
+    #if B_TRAINER_CLASS_NAMES == GEN_6
+        [TRAINER_CLASS_SCHOOL_KID] = { _("Schoolkid") },
+    #else
+        [TRAINER_CLASS_SCHOOL_KID] = { _("School Kid") },
+    #endif
+    #if B_TRAINER_CLASS_NAMES >= GEN_6
+        [TRAINER_CLASS_SR_AND_JR] = { _("Teammates"), 3 },
+        [TRAINER_CLASS_POKEFAN] = { _("Poké Fan"), 16 },
+        [TRAINER_CLASS_SIS_AND_BRO] = { _("Sis & Bro"), 3 },
+    #else
+        [TRAINER_CLASS_SR_AND_JR] = { _("Sr. and Jr."), 3 },
+        [TRAINER_CLASS_POKEFAN] = { _("Pokéfan"), 16 },
+        [TRAINER_CLASS_SIS_AND_BRO] = { _("Sis and Bro"), 3 },
+    #endif
     [TRAINER_CLASS_WINSTRATE] = { _("Winstrate"), 10 },
-    [TRAINER_CLASS_POKEFAN] = { (B_TRAINER_CLASS_NAMES >= GEN_6 ? _("Poké Fan") : _("Pokéfan")), 16 },
     [TRAINER_CLASS_YOUNGSTER] = { _("Youngster"), 4 },
     [TRAINER_CLASS_CHAMPION] = { _("Champion"), 50, BALL_ULTRA },
-    [TRAINER_CLASS_FISHERMAN] = { ((B_TRAINER_CLASS_NAMES >= GEN_8 || B_TRAINER_CLASS_NAMES == GEN_2) ? _("Fisher") : _("Fisherman")), 8, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_DIVE : BALL_LURE },
+    #if B_TRAINER_CLASS_NAMES >= GEN_8 || B_TRAINER_CLASS_NAMES == GEN_2
+        [TRAINER_CLASS_FISHERMAN] = { _("Fisher"), 8, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_DIVE : BALL_LURE },
+    #else
+        [TRAINER_CLASS_FISHERMAN] = { _("Fisherman"), 8, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_DIVE : BALL_LURE },
+    #endif
     [TRAINER_CLASS_TRIATHLETE] = { _("Triathlete"), 10 },
     [TRAINER_CLASS_DRAGON_TAMER] = { _("Dragon Tamer"), 15 },
     [TRAINER_CLASS_NINJA_BOY] = { _("Ninja Boy"), 4 },
     [TRAINER_CLASS_BATTLE_GIRL] = { _("Battle Girl"), 8 },
     [TRAINER_CLASS_PARASOL_LADY] = { _("Parasol Lady"), 8 },
-    [TRAINER_CLASS_SWIMMER_F] = { (B_TRAINER_CLASS_NAMES >= GEN_5 ? _("Swimmer") : _("Swimmer♀")), 4, BALL_DIVE },
     [TRAINER_CLASS_TWINS] = { _("Twins"), 1 },
     [TRAINER_CLASS_SAILOR] = { _("Sailor"), 10 },
-    [TRAINER_CLASS_COOLTRAINER_2] = { (B_TRAINER_CLASS_NAMES >= GEN_4 ? _("Ace Trainer") : _("Cooltrainer")), 15, BALL_ULTRA }, // Jazmyn
     [TRAINER_CLASS_MAGMA_ADMIN] = { _("Magma Admin"), 20 },
     [TRAINER_CLASS_RIVAL] = { _("{PKMN} Trainer"), 10 }, // Brendan & May
     [TRAINER_CLASS_BUG_CATCHER] = { _("Bug Catcher"), 4 },
@@ -358,8 +391,6 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_LASS] = { _("Lass"), 4 },
     [TRAINER_CLASS_YOUNG_COUPLE] = { _("Young Couple"), 8 },
     [TRAINER_CLASS_OLD_COUPLE] = { _("Old Couple"), 20 },
-    [TRAINER_CLASS_SIS_AND_BRO] = { (B_TRAINER_CLASS_NAMES >= GEN_6 ? _("Sis & Bro") : _("Sis and Bro")), 3 },
-    [TRAINER_CLASS_SALON_MAIDEN] = { (B_TRAINER_CLASS_NAMES >= GEN_4 ? _("Tower Tycoon") : _("Salon Maiden")), 0, BALL_ULTRA },
     [TRAINER_CLASS_DOME_ACE] = { _("Dome Ace") },
     [TRAINER_CLASS_PALACE_MAVEN] = { _("Palace Maven") },
     [TRAINER_CLASS_ARENA_TYCOON] = { _("Arena Tycoon") },
