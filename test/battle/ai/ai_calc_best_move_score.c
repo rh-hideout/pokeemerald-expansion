@@ -112,3 +112,37 @@ AI_SINGLE_BATTLE_TEST("AI will select Throat Chop if the sound move is the best 
         TURN { EXPECT_MOVE(opponent, MOVE_THROAT_CHOP); MOVE(player, MOVE_HYPER_VOICE);}
     }
 }
+
+AI_SINGLE_BATTLE_TEST("HasMoveThatChangesKOThreshold - AI should not see self-targeted speed drops as preventing setup moves in 2hko cases")
+{
+    u16 move;
+    PARAMETRIZE { move = MOVE_EARTHQUAKE; }
+    PARAMETRIZE { move = MOVE_BULLDOZE; }
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_HAMMER_ARM, MOVE_EFFECT_SPD_MINUS_1) == TRUE);
+        ASSUME(MoveHasAdditionalEffect(MOVE_BULLDOZE, MOVE_EFFECT_SPD_MINUS_1) == TRUE);
+        ASSUME(GetMoveEffect(MOVE_NASTY_PLOT) == EFFECT_SPECIAL_ATTACK_UP_2);
+        ASSUME(GetMovePower(MOVE_EARTHQUAKE) == 100);
+        ASSUME(GetMovePower(MOVE_HAMMER_ARM) == 100);
+        ASSUME(GetMovePower(MOVE_BULLDOZE) == 60);
+        ASSUME(GetMovePower(MOVE_AURA_SPHERE) == 80);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_RHYDON) { Level(100); Nature(NATURE_ADAMANT); Item(ITEM_EVIOLITE); Speed(1); Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_HAMMER_ARM, move); }
+        OPPONENT(SPECIES_GRIMMSNARL) { Level(100); Nature(NATURE_JOLLY); Ability(ABILITY_INFILTRATOR); Speed(2); HP(300); Moves(MOVE_NASTY_PLOT, MOVE_AURA_SPHERE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HAMMER_ARM); EXPECT_MOVE(opponent, move == MOVE_EARTHQUAKE ? MOVE_NASTY_PLOT : MOVE_AURA_SPHERE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_IsMoveEffectInPlus - AI should not see secondary effect of Sheer Force boosted moves as beneficial")
+{
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_PSYCHIC) == 90);
+        ASSUME(MoveHasAdditionalEffect(MOVE_PSYCHIC, MOVE_EFFECT_SP_DEF_MINUS_1) == TRUE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_STEELIX) { Level(100); Nature(NATURE_SASSY); Item(ITEM_STEELIXITE); Ability(ABILITY_STURDY); Speed(58); Moves(MOVE_GYRO_BALL); }
+        OPPONENT(SPECIES_BRAVIARY_HISUI) { Level(100); Nature(NATURE_TIMID); Ability(ABILITY_SHEER_FORCE); Speed(251); Moves(MOVE_PSYCHIC, MOVE_NIGHT_SHADE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GYRO_BALL); SCORE_EQ_VAL(opponent, MOVE_PSYCHIC, 101); SCORE_EQ_VAL(opponent, MOVE_NIGHT_SHADE, 101); }
+    }
+}

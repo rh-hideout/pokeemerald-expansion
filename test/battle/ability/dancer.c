@@ -79,6 +79,9 @@ DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest")
     }
 }
 
+TO_DO_BATTLE_TEST("Dancer triggers from slowest to fastest during Trick Room")
+TO_DO_BATTLE_TEST("Dancer triggering ignores Lagging Tail")
+
 SINGLE_BATTLE_TEST("Dancer doesn't trigger if the original user flinches")
 {
     GIVEN {
@@ -146,6 +149,27 @@ SINGLE_BATTLE_TEST("Dancer-called attacks have their type updated")
     }
 }
 
+SINGLE_BATTLE_TEST("Dancer-called attacks do not trigger Life Orb if target is immune")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_REVELATION_DANCE));
+        ASSUME(GetMoveEffect(MOVE_REVELATION_DANCE) == EFFECT_REVELATION_DANCE);
+        ASSUME(GetMoveEffect(MOVE_ROOST) == EFFECT_ROOST);
+        ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
+        ASSUME(GetSpeciesType(SPECIES_ORICORIO_POM_POM, 0) == TYPE_ELECTRIC || GetSpeciesType(SPECIES_ORICORIO_POM_POM, 1) == TYPE_ELECTRIC);
+        PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
+        OPPONENT(SPECIES_ORICORIO_POM_POM) { Ability(ABILITY_DANCER); Item(ITEM_LIFE_ORB); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ROOST); MOVE(player, MOVE_REVELATION_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, opponent);
+        ABILITY_POPUP(player, ABILITY_LIGHTNING_ROD);
+        NOT HP_BAR(opponent);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Dancer doesn't trigger on a snatched move")
 {
     GIVEN {
@@ -169,6 +193,9 @@ DOUBLE_BATTLE_TEST("Dancer doesn't trigger on a snatched move")
         }
     }
 }
+
+TO_DO_BATTLE_TEST("Dancer-called moves can be snatched")
+TO_DO_BATTLE_TEST("Dancer-called moves can be reflected by Magic Bounce/Coat")
 
 DOUBLE_BATTLE_TEST("Dancer triggers on Instructed dance moves")
 {
@@ -225,6 +252,9 @@ DOUBLE_BATTLE_TEST("Dancer-called move doesn't update move to be Instructed")
     }
 }
 
+TO_DO_BATTLE_TEST("Dancer-called moves doesn't update move to be called by Mimick")
+TO_DO_BATTLE_TEST("Dancer-called moves doesn't update move to be called by Mirror Move")
+
 DOUBLE_BATTLE_TEST("Dancer doesn't call a move that didn't execute due to Powder")
 {
     GIVEN {
@@ -246,7 +276,6 @@ DOUBLE_BATTLE_TEST("Dancer doesn't call a move that didn't execute due to Powder
         }
     }
 }
-
 
 DOUBLE_BATTLE_TEST("Dancer still activates after Red Card")
 {
@@ -334,3 +363,16 @@ DOUBLE_BATTLE_TEST("Dancer correctly restores move targets")
         HP_BAR(playerRight);
     }
 }
+
+TO_DO_BATTLE_TEST("Dancer-called damaging moves are considered for Counter/Mirror Coat/Metal Burst")
+
+TO_DO_BATTLE_TEST("Dancer copies a status Z-Move's base move without gaining an additional Z-Power effect")
+TO_DO_BATTLE_TEST("Dancer user may hit itself in confusion instead of copying a move if it's confused")
+TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Rampage move") // Test with Petal Dance, Thrash
+TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Rollout")
+TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Choice items")
+TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Encore")
+TO_DO_BATTLE_TEST("Dancer tries to copy a status move but fails if it's under Taunt's effect")
+TO_DO_BATTLE_TEST("Dancer can still copy status moves if the user is holding an Assault Vest")
+TO_DO_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, but before the replacement is sent out")
+TO_DO_BATTLE_TEST("Dancer doesn't activate Feather Dance if it was reflected by Magic Bounce/Coat")

@@ -64,8 +64,6 @@ SINGLE_BATTLE_TEST("Hazards are applied correctly after a battler faints")
 
 SINGLE_BATTLE_TEST("Toxic Spikes can be removed after fainting to other hazards")
 {
-    KNOWN_FAILING; // tryfaintmon changes something that doesn't allow other switch-in effects on the battler
-
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_GRIMER) { HP(1); }

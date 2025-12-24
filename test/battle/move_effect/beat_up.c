@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Beat Up hits the target for each non-fainted, non-statused m
     PARAMETRIZE { gen = GEN_5; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, gen);
+        WITH_CONFIG(CONFIG_BEAT_UP, gen);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_PICHU)
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Beat Up doesn't consider Comatose as a status")
 SINGLE_BATTLE_TEST("Beat Up doesn't list party member's name (Gen5+)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage is Dark-typed (Gen5+)", s16 damage)
 
     ASSUME(GetMoveType(MOVE_BEAT_UP) == TYPE_DARK);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(targetIsFairy ? SPECIES_SYLVEON : SPECIES_WOBBUFFET);
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Beat Up's base power is determined by each striking Pokémon
     s16 firstHit, secondHit;
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_SHUCKLE);
         PLAYER(SPECIES_DEOXYS_ATTACK);
         PLAYER(SPECIES_WYNAUT) { HP(0); }
@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers stat stage changes (Gen5+)", s16 
     PARAMETRIZE { boosted = TRUE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_UMBREON);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -163,7 +163,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+
     PARAMETRIZE { ability = ABILITY_THICK_FAT;   item = ITEM_CHOICE_BAND; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_AZUMARILL) { Ability(ability); Item(item); Moves(MOVE_BEAT_UP); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -183,7 +183,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+
 SINGLE_BATTLE_TEST("Beat Up lists each party member's name")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WYNAUT) { HP(0); }
@@ -225,7 +225,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage is typeless", s16 damage)
     PARAMETRIZE { defender = SPECIES_SYLVEON; }     // Fairy
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
         type1 = GetSpeciesType(defender, 0);
         type2 = GetSpeciesType(defender, 1);
         ASSUME(type2 == type1 || type2 == TYPE_MYSTERY); // Ensure monotype targets
@@ -250,7 +250,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage doesn't consider STAB")
 {
     s16 damage;
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
         damage = 0;
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT) { HP(0); }
@@ -271,7 +271,7 @@ SINGLE_BATTLE_TEST("Beat Up's base power is the same for each strike")
 {
     s16 firstHit, secondHit;
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
         firstHit = 0;
         secondHit = 0;
         PLAYER(SPECIES_WYNAUT);
@@ -296,7 +296,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage is determined by each striking Pokémon's b
 {
     s16 shuckleHit, deoxysHit;
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
         shuckleHit = 0;
         deoxysHit = 0;
         PLAYER(SPECIES_SHUCKLE);
@@ -330,7 +330,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores stat stage changes", s16 damage)
     PARAMETRIZE { boosted = TRUE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -356,7 +356,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores Huge Power", s16 damage)
     PARAMETRIZE { ability = ABILITY_HUGE_POWER; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
         PLAYER(SPECIES_AZUMARILL) { Ability(ability); Moves(MOVE_BEAT_UP); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -379,7 +379,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores Choice Band", s16 damage)
     PARAMETRIZE { item = ITEM_CHOICE_BAND; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
+        WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
         PLAYER(SPECIES_URSARING) { Item(item); Moves(MOVE_BEAT_UP); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);

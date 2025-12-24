@@ -122,3 +122,18 @@ SINGLE_BATTLE_TEST("Recoil: The correct amount of recoil damage is dealt after t
         EXPECT_MUL_EQ(directDamage, UQ_4_12(0.25), recoilDamage);
     }
 }
+
+SINGLE_BATTLE_TEST("Recoil: No recoil is taken if the move is blocked by Disguise")
+{
+    GIVEN {
+        ASSUME(GetMoveRecoil(MOVE_FLARE_BLITZ) > 0);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLARE_BLITZ); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLARE_BLITZ, player);
+    } THEN {
+        EXPECT_EQ(player->hp, player->maxHP);
+    }
+}
