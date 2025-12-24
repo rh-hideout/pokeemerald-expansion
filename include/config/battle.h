@@ -344,6 +344,7 @@
 #define B_SLEEP_CLAUSE                  FALSE      // Enables Sleep Clause all the time in every case, overriding B_FLAG_SLEEP_CLAUSE. Use that for modularity.
 #define B_PARTNER_MONS_MARKED_SEEN      FALSE      // If TRUE, if your double battle partner sends out a Pokémon you haven't encountered yet, it will be marked as SEEN in your Pokédex.
 #define B_TRAINER_CLASS_NAMES           GEN_LATEST // Updates trainer class names. src/battle_main.c for details.
+#define B_ORAS_PRIZE_MONEY              FALSE      // If set to TRUE, trainers will use their base payouts from ORAS.
 
 #define NUM_BEEPS_GEN_LATEST            4                    // Loops 4 times
 #define NUM_BEEPS_GEN_3                 -1                   // Loops infinitely
