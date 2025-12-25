@@ -68,23 +68,57 @@ AI_DOUBLE_BATTLE_TEST("AI will Fake Out either opponent if one has a slower Fake
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI will Fake Out a target that its ally has slow KO on the target's partner and the user cannot fast KO the target")
+AI_DOUBLE_BATTLE_TEST("AI will Fake Out a target if its ally has slow KO on the target's partner and the user cannot fast KO the target")
 {
+    u32 speed = 2;
+
+    PARAMETRIZE { speed = 2; }
+    PARAMETRIZE { speed = 4; }
+
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_CELEBRATE); HP(40); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_DRAGON_RAGE, MOVE_CELEBRATE); HP(100); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_DRAGON_RAGE, MOVE_CELEBRATE); HP(40); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_CELEBRATE); HP(40); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_DRAGON_RAGE, MOVE_CELEBRATE); HP(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(speed); Moves(MOVE_DRAGON_RAGE, MOVE_CELEBRATE); HP(40); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Level(39); Moves(MOVE_SEISMIC_TOSS, MOVE_FAKE_OUT); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentRight, MOVE_FAKE_OUT, target:playerRight);
             SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
             SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
-            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + GOOD_EFFECT, target:playerLeft); 
-            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + BEST_EFFECT, target:playerRight);
+            if (speed == 2)
+            {
+                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + GOOD_EFFECT, target:playerLeft); 
+                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + SLOW_KILL + 2, target:playerRight);
+            }
+            else
+            {
+                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerLeft); 
+                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + FAST_KILL + 2, target:playerRight);
+            }
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentRight);
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI will not Fake Out a target if its ally has slow KO on the target's partner where its ally is fast KO'd by both target and target's partner")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE | AI_FLAG_OMNISCIENT);
+        TIE_BREAK_TARGET(TARGET_TIE_HI, 0);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_DRAGON_RAGE, MOVE_CELEBRATE); HP(40); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_DRAGON_RAGE, MOVE_CELEBRATE); HP(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_DRAGON_RAGE, MOVE_CELEBRATE); HP(40); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Level(39); Moves(MOVE_SEISMIC_TOSS, MOVE_FAKE_OUT); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target:playerRight);
+            SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
+            SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
+            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT, target:playerLeft); 
+            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT, target:playerRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponentRight);
     }
 }
 
