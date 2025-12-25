@@ -255,17 +255,7 @@ static inline struct Benchmark BenchmarkStop(void)
 #define KNOWN_CRASHING \
     Test_ExpectCrash(TRUE)
 
-#define EXPECT_FAIL \
-    if (1) \
-        goto CAT(expect_fail_body_, __LINE__); \
-    else \
-        while (1) \
-            if (1) { \
-                Test_ExpectFail(__LINE__); \
-                break; \
-            } else \
-                CAT(expect_fail_body_, __LINE__): \
-                    if ((Test_ExpectFail(-1), 1))
+#define EXPECT_FAIL for (u32 _expect_fail = (Test_ExpectFail(-1), 1); _expect_fail; Test_ExpectFail(__LINE__), _expect_fail = 0)
 
 #define PARAMETRIZE if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter)
 
