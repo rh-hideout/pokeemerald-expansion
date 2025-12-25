@@ -350,6 +350,7 @@ static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
     [MOVEMENT_TYPE_WANDER_AROUND_OWE] = MovementType_WanderAround_OverworldWildEncounter,
     [MOVEMENT_TYPE_CHASE_PLAYER_OWE] = MovementType_ChasePlayer_OverworldWildEncounter,
     [MOVEMENT_TYPE_FLEE_PLAYER_OWE] = MovementType_FleePlayer_OverworldWildEncounter,
+    [MOVEMENT_TYPE_WATCH_PLAYER_OWE] = MovementType_WatchPlayer_OverworldWildEncounter,
 };
 
 static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
@@ -397,6 +398,7 @@ static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_WANDER_AROUND_OWE] = TRUE,
     [MOVEMENT_TYPE_CHASE_PLAYER_OWE] = TRUE,
     [MOVEMENT_TYPE_FLEE_PLAYER_OWE] = TRUE,
+    [MOVEMENT_TYPE_WATCH_PLAYER_OWE] = TRUE,
 };
 
 const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
@@ -485,6 +487,7 @@ const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_WANDER_AROUND_OWE] = DIR_SOUTH,
     [MOVEMENT_TYPE_CHASE_PLAYER_OWE] = DIR_SOUTH,
     [MOVEMENT_TYPE_FLEE_PLAYER_OWE] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WATCH_PLAYER_OWE] = DIR_SOUTH,
 };
 
 #include "data/object_events/object_event_graphics_info_pointers.h"
@@ -11825,7 +11828,7 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step8(struct ObjectEvent *
     return TRUE;
 }
 
-bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step9(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+bool8 MovementType_Common_OverworldWildEncounter_Step9(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
     {
@@ -11909,17 +11912,7 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step8(struct ObjectEvent *o
     return TRUE;
 }
 
-bool8 MovementType_FleePlayer_OverworldWildEncounter_Step9(struct ObjectEvent *objectEvent, struct Sprite *sprite)
-{
-    if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
-    {
-        sprite->sTypeFuncId = 10;
-    }
-    return TRUE;
-}
-
 #define sCollisionTimer     sprite->data[6]
-#define STARTED             1
 
 bool8 MovementType_FleePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
@@ -11984,5 +11977,42 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
     return TRUE;
 }
 
+movement_type_def(MovementType_WatchPlayer_OverworldWildEncounter, gMovementTypeFuncs_WatchPlayer_OverworldWildEncounter)
+
+bool8 MovementType_WatchPlayer_OverworldWildEncounter_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+
+    SetObjectEventDirection(objectEvent, direction);
+
+    if (!OWE_IsMonNextToPlayer(objectEvent))
+    {
+        ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_QUESTION_MARK);
+        sprite->sTypeFuncId = 9;
+    }
+    else
+    {
+        sprite->sTypeFuncId = 10;
+    }
+
+    return TRUE;
+}
+
+bool8 MovementType_WatchPlayer_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+
+    SetObjectEventDirection(objectEvent, direction);
+    sprite->sTypeFuncId = 11;
+    return TRUE;
+}
+
+bool8 MovementType_WatchPlayer_OverworldWildEncounter_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection));
+    objectEvent->singleMovementActive = TRUE;
+    sprite->sTypeFuncId = 12;
+    return TRUE;
+}
+
 #undef sCollisionTimer
-#undef STARTED
