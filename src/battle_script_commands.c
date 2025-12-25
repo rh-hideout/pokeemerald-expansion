@@ -11006,11 +11006,27 @@ static void Cmd_trysetencore(void)
         if (gBattleMons[gBattlerTarget].volatiles.encoredMove != GetChosenMoveFromPosition(gBattlerTarget))
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
-        // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
-        if (HasBattlerActedThisTurn(gBattlerTarget))
-            gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER;
+        if (B_ENCORE_TURNS >= GEN_5)
+        {
+            if (HasBattlerActedThisTurn(gBattlerTarget))
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER;
+            else
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER - 1;
+        }
+        else if (B_ENCORE_TURNS == GEN_4)
+        {
+            if (HasBattlerActedThisTurn(gBattlerTarget))
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = ((Random() % 5) + B_ENCORE_TIMER);
+            else
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = ((Random() % 5) + 3);
+        }
         else
-            gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER - 1;
+        {
+            if (HasBattlerActedThisTurn(gBattlerTarget))
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = ((Random() % 5) + 3);
+            else
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = ((Random() % 5) + 2);
+        }
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -13152,8 +13168,16 @@ static void Cmd_handleballthrow(void)
                     u8 gender1 = GetMonGender(GetBattlerMon(gBattlerTarget));
                     u8 gender2 = GetMonGender(GetBattlerMon(gBattlerAttacker));
 
-                    if (gender1 != gender2 && gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS)
-                        ballMultiplier = 800;
+                    if (B_LOVE_BALL_MODIFIER >= GEN_4)
+                    {
+                        if (gender1 != gender2 && gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS)
+                            ballMultiplier = 800;
+                    }
+                    else
+                    {
+                        if (gender1 == gender2 && gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS)
+                            ballMultiplier = 800;
+                    }
                 }
                 break;
             case BALL_FAST:

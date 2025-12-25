@@ -6364,7 +6364,9 @@ BattleScript_TraceActivates::
 	printstring STRINGID_PKMNTRACED
 	waitmessage B_WAIT_TIME_LONG
 	settracedability BS_SCRIPTING
+.if B_TRACE >= GEN_4
 	switchinabilities BS_SCRIPTING
+.endif
 	return
 
 BattleScript_ReceiverActivates::
