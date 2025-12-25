@@ -105,25 +105,26 @@ struct TextPrinter
 {
     struct TextPrinterTemplate printerTemplate;
 
-    void (*callback)(struct TextPrinterTemplate *, u16); // 0x10
+    void (*callback)(struct TextPrinterTemplate *, u16);
 
     u16 utilityCounter:13;
     u16 downArrowYPosIdx:2;
     bool16 hasFontIdBeenSet:1;
     u8 autoScrollDelay;
-    u8 fontId:4;  // 0x14
+    u8 fontId:4;
     bool8 hasPrintBeenSpedUp:1;
     u8 japanese:1;
     u8 active:1;
     u8 isInUse:1;
-    //  word
 
-    u8 state;       // 0x1C
+    u8 state;
     u8 delayCounter;
     u8 scrollDistance;
-    u8 minLetterSpacing:4;  // 0x20
-    u8 textSpeed:4;
-    //  word
+    u8 minLetterSpacing;
+
+    u8 textSpeed;
+    u8 padding[3];
+
     struct TextPrinter *nextPrinter;
 
 };
