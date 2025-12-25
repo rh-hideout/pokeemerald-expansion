@@ -4352,14 +4352,15 @@ void TestThing(void)
     //FillSpriteRectColor(spriteIds[0], 3, 3, 88, 88, TRUE, 7);
     //FillSpriteRectSprite(spriteIds[0], 3, 3, 88, 88);
 
-    const u8 color[4] = {0, 3, 8, 0};
+    //const u8 color[4] = {0, 3, 8, 0};
+    const union TextColor color = {.asArray = {0, 3, 8, 0}};
 
-    AddSpriteTextPrinterParameterized4(spriteIds[0], FONT_SHORT, 0,  0, 0, 0, color, 1, sNewString);
-    AddSpriteTextPrinterParameterized4(spriteIds[0], FONT_SHORT, 0, 16, 0, 0, color, 1, sNewString2);
-    AddSpriteTextPrinterParameterized4(spriteIds[4], FONT_SHORT, 0,  0, 0, 0, color, 1, sNewString3);
-    AddSpriteTextPrinterParameterized4(spriteIds[4], FONT_SHORT, 0, 16, 0, 0, color, 1, sNewString4);
-    AddSpriteTextPrinterParameterized4(spriteIds[8], FONT_SHORT, 0,  0, 0, 0, color, 1, sNewString5);
-    AddSpriteTextPrinterParameterized4(spriteIds[8], FONT_SHORT, 0, 16, 0, 0, color, 1, sNewString6);
+    AddSpriteTextPrinterParameterized6(spriteIds[0], FONT_SHORT, 0,  0, 0, 0, color, 1, sNewString);
+    AddSpriteTextPrinterParameterized6(spriteIds[0], FONT_SHORT, 0, 16, 0, 0, color, 1, sNewString2);
+    AddSpriteTextPrinterParameterized6(spriteIds[4], FONT_SHORT, 0,  0, 0, 0, color, 1, sNewString3);
+    AddSpriteTextPrinterParameterized6(spriteIds[4], FONT_SHORT, 0, 16, 0, 0, color, 1, sNewString4);
+    AddSpriteTextPrinterParameterized6(spriteIds[8], FONT_SHORT, 0,  0, 0, 0, color, 1, sNewString5);
+    AddSpriteTextPrinterParameterized6(spriteIds[8], FONT_SHORT, 0, 16, 0, 0, color, 1, sNewString6);
 
     CreateTask(SomeTask, 0);
 }
