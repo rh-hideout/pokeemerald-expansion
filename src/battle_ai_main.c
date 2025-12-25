@@ -4278,7 +4278,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     }
 
     // check guaranteed flinch, a la Fake Out
-    if (IsFlinchGuaranteed(battlerAtk, battlerDef, move))
+    if (IsFlinchGuaranteed(battlerAtk, battlerDef, move) && !IsDoubleBattle())
         ADJUST_SCORE(BEST_EFFECT);
 
     if (IsExplosionMove(move) && gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE && gBattleMons[battlerDef].statStages[STAT_EVASION] <= DEFAULT_STAT_STAGE)
@@ -4985,8 +4985,30 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF));
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (gBattleStruct->battlerState[battlerAtk].isFirstTurn && IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
-            ADJUST_SCORE(BEST_EFFECT);
+        if (gBattleStruct->battlerState[battlerAtk].isFirstTurn && !IsTargetingPartner(battlerAtk, battlerDef))
+        {
+            // Fake Out in doubles
+            if (IsDoubleBattle() && IsFlinchGuaranteed(battlerAtk, battlerDef, move))
+            {
+                // If either opponent has Fake out, it's their first turn but user is faster - incentivise Fake Out on both
+                if ((HasMove(battlerDef, MOVE_FAKE_OUT) && gBattleStruct->battlerState[battlerDef].isFirstTurn
+                 && AI_WhoStrikesFirst(battlerAtk, battlerDef, MOVE_FAKE_OUT, MOVE_FAKE_OUT, CONSIDER_PRIORITY) == AI_IS_FASTER)
+                 || (HasMove(BATTLE_PARTNER(battlerDef), MOVE_FAKE_OUT) && gBattleStruct->battlerState[BATTLE_PARTNER(battlerDef)].isFirstTurn
+                 && AI_WhoStrikesFirst(battlerAtk, BATTLE_PARTNER(battlerDef), MOVE_FAKE_OUT, MOVE_FAKE_OUT, CONSIDER_PRIORITY) == AI_IS_FASTER))
+                    ADJUST_SCORE(BEST_EFFECT);
+                // If ally has slow KO with their chosen move, user sees no KOs while outspeeding (checking move and priority combinations gets a bit complicated)
+                else if (hasPartner 
+                 && (AI_WhoStrikesFirst(BATTLE_PARTNER(battlerAtk), battlerDef, gBattleMons[BATTLE_PARTNER(battlerAtk)].moves[gAiBattleData->chosenMoveIndex[BATTLE_PARTNER(battlerAtk)]], MOVE_SCRATCH, CONSIDER_PRIORITY) == AI_IS_SLOWER)
+                 && CanAIFaintTarget(BATTLE_PARTNER(battlerAtk), battlerDef, 1) 
+                 && !(CanAIFaintTarget(battlerAtk, battlerDef, 1) && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
+                 && !(CanAIFaintTarget(battlerAtk, BATTLE_PARTNER(battlerDef), 1) && AI_WhoStrikesFirst(battlerAtk, BATTLE_PARTNER(battlerDef), move, MOVE_SCRATCH, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER))
+                    ADJUST_SCORE(BEST_EFFECT);
+                else
+                    ADJUST_SCORE(DECENT_EFFECT);
+            }
+            else if (IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
+                ADJUST_SCORE(BEST_EFFECT);
+        }
         break;
     case EFFECT_STOCKPILE:
         if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
