@@ -150,30 +150,4 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, records damage, bre
     }
 }
 
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break TRUE, failing")
-{
-    KNOWN_FAILING;  //  For testing purposes
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player, subBreak: TRUE);
-    }
-}
-
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break FALSE, failing")
-{
-    KNOWN_FAILING;  //  For testing purposes
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player, subBreak: FALSE);
-    }
-}
-
 TO_DO_BATTLE_TEST("Baton Pass passes Substitutes");

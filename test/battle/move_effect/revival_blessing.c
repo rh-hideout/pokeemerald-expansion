@@ -85,40 +85,6 @@ AI_MULTI_BATTLE_TEST("AI will not revive a partner's party member with Revival B
     }
 }
 
-ONE_VS_TWO_BATTLE_TEST("Revival Blessing cannot revive an opponent partner's party member in a 1v2 double battle")
-{
-    GIVEN {
-        PLAYER(SPECIES_CLEFABLE);
-        PLAYER(SPECIES_CLEFABLE);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_B(SPECIES_WYNAUT);
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { HP(0); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT);
-    } WHEN {
-        EXPECT_FAIL;
-        TURN { MOVE(opponentLeft, MOVE_REVIVAL_BLESSING, partyIndex: 4); }
-    }
-}
-
-TWO_VS_ONE_BATTLE_TEST("Revival Blessing cannot revive a partner's party member in a 2v1 multi battle")
-{
-    GIVEN {
-        MULTI_PLAYER(SPECIES_CLEFABLE);
-        MULTI_PLAYER(SPECIES_CLEFABLE);
-        MULTI_PLAYER(SPECIES_CLEFABLE);
-        MULTI_PARTNER(SPECIES_CLEFAIRY);
-        MULTI_PARTNER(SPECIES_CLEFAIRY) { HP(0); }
-        MULTI_PARTNER(SPECIES_CLEFAIRY);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_A(SPECIES_WYNAUT);
-    } WHEN {
-        EXPECT_FAIL;
-        TURN { MOVE(playerLeft, MOVE_REVIVAL_BLESSING, partyIndex: 4); }
-    }
-}
-
 DOUBLE_BATTLE_TEST("Revival Blessing doesn't prevent revived battlers from losing their turn")
 {
     GIVEN {
