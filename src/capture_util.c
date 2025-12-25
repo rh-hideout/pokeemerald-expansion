@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "capture_util.h"
 #include "event_data.h"
+#include "generational_changes.h"
 #include "item.h"
 #include "overworld.h"
 #include "pokedex.h"
@@ -215,7 +216,7 @@ u32 ComputeBadgeCapturePenalty(u32 enemyLevel, u32 playerLevel)
             badgeCount++;
     }
 
-    if (B_CATCH_BADGE_PENALTY == GEN_8)
+    if (GetConfig(CONFIG_MISSING_BADGE_CATCH_MALUS) == GEN_8)
     {
         if (badgeCount < 8 && playerLevel < enemyLevel)
             badgePenalty = 410;
@@ -249,17 +250,17 @@ u32 ComputeCaptureOdds(struct BattlePokemon *mon, struct BallData *ball, u32 pla
     odds = odds * catchRate / maxHPbase;
     odds = odds * ball->multiplier / ball->divider;
 
-    if (B_CATCH_BADGE_PENALTY >= GEN_8)
+    if (GetConfig(CONFIG_MISSING_BADGE_CATCH_MALUS) >= GEN_8)
         odds = odds * ComputeBadgeCapturePenalty(mon->level, playerLevel) / 4096;
 
-    if (B_CATCH_LOW_LEVEL_BONUS == GEN_8 && mon->level <= 20)
+    if (GetConfig(CONFIG_LOW_LEVEL_CATCH_BONUS) == GEN_8 && mon->level <= 20)
          odds = odds * (30 - mon->level) / 10;
-    else if (B_CATCH_LOW_LEVEL_BONUS >= GEN_9 && mon->level <= 13)
+    else if (GetConfig(CONFIG_LOW_LEVEL_CATCH_BONUS) >= GEN_9 && mon->level <= 13)
         odds = odds * (36 - (mon->level * 2)) / 10;
 
     if (mon->status1 & STATUS1_INCAPACITATED)
     {
-        if (B_CATCH_SLEEP_FREEZE_BONUS >= GEN_5)
+        if (GetConfig(CONFIG_INCAPACITATED_CATCH_BONUS) >= GEN_5)
             odds = (odds * 25) / 10;
         else
             odds *= 2;

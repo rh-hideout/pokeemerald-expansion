@@ -13062,7 +13062,7 @@ static void Cmd_handleballthrow(void)
         u32 ballId = ItemIdToBallId(gLastUsedItem);
 
         ComputeBallData(&gBattleMons[gBattlerTarget], ballId, &ball);
-        u32 odds = ComputeCaptureOdds(&gBattleMons[gBattlerTarget], &ball);
+        u32 odds = ComputeCaptureOdds(&gBattleMons[gBattlerTarget], &ball, gBattleMons[gBattlerAttacker].level);
 
         if (gBattleResults.catchAttempts[ballId] < 255)
             gBattleResults.catchAttempts[ballId]++;
@@ -13107,7 +13107,7 @@ static void Cmd_handleballthrow(void)
         if (shakes == maxShakes) // mon caught, copy of the code above
         {
             enum NationalDexOrder natDexNo = SpeciesToNationalPokedexNum(gBattleMons[gBattlerTarget].species);
-            if ((B_CRITICAL_CAPTURE_IF_OWNED >= GEN_9 && GetSetPokedexFlag(natDexNo, FLAG_GET_CAUGHT))
+            if ((GetConfig(CONFIG_CRITICAL_CAPTURE_IF_OWNED) >= GEN_9 && GetSetPokedexFlag(natDexNo, FLAG_GET_CAUGHT))
              || IsCriticalCapture())
             {
                 gBattleSpritesDataPtr->animationData->isCriticalCapture = TRUE;
