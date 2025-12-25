@@ -138,7 +138,7 @@ SINGLE_BATTLE_TEST("Fling's thrown item can be regained with Recycle")
 SINGLE_BATTLE_TEST("Fling - Item is lost even when there is no target")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SELF_DESTRUCT) == EFFECT_EXPLOSION);
+        ASSUME(IsExplosionMove(MOVE_SELF_DESTRUCT));
         PLAYER(SPECIES_WOBBUFFET) {Item(ITEM_RAZOR_CLAW); Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) {Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) {Speed(5); }

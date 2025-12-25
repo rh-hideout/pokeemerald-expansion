@@ -6601,34 +6601,34 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     u32 i, temp;
 
     // if used future sight on opposing side, properly track who used it
-    if (gWishFutureKnock.futureSightCounter[LEFT_FOE(battlerAtk)] > 0
-     || gWishFutureKnock.futureSightCounter[RIGHT_FOE(battlerAtk)] > 0)
+    if (gBattleStruct->futureSight[LEFT_FOE(battlerAtk)].counter > 0
+     || gBattleStruct->futureSight[RIGHT_FOE(battlerAtk)].counter > 0)
     {
         for (i = 0; i < gBattlersCount; i++)
         {
             if (IsBattlerAlly(i, battlerAtk))
                 continue;   // only on opposing side
 
-            if (gWishFutureKnock.futureSightBattlerIndex[i] == battlerAtk)
+            if (gBattleStruct->futureSight[i].battlerIndex == battlerAtk)
             {
                 // if target was attacked with future sight from us, now they'll be the partner slot
-                gWishFutureKnock.futureSightBattlerIndex[i] = battlerPartner;
-                gWishFutureKnock.futureSightPartyIndex[i] = gBattlerPartyIndexes[battlerPartner];
+                gBattleStruct->futureSight[i].battlerIndex = battlerPartner;
+                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerPartner];
                 break;
             }
-            else if (gWishFutureKnock.futureSightBattlerIndex[i] == battlerPartner)
+            else if (gBattleStruct->futureSight[i].battlerIndex == battlerPartner)
             {
-                gWishFutureKnock.futureSightBattlerIndex[i] = battlerAtk;
-                gWishFutureKnock.futureSightPartyIndex[i] = gBattlerPartyIndexes[battlerAtk];
+                gBattleStruct->futureSight[i].battlerIndex = battlerAtk;
+                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerAtk];
                 break;
             }
         }
     }
 
     // swap wish party indices
-    if (gWishFutureKnock.wishCounter[battlerAtk] > 0
-     || gWishFutureKnock.wishCounter[battlerPartner] > 0)
-        SWAP(gWishFutureKnock.wishPartyId[battlerAtk], gWishFutureKnock.wishPartyId[battlerPartner], temp);
+    if (gBattleStruct->wish.counter[battlerAtk] > 0
+     || gBattleStruct->wish.counter[battlerPartner] > 0)
+        SWAP(gBattleStruct->wish.partyId[battlerAtk], gBattleStruct->wish.partyId[battlerPartner], temp);
 }
 
 static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)

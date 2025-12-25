@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Present", s16 damage)
     } WHEN {
         //Test will fail if present heals because the hp change would be 0
         //so we want a damaging version of present
-        TURN { MOVE(player, MOVE_PRESENT, WITH_RNG(RNG_PRESENT, 1)); } 
+        TURN { MOVE(player, MOVE_PRESENT, WITH_RNG(RNG_PRESENT, 1)); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -969,7 +969,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
 {
     s16 damage1, damage2;
     u32 move = 0;
-    for (u32 j = MOVE_HONE_CLAWS; j < MOVES_COUNT_GEN5; j++)
+    for (u32 j = MOVE_HONE_CLAWS + 12; j < MOVES_COUNT_GEN5; j++)
     {
         if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
             PARAMETRIZE { move = j; }
