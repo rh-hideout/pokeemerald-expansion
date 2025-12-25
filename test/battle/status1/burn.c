@@ -7,7 +7,7 @@ ASSUMPTIONS
     ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
 }
 
-SINGLE_BATTLE_TEST("Burn deals 1/8th damage (Gen1-6) or 1/16th (Gen7+) per turn")
+SINGLE_BATTLE_TEST("Burn deals 1/8th damage (Gen2-6) or 1/16th (Gen1 and Gen7+) per turn")
 {
     u32 j, config, value;
     PARAMETRIZE { config = GEN_7; value = 16; }
