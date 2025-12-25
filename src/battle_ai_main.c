@@ -418,6 +418,7 @@ u32 GetAllyMove(u32 battler)
         return gBattleMons[partnerBattler].moves[simulatedMoveIndex];
     }
 
+    // Move for battler has already been calculated so set as partner move
     u32 moveIndex = gAiBattleData->chosenMoveIndex[partnerBattler];
     return gBattleMons[partnerBattler].moves[moveIndex];
 }
