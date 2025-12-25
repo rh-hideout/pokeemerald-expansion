@@ -468,14 +468,6 @@ static void SetPosForRotation(struct Sprite *sprite, u16 index, s16 amplitudeX, 
     sprite->y2 = yAdder + amplitudeY;
 }
 
-enum BackAnim GetSpeciesBackAnimSet(u16 species)
-{
-    if (gSpeciesInfo[species].backAnimId != BACK_ANIM_NONE)
-        return gSpeciesInfo[species].backAnimId - 1;
-    else
-        return BACK_ANIM_NONE;
-}
-
 #define tState  data[0]
 #define tPtrHi  data[1]
 #define tPtrLo  data[2]

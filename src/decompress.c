@@ -1142,34 +1142,24 @@ void LoadSpecialPokePicIsEgg(void *dest, s32 species, u32 personality, bool8 isF
 
     if (isEgg)
     {
-        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
-            DecompressDataWithHeaderWram(gEggDatas[gSpeciesInfo[species].eggId].eggSprite, dest);
+        if (GetSpeciesEggId(species) != EGG_ID_NONE)
+            DecompressDataWithHeaderWram(gEggDatas[GetSpeciesEggId(species)].eggSprite, dest);
         else
-            DecompressDataWithHeaderWram(gSpeciesInfo[SPECIES_EGG].frontPic, dest);
+            DecompressDataWithHeaderWram(GetSpeciesFrontPic(SPECIES_EGG), dest);
     }
     else if (isFrontPic)
     {
-    #if P_GENDER_DIFFERENCES
-        if (gSpeciesInfo[species].frontPicFemale != NULL && IsPersonalityFemale(species, personality))
-            DecompressDataWithHeaderWram(gSpeciesInfo[species].frontPicFemale, dest);
+        if (IsPersonalityFemale(species, personality))
+            DecompressDataWithHeaderWram(GetSpeciesFrontPicFemale(species), dest);
         else
-    #endif
-        if (gSpeciesInfo[species].frontPic != NULL)
-            DecompressDataWithHeaderWram(gSpeciesInfo[species].frontPic, dest);
-        else
-            DecompressDataWithHeaderWram(gSpeciesInfo[SPECIES_NONE].frontPic, dest);
+            DecompressDataWithHeaderWram(GetSpeciesFrontPic(species), dest);
     }
     else
     {
-    #if P_GENDER_DIFFERENCES
-        if (gSpeciesInfo[species].backPicFemale != NULL && IsPersonalityFemale(species, personality))
-            DecompressDataWithHeaderWram(gSpeciesInfo[species].backPicFemale, dest);
+        if (IsPersonalityFemale(species, personality))
+            DecompressDataWithHeaderWram(GetSpeciesBackPicFemale(species), dest);
         else
-    #endif
-        if (gSpeciesInfo[species].backPic != NULL)
-            DecompressDataWithHeaderWram(gSpeciesInfo[species].backPic, dest);
-        else
-            DecompressDataWithHeaderWram(gSpeciesInfo[SPECIES_NONE].backPic, dest);
+            DecompressDataWithHeaderWram(GetSpeciesBackPic(species), dest);
     }
 
     if (species == SPECIES_SPINDA && isFrontPic)

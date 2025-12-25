@@ -4432,7 +4432,7 @@ static void Cmd_getexp(void)
             if (orderId < PARTY_SIZE)
                 gBattleStruct->expGettersOrder[orderId] = PARTY_SIZE;
 
-            calculatedExp = gSpeciesInfo[gBattleMons[gBattlerFainted].species].expYield * gBattleMons[gBattlerFainted].level;
+            calculatedExp = GetSpeciesExpYield(gBattleMons[gBattlerFainted].species) * gBattleMons[gBattlerFainted].level;
             if (B_SCALED_EXP >= GEN_5 && B_SCALED_EXP != GEN_6)
                 calculatedExp /= 5;
             else
@@ -4526,7 +4526,7 @@ static void Cmd_getexp(void)
 
                     if (B_EXP_CAP_TYPE == EXP_CAP_HARD && gBattleStruct->battlerExpReward != 0)
                     {
-                        enum GrowthRate growthRate = gSpeciesInfo[GetMonData(&gPlayerParty[*expMonId], MON_DATA_SPECIES)].growthRate;
+                        enum GrowthRate growthRate = GetSpeciesGrowthRate(GetMonData(&gPlayerParty[*expMonId], MON_DATA_SPECIES));
                         u32 currentExp = GetMonData(&gPlayerParty[*expMonId], MON_DATA_EXP);
                         u32 levelCap = GetCurrentLevelCap();
 
@@ -13039,9 +13039,9 @@ static void Cmd_handleballthrow(void)
         if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
             catchRate = gBattleStruct->safariCatchFactor * 1275 / 100;
         else
-            catchRate = gSpeciesInfo[gBattleMons[gBattlerTarget].species].catchRate;
+            catchRate = GetSpeciesCatchRate(gBattleMons[gBattlerTarget].species);
 
-        if (gSpeciesInfo[gBattleMons[gBattlerTarget].species].isUltraBeast)
+        if (IsSpeciesUltraBeast(gBattleMons[gBattlerTarget].species))
         {
             if (ballId == BALL_BEAST)
                 ballMultiplier = 500;

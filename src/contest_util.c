@@ -1116,7 +1116,7 @@ static void LoadAllContestMonIconPalettes(void)
     for (i = 0; i < CONTESTANT_COUNT; i++)
     {
         species = gContestMons[i].species;
-        LoadPalette(gMonIconPalettes[gSpeciesInfo[GetIconSpecies(species, 0)].iconPalIndex], BG_PLTT_ID(10 + i), PLTT_SIZE_4BPP);
+        LoadPalette(gMonIconPalettes[GetSpeciesIconPalIndex(GetIconSpecies(species, 0))], BG_PLTT_ID(10 + i), PLTT_SIZE_4BPP);
     }
 }
 

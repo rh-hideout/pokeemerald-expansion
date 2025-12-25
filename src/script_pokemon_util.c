@@ -314,7 +314,7 @@ void ToggleGigantamaxFactor(struct ScriptContext *ctx)
     {
         bool32 gigantamaxFactor;
 
-        if (gSpeciesInfo[SanitizeSpeciesId(GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES))].isMythical)
+        if (IsSpeciesMythical(GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES)))
             return;
 
         gigantamaxFactor = GetMonData(&gPlayerParty[partyIndex], MON_DATA_GIGANTAMAX_FACTOR);
@@ -364,7 +364,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     if (nature >= NUM_NATURES)
     {
         if (OW_SYNCHRONIZE_NATURE >= GEN_6
-         && (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED || OW_SYNCHRONIZE_NATURE == GEN_7))
+         && (GetSpeciesEggGroup(species, 0) == EGG_GROUP_NO_EGGS_DISCOVERED || OW_SYNCHRONIZE_NATURE == GEN_7))
             nature = PickWildMonNature();
         else
             nature = Random() % NUM_NATURES;
@@ -544,20 +544,21 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u32 i;
     enum Stat availableIVs[NUM_STATS];
     enum Stat selectedIvs[NUM_STATS];
-    if (gSpeciesInfo[species].perfectIVCount != 0)
+    u32 perfectIVCount = GetSpeciesPerfectIVCount(species);
+    if (perfectIVCount != 0)
     {
         // Initialize a list of IV indices.
         for (i = 0; i < NUM_STATS; i++)
             availableIVs[i] = i;
 
         // Select the IVs that will be perfected.
-        for (i = 0; i < NUM_STATS && i < gSpeciesInfo[species].perfectIVCount; i++)
+        for (i = 0; i < NUM_STATS && i < perfectIVCount; i++)
         {
             u8 index = Random() % (NUM_STATS - i);
             selectedIvs[i] = availableIVs[index];
             RemoveIVIndexFromList(availableIVs, index);
         }
-        for (i = 0; i < NUM_STATS && i < gSpeciesInfo[species].perfectIVCount; i++)
+        for (i = 0; i < NUM_STATS && i < perfectIVCount; i++)
         {
             switch (selectedIvs[i])
             {

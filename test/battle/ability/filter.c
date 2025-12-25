@@ -7,8 +7,8 @@ SINGLE_BATTLE_TEST("Filter reduces damage to Super Effective moves by 0.75", s16
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; }
     PARAMETRIZE { ability = ABILITY_FILTER; }
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_MR_MIME].types[0] == TYPE_PSYCHIC);
-        ASSUME(gSpeciesInfo[SPECIES_MR_MIME].types[1] == TYPE_FAIRY);
+        ASSUME(GetSpeciesType(SPECIES_MR_MIME, 0) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(SPECIES_MR_MIME, 1) == TYPE_FAIRY);
         ASSUME(GetMoveType(MOVE_POISON_JAB) == TYPE_POISON);
         ASSUME(gTypeEffectivenessTable[TYPE_POISON][TYPE_FAIRY] > UQ_4_12(1.0));
         ASSUME(gTypeEffectivenessTable[TYPE_POISON][TYPE_PSYCHIC] == UQ_4_12(1.0));

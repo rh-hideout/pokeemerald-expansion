@@ -123,7 +123,7 @@ bool32 CanDynamax(u32 battler)
 bool32 IsGigantamaxed(u32 battler)
 {
     struct Pokemon *mon = GetBattlerMon(battler);
-    if ((gSpeciesInfo[gBattleMons[battler].species].isGigantamax) && GetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR))
+    if (IsSpeciesGigantamax(gBattleMons[battler].species) && GetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR))
         return TRUE;
     return FALSE;
 }
@@ -240,13 +240,13 @@ static u16 GetTypeBasedMaxMove(u32 battler, enum Type type)
     u32 species = gBattleMons[battler].species;
     u32 targetSpecies = species;
 
-    if (!gSpeciesInfo[species].isGigantamax)
+    if (!IsSpeciesGigantamax(species))
         targetSpecies = GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_GIGANTAMAX);
 
     if (targetSpecies != species)
         species = targetSpecies;
 
-    if (gSpeciesInfo[species].isGigantamax)
+    if (IsSpeciesGigantamax(species))
     {
         for (i = 0; i < ARRAY_COUNT(sGMaxMoveTable); i++)
         {

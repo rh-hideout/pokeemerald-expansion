@@ -272,7 +272,6 @@ static void InitGame(struct PokemonJump *);
 static void ResetForNewGame(struct PokemonJump *);
 static void InitPlayerAndJumpTypes(void);
 static void ResetPlayersForNewGame(void);
-static s16 GetSpeciesPokemonJumpType(u16 species);
 static void InitJumpMonInfo(struct PokemonJump_MonInfo *, struct Pokemon *);
 static void CB2_PokemonJump(void);
 static void Task_StartPokemonJump(u8);
@@ -518,11 +517,6 @@ static void ResetPlayersForNewGame(void)
         sPokemonJump->players[i].jumpState = JUMPSTATE_NONE;
         sPokemonJump->memberFuncIds[i] = FUNC_NONE;
     }
-}
-
-static s16 GetSpeciesPokemonJumpType(u16 species)
-{
-    return gSpeciesInfo[SanitizeSpeciesId(species)].pokemonJumpType;
 }
 
 static void InitJumpMonInfo(struct PokemonJump_MonInfo *monInfo, struct Pokemon *mon)
@@ -2214,11 +2208,6 @@ static u8 *GetPokeJumpPlayerName(u8 multiplayerId)
     return sPokemonJump->players[multiplayerId].name;
 }
 
-bool32 IsSpeciesAllowedInPokemonJump(u16 species)
-{
-    return GetSpeciesPokemonJumpType(species) != PKMN_JUMP_TYPE_NONE;
-}
-
 void IsPokemonJumpSpeciesInParty(void)
 {
     int i;
@@ -3569,7 +3558,7 @@ static void CreateJumpMonSprites(void)
     {
         struct PokemonJump_MonInfo *monInfo = GetMonInfoByMultiplayerId(i);
 
-        y = gSpeciesInfo[monInfo->species].frontPicYOffset;
+        y = GetSpeciesFrontPicYOffset(monInfo->species);
         CreateJumpMonSprite(sPokemonJumpGfx, monInfo, *xCoords, y + 112, i);
         CreateStarSprite(sPokemonJumpGfx, *xCoords, 112, i);
         xCoords++;

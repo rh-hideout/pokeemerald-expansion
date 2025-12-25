@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Magnet Rise fails if the user is Grounded by Smack Down")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_SMACK_DOWN);
-        ASSUME(gSpeciesInfo[SPECIES_XATU].types[0] == TYPE_FLYING || gSpeciesInfo[SPECIES_XATU].types[1] == TYPE_FLYING);
+        ASSUME(IsSpeciesOfType(SPECIES_XATU, TYPE_FLYING));
         PLAYER(SPECIES_XATU);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {

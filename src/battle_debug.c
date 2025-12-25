@@ -776,7 +776,7 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
         struct Pokemon *party = GetBattlerParty(data->aiBattlerId);
         u32 switchMon = GetMonData(&party[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
         AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74, 79, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("Switching to "));
-        AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74 + 68, 79, sTextColorTable[COLORID_RED], 0, gSpeciesInfo[switchMon].speciesName);
+        AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74 + 68, 79, sTextColorTable[COLORID_RED], 0, GetSpeciesName(switchMon));
     }
 
     CopyWindowToVram(data->aiMovesWindowId, COPYWIN_FULL);

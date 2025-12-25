@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Toxic Thread still inflicts Poison if speed can't be lowered
 SINGLE_BATTLE_TEST("Toxic Thread still lowers speed if the target can't be Poisoned")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_BRONZOR].types[0] == TYPE_STEEL || gSpeciesInfo[SPECIES_BRONZOR].types[1] == TYPE_STEEL);
+        ASSUME(IsSpeciesOfType(SPECIES_BRONZOR, TYPE_STEEL));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRONZOR);
     } WHEN {
@@ -148,7 +148,7 @@ SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered and target is a
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
-        ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_POISON || gSpeciesInfo[SPECIES_ODDISH].types[1] == TYPE_POISON);
+        ASSUME(IsSpeciesOfType(SPECIES_ODDISH, TYPE_POISON));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ODDISH);
     } WHEN {

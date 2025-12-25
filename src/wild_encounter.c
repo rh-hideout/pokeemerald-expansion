@@ -482,7 +482,7 @@ void CreateWildMon(u16 species, u8 level)
 
     ZeroEnemyPartyMons();
 
-    switch (gSpeciesInfo[species].genderRatio)
+    switch (GetSpeciesGenderRatio(species))
     {
     case MON_MALE:
     case MON_FEMALE:
