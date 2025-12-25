@@ -368,7 +368,6 @@ static void TryResetComboAttackState(u32 battler, u32 moveIndex)
      && effect != EFFECT_ROUND
      && effect != EFFECT_FUSION_COMBO)
     {
-        DebugPrintf("???");
         u32 partner = BATTLE_PARTNER(battler);
         gAiLogicData->comboState = COMBO_SECOND_BATTLER_NO_SCORE_INCREASE;
         gAiBattleData->chosenMoveIndex[partner] = BattleAI_ChooseMoveIndex(partner);
