@@ -11884,7 +11884,7 @@ bool8 MovementType_Common_OverworldWildEncounter_Step12(struct ObjectEvent *obje
     {
         objectEvent->singleMovementActive = FALSE;
 
-        if (!OWE_IsPlayerInsideRangeFromMon(objectEvent, OWE_CHASE_RANGE))
+        if (!OWE_IsPlayerInsideMonActiveDistance(objectEvent))
         {
             sprite->sTypeFuncId = 0;
             return FALSE;

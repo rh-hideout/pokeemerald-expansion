@@ -116,7 +116,7 @@ void TryRemoveOverworldWildEncounter(u32 localId);
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
 void DespawnOldestOWE_Pal(void);
 bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon);
-bool32 OWE_IsPlayerInsideRangeFromMon(struct ObjectEvent *mon, u32 distance);
+bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 void Task_OWE_WaitMovements(u8 taskId);

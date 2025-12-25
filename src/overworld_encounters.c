@@ -857,7 +857,7 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
 
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
     {
-        if (OWE_IsPlayerInsideRangeFromMon(mon, OWE_MON_SIGHT_LENGTH))
+        if (OWE_IsPlayerInsideMonActiveDistance(mon))
             return TRUE;
     }
     else
@@ -890,9 +890,14 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
     return FALSE;
 }
 
-bool32 OWE_IsPlayerInsideRangeFromMon(struct ObjectEvent *mon, u32 distance)
+bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon)
 {
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u32 distance = OWE_CHASE_RANGE;
+    u32 speciesId = OW_SPECIES(mon);
+
+    if (speciesId != SPECIES_NONE)
+        distance = sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].activeDistance;
 
     if (player->currentCoords.y <= mon->currentCoords.y + distance && player->currentCoords.y >= mon->currentCoords.y - distance
      && player->currentCoords.x <= mon->currentCoords.x + distance && player->currentCoords.x >= mon->currentCoords.x - distance)
