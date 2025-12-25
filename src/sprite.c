@@ -1796,29 +1796,6 @@ u32 GetSpanPerImage(u32 shape, u32 size)
     return sSpanPerImage[shape][size];
 }
 
-u8 PrintTextToSprite(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
-{
-    struct TextPrinterTemplate printer;
-
-    printer.currentChar = string;
-    printer.type = SPRITE_TEXT_PRINTER;
-    printer.spriteId = spriteId;
-    printer.fontId = fontId;
-    printer.x = x;
-    printer.y = y;
-    printer.currentX = x;
-    printer.currentY = y;
-    printer.letterSpacing = gFonts[fontId].letterSpacing;
-    printer.lineSpacing = gFonts[fontId].lineSpacing;
-    printer.color.accent = 0;
-    printer.color.foreground = 1;
-    printer.color.background = 0;
-    printer.color.shadow = 3;
-    printer.firstSpriteInRow = spriteId;
-
-    return AddTextPrinter(&printer, 0, NULL);
-}
-
 #define nextX data[1]
 #define nextY data[2]
 
