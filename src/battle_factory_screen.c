@@ -125,7 +125,7 @@ struct FactorySelectScreen
 struct SwapScreenAction
 {
     u8 id;
-    void (*func)(u8 taskId);
+    TaskFunc func;
 };
 
 struct FactorySwapScreen
@@ -253,7 +253,7 @@ static EWRAM_DATA u8 *sSwapMenuTilemapBuffer = NULL;
 static EWRAM_DATA u8 *sSwapMonPicBgTilemapBuffer = NULL;
 
 static struct FactorySelectScreen *sFactorySelectScreen;
-static void (*sSwap_CurrentOptionFunc)(u8 taskId);
+static TaskFunc sSwap_CurrentOptionFunc;
 static struct FactorySwapScreen *sFactorySwapScreen;
 
 COMMON_DATA u8 (*gFactorySelect_CurrentOptionFunc)(void) = NULL;
@@ -299,7 +299,7 @@ static const struct SpritePalette sSelect_SpritePalettes[] =
     {},
 };
 
-u8 static (* const sSelect_MenuOptionFuncs[])(void) =
+u8 static (*const sSelect_MenuOptionFuncs[])(void) =
 {
     Select_OptionSummary,
     Select_OptionRentDeselect,
@@ -517,17 +517,17 @@ static const union AnimCmd sAnim_Select_Pokeball_Moving[] =
     ANIMCMD_END,
 };
 
-static const union AnimCmd * const sAnims_Select_Interface[] =
+static const union AnimCmd *const sAnims_Select_Interface[] =
 {
     sAnim_Select_Interface,
 };
 
-static const union AnimCmd * const sAnims_Select_MonPicBgAnim[] =
+static const union AnimCmd *const sAnims_Select_MonPicBgAnim[] =
 {
     sAnim_Select_MonPicBgAnim,
 };
 
-static const union AnimCmd * const sAnims_Select_Pokeball[] =
+static const union AnimCmd *const sAnims_Select_Pokeball[] =
 {
     sAnim_Select_Pokeball_Still,
     sAnim_Select_Pokeball_Moving,
@@ -569,7 +569,7 @@ static const union AffineAnimCmd sAffineAnim_Select_MonPicBg_Open[] =
     AFFINEANIMCMD_END,
 };
 
-static const union AffineAnimCmd * const sAffineAnims_Select_MonPicBgAnim[] =
+static const union AffineAnimCmd *const sAffineAnims_Select_MonPicBgAnim[] =
 {
     sAffineAnim_Select_MonPicBg_Opening,
     sAffineAnim_Select_MonPicBg_Closing,
@@ -582,8 +582,6 @@ static const struct SpriteTemplate sSpriteTemplate_Select_Pokeball =
     .paletteTag = PALTAG_BALL_GRAY,
     .oam = &sOam_Select_Pokeball,
     .anims = sAnims_Select_Pokeball,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Pokeball
 };
 
@@ -593,9 +591,6 @@ static const struct SpriteTemplate sSpriteTemplate_Select_Arrow =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_Select_Arrow,
     .anims = sAnims_Select_Interface,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Select_MenuHighlightLeft =
@@ -604,9 +599,6 @@ static const struct SpriteTemplate sSpriteTemplate_Select_MenuHighlightLeft =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_Select_MenuHighlight,
     .anims = sAnims_Select_Interface,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Select_MenuHighlightRight =
@@ -615,9 +607,6 @@ static const struct SpriteTemplate sSpriteTemplate_Select_MenuHighlightRight =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_Select_MenuHighlight,
     .anims = sAnims_Select_Interface,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Select_MonPicBgAnim =
@@ -626,9 +615,7 @@ static const struct SpriteTemplate sSpriteTemplate_Select_MonPicBgAnim =
     .paletteTag = PALTAG_MON_PIC_BG,
     .oam = &sOam_Select_MonPicBgAnim,
     .anims = sAnims_Select_MonPicBgAnim,
-    .images = NULL,
     .affineAnims = sAffineAnims_Select_MonPicBgAnim,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteSheet sSwap_SpriteSheets[] =
@@ -772,17 +759,17 @@ static const union AnimCmd sAnim_Swap_Pokeball_Moving[] =
     ANIMCMD_END,
 };
 
-static const union AnimCmd * const sAnims_Swap_Interface[] =
+static const union AnimCmd *const sAnims_Swap_Interface[] =
 {
     sAnim_Swap_Interface,
 };
 
-static const union AnimCmd * const sAnims_Swap_MonPicBgAnim[] =
+static const union AnimCmd *const sAnims_Swap_MonPicBgAnim[] =
 {
     sAnim_Swap_MonPicBgAnim,
 };
 
-static const union AnimCmd * const sAnims_Swap_Pokeball[] =
+static const union AnimCmd *const sAnims_Swap_Pokeball[] =
 {
     sAnim_Swap_Pokeball_Still,
     sAnim_Swap_Pokeball_Moving,
@@ -824,7 +811,7 @@ static const union AffineAnimCmd sAffineAnim_Swap_MonPicBg_Open[] =
     AFFINEANIMCMD_END,
 };
 
-static const union AffineAnimCmd * const sAffineAnims_Swap_MonPicBgAnim[] =
+static const union AffineAnimCmd *const sAffineAnims_Swap_MonPicBgAnim[] =
 {
     sAffineAnim_Swap_MonPicBg_Opening,
     sAffineAnim_Swap_MonPicBg_Closing,
@@ -837,8 +824,6 @@ static const struct SpriteTemplate sSpriteTemplate_Swap_Pokeball =
     .paletteTag = PALTAG_BALL_GRAY,
     .oam = &sOam_Swap_Pokeball,
     .anims = sAnims_Swap_Pokeball,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Pokeball
 };
 
@@ -848,9 +833,6 @@ static const struct SpriteTemplate sSpriteTemplate_Swap_Arrow =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_Swap_Arrow,
     .anims = sAnims_Swap_Interface,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Swap_MenuHighlightLeft =
@@ -859,9 +841,6 @@ static const struct SpriteTemplate sSpriteTemplate_Swap_MenuHighlightLeft =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_Swap_MenuHighlight,
     .anims = sAnims_Swap_Interface,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Swap_MenuHighlightRight =
@@ -870,9 +849,6 @@ static const struct SpriteTemplate sSpriteTemplate_Swap_MenuHighlightRight =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_Swap_MenuHighlight,
     .anims = sAnims_Swap_Interface,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Swap_MonPicBgAnim =
@@ -881,12 +857,10 @@ static const struct SpriteTemplate sSpriteTemplate_Swap_MonPicBgAnim =
     .paletteTag = PALTAG_MON_PIC_BG,
     .oam = &sOam_Swap_MonPicBgAnim,
     .anims = sAnims_Swap_MonPicBgAnim,
-    .images = NULL,
     .affineAnims = sAffineAnims_Swap_MonPicBgAnim,
-    .callback = SpriteCallbackDummy
 };
 
-void static (* const sSwap_MenuOptionFuncs[])(u8 taskId) =
+static const TaskFunc sSwap_MenuOptionFuncs[] =
 {
     Swap_OptionSummary,
     Swap_OptionSwap,

@@ -43,8 +43,8 @@ SINGLE_BATTLE_TEST("Full Restore restores a party members HP and cures any prima
     PARAMETRIZE { status = STATUS1_SLEEP; }
     PARAMETRIZE { status = STATUS1_NONE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(300); Status1(status); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(300); Status1(status); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(100); MaxHP(300); Status1(status); }
+        PLAYER(SPECIES_WYNAUT) { HP(100); MaxHP(300); Status1(status); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 1); }
@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Full Restore restores a battler's HP and cures confusion")
     } WHEN {
         TURN{ MOVE(opponent, MOVE_CONFUSE_RAY); }
         TURN{ USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 0); }
-        TURN{ MOVE(player, MOVE_TACKLE); }
+        TURN{ MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         MESSAGE("Wobbuffet had its HP restored.");
         NONE_OF { MESSAGE("Wobbuffet is confused!"); }

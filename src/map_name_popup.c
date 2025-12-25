@@ -81,7 +81,10 @@ static const u16 sMapPopUp_PaletteTable[][16] =
 
 static const u16 sMapPopUp_Palette_Underwater[16] = INCBIN_U16("graphics/map_popup/underwater.gbapal");
 
-static const u8 sRegionMapSectionId_To_PopUpThemeIdMapping[] =
+// -1 in the size excludes MAPSEC_NONE.
+// The MAPSEC values for Kanto (between MAPSEC_DYNAMIC and MAPSEC_AQUA_HIDEOUT) are also excluded,
+// and this is then handled by subtracting KANTO_MAPSEC_COUNT here and in LoadMapNamePopUpWindowBg.
+static const u8 sMapSectionToThemeId[MAPSEC_COUNT - KANTO_MAPSEC_COUNT - 1] =
 {
     [MAPSEC_LITTLEROOT_TOWN] = MAPPOPUP_THEME_WOOD,
     [MAPSEC_OLDALE_TOWN] = MAPPOPUP_THEME_WOOD,
@@ -186,7 +189,7 @@ static const u8 sRegionMapSectionId_To_PopUpThemeIdMapping[] =
     [MAPSEC_DESERT_UNDERPASS - KANTO_MAPSEC_COUNT] = MAPPOPUP_THEME_STONE,
     [MAPSEC_ALTERING_CAVE - KANTO_MAPSEC_COUNT] = MAPPOPUP_THEME_STONE,
     [MAPSEC_NAVEL_ROCK - KANTO_MAPSEC_COUNT] = MAPPOPUP_THEME_STONE,
-    [MAPSEC_TRAINER_HILL - KANTO_MAPSEC_COUNT] = MAPPOPUP_THEME_MARBLE
+    [MAPSEC_TRAINER_HILL - KANTO_MAPSEC_COUNT] = MAPPOPUP_THEME_MARBLE,
 };
 
 #if OW_POPUP_GENERATION == GEN_5
@@ -424,7 +427,6 @@ static void Task_MapNamePopUpWindow(u8 taskId)
         break;
     case STATE_WAIT:
         // Wait while the window is fully onscreen.
-        UpdateSecondaryPopUpWindow(GetSecondaryPopUpWindowId());
         if (++task->tOnscreenTimer > 120)
         {
             task->tOnscreenTimer = 0;
@@ -518,29 +520,29 @@ static void UpdateSecondaryPopUpWindow(u8 secondaryPopUpWindowId)
 
 static void ShowMapNamePopUpWindow(void)
 {
-    u8 mapDisplayHeader[24];
+    u8 mapDisplayHeader[27];
     u8 *withoutPrefixPtr;
     u8 x;
     const u8 *mapDisplayHeaderSource;
     u8 mapNamePopUpWindowId, secondaryPopUpWindowId;
 
-    if (InBattlePyramid())
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP)
         {
-            withoutPrefixPtr = &(mapDisplayHeader[3]);
+            withoutPrefixPtr = &(mapDisplayHeader[6]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[FRONTIER_STAGES_PER_CHALLENGE];
         }
         else
         {
-            withoutPrefixPtr = &(mapDisplayHeader[3]);
+            withoutPrefixPtr = &(mapDisplayHeader[6]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[gSaveBlock2Ptr->frontier.curChallengeBattleNum];
         }
         StringCopy(withoutPrefixPtr, mapDisplayHeaderSource);
     }
     else
     {
-        withoutPrefixPtr = &(mapDisplayHeader[3]);
+        withoutPrefixPtr = &(mapDisplayHeader[6]);
         GetMapName(withoutPrefixPtr, gMapHeader.regionMapSectionId, 0);
     }
 
@@ -560,8 +562,11 @@ static void ShowMapNamePopUpWindow(void)
     LoadMapNamePopUpWindowBg();
 
     mapDisplayHeader[0] = EXT_CTRL_CODE_BEGIN;
-    mapDisplayHeader[1] = EXT_CTRL_CODE_HIGHLIGHT;
+    mapDisplayHeader[1] = EXT_CTRL_CODE_BACKGROUND;
     mapDisplayHeader[2] = TEXT_COLOR_TRANSPARENT;
+    mapDisplayHeader[3] = EXT_CTRL_CODE_BEGIN;
+    mapDisplayHeader[4] = EXT_CTRL_CODE_ACCENT;
+    mapDisplayHeader[5] = TEXT_COLOR_TRANSPARENT;
 
     if (OW_POPUP_GENERATION == GEN_5)
     {
@@ -613,7 +618,7 @@ static void LoadMapNamePopUpWindowBg(void)
 {
     u8 popUpThemeId;
     u8 popupWindowId = GetMapNamePopUpWindowId();
-    u16 regionMapSectionId = gMapHeader.regionMapSectionId;
+    mapsec_u16_t regionMapSectionId = gMapHeader.regionMapSectionId;
     u8 secondaryPopUpWindowId;
 
     if (OW_POPUP_GENERATION == GEN_5)
@@ -649,7 +654,7 @@ static void LoadMapNamePopUpWindowBg(void)
     }
     else
     {
-        popUpThemeId = sRegionMapSectionId_To_PopUpThemeIdMapping[regionMapSectionId];
+        popUpThemeId = sMapSectionToThemeId[regionMapSectionId];
         LoadBgTiles(GetWindowAttribute(popupWindowId, WINDOW_BG), sMapPopUp_OutlineTable[popUpThemeId], 0x400, 0x21D);
         CallWindowFunction(popupWindowId, DrawMapNamePopUpFrame);
         PutWindowTilemap(popupWindowId);

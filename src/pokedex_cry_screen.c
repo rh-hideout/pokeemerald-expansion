@@ -72,7 +72,7 @@ static const u8 sCryMeterNeedle_Gfx[] = INCBIN_U8("graphics/pokedex/cry_meter_ne
 
 static const u16 sCryMeter_Tilemap[] = INCBIN_U16("graphics/pokedex/cry_meter_map.bin"); // Unused
 static const u16 sCryMeter_Pal[] = INCBIN_U16("graphics/pokedex/cry_meter.gbapal");
-static const u8 sCryMeter_Gfx[] = INCBIN_U8("graphics/pokedex/cry_meter.4bpp.lz");
+static const u8 sCryMeter_Gfx[] = INCBIN_U8("graphics/pokedex/cry_meter.4bpp.smol");
 
 static const u16 sWaveformOffsets[][72] =
 {
@@ -208,8 +208,6 @@ static const struct SpriteTemplate sCryMeterNeedleSpriteTemplate =
     .paletteTag = TAG_NEEDLE,
     .oam = &sOamData_CryMeterNeedle,
     .anims = sSpriteAnimTable_CryMeterNeedle,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CryMeterNeedle
 };
 
@@ -228,7 +226,7 @@ static const struct SpritePalette sCryMeterNeedleSpritePalettes[] =
 bool8 LoadCryWaveformWindow(struct CryScreenWindow *window, u8 windowId)
 {
     u8 i;
-    u8 finished = FALSE;
+    bool32 finished = FALSE;
 
     switch (gDexCryScreenState)
     {

@@ -7,9 +7,9 @@ SINGLE_BATTLE_TEST("Seed Sower sets up Grassy Terrain when hit by an attack")
         PLAYER(SPECIES_ARBOLIVA) { Ability(ABILITY_SEED_SOWER); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Tackle!");
+        MESSAGE("The opposing Wobbuffet used Scratch!");
         HP_BAR(player);
         ABILITY_POPUP(player);
         MESSAGE("Grass grew to cover the battlefield!");
@@ -49,8 +49,8 @@ DOUBLE_BATTLE_TEST("Multi-target moves hit correct battlers after Seed Sower is 
     }
 
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_ARBOLIVA) { Ability(abilities[B_POSITION_PLAYER_LEFT]); }
         PLAYER(SPECIES_ARBOLIVA) { Ability(abilities[B_POSITION_PLAYER_RIGHT]); }
         OPPONENT(SPECIES_ARBOLIVA) { Ability(abilities[B_POSITION_OPPONENT_LEFT]); }

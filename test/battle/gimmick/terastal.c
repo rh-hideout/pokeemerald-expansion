@@ -346,7 +346,7 @@ SINGLE_BATTLE_TEST("(TERA) Conversion2 fails if used by a Terastallized Pokemon"
         PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_PSYCHIC); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_CONVERSION_2, gimmick: GIMMICK_TERA); }
     } SCENE {
         MESSAGE("Wobbuffet used Conversion 2!");
@@ -362,13 +362,13 @@ SINGLE_BATTLE_TEST("(TERA) Reflect Type copies a Terastallized Pokemon's Tera Ty
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
         TURN { MOVE(opponent, MOVE_REFLECT_TYPE); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         // turn 2
         MESSAGE("The opposing Wobbuffet used Reflect Type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT_TYPE, opponent);
         // turn 3
-        MESSAGE("Wobbuffet used Tackle!");
+        MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("It doesn't affect the opposing Wobbuffet…");
         NOT { HP_BAR(opponent); }
     }
@@ -385,7 +385,7 @@ SINGLE_BATTLE_TEST("(TERA) Synchronoise uses a Terastallized Pokemon's Tera Type
     } SCENE {
         // turn 1
         MESSAGE("The opposing Wobbuffet used Synchronoise!");
-        MESSAGE("It won't have any effect on Wobbuffet!");
+        MESSAGE("It doesn't affect Wobbuffet…");
         // turn 2
         MESSAGE("The opposing Wobbuffet used Synchronoise!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYNCHRONOISE, opponent);
@@ -420,8 +420,8 @@ SINGLE_BATTLE_TEST("(TERA) Double Shock does not remove the user's Electric type
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); MOVE(opponent, MOVE_RECOVER); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_RECOVER); }
-        TURN { SWITCH(player, 0); MOVE(opponent, MOVE_RECOVER); }
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); }
     } SCENE {
@@ -448,28 +448,6 @@ SINGLE_BATTLE_TEST("(TERA) Double Shock does not remove the user's Electric type
         EXPECT_EQ(damage[0], damage[1]);
         EXPECT_MUL_EQ(damage[0], Q_4_12(1.333), damage[2]);
         EXPECT_EQ(damage[2], damage[3]);
-    }
-}
-
-SINGLE_BATTLE_TEST("(TERA) Transform does not copy the target's Tera Type, and if the user is Terastallized it keeps its own Tera Type")
-{
-    KNOWN_FAILING; // Transform seems to be bugged in tests.
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_TACKLE, MOVE_EARTHQUAKE); TeraType(TYPE_GHOST); }
-        OPPONENT(SPECIES_DITTO) { TeraType(TYPE_FLYING); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_TRANSFORM); }
-        TURN { MOVE(player, MOVE_EARTHQUAKE); }
-        // TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TACKLE, target: player, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        // turn 2
-        MESSAGE("Wobbuffet used Earthquake!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
-        HP_BAR(opponent);
-        // turn 3
-        MESSAGE("Wobbuffet used Tackle!");
-        MESSAGE("It doesn't affect Ditto…");
-        NOT { HP_BAR(opponent); }
     }
 }
 
@@ -501,13 +479,13 @@ SINGLE_BATTLE_TEST("(TERA) Reflect Type copies a Stellar-type Pokemon's base typ
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
         TURN { MOVE(opponent, MOVE_REFLECT_TYPE); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         // turn 2
         MESSAGE("The opposing Wobbuffet used Reflect Type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT_TYPE, opponent);
         // turn 3
-        MESSAGE("Banette used Tackle!");
+        MESSAGE("Banette used Scratch!");
         MESSAGE("It doesn't affect the opposing Wobbuffet…");
         NOT { HP_BAR(opponent); }
     }
@@ -628,14 +606,14 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar type boosts all moves
     s16 damage[4];
     GIVEN {
         ASSUME(GetMovePower(MOVE_MEGA_DRAIN) == 40);
-        ASSUME(GetMovePower(MOVE_BUBBLE) == 40);
+        ASSUME(GetMovePower(MOVE_WATER_GUN) == 40);
         PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MEGA_DRAIN); }
         TURN { MOVE(player, MOVE_MEGA_DRAIN, gimmick: GIMMICK_TERA); }
         TURN { MOVE(player, MOVE_MEGA_DRAIN); }
-        TURN { MOVE(player, MOVE_BUBBLE); }
+        TURN { MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
         // turn 1
         MESSAGE("Wobbuffet used Mega Drain!");
@@ -650,8 +628,8 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar type boosts all moves
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEGA_DRAIN, player);
         HP_BAR(opponent, captureDamage: &damage[2]);
         // turn 4
-        MESSAGE("Wobbuffet used Bubble!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUBBLE, player);
+        MESSAGE("Wobbuffet used Water Gun!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, player);
         HP_BAR(opponent, captureDamage: &damage[3]);
     } THEN {
         // The jump from 40 BP to 72 BP (60 * 1.2x) is a 1.8x boost.
@@ -661,17 +639,21 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar type boosts all moves
     }
 }
 
-SINGLE_BATTLE_TEST("(TERA) Protean cannot change the type of a Terastallized Pokemon")
+SINGLE_BATTLE_TEST("(TERA) Protean/Libero cannot change the type of a Terastallized Pokemon")
 {
+    u32 ability, species;
+    PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_GRENINJA; }
+    PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
-        PLAYER(SPECIES_GRENINJA) { Ability(ABILITY_PROTEAN); TeraType(TYPE_GRASS); }
+        PLAYER(species) { Ability(ability); TeraType(TYPE_GRASS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BUBBLE, gimmick: GIMMICK_TERA);
                MOVE(opponent, MOVE_EMBER); }
     } SCENE {
-        MESSAGE("Greninja used Bubble!");
-        MESSAGE("The opposing Wobbuffet used Ember!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUBBLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         MESSAGE("It's super effective!");
     }
 }
@@ -747,10 +729,10 @@ SINGLE_BATTLE_TEST("(TERA) Terapagos retains the Stellar type boost at all times
 {
     s16 damage[2];
     u32 move;
-    PARAMETRIZE { move = MOVE_TACKLE; }
+    PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_MACH_PUNCH; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
         ASSUME(GetMoveType(MOVE_MACH_PUNCH) != TYPE_NORMAL);
         PLAYER(SPECIES_TERAPAGOS);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -777,36 +759,52 @@ SINGLE_BATTLE_TEST("(TERA) Terapagos retains its base defensive profile when Ter
     }
 }
 
-SINGLE_BATTLE_TEST("(TERA) Illusion breaks if the pokemon Terastalizes")
+SINGLE_BATTLE_TEST("(TERA) Illusion breaks if the Pokémon Terastallizes when illusioned as a mon that changes forms by Terastallizing")
 {
-    KNOWN_FAILING; // #5015
     u32 species;
     PARAMETRIZE { species = SPECIES_TERAPAGOS; }
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { species = SPECIES_OGERPON; }
     GIVEN {
-        PLAYER(SPECIES_ZOROARK) { TeraType(TYPE_DARK); }
+        ASSUME(DoesSpeciesHaveFormChangeMethod(species, FORM_CHANGE_BATTLE_TERASTALLIZATION));
+        PLAYER(SPECIES_ZOROARK) { TeraType(TYPE_BUG); }
         PLAYER(species);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Zoroark's Illusion wore off!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
     }
 }
 
-/*
-//  This test freezes the emulator
-SINGLE_BATTLE_TEST("(TERA) Transformed pokemon can't Terastalize")
+// Visual test to make sure Zoroark appears as Wobbuffet/Zigzagoon until illusion breaks
+SINGLE_BATTLE_TEST("(TERA) Illusion doesn't break upon Terastallizing when illusioned as a mon that doesn't change forms by Terastallizing")
+{
+    u32 species;
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { species = SPECIES_ZIGZAGOON; }
+    GIVEN {
+        ASSUME(!DoesSpeciesHaveFormChangeMethod(species, FORM_CHANGE_BATTLE_TERASTALLIZATION));
+        PLAYER(SPECIES_ZOROARK) { TeraType(TYPE_BUG); }
+        PLAYER(species);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("(TERA) Transformed Pokémon can't Terastalize")
 {
     GIVEN {
-        PLAYER(SPECIES_DITTO);
-        OPPONENT(SPECIES_TERAPAGOS) { Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_DITTO) { Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_TERAPAGOS) { Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRANSFORM); }
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     }
 }
-*/
 
 SINGLE_BATTLE_TEST("(TERA) Pokemon with Tera forms change upon Terastallizing")
 {
@@ -828,7 +826,7 @@ SINGLE_BATTLE_TEST("(TERA) Pokemon with Tera forms change upon Terastallizing")
 
 SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly")
 {
-    u32 type;
+    enum Type type;
     PARAMETRIZE { type = TYPE_NONE; }
     PARAMETRIZE { type = TYPE_NORMAL; }
     PARAMETRIZE { type = TYPE_FIGHTING; }
@@ -860,7 +858,7 @@ SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly")
 
 SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly - Opponent")
 {
-    u32 type;
+    enum Type type;
     PARAMETRIZE { type = TYPE_NONE; }
     PARAMETRIZE { type = TYPE_NORMAL; }
     PARAMETRIZE { type = TYPE_FIGHTING; }

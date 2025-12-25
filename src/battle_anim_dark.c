@@ -29,9 +29,6 @@ static const struct SpriteTemplate sUnusedBagStealSpriteTemplate =
     .tileTag = ANIM_TAG_TIED_BAG,
     .paletteTag = ANIM_TAG_TIED_BAG,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimUnusedBagSteal,
 };
 
@@ -100,8 +97,6 @@ const struct SpriteTemplate gSharpTeethSpriteTemplate =
     .tileTag = ANIM_TAG_SHARP_TEETH,
     .paletteTag = ANIM_TAG_SHARP_TEETH,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_Bite,
     .callback = AnimBite,
 };
@@ -111,8 +106,6 @@ const struct SpriteTemplate gClampJawSpriteTemplate =
     .tileTag = ANIM_TAG_CLAMP,
     .paletteTag = ANIM_TAG_CLAMP,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_Bite,
     .callback = AnimBite,
 };
@@ -142,8 +135,6 @@ const struct SpriteTemplate gTearDropSpriteTemplate =
     .tileTag = ANIM_TAG_SMALL_BUBBLES,
     .paletteTag = ANIM_TAG_SMALL_BUBBLES,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_TearDrop,
     .callback = AnimTearDrop,
 };
@@ -180,8 +171,6 @@ const struct SpriteTemplate gClawSlashSpriteTemplate =
     .paletteTag = ANIM_TAG_CLAW_SLASH,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_ClawSlash,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimClawSlash,
 };
 
@@ -241,8 +230,6 @@ const struct SpriteTemplate gPunishmentSpriteTemplate =
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
     .anims = gPunishmentAnim,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
 
@@ -251,10 +238,21 @@ const struct SpriteTemplate gPunishmentImpactSpriteTemplate =
     .tileTag = ANIM_TAG_IMPACT,
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gPunishmentImpactAffineAnim,
     .callback = AnimPunishment,
+};
+
+// See AnimShadowBall in battle_anim_ghost.c for more specifics
+// arg 0: duration step 1 (attacker -> center)
+// arg 1: duration step 2 (spin center)
+// arg 2: duration step 3 (center -> target)
+const struct SpriteTemplate gDarkPulseSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_PURPLE_RING,
+    .paletteTag = ANIM_TAG_PURPLE_RING,
+    .oam = &gOamData_AffineDouble_ObjNormal_16x32,
+    .affineAnims = gAffineAnims_SpinningBone,
+    .callback = AnimShadowBall,
 };
 
 // arg 0: x pixel offset
@@ -501,7 +499,7 @@ void AnimTask_MoveAttackerMementoShadow(u8 taskId)
     task->data[14] = pos - 32;
     task->data[15] = pos + 32;
 
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimAttacker))
         task->data[8] = -12;
     else
         task->data[8] = -64;
@@ -671,7 +669,7 @@ void AnimTask_MoveTargetMementoShadow(u8 taskId)
         task->data[14] = x - 4;
         task->data[15] = x + 4;
 
-        if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+        if (IsOnPlayerSide(gBattleAnimTarget))
             task->data[8] = -12;
         else
             task->data[8] = -64;
@@ -934,7 +932,7 @@ void AnimTask_MetallicShine(u8 taskId)
     if (IsContest())
         species = gContestResources->moveAnim->species;
     else
-        species = GetMonData(GetPartyBattlerData(gBattleAnimAttacker), MON_DATA_SPECIES);
+        species = GetMonData(GetBattlerMon(gBattleAnimAttacker), MON_DATA_SPECIES);
 
     spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
     newSpriteId = CreateInvisibleSpriteCopy(gBattleAnimAttacker, spriteId, species);

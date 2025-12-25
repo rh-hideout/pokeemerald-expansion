@@ -105,8 +105,6 @@ static const struct SpriteTemplate sSpriteTemplate_JudgmentIcon =
     .paletteTag = TAG_NONE,
     .oam = &sOam_JudgmentIcon,
     .anims = sAnims_JudgmentIcon,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_JudgmentIcon,
 };
 
@@ -116,7 +114,7 @@ static const struct CompressedSpriteSheet sBattleArenaJudgmentSymbolsSpriteSheet
     {0}
 };
 
-static void (* const sArenaFunctions[])(void) =
+static void (*const sArenaFunctions[])(void) =
 {
     [BATTLE_ARENA_FUNC_INIT]             = InitArenaChallenge,
     [BATTLE_ARENA_FUNC_GET_DATA]         = GetArenaData,
@@ -371,9 +369,7 @@ void BattleArena_AddMindPoints(u8 battler)
         gBattleStruct->arenaMindPoints[battler]--;
     }
     else if (!IsBattleMoveStatus(gCurrentMove)
-          && effect != EFFECT_COUNTER
-          && effect != EFFECT_MIRROR_COAT
-          && effect != EFFECT_METAL_BURST
+          && effect != EFFECT_REFLECT_DAMAGE
           && effect != EFFECT_BIDE)
     {
         gBattleStruct->arenaMindPoints[battler]++;
@@ -384,7 +380,7 @@ void BattleArena_AddSkillPoints(u8 battler)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
-    if (gHitMarker & HITMARKER_OBEYS)
+    if (!gBattleStruct->unableToUseMove)
     {
         if (gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt)
         {
@@ -427,14 +423,11 @@ void BattleArena_DeductSkillPoints(u8 battler, enum StringID stringId)
     case STRINGID_PKMNSXBLOCKSY2:
     case STRINGID_PKMNSXPREVENTSYLOSS:
     case STRINGID_PKMNSXMADEYINEFFECTIVE:
-    case STRINGID_PKMNSXPREVENTSBURNS:
     case STRINGID_PKMNSXBLOCKSY:
     case STRINGID_PKMNPROTECTEDBY:
     case STRINGID_PKMNPREVENTSUSAGE:
     case STRINGID_PKMNRESTOREDHPUSING:
-    case STRINGID_PKMNPREVENTSPARALYSISWITH:
     case STRINGID_PKMNPREVENTSROMANCEWITH:
-    case STRINGID_PKMNPREVENTSPOISONINGWITH:
     case STRINGID_PKMNPREVENTSCONFUSIONWITH:
     case STRINGID_PKMNRAISEDFIREPOWERWITH:
     case STRINGID_PKMNANCHORSITSELFWITH:

@@ -1136,6 +1136,11 @@
 // Flags
 #undef B_FLAG_SLEEP_CLAUSE
 #define B_FLAG_SLEEP_CLAUSE              TESTING_FLAG_SLEEP_CLAUSE
+#undef B_FLAG_INVERSE_BATTLE
+#define B_FLAG_INVERSE_BATTLE            TESTING_FLAG_INVERSE_BATTLE
+
+// Compression DebugPrintf switch
+#define T_COMPRESSION_SHOULD_PRINT FALSE
 
 //  Move animation testing
 #define T_SHOULD_RUN_MOVE_ANIM  FALSE       //  If TRUE, enables the move animation tests, these are very computationally heavy and takes a long time to run.

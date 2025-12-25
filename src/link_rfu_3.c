@@ -35,7 +35,7 @@ EWRAM_DATA u8 gWirelessStatusIndicatorSpriteId = 0;
 static u8 sSequenceArrayValOffset;
 
 static const u16 sWirelessLinkIconPalette[] = INCBIN_U16("graphics/link/wireless_icon.gbapal");
-static const u32 sWirelessLinkIconPic[] = INCBIN_U32("graphics/link/wireless_icon.4bpp.lz");
+static const u32 sWirelessLinkIconPic[] = INCBIN_U32("graphics/link/wireless_icon.4bpp.smol");
 
 // Most of the below two tables won't make sense with ASCII encoding.
 static const u8 sWireless_ASCIItoRSETable[256] = {
@@ -305,9 +305,6 @@ static const struct SpriteTemplate sWirelessStatusIndicatorSpriteTemplate = {
     .paletteTag = TAG_PAL_STATUS_INDICATOR,
     .oam = &sWirelessStatusIndicatorOamData,
     .anims = sWirelessStatusIndicatorAnims,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 void RfuRecvQueue_Reset(struct RfuRecvQueue *queue)

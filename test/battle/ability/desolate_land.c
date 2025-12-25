@@ -34,7 +34,7 @@ DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints th
     GIVEN {
         ASSUME(!IsBattleMoveStatus(MOVE_SURF));
         ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_GROUDON) {Item(ITEM_RED_ORB); {Speed(5);}}
         PLAYER(SPECIES_WOBBUFFET) {Speed(5);}
         OPPONENT(SPECIES_WOBBUFFET) {Speed(10);}
@@ -53,7 +53,7 @@ DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints th
     }
 }
 
-SINGLE_BATTLE_TEST("Desolate Land does not block a move if pokemon is asleep and uses a Water-type move") // Sleep/confusion/paralysis all happen before the check for primal weather
+SINGLE_BATTLE_TEST("Desolate Land does not block a move if Pokémon is asleep and uses a Water-type move") // Sleep/confusion/paralysis all happen before the check for primal weather
 {
     GIVEN {
         PLAYER(SPECIES_GROUDON) {Item(ITEM_RED_ORB);}
@@ -65,3 +65,48 @@ SINGLE_BATTLE_TEST("Desolate Land does not block a move if pokemon is asleep and
         MESSAGE("The opposing Wobbuffet is fast asleep.");
     }
 }
+
+SINGLE_BATTLE_TEST("Desolate Land will not create a softlock when move in semi invulnerable position is blocked")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DIVE); }
+        TURN { SWITCH(opponent, 1); SKIP_TURN(player); }
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, player);
+        ABILITY_POPUP(opponent, ABILITY_DESOLATE_LAND);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
+{
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { HP(1); Item(ITEM_RED_ORB); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_POUND); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
+        NOT MESSAGE("The sunlight is strong.");
+        MESSAGE("The extremely harsh sunlight faded!");
+    }
+}
+
+TO_DO_BATTLE_TEST("Desolate Land makes Sunny Day fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Rain Dance fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Sandstorm fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Hail fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Snowscape fail") // Extrapolation
+TO_DO_BATTLE_TEST("Desolate Land makes Drought fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land makes Drizzle fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land makes Sand Stream fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land makes Snow Warning fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land can be replaced by Delta Stream")
+TO_DO_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea")

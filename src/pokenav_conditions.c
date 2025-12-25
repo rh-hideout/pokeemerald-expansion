@@ -342,10 +342,13 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
     boxId = monListPtr->monData[listId].boxId;
     monId = monListPtr->monData[listId].monId;
     *(str++) = EXT_CTRL_CODE_BEGIN;
-    *(str++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-    *(str++) = TEXT_COLOR_BLUE;
+    *(str++) = EXT_CTRL_CODE_BACKGROUND;
     *(str++) = TEXT_COLOR_TRANSPARENT;
+    *(str++) = EXT_CTRL_CODE_BEGIN;
+    *(str++) = EXT_CTRL_CODE_TEXT_COLORS;
+    *(str++) = TEXT_COLOR_BLUE;
     *(str++) = TEXT_COLOR_LIGHT_BLUE;
+    *(str++) = TEXT_COLOR_TRANSPARENT;
 
     if (GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL))
         return StringCopyPadded(str, gText_EggNickname, CHAR_SPACE, POKEMON_NAME_LENGTH + 2);
@@ -384,29 +387,27 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
         break;
     case MON_MALE:
         *(str_++) = EXT_CTRL_CODE_BEGIN;
-        *(str_++) = EXT_CTRL_CODE_COLOR;
+        *(str_++) = EXT_CTRL_CODE_TEXT_COLORS;
         *(str_++) = TEXT_COLOR_RED;
-        *(str_++) = EXT_CTRL_CODE_BEGIN;
-        *(str_++) = EXT_CTRL_CODE_SHADOW;
         *(str_++) = TEXT_COLOR_LIGHT_RED;
+        *(str_++) = TEXT_COLOR_TRANSPARENT;
         *(str_++) = CHAR_MALE;
         break;
     case MON_FEMALE:
         *(str_++) = EXT_CTRL_CODE_BEGIN;
-        *(str_++) = EXT_CTRL_CODE_COLOR;
+        *(str_++) = EXT_CTRL_CODE_TEXT_COLORS;
         *(str_++) = TEXT_COLOR_GREEN;
-        *(str_++) = EXT_CTRL_CODE_BEGIN;
-        *(str_++) = EXT_CTRL_CODE_SHADOW;
         *(str_++) = TEXT_COLOR_LIGHT_GREEN;
+        *(str_++) = TEXT_COLOR_TRANSPARENT;
         *(str_++) = CHAR_FEMALE;
         break;
     }
 
     *(str_++) = EXT_CTRL_CODE_BEGIN;
-    *(str_++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
+    *(str_++) = EXT_CTRL_CODE_TEXT_COLORS;
     *(str_++) = TEXT_COLOR_BLUE;
-    *(str_++) = TEXT_COLOR_TRANSPARENT;
     *(str_++) = TEXT_COLOR_LIGHT_BLUE;
+    *(str_++) = TEXT_COLOR_TRANSPARENT;
     *(str_++) = CHAR_SLASH;
     *(str_++) = CHAR_EXTRA_SYMBOL;
     *(str_++) = CHAR_LV_2;
@@ -427,33 +428,37 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
 
 static void CopyMonNameGenderLocation(s16 listId, u8 loadId)
 {
-    u16 boxId, i;
+    u16 boxId;
     struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
     struct PokenavMonList *monListPtr = GetSubstructPtr(POKENAV_SUBSTRUCT_MON_LIST);
 
     if (listId != (IsConditionMenuSearchMode() ? monListPtr->listCount : monListPtr->listCount - 1))
     {
+        u16 i = 0;
         CopyConditionMonNameGender(menu->nameText[loadId], listId, FALSE);
         boxId = monListPtr->monData[listId].boxId;
-        menu->locationText[loadId][0] = EXT_CTRL_CODE_BEGIN;
-        menu->locationText[loadId][1] = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-        menu->locationText[loadId][2] = TEXT_COLOR_BLUE;
-        menu->locationText[loadId][3] = TEXT_COLOR_TRANSPARENT;
-        menu->locationText[loadId][4] = TEXT_COLOR_LIGHT_BLUE;
+        menu->locationText[loadId][i++] = EXT_CTRL_CODE_BEGIN;
+        menu->locationText[loadId][i++] = EXT_CTRL_CODE_BACKGROUND;
+        menu->locationText[loadId][i++] = TEXT_COLOR_TRANSPARENT;
+        menu->locationText[loadId][i++] = EXT_CTRL_CODE_BEGIN;
+        menu->locationText[loadId][i++] = EXT_CTRL_CODE_TEXT_COLORS;
+        menu->locationText[loadId][i++] = TEXT_COLOR_BLUE;
+        menu->locationText[loadId][i++] = TEXT_COLOR_LIGHT_BLUE;
+        menu->locationText[loadId][i++] = TEXT_COLOR_TRANSPARENT;
         if (boxId == TOTAL_BOXES_COUNT)
-            CopyStringLeftAlignedToConditionData(&menu->locationText[loadId][5], gText_InParty, BOX_NAME_LENGTH);
+            CopyStringLeftAlignedToConditionData(&menu->locationText[loadId][i], gText_InParty, BOX_NAME_LENGTH);
         else
-            CopyStringLeftAlignedToConditionData(&menu->locationText[loadId][5], GetBoxNamePtr(boxId), BOX_NAME_LENGTH);
+            CopyStringLeftAlignedToConditionData(&menu->locationText[loadId][i], GetBoxNamePtr(boxId), BOX_NAME_LENGTH);
     }
     else
     {
-        for (i = 0; i < POKEMON_NAME_LENGTH + 2; i++)
+        for (u16 i = 0; i < POKEMON_NAME_LENGTH + 2; i++)
             menu->nameText[loadId][i] = CHAR_SPACE;
-        menu->nameText[loadId][i] = EOS;
+        menu->nameText[loadId][POKEMON_NAME_LENGTH + 2] = EOS;
 
-        for (i = 0; i < BOX_NAME_LENGTH; i++)
+        for (u16 i = 0; i < BOX_NAME_LENGTH; i++)
             menu->locationText[loadId][i] = CHAR_SPACE;
-        menu->locationText[loadId][i] = EOS;
+        menu->locationText[loadId][BOX_NAME_LENGTH] = EOS;
     }
 }
 
@@ -523,22 +528,20 @@ static void GetMonConditionGraphData(s16 listId, u8 loadId)
 
 static void ConditionGraphDrawMonPic(s16 listId, u8 loadId)
 {
-    u16 boxId, monId, species;
-    u32 personality;
-    bool8 isShiny;
     struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
     struct PokenavMonList *monListPtr = GetSubstructPtr(POKENAV_SUBSTRUCT_MON_LIST);
 
     if (listId == (IsConditionMenuSearchMode() ? monListPtr->listCount : monListPtr->listCount - 1))
         return;
 
-    boxId = monListPtr->monData[listId].boxId;
-    monId = monListPtr->monData[listId].monId;
-    species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES_OR_EGG, NULL);
-    isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
-    personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
-    LoadSpecialPokePic(menu->monPicGfx[loadId], species, personality, TRUE);
-    memcpy(&menu->monPal[loadId], GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), 32);
+    u32 boxId = monListPtr->monData[listId].boxId;
+    u32 monId = monListPtr->monData[listId].monId;
+    u32 species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES, NULL);
+    bool32 isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
+    u32 personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
+    bool32 isEgg = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL);
+    LoadSpecialPokePicIsEgg(menu->monPicGfx[loadId], species, personality, TRUE, isEgg);
+    memcpy(&menu->monPal[loadId], GetMonSpritePalFromSpeciesAndPersonalityIsEgg(species, isShiny, personality, isEgg), 32);
 }
 
 u16 GetMonListCount(void)

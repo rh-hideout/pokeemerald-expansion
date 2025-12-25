@@ -20,14 +20,14 @@ SINGLE_BATTLE_TEST("Stamina raises Defense by 1 when hit by a move")
     s16 turnOneHit, turnTwoHit;
     u16 move;
 
-    PARAMETRIZE {move = MOVE_TACKLE; }
+    PARAMETRIZE {move = MOVE_SCRATCH; }
     PARAMETRIZE {move = MOVE_GUST; }
 
     GIVEN {
-        ASSUME(!IsBattleMoveStatus(MOVE_TACKLE));
+        ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
         ASSUME(!IsBattleMoveStatus(MOVE_GUST));
         ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
-        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STAMINA); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Stamina raises Defense by 1 when hit by a move")
         STAMINA_HIT(opponent, player, move, "Wobbuffet's Defense rose!", turnTwoHit);
     }
     THEN {
-        if (move == MOVE_TACKLE) {
+        if (move == MOVE_SCRATCH) {
             EXPECT_MUL_EQ(turnTwoHit, Q_4_12(1.5), turnOneHit);
         }
         else {
@@ -49,14 +49,14 @@ SINGLE_BATTLE_TEST("Stamina raises Defense by 1 when hit by a move")
 
 DOUBLE_BATTLE_TEST("Stamina activates correctly for every battler with the ability when hit by a multi target move")
 {
-    u16 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE {abilityLeft = ABILITY_NONE, abilityRight = ABILITY_STAMINA; }
     PARAMETRIZE {abilityLeft = ABILITY_STAMINA, abilityRight = ABILITY_NONE; }
     PARAMETRIZE {abilityLeft = ABILITY_STAMINA, abilityRight = ABILITY_STAMINA; }
 
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET) { Ability(abilityLeft); Speed(10); }
         PLAYER(SPECIES_WOBBUFFET) { Ability(abilityRight); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) {Speed(20); }

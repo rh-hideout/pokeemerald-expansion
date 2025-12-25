@@ -13,9 +13,9 @@ static void AnimComplexPaletteBlend(struct Sprite *);
 static void AnimComplexPaletteBlend_Step1(struct Sprite *);
 static void AnimComplexPaletteBlend_Step2(struct Sprite *);
 static void AnimCirclingSparkle(struct Sprite *);
-static void AnimShakeMonOrBattleTerrain(struct Sprite *);
-static void AnimShakeMonOrBattleTerrain_Step(struct Sprite *);
-static void AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled(void);
+static void AnimShakeMonOrBattlePlatforms(struct Sprite *);
+static void AnimShakeMonOrBattlePlatforms_Step(struct Sprite *);
+static void AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled(void);
 static void AnimHitSplatPersistent(struct Sprite *);
 static void AnimHitSplatHandleInvert(struct Sprite *);
 static void AnimConfusionDuck_Step(struct Sprite *);
@@ -27,7 +27,7 @@ static void BlendColorCycleByTag(u8, u8, u8);
 static void AnimTask_BlendColorCycleByTagLoop(u8);
 static void AnimTask_FlashAnimTagWithColor_Step1(u8);
 static void AnimTask_FlashAnimTagWithColor_Step2(u8);
-static void AnimTask_ShakeBattleTerrain_Step(u8);
+static void AnimTask_ShakeBattlePlatforms_Step(u8);
 static void AnimMovePowerSwapGuardSwap(struct Sprite *);
 
 static const union AnimCmd sAnim_ConfusionDuck_0[] =
@@ -60,8 +60,6 @@ const struct SpriteTemplate gConfusionDuckSpriteTemplate =
     .paletteTag = ANIM_TAG_DUCK,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_ConfusionDuck,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimConfusionDuck,
 };
 
@@ -70,9 +68,6 @@ const struct SpriteTemplate gSimplePaletteBlendSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSimplePaletteBlend,
 };
 
@@ -81,9 +76,6 @@ const struct SpriteTemplate gComplexPaletteBlendSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimComplexPaletteBlend,
 };
 
@@ -139,8 +131,6 @@ const struct SpriteTemplate gPowerSwapGuardSwapSpriteTemplate =
     .paletteTag = ANIM_TAG_COLORED_ORBS,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sPowerSwapGuardSwapAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimMovePowerSwapGuardSwap
 };
 
@@ -166,20 +156,15 @@ static const struct SpriteTemplate sCirclingSparkleSpriteTemplate =
     .paletteTag = ANIM_TAG_SPARKLE_4,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_CirclingSparkle,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimCirclingSparkle,
 };
 
-const struct SpriteTemplate gShakeMonOrTerrainSpriteTemplate =
+const struct SpriteTemplate gShakeMonOrPlatformSpriteTemplate =
 {
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimShakeMonOrBattleTerrain,
+    .callback = AnimShakeMonOrBattlePlatforms,
 };
 
 static const union AffineAnimCmd sAffineAnim_HitSplat_0[] =
@@ -222,8 +207,6 @@ const struct SpriteTemplate gBasicHitSplatSpriteTemplate =
     .tileTag = ANIM_TAG_IMPACT,
     .paletteTag = ANIM_TAG_IMPACT,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_HitSplat,
     .callback = AnimHitSplatBasic,
 };
@@ -233,8 +216,6 @@ const struct SpriteTemplate gHandleInvertHitSplatSpriteTemplate =
     .tileTag = ANIM_TAG_IMPACT,
     .paletteTag = ANIM_TAG_IMPACT,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_HitSplat,
     .callback = AnimHitSplatHandleInvert,
 };
@@ -244,8 +225,6 @@ const struct SpriteTemplate gWaterHitSplatSpriteTemplate =
     .tileTag = ANIM_TAG_WATER_IMPACT,
     .paletteTag = ANIM_TAG_WATER_IMPACT,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_HitSplat,
     .callback = AnimHitSplatBasic,
 };
@@ -255,8 +234,6 @@ const struct SpriteTemplate gRandomPosHitSplatSpriteTemplate =
     .tileTag = ANIM_TAG_IMPACT,
     .paletteTag = ANIM_TAG_IMPACT,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_HitSplat,
     .callback = SpriteCB_RandomCentredHits,
 };
@@ -266,8 +243,6 @@ const struct SpriteTemplate gMonEdgeHitSplatSpriteTemplate =
     .tileTag = ANIM_TAG_IMPACT,
     .paletteTag = ANIM_TAG_IMPACT,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_HitSplat,
     .callback = AnimHitSplatOnMonEdge,
 };
@@ -277,9 +252,6 @@ const struct SpriteTemplate gCrossImpactSpriteTemplate =
     .tileTag = ANIM_TAG_CROSS_IMPACT,
     .paletteTag = ANIM_TAG_CROSS_IMPACT,
     .oam = &gOamData_AffineOff_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimCrossImpact,
 };
 
@@ -288,8 +260,6 @@ const struct SpriteTemplate gFlashingHitSplatSpriteTemplate =
     .tileTag = ANIM_TAG_IMPACT,
     .paletteTag = ANIM_TAG_IMPACT,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_HitSplat,
     .callback = AnimFlashingHitSplat,
 };
@@ -299,8 +269,6 @@ const struct SpriteTemplate gPersistHitSplatSpriteTemplate =
     .tileTag = ANIM_TAG_IMPACT,
     .paletteTag = ANIM_TAG_IMPACT,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_HitSplat,
     .callback = AnimHitSplatPersistent,
 };
@@ -349,7 +317,7 @@ static void AnimConfusionDuck(struct Sprite *sprite)
     sprite->x += gBattleAnimArgs[0];
     sprite->y += gBattleAnimArgs[1];
     sprite->data[0] = gBattleAnimArgs[2];
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         sprite->data[1] = -gBattleAnimArgs[3];
         sprite->data[4] = 1;
@@ -417,13 +385,13 @@ u32 UnpackSelectedBattlePalettes(s16 selector)
 
     switch (moveTarget)
     {
-    case MOVE_TARGET_BOTH:
+    case TARGET_BOTH:
         if (target)
         {
             targetPartner |= 1;
         }
         break;
-    case MOVE_TARGET_FOES_AND_ALLY:
+    case TARGET_FOES_AND_ALLY:
         if (target)
         {
             targetPartner |= 1;
@@ -899,7 +867,7 @@ void AnimTask_TintPalettes(u8 taskId)
 #undef tColorG
 #undef tColorB
 
-static void AnimShakeMonOrBattleTerrain(struct Sprite *sprite)
+static void AnimShakeMonOrBattlePlatforms(struct Sprite *sprite)
 {
     u16 var0;
 
@@ -929,12 +897,12 @@ static void AnimShakeMonOrBattleTerrain(struct Sprite *sprite)
     sprite->data[5] = gBattleAnimArgs[3];
     var0 = sprite->data[5] - 2;
     if (var0 < 2)
-        AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled();
+        AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled();
 
-    sprite->callback = AnimShakeMonOrBattleTerrain_Step;
+    sprite->callback = AnimShakeMonOrBattlePlatforms_Step;
 }
 
-static void AnimShakeMonOrBattleTerrain_Step(struct Sprite *sprite)
+static void AnimShakeMonOrBattlePlatforms_Step(struct Sprite *sprite)
 {
     u8 i;
     u16 var0;
@@ -967,7 +935,7 @@ static void AnimShakeMonOrBattleTerrain_Step(struct Sprite *sprite)
     }
 }
 
-static void AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled(void)
+static void AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled(void)
 {
     gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].coordOffsetEnabled = FALSE;
     gSprites[gBattlerSpriteIds[gBattleAnimTarget]].coordOffsetEnabled = FALSE;
@@ -986,19 +954,19 @@ static void AnimShakeMonOrBattleTerrain_UpdateCoordOffsetEnabled(void)
     }
 }
 
-// Task data for AnimTask_ShakeBattleTerrain
+// Task data for AnimTask_ShakeBattlePlatforms
 #define tXOffset     data[0]
 #define tYOffset     data[1]
 #define tNumShakes   data[2]
 #define tTimer       data[3]
 #define tShakeDelay  data[8]
 
-// Can shake battle terrain back and forth on the X or down and back to original pos on Y (cant shake up from orig pos)
+// Can shake battle platforms back and forth on the X or down and back to original pos on Y (cant shake up from orig pos)
 // arg0: x offset of shake
 // arg1: y offset of shake
 // arg2: number of shakes
 // arg3: time between shakes
-void AnimTask_ShakeBattleTerrain(u8 taskId)
+void AnimTask_ShakeBattlePlatforms(u8 taskId)
 {
     gTasks[taskId].tXOffset = gBattleAnimArgs[0];
     gTasks[taskId].tYOffset = gBattleAnimArgs[1];
@@ -1007,11 +975,11 @@ void AnimTask_ShakeBattleTerrain(u8 taskId)
     gTasks[taskId].tShakeDelay = gBattleAnimArgs[3];
     gBattle_BG3_X = gBattleAnimArgs[0];
     gBattle_BG3_Y = gBattleAnimArgs[1];
-    gTasks[taskId].func = AnimTask_ShakeBattleTerrain_Step;
+    gTasks[taskId].func = AnimTask_ShakeBattlePlatforms_Step;
     gTasks[taskId].func(taskId);
 }
 
-static void AnimTask_ShakeBattleTerrain_Step(u8 taskId)
+static void AnimTask_ShakeBattlePlatforms_Step(u8 taskId)
 {
     if (gTasks[taskId].tTimer == 0)
     {
@@ -1079,7 +1047,7 @@ static void AnimHitSplatPersistent(struct Sprite *sprite)
 // Used by Twineedle and Spike Cannon
 static void AnimHitSplatHandleInvert(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER && !IsContest())
+    if (!IsOnPlayerSide(gBattleAnimAttacker) && !IsContest())
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];
 
     AnimHitSplatBasic(sprite);

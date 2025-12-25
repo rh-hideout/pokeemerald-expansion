@@ -714,10 +714,10 @@ static const u32 sStartSelectButtons_Gfx[] = INCBIN_U32("graphics/easy_chat/star
 // on screen the interview_frame gfx was shown behind them.
 // In Emerald all Easy Chat screens have a filled background, so these gfx go unused
 static const u16 sRSInterviewFrame_Pal[] = INCBIN_U16("graphics/easy_chat/interview_frame.gbapal");
-static const u32 sRSInterviewFrame_Gfx[] = INCBIN_U32("graphics/easy_chat/interview_frame.4bpp.lz");
+static const u32 sRSInterviewFrame_Gfx[] = INCBIN_U32("graphics/easy_chat/interview_frame.4bpp.smol");
 static const u16 sTextInputFrameOrange_Pal[] = INCBIN_U16("graphics/easy_chat/text_input_frame_orange.gbapal");
 static const u16 sTextInputFrameGreen_Pal[] = INCBIN_U16("graphics/easy_chat/text_input_frame_green.gbapal");
-static const u32 sTextInputFrame_Gfx[] = INCBIN_U32("graphics/easy_chat/text_input_frame.4bpp.lz");
+static const u32 sTextInputFrame_Gfx[] = INCBIN_U32("graphics/easy_chat/text_input_frame.4bpp.smol");
 static const u16 sTitleText_Pal[] = INCBIN_U16("graphics/easy_chat/title_text.gbapal");
 static const u16 sText_Pal[] = INCBIN_U16("graphics/easy_chat/text.gbapal");
 
@@ -962,9 +962,6 @@ static const struct SpriteTemplate sSpriteTemplate_TriangleCursor =
     .tileTag = PALTAG_TRIANGLE_CURSOR,
     .paletteTag = GFXTAG_TRIANGLE_CURSOR,
     .oam = &sOamData_TriangleCursor,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Cursor,
 };
 
@@ -1025,8 +1022,6 @@ static const struct SpriteTemplate sSpriteTemplate_RectangleCursor =
     .paletteTag = PALTAG_RECTANGLE_CURSOR,
     .oam = &sOamData_RectangleCursor,
     .anims = sAnims_RectangleCursor,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Cursor,
 };
 
@@ -1096,9 +1091,6 @@ static const struct SpriteTemplate sSpriteTemplate_ModeWindow =
     .paletteTag = PALTAG_MISC_UI,
     .oam = &sOamData_ModeWindow,
     .anims = sAnims_ModeWindow,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_ButtonWindow = {
@@ -1122,10 +1114,6 @@ static const struct SpriteTemplate sSpriteTemplate_ButtonWindow =
     .tileTag = GFXTAG_BUTTON_WINDOW,
     .paletteTag = PALTAG_MISC_UI,
     .oam = &sOamData_ButtonWindow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_StartSelectButton = {
@@ -1182,9 +1170,6 @@ static const struct SpriteTemplate sSpriteTemplate_StartSelectButton =
     .paletteTag = PALTAG_MISC_UI,
     .oam = &sOamData_StartSelectButton,
     .anims = sAnims_TwoFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ScrollIndicator =
@@ -1193,9 +1178,6 @@ static const struct SpriteTemplate sSpriteTemplate_ScrollIndicator =
     .paletteTag = PALTAG_MISC_UI,
     .oam = &sOamData_ScrollIndicator,
     .anims = sAnims_TwoFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const u8 sFooterOptionXOffsets[NUM_FOOTER_TYPES][4] = {
@@ -5545,7 +5527,7 @@ static u16 GetRandomUnlockedEasyChatPokemon(void)
     numWords = gEasyChatGroups[EC_GROUP_POKEMON].numWords;
     for (i = 0; i < numWords; i++)
     {
-        u16 dexNum = SpeciesToNationalPokedexNum(*species);
+        enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(*species);
         if (GetSetPokedexFlag(dexNum, FLAG_GET_SEEN))
         {
             if (index)
@@ -5851,16 +5833,23 @@ static u8 IsEasyChatWordUnlocked(u16 easyChatWord)
 void InitializeEasyChatWordArray(u16 *words, u16 length)
 {
     u16 i;
-    for (i = length - 1; i != EC_EMPTY_WORD; i--)
-        *(words++) = EC_EMPTY_WORD;
+    if (words != NULL)
+    {
+        for (i = length - 1; i != EC_EMPTY_WORD; i--)
+            *(words++) = EC_EMPTY_WORD;
+    }
 }
 
 void InitQuestionnaireWords(void)
 {
     int i;
     u16 *words = GetQuestionnaireWordsPtr();
-    for (i = 0; i < NUM_QUESTIONNAIRE_WORDS; i++)
-        words[i] = EC_EMPTY_WORD;
+
+    if (words != NULL)
+    {
+        for (i = 0; i < NUM_QUESTIONNAIRE_WORDS; i++)
+            words[i] = EC_EMPTY_WORD;
+    }
 }
 
 bool32 IsEasyChatAnswerUnlocked(int easyChatWord)

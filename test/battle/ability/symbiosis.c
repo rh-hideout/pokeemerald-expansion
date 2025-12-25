@@ -21,7 +21,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes an
         MESSAGE("Oranguru passed its Toxic Orb to Wobbuffet through Symbiosis!");
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
-        STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON); 
+        STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
         EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
         EXPECT_EQ(playerRight->item, ITEM_NONE);
@@ -105,6 +105,73 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item")
         MESSAGE("Oranguru passed its Toxic Orb to Wobbuffet through Symbiosis!");
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
+        STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
+    } THEN {
+        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->item, ITEM_NONE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a weakness berry")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHILAN_BERRY); }
+        PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
+        STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
+    } THEN {
+        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->item, ITEM_NONE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption and move execution (Gen7+)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_NORMAL_GEM) == HOLD_EFFECT_GEMS);
+        WITH_CONFIG(CONFIG_SYMBIOSIS_GEMS, GEN_7);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
+        PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
+        STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
+    } THEN {
+        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->item, ITEM_NONE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption, but before move execution (Gen6)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_NORMAL_GEM) == HOLD_EFFECT_GEMS);
+        WITH_CONFIG(CONFIG_SYMBIOSIS_GEMS, GEN_6);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
+        PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
+        ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
         EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);

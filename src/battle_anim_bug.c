@@ -43,8 +43,6 @@ const struct SpriteTemplate gMegahornHornSpriteTemplate =
     .tileTag = ANIM_TAG_HORN_HIT_2,
     .paletteTag = ANIM_TAG_HORN_HIT_2,
     .oam = &gOamData_AffineDouble_ObjNormal_32x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_MegahornHorn,
     .callback = AnimMegahornHorn,
 };
@@ -79,8 +77,6 @@ const struct SpriteTemplate gLeechLifeNeedleSpriteTemplate =
     .tileTag = ANIM_TAG_NEEDLE,
     .paletteTag = ANIM_TAG_NEEDLE,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_LeechLifeNeedle,
     .callback = AnimLeechLifeNeedle,
 };
@@ -90,9 +86,6 @@ const struct SpriteTemplate gWebThreadSpriteTemplate =
     .tileTag = ANIM_TAG_WEB_THREAD,
     .paletteTag = ANIM_TAG_WEB_THREAD,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimTranslateWebThread,
 };
 
@@ -101,9 +94,6 @@ const struct SpriteTemplate gStringWrapSpriteTemplate =
     .tileTag = ANIM_TAG_STRING,
     .paletteTag = ANIM_TAG_STRING,
     .oam = &gOamData_AffineOff_ObjNormal_64x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimStringWrap,
 };
 
@@ -124,8 +114,6 @@ const struct SpriteTemplate gSpiderWebSpriteTemplate =
     .tileTag = ANIM_TAG_SPIDER_WEB,
     .paletteTag = ANIM_TAG_SPIDER_WEB,
     .oam = &gOamData_AffineDouble_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_SpiderWeb,
     .callback = AnimSpiderWeb,
 };
@@ -135,9 +123,6 @@ const struct SpriteTemplate gLinearStingerSpriteTemplate =
     .tileTag = ANIM_TAG_NEEDLE,
     .paletteTag = ANIM_TAG_NEEDLE,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimTranslateStinger,
 };
 
@@ -146,9 +131,6 @@ const struct SpriteTemplate gPinMissileSpriteTemplate =
     .tileTag = ANIM_TAG_NEEDLE,
     .paletteTag = ANIM_TAG_NEEDLE,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimMissileArc,
 };
 
@@ -157,9 +139,6 @@ const struct SpriteTemplate gIcicleSpearSpriteTemplate =
     .tileTag = ANIM_TAG_ICICLE_SPEAR,
     .paletteTag = ANIM_TAG_ICICLE_SPEAR,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimMissileArc,
 };
 
@@ -184,8 +163,6 @@ const struct SpriteTemplate gTailGlowOrbSpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_TailGlowOrb,
     .callback = AnimTailGlowOrb,
 };
@@ -198,7 +175,7 @@ static void AnimMegahornHorn(struct Sprite *sprite)
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
         gBattleAnimArgs[0] = -gBattleAnimArgs[0];
     }
-    else if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    else if (IsOnPlayerSide(gBattleAnimTarget))
     {
         StartSpriteAffineAnim(sprite, 1);
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];
@@ -225,7 +202,7 @@ static void AnimLeechLifeNeedle(struct Sprite *sprite)
         gBattleAnimArgs[0] = -gBattleAnimArgs[0];
         StartSpriteAffineAnim(sprite, 2);
     }
-    else if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    else if (IsOnPlayerSide(gBattleAnimTarget))
     {
         gBattleAnimArgs[1] = -gBattleAnimArgs[1];
         gBattleAnimArgs[0] = -gBattleAnimArgs[0];
@@ -290,13 +267,13 @@ static void AnimTranslateWebThread_Step(struct Sprite *sprite)
 static void AnimStringWrap(struct Sprite *sprite)
 {
     SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->x -= gBattleAnimArgs[0];
     else
         sprite->x += gBattleAnimArgs[0];
 
     sprite->y += gBattleAnimArgs[1];
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
         sprite->y += 8;
 
     sprite->callback = AnimStringWrap_Step;
@@ -327,7 +304,7 @@ void AnimSpiderWeb(struct Sprite *sprite)
     if (gBattleAnimArgs[2])
         SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
 
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->x -= gBattleAnimArgs[0];
     else
         sprite->x += gBattleAnimArgs[0];
@@ -381,7 +358,7 @@ void AnimTranslateStinger(struct Sprite *sprite)
     }
     else
     {
-        if (GetBattlerSide(gBattleAnimAttacker))
+        if (!IsOnPlayerSide(gBattleAnimAttacker))
         {
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];
             gBattleAnimArgs[1] = -gBattleAnimArgs[1];
@@ -426,7 +403,7 @@ void AnimMissileArc(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
 
-    if (GetBattlerSide(gBattleAnimAttacker))
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
     sprite->data[0] = gBattleAnimArgs[4];

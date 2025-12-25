@@ -5,6 +5,8 @@
 #include <limits.h>
 #include "config/general.h" // we need to define config before gba headers as print stuff needs the functions nulled before defines.
 #include "gba/gba.h"
+#include "assertf.h"
+#include "gametypes.h"
 #include "siirtc.h"
 #include "fpmath.h"
 #include "metaprogram.h"
@@ -13,6 +15,7 @@
 #include "constants/vars.h"
 #include "constants/species.h"
 #include "constants/pokedex.h"
+#include "constants/apricorn_tree.h"
 #include "constants/berry.h"
 #include "constants/maps.h"
 #include "constants/pokemon.h"
@@ -27,6 +30,10 @@
 // to help in decompiling
 #define asm_unified(x) asm(".syntax unified\n" x "\n.syntax divided")
 #define NAKED __attribute__((naked))
+
+#if MODERN
+#define asm __asm__
+#endif
 
 /// IDE support
 #if defined(__APPLE__) || defined(__CYGWIN__) || defined(__INTELLISENSE__)
@@ -103,6 +110,9 @@
 #define T2_READ_32(ptr) ((ptr)[0] + ((ptr)[1] << 8) + ((ptr)[2] << 16) + ((ptr)[3] << 24))
 #define T2_READ_PTR(ptr) (void *) T2_READ_32(ptr)
 
+#define PACK(data, shift, mask)   ( ((data) << (shift)) & (mask) )
+#define UNPACK(data, shift, mask) ( ((data) & (mask)) >> (shift) )
+
 // Macros for checking the joypad
 #define TEST_BUTTON(field, button) ((field) & (button))
 #define JOY_NEW(button) TEST_BUTTON(gMain.newKeys,  button)
@@ -125,6 +135,8 @@
 #define NUM_DEX_FLAG_BYTES ROUND_BITS_TO_BYTES(POKEMON_SLOTS_NUMBER)
 #define NUM_FLAG_BYTES ROUND_BITS_TO_BYTES(FLAGS_COUNT)
 #define NUM_TRENDY_SAYING_BYTES ROUND_BITS_TO_BYTES(NUM_TRENDY_SAYINGS)
+
+#define NUM_APRICORN_TREE_BYTES ROUND_BITS_TO_BYTES(APRICORN_TREE_COUNT)
 
 // This produces an error at compile-time if expr is zero.
 // It looks like file.c:line: size of array `id' is negative
@@ -200,23 +212,24 @@ struct Time
     /*0x04*/ s8 seconds;
 };
 
-struct NPCFollowerMapData
+struct NPCFollowerPadding
 {
-    u8 id;
-    u8 number;
-    u8 group;
+    u8 padding1;
+    u8 padding2;
+    u8 padding3;
 };
 
 struct NPCFollower
 {
     u8 inProgress:1;
     u8 warpEnd:1;
-    u8 createSurfBlob:3;
-    u8 comeOutDoorStairs:3;
+    u8 createSurfBlob:2;
+    u8 comeOutDoorStairs:2;
+    u8 forcedMovement:2;
     u8 objId;
     u8 currentSprite;
     u8 delayedState;
-    struct NPCFollowerMapData map;
+    struct NPCFollowerPadding padding;
     struct Coords16 log;
     const u8 *script;
     u16 flag;
@@ -243,6 +256,9 @@ struct SaveBlock3
     u8 dexNavSearchLevels[NUM_SPECIES];
 #endif
     u8 dexNavChain;
+#if APRICORN_TREE_COUNT > 0
+    u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
+#endif
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;
@@ -518,7 +534,7 @@ struct ApprenticeQuestion
     u8 moveSlot:2;
     u8 suggestedChange:2; // TRUE if told to use held item or second move, FALSE if told to use no item or first move
     //u8 padding;
-    u16 data; // used both as an itemId and a moveId
+    u16 data; // used both as an itemId and a move
 };
 
 struct PlayersApprentice
@@ -676,7 +692,8 @@ struct Roamer
     /*0x12*/ u8 tough;
     /*0x13*/ bool8 active;
     /*0x14*/ u8 statusB; // Stores frostbite
-    /*0x14*/ u8 filler[0x7];
+    /*0x15*/ bool8 shiny;
+    /*0x16*/ u8 filler[0x6];
 };
 
 struct RamScriptData
@@ -684,7 +701,7 @@ struct RamScriptData
     u8 magic;
     u8 mapGroup;
     u8 mapNum;
-    u8 objectId;
+    u8 localId;
     u8 script[995];
     //u8 padding;
 };
@@ -1039,6 +1056,15 @@ struct ExternalEventFlags
 
 } __attribute__((packed));/*size = 0x15*/
 
+struct Bag
+{
+    struct ItemSlot items[BAG_ITEMS_COUNT];
+    struct ItemSlot keyItems[BAG_KEYITEMS_COUNT];
+    struct ItemSlot pokeBalls[BAG_POKEBALLS_COUNT];
+    struct ItemSlot TMsHMs[BAG_TMHM_COUNT];
+    struct ItemSlot berries[BAG_BERRIES_COUNT];
+};
+
 struct SaveBlock1
 {
     /*0x00*/ struct Coords16 pos;
@@ -1061,11 +1087,8 @@ struct SaveBlock1
     /*0x494*/ u16 coins;
     /*0x496*/ u16 registeredItem; // registered for use with SELECT button
     /*0x498*/ struct ItemSlot pcItems[PC_ITEMS_COUNT];
-    /*0x560*/ struct ItemSlot bagPocket_Items[BAG_ITEMS_COUNT];
-    /*0x5D8*/ struct ItemSlot bagPocket_KeyItems[BAG_KEYITEMS_COUNT];
-    /*0x650*/ struct ItemSlot bagPocket_PokeBalls[BAG_POKEBALLS_COUNT];
-    /*0x690*/ struct ItemSlot bagPocket_TMHM[BAG_TMHM_COUNT];
-    /*0x790*/ struct ItemSlot bagPocket_Berries[BAG_BERRIES_COUNT];
+    /*0x560 -> 0x848 is bag storage*/
+    /*0x560*/ struct Bag bag;
     /*0x848*/ struct Pokeblock pokeblocks[POKEBLOCKS_COUNT];
 #if FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK1 == FALSE
     /*0x988*/ u8 filler1[0x34]; // Previously Dex Flags, feel free to remove.
@@ -1153,7 +1176,7 @@ struct SaveBlock1
     // sizeof: 0x3???
 };
 
-extern struct SaveBlock1* gSaveBlock1Ptr;
+extern struct SaveBlock1 *gSaveBlock1Ptr;
 
 struct MapPosition
 {
@@ -1164,6 +1187,8 @@ struct MapPosition
 
 #if T_SHOULD_RUN_MOVE_ANIM
 extern bool32 gLoadFail;
+extern bool32 gCountAllocs;
+extern s32 gSpriteAllocs;
 #endif // T_SHOULD_RUN_MOVE_ANIM
 
 #endif // GUARD_GLOBAL_H

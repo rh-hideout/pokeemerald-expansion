@@ -168,10 +168,20 @@ int MyFunction(int bar)
 }
 ```
 
-A chain of `if-else` statements in which any block is more than one line of
-code should use braces. If all blocks are single-line, then no braces are necessary.
+A chain of `if-else` statements in which any condition or block is more
+than one line of code should use braces. If all blocks *and* conditions
+are single-line, then no braces are necessary.
 
 ```c
+if (foo) // correct
+    return 1;
+
+if (foo
+ && bar) // correct
+{
+    return 1;
+}
+
 if (foo) // correct
 {
     return 1;
@@ -182,6 +192,25 @@ else
     return 0;
 }
 
+if (foo) // correct
+{
+    return 1;
+}
+else if (foo
+      && bar)
+{
+    return 0;
+}
+
+if (foo) // incorrect
+{
+    return 1;
+}
+
+if (foo
+ && bar) // incorrect
+    return 1;
+
 if (foo) // incorrect
     return 1;
 else
@@ -189,6 +218,26 @@ else
     MyFunction();
     return 0;
 }
+
+if (foo) // incorrect
+    return 1;
+else if (foo
+      && bar)
+    return 0;
+```
+
+The exception is `assertf` which should always use braces if it has a recovery path, even for one line of conditions and one line of code.
+
+```c
+assertf(true); // correct
+
+assertf(true) // correct
+{
+    return NULL;
+}
+
+assertf(true) // incorrect
+    return NULL;
 ```
 
 ### Control Structures
@@ -202,7 +251,7 @@ if (runTasks) // correct
 
 if (runTasks != 0) // incorrect
     RunTasks();
-    
+
 if (!PlayerIsOutside()) // correct
     RemoveSunglasses();
 
@@ -264,6 +313,15 @@ void SetCurrentDifficultyLevel(enum DifficultyLevel desiredDifficulty)
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 45 : 35,
     },
+```
+### Variable Declarations
+Loop iterators should be declared as part of the loop unless there's a very good reason not to.
+```C
+for (u32 i = 0; i < LOOP_ITERATIONS; i++)
+{
+    dst1[i] = i;
+    dst2[i] = i;
+}
 ```
 ## Data Type Sizes
 When a variable number is used, the data type should generally `u32` (unsigned) or `s32` (signed). There are a few exceptions to this rule, such as:
@@ -349,6 +407,10 @@ enum DifficultyLevel GetCurrentDifficultyLevel(void)
     return VarGet(B_VAR_DIFFICULTY);
 }
 ```
+
+## Data file format
+
+External data files should use JSON.
 
 ## Principles
 

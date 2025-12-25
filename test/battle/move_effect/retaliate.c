@@ -14,14 +14,14 @@ SINGLE_BATTLE_TEST("Retaliate doubles in base power the turn after an ally faint
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); SEND_OUT(player, 1); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_RETALIATE); }
         TURN { MOVE(player, MOVE_RETALIATE); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &damage[0]);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
 
@@ -33,14 +33,14 @@ SINGLE_BATTLE_TEST("Retaliate doubles in base power the turn after an ally faint
         OPPONENT(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
         TURN { MOVE(opponent, MOVE_RETALIATE); }
         TURN { MOVE(opponent, MOVE_RETALIATE); }
     } SCENE {
         HP_BAR(player, captureDamage: &damage[0]);
         HP_BAR(player, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
 
@@ -63,9 +63,12 @@ DOUBLE_BATTLE_TEST("Retaliate works with passive damage")
     PARAMETRIZE { move = MOVE_FLAME_BURST; moveTarget = playerRight; }
     PARAMETRIZE { move = MOVE_FIRE_PLEDGE; moveTarget = playerRight; move2 = MOVE_GRASS_PLEDGE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
-        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_POISON);
-        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
+        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
         #if B_USE_FROSTBITE == TRUE
         ASSUME(GetMoveAdditionalEffectById(MOVE_ICE_BEAM, 0)->moveEffect == MOVE_EFFECT_FREEZE_OR_FROSTBITE);
         #endif
@@ -89,7 +92,7 @@ DOUBLE_BATTLE_TEST("Retaliate works with passive damage")
         HP_BAR(opponentRight, captureDamage: &damage[0]);
         HP_BAR(opponentRight, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
 
@@ -112,7 +115,7 @@ SINGLE_BATTLE_TEST("Retaliate works with Perish Song")
         HP_BAR(opponent, captureDamage: &damage[0]);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
 
@@ -132,6 +135,6 @@ SINGLE_BATTLE_TEST("Retaliate works with self-inflicted fainting")
         HP_BAR(opponent, captureDamage: &damage[0]);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }

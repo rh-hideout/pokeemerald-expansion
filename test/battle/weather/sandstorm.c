@@ -17,12 +17,14 @@ SINGLE_BATTLE_TEST("Sandstorm deals 1/16 damage per turn")
    } THEN { EXPECT_EQ(sandstormDamage, opponent->maxHP / 16); }
 }
 
-SINGLE_BATTLE_TEST("Sandstorm multiplies the special defense of Rock-types by 1.5x", s16 damage)
+SINGLE_BATTLE_TEST("Sandstorm multiplies the special defense of Rock-types by 1.5x (Gen4+)", s16 damage)
 {
-    u16 move;
-    PARAMETRIZE { move = MOVE_SANDSTORM; }
-    PARAMETRIZE { move = MOVE_CELEBRATE; }
+    u32 move, config;
+    PARAMETRIZE { move = MOVE_CELEBRATE; config = GEN_3; }
+    PARAMETRIZE { move = MOVE_SANDSTORM; config = GEN_3; }
+    PARAMETRIZE { move = MOVE_SANDSTORM; config = GEN_4; }
     GIVEN {
+        WITH_CONFIG(CONFIG_SANDSTORM_SPDEF_BOOST, config);
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET) ;
         OPPONENT(SPECIES_NOSEPASS);
@@ -32,7 +34,8 @@ SINGLE_BATTLE_TEST("Sandstorm multiplies the special defense of Rock-types by 1.
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[0].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[1].damage);
     }
 }
 
@@ -43,9 +46,9 @@ SINGLE_BATTLE_TEST("Sandstorm damage does not hurt Ground, Rock, and Steel-type 
     PARAMETRIZE { mon = SPECIES_NOSEPASS; }
     PARAMETRIZE { mon = SPECIES_REGISTEEL; }
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_SANDSLASH].types[0] == TYPE_GROUND);
-        ASSUME(gSpeciesInfo[SPECIES_NOSEPASS].types[0] == TYPE_ROCK);
-        ASSUME(gSpeciesInfo[SPECIES_REGISTEEL].types[0] == TYPE_STEEL);
+        ASSUME(GetSpeciesType(SPECIES_SANDSLASH, 0) == TYPE_GROUND);
+        ASSUME(GetSpeciesType(SPECIES_NOSEPASS, 0) == TYPE_ROCK);
+        ASSUME(GetSpeciesType(SPECIES_REGISTEEL, 0) == TYPE_STEEL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(mon);
     } WHEN {
@@ -92,5 +95,22 @@ SINGLE_BATTLE_TEST("Sandstorm damage rounds properly when maxHP < 16")
         TURN { MOVE(opponent, MOVE_SANDSTORM); }
     } SCENE {
         HP_BAR(player, damage: 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sandstorm doesn't do damage when weather is negated")
+{
+    enum Type type1 = GetSpeciesType(SPECIES_STOUTLAND, 0);
+    enum Type type2 = GetSpeciesType(SPECIES_STOUTLAND, 1);
+    GIVEN {
+        ASSUME(type1 != TYPE_ROCK && type2 != TYPE_ROCK);
+        ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
+        ASSUME(type1 != TYPE_STEEL && type2 != TYPE_STEEL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_CLOUD_NINE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SANDSTORM); }
+    } SCENE {
+        NOT HP_BAR(player);
     }
 }

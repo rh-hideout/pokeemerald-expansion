@@ -20,7 +20,7 @@ Optional (but still recommended) fields for trainers:
     - Music
     - Items (Some Item / Another Item / Third Item)
             (Can also be specified with ITEM_SOME_ITEM)
-    - Double Battle (Yes/No, defaults to No)
+    - Battle Type (Singles / Doubles, defaults to Singles)
     - AI (Ai Flag / Another Flag / Third Flag / ...
           see "constants/battle_ai.h" for all flags)
     - Mugshot (enable Mugshots during battle transition

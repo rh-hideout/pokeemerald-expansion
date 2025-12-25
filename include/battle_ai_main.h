@@ -6,11 +6,6 @@ typedef s32 (*AiScoreFunc)(u32, u32, u32, s32);
 
 #define UNKNOWN_NO_OF_HITS UINT32_MAX
 
-// return vals for BattleAI_ChooseMoveOrAction
-// 0 - 3 are move idx
-#define AI_CHOICE_FLEE 4
-#define AI_CHOICE_WATCH 5
-
 // for AI_WhoStrikesFirst
 #define AI_IS_FASTER   1
 #define AI_IS_SLOWER   -1
@@ -28,6 +23,12 @@ enum StatChange
     STAT_CHANGE_SPEED_2,
     STAT_CHANGE_SPATK_2,
     STAT_CHANGE_SPDEF_2,
+    STAT_CHANGE_ATK_3,
+    STAT_CHANGE_DEF_3,
+    STAT_CHANGE_SPEED_3,
+    STAT_CHANGE_SPATK_3,
+    STAT_CHANGE_SPDEF_3,
+    STAT_CHANGE_ATK_MAX,
     STAT_CHANGE_ACC,
     STAT_CHANGE_EVASION
 };
@@ -43,7 +44,18 @@ enum AIScore
     WEAK_EFFECT = 1,
     DECENT_EFFECT = 2,
     GOOD_EFFECT = 3,
-    BEST_EFFECT = 4
+    BEST_EFFECT = 4,
+    PERFECT_EFFECT = 10,
+    BAD_EFFECT = -1,
+    AWFUL_EFFECT = -3,
+    WORST_EFFECT = -10
+};
+
+enum MoveComparisonResult
+{
+    MOVE_NEUTRAL_COMPARISON,
+    MOVE_WON_COMPARISON,
+    MOVE_LOST_COMPARISON,
 };
 
 // AI_TryToFaint
@@ -65,7 +77,7 @@ enum AIScore
         { \
             TestRunner_Battle_AISetScore(__FILE__, __LINE__, battler, movesetIndex, val); \
         } \
-        AI_THINKING_STRUCT->score[movesetIndex] = val; \
+        gAiThinkingStruct->score[movesetIndex] = val; \
     } while (0) \
 
 #define ADJUST_SCORE(val) \
@@ -73,7 +85,7 @@ enum AIScore
     { \
         if (TESTING) \
         { \
-            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, AI_THINKING_STRUCT->movesetIndex, val); \
+            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, gAiThinkingStruct->movesetIndex, val); \
         } \
         score += val; \
     } while (0) \
@@ -83,7 +95,7 @@ enum AIScore
     { \
     if (TESTING) \
         { \
-            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, AI_THINKING_STRUCT->movesetIndex, val); \
+            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, gAiThinkingStruct->movesetIndex, val); \
         } \
         score += val; \
         return score; \
@@ -94,7 +106,7 @@ enum AIScore
     { \
         if (TESTING) \
         { \
-            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, AI_THINKING_STRUCT->movesetIndex, val); \
+            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, gAiThinkingStruct->movesetIndex, val); \
         } \
         (*score) += val; \
     } while (0) \
@@ -114,11 +126,14 @@ enum AIScore
 void BattleAI_SetupItems(void);
 void BattleAI_SetupFlags(void);
 void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler);
-u32 BattleAI_ChooseMoveOrAction(u32 battler);
+void ComputeBattlerDecisions(u32 battler);
+u32 BattleAI_ChooseMoveIndex(u32 battler);
 void Ai_InitPartyStruct(void);
 void Ai_UpdateSwitchInData(u32 battler);
 void Ai_UpdateFaintData(u32 battler);
 void SetAiLogicDataForTurn(struct AiLogicData *aiData);
 void ResetDynamicAiFunc(void);
+void AI_TrySwitchOrUseItem(u32 battler);
+void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 weather, u32 fieldStatus);
 
 #endif // GUARD_BATTLE_AI_MAIN_H

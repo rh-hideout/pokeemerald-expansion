@@ -130,17 +130,16 @@ static const struct SpriteTemplate sSpriteTemplate_CutGrass =
     .oam = &sOamData_CutGrass,
     .anims = sSpriteAnimTable_CutGrass,
     .images = sSpriteImageTable_CutGrass,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = CutGrassSpriteCallback1,
 };
 
 // code
-bool8 SetUpFieldMove_Cut(void)
+bool32 SetUpFieldMove_Cut(void)
 {
     s16 x, y;
     u8 i, j;
     u8 tileBehavior;
-    u16 userAbility;
+    enum Ability userAbility;
     bool8 cutTiles[CUT_NORMAL_AREA];
     bool8 ret;
 

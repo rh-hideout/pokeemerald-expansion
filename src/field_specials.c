@@ -2,9 +2,10 @@
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
-#include "battle_tower.h"
+#include "battle_special.h"
 #include "cable_club.h"
 #include "data.h"
+#include "daycare.h"
 #include "decoration.h"
 #include "diploma.h"
 #include "event_data.h"
@@ -19,20 +20,24 @@
 #include "field_weather.h"
 #include "graphics.h"
 #include "international_string_util.h"
+#include "item.h"
 #include "item_icon.h"
+#include "item_menu.h"
 #include "link.h"
-#include "load_save.h"
 #include "list_menu.h"
+#include "load_save.h"
 #include "main.h"
-#include "mystery_gift.h"
 #include "match_call.h"
 #include "menu.h"
+#include "metatile_behavior.h"
+#include "mystery_gift.h"
 #include "overworld.h"
 #include "party_menu.h"
 #include "pokeblock.h"
 #include "pokedex.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
+#include "pokemon_summary_screen.h"
 #include "random.h"
 #include "rayquaza_scene.h"
 #include "region_map.h"
@@ -59,7 +64,6 @@
 #include "constants/field_specials.h"
 #include "constants/items.h"
 #include "constants/heal_locations.h"
-#include "constants/map_types.h"
 #include "constants/mystery_gift.h"
 #include "constants/slot_machine.h"
 #include "constants/songs.h"
@@ -81,6 +85,14 @@
 #define ELEVATOR_WINDOW_WIDTH  3
 #define ELEVATOR_WINDOW_HEIGHT 3
 #define ELEVATOR_LIGHT_STAGES  3
+
+enum 
+{
+    CAN_LEARN_MOVE,
+    CANNOT_LEARN_MOVE,
+    ALREADY_KNOWS_MOVE,
+    CANNOT_LEARN_MOVE_IS_EGG
+};
 
 EWRAM_DATA bool8 gBikeCyclingChallenge = FALSE;
 EWRAM_DATA u8 gBikeCollisions = 0;
@@ -122,14 +134,14 @@ static void Task_MoveElevator(u8);
 static void MoveElevatorWindowLights(u16, bool8);
 static void Task_MoveElevatorWindowLights(u8);
 static void Task_ShowScrollableMultichoice(u8);
-static void FillFrontierExchangeCornerWindowAndItemIcon(u16, u16);
-static void ShowBattleFrontierTutorWindow(u8, u16);
+static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti, u16);
+static void ShowBattleFrontierTutorWindow(enum ScrollMulti, u16);
 static void InitScrollableMultichoice(void);
 static void ScrollableMultichoice_ProcessInput(u8);
 static void ScrollableMultichoice_UpdateScrollArrows(u8);
 static void ScrollableMultichoice_MoveCursor(s32, bool8, struct ListMenu *);
-static void HideFrontierExchangeCornerItemIcon(u16, u16);
-static void ShowBattleFrontierTutorMoveDescription(u8, u16);
+static void HideFrontierExchangeCornerItemIcon(enum ScrollMulti, u16);
+static void ShowBattleFrontierTutorMoveDescription(enum ScrollMulti, u16);
 static void CloseScrollableMultichoice(u8);
 static void ScrollableMultichoice_RemoveScrollArrows(u8);
 static void Task_ScrollableMultichoice_WaitReturnToList(u8);
@@ -144,6 +156,18 @@ static void Task_CloseBattlePikeCurtain(u8);
 static u8 DidPlayerGetFirstFans(void);
 static void SetInitialFansOfPlayer(void);
 static u16 PlayerGainRandomTrainerFan(void);
+static void Task_LearnedMoveBoxMon(u8);
+static void Task_ReplaceBoxMonMoveYesNo(u8);
+static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8);
+static void Task_HandleReplaceBoxMonMoveYesNoInput(u8);
+static void Task_ShowSummaryScreenToForgetBoxMonMove(u8);
+static void StopLearningBoxMonMovePrompt(u8);
+static void CB2_ReturnToFieldWhileLearningMove(void);
+static void Task_ReturnToFieldWhileLearningMove(void);
+static void Task_BoxMonReplaceMove(u8);
+static void Task_StopLearningBoxMonMoveYesNo(u8);
+static void Task_HandleStopLearningBoxMonMoveYesNoInput(u8);
+static void Task_DidntLearnMove(u8);
 #if FREE_LINK_BATTLE_RECORDS == FALSE
 static void BufferFanClubTrainerName_(struct LinkBattleRecords *, u8, u8);
 #else
@@ -284,7 +308,7 @@ u16 GetRecordedCyclingRoadResults(void)
 
 void UpdateCyclingRoadState(void)
 {
-    if (gLastUsedWarp.mapNum == MAP_NUM(ROUTE110_SEASIDE_CYCLING_ROAD_NORTH_ENTRANCE) && gLastUsedWarp.mapGroup == MAP_GROUP(ROUTE110_SEASIDE_CYCLING_ROAD_NORTH_ENTRANCE))
+    if (gLastUsedWarp.mapNum == MAP_NUM(MAP_ROUTE110_SEASIDE_CYCLING_ROAD_NORTH_ENTRANCE) && gLastUsedWarp.mapGroup == MAP_GROUP(MAP_ROUTE110_SEASIDE_CYCLING_ROAD_NORTH_ENTRANCE))
         return;
 
     if (VarGet(VAR_CYCLING_CHALLENGE_STATE) == 2 || VarGet(VAR_CYCLING_CHALLENGE_STATE) == 3)
@@ -314,10 +338,11 @@ bool32 CountSSTidalStep(u16 delta)
     return TRUE;
 }
 
-u8 GetSSTidalLocation(s8 *mapGroup, s8 *mapNum, s16 *x, s16 *y)
+enum SSTidalLocation GetSSTidalLocation(s8 *mapGroup, s8 *mapNum, s16 *x, s16 *y)
 {
     u16 *varCruiseStepCount = GetVarPointer(VAR_CRUISE_STEP_COUNT);
-    switch (*GetVarPointer(VAR_SS_TIDAL_STATE))
+
+    switch ((enum SSTidalState)(*GetVarPointer(VAR_SS_TIDAL_STATE)))
     {
     case SS_TIDAL_BOARD_SLATEPORT:
     case SS_TIDAL_LAND_SLATEPORT:
@@ -334,39 +359,39 @@ u8 GetSSTidalLocation(s8 *mapGroup, s8 *mapNum, s16 *x, s16 *y)
     case SS_TIDAL_DEPART_SLATEPORT:
         if (*varCruiseStepCount < 60)
         {
-            *mapNum = MAP_NUM(ROUTE134);
+            *mapNum = MAP_NUM(MAP_ROUTE134);
             *x = *varCruiseStepCount + 19;
         }
         else if (*varCruiseStepCount < 140)
         {
-            *mapNum = MAP_NUM(ROUTE133);
+            *mapNum = MAP_NUM(MAP_ROUTE133);
             *x = *varCruiseStepCount - 60;
         }
         else
         {
-            *mapNum = MAP_NUM(ROUTE132);
+            *mapNum = MAP_NUM(MAP_ROUTE132);
             *x = *varCruiseStepCount - 140;
         }
         break;
     case SS_TIDAL_HALFWAY_SLATEPORT:
         if (*varCruiseStepCount < 66)
         {
-            *mapNum = MAP_NUM(ROUTE132);
+            *mapNum = MAP_NUM(MAP_ROUTE132);
             *x = 65 - *varCruiseStepCount;
         }
         else if (*varCruiseStepCount < 146)
         {
-            *mapNum = MAP_NUM(ROUTE133);
+            *mapNum = MAP_NUM(MAP_ROUTE133);
             *x = 145 - *varCruiseStepCount;
         }
         else
         {
-            *mapNum = MAP_NUM(ROUTE134);
+            *mapNum = MAP_NUM(MAP_ROUTE134);
             *x = 224 - *varCruiseStepCount;
         }
         break;
     }
-    *mapGroup = MAP_GROUP(ROUTE132);
+    *mapGroup = MAP_GROUP(MAP_ROUTE132);
     *y = 20;
     return SS_TIDAL_LOCATION_CURRENTS;
 }
@@ -584,8 +609,8 @@ void SpawnLinkPartnerObjectEvent(void)
                     linkSpriteId = OBJ_EVENT_GFX_RIVAL_MAY_NORMAL;
                 break;
             }
-            SpawnSpecialObjectEventParameterized(linkSpriteId, movementTypes[j], 240 - i, coordOffsets[j][0] + x + MAP_OFFSET, coordOffsets[j][1] + y + MAP_OFFSET, 0);
-            LoadLinkPartnerObjectEventSpritePalette(linkSpriteId, 240 - i, i);
+            SpawnSpecialObjectEventParameterized(linkSpriteId, movementTypes[j], LOCALID_BERRY_BLENDER_PLAYER_END - i, coordOffsets[j][0] + x + MAP_OFFSET, coordOffsets[j][1] + y + MAP_OFFSET, 0);
+            LoadLinkPartnerObjectEventSpritePalette(linkSpriteId, LOCALID_BERRY_BLENDER_PLAYER_END - i, i);
             j++;
             if (j == MAX_LINK_PLAYERS)
                 j = 0;
@@ -680,10 +705,10 @@ void MauvilleGymSetDefaultBarriers(void)
                 MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_GreenBeamH2_On);
                 break;
             case METATILE_MauvilleGym_GreenBeamH3_Off:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_GreenBeamH3_On | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_GreenBeamH3_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_GreenBeamH4_Off:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_GreenBeamH4_On | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_GreenBeamH4_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_RedBeamH1_On:
                 MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamH1_Off);
@@ -704,37 +729,37 @@ void MauvilleGymSetDefaultBarriers(void)
                 MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamH2_On);
                 break;
             case METATILE_MauvilleGym_RedBeamH3_Off:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamH3_On | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamH3_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_RedBeamH4_Off:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamH4_On | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamH4_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_GreenBeamV1_On:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleBottom_On | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleBottom_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_GreenBeamV2_On:
                 MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_FloorTile);
                 break;
             case METATILE_MauvilleGym_RedBeamV1_On:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleBottom_Off | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleBottom_Off | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_RedBeamV2_On:
                 MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_FloorTile);
                 break;
             case METATILE_MauvilleGym_PoleBottom_On:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_GreenBeamV1_On | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_GreenBeamV1_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_FloorTile:
                 if (MapGridGetMetatileIdAt(x, y - 1) == METATILE_MauvilleGym_GreenBeamV1_On)
-                    MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_GreenBeamV2_On | MAPGRID_COLLISION_MASK);
+                    MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_GreenBeamV2_On | MAPGRID_IMPASSABLE);
                 else
-                    MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamV2_On | MAPGRID_COLLISION_MASK);
+                    MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamV2_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_PoleBottom_Off:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamV1_On | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamV1_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_PoleTop_Off:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleTop_On | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleTop_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_PoleTop_On:
                 MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleTop_Off);
@@ -785,10 +810,10 @@ void MauvilleGymDeactivatePuzzle(void)
                 MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_RedBeamH4_Off);
                 break;
             case METATILE_MauvilleGym_GreenBeamV1_On:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleBottom_On | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleBottom_On | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_RedBeamV1_On:
-                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleBottom_Off | MAPGRID_COLLISION_MASK);
+                MapGridSetMetatileIdAt(x, y, METATILE_MauvilleGym_PoleBottom_Off | MAPGRID_IMPASSABLE);
                 break;
             case METATILE_MauvilleGym_GreenBeamV2_On:
             case METATILE_MauvilleGym_RedBeamV2_On:
@@ -897,8 +922,8 @@ static void PetalburgGymSetDoorMetatiles(u8 roomNumber, u16 metatileId)
     }
     for (i = 0; i < nDoors; i++)
     {
-        MapGridSetMetatileIdAt(doorCoordsX[i] + MAP_OFFSET, doorCoordsY[i] + MAP_OFFSET, metatileId | MAPGRID_COLLISION_MASK);
-        MapGridSetMetatileIdAt(doorCoordsX[i] + MAP_OFFSET, doorCoordsY[i] + MAP_OFFSET + 1, (metatileId + METATILE_ROW_WIDTH) | MAPGRID_COLLISION_MASK);
+        MapGridSetMetatileIdAt(doorCoordsX[i] + MAP_OFFSET, doorCoordsY[i] + MAP_OFFSET, metatileId | MAPGRID_IMPASSABLE);
+        MapGridSetMetatileIdAt(doorCoordsX[i] + MAP_OFFSET, doorCoordsY[i] + MAP_OFFSET + 1, (metatileId + METATILE_ROW_WIDTH) | MAPGRID_IMPASSABLE);
     }
     DrawWholeMapView();
 }
@@ -948,9 +973,9 @@ u8 GetBattleOutcome(void)
 void CableCarWarp(void)
 {
     if (gSpecialVar_0x8004 != 0)
-        SetWarpDestination(MAP_GROUP(ROUTE112_CABLE_CAR_STATION), MAP_NUM(ROUTE112_CABLE_CAR_STATION), WARP_ID_NONE, 6, 4);
+        SetWarpDestination(MAP_GROUP(MAP_ROUTE112_CABLE_CAR_STATION), MAP_NUM(MAP_ROUTE112_CABLE_CAR_STATION), WARP_ID_NONE, 6, 4);
     else
-        SetWarpDestination(MAP_GROUP(MT_CHIMNEY_CABLE_CAR_STATION), MAP_NUM(MT_CHIMNEY_CABLE_CAR_STATION), WARP_ID_NONE, 6, 4);
+        SetWarpDestination(MAP_GROUP(MAP_MT_CHIMNEY_CABLE_CAR_STATION), MAP_NUM(MAP_MT_CHIMNEY_CABLE_CAR_STATION), WARP_ID_NONE, 6, 4);
 }
 
 void SetHiddenItemFlag(void)
@@ -984,7 +1009,7 @@ void FieldShowRegionMap(void)
 
 static bool32 IsBuildingPCTile(u32 tileId)
 {
-    return gMapHeader.mapLayout->primaryTileset == &gTileset_Building && (tileId == METATILE_Building_PC_On || tileId == METATILE_Building_PC_Off);
+    return (MetatileBehavior_IsPC(UNPACK_BEHAVIOR(GetMetatileAttributesById(tileId))));
 }
 
 static bool32 IsPlayerHousePCTile(u32 tileId)
@@ -1098,7 +1123,7 @@ static void PCTurnOnEffect_SetMetatile(s16 isScreenOn, s8 dx, s8 dy)
         else if (gSpecialVar_0x8004 == PC_LOCATION_MAYS_HOUSE)
             metatileId = METATILE_BrendansMaysHouse_MayPC_On;
     }
-    MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + dx + MAP_OFFSET, gSaveBlock1Ptr->pos.y + dy + MAP_OFFSET, metatileId | MAPGRID_COLLISION_MASK);
+    MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + dx + MAP_OFFSET, gSaveBlock1Ptr->pos.y + dy + MAP_OFFSET, metatileId | MAPGRID_IMPASSABLE);
 }
 
 // For this special, gSpecialVar_0x8004 is expected to be some PC_LOCATION_* value.
@@ -1141,7 +1166,7 @@ static void PCTurnOffEffect(void)
     else if (gSpecialVar_0x8004 == PC_LOCATION_MAYS_HOUSE)
         metatileId = METATILE_BrendansMaysHouse_MayPC_Off;
 
-    MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + dx + MAP_OFFSET, gSaveBlock1Ptr->pos.y + dy + MAP_OFFSET, metatileId | MAPGRID_COLLISION_MASK);
+    MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + dx + MAP_OFFSET, gSaveBlock1Ptr->pos.y + dy + MAP_OFFSET, metatileId | MAPGRID_IMPASSABLE);
     DrawWholeMapView();
 }
 
@@ -1173,14 +1198,14 @@ static void LotteryCornerComputerEffect(struct Task *task)
         if (task->tIsScreenOn)
         {
             // Screen is on, set it off
-            MapGridSetMetatileIdAt(11 + MAP_OFFSET, 1 + MAP_OFFSET, METATILE_Shop_Laptop1_Normal | MAPGRID_COLLISION_MASK);
-            MapGridSetMetatileIdAt(11 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_Shop_Laptop2_Normal | MAPGRID_COLLISION_MASK);
+            MapGridSetMetatileIdAt(11 + MAP_OFFSET, 1 + MAP_OFFSET, METATILE_Shop_Laptop1_Normal | MAPGRID_IMPASSABLE);
+            MapGridSetMetatileIdAt(11 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_Shop_Laptop2_Normal | MAPGRID_IMPASSABLE);
         }
         else
         {
             // Screen is off, set it on
-            MapGridSetMetatileIdAt(11 + MAP_OFFSET, 1 + MAP_OFFSET, METATILE_Shop_Laptop1_Flash | MAPGRID_COLLISION_MASK);
-            MapGridSetMetatileIdAt(11 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_Shop_Laptop2_Flash | MAPGRID_COLLISION_MASK);
+            MapGridSetMetatileIdAt(11 + MAP_OFFSET, 1 + MAP_OFFSET, METATILE_Shop_Laptop1_Flash | MAPGRID_IMPASSABLE);
+            MapGridSetMetatileIdAt(11 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_Shop_Laptop2_Flash | MAPGRID_IMPASSABLE);
         }
         DrawWholeMapView();
 
@@ -1195,8 +1220,8 @@ static void LotteryCornerComputerEffect(struct Task *task)
 
 void EndLotteryCornerComputerEffect(void)
 {
-    MapGridSetMetatileIdAt(11 + MAP_OFFSET, 1 + MAP_OFFSET, METATILE_Shop_Laptop1_Normal | MAPGRID_COLLISION_MASK);
-    MapGridSetMetatileIdAt(11 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_Shop_Laptop2_Normal | MAPGRID_COLLISION_MASK);
+    MapGridSetMetatileIdAt(11 + MAP_OFFSET, 1 + MAP_OFFSET, METATILE_Shop_Laptop1_Normal | MAPGRID_IMPASSABLE);
+    MapGridSetMetatileIdAt(11 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_Shop_Laptop2_Normal | MAPGRID_IMPASSABLE);
     DrawWholeMapView();
 }
 
@@ -1273,7 +1298,7 @@ void IsGrassTypeInParty(void)
         if (GetMonData(pokemon, MON_DATA_SANITY_HAS_SPECIES) && !GetMonData(pokemon, MON_DATA_IS_EGG))
         {
             species = GetMonData(pokemon, MON_DATA_SPECIES);
-            if (gSpeciesInfo[species].types[0] == TYPE_GRASS || gSpeciesInfo[species].types[1] == TYPE_GRASS)
+            if (GetSpeciesType(species, 0) == TYPE_GRASS || GetSpeciesType(species, 1) == TYPE_GRASS)
             {
                 gSpecialVar_Result = TRUE;
                 return;
@@ -1287,7 +1312,7 @@ void SpawnCameraObject(void)
 {
     u8 obj = SpawnSpecialObjectEventParameterized(OBJ_EVENT_GFX_BOY_1,
                                                   MOVEMENT_TYPE_FACE_DOWN,
-                                                  OBJ_EVENT_ID_CAMERA,
+                                                  LOCALID_CAMERA,
                                                   gSaveBlock1Ptr->pos.x + MAP_OFFSET,
                                                   gSaveBlock1Ptr->pos.y + MAP_OFFSET,
                                                   3); // elevation
@@ -1298,7 +1323,7 @@ void SpawnCameraObject(void)
 void RemoveCameraObject(void)
 {
     CameraObjectSetFollowedSpriteId(GetPlayerAvatarSpriteId());
-    RemoveObjectEventByLocalIdAndMap(OBJ_EVENT_ID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    RemoveObjectEventByLocalIdAndMap(LOCALID_CAMERA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
 }
 
 u8 GetPokeblockNameByMonNature(void)
@@ -1433,8 +1458,8 @@ bool8 Special_AreLeadMonEVsMaxedOut(void)
 u8 TryUpdateRusturfTunnelState(void)
 {
     if (!FlagGet(FLAG_RUSTURF_TUNNEL_OPENED)
-        && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(RUSTURF_TUNNEL)
-        && gSaveBlock1Ptr->location.mapNum == MAP_NUM(RUSTURF_TUNNEL))
+        && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_RUSTURF_TUNNEL)
+        && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_RUSTURF_TUNNEL))
     {
         if (FlagGet(FLAG_HIDE_RUSTURF_TUNNEL_ROCK_1))
         {
@@ -1578,7 +1603,10 @@ u8 GetLeadMonIndex(void)
 
 u16 ScriptGetPartyMonSpecies(void)
 {
-    return GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG, NULL);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        return GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG);
+    else
+        return GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG);
 }
 
 // Removed for Emerald
@@ -1672,7 +1700,7 @@ u16 GetMysteryGiftCardStat(void)
 
 bool8 BufferTMHMMoveName(void)
 {
-    if (gSpecialVar_0x8004 >= ITEM_TM01 && gSpecialVar_0x8004 <= ITEM_HM08)
+    if (gItemsInfo[gSpecialVar_0x8004].pocket == POCKET_TM_HM)
     {
         StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(gSpecialVar_0x8004)));
         return TRUE;
@@ -1697,8 +1725,8 @@ bool8 IsBadEggInParty(void)
 
 bool8 InMultiPartnerRoom(void)
 {
-    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(BATTLE_FRONTIER_BATTLE_TOWER_MULTI_PARTNER_ROOM)
-        && gSaveBlock1Ptr->location.mapNum == MAP_NUM(BATTLE_FRONTIER_BATTLE_TOWER_MULTI_PARTNER_ROOM) &&
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_PARTNER_ROOM)
+        && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_PARTNER_ROOM) &&
         VarGet(VAR_FRONTIER_BATTLE_MODE) == FRONTIER_MODE_MULTIS)
         return TRUE;
     return FALSE;
@@ -1781,25 +1809,25 @@ static const u16 sElevatorWindowTiles_Descending[ELEVATOR_WINDOW_HEIGHT][ELEVATO
 
 void SetDeptStoreFloor(void)
 {
-    u8 deptStoreFloor;
+    enum DeptStoreFloorNumber deptStoreFloor;
     switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
     {
-    case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_1F):
+    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_1F;
         break;
-    case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_2F):
+    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_2F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_2F;
         break;
-    case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_3F):
+    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_3F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_3F;
         break;
-    case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_4F):
+    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_4F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_4F;
         break;
-    case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_5F):
+    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_5F):
         deptStoreFloor = DEPT_STORE_FLOORNUM_5F;
         break;
-    case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_ROOFTOP):
+    case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_ROOFTOP):
         deptStoreFloor = DEPT_STORE_FLOORNUM_ROOFTOP;
         break;
     default:
@@ -1814,27 +1842,27 @@ u16 GetDeptStoreDefaultFloorChoice(void)
     sLilycoveDeptStore_NeverRead = 0;
     sLilycoveDeptStore_DefaultFloorChoice = 0;
 
-    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(LILYCOVE_CITY_DEPARTMENT_STORE_1F))
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F))
     {
         switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
         {
-        case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_5F):
+        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_5F):
             sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 0;
             break;
-        case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_4F):
+        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_4F):
             sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 1;
             break;
-        case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_3F):
+        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_3F):
             sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 2;
             break;
-        case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_2F):
+        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_2F):
             sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 3;
             break;
-        case MAP_NUM(LILYCOVE_CITY_DEPARTMENT_STORE_1F):
+        case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F):
             sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 4;
             break;
@@ -1976,7 +2004,7 @@ static void Task_MoveElevatorWindowLights(u8 taskId)
             for (y = 0; y < ELEVATOR_WINDOW_HEIGHT; y++)
             {
                 for (x = 0; x < ELEVATOR_WINDOW_WIDTH; x++)
-                    MapGridSetMetatileIdAt(x + MAP_OFFSET + 1, y + MAP_OFFSET, sElevatorWindowTiles_Ascending[y][tMoveCounter % ELEVATOR_LIGHT_STAGES] | MAPGRID_COLLISION_MASK);
+                    MapGridSetMetatileIdAt(x + MAP_OFFSET + 1, y + MAP_OFFSET, sElevatorWindowTiles_Ascending[y][tMoveCounter % ELEVATOR_LIGHT_STAGES] | MAPGRID_IMPASSABLE);
             }
         }
         else
@@ -1985,7 +2013,7 @@ static void Task_MoveElevatorWindowLights(u8 taskId)
             for (y = 0; y < ELEVATOR_WINDOW_HEIGHT; y++)
             {
                 for (x = 0; x < ELEVATOR_WINDOW_WIDTH; x++)
-                    MapGridSetMetatileIdAt(x + MAP_OFFSET + 1, y + MAP_OFFSET, sElevatorWindowTiles_Descending[y][tMoveCounter % ELEVATOR_LIGHT_STAGES] | MAPGRID_COLLISION_MASK);
+                    MapGridSetMetatileIdAt(x + MAP_OFFSET + 1, y + MAP_OFFSET, sElevatorWindowTiles_Descending[y][tMoveCounter % ELEVATOR_LIGHT_STAGES] | MAPGRID_IMPASSABLE);
             }
         }
         DrawWholeMapView();
@@ -2006,12 +2034,24 @@ void BufferVarsForIVRater(void)
     u8 i;
     u32 ivStorage[NUM_STATS];
 
-    ivStorage[STAT_HP] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HP_IV);
-    ivStorage[STAT_ATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ATK_IV);
-    ivStorage[STAT_DEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_DEF_IV);
-    ivStorage[STAT_SPEED] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPEED_IV);
-    ivStorage[STAT_SPATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPATK_IV);
-    ivStorage[STAT_SPDEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPDEF_IV);
+    if(gSpecialVar_MonBoxId == 0xFF)
+    {
+        ivStorage[STAT_HP] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HP_IV);
+        ivStorage[STAT_ATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ATK_IV);
+        ivStorage[STAT_DEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_DEF_IV);
+        ivStorage[STAT_SPEED] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPEED_IV);
+        ivStorage[STAT_SPATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPATK_IV);
+        ivStorage[STAT_SPDEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPDEF_IV);
+    }
+    else
+    {
+        ivStorage[STAT_HP] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_HP_IV);
+        ivStorage[STAT_ATK] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_ATK_IV);
+        ivStorage[STAT_DEF] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_DEF_IV);
+        ivStorage[STAT_SPEED] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPEED_IV);
+        ivStorage[STAT_SPATK] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPATK_IV);
+        ivStorage[STAT_SPDEF] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPDEF_IV);
+    }
 
     gSpecialVar_0x8005 = 0;
 
@@ -2079,7 +2119,7 @@ bool8 UsedPokemonCenterWarp(void)
 
 bool32 PlayerNotAtTrainerHillEntrance(void)
 {
-    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(TRAINER_HILL_ENTRANCE) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(TRAINER_HILL_ENTRANCE))
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_TRAINER_HILL_ENTRANCE) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_TRAINER_HILL_ENTRANCE))
         return FALSE;
 
     return TRUE;
@@ -2294,7 +2334,7 @@ void ShowScrollableMultichoice(void)
     struct Task *task = &gTasks[taskId];
     task->tScrollMultiId = gSpecialVar_0x8004;
 
-    switch (gSpecialVar_0x8004)
+    switch ((enum ScrollMulti)gSpecialVar_0x8004)
     {
     case SCROLL_MULTI_NONE:
         task->tMaxItemsOnScreen = 1;
@@ -2821,7 +2861,11 @@ void ShowNatureGirlMessage(void)
     if (gSpecialVar_0x8004 >= PARTY_SIZE)
         gSpecialVar_0x8004 = 0;
 
-    nature = GetNature(&gPlayerParty[gSpecialVar_0x8004]);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        nature = GetNature(&gPlayerParty[gSpecialVar_0x8004]);
+    else
+        nature = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PERSONALITY) % NUM_NATURES;
+    
     ShowFieldMessage(gNaturesInfo[nature].natureGirlMessage);
 }
 
@@ -2989,7 +3033,7 @@ void CloseFrontierExchangeCornerItemIconWindow(void)
     RemoveWindow(sFrontierExchangeCorner_ItemIconWindowId);
 }
 
-static void FillFrontierExchangeCornerWindowAndItemIcon(u16 menu, u16 selection)
+static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti menu, u16 selection)
 {
     #include "data/battle_frontier/battle_frontier_exchange_corner.h"
 
@@ -3032,6 +3076,8 @@ static void FillFrontierExchangeCornerWindowAndItemIcon(u16 menu, u16 selection)
             AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_HoldItemsDescriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
             ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_HoldItems[selection]);
             break;
+        default:
+            break;
         }
     }
 }
@@ -3050,7 +3096,7 @@ static void ShowFrontierExchangeCornerItemIcon(u16 item)
     }
 }
 
-static void HideFrontierExchangeCornerItemIcon(u16 menu, u16 unused)
+static void HideFrontierExchangeCornerItemIcon(enum ScrollMulti menu, u16 unused)
 {
     if (sScrollableMultichoice_ItemSpriteId != MAX_SPRITES)
     {
@@ -3063,6 +3109,8 @@ static void HideFrontierExchangeCornerItemIcon(u16 menu, u16 unused)
             // This makes sure deleting the icon will not clear palettes in use by object events
             FieldEffectFreeGraphicsResources(&gSprites[sScrollableMultichoice_ItemSpriteId]);
             break;
+        default:
+            break;
         }
         sScrollableMultichoice_ItemSpriteId = MAX_SPRITES;
     }
@@ -3070,10 +3118,10 @@ static void HideFrontierExchangeCornerItemIcon(u16 menu, u16 unused)
 
 void BufferBattleFrontierTutorMoveName(void)
 {
-    StringCopy(gStringVar1, GetMoveName(gSpecialVar_0x8005));
+    StringCopy(gStringVar1, GetMoveName(gSpecialVar_ItemId));
 }
 
-static void ShowBattleFrontierTutorWindow(u8 menu, u16 selection)
+static void ShowBattleFrontierTutorWindow(enum ScrollMulti menu, u16 selection)
 {
     static const struct WindowTemplate sBattleFrontierTutor_WindowTemplate =
     {
@@ -3097,7 +3145,7 @@ static void ShowBattleFrontierTutorWindow(u8 menu, u16 selection)
     }
 }
 
-static void ShowBattleFrontierTutorMoveDescription(u8 menu, u16 selection)
+static void ShowBattleFrontierTutorMoveDescription(enum ScrollMulti menu, u16 selection)
 {
     static const u8 *const sBattleFrontier_TutorMoveDescriptions1[] =
     {
@@ -3291,8 +3339,8 @@ static void ChangeDeoxysRockLevel(u8 rockLevel)
 
     CreateTask(WaitForDeoxysRockMovement, 8);
     gFieldEffectArguments[0] = LOCALID_BIRTH_ISLAND_EXTERIOR_ROCK;
-    gFieldEffectArguments[1] = MAP_NUM(BIRTH_ISLAND_EXTERIOR);
-    gFieldEffectArguments[2] = MAP_GROUP(BIRTH_ISLAND_EXTERIOR);
+    gFieldEffectArguments[1] = MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR);
+    gFieldEffectArguments[2] = MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR);
     gFieldEffectArguments[3] = sDeoxysRockCoords[rockLevel][0];
     gFieldEffectArguments[4] = sDeoxysRockCoords[rockLevel][1];
 
@@ -3319,7 +3367,7 @@ static void WaitForDeoxysRockMovement(u8 taskId)
 void IncrementBirthIslandRockStepCount(void)
 {
     u16 stepCount = VarGet(VAR_DEOXYS_ROCK_STEP_COUNT);
-    if (gSaveBlock1Ptr->location.mapNum == MAP_NUM(BIRTH_ISLAND_EXTERIOR) && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(BIRTH_ISLAND_EXTERIOR))
+    if (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR) && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR))
     {
         if (++stepCount > 99)
             VarSet(VAR_DEOXYS_ROCK_STEP_COUNT, 0);
@@ -3415,22 +3463,22 @@ void CreateAbnormalWeatherEvent(void)
 bool32 GetAbnormalWeatherMapNameAndType(void)
 {
     static const u8 sAbnormalWeatherMapNumbers[] = {
-        MAP_NUM(ROUTE114),
-        MAP_NUM(ROUTE114),
-        MAP_NUM(ROUTE115),
-        MAP_NUM(ROUTE115),
-        MAP_NUM(ROUTE116),
-        MAP_NUM(ROUTE116),
-        MAP_NUM(ROUTE118),
-        MAP_NUM(ROUTE118),
-        MAP_NUM(ROUTE105),
-        MAP_NUM(ROUTE105),
-        MAP_NUM(ROUTE125),
-        MAP_NUM(ROUTE125),
-        MAP_NUM(ROUTE127),
-        MAP_NUM(ROUTE127),
-        MAP_NUM(ROUTE129),
-        MAP_NUM(ROUTE129)
+        MAP_NUM(MAP_ROUTE114),
+        MAP_NUM(MAP_ROUTE114),
+        MAP_NUM(MAP_ROUTE115),
+        MAP_NUM(MAP_ROUTE115),
+        MAP_NUM(MAP_ROUTE116),
+        MAP_NUM(MAP_ROUTE116),
+        MAP_NUM(MAP_ROUTE118),
+        MAP_NUM(MAP_ROUTE118),
+        MAP_NUM(MAP_ROUTE105),
+        MAP_NUM(MAP_ROUTE105),
+        MAP_NUM(MAP_ROUTE125),
+        MAP_NUM(MAP_ROUTE125),
+        MAP_NUM(MAP_ROUTE127),
+        MAP_NUM(MAP_ROUTE127),
+        MAP_NUM(MAP_ROUTE129),
+        MAP_NUM(MAP_ROUTE129)
     };
 
     u16 abnormalWeather = VarGet(VAR_ABNORMAL_WEATHER_LOCATION);
@@ -3448,22 +3496,22 @@ bool8 AbnormalWeatherHasExpired(void)
     // Duplicate array.
     static const u8 sAbnormalWeatherMapNumbers[] =
     {
-        MAP_NUM(ROUTE114),
-        MAP_NUM(ROUTE114),
-        MAP_NUM(ROUTE115),
-        MAP_NUM(ROUTE115),
-        MAP_NUM(ROUTE116),
-        MAP_NUM(ROUTE116),
-        MAP_NUM(ROUTE118),
-        MAP_NUM(ROUTE118),
-        MAP_NUM(ROUTE105),
-        MAP_NUM(ROUTE105),
-        MAP_NUM(ROUTE125),
-        MAP_NUM(ROUTE125),
-        MAP_NUM(ROUTE127),
-        MAP_NUM(ROUTE127),
-        MAP_NUM(ROUTE129),
-        MAP_NUM(ROUTE129)
+        MAP_NUM(MAP_ROUTE114),
+        MAP_NUM(MAP_ROUTE114),
+        MAP_NUM(MAP_ROUTE115),
+        MAP_NUM(MAP_ROUTE115),
+        MAP_NUM(MAP_ROUTE116),
+        MAP_NUM(MAP_ROUTE116),
+        MAP_NUM(MAP_ROUTE118),
+        MAP_NUM(MAP_ROUTE118),
+        MAP_NUM(MAP_ROUTE105),
+        MAP_NUM(MAP_ROUTE105),
+        MAP_NUM(MAP_ROUTE125),
+        MAP_NUM(MAP_ROUTE125),
+        MAP_NUM(MAP_ROUTE127),
+        MAP_NUM(MAP_ROUTE127),
+        MAP_NUM(MAP_ROUTE129),
+        MAP_NUM(MAP_ROUTE129)
     };
 
     u16 steps = VarGet(VAR_ABNORMAL_WEATHER_STEP_COUNTER);
@@ -3475,15 +3523,15 @@ bool8 AbnormalWeatherHasExpired(void)
     if (++steps > 999)
     {
         VarSet(VAR_ABNORMAL_WEATHER_STEP_COUNTER, 0);
-        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(UNDERWATER_MARINE_CAVE))
+        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_UNDERWATER_MARINE_CAVE))
         {
             switch (gSaveBlock1Ptr->location.mapNum)
             {
-            case MAP_NUM(UNDERWATER_MARINE_CAVE):
-            case MAP_NUM(MARINE_CAVE_ENTRANCE):
-            case MAP_NUM(MARINE_CAVE_END):
-            case MAP_NUM(TERRA_CAVE_ENTRANCE):
-            case MAP_NUM(TERRA_CAVE_END):
+            case MAP_NUM(MAP_UNDERWATER_MARINE_CAVE):
+            case MAP_NUM(MAP_MARINE_CAVE_ENTRANCE):
+            case MAP_NUM(MAP_MARINE_CAVE_END):
+            case MAP_NUM(MAP_TERRA_CAVE_ENTRANCE):
+            case MAP_NUM(MAP_TERRA_CAVE_END):
                 VarSet(VAR_SHOULD_END_ABNORMAL_WEATHER, 1);
                 return FALSE;
             default:
@@ -3491,14 +3539,14 @@ bool8 AbnormalWeatherHasExpired(void)
             }
         }
 
-        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(UNDERWATER_ROUTE127))
+        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_UNDERWATER_ROUTE127))
         {
             switch (gSaveBlock1Ptr->location.mapNum)
             {
-            case MAP_NUM(UNDERWATER_ROUTE127):
-            case MAP_NUM(UNDERWATER_ROUTE129):
-            case MAP_NUM(UNDERWATER_ROUTE105):
-            case MAP_NUM(UNDERWATER_ROUTE125):
+            case MAP_NUM(MAP_UNDERWATER_ROUTE127):
+            case MAP_NUM(MAP_UNDERWATER_ROUTE129):
+            case MAP_NUM(MAP_UNDERWATER_ROUTE105):
+            case MAP_NUM(MAP_UNDERWATER_ROUTE125):
                 VarSet(VAR_SHOULD_END_ABNORMAL_WEATHER, 1);
                 return FALSE;
             default:
@@ -3534,18 +3582,18 @@ u32 GetMartEmployeeObjectEventId(void)
 {
     static const u8 sPokeMarts[][3] =
     {
-        { MAP_GROUP(OLDALE_TOWN_MART),     MAP_NUM(OLDALE_TOWN_MART),     LOCALID_OLDALE_MART_CLERK },
-        { MAP_GROUP(LAVARIDGE_TOWN_MART),  MAP_NUM(LAVARIDGE_TOWN_MART),  LOCALID_LAVARIDGE_MART_CLERK },
-        { MAP_GROUP(FALLARBOR_TOWN_MART),  MAP_NUM(FALLARBOR_TOWN_MART),  LOCALID_FALLARBOR_MART_CLERK },
-        { MAP_GROUP(VERDANTURF_TOWN_MART), MAP_NUM(VERDANTURF_TOWN_MART), LOCALID_VERDANTURF_MART_CLERK },
-        { MAP_GROUP(PETALBURG_CITY_MART),  MAP_NUM(PETALBURG_CITY_MART),  LOCALID_PETALBURG_MART_CLERK },
-        { MAP_GROUP(SLATEPORT_CITY_MART),  MAP_NUM(SLATEPORT_CITY_MART),  LOCALID_SLATEPORT_MART_CLERK },
-        { MAP_GROUP(MAUVILLE_CITY_MART),   MAP_NUM(MAUVILLE_CITY_MART),   LOCALID_MAUVILLE_MART_CLERK },
-        { MAP_GROUP(RUSTBORO_CITY_MART),   MAP_NUM(RUSTBORO_CITY_MART),   LOCALID_RUSTBORO_MART_CLERK },
-        { MAP_GROUP(FORTREE_CITY_MART),    MAP_NUM(FORTREE_CITY_MART),    LOCALID_FORTREE_MART_CLERK },
-        { MAP_GROUP(MOSSDEEP_CITY_MART),   MAP_NUM(MOSSDEEP_CITY_MART),   LOCALID_MOSSDEEP_MART_CLERK },
-        { MAP_GROUP(SOOTOPOLIS_CITY_MART), MAP_NUM(SOOTOPOLIS_CITY_MART), LOCALID_SOOTOPOLIS_MART_CLERK },
-        { MAP_GROUP(BATTLE_FRONTIER_MART), MAP_NUM(BATTLE_FRONTIER_MART), LOCALID_BATTLE_FRONTIER_MART_CLERK }
+        { MAP_GROUP(MAP_OLDALE_TOWN_MART),     MAP_NUM(MAP_OLDALE_TOWN_MART),     LOCALID_OLDALE_MART_CLERK },
+        { MAP_GROUP(MAP_LAVARIDGE_TOWN_MART),  MAP_NUM(MAP_LAVARIDGE_TOWN_MART),  LOCALID_LAVARIDGE_MART_CLERK },
+        { MAP_GROUP(MAP_FALLARBOR_TOWN_MART),  MAP_NUM(MAP_FALLARBOR_TOWN_MART),  LOCALID_FALLARBOR_MART_CLERK },
+        { MAP_GROUP(MAP_VERDANTURF_TOWN_MART), MAP_NUM(MAP_VERDANTURF_TOWN_MART), LOCALID_VERDANTURF_MART_CLERK },
+        { MAP_GROUP(MAP_PETALBURG_CITY_MART),  MAP_NUM(MAP_PETALBURG_CITY_MART),  LOCALID_PETALBURG_MART_CLERK },
+        { MAP_GROUP(MAP_SLATEPORT_CITY_MART),  MAP_NUM(MAP_SLATEPORT_CITY_MART),  LOCALID_SLATEPORT_MART_CLERK },
+        { MAP_GROUP(MAP_MAUVILLE_CITY_MART),   MAP_NUM(MAP_MAUVILLE_CITY_MART),   LOCALID_MAUVILLE_MART_CLERK },
+        { MAP_GROUP(MAP_RUSTBORO_CITY_MART),   MAP_NUM(MAP_RUSTBORO_CITY_MART),   LOCALID_RUSTBORO_MART_CLERK },
+        { MAP_GROUP(MAP_FORTREE_CITY_MART),    MAP_NUM(MAP_FORTREE_CITY_MART),    LOCALID_FORTREE_MART_CLERK },
+        { MAP_GROUP(MAP_MOSSDEEP_CITY_MART),   MAP_NUM(MAP_MOSSDEEP_CITY_MART),   LOCALID_MOSSDEEP_MART_CLERK },
+        { MAP_GROUP(MAP_SOOTOPOLIS_CITY_MART), MAP_NUM(MAP_SOOTOPOLIS_CITY_MART), LOCALID_SOOTOPOLIS_MART_CLERK },
+        { MAP_GROUP(MAP_BATTLE_FRONTIER_MART), MAP_NUM(MAP_BATTLE_FRONTIER_MART), LOCALID_FRONTIER_MART_CLERK },
     };
 
     u8 i;
@@ -3825,7 +3873,7 @@ void GetBattlePyramidHint(void)
 // Used to avoid a potential softlock if the player respawns on Dewford with no way off
 void ResetHealLocationFromDewford(void)
 {
-    if (gSaveBlock1Ptr->lastHealLocation.mapGroup == MAP_GROUP(DEWFORD_TOWN) && gSaveBlock1Ptr->lastHealLocation.mapNum == MAP_NUM(DEWFORD_TOWN))
+    if (gSaveBlock1Ptr->lastHealLocation.mapGroup == MAP_GROUP(MAP_DEWFORD_TOWN) && gSaveBlock1Ptr->lastHealLocation.mapNum == MAP_NUM(MAP_DEWFORD_TOWN))
         SetLastHealLocationWarp(HEAL_LOCATION_PETALBURG_CITY);
 }
 
@@ -4307,8 +4355,8 @@ void GetObjectPosition(u16* xPointer, u16* yPointer, u32 localId, u32 useTemplat
 
     objectId = GetObjectEventIdByLocalId(localId);
     objEvent = &gObjectEvents[objectId];
-    *xPointer = objEvent->currentCoords.x - 7;
-    *yPointer = objEvent->currentCoords.y - 7;
+    *xPointer = objEvent->currentCoords.x - MAP_OFFSET;
+    *yPointer = objEvent->currentCoords.y - MAP_OFFSET;
 }
 
 bool32 CheckObjectAtXY(u32 x, u32 y)
@@ -4348,8 +4396,248 @@ void UseBlankMessageToCancelPokemonPic(void)
     ScriptMenu_HidePokemonPic();
 }
 
+void CanTeachMoveBoxMon(void)
+{
+    ScriptContext_Stop();
+    if(gSpecialVar_MonBoxId == 0xFF)
+    {
+        if (GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_IS_EGG))
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE_IS_EGG;
+            ScriptContext_Enable();
+        }
+        else if (MonKnowsMove(&gPlayerParty[gSpecialVar_MonBoxPos], gSpecialVar_ItemId) == TRUE)
+        {
+            gSpecialVar_Result = ALREADY_KNOWS_MOVE;
+            ScriptContext_Enable();
+        }
+        else if (CanLearnTeachableMove(GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE;
+            ScriptContext_Enable();
+        }
+        else
+        {
+            if (GiveMoveToMon(&gPlayerParty[gSpecialVar_MonBoxPos], gSpecialVar_ItemId) != MON_HAS_MAX_MOVES)
+            {
+                CreateTask(Task_LearnedMoveBoxMon, 1);
+            }
+            else
+            {
+                GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+                StringCopy(gStringVar2, GetMoveName(gSpecialVar_ItemId));
+                ShowFieldMessage(gText_PkmnNeedsToReplaceMove);
+                CreateTask(Task_ReplaceBoxMonMoveYesNo, 1);
+            }
+        }
+    }
+    else
+    {
+        if (GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_IS_EGG))
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE_IS_EGG;
+            ScriptContext_Enable();
+        }
+        else if (BoxMonKnowsMove(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gSpecialVar_ItemId) == TRUE)
+        {
+            gSpecialVar_Result = ALREADY_KNOWS_MOVE;
+            ScriptContext_Enable();
+        }
+        else if (CanLearnTeachableMove(GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE;
+            ScriptContext_Enable();
+        }
+        else
+        {
+            if (GiveMoveToBoxMon(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gSpecialVar_ItemId) != MON_HAS_MAX_MOVES)
+                CreateTask(Task_LearnedMoveBoxMon, 1);
+            else
+            {
+                GetBoxMonNickname(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gStringVar1);
+                StringCopy(gStringVar2, GetMoveName(gSpecialVar_ItemId));
+                ShowFieldMessage(gText_PkmnNeedsToReplaceMove);
+                CreateTask(Task_ReplaceBoxMonMoveYesNo, 1);
+            }
+        }
+        
+    }
+}
+
+static void Task_LearnedMoveBoxMon(u8 taskId)
+{
+    s16 move = gSpecialVar_ItemId;
+
+    if(gSpecialVar_MonBoxId == 0xFF)
+        GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+    else
+        GetBoxMonNickname(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gStringVar1);
+    StringCopy(gStringVar2, GetMoveName(move));
+    ShowFieldMessage(gText_PkmnLearnedMove4);
+    gTasks[taskId].func = Task_DoLearnedBoxMonMoveFanfareAfterText;
+}
+
+static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        PlayFanfare(MUS_LEVEL_UP);
+        gSpecialVar_Result = CAN_LEARN_MOVE;
+        DestroyTask(taskId);
+        ScriptContext_Enable();
+    }
+}
+
+static void Task_ReplaceBoxMonMoveYesNo(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DisplayYesNoMenuDefaultYes();
+        gTasks[taskId].func = Task_HandleReplaceBoxMonMoveYesNoInput;
+    }
+}
+
+static void Task_HandleReplaceBoxMonMoveYesNoInput(u8 taskId)
+{
+    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    {
+    case 0:
+        ShowFieldMessage(gText_WhichMoveToForget);
+        gTasks[taskId].func = Task_ShowSummaryScreenToForgetBoxMonMove;
+        break;
+    case MENU_B_PRESSED:
+        PlaySE(SE_SELECT);
+        // fallthrough
+    case 1:
+        StopLearningBoxMonMovePrompt(taskId);
+        break;
+    }
+}
+
+static void Task_ShowSummaryScreenToForgetBoxMonMove(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DestroyTask(taskId);
+        if(gSpecialVar_MonBoxId == 0xFF)
+            ShowSelectMovePokemonSummaryScreen(gPlayerParty, gSpecialVar_MonBoxPos, gPlayerPartyCount - 1, CB2_ReturnToFieldWhileLearningMove, gSpecialVar_ItemId);
+        else
+            ShowSelectMoveBoxPokemonSummaryScreen(GetBoxedMonPtr(StorageGetCurrentBox(), 0), gSpecialVar_MonBoxPos, IN_BOX_COUNT - 1, CB2_ReturnToFieldWhileLearningMove, gSpecialVar_ItemId);
+    }
+}
+
+static void CB2_ReturnToFieldWhileLearningMove(void)
+{
+    if (!gPaletteFade.active)
+    {
+        gFieldCallback = Task_ReturnToFieldWhileLearningMove;
+        SetMainCallback2(CB2_ReturnToField);
+    }
+}
+
+static void Task_ReturnToFieldWhileLearningMove(void)
+{
+    if (GetMoveSlotToReplace() < MAX_MON_MOVES)
+    {
+        if(gSpecialVar_MonBoxId == 0xFF)
+        {
+            GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+            StringCopy(gStringVar2, GetMoveName(GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_MOVE1 + GetMoveSlotToReplace())));
+        }
+        else
+        {
+            GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+            StringCopy(gStringVar2, GetMoveName(GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + GetMoveSlotToReplace())));
+        }
+        ShowFieldMessage(gText_12PoofForgotMove);
+        CreateTask(Task_BoxMonReplaceMove,1);
+    }
+    else
+        CreateTask(StopLearningBoxMonMovePrompt,1);
+}
+
+static void Task_BoxMonReplaceMove(u8 taskId)
+{
+
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        u16 move = gSpecialVar_ItemId;
+        if(gSpecialVar_MonBoxId == 0xFF)
+        {
+            RemoveMonPPBonus(&gPlayerParty[gSpecialVar_MonBoxPos], GetMoveSlotToReplace());
+            SetMonMoveSlot(&gPlayerParty[gSpecialVar_MonBoxPos], move, GetMoveSlotToReplace()); 
+        }
+        else
+        {
+            struct BoxPokemon *mon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+
+            u8 ppBonuses = GetBoxMonData(mon, MON_DATA_PP_BONUSES);
+            ppBonuses &= gPPUpClearMask[GetMoveSlotToReplace()];
+            SetBoxMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
+
+            SetBoxMonData(mon, MON_DATA_MOVE1 + GetMoveSlotToReplace(), &move);
+            SetBoxMonData(mon, MON_DATA_PP1 + GetMoveSlotToReplace(), &gMovesInfo[move].pp);
+        }
+     
+        Task_LearnedMoveBoxMon(taskId);
+    }
+}
+
+static void StopLearningBoxMonMovePrompt(u8 taskId)
+{
+    StringCopy(gStringVar2, GetMoveName(gSpecialVar_ItemId));
+    ShowFieldMessage(gText_StopLearningMove2);
+    gTasks[taskId].func = Task_StopLearningBoxMonMoveYesNo;
+}
+
+static void Task_StopLearningBoxMonMoveYesNo(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DisplayYesNoMenuDefaultYes();
+        gTasks[taskId].func = Task_HandleStopLearningBoxMonMoveYesNoInput;
+    }
+}
+
+static void Task_HandleStopLearningBoxMonMoveYesNoInput(u8 taskId)
+{
+    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    {
+    case 0:
+        if(gSpecialVar_MonBoxId == 0xFF)
+            GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+        else
+            GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+        ShowFieldMessage(gText_MoveNotLearned);
+        gSpecialVar_Result = 4;
+        gTasks[taskId].func = Task_DidntLearnMove;
+        break;
+    case MENU_B_PRESSED:
+        PlaySE(SE_SELECT);
+        // fallthrough
+    case 1:
+        if(gSpecialVar_MonBoxId == 0xFF)
+            GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+        else
+            GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+        ShowFieldMessage(gText_PkmnNeedsToReplaceMove);
+        gTasks[taskId].func = Task_ReplaceBoxMonMoveYesNo;
+        break;
+    }
+}
+
+static void Task_DidntLearnMove(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DestroyTask(taskId);
+        ScriptContext_Enable();
+    }
+}
+
 void EnterCode(void)
 {
+    StringCopy(gStringVar2, COMPOUND_STRING(""));
     DoNamingScreen(NAMING_SCREEN_CODE, gStringVar2, 0, 0, 0, CB2_ReturnToFieldContinueScript);
 }
 
@@ -4360,4 +4648,17 @@ void GetCodeFeedback(void)
         gSpecialVar_Result = 1;
     else
         gSpecialVar_Result = 0;
+}
+
+void SetHiddenNature(void)
+{
+    u32 hiddenNature = gSpecialVar_Result;
+    SetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HIDDEN_NATURE, &hiddenNature);
+    CalculateMonStats(&gPlayerParty[gSpecialVar_0x8004]);
+}
+
+void SetAbility(void)
+{
+    u32 ability = gSpecialVar_Result;
+    SetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ABILITY_NUM, &ability);
 }

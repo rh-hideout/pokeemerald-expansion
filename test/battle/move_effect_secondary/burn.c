@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Ember inflicts burn")
 SINGLE_BATTLE_TEST("Ember cannot burn a Fire-type Pokémon")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_CHARMANDER].types[0] == TYPE_FIRE);
+        ASSUME(GetSpeciesType(SPECIES_CHARMANDER, 0) == TYPE_FIRE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {
@@ -43,7 +43,7 @@ DOUBLE_BATTLE_TEST("Lava Plume inflicts burn to all adjacent battlers")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_LAVA_PLUME, MOVE_EFFECT_BURN) == TRUE);
-        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Scald shouldn't burn a Water-type Pokémon")
 #endif
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_SQUIRTLE].types[0] == TYPE_WATER);
+        ASSUME(GetSpeciesType(SPECIES_SQUIRTLE, 0) == TYPE_WATER);
         ASSUME(MoveHasAdditionalEffect(MOVE_SCALD, MOVE_EFFECT_BURN) == TRUE);
         ASSUME(GetMoveType(MOVE_SCALD) == TYPE_WATER);
         PLAYER(SPECIES_SQUIRTLE);

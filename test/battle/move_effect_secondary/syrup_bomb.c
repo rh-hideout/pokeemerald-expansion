@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Syrup Bomb is prevented by Bulletproof")
 SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, White Smoke or Full Metal Body")
 {
     u32 species;
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BELDUM; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
@@ -200,14 +200,14 @@ SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user faints")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB);
-               MOVE(opponent, MOVE_TACKLE);
+               MOVE(opponent, MOVE_SCRATCH);
                SEND_OUT(player, 1);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
         MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
         MESSAGE("Wobbuffet fainted!");
         SEND_IN_MESSAGE("Wynaut");

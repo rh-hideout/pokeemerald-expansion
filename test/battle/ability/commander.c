@@ -46,11 +46,11 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri avoids moves targetted towards it")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); MOVE(opponentRight, MOVE_POUND, target: playerRight); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(opponentRight, MOVE_POUND, target: playerRight); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         MESSAGE("The opposing Wobbuffet's attack missed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentRight);
     }
@@ -66,9 +66,9 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take residual damage from a f
     } WHEN {
         TURN { }
     } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
-        ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
         MESSAGE("Dondozo is buffeted by the sandstorm!");
         MESSAGE("Tatsugiri is buffeted by the sandstorm!");
         MESSAGE("The opposing Wobbuffet is buffeted by the sandstorm!");
@@ -99,11 +99,11 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri still avoids moves even when the attacke
         OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         MESSAGE("The opposing Machamp's attack missed!");
     }
 }
@@ -160,7 +160,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerRight, MOVE_TACKLE, target: opponentLeft); }
+        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
@@ -175,7 +175,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
 DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move if Dondozo faints")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_DONDOZO) { HP(1); };
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_WYNAUT);
@@ -308,17 +308,17 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Haze while controll
 DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot)")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentRight, MOVE_TACKLE, target: opponentLeft); }
+        TURN { MOVE(opponentRight, MOVE_SCRATCH, target: opponentLeft); }
         TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_SURF); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
@@ -331,17 +331,17 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot)")
 DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Right Slot)")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_DONDOZO);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentRight, MOVE_TACKLE, target: opponentLeft); }
+        TURN { MOVE(opponentRight, MOVE_SCRATCH, target: opponentLeft); }
         TURN { SWITCH(playerRight, 2); MOVE(opponentLeft, MOVE_SURF); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("The opposing Wobbuffet's attack missed!");
@@ -362,16 +362,16 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri does not attack if Dondozo faints the sa
     } WHEN {
         TURN {
             SWITCH(playerLeft, 2);
-            MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft);
-            MOVE(opponentRight, MOVE_TACKLE, target: playerRight);
+            MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);
+            MOVE(opponentRight, MOVE_SCRATCH, target: playerRight);
             MOVE(playerRight, MOVE_CELEBRATE);
             SEND_OUT(playerLeft, 0);
         }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft);
         MESSAGE("Dondozo fainted!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         HP_BAR(playerRight);
         NOT MESSAGE("Tatsugiri used Celebrate!");
     }
@@ -432,7 +432,7 @@ DOUBLE_BATTLE_TEST("Commander will not activate if Dondozo fainted right before 
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentRight, MOVE_TACKLE, target: playerRight); MOVE(playerLeft, MOVE_SHED_TAIL); SEND_OUT(playerLeft, 2); SEND_OUT(playerRight, 3); }
+        TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerRight); MOVE(playerLeft, MOVE_SHED_TAIL); SEND_OUT(playerLeft, 2); SEND_OUT(playerRight, 3); }
     } SCENE {
         NOT ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
     }

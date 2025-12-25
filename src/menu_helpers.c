@@ -85,9 +85,6 @@ static const struct SpriteTemplate sSpriteTemplate_SwapLine =
     .paletteTag = TAG_SWAP_LINE,
     .oam = &sOamData_SwapLine,
     .anims = sAnims_SwapLine,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // code
@@ -279,8 +276,8 @@ bool8 IsHoldingItemAllowed(u16 itemId)
 {
     // e-Reader Enigma Berry can't be held in link areas
     if (itemId == ITEM_ENIGMA_BERRY_E_READER
-     && ((gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(TRADE_CENTER)
-       && gSaveBlock1Ptr->location.mapNum == MAP_NUM(TRADE_CENTER))
+     && ((gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_TRADE_CENTER)
+       && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_TRADE_CENTER))
        || InUnionRoom() == TRUE))
         return FALSE;
     else
@@ -322,13 +319,12 @@ bool8 MenuHelpers_ShouldWaitForLinkRecv(void)
 void SetItemListPerPageCount(struct ItemSlot *slots, u8 slotsCount, u8 *pageItems, u8 *totalItems, u8 maxPerPage)
 {
     u16 i;
-    struct ItemSlot *slots_ = slots;
 
     // Count the number of non-empty item slots
     *totalItems = 0;
     for (i = 0; i < slotsCount; i++)
     {
-        if (slots_[i].itemId != ITEM_NONE)
+        if (slots[i].itemId != ITEM_NONE)
             (*totalItems)++;
     }
     (*totalItems)++; // + 1 for 'Cancel'

@@ -131,11 +131,11 @@ static const struct BgTemplate sBgTemplates[4] = {
     },
 };
 
-static const u16 sGround_Tilemap[] = INCBIN_U16("graphics/cable_car/ground.bin.lz");
-static const u16 sTrees_Tilemap[] = INCBIN_U16("graphics/cable_car/trees.bin.lz");
-static const u16 sBgMountains_Tilemap[] = INCBIN_U16("graphics/cable_car/bg_mountains.bin.lz");
+static const u16 sGround_Tilemap[] = INCBIN_U16("graphics/cable_car/ground.bin.smolTM");
+static const u16 sTrees_Tilemap[] = INCBIN_U16("graphics/cable_car/trees.bin.smolTM");
+static const u16 sBgMountains_Tilemap[] = INCBIN_U16("graphics/cable_car/bg_mountains.bin.smolTM");
 static const u16 sPylonTop_Tilemap[] = INCBIN_U16("graphics/cable_car/pylon_top.bin");
-static const u16 sPylonPole_Tilemap[] = INCBIN_U16("graphics/cable_car/pylon_pole.bin.lz");
+static const u16 sPylonPole_Tilemap[] = INCBIN_U16("graphics/cable_car/pylon_pole.bin.smolTM");
 
 static const struct CompressedSpriteSheet sSpriteSheets[] = {
     { gCableCar_Gfx,      0x800, TAG_CABLE_CAR },
@@ -197,18 +197,12 @@ static const struct SpriteTemplate sSpriteTemplates_CableCar[] =
         .tileTag = TAG_CABLE_CAR,
         .paletteTag = TAG_CABLE_CAR,
         .oam = &sOam_CableCar,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_CableCar,
     },
     {
         .tileTag = TAG_DOOR,
         .paletteTag = TAG_CABLE_CAR,
         .oam = &sOam_CableCarDoor,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_CableCar,
     },
 };
@@ -218,9 +212,6 @@ static const struct SpriteTemplate sSpriteTemplate_Cable =
     .tileTag = TAG_CABLE,
     .paletteTag = TAG_CABLE_CAR,
     .oam = &sOam_Cable,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Cable,
 };
 

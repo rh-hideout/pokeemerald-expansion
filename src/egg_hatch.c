@@ -33,6 +33,7 @@
 #include "naming_screen.h"
 #include "pokemon_storage_system.h"
 #include "field_screen_effect.h"
+#include "trade.h"
 #include "data.h"
 #include "battle.h" // to get rid of later
 #include "constants/rgb.h"
@@ -63,7 +64,6 @@ struct EggHatchData
     u8 textColor[3];
 };
 
-extern const u32 gTradePlatform_Tilemap[];
 extern const u8 gText_HatchedFromEgg[];
 extern const u8 gText_NicknameHatchPrompt[];
 
@@ -169,9 +169,6 @@ static const struct SpriteTemplate sSpriteTemplate_Egg =
     .paletteTag = PALTAG_EGG,
     .oam = &sOamData_Egg,
     .anims = sSpriteAnimTable_Egg,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOamData_EggShard =
@@ -229,8 +226,6 @@ static const struct SpriteTemplate sSpriteTemplate_EggShard =
     .paletteTag = PALTAG_EGG,
     .oam = &sOamData_EggShard,
     .anims = sSpriteAnimTable_EggShard,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_EggShard
 };
 
@@ -362,10 +357,10 @@ static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
 static void AddHatchedMonToParty(u8 id)
 {
     u8 isEgg = 0x46; // ?
-    u16 species;
+    enum NationalDexOrder species;
     u8 name[POKEMON_NAME_LENGTH + 1];
     u16 metLevel;
-    u8 metLocation;
+    metloc_u8_t metLocation;
     struct Pokemon *mon = &gPlayerParty[id];
 
     CreateHatchedMon(mon, &gEnemyParty[0]);
@@ -445,9 +440,9 @@ static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesL
         // Load mon sprite gfx
         {
             u32 pid = GetMonData(mon, MON_DATA_PERSONALITY);
-            HandleLoadSpecialPokePic(TRUE,
+            HandleLoadSpecialPokePicIsEgg(TRUE,
                                      gMonSpritesGfxPtr->spritesGfx[(useAlt * 2) + B_POSITION_OPPONENT_LEFT],
-                                     species, pid);
+                                     species, pid, FALSE);
             LoadSpritePaletteWithTag(GetMonFrontSpritePal(mon), species);
             *speciesLoc = species;
         }
@@ -537,11 +532,43 @@ static void CB2_LoadEggHatch(void)
         gMain.state++;
         break;
     case 3:
-        LoadSpriteSheet(&sEggHatch_Sheet);
-        LoadSpriteSheet(&sEggShards_Sheet);
-        LoadSpritePalette(&sEgg_SpritePalette);
+    {
+        u32 species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
+        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
+        {
+            u32 *tempSprite = malloc_and_decompress(gEggDatas[gSpeciesInfo[species].eggId].eggHatchGfx, NULL);
+            struct SpriteSheet tempSheet;
+            tempSheet.data = tempSprite;
+            tempSheet.size = 2048;
+            tempSheet.tag = GFXTAG_EGG;
+            LoadSpriteSheet(&tempSheet);
+            Free(tempSprite);
+
+            struct SpritePalette tempPal;
+            tempPal.data = gEggDatas[gSpeciesInfo[species].eggId].eggHatchPal;
+            tempPal.tag = PALTAG_EGG;
+            LoadSpritePalette(&tempPal);
+            if (gEggDatas[gSpeciesInfo[species].eggId].eggShardsGfx != NULL)
+            {
+                tempSheet.data = gEggDatas[gSpeciesInfo[species].eggId].eggShardsGfx;
+                tempSheet.size = 128;
+                tempSheet.tag = GFXTAG_EGG_SHARD;
+                LoadSpriteSheet(&tempSheet);
+            }
+            else
+            {
+                LoadSpriteSheet(&sEggShards_Sheet);
+            }
+        }
+        else
+        {
+            LoadSpriteSheet(&sEggHatch_Sheet);
+            LoadSpriteSheet(&sEggShards_Sheet);
+            LoadSpritePalette(&sEgg_SpritePalette);
+        }
         gMain.state++;
         break;
+    }
     case 4:
         CopyBgTilemapBufferToVram(0);
         AddHatchedMonToParty(sEggHatchData->eggPartyId);
@@ -931,7 +958,7 @@ u8 GetEggCyclesToSubtract(void)
     {
         if (!GetMonData(&gPlayerParty[i], MON_DATA_SANITY_IS_EGG))
         {
-            u16 ability = GetMonAbility(&gPlayerParty[i]);
+            enum Ability ability = GetMonAbility(&gPlayerParty[i]);
             if (ability == ABILITY_MAGMA_ARMOR
              || ability == ABILITY_FLAME_BODY
              || ability == ABILITY_STEAM_ENGINE)

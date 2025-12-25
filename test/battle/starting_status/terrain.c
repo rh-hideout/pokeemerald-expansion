@@ -2,9 +2,7 @@
 #include "event_data.h"
 #include "test/battle.h"
 
-#if B_VAR_STARTING_STATUS != 0
-
-SINGLE_BATTLE_TEST("B_VAR_STARTING_STATUS starts a chosen terrain at the beginning of battle and lasts infinitely long")
+SINGLE_BATTLE_TEST("SetStartingStatus starts a chosen terrain at the beginning of battle and lasts infinitely long if it's defined as such")
 {
     u16 terrain;
 
@@ -12,9 +10,9 @@ SINGLE_BATTLE_TEST("B_VAR_STARTING_STATUS starts a chosen terrain at the beginni
     PARAMETRIZE { terrain = STARTING_STATUS_PSYCHIC_TERRAIN; }
     PARAMETRIZE { terrain = STARTING_STATUS_MISTY_TERRAIN; }
     PARAMETRIZE { terrain = STARTING_STATUS_ELECTRIC_TERRAIN; }
+    PARAMETRIZE { terrain = STARTING_STATUS_ELECTRIC_TERRAIN_TEMPORARY; }
 
-    VarSet(B_VAR_STARTING_STATUS, terrain);
-    VarSet(B_VAR_STARTING_STATUS_TIMER, 0);
+    SetStartingStatus(terrain);
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -29,30 +27,36 @@ SINGLE_BATTLE_TEST("B_VAR_STARTING_STATUS starts a chosen terrain at the beginni
         TURN { ; }
         TURN { ; }
     } SCENE {
-        switch (terrain) {
-            case STARTING_STATUS_GRASSY_TERRAIN:
-                MESSAGE("Grass grew to cover the battlefield!");
-                break;
-            case STARTING_STATUS_PSYCHIC_TERRAIN:
-                MESSAGE("The battlefield got weird!");
-                break;
-            case STARTING_STATUS_MISTY_TERRAIN:
-                MESSAGE("Mist swirled around the battlefield!");
-                break;
-            case STARTING_STATUS_ELECTRIC_TERRAIN:
-                MESSAGE("An electric current is running across the battlefield!");
-                break;
+        switch (terrain)
+        {
+        case STARTING_STATUS_GRASSY_TERRAIN:
+            MESSAGE("The battlefield is covered with grass!");
+            break;
+        case STARTING_STATUS_PSYCHIC_TERRAIN:
+            MESSAGE("The battlefield seems weird!");
+            break;
+        case STARTING_STATUS_MISTY_TERRAIN:
+            MESSAGE("Mist swirls around the battlefield!");
+            break;
+        case STARTING_STATUS_ELECTRIC_TERRAIN:
+            MESSAGE("An electric current is running across the battlefield!");
+            break;
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
-            MESSAGE("The weirdness disappeared from the battlefield!");
+        if (terrain != STARTING_STATUS_ELECTRIC_TERRAIN_TEMPORARY) {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
+                MESSAGE("The weirdness disappeared from the battlefield!");
+                MESSAGE("The electricity disappeared from the battlefield.");
+                MESSAGE("The mist disappeared from the battlefield.");
+                MESSAGE("The grass disappeared from the battlefield.");
+            }
+        } else {
             MESSAGE("The electricity disappeared from the battlefield.");
-            MESSAGE("The mist disappeared from the battlefield.");
-            MESSAGE("The grass disappeared from the battlefield.");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
         }
     } THEN {
-        VarSet(B_VAR_STARTING_STATUS, 0);
+        ResetStartingStatuses();
     }
 }
 
@@ -63,8 +67,7 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
     PARAMETRIZE { viaMove = TRUE; }
     PARAMETRIZE { viaMove = FALSE; }
 
-    VarSet(B_VAR_STARTING_STATUS, STARTING_STATUS_ELECTRIC_TERRAIN);
-    VarSet(B_VAR_STARTING_STATUS_TIMER, 0);
+    SetStartingStatus(STARTING_STATUS_ELECTRIC_TERRAIN);
 
     GIVEN {
         PLAYER(SPECIES_TAPU_BULU) { Ability(viaMove == TRUE ? ABILITY_TELEPATHY : ABILITY_GRASSY_SURGE); }
@@ -106,8 +109,6 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
         MESSAGE("The grass disappeared from the battlefield.");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
     } THEN {
-        VarSet(B_VAR_STARTING_STATUS, 0);
+        ResetStartingStatuses();
     }
 }
-
-#endif // B_VAR_STARTING_STATUS

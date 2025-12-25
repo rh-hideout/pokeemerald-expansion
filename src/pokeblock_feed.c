@@ -524,7 +524,6 @@ static const struct SpriteTemplate sSpriteTemplate_Pokeblock =
     .paletteTag = TAG_POKEBLOCK,
     .oam = &sOamData_Pokeblock,
     .anims = sAnims_Pokeblock,
-    .images = NULL,
     .affineAnims = sAffineAnims_Pokeblock,
     .callback = SpriteCB_ThrownPokeblock
 };
@@ -691,18 +690,18 @@ static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
         break;
     case 6:
         ResetTempTileDataBuffers();
-        DecompressAndCopyTileDataToVram(1, gBattleTerrainTiles_Building, 0, 0, 0);
+        DecompressAndCopyTileDataToVram(1, gBattleEnvironmentTiles_Building, 0, 0, 0);
         sPokeblockFeed->loadGfxState++;
         break;
     case 7:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LZDecompressWram(gPokeblockFeedBg_Tilemap, sPokeblockFeed->tilemapBuffer);
+            DecompressDataWithHeaderWram(gPokeblockFeedBg_Tilemap, sPokeblockFeed->tilemapBuffer);
             sPokeblockFeed->loadGfxState++;
         }
         break;
     case 8:
-        LoadPalette(gBattleTerrainPalette_Frontier, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+        LoadPalette(gBattleEnvironmentPalette_Frontier, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
         sPokeblockFeed->loadGfxState = 0;
         return TRUE;
     }

@@ -687,19 +687,19 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .trainerOffset = 0,
         .frontPic = gMonFrontPic_OinkologneM,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
-        .frontPicYOffset = 6,
+        .frontPicYOffset = 7,
         .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
         .backPic = gMonBackPic_OinkologneM,
         .backPicSize = MON_COORDS_SIZE(64, 64),
-        .backPicYOffset = 8,
+        .backPicYOffset = 12,
         //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_OinkologneM,
         .shinyPalette = gMonShinyPalette_OinkologneM,
         .iconSprite = gMonIcon_OinkologneM,
         .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        SHADOW(-2, 6, SHADOW_SIZE_M)
+        SHADOW(5, 6, SHADOW_SIZE_M)
         FOOTPRINT(Oinkologne)
         OVERWORLD(
             sPicTable_OinkologneM,
@@ -751,19 +751,19 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .trainerOffset = 0,
         .frontPic = gMonFrontPic_OinkologneF,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
-        .frontPicYOffset = 6,
+        .frontPicYOffset = 7,
         .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
         .backPic = gMonBackPic_OinkologneF,
         .backPicSize = MON_COORDS_SIZE(64, 64),
-        .backPicYOffset = 7,
+        .backPicYOffset = 12,
         //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_OinkologneF,
         .shinyPalette = gMonShinyPalette_OinkologneF,
         .iconSprite = gMonIcon_OinkologneF,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        SHADOW(3, 7, SHADOW_SIZE_M)
+        SHADOW(5, 6, SHADOW_SIZE_M)
         FOOTPRINT(Oinkologne)
         OVERWORLD(
             sPicTable_OinkologneF,
@@ -4003,10 +4003,9 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .trainerOffset = 0,
         .frontPic = gMonFrontPic_Bombirdier,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
-        .frontPicYOffset = 1,
+        .frontPicYOffset = 0,
         .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .enemyMonElevation = 8,
         .backPic = gMonBackPic_Bombirdier,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 4,
@@ -4016,7 +4015,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .iconSprite = gMonIcon_Bombirdier,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        SHADOW(1, 18, SHADOW_SIZE_M)
+        SHADOW(8, 12, SHADOW_SIZE_M)
         FOOTPRINT(Bombirdier)
         OVERWORLD(
             sPicTable_Bombirdier,
@@ -5316,19 +5315,19 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .trainerOffset = 0,
         .frontPic = gMonFrontPic_GreatTusk,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
-        .frontPicYOffset = 5,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
         .backPic = gMonBackPic_GreatTusk,
         .backPicSize = MON_COORDS_SIZE(64, 64),
-        .backPicYOffset = 4,
+        .backPicYOffset = 9,
         //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_GreatTusk,
         .shinyPalette = gMonShinyPalette_GreatTusk,
         .iconSprite = gMonIcon_GreatTusk,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        SHADOW(3, 6, SHADOW_SIZE_L)
+        SHADOW(2, 13, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(GreatTusk)
         OVERWORLD(
             sPicTable_GreatTusk,
@@ -6123,19 +6122,19 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .trainerOffset = 0,
         .frontPic = gMonFrontPic_Frigibax,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
-        .frontPicYOffset = 7,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPicYOffset = 13,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
         .backPic = gMonBackPic_Frigibax,
         .backPicSize = MON_COORDS_SIZE(64, 64),
-        .backPicYOffset = 11,
+        .backPicYOffset = 13,
         //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_Frigibax,
         .shinyPalette = gMonShinyPalette_Frigibax,
         .iconSprite = gMonIcon_Frigibax,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,
-        SHADOW(0, 7, SHADOW_SIZE_S)
+        SHADOW(2, -1, SHADOW_SIZE_S)
         FOOTPRINT(Frigibax)
         OVERWORLD(
             sPicTable_Frigibax,
@@ -6526,7 +6525,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_WoChien,
             gShinyOverworldPalette_WoChien
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sWoChienLevelUpLearnset,
         .teachableLearnset = sWoChienTeachableLearnset,
@@ -6593,7 +6592,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_ChienPao,
             gShinyOverworldPalette_ChienPao
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sChienPaoLevelUpLearnset,
         .teachableLearnset = sChienPaoTeachableLearnset,
@@ -6660,7 +6659,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_TingLu,
             gShinyOverworldPalette_TingLu
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sTingLuLevelUpLearnset,
         .teachableLearnset = sTingLuTeachableLearnset,
@@ -6728,7 +6727,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_ChiYu,
             gShinyOverworldPalette_ChiYu
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sChiYuLevelUpLearnset,
         .teachableLearnset = sChiYuTeachableLearnset,
@@ -6929,7 +6928,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Koraidon,
             gShinyOverworldPalette_Koraidon
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sKoraidonLevelUpLearnset,
@@ -6977,6 +6976,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .frontPicYOffset = 0,
         .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 8,
         .backPic = gMonBackPic_Miraidon,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
@@ -6986,7 +6986,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .iconSprite = gMonIcon_Miraidon,
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        SHADOW(10, 14, SHADOW_SIZE_L)
+        SHADOW(3, 22, SHADOW_SIZE_L)
         FOOTPRINT(Miraidon)
         OVERWORLD(
             sPicTable_Miraidon,
@@ -6997,7 +6997,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Miraidon,
             gShinyOverworldPalette_Miraidon
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sMiraidonLevelUpLearnset,
@@ -7459,7 +7459,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Okidogi,
             gShinyOverworldPalette_Okidogi
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sOkidogiLevelUpLearnset,
         .teachableLearnset = sOkidogiTeachableLearnset,
@@ -7526,7 +7526,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Munkidori,
             gShinyOverworldPalette_Munkidori
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sMunkidoriLevelUpLearnset,
         .teachableLearnset = sMunkidoriTeachableLearnset,
@@ -7593,7 +7593,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Fezandipiti,
             gShinyOverworldPalette_Fezandipiti
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sFezandipitiLevelUpLearnset,
         .teachableLearnset = sFezandipitiTeachableLearnset,
@@ -7661,15 +7661,15 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .teachableLearnset = sOgerponTeachableLearnset,                                                                 \
         .formSpeciesIdTable = sOgerponFormSpeciesIdTable,                                                               \
         .formChangeTable = sOgerponFormChangeTable,                                                                     \
-        .isLegendary = TRUE,                                                                                            \
+        .isSubLegendary = TRUE,                                                                                         \
         .isTeraForm = isTeraform,                                                                                       \
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,                                                                   \
     }
 
-    [SPECIES_OGERPON_TEAL]             = OGERPON_SPECIES_INFO(Teal,        Teal,            TYPE_GRASS, ABILITY_DEFIANT,                        BODY_COLOR_GREEN, 1, 7, 1, FALSE),
-    [SPECIES_OGERPON_WELLSPRING]       = OGERPON_SPECIES_INFO(Wellspring,  Wellspring,      TYPE_WATER, ABILITY_WATER_ABSORB,                   BODY_COLOR_BLUE,  1, 7, 0, FALSE),
-    [SPECIES_OGERPON_HEARTHFLAME]      = OGERPON_SPECIES_INFO(Hearthflame, Hearthflame,     TYPE_FIRE,  ABILITY_MOLD_BREAKER,                   BODY_COLOR_RED,   1, 7, 0, FALSE),
-    [SPECIES_OGERPON_CORNERSTONE]      = OGERPON_SPECIES_INFO(Cornerstone, Cornerstone,     TYPE_ROCK,  ABILITY_STURDY,                         BODY_COLOR_GRAY,  1, 7, 0, FALSE),
+    [SPECIES_OGERPON_TEAL]             = OGERPON_SPECIES_INFO(Teal,        Teal,            TYPE_GRASS, ABILITY_DEFIANT,                        BODY_COLOR_GREEN, 1, 6, 1, FALSE),
+    [SPECIES_OGERPON_WELLSPRING]       = OGERPON_SPECIES_INFO(Wellspring,  Wellspring,      TYPE_WATER, ABILITY_WATER_ABSORB,                   BODY_COLOR_BLUE,  1, 6, 0, FALSE),
+    [SPECIES_OGERPON_HEARTHFLAME]      = OGERPON_SPECIES_INFO(Hearthflame, Hearthflame,     TYPE_FIRE,  ABILITY_MOLD_BREAKER,                   BODY_COLOR_RED,   1, 6, 0, FALSE),
+    [SPECIES_OGERPON_CORNERSTONE]      = OGERPON_SPECIES_INFO(Cornerstone, Cornerstone,     TYPE_ROCK,  ABILITY_STURDY,                         BODY_COLOR_GRAY,  1, 6, 0, FALSE),
 #if P_TERA_FORMS
     [SPECIES_OGERPON_TEAL_TERA]        = OGERPON_SPECIES_INFO(Teal,        TealTera,        TYPE_GRASS, ABILITY_EMBODY_ASPECT_TEAL_MASK,        BODY_COLOR_GREEN, 0, 0, 1, TRUE),
     [SPECIES_OGERPON_WELLSPRING_TERA]  = OGERPON_SPECIES_INFO(Wellspring,  WellspringTera,  TYPE_WATER, ABILITY_EMBODY_ASPECT_WELLSPRING_MASK,  BODY_COLOR_BLUE,  0, 0, 0, TRUE),
@@ -7984,20 +7984,19 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .trainerOffset = 7,
         .frontPic = gMonFrontPic_TerapagosNormal,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
-        .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .enemyMonElevation = 1,
+        .frontPicYOffset = 10,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
         .backPic = gMonBackPic_TerapagosNormal,
         .backPicSize = MON_COORDS_SIZE(64, 64),
-        .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_NONE,
+        .backPicYOffset = 9,
+        //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_TerapagosNormal,
         .shinyPalette = gMonShinyPalette_TerapagosNormal,
         .iconSprite = gMonIcon_TerapagosNormal,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-        SHADOW(3, 13, SHADOW_SIZE_L)
+        SHADOW(0, 2, SHADOW_SIZE_M)
         FOOTPRINT(TerapagosNormal)
         OVERWORLD(
             sPicTable_TerapagosNormal,
@@ -8008,7 +8007,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_TerapagosNormal,
             gShinyOverworldPalette_TerapagosNormal
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sTerapagosLevelUpLearnset,
@@ -8056,19 +8055,19 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .frontPic = gMonFrontPic_TerapagosTerastal,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 8,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .enemyMonElevation = 1,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 8,
         .backPic = gMonBackPic_TerapagosTerastal,
         .backPicSize = MON_COORDS_SIZE(64, 64),
-        .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_NONE,
+        .backPicYOffset = 11,
+        //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_TerapagosTerastal,
         .shinyPalette = gMonShinyPalette_TerapagosTerastal,
         .iconSprite = gMonIcon_TerapagosTerastal,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        SHADOW(-4, 4, SHADOW_SIZE_L)
+        SHADOW(-4, 8, SHADOW_SIZE_L)
         FOOTPRINT(TerapagosTerastal)
         OVERWORLD(
             sPicTable_TerapagosTerastal,
@@ -8079,7 +8078,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_TerapagosTerastal,
             gShinyOverworldPalette_TerapagosTerastal
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sTerapagosLevelUpLearnset,
@@ -8139,7 +8138,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 12, SHADOW_SIZE_L)
         FOOTPRINT(TerapagosStellar)
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isTeraForm = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
