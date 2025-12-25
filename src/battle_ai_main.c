@@ -358,22 +358,6 @@ void SetupAIPredictionData(u32 battler, enum SwitchType switchType)
     gAiLogicData->aiPredictionInProgress = FALSE;
 }
 
-static void TryResetComboAttackState(u32 battler, u32 moveIndex)
-{
-    enum BattleMoveEffects effect = GetMoveEffect(gBattleMons[battler].moves[moveIndex]);
-
-    // partner (high id) didn't choose Round, recalculate move
-    if (gAiLogicData->comboState == COMBO_FIRST_BATTLER_SCORE_INCREASE
-     && effect != EFFECT_PLEDGE
-     && effect != EFFECT_ROUND
-     && effect != EFFECT_FUSION_COMBO)
-    {
-        u32 partner = BATTLE_PARTNER(battler);
-        gAiLogicData->comboState = COMBO_SECOND_BATTLER_NO_SCORE_INCREASE;
-        gAiBattleData->chosenMoveIndex[partner] = BattleAI_ChooseMoveIndex(partner);
-    }
-}
-
 void ComputeBattlerDecisions(u32 battler)
 {
     bool32 isAiBattler = (gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart()) && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE));
@@ -399,8 +383,6 @@ void ComputeBattlerDecisions(u32 battler)
 
         // AI's move scoring
         gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
-        if (IsDoubleBattle())
-            TryResetComboAttackState(battler, gAiBattleData->chosenMoveIndex[battler]);
         if (isAiBattler)
             BattlerChooseNonMoveAction();
         ModifySwitchAfterMoveScoring(battler);
@@ -420,10 +402,33 @@ void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move)
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
+u32 GetAllyMove(u32 battler)
+{
+    u32 partnerBattler = BATTLE_PARTNER(battler);
+    gAiLogicData->partnerMove = MOVE_NONE; // Make sure no garbage is stored for simulation
+
+    if (!IsBattlerAlive(partnerBattler) || !IsAiBattlerAware(partnerBattler))
+        return MOVE_NONE;
+
+    if (partnerBattler > battler) // Battler with the lower id chooses the move first.
+    {
+        gAiLogicData->partnerMoveSimulation = TRUE;
+        u32 simulatedMoveIndex = ChooseMoveOrAction_Doubles(partnerBattler);
+        gAiLogicData->partnerMoveSimulation = FALSE;
+        return gBattleMons[partnerBattler].moves[simulatedMoveIndex];
+    }
+
+    u32 moveIndex = gAiBattleData->chosenMoveIndex[partnerBattler];
+    return gBattleMons[partnerBattler].moves[moveIndex];
+}
+
 static u32 ChooseMoveOrAction(u32 battler)
 {
     if (IsDoubleBattle())
+    {
+        gAiLogicData->partnerMove = GetAllyMove(battler);
         return ChooseMoveOrAction_Doubles(battler);
+    }
     return ChooseMoveOrAction_Singles(battler);
 }
 
@@ -827,7 +832,7 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
 
     gAiThinkingStruct->aiLogicId = 0;
     gAiThinkingStruct->movesetIndex = 0;
-    gAiLogicData->partnerMove = 0;   // no ally
+    gAiLogicData->partnerMove = MOVE_NONE;   // no ally
 
     while (flags != 0)
     {
@@ -907,7 +912,6 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler)
 
             gBattlerTarget = battlerIndex;
 
-            gAiLogicData->partnerMove = GetAllyChosenMove(battler);
             gAiThinkingStruct->aiLogicId = 0;
             gAiThinkingStruct->movesetIndex = 0;
             flags = gAiThinkingStruct->aiFlags[battler];
@@ -3257,23 +3261,17 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     case EFFECT_FUSION_COMBO:
         if (ShouldUseFusionMove(battlerAtk))
         {
-            if (gAiLogicData->comboState == COMBO_INITIAL_STATE)
-                gAiLogicData->comboState = COMBO_FIRST_BATTLER_SCORE_INCREASE;
             ADJUST_SCORE(BEST_EFFECT);
         }
     case EFFECT_ROUND:
         if (ShouldUseRound(battlerAtk))
         {
-            if (gAiLogicData->comboState == COMBO_INITIAL_STATE)
-                gAiLogicData->comboState = COMBO_FIRST_BATTLER_SCORE_INCREASE;
             ADJUST_SCORE(BEST_EFFECT);
         }
         break;
     case EFFECT_PLEDGE:
         if (ShouldUsePledgeMove(battlerAtk, battlerDef, move))
         {
-            if (gAiLogicData->comboState == COMBO_INITIAL_STATE)
-                gAiLogicData->comboState = COMBO_FIRST_BATTLER_SCORE_INCREASE;
             ADJUST_SCORE(BEST_EFFECT);
         }
         break;

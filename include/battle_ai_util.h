@@ -271,7 +271,6 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct Ai
 // partner logic
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef);
 // IsTargetingPartner includes a check to make sure the adjacent pokemon is truly a partner.
-u32 GetAllyChosenMove(u32 battlerId);
 bool32 IsBattle1v1(void);
 // IsBattle1v1 is distinct from !IsDoubleBattle. If the player is fighting Maxie and Tabitha, with Steven as their partner, and both Tabitha and Steven have run out of Pokemon, the battle is 1v1, even though mechanically it is a Double Battle for how battlers and flags are set.
 // Most AI checks should be using IsBattle1v1; most engine checks should be using !IsDoubleBattle

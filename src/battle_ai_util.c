@@ -4147,18 +4147,6 @@ bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef)
     return ((battlerAtk) == (battlerDef ^ BIT_FLANK));
 }
 
-u32 GetAllyChosenMove(u32 battlerId)
-{
-    u32 partnerBattler = BATTLE_PARTNER(battlerId);
-
-    if (!IsBattlerAlive(partnerBattler) || !IsAiBattlerAware(partnerBattler))
-        return MOVE_NONE;
-    else if (partnerBattler > battlerId) // Battler with the lower id chooses the move first.
-        return gAiLogicData->lastUsedMove[partnerBattler];
-    else
-        return GetChosenMoveFromPosition(partnerBattler);
-}
-
 bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, u32 move, u32 partnerMove)
 {
     if (!IsBattlerAlive(battlerAtkPartner) || partnerMove == MOVE_NONE)
@@ -6396,20 +6384,19 @@ static bool32 WillPartnerActBeforeOrAfter(u32 battler, u32 partner)
 bool32 ShouldUseFusionMove(u32 battler)
 {
     u32 partner = BATTLE_PARTNER(battler);
-    u32 partnerMove = gBattleMons[partner].moves[gAiBattleData->chosenMoveIndex[partner]];
+    u32 partnerMove = gAiLogicData->partnerMove;
 
     if (!IsBattlerAlive(partner))
-        return FALSE;
-
-    // Second time we get into the function with the first battler since partner didn't choose a Fusion move
-    if (gAiLogicData->comboState == COMBO_SECOND_BATTLER_NO_SCORE_INCREASE)
         return FALSE;
 
     if (!WillPartnerActBeforeOrAfter(battler, partner))
         return FALSE;
 
-    if (battler < partner || GetMoveEffect(partnerMove) == EFFECT_FUSION_COMBO)
+    if (gAiLogicData->partnerMoveSimulation)
         return HasMoveWithEffect(partner, EFFECT_FUSION_COMBO);
+
+    if (GetMoveEffect(partnerMove) == EFFECT_FUSION_COMBO)
+        return TRUE;
 
     return FALSE;
 }
@@ -6417,18 +6404,20 @@ bool32 ShouldUseFusionMove(u32 battler)
 bool32 ShouldUseRound(u32 battler)
 {
     u32 partner = BATTLE_PARTNER(battler);
-    u32 partnerMove = gBattleMons[partner].moves[gAiBattleData->chosenMoveIndex[partner]];
+    u32 partnerMove = gAiLogicData->partnerMove;
 
     if (!IsBattlerAlive(partner))
         return FALSE;
 
-    // Second time we get into the function with the first battler since partner didn't choose Round
-    if (gAiLogicData->comboState == COMBO_SECOND_BATTLER_NO_SCORE_INCREASE)
-        return FALSE;
-
-    // Check if battler chooses move first or partner has chosen Round
-    if (battler < partner || GetMoveEffect(partnerMove) == EFFECT_ROUND)
+    // First battler to check so check moveset of partner
+    if (gAiLogicData->partnerMoveSimulation)
+    {
         return HasMoveWithEffect(partner, EFFECT_ROUND);
+    }
+
+    // Check if partner actually chose Round
+    if (GetMoveEffect(partnerMove) == EFFECT_ROUND)
+        return TRUE;
 
     return FALSE;
 }
@@ -6436,18 +6425,12 @@ bool32 ShouldUseRound(u32 battler)
 bool32 ShouldUsePledgeMove(u32 battlerAtk, u32 battlerDef, u32 move)
 {
     u32 partner = BATTLE_PARTNER(battlerAtk);
-    u32 partnerMove = gBattleMons[partner].moves[gAiBattleData->chosenMoveIndex[partner]];
+    u32 partnerMove = gAiLogicData->partnerMove;
+    u32 atkSide = GetBattlerSide(battlerAtk);
+    u32 defSide = GetBattlerSide(battlerDef);
 
-    if (partnerMove == move) // Same pledge move
-        return FALSE;
-    if (gAiLogicData->comboState == COMBO_SECOND_BATTLER_NO_SCORE_INCREASE)
-        return FALSE;
-
-    if (battlerAtk < partner || GetMoveEffect(partnerMove) == EFFECT_PLEDGE)
+    if (gAiLogicData->partnerMoveSimulation)
     {
-        u32 atkSide = GetBattlerSide(battlerAtk);
-        u32 defSide = GetBattlerSide(battlerDef);
-
         switch (move)
         {
         case MOVE_GRASS_PLEDGE:
@@ -6468,7 +6451,30 @@ bool32 ShouldUsePledgeMove(u32 battlerAtk, u32 battlerDef, u32 move)
             if (HasMove(partner, MOVE_FIRE_PLEDGE))
                 return gSideTimers[atkSide].rainbowTimer == 0;
             break;
-        default: break;
+        }
+    }
+    else if (GetMoveEffect(partnerMove) == EFFECT_PLEDGE)
+    {
+        switch (move)
+        {
+        case MOVE_GRASS_PLEDGE:
+            if (partnerMove == MOVE_FIRE_PLEDGE)
+                return gSideTimers[defSide].seaOfFireTimer == 0;
+            if (partnerMove == MOVE_WATER_PLEDGE)
+                return gSideTimers[defSide].swampTimer == 0;
+            break;
+        case MOVE_FIRE_PLEDGE:
+            if (partnerMove == MOVE_WATER_PLEDGE)
+                return gSideTimers[atkSide].rainbowTimer == 0;
+            if (partnerMove == MOVE_GRASS_PLEDGE)
+                return gSideTimers[defSide].seaOfFireTimer == 0;
+            break;
+        case MOVE_WATER_PLEDGE:
+            if (partnerMove == MOVE_GRASS_PLEDGE)
+                return gSideTimers[defSide].swampTimer == 0;
+            if (partnerMove == MOVE_FIRE_PLEDGE)
+                return gSideTimers[atkSide].rainbowTimer == 0;
+            break;
         }
     }
 

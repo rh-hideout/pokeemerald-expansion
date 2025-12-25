@@ -18,9 +18,8 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower bat
             EXPECT_MOVE(opponentRight, MOVE_TAILWIND);
             SCORE_EQ_VAL(opponentLeft, MOVE_TRI_ATTACK, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
             SCORE_EQ_VAL(opponentRight, MOVE_TAILWIND, AI_SCORE_DEFAULT + POWERFUL_STATUS_MOVE + 2, target:playerLeft); // + 2 from "regular" Tailwind AI
-            // The test is correct but the test system throws an error to early before a new move is chosen`
-            // SCORE_EQ_VAL(opponentLeft, MOVE_ROUND, AI_SCORE_DEFAULT, target:playerLeft);
-            // SCORE_EQ_VAL(opponentRight, MOVE_ROUND, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_ROUND, AI_SCORE_DEFAULT, target:playerLeft);
+            SCORE_EQ_VAL(opponentRight, MOVE_ROUND, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
         }
     }
 }
