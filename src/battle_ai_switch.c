@@ -182,6 +182,8 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
             return SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE;
         case SHOULD_SWITCH_ALL_SCORES_BAD:
             return SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE;
+        case SHOULD_SWITCH_DYN_FUNC:
+            return SHOULD_SWITCH_DYN_FUNC_PERCENTAGE;
         default:
             return 100;
     }
@@ -447,7 +449,7 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
     // Switch if no moves affect opponents
     if (IsDoubleBattle())
     {
-        u32 opposingPartner = GetBattlerAtPosition(BATTLE_PARTNER(opposingBattler));
+        u32 opposingPartner = BATTLE_PARTNER(opposingBattler);
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             aiMove = gBattleMons[battler].moves[moveIndex];
@@ -513,7 +515,7 @@ static bool32 ShouldSwitchIfWonderGuard(u32 battler)
 
 static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
 {
-    u8 battlerIn1, battlerIn2;
+    u32 battlerIn1, battlerIn2;
     u8 numAbsorbingAbilities = 0;
     enum Ability absorbingTypeAbilities[3]; // Array size is maximum number of absorbing abilities for a single type
     s32 firstId;
@@ -552,20 +554,6 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
                     return FALSE;
             }
         }
-    }
-
-    if (IsDoubleBattle())
-    {
-        battlerIn1 = battler;
-        if (gAbsentBattlerFlags & (1u << GetPartnerBattler(battler)))
-            battlerIn2 = battler;
-        else
-            battlerIn2 = GetPartnerBattler(battler);
-    }
-    else
-    {
-        battlerIn1 = battler;
-        battlerIn2 = battler;
     }
 
     // Create an array of possible absorb abilities so the AI considers all of them
@@ -620,10 +608,11 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
             return FALSE;
     }
 
-    // Check party for mon with ability that absorbs move
+    GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
     GetAIPartyIndexes(battler, &firstId, &lastId);
     party = GetBattlerParty(battler);
 
+    // Check party for mon with ability that absorbs move
     for (u32 monIndex = firstId; monIndex < lastId; monIndex++)
     {
         if (!IsValidForBattle(&party[monIndex]))
@@ -955,7 +944,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler)
     if (!IsDoubleBattle())
         return FALSE;
 
-    opposingBattler = GetBattlerAtPosition(BATTLE_PARTNER(opposingPosition));
+    opposingBattler = BATTLE_PARTNER(opposingPosition);
 
     if (!(gAbsentBattlerFlags & (1u << opposingBattler)))
     {
@@ -994,19 +983,7 @@ static bool32 FindMonWithFlagsAndSuperEffective(u32 battler, u16 flags, u32 perc
     if (IsBattleMoveStatus(gLastLandedMoves[battler]))
         return FALSE;
 
-    if (IsDoubleBattle())
-    {
-        battlerIn1 = battler;
-        if (gAbsentBattlerFlags & (1u << GetPartnerBattler(battler)))
-            battlerIn2 = battler;
-        else
-            battlerIn2 = GetPartnerBattler(battler);
-    }
-    else
-    {
-        battlerIn1 = battler;
-        battlerIn2 = battler;
-    }
+    GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
 
     GetAIPartyIndexes(battler, &firstId, &lastId);
     party = GetBattlerParty(battler);
@@ -1020,13 +997,7 @@ static bool32 FindMonWithFlagsAndSuperEffective(u32 battler, u16 flags, u32 perc
 
         if (!IsValidForBattle(&party[monIndex]))
             continue;
-        if (monIndex == gBattlerPartyIndexes[battlerIn1])
-            continue;
-        if (monIndex == gBattlerPartyIndexes[battlerIn2])
-            continue;
-        if (monIndex == gBattleStruct->monToSwitchIntoId[battlerIn1])
-            continue;
-        if (monIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
+        if (IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
             continue;
         if (IsAceMon(battler, monIndex))
             continue;
@@ -1070,20 +1041,7 @@ static bool32 CanMonSurviveHazardSwitchin(u32 battler)
     // Battler will faint to hazards, check to see if another mon can clear them
     if (hazardDamage > battlerHp)
     {
-        if (IsDoubleBattle())
-        {
-            battlerIn1 = battler;
-            if (gAbsentBattlerFlags & (1u << GetPartnerBattler(battler)))
-                battlerIn2 = battler;
-            else
-                battlerIn2 = GetPartnerBattler(battler);
-        }
-        else
-        {
-            battlerIn1 = battler;
-            battlerIn2 = battler;
-        }
-
+        GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
         GetAIPartyIndexes(battler, &firstId, &lastId);
         party = GetBattlerParty(battler);
 
@@ -1091,13 +1049,7 @@ static bool32 CanMonSurviveHazardSwitchin(u32 battler)
         {
             if (!IsValidForBattle(&party[monIndex]))
                 continue;
-            if (monIndex == gBattlerPartyIndexes[battlerIn1])
-                continue;
-            if (monIndex == gBattlerPartyIndexes[battlerIn2])
-                continue;
-            if (monIndex == gBattleStruct->monToSwitchIntoId[battlerIn1])
-                continue;
-            if (monIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
+            if (IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
                 continue;
             if (IsAceMon(battler, monIndex))
                 continue;
@@ -1210,6 +1162,17 @@ static bool32 ShouldSwitchIfAttackingStatsLowered(u32 battler)
     return FALSE;
 }
 
+bool32 ShouldSwitchDynFuncExample(u32 battler)
+{
+    // Chance to switch if trainer class is Guitarist, perhaps thematic for Jugglers
+    if (GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA) == TRAINER_CLASS_GUITARIST
+        && RandomPercentage(RNG_AI_SWITCH_DYN_FUNC, GetSwitchChance(SHOULD_SWITCH_DYN_FUNC)))
+    {
+        return SetSwitchinAndSwitch(battler, PARTY_SIZE);
+    }
+    return FALSE;
+}
+
 bool32 ShouldSwitch(u32 battler)
 {
     u32 battlerIn1, battlerIn2;
@@ -1235,21 +1198,7 @@ bool32 ShouldSwitch(u32 battler)
 
     availableToSwitch = 0;
 
-    if (IsDoubleBattle())
-    {
-        u32 partner = BATTLE_PARTNER(battler);
-        battlerIn1 = battler;
-        if (gAbsentBattlerFlags & (1u << partner))
-            battlerIn2 = battler;
-        else
-            battlerIn2 = partner;
-    }
-    else
-    {
-        battlerIn1 = battler;
-        battlerIn2 = battler;
-    }
-
+    GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
     GetAIPartyIndexes(battler, &firstId, &lastId);
     party = GetBattlerParty(battler);
 
@@ -1257,13 +1206,7 @@ bool32 ShouldSwitch(u32 battler)
     {
         if (!IsValidForBattle(&party[monIndex]))
             continue;
-        if (monIndex == gBattlerPartyIndexes[battlerIn1])
-            continue;
-        if (monIndex == gBattlerPartyIndexes[battlerIn2])
-            continue;
-        if (monIndex == gBattleStruct->monToSwitchIntoId[battlerIn1])
-            continue;
-        if (monIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
+        if (IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
             continue;
         if (IsAceMon(battler, monIndex))
             continue;
@@ -1272,7 +1215,12 @@ bool32 ShouldSwitch(u32 battler)
     }
 
     if (availableToSwitch == 0)
-            return FALSE;
+        return FALSE;
+
+    // custom switching logic
+    // NOTE: needs to always end with `return SetSwitchinAndSwitch` or `return FALSE`
+    if (gDynamicAiSwitchFunc != NULL && gDynamicAiSwitchFunc(battler)) // Create custom AI functions for specific battles via "setdynamicswitchaifunc" cmd
+        return TRUE;
 
     // NOTE: The sequence of the below functions matter! Do not change unless you have carefully considered the outcome.
     // Since the order is sequential, and some of these functions prompt switch to specific party members.
@@ -1393,21 +1341,7 @@ void ModifySwitchAfterMoveScoring(u32 battler)
 
     availableToSwitch = 0;
 
-    if (IsDoubleBattle())
-    {
-        u32 partner = BATTLE_PARTNER(battler);
-        battlerIn1 = battler;
-        if (gAbsentBattlerFlags & (1u << partner))
-            battlerIn2 = battler;
-        else
-            battlerIn2 = partner;
-    }
-    else
-    {
-        battlerIn1 = battler;
-        battlerIn2 = battler;
-    }
-
+    GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
     GetAIPartyIndexes(battler, &firstId, &lastId);
     party = GetBattlerParty(battler);
 
@@ -2096,11 +2030,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     for (u32 monIndex = firstId; monIndex < lastId; monIndex++)
     {
         // Check mon validity
-        if (!IsValidForBattle(&party[monIndex])
-            || gBattlerPartyIndexes[battlerIn1] == monIndex
-            || gBattlerPartyIndexes[battlerIn2] == monIndex
-            || monIndex == gBattleStruct->monToSwitchIntoId[battlerIn1]
-            || monIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
+        if (!IsValidForBattle(&party[monIndex]) || IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
         {
             continue;
         }
@@ -2330,11 +2260,7 @@ static u32 GetBestMonVanilla(struct Pokemon *party, int firstId, int lastId, u32
     for (u32 monIndex = firstId; monIndex < lastId; monIndex++)
     {
         // Check mon validity
-        if (!IsValidForBattle(&party[monIndex])
-            || gBattlerPartyIndexes[battlerIn1] == monIndex
-            || gBattlerPartyIndexes[battlerIn2] == monIndex
-            || monIndex == gBattleStruct->monToSwitchIntoId[battlerIn1]
-            || monIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
+        if (!IsValidForBattle(&party[monIndex]) || IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
         {
             continue;
         }
@@ -2421,11 +2347,7 @@ static u32 GetNextMonInParty(struct Pokemon *party, int firstId, int lastId, u32
     for (u32 monIndex = firstId; monIndex < lastId; monIndex++)
     {
         // Check mon validity
-        if (!IsValidForBattle(&party[monIndex])
-            || gBattlerPartyIndexes[battlerIn1] == monIndex
-            || gBattlerPartyIndexes[battlerIn2] == monIndex
-            || monIndex == gBattleStruct->monToSwitchIntoId[battlerIn1]
-            || monIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
+        if (!IsValidForBattle(&party[monIndex]) || IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
         {
             continue;
         }
@@ -2448,25 +2370,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
         return gBattlerPartyIndexes[battler] + 1;
 
-    if (IsDoubleBattle())
-    {
-        battlerIn1 = battler;
-        if (gAbsentBattlerFlags & (1u << GetPartnerBattler(battler)))
-            battlerIn2 = battler;
-        else
-            battlerIn2 = GetPartnerBattler(battler);
-
-        opposingBattler = BATTLE_OPPOSITE(battlerIn1);
-        if (gAbsentBattlerFlags & (1u << opposingBattler))
-            opposingBattler ^= BIT_FLANK;
-    }
-    else
-    {
-        opposingBattler = GetOppositeBattler(battler);
-        battlerIn1 = battler;
-        battlerIn2 = battler;
-    }
-
+    opposingBattler = GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
     GetAIPartyIndexes(battler, &firstId, &lastId);
     party = GetBattlerParty(battler);
 
