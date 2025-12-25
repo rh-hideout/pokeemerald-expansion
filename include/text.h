@@ -189,7 +189,7 @@ void DeactivateAllTextPrinters(void);
 u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
 bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
 void RunTextPrinters(void);
-bool32 IsTextPrinterActive(u8 id);
+bool32 IsTextPrinterActive(u32 id, bool32);
 void GenerateFontHalfRowLookupTable(union TextColor color);
 void SaveTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8* accentColor);
 void RestoreTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor);

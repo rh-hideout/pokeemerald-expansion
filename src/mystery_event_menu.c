@@ -149,7 +149,7 @@ static void CB2_MysteryEventMenu(void)
         }
         break;
     case 2:
-        if (!IsTextPrinterActive(WIN_MSG))
+        if (!IsTextPrinterActive(WIN_MSG, FALSE))
         {
             gMain.state++;
             gLinkType = LINKTYPE_MYSTERY_EVENT;
@@ -171,7 +171,7 @@ static void CB2_MysteryEventMenu(void)
         }
         break;
     case 4:
-        if (!IsTextPrinterActive(WIN_MSG))
+        if (!IsTextPrinterActive(WIN_MSG, FALSE))
             gMain.state++;
         break;
     case 5:
@@ -235,7 +235,7 @@ static void CB2_MysteryEventMenu(void)
         }
         break;
     case 7:
-        if (!IsTextPrinterActive(WIN_MSG))
+        if (!IsTextPrinterActive(WIN_MSG, FALSE))
             gMain.state++;
         break;
     case 8:
@@ -271,7 +271,7 @@ static void CB2_MysteryEventMenu(void)
         gMain.state++;
         break;
     case 13:
-        if (!IsTextPrinterActive(WIN_MSG))
+        if (!IsTextPrinterActive(WIN_MSG, FALSE))
             gMain.state++;
         break;
     case 14:

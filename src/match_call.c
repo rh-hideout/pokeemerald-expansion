@@ -1462,7 +1462,7 @@ static bool32 RunMatchCallTextPrinter(int windowId)
         gTextFlags.canABSpeedUpPrint = FALSE;
 
     RunTextPrinters();
-    return IsTextPrinterActive(windowId);
+    return IsTextPrinterActive(windowId, FALSE);
 }
 
 #define tTimer     data[0]

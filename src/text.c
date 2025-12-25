@@ -357,15 +357,14 @@ bool32 IsPlayerTextSpeedInstant(void)
 
 void DeactivateAllTextPrinters(void)
 {
-    int printer;
-    for (printer = 0; printer < NUM_TEXT_PRINTERS; ++printer)
+    struct TextPrinter *currentPrinter = sFirstTextPrinter;
+    while (currentPrinter != NULL)
     {
-        if (sTextPrinters[printer] != NULL)
-        {
-            sTextPrinters[printer]->active = FALSE;
-            sTextPrinters[printer]->isInUse = FALSE;
-        }
+        currentPrinter->isInUse = FALSE;
+        currentPrinter = currentPrinter->nextPrinter;
     }
+
+    FreeFinishedTextPrinters();
 }
 
 u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16))
@@ -456,8 +455,6 @@ void RunTextPrinters(void)
         return;
 
     u32 numPrinters = GetNumTextPrinters();
-
-    sTextPrinters[0] = sFirstTextPrinter;
 
     struct TextPrinter *currentPrinter = sFirstTextPrinter;
 

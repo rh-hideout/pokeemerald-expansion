@@ -16376,7 +16376,7 @@ void BS_ArenaJudgmentString(void)
 void BS_ArenaWaitMessage(void)
 {
     NATIVE_ARGS();
-    if (IsTextPrinterActive(ARENA_WIN_JUDGMENT_TEXT))
+    if (IsTextPrinterActive(ARENA_WIN_JUDGMENT_TEXT, FALSE))
         return;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

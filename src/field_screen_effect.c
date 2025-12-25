@@ -1376,7 +1376,7 @@ static bool32 PrintWhiteOutRecoveryMessage(u8 taskId, const u8 *text, u32 x, u32
         break;
     case 1:
         RunTextPrinters();
-        if (!IsTextPrinterActive(windowId))
+        if (!IsTextPrinterActive(windowId, FALSE))
         {
             gTasks[taskId].tPrintState = 0;
             return TRUE;
