@@ -18,7 +18,6 @@
 	.endm
 
 	.macro critcalc
-	.warning "critcalc macro has been deprecated, please remove from scripts"
 	.byte 0x4
 	.endm
 
@@ -426,9 +425,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro trainerslidein position:req
+	.macro unused_0x48
 	.byte 0x48
-	.byte \position
 	.endm
 
 	.macro moveend endMode:req, endState:req
@@ -518,8 +516,9 @@
 	.byte \battler
 	.endm
 
-	.macro switchinevents
+	.macro trainerslidein position:req
 	.byte 0x53
+	.byte \position
 	.endm
 
 	.macro playse song:req
@@ -746,8 +745,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro stockpile
+	.macro stockpile id:req
 	.byte 0x85
+	.byte \id
 	.endm
 
 	.macro stockpiletobasedamage
@@ -890,12 +890,14 @@
 	.byte 0xa0
 	.endm
 
-	.macro unused_0xA1
+	.macro counterdamagecalculator failInstr:req
 	.byte 0xa1
+	.4byte \failInstr
 	.endm
 
-	.macro unused_0xA2
+	.macro mirrorcoatdamagecalculator failInstr:req
 	.byte 0xa2
+	.4byte \failInstr
 	.endm
 
 	.macro disablelastusedattack failInstr:req
@@ -977,7 +979,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro unused_0xb3
+	.macro handlerollout
 	.byte 0xb3
 	.endm
 
@@ -987,7 +989,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused_0xb5
+	.macro handlefurycutter
 	.byte 0xb5
 	.endm
 
@@ -1102,7 +1104,7 @@
 	.byte \battler
 	.endm
 
-	.macro unused_0xCC
+	.macro callenvironmentattack
 	.byte 0xcc
 	.endm
 
@@ -1116,8 +1118,9 @@
 	.4byte \failInstr
 	.endm
 
-	.macro unused_0xcf
+	.macro jumpifnodamage jumpInstr:req
 	.byte 0xcf
+	.4byte \jumpInstr
 	.endm
 
 	.macro settaunt failInstr:req
@@ -1161,8 +1164,9 @@
 	.4byte \failInstr
 	.endm
 
-	.macro Cmd_unused0xd8
+	.macro setdamagetohealthdifference failInstr:req
 	.byte 0xd8
+	.4byte \failInstr
 	.endm
 
 	.macro setroom
@@ -1293,7 +1297,7 @@
 	.byte 0xf3
 	.endm
 
-	.macro sortbattlers
+	.macro unused_0xf4
 	.byte 0xf4
 	.endm
 
@@ -1367,6 +1371,11 @@
 
 	.macro jumpifintimidateabilityprevented
 	callnative BS_JumpIfIntimidateAbilityPrevented
+	.endm
+
+	.macro metalburstdamagecalculator failInstr:req
+	callnative BS_CalcMetalBurstDmg
+	.4byte \failInstr
 	.endm
 
 	.macro allyswitchswapbattlers
@@ -1452,8 +1461,9 @@
 	.4byte \ptr
 	.endm
 
-	.macro jumpifcantloseitem ptr:req
+	.macro jumpifcantloseitem battler:req, ptr:req
 	callnative BS_JumpIfCantLoseItem
+	.byte \battler
 	.4byte \ptr
 	.endm
 
@@ -1863,6 +1873,10 @@
 	manipulatedamage DMG_1_8_TARGET_HP
 	.endm
 
+	.macro dmgtomaxattackerhp
+	manipulatedamage DMG_FULL_ATTACKER_HP
+	.endm
+
 	.macro jumpifflowerveil jumpInstr:req
 	jumpifnottype BS_TARGET, TYPE_GRASS, 1f
 	jumpifability BS_TARGET_SIDE, ABILITY_FLOWER_VEIL, \jumpInstr
@@ -2105,9 +2119,8 @@
 	callnative BS_InstantHpDrop
 	.endm
 
-	.macro clearstatus battler:req
+	.macro clearstatus
 	callnative BS_ClearStatus
-	.byte \battler
 	.endm
 
 	.macro restoremovepp

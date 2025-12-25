@@ -85,6 +85,9 @@ static const struct SpriteTemplate sSpriteTemplate_SwapLine =
     .paletteTag = TAG_SWAP_LINE,
     .oam = &sOamData_SwapLine,
     .anims = sAnims_SwapLine,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 // code

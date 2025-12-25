@@ -180,7 +180,9 @@ BattleFrontier_BattlePyramidTop_EventScript_DefeatedBrandonGold::
 
 BattleFrontier_BattlePyramidTop_EventScript_DoBrandonBattle::
 	closemessage
-	dofacilitytrainerbattle FACILITY_BATTLE_PYRAMID
+	setvar VAR_0x8004, SPECIAL_BATTLE_PYRAMID
+	setvar VAR_0x8005, 0
+	special DoSpecialTrainerBattle
 	waitstate
 	return
 

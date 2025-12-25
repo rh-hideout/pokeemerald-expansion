@@ -46,6 +46,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_BallLight = {
     .oam = &gObjectEventBaseOam_32x32,
     .anims = sAnimTable_Inanimate,
     .images = gFieldEffectObjectPicTable_BallLight,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateLightSprite,
 };
 
@@ -55,6 +56,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_PokeCenterLight = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_Inanimate,
     .images = gFieldEffectObjectPicTable_PokeCenterLight,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateLightSprite,
 };
 
@@ -64,6 +66,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_MartLight = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_Inanimate,
     .images = gFieldEffectObjectPicTable_MartLight,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateLightSprite,
 };
 
@@ -79,6 +82,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ShadowSmall = {
     .oam = &gObjectEventBaseOam_8x8,
     .anims = sAnimTable_Shadow,
     .images = sPicTable_ShadowSmall,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateShadowFieldEffect,
 };
 
@@ -88,6 +92,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ShadowMedium = {
     .oam = &gObjectEventBaseOam_16x8,
     .anims = sAnimTable_Shadow,
     .images = sPicTable_ShadowMedium,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateShadowFieldEffect,
 };
 
@@ -97,6 +102,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ShadowLarge = {
     .oam = &gObjectEventBaseOam_32x8,
     .anims = sAnimTable_Shadow,
     .images = sPicTable_ShadowLarge,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateShadowFieldEffect,
 };
 
@@ -106,6 +112,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ShadowExtraLarge = {
     .oam = &gObjectEventBaseOam_64x32,
     .anims = sAnimTable_Shadow,
     .images = sPicTable_ShadowExtraLarge,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateShadowFieldEffect,
 };
 
@@ -138,6 +145,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_TallGrass = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_TallGrass,
     .images = sPicTable_TallGrass,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateTallGrassFieldEffect,
 };
 
@@ -173,6 +181,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Ripple = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_Ripple,
     .images = sPicTable_Ripple,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = WaitFieldEffectSpriteAnim,
 };
 
@@ -205,6 +214,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Ash = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_Ash,
     .images = sPicTable_Ash,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateAshFieldEffect,
 };
 
@@ -252,6 +262,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_SurfBlob = {
     .oam = &gObjectEventBaseOam_32x32,
     .anims = sAnimTable_SurfBlob,
     .images = sPicTable_SurfBlob,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateSurfBlobFieldEffect,
 };
 
@@ -308,6 +319,8 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Arrow = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_Arrow,
     .images = sPicTable_Arrow,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteFrameImage sPicTable_GroundImpactDust[] = {
@@ -335,6 +348,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_GroundImpactDust = {
     .oam = &gObjectEventBaseOam_16x8,
     .anims = sAnimTable_GroundImpactDust,
     .images = sPicTable_GroundImpactDust,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateJumpImpactEffect,
 };
 
@@ -365,6 +379,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_JumpTallGrass = {
     .oam = &gObjectEventBaseOam_16x8,
     .anims = sAnimTable_JumpTallGrass,
     .images = sPicTable_JumpTallGrass,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateJumpImpactEffect,
 };
 
@@ -412,6 +427,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_SandFootprints = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_SandFootprints,
     .images = sPicTable_SandFootprints,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateFootprintsTireTracksFieldEffect,
 };
 
@@ -459,6 +475,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_DeepSandFootprints = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_DeepSandFootprints,
     .images = sPicTable_DeepSandFootprints,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateFootprintsTireTracksFieldEffect,
 };
 
@@ -478,6 +495,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_BugTracks = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_DeepSandFootprints,
     .images = sPicTable_BugTracks,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateFootprintsTireTracksFieldEffect,
 };
 
@@ -487,6 +505,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_SpotTracks = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_DeepSandFootprints,
     .images = sPicTable_SpotTracks,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateFootprintsTireTracksFieldEffect,
 };
 
@@ -572,6 +591,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_BikeTireTracks = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_BikeTireTracks,
     .images = sPicTable_BikeTireTracks,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateFootprintsTireTracksFieldEffect,
 };
 
@@ -582,6 +602,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_SlitherTracks = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_BikeTireTracks,
     .images = sPicTable_SlitherTracks,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateFootprintsTireTracksFieldEffect,
 };
 
@@ -612,6 +633,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_JumpBigSplash = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_JumpBigSplash,
     .images = sPicTable_JumpBigSplash,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateJumpImpactEffect,
 };
 
@@ -652,6 +674,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Splash = {
     .oam = &gObjectEventBaseOam_16x8,
     .anims = sAnimTable_Splash,
     .images = sPicTable_Splash,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateSplashFieldEffect,
 };
 
@@ -680,6 +703,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_JumpSmallSplash = {
     .oam = &gObjectEventBaseOam_16x8,
     .anims = sAnimTable_JumpSmallSplash,
     .images = sPicTable_JumpSmallSplash,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateJumpImpactEffect,
 };
 
@@ -713,6 +737,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_LongGrass = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_LongGrass,
     .images = sPicTable_LongGrass,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateLongGrassFieldEffect,
 };
 
@@ -747,6 +772,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_JumpLongGrass = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_JumpLongGrass,
     .images = sPicTable_JumpLongGrass,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateJumpImpactEffect,
 };
 
@@ -787,6 +813,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_UnusedGrass = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_UnusedGrass,
     .images = sPicTable_UnusedGrass,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = WaitFieldEffectSpriteAnim,
 };
 
@@ -819,6 +846,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_UnusedGrass2 = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_UnusedGrass2,
     .images = sPicTable_UnusedGrass2,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = WaitFieldEffectSpriteAnim,
 };
 
@@ -849,6 +877,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_UnusedSand = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_UnusedSand,
     .images = sPicTable_UnusedSand,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = WaitFieldEffectSpriteAnim,
 };
 
@@ -877,6 +906,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_SandPile = {
     .oam = &gObjectEventBaseOam_16x8,
     .anims = sAnimTable_SandPile,
     .images = sPicTable_SandPile,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateSandPileFieldEffect,
 };
 
@@ -909,6 +939,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_WaterSurfacing = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_WaterSurfacing,
     .images = sPicTable_WaterSurfacing,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = WaitFieldEffectSpriteAnim,
 };
 
@@ -950,7 +981,10 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ReflectionDistortion = {
     .tileTag = 0x0,
     .paletteTag = TAG_NONE,
     .oam = &gDummyOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = sAffineAnims_ReflectionDistortion,
+    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteFrameImage sPicTable_Sparkle[] = {
@@ -998,6 +1032,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Sparkle = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_Sparkle,
     .images = sPicTable_Sparkle,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = WaitFieldEffectSpriteAnim,
 };
 
@@ -1041,6 +1076,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_TreeDisguise = {
     .oam = &gObjectEventBaseOam_16x32,
     .anims = sAnimTable_TreeDisguise,
     .images = sPicTable_TreeDisguise,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateDisguiseFieldEffect,
 };
 
@@ -1084,6 +1120,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_MountainDisguise = {
     .oam = &gObjectEventBaseOam_16x32,
     .anims = sAnimTable_MountainDisguise,
     .images = sPicTable_MountainDisguise,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateDisguiseFieldEffect,
 };
 
@@ -1103,6 +1140,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_SandDisguisePlaceholder =
     .oam = &gObjectEventBaseOam_16x32,
     .anims = sAnimTable_TreeDisguise,
     .images = sPicTable_SandDisguisePlaceholder,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateDisguiseFieldEffect,
 };
 
@@ -1127,6 +1165,8 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Bird = {
     .oam = &gObjectEventBaseOam_32x32,
     .anims = sAnimTable_Bird,
     .images = sPicTable_Bird,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteFrameImage sPicTable_ShortGrass[] = {
@@ -1152,6 +1192,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ShortGrass = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_ShortGrass,
     .images = sPicTable_ShortGrass,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateShortGrassFieldEffect,
 };
 
@@ -1176,6 +1217,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_HotSpringsWater = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_HotSpringsWater,
     .images = sPicTable_HotSpringsWater,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateHotSpringsWaterFieldEffect,
 };
 
@@ -1209,6 +1251,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_AshPuff =
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_AshPuff,
     .images = sPicTable_AshPuff,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_AshPuff
 };
 
@@ -1244,6 +1287,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_AshLaunch =
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_AshLaunch,
     .images = sPicTable_AshLaunch,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_AshLaunch
 };
 
@@ -1282,6 +1326,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Bubbles = {
     .oam = &gObjectEventBaseOam_16x32,
     .anims = sAnimTable_Bubbles,
     .images = sPicTable_Bubbles,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateBubblesFieldEffect,
 };
 
@@ -1309,6 +1354,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_SmallSparkle = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_SmallSparkle,
     .images = sPicTable_SmallSparkle,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateSparkleFieldEffect,
 };
 
@@ -1333,6 +1379,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Rayquaza = {
     .oam = &gObjectEventBaseOam_32x32,
     .anims = sAnimTable_RayquazaSpotlightEffect,
     .images = sPicTable_RayquazaSpotlightEffect,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateRayquazaSpotlightEffect,
 };
 
@@ -1352,6 +1399,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_CaveDust = {
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_WaterSurfacing,
     .images = sPicTable_CaveDust,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = WaitFieldEffectSpriteAnim,
 };
 
@@ -1368,6 +1416,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_RockClimbBlob = {
     .oam = &gObjectEventBaseOam_32x32,
     .anims = sAnimTable_SurfBlob,
     .images = sPicTable_RockClimbBlob,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateSurfBlobFieldEffect,
 };
 
@@ -1394,6 +1443,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_RockClimbDust = {
     .oam = &gObjectEventBaseOam_32x32,
     .anims = sAnimTable_RockClimbDust,
     .images = sPicTable_RockClimbDust,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateJumpImpactEffect,
 };
 

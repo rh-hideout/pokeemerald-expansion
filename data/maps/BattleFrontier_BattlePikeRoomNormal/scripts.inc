@@ -31,7 +31,9 @@ BattleFrontier_BattlePikeRoomNormal_EventScript_EnterSingleBattleRoom::
 	waitmessage
 	closemessage
 	releaseall
-	dofacilitytrainerbattle FACILITY_BATTLE_PIKE_SINGLE
+	setvar VAR_0x8004, SPECIAL_BATTLE_PIKE_SINGLE
+	setvar VAR_0x8005, 0
+	special DoSpecialTrainerBattle
 	waitstate
 	switch VAR_RESULT
 	case 1, BattleFrontier_BattlePikeRoomNormal_EventScript_WonSingleBattle
@@ -59,7 +61,9 @@ BattleFrontier_BattlePikeRoomNormal_EventScript_EnterHardBattleRoom::
 	waitmessage
 	closemessage
 	releaseall
-	dofacilitytrainerbattle FACILITY_BATTLE_PIKE_SINGLE
+	setvar VAR_0x8004, SPECIAL_BATTLE_PIKE_SINGLE
+	setvar VAR_0x8005, 0
+	special DoSpecialTrainerBattle
 	waitstate
 	switch VAR_RESULT
 	case 1, BattleFrontier_BattlePikeRoomNormal_EventScript_WonHardBattle
@@ -248,7 +252,9 @@ BattleFrontier_BattlePikeRoomNormal_EventScript_EnterDoubleBattleRoom::
 	pike_gettrainerintro 1
 	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dofacilitytrainerbattle FACILITY_BATTLE_PIKE_DOUBLE
+	setvar VAR_0x8004, SPECIAL_BATTLE_PIKE_DOUBLE
+	setvar VAR_0x8005, 0
+	special DoSpecialTrainerBattle
 	waitstate
 	switch VAR_RESULT
 	case 1, BattleFrontier_BattlePikeRoomNormal_EventScript_WonDoubleBattle
@@ -374,7 +380,9 @@ BattleFrontier_BattlePikeRoomNormal_EventScript_DoPikeQueenBattle::
 	closemessage
 	applymovement LOCALID_PLAYER, BattleFrontier_BattlePikeRoomNormal_Movement_PlayerWalkUp2
 	waitmovement 0
-	dofacilitytrainerbattle FACILITY_BATTLE_PIKE_SINGLE
+	setvar VAR_0x8004, SPECIAL_BATTLE_PIKE_SINGLE
+	setvar VAR_0x8005, 0
+	special DoSpecialTrainerBattle
 	waitstate
 	return
 

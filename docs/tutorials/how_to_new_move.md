@@ -37,7 +37,7 @@ Let's look at an example:
     .type = TYPE_ELECTRIC,
     .accuracy = 100,
     .pp = 30,
-    .target = TARGET_SELECTED,
+    .target = MOVE_TARGET_SELECTED,
     .priority = 0,
     .category = DAMAGE_CATEGORY_SPECIAL,
     .additionalEffects = ADDITIONAL_EFFECTS({
@@ -170,7 +170,7 @@ Each move can have up to 3 additional effects, allowing you to construct monstro
     .type = TYPE_NORMAL,
     .accuracy = 100,
     .pp = 35,
-    .target = TARGET_SELECTED,
+    .target = MOVE_TARGET_SELECTED,
     .priority = 0,
     .category = DAMAGE_CATEGORY_PHYSICAL,
     .additionalEffects = ADDITIONAL_EFFECTS({

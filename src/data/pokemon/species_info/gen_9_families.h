@@ -6525,7 +6525,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_WoChien,
             gShinyOverworldPalette_WoChien
         )
-        .isSubLegendary = TRUE,
+        .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sWoChienLevelUpLearnset,
         .teachableLearnset = sWoChienTeachableLearnset,
@@ -6592,7 +6592,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_ChienPao,
             gShinyOverworldPalette_ChienPao
         )
-        .isSubLegendary = TRUE,
+        .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sChienPaoLevelUpLearnset,
         .teachableLearnset = sChienPaoTeachableLearnset,
@@ -6659,7 +6659,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_TingLu,
             gShinyOverworldPalette_TingLu
         )
-        .isSubLegendary = TRUE,
+        .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sTingLuLevelUpLearnset,
         .teachableLearnset = sTingLuTeachableLearnset,
@@ -6727,7 +6727,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_ChiYu,
             gShinyOverworldPalette_ChiYu
         )
-        .isSubLegendary = TRUE,
+        .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sChiYuLevelUpLearnset,
         .teachableLearnset = sChiYuTeachableLearnset,
@@ -6928,7 +6928,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Koraidon,
             gShinyOverworldPalette_Koraidon
         )
-        .isRestrictedLegendary = TRUE,
+        .isLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sKoraidonLevelUpLearnset,
@@ -6997,7 +6997,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Miraidon,
             gShinyOverworldPalette_Miraidon
         )
-        .isRestrictedLegendary = TRUE,
+        .isLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sMiraidonLevelUpLearnset,
@@ -7459,7 +7459,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Okidogi,
             gShinyOverworldPalette_Okidogi
         )
-        .isSubLegendary = TRUE,
+        .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sOkidogiLevelUpLearnset,
         .teachableLearnset = sOkidogiTeachableLearnset,
@@ -7526,7 +7526,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Munkidori,
             gShinyOverworldPalette_Munkidori
         )
-        .isSubLegendary = TRUE,
+        .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sMunkidoriLevelUpLearnset,
         .teachableLearnset = sMunkidoriTeachableLearnset,
@@ -7593,7 +7593,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_Fezandipiti,
             gShinyOverworldPalette_Fezandipiti
         )
-        .isSubLegendary = TRUE,
+        .isLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sFezandipitiLevelUpLearnset,
         .teachableLearnset = sFezandipitiTeachableLearnset,
@@ -7661,7 +7661,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .teachableLearnset = sOgerponTeachableLearnset,                                                                 \
         .formSpeciesIdTable = sOgerponFormSpeciesIdTable,                                                               \
         .formChangeTable = sOgerponFormChangeTable,                                                                     \
-        .isSubLegendary = TRUE,                                                                                         \
+        .isLegendary = TRUE,                                                                                            \
         .isTeraForm = isTeraform,                                                                                       \
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,                                                                   \
     }
@@ -8007,7 +8007,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_TerapagosNormal,
             gShinyOverworldPalette_TerapagosNormal
         )
-        .isRestrictedLegendary = TRUE,
+        .isLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sTerapagosLevelUpLearnset,
@@ -8078,7 +8078,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_TerapagosTerastal,
             gShinyOverworldPalette_TerapagosTerastal
         )
-        .isRestrictedLegendary = TRUE,
+        .isLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sTerapagosLevelUpLearnset,
@@ -8138,7 +8138,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 12, SHADOW_SIZE_L)
         FOOTPRINT(TerapagosStellar)
-        .isRestrictedLegendary = TRUE,
+        .isLegendary = TRUE,
         .isTeraForm = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,

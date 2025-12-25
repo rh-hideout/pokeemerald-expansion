@@ -454,7 +454,10 @@ static const struct SpriteTemplate sSpriteTemplate_SliderHeart =
     .tileTag = TAG_SLIDER_HEART,
     .paletteTag = TAG_CONTEST_SYMBOLS_PAL,
     .oam = &sOam_SliderHeart,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = sAffineAnims_SliderHeart,
+    .callback = SpriteCallbackDummy
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_NextTurn[CONTESTANT_COUNT] =
@@ -510,21 +513,37 @@ static const struct SpriteTemplate sSpriteTemplates_NextTurn[CONTESTANT_COUNT] =
         .tileTag = TAG_NEXT_TURN_1_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
+        .anims = gDummySpriteAnimTable,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCallbackDummy,
     },
     {
         .tileTag = TAG_NEXT_TURN_2_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
+        .anims = gDummySpriteAnimTable,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCallbackDummy,
     },
     {
         .tileTag = TAG_NEXT_TURN_3_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
+        .anims = gDummySpriteAnimTable,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCallbackDummy,
     },
     {
         .tileTag = TAG_NEXT_TURN_4_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
+        .anims = gDummySpriteAnimTable,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCallbackDummy,
     }
 };
 
@@ -587,6 +606,10 @@ static const struct SpriteTemplate sSpriteTemplate_Faces =
     .tileTag = TAG_FACES_GFX,
     .paletteTag = TAG_CONTEST_SYMBOLS_PAL,
     .oam = &sOam_Faces,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ApplauseMeter =
@@ -621,6 +644,10 @@ static const struct SpriteTemplate sSpriteTemplate_ApplauseMeter =
     .tileTag = TAG_APPLAUSE_METER,
     .paletteTag = TAG_APPLAUSE_METER,
     .oam = &sOam_ApplauseMeter,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOam_Judge =
@@ -642,6 +669,10 @@ static const struct SpriteTemplate sSpriteTemplate_Judge =
     .tileTag = TAG_JUDGE,
     .paletteTag = TAG_JUDGE,
     .oam = &sOam_Judge,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_Judge =
@@ -669,6 +700,10 @@ static const struct SpriteTemplate sSpriteTemplate_JudgeSpeechBubble =
     .tileTag = TAG_JUDGE_SYMBOLS_GFX,
     .paletteTag = TAG_CONTEST_SYMBOLS_PAL,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const u16 sText_Pal[] = INCBIN_U16("graphics/contest/text.gbapal");
@@ -971,25 +1006,37 @@ static const struct SpriteTemplate sSpriteTemplates_ContestantsTurnBlinkEffect[C
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT0,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT0,
         .oam = &sOam_ContestantsTurnBlinkEffect,
+        .anims = gDummySpriteAnimTable,
+        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
+        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT1,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT1,
         .oam = &sOam_ContestantsTurnBlinkEffect,
+        .anims = gDummySpriteAnimTable,
+        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
+        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT2,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT2,
         .oam = &sOam_ContestantsTurnBlinkEffect,
+        .anims = gDummySpriteAnimTable,
+        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
+        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT3,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT3,
         .oam = &sOam_ContestantsTurnBlinkEffect,
+        .anims = gDummySpriteAnimTable,
+        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
+        .callback = SpriteCallbackDummy
     }
 };
 
@@ -5327,21 +5374,15 @@ static void Task_WaitForSliderHeartAnim(u8 taskId)
 
 static u16 SanitizeMove(u16 move)
 {
-    assertf(move < MOVES_COUNT, "invalid move: %d", move)
-    {
-        return MOVE_POUND;
-    }
-
+    if (move >= MOVES_COUNT)
+        move = MOVE_POUND;
     return move;
 }
 
 static u16 SanitizeSpecies(u16 species)
 {
-    assertf(species < NUM_SPECIES, "invalid species: %d", species)
-    {
-        return SPECIES_NONE;
-    }
-
+    if (species >= NUM_SPECIES)
+        species = SPECIES_NONE;
     return species;
 }
 
@@ -5430,14 +5471,14 @@ static void SetMoveTargetPosition(u16 move)
 {
     switch (GetBattlerMoveTargetType(gBattlerAttacker, move))
     {
-    case TARGET_USER:
+    case MOVE_TARGET_USER:
         gBattlerTarget = B_POSITION_PLAYER_RIGHT;
         break;
-    case TARGET_OPPONENT:
-    case TARGET_SELECTED:
-    case TARGET_RANDOM:
-    case TARGET_BOTH:
-    case TARGET_FOES_AND_ALLY:
+    case MOVE_TARGET_OPPONENT:
+    case MOVE_TARGET_SELECTED:
+    case MOVE_TARGET_RANDOM:
+    case MOVE_TARGET_BOTH:
+    case MOVE_TARGET_FOES_AND_ALLY:
     default:
         gBattlerTarget = B_POSITION_OPPONENT_RIGHT;
         break;
@@ -5457,10 +5498,10 @@ static void Contest_PrintTextToBg0WindowStd(u32 windowId, const u8 *b)
     printerTemplate.currentY = 1;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.color.accent = TEXT_COLOR_TRANSPARENT;
-    printerTemplate.color.foreground = 15;
-    printerTemplate.color.background = TEXT_COLOR_TRANSPARENT;
-    printerTemplate.color.shadow = 8;
+    printerTemplate.unk = 0;
+    printerTemplate.fgColor = 15;
+    printerTemplate.bgColor = 0;
+    printerTemplate.shadowColor = 8;
 
     AddTextPrinter(&printerTemplate, 0, 0);
     PutWindowTilemap(windowId);
@@ -5480,10 +5521,10 @@ void Contest_PrintTextToBg0WindowAt(u32 windowId, u8 *currChar, s32 x, s32 y, s3
     printerTemplate.currentY = y;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.color.accent = TEXT_COLOR_TRANSPARENT;
-    printerTemplate.color.foreground = 15;
-    printerTemplate.color.background = TEXT_COLOR_TRANSPARENT;
-    printerTemplate.color.shadow = 8;
+    printerTemplate.unk = 0;
+    printerTemplate.fgColor = 15;
+    printerTemplate.bgColor = 0;
+    printerTemplate.shadowColor = 8;
 
     AddTextPrinter(&printerTemplate, 0, 0);
     PutWindowTilemap(windowId);
@@ -5504,10 +5545,10 @@ static void Contest_StartTextPrinter(const u8 *currChar, bool32 b)
     printerTemplate.currentY = 1;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.color.accent = TEXT_COLOR_TRANSPARENT;
-    printerTemplate.color.foreground = 1;
-    printerTemplate.color.background = TEXT_COLOR_TRANSPARENT;
-    printerTemplate.color.shadow = 8;
+    printerTemplate.unk = 0;
+    printerTemplate.fgColor = 1;
+    printerTemplate.bgColor = 0;
+    printerTemplate.shadowColor = 8;
 
     if (!b)
     {

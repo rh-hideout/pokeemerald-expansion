@@ -13,6 +13,7 @@
         .subspriteTables = sOamTables_16x32,                        \
         .anims = sAnimTable_Following,                              \
         .images = sPicTable_Ball_##NAME,                            \
+        .affineAnims = gDummySpriteAffineAnimTable,                 \
     }
 
 

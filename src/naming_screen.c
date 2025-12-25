@@ -1942,11 +1942,18 @@ static void DrawTextEntry(void)
     PutWindowTilemap(sNamingScreen->windows[WIN_TEXT_ENTRY]);
 }
 
-ALIGNED(4) static const u8 sTextColorStruct[3][4] =
+struct TextColor   // Needed because of alignment
 {
-    {TEXT_DYNAMIC_COLOR_4, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
-    {TEXT_DYNAMIC_COLOR_5, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
-    {TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY}
+    u8 colors[3][4];
+};
+
+static const struct TextColor sTextColorStruct =
+{
+    {
+        {TEXT_DYNAMIC_COLOR_4, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
+        {TEXT_DYNAMIC_COLOR_5, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
+        {TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY}
+    }
 };
 
 static const u8 sFillValues[KBPAGE_COUNT] =
@@ -1958,9 +1965,9 @@ static const u8 sFillValues[KBPAGE_COUNT] =
 
 static const u8 *const sKeyboardTextColors[KBPAGE_COUNT] =
 {
-    [KEYBOARD_LETTERS_LOWER] = sTextColorStruct[1],
-    [KEYBOARD_LETTERS_UPPER] = sTextColorStruct[0],
-    [KEYBOARD_SYMBOLS]       = sTextColorStruct[2]
+    [KEYBOARD_LETTERS_LOWER] = sTextColorStruct.colors[1],
+    [KEYBOARD_LETTERS_UPPER] = sTextColorStruct.colors[0],
+    [KEYBOARD_SYMBOLS]       = sTextColorStruct.colors[2]
 };
 
 static void PrintKeyboardKeys(u8 window, u8 page)
@@ -2466,6 +2473,8 @@ static const struct SpriteTemplate sSpriteTemplate_PageSwapFrame =
     .paletteTag = PALTAG_PAGE_SWAP,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PageSwap
 };
 
@@ -2475,6 +2484,9 @@ static const struct SpriteTemplate sSpriteTemplate_PageSwapButton =
     .paletteTag = PALTAG_PAGE_SWAP_UPPER,
     .oam = &sOam_32x16,
     .anims = sAnims_Loop,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_PageSwapText =
@@ -2483,6 +2495,9 @@ static const struct SpriteTemplate sSpriteTemplate_PageSwapText =
     .paletteTag = PALTAG_PAGE_SWAP,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_BackButton =
@@ -2491,6 +2506,9 @@ static const struct SpriteTemplate sSpriteTemplate_BackButton =
     .paletteTag = PALTAG_BACK_BUTTON,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_OkButton =
@@ -2499,6 +2517,9 @@ static const struct SpriteTemplate sSpriteTemplate_OkButton =
     .paletteTag = PALTAG_OK_BUTTON,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Cursor =
@@ -2507,6 +2528,8 @@ static const struct SpriteTemplate sSpriteTemplate_Cursor =
     .paletteTag = PALTAG_CURSOR,
     .oam = &sOam_16x16,
     .anims = sAnims_Cursor,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Cursor
 };
 
@@ -2516,6 +2539,8 @@ static const struct SpriteTemplate sSpriteTemplate_InputArrow =
     .paletteTag = PALTAG_PAGE_SWAP_OTHERS,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_InputArrow
 };
 
@@ -2525,6 +2550,8 @@ static const struct SpriteTemplate sSpriteTemplate_Underscore =
     .paletteTag = PALTAG_PAGE_SWAP_OTHERS,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Underscore
 };
 
@@ -2535,6 +2562,8 @@ static const struct SpriteTemplate sSpriteTemplate_PCIcon =
     .oam = &sOam_8x8,
     .anims = sAnims_PCIcon,
     .images = sImageTable_PCIcon,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const u8 *const sNamingScreenKeyboardText[KBPAGE_COUNT][KBROW_COUNT] =

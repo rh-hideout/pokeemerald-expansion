@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by each multi hit")
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(IsMultiHitMove(MOVE_BULLET_SEED));
+        ASSUME(GetMoveEffect(MOVE_BULLET_SEED) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {

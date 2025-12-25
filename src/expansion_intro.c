@@ -191,6 +191,8 @@ static const struct SpriteTemplate sSpriteTemplate_DizzyEgg =
     .paletteTag = PAL_TAG_DIZZY,
     .oam = &sOamData_DizzyEgg,
     .anims = sAnimCmdTable_DizzyEgg,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallback_DizzyWalking,
 };
 
@@ -200,6 +202,7 @@ static const struct SpriteTemplate sSpriteTemplate_Porygon =
     .paletteTag = PAL_TAG_PORYGON,
     .oam = &sOamData_Porygon,
     .anims = sAnimCmdTable_Porygon,
+    .images = NULL,
     .affineAnims = sAffineAnimCmdTable_Porygon,
     .callback = SpriteCallback_PorygonFlying,
 };

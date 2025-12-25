@@ -6,6 +6,7 @@
 #include "battle_ai_field_statuses.h"
 #include "battle_ai_util.h"
 #include "battle_ai_main.h"
+#include "battle_ai_switch_items.h"
 #include "battle_factory.h"
 #include "battle_setup.h"
 #include "event_data.h"
@@ -45,23 +46,6 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler);
 static enum FieldEffectOutcome BenefitsFromGravity(u32 battler);
 static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler);
 
-static bool32 HasBattlerTerrainBoostMove(u32 battler, u32 terrain)
-{
-    if (!IsBattlerAlive(battler))
-        return FALSE;
-
-    u16 *moves = GetMovesArray(battler);
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-    {
-        u32 move = moves[moveIndex];
-        if (GetMoveEffect(move) == EFFECT_TERRAIN_BOOST
-         && GetMoveTerrainBoost_Terrain(move) == terrain)
-            return TRUE;
-    }
-
-    return FALSE;
-}
-
 bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredResult)
 {
     if (IsWeatherActive(B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
@@ -70,12 +54,13 @@ bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredR
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
 
+    u32 i;
     u32 battlersOnSide = 1;
 
     if (HasPartner(battler))
         battlersOnSide = 2;
 
-    for (u32 battlerIndex = 0; battlerIndex < battlersOnSide; battlerIndex++)
+    for (i = 0; i < battlersOnSide; i++)
     {
         if (weather & B_WEATHER_RAIN)
             result = BenefitsFromRain(battler);
@@ -90,7 +75,7 @@ bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredR
 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
-            if (weather & B_WEATHER_DAMAGING_ANY && battlerIndex == 0 && battlersOnSide == 2)
+            if (weather & B_WEATHER_DAMAGING_ANY && i == 0 && battlersOnSide == 2)
                 firstResult = result;
         }
     }
@@ -103,13 +88,14 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
 {
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
+    u32 i;
 
     u32 battlersOnSide = 1;
 
     if (HasPartner(battler))
         battlersOnSide = 2;
 
-    for (u32 battlerIndex = 0; battlerIndex < battlersOnSide; battlerIndex++)
+    for (i = 0; i < battlersOnSide; i++)
     {
         // terrains
         if (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN)
@@ -132,7 +118,7 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
             // Trick room wants both pokemon to agree, not just one
-            if (fieldStatus & STATUS_FIELD_TRICK_ROOM && battlerIndex == 0 && battlersOnSide == 2)
+            if (fieldStatus & STATUS_FIELD_TRICK_ROOM && i == 0 && battlersOnSide == 2)
                 firstResult = result;
         }
     }
@@ -217,11 +203,12 @@ static bool32 IsLightSensitiveMove(u32 move)
 
 static bool32 HasLightSensitiveMove(u32 battler)
 {
+    s32 i;
     u16 *moves = GetMovesArray(battler);
 
-    for (u32 battlerIndex = 0; battlerIndex < MAX_MON_MOVES; battlerIndex++)
+    for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[battlerIndex] != MOVE_NONE && moves[battlerIndex] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[battlerIndex]))
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[i]))
             return TRUE;
     }
 
@@ -321,7 +308,7 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler)
     if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (HasMoveWithEffect(battler, EFFECT_RISING_VOLTAGE))
         return FIELD_EFFECT_POSITIVE;
 
     if ((HasMoveWithEffect(LEFT_FOE(battler), EFFECT_REST) && AI_IsBattlerGrounded(LEFT_FOE(battler)))
@@ -337,8 +324,7 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler)
     || HasDamagingMoveOfType(battler, TYPE_ELECTRIC)))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (HasBattlerSideMoveWithEffect(LEFT_FOE(battler), EFFECT_RISING_VOLTAGE))
         return FIELD_EFFECT_NEGATIVE;
 
 
@@ -379,8 +365,7 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
     if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_MISTY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_MISTY_TERRAIN)
-     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), STATUS_FIELD_MISTY_TERRAIN))
+    if (HasBattlerSideMoveWithEffect(battler, EFFECT_MISTY_EXPLOSION))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
@@ -413,8 +398,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
     if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_PSYCHIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_PSYCHIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (HasBattlerSideMoveWithEffect(battler, EFFECT_EXPANDING_FORCE))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
@@ -435,8 +419,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
     if (grounded && HasDamagingMoveOfType(battler, TYPE_PSYCHIC))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), STATUS_FIELD_PSYCHIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (HasBattlerSideMoveWithEffect(LEFT_FOE(battler), EFFECT_EXPANDING_FORCE))
         return FIELD_EFFECT_NEGATIVE;
 
     if (AI_IsAbilityOnSide(battler, ABILITY_GALE_WINGS)
@@ -494,9 +477,9 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
     if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
     {
         u16* aiMoves = GetMovesArray(battler);
-        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+        for (int i = 0; i < MAX_MON_MOVES; i++)
         {
-            u16 move = aiMoves[moveIndex];
+            u16 move = aiMoves[i];
             if (GetBattleMovePriority(battler, gAiLogicData->abilities[battler], move) > 0 && !(GetMovePriority(move) > 0 && IsBattleMoveStatus(move)))
             {
                 return FIELD_EFFECT_POSITIVE;

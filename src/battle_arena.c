@@ -105,6 +105,8 @@ static const struct SpriteTemplate sSpriteTemplate_JudgmentIcon =
     .paletteTag = TAG_NONE,
     .oam = &sOam_JudgmentIcon,
     .anims = sAnims_JudgmentIcon,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_JudgmentIcon,
 };
 
@@ -369,7 +371,9 @@ void BattleArena_AddMindPoints(u8 battler)
         gBattleStruct->arenaMindPoints[battler]--;
     }
     else if (!IsBattleMoveStatus(gCurrentMove)
-          && effect != EFFECT_REFLECT_DAMAGE
+          && effect != EFFECT_COUNTER
+          && effect != EFFECT_MIRROR_COAT
+          && effect != EFFECT_METAL_BURST
           && effect != EFFECT_BIDE)
     {
         gBattleStruct->arenaMindPoints[battler]++;
@@ -380,7 +384,7 @@ void BattleArena_AddSkillPoints(u8 battler)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
-    if (!gBattleStruct->unableToUseMove)
+    if (gHitMarker & HITMARKER_OBEYS)
     {
         if (gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt)
         {

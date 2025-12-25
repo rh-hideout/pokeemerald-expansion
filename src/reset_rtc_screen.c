@@ -266,6 +266,8 @@ const struct SpriteTemplate gSpriteTemplate_Arrow =
     .oam = &sOamData_Arrow,
     .anims = sAnims_Arrow,
     .images = sPicTable_Arrow,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 #define sTaskId data[0]

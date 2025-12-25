@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Mirror Move's called powder move fails against Grass Types")
 SINGLE_BATTLE_TEST("Mirror Move's called multi-hit move hits multiple times")
 {
     GIVEN {
-        ASSUME(IsMultiHitMove(MOVE_BULLET_SEED));
+        ASSUME(GetMoveEffect(MOVE_BULLET_SEED) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -71,6 +71,9 @@ static const struct SpriteTemplate sUnusedIceCrystalThrowSpriteTemplate =
     .tileTag = ANIM_TAG_ICE_CRYSTALS,
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimUnusedIceCrystalThrow,
 };
 
@@ -159,6 +162,7 @@ const struct SpriteTemplate gIceCrystalSpiralInwardLarge =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineDouble_ObjBlend_8x16,
     .anims = gAnims_IceCrystalLarge,
+    .images = NULL,
     .affineAnims = sAffineAnims_IceCrystalSpiralInwardLarge,
     .callback = AnimIcePunchSwirlingParticle,
 };
@@ -169,6 +173,8 @@ const struct SpriteTemplate gIceCrystalSpiralInwardSmall =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineOff_ObjBlend_8x8,
     .anims = gAnims_IceCrystalSmall,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimIcePunchSwirlingParticle,
 };
 
@@ -178,6 +184,8 @@ const struct SpriteTemplate gIceCrystalSpinSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineDouble_ObjBlend_8x16,
     .anims = gAnims_IceCrystalLarge,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimParticleInVortex,
 };
 
@@ -198,6 +206,7 @@ const struct SpriteTemplate gIceBeamInnerCrystalSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineNormal_ObjBlend_8x16,
     .anims = gAnims_IceCrystalLarge,
+    .images = NULL,
     .affineAnims = sAffineAnims_IceBeamInnerCrystal,
     .callback = AnimIceBeamParticle,
 };
@@ -208,6 +217,8 @@ const struct SpriteTemplate gIceBeamOuterCrystalSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineOff_ObjBlend_8x8,
     .anims = gAnims_IceCrystalSmall,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimIceBeamParticle,
 };
 
@@ -230,6 +241,7 @@ const struct SpriteTemplate gIceCrystalHitLargeSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineNormal_ObjBlend_8x16,
     .anims = gAnims_IceCrystalLarge,
+    .images = NULL,
     .affineAnims = gAffineAnims_IceCrystalHit,
     .callback = AnimIceEffectParticle,
 };
@@ -240,6 +252,7 @@ const struct SpriteTemplate gIceCrystalHitSmallSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineNormal_ObjBlend_8x8,
     .anims = gAnims_IceCrystalSmall,
+    .images = NULL,
     .affineAnims = gAffineAnims_IceCrystalHit,
     .callback = AnimIceEffectParticle,
 };
@@ -250,6 +263,8 @@ const struct SpriteTemplate gSwirlingSnowballSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
     .anims = gAnims_Snowball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSwirlingSnowball,
 };
 
@@ -259,6 +274,8 @@ const struct SpriteTemplate gBlizzardIceCrystalSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = gAnims_BlizzardIceCrystal,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimMoveParticleBeyondTarget,
 };
 
@@ -268,6 +285,8 @@ const struct SpriteTemplate gPowderSnowSnowballSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
     .anims = gAnims_Snowball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimMoveParticleBeyondTarget,
 };
 
@@ -294,6 +313,8 @@ const struct SpriteTemplate gIceGroundSpikeSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_SPIKES,
     .oam = &gOamData_AffineOff_ObjBlend_8x16,
     .anims = sAnims_IceGroundSpike,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimWaveFromCenterOfTarget,
 };
 
@@ -315,6 +336,8 @@ const struct SpriteTemplate gMistCloudSpriteTemplate =
     .paletteTag = ANIM_TAG_MIST_CLOUD,
     .oam = &gOamData_AffineOff_ObjBlend_32x16,
     .anims = sAnims_Cloud,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = InitSwirlingFogAnim,
 };
 
@@ -324,6 +347,8 @@ const struct SpriteTemplate gSmogCloudSpriteTemplate =
     .paletteTag = ANIM_TAG_PURPLE_GAS_CLOUD,
     .oam = &gOamData_AffineOff_ObjBlend_32x16,
     .anims = sAnims_Cloud,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = InitSwirlingFogAnim,
 };
 
@@ -337,6 +362,9 @@ const struct SpriteTemplate gMistBallSpriteTemplate =
     .tileTag = ANIM_TAG_SMALL_BUBBLES,
     .paletteTag = ANIM_TAG_SMALL_BUBBLES,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimThrowMistBall,
 };
 
@@ -351,6 +379,8 @@ const struct SpriteTemplate gPoisonGasCloudSpriteTemplate =
     .paletteTag = ANIM_TAG_PURPLE_GAS_CLOUD,
     .oam = &gOamData_AffineOff_ObjBlend_32x16,
     .anims = sAnims_Cloud,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = InitPoisonGasCloudAnim,
 };
 
@@ -409,6 +439,8 @@ const struct SpriteTemplate gHailParticleSpriteTemplate =
     .tileTag = ANIM_TAG_HAIL,
     .paletteTag = ANIM_TAG_HAIL,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = sAffineAnims_HailParticle,
     .callback = AnimHailBegin,
 };
@@ -418,6 +450,8 @@ const struct SpriteTemplate gWeatherBallIceDownSpriteTemplate =
     .tileTag = ANIM_TAG_HAIL,
     .paletteTag = ANIM_TAG_HAIL,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
     .affineAnims = sAffineAnims_WeatherBallIceDown,
     .callback = AnimWeatherBallDown,
 };
@@ -488,6 +522,7 @@ const struct SpriteTemplate gIceBallChunkSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CHUNK,
     .oam = &gOamData_AffineDouble_ObjNormal_32x32,
     .anims = gAnims_IceBallChunk,
+    .images = NULL,
     .affineAnims = sAffineAnims_IceBallChunk,
     .callback = InitIceBallAnim,
 };
@@ -498,6 +533,8 @@ const struct SpriteTemplate gIceBallImpactShardSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CRYSTALS,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
     .anims = gAnims_IceCrystalSmall,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = InitIceBallParticle,
 };
 
@@ -532,6 +569,8 @@ const struct SpriteTemplate gAvalancheSpriteTemplate =
     .paletteTag = ANIM_TAG_ICE_CHUNK,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAvalancheAnimCmd,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AvalancheAnim_Step,
 };
 
@@ -541,6 +580,7 @@ const struct SpriteTemplate gChatterSingNotesTemplate =
     .paletteTag = ANIM_TAG_MUSIC_NOTES,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = gMusicNotesAnimTable,
+    .images = NULL,
     .affineAnims = gAffineAnims_IceCrystalHit,
     .callback = AnimIceEffectParticle
 };
@@ -1559,8 +1599,8 @@ static void AnimHailBegin(struct Sprite *sprite)
         sprite->data[0] = spriteId;
         if (spriteId != MAX_SPRITES)
         {
-            // The sprite template we're using is shared amongst a few other
-            // places, which make the sprite flicker. That's not what we want
+            // The sprite template we're using is shared amongst a few other 
+            // places, which make the sprite flicker. That's not what we want 
             // here, though. Override the callback.
             gSprites[sprite->data[0]].callback = AnimHailContinue;
             gSprites[sprite->data[0]].sOwnerTaskId = sprite->sOwnerTaskId;
@@ -1609,7 +1649,10 @@ static void AnimHailContinue(struct Sprite *sprite)
 // arg 5: arc height (negative)
 static void InitIceBallAnim(struct Sprite *sprite)
 {
-    u32 animNum = gAnimDisableStructPtr->rolloutTimer + 1;
+    u8 animNum = gAnimDisableStructPtr->rolloutTimerStartValue - gAnimDisableStructPtr->rolloutTimer - 1;
+
+    if (animNum > 4)
+        animNum = 4;
 
     StartSpriteAffineAnim(sprite, animNum);
     InitSpritePosToAnimAttacker(sprite, TRUE);
@@ -1678,7 +1721,8 @@ static void AnimIceBallParticle(struct Sprite *sprite)
 void AnimTask_GetIceBallCounter(u8 taskId)
 {
     u8 arg = gBattleAnimArgs[0];
-    gBattleAnimArgs[arg] = gAnimDisableStructPtr->rolloutTimer + 1;
+
+    gBattleAnimArgs[arg] = gAnimDisableStructPtr->rolloutTimerStartValue - gAnimDisableStructPtr->rolloutTimer - 1;
     DestroyAnimVisualTask(taskId);
 }
 
@@ -1705,6 +1749,8 @@ const struct SpriteTemplate gSnowFlakesSpriteTemplate =
     .paletteTag = ANIM_TAG_SNOWFLAKES,
     .oam = &gOamData_AffineOff_ObjNormal_16x32,
     .anims = sAnims_Snowflakes,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSnowflakes,
 };
 

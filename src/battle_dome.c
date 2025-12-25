@@ -636,6 +636,9 @@ static const struct SpriteTemplate sTourneyTreePokeballSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_TourneyTreePokeball,
     .anims = sSpriteAnimTable_TourneyTreePokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const union AnimCmd sSpriteAnim_TourneyTreeCancelButtonNormal[] =
@@ -662,6 +665,9 @@ static const struct SpriteTemplate sCancelButtonSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_TourneyTreeCloseButton,
     .anims = sSpriteAnimTable_TourneyTreeCancelButton,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const union AnimCmd sSpriteAnim_TourneyTreeExitButtonNormal[] =
@@ -688,6 +694,9 @@ static const struct SpriteTemplate sExitButtonSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_TourneyTreeCloseButton,
     .anims = sSpriteAnimTable_TourneyTreeExitButton,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy
 };
 
 static const union AnimCmd sSpriteAnim_UpArrow[] =
@@ -732,6 +741,8 @@ static const struct SpriteTemplate sHorizontalScrollArrowSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_HorizontalScrollArrow,
     .anims = sSpriteAnimTable_HorizontalScrollArrow,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_HorizontalScrollArrow
 };
 
@@ -741,6 +752,8 @@ static const struct SpriteTemplate sVerticalScrollArrowSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_VerticalScrollArrow,
     .anims = sSpriteAnimTable_VerticalScrollArrow,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_VerticalScrollArrow
 };
 
@@ -3893,7 +3906,7 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
-    case EFFECT_REFLECT_DAMAGE:
+    case EFFECT_COUNTER:
     case EFFECT_EVASION_UP:
     case EFFECT_DEFENSE_UP:
     case EFFECT_DEFENSE_UP_2:
@@ -3910,6 +3923,7 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
     case EFFECT_MAT_BLOCK:
     case EFFECT_ENDURE:
     case EFFECT_SAFEGUARD:
+    case EFFECT_MIRROR_COAT:
     case EFFECT_MAGIC_COAT:
     case EFFECT_INGRAIN:
     case EFFECT_AQUA_RING:
@@ -3924,7 +3938,8 @@ static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
 {
     switch(effect)
     {
-    // TODO: Bring back Misty Explosion and Explosion. Also non of those functions have been updated from gen3
+    case EFFECT_EXPLOSION:
+    case EFFECT_MISTY_EXPLOSION:
     case EFFECT_SPITE:
     case EFFECT_DESTINY_BOND:
     case EFFECT_PERISH_SONG:
@@ -3936,14 +3951,11 @@ static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
 
 static bool32 IsDomeLuckyMove(u32 move)
 {
-    if (GetMoveAccuracy(move) <= 50 && GetMoveAccuracy(move) != 0)
+    if (GetMoveAccuracy(move) <= 50)
         return TRUE;
     switch(GetMoveEffect(move))
     {
-    case EFFECT_REFLECT_DAMAGE:
-        if (GetMoveReflectDamage_DamageCategories(move) != (1u << DAMAGE_CATEGORY_PHYSICAL)) // if not Counter
-            return FALSE;
-        // fallthrough
+    case EFFECT_COUNTER:
     case EFFECT_OHKO:
     case EFFECT_SHEER_COLD:
     case EFFECT_METRONOME:
@@ -4062,8 +4074,11 @@ static bool32 IsDomeComboMove(u32 move)
     case EFFECT_AURORA_VEIL:
     case EFFECT_WEATHER_BALL:
     // Moves dependent on terrain
+    case EFFECT_EXPANDING_FORCE:
     case EFFECT_GRASSY_GLIDE:
-    case EFFECT_TERRAIN_BOOST:
+    //case EFFECT_MISTY_EXPLOSION: (needs a unique effect in gMovesInfo!)
+    case EFFECT_PSYBLADE:
+    case EFFECT_RISING_VOLTAGE:
     case EFFECT_TERRAIN_PULSE:
     // Stockpile group
     case EFFECT_STOCKPILE:
@@ -4207,10 +4222,10 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
     textPrinter.currentY = textPrinter.y;
     textPrinter.letterSpacing = 2;
     textPrinter.lineSpacing = 0;
-    textPrinter.color.accent = TEXT_COLOR_TRANSPARENT;
-    textPrinter.color.foreground = TEXT_DYNAMIC_COLOR_5;
-    textPrinter.color.background = TEXT_COLOR_TRANSPARENT;
-    textPrinter.color.shadow = TEXT_DYNAMIC_COLOR_4;
+    textPrinter.unk = 0;
+    textPrinter.fgColor = TEXT_DYNAMIC_COLOR_5;
+    textPrinter.bgColor = TEXT_COLOR_TRANSPARENT;
+    textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
 
     // Get class and trainer name
     i = 0;
@@ -4796,10 +4811,10 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
     textPrinter.currentY = textPrinter.y;
     textPrinter.letterSpacing = 0;
     textPrinter.lineSpacing = 0;
-    textPrinter.color.accent = TEXT_COLOR_TRANSPARENT;
-    textPrinter.color.foreground = TEXT_DYNAMIC_COLOR_5;
-    textPrinter.color.background = TEXT_COLOR_TRANSPARENT;
-    textPrinter.color.shadow = TEXT_DYNAMIC_COLOR_4;
+    textPrinter.unk = 0;
+    textPrinter.fgColor = TEXT_DYNAMIC_COLOR_5;
+    textPrinter.bgColor = TEXT_COLOR_TRANSPARENT;
+    textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
     StringExpandPlaceholders(gStringVar4, sBattleDomeWinTexts[winStringId]);
     textPrinter.currentChar = gStringVar4;
     textPrinter.windowId = windowId + WIN_MATCH_WIN_TEXT;
@@ -5094,7 +5109,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
 {
     int i, j, k;
     int moveScores[MAX_MON_MOVES * FRONTIER_PARTY_SIZE];
-    u16 moves[MAX_MON_MOVES * FRONTIER_PARTY_SIZE] = {MOVE_NONE};
+    u16 moves[MAX_MON_MOVES * FRONTIER_PARTY_SIZE];
     u16 bestScore = 0;
     u16 bestId = 0;
     int movePower = 0;
@@ -5105,22 +5120,21 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
     {
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
-            u32 moveIndex = i * MAX_MON_MOVES + j;
-            u32 move = moves[moveIndex];
-
-            moveScores[moveIndex] = 0;
+            // TODO: Clean this up, looks like a different data structure (2D array)
+            moveScores[i * MAX_MON_MOVES + j] = 0;
             if (DOME_TRAINERS[winnerTournamentId].trainerId == TRAINER_FRONTIER_BRAIN)
-                move = GetFrontierBrainMonMove(i, j);
+                moves[i * MAX_MON_MOVES + j] = GetFrontierBrainMonMove(i, j);
             else
-                move = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
+                moves[i * MAX_MON_MOVES + j] = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
 
-            movePower = GetMovePower(move);
-            enum BattleMoveEffects effect = GetMoveEffect(move);
-            if (IsBattleMoveStatus(move))
+            movePower = GetMovePower(moves[i * MAX_MON_MOVES + j]);
+            enum BattleMoveEffects effect = GetMoveEffect(moves[i * MAX_MON_MOVES + j]);
+            if (IsBattleMoveStatus(moves[i * MAX_MON_MOVES + j]))
                 movePower = 40;
             else if (movePower == 1)
                 movePower = 60;
-            else if (GetConfig(CONFIG_EXPLOSION_DEFENSE) < GEN_5 && (IsExplosionMove(effect)))
+            else if (B_EXPLOSION_DEFENSE < GEN_5
+                && (effect == EFFECT_EXPLOSION || EFFECT_MISTY_EXPLOSION))
                 movePower /= 2;
 
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
@@ -5143,24 +5157,24 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
 
                 typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(moves[i * 4 + j], targetSpecies, targetAbility);
                 if (typeMultiplier == UQ_4_12(0))
-                    moveScores[moveIndex] += 0;
+                    moveScores[i * MAX_MON_MOVES + j] += 0;
                 else if (typeMultiplier >= UQ_4_12(2.0))
-                    moveScores[moveIndex] += movePower * 2;
+                    moveScores[i * MAX_MON_MOVES + j] += movePower * 2;
                 else if (typeMultiplier <= UQ_4_12(0.5))
-                    moveScores[moveIndex] += movePower / 2;
+                    moveScores[i * MAX_MON_MOVES + j] += movePower / 2;
                 else
-                    moveScores[moveIndex] += movePower;
+                    moveScores[i * MAX_MON_MOVES + j] += movePower;
             }
 
-            if (bestScore < moveScores[moveIndex])
+            if (bestScore < moveScores[i * MAX_MON_MOVES + j])
             {
-                bestId = moveIndex;
-                bestScore = moveScores[moveIndex];
+                bestId = i * MAX_MON_MOVES + j;
+                bestScore = moveScores[i * MAX_MON_MOVES + j];
             }
-            else if (bestScore == moveScores[moveIndex])
+            else if (bestScore == moveScores[i * MAX_MON_MOVES + j])
             {
-                if (moves[bestId] < move) // Why not use (Random() & 1) instead of promoting moves with a higher id?
-                    bestId = moveIndex;
+                if (moves[bestId] < moves[i * MAX_MON_MOVES + j]) // Why not use (Random() & 1) instead of promoting moves with a higher id?
+                    bestId = i * MAX_MON_MOVES + j;
             }
         }
     }
@@ -5294,10 +5308,10 @@ static void Task_ShowTourneyTree(u8 taskId)
         textPrinter.lineSpacing = 0;
         textPrinter.currentX = GetStringCenterAlignXOffsetWithLetterSpacing(textPrinter.fontId, textPrinter.currentChar, 0x70, textPrinter.letterSpacing);
         textPrinter.currentY = 1;
-        textPrinter.color.accent = TEXT_COLOR_TRANSPARENT;
-        textPrinter.color.foreground = TEXT_DYNAMIC_COLOR_5;
-        textPrinter.color.background = TEXT_COLOR_TRANSPARENT;
-        textPrinter.color.shadow = TEXT_DYNAMIC_COLOR_4;
+        textPrinter.unk = 0;
+        textPrinter.fgColor = TEXT_DYNAMIC_COLOR_5;
+        textPrinter.bgColor = TEXT_COLOR_TRANSPARENT;
+        textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
         AddTextPrinter(&textPrinter, 0, NULL);
         for (i = 0; i < DOME_TOURNAMENT_TRAINERS_COUNT; i++)
         {
@@ -5350,26 +5364,26 @@ static void Task_ShowTourneyTree(u8 taskId)
             {
                 if (DOME_TRAINERS[i].trainerId == TRAINER_PLAYER)
                 {
-                    textPrinter.color.foreground = TEXT_COLOR_LIGHT_GRAY;
-                    textPrinter.color.shadow = TEXT_COLOR_RED;
+                    textPrinter.fgColor = TEXT_COLOR_LIGHT_GRAY;
+                    textPrinter.shadowColor = TEXT_COLOR_RED;
                 }
                 else
                 {
-                    textPrinter.color.foreground = TEXT_DYNAMIC_COLOR_2;
-                    textPrinter.color.shadow = TEXT_DYNAMIC_COLOR_4;
+                    textPrinter.fgColor = TEXT_DYNAMIC_COLOR_2;
+                    textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
                 }
             }
             else
             {
                 if (DOME_TRAINERS[i].trainerId == TRAINER_PLAYER)
                 {
-                    textPrinter.color.foreground = TEXT_COLOR_LIGHT_GRAY;
-                    textPrinter.color.shadow = TEXT_COLOR_RED;
+                    textPrinter.fgColor = TEXT_COLOR_LIGHT_GRAY;
+                    textPrinter.shadowColor = TEXT_COLOR_RED;
                 }
                 else
                 {
-                    textPrinter.color.foreground = TEXT_DYNAMIC_COLOR_5;
-                    textPrinter.color.shadow = TEXT_DYNAMIC_COLOR_4;
+                    textPrinter.fgColor = TEXT_DYNAMIC_COLOR_5;
+                    textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
                 }
             }
 
@@ -5475,10 +5489,10 @@ static void Task_HandleStaticTourneyTreeInput(u8 taskId)
             textPrinter.y = 0;
             textPrinter.letterSpacing = 2;
             textPrinter.lineSpacing = 0;
-            textPrinter.color.accent = TEXT_COLOR_TRANSPARENT;
-            textPrinter.color.foreground = TEXT_DYNAMIC_COLOR_2;
-            textPrinter.color.background = TEXT_COLOR_TRANSPARENT;
-            textPrinter.color.shadow = TEXT_DYNAMIC_COLOR_4;
+            textPrinter.unk = 0;
+            textPrinter.fgColor = TEXT_DYNAMIC_COLOR_2;
+            textPrinter.bgColor = TEXT_COLOR_TRANSPARENT;
+            textPrinter.shadowColor = TEXT_DYNAMIC_COLOR_4;
 
             // Update the advancement lines and gray out eliminated trainer names
             for (i = 0; i < DOME_TOURNAMENT_TRAINERS_COUNT; i++)
