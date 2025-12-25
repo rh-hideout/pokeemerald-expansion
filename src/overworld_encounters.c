@@ -46,10 +46,11 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 
 static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
 {
-    [OWE_BEHAVIOR_WANDER_AROUND] =  MOVEMENT_TYPE_WANDER_AROUND_OWE,
-    [OWE_BEHAVIOR_CHASE_PLAYER] =   MOVEMENT_TYPE_CHASE_PLAYER_OWE,
-    [OWE_BEHAVIOR_FLEE_PLAYER] =    MOVEMENT_TYPE_FLEE_PLAYER_OWE,
-    [OWE_BEHAVIOR_WATCH_PLAYER] =   MOVEMENT_TYPE_WATCH_PLAYER_OWE,
+    [OWE_BEHAVIOR_WANDER_AROUND] =      MOVEMENT_TYPE_WANDER_AROUND_OWE,
+    [OWE_BEHAVIOR_CHASE_PLAYER] =       MOVEMENT_TYPE_CHASE_PLAYER_OWE,
+    [OWE_BEHAVIOR_FLEE_PLAYER] =        MOVEMENT_TYPE_FLEE_PLAYER_OWE,
+    [OWE_BEHAVIOR_WATCH_PLAYER] =       MOVEMENT_TYPE_WATCH_PLAYER_OWE,
+    [OWE_BEHAVIOR_APPROACH_PLAYER] =    MOVEMENT_TYPE_APPROACH_PLAYER_OWE,
 };
 
 void LoadOverworldEncounterData(void)
@@ -975,8 +976,33 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon)
     return TRUE;
 }
 
-#define NOT_STARTED         0
-#define STARTED             1
+u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances)
+{
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    s16 absX, absY;
+    s16 distanceX = player->currentCoords.x - mon->currentCoords.x;
+    s16 distanceY = player->currentCoords.y - mon->currentCoords.y;
+
+    // Get absolute X distance.
+    if (distanceX < 0)
+        absX = distanceX * -1;
+    else
+        absX = distanceX;
+
+    // Get absolute Y distance.
+    if (distanceY < 0)
+        absY = distanceY * -1;
+    else
+        absY = distanceY;
+
+    if (absY == absX)
+        *equalDistances = TRUE;
+
+    if (absY > absX)
+        return absY;
+    else
+        return absX;
+}
 
 void Task_OWE_WaitMovements(u8 taskId)
 {

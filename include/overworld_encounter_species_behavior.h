@@ -27,6 +27,14 @@ static const struct MonSpeciesOWEData sOWESpeciesBehaviors[OWE_SPECIES_BEHAVIOR_
         .viewDistance = 4,
         .viewWidth = 3,
         .activeDistance = 5
+    },
+    [OWE_APPROACH_PLAYER_SLOW] = {
+        .behavior = OWE_BEHAVIOR_APPROACH_PLAYER,
+        .idleSpeed = OWE_SPEED_NORMAL,
+        .activeSpeed = OWE_SPEED_SLOW,
+        .viewDistance = 4,
+        .viewWidth = 3,
+        .activeDistance = 5
     }
 };
 
