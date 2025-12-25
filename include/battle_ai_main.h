@@ -28,6 +28,7 @@ enum StatChange
     STAT_CHANGE_SPEED_3,
     STAT_CHANGE_SPATK_3,
     STAT_CHANGE_SPDEF_3,
+    STAT_CHANGE_ATK_MAX,
     STAT_CHANGE_ACC,
     STAT_CHANGE_EVASION
 };
@@ -132,5 +133,7 @@ void Ai_UpdateSwitchInData(u32 battler);
 void Ai_UpdateFaintData(u32 battler);
 void SetAiLogicDataForTurn(struct AiLogicData *aiData);
 void ResetDynamicAiFunc(void);
+void AI_TrySwitchOrUseItem(u32 battler);
+void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 weather, u32 fieldStatus);
 
 #endif // GUARD_BATTLE_AI_MAIN_H

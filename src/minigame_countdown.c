@@ -116,9 +116,6 @@ static const struct SpriteTemplate sSpriteTemplate_StaticCountdown[] =
         .paletteTag = TAG_STATIC_COUNTDOWN,
         .oam = &gOamData_AffineOff_ObjNormal_32x32,
         .anims = sAnims_StaticCountdown,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     },
 };
 
@@ -731,7 +728,6 @@ static u8 CreateNumberSprite(u16 tileTag, u16 palTag, s16 x, s16 y, u8 subpriori
         .oam = &sOamData_Numbers,
         .anims = sAnimTable_Numbers,
         .affineAnims = sAffineAnimTable_Numbers,
-        .callback = SpriteCallbackDummy,
     };
 
     spriteTemplate.tileTag = tileTag;
@@ -745,8 +741,6 @@ static void CreateStartSprite(u16 tileTag, u16 palTag, s16 x, s16 y, u8 subprior
     {
         .oam = &sOamData_Start,
         .anims = sAnimTable_Start,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     };
 
     spriteTemplate.tileTag = tileTag;

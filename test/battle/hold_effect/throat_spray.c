@@ -12,7 +12,7 @@ DOUBLE_BATTLE_TEST("Throat Spray activates after both hits of a spread move")
     s16 firstHit, secondHit;
 
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_THROAT_SPRAY); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);

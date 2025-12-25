@@ -190,7 +190,7 @@ void ActivateDynamax(u32 battler)
     if (!gBattleMons[battler].volatiles.transformed) // Ditto cannot Gigantamax.
         TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX);
 
-    BattleScriptExecute(BattleScript_DynamaxBegins);
+    BattleScriptPushCursorAndCallback(BattleScript_DynamaxBegins);
 }
 
 // Unsets the flags used for Dynamaxing and reverts max HP if needed.
@@ -368,26 +368,36 @@ static u32 GetMaxPowerTier(u32 move)
         }
     }
 
+    if (IsMultiHitMove(move))
+    {
+        switch(GetMovePower(move))
+        {
+            case 0 ... 15:    return MAX_POWER_TIER_1;
+            case 16 ... 18:   return MAX_POWER_TIER_2;
+            case 19 ... 20:   return MAX_POWER_TIER_4;
+            default:
+            case 21 ... 25:   return MAX_POWER_TIER_5;
+        }
+    }
+
     switch (GetMoveEffect(move))
     {
         case EFFECT_BIDE:
         case EFFECT_FIXED_PERCENT_DAMAGE:
         case EFFECT_LEVEL_DAMAGE:
         case EFFECT_PSYWAVE:
-        case EFFECT_COUNTER:
+        case EFFECT_REFLECT_DAMAGE:
         case EFFECT_PRESENT:
         case EFFECT_BEAT_UP:
         case EFFECT_WEATHER_BALL:
         case EFFECT_FLING:
         case EFFECT_ELECTRO_BALL:
-        case EFFECT_METAL_BURST:
         case EFFECT_TERRAIN_PULSE:
         case EFFECT_PUNISHMENT:
         case EFFECT_TRUMP_CARD:
         case EFFECT_FIXED_HP_DAMAGE:
         case EFFECT_SPIT_UP:
         case EFFECT_NATURAL_GIFT:
-        case EFFECT_MIRROR_COAT:
         case EFFECT_FINAL_GAMBIT:
             return MAX_POWER_TIER_2;
         case EFFECT_OHKO:
@@ -404,15 +414,6 @@ static u32 GetMaxPowerTier(u32 move)
         case EFFECT_FLAIL:
         case EFFECT_LOW_KICK:
             return MAX_POWER_TIER_7;
-        case EFFECT_MULTI_HIT:
-            switch(GetMovePower(move))
-            {
-                case 0 ... 15:    return MAX_POWER_TIER_1;
-                case 16 ... 18:   return MAX_POWER_TIER_2;
-                case 19 ... 20:   return MAX_POWER_TIER_4;
-                default:
-                case 21 ... 25:   return MAX_POWER_TIER_5;
-            }
         default:
             break;
     }
