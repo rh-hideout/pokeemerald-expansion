@@ -862,26 +862,30 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
     }
     else
     {
+        u32 speciesId = OW_SPECIES(mon);
+        u32 viewDistance = sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].viewDistance;
+        u32 viewWidth = sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].viewWidth;
+
         switch (mon->facingDirection)
         {
         case DIR_NORTH:
-            if (player->currentCoords.y < mon->currentCoords.y && (mon->currentCoords.y - player->currentCoords.y) <= OWE_MON_SIGHT_LENGTH
-             && player->currentCoords.x >= (mon->currentCoords.x - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            if (player->currentCoords.y < mon->currentCoords.y && (mon->currentCoords.y - player->currentCoords.y) <= viewDistance
+             && player->currentCoords.x >= (mon->currentCoords.x - ((viewWidth - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((viewWidth - 1) / 2)))
                 return TRUE;
             break;
         case DIR_SOUTH:
-            if (player->currentCoords.y > mon->currentCoords.y && (player->currentCoords.y - mon->currentCoords.y) <= OWE_MON_SIGHT_LENGTH
-             && player->currentCoords.x >= (mon->currentCoords.x - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            if (player->currentCoords.y > mon->currentCoords.y && (player->currentCoords.y - mon->currentCoords.y) <= viewDistance
+             && player->currentCoords.x >= (mon->currentCoords.x - ((viewWidth - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((viewWidth - 1) / 2)))
                 return TRUE;
             break;
         case DIR_EAST:
-            if (player->currentCoords.x > mon->currentCoords.x && (player->currentCoords.x - mon->currentCoords.x) <= OWE_MON_SIGHT_LENGTH
-             && player->currentCoords.y >= (mon->currentCoords.y - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            if (player->currentCoords.x > mon->currentCoords.x && (player->currentCoords.x - mon->currentCoords.x) <= viewDistance
+             && player->currentCoords.y >= (mon->currentCoords.y - ((viewWidth - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((viewWidth - 1) / 2)))
                 return TRUE;
             break;
         case DIR_WEST:
-            if (player->currentCoords.x < mon->currentCoords.x && (mon->currentCoords.x - player->currentCoords.x) <= OWE_MON_SIGHT_LENGTH
-             && player->currentCoords.y >= (mon->currentCoords.y - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            if (player->currentCoords.x < mon->currentCoords.x && (mon->currentCoords.x - player->currentCoords.x) <= viewDistance
+             && player->currentCoords.y >= (mon->currentCoords.y - ((viewWidth - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((viewWidth - 1) / 2)))
                 return TRUE;
             break;
         }
