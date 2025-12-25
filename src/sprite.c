@@ -1811,12 +1811,12 @@ u8 PrintTextToSprite(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
     printer.letterSpacing = gFonts[fontId].letterSpacing;
     printer.lineSpacing = gFonts[fontId].lineSpacing;
     printer.color.accent = 0;
-    printer.color.foreground = 8;
+    printer.color.foreground = 1;
     printer.color.background = 0;
-    printer.color.shadow = 1;
+    printer.color.shadow = 3;
     printer.firstSpriteInRow = spriteId;
 
-    return AddTextPrinter(&printer, 1, NULL);
+    return AddTextPrinter(&printer, 0, NULL);
 }
 
 #define nextX data[1]
