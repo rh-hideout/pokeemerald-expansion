@@ -918,7 +918,7 @@ static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor,
     u32 width;
     u8 text[2 * HP_MAX_DIGITS + 2], *txtPtr;
 
-    const u8 color[4] = {0, 1, 3, 0};
+    const union TextColor color = {.asArray = {0, 1, 3, 0}};
 
     // To fit 4 digit HP values we need to modify a bit the way hp is printed on Healthbox.
     // HP_RIGHT_SPRITE_CHARS chars can fit on the right healthbox, the rest goes to the left one
@@ -931,13 +931,13 @@ static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor,
     FillSpriteRectColor(gSprites[spriteId].oam.affineParam, 0, 24, 32, 8, 2);
 
     // Print last HP_RIGHT_SPRITE_CHARS chars on the right window
-    AddSpriteTextPrinterParameterized3(gSprites[spriteId].oam.affineParam, HP_FONT, 0, yOffset + 5, color, 0, txtPtr - HP_RIGHT_SPRITE_CHARS);
+    AddSpriteTextPrinterParameterized6(gSprites[spriteId].oam.affineParam, HP_FONT, 0, yOffset + 5, 0, 0, color, 0, txtPtr - HP_RIGHT_SPRITE_CHARS);
 
     // Print the rest of the chars on the left window
     txtPtr[-HP_RIGHT_SPRITE_CHARS] = EOS;
 
     width = GetStringWidth(HP_FONT, text, -1) + GetFontAttribute(HP_FONT, FONTATTR_LETTER_SPACING);
-    AddSpriteTextPrinterParameterized3(spriteId, HP_FONT, 64 - width, yOffset + 5, color, 0, text);
+    AddSpriteTextPrinterParameterized6(spriteId, HP_FONT, 64 - width, yOffset + 5, 0, 0, color, 0, text);
 }
 
 // Note: this is only possible to trigger via debug, it was an unused GF function.
