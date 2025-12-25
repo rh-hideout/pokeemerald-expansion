@@ -330,6 +330,7 @@ bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount);
 void SetBattlerFieldStatusForSwitchin(u32 battler);
 bool32 ShouldInstructPartner(u32 battlerDef, u32 move);
 bool32 CanMoveBeBouncedBack(u32 battler, u32 move);
+bool32 ShouldUseFusionMove(u32 battler);
 bool32 ShouldUseRound(u32 battler);
 bool32 ShouldUsePledgeMove(u32 battlerAtk, u32 battlerDef, u32 move);
 

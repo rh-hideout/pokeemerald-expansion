@@ -27,6 +27,25 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(u32 battler, u32 move);
 
 // Functions
+void AI_SetBattlerTurnOrder(s32 *aiBattlerTurnOrder)
+{
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+        aiBattlerTurnOrder[battler] = battler;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        for (u32 j = 0; j < gBattlersCount; j++)
+        {
+            if (AI_WhoStrikesFirst(aiBattlerTurnOrder[i], aiBattlerTurnOrder[j], MOVE_NONE, MOVE_NONE, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
+            {
+                u32 temp = aiBattlerTurnOrder[i];
+                aiBattlerTurnOrder[i] = aiBattlerTurnOrder[j];
+                aiBattlerTurnOrder[j] = temp;
+            }
+        }
+    }
+}
+
 u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, u32 holdEffectDef, u32 move)
 {
     if (MoveIgnoresTargetAbility(move))
@@ -1422,6 +1441,7 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef)
     * AI_IS_FASTER: is user(ai) faster
     * AI_IS_SLOWER: is target faster
 */
+
 s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 aiMoveConsidered, u32 playerMoveConsidered, enum ConsiderPriority considerPriority)
 {
     u32 speedBattlerAI, speedBattler;
@@ -1441,8 +1461,8 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 aiMoveConsidered, u32 pla
             return AI_IS_SLOWER;
     }
 
-    speedBattlerAI = GetBattlerTotalSpeedStat(battlerAI, abilityAI, holdEffectAI);
-    speedBattler   = GetBattlerTotalSpeedStat(battler, abilityPlayer, holdEffectPlayer);
+    speedBattlerAI = gAiLogicData->speedStats[battlerAI];
+    speedBattler   = gAiLogicData->speedStats[battler];
 
     if (holdEffectAI == HOLD_EFFECT_LAGGING_TAIL && holdEffectPlayer != HOLD_EFFECT_LAGGING_TAIL)
         return AI_IS_SLOWER;
@@ -5504,7 +5524,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
         {
             u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battler, opposingBattler, gAiLogicData);
             // will we go first?
-            if (AI_WhoStrikesFirst(battler, opposingBattler, killingMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY) == AI_IS_FASTER && GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove))
+            if (AI_IsFaster(battler, opposingBattler, killingMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY) && GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove))
                 return USE_GIMMICK;
         }
     }
@@ -6321,6 +6341,41 @@ bool32 CanMoveBeBouncedBack(u32 battler, u32 move)
     return FALSE;
 }
 
+static bool32 WillPartnerActBeforeOrAfter(u32 battler, u32 partner)
+{
+    s32 aiBattlerTurnOrder[gBattlersCount];
+    AI_SetBattlerTurnOrder(aiBattlerTurnOrder);
+
+    battler = aiBattlerTurnOrder[battler];
+    partner = aiBattlerTurnOrder[partner];
+
+    if (battler + 1 == partner || battler - 1 == partner)
+        return TRUE;
+
+    return FALSE;
+}
+
+bool32 ShouldUseFusionMove(u32 battler)
+{
+    u32 partner = BATTLE_PARTNER(battler);
+    u32 partnerMove = gBattleMons[partner].moves[gAiBattleData->chosenMoveIndex[partner]];
+
+    if (!IsBattlerAlive(partner))
+        return FALSE;
+
+    // Second time we get into the function with the first battler since partner didn't choose a Fusion move
+    if (gAiLogicData->comboState == COMBO_SECOND_BATTLER_NO_SCORE_INCREASE)
+        return FALSE;
+
+    if (!WillPartnerActBeforeOrAfter(battler, partner))
+        return FALSE;
+
+    if (battler < partner || GetMoveEffect(partnerMove) == EFFECT_FUSION_COMBO)
+        return HasMoveWithEffect(partner, EFFECT_FUSION_COMBO);
+
+    return FALSE;
+}
+
 bool32 ShouldUseRound(u32 battler)
 {
     u32 partner = BATTLE_PARTNER(battler);
@@ -6338,7 +6393,6 @@ bool32 ShouldUseRound(u32 battler)
         return HasMoveWithEffect(partner, EFFECT_ROUND);
 
     return FALSE;
-
 }
 
 bool32 ShouldUsePledgeMove(u32 battlerAtk, u32 battlerDef, u32 move)

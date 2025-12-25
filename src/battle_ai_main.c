@@ -362,10 +362,12 @@ static void TryResetComboAttackState(u32 battler, u32 moveIndex)
     enum BattleMoveEffects effect = GetMoveEffect(gBattleMons[battler].moves[moveIndex]);
 
     // partner (high id) didn't choose Round, recalculate move
-    if (effect != EFFECT_ROUND
+    if (gAiLogicData->comboState == COMBO_FIRST_BATTLER_SCORE_INCREASE
      && effect != EFFECT_PLEDGE
-     && gAiLogicData->comboState == COMBO_FIRST_BATTLER_SCORE_INCREASE)
+     && effect != EFFECT_ROUND
+     && effect != EFFECT_FUSION_COMBO)
     {
+        DebugPrintf("???");
         u32 partner = BATTLE_PARTNER(battler);
         gAiLogicData->comboState = COMBO_SECOND_BATTLER_NO_SCORE_INCREASE;
         gAiBattleData->chosenMoveIndex[partner] = BattleAI_ChooseMoveIndex(partner);
@@ -3269,6 +3271,13 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     // consider our move effect relative to partner state
     switch (effect)
     {
+    case EFFECT_FUSION_COMBO:
+        if (ShouldUseFusionMove(battlerAtk))
+        {
+            if (gAiLogicData->comboState == COMBO_INITIAL_STATE)
+                gAiLogicData->comboState = COMBO_FIRST_BATTLER_SCORE_INCREASE;
+            ADJUST_SCORE(BEST_EFFECT);
+        }
     case EFFECT_ROUND:
         if (ShouldUseRound(battlerAtk))
         {
@@ -6880,7 +6889,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ADJUST_SCORE(GOOD_EFFECT);
         else if (hitsToKO == 1)
             ADJUST_SCORE(BEST_EFFECT);
-        else if (IsSwitchOutEffect(GetMoveEffect(predictedMove)) && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) == AI_IS_SLOWER) // Pursuit against fast U-Turn
+        else if (IsSwitchOutEffect(GetMoveEffect(predictedMove)) && AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Pursuit against fast U-Turn
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     }
