@@ -385,6 +385,68 @@ u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 
     return AddTextPrinter(&printerTemplate, speed, callback);
 }
 
+u16 AddSpriteTextPrinterParametrerized(u8 spriteId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16))
+{
+    struct TextPrinterTemplate printerTemplate;
+
+    printerTemplate.currentChar = str;
+    printerTemplate.type = SPRITE_TEXT_PRINTER;
+    printerTemplate.spriteId = spriteId;
+    printerTemplate.fontId = fontId;
+    printerTemplate.x = x;
+    printerTemplate.y = y;
+    printerTemplate.currentX = x;
+    printerTemplate.currentY = y;
+    printerTemplate.letterSpacing = gFonts[fontId].letterSpacing;
+    printerTemplate.lineSpacing = gFonts[fontId].lineSpacing;
+    printerTemplate.color = gFonts[fontId].color;
+    return AddTextPrinter(&printerTemplate, speed, callback);
+}
+
+void AddSpriteTextPrinterParameterized3(u8 spriteId, u8 fontId, u8 left, u8 top, const u8 *color, s8 speed, const u8 *str)
+{
+    struct TextPrinterTemplate printer;
+
+    printer.currentChar = str;
+    printer.type = SPRITE_TEXT_PRINTER;
+    printer.spriteId = spriteId;
+    printer.fontId = fontId;
+    printer.x = left;
+    printer.y = top;
+    printer.currentX = printer.x;
+    printer.currentY = printer.y;
+    printer.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
+    printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
+    printer.color.background = color[0];
+    printer.color.foreground = color[1];
+    printer.color.shadow = color[2];
+    printer.color.accent = color[0];
+
+    AddTextPrinter(&printer, speed, NULL);
+}
+
+void AddSpriteTextPrinterParameterized4(u8 spriteId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const u8 *color, s8 speed, const u8 *str)
+{
+    struct TextPrinterTemplate printer;
+
+    printer.currentChar = str;
+    printer.type = SPRITE_TEXT_PRINTER;
+    printer.spriteId = spriteId;
+    printer.fontId = fontId;
+    printer.x = left;
+    printer.y = top;
+    printer.currentX = printer.x;
+    printer.currentY = printer.y;
+    printer.letterSpacing = letterSpacing;
+    printer.lineSpacing = lineSpacing;
+    printer.color.background = color[0];
+    printer.color.foreground = color[1];
+    printer.color.shadow = color[2];
+    printer.color.accent = color[0];
+
+    AddTextPrinter(&printer, speed, NULL);
+}
+
 bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16))
 {
     if (!gFonts)
