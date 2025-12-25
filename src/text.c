@@ -7,6 +7,7 @@
 #include "fonts.h"
 #include "m4a.h"
 #include "main.h"
+#include "malloc.h"
 #include "menu.h"
 #include "palette.h"
 #include "sound.h"
@@ -51,10 +52,11 @@ static u32 GetGlyphWidth_SmallNarrower(u16, bool32);
 static u32 GetGlyphWidth_ShortNarrow(u16, bool32);
 static u32 GetGlyphWidth_ShortNarrower(u16, bool32);
 
-static u32 GetUnusedTextPrinter(void);
+static struct TextPrinter *AllocateTextPrinter(void);
+static u32 GetNumTextPrinters(void);
+static void FreeFinishedTextPrinters(void);
 
-//static EWRAM_DATA struct TextPrinter sTempTextPrinter = {0};
-static EWRAM_DATA struct TextPrinter sTextPrinters[NUM_TEXT_PRINTERS] = {0};
+static EWRAM_DATA struct TextPrinter *sFirstTextPrinter = NULL;
 
 static EWRAM_DATA u16 sFontHalfRowLookupTable[0x100];
 static EWRAM_DATA union TextColor sLastTextColor;
@@ -358,8 +360,11 @@ void DeactivateAllTextPrinters(void)
     int printer;
     for (printer = 0; printer < NUM_TEXT_PRINTERS; ++printer)
     {
-        sTextPrinters[printer].active = FALSE;
-        sTextPrinters[printer].isInUse = FALSE;
+        if (sTextPrinters[printer] != NULL)
+        {
+            sTextPrinters[printer]->active = FALSE;
+            sTextPrinters[printer]->isInUse = FALSE;
+        }
     }
 }
 
@@ -390,12 +395,12 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
 
     sTempTextPrinter.active = TRUE;
     sTempTextPrinter.state = RENDER_STATE_HANDLE_CHAR;
-    sTempTextPrinter.textSpeed = speed;
-    sTempTextPrinter.delayCounter = 0;
-    sTempTextPrinter.scrollDistance = 0;
-
     sTempTextPrinter.printerTemplate = *printerTemplate;
     sTempTextPrinter.callback = callback;
+    sTempTextPrinter.textSpeed = speed;
+
+    sTempTextPrinter.delayCounter = 0;
+    sTempTextPrinter.scrollDistance = 0;
     sTempTextPrinter.minLetterSpacing = 0;
     sTempTextPrinter.japanese = 0;
 
@@ -404,11 +409,15 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
     {
         --sTempTextPrinter.textSpeed;
         sTempTextPrinter.isInUse = TRUE;
-        u32 printerId = GetUnusedTextPrinter();
-        if (printerId != NUM_TEXT_PRINTERS + 1)
-            sTextPrinters[printerId] = sTempTextPrinter;
+        struct TextPrinter *printer = AllocateTextPrinter();
+        if (printer != NULL)
+        {
+            *printer = sTempTextPrinter;
+        }
         else
+        {
             return FALSE;
+        }
     }
     else
     {
@@ -446,40 +455,47 @@ void RunTextPrinters(void)
     if (gDisableTextPrinters)
         return;
 
+    u32 numPrinters = GetNumTextPrinters();
+
+    sTextPrinters[0] = sFirstTextPrinter;
+
+    struct TextPrinter *currentPrinter = sFirstTextPrinter;
+
     do
     {
         u32 numEmpty = 0;
-        for (u32 i = 0; i < NUM_TEXT_PRINTERS; ++i)
+        while (currentPrinter != NULL)
         {
-            if (sTextPrinters[i].active)
+            if (currentPrinter->active)
             {
                 for (u32 repeat = 0; repeat < textRepeats; repeat++)
                 {
-                    u32 renderState = RenderFont(&sTextPrinters[i]);
+                    u32 renderState = RenderFont(currentPrinter);
                     switch (renderState)
                     {
                     case RENDER_PRINT:
-                        switch (sTextPrinters[i].printerTemplate.type)
+                        switch (currentPrinter->printerTemplate.type)
                         {
                         case WINDOW_TEXT_PRINTER:
-                            CopyWindowToVram(sTextPrinters[i].printerTemplate.windowId, COPYWIN_GFX);
+                            CopyWindowToVram(currentPrinter->printerTemplate.windowId, COPYWIN_GFX);
                             break;
                         case SPRITE_TEXT_PRINTER:
                             break;
                         }
                         break;
                     case RENDER_UPDATE:
-                        if (sTextPrinters[i].callback != NULL)
-                            sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderState);
+                        if (currentPrinter->callback != NULL)
+                            currentPrinter->callback(&currentPrinter->printerTemplate, renderState);
                         isInstantText = FALSE;
                         break;
                     case RENDER_FINISH:
-                        sTextPrinters[i].active = FALSE;
+                        currentPrinter->active = FALSE;
+                        currentPrinter->isInUse = FALSE;
                         isInstantText = FALSE;
                         break;
                     }
 
-                    if (!sTextPrinters[i].active)
+                    if (!currentPrinter->active)
                         break;
                 }
             }
@@ -487,16 +503,44 @@ void RunTextPrinters(void)
             {
                 numEmpty++;
             }
+            currentPrinter = currentPrinter->nextPrinter;
         }
 
-        if (numEmpty == NUM_TEXT_PRINTERS)
+        if (numEmpty == numPrinters)
+        {
+            FreeFinishedTextPrinters();
             return;
+        }
     } while (isInstantText);
+    FreeFinishedTextPrinters();
 }
 
-bool32 IsTextPrinterActive(u8 id)
+bool32 IsTextPrinterActive(u32 id, bool32 isSprite)
 {
-    return sTextPrinters[id].active;
+    struct TextPrinter *currentPrinter = sFirstTextPrinter;
+
+    while (currentPrinter != NULL)
+    {
+        if (isSprite)
+        {
+            if (currentPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER
+             && currentPrinter->printerTemplate.spriteId == id)
+            {
+                return currentPrinter->active;
+            }
+        }
+        else
+        {
+            if (currentPrinter->printerTemplate.type == WINDOW_TEXT_PRINTER
+             && currentPrinter->printerTemplate.windowId == id)
+            {
+                return currentPrinter->active;
+            }
+        }
+        currentPrinter = currentPrinter->nextPrinter;
+    }
+
+    return FALSE;
 }
 
 static u32 RenderFont(struct TextPrinter *textPrinter)
@@ -2550,11 +2594,80 @@ u8 *WrapFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width)
     }
 }
 
-static u32 GetUnusedTextPrinter(void)
+static struct TextPrinter *AllocateTextPrinter(void)
 {
-    for (u32 i = 0; i < NUM_TEXT_PRINTERS; i++)
-        if (!sTextPrinters[i].isInUse)
-            return i;
-    errorf("\nAll text printers are already in use.\nIncrease NUM_TEXT_PRINTERS");
-    return NUM_TEXT_PRINTERS + 1;
+    struct TextPrinter *printer = Alloc(sizeof(struct TextPrinter));
+
+    if (printer == NULL)
+    {
+        errorf("Failed to allocate text printer");
+        return NULL;
+    }
+
+    if (sFirstTextPrinter == NULL)
+    {
+        sFirstTextPrinter = printer;
+    }
+    else
+    {
+        struct TextPrinter *currentPrinter = sFirstTextPrinter;
+        while (currentPrinter->nextPrinter != NULL)
+            currentPrinter = currentPrinter->nextPrinter;
+
+        currentPrinter->nextPrinter = printer;
+    }
+
+    return printer;
+}
+
+static u32 GetNumTextPrinters(void)
+{
+    u32 numPrinters = 0;
+    struct TextPrinter *currentPrinter = sFirstTextPrinter;
+    while (currentPrinter != NULL)
+    {
+        currentPrinter = currentPrinter->nextPrinter;
+        numPrinters++;
+    }
+    return numPrinters;
+}
+
+static void FreeFinishedTextPrinters(void)
+{
+    //  Clear out printers from the front
+    while (sFirstTextPrinter != NULL)
+    {
+        if (!sFirstTextPrinter->isInUse)
+        {
+            struct TextPrinter *printer = sFirstTextPrinter;
+            sFirstTextPrinter = sFirstTextPrinter->nextPrinter;
+            Free(printer);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    if (sFirstTextPrinter == NULL)
+        return;
+
+    //  Clear out printers in the "middle"
+    struct TextPrinter *prevPrinter = sFirstTextPrinter;
+    struct TextPrinter *currentPrinter = sFirstTextPrinter->nextPrinter;
+
+    while (currentPrinter != NULL)
+    {
+        if (!currentPrinter->isInUse)
+        {
+            prevPrinter->nextPrinter = currentPrinter->nextPrinter;
+            Free(currentPrinter);
+            currentPrinter = prevPrinter->nextPrinter;
+        }
+        else
+        {
+            prevPrinter = currentPrinter;
+            currentPrinter = currentPrinter->nextPrinter;
+        }
+    }
 }

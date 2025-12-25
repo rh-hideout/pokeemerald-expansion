@@ -4256,10 +4256,21 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
 
 //const u8 sSomeText[] = _("{START_BUTTON} what");
 const u8 sSomeText[] = _("À");
-const u8 sNewString[] = _("This\n{START_BUTTON}\ntext");
+//const u8 sNewString[] = _("This\n{START_BUTTON}\ntext");
+const u8 sNewString[] = _("This is some text");
+const u8 sNewString2[] = _("Do you know what this is?");
+const u8 sNewString3[] = _("This is kinda magic");
+const u8 sNewString4[] = _("It didn't work before");
+const u8 sNewString5[] = _("Even more lines!");
+const u8 sNewString6[] = _("{START_BUTTON} also works!");
 
 const u32 sTestSpriteGfx[] = INCBIN_U32("graphics/test_sprite.4bpp");
 const u16 sTestSpritePal[] = INCBIN_U16("graphics/test_sprite.gbapal");
+
+static void SomeTask(u8 taskId)
+{
+    RunTextPrinters();
+}
 
 void TestThing(void)
 {
@@ -4319,25 +4330,34 @@ void TestThing(void)
     cs.spriteSize = SPRITE_SIZE(32x32);
     cs.spriteShape = SPRITE_SHAPE(32x32);
 
-    u8 spriteIds[16];
+    u8 spriteIds[12];
 
     for (u32 y = 0; y < 3; y++)
     {
-        for (u32 x = 0; x < 3; x++)
+        for (u32 x = 0; x < 4; x++)
         {
-            cs.tileTag = 0xCEC1 + x + 3 * y;
+            cs.tileTag = 0xCEC1 + x + 4 * y;
             cs.posX = 32 + 32 * x;
             cs.posY = 32 + 32 * y;
-            spriteIds[x + y * 3] = Even_CreateSprite(&cs);
+            spriteIds[x + y * 4] = Even_CreateSprite(&cs);
         }
     }
-    const u32 *srcs[9] = {sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx};
-    SetupSpritesForTextPrinting(spriteIds, srcs, 3, 3);
+    const u32 *srcs[12] = {sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx,
+                           sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx,
+                           sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx};
+    SetupSpritesForTextPrinting(spriteIds, srcs, 4, 3);
 
     //FillSpriteRectColor(spriteIds[0], 3, 3, 3, 3, TRUE, 7);
     //FillSpriteRectColor(spriteIds[0], 3, 3, 88, 4, TRUE, 7);
     //FillSpriteRectColor(spriteIds[0], 3, 3, 88, 88, TRUE, 7);
-    FillSpriteRectSprite(spriteIds[0], 3, 3, 88, 88);
+    //FillSpriteRectSprite(spriteIds[0], 3, 3, 88, 88);
 
-    PrintTextToSprite(spriteIds[0], 24, 10, FONT_SHORT, sNewString);
+    PrintTextToSprite(spriteIds[0], 0, 0, FONT_SHORT, sNewString);
+    PrintTextToSprite(spriteIds[0], 0, 16, FONT_SHORT, sNewString2);
+    PrintTextToSprite(spriteIds[4], 0, 0, FONT_SHORT, sNewString3);
+    PrintTextToSprite(spriteIds[4], 0, 16, FONT_SHORT, sNewString4);
+    PrintTextToSprite(spriteIds[8], 0, 0, FONT_SHORT, sNewString5);
+    PrintTextToSprite(spriteIds[8], 0, 16, FONT_SHORT, sNewString6);
+
+    CreateTask(SomeTask, 0);
 }
