@@ -4995,14 +4995,20 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                  && AI_WhoStrikesFirst(battlerAtk, battlerDef, MOVE_FAKE_OUT, MOVE_FAKE_OUT, CONSIDER_PRIORITY) == AI_IS_FASTER)
                  || (HasMove(BATTLE_PARTNER(battlerDef), MOVE_FAKE_OUT) && gBattleStruct->battlerState[BATTLE_PARTNER(battlerDef)].isFirstTurn
                  && AI_WhoStrikesFirst(battlerAtk, BATTLE_PARTNER(battlerDef), MOVE_FAKE_OUT, MOVE_FAKE_OUT, CONSIDER_PRIORITY) == AI_IS_FASTER))
+                    ADJUST_SCORE(GOOD_EFFECT);
+                // If ally has KO on target's partner, but target can fast KO ally (checking move and priority combinations for everything likely gets a bit complicated)
+                else if (hasPartner
+                 && CanAIFaintTarget(BATTLE_PARTNER(battlerAtk), BATTLE_PARTNER(battlerDef), 1)
+                 && (CanAIFaintTarget(battlerDef, BATTLE_PARTNER(battlerAtk), 1) && AI_WhoStrikesFirst(BATTLE_PARTNER(battlerAtk), battlerDef, gBattleMons[BATTLE_PARTNER(battlerAtk)].moves[gAiBattleData->chosenMoveIndex[BATTLE_PARTNER(battlerAtk)]], predictedMoveSpeedCheck, CONSIDER_PRIORITY) == AI_IS_SLOWER)
+                 && !(CanAIFaintTarget(battlerAtk, battlerDef, 1) && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER))
                     ADJUST_SCORE(BEST_EFFECT);
-                // If ally has slow KO with their chosen move, user sees no KOs while outspeeding (checking move and priority combinations gets a bit complicated)
+                // If ally has slow KO with their chosen move, user sees no KOs while outspeeding (checking move and priority combinations for everything likely gets a bit complicated)
                 else if (hasPartner 
-                 && (AI_WhoStrikesFirst(BATTLE_PARTNER(battlerAtk), battlerDef, gBattleMons[BATTLE_PARTNER(battlerAtk)].moves[gAiBattleData->chosenMoveIndex[BATTLE_PARTNER(battlerAtk)]], MOVE_SCRATCH, CONSIDER_PRIORITY) == AI_IS_SLOWER)
+                 && (AI_WhoStrikesFirst(BATTLE_PARTNER(battlerAtk), battlerDef, gBattleMons[BATTLE_PARTNER(battlerAtk)].moves[gAiBattleData->chosenMoveIndex[BATTLE_PARTNER(battlerAtk)]], predictedMoveSpeedCheck, CONSIDER_PRIORITY) == AI_IS_SLOWER)
                  && CanAIFaintTarget(BATTLE_PARTNER(battlerAtk), battlerDef, 1) 
                  && !(CanAIFaintTarget(battlerAtk, battlerDef, 1) && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
                  && !(CanAIFaintTarget(battlerAtk, BATTLE_PARTNER(battlerDef), 1) && AI_WhoStrikesFirst(battlerAtk, BATTLE_PARTNER(battlerDef), move, MOVE_SCRATCH, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER))
-                    ADJUST_SCORE(BEST_EFFECT);
+                    ADJUST_SCORE(GOOD_EFFECT);
                 else
                     ADJUST_SCORE(DECENT_EFFECT);
             }
