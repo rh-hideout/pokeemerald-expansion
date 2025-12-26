@@ -70,7 +70,7 @@ DOUBLE_BATTLE_TEST("Mind Blown causes the user to faint when below 1/2 of its Ma
 SINGLE_BATTLE_TEST("Mind Blown causes the user & the target to faint when below 1/2 of its Max HP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200) ; MaxHP(400); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(200); MaxHP(400); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -91,7 +91,8 @@ DOUBLE_BATTLE_TEST("Mind Blown causes everyone to faint in a double battle")
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_ABRA) { HP(1); }
         OPPONENT(SPECIES_KADABRA) { HP(1); }
-        OPPONENT(SPECIES_KADABRA);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_MIND_BLOWN); }
     } SCENE {

@@ -134,7 +134,6 @@ DOUBLE_BATTLE_TEST("Explosion boosted by Galvanize is correctly blocked by Volt 
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
-        MESSAGE("Geodude used Explosion!");
         HP_BAR(playerLeft, hp: 0);
         ABILITY_POPUP(opponentLeft, ABILITY_VOLT_ABSORB);
         NOT HP_BAR(opponentLeft, hp: 0);
