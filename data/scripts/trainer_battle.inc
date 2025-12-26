@@ -132,8 +132,11 @@ Std_MsgboxAutoclose::
 @ Event Snippets for dynamic trainer battle scripting
 EventSnippet_Lock::
 	lock
-	faceplayer
 	setflag FLAG_SAFE_FOLLOWER_MOVEMENT
+	return
+
+EventSnippet_FacePlayer::
+	faceplayer
 	return
 
 EventSnippet_StartTrainerApproach::

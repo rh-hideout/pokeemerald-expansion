@@ -41,6 +41,7 @@ extern const u8 EventScript_ShowTrainerIntroMsg[];
 extern const u8 EventScript_NotEnoughMonsForDoubleBattle[];
 
 extern const u8 EventSnippet_Lock[];
+extern const u8 EventSnippet_FacePlayer[];
 extern const u8 EventSnippet_StartTrainerApproach[];
 extern const u8 EventSnippet_TryDoNormalTrainerBattle[];
 extern const u8 EventSnippet_RevealTrainer[];

@@ -31,7 +31,8 @@ typedef union PACKED TrainerBattleParameter
         u8 playMusicA:1;
         u8 playMusicB:1;
         u8 continueScript:1;
-        u8 padding:3;
+        u8 facePlayer:1;
+        u8 padding:2;
         u8 objEventLocalIdA;
         u16 opponentA;
         u8 *introTextA;
@@ -55,12 +56,13 @@ extern u16 gPartnerTrainerId;
 
 #define TRAINER_BATTLE_PARAM gTrainerBattleParameter.params
 
-#define DebugPrintTrainerParams(battleParameter) DebugPrintfLevel(MGBA_LOG_DEBUG, "\nisDouble: %d\nisRematch: %d\nplayMusicA: %d\nplayMusicB: %d\ncotinueScript: %d\npadding: %d\nlocalIdA: %d\ntrainerA: %d\nintroA: %x\ndefeatA: %x\neventA: %x\nlocalIdB: %d\ntrainerB: %d\nintroB: %x\ndefeatB: %x\neventB: %x\nvictory: %x\nnotBattle:%x\n", \
+#define DebugPrintTrainerParams(battleParameter) DebugPrintfLevel(MGBA_LOG_DEBUG, "\nisDouble: %d\nisRematch: %d\nplayMusicA: %d\nplayMusicB: %d\ncotinueScript: %d\nfacePlayer: %d\npadding: %d\nlocalIdA: %d\ntrainerA: %d\nintroA: %x\ndefeatA: %x\neventA: %x\nlocalIdB: %d\ntrainerB: %d\nintroB: %x\ndefeatB: %x\neventB: %x\nvictory: %x\nnotBattle:%x\n", \
         battleParameter->params.isDoubleBattle, \
         battleParameter->params.isRematch, \
         battleParameter->params.playMusicA, \
         battleParameter->params.playMusicB, \
         battleParameter->params.continueScript, \
+        battleParameter->params.facePlayer, \
         battleParameter->params.padding, \
         battleParameter->params.objEventLocalIdA, \
         battleParameter->params.opponentA, \

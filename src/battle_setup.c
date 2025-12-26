@@ -1074,8 +1074,9 @@ static const u8* BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParamet
     DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
-    PUSH(EventSnippet_Lock)
-    PUSH(EventSnippet_RevealTrainer)
+    PUSH       (EventSnippet_Lock)
+    PUSH_IF_SET(EventSnippet_FacePlayer, battleParams->params.facePlayer)
+    PUSH       (EventSnippet_RevealTrainer)
 
     if (GetTrainerFlag()) {
         PUSH(EventSnippet_GotoPostBattleScript)
@@ -1121,8 +1122,9 @@ static const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *batt
     DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
-    PUSH(EventSnippet_Lock)
-    PUSH(EventSnippet_RevealTrainer)
+    PUSH       (EventSnippet_Lock)
+    PUSH_IF_SET(EventSnippet_FacePlayer, battleParams->params.facePlayer)
+    PUSH       (EventSnippet_RevealTrainer)
     
     if ((GetTrainerFlag() && !battleParams->params.isRematch) 
     || (!IsTrainerReadyForRematch() && battleParams->params.isRematch)) {
