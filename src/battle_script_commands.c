@@ -5567,13 +5567,6 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
 
     switch (moveEffect)
     {
-    case EFFECT_FINAL_GAMBIT:
-        if (GetConfig(CONFIG_FINAL_GAMBIT_FAINT_TIMING) < GEN_6)
-        {
-            BattleScriptCall(BattleScript_FinalGambit);
-            effect = TRUE;
-        }
-        break;
     case EFFECT_KNOCK_OFF:
         if (gBattleMons[gBattlerTarget].item != ITEM_NONE
          && IsBattlerAlive(gBattlerAttacker)
@@ -5970,15 +5963,6 @@ static void Cmd_moveend(void)
                         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
                         BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
                     }
-                }
-                break;
-            case EFFECT_FINAL_GAMBIT:
-                if (GetConfig(CONFIG_FINAL_GAMBIT_FAINT_TIMING) < GEN_6
-                 && IsBattlerAlive(gBattlerAttacker)
-                 && IsBattlerTurnDamaged(gBattlerTarget))
-                {
-                    BattleScriptCall(BattleScript_FinalGambit);
-                    effect = TRUE;
                 }
                 break;
             case EFFECT_MAX_HP_50_RECOIL:

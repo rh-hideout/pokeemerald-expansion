@@ -2923,7 +2923,7 @@ static enum MoveCanceler CancelerExplodingDamp(struct BattleContext *ctx)
 
 static enum MoveCanceler CancelerExplosion(struct BattleContext *ctx)
 {
-    if (IsExplosionMove(ctx->move))
+    if (IsExplosionMove(ctx->move) || (GetConfig(CONFIG_FINAL_GAMBIT_FAINT_TIMING) < GEN_6) && GetMoveEffect(ctx->move) == EFFECT_FINAL_GAMBIT)
     {
         BattleScriptCall(BattleScript_Explosion);
         return MOVE_STEP_BREAK;

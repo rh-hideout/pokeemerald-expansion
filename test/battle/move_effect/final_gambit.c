@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Final Gambit does not faint user if target is immune")
 SINGLE_BATTLE_TEST("Final Gambit faints the user before abilities can activate (Gen 5)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_FINAL_GAMBIT_FAINT_TIMING, GEN_5);
+        WITH_CONFIG(CONFIG_UPDATED_MOVE_FLAGS, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PYUKUMUKU) { Ability(ABILITY_INNARDS_OUT); HP(1); }
     } WHEN {
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Final Gambit faints the user before abilities can activate (
 SINGLE_BATTLE_TEST("Final Gambit faints the user after abilities can activate (Gen 6+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_FINAL_GAMBIT_FAINT_TIMING, GEN_6);
+        WITH_CONFIG(CONFIG_UPDATED_MOVE_FLAGS, GEN_6);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PYUKUMUKU) { Ability(ABILITY_INNARDS_OUT); HP(1); }
     } WHEN {
