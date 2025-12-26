@@ -1134,7 +1134,7 @@ static const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *batt
 
     if (battleParams->params.isDoubleBattle && !HasEnoughMonsForDoubleBattle2())
     {
-        PUSH(EventScript_NotEnoughMonsForDoubleBattle)
+        PUSH(EventSnippet_NotEnoughMonsForDoubleBattle)
         return NULL;
     }
     
