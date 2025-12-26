@@ -35,6 +35,13 @@ static const struct MonSpeciesOWEData sOWESpeciesBehaviors[OWE_SPECIES_BEHAVIOR_
         .viewDistance = 4,
         .viewWidth = 3,
         .activeDistance = 5
+    },
+    [OWE_DESPAWN_ON_NOTICE] = {
+        .behavior = OWE_BEHAVIOR_DESPAWN,
+        .idleSpeed = OWE_SPEED_NORMAL,
+        .viewDistance = 4,
+        .viewWidth = 3,
+        .activeDistance = 5
     }
 };
 

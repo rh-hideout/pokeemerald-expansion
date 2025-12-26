@@ -34,6 +34,8 @@
 
 #define OWE_FLEE_COLLISION_TIME     6  // If a fleeing mon is unable to take a step for this many tries it will despawn. (Multiply this value by 16 to get number of frames.)
 
+#define OWE_DESPAWN_FRAMES          30  // Number of frames before a mon despawns after noticing the player (OWE_BEHAVIOR_DESPAWN)
+
 #define INVALID_SPAWN_SLOT 0xFF
 
 enum OverworldEncounterSpawnAnim
@@ -63,6 +65,7 @@ enum OverworldEncounterBehaviors
     OWE_BEHAVIOR_FLEE_PLAYER,
     OWE_BEHAVIOR_WATCH_PLAYER,
     OWE_BEHAVIOR_APPROACH_PLAYER,
+    OWE_BEHAVIOR_DESPAWN,
     OWE_BEHAVIOR_COUNT
 };
 
@@ -93,6 +96,7 @@ enum OWESpeciesBehaviors
     OWE_FLEE_PLAYER_NORMAL,
     OWE_WATCH_PLAYER_NORMAL,
     OWE_APPROACH_PLAYER_SLOW,
+    OWE_DESPAWN_ON_NOTICE,
     OWE_SPECIES_BEHAVIOR_COUNT
 };
 
