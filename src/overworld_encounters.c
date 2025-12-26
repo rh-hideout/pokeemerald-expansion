@@ -33,7 +33,7 @@ static u8 NextSpawnMonSlot();
 static bool32 OWE_ShouldSpawnWaterMons(void);
 static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
 static bool8 IsSafeToSpawnObjectEvents(void);
-static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
+static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
@@ -95,7 +95,8 @@ void UpdateOverworldEncounters(void)
         return;
     }
     
-    if (GetActiveEncounterTable(OWE_ShouldSpawnWaterMons()))
+    bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
+    if (OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
     {
         u16 spawnSlot = NextSpawnMonSlot();
 
@@ -105,7 +106,6 @@ void UpdateOverworldEncounters(void)
             return;
         }
         
-        bool32 waterMons = OWE_ShouldSpawnWaterMons();
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
         u32 level;
         u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level);
@@ -150,7 +150,7 @@ void UpdateOverworldEncounters(void)
 
         // Hide reflections for spawns in water
         // (It just looks weird)
-        if (waterMons)
+        if (shouldSpawnWaterMons)
             gObjectEvents[objectEventId].hideReflection = TRUE;
 
         // Slower replacement spawning
@@ -600,22 +600,22 @@ static bool8 CheckForObjectEventAtLocation(s16 x, s16 y)
     return FALSE;
 }
 
-static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater)
+static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
-
-    if (headerId == HEADER_NONE)
-        return NULL;
-
     enum TimeOfDay timeOfDay;
 
-    if (onWater)
+    if (headerId == HEADER_NONE)
+        return FALSE;
+
+    if (shouldSpawnWaterMons)
     {
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-        return gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
+        return gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo != NULL;
     }
+
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-    return gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+    return gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo != NULL;
 }
 
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent)
