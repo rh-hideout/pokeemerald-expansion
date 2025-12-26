@@ -5565,13 +5565,6 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
     bool32 effect = FALSE;
     enum BattleSide side = GetBattlerSide(gBattlerTarget);
 
-    if (!gBattleStruct->unableToUseMove && IsExplosionMove(gCurrentMove))
-    {
-        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
-        BattleScriptCall(BattleScript_FaintAttackerForExplosion);
-        return TRUE;
-    }
-
     switch (moveEffect)
     {
     case EFFECT_FINAL_GAMBIT:
@@ -5730,19 +5723,6 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
             SetPassiveDamageAmount(gBattlerAttacker, gBattleScripting.savedDmg * max(1, GetMoveRecoil(gCurrentMove)) / 100);
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);
-            effect = TRUE;
-        }
-        break;
-    case EFFECT_MAX_HP_50_RECOIL:
-        if (IsBattlerAlive(gBattlerAttacker)
-         && !gBattleStruct->unableToUseMove
-         && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED)
-         && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
-        {
-            s32 recoil = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
-            SetPassiveDamageAmount(gBattlerAttacker, recoil);
-            TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
-            BattleScriptCall(BattleScript_MaxHp50Recoil);
             effect = TRUE;
         }
         break;
@@ -5952,18 +5932,27 @@ static void Cmd_moveend(void)
             }
             break;
         case MOVEEND_ABSORB:
-            if (gBattleStruct->unableToUseMove || !IsBattlerTurnDamaged(gBattlerTarget))
+            if (gBattleStruct->unableToUseMove)
             {
                 gBattleScripting.moveendState++;
                 break;
             }
+
+            if (IsExplosionMove(gCurrentMove) && !gBattleStruct->battlerState[gBattlerAttacker].fainted)
+            {
+                gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
+                BattleScriptCall(BattleScript_FaintAttackerForExplosion);
+                return TRUE;
+            }
+
             switch (moveEffect)
             {
             case EFFECT_ABSORB:
             case EFFECT_DREAM_EATER:
                 if (!gBattleMons[gBattlerAttacker].volatiles.healBlock
-                     && gBattleStruct->moveDamage[gBattlerTarget] > 0
-                     && IsBattlerAlive(gBattlerAttacker))
+                 && gBattleStruct->moveDamage[gBattlerTarget] > 0
+                 && IsBattlerTurnDamaged(gBattlerTarget)
+                 && IsBattlerAlive(gBattlerAttacker))
                 {
                     s32 healAmount = (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
                     healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
@@ -5981,6 +5970,30 @@ static void Cmd_moveend(void)
                         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
                         BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
                     }
+                }
+                break;
+            case EFFECT_FINAL_GAMBIT:
+                if (GetConfig(CONFIG_FINAL_GAMBIT_FAINT_TIMING) < GEN_6
+                 && IsBattlerAlive(gBattlerAttacker)
+                 && IsBattlerTurnDamaged(gBattlerTarget))
+                {
+                    BattleScriptCall(BattleScript_FinalGambit);
+                    effect = TRUE;
+                }
+                break;
+            case EFFECT_MAX_HP_50_RECOIL:
+                if (IsBattlerAlive(gBattlerAttacker)
+                 && !gBattleStruct->unableToUseMove
+                 && !gSpecialStatuses[gBattlerAttacker].steelBeamRecoil
+                 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED)
+                 && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
+                {
+                    s32 recoil = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
+                    SetPassiveDamageAmount(gBattlerAttacker, recoil);
+                    gSpecialStatuses[gBattlerAttacker].steelBeamRecoil = TRUE;
+                    TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
+                    BattleScriptCall(BattleScript_MaxHp50Recoil);
+                    effect = TRUE;
                 }
                 break;
             default:

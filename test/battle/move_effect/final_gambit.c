@@ -75,8 +75,6 @@ SINGLE_BATTLE_TEST("Final Gambit does not faint user if target is immune")
 
 TO_DO_BATTLE_TEST("Final Gambit faints the user, and the target receives damage equal to the user's HP") // User should faint before the target
 TO_DO_BATTLE_TEST("Final Gambit doesn't faint the user if it misses")
-TO_DO_BATTLE_TEST("Final Gambit doesn't faint the user if the target is immune")
-TO_DO_BATTLE_TEST("Final Gambit doesn't faint the user if the target is protected")
 TO_DO_BATTLE_TEST("Final Gambit doesn't trigger the user's Focus Band")
 TO_DO_BATTLE_TEST("Final Gambit doesn't trigger the user's Focus Sash")
 TO_DO_BATTLE_TEST("Final Gambit doesn't trigger the user's Sturdy")
