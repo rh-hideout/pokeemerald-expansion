@@ -73,6 +73,32 @@ SINGLE_BATTLE_TEST("Final Gambit does not faint user if target is immune")
     }
 }
 
+SINGLE_BATTLE_TEST("Final Gambit faints the user before abilities can activate (Gen 5)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_FINAL_GAMBIT_FAINT_TIMING, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PYUKUMUKU) { Ability(ABILITY_INNARDS_OUT); HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FINAL_GAMBIT); }
+    } SCENE {
+        NOT ABILITY_POPUP(opponent, ABILITY_INNARDS_OUT);
+    }
+}
+
+SINGLE_BATTLE_TEST("Final Gambit faints the user after abilities can activate (Gen 6+)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_FINAL_GAMBIT_FAINT_TIMING, GEN_6);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PYUKUMUKU) { Ability(ABILITY_INNARDS_OUT); HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FINAL_GAMBIT); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_INNARDS_OUT);
+    }
+}
+
 TO_DO_BATTLE_TEST("Final Gambit faints the user, and the target receives damage equal to the user's HP") // User should faint before the target
 TO_DO_BATTLE_TEST("Final Gambit doesn't faint the user if it misses")
 TO_DO_BATTLE_TEST("Final Gambit doesn't trigger the user's Focus Band")
