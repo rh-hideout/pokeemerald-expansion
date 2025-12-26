@@ -297,6 +297,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     s16 playerX, playerY;
     s16 x, y;
     u8 closeDistance;
+    bool32 isEncounterTile = FALSE;
     const struct MapLayout *layout;
 
     // Spawn further away when surfing
@@ -353,27 +354,19 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
         return FALSE;
 
     tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-    if (OWE_ShouldSpawnWaterMons())
-    {
-        if(MetatileBehavior_IsWaterWildEncounter(tileBehavior) && !MapGridGetCollisionAt(x, y))
-        {
-            *outX = x;
-            *outY = y;
+    if (OWE_ShouldSpawnWaterMons() && MetatileBehavior_IsWaterWildEncounter(tileBehavior))
+        isEncounterTile = TRUE;
 
-            if (!CheckForObjectEventAtLocation(x, y))
-                return TRUE;
-        }
-    }
-    else
-    {
-        if(MetatileBehavior_IsLandWildEncounter(tileBehavior) && !MapGridGetCollisionAt(x, y))
-        {
-            *outX = x;
-            *outY = y;
+    if (!OWE_ShouldSpawnWaterMons() && (MetatileBehavior_IsLandWildEncounter(tileBehavior) || MetatileBehavior_IsIndoorEncounter(tileBehavior)))
+        isEncounterTile = TRUE;
 
-            if (!CheckForObjectEventAtLocation(x, y))
-                return TRUE;
-        }
+    if (isEncounterTile && !MapGridGetCollisionAt(x, y))
+    {
+        *outX = x;
+        *outY = y;
+
+        if (!CheckForObjectEventAtLocation(x, y))
+            return TRUE;
     }
 
     return FALSE;
