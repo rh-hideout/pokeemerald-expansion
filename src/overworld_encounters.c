@@ -1,6 +1,7 @@
 #include "global.h"
 #include "overworld_encounters.h"
 #include "battle_setup.h"
+#include "battle_main.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "fieldmap.h"
@@ -185,13 +186,17 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     return TRUE;
 }
 
-void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
+void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn)
 {
     enum OverworldEncounterSpawnAnim spawnAnimType;
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
-    OWE_PlayMonObjectCry(objectEvent);
 
-    if (isShiny)
+    if (spawn)
+        OWE_PlayMonObjectCry(objectEvent);
+    else
+        PlaySE(SE_FLEE);
+
+    if (isShiny && spawn)
     {
         PlaySE(SE_SHINY);
         spawnAnimType = OWE_SPAWN_ANIM_SHINY;
@@ -466,17 +471,22 @@ static void SortOWEMonAges(void)
 
 void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
+    if (!IsOverworldWildEncounter(objectEvent))
+        return;
+    
     if (IsGeneratedOverworldWildEncounter(objectEvent))
         SortOWEMonAges();
 
-    if (IsOverworldWildEncounter(objectEvent))
-        OWE_DoSpawnAnim(objectEvent);
+    OWE_DoSpawnDespawnAnim(objectEvent, TRUE);
 }
 
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-    // Currently Unused
-    if (IsGeneratedOverworldWildEncounter(objectEvent)) {}
+    if (!IsOverworldWildEncounter(objectEvent))
+        return;
+    
+    if (gMain.callback2 != CB2_InitBattle)
+        OWE_DoSpawnDespawnAnim(objectEvent, FALSE);
 }
 
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
