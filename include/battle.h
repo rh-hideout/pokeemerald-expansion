@@ -522,8 +522,9 @@ struct BattlerState
     // End of Word
     u16 hpOnSwitchout;
     u16 switchIn:1;
+    u16 fainted:1;
     u16 isFirstTurn:2;
-    u16 padding:13;
+    u16 padding:12;
 };
 
 struct PartyState
@@ -550,14 +551,14 @@ struct EventStates
     u32 arenaTurn:8;
     enum BattleSide battlerSide:4;
     enum BattlerId moveEndBattler:4;
-    enum FirstTurnEventsStates beforeFristTurn:8;
+    enum FirstTurnEventsStates beforeFirstTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
     enum MoveSuccessOrder atkCanceler:8;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;
     u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
-    u32 padding:8;
+    u32 moveEndBlock:8;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
