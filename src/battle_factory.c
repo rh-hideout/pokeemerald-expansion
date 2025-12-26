@@ -594,6 +594,9 @@ static enum FactoryStyle GetMoveBattleStyle(u32 move)
     if (GetMoveNonVolatileStatus(move) != MOVE_EFFECT_NONE)
         return FACTORY_STYLE_SLOW_STEADY;
 
+    if (IsExplosionMove(move))
+        return FACTORY_STYLE_SLOW_STEADY;
+
     return FACTORY_STYLE_NONE;
 }
 

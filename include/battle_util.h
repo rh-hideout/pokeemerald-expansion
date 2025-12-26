@@ -132,6 +132,7 @@ enum MoveSuccessOrder
     CANCELER_PRIORITY_BLOCK,
     CANCELER_PROTEAN,
     CANCELER_EXPLODING_DAMP,
+    CANCELER_EXPLOSION,
     CANCELER_MULTIHIT_MOVES,
     CANCELER_MULTI_TARGET_MOVES,
     CANCELER_END,
@@ -249,6 +250,7 @@ bool32 IsBattlerMarkedForControllerExec(u32 battler);
 void MarkBattlerForControllerExec(u32 battler);
 void MarkBattlerReceivedLinkData(u32 battler);
 const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState);
+bool32 IsLastMonToMove(u32 battler);
 bool32 ShouldDefiantCompetitiveActivate(u32 battler, enum Ability ability);
 void PrepareStringBattle(enum StringID stringId, u32 battler);
 void ResetSentPokesToOpponentValue(void);
