@@ -9,6 +9,7 @@
 #include "menu.h"
 #include "overworld.h"
 #include "palette.h"
+#include "regions.h"
 #include "region_map.h"
 #include "sound.h"
 #include "strings.h"
@@ -218,7 +219,9 @@ static void PrintRegionMapSecName(void)
     if (sFieldRegionMapHandler->regionMap.mapSecType != MAPSECTYPE_NONE)
     {
         FillWindowPixelBuffer(WIN_MAPSEC_NAME, PIXEL_FILL(1));
-        AddTextPrinterParameterized(WIN_MAPSEC_NAME, FONT_NORMAL, sFieldRegionMapHandler->regionMap.mapSecName, 0, 1, 0, NULL);
+        u32 mapSecNameFontId = GetFontIdToFit(sFieldRegionMapHandler->regionMap.mapSecName, FONT_NORMAL, 0, 100);
+        u32 mapSecNameOffset = GetStringCenterAlignXOffset(mapSecNameFontId, sFieldRegionMapHandler->regionMap.mapSecName, 0x26);
+        AddTextPrinterParameterized(WIN_MAPSEC_NAME, mapSecNameFontId, sFieldRegionMapHandler->regionMap.mapSecName, mapSecNameOffset, 1, 0, NULL);
         ScheduleBgCopyTilemapToVram(WIN_MAPSEC_NAME);
     }
     else
@@ -230,21 +233,25 @@ static void PrintRegionMapSecName(void)
 
 static void PrintTitleWindowText(void)
 {
+    const u8* regionName = GetCurrentRegionName();
+    u32 regionFontId = GetFontIdToFit(regionName, FONT_NORMAL, 0, 60);
+    u32 regionOffset = GetStringCenterAlignXOffset(regionFontId, regionName, 0x38);
+
     static const u8 FlyPromptText[] = _("{R_BUTTON} FLY");
-    u32 hoennOffset = GetStringCenterAlignXOffset(FONT_NORMAL, gText_Hoenn, 0x38);
-    u32 flyOffset = GetStringCenterAlignXOffset(FONT_NORMAL, FlyPromptText, 0x38);
+    u32 flyFontId = GetFontIdToFit(FlyPromptText, FONT_NORMAL, 0, 60);
+    u32 flyOffset = GetStringCenterAlignXOffset(flyFontId, FlyPromptText, 0x38);
 
     FillWindowPixelBuffer(WIN_TITLE, PIXEL_FILL(1));
 
     if (sFieldRegionMapHandler->regionMap.mapSecType == MAPSECTYPE_CITY_CANFLY
         && FlagGet(OW_FLAG_POKE_RIDER) && Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) == TRUE)
     {
-        AddTextPrinterParameterized(WIN_TITLE, FONT_NORMAL, FlyPromptText, flyOffset, 1, 0, NULL);
+        AddTextPrinterParameterized(WIN_TITLE, flyFontId, FlyPromptText, flyOffset, 1, 0, NULL);
         ScheduleBgCopyTilemapToVram(WIN_TITLE);
     }
     else
     {
-        AddTextPrinterParameterized(WIN_TITLE, FONT_NORMAL, gText_Hoenn, hoennOffset, 1, 0, NULL);
+        AddTextPrinterParameterized(WIN_TITLE, regionFontId, regionName, regionOffset, 1, 0, NULL);
         CopyWindowToVram(WIN_TITLE, COPYWIN_FULL);
     }
 }
