@@ -69,7 +69,6 @@ union TextColor {
         u8 accent;
     };
     u32 asU32;
-    u8 asArray[4];
 };
 
 struct TextPrinterSubStruct

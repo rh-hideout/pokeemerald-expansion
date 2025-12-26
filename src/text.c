@@ -498,25 +498,23 @@ void GenerateFontHalfRowLookupTable(union TextColor color)
 
     sLastTextColor = color;
 
-    u8 *colors = color.asArray;
-
     u8 quarterRows[16] = {
-        colors[0] << 4 | colors[0],
-        colors[1] << 4 | colors[0],
-        colors[2] << 4 | colors[0],
-        colors[3] << 4 | colors[0],
-        colors[0] << 4 | colors[1],
-        colors[1] << 4 | colors[1],
-        colors[2] << 4 | colors[1],
-        colors[3] << 4 | colors[1],
-        colors[0] << 4 | colors[2],
-        colors[1] << 4 | colors[2],
-        colors[2] << 4 | colors[2],
-        colors[3] << 4 | colors[2],
-        colors[0] << 4 | colors[3],
-        colors[1] << 4 | colors[3],
-        colors[2] << 4 | colors[3],
-        colors[3] << 4 | colors[3],
+        color.background << 4 | color.background,
+        color.foreground << 4 | color.background,
+        color.shadow << 4     | color.background,
+        color.accent << 4     | color.background,
+        color.background << 4 | color.foreground,
+        color.foreground << 4 | color.foreground,
+        color.shadow << 4     | color.foreground,
+        color.accent << 4     | color.foreground,
+        color.background << 4 | color.shadow,
+        color.foreground << 4 | color.shadow,
+        color.shadow << 4     | color.shadow,
+        color.accent << 4     | color.shadow,
+        color.background << 4 | color.accent,
+        color.foreground << 4 | color.accent,
+        color.shadow << 4     | color.accent,
+        color.accent << 4     | color.accent,
     };
 
     u8 *current = (u8 *)sFontHalfRowLookupTable;
