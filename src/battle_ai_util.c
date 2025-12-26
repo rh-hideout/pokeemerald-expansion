@@ -6401,7 +6401,7 @@ bool32 ShouldUseFusionMove(u32 battler)
     return FALSE;
 }
 
-bool32 ShouldUseRound(u32 battler)
+bool32 ShouldUseRound(u32 battler, enum BattleMoveEffects moveEffect)
 {
     u32 partner = BATTLE_PARTNER(battler);
     u32 partnerMove = gAiLogicData->partnerMove;
@@ -6409,14 +6409,12 @@ bool32 ShouldUseRound(u32 battler)
     if (!IsBattlerAlive(partner))
         return FALSE;
 
-    // First battler to check so check moveset of partner
+    // First battler check, so check moveset of partner
     if (gAiLogicData->partnerMoveSimulation)
-    {
-        return HasMoveWithEffect(partner, EFFECT_ROUND);
-    }
+        return HasMoveWithEffect(partner, moveEffect);
 
-    // Check if partner actually chose Round
-    if (GetMoveEffect(partnerMove) == EFFECT_ROUND)
+    // Check if partner actually chose the combo move
+    if (GetMoveEffect(partnerMove) == moveEffect)
         return TRUE;
 
     return FALSE;

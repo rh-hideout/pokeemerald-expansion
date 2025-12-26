@@ -3265,7 +3265,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ADJUST_SCORE(BEST_EFFECT);
         }
     case EFFECT_ROUND:
-        if (ShouldUseRound(battlerAtk))
+        if (ShouldUseRound(battlerAtk, EFFECT_ROUND))
         {
             ADJUST_SCORE(BEST_EFFECT);
         }
