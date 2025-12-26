@@ -82,6 +82,7 @@ SINGLE_BATTLE_TEST("Final Gambit faints the user before abilities can activate (
     } WHEN {
         TURN { MOVE(player, MOVE_FINAL_GAMBIT); }
     } SCENE {
+        MESSAGE("Wobbuffet fainted!");
         NOT ABILITY_POPUP(opponent, ABILITY_INNARDS_OUT);
     }
 }
@@ -96,6 +97,7 @@ SINGLE_BATTLE_TEST("Final Gambit faints the user after abilities can activate (G
         TURN { MOVE(player, MOVE_FINAL_GAMBIT); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INNARDS_OUT);
+        MESSAGE("Wobbuffet fainted!");
     }
 }
 
