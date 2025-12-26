@@ -890,7 +890,6 @@ static void Task_EndTrainerApproach(u8 taskId)
 
 void PrepareSecondApproachingTrainer(void)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, "g appr id: %d", gApproachingTrainerId);
     if (gApproachingTrainerId == 0)
     {
         gApproachingTrainerId++;
@@ -907,7 +906,6 @@ void PrepareSecondApproachingTrainer(void)
 
 void TryPrepareSecondApproachingTrainer(void)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, "no app: %d", gNoOfApproachingTrainers);
     if (gNoOfApproachingTrainers == 2)
     {
         PrepareSecondApproachingTrainer();

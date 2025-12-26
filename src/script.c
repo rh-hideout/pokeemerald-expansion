@@ -140,13 +140,13 @@ bool8 ScriptStackPush(struct ScriptStack *stk, const u8 *ptr)
 {
     if (stk->stackDepth + 1 >= (int)ARRAY_COUNT(stk->stack))
     {
-        return TRUE;
+        return FALSE;
     }
     else
     {
         stk->stack[stk->stackDepth] = ptr;
         stk->stackDepth++;
-        return FALSE;
+        return TRUE;
     }
 }
 
@@ -176,8 +176,8 @@ void ScriptJump(struct ScriptContext *ctx, const u8 *ptr)
 
 void ScriptCall(struct ScriptContext *ctx, const u8 *ptr)
 {
-    bool32 failed = ScriptPush(ctx, ctx->scriptPtr);
-    assertf(!failed, "could not push %p", ptr)
+    assertf(ScriptPush(ctx, ctx->scriptPtr), 
+        "Failed to push %p to %p", ptr, ctx)
     {
         return;
     }
@@ -306,16 +306,17 @@ void ScriptContext_Enable(void)
 
 bool8 ScriptContext_ScriptPushStackToContext(struct ScriptStack *stk, struct ScriptContext *ctx)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
-
     const u8 *ptr;
     while ((ptr = ScriptStackPop(stk)) != NULL)
     {
-        if (ScriptPush(ctx, ptr))
+        assertf(ScriptPush(ctx, ptr),
+            "Failed to push %p to: %p", ptr, ctx)
+        {
             return FALSE;
+        }
     }
 
-    return TRUE;
+    return TRUE;    
 }
 
 bool8 ScriptContext_ScriptPushStackToGlobal(struct ScriptStack *stk)
@@ -326,10 +327,12 @@ bool8 ScriptContext_ScriptPushStackToGlobal(struct ScriptStack *stk)
 // Pops the top script from the stack and enables the context
 void ScriptContext_RunContextFromTop(struct ScriptContext *ctx)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
 
     ctx->scriptPtr = ScriptPop(ctx);
     ctx->mode = SCRIPT_MODE_BYTECODE;
+
+    assertf(ctx->scriptPtr, "Failed to load script.");
+    
     LockPlayerFieldControls();
 
     if (OW_FOLLOWERS_SCRIPT_MOVEMENT)
@@ -650,7 +653,6 @@ void Script_GotoBreak_Internal(void)
 
 bool32 RunScriptImmediatelyUntilEffect_Internal(u32 effects, const u8 *ptr, struct ScriptContext *ctx)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     bool32 result;
     struct ScriptEffectContext seCtx;
     seCtx.breakOn = effects & 0x7FFFFFFF;
@@ -663,7 +665,6 @@ bool32 RunScriptImmediatelyUntilEffect_Internal(u32 effects, const u8 *ptr, stru
         ctx->breakOnTrainerBattle = TRUE;
     SetupBytecodeScript(ctx, ptr);
 
-    //DebugPrintfLevel(MGBA_LOG_DEBUG, "imm ctx: %x", ctx);
     rng_value_t rngValue = gRngValue;
     gScriptEffectContext = &seCtx;
     result = RunScriptImmediatelyUntilEffect_InternalLoop(ctx);

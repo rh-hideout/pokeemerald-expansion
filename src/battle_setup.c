@@ -1044,9 +1044,8 @@ else                \
     PUSH(alt)       \
 }                   \
 
-static const u8* BattleSetup_ConfigureApproachingFacilityTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
+static void BattleSetup_ConfigureApproachingFacilityTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
     PUSH(EventSnippet_StartTrainerApproach)
@@ -1066,12 +1065,10 @@ static const u8* BattleSetup_ConfigureApproachingFacilityTrainerBattle(TrainerBa
 
     PUSH(EventSnippet_DoTrainerBattle)
     PUSH(EventSnippet_EndTrainerBattle)
-    return NULL;
 }
 
-static const u8* BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
+static void BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
     PUSH       (EventSnippet_Lock)
@@ -1080,7 +1077,7 @@ static const u8* BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParamet
 
     if (GetTrainerFlag()) {
         PUSH(EventSnippet_GotoPostBattleScript)
-        return NULL;
+        return;
     }
 
     PUSH(EventSnippet_PlayTrainerEncounterMusic)
@@ -1089,12 +1086,11 @@ static const u8* BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParamet
     PUSH(EventSnippet_DoTrainerBattle)
     PUSH(EventSnippet_EndTrainerBattle)
 
-    return NULL;
+    return;
 }
 
-static const u8* BattleSetup_ConfigureApproachingTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
+static void BattleSetup_ConfigureApproachingTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
     PUSH       (EventSnippet_StartTrainerApproach)
@@ -1114,12 +1110,11 @@ static const u8* BattleSetup_ConfigureApproachingTrainerBattle(TrainerBattlePara
 
     PUSH(EventSnippet_DoTrainerBattle)
     PUSH(EventSnippet_EndTrainerBattle)
-    return NULL;
+    return;
 }
 
-static const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
+static void BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     SetMapVarsToTrainerA();
 
     PUSH       (EventSnippet_Lock)
@@ -1129,13 +1124,13 @@ static const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *batt
     if ((GetTrainerFlag() && !battleParams->params.isRematch) 
     || (!IsTrainerReadyForRematch() && battleParams->params.isRematch)) {
         PUSH(EventSnippet_GotoPostBattleScript)
-        return NULL;
+        return;
     }
 
     if (battleParams->params.isDoubleBattle && !HasEnoughMonsForDoubleBattle2())
     {
         PUSH(EventSnippet_NotEnoughMonsForDoubleBattle)
-        return NULL;
+        return;
     }
     
     if (battleParams->params.isRematch)
@@ -1149,12 +1144,11 @@ static const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *batt
     PUSH_IF_ELSE(EventSnippet_DoRematchTrainerBattle, EventSnippet_DoTrainerBattle, battleParams->params.isRematch)
     PUSH_IF_ELSE(EventSnippet_GotoPostBattleScript, EventSnippet_EndTrainerBattle, battleParams->params.continueScript)
 
-    return NULL;
+    return;
 }
 
 void ConfigureTrainerBattle(struct ScriptContext *ctx)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, __func__);
     InitTrainerBattleParameter();
 
     struct ScriptStack trainerBattleScriptStack;
