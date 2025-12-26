@@ -5447,9 +5447,9 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
             gBattleStruct->eventState.moveEndBlock++;
             break;
         case FAINT_BLOCK_END_NEUTRALIZING_GAS:
-            if (gDisableStructs[gBattlerTarget].neutralizingGas)
+            if (gBattleMons[gBattlerTarget].volatiles.neutralizingGas)
             {
-                gDisableStructs[gBattlerTarget].neutralizingGas = FALSE;
+                gBattleMons[gBattlerTarget].volatiles.neutralizingGas = FALSE;
                 if (!IsNeutralizingGasOnField())
                 {
                     effect = TRUE;
@@ -5920,8 +5920,10 @@ static void Cmd_moveend(void)
              && !gBattleStruct->battlerState[gBattlerAttacker].fainted)
             {
                 gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
+                effect = TRUE;
                 BattleScriptCall(BattleScript_FaintAttackerForExplosion);
-                return TRUE;
+                gBattleScripting.moveendState++;
+                break;
             }
 
             switch (moveEffect)
