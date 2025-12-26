@@ -484,8 +484,8 @@ struct BattleVideo {
 
 struct Wish
 {
-    u16 counter[MAX_BATTLERS_COUNT];
-    u8 partyId[MAX_BATTLERS_COUNT];
+    u16 counter;
+    u8 partyId;
 };
 
 struct FutureSight
@@ -567,7 +567,7 @@ struct BattleStruct
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     struct EventStates eventState;
     struct FutureSight futureSight[MAX_BATTLERS_COUNT];
-    struct Wish wish;
+    struct Wish wish[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
@@ -1164,15 +1164,9 @@ static inline bool32 IsDoubleBattle(void)
     return (gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
 }
 
-enum BattleTypeChecks
+static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
 {
-    CHECK_BATTLE_TYPE,
-    IGNORE_BATTLE_TYPE,
-};
-
-static inline bool32 IsSpreadMove(enum MoveTarget moveTarget, enum BattleTypeChecks checkBattleType)
-{
-    if (checkBattleType == CHECK_BATTLE_TYPE && !IsDoubleBattle())
+    if (!IsDoubleBattle())
         return FALSE;
     return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
 }
@@ -1181,7 +1175,7 @@ static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
         && !gBattleStruct->unableToUseMove
-        && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), CHECK_BATTLE_TYPE);
+        && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 
 static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef, enum MoveTarget moveTarget)

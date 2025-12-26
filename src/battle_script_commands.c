@@ -1470,7 +1470,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
             numMisses = 0,
             moveType = GetBattleMoveType(move),
             moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, move);
-        bool32 calcSpreadMove = IsSpreadMove(moveTarget, CHECK_BATTLE_TYPE) && !IsBattleMoveStatus(move);
+        bool32 calcSpreadMove = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(move);
 
         for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
         {
@@ -1630,7 +1630,7 @@ static void Cmd_damagecalc(void)
     ctx.randomFactor = TRUE;
     ctx.updateFlags = TRUE;
 
-    if (IsSpreadMove(moveTarget, CHECK_BATTLE_TYPE))
+    if (IsSpreadMove(moveTarget))
     {
         u32 battlerDef;
         for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -1657,7 +1657,7 @@ static void Cmd_typecalc(void)
 {
     CMD_ARGS();
 
-    if (!IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), CHECK_BATTLE_TYPE)) // Handled in CANCELER_MULTI_TARGET_MOVES for Spread Moves
+    if (!IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove))) // Handled in CANCELER_MULTI_TARGET_MOVES for Spread Moves
     {
         struct BattleContext ctx = {0};
         ctx.battlerAtk = gBattlerAttacker;
@@ -1688,7 +1688,7 @@ static void Cmd_adjustdamage(void)
     u32 affectionScore;
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
-    bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget, CHECK_BATTLE_TYPE) && !IsBattleMoveStatus(gCurrentMove);
+    bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget);
     u32 enduredHit = 0;
 
     for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -6346,7 +6346,7 @@ static void Cmd_moveend(void)
 
             gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
             if (!gBattleStruct->unableToUseMove
-             && IsSpreadMove(moveTarget, CHECK_BATTLE_TYPE)
+             && IsSpreadMove(moveTarget)
              && !gProtectStructs[gBattlerAttacker].chargingTurn)
             {
                 u32 nextTarget = GetNextTarget(moveTarget, FALSE);
@@ -12325,10 +12325,10 @@ static void Cmd_trywish(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (gBattleStruct->wish.counter[gBattlerAttacker] == 0)
+    else if (gBattleStruct->wish[gBattlerAttacker].counter == 0)
     {
-        gBattleStruct->wish.counter[gBattlerAttacker] = 2;
-        gBattleStruct->wish.partyId[gBattlerAttacker] = gBattlerPartyIndexes[gBattlerAttacker];
+        gBattleStruct->wish[gBattlerAttacker].counter = 2;
+        gBattleStruct->wish[gBattlerAttacker].partyId = gBattlerPartyIndexes[gBattlerAttacker];
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
