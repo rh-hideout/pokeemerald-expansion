@@ -529,22 +529,14 @@ void GenerateFontHalfRowLookupTable(union TextColor color)
     }
 }
 
-void SaveTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor)
+union TextColor SaveTextColors(void)
 {
-    *bgColor = sLastTextColor.background;
-    *fgColor = sLastTextColor.foreground;
-    *shadowColor = sLastTextColor.shadow;
-    *accentColor = sLastTextColor.accent;
+    return sLastTextColor;
 }
 
-void RestoreTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor)
+void RestoreTextColors(union TextColor color)
 {
-    GenerateFontHalfRowLookupTable((union TextColor) {
-        .background = *bgColor,
-        .foreground = *fgColor,
-        .shadow = *shadowColor,
-        .accent = *accentColor}
-    );
+    GenerateFontHalfRowLookupTable(color);
 }
 
 void DecompressGlyphTile(const void *src_, void *dest_)
@@ -1688,9 +1680,8 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
     int strPos;
     int temp;
     int temp2;
-    u8 colorBackup[4];
 
-    SaveTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2], &colorBackup[3]);
+    union TextColor savedTextColors = SaveTextColors();
 
     union TextColor textColor = {
         .background = TEXT_COLOR_TRANSPARENT,
@@ -1802,7 +1793,7 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
     }
     while (temp != EOS);
 
-    RestoreTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2], &colorBackup[3]);
+    RestoreTextColors(savedTextColors);
     return 1;
 }
 
