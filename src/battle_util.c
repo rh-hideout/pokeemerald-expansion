@@ -2925,7 +2925,7 @@ static enum MoveCanceler CancelerExplosion(struct BattleContext *ctx)
 {
     // KO user of Explosion; for Final Gambit doesn't happen if target is immune or if it missed
     if (IsExplosionMove(ctx->move)
-     && (GetMoveEffect(gCurrentMove) != EFFECT_FINAL_GAMBIT || !(gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_DOESNT_AFFECT_FOE | MOVE_RESULT_MISSED))))
+     && (GetMoveEffect(ctx->move) != EFFECT_FINAL_GAMBIT || !(gBattleStruct->moveResultFlags[ctx->battlerDef] & (MOVE_RESULT_DOESNT_AFFECT_FOE | MOVE_RESULT_MISSED))))
     {
         BattleScriptCall(BattleScript_Explosion);
         return MOVE_STEP_BREAK;
