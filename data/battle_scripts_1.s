@@ -5321,6 +5321,7 @@ BattleScript_FutureAttackEnd::
 	moveendfromto MOVEEND_SYMBIOSIS, MOVEEND_UPDATE_LAST_MOVES
 	moveendcase MOVEEND_COLOR_CHANGE
 	checkteamslost BattleScript_FutureAttackClearResults
+	goto BattleScript_FutureAttackClearResults
 BattleScript_FutureAttackMiss::
 	pause B_WAIT_TIME_SHORT
 	setmoveresultflags MOVE_RESULT_FAILED
