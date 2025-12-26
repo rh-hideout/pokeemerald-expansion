@@ -3451,6 +3451,22 @@ bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
         && gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 2;
 }
 
+u32 NumFaintedBattlersByAttacker(u32 battlerAtk)
+{
+    u32 battler, numMonsFainted = 0;
+
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (battler == battlerAtk)
+            continue;
+
+        if (IsBattlerTurnDamaged(battler) && !IsBattlerAlive(battler))
+            numMonsFainted++;
+    }
+
+    return numMonsFainted;
+}
+
 #define ANIM_STAT_HP      0
 #define ANIM_STAT_ATK     1
 #define ANIM_STAT_DEF     2
@@ -5647,7 +5663,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                      && battlerDef != battler
                      && IsBattlerTurnDamaged(battlerDef)
                      && CanStealItem(battler, battlerDef, gBattleMons[battlerDef].item)
-                     && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(battlerDef)] & (1u << gBattlerPartyIndexes[battlerDef]))
+                     && !GetBattlerPartyState(battlerDef)->knockedOffItem
                      && !DoesSubstituteBlockMove(battler, battlerDef, move)
                      && (GetBattlerAbility(battlerDef) != ABILITY_STICKY_HOLD || !IsBattlerAlive(battlerDef)))
                     {
@@ -5726,7 +5742,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 if (GetBattlerPartyState(battler)->battleBondBoost || gBattleMons[battler].species != SPECIES_GRENINJA_BATTLE_BOND)
                     break;
 
-                if (GetGenConfig(GEN_CONFIG_BATTLE_BOND) < GEN_9)
+                if (GetConfig(CONFIG_BATTLE_BOND) < GEN_9)
                 {
                     // TODO: Convert this to a proper FORM_CHANGE type.
                     gLastUsedAbility = ability;
