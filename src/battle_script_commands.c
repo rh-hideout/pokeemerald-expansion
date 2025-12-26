@@ -5931,7 +5931,9 @@ static void Cmd_moveend(void)
                 break;
             }
 
-            if (IsExplosionMove(gCurrentMove) && !gBattleStruct->battlerState[gBattlerAttacker].fainted)
+            if (IsExplosionMove(gCurrentMove)
+             && !IsBattlerAlive(gBattlerAttacker)
+             && !gBattleStruct->battlerState[gBattlerAttacker].fainted)
             {
                 gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
                 BattleScriptCall(BattleScript_FaintAttackerForExplosion);
