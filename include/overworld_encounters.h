@@ -27,6 +27,10 @@
 #define OWE_MON_SIGHT_LENGTH        4
 
 #define OWE_CHASE_RANGE             5
+#define OWE_APPROACH_DISTANCE       2
+
+#define OWE_APPROACH_JUMP_TIMER_MIN 16
+#define OWE_APPROACH_JUMP_TIMER_MAX 64
 
 #define OWE_FLEE_COLLISION_TIME     6  // If a fleeing mon is unable to take a step for this many tries it will despawn. (Multiply this value by 16 to get number of frames.)
 
@@ -58,6 +62,7 @@ enum OverworldEncounterBehaviors
     OWE_BEHAVIOR_CHASE_PLAYER,
     OWE_BEHAVIOR_FLEE_PLAYER,
     OWE_BEHAVIOR_WATCH_PLAYER,
+    OWE_BEHAVIOR_APPROACH_PLAYER,
     OWE_BEHAVIOR_COUNT
 };
 
@@ -87,6 +92,7 @@ enum OWESpeciesBehaviors
     OWE_CHASE_PLAYER_SLOW,
     OWE_FLEE_PLAYER_NORMAL,
     OWE_WATCH_PLAYER_NORMAL,
+    OWE_APPROACH_PLAYER_SLOW,
     OWE_SPECIES_BEHAVIOR_COUNT
 };
 
@@ -121,6 +127,7 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon);
 bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
+u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
 bool32 OWE_IsWaitTaskActive(void);
 u32 OWE_GetDespawnAnimType(u32 metatileBehavior);
