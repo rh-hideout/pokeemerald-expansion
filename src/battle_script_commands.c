@@ -6418,7 +6418,7 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         }
-        case MOVEEND_ABILITY_BLOCK:
+        case MOVEEND_ABILITY_EFFECT_FOES_FAINTED:
             effect = AbilityBattleEffects(ABILITYEFFECT_MOVE_END_FOES_FAINTED, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), gCurrentMove, TRUE);
             gBattleScripting.moveendState++;
             break;
