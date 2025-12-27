@@ -226,7 +226,7 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
     SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
     if (FollowerNPCHasRunningFrames())
         followerFlags |= FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES;
-        
+
     SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
@@ -810,7 +810,7 @@ void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
 {
     if (PlayerHasFollowerNPC())
         return;
-        
+
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     struct ObjectEvent *follower;
     struct ObjectEventTemplate npc = 
@@ -827,7 +827,7 @@ void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
     follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
     follower->movementType = MOVEMENT_TYPE_NONE;
     gSprites[follower->spriteId].callback = MovementType_None;
-    
+
     SetFollowerNPCData(FNPC_DATA_IN_PROGRESS, TRUE);
     SetFollowerNPCData(FNPC_DATA_GFX_ID, follower->graphicsId);
     SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
@@ -835,7 +835,7 @@ void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
     SetFollowerNPCScriptPointer(scriptPtr);
     if (FollowerNPCHasRunningFrames())
         followerFlags |= FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES;
-        
+
     SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
@@ -887,7 +887,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
     // Follower won't move if player is forced back onto the same tile.
     if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_FORCED_STAY)
         return MOVEMENT_ACTION_NONE;
-        
+
     GetXYCoordsPlayerMovementDest(playerMoveDirection, &playerDestX, &playerDestY);
     newPlayerMB = MapGridGetMetatileBehaviorAt(playerDestX, playerDestY);
 
@@ -1863,7 +1863,7 @@ void ScriptHideNPCFollower(struct ScriptContext *ctx)
 {
     if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
-        
+
     u32 walkSpeed = ScriptReadByte(ctx);
     struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
 
@@ -1893,7 +1893,7 @@ void ScriptChangeFollowerNPCBattlePartner(struct ScriptContext *ctx)
 {
     if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
-        
+
     u32 newBattlePartner = ScriptReadHalfword(ctx);
 
     SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, newBattlePartner);

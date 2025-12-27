@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Tablets of Ruin's message displays correctly after all battl
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WO_CHIEN);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Tablets of Ruin's message displays correctly after all battl
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1);}
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WO_CHIEN);
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }

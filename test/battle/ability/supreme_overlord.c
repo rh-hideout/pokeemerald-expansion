@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Supreme Overlord's message displays correctly after all batt
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_KINGAMBIT) { Ability(ABILITY_SUPREME_OVERLORD); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -119,7 +119,7 @@ SINGLE_BATTLE_TEST("Supreme Overlord's message displays correctly after all batt
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1);}
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_KINGAMBIT) { Ability(ABILITY_SUPREME_OVERLORD); }
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }

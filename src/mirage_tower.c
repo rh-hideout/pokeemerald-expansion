@@ -713,7 +713,7 @@ static void Task_FossilFallAndSink(u8 taskId)
         FieldEffectFreePaletteIfUnused(gSprites[sFallingFossil->spriteId].oam.paletteNum);
         gSprites[sFallingFossil->spriteId].inUse = TRUE;
         DestroySprite(&gSprites[sFallingFossil->spriteId]);
-        FREE_AND_SET_NULL(sFallingFossil->disintegrateRand);;
+        FREE_AND_SET_NULL(sFallingFossil->disintegrateRand);
         FREE_AND_SET_NULL(sFallingFossil->frameImage);
         FREE_AND_SET_NULL(sFallingFossil->frameImageTiles);
         FREE_AND_SET_NULL(sFallingFossil);

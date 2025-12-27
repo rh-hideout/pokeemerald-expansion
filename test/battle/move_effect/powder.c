@@ -287,7 +287,7 @@ DOUBLE_BATTLE_TEST("Powder damages a target using Shell Trap even if it wasn't h
     u32 move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_EMBER; }
-    PARAMETRIZE { move = MOVE_TICKLE;}
+    PARAMETRIZE { move = MOVE_TICKLE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SHELL_TRAP) == EFFECT_SHELL_TRAP);
         ASSUME(GetMoveType(MOVE_SHELL_TRAP) == TYPE_FIRE);

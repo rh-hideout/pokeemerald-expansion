@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Poison Touch applies between multi-hit move hits")
         ASSUME(MoveMakesContact(MOVE_ARM_THRUST));
         ASSUME(gItemsInfo[ITEM_PECHA_BERRY].holdEffect == HOLD_EFFECT_CURE_PSN);
         PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_ARM_THRUST); }
     } SCENE {

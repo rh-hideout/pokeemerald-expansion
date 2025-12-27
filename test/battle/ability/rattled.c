@@ -21,8 +21,8 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost typ
     PARAMETRIZE { move = MOVE_SHADOW_PUNCH; }
     PARAMETRIZE { move = MOVE_SCRATCH; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) {Speed(42) ;}
-        OPPONENT(SPECIES_SUDOWOODO) {Speed(40); Ability(ABILITY_RATTLED);}
+        PLAYER(SPECIES_WOBBUFFET) { Speed(42) ; }
+        OPPONENT(SPECIES_SUDOWOODO) { Speed(40); Ability(ABILITY_RATTLED); }
     } WHEN {
         TURN { MOVE(player, move); }
         TURN { MOVE(player, move); }
@@ -56,8 +56,8 @@ SINGLE_BATTLE_TEST("Rattled does not boost speed by 1 when affected by Intimidat
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_7);
-        PLAYER(SPECIES_GYARADOS) {Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_SUDOWOODO) {Ability(ABILITY_RATTLED); }
+        PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_SUDOWOODO) { Ability(ABILITY_RATTLED); }
     } WHEN {
         TURN {}
     } SCENE {
@@ -76,8 +76,8 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate (Gen8+
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_8);
-        PLAYER(SPECIES_GYARADOS) {Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_SUDOWOODO) {Ability(ABILITY_RATTLED); }
+        PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_SUDOWOODO) { Ability(ABILITY_RATTLED); }
     } WHEN {
         TURN {}
     } SCENE {
@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Rattled triggers correctly when hit by U-Turn") // Specific 
         ASSUME(GetMoveType(MOVE_U_TURN) == TYPE_BUG);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_SUDOWOODO) {Ability(ABILITY_RATTLED); }
+        OPPONENT(SPECIES_SUDOWOODO) { Ability(ABILITY_RATTLED); }
         OPPONENT(SPECIES_SUDOWOODO);
     } WHEN {
         TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }

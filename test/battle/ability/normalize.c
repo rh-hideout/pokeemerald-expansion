@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Normalize turns a move into a Normal-type move")
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
         PLAYER(SPECIES_GASTLY);
-        OPPONENT(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_WATER_GUN);}
+        OPPONENT(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_WATER_GUN); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
     } SCENE {
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Normalize affects status moves")
         ASSUME(GetMoveType(MOVE_THUNDER_WAVE) == TYPE_ELECTRIC);
         ASSUME(GetSpeciesType(SPECIES_DRILBUR, 0) == TYPE_GROUND);
         PLAYER(SPECIES_DRILBUR);
-        OPPONENT(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_THUNDER_WAVE);}
+        OPPONENT(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_THUNDER_WAVE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_THUNDER_WAVE); }
     } SCENE {
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Normalize still makes Freeze-Dry do super effective damage t
         ASSUME(GetMoveEffect(MOVE_FREEZE_DRY) == EFFECT_SUPER_EFFECTIVE_ON_ARG);
         ASSUME(GetSpeciesType(SPECIES_MUDKIP, 0) == TYPE_WATER);
         PLAYER(SPECIES_MUDKIP);
-        OPPONENT(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_FREEZE_DRY);}
+        OPPONENT(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_FREEZE_DRY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_FREEZE_DRY); }
     } SCENE {

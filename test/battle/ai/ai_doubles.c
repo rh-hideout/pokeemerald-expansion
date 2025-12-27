@@ -5,7 +5,7 @@
 AI_DOUBLE_BATTLE_TEST("AI won't use a Weather changing move if partner already chose such move")
 {
     u32 j, k;
-    static const u16 weatherMoves[] = {MOVE_SUNNY_DAY, MOVE_HAIL, MOVE_RAIN_DANCE, MOVE_SANDSTORM, MOVE_SNOWSCAPE};
+    static const u16 weatherMoves[] = { MOVE_SUNNY_DAY, MOVE_HAIL, MOVE_RAIN_DANCE, MOVE_SANDSTORM, MOVE_SNOWSCAPE};
     u16 weatherMoveLeft = MOVE_NONE, weatherMoveRight = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(weatherMoves); j++)

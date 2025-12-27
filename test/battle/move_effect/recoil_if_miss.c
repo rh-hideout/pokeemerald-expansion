@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Recoil if miss: Disguise doesn't prevent crash damage from J
     PARAMETRIZE { ability = ABILITY_SCRAPPY; }
 
     GIVEN {
-        PLAYER(SPECIES_KANGASKHAN) { Ability(ability); };
+        PLAYER(SPECIES_KANGASKHAN) { Ability(ability); }
         OPPONENT(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); }
     } WHEN {
         TURN { MOVE(player, MOVE_JUMP_KICK); }

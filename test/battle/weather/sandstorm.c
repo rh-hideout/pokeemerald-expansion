@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Sandstorm deals 1/16 damage per turn")
         PLAYER(SPECIES_SANDSLASH);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {MOVE(player, MOVE_SANDSTORM);}
+        TURN { MOVE(player, MOVE_SANDSTORM); }
     } SCENE {
         MESSAGE("The opposing Wobbuffet is buffeted by the sandstorm!");
         HP_BAR(opponent, captureDamage: &sandstormDamage);

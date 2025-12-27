@@ -19,7 +19,7 @@ AI_SINGLE_BATTLE_TEST("AI: Belch has nonzero score after eating a berry")
         OPPONENT(SPECIES_PIKACHU) { Level(15); Item(ITEM_SHUCA_BERRY); Moves(MOVE_BELCH, MOVE_SCRATCH); }
     } WHEN {
         TURN { MOVE(player, MOVE_MUD_SHOT); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_BELCH);}
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_BELCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELCH, opponent);
     }

@@ -2086,7 +2086,7 @@ static void Debug_Display_ItemInfo(u32 itemId, u32 digit, u8 windowId)
     else if (CheckIfItemIsTMHMOrEvolutionStone(itemId) == 1)
     {
         end = StringCopy(end, COMPOUND_STRING(" None"));
-    } 
+    }
 
     WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
     StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);

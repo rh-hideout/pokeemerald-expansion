@@ -399,4 +399,4 @@ gFieldEffectScript_RockClimbDust:: @ 82DBB28
 gFieldEffectScript_ORASDowse::
 	field_eff_callnative FldEff_ORASDowsing
 	field_eff_end
-    
+

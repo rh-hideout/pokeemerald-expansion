@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Me First can be selected if users holds Assault Vest")
     }
 }
 
-SINGLE_BATTLE_TEST("Me Frist deducts power points from itself, not the copied move")
+SINGLE_BATTLE_TEST("Me First deducts power points from itself, not the copied move")
 {
     ASSUME(GetMovePP(MOVE_ME_FIRST) == 20);
     ASSUME(GetMovePP(MOVE_POUND) == 35);

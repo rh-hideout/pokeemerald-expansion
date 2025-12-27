@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_STUNFISK_GALAR, 0) == TYPE_GROUND);
         ASSUME(GetSpeciesType(SPECIES_STUNFISK_GALAR, 1) == TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET); 
+        PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STUNFISK_GALAR) { Ability(ABILITY_MIMICRY); }
     } WHEN {
         TURN { MOVE(opponent, terrainMove); MOVE(player, removeTerrainMove); }

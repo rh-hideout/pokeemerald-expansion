@@ -179,7 +179,7 @@ DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
     GIVEN {
         ASSUME(!IsSoundMove(MOVE_AROMATHERAPY));
         WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); Status1(STATUS1_POISON); };
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); Status1(STATUS1_POISON); }
         PLAYER(SPECIES_EXPLOUD) { Ability(ability); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);

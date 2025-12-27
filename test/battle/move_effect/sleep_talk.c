@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Sleep Talk fails if no moves work")
 SINGLE_BATTLE_TEST("Sleep Talk can still use moves with no PP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); MovesWithPP({MOVE_SLEEP_TALK, 10}, {MOVE_SCRATCH, 0}, {MOVE_FLY, 10}, {MOVE_DIG, 10}); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); MovesWithPP({ MOVE_SLEEP_TALK, 10}, { MOVE_SCRATCH, 0}, { MOVE_FLY, 10}, { MOVE_DIG, 10}); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SLEEP_TALK); }

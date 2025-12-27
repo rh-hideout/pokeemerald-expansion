@@ -8,7 +8,7 @@ SINGLE_BATTLE_TEST("Mind's Eye allows to hit Ghost-type Pokémon with Normal- an
     PARAMETRIZE { move = MOVE_KARATE_CHOP; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_MINDS_EYE); };
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_MINDS_EYE); }
         OPPONENT(SPECIES_GASTLY);
     } WHEN {
         TURN { MOVE(player, move); }
@@ -26,8 +26,8 @@ SINGLE_BATTLE_TEST("Mind's Eye doesn't bypass a Ghost-type's Wonder Guard")
     PARAMETRIZE { move = MOVE_KARATE_CHOP; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SCRAPPY); };
-        OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); };
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SCRAPPY); }
+        OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {

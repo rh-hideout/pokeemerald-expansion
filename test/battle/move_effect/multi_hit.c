@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit the maximum amount with Skill Link")
     PASSES_RANDOMLY(100, 100, RNG_HITS);
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SKILL_LINK); };
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SKILL_LINK); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BULLET_SEED); }

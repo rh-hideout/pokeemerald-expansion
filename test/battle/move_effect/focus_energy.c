@@ -45,8 +45,8 @@ SINGLE_BATTLE_TEST("Focus Energy multiplies crit chance by 4 with gen 1 crit cha
     bool32 useFocusEnergy = 0;
     u32 genConfig = 0, chance = 0;
     for (u32 j = GEN_1; j <= GEN_9; j++) {
-        PARAMETRIZE { genConfig = j; useFocusEnergy = FALSE; chance = 16;}
-        PARAMETRIZE { genConfig = j; useFocusEnergy = TRUE; chance = 4;}
+        PARAMETRIZE { genConfig = j; useFocusEnergy = FALSE; chance = 16; }
+        PARAMETRIZE { genConfig = j; useFocusEnergy = TRUE; chance = 4; }
     }
     PASSES_RANDOMLY(1, chance, RNG_CRITICAL_HIT);
     GIVEN {

@@ -174,7 +174,7 @@ SINGLE_BATTLE_TEST("Competitive correctly activates after Sticky Web lowers Spee
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); MOVE(opponent, MOVE_COURT_CHANGE); }
         TURN { SWITCH(player, 1); }
-        TURN { MOVE(opponent, MOVE_GROWL);}
+        TURN { MOVE(opponent, MOVE_GROWL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COURT_CHANGE, opponent);

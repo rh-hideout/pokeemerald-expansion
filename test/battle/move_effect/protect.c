@@ -64,9 +64,9 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
     u32 j;
     static const u16 protectMoves[][3] =
     {   // Move             Stat      Stages
-        {MOVE_KINGS_SHIELD, STAT_ATK,   (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? 1 : 2},
-        {MOVE_SILK_TRAP,    STAT_SPEED, 1},
-        {MOVE_OBSTRUCT,     STAT_DEF,   2},
+        { MOVE_KINGS_SHIELD, STAT_ATK,   (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? 1 : 2},
+        { MOVE_SILK_TRAP,    STAT_SPEED, 1},
+        { MOVE_OBSTRUCT,     STAT_DEF,   2},
     };
     u16 protectMove = MOVE_NONE;
     u16 usedMove = MOVE_NONE;
@@ -166,9 +166,9 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making co
 {
     u16 usedMove = MOVE_NONE;
 
-    PARAMETRIZE {usedMove = MOVE_SCRATCH; }
-    PARAMETRIZE {usedMove = MOVE_LEER; }
-    PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
+    PARAMETRIZE { usedMove = MOVE_SCRATCH; }
+    PARAMETRIZE { usedMove = MOVE_LEER; }
+    PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -218,9 +218,9 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making con
 {
     u16 usedMove = MOVE_NONE;
 
-    PARAMETRIZE {usedMove = MOVE_SCRATCH; }
-    PARAMETRIZE {usedMove = MOVE_LEER; }
-    PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
+    PARAMETRIZE { usedMove = MOVE_SCRATCH; }
+    PARAMETRIZE { usedMove = MOVE_LEER; }
+    PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -721,7 +721,7 @@ SINGLE_BATTLE_TEST("Protect: Protective Pads protects from secondary effects")
 DOUBLE_BATTLE_TEST("Protect is not transferred to a mon that is switched in due to Eject Button")
 {
     GIVEN {
-        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); };
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }

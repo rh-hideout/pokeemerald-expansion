@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) {Ability(ABILITY_SIMPLE);};
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SIMPLE); }
     } WHEN {
         TURN { MOVE(player, MOVE_DEFOG); }
         TURN { MOVE(player, MOVE_DEFOG); }
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change behind
     GIVEN {
         WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Ability(ABILITY_SIMPLE);}
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Ability(ABILITY_SIMPLE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
         TURN { MOVE(player, MOVE_DEFOG); }

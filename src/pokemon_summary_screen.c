@@ -2007,7 +2007,7 @@ void TryUpdateRelearnType(enum IncrDecrUpdateValues delta)
             return;
         }
         zeroCounter++;
-        
+
     } while (zeroCounter <= MOVE_RELEARNER_COUNT && !hasRelearnableMoves);
 }
 

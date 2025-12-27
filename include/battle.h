@@ -616,7 +616,7 @@ struct EventStates
     u32 arenaTurn:8;
     enum BattleSide battlerSide:4;
     enum BattlerId moveEndBattler:4;
-    enum FirstTurnEventsStates beforeFristTurn:8;
+    enum FirstTurnEventsStates beforeFirstTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
     enum MoveSuccessOrder atkCanceler:8;

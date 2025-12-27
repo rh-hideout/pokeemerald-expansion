@@ -161,7 +161,7 @@ DOUBLE_BATTLE_TEST("Lash Out damage is not boosted by Treasure of Ruin ability a
 
     GIVEN {
         PLAYER(SPECIES_GRIMMSNARL)  { Moves(MOVE_LASH_OUT); }
-        PLAYER(SPECIES_RATTATA); 
+        PLAYER(SPECIES_RATTATA);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLEM);
         OPPONENT(species)  { Ability(ability); }

@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Shell Bell recovers no HP if the move did no damage")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_FALSE_SWIPE); }
     } SCENE {
@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Shell Bell restores 1/8 HP of damage dealt")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Level(16); Item(ITEM_SHELL_BELL); HP(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Level(16); };
+        OPPONENT(SPECIES_WOBBUFFET) { Level(16); }
     } WHEN {
         TURN { MOVE(player, MOVE_SEISMIC_TOSS); }
     } SCENE {
@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Shell Bell doesn't restore HP for damage dealt by a foreseen
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
         PLAYER(SPECIES_WOBBUFFET) { Level(16); Item(ITEM_SHELL_BELL); HP(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Level(16); };
+        OPPONENT(SPECIES_WOBBUFFET) { Level(16); }
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { }
@@ -275,7 +275,7 @@ SINGLE_BATTLE_TEST("Shell Bell recovers only 1 damage if the move only did 1 dam
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_RAGE); }
     } SCENE {

@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Scope Lens increases the critical hit ratio by 1 stage")
         WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(gItemsInfo[ITEM_SCOPE_LENS].holdEffect == HOLD_EFFECT_SCOPE_LENS);
         ASSUME(GetSpeciesBaseSpeed(SPECIES_WOBBUFFET) == 33);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SCOPE_LENS); };
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SCOPE_LENS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
