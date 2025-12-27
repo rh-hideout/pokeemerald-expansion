@@ -9,9 +9,10 @@ struct BallData
     u8      flatBonus;
 };
 
-void ComputeBallData(struct BattlePokemon *mon, u32 ballId, struct BallData *ball);
-u32 ComputeBadgeCapturePenalty(u32 enemyLevel, u32 playerLevel);
-u32 ComputeCaptureOdds(struct BattlePokemon *mon, struct BallData *ball, u32 level);
+u32 ComputeCaptureOdds();
 bool32 CriticalCapture(u32 odds);
+u32 ComputeBallShakeOdds(u32 odds);
+
+#define CAPTURE_GUARANTEED -1
 
 #endif // GUARD_CAPTURE_UTIL_H

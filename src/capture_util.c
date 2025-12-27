@@ -10,13 +10,17 @@
 #include "rtc.h"
 #include "wild_encounter.h"
 
-// Note: Love Ball and Level Ball won't work outside of battle
-void ComputeBallData(struct BattlePokemon *mon, u32 ballId, struct BallData *ball)
+static void ComputeBallData(struct BallData *ball)
 {
     u32 i;
+    u32 ballId = ItemIdToBallId(gLastUsedItem);
+    struct BattlePokemon *mon = &gBattleMons[gBattlerTarget];
 
     ball->multiplier = 100;
     ball->divider = 100;
+    ball->flatBonus = 0;
+    ball->guaranteedCapture = FALSE;
+
     if (gSpeciesInfo[mon->species].isUltraBeast)
     {
         if (ballId == BALL_BEAST)
@@ -194,48 +198,27 @@ void ComputeBallData(struct BattlePokemon *mon, u32 ballId, struct BallData *bal
 
 }
 
-u32 ComputeBadgeCapturePenalty(u32 enemyLevel, u32 playerLevel)
+static const u8 sBadgeLevel[] = {
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55,
+    60,
+    100,
+};
+
+u32 ComputeCaptureOdds()
 {
-    u32 badgePenalty = 4096;
+    struct BallData ball;
+    ComputeBallData(&ball);
 
-    u8 badgeCount = 0;
-    u8 badgeLevel[] = {
-        15,
-        25,
-        35,
-        45,
-        55,
-        65,
-        75,
-        85,
-        100,
-    };
-    for (u32 i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
-    {
-        if (FlagGet(i))
-            badgeCount++;
-    }
-
-    if (GetConfig(CONFIG_MISSING_BADGE_CATCH_MALUS) == GEN_8)
-    {
-        if (badgeCount < 8 && playerLevel < enemyLevel)
-            badgePenalty = 410;
-        return badgePenalty;
-    }
-    for (u32 i = badgeCount; i < sizeof(badgeLevel); i++)
-    {
-        if (enemyLevel <= badgeLevel[i])
-            break;
-        
-        badgePenalty = (badgePenalty * 4) / 5;
-    }
-    return badgePenalty;
-}
-
-u32 ComputeCaptureOdds(struct BattlePokemon *mon, struct BallData *ball, u32 playerLevel)
-{
-    u32 maxHPbase = gBattleMons[gBattlerTarget].maxHP * 3;
-    u32 odds = (maxHPbase - gBattleMons[gBattlerTarget].hp * 2);
+    if (ball.guaranteedCapture)
+        return CAPTURE_GUARANTEED;
+    struct BattlePokemon *mon = &gBattleMons[gBattlerTarget];
+    u32 odds = (mon->maxHP * 3 -  mon->hp * 2);
     s32 catchRate;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
@@ -243,15 +226,26 @@ u32 ComputeCaptureOdds(struct BattlePokemon *mon, struct BallData *ball, u32 pla
     else
         catchRate = gSpeciesInfo[mon->species].catchRate;
 
-    catchRate += ball->flatBonus;
+    catchRate += ball.flatBonus;
     if (catchRate <= 0)
-        catchRate = catchRate + ball->flatBonus;
+        catchRate = catchRate + ball.flatBonus;
 
-    odds = odds * catchRate / maxHPbase;
-    odds = odds * ball->multiplier / ball->divider;
+    odds = odds * catchRate / (mon->maxHP * 3);
+    odds = odds * ball.multiplier / ball.divider;
 
-    if (GetConfig(CONFIG_MISSING_BADGE_CATCH_MALUS) >= GEN_8)
-        odds = odds * ComputeBadgeCapturePenalty(mon->level, playerLevel) / 4096;
+    u8 badgeCount = 0;
+    for (u32 i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+    {
+        if (FlagGet(i))
+            badgeCount++;
+    }
+    if (GetConfig(CONFIG_MISSING_BADGE_CATCH_MALUS) == GEN_8 && badgeCount < NUM_BADGES && gBattleMons[gBattlerAttacker].level < mon->level)
+        odds = odds * 410 / 4096;
+    if (GetConfig(CONFIG_MISSING_BADGE_CATCH_MALUS) == GEN_9 && badgeCount < NUM_BADGES)
+    {
+        for (u32 i = badgeCount; i < NUM_BADGES && mon->level > sBadgeLevel[i]; i++)
+            odds = odds * 4 / 5;
+    }
 
     if (GetConfig(CONFIG_LOW_LEVEL_CATCH_BONUS) == GEN_8 && mon->level <= 20)
          odds = odds * (30 - mon->level) / 10;
@@ -310,4 +304,11 @@ bool32 CriticalCapture(u32 odds)
         return TRUE;
 
     return FALSE;
+}
+
+u32 ComputeBallShakeOdds(u32 odds)
+{
+    odds = Sqrt(Sqrt(16711680 / odds));
+    odds = 1048560 / odds;
+    return odds;
 }
