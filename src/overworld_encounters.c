@@ -45,6 +45,7 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
 static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId);
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
+static bool32 OWE_DoesRoamerExistOnMap(void);
 
 static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
 {
@@ -489,6 +490,8 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
 {
     if (!IsOverworldWildEncounter(objectEvent))
         return;
+
+    objectEvent->sRoamerStatus = 0;
     
     if (gMain.callback2 != CB2_InitBattle)
         OWE_DoSpawnDespawnAnim(objectEvent, FALSE);
@@ -534,7 +537,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
     }
 
-    if (TryStartRoamerEncounter())
+    if (TryStartRoamerEncounter() && !OWE_DoesRoamerExistOnMap())
     {
         *roamerIndex = gEncounteredRoamerIndex;
     }
@@ -1050,6 +1053,18 @@ static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
 }
 #undef MAP_METATILE_VIEW_X
 #undef MAP_METATILE_VIEW_Y
+
+static bool32 OWE_DoesRoamerExistOnMap(void)
+{
+    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        struct ObjectEvent *object = &gObjectEvents[i];
+        if (IsOverworldWildEncounter(object) && object->sRoamerStatus == gEncounteredRoamerIndex)
+            return TRUE;
+    }
+
+    return FALSE;
+}
 
 #undef tLocalId
 #undef tTaskStarted
