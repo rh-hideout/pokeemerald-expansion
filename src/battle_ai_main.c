@@ -3553,7 +3553,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
 
-                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    if (GetMoveStrikeCount(move) > 1 && moveTarget != TARGET_SMART)
                     {
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
@@ -3588,7 +3588,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
 
-                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    if (GetMoveStrikeCount(move) > 1 && moveTarget != TARGET_SMART)
                     {
                         ADJUST_SCORE(WEAK_EFFECT);
                     }
@@ -3646,7 +3646,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                         ADJUST_SCORE(GOOD_EFFECT);
                     }
 
-                    if (GetMoveStrikeCount(move) > 1 && effect != EFFECT_DRAGON_DARTS)
+                    if (GetMoveStrikeCount(move) > 1 && moveTarget != TARGET_SMART)
                     {
                         ADJUST_SCORE(WEAK_EFFECT);
                     }

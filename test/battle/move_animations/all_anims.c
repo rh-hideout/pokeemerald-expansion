@@ -121,8 +121,8 @@ static u32 GetParametrizedLevel(u32 move, u32 variation)
 
 static bool32 GetParametrizedShinyness(u32 move, u32 variation)
 {
-    if ((gMovesInfo[move].effect == EFFECT_DRAGON_DARTS && variation == 2)
-        || (move == MOVE_SYRUP_BOMB && variation == 1)
+    if ((GetMoveAnimationScript(move) == gBattleAnimMove_DragonDarts && variation == 2)
+        || (GetMoveAnimationScript(move) == gBattleAnimMove_SyrupBomb && variation == 1)
         )
         return TRUE;
     return FALSE;
@@ -194,7 +194,7 @@ static u32 GetVariationsNumber(u32 move, bool8 isDouble)
         variationsNumber = 4;
     else if (gMovesInfo[move].effect == EFFECT_SPIT_UP
           || gMovesInfo[move].effect == EFFECT_SWALLOW
-          || gMovesInfo[move].effect == EFFECT_DRAGON_DARTS
+          || GetMoveAnimationScript(move) == gBattleAnimMove_DragonDarts
           || move == MOVE_SEISMIC_TOSS)
         variationsNumber = 3;
     else if (gMovesInfo[move].effect == EFFECT_CURSE

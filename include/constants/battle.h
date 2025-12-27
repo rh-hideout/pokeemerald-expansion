@@ -696,6 +696,7 @@ enum MoveTarget
 {
     TARGET_NONE,
     TARGET_SELECTED,
+    TARGET_SMART, // Like target select but can also smartly redirect to partner. Works only with strikeCount > 1 moves
     TARGET_DEPENDS,
     TARGET_OPPONENT,
     TARGET_RANDOM,

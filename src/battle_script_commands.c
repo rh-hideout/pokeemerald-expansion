@@ -972,6 +972,7 @@ static bool32 NoTargetPresent(u8 battler, u32 move)
     switch (GetBattlerMoveTargetType(battler, move))
     {
     case TARGET_SELECTED:
+    case TARGET_SMART:
     case TARGET_DEPENDS:
     case TARGET_RANDOM:
         if (!IsBattlerAlive(gBattlerTarget))
@@ -1506,7 +1507,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
                 if (holdEffectAtk == HOLD_EFFECT_BLUNDER_POLICY)
                     gBattleStruct->blunderPolicy = TRUE;    // Only activates from missing through acc/evasion checks
 
-                if (effect == EFFECT_DRAGON_DARTS
+                if (moveTarget == TARGET_SMART
                     && !IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(battlerDef), gCurrentMove)
                     && !recalcDragonDarts // So we don't jump back and forth between targets
                     && CanTargetPartner(gBattlerAttacker, battlerDef)
@@ -6409,8 +6410,9 @@ static void Cmd_moveend(void)
              && gMultiHitCounter
              && !(moveEffect == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0)) // Parental Bond edge case
             {
+                enum MoveTarget target = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
                 gMultiHitCounter--;
-                if (!IsBattlerAlive(gBattlerTarget) && moveEffect != EFFECT_DRAGON_DARTS)
+                if (!IsBattlerAlive(gBattlerTarget) && target != TARGET_SMART)
                     gMultiHitCounter = 0;
 
                 gBattleScripting.multihitString[4]++;
@@ -6424,7 +6426,7 @@ static void Cmd_moveend(void)
                 }
                 else
                 {
-                    if (moveEffect == EFFECT_DRAGON_DARTS
+                    if (target == TARGET_SMART
                      && !IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), gCurrentMove)
                      && !(gBattleStruct->moveResultFlags[BATTLE_PARTNER(gBattlerTarget)] & MOVE_RESULT_MISSED) // didn't miss the other target
                      && CanTargetPartner(gBattlerAttacker, gBattlerTarget)

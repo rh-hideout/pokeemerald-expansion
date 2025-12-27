@@ -5435,6 +5435,7 @@ static void SetMoveTargetPosition(u16 move)
         break;
     case TARGET_OPPONENT:
     case TARGET_SELECTED:
+    case TARGET_SMART:
     case TARGET_RANDOM:
     case TARGET_BOTH:
     case TARGET_FOES_AND_ALLY:
