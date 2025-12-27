@@ -27,6 +27,25 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(u32 battler, u32 move);
 
 // Functions
+void AI_SetBattlerTurnOrder(s32 *aiBattlerTurnOrder)
+{
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+        aiBattlerTurnOrder[battler] = battler;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        for (u32 j = 0; j < gBattlersCount; j++)
+        {
+            if (AI_WhoStrikesFirst(aiBattlerTurnOrder[i], aiBattlerTurnOrder[j], MOVE_NONE, MOVE_NONE, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
+            {
+                u32 temp = aiBattlerTurnOrder[i];
+                aiBattlerTurnOrder[i] = aiBattlerTurnOrder[j];
+                aiBattlerTurnOrder[j] = temp;
+            }
+        }
+    }
+}
+
 u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, u32 holdEffectDef, u32 move)
 {
     if (MoveIgnoresTargetAbility(move))
@@ -1422,6 +1441,7 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef)
     * AI_IS_FASTER: is user(ai) faster
     * AI_IS_SLOWER: is target faster
 */
+
 s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 aiMoveConsidered, u32 playerMoveConsidered, enum ConsiderPriority considerPriority)
 {
     u32 speedBattlerAI, speedBattler;
@@ -1441,8 +1461,8 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 aiMoveConsidered, u32 pla
             return AI_IS_SLOWER;
     }
 
-    speedBattlerAI = GetBattlerTotalSpeedStat(battlerAI, abilityAI, holdEffectAI);
-    speedBattler   = GetBattlerTotalSpeedStat(battler, abilityPlayer, holdEffectPlayer);
+    speedBattlerAI = gAiLogicData->speedStats[battlerAI];
+    speedBattler   = gAiLogicData->speedStats[battler];
 
     if (holdEffectAI == HOLD_EFFECT_LAGGING_TAIL && holdEffectPlayer != HOLD_EFFECT_LAGGING_TAIL)
         return AI_IS_SLOWER;
@@ -4127,18 +4147,6 @@ bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef)
     return ((battlerAtk) == (battlerDef ^ BIT_FLANK));
 }
 
-u32 GetAllyChosenMove(u32 battlerId)
-{
-    u32 partnerBattler = BATTLE_PARTNER(battlerId);
-
-    if (!IsBattlerAlive(partnerBattler) || !IsAiBattlerAware(partnerBattler))
-        return MOVE_NONE;
-    else if (partnerBattler > battlerId) // Battler with the lower id chooses the move first.
-        return gAiLogicData->lastUsedMove[partnerBattler];
-    else
-        return GetChosenMoveFromPosition(partnerBattler);
-}
-
 bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, u32 move, u32 partnerMove)
 {
     if (!IsBattlerAlive(battlerAtkPartner) || partnerMove == MOVE_NONE)
@@ -5504,7 +5512,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
         {
             u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battler, opposingBattler, gAiLogicData);
             // will we go first?
-            if (AI_WhoStrikesFirst(battler, opposingBattler, killingMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY) == AI_IS_FASTER && GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove))
+            if (AI_IsFaster(battler, opposingBattler, killingMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY) && GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove))
                 return USE_GIMMICK;
         }
     }
@@ -6355,5 +6363,118 @@ bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, u32 battlerIn1, u32 bat
     if (partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn1]
             || partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
         return TRUE;
+    return FALSE;
+}
+
+
+static bool32 WillPartnerActBeforeOrAfter(u32 battler, u32 partner)
+{
+    s32 aiBattlerTurnOrder[gBattlersCount];
+    AI_SetBattlerTurnOrder(aiBattlerTurnOrder);
+
+    battler = aiBattlerTurnOrder[battler];
+    partner = aiBattlerTurnOrder[partner];
+
+    if (battler + 1 == partner || battler - 1 == partner)
+        return TRUE;
+
+    return FALSE;
+}
+
+bool32 ShouldUseFusionMove(u32 battler)
+{
+    u32 partner = BATTLE_PARTNER(battler);
+    u32 partnerMove = gAiLogicData->partnerMove;
+
+    if (!IsBattlerAlive(partner))
+        return FALSE;
+
+    if (!WillPartnerActBeforeOrAfter(battler, partner))
+        return FALSE;
+
+    if (gAiLogicData->partnerMoveSimulation)
+        return HasMoveWithEffect(partner, EFFECT_FUSION_COMBO);
+
+    if (GetMoveEffect(partnerMove) == EFFECT_FUSION_COMBO)
+        return TRUE;
+
+    return FALSE;
+}
+
+bool32 ShouldUseRound(u32 battler, enum BattleMoveEffects moveEffect)
+{
+    u32 partner = BATTLE_PARTNER(battler);
+    u32 partnerMove = gAiLogicData->partnerMove;
+
+    if (!IsBattlerAlive(partner))
+        return FALSE;
+
+    // First battler check, so check moveset of partner
+    if (gAiLogicData->partnerMoveSimulation)
+        return HasMoveWithEffect(partner, moveEffect);
+
+    // Check if partner actually chose the combo move
+    if (GetMoveEffect(partnerMove) == moveEffect)
+        return TRUE;
+
+    return FALSE;
+}
+
+bool32 ShouldUsePledgeMove(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    u32 partner = BATTLE_PARTNER(battlerAtk);
+    u32 partnerMove = gAiLogicData->partnerMove;
+    u32 atkSide = GetBattlerSide(battlerAtk);
+    u32 defSide = GetBattlerSide(battlerDef);
+
+    if (gAiLogicData->partnerMoveSimulation)
+    {
+        switch (move)
+        {
+        case MOVE_GRASS_PLEDGE:
+            if (HasMove(partner, MOVE_FIRE_PLEDGE))
+                return gSideTimers[defSide].seaOfFireTimer == 0;
+            if (HasMove(partner, MOVE_WATER_PLEDGE))
+                return gSideTimers[defSide].swampTimer == 0;
+            break;
+        case MOVE_FIRE_PLEDGE:
+            if (HasMove(partner, MOVE_WATER_PLEDGE))
+                return gSideTimers[atkSide].rainbowTimer == 0;
+            if (HasMove(partner, MOVE_GRASS_PLEDGE))
+                return gSideTimers[defSide].seaOfFireTimer == 0;
+            break;
+        case MOVE_WATER_PLEDGE:
+            if (HasMove(partner, MOVE_GRASS_PLEDGE))
+                return gSideTimers[defSide].swampTimer == 0;
+            if (HasMove(partner, MOVE_FIRE_PLEDGE))
+                return gSideTimers[atkSide].rainbowTimer == 0;
+            break;
+        }
+    }
+    else if (GetMoveEffect(partnerMove) == EFFECT_PLEDGE)
+    {
+        switch (move)
+        {
+        case MOVE_GRASS_PLEDGE:
+            if (partnerMove == MOVE_FIRE_PLEDGE)
+                return gSideTimers[defSide].seaOfFireTimer == 0;
+            if (partnerMove == MOVE_WATER_PLEDGE)
+                return gSideTimers[defSide].swampTimer == 0;
+            break;
+        case MOVE_FIRE_PLEDGE:
+            if (partnerMove == MOVE_WATER_PLEDGE)
+                return gSideTimers[atkSide].rainbowTimer == 0;
+            if (partnerMove == MOVE_GRASS_PLEDGE)
+                return gSideTimers[defSide].seaOfFireTimer == 0;
+            break;
+        case MOVE_WATER_PLEDGE:
+            if (partnerMove == MOVE_GRASS_PLEDGE)
+                return gSideTimers[defSide].swampTimer == 0;
+            if (partnerMove == MOVE_FIRE_PLEDGE)
+                return gSideTimers[atkSide].rainbowTimer == 0;
+            break;
+        }
+    }
+
     return FALSE;
 }
