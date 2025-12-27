@@ -5424,7 +5424,7 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
             if (moveEffect == EFFECT_FINAL_GAMBIT
              && IsBattlerAlive(gBattlerAttacker)
              && !gBattleStruct->unableToUseMove
-             && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleBattle())
+             && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
              && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
             {
                 BattleScriptCall(BattleScript_FinalGambit);
@@ -5910,7 +5910,7 @@ static void Cmd_moveend(void)
             }
 
             if (IsExplosionMove(gCurrentMove)
-             && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleBattle())
+             && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
              && !IsBattlerAlive(gBattlerAttacker)
              && !gBattleStruct->battlerState[gBattlerAttacker].fainted)
             {
@@ -5951,7 +5951,7 @@ static void Cmd_moveend(void)
             case EFFECT_MAX_HP_50_RECOIL:
                 if (IsBattlerAlive(gBattlerAttacker)
                  && !gBattleStruct->unableToUseMove
-                 && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleBattle())
+                 && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
                  && !gSpecialStatuses[gBattlerAttacker].steelBeamRecoil
                  && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED)
                  && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
