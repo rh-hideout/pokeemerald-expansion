@@ -55,4 +55,18 @@ SINGLE_BATTLE_TEST("Substitute's HP cost can trigger a berry")
     }
 }
 
+SINGLE_BATTLE_TEST("Substitute's HP cost doesn't trigger effects that trigger on damage taken")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        MESSAGE("Wobbuffet put in a substitute!");
+        NOT MESSAGE("Wobbuffet's Air Balloon popped!");
+    }
+}
+
 TO_DO_BATTLE_TEST("Baton Pass passes Substitutes");

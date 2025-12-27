@@ -9,20 +9,6 @@ TEST("Tests resume after CRASH")
     f();
 }
 
-SINGLE_BATTLE_TEST("Substitute's HP cost doesn't trigger effects that trigger on damage taken")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
-        MESSAGE("Wobbuffet put in a substitute!");
-        NOT MESSAGE("Wobbuffet's Air Balloon popped!");
-    }
-}
-
 SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT")
 {
     GIVEN {
