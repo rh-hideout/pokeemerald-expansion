@@ -3199,6 +3199,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
 
     gBattleStruct->moveResultFlags[battler] = 0;
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
+    gBattleStruct->battlerState[battler].fainted = FALSE;
     gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
@@ -3306,6 +3307,7 @@ const u8* FaintClearSetData(u32 battler)
     gProtectStructs[battler].pranksterElevated = FALSE;
 
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
+    gBattleStruct->battlerState[battler].fainted = TRUE;
 
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
@@ -3698,7 +3700,7 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_SET_DEX_AND_BATTLE_VARS:
         if (!gBattleControllerExecFlags)
         {
-            gBattleStruct->eventState.beforeFristTurn = 0;
+            gBattleStruct->eventState.beforeFirstTurn = 0;
             gBattleStruct->switchInBattlerCounter = 0;
             Ai_InitPartyStruct(); // Save mons party counts, and first 2/4 mons on the battlefield.
 
@@ -3732,7 +3734,7 @@ static void TryDoEventsBeforeFirstTurn(void)
     if (gBattleControllerExecFlags)
         return;
 
-    switch (gBattleStruct->eventState.beforeFristTurn)
+    switch (gBattleStruct->eventState.beforeFirstTurn)
     {
     case FIRST_TURN_EVENTS_START:
         // Set invalid mons as absent(for example when starting a double battle with only one pokemon).
@@ -3763,15 +3765,15 @@ static void TryDoEventsBeforeFirstTurn(void)
 
         gBattleStruct->speedTieBreaks = RandomUniform(RNG_SPEED_TIE, 0, Factorial(MAX_BATTLERS_COUNT) - 1);
         gBattleTurnCounter = 0;
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_OVERWORLD_WEATHER:
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         if (TryFieldEffects(FIELD_EFFECT_OVERWORLD_WEATHER))
             return;
         break;
     case FIRST_TURN_EVENTS_TERRAIN:
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         if (TryFieldEffects(FIELD_EFFECT_OVERWORLD_TERRAIN))
             return;
         break;
@@ -3782,7 +3784,7 @@ static void TryDoEventsBeforeFirstTurn(void)
                 return;
             break;
         }
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_TOTEM_BOOST:
         for (i = 0; i < gBattlersCount; i++)
@@ -3795,21 +3797,21 @@ static void TryDoEventsBeforeFirstTurn(void)
             }
         }
         memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts)); // erase all totem boosts for Mirror Herb and Opportunist
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_SWITCH_IN_EVENTS:
         gBattleStruct->eventState.switchIn = 0;
         for (u32 battler = 0; battler < gBattlersCount; battler++)
             gBattleStruct->battlerState[battler].switchIn = TRUE;
         BattleScriptPushCursorAndCallback(BattleScript_FirstTurnSwitchInEvents);
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_FAINTED_BATTLERS:
         // Handle any Pokemon that fainted from starting hazards before transitioning to action selection
         if (HandleFaintedMonActions())
             return;
         gBattleStruct->eventState.faintedAction = 0;
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_END:
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
@@ -3846,7 +3848,7 @@ static void TryDoEventsBeforeFirstTurn(void)
 
         if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_BEFORE_FIRST_TURN)))
             BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
-        gBattleStruct->eventState.beforeFristTurn = 0;
+        gBattleStruct->eventState.beforeFirstTurn = 0;
         break;
     }
 }

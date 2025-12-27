@@ -367,7 +367,6 @@ BattleScript_EffectHit_Pledge::
 	printstring STRINGID_THETWOMOVESBECOMEONE
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_EffectHit_RetFromAccCheck
-	tryfaintmon BS_TARGET
 	return
 
 BattleScript_MoveEffectSaltCure::
@@ -709,7 +708,6 @@ BattleScript_EffectFlingConsumeBerry:
 	setbyte sBERRY_OVERRIDE, 0
 	restorebattleritem
 BattleScript_FlingEnd:
-	tryfaintmon BS_TARGET
 	trysymbiosis BS_ATTACKER
 	goto BattleScript_MoveEnd
 
@@ -1158,10 +1156,7 @@ BattleScript_EffectSpectralThief::
 BattleScript_EffectSpectralThiefFromDamage:
 	damagecalc
 	adjustdamage
-	call BattleScript_Hit_RetFromAtkAnimation
-	tryfaintmon BS_TARGET
-	moveendall
-	end
+	goto BattleScript_HitFromAtkAnimation
 
 BattleScript_EffectPartingShot::
 	attackcanceler
@@ -2019,11 +2014,10 @@ BattleScript_EffectHealingWish::
 	tryfaintmon BS_ATTACKER
 	storehealingwish BS_ATTACKER
 	jumpifgenconfiglowerthan CONFIG_HEALING_WISH_SWITCH, GEN_5, BattleScript_EffectHealingWishGen4
-BattleScript_EffectHealingWishEnd:
-	moveendall
-	end
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectHealingWishGen4:
-	openpartyscreen BS_ATTACKER, BattleScript_EffectHealingWishEnd
+	openpartyscreen BS_ATTACKER, BattleScript_MoveEnd
 	waitstate
 	switchhandleorder BS_ATTACKER, 2
 	returnatktoball
@@ -2040,7 +2034,7 @@ BattleScript_EffectHealingWishGen4:
 	waitstate
 	switchineffects BS_ATTACKER
 	switchinevents
-	goto BattleScript_EffectHealingWishEnd
+	goto BattleScript_MoveEnd
 
 BattleScript_HealingWishActivates::
 	setbyte cMULTISTRING_CHOOSER, 0
@@ -2389,8 +2383,6 @@ BattleScript_HitFromDamageCalc::
 	adjustdamage
 BattleScript_HitFromAtkAnimation::
 	call BattleScript_Hit_RetFromAtkAnimation
-BattleScript_TryFaintMon::
-	tryfaintmon BS_TARGET
 BattleScript_MoveEnd::
 	moveendall
 	end
@@ -3788,7 +3780,6 @@ BattleScript_EffectSpitUp::
 	adjustdamage
 	stockpiletobasedamage
 	call BattleScript_Hit_RetFromAtkAnimation
-	tryfaintmon BS_TARGET
 	removestockpilecounters
 	goto BattleScript_MoveEnd
 
@@ -4048,7 +4039,6 @@ BattleScript_BrickBreakDoHit::
 	waitmessage B_WAIT_TIME_LONG
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
-	tryfaintmon BS_TARGET
 	setadditionaleffects
 	goto BattleScript_MoveEnd
 
@@ -4884,7 +4874,6 @@ BattleScript_BideAttack::
 	datahpupdate BS_TARGET, MOVE_DAMAGE_HP_UPDATE
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
-	tryfaintmon BS_TARGET
 	goto BattleScript_MoveEnd
 
 BattleScript_BideNoEnergyToAttack::
@@ -5040,11 +5029,6 @@ BattleScript_DmgHazardsOnBattler::
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	call BattleScript_PrintHurtByDmgHazards
 	tryfaintmon BS_SCRIPTING
-	return
-
-BattleScript_DmgHazardsOnBattlerScriptingFainted::
-	setbyte sGIVEEXP_STATE, 0
-	getexp BS_SCRIPTING
 	return
 
 BattleScript_PrintHurtByDmgHazards::
@@ -5324,15 +5308,14 @@ BattleScript_DoFutureAttackHit::
 BattleScript_DoFutureAttackResult:
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
-	tryfaintmon BS_TARGET
-	checkteamslost BattleScript_FutureAttackEnd
 BattleScript_FutureAttackEnd::
 	moveendcase MOVEEND_SET_VALUES
 	moveendcase MOVEEND_RAGE
 	moveendcase MOVEEND_ABILITIES
-	moveendcase MOVEEND_COLOR_CHANGE
 	moveendcase MOVEEND_ITEM_EFFECTS_TARGET
 	moveendfromto MOVEEND_SYMBIOSIS, MOVEEND_UPDATE_LAST_MOVES
+	moveendcase MOVEEND_COLOR_CHANGE
+	checkteamslost BattleScript_FutureAttackClearResults
 	goto BattleScript_FutureAttackClearResults
 BattleScript_FutureAttackMiss::
 	pause B_WAIT_TIME_SHORT
