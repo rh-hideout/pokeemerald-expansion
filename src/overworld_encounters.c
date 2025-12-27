@@ -33,7 +33,7 @@ static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
 static bool32 OWE_ShouldSpawnWaterMons(void);
-static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
+static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
 static bool8 IsSafeToSpawnObjectEvents(void);
 static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
@@ -111,32 +111,7 @@ void UpdateOverworldEncounters(void)
         
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
         u32 level;
-        u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level);
-
-        if (TryStartRoamerEncounter())
-        {
-            roamerIndex = gEncounteredRoamerIndex;
-            u32 personality = gSaveBlock1Ptr->roamer[roamerIndex].personality;
-            speciesId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
-            level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
-
-            // Consolidate next section into a function?
-            isShiny = ComputePlayerShinyOdds(personality);
-            if (GetGenderFromSpeciesAndPersonality(speciesId, personality) == MON_FEMALE)
-                isFemale = TRUE;
-            else
-                isFemale = FALSE;
-
-            // Consolidate ext section into a function?
-            graphicsId = speciesId + OBJ_EVENT_MON;
-            if (isFemale)
-                graphicsId += OBJ_EVENT_MON_FEMALE;
-
-            if (isShiny)
-                graphicsId += OBJ_EVENT_MON_SHINY;
-
-            ZeroEnemyPartyMons();
-        }
+        u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &roamerIndex);
 
         if (speciesId == SPECIES_NONE || !IsWildLevelAllowedByRepel(level))
         {
@@ -519,9 +494,9 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
         OWE_DoSpawnDespawnAnim(objectEvent, FALSE);
 }
 
-u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
+u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex)
 {
-    SetOverworldEncounterSpeciesInfo(x, y, speciesId, isShiny, isFemale, level);
+    SetOverworldEncounterSpeciesInfo(x, y, speciesId, isShiny, isFemale, level, roamerIndex);
     u16 graphicsId = *speciesId + OBJ_EVENT_MON;
 
     if (*isFemale)
@@ -538,7 +513,7 @@ void OverworldWildEncounter_SetMinimumSpawnTimer(void)
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
-static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
+static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex)
 {
     const struct WildPokemonInfo *wildMonInfo;
     enum WildPokemonArea wildArea;
@@ -559,12 +534,19 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
     }
 
-    if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE))
+    if (TryStartRoamerEncounter())
     {
+        *roamerIndex = gEncounteredRoamerIndex;
+    }
+    else if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE))
+    {
+        ZeroEnemyPartyMons();
         *speciesId = SPECIES_NONE;
         return;
     }
 
+    // gEnemyParty[1] will contain a generated wild mon if a roaming encounter was generated.
+    // If not it will be contained in gEnemyParty[0]. 
     *speciesId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
     *level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
     personality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);
@@ -785,6 +767,7 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
     u32 level;
+    u32 roamerIndex = ROAMER_COUNT;
 
     SetOverworldEncounterSpeciesInfo(
         template->x - MAP_OFFSET,
@@ -792,7 +775,8 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
         &speciesId,
         &isShiny,
         &isFemale,
-        &level
+        &level,
+        &roamerIndex
     );
     // Have a fallback incase of no header mons
 
