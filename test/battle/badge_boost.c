@@ -8,8 +8,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_ATTACK boost Attack", s16 dmg)
     u32 genConfig = 0;
     for (u32 gen = GEN_1; gen <= GEN_LATEST; gen++)
     {
-        PARAMETRIZE{badge = FALSE; genConfig = gen;}
-        PARAMETRIZE{badge = TRUE; genConfig = gen;}
+        PARAMETRIZE { badge = FALSE; genConfig = gen; }
+        PARAMETRIZE { badge = TRUE; genConfig = gen; }
     }
     GIVEN {
         if (badge)
@@ -40,8 +40,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPATK boost Special Attack", s
     u32 genConfig = 0;
     for (u32 gen = GEN_1; gen <= GEN_LATEST; gen++)
     {
-        PARAMETRIZE{badge = FALSE; genConfig = gen;}
-        PARAMETRIZE{badge = TRUE; genConfig = gen;}
+        PARAMETRIZE { badge = FALSE; genConfig = gen; }
+        PARAMETRIZE { badge = TRUE; genConfig = gen; }
     }
     GIVEN {
         if (badge)
@@ -72,8 +72,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_DEFENSE boost Defense", s16 dm
     u32 genConfig = 0;
     for (u32 gen = GEN_1; gen <= GEN_LATEST; gen++)
     {
-        PARAMETRIZE{badge = FALSE; genConfig = gen;}
-        PARAMETRIZE{badge = TRUE; genConfig = gen;}
+        PARAMETRIZE { badge = FALSE; genConfig = gen; }
+        PARAMETRIZE { badge = TRUE; genConfig = gen; }
     }
 
     GIVEN {
@@ -105,8 +105,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPDEF boost Special Defense", 
     u32 genConfig = 0;
     for (u32 gen = GEN_1; gen <= GEN_LATEST; gen++)
     {
-        PARAMETRIZE{badge = FALSE; genConfig = gen;}
-        PARAMETRIZE{badge = TRUE; genConfig = gen;}
+        PARAMETRIZE { badge = FALSE; genConfig = gen; }
+        PARAMETRIZE { badge = TRUE; genConfig = gen; }
     }
 
     GIVEN {
@@ -138,8 +138,8 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPEED boost Speed", s16 dmg)
     u32 genConfig = 0;
     for (u32 gen = GEN_1; gen <= GEN_LATEST; gen++)
     {
-        PARAMETRIZE{badge = FALSE; genConfig = gen;}
-        PARAMETRIZE{badge = TRUE; genConfig = gen;}
+        PARAMETRIZE { badge = FALSE; genConfig = gen; }
+        PARAMETRIZE { badge = TRUE; genConfig = gen; }
     }
     GIVEN {
         if (badge)
@@ -150,7 +150,7 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPEED boost Speed", s16 dmg)
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(101); HP(1); }
     } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH);}
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
     } THEN {
         if (badge && genConfig <= GEN_3)
         {

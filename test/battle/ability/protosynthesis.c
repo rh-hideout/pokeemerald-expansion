@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
     GIVEN {
         WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); };
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         for (turns = 0; turns < 5; turns++)
             TURN {}
@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ROARING_MOON) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); };
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         TURN { SWITCH(player, 1); }
     } SCENE {

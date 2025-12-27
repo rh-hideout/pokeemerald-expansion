@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Mirror Coat fails if mon that damaged Mirror Coat user is no
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN {

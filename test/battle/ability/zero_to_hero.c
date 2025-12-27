@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
         PLAYER(SPECIES_PALAFIN_ZERO);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -166,7 +166,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PALAFIN_ZERO);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1);}
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLIP_TURN); SEND_OUT(opponent, 1); }
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 0); }

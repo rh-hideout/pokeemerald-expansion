@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Quark Drive after Electric Terr
 {
     GIVEN {
         PLAYER(SPECIES_IRON_MOTH) { Attack(100); Defense(100); Speed(100); SpAttack(110); SpDefense(100); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_TAPU_KOKO) { Speed(100); Ability(ABILITY_ELECTRIC_SURGE); };
+        OPPONENT(SPECIES_TAPU_KOKO) { Speed(100); Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
         TURN {}
         TURN {}
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Protosynthesis after harsh sunl
     GIVEN {
         WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_RAGING_BOLT) { Attack(100); Defense(100); Speed(100); SpAttack(110); SpDefense(100); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_TORKOAL) { Speed(100); Ability(ABILITY_DROUGHT); };
+        OPPONENT(SPECIES_TORKOAL) { Speed(100); Ability(ABILITY_DROUGHT); }
     } WHEN {
         TURN {}
         TURN {}
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Protosynthesis and increases highes
 
     GIVEN {
         PLAYER(SPECIES_RAGING_BOLT) { Attack(attack); Defense(defense); Speed(speed); SpAttack(spAttack); SpDefense(spDefense); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN { }
     } SCENE {
@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Quark Drive and increases highest s
 
     GIVEN {
         PLAYER(SPECIES_IRON_MOTH) { Attack(attack); Defense(defense); Speed(speed); SpAttack(spAttack); SpDefense(spDefense); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN { }
     } SCENE {
@@ -192,7 +192,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special attack by 30% if it is the 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_ROUND) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(species) { Attack(100); Defense(100); Speed(100); SpAttack(110); SpDefense(100); Ability(ability); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_ROUND); }
     } SCENE {
@@ -218,7 +218,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_ROUND) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(species) { Attack(100); Defense(100); Speed(100); SpAttack(100); SpDefense(110); Ability(ability); Item(item); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ROUND); }
     } SCENE {
@@ -288,7 +288,7 @@ DOUBLE_BATTLE_TEST("Booster Energy activates on any terrain")
         PLAYER(SPECIES_IRON_MOTH) { Speed(110); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(80); }
         OPPONENT(SPECIES_TAPU_BULU) { Speed(100); Ability(ABILITY_GRASSY_SURGE); }
-        OPPONENT(SPECIES_TAPU_KOKO) { Speed(10); Ability(ABILITY_ELECTRIC_SURGE); };
+        OPPONENT(SPECIES_TAPU_KOKO) { Speed(10); Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
         TURN { }
     } SCENE {
@@ -305,7 +305,7 @@ DOUBLE_BATTLE_TEST("Booster Energy activates on air locked sun")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_RAGING_BOLT) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_PSYDUCK) { Ability(ABILITY_CLOUD_NINE); }
-        OPPONENT(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); };
+        OPPONENT(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         TURN { SWITCH(playerLeft, 2); }
     } SCENE {
@@ -321,7 +321,7 @@ DOUBLE_BATTLE_TEST("Booster Energy will not activate on terrain if user has Prot
         PLAYER(SPECIES_RAGING_BOLT) { Speed(110); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(80); }
         OPPONENT(SPECIES_TAPU_BULU) { Speed(100); Ability(ABILITY_GRASSY_SURGE); }
-        OPPONENT(SPECIES_TAPU_KOKO) { Speed(10); Ability(ABILITY_ELECTRIC_SURGE); };
+        OPPONENT(SPECIES_TAPU_KOKO) { Speed(10); Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
         TURN { }
     } SCENE {

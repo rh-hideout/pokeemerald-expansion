@@ -24,8 +24,8 @@ SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is targeted")
 SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is attacking")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); Item(ITEM_DESTINY_KNOT);}
-        OPPONENT(SPECIES_CLEFAIRY)  { Gender(MON_FEMALE); Ability(ABILITY_CUTE_CHARM);}
+        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); Item(ITEM_DESTINY_KNOT); }
+        OPPONENT(SPECIES_CLEFAIRY)  { Gender(MON_FEMALE); Ability(ABILITY_CUTE_CHARM); }
     } WHEN {
         TURN {  MOVE(player, MOVE_TACKLE); }
     } SCENE {
@@ -68,11 +68,11 @@ SINGLE_BATTLE_TEST("Destiny Knot procs but fails if the target is oblivious")
 SINGLE_BATTLE_TEST("Destiny Knot procs but fails if the target is already infatuated (cute charm)")
 {
     GIVEN {
-        PLAYER(SPECIES_CLEFAIRY) { Gender(MON_MALE); Ability(ABILITY_CUTE_CHARM);}
+        PLAYER(SPECIES_CLEFAIRY) { Gender(MON_MALE); Ability(ABILITY_CUTE_CHARM); }
         OPPONENT(SPECIES_WOBBUFFET)  { Gender(MON_FEMALE); Item(ITEM_DESTINY_KNOT); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_ATTRACT);}
-        TURN { MOVE(opponent, MOVE_TACKLE);}
+        TURN { MOVE(opponent, MOVE_ATTRACT); }
+        TURN { MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("But it failed!");
