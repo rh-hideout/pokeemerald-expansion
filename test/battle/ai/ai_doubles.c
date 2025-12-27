@@ -449,7 +449,7 @@ AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Weakness Policy")
 AI_DOUBLE_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide (doubles)")
 {
     ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
 
@@ -474,7 +474,7 @@ AI_DOUBLE_BATTLE_TEST("AI will only explode and kill everything on the field wit
 AI_DOUBLE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (doubles)")
 {
     ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
     u32 battler;

@@ -746,9 +746,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro stockpile id:req
+	.macro stockpile
 	.byte 0x85
-	.byte \id
 	.endm
 
 	.macro stockpiletobasedamage
@@ -891,14 +890,12 @@
 	.byte 0xa0
 	.endm
 
-	.macro counterdamagecalculator failInstr:req
+	.macro unused_0xA1
 	.byte 0xa1
-	.4byte \failInstr
 	.endm
 
-	.macro mirrorcoatdamagecalculator failInstr:req
+	.macro unused_0xA2
 	.byte 0xa2
-	.4byte \failInstr
 	.endm
 
 	.macro disablelastusedattack failInstr:req
@@ -1164,9 +1161,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setdamagetohealthdifference failInstr:req
+	.macro Cmd_unused0xd8
 	.byte 0xd8
-	.4byte \failInstr
 	.endm
 
 	.macro setroom
@@ -1371,11 +1367,6 @@
 
 	.macro jumpifintimidateabilityprevented
 	callnative BS_JumpIfIntimidateAbilityPrevented
-	.endm
-
-	.macro metalburstdamagecalculator failInstr:req
-	callnative BS_CalcMetalBurstDmg
-	.4byte \failInstr
 	.endm
 
 	.macro allyswitchswapbattlers
