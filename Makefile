@@ -445,11 +445,15 @@ generated: $(AUTO_GEN_TARGETS)
 %.smol:     %      ; $(SMOL) -w $< $@
 %.rl:       %      ; $(GFX) $< $@
 
-clean-generated:
-	@rm -f $(AUTO_GEN_TARGETS)
-	@echo "rm -f <AUTO_GEN_TARGETS>"
+clean-learnsets:
 	@rm -Rf $(LEARNSET_HELPERS_BUILD_DIR)
 	@echo "rm -Rf <LEARNSET_HELPERS_BUILD_DIR>"
+	rm $(ALL_LEARNABLES_JSON)
+	rm $(DATA_SRC_SUBDIR)/pokemon/teachable_learnsets.h
+
+clean-generated: clean-learnsets
+	@rm -f $(AUTO_GEN_TARGETS)
+	@echo "rm -f <AUTO_GEN_TARGETS>"
 
 $(C_BUILDDIR)/librfu_intr.o: CFLAGS := -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast
 $(C_BUILDDIR)/berry_crush.o: override CFLAGS += -Wno-address-of-packed-member

@@ -71,7 +71,7 @@ MoveRelearner_EventScript_TeachMove::
 	getpartysize
 	goto_if_eq VAR_RESULT, 0, MoveRelearner_EventScript_NoPkmn
 	msgbox MoveRelearner_Text_ChoosePkmn, MSGBOX_DEFAULT
-	special ChooseMonForMoveRelearner
+	chooseboxmon SELECT_PC_MON_MOVE_RELEARNER
 	waitstate
 	call_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, MoveRelearner_EventScript_AnythingElse
 	special IsSelectedMonEgg
