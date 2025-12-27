@@ -10,6 +10,7 @@
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "random.h"
+#include "roamer.h"
 #include "script.h"
 #include "sprite.h"
 #include "sound.h"
@@ -25,6 +26,7 @@
 
 #define sOverworldEncounterLevel trainerRange_berryTreeId
 #define sAge                     playerCopyableMovement
+#define sRoamerStatus            directionSequenceIndex
 
 static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
@@ -81,6 +83,7 @@ void UpdateOverworldEncounters(void)
     u16 speciesId = SPECIES_NONE;
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
+    u32 roamerIndex = ROAMER_COUNT;
     s16 x, y;
 
     if (sOWESpawnCountdown != 0)
@@ -110,7 +113,32 @@ void UpdateOverworldEncounters(void)
         u32 level;
         u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level);
 
-        if (speciesId == SPECIES_NONE)
+        if (TryStartRoamerEncounter())
+        {
+            roamerIndex = gEncounteredRoamerIndex;
+            u32 personality = gSaveBlock1Ptr->roamer[roamerIndex].personality;
+            speciesId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+            level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+
+            // Consolidate next section into a function?
+            isShiny = ComputePlayerShinyOdds(personality);
+            if (GetGenderFromSpeciesAndPersonality(speciesId, personality) == MON_FEMALE)
+                isFemale = TRUE;
+            else
+                isFemale = FALSE;
+
+            // Consolidate ext section into a function?
+            graphicsId = speciesId + OBJ_EVENT_MON;
+            if (isFemale)
+                graphicsId += OBJ_EVENT_MON_FEMALE;
+
+            if (isShiny)
+                graphicsId += OBJ_EVENT_MON_SHINY;
+
+            ZeroEnemyPartyMons();
+        }
+
+        if (speciesId == SPECIES_NONE || !IsWildLevelAllowedByRepel(level))
         {
             OWE_ResetSpawnCounterPlayAmbientCry();
             return;
@@ -144,6 +172,7 @@ void UpdateOverworldEncounters(void)
         gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
         gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
         gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
+        gObjectEvents[objectEventId].sRoamerStatus = roamerIndex;
 
         u8 directions[4] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
         ObjectEventTurn(&gObjectEvents[objectEventId], directions[Random() & 3]);
@@ -383,6 +412,14 @@ void CreateOverworldWildEncounter(void)
 
     if (!IsOverworldWildEncounter(object))
         return;
+
+    if (object->sRoamerStatus < ROAMER_COUNT)
+    {
+        CreateRoamerMonInstance(object->sRoamerStatus);
+        gEncounteredRoamerIndex = object->sRoamerStatus;
+        BattleSetup_StartRoamerBattle();
+        return;
+    }
 
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
@@ -1037,3 +1074,4 @@ static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
 #undef STARTED
 #undef sOverworldEncounterLevel
 #undef sAge
+#undef sRoamerStatus
