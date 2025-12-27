@@ -5031,11 +5031,6 @@ BattleScript_DmgHazardsOnBattler::
 	tryfaintmon BS_SCRIPTING
 	return
 
-BattleScript_DmgHazardsOnBattlerScriptingFainted::
-	setbyte sGIVEEXP_STATE, 0
-	getexp BS_SCRIPTING
-	return
-
 BattleScript_PrintHurtByDmgHazards::
 	printfromtable gDmgHazardsStringIds
 	waitmessage B_WAIT_TIME_LONG
