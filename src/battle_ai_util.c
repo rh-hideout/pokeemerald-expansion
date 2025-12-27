@@ -946,6 +946,10 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     if (movePower)
         isDamageMoveUnusable = IsDamageMoveUnusable(&ctx);
 
+    if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
+     && battlerDef == BATTLE_PARTNER(battlerAtk))
+        movePower = 0;
+
     if (movePower && !isDamageMoveUnusable)
     {
         enum Type types[3];
