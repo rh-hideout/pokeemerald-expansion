@@ -44,7 +44,7 @@ u32 TestRunner_Battle_GetForcedEnvironment(void);
 #define TestRunner_Battle_RecordExp(...) (void)0
 #define TestRunner_Battle_RecordMessage(...) (void)0
 #define TestRunner_Battle_RecordStatus1(...) (void)0
-void TestRunner_Battle_RecordCatchChance(...) (void)0
+#define TestRunner_Battle_RecordCatchChance(...) (void)0
 #define TestRunner_Battle_AfterLastTurn(...) (void)0
 #define TestRunner_Battle_CheckChosenMove(...) (void)0
 #define TestRunner_Battle_CheckSwitch(...) (void)0
