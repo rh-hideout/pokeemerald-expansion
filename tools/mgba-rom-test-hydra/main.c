@@ -11,9 +11,9 @@
  * L: Sets the filename to the remainder of the line.
  * R: Sets the result to the remainder of the line, and flushes any
  *    output buffered since the previous R.
- * P/K/F/A: Sets the result to the remaining of the line, flushes any
- *    output since the previous P/K/F/A and increment the number of
- *    passes/known fails/assumption fails/fails.
+ * P/E/K/F/A: Sets the result to the remaining of the line, flushes any
+ *    output since the previous P/E/K/F/A and increment the number of
+ *    passes/expected fails/known fails/assumption fails/fails.
  */
 #include <fcntl.h>
 #include <math.h>
@@ -59,6 +59,8 @@ struct Runner
     int passes;
     int knownFails;
     int knownFailsPassing;
+    int expectedFails;
+    int expectedFailsPassing;
     int todos;
     int assumptionFails;
     int fails;
@@ -67,6 +69,8 @@ struct Runner
     char failed_TestFilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
     char knownFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
     char knownFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char expectedFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char expectedFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
     char assumeFailed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
     char assumeFailed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
 };
@@ -241,6 +245,9 @@ static void handle_read(int i, struct Runner *runner)
                 case 'P':
                     runner->passes++;
                     goto add_to_results;
+                case 'E':
+                    runner->expectedFails++;
+                    goto add_to_results;
                 case 'K':
                     runner->knownFails++;
                     goto add_to_results;
@@ -251,6 +258,14 @@ static void handle_read(int i, struct Runner *runner)
                         strcpy(runner->knownFailingPassed_FilenameLine[runner->knownFailsPassing], runner->filename_line);
                     }
                     runner->knownFailsPassing++;
+                    goto add_to_results;
+                case 'V':
+                    if (runner->expectedFailsPassing < MAX_SUMMARY_TESTS_TO_LIST)
+                    {
+                        strcpy(runner->expectedFailingPassed_TestNames[runner->expectedFailsPassing], runner->test_name);
+                        strcpy(runner->expectedFailingPassed_FilenameLine[runner->expectedFailsPassing], runner->filename_line);
+                    }
+                    runner->expectedFailsPassing++;
                     goto add_to_results;
                 case 'T':
                     runner->todos++;
@@ -737,6 +752,8 @@ int main(int argc, char *argv[])
     // Reap test runners and collate exit codes.
     int exit_code = 0;
     int passes = 0;
+    int expectedFails = 0;
+    int expectedFailsPassing = 0;
     int knownFails = 0;
     int knownFailsPassing = 0;
     int todos = 0;
@@ -749,6 +766,9 @@ int main(int argc, char *argv[])
 
     char knownFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
     char knownFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+
+    char expectedFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+    char expectedFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
 
     char assumeFailed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
     char assumeFailed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
@@ -766,6 +786,7 @@ int main(int argc, char *argv[])
         if (WIFEXITED(wstatus) && WEXITSTATUS(wstatus) > exit_code)
             exit_code = WEXITSTATUS(wstatus);
         passes += runners[i].passes;
+        expectedFails += runners[i].expectedFails;
         knownFails += runners[i].knownFails;
         for (int j = 0; j < runners[i].knownFailsPassing; j++)
         {
@@ -775,6 +796,15 @@ int main(int argc, char *argv[])
                 strcpy(knownFailingPassed_FilenameLine[knownFailsPassing], runners[i].knownFailingPassed_FilenameLine[j]);
             }
             knownFailsPassing++;
+        }
+        for (int j = 0; j < runners[i].expectedFailsPassing; j++)
+        {
+            if (j < MAX_SUMMARY_TESTS_TO_LIST)
+            {
+                strcpy(expectedFailingPassed_TestNames[expectedFailsPassing], runners[i].expectedFailingPassed_TestNames[j]);
+                strcpy(expectedFailingPassed_FilenameLine[expectedFailsPassing], runners[i].expectedFailingPassed_FilenameLine[j]);
+            }
+            expectedFailsPassing++;
         }
         todos += runners[i].todos;
         for (int j = 0; j < runners[i].assumptionFails; j++)
@@ -855,12 +885,16 @@ int main(int argc, char *argv[])
         fprintf(stdout, "\n");
         if (fails > 0)
             fprintf(stdout, "- Tests \e[31mFAILED\e[0m :         %d    Add TESTS='X' to run tests with the defined prefix.\n", fails);
+        if (expectedFails > 0)
+            fprintf(stdout, "- Tests \e[32mEXPECT_FAILING\e[0m:  %d\n", expectedFails);
         if (knownFails > 0)
             fprintf(stdout, "- Tests \e[33mKNOWN_FAILING\e[0m:   %d\n", knownFails);
         if (assumptionFails > 0)
             fprintf(stdout, "- \e[33mASSUMPTIONS_FAILED\e[0m:    %d\n", assumptionFails);
         if (todos > 0)
             fprintf(stdout, "- Tests \e[33mTO_DO\e[0m:           %d\n", todos);
+        if (expectedFailsPassing > 0)
+            fprintf(stdout, "- \e[31mEXPECTED_FAIL_PASSING\e[0m: %d\n", expectedFailsPassing);
         if (knownFailsPassing > 0)
             fprintf(stdout, "- \e[32mKNOWN_FAILING_PASSING\e[0m: %d   \e[33mPlease remove KNOWN_FAILING if these tests intentionally PASS\e[0m\n", knownFailsPassing);
         fprintf(stdout, "- Tests \e[32mPASSED\e[0m:          %d\n", passes);
