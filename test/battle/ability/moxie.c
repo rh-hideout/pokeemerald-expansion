@@ -19,8 +19,8 @@ DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh raises Attack by one stage after direct
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); SEND_OUT(opponentLeft, 2);  }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
-        MESSAGE("Snorunt fainted!");
         MESSAGE("The opposing Glalie fainted!");
+        MESSAGE("Snorunt fainted!");
         MESSAGE("The opposing Abra fainted!");
         ABILITY_POPUP(playerLeft, abilityPopUp);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);

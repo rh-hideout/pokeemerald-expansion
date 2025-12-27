@@ -5411,154 +5411,127 @@ static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, enum Ba
     return FALSE;
 }
 
-static u32 GetNextFaintingBattler(u32 battler)
-{
-    // user -> ally -> left foe -> right foe
-    if (battler == gBattlerAttacker)
-        return BATTLE_PARTNER(gBattlerAttacker);
-    if (IsBattlerAlly(battler, gBattlerAttacker))
-        return IsOnPlayerSide(gBattlerAttacker) ? GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT) : GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-    if (battler >= 2) // on the right
-        return MAX_BATTLERS_COUNT;
-    return BATTLE_PARTNER(battler);
-}
-
 static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
 {
     bool32 effect = FALSE;
 
     do
     {
-        u32 battler = gBattleStruct->eventState.moveEndBattler;
-        do
+        switch (gBattleStruct->eventState.moveEndBlock)
         {
-            if (gAbsentBattlerFlags & (1u << battler))
-                break;
-
-            switch (gBattleStruct->eventState.moveEndBlock)
+        case FAINT_BLOCK_FINAL_GAMBIT:
+            if (moveEffect == EFFECT_FINAL_GAMBIT
+             && IsBattlerAlive(gBattlerAttacker)
+             && !gBattleStruct->unableToUseMove
+             && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
+             && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
             {
-            case FAINT_BLOCK_FINAL_GAMBIT:
-                if (moveEffect == EFFECT_FINAL_GAMBIT
-                 && !IsBattlerAlly(gBattlerAttacker, battler)
-                 && IsBattlerAlive(gBattlerAttacker)
-                 && !gBattleStruct->unableToUseMove
-                 && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
-                 && IsAnyTargetAffected())
-                {
-                    BattleScriptCall(BattleScript_FinalGambit);
-                    effect = TRUE;
-                }
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
-            case FAINT_BLOCK_CHECK_TARGET_FAINTED: // Stop if target already ran the block / is alive or absent
-                if (IsBattlerAlive(battler)
-                 || gBattleStruct->battlerState[battler].fainted)
-                {
-                    gBattleStruct->eventState.moveEndBlock = 0;
-                    break;
-                }
-
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
-            case FAINT_BLOCK_END_NEUTRALIZING_GAS:
-                if (gBattleMons[battler].volatiles.neutralizingGas)
-                {
-                    gBattleMons[battler].volatiles.neutralizingGas = FALSE;
-                    if (!IsNeutralizingGasOnField())
-                    {
-                        effect = TRUE;
-                        BattleScriptCall(BattleScript_NeutralizingGasExits);
-                    }
-                }
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
-            case FAINT_BLOCK_TRY_DESTINY_BOND: // Checked before FAINT_BLOCK_FAINT_TARGET but occurs after since volatiles are cleared on faint
-                if (gBattleMons[battler].volatiles.destinyBond
-                 && IsBattlerTurnDamaged(battler)
-                 && IsBattlerAlive(gBattlerAttacker)
-                 && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX
-                 && !IsBattlerAlly(gBattlerAttacker, battler))
-                {
-                    gBattleStruct->tryDestinyBond = TRUE;
-                }
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
-            case FAINT_BLOCK_TRY_GRUDGE: // Checked before FAINT_BLOCK_FAINT_TARGET but occurs after since volatiles are cleared on faint
-                if (gBattleMons[battler].volatiles.grudge
-                 && IsBattlerTurnDamaged(battler)
-                 && IsBattlerAlive(gBattlerAttacker)
-                 && !IsBattlerAlly(gBattlerAttacker, battler)
-                 && !IsZMove(gCurrentMove)
-                 && gCurrentMove != MOVE_STRUGGLE)
-                {
-                    gBattleStruct->tryGrudge = TRUE;
-                }
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
-            case FAINT_BLOCK_FAINT_TARGET:
-                gBattlerFainted = battler;
-                TryUpdateEvolutionTracker(IF_DEFEAT_X_WITH_ITEMS, 1, MOVE_NONE);
-                TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
-                gHitMarker |= HITMARKER_FAINTED(battler);
-                gBattleStruct->eventState.faintedAction = 0;
-                if (IsOnPlayerSide(battler))
-                {
-                    gHitMarker |= HITMARKER_PLAYER_FAINTED;
-                    if (gBattleResults.playerFaintCounter < 255)
-                        gBattleResults.playerFaintCounter++;
-                    AdjustFriendshipOnBattleFaint(battler);
-                    gSideTimers[B_SIDE_PLAYER].retaliateTimer = 2;
-                }
-                else
-                {
-                    if (gBattleResults.opponentFaintCounter < 255)
-                        gBattleResults.opponentFaintCounter++;
-                    gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES, NULL);
-                    gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
-                }
-                BattleScriptCall(BattleScript_FaintBattler);
+                BattleScriptCall(BattleScript_FinalGambit);
                 effect = TRUE;
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
-            case FAINT_BLOCK_DO_DESTINY_BOND:
-                if (gBattleStruct->tryDestinyBond)
-                {
-                    gEffectBattler = battler;
-                    gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerAttacker].hp;
-                    BattleScriptCall(BattleScript_DestinyBondTakesLife);
-                    effect = TRUE;
-                }
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
-            case FAINT_BLOCK_DO_GRUDGE:
-                if (gBattleStruct->tryGrudge)
-                {
-                    u32 moveIndex = gBattleStruct->chosenMovePositions[gBattlerAttacker];
-
-                    gBattleMons[gBattlerAttacker].pp[moveIndex] = 0;
-                    BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, moveIndex + REQUEST_PPMOVE1_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].pp[moveIndex]), &gBattleMons[gBattlerAttacker].pp[moveIndex]);
-                    MarkBattlerForControllerExec(gBattlerAttacker);
-                    PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].moves[moveIndex])
-                    BattleScriptCall(BattleScript_GrudgeTakesPp);
-                    effect = TRUE;
-                }
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
-            case FAINT_BLOCK_COUNT: // Clear bits for other potential fainting targets
-                gBattleStruct->tryDestinyBond = FALSE;
-                gBattleStruct->tryGrudge = FALSE;
-                gBattleStruct->eventState.moveEndBlock = 0;
-                break;
             }
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
+        case FAINT_BLOCK_CHECK_TARGET_FAINTED: // Stop if target already ran the block / is alive or absent
+            if (IsBattlerAlive(gBattlerTarget)
+             || gBattleStruct->battlerState[gBattlerTarget].fainted)
+                return FALSE;
 
-            if (effect)
-                return effect;
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
+        case FAINT_BLOCK_END_NEUTRALIZING_GAS:
+            if (gBattleMons[gBattlerTarget].volatiles.neutralizingGas)
+            {
+                gBattleMons[gBattlerTarget].volatiles.neutralizingGas = FALSE;
+                if (!IsNeutralizingGasOnField())
+                {
+                    effect = TRUE;
+                    BattleScriptCall(BattleScript_NeutralizingGasExits);
+                }
+            }
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
+        case FAINT_BLOCK_TRY_DESTINY_BOND: // Checked before FAINT_BLOCK_FAINT_TARGET but occurs after since volatiles are cleared on faint
+            if (gBattleMons[gBattlerTarget].volatiles.destinyBond
+             && IsBattlerTurnDamaged(gBattlerTarget)
+             && IsBattlerAlive(gBattlerAttacker)
+             && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX
+             && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
+            {
+                gBattleStruct->tryDestinyBond = TRUE;
+            }
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
+        case FAINT_BLOCK_TRY_GRUDGE: // Checked before FAINT_BLOCK_FAINT_TARGET but occurs after since volatiles are cleared on faint
+            if (gBattleMons[gBattlerTarget].volatiles.grudge
+             && IsBattlerTurnDamaged(gBattlerTarget)
+             && IsBattlerAlive(gBattlerAttacker)
+             && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget)
+             && !IsZMove(gCurrentMove)
+             && gCurrentMove != MOVE_STRUGGLE)
+            {
+                gBattleStruct->tryGrudge = TRUE;
+            }
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
+        case FAINT_BLOCK_FAINT_TARGET:
+            gBattlerFainted = gBattlerTarget;
+            TryUpdateEvolutionTracker(IF_DEFEAT_X_WITH_ITEMS, 1, MOVE_NONE);
+            TryDeactivateSleepClause(GetBattlerSide(gBattlerTarget), gBattlerPartyIndexes[gBattlerTarget]);
+            gHitMarker |= HITMARKER_FAINTED(gBattlerTarget);
+            gBattleStruct->eventState.faintedAction = 0;
+            if (IsOnPlayerSide(gBattlerTarget))
+            {
+                gHitMarker |= HITMARKER_PLAYER_FAINTED;
+                if (gBattleResults.playerFaintCounter < 255)
+                    gBattleResults.playerFaintCounter++;
+                AdjustFriendshipOnBattleFaint(gBattlerTarget);
+                gSideTimers[B_SIDE_PLAYER].retaliateTimer = 2;
+            }
+            else
+            {
+                if (gBattleResults.opponentFaintCounter < 255)
+                    gBattleResults.opponentFaintCounter++;
+                gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_SPECIES, NULL);
+                gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
+            }
+            BattleScriptCall(BattleScript_FaintBattler);
+            effect = TRUE;
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
+        case FAINT_BLOCK_DO_DESTINY_BOND:
+            if (gBattleStruct->tryDestinyBond)
+            {
+                gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerAttacker].hp;
+                BattleScriptCall(BattleScript_DestinyBondTakesLife);
+                effect = TRUE;
+            }
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
+        case FAINT_BLOCK_DO_GRUDGE:
+            if (gBattleStruct->tryGrudge)
+            {
+                u32 moveIndex = gBattleStruct->chosenMovePositions[gBattlerAttacker];
 
-        } while (gBattleStruct->eventState.moveEndBlock != 0);
+                gBattleMons[gBattlerAttacker].pp[moveIndex] = 0;
+                BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, moveIndex + REQUEST_PPMOVE1_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].pp[moveIndex]), &gBattleMons[gBattlerAttacker].pp[moveIndex]);
+                MarkBattlerForControllerExec(gBattlerAttacker);
+                PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].moves[moveIndex])
+                BattleScriptCall(BattleScript_GrudgeTakesPp);
+                effect = TRUE;
+            }
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
+        case FAINT_BLOCK_COUNT: // Clear bits for other potential fainting targets
+            gBattleStruct->tryDestinyBond = FALSE;
+            gBattleStruct->tryGrudge = FALSE;
+            gBattleStruct->eventState.moveEndBlock = 0;
+            break;
+        }
 
-        gBattleStruct->eventState.moveEndBattler = GetNextFaintingBattler(battler);
-        gBattleStruct->eventState.moveEndBlock = 0;
-    } while (gBattleStruct->eventState.moveEndBattler != MAX_BATTLERS_COUNT);
+        if (effect)
+            return effect;
+
+    } while (gBattleStruct->eventState.moveEndBlock != 0);
 
     return FALSE;
 }
@@ -5918,6 +5891,14 @@ static void Cmd_moveend(void)
                 }
             }
             gBattleScripting.moveendState++;
+            break;
+        case MOVEEND_FAINT_BLOCK:
+            effect = HandleMoveEndFaintBlock(moveEffect);
+            if (!effect)
+            {
+                gBattleStruct->eventState.moveEndBlock = 0;
+                gBattleScripting.moveendState++;
+            }
             break;
         case MOVEEND_ABSORB:
             if (gBattleStruct->unableToUseMove)
@@ -6330,20 +6311,6 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         }
-        case MOVEEND_PREPARE_FAINT_BLOCK:
-            gBattleStruct->eventState.moveEndBattler = gBattlerAttacker;
-            gBattleStruct->eventState.moveEndBlock = 0;
-            gBattleScripting.moveendState++;
-            break;
-        case MOVEEND_FAINT_BLOCK:
-            effect = HandleMoveEndFaintBlock(moveEffect);
-            if (!effect)
-            {
-                gBattleStruct->eventState.moveEndBattler = 0;
-                gBattleStruct->eventState.moveEndBlock = 0;
-                gBattleScripting.moveendState++;
-            }
-            break;
         case MOVEEND_HP_THRESHOLD_ITEMS_TARGET:
             if (gMultiHitCounter
              && ItemBattleEffects(gBattlerTarget, gBattlerAttacker, GetBattlerHoldEffect(gBattlerTarget), IsOnHpThresholdActivation))

@@ -102,8 +102,8 @@ DOUBLE_BATTLE_TEST("Mind Blown causes everyone to faint in a double battle")
         HP_BAR(opponentRight, hp: 0);
         HP_BAR(playerLeft, hp: 0);
         MESSAGE("Wobbuffet fainted!");
-        MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Abra fainted!");
+        MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Kadabra fainted!");
     }
 }
@@ -137,8 +137,8 @@ DOUBLE_BATTLE_TEST("Mind Blown's recoil only happens once, regardless of number 
         HP_BAR(opponentLeft, hp: 0);
         HP_BAR(playerRight, hp: 0);
         HP_BAR(opponentRight, hp: 0);
-        MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Abra fainted!");
+        MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Kadabra fainted!");
     } THEN {
         EXPECT_GT(playerLeft->hp, 0);

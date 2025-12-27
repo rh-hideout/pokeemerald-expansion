@@ -85,8 +85,8 @@ DOUBLE_BATTLE_TEST("Explosion causes everyone to faint in a double battle")
         HP_BAR(playerRight, hp: 0);
         HP_BAR(opponentRight, hp: 0);
         MESSAGE("Wobbuffet fainted!");
-        MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Abra fainted!");
+        MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Kadabra fainted!");
     }
 }

@@ -157,13 +157,12 @@ enum MoveEndEffects
     MOVEEND_ITEM_EFFECTS_ATTACKER_1,
     MOVEEND_SYMBIOSIS,
     MOVEEND_SUBSTITUTE,
+    MOVEEND_FAINT_BLOCK,
     MOVEEND_SKY_DROP_CONFUSE,
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
     MOVEEND_DEFROST,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
-    MOVEEND_PREPARE_FAINT_BLOCK,
-    MOVEEND_FAINT_BLOCK,
     MOVEEND_HP_THRESHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_MOVE_BLOCK,
