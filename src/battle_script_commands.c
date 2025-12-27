@@ -11303,10 +11303,10 @@ static void Cmd_mimicattackcopy(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if ((IsMoveMimicBanned(gLastMoves[gBattlerTarget]))
-        || (gBattleMons[gBattlerAttacker].volatiles.transformed)
-        || gLastMoves[gBattlerTarget] == MOVE_NONE
-        || gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE)
+    if (gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE
+     || gLastMoves[gBattlerTarget] == MOVE_NONE
+     || gBattleMons[gBattlerAttacker].volatiles.transformed
+     || IsMoveMimicBanned(gLastMoves[gBattlerTarget]))
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
