@@ -1,6 +1,6 @@
 #include "global.h"
 #include "battle.h"
-#include "capture_util.h"
+#include "battle_capture_util.h"
 #include "event_data.h"
 #include "generational_changes.h"
 #include "item.h"
