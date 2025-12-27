@@ -33,10 +33,6 @@ import typing
 
 
 CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)")
-INCFILE_HAS_TUTOR_PAT = re.compile(r"special ChooseMonForMoveTutor")
-INCFILE_HAS_TUTOR_PAT2 = re.compile(r"chooseboxmon SELECT_PC_MON_MOVE_TUTOR")
-INCFILE_MOVE_PAT = re.compile(r"setvar VAR_0x8005, (MOVE_[A-Z_]*)")
-INCFILE_MOVE_PAT2 = re.compile(r"move_tutor (MOVE_[A-Z_]*)")
 ALPHABETICAL_ORDER_ENABLED_PAT = re.compile(r"#define HGSS_SORT_TMS_BY_NUM\s+(?P<cfg_val>[^ ]*)")
 TM_LITTERACY_PAT = re.compile(r"#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)")
 TMHM_MACRO_PAT = re.compile(r"F\((\w+)\)")
@@ -51,23 +47,6 @@ def enabled() -> bool:
         cfg_pokemon = cfg_pokemon_fp.read()
         cfg_defined = CONFIG_ENABLED_PAT.search(cfg_pokemon)
         return cfg_defined is not None and cfg_defined.group("cfg_val") in ("TRUE", "1")
-
-def extract_repo_tutors() -> typing.Generator[str, None, None]:
-    """
-    Yield MOVE constants which are *likely* assigned to a move tutor. This isn't
-    foolproof, but it's suitable.
-    """
-    for inc_fname in chain(glob.glob("./data/scripts/*.inc"), glob.glob("./data/maps/*/scripts.inc")):
-        with open(inc_fname, "r") as inc_fp:
-            incfile = inc_fp.read()
-            if not INCFILE_HAS_TUTOR_PAT.search(incfile) and not INCFILE_HAS_TUTOR_PAT2.search(incfile):
-                continue
-
-            for move in INCFILE_MOVE_PAT.finditer(incfile):
-                yield move.group(1)
-
-            for move in INCFILE_MOVE_PAT2.finditer(incfile):
-                yield move.group(1)
 
 def extract_repo_tms() -> typing.Generator[str, None, None]:
     """
