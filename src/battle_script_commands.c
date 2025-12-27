@@ -1143,13 +1143,6 @@ static void Cmd_attackcanceler(void)
 
     enum BattleMoveEffects moveEffect = GetMoveEffect(ctx.move);
 
-    if (!IsBattlerAlive(gBattlerAttacker) && !IsExplosionMove(ctx.move))
-    {
-        gBattleStruct->unableToUseMove = TRUE;
-        gBattlescriptCurrInstr = BattleScript_MoveEnd;
-        return;
-    }
-
     ctx.abilityAtk = GetBattlerAbility(ctx.battlerAtk);
     ctx.abilityDef = GetBattlerAbility(ctx.battlerDef);
 
