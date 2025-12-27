@@ -10,6 +10,8 @@
 #include "constants/map_scripts.h"
 #include "field_message_box.h"
 
+#include "dexnav.h"
+
 #define RAM_SCRIPT_MAGIC 51
 
 enum {
@@ -199,6 +201,7 @@ u32 ScriptPeekWord(struct ScriptContext *ctx)
 void LockPlayerFieldControls(void)
 {
     sLockFieldControls = TRUE;
+    EndDexNavSearch();
 }
 
 void UnlockPlayerFieldControls(void)
