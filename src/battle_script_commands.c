@@ -4061,8 +4061,7 @@ static void Cmd_tryfaintmon(void)
     }
     else
     {
-        if (!(gAbsentBattlerFlags & (1u << battler))
-         && !IsBattlerAlive(battler)
+        if (!IsBattlerAlive(battler)
          && !(gBattleStruct->battlerState[battler].fainted))
         {
             if (gBattleMons[battler].volatiles.neutralizingGas)
@@ -5434,7 +5433,6 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
             break;
         case FAINT_BLOCK_CHECK_TARGET_FAINTED: // Stop if target already ran the block / is alive or absent
             if (IsBattlerAlive(gBattlerTarget)
-             || (gAbsentBattlerFlags & (1u << gBattlerTarget))
              || gBattleStruct->battlerState[gBattlerTarget].fainted)
                 return FALSE;
 
@@ -5952,13 +5950,13 @@ static void Cmd_moveend(void)
                 if (IsBattlerAlive(gBattlerAttacker)
                  && !gBattleStruct->unableToUseMove
                  && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
-                 && !gSpecialStatuses[gBattlerAttacker].steelBeamRecoil
+                 && !gSpecialStatuses[gBattlerAttacker].mindBlownRecoil
                  && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED)
                  && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
                 {
                     s32 recoil = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
                     SetPassiveDamageAmount(gBattlerAttacker, recoil);
-                    gSpecialStatuses[gBattlerAttacker].steelBeamRecoil = TRUE;
+                    gSpecialStatuses[gBattlerAttacker].mindBlownRecoil = TRUE;
                     TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
                     BattleScriptCall(BattleScript_MaxHp50Recoil);
                     effect = TRUE;

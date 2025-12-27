@@ -133,7 +133,7 @@ struct SpecialStatus
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
     u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
-    u8 steelBeamRecoil:1;
+    u8 mindBlownRecoil:1;
     u8 padding2:1;
     // End of byte
     u8 gemParam:7;
