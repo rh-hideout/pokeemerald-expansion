@@ -483,6 +483,12 @@
  *     ...
  *     STATUS_ICON(player, status1);
  *
+ * CATCHING_CHANCE(address)
+ * Causes the test to fail if no catching attempt is made
+ * and then writes the computed catch chance in the `address`pointer
+ *     u32 recordedCatchChance;
+ *     CATCHING_CHANCE(&recordedCatchChance);
+ *
  * NOT
  * Causes the test to fail if the SCENE command succeeds before the
  * following command succeeds.

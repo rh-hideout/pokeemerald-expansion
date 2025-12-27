@@ -13063,7 +13063,7 @@ static void Cmd_handleballthrow(void)
     }
     else
     {
-        u32 odds = ComputeCaptureOdds();
+        u32 odds = ComputeCaptureOdds(gBattlerTarget, gBattlerAttacker);
         if (gTestRunnerEnabled)
             TestRunner_Battle_RecordCatchChance(odds);
 
