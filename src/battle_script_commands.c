@@ -5411,15 +5411,16 @@ static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, enum Ba
     return FALSE;
 }
 
-static inline u32 GetNextFaintingBattler(u32 currentBattler)
+static u32 GetNextFaintingBattler(u32 battler)
 {
-    if (currentBattler == gBattlerAttacker)
+    // user -> ally -> left foe -> right foe
+    if (battler == gBattlerAttacker)
         return BATTLE_PARTNER(gBattlerAttacker);
-    if (IsBattlerAlly(currentBattler, gBattlerAttacker))
+    if (IsBattlerAlly(battler, gBattlerAttacker))
         return IsOnPlayerSide(gBattlerAttacker) ? GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT) : GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-    if (currentBattler >= 2)
+    if (battler >= 2) // on the right
         return MAX_BATTLERS_COUNT;
-    return BATTLE_PARTNER(currentBattler);
+    return BATTLE_PARTNER(battler);
 }
 
 static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
@@ -5428,19 +5429,21 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
 
     do
     {
+        u32 battler = gBattleStruct->eventState.moveEndBattler;
         do
         {
-            if (gAbsentBattlerFlags & (1u << gBattleStruct->eventState.moveEndBattler))
+            if (gAbsentBattlerFlags & (1u << battler))
                 break;
 
             switch (gBattleStruct->eventState.moveEndBlock)
             {
             case FAINT_BLOCK_FINAL_GAMBIT:
                 if (moveEffect == EFFECT_FINAL_GAMBIT
-                && IsBattlerAlive(gBattlerAttacker)
-                && !gBattleStruct->unableToUseMove
-                && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
-                && IsAnyTargetAffected())
+                 && !IsBattlerAlly(gBattlerAttacker, battler)
+                 && IsBattlerAlive(gBattlerAttacker)
+                 && !gBattleStruct->unableToUseMove
+                 && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
+                 && IsAnyTargetAffected())
                 {
                     BattleScriptCall(BattleScript_FinalGambit);
                     effect = TRUE;
@@ -5448,8 +5451,8 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case FAINT_BLOCK_CHECK_TARGET_FAINTED: // Stop if target already ran the block / is alive or absent
-                if (IsBattlerAlive(gBattleStruct->eventState.moveEndBattler)
-                 || gBattleStruct->battlerState[gBattleStruct->eventState.moveEndBattler].fainted)
+                if (IsBattlerAlive(battler)
+                 || gBattleStruct->battlerState[battler].fainted)
                 {
                     gBattleStruct->eventState.moveEndBlock = 0;
                     break;
@@ -5458,9 +5461,9 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case FAINT_BLOCK_END_NEUTRALIZING_GAS:
-                if (gBattleMons[gBattleStruct->eventState.moveEndBattler].volatiles.neutralizingGas)
+                if (gBattleMons[battler].volatiles.neutralizingGas)
                 {
-                    gBattleMons[gBattleStruct->eventState.moveEndBattler].volatiles.neutralizingGas = FALSE;
+                    gBattleMons[battler].volatiles.neutralizingGas = FALSE;
                     if (!IsNeutralizingGasOnField())
                     {
                         effect = TRUE;
@@ -5470,47 +5473,47 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case FAINT_BLOCK_TRY_DESTINY_BOND: // Checked before FAINT_BLOCK_FAINT_TARGET but occurs after since volatiles are cleared on faint
-                if (gBattleMons[gBattleStruct->eventState.moveEndBattler].volatiles.destinyBond
-                && IsBattlerTurnDamaged(gBattleStruct->eventState.moveEndBattler)
-                && IsBattlerAlive(gBattlerAttacker)
-                && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX
-                && !IsBattlerAlly(gBattlerAttacker, gBattleStruct->eventState.moveEndBattler))
+                if (gBattleMons[battler].volatiles.destinyBond
+                 && IsBattlerTurnDamaged(battler)
+                 && IsBattlerAlive(gBattlerAttacker)
+                 && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX
+                 && !IsBattlerAlly(gBattlerAttacker, battler))
                 {
                     gBattleStruct->tryDestinyBond = TRUE;
                 }
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case FAINT_BLOCK_TRY_GRUDGE: // Checked before FAINT_BLOCK_FAINT_TARGET but occurs after since volatiles are cleared on faint
-                if (gBattleMons[gBattleStruct->eventState.moveEndBattler].volatiles.grudge
-                && IsBattlerTurnDamaged(gBattleStruct->eventState.moveEndBattler)
-                && IsBattlerAlive(gBattlerAttacker)
-                && !IsBattlerAlly(gBattlerAttacker, gBattleStruct->eventState.moveEndBattler)
-                && !IsZMove(gCurrentMove)
-                && gCurrentMove != MOVE_STRUGGLE)
+                if (gBattleMons[battler].volatiles.grudge
+                 && IsBattlerTurnDamaged(battler)
+                 && IsBattlerAlive(gBattlerAttacker)
+                 && !IsBattlerAlly(gBattlerAttacker, battler)
+                 && !IsZMove(gCurrentMove)
+                 && gCurrentMove != MOVE_STRUGGLE)
                 {
                     gBattleStruct->tryGrudge = TRUE;
                 }
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case FAINT_BLOCK_FAINT_TARGET:
-                gBattlerFainted = gBattleStruct->eventState.moveEndBattler;
+                gBattlerFainted = battler;
                 TryUpdateEvolutionTracker(IF_DEFEAT_X_WITH_ITEMS, 1, MOVE_NONE);
-                TryDeactivateSleepClause(GetBattlerSide(gBattleStruct->eventState.moveEndBattler), gBattlerPartyIndexes[gBattleStruct->eventState.moveEndBattler]);
-                gHitMarker |= HITMARKER_FAINTED(gBattleStruct->eventState.moveEndBattler);
+                TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
+                gHitMarker |= HITMARKER_FAINTED(battler);
                 gBattleStruct->eventState.faintedAction = 0;
-                if (IsOnPlayerSide(gBattleStruct->eventState.moveEndBattler))
+                if (IsOnPlayerSide(battler))
                 {
                     gHitMarker |= HITMARKER_PLAYER_FAINTED;
                     if (gBattleResults.playerFaintCounter < 255)
                         gBattleResults.playerFaintCounter++;
-                    AdjustFriendshipOnBattleFaint(gBattleStruct->eventState.moveEndBattler);
+                    AdjustFriendshipOnBattleFaint(battler);
                     gSideTimers[B_SIDE_PLAYER].retaliateTimer = 2;
                 }
                 else
                 {
                     if (gBattleResults.opponentFaintCounter < 255)
                         gBattleResults.opponentFaintCounter++;
-                    gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(gBattleStruct->eventState.moveEndBattler), MON_DATA_SPECIES, NULL);
+                    gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES, NULL);
                     gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
                 }
                 BattleScriptCall(BattleScript_FaintBattler);
@@ -5520,7 +5523,7 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
             case FAINT_BLOCK_DO_DESTINY_BOND:
                 if (gBattleStruct->tryDestinyBond)
                 {
-                    gEffectBattler = gBattleStruct->eventState.moveEndBattler;
+                    gEffectBattler = battler;
                     gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerAttacker].hp;
                     BattleScriptCall(BattleScript_DestinyBondTakesLife);
                     effect = TRUE;
@@ -5550,9 +5553,11 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
 
             if (effect)
                 return effect;
+
         } while (gBattleStruct->eventState.moveEndBlock != 0);
-        gBattleStruct->eventState.moveEndBattler = GetNextFaintingBattler(gBattleStruct->eventState.moveEndBattler);
-        gBattleStruct->eventState.moveEndBlock = FAINT_BLOCK_CHECK_TARGET_FAINTED;
+
+        gBattleStruct->eventState.moveEndBattler = GetNextFaintingBattler(battler);
+        gBattleStruct->eventState.moveEndBlock = 0;
     } while (gBattleStruct->eventState.moveEndBattler != MAX_BATTLERS_COUNT);
 
     return FALSE;

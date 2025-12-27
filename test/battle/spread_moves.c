@@ -455,3 +455,39 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
         MESSAGE("The opposing Wynaut fainted!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Spread Moves: Faint Order - ally, Left Foe, Right Foe - Player side")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WYNAUT) { HP(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_LAVA_PLUME); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, playerLeft);
+        MESSAGE("Wynaut fainted!");
+        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing Wynaut fainted!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Faint Order - ally, Left Foe, Right Foe - Opponent side")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { HP(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_LAVA_PLUME); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, opponentLeft);
+        MESSAGE("The opposing Wynaut fainted!");
+        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("Wynaut fainted!");
+    }
+}
