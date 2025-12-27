@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_hold_effects.h"
+#include "battle_setup.h"
 #include "battle_util.h"
 #include "battle_controllers.h"
 #include "battle_ai_util.h"
@@ -1355,6 +1356,94 @@ static bool32 HandleEndTurnDynamax(u32 battler)
     return effect;
 }
 
+static bool32 HandleEndTurnTrainerASlides(u32 battler)
+{
+    bool32 slide = FALSE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_LAST_LOW_HP))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_LAST_HALF_HP))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_ENEMY_MON_UNAFFECTED))
+        slide = TRUE;
+
+    if (slide == TRUE)
+        BattleScriptExecute(BattleScript_TrainerASlideMsgEnd2);
+
+    return slide;
+}
+
+static bool32 HandleEndTurnTrainerBSlides(u32 battler)
+{
+    bool32 slide = FALSE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_LAST_LOW_HP))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_LAST_HALF_HP))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_ENEMY_MON_UNAFFECTED))
+        slide = TRUE;
+
+    if (slide == TRUE)
+    {
+        if ((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA) 
+        || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
+        || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF))
+            BattleScriptExecute(BattleScript_TrainerASlideMsgEnd2);
+        else
+            BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd2);
+    }
+
+    return slide;
+}
+
+static bool32 HandleEndTurnTrainerPartnerSlides(u32 battler)
+{
+    bool32 slide = FALSE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), TRAINER_SLIDE_LAST_LOW_HP))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), TRAINER_SLIDE_LAST_HALF_HP))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE))
+        slide = TRUE;
+    else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), TRAINER_SLIDE_ENEMY_MON_UNAFFECTED))
+        slide = TRUE;
+
+    if (slide == TRUE)
+        BattleScriptExecute(BattleScript_TrainerPartnerSlideMsgEnd2);
+
+    return slide;
+}
+
 /*
  * Various end turn effects that happen after all battlers moved.
  * Each Case will apply the effects for each battler. Moving to the next case when all battlers are done.
@@ -1417,6 +1506,9 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_FORM_CHANGE_ABILITIES] = HandleEndTurnFormChangeAbilities,
     [ENDTURN_EJECT_PACK] = HandleEndTurnEjectPack,
     [ENDTURN_DYNAMAX] = HandleEndTurnDynamax,
+    [ENDTURN_TRAINER_A_SLIDES] = HandleEndTurnTrainerASlides,
+    [ENDTURN_TRAINER_B_SLIDES] = HandleEndTurnTrainerBSlides,
+    [ENDTURN_TRAINER_PARTNER_SLIDES] = HandleEndTurnTrainerPartnerSlides,
 };
 
 u32 DoEndTurnEffects(void)

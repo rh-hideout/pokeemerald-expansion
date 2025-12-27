@@ -36,6 +36,7 @@
 #include "constants/trainers.h"
 
 static void RecordedPartnerHandleDrawTrainerPic(u32 battler);
+static void RecordedPartnerHandleTrainerSlide(u32 battler);
 static void RecordedPartnerHandleTrainerSlideBack(u32 battler);
 static void RecordedPartnerHandleChooseAction(u32 battler);
 static void RecordedPartnerHandleChooseMove(u32 battler);
@@ -55,7 +56,7 @@ static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 b
     [CONTROLLER_SWITCHINANIM]             = BtlController_HandleSwitchInAnim,
     [CONTROLLER_RETURNMONTOBALL]          = BtlController_HandleReturnMonToBall,
     [CONTROLLER_DRAWTRAINERPIC]           = RecordedPartnerHandleDrawTrainerPic,
-    [CONTROLLER_TRAINERSLIDE]             = BtlController_Empty,
+    [CONTROLLER_TRAINERSLIDE]             = RecordedPartnerHandleTrainerSlide,
     [CONTROLLER_TRAINERSLIDEBACK]         = RecordedPartnerHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
@@ -194,6 +195,18 @@ void RecordedPartnerBufferExecCompleted(u32 battler)
     }
 }
 
+static u32 RecordedPartnerGetTrainerBackPicId(enum DifficultyLevel difficulty)
+{
+    u32 trainerPicId;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        trainerPicId = gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic;
+    else
+        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_BRENDAN;
+
+    return trainerPicId;
+}
+
 // some explanation here
 // in emerald it's possible to have a tag battle in the battle frontier facilities with AI
 // which use the front sprite for both the player and the partner as opposed to any other battles (including the one with Steven) that use the back pic as well as animate it
@@ -210,6 +223,13 @@ static void RecordedPartnerHandleDrawTrainerPic(u32 battler)
     isFrontPic = FALSE;
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, isFrontPic, xPos, yPos, -1);
+}
+
+static void RecordedPartnerHandleTrainerSlide(u32 battler)
+{
+    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
+    u32 trainerPicId = RecordedPartnerGetTrainerBackPicId(difficulty);
+    BtlController_HandleTrainerSlide(battler, trainerPicId);
 }
 
 static void RecordedPartnerHandleTrainerSlideBack(u32 battler)
