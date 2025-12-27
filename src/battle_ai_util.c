@@ -901,6 +901,10 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
 
+    if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
+     && battlerDef == BATTLE_PARTNER(battlerAtk))
+        return simDamage;
+
     if (moveEffect == EFFECT_NATURE_POWER)
         move = GetNaturePowerMove(battlerAtk);
 
@@ -945,10 +949,6 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     u32 movePower = GetMovePower(move);
     if (movePower)
         isDamageMoveUnusable = IsDamageMoveUnusable(&ctx);
-
-    if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
-     && battlerDef == BATTLE_PARTNER(battlerAtk))
-        movePower = 0;
 
     if (movePower && !isDamageMoveUnusable)
     {
