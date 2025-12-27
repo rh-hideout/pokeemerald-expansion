@@ -734,7 +734,7 @@ void HandleInputChooseMove(u32 battler)
 
                     canSelectTarget = 3;
                 }
-                else if (IsSpreadMove(moveTarget, IGNORE_BATTLE_TYPE) || moveTarget == TARGET_OPPONENTS_FIELD)
+                else if (IsSpreadMove(moveTarget) || moveTarget == TARGET_OPPONENTS_FIELD)
                 {
                     TryShowAsTarget(gMultiUsePlayerCursor);
                     TryShowAsTarget(BATTLE_PARTNER(gMultiUsePlayerCursor));

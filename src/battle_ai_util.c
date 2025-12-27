@@ -43,7 +43,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
     u32 numOfTargets = 0;
     u32 moveTargetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
 
-    if (!IsSpreadMove(moveTargetType, CHECK_BATTLE_TYPE))
+    if (!IsSpreadMove(moveTargetType))
         return FALSE;
 
     for (u32 battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
