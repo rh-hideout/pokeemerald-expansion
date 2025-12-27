@@ -4281,7 +4281,7 @@ static void Cmd_tryfaintmon(void)
             }
         }
 
-        if (cmd->battler == BS_ATTACKER)
+        if (cmd->battler == BS_TARGET && gCurrentMove != MOVE_NONE)
             TryUpdateEvolutionTracker(IF_DEFEAT_X_WITH_ITEMS, 1, MOVE_NONE);
 
         gBattlerFainted = battler;
@@ -15512,7 +15512,8 @@ static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 
                             SetMonData(monAtk, MON_DATA_EVOLUTION_TRACKER, &val);
                             break;
                         case IF_DEFEAT_X_WITH_ITEMS:
-                            if (GetMonData(monDef, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
+                            if (GetMonData(monAtk, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
+                             && GetMonData(monDef, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
                              && GetMonData(monDef, MON_DATA_HELD_ITEM) == evolutions[i].params[j].arg2)
                                 SetMonData(monAtk, MON_DATA_EVOLUTION_TRACKER, &val);
                             break;
