@@ -286,6 +286,10 @@ static const u8 sText_TheLevelIs[] = _("The level is ");
 static const u8 sText_TheFeelIs[] = _(", and the feel is ");
 static const u8 sText_Dot2[] = _(".");
 
+static const u8 sText_SavingDontTurnOff2[] = _("SAVING…\nDON'T TURN OFF THE POWER.");
+static const u8 sText_BlenderMaxSpeedRecord[] = _("BERRY BLENDER\nMAXIMUM SPEED RECORD!");
+static const u8 sText_234Players[] = _("2 PLAYERS\n3 PLAYERS\n4 PLAYERS");
+
 static const struct BgTemplate sBgTemplates[3] =
 {
     {
@@ -2846,7 +2850,7 @@ static void CB2_CheckPlayAgainLink(void)
             sBerryBlender->gameEndState = 5;
         break;
     case 5:
-        PrintMessage(&sBerryBlender->textState, gText_SavingDontTurnOff2, 0);
+        PrintMessage(&sBerryBlender->textState, sText_SavingDontTurnOff2, 0);
         SetLinkStandbyCallback();
         sBerryBlender->gameEndState++;
         break;
@@ -3744,9 +3748,9 @@ void ShowBerryBlenderRecordWindow(void)
     DrawStdWindowFrame(gRecordsWindowId, FALSE);
     FillWindowPixelBuffer(gRecordsWindowId, PIXEL_FILL(1));
 
-    xPos = GetStringCenterAlignXOffset(FONT_NORMAL, gText_BlenderMaxSpeedRecord, 144);
-    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_BlenderMaxSpeedRecord, xPos, 1, 0, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_234Players, 4, 41, 0, NULL);
+    xPos = GetStringCenterAlignXOffset(FONT_NORMAL, sText_BlenderMaxSpeedRecord, 144);
+    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, sText_BlenderMaxSpeedRecord, xPos, 1, 0, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, sText_234Players, 4, 41, 0, NULL);
 
     for (i = 0, yPos = 41; i < NUM_SCORE_TYPES; i++)
     {
