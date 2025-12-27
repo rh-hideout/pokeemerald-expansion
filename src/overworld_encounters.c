@@ -233,7 +233,7 @@ void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn)
     else 
     {
         u32 metatileBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
-        spawnAnimType = OWE_GetDespawnAnimType(metatileBehavior);
+        spawnAnimType = OWE_GetSpawnDespawnAnimType(metatileBehavior);
     }
     MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
@@ -1002,7 +1002,7 @@ void Task_OWE_WaitMovements(u8 taskId)
     }
 }
 
-u32 OWE_GetDespawnAnimType(u32 metatileBehavior)
+enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior)
 {
     // Need to edit anims:
     // If object is on water then use water anim.
