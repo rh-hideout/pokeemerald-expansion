@@ -5450,7 +5450,10 @@ static bool32 HandleMoveEndFaintBlock(u32 moveEffect)
             case FAINT_BLOCK_CHECK_TARGET_FAINTED: // Stop if target already ran the block / is alive or absent
                 if (IsBattlerAlive(gBattleStruct->eventState.moveEndBattler)
                  || gBattleStruct->battlerState[gBattleStruct->eventState.moveEndBattler].fainted)
+                {
+                    gBattleStruct->eventState.moveEndBlock = 0;
                     break;
+                }
 
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
