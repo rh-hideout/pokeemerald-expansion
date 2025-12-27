@@ -224,7 +224,8 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->pressedStartButton)
     {
         PlaySE(SE_WIN_OPEN);
-        ShowStartMenu();
+        //ShowStartMenu();
+        TestThing();
         return TRUE;
     }
 

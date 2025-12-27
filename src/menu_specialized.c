@@ -869,7 +869,7 @@ void MoveRelearnerPrintMessage(u8 *str)
 bool16 MoveRelearnerRunTextPrinters(void)
 {
     RunTextPrinters();
-    return IsTextPrinterActive(RELEARNERWIN_MSG);
+    return IsTextPrinterActive(RELEARNERWIN_MSG, FALSE);
 }
 
 void MoveRelearnerCreateYesNoMenu(void)
