@@ -9841,9 +9841,20 @@ static void UpdateObjectEventElevationAndPriority(struct ObjectEvent *objEvent, 
         // so that it disappears under bridges when they do
         if (OW_LARGE_OW_SUPPORT && objEvent->localId == OBJ_EVENT_ID_FOLLOWER)
             sprite->subspriteMode |= gSprites[gPlayerAvatar.spriteId].subspriteMode & SUBSPRITES_IGNORE_PRIORITY;
-        // if transitioning between elevations, use the player's elevation
-        if (!objEvent->currentElevation)
-            objEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+        // If transitioning between elevations, use the player's elevation
+        // unless follower prev elevation is still greater than players (e.g. following player over transition from 4 -> 3)
+        if (objEvent->currentElevation == 0) {
+            struct ObjectEvent *playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
+            u8 playerPrevElev = playerObj->previousElevation;
+            u8 playerCurElev  = playerObj->currentElevation;
+            u8 followerPrevElev = objEvent->previousElevation;
+            if (!(playerPrevElev == playerCurElev
+                    && (followerPrevElev > 2 && followerPrevElev % 2 == 0) // follower on even elevation
+                    && (playerCurElev > 2 && playerCurElev % 2 != 0))) {   // player on odd elevation
+                objEvent = playerObj;
+            }
+        }
     }
 
     sprite->subspriteTableNum = sElevationToSubspriteTableNum[objEvent->previousElevation];
