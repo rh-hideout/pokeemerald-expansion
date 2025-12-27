@@ -122,6 +122,29 @@ SINGLE_BATTLE_TEST("Mind Blown hp loss is prevented by Magic Guard")
     }
 }
 
+DOUBLE_BATTLE_TEST("Mind Blown's recoil only happens once, regardless of number of affected targets")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(399); MaxHP(400); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ABRA) { HP(1); }
+        OPPONENT(SPECIES_KADABRA) { HP(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_MIND_BLOWN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIND_BLOWN, playerLeft);
+        HP_BAR(opponentLeft, hp: 0);
+        HP_BAR(playerRight, hp: 0);
+        HP_BAR(opponentRight, hp: 0);
+        MESSAGE("The opposing Abra fainted!");
+        MESSAGE("Wynaut fainted!");
+        MESSAGE("The opposing Kadabra fainted!");
+    } THEN {
+        EXPECT_GT(playerLeft->hp, 0);
+    }
+}
+
 SINGLE_BATTLE_TEST("Mind Blown is blocked by Damp")
 {
     GIVEN {
