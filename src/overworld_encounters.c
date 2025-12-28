@@ -59,6 +59,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
 static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak);
 static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
 static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId);
+static bool32 CreateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEvent *objectEvent, u32 headerId);
 static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
@@ -435,6 +436,9 @@ void CreateOverworldWildEncounter(void)
     if (CreateOverworldWildEncounter_CheckMassOutbreak(indexRoamerOutbreak, speciesId))
         return;
 
+    if (CreateOverworldWildEncounter_CheckDoubleBattle(object, headerId))
+        return;
+
     BattleSetup_StartWildBattle();
 }
 
@@ -483,6 +487,41 @@ static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutb
         
         BattleSetup_StartWildBattle();
         return TRUE;
+    }
+
+    return FALSE;
+}
+
+static bool32 CreateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEvent *objectEvent, u32 headerId)
+{
+    enum WildPokemonArea wildArea;
+    enum TimeOfDay timeOfDay;
+    const struct WildPokemonInfo *wildMonInfo;
+    u32 metatileBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
+
+    if (TryDoDoubleWildBattle())
+    {
+        struct Pokemon mon1 = gEnemyParty[0];
+
+        if (MetatileBehavior_IsWaterWildEncounter(metatileBehavior))
+        {
+            wildArea = WILD_AREA_WATER;
+            timeOfDay = GetTimeOfDayForEncounters(headerId, wildArea);
+            wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
+        }
+        else
+        {
+            wildArea = WILD_AREA_LAND;
+            timeOfDay = GetTimeOfDayForEncounters(headerId, wildArea);
+            wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+        }
+
+        if (TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE))
+        {
+            gEnemyParty[1] = mon1;
+            BattleSetup_StartDoubleWildBattle();
+            return TRUE;
+        }
     }
 
     return FALSE;
