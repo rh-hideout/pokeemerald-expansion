@@ -8,7 +8,7 @@ ASSUMPTIONS
     ASSUME(gSpeciesInfo[SPECIES_BISHARP].evolutions[0].params->arg2 == ITEM_LEADERS_CREST);
 }
 
-SINGLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader's Crest increases tracker")
+WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader's Crest increases tracker")
 {
     GIVEN {
         PLAYER(SPECIES_BISHARP);
@@ -40,7 +40,7 @@ DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing multiple Bisharps holding 
     }
 }
 
-SINGLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that doesn't hold Leader's Crest doesn't increase tracker")
+WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that doesn't hold Leader's Crest doesn't increase tracker")
 {
     GIVEN {
         PLAYER(SPECIES_BISHARP);
@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that doesn't hol
     }
 }
 
-SINGLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a non-Bisharp that holds Leader's Crest doesn't increase tracker")
+WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a non-Bisharp that holds Leader's Crest doesn't increase tracker")
 {
     u32 species;
 
@@ -72,7 +72,7 @@ SINGLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a non-Bisharp that holds L
     }
 }
 
-SINGLE_BATTLE_TEST("Evolution Tracker: Pawniard KO-ing a Bisharp that holds Leader's Crest doesn't increase tracker")
+WILD_BATTLE_TEST("Evolution Tracker: Pawniard KO-ing a Bisharp that holds Leader's Crest doesn't increase tracker")
 {
     GIVEN {
         PLAYER(SPECIES_PAWNIARD);
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Evolution Tracker: Pawniard KO-ing a Bisharp that holds Lead
     }
 }
 
-SINGLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler from contact effects doesn't increase tracker")
+WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler from contact effects doesn't increase tracker")
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_ROCKY_HELMET) == HOLD_EFFECT_ROCKY_HELMET);
@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler from cont
     }
 }
 
-SINGLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with passive damage doesn't increase tracker")
+WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with passive damage doesn't increase tracker")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
