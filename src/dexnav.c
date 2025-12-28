@@ -832,6 +832,7 @@ static void Task_SetUpDexNavSearch(u8 taskId)
     }
 
     FlagSet(DN_FLAG_SEARCHING);
+    OverworldWildEncounter_FreezeAllObjects();
     gPlayerAvatar.creeping = TRUE;  //initialize as true in case mon appears beside you
     task->tProximity = gSprites[gPlayerAvatar.spriteId].x;
     task->tFrameCount = 0;
@@ -969,6 +970,7 @@ bool8 TryStartDexNavSearch(void)
 void EndDexNavSearch(u8 taskId)
 {
     FlagClear(DN_FLAG_SEARCHING);
+    UnfreezeObjectEvents();
     DestroyTask(taskId);
     RemoveDexNavWindowAndGfx();
     FieldEffectStop(&gSprites[sDexNavSearchDataPtr->fldEffSpriteId], sDexNavSearchDataPtr->fldEffId);
@@ -1087,6 +1089,7 @@ static void Task_DexNavSearch(u8 taskId)
                             sDexNavSearchDataPtr->abilityNum, sDexNavSearchDataPtr->heldItem, sDexNavSearchDataPtr->moves);
 
         FlagClear(DN_FLAG_SEARCHING);
+        UnfreezeObjectEvents();
         ScriptContext_SetupScript(EventScript_StartDexNavBattle);
         Free(sDexNavSearchDataPtr);
         DestroyTask(taskId);

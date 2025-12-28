@@ -60,17 +60,6 @@ enum OverworldObjectEncounterType
 };
 */
 
-enum OverworldEncounterBehaviors
-{
-    OWE_BEHAVIOR_WANDER_AROUND,
-    OWE_BEHAVIOR_CHASE_PLAYER,
-    OWE_BEHAVIOR_FLEE_PLAYER,
-    OWE_BEHAVIOR_WATCH_PLAYER,
-    OWE_BEHAVIOR_APPROACH_PLAYER,
-    OWE_BEHAVIOR_DESPAWN,
-    OWE_BEHAVIOR_COUNT
-};
-
 // OWE_SPEED_FASTER seems to visually bug out sometimes.
 enum OWESpeeds
 {
@@ -80,18 +69,18 @@ enum OWESpeeds
     OWE_SPEED_FASTER
 };
 
-struct MonSpeciesOWEData
+struct OWESpeciesBehavior
 {
-    enum OverworldEncounterBehaviors behavior;
+    u32 movementType:8;
+    u32 viewDistance:4;
+    u32 viewWidth:4;
+    u32 activeDistance:4;
+    u32 padding:12;
     enum OWESpeeds idleSpeed;
     enum OWESpeeds activeSpeed;
-    u16 viewDistance:4;
-    u16 viewWidth:4;
-    u16 activeDistance:4;
-    u16 padding:4;
 };
 
-enum OWESpeciesBehaviors
+enum OverworldEncounterBehaviors
 {
     OWE_IGNORE_PLAYER,
     OWE_CHASE_PLAYER_SLOW,
@@ -112,8 +101,7 @@ void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
 void OverworldWildEncounter_SetMinimumSpawnTimer(void);
-u8 CountActiveOverworldEncounters(void);
-void RemoveAllOverworldEncounterObjects(void);
+void RemoveAllGeneratedOverworldEncounterObjects(void);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent);
@@ -136,6 +124,7 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
-void OverworldWildEncounter_InitRoamerStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template);
+void OverworldWildEncounter_InitRoamerOutbreakStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template);
+void OverworldWildEncounter_FreezeAllObjects(void);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

@@ -65,7 +65,7 @@ EWRAM_DATA u8 gChainFishingDexNavStreak = 0;
 
 #include "data/wild_encounters.h"
 
-const struct WildPokemon sWildFeebas = {20, 25, SPECIES_FEEBAS};
+const struct WildPokemon gWildFeebas = {20, 25, SPECIES_FEEBAS};
 
 static const u16 sRoute119WaterTileData[] =
 {
@@ -584,7 +584,7 @@ static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 
     return wildMonSpecies;
 }
 
-static bool8 SetUpMassOutbreakEncounter(u8 flags)
+bool32 SetUpMassOutbreakEncounter(u8 flags)
 {
     u16 i;
 
@@ -598,7 +598,7 @@ static bool8 SetUpMassOutbreakEncounter(u8 flags)
     return TRUE;
 }
 
-static bool8 DoMassOutbreakEncounterTest(void)
+bool32 DoMassOutbreakEncounterTest(void)
 {
     if (gSaveBlock1Ptr->outbreakPokemonSpecies != SPECIES_NONE
      && gSaveBlock1Ptr->location.mapNum == gSaveBlock1Ptr->outbreakLocationMapNum
@@ -668,7 +668,7 @@ static bool8 AllowWildCheckOnNewMetatile(void)
         return TRUE;
 }
 
-static bool8 AreLegendariesInSootopolisPreventingEncounters(void)
+bool32 AreLegendariesInSootopolisPreventingEncounters(void)
 {
     if (gSaveBlock1Ptr->location.mapGroup != MAP_GROUP(MAP_SOOTOPOLIS_CITY)
      || gSaveBlock1Ptr->location.mapNum != MAP_NUM(MAP_SOOTOPOLIS_CITY))
@@ -971,9 +971,9 @@ void FishingWildEncounter(u8 rod)
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     if (CheckFeebasAtCoords(x, y) == TRUE)
     {
-        u8 level = ChooseWildMonLevel(&sWildFeebas, 0, WILD_AREA_FISHING);
+        u8 level = ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING);
 
-        species = sWildFeebas.species;
+        species = gWildFeebas.species;
         CreateWildMon(species, level);
     }
     else
