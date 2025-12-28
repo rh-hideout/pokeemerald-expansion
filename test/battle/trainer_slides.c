@@ -807,8 +807,6 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Z Move")
 
 AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Dynamax")
 {
-    //KNOWN_FAILING; // Trainer A Dynamaxing in test 2
-
     s32 dynamaxLevelA = 0, dynamaxLevelB = 0;
 
     PARAMETRIZE { dynamaxLevelA = 10;  dynamaxLevelB = -1;  }
