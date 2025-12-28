@@ -564,8 +564,16 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
     return NULL;
 }
 
-static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metatileBehavior, u8 direction)
+static const u8 *GetInteractedWaterScript(struct MapPosition *position, u8 metatileBehavior, u8 direction)
 {
+    u8 objectEventId = GetObjectEventIdByPosition(position->x, position->y, 1);
+    struct ObjectEvent *object = &gObjectEvents[objectEventId];
+    if (IsPlayerFacingSurfableFishableWater() == TRUE && IsOverworldWildEncounter(object))
+    {
+        gSpecialVar_0x8004 = OW_SPECIES(object);
+        return InteractWithDynamicWildOverworldEncounter;
+    }
+
     if (IsFieldMoveUnlocked(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF)
      )

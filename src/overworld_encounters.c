@@ -942,7 +942,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
 
     if (IsGeneratedOverworldWildEncounter(object)
-        || (IsManualOverworldWildEncounter(object) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL))
+        || (!IsGeneratedOverworldWildEncounter(object) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL))
     {
         gSpecialVar_0x8004 = OW_SPECIES(object);
         return TRUE;
