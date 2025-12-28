@@ -82,7 +82,7 @@ void UpdateOverworldEncounters(void)
     {
         if (sOWESpawnCountdown != 255)
         {
-            RemoveAllOverworldEncounterObjects();
+            RemoveAllGeneratedOverworldEncounterObjects();
             sOWESpawnCountdown = 255;
         }
         return;
