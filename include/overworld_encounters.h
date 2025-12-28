@@ -123,6 +123,6 @@ u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equal
 void Task_OWE_WaitMovements(u8 taskId);
 bool32 OWE_IsWaitTaskActive(void);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
-void OverworldWildEncounter_InitRoamerStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template);
+void OverworldWildEncounter_InitRoamerOutbreakStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
