@@ -705,10 +705,10 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     }
     else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
     {
-        SetUpMassOutbreakEncounter(WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE);
+        SetUpMassOutbreakEncounter(WILD_CHECK_KEEN_EYE);
         *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
     }
-    else if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE))
+    else if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_KEEN_EYE))
     {
         ZeroEnemyPartyMons();
         *speciesId = SPECIES_NONE;
