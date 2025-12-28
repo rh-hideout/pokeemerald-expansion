@@ -552,9 +552,9 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     }
     else if (OW_WILD_ENCOUNTERS_FEEBAS && wildArea == WILD_AREA_WATER && CheckFeebasAtCoords(x, y))
     {
-        *level = ChooseWildMonLevel(&sWildFeebas, 0, WILD_AREA_FISHING);
+        *level = ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING);
 
-        *speciesId = sWildFeebas.species;
+        *speciesId = gWildFeebas.species;
         CreateWildMon(*speciesId, *level);
     }
     else if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE))
