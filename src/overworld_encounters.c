@@ -1234,11 +1234,6 @@ void Task_OWE_WaitMovements(u8 taskId)
 
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior)
 {
-    // Need to edit anims:
-    // If object is on water then use water anim.
-    // If object is indoor, need an indoor anim?
-    // Long grass anim?
-
     if (MetatileBehavior_IsPokeGrass(metatileBehavior) || MetatileBehavior_IsAshGrass(metatileBehavior))
         return OWE_SPAWN_ANIM_GRASS;
     else if (MetatileBehavior_IsLongGrass(metatileBehavior))
