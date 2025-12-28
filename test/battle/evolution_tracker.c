@@ -22,6 +22,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader'
     }
 }
 
+// To be replaced with WILD_DOUBLE_BATTLE_TEST when that is made possible (also see TryUpdateEvolutionTracker)
 DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing multiple Bisharps holding Leader's Crest increases tracker multiple times")
 {
     GIVEN {
@@ -117,6 +118,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with passiv
     }
 }
 
+// To be replaced with WILD_DOUBLE_BATTLE_TEST when that is made possible (also see TryUpdateEvolutionTracker)
 DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with bursting flames doesn't increase tracker")
 {
     GIVEN {
