@@ -97,6 +97,13 @@ void UpdateOverworldEncounters(void)
     }
     
     bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
+
+    if (shouldSpawnWaterMons && !AreLegendariesInSootopolisPreventingEncounters())
+    {
+        OWE_ResetSpawnCounterPlayAmbientCry();
+        return;
+    }
+
     if (OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
     {
         u16 spawnSlot = NextSpawnMonSlot();
