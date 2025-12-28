@@ -17,23 +17,26 @@ SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking ou
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        switch(i) {
-            case 0:
-                MESSAGE("Nihilego's Attack rose!");
-                break;
-            case 1:
-                MESSAGE("Nihilego's Defense rose!");
-                break;
-            case 2:
-                MESSAGE("Nihilego's Sp. Atk rose!");
-                break;
-            case 3:
-                MESSAGE("Nihilego's Sp. Def rose!");
-                break;
-            case 4:
-                MESSAGE("Nihilego's Speed rose!");
-                break;
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        u32 expectedStat = STAT_ATK;
+
+        switch (i) {
+        case 1:
+            expectedStat = STAT_DEF;
+            break;
+        case 2:
+            expectedStat = STAT_SPATK;
+            break;
+        case 3:
+            expectedStat = STAT_SPDEF;
+            break;
+        case 4:
+            expectedStat = STAT_SPEED;
+            break;
         }
+
+        EXPECT_EQ(player->statStages[expectedStat], DEFAULT_STAT_STAGE + 1);
     }
 }
 
@@ -73,20 +76,23 @@ SINGLE_BATTLE_TEST("Beast Boost prioritizes stats in the case of a tie in the fo
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        switch(i) {
-            case 0:
-                MESSAGE("Nihilego's Attack rose!");
-                break;
-            case 1:
-                MESSAGE("Nihilego's Defense rose!");
-                break;
-            case 2:
-                MESSAGE("Nihilego's Sp. Atk rose!");
-                break;
-            case 3:
-                MESSAGE("Nihilego's Sp. Def rose!");
-                break;
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        u32 expectedStat = STAT_ATK;
+
+        switch (i) {
+        case 1:
+            expectedStat = STAT_DEF;
+            break;
+        case 2:
+            expectedStat = STAT_SPATK;
+            break;
+        case 3:
+            expectedStat = STAT_SPDEF;
+            break;
         }
+
+        EXPECT_EQ(player->statStages[expectedStat], DEFAULT_STAT_STAGE + 1);
     }
 }
 
@@ -104,7 +110,9 @@ SINGLE_BATTLE_TEST("Beast Boost considers Power Split")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POWER_SPLIT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        MESSAGE("Nihilego's Sp. Atk rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }
 }
 
@@ -122,7 +130,9 @@ SINGLE_BATTLE_TEST("Beast Boost considers Guard Split")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GUARD_SPLIT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        MESSAGE("Nihilego's Defense rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
 }
 
@@ -140,7 +150,9 @@ SINGLE_BATTLE_TEST("Beast Boost considers Power Trick")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POWER_TRICK, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        MESSAGE("Nihilego's Attack rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
 }
 
@@ -160,7 +172,9 @@ SINGLE_BATTLE_TEST("Beast Boost considers Wonder Room")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXTREME_SPEED, player);
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        MESSAGE("Nihilego's Defense rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
 }
 
@@ -179,7 +193,9 @@ SINGLE_BATTLE_TEST("Beast Boost considers Speed Swap")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPEED_SWAP, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        MESSAGE("Nihilego's Speed rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }
 }
 
@@ -197,7 +213,9 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider stat stages")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        MESSAGE("Nihilego's Sp. Atk rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }
 }
 
@@ -213,7 +231,9 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        MESSAGE("Nihilego's Sp. Atk rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }
 }
 
@@ -228,6 +248,8 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider status condition reductions")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        MESSAGE("Nihilego's Attack rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
 }

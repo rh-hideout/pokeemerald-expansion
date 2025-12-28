@@ -5884,18 +5884,23 @@ u32 GetHighestStatId(u32 battler)
         if (stat == STAT_SPEED)
             continue;
 
-        u16 statVal;
+        u32 statVal;
         switch (stat)
         {
+        case STAT_ATK:
+            statVal = gBattleMons[battler].attack;
+            break;
         case STAT_DEF:
             statVal = wonderRoom ? gBattleMons[battler].spDefense : gBattleMons[battler].defense;
+            break;
+        case STAT_SPATK:
+            statVal = gBattleMons[battler].spAttack;
             break;
         case STAT_SPDEF:
             statVal = wonderRoom ? gBattleMons[battler].defense : gBattleMons[battler].spDefense;
             break;
         default:
-            statVal = *(&gBattleMons[battler].attack + (stat - 1));
-            break;
+            continue;
         }
 
         if (statVal > highestStat)
