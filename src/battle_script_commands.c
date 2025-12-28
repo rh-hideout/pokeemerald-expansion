@@ -958,7 +958,7 @@ bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef)
 {
     return battlerDef == battlerAtk
         || !IsBattlerAlive(battlerDef)
-        || gBattleStruct->moveResultFlags[battlerDef] & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_SKIP);
+        || gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT;
 }
 
 bool32 ProteanTryChangeType(u32 battler, enum Ability ability, u32 move, enum Type moveType)
@@ -1040,7 +1040,7 @@ static bool32 IsAnyTargetAffected(void)
         if (battler == gBattlerAttacker)
             continue;
 
-        if (!(gBattleStruct->moveResultFlags[battler] & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_SKIP)))
+        if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT))
             return TRUE;
     }
     return FALSE;
@@ -1178,10 +1178,8 @@ static void Cmd_attackcanceler(void)
         return;
     }
 
-    if (ShouldSkipToMoveEnd())
+    if (ShouldSkipToMoveEnd()) // Hack: Prevents messages being printed multiply times
     {
-        // Hack: Not good but the other options are worse
-        // It prevents messages being printed multiply times
         gBattlescriptCurrInstr = BattleScript_MoveEnd;
         return;
     }
@@ -13586,7 +13584,7 @@ void BS_SetMagicCoatTarget(void)
     gBattlerTarget = gBattleStruct->attackerBeforeBounce;
     HandleMoveTargetRedirection();
     ClearDamageCalcResults();
-    gBattleStruct->eventState.atkCanceler = CANCELER_HANDLE_TARGET;
+    gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
     gBattleStruct->eventState.atkCancelerBattler = 0;
 
     gBattlescriptCurrInstr = cmd->nextInstr;

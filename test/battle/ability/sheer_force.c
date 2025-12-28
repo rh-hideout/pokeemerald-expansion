@@ -1,6 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
-#if 0
+
 ASSUMPTIONS
 {
     ASSUME(MoveIsAffectedBySheerForce(MOVE_ELECTRO_SHOT) == TRUE);
@@ -1422,4 +1422,3 @@ AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects")
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     }
 }
-#endif

@@ -64,9 +64,7 @@ static void ResetParadoxWeatherStat(u32 battler);
 static void ResetParadoxTerrainStat(u32 battler);
 static bool32 CanBattlerFormChange(u32 battler, enum FormChanges method);
 static bool32 DoesMoveDoHalfDamage(struct BattleContext *ctx);
-static bool32 IsGen3RedirectAbilityImmunity(u32 type, enum Ability ability);
-static bool32 CanMagicBounceBounceMove(struct BattleContext *ctx);
-static bool32 CanMagicCoatBounceMove(struct BattleContext *ctx);
+static bool32 CanBattlerBounceBackMove(struct BattleContext *ctx);
 
 // Submoves
 static u32 GetMirrorMoveMove(void);
@@ -3235,10 +3233,11 @@ static bool32 ShouldCheckTargetMoveFailure(u32 battlerAtk, u32 battlerDef, u32 m
     return sShouldCheckTargetMoveFailure[moveTarget](battlerAtk, battlerDef);
 }
 
-static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
+static enum MoveCanceler CancelerTargetFailures(struct BattleContext *ctx)
 {
     bool32 targetAvoidedAttack = FALSE;
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move);
+    s32 movePriority = GetChosenMovePriority(ctx->battlerAtk, ctx->abilityAtk);
     ctx->moveType = GetBattleMoveType(ctx->move);
     ctx->updateFlags = TRUE;
     ctx->runScript = TRUE;
@@ -3255,7 +3254,7 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
 
         if (moveTarget == TARGET_OPPONENTS_FIELD)
         {
-            if (CanMagicBounceBounceMove(ctx) || CanMagicCoatBounceMove(ctx))
+            if (CanBattlerBounceBackMove(ctx))
                 gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FAILED;
             continue;
         }
@@ -3288,11 +3287,11 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
                 BattleScriptCall(BattleScript_TargetProtected);
             targetAvoidedAttack = TRUE;
         }
-        else if (CanMagicBounceBounceMove(ctx) || CanMagicCoatBounceMove(ctx))
+        else if (CanBattlerBounceBackMove(ctx))
         {
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FAILED;
         }
-        else if (CanMoveBeBlockedByTarget(ctx))
+        else if (CanMoveBeBlockedByTarget(ctx, movePriority))
         {
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED; // Not sure. maybe worth having a new flag?
             targetAvoidedAttack = TRUE;
@@ -3328,8 +3327,6 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
             gBattleScripting.battler = ctx->battlerDef;
             gBattleStruct->pledgeMove = FALSE;
             CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
-            if (gSpecialStatuses[ctx->battlerAtk].parentalBondState == PARENTAL_BOND_1ST_HIT)
-                gSpecialStatuses[ctx->battlerAtk].parentalBondState = PARENTAL_BOND_OFF; // No second hit if first hit was blocked
             return MOVE_STEP_PAUSE;
         }
     }
@@ -3500,7 +3497,7 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_CHARGING] = CancelerCharging,
     [CANCELER_NO_TARGET] = CancelerNoTarget,
     [CANCELER_TOOK_ATTACK] = CancelerTookAttack,
-    [CANCELER_HANDLE_TARGET] = CancelerTargetFailure,
+    [CANCELER_TARGET_FAILURE] = CancelerTargetFailures,
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
 };
 
@@ -3915,29 +3912,12 @@ void ChooseStatBoostAnimation(u32 battler)
 
 static bool32 IsPowderMoveBlocked(struct BattleContext *ctx);
 
-bool32 CanMoveBeBlockedByTarget(struct BattleContext *ctx)
+bool32 CanMoveBeBlockedByTarget(struct BattleContext *ctx, s32 movePriority)
 {
-    if (CanAbilityAbsorbMove(ctx))
-        return TRUE;
-
-    s32 movePriority = GetChosenMovePriority(ctx->battlerAtk, ctx->abilityAtk);
     return CanPsychicTerrainProtectTarget(ctx, movePriority)
         || CanTargetBlockPranksterMove(ctx, movePriority)
-        || IsPowderMoveBlocked(ctx);
-}
-
-bool32 CanTargetBlockPranksterMove(struct BattleContext *ctx, s32 movePriority)
-{
-    if (movePriority <= 0
-     || !IsBattleMoveStatus(ctx->move)
-     || !BlocksPrankster(ctx->move, ctx->battlerAtk, ctx->battlerDef, TRUE)
-     || (IsBattleMoveStatus(ctx->move) && (ctx->abilityDef == ABILITY_MAGIC_BOUNCE || gProtectStructs[ctx->battlerDef].bounceMove)))
-        return FALSE;
-
-    if (ctx->runScript)
-        BattleScriptCall(BattleScript_DoesntAffectScripting);
-
-    return TRUE;
+        || IsPowderMoveBlocked(ctx)
+        || CanAbilityAbsorbMove(ctx);
 }
 
 bool32 CanPsychicTerrainProtectTarget(struct BattleContext *ctx, s32 movePriority)
@@ -3951,6 +3931,20 @@ bool32 CanPsychicTerrainProtectTarget(struct BattleContext *ctx, s32 movePriorit
 
     if (ctx->runScript)
         BattleScriptCall(BattleScript_MoveUsedPsychicTerrainPrevents);
+
+    return TRUE;
+}
+
+bool32 CanTargetBlockPranksterMove(struct BattleContext *ctx, s32 movePriority)
+{
+    if (movePriority <= 0
+     || !IsBattleMoveStatus(ctx->move)
+     || !BlocksPrankster(ctx->move, ctx->battlerAtk, ctx->battlerDef, TRUE)
+     || (IsBattleMoveStatus(ctx->move) && (ctx->abilityDef == ABILITY_MAGIC_BOUNCE || gProtectStructs[ctx->battlerDef].bounceMove)))
+        return FALSE;
+
+    if (ctx->runScript)
+        BattleScriptCall(BattleScript_DoesntAffectScripting);
 
     return TRUE;
 }
@@ -4000,11 +3994,11 @@ bool32 CanAbilityAbsorbMove(struct BattleContext *ctx)
             battleScript = AbsorbedByStatIncreaseAbility(ctx->battlerDef, ctx->abilityDef, STAT_SPEED, 1);
         break;
     case ABILITY_LIGHTNING_ROD:
-        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && ctx->moveType == TYPE_ELECTRIC)
+        if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && ctx->moveType == TYPE_ELECTRIC)
             battleScript = AbsorbedByStatIncreaseAbility(ctx->battlerDef, ctx->abilityDef, STAT_SPATK, 1);
         break;
     case ABILITY_STORM_DRAIN:
-        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && ctx->moveType == TYPE_WATER)
+        if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && ctx->moveType == TYPE_WATER)
             battleScript = AbsorbedByStatIncreaseAbility(ctx->battlerDef, ctx->abilityDef, STAT_SPATK, 1);
         break;
     case ABILITY_SAP_SIPPER:
@@ -4095,6 +4089,48 @@ const u8 *AbsorbedByFlashFire(u32 battlerDef)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_NO_BOOST;
         return BattleScript_FlashFireBoost;
     }
+}
+
+static bool32 TryMagicBounce(struct BattleContext *ctx);
+static bool32 TryMagicCoat(struct BattleContext *ctx);
+
+static bool32 CanBattlerBounceBackMove(struct BattleContext *ctx)
+{
+    return TryMagicBounce(ctx) || TryMagicCoat(ctx);
+}
+
+static bool32 TryMagicBounce(struct BattleContext *ctx)
+{
+    if (!MoveCanBeBouncedBack(ctx->move))
+        return FALSE;
+
+    if (gBattleStruct->magicBounceActive || gBattleStruct->bouncedMoveIsUsed)
+        return FALSE;
+
+    if (ctx->abilityDef != ABILITY_MAGIC_BOUNCE)
+        return FALSE;
+
+    gBattleStruct->magicBounceActive = TRUE;
+    gBattleStruct->moveBouncer = ctx->battlerDef;
+
+    return TRUE;
+}
+
+static bool32 TryMagicCoat(struct BattleContext *ctx)
+{
+    if (!MoveCanBeBouncedBack(ctx->move) || gBattleStruct->magicBounceActive) // Magic Bounce has precedence over magic coat
+        return FALSE;
+
+    if (gBattleStruct->magicCoatActive || gBattleStruct->bouncedMoveIsUsed)
+        return FALSE;
+
+    if (!gProtectStructs[ctx->battlerDef].bounceMove)
+        return FALSE;
+
+    gBattleStruct->magicCoatActive = TRUE;
+    gBattleStruct->moveBouncer = ctx->battlerDef;
+
+    return TRUE;
 }
 
 static u32 GetFirstBattlerOnSide(u32 side)
@@ -7497,40 +7533,6 @@ bool32 IsBattlerProtected(struct BattleContext *ctx)
         isProtected = FALSE;
 
     return isProtected;
-}
-
-static bool32 CanMagicBounceBounceMove(struct BattleContext *ctx)
-{
-    if (!MoveCanBeBouncedBack(ctx->move))
-        return FALSE;
-
-    if (gBattleStruct->magicBounceActive || gBattleStruct->bouncedMoveIsUsed)
-        return FALSE;
-
-    if (ctx->abilityDef != ABILITY_MAGIC_BOUNCE)
-        return FALSE;
-
-    gBattleStruct->magicBounceActive = TRUE;
-    gBattleStruct->moveBouncer = ctx->battlerDef;
-
-    return TRUE;
-}
-
-static bool32 CanMagicCoatBounceMove(struct BattleContext *ctx)
-{
-    if (!MoveCanBeBouncedBack(ctx->move) || gBattleStruct->magicBounceActive) // Magic Bounce has precedence over magic coat
-        return FALSE;
-
-    if (gBattleStruct->magicCoatActive || gBattleStruct->bouncedMoveIsUsed)
-        return FALSE;
-
-    if (!gProtectStructs[ctx->battlerDef].bounceMove)
-        return FALSE;
-
-    gBattleStruct->magicCoatActive = TRUE;
-    gBattleStruct->moveBouncer = ctx->battlerDef;
-
-    return TRUE;
 }
 
 u32 GetProtectType(enum ProtectMethod method)
@@ -11652,7 +11654,7 @@ void UpdateStallMons(void)
      || target == TARGET_SELECTED 
      || target == TARGET_SMART)
     {
-        if (CanMoveBeBlockedByTarget(&ctx))
+        if (CanMoveBeBlockedByTarget(&ctx, GetChosenMovePriority(ctx.battlerAtk, ctx.abilityAtk)))
         {
             gAiBattleData->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
         }
@@ -12592,15 +12594,4 @@ void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 usedMov
             }
         }
     }
-}
-
-static UNUSED bool32 IsGen3RedirectAbilityImmunity(u32 type, enum Ability ability)
-{
-    if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5)
-    {
-        if ((type == TYPE_ELECTRIC && ABILITY_LIGHTNING_ROD)
-         || (type == TYPE_WATER && ABILITY_STORM_DRAIN))
-            return TRUE;
-    }
-    return FALSE;
 }

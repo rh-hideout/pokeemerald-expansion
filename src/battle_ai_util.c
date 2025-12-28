@@ -556,12 +556,7 @@ bool32 Ai_IsPriorityBlocked(u32 battlerAtk, u32 battlerDef, u32 move, struct AiL
 
 bool32 AI_CanMoveBeBlockedByTarget(struct BattleContext *ctx)
 {
-    if (CanAbilityAbsorbMove(ctx))
-        return TRUE;
-
-    s32 movePriority = GetBattleMovePriority(ctx->battlerAtk, ctx->abilityAtk, ctx->move);
-    return CanPsychicTerrainProtectTarget(ctx, movePriority)
-        || CanTargetBlockPranksterMove(ctx, movePriority);
+    return CanMoveBeBlockedByTarget(ctx, GetBattleMovePriority(ctx->battlerAtk, ctx->abilityAtk, ctx->move));
 }
 
 // This function checks if all physical/special moves are either unusable or unreasonable to use.

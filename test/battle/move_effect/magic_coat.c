@@ -86,10 +86,10 @@ DOUBLE_BATTLE_TEST("Magic Coat reflects hazards regardless of the user's positio
         TURN { MOVE(coatUser, MOVE_MAGIC_COAT); MOVE(opponentRight, MOVE_STEALTH_ROCK); MOVE(opponentLeft, MOVE_SPIKES); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, coatUser);
-        // NONE_OF {
-        //     ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentRight);
-        //     ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, opponentLeft);
-        // }
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentRight);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, opponentLeft);
+        }
     } THEN {
         EXPECT(!IsHazardOnSide(B_SIDE_PLAYER, HAZARDS_STEALTH_ROCK));
         EXPECT(!IsHazardOnSide(B_SIDE_PLAYER, HAZARDS_SPIKES));

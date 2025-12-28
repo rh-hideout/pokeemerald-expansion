@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Storm Drain absorbs Water-type moves and increases the Sp. Attack (Gen5+)")
 {
     u32 config;
-    // PARAMETRIZE { config = GEN_4; }
+    PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
         WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);

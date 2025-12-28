@@ -130,7 +130,7 @@ enum MoveSuccessOrder
     CANCELER_CHARGING,
     CANCELER_NO_TARGET,
     CANCELER_TOOK_ATTACK,
-    CANCELER_HANDLE_TARGET,
+    CANCELER_TARGET_FAILURE,
     CANCELER_MULTIHIT_MOVES,
     CANCELER_END,
 };
@@ -277,7 +277,7 @@ bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag);
 bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, u32 move, enum ResultOption option);
 bool32 CanTargetBlockPranksterMove(struct BattleContext *ctx, s32 movePriority);
 bool32 CanPsychicTerrainProtectTarget(struct BattleContext *ctx, s32 movePriority);
-bool32 CanMoveBeBlockedByTarget(struct BattleContext *ctx);
+bool32 CanMoveBeBlockedByTarget(struct BattleContext *ctx, s32 movePriority);
 bool32 CanAbilityAbsorbMove(struct BattleContext *ctx);
 bool32 TryFieldEffects(enum FieldEffectCases caseId);
 u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ability, u32 move, bool32 shouldAbilityTrigger);

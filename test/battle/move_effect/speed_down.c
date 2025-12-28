@@ -5,7 +5,7 @@ DOUBLE_BATTLE_TEST("Speed Down: Cotton Spore does not fail if it is blocked by o
 {
     enum Ability abilityOne, abilityTwo;
 
-    // PARAMETRIZE { abilityOne = ABILITY_OVERCOAT; abilityTwo = ABILITY_SKILL_LINK; }
+    PARAMETRIZE { abilityOne = ABILITY_OVERCOAT; abilityTwo = ABILITY_SKILL_LINK; }
     PARAMETRIZE { abilityOne = ABILITY_SKILL_LINK; abilityTwo = ABILITY_OVERCOAT; }
 
     GIVEN {

@@ -535,7 +535,6 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
     enum Type incomingType = CheckDynamicMoveType(GetBattlerMon(opposingBattler), incomingMove, opposingBattler, MON_IN_BATTLE);
     bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
-    s32 i, j;
 
     if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;

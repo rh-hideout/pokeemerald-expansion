@@ -402,12 +402,6 @@ enum TypeSideHazard
 #define MOVE_RESULT_STURDIED              (1 << 8)
 #define MOVE_RESULT_FOE_ENDURED_AFFECTION (1 << 9)
 #define MOVE_RESULT_SYNCHRONOISE_AFFECTED (1 << 10)
-// for spread damaging moves.
-// Alternatively we set MOVE_RESULT_NO_EFFECT as we previously did and skip it for status moves
-// Because I think this might result in bugs since we don't always want to check MOVE_RESULT_SKIP so it's possible some mon will be considered hit
-// That only exactly applies to TARGET_BOTH
-// Other alternative 2, make a new TARGET_BOTH_STATUS. This might be the best option
-#define MOVE_RESULT_SKIP                  (1 << 11)
 #define MOVE_RESULT_AVOIDED_ATTACK        (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED)
 #define MOVE_RESULT_NO_EFFECT             (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE)
 
