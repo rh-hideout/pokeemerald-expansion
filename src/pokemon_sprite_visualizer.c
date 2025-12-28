@@ -429,7 +429,7 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
     u8 textBottomForms[] = _("BACK:\nFRONT:\nBG:\nFORMS:$");
     u8 textBottomSubmenuTwo[] = _("B coords:\nF coords:\nF elev:");
     u8 textBottomSubmenuThree[] = _("X coords:\nY coords:\nSize:");
-    u16 species = data->modifyArrows.currValue;
+    u16 species = SanitizeSpeciesId(data->modifyArrows.currValue);
 
     u8 textL[] = _("{L_BUTTON}");
     u8 textR[] = _("{R_BUTTON}");
@@ -506,7 +506,7 @@ static void SetStructPtr(u8 taskId, void *ptr)
 static void PrintDigitChars(struct PokemonSpriteVisualizer *data)
 {
     s32 i;
-    u16 species = data->modifyArrows.currValue;
+    u16 species = SanitizeSpeciesId(data->modifyArrows.currValue);
     u8 text[MODIFY_DIGITS_MAX + POKEMON_NAME_LENGTH + 8];
 
     for (i = 0; i < data->modifyArrows.maxDigits; i++)
@@ -723,7 +723,7 @@ static void BattleLoadOpponentMonSpriteGfxCustom(u16 species, bool8 isFemale, bo
 
 static void SetConstSpriteValues(struct PokemonSpriteVisualizer *data)
 {
-    u16 species = data->currentmonId;
+    u16 species = SanitizeSpeciesId(data->currentmonId);
     data->constSpriteValues.frontPicCoords = gSpeciesInfo[species].frontPicYOffset;
     data->constSpriteValues.frontElevation = gSpeciesInfo[species].enemyMonElevation;
     data->constSpriteValues.backPicCoords = gSpeciesInfo[species].backPicYOffset;
@@ -1039,6 +1039,32 @@ static void UpdateBattleBg(u8 taskId, bool8 increment)
     LoadBattleBg(data->battleBgType, data->battleEnvironment);
 }
 
+static void DrawFollowerSprite(struct PokemonSpriteVisualizer *data, u16 species)
+{
+#if OW_POKEMON_OBJECT_EVENTS
+    u16 graphicsId = species + OBJ_EVENT_MON;
+    if (data->isShiny)
+        graphicsId += OBJ_EVENT_MON_SHINY;
+    if (data->isFemale)
+        graphicsId += OBJ_EVENT_MON_FEMALE;
+    data->followerspriteId = CreateObjectGraphicsSprite(graphicsId,
+                                                SpriteCB_Follower,
+                                                VISUALIZER_FOLLOWER_X,
+                                                VISUALIZER_FOLLOWER_Y,
+                                                0);
+    gSprites[data->followerspriteId].oam.priority = 0;
+
+    const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
+    gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
+    gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
+    gSprites[data->followerspriteId].images = graphicsInfo->images;
+    gSprites[data->followerspriteId].anims = graphicsInfo->anims;
+    gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
+#else
+    return;
+#endif
+}
+
 // *******************************
 // Main functions
 static void UpdateMonAnimNames(u8 taskId)
@@ -1246,7 +1272,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
             SetStructPtr(taskId, data);
 
             data->currentmonId = SPECIES_BULBASAUR;
-            species = data->currentmonId;
+            species = SanitizeSpeciesId(data->currentmonId);
 
             //Print instructions
             PrintInstructionsOnWindow(data);
@@ -1256,8 +1282,6 @@ void CB2_Pokemon_Sprite_Visualizer(void)
             LoadSpritePaletteWithTag(palette, species);
             //Front
             HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[1], species, (data->isFemale ? FEMALE_PERSONALITY : MALE_PERSONALITY));
-            data->isShiny = FALSE;
-            data->isFemale = FALSE;
             BattleLoadOpponentMonSpriteGfxCustom(species, data->isFemale, data->isShiny, 1);
             SetMultiuseSpriteTemplateToPokemon(species, 1);
             gMultiuseSpriteTemplate.paletteTag = species;
@@ -1271,11 +1295,11 @@ void CB2_Pokemon_Sprite_Visualizer(void)
 
             //Back
             HandleLoadSpecialPokePic(FALSE, gMonSpritesGfxPtr->spritesGfx[2], species, (data->isFemale ? FEMALE_PERSONALITY : MALE_PERSONALITY));
-            BattleLoadOpponentMonSpriteGfxCustom(species, data->isFemale, data->isShiny, 4);
+            BattleLoadOpponentMonSpriteGfxCustom(species, data->isFemale, data->isShiny, 5);
             SetMultiuseSpriteTemplateToPokemon(species, 2);
             offset_y = gSpeciesInfo[species].backPicYOffset;
             data->backspriteId = CreateSprite(&gMultiuseSpriteTemplate, VISUALIZER_MON_BACK_X, VISUALIZER_MON_BACK_Y + offset_y, 0);
-            gSprites[data->backspriteId].oam.paletteNum = 4;
+            gSprites[data->backspriteId].oam.paletteNum = 5;
             gSprites[data->backspriteId].callback = SpriteCallbackDummy;
             gSprites[data->backspriteId].oam.priority = 0;
 
@@ -1284,26 +1308,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
             gSprites[data->iconspriteId].oam.priority = 0;
 
             //Follower Sprite
-            u16 graphicsId = species + OBJ_EVENT_MON;
-            if (data->isShiny)
-                graphicsId += OBJ_EVENT_MON_SHINY;
-            if (data->isFemale)
-                graphicsId += OBJ_EVENT_MON_FEMALE;
-            data->followerspriteId = CreateObjectGraphicsSprite(graphicsId,
-                                                        SpriteCB_Follower,
-                                                        VISUALIZER_FOLLOWER_X,
-                                                        VISUALIZER_FOLLOWER_Y,
-                                                        0);
-            gSprites[data->followerspriteId].oam.priority = 0;
-            const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
-            if (graphicsInfo != NULL)
-            {
-                gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
-                gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
-                gSprites[data->followerspriteId].images = graphicsInfo->images;
-                gSprites[data->followerspriteId].anims = graphicsInfo->anims;
-                gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
-            }
+            DrawFollowerSprite(data, species);
 
             //Modify Arrows
             SetUpModifyArrows(data);
@@ -1387,7 +1392,7 @@ static void ResetBGs_PokemonSpriteVisualizer(u16 a)
 
 static void ApplyOffsetSpriteValues(struct PokemonSpriteVisualizer *data)
 {
-    u16 species = data->currentmonId;
+    u16 species = SanitizeSpeciesId(data->currentmonId);
     //Back
     gSprites[data->backspriteId].y = VISUALIZER_MON_BACK_Y + gSpeciesInfo[species].backPicYOffset + data->offsetsSpriteValues.offset_back_picCoords;
     //Front
@@ -1489,7 +1494,7 @@ static void UpdateSubmenuOneOptionValue(u8 taskId, bool8 increment)
 static void UpdateSubmenuTwoOptionValue(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
-    u16 species = data->currentmonId;
+    u16 species = SanitizeSpeciesId(data->currentmonId);
     u8 option = data->submenuYpos[2];
     s8 offset;
     u8 y;
@@ -1934,7 +1939,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
 static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
 {
     const u16 *palette;
-    u16 species = data->currentmonId;
+    u16 species = SanitizeSpeciesId(data->currentmonId);
     s16 offset_y;
     u8 front_x = sBattlerCoords[0][1].x;
     u8 front_y;
@@ -1992,26 +1997,7 @@ static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
     gSprites[data->iconspriteId].oam.priority = 0;
 
     //Follower Sprite
-    u16 graphicsId = species + OBJ_EVENT_MON;
-    if (data->isShiny)
-        graphicsId += OBJ_EVENT_MON_SHINY;
-    if (data->isFemale)
-        graphicsId += OBJ_EVENT_MON_FEMALE;
-    data->followerspriteId = CreateObjectGraphicsSprite(graphicsId,
-                                                        SpriteCB_Follower,
-                                                        VISUALIZER_FOLLOWER_X,
-                                                        VISUALIZER_FOLLOWER_Y,
-                                                        0);
-    gSprites[data->followerspriteId].oam.priority = 0;
-    const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
-    if (graphicsInfo != NULL)
-    {
-        gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
-        gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
-        gSprites[data->followerspriteId].images = graphicsInfo->images;
-        gSprites[data->followerspriteId].anims = graphicsInfo->anims;
-        gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
-    }
+    DrawFollowerSprite(data, species);
 
     //Modify Arrows
     LoadSpritePalette(&gSpritePalette_Arrow);
