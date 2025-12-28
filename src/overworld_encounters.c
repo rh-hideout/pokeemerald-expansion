@@ -90,6 +90,13 @@ void UpdateOverworldEncounters(void)
         OverworldWildEncounter_SetMinimumSpawnTimer();
     }
 
+    bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
+    if (OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
+    {
+        OWE_ResetSpawnCounterPlayAmbientCry();
+        return;
+    }
+
     u16 speciesId = SPECIES_NONE;
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
@@ -107,8 +114,6 @@ void UpdateOverworldEncounters(void)
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
     }
-    
-    bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
 
     if (shouldSpawnWaterMons && !AreLegendariesInSootopolisPreventingEncounters())
     {
@@ -116,67 +121,64 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
-    if (OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
+    u16 spawnSlot = NextSpawnMonSlot();
+
+    if (spawnSlot == INVALID_SPAWN_SLOT)
     {
-        u16 spawnSlot = NextSpawnMonSlot();
-
-        if (spawnSlot == INVALID_SPAWN_SLOT)
-        {
-            OWE_ResetSpawnCounterPlayAmbientCry();
-            return;
-        }
-        
-        u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-        u32 level;
-        u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
-
-        if (speciesId == SPECIES_NONE || !IsWildLevelAllowedByRepel(level))
-        {
-            OWE_ResetSpawnCounterPlayAmbientCry();
-            return;
-        }
-        
-        struct ObjectEventTemplate objectEventTemplate = {
-            .localId = localId,
-            .graphicsId = graphicsId,
-            .x = x - MAP_OFFSET,
-            .y = y - MAP_OFFSET,
-            .elevation = MapGridGetElevationAt(x, y),
-            .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
-            .trainerType = TRAINER_TYPE_ENCOUNTER,
-        };
-
-        if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
-        {
-            OWE_ResetSpawnCounterPlayAmbientCry();
-            return;
-        }
-
-        u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
-
-        if (objectEventId >= OBJECT_EVENTS_COUNT)
-        {
-            OWE_ResetSpawnCounterPlayAmbientCry();
-            return;
-        }
-
-        gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
-        gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
-        gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
-        gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
-        gObjectEvents[objectEventId].sRoamerOutbreakStatus = indexRoamerOutbreak;
-
-        u8 directions[4] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
-        ObjectEventTurn(&gObjectEvents[objectEventId], directions[Random() & 3]);
-
-        // Hide reflections for spawns in water
-        // (It just looks weird)
-        if (shouldSpawnWaterMons)
-            gObjectEvents[objectEventId].hideReflection = TRUE;
-
-        // Slower replacement spawning
-        sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
+        OWE_ResetSpawnCounterPlayAmbientCry();
+        return;
     }
+    
+    u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
+    u32 level;
+    u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
+
+    if (speciesId == SPECIES_NONE || !IsWildLevelAllowedByRepel(level))
+    {
+        OWE_ResetSpawnCounterPlayAmbientCry();
+        return;
+    }
+    
+    struct ObjectEventTemplate objectEventTemplate = {
+        .localId = localId,
+        .graphicsId = graphicsId,
+        .x = x - MAP_OFFSET,
+        .y = y - MAP_OFFSET,
+        .elevation = MapGridGetElevationAt(x, y),
+        .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
+        .trainerType = TRAINER_TYPE_ENCOUNTER,
+    };
+
+    if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
+    {
+        OWE_ResetSpawnCounterPlayAmbientCry();
+        return;
+    }
+
+    u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
+
+    if (objectEventId >= OBJECT_EVENTS_COUNT)
+    {
+        OWE_ResetSpawnCounterPlayAmbientCry();
+        return;
+    }
+
+    gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
+    gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
+    gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
+    gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
+    gObjectEvents[objectEventId].sRoamerOutbreakStatus = indexRoamerOutbreak;
+
+    u8 directions[4] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
+    ObjectEventTurn(&gObjectEvents[objectEventId], directions[Random() & 3]);
+
+    // Hide reflections for spawns in water
+    // (It just looks weird)
+    if (shouldSpawnWaterMons)
+        gObjectEvents[objectEventId].hideReflection = TRUE;
+
+    // Slower replacement spawning
+    sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
 }
 
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny)
