@@ -381,6 +381,7 @@ void CreateOverworldWildEncounter(void)
 {
     u32 localId = gSpecialVar_LastTalked;
     u32 objEventId = GetObjectEventIdByLocalId(localId);
+    u32 roamerIndex;
     struct ObjectEvent *object = &gObjectEvents[objEventId];
 
     if (objEventId >= OBJECT_EVENTS_COUNT)
@@ -389,10 +390,11 @@ void CreateOverworldWildEncounter(void)
     if (!IsOverworldWildEncounter(object))
         return;
 
-    if (object->sRoamerStatus < ROAMER_COUNT)
+    roamerIndex = object->sRoamerStatus;
+    if (roamerIndex < ROAMER_COUNT && IsRoamerAt(roamerIndex, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
-        CreateRoamerMonInstance(object->sRoamerStatus);
-        gEncounteredRoamerIndex = object->sRoamerStatus;
+        CreateRoamerMonInstance(roamerIndex);
+        gEncounteredRoamerIndex = roamerIndex;
         BattleSetup_StartRoamerBattle();
         return;
     }
@@ -537,7 +539,11 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
     }
 
-    if (TryStartRoamerEncounter() && !OWE_DoesRoamerExistOnMap())
+    if (*roamerIndex < ROAMER_COUNT && IsRoamerAt(*roamerIndex, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+    {
+        CreateRoamerMonInstance(*roamerIndex);
+    }
+    else if (TryStartRoamerEncounter() && !OWE_DoesRoamerExistOnMap())
     {
         *roamerIndex = gEncounteredRoamerIndex;
     }
@@ -548,7 +554,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
         return;
     }
 
-    // gEnemyParty[1] will contain a generated wild mon if a roaming encounter was generated.
+    // gEnemyParty[1] will contain a generated wild mon if a roaming encounter was generated or specified manually.
     // If not it will be contained in gEnemyParty[0]. 
     *speciesId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
     *level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
@@ -771,6 +777,10 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
     bool32 isFemale = FALSE;
     u32 level;
     u32 roamerIndex = ROAMER_COUNT;
+    u32 storedRoamer = (template->trainerType >> 8) & 0xFF;
+
+    if (storedRoamer)
+        roamerIndex = storedRoamer;
 
     SetOverworldEncounterSpeciesInfo(
         template->x - MAP_OFFSET,
@@ -791,7 +801,7 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
 
     templateOWE.graphicsId = graphicsId;
     templateOWE.sOverworldEncounterLevel = level;
-    templateOWE.trainerType = TRAINER_TYPE_ENCOUNTER;
+    templateOWE.trainerType = (TRAINER_TYPE_ENCOUNTER & 0xFF) | ((roamerIndex & 0xFF) << 8);
     return templateOWE;
 }
 
@@ -1064,6 +1074,17 @@ static bool32 OWE_DoesRoamerExistOnMap(void)
     }
 
     return FALSE;
+}
+
+void OverworldWildEncounter_InitRoamerStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template)
+{
+    // Should only occur for Manual or Semi-Manual Overworld Encounters.
+    // Trainer type can be be set on manual encounters to specify a roamer index,
+    // but probably shouldn't unless it can be consistently guarenteed.
+    if (!IsOverworldWildEncounter(objectEvent))
+        return;
+    
+    objectEvent->sRoamerStatus = (template->trainerType >> 8) & 0xFF;
 }
 
 #undef tLocalId
