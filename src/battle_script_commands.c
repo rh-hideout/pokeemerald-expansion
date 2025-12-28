@@ -15512,8 +15512,7 @@ static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 
                             SetMonData(monAtk, MON_DATA_EVOLUTION_TRACKER, &val);
                             break;
                         case IF_DEFEAT_X_WITH_ITEMS:
-                            if (GetMonData(monAtk, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
-                             && GetMonData(monDef, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
+                            if (GetMonData(monDef, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
                              && GetMonData(monDef, MON_DATA_HELD_ITEM) == evolutions[i].params[j].arg2)
                                 SetMonData(monAtk, MON_DATA_EVOLUTION_TRACKER, &val);
                             break;
