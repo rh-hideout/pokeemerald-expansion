@@ -56,6 +56,9 @@ static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, u32 
 static u32 GetNumActiveOverworldEncounters(void);
 static u32 GetNumActiveGeneratedOverworldEncounters(void);
 static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
+static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak);
+static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
+static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -400,13 +403,8 @@ void CreateOverworldWildEncounter(void)
         return;
 
     indexRoamerOutbreak = object->sRoamerOutbreakStatus;
-    if (indexRoamerOutbreak < OWE_NON_ROAMER_OUTBREAK && IsRoamerAt(indexRoamerOutbreak, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
-    {
-        CreateRoamerMonInstance(indexRoamerOutbreak);
-        gEncounteredRoamerIndex = indexRoamerOutbreak;
-        BattleSetup_StartRoamerBattle();
+    if (CreateOverworldWildEncounter_CheckRoamer(indexRoamerOutbreak))
         return;
-    }
 
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
@@ -430,30 +428,63 @@ void CreateOverworldWildEncounter(void)
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
 
+    if (CreateOverworldWildEncounter_CheckBattleFrontier(headerId))
+        return;
+    
+    if (CreateOverworldWildEncounter_CheckMassOutbreak(indexRoamerOutbreak, speciesId))
+        return;
+
+    BattleSetup_StartWildBattle();
+}
+
+static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak)
+{
+    if (indexRoamerOutbreak < OWE_NON_ROAMER_OUTBREAK && IsRoamerAt(indexRoamerOutbreak, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+    {
+        CreateRoamerMonInstance(indexRoamerOutbreak);
+        gEncounteredRoamerIndex = indexRoamerOutbreak;
+        BattleSetup_StartRoamerBattle();
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId)
+{
     if (headerId == HEADER_NONE)
     {
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
         {
             TryGenerateBattlePikeWildMon(FALSE);
             BattleSetup_StartBattlePikeWildBattle();
-            return;
+            return TRUE;
         }
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         {
             GenerateBattlePyramidWildMon();
             BattleSetup_StartWildBattle();
-            return;
+            return TRUE;
         }
     }
 
+    return FALSE;
+}
+
+static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId)
+{
     if (indexRoamerOutbreak == OWE_MASS_OUTBREAK_INDEX && gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId
      && gSaveBlock1Ptr->location.mapNum == gSaveBlock1Ptr->outbreakLocationMapNum
      && gSaveBlock1Ptr->location.mapGroup == gSaveBlock1Ptr->outbreakLocationMapGroup)
     {
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
             SetMonMoveSlot(&gEnemyParty[0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
+        
+        BattleSetup_StartWildBattle();
+        return TRUE;
     }
-    BattleSetup_StartWildBattle();
+
+    return FALSE;
 }
 
 struct AgeSort
