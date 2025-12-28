@@ -2064,25 +2064,28 @@ s32 MoveBattleBar(u8 battler, u8 healthboxSpriteId, u8 whichBar, u8 unused)
 static void MoveBattleBarGraphically(u8 battler, u8 whichBar)
 {
     u8 array[8];
-    u8 filledPixelsCount, level;
+    u8 level;
     u8 barElementId;
     u8 i;
 
     switch (whichBar)
     {
     case HEALTH_BAR:
-        filledPixelsCount = CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
+        CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
                             gBattleSpritesDataPtr->battleBars[battler].oldValue,
                             gBattleSpritesDataPtr->battleBars[battler].receivedValue,
                             &gBattleSpritesDataPtr->battleBars[battler].currValue,
                             array, B_HEALTHBAR_PIXELS / 8);
 
-        if (filledPixelsCount > (B_HEALTHBAR_PIXELS * 50 / 100)) // more than 50 % hp
+        s32 currValue = gBattleSpritesDataPtr->battleBars[battler].currValue;
+        s32 maxValue  = gBattleSpritesDataPtr->battleBars[battler].maxValue;
+
+        if (currValue * 100 > maxValue * 50) // more than 50 % hp
             barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
-        else if (filledPixelsCount > (B_HEALTHBAR_PIXELS * 20 / 100)) // more than 20% hp
+        else if (currValue * 100 > maxValue * 20) // more than 20 % hp
             barElementId = HEALTHBOX_GFX_HP_BAR_YELLOW;
         else
-            barElementId = HEALTHBOX_GFX_HP_BAR_RED; // 20 % or less
+            barElementId = HEALTHBOX_GFX_HP_BAR_RED;
 
         for (i = 0; i < 6; i++)
         {
@@ -2288,12 +2291,11 @@ u8 GetHPBarLevel(s16 hp, s16 maxhp)
     }
     else
     {
-        u8 fraction = GetScaledHPFraction(hp, maxhp, B_HEALTHBAR_PIXELS);
-        if (fraction > (B_HEALTHBAR_PIXELS * 50 / 100)) // more than 50 % hp
+        if (hp * 100 > maxhp * 50) // more than 50 % hp
             result = HP_BAR_GREEN;
-        else if (fraction > (B_HEALTHBAR_PIXELS * 20 / 100)) // more than 20% hp
+        else if (hp * 100 > maxhp * 20) // more than 20% hp
             result = HP_BAR_YELLOW;
-        else if (fraction > 0)
+        else if (hp > 0)
             result = HP_BAR_RED;
         else
             result = HP_BAR_EMPTY;
