@@ -713,6 +713,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
 #endif
 
 #include "data/pokemon/teachable_learnsets.h"
+#include "data/pokemon/overworld_encounter_behaviors.h"
 #include "data/pokemon/egg_moves.h"
 #include "data/pokemon/form_species_tables.h"
 #include "data/pokemon/form_change_tables.h"
@@ -7474,4 +7475,47 @@ bool32 IsSpeciesOfType(u32 species, enum Type type)
      || gSpeciesInfo[species].types[1] == type)
         return TRUE;
     return FALSE;
+}
+
+u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
+{
+    // return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return sOWESpeciesBehavior[behavior].movementType;
+}
+
+u32 OWE_GetViewDistanceFromSpecies(u32 speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return sOWESpeciesBehavior[behavior].viewDistance;
+}
+
+u32 OWE_GetViewWidthFromSpecies(u32 speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return sOWESpeciesBehavior[behavior].viewWidth;
+}
+
+u32 OWE_GetViewActiveDistanceFromSpecies(u32 speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return sOWESpeciesBehavior[behavior].activeDistance;
+}
+
+enum OWESpeeds OWE_GetIdleSpeedFromSpecies(u32 speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return sOWESpeciesBehavior[behavior].idleSpeed;
+}
+
+enum OWESpeeds OWE_GetActiveSpeedFromSpecies(u32 speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return sOWESpeciesBehavior[behavior].activeSpeed;
 }

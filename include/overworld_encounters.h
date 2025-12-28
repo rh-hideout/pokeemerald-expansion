@@ -58,17 +58,6 @@ enum OverworldObjectEncounterType
 };
 */
 
-enum OverworldEncounterBehaviors
-{
-    OWE_BEHAVIOR_WANDER_AROUND,
-    OWE_BEHAVIOR_CHASE_PLAYER,
-    OWE_BEHAVIOR_FLEE_PLAYER,
-    OWE_BEHAVIOR_WATCH_PLAYER,
-    OWE_BEHAVIOR_APPROACH_PLAYER,
-    OWE_BEHAVIOR_DESPAWN,
-    OWE_BEHAVIOR_COUNT
-};
-
 // OWE_SPEED_FASTER seems to visually bug out sometimes.
 enum OWESpeeds
 {
@@ -78,18 +67,18 @@ enum OWESpeeds
     OWE_SPEED_FASTER
 };
 
-struct MonSpeciesOWEData
+struct OWESpeciesBehavior
 {
-    enum OverworldEncounterBehaviors behavior;
+    u32 movementType:8;
+    u32 viewDistance:4;
+    u32 viewWidth:4;
+    u32 activeDistance:4;
+    u32 padding:12;
     enum OWESpeeds idleSpeed;
     enum OWESpeeds activeSpeed;
-    u16 viewDistance:4;
-    u16 viewWidth:4;
-    u16 activeDistance:4;
-    u16 padding:4;
 };
 
-enum OWESpeciesBehaviors
+enum OverworldEncounterBehaviors
 {
     OWE_IGNORE_PLAYER,
     OWE_CHASE_PLAYER_SLOW,

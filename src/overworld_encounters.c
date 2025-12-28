@@ -1,6 +1,5 @@
 #include "global.h"
 #include "overworld_encounters.h"
-#include "overworld_encounter_species_behavior.h"
 #include "battle_setup.h"
 #include "battle_main.h"
 #include "event_data.h"
@@ -43,7 +42,6 @@ static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
-static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId);
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 static bool32 OWE_DoesRoamerExistOnMap(void);
@@ -51,16 +49,6 @@ static bool32 OWE_CheckRestrictedMovementMetatile(struct ObjectEvent *objectEven
 static bool32 OWE_CheckRestrictedMovementMap(struct ObjectEvent *objectEvent, u32 direction);
 static u32 GetNumActiveOverworldEncounters(void);
 static u32 GetNumActiveGeneratedOverworldEncounters(void);
-
-static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
-{
-    [OWE_BEHAVIOR_WANDER_AROUND] =      MOVEMENT_TYPE_WANDER_AROUND_OWE,
-    [OWE_BEHAVIOR_CHASE_PLAYER] =       MOVEMENT_TYPE_CHASE_PLAYER_OWE,
-    [OWE_BEHAVIOR_FLEE_PLAYER] =        MOVEMENT_TYPE_FLEE_PLAYER_OWE,
-    [OWE_BEHAVIOR_WATCH_PLAYER] =       MOVEMENT_TYPE_WATCH_PLAYER_OWE,
-    [OWE_BEHAVIOR_APPROACH_PLAYER] =    MOVEMENT_TYPE_APPROACH_PLAYER_OWE,
-    [OWE_BEHAVIOR_DESPAWN] =            MOVEMENT_TYPE_DESPAWN_OWE
-};
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -900,8 +888,8 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
     else
     {
         u32 speciesId = OW_SPECIES(mon);
-        u32 viewDistance = sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].viewDistance;
-        u32 viewWidth = sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].viewWidth;
+        u32 viewDistance = OWE_GetViewDistanceFromSpecies(speciesId);
+        u32 viewWidth = OWE_GetViewWidthFromSpecies(speciesId);
 
         switch (mon->facingDirection)
         {
@@ -938,7 +926,7 @@ bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon)
     u32 speciesId = OW_SPECIES(mon);
 
     if (speciesId != SPECIES_NONE)
-        distance = sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].activeDistance;
+        distance = OWE_GetViewActiveDistanceFromSpecies(speciesId);
 
     if (player->currentCoords.y <= mon->currentCoords.y + distance && player->currentCoords.y >= mon->currentCoords.y - distance
      && player->currentCoords.x <= mon->currentCoords.x + distance && player->currentCoords.x >= mon->currentCoords.x - distance)
@@ -1099,13 +1087,6 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
             return slotMon;
     }
     return NULL;
-}
-
-
-static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
-{
-    //return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
-    return sOWE_MovementBehaviorType[sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].behavior];
 }
 
 // Are these needed? Not defined elsewhere? I don't think so.
