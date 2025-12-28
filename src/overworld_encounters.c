@@ -551,7 +551,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     {
         *roamerIndex = gEncounteredRoamerIndex;
     }
-    else if (wildArea == WILD_AREA_WATER && CheckFeebasAtCoords(x, y))
+    else if (OW_WILD_ENCOUNTERS_FEEBAS && wildArea == WILD_AREA_WATER && CheckFeebasAtCoords(x, y))
     {
         *level = ChooseWildMonLevel(&sWildFeebas, 0, WILD_AREA_FISHING);
 
