@@ -124,13 +124,25 @@ enum SetMoveEffectFlags
     EFFECT_CERTAIN = (1 << 1),
 };
 
+enum FaintBlockStates
+{
+    FAINT_BLOCK_FINAL_GAMBIT,
+    FAINT_BLOCK_CHECK_TARGET_FAINTED, // Exits if target is not fainted
+    FAINT_BLOCK_END_NEUTRALIZING_GAS,
+    // Destiny Bond and Grudge are tested first, but Faint Target's script plays first
+    FAINT_BLOCK_TRY_DESTINY_BOND,
+    FAINT_BLOCK_TRY_GRUDGE,
+    FAINT_BLOCK_FAINT_TARGET,
+    FAINT_BLOCK_DO_DESTINY_BOND,
+    FAINT_BLOCK_DO_GRUDGE,
+    FAINT_BLOCK_COUNT,
+};
+
 // cases for Cmd_moveend - Order matters!
 enum MoveEndEffects
 {
     MOVEEND_SET_VALUES,
     MOVEEND_PROTECT_LIKE_EFFECT,
-    MOVEEND_GRUDGE,
-    MOVEEND_DESTINY_BOND,
     MOVEEND_ABSORB,
     MOVEEND_RAGE,
     MOVEEND_SYNCHRONIZE_TARGET,
@@ -145,16 +157,17 @@ enum MoveEndEffects
     MOVEEND_ITEM_EFFECTS_ATTACKER_1,
     MOVEEND_SYMBIOSIS,
     MOVEEND_SUBSTITUTE,
+    MOVEEND_FAINT_BLOCK,
     MOVEEND_SKY_DROP_CONFUSE,
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
     MOVEEND_DEFROST,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
-    MOVEEND_HP_THRESHHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
+    MOVEEND_HP_THRESHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER_2,
-    MOVEEND_ABILITY_BLOCK,
+    MOVEEND_ABILITY_EFFECT_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
     MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
     MOVEEND_COLOR_CHANGE, // Color Change / Berserk / Anger Shell
     MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET,

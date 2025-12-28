@@ -34,7 +34,7 @@ DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints th
     GIVEN {
         ASSUME(!IsBattleMoveStatus(MOVE_SURF));
         ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_GROUDON) {Item(ITEM_RED_ORB); {Speed(5);}}
         PLAYER(SPECIES_WOBBUFFET) {Speed(5);}
         OPPONENT(SPECIES_WOBBUFFET) {Speed(10);}
@@ -98,3 +98,15 @@ SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
         MESSAGE("The extremely harsh sunlight faded!");
     }
 }
+
+TO_DO_BATTLE_TEST("Desolate Land makes Sunny Day fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Rain Dance fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Sandstorm fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Hail fail")
+TO_DO_BATTLE_TEST("Desolate Land makes Snowscape fail") // Extrapolation
+TO_DO_BATTLE_TEST("Desolate Land makes Drought fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land makes Drizzle fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land makes Sand Stream fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land makes Snow Warning fail to activate")
+TO_DO_BATTLE_TEST("Desolate Land can be replaced by Delta Stream")
+TO_DO_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea")

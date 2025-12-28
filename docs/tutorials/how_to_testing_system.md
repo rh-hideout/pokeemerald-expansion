@@ -464,6 +464,20 @@ If the expected status icon is parametrized the corresponding `STATUS1` constant
      STATUS_ICON(player, status1);
 ```
 
+### `SUB_HIT`
+`SUB_HIT(battler, captureDamage: | subBreak:)`
+Causes the test to fail the test to fail if a Substitute for the specified battler doesn't take damage.
+If `captureDamage` is used, the damage the substitute takes is written to the supplied pointer.
+```
+u16 damage;
+...
+SUB_HIT(player, captureDamage: &damage);
+```
+If `subBreak` is set to `TRUE`, the test will fail unless the substitute breaks. And if set to `FALSE`, the test will fail unless the substitute survives.
+```
+SUB_HIT(player, subBreak: TRUE);
+```
+
 ### `NOT`
 `NOT sceneCommand`
 Causes the test to fail if the `SCENE` command succeeds before the following command succeeds.

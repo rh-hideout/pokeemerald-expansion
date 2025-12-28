@@ -498,25 +498,23 @@ void GenerateFontHalfRowLookupTable(union TextColor color)
 
     sLastTextColor = color;
 
-    u8 *colors = color.asArray;
-
     u8 quarterRows[16] = {
-        colors[0] << 4 | colors[0],
-        colors[1] << 4 | colors[0],
-        colors[2] << 4 | colors[0],
-        colors[3] << 4 | colors[0],
-        colors[0] << 4 | colors[1],
-        colors[1] << 4 | colors[1],
-        colors[2] << 4 | colors[1],
-        colors[3] << 4 | colors[1],
-        colors[0] << 4 | colors[2],
-        colors[1] << 4 | colors[2],
-        colors[2] << 4 | colors[2],
-        colors[3] << 4 | colors[2],
-        colors[0] << 4 | colors[3],
-        colors[1] << 4 | colors[3],
-        colors[2] << 4 | colors[3],
-        colors[3] << 4 | colors[3],
+        color.background << 4 | color.background,
+        color.foreground << 4 | color.background,
+        color.shadow << 4     | color.background,
+        color.accent << 4     | color.background,
+        color.background << 4 | color.foreground,
+        color.foreground << 4 | color.foreground,
+        color.shadow << 4     | color.foreground,
+        color.accent << 4     | color.foreground,
+        color.background << 4 | color.shadow,
+        color.foreground << 4 | color.shadow,
+        color.shadow << 4     | color.shadow,
+        color.accent << 4     | color.shadow,
+        color.background << 4 | color.accent,
+        color.foreground << 4 | color.accent,
+        color.shadow << 4     | color.accent,
+        color.accent << 4     | color.accent,
     };
 
     u8 *current = (u8 *)sFontHalfRowLookupTable;
@@ -531,22 +529,14 @@ void GenerateFontHalfRowLookupTable(union TextColor color)
     }
 }
 
-void SaveTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor)
+union TextColor SaveTextColors(void)
 {
-    *bgColor = sLastTextColor.background;
-    *fgColor = sLastTextColor.foreground;
-    *shadowColor = sLastTextColor.shadow;
-    *accentColor = sLastTextColor.accent;
+    return sLastTextColor;
 }
 
-void RestoreTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor)
+void RestoreTextColors(union TextColor color)
 {
-    GenerateFontHalfRowLookupTable((union TextColor) {
-        .background = *bgColor,
-        .foreground = *fgColor,
-        .shadow = *shadowColor,
-        .accent = *accentColor}
-    );
+    GenerateFontHalfRowLookupTable(color);
 }
 
 void DecompressGlyphTile(const void *src_, void *dest_)
@@ -1690,9 +1680,8 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
     int strPos;
     int temp;
     int temp2;
-    u8 colorBackup[4];
 
-    SaveTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2], &colorBackup[3]);
+    union TextColor savedTextColors = SaveTextColors();
 
     union TextColor textColor = {
         .background = TEXT_COLOR_TRANSPARENT,
@@ -1804,7 +1793,7 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
     }
     while (temp != EOS);
 
-    RestoreTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2], &colorBackup[3]);
+    RestoreTextColors(savedTextColors);
     return 1;
 }
 

@@ -17,12 +17,14 @@ SINGLE_BATTLE_TEST("Sandstorm deals 1/16 damage per turn")
    } THEN { EXPECT_EQ(sandstormDamage, opponent->maxHP / 16); }
 }
 
-SINGLE_BATTLE_TEST("Sandstorm multiplies the special defense of Rock-types by 1.5x", s16 damage)
+SINGLE_BATTLE_TEST("Sandstorm multiplies the special defense of Rock-types by 1.5x (Gen4+)", s16 damage)
 {
-    u16 move;
-    PARAMETRIZE { move = MOVE_SANDSTORM; }
-    PARAMETRIZE { move = MOVE_CELEBRATE; }
+    u32 move, config;
+    PARAMETRIZE { move = MOVE_CELEBRATE; config = GEN_3; }
+    PARAMETRIZE { move = MOVE_SANDSTORM; config = GEN_3; }
+    PARAMETRIZE { move = MOVE_SANDSTORM; config = GEN_4; }
     GIVEN {
+        WITH_CONFIG(CONFIG_SANDSTORM_SPDEF_BOOST, config);
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET) ;
         OPPONENT(SPECIES_NOSEPASS);
@@ -32,7 +34,8 @@ SINGLE_BATTLE_TEST("Sandstorm multiplies the special defense of Rock-types by 1.
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[0].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[1].damage);
     }
 }
 
