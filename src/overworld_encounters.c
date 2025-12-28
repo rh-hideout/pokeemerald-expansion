@@ -1340,9 +1340,7 @@ static bool32 OWE_DoesRoamerObjectExist(void)
 
 void OverworldWildEncounter_InitRoamerOutbreakStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template)
 {
-    // Should only occur for Manual or Semi-Manual Overworld Encounters.
-    // Trainer type can be be set on manual encounters to specify a roamer index,
-    // but probably shouldn't unless it can be consistently guarenteed.
+    // See comment in OWE_CreateEnemyPartyMon.
     if (!IsOverworldWildEncounter(objectEvent))
         return;
     
