@@ -11754,6 +11754,41 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent 
 {
     if (!ObjectEventExecSingleMovementAction(objectEvent, sprite))
         return FALSE;
+
+    if (OWE_IsWaitTaskActive())
+    {
+        u16 speciesId = OW_SPECIES(objectEvent);
+        u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+        bool8 collision;
+        u8 movementActionId;
+    
+        SetObjectEventDirection(objectEvent, direction);
+        collision = GetCollisionInDirection(objectEvent, objectEvent->movementDirection);
+        movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].activeSpeed);
+        
+        if ((OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT && OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection)) || collision)
+        {
+            s16 x = objectEvent->currentCoords.x;
+            s16 y = objectEvent->currentCoords.y;
+            MoveCoords(objectEvent->movementDirection, &x, &y);
+            // If colliding with the player object, don't try to walk around it.
+            if (GetObjectObjectCollidesWith(objectEvent, x, y, FALSE) == gPlayerAvatar.objectEventId)
+            {
+                movementActionId = GetFaceDirectionMovementAction(objectEvent->facingDirection);
+            }
+            else
+            {
+                direction = OWE_DirectionToPlayerFromCollision(objectEvent);
+                SetObjectEventDirection(objectEvent, direction);
+                movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].activeSpeed);
+            }
+        }
+        ObjectEventSetSingleMovement(objectEvent, sprite, movementActionId);
+        objectEvent->singleMovementActive = TRUE;
+        sprite->sTypeFuncId = 6;
+        return FALSE;
+    }
+    
     SetMovementDelay(sprite, sMovementDelaysOWE[Random() % ARRAY_COUNT(sMovementDelaysOWE)]);
     sprite->sTypeFuncId = 3;
     return TRUE;
