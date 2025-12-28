@@ -8513,7 +8513,9 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
             dmg = gBattleMons[ctx->battlerAtk].level * ((randDamage * 10) + 50) / 100;
         }
         else
+        {
             dmg = Random() % ((gBattleMons[ctx->battlerAtk].level + (gBattleMons[ctx->battlerAtk].level / 2)) + 1);
+        }
         break;
     case EFFECT_FIXED_HP_DAMAGE:
         dmg = GetMoveFixedHPDamage(ctx->move);
