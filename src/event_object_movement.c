@@ -12200,8 +12200,6 @@ bool8 MovementType_Despawn_OverworldWildEncounter_Step11(struct ObjectEvent *obj
 {
     if (sDespawnTimer == OWE_DESPAWN_FRAMES)
     {
-        u32 animType = OWE_GetSpawnDespawnAnimType(objectEvent->currentMetatileBehavior);
-        MovementAction_OverworldEncounterSpawn(animType, objectEvent);
         RemoveObjectEvent(objectEvent);
         return FALSE;
     }
