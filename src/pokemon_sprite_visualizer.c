@@ -1481,7 +1481,7 @@ static void UpdateSubmenuOneOptionValue(u8 taskId, bool8 increment)
             UpdateMonAnimNames(taskId);
             ResetOffsetSpriteValues(data);
             ResetShadowSettings(data);
-            
+
             UpdateBattlerValue(data);
             ReloadPokemonSprites(data);
             VBlankIntrWait();
