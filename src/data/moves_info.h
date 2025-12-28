@@ -21363,6 +21363,25 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_MalignantChain,
     },
 
+    [MOVE_NIHIL_LIGHT] =
+    {
+        .name = COMPOUND_STRING("Nihil Light"),
+        .description = COMPOUND_STRING(
+            "Strikes through the foe's\n"
+            "stat changes and hits Fairy."),
+        .effect = EFFECT_PLACEHOLDER, //EFFECT_NEUTRAL_EFFECTIVE_ON_ARG
+        .power = 200,
+        .type = TYPE_DRAGON,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .ignoresTargetDefenseEvasionStages = TRUE,
+        //.argument = { .type = TYPE_FAIRY },
+        //.battleAnimScript = gBattleAnimMove_NihilLight,
+    },
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

@@ -9739,7 +9739,7 @@ static bool32 CanBattlerFormChange(u32 battler, enum FormChanges method)
 
 bool32 TryRevertPartyMonFormChange(u32 partyIndex)
 {
-     bool32 changedForm = FALSE;
+    bool32 changedForm = FALSE;
 
     // Appeared in battle and didn't faint
     if (gBattleStruct->partyState[B_SIDE_PLAYER][partyIndex].sentOut && GetMonData(&gPlayerParty[partyIndex], MON_DATA_HP, NULL) != 0)
@@ -9774,7 +9774,7 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
         if (GetBattlerPartyState(battler)->changedSpecies == SPECIES_NONE)
             GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
 
-        TryToSetBattleFormChangeMoves(&party[monId], method);
+        TryToSetBattleFormChangeMoves(battler, &party[monId], method);
         SetMonData(&party[monId], MON_DATA_SPECIES, &targetSpecies);
         gBattleMons[battler].species = targetSpecies;
         RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
@@ -9805,7 +9805,7 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
         {
             enum Ability abilityForm = gBattleMons[battler].ability;
             // Reverts the original species
-            TryToSetBattleFormChangeMoves(&party[monId], method);
+            TryToSetBattleFormChangeMoves(battler, &party[monId], method);
             u32 changedSpecies = GetBattlerPartyState(battler)->changedSpecies;
             SetMonData(&party[monId], MON_DATA_SPECIES, &changedSpecies);
             RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);

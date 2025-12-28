@@ -619,7 +619,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = MOVE_POUND; j < MOVES_COUNT_GEN1; j++)
     {
-        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j) && GetMoveEffect(j) != EFFECT_PLACEHOLDER)
             PARAMETRIZE { move = j; }
     }
     GIVEN {
@@ -707,7 +707,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = MOVE_SKETCH; j < MOVES_COUNT_GEN2; j++)
     {
-        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j) && GetMoveEffect(j) != EFFECT_PLACEHOLDER)
             PARAMETRIZE { move = j; }
     }
     GIVEN {
@@ -795,7 +795,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = MOVE_FAKE_OUT; j < MOVES_COUNT_GEN3; j++)
     {
-        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j) && GetMoveEffect(j) != EFFECT_PLACEHOLDER)
             PARAMETRIZE { move = j; }
     }
     GIVEN {
@@ -883,7 +883,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = MOVE_ROOST; j < MOVES_COUNT_GEN4; j++)
     {
-        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j) && GetMoveEffect(j) != EFFECT_PLACEHOLDER)
             PARAMETRIZE { move = j; }
     }
     GIVEN {
@@ -971,7 +971,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = MOVE_HONE_CLAWS + 12; j < MOVES_COUNT_GEN5; j++)
     {
-        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j) && GetMoveEffect(j) != EFFECT_PLACEHOLDER)
             PARAMETRIZE { move = j; }
     }
     GIVEN {
@@ -1059,7 +1059,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = MOVE_FLYING_PRESS; j < MOVES_COUNT_GEN6; j++)
     {
-        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j) && GetMoveEffect(j) != EFFECT_PLACEHOLDER)
             PARAMETRIZE { move = j; }
     }
     GIVEN {
@@ -1147,7 +1147,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = MOVE_SHORE_UP; j < MOVES_COUNT_GEN7; j++)
     {
-        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j) && GetMoveEffect(j) != EFFECT_PLACEHOLDER)
             PARAMETRIZE { move = j; }
     }
     GIVEN {
@@ -1235,7 +1235,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = MOVE_DYNAMAX_CANNON; j < MOVES_COUNT_GEN8; j++)
     {
-        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j) && GetMoveEffect(j) != EFFECT_PLACEHOLDER)
             PARAMETRIZE { move = j; }
     }
     GIVEN {
@@ -1324,7 +1324,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
     u32 move = 0;
     for (u32 j = MOVE_TERA_BLAST; j < MOVES_COUNT; j++)
     {
-        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j) && GetMoveEffect(j) != EFFECT_PLACEHOLDER)
             PARAMETRIZE { move = j; }
     }
     GIVEN {
