@@ -551,6 +551,13 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     {
         *roamerIndex = gEncounteredRoamerIndex;
     }
+    else if (wildArea == WILD_AREA_WATER && CheckFeebasAtCoords(x, y))
+    {
+        *level = ChooseWildMonLevel(&sWildFeebas, 0, WILD_AREA_FISHING);
+
+        *speciesId = sWildFeebas.species;
+        CreateWildMon(*speciesId, *level);
+    }
     else if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE))
     {
         ZeroEnemyPartyMons();

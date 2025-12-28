@@ -65,7 +65,7 @@ EWRAM_DATA u8 gChainFishingDexNavStreak = 0;
 
 #include "data/wild_encounters.h"
 
-static const struct WildPokemon sWildFeebas = {20, 25, SPECIES_FEEBAS};
+const struct WildPokemon sWildFeebas = {20, 25, SPECIES_FEEBAS};
 
 static const u16 sRoute119WaterTileData[] =
 {
@@ -111,18 +111,16 @@ static u16 GetFeebasFishingSpotId(s16 targetX, s16 targetY, u8 section)
     return spotId + 1;
 }
 
-static bool8 CheckFeebas(void)
+bool8 CheckFeebasAtCoords(s16 x, s16 y)
 {
     u8 i;
     u16 feebasSpots[NUM_FEEBAS_SPOTS];
-    s16 x, y;
     u8 route119Section = 0;
     u16 spotId;
 
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ROUTE119)
      && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ROUTE119))
     {
-        GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
         x -= MAP_OFFSET;
         y -= MAP_OFFSET;
 
@@ -966,10 +964,12 @@ void FishingWildEncounter(u8 rod)
 {
     u16 species;
     u32 headerId;
+    s16 x, y;
     enum TimeOfDay timeOfDay;
 
     gIsFishingEncounter = TRUE;
-    if (CheckFeebas() == TRUE)
+    GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
+    if (CheckFeebasAtCoords(x, y) == TRUE)
     {
         u8 level = ChooseWildMonLevel(&sWildFeebas, 0, WILD_AREA_FISHING);
 
