@@ -110,7 +110,9 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive)
             if (species != SPECIES_NONE
                     && species != SPECIES_EGG
                     && (!onlyAlive || GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_HP, NULL)))
+            {
                 count++;
+            }
         }
     }
     else
