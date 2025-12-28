@@ -47,6 +47,8 @@ static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId);
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 static bool32 OWE_DoesRoamerExistOnMap(void);
+static bool32 OWE_CheckRestrictedMovementMetatile(struct ObjectEvent *objectEvent, u32 direction);
+static bool32 OWE_CheckRestrictedMovementMap(struct ObjectEvent *objectEvent, u32 direction);
 
 static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
 {
@@ -307,7 +309,6 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     s16 x, y;
     u8 closeDistance;
     bool32 isEncounterTile = FALSE;
-    const struct MapLayout *layout;
 
     // Spawn further away when surfing
     if (OWE_ShouldSpawnWaterMons())
@@ -352,9 +353,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
     elevation = MapGridGetElevationAt(x, y);
 
-    layout = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum)->mapLayout;
-    if ((x - MAP_OFFSET) < 0 || (x - MAP_OFFSET) >= layout->width ||
-        (y - MAP_OFFSET) < 0 || (y - MAP_OFFSET) >= layout->height)
+    if (!AreCoordsInsidePlayerMap(x, y))
         return FALSE;
 
     // 0 is change of elevation, 15 is multiple elevation e.g. bridges
@@ -852,26 +851,8 @@ void TryRemoveOverworldWildEncounter(u32 localId)
 
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction)
 {
-    s16 xCurrent = objectEvent->currentCoords.x;
-    s16 yCurrent = objectEvent->currentCoords.y;
-    s16 xNew = xCurrent + gDirectionToVectors[direction].x;
-    s16 yNew = yCurrent + gDirectionToVectors[direction].y;
-    u32 metatileBehaviourCurrent = MapGridGetMetatileBehaviorAt(xCurrent, yCurrent);
-    u32 metatileBehaviourNew = MapGridGetMetatileBehaviorAt(xNew, yNew);
-
-    if (MetatileBehavior_IsLandWildEncounter(metatileBehaviourCurrent)
-        && MetatileBehavior_IsLandWildEncounter(metatileBehaviourNew))
-        return FALSE;
-
-    if (MetatileBehavior_IsWaterWildEncounter(metatileBehaviourCurrent)
-        && MetatileBehavior_IsWaterWildEncounter(metatileBehaviourNew))
-        return FALSE;
-
-    if (MetatileBehavior_IsIndoorEncounter(metatileBehaviourCurrent)
-        && MetatileBehavior_IsIndoorEncounter(metatileBehaviourNew))
-        return FALSE;
-
-    return TRUE;
+    return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictedMovementMetatile(objectEvent, direction))
+        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictedMovementMap(objectEvent, direction)));
 }
 
 void DespawnOldestOWE_Pal(void)
@@ -1157,6 +1138,45 @@ void OverworldWildEncounter_InitRoamerStatus(struct ObjectEvent *objectEvent, co
         return;
     
     objectEvent->sRoamerStatus = (template->trainerType >> 8) & 0xFF;
+}
+
+static bool32 OWE_CheckRestrictedMovementMetatile(struct ObjectEvent *objectEvent, u32 direction)
+{
+    s16 xCurrent = objectEvent->currentCoords.x;
+    s16 yCurrent = objectEvent->currentCoords.y;
+    s16 xNew = xCurrent + gDirectionToVectors[direction].x;
+    s16 yNew = yCurrent + gDirectionToVectors[direction].y;
+    u32 metatileBehaviourCurrent = MapGridGetMetatileBehaviorAt(xCurrent, yCurrent);
+    u32 metatileBehaviourNew = MapGridGetMetatileBehaviorAt(xNew, yNew);
+
+    if (MetatileBehavior_IsLandWildEncounter(metatileBehaviourCurrent)
+        && MetatileBehavior_IsLandWildEncounter(metatileBehaviourNew))
+        return FALSE;
+
+    if (MetatileBehavior_IsWaterWildEncounter(metatileBehaviourCurrent)
+        && MetatileBehavior_IsWaterWildEncounter(metatileBehaviourNew))
+        return FALSE;
+
+    if (MetatileBehavior_IsIndoorEncounter(metatileBehaviourCurrent)
+        && MetatileBehavior_IsIndoorEncounter(metatileBehaviourNew))
+        return FALSE;
+
+    return TRUE;
+}
+
+static bool32 OWE_CheckRestrictedMovementMap(struct ObjectEvent *objectEvent, u32 direction)
+{
+    s16 xCurrent = objectEvent->currentCoords.x;
+    s16 yCurrent = objectEvent->currentCoords.y;
+    s16 xNew = xCurrent + gDirectionToVectors[direction].x;
+    s16 yNew = yCurrent + gDirectionToVectors[direction].y;
+    u32 mapGroup = objectEvent->mapGroup;
+    u32 mapNum = objectEvent->mapNum;
+
+    if (mapGroup == gSaveBlock1Ptr->location.mapGroup && mapNum == gSaveBlock1Ptr->location.mapNum)
+        return AreCoordsInsidePlayerMap(xNew, yNew);
+    else
+        return !AreCoordsInsidePlayerMap(xNew, yNew);
 }
 
 #undef tLocalId

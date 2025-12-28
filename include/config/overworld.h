@@ -74,7 +74,8 @@
 // Overworld Encounters
 #define OW_WILD_ENCOUNTERS_RANDOM               TRUE    // If TRUE, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
 #define OW_WILD_ENCOUNTERS_OVERWORLD            FALSE   // If TRUE, OW Pokémon can spawn as overworld wild encounters on the current map. Requires OW_POKEMON_OBJECT_EVENTS.
-#define OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT  TRUE    // If TRUE, OW Pokémon spawned as overworld wild encounters will stay within tiles with the same metatile behavior as the one it spawned on.
+#define OW_WILD_ENCOUNTERS_RESTRICT_METATILE    TRUE    // If TRUE, OW Pokémon spawned as overworld wild encounters will stay within tiles with the same metatile behavior as the one it spawned on.
+#define OW_WILD_ENCOUNTERS_RESTRICT_MAP         TRUE    // If TRUE, OW Pokémon spawned as overworld wild encounters will stay within their current map bounds.
 #define OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT    FALSE   // If TRUE, the oldest OW wild encounter objects will despawn after a short time and be replaced with a new spawn if possible.
 #define OW_WILD_ENCOUNTERS_FLEE_DESPAWN         TRUE    // If TRUE, a fleeing OW Pokémon will despawn if it is unable to take a step for a short time.
 #define OW_ENCOUNTER_MOVEMENT_RANGE_X           8       // The horizontal movement range for OW encounter Pokémon.
