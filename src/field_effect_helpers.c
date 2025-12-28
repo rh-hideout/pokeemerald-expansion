@@ -1530,6 +1530,12 @@ u32 FldEff_OWE_SpawnAnim(void)
         yOffset = 8;
         break;
 
+    case OWE_SPAWN_ANIM_LONG_GRASS:
+        visual = FLDEFFOBJ_JUMP_LONG_GRASS;
+        xOffset = 0;
+        yOffset = 0;
+        break;
+
     case OWE_SPAWN_ANIM_WATER:
         visual = FLDEFFOBJ_JUMP_BIG_SPLASH;
         xOffset = 0;
