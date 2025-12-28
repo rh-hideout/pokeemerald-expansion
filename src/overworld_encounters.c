@@ -2,6 +2,8 @@
 #include "overworld_encounters.h"
 #include "battle_setup.h"
 #include "battle_main.h"
+#include "battle_pike.h"
+#include "battle_pyramid.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "fieldmap.h"
@@ -18,11 +20,13 @@
 #include "wild_encounter.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
+#include "constants/layouts.h"
 #include "constants/map_types.h"
 #include "constants/trainer_types.h"
 #include "constants/songs.h"
 #include "constants/vars.h"
 #include "constants/wild_encounter.h"
+// #include "data/wild_encounters.h"
 
 #define sOverworldEncounterLevel trainerRange_berryTreeId
 #define sAge                     playerCopyableMovement
@@ -386,6 +390,7 @@ void CreateOverworldWildEncounter(void)
     u32 localId = gSpecialVar_LastTalked;
     u32 objEventId = GetObjectEventIdByLocalId(localId);
     u32 indexRoamerOutbreak;
+    u32 headerId = GetCurrentMapWildMonHeaderId();
     struct ObjectEvent *object = &gObjectEvents[objEventId];
 
     if (objEventId >= OBJECT_EVENTS_COUNT)
@@ -424,6 +429,23 @@ void CreateOverworldWildEncounter(void)
         isFemale
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
+
+    if (headerId == HEADER_NONE)
+    {
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
+        {
+            TryGenerateBattlePikeWildMon(FALSE);
+            BattleSetup_StartBattlePikeWildBattle();
+            return;
+        }
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+        {
+            GenerateBattlePyramidWildMon();
+            BattleSetup_StartWildBattle();
+            return;
+        }
+    }
+
     if (indexRoamerOutbreak == OWE_MASS_OUTBREAK_INDEX && gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId
      && gSaveBlock1Ptr->location.mapNum == gSaveBlock1Ptr->outbreakLocationMapNum
      && gSaveBlock1Ptr->location.mapGroup == gSaveBlock1Ptr->outbreakLocationMapGroup)
@@ -560,6 +582,42 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     u32 headerId = GetCurrentMapWildMonHeaderId();
     u32 metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
 
+    if (headerId == HEADER_NONE)
+    {
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
+        {
+            headerId = GetBattlePikeWildMonHeaderId();
+            timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+            if (TryGenerateWildMon(gBattlePikeWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
+            {
+                ZeroEnemyPartyMons();
+                *speciesId = SPECIES_NONE;
+                return FALSE;
+            }
+            
+            TryGenerateBattlePikeWildMon(FALSE);
+            return TRUE;
+        }
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+        {
+            headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+            timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+            if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
+            {
+                ZeroEnemyPartyMons();
+                *speciesId = SPECIES_NONE;
+                return FALSE;
+            }
+
+            GenerateBattlePyramidWildMon();
+            return TRUE;
+        }
+
+        ZeroEnemyPartyMons();
+        *speciesId = SPECIES_NONE;
+        return FALSE;
+    }
+
     if (MetatileBehavior_IsWaterWildEncounter(metatileBehavior))
     {
         wildArea = WILD_AREA_WATER;
@@ -694,7 +752,21 @@ static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons)
     enum TimeOfDay timeOfDay;
 
     if (headerId == HEADER_NONE)
+    {
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
+        {
+            headerId = GetBattlePikeWildMonHeaderId();
+            timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+            return gBattlePikeWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo != NULL;
+        }
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+        {
+            headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+            timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+            return gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo != NULL;
+        }
         return FALSE;
+    }
 
     if (shouldSpawnWaterMons)
     {
