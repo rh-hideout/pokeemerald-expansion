@@ -1241,8 +1241,10 @@ enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavio
 
     if (MetatileBehavior_IsPokeGrass(metatileBehavior) || MetatileBehavior_IsAshGrass(metatileBehavior))
         return OWE_SPAWN_ANIM_GRASS;
-    else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior))
+    else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior) && gMapHeader.mapType != MAP_TYPE_UNDERWATER)
         return OWE_SPAWN_ANIM_WATER;
+    else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior) && gMapHeader.mapType == MAP_TYPE_UNDERWATER)
+        return OWE_SPAWN_ANIM_UNDERWATER;
     else
         return OWE_SPAWN_ANIM_CAVE;
 }

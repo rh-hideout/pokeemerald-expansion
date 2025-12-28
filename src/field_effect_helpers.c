@@ -1536,6 +1536,12 @@ u32 FldEff_OWE_SpawnAnim(void)
         yOffset = 0;
         break;
 
+    case OWE_SPAWN_ANIM_UNDERWATER:
+        visual = FLDEFFOBJ_BUBBLES;
+        xOffset = 0;
+        yOffset = 0;
+        break;
+
     case OWE_SPAWN_ANIM_CAVE:
         visual = FLDEFFOBJ_GROUND_IMPACT_DUST;
         xOffset = 0;
