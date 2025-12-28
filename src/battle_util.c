@@ -5876,6 +5876,7 @@ bool32 IsBattlerTerrainAffected(u32 battler, enum Ability ability, enum HoldEffe
 u32 GetHighestStatId(u32 battler)
 {
     u32 highestId = STAT_ATK;
+    bool32 wonderRoom = (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) != 0;
     u32 highestStat = gBattleMons[battler].attack;
 
     for (u32 stat = STAT_DEF; stat < NUM_STATS; stat++)
@@ -5883,10 +5884,23 @@ u32 GetHighestStatId(u32 battler)
         if (stat == STAT_SPEED)
             continue;
 
-        u16 *statVal = &gBattleMons[battler].attack + (stat - 1);
-        if (*statVal > highestStat)
+        u16 statVal;
+        switch (stat)
         {
-            highestStat = *statVal;
+        case STAT_DEF:
+            statVal = wonderRoom ? gBattleMons[battler].spDefense : gBattleMons[battler].defense;
+            break;
+        case STAT_SPDEF:
+            statVal = wonderRoom ? gBattleMons[battler].defense : gBattleMons[battler].spDefense;
+            break;
+        default:
+            statVal = *(&gBattleMons[battler].attack + (stat - 1));
+            break;
+        }
+
+        if (statVal > highestStat)
+        {
+            highestStat = statVal;
             highestId = stat;
         }
     }

@@ -90,11 +90,144 @@ SINGLE_BATTLE_TEST("Beast Boost prioritizes stats in the case of a tie in the fo
     }
 }
 
-TO_DO_BATTLE_TEST("Beast Boost considers Power Split");
-TO_DO_BATTLE_TEST("Beast Boost considers Guard Split");
-TO_DO_BATTLE_TEST("Beast Boost considers Power Trick");
-TO_DO_BATTLE_TEST("Beast Boost considers Wonder Room");
-TO_DO_BATTLE_TEST("Beast Boost considers Speed Swap");
-TO_DO_BATTLE_TEST("Beast Boost doesn't consider stat stages");
-TO_DO_BATTLE_TEST("Beast Boost doesn't consider held items");
-TO_DO_BATTLE_TEST("Beast Boost doesn't consider status condition reductions");
+SINGLE_BATTLE_TEST("Beast Boost considers Power Split")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_POWER_SPLIT) == EFFECT_POWER_SPLIT);
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(200); Defense(30); SpAttack(50); SpDefense(30); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Attack(10); SpAttack(250); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_POWER_SPLIT); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POWER_SPLIT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        MESSAGE("Nihilego's Sp. Atk rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beast Boost considers Guard Split")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GUARD_SPLIT) == EFFECT_GUARD_SPLIT);
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(80); Defense(20); SpAttack(70); SpDefense(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Defense(200); SpDefense(30); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_GUARD_SPLIT); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GUARD_SPLIT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        MESSAGE("Nihilego's Defense rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beast Boost considers Power Trick")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_POWER_TRICK) == EFFECT_POWER_TRICK);
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(40); Defense(200); SpAttack(60); SpDefense(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_POWER_TRICK); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POWER_TRICK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        MESSAGE("Nihilego's Attack rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beast Boost considers Wonder Room")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
+        ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(100); Defense(50); SpAttack(70); SpDefense(200); Speed(120); Moves(MOVE_SPLASH, MOVE_EXTREME_SPEED); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(200); Moves(MOVE_WONDER_ROOM, MOVE_SPLASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(30); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WONDER_ROOM); MOVE(player, MOVE_SPLASH); }
+        TURN { MOVE(player, MOVE_EXTREME_SPEED); MOVE(opponent, MOVE_SPLASH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WONDER_ROOM, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EXTREME_SPEED, player);
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        MESSAGE("Nihilego's Defense rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beast Boost considers Speed Swap")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPEED_SWAP) == EFFECT_SPEED_SWAP);
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(60); Defense(60); SpAttack(70); SpDefense(60); Speed(30); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(200); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SPEED_SWAP); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPEED_SWAP, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        MESSAGE("Nihilego's Speed rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beast Boost doesn't consider stat stages")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(100); Defense(60); SpAttack(150); SpDefense(60); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        MESSAGE("Nihilego's Sp. Atk rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Item(ITEM_CHOICE_BAND); Attack(120); Defense(60); SpAttack(150); SpDefense(60); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        MESSAGE("Nihilego's Sp. Atk rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beast Boost doesn't consider status condition reductions")
+{
+    GIVEN {
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Status1(STATUS1_BURN); Attack(150); Defense(60); SpAttack(100); SpDefense(60); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        MESSAGE("Nihilego's Attack rose!");
+    }
+}
