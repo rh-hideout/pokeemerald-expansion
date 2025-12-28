@@ -46,7 +46,7 @@ static void SortOWEMonAges(void);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
-static bool32 OWE_DoesRoamerExistOnMap(void);
+static bool32 OWE_DoesRoamerObjectExist(void);
 static bool32 OWE_CheckRestrictedMovementMetatile(struct ObjectEvent *objectEvent, u32 direction);
 static bool32 OWE_CheckRestrictedMovementMap(struct ObjectEvent *objectEvent, u32 direction);
 static u32 GetNumActiveOverworldEncounters(void);
@@ -559,7 +559,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     {
         SetUpMassOutbreakEncounter(0);
     }
-    else if (TryStartRoamerEncounter() && !OWE_DoesRoamerExistOnMap())
+    else if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist())
     {
         *indexRoamerOutbreak = gEncounteredRoamerIndex;
     }
@@ -1153,7 +1153,7 @@ static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
 #undef MAP_METATILE_VIEW_X
 #undef MAP_METATILE_VIEW_Y
 
-static bool32 OWE_DoesRoamerExistOnMap(void)
+static bool32 OWE_DoesRoamerObjectExist(void)
 {
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
