@@ -499,7 +499,7 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
 
     objectEvent->sRoamerStatus = 0;
     
-    if (gMain.callback2 != CB2_InitBattle)
+    if (gMain.callback2 == CB2_Overworld)
         OWE_DoSpawnDespawnAnim(objectEvent, FALSE);
 }
 
