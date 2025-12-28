@@ -11754,7 +11754,7 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent 
     if (!ObjectEventExecSingleMovementAction(objectEvent, sprite))
         return FALSE;
 
-    if (OWE_IsWaitTaskActive())
+    if (objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER)
     {
         u16 speciesId = OW_SPECIES(objectEvent);
         u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
@@ -11965,7 +11965,7 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *
 
     u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
 
-    if (!OWE_IsWaitTaskActive())
+    if (!(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER))
     {
         direction = GetOppositeDirection(direction);
     }
@@ -11988,7 +11988,7 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
         struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
 
-        if (!OWE_IsWaitTaskActive() && !(objectEvent->currentCoords.x == player->currentCoords.x || objectEvent->currentCoords.y == player->currentCoords.y))
+        if (!(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER) && !(objectEvent->currentCoords.x == player->currentCoords.x || objectEvent->currentCoords.y == player->currentCoords.y))
         {
             newDirection = GetOppositeDirection(newDirection);
         }
@@ -12097,7 +12097,7 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
     bool8 collision;
     u8 movementActionId;
 
-    if (distance <= 1 && !OWE_IsWaitTaskActive())
+    if (distance <= 1 && !(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER))
     {
         SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
 
@@ -12108,7 +12108,7 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
             struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
             u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
 
-            if (!OWE_IsWaitTaskActive() && !(objectEvent->currentCoords.x == player->currentCoords.x || objectEvent->currentCoords.y == player->currentCoords.y))
+            if (!(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER) && !(objectEvent->currentCoords.x == player->currentCoords.x || objectEvent->currentCoords.y == player->currentCoords.y))
             {
                 newDirection = GetOppositeDirection(newDirection);
             }
@@ -12121,7 +12121,7 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
             }
         }
     }
-    else if (distance == OWE_APPROACH_DISTANCE && !equalDistances && !OWE_IsWaitTaskActive())
+    else if (distance == OWE_APPROACH_DISTANCE && !equalDistances && !(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER))
     {
         if (sJumpTimer <= 0)
         {

@@ -38,6 +38,8 @@
 
 #define INVALID_SPAWN_SLOT 0xFF
 
+#define OWE_FLAG_START_ENCOUNTER    0x8000
+
 enum OverworldEncounterSpawnAnim
 {
     OWE_SPAWN_ANIM_GRASS,
@@ -121,7 +123,6 @@ u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
-bool32 OWE_IsWaitTaskActive(void);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
 void OverworldWildEncounter_InitRoamerOutbreakStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template);
 void OverworldWildEncounter_FreezeAllObjects(void);

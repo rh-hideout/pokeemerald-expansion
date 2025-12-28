@@ -411,7 +411,7 @@ void CreateOverworldWildEncounter(void)
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
     bool32 isFemale = OW_FEMALE(object) ? TRUE : FALSE;
-    u32 level = object->sOverworldEncounterLevel;
+    u32 level = (object->sOverworldEncounterLevel &= ~OWE_FLAG_START_ENCOUNTER);
 
     if (level > MAX_LEVEL)
         level = MAX_LEVEL;
@@ -1007,6 +1007,14 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
     return templateOWE;
 }
 
+static bool32 OWE_IsWaitTaskActive(void)
+{
+    if (FindTaskIdByFunc(Task_OWE_WaitMovements) != TASK_NONE)
+        return TRUE;
+
+    return FALSE;
+}
+
 #define tLocalId           gTasks[taskId].data[0]
 
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
@@ -1026,6 +1034,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         LockPlayerFieldControls();
         // Wait for both the player and the mon to finish their current movements.
         u8 taskId = CreateTask(Task_OWE_WaitMovements, 0);
+        wildMon->trainerRange_berryTreeId |= OWE_FLAG_START_ENCOUNTER;
         tLocalId = wildMon->localId;
     }
 }
@@ -1235,14 +1244,6 @@ void Task_OWE_WaitMovements(u8 taskId)
             DestroyTask(taskId);
         }
     }
-}
-
-bool32 OWE_IsWaitTaskActive(void)
-{
-    if (FindTaskIdByFunc(Task_OWE_WaitMovements) != TASK_NONE)
-        return TRUE;
-
-    return FALSE;
 }
 
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior)
