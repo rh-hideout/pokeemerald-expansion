@@ -355,7 +355,9 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType
     if (((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
      || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
      || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
+    {
         MarkTrainerSlideAsPlayed(BATTLE_PARTNER(battler), slideId);
+    }
     
     MarkTrainerSlideAsPlayed(battler, slideId);
     SetTrainerSlideMessage(difficulty,trainerId,slideId);
