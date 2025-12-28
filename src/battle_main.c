@@ -3849,7 +3849,9 @@ static void TryDoEventsBeforeFirstTurn(void)
             if (!((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA) 
             || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
             || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
+            {
                 BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd2);
+            }
         }
         gBattleStruct->eventState.beforeFristTurn++;
         break;
