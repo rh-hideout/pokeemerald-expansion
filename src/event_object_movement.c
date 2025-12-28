@@ -1484,6 +1484,7 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->mapNum = mapNum;
     objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
     objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
+    OverworldWildEncounter_InitRoamerStatus(objectEvent, template);
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
     if (sMovementTypeHasRange[objectEvent->movementType])
     {
@@ -11924,8 +11925,6 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *
 {
     if (OW_WILD_ENCOUNTERS_FLEE_DESPAWN && sCollisionTimer >= OWE_FLEE_COLLISION_TIME)
     {
-        u32 animType = OWE_GetDespawnAnimType(objectEvent->currentMetatileBehavior);
-        MovementAction_OverworldEncounterSpawn(animType, objectEvent);
         RemoveObjectEvent(objectEvent);
         return FALSE;
     }
@@ -12166,7 +12165,7 @@ bool8 MovementType_Despawn_OverworldWildEncounter_Step11(struct ObjectEvent *obj
 {
     if (sDespawnTimer == OWE_DESPAWN_FRAMES)
     {
-        u32 animType = OWE_GetDespawnAnimType(objectEvent->currentMetatileBehavior);
+        u32 animType = OWE_GetSpawnDespawnAnimType(objectEvent->currentMetatileBehavior);
         MovementAction_OverworldEncounterSpawn(animType, objectEvent);
         RemoveObjectEvent(objectEvent);
         return FALSE;

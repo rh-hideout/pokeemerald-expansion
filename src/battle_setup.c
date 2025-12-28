@@ -253,12 +253,12 @@ static void Task_BattleStart(u8 taskId)
     case 1:
         if (IsBattleTransitionDone() == TRUE)
         {
-            TryRemoveOverworldWildEncounter(gSpecialVar_LastTalked);
             PrepareForFollowerNPCBattle();
             CleanupOverworldWindowsAndTilemaps();
             SetMainCallback2(CB2_InitBattle);
             RestartWildEncounterImmunitySteps();
             ClearPoisonStepCounter();
+            TryRemoveOverworldWildEncounter(gSpecialVar_LastTalked);
             DestroyTask(taskId);
         }
         break;

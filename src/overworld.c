@@ -954,7 +954,7 @@ static void LoadMapFromWarp(bool32 a1)
         UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
         InitSecretBaseAppearance(TRUE);
     }
-    ClearOverworldEncounterData();
+    OverworldWildEncounter_SetMinimumSpawnTimer();
 }
 
 void ResetInitialPlayerAvatarState(void)
@@ -1331,6 +1331,9 @@ void Overworld_FadeOutMapMusic(void)
 
 static void PlayAmbientCry(void)
 {
+    if (!OW_VANILLA_AMBIENT_CRIES)
+        return;
+    
     s16 x, y;
     s8 pan;
     s8 volume;

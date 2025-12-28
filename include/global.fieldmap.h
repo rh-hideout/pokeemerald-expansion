@@ -243,7 +243,7 @@ struct ObjectEvent
     /*0x1F*/ u8 previousMetatileBehavior;
     /*0x20*/ u8 previousMovementDirection:4;
              u8 directionOverwrite:4;
-    /*0x21*/ u8 directionSequenceIndex;
+    /*0x21*/ u8 directionSequenceIndex; // Also stores roamer status for Overworld Encounters.
     /*0x22*/ u8 playerCopyableMovement; // COPY_MOVE_*   Also stores age for Overworld Encounters.
     /*0x23*/ u8 spriteId;
     /*size = 0x24*/

@@ -102,14 +102,14 @@ enum OWESpeciesBehaviors
 
 extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
-void LoadOverworldEncounterData(void);
+void OWE_ResetSpawnCounterPlayAmbientCry(void);
 void UpdateOverworldEncounters(void);
 u32 GetOldestSlot(void);
 void CreateOverworldWildEncounter(void);
 void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
-u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
-void ClearOverworldEncounterData(void);
+u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
+void OverworldWildEncounter_SetMinimumSpawnTimer(void);
 u8 CountActiveOverworldEncounters(void);
 void RemoveAllOverworldEncounterObjects(void);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
@@ -120,7 +120,7 @@ u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
 u32 RemoveOldestOverworldEncounter(void);
-void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent);
+void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn);
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
@@ -134,6 +134,7 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
 bool32 OWE_IsWaitTaskActive(void);
-u32 OWE_GetDespawnAnimType(u32 metatileBehavior);
+enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
+void OverworldWildEncounter_InitRoamerStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
