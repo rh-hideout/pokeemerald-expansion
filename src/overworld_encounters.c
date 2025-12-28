@@ -51,6 +51,7 @@ static bool32 OWE_CheckRestrictMovementMetatile(struct ObjectEvent *objectEvent,
 static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, u32 direction);
 static u32 GetNumActiveOverworldEncounters(void);
 static u32 GetNumActiveGeneratedOverworldEncounters(void);
+static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -530,13 +531,36 @@ void OverworldWildEncounter_SetMinimumSpawnTimer(void)
 
 static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
 {
+    u32 personality;
+
+    if (!OWE_CreateEnemyPartyMon(speciesId, level, indexRoamerOutbreak, x, y))
+        return;
+ 
+    *speciesId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+    *level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+    personality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);
+
+    if (*speciesId == SPECIES_UNOWN)
+        *speciesId = GetUnownSpeciesId(personality);
+
+    *isShiny = ComputePlayerShinyOdds(personality);
+    if (GetGenderFromSpeciesAndPersonality(*speciesId, personality) == MON_FEMALE)
+        *isFemale = TRUE;
+    else
+        *isFemale = FALSE;
+
+    ZeroEnemyPartyMons();
+}
+
+static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
+{
     const struct WildPokemonInfo *wildMonInfo;
     enum WildPokemonArea wildArea;
     enum TimeOfDay timeOfDay;
-    u32 personality;
     u32 headerId = GetCurrentMapWildMonHeaderId();
+    u32 metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
 
-    if (MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y)))
+    if (MetatileBehavior_IsWaterWildEncounter(metatileBehavior))
     {
         wildArea = WILD_AREA_WATER;
         timeOfDay = GetTimeOfDayForEncounters(headerId, wildArea);
@@ -548,6 +572,26 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
         timeOfDay = GetTimeOfDayForEncounters(headerId, wildArea);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
     }
+
+    /*
+    These functions perform checks of various encounter types in the following order:
+        1. Manual/Semi-Manual OWE Defined Roamer Encounter
+        2. Manual/Semi-Manual OWE Defined Mass Outbreak Encounter
+        3. Attempted Generated Roamer Encounter
+        4. Attempted Generated Feebas encounter
+        5. Attempted Generated Mass Outbreak Encounter
+        6. Attempted Generated Standard Wild Encounter generation
+        Note: While a player cannot be stopped from trying to trigger checks 1 and 2, it is not recommended.
+              This is due to the fact that it requires careful tracking of the Roamer/Mass Outbreak in the save.
+              Regardless of this, 'functionality' is provided mostly to prevent breakages if the player does so,
+              accidentally.
+    
+    The structure of this statement ensures that only one of these encounter types can succeed per call,
+    with the resultant wild mon being created in gEnemyParty[0].
+    If none of these checks succeed, speciesId is set to SPECIES_NONE and FALSE is returned.
+    */
+
+    // REGARDING ABOVE: A sanitisation check to clean the top 8 bits of trainerType when it is read from templates would prevent it, but remove 'functionality'.
 
     if (*indexRoamerOutbreak < OWE_NON_ROAMER_OUTBREAK && IsRoamerAt(*indexRoamerOutbreak, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
@@ -563,13 +607,13 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     {
         *indexRoamerOutbreak = gEncounteredRoamerIndex;
     }
-    else if (OW_WILD_ENCOUNTERS_FEEBAS && wildArea == WILD_AREA_WATER && CheckFeebasAtCoords(x, y))
+    else if (OW_WILD_ENCOUNTERS_FEEBAS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
     {
         *level = ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING);
         *speciesId = gWildFeebas.species;
         CreateWildMon(*speciesId, *level);
     }
-    else if (DoMassOutbreakEncounterTest())
+    else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
     {
         SetUpMassOutbreakEncounter(WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE);
         *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
@@ -578,25 +622,10 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     {
         ZeroEnemyPartyMons();
         *speciesId = SPECIES_NONE;
-        return;
+        return FALSE;
     }
 
-    // gEnemyParty[1] will contain a generated wild mon if a roaming encounter was generated or specified manually.
-    // If not it will be contained in gEnemyParty[0]. 
-    *speciesId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
-    *level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
-    personality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);
-
-    if (*speciesId == SPECIES_UNOWN)
-        *speciesId = GetUnownSpeciesId(personality);
-
-    *isShiny = ComputePlayerShinyOdds(personality);
-    if (GetGenderFromSpeciesAndPersonality(*speciesId, personality) == MON_FEMALE)
-        *isFemale = TRUE;
-    else
-        *isFemale = FALSE;
-
-    ZeroEnemyPartyMons();
+    return TRUE;
 }
 
 static bool8 IsSafeToSpawnObjectEvents(void)
