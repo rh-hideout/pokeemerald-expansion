@@ -6853,8 +6853,8 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
-        .iconPic = gItemIcon_QuestionMark, // gItemIcon_Darkranite,
-        .iconPalette = gItemIconPalette_QuestionMark, // gItemIconPalette_Darkranite,
+        .iconPic = gItemIcon_QuestionMark, // gItemIcon_Heatranite,
+        .iconPalette = gItemIconPalette_QuestionMark, // gItemIconPalette_Heatranite,
     },
 
     [ITEM_DARKRANITE] =
