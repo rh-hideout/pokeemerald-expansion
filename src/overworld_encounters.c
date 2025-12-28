@@ -47,8 +47,8 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 static bool32 OWE_DoesRoamerObjectExist(void);
-static bool32 OWE_CheckRestrictedMovementMetatile(struct ObjectEvent *objectEvent, u32 direction);
-static bool32 OWE_CheckRestrictedMovementMap(struct ObjectEvent *objectEvent, u32 direction);
+static bool32 OWE_CheckRestrictMovementMetatile(struct ObjectEvent *objectEvent, u32 direction);
+static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, u32 direction);
 static u32 GetNumActiveOverworldEncounters(void);
 static u32 GetNumActiveGeneratedOverworldEncounters(void);
 
@@ -879,8 +879,9 @@ void TryRemoveOverworldWildEncounter(u32 localId)
 
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction)
 {
-    return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictedMovementMetatile(objectEvent, direction))
-        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictedMovementMap(objectEvent, direction)));
+    // Returns TRUE if movement is restricted.
+    return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatile(objectEvent, direction))
+        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMap(objectEvent, direction)));
 }
 
 void DespawnOldestOWE_Pal(void)
@@ -1176,7 +1177,7 @@ void OverworldWildEncounter_InitRoamerStatus(struct ObjectEvent *objectEvent, co
     objectEvent->sRoamerOutbreakStatus = (template->trainerType >> 8) & 0xFF;
 }
 
-static bool32 OWE_CheckRestrictedMovementMetatile(struct ObjectEvent *objectEvent, u32 direction)
+static bool32 OWE_CheckRestrictMovementMetatile(struct ObjectEvent *objectEvent, u32 direction)
 {
     s16 xCurrent = objectEvent->currentCoords.x;
     s16 yCurrent = objectEvent->currentCoords.y;
@@ -1200,7 +1201,7 @@ static bool32 OWE_CheckRestrictedMovementMetatile(struct ObjectEvent *objectEven
     return TRUE;
 }
 
-static bool32 OWE_CheckRestrictedMovementMap(struct ObjectEvent *objectEvent, u32 direction)
+static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, u32 direction)
 {
     s16 xCurrent = objectEvent->currentCoords.x;
     s16 yCurrent = objectEvent->currentCoords.y;
@@ -1210,9 +1211,9 @@ static bool32 OWE_CheckRestrictedMovementMap(struct ObjectEvent *objectEvent, u3
     u32 mapNum = objectEvent->mapNum;
 
     if (mapGroup == gSaveBlock1Ptr->location.mapGroup && mapNum == gSaveBlock1Ptr->location.mapNum)
-        return AreCoordsInsidePlayerMap(xNew, yNew);
-    else
         return !AreCoordsInsidePlayerMap(xNew, yNew);
+    else
+        return AreCoordsInsidePlayerMap(xNew, yNew);
 }
 
 #undef tLocalId
