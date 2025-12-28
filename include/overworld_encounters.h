@@ -27,8 +27,14 @@
 #define OWE_MON_SIGHT_LENGTH        4
 
 #define OWE_CHASE_RANGE             5
+#define OWE_APPROACH_DISTANCE       2
+
+#define OWE_APPROACH_JUMP_TIMER_MIN 16
+#define OWE_APPROACH_JUMP_TIMER_MAX 64
 
 #define OWE_FLEE_COLLISION_TIME     6  // If a fleeing mon is unable to take a step for this many tries it will despawn. (Multiply this value by 16 to get number of frames.)
+
+#define OWE_DESPAWN_FRAMES          30  // Number of frames before a mon despawns after noticing the player (OWE_BEHAVIOR_DESPAWN)
 
 #define INVALID_SPAWN_SLOT 0xFF
 
@@ -55,9 +61,43 @@ enum OverworldObjectEncounterType
 enum OverworldEncounterBehaviors
 {
     OWE_BEHAVIOR_WANDER_AROUND,
-    OWE_BEHAVIOR_CHASE,
-    OWE_BEHAVIOR_FLEE,
+    OWE_BEHAVIOR_CHASE_PLAYER,
+    OWE_BEHAVIOR_FLEE_PLAYER,
+    OWE_BEHAVIOR_WATCH_PLAYER,
+    OWE_BEHAVIOR_APPROACH_PLAYER,
+    OWE_BEHAVIOR_DESPAWN,
     OWE_BEHAVIOR_COUNT
+};
+
+// OWE_SPEED_FASTER seems to visually bug out sometimes.
+enum OWESpeeds
+{
+    OWE_SPEED_NORMAL,
+    OWE_SPEED_SLOW,
+    OWE_SPEED_FAST,
+    OWE_SPEED_FASTER
+};
+
+struct MonSpeciesOWEData
+{
+    enum OverworldEncounterBehaviors behavior;
+    enum OWESpeeds idleSpeed;
+    enum OWESpeeds activeSpeed;
+    u16 viewDistance:4;
+    u16 viewWidth:4;
+    u16 activeDistance:4;
+    u16 padding:4;
+};
+
+enum OWESpeciesBehaviors
+{
+    OWE_IGNORE_PLAYER,
+    OWE_CHASE_PLAYER_SLOW,
+    OWE_FLEE_PLAYER_NORMAL,
+    OWE_WATCH_PLAYER_NORMAL,
+    OWE_APPROACH_PLAYER_SLOW,
+    OWE_DESPAWN_ON_NOTICE,
+    OWE_SPECIES_BEHAVIOR_COUNT
 };
 
 extern const u8 InteractWithDynamicWildOverworldEncounter[];
@@ -88,10 +128,12 @@ void TryRemoveOverworldWildEncounter(u32 localId);
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
 void DespawnOldestOWE_Pal(void);
 bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon);
-bool32 OWE_IsPlayerInsideRangeFromMon(struct ObjectEvent *mon, u32 distance);
+bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
+u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
+bool32 OWE_IsWaitTaskActive(void);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
 void OverworldWildEncounter_InitRoamerStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template);
 

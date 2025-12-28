@@ -1,5 +1,6 @@
 #include "global.h"
 #include "overworld_encounters.h"
+#include "overworld_encounter_species_behavior.h"
 #include "battle_setup.h"
 #include "battle_main.h"
 #include "event_data.h"
@@ -49,9 +50,12 @@ static bool32 OWE_DoesRoamerExistOnMap(void);
 
 static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
 {
-    [OWE_BEHAVIOR_WANDER_AROUND] =  MOVEMENT_TYPE_WANDER_AROUND_OWE,
-    [OWE_BEHAVIOR_CHASE] =          MOVEMENT_TYPE_CHASE_PLAYER_OWE,
-    [OWE_BEHAVIOR_FLEE] =           MOVEMENT_TYPE_FLEE_PLAYER_OWE,
+    [OWE_BEHAVIOR_WANDER_AROUND] =      MOVEMENT_TYPE_WANDER_AROUND_OWE,
+    [OWE_BEHAVIOR_CHASE_PLAYER] =       MOVEMENT_TYPE_CHASE_PLAYER_OWE,
+    [OWE_BEHAVIOR_FLEE_PLAYER] =        MOVEMENT_TYPE_FLEE_PLAYER_OWE,
+    [OWE_BEHAVIOR_WATCH_PLAYER] =       MOVEMENT_TYPE_WATCH_PLAYER_OWE,
+    [OWE_BEHAVIOR_APPROACH_PLAYER] =    MOVEMENT_TYPE_APPROACH_PLAYER_OWE,
+    [OWE_BEHAVIOR_DESPAWN] =            MOVEMENT_TYPE_DESPAWN_OWE
 };
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
@@ -817,7 +821,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle));
     bool32 playerIsObstacle = (obstacle->isPlayer && IsOverworldWildEncounter(collider));
 
-    if ((playerIsCollider || playerIsObstacle) && FindTaskIdByFunc(Task_OWE_WaitMovements) == TASK_NONE)
+    if ((playerIsCollider || playerIsObstacle) && !OWE_IsWaitTaskActive())
     {
         struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
 
@@ -888,31 +892,35 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
 
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
     {
-        if (OWE_IsPlayerInsideRangeFromMon(mon, OWE_MON_SIGHT_LENGTH))
+        if (OWE_IsPlayerInsideMonActiveDistance(mon))
             return TRUE;
     }
     else
     {
+        u32 speciesId = OW_SPECIES(mon);
+        u32 viewDistance = sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].viewDistance;
+        u32 viewWidth = sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].viewWidth;
+
         switch (mon->facingDirection)
         {
         case DIR_NORTH:
-            if (player->currentCoords.y < mon->currentCoords.y && (mon->currentCoords.y - player->currentCoords.y) <= OWE_MON_SIGHT_LENGTH
-             && player->currentCoords.x >= (mon->currentCoords.x - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            if (player->currentCoords.y < mon->currentCoords.y && (mon->currentCoords.y - player->currentCoords.y) <= viewDistance
+             && player->currentCoords.x >= (mon->currentCoords.x - ((viewWidth - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((viewWidth - 1) / 2)))
                 return TRUE;
             break;
         case DIR_SOUTH:
-            if (player->currentCoords.y > mon->currentCoords.y && (player->currentCoords.y - mon->currentCoords.y) <= OWE_MON_SIGHT_LENGTH
-             && player->currentCoords.x >= (mon->currentCoords.x - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            if (player->currentCoords.y > mon->currentCoords.y && (player->currentCoords.y - mon->currentCoords.y) <= viewDistance
+             && player->currentCoords.x >= (mon->currentCoords.x - ((viewWidth - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((viewWidth - 1) / 2)))
                 return TRUE;
             break;
         case DIR_EAST:
-            if (player->currentCoords.x > mon->currentCoords.x && (player->currentCoords.x - mon->currentCoords.x) <= OWE_MON_SIGHT_LENGTH
-             && player->currentCoords.y >= (mon->currentCoords.y - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            if (player->currentCoords.x > mon->currentCoords.x && (player->currentCoords.x - mon->currentCoords.x) <= viewDistance
+             && player->currentCoords.y >= (mon->currentCoords.y - ((viewWidth - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((viewWidth - 1) / 2)))
                 return TRUE;
             break;
         case DIR_WEST:
-            if (player->currentCoords.x < mon->currentCoords.x && (mon->currentCoords.x - player->currentCoords.x) <= OWE_MON_SIGHT_LENGTH
-             && player->currentCoords.y >= (mon->currentCoords.y - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            if (player->currentCoords.x < mon->currentCoords.x && (mon->currentCoords.x - player->currentCoords.x) <= viewDistance
+             && player->currentCoords.y >= (mon->currentCoords.y - ((viewWidth - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((viewWidth - 1) / 2)))
                 return TRUE;
             break;
         }
@@ -921,15 +929,47 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
     return FALSE;
 }
 
-bool32 OWE_IsPlayerInsideRangeFromMon(struct ObjectEvent *mon, u32 distance)
+bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon)
 {
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u32 distance = OWE_CHASE_RANGE;
+    u32 speciesId = OW_SPECIES(mon);
+
+    if (speciesId != SPECIES_NONE)
+        distance = sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].activeDistance;
 
     if (player->currentCoords.y <= mon->currentCoords.y + distance && player->currentCoords.y >= mon->currentCoords.y - distance
      && player->currentCoords.x <= mon->currentCoords.x + distance && player->currentCoords.x >= mon->currentCoords.x - distance)
         return TRUE;
 
     return FALSE;
+}
+
+static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, u32 newDirection)
+{
+    s16 x = mon->currentCoords.x;
+    s16 y = mon->currentCoords.y;
+
+    MoveCoords(newDirection, &x, &y);
+    if (!GetCollisionAtCoords(mon, x, y, newDirection))
+    {
+        MoveCoords(mon->movementDirection, &x, &y);
+        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection))
+            return newDirection;
+    }
+
+    x = mon->currentCoords.x;
+    y = mon->currentCoords.y;
+
+    MoveCoords(GetOppositeDirection(newDirection), &x, &y);
+    if (!GetCollisionAtCoords(mon, x, y, GetOppositeDirection(newDirection)))
+    {
+        MoveCoords(mon->movementDirection, &x, &y);
+        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection))
+            return GetOppositeDirection(newDirection);
+    }
+
+    return mon->movementDirection;
 }
 
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
@@ -943,7 +983,7 @@ u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
         if (player->currentCoords.x < mon->currentCoords.x)
             return DIR_WEST;
         else if (player->currentCoords.x == mon->currentCoords.x)
-            return (Random() % 2) == 0 ? DIR_EAST : DIR_WEST;
+            return OWE_CheckPathToPlayerFromCollision(mon, (Random() % 2) == 0 ? DIR_EAST : DIR_WEST);
         else
             return DIR_EAST;
     case DIR_EAST:
@@ -951,7 +991,7 @@ u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
         if (player->currentCoords.y < mon->currentCoords.y)
             return DIR_NORTH;
         else if (player->currentCoords.y == mon->currentCoords.y)
-            return (Random() % 2) == 0 ? DIR_NORTH : DIR_SOUTH;
+            return OWE_CheckPathToPlayerFromCollision(mon, (Random() % 2) == 0 ? DIR_NORTH : DIR_SOUTH);
         else
             return DIR_SOUTH;
     }
@@ -969,21 +1009,38 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon)
     return TRUE;
 }
 
-#define tTaskStarted        gTasks[taskId].data[1]
-#define sSpriteTaskState    gSprites[mon->spriteId].data[6]
-#define NOT_STARTED         0
-#define STARTED             1
+u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances)
+{
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    s16 absX, absY;
+    s16 distanceX = player->currentCoords.x - mon->currentCoords.x;
+    s16 distanceY = player->currentCoords.y - mon->currentCoords.y;
+
+    // Get absolute X distance.
+    if (distanceX < 0)
+        absX = distanceX * -1;
+    else
+        absX = distanceX;
+
+    // Get absolute Y distance.
+    if (distanceY < 0)
+        absY = distanceY * -1;
+    else
+        absY = distanceY;
+
+    if (absY == absX)
+        *equalDistances = TRUE;
+
+    if (absY > absX)
+        return absY;
+    else
+        return absX;
+}
 
 void Task_OWE_WaitMovements(u8 taskId)
 {
     struct ObjectEvent *mon = &gObjectEvents[GetObjectEventIdByLocalId(tLocalId)];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    
-    if (tTaskStarted == NOT_STARTED)
-    {
-        sSpriteTaskState = STARTED;
-        tTaskStarted = STARTED;
-    }
 
     if (mon->singleMovementActive == 0 && player->singleMovementActive == 0)
     {
@@ -997,6 +1054,14 @@ void Task_OWE_WaitMovements(u8 taskId)
             DestroyTask(taskId);
         }
     }
+}
+
+bool32 OWE_IsWaitTaskActive(void)
+{
+    if (FindTaskIdByFunc(Task_OWE_WaitMovements) != TASK_NONE)
+        return TRUE;
+
+    return FALSE;
 }
 
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior)
@@ -1022,8 +1087,8 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
 
 static u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
 {
-    return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
-    return sOWE_MovementBehaviorType[gSpeciesInfo[speciesId].overworldEncounterBehavior];
+    //return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
+    return sOWE_MovementBehaviorType[sOWESpeciesBehaviors[gSpeciesInfo[speciesId].overworldEncounterBehavior].behavior];
 }
 
 // Are these needed? Not defined elsewhere? I don't think so.
@@ -1088,8 +1153,6 @@ void OverworldWildEncounter_InitRoamerStatus(struct ObjectEvent *objectEvent, co
 }
 
 #undef tLocalId
-#undef tTaskStarted
-#undef sSpriteTaskState
 #undef NOT_STARTED
 #undef STARTED
 #undef sOverworldEncounterLevel
