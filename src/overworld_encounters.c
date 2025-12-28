@@ -627,7 +627,11 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     u32 personality;
 
     if (!OWE_CreateEnemyPartyMon(speciesId, level, indexRoamerOutbreak, x, y))
+    {
+        ZeroEnemyPartyMons();
+        *speciesId = SPECIES_NONE;
         return;
+    }
  
     *speciesId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
     *level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
@@ -660,11 +664,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
             headerId = GetBattlePikeWildMonHeaderId();
             timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
             if (TryGenerateWildMon(gBattlePikeWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
-            {
-                ZeroEnemyPartyMons();
-                *speciesId = SPECIES_NONE;
                 return FALSE;
-            }
             
             TryGenerateBattlePikeWildMon(FALSE);
             return TRUE;
@@ -674,18 +674,12 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
             headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
             timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
             if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
-            {
-                ZeroEnemyPartyMons();
-                *speciesId = SPECIES_NONE;
                 return FALSE;
-            }
 
             GenerateBattlePyramidWildMon();
             return TRUE;
         }
 
-        ZeroEnemyPartyMons();
-        *speciesId = SPECIES_NONE;
         return FALSE;
     }
 
@@ -749,8 +743,6 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     }
     else if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_KEEN_EYE))
     {
-        ZeroEnemyPartyMons();
-        *speciesId = SPECIES_NONE;
         return FALSE;
     }
 
