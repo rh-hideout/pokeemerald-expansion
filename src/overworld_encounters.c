@@ -26,7 +26,6 @@
 #include "constants/songs.h"
 #include "constants/vars.h"
 #include "constants/wild_encounter.h"
-// #include "data/wild_encounters.h"
 
 #define sOverworldEncounterLevel trainerRange_berryTreeId
 #define sAge                     playerCopyableMovement
