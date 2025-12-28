@@ -89,7 +89,6 @@ struct ProtectStruct
     u32 palaceUnableToUseMove:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
-    u32 touchedProtectLike:1;
     u32 disableEjectPack:1;
     u32 pranksterElevated:1;
     u32 quickDraw:1;
@@ -103,6 +102,7 @@ struct ProtectStruct
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
     u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
+    u32 padding1:1;
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;

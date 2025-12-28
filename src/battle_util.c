@@ -53,13 +53,6 @@
 #include "constants/weather.h"
 #include "constants/pokemon.h"
 
-/*
-NOTE: The data and functions in this file up until (but not including) sSoundMovesTable
-are actually part of battle_main.c. They needed to be moved to this file in order to
-match the ROM; this is also why sSoundMovesTable's declaration is in the middle of
-functions instead of at the top of the file with the other declarations.
-*/
-
 static bool32 TryRemoveScreens(u32 battler);
 static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler);
 static u32 GetFlingPowerFromItemId(u32 itemId);
