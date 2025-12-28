@@ -59,6 +59,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
 static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak);
 static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
 static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId);
+static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -212,7 +213,7 @@ void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn)
 
     if (spawn)
         OWE_PlayMonObjectCry(objectEvent);
-    else
+    else if (!spawn && OWE_ShouldPlayMonFleeSound(objectEvent))
         PlaySE(SE_FLEE);
 
     if (isShiny && spawn)
@@ -1346,6 +1347,17 @@ static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, u32 
         return !AreCoordsInsidePlayerMap(xNew, yNew);
     else
         return AreCoordsInsidePlayerMap(xNew, yNew);
+}
+
+static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent)
+{
+    if (!IsOverworldWildEncounter(objectEvent) || OW_SPECIES(objectEvent) == SPECIES_NONE)
+        return FALSE;
+
+    if (!AreCoordsInsidePlayerMap(objectEvent->currentCoords.x, objectEvent->currentCoords.y))
+        return FALSE;
+
+    return OW_WILD_ENCOUNTERS_DESPAWN_SOUND;
 }
 
 #undef tLocalId
