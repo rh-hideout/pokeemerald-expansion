@@ -72,26 +72,31 @@ void OWE_ResetSpawnCounterPlayAmbientCry(void)
 
 void UpdateOverworldEncounters(void)
 {
-    if (!OW_WILD_ENCOUNTERS_OVERWORLD || ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
+    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
         return;
     
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
-    {
-        if (sOWESpawnCountdown != 255)
-        {
-            RemoveAllOverworldEncounterObjects();
-            sOWESpawnCountdown = 255;
-        }
-
-        return;
-    }
-    else if (sOWESpawnCountdown == 255)
+    bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
+    if (!OW_WILD_ENCOUNTERS_OVERWORLD
+        || FlagGet(OW_FLAG_NO_ENCOUNTER)
+        || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
     {
         OverworldWildEncounter_SetMinimumSpawnTimer();
+        RemoveAllGeneratedOverworldEncounterObjects();
+        return;
     }
 
-    bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
-    if (OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
+    if (sOWESpawnCountdown != 0)
+    {
+        sOWESpawnCountdown--;
+        return;
+    }
+
+    s16 x, y;
+    u16 spawnSlot = NextSpawnMonSlot();
+    if (!IsSafeToSpawnObjectEvents()
+        || !TrySelectTile(&x, &y)
+        || spawnSlot == INVALID_SPAWN_SLOT
+        || (shouldSpawnWaterMons && !AreLegendariesInSootopolisPreventingEncounters()))
     {
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
@@ -101,34 +106,6 @@ void UpdateOverworldEncounters(void)
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
-    s16 x, y;
-
-    if (sOWESpawnCountdown != 0)
-    {
-        sOWESpawnCountdown--;
-        return;
-    }
-
-    if (!IsSafeToSpawnObjectEvents() || !TrySelectTile(&x, &y))
-    {
-        OWE_ResetSpawnCounterPlayAmbientCry();
-        return;
-    }
-
-    if (shouldSpawnWaterMons && !AreLegendariesInSootopolisPreventingEncounters())
-    {
-        OWE_ResetSpawnCounterPlayAmbientCry();
-        return;
-    }
-
-    u16 spawnSlot = NextSpawnMonSlot();
-
-    if (spawnSlot == INVALID_SPAWN_SLOT)
-    {
-        OWE_ResetSpawnCounterPlayAmbientCry();
-        return;
-    }
-    
     u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
     u32 level;
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
@@ -789,12 +766,12 @@ static bool32 OWE_ShouldSpawnWaterMons(void)
     return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
-void RemoveAllOverworldEncounterObjects(void)
+void RemoveAllGeneratedOverworldEncounterObjects(void)
 {
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
-        if (IsGeneratedOverworldWildEncounter(obj))
+        if (IsGeneratedOverworldWildEncounter(obj) && obj->active)
             RemoveObjectEventByLocalIdAndMap(obj->localId, obj->mapNum, obj->mapGroup);
     }
 }

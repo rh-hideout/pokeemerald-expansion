@@ -894,6 +894,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
          || gMapHeader.regionMapSectionId != sLastMapSectionId)
             ShowMapNamePopup();
     }
+    OverworldWildEncounter_SetMinimumSpawnTimer();
 }
 
 static void LoadMapFromWarp(bool32 a1)
