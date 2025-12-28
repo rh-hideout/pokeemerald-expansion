@@ -49,6 +49,8 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 static bool32 OWE_DoesRoamerExistOnMap(void);
 static bool32 OWE_CheckRestrictedMovementMetatile(struct ObjectEvent *objectEvent, u32 direction);
 static bool32 OWE_CheckRestrictedMovementMap(struct ObjectEvent *objectEvent, u32 direction);
+static u32 GetNumActiveOverworldEncounters(void);
+static u32 GetNumActiveGeneratedOverworldEncounters(void);
 
 static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
 {
@@ -63,7 +65,8 @@ static const u32 sOWE_MovementBehaviorType[OWE_BEHAVIOR_COUNT] =
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
     OverworldWildEncounter_SetMinimumSpawnTimer();
-    if (OW_WILD_ENCOUNTERS_AMBIENT_CRIES)
+    // Currently may not play manual or semi-manual encounter cries if no wild mon header exists
+    if (OW_WILD_ENCOUNTERS_AMBIENT_CRIES && GetNumActiveOverworldEncounters())
         OWE_PlayMonObjectCry(OWE_GetRandomActiveEncounterObject());
 }
 
@@ -267,7 +270,7 @@ static u8 NextSpawnMonSlot(void)
     u32 maxSpawns = GetMaxOverworldEncounterSpawns();
 
     // All mon slots are in use
-    if (CountActiveOverworldEncounters() >= maxSpawns)
+    if (GetNumActiveGeneratedOverworldEncounters() >= maxSpawns)
     {
         if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
         {
@@ -437,7 +440,7 @@ static void SortOWEMonAges(void)
     struct ObjectEvent *slotMon;
     struct AgeSort array[OWE_MAX_SPAWN_SLOTS];
     struct AgeSort current;
-    u32 numActive = CountActiveOverworldEncounters();
+    u32 numActive = GetNumActiveGeneratedOverworldEncounters();
     u32 count = 0;
     s32 i, j;
 
@@ -591,15 +594,26 @@ static bool8 IsSafeToSpawnObjectEvents(void)
     return (player->currentCoords.x == player->previousCoords.x && player->currentCoords.y == player->previousCoords.y);
 }
 
-u8 CountActiveOverworldEncounters(void)
+static u32 GetNumActiveOverworldEncounters(void)
+{
+    u32 numActive = 0;
+    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        if (IsOverworldWildEncounter(&gObjectEvents[i]))
+            numActive++;
+    }
+    return numActive;
+}
+
+static u32 GetNumActiveGeneratedOverworldEncounters(void)
 {
     u32 count = 0;
+
     for (u32 spawnSlot = 0; spawnSlot < OWE_MAX_SPAWN_SLOTS; spawnSlot++)
     {
         if (GetOverworldSpeciesBySpawnSlot(spawnSlot) != SPECIES_NONE)
             count++;
     }
-
     return count;
 }
 
@@ -716,7 +730,7 @@ u32 GetNewestOWEncounterLocalId(void)
 bool32 CanRemoveOverworldEncounter(u32 localId)
 {
     // Include a check for the encounter not being shiny or a roamer.
-    return (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveOverworldEncounters() != 0
+    return (OW_WILD_ENCOUNTERS_OVERWORLD && GetNumActiveGeneratedOverworldEncounters() != 0
         && (localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS + 1)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
@@ -860,7 +874,7 @@ void DespawnOldestOWE_Pal(void)
     // Should have similar naming convention for these despawn functions based on Num Object Events, Pals & Tiles
     if (OW_WILD_ENCOUNTERS_OVERWORLD && CountFreePaletteSlots() < 2)
     {
-        u32 count = CountActiveOverworldEncounters();
+        u32 count = GetNumActiveGeneratedOverworldEncounters();
 
         if (count > 0)
         {
@@ -1069,7 +1083,22 @@ enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavio
 
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
 {
-    return &gObjectEvents[gPlayerAvatar.objectEventId];
+    u32 numActive = GetNumActiveOverworldEncounters();
+    u32 randomIndex;
+    struct ObjectEvent *slotMon;
+
+    if (numActive)
+        randomIndex = Random() % numActive;
+    else
+        return NULL;
+    
+    for (u32 i = 0; i < numActive; i++)
+    {
+        slotMon = &gObjectEvents[i];
+        if (IsOverworldWildEncounter(slotMon) && (i == randomIndex))
+            return slotMon;
+    }
+    return NULL;
 }
 
 
@@ -1096,8 +1125,8 @@ static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
     // TESTING: Setting this species can be used as a test to play a consistent sound to check how often the
     //          code in UpdateOverworldEncounters runs, as OWE_GetRandomActiveEncounterObject cuurently returns
     //          the player object.
-    if (objectEvent->isPlayer)
-        speciesId = SPECIES_NONE;
+    if (objectEvent == NULL)
+        return;
 
     if (distanceX > MAP_METATILE_VIEW_X)
         distanceX = MAP_METATILE_VIEW_X;
