@@ -39,7 +39,7 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
     u32 temp = 0;
 
-    if (!gProtectStructs[gBattlerAttacker].touchedProtectLike)
+    if (CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
     {
         gBattleScripting.moveendState++;
         return result;
@@ -51,7 +51,6 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
     case PROTECT_SPIKY_SHIELD:
         if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
         {
-            gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
             SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 8);
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SPIKY_SHIELD);
             BattleScriptCall(BattleScript_SpikyShieldEffect);
@@ -59,7 +58,6 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
         }
         break;
     case PROTECT_KINGS_SHIELD:
-        gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
         SWAP(gBattlerAttacker, gBattlerTarget, temp); // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
         if (B_KINGS_SHIELD_LOWER_ATK >= GEN_8)
             gBattleScripting.moveEffect = MOVE_EFFECT_ATK_MINUS_1;
@@ -71,7 +69,6 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
     case PROTECT_BANEFUL_BUNKER:
         if (CanBePoisoned(gBattlerTarget, gBattlerAttacker, gLastUsedAbility, GetBattlerAbility(gBattlerAttacker)))
         {
-            gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
             gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
             BattleScriptCall(BattleScript_BanefulBunkerEffect);
             result = MOVEEND_STEP_RUN_SCRIPT;
@@ -80,21 +77,18 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
     case PROTECT_BURNING_BULWARK:
         if (CanBeBurned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)))
         {
-            gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
             gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
             BattleScriptCall(BattleScript_BanefulBunkerEffect);
             result = MOVEEND_STEP_RUN_SCRIPT;
         }
         break;
     case PROTECT_OBSTRUCT:
-        gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
         SWAP(gBattlerAttacker, gBattlerTarget, temp); // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
         gBattleScripting.moveEffect = MOVE_EFFECT_DEF_MINUS_2;
         BattleScriptCall(BattleScript_KingsShieldEffect);
         result = MOVEEND_STEP_RUN_SCRIPT;
         break;
     case PROTECT_SILK_TRAP:
-        gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
         SWAP(gBattlerAttacker, gBattlerTarget, temp); // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
         gBattleScripting.moveEffect = MOVE_EFFECT_SPD_MINUS_1;
         BattleScriptCall(BattleScript_KingsShieldEffect);
@@ -109,7 +103,6 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
      && CanBeBurned(gBattlerAttacker, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
      && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
     {
-        gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
         gBattleMons[gBattlerAttacker].status1 = STATUS1_BURN;
         BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].status1), &gBattleMons[gBattlerAttacker].status1);
         MarkBattlerForControllerExec(gBattlerAttacker);
