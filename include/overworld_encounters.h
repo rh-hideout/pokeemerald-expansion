@@ -40,7 +40,7 @@
 
 #define INVALID_SPAWN_SLOT          0xFF
 
-#define OWE_FLAG_START_ENCOUNTER    0x8000
+#define OWE_FLAG_START_ENCOUNTER    0x80
 
 enum OverworldEncounterSpawnAnim
 {
