@@ -1541,9 +1541,9 @@ BattleScript_EffectInstruct::
 	tryinstruct BattleScript_ButItFailed
 	attackanimation
 	waitanimation
+	printstring STRINGID_USEDINSTRUCTEDMOVE
 	copybyte gBattlerAttacker, gBattlerTarget
 	copybyte gBattlerTarget, gEffectBattler
-	printstring STRINGID_USEDINSTRUCTEDMOVE
 	waitmessage B_WAIT_TIME_LONG
 	jumptocalledmove TRUE
 
