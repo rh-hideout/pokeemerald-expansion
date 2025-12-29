@@ -160,10 +160,12 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Pa
 {
     PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
     GIVEN {
+        ASSUME(GetMovePriority(MOVE_VITAL_THROW) == -1);
         PLAYER (SPECIES_WOBBUFFET) { HP(1);}
         PLAYER (SPECIES_WOBBUFFET);
         OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_VITAL_THROW, MOVE_STUN_SPORE, MOVE_SURF); };\
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(gMovesInfo[SanitizeMoveId(MOVE_STUN_SPORE)].argument.nonVolatileStatus == MOVE_EFFECT_PARALYSIS);
     }
     WHEN {
         TURN {
@@ -199,6 +201,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Fl
 {
     PASSES_RANDOMLY(10, 100, RNG_HOLD_EFFECT_FLINCH);
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
         PLAYER (SPECIES_WOBBUFFET) { HP(1); }
         PLAYER (SPECIES_WOBBUFFET);
         OPPONENT (SPECIES_WOBBUFFET);
