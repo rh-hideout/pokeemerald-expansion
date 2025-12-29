@@ -248,7 +248,7 @@ static inline u32 GetMoveTarget(u32 moveId)
 {
     moveId = SanitizeMoveId(moveId);
     u32 target = gMovesInfo[moveId].target;
-    assertf(target != TARGET_SMART || gMovesInfo[moveId].strikeCount > 1, "not a multi strike move: %S", gMovesInfo[moveId].name);
+    assertf(target != TARGET_SMART || gMovesInfo[moveId].strikeCount > 1, "Smart target requires strikeCount > 1: %S", gMovesInfo[moveId].name);
     return target;
 }
 

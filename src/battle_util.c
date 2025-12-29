@@ -377,12 +377,12 @@ static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler)
     return FALSE;
 }
 
-static inline bool32 IsDragonDartsSecondHit(void)
+static inline bool32 IsDragonDartsSecondHit(u32 battlerAtk, u32 move)
 {
-    if (GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove) != TARGET_SMART)
+    if (GetBattlerMoveTargetType(battlerAtk, move) != TARGET_SMART)
         return FALSE;
 
-    if (gMultiHitCounter == 1)
+    if (gMultiHitCounter < GetMoveStrikeCount(move))
         return TRUE;
 
     return FALSE;
@@ -394,7 +394,7 @@ bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
     enum BattleMoveEffects effect = GetMoveEffect(move);
 
     if (gSideTimers[defSide].followmeTimer == 0
-        || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit())
+        || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit(battlerAtk, move))
         || effect == EFFECT_SNIPE_SHOT
         || effect == EFFECT_SKY_DROP
         || IsAbilityAndRecord(battlerAtk, ability, ABILITY_PROPELLER_TAIL)
