@@ -146,12 +146,4 @@
 // Trainer Rematches
 #define OW_REMATCH_BADGE_COUNT      5 // Number of badges necessary before the match call or vs seeker features allow rematches
 
-#if OW_BATTLE_ONLY_FORMS && !OW_POKEMON_OBJECT_EVENTS
-#error "OW_BATTLE_ONLY_FORMS can't be TRUE when OW_POKEMON_OBJECT_EVENTS is FALSE"
-#endif
-
-#if OW_FOLLOWERS_ENABLED && !OW_POKEMON_OBJECT_EVENTS
-#error "OW_FOLLOWERS_ENABLED can't be TRUE when OW_POKEMON_OBJECT_EVENTS is FALSE"
-#endif
-
 #endif // GUARD_CONFIG_OVERWORLD_H
