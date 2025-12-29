@@ -80,14 +80,14 @@ void UpdateOverworldEncounters(void)
         || FlagGet(OW_FLAG_NO_ENCOUNTER)
         || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
     {
-        if (sOWESpawnCountdown != 255)
+        if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
         {
             RemoveAllGeneratedOverworldEncounterObjects();
-            sOWESpawnCountdown = 255;
+            sOWESpawnCountdown = OWE_NO_ENCOUNTER_SET;
         }
         return;
     }
-    else if (sOWESpawnCountdown == 255)
+    else if (sOWESpawnCountdown == OWE_NO_ENCOUNTER_SET)
     {
         OverworldWildEncounter_SetMinimumSpawnTimer();
     }

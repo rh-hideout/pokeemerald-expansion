@@ -36,7 +36,9 @@
 
 #define OWE_DESPAWN_FRAMES          30  // Number of frames before a mon despawns after noticing the player (OWE_BEHAVIOR_DESPAWN)
 
-#define INVALID_SPAWN_SLOT 0xFF
+#define OWE_NO_ENCOUNTER_SET        255
+
+#define INVALID_SPAWN_SLOT          0xFF
 
 #define OWE_FLAG_START_ENCOUNTER    0x8000
 
