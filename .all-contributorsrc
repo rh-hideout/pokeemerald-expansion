@@ -468,6 +468,43 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "leo60228",
+      "name": "leo60228",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8355305?v=4",
+      "profile": "https://vriska.dev",
+      "contributions": [
+        "doc",
+        "data"
+      ]
+    },
+    {
+      "login": "shachar700",
+      "name": "shachar700",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48739719?v=4",
+      "profile": "https://github.com/shachar700",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "purrfectdoodle",
+      "name": "Eva",
+      "avatar_url": "https://avatars.githubusercontent.com/u/105788407?v=4",
+      "profile": "http://purrfectdoodle.com",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
+      "login": "amiosi",
+      "name": "amiosi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44352097?v=4",
+      "profile": "https://github.com/amiosi",
+      "contributions": [
+        "data"
+      ]
     }
   ],
   "contributorsPerLine": 7,

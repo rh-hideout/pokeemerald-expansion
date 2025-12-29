@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Beads of Ruin reduces Sp. Def if opposing mon's ability does
 SINGLE_BATTLE_TEST("Beads of Ruin's message displays correctly after all battlers fainted - Player")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET) { HP(1);}
         PLAYER(SPECIES_CHI_YU);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Beads of Ruin's message displays correctly after all battler
 SINGLE_BATTLE_TEST("Beads of Ruin's message displays correctly after all battlers fainted - Opponent")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1);}

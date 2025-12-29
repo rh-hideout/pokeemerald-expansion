@@ -9,14 +9,12 @@
 #include "test/test.h"
 #include "config/pokerus.h"
 
-void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
-
 TEST("(Pokerus) No infection when POKERUS_ENABLED is false")
 {
     u32 enabled;
     PARAMETRIZE { enabled = TRUE;}
     PARAMETRIZE { enabled = FALSE;}
-    SetGenConfig(POKERUS_CONFIG_ENABLED, enabled);
+    SetConfig(CONFIG_POKERUS_ENABLED, enabled);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -33,7 +31,7 @@ TEST("(Pokerus) No infection when POKERUS_ENABLED is false")
 
 TEST("(Pokerus) RandomlyGivePartyPokerus doesn't freeze if the party is empty")
 {
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
     ZeroPlayerPartyMons();
     SET_RNG(RNG_POKERUS_INFECTION, 0);
 
@@ -48,8 +46,8 @@ TEST("(Pokerus) Eggs can only be infected if POKERUS_INFECT_EGG is TRUE")
     u32 infectEgg;
     PARAMETRIZE { infectEgg = TRUE;}
     PARAMETRIZE { infectEgg = FALSE;}
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
-    SetGenConfig(POKERUS_CONFIG_INFECT_EGG, infectEgg);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_INFECT_EGG, infectEgg);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -72,8 +70,8 @@ TEST("(Pokerus) No infection when POKERUS_INFECT_AGAIN is false and you already 
     u32 infectAgain;
     PARAMETRIZE { infectAgain = TRUE;}
     PARAMETRIZE { infectAgain = FALSE;}
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
-    SetGenConfig(POKERUS_CONFIG_INFECT_AGAIN, infectAgain);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_INFECT_AGAIN, infectAgain);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -97,8 +95,8 @@ TEST("(Pokerus) Test POKERUS_HERD_IMMUNITY config in RandomlyGivePartyPokerus")
     u32 herdImmunity;
     PARAMETRIZE { herdImmunity = TRUE;}
     PARAMETRIZE { herdImmunity = FALSE;}
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
-    SetGenConfig(POKERUS_CONFIG_HERD_IMMUNITY, herdImmunity);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_HERD_IMMUNITY, herdImmunity);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -124,7 +122,7 @@ TEST("(Pokerus) No infection when POKERUS_FLAG_INFECTION is clear")
     u32 flag;
     PARAMETRIZE { flag = TRUE;}
     PARAMETRIZE { flag = FALSE;}
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -212,7 +210,7 @@ TEST("(Pokerus) Test IsPokerusInParty general behavior")
             PARAMETRIZE { enabled = FALSE; partyMember = i, pokerus = j;}
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, enabled);
+    SetConfig(CONFIG_POKERUS_ENABLED, enabled);
 
     ZeroPlayerPartyMons();
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -244,7 +242,7 @@ TEST("(Pokerus) Test CheckMonPokerus general behavior")
             PARAMETRIZE { enabled = FALSE; pokerus = j;}
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, enabled);
+    SetConfig(CONFIG_POKERUS_ENABLED, enabled);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -271,7 +269,7 @@ TEST("(Pokerus) Test CheckMonHasHadPokerus general behavior")
             PARAMETRIZE { enabled = FALSE; pokerus = j;}
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, enabled);
+    SetConfig(CONFIG_POKERUS_ENABLED, enabled);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -304,7 +302,7 @@ TEST("(Pokerus) Test UpdatePartyPokerusTime general behavior")
             }
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, enabled);
+    SetConfig(CONFIG_POKERUS_ENABLED, enabled);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -347,9 +345,9 @@ TEST("(Pokerus) Test PartySpreadPokerus general behavior")
             PARAMETRIZE {pokerus = i; partyMember = k;}
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
-    SetGenConfig(POKERUS_CONFIG_SPREAD_DAYS_LEFT, GEN_3);
-    SetGenConfig(POKERUS_CONFIG_SPREAD_ADJACENCY, GEN_3);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_SPREAD_DAYS_LEFT, GEN_3);
+    SetConfig(CONFIG_POKERUS_SPREAD_ADJACENCY, GEN_3);
 
     ZeroPlayerPartyMons();
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -402,9 +400,9 @@ TEST("(Pokerus) Test PartySpreadPokerus: Pokerus can spread to and from eggs")
             PARAMETRIZE {pokerus = i; partyMember = k;}
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
-    SetGenConfig(POKERUS_CONFIG_SPREAD_DAYS_LEFT, GEN_3);
-    SetGenConfig(POKERUS_CONFIG_SPREAD_ADJACENCY, GEN_3);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_SPREAD_DAYS_LEFT, GEN_3);
+    SetConfig(CONFIG_POKERUS_SPREAD_ADJACENCY, GEN_3);
 
     ZeroPlayerPartyMons();
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -459,7 +457,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread inactive pokerus")
             PARAMETRIZE {pokerus = i; partyMember = k;}
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
 
     ZeroPlayerPartyMons();
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -492,7 +490,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread if POKERUS_ENABLED is fal
             PARAMETRIZE {pokerus = i; partyMember = k;}
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, FALSE);
+    SetConfig(CONFIG_POKERUS_ENABLED, FALSE);
 
     ZeroPlayerPartyMons();
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -526,7 +524,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread to pokemon who got pokeru
             PARAMETRIZE {pokerus1 = ((i << 4) | 2); pokerus2 = ((j << 4) | 1);}
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -553,8 +551,8 @@ TEST("(Pokerus) Test PartySpreadPokerus: strain 0 can be spread to if POKERUS_WE
         PARAMETRIZE {weakVariant = TRUE; pokerus2 = i;}
         PARAMETRIZE {weakVariant = FALSE; pokerus2 = i;}
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
-    SetGenConfig(POKERUS_CONFIG_WEAK_VARIANT, weakVariant);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_WEAK_VARIANT, weakVariant);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -589,9 +587,9 @@ TEST("(Pokerus) Test PartySpreadPokerus when POKERUS_SPREAD_DAYS_LEFT is set to 
             }
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
-    SetGenConfig(POKERUS_CONFIG_SPREAD_DAYS_LEFT, GEN_2);
-    SetGenConfig(POKERUS_CONFIG_SPREAD_ADJACENCY, GEN_3);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_SPREAD_DAYS_LEFT, GEN_2);
+    SetConfig(CONFIG_POKERUS_SPREAD_ADJACENCY, GEN_3);
 
     ZeroPlayerPartyMons();
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -653,9 +651,9 @@ TEST("(Pokerus) Test PartySpreadPokerus using gen2 adjacency")
             PARAMETRIZE {pokerus = i; partyMember = k; spreadUp = FALSE;}
         }
     }
-    SetGenConfig(POKERUS_CONFIG_ENABLED, TRUE);
-    SetGenConfig(POKERUS_CONFIG_SPREAD_DAYS_LEFT, GEN_3);
-    SetGenConfig(POKERUS_CONFIG_SPREAD_ADJACENCY, GEN_2);
+    SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
+    SetConfig(CONFIG_POKERUS_SPREAD_DAYS_LEFT, GEN_3);
+    SetConfig(CONFIG_POKERUS_SPREAD_ADJACENCY, GEN_2);
 
     ZeroPlayerPartyMons();
     for (u32 i = 0; i < PARTY_SIZE; i++)

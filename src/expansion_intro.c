@@ -191,8 +191,6 @@ static const struct SpriteTemplate sSpriteTemplate_DizzyEgg =
     .paletteTag = PAL_TAG_DIZZY,
     .oam = &sOamData_DizzyEgg,
     .anims = sAnimCmdTable_DizzyEgg,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallback_DizzyWalking,
 };
 
@@ -202,7 +200,6 @@ static const struct SpriteTemplate sSpriteTemplate_Porygon =
     .paletteTag = PAL_TAG_PORYGON,
     .oam = &sOamData_Porygon,
     .anims = sAnimCmdTable_Porygon,
-    .images = NULL,
     .affineAnims = sAffineAnimCmdTable_Porygon,
     .callback = SpriteCallback_PorygonFlying,
 };
@@ -407,7 +404,7 @@ static void SpriteCallback_PorygonFlying(struct Sprite* sprite)
             sprite->callback = SpriteCallback_PorygonHit;
             sprite->sTimer = 0;
             PlaySE(SE_M_DOUBLE_SLAP);
-            PlayCryInternal(SPECIES_PORYGON, 0, 120, 10, 0);
+            PlayCryInternal(SPECIES_NONE, 0, 120, 10, 0);
         }
     }
     sprite->sTimer++;

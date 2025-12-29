@@ -88,19 +88,6 @@ static inline void NONNULL BagPocket_SetSlotDataPC(struct BagPocket *pocket, u32
     pocket->itemSlots[pocketPos].quantity = newSlot.quantity;
 }
 
-enum TMHMItemId GetTMHMItemIdFromMoveId(u16 move)
-{
-    if (move == MOVE_NONE)
-        return 0;
-
-    for (u16 i = 0; i < NUM_ALL_MACHINES; i++)
-    {
-        if (GetTMHMMoveId(i + 1) == move)
-            return GetTMHMItemId(i + 1);
-    }
-    return 0;
-}
-
 struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos)
 {
     switch (pocket->id)
@@ -422,6 +409,13 @@ bool32 RemoveBagItem(u16 itemId, u16 count)
         return RemovePyramidBagItem(itemId, count);
 
     return BagPocket_RemoveItem(&gBagPockets[GetItemPocket(itemId)], itemId, count);
+}
+
+// Unsafe function: Only use with functions that already check the slot and count are valid
+void RemoveBagItemFromSlot(struct BagPocket *pocket, u16 slotId, u16 count)
+{
+    struct ItemSlot itemSlot = BagPocket_GetSlotData(pocket, slotId);
+    BagPocket_SetSlotItemIdAndCount(pocket, slotId, itemSlot.itemId, itemSlot.quantity - count);
 }
 
 static u8 NONNULL BagPocket_CountUsedItemSlots(struct BagPocket *pocket)
@@ -785,10 +779,12 @@ bool32 RemovePyramidBagItem(u16 itemId, u16 count)
 
 static u16 SanitizeItemId(u16 itemId)
 {
-    if (itemId >= ITEMS_COUNT)
+    assertf(itemId < ITEMS_COUNT, "invalid item: %d", itemId)
+    {
         return ITEM_NONE;
-    else
-        return itemId;
+    }
+
+    return itemId;
 }
 
 const u8 *GetItemName(u16 itemId)

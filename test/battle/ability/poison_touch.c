@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Poison Touch only applies when using contact moves")
 SINGLE_BATTLE_TEST("Poison Touch applies between multi-hit move hits")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ARM_THRUST) == EFFECT_MULTI_HIT);
+        ASSUME(IsMultiHitMove(MOVE_ARM_THRUST));
         ASSUME(MoveMakesContact(MOVE_ARM_THRUST));
         ASSUME(gItemsInfo[ITEM_PECHA_BERRY].holdEffect == HOLD_EFFECT_CURE_PSN);
         PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }

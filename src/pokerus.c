@@ -16,9 +16,9 @@ u32 GetDaysLeftBasedOnStrain(u32 strain)
 static u32 GetRandomPokerusStrain(void)
 {
     u32 strain;
-    if (POKERUS_STRAIN_DISTRIBUTION < GEN_3) // Gen 1 - 2 (Gen 1 had no pokerus but we default it with gen 2)
+    if (M_POKERUS_STRAIN_DISTRIBUTION < GEN_3) // Gen 1 - 2 (Gen 1 had no pokerus but we default it with gen 2)
         strain = RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 15, 30, 30, 30, 30, 30, 30, 30, 30, 1, 1, 1, 1, 1, 1, 1);
-    else if (POKERUS_STRAIN_DISTRIBUTION < GEN_4) //Gen 3 (Ruby/Sapphire only)
+    else if (M_POKERUS_STRAIN_DISTRIBUTION < GEN_4) //Gen 3 (Ruby/Sapphire only)
         strain = RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 30, 31, 31, 31, 31, 31, 31, 31, 1, 1, 1, 1, 1, 1, 1, 1);
     else // Gen 4+ (Pokerus was disabled in gen 9 but we default it here)
         strain = RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 0, 31, 31, 31, 31, 31, 31, 31, 0, 1, 1, 1, 1, 1, 1, 1);
@@ -27,16 +27,16 @@ static u32 GetRandomPokerusStrain(void)
 
 void RandomlyGivePartyPokerus(void)
 {
-    if (!GetGenConfig(POKERUS_CONFIG_ENABLED))
+    if (!GetConfig(CONFIG_POKERUS_ENABLED))
         return;
 
-    if (!GetGenConfig(POKERUS_CONFIG_INFECT_AGAIN) && IsPokerusInParty())
+    if (!GetConfig(CONFIG_POKERUS_INFECT_AGAIN) && IsPokerusInParty())
         return;
 
-    if (POKERUS_FLAG_INFECTION && !FlagGet(POKERUS_FLAG_INFECTION))
+    if (M_POKERUS_FLAG_INFECTION && !FlagGet(M_POKERUS_FLAG_INFECTION))
         return;
 
-    if (RandomUniform(RNG_POKERUS_INFECTION, 0, MAX_u16) < POKERUS_INFECTION_ODDS)
+    if (RandomUniform(RNG_POKERUS_INFECTION, 0, MAX_u16) < M_POKERUS_INFECTION_ODDS)
     {
         struct Pokemon *mon;
         u32 randomIndex;
@@ -48,9 +48,9 @@ void RandomlyGivePartyPokerus(void)
             mon = &gPlayerParty[i];
             if (!GetMonData(mon, MON_DATA_SPECIES))
                 continue;
-            else if (!GetGenConfig(POKERUS_CONFIG_INFECT_EGG) && GetMonData(mon, MON_DATA_IS_EGG))
+            else if (!GetConfig(CONFIG_POKERUS_INFECT_EGG) && GetMonData(mon, MON_DATA_IS_EGG))
                 continue;
-            else if (!GetGenConfig(POKERUS_CONFIG_HERD_IMMUNITY) && CheckMonHasHadPokerus(mon))
+            else if (!GetConfig(CONFIG_POKERUS_HERD_IMMUNITY) && CheckMonHasHadPokerus(mon))
                 continue;
             validTargets[validTargetsCount] = i;
             validTargetsCount++;
@@ -75,7 +75,7 @@ void RandomlyGivePartyPokerus(void)
 
 bool8 IsPokerusInParty(void)
 {
-    if (!GetGenConfig(POKERUS_CONFIG_ENABLED))
+    if (!GetConfig(CONFIG_POKERUS_ENABLED))
         return FALSE;
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -92,7 +92,7 @@ bool8 IsPokerusInParty(void)
 
 bool32 CheckMonPokerus(struct Pokemon *mon)
 {
-    if (!GetGenConfig(POKERUS_CONFIG_ENABLED))
+    if (!GetConfig(CONFIG_POKERUS_ENABLED))
         return FALSE;
 
     if (GetMonData(mon, MON_DATA_POKERUS_DAYS_LEFT))
@@ -103,7 +103,7 @@ bool32 CheckMonPokerus(struct Pokemon *mon)
 
 bool32 CheckMonHasHadPokerus(struct Pokemon *mon)
 {
-    if (!GetGenConfig(POKERUS_CONFIG_ENABLED))
+    if (!GetConfig(CONFIG_POKERUS_ENABLED))
         return FALSE;
 
     if (GetMonData(mon, MON_DATA_POKERUS))
@@ -116,7 +116,7 @@ bool32 IsPokerusVisible(struct Pokemon *mon)
 {
     if (!GetMonData(mon, MON_DATA_IS_EGG))
         return TRUE;
-    if (POKERUS_VISIBLE_ON_EGG)
+    if (M_POKERUS_VISIBLE_ON_EGG)
         return TRUE;
     return FALSE;
 
@@ -140,7 +140,7 @@ bool32 ShouldPokemonShowCuredPokerus(struct Pokemon *mon)
 
 void UpdatePartyPokerusTime(u16 days)
 {
-    if (!GetGenConfig(POKERUS_CONFIG_ENABLED))
+    if (!GetConfig(CONFIG_POKERUS_ENABLED))
         return;
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -173,24 +173,24 @@ void UpdatePartyPokerusTime(u16 days)
 static void SpreadPokerusToSpecificMon(struct Pokemon *mon, u32 strain, u32 daysLeft)
 {
     SetMonData(mon, MON_DATA_POKERUS_STRAIN, &strain);
-    if (GetGenConfig(POKERUS_CONFIG_SPREAD_DAYS_LEFT) < GEN_3)
+    if (GetConfig(CONFIG_POKERUS_SPREAD_DAYS_LEFT) < GEN_3)
         daysLeft = GetDaysLeftBasedOnStrain(strain);
     SetMonData(mon, MON_DATA_POKERUS_DAYS_LEFT, &daysLeft);
 }
 
 static bool32 CanReceivePokerusFromSpread(struct Pokemon *mon)
 {
-    if (GetGenConfig(POKERUS_CONFIG_WEAK_VARIANT))
+    if (GetConfig(CONFIG_POKERUS_WEAK_VARIANT))
         return !GetMonData(mon, MON_DATA_POKERUS_STRAIN);
     return !GetMonData(mon, MON_DATA_POKERUS);
 }
 
 void PartySpreadPokerus(void)
 {
-    if (!GetGenConfig(POKERUS_CONFIG_ENABLED))
+    if (!GetConfig(CONFIG_POKERUS_ENABLED))
         return;
 
-    if (RandomUniform(RNG_POKERUS_SPREAD, 0, MAX_u16) >= POKERUS_SPREAD_ODDS)
+    if (RandomUniform(RNG_POKERUS_SPREAD, 0, MAX_u16) >= M_POKERUS_SPREAD_ODDS)
         return;
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -203,7 +203,7 @@ void PartySpreadPokerus(void)
         if (daysLeft)
         {
             bool32 spreadUp = TRUE, spreadDown = TRUE;
-            if (GetGenConfig(POKERUS_CONFIG_SPREAD_ADJACENCY) < GEN_3)
+            if (GetConfig(CONFIG_POKERUS_SPREAD_ADJACENCY) < GEN_3)
             {
                 if (i == (gPlayerPartyCount - 1))
                     spreadUp = FALSE;
