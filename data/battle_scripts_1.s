@@ -1542,9 +1542,9 @@ BattleScript_EffectInstruct::
 	attackanimation
 	waitanimation
 	printstring STRINGID_USEDINSTRUCTEDMOVE
+	waitmessage B_WAIT_TIME_LONG
 	copybyte gBattlerAttacker, gBattlerTarget
 	copybyte gBattlerTarget, gEffectBattler
-	waitmessage B_WAIT_TIME_LONG
 	jumptocalledmove TRUE
 
 BattleScript_EffectAutotomize::
