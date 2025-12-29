@@ -349,7 +349,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
     elevation = MapGridGetElevationAt(x, y);
 
-    if (!AreCoordsInsidePlayerMap(x - MAP_OFFSET, y - MAP_OFFSET))
+    if (!AreCoordsInsidePlayerMap(x, y))
         return FALSE;
 
     // 0 is change of elevation, 15 is multiple elevation e.g. bridges
