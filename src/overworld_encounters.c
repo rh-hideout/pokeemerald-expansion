@@ -79,14 +79,14 @@ void UpdateOverworldEncounters(void)
         || FlagGet(OW_FLAG_NO_ENCOUNTER)
         || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
     {
-        if (sOWESpawnCountdown != 255)
+        if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
         {
             RemoveAllGeneratedOverworldEncounterObjects();
-            sOWESpawnCountdown = 255;
+            sOWESpawnCountdown = OWE_NO_ENCOUNTER_SET;
         }
         return;
     }
-    else if (sOWESpawnCountdown == 255)
+    else if (sOWESpawnCountdown == OWE_NO_ENCOUNTER_SET)
     {
         OverworldWildEncounter_SetMinimumSpawnTimer();
     }
@@ -97,12 +97,14 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
+    if (!IsSafeToSpawnObjectEvents())
+        return;
+
     s16 x, y;
     u16 spawnSlot = NextSpawnMonSlot();
-    if (!IsSafeToSpawnObjectEvents()
-        || !TrySelectTile(&x, &y)
-        || spawnSlot == INVALID_SPAWN_SLOT
-        || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters()))
+    if (spawnSlot == INVALID_SPAWN_SLOT
+        || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters())
+        || !TrySelectTile(&x, &y))
     {
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
@@ -348,7 +350,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
     elevation = MapGridGetElevationAt(x, y);
 
-    if (!AreCoordsInsidePlayerMap(x - MAP_OFFSET, y - MAP_OFFSET))
+    if (!AreCoordsInsidePlayerMap(x, y))
         return FALSE;
 
     // 0 is change of elevation, 15 is multiple elevation e.g. bridges
