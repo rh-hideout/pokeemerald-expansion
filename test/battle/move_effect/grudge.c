@@ -51,11 +51,195 @@ SINGLE_BATTLE_TEST("Grudge does not deplete PP of a Z-Move")
 }
 
 TO_DO_BATTLE_TEST("Grudge depletes all PP from a Max Move's base move")
-TO_DO_BATTLE_TEST("Grudge does not activate for Struggle")
-TO_DO_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Move");
-TO_DO_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Sleep");
-TO_DO_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Paralysis");
-TO_DO_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Flinching");
+
+SINGLE_BATTLE_TEST("Grudge does not activate for Struggle")
+{
+    GIVEN {
+        PLAYER (SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER (SPECIES_WOBBUFFET);
+        OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_STRUGGLE, MOVE_POUND, MOVE_SURF); };
+    }
+    WHEN {
+        TURN {
+            MOVE(player, MOVE_GRUDGE);
+            MOVE(opponent, MOVE_STRUGGLE);
+            SEND_OUT(player, 1);
+        }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponent);
+        MESSAGE("Wobbuffet fainted!");
+        NOT MESSAGE("The opposing Wobbuffet's Struggle lost all its PP due to the grudge!");
+    }
+    THEN
+    {
+        EXPECT_GT(opponent->pp[0], 0);
+        EXPECT_GT(opponent->pp[1], 0);
+        EXPECT_GT(opponent->pp[2], 0);
+        EXPECT_GT(opponent->pp[3], 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Move")
+{
+    GIVEN {
+        PLAYER (SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER (SPECIES_WOBBUFFET);
+        OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_POUND, MOVE_SURF); };
+    }
+    WHEN {
+        TURN {
+            MOVE(player, MOVE_GRUDGE);
+            MOVE(opponent, MOVE_CELEBRATE);
+        }
+        TURN {
+            MOVE(player, MOVE_CELEBRATE);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        MESSAGE("Wobbuffet fainted!");
+        NOT MESSAGE("The opposing Wobbuffet's Scratch lost all its PP due to the grudge!");
+    }
+    THEN
+    {
+        EXPECT_GT(opponent->pp[0], 0);
+        EXPECT_GT(opponent->pp[1], 0);
+        EXPECT_GT(opponent->pp[2], 0);
+        EXPECT_GT(opponent->pp[3], 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Sleep")
+{
+    GIVEN {
+        PLAYER (SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER (SPECIES_WOBBUFFET);
+        OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_VITAL_THROW, MOVE_SPORE, MOVE_SURF); }
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(gMovesInfo[SanitizeMoveId(MOVE_SPORE)].argument.nonVolatileStatus == MOVE_EFFECT_SLEEP);
+    }
+    WHEN {
+        TURN {
+            MOVE(player, MOVE_GRUDGE);
+            MOVE(opponent, MOVE_SPORE);
+        }
+        TURN {
+            MOVE(player, MOVE_CELEBRATE);
+            MOVE(opponent, MOVE_VITAL_THROW);
+            SEND_OUT(player, 1);
+        }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
+        MESSAGE("Wobbuffet fell asleep!");
+        STATUS_ICON(player, sleep: TRUE);
+        MESSAGE("Wobbuffet is fast asleep.");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VITAL_THROW, opponent);
+        MESSAGE("Wobbuffet fainted!");
+        NOT MESSAGE("The opposing Wobbuffet's Scratch lost all its PP due to the grudge!");
+    }
+    THEN
+    {
+        EXPECT_GT(opponent->pp[0], 0);
+        EXPECT_GT(opponent->pp[1], 0);
+        EXPECT_GT(opponent->pp[2], 0);
+        EXPECT_GT(opponent->pp[3], 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Paralysis")
+{
+    PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
+    GIVEN {
+        PLAYER (SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER (SPECIES_WOBBUFFET);
+        OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_VITAL_THROW, MOVE_STUN_SPORE, MOVE_SURF); };\
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+    }
+    WHEN {
+        TURN {
+            MOVE(player, MOVE_GRUDGE);
+            MOVE(opponent, MOVE_STUN_SPORE);
+        }
+        TURN {
+            MOVE(player, MOVE_CELEBRATE);
+            MOVE(opponent, MOVE_VITAL_THROW);
+            SEND_OUT(player, 1);
+        }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, opponent);
+        MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
+        STATUS_ICON(player, paralysis: TRUE);
+        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VITAL_THROW, opponent);
+        MESSAGE("Wobbuffet fainted!");
+        NOT MESSAGE("The opposing Wobbuffet's Scratch lost all its PP due to the grudge!");
+    }
+    THEN
+    {
+        EXPECT_GT(opponent->pp[0], 0);
+        EXPECT_GT(opponent->pp[1], 0);
+        EXPECT_GT(opponent->pp[2], 0);
+        EXPECT_GT(opponent->pp[3], 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Flinching")
+{
+    PASSES_RANDOMLY(10, 100, RNG_HOLD_EFFECT_FLINCH);
+    GIVEN {
+        PLAYER (SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER (SPECIES_WOBBUFFET);
+        OPPONENT (SPECIES_WOBBUFFET);
+        OPPONENT (SPECIES_WOBBUFFET) {
+            Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_FALSE_SWIPE, MOVE_SURF);
+            Item(ITEM_KINGS_ROCK);
+        }
+    }
+    WHEN {
+        TURN {
+            SWITCH(opponent, 1);
+            MOVE(player, MOVE_GRUDGE);
+        }
+        TURN {
+            MOVE(opponent, MOVE_FALSE_SWIPE);
+            MOVE(player, MOVE_CELEBRATE);
+        }
+        TURN {
+            MOVE(opponent, MOVE_SCRATCH);
+            MOVE(player, MOVE_CELEBRATE);
+            SEND_OUT(player, 1);
+        }
+    }
+    SCENE {
+        SEND_IN_MESSAGE("Wobbuffet");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FALSE_SWIPE, opponent);
+        MESSAGE("Wobbuffet flinched and couldn't move!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        MESSAGE("Wobbuffet fainted!");
+        NOT MESSAGE("The opposing Wobbuffet's Scratch lost all its PP due to the grudge!");
+    }
+    THEN
+    {
+        EXPECT_GT(opponent->pp[0], 0);
+        EXPECT_GT(opponent->pp[1], 0);
+        EXPECT_GT(opponent->pp[2], 0);
+        EXPECT_GT(opponent->pp[3], 0);
+    }
+}
+
 TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Sandstorm");
 TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Leech Seed");
 TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future Sight");
