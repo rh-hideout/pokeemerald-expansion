@@ -98,12 +98,14 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
+    if (!IsSafeToSpawnObjectEvents())
+        return;
+
     s16 x, y;
     u16 spawnSlot = NextSpawnMonSlot();
-    if (!IsSafeToSpawnObjectEvents()
-        || !TrySelectTile(&x, &y)
-        || spawnSlot == INVALID_SPAWN_SLOT
-        || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters()))
+    if (spawnSlot == INVALID_SPAWN_SLOT
+        || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters())
+        || !TrySelectTile(&x, &y))
     {
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
