@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Thrash lasts for 2 or 3 turns")
 SINGLE_BATTLE_TEST("Thrash confuses the user after it finishes")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({ MOVE_THRASH, 10}); }
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_THRASH, 10}); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_THRASH); }

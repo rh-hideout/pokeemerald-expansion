@@ -19,7 +19,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Final Gambit")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, MOVE_FINAL_GAMBIT); SEND_OUT(playerLeft, 2); }
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_FINAL_GAMBIT); SEND_OUT(playerLeft, 2); }
     }
 }
 
@@ -35,7 +35,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Guillotine")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, MOVE_GUILLOTINE); SEND_OUT(playerLeft, 2); }
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_GUILLOTINE); SEND_OUT(playerLeft, 2); }
     }
 }
 
@@ -51,7 +51,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Sheer Cold")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, MOVE_SHEER_COLD); SEND_OUT(playerLeft, 2); }
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_SHEER_COLD); SEND_OUT(playerLeft, 2); }
     }
 }
 
@@ -113,7 +113,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, move); }
     }
 }
 
@@ -189,7 +189,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, move); }
     }
 }
 
@@ -278,7 +278,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, move); }
     }
 }
 
@@ -355,7 +355,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, move); }
     }
 }
 
@@ -423,7 +423,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, move); }
     }
 }
 
@@ -498,7 +498,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, move); }
     }
 }
 
@@ -570,7 +570,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, move); }
     }
 }
 
@@ -639,7 +639,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, move); }
     }
 }
 
@@ -701,6 +701,6 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, move); }
     }
 }

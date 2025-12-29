@@ -130,7 +130,7 @@ DOUBLE_BATTLE_TEST("Revive does reset abilities")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN {  MOVE(opponentRight, MOVE_WORRY_SEED, target: playerLeft); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+        TURN { MOVE(opponentRight, MOVE_WORRY_SEED, target: playerLeft); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
         TURN { USE_ITEM(playerRight, ITEM_REVIVE, partyIndex: 0); SKIP_TURN(playerLeft); MOVE(opponentRight, MOVE_SPORE, target: playerLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
@@ -203,8 +203,8 @@ DOUBLE_BATTLE_TEST("Revive force revived pokemon to replace absent battler immed
 
     GIVEN {
         PLAYER(SPECIES_WYNAUT) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET) { };
-        PLAYER(SPECIES_ARBOK) { Ability(ability); HP(0) ;} ;
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ARBOK) { Ability(ability); HP(0); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {

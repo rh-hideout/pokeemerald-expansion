@@ -185,7 +185,7 @@ DOUBLE_BATTLE_TEST("Mirror Armor lowers Speed of the partner Pokemon after Court
         TURN { MOVE(playerLeft, MOVE_STICKY_WEB); }
         TURN { MOVE(opponentLeft, MOVE_COURT_CHANGE); }
         TURN { SWITCH(playerRight, 2); }
-        TURN { }
+        TURN {}
     } SCENE {
         MESSAGE("Wobbuffet used Sticky Web!");
         MESSAGE("The opposing Wynaut used Court Change!");

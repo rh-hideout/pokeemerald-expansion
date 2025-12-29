@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user failed to a
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); MOVE(opponent, MOVE_THUNDER_WAVE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRICK);  }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRICK); }
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
     } SCENE {

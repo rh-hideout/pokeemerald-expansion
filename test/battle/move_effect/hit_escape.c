@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon 
 {
     GIVEN {
         PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
-        PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE);  }
+        PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WYNAUT) { Item(ITEM_ELECTRIC_SEED); }
     } WHEN {

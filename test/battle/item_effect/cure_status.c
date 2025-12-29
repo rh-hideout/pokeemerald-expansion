@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("Antidote resets Toxic Counter")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC); }
-        TURN { ; }
+        TURN {}
         TURN { USE_ITEM(player, ITEM_ANTIDOTE, partyIndex: 0); }
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Toxic!");

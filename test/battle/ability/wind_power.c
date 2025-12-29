@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
 
     GIVEN {
         PLAYER(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(10); }
-        OPPONENT(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralyzed.
+        OPPONENT(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(5); } // Limber, so it doesn't get paralyzed.
     } WHEN {
         TURN { MOVE(player, MOVE_NUZZLE), MOVE(opponent, move); }
         TURN { MOVE(player, MOVE_NUZZLE), MOVE(opponent, move); }
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
     PARAMETRIZE { move = MOVE_AIR_CUTTER; }
 
     GIVEN {
-        PLAYER(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralyzed.
+        PLAYER(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(5); } // Limber, so it doesn't get paralyzed.
         OPPONENT(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(10); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_NUZZLE), MOVE(player, move); }
@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for only one attack when hit by a 
 
     GIVEN {
         PLAYER(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(5); }
-        OPPONENT(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(10) ;} // Limber, so it doesn't get paralyzed.
+        OPPONENT(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(10); } // Limber, so it doesn't get paralyzed.
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_NUZZLE); }
         TURN { MOVE(player, MOVE_NUZZLE); }

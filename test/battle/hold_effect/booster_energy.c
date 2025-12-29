@@ -72,11 +72,11 @@ SINGLE_BATTLE_TEST("Booster Energy's Protosynthesis boost is preserved when weat
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_SUNNY_DAY, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
-        TURN { }
-        TURN { }
-        TURN { }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Raging Bolt used its Booster Energy to activate Protosynthesis!");
@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Protosynthesis and increases highes
         PLAYER(SPECIES_RAGING_BOLT) { Attack(attack); Defense(defense); Speed(speed); SpAttack(spAttack); SpDefense(spDefense); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Quark Drive and increases highest s
         PLAYER(SPECIES_IRON_MOTH) { Attack(attack); Defense(defense); Speed(speed); SpAttack(spAttack); SpDefense(spDefense); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         if (attack == 110)
@@ -161,11 +161,11 @@ SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASSY_TERRAIN, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_GRASSY_TERRAIN); }
-        TURN { }
-        TURN { }
-        TURN { }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Iron Moth used its Booster Energy to activate Quark Drive!");
@@ -290,7 +290,7 @@ DOUBLE_BATTLE_TEST("Booster Energy activates on any terrain")
         OPPONENT(SPECIES_TAPU_BULU) { Speed(100); Ability(ABILITY_GRASSY_SURGE); }
         OPPONENT(SPECIES_TAPU_KOKO) { Speed(10); Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_GRASSY_SURGE);
         ABILITY_POPUP(playerLeft, ABILITY_QUARK_DRIVE);
@@ -323,7 +323,7 @@ DOUBLE_BATTLE_TEST("Booster Energy will not activate on terrain if user has Prot
         OPPONENT(SPECIES_TAPU_BULU) { Speed(100); Ability(ABILITY_GRASSY_SURGE); }
         OPPONENT(SPECIES_TAPU_KOKO) { Speed(10); Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_GRASSY_SURGE);
         NOT ABILITY_POPUP(playerLeft, ABILITY_PROTOSYNTHESIS);

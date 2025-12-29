@@ -168,7 +168,7 @@ WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falli
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); Status1(STATUS1_BURN); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);

@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of 
         PLAYER(SPECIES_DARKRAI);
         OPPONENT(SPECIES_WOBBUFFET) { Status1(status); }
     } WHEN {
-        TURN {; }
+        TURN {}
     } SCENE {
         if (status == STATUS1_SLEEP) {
             ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Bad Dreams causes Pokémon with Comatose to lose 1/8 of HP")
         PLAYER(SPECIES_DARKRAI);
         OPPONENT(SPECIES_KOMALA) { Ability(ABILITY_COMATOSE); }
     } WHEN {
-        TURN {; }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
         MESSAGE("The opposing Komala is tormented!");
@@ -59,7 +59,7 @@ DOUBLE_BATTLE_TEST("Bad Dreams does not activate if only the partner Pokemon is 
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {; }
+        TURN {}
     } SCENE {
         NONE_OF {
             ABILITY_POPUP(playerLeft, ABILITY_BAD_DREAMS);
@@ -81,7 +81,7 @@ DOUBLE_BATTLE_TEST("Bad Dreams activates for both sleeping Pokémon on the playe
         OPPONENT(SPECIES_DARKRAI);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {; }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_BAD_DREAMS);
         MESSAGE("Wobbuffet is tormented!");

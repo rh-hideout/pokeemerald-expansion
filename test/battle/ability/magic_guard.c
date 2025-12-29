@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Magic Guard does not ignore speed stat changes caused by par
         PLAYER(SPECIES_CLEFABLE) { Speed(100); Ability(ABILITY_MAGIC_GUARD); Status1(STATUS1_PARALYSIS); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(99); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);

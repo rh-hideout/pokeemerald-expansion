@@ -664,11 +664,11 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_SOLAR_BEAM:
             case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-                TURN { ; }
+                TURN {}
                 break;
             case EFFECT_FUTURE_SIGHT:
-                TURN { ; }
-                TURN { ; }
+                TURN {}
+                TURN {}
                 break;
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
@@ -752,11 +752,11 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_SOLAR_BEAM:
             case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-                TURN { ; }
+                TURN {}
                 break;
             case EFFECT_FUTURE_SIGHT:
-                TURN { ; }
-                TURN { ; }
+                TURN {}
+                TURN {}
                 break;
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
@@ -840,11 +840,11 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_SOLAR_BEAM:
             case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-                TURN { ; }
+                TURN {}
                 break;
             case EFFECT_FUTURE_SIGHT:
-                TURN { ; }
-                TURN { ; }
+                TURN {}
+                TURN {}
                 break;
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
@@ -928,11 +928,11 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_SOLAR_BEAM:
             case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-                TURN { ; }
+                TURN {}
                 break;
             case EFFECT_FUTURE_SIGHT:
-                TURN { ; }
-                TURN { ; }
+                TURN {}
+                TURN {}
                 break;
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
@@ -1016,11 +1016,11 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_SOLAR_BEAM:
             case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-                TURN { ; }
+                TURN {}
                 break;
             case EFFECT_FUTURE_SIGHT:
-                TURN { ; }
-                TURN { ; }
+                TURN {}
+                TURN {}
                 break;
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
@@ -1104,11 +1104,11 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_SOLAR_BEAM:
             case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-                TURN { ; }
+                TURN {}
                 break;
             case EFFECT_FUTURE_SIGHT:
-                TURN { ; }
-                TURN { ; }
+                TURN {}
+                TURN {}
                 break;
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
@@ -1192,11 +1192,11 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_SOLAR_BEAM:
             case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-                TURN { ; }
+                TURN {}
                 break;
             case EFFECT_FUTURE_SIGHT:
-                TURN { ; }
-                TURN { ; }
+                TURN {}
+                TURN {}
                 break;
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
@@ -1280,11 +1280,11 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_SOLAR_BEAM:
             case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-                TURN { ; }
+                TURN {}
                 break;
             case EFFECT_FUTURE_SIGHT:
-                TURN { ; }
-                TURN { ; }
+                TURN {}
+                TURN {}
                 break;
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
@@ -1369,11 +1369,11 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             case EFFECT_SOLAR_BEAM:
             case EFFECT_SKY_DROP:
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-                TURN { ; }
+                TURN {}
                 break;
             case EFFECT_FUTURE_SIGHT:
-                TURN { ; }
-                TURN { ; }
+                TURN {}
+                TURN {}
                 break;
             case EFFECT_BIDE:
                 TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }

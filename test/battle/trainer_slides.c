@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Before First Turn")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         MESSAGE("This message plays before the first turn.{PAUSE_UNTIL_PRESS}");
     }

@@ -9,7 +9,7 @@ DOUBLE_BATTLE_TEST("Frisk does not trigger when Pokémon hold no items")
         OPPONENT(SPECIES_SENTRET) { Ability(ABILITY_FRISK); }
         OPPONENT(SPECIES_SENTRET) { Ability(ABILITY_FRISK); }
     } WHEN {
-        TURN { ; }
+        TURN {}
     } SCENE {
         NONE_OF {
             ABILITY_POPUP(playerLeft, ABILITY_FRISK);
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Frisk triggers in a Single Battle")
         PLAYER(SPECIES_FURRET) { Ability(ABILITY_FRISK); Item(ITEM_POTION); }
         OPPONENT(SPECIES_SENTRET) { Ability(ABILITY_FRISK); Item(ITEM_POTION); }
     } WHEN {
-        TURN { ; }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_FRISK);
         MESSAGE("Furret frisked the opposing Sentret and found its Potion!");

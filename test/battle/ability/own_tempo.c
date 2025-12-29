@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Own Tempo doesn't prevent Intimidate (Gen3-7)")
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         NONE_OF {

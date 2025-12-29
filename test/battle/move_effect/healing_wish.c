@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacem
         ASSUME(GetMovePP(MOVE_EMBER) == 25);
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(100); Status1(STATUS1_POISON);
-            MovesWithPP({ MOVE_SCRATCH, 5}, { MOVE_WATER_GUN, 5}, { MOVE_LEAFAGE, 5}, { MOVE_EMBER, 0}); }
+            MovesWithPP({MOVE_SCRATCH, 5}, {MOVE_WATER_GUN, 5}, {MOVE_LEAFAGE, 5}, {MOVE_EMBER, 0}); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_HEALING_WISH); SEND_OUT(player, 1); }
@@ -50,7 +50,7 @@ DOUBLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacem
         PLAYER(SPECIES_GARDEVOIR) { Speed(300); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(100); Status1(STATUS1_BURN); Speed(50);
-            MovesWithPP({ MOVE_SCRATCH, 5}, { MOVE_WATER_GUN, 5}, { MOVE_LEAFAGE, 5}, { MOVE_EMBER, 0}); }
+            MovesWithPP({MOVE_SCRATCH, 5}, {MOVE_WATER_GUN, 5}, {MOVE_LEAFAGE, 5}, {MOVE_EMBER, 0}); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Healing Wish effect activates only if the switched Pokémon 
         PLAYER(SPECIES_NINJASK) { Speed(400); }
         PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); Speed(50); }
         PLAYER(SPECIES_WYNAUT) { Status1(STATUS1_PARALYSIS); Speed(50); }
-        PLAYER(SPECIES_WYNAUT) { MovesWithPP({ MOVE_SCRATCH, 5}); Speed(50); }
+        PLAYER(SPECIES_WYNAUT) { MovesWithPP({MOVE_SCRATCH, 5}); Speed(50); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN { MOVE(player, MOVE_HEALING_WISH); SEND_OUT(player, 1); }

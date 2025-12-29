@@ -72,7 +72,7 @@ SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (HP)")
 {
     GIVEN {
         PLAYER(SPECIES_TERAPAGOS) { HP(5); MaxHP(10); TeraType(TYPE_STELLAR); }
-        OPPONENT(SPECIES_WOBBUFFET) {}
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_CELEBRATE); }
     } THEN {

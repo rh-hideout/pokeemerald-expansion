@@ -132,7 +132,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Coaching")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move); }
     } WHEN {
         if (move == MOVE_HEADBUTT)
-            TURN {  EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
         else
             TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
     }

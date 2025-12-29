@@ -181,7 +181,7 @@ SINGLE_BATTLE_TEST("Berry hold effect cures status if a Pokémon enters a battle
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); Item(ITEM_LUM_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET) { Status1(status); Item(item); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);

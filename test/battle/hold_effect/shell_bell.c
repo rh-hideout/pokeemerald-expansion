@@ -138,8 +138,8 @@ SINGLE_BATTLE_TEST("Shell Bell doesn't restore HP for damage dealt by a foreseen
         OPPONENT(SPECIES_WOBBUFFET) { Level(16); }
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         MESSAGE("The opposing Wobbuffet took the Future Sight attack!");
@@ -210,9 +210,9 @@ DOUBLE_BATTLE_TEST("Shell Bell heals accumulated damage for spread moves")
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_ARIADOS) { MaxHP(maxHp); HP(initHp); Item(ITEM_SHELL_BELL); }
-        PLAYER(SPECIES_WOBBUFFET) {}
-        OPPONENT(SPECIES_GYARADOS) {}
-        OPPONENT(SPECIES_CHANSEY) {}
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GYARADOS);
+        OPPONENT(SPECIES_CHANSEY);
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_DISCHARGE);

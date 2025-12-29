@@ -413,7 +413,7 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_FLING) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET) { Item(item); Attack(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(status1); HP(399); MaxHP(400); MovesWithPP({ MOVE_CELEBRATE, 35}); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(status1); HP(399); MaxHP(400); MovesWithPP({MOVE_CELEBRATE, 35}); }
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {

@@ -220,7 +220,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(species) { Speed(6); Ability(ability); Item(heldItem); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         NOT ABILITY_POPUP(opponent, ability);
         if (heldItem == ITEM_IRON_BALL) {
@@ -393,9 +393,9 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(species) { Speed(5); Ability(ability); }
     } WHEN {
-        TURN{ MOVE(opponent, MOVE_AGILITY); }
-        TURN{ MOVE(player, MOVE_SPECTRAL_THIEF); }
-        TURN{ }
+        TURN { MOVE(opponent, MOVE_AGILITY); }
+        TURN { MOVE(player, MOVE_SPECTRAL_THIEF); }
+        TURN {}
     } SCENE {
         if (ability == ABILITY_FULL_METAL_BODY)
             MESSAGE("The opposing Solgaleo used Agility!");

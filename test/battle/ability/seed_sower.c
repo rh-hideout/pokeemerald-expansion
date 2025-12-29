@@ -29,7 +29,7 @@ DOUBLE_BATTLE_TEST("Multi-target moves hit correct battlers after Seed Sower is 
 {
     u32 j, k, l;
     u16 usedMove = MOVE_NONE;
-    static const u16 moves[] = { MOVE_HYPER_VOICE, MOVE_SURF};
+    static const u16 moves[] = {MOVE_HYPER_VOICE, MOVE_SURF};
     u16 abilities[MAX_BATTLERS_COUNT] = {0};
     u8 attacker = 0;
 
