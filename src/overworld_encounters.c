@@ -103,7 +103,7 @@ void UpdateOverworldEncounters(void)
     if (!IsSafeToSpawnObjectEvents()
         || !TrySelectTile(&x, &y)
         || spawnSlot == INVALID_SPAWN_SLOT
-        || (shouldSpawnWaterMons && !AreLegendariesInSootopolisPreventingEncounters()))
+        || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters()))
     {
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
