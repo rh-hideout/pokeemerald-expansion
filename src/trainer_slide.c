@@ -298,6 +298,9 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType
     if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
         return TRAINER_SLIDE_TARGET_NONE;
 
+    if (!IsDoubleBattle() && (battler > B_BATTLER_1))
+        return TRAINER_SLIDE_TARGET_NONE;
+
     SetTrainerSlideParameters(battler, &firstId, &lastId, &trainerId, &retValue);
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
 
