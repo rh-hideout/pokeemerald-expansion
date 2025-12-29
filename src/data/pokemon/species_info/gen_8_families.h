@@ -1230,7 +1230,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
             gOverworldPalette_Blipbug,
             gShinyOverworldPalette_Blipbug
         )
-        .tmIlliterate = TRUE,
+        .teachingType = TM_ILLITERATE,
         .levelUpLearnset = sBlipbugLevelUpLearnset,
         .teachableLearnset = sBlipbugTeachableLearnset,
         .eggMoveLearnset = sBlipbugEggMoveLearnset,
@@ -2461,7 +2461,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
             gOverworldPalette_Applin,
             gShinyOverworldPalette_Applin
         )
-        .tmIlliterate = TRUE,
+        .teachingType = TM_ILLITERATE,
         .levelUpLearnset = sApplinLevelUpLearnset,
         .teachableLearnset = sApplinTeachableLearnset,
         .eggMoveLearnset = sApplinEggMoveLearnset,

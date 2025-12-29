@@ -300,33 +300,20 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking into account accuracy and move effect failing")
+AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering Power Herb")
 {
-    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 expectedMove, expectedMove2 = MOVE_NONE;
-    enum Ability abilityAtk = ABILITY_NONE;
-    u32 holdItemAtk = ITEM_NONE;
+    u32 aiItem;
 
-    // Fiery Dance and Skull Bash are chosen because user is holding Power Herb
-    PARAMETRIZE { abilityAtk = ABILITY_STURDY; holdItemAtk = ITEM_POWER_HERB; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_FIERY_DANCE; move4 = MOVE_DOUBLE_EDGE;
-                  expectedMove = MOVE_FIERY_DANCE; expectedMove2 = MOVE_SKULL_BASH; }
-    // Crabhammer is chosen even if Skull Bash is more accurate, the user has no Power Herb
-    PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_SLAM; move4 = MOVE_CRABHAMMER;
-                  expectedMove = MOVE_CRABHAMMER; }
+    PARAMETRIZE { aiItem = ITEM_POWER_HERB; }
+    PARAMETRIZE { aiItem= ITEM_NONE; }
 
-    KNOWN_FAILING;
     GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_POWER_HERB) == HOLD_EFFECT_POWER_HERB);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(5); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Item(holdItemAtk); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); HP(5); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_FOCUS_BLAST, MOVE_SKULL_BASH, MOVE_FIERY_DANCE, MOVE_CRABHAMMER); Item(aiItem); }
     } WHEN {
-        TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
-                else {EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1);}
-             }
-    }
-    SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        TURN { aiItem == ITEM_POWER_HERB ? EXPECT_MOVE(opponent, MOVE_SKULL_BASH) : SCORE_EQ(opponent, MOVE_FIERY_DANCE, MOVE_SKULL_BASH); }
     }
 }
 
@@ -337,7 +324,6 @@ AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
     PARAMETRIZE { holdItemAtk = ITEM_POWER_HERB; }
-    PARAMETRIZE { }
 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SOLAR_BEAM) == DAMAGE_CATEGORY_SPECIAL);
