@@ -780,8 +780,7 @@ static enum MoveEndResult MoveEnd_MultihitMove(void)
 
     if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
      && !gBattleStruct->unableToUseMove
-     && gMultiHitCounter
-     && !(moveEffect == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0)) // Parental Bond edge case
+     && gMultiHitCounter)
     {
         gMultiHitCounter--;
         if (!IsBattlerAlive(gBattlerTarget) && moveEffect != EFFECT_DRAGON_DARTS)

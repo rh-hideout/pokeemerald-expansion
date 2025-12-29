@@ -9715,6 +9715,9 @@ static void Cmd_presentdamagecalculation(void)
         }
         else
         {
+            gSpecialStatuses[gBattlerAttacker].parentalBondState = PARENTAL_BOND_OFF;
+            gSpecialStatuses[gBattlerAttacker].multiHitOn = 0;
+            gMultiHitCounter = 0;
             SetHealAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 4);
             gBattleStruct->presentBasePower = 0;
         }
