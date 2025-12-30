@@ -31,11 +31,11 @@ SINGLE_BATTLE_TEST("Heatproof reduces damage from fire type moves")
 
 SINGLE_BATTLE_TEST("Heatproof halves the damage done by burn from 1/8th to 1/16th (Gen1-6) or 1/16th to 1/32nd (Gen 7+)")
 {
-    u32 config, value;
+    u32 config, burnRate;
 
-    PARAMETRIZE { config = GEN_7; value = 32; }
+    PARAMETRIZE { config = GEN_7; burnRate = 32; }
 
-    PARAMETRIZE { config = GEN_6; value = 16; }
+    PARAMETRIZE { config = GEN_6; burnRate = 16; }
 
     GIVEN {
         WITH_CONFIG(CONFIG_BURN_DAMAGE, config);
@@ -47,6 +47,6 @@ SINGLE_BATTLE_TEST("Heatproof halves the damage done by burn from 1/8th to 1/16t
     }
     SCENE {
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
-        HP_BAR(player, damage : maxHP / value);
+        HP_BAR(player, damage : maxHP / burnRate);
     }
 }
