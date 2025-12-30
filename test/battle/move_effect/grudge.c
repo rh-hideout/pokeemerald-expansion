@@ -254,4 +254,32 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Leech S
         EXPECT_GT(opponent->pp[3], 0);
     }
 }
-TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future Sight");
+SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future Sight")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER (SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER (SPECIES_WOBBUFFET);
+        OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_FUTURE_SIGHT, MOVE_SURF); }
+    }
+    WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_FUTURE_SIGHT); }
+        TURN { };
+        TURN { MOVE(player, MOVE_GRUDGE); SEND_OUT(player, 1); };
+        }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
+        MESSAGE("The opposing Wobbuffet foresaw an attack!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
+        MESSAGE("Wobbuffet took the Future Sight attack!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FUTURE_SIGHT_HIT);
+        MESSAGE("Wobbuffet fainted!");
+        NOT MESSAGE("The opposing Wobbuffet's Future Sight lost all its PP due to the grudge!");
+    }
+    THEN {
+        EXPECT_GT(opponent->pp[0], 0);
+        EXPECT_GT(opponent->pp[1], 0);
+        EXPECT_GT(opponent->pp[2], 0);
+        EXPECT_GT(opponent->pp[3], 0);
+    }
+}
