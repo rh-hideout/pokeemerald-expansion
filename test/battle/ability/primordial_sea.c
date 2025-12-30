@@ -65,14 +65,165 @@ SINGLE_BATTLE_TEST("Primordial Sea does not block a move if Pokémon is asleep a
     }
 }
 
-TO_DO_BATTLE_TEST("Primordial Sea makes Sunny Day fail")
-TO_DO_BATTLE_TEST("Primordial Sea makes Rain Dance fail")
-TO_DO_BATTLE_TEST("Primordial Sea makes Sandstorm fail")
-TO_DO_BATTLE_TEST("Primordial Sea makes Hail fail")
-TO_DO_BATTLE_TEST("Primordial Sea makes Snowscape fail") // Extrapolation
-TO_DO_BATTLE_TEST("Primordial Sea makes Drought fail to activate")
-TO_DO_BATTLE_TEST("Primordial Sea makes Drizzle fail to activate")
-TO_DO_BATTLE_TEST("Primordial Sea makes Sand Stream fail to activate")
-TO_DO_BATTLE_TEST("Primordial Sea makes Snow Warning fail to activate")
-TO_DO_BATTLE_TEST("Primordial Sea can be replaced by Delta Stream")
-TO_DO_BATTLE_TEST("Primordial Sea can be replaced by Desolate Land")
+SINGLE_BATTLE_TEST("Primordial Sea makes Sunny Day fail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_SUNNY_DAY);
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Sunny Day!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
+        MESSAGE("There is no relief from this heavy rain!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea makes Rain Dance fail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_RAIN_DANCE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Rain Dance!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, opponent);
+        MESSAGE("There is no relief from this heavy rain!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea makes Sandstorm fail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SANDSTORM); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Sandstorm!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SANDSTORM, opponent);
+        MESSAGE("There is no relief from this heavy rain!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea makes Hail fail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HAIL); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Hail!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HAIL, opponent);
+        MESSAGE("There is no relief from this heavy rain!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea makes Snowscape fail") // Extrapolation
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SNOWSCAPE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Snowscape!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SNOWSCAPE, opponent);
+        MESSAGE("There is no relief from this heavy rain!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea makes Drought fail to activate")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
+        MESSAGE("There is no relief from this heavy rain!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea makes Drizzle fail to activate")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_POLITOED) { Ability(ABILITY_DRIZZLE); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DRIZZLE);
+        MESSAGE("There is no relief from this heavy rain!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea makes Sand Stream fail to activate")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_HIPPOWDON) { Ability(ABILITY_SAND_STREAM); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SAND_STREAM);
+        MESSAGE("There is no relief from this heavy rain!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea makes Snow Warning fail to activate")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ABOMASNOW) { Ability(ABILITY_SNOW_WARNING); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SNOW_WARNING);
+        MESSAGE("There is no relief from this heavy rain!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea can be replaced by Delta Stream")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DELTA_STREAM);
+        MESSAGE("Mysterious strong winds are protecting Flying-type Pokémon!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_STRONG_WINDS);
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea can be replaced by Desolate Land")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DESOLATE_LAND);
+        MESSAGE("The sunlight turned extremely harsh!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_SUN_PRIMAL);
+    }
+}

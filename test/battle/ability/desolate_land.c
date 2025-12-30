@@ -99,14 +99,165 @@ SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
     }
 }
 
-TO_DO_BATTLE_TEST("Desolate Land makes Sunny Day fail")
-TO_DO_BATTLE_TEST("Desolate Land makes Rain Dance fail")
-TO_DO_BATTLE_TEST("Desolate Land makes Sandstorm fail")
-TO_DO_BATTLE_TEST("Desolate Land makes Hail fail")
-TO_DO_BATTLE_TEST("Desolate Land makes Snowscape fail") // Extrapolation
-TO_DO_BATTLE_TEST("Desolate Land makes Drought fail to activate")
-TO_DO_BATTLE_TEST("Desolate Land makes Drizzle fail to activate")
-TO_DO_BATTLE_TEST("Desolate Land makes Sand Stream fail to activate")
-TO_DO_BATTLE_TEST("Desolate Land makes Snow Warning fail to activate")
-TO_DO_BATTLE_TEST("Desolate Land can be replaced by Delta Stream")
-TO_DO_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea")
+SINGLE_BATTLE_TEST("Desolate Land makes Sunny Day fail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_SUNNY_DAY);
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Sunny Day!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
+        MESSAGE("The extremely harsh sunlight was not lessened at all!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land makes Rain Dance fail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_RAIN_DANCE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Rain Dance!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, opponent);
+        MESSAGE("The extremely harsh sunlight was not lessened at all!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land makes Sandstorm fail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SANDSTORM); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Sandstorm!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SANDSTORM, opponent);
+        MESSAGE("The extremely harsh sunlight was not lessened at all!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land makes Hail fail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HAIL); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Hail!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HAIL, opponent);
+        MESSAGE("The extremely harsh sunlight was not lessened at all!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land makes Snowscape fail") // Extrapolation
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SNOWSCAPE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Snowscape!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SNOWSCAPE, opponent);
+        MESSAGE("The extremely harsh sunlight was not lessened at all!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land makes Drought fail to activate")
+{
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
+        MESSAGE("The extremely harsh sunlight was not lessened at all!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land makes Drizzle fail to activate")
+{
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_POLITOED) { Ability(ABILITY_DRIZZLE); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DRIZZLE);
+        MESSAGE("The extremely harsh sunlight was not lessened at all!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land makes Sand Stream fail to activate")
+{
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_HIPPOWDON) { Ability(ABILITY_SAND_STREAM); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SAND_STREAM);
+        MESSAGE("The extremely harsh sunlight was not lessened at all!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land makes Snow Warning fail to activate")
+{
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ABOMASNOW) { Ability(ABILITY_SNOW_WARNING); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SNOW_WARNING);
+        MESSAGE("The extremely harsh sunlight was not lessened at all!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land can be replaced by Delta Stream")
+{
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DELTA_STREAM);
+        MESSAGE("Mysterious strong winds are protecting Flying-type Pokémon!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_STRONG_WINDS);
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea")
+{
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_PRIMORDIAL_SEA);
+        MESSAGE("A heavy rain began to fall!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_RAIN_PRIMAL);
+    }
+}
