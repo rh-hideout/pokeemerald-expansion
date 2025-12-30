@@ -1593,19 +1593,20 @@ u32 LoadSpritePalette(const struct SpritePalette *palette)
     if (index != 0xFF)
         return index;
 
-    DespawnOldestOWE_Pal();
     index = IndexOfSpritePaletteTag(TAG_NONE);
 
     if (index == 0xFF)
     {
-        return 0xFF;
+        DespawnOldestOWE_Pal();
+        index = IndexOfSpritePaletteTag(TAG_NONE);
+        
+        if (index == 0xFF)
+            return 0xFF;
     }
-    else
-    {
-        sSpritePaletteTags[index] = palette->tag;
-        DoLoadSpritePalette(palette->data, PLTT_ID(index));
-        return index;
-    }
+
+    sSpritePaletteTags[index] = palette->tag;
+    DoLoadSpritePalette(palette->data, PLTT_ID(index));
+    return index;
 }
 
 u32 LoadSpritePaletteWithTag(const u16 *pal, u16 tag)
