@@ -47,6 +47,6 @@ SINGLE_BATTLE_TEST("Heatproof halves the damage done by burn from 1/8th to 1/16t
     }
     SCENE {
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
-        HP_BAR(player, damage : maxHP / burnRate);
+        HP_BAR(player, damage: maxHP / burnRate);
     }
 }
