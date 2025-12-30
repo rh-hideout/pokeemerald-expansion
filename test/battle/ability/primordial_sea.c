@@ -65,134 +65,50 @@ SINGLE_BATTLE_TEST("Primordial Sea does not block a move if Pokémon is asleep a
     }
 }
 
-SINGLE_BATTLE_TEST("Primordial Sea makes Sunny Day fail")
+SINGLE_BATTLE_TEST("Primordial Sea blocks weather-setting moves")
 {
+    u16 move;
+    PARAMETRIZE { move = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { move = MOVE_RAIN_DANCE; }
+    PARAMETRIZE { move = MOVE_SANDSTORM; }
+    PARAMETRIZE { move = MOVE_HAIL; }
+    PARAMETRIZE { move = MOVE_SNOWSCAPE; }
+
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_SUNNY_DAY);
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
-    } SCENE {
-        MESSAGE("The opposing Wobbuffet used Sunny Day!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
-        MESSAGE("There is no relief from this heavy rain!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Primordial Sea makes Rain Dance fail")
-{
-    GIVEN {
         ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_RAIN_DANCE); }
-    } SCENE {
-        MESSAGE("The opposing Wobbuffet used Rain Dance!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, opponent);
-        MESSAGE("There is no relief from this heavy rain!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Primordial Sea makes Sandstorm fail")
-{
-    GIVEN {
         ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SANDSTORM); }
-    } SCENE {
-        MESSAGE("The opposing Wobbuffet used Sandstorm!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SANDSTORM, opponent);
-        MESSAGE("There is no relief from this heavy rain!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Primordial Sea makes Hail fail")
-{
-    GIVEN {
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_HAIL); }
-    } SCENE {
-        MESSAGE("The opposing Wobbuffet used Hail!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HAIL, opponent);
-        MESSAGE("There is no relief from this heavy rain!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Primordial Sea makes Snowscape fail") // Extrapolation
-{
-    GIVEN {
         ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
         PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_SNOWSCAPE); }
+        TURN { MOVE(opponent, move); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Snowscape!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SNOWSCAPE, opponent);
-        MESSAGE("There is no relief from this heavy rain!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_RAIN_PRIMAL);
     }
 }
 
-SINGLE_BATTLE_TEST("Primordial Sea makes Drought fail to activate")
+SINGLE_BATTLE_TEST("Primordial Sea prevents other weather abilities")
 {
-    GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
-    } WHEN {
-        TURN { SWITCH(opponent, 1); }
-    } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
-        MESSAGE("There is no relief from this heavy rain!");
-    }
-}
+    u16 ability, species;
+    PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
+    PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
+    PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
+    PARAMETRIZE { ability = ABILITY_SNOW_WARNING; species = SPECIES_ABOMASNOW; }
 
-SINGLE_BATTLE_TEST("Primordial Sea makes Drizzle fail to activate")
-{
     GIVEN {
         PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_POLITOED) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_DRIZZLE);
-        MESSAGE("There is no relief from this heavy rain!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Primordial Sea makes Sand Stream fail to activate")
-{
-    GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_HIPPOWDON) { Ability(ABILITY_SAND_STREAM); }
-    } WHEN {
-        TURN { SWITCH(opponent, 1); }
-    } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_SAND_STREAM);
-        MESSAGE("There is no relief from this heavy rain!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Primordial Sea makes Snow Warning fail to activate")
-{
-    GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_ABOMASNOW) { Ability(ABILITY_SNOW_WARNING); }
-    } WHEN {
-        TURN { SWITCH(opponent, 1); }
-    } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_SNOW_WARNING);
-        MESSAGE("There is no relief from this heavy rain!");
+        ABILITY_POPUP(opponent, ability);
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_RAIN_PRIMAL);
     }
 }
 
