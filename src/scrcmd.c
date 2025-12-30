@@ -1,6 +1,7 @@
 #include "global.h"
 #include "frontier_util.h"
 #include "battle_setup.h"
+#include "battle_util.h"
 #include "berry.h"
 #include "clock.h"
 #include "coins.h"

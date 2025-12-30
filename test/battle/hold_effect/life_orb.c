@@ -110,6 +110,7 @@ SINGLE_BATTLE_TEST("Life Orb does not activate if on a confusion hit")
 SINGLE_BATTLE_TEST("Life Orb does not activate if move was absorbed by target")
 {
     GIVEN {
+        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
         OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
     } WHEN {

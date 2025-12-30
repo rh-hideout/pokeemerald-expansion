@@ -28,7 +28,6 @@ static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 bool32 ShouldUseItem(u32 battler)
 {
     struct Pokemon *party;
-    s32 i;
     u8 validMons = 0;
     bool32 shouldUse = FALSE;
     u32 healAmount = 0;
@@ -49,21 +48,21 @@ bool32 ShouldUseItem(u32 battler)
 
     party = GetBattlerParty(battler);
 
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
     {
-        if (IsValidForBattle(&party[i]))
+        if (IsValidForBattle(&party[monIndex]))
         {
             validMons++;
         }
     }
 
-    for (i = 0; i < MAX_TRAINER_ITEMS; i++)
+    for (u32 itemIndex = 0; itemIndex < MAX_TRAINER_ITEMS; itemIndex++)
     {
         u16 item;
         const u8 *itemEffects;
         u8 battlerSide;
 
-        item = gBattleHistory->trainerItems[i];
+        item = gBattleHistory->trainerItems[itemIndex];
         if (item == ITEM_NONE)
             continue;
         itemEffects = GetItemEffect(item);
@@ -90,7 +89,7 @@ bool32 ShouldUseItem(u32 battler)
                 shouldUse = ShouldCureStatusWithItem(battler, battler, gAiLogicData);
             break;
         case EFFECT_ITEM_INCREASE_STAT:
-            if (gDisableStructs[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
+            if (gBattleStruct->battlerState[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
             {
                 if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
                 {
@@ -117,7 +116,7 @@ bool32 ShouldUseItem(u32 battler)
         case EFFECT_ITEM_INCREASE_ALL_STATS:
             if (gAiLogicData->abilities[battler] == ABILITY_CONTRARY)
                 break;
-            if (gDisableStructs[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
+            if (gBattleStruct->battlerState[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
             {
                 if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
                 {
@@ -143,7 +142,7 @@ bool32 ShouldUseItem(u32 battler)
             }
             break;
         case EFFECT_ITEM_SET_FOCUS_ENERGY:
-            if (!gDisableStructs[battler].isFirstTurn
+            if (!gBattleStruct->battlerState[battler].isFirstTurn
                 || gBattleMons[battler].volatiles.dragonCheer
                 || gBattleMons[battler].volatiles.focusEnergy
                 || AI_OpponentCanFaintAiWithMod(battler, 0))
@@ -167,7 +166,7 @@ bool32 ShouldUseItem(u32 battler)
             break;
         case EFFECT_ITEM_SET_MIST:
             battlerSide = GetBattlerSide(battler);
-            if (gDisableStructs[battler].isFirstTurn && !(gSideStatuses[battlerSide] & SIDE_STATUS_MIST))
+            if (gBattleStruct->battlerState[battler].isFirstTurn && !(gSideStatuses[battlerSide] & SIDE_STATUS_MIST))
                 shouldUse = TRUE;
             break;
         case EFFECT_ITEM_REVIVE:
@@ -189,7 +188,7 @@ bool32 ShouldUseItem(u32 battler)
                 gBattleStruct->itemPartyIndex[battler] = gBattlerPartyIndexes[battler];
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
             gBattleStruct->chosenItem[battler] = item;
-            gBattleHistory->trainerItems[i] = 0;
+            gBattleHistory->trainerItems[itemIndex] = 0;
             return shouldUse;
         }
     }
@@ -200,7 +199,6 @@ bool32 ShouldUseItem(u32 battler)
 static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
 {
     bool32 shouldHeal = FALSE;
-    u8 opponent;
     u32 maxDamage = 0;
     u32 dmg = 0;
 
@@ -213,11 +211,11 @@ static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
     }
 
     //calculate max expected damage from the opponent
-    for (opponent = 0; opponent < gBattlersCount; opponent++)
+    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        if (IsOnPlayerSide(opponent))
+        if (IsOnPlayerSide(battlerIndex))
         {
-            dmg = GetBestDmgFromBattler(opponent, battler, AI_DEFENDING);
+            dmg = GetBestDmgFromBattler(battlerIndex, battler, AI_DEFENDING);
 
             if (dmg > maxDamage)
                 maxDamage = dmg;

@@ -300,33 +300,20 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking into account accuracy and move effect failing")
+AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering Power Herb")
 {
-    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 expectedMove, expectedMove2 = MOVE_NONE;
-    enum Ability abilityAtk = ABILITY_NONE;
-    u32 holdItemAtk = ITEM_NONE;
+    u32 aiItem;
 
-    // Fiery Dance and Skull Bash are chosen because user is holding Power Herb
-    PARAMETRIZE { abilityAtk = ABILITY_STURDY; holdItemAtk = ITEM_POWER_HERB; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_FIERY_DANCE; move4 = MOVE_DOUBLE_EDGE;
-                  expectedMove = MOVE_FIERY_DANCE; expectedMove2 = MOVE_SKULL_BASH; }
-    // Crabhammer is chosen even if Skull Bash is more accurate, the user has no Power Herb
-    PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_SLAM; move4 = MOVE_CRABHAMMER;
-                  expectedMove = MOVE_CRABHAMMER; }
+    PARAMETRIZE { aiItem = ITEM_POWER_HERB; }
+    PARAMETRIZE { aiItem= ITEM_NONE; }
 
-    KNOWN_FAILING;
     GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_POWER_HERB) == HOLD_EFFECT_POWER_HERB);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(5); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Item(holdItemAtk); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); HP(5); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_FOCUS_BLAST, MOVE_SKULL_BASH, MOVE_FIERY_DANCE, MOVE_CRABHAMMER); Item(aiItem); }
     } WHEN {
-        TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
-                else {EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1);}
-             }
-    }
-    SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        TURN { aiItem == ITEM_POWER_HERB ? EXPECT_MOVE(opponent, MOVE_SKULL_BASH) : SCORE_EQ(opponent, MOVE_FIERY_DANCE, MOVE_SKULL_BASH); }
     }
 }
 
@@ -337,7 +324,6 @@ AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
     PARAMETRIZE { holdItemAtk = ITEM_POWER_HERB; }
-    PARAMETRIZE { }
 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SOLAR_BEAM) == DAMAGE_CATEGORY_SPECIAL);
@@ -846,6 +832,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees opposing drain ability")
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
         ASSUME(GetMoveType(MOVE_RAZOR_LEAF) != TYPE_ELECTRIC);
         ASSUME(GetMoveType(MOVE_METAL_CLAW) != TYPE_ELECTRIC);
+        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_KRABBY) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_CELEBRATE); }
@@ -1098,7 +1085,7 @@ AI_SINGLE_BATTLE_TEST("AI will consider using Explosion inversely proportional t
     PARAMETRIZE { monHP = 1; passesChance = EXPLOSION_MAXIMUM_CHANCE; }
     PASSES_RANDOMLY(passesChance, 100, RNG_AI_CONSIDER_EXPLOSION);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         ASSUME(EXPLOSION_LOWER_HP_THRESHOLD == 10);
         ASSUME(EXPLOSION_HIGHER_HP_THRESHOLD == 90);
         ASSUME(LAST_MON_PREFERS_NOT_SACRIFICE == FALSE);
@@ -1117,7 +1104,7 @@ AI_SINGLE_BATTLE_TEST("AI will prioritize non-self-sacrificing moves if they hav
     PARAMETRIZE { selfSacrificeMove = MOVE_FINAL_GAMBIT; }
     PASSES_RANDOMLY(100, 100, RNG_AI_CONSIDER_EXPLOSION);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
         ASSUME(EXPLOSION_LOWER_HP_THRESHOLD == 10);
         ASSUME(EXPLOSION_HIGHER_HP_THRESHOLD == 90);
@@ -1182,4 +1169,101 @@ TEST("AI hits to KO damage rounding works correctly")
 {
     EXPECT_EQ(GetNoOfHitsToKO(4, 12), 3);
     EXPECT_EQ(GetNoOfHitsToKO(16, 50), 4);
+}
+
+AI_SINGLE_BATTLE_TEST("AI is encouraged to use pivot moves if it outspeeds and should switch")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_HASBADODDS_PERCENTAGE, 100, RNG_AI_SWITCH_HASBADODDS);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_SCRATCH, MOVE_GROWL); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(2); HP(3); MaxHP(5); Moves(MOVE_U_TURN, MOVE_STRENGTH); }
+        OPPONENT(SPECIES_METAGROSS) { Speed(2); Moves(MOVE_METEOR_MASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_U_TURN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI is encouraged to use pivot moves if it is outsped, survives a hit, and should switch")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_HASBADODDS_PERCENTAGE, 100, RNG_AI_SWITCH_HASBADODDS);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_MACHAMP) { Speed(2); Moves(MOVE_DRAGON_RAGE, MOVE_GROWL); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); MaxHP(41); Moves(MOVE_U_TURN, MOVE_STRENGTH); }
+        OPPONENT(SPECIES_METAGROSS) { Speed(2); Moves(MOVE_METEOR_MASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_U_TURN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI is encouraged to use pivot moves if the target has a Sash or Multiscale effect and the AI has a good switchin")
+{
+    PASSES_RANDOMLY(SHOULD_PIVOT_BREAK_SASH_CHANCE, 100, RNG_AI_SHOULD_PIVOT_BREAK_SASH);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Item(ITEM_FOCUS_SASH); Moves(MOVE_GROWL); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_U_TURN, MOVE_STRENGTH); }
+        OPPONENT(SPECIES_METAGROSS) { Moves(MOVE_METEOR_MASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_U_TURN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI is encouraged to use pivot moves if it benefits from Regenerator and has a good switchin")
+{
+    PASSES_RANDOMLY(100, 100);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_DRAGON_RAGE, MOVE_GROWL); }
+        OPPONENT(SPECIES_TANGELA) { Speed(2); HP(30); MaxHP(100); Ability(ABILITY_REGENERATOR); Moves(MOVE_U_TURN, MOVE_MAGICAL_LEAF); }
+        OPPONENT(SPECIES_METAGROSS) { Speed(2); Moves(MOVE_METEOR_MASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_U_TURN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI is discouraged from using pivot moves if it has no good switchin and does not KO")
+{
+    PASSES_RANDOMLY(100, 100);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_SCRATCH, MOVE_GROWL); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(2); HP(3); MaxHP(5); Moves(MOVE_U_TURN, MOVE_STRENGTH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); Level(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_STRENGTH); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will try to withstand hit with absorbing move")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); HP(39); Moves(MOVE_ENERGY_BALL, MOVE_GIGA_DRAIN); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_RAGE); EXPECT_MOVE(opponent, MOVE_GIGA_DRAIN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will not try to withstand hit with absorbing move if it will still be KO'd")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); MaxHP(40); HP(39); Moves(MOVE_ENERGY_BALL, MOVE_GIGA_DRAIN); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_RAGE); EXPECT_MOVE(opponent, MOVE_ENERGY_BALL); }
+    }
 }

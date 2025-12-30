@@ -33,6 +33,7 @@ enum ShouldSwitchScenario
     SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO,
     SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS,
     SHOULD_SWITCH_ALL_SCORES_BAD,
+    SHOULD_SWITCH_DYN_FUNC,
 };
 
 enum SwitchType
@@ -44,7 +45,6 @@ enum SwitchType
 
 u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType);
 bool32 ShouldSwitch(u32 battler);
-bool32 IsSwitchinGrounded(enum HoldEffect heldItemEffect, enum Ability ability, enum Type type1, enum Type type2);
 void ModifySwitchAfterMoveScoring(u32 battler);
 u32 AI_SelectRevivalBlessingMon(u32 battler);
 bool32 IsSwitchinValid(u32 battler);
