@@ -121,12 +121,14 @@ SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active")
         ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
         ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); Moves(MOVE_THUNDER_SHOCK); }
-        OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_ANTICIPATION); }
+        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); Moves(MOVE_THUNDER_SHOCK, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_ANTICIPATION); Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_ANTICIPATION);
+        MESSAGE("Rayquaza used Celebrate!");
+        MESSAGE("The opposing Pidgey used Celebrate!");
     }
 }
 
@@ -137,12 +139,14 @@ SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active in Inve
         ASSUME(GetMoveType(MOVE_VINE_WHIP) == TYPE_GRASS);
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 0) == TYPE_FLYING);
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 1) == TYPE_FLYING);
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); Moves(MOVE_VINE_WHIP); }
-        OPPONENT(SPECIES_TORNADUS) { Ability(ABILITY_ANTICIPATION); }
+        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); Moves(MOVE_VINE_WHIP, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_TORNADUS) { Ability(ABILITY_ANTICIPATION); Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_ANTICIPATION);
+        MESSAGE("Rayquaza used Celebrate!");
+        MESSAGE("The opposing Tornadus used Celebrate!");
     }
 }
 
