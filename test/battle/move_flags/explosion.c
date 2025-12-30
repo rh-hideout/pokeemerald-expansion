@@ -32,8 +32,8 @@ SINGLE_BATTLE_TEST("Explosion causes the user & the target to faint")
         HP_BAR(player, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
         HP_BAR(opponent, hp: 0);
-        MESSAGE("The opposing Wobbuffet fainted!");
         MESSAGE("Wobbuffet fainted!");
+        MESSAGE("The opposing Wobbuffet fainted!");
     }
 }
 
@@ -84,10 +84,10 @@ DOUBLE_BATTLE_TEST("Explosion causes everyone to faint in a double battle")
         HP_BAR(opponentLeft, hp: 0);
         HP_BAR(playerRight, hp: 0);
         HP_BAR(opponentRight, hp: 0);
+        MESSAGE("Wobbuffet fainted!");
         MESSAGE("The opposing Abra fainted!");
         MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Kadabra fainted!");
-        MESSAGE("Wobbuffet fainted!");
     }
 }
 
@@ -134,14 +134,13 @@ DOUBLE_BATTLE_TEST("Explosion boosted by Galvanize is correctly blocked by Volt 
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
-        MESSAGE("Geodude used Explosion!");
         HP_BAR(playerLeft, hp: 0);
         ABILITY_POPUP(opponentLeft, ABILITY_VOLT_ABSORB);
         NOT HP_BAR(opponentLeft, hp: 0);
         HP_BAR(playerRight, hp: 0);
         HP_BAR(opponentRight, hp: 0);
+        MESSAGE("Geodude fainted!");
         MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Wobbuffet fainted!");
-        MESSAGE("Geodude fainted!");
     }
 }
