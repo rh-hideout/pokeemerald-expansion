@@ -150,8 +150,6 @@ void UpdateOverworldEncounters(void)
     }
 
     gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
-    gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
-    gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
     gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
     gObjectEvents[objectEventId].sRoamerOutbreakStatus = indexRoamerOutbreak;
 

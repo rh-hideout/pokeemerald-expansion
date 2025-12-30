@@ -78,8 +78,6 @@
 #define OW_WILD_ENCOUNTERS_RESTRICT_MAP         TRUE    // If TRUE, OW Pokémon spawned as overworld wild encounters will stay within their current map bounds.
 #define OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT    FALSE   // If TRUE, the oldest OW wild encounter objects will despawn after a short time and be replaced with a new spawn if possible.
 #define OW_WILD_ENCOUNTERS_FLEE_DESPAWN         TRUE    // If TRUE, a fleeing OW Pokémon will despawn if it is unable to take a step for a short time.
-#define OW_ENCOUNTER_MOVEMENT_RANGE_X           8       // The horizontal movement range for OW encounter Pokémon.
-#define OW_ENCOUNTER_MOVEMENT_RANGE_Y           8       // The vertical movement range for OW encounter Pokémon.
 #define OW_VANILLA_AMBIENT_CRIES                TRUE    // If TRUE, the ambient wild Pokémon cries will play on routes with encounter tables.
 #define OW_WILD_ENCOUNTERS_AMBIENT_CRIES        TRUE    // If TRUE, generated overworld encounters will play ambient cries based on their location relative to the player.
 #define OW_WILD_ENCOUNTERS_FEEBAS               FALSE   // If TRUE, any spot that could result in a Feebas fishing encounter can spawn a Feebas overworld wild encounter.
