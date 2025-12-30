@@ -12,9 +12,7 @@ SINGLE_BATTLE_TEST("Heatproof reduces damage from fire type moves")
     s16 damage[2];
     GIVEN {
         PLAYER (SPECIES_WOBBUFFET);
-        OPPONENT (SPECIES_BRONZONG) {
-            Ability(ABILITY_HEATPROOF);
-        }
+        OPPONENT (SPECIES_BRONZONG) { Ability(ABILITY_HEATPROOF); }
     }
     WHEN {
         TURN { MOVE(player, MOVE_EMBER); }
@@ -35,22 +33,13 @@ SINGLE_BATTLE_TEST("Heatproof halves the damage done by burn from 1/8th to 1/16t
 {
     u32 config, value;
 
-    PARAMETRIZE {
-        config = GEN_7;
-        value = 32;
-    }
+    PARAMETRIZE { config = GEN_7; value = 32; }
 
-    PARAMETRIZE {
-        config = GEN_6;
-        value = 16;
-    }
+    PARAMETRIZE { config = GEN_6; value = 16; }
 
     GIVEN {
         WITH_CONFIG(CONFIG_BURN_DAMAGE, config);
-        PLAYER (SPECIES_BRONZONG) {
-            Ability(ABILITY_HEATPROOF);
-            Status1(STATUS1_BURN);
-        }
+        PLAYER (SPECIES_BRONZONG) { Ability(ABILITY_HEATPROOF); Status1(STATUS1_BURN); }
         OPPONENT (SPECIES_WOBBUFFET);
     }
     WHEN {
