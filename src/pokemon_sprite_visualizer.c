@@ -1041,8 +1041,10 @@ static void UpdateBattleBg(u8 taskId, bool8 increment)
 
 static void DrawFollowerSprite(struct PokemonSpriteVisualizer *data)
 {
+    if (!OW_POKEMON_OBJECT_EVENTS)
+        return;
+
     u16 species = SanitizeSpeciesId(data->currentmonId);
-#if OW_POKEMON_OBJECT_EVENTS
     u16 graphicsId = species + OBJ_EVENT_MON;
     if (data->isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
@@ -1061,9 +1063,6 @@ static void DrawFollowerSprite(struct PokemonSpriteVisualizer *data)
     gSprites[data->followerspriteId].images = graphicsInfo->images;
     gSprites[data->followerspriteId].anims = graphicsInfo->anims;
     gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
-#else
-    return;
-#endif
 }
 
 // *******************************
@@ -1795,7 +1794,8 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             SetConstSpriteValues(data);
             UpdateYPosOffsetText(data);
 
-            gSprites[data->followerspriteId].invisible = TRUE;
+            if (data->followerspriteId != 0)
+                gSprites[data->followerspriteId].invisible = TRUE;
         }
         else if (JOY_NEW(B_BUTTON))
         {
@@ -1860,8 +1860,9 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             SetArrowInvisibility(data);
             PrintInstructionsOnWindow(data);
             UpdateMonAnimNames(taskId);
-
-            gSprites[data->followerspriteId].invisible = FALSE;
+            
+            if (data->followerspriteId != 0)
+                gSprites[data->followerspriteId].invisible = FALSE;
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
@@ -1950,7 +1951,9 @@ static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
     DestroySprite(&gSprites[data->frontspriteId]);
     DestroySprite(&gSprites[data->backspriteId]);
     DestroySprite(&gSprites[data->iconspriteId]);
-    DestroySprite(&gSprites[data->followerspriteId]);
+
+    if (data->followerspriteId != 0)
+        DestroySprite(&gSprites[data->followerspriteId]);
 
     DestroySprite(&gSprites[data->frontShadowSpriteIdPrimary]);
     if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
