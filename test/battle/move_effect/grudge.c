@@ -50,7 +50,32 @@ SINGLE_BATTLE_TEST("Grudge does not deplete PP of a Z-Move")
     }
 }
 
-TO_DO_BATTLE_TEST("Grudge depletes all PP from a Max Move's base move")
+SINGLE_BATTLE_TEST("Grudge depletes all PP from a Max Move's base move")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) {  Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_POUND, MOVE_SURF); Item(ITEM_LAGGING_TAIL); };
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_GRUDGE);
+            MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX);
+            SEND_OUT(player, 1);
+        }
+    } SCENE {
+        MESSAGE("Wobbuffet used Grudge!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
+        MESSAGE("The opposing Wobbuffet used Max Strike!");
+        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("The opposing Wobbuffet's Scratch lost all its PP due to the grudge!");
+
+    } THEN {
+        EXPECT_GT(opponent->pp[0], 0);
+        EXPECT_EQ(opponent->pp[1], 0);
+        EXPECT_GT(opponent->pp[2], 0);
+        EXPECT_GT(opponent->pp[3], 0);
+    }
+}
 
 SINGLE_BATTLE_TEST("Grudge does not activate for Struggle")
 {
