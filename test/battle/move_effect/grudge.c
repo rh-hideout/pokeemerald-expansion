@@ -200,6 +200,33 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Fl
     }
 }
 
-TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Sandstorm");
+SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Sandstorm")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
+        PLAYER (SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER (SPECIES_WOBBUFFET);
+        OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_SANDSTORM, MOVE_SURF); }
+    }
+    WHEN {
+        TURN { MOVE(player, MOVE_GRUDGE); MOVE(opponent, MOVE_SANDSTORM); SEND_OUT(player, 1); }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SANDSTORM, opponent);
+        MESSAGE("The sandstorm is raging.");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SANDSTORM_CONTINUES);
+        MESSAGE("Wobbuffet is buffeted by the sandstorm!");
+        MESSAGE("Wobbuffet fainted!");
+        NOT MESSAGE("The opposing Wobbuffet's Sandstorm lost all its PP due to the grudge!");
+    }
+    THEN {
+        EXPECT_GT(opponent->pp[0], 0);
+        EXPECT_GT(opponent->pp[1], 0);
+        EXPECT_GT(opponent->pp[2], 0);
+        EXPECT_GT(opponent->pp[3], 0);
+    }
+}
+
 TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Leech Seed");
 TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future Sight");
