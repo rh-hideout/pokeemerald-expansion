@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn after being used")
     }
 }
 
-DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is Protected")
+DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
 {
     // Commented moves are instructBanned.
     u32 move;
@@ -183,7 +183,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is Protected")
     }
 }
 
-DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is Protected by Quick Guard")
+DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Quick Guard")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_QUICK_GUARD) == EFFECT_PROTECT);
