@@ -6136,6 +6136,7 @@ static void Cmd_moveend(void)
 
                 // Not strictly a protect effect, but works the same way
                 if (IsBattlerUsingBeakBlast(gBattlerTarget)
+                 && method == PROTECT_NONE
                  && CanBeBurned(gBattlerAttacker, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
                  && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 {
