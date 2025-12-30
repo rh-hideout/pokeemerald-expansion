@@ -1245,6 +1245,8 @@ enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavio
         return OWE_SPAWN_ANIM_GRASS;
     else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior))
         return OWE_SPAWN_ANIM_WATER;
+    else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
+        return OWE_SPAWN_ANIM_UNDERWATER;
     else
         return OWE_SPAWN_ANIM_CAVE;
 }
