@@ -23,9 +23,9 @@
 #define OWE_SPAWN_RADUIS_WIDTH      (OWE_TOTAL_SPAWN_WIDTH - 1) / 2     // Distance from center to left/right edge (not including center).
 #define OWE_SPAWN_RADUIS_HEIGHT     (OWE_TOTAL_SPAWN_HEIGHT - 1) / 2    // Distance from center to top/bottom edge (not including center).
 
-#define OWE_TIME_BETWEEN_SPAWNS     180 // Minimum wait time (in frames) between spawns.
-#define OWE_SPAWN_TIME_VARIABILITY  60  // A random number of frames between 0 and this value will be added to OWE_TIME_BETWEEN_SPAWNS every reset for variability.
-#define OWE_SPAWN_TIME_MINIMUM      60  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
+#define OWE_TIME_BETWEEN_SPAWNS     60 // Minimum wait time (in frames) between spawns.
+#define OWE_SPAWN_TIME_VARIABILITY  30  // A random number of frames between 0 and this value will be added to OWE_TIME_BETWEEN_SPAWNS every reset for variability.
+#define OWE_SPAWN_TIME_MINIMUM      30  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 
 #define OWE_MON_SIGHT_WIDTH         3
 #define OWE_MON_SIGHT_LENGTH        4
