@@ -7,7 +7,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
 }
 
-SINGLE_BATTLE_TEST("Heatproof reduces damage from fire type moves")
+SINGLE_BATTLE_TEST("Heatproof halves damage from fire type moves")
 {
     s16 damage[2];
     GIVEN {
