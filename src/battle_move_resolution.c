@@ -785,7 +785,7 @@ static enum MoveEndResult MoveEnd_MultihitMove(void)
     {
         enum MoveTarget target = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
         gMultiHitCounter--;
-        if (!IsBattlerAlive(gBattlerTarget) && target == TARGET_SMART)
+        if (!IsBattlerAlive(gBattlerTarget) && target != TARGET_SMART)
             gMultiHitCounter = 0;
 
         gBattleScripting.multihitString[4]++;
