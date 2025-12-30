@@ -228,5 +228,30 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Sandsto
     }
 }
 
-TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Leech Seed");
+SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Leech Seed")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
+        PLAYER (SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER (SPECIES_WOBBUFFET);
+        OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_LEECH_SEED, MOVE_SURF); }
+    }
+    WHEN {
+        TURN { MOVE(player, MOVE_GRUDGE); MOVE(opponent, MOVE_LEECH_SEED); SEND_OUT(player, 1); }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponent);
+        MESSAGE("Wobbuffet was seeded!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, player);
+        MESSAGE("Wobbuffet fainted!");
+        NOT MESSAGE("The opposing Wobbuffet's Leech Seed lost all its PP due to the grudge!");
+    }
+    THEN {
+        EXPECT_GT(opponent->pp[0], 0);
+        EXPECT_GT(opponent->pp[1], 0);
+        EXPECT_GT(opponent->pp[2], 0);
+        EXPECT_GT(opponent->pp[3], 0);
+    }
+}
 TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future Sight");
