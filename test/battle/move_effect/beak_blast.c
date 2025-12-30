@@ -161,7 +161,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
-        TURN { MOVE(opponentLeft, move); MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
+        TURN { MOVE(opponentLeft, move); }
         TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft, WITH_RNG(RNG_PROTECT_FAIL, 0));
                MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
                MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
@@ -196,7 +196,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Quick 
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
                MOVE(opponentRight, MOVE_QUICK_GUARD);
-               MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
+               MOVE(playerLeft, MOVE_QUICK_ATTACK, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_GUARD, opponentRight);
