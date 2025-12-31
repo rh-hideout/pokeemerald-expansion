@@ -241,7 +241,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_LIGHTNING_ROD, ABILITY_LIGHTNING_ROD, ABILITY_LIGHTNING_ROD },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Sceptile"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_SCEPTILE_MEGA : CRY_SCEPTILE,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_SCEPTILE_MEGA,
+    #else
+        .cryId = CRY_SCEPTILE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_SCEPTILE,
         .categoryName = _("Forest"),
         .height = 19,
@@ -569,7 +573,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_SPEED_BOOST, ABILITY_SPEED_BOOST, ABILITY_SPEED_BOOST },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Blaziken"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_BLAZIKEN_MEGA : CRY_BLAZIKEN,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_BLAZIKEN_MEGA,
+    #else
+        .cryId = CRY_BLAZIKEN,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_BLAZIKEN,
         .categoryName = _("Blaze"),
         .height = 19,
@@ -863,7 +871,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_SWIFT_SWIM, ABILITY_SWIFT_SWIM, ABILITY_SWIFT_SWIM },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Swampert"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_SWAMPERT_MEGA : CRY_SWAMPERT,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_SWAMPERT_MEGA,
+    #else
+        .cryId = CRY_SWAMPERT,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_SWAMPERT,
         .categoryName = _("Mud Fish"),
         .height = 19,
@@ -2901,7 +2913,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_PIXILATE, ABILITY_PIXILATE, ABILITY_PIXILATE },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Gardevoir"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_GARDEVOIR_MEGA : CRY_GARDEVOIR,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_GARDEVOIR_MEGA,
+    #else
+        .cryId = CRY_GARDEVOIR,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_GARDEVOIR,
         .categoryName = _("Embrace"),
         .height = 16,
@@ -3050,7 +3066,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_INNER_FOCUS, ABILITY_INNER_FOCUS, ABILITY_INNER_FOCUS },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Gallade"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_GALLADE_MEGA : CRY_GALLADE,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_GALLADE_MEGA,
+    #else
+        .cryId = CRY_GALLADE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_GALLADE,
         .categoryName = _("Blade"),
         .height = 16,
@@ -4647,7 +4667,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_MAGIC_BOUNCE, ABILITY_MAGIC_BOUNCE, ABILITY_MAGIC_BOUNCE },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Sableye"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_SABLEYE_MEGA : CRY_SABLEYE,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_SABLEYE_MEGA,
+    #else
+        .cryId = CRY_SABLEYE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_SABLEYE,
         .categoryName = _("Darkness"),
         .height = 5,
@@ -4802,7 +4826,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_HUGE_POWER, ABILITY_HUGE_POWER, ABILITY_HUGE_POWER },
         .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Mawile"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_MAWILE_MEGA : CRY_MAWILE,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_MAWILE_MEGA,
+    #else
+        .cryId = CRY_MAWILE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_MAWILE,
         .categoryName = _("Deceiver"),
         .height = 10,
@@ -5095,7 +5123,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_FILTER, ABILITY_FILTER, ABILITY_FILTER },
         .bodyColor = BODY_COLOR_GRAY,
         .speciesName = _("Aggron"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_AGGRON_MEGA : CRY_AGGRON,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_AGGRON_MEGA,
+    #else
+        .cryId = CRY_AGGRON,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_AGGRON,
         .categoryName = _("Iron Armor"),
         .height = 22,
@@ -5335,7 +5367,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_PURE_POWER, ABILITY_PURE_POWER, ABILITY_PURE_POWER },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Medicham"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_MEDICHAM_MEGA : CRY_MEDICHAM,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_MEDICHAM_MEGA,
+    #else
+        .cryId = CRY_MEDICHAM,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_MEDICHAM,
         .categoryName = _("Meditate"),
         .height = 13,
@@ -5549,7 +5585,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_INTIMIDATE, ABILITY_INTIMIDATE, ABILITY_INTIMIDATE },
         .bodyColor = BODY_COLOR_YELLOW,
         .speciesName = _("Manectric"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_MANECTRIC_MEGA : CRY_MANECTRIC,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_MANECTRIC_MEGA,
+    #else
+        .cryId = CRY_MANECTRIC,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_MANECTRIC,
         .categoryName = _("Discharge"),
         .height = 18,
@@ -6510,7 +6550,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_STRONG_JAW, ABILITY_STRONG_JAW, ABILITY_STRONG_JAW },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Sharpedo"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_SHARPEDO_MEGA : CRY_SHARPEDO,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_SHARPEDO_MEGA,
+    #else
+        .cryId = CRY_SHARPEDO,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_SHARPEDO,
         .categoryName = _("Brutal"),
         .height = 25,
@@ -6906,7 +6950,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_SHEER_FORCE, ABILITY_SHEER_FORCE, ABILITY_SHEER_FORCE },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Camerupt"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_CAMERUPT_MEGA : CRY_CAMERUPT,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_CAMERUPT_MEGA,
+    #else
+        .cryId = CRY_CAMERUPT,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_CAMERUPT,
         .categoryName = _("Eruption"),
         .height = 25,
@@ -7827,7 +7875,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_PIXILATE, ABILITY_PIXILATE, ABILITY_PIXILATE },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Altaria"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_ALTARIA_MEGA : CRY_ALTARIA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_ALTARIA_MEGA,
+    #else
+        .cryId = CRY_ALTARIA,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_ALTARIA,
         .categoryName = _("Humming"),
         .height = 15,
@@ -9697,7 +9749,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_PRANKSTER, ABILITY_PRANKSTER, ABILITY_PRANKSTER },
         .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Banette"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_BANETTE_MEGA : CRY_BANETTE,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_BANETTE_MEGA,
+    #else
+        .cryId = CRY_BANETTE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_BANETTE,
         .categoryName = _("Marionette"),
         .height = 12,
@@ -10333,7 +10389,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .bodyColor = BODY_COLOR_WHITE,
         .noFlip = TRUE,
         .speciesName = _("Absol"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_ABSOL_MEGA : CRY_ABSOL,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_ABSOL_MEGA,
+    #else
+        .cryId = CRY_ABSOL,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_ABSOL,
         .categoryName = _("Disaster"),
         .height = 12,
@@ -10560,7 +10620,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_REFRIGERATE, ABILITY_REFRIGERATE, ABILITY_REFRIGERATE },
         .bodyColor = BODY_COLOR_GRAY,
         .speciesName = _("Glalie"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_GLALIE_MEGA : CRY_GLALIE,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_GLALIE_MEGA,
+    #else
+        .cryId = CRY_GLALIE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_GLALIE,
         .categoryName = _("Face"),
         .height = 21,
@@ -11538,7 +11602,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_AERILATE, ABILITY_AERILATE, ABILITY_AERILATE },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Salamence"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_SALAMENCE_MEGA : CRY_SALAMENCE,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_SALAMENCE_MEGA,
+    #else
+        .cryId = CRY_SALAMENCE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_SALAMENCE,
         .categoryName = _("Dragon"),
         .height = 18,
@@ -11833,7 +11901,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_TOUGH_CLAWS, ABILITY_TOUGH_CLAWS, ABILITY_TOUGH_CLAWS },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Metagross"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_METAGROSS_MEGA : CRY_METAGROSS,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_METAGROSS_MEGA,
+    #else
+        .cryId = CRY_METAGROSS,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_METAGROSS,
         .categoryName = _("Iron Leg"),
         .height = 25,
@@ -12224,7 +12296,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_LEVITATE, ABILITY_LEVITATE, ABILITY_LEVITATE },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Latias"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_LATIAS_MEGA : CRY_LATIAS,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_LATIAS_MEGA,
+    #else
+        .cryId = CRY_LATIAS,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_LATIAS,
         .categoryName = _("Eon"),
         .height = 18,
@@ -12379,7 +12455,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_LEVITATE, ABILITY_LEVITATE, ABILITY_LEVITATE },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Latios"),
-        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_LATIOS_MEGA : CRY_LATIOS,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_LATIOS_MEGA,
+    #else
+        .cryId = CRY_LATIOS,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_LATIOS,
         .categoryName = _("Eon"),
         .height = 23,
