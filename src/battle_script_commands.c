@@ -3949,6 +3949,7 @@ static void Cmd_setpreattackadditionaleffect(void)
         return;
     }
 
+    gBattleStruct->additionalEffectsCounter = 0;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
