@@ -314,7 +314,6 @@ extern const u8 BattleScript_PsychicSurgeActivates[];
 extern const u8 BattleScript_GrassySurgeActivates[];
 extern const u8 BattleScript_MistySurgeActivates[];
 extern const u8 BattleScript_ElectricSurgeActivates[];
-extern const u8 BattleScript_EffectSpectralThief[];
 extern const u8 BattleScript_EffectLifeDew[];
 extern const u8 BattleScript_AbilityRaisesDefenderStat[];
 extern const u8 BattleScript_PowderMoveNoEffect[];
@@ -504,6 +503,8 @@ extern const u8 BattleScript_PrintAbilityMadeIneffective[];
 extern const u8 BattleScript_ItDoesntAffectFoe[];
 extern const u8 BattleScript_FirstTurnSwitchInEvents[];
 extern const u8 BattleScript_Explosion[];
+extern const u8 BattleScript_RemoveScreens[];
+extern const u8 BattleScript_StealStats[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -672,7 +673,6 @@ extern const u8 BattleScript_EffectWish[];
 extern const u8 BattleScript_EffectIngrain[];
 extern const u8 BattleScript_EffectMagicCoat[];
 extern const u8 BattleScript_EffectRecycle[];
-extern const u8 BattleScript_EffectBrickBreak[];
 extern const u8 BattleScript_EffectYawn[];
 extern const u8 BattleScript_EffectSkillSwap[];
 extern const u8 BattleScript_EffectImprison[];

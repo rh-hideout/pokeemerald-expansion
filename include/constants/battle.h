@@ -577,6 +577,10 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FIXED_POWER,
     // Max move effects end. They can be used for (custom) normal moves.
 
+    // Move effects that happen before the move hits
+    MOVE_EFFECT_REMOVE_SCREENS,
+    MOVE_EFFECT_STEAL_STATS,
+
     NUM_MOVE_EFFECTS
 };
 

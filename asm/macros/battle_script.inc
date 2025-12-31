@@ -13,8 +13,9 @@
 	.byte 0x2
 	.endm
 
-	.macro unused_0x3
+	.macro printselectionstringfromtable ptr:req
 	.byte 0x3
+	.4byte \ptr
 	.endm
 
 	.macro critcalc
@@ -94,9 +95,8 @@
 	.4byte \ptr
 	.endm
 
-	.macro printselectionstringfromtable ptr:req
+	.macro setpreattackadditionaleffect
 	.byte 0x14
-	.4byte \ptr
 	.endm
 
 	.macro setadditionaleffects
@@ -1267,7 +1267,7 @@
 	.byte 0xed
 	.endm
 
-	.macro removescreens
+	.macro unused_0xee
 	.byte 0xee
 	.endm
 
@@ -1730,11 +1730,6 @@
 
 	.macro removeterrain
 	callnative BS_RemoveTerrain
-	.endm
-
-	.macro tryspectralthiefsteal jumpInstr:req
-	callnative BS_TrySpectralThiefSteal
-	.4byte \jumpInstr
 	.endm
 
 	.macro spectralthiefprintstats
