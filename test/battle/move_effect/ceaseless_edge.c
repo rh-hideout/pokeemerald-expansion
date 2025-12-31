@@ -17,12 +17,15 @@ SINGLE_BATTLE_TEST("Ceaseless Edge sets up hazards after hitting the target")
         TURN { SWITCH(opponent, 1); }
     } SCENE {
         s32 maxHP = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
+        FORMATTED_MESSAGE(STRINGID_USEDMOVE, player, MOVE_CEASELESS_EDGE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CEASELESS_EDGE, player);
         HP_BAR(opponent);
-        MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+        //MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+        FORMATTED_MESSAGE(STRINGID_SPIKESSCATTERED, opponent);
         MESSAGE("2 sent out Wobbuffet!");
         HP_BAR(opponent, damage: maxHP / 8);
-        MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
+        //MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
+        FORMATTED_MESSAGE(STRINGID_PKMNHURTBYSPIKES, opponent);
     }
 }
 

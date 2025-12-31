@@ -257,6 +257,8 @@ void SetPpNumbersPaletteInMoveSelection(u32 battler);
 u8 GetCurrentPpToMaxPpState(u8 currentPp, u8 maxPp);
 void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst);
 
+u32 Test_BattleStringExpandPlaceholders(u32 msgId,u8 *dst, u32 formattedIndex);
+
 extern struct BattleMsgData *gBattleMsgDataPtr;
 
 extern const u8 *const gBattleStringsTable[];

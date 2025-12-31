@@ -609,6 +609,7 @@ enum
     QUEUED_SUB_HIT_EVENT,
     QUEUED_EXP_EVENT,
     QUEUED_MESSAGE_EVENT,
+    QUEUED_FORMATTED_MESSAGE_EVENT,
     QUEUED_STATUS_EVENT,
 };
 
@@ -656,6 +657,13 @@ struct QueuedMessageEvent
     const u8 *pattern;
 };
 
+struct QueuedFormattedMessageEvent
+{
+    u16 msgId;
+    u8 variadicCount;
+    u8 formattedIndex;
+};
+
 struct QueuedStatusEvent
 {
     u32 battlerId:3;
@@ -676,6 +684,7 @@ struct QueuedEvent
         struct QueuedSubHitEvent subHit;
         struct QueuedExpEvent exp;
         struct QueuedMessageEvent message;
+        struct QueuedFormattedMessageEvent formattedMessage;
         struct QueuedStatusEvent status;
     } as;
 };
@@ -1211,6 +1220,8 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
 
 #define FORCE_MOVE_ANIM(set) gBattleTestRunnerState->forceMoveAnim = (set)
 
+extern u32 gFormattedDataList[32];
+
 #define ABILITY_POPUP(battler, ...) QueueAbility(__LINE__, battler, (struct AbilityEventContext) { __VA_ARGS__ })
 #define ANIMATION(type, id, ...) QueueAnimation(__LINE__, type, id, (struct AnimationEventContext) { __VA_ARGS__ })
 #define HP_BAR(battler, ...) QueueHP(__LINE__, battler, (struct HPEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
@@ -1218,6 +1229,7 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
 #define EXPERIENCE_BAR(battler, ...) QueueExp(__LINE__, battler, (struct ExpEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
 // Static const is needed to make the modern compiler put the pattern variable in the .rodata section, instead of putting it on stack(which can break the game).
 #define MESSAGE(pattern) do {static const u8 msg[] = _(pattern); QueueMessage(__LINE__, msg);} while (0)
+#define FORMATTED_MESSAGE(msgId, ...) QueueFormattedMessage(__LINE__, msgId, __VA_ARGS__);
 #define STATUS_ICON(battler, status) QueueStatus(__LINE__, battler, (struct StatusEventContext) { status })
 #define FREEZE_OR_FROSTBURN_STATUS(battler, isFrostbite) \
     (B_USE_FROSTBITE ? STATUS_ICON(battler, frostbite: isFrostbite) : STATUS_ICON(battler, freeze: isFrostbite))
@@ -1307,6 +1319,7 @@ void QueueHP(u32 sourceLine, struct BattlePokemon *battler, struct HPEventContex
 void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEventContext);
 void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventContext);
 void QueueMessage(u32 sourceLine, const u8 *pattern);
+void QueueFormattedMessage(u32 sourceLine, u32 msgId, ...);
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext);
 
 /* Then */

@@ -37,6 +37,8 @@
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
 
+#include "test/battle.h"
+
 struct BattleWindowText
 {
     u8 fillValue;
@@ -3354,6 +3356,244 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
     BreakStringAutomatic(dst, BATTLE_MSG_MAX_WIDTH, BATTLE_MSG_MAX_LINES, fontId, SHOW_SCROLL_PROMPT);
 
     return dstID;
+}
+
+#define DATA gBattleTestRunnerState->data
+
+u32 Test_BattleStringExpandPlaceholders(u32 msgId, u8 *dst, u32 formattedIndex)
+{
+    u32 i = 0;
+    s32 battlerId;
+    struct BattlePokemon *battleMon;
+
+    const u8 *toCpy = NULL;
+    const u8 *src;
+    // Clear destination first
+    while (i < 0x100)
+    {
+        dst[i] = EOS;
+        i++;
+    }
+
+    if (msgId == STRINGID_USEDMOVE)
+    {
+        src = sText_AttackerUsedX;
+    }
+    else
+    {
+        src = gBattleStringsTable[msgId];
+    }
+    i = 0;
+    while (*src != EOS)
+    {
+        toCpy = NULL;
+
+        if (*src == PLACEHOLDER_BEGIN)
+        {
+            src++;
+            switch (*src)
+            {
+            case B_TXT_BUFF1:
+            case B_TXT_BUFF2:
+            case B_TXT_BUFF3:
+            case B_TXT_COPY_VAR_1:
+            case B_TXT_COPY_VAR_2:
+            case B_TXT_COPY_VAR_3:
+                if (msgId == STRINGID_USEDMOVE)
+                    toCpy = GetMoveName(gFormattedDataList[formattedIndex]);
+                else
+                    toCpy = (u8 *)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                break;
+            case B_TXT_PLAYER_MON1_NAME: // first player poke name
+            case B_TXT_OPPONENT_MON1_NAME: // first enemy poke name
+            case B_TXT_PLAYER_MON2_NAME: // second player poke name
+            case B_TXT_OPPONENT_MON2_NAME: // second enemy poke name
+            case B_TXT_LINK_PLAYER_MON1_NAME: // link first player poke name
+            case B_TXT_LINK_OPPONENT_MON1_NAME: // link first opponent poke name
+            case B_TXT_LINK_PLAYER_MON2_NAME: // link second player poke name
+            case B_TXT_LINK_OPPONENT_MON2_NAME: // link second opponent poke name
+            case B_TXT_ATK_NAME_WITH_PREFIX_MON1: // Unused, to change into sth else.
+            case B_TXT_ATK_PARTNER_NAME: // attacker partner name
+            case B_TXT_DEF_NAME: // target name
+            case B_TXT_DEF_PARTNER_NAME: // partner target name
+                battleMon = (struct BattlePokemon *)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                toCpy = GetSpeciesName(battleMon->species);
+                break;
+            case B_TXT_ATK_NAME_WITH_PREFIX: // attacker name with prefix
+            case B_TXT_DEF_NAME_WITH_PREFIX: // target name with prefix
+            case B_TXT_EFF_NAME_WITH_PREFIX: // effect battler name with prefix
+            case B_TXT_SCR_ACTIVE_NAME_WITH_PREFIX: // scripting active battler name with prefix
+                battleMon = (struct BattlePokemon *)(gFormattedDataList[formattedIndex]);
+                formattedIndex++;
+                battlerId = battleMon - gBattleMons;
+                if (battlerId & BIT_SIDE)
+                {
+                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+                        toCpy = sText_FoePkmnPrefix;
+                    else
+                        toCpy = sText_WildPkmnPrefix;
+                    while (*toCpy != EOS)
+                    {
+                        dst[i] = *toCpy;
+                        i++;
+                        toCpy++;
+                    }
+                }
+                toCpy = GetSpeciesName(battleMon->species);
+                break;
+            case B_TXT_CURRENT_MOVE: // current move name
+            case B_TXT_LAST_MOVE: // originally used move name
+                u16 move = (u32)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                toCpy = GetMoveName(move);
+                break;
+            case B_TXT_LAST_ITEM: // last used item
+                u16 item = (u32)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                toCpy = GetItemName(item);
+                break;
+            case B_TXT_LAST_ABILITY: // last used ability
+            case B_TXT_ATK_ABILITY: // attacker ability
+            case B_TXT_DEF_ABILITY: // target ability
+            case B_TXT_SCR_ACTIVE_ABILITY: // scripting active ability
+            case B_TXT_EFF_ABILITY: // effect battler ability
+                u16 ability = (u32)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                toCpy = gAbilitiesInfo[ability].name;
+                break;
+            case B_TXT_TRAINER1_CLASS: // trainer class name
+            case B_TXT_TRAINER1_NAME: // trainer1 name
+            case B_TXT_TRAINER1_NAME_WITH_CLASS: // trainer1 name with trainer class
+            case B_TXT_LINK_PLAYER_NAME: // link player name
+            case B_TXT_LINK_PARTNER_NAME: // link partner name
+            case B_TXT_LINK_OPPONENT1_NAME: // link opponent 1 name
+            case B_TXT_LINK_OPPONENT2_NAME: // link opponent 2 name
+            case B_TXT_LINK_SCR_TRAINER_NAME: // link scripting active name
+            case B_TXT_PLAYER_NAME: // player name
+                toCpy = (u8 *)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                break;
+            case B_TXT_PC_CREATOR_NAME: // lanette pc
+                if (FlagGet(FLAG_SYS_PC_LANETTE))
+                    toCpy = sText_Lanettes;
+                else
+                    toCpy = sText_Someones;
+                break;
+            case B_TXT_ATK_PREFIX2:
+            case B_TXT_DEF_PREFIX2:
+                battleMon = (struct BattlePokemon *)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                battlerId = battleMon - gBattleMons;
+                if (!(battlerId & BIT_SIDE))
+                    toCpy = sText_AllyPkmnPrefix2;
+                else
+                    toCpy = sText_FoePkmnPrefix3;
+                break;
+            case B_TXT_ATK_PREFIX1:
+            case B_TXT_DEF_PREFIX1:
+                battleMon = (struct BattlePokemon *)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                battlerId = battleMon - gBattleMons;
+                if (!(battlerId & BIT_SIDE))
+                    toCpy = sText_AllyPkmnPrefix;
+                else
+                    toCpy = sText_FoePkmnPrefix2;
+                break;
+            case B_TXT_ATK_PREFIX3:
+            case B_TXT_DEF_PREFIX3:
+                battleMon = (struct BattlePokemon *)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                battlerId = battleMon - gBattleMons;
+                if (!(battlerId & BIT_SIDE))
+                    toCpy = sText_AllyPkmnPrefix3;
+                else
+                    toCpy = sText_FoePkmnPrefix4;
+                break;
+            case B_TXT_TRAINER2_CLASS:
+            case B_TXT_TRAINER2_NAME:
+            case B_TXT_TRAINER2_NAME_WITH_CLASS:
+            case B_TXT_PARTNER_CLASS:
+            case B_TXT_PARTNER_NAME:
+            case B_TXT_PARTNER_NAME_WITH_CLASS:
+            case B_TXT_ATK_TRAINER_NAME:
+            case B_TXT_ATK_TRAINER_CLASS:
+            case B_TXT_ATK_TRAINER_NAME_WITH_CLASS:
+                toCpy = (u8 *)gFormattedDataList[formattedIndex];
+                break;
+            case B_TXT_ATK_TEAM1:
+            case B_TXT_DEF_TEAM1:
+            case B_TXT_EFF_TEAM1:
+                battleMon = (struct BattlePokemon *)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                battlerId = battleMon - gBattleMons;
+                if (!(battlerId & BIT_SIDE))
+                    toCpy = sText_Your1;
+                else
+                    toCpy = sText_Opposing1;
+                break;
+            case B_TXT_ATK_TEAM2:
+            case B_TXT_DEF_TEAM2:
+            case B_TXT_EFF_TEAM2:
+                battleMon = (struct BattlePokemon *)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                battlerId = battleMon - gBattleMons;
+                if (!(battlerId & BIT_SIDE))
+                    toCpy = sText_Your2;
+                else
+                    toCpy = sText_Opposing2;
+                break;
+            case B_TXT_ATK_NAME_WITH_PREFIX2:
+            case B_TXT_DEF_NAME_WITH_PREFIX2:
+            case B_TXT_EFF_NAME_WITH_PREFIX2:
+            case B_TXT_SCR_ACTIVE_NAME_WITH_PREFIX2:
+                battleMon = (struct BattlePokemon *)gFormattedDataList[formattedIndex];
+                formattedIndex++;
+                battlerId = battleMon - gBattleMons;
+                if (battlerId & BIT_SIDE)
+                {
+                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+                        toCpy = sText_FoePkmnPrefixLower;
+                    else
+                        toCpy = sText_WildPkmnPrefixLower;
+                    while (*toCpy != EOS)
+                    {
+                        dst[i] = *toCpy;
+                        i++;
+                        toCpy++;
+                    }
+                }
+                toCpy = GetSpeciesName(battleMon->species);
+                break;
+            }
+
+            if (toCpy != NULL)
+            {
+                while (*toCpy != EOS)
+                {
+                    if (*toCpy == CHAR_SPACE)
+                        dst[i] = CHAR_NBSP;
+                    else
+                        dst[i] = *toCpy;
+                    i++;
+                    toCpy++;
+                }
+            }
+        }
+        else
+        {
+            dst[i] = *src;
+            i++;
+        }
+        src++;
+    }
+    dst[i] = *src;
+    i++;
+
+    BreakStringAutomatic(dst, BATTLE_MSG_MAX_WIDTH, BATTLE_MSG_MAX_LINES, FONT_NORMAL, SHOW_SCROLL_PROMPT);
+
+    return i;
 }
 
 static void IllusionNickHack(u32 battler, u32 partyId, u8 *dst)

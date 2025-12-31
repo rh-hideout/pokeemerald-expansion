@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include "global.h"
 #include "battle.h"
 #include "battle_ai_util.h"
@@ -18,6 +19,9 @@
 #include "constants/characters.h"
 #include "constants/trainers.h"
 #include "constants/abilities.h"
+
+#include "battle_message.h"
+#include "string_util.h"
 
 #if defined(__INTELLISENSE__)
 #undef TestRunner_Battle_RecordAbilityPopUp
@@ -58,6 +62,8 @@ static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32
 static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore);
 static void ClearAiLog(u32 battlerId);
 static const char *BattlerIdentifier(s32 battlerId);
+
+EWRAM_DATA u8 gFormattedMessage[0x100] = {0};
 
 NAKED static void InvokeSingleTestFunctionWithStack(void *results, u32 i, struct BattlePokemon *player, struct BattlePokemon *opponent, SingleBattleTestFunction function, void *stack)
 {
@@ -1504,18 +1510,32 @@ void TestRunner_Battle_RecordExp(u32 battlerId, u32 oldExp, u32 newExp)
 static s32 TryMessage(s32 i, s32 n, const u8 *string)
 {
     s32 j, k;
-    struct QueuedMessageEvent *event;
+    u8 pattern[0x100];
     s32 iMax = i + n;
     for (; i < iMax; i++)
     {
-        if (DATA.queuedEvents[i].type != QUEUED_MESSAGE_EVENT)
+        if (DATA.queuedEvents[i].type == QUEUED_MESSAGE_EVENT)
+        {
+            StringCopy(pattern, DATA.queuedEvents[i].as.message.pattern);
+        }
+        else if (DATA.queuedEvents[i].type == QUEUED_FORMATTED_MESSAGE_EVENT)
+        {
+            Test_BattleStringExpandPlaceholders(
+                DATA.queuedEvents[i].as.formattedMessage.msgId,
+                pattern,
+                DATA.queuedEvents[i].as.formattedMessage.formattedIndex
+            );
+            DebugPrintf("pattern %S", pattern);
+        }
+        else
+        {
             continue;
+        }
 
-        event = &DATA.queuedEvents[i].as.message;
         // Test_MgbaPrintf("Looking for: %S Found: %S\n", event->pattern, string); // Useful for debugging.
         for (j = k = 0; ; j++, k++)
         {
-            if (event->pattern[k] == CHAR_SPACE)
+            if (pattern[k] == CHAR_SPACE)
             {
                 switch (string[j])
                 {
@@ -1529,13 +1549,13 @@ static s32 TryMessage(s32 i, s32 n, const u8 *string)
                     break;
                 }
             }
-            if (event->pattern[k] == EOS)
+            if (pattern[k] == EOS)
             {
                 // Consume any trailing '\p'.
                 if (string[j] == CHAR_PROMPT_CLEAR)
                     j++;
             }
-            if (string[j] != event->pattern[k])
+            if (string[j] != pattern[k])
             {
                 break;
             }
@@ -1668,6 +1688,7 @@ static const char *const sEventTypeMacros[] =
     [QUEUED_SUB_HIT_EVENT] = "SUB_HIT",
     [QUEUED_EXP_EVENT] = "EXPERIENCE_BAR",
     [QUEUED_MESSAGE_EVENT] = "MESSAGE",
+    [QUEUED_FORMATTED_MESSAGE_EVENT] = "FORMATTED_MESSAGE",
     [QUEUED_STATUS_EVENT] = "STATUS_ICON",
 };
 
@@ -3304,6 +3325,59 @@ void QueueMessage(u32 sourceLine, const u8 *pattern)
         .groupSize = 1,
         .as = { .message = {
             .pattern = pattern,
+        }},
+    };
+}
+
+static EWRAM_DATA u8 sFormattedIndex = 0;
+EWRAM_DATA u32 gFormattedDataList[32] = {0};
+
+void QueueFormattedMessage(u32 sourceLine, u32 msgId, ...)
+{
+    va_list va;
+    va_start(va, msgId);
+
+    u32 variadicCount = 0;
+    u32 startIndex = sFormattedIndex;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
+
+    if (msgId == STRINGID_USEDMOVE)
+    {
+        gFormattedDataList[sFormattedIndex] = va_arg(va, u32);
+        sFormattedIndex++;
+        gFormattedDataList[sFormattedIndex] = va_arg(va, u32);
+        sFormattedIndex++;
+    }
+    else
+    {
+        const u8 *message = gBattleStringsTable[msgId];
+        while (*message != EOS)
+        {
+            if (*message == PLACEHOLDER_BEGIN)
+            {
+                message++;
+                gFormattedDataList[sFormattedIndex] = va_arg(va, u32);
+                sFormattedIndex++;
+            }
+            message++;
+        }
+    }
+    va_end(va);
+
+    INVALID_IF(!STATE->runScene, "MESSAGE outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, ":L%s:%d: MESSAGE exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_FORMATTED_MESSAGE_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .formattedMessage = {
+            .msgId = msgId,
+            .variadicCount = variadicCount,
+            .formattedIndex = startIndex
         }},
     };
 }
