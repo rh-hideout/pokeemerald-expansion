@@ -21,10 +21,10 @@ SINGLE_BATTLE_TEST("Heatproof halves damage from fire type moves")
     }
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
-        HP_BAR(opponent, captureDamage : &damage[0]);
+        HP_BAR(opponent, captureDamage: &damage[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WORRY_SEED, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
-        HP_BAR(opponent, captureDamage : &damage[1]);
+        HP_BAR(opponent, captureDamage: &damage[1]);
         EXPECT_MUL_EQ(damage[0], Q_4_12(2), damage[1]);
     }
 }
@@ -34,7 +34,6 @@ SINGLE_BATTLE_TEST("Heatproof halves the damage done by burn from 1/8th to 1/16t
     u32 config, burnRate;
 
     PARAMETRIZE { config = GEN_7; burnRate = 32; }
-
     PARAMETRIZE { config = GEN_6; burnRate = 16; }
 
     GIVEN {
@@ -50,3 +49,4 @@ SINGLE_BATTLE_TEST("Heatproof halves the damage done by burn from 1/8th to 1/16t
         HP_BAR(player, damage: maxHP / burnRate);
     }
 }
+

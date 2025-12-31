@@ -57,18 +57,13 @@ SINGLE_BATTLE_TEST("Grudge depletes all PP from a Max Move's base move")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) {  Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_POUND, MOVE_SURF); Item(ITEM_LAGGING_TAIL); };
     } WHEN {
-        TURN {
-            MOVE(player, MOVE_GRUDGE);
-            MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX);
-            SEND_OUT(player, 1);
-        }
+        TURN { MOVE(player, MOVE_GRUDGE); MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); SEND_OUT(player, 1); }
     } SCENE {
         MESSAGE("Wobbuffet used Grudge!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         MESSAGE("The opposing Wobbuffet used Max Strike!");
         MESSAGE("Wobbuffet fainted!");
         MESSAGE("The opposing Wobbuffet's Scratch lost all its PP due to the grudge!");
-
     } THEN {
         EXPECT_GT(opponent->pp[0], 0);
         EXPECT_EQ(opponent->pp[1], 0);
@@ -131,11 +126,11 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Mo
 SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Sleep")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(gMovesInfo[SanitizeMoveId(MOVE_SPORE)].argument.nonVolatileStatus == MOVE_EFFECT_SLEEP);
         PLAYER (SPECIES_WOBBUFFET) { HP(1);}
         PLAYER (SPECIES_WOBBUFFET);
         OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_VITAL_THROW, MOVE_SPORE, MOVE_SURF); }
-        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(gMovesInfo[SanitizeMoveId(MOVE_SPORE)].argument.nonVolatileStatus == MOVE_EFFECT_SLEEP);
     }
     WHEN {
         TURN { MOVE(player, MOVE_GRUDGE); MOVE(opponent, MOVE_SPORE); }
@@ -279,6 +274,7 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Leech S
         EXPECT_GT(opponent->pp[3], 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future Sight")
 {
     GIVEN {
@@ -289,8 +285,8 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future 
     }
     WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_FUTURE_SIGHT); }
-        TURN { };
-        TURN { MOVE(player, MOVE_GRUDGE); SEND_OUT(player, 1); };
+        TURN {}
+        TURN { MOVE(player, MOVE_GRUDGE); SEND_OUT(player, 1); }
         }
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
@@ -308,3 +304,4 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future 
         EXPECT_GT(opponent->pp[3], 0);
     }
 }
+

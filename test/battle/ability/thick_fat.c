@@ -26,11 +26,14 @@ SINGLE_BATTLE_TEST("Thick Fat halves damage from fire and ice type moves", s16 d
     }
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WORRY_SEED, player);
         ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage[1]);
     }
     FINALLY {
         EXPECT_MUL_EQ(results[0].damage[0], Q_4_12(2), results[0].damage[1]);
         EXPECT_MUL_EQ(results[1].damage[0], Q_4_12(2), results[1].damage[1]);
     }
 }
+
