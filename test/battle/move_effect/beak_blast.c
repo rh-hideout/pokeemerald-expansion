@@ -162,14 +162,13 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponentLeft, move); }
+        // Use Instruct twice to ensure at least 1 protection move is successful
         TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft);
                MOVE(playerRight, MOVE_INSTRUCT, target: opponentLeft);
                MOVE(playerLeft, MOVE_POUND, target: opponentLeft);
                MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT);
-        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
         if (move == MOVE_SPIKY_SHIELD) {
             HP_BAR(playerLeft);
