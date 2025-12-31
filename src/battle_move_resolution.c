@@ -776,7 +776,6 @@ static enum MoveEndResult MoveEnd_HpThresholdItemsTarget(void)
 static enum MoveEndResult MoveEnd_MultihitMove(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
-    enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
     if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
      && !gBattleStruct->unableToUseMove
