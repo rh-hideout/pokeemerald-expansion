@@ -156,7 +156,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
     GIVEN {
         ASSUME(GetMoveEffect(move) == EFFECT_PROTECT);
         ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
-        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) > GetMovePriority(MOVE_WONDER_ROOM));
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) > GetMovePriority(MOVE_TRICK_ROOM));
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WYNAUT) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
@@ -165,7 +165,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
         TURN { MOVE(opponentLeft, move); }
         TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft, WITH_RNG(RNG_PROTECT_FAIL, 0));
                MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
-               MOVE(playerRight, MOVE_WONDER_ROOM);
+               MOVE(playerRight, MOVE_TRICK_ROOM); // Acts after playerLeft
                MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
