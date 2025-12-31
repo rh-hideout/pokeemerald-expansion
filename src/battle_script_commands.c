@@ -3821,11 +3821,11 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
 static void SetPreAttackMoveEffect(u32 moveEffect, const u8 *battleScript)
 {
 	u32 side = 0;
-	enum Ability abilityAtk= ABILITY_NONE;
+	enum Ability abilityAtk = ABILITY_NONE;
 
 	switch (moveEffect)
 	{
-    case MOVE_EFFECT_REMOVE_SCREENS:
+    case MOVE_EFFECT_BREAK_SCREEN:
         if (B_BRICK_BREAK >= GEN_4)
         	side = GetBattlerSide(gBattlerTarget); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
         else
@@ -3857,7 +3857,7 @@ static void SetPreAttackMoveEffect(u32 moveEffect, const u8 *battleScript)
             	gBattleScripting.animTargetsHit = 1;
             	gBattleStruct->preAttackAnimPlayed = TRUE; // The whole brick break animation is covered by the move so don't play twice
             	BattleScriptPush(battleScript);
-            	gBattlescriptCurrInstr = BattleScript_RemoveScreens;
+            	gBattlescriptCurrInstr = BattleScript_BreakScreens;
         	}
         	else
         	{
@@ -4001,7 +4001,6 @@ static void Cmd_setadditionaleffects(void)
         {
             u32 percentChance;
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-            const u8 *currentPtr = gBattlescriptCurrInstr;
 
             // Various checks for if this move effect can be applied this turn
             if (CanApplyAdditionalEffect(additionalEffect))
@@ -4021,34 +4020,22 @@ static void Cmd_setadditionaleffects(void)
                         gBattlerAttacker,
                         additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
                         additionalEffect->moveEffect,
-                        cmd->nextInstr,
+                        gBattlescriptCurrInstr,
                         flags
                     );
+
+                    gBattleStruct->additionalEffectsCounter++;
+				    return;
                 }
             }
 
-            // Move script along if we haven't jumped elsewhere
-            if (gBattlescriptCurrInstr == currentPtr)
-                gBattlescriptCurrInstr = cmd->nextInstr;
-
-            // Call setadditionaleffects again in the case of a move with multiple effects
             gBattleStruct->additionalEffectsCounter++;
-            if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
-                gBattleScripting.moveEffect = MOVE_EFFECT_CONTINUE;
-            else
-                gBattleScripting.moveEffect = gBattleStruct->additionalEffectsCounter = 0;
-        }
-        else
-        {
-            gBattleScripting.moveEffect = 0;
-            gBattlescriptCurrInstr = cmd->nextInstr;
         }
     }
-    else
-    {
-        gBattleScripting.moveEffect = 0;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
+
+    gBattleStruct->additionalEffectsCounter = 0;
+    gBattleScripting.moveEffect = 0;
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_seteffectprimary(void)

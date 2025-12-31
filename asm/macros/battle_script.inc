@@ -100,9 +100,7 @@
 	.endm
 
 	.macro setadditionaleffects
-	1:
 	.byte 0x15
-	jumpifhalfword CMP_EQUAL, sMOVE_EFFECT, MOVE_EFFECT_CONTINUE, 1b
 	.endm
 
 	.macro seteffectprimary battler:req, effectBattler:req, moveEffect=0

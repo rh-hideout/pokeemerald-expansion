@@ -6188,7 +6188,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
                         ADJUST_SCORE(BAD_EFFECT);
                 }
 				break;
-            case MOVE_EFFECT_REMOVE_SCREENS:
+            case MOVE_EFFECT_BREAK_SCREEN:
             	if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_REFLECT)
             		ADJUST_SCORE(DECENT_EFFECT);
             	if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_LIGHTSCREEN)

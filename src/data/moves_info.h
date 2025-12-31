@@ -7571,7 +7571,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_REMOVE_SCREENS,
+            .moveEffect = MOVE_EFFECT_BREAK_SCREEN,
         }),
         .makesContact = TRUE,
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_HIGHLY_APPEALING : CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
@@ -17004,7 +17004,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_REMOVE_SCREENS,
+            .moveEffect = MOVE_EFFECT_BREAK_SCREEN,
         }),
         .makesContact = TRUE,
         .bitingMove = TRUE,
@@ -20339,7 +20339,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_REMOVE_SCREENS,
+            .moveEffect = MOVE_EFFECT_BREAK_SCREEN,
         }),
         .makesContact = TRUE,
         .metronomeBanned = TRUE,

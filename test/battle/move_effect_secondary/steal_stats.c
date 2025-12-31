@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-	ASSUME(MoveHasAdditionalEffectSelf(MOVE_SPECTRAL_THIEF, MOVE_EFFECT_STEAL_STATS));
+	ASSUME(MoveHasAdditionalEffect(MOVE_SPECTRAL_THIEF, MOVE_EFFECT_STEAL_STATS));
 }
 
 SINGLE_BATTLE_TEST("Spectral Thief steals opponents boost before attacking", s16 damage)

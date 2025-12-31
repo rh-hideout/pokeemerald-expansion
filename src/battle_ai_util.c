@@ -4279,7 +4279,7 @@ static u32 GetAIEffectGroupFromMove(u32 battler, u32 move)
         case MOVE_EFFECT_GRAVITY:
             aiEffect |= AI_EFFECT_GRAVITY;
 			break;
-        case MOVE_EFFECT_REMOVE_SCREENS:
+        case MOVE_EFFECT_BREAK_SCREEN:
         	aiEffect |= AI_EFFECT_BREAK_SCREENS;
             break;
         default:

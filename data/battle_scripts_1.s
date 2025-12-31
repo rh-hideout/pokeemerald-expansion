@@ -3993,7 +3993,7 @@ BattleScript_EffectRecycle::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_RemoveScreens::
+BattleScript_BreakScreens::
 	playmoveanimation MOVE_NONE @use current move
 	waitanimation
 	printstring STRINGID_THEWALLSHATTERED
