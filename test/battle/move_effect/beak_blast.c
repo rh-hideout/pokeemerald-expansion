@@ -156,18 +156,19 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
     GIVEN {
         ASSUME(GetMoveEffect(move) == EFFECT_PROTECT);
         ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
-        PLAYER(SPECIES_WYNAUT) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(SPECIES_WYNAUT) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponentLeft, move); }
-        TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft, WITH_RNG(RNG_PROTECT_FAIL, 0));
-               MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
-               MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
+        TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft);
+               MOVE(playerRight, MOVE_INSTRUCT, target: opponentLeft);
+               MOVE(playerLeft, MOVE_POUND, target: opponentLeft);
+               MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT);
         ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
         if (move == MOVE_SPIKY_SHIELD) {

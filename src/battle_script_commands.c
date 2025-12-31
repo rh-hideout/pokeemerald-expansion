@@ -9707,7 +9707,6 @@ static void Cmd_setprotectlike(void)
 {
     CMD_ARGS();
 
-    bool32 protectFails = TRUE;
     bool32 notLastTurn = TRUE;
     u32 protectMethod = GetMoveProtectMethod(gCurrentMove);
 
@@ -9737,10 +9736,8 @@ static void Cmd_setprotectlike(void)
         }
 
         gDisableStructs[gBattlerAttacker].protectUses++;
-        protectFails = FALSE;
     }
-
-    if (protectFails)
+    else // Protect failed
     {
         gDisableStructs[gBattlerAttacker].protectUses = 0;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECT_FAILED;
