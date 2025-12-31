@@ -287,7 +287,7 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future 
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_FUTURE_SIGHT); }
         TURN {}
         TURN { MOVE(player, MOVE_GRUDGE); SEND_OUT(player, 1); }
-        }
+    }
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
         MESSAGE("The opposing Wobbuffet foresaw an attack!");
