@@ -2716,15 +2716,13 @@ static void SetNonVolatileStatus(u32 effectBattler, enum MoveEffect effect, cons
 // To avoid confusion the arguments are naned battler/effectBattler since they can be different from gBattlerAttacker/gBattlerTarget
 void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)
 {
-    s32 i, side;
+    s32 i;
     bool32 primary = effectFlags & EFFECT_PRIMARY;
     bool32 certain = effectFlags & EFFECT_CERTAIN;
-    bool32 preAttack = effectFlags & EFFECT_PRE_ATTACK;
     bool32 affectsUser = (battler == effectBattler);
     bool32 mirrorArmorReflected = (GetBattlerAbility(gBattlerTarget) == ABILITY_MIRROR_ARMOR);
     union StatChangeFlags flags = {0};
     enum Ability battlerAbility = ABILITY_NONE; // effect battler ability
-    enum Ability abilityAtk = ABILITY_NONE;
     bool32 activateAfterFaint = FALSE;
 
     // NULL move effect
@@ -3813,13 +3811,27 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         break;
     }
+        default:
+            break;
+    }
+
+    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+}
+
+static void SetPreAttackMoveEffect(u32 moveEffect, const u8 *battleScript)
+{
+	u32 side = 0;
+	enum Ability abilityAtk= ABILITY_NONE;
+
+	switch (moveEffect)
+	{
     case MOVE_EFFECT_REMOVE_SCREENS:
         if (B_BRICK_BREAK >= GEN_4)
         	side = GetBattlerSide(gBattlerTarget); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
         else
         	side = GetBattlerSide(gBattlerAttacker) ^ BIT_SIDE;
 
-        if (preAttack && gSideStatuses[side] & SIDE_STATUS_SCREEN_ANY)
+        if (gSideStatuses[side] & SIDE_STATUS_SCREEN_ANY)
         {
             bool32 failed;
 
@@ -3829,7 +3841,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
                         	gBattlerAttacker,
                         	gBattlerTarget,
                         	GetBattlerAbility(gBattlerAttacker),
-                        	battlerAbility,
+                    	    GetBattlerAbility(gBattlerTarget),
                         	TRUE
                         ); // Sets moveResultFlags
 
@@ -3862,7 +3874,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
                     	gBattlerAttacker,
                     	gBattlerTarget,
                     	abilityAtk,
-                    	battlerAbility,
+                    	GetBattlerAbility(gBattlerTarget),
                     	TRUE
                     ); // Sets moveResultFlags
         if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
@@ -3917,12 +3929,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             }
         }
         break;
-
-        default:
-            break;
-    }
-
-    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+	default:
+		break;
+	}
 }
 
 static void Cmd_setpreattackadditionaleffect(void)
@@ -3934,13 +3943,7 @@ static void Cmd_setpreattackadditionaleffect(void)
     {
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
 
-        SetMoveEffect(
-        	gBattlerAttacker,
-        	additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
-        	additionalEffect->moveEffect,
-        	gBattlescriptCurrInstr,
-        	EFFECT_PRE_ATTACK | EFFECT_PRIMARY
-        );
+        SetPreAttackMoveEffect(additionalEffect->moveEffect, gBattlescriptCurrInstr);
 
         gBattleStruct->additionalEffectsCounter++;
         return;
