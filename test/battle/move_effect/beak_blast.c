@@ -143,15 +143,12 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn after being used")
 
 DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
 {
-    // Commented moves are instructBanned.
     u32 move;
 
     PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
     PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }
     PARAMETRIZE { move = MOVE_BURNING_BULWARK; }
-    // PARAMETRIZE { move = MOVE_KINGS_SHIELD; }
     PARAMETRIZE { move = MOVE_SILK_TRAP; }
-    // PARAMETRIZE { move = MOVE_OBSTRUCT; }
 
     GIVEN {
         ASSUME(GetMoveEffect(move) == EFFECT_PROTECT);
@@ -165,7 +162,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
         TURN { MOVE(opponentLeft, move); }
         TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft, WITH_RNG(RNG_PROTECT_FAIL, 0));
                MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
-               MOVE(playerRight, MOVE_TRICK_ROOM); // Acts after playerLeft
+               MOVE(playerRight, MOVE_TRICK_ROOM);
                MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
