@@ -5115,12 +5115,11 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
                 move = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
 
             movePower = GetMovePower(move);
-            enum BattleMoveEffects effect = GetMoveEffect(move);
             if (IsBattleMoveStatus(move))
                 movePower = 40;
             else if (movePower == 1)
                 movePower = 60;
-            else if (GetConfig(CONFIG_EXPLOSION_DEFENSE) < GEN_5 && (IsExplosionMove(effect)))
+            else if (GetConfig(CONFIG_EXPLOSION_DEFENSE) < GEN_5 && IsExplosionMove(move))
                 movePower /= 2;
 
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)

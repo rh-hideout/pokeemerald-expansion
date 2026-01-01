@@ -75,7 +75,7 @@ static inline bool32 IsMoveUnusable(u32 moveIndex, enum Move move, u32 moveLimit
         || moveLimitations & 1u << moveIndex;
 }
 
-typedef bool32 (*MoveFlag)(u32 move);
+typedef bool32 (*MoveFlag)(enum Move move);
 
 bool32 AI_IsFaster(u32 battlerAi, u32 battlerDef, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority);
 bool32 AI_IsSlower(u32 battlerAi, u32 battlerDef, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority);
