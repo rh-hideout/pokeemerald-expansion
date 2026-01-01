@@ -542,7 +542,7 @@ static struct ObjectEventTemplate *GetObjectEventTemplate(u8 localId)
             return &gSaveBlock1Ptr->objectEventTemplates[i];
     }
 
-    assertf(0, "no object event template for localId %d", localId);
+    errorf("no object event template for localId %d", localId);
     return NULL;
 }
 
@@ -1707,11 +1707,12 @@ static void OverworldBasic(void)
         gTimeUpdateCounter = (SECONDS_PER_MINUTE * 60 / FakeRtc_GetSecondsRatio());
         UpdateTimeOfDay();
         FormChangeTimeUpdate();
-        if (bld0[0] != bld1[0]
+        if (MapHasNaturalLight(gMapHeader.mapType) &&
+           (bld0[0] != bld1[0]
          || bld0[1] != bld1[1]
-         || bld0[2] != bld1[2])
+         || bld0[2] != bld1[2]))
         {
-           ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
+            ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
 }
