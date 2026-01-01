@@ -119,7 +119,7 @@ void UpdateOverworldEncounters(void)
     u32 level;
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
 
-    if (speciesId == SPECIES_NONE || !IsWildLevelAllowedByRepel(level))
+    if (speciesId == SPECIES_NONE || !IsWildLevelAllowedByRepel(level) || !IsAbilityAllowingEncounter(level))
     {
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
@@ -728,10 +728,10 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     }
     else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
     {
-        SetUpMassOutbreakEncounter(WILD_CHECK_KEEN_EYE);
+        SetUpMassOutbreakEncounter(0);
         *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
     }
-    else if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_KEEN_EYE))
+    else if (!TryGenerateWildMon(wildMonInfo, wildArea, 0))
     {
         return FALSE;
     }
