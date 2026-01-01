@@ -664,7 +664,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
         case EFFECT_FAIL_IF_NOT_ARG_TYPE:
 
         //TODO: AI TESTS
-        case EFFECT_CHILLY_RECEPTION:
+        case EFFECT_WEATHER_AND_SWITCH:
         case EFFECT_TIDY_UP:
 
         // tests exist elsewhere

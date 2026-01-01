@@ -20455,7 +20455,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Bad joke summons snowstorm.\n"
             "The user also switches out."),
         #endif
-        .effect = EFFECT_CHILLY_RECEPTION,
+        .effect = EFFECT_WEATHER_AND_SWITCH,
         .power = 0,
         .type = TYPE_ICE,
         .accuracy = 0,

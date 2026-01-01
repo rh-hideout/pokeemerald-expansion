@@ -2105,9 +2105,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_CHILLY_RECEPTION] =
+    [EFFECT_WEATHER_AND_SWITCH] =
     {
-        .battleScript = BattleScript_EffectChillyReception,
+        .battleScript =BattleScript_EffectWeatherAndSwitch,
         .battleTvScore = 0, // TODO: Assign points
         .battleFactoryStyle = FACTORY_STYLE_WEATHER,
     },

@@ -3296,26 +3296,23 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
 
 bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
 {
+    bool32 setWeather = FALSE;
+
     if (gBattleWeather & sBattleWeatherInfo[battleWeatherId].flag)
     {
-        return FALSE;
+        setWeather = FALSE;
     }
     else if (gBattleWeather & B_WEATHER_PRIMAL_ANY
           && ability != ABILITY_DESOLATE_LAND
           && ability != ABILITY_PRIMORDIAL_SEA
           && ability != ABILITY_DELTA_STREAM)
     {
-        return FALSE;
+        setWeather = FALSE;
     }
     else if (GetConfig(CONFIG_ABILITY_WEATHER) < GEN_6 && ability != ABILITY_NONE)
     {
         gBattleWeather = sBattleWeatherInfo[battleWeatherId].flag;
-        for (u32 i = 0; i < gBattlersCount; i++)
-        {
-            gBattleMons[i].volatiles.weatherAbilityDone = FALSE;
-            ResetParadoxWeatherStat(i);
-        }
-        return TRUE;
+        setWeather = TRUE;
     }
     else
     {
@@ -3339,16 +3336,20 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
         else
             gBattleStruct->weatherDuration = 5;
 
+
+        setWeather = TRUE;
+    }
+    
+    if (setWeather)
+    {
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gBattleMons[i].volatiles.weatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(i);
         }
-
-        return TRUE;
     }
 
-    return FALSE;
+    return setWeather;
 }
 
 bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag)
@@ -4592,20 +4593,18 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             break;
         case ABILITY_SNOW_WARNING:
-            if (GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 && TryChangeBattleWeather(battler, BATTLE_WEATHER_SNOW, gLastUsedAbility))
             {
-                BattleScriptCall(BattleScript_WeatherAbilityActivates);
-                effect++;
-            }
-            else if (GetConfig(CONFIG_SNOW_WARNING) < GEN_9 && TryChangeBattleWeather(battler, BATTLE_WEATHER_HAIL, gLastUsedAbility))
-            {
-                BattleScriptCall(BattleScript_WeatherAbilityActivates);
-                effect++;
-            }
-            else if (gBattleWeather & B_WEATHER_PRIMAL_ANY && HasWeatherEffect())
-            {
-                BattleScriptCall(BattleScript_BlockedByPrimalWeather);
-                effect++;
+                u32 weather = (GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 ? BATTLE_WEATHER_SNOW : BATTLE_WEATHER_HAIL);
+                if (TryChangeBattleWeather(battler, weather, gLastUsedAbility))
+                {
+                    BattleScriptCall(BattleScript_WeatherAbilityActivates);
+                    effect++;
+                }
+                else if (gBattleWeather & B_WEATHER_PRIMAL_ANY && HasWeatherEffect())
+                {
+                    BattleScriptCall(BattleScript_BlockedByPrimalWeather);
+                    effect++;
+                }
             }
             break;
         case ABILITY_ELECTRIC_SURGE:
