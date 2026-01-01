@@ -1076,12 +1076,13 @@ void GetConditionMenuMonGfx(void *tilesDst, void *palDst, u16 boxId, u16 monId, 
 
     if (partyId != numMons)
     {
-        u16 species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES_OR_EGG, NULL);
+        u16 species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES, NULL);
         bool8 isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
         u32 personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
+        bool32 isEgg = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL);
 
-        LoadSpecialPokePic(tilesDst, species, personality, TRUE);
-        memcpy(palDst, GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), 32);
+        LoadSpecialPokePicIsEgg(tilesDst, species, personality, TRUE, isEgg);
+        memcpy(palDst, GetMonSpritePalFromSpeciesAndPersonalityIsEgg(species, isShiny, personality, isEgg), 32);
     }
 }
 

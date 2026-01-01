@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Anticipation causes notifies if an opponent has a One-hit KO
 SINGLE_BATTLE_TEST("Anticipation treats Self-Destruct and Explosion like all other Normal types (Gen5+)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EXPLOSION, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {

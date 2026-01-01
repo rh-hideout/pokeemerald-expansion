@@ -528,22 +528,20 @@ static void GetMonConditionGraphData(s16 listId, u8 loadId)
 
 static void ConditionGraphDrawMonPic(s16 listId, u8 loadId)
 {
-    u16 boxId, monId, species;
-    u32 personality;
-    bool8 isShiny;
     struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
     struct PokenavMonList *monListPtr = GetSubstructPtr(POKENAV_SUBSTRUCT_MON_LIST);
 
     if (listId == (IsConditionMenuSearchMode() ? monListPtr->listCount : monListPtr->listCount - 1))
         return;
 
-    boxId = monListPtr->monData[listId].boxId;
-    monId = monListPtr->monData[listId].monId;
-    species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES_OR_EGG, NULL);
-    isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
-    personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
-    LoadSpecialPokePic(menu->monPicGfx[loadId], species, personality, TRUE);
-    memcpy(&menu->monPal[loadId], GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), 32);
+    u32 boxId = monListPtr->monData[listId].boxId;
+    u32 monId = monListPtr->monData[listId].monId;
+    u32 species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES, NULL);
+    bool32 isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
+    u32 personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
+    bool32 isEgg = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL);
+    LoadSpecialPokePicIsEgg(menu->monPicGfx[loadId], species, personality, TRUE, isEgg);
+    memcpy(&menu->monPal[loadId], GetMonSpritePalFromSpeciesAndPersonalityIsEgg(species, isShiny, personality, isEgg), 32);
 }
 
 u16 GetMonListCount(void)
