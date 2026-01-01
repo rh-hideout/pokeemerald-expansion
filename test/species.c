@@ -156,8 +156,7 @@ TEST("Every species has a description")
 
 TEST("Test species data is equal to original species data")
 {
-    //if (gTestRunnerSkipIsFail)
-    if (TRUE)
+    if (gTestRunnerIsRHH)
     {
         bool32 allSpeciesUnchanged = TRUE;
         for (u32 i = 1; i < NUM_SPECIES; i++)

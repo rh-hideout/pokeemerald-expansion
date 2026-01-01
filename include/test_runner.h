@@ -7,7 +7,7 @@ extern const bool8 gTestRunnerHeadless;
 #else
 #define gTestRunnerHeadless FALSE
 #endif
-extern const bool8 gTestRunnerSkipIsFail;
+extern const bool8 gTestRunnerIsRHH;
 
 #if TESTING
 
