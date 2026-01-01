@@ -292,20 +292,12 @@ const u16 gItemIconPalette_EscapeRope[] = INCBIN_U16("graphics/items/icon_palett
 
 const u32 gItemIcon_BattleStatItem[] = INCBIN_U32("graphics/items/icons/battle_stat_item.4bpp.smol");
 const u16 gItemIconPalette_XAttack[] = INCBIN_U16("graphics/items/icon_palettes/x_attack.gbapal");
-
 const u16 gItemIconPalette_XDefend[] = INCBIN_U16("graphics/items/icon_palettes/x_defend.gbapal");
-
 const u16 gItemIconPalette_XSpecial[] = INCBIN_U16("graphics/items/icon_palettes/x_special.gbapal");
-
-const u32 gItemIcon_XSpecialDefense[] = INCBIN_U32("graphics/items/icons/x_special_defense.4bpp.smol");
 const u16 gItemIconPalette_XSpecialDefense[] = INCBIN_U16("graphics/items/icon_palettes/x_special_defense.gbapal");
-
 const u16 gItemIconPalette_XSpeed[] = INCBIN_U16("graphics/items/icon_palettes/x_speed.gbapal");
-
 const u16 gItemIconPalette_XAccuracy[] = INCBIN_U16("graphics/items/icon_palettes/x_accuracy.gbapal");
-
 const u16 gItemIconPalette_DireHit[] = INCBIN_U16("graphics/items/icon_palettes/dire_hit.gbapal");
-
 const u16 gItemIconPalette_GuardSpec[] = INCBIN_U16("graphics/items/icon_palettes/guard_spec.gbapal");
 
 // Escape Items
@@ -355,7 +347,6 @@ const u16 gItemIconPalette_Star[] = INCBIN_U16("graphics/items/icon_palettes/sta
 
 const u32 gItemIcon_StarPiece[] = INCBIN_U32("graphics/items/icons/star_piece.4bpp.smol");
 
-const u32 gItemIcon_CometShard[] = INCBIN_U32("graphics/items/icons/comet_shard.4bpp.smol");
 const u16 gItemIconPalette_CometShard[] = INCBIN_U16("graphics/items/icon_palettes/comet_shard.gbapal");
 
 const u16 gItemIconPalette_ShoalSalt[] = INCBIN_U16("graphics/items/icon_palettes/shoal_salt.gbapal");
@@ -466,10 +457,7 @@ const u16 gItemIconPalette_BlueApricorn[] = INCBIN_U16("graphics/items/icon_pale
 const u16 gItemIconPalette_YellowApricorn[] = INCBIN_U16("graphics/items/icon_palettes/yellow_apricorn.gbapal");
 const u16 gItemIconPalette_GreenApricorn[] = INCBIN_U16("graphics/items/icon_palettes/green_apricorn.gbapal");
 const u16 gItemIconPalette_PinkApricorn[] = INCBIN_U16("graphics/items/icon_palettes/pink_apricorn.gbapal");
-
-const u32 gItemIcon_WhiteApricorn[] = INCBIN_U32("graphics/items/icons/white_apricorn.4bpp.smol");
 const u16 gItemIconPalette_WhiteApricorn[] = INCBIN_U16("graphics/items/icon_palettes/white_apricorn.gbapal");
-
 const u16 gItemIconPalette_BlackApricorn[] = INCBIN_U16("graphics/items/icon_palettes/black_apricorn.gbapal");
 
 const u32 gItemIcon_WishingPiece[] = INCBIN_U32("graphics/items/icons/wishing_piece.4bpp.smol");
@@ -648,10 +636,8 @@ const u16 gItemIconPalette_MetalAlloy[] = INCBIN_U16("graphics/items/icon_palett
 
 // Nectars
 
-const u32 gItemIcon_RedNectar[] = INCBIN_U32("graphics/items/icons/red_nectar.4bpp.smol");
-const u16 gItemIconPalette_RedNectar[] = INCBIN_U16("graphics/items/icon_palettes/red_nectar.gbapal");
-
 const u32 gItemIcon_Nectar[] = INCBIN_U32("graphics/items/icons/nectar.4bpp.smol");
+const u16 gItemIconPalette_RedNectar[] = INCBIN_U16("graphics/items/icon_palettes/red_nectar.gbapal");
 const u16 gItemIconPalette_YellowNectar[] = INCBIN_U16("graphics/items/icon_palettes/yellow_nectar.gbapal");
 const u16 gItemIconPalette_PinkNectar[] = INCBIN_U16("graphics/items/icon_palettes/pink_nectar.gbapal");
 const u16 gItemIconPalette_PurpleNectar[] = INCBIN_U16("graphics/items/icon_palettes/purple_nectar.gbapal");
@@ -1039,7 +1025,6 @@ const u16 gItemIconPalette_LuckyPunch[] = INCBIN_U16("graphics/items/icon_palett
 const u32 gItemIcon_MetalPowder[] = INCBIN_U32("graphics/items/icons/metal_powder.4bpp.smol");
 const u16 gItemIconPalette_MetalPowder[] = INCBIN_U16("graphics/items/icon_palettes/metal_powder.gbapal");
 
-const u32 gItemIcon_QuickPowder[] = INCBIN_U32("graphics/items/icons/quick_powder.4bpp.smol");
 const u16 gItemIconPalette_QuickPowder[] = INCBIN_U16("graphics/items/icon_palettes/quick_powder.gbapal");
 
 const u32 gItemIcon_DeepSeaScale[] = INCBIN_U32("graphics/items/icons/deep_sea_scale.4bpp.smol");
