@@ -105,7 +105,7 @@ static const u8 sText_PowerColon[] = _("Power: ");
 static const u8 sText_NoAdditionalEffect[] = _("No Additional Effect");
 
 // Functions
-bool32 IsZMove(u32 move)
+bool32 IsZMove(enum Move move)
 {
     return move >= FIRST_Z_MOVE && move <= LAST_Z_MOVE;
 }
@@ -140,7 +140,7 @@ bool32 CanUseZMove(u32 battler)
     return TRUE;
 }
 
-u32 GetUsableZMove(u32 battler, u32 move)
+u32 GetUsableZMove(u32 battler, enum Move move)
 {
     u32 item = gBattleMons[battler].item;
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
@@ -163,7 +163,7 @@ void ActivateZMove(u32 battler)
     SetActiveGimmick(battler, GIMMICK_Z_MOVE);
 }
 
-bool32 IsViableZMove(u32 battler, u32 move)
+bool32 IsViableZMove(u32 battler, enum Move move)
 {
     u32 item;
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
@@ -226,7 +226,7 @@ bool32 TryChangeZTrigger(u32 battler, u32 moveIndex)
     return viableZMove;
 }
 
-u32 GetSignatureZMove(u32 move, u32 species, u32 item)
+u32 GetSignatureZMove(enum Move move, u32 species, u32 item)
 {
     u32 i;
 
@@ -240,9 +240,9 @@ u32 GetSignatureZMove(u32 move, u32 species, u32 item)
     return MOVE_NONE;
 }
 
-u32 GetTypeBasedZMove(u32 move)
+u32 GetTypeBasedZMove(enum Move move)
 {
-    u32 moveType = GetMoveType(move);
+    enum Type moveType = GetMoveType(move);
 
     if (moveType >= NUMBER_OF_MON_TYPES)
         moveType = TYPE_MYSTERY;
@@ -543,7 +543,7 @@ void SetZEffect(void)
     }
 }
 
-u32 GetZMovePower(u32 move)
+u32 GetZMovePower(enum Move move)
 {
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return 0;

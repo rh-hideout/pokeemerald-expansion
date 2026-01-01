@@ -630,7 +630,7 @@ static inline u32 GetMoveEffectArg_Status(u32 moveId)
 {
     // Forward-declared here because 'include/battle_util.h' includes
     // this file.
-    extern bool32 MoveHasAdditionalEffect(u32 move, u32 moveEffect);
+    extern bool32 MoveHasAdditionalEffect(enum Move move, u32 moveEffect);
 
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
