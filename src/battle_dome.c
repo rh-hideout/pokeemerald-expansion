@@ -3873,7 +3873,7 @@ static u8 Task_GetInfoCardInput(u8 taskId)
 
 #undef tUsingAlternateSlot
 
-static bool32 IsDomeHealingMove(u32 move)
+static bool32 IsDomeHealingMove(enum Move move)
 {
     if (IsHealingMove(move))
         return TRUE;
@@ -3934,7 +3934,7 @@ static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
     }
 }
 
-static bool32 IsDomeLuckyMove(u32 move)
+static bool32 IsDomeLuckyMove(enum Move move)
 {
     if (GetMoveAccuracy(move) <= 50 && GetMoveAccuracy(move) != 0)
         return TRUE;
@@ -3962,7 +3962,7 @@ static bool32 IsDomeLuckyMove(u32 move)
     }
 }
 
-static bool32 IsDomePopularMove(u32 move)
+static bool32 IsDomePopularMove(enum Move move)
 {
     u8 i;
     for (i = 0; i < NUM_ALL_MACHINES; i++)
@@ -3989,7 +3989,7 @@ static bool32 IsDomePopularMove(u32 move)
     }
 }
 
-static bool32 IsDomeStatusMoveEffect(u32 move)
+static bool32 IsDomeStatusMoveEffect(enum Move move)
 {
     switch(GetMoveEffect(move))
     {
@@ -4015,7 +4015,7 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
     return FALSE;
 }
 
-static bool32 IsDomeRareMove(u32 move)
+static bool32 IsDomeRareMove(enum Move move)
 {
     u16 i, j;
     u16 species = 0;
@@ -4036,7 +4036,7 @@ static bool32 IsDomeRareMove(u32 move)
     return TRUE;
 }
 
-static bool32 IsDomeComboMove(u32 move)
+static bool32 IsDomeComboMove(enum Move move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     switch(effect)
@@ -4297,7 +4297,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
         {
             for (k = 0; k < NUM_MOVE_POINT_TYPES; k++)
             {
-                u32 move;
+                enum Move move;
                 if (trainerId == TRAINER_FRONTIER_BRAIN)
                     move = GetFrontierBrainMonMove(i, j);
                 else if (trainerId == TRAINER_PLAYER)
@@ -5106,7 +5106,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
             u32 moveIndex = i * MAX_MON_MOVES + j;
-            u32 move = moves[moveIndex];
+            enum Move move = moves[moveIndex];
 
             moveScores[moveIndex] = 0;
             if (DOME_TRAINERS[winnerTournamentId].trainerId == TRAINER_FRONTIER_BRAIN)

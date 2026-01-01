@@ -947,7 +947,7 @@ static const struct PickupItem sPickupTable[] =
 
 #undef _
 
-static bool32 NoTargetPresent(u8 battler, u32 move)
+static bool32 NoTargetPresent(u8 battler, enum Move move)
 {
     if (!IsBattlerAlive(gBattlerTarget))
         gBattlerTarget = GetBattleMoveTarget(move, TARGET_NONE);
@@ -974,7 +974,7 @@ static bool32 NoTargetPresent(u8 battler, u32 move)
     return FALSE;
 }
 
-bool32 ProteanTryChangeType(u32 battler, enum Ability ability, u32 move, enum Type moveType)
+bool32 ProteanTryChangeType(u32 battler, enum Ability ability, enum Move move, enum Type moveType)
 {
       if ((ability == ABILITY_PROTEAN || ability == ABILITY_LIBERO)
          && !gBattleMons[gBattlerAttacker].volatiles.usedProteanLibero
@@ -989,7 +989,7 @@ bool32 ProteanTryChangeType(u32 battler, enum Ability ability, u32 move, enum Ty
     return FALSE;
 }
 
-bool32 IsMoveNotAllowedInSkyBattles(u32 move)
+bool32 IsMoveNotAllowedInSkyBattles(enum Move move)
 {
     return (gBattleStruct->isSkyBattle && IsMoveSkyBattleBanned(gCurrentMove));
 }
@@ -1238,7 +1238,7 @@ static void Cmd_attackcanceler(void)
     }
 }
 
-static void JumpIfMoveFailed(u32 adder, u32 move, u32 moveType, const u8 *failInstr)
+static void JumpIfMoveFailed(u32 adder, enum Move move, enum Type moveType, const u8 *failInstr)
 {
     if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
     {
@@ -1274,7 +1274,7 @@ static void Cmd_setchargingturn(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static bool32 JumpIfMoveAffectedByProtect(u32 move, u32 battler, u32 shouldJump, const u8 *failInstr)
+static bool32 JumpIfMoveAffectedByProtect(enum Move move, u32 battler, u32 shouldJump, const u8 *failInstr)
 {
     bool32 affected = IsBattlerProtected(gBattlerAttacker, battler, move);
     if (affected)
@@ -1753,7 +1753,7 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(u32 resultFlags)
     return resultFlags;
 }
 
-static inline bool32 TryStrongWindsWeakenAttack(u32 battlerDef, u32 moveType)
+static inline bool32 TryStrongWindsWeakenAttack(u32 battlerDef, enum Type moveType)
 {
     if (gBattleWeather & B_WEATHER_STRONG_WINDS && HasWeatherEffect())
     {
@@ -7039,7 +7039,7 @@ bool32 CanUseLastResort(u8 battler)
     u32 moveIndex;
     for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        u32 move = gBattleMons[battler].moves[moveIndex];
+        enum Move move = gBattleMons[battler].moves[moveIndex];
         // Assumes that an empty slot cannot have a non-empty slot after it
         if (move == MOVE_NONE)
             break;
@@ -7255,7 +7255,7 @@ u32 IsAbilityStatusProtected(u32 battler, enum Ability ability)
         || IsFlowerVeilProtected(battler);
 }
 
-static bool32 IsRototillerAffected(u32 battler, u32 move)
+static bool32 IsRototillerAffected(u32 battler, enum Move move)
 {
     if (!IsBattlerAlive(battler))
         return FALSE;
@@ -9201,8 +9201,8 @@ static void Cmd_settypetorandomresistance(void)
 
     // Before Gen 5 Conversion 2 only worked on a move the attacker was actually hit by.
     // This changed later to the last move used by the selected target.
-    u32 moveToCheck;
-    u32 typeToCheck;
+    enum Move moveToCheck;
+    enum Type typeToCheck;
 
     if (GetConfig(CONFIG_UPDATED_CONVERSION_2) < GEN_5)
     {
@@ -10919,7 +10919,7 @@ static void Cmd_settypebasedhalvers(void)
         gBattlescriptCurrInstr = cmd->failInstr;
 }
 
-bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, u32 move)
+bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, enum Move move)
 {
     if (!gBattleMons[battlerDef].volatiles.substitute)
         return FALSE;
@@ -10931,7 +10931,7 @@ bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, u32 move)
         return TRUE;
 }
 
-bool32 DoesDisguiseBlockMove(u32 battler, u32 move)
+bool32 DoesDisguiseBlockMove(u32 battler, enum Move move)
 {
     if (!IsMimikyuDisguised(battler)
      || gBattleMons[battler].volatiles.transformed
@@ -12151,7 +12151,7 @@ static bool32 CriticalCapture(u32 odds)
     return FALSE;
 }
 
-bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler)
+bool32 IsMoveAffectedByParentalBond(enum Move move, u32 battler)
 {
     if (move != MOVE_NONE && move != MOVE_UNAVAILABLE && move != MOVE_STRUGGLE
         && !IsMoveParentalBondBanned(move)

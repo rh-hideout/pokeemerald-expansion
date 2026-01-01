@@ -14,7 +14,7 @@
 static void ValidateBattlers(void);
 static u32 GetOriginallyUsedMove(u32 chosenMove);
 static void SetSameMoveTurnValues(u32 moveEffect);
-static void TryClearChargeVolatile(u32 moveType);
+static void TryClearChargeVolatile(enum Type moveType);
 static inline bool32 IsBattlerUsingBeakBlast(u32 battler);
 
 // Attackcanceler
@@ -1875,7 +1875,7 @@ static void SetSameMoveTurnValues(u32 moveEffect)
         gBattleMons[gBattlerAttacker].volatiles.metronomeItemCounter = 0;
 }
 
-static void TryClearChargeVolatile(u32 moveType)
+static void TryClearChargeVolatile(enum Type moveType)
 {
     if (B_CHARGE < GEN_9) // Prior to gen9, charge is cleared during the end turn
         return;
