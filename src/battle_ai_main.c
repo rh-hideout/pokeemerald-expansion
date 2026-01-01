@@ -5202,7 +5202,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                 case HOLD_EFFECT_STICKY_BARB:
                     break;
                 case HOLD_EFFECT_UTILITY_UMBRELLA:
-                    if ((AI_GetWeather() & B_WEATHER_SUN) && aiData->abilities[battlerAtk] == ABILITY_DRY_SKIN)
+                    if ((AI_GetWeather() & B_WEATHER_SUN) && (aiData->abilities[battlerAtk] == ABILITY_DRY_SKIN || aiData->abilities[battlerDef] == ABILITY_DRY_SKIN))
                         ADJUST_SCORE(DECENT_EFFECT);
                     else if (!DoesAbilityBenefitFromSunOrRain(aiData->abilities[battlerAtk], AI_GetWeather()))
                         ADJUST_SCORE(WEAK_EFFECT);
