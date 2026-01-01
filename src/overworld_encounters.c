@@ -61,6 +61,7 @@ static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
 static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId);
 static bool32 CreateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEvent *objectEvent, u32 headerId);
 static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent);
+static u32 GetMaxOverworldEncounterSpawns(void);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -218,7 +219,7 @@ void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn)
     MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
 
-static u8 GetMaxOverworldEncounterSpawns(void)
+static u32 GetMaxOverworldEncounterSpawns(void)
 {
     if (OWE_ShouldSpawnWaterMons())
         return OWE_MAX_WATER_SPAWNS;
