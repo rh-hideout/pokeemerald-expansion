@@ -1,12 +1,3 @@
-//CREDITS
-//TheXaman:             https://github.com/TheXaman/pokeemerald/tree/tx_debug_system
-//CODE USED FROM:
-//ketsuban:             https://github.com/pret/pokeemerald/wiki/Add-a-debug-menu
-//Pyredrid:             https://github.com/Pyredrid/pokeemerald/tree/debugmenu
-//AsparagusEduardo:     https://github.com/AsparagusEduardo/pokeemerald/tree/InfusedEmerald_v2
-//Ghoulslash:           https://github.com/ghoulslash/pokeemerald
-//Jaizu:                https://jaizu.moe/
-//AND OTHER RHH POKEEMERALD-EXPANSION CONTRIBUTORS
 #include "global.h"
 #include "battle.h"
 #include "battle_setup.h"

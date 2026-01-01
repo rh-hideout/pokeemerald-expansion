@@ -1,4 +1,3 @@
-//Credits: Gamer2020, AsparagusEduardo, TheXaman, ShinyDragonHunter
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"

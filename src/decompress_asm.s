@@ -19,9 +19,6 @@ FastUnsafeCopy32:
     pop     {r4-r10}
     bx    lr
     
-    
-@ Credit to:  luckytyphlosion as it's his implementation
-    
     .section .text @Copied to stack on run-time
     .align 2
 
