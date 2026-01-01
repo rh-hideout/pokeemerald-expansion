@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
 }
 
-SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns: Encore used before move")
+SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Encore used before move")
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns: Encore used
     }
 }
 
-SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns for player: Encore used after move")
+SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns for player: Encore used after move")
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
@@ -127,5 +127,4 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can be encored immediately after
 TO_DO_BATTLE_TEST("Encore's effect ends if the encored move runs out of PP");
 TO_DO_BATTLE_TEST("Encore lasts for 2-6 turns (Gen 2-3)");
 TO_DO_BATTLE_TEST("Encore lasts for 4-8 turns (Gen 4)");
-TO_DO_BATTLE_TEST("Encore lasts for 3 turns (Gen 5+)");
 TO_DO_BATTLE_TEST("Encore randomly chooses an opponent target");

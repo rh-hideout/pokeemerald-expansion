@@ -5,3 +5,5 @@ TO_DO_BATTLE_TEST("Poke Balls can't be thrown when there's 2 opposing wild battl
 TO_DO_BATTLE_TEST("Poke Balls can't be thrown when there's no space in the Pokemon Storage System")
 TO_DO_BATTLE_TEST("Poke Balls can't be thrown when an opposing wild battler is in a semi-invulnerable state")
 TO_DO_BATTLE_TEST("Poke Balls can't be thrown when B_FLAG_NO_CATCHING is set")
+TO_DO_BATTLE_TEST("Love Ball increases catch rate on the same species and same gender (Gen2)")
+TO_DO_BATTLE_TEST("Love Ball increases catch rate on the same species and opposite gender (Gen4+)")
