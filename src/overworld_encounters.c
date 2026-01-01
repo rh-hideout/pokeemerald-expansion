@@ -937,6 +937,9 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
 
+    if (!IsOverworldWildEncounter(object))
+        return FALSE;
+
     if (IsGeneratedOverworldWildEncounter(object)
         || (!IsGeneratedOverworldWildEncounter(object) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL))
     {
