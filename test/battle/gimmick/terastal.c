@@ -298,7 +298,7 @@ SINGLE_BATTLE_TEST("(TERA) Roost does not remove the user's Flying type while Te
 
 SINGLE_BATTLE_TEST("(TERA) Type-changing moves fail against a Terastallized Pokemon")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SOAK; }
     PARAMETRIZE { move = MOVE_FORESTS_CURSE; }
     PARAMETRIZE { move = MOVE_TRICK_OR_TREAT; }
@@ -681,7 +681,7 @@ SINGLE_BATTLE_TEST("(TERA) Stellar type's one-time boost factors in dynamically-
 SINGLE_BATTLE_TEST("(TERA) Terapagos retains the Stellar type boost at all times")
 {
     s16 damage[2];
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_MACH_PUNCH; }
     GIVEN {

@@ -4,7 +4,7 @@
 
 AI_SINGLE_BATTLE_TEST("AI will not further increase Attack / Sp. Atk stat if it knows it faints to target: AI faster")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_HOWL; }
     PARAMETRIZE { move = MOVE_CALM_MIND; }
@@ -25,7 +25,7 @@ AI_SINGLE_BATTLE_TEST("AI will not further increase Attack / Sp. Atk stat if it 
 
 AI_SINGLE_BATTLE_TEST("AI will not further increase Attack / Sp. Atk stat if it knows it faints to target: AI slower")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_HOWL; }
     PARAMETRIZE { move = MOVE_CALM_MIND; }
@@ -58,7 +58,7 @@ AI_SINGLE_BATTLE_TEST("AI will increase speed if it is slower")
 
 AI_SINGLE_BATTLE_TEST("AI will not waste a turn setting up if it knows target can faint it")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_HOWL; }
     PARAMETRIZE { move = MOVE_CALM_MIND; }
@@ -148,7 +148,7 @@ AI_SINGLE_BATTLE_TEST("AI will incentivise multiple best damage moves in cases o
 
 AI_SINGLE_BATTLE_TEST("Clangorous Soul - gets best move boost when player does under 67 pct damage")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SOLAR_BEAM; }
     PARAMETRIZE { move = MOVE_AIR_SLASH; }
     ASSUME(GetMovePower(MOVE_SOLAR_BEAM) == 120);
@@ -240,7 +240,7 @@ AI_SINGLE_BATTLE_TEST("Belly Drum - physical move >50pct damage vs ice face alre
 
 AI_SINGLE_BATTLE_TEST("HasMoveThatChangesKOThreshold - AI should not see self-targeted speed drops as preventing setup moves in 2hko cases")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_EARTHQUAKE; }
     PARAMETRIZE { move = MOVE_BULLDOZE; }
     GIVEN {
@@ -274,7 +274,7 @@ AI_SINGLE_BATTLE_TEST("AI_IsMoveEffectInPlus - AI should not see secondary effec
 
 AI_SINGLE_BATTLE_TEST("Fillet Away AI handling")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCALD; }
     PARAMETRIZE { move = MOVE_THUNDERBOLT; }
     ASSUME(GetMovePower(MOVE_THUNDERBOLT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? 90 : 95));

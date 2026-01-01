@@ -57,14 +57,14 @@ AI_DOUBLE_BATTLE_TEST("AI uses Sheer Cold")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100")
 {
-    u32 moveStart = 0;
-    u32 moveCap = 100;
+    enum Move moveStart = 0;
+    enum Move moveCap = 100;
 
     if (moveCap > MOVES_COUNT)
         moveCap = MOVES_COUNT - 1;
 
     s32 j;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     enum BattleMoveEffects effect;
 
@@ -119,14 +119,14 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
 {
-    u32 moveStart = 100;
-    u32 moveCap = 200;
+    enum Move moveStart = 100;
+    enum Move moveCap = 200;
 
     if (moveCap > MOVES_COUNT)
         moveCap = MOVES_COUNT - 1;
 
     s32 j;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     enum BattleMoveEffects effect;
 
@@ -195,14 +195,14 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
 {
-    u32 moveStart = 200;
-    u32 moveCap = 300;
+    enum Move moveStart = 200;
+    enum Move moveCap = 300;
 
     if (moveCap > MOVES_COUNT)
         moveCap = MOVES_COUNT - 1;
 
     s32 j;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     enum BattleMoveEffects effect;
 
@@ -284,14 +284,14 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
 {
-    u32 moveStart = 300;
-    u32 moveCap = 400;
+    enum Move moveStart = 300;
+    enum Move moveCap = 400;
 
     if (moveCap > MOVES_COUNT)
         moveCap = MOVES_COUNT - 1;
 
     s32 j;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     enum BattleMoveEffects effect;
 
@@ -361,14 +361,14 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
 {
-    u32 moveStart = 400;
-    u32 moveCap = 500;
+    enum Move moveStart = 400;
+    enum Move moveCap = 500;
 
     if (moveCap > MOVES_COUNT)
         moveCap = MOVES_COUNT - 1;
 
     s32 j;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     enum BattleMoveEffects effect;
 
@@ -429,14 +429,14 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
 {
-    u32 moveStart = 515;
-    u32 moveCap = 600;
+    enum Move moveStart = 515;
+    enum Move moveCap = 600;
 
     if (moveCap > MOVES_COUNT)
         moveCap = MOVES_COUNT - 1;
 
     s32 j;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     enum BattleMoveEffects effect;
 
@@ -504,14 +504,14 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
 {
-    u32 moveStart = 600;
-    u32 moveCap = 700;
+    enum Move moveStart = 600;
+    enum Move moveCap = 700;
 
     if (moveCap > MOVES_COUNT)
         moveCap = MOVES_COUNT - 1;
 
     s32 j;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     enum BattleMoveEffects effect;
 
@@ -576,14 +576,14 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
 {
-    u32 moveStart = 700;
-    u32 moveCap = 800;
+    enum Move moveStart = 700;
+    enum Move moveCap = 800;
 
     if (moveCap > MOVES_COUNT)
         moveCap = MOVES_COUNT - 1;
 
     s32 j;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     enum BattleMoveEffects effect;
 
@@ -645,14 +645,14 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
 {
-    u32 moveStart = 800;
-    u32 moveCap = 900;
+    enum Move moveStart = 800;
+    enum Move moveCap = 900;
 
     if (moveCap > MOVES_COUNT)
         moveCap = MOVES_COUNT - 1;
 
     s32 j;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     enum BattleMoveEffects effect;
 

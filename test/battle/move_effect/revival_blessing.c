@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Revival Blessing fails if no party members are fainted")
 AI_MULTI_BATTLE_TEST("AI will not revive a partner's party member with Revival Blessing")
 {
     struct BattlePokemon *user = NULL;
-    u32 move1, move2, move3;
+    enum Move move1, move2, move3;
     PARAMETRIZE { user = opponentLeft, move1 = MOVE_REVIVAL_BLESSING, move2 = MOVE_CELEBRATE, move3 = MOVE_CELEBRATE; }
     PARAMETRIZE { user = playerRight, move1 = MOVE_CELEBRATE, move2 = MOVE_REVIVAL_BLESSING, move3 = MOVE_CELEBRATE; }
     PARAMETRIZE { user = opponentRight, move1 = MOVE_CELEBRATE, move2 = MOVE_CELEBRATE, move3 = MOVE_REVIVAL_BLESSING; }

@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Zero to Hero will activate if a switch move is used")
 
 SINGLE_BATTLE_TEST("Gastro Acid, Worry Seed, and Simple Beam fail if the target has the Ability Zero to Hero")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_GASTRO_ACID; }
     PARAMETRIZE { move = MOVE_WORRY_SEED; }

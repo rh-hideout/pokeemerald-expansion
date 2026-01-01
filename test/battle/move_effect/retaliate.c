@@ -47,8 +47,8 @@ SINGLE_BATTLE_TEST("Retaliate doubles in base power the turn after an ally faint
 DOUBLE_BATTLE_TEST("Retaliate works with passive damage")
 {
     s16 damage[2];
-    u32 move;
-    u32 move2 = MOVE_CELEBRATE;
+    enum Move move;
+    enum Move move2 = MOVE_CELEBRATE;
     struct BattlePokemon *moveTarget = playerLeft;
     PARAMETRIZE { move = MOVE_TOXIC; moveTarget = playerLeft; }
     PARAMETRIZE { move = MOVE_POISON_POWDER; moveTarget = playerLeft; }

@@ -12,7 +12,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Raging Bull removes Light Screen, Reflect and Aurora Veil from the target's side of the field")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
     PARAMETRIZE { move = MOVE_REFLECT; }
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Raging Bull removes Light Screen, Reflect and Aurora Veil fr
 
 SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora Veil if the target is immune")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
     PARAMETRIZE { move = MOVE_REFLECT; }
@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora 
 
 SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora Veil if the target Protected")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
     PARAMETRIZE { move = MOVE_REFLECT; }
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora 
 
 SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora Veil if it misses")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
     PARAMETRIZE { move = MOVE_REFLECT; }
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora 
 
 DOUBLE_BATTLE_TEST("Raging Bull can remove Light Screen, Reflect and Aurora Veil on users side")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
     PARAMETRIZE { move = MOVE_REFLECT; }

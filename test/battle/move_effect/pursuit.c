@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe")
 
 SINGLE_BATTLE_TEST("Pursuit attacks a foe using Volt Switch / U-Turn / Parting Shot to switch out")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_VOLT_SWITCH; }
     PARAMETRIZE { move = MOVE_U_TURN; }
     PARAMETRIZE { move = MOVE_PARTING_SHOT; }
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Pursuit attacks a foe using Volt Switch / U-Turn / Parting S
 
 DOUBLE_BATTLE_TEST("Pursuit doesn't attack a foe using Teleport / Baton Pass to switch out")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_TELEPORT; }
     PARAMETRIZE { move = MOVE_BATON_PASS; }
     GIVEN {

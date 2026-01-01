@@ -311,7 +311,7 @@ SINGLE_BATTLE_TEST("Protect: Recoil damage is not applied if target was protecte
 
 SINGLE_BATTLE_TEST("Protect: Multi-hit moves don't hit a protected target and fail only once")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_PROTECT; }
     PARAMETRIZE { move = MOVE_DETECT; }
@@ -394,7 +394,7 @@ DOUBLE_BATTLE_TEST("Protect fails when the only slower battler is a fainted ally
 
 DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_SCRATCH; }      // Single target
     PARAMETRIZE { move = MOVE_SURF; }        // All targets
@@ -467,7 +467,7 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns (Gen6+
 
 DOUBLE_BATTLE_TEST("Protect: Quick Guard protects self and ally from priority moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     struct BattlePokemon *targetOpponent = NULL;
 
     PARAMETRIZE { move = MOVE_SCRATCH;      targetOpponent = opponentLeft; }
@@ -530,7 +530,7 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6
 
 DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     struct BattlePokemon *targetOpponent = NULL;
 
     PARAMETRIZE { move = MOVE_HYPER_VOICE; }
@@ -571,7 +571,7 @@ DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status mo
 
 SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CONFIDE; }
     PARAMETRIZE { move = MOVE_DECORATE; }
 
@@ -593,7 +593,7 @@ SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
 
 DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decorate")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CONFIDE; }
     PARAMETRIZE { move = MOVE_DECORATE; }
 
@@ -649,7 +649,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all
 SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Max Move demage", s16 damage)
 {
     s16 dmg[2];
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_WIDE_GUARD; }
     PARAMETRIZE { move = MOVE_QUICK_GUARD; }
@@ -672,7 +672,7 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
 SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Z-Move demage", s16 damage)
 {
     bool32 protected;
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { protected = TRUE; move = MOVE_WIDE_GUARD; }
     PARAMETRIZE { protected = FALSE; move = MOVE_WIDE_GUARD; }

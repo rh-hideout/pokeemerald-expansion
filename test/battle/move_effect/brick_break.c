@@ -13,7 +13,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs remove Light Screen, Reflect and Aurora Veil from the target's side of the field")
 {
-    u32 move;
+    enum Move move;
     u32 breakingMove;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_BRICK_BREAK; }
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs remove Light Screen, Reflect a
 
 SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Reflect and Aurora Veil if the target is immune")
 {
-    u32 move;
+    enum Move move;
     u32 breakingMove;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_BRICK_BREAK; }
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
 
 SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Reflect and Aurora Veil if the target Protected")
 {
-    u32 move;
+    enum Move move;
     u32 breakingMove;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_BRICK_BREAK; }
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
 
 SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Reflect and Aurora Veil if it misses")
 {
-    u32 move;
+    enum Move move;
     u32 breakingMove;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_BRICK_BREAK; }
@@ -128,7 +128,7 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
 
 DOUBLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove Light Screen, Reflect and Aurora Veil on users side")
 {
-    u32 move;
+    enum Move move;
     u32 breakingMove;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_BRICK_BREAK; }

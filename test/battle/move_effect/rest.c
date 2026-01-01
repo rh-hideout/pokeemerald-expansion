@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down")
 
 SINGLE_BATTLE_TEST("Rest fails if the user is protected by Electric/Misty Terrain")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
     PARAMETRIZE { move = MOVE_MISTY_TERRAIN; }
     GIVEN {

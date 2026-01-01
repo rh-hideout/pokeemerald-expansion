@@ -41,7 +41,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SEQUENCE_SWITCHING: AI will always switch after a
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SEQUENCE_SWITCHING: Roar and Dragon Tail still force switch to random party member")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_ROAR; }
     PARAMETRIZE {move = MOVE_DRAGON_TAIL; }

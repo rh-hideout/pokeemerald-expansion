@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat")
 SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not both")
 {
     u16 species;
-    u32 move;
+    enum Move move;
     s16 damage[2];
 
     PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_SCRATCH; }

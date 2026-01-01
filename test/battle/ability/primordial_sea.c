@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Primordial Sea does not block a move if Pokémon is asleep a
 
 SINGLE_BATTLE_TEST("Primordial Sea blocks weather-setting moves")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SUNNY_DAY; }
     PARAMETRIZE { move = MOVE_RAIN_DANCE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }

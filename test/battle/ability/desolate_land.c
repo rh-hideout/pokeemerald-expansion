@@ -101,7 +101,7 @@ SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
 
 SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SUNNY_DAY; }
     PARAMETRIZE { move = MOVE_RAIN_DANCE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }

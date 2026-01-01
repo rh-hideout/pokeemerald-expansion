@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Ice Spinner doesn't fail if there is no terrain on the field
 
 AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a terrain or not")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
     PARAMETRIZE { move = MOVE_NONE; }

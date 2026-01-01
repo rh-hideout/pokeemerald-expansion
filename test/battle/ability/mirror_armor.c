@@ -3,7 +3,8 @@
 
 SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
 {
-    u16 move, statId;
+    enum Move move;
+    u32 statId;
 
     PARAMETRIZE { move = MOVE_LEER;        statId = STAT_DEF; }
     PARAMETRIZE { move = MOVE_GROWL;       statId = STAT_ATK; }

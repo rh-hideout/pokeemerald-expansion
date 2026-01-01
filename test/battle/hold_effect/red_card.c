@@ -385,7 +385,7 @@ SINGLE_BATTLE_TEST("Red Card activates and overrides U-turn")
 
 SINGLE_BATTLE_TEST("Red Card does not activate if attacker's Sheer Force applied")
 {
-    u32 move;
+    enum Move move;
     bool32 activate;
     PARAMETRIZE { move = MOVE_SCRATCH; activate = TRUE; }
     PARAMETRIZE { move = MOVE_STOMP; activate = FALSE; }
