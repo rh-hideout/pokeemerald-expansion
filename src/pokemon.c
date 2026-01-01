@@ -51,8 +51,6 @@
 #include "text.h"
 #include "trainer_hill.h"
 #include "util.h"
-#include "wild_encounter.h"
-#include "config/fishing.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_move_effects.h"
@@ -1068,8 +1066,7 @@ bool32 ComputePlayerShinyOdds(u32 personality)
             totalRerolls += I_SHINY_CHARM_ADDITIONAL_ROLLS;
         if (LURE_STEP_COUNT != 0)
             totalRerolls += 1;
-        if (I_FISHING_CHAIN && gIsFishingEncounter)
-            totalRerolls += CalculateChainFishingShinyRolls();
+        totalRerolls += CalculateChainFishingShinyRolls();
         if (gDexNavSpecies)
             totalRerolls += CalculateDexNavShinyRolls();
 
