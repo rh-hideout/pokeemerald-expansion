@@ -3325,7 +3325,7 @@ static u32 GetDebugPokemonTotalEV(void)
     return totalEVs;
 }
 
-static void Debug_Display_MoveInfo(u32 moveId, u32 iteration, u32 digit, u8 windowId)
+static void Debug_Display_MoveInfo(enum Move moveId, u32 iteration, u32 digit, u8 windowId)
 {
     // Doesn't expand placeholdes so a 4th dynamic value can be shown.
     u8 *end = StringCopy(gStringVar1, GetMoveName(moveId));

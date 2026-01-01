@@ -3990,7 +3990,8 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                             // Heal PP for all moves
                             for (temp2 = 0; (signed)(temp2) < (signed)(MAX_MON_MOVES); temp2++)
                             {
-                                u32 move, ppBonus;
+                                enum Move move;
+                                u32 ppBonus;
                                 dataUnsigned = GetMonData(mon, MON_DATA_PP1 + temp2, NULL);
                                 move = GetMonData(mon, MON_DATA_MOVE1 + temp2, NULL);
                                 ppBonus = CalculatePPWithBonus(move, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), temp2);
@@ -5749,7 +5750,7 @@ u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
     for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
     {
         enum TMHMItemId item = GetTMHMItemId(i + 1);
-        u32 move = GetTMHMMoveId(i + 1);
+        enum Move move = GetTMHMMoveId(i + 1);
 
         if (move == MOVE_NONE)
             continue;
@@ -5803,7 +5804,7 @@ u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
 
     for (u32 i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
     {
-        u32 move = gTutorMoves[i];
+        enum Move move = gTutorMoves[i];
 
         if (!CanLearnTeachableMove(species, move))
             continue;
@@ -5927,7 +5928,7 @@ bool32 HasRelearnerTMMoves(struct Pokemon *mon)
     for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
     {
         enum TMHMItemId item = GetTMHMItemId(i + 1);
-        u32 move = GetTMHMMoveId(i + 1);
+        enum Move move = GetTMHMMoveId(i + 1);
 
         if (move == MOVE_NONE)
             continue;
@@ -5963,7 +5964,7 @@ bool32 HasRelearnerTutorMoves(struct Pokemon *mon)
 
     for (u32 i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
     {
-        u32 move = gTutorMoves[i];
+        enum Move move = gTutorMoves[i];
 
         if (!CanLearnTeachableMove(species, move))
             continue;
@@ -7407,7 +7408,7 @@ void UpdateDaysPassedSinceFormChange(u16 days)
     }
 }
 
-enum Type CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState state)
+enum Type CheckDynamicMoveType(struct Pokemon *mon, enum Move move, u32 battler, enum MonState state)
 {
     enum Type moveType = GetDynamicMoveType(mon, move, battler, state);
     if (moveType != TYPE_NONE)

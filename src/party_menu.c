@@ -6224,7 +6224,7 @@ u8 IsFusionMon(u16 species)
     return FALSE;
 }
 
-void FormChangeTeachMove(u8 taskId, u32 move, u32 slot)
+void FormChangeTeachMove(u8 taskId, enum Move move, u32 slot)
 {
     struct Pokemon *mon;
 
@@ -6247,7 +6247,7 @@ void FormChangeTeachMove(u8 taskId, u32 move, u32 slot)
     }
 }
 
-void DeleteMove(struct Pokemon *mon, u32 move)
+void DeleteMove(struct Pokemon *mon, enum Move move)
 {
     struct BoxPokemon *boxMon = &mon->box;
     u32 i, j;
@@ -6338,7 +6338,7 @@ static void DeleteInvalidFusionMoves(struct Pokemon *mon, u32 species)
 {
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
-        u32 move = GetMonData(mon, MON_DATA_MOVE1 + i);
+        enum Move move = GetMonData(mon, MON_DATA_MOVE1 + i);
         bool32 toDelete = TRUE;
         const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
         for (u32 j = 0; learnset[j].move != LEVEL_UP_MOVE_END;j++)
@@ -6392,7 +6392,7 @@ static void SwapFusionMonMoves(struct Pokemon *mon, const u16 moveTable[][2], u3
     }
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
-        u32 move = GetMonData(mon, MON_DATA_MOVE1 + i);
+        enum Move move = GetMonData(mon, MON_DATA_MOVE1 + i);
         for (u32 j = 0; j < 2; j++)
         {
             if (move == moveTable[j][oldMoveIndex])

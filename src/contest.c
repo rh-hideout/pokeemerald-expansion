@@ -1038,7 +1038,7 @@ static void CopyNicknameToFit(u8 *dest, u32 contestant)
     WrapFontIdToFit(dest, end, FONT_NORMAL, 60);
 }
 
-static void CopyMoveNameToFit(u8 *dest, u32 move)
+static void CopyMoveNameToFit(u8 *dest, enum Move move)
 {
     u8 *end = StringCopy(dest, GetMoveName(move));
     WrapFontIdToFit(dest, end, FONT_NORMAL, 84);
