@@ -6465,7 +6465,7 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
     {
         curObject = &gObjectEvents[i];
         if (curObject->active && (curObject->movementType != MOVEMENT_TYPE_FOLLOW_PLAYER || objectEvent != &gObjectEvents[gPlayerAvatar.objectEventId]) && curObject != objectEvent
-         && !FollowerNPC_IsCollisionExempt(curObject, objectEvent) // Partner
+         && !FollowerNPC_IsCollisionExempt(curObject, objectEvent)
          )
         {
             // check for collision if curObject is active, not the object in question, and not exempt from collisions
@@ -6473,8 +6473,6 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
             {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
                 {
-                    // check if objects can actually collide with this or if it returns no too early
-                    // should be fine
                     OWE_TryTriggerEncounter(objectEvent, curObject);
                     return i;
                 }
