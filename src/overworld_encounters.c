@@ -149,8 +149,6 @@ void UpdateOverworldEncounters(void)
     }
 
     gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
-    gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
-    gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
     gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
     gObjectEvents[objectEventId].sRoamerOutbreakStatus = indexRoamerOutbreak;
 
@@ -910,14 +908,6 @@ u32 RemoveOldestOverworldEncounter(void)
     u32 localId = GetLocalIdByOverworldSpawnSlot(oldestSlot);
     u32 objectEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
-    u32 fldEffSpriteId = object->fieldEffectSpriteId;
-
-    // Stop the associated field effect if it is active.
-    if (fldEffSpriteId != 0)
-    {
-        FieldEffectStop(&gSprites[fldEffSpriteId], FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
-        object->fieldEffectSpriteId = 0;
-    }
 
     RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
     return objectEventId;
@@ -1241,7 +1231,7 @@ enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavio
         return OWE_SPAWN_ANIM_LONG_GRASS;
     else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior) && gMapHeader.mapType != MAP_TYPE_UNDERWATER)
         return OWE_SPAWN_ANIM_WATER;
-    else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior) && gMapHeader.mapType == MAP_TYPE_UNDERWATER)
+    else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
         return OWE_SPAWN_ANIM_UNDERWATER;
     else
         return OWE_SPAWN_ANIM_CAVE;
