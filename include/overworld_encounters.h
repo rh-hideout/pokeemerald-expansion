@@ -120,7 +120,7 @@ bool32 CanRemoveOverworldEncounter(u32 localId);
 u32 RemoveOldestOverworldEncounter(void);
 void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn);
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
-struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
+const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void TryRemoveOverworldWildEncounter(u32 localId);
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);

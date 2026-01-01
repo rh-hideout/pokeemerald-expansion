@@ -942,7 +942,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
     return FALSE;
 }
 
-struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
+const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
     if (!IsSemiManualOverworldWildEncounter(template->graphicsId, template->trainerType))
         return *template;
@@ -981,6 +981,7 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
     templateOWE.graphicsId = graphicsId;
     templateOWE.sOverworldEncounterLevel = level;
     templateOWE.trainerType = (TRAINER_TYPE_ENCOUNTER & 0xFF) | ((indexRoamerOutbreak & 0xFF) << 8);
+    templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
     return templateOWE;
 }
 
