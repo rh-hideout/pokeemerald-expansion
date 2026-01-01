@@ -221,7 +221,7 @@ static inline bool32 SetSwitchinAndSwitch(u32 battler, u32 switchinId)
     return TRUE;
 }
 
-static bool32 AI_DoesChoiceEffectBlockMove(u32 battler, u32 move)
+static bool32 AI_DoesChoiceEffectBlockMove(u32 battler, enum Move move)
 {
     // Choice locked into something else
     if (gAiLogicData->lastUsedMove[battler] != MOVE_NONE && gAiLogicData->lastUsedMove[battler] != move
@@ -410,7 +410,7 @@ static bool32 ShouldSwitchIfTruant(u32 battler)
 
 static u32 FindMonWithMoveOfEffectiveness(u32 battler, u32 opposingBattler, uq4_12_t effectiveness)
 {
-    u32 move;
+    enum Move move;
     s32 firstId;
     s32 lastId; // + 1
     struct Pokemon *party = NULL;
@@ -794,7 +794,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     return FALSE;
 }
 
-static bool32 GetHitEscapeTransformState(u32 battlerAtk, u32 move)
+static bool32 GetHitEscapeTransformState(u32 battlerAtk, enum Move move)
 {
     u32 moveIndex;
     bool32 hasValidTarget = FALSE;
@@ -900,7 +900,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
-                u32 move = gBattleMons[battler].moves[moveIndex];
+                enum Move move = gBattleMons[battler].moves[moveIndex];
 
                 if (move != MOVE_NONE && GetMoveEffect(move) == EFFECT_HIT_ESCAPE)
                 {
@@ -1029,7 +1029,8 @@ static bool32 CanMonSurviveHazardSwitchin(u32 battler)
 {
     u32 battlerIn1, battlerIn2;
     u32 hazardDamage = 0, battlerHp = gBattleMons[battler].hp;
-    enum Ability ability = gAiLogicData->abilities[battler], aiMove;
+    enum Ability ability = gAiLogicData->abilities[battler];
+    enum Move aiMove;
     s32 firstId, lastId;
     struct Pokemon *party;
 

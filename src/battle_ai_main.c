@@ -52,25 +52,25 @@ EWRAM_DATA AiScoreFunc sDynamicAiFunc = NULL;
 EWRAM_DATA AiSwitchFunc gDynamicAiSwitchFunc = NULL;
 
 // const rom data
-static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_AttacksPartner(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_Safari(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_FirstBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_DynamicFunc(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
-static s32 AI_CheckPpStall(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
+static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_AttacksPartner(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_Safari(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_FirstBattle(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_DynamicFunc(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
+static s32 AI_CheckPpStall(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score);
 
-static s32 (*const sBattleAiFuncTable[])(u32, u32, u32, s32) =
+static s32 (*const sBattleAiFuncTable[])(u32, u32, enum Move, s32) =
 {
     [0] = AI_CheckBadMove,           // AI_FLAG_CHECK_BAD_MOVE
     [1] = AI_TryToFaint,             // AI_FLAG_TRY_TO_FAINT
@@ -594,7 +594,7 @@ void RecordMovesBasedOnStab(u32 battler)
 {
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        u32 playerMove = gBattleMons[battler].moves[moveIndex];
+        enum Move playerMove = gBattleMons[battler].moves[moveIndex];
         if (IsSpeciesOfType(gBattleMons[battler].species, GetMoveType(playerMove)) && GetMovePower(playerMove != 0))
             RecordKnownMove(battler, playerMove);
     }
@@ -604,7 +604,7 @@ void RecordStatusMoves(u32 battler)
 {
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        u32 playerMove = gBattleMons[battler].moves[moveIndex];
+        enum Move playerMove = gBattleMons[battler].moves[moveIndex];
         if (ShouldRecordStatusMove(playerMove))
             RecordKnownMove(battler, playerMove);
     }
@@ -632,7 +632,7 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
 }
 
 #define BYPASSES_ACCURACY_CALC 101 // 101 indicates for ai that the move will always hit
-static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 move)
+static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, enum Move move)
 {
     u32 accuracy;
     enum Ability abilityAtk = aiData->abilities[battlerAtk];
@@ -655,7 +655,7 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 ba
 
 void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 weather, u32 fieldStatus)
 {
-    u32 move;
+    enum Move move;
     u16 *moves = GetMovesArray(battlerAtk);
     u32 moveLimitations = aiData->moveLimitations[battlerAtk];
 
@@ -760,7 +760,7 @@ u32 GetPartyMonAbility(struct Pokemon *mon)
     return ability;
 }
 
-static u32 PpStallReduction(u32 move, u32 battlerAtk)
+static u32 PpStallReduction(enum Move move, u32 battlerAtk)
 {
     if (move == MOVE_NONE)
         return 0;
@@ -982,7 +982,7 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler)
     return actionOrMoveIndex[gBattlerTarget];
 }
 
-static inline bool32 ShouldConsiderMoveForBattler(u32 battlerAi, u32 battlerDef, u32 move)
+static inline bool32 ShouldConsiderMoveForBattler(u32 battlerAi, u32 battlerDef, enum Move move)
 {
     if (battlerAi == BATTLE_PARTNER(battlerDef))
     {
@@ -1141,7 +1141,7 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
 
 // AI Score Functions
 // AI_FLAG_CHECK_BAD_MOVE - decreases move scores
-static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     if (IsTargetingPartner(battlerAtk, battlerDef))
         return score;
@@ -3126,7 +3126,7 @@ static s32 AI_GetWhichBattlerFasterOrTies(u32 battlerAtk, u32 battlerDef, bool32
     return GetWhichBattlerFasterOrTies(&calcValues, ignoreChosenMoves);
 }
 
-static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     u32 movesetIndex = gAiThinkingStruct->movesetIndex;
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
@@ -3160,7 +3160,7 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 }
 
 // double battle logic
-static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     // move data
     enum Type moveType = GetMoveType(move);
@@ -3998,7 +3998,7 @@ static enum MoveComparisonResult CompareMoveTwoTurnEffect(u32 battlerAtk, u16 mo
     return MOVE_NEUTRAL_COMPARISON;
 }
 
-static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 moveIndex, u32 hitsToFaintOpposingBattler)
+static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, enum Move move, u32 moveIndex, u32 hitsToFaintOpposingBattler)
 {
     u32 partnerBattler = BATTLE_PARTNER(battlerAtk);
     u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex, AI_ATTACKING, CONSIDER_ENDURE);
@@ -4197,7 +4197,7 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
     }
 }
 
-static s32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData)
+static s32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData)
 {
     enum HoldEffect holdEffect = aiData->holdEffects[battlerAtk];
 
@@ -4226,7 +4226,7 @@ static s32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move, 
     return score;
 }
 
-static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData)
+static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData)
 {
     // move data
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
@@ -5863,7 +5863,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     return score;
 }
 
-static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData)
+static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData)
 {
     // move data
     s32 score = 0;
@@ -6205,7 +6205,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
 }
 
 // AI_FLAG_CHECK_VIABILITY - Chooses best possible move to hit player
-static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     struct AiLogicData *aiData = gAiLogicData;
 
@@ -6233,7 +6233,7 @@ static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
 }
 
 // Effects that are encouraged on the first turn of battle
-static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     if (IsTargetingPartner(battlerAtk, battlerDef)
       || gBattleResults.battleTurnCounter != 0)
@@ -6346,7 +6346,7 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
 }
 
 // Adds score bonus to 'riskier' move effects and high crit moves
-static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     struct AiLogicData *aiData = gAiLogicData;
 
@@ -6423,7 +6423,7 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 }
 
 // Adds score bonus to OHKOs and 2HKOs
-static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     if (IsTargetingPartner(battlerAtk, battlerDef))
         return score;
@@ -6437,7 +6437,7 @@ static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 }
 
 // Adds score bonus to targeting "partner"
-static s32 AI_AttacksPartner(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_AttacksPartner(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     if (battlerDef == BATTLE_PARTNER(battlerAtk)
        // natural enemies in wild battles try to kill each other
@@ -6462,7 +6462,7 @@ static s32 AI_AttacksPartner(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
 }
 
 // Prefers moves that are good for baton pass
-static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     if (IsTargetingPartner(battlerAtk, battlerDef)
       || CountUsablePartyMons(battlerAtk) == 0
@@ -6514,7 +6514,7 @@ static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 scor
     return score;
 }
 
-static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     enum Type moveType = 0;
@@ -6716,7 +6716,7 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     return score;
 }
 
-static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
@@ -6824,7 +6824,7 @@ bool32 DoesSideHaveDamagingHazards(u32 side)
     return FALSE;
 }
 
-static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     u32 unmodifiedScore = score;
     enum Ability ability = gBattleMons[battlerAtk].ability;
@@ -6982,7 +6982,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     return score;
 }
 
-static s32 AI_CheckPpStall(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_CheckPpStall(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     if (!IsOnPlayerSide(battlerAtk))
         score -= PpStallReduction(move, battlerAtk);
@@ -7000,7 +7000,7 @@ static void AI_Watch(void)
 }
 
 // Roaming pokemon logic
-static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     bool32 roamerCanFlee = FALSE;
 
@@ -7019,7 +7019,7 @@ static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 }
 
 // Safari pokemon logic
-static s32 AI_Safari(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_Safari(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     u32 safariFleeRate = gBattleStruct->safariEscapeFactor * 5; // Safari flee rate, from 0-20.
 
@@ -7032,7 +7032,7 @@ static s32 AI_Safari(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 }
 
 // First battle logic
-static s32 AI_FirstBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_FirstBattle(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     if (gAiLogicData->hpPercents[battlerDef] <= 20)
         AI_Flee();
@@ -7045,7 +7045,7 @@ static s32 AI_FirstBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 // For specific battle scenarios
 
 // Example - prefer attacking opposite foe in a tag battle
-s32 AI_TagBattlePreferFoe(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+s32 AI_TagBattlePreferFoe(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     if (!(gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER))
     {
@@ -7066,7 +7066,7 @@ s32 AI_TagBattlePreferFoe(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     return score;
 }
 
-static s32 AI_DynamicFunc(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+static s32 AI_DynamicFunc(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
 {
     if (sDynamicAiFunc != NULL)
         score = sDynamicAiFunc(battlerAtk, battlerDef, move, score);
