@@ -67,7 +67,7 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
         result = MOVEEND_STEP_RUN_SCRIPT;
         break;
     case PROTECT_BANEFUL_BUNKER:
-        if (CanBePoisoned(gBattlerTarget, gBattlerAttacker, gLastUsedAbility, GetBattlerAbility(gBattlerAttacker)))
+        if (CanBePoisoned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerTarget), GetBattlerAbility(gBattlerAttacker)))
         {
             gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
             BattleScriptCall(BattleScript_BanefulBunkerEffect);
@@ -446,7 +446,8 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
              && IsBattlerAlive(gBattlerAttacker)
              && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget)
              && !IsZMove(gCurrentMove)
-             && gCurrentMove != MOVE_STRUGGLE)
+             && gCurrentMove != MOVE_STRUGGLE
+             && GetMoveEffect(gCurrentMove) != EFFECT_FUTURE_SIGHT)
             {
                 gBattleStruct->tryGrudge = TRUE;
             }
@@ -570,7 +571,7 @@ static enum MoveEndResult MoveEnd_UpdateLastMoves(void)
         && gBattlerTarget != gBattlerAttacker
         && !IsBattlerAlly(gBattlerTarget, gBattlerAttacker)
         && gProtectStructs[gBattlerTarget].physicalBattlerId == gBattlerAttacker
-        && !TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove))
+        && !IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
     {
         gProtectStructs[gBattlerTarget].shellTrap = TRUE;
         // Change move order in double battles, so the hit mon with shell trap moves immediately after being hit.
@@ -776,12 +777,10 @@ static enum MoveEndResult MoveEnd_HpThresholdItemsTarget(void)
 static enum MoveEndResult MoveEnd_MultihitMove(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
-    enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
     if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
      && !gBattleStruct->unableToUseMove
-     && gMultiHitCounter
-     && !(moveEffect == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0)) // Parental Bond edge case
+     && gMultiHitCounter)
     {
         enum MoveTarget target = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
         gMultiHitCounter--;
@@ -1100,7 +1099,7 @@ static enum MoveEndResult MoveEnd_AbilityEffectFoesFainted(void)
 
 static enum MoveEndResult MoveEnd_SheerForce(void)
 {
-    if (TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove))
+    if (IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
         gBattleScripting.moveendState = MOVEEND_EJECT_PACK;
     else
         gBattleScripting.moveendState++;
@@ -1274,7 +1273,6 @@ static enum MoveEndResult MoveEnd_LifeOrbShellBell(void)
     if (ItemBattleEffects(gBattlerAttacker, 0, GetBattlerHoldEffect(gBattlerAttacker), IsLifeOrbShellBellActivation))
         result = MOVEEND_STEP_RUN_SCRIPT;
 
-    // DebugPrintf("[11]");
     gBattleScripting.moveendState++;
     return result;
 }

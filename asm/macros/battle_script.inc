@@ -2450,3 +2450,8 @@
 	.byte \gen
 	.4byte \jumpInstr
 	.endm
+
+	@ Absorbs Toxic Spikes when a grounded Poison-type faints to entry hazards.
+	.macro tryabsorbtoxicspikesonfaint
+	callnative BS_TryAbsorbToxicSpikesOnFaint
+	.endm
