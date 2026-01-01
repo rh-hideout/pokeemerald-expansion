@@ -2146,7 +2146,7 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
     //       they are used in combination as general damage trackers for other purposes.
     if (GetConfig(CONFIG_COUNTER_MIRROR_COAT_ALLY) <= GEN_4 || !IsBattlerAlly(battler, gBattlerAttacker))
     {
-        if (IsBattleMovePhysical(gCurrentMove))
+        if (IsBattleMovePhysical(gCurrentMove) || (SanitizeMoveId(gCurrentMove) == MOVE_HIDDEN_POWER && GetConfig(CONFIG_HIDDEN_POWER_COUNTER) < GEN_4))
         {
             gProtectStructs[battler].physicalDmg = gBattleStruct->moveDamage[battler] + 1;
             gProtectStructs[battler].physicalBattlerId = gBattlerAttacker;
