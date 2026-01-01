@@ -21,6 +21,7 @@
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
 #include "constants/layouts.h"
+#include "constants/item.h"
 #include "constants/map_types.h"
 #include "constants/trainer_types.h"
 #include "constants/songs.h"
@@ -999,7 +1000,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 {
     // The only automatically interacts with an OW Encounter when;
     // Not using a repel or the DexNav is inactive.
-    if (/* VarGet(VAR_REPEL_STEP_COUNT) > 0 || */ FlagGet(DN_FLAG_SEARCHING))
+    if (REPEL_STEP_COUNT || FlagGet(DN_FLAG_SEARCHING))
         return;
 
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle));
