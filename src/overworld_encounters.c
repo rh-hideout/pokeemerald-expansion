@@ -31,8 +31,8 @@
 #define sOverworldEncounterLevel trainerRange_berryTreeId
 #define sAge                     playerCopyableMovement
 #define sRoamerOutbreakStatus    directionSequenceIndex
-#define OWE_NON_ROAMER_OUTBREAK  ROAMER_COUNT // If less than this value, OWE is a roamer.
-#define OWE_MASS_OUTBREAK_INDEX  OWE_NON_ROAMER_OUTBREAK + 1
+#define OWE_NON_ROAMER_OUTBREAK  0
+#define OWE_MASS_OUTBREAK_INDEX  ROAMER_COUNT + 1
 
 static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
@@ -62,6 +62,8 @@ static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutb
 static bool32 CreateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEvent *objectEvent, u32 headerId);
 static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent);
 static u32 GetMaxOverworldEncounterSpawns(void);
+static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
+static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -383,9 +385,9 @@ void CreateOverworldWildEncounter(void)
 {
     u32 localId = gSpecialVar_LastTalked;
     u32 objEventId = GetObjectEventIdByLocalId(localId);
-    u32 indexRoamerOutbreak;
     u32 headerId = GetCurrentMapWildMonHeaderId();
     struct ObjectEvent *object = &gObjectEvents[objEventId];
+    u32 indexRoamerOutbreak = object->sRoamerOutbreakStatus;
 
     if (objEventId >= OBJECT_EVENTS_COUNT)
         return;
@@ -393,8 +395,7 @@ void CreateOverworldWildEncounter(void)
     if (!IsOverworldWildEncounter(object))
         return;
 
-    indexRoamerOutbreak = object->sRoamerOutbreakStatus;
-    if (CreateOverworldWildEncounter_CheckRoamer(indexRoamerOutbreak))
+    if (indexRoamerOutbreak && CreateOverworldWildEncounter_CheckRoamer(OWE_GetObjectRoamerOutbreakStatus(object)))
         return;
 
     u16 speciesId = OW_SPECIES(object);
@@ -433,7 +434,8 @@ void CreateOverworldWildEncounter(void)
 
 static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak)
 {
-    if (indexRoamerOutbreak < OWE_NON_ROAMER_OUTBREAK && IsRoamerAt(indexRoamerOutbreak, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+    if (indexRoamerOutbreak < ROAMER_COUNT
+        && IsRoamerAt(indexRoamerOutbreak, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
         CreateRoamerMonInstance(indexRoamerOutbreak);
         gEncounteredRoamerIndex = indexRoamerOutbreak;
@@ -467,9 +469,10 @@ static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId)
 
 static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId)
 {
-    if (indexRoamerOutbreak == OWE_MASS_OUTBREAK_INDEX && gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId
-     && gSaveBlock1Ptr->location.mapNum == gSaveBlock1Ptr->outbreakLocationMapNum
-     && gSaveBlock1Ptr->location.mapGroup == gSaveBlock1Ptr->outbreakLocationMapGroup)
+    if (indexRoamerOutbreak == OWE_MASS_OUTBREAK_INDEX
+        && gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId
+        && gSaveBlock1Ptr->location.mapNum == gSaveBlock1Ptr->outbreakLocationMapNum
+        && gSaveBlock1Ptr->location.mapGroup == gSaveBlock1Ptr->outbreakLocationMapGroup)
     {
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
             SetMonMoveSlot(&gEnemyParty[0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
@@ -689,37 +692,19 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
 
     /*
     These functions perform checks of various encounter types in the following order:
-        1. Manual/Semi-Manual OWE Defined Roamer Encounter
-        2. Manual/Semi-Manual OWE Defined Mass Outbreak Encounter
-        3. Attempted Generated Roamer Encounter
-        4. Attempted Generated Feebas encounter
-        5. Attempted Generated Mass Outbreak Encounter
-        6. Attempted Generated Standard Wild Encounter generation
-        Note: While a player cannot be stopped from trying to trigger checks 1 and 2, it is not recommended.
-              This is due to the fact that it requires careful tracking of the Roamer/Mass Outbreak in the save.
-              Regardless of this, 'functionality' is provided mostly to prevent breakages if the player does so,
-              accidentally.
+        1. Attempted Generated Roamer Encounter
+        2. Attempted Generated Feebas Encounter
+        3. Attempted Generated Mass Outbreak Encounter
+        4. Attempted Generated Standard Wild Encounter generation
     
     The structure of this statement ensures that only one of these encounter types can succeed per call,
     with the resultant wild mon being created in gEnemyParty[0].
     If none of these checks succeed, speciesId is set to SPECIES_NONE and FALSE is returned.
     */
 
-    // REGARDING ABOVE: A sanitisation check to clean the top 8 bits of trainerType when it is read from templates would prevent it, but remove 'functionality'.
-
-    if (*indexRoamerOutbreak < OWE_NON_ROAMER_OUTBREAK && IsRoamerAt(*indexRoamerOutbreak, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+    if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist())
     {
-        CreateRoamerMonInstance(*indexRoamerOutbreak);
-    }
-    else if (*indexRoamerOutbreak == OWE_MASS_OUTBREAK_INDEX && gSaveBlock1Ptr->outbreakPokemonSpecies != SPECIES_NONE
-     && gSaveBlock1Ptr->location.mapNum == gSaveBlock1Ptr->outbreakLocationMapNum
-     && gSaveBlock1Ptr->location.mapGroup == gSaveBlock1Ptr->outbreakLocationMapGroup)
-    {
-        SetUpMassOutbreakEncounter(0);
-    }
-    else if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist())
-    {
-        *indexRoamerOutbreak = gEncounteredRoamerIndex;
+        *indexRoamerOutbreak = OWE_GetObjectRoamerStatusFromIndex(gEncounteredRoamerIndex);
     }
     else if (OW_WILD_ENCOUNTERS_FEEBAS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
     {
@@ -965,10 +950,6 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     bool32 isFemale = FALSE;
     u32 level;
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
-    u32 storedRoamer = (template->trainerType >> 8) & 0xFF;
-
-    if (storedRoamer)
-        indexRoamerOutbreak = storedRoamer;
 
     SetOverworldEncounterSpeciesInfo(
         template->x - MAP_OFFSET,
@@ -989,7 +970,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
 
     templateOWE.graphicsId = graphicsId;
     templateOWE.sOverworldEncounterLevel = level;
-    templateOWE.trainerType = (TRAINER_TYPE_ENCOUNTER & 0xFF) | ((indexRoamerOutbreak & 0xFF) << 8);
+    templateOWE.trainerType = TRAINER_TYPE_ENCOUNTER;
     templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
     return templateOWE;
 }
@@ -1310,7 +1291,7 @@ static bool32 OWE_DoesRoamerObjectExist(void)
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         struct ObjectEvent *object = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(object) && object->sRoamerOutbreakStatus == gEncounteredRoamerIndex)
+        if (IsOverworldWildEncounter(object) && OWE_GetObjectRoamerOutbreakStatus(object) == gEncounteredRoamerIndex)
             return TRUE;
     }
 
@@ -1384,6 +1365,28 @@ void OverworldWildEncounter_FreezeAllObjects(void)
         if (IsOverworldWildEncounter(objectEvent))
             FreezeObjectEvent(objectEvent);
     }
+}
+
+static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index)
+{
+    if (index < ROAMER_COUNT)
+        return index + 1;
+    
+    return index;
+}
+
+static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
+{
+    if (!IsOverworldWildEncounter(objectEvent))
+        return OWE_NON_ROAMER_OUTBREAK;
+
+    u32 status = objectEvent->sRoamerOutbreakStatus;
+    if (status == OWE_NON_ROAMER_OUTBREAK || status == OWE_MASS_OUTBREAK_INDEX)
+    {
+        return status;
+    }
+    
+    return status - 1;
 }
 
 #undef tLocalId
