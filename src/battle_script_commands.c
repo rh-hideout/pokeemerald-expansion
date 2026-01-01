@@ -14173,7 +14173,7 @@ void BS_GetStatValue(void)
         gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerTarget].speed;
         break;
     default:
-        //  Add errorf here on upcoming
+        errorf("Illegal stat requested");
         return;
     }
     gBattleStruct->passiveHpUpdate[gBattlerAttacker] *= gStatStageRatios[gBattleMons[gBattlerTarget].statStages[stat]][0];
