@@ -4630,8 +4630,8 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_FormChange_ConsumedOnUse,
         .flingPower = 10,
-        .iconPic = gItemIcon_RedNectar,
-        .iconPalette = gItemIconPalette_Nectar,
+        .iconPic = gItemIcon_Nectar,
+        .iconPalette = gItemIconPalette_RedNectar,
     },
 
     [ITEM_YELLOW_NECTAR] =
