@@ -163,6 +163,8 @@ void UpdateOverworldEncounters(void)
 
     // Slower replacement spawning
     sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
+    if (LURE_STEP_COUNT)
+        sOWESpawnCountdown /= 2;
 }
 
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny)
@@ -606,6 +608,8 @@ u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, boo
 void OverworldWildEncounter_SetMinimumSpawnTimer(void)
 {
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+    if (LURE_STEP_COUNT)
+        sOWESpawnCountdown /= 2;
 }
 
 static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
