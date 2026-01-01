@@ -459,10 +459,20 @@ enum Weekday GetDayOfWeek(void)
 
 enum TimeOfDay GenConfigTimeOfDay(enum TimeOfDay timeOfDay)
 {
-    if ((((timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING) && OW_TIMES_OF_DAY == GEN_3)
-        || (timeOfDay == TIME_EVENING && OW_TIMES_OF_DAY == GEN_4))
-        && timeOfDay < TIME_LAST)
-        timeOfDay++;
+    if (timeOfDay >= TIME_LAST)
+		return timeOfDay;
+
+    switch (OW_TIMES_OF_DAY)
+    {
+    case GEN_3:
+		if (timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING)
+			timeOfDay++;
+		break;
+    case GEN_4:
+		if (timeOfDay == TIME_EVENING)
+            timeOfDay++;
+		break;
+    }
 
     return timeOfDay;
 }

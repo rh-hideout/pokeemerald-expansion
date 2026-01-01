@@ -13,6 +13,7 @@
 #include "constants/battle_pike.h"
 #include "constants/battle_pyramid.h"
 #include "constants/battle_setup.h"
+#include "constants/battle_special.h"
 #include "constants/battle_tent.h"
 #include "constants/battle_tower.h"
 #include "constants/berry.h"
@@ -79,6 +80,7 @@
 	.set ALLOCATE_SCRIPT_CMD_TABLE, 1
 	.include "data/script_cmd_table.inc"
 
+.align 2
 gSpecialVars::
 	.4byte gSpecialVar_0x8000
 	.4byte gSpecialVar_0x8001

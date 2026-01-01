@@ -17,6 +17,7 @@ jobs:
       GAME_LANGUAGE: ENGLISH
       COMPARE: 0
       UNUSED_ERROR: 1
+      DEPRECATED_ERROR: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,12 +34,12 @@ jobs:
           GAME_VERSION: EMERALD
         run: make -j${nproc} -O all
 
-      - name: LTO
+      - name: Release
         env:
           GAME_VERSION: EMERALD
         run: |
           make tidy
-          make -j${nproc} LTO=1
+          make -j${nproc} release
         # make tidy to purge previous build
 
       - name: Test
@@ -60,6 +61,18 @@ jobs:
           COMPARE: 0
         run: |
           make leafgreen -j${nproc} -O
+
+  docs_validate:
+    if: github.actor != 'allcontributors[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check that SUMMARY.md includes markdown doc files
+        run: |
+          .github/docs_validate/inclusive_summary.py
+
   allcontributors:
     if: github.actor == 'allcontributors[bot]'
     runs-on: ubuntu-latest

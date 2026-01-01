@@ -62,19 +62,11 @@ static const struct SpriteTemplate sSpriteTemplates_MoveEffectMons[] =
         .tileTag = TAG_MOVE_EFFECT_MON_1,
         .paletteTag = TAG_MOVE_EFFECT_MON_1,
         .oam = &gOamData_AffineNormal_ObjNormal_64x64,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     },
     {
         .tileTag = TAG_MOVE_EFFECT_MON_2,
         .paletteTag = TAG_MOVE_EFFECT_MON_2,
         .oam = &gOamData_AffineNormal_ObjNormal_64x64,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     }
 };
 

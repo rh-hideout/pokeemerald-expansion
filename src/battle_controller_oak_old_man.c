@@ -25,8 +25,6 @@
 
 static void OakOldManHandleDrawTrainerPic(u32 battler);
 static void OakOldManHandleTrainerSlide(u32 battler);
-static void OakOldManHandleSuccessBallThrowAnim(u32 battler);
-static void OakOldManHandleBallThrowAnim(u32 battler);
 static void OakOldManHandlePrintString(u32 battler);
 static void OakOldManHandlePrintSelectionString(u32 battler);
 static void OakOldManHandleChooseAction(u32 battler);
@@ -75,8 +73,7 @@ static void (*const sOakOldManBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler
     [CONTROLLER_TRAINERSLIDEBACK]         = BtlController_Empty,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = OakOldManHandleSuccessBallThrowAnim,
-    [CONTROLLER_BALLTHROWANIM]            = OakOldManHandleBallThrowAnim,
+    [CONTROLLER_BALLTHROWANIM]            = BtlController_HandleBallThrowAnim,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
     [CONTROLLER_PRINTSTRING]              = OakOldManHandlePrintString,
@@ -687,16 +684,6 @@ static void OakOldManHandleTrainerSlide(u32 battler)
 {
     u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_RED : TRAINER_BACK_PIC_OLD_MAN;
     BtlController_HandleTrainerSlide(battler, trainerPicId);
-}
-
-static void OakOldManHandleSuccessBallThrowAnim(u32 battler)
-{
-    BtlController_HandleSuccessBallThrowAnim(battler, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), B_ANIM_BALL_THROW_WITH_TRAINER, FALSE);
-}
-
-static void OakOldManHandleBallThrowAnim(u32 battler)
-{
-    BtlController_HandleBallThrowAnim(battler, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), B_ANIM_BALL_THROW_WITH_TRAINER, FALSE);
 }
 
 static void OakOldManHandlePrintString(u32 battler)

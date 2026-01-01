@@ -306,10 +306,10 @@
  *
  * WITH_CONFIG(configTag, value)
  * Runs the test with a specified config override. `configTag` must be
- * of `enum GenConfigTag`
+ * of `enum ConfigTag`
  * Example:
  *     GIVEN {
- *         WITH_CONFIG(GEN_CONFIG_GALE_WINGS, GEN_6);
+ *         WITH_CONFIG(CONFIG_GALE_WINGS, GEN_6);
  *     }
  * The `value` may be inferred from a local variable, e.g. set by
  * PARAMETRIZE.
@@ -606,6 +606,7 @@ enum
     QUEUED_ABILITY_POPUP_EVENT,
     QUEUED_ANIMATION_EVENT,
     QUEUED_HP_EVENT,
+    QUEUED_SUB_HIT_EVENT,
     QUEUED_EXP_EVENT,
     QUEUED_MESSAGE_EVENT,
     QUEUED_STATUS_EVENT,
@@ -633,6 +634,14 @@ struct QueuedHPEvent
     u32 battlerId:3;
     u32 type:1;
     u32 address:28;
+};
+
+struct QueuedSubHitEvent
+{
+    u32 battlerId:3;
+    u32 checkBreak:1;
+    u32 breakSub:1;
+    u32 address:27;
 };
 
 struct QueuedExpEvent
@@ -664,6 +673,7 @@ struct QueuedEvent
         struct QueuedAbilityEvent ability;
         struct QueuedAnimationEvent animation;
         struct QueuedHPEvent hp;
+        struct QueuedSubHitEvent subHit;
         struct QueuedExpEvent exp;
         struct QueuedMessageEvent message;
         struct QueuedStatusEvent status;
@@ -715,6 +725,24 @@ struct AILogLine
     s16 score;
 };
 
+enum ScoreTieResolution
+{
+    SCORE_TIE_NONE,
+    SCORE_TIE_LO,
+    SCORE_TIE_HI,
+    SCORE_TIE_RANDOM,
+    SCORE_TIE_CHOSEN
+};
+
+enum TargetTieResolution
+{
+    TARGET_TIE_NONE,
+    TARGET_TIE_LO,
+    TARGET_TIE_HI,
+    TARGET_TIE_RANDOM,
+    TARGET_TIE_CHOSEN
+};
+
 // Data which is updated by the test runner during a battle and needs to
 // be reset between trials.
 struct BattleTrialData
@@ -722,7 +750,11 @@ struct BattleTrialData
     u8 lastActionTurn;
     u8 queuedEvent;
     u8 aiActionsPlayed[MAX_BATTLERS_COUNT];
+    u8 scoreTieCount;
+    u8 targetTieCount;
 };
+
+extern struct BattleTrialData gBattleTrialData;
 
 struct BattleTestData
 {
@@ -740,8 +772,8 @@ struct BattleTestData
     u8 gender;
     u8 nature;
     bool8 isShiny;
-    enum Ability forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
-    u8 chosenGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];
+    enum Ability forcedAbilities[MAX_BATTLERS_COUNT][PARTY_SIZE];
+    u8 chosenGimmick[MAX_BATTLERS_COUNT][PARTY_SIZE];
     u8 forcedEnvironment;
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
@@ -769,8 +801,14 @@ struct BattleTestData
     struct AILogLine aiLogLines[MAX_BATTLERS_COUNT][MAX_MON_MOVES][MAX_AI_LOG_LINES];
     u8 aiLogPrintedForMove[MAX_BATTLERS_COUNT]; // Marks ai score log as printed for move, so the same log isn't displayed multiple times.
     u16 flagId;
+    u16 varId;
 
     struct BattleTrialData trial;
+    enum ScoreTieResolution scoreTieResolution;
+    u8 scoreTieOverride;
+    enum RandomTag scoreTieTag;
+    enum TargetTieResolution targetTieResolution;
+    u8 targetTieOverride;
 };
 
 struct BattleTestRunnerState
@@ -960,6 +998,7 @@ struct moveWithPP {
 #define AI_LOG AILogScores(__LINE__)
 
 #define FLAG_SET(flagId) SetFlagForTest(__LINE__, flagId)
+#define VAR_SET(varId, value) SetVarForTest(__LINE__, varId, value)
 #define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, configTag, value)
 
 #define PLAYER(species) for (OpenPokemon(__LINE__, B_POSITION_PLAYER_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
@@ -1000,8 +1039,12 @@ struct moveWithPP {
 #define Environment(environment) Environment_(__LINE__, environment)
 
 void SetFlagForTest(u32 sourceLine, u16 flagId);
-void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
+void SetVarForTest(u32 sourceLine, u16 varId, u16 value);
+void TestSetConfig(u32 sourceLine, enum ConfigTag configTag, u32 value);
+void TieBreakScore(u32 sourceLine, enum RandomTag rngTag, enum ScoreTieResolution scoreTieRes, u32 value);
+void TieBreakTarget(u32 sourceLine, enum TargetTieResolution targetTieRes, u32 value);
 void ClearFlagAfterTest(void);
+void ClearVarAfterTest(void);
 void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species);
 void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species);
 void ClosePokemon(u32 sourceLine);
@@ -1033,7 +1076,7 @@ void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES]);
 void Friendship_(u32 sourceLine, u32 friendship);
 void Status1_(u32 sourceLine, u32 status1);
 void OTName_(u32 sourceLine, const u8 *otName);
-void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel);
+void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel);
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor);
 void TeraType_(u32 sourceLine, enum Type teraType);
 void Shadow_(u32 sourceLine, bool32 isShadow);
@@ -1106,6 +1149,8 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 #define SEND_OUT(battler, partyIndex) SendOut(__LINE__, battler, partyIndex)
 #define USE_ITEM(battler, ...) UseItem(__LINE__, battler, (struct ItemContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define WITH_RNG(tag, value) rng: ((struct RiggedRNG) { tag, value })
+#define TIE_BREAK_SCORE(rngTag, scoreTieRes, value) TieBreakScore(__LINE__, rngTag, scoreTieRes, value)
+#define TIE_BREAK_TARGET(targetTieRes, value) TieBreakTarget(__LINE__, targetTieRes, value)
 
 struct MoveContext
 {
@@ -1173,6 +1218,7 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
 #define ABILITY_POPUP(battler, ...) QueueAbility(__LINE__, battler, (struct AbilityEventContext) { __VA_ARGS__ })
 #define ANIMATION(type, id, ...) QueueAnimation(__LINE__, type, id, (struct AnimationEventContext) { __VA_ARGS__ })
 #define HP_BAR(battler, ...) QueueHP(__LINE__, battler, (struct HPEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
+#define SUB_HIT(battler, ...) QueueSubHit(__LINE__, battler, (struct SubHitEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define EXPERIENCE_BAR(battler, ...) QueueExp(__LINE__, battler, (struct ExpEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
 // Static const is needed to make the modern compiler put the pattern variable in the .rodata section, instead of putting it on stack(which can break the game).
 #define MESSAGE(pattern) do {static const u8 msg[] = _(pattern); QueueMessage(__LINE__, msg);} while (0)
@@ -1225,6 +1271,15 @@ struct HPEventContext
     bool8 explicitCaptureDamage;
 };
 
+struct SubHitEventContext
+{
+    u8 _;
+    bool8 subBreak;
+    bool8 explicitSubBreak;
+    u16 *captureDamage;
+    bool8 explicitCaptureDamage;
+};
+
 struct ExpEventContext
 {
     u8 _;
@@ -1253,6 +1308,7 @@ void CloseQueueGroup(u32 sourceLine);
 void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityEventContext);
 void QueueAnimation(u32 sourceLine, u32 type, u32 id, struct AnimationEventContext);
 void QueueHP(u32 sourceLine, struct BattlePokemon *battler, struct HPEventContext);
+void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEventContext);
 void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventContext);
 void QueueMessage(u32 sourceLine, const u8 *pattern);
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext);

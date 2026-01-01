@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Quark Drive after Electric Terr
 SINGLE_BATTLE_TEST("Booster Energy will activate Protosynthesis after harsh sunlight ends")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_RAGING_BOLT) { Attack(100); Defense(100); Speed(100); SpAttack(110); SpDefense(100); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_TORKOAL) { Speed(100); Ability(ABILITY_DROUGHT); };
     } WHEN {
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Protosynthesis boost is preserved when weat
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
         MESSAGE("The sunlight faded.");
     } THEN {
-        EXPECT(gDisableStructs[B_POSITION_PLAYER_LEFT].paradoxBoostedStat == STAT_ATK);
+        EXPECT(gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.paradoxBoostedStat == STAT_ATK);
     }
 }
 
@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, opponent);
         MESSAGE("The grass disappeared from the battlefield.");
     } THEN {
-        EXPECT(gDisableStructs[B_POSITION_PLAYER_LEFT].paradoxBoostedStat == STAT_ATK);
+        EXPECT(gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.paradoxBoostedStat == STAT_ATK);
     }
 }
 

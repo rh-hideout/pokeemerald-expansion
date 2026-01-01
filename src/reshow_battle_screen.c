@@ -237,7 +237,7 @@ static void CB2_ReshowBlankBattleScreenAfterMenu(void)
             gBattleScripting.reshowMainState--;
         break;
     case 10:
-        if (gBattleScripting.monCaught) 
+        if (gBattleScripting.monCaught)
             CreateCaughtMonSprite(); // displays the caught mon for the switch into party feature
         break;
     default:
@@ -328,7 +328,7 @@ void CreateBattlerSprite(u32 battler)
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
                                                 (8 - gTrainerBacksprites[gSaveBlock2Ptr->playerGender].coordinates.size) * 4 + 80,
                                                  GetBattlerSpriteSubpriority(0));
-            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
+            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = (8 + battler / 2);
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
         }
@@ -338,7 +338,7 @@ void CreateBattlerSprite(u32 battler)
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
                                                 (8 - gTrainerBacksprites[IS_FRLG ? TRAINER_BACK_PIC_OLD_MAN :TRAINER_BACK_PIC_WALLY].coordinates.size) * 4 + 80,
                                                  GetBattlerSpriteSubpriority(0));
-            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
+            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = (8 + battler / 2);
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
         }

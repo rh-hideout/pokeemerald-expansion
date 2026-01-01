@@ -1095,14 +1095,14 @@ gBattleAnimGeneral_AquaRingHeal::
 	createsprite gSmallBubblePairSpriteTemplate, ANIM_ATTACKER, 2, 12, 0, 25, 0
 	setalpha 8, 8
 	playsewithpan SE_M_MILK_DRINK, SOUND_PAN_ATTACKER
-	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 0
+	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 0, FALSE
 	delay 4
-	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 0
+	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 0, FALSE
 	delay 4
-	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 0
+	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 0, FALSE
 	waitforvisualfinish
 	playsewithpan SE_SHINY, SOUND_PAN_ATTACKER
-	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_ATK_SIDE, 0, 2, 0, 10, RGB_WHITE
+	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_ATTACKER, 0, 2, 0, 10, RGB_WHITE
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
@@ -22587,11 +22587,11 @@ gBattleAnimMove_Safeguard::
 	monbg ANIM_ATK_PARTNER
 	setalpha 8, 8
 	playsewithpan SE_M_MILK_DRINK, SOUND_PAN_ATTACKER
-	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 2
+	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 2, TRUE
 	delay 4
-	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 2
+	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 2, TRUE
 	delay 4
-	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 2
+	createsprite gGuardRingSpriteTemplate, ANIM_ATTACKER, 2, TRUE
 	waitforvisualfinish
 	playsewithpan SE_SHINY, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_ATK_SIDE, 0, 2, 0, 10, RGB_WHITE
@@ -32184,6 +32184,16 @@ gBattleAnimGeneral_Swamp::
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
+	end
+
+gBattleAnimGeneral_SwapToSubstitute::
+	createvisualtask AnimTask_SwapMonSpriteToFromSubstitute, 2, FALSE
+	waitforvisualfinish
+	end
+
+gBattleAnimGeneral_SwapFromSubstitute::
+	createvisualtask AnimTask_SwapMonSpriteToFromSubstitute, 2, TRUE
+	waitforvisualfinish
 	end
 
 SnatchMoveTrySwapFromSubstitute:

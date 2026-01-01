@@ -29,7 +29,7 @@ static const u16 sTradePartyBoxTilemap[] = INCBIN_U16("graphics/trade/party_box_
 static const u8 sTradeStripesBG2Tilemap[] = INCBIN_U8("graphics/trade/stripes_bg2_map.bin");
 static const u8 sTradeStripesBG3Tilemap[] = INCBIN_U8("graphics/trade/stripes_bg3_map.bin");
 static const u8 sText_EmptyString[] = _("");
-static const u8 sText_UnusedTextFormat[] = _("{COLOR WHITE}{HIGHLIGHT TRANSPARENT}{SHADOW DARK_GRAY}");
+static const u8 sText_UnusedTextFormat[] = _("{BACKGROUND TRANSPARENT}{TEXT_COLORS WHITE DARK_GRAY TRANSPARENT}");
 const u8 gText_MaleSymbol4[] = _("♂");
 const u8 gText_FemaleSymbol4[] = _("♀");
 const u8 gText_GenderlessSymbol[] = _("");
@@ -49,10 +49,10 @@ static const u8 sText_CancelTrade[] = _("Cancel trade?");
 static const u8 sJPText_PressBButtonToQuit[] = _("Bボタン　で　もどります");
 static const u8 sText_Summary2[] = _("SUMMARY");
 static const u8 sText_Trade2[] = _("TRADE");
-static const u8 sText_CommunicationStandby[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}Communication standby…\nPlease wait.");
-static const u8 sText_TheTradeHasBeenCanceled[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}The trade has\nbeen canceled.");
+static const u8 sText_CommunicationStandby[] = _("{BACKGROUND WHITE}{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}Communication standby…\nPlease wait.");
+static const u8 sText_TheTradeHasBeenCanceled[] = _("{BACKGROUND WHITE}{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}The trade has\nbeen canceled.");
 static const u8 sText_OnlyPkmnForBattle[] = _("That's your only\nPOKéMON for battle.");
-static const u8 sText_WaitingForYourFriend[] = _("{COLOR DARK_GRAY}{HIGHLIGHT WHITE}{SHADOW LIGHT_GRAY}Waiting for your friend\nto finish…");
+static const u8 sText_WaitingForYourFriend[] = _("{BACKGROUND WHITE}{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}Waiting for your friend\nto finish…");
 static const u8 sText_YourFriendWantsToTrade[] = _("Your friend wants\nto trade POKéMON.");
 
 static const struct OamData sOamData_MenuText =
@@ -158,9 +158,6 @@ static const struct SpriteTemplate sSpriteTemplate_Cursor =
     .paletteTag = PALTAG_CURSOR,
     .oam = &sOamData_Cursor,
     .anims = sAnims_Cursor,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_MenuText =
@@ -169,9 +166,6 @@ static const struct SpriteTemplate sSpriteTemplate_MenuText =
     .paletteTag = PALTAG_MENU_TEXT,
     .oam = &sOamData_MenuText,
     .anims = sAnims_MenuText,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const u16 sMenuText_Pal[] = INCBIN_U16("graphics/trade/text.gbapal");
@@ -746,7 +740,6 @@ static const struct SpriteTemplate sSpriteTemplate_Pokeball =
     .paletteTag = PALTAG_POKEBALL,
     .oam = &sOamData_Pokeball,
     .anims = sAnims_Pokeball,
-    .images = NULL,
     .affineAnims = sAffineAnims_Pokeball,
     .callback = SpriteCB_BouncingPokeball
 };
@@ -808,7 +801,6 @@ static const struct SpriteTemplate sSpriteTemplate_LinkMonGlow =
     .paletteTag = PALTAG_LINK_MON,
     .oam = &sOamData_LinkMonGlow,
     .anims = sAnims_LinkMonGlow,
-    .images = NULL,
     .affineAnims = sAffineAnims_LinkMonGlow,
     .callback = SpriteCB_LinkMonGlow
 };
@@ -856,8 +848,6 @@ static const struct SpriteTemplate sSpriteTemplate_LinkMonShadow =
     .paletteTag = PALTAG_LINK_MON,
     .oam = &sOamData_LinkMonShadow,
     .anims = sAnims_LinkMonShadow,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_LinkMonShadow
 };
 
@@ -892,8 +882,6 @@ static const struct SpriteTemplate sSpriteTemplate_CableEnd =
     .paletteTag = PALTAG_GBA,
     .oam = &sOamData_CableEnd,
     .anims = sAnims_CableEnd,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CableEndSending
 };
 
@@ -953,8 +941,6 @@ static const struct SpriteTemplate sSpriteTemplate_GbaScreenFlash_Long =
     .paletteTag = PALTAG_GBA,
     .oam = &sOamData_GbaScreen,
     .anims = sAnims_GbaScreen_Long,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_GbaScreen
 };
 
@@ -964,8 +950,6 @@ static const struct SpriteTemplate sSpriteTemplate_GbaScreenFlash_Short =
     .paletteTag = PALTAG_GBA,
     .oam = &sOamData_GbaScreen,
     .anims = sAnims_GbaScreen_Short,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_GbaScreen
 };
 
