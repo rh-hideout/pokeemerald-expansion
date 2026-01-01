@@ -2724,7 +2724,7 @@ u32 MoveGetFirstFainted(s32 battlerId)
 void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 {
     s32 battlerId = battler - gBattleMons;
-    enum Move moveId;
+    u32 moveId;
     u32 moveSlot;
     s32 target;
     bool32 requirePartyIndex = FALSE;
@@ -2805,7 +2805,7 @@ void ForcedMove(u32 sourceLine, struct BattlePokemon *battler)
 static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext *ctx)
 {
     s32 battlerId = battler - gBattleMons;
-    enum Move moveId;
+    u32 moveId;
     u32 moveSlot, id;
     s32 target;
 

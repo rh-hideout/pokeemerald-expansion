@@ -924,7 +924,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
 
 static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler)
 {
-    u16 move;
+    enum Move move;
 
     u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
@@ -968,7 +968,7 @@ static bool32 FindMonWithFlagsAndSuperEffective(u32 battler, u16 flags, u32 perc
     s32 firstId;
     s32 lastId; // + 1
     struct Pokemon *party;
-    u16 move;
+    enum Move move;
 
     // Similar functionality handled more thoroughly by ShouldSwitchIfHasBadOdds
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING)

@@ -1956,7 +1956,7 @@ static u8 GetMonNicknameWidth(u8 *str, u8 whichParty, u8 partyIdx)
 
 static void BufferMovesString(u8 *str, u8 whichParty, u8 partyIdx)
 {
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u16 i;
 
     if (!sTradeMenu->isEgg[whichParty][partyIdx])

@@ -4561,7 +4561,7 @@ static void Task_BoxMonReplaceMove(u8 taskId)
 
     if (IsTextPrinterActive(0) != TRUE)
     {
-        u16 move = gSpecialVar_ItemId;
+        enum Move move = gSpecialVar_ItemId;
         if(gSpecialVar_MonBoxId == 0xFF)
         {
             RemoveMonPPBonus(&gPlayerParty[gSpecialVar_MonBoxPos], GetMoveSlotToReplace());

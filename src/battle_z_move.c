@@ -45,8 +45,8 @@
 
 // Function Declarations
 static void ZMoveSelectionDisplayPpNumber(u32 battler);
-static void ZMoveSelectionDisplayPower(u16 move, u16 zMove);
-static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler);
+static void ZMoveSelectionDisplayPower(enum Move move, enum Move zMove);
+static void ZMoveSelectionDisplayMoveType(enum Move zMove, u32 battler);
 
 // Const Data
 static const struct SignatureZMove sSignatureZMoves[] =
@@ -261,7 +261,7 @@ bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
 {
     u32 i;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-    u16 move = moveInfo->moves[gMoveSelectionCursor[battler]];
+    enum Move move = moveInfo->moves[gMoveSelectionCursor[battler]];
 
     PlaySE(SE_SELECT);
     gBattleStruct->zmove.viewing = TRUE;
@@ -385,7 +385,7 @@ bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
     return FALSE;
 }
 
-static void ZMoveSelectionDisplayPower(u16 move, u16 zMove)
+static void ZMoveSelectionDisplayPower(enum Move move, enum Move zMove)
 {
     u8 *txtPtr;
     u16 power = GetZMovePower(move);
@@ -415,7 +415,7 @@ static void ZMoveSelectionDisplayPpNumber(u32 battler)
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_PP_REMAINING);
 }
 
-static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
+static void ZMoveSelectionDisplayMoveType(enum Move zMove, u32 battler)
 {
     u8 *txtPtr, *end;
     enum Type zMoveType = GetBattleMoveType(zMove);
