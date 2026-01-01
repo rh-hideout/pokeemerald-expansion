@@ -391,9 +391,7 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
 
     // If we're not using extra mega cries, we need to modify the cry mode for mega evolutions.
     if (!P_MODIFIED_MEGA_CRIES && gSpeciesInfo[species].isMegaEvolution)
-    {
         mode = P_MODIFIED_MEGA_CRY_MODE;
-    }
 
     switch (mode)
     {
