@@ -1,4 +1,4 @@
-OneIsland_House1_MapScripts::
+OneIsland_House1_Frlg_MapScripts::
 	.byte 0
 
 OneIsland_House1_EventScript_OldMan::

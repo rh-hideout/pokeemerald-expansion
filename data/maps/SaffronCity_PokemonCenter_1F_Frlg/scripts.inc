@@ -1,4 +1,4 @@
-SaffronCity_PokemonCenter_1F_MapScripts::
+SaffronCity_PokemonCenter_1F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SaffronCity_PokemonCenter_1F_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume
 	.byte 0

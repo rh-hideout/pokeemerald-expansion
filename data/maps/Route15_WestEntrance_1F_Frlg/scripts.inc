@@ -1,4 +1,4 @@
-Route15_WestEntrance_1F_MapScripts::
+Route15_WestEntrance_1F_Frlg_MapScripts::
 	.byte 0
 
 Route15_WestEntrance_1F_EventScript_Guard::

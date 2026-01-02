@@ -1,4 +1,4 @@
-ThreeIsland_Mart_MapScripts::
+ThreeIsland_Mart_Frlg_MapScripts::
 	.byte 0
 
 ThreeIsland_Mart_EventScript_Clerk::

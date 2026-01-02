@@ -1,4 +1,4 @@
-SSAnne_1F_Room3_MapScripts::
+SSAnne_1F_Room3_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_1F_Room3_EventScript_LittleGirl::

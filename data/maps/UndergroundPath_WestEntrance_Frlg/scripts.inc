@@ -1,4 +1,4 @@
-UndergroundPath_WestEntrance_MapScripts::
+UndergroundPath_WestEntrance_Frlg_MapScripts::
 	.byte 0
 
 UndergroundPath_WestEntrance_EventScript_BaldingMan::

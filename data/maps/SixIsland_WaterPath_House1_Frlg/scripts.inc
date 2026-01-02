@@ -1,4 +1,4 @@
-SixIsland_WaterPath_House1_MapScripts::
+SixIsland_WaterPath_House1_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_WaterPath_House1_EventScript_Beauty::

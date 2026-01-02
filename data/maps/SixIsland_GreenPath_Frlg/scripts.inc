@@ -1,4 +1,4 @@
-SixIsland_GreenPath_MapScripts::
+SixIsland_GreenPath_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_GreenPath_EventScript_RightRouteSign::

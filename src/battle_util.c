@@ -752,6 +752,11 @@ bool32 TryRunFromBattle(u32 battler)
             effect++;
         }
     }
+    else if (IsGhostBattleWithoutScope())
+    {
+        if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+            effect++;
+    }
     else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL) && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         effect++;
@@ -2372,6 +2377,20 @@ static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
+static enum MoveCanceler CancelerGhost(struct BattleContext *ctx) // GHOST in pokemon tower
+{
+    if (IsGhostBattleWithoutScope())
+    {
+        if (GetBattlerSide(ctx->battlerAtk) == B_SIDE_PLAYER)
+            gBattlescriptCurrInstr = BattleScript_TooScaredToMove;
+        else
+            gBattlescriptCurrInstr = BattleScript_GhostGetOutGetOut;
+        gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+        return MOVE_STEP_BREAK;
+    }
+    return MOVE_STEP_SUCCESS;
+}
+
 static enum MoveCanceler CancelerParalyzed(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_PARALYSIS
@@ -3102,6 +3121,7 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_TAUNTED] = CancelerTaunted,
     [CANCELER_IMPRISONED] = CancelerImprisoned,
     [CANCELER_CONFUSED] = CancelerConfused,
+    [CANCELER_GHOST] = CancelerGhost,
     [CANCELER_PARALYZED] = CancelerParalyzed,
     [CANCELER_INFATUATION] = CancelerInfatuation,
     [CANCELER_BIDE] = CancelerBide,
@@ -9280,7 +9300,8 @@ static bool32 IsCriticalHit(struct BattleContext *ctx)
     else
         critChance = CalcCritChanceStage(ctx);
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_FIRST_BATTLE))
+    if ((gBattleTypeFlags & (BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_POKEDUDE))
+        || ((gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) && (!IS_FRLG || !BtlCtrl_OakOldMan_TestState2Flag(1))))
         isCrit = FALSE;
     else if (critChance == -1)
         isCrit = FALSE;

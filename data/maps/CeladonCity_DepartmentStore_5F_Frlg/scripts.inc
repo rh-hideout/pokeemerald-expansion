@@ -1,4 +1,4 @@
-CeladonCity_DepartmentStore_5F_MapScripts::
+CeladonCity_DepartmentStore_5F_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_DepartmentStore_5F_EventScript_Gentleman::

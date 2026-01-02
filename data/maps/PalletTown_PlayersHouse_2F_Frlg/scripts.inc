@@ -1,4 +1,4 @@
-PalletTown_PlayersHouse_2F_MapScripts::
+PalletTown_PlayersHouse_2F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, PalletTown_PlayersHouse_2F_OnTransition
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, PalletTown_PlayersHouse_2F_OnWarp
 	.byte 0

@@ -1,4 +1,4 @@
-FourIsland_LoreleisHouse_MapScripts::
+FourIsland_LoreleisHouse_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, FourIsland_LoreleisHouse_OnTransition
 	.byte 0
 

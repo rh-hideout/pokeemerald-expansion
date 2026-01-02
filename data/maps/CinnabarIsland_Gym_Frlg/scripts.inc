@@ -1,4 +1,4 @@
-CinnabarIsland_Gym_MapScripts::
+CinnabarIsland_Gym_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, CinnabarIsland_Gym_OnLoad
 	.byte 0
 

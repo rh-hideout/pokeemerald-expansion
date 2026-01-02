@@ -1,4 +1,4 @@
-Route5_SouthEntrance_MapScripts::
+Route5_SouthEntrance_Frlg_MapScripts::
 	.byte 0
 
 Route5_SouthEntrance_EventScript_Guard::

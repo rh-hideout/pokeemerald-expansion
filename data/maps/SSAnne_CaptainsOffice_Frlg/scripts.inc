@@ -1,4 +1,4 @@
-SSAnne_CaptainsOffice_MapScripts::
+SSAnne_CaptainsOffice_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_CaptainsOffice_EventScript_Captain::

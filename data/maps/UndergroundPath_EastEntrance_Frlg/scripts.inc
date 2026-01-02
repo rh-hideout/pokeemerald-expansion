@@ -1,4 +1,4 @@
-UndergroundPath_EastEntrance_MapScripts::
+UndergroundPath_EastEntrance_Frlg_MapScripts::
 	.byte 0
 
 UndergroundPath_EastEntrance_EventScript_Woman::

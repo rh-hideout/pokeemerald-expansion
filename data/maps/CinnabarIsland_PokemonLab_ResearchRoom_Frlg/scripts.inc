@@ -1,4 +1,4 @@
-CinnabarIsland_PokemonLab_ResearchRoom_MapScripts::
+CinnabarIsland_PokemonLab_ResearchRoom_Frlg_MapScripts::
 	.byte 0
 
 CinnabarIsland_PokemonLab_ResearchRoom_EventScript_MetronomeTutor::

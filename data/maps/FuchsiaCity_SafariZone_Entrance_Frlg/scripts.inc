@@ -1,4 +1,4 @@
-FuchsiaCity_SafariZone_Entrance_MapScripts::
+FuchsiaCity_SafariZone_Entrance_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, FuchsiaCity_SafariZone_Entrance_OnFrame
 	.byte 0
 

@@ -1,4 +1,4 @@
-CeladonCity_MapScripts::
+CeladonCity_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CeladonCity_OnTransition
 	.byte 0
 

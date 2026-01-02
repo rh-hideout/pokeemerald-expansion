@@ -1,4 +1,4 @@
-SixIsland_RuinValley_MapScripts::
+SixIsland_RuinValley_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, SixIsland_RuinValley_OnLoad
 	.byte 0
 

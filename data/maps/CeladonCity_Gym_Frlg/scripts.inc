@@ -1,4 +1,4 @@
-CeladonCity_Gym_MapScripts::
+CeladonCity_Gym_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_Gym_EventScript_Erika::

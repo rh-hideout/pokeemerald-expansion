@@ -1,4 +1,4 @@
-SafariZone_East_RestHouse_MapScripts::
+SafariZone_East_RestHouse_Frlg_MapScripts::
 	.byte 0
 
 SafariZone_East_RestHouse_EventScript_Rocker::

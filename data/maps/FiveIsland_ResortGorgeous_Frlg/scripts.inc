@@ -1,4 +1,4 @@
-FiveIsland_ResortGorgeous_MapScripts::
+FiveIsland_ResortGorgeous_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, FiveIsland_ResortGorgeous_OnWarp
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, FiveIsland_ResortGorgeous_OnFrame
 	.byte 0

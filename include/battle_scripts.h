@@ -819,5 +819,9 @@ extern const u8 BattleScript_MetronomeAttackstring[];
 extern const u8 BattleScript_SleepTalkAttackstring[];
 extern const u8 BattleScript_NaturePowerAttackstring[];
 extern const u8 BattleScript_PokemonCantUseTheMove[];
+extern const u8 BattleScript_GhostBallDodge[];
+extern const u8 BattleScript_GhostGetOutGetOut[];
+extern const u8 BattleScript_TooScaredToMove[];
+extern const u8 BattleScript_SilphScopeUnveiled[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

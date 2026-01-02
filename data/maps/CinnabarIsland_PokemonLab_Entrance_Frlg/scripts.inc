@@ -1,4 +1,4 @@
-CinnabarIsland_PokemonLab_Entrance_MapScripts::
+CinnabarIsland_PokemonLab_Entrance_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CinnabarIsland_PokemonLab_Entrance_OnTransition
 	.byte 0
 

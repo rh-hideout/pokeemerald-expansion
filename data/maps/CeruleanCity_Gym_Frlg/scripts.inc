@@ -1,4 +1,4 @@
-CeruleanCity_Gym_MapScripts::
+CeruleanCity_Gym_Frlg_MapScripts::
 	.byte 0
 
 CeruleanCity_Gym_EventScript_Misty::

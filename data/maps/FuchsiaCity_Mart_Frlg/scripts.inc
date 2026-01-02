@@ -1,4 +1,4 @@
-FuchsiaCity_Mart_MapScripts::
+FuchsiaCity_Mart_Frlg_MapScripts::
 	.byte 0
 
 FuchsiaCity_Mart_EventScript_CooltrainerF::
