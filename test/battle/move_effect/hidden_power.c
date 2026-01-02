@@ -161,8 +161,8 @@ SINGLE_BATTLE_TEST("Hidden Power always triggers Counter instead of Mirror Coat 
         WITH_CONFIG(CONFIG_HIDDEN_POWER_COUNTER, GEN_3);
         ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_REFLECT_DAMAGE );
         ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_REFLECT_DAMAGE);
-        ASSUME(gMovesInfo[SanitizeMoveId(MOVE_COUNTER)].argument.reflectDamage.damageCategories == 1u << DAMAGE_CATEGORY_PHYSICAL );
-        ASSUME(gMovesInfo[SanitizeMoveId(MOVE_MIRROR_COAT)].argument.reflectDamage.damageCategories == 1u << DAMAGE_CATEGORY_SPECIAL );
+        ASSUME(GetMoveReflectDamage_DamageCategories(MOVE_COUNTER) == 1u << DAMAGE_CATEGORY_PHYSICAL );
+        ASSUME(GetMoveReflectDamage_DamageCategories(MOVE_MIRROR_COAT) == 1u << DAMAGE_CATEGORY_SPECIAL );
         PLAYER(SPECIES_WOBBUFFET) { HPIV(hp); AttackIV(atk); DefenseIV(def); SpAttackIV(spa); SpDefenseIV(spd); SpeedIV(spe); }
         OPPONENT(SPECIES_WOBBUFFET);
     }
