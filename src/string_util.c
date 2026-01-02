@@ -1,6 +1,7 @@
 #include "global.h"
 #include "string_util.h"
 #include "text.h"
+#include "regions.h"
 #include "strings.h"
 #include "union_room_chat.h"
 
@@ -485,6 +486,11 @@ static const u8 *ExpandPlaceholder_RivalName(void)
         return gText_ExpandedPlaceholder_Brendan;
 }
 
+static const u8 *ExpandPlaceholder_RegionName(void)
+{
+    return GetCurrentRegionName();
+}
+
 static const u8 *ExpandPlaceholder_Version(void)
 {
     return gText_ExpandedPlaceholder_Emerald;
@@ -533,6 +539,7 @@ const u8 *GetExpandedPlaceholder(u32 id)
         [PLACEHOLDER_ID_STRING_VAR_3] = ExpandPlaceholder_StringVar3,
         [PLACEHOLDER_ID_KUN]          = ExpandPlaceholder_KunChan,
         [PLACEHOLDER_ID_RIVAL]        = ExpandPlaceholder_RivalName,
+        [PLACEHOLDER_ID_REGION]       = ExpandPlaceholder_RegionName,
         [PLACEHOLDER_ID_VERSION]      = ExpandPlaceholder_Version,
         [PLACEHOLDER_ID_AQUA]         = ExpandPlaceholder_Aqua,
         [PLACEHOLDER_ID_MAGMA]        = ExpandPlaceholder_Magma,

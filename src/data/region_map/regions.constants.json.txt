@@ -1,0 +1,14 @@
+{{ doNotModifyHeader }}
+#ifndef GUARD_CONSTANTS_REGIONS_H
+#define GUARD_CONSTANTS_REGIONS_H
+
+enum Region
+{
+## for region in regions
+    {{ region.id }},
+## endfor
+    REGION_NONE,
+    REGIONS_COUNT
+};
+
+#endif // GUARD_CONSTANTS_REGIONS_H

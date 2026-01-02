@@ -19,6 +19,7 @@
 #include "field_effect.h"
 #include "field_specials.h"
 #include "fldeff.h"
+#include "regions.h"
 #include "region_map.h"
 #include "decompress.h"
 #include "constants/region_map_sections.h"
@@ -119,16 +120,101 @@ static void CB_ExitFlyMap(void);
 static const u16 sRegionMapCursorPal[] = INCBIN_U16("graphics/pokenav/region_map/cursor.gbapal");
 static const u32 sRegionMapCursorSmallGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_small.4bpp.smol");
 static const u32 sRegionMapCursorLargeGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_large.4bpp.smol");
-static const u16 sRegionMapBg_Pal[] = INCBIN_U16("graphics/pokenav/region_map/map.gbapal");
-static const u32 sRegionMapBg_GfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/map.8bpp.smol");
-static const u32 sRegionMapBg_TilemapLZ[] = INCBIN_U32("graphics/pokenav/region_map/map.bin.smolTM");
 static const u16 sRegionMapPlayerIcon_BrendanPal[] = INCBIN_U16("graphics/pokenav/region_map/brendan_icon.gbapal");
 static const u8 sRegionMapPlayerIcon_BrendanGfx[] = INCBIN_U8("graphics/pokenav/region_map/brendan_icon.4bpp");
 static const u16 sRegionMapPlayerIcon_MayPal[] = INCBIN_U16("graphics/pokenav/region_map/may_icon.gbapal");
 static const u8 sRegionMapPlayerIcon_MayGfx[] = INCBIN_U8("graphics/pokenav/region_map/may_icon.4bpp");
+// Hoenn region map
+static const u16 sRegionMapBg_Pal_Hoenn[] = INCBIN_U16("graphics/pokenav/region_map/map.gbapal");
+static const u32 sRegionMapBg_Gfx_Hoenn[] = INCBIN_U32("graphics/pokenav/region_map/map.8bpp.smol");
+static const u32 sRegionMapBg_Tilemap_Hoenn[] = INCBIN_U32("graphics/pokenav/region_map/map.bin.smolTM");
 
-#include "data/region_map/region_map_layout.h"
 #include "data/region_map/region_map_entries.h"
+#include "data/region_map/region_map_layout_hoenn.h"
+
+const u16 *GetCurrentRegionMapBgPal(void)
+{
+    switch (GetCurrentRegion())
+    {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
+    case REGION_HOENN:
+    case REGION_NONE:
+    case REGIONS_COUNT:
+        return sRegionMapBg_Pal_Hoenn;
+    }
+    return sRegionMapBg_Pal_Hoenn;
+}
+
+const u32 *GetCurrentRegionMapBgGfx(void)
+{
+    switch (GetCurrentRegion())
+    {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
+    case REGION_HOENN:
+    case REGION_NONE:
+    case REGIONS_COUNT:
+        return sRegionMapBg_Gfx_Hoenn;
+    }
+    return sRegionMapBg_Gfx_Hoenn;
+}
+
+const u32 *GetCurrentRegionMapBgTilemap(void)
+{
+    switch (GetCurrentRegion())
+    {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
+    case REGION_HOENN:
+    case REGION_NONE:
+    case REGIONS_COUNT:
+        return sRegionMapBg_Tilemap_Hoenn;
+    }
+    return sRegionMapBg_Tilemap_Hoenn;
+}
+
+const mapsec_u8_t (*GetCurrentRegionMapLayout(void))[MAP_WIDTH]
+{
+    switch (GetCurrentRegion())
+    {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
+    case REGION_HOENN:
+    case REGION_NONE:
+    case REGIONS_COUNT:
+        return sRegionMap_MapSectionLayout_Hoenn;
+    }
+    return sRegionMap_MapSectionLayout_Hoenn;
+}
 
 static const mapsec_u16_t sRegionMap_SpecialPlaceLocations[][2] =
 {
@@ -542,24 +628,24 @@ bool8 LoadRegionMapGfx(void)
     {
     case 0:
         if (sRegionMap->bgManaged)
-            DecompressAndCopyTileDataToVram(sRegionMap->bgNum, sRegionMapBg_GfxLZ, 0, 0, 0);
+            DecompressAndCopyTileDataToVram(sRegionMap->bgNum, GetCurrentRegionMapBgGfx(), 0, 0, 0);
         else
-            DecompressDataWithHeaderVram(sRegionMapBg_GfxLZ, (u16 *)BG_CHAR_ADDR(2));
+            DecompressDataWithHeaderVram(GetCurrentRegionMapBgGfx(), (u16 *)BG_CHAR_ADDR(2));
         break;
     case 1:
         if (sRegionMap->bgManaged)
         {
             if (!FreeTempTileDataBuffersIfPossible())
-                DecompressAndCopyTileDataToVram(sRegionMap->bgNum, sRegionMapBg_TilemapLZ, 0, 0, 1);
+                DecompressAndCopyTileDataToVram(sRegionMap->bgNum, GetCurrentRegionMapBgTilemap(), 0, 0, 1);
         }
         else
         {
-            DecompressDataWithHeaderVram(sRegionMapBg_TilemapLZ, (u16 *)BG_SCREEN_ADDR(28));
+            DecompressDataWithHeaderVram(GetCurrentRegionMapBgTilemap(), (u16 *)BG_SCREEN_ADDR(28));
         }
         break;
     case 2:
         if (!FreeTempTileDataBuffersIfPossible())
-            LoadPalette(sRegionMapBg_Pal, BG_PLTT_ID(7), 3 * PLTT_SIZE_4BPP);
+            LoadPalette(GetCurrentRegionMapBgPal(), BG_PLTT_ID(7), 3 * PLTT_SIZE_4BPP);
         break;
     case 3:
         DecompressDataWithHeaderWram(sRegionMapCursorSmallGfxLZ, sRegionMap->cursorSmallImage);
@@ -965,7 +1051,7 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
     }
     y -= MAPCURSOR_Y_MIN;
     x -= MAPCURSOR_X_MIN;
-    return sRegionMap_MapSectionLayout[y][x];
+    return GetCurrentRegionMapLayout()[y][x];
 }
 
 static void InitMapBasedOnPlayerLocation(void)

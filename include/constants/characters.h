@@ -268,6 +268,7 @@
 #define PLACEHOLDER_ID_MAXIE         0xB
 #define PLACEHOLDER_ID_KYOGRE        0xC
 #define PLACEHOLDER_ID_GROUDON       0xD
+#define PLACEHOLDER_ID_REGION        0xE
 
 // battle placeholders are located in battle_message.h
 
