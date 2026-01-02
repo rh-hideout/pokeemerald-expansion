@@ -1051,10 +1051,10 @@ static void DrawFollowerSprite(struct PokemonSpriteVisualizer *data)
     if (data->isFemale)
         graphicsId += OBJ_EVENT_MON_FEMALE;
     data->followerspriteId = CreateObjectGraphicsSprite(graphicsId,
-                                                SpriteCB_Follower,
-                                                VISUALIZER_FOLLOWER_X,
-                                                VISUALIZER_FOLLOWER_Y,
-                                                0);
+                                                        SpriteCB_Follower,
+                                                        VISUALIZER_FOLLOWER_X,
+                                                        VISUALIZER_FOLLOWER_Y,
+                                                        0);
     gSprites[data->followerspriteId].oam.priority = 0;
 
     const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
