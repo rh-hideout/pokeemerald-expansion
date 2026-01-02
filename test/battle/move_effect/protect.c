@@ -23,15 +23,15 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and Burning Bulwark protect from all moves")
 {
     u32 j;
-    static const u16 protectMoves[] = {
+    static const enum Move protectMoves[] = {
         MOVE_PROTECT,
         MOVE_DETECT,
         MOVE_SPIKY_SHIELD,
         MOVE_BANEFUL_BUNKER,
         MOVE_BURNING_BULWARK,
     };
-    u16 protectMove = MOVE_NONE;
-    u16 usedMove = MOVE_NONE;
+    enum Move protectMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
     {
@@ -62,14 +62,14 @@ SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and B
 SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from damaging moves and lower stats on contact")
 {
     u32 j;
-    static const u16 protectMoves[][3] =
+    static const enum Move protectMoves[][3] =
     {   // Move             Stat      Stages
         {MOVE_KINGS_SHIELD, STAT_ATK,   (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? 1 : 2},
         {MOVE_SILK_TRAP,    STAT_SPEED, 1},
         {MOVE_OBSTRUCT,     STAT_DEF,   2},
     };
-    u16 protectMove = MOVE_NONE;
-    u16 usedMove = MOVE_NONE;
+    enum Move protectMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
     u16 statId = 0, lowersBy = 0;
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
 
 SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers making contact and may faint them")
 {
-    u16 usedMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
     u16 hp = 400, maxHp = 400;
 
     PARAMETRIZE { usedMove = MOVE_SCRATCH; hp = 1; }
@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
 
 SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making contact")
 {
-    u16 usedMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
 
     PARAMETRIZE {usedMove = MOVE_SCRATCH; }
     PARAMETRIZE {usedMove = MOVE_LEER; }
@@ -216,7 +216,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are al
 
 SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making contact")
 {
-    u16 usedMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
 
     PARAMETRIZE {usedMove = MOVE_SCRATCH; }
     PARAMETRIZE {usedMove = MOVE_LEER; }
@@ -271,8 +271,8 @@ SINGLE_BATTLE_TEST("Protect: Recoil damage is not applied if target was protecte
     u32 j, k;
     static const u16 protectMoves[] = { MOVE_PROTECT, MOVE_DETECT, MOVE_KINGS_SHIELD, MOVE_BANEFUL_BUNKER, MOVE_SILK_TRAP, MOVE_OBSTRUCT, MOVE_SPIKY_SHIELD };
     static const u16 recoilMoves[] = { MOVE_VOLT_TACKLE, MOVE_HEAD_SMASH, MOVE_TAKE_DOWN, MOVE_DOUBLE_EDGE };
-    u16 protectMove = MOVE_NONE;
-    u16 recoilMove = MOVE_NONE;
+    enum Move protectMove = MOVE_NONE;
+    enum Move recoilMove = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
     {

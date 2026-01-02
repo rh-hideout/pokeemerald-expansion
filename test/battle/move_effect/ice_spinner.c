@@ -17,8 +17,8 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
         MOVE_MISTY_TERRAIN,
     };
 
-    u16 terrainMove = MOVE_NONE;
-    u16 removeTerrainMove = MOVE_NONE;
+    enum Move terrainMove = MOVE_NONE;
+    enum Move removeTerrainMove = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(terrainMoves); j++)
     {
@@ -52,6 +52,8 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
             break;
         case MOVE_MISTY_TERRAIN:
             MESSAGE("The mist disappeared from the battlefield.");
+            break;
+        default:
             break;
         }
     }

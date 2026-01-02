@@ -54,7 +54,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
 AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they both require the same number of hits to ko")
 {
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 hp, expectedMove, turns, expectedMove2;
+    enum Move expectedMove, expectedMove2;
+    u16 hp, turns;
     enum Ability abilityAtk;
 
     abilityAtk = ABILITY_NONE;
@@ -139,7 +140,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves which deal more damage instead of moves 
 {
     u8 turns = 0;
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 expectedMove;
+    enum Move expectedMove;
     enum Ability abilityAtk, abilityDef;
 
     abilityAtk = ABILITY_NONE;
@@ -199,7 +200,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers Earthquake over Drill Run if both require the 
 AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over a one with a downside effect if both require the same number of hits to ko")
 {
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 hp, expectedMove, turns;
+    enum Move expectedMove;
+    u16 hp, turns;
 
     // Both moves require the same number of turns but Flamethrower will be chosen over Overheat (powerful effect)
     PARAMETRIZE { move1 = MOVE_OVERHEAT; move2 = MOVE_FLAMETHROWER; hp = 300; expectedMove = MOVE_FLAMETHROWER; turns = 2; }
@@ -265,7 +267,7 @@ AI_SINGLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two
 AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking into account accuracy and move effect")
 {
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 expectedMove, expectedMove2 = MOVE_NONE;
+    enum Move expectedMove, expectedMove2 = MOVE_NONE;
     enum Ability abilityAtk = ABILITY_NONE;
     u32 holdItemAtk = ITEM_NONE;
 
@@ -973,7 +975,7 @@ AI_SINGLE_BATTLE_TEST("AI will use Recovery move if it outheals your damage and 
 
 AI_SINGLE_BATTLE_TEST("AI will use recovery move if it outheals your damage and is outsped")
 {
-    u32 aiMove = MOVE_NONE;
+    enum Move aiMove = MOVE_NONE;
     PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
     PARAMETRIZE{ aiMove = MOVE_RECOVER; }
     PARAMETRIZE{ aiMove = MOVE_STRENGTH_SAP; }

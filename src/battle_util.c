@@ -65,12 +65,12 @@ static void ResetParadoxTerrainStat(u32 battler);
 static bool32 CanBattlerFormChange(u32 battler, enum FormChanges method);
 
 // Submoves
-static u32 GetMirrorMoveMove(void);
-static u32 GetMetronomeMove(void);
-static u32 GetAssistMove(void);
-static u32 GetSleepTalkMove(void);
-static u32 GetCopyCatMove(void);
-static u32 GetMeFirstMove(void);
+static enum Move GetMirrorMoveMove(void);
+static enum Move GetMetronomeMove(void);
+static enum Move GetAssistMove(void);
+static enum Move GetSleepTalkMove(void);
+static enum Move GetCopyCatMove(void);
+static enum Move GetMeFirstMove(void);
 
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12(u32 percent);
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12_Floored(u32 percent);
@@ -2483,7 +2483,7 @@ static enum MoveCanceler CancelerChoiceLock(struct BattleContext *ctx)
 static enum MoveCanceler CancelerCallSubmove(struct BattleContext *ctx)
 {
     bool32 noEffect = FALSE;
-    u32 calledMove = MOVE_NONE;
+    enum Move calledMove = MOVE_NONE;
     const u8 *battleScript = NULL;
     battleScript = BattleScript_SubmoveAttackstring;
 
@@ -11817,7 +11817,7 @@ bool32 IsAffectedByPowderMove(u32 battler, u32 ability, enum HoldEffect holdEffe
     return TRUE;
 }
 
-static u32 GetMirrorMoveMove(void)
+static enum Move GetMirrorMoveMove(void)
 {
     s32 i, validMovesCount;
     enum Move move = MOVE_NONE;
@@ -11852,7 +11852,7 @@ static bool32 InvalidMetronomeMove(u32 move)
         || IsMoveMetronomeBanned(move);
 }
 
-static u32 GetMetronomeMove(void)
+static enum Move GetMetronomeMove(void)
 {
     enum Move move = MOVE_NONE;
 
@@ -11880,12 +11880,12 @@ static u32 GetMetronomeMove(void)
     return move;
 }
 
-static u32 GetAssistMove(void)
+static enum Move GetAssistMove(void)
 {
     enum Move move = MOVE_NONE;
     s32 chooseableMovesNo = 0;
     struct Pokemon *party;
-    u16 *validMoves = Alloc(sizeof(u16) * PARTY_SIZE * MAX_MON_MOVES);
+    enum Move *validMoves = Alloc(sizeof(u16) * PARTY_SIZE * MAX_MON_MOVES);
 
     if (validMoves != NULL)
     {
@@ -11920,7 +11920,7 @@ static u32 GetAssistMove(void)
     return move;
 }
 
-u32 GetNaturePowerMove(u32 battler)
+enum Move GetNaturePowerMove(u32 battler)
 {
     enum Move move = gBattleEnvironmentInfo[gBattleEnvironment].naturePower;
     if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
@@ -11937,7 +11937,7 @@ u32 GetNaturePowerMove(u32 battler)
     return move;
 }
 
-static u32 GetSleepTalkMove(void)
+static enum Move GetSleepTalkMove(void)
 {
     enum Move move = MOVE_NONE;
 
@@ -11971,7 +11971,7 @@ static u32 GetSleepTalkMove(void)
     return move;
 }
 
-static u32 GetCopyCatMove(void)
+static enum Move GetCopyCatMove(void)
 {
     if (gLastUsedMove == MOVE_NONE
      || gLastUsedMove == MOVE_UNAVAILABLE
@@ -11982,7 +11982,7 @@ static u32 GetCopyCatMove(void)
     return gLastUsedMove;
 }
 
-static u32 GetMeFirstMove(void)
+static enum Move GetMeFirstMove(void)
 {
     enum Move move = GetChosenMoveFromPosition(gBattlerTarget);
 

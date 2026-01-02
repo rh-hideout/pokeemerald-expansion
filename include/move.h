@@ -196,7 +196,7 @@ extern const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL];
 extern const u8 gNotDoneYetDescription[];
 extern const struct BattleMoveEffect gBattleMoveEffects[];
 
-static inline u32 SanitizeMoveId(enum Move moveId)
+static inline enum Move SanitizeMoveId(enum Move moveId)
 {
     assertf(moveId < MOVES_COUNT_ALL, "invalid move: %d", moveId)
     {

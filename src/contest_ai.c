@@ -849,7 +849,7 @@ static void ContestAICmd_check_most_jamming_move(void)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        u16 newMove = gContestMons[eContestAI.contestantId].moves[i];
+        enum Move newMove = gContestMons[eContestAI.contestantId].moves[i];
         if (newMove != MOVE_NONE && jam < gContestEffects[GetMoveContestEffect(newMove)].jam)
             break;
     }

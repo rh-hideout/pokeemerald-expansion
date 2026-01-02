@@ -263,7 +263,7 @@ static u16 GetTypeBasedMaxMove(u32 battler, enum Type type)
 }
 
 // Returns the appropriate Max Move or G-Max Move for a battler to use.
-u16 GetMaxMove(u32 battler, enum Move baseMove)
+enum Move GetMaxMove(u32 battler, enum Move baseMove)
 {
     enum Type moveType;
     SetTypeBeforeUsingMove(baseMove, battler);

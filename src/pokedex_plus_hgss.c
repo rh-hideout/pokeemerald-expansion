@@ -5080,7 +5080,7 @@ static bool8 CalculateMoves(void)
     return TRUE;
 }
 
-static u16 GetSelectedMove(u32 species, u32 selected)
+static enum Move GetSelectedMove(u32 species, u32 selected)
 {
     if (selected < sPokedexView->numEggMoves)
     {

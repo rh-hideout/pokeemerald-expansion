@@ -140,14 +140,14 @@ bool32 CanUseZMove(u32 battler)
     return TRUE;
 }
 
-u32 GetUsableZMove(u32 battler, enum Move move)
+enum Move GetUsableZMove(u32 battler, enum Move move)
 {
     u32 item = gBattleMons[battler].item;
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
     {
-        u16 zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
+        enum Move zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
         if (zMove != MOVE_NONE)
             return zMove;  // Signature z move exists
 
@@ -190,7 +190,7 @@ bool32 IsViableZMove(u32 battler, enum Move move)
     // Check for signature Z-Move or type-based Z-Move.
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
     {
-        u16 zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
+        enum Move zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
         if (zMove != MOVE_NONE)
             return TRUE;
 
@@ -201,7 +201,7 @@ bool32 IsViableZMove(u32 battler, enum Move move)
     return FALSE;
 }
 
-void AssignUsableZMoves(u32 battler, u16 *moves)
+void AssignUsableZMoves(u32 battler, enum Move *moves)
 {
     u32 i;
     gBattleStruct->zmove.possibleZMoves[battler] = 0;
@@ -226,7 +226,7 @@ bool32 TryChangeZTrigger(u32 battler, u32 moveIndex)
     return viableZMove;
 }
 
-u32 GetSignatureZMove(enum Move move, u32 species, u32 item)
+enum Move GetSignatureZMove(enum Move move, u32 species, u32 item)
 {
     u32 i;
 
@@ -240,7 +240,7 @@ u32 GetSignatureZMove(enum Move move, u32 species, u32 item)
     return MOVE_NONE;
 }
 
-u32 GetTypeBasedZMove(enum Move move)
+enum Move GetTypeBasedZMove(enum Move move)
 {
     enum Type moveType = GetMoveType(move);
 
@@ -257,7 +257,7 @@ u32 GetTypeBasedZMove(enum Move move)
     return gTypesInfo[moveType].zMove;
 }
 
-bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
+bool32 MoveSelectionDisplayZMove(enum Move zmove, u32 battler)
 {
     u32 i;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);

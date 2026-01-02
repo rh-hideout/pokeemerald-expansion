@@ -115,7 +115,7 @@ bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef);
 s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler2, u32 aiMoveConsidered, u32 playerMoveConsidered, enum ConsiderPriority considerPriority);
 bool32 CanTargetFaintAi(u32 battlerDef, u32 battlerAtk);
 u32 NoOfHitsForTargetToFaintBattler(u32 battlerDef, u32 battlerAtk, enum AiConsiderEndure considerEndure);
-void GetBestDmgMovesFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, u32 *bestMoves);
+void GetBestDmgMovesFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, enum Move *bestMoves);
 u16 GetMoveIndex(u32 battler, enum Move move);
 bool32 IsBestDmgMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, enum Move move);
 bool32 BestDmgMoveHasEffect(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, enum BattleMoveEffects moveEffect);
@@ -211,7 +211,7 @@ bool32 IsMoveRedirectionPrevented(u32 battlerAtk, enum Move move, enum Ability a
 bool32 IsHazardMove(enum Move move);
 bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, enum Move move);
 bool32 IsBattlerDamagedByStatus(u32 battler);
-s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, enum Move move, u32 predictedMove);
+s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, enum Move move, enum Move predictedMove);
 bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef);
 bool32 ShouldSetWeather(u32 battler, u32 weather);
 bool32 ShouldClearWeather(u32 battler, u32 weather);
@@ -270,7 +270,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct Ai
 // partner logic
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef);
 // IsTargetingPartner includes a check to make sure the adjacent pokemon is truly a partner.
-u32 GetAllyChosenMove(u32 battlerId);
+enum Move GetAllyChosenMove(u32 battlerId);
 bool32 IsBattle1v1(void);
 // IsBattle1v1 is distinct from !IsDoubleBattle. If the player is fighting Maxie and Tabitha, with Steven as their partner, and both Tabitha and Steven have run out of Pokemon, the battle is 1v1, even though mechanically it is a Double Battle for how battlers and flags are set.
 // Most AI checks should be using IsBattle1v1; most engine checks should be using !IsDoubleBattle
@@ -279,13 +279,13 @@ bool32 HasTwoOpponents(u32 battler);
 bool32 HasPartner(u32 battler);
 bool32 HasPartnerIgnoreFlags(u32 battler);
 // HasPartner respects the Attacks Partner AI flag; HasPartnerIgnoreFlags checks only if a live pokemon is adjacent.
-bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, enum Move move, u32 partnerMove);
-bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, enum Move move, u32 partnerMove);
-bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef, u32 partnerMove);
-bool32 PartnerMoveEffectIs(u32 battlerAtkPartner, u32 partnerMove, enum BattleMoveEffects effectCheck);
-bool32 PartnerMoveIs(u32 battlerAtkPartner, u32 partnerMove, u32 moveCheck);
-bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, enum Move move, u32 partnerMove);
-bool32 PartnerMoveIsSameNoTarget(u32 battlerAtkPartner, enum Move move, u32 partnerMove);
+bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, enum Move move, enum Move partnerMove);
+bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, enum Move move, enum Move partnerMove);
+bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef, enum Move partnerMove);
+bool32 PartnerMoveEffectIs(u32 battlerAtkPartner, enum Move partnerMove, enum BattleMoveEffects effectCheck);
+bool32 PartnerMoveIs(u32 battlerAtkPartner, enum Move partnerMove, enum Move moveCheck);
+bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, enum Move move, enum Move partnerMove);
+bool32 PartnerMoveIsSameNoTarget(u32 battlerAtkPartner, enum Move move, enum Move partnerMove);
 bool32 PartnerMoveActivatesSleepClause(enum Move partnerMove);
 bool32 ShouldUseWishAromatherapy(u32 battlerAtk, u32 battlerDef, enum Move move);
 u32 GetFriendlyFireKOThreshold(u32 battler);
@@ -324,8 +324,8 @@ bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, enum Move mo
 u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, enum Move move);
 bool32 IsBattlerItemEnabled(u32 battler);
 bool32 IsBattlerPredictedToSwitch(u32 battler);
-u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
-u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
+enum Move GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
+enum Move GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount);
 void SetBattlerFieldStatusForSwitchin(u32 battler);

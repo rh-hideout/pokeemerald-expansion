@@ -12,7 +12,7 @@
 #include "constants/battle_move_resolution.h"
 
 static void ValidateBattlers(void);
-static u32 GetOriginallyUsedMove(u32 chosenMove);
+static enum Move GetOriginallyUsedMove(enum Move chosenMove);
 static void SetSameMoveTurnValues(u32 moveEffect);
 static void TryClearChargeVolatile(enum Type moveType);
 static inline bool32 IsBattlerUsingBeakBlast(u32 battler);
@@ -1601,7 +1601,7 @@ static enum MoveEndResult MoveEnd_ClearBits(void)
 {
     ValidateBattlers();
 
-    u32 originallyUsedMove = GetOriginallyUsedMove(gChosenMove);
+    enum Move originallyUsedMove = GetOriginallyUsedMove(gChosenMove);
     enum Type moveType = GetBattleMoveType(gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
@@ -1828,7 +1828,7 @@ static void ValidateBattlers(void)
     assertf(gBattleStruct->savedTargetCount == 0, "savedTargetCount is greater than 0");
 }
 
-static u32 GetOriginallyUsedMove(u32 chosenMove)
+static enum Move GetOriginallyUsedMove(enum Move chosenMove)
 {
     return (gChosenMove == MOVE_UNAVAILABLE) ? MOVE_NONE : gChosenMove;
 }

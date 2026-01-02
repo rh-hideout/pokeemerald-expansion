@@ -12,7 +12,7 @@ u16 GetNonDynamaxMaxHP(u32 battler);
 void UndoDynamax(u32 battler);
 bool32 IsMoveBlockedByMaxGuard(enum Move move);
 
-u16 GetMaxMove(u32 battler, enum Move baseMove);
+enum Move GetMaxMove(u32 battler, enum Move baseMove);
 u32 GetMaxMovePower(enum Move move);
 bool32 IsMaxMove(enum Move move);
 void ChooseDamageNonTypesString(enum Type type);

@@ -462,7 +462,7 @@ static void GetLatestLearnedMoves(u16 species, u16 *moves)
 
 // Get the level up move or previously suggested move to be the first move choice
 // Compare to GetRandomAlternateMove, which gets the move that will be the second choice
-static u16 GetDefaultMove(u8 monId, u8 speciesArrayId, u8 moveSlot)
+static enum Move GetDefaultMove(u8 monId, u8 speciesArrayId, u8 moveSlot)
 {
     enum Move moves[MAX_MON_MOVES];
     u8 i, numQuestions;

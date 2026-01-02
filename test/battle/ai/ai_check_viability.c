@@ -153,7 +153,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Spit Up")
 
 AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted move split is correct and user doesn't faint")
 {
-    u16 playerMove = MOVE_NONE, opponentMove = MOVE_NONE;
+    enum Move playerMove = MOVE_NONE, opponentMove = MOVE_NONE;
 
     PARAMETRIZE { playerMove = MOVE_STRENGTH; opponentMove = MOVE_COUNTER; }
     PARAMETRIZE { playerMove = MOVE_POWER_GEM; opponentMove = MOVE_MIRROR_COAT; }

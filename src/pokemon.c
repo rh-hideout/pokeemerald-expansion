@@ -1803,7 +1803,7 @@ u16 GiveMoveToBoxMon(struct BoxPokemon *boxMon, enum Move move)
     s32 i;
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        u16 existingMove = GetBoxMonData(boxMon, MON_DATA_MOVE1 + i, NULL);
+        enum Move existingMove = GetBoxMonData(boxMon, MON_DATA_MOVE1 + i, NULL);
         if (existingMove == MOVE_NONE)
         {
             u32 pp = GetMovePP(move);
@@ -1914,9 +1914,9 @@ void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon) //Credit: AsparagusEdua
     }
 }
 
-u16 MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u32 level)
+enum Move MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u32 level)
 {
-    u32 retVal = MOVE_NONE;
+    enum Move retVal = MOVE_NONE;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
 
@@ -1965,7 +1965,7 @@ u16 MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u32 leve
     return retVal;
 }
 
-u16 MonTryLearningNewMove(struct Pokemon *mon, bool8 firstMove)
+enum Move MonTryLearningNewMove(struct Pokemon *mon, bool8 firstMove)
 {
     return MonTryLearningNewMoveAtLevel(mon, firstMove, GetMonData(mon, MON_DATA_LEVEL, NULL));
 }
@@ -5741,7 +5741,7 @@ u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
     if (!P_TM_MOVES_RELEARNER)
         return 0;
 
-    u32 learnedMoves[MAX_MON_MOVES] = {0};
+    enum Move learnedMoves[MAX_MON_MOVES] = {MOVE_NONE};
     u32 numMoves = 0;
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
     u16 allMoves[NUM_ALL_MACHINES];
@@ -5920,7 +5920,7 @@ bool32 HasRelearnerTMMoves(struct Pokemon *mon)
     if (species == SPECIES_EGG)
         return FALSE;
 
-    u16 learnedMoves[MAX_MON_MOVES];
+    enum Move learnedMoves[MAX_MON_MOVES];
 
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
         learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
