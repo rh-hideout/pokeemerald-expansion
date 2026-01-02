@@ -112,3 +112,47 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield both can be Skill Swappe
         MESSAGE("Wobbuffet's Dauntless Shield raised its Defense!");
     }
 }
+
+SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage (Skill Swap)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
+        OPPONENT(SPECIES_ZAMAZENTA) { Ability(ABILITY_DAUNTLESS_SHIELD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
+        TURN { MOVE(player, MOVE_SKILL_SWAP); }
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_DAUNTLESS_SHIELD);
+            ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage (Baton Pass)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ZAMAZENTA) { Ability(ABILITY_DAUNTLESS_SHIELD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
+        TURN { MOVE(player, MOVE_BATON_PASS); MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(player, 1); SEND_OUT(opponent, 1);}
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_DAUNTLESS_SHIELD);
+            ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
+        }
+    }
+}

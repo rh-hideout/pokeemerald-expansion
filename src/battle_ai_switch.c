@@ -64,15 +64,15 @@ static u32 GetWishHealAmountForBattler(u32 battler)
 {
     u32 wishHeal = 0;
 
-    if (gBattleStruct->wish.counter[battler] == 0)
+    if (gBattleStruct->wish[battler].counter == 0)
         return wishHeal;
 
     if (B_WISH_HP_SOURCE >= GEN_5)
     {
         if (IsOnPlayerSide(battler))
-            wishHeal = GetMonData(&gPlayerParty[gBattleStruct->wish.partyId[battler]], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&gPlayerParty[gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
         else
-            wishHeal = GetMonData(&gEnemyParty[gBattleStruct->wish.partyId[battler]], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&gEnemyParty[gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
     }
     else
     {
@@ -108,11 +108,11 @@ static void GetIncomingHealInfo(u32 battler, struct IncomingHealInfo *healInfo)
     }
 
     // Wish heals at end of turn
-    if (gBattleStruct->wish.counter[battler] > 0)
+    if (gBattleStruct->wish[battler].counter > 0)
     {
         healInfo->hasHealing = TRUE;
         healInfo->healEndOfTurn = TRUE;
-        healInfo->wishCounter = gBattleStruct->wish.counter[battler];
+        healInfo->wishCounter = gBattleStruct->wish[battler].counter;
         healInfo->healAmount = GetWishHealAmountForBattler(battler);
     }
 }
@@ -1173,14 +1173,8 @@ bool32 ShouldSwitchDynFuncExample(u32 battler)
     return FALSE;
 }
 
-bool32 ShouldSwitch(u32 battler)
+static bool32 CanBattlerConsiderSwitch(u32 battler)
 {
-    u32 battlerIn1, battlerIn2;
-    s32 firstId;
-    s32 lastId; // + 1
-    struct Pokemon *party;
-    s32 availableToSwitch;
-
     if (gBattleMons[battler].volatiles.wrapped)
         return FALSE;
     if (gBattleMons[battler].volatiles.escapePrevention)
@@ -1189,7 +1183,22 @@ bool32 ShouldSwitch(u32 battler)
         return FALSE;
     if (IsAbilityPreventingEscape(battler))
         return FALSE;
+    if (gBattleStruct->battlerState[battler].commanderSpecies)
+        return FALSE;
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+        return FALSE;
+    return TRUE;
+}
+
+bool32 ShouldSwitch(u32 battler)
+{
+    u32 battlerIn1, battlerIn2;
+    s32 firstId;
+    s32 lastId; // + 1
+    struct Pokemon *party;
+    s32 availableToSwitch;
+
+    if (!CanBattlerConsiderSwitch(battler))
         return FALSE;
 
     // Sequence Switching AI never switches mid-battle
@@ -1324,15 +1333,7 @@ void ModifySwitchAfterMoveScoring(u32 battler)
     struct Pokemon *party;
     s32 availableToSwitch;
 
-    if (gBattleMons[battler].volatiles.wrapped)
-        return;
-    if (gBattleMons[battler].volatiles.escapePrevention)
-        return;
-    if (gBattleMons[battler].volatiles.root)
-        return;
-    if (IsAbilityPreventingEscape(battler))
-        return;
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (!CanBattlerConsiderSwitch(battler))
         return;
 
     // Sequence Switching AI never switches mid-battle

@@ -43,7 +43,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
     u32 numOfTargets = 0;
     u32 moveTargetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
 
-    if (!IsSpreadMove(moveTargetType, CHECK_BATTLE_TYPE))
+    if (!IsSpreadMove(moveTargetType))
         return FALSE;
 
     for (u32 battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
@@ -896,6 +896,10 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
 
+    if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
+     && battlerDef == BATTLE_PARTNER(battlerAtk))
+        return simDamage;
+
     if (moveEffect == EFFECT_NATURE_POWER)
         move = GetNaturePowerMove(battlerAtk);
 
@@ -1026,6 +1030,9 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
     enum Ability abilityAtk = gAiLogicData->abilities[battlerAtk];
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
+
+    if (IsSheerForceAffected(move, abilityAtk))
+        return FALSE;
 
     switch (GetMoveEffect(move))
     {
@@ -1478,10 +1485,9 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 aiMoveConsidered, u32 pla
 
 bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
 {
-    enum BattleMoveEffects effect = GetMoveEffect(move);
     if (!AI_BattlerAtMaxHp(battlerTarget) || IsMultiHitMove(move) || gAiLogicData->abilities[battler]  == ABILITY_PARENTAL_BOND)
         return FALSE;
-    if (GetMoveStrikeCount(move) > 1 && !(effect == EFFECT_DRAGON_DARTS && !HasTwoOpponents(battler)))
+    if (GetMoveStrikeCount(move) > 1 && !(AI_GetBattlerMoveTargetType(battler, move) == TARGET_SMART && !HasTwoOpponents(battler)))
         return FALSE;
     if (gAiLogicData->holdEffects[battlerTarget] == HOLD_EFFECT_FOCUS_SASH)
         return TRUE;
@@ -6289,6 +6295,7 @@ bool32 ShouldInstructPartner(u32 partner, u32 move)
     switch (type)
     {
     case TARGET_SELECTED:
+    case TARGET_SMART:
     case TARGET_DEPENDS:
     case TARGET_RANDOM:
     case TARGET_BOTH:
@@ -6311,6 +6318,7 @@ bool32 CanMoveBeBouncedBack(u32 battler, u32 move)
     switch (type)
     {
     case TARGET_SELECTED:
+    case TARGET_SMART:
     case TARGET_OPPONENTS_FIELD:
     case TARGET_BOTH:
         return TRUE;

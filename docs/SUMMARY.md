@@ -43,6 +43,7 @@
   - [How to Apricorn Tree](tutorials/how_to_apricorn_tree.md)
   - [How to Namebox](tutorials/how_to_namebox.md)
   - [Vs. Seeker](tutorials/vs_seeker.md)
+  - [Teachable Learnsets Explanations](tutorials/teachable_learnsets.md)
 - [Changelog](./CHANGELOG.md)
     - [1.14.x]()
         - [Version 1.14.1](changelogs/1.14.x/1.14.1.md)

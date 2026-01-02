@@ -1743,6 +1743,7 @@ static void Task_HandleInput(u8 taskId)
             sMonSummaryScreen->callback = CB2_InitLearnMove;
             gSpecialVar_0x8004 = sMonSummaryScreen->curMonIndex;
             gRelearnMode = sMonSummaryScreen->currPageIndex;
+            gSpecialVar_MonBoxId = 0xFF;
             StopPokemonAnimations();
             PlaySE(SE_SELECT);
             BeginCloseSummaryScreen(taskId);

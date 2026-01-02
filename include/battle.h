@@ -89,7 +89,6 @@ struct ProtectStruct
     u32 palaceUnableToUseMove:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
-    u32 touchedProtectLike:1;
     u32 disableEjectPack:1;
     u32 pranksterElevated:1;
     u32 quickDraw:1;
@@ -103,6 +102,7 @@ struct ProtectStruct
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
     u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
+    u32 padding1:1;
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;
@@ -133,7 +133,8 @@ struct SpecialStatus
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
     u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
-    u8 padding2:2;
+    u8 mindBlownRecoil:1;
+    u8 padding2:1;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
@@ -484,8 +485,8 @@ struct BattleVideo {
 
 struct Wish
 {
-    u16 counter[MAX_BATTLERS_COUNT];
-    u8 partyId[MAX_BATTLERS_COUNT];
+    u16 counter;
+    u8 partyId;
 };
 
 struct FutureSight
@@ -522,8 +523,9 @@ struct BattlerState
     // End of Word
     u16 hpOnSwitchout;
     u16 switchIn:1;
+    u16 fainted:1;
     u16 isFirstTurn:2;
-    u16 padding:13;
+    u16 padding:12;
 };
 
 struct PartyState
@@ -550,14 +552,14 @@ struct EventStates
     u32 arenaTurn:8;
     enum BattleSide battlerSide:4;
     enum BattlerId moveEndBattler:4;
-    enum FirstTurnEventsStates beforeFristTurn:8;
+    enum FirstTurnEventsStates beforeFirstTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
     enum MoveSuccessOrder atkCanceler:8;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;
     u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
-    u32 padding:8;
+    u32 moveEndBlock:8;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -567,7 +569,7 @@ struct BattleStruct
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     struct EventStates eventState;
     struct FutureSight futureSight[MAX_BATTLERS_COUNT];
-    struct Wish wish;
+    struct Wish wish[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
@@ -1164,15 +1166,9 @@ static inline bool32 IsDoubleBattle(void)
     return (gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
 }
 
-enum BattleTypeChecks
+static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
 {
-    CHECK_BATTLE_TYPE,
-    IGNORE_BATTLE_TYPE,
-};
-
-static inline bool32 IsSpreadMove(enum MoveTarget moveTarget, enum BattleTypeChecks checkBattleType)
-{
-    if (checkBattleType == CHECK_BATTLE_TYPE && !IsDoubleBattle())
+    if (!IsDoubleBattle())
         return FALSE;
     return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
 }
@@ -1181,7 +1177,7 @@ static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
         && !gBattleStruct->unableToUseMove
-        && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), CHECK_BATTLE_TYPE);
+        && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 
 static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef, enum MoveTarget moveTarget)
