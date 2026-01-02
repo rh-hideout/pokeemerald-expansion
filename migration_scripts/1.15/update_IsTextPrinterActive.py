@@ -22,15 +22,10 @@ def update_function(fileInput):
     allLines = list()
     with open(fileInput, 'r', encoding='UTF-8') as file:
         while line:=file.readline():
-            if "bool32 IsTextPrinterActive(u32 id, bool32 isSprite)" in line:
+            if "bool32 IsTextPrinterActiveOn" in line:
                 allLines.append(line)
             elif "IsTextPrinterActive" in line:
-                funcNameIndex = line.find("IsTextPrinterActive")
-                openParenIndex = line.find("(", funcNameIndex)
-                closeParenIndex = find_close_paren(line, openParenIndex)
-                firstHalf = line[:closeParenIndex]
-                secondHalf = line[closeParenIndex:]
-                line = firstHalf + ", FALSE" + secondHalf
+                line = line.replace("IsTextPrinterActive(", "IsTextPrinterActiveOnWindow(")
                 allLines.append(line)
             else:
                 allLines.append(line)
