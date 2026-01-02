@@ -3089,6 +3089,7 @@ static void BattleStartClearSetData(void)
     gLeveledUpInBattle = 0;
     gAbsentBattlerFlags = 0;
     gBattleStruct->runTries = 0;
+    gBattleStruct->caughtMonPartyIndex = PARTY_SIZE;
     gBattleStruct->safariGoNearCounter = 0;
     gBattleStruct->safariPkblThrowCounter = 0;
     gBattleStruct->safariCatchFactor = gSpeciesInfo[GetMonData(&gEnemyParty[0], MON_DATA_SPECIES)].catchRate * 100 / 1275;
@@ -3116,6 +3117,7 @@ static void BattleStartClearSetData(void)
         gBattleStruct->partyState[B_SIDE_OPPONENT][i].usedHeldItem = ITEM_NONE;
         gBattleStruct->itemLost[B_SIDE_PLAYER][i].originalItem = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
         gBattleStruct->itemLost[B_SIDE_OPPONENT][i].originalItem = GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM);
+        gBattleStruct->wildItemStolen[i] = ITEM_NONE;
         gPartyCriticalHits[i] = 0;
     }
 
@@ -5631,6 +5633,7 @@ static void HandleEndTurn_FinishBattle(void)
         FadeOutMapMusic(5);
         if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE || B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
             TryRestoreHeldItems();
+        TryAddStolenWildItemsToBag();
 
         // Undo Dynamax HP multiplier before recalculating stats.
         for (battler = 0; battler < gBattlersCount; ++battler)
