@@ -37,8 +37,9 @@
 #include "trainer_pokemon_sprites.h"
 
 #include "constants/global.h"
-#include "constants/items.h"
+#include "constants/battle_anim.h"
 #include "constants/event_objects.h"
+#include "constants/items.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
@@ -338,6 +339,94 @@ const u8 gFrontAnimNames[][34] =
     [ANIM_SHAKE_GLOW_PURPLE_SLOW]            = _("SHAKE GLOW PURPLE SLOW"),
 };
 
+const u8 gMoveBackgroundNames[][26] =
+{
+    [BG_NONE]                      = _("NONE"),
+    [BG_DARK]                      = _("DARK"),
+    [BG_GHOST]                     = _("GHOST"),
+    [BG_PSYCHIC]                   = _("PSYCHIC"),
+    [BG_IMPACT_OPPONENT]           = _("IMPACT_OPPONENT"),
+    [BG_IMPACT_PLAYER]             = _("IMPACT_PLAYER"),
+    [BG_IMPACT_CONTESTS]           = _("IMPACT_CONTESTS"),
+    [BG_DRILL]                     = _("DRILL"),
+    [BG_DRILL_CONTESTS]            = _("DRILL_CONTESTS"),
+    [BG_HIGHSPEED_OPPONENT]        = _("HIGHSPEED_OPPONENT"),
+    [BG_HIGHSPEED_PLAYER]          = _("HIGHSPEED_PLAYER"),
+    [BG_THUNDER]                   = _("THUNDER"),
+    [BG_GUILLOTINE_OPPONENT]       = _("GUILLOTINE_OPPONENT"),
+    [BG_GUILLOTINE_PLAYER]         = _("GUILLOTINE_PLAYER"),
+    [BG_GUILLOTINE_CONTESTS]       = _("GUILLOTINE_CONTESTS"),
+    [BG_ICE]                       = _("ICE"),
+    [BG_COSMIC]                    = _("COSMIC"),
+    [BG_IN_AIR]                    = _("IN_AIR"),
+    [BG_SKY]                       = _("SKY"),
+    [BG_SKY_CONTESTS]              = _("SKY_CONTESTS"),
+    [BG_AURORA]                    = _("AURORA"),
+    [BG_FISSURE]                   = _("FISSURE"),
+    [BG_BUG_OPPONENT]              = _("BUG_OPPONENT"),
+    [BG_BUG_PLAYER]                = _("BUG_PLAYER"),
+    [BG_SOLAR_BEAM_OPPONENT]       = _("SOLAR_BEAM_OPPONENT"),
+    [BG_SOLAR_BEAM_PLAYER]         = _("SOLAR_BEAM_PLAYER"),
+    [BG_SOLAR_BEAM_CONTESTS]       = _("SOLAR_BEAM_CONTESTS"),
+    [BG_MAGMA_STORM]               = _("MAGMA_STORM"),
+    [BG_GIGA_IMPACT_OPPONENT]      = _("GIGA_IMPACT_OPPONENT"),
+    [BG_GIGA_IMPACT_PLAYER]        = _("GIGA_IMPACT_PLAYER"),
+    [BG_GIGA_IMPACT_CONTEST]       = _("GIGA_IMPACT_CONTEST"),
+    [BG_TRICK_ROOM]                = _("TRICK_ROOM"),
+    [BG_ROCK_WRECKER]              = _("ROCK_WRECKER"),
+    [BG_SPACIAL_REND_ON_OPPONENT]  = _("SPACIAL_REND_ON_OPPONENT"),
+    [BG_SPACIAL_REND_ON_PLAYER]    = _("SPACIAL_REND_ON_PLAYER"),
+    [BG_DARK_VOID]                 = _("DARK_VOID"),
+    [BG_WATER]                     = _("WATER"),
+    [BG_NIGHTMARE]                 = _("NIGHTMARE"),
+    [BG_LEAF_STORM]                = _("LEAF_STORM"),
+    [BG_FIRE]                      = _("FIRE"),
+    [BG_FIRE_2]                    = _("FIRE_2"),
+    [BG_WATER_2]                   = _("WATER_2"),
+    [BG_POISON]                    = _("POISON"),
+    [BG_AEROBLAST]                 = _("AEROBLAST"),
+    [BG_HURRICANE]                 = _("HURRICANE"),
+    [BG_ELECTRIC_TERRAIN]          = _("ELECTRIC_TERRAIN"),
+    [BG_GRASSY_TERRAIN]            = _("GRASSY_TERRAIN"),
+    [BG_MISTY_TERRAIN]             = _("MISTY_TERRAIN"),
+    [BG_PSYCHIC_TERRAIN]           = _("PSYCHIC_TERRAIN"),
+    [BG_FOCUS_BLAST]               = _("FOCUS_BLAST"),
+    [BG_GUNK_SHOT]                 = _("GUNK_SHOT"),
+    [BG_HYDRO_CANNON]              = _("HYDRO_CANNON"),
+    [BG_WONDER_ROOM]               = _("WONDER_ROOM"),
+    [BG_MAGIC_ROOM]                = _("MAGIC_ROOM"),
+    [BG_HYPERSPACE_FURY]           = _("HYPERSPACE_FURY"),
+    [BG_BOLT_STRIKE]               = _("BOLT_STRIKE"),
+    [BG_ZMOVE_ACTIVATE]            = _("ZMOVE_ACTIVATE"),
+    [BG_TECTONIC_RAGE]             = _("TECTONIC_RAGE"),
+    [BG_ROCK_FIELD_DAY]            = _("ROCK_FIELD_DAY"),
+    [BG_ROCK_FIELD_AFTERNOON]      = _("ROCK_FIELD_AFTERNOON"),
+    [BG_ROCK_FIELD_NIGHT]          = _("ROCK_FIELD_NIGHT"),
+    [BG_ZMOVE_MOUNTAIN]            = _("ZMOVE_MOUNTAIN"),
+    [BG_NEVERENDING_NIGHTMARE]     = _("NEVERENDING_NIGHTMARE"),
+    [BG_WATER_PULSE]               = _("WATER_PULSE"),
+    [BG_INFERNO_OVERDRIVE]         = _("INFERNO_OVERDRIVE"),
+    [BG_BLOOM_DOOM]                = _("BLOOM_DOOM"),
+    [BG_SHATTERED_PSYCHE]          = _("SHATTERED_PSYCHE"),
+    [BG_TWINKLE_TACKLE]            = _("TWINKLE_TACKLE"),
+    [BG_BLACKHOLE_ECLIPSE]         = _("BLACKHOLE_ECLIPSE"),
+    [BG_SOULSTEALING_7STAR_STRIKE] = _("SOULSTEALING_7STAR_STRIKE"),
+    [BG_MALICIOUS_MOONSAULT]       = _("MALICIOUS_MOONSAULT"),
+    [BG_CLANGOROUS_SOULBLAZE]      = _("CLANGOROUS_SOULBLAZE"),
+    [BG_SNUGGLE_FOREVER]           = _("SNUGGLE_FOREVER"),
+    [BG_MAX_LIGHTNING]             = _("MAX_LIGHTNING"),
+    [BG_GARBAGE_FALLS]             = _("GARBAGE_FALLS"),
+    [BG_HYPER_BEAM]                = _("HYPER_BEAM"),
+    [BG_DYNAMAX_CANNON]            = _("DYNAMAX_CANNON"),
+    [BG_AURA_SPHERE]               = _("AURA_SPHERE"),
+    [BG_STEEL_BEAM_OPPONENT]       = _("STEEL_BEAM_OPPONENT"),
+    [BG_STEEL_BEAM_PLAYER]         = _("STEEL_BEAM_PLAYER"),
+    [BG_CHLOROBLAST]               = _("CHLOROBLAST"),
+    [BG_RAINBOW_PLAYER]            = _("RAINBOW_PLAYER"),
+    [BG_RAINBOW_OPPONENT]          = _("RAINBOW_OPPONENT"),
+    [BG_SWAMP]                     = _("SWAMP"),
+};
+
 const u8 sShadowSizeLabels[][4] =
 {
     [SHADOW_SIZE_S]                 = _(" S"),
@@ -383,13 +472,17 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
 #if B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE
     u8 textInstructionsSubmenuTwo[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$");
     u8 textInstructionsSubmenuTwoGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$");
-    u8 textInstructionsSubmenuThree[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back");
-    u8 textInstructionsSubmenuThreeGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back$");
+    u8 textInstructionsSubmenuThree[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move Anims");
+    u8 textInstructionsSubmenuThreeGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON}  {A_BUTTON} Move Anims$");
+    u8 textInstructionsSubmenuFour[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back");
+    u8 textInstructionsSubmenuFourGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back$");
 #else
     u8 textInstructionsSubmenuTwo[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back$");
     u8 textInstructionsSubmenuTwoGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back$");
     u8 textInstructionsSubmenuThree[] = _("$");
     u8 textInstructionsSubmenuThreeGender[] = _("$");
+    u8 textInstructionsSubmenuFour[] = _("$");
+    u8 textInstructionsSubmenuFourGender[] = _("$");
 #endif
 
 
@@ -397,6 +490,7 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
     u8 textBottomForms[] = _("BACK:\nFRONT:\nBG:\nFORMS:$");
     u8 textBottomSubmenuTwo[] = _("B coords:\nF coords:\nF elev:");
     u8 textBottomSubmenuThree[] = _("X coords:\nY coords:\nSize:");
+    u8 textBottomSubmenuFour[] = _("Move BG:");
     u16 species = data->modifyArrows.currValue;
 
     u8 textL[] = _("{L_BUTTON}");
@@ -432,6 +526,13 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
         else
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuThree, x, 0, 0, NULL);
     }
+    else if (data->currentSubmenu == 4)
+    {
+        if (SpeciesHasGenderDifferences(species))
+            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuFourGender, x, 0, 0, NULL);
+        else
+            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuFour, x, 0, 0, NULL);
+    }
     CopyWindowToVram(WIN_INSTRUCTIONS, COPYWIN_FULL);
 
     //Bottom left text
@@ -449,6 +550,8 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
         AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottomSubmenuTwo, 0, 0, 0, NULL);
     else if (data->currentSubmenu == 3)
         AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottomSubmenuThree, 0, 0, 0, NULL);
+    else if (data->currentSubmenu == 4)
+        AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottomSubmenuFour, 0, 0, 0, NULL);
 }
 
 static void VBlankCB(void)
@@ -558,6 +661,7 @@ static void SetArrowInvisibility(struct PokemonSpriteVisualizer *data)
         break;
     case 2:
     case 3:
+    case 4:
         gSprites[data->modifyArrows.arrowSpriteId[0]].invisible = TRUE;
         gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = TRUE;
         gSprites[data->optionArrows.arrowSpriteId[0]].invisible = TRUE;
@@ -896,6 +1000,57 @@ static void UpdateBattleBg(u8 taskId, bool8 increment)
 
     PrintBattleBgName(taskId);
     LoadBattleBg(data->battleEnvironment);
+}
+
+//Move background functions
+static void LoadMoveBackground(u8 moveBackground)
+{
+    DecompressDataWithHeaderVram(gBattleAnimBackgroundTable[moveBackground].tilemap, (void *)BG_SCREEN_ADDR(26));
+    DecompressDataWithHeaderVram(gBattleAnimBackgroundTable[moveBackground].image, (void *)BG_CHAR_ADDR(2));
+    LoadPalette(gBattleAnimBackgroundTable[moveBackground].palette, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
+}
+
+static void PrintMoveBgName(u8 taskId)
+{
+    struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
+    u8 fontId = 0;
+    u8 text[26];
+
+    FillWindowPixelBuffer(WIN_BOTTOM_RIGHT, PIXEL_FILL(0));
+
+    StringCopy(text, gMoveBackgroundNames[data->moveBackground]);
+    AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 0, 0, 0, NULL);
+}
+
+static void UpdateMoveBg(u8 taskId, bool8 increment)
+{
+    struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
+
+    if (data->moveBackground == BG_NONE)
+    {
+        if (increment)
+            data->moveBackground += 1;
+        else
+            data->moveBackground = BG_SWAMP;
+    }
+    else if (data->moveBackground == BG_SWAMP)
+    {
+        if (increment)
+            data->moveBackground = BG_NONE;
+        else
+            data->moveBackground -= 1;
+    }
+    else
+    {
+        if (increment)
+            data->moveBackground += 1;
+        else
+            data->moveBackground -= 1;
+    }
+
+    PrintMoveBgName(taskId);
+
+    LoadMoveBackground(data->moveBackground);
 }
 
 static void DrawFollowerSprite(struct PokemonSpriteVisualizer *data)
@@ -1496,6 +1651,21 @@ static void UpdateShadowSizeValue(u8 taskId, bool8 increment)
     gSprites[data->frontShadowSpriteIdSecondary].oam.tileNum += (8 * update);
 }
 
+static void UpdateSubmenuFourOptionValue(u8 taskId, bool8 increment)
+{
+    struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
+    u8 option = data->submenuYpos[1];
+
+    switch (option)
+    {
+    case 0:
+        UpdateMoveBg(taskId, increment);
+        break;
+    default:
+        break;
+    }
+}
+
 #define READ_PTR_FROM_TASK(taskId, dataId)                      \
     (void *)(                                                   \
     ((u16)(gTasks[taskId].data[dataId]) |                       \
@@ -1750,7 +1920,13 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
     }
     else if (data->currentSubmenu == 3) // Submenu 3
     {
-        if (JOY_NEW(B_BUTTON))
+        if (JOY_NEW(A_BUTTON))
+        {
+            data->currentSubmenu = 4;
+            PrintInstructionsOnWindow(data);
+            SetArrowInvisibility(data);
+        }
+        else if (JOY_NEW(B_BUTTON))
         {
             data->currentSubmenu = 2;
             PrintInstructionsOnWindow(data);
@@ -1790,6 +1966,24 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
                 UpdateShadowSettingsValue(taskId, TRUE);
             else
                 UpdateShadowSizeValue(taskId, TRUE);
+        }
+    }
+    else if (data->currentSubmenu == 4) // Submenu 4
+    {
+        if (JOY_NEW(B_BUTTON))
+        {
+            data->currentSubmenu = 3;
+            PrintInstructionsOnWindow(data);
+            SetArrowInvisibility(data);
+            UpdateShadowSettingsText(data);
+        }
+        else if (JOY_NEW(DPAD_LEFT))
+        {
+            UpdateSubmenuFourOptionValue(taskId, FALSE);
+        }
+        else if (JOY_NEW(DPAD_RIGHT))
+        {
+            UpdateSubmenuFourOptionValue(taskId, TRUE);
         }
     }
 }
