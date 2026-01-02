@@ -72,10 +72,6 @@ enum MoveComparisonResult
 #define SET_SCORE(battler, movesetIndex, val) \
     do \
     { \
-        if (TESTING) \
-        { \
-            TestRunner_Battle_AISetScore(__FILE__, __LINE__, battler, movesetIndex, val); \
-        } \
         gAiThinkingStruct->score[movesetIndex] = val; \
     } while (0) \
 
@@ -84,7 +80,7 @@ enum MoveComparisonResult
     { \
         if (TESTING) \
         { \
-            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, gAiThinkingStruct->movesetIndex, val); \
+            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, val); \
         } \
         score += val; \
     } while (0) \
@@ -94,7 +90,7 @@ enum MoveComparisonResult
     { \
     if (TESTING) \
         { \
-            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, gAiThinkingStruct->movesetIndex, val); \
+            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, val); \
         } \
         score += val; \
         return score; \
@@ -105,7 +101,7 @@ enum MoveComparisonResult
     { \
         if (TESTING) \
         { \
-            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, gAiThinkingStruct->movesetIndex, val); \
+            TestRunner_Battle_AIAdjustScore(__FILE__, __LINE__, battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, val); \
         } \
         (*score) += val; \
     } while (0) \
