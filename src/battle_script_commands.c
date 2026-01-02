@@ -7556,16 +7556,9 @@ static void Cmd_setfieldweather(void)
         return;
     }
 
-    if (GetMoveEffect(gCurrentMove) == EFFECT_WEATHER_AND_SWITCH)
-    {
-        gBattlescriptCurrInstr = BattleScript_PlayAnimAndMoveSwitch;
-    }
-    else
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_FAILED;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
+    gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
+    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_FAILED;
+    gBattlescriptCurrInstr = cmd->nextInstr;
 
     if (gBattleWeather & B_WEATHER_PRIMAL_ANY)
         BattleScriptCall(BattleScript_FailOnPrimalWeather);

@@ -3522,16 +3522,15 @@ BattleScript_EffectWeather::
 BattleScript_EffectWeatherAndSwitch::
 	printstring STRINGID_PKMNTELLCHILLINGRECEPTIONJOKE
 	waitmessage B_WAIT_TIME_LONG
+	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_EffectWeather
+	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_EffectWeather
 	attackcanceler
 	setfieldweather
+	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	attackanimation
 	waitanimation
 	call BattleScript_MoveWeatherChangeRet
-	goto BattleScript_PlayAnimAndMoveSwitch
-
-BattleScript_PlayAnimAndMoveSwitch::
-	attackanimation
-	waitanimation
+	moveendall
 	goto BattleScript_MoveSwitch
 
 BattleScript_MoveWeatherChangeRet::
@@ -3539,7 +3538,7 @@ BattleScript_MoveWeatherChangeRet::
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_ActivateWeatherAbilities
 	return
-	
+
 BattleScript_FailOnPrimalWeather::
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_SUN_PRIMAL, BattleScript_ExtremelyHarshSunlightWasNotLessened
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_RAIN_PRIMAL, BattleScript_NoReliefFromHeavyRain
