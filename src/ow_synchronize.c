@@ -10,7 +10,8 @@ static UNUSED bool32 IsFalse(u32 species);
 static UNUSED bool32 IsTrue(u32 species);
 static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species);
 
-const static bool32 (*sSynchronizeModes[]) (u32) = {
+const static bool32 (*sSynchronizeModes[]) (u32) = 
+{
 #if OW_SYNCHRONIZE_NATURE == GEN_3
     [WILDMON_ORIGIN] = HasHalfChance,
     [STATIC_WILDMON_ORIGIN] = IsFalse,
@@ -39,7 +40,8 @@ const static bool32 (*sSynchronizeModes[]) (u32) = {
 #endif
 };
 
-const static bool32 (*sCuteCharmModes[]) (u32) = {
+const static bool32 (*sCuteCharmModes[]) (u32) = 
+{
     [WILDMON_ORIGIN] = HasTwoThirdsChance,
     [STATIC_WILDMON_ORIGIN] = HasTwoThirdsChance,
     [ROAMER_ORIGIN] = IsFalse,
@@ -73,18 +75,14 @@ static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species)
 
 static bool32 IsSynchronizeActive(void)
 {
-    if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_SYNCHRONIZE)
-        return TRUE;
-    return FALSE;
+    return ((!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
+        && GetMonAbility(&gPlayerParty[0]) == ABILITY_SYNCHRONIZE));
 }
 
 static bool32 IsCuteCharmActive(void)
 {
-     if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM)
-        return TRUE;
-    return FALSE;
+     return ((!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
+        && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM))
 }
 
 u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, u32 species)
