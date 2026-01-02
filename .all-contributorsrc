@@ -570,6 +570,15 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "Jaizu",
+      "name": "Jaizu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18596778?v=4",
+      "profile": "https://jaizu.moe",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
