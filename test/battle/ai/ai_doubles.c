@@ -138,7 +138,7 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI times Trick/Bestow around status-orb")
+AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow")
 {
     u16 move = MOVE_NONE, item = ITEM_NONE, status = STATUS1_NONE;
     enum Ability ability = ABILITY_NONE;
@@ -161,14 +161,18 @@ AI_DOUBLE_BATTLE_TEST("AI times Trick/Bestow around status-orb")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
     } WHEN {
         if (turnToTrick == 1)
+        {
             TURN { EXPECT_MOVE(opponentLeft, move, target: playerLeft); }
+        }
         else if (turnToTrick == 2)
         {
             TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
             TURN { EXPECT_MOVE(opponentLeft, move, target: playerLeft); }
         }
         else
+        {
             TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+        }
     }
 }
 

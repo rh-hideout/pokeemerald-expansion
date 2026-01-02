@@ -5146,12 +5146,16 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         case HOLD_EFFECT_TOXIC_ORB:
             if (!ShouldPoison(battlerAtk, battlerAtk)
              || (gBattleMons[battlerAtk].status1 & STATUS1_PSN_ANY))
+            {
                 ADJUST_SCORE(DECENT_EFFECT);
+            }
             break;
         case HOLD_EFFECT_FLAME_ORB:
             if (!ShouldBurn(battlerAtk, battlerAtk, aiData->abilities[battlerAtk])
              || (gBattleMons[battlerAtk].status1 & STATUS1_BURN))
+            {
                 ADJUST_SCORE(DECENT_EFFECT);
+            }
             break;
         case HOLD_EFFECT_BLACK_SLUDGE:
             if (!IS_BATTLER_OF_TYPE(battlerDef, TYPE_POISON) && aiData->abilities[battlerDef] != ABILITY_MAGIC_GUARD)
@@ -5168,20 +5172,25 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         case HOLD_EFFECT_UTILITY_UMBRELLA:
             if (!(AI_GetWeather() & B_WEATHER_SUN && aiData->abilities[battlerAtk] == ABILITY_DRY_SKIN)
              && DoesAbilityBenefitFromSunOrRain(aiData->abilities[battlerDef], AI_GetWeather()))
+            {
                 ADJUST_SCORE(DECENT_EFFECT); // Remove their weather benefit
+            }
             break;
         case HOLD_EFFECT_EJECT_BUTTON:
             //if (!IsRaidBattle() && GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX && gNewBS->dynamaxData.timer[battlerDef] > 1 &&
             if (HasDamagingMove(battlerAtk)
              || (hasPartner && HasDamagingMove(BATTLE_PARTNER(battlerAtk))))
+            {
                 ADJUST_SCORE(DECENT_EFFECT); // Force 'em out next turn
+            }
             break;
         default:
             if (GetMoveEffect(move) != EFFECT_BESTOW && aiData->items[battlerAtk] == ITEM_NONE && aiData->items[battlerDef] != ITEM_NONE)
             {
                 switch (aiData->holdEffects[battlerDef])
                 {
-                // Most of the time, players carry CHOICE items for offense, so taking them is considered good.
+                case HOLD_EFFECT_CHOICE_BAND:
+                    break;
                 case HOLD_EFFECT_TOXIC_ORB:
                     if (ShouldPoison(battlerAtk, battlerAtk))
                         ADJUST_SCORE(DECENT_EFFECT);
