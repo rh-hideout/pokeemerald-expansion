@@ -507,9 +507,7 @@ static bool32 ShouldChangeMovementForTrainerType(u32 trainerType)
 {
     if (trainerType == TRAINER_TYPE_NORMAL)
         return TRUE;
-    if (trainerType == TRAINER_TYPE_BURIED)
-        return TRUE;
-    return FALSE;
+    return (trainerType == TRAINER_TYPE_BURIED);
 }
 
 void ClearRematchMovementByTrainerId(void)
