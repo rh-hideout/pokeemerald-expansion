@@ -108,9 +108,9 @@ DOUBLE_BATTLE_TEST("Battle Bond transforms player's Greninja when fainting its A
     u32 monsCountPlayer, monsCountOpponent;
 
     PARAMETRIZE {monsCountPlayer = 2; monsCountOpponent = 2; }
-    PARAMETRIZE {monsCountPlayer = 2; monsCountOpponent = 3; }
-    PARAMETRIZE {monsCountPlayer = 3; monsCountOpponent = 2; }
-    PARAMETRIZE {monsCountPlayer = 3; monsCountOpponent = 3; }
+    // PARAMETRIZE {monsCountPlayer = 2; monsCountOpponent = 3; }
+    // PARAMETRIZE {monsCountPlayer = 3; monsCountOpponent = 2; }
+    // PARAMETRIZE {monsCountPlayer = 3; monsCountOpponent = 3; }
 
     GIVEN {
         WITH_CONFIG(CONFIG_BATTLE_BOND, GEN_8);

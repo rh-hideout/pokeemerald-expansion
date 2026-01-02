@@ -403,7 +403,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TWO_TURNS_ATTACK] =
     {
-        .battleScript = BattleScript_EffectTwoTurnsAttack,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
         .twoTurnEffect = TRUE,
     },
@@ -841,7 +841,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SOLAR_BEAM] =
     {
-        .battleScript = BattleScript_EffectTwoTurnsAttack,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
         .twoTurnEffect = TRUE,
     },
@@ -860,7 +860,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SEMI_INVULNERABLE] =
     {
-        .battleScript = BattleScript_EffectTwoTurnsAttack,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
         .twoTurnEffect = TRUE,
         .semiInvulnerableEffect = TRUE,

@@ -1,7 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 
-
 SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves")
 {
     GIVEN {

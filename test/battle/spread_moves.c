@@ -183,9 +183,9 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and 
         TURN { MOVE(playerLeft, MOVE_DISCHARGE); }
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_LIGHTNING_ROD);
+        ABILITY_POPUP(opponentRight, ABILITY_VOLT_ABSORB);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DISCHARGE, playerLeft);
         ABILITY_POPUP(playerRight, ABILITY_DISGUISE);
-        ABILITY_POPUP(opponentRight, ABILITY_VOLT_ABSORB);
     }
 }
 
@@ -202,8 +202,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and L
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DISCHARGE); }
     } SCENE {
-        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD);
         ABILITY_POPUP(opponentLeft, ABILITY_VOLT_ABSORB);
+        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DISCHARGE, playerLeft);
         ABILITY_POPUP(playerRight, ABILITY_DISGUISE);
     }
@@ -453,5 +453,41 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
         MESSAGE("The opposing Wobbuffet fainted!");
         MESSAGE("Wynaut hung on using its Focus Sash!");
         MESSAGE("The opposing Wynaut fainted!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("test x")
+{
+    GIVEN {
+        PLAYER(SPECIES_GARDEVOIR);
+        PLAYER(SPECIES_LANTURN) { HP(1); Ability(ABILITY_VOLT_ABSORB); }
+        OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
+        OPPONENT(SPECIES_VOLTORB) { Ability(ABILITY_SOUNDPROOF); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_ELECTRIFY, target: playerLeft);
+            MOVE(playerLeft, MOVE_PERISH_SONG);
+        }
+        TURN {}
+    } SCENE {
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: AOE ground type move vs Levitate and Air Balloon")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_AIR_BALLOON); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_LEVITATE);
+        MESSAGE("It doesn't affect the opposing Wynaut…");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        HP_BAR(playerRight);
     }
 }

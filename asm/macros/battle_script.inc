@@ -13,8 +13,9 @@
 	.byte 0x2
 	.endm
 
-	.macro unused_0x3
+	.macro getpossiblenexttarget jumpInstr:req
 	.byte 0x3
+	.4byte \jumpInstr
 	.endm
 
 	.macro critcalc
@@ -1065,19 +1066,8 @@
 	setsemiinvulnerablebit TRUE
 	.endm
 
-	.macro tryfiretwoturnmovenowbyeffect battler:req, checkChargeTurnEffects:req, jumpInstr:req
+	.macro unused_0xC6
 	.byte 0xc6
-	.byte \battler
-	.byte \checkChargeTurnEffects
-	.4byte \jumpInstr
-	.endm
-
-	.macro tryfiretwoturnmovewithoutcharging battler:req, jumpInstr:req
-	tryfiretwoturnmovenowbyeffect \battler, TRUE, \jumpInstr
-	.endm
-
-	.macro tryfiretwoturnmoveaftercharging battler:req, jumpInstr:req
-	tryfiretwoturnmovenowbyeffect \battler, FALSE, \jumpInstr
 	.endm
 
 	.macro unused_0xC7
@@ -1481,13 +1471,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifelectricabilityaffected battler:req, ability:req, jumpInstr:req
-	callnative BS_JumpIfElectricAbilityAffected
-	.byte \battler
-	.2byte \ability
-	.4byte \jumpInstr
-	.endm
-
 	.macro setterrain failInstr:req
 	callnative BS_SetTerrain
 	.4byte \failInstr
@@ -1658,14 +1641,14 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifteainvulnerable battler:req, jumpInstr:req
-	callnative BS_TeatimeInvul
+	.macro jumpifnoberry battler:req, jumpInstr:req
+	callnative BS_JumpIfNoBerry
 	.byte \battler
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifteanoberry failInstr:req
-	callnative BS_TeatimeTargets
+	.macro checkteatimetargets failInstr:req
+	callnative BS_CheckTeaTimeTargets
 	.4byte \failInstr
 	.endm
 
@@ -2110,8 +2093,9 @@
 	.byte \battler
 	.endm
 
-	.macro restoremovepp
+	.macro restoremovepp battler:req
 	callnative BS_RestoreMovePp
+	.byte \battler
 	.endm
 
 	.macro tryactivatereceiver battler:req
@@ -2310,11 +2294,6 @@
 	.macro getrototillertargets failInstr:req
 	callnative BS_GetRototillerTargets
 	.4byte \failInstr
-	.endm
-
-	.macro jumpifnotrototilleraffected jumpInstr:req
-	callnative BS_JumpIfNotRototillerAffected
-	.4byte \jumpInstr
 	.endm
 
 	.macro consumeberry battler:req, fromBattler:req

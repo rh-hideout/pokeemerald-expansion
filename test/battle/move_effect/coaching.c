@@ -74,7 +74,7 @@ DOUBLE_BATTLE_TEST("Coaching fails if all allies are is semi-invulnerable")
             MESSAGE("Hawlucha's Attack rose!");
             MESSAGE("Hawlucha's Defense rose!");
         }
-        MESSAGE("But it failed!");
+        MESSAGE("Hawlucha avoided the attack!");
     }
 }
 
