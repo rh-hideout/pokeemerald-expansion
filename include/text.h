@@ -188,7 +188,7 @@ void GenerateFontHalfRowLookupTable(union TextColor color);
 union TextColor SaveTextColors(void);
 void RestoreTextColors(union TextColor color);
 void DecompressGlyphTile(const void *src_, void *dest_);
-u32 CopyGlyphToWindow(struct TextPrinter *textPrinter);
+u32 CopyGlyphToVRAM(struct TextPrinter *textPrinter);
 void ClearTextSpan(struct TextPrinter *textPrinter, u32 width);
 
 void TextPrinterInitDownArrowCounters(struct TextPrinter *textPrinter);

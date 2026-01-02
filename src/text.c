@@ -806,7 +806,7 @@ inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, 
     }
 }
 
-u32 CopyGlyphToWindow(struct TextPrinter *textPrinter)
+u32 CopyGlyphToVRAM(struct TextPrinter *textPrinter)
 {
     u32 *glyphPixels;
     u32 currX, currY, widthOffset;
@@ -967,7 +967,7 @@ u32 CopyGlyphToWindow(struct TextPrinter *textPrinter)
 
 static void PrintGlyph(struct TextPrinter *textPrinter)
 {
-    u32 cutOffAmount = CopyGlyphToWindow(textPrinter);
+    u32 cutOffAmount = CopyGlyphToVRAM(textPrinter);
 
     //  Handle switching to next sprite here
     if (textPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER
@@ -981,7 +981,7 @@ static void PrintGlyph(struct TextPrinter *textPrinter)
         //  Copy the remaining part of the glyph to the sprite
         //  Offset the current glyph
         u32 newWidth = OffsetCurrGlyph(cutOffAmount);
-        CopyGlyphToWindow(textPrinter);
+        CopyGlyphToVRAM(textPrinter);
 
         //  Set the print offset for the next glyph
         textPrinter->printerTemplate.currentX = newWidth;
