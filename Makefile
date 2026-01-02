@@ -365,14 +365,14 @@ $(TESTELF): $(OBJ_DIR)/ld_script_test.ld $(OBJS) $(TEST_OBJS) libagbsyscall tool
 	$(PATCHELF) $(TESTELF) gTestRunnerArgv "$(TESTS:%*=%)\0"
 
 ifeq ($(GITHUB_REPOSITORY_OWNER),rh-hideout)
-TEST_SKIP_IS_FAIL := \x01
+TEST_IS_RHH := \x01
 else
-TEST_SKIP_IS_FAIL := \x00
+TEST_IS_RHH := \x00
 endif
 
 check: $(TESTELF)
 	@cp $< $(HEADLESSELF)
-	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
+	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerIsRHH "$(TEST_IS_RHH)"
 	$(ROMTESTHYDRA) $(ROMTEST) $(OBJCOPY) $(HEADLESSELF)
 
 # Other rules
