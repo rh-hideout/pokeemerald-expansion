@@ -593,27 +593,33 @@ void RunTextPrinters(void)
     FreeFinishedTextPrinters();
 }
 
-bool32 IsTextPrinterActive(u32 id, bool32 isSprite)
+bool32 IsTextPrinterActiveOnWindow(u32 windowId)
 {
     struct TextPrinter *currentPrinter = sFirstTextPrinter;
 
     while (currentPrinter != NULL)
     {
-        if (isSprite)
+        if (currentPrinter->printerTemplate.type == WINDOW_TEXT_PRINTER
+         && currentPrinter->printerTemplate.windowId == windowId)
         {
-            if (currentPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER
-             && currentPrinter->printerTemplate.spriteId == id)
-            {
-                return currentPrinter->active;
-            }
+            return currentPrinter->active;
         }
-        else
+        currentPrinter = currentPrinter->nextPrinter;
+    }
+
+    return FALSE;
+}
+
+bool32 IsTextPrinterActiveOnSprite(u32 spriteId)
+{
+    struct TextPrinter *currentPrinter = sFirstTextPrinter;
+
+    while (currentPrinter != NULL)
+    {
+        if (currentPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER
+         && currentPrinter->printerTemplate.spriteId == spriteId)
         {
-            if (currentPrinter->printerTemplate.type == WINDOW_TEXT_PRINTER
-             && currentPrinter->printerTemplate.windowId == id)
-            {
-                return currentPrinter->active;
-            }
+            return currentPrinter->active;
         }
         currentPrinter = currentPrinter->nextPrinter;
     }
