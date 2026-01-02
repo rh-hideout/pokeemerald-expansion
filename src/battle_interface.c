@@ -918,7 +918,13 @@ static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor,
     u32 width;
     u8 text[2 * HP_MAX_DIGITS + 2], *txtPtr;
 
-    const union TextColor color = {.asArray = {0, 1, 3, 0}};
+    const union TextColor color =
+    {
+        .background = 0,
+        .foreground = 1,
+        .shadow = 3,
+        .accent = 0
+    };
 
     // To fit 4 digit HP values we need to modify a bit the way hp is printed on Healthbox.
     // HP_RIGHT_SPRITE_CHARS chars can fit on the right healthbox, the rest goes to the left one

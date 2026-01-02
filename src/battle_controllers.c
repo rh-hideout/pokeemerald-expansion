@@ -2199,7 +2199,7 @@ static void Controller_WaitForTrainerPic(u32 battler)
 
 void Controller_WaitForString(u32 battler)
 {
-    if (!IsTextPrinterActive(B_WIN_MSG, FALSE))
+    if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         BtlController_Complete(battler);
 }
 

@@ -3872,7 +3872,7 @@ static bool32 PrintMessage(s16 *textState, const u8 *string, s32 textSpeed)
         (*textState)++;
         break;
     case 1:
-        if (!IsTextPrinterActive(WIN_MSG, FALSE))
+        if (!IsTextPrinterActiveOnWindow(WIN_MSG))
         {
             *textState = 0;
             return TRUE;

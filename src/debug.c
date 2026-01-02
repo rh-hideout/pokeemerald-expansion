@@ -4906,7 +4906,13 @@ void TestThing(void)
     //FillSpriteRectSprite(spriteIds[0], 3, 3, 88, 88);
 
     //const u8 color[4] = {0, 3, 8, 0};
-    const union TextColor color = {.asArray = {0, 3, 8, 0}};
+    const union TextColor color =
+    {
+        .background = 0,
+        .foreground = 3,
+        .shadow = 8,
+        .accent = 0
+    };
 
     AddSpriteTextPrinterParameterized6(spriteIds[0], FONT_SHORT, 0,  0, 0, 0, color, 1, sNewString);
     AddSpriteTextPrinterParameterized6(spriteIds[0], FONT_SHORT, 0, 16, 0, 0, color, 1, sNewString2);
