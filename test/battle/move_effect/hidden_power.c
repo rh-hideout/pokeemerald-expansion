@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
 
 TO_DO_BATTLE_TEST("Hidden Power's power is determined by IVs before Gen6");
 
-SINGLE_BATTLE_TEST("Hidden Power always triggers Counter instead of Mirror Coat before Gen 4 ")
+SINGLE_BATTLE_TEST("Hidden Power always triggers Counter instead of Mirror Coat (Gen 1-3)")
 {
     u8 hp, atk, def, spa, spd, spe;
 
