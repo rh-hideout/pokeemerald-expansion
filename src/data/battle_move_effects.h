@@ -415,12 +415,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
-    [EFFECT_RAGE] =
-    {
-        .battleScript = BattleScript_EffectRage,
-        .battleTvScore = 2,
-    },
-
     [EFFECT_MIMIC] =
     {
         .battleScript = BattleScript_EffectMimic,

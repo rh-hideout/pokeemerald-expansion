@@ -6612,7 +6612,6 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_LIGHT_SCREEN:
             case EFFECT_MIST:
             case EFFECT_FOCUS_ENERGY:
-            case EFFECT_RAGE:
             case EFFECT_CONVERSION_2:
             case EFFECT_LOCK_ON:
             case EFFECT_SAFEGUARD:

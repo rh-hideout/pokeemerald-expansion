@@ -1391,12 +1391,21 @@ static void Cmd_setchargingturn(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+static void SetOrClearRageVolatile(void)
+{
+    if (GetConfig(CONFIG_RAGE_BUILDS) <= GEN_3 && MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_RAGE))
+        gBattleMons[gBattlerAttacker].volatiles.rage = TRUE;
+    else
+        gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
+}
+
 static bool32 JumpIfMoveAffectedByProtect(u32 move, u32 battler, u32 shouldJump, const u8 *failInstr)
 {
     bool32 affected = IsBattlerProtected(gBattlerAttacker, battler, move);
     if (affected)
     {
         gBattleStruct->moveResultFlags[battler] |= MOVE_RESULT_MISSED;
+        SetOrClearRageVolatile();
         if (shouldJump)
             JumpIfMoveFailed(7, move, GetBattleMoveType(move), failInstr);
     }
@@ -1539,7 +1548,10 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
         }
 
         if (numTargets == numMisses)
+        {
+            SetOrClearRageVolatile();
             gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+        }
 
         if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED)
             gBattleStruct->moveResultFlags[gBattlerTarget] = MOVE_RESULT_MISSED;

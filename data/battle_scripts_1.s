@@ -3108,21 +3108,6 @@ BattleScript_MoveUsedMustRecharge::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectRage::
-	jumpifgenconfiglowerthan CONFIG_RAGE_BUILDS, GEN_4, BattleScript_EffectRageGen3
-	attackcanceler
-	accuracycheck BattleScript_RageMissGen4, ACC_CURR_MOVE
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_RAGE
-	goto BattleScript_HitFromDamageCalc
-BattleScript_RageMissGen4::
-	clearvolatile BS_ATTACKER, VOLATILE_RAGE
-	goto BattleScript_MoveMissedPause
-BattleScript_EffectRageGen3::
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_RAGE
-	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	goto BattleScript_HitFromDamageCalc
-
 BattleScript_EffectMimic::
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed

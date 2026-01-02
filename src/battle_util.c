@@ -1995,8 +1995,7 @@ void TryClearRageAndFuryCutter(void)
     s32 i;
     for (i = 0; i < gBattlersCount; i++)
     {
-        u32 effect = GetMoveEffect(gChosenMoveByBattler[i]);
-        if (gBattleMons[i].volatiles.rage && effect != EFFECT_RAGE)
+        if (!MoveHasAdditionalEffect(gChosenMoveByBattler[i], MOVE_EFFECT_RAGE))
             gBattleMons[i].volatiles.rage = FALSE;
     }
 }
@@ -6767,7 +6766,7 @@ u8 GetAttackerObedienceForAction()
 
     // is not obedient
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
-    if (moveEffect == EFFECT_RAGE)
+    if (MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_RAGE))
         gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
     if (gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP && IsUsableWhileAsleepEffect(moveEffect))
         return DISOBEYS_WHILE_ASLEEP;
