@@ -345,7 +345,7 @@ const u16 gItemIconPalette_PearlString[] = INCBIN_U16("graphics/items/icon_palet
 const u32 gItemIcon_Stardust[] = INCBIN_U32("graphics/items/icons/stardust.4bpp.smol");
 const u16 gItemIconPalette_Star[] = INCBIN_U16("graphics/items/icon_palettes/star.gbapal");
 
-const u32 gItemIcon_StarPiece[] = INCBIN_U32("graphics/items/icons/star_piece.4bpp.smol");
+const u32 gItemIcon_StarTreasure[] = INCBIN_U32("graphics/items/icons/star_piece.4bpp.smol");
 
 const u16 gItemIconPalette_CometShard[] = INCBIN_U16("graphics/items/icon_palettes/comet_shard.gbapal");
 
@@ -1022,9 +1022,8 @@ const u16 gItemIconPalette_ThickClub[] = INCBIN_U16("graphics/items/icon_palette
 const u32 gItemIcon_LuckyPunch[] = INCBIN_U32("graphics/items/icons/lucky_punch.4bpp.smol");
 const u16 gItemIconPalette_LuckyPunch[] = INCBIN_U16("graphics/items/icon_palettes/lucky_punch.gbapal");
 
-const u32 gItemIcon_MetalPowder[] = INCBIN_U32("graphics/items/icons/metal_powder.4bpp.smol");
+const u32 gItemIcon_DittoPowder[] = INCBIN_U32("graphics/items/icons/metal_powder.4bpp.smol");
 const u16 gItemIconPalette_MetalPowder[] = INCBIN_U16("graphics/items/icon_palettes/metal_powder.gbapal");
-
 const u16 gItemIconPalette_QuickPowder[] = INCBIN_U16("graphics/items/icon_palettes/quick_powder.gbapal");
 
 const u32 gItemIcon_DeepSeaScale[] = INCBIN_U32("graphics/items/icons/deep_sea_scale.4bpp.smol");

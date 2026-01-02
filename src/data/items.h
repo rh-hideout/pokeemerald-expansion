@@ -2825,7 +2825,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
-        .iconPic = gItemIcon_StarPiece,
+        .iconPic = gItemIcon_StarTreasure,
         .iconPalette = gItemIconPalette_Star,
     },
 
@@ -2842,7 +2842,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
-        .iconPic = gItemIcon_StarPiece,
+        .iconPic = gItemIcon_StarTreasure,
         .iconPalette = gItemIconPalette_CometShard,
     },
 
@@ -7900,7 +7900,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
-        .iconPic = gItemIcon_MetalPowder,
+        .iconPic = gItemIcon_DittoPowder,
         .iconPalette = gItemIconPalette_MetalPowder,
     },
 
@@ -7919,7 +7919,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
-        .iconPic = gItemIcon_MetalPowder,
+        .iconPic = gItemIcon_DittoPowder,
         .iconPalette = gItemIconPalette_QuickPowder,
     },
 
