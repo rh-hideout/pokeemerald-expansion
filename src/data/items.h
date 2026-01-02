@@ -252,8 +252,8 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_PREMIER,
-        .iconPic = gItemIcon_PremierBall,
-        .iconPalette = gItemIconPalette_LuxuryBall,
+        .iconPic = gItemIcon_PokeBall,
+        .iconPalette = gItemIconPalette_PremierBall,
     },
 
     [ITEM_HEAL_BALL] =
@@ -1159,7 +1159,7 @@ const struct Item gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_SacredAsh,
         .effect = gItemEffect_SacredAsh,
         .flingPower = 30,
-        .iconPic = gItemIcon_SacredAsh,
+        .iconPic = gItemIcon_DittoPowder,
         .iconPalette = gItemIconPalette_SacredAsh,
     },
 
@@ -2808,7 +2808,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
-        .iconPic = gItemIcon_Stardust,
+        .iconPic = gItemIcon_Sand,
         .iconPalette = gItemIconPalette_Star,
     },
 
@@ -2825,7 +2825,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
-        .iconPic = gItemIcon_StarTreasure,
+        .iconPic = gItemIcon_StarPiece,
         .iconPalette = gItemIconPalette_Star,
     },
 
@@ -2842,7 +2842,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
-        .iconPic = gItemIcon_StarTreasure,
+        .iconPic = gItemIcon_StarPiece,
         .iconPalette = gItemIconPalette_CometShard,
     },
 
@@ -2985,8 +2985,8 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
-        .iconPic = gItemIcon_ThickClub,
-        .iconPalette = gItemIconPalette_ThickClub,
+        .iconPic = gItemIcon_Bone,
+        .iconPalette = gItemIconPalette_Bone,
     },
 
     [ITEM_ODD_KEYSTONE] =
@@ -7862,8 +7862,8 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 90,
-        .iconPic = gItemIcon_ThickClub,
-        .iconPalette = gItemIconPalette_ThickClub,
+        .iconPic = gItemIcon_Bone,
+        .iconPalette = gItemIconPalette_Bone,
     },
 
     [ITEM_LUCKY_PUNCH] =
@@ -8608,7 +8608,7 @@ const struct Item gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GROUND,
         .flingPower = 10,
-        .iconPic = gItemIcon_SoftSand,
+        .iconPic = gItemIcon_Sand,
         .iconPalette = gItemIconPalette_SoftSand,
     },
 
