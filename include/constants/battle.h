@@ -2,6 +2,8 @@
 #define GUARD_CONSTANTS_BATTLE_H
 
 #include "constants/moves.h"
+#include "constants/global.h"
+#include "pokemon.h"
 
 /*
  * A battler may be in one of four positions on the field. The first bit determines
@@ -158,6 +160,44 @@ enum VolatileFlags
     V_BATON_PASSABLE = (1 << 0),
 };
 
+
+/*
+ the formula for volatile max value to bit field translation is log2
+
+ If there's n values (e.g. 0 to 2 inclusive is n=3) then you need ceiling(log2(n)) bits. 
+ If your calculator doesn't have log2 you can do log(n) / log(2).
+
+e.g. in Python:
+>>> import math
+>>> {x: math.ceil(math.log(x) / math.log(2)) for x in range(1, 6)}
+{1: 0, 2: 1, 3: 2, 4: 2, 5: 3}
+
+1 value requires 0 bits, 2 values requires 1 bit, 3/4 values requires 2 bits, 5 requires 3 bits, etc.
+You can equivalently think of this via powers of 2 (log2(2^x) == x).
+2^0 = 1, 2^1 = 2, 2^2 = 4, etc. 
+So with 0 bits you can hold 1 value, 
+with 1 bit you can hold up to 2 values, 
+with 2 bits you can hold up to 4 values, etc. 
+
+
+running log2 on maxvalue of 3 gives
+1.5849625007211561814537389439478
+which tells me it can't be stored in 1 bit
+ceiling then accounts for it scaling up to use 2 bits
+
+as 2^2 can hold 4 values and store max value of 3
+max value of bit is 2^n -1
+
+*/
+
+/*
+    +1 added to volatile timers and some values seen here as extra precaution 
+    to help ensure large enough bit field is allocated for said value
+    as log2 may mistakenly allocated lower than we need
+    ex timer of max value 2 would need bit 2
+    but log2(2) would instead allocate 1 bit
+*/
+
 /* Volatile status ailments
  * These are removed after exiting the battle or switching
  *  Enum,                                   Type                           Type, max value, flags */
@@ -179,7 +219,7 @@ enum VolatileFlags
     F(VOLATILE_TRANSFORMED,                 transformed,                   (u32, 1)) \
     F(VOLATILE_RAGE,                        rage,                          (u32, 1)) \
     F(VOLATILE_SUBSTITUTE,                  substitute,                    (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, 3)) \
+    F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, B_DESTINY_BOND + 1)) \
     F(VOLATILE_ESCAPE_PREVENTION,           escapePrevention,              (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_NIGHTMARE,                   nightmare,                     (u32, 1)) \
     F(VOLATILE_CURSED,                      cursed,                        (u32, 1), V_BATON_PASSABLE) \

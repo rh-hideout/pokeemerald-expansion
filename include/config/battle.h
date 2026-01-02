@@ -195,6 +195,8 @@
 #define B_SYRUP_BOMB_TIMER   3
 #define B_TORMENT_TIMER      3
 
+#define B_DESTINY_BOND       2  //Don't Change -value of 2 needed for gen 7 config to block successive use of Destiny Bond
+
 // Item settings
 #define B_CONFUSE_BERRIES_HEAL      GEN_LATEST // Before Gen7, Figy and similar berries restore 1/8th of HP and trigger at half HP. In Gen7 they restore half HP, triggering at 25% HP. In Gen8 they heal 1/3rd of HP.
 #define B_X_ITEMS_BUFF              GEN_LATEST // In Gen7+, the X Items raise a stat by 2 stages instead of 1.
