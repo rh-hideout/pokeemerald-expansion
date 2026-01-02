@@ -806,8 +806,6 @@ inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, 
     }
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 u32 CopyGlyphToWindow(struct TextPrinter *textPrinter)
 {
     u32 *glyphPixels;
@@ -854,6 +852,9 @@ u32 CopyGlyphToWindow(struct TextPrinter *textPrinter)
 
         widthOffset = gOamDimensions[sprite->oam.shape][sprite->oam.size].width * 4;
         break;
+    default:
+        errorf("Illegal printer type");
+        return 0;
     }
 
     if (glyphWidth < 9)
@@ -960,7 +961,6 @@ u32 CopyGlyphToWindow(struct TextPrinter *textPrinter)
 
     return 0;
 }
-#pragma GCC diagnostic pop
 
 #define nextX data[1]
 #define nextY data[2]
