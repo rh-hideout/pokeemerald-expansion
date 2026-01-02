@@ -2120,7 +2120,7 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
                     effect = MOVE_STEP_FAILURE;
                     gBattlescriptCurrInstr = BattleScript_MoveUsedIsAsleep;
                 }
-                else 
+                else
                 {
                     effect = MOVE_STEP_BREAK;
                 }
@@ -3065,6 +3065,7 @@ static bool32 NoTargetPresent(u32 battler, u32 move, u32 moveTarget)
             return TRUE;
         break;
     case TARGET_BOTH:
+    case TARGET_SMART:
         if (!IsBattlerAlive(gBattlerTarget) && !IsBattlerAlive(BATTLE_PARTNER(gBattlerTarget)))
             return TRUE;
         break;
@@ -3275,8 +3276,6 @@ static enum MoveCanceler CancelerTargetFailures(struct BattleContext *ctx)
         }
         else if (IsBattlerProtected(ctx))
         {
-            if (!CanBattlerAvoidContactEffects(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, ctx->holdEffectAtk, gCurrentMove))
-                gProtectStructs[ctx->battlerAtk].touchedProtectLike = TRUE;
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED;
             gLastLandedMoves[ctx->battlerDef] = 0;
@@ -3363,7 +3362,9 @@ static void SetPossibleNewSmartTarget(u32 move)
      || gBattlerAttacker == partner
      || !IsBattlerAlive(partner)
      || IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), move)
-     || GetMoveEffect(move) != EFFECT_DRAGON_DARTS)
+     // || GetMoveEffect(move) != EFFECT_DRAGON_DARTS
+
+     )
         return;
 
     if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT
@@ -7207,6 +7208,7 @@ u32 GetBattleMoveTarget(u32 move, enum MoveTarget moveTarget)
     switch (moveTarget)
     {
     case TARGET_SELECTED:
+    case TARGET_SMART:
     case TARGET_OPPONENT:
         side = BATTLE_OPPOSITE(GetBattlerSide(gBattlerAttacker));
         if (IsAffectedByFollowMe(gBattlerAttacker, side, move))
@@ -11650,8 +11652,8 @@ void UpdateStallMons(void)
         return;
 
     enum MoveTarget target = GetBattlerMoveTargetType(ctx.battlerAtk, ctx.move);
-    if (!IsDoubleBattle() 
-     || target == TARGET_SELECTED 
+    if (!IsDoubleBattle()
+     || target == TARGET_SELECTED
      || target == TARGET_SMART)
     {
         if (CanMoveBeBlockedByTarget(&ctx, GetChosenMovePriority(ctx.battlerAtk, ctx.abilityAtk)))
@@ -12435,6 +12437,20 @@ bool32 IsAnyTargetAffected(void)
     return FALSE;
 }
 
+bool32 IsDoubleSpreadMove(void)
+{
+    return gBattleStruct->numSpreadTargets > 1
+        && !gBattleStruct->unableToUseMove
+        && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
+}
+
+bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef)
+{
+    return battlerDef == battlerAtk
+        || !IsBattlerAlive(battlerDef)
+        || gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT;
+}
+
 bool32 IsAllowedToUseBag(void)
 {
     switch(VarGet(B_VAR_NO_BAG_USE))
@@ -12546,7 +12562,7 @@ void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 usedMov
 
     if (IsOnPlayerSide(gBattlerAttacker)
      && ((TESTING && IsDoubleBattle()) // To be removed when Wild Double Battles are added to tests
-     || !(gBattleTypeFlags & (BATTLE_TYPE_LINK    
+     || !(gBattleTypeFlags & (BATTLE_TYPE_LINK
                              | BATTLE_TYPE_EREADER_TRAINER
                              | BATTLE_TYPE_RECORDED_LINK
                              | BATTLE_TYPE_TRAINER_HILL

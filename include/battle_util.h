@@ -468,6 +468,8 @@ bool32 IsAllowedToUseBag(void);
 bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsAnyTargetAffected(void);
 bool32 IsMimikyuDisguised(u32 battler);
+bool32 IsDoubleSpreadMove(void);
+bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef);
 void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
 bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
