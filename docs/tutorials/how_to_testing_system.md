@@ -497,10 +497,10 @@ Causes the test to fail if the `SCENE` command succeeds before the following com
 ```
 Causes the test to fail unless one of the `SCENE` commands succeeds.
 ```
-     ONE_OF {
-         MESSAGE("Wobbuffet used Celebrate!");
-         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
-     }
+    ONE_OF {
+        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+    }
 ```
 
 ### `NONE_OF`
@@ -511,12 +511,12 @@ Causes the test to fail unless one of the `SCENE` commands succeeds.
 ```
 Causes the test to fail if one of the `SCENE` commands succeeds before the command after the `NONE_OF` succeeds.
 ```
-     // Our Wobbuffet does not move before the foe's.
-     NONE_OF {
-         MESSAGE("Wobbuffet used Celebrate!");
-         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
-     }
-     MESSAGE("The opposing Wobbuffet used Celebrate!");
+    // Our Wobbuffet does not move before the foe's.
+    NONE_OF {
+        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+    }
+    MESSAGE("The opposing Wobbuffet used Celebrate!");
 ```
 
 ### `PLAYER_PARTY`

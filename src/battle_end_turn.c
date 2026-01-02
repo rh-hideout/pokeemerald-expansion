@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_hold_effects.h"
+#include "battle_setup.h"
 #include "battle_util.h"
 #include "battle_controllers.h"
 #include "battle_ai_util.h"
@@ -1355,6 +1356,63 @@ static bool32 HandleEndTurnDynamax(u32 battler)
     return effect;
 }
 
+static bool32 TryEndTurnTrainerSlide(u32 battler)
+{
+    return ((ShouldDoTrainerSlide(battler, TRAINER_SLIDE_LAST_LOW_HP) != TRAINER_SLIDE_TARGET_NONE)
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_LAST_HALF_HP) != TRAINER_SLIDE_TARGET_NONE)
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT) != TRAINER_SLIDE_TARGET_NONE)
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT) != TRAINER_SLIDE_TARGET_NONE)
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT) != TRAINER_SLIDE_TARGET_NONE)
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE) != TRAINER_SLIDE_TARGET_NONE)
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ENEMY_MON_UNAFFECTED) != TRAINER_SLIDE_TARGET_NONE));
+}
+
+static bool32 HandleEndTurnTrainerASlides(u32 battler)
+{
+    gBattleStruct->eventState.endTurnBattler++;
+    bool32 slide = TryEndTurnTrainerSlide(B_BATTLER_1);
+    if (slide == TRUE)
+        BattleScriptExecute(BattleScript_TrainerASlideMsgEnd2);
+    return slide;
+}
+
+static bool32 HandleEndTurnTrainerBSlides(u32 battler)
+{
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (!IsDoubleBattle())
+        return FALSE;
+
+    bool32 slide = TryEndTurnTrainerSlide(B_BATTLER_3);
+
+    if (slide == TRUE)
+    {
+        if ((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA) 
+        || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
+        || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF))
+            BattleScriptExecute(BattleScript_TrainerASlideMsgEnd2);
+        else
+            BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd2);
+    }
+
+    return slide;
+}
+
+static bool32 HandleEndTurnTrainerPartnerSlides(u32 battler)
+{
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (!IsDoubleBattle())
+        return FALSE;
+
+    bool32 slide = TryEndTurnTrainerSlide(B_BATTLER_2);
+
+    if (slide == TRUE)
+        BattleScriptExecute(BattleScript_TrainerPartnerSlideMsgEnd2);
+
+    return slide;
+}
+
 /*
  * Various end turn effects that happen after all battlers moved.
  * Each Case will apply the effects for each battler. Moving to the next case when all battlers are done.
@@ -1417,6 +1475,9 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_FORM_CHANGE_ABILITIES] = HandleEndTurnFormChangeAbilities,
     [ENDTURN_EJECT_PACK] = HandleEndTurnEjectPack,
     [ENDTURN_DYNAMAX] = HandleEndTurnDynamax,
+    [ENDTURN_TRAINER_A_SLIDES] = HandleEndTurnTrainerASlides,
+    [ENDTURN_TRAINER_B_SLIDES] = HandleEndTurnTrainerBSlides,
+    [ENDTURN_TRAINER_PARTNER_SLIDES] = HandleEndTurnTrainerPartnerSlides,
 };
 
 u32 DoEndTurnEffects(void)
