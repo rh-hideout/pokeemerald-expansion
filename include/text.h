@@ -89,6 +89,7 @@ struct TextPrinterTemplate
     u8 letterSpacing;
     u8 lineSpacing;
     u8 firstSpriteInRow;
+    u8 firstSprite;
     union {
         struct {
             DEPRECATED("Use color.background instead") u8 bgColor;

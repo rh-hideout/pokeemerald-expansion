@@ -453,7 +453,7 @@ void AddSpriteTextPrinterParameterized6(u8 spriteId, u8 fontId, u8 left, u8 top,
 
     printer.currentChar = str;
     printer.type = SPRITE_TEXT_PRINTER;
-    printer.windowId = spriteId;
+    printer.spriteId = spriteId;
     printer.fontId = fontId;
     printer.x = left;
     printer.y = top;
@@ -479,10 +479,9 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
     sTempTextPrinter.callback = callback;
     sTempTextPrinter.textSpeed = speed;
 
-    sTempTextPrinter.delayCounter = 0;
-    sTempTextPrinter.scrollDistance = 0;
-    sTempTextPrinter.minLetterSpacing = 0;
-    sTempTextPrinter.japanese = 0;
+    if (printerTemplate->type == SPRITE_TEXT_PRINTER)
+        printerTemplate->firstSprite = printerTemplate->spriteId;
+
 
     GenerateFontHalfRowLookupTable(printerTemplate->color);
     if (speed != TEXT_SKIP_DRAW && speed != 0)
@@ -617,7 +616,7 @@ bool32 IsTextPrinterActiveOnSprite(u32 spriteId)
     while (currentPrinter != NULL)
     {
         if (currentPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER
-         && currentPrinter->printerTemplate.spriteId == spriteId)
+         && currentPrinter->printerTemplate.firstSprite == spriteId)
         {
             return currentPrinter->active;
         }
