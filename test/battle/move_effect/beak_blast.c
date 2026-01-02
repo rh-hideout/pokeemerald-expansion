@@ -141,6 +141,71 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn after being used")
     }
 }
 
+DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
+    PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }
+    PARAMETRIZE { move = MOVE_BURNING_BULWARK; }
+    PARAMETRIZE { move = MOVE_SILK_TRAP; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(move) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) > GetMovePriority(MOVE_TRICK_ROOM));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_WYNAUT) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, move); }
+        TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft, WITH_RNG(RNG_PROTECT_FAIL, 0));
+               MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
+               MOVE(playerRight, MOVE_TRICK_ROOM);
+               MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
+        if (move == MOVE_SPIKY_SHIELD) {
+            HP_BAR(playerLeft);
+        } else if (move == MOVE_BANEFUL_BUNKER) {
+            STATUS_ICON(playerLeft, STATUS1_POISON);
+        } else if (move == MOVE_BURNING_BULWARK) {
+            STATUS_ICON(playerLeft, STATUS1_BURN);
+        } else if (move == MOVE_SILK_TRAP) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        }
+        NOT STATUS_ICON(playerLeft, STATUS1_BURN);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Quick Guard")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_QUICK_GUARD) == EFFECT_PROTECT);
+        ASSUME(GetMoveProtectMethod(MOVE_QUICK_GUARD) == PROTECT_QUICK_GUARD);
+        ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) > 0);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_WYNAUT) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
+               MOVE(opponentRight, MOVE_QUICK_GUARD);
+               MOVE(playerLeft, MOVE_QUICK_ATTACK, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_GUARD, opponentRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, playerLeft);
+            STATUS_ICON(playerLeft, STATUS1_BURN);
+        }
+    }
+}
+
 TO_DO_BATTLE_TEST("Beak Blast's charging message is shown regardless if it would've missed");
 TO_DO_BATTLE_TEST("Beak Blast fails if it's forced by Encore after choosing a different move");
 TO_DO_BATTLE_TEST("Bulletproof is immune to Beak Blast but not to the burn it causes");

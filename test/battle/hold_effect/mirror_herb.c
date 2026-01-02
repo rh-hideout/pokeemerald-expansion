@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Mirror Herb copies the boost gained by an ability")
         PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);

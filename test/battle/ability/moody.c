@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Moody randomly raises the user's Attack, Defense, Sp. Atk, S
         PLAYER(SPECIES_OCTILLERY) { Ability(ABILITY_MOODY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_MOODY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Moody randomly lowers the user's Attack, Defense, Sp. Atk, S
         PLAYER(SPECIES_OCTILLERY) { Ability(ABILITY_MOODY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_MOODY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Moody randomly raises the holder's Attack, Defense, Sp. Atk,
         PLAYER(SPECIES_OCTILLERY) { Ability(ABILITY_MOODY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_MOODY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);

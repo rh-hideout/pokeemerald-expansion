@@ -166,9 +166,9 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making co
 {
     u16 usedMove = MOVE_NONE;
 
-    PARAMETRIZE {usedMove = MOVE_SCRATCH; }
-    PARAMETRIZE {usedMove = MOVE_LEER; }
-    PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
+    PARAMETRIZE { usedMove = MOVE_SCRATCH; }
+    PARAMETRIZE { usedMove = MOVE_LEER; }
+    PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -218,9 +218,9 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making con
 {
     u16 usedMove = MOVE_NONE;
 
-    PARAMETRIZE {usedMove = MOVE_SCRATCH; }
-    PARAMETRIZE {usedMove = MOVE_LEER; }
-    PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
+    PARAMETRIZE { usedMove = MOVE_SCRATCH; }
+    PARAMETRIZE { usedMove = MOVE_LEER; }
+    PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -269,8 +269,8 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are alr
 SINGLE_BATTLE_TEST("Protect: Recoil damage is not applied if target was protected")
 {
     u32 j, k;
-    static const u16 protectMoves[] = { MOVE_PROTECT, MOVE_DETECT, MOVE_KINGS_SHIELD, MOVE_BANEFUL_BUNKER, MOVE_SILK_TRAP, MOVE_OBSTRUCT, MOVE_SPIKY_SHIELD };
-    static const u16 recoilMoves[] = { MOVE_VOLT_TACKLE, MOVE_HEAD_SMASH, MOVE_TAKE_DOWN, MOVE_DOUBLE_EDGE };
+    static const u16 protectMoves[] = {MOVE_PROTECT, MOVE_DETECT, MOVE_KINGS_SHIELD, MOVE_BANEFUL_BUNKER, MOVE_SILK_TRAP, MOVE_OBSTRUCT, MOVE_SPIKY_SHIELD};
+    static const u16 recoilMoves[] = {MOVE_VOLT_TACKLE, MOVE_HEAD_SMASH, MOVE_TAKE_DOWN, MOVE_DOUBLE_EDGE};
     u16 protectMove = MOVE_NONE;
     u16 recoilMove = MOVE_NONE;
 
@@ -721,7 +721,7 @@ SINGLE_BATTLE_TEST("Protect: Protective Pads protects from secondary effects")
 DOUBLE_BATTLE_TEST("Protect is not transferred to a mon that is switched in due to Eject Button")
 {
     GIVEN {
-        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); };
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }

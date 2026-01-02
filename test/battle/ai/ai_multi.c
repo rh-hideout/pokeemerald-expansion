@@ -73,10 +73,10 @@ AI_MULTI_BATTLE_TEST("AI partner makes sensible move selections in battle (multi
         MULTI_PARTNER(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL, MOVE_AURA_SPHERE); }
         MULTI_OPPONENT_A(SPECIES_RATTATA) { Moves(MOVE_CELEBRATE); HP(1); }
         MULTI_OPPONENT_B(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
-        
+
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:opponentRight); EXPECT_MOVE(playerRight, MOVE_AURA_SPHERE, target:opponentLeft); };
-    } 
+        TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:opponentRight); EXPECT_MOVE(playerRight, MOVE_AURA_SPHERE, target:opponentLeft); }
+    }
 }
 
 // Used to test EXPECT_MOVE only on partner
@@ -90,10 +90,10 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner makes sensible move selections in battle (
         MULTI_PARTNER(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL, MOVE_AURA_SPHERE); }
         MULTI_OPPONENT_A(SPECIES_RATTATA) { Moves(MOVE_CELEBRATE); HP(1); }
         MULTI_OPPONENT_A(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
-        
+
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:opponentRight); EXPECT_MOVE(playerRight, MOVE_AURA_SPHERE, target:opponentLeft); };
-    } 
+        TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:opponentRight); EXPECT_MOVE(playerRight, MOVE_AURA_SPHERE, target:opponentLeft); }
+    }
 }
 
 AI_TWO_VS_ONE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (2v1)")
@@ -138,7 +138,7 @@ AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon when running out")
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN {EXPECT_MOVE(playerRight, MOVE_MEMENTO, target:opponentLeft);}
+        TURN { EXPECT_MOVE(playerRight, MOVE_MEMENTO, target:opponentLeft); }
         TURN {}
     } THEN {
         EXPECT_EQ(gAbsentBattlerFlags, (1u << GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)));
@@ -159,7 +159,7 @@ AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon to delay using their a
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN {EXPECT_MOVE(playerRight, MOVE_MEMENTO, target:opponentLeft);}
+        TURN { EXPECT_MOVE(playerRight, MOVE_MEMENTO, target:opponentLeft); }
         TURN {}
     } THEN {
         EXPECT_EQ(SPECIES_METAGROSS, playerRight->species);
@@ -174,12 +174,12 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
         BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
         MULTI_PARTNER(SPECIES_WOBBUFFET) { }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); HP(1);}
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); HP(1); }
         MULTI_OPPONENT_A(SPECIES_VENUSAUR) { Moves(MOVE_GIGA_DRAIN); }
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN {MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
-        TURN {MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
     } THEN {
         EXPECT_EQ(SPECIES_VENUSAUR, opponentLeft->species);
     }
@@ -188,19 +188,19 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
 AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi battle when forced out")
 {
     u32 item, move;
-    PARAMETRIZE {item = ITEM_EJECT_BUTTON; move = MOVE_TACKLE;}
-    PARAMETRIZE {item = ITEM_EJECT_PACK; move = MOVE_TAIL_WHIP;}
-    PARAMETRIZE {item = ITEM_NONE; move = MOVE_ROAR;}
+    PARAMETRIZE { item = ITEM_EJECT_BUTTON; move = MOVE_TACKLE; }
+    PARAMETRIZE { item = ITEM_EJECT_PACK; move = MOVE_TAIL_WHIP; }
+    PARAMETRIZE { item = ITEM_NONE; move = MOVE_ROAR; }
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
         MULTI_PARTNER(SPECIES_WOBBUFFET) { }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Item(item);}
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Item(item); }
         MULTI_OPPONENT_A(SPECIES_VENUSAUR) { Moves(MOVE_GIGA_DRAIN); }
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN {MOVE(playerLeft, move, target: opponentLeft); }
+        TURN { MOVE(playerLeft, move, target: opponentLeft); }
     } THEN {
         EXPECT_EQ(SPECIES_VENUSAUR, opponentLeft->species);
     }
@@ -213,11 +213,11 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
         BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
         MULTI_PARTNER(SPECIES_WOBBUFFET) { }
-        MULTI_OPPONENT_A(SPECIES_GOLISOPOD) { Moves(MOVE_CELEBRATE); HP(101); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT);}
+        MULTI_OPPONENT_A(SPECIES_GOLISOPOD) { Moves(MOVE_CELEBRATE); HP(101); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
         MULTI_OPPONENT_A(SPECIES_VENUSAUR) { Moves(MOVE_GIGA_DRAIN); }
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN {MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
     } THEN {
         EXPECT_EQ(SPECIES_VENUSAUR, opponentLeft->species);
     }

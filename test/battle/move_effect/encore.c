@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can be encored immediately after
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); }; // yes, this speed is necessary
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_ARM_THRUST, gimmick: GIMMICK_DYNAMAX); }
         TURN { MOVE(player, MOVE_ARM_THRUST); }
