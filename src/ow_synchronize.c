@@ -82,7 +82,7 @@ static bool32 IsSynchronizeActive(void)
 static bool32 IsCuteCharmActive(void)
 {
      return ((!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM))
+        && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM));
 }
 
 u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, u32 species)
