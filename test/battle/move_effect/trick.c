@@ -183,3 +183,22 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
         EXPECT(opponent->item == ITEM_LUM_BERRY);
     }
 }
+
+SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the target and use are holding choice items before Gen5")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, GEN_3);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); Moves(MOVE_TRICK, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_SABLEYE){ Ability(ABILITY_STALL); Item(ITEM_CHOICE_SCARF); Moves(MOVE_DISABLE);}
+    }
+    WHEN {
+        TURN { MOVE(player, MOVE_TRICK); MOVE(opponent, MOVE_DISABLE); }
+        TURN { FORCED_MOVE(player); MOVE(opponent, MOVE_DISABLE); }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISABLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+    }
+}
+
