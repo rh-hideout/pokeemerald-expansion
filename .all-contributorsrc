@@ -515,6 +515,15 @@
       "contributions": [
         "data"
       ]
+    },
+    {
+      "login": "TheXaman",
+      "name": "TheXaman",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48356183?v=4",
+      "profile": "https://github.com/TheXaman",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
