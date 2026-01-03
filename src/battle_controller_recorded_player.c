@@ -291,12 +291,12 @@ static void RecordedPlayerHandleDrawTrainerPic(u32 battler)
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-                trainerPicId = GetBattlerLinkPlayerGender(battler);
+                trainerPicId = GetBattlerLinkPlayerGender(battler) + TRAINER_PIC_BACK_BRENDAN;
             else
-                trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender;
+                trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender + TRAINER_PIC_BACK_BRENDAN;
         }
         else
-            trainerPicId = gLinkPlayers[0].gender;
+            trainerPicId = gLinkPlayers[0].gender + TRAINER_PIC_BACK_BRENDAN;
 
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
