@@ -217,6 +217,7 @@ enum __attribute__((packed)) Stat
 #define MAX_PER_STAT_IVS 31
 #define MAX_IV_MASK 31
 #define USE_RANDOM_IVS (MAX_PER_STAT_IVS + 1)
+#define WT_RANDOM_IVS (MAX_PER_STAT_IVS + 2)
 #define MAX_PER_STAT_EVS ((P_EV_CAP >= GEN_6) ? 252 : 255)
 #define MAX_TOTAL_EVS 510
 #define EV_ITEM_RAISE_LIMIT ((I_VITAMIN_EV_CAP >= GEN_8) ? MAX_PER_STAT_EVS : 100)

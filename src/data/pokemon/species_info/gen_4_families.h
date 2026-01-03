@@ -2900,6 +2900,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(1, 2, SHADOW_SIZE_S)
         FOOTPRINT(Cherrim)
+        .isWonderTradeBanned = TRUE,
         .levelUpLearnset = sCherrimLevelUpLearnset,
         .teachableLearnset = sCherrimTeachableLearnset,
         .formSpeciesIdTable = sCherrimFormSpeciesIdTable,
@@ -6489,6 +6490,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
             gOverworldPalette_DialgaOrigin,
             gShinyOverworldPalette_DialgaOrigin
         )
+        .isWonderTradeBanned = TRUE,
         .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -6638,6 +6640,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
             gOverworldPalette_PalkiaOrigin,
             gShinyOverworldPalette_PalkiaOrigin
         )
+        .isWonderTradeBanned = TRUE,
         .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -6948,6 +6951,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
             gOverworldPalette_GiratinaOrigin,
             gShinyOverworldPalette_GiratinaOrigin
         )
+        .isWonderTradeBanned = TRUE,
         .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,

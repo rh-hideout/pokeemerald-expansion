@@ -5231,6 +5231,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, -1, SHADOW_SIZE_S)
         FOOTPRINT(Darmanitan)
+        .isWonderTradeBanned = TRUE,
         .levelUpLearnset = sDarmanitanLevelUpLearnset,
         .teachableLearnset = sDarmanitanTeachableLearnset,
         .formSpeciesIdTable = sDarmanitanFormSpeciesIdTable,
@@ -5421,6 +5422,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 11, SHADOW_SIZE_S)
         FOOTPRINT(Darmanitan)
+        .isWonderTradeBanned = TRUE,
         .isGalarianForm = TRUE,
         .levelUpLearnset = sDarmanitanGalarLevelUpLearnset,
         .teachableLearnset = sDarmanitanGalarTeachableLearnset,
@@ -13695,6 +13697,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 12, SHADOW_SIZE_M)
         FOOTPRINT(Keldeo)
+        .isWonderTradeBanned = TRUE,
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -13859,6 +13862,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_MeloettaPirouette,
             gShinyOverworldPalette_MeloettaPirouette
         )
+        .isWonderTradeBanned = TRUE,
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,

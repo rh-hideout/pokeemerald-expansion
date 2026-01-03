@@ -235,6 +235,7 @@ enum RandomTag
     RNG_FISHING_BITE,
     RNG_FISHING_GEN3_STICKY,
     RNG_TAUNT,
+    RNG_WONDER_TRADE,
 };
 
 #define RandomWeighted(tag, ...) \

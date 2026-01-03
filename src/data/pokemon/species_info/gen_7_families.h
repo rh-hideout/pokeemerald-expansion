@@ -2413,6 +2413,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-4, 7, SHADOW_SIZE_L)
         FOOTPRINT(Wishiwashi)
+        .isWonderTradeBanned = TRUE,
         .levelUpLearnset = sWishiwashiLevelUpLearnset,
         .teachableLearnset = sWishiwashiTeachableLearnset,
         .eggMoveLearnset = sWishiwashiEggMoveLearnset,
@@ -4546,6 +4547,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,                 \
         SHADOW(-2, 12, SHADOW_SIZE_S)                           \
         .formChangeTable = sMinior ##Form##FormChangeTable,     \
+        .isWonderTradeBanned = TRUE,                            \
         MINIOR_MISC_INFO(color),                                \
     }
 
@@ -4941,6 +4943,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-3, 1, SHADOW_SIZE_S)
         FOOTPRINT(Mimikyu)
+        .isWonderTradeBanned = TRUE,
         .levelUpLearnset = sMimikyuLevelUpLearnset,
         .teachableLearnset = sMimikyuTeachableLearnset,
         .eggMoveLearnset = sMimikyuEggMoveLearnset,
@@ -5061,6 +5064,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         SHADOW(-3, 1, SHADOW_SIZE_S)
         FOOTPRINT(Mimikyu)
         .isTotem = TRUE,
+        .isWonderTradeBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sMimikyuLevelUpLearnset,
         .teachableLearnset = sMimikyuTeachableLearnset,

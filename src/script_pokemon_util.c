@@ -24,6 +24,7 @@
 #include "string_util.h"
 #include "tv.h"
 #include "wild_encounter.h"
+#include "wonder_trade.h"
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/battle_frontier.h"

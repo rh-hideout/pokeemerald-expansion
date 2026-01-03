@@ -3155,6 +3155,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(5, 14, SHADOW_SIZE_M)
         FOOTPRINT(Cramorant)
+        .isWonderTradeBanned = TRUE,
         .levelUpLearnset = sCramorantLevelUpLearnset,
         .teachableLearnset = sCramorantTeachableLearnset,
         .eggMoveLearnset = sCramorantEggMoveLearnset,
@@ -3212,6 +3213,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(5, 14, SHADOW_SIZE_M)
         FOOTPRINT(Cramorant)
+        .isWonderTradeBanned = TRUE,
         .levelUpLearnset = sCramorantLevelUpLearnset,
         .teachableLearnset = sCramorantTeachableLearnset,
         .eggMoveLearnset = sCramorantEggMoveLearnset,
@@ -5682,6 +5684,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 13, SHADOW_SIZE_S)
         FOOTPRINT(Eiscue)
+        .isWonderTradeBanned = TRUE,
         .levelUpLearnset = sEiscueLevelUpLearnset,
         .teachableLearnset = sEiscueTeachableLearnset,
         .eggMoveLearnset = sEiscueEggMoveLearnset,
@@ -5938,6 +5941,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(0, 0, SHADOW_SIZE_S)
         FOOTPRINT(Morpeko)
+        .isWonderTradeBanned = TRUE,
         .levelUpLearnset = sMorpekoLevelUpLearnset,
         .teachableLearnset = sMorpekoTeachableLearnset,
         .eggMoveLearnset = sMorpekoEggMoveLearnset,
@@ -6920,6 +6924,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
             gOverworldPalette_ZacianCrowned,
             gShinyOverworldPalette_ZacianCrowned
         )
+        .isWonderTradeBanned = TRUE,
         .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -7058,6 +7063,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
             gOverworldPalette_ZamazentaCrowned,
             gShinyOverworldPalette_ZamazentaCrowned
         )
+        .isWonderTradeBanned = TRUE,
         .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -7188,6 +7194,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 20, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Eternatus)
+        .isWonderTradeBanned = TRUE,
         .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
