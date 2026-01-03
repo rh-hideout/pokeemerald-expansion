@@ -2007,7 +2007,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
                 SetConstSpriteValues(data);
                 UpdateYPosOffsetText(data);
             }
-            LoadBattleBg(data->battleBgType, data->battleEnvironment);
+            LoadBattleBg(data->battleEnvironment);
         }
         else if (JOY_NEW(DPAD_LEFT))
         {
