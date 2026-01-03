@@ -472,7 +472,7 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
 #if B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE
     u8 textInstructionsSubmenuTwo[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$");
     u8 textInstructionsSubmenuTwoGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$");
-    u8 textInstructionsSubmenuThree[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move Anims");
+    u8 textInstructionsSubmenuThree[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move Anims$");
     u8 textInstructionsSubmenuThreeGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Move Anims$");
 #else
     u8 textInstructionsSubmenuTwo[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move Anims$");
@@ -480,7 +480,7 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
     u8 textInstructionsSubmenuThree[] = _("$");
     u8 textInstructionsSubmenuThreeGender[] = _("$");
 #endif
-    u8 textInstructionsSubmenuFour[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back");
+    u8 textInstructionsSubmenuFour[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back$");
     u8 textInstructionsSubmenuFourGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back$");
 
 
@@ -1047,7 +1047,6 @@ static void UpdateMoveBackground(u8 taskId, bool8 increment)
     }
 
     PrintMoveBackgroundName(taskId);
-
     LoadMoveBackground(data->moveBackground);
 }
 
