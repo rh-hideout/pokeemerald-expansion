@@ -179,6 +179,7 @@ struct MoveInfo
         u32 recoilPercentage;
         u32 nonVolatileStatus;
         u32 overwriteAbility;
+        u32 weatherType;
     } argument;
 
     // primary/secondary effects
@@ -712,6 +713,12 @@ static inline u32 GetMoveOverwriteAbility(enum Move move)
     move = SanitizeMoveId(move);
     assertf(gMovesInfo[move].effect == EFFECT_OVERWRITE_ABILITY, "not a move that overwrites abilities: %S", gMovesInfo[move].name);
     return gMovesInfo[move].argument.overwriteAbility;
+}
+
+static inline u32 GetMoveWeatherType(enum Move move)
+{
+    assertf(gMovesInfo[move].effect == EFFECT_WEATHER || gMovesInfo[move].effect == EFFECT_WEATHER_AND_SWITCH, "not a move that sets weather: %S", gMovesInfo[move].name);
+    return gMovesInfo[SanitizeMoveId(move)].argument.weatherType;
 }
 
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(enum Move moveId, u32 effect)

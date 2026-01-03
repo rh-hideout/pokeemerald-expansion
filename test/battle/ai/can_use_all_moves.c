@@ -244,20 +244,13 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
 
         // tests exist elsewhere
         case EFFECT_HEAL_BELL:
-        case EFFECT_SUNNY_DAY:
-        case EFFECT_RAIN_DANCE:
-    #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW
-        case EFFECT_SNOWSCAPE:
-    #else
-        case EFFECT_HAIL:
-    #endif
+        case EFFECT_WEATHER:
         case EFFECT_ROLE_PLAY:
         case EFFECT_REFRESH:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
-        case EFFECT_SANDSTORM:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
@@ -546,7 +539,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_AURORA_VEIL:
         case EFFECT_GEAR_UP:
         case EFFECT_MAGNETIC_FLUX:
- 
+
         // Skipped on purpose.
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
@@ -671,13 +664,18 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
         case EFFECT_FAIL_IF_NOT_ARG_TYPE:
 
         //TODO: AI TESTS
-        case EFFECT_CHILLY_RECEPTION:
+        case EFFECT_WEATHER_AND_SWITCH:
         case EFFECT_TIDY_UP:
 
         // tests exist elsewhere
-        case EFFECT_SNOWSCAPE:
         case EFFECT_DRAGON_CHEER:
-
+            break;
+        case EFFECT_WEATHER:
+            if (GetMoveWeatherType(j) == BATTLE_WEATHER_SNOW)
+                break;
+            else
+                PARAMETRIZE { move = j; }
+            break;
         // Skipped on purpose.
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:

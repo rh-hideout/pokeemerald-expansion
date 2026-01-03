@@ -761,6 +761,12 @@ static const TaskFunc sTextPrinterTasks[] =
     [PSS_PAGE_CONTEST_MOVES] = Task_PrintContestMoves
 };
 
+static const u8 sText_Relearn[] = _("{START_BUTTON} RELEARN"); // future note: don't decap this, because it mimics the summary screen BG graphics which will not get decapped
+static const u8 sText_Relearn_LevelUp[] = _("{START_BUTTON} RELEARN LEVEL");
+static const u8 sText_Relearn_Egg[] = _("{START_BUTTON} RELEARN EGG");
+static const u8 sText_Relearn_TM[] = _("{START_BUTTON} RELEARN TM");
+static const u8 sText_Relearn_Tutor[] = _("{START_BUTTON} RELEARN TUTOR");
+
 static const u8 sMemoNatureTextColor[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");
 static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // This is also affected by palettes, apparently
 static const u8 sStatsLeftColumnLayout[] = _("{DYNAMIC 0}/{DYNAMIC 1}\n{DYNAMIC 2}\n{DYNAMIC 3}");
@@ -2005,7 +2011,7 @@ void TryUpdateRelearnType(enum IncrDecrUpdateValues delta)
             return;
         }
         zeroCounter++;
-        
+
     } while (zeroCounter <= MOVE_RELEARNER_COUNT && !hasRelearnableMoves);
 }
 
@@ -2093,7 +2099,7 @@ static void Task_ChangeSummaryMon(u8 taskId)
         }
 
         if (P_SUMMARY_SCREEN_MOVE_RELEARNER
-             && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES 
+             && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES
              || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES))
         {
             gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
@@ -2266,7 +2272,7 @@ static void ChangePage(u8 taskId, s8 delta)
         TryUpdateRelearnType(TRY_SET_UPDATE);
     }
 
-    // to prevent nothing showing 
+    // to prevent nothing showing
     if (currPageIndex >= PSS_PAGE_BATTLE_MOVES && !sMonSummaryScreen->hasRelearnableMoves)
         TryUpdateRelearnType(TRY_SET_UPDATE);
     else
@@ -4851,6 +4857,7 @@ static inline void ShowUtilityPrompt(s16 mode)
     const u8* gText_SkillPageIvs = COMPOUND_STRING("IVs");
     const u8* gText_SkillPageEvs = COMPOUND_STRING("EVs");
     const u8* gText_SkillPageStats = COMPOUND_STRING("STATS");
+    const u8* gText_Rename = COMPOUND_STRING("RENAME");
 
     if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
     {
@@ -4931,19 +4938,19 @@ void ShowRelearnPrompt(void)
     switch (gMoveRelearnerState)
     {
         case MOVE_RELEARNER_LEVEL_UP_MOVES:
-            relearnText = gText_Relearn_LevelUp;
+            relearnText = sText_Relearn_LevelUp;
             break;
         case MOVE_RELEARNER_EGG_MOVES:
-            relearnText = gText_Relearn_Egg;
+            relearnText = sText_Relearn_Egg;
             break;
         case MOVE_RELEARNER_TM_MOVES:
-            relearnText = gText_Relearn_TM;
+            relearnText = sText_Relearn_TM;
             break;
         case MOVE_RELEARNER_TUTOR_MOVES:
-            relearnText = gText_Relearn_Tutor;
+            relearnText = sText_Relearn_Tutor;
             break;
         default:
-            relearnText = gText_Relearn;
+            relearnText = sText_Relearn;
             break;
     }
 
