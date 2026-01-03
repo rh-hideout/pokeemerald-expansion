@@ -206,3 +206,20 @@ SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the tar
     }
 }
 
+SINGLE_BATTLE_TEST("Trick removes the user's choice lock if both the target and use are holding choice items from Gen5 onwards")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); MovesWithPP({MOVE_TRICK, 1}, {MOVE_CELEBRATE, 10}); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); }
+    }
+    WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
