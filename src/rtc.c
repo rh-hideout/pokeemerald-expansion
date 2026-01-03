@@ -468,7 +468,7 @@ enum TimeOfDay GenConfigTimeOfDay(enum TimeOfDay timeOfDay)
     {
     case GEN_3:
         if (timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING)
-            timeOfDay++;timeOfDay++;
+            timeOfDay++;
         break;
     case GEN_2:
     case GEN_4:
