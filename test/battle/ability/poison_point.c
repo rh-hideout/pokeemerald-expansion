@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Poison Point inflicts poison on contact")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_SWIFT; }
     GIVEN {

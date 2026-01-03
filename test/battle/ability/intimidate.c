@@ -267,7 +267,7 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer effected by Neutral
 
 DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutralizing Gas - switching moves")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_U_TURN; }
     PARAMETRIZE { move = MOVE_HEALING_WISH; }
     PARAMETRIZE { move = MOVE_BATON_PASS; }
@@ -300,7 +300,8 @@ DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
 
 SINGLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutralizing Gas - opponent caused switches")
 {
-    u32 move, item;
+    enum Move move;
+    u32 item;
     PARAMETRIZE { move = MOVE_SCRATCH; item = ITEM_EJECT_BUTTON; }
     PARAMETRIZE { move = MOVE_GROWL; item = ITEM_EJECT_PACK; }
     PARAMETRIZE { move = MOVE_ROAR; item = ITEM_NONE; }

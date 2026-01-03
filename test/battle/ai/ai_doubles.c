@@ -4,9 +4,9 @@
 
 AI_DOUBLE_BATTLE_TEST("AI won't use a Weather changing move if partner already chose such move")
 {
-    u32 j, k;
-    static const u16 weatherMoves[] = {MOVE_SUNNY_DAY, MOVE_HAIL, MOVE_RAIN_DANCE, MOVE_SANDSTORM, MOVE_SNOWSCAPE};
-    u16 weatherMoveLeft = MOVE_NONE, weatherMoveRight = MOVE_NONE;
+    enum Move j, k;
+    static const enum Move weatherMoves[] = {MOVE_SUNNY_DAY, MOVE_HAIL, MOVE_RAIN_DANCE, MOVE_SANDSTORM, MOVE_SNOWSCAPE};
+    enum Move weatherMoveLeft = MOVE_NONE, weatherMoveRight = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(weatherMoves); j++)
     {
@@ -33,7 +33,7 @@ AI_DOUBLE_BATTLE_TEST("AI won't use a Weather changing move if partner already c
 
 AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any damage moves")
 {
-    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
+    enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
 
     PARAMETRIZE { move1 = MOVE_LEER; move2 = MOVE_TOXIC; }
     PARAMETRIZE { move1 = MOVE_HELPING_HAND; move2 = MOVE_PROTECT; }
@@ -58,7 +58,8 @@ AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any
 
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target already holds one")
 {
-    u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Move move = MOVE_NONE;
+    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
@@ -77,7 +78,8 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target al
 
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items")
 {
-    u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Move move = MOVE_NONE;
+    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORANGE_MAIL; targetItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY;  targetItem = ITEM_ORANGE_MAIL; }
@@ -96,7 +98,8 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items")
 
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow around Sticky Hold")
 {
-    u16 move = MOVE_NONE, atkItem = ITEM_ORAN_BERRY, targetItem = ITEM_NONE;
+    enum Move move = MOVE_NONE;
+    u32 atkItem = ITEM_ORAN_BERRY, targetItem = ITEM_NONE;
     enum Ability atkAbility = ABILITY_PRESSURE, targetAbility = ABILITY_PRESSURE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE; targetItem = ITEM_LEFTOVERS; }
@@ -118,7 +121,8 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute")
 {
     ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
 
-    u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Move move = MOVE_NONE;
+    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_LEFTOVERS; }
     PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_NONE; }
@@ -140,8 +144,8 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute")
 
 AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose Helping Hand")
 {
-    s32 j;
-    u32 statusMove = MOVE_NONE;
+    enum Move j;
+    enum Move statusMove = MOVE_NONE;
 
     for (j = MOVE_NONE + 1; j < MOVES_COUNT; j++)
     {
@@ -175,7 +179,7 @@ TO_DO_BATTLE_TEST("AI understands Wide Guard")
 
 AI_DOUBLE_BATTLE_TEST("AI won't use the same nondamaging move as its partner for no reason")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_AROMATHERAPY; }
     PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
     PARAMETRIZE { move = MOVE_FOLLOW_ME; }
@@ -223,7 +227,7 @@ AI_DOUBLE_BATTLE_TEST("AI won't use the same nondamaging move as its partner for
 
 AI_DOUBLE_BATTLE_TEST("Heal Bell and Jungle Healing skip curing a partner that benefits from burn")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_HEAL_BELL; }
     PARAMETRIZE { move = MOVE_JUNGLE_HEALING; }
@@ -513,7 +517,8 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
     ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
 
     enum Ability ability;
-    u32 move, species;
+    enum Move move;
+    u32 species;
 
     PARAMETRIZE { species = SPECIES_PSYDUCK;    ability = ABILITY_CLOUD_NINE;         move = MOVE_DISCHARGE; }
     PARAMETRIZE { species = SPECIES_PIKACHU;    ability = ABILITY_LIGHTNING_ROD;      move = MOVE_DISCHARGE; }
@@ -551,7 +556,8 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
     ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
 
     enum Ability ability;
-    u32 move, species;
+    enum Move move;
+    u32 species;
 
     PARAMETRIZE { species = SPECIES_SEAKING;    ability = ABILITY_LIGHTNING_ROD;    move = MOVE_DISCHARGE; }
     PARAMETRIZE { species = SPECIES_SHELLOS;    ability = ABILITY_STORM_DRAIN;      move = MOVE_SURF; }
@@ -575,7 +581,9 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
     ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
 
-    u32 move, species, ability, config, expectedMove;
+    enum Move move, expectedMove;
+    u32 species, config;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SEAKING; ability = ABILITY_LIGHTNING_ROD; move = MOVE_DISCHARGE; config = GEN_4; expectedMove = MOVE_HEADBUTT; }
     PARAMETRIZE { species = SPECIES_SHELLOS; ability = ABILITY_STORM_DRAIN;   move = MOVE_SURF;      config = GEN_4; expectedMove = MOVE_HEADBUTT; }
@@ -694,7 +702,7 @@ AI_DOUBLE_BATTLE_TEST("AI sets up terrain for its ally")
 
 AI_DOUBLE_BATTLE_TEST("AI uses After You to set up Trick Room")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_TRICK_ROOM; }
     PARAMETRIZE { move = MOVE_MOONBLAST; }
@@ -718,7 +726,9 @@ AI_DOUBLE_BATTLE_TEST("AI uses After You to set up Trick Room")
 
 AI_DOUBLE_BATTLE_TEST("AI uses Trick Room intelligently")
 {
-    u32 move, ability, speed;
+    enum Move move;
+    enum Ability ability;
+    u32 speed;
 
     PARAMETRIZE { move = MOVE_DRAINING_KISS; ability = ABILITY_SYNCHRONIZE; speed = 4; }
     PARAMETRIZE { move = MOVE_DAZZLING_GLEAM; ability = ABILITY_SYNCHRONIZE; speed = 4; }

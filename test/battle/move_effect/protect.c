@@ -23,15 +23,15 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and Burning Bulwark protect from all moves")
 {
     u32 j;
-    static const u16 protectMoves[] = {
+    static const enum Move protectMoves[] = {
         MOVE_PROTECT,
         MOVE_DETECT,
         MOVE_SPIKY_SHIELD,
         MOVE_BANEFUL_BUNKER,
         MOVE_BURNING_BULWARK,
     };
-    u16 protectMove = MOVE_NONE;
-    u16 usedMove = MOVE_NONE;
+    enum Move protectMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
     {
@@ -62,14 +62,14 @@ SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and B
 SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from damaging moves and lower stats on contact")
 {
     u32 j;
-    static const u16 protectMoves[][3] =
+    static const enum Move protectMoves[][3] =
     {   // Move             Stat      Stages
         {MOVE_KINGS_SHIELD, STAT_ATK,   (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? 1 : 2},
         {MOVE_SILK_TRAP,    STAT_SPEED, 1},
         {MOVE_OBSTRUCT,     STAT_DEF,   2},
     };
-    u16 protectMove = MOVE_NONE;
-    u16 usedMove = MOVE_NONE;
+    enum Move protectMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
     u16 statId = 0, lowersBy = 0;
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
 
 SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers making contact and may faint them")
 {
-    u16 usedMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
     u16 hp = 400, maxHp = 400;
 
     PARAMETRIZE { usedMove = MOVE_SCRATCH; hp = 1; }
@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
 
 SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making contact")
 {
-    u16 usedMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
 
     PARAMETRIZE {usedMove = MOVE_SCRATCH; }
     PARAMETRIZE {usedMove = MOVE_LEER; }
@@ -216,7 +216,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are al
 
 SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making contact")
 {
-    u16 usedMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
 
     PARAMETRIZE {usedMove = MOVE_SCRATCH; }
     PARAMETRIZE {usedMove = MOVE_LEER; }
@@ -271,8 +271,8 @@ SINGLE_BATTLE_TEST("Protect: Recoil damage is not applied if target was protecte
     u32 j, k;
     static const u16 protectMoves[] = { MOVE_PROTECT, MOVE_DETECT, MOVE_KINGS_SHIELD, MOVE_BANEFUL_BUNKER, MOVE_SILK_TRAP, MOVE_OBSTRUCT, MOVE_SPIKY_SHIELD };
     static const u16 recoilMoves[] = { MOVE_VOLT_TACKLE, MOVE_HEAD_SMASH, MOVE_TAKE_DOWN, MOVE_DOUBLE_EDGE };
-    u16 protectMove = MOVE_NONE;
-    u16 recoilMove = MOVE_NONE;
+    enum Move protectMove = MOVE_NONE;
+    enum Move recoilMove = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
     {
@@ -311,7 +311,7 @@ SINGLE_BATTLE_TEST("Protect: Recoil damage is not applied if target was protecte
 
 SINGLE_BATTLE_TEST("Protect: Multi-hit moves don't hit a protected target and fail only once")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_PROTECT; }
     PARAMETRIZE { move = MOVE_DETECT; }
@@ -394,7 +394,7 @@ DOUBLE_BATTLE_TEST("Protect fails when the only slower battler is a fainted ally
 
 DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_SCRATCH; }      // Single target
     PARAMETRIZE { move = MOVE_SURF; }        // All targets
@@ -467,7 +467,7 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns (Gen6+
 
 DOUBLE_BATTLE_TEST("Protect: Quick Guard protects self and ally from priority moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     struct BattlePokemon *targetOpponent = NULL;
 
     PARAMETRIZE { move = MOVE_SCRATCH;      targetOpponent = opponentLeft; }
@@ -530,7 +530,7 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6
 
 DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     struct BattlePokemon *targetOpponent = NULL;
 
     PARAMETRIZE { move = MOVE_HYPER_VOICE; }
@@ -571,7 +571,7 @@ DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status mo
 
 SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CONFIDE; }
     PARAMETRIZE { move = MOVE_DECORATE; }
 
@@ -593,7 +593,7 @@ SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
 
 DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decorate")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CONFIDE; }
     PARAMETRIZE { move = MOVE_DECORATE; }
 
@@ -649,7 +649,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all
 SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Max Move demage", s16 damage)
 {
     s16 dmg[2];
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_WIDE_GUARD; }
     PARAMETRIZE { move = MOVE_QUICK_GUARD; }
@@ -672,7 +672,7 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
 SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Z-Move demage", s16 damage)
 {
     bool32 protected;
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { protected = TRUE; move = MOVE_WIDE_GUARD; }
     PARAMETRIZE { protected = FALSE; move = MOVE_WIDE_GUARD; }

@@ -2193,7 +2193,7 @@ bool8 ScrCmd_bufferdecorationname(struct ScriptContext *ctx)
 bool8 ScrCmd_buffermovename(struct ScriptContext *ctx)
 {
     u8 stringVarIndex = ScriptReadByte(ctx);
-    u16 move = VarGet(ScriptReadHalfword(ctx));
+    enum Move move = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1);
 
@@ -2294,7 +2294,7 @@ bool8 ScrCmd_setmonmove(struct ScriptContext *ctx)
 {
     u8 partyIndex = ScriptReadByte(ctx);
     u8 slot = ScriptReadByte(ctx);
-    u16 move = ScriptReadHalfword(ctx);
+    enum Move move = ScriptReadHalfword(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 
@@ -2306,7 +2306,7 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
 {
     enum FieldMove fieldMove = ScriptReadByte(ctx);
     bool32 doUnlockedCheck = ScriptReadByte(ctx);
-    u16 move;
+    enum Move move;
 
     Script_RequestEffects(SCREFF_V1);
 

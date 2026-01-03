@@ -999,7 +999,7 @@ SINGLE_BATTLE_TEST("Dynamax: G-Max Steelsurge sets up sharp steel")
 // The test below should apply to G-Max Fireball and G-Max Drum Solo, too.
 SINGLE_BATTLE_TEST("Dynamax: G-Max Hydrosnipe has fixed power and ignores abilities", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_WATER_GUN; }
     PARAMETRIZE { move = MOVE_HYDRO_CANNON; }
     GIVEN {
@@ -1609,7 +1609,8 @@ SINGLE_BATTLE_TEST("Dynamax: Max Attacks prints a message when hitting into Max 
 
 SINGLE_BATTLE_TEST("Dynamax: Max Moves don't bypass absorbing abilities")
 {
-    u32 move, species;
+    enum Move move;
+    u32 species;
     enum Ability ability;
     PARAMETRIZE { move = MOVE_SPARK;     ability = ABILITY_VOLT_ABSORB;     species = SPECIES_LANTURN; }
     PARAMETRIZE { move = MOVE_WATER_GUN; ability = ABILITY_WATER_ABSORB;    species = SPECIES_LANTURN; }
@@ -1677,8 +1678,9 @@ SINGLE_BATTLE_TEST("Dynamax: max move against semi-invulnerable target prints th
 
 DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abilities apply to partner")
 {
-    u32 move, stat, ability;
-    move = 0; stat = 0; ability = 0;
+    enum Move move = MOVE_NONE;
+    u32 stat = 0;
+    enum Ability ability = ABILITY_NONE;
     u32 abilityList[] = {ABILITY_COMPETITIVE, ABILITY_DEFIANT, ABILITY_CONTRARY, ABILITY_SIMPLE};
     for (u32 j = 0; j < 4; j++)
     {
@@ -1710,8 +1712,9 @@ DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abiliti
 
 DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilities apply to partner")
 {
-    u32 move, stat, ability;
-    move = 0; stat = 0; ability = 0;
+    enum Move move = MOVE_NONE;
+    u32 stat = 0;
+    enum Ability ability = ABILITY_NONE;
     u32 abilityList[] = {ABILITY_CONTRARY, ABILITY_SIMPLE};
     for (u32 j = 0; j < 2; j++)
     {

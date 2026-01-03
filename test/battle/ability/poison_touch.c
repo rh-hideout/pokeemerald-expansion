@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Poison Touch has a 30% chance to poison when attacking with 
 
 SINGLE_BATTLE_TEST("Poison Touch only applies when using contact moves")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_SWIFT; }
