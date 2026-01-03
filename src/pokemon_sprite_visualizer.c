@@ -1048,7 +1048,7 @@ static void LoadMoveBackground(u8 moveBackground)
     LoadPalette(gBattleAnimBackgroundTable[moveBackground].palette, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
 }
 
-static void PrintMoveBgName(u8 taskId)
+static void PrintMoveBackgroundName(u8 taskId)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
     u8 fontId = 0;
@@ -1060,7 +1060,7 @@ static void PrintMoveBgName(u8 taskId)
     AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 0, 0, 0, NULL);
 }
 
-static void UpdateMoveBg(u8 taskId, bool8 increment)
+static void UpdateMoveBackground(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
 
@@ -1086,7 +1086,7 @@ static void UpdateMoveBg(u8 taskId, bool8 increment)
             data->moveBackground -= 1;
     }
 
-    PrintMoveBgName(taskId);
+    PrintMoveBackgroundName(taskId);
 
     LoadMoveBackground(data->moveBackground);
 }
@@ -1690,7 +1690,7 @@ static void UpdateSubmenuFourOptionValue(u8 taskId, bool8 increment)
     switch (data->submenuYpos[1])
     {
     case 0:
-        UpdateMoveBg(taskId, increment);
+        UpdateMoveBackground(taskId, increment);
         break;
     default:
         break;
@@ -1920,7 +1920,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
                 data->currentSubmenu = 4;
                 PrintInstructionsOnWindow(data);
                 SetArrowInvisibility(data);
-                PrintMoveBgName(taskId);
+                PrintMoveBackgroundName(taskId);
                 LoadMoveBackground(data->moveBackground);
             }
         }
@@ -1974,7 +1974,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             data->currentSubmenu = 4;
             PrintInstructionsOnWindow(data);
             SetArrowInvisibility(data);
-            PrintMoveBgName(taskId);
+            PrintMoveBackgroundName(taskId);
             LoadMoveBackground(data->moveBackground);
         }
         else if (JOY_NEW(B_BUTTON))
