@@ -1178,7 +1178,7 @@ static bool32 TryEjectButton(u32 battlerAtk, u32 ejectButtonBattler)
     return TRUE;
 }
 
-static enum MoveEndResult MoveEnd_EjectItems(void)
+static enum MoveEndResult MoveEnd_CardButton(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
     u32 redCardBattlers = 0;
@@ -1740,7 +1740,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_SHEER_FORCE] = MoveEnd_SheerForce,
     [MOVEEND_COLOR_CHANGE] = MoveEnd_ColorChange,
     [MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET] = MoveEnd_KeeMarangaHpThresholdItemTarget,
-    [MOVEEND_CARD_BUTTON] = MoveEnd_EjectItems,
+    [MOVEEND_CARD_BUTTON] = MoveEnd_CardButton,
     [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEnd_LifeOrbShellBell,
     [MOVEEND_FORM_CHANGE] = MoveEnd_FormChange,
     [MOVEEND_EMERGENCY_EXIT] = MoveEnd_EmergencyExit,
