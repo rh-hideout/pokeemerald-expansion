@@ -71,21 +71,16 @@ union TextColor {
     u32 asU32;
 };
 
-struct TextPrinterSubStruct
-{
-    u8 fontId:4;  // 0x14
-    bool8 hasPrintBeenSpedUp:1;
-    u8 unk:3;
-    u16 utilityCounter:13;
-    u16 downArrowYPosIdx:2;
-    bool16 hasFontIdBeenSet:1;
-    u8 autoScrollDelay;
-};
-
 struct TextPrinterTemplate
 {
     const u8 *currentChar;
-    u8 windowId;
+
+    enum: u8 { WINDOW_TEXT_PRINTER, SPRITE_TEXT_PRINTER } type;
+    union {
+        u8 windowId;
+        u8 spriteId;
+    };
+
     u8 fontId;
     u8 x;
     u8 y;
@@ -93,6 +88,8 @@ struct TextPrinterTemplate
     u8 currentY;
     u8 letterSpacing;
     u8 lineSpacing;
+    u8 firstSpriteInRow;
+    u8 firstSprite;
     union {
         struct {
             DEPRECATED("Use color.background instead") u8 bgColor;
@@ -108,16 +105,28 @@ struct TextPrinter
 {
     struct TextPrinterTemplate printerTemplate;
 
-    void (*callback)(struct TextPrinterTemplate *, u16); // 0x10
+    void (*callback)(struct TextPrinterTemplate *, u16);
 
-    u8 subStructFields[7]; // always cast to struct TextPrinterSubStruct... so why bother
-    u8 active;
-    u8 state;       // 0x1C
-    u8 textSpeed;
+    u16 utilityCounter:13;
+    u16 downArrowYPosIdx:2;
+    bool16 hasFontIdBeenSet:1;
+    u8 autoScrollDelay;
+    u8 fontId:4;
+    bool8 hasPrintBeenSpedUp:1;
+    u8 japanese:1;
+    u8 active:1;
+    u8 isInUse:1;
+
+    u8 state;
     u8 delayCounter;
     u8 scrollDistance;
-    u8 minLetterSpacing;  // 0x20
-    u8 japanese;
+    u8 minLetterSpacing;
+
+    u8 textSpeed;
+    u8 padding[3];
+
+    struct TextPrinter *nextPrinter;
+
 };
 
 struct FontInfo
@@ -167,14 +176,19 @@ extern struct TextGlyph gCurGlyph;
 
 void DeactivateAllTextPrinters(void);
 u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
+u16 AddSpriteTextPrinterParametrerized(u8 spriteId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
+void AddSpriteTextPrinterParameterized3(u8 spriteId, u8 fontId, u8 left, u8 top, const u8 *color, s8 speed, const u8 *str);
+void AddSpriteTextPrinterParameterized4(u8 spriteId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const u8 *color, s8 speed, const u8 *str);
+void AddSpriteTextPrinterParameterized6(u8 spriteId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const union TextColor color, s8 speed, const u8 *str);
 bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
 void RunTextPrinters(void);
-bool32 IsTextPrinterActive(u8 id);
+bool32 IsTextPrinterActiveOnWindow(u32 windowId);
+bool32 IsTextPrinterActiveOnSprite(u32 spriteId);
 void GenerateFontHalfRowLookupTable(union TextColor color);
 union TextColor SaveTextColors(void);
 void RestoreTextColors(union TextColor color);
 void DecompressGlyphTile(const void *src_, void *dest_);
-void CopyGlyphToWindow(struct TextPrinter *textPrinter);
+u32 CopyGlyphToVRAM(struct TextPrinter *textPrinter);
 void ClearTextSpan(struct TextPrinter *textPrinter, u32 width);
 
 void TextPrinterInitDownArrowCounters(struct TextPrinter *textPrinter);

@@ -1911,6 +1911,7 @@ static void AddContestTextPrinterFitWidth(int windowId, u8 *str, int x, int widt
 {
     struct TextPrinterTemplate textPrinter;
     textPrinter.currentChar = str;
+    textPrinter.type = WINDOW_TEXT_PRINTER;
     textPrinter.windowId = windowId;
     textPrinter.fontId = GetFontIdToFit(str, FONT_NARROW, 0, widthPx);
     textPrinter.x = x;
