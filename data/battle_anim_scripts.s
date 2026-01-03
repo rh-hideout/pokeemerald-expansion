@@ -1830,7 +1830,7 @@ SetGigaImpactPlayerBG:
 	fadetobg BG_GIGA_IMPACT_PLAYER
 	goto GigaImpactContinuity
 SetGigaImpactContestsBG:
-	fadetobg BG_GIGA_IMPACT_CONTEST
+	fadetobg BG_GIGA_IMPACT_CONTESTS
 	goto GigaImpactContinuity
 GigaImpactContinuity:
 	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_ATTACKER
