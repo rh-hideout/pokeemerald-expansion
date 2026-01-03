@@ -144,7 +144,7 @@ DOUBLE_BATTLE_TEST("Ally Switch has no effect on partner's chosen move")
 
 DOUBLE_BATTLE_TEST("Ally Switch - move fails if the target was ally which changed position")
 {
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_COACHING; }
     PARAMETRIZE { move = MOVE_AROMATIC_MIST; }

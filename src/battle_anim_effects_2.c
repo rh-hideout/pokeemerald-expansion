@@ -3740,9 +3740,10 @@ static void AnimPerishSongMusicNote_Step2(struct Sprite *sprite)
     }
 }
 
+//  arg0: cover both battlers
 static void AnimGuardRing(struct Sprite *sprite)
 {
-    if (IsDoubleBattle() && IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
+    if (gBattleAnimArgs[0] && IsDoubleBattle() && IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
     {
         SetAverageBattlerPositions(gBattleAnimAttacker, FALSE, &sprite->x, &sprite->y);
         sprite->y += 40;

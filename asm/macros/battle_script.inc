@@ -711,9 +711,8 @@
 	.byte 0x7c
 	.endm
 
-	.macro setfieldweather weather:req
+	.macro setfieldweather
 	.byte 0x7d
-	.byte \weather
 	.endm
 
 	.macro setreflect
@@ -2450,4 +2449,9 @@
 	.2byte \tag
 	.byte \gen
 	.4byte \jumpInstr
+	.endm
+
+	@ Absorbs Toxic Spikes when a grounded Poison-type faints to entry hazards.
+	.macro tryabsorbtoxicspikesonfaint
+	callnative BS_TryAbsorbToxicSpikesOnFaint
 	.endm

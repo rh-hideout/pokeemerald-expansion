@@ -309,7 +309,7 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
 void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32 otID, u32 flags, struct Pokemon *dst)
 {
     u8 ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
-    u16 move;
+    enum Move move;
     u32 personality = 0, ability, friendship, j;
 
     if (fmon->gender == TRAINER_MON_MALE)

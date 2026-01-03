@@ -68,7 +68,7 @@
 #define _ASSERTF_FMT(cond, fmt, ...) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: " fmt, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__), TRUE); _recover = FALSE)
 
 #if RELEASE
-#define _ASSERTF_HANDLE(...) 0
+#define _ASSERTF_HANDLE(...) (void)0
 #elif TESTING
 #include "test_result.h"
 #define _ASSERTF_HANDLE(fmt, ...) Test_ExitWithResult(TEST_RESULT_INVALID, 0, fmt, __VA_ARGS__)

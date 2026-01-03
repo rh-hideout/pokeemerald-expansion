@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Fling fails if Pokémon holds no item")
 
 SINGLE_BATTLE_TEST("Fling fails if Pokémon is under the effects of Embargo or Magic Room")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE {move = MOVE_CELEBRATE; }
     PARAMETRIZE {move = MOVE_EMBARGO; }

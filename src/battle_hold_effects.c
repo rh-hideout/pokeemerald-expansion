@@ -846,7 +846,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        u32 move = GetMonData(mon, MON_DATA_MOVE1 + i);
+        enum Move move = GetMonData(mon, MON_DATA_MOVE1 + i);
         u32 currentPP = GetMonData(mon, MON_DATA_PP1 + i);
         u32 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
         u32 maxPP = CalculatePPWithBonus(move, ppBonuses, i);

@@ -15,7 +15,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost type move")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_FURY_CUTTER; }
     PARAMETRIZE { move = MOVE_FEINT_ATTACK; }
     PARAMETRIZE { move = MOVE_SHADOW_PUNCH; }

@@ -21,7 +21,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Reflect Damage: Counter is not affected by Protect effects if it doesn't damage")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
     PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }
@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Reflect Damage: Counter is not affected by Protect effects i
 DOUBLE_BATTLE_TEST("Reflect Damage: Counter is affected by Protect effects if it was damaged by that battler")
 {
     // Commented moves are instructBanned.
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
     PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }
