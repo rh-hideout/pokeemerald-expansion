@@ -1121,7 +1121,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u32 personal
     }
     else // Player is the OT
     {
-        value = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
+        value = READ_OTID_FROM_SAVE;
         if (P_FLAG_FORCE_NO_SHINY != 0 && FlagGet(P_FLAG_FORCE_NO_SHINY))
         {
             isShiny = FALSE;
@@ -6183,11 +6183,7 @@ bool8 IsTradedMon(struct Pokemon *mon)
 
 bool8 IsOtherTrainer(u32 otId, u8 *otName)
 {
-    if (otId ==
-        (gSaveBlock2Ptr->playerTrainerId[0]
-      | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
-      | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
-      | (gSaveBlock2Ptr->playerTrainerId[3] << 24)))
+    if (otId == READ_OTID_FROM_SAVE)
     {
         int i;
         for (i = 0; otName[i] != EOS; i++)
