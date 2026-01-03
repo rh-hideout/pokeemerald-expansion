@@ -186,8 +186,13 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
 
 SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the target and use are holding choice items before Gen5")
 {
+    u32 genConfig;
+
+    PARAMETRIZE { genConfig = GEN_3; }
+    PARAMETRIZE  { genConfig = GEN_4; }
+
     GIVEN {
-        WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, GEN_3);
+        WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, genConfig);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); MovesWithPP({MOVE_TRICK, 1}, {MOVE_CELEBRATE, 10}); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); }
     }
