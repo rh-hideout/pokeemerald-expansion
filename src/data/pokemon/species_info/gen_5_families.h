@@ -548,42 +548,22 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             "shaped like a serpentine spear,\n"
             "it rushes in to save its\n"
             "imperiled allies."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
-        .iconPalIndex = 0,
+        //.frontPic = gMonFrontPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        //.iconSprite = gMonIcon_QuestionMark,
+        //.iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
-    #if OW_BATTLE_ONLY_FORMS
-        .overworldData = {
-            .tileTag = TAG_NONE,
-            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
-            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
-            .size = 512,
-            .width = 32,
-            .height = 32,
-            .paletteSlot = PALSLOT_NPC_1,
-            .shadowSize = SHADOW_SIZE_M,
-            .inanimate = FALSE,
-            .compressed = COMP,
-            .tracks = TRACKS_FOOT,
-            .oam = &gObjectEventBaseOam_32x32,
-            .subspriteTables = sOamTables_32x32,
-            .anims = sAnimTable_Following,
-            .images = sPicTable_Substitute,
-            .affineAnims = gDummySpriteAffineAnimTable,
-        },
-    #endif //OW_BATTLE_ONLY_FORMS
+        FOOTPRINT(Emboar)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sEmboarLevelUpLearnset,
         .teachableLearnset = sEmboarTeachableLearnset,
@@ -2880,42 +2860,22 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             "head together to form a streamlined\n"
             "shape and spins at high speeds,\n"
             "it can destroy anything."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
-        .iconPalIndex = 0,
+        //.frontPic = gMonFrontPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        //.iconSprite = gMonIcon_QuestionMark,
+        //.iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
-    #if OW_BATTLE_ONLY_FORMS
-        .overworldData = {
-            .tileTag = TAG_NONE,
-            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
-            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
-            .size = 512,
-            .width = 32,
-            .height = 32,
-            .paletteSlot = PALSLOT_NPC_1,
-            .shadowSize = SHADOW_SIZE_M,
-            .inanimate = FALSE,
-            .compressed = COMP,
-            .tracks = TRACKS_FOOT,
-            .oam = &gObjectEventBaseOam_32x32,
-            .subspriteTables = sOamTables_32x32,
-            .anims = sAnimTable_Following,
-            .images = sPicTable_Substitute,
-            .affineAnims = gDummySpriteAffineAnimTable,
-        },
-    #endif //OW_BATTLE_ONLY_FORMS
+        FOOTPRINT(Excadrill)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sExcadrillLevelUpLearnset,
         .teachableLearnset = sExcadrillTeachableLearnset,
@@ -3021,7 +2981,11 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .abilities = { ABILITY_HEALER, ABILITY_HEALER, ABILITY_HEALER },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Audino"),
+    #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_AUDINO_MEGA,
+    #else
+        .cryId = CRY_AUDINO,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_AUDINO,
         .categoryName = _("Hearing"),
         .height = 15,
@@ -4129,42 +4093,22 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             "Its deadly venom gives off a faint\n"
             "glow. The venom affects Scolipede's\n"
             "mind, honing its viciousness."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
-        .iconPalIndex = 0,
+        //.frontPic = gMonFrontPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        //.iconSprite = gMonIcon_QuestionMark,
+        //.iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
-    #if OW_BATTLE_ONLY_FORMS
-        .overworldData = {
-            .tileTag = TAG_NONE,
-            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
-            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
-            .size = 512,
-            .width = 32,
-            .height = 32,
-            .paletteSlot = PALSLOT_NPC_1,
-            .shadowSize = SHADOW_SIZE_M,
-            .inanimate = FALSE,
-            .compressed = COMP,
-            .tracks = TRACKS_FOOT,
-            .oam = &gObjectEventBaseOam_32x32,
-            .subspriteTables = sOamTables_32x32,
-            .anims = sAnimTable_Following,
-            .images = sPicTable_Substitute,
-            .affineAnims = gDummySpriteAffineAnimTable,
-        },
-    #endif //OW_BATTLE_ONLY_FORMS
+        FOOTPRINT(Scolipede)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sScolipedeLevelUpLearnset,
         .teachableLearnset = sScolipedeTeachableLearnset,
@@ -5885,42 +5829,22 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             "shed skin to turn white, growing\n"
             "tough and supple. Of course, this\n"
             "Pokémon is still as feisty as ever."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
-        .iconPalIndex = 0,
+        //.frontPic = gMonFrontPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        //.iconSprite = gMonIcon_QuestionMark,
+        //.iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
-    #if OW_BATTLE_ONLY_FORMS
-        .overworldData = {
-            .tileTag = TAG_NONE,
-            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
-            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
-            .size = 512,
-            .width = 32,
-            .height = 32,
-            .paletteSlot = PALSLOT_NPC_1,
-            .shadowSize = SHADOW_SIZE_M,
-            .inanimate = FALSE,
-            .compressed = COMP,
-            .tracks = TRACKS_FOOT,
-            .oam = &gObjectEventBaseOam_32x32,
-            .subspriteTables = sOamTables_32x32,
-            .anims = sAnimTable_Following,
-            .images = sPicTable_Substitute,
-            .affineAnims = gDummySpriteAffineAnimTable,
-        },
-    #endif //OW_BATTLE_ONLY_FORMS
+        FOOTPRINT(Scrafty)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sScraftyLevelUpLearnset,
         .teachableLearnset = sScraftyTeachableLearnset,
@@ -9712,7 +9636,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_Tynamo,
             gShinyOverworldPalette_Tynamo
         )
-        .tmIlliterate = TRUE,
+        .teachingType = TM_ILLITERATE,
         .levelUpLearnset = sTynamoLevelUpLearnset,
         .teachableLearnset = sTynamoTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 39, SPECIES_EELEKTRIK}),
@@ -9893,42 +9817,22 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             "electricity it did before Mega\n"
             "Evolving. It discharges this energy\n"
             "from its false Eelektrik made of mucus."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
-        .iconPalIndex = 0,
+        //.frontPic = gMonFrontPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        //.iconSprite = gMonIcon_QuestionMark,
+        //.iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
-    #if OW_BATTLE_ONLY_FORMS
-        .overworldData = {
-            .tileTag = TAG_NONE,
-            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
-            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
-            .size = 512,
-            .width = 32,
-            .height = 32,
-            .paletteSlot = PALSLOT_NPC_1,
-            .shadowSize = SHADOW_SIZE_M,
-            .inanimate = FALSE,
-            .compressed = COMP,
-            .tracks = TRACKS_FOOT,
-            .oam = &gObjectEventBaseOam_32x32,
-            .subspriteTables = sOamTables_32x32,
-            .anims = sAnimTable_Following,
-            .images = sPicTable_Substitute,
-            .affineAnims = gDummySpriteAffineAnimTable,
-        },
-    #endif //OW_BATTLE_ONLY_FORMS
+        FOOTPRINT(Eelektross)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sEelektrossLevelUpLearnset,
         .teachableLearnset = sEelektrossTeachableLearnset,
@@ -10335,42 +10239,22 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             "our world with the afterlife.\n"
             "This Pokémon draws in hatred and\n"
             "converts it into power."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
-        .iconPalIndex = 0,
+        //.frontPic = gMonFrontPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        //.iconSprite = gMonIcon_QuestionMark,
+        //.iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
-    #if OW_BATTLE_ONLY_FORMS
-        .overworldData = {
-            .tileTag = TAG_NONE,
-            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
-            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
-            .size = 512,
-            .width = 32,
-            .height = 32,
-            .paletteSlot = PALSLOT_NPC_1,
-            .shadowSize = SHADOW_SIZE_M,
-            .inanimate = FALSE,
-            .compressed = COMP,
-            .tracks = TRACKS_FOOT,
-            .oam = &gObjectEventBaseOam_32x32,
-            .subspriteTables = sOamTables_32x32,
-            .anims = sAnimTable_Following,
-            .images = sPicTable_Substitute,
-            .affineAnims = gDummySpriteAffineAnimTable,
-        },
-    #endif //OW_BATTLE_ONLY_FORMS
+        FOOTPRINT(Chandelure)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sChandelureLevelUpLearnset,
         .teachableLearnset = sChandelureTeachableLearnset,
@@ -12645,7 +12529,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_Cobalion,
             gShinyOverworldPalette_Cobalion
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sCobalionLevelUpLearnset,
         .teachableLearnset = sCobalionTeachableLearnset,
@@ -12720,7 +12604,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_Terrakion,
             gShinyOverworldPalette_Terrakion
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sTerrakionLevelUpLearnset,
         .teachableLearnset = sTerrakionTeachableLearnset,
@@ -12790,7 +12674,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_Virizion,
             gShinyOverworldPalette_Virizion
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sVirizionLevelUpLearnset,
         .teachableLearnset = sVirizionTeachableLearnset,
@@ -12881,7 +12765,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_TornadusIncarnate,
             gShinyOverworldPalette_TornadusIncarnate
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sTornadusLevelUpLearnset,
         .teachableLearnset = sTornadusTeachableLearnset,
@@ -12954,7 +12838,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_TornadusTherian,
             gShinyOverworldPalette_TornadusTherian
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sTornadusLevelUpLearnset,
         .teachableLearnset = sTornadusTeachableLearnset,
@@ -13047,7 +12931,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_ThundurusIncarnate,
             gShinyOverworldPalette_ThundurusIncarnate
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sThundurusLevelUpLearnset,
         .teachableLearnset = sThundurusTeachableLearnset,
@@ -13132,7 +13016,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_ThundurusTherian,
             gShinyOverworldPalette_ThundurusTherian
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sThundurusLevelUpLearnset,
         .teachableLearnset = sThundurusTeachableLearnset,
@@ -13204,7 +13088,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_Reshiram,
             gShinyOverworldPalette_Reshiram
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sReshiramLevelUpLearnset,
@@ -13275,7 +13159,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_Zekrom,
             gShinyOverworldPalette_Zekrom
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sZekromLevelUpLearnset,
@@ -13367,7 +13251,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_LandorusIncarnate,
             gShinyOverworldPalette_LandorusIncarnate
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sLandorusLevelUpLearnset,
         .teachableLearnset = sLandorusTeachableLearnset,
@@ -13440,7 +13324,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_LandorusTherian,
             gShinyOverworldPalette_LandorusTherian
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sLandorusLevelUpLearnset,
         .teachableLearnset = sLandorusTeachableLearnset,
@@ -13517,7 +13401,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_Kyurem,
             gShinyOverworldPalette_Kyurem
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sKyuremLevelUpLearnset,
@@ -13595,7 +13479,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_KyuremWhite,
             gShinyOverworldPalette_KyuremWhite
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .cannotBeTraded = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -13673,7 +13557,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             gOverworldPalette_KyuremBlack,
             gShinyOverworldPalette_KyuremBlack
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .cannotBeTraded = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,

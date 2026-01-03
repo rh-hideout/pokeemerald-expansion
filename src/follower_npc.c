@@ -2,6 +2,7 @@
 #include "follower_npc.h"
 #include "follower_npc_alternate_sprites.h"
 #include "battle.h"
+#include "battle_partner.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
 #include "bike.h"
@@ -1086,6 +1087,10 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
             RETURN_STATE(MOVEMENT_ACTION_RUN_DOWN_SLOW, direction);
 
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
+
+    // Slow stairs.
+    case MOVEMENT_ACTION_WALK_SLOW_STAIRS_DOWN ... MOVEMENT_ACTION_WALK_SLOW_STAIRS_RIGHT:
+        RETURN_STATE(MOVEMENT_ACTION_WALK_SLOW_STAIRS_DOWN, direction);
 
     default:
         return MOVEMENT_INVALID;

@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Scrappy doesn't prevent Intimidate (Gen4-7)")
     s16 turnTwoHit;
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_UPDATED_INTIMIDATE, GEN_7);
+        WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_7);
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_SHED_SKIN); };
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); };
         OPPONENT(SPECIES_KANGASKHAN) { Ability(ABILITY_SCRAPPY); };
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Scrappy prevents Intimidate (Gen8+)")
     s16 turnTwoHit;
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_UPDATED_INTIMIDATE, GEN_8);
+        WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_8);
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_SHED_SKIN); };
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); };
         OPPONENT(SPECIES_KANGASKHAN) { Ability(ABILITY_SCRAPPY); };
@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Scrappy prevents Intimidate (Gen8+)")
 
 SINGLE_BATTLE_TEST("Scrappy allows to hit Ghost-type Pokémon with Normal- and Fighting-type moves")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_KARATE_CHOP; }
 
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Scrappy allows to hit Ghost-type Pokémon with Normal- and F
 
 SINGLE_BATTLE_TEST("Scrappy doesn't bypass a Ghost-type's Wonder Guard")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_KARATE_CHOP; }
 

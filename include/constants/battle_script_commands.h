@@ -31,7 +31,7 @@
 #define sSPECIAL_TRAINER_BATTLE_TYPE (gBattleScripting + 0x26) // specialTrainerBattleType
 #define sMON_CAUGHT                  (gBattleScripting + 0x27) // monCaught
 #define sSAVED_DMG                   (gBattleScripting + 0x28) // savedDmg
-#define sSAVED_MOVE_EFFECT           (gBattleScripting + 0x2C) // savedMoveEffect
+#define sUNUSED_0x2C                 (gBattleScripting + 0x2C) // unused_0x2c
 #define sMOVE_EFFECT                 (gBattleScripting + 0x2E) // moveEffect
 #define sUNUSED_0x30                 (gBattleScripting + 0x30) // unused_0x30
 #define sILLUSION_NICK_HACK          (gBattleScripting + 0x32) // illusionNickHack
@@ -88,18 +88,10 @@
 #define CMP_COMMON_BITS         4
 #define CMP_NO_COMMON_BITS      5
 
-// Veriouses have been deprecated but the enum and function will be supported for one more release cycle
-enum CmdVarious
-{
-    VARIOUS_NONE,
-};
-
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN         1
-#define DMG_DOUBLED             2
-#define DMG_1_8_TARGET_HP       3
-#define DMG_FULL_ATTACKER_HP    4
-#define DMG_BIG_ROOT            5
+#define DMG_1_8_TARGET_HP       2
+#define DMG_BIG_ROOT            3
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
@@ -132,68 +124,26 @@ enum SetMoveEffectFlags
     EFFECT_CERTAIN = (1 << 1),
 };
 
-// cases for Cmd_moveend - Order matters!
-enum MoveEndEffects
+enum FaintBlockStates
 {
-    MOVEEND_SET_VALUES,
-    MOVEEND_PROTECT_LIKE_EFFECT,
-    MOVEEND_GRUDGE,
-    MOVEEND_DESTINY_BOND,
-    MOVEEND_ABSORB,
-    MOVEEND_RAGE,
-    MOVEEND_SYNCHRONIZE_TARGET,
-    MOVEEND_ABILITIES,
-    MOVEEND_ABILITIES_ATTACKER,
-    MOVEEND_STATUS_IMMUNITY_ABILITIES, // TODO: Do berries come before????
-    MOVEEND_SYNCHRONIZE_ATTACKER,
-    MOVEEND_ATTACKER_INVISIBLE,
-    MOVEEND_ATTACKER_VISIBLE,
-    MOVEEND_TARGET_VISIBLE,
-    MOVEEND_ITEM_EFFECTS_TARGET,
-    MOVEEND_ITEM_EFFECTS_ATTACKER_1,
-    MOVEEND_SYMBIOSIS,
-    MOVEEND_SUBSTITUTE,
-    MOVEEND_SKY_DROP_CONFUSE,
-    MOVEEND_UPDATE_LAST_MOVES,
-    MOVEEND_MIRROR_MOVE,
-    MOVEEND_DEFROST,
-    MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
-    MOVEEND_HP_THRESHHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
-    MOVEEND_MULTIHIT_MOVE,
-    MOVEEND_MOVE_BLOCK,
-    MOVEEND_ITEM_EFFECTS_ATTACKER_2,
-    MOVEEND_ABILITY_BLOCK,
-    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
-    MOVEEND_COLOR_CHANGE, // Color Change / Berserk / Anger Shell
-    MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET,
-    MOVEEND_RED_CARD,
-    MOVEEND_EJECT_BUTTON,
-    MOVEEND_LIFE_ORB_SHELL_BELL,
-    MOVEEND_FORM_CHANGE,
-    MOVEEND_EMERGENCY_EXIT,
-    MOVEEND_EJECT_PACK,
-    MOVEEND_HIT_ESCAPE,
-    MOVEEND_ITEMS_EFFECTS_ALL,
-    MOVEEND_WHITE_HERB,
-    MOVEEND_OPPORTUNIST,
-    MOVEEND_MIRROR_HERB,
-    MOVEEND_PICKPOCKET,
-    MOVEEND_THIRD_MOVE_BLOCK,
-    MOVEEND_CHANGED_ITEMS,
-    MOVEEND_SAME_MOVE_TURNS,
-    MOVEEND_CLEAR_BITS,
-    MOVEEND_DANCER,
-    MOVEEND_PURSUIT_NEXT_ACTION,
-    MOVEEND_COUNT,
-
-    // This guarantees a correct jump if new moveends are added directly after MOVEEND_HIT_ESCAPE
-    MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE = (MOVEEND_HIT_ESCAPE + 1),
+    FAINT_BLOCK_FINAL_GAMBIT,
+    FAINT_BLOCK_CHECK_TARGET_FAINTED, // Exits if target is not fainted
+    FAINT_BLOCK_END_NEUTRALIZING_GAS,
+    // Destiny Bond and Grudge are tested first, but Faint Target's script plays first
+    FAINT_BLOCK_TRY_DESTINY_BOND,
+    FAINT_BLOCK_TRY_GRUDGE,
+    FAINT_BLOCK_FAINT_TARGET,
+    FAINT_BLOCK_DO_DESTINY_BOND,
+    FAINT_BLOCK_DO_GRUDGE,
+    FAINT_BLOCK_COUNT,
 };
 
-// switch cases
-#define B_SWITCH_NORMAL     0
-#define B_SWITCH_HIT        1   // dragon tail, circle throw
-#define B_SWITCH_RED_CARD   2
+enum SwitchInCases
+{
+    B_SWITCH_NORMAL,
+    B_SWITCH_HIT, // dragon tail, circle throw
+    B_SWITCH_RED_CARD,
+};
 
 enum StatusTrigger
 {

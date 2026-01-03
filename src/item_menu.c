@@ -170,6 +170,7 @@ static void PrintThereIsNoPokemon(u8);
 static void Task_ChooseHowManyToToss(u8);
 static void AskTossItems(u8);
 static void Task_RemoveItemFromBag(u8);
+static void Task_TossItemFromBag(u8 taskId);
 static void ItemMenu_Cancel(u8);
 static void HandleErrorMessage(u8);
 static void PrintItemCantBeHeld(u8);
@@ -936,7 +937,7 @@ static void GetItemNameFromPocket(u8 *dest, u16 itemId)
     {
     case POCKET_TM_HM:
         end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
-        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
+        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, NUM_TECHNICAL_MACHINES >= 100 ? 60 : 65);
         if (GetItemTMHMIndex(itemId) > NUM_TECHNICAL_MACHINES)
         {
             // Get HM number
@@ -946,7 +947,7 @@ static void GetItemNameFromPocket(u8 *dest, u16 itemId)
         else
         {
             // Get TM number
-            ConvertIntToDecimalStringN(gStringVar1, GetItemTMHMIndex(itemId), STR_CONV_MODE_LEADING_ZEROS, 2);
+            ConvertIntToDecimalStringN(gStringVar1, GetItemTMHMIndex(itemId), STR_CONV_MODE_LEADING_ZEROS, NUM_TECHNICAL_MACHINES >= 100 ? 3 : 2);
             StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
         }
         break;
@@ -1958,11 +1959,34 @@ static void ConfirmToss(u8 taskId)
     StringExpandPlaceholders(gStringVar4, gText_ThrewAwayVar2Var1s);
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
-    gTasks[taskId].func = Task_RemoveItemFromBag;
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
+        gTasks[taskId].func = Task_RemoveItemFromBag;
+    else
+        gTasks[taskId].func = Task_TossItemFromBag;
+}
+
+static void Task_TossItemFromBag(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    u16 *scrollPos = &gBagPosition.scrollPosition[gBagPosition.pocket];
+    u16 *cursorPos = &gBagPosition.cursorPosition[gBagPosition.pocket];
+
+    if (JOY_NEW(A_BUTTON | B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        RemoveBagItemFromSlot(&gBagPockets[gBagPosition.pocket], *scrollPos + *cursorPos, tItemCount);
+        DestroyListMenuTask(tListTaskId, scrollPos, cursorPos);
+        UpdatePocketItemList(gBagPosition.pocket);
+        UpdatePocketListPosition(gBagPosition.pocket);
+        LoadBagItemListBuffers(gBagPosition.pocket);
+        tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, *scrollPos, *cursorPos);
+        ScheduleBgCopyTilemapToVram(0);
+        ReturnToItemList(taskId);
+    }
 }
 
 // Remove selected item(s) from the bag and update list
-// For when items are tossed or deposited
+// For when items are deposited
 static void Task_RemoveItemFromBag(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
@@ -2072,9 +2096,9 @@ static void ItemMenu_UseInBattle(u8 taskId)
         return;
 
     RemoveContextWindow();
-    if (type == ITEM_USE_BAG_MENU)
+    if (type == ITEM_USE_BAG_MENU || (type == ITEM_USE_BATTLER && !IsDoubleBattle()))
         ItemUseInBattle_BagMenu(taskId);
-    else if (type == ITEM_USE_PARTY_MENU)
+    else if (type == ITEM_USE_PARTY_MENU || (type == ITEM_USE_BATTLER && IsDoubleBattle()))
         ItemUseInBattle_PartyMenu(taskId);
     else if (type == ITEM_USE_PARTY_MENU_MOVES)
         ItemUseInBattle_PartyMenuChooseMove(taskId);
@@ -2644,7 +2668,7 @@ static void PrepareTMHMMoveWindow(void)
 static void PrintTMHMMoveData(u16 itemId)
 {
     u8 i;
-    u16 move;
+    enum Move move;
     const u8 *text;
 
     FillWindowPixelBuffer(WIN_TMHM_INFO, PIXEL_FILL(0));
@@ -2916,8 +2940,8 @@ static s32 CompareItemsAlphabetically(enum Pocket pocketId, struct ItemSlot item
 
     if (pocketId == POCKET_TM_HM)
     {
-        name1 = gMovesInfo[GetTMHMMoveId(GetItemTMHMIndex(item1.itemId))].name;
-        name2 = gMovesInfo[GetTMHMMoveId(GetItemTMHMIndex(item2.itemId))].name;
+        name1 = GetMoveName(GetTMHMMoveId(GetItemTMHMIndex(item1.itemId)));
+        name2 = GetMoveName(GetTMHMMoveId(GetItemTMHMIndex(item2.itemId)));
     }
     else
     {

@@ -572,7 +572,8 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
 
 DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mon is woken up with Aromatherapy / Heal Bell / Sparkly Swirl")
 {
-    u32 move = MOVE_NONE, switchIndex = 0;
+    enum Move move = MOVE_NONE;
+    u32 switchIndex = 0;
     struct BattlePokemon *healingSlot = opponentRight;
     struct BattlePokemon *sporedSlot = opponentLeft;
     PARAMETRIZE { move = MOVE_AROMATHERAPY;     healingSlot = opponentRight;    sporedSlot = opponentLeft;      switchIndex = 0; }
@@ -719,7 +720,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
 
 SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mon is woken up by using Sleep Talk into a status curing move")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_PSYCHO_SHIFT; }
     PARAMETRIZE { move = MOVE_JUNGLE_HEALING; }
     PARAMETRIZE { move = MOVE_LUNAR_BLESSING; }
@@ -1772,7 +1773,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep Clause does not prevent sleeping your pa
 DOUBLE_BATTLE_TEST("Sleep Clause: Sleep moves used after being Encore'd are prevented when sleep clause is active")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ENCORE_TARGET, GEN_3);
+        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);

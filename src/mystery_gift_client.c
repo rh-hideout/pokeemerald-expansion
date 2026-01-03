@@ -3,7 +3,7 @@
 #include "decompress.h"
 #include "overworld.h"
 #include "script.h"
-#include "battle_tower.h"
+#include "battle_special.h"
 #include "mystery_gift.h"
 #include "mystery_event_script.h"
 #include "mystery_gift_client.h"

@@ -157,7 +157,7 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
     }
 }
 
-void ScriptSetMonMoveSlot(u8 monIndex, u16 move, u8 slot)
+void ScriptSetMonMoveSlot(u8 monIndex, enum Move move, u8 slot)
 {
 // Allows monIndex to go out of bounds of gPlayerParty. Doesn't occur in vanilla
 #ifdef BUGFIX
@@ -243,9 +243,20 @@ void CanHyperTrain(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    if (stat < NUM_STATS
-     && partyIndex < PARTY_SIZE
-     && !GetMonData(&gPlayerParty[partyIndex], MON_DATA_HYPER_TRAINED_HP + stat)
+    assertf(stat < NUM_STATS, "invalid stat: %d", stat)
+    {
+        gSpecialVar_Result = FALSE;
+        return;
+    }
+
+    CalculatePlayerPartyCount();
+    assertf(partyIndex < gPlayerPartyCount, "invalid party index: %d", partyIndex)
+    {
+        gSpecialVar_Result = FALSE;
+        return;
+    }
+
+    if (!GetMonData(&gPlayerParty[partyIndex], MON_DATA_HYPER_TRAINED_HP + stat)
      && GetMonData(&gPlayerParty[partyIndex], MON_DATA_HP_IV + stat) < MAX_PER_STAT_IVS)
     {
         gSpecialVar_Result = TRUE;
@@ -263,12 +274,20 @@ void HyperTrain(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 
-    if (stat < NUM_STATS && partyIndex < PARTY_SIZE)
+    assertf(stat < NUM_STATS, "invalid stat: %d", stat)
     {
-        bool32 data = TRUE;
-        SetMonData(&gPlayerParty[partyIndex], MON_DATA_HYPER_TRAINED_HP + stat, &data);
-        CalculateMonStats(&gPlayerParty[partyIndex]);
+        return;
     }
+
+    CalculatePlayerPartyCount();
+    assertf(partyIndex < gPlayerPartyCount, "invalid party index: %d", partyIndex)
+    {
+        return;
+    }
+
+    bool32 data = TRUE;
+    SetMonData(&gPlayerParty[partyIndex], MON_DATA_HYPER_TRAINED_HP + stat, &data);
+    CalculateMonStats(&gPlayerParty[partyIndex]);
 }
 
 void HasGigantamaxFactor(struct ScriptContext *ctx)
@@ -338,7 +357,6 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     int sentToPc;
     struct Pokemon mon;
     u32 i;
-    u8 genderRatio = gSpeciesInfo[species].genderRatio;
     u16 targetSpecies;
     bool32 isShiny;
 
@@ -353,9 +371,9 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     }
 
     // create a Pokémon with basic data
-    if ((gender == MON_MALE && genderRatio != MON_FEMALE && genderRatio != MON_GENDERLESS)
-     || (gender == MON_FEMALE && genderRatio != MON_MALE && genderRatio != MON_GENDERLESS)
-     || (gender == MON_GENDERLESS && genderRatio == MON_GENDERLESS))
+    // TODO: Use another value for "any gender" so that we can report an
+    // error if genderless.
+    if (gender != MON_GENDERLESS)
         CreateMonWithGenderNatureLetter(&mon, species, level, 32, gender, nature, 0);
     else
         CreateMonWithNature(&mon, species, level, 32, nature);
@@ -434,36 +452,33 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     SetMonData(&mon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
     SetMonData(&mon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
 
-    if (slot < PARTY_SIZE)
+    if (side == B_SIDE_PLAYER)
     {
-        if (side == 0)
+        if (slot < PARTY_SIZE)
+        {
             CopyMon(&gPlayerParty[slot], &mon, sizeof(struct Pokemon));
-        else
-            CopyMon(&gEnemyParty[slot], &mon, sizeof(struct Pokemon));
-        sentToPc = MON_GIVEN_TO_PARTY;
-    }
-    else
-    {
-        // find empty party slot to decide whether the Pokémon goes to the Player's party or the storage system.
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
-                break;
-        }
-        if (i >= PARTY_SIZE)
-        {
-            sentToPc = CopyMonToPC(&mon);
-        }
-        else
-        {
             sentToPc = MON_GIVEN_TO_PARTY;
-            CopyMon(&gPlayerParty[i], &mon, sizeof(mon));
-            gPlayerPartyCount = i + 1;
         }
-    }
+        else
+        {
+            // find empty party slot to decide whether the Pokémon goes to the Player's party or the storage system.
+            for (i = 0; i < PARTY_SIZE; i++)
+            {
+                if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
+                    break;
+            }
+            if (i >= PARTY_SIZE)
+            {
+                sentToPc = CopyMonToPC(&mon);
+            }
+            else
+            {
+                sentToPc = MON_GIVEN_TO_PARTY;
+                CopyMon(&gPlayerParty[i], &mon, sizeof(mon));
+                gPlayerPartyCount = i + 1;
+            }
+        }
 
-    if (side == 0)
-    {
         // set pokédex flags
         nationalDexNum = SpeciesToNationalPokedexNum(species);
         if (sentToPc != MON_CANT_GIVE)
@@ -471,6 +486,15 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
             GetSetPokedexFlag(nationalDexNum, FLAG_SET_SEEN);
             GetSetPokedexFlag(nationalDexNum, FLAG_SET_CAUGHT);
         }
+    }
+    else
+    {
+        assertf(slot < PARTY_SIZE, "invalid slot: %d", slot)
+        {
+            return MON_CANT_GIVE;
+        }
+        CopyMon(&gEnemyParty[slot], &mon, sizeof(struct Pokemon));
+        sentToPc = MON_GIVEN_TO_PARTY;
     }
 
     return sentToPc;
@@ -481,7 +505,7 @@ u32 ScriptGiveMon(u16 species, u8 level, u16 item)
     u8 evs[NUM_STATS]        = {0, 0, 0, 0, 0, 0};
     u8 ivs[NUM_STATS]        = {MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1,   // We pass "MAX_PER_STAT_IVS + 1" here to ensure that
                                 MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1};  // ScriptGiveMonParameterized won't touch the stats' IV.
-    u16 moves[MAX_MON_MOVES] = {MOVE_NONE, MOVE_NONE, MOVE_NONE, MOVE_NONE};
+    enum Move moves[MAX_MON_MOVES] = {MOVE_NONE, MOVE_NONE, MOVE_NONE, MOVE_NONE};
 
     return ScriptGiveMonParameterized(0, PARTY_SIZE, species, level, item, ITEM_POKE_BALL, NUM_NATURES, NUM_ABILITY_PERSONALITY, MON_GENDERLESS, evs, ivs, moves, SHINY_MODE_RANDOM, FALSE, NUMBER_OF_MON_TYPES, 0);
 }
@@ -553,10 +577,10 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     speedIv                  = PARSE_FLAG(14, speedIv);
     spAtkIv                  = PARSE_FLAG(15, spAtkIv);
     spDefIv                  = PARSE_FLAG(16, spDefIv);
-    u16 move1                = PARSE_FLAG(17, MOVE_NONE);
-    u16 move2                = PARSE_FLAG(18, MOVE_NONE);
-    u16 move3                = PARSE_FLAG(19, MOVE_NONE);
-    u16 move4                = PARSE_FLAG(20, MOVE_NONE);
+    enum Move move1          = PARSE_FLAG(17, MOVE_NONE);
+    enum Move move2          = PARSE_FLAG(18, MOVE_NONE);
+    enum Move move3          = PARSE_FLAG(19, MOVE_NONE);
+    enum Move move4          = PARSE_FLAG(20, MOVE_NONE);
     enum ShinyMode shinyMode = PARSE_FLAG(21, SHINY_MODE_RANDOM);
     bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
     enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
@@ -564,7 +588,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
 
     u8 evs[NUM_STATS]        = {hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv};
     u8 ivs[NUM_STATS]        = {hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv};
-    u16 moves[MAX_MON_MOVES] = {move1, move2, move3, move4};
+    enum Move moves[MAX_MON_MOVES] = {move1, move2, move3, move4};
 
     if (side == 0)
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
@@ -627,5 +651,18 @@ void Script_SetStatus1(struct ScriptContext *ctx)
     else
     {
         SetMonData(&gPlayerParty[slot], MON_DATA_STATUS, &status1);
+    }
+}
+
+void Script_SetKO(struct ScriptContext *ctx)
+{
+    u32 slot = VarGet(ScriptReadHalfword(ctx));
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+
+    if (slot < PARTY_SIZE)
+    {
+        u32 hp = 0;
+        SetMonData(&gPlayerParty[slot], MON_DATA_HP, &hp);
     }
 }
