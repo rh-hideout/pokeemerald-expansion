@@ -310,7 +310,7 @@ void OpponentBufferExecCompleted(u32 battler)
 
 static u32 OpponentGetTrainerPicId(u32 battlerId)
 {
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
     {
@@ -370,14 +370,14 @@ static u32 OpponentGetTrainerPicId(u32 battlerId)
 static void OpponentHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     // Sets Multibattle test opponent sprites to not be Hiker
     if (IsMultibattleTest())
     {
         if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
-            trainerPicId = TRAINER_PIC_LEAF;
+            trainerPicId = TRAINER_PIC_FRONT_LEAF;
             if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
                 xPos = 176;
             else
@@ -385,7 +385,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
         }
         else
         {
-            trainerPicId = TRAINER_PIC_RED;
+            trainerPicId = TRAINER_PIC_FRONT_RED;
             xPos = 152;
         }
     }
@@ -411,7 +411,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
 
 void OpponentHandleTrainerSlide(u32 battler)
 {
-    u32 trainerPicId = OpponentGetTrainerPicId(battler);
+    enum TrainerPicID trainerPicId = OpponentGetTrainerPicId(battler);
     BtlController_HandleTrainerSlide(battler, trainerPicId);
 }
 

@@ -2396,7 +2396,7 @@ void BtlController_HandleReturnMonToBall(u32 battler)
 
 #define sSpeedX data[0]
 
-void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 isFrontPic, s16 xPos, s16 yPos, s32 subpriority)
+void BtlController_HandleDrawTrainerPic(u32 battler, enum TrainerPicID trainerPicId, bool32 isFrontPic, s16 xPos, s16 yPos, s32 subpriority)
 {
     if (!IsOnPlayerSide(battler)) // Always the front sprite for the opponent.
     {
@@ -2461,7 +2461,7 @@ void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 is
     gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
 }
 
-void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId)
+void BtlController_HandleTrainerSlide(u32 battler, enum TrainerPicID trainerPicId)
 {
     if (IsOnPlayerSide(battler))
     {
