@@ -188,16 +188,15 @@ SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the tar
 {
     GIVEN {
         WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); Moves(MOVE_TRICK, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_SABLEYE){ Ability(ABILITY_STALL); Item(ITEM_CHOICE_SCARF); Moves(MOVE_DISABLE);}
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); MovesWithPP({MOVE_TRICK, 1}, {MOVE_CELEBRATE, 10}); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); }
     }
     WHEN {
-        TURN { MOVE(player, MOVE_TRICK); MOVE(opponent, MOVE_DISABLE); }
-        TURN { FORCED_MOVE(player); MOVE(opponent, MOVE_DISABLE); }
+        TURN { MOVE(player, MOVE_TRICK); }
+        TURN { FORCED_MOVE(player); }
     }
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISABLE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
     }
 }
