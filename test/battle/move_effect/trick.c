@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
     }
 }
 
-SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the target and use are holding choice items before Gen5")
+SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the target and use are holding choice items before Gen 5")
 {
     u32 genConfig;
 
@@ -206,7 +206,7 @@ SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the tar
     }
 }
 
-SINGLE_BATTLE_TEST("Trick removes the user's choice lock if both the target and use are holding choice items from Gen5 onwards")
+SINGLE_BATTLE_TEST("Trick removes the user's choice lock if both the target and use are holding choice items from Gen 5 onwards")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, GEN_5);
