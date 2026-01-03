@@ -3101,15 +3101,6 @@ BattleScript_MoveUsedMustRecharge::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectRage::
-	attackcanceler
-	accuracycheck BattleScript_RageMiss, ACC_CURR_MOVE
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_RAGE
-	goto BattleScript_HitFromDamageCalc
-BattleScript_RageMiss::
-	clearvolatile BS_ATTACKER, VOLATILE_RAGE
-	goto BattleScript_MoveMissedPause
-
 BattleScript_EffectMimic::
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed

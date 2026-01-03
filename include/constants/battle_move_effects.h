@@ -60,7 +60,6 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_REFLECT,
     EFFECT_TWO_TURNS_ATTACK,
     EFFECT_SUBSTITUTE,
-    EFFECT_RAGE,
     EFFECT_MIMIC,
     EFFECT_METRONOME,
     EFFECT_LEECH_SEED,

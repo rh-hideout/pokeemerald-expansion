@@ -183,6 +183,13 @@ static const u8 sText_1MinutePlus[] = _("1 minute +");
 static const u8 sText_SpaceSeconds[] = _(" seconds");
 static const u8 sText_SpaceTimes[] = _(" time(s)");
 
+static const u8 sText_Wallace[] = _("WALLACE");
+static const u8 sText_Steven[] = _("STEVEN");
+static const u8 sText_Brawly[] = _("BRAWLY");
+static const u8 sText_Winona[] = _("WINONA");
+static const u8 sText_Phoebe[] = _("PHOEBE");
+static const u8 sText_Glacia[] = _("GLACIA");
+
 void Special_ShowDiploma(void)
 {
     SetMainCallback2(CB2_ShowDiploma);
@@ -2632,7 +2639,7 @@ static void Task_ShowScrollableMultichoice(u8 taskId)
     sScrollableMultichoice_ItemSpriteId = MAX_SPRITES;
     FillFrontierExchangeCornerWindowAndItemIcon(task->tScrollMultiId, 0);
     ShowBattleFrontierTutorWindow(task->tScrollMultiId, 0);
-    sScrollableMultichoice_ListMenuItem = AllocZeroed(task->tNumItems * 8);
+    sScrollableMultichoice_ListMenuItem = AllocZeroed(task->tNumItems * sizeof(struct ListMenuItem));
     sFrontierExchangeCorner_NeverRead = 0;
     InitScrollableMultichoice();
 
@@ -4209,25 +4216,25 @@ static void BufferFanClubTrainerName_(struct LinkBattleRecords *linkRecords, u8 
         switch (whichNPCTrainer)
         {
         case 0:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
         case 1:
-            StringCopy(gStringVar1, gText_Steven);
+            StringCopy(gStringVar1, sText_Steven);
             break;
         case 2:
-            StringCopy(gStringVar1, gText_Brawly);
+            StringCopy(gStringVar1, sText_Brawly);
             break;
         case 3:
-            StringCopy(gStringVar1, gText_Winona);
+            StringCopy(gStringVar1, sText_Winona);
             break;
         case 4:
-            StringCopy(gStringVar1, gText_Phoebe);
+            StringCopy(gStringVar1, sText_Phoebe);
             break;
         case 5:
-            StringCopy(gStringVar1, gText_Glacia);
+            StringCopy(gStringVar1, sText_Glacia);
             break;
         default:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
         }
     }
@@ -4244,25 +4251,25 @@ static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer)
     switch (whichNPCTrainer)
     {
         case 0:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
         case 1:
-            StringCopy(gStringVar1, gText_Steven);
+            StringCopy(gStringVar1, sText_Steven);
             break;
         case 2:
-            StringCopy(gStringVar1, gText_Brawly);
+            StringCopy(gStringVar1, sText_Brawly);
             break;
         case 3:
-            StringCopy(gStringVar1, gText_Winona);
+            StringCopy(gStringVar1, sText_Winona);
             break;
         case 4:
-            StringCopy(gStringVar1, gText_Phoebe);
+            StringCopy(gStringVar1, sText_Phoebe);
             break;
         case 5:
-            StringCopy(gStringVar1, gText_Glacia);
+            StringCopy(gStringVar1, sText_Glacia);
             break;
         default:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
     }
 }
