@@ -116,6 +116,25 @@ SINGLE_BATTLE_TEST("Chesto and Lum Berries cure sleep")
     }
 }
 
+SINGLE_BATTLE_TEST("Chesto Berry cures sleep when Yawn takes effect")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
+        ASSUME(gItemsInfo[ITEM_CHESTO_BERRY].holdEffect == HOLD_EFFECT_CURE_SLP);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHESTO_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_YAWN); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_YAWN, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
+        STATUS_ICON(player, sleep: TRUE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        STATUS_ICON(player, sleep: FALSE);
+    }
+}
+
 TO_DO_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comatose")
 
 SINGLE_BATTLE_TEST("Cheri and Lum Berries cure paralysis")
