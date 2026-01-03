@@ -1773,7 +1773,7 @@ void GiveMonDefaultMove(struct Pokemon *mon, u32 slot)
 
 void GiveBoxMonDefaultMove(struct BoxPokemon *boxMon, u32 slot)
 {
-    enum Move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
     s32 level = GetLevelFromBoxMonExp(boxMon);
