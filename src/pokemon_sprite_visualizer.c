@@ -1918,6 +1918,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             SetArrowInvisibility(data);
             PrintInstructionsOnWindow(data);
             UpdateMonAnimNames(taskId);
+            LoadBattleBg(data->battleBgType, data->battleEnvironment);
 
             gSprites[data->followerspriteId].invisible = FALSE;
         }
@@ -1956,6 +1957,8 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             data->currentSubmenu = 4;
             PrintInstructionsOnWindow(data);
             SetArrowInvisibility(data);
+            PrintMoveBgName(taskId);
+            LoadMoveBackground(data->moveBackground);
         }
         else if (JOY_NEW(B_BUTTON))
         {
