@@ -2130,7 +2130,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               || !CanBattlerGetOrLoseItem(battlerAtk, battlerDef, aiData->items[battlerDef])
               || !CanBattlerGetOrLoseItem(battlerDef, battlerAtk, aiData->items[battlerDef])
               || !CanBattlerGetOrLoseItem(battlerDef, battlerAtk, gBattleMons[battlerAtk].item)
-              || aiData->abilities[battlerAtk] == ABILITY_STICKY_HOLD
               || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD
               || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
                 ADJUST_SCORE(-10);
