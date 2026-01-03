@@ -122,8 +122,7 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species),
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species),
         RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID);
-    SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
+    CreateMonWithIVs(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
     if (item)
     {
@@ -142,8 +141,7 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species1),
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species1),
         RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[0], species1, level1, personality, OTID_STRUCT_PLAYER_ID);
-    SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
+    CreateMonWithIVs(&gEnemyParty[0], species1, level1, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
     if (item1)
     {
@@ -156,8 +154,7 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species2),
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species2),
         RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[1], species2, level2, personality, OTID_STRUCT_PLAYER_ID);
-    SetMonIVs(&gEnemyParty[1], USE_RANDOM_IVS);
+    CreateMonWithIVs(&gEnemyParty[1], species2, level2, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[1]);
     if (item2)
     {

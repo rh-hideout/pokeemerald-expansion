@@ -2624,12 +2624,12 @@ void CreateFrontierBrainPokemon(void)
                                             MON_GENDER_RANDOM,
                                             sFrontierBrainsMons[facility][symbol][i].nature,
                                             RANDOM_UNOWN_LETTER);
-        CreateMon(&gEnemyParty[monPartyId],
+        CreateMonWithIVs(&gEnemyParty[monPartyId],
                   sFrontierBrainsMons[facility][symbol][i].species,
                   monLevel,
                   personality,
-                  OTID_STRUCT_PRESET(FRONTIER_BRAIN_OTID));
-        SetMonIVs(&gEnemyParty[monPartyId], sFrontierBrainsMons[facility][symbol][i].fixedIV);
+                  OTID_STRUCT_PRESET(FRONTIER_BRAIN_OTID),
+                  sFrontierBrainsMons[facility][symbol][i].fixedIV);
         SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
         for (j = 0; j < NUM_STATS; j++)
             SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);

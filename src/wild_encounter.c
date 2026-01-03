@@ -473,8 +473,7 @@ void CreateWildMon(u16 species, u8 level)
 {
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID);
-    SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
+    CreateMonWithIVs(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
 }
 

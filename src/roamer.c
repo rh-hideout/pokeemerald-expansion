@@ -105,8 +105,7 @@ static void CreateInitialRoamerMon(u8 index, u16 species, u8 level)
         GetSynchronizedGender(ROAMER_ORIGIN, species),
         GetSynchronizedNature(ROAMER_ORIGIN, species),
         RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID);
-    SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
+    CreateMonWithIVs(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
     ROAMER(index)->ivs = GetMonData(&gEnemyParty[0], MON_DATA_IVS);
     ROAMER(index)->personality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);

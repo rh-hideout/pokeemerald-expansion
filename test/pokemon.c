@@ -91,8 +91,7 @@ TEST("Hyper Training increases stats without affecting IVs")
 {
     u32 data, hp, atk, def, speed, spatk, spdef, friendship = 0;
     struct Pokemon mon;
-    CreateMon(&mon, SPECIES_WOBBUFFET, 100, 0, OTID_STRUCT_PRESET(0));
-    SetMonIVs(&mon, 3);
+    CreateMonWithIVs(&mon, SPECIES_WOBBUFFET, 100, 0, OTID_STRUCT_PRESET(0), 3);
     // Consider B_FRIENDSHIP_BOOST.
     SetMonData(&mon, MON_DATA_FRIENDSHIP, &friendship);
     CalculateMonStats(&mon);
