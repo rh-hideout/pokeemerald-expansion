@@ -2096,7 +2096,7 @@ static void Controller_FaintOpponentMon(u32 battler)
 
 static void Controller_DoMoveAnimation(u32 battler)
 {
-    u16 move = gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8);
+    enum Move move = gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8);
 
     switch (gBattleSpritesDataPtr->healthBoxesData[battler].animationState)
     {
