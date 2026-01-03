@@ -1986,15 +1986,15 @@ gBattleAnimMove_IceShard::
 	setalpha 12, 8
 	loadspritegfx ANIM_TAG_ICE_CRYSTALS
 	loadspritegfx ANIM_TAG_IMPACT
-	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 4
 	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_TARGET, -31, 0, 7, RGB(0, 20, 31)
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 25, 1
@@ -3588,7 +3588,7 @@ gBattleAnimMove_SpacialRend::
 	delay 2
 	createsprite gSpacialRendBladesTemplate, ANIM_ATTACKER, 3, 0, 0, 0x38, 12
 	waitforvisualfinish
-	fadetobgfromset BG_SPACIAL_REND_ON_OPPONENT BG_SPACIAL_REND_ON_PLAYER BG_SPACIAL_REND_ON_OPPONENT
+	fadetobgfromset BG_SPACIAL_REND_OPPONENT BG_SPACIAL_REND_PLAYER BG_SPACIAL_REND_OPPONENT
 	waitbgfadein
 	loopsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET, 3, 5
 	createsprite gSpacialRendBladesTemplate2, ANIM_TARGET, 1, 0, 10, SOUND_PAN_ATTACKER, 0xb0, 0x28
@@ -14299,7 +14299,7 @@ gBattleAnimMove_Eternabeam::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_HYDRO_PUMP, 0, 12, 12, RGB(31, 4, 10)    @Pinkish Red
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_ROUND_SHADOW, 0, 13, 13, RGB(31, 4, 10)  @Pinkish Red
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB(11, 1, 22)
-	fadetobgfromset BG_SPACIAL_REND_ON_OPPONENT BG_SPACIAL_REND_ON_PLAYER BG_SPACIAL_REND_ON_OPPONENT
+	fadetobgfromset BG_SPACIAL_REND_OPPONENT BG_SPACIAL_REND_PLAYER BG_SPACIAL_REND_OPPONENT
 	playsewithpan SE_M_FLY, SOUND_PAN_ATTACKER
 	invisible ANIM_ATTACKER
 	createsprite gDevastatingDrakeDrakeUpSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 0x04E0, 36, 21, 1, ANIM_ATTACKER
@@ -18400,7 +18400,7 @@ FickleBeamRegular:
 	end
 FickleBeamIntense:
 	loadspritegfx ANIM_TAG_ORBS
-	fadetobgfromset BG_SPACIAL_REND_ON_OPPONENT BG_SPACIAL_REND_ON_PLAYER BG_SPACIAL_REND_ON_OPPONENT
+	fadetobgfromset BG_SPACIAL_REND_OPPONENT BG_SPACIAL_REND_PLAYER BG_SPACIAL_REND_OPPONENT
 	waitbgfadein
 	delay 10
 	playsewithpan SE_M_HYPER_BEAM, SOUND_PAN_ATTACKER
@@ -19924,36 +19924,36 @@ TeraBlastBug:
 	waitforvisualfinish
 	monbg ANIM_DEF_PARTNER
 	call SetBugBg
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 3, 0, 50, 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
@@ -21057,7 +21057,7 @@ OrderUpStretchy:
 	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
 	waitforvisualfinish
 	end
-	
+
 gBattleAnimMove_MatchaGotcha::
 	loadspritegfx ANIM_TAG_POISON_BUBBLE
 	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
@@ -34468,7 +34468,7 @@ gBattleAnimMove_BlackHoleEclipse::
 	delay 3
 	createsprite gBlackHoleEclipseWispSpriteTemplate, ANIM_ATTACKER, 4, 0x0, 0x10, 0x3
 	waitforvisualfinish
-	fadetobg BG_BLACKHOLE_ECLIPSE
+	fadetobg BG_BLACK_HOLE_ECLIPSE
 	playsewithpan SE_M_SACRED_FIRE2, SOUND_PAN_TARGET
 	loadspritegfx ANIM_TAG_VERTICAL_HEX @red
 	createsprite gBlackHoleEclipseRedRingSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x100, 0x0
