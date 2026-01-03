@@ -1258,9 +1258,6 @@ void CB2_Pokemon_Sprite_Visualizer(void)
             data->animIdFront = gSpeciesInfo[data->currentmonId].frontAnimId;
             UpdateMonAnimNames(taskId);
 
-            //BattleNg Name
-            PrintBattleBgName(taskId);
-
             //Footprint
             DrawFootprint(WIN_FOOTPRINT, species);
             CopyWindowToVram(WIN_FOOTPRINT, COPYWIN_GFX);
