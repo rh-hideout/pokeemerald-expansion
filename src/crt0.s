@@ -37,7 +37,7 @@ sp_irq: .word IWRAM_END - 0x60
 	.pool
 
 	.arm
-	.section .iwram.code
+	.section .iwram.code, "ax", %progbits
 	.align 2, 0
 IntrMain::
 	mov r3, #REG_BASE

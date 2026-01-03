@@ -484,7 +484,7 @@ struct SpeciesInfo /*0xC4*/
     u32 cannotBeTraded:1;
     u32 perfectIVCount:3;   // This species will always generate with the specified amount of perfect IVs.
     u32 dexForceRequired:1; // This species will be taken into account for Pokédex ratings even if they have the "isMythical" flag set.
-    u32 tmIlliterate:1;     // This species will be unable to learn the universal moves.
+    u32 teachingType:1; // Not used in the ROM but used in compilation (check constants/teaching_types.h for explanations)
     u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
     u32 padding4:10;
     // Shadow settings
@@ -701,9 +701,6 @@ extern const struct SpriteTemplate gBattlerSpriteTemplates[];
 extern const u32 sExpCandyExperienceTable[];
 extern const struct AbilityInfo gAbilitiesInfo[];
 extern const struct NatureInfo gNaturesInfo[];
-#if P_TUTOR_MOVES_ARRAY
-extern const u16 gTutorMoves[];
-#endif // P_TUTOR_MOVES_ARRAY
 
 void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
@@ -722,7 +719,6 @@ void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src);
 void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPokemon *src, bool8 lvl50);
 void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId);
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest);
-bool8 ShouldIgnoreDeoxysForm(u8 caseId, u8 battler);
 u16 GetUnionRoomTrainerPic(void);
 enum TrainerClassID GetUnionRoomTrainerClass(void);
 void CreateEnemyEventMon(void);
@@ -842,14 +838,14 @@ void UpdatePartyPokerusTime(u16 days);
 void PartySpreadPokerus(struct Pokemon *party);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
 u8 CanLearnTeachableMove(u16 species, u16 move);
-u8 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves);
-u8 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves);
-u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves);
-u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves);
-u8 GetNumberOfLevelUpMoves(struct Pokemon *mon);
-u8 GetNumberOfEggMoves(struct Pokemon *mon);
-u8 GetNumberOfTMMoves(struct Pokemon *mon);
-u8 GetNumberOfTutorMoves(struct Pokemon *mon);
+u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves);
+bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon);
+bool32 HasRelearnerEggMoves(struct Pokemon *mon);
+bool32 HasRelearnerTMMoves(struct Pokemon *mon);
+bool32 HasRelearnerTutorMoves(struct Pokemon *mon);
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves);
 u8 GetNumberOfRelearnableMoves(struct Pokemon *mon);
 u16 SpeciesToPokedexNum(u16 species);

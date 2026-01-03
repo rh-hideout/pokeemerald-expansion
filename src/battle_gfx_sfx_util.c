@@ -300,7 +300,7 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
 
     if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
         chosenMoveIndex |= (battler << 8);
-    else if (moveTarget == TARGET_SELECTED)
+    else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART)
         chosenMoveIndex |= GetBattlePalaceTarget(battler);
     else
         chosenMoveIndex |= (GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler))) << 8);
@@ -322,6 +322,7 @@ static u8 GetBattlePalaceMoveGroup(u8 battler, u16 move)
     switch (GetBattlerMoveTargetType(battler, move))
     {
     case TARGET_SELECTED:
+    case TARGET_SMART:
     case TARGET_OPPONENT:
     case TARGET_RANDOM:
     case TARGET_BOTH:
@@ -917,6 +918,8 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
     bool32 isShiny;
     const void *src;
     const u16 *paletteData;
+    struct Pokemon *monAtk = GetBattlerMon(battlerAtk);
+    struct Pokemon *monDef = GetBattlerMon(battlerDef);
     void *dst;
 
     if (IsContest())
@@ -942,23 +945,23 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
             else if (gBattleStruct->illusion[battlerDef].state == ILLUSION_ON)
                 targetSpecies = GetIllusionMonSpecies(battlerDef);
             else
-                targetSpecies = gBattleMons[battlerDef].species;
+                targetSpecies = GetMonData(monDef, MON_DATA_SPECIES);
         }
         else
         {
-            targetSpecies = gBattleMons[battlerAtk].species;
+            targetSpecies = GetMonData(monAtk, MON_DATA_SPECIES);
         }
         gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies = targetSpecies;
 
         if (changeType == SPECIES_GFX_CHANGE_TRANSFORM)
         {
-            personalityValue = gBattleMons[battlerAtk].volatiles.transformedMonPID;
-            isShiny = gBattleMons[battlerAtk].volatiles.isTransformedMonShiny;
+            personalityValue = gTransformedPersonalities[battlerAtk];
+            isShiny = gTransformedShininess[battlerAtk];
         }
         else
         {
-            personalityValue = gBattleMons[battlerAtk].personality;
-            isShiny = gBattleMons[battlerAtk].isShiny;
+            personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
+            isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
         }
         HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
                                  gMonSpritesGfxPtr->spritesGfx[position],
