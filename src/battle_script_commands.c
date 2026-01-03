@@ -10289,10 +10289,6 @@ static void Cmd_tryswapitems(void)
             gBattlescriptCurrInstr = cmd->failInstr;
         }
         // check if ability prevents swapping
-        else if (GetBattlerAbility(gBattlerAttacker) == ABILITY_STICKY_HOLD)
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
         else if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
         {
             gBattlescriptCurrInstr = BattleScript_StickyHoldActivates;
@@ -10302,19 +10298,18 @@ static void Cmd_tryswapitems(void)
         // took a while, but all checks passed and items can be safely swapped
         else
         {
-            u16 oldItemAtk, *newItemAtk;
+            u16 oldItemAtk, oldItemDef;
 
-            newItemAtk = &gBattleStruct->changedItems[gBattlerAttacker];
             oldItemAtk = gBattleMons[gBattlerAttacker].item;
-            *newItemAtk = gBattleMons[gBattlerTarget].item;
+            oldItemDef = gBattleMons[gBattlerTarget].item;
 
-            gBattleMons[gBattlerAttacker].item = ITEM_NONE;
+            gBattleMons[gBattlerAttacker].item = oldItemDef;
             gBattleMons[gBattlerTarget].item = oldItemAtk;
 
-            RecordItemEffectBattle(gBattlerAttacker, 0);
+            RecordItemEffectBattle(gBattlerAttacker, GetItemHoldEffect(oldItemDef));
             RecordItemEffectBattle(gBattlerTarget, GetItemHoldEffect(oldItemAtk));
 
-            BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(*newItemAtk), newItemAtk);
+            BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
             MarkBattlerForControllerExec(gBattlerAttacker);
 
             BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
@@ -10327,7 +10322,7 @@ static void Cmd_tryswapitems(void)
 
             gBattlescriptCurrInstr = cmd->nextInstr;
 
-            PREPARE_ITEM_BUFFER(gBattleTextBuff1, *newItemAtk)
+            PREPARE_ITEM_BUFFER(gBattleTextBuff1, oldItemDef)
             PREPARE_ITEM_BUFFER(gBattleTextBuff2, oldItemAtk)
 
             if (!(IsBattlerAlly(gBattlerAttacker, gBattlerTarget) && IsPartnerMonFromSameTrainer(gBattlerAttacker)))
@@ -10336,23 +10331,23 @@ static void Cmd_tryswapitems(void)
                 if (IsOnPlayerSide(gBattlerAttacker))
                     TrySaveExchangedItem(gBattlerAttacker, oldItemAtk);
                 if (IsOnPlayerSide(gBattlerTarget))
-                    TrySaveExchangedItem(gBattlerTarget, *newItemAtk);
+                    TrySaveExchangedItem(gBattlerTarget, oldItemDef);
             }
 
-            if (oldItemAtk != ITEM_NONE && *newItemAtk != ITEM_NONE)
+            if (oldItemAtk != ITEM_NONE && oldItemDef != ITEM_NONE)
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_BOTH;  // attacker's item -> <- target's item
             }
-            else if (oldItemAtk == ITEM_NONE && *newItemAtk != ITEM_NONE)
+            else if (oldItemAtk == ITEM_NONE && oldItemDef != ITEM_NONE)
             {
-                if (GetBattlerAbility(gBattlerAttacker) == ABILITY_UNBURDEN && gBattleMons[gBattlerAttacker].volatiles.unburdenActive)
-                    gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
-
+                CheckSetUnburden(gBattlerTarget);
+                gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_TAKEN; // nothing -> <- target's item
             }
             else
             {
                 CheckSetUnburden(gBattlerAttacker);
+                gBattleMons[gBattlerTarget].volatiles.unburdenActive = FALSE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_GIVEN; // attacker's item -> <- nothing
             }
         }
@@ -15597,28 +15592,38 @@ void BS_JumpIfGenConfigLowerThan(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-// Used when the Pokemon faints before Toxic Spikes would normally be processed in the hazards queue.
-void BS_TryAbsorbToxicSpikesOnFaint(void)
+void BS_TryActivateAbilityWithAbilityShield(void)
 {
-    NATIVE_ARGS();
-    u32 battler = gBattlerFainted;
-    u32 side = GetBattlerSide(battler);
+    NATIVE_ARGS(u8 battler, bool8 switchedItems);
 
-    if (gSideTimers[side].toxicSpikesAmount == 0)
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-
-    if (IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler))
-     && IS_BATTLER_OF_TYPE(battler, TYPE_POISON))
-    {
-        gSideTimers[side].toxicSpikesAmount = 0;
-        RemoveHazardFromField(side, HAZARDS_TOXIC_SPIKES);
-        gEffectBattler = battler;
-        BattleScriptCall(BattleScript_ToxicSpikesAbsorbed);
-        return;
-    }
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
+
+    if (cmd->switchedItems)
+    {
+        bool32 attackerHasAbilityShield = GetBattlerHoldEffectIgnoreAbility(gBattlerAttacker) == HOLD_EFFECT_ABILITY_SHIELD;
+        bool32 targetHasAbilityShield = GetBattlerHoldEffectIgnoreAbility(gBattlerTarget) == HOLD_EFFECT_ABILITY_SHIELD;
+
+        if (attackerHasAbilityShield == targetHasAbilityShield) // both or neither has Ability Shield
+            return;
+
+        if (attackerHasAbilityShield)
+            battler = gBattlerAttacker;
+        else
+            battler = gBattlerTarget;
+    }
+    else
+    {
+        if (GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD)
+            return;
+    }
+
+    // check if Ability Shield is protecting battler's ability from being suppressed (no breaking effects)
+    if (GetBattlerAbilityInternal(battler, TRUE, TRUE) == ABILITY_NONE
+     && GetBattlerAbility(battler) != ABILITY_NONE)
+    {
+        gBattleScripting.battler = battler;
+        BattleScriptCall(BattleScript_ActivateSwitchInAbility);
+    }
 }
