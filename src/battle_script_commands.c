@@ -11162,7 +11162,7 @@ static void Cmd_handleballthrow(void)
         if (gBattleResults.catchAttempts[ballId] < 255)
             gBattleResults.catchAttempts[ballId]++;
 
-        if (odds > 254) // mon caught
+        if (odds == CAPTURE_GUARANTEED)
         {
             FinalizeCapture();
             return;
@@ -11184,6 +11184,11 @@ static void Cmd_handleballthrow(void)
             maxShakes = BALL_3_SHAKES_SUCCESS;
         }
 
+        if (odds > 254)
+        {
+            FinalizeCapture();
+            return;
+        }
         odds = ComputeBallShakeOdds(odds);
         for (shakes = 0; shakes < maxShakes; shakes++)
         {
