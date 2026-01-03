@@ -361,7 +361,7 @@ void SetTeraType(struct ScriptContext *ctx)
  * if side/slot are assigned, it will create the mon at the assigned party location
  * if slot == PARTY_SIZE, it will give the mon to first available party or storage slot
  */
-static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
+static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u16 *evs, u16 *ivs, u16 *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
 {
     struct Pokemon mon;
     u32 i;
@@ -514,49 +514,48 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u8 gender         = PARSE_FLAG(4, MON_GENDER_RANDOM);
 
     u32 i;
-    u8 evs[NUM_STATS];
+    u16 evs[NUM_STATS];
     u32 evTotal = 0;
+    u32 evCap = GetCurrentEVCap();
     for (i = 0; i < NUM_STATS; i++)
     {
         evs[i] = PARSE_FLAG(5 + i, 0);
-        assertf(evs[i] > MAX_PER_STAT_EVS, "invalid ev value of %d above maximum of %d", evs[i], MAX_PER_STAT_EVS)
+        assertf(evs[i] <= MAX_PER_STAT_EVS, "invalid ev value of %d above maximum of %d", evs[i], MAX_PER_STAT_EVS)
         {
             evs[i] = 0;
         }
         evTotal += evs[i];
     }
-    assertf(evTotal > MAX_PER_STAT_EVS, "total ev count of %d above maximum of %d", evTotal, GetCurrentEVCap())
+    assertf(evTotal <= evCap, "total ev count of %d above maximum of %d", evTotal, evCap)
     {
         for (i = 0; i < NUM_STATS; i++)
             evs[i] = 0;
     }
 
-    u8 ivs[NUM_STATS];
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        ivs[i] = PARSE_FLAG(11 + i, USE_RANDOM_IVS);
-    }
-
-    // Perfect IV calculation
+    u16 ivs[NUM_STATS];
     u32 nonFixedIvCount = 0;
     enum Stat availableIVs[NUM_STATS];
     enum Stat selectedIvs[NUM_STATS];
+    for (i = 0; i < NUM_STATS; i++)
+    {
+        ivs[i] = PARSE_FLAG(11 + i, USE_RANDOM_IVS);
+        if (ivs[i] > USE_RANDOM_IVS)
+            errorf("invalid iv value of %d  above maximum of %d", ivs[i], MAX_PER_STAT_IVS);
+        if (ivs[i] == USE_RANDOM_IVS)
+        {
+            availableIVs[nonFixedIvCount] = i;
+            ivs[i] = Random() % (MAX_PER_STAT_IVS + 1);
+            nonFixedIvCount++;
+        }
+    }
+
+    // Perfect IV calculation
     if (gSpeciesInfo[species].perfectIVCount != 0)
     {
-        // Initialize a list of IV indices.
-        for (i = 0; i < NUM_STATS; i++)
-        {
-            if (ivs[i] == USE_RANDOM_IVS)
-            {
-                availableIVs[nonFixedIvCount] = i;
-                nonFixedIvCount++;
-            }
-        }
-
         // Select the IVs that will be perfected.
         for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
         {
-            u8 index = Random() % (NUM_STATS - i);
+            u8 index = Random() % (nonFixedIvCount - i);
             selectedIvs[i] = availableIVs[index];
             RemoveIVIndexFromList(availableIVs, index);
         }
@@ -564,13 +563,6 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
         {
             ivs[selectedIvs[i]] = MAX_PER_STAT_IVS;
         }
-    }
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        if (ivs[i] == USE_RANDOM_IVS)
-            ivs[i] = Random() % (MAX_PER_STAT_IVS + 1);
-        else if (ivs[i] > USE_RANDOM_IVS)
-            errorf("invalid iv value of %d  above maximum of %d", ivs[i], MAX_PER_STAT_IVS);
     }
 
     u16 move1                = PARSE_FLAG(17, MOVE_DEFAULT);

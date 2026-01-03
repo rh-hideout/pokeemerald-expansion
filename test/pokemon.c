@@ -272,6 +272,40 @@ TEST("givemon respects perfectIVCount")
     }
 }
 
+TEST("givemon respects perfectIVCount but does overwrite fixed IVs (1)")
+{
+    ZeroPlayerPartyMons();
+
+    ASSUME(gSpeciesInfo[SPECIES_MEW].perfectIVCount == 3);
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_MEW, 100, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12
+    );
+
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_IV), 7);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_IV), 8);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF_IV), 9);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED_IV), 10);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK_IV), 11);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF_IV), 12);
+}
+
+TEST("givemon respects perfectIVCount but does overwrite fixed IVs (2)")
+{
+    ZeroPlayerPartyMons();
+
+    ASSUME(gSpeciesInfo[SPECIES_MEW].perfectIVCount == 3);
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_MEW, 100, hpIv=7, atkIv=8, defIv=9
+    );
+
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_IV), 7);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_IV), 8);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF_IV), 9);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED_IV), MAX_PER_STAT_IVS);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK_IV), MAX_PER_STAT_IVS);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF_IV), MAX_PER_STAT_IVS);
+}
+
 TEST("givemon respects FORM_CHANGE_ITEM_HOLD")
 {
     ZeroPlayerPartyMons();
