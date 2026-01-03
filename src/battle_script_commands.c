@@ -2594,8 +2594,7 @@ void StealTargetItem(u8 battlerStealer, u8 itemBattler)
         RecordItemEffectBattle(battlerStealer, GetItemHoldEffect(gLastUsedItem));
         gBattleMons[battlerStealer].item = gLastUsedItem;
 
-        if (GetBattlerAbility(battlerStealer) == ABILITY_UNBURDEN)
-            gBattleMons[battlerStealer].volatiles.unburdenActive = FALSE;
+        gBattleMons[battlerStealer].volatiles.unburdenActive = FALSE;
         BtlController_EmitSetMonData(battlerStealer, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gLastUsedItem), &gLastUsedItem); // set attacker item
         MarkBattlerForControllerExec(battlerStealer);
     }
@@ -10342,15 +10341,13 @@ static void Cmd_tryswapitems(void)
             else if (oldItemAtk == ITEM_NONE && oldItemDef != ITEM_NONE)
             {
                 CheckSetUnburden(gBattlerTarget);
-                if (GetBattlerAbility(gBattlerAttacker) == ABILITY_UNBURDEN)
-                    gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
+                gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_TAKEN; // nothing -> <- target's item
             }
             else
             {
                 CheckSetUnburden(gBattlerAttacker);
-                if (GetBattlerAbility(gBattlerTarget) == ABILITY_UNBURDEN)
-                    gBattleMons[gBattlerTarget].volatiles.unburdenActive = FALSE;
+                gBattleMons[gBattlerTarget].volatiles.unburdenActive = FALSE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_GIVEN; // attacker's item -> <- nothing
             }
         }

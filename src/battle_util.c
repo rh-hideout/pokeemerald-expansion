@@ -11419,9 +11419,7 @@ void BestowItem(u32 battlerAtk, u32 battlerDef)
     gBattleMons[battlerDef].item = gLastUsedItem;
     BtlController_EmitSetMonData(battlerDef, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battlerDef].item), &gBattleMons[battlerDef].item);
     MarkBattlerForControllerExec(battlerDef);
-
-    if (GetBattlerAbility(battlerDef) == ABILITY_UNBURDEN)
-        gBattleMons[battlerDef].volatiles.unburdenActive = FALSE;
+    gBattleMons[battlerDef].volatiles.unburdenActive = FALSE;
 }
 
 #define UNPACK_VOLATILE_GETTERS(_enum, _fieldName, _typeMaxValue, ...) case _enum: return gBattleMons[battler].volatiles._fieldName;
