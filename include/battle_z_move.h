@@ -9,8 +9,8 @@ struct SignatureZMove
 {
     u16 species;
     u16 item;
-    u16 move;
-    u16 zmove;
+    enum Move move;
+    enum Move zmove;
 };
 
 bool32 IsZMove(enum Move move);

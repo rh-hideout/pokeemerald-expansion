@@ -245,10 +245,10 @@ static inline u32 GetMoveAccuracy(enum Move moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].accuracy;
 }
 
-static inline u32 GetMoveTarget(enum Move moveId)
+static inline enum MoveTarget GetMoveTarget(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    u32 target = gMovesInfo[moveId].target;
+    enum MoveTarget target = gMovesInfo[moveId].target;
     assertf(target != TARGET_SMART || gMovesInfo[moveId].strikeCount > 1, "Smart target requires strikeCount > 1: %S", gMovesInfo[moveId].name);
     return target;
 }
@@ -631,7 +631,7 @@ static inline u32 GetMoveEffectArg_Status(enum Move moveId)
 {
     // Forward-declared here because 'include/battle_util.h' includes
     // this file.
-    extern bool32 MoveHasAdditionalEffect(enum Move move, u32 moveEffect);
+    extern bool32 MoveHasAdditionalEffect(enum Move move, enum MoveEffect moveEffect);
 
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;

@@ -118,7 +118,7 @@ struct ALIGNED(2) BagPocket
 struct TmHmIndexKey
 {
     enum TMHMItemId itemId:16;
-    u16 moveId;
+    enum Move moveId;
 };
 
 extern const u8 gQuestionMarksItemName[];

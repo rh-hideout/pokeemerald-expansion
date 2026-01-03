@@ -142,13 +142,13 @@ struct PokemonSubstruct0
 
 struct PokemonSubstruct1
 {
-    u16 move1:11; // 2047 moves.
+    enum Move move1:11; // 2047 moves.
     u16 evolutionTracker1:5;
-    u16 move2:11; // 2047 moves.
+    enum Move move2:11; // 2047 moves.
     u16 evolutionTracker2:5;
-    u16 move3:11; // 2047 moves.
+    enum Move move3:11; // 2047 moves.
     u16 unused_04:5;
-    u16 move4:11; // 2047 moves.
+    enum Move move4:11; // 2047 moves.
     u16 unused_06:3;
     u16 hyperTrainedHP:1;
     u16 hyperTrainedAttack:1;
@@ -612,7 +612,7 @@ struct SpindaSpot
 
 struct LevelUpMove
 {
-    u16 move;
+    enum Move move;
     u16 level;
 };
 
