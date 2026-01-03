@@ -19,7 +19,7 @@ It has a lot of arguments in order to offer this flexibility.
 `nature`, and `gender` will default to random values
 `abilityNum` will default to the value corresponding to the personality they will roll (in practice, it's random but it will have correlations with other if the pokemon parameters)
 `hpEv`, `atkEv`, `defEv`, `speedEv`, `spAtkEv`, `spDefEv` will default to 0
-`hpIv`, `atkIv`, `defIv`, `speedIv`, `spAtkIv`, `spDefIv` will default to random IV values (between 0 and 31)
+`hpIv`, `atkIv`, `defIv`, `speedIv`, `spAtkIv`, `spDefIv` will default to random IV values (between 0 and 31). If the generated species has a `perfectIVCount`, only the random values will be eligible to be perfected.
 `move1`, `move2`, `move3`, `move4` will default to the last level up move available
 `shinyMode` will default to SHINY_MODE_RANDOM doing random roll(s) to check if the mon is shiny. (The other possibile values for shinyMode are SHINY_MODE_ALWAYS and SHINY_MODE_NEVER to force the pokemon to be shiny or not be shiny respectively)
 `gmaxFactor` default to FALSE
@@ -34,6 +34,7 @@ It has a lot of arguments in order to offer this flexibility.
 
 You can use special values for the arguments of `givemon` and `createmon` to indicate the game to compute the value in a certain way.
 The main purpose is to emulate default values.
+`hpIv`, `atkIv`, `defIv`, `speedIv`, `spAtkIv`, `spDefIv` accept `USE_RANDOM_IVS` or `32` as an argument to pick a random IV
 `move1`, `move2`, `move3`, `move4` accept `MOVE_DEFAULT` as an argument to give last level up move available
 `nature` accept `NATURE_RANDOM` to pick a random nature
 `gender` accept `MON_GENDER_RANDOM` to pick a random gender (based on the species gender ratio)

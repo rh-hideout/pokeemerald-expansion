@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_gfx_sfx_util.h"
 #include "berry.h"
+#include "caps.h"
 #include "data.h"
 #include "daycare.h"
 #include "decompress.h"
@@ -511,56 +512,67 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u8 nature         = PARSE_FLAG(2, NATURE_RANDOM);
     u8 abilityNum     = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
     u8 gender         = PARSE_FLAG(4, MON_GENDER_RANDOM);
-    u8 hpEv           = PARSE_FLAG(5, 0);
-    u8 atkEv          = PARSE_FLAG(6, 0);
-    u8 defEv          = PARSE_FLAG(7, 0);
-    u8 speedEv        = PARSE_FLAG(8, 0);
-    u8 spAtkEv        = PARSE_FLAG(9, 0);
-    u8 spDefEv        = PARSE_FLAG(10, 0);
-    u8 hpIv           = Random() % (MAX_PER_STAT_IVS + 1);
-    u8 atkIv          = Random() % (MAX_PER_STAT_IVS + 1);
-    u8 defIv          = Random() % (MAX_PER_STAT_IVS + 1);
-    u8 speedIv        = Random() % (MAX_PER_STAT_IVS + 1);
-    u8 spAtkIv        = Random() % (MAX_PER_STAT_IVS + 1);
-    u8 spDefIv        = Random() % (MAX_PER_STAT_IVS + 1);
+
+    u32 i;
+    u8 evs[NUM_STATS];
+    u32 evTotal = 0;
+    for (i = 0; i < NUM_STATS; i++)
+    {
+        evs[i] = PARSE_FLAG(5 + i, 0);
+        assertf(evs[i] > MAX_PER_STAT_EVS, "invalid ev value of %d above maximum of %d", evs[i], MAX_PER_STAT_EVS)
+        {
+            evs[i] = 0;
+        }
+        evTotal += evs[i];
+    }
+    assertf(evTotal > MAX_PER_STAT_EVS, "total ev count of %d above maximum of %d", evTotal, GetCurrentEVCap())
+    {
+        for (i = 0; i < NUM_STATS; i++)
+            evs[i] = 0;
+    }
+
+    u8 ivs[NUM_STATS];
+    for (i = 0; i < NUM_STATS; i++)
+    {
+        ivs[i] = PARSE_FLAG(11 + i, USE_RANDOM_IVS);
+    }
 
     // Perfect IV calculation
-    u32 i;
+    u32 nonFixedIvCount = 0;
     enum Stat availableIVs[NUM_STATS];
     enum Stat selectedIvs[NUM_STATS];
     if (gSpeciesInfo[species].perfectIVCount != 0)
     {
         // Initialize a list of IV indices.
         for (i = 0; i < NUM_STATS; i++)
-            availableIVs[i] = i;
+        {
+            if (ivs[i] == USE_RANDOM_IVS)
+            {
+                availableIVs[nonFixedIvCount] = i;
+                nonFixedIvCount++;
+            }
+        }
 
         // Select the IVs that will be perfected.
-        for (i = 0; i < NUM_STATS && i < gSpeciesInfo[species].perfectIVCount; i++)
+        for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
         {
             u8 index = Random() % (NUM_STATS - i);
             selectedIvs[i] = availableIVs[index];
             RemoveIVIndexFromList(availableIVs, index);
         }
-        for (i = 0; i < NUM_STATS && i < gSpeciesInfo[species].perfectIVCount; i++)
+        for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
         {
-            switch (selectedIvs[i])
-            {
-            case STAT_HP:    hpIv    = MAX_PER_STAT_IVS; break;
-            case STAT_ATK:   atkIv   = MAX_PER_STAT_IVS; break;
-            case STAT_DEF:   defIv   = MAX_PER_STAT_IVS; break;
-            case STAT_SPEED: speedIv = MAX_PER_STAT_IVS; break;
-            case STAT_SPATK: spAtkIv = MAX_PER_STAT_IVS; break;
-            case STAT_SPDEF: spDefIv = MAX_PER_STAT_IVS; break;
-            default: break;
-            }
+            ivs[selectedIvs[i]] = MAX_PER_STAT_IVS;
         }
     }
-    hpIv                     = PARSE_FLAG(11, hpIv);
-    atkIv                    = PARSE_FLAG(12, atkIv);
-    defIv                    = PARSE_FLAG(13, defIv);
-    speedIv                  = PARSE_FLAG(14, speedIv);
-    spAtkIv                  = PARSE_FLAG(15, spAtkIv);
-    spDefIv                  = PARSE_FLAG(16, spDefIv);
+    for (i = 0; i < NUM_STATS; i++)
+    {
+        if (ivs[i] == USE_RANDOM_IVS)
+            ivs[i] = Random() % (MAX_PER_STAT_IVS + 1);
+        else if (ivs[i] > USE_RANDOM_IVS)
+            errorf("invalid iv value of %d  above maximum of %d", ivs[i], MAX_PER_STAT_IVS);
+    }
+
     u16 move1                = PARSE_FLAG(17, MOVE_DEFAULT);
     u16 move2                = PARSE_FLAG(18, MOVE_DEFAULT);
     u16 move3                = PARSE_FLAG(19, MOVE_DEFAULT);
@@ -569,9 +581,6 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
     enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
     u8 dmaxLevel             = PARSE_FLAG(24, 0);
-
-    u8 evs[NUM_STATS]        = {hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv};
-    u8 ivs[NUM_STATS]        = {hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv};
 
     u16 moves[MAX_MON_MOVES];
     for (i = 0; i < MAX_MON_MOVES; i++)
