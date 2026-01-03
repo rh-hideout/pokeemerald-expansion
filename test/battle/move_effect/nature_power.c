@@ -7,7 +7,7 @@
 SINGLE_BATTLE_TEST("Nature power plays a move correctly in any background")
 {
     u32 environment = 0;
-    u32 move = MOVE_TRI_ATTACK;
+    enum Move move = MOVE_TRI_ATTACK;
     for (u32 j = 0; j < BATTLE_ENVIRONMENT_COUNT; j++)
     {
         PARAMETRIZE {environment = i;}

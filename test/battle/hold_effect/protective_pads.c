@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Protective Pads protects from Rocly Helmet Damage")
 
 SINGLE_BATTLE_TEST("Protective Pads protects from Protect's secondary effects")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
     PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }

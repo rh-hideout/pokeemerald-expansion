@@ -493,7 +493,7 @@ static void PrintMessageWithPlaceholders(const u8 *src)
 }
 
 // If reusable TMs is off, remove the TM from the bag
-static void RemoveRelearnerTMFromBag(u16 move)
+static void RemoveRelearnerTMFromBag(enum Move move)
 {
     u16 item = GetTMHMItemIdFromMoveId(move);
 
@@ -798,7 +798,7 @@ static void DoMoveRelearnerMain(void)
             }
             else
             {
-                u16 move;
+                enum Move move;
                 if(gSpecialVar_MonBoxId == 0xFF)
                 {
                     move = GetMonData(&gPlayerParty[sMoveRelearnerStruct->partyMon], MON_DATA_MOVE1 + sMoveRelearnerStruct->moveSlot);

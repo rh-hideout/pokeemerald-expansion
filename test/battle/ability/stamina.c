@@ -18,7 +18,7 @@
 SINGLE_BATTLE_TEST("Stamina raises Defense by 1 when hit by a move")
 {
     s16 turnOneHit, turnTwoHit;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE {move = MOVE_SCRATCH; }
     PARAMETRIZE {move = MOVE_GUST; }
