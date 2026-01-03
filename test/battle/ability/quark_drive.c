@@ -236,3 +236,4 @@ SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler")
         EXPECT_EQ(opponent->ability, ABILITY_QUARK_DRIVE);
     }
 }
+
