@@ -8773,7 +8773,7 @@ static void Cmd_setgravity(void)
     }
 }
 
-static bool32 TryCheekPouch(u32 battler, u32 itemId)
+static bool32 TryCheekPouch(u32 battler, u32 itemId, const u8 *nextInstr)
 {
     if (GetItemPocket(itemId) == POCKET_BERRIES
         && GetBattlerAbility(battler) == ABILITY_CHEEK_POUCH
@@ -8783,7 +8783,7 @@ static bool32 TryCheekPouch(u32 battler, u32 itemId)
     {
         gBattlerAbility = battler;
         SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 3);
-        BattleScriptPush(gBattlescriptCurrInstr + 2);
+        BattleScriptPush(nextInstr);
         gBattlescriptCurrInstr = BattleScript_CheekPouchActivates;
         return TRUE;
     }
@@ -8863,7 +8863,7 @@ static void Cmd_removeitem(void)
     MarkBattlerForControllerExec(battler);
 
     ClearBattlerItemEffectHistory(battler);
-    if (!TryCheekPouch(battler, itemId) && !TrySymbiosis(battler, itemId, FALSE))
+    if (!TryCheekPouch(battler, itemId, cmd->nextInstr) && !TrySymbiosis(battler, itemId, FALSE))
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -17894,7 +17894,15 @@ void BS_ConsumeBerry(void)
     if (cmd->fromBattler)
         gLastUsedItem = gBattleMons[battler].item;
 
-    if (GetItemPocket(gLastUsedItem) != POCKET_BERRIES || gBattleScripting.overrideBerryRequirements == 2)
+    if (gBattleScripting.overrideBerryRequirements == 2)
+    {
+        gBattleScripting.overrideBerryRequirements = 0;
+        if (!cmd->fromBattler && TryCheekPouch(battler, gLastUsedItem, cmd->nextInstr))
+            return;
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
+    if (GetItemPocket(gLastUsedItem) != POCKET_BERRIES)
     {
         gBattleScripting.overrideBerryRequirements = 0;
         gBattlescriptCurrInstr = cmd->nextInstr;
