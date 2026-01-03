@@ -558,6 +558,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/species.h"
+#include "constants/songs.h"
 #include "test/test.h"
 
 // NOTE: If the stack is too small the test runner will probably crash
@@ -610,6 +611,13 @@ enum
     QUEUED_EXP_EVENT,
     QUEUED_MESSAGE_EVENT,
     QUEUED_STATUS_EVENT,
+    QUEUED_EFFECTIVENESS_EVENT,
+};
+
+struct QueuedEffectiveness
+{
+    u8 battlerId;
+    u16 soundId;
 };
 
 struct QueuedAbilityEvent
@@ -677,6 +685,7 @@ struct QueuedEvent
         struct QueuedExpEvent exp;
         struct QueuedMessageEvent message;
         struct QueuedStatusEvent status;
+        struct QueuedEffectiveness eff_se;
     } as;
 };
 
@@ -1204,12 +1213,18 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
                                      MESSAGE("Go for it, " name "!");                       \
                                      MESSAGE("Your opponent's weak! Get 'em, " name "!");   \
                                  }
+#define EFFECTIVENESS_SE(battler, ...) QueueEffectivenessSound(__LINE__, battler, (struct EffectivenessEventContext) { __VA_ARGS__ })
 
 enum QueueGroupType
 {
     QUEUE_GROUP_NONE,
     QUEUE_GROUP_ONE_OF,
     QUEUE_GROUP_NONE_OF,
+};
+
+struct EffectivenessEventContext
+{
+    u16 soundId;
 };
 
 struct AbilityEventContext
@@ -1277,6 +1292,7 @@ void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEve
 void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventContext);
 void QueueMessage(u32 sourceLine, const u8 *pattern);
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext);
+void QueueEffectivenessSound(u32 sourceLine, struct BattlePokemon *battler, struct EffectivenessEventContext);
 
 /* Then */
 
