@@ -8034,26 +8034,10 @@ void GetNumMovesSelectedMonHas(void)
 
 void BufferMoveDeleterNicknameAndMove(void)
 {
-<<<<<<< HEAD
-    u16 move = 0;
+    enum Move move = 0;
     struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
     move = GetBoxMonData(boxmon, MON_DATA_MOVE1 + gSpecialVar_0x8005);
     GetBoxMonData(boxmon, MON_DATA_NICKNAME, gStringVar1);
-=======
-    enum Move move = 0;
-    if(gSpecialVar_MonBoxId == 0xFF){
-        struct Pokemon *mon = &gPlayerParty[gSpecialVar_0x8004];
-        move = GetMonData(mon, MON_DATA_MOVE1 + gSpecialVar_0x8005);
-
-        GetMonNickname(mon, gStringVar1);
-    }
-    else{
-        move = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + gSpecialVar_0x8005);
-
-        GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
-    }
-
->>>>>>> 8cd51b94b0b334ab1349a0d9601183ad3eafc119
     StringCopy(gStringVar2, GetMoveName(move));
 }
 
@@ -8072,19 +8056,11 @@ void MoveDeleterForgetMove(void)
 
 static void ShiftMoveSlot(struct BoxPokemon *mon, u8 slotTo, u8 slotFrom)
 {
-<<<<<<< HEAD
-    u16 move1 = GetBoxMonData(mon, MON_DATA_MOVE1 + slotTo);
-    u16 move0 = GetBoxMonData(mon, MON_DATA_MOVE1 + slotFrom);
+    enum Move move1 = GetBoxMonData(mon, MON_DATA_MOVE1 + slotTo);
+    enum Move move0 = GetBoxMonData(mon, MON_DATA_MOVE1 + slotFrom);
     u8 pp1 = GetBoxMonData(mon, MON_DATA_PP1 + slotTo);
     u8 pp0 = GetBoxMonData(mon, MON_DATA_PP1 + slotFrom);
     u8 ppBonuses = GetBoxMonData(mon, MON_DATA_PP_BONUSES);
-=======
-    enum Move move1 = GetMonData(mon, MON_DATA_MOVE1 + slotTo);
-    enum Move move0 = GetMonData(mon, MON_DATA_MOVE1 + slotFrom);
-    u8 pp1 = GetMonData(mon, MON_DATA_PP1 + slotTo);
-    u8 pp0 = GetMonData(mon, MON_DATA_PP1 + slotFrom);
-    u8 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
->>>>>>> 8cd51b94b0b334ab1349a0d9601183ad3eafc119
     u8 ppBonusMask1 = gPPUpGetMask[slotTo];
     u8 ppBonusMove1 = (ppBonuses & ppBonusMask1) >> (slotTo * 2);
     u8 ppBonusMask2 = gPPUpGetMask[slotFrom];
@@ -8092,40 +8068,11 @@ static void ShiftMoveSlot(struct BoxPokemon *mon, u8 slotTo, u8 slotFrom)
     ppBonuses &= ~ppBonusMask1;
     ppBonuses &= ~ppBonusMask2;
     ppBonuses |= (ppBonusMove1 << (slotFrom * 2)) + (ppBonusMove2 << (slotTo * 2));
-<<<<<<< HEAD
     SetBoxMonData(mon, MON_DATA_MOVE1 + slotTo, &move0);
     SetBoxMonData(mon, MON_DATA_MOVE1 + slotFrom, &move1);
     SetBoxMonData(mon, MON_DATA_PP1 + slotTo, &pp0);
     SetBoxMonData(mon, MON_DATA_PP1 + slotFrom, &pp1);
     SetBoxMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
-=======
-    SetMonData(mon, MON_DATA_MOVE1 + slotTo, &move0);
-    SetMonData(mon, MON_DATA_MOVE1 + slotFrom, &move1);
-    SetMonData(mon, MON_DATA_PP1 + slotTo, &pp0);
-    SetMonData(mon, MON_DATA_PP1 + slotFrom, &pp1);
-    SetMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
-}
-
-static void ShiftMoveSlotBoxMon( u8 slotTo, u8 slotFrom)
-{
-    enum Move move1 = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + slotTo);
-    enum Move move0 = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + slotFrom);
-    u8 pp1 = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + slotTo);
-    u8 pp0 = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + slotFrom);
-    u8 ppBonuses = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP_BONUSES);
-    u8 ppBonusMask1 = gPPUpGetMask[slotTo];
-    u8 ppBonusMove1 = (ppBonuses & ppBonusMask1) >> (slotTo * 2);
-    u8 ppBonusMask2 = gPPUpGetMask[slotFrom];
-    u8 ppBonusMove2 = (ppBonuses & ppBonusMask2) >> (slotFrom * 2);
-    ppBonuses &= ~ppBonusMask1;
-    ppBonuses &= ~ppBonusMask2;
-    ppBonuses |= (ppBonusMove1 << (slotFrom * 2)) + (ppBonusMove2 << (slotTo * 2));
-    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + slotTo, &move0);
-    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + slotFrom, &move1);
-    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + slotTo, &pp0);
-    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + slotFrom, &pp1);
-    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP_BONUSES, &ppBonuses);
->>>>>>> 8cd51b94b0b334ab1349a0d9601183ad3eafc119
 }
 
 void IsSelectedMonEgg(void)

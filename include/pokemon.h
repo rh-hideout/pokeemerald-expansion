@@ -826,19 +826,11 @@ u8 CheckPartyHasHadPokerus(struct Pokemon *party, u8 selection);
 void UpdatePartyPokerusTime(u16 days);
 void PartySpreadPokerus(struct Pokemon *party);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
-<<<<<<< HEAD
-u8 CanLearnTeachableMove(u16 species, u16 move);
+u8 CanLearnTeachableMove(u16 species, enum Move move);
 u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves);
 u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves);
 u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves);
 u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves);
-=======
-u8 CanLearnTeachableMove(u16 species, enum Move move);
-u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves);
-u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves);
-u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves);
-u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves);
->>>>>>> 8cd51b94b0b334ab1349a0d9601183ad3eafc119
 bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon);
 bool32 HasRelearnerEggMoves(struct Pokemon *mon);
 bool32 HasRelearnerTMMoves(struct Pokemon *mon);

@@ -451,10 +451,6 @@ clean-teachables_intermediates:
 	@rm -Rf $(LEARNSET_HELPERS_BUILD_DIR)
 	@echo "rm -Rf <LEARNSET_HELPERS_BUILD_DIR>"
 
-clean-generated: clean-learnsets
-	@rm -f $(AUTO_GEN_TARGETS)
-	@echo "rm -f <AUTO_GEN_TARGETS>"
-
 clean-generated: clean-teachables_intermediates
 	@rm -f $(AUTO_GEN_TARGETS)
 	@echo "rm -f <AUTO_GEN_TARGETS>"
