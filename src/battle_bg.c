@@ -610,7 +610,7 @@ const struct WindowTemplate *const gBattleWindowTemplates[] =
 
 // If current map scene equals any of the values in sMapBattleSceneMapping,
 // use its battle terrain value. Otherwise, use the default.
-u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene)
+static u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene)
 {
     int i;
     for (i = 0; i < NELEMS(sMapBattleSceneMapping); i++)

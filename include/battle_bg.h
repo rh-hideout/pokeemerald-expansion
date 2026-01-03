@@ -19,6 +19,5 @@ void InitLinkBattleVsScreen(u8 taskId);
 void DrawBattleEntryBackground(void);
 bool8 LoadChosenBattleElement(u8 caseId);
 void DrawTerrainTypeBattleBackground(void);
-u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene);
 
 #endif // GUARD_BATTLE_BG_H
