@@ -1841,15 +1841,10 @@ void SetMonMoveSlot(struct Pokemon *mon, u16 move, u8 slot)
     SetMonData(mon, MON_DATA_PP1 + slot, &pp);
 }
 
-static void SetMonMoveSlot_KeepPP(struct Pokemon *mon, u16 move, u8 slot)
+static void SetMonMoveSlot_WithPP(struct Pokemon *mon, u16 move, u32 pp, u8 slot)
 {
-    u8 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES, NULL);
-    u8 currPP = GetMonData(mon, MON_DATA_PP1 + slot, NULL);
-    u8 newPP = CalculatePPWithBonus(move, ppBonuses, slot);
-    u16 finalPP = min(currPP, newPP);
-
     SetMonData(mon, MON_DATA_MOVE1 + slot, &move);
-    SetMonData(mon, MON_DATA_PP1 + slot, &finalPP);
+    SetMonData(mon, MON_DATA_PP1 + slot, &pp);
 }
 
 void SetBattleMonMoveSlot(struct BattlePokemon *mon, u16 move, u8 slot)
@@ -6973,7 +6968,14 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                 case FORM_CHANGE_BEGIN_BATTLE:
                 case FORM_CHANGE_END_BATTLE:
                     if (heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
+                    {
                         targetSpecies = formChanges[i].targetSpecies;
+                        // If target is set to SPECIES_NONE, return current species to allow partyState's
+                        // changedSpecies to handle reverting into the form from the battle's start.
+                        // For example, Power Construct Zygarde 10% and 50% can both become Zygarde Complete.
+                        if (targetSpecies == SPECIES_NONE)
+                            targetSpecies = species;
+                    }
                     break;
                 case FORM_CHANGE_END_BATTLE_ENVIRONMENT:
                     if (gBattleEnvironment == formChanges[i].param1)
@@ -7179,12 +7181,23 @@ bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
     u32 currentSpecies = GetMonData(&party[monId], MON_DATA_SPECIES);
     u32 targetSpecies = GetFormChangeTargetSpecies(&party[monId], method, 0);
 
-    if (targetSpecies == currentSpecies && gBattleStruct != NULL && gBattleStruct->partyState[side][monId].changedSpecies != SPECIES_NONE)
-        targetSpecies = gBattleStruct->partyState[side][monId].changedSpecies;
-
-    if (targetSpecies != currentSpecies)
+    // If the battle ends, and there's not a specified species to transform into,
+    // use the species at the start of the battle.
+    // from being counted as valid for other species.
+    if (targetSpecies == currentSpecies
+        && gBattleStruct != NULL
+        && gBattleStruct->partyState[side][monId].changedSpecies != SPECIES_NONE
+        // This is added to prevent FORM_CHANGE_END_BATTLE_ENVIRONMENT from omitting move changes
+        // at the end of the battle, as it was being counting as a successful form change.
+        && method == FORM_CHANGE_END_BATTLE
+    )
     {
-        TryToSetBattleFormChangeMoves(&party[monId], method);
+        targetSpecies = gBattleStruct->partyState[side][monId].changedSpecies;
+    }
+
+    if (targetSpecies != currentSpecies && targetSpecies != SPECIES_NONE)
+    {
+        TryToSetBattleFormChangeMoves(MAX_BATTLERS_COUNT, &party[monId], method);
         SetMonData(&party[monId], MON_DATA_SPECIES, &targetSpecies);
         CalculateMonStats(&party[monId]);
         return TRUE;
@@ -7209,15 +7222,25 @@ bool32 IsSpeciesEnabled(u16 species)
     return gSpeciesInfo[species].baseHP > 0 || species == SPECIES_EGG;
 }
 
-void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method)
+void TryToSetBattleFormChangeMoves(u32 battler, struct Pokemon *mon, enum FormChanges method)
 {
     int i, j;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
 
-    if (formChanges == NULL
-        || (method != FORM_CHANGE_BEGIN_BATTLE && method != FORM_CHANGE_END_BATTLE))
+    if (formChanges == NULL)
         return;
+
+    switch (method)
+    {
+    default:
+        return;
+    // Valid form changes
+    case FORM_CHANGE_BEGIN_BATTLE:               // Zacian/Zamazenta
+    case FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM: // Zygarde
+    case FORM_CHANGE_END_BATTLE:                 // Zacian/Zamazenta/Zygarde
+        break;
+    }
 
     for (i = 0; formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
     {
@@ -7233,7 +7256,21 @@ void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method)
             {
                 u16 currMove = GetMonData(mon, MON_DATA_MOVE1 + j, NULL);
                 if (currMove == originalMove)
-                    SetMonMoveSlot_KeepPP(mon, newMove, j);
+                {
+                    u8 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES, NULL);
+                    u8 currPP = GetMonData(mon, MON_DATA_PP1 + j, NULL);
+                    u8 newPP = CalculatePPWithBonus(newMove, ppBonuses, j);
+                    u16 finalPP = min(currPP, newPP);
+
+                    SetMonMoveSlot_WithPP(mon, newMove, finalPP, j);
+
+                    // MAX_BATTLERS_COUNT can be sent for instances outside a battle
+                    if (battler < MAX_BATTLERS_COUNT)
+                    {
+                        gBattleMons[battler].moves[j] = newMove;
+                        gBattleMons[battler].pp[j] = finalPP;
+                    }
+                }
             }
             break;
         }

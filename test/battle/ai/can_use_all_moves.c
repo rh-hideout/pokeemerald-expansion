@@ -97,6 +97,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100")
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_PLACEHOLDER:
             break;
         default:
             PARAMETRIZE { move = j; }
@@ -173,6 +174,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_PLACEHOLDER:
             break;
         default:
             PARAMETRIZE { move = j; }
@@ -262,6 +264,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_PLACEHOLDER:
             break;
         default:
             PARAMETRIZE { move = j; }
@@ -339,6 +342,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_PLACEHOLDER:
             break;
         default:
             PARAMETRIZE { move = j; }
@@ -407,6 +411,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_PLACEHOLDER:
             break;
         default:
             PARAMETRIZE { move = j; }
@@ -482,6 +487,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_PLACEHOLDER:
             break;
         default:
             PARAMETRIZE { move = j; }
@@ -546,7 +552,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_AURORA_VEIL:
         case EFFECT_GEAR_UP:
         case EFFECT_MAGNETIC_FLUX:
- 
+
         // Skipped on purpose.
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
@@ -554,6 +560,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_PLACEHOLDER:
             break;
         default:
             PARAMETRIZE { move = j; }
@@ -623,6 +630,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_PLACEHOLDER:
             break;
         default:
             PARAMETRIZE { move = j; }
@@ -685,6 +693,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_PLACEHOLDER:
             break;
         default:
             PARAMETRIZE { move = j; }

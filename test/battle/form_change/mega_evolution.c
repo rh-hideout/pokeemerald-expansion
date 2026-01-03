@@ -192,3 +192,34 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Zygarde's Core Enforcer becomes Nihil Light upon Mega Evolving")
+{
+    u16 baseSpecies;
+    PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
+    PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
+
+    GIVEN {
+        PLAYER(baseSpecies)
+        {
+            Ability(ABILITY_POWER_CONSTRUCT);
+            HP((GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP) / 2) + 1);
+            Item(ITEM_ZYGARDITE);
+            Moves(MOVE_CORE_ENFORCER, MOVE_CELEBRATE);
+        }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        // Turn 1
+        MESSAGE("You sense the presence of many!");
+        ABILITY_POPUP(player, ABILITY_POWER_CONSTRUCT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_POWER_CONSTRUCT, player);
+        // Turn 2
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, player);
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_ZYGARDE_MEGA);
+        EXPECT_EQ(player->moves[0], MOVE_NIHIL_LIGHT);
+    }
+}

@@ -1058,9 +1058,10 @@ static const struct FormChange sZygarde10PowerConstructFormChangeTable[] = {
 
 static const struct FormChange sZygardeCompleteFormChangeTable[] = {
     {FORM_CHANGE_FAINT},
-    {FORM_CHANGE_END_BATTLE},
+    // Don't specify species to allow partyState's changedSpecies to handle reverting into 50% or 10%.
+    {FORM_CHANGE_END_BATTLE,                 SPECIES_NONE,         ITEM_ZYGARDITE, MOVE_NIHIL_LIGHT,   MOVE_CORE_ENFORCER},
 #if P_GEN_9_MEGA_EVOLUTIONS
-    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_ZYGARDE_MEGA, ITEM_ZYGARDITE},
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, SPECIES_ZYGARDE_MEGA, ITEM_ZYGARDITE, MOVE_CORE_ENFORCER, MOVE_NIHIL_LIGHT},
 #endif
     {FORM_CHANGE_TERMINATOR},
 };
