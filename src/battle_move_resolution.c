@@ -361,7 +361,6 @@ static enum MoveEndResult MoveEnd_Symbiosis(void)
             gLastUsedAbility = gBattleMons[BATTLE_PARTNER(battler)].ability;
             gEffectBattler = battler;
             gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(battler);
-            gBattlerAttacker = battler;
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
             result = MOVEEND_STEP_RUN_SCRIPT;

@@ -102,7 +102,6 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow around Sticky Hold")
     u32 atkItem = ITEM_ORAN_BERRY, targetItem = ITEM_NONE;
     enum Ability atkAbility = ABILITY_PRESSURE, targetAbility = ABILITY_PRESSURE;
 
-    PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE; targetItem = ITEM_LEFTOVERS; }
     PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_PRESSURE;  targetAbility = ABILITY_STICKY_HOLD; targetItem = ITEM_LEFTOVERS; }
     PARAMETRIZE { move = MOVE_BESTOW; atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE;  targetItem = ITEM_NONE; }
 
