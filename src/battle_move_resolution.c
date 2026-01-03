@@ -1151,7 +1151,7 @@ static bool32 TryRedCard(u32 battlerAtk, u32 redCardBattler, u32 move)
     gLastUsedItem = gBattleMons[redCardBattler].item;
     SaveBattlerTarget(redCardBattler); // save battler with red card
     SaveBattlerAttacker(battlerAtk);
-    gBattleScripting.battler = redCardBattler;
+    gBattleScripting.battler = gBattlerTarget = redCardBattler;
     gEffectBattler = battlerAtk;
     if (gBattleStruct->battlerState[battlerAtk].commanderSpecies != SPECIES_NONE
      || GetBattlerAbility(battlerAtk) == ABILITY_GUARD_DOG
@@ -1210,7 +1210,7 @@ static enum MoveEndResult MoveEnd_EjectItems(void)
     {
         u32 battler = battlers[battlerDef];
 
-        // Only fastest red card or eject pack activates
+        // Only fastest red card or eject button activates
         if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
             result = MOVEEND_STEP_RUN_SCRIPT; 
         else if (ejectButtonBattlers & 1u << battler && TryEjectButton(gBattlerAttacker, battler))
@@ -1740,7 +1740,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_SHEER_FORCE] = MoveEnd_SheerForce,
     [MOVEEND_COLOR_CHANGE] = MoveEnd_ColorChange,
     [MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET] = MoveEnd_KeeMarangaHpThresholdItemTarget,
-    [MOVEEND_EJECT_ITEMS] = MoveEnd_EjectItems,
+    [MOVEEND_CARD_BUTTON] = MoveEnd_EjectItems,
     [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEnd_LifeOrbShellBell,
     [MOVEEND_FORM_CHANGE] = MoveEnd_FormChange,
     [MOVEEND_EMERGENCY_EXIT] = MoveEnd_EmergencyExit,
