@@ -80,8 +80,7 @@ SINGLE_BATTLE_TEST("Trace will copy an opponent's ability whenever it has the ch
     }
 }
 
-
-SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and triggers it immediately")
+SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and triggers it immediately (Gen4+)")
 {
     GIVEN {
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
@@ -111,3 +110,5 @@ DOUBLE_BATTLE_TEST("Trace respects the turn order")
         ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
     }
 }
+
+TODO_BATTLE_TEST("Trace copies opponent's Intimidate and does not trigger it (Gen3)")
