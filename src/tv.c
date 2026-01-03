@@ -3346,7 +3346,7 @@ static u8 GetTVGroupByShowId(u8 kind)
 
 u32 GetPlayerIDAsU32(void)
 {
-    return (gSaveBlock2Ptr->playerTrainerId[3] << 24) | (gSaveBlock2Ptr->playerTrainerId[2] << 16) | (gSaveBlock2Ptr->playerTrainerId[1] << 8) | gSaveBlock2Ptr->playerTrainerId[0];
+    return READ_OTID_FROM_SAVE;
 }
 
 u8 CheckForPlayersHouseNews(void)

@@ -248,7 +248,7 @@ static u32 GetPoolSeed(const struct Trainer *trainer)
     if (B_POOL_SETTING_USE_FIXED_SEED)
         seed = B_POOL_SETTING_FIXED_SEED;
     else
-        seed = gSaveBlock2Ptr->playerTrainerId[0] + (gSaveBlock2Ptr->playerTrainerId[1] << 8) + (gSaveBlock2Ptr->playerTrainerId[2] << 16) + (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+        seed = READ_OTID_FROM_SAVE;
     seed ^= (u32)trainer;
     return seed;
 }
