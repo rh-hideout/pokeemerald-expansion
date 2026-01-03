@@ -119,9 +119,10 @@
 
 enum SetMoveEffectFlags
 {
-    NO_FLAGS = 0,
-    EFFECT_PRIMARY = (1 << 0),
-    EFFECT_CERTAIN = (1 << 1),
+    NO_FLAGS          = 0,
+    EFFECT_PRIMARY    = (1 << 0),
+    EFFECT_CERTAIN    = (1 << 1),
+    EFFECT_PRE_ATTACK = (1 << 2),
 };
 
 enum FaintBlockStates

@@ -388,7 +388,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPECTRAL_THIEF) == EFFECT_SPECTRAL_THIEF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_SPECTRAL_THIEF, MOVE_EFFECT_STEAL_STATS));
         ASSUME(GetMoveEffect(MOVE_AGILITY) == EFFECT_SPEED_UP_2);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(species) { Speed(5); Ability(ability); }

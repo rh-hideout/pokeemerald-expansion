@@ -337,7 +337,7 @@ static bool32 CanAbilityShieldActivateForBattler(u32 battler);
 static void Cmd_attackcanceler(void);
 static void Cmd_accuracycheck(void);
 static void Cmd_printattackstring(void);
-static void Cmd_unused_0x3(void);
+static void Cmd_printselectionstringfromtable(void);
 static void Cmd_critcalc(void);
 static void Cmd_damagecalc(void);
 static void Cmd_typecalc(void);
@@ -354,7 +354,7 @@ static void Cmd_printstring(void);
 static void Cmd_printselectionstring(void);
 static void Cmd_waitmessage(void);
 static void Cmd_printfromtable(void);
-static void Cmd_printselectionstringfromtable(void);
+static void Cmd_setpreattackadditionaleffect(void);
 static void Cmd_setadditionaleffects(void);
 static void Cmd_seteffectprimary(void);
 static void Cmd_seteffectsecondary(void);
@@ -572,7 +572,7 @@ static void Cmd_tryrecycleitem(void);
 static void Cmd_settypetoenvironment(void);
 static void Cmd_pursuitdoubles(void);
 static void Cmd_snatchsetbattlers(void);
-static void Cmd_removescreens(void);
+static void Cmd_unused_0xee(void);
 static void Cmd_handleballthrow(void);
 static void Cmd_givecaughtmon(void);
 static void Cmd_trysetcaughtmondexflags(void);
@@ -596,7 +596,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_attackcanceler,                          //0x0
     Cmd_accuracycheck,                           //0x1
     Cmd_printattackstring,                       //0x2
-    Cmd_unused_0x3,                              //0x3
+    Cmd_printselectionstringfromtable,           //0x3
     Cmd_critcalc,                                //0x4
     Cmd_damagecalc,                              //0x5
     Cmd_typecalc,                                //0x6
@@ -613,7 +613,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_printselectionstring,                    //0x11
     Cmd_waitmessage,                             //0x12
     Cmd_printfromtable,                          //0x13
-    Cmd_printselectionstringfromtable,           //0x14
+    Cmd_setpreattackadditionaleffect,            //0x14
     Cmd_setadditionaleffects,                    //0x15
     Cmd_seteffectprimary,                        //0x16
     Cmd_seteffectsecondary,                      //0x17
@@ -831,7 +831,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_settypetoenvironment,                    //0xEB
     Cmd_pursuitdoubles,                          //0xEC
     Cmd_snatchsetbattlers,                       //0xED
-    Cmd_removescreens,                           //0xEE
+    Cmd_unused_0xee,                             //0xEE
     Cmd_handleballthrow,                         //0xEF
     Cmd_givecaughtmon,                           //0xF0
     Cmd_trysetcaughtmondexflags,                 //0xF1
@@ -1468,8 +1468,21 @@ static void Cmd_printattackstring(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_unused_0x3(void)
+static void Cmd_printselectionstringfromtable(void)
 {
+    CMD_ARGS(const u16 *ptr);
+
+    if (gBattleControllerExecFlags == 0)
+    {
+        const u16 *ptr = cmd->ptr;
+        ptr += gBattleCommunication[MULTISTRING_CHOOSER];
+
+        BtlController_EmitPrintSelectionString(gBattlerAttacker, B_COMM_TO_CONTROLLER, *ptr);
+        MarkBattlerForControllerExec(gBattlerAttacker);
+
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        gBattleCommunication[MSG_DISPLAY] = 1;
+    }
 }
 
 // Calculations have been moved to cmd_damagecalc. Please remove the macro from scripts
@@ -1877,7 +1890,9 @@ static void Cmd_attackanimation(void)
     if (IsDoubleSpreadMove())
         moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(gBattleStruct->moveResultFlags[gBattlerTarget]);
 
-    if ((gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION))
+    bool32 isAnimDisabled = (gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION)
+                          || gBattleStruct->preAttackAnimPlayed);
+    if (isAnimDisabled
         && effect != EFFECT_TRANSFORM
         && effect != EFFECT_SUBSTITUTE
         && effect != EFFECT_ALLY_SWITCH
@@ -2537,23 +2552,6 @@ static void Cmd_printfromtable(void)
     }
 }
 
-static void Cmd_printselectionstringfromtable(void)
-{
-    CMD_ARGS(const u16 *ptr);
-
-    if (gBattleControllerExecFlags == 0)
-    {
-        const u16 *ptr = cmd->ptr;
-        ptr += gBattleCommunication[MULTISTRING_CHOOSER];
-
-        BtlController_EmitPrintSelectionString(gBattlerAttacker, B_COMM_TO_CONTROLLER, *ptr);
-        MarkBattlerForControllerExec(gBattlerAttacker);
-
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        gBattleCommunication[MSG_DISPLAY] = 1;
-    }
-}
-
 bool32 HasBattlerActedThisTurn(u32 battler)
 {
     u32 i;
@@ -2736,7 +2734,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     bool32 affectsUser = (battler == effectBattler);
     bool32 mirrorArmorReflected = (GetBattlerAbility(gBattlerTarget) == ABILITY_MIRROR_ARMOR);
     union StatChangeFlags flags = {0};
-    u32 battlerAbility;
+    enum Ability battlerAbility = ABILITY_NONE; // effect battler ability
     bool32 activateAfterFaint = FALSE;
 
     // NULL move effect
@@ -3833,6 +3831,141 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 }
 
+static void SetPreAttackMoveEffect(u32 moveEffect, const u8 *battleScript)
+{
+	u32 side = 0;
+	enum Ability abilityAtk = ABILITY_NONE;
+
+	switch (moveEffect)
+	{
+    case MOVE_EFFECT_BREAK_SCREEN:
+        if (B_BRICK_BREAK >= GEN_4)
+        	side = GetBattlerSide(gBattlerTarget); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
+        else
+        	side = GetBattlerSide(gBattlerAttacker) ^ BIT_SIDE;
+
+        if (gSideStatuses[side] & SIDE_STATUS_SCREEN_ANY)
+        {
+            bool32 failed;
+
+            CalcTypeEffectivenessMultiplierHelper(
+                        	gCurrentMove,
+                        	GetBattleMoveType(gCurrentMove),
+                        	gBattlerAttacker,
+                        	gBattlerTarget,
+                        	GetBattlerAbility(gBattlerAttacker),
+                    	    GetBattlerAbility(gBattlerTarget),
+                        	TRUE
+                        ); // Sets moveResultFlags
+
+            if (B_BRICK_BREAK >= GEN_5)
+            	failed = gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT;
+            else
+            	failed = FALSE;
+
+        	if (!failed)
+        	{
+            	gSideStatuses[side] &= ~SIDE_STATUS_SCREEN_ANY;
+            	gBattleScripting.animTurn = 1;
+            	gBattleScripting.animTargetsHit = 1;
+            	gBattleStruct->preAttackAnimPlayed = TRUE; // The whole brick break animation is covered by the move so don't play twice
+            	BattleScriptPush(battleScript);
+            	gBattlescriptCurrInstr = BattleScript_BreakScreens;
+        	}
+        	else
+        	{
+        		gBattleScripting.animTurn = 0;
+        		gBattleScripting.animTargetsHit = 0;
+        	}
+        }
+        break;
+    case MOVE_EFFECT_STEAL_STATS:
+        abilityAtk = GetBattlerAbility(gBattlerAttacker);
+        CalcTypeEffectivenessMultiplierHelper(
+                    	gCurrentMove,
+                    	GetBattleMoveType(gCurrentMove),
+                    	gBattlerAttacker,
+                    	gBattlerTarget,
+                    	abilityAtk,
+                    	GetBattlerAbility(gBattlerTarget),
+                    	TRUE
+                    ); // Sets moveResultFlags
+        if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+        {
+            break;
+        }
+        else
+        {
+            bool32 contrary = abilityAtk == ABILITY_CONTRARY;
+            gBattleStruct->stolenStats[0] = 0; // Stats to steal.
+            gBattleScripting.animArg1 = 0;
+            for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+            {
+                if (gBattleMons[gBattlerTarget].statStages[stat] > DEFAULT_STAT_STAGE && gBattleMons[gBattlerAttacker].statStages[stat] != MAX_STAT_STAGE)
+                {
+                    bool32 byTwo = FALSE;
+
+                    gBattleStruct->stolenStats[0] |= (1 << (stat));
+                    // Store by how many stages to raise the stat.
+                    gBattleStruct->stolenStats[stat] = gBattleMons[gBattlerTarget].statStages[stat] - DEFAULT_STAT_STAGE;
+
+                    while (gBattleMons[gBattlerAttacker].statStages[stat] + gBattleStruct->stolenStats[stat] > MAX_STAT_STAGE)
+                    	gBattleStruct->stolenStats[stat]--;
+
+                    gBattleMons[gBattlerTarget].statStages[stat] = DEFAULT_STAT_STAGE;
+
+                    if (gBattleStruct->stolenStats[stat] >= 2)
+                    	byTwo++;
+
+                    if (gBattleScripting.animArg1 == 0)
+                    {
+                    	if (byTwo)
+                    		gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MINUS2 : STAT_ANIM_PLUS2) + stat;
+                    	else
+                    		gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MINUS1 : STAT_ANIM_PLUS1) + stat;
+                    }
+                    else
+                    {
+                    	if (byTwo)
+                    		gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MULTIPLE_MINUS2 : STAT_ANIM_MULTIPLE_PLUS2);
+                    	else
+                    		gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MULTIPLE_MINUS1 : STAT_ANIM_MULTIPLE_PLUS1);
+                    }
+            	}
+            }
+
+            if (gBattleStruct->stolenStats[0] != 0)
+            {
+                gBattleStruct->preAttackAnimPlayed = FALSE; // if set by the previous move effect, reset it for final Spectral Thief anim
+                BattleScriptPush(battleScript);
+                gBattlescriptCurrInstr = BattleScript_StealStats;
+            }
+        }
+        break;
+	default:
+		break;
+	}
+}
+
+static void Cmd_setpreattackadditionaleffect(void)
+{
+    CMD_ARGS();
+
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
+    if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
+    {
+        const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+
+        SetPreAttackMoveEffect(additionalEffect->moveEffect, gBattlescriptCurrInstr);
+
+        gBattleStruct->additionalEffectsCounter++;
+        return;
+    }
+
+    gBattleStruct->additionalEffectsCounter = 0;
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additionalEffect)
 {
     // If Toxic Chain will activate it blocks all other non volatile effects
@@ -3881,7 +4014,6 @@ static void Cmd_setadditionaleffects(void)
         {
             u32 percentChance;
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-            const u8 *currentPtr = gBattlescriptCurrInstr;
 
             // Various checks for if this move effect can be applied this turn
             if (CanApplyAdditionalEffect(additionalEffect))
@@ -3901,34 +4033,22 @@ static void Cmd_setadditionaleffects(void)
                         gBattlerAttacker,
                         additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
                         additionalEffect->moveEffect,
-                        cmd->nextInstr,
+                        gBattlescriptCurrInstr,
                         flags
                     );
+
+                    gBattleStruct->additionalEffectsCounter++;
+				    return;
                 }
             }
 
-            // Move script along if we haven't jumped elsewhere
-            if (gBattlescriptCurrInstr == currentPtr)
-                gBattlescriptCurrInstr = cmd->nextInstr;
-
-            // Call setadditionaleffects again in the case of a move with multiple effects
             gBattleStruct->additionalEffectsCounter++;
-            if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
-                gBattleScripting.moveEffect = MOVE_EFFECT_CONTINUE;
-            else
-                gBattleScripting.moveEffect = gBattleStruct->additionalEffectsCounter = 0;
-        }
-        else
-        {
-            gBattleScripting.moveEffect = 0;
-            gBattlescriptCurrInstr = cmd->nextInstr;
         }
     }
-    else
-    {
-        gBattleScripting.moveEffect = 0;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
+
+    gBattleStruct->additionalEffectsCounter = 0;
+    gBattleScripting.moveEffect = 0;
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_seteffectprimary(void)
@@ -11072,36 +11192,8 @@ static void Cmd_snatchsetbattlers(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_removescreens(void)
+static void Cmd_unused_0xee(void)
 {
-    CMD_ARGS();
-
-    u8 side;
-    bool32 failed;
-
-    if (B_BRICK_BREAK >= GEN_4)
-        side = GetBattlerSide(gBattlerTarget); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
-    else
-        side = GetBattlerSide(gBattlerAttacker) ^ BIT_SIDE;
-
-    if (B_BRICK_BREAK >= GEN_5)
-        failed = gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT;
-    else
-        failed = FALSE;
-
-    if (!failed && gSideStatuses[side] & SIDE_STATUS_SCREEN_ANY)
-    {
-        gSideStatuses[side] &= ~SIDE_STATUS_SCREEN_ANY;
-        gBattleScripting.animTurn = 1;
-        gBattleScripting.animTargetsHit = 1;
-    }
-    else
-    {
-        gBattleScripting.animTurn = 0;
-        gBattleScripting.animTargetsHit = 0;
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 u8 GetCatchingBattler(void)
@@ -12965,7 +13057,7 @@ void BS_TryTrainerSlideDynamaxMsg(void)
     if ((shouldSlide = ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_DYNAMAX)))
     {
         BattleScriptPush(cmd->nextInstr);
-        
+
         switch(gBattleScripting.battler)
         {
         case B_POSITION_OPPONENT_LEFT:
@@ -13527,60 +13619,6 @@ void BS_RemoveTerrain(void)
     NATIVE_ARGS();
     RemoveAllTerrains();
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_TrySpectralThiefSteal(void)
-{
-    NATIVE_ARGS(const u8 *jumpInstr);
-
-    if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-
-    bool32 contrary = GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY;
-    gBattleStruct->stolenStats[0] = 0; // Stats to steal.
-    gBattleScripting.animArg1 = 0;
-    for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
-    {
-        if (gBattleMons[gBattlerTarget].statStages[stat] > DEFAULT_STAT_STAGE && gBattleMons[gBattlerAttacker].statStages[stat] != MAX_STAT_STAGE)
-        {
-            bool32 byTwo = FALSE;
-
-            gBattleStruct->stolenStats[0] |= (1 << (stat));
-            // Store by how many stages to raise the stat.
-            gBattleStruct->stolenStats[stat] = gBattleMons[gBattlerTarget].statStages[stat] - DEFAULT_STAT_STAGE;
-
-            while (gBattleMons[gBattlerAttacker].statStages[stat] + gBattleStruct->stolenStats[stat] > MAX_STAT_STAGE)
-                gBattleStruct->stolenStats[stat]--;
-
-            gBattleMons[gBattlerTarget].statStages[stat] = DEFAULT_STAT_STAGE;
-
-            if (gBattleStruct->stolenStats[stat] >= 2)
-                byTwo++;
-
-            if (gBattleScripting.animArg1 == 0)
-            {
-                if (byTwo)
-                    gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MINUS2 : STAT_ANIM_PLUS2) + stat;
-                else
-                    gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MINUS1 : STAT_ANIM_PLUS1) + stat;
-            }
-            else
-            {
-                if (byTwo)
-                    gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MULTIPLE_MINUS2 : STAT_ANIM_MULTIPLE_PLUS2);
-                else
-                    gBattleScripting.animArg1 = (contrary ? STAT_ANIM_MULTIPLE_MINUS1 : STAT_ANIM_MULTIPLE_PLUS1);
-            }
-        }
-    }
-
-    if (gBattleStruct->stolenStats[0] != 0)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_SpectralThiefPrintStats(void)
@@ -14708,10 +14746,15 @@ void BS_TryActivateSoulheart(void)
 void BS_PlayMoveAnimation(void)
 {
     NATIVE_ARGS(u16 move);
+
+    u32 move = cmd->move;
+    if (move == MOVE_NONE)
+    	move = gCurrentMove;
+
     BtlController_EmitMoveAnimation(
         gBattlerAttacker,
         B_COMM_TO_CONTROLLER,
-        cmd->move,
+        move,
         gBattleScripting.animTurn,
         0,
         0,
