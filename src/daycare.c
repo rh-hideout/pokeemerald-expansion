@@ -825,7 +825,7 @@ u8 GetEggMovesBySpecies(u16 species, u16 *eggMoves)
     return numEggMoves;
 }
 
-bool8 SpeciesCanLearnEggMove(u16 species, u16 move) //Move search PokedexPlus HGSS_Ui
+bool8 SpeciesCanLearnEggMove(u16 species, enum Move move) //Move search PokedexPlus HGSS_Ui
 {
     u32 i;
     const u16 *eggMoveLearnset = GetSpeciesEggMoves(species);
@@ -917,7 +917,7 @@ static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, stru
             {
                 for (j = 0; j < NUM_ALL_MACHINES; j++)
                 {
-                    u16 moveId = GetTMHMMoveId(j + 1);
+                    enum Move moveId = GetTMHMMoveId(j + 1);
                     if (sHatchedEggFatherMoves[i] == moveId && CanLearnTeachableMove(GetMonData(egg, MON_DATA_SPECIES_OR_EGG), moveId))
                     {
                         if (GiveMoveToMon(egg, sHatchedEggFatherMoves[i]) == MON_HAS_MAX_MOVES)

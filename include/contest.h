@@ -362,7 +362,7 @@ void SetContestantEffectStringID(u8 contestant, u8 effectStringId);
 void SetContestantEffectStringID2(u8 contestant, u8 effectStringId);
 void SetStartledString(u8 contestant, u8 jam);
 void MakeContestantNervous(u8 p);
-s8 Contest_GetMoveExcitement(u16 move);
+s8 Contest_GetMoveExcitement(enum Move move);
 bool8 IsContestantAllowedToCombo(u8 contestant);
 void Contest_PrintTextToBg0WindowAt(u32 windowId, u8 *currChar, s32 x, s32 y, s32 fontId);
 void ResetContestLinkResults(void);

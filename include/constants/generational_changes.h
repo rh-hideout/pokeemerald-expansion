@@ -46,6 +46,7 @@
     F(SHEER_COLD_IMMUNITY,       sheerColdImmunity,       (u32, GEN_COUNT - 1)) \
     F(ROOST_PURE_FLYING,         roostPureFlying,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(STATUS_TYPE_IMMUNITY,      statusTypeImmunity,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(HIDDEN_POWER_COUNTER,      hiddenPowerCounter,      (u32, GEN_COUNT - 1)) \
     /* Turn settings */ \
     F(BINDING_TURNS,             bindingTurns,            (u32, GEN_COUNT - 1)) \
     F(UPROAR_TURNS,              uproarTurns,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -124,6 +125,7 @@
     F(TIME_OF_DAY_HEALING_MOVES, timeOfDayHealingMoves,   (u32, GEN_COUNT - 1)) \
     F(DREAM_EATER_LIQUID_OOZE,   dreamEaterLiquidOoze,    (u32, GEN_COUNT - 1)) \
     F(FOCUS_PUNCH_FAILURE,       focusPunchFailure,       (u32, GEN_COUNT - 1)) \
+    F(RAGE_BUILDS,               rageBuilds,              (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

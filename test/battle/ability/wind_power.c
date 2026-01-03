@@ -19,7 +19,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move")
 {
     s16 dmgBefore, dmgAfter;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE {move = MOVE_SCRATCH; }
     PARAMETRIZE {move = MOVE_AIR_CUTTER; }
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
 SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind move")
 {
     s16 dmgBefore, dmgAfter;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE {move = MOVE_SCRATCH; }
     PARAMETRIZE {move = MOVE_AIR_CUTTER; }
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
 SINGLE_BATTLE_TEST("Wind Power sets up Charge for only one attack when hit by a wind move")
 {
     s16 dmgCharged, dmgAfter;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE {move = MOVE_SCRATCH; }
     PARAMETRIZE {move = MOVE_AIR_CUTTER; }

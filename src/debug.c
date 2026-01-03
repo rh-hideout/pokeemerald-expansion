@@ -2606,7 +2606,7 @@ static void Debug_Display_ItemInfo(u32 itemId, u32 digit, u8 windowId)
 {
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
     u8* end = CopyItemName(itemId, gStringVar1);
-    u16 moveId = ItemIdToBattleMoveId(itemId);
+    enum Move moveId = ItemIdToBattleMoveId(itemId);
     if (moveId != MOVE_NONE)
     {
         end = StringCopy(end, gText_Space);
@@ -3331,7 +3331,7 @@ static u32 GetDebugPokemonTotalEV(void)
     return totalEVs;
 }
 
-static void Debug_Display_MoveInfo(u32 moveId, u32 iteration, u32 digit, u8 windowId)
+static void Debug_Display_MoveInfo(enum Move moveId, u32 iteration, u32 digit, u8 windowId)
 {
     // Doesn't expand placeholdes so a 4th dynamic value can be shown.
     u8 *end;
@@ -3465,7 +3465,7 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
 {
     struct Pokemon mon;
     u8 i;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u8 IVs[NUM_STATS];
     u8 iv_val;
     u8 EVs[NUM_STATS];

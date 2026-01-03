@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_CHILLY_RECEPTION) == EFFECT_CHILLY_RECEPTION);
+    ASSUME(GetMoveEffect(MOVE_CHILLY_RECEPTION) == EFFECT_WEATHER_AND_SWITCH);
 }
 #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL
 SINGLE_BATTLE_TEST("Chilly Reception sets up hail and switches the user out")
@@ -47,8 +47,8 @@ SINGLE_BATTLE_TEST("Chilly Reception switches the user out, even if the weather 
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); SEND_OUT(player, 1); }
     } SCENE {
         MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
         MESSAGE("There is no relief from this heavy rain!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
         MESSAGE("Slowking went back to 1!");
         SEND_IN_MESSAGE("Slowpoke");
         MESSAGE("Rain continues to fall.");

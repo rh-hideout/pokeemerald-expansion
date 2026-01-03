@@ -25,7 +25,7 @@ void CopyBattleSpriteInvisibility(u8 battler);
 void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType);
 void BattleLoadSubstituteOrMonSpriteGfx(u8 battler, bool8 loadMonSprite);
 void LoadBattleMonGfxAndAnimate(u8 battler, bool8 loadMonSprite, u8 spriteId);
-void TrySetBehindSubstituteSpriteBit(u8 battler, u16 move);
+void TrySetBehindSubstituteSpriteBit(u8 battler, enum Move move);
 void ClearBehindSubstituteBit(u8 battler);
 void HandleLowHpMusicChange(struct Pokemon *mon, u8 battler);
 void BattleStopLowHpSound(void);

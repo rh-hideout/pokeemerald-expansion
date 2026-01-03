@@ -164,7 +164,7 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
     }
 }
 
-void ScriptSetMonMoveSlot(u8 monIndex, u16 move, u8 slot)
+void ScriptSetMonMoveSlot(u8 monIndex, enum Move move, u8 slot)
 {
 // Allows monIndex to go out of bounds of gPlayerParty. Doesn't occur in vanilla
 #ifdef BUGFIX
@@ -562,16 +562,16 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
         }
     }
 
-    u16 move1                = PARSE_FLAG(17, MOVE_DEFAULT);
-    u16 move2                = PARSE_FLAG(18, MOVE_DEFAULT);
-    u16 move3                = PARSE_FLAG(19, MOVE_DEFAULT);
-    u16 move4                = PARSE_FLAG(20, MOVE_DEFAULT);
+    enum Move move1                = PARSE_FLAG(17, MOVE_DEFAULT);
+    enum Move move2                = PARSE_FLAG(18, MOVE_DEFAULT);
+    enum Move move3                = PARSE_FLAG(19, MOVE_DEFAULT);
+    enum Move move4                = PARSE_FLAG(20, MOVE_DEFAULT);
     enum ShinyMode shinyMode = PARSE_FLAG(21, SHINY_MODE_RANDOM);
     bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
     enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
     u8 dmaxLevel             = PARSE_FLAG(24, 0);
 
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     for (i = 0; i < MAX_MON_MOVES; i++)
         moves[i] = MOVE_NONE;
 
