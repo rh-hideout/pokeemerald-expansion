@@ -441,6 +441,13 @@ Debug_EventScript_SetFriendship::
 	releaseall
 	end
 
+Debug_EventScript_GivePokerus::
+	special ChoosePartyMon
+	waitstate
+	callnative DebugNative_Party_SetPokerus
+	releaseall
+	end
+
 Debug_EventScript_InflictStatus1_Single_Poison:
 	setstatus1 STATUS1_POISON, VAR_0x8004
 	releaseall

@@ -2,12 +2,15 @@
 #include "generational_changes.h"
 #include "malloc.h"
 #include "constants/generational_changes.h"
+#include "config/pokerus.h"
 
-#define UNPACK_CONFIG_GEN_CHANGES2(_name, _field, ...) ._field = B_##_name,
+#define UNPACK_BATTLE_CONFIG_GEN_CHANGES(_name, _field, ...) ._field = B_##_name,
+#define UNPACK_MISC_CONFIG_GEN_CHANGES(_name, _field, ...) ._field = M_##_name,
 
 const struct GenChanges sConfigChanges =
 {
-    CONFIG_DEFINITIONS(UNPACK_CONFIG_GEN_CHANGES2)
+    BATTLE_CONFIG_DEFINITIONS(UNPACK_BATTLE_CONFIG_GEN_CHANGES)
+    MISC_CONFIG_DEFINITIONS(UNPACK_MISC_CONFIG_GEN_CHANGES)
     /* Expands to:
     .critChance     = B_CRIT_CHANCE,
     .critMultiplier = B_CRIT_MULTIPLIER,
@@ -38,7 +41,8 @@ u32 GetConfig(enum ConfigTag _genConfig)
     {
         switch (_genConfig)
         {
-            CONFIG_DEFINITIONS(UNPACK_CONFIG_GETTERS)
+            BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_GETTERS)
+            MISC_CONFIG_DEFINITIONS(UNPACK_CONFIG_GETTERS)
         /* Expands to:
             case CONFIG_CRIT_CHANCE:
                 return gConfigChangesTestOverride->critChance;
@@ -52,7 +56,8 @@ u32 GetConfig(enum ConfigTag _genConfig)
     {
         switch (_genConfig)
         {
-            CONFIG_DEFINITIONS(UNPACK_CONFIG_OVERRIDE_GETTERS)
+            BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_OVERRIDE_GETTERS)
+            MISC_CONFIG_DEFINITIONS(UNPACK_CONFIG_OVERRIDE_GETTERS)
         /* Expands to:
             case CONFIG_CRIT_CHANCE:
                  return sConfigChanges.critChance;
@@ -69,7 +74,8 @@ u32 GetClampedValue(enum ConfigTag _genConfig, u32 newValue)
     u32 clampedValue = 0;
     switch(_genConfig)
     {
-        CONFIG_DEFINITIONS(UNPACK_CONFIG_CLAMPER)
+        BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_CLAMPER)
+        MISC_CONFIG_DEFINITIONS(UNPACK_CONFIG_CLAMPER)
         default:
             return 0;
     }
@@ -84,7 +90,8 @@ void SetConfig(enum ConfigTag _genConfig, u32 _value)
     u32 clampedValue = GetClampedValue(_genConfig, _value);
     switch (_genConfig)
     {
-        CONFIG_DEFINITIONS(UNPACK_CONFIG_SETTERS)
+        BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_SETTERS)
+        MISC_CONFIG_DEFINITIONS(UNPACK_CONFIG_SETTERS)
     /* Expands to:
     #if TESTING
         case CONFIG_CRIT_CHANCE:
