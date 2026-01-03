@@ -18,10 +18,10 @@ const static bool32 (*sSynchronizeModes[]) (u32) =
     [ROAMER_ORIGIN] = IsFalse,
     [GIFTMON_ORIGIN] = IsFalse,
 #elif OW_SYNCHRONIZE_NATURE <= GEN_5
-    [WILDMON_ORIGIN] = IsTrue,
-    [STATIC_WILDMON_ORIGIN] = IsFalse,
-    [ROAMER_ORIGIN] = HasHalfChance,
-    [GIFTMON_ORIGIN] = HasHalfChance,
+    [WILDMON_ORIGIN] = HasHalfChance,
+    [STATIC_WILDMON_ORIGIN] = HasHalfChance,
+    [ROAMER_ORIGIN] = IsFalse,
+    [GIFTMON_ORIGIN] = IsFalse,
 #elif OW_SYNCHRONIZE_NATURE == GEN_6
     [WILDMON_ORIGIN] = HasHalfChance,
     [STATIC_WILDMON_ORIGIN] = HasHalfChance,
@@ -32,10 +32,15 @@ const static bool32 (*sSynchronizeModes[]) (u32) =
     [STATIC_WILDMON_ORIGIN] = HasHalfChance,
     [ROAMER_ORIGIN] = IsFalse,
     [GIFTMON_ORIGIN] = IsTrue,
-#else
+#elif OW_SYNCHRONIZE_NATURE == GEN_8
     [WILDMON_ORIGIN] = IsTrue,
     [STATIC_WILDMON_ORIGIN] = IsFalse,
     [ROAMER_ORIGIN] = IsTrue,
+    [GIFTMON_ORIGIN] = IsFalse,
+#else
+    [WILDMON_ORIGIN] = IsFalse,
+    [STATIC_WILDMON_ORIGIN] = IsFalse,
+    [ROAMER_ORIGIN] = IsFalse,
     [GIFTMON_ORIGIN] = IsFalse,
 #endif
 };
