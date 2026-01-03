@@ -44,7 +44,7 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler);
 static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, u32 battlerAtk, u32 battlerDef);
 static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef);
 static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
-static bool32 DoesAbilityBenefitFromSunOrRain(enum Ability ability, u32 weather);
+static bool32 DoesAbilityBenefitFromSunOrRain(u32 battler, enum Ability ability, u32 weather);
 static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef);
 
 // ewram
@@ -3918,7 +3918,7 @@ static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect)
     }
 }
 
-static bool32 DoesAbilityBenefitFromSunOrRain(enum Ability ability, u32 weather)
+static bool32 DoesAbilityBenefitFromSunOrRain(u32 battler, enum Ability ability, u32 weather)
 {
     switch (ability)
     {
@@ -3927,9 +3927,14 @@ static bool32 DoesAbilityBenefitFromSunOrRain(enum Ability ability, u32 weather)
     case ABILITY_RAIN_DISH:
     case ABILITY_SWIFT_SWIM:
         return (weather & B_WEATHER_RAIN);
+    case ABILITY_HARVEST:
+        if (GetItemPocket(gAiLogicData->items[battler]) != POCKET_BERRIES
+            && GetItemPocket(gBattleStruct->changedItems[battler]) != POCKET_BERRIES
+            && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) != POCKET_BERRIES)
+            return FALSE;
+        // fallthrough
     case ABILITY_CHLOROPHYLL:
     case ABILITY_FLOWER_GIFT:
-    case ABILITY_HARVEST:
     case ABILITY_LEAF_GUARD:
     case ABILITY_SOLAR_POWER:
     case ABILITY_ORICHALCUM_PULSE:
@@ -5171,7 +5176,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             break;
         case HOLD_EFFECT_UTILITY_UMBRELLA:
             if (!(AI_GetWeather() & B_WEATHER_SUN && aiData->abilities[battlerAtk] == ABILITY_DRY_SKIN)
-             && DoesAbilityBenefitFromSunOrRain(aiData->abilities[battlerDef], AI_GetWeather()))
+             && DoesAbilityBenefitFromSunOrRain(battlerDef, aiData->abilities[battlerDef], AI_GetWeather()))
             {
                 ADJUST_SCORE(DECENT_EFFECT); // Remove their weather benefit
             }
@@ -5213,7 +5218,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                 case HOLD_EFFECT_UTILITY_UMBRELLA:
                     if ((AI_GetWeather() & B_WEATHER_SUN) && (aiData->abilities[battlerAtk] == ABILITY_DRY_SKIN || aiData->abilities[battlerDef] == ABILITY_DRY_SKIN))
                         ADJUST_SCORE(DECENT_EFFECT);
-                    else if (!DoesAbilityBenefitFromSunOrRain(aiData->abilities[battlerAtk], AI_GetWeather()))
+                    else if (!DoesAbilityBenefitFromSunOrRain(battlerAtk, aiData->abilities[battlerAtk], AI_GetWeather()))
                         ADJUST_SCORE(WEAK_EFFECT);
                     break;
                 default:

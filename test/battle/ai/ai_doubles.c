@@ -144,12 +144,12 @@ AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow")
     enum Ability ability = ABILITY_NONE;
     u8 turnToTrick = 0;
 
-    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_TOXIC_ORB; status = STATUS1_NONE;   ability = ABILITY_PRESSURE;     turnToTrick = 1; }
-    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_FLAME_ORB; status = STATUS1_NONE;   ability = ABILITY_PRESSURE;     turnToTrick = 1; }
-    PARAMETRIZE { move = MOVE_BESTOW; item = ITEM_TOXIC_ORB; status = STATUS1_NONE;   ability = ABILITY_POISON_HEAL;  turnToTrick = 2; }
-    PARAMETRIZE { move = MOVE_BESTOW; item = ITEM_FLAME_ORB; status = STATUS1_NONE;   ability = ABILITY_GUTS;         turnToTrick = 2; }
-    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_TOXIC_ORB; status = STATUS1_POISON; ability = ABILITY_POISON_HEAL;  turnToTrick = 1; }
-    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_FLAME_ORB; status = STATUS1_BURN;   ability = ABILITY_GUTS;         turnToTrick = 1; }
+    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_TOXIC_ORB; status = STATUS1_NONE;   ability = ABILITY_PRESSURE;    turnToTrick = 1; }
+    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_FLAME_ORB; status = STATUS1_NONE;   ability = ABILITY_PRESSURE;    turnToTrick = 1; }
+    PARAMETRIZE { move = MOVE_BESTOW; item = ITEM_TOXIC_ORB; status = STATUS1_NONE;   ability = ABILITY_POISON_HEAL; turnToTrick = 2; }
+    PARAMETRIZE { move = MOVE_BESTOW; item = ITEM_FLAME_ORB; status = STATUS1_NONE;   ability = ABILITY_GUTS;        turnToTrick = 2; }
+    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_TOXIC_ORB; status = STATUS1_POISON; ability = ABILITY_POISON_HEAL; turnToTrick = 1; }
+    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_FLAME_ORB; status = STATUS1_BURN;   ability = ABILITY_GUTS;        turnToTrick = 1; }
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
@@ -182,10 +182,15 @@ AI_DOUBLE_BATTLE_TEST("AI gifts Utility Umbrella only when it removes the foe's 
     enum Ability weatherAbility = ABILITY_NONE, targetAbility = ABILITY_NONE, attackerAbility = ABILITY_NONE;
     bool32 expectTrick = FALSE;
 
-    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT;  targetAbility = ABILITY_CHLOROPHYLL; attackerAbility = ABILITY_DRY_SKIN; expectTrick = FALSE; }
-    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT;  targetAbility = ABILITY_LEAF_GUARD;  attackerAbility = ABILITY_PRESSURE; expectTrick = TRUE;  }
-    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE;  targetAbility = ABILITY_SWIFT_SWIM;  attackerAbility = ABILITY_DRY_SKIN; expectTrick = TRUE;  }
-    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE;  targetAbility = ABILITY_RAIN_DISH;   attackerAbility = ABILITY_PRESSURE; expectTrick = TRUE;  }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_CHLOROPHYLL;      attackerAbility = ABILITY_DRY_SKIN; expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_LEAF_GUARD;       attackerAbility = ABILITY_PRESSURE; expectTrick = TRUE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_FLOWER_GIFT;      attackerAbility = ABILITY_PRESSURE; expectTrick = TRUE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_SOLAR_POWER;      attackerAbility = ABILITY_PRESSURE; expectTrick = TRUE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_ORICHALCUM_PULSE; attackerAbility = ABILITY_PRESSURE; expectTrick = TRUE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE; targetAbility = ABILITY_SWIFT_SWIM;       attackerAbility = ABILITY_DRY_SKIN; expectTrick = TRUE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE; targetAbility = ABILITY_RAIN_DISH;        attackerAbility = ABILITY_PRESSURE; expectTrick = TRUE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE; targetAbility = ABILITY_DRY_SKIN;         attackerAbility = ABILITY_PRESSURE; expectTrick = TRUE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE; targetAbility = ABILITY_HYDRATION;        attackerAbility = ABILITY_PRESSURE; expectTrick = TRUE; }
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
@@ -208,10 +213,17 @@ AI_DOUBLE_BATTLE_TEST("AI steals Utility Umbrella to handle sun and Dry Skin but
     enum Ability weatherAbility = ABILITY_NONE, targetAbility = ABILITY_NONE, attackerAbility = ABILITY_NONE;
     bool32 expectTrick = FALSE;
 
-    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_DRY_SKIN;    expectTrick = TRUE;  }
-    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_DRY_SKIN; attackerAbility = ABILITY_PRESSURE;    expectTrick = TRUE;  }
-    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_CHLOROPHYLL; expectTrick = FALSE; }
-    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_SWIFT_SWIM;  expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_DRY_SKIN;         expectTrick = TRUE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_DRY_SKIN; attackerAbility = ABILITY_PRESSURE;         expectTrick = TRUE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_CHLOROPHYLL;      expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_FLOWER_GIFT;      expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_LEAF_GUARD;       expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_SOLAR_POWER;      expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_TORKOAL;  weatherAbility = ABILITY_DROUGHT; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_ORICHALCUM_PULSE; expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_SWIFT_SWIM;       expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_RAIN_DISH;        expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_HYDRATION;        expectTrick = FALSE; }
+    PARAMETRIZE { weatherSpecies = SPECIES_POLITOED; weatherAbility = ABILITY_DRIZZLE; targetAbility = ABILITY_PRESSURE; attackerAbility = ABILITY_DRY_SKIN;         expectTrick = FALSE; }
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
@@ -219,6 +231,30 @@ AI_DOUBLE_BATTLE_TEST("AI steals Utility Umbrella to handle sun and Dry Skin but
         PLAYER(SPECIES_WOBBUFFET) { Ability(targetAbility); Item(ITEM_UTILITY_UMBRELLA); }
         PLAYER(weatherSpecies) { Ability(weatherAbility); }
         OPPONENT(SPECIES_WOBBUFFET) { Ability(attackerAbility); Item(ITEM_NONE); Moves(MOVE_TRICK, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        if (expectTrick)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_TRICK, target: playerLeft); }
+        else
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI treats Harvest as a sun benefit only when a berry is involved")
+{
+    u16 targetItem = ITEM_NONE;
+    bool32 expectTrick = FALSE;
+
+    PARAMETRIZE { targetItem = ITEM_ORAN_BERRY; expectTrick = TRUE; }
+    PARAMETRIZE { targetItem = ITEM_LEFTOVERS; expectTrick = FALSE; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
+        ASSUME(GetItemPocket(ITEM_ORAN_BERRY) == POCKET_BERRIES);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_HARVEST); Item(targetItem); }
+        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); Item(ITEM_UTILITY_UMBRELLA); Moves(MOVE_TRICK, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
     } WHEN {
         if (expectTrick)
