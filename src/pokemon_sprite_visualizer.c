@@ -654,6 +654,7 @@ static void SetArrowInvisibility(struct PokemonSpriteVisualizer *data)
         gSprites[data->yPosModifyArrows.arrowSpriteId[0]].invisible = TRUE;
         break;
     case 1:
+    case 4:
         gSprites[data->modifyArrows.arrowSpriteId[0]].invisible = TRUE;
         gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = TRUE;
         gSprites[data->optionArrows.arrowSpriteId[0]].invisible = FALSE;
@@ -661,7 +662,6 @@ static void SetArrowInvisibility(struct PokemonSpriteVisualizer *data)
         break;
     case 2:
     case 3:
-    case 4:
         gSprites[data->modifyArrows.arrowSpriteId[0]].invisible = TRUE;
         gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = TRUE;
         gSprites[data->optionArrows.arrowSpriteId[0]].invisible = TRUE;
@@ -1654,9 +1654,8 @@ static void UpdateShadowSizeValue(u8 taskId, bool8 increment)
 static void UpdateSubmenuFourOptionValue(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
-    u8 option = data->submenuYpos[1];
 
-    switch (option)
+    switch (data->submenuYpos[1])
     {
     case 0:
         UpdateMoveBg(taskId, increment);
@@ -1923,6 +1922,10 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
     {
         if (JOY_NEW(A_BUTTON))
         {
+            if (data->submenuYpos[1] > 0)
+                data->submenuYpos[1] = 0;
+            data->optionArrows.currentDigit = data->submenuYpos[1];
+            gSprites[data->optionArrows.arrowSpriteId[0]].y = OPTIONS_ARROW_Y + data->optionArrows.currentDigit * 12;
             data->currentSubmenu = 4;
             PrintInstructionsOnWindow(data);
             SetArrowInvisibility(data);
