@@ -81,6 +81,7 @@ DOUBLE_BATTLE_TEST("Court Change swaps entry hazards used by the player")
 DOUBLE_BATTLE_TEST("Court Change used by the player swaps Mist, Safeguard, Aurora Veil, Reflect, Light Screen, Tailwind")
 {
     GIVEN {
+        WITH_CONFIG(CONFIG_TAILWIND_TURNS, GEN_5);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WYNAUT);
@@ -119,6 +120,7 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps Mist, Safeguard, Auror
 DOUBLE_BATTLE_TEST("Court Change used by the opponent swaps Mist, Safeguard, Aurora Veil, Reflect, Light Screen, Tailwind")
 {
     GIVEN {
+        WITH_CONFIG(CONFIG_TAILWIND_TURNS, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -171,9 +173,7 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Steelsurge")
         MESSAGE("Copperajah used G-Max Steelsurge!");
         SEND_IN_MESSAGE("Wobbuffet");
         MESSAGE("The sharp steel bit into Wobbuffet!");
-        NONE_OF {
-            MESSAGE("The sharp steel bit into the opposing Wynaut!");
-        }
+        NOT MESSAGE("The sharp steel bit into the opposing Wynaut!");
     }
 }
 
@@ -248,4 +248,3 @@ AI_SINGLE_BATTLE_TEST("AI uses Court Change")
             TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_COURT_CHANGE); }
     }
 }
-

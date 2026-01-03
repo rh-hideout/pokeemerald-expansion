@@ -10,6 +10,7 @@
 #include "constants/characters.h"
 #include "test_runner.h"
 #include "test/test.h"
+#include "test/battle.h"
 
 #define TIMEOUT_SECONDS 60
 
@@ -160,6 +161,9 @@ void TestRunner_CheckMemory(void)
                         {
                             Test_MgbaPrintf("%s: %d bytes not freed", location, block->size);
                             gTestRunnerState.result = TEST_RESULT_FAIL;
+       
+                            if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+                                gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                             break;
                         }
                     }
@@ -168,6 +172,9 @@ void TestRunner_CheckMemory(void)
                 {
                     Test_MgbaPrintf("<unknown>: %d bytes not freed", block->size);
                     gTestRunnerState.result = TEST_RESULT_FAIL;
+
+                    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+                        gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 }
             }
             block = block->next;
@@ -180,6 +187,9 @@ void TestRunner_CheckMemory(void)
             {
                 Test_MgbaPrintf(":L%s:%d - %p: task not freed", gTestRunnerState.test->filename, SourceLine(0), gTasks[i].func);
                 gTestRunnerState.result = TEST_RESULT_FAIL;
+
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
             }
         }
     }
@@ -247,6 +257,9 @@ top:
 
             if (gPersistentTestRunnerState.expectCrash)
                 gTestRunnerState.expectedResult = TEST_RESULT_CRASH;
+            
+            gTestRunnerState.expectedFailLine = 0;
+            gTestRunnerState.expectedFailState = NO_EXPECT_FAIL;
         }
         else
         {
@@ -285,6 +298,8 @@ top:
         gTestRunnerState.result = TEST_RESULT_PASS;
         gTestRunnerState.expectedResult = TEST_RESULT_PASS;
         gTestRunnerState.expectLeaks = FALSE;
+        gTestRunnerState.expectedFailLine = 0;
+        gTestRunnerState.expectedFailState = NO_EXPECT_FAIL;
         if (gTestRunnerHeadless)
             gTestRunnerState.timeoutSeconds = TIMEOUT_SECONDS;
         else
@@ -355,8 +370,23 @@ top:
         {
             const char *color;
             const char *result;
+            bool32 expectedFailOnCorrectLine = FALSE;
 
-            if (gTestRunnerState.result == gTestRunnerState.expectedResult
+            if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SUCCESS)
+            {
+                // Failed within expected block; pass
+                expectedFailOnCorrectLine = TRUE;
+                color = "\e[32m";
+                Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
+            }
+            else if (gTestRunnerState.expectedFailState == EXPECT_FAIL_CLOSED
+             && gTestRunnerState.result == TEST_RESULT_FAIL)
+            {
+                // Failed outside expected block; fail
+                gTestRunnerState.exitCode = 1;
+                color = "\e[31m";
+            }
+            else if (gTestRunnerState.result == gTestRunnerState.expectedResult
              || (gTestRunnerState.result == TEST_RESULT_FAIL
               && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
             {
@@ -381,14 +411,29 @@ top:
                     result = "KNOWN_FAILING";
                     color = "\e[33m";
                 }
+                else if (expectedFailOnCorrectLine)
+                {
+                    color = "\e[32m";
+                    result = "EXPECTED_FAIL";
+                }
+                else if (gTestRunnerState.expectedResult == TEST_RESULT_FAIL
+                 && gTestRunnerState.expectedFailState != EXPECT_FAIL_SUCCESS)
+                {
+                    // Failed on wrong line
+                    result = "UNEXPECTED_FAIL_LINE";
+                }
                 else
                 {
                     result = "FAIL";
                 }
                 break;
             case TEST_RESULT_PASS:
-                if (gTestRunnerState.result != gTestRunnerState.expectedResult)
+                if (gTestRunnerState.result != gTestRunnerState.expectedResult
+                 && gTestRunnerState.expectedFailLine == 0)
                     result = "KNOWN_FAILING_PASS";
+                else if (gTestRunnerState.result != gTestRunnerState.expectedResult
+                 && gTestRunnerState.expectedFailLine != 0)
+                    result = "EXPECTED_FAIL_PASS";
                 else
                     result = "PASS";
                 break;
@@ -422,25 +467,39 @@ top:
                 if (gTestRunnerState.result != gTestRunnerState.expectedResult)
                 {
                     Test_MgbaPrintf(":L%s:%d", gTestRunnerState.test->filename, SourceLine(0));
-                    Test_MgbaPrintf(":U%s%s\e[0m", color, result);
+                    if (gTestRunnerState.expectedFailLine == 0)
+                        Test_MgbaPrintf(":U%s%s\e[0m", color, result);
+                    else
+                        Test_MgbaPrintf(":V%s%s\e[0m", color, result);
                 }
                 else
                 {
                     Test_MgbaPrintf(":P%s%s\e[0m", color, result);
                 }
             }
+            else if (expectedFailOnCorrectLine)
+                Test_MgbaPrintf(":E%s%s\e[0m", color, result);
             else if (gTestRunnerState.result == TEST_RESULT_ASSUMPTION_FAIL)
                 Test_MgbaPrintf(":A%s%s\e[0m", color, result);
             else if (gTestRunnerState.result == TEST_RESULT_TODO)
                 Test_MgbaPrintf(":T%s%s\e[0m", color, result);
             else if (gTestRunnerState.expectedResult == gTestRunnerState.result
+                 && gTestRunnerState.result == TEST_RESULT_CRASH)
+                Test_MgbaPrintf(":E%s%s\e[0m", color, result);
+            else if (gTestRunnerState.expectedResult == gTestRunnerState.result
+                 && gTestRunnerState.result == TEST_RESULT_FAIL
+                 && gTestRunnerState.expectedFailLine == 0)
+                Test_MgbaPrintf(":K%s%s\e[0m", color, result);
+            else if ((gTestRunnerState.expectedResult == gTestRunnerState.result
+                  && gTestRunnerState.expectedFailState == NO_EXPECT_FAIL)
                  || (gTestRunnerState.result == TEST_RESULT_FAIL
                   && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
                 Test_MgbaPrintf(":K%s%s\e[0m", color, result);
             else
                 Test_MgbaPrintf(":F%s%s\e[0m", color, result);
         }
-
+        gTestRunnerState.expectedFailLine = 0;
+        gTestRunnerState.expectedFailState = NO_EXPECT_FAIL;
         break;
 
     case STATE_NEXT_TEST:
@@ -479,9 +538,30 @@ void Test_ExpectCrash(bool32 expectCrash)
         Test_ExpectedResult(TEST_RESULT_CRASH);
 }
 
+void Test_ExpectFail(u32 failLine)
+{
+    // If expecting a fail and fail has not already been encountered
+    if ((gTestRunnerState.expectedFailState != EXPECT_FAIL_SUCCESS)
+     && (gTestRunnerState.expectedFailState != EXPECT_FAIL_TURN_OPEN)
+     && (gTestRunnerState.expectedFailState != EXPECT_FAIL_SCENE_OPEN))
+    {
+        if (failLine == -1)
+        {
+            Test_ExpectedResult(TEST_RESULT_FAIL);
+            gTestRunnerState.expectedFailState = EXPECT_FAIL_OPEN;
+        }
+        else
+        {
+            gTestRunnerState.expectedFailLine = failLine;
+            gTestRunnerState.expectedFailState = EXPECT_FAIL_CLOSED;
+        }
+    }
+}
+
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
+    ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
     SeedRng(0);
 }
@@ -513,12 +593,84 @@ static bool32 FunctionTest_CheckProgress(void *data)
     return madeProgress;
 }
 
+static u32 FunctionTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
+{
+    //rigged
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == tag)
+        {
+            if (reject && reject(gFunctionTestRunnerState->rngList[i].value))
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LWITH_RNG specified a rejected value (%d)", gFunctionTestRunnerState->rngList[i].value);
+            return gFunctionTestRunnerState->rngList[i].value;
+        }
+    }
+    //trials
+    /*
+    if (tag == STATE->rngTag)
+        return RandomUniformTrials(tag, lo, hi, reject);
+    */
+
+    //default
+    return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
+}
+
+static u32 FunctionTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+{
+    //rigged
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == tag)
+            return gFunctionTestRunnerState->rngList[i].value;
+    }
+
+    //trials
+    /*
+    if (tag == STATE->rngTag)
+        return RandomWeightedArrayTrials(tag, sum, n, weights);
+    */
+
+    //default
+    return RandomWeightedArrayDefaultValue(tag, n, weights, caller);
+}
+
+static const void* FunctionTest_RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
+{
+    //rigged
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == tag)
+        {
+            u32 element = 0;
+            for (u32 index = 0; index < count; index++)
+            {
+                memcpy(&element, (const u8 *)array + size * index, size);
+                if (element == gFunctionTestRunnerState->rngList[i].value)
+                    return (const u8 *)array + size * index;
+            }
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":L%s: RandomElement illegal value requested: %d", gTestRunnerState.test->filename, gFunctionTestRunnerState->rngList[i].value);
+        }
+    }
+
+    //trials
+    /*
+    if (tag == STATE->rngTag)
+        return RandomElementTrials(tag, array, size, count);
+    */
+
+    //default
+    return RandomElementArrayDefaultValue(tag, array, size, count, caller);
+}
+
 const struct TestRunner gFunctionTestRunner =
 {
     .setUp = FunctionTest_SetUp,
     .run = FunctionTest_Run,
     .tearDown = FunctionTest_TearDown,
     .checkProgress = FunctionTest_CheckProgress,
+    .randomUniform = FunctionTest_RandomUniform,
+    .randomWeightedArray = FunctionTest_RandomWeightedArray,
+    .randomElementArray = FunctionTest_RandomElementArray,
 };
 
 static void Assumptions_Run(void *data)
@@ -580,10 +732,36 @@ static void Intr_Timer2(void)
     }
 }
 
-void Test_ExitWithResult(enum TestResult result, u32 stopLine, const char *fmt, ...)
+void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *return1, const char *fmt, ...)
 {
     gTestRunnerState.result = result;
     gTestRunnerState.failedAssumptionsBlockLine = stopLine;
+
+    if (result == TEST_RESULT_FAIL)
+    {
+        switch (gTestRunnerState.expectedFailState)
+        {
+            case EXPECT_FAIL_OPEN:
+            case EXPECT_FAIL_TURN_OPEN:
+                gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+                break;
+            case EXPECT_FAIL_SCENE_OPEN: // EXPECT_FAIL_SUCCESS set in individual Queue functions
+                gTestRunnerState.expectedFailState = EXPECT_FAIL_CLOSED;
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_CLOSED
+     && gTestRunnerState.expectedResult == TEST_RESULT_FAIL
+     && result == TEST_RESULT_FAIL)
+    {
+        Test_MgbaPrintf(":L%s:%d: Expected failure in block from line %d, but failed on line %d",
+         gTestRunnerState.test->filename, stopLine,
+         gTestRunnerState.expectedFailLine, stopLine);
+    }
+    
     ReinitCallbacks();
     if (gTestRunnerState.state == STATE_REPORT_RESULT
      && gTestRunnerState.result != gTestRunnerState.expectedResult)
@@ -591,6 +769,11 @@ void Test_ExitWithResult(enum TestResult result, u32 stopLine, const char *fmt, 
         if (!gTestRunnerState.test->runner->handleExitWithResult
          || !gTestRunnerState.test->runner->handleExitWithResult(gTestRunnerState.test->data, result))
         {
+            if (result == TEST_RESULT_INVALID)
+            {
+                const void *return0 = __builtin_return_address(0);
+                Test_MgbaPrintf("in %p\nin %p", return1, return0);
+            }
             va_list va;
             va_start(va, fmt);
             MgbaVPrintf_(fmt, va);
@@ -825,4 +1008,103 @@ u32 SourceLineOffset(u32 sourceLine)
         return 0;
     else
         return sourceLine - test->sourceLine;
+}
+
+u32 RandomUniform(enum RandomTag tag, u32 lo, u32 hi)
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomUniform)
+        return gTestRunnerState.test->runner->randomUniform(tag, lo, hi, NULL, caller);
+    else
+        return RandomUniformDefault(tag, lo, hi);
+}
+
+u32 RandomUniformExcept(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32))
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomUniform)
+        return gTestRunnerState.test->runner->randomUniform(tag, lo, hi, reject, caller);
+    else
+        return RandomUniformExceptDefault(tag, lo, hi, reject);
+}
+
+u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomWeightedArray)
+        return gTestRunnerState.test->runner->randomWeightedArray(tag, sum, n, weights, caller);
+    else
+        return RandomWeightedArrayDefault(tag, sum, n, weights);
+}
+
+const void *RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count)
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomElementArray)
+        return gTestRunnerState.test->runner->randomElementArray(tag, array, size, count, caller);
+    else
+        return RandomElementArrayDefault(tag, array, size, count);
+}
+
+u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
+{
+    u32 default_ = hi;
+    if (reject)
+    {
+        while (reject(default_))
+        {
+            if (default_ == lo)
+                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniformExcept called from %p with tag %d rejected all values", caller, tag);
+            default_--;
+        }
+    }
+    return default_;
+}
+
+u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u8 *weights, void *caller)
+{
+    while (weights[n-1] == 0)
+    {
+        if (n == 1)
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeightedArray called from %p with tag %d and all zero weights", caller, tag);
+        n--;
+    }
+    return n-1;
+}
+
+const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
+{
+    return (const u8 *)array + size * (count - 1);
+}
+
+void ClearRiggedRng(void)
+{
+    struct RiggedRNG zeroRng = {.tag = RNG_NONE, .value = 0};
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+        memcpy(&gFunctionTestRunnerState->rngList[i], &zeroRng, sizeof(zeroRng));
+}
+
+void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value)
+{
+    struct RiggedRNG rng = {.tag = randomTag, .value = value};
+    u32 i;
+    for (i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == randomTag)
+        {
+            memcpy(&gFunctionTestRunnerState->rngList[i], &rng, sizeof(rng));
+            break;
+        }
+        else if (gFunctionTestRunnerState->rngList[i].tag > RNG_NONE)
+        {
+            continue;
+        }
+        else
+        {
+            memcpy(&gFunctionTestRunnerState->rngList[i], &rng, sizeof(rng));
+            break;
+        }
+    }
+    if (i == RIGGED_RNG_COUNT)
+        Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: Too many rigged RNGs to set up", gTestRunnerState.test->filename, sourceLine);
 }

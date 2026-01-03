@@ -15,6 +15,7 @@
 #include "battle_setup.h"
 #include "random.h"
 #include "field_player_avatar.h"
+#include "fieldmap.h"
 #include "vs_seeker.h"
 #include "menu.h"
 #include "string_util.h"
@@ -390,8 +391,8 @@ static void GatherNearbyTrainerInfo(void)
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].localId = templates[objectEventIdx].localId;
         TryGetObjectEventIdByLocalIdAndMap(templates[objectEventIdx].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objectEventId);
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].objectEventId = objectEventId;
-        sVsSeeker->trainerInfo[vsSeekerObjectIdx].xCoord = gObjectEvents[objectEventId].currentCoords.x - 7;
-        sVsSeeker->trainerInfo[vsSeekerObjectIdx].yCoord = gObjectEvents[objectEventId].currentCoords.y - 7;
+        sVsSeeker->trainerInfo[vsSeekerObjectIdx].xCoord = gObjectEvents[objectEventId].currentCoords.x - MAP_OFFSET;
+        sVsSeeker->trainerInfo[vsSeekerObjectIdx].yCoord = gObjectEvents[objectEventId].currentCoords.y - MAP_OFFSET;
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].graphicsId = templates[objectEventIdx].graphicsId;
         vsSeekerObjectIdx++;
     }
@@ -716,31 +717,19 @@ static u16 GetTrainerFlagFromScript(const u8 *script)
 {
     // The trainer flag is located 3 bytes (command + flags + localIdA) from the script pointer, assuming the trainerbattle command is first in the script.
     // Because scripts are unaligned, and because the ARM processor requires shorts to be 16-bit aligned, this function needs to perform explicit bitwise operations to get the correct flag.
-    u16 trainerFlag;
-    switch (script[0])
+    u16 trainerFlag = TRAINER_NONE;
+    struct ScriptContext *ctx = AllocZeroed(sizeof(struct ScriptContext));
+    if (script[0] == SCR_OP_TRAINERBATTLE)
     {
-        case SCR_OP_TRAINERBATTLE:
-            script += 3;
-            trainerFlag = script[0];
-            trainerFlag |= script[1] << 8;
-            break;
-        case SCR_OP_CALLNATIVE:
-            u32 callnativeFunc = (((((script[4] << 8) + script[3]) << 8) + script[2]) << 8) + script[1];
-            if (callnativeFunc == ((u32)NativeVsSeekerRematchId | 0xA000000)) // | 0xA000000 corresponds to the request_effects=1 version of the function
-            {
-                script += 5;
-                trainerFlag = script[0];
-                trainerFlag |= script[1] << 8;
-            }
-            else
-            {
-                trainerFlag = TRAINER_NONE;
-            }
-            break;
-        default:
-            trainerFlag = TRAINER_NONE;
-        break;
+        ctx->scriptPtr = script + 3;
+        trainerFlag = ScriptPeekHalfword(ctx);
     }
+    else if (Script_MatchesCallNative(script, NativeVsSeekerRematchId, TRUE))
+    {
+        ctx->scriptPtr = script + 5;
+        trainerFlag = ScriptPeekHalfword(ctx);
+    }
+    Free(ctx);
     return trainerFlag;
 }
 
@@ -764,8 +753,8 @@ static bool8 IsTrainerVisibleOnScreen(struct VsSeekerTrainerInfo * trainerInfo)
     s16 y;
 
     PlayerGetDestCoords(&x, &y);
-    x -= 7;
-    y -= 7;
+    x -= MAP_OFFSET;
+    y -= MAP_OFFSET;
 
     if (   x - 7 <= trainerInfo->xCoord
         && x + 7 >= trainerInfo->xCoord

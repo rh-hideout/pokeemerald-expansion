@@ -327,33 +327,6 @@ SINGLE_BATTLE_TEST("(TERA) Reflect Type fails if used by a Terastallized Pokemon
     }
 }
 
-SINGLE_BATTLE_TEST("(TERA) Conversion fails if used by a Terastallized Pokemon")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_PSYCHIC); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_CONVERSION, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Conversion!");
-        MESSAGE("But it failed!");
-    }
-}
-
-SINGLE_BATTLE_TEST("(TERA) Conversion2 fails if used by a Terastallized Pokemon")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_PSYCHIC); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_CONVERSION_2, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Conversion 2!");
-        MESSAGE("But it failed!");
-    }
-}
-
 SINGLE_BATTLE_TEST("(TERA) Reflect Type copies a Terastallized Pokemon's Tera Type")
 {
     GIVEN {
@@ -420,8 +393,8 @@ SINGLE_BATTLE_TEST("(TERA) Double Shock does not remove the user's Electric type
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); MOVE(opponent, MOVE_RECOVER); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_RECOVER); }
-        TURN { SWITCH(player, 0); MOVE(opponent, MOVE_RECOVER); }
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); }
     } SCENE {
@@ -505,26 +478,6 @@ SINGLE_BATTLE_TEST("(TERA) Revelation Dance uses a Stellar-type Pokemon's base t
         NOT { HP_BAR(opponent); }
     }
 }
-
-#if B_UPDATED_CONVERSION_2 < GEN_5
-SINGLE_BATTLE_TEST("(TERA) Conversion2 fails if last hit by a Stellar-type move")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
-        TURN { MOVE(opponent, MOVE_CONVERSION_2); }
-    } SCENE {
-        // turn 1
-        MESSAGE("Wobbuffet used Tera Blast!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
-        // turn 2
-        MESSAGE("The opposing Wobbuffet used Conversion 2!");
-        MESSAGE("But it failed!");
-    }
-}
-#endif
 
 SINGLE_BATTLE_TEST("(TERA) Roost does not remove Flying-type ground immunity when Terastallized into the Stellar type")
 {
@@ -639,17 +592,21 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar type boosts all moves
     }
 }
 
-SINGLE_BATTLE_TEST("(TERA) Protean cannot change the type of a Terastallized Pokemon")
+SINGLE_BATTLE_TEST("(TERA) Protean/Libero cannot change the type of a Terastallized Pokemon")
 {
+    u32 ability, species;
+    PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_GRENINJA; }
+    PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
-        PLAYER(SPECIES_GRENINJA) { Ability(ABILITY_PROTEAN); TeraType(TYPE_GRASS); }
+        PLAYER(species) { Ability(ability); TeraType(TYPE_GRASS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BUBBLE, gimmick: GIMMICK_TERA);
                MOVE(opponent, MOVE_EMBER); }
     } SCENE {
-        MESSAGE("Greninja used Bubble!");
-        MESSAGE("The opposing Wobbuffet used Ember!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUBBLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         MESSAGE("It's super effective!");
     }
 }

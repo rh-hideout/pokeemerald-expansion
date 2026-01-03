@@ -1444,10 +1444,10 @@ static void InitMatchCallTextPrinter(int windowId, const u8 *str)
     printerTemplate.currentY = 1;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.unk = 0;
-    printerTemplate.fgColor = TEXT_DYNAMIC_COLOR_1;
-    printerTemplate.bgColor = TEXT_COLOR_BLUE;
-    printerTemplate.shadowColor = TEXT_DYNAMIC_COLOR_5;
+    printerTemplate.color.accent = TEXT_COLOR_BLUE;
+    printerTemplate.color.foreground = TEXT_DYNAMIC_COLOR_1;
+    printerTemplate.color.background = TEXT_COLOR_BLUE;
+    printerTemplate.color.shadow = TEXT_DYNAMIC_COLOR_5;
     gTextFlags.useAlternateDownArrow = FALSE;
 
     AddTextPrinter(&printerTemplate, GetPlayerTextSpeedDelay(), NULL);
@@ -1701,12 +1701,12 @@ static void PopulateMatchCallStringVar(int matchCallId, int funcId, u8 *destStr)
 
 static const struct MultiTrainerMatchCallText sMultiTrainerMatchCallTexts[] =
 {
-    { .trainerId = TRAINER_KIRA_AND_DAN_1, .text = gText_Kira },
-    { .trainerId = TRAINER_AMY_AND_LIV_1,  .text = gText_Amy },
-    { .trainerId = TRAINER_JOHN_AND_JAY_1, .text = gText_John },
-    { .trainerId = TRAINER_LILA_AND_ROY_1, .text = gText_Roy },
-    { .trainerId = TRAINER_GABBY_AND_TY_1, .text = gText_Gabby },
-    { .trainerId = TRAINER_ANNA_AND_MEG_1, .text = gText_Anna },
+    { .trainerId = TRAINER_KIRA_AND_DAN_1, .text = COMPOUND_STRING("KIRA") },
+    { .trainerId = TRAINER_AMY_AND_LIV_1,  .text = COMPOUND_STRING("AMY") },
+    { .trainerId = TRAINER_JOHN_AND_JAY_1, .text = COMPOUND_STRING("JOHN") },
+    { .trainerId = TRAINER_LILA_AND_ROY_1, .text = COMPOUND_STRING("ROY") },
+    { .trainerId = TRAINER_GABBY_AND_TY_1, .text = COMPOUND_STRING("GABBY") },
+    { .trainerId = TRAINER_ANNA_AND_MEG_1, .text = COMPOUND_STRING("ANNA") },
 };
 
 static void PopulateTrainerName(int matchCallId, u8 *destStr)

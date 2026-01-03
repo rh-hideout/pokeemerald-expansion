@@ -194,9 +194,9 @@
  *         ASSUME(GetMoveEffect(MOVE_POISON_STING) == EFFECT_POISON_HIT);
  *     }
  *
- * SINGLE_BATTLE_TEST(name, results...), DOUBLE_BATTLE_TEST(name, results...), MULTI_BATTLE_TEST(name, results...), 
+ * SINGLE_BATTLE_TEST(name, results...), DOUBLE_BATTLE_TEST(name, results...), MULTI_BATTLE_TEST(name, results...),
  * TWO_VS_ONE_BATTLE_TEST(name, results...), and ONE_VS_TWO_BATTLE_TEST(name, results...)
- * Define single-, double-, 2v2-multi-, 2v1-multi-, and 1v2- battles. The names should start with 
+ * Define single-, double-, 2v2-multi-, 2v1-multi-, and 1v2- battles. The names should start with
  * the name of the mechanic being tested so that it is easier to run all the related tests. results contains variable
  * declarations to be placed into the `results` array which is available in tests using `PARAMETRIZE` commands.
  * The main differences for doubles, 2v2, 2v1, and 1v2 are:
@@ -204,7 +204,7 @@
  * - Instead of player and opponent there is playerLeft, playerRight,
  *   opponentLeft, and opponentRight.
  *
- * AI_SINGLE_BATTLE_TEST(name, results...), AI_DOUBLE_BATTLE_TEST(name, results...), 
+ * AI_SINGLE_BATTLE_TEST(name, results...), AI_DOUBLE_BATTLE_TEST(name, results...),
  * AI_MULTI_BATTLE_TEST(name, results...), AI_TWO_VS_ONE_BATTLE_TEST(name, results...), and AI_ONE_VS_TWO_BATTLE_TEST(name, results...)
  * Define battles where opponent mons are controlled by AI, the same that runs
  * when battling regular Trainers. The flags for AI should be specified by
@@ -306,10 +306,10 @@
  *
  * WITH_CONFIG(configTag, value)
  * Runs the test with a specified config override. `configTag` must be
- * of `enum GenConfigTag`
+ * of `enum ConfigTag`
  * Example:
  *     GIVEN {
- *         WITH_CONFIG(GEN_CONFIG_GALE_WINGS, GEN_6);
+ *         WITH_CONFIG(CONFIG_GALE_WINGS, GEN_6);
  *     }
  * The `value` may be inferred from a local variable, e.g. set by
  * PARAMETRIZE.
@@ -334,34 +334,34 @@
  * Note if Moves is specified then MOVE will not automatically add moves
  * to the moveset.
  *
- * For tests using MULTI_BATTLE_TEST, AI_MULTI_BATTLE_TEST, TWO_VS_ONE_BATTLE_TEST, 
- * AI_TWO_VS_ONE_BATTLE_TEST, ONE_VS_TWO_BATTLE_TEST, and AI_ONE_VS_TWO_BATTLE_TEST, 
+ * For tests using MULTI_BATTLE_TEST, AI_MULTI_BATTLE_TEST, TWO_VS_ONE_BATTLE_TEST,
+ * AI_TWO_VS_ONE_BATTLE_TEST, ONE_VS_TWO_BATTLE_TEST, and AI_ONE_VS_TWO_BATTLE_TEST,
  * the below must be used instead of PLAYER(species) and OPPONENT(species).
- * MULTI_PLAYER(species), MULTI_PARTNER(species), MULTI_OPPONENT_A(species), and 
- * MULTI_OPPONENT_B(species) Adds the species to the player's, player partner's, 
+ * MULTI_PLAYER(species), MULTI_PARTNER(species), MULTI_OPPONENT_A(species), and
+ * MULTI_OPPONENT_B(species) Adds the species to the player's, player partner's,
  * opponent A's, or opponent B's party, respectively.
  * Pokemon can be customised as per the guidance for PLAYER(species) and OPPONENT(species).
- * The functions assign the Pokémon to the party of the trainer at B_POSITION_PLAYER_LEFT, 
+ * The functions assign the Pokémon to the party of the trainer at B_POSITION_PLAYER_LEFT,
  * B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_LEFT, and B_POSITION_OPPONENT_RIGHT, respectively.
  * MULTI_PLAYER(species) and MULTI_OPPONENT_A(species) set Pokémon starting at party index 0,
- * while MULTI_PARTNER(species) and MULTI_OPPONENT_B(species) set Pokémon starting at party 
+ * while MULTI_PARTNER(species) and MULTI_OPPONENT_B(species) set Pokémon starting at party
  * index 3.
  * For ONE_VS_TWO tests, MULTI_PLAYER(species) must be used for all player-side Pokémon,
  * and for TWO_VS_ONE tests, MULTI_OPPONENT_A(species) must be used for all opponent-side
- * Pokémon. 
+ * Pokémon.
  * All MULTI_PLAYER(species) Pokémon must be set before any MULTI_PARTNER(species) Pokémon,
  * and all MULTI_OPPONENT_A(species) must be set before any MULTI_OPPONENT_B(species) Pokémon,
  * else Pokémon will be set in the incorrect parties in the test.
  * Note where a side in a test has two trainers, the test setup manages the assigning of correct
- * multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A 
- * Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B 
+ * multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A
+ * Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B
  * Pokémon may be referenced using indexes 3, 4, and 5.
  *
  * AI_FLAGS
  * Specifies which AI flags are run for all battlers during the test. Has use only for AI tests.
  * The most common combination is  AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)
  * which is the general 'smart' AI.
- * 
+ *
  * BATTLER_AI_FLAGS
  * Specifies additional AI flags to be applied to specific battlers (battler 0/1/2/3). Has use only for AI tests.
  * Must be used strictly after AI_FLAGS(flags), which overwrites all existing flags.
@@ -567,7 +567,19 @@
 #define MAX_QUEUED_EVENTS 30
 #define MAX_EXPECTED_ACTIONS 10
 
-enum { BATTLE_TEST_SINGLES, BATTLE_TEST_DOUBLES, BATTLE_TEST_WILD, BATTLE_TEST_AI_SINGLES, BATTLE_TEST_AI_DOUBLES, BATTLE_TEST_MULTI, BATTLE_TEST_AI_MULTI, BATTLE_TEST_TWO_VS_ONE, BATTLE_TEST_AI_TWO_VS_ONE, BATTLE_TEST_ONE_VS_TWO, BATTLE_TEST_AI_ONE_VS_TWO };
+enum {
+    BATTLE_TEST_SINGLES,
+    BATTLE_TEST_DOUBLES,
+    BATTLE_TEST_WILD,
+    BATTLE_TEST_MULTI,
+    BATTLE_TEST_TWO_VS_ONE,
+    BATTLE_TEST_ONE_VS_TWO,
+    BATTLE_TEST_AI_SINGLES,
+    BATTLE_TEST_AI_DOUBLES,
+    BATTLE_TEST_AI_MULTI,
+    BATTLE_TEST_AI_TWO_VS_ONE,
+    BATTLE_TEST_AI_ONE_VS_TWO
+};
 
 typedef void (*SingleBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *);
 typedef void (*DoubleBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *);
@@ -594,6 +606,7 @@ enum
     QUEUED_ABILITY_POPUP_EVENT,
     QUEUED_ANIMATION_EVENT,
     QUEUED_HP_EVENT,
+    QUEUED_SUB_HIT_EVENT,
     QUEUED_EXP_EVENT,
     QUEUED_MESSAGE_EVENT,
     QUEUED_STATUS_EVENT,
@@ -621,6 +634,14 @@ struct QueuedHPEvent
     u32 battlerId:3;
     u32 type:1;
     u32 address:28;
+};
+
+struct QueuedSubHitEvent
+{
+    u32 battlerId:3;
+    u32 checkBreak:1;
+    u32 breakSub:1;
+    u32 address:27;
 };
 
 struct QueuedExpEvent
@@ -652,16 +673,11 @@ struct QueuedEvent
         struct QueuedAbilityEvent ability;
         struct QueuedAnimationEvent animation;
         struct QueuedHPEvent hp;
+        struct QueuedSubHitEvent subHit;
         struct QueuedExpEvent exp;
         struct QueuedMessageEvent message;
         struct QueuedStatusEvent status;
     } as;
-};
-
-struct TurnRNG
-{
-    u16 tag;
-    u16 value;
 };
 
 struct BattlerTurn
@@ -669,7 +685,7 @@ struct BattlerTurn
     u8 hit:2;
     u8 criticalHit:2;
     u8 secondaryEffect:2;
-    struct TurnRNG rng;
+    struct RiggedRNG rng;
 };
 
 struct ExpectedAIAction
@@ -709,6 +725,24 @@ struct AILogLine
     s16 score;
 };
 
+enum ScoreTieResolution
+{
+    SCORE_TIE_NONE,
+    SCORE_TIE_LO,
+    SCORE_TIE_HI,
+    SCORE_TIE_RANDOM,
+    SCORE_TIE_CHOSEN
+};
+
+enum TargetTieResolution
+{
+    TARGET_TIE_NONE,
+    TARGET_TIE_LO,
+    TARGET_TIE_HI,
+    TARGET_TIE_RANDOM,
+    TARGET_TIE_CHOSEN
+};
+
 // Data which is updated by the test runner during a battle and needs to
 // be reset between trials.
 struct BattleTrialData
@@ -716,7 +750,11 @@ struct BattleTrialData
     u8 lastActionTurn;
     u8 queuedEvent;
     u8 aiActionsPlayed[MAX_BATTLERS_COUNT];
+    u8 scoreTieCount;
+    u8 targetTieCount;
 };
+
+extern struct BattleTrialData gBattleTrialData;
 
 struct BattleTestData
 {
@@ -734,8 +772,8 @@ struct BattleTestData
     u8 gender;
     u8 nature;
     bool8 isShiny;
-    enum Ability forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
-    u8 chosenGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];
+    enum Ability forcedAbilities[MAX_BATTLERS_COUNT][PARTY_SIZE];
+    u8 chosenGimmick[MAX_BATTLERS_COUNT][PARTY_SIZE];
     u8 forcedEnvironment;
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
@@ -763,8 +801,14 @@ struct BattleTestData
     struct AILogLine aiLogLines[MAX_BATTLERS_COUNT][MAX_MON_MOVES][MAX_AI_LOG_LINES];
     u8 aiLogPrintedForMove[MAX_BATTLERS_COUNT]; // Marks ai score log as printed for move, so the same log isn't displayed multiple times.
     u16 flagId;
+    u16 varId;
 
     struct BattleTrialData trial;
+    enum ScoreTieResolution scoreTieResolution;
+    u8 scoreTieOverride;
+    enum RandomTag scoreTieTag;
+    enum TargetTieResolution targetTieResolution;
+    u8 targetTieOverride;
 };
 
 struct BattleTestRunnerState
@@ -954,6 +998,7 @@ struct moveWithPP {
 #define AI_LOG AILogScores(__LINE__)
 
 #define FLAG_SET(flagId) SetFlagForTest(__LINE__, flagId)
+#define VAR_SET(varId, value) SetVarForTest(__LINE__, varId, value)
 #define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, configTag, value)
 
 #define PLAYER(species) for (OpenPokemon(__LINE__, B_POSITION_PLAYER_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
@@ -994,8 +1039,12 @@ struct moveWithPP {
 #define Environment(environment) Environment_(__LINE__, environment)
 
 void SetFlagForTest(u32 sourceLine, u16 flagId);
-void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
+void SetVarForTest(u32 sourceLine, u16 varId, u16 value);
+void TestSetConfig(u32 sourceLine, enum ConfigTag configTag, u32 value);
+void TieBreakScore(u32 sourceLine, enum RandomTag rngTag, enum ScoreTieResolution scoreTieRes, u32 value);
+void TieBreakTarget(u32 sourceLine, enum TargetTieResolution targetTieRes, u32 value);
 void ClearFlagAfterTest(void);
+void ClearVarAfterTest(void);
 void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species);
 void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species);
 void ClosePokemon(u32 sourceLine);
@@ -1027,7 +1076,7 @@ void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES]);
 void Friendship_(u32 sourceLine, u32 friendship);
 void Status1_(u32 sourceLine, u32 status1);
 void OTName_(u32 sourceLine, const u8 *otName);
-void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel);
+void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel);
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor);
 void TeraType_(u32 sourceLine, enum Type teraType);
 void Shadow_(u32 sourceLine, bool32 isShadow);
@@ -1099,7 +1148,9 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 #define SKIP_TURN(battler) SkipTurn(__LINE__, battler)
 #define SEND_OUT(battler, partyIndex) SendOut(__LINE__, battler, partyIndex)
 #define USE_ITEM(battler, ...) UseItem(__LINE__, battler, (struct ItemContext) { R_APPEND_TRUE(__VA_ARGS__) })
-#define WITH_RNG(tag, value) rng: ((struct TurnRNG) { tag, value })
+#define WITH_RNG(tag, value) rng: ((struct RiggedRNG) { tag, value })
+#define TIE_BREAK_SCORE(rngTag, scoreTieRes, value) TieBreakScore(__LINE__, rngTag, scoreTieRes, value)
+#define TIE_BREAK_TARGET(targetTieRes, value) TieBreakTarget(__LINE__, targetTieRes, value)
 
 struct MoveContext
 {
@@ -1124,7 +1175,7 @@ struct MoveContext
     u16 explicitNotExpected:1;
     struct BattlePokemon *target;
     bool8 explicitTarget;
-    struct TurnRNG rng;
+    struct RiggedRNG rng;
     bool8 explicitRNG;
 };
 
@@ -1136,7 +1187,7 @@ struct ItemContext
     u16 explicitPartyIndex:1;
     u16 move;
     u16 explicitMove:1;
-    struct TurnRNG rng;
+    struct RiggedRNG rng;
     u16 explicitRNG:1;
 };
 
@@ -1167,6 +1218,7 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
 #define ABILITY_POPUP(battler, ...) QueueAbility(__LINE__, battler, (struct AbilityEventContext) { __VA_ARGS__ })
 #define ANIMATION(type, id, ...) QueueAnimation(__LINE__, type, id, (struct AnimationEventContext) { __VA_ARGS__ })
 #define HP_BAR(battler, ...) QueueHP(__LINE__, battler, (struct HPEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
+#define SUB_HIT(battler, ...) QueueSubHit(__LINE__, battler, (struct SubHitEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define EXPERIENCE_BAR(battler, ...) QueueExp(__LINE__, battler, (struct ExpEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
 // Static const is needed to make the modern compiler put the pattern variable in the .rodata section, instead of putting it on stack(which can break the game).
 #define MESSAGE(pattern) do {static const u8 msg[] = _(pattern); QueueMessage(__LINE__, msg);} while (0)
@@ -1219,6 +1271,15 @@ struct HPEventContext
     bool8 explicitCaptureDamage;
 };
 
+struct SubHitEventContext
+{
+    u8 _;
+    bool8 subBreak;
+    bool8 explicitSubBreak;
+    u16 *captureDamage;
+    bool8 explicitCaptureDamage;
+};
+
 struct ExpEventContext
 {
     u8 _;
@@ -1247,6 +1308,7 @@ void CloseQueueGroup(u32 sourceLine);
 void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityEventContext);
 void QueueAnimation(u32 sourceLine, u32 type, u32 id, struct AnimationEventContext);
 void QueueHP(u32 sourceLine, struct BattlePokemon *battler, struct HPEventContext);
+void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEventContext);
 void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventContext);
 void QueueMessage(u32 sourceLine, const u8 *pattern);
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext);

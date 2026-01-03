@@ -57,18 +57,20 @@ bool16 ResetAllPicSprites(void)
     return FALSE;
 }
 
-static bool16 DecompressPic(u16 species, u32 personality, bool8 isFrontPic, u8 *dest, bool8 isTrainer)
+static bool16 DecompressPic(u16 picId, u32 personality, bool8 isFrontPic, u8 *dest, bool8 isTrainer)
 {
     if (!isTrainer)
     {
+        u16 species = picId;
         LoadSpecialPokePic(dest, species, personality, isFrontPic);
     }
     else
     {
+        u16 trainerPicId = picId;
         if (isFrontPic)
-            DecompressPicFromTable(&gTrainerSprites[species].frontPic, dest);
+            DecompressPicFromTable(&gTrainerSprites[trainerPicId].frontPic, dest);
         else
-            CopyTrainerBackspriteFramesToDest(species, dest);
+            CopyTrainerBackspriteFramesToDest(trainerPicId, dest);
     }
     return FALSE;
 }

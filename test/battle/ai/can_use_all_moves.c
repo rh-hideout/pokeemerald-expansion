@@ -9,7 +9,6 @@
 
 AI_DOUBLE_BATTLE_TEST("AI uses Final Gambit")
 {
-    KNOWN_FAILING;
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
@@ -20,13 +19,12 @@ AI_DOUBLE_BATTLE_TEST("AI uses Final Gambit")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, MOVE_FINAL_GAMBIT); }
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_FINAL_GAMBIT); SEND_OUT(playerLeft, 2); }
     }
 }
 
 AI_DOUBLE_BATTLE_TEST("AI uses Guillotine")
 {
-    KNOWN_FAILING;
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
@@ -37,13 +35,12 @@ AI_DOUBLE_BATTLE_TEST("AI uses Guillotine")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, MOVE_GUILLOTINE); }
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_GUILLOTINE); SEND_OUT(playerLeft, 2); }
     }
 }
 
 AI_DOUBLE_BATTLE_TEST("AI uses Sheer Cold")
 {
-    KNOWN_FAILING;
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
@@ -54,7 +51,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Sheer Cold")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, MOVE_SHEER_COLD); }
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_SHEER_COLD); SEND_OUT(playerLeft, 2); }
     }
 }
 
@@ -247,20 +244,13 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
 
         // tests exist elsewhere
         case EFFECT_HEAL_BELL:
-        case EFFECT_SUNNY_DAY:
-        case EFFECT_RAIN_DANCE:
-    #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW
-        case EFFECT_SNOWSCAPE:
-    #else
-        case EFFECT_HAIL:
-    #endif
+        case EFFECT_WEATHER:
         case EFFECT_ROLE_PLAY:
         case EFFECT_REFRESH:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
-        case EFFECT_SANDSTORM:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
@@ -318,6 +308,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
         case EFFECT_LAST_RESORT:
         case EFFECT_AQUA_RING:
         case EFFECT_HEALING_WISH:
+        case EFFECT_LUNAR_DANCE:
 
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
@@ -386,6 +377,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
         {
         //TODO: AI HANDLING
         case EFFECT_HEALING_WISH:
+        case EFFECT_LUNAR_DANCE:
         case EFFECT_WONDER_ROOM:
         case EFFECT_FOLLOW_ME:
         case EFFECT_MAGIC_ROOM:
@@ -547,7 +539,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_AURORA_VEIL:
         case EFFECT_GEAR_UP:
         case EFFECT_MAGNETIC_FLUX:
- 
+
         // Skipped on purpose.
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
@@ -672,13 +664,18 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
         case EFFECT_FAIL_IF_NOT_ARG_TYPE:
 
         //TODO: AI TESTS
-        case EFFECT_CHILLY_RECEPTION:
+        case EFFECT_WEATHER_AND_SWITCH:
         case EFFECT_TIDY_UP:
 
         // tests exist elsewhere
-        case EFFECT_SNOWSCAPE:
         case EFFECT_DRAGON_CHEER:
-
+            break;
+        case EFFECT_WEATHER:
+            if (GetMoveWeatherType(j) == BATTLE_WEATHER_SNOW)
+                break;
+            else
+                PARAMETRIZE { move = j; }
+            break;
         // Skipped on purpose.
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
