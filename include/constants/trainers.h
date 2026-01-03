@@ -16,6 +16,7 @@
 #define TRAINER_UNION_ROOM                  3072
 
 enum TrainerPicID
+enum __attribute__((packed)) TrainerPicID
 {
     TRAINER_PIC_FRONT_HIKER,
     TRAINER_PIC_FRONT_AQUA_GRUNT_M,
