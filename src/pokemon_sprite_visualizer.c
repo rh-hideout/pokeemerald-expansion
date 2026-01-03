@@ -898,17 +898,16 @@ static void LoadAndCreateEnemyShadowSpriteCustom(struct PokemonSpriteVisualizer 
 //Battle background functions
 static void LoadBattleBg(u8 battleBgType, enum BattleEnvironments battleEnvironment)
 {
-    if (battleBgType == MAP_BATTLE_SCENE_NORMAL) {
-        DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tileset, (void *)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentInfo[battleEnvironment].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
-    }
+    u8 environmentInfo;
+
+    if (battleBgType == MAP_BATTLE_SCENE_NORMAL)
+        environmentInfo = battleEnvironment;
     else
-    {
-        DecompressDataWithHeaderVram(gBattleEnvironmentInfo[GetBattleEnvironmentByMapScene(battleBgType)].background.tileset, (void *)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentInfo[GetBattleEnvironmentByMapScene(battleBgType)].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentInfo[GetBattleEnvironmentByMapScene(battleBgType)].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
-    }
+        environmentInfo = GetBattleEnvironmentByMapScene(battleBgType);
+
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environmentInfo].background.tileset, (void *)(BG_CHAR_ADDR(2)));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environmentInfo].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
+    LoadPalette(gBattleEnvironmentInfo[environmentInfo].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
 }
 
 static void PrintBattleBgName(u8 taskId)
@@ -917,7 +916,7 @@ static void PrintBattleBgName(u8 taskId)
     u8 fontId = 0;
     u8 text[30+1];
 
-    if (data->battleBgType == 0)
+    if (data->battleBgType == MAP_BATTLE_SCENE_NORMAL)
         StringCopy(text, gBattleBackgroundTerrainNames[data->battleEnvironment]);
     else
         StringCopy(text, gBattleBackgroundNames[data->battleBgType]);
