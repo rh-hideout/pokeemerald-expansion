@@ -41,8 +41,7 @@ enum MoveEndState
     MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
     MOVEEND_COLOR_CHANGE, // Color Change / Berserk / Anger Shell
     MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET,
-    MOVEEND_RED_CARD,
-    MOVEEND_EJECT_BUTTON,
+    MOVEEND_CARD_BUTTON, // Red Card / Eject Button
     MOVEEND_LIFE_ORB_SHELL_BELL,
     MOVEEND_FORM_CHANGE,
     MOVEEND_EMERGENCY_EXIT,

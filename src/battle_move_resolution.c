@@ -1140,129 +1140,92 @@ static enum MoveEndResult MoveEnd_KeeMarangaHpThresholdItemTarget(void)
     return MOVEEND_STEP_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_RedCard(void)
+static bool32 TryRedCard(u32 battlerAtk, u32 redCardBattler, u32 move)
+{
+    if (!IsBattlerAlive(redCardBattler)
+     || !IsBattlerTurnDamaged(redCardBattler)
+     || DoesSubstituteBlockMove(battlerAtk, redCardBattler, move)
+     || !CanBattlerSwitch(battlerAtk))
+        return FALSE;
+
+    gLastUsedItem = gBattleMons[redCardBattler].item;
+    SaveBattlerTarget(redCardBattler); // save battler with red card
+    SaveBattlerAttacker(battlerAtk);
+    gBattleScripting.battler = gBattlerTarget = redCardBattler;
+    gEffectBattler = battlerAtk;
+    if (gBattleStruct->battlerState[battlerAtk].commanderSpecies != SPECIES_NONE
+     || GetBattlerAbility(battlerAtk) == ABILITY_GUARD_DOG
+     || GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
+        BattleScriptCall(BattleScript_RedCardActivationNoSwitch);
+    else
+        BattleScriptCall(BattleScript_RedCardActivates);
+
+    return TRUE;
+}
+
+static bool32 TryEjectButton(u32 battlerAtk, u32 ejectButtonBattler)
+{
+    if (!IsBattlerTurnDamaged(ejectButtonBattler)
+     || !IsBattlerAlive(ejectButtonBattler)
+     || !CanBattlerSwitch(ejectButtonBattler))
+        return FALSE;
+
+    gBattleScripting.battler = ejectButtonBattler;
+    gLastUsedItem = gBattleMons[ejectButtonBattler].item;
+    gBattleStruct->battlerState[ejectButtonBattler].usedEjectItem = TRUE;
+    BattleScriptCall(BattleScript_EjectButtonActivates);
+    gAiLogicData->ejectButtonSwitch = TRUE;
+    return TRUE;
+}
+
+static enum MoveEndResult MoveEnd_CardButton(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
     u32 redCardBattlers = 0;
+    u32 ejectButtonBattlers = 0;
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
+    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        if (i == gBattlerAttacker)
+        if (gBattlerAttacker == battlerDef)
             continue;
-        if (GetBattlerHoldEffect(i) == HOLD_EFFECT_RED_CARD)
-            redCardBattlers |= (1u << i);
+
+        if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_BUTTON)
+            ejectButtonBattlers |= 1u << battlerDef;
+         
+        if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_RED_CARD)
+            redCardBattlers |= 1u << battlerDef;
     }
 
-    if (!redCardBattlers || !IsBattlerAlive(gBattlerAttacker))
+    if (!redCardBattlers && !ejectButtonBattlers)
     {
         gBattleScripting.moveendState++;
         return MOVEEND_STEP_CONTINUE;
     }
 
-    // Since we check if battler was damaged, we don't need to check move result.
-    // In fact, doing so actually prevents multi-target moves from activating red card properly
     u8 battlers[4] = {0, 1, 2, 3};
     SortBattlersBySpeed(battlers, FALSE);
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        u32 battler = battlers[i];
-        // Search for fastest hit pokemon with a red card
-        // Attacker is the one to be switched out, battler is one with red card
-        if (redCardBattlers & (1u << battler)
-          && IsBattlerAlive(battler)
-          && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)
-          && IsBattlerTurnDamaged(battler)
-          && CanBattlerSwitch(gBattlerAttacker)
-          && !(GetMoveEffect(gCurrentMove) == EFFECT_HIT_SWITCH_TARGET && CanBattlerSwitch(battler)))
-        {
-            gLastUsedItem = gBattleMons[battler].item;
-            SaveBattlerTarget(battler); // save battler with red card
-            SaveBattlerAttacker(gBattlerAttacker);
-            gBattleScripting.battler = battler;
-            gEffectBattler = gBattlerAttacker;
-            BattleScriptPushCursor();
-            if (gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies != SPECIES_NONE
-             || GetBattlerAbility(gBattlerAttacker) == ABILITY_GUARD_DOG
-             || GetActiveGimmick(gBattlerAttacker) == GIMMICK_DYNAMAX)
-                gBattlescriptCurrInstr = BattleScript_RedCardActivationNoSwitch;
-            else
-                gBattlescriptCurrInstr = BattleScript_RedCardActivates;
+        u32 battler = battlers[battlerDef];
+
+        // Only fastest red card or eject button activates
+        if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
+            result = MOVEEND_STEP_RUN_SCRIPT; 
+        else if (ejectButtonBattlers & 1u << battler && TryEjectButton(gBattlerAttacker, battler))
             result = MOVEEND_STEP_RUN_SCRIPT;
-            break;  // Only fastest red card activates
-        }
-    }
 
-    if (result == MOVEEND_STEP_RUN_SCRIPT)
-        gBattleScripting.moveendState = MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE;
-    else
-        gBattleScripting.moveendState++;
-
-    return result;
-}
-
-static inline bool32 CanEjectButtonTrigger(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect)
-{
-    if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_BUTTON
-     && battlerAtk != battlerDef
-     && IsBattlerTurnDamaged(battlerDef)
-     && IsBattlerAlive(battlerDef)
-     && CountUsablePartyMons(battlerDef) > 0
-     && !(moveEffect == EFFECT_HIT_SWITCH_TARGET && CanBattlerSwitch(battlerAtk)))
-        return TRUE;
-
-    return FALSE;
-}
-
-static enum MoveEndResult MoveEnd_EjectButton(void)
-{
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
-    u32 numEjectButtonBattlers = 0;
-    u32 ejectButtonBattlers = 0;
-
-    // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
-    for (u32 i = 0; i < gBattlersCount; i++)
-    {
-        if (CanEjectButtonTrigger(gBattlerAttacker, i, GetMoveEffect(gCurrentMove)))
+        if (result == MOVEEND_STEP_RUN_SCRIPT)
         {
-            ejectButtonBattlers |= 1u << i;
-            numEjectButtonBattlers++;
+            for (u32 i = 0; i < gBattlersCount; i++)
+                gBattleMons[i].volatiles.tryEjectPack = FALSE;
+            gBattleScripting.moveendState = MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE;
+            return result;
         }
     }
 
-    if (numEjectButtonBattlers == 0)
-    {
-        gBattleScripting.moveendState++;
-        return result;
-    }
-
-    for (u32 i = 0; i < gBattlersCount; i++)
-        gBattleMons[i].volatiles.tryEjectPack = FALSE;
-
-    u8 battlers[4] = {0, 1, 2, 3};
-    if (numEjectButtonBattlers > 1)
-        SortBattlersBySpeed(battlers, FALSE);
-
-    for (u32 i = 0; i < gBattlersCount; i++)
-    {
-        u32 battler = battlers[i];
-
-        if (!(ejectButtonBattlers & 1u << battler))
-            continue;
-
-        gBattleScripting.battler = battler;
-        gLastUsedItem = gBattleMons[battler].item;
-        gBattleStruct->battlerState[battler].usedEjectItem = TRUE;
-        BattleScriptCall(BattleScript_EjectButtonActivates);
-        gAiLogicData->ejectButtonSwitch = TRUE;
-        result = MOVEEND_STEP_RUN_SCRIPT;
-        break; // Only the fastest Eject Button activates
-    }
-
-    if (result == MOVEEND_STEP_RUN_SCRIPT)
-        gBattleScripting.moveendState = MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE;
-    else
-        gBattleScripting.moveendState++;
+    gBattleScripting.moveendState++;
     return result;
 }
 
@@ -1777,8 +1740,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_SHEER_FORCE] = MoveEnd_SheerForce,
     [MOVEEND_COLOR_CHANGE] = MoveEnd_ColorChange,
     [MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET] = MoveEnd_KeeMarangaHpThresholdItemTarget,
-    [MOVEEND_RED_CARD] = MoveEnd_RedCard,
-    [MOVEEND_EJECT_BUTTON] = MoveEnd_EjectButton,
+    [MOVEEND_CARD_BUTTON] = MoveEnd_CardButton,
     [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEnd_LifeOrbShellBell,
     [MOVEEND_FORM_CHANGE] = MoveEnd_FormChange,
     [MOVEEND_EMERGENCY_EXIT] = MoveEnd_EmergencyExit,

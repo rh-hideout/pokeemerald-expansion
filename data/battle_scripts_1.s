@@ -7888,22 +7888,23 @@ BattleScript_RedCardActivates::
 	setbyte sSWITCH_CASE, B_SWITCH_RED_CARD
 	forcerandomswitch BattleScript_RedCardEnd
 	@ changes the current battle script. the rest happens in BattleScript_RoarSuccessSwitch_Ret, if switch is successful
-BattleScript_RedCardEnd:
-	return
 BattleScript_RedCardIngrain:
 	printstring STRINGID_PKMNANCHOREDITSELF
 BattleScript_RedCardIngrainContinue:
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
-	restoretarget
-	restoreattacker
-	return
+    goto BattleScript_RedCardEnd
 BattleScript_RedCardSuctionCups:
     printstring STRINGID_PKMNANCHORSITSELFWITH
     goto BattleScript_RedCardIngrainContinue
 BattleScript_RedCardDynamaxed:
 	printstring STRINGID_MOVEBLOCKEDBYDYNAMAX
     goto BattleScript_RedCardIngrainContinue
+
+BattleScript_RedCardEnd:
+	restoretarget
+	restoreattacker
+	return
 
 BattleScript_EjectButtonActivates::
 	makevisible BS_ATTACKER

@@ -51,11 +51,11 @@ So, finally, it needs to look like this:
 
  const struct TrainerSprite gTrainerSprites[] =
  {
-     TRAINER_SPRITE(TRAINER_PIC_HIKER, gTrainerFrontPic_Hiker, gTrainerPalette_Hiker),
-     TRAINER_SPRITE(TRAINER_PIC_AQUA_GRUNT_M, gTrainerFrontPic_AquaGruntM, gTrainerPalette_AquaGruntM),
+     TRAINER_SPRITE(TRAINER_PIC_FRONT_HIKER, gTrainerFrontPic_Hiker, gTrainerPalette_Hiker),
+     TRAINER_SPRITE(TRAINER_PIC_FRONT_AQUA_GRUNT_M, gTrainerFrontPic_AquaGruntM, gTrainerPalette_AquaGruntM),
      ...
-     TRAINER_SPRITE(TRAINER_PIC_RS_MAY, gTrainerFrontPic_RubySapphireMay, gTrainerPalette_RubySapphireMay),
-+    TRAINER_SPRITE(TRAINER_PIC_NEW_ONE, gTrainerFrontPic_NewOne, gTrainerPalette_NewOne),
+     TRAINER_SPRITE(TRAINER_PIC_FRONT_RS_MAY, gTrainerFrontPic_RubySapphireMay, gTrainerPalette_RubySapphireMay),
++    TRAINER_SPRITE(TRAINER_PIC_FRONT_NEW_ONE, gTrainerFrontPic_NewOne, gTrainerPalette_NewOne),
  };
 ```
 ### The Data
@@ -63,16 +63,16 @@ So, finally, it needs to look like this:
 Finally, let's bring it all together by defining our new trainer pic in [`include/constants/trainers.h`](./include/constants/trainers.h):
 
 ```diff
- #define TRAINER_PIC_RS_MAY                92
-+#define TRAINER_PIC_NEW_ONE               93
-
- #define TRAINER_BACK_PIC_BRENDAN                0
- #define TRAINER_BACK_PIC_MAY                    1
+    TRAINER_PIC_FRONT_RS_MAY,
++   TRAINER_PIC_FRONT_NEW_ONE,
+    TRAINER_PIC_FRONT_COUNT,
+    TRAINER_PIC_BACK_BRENDAN = TRAINER_PIC_FRONT_COUNT, // The player back pics are assumed to alternate according to the gender values (MALE/FEMALE)
+    TRAINER_PIC_BACK_MAY,
 ```
-Remember to count the number next to the trainer pic up by one!
+Remember to add new front pics before `TRAINER_PIC_FRONT_COUNT`!
 
 ## Usage
-You can test your trainer type by going to [`src/data/trainers.party`](./src/data/trainers.party) and change the `Pic` field. The syntax should match the constant (`TRAINER_PIC_NEW_ONE`) with the underscore replaced by spaces. For example:
+You can test your trainer type by going to [`src/data/trainers.party`](./src/data/trainers.party) and change the `Pic` field. The syntax should match the constant (`TRAINER_PIC_FRONT_NEW_ONE`) with the underscore replaced by spaces. For example:
 ```diff
  === TRAINER_BRENDAN_PLACEHOLDER ===
  Name: BRENDAN
@@ -90,8 +90,8 @@ Otherwise if you use [`src/data/trainers.h`](./src/data/trainers.h), change the 
      {
          .trainerName = _("BRENDAN"),
          .trainerClass = TRAINER_CLASS_RS_PROTAG,
--        .trainerPic = TRAINER_PIC_RS_BRENDAN,
-+        .trainerPic = TRAINER_PIC_NEW_ONE,
+-        .trainerPic = TRAINER_PIC_FRONT_RS_BRENDAN,
++        .trainerPic = TRAINER_PIC_FRONT_NEW_ONE,
          .encounterMusic_gender = TRAINER_ENCOUNTER_MUSIC_MALE,
          .doubleBattle = FALSE,
 ```

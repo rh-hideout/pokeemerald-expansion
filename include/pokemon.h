@@ -142,13 +142,13 @@ struct PokemonSubstruct0
 
 struct PokemonSubstruct1
 {
-    u16 move1:11; // 2047 moves.
+    enum Move move1:11; // 2047 moves.
     u16 evolutionTracker1:5;
-    u16 move2:11; // 2047 moves.
+    enum Move move2:11; // 2047 moves.
     u16 evolutionTracker2:5;
-    u16 move3:11; // 2047 moves.
+    enum Move move3:11; // 2047 moves.
     u16 unused_04:5;
-    u16 move4:11; // 2047 moves.
+    enum Move move4:11; // 2047 moves.
     u16 unused_06:3;
     u16 hyperTrainedHP:1;
     u16 hyperTrainedAttack:1;
@@ -612,7 +612,7 @@ struct SpindaSpot
 
 struct LevelUpMove
 {
-    u16 move;
+    enum Move move;
     u16 level;
 };
 
@@ -708,7 +708,7 @@ void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPok
 void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId);
 void CreateMonWithEVSpreadNatureOTID(struct Pokemon *mon, u16 species, u8 level, u8 nature, u8 fixedIV, u8 evSpread, u32 otId);
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest);
-u16 GetUnionRoomTrainerPic(void);
+enum TrainerPicID GetUnionRoomTrainerPic(void);
 enum TrainerClassID GetUnionRoomTrainerClass(void);
 void CreateEnemyEventMon(void);
 void CalculateMonStats(struct Pokemon *mon);
@@ -734,8 +734,8 @@ u8 GetGenderFromSpeciesAndPersonality(u16 species, u32 personality);
 bool32 IsPersonalityFemale(u16 species, u32 personality);
 u32 GetUnownSpeciesId(u32 personality);
 void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, enum BattlerPosition battlerPosition);
-void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerPicId, enum BattlerPosition battlerPosition);
-void SetMultiuseSpriteTemplateToTrainerFront(u16 trainerPicId, enum BattlerPosition battlerPosition);
+void SetMultiuseSpriteTemplateToTrainerBack(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition);
+void SetMultiuseSpriteTemplateToTrainerFront(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition);
 
 /* GameFreak called Get(Box)MonData with either 2 or 3 arguments, for
  * type safety we have a Get(Box)MonData macro which dispatches to
@@ -762,7 +762,7 @@ u8 GetMonsStateToDoubles_2(void);
 enum Ability GetAbilityBySpecies(u16 species, u8 abilityNum);
 enum Ability GetMonAbility(struct Pokemon *mon);
 void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord);
-u8 GetSecretBaseTrainerPicIndex(void);
+enum TrainerPicID GetSecretBaseTrainerPicIndex(void);
 enum TrainerClassID GetSecretBaseTrainerClass(void);
 bool8 IsPlayerPartyAndPokemonStorageFull(void);
 bool8 IsPokemonStorageFull(void);
@@ -865,8 +865,8 @@ void PokemonSummaryDoMonAnimation(struct Sprite *sprite, u16 species, bool8 oneF
 void StopPokemonAnimationDelayTask(void);
 void BattleAnimateBackSprite(struct Sprite *sprite, u16 species);
 u8 GetOpposingLinkMultiBattlerId(bool8 rightSide, u8 multiplayerId);
-u16 FacilityClassToPicIndex(u16 facilityClass);
-u16 PlayerGenderToFrontTrainerPicId(u8 playerGender);
+enum TrainerPicID FacilityClassToPicIndex(u16 facilityClass);
+enum TrainerPicID PlayerGenderToFrontTrainerPicId(u8 playerGender);
 void HandleSetPokedexFlag(enum NationalDexOrder nationalNum, u8 caseId, u32 personality);
 void HandleSetPokedexFlagFromMon(struct Pokemon *mon, u32 caseId);
 bool8 HasTwoFramesAnimation(u16 species);

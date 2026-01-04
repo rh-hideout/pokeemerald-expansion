@@ -98,7 +98,7 @@ struct ContestPokemon
     u8 aiPool_Cute:1;
     u8 aiPool_Smart:1;
     u8 aiPool_Tough:1;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u8 cool;
     u8 beauty;
     u8 cute;

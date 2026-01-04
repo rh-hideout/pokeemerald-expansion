@@ -1592,7 +1592,7 @@ static void CreateEventMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedI
     SetMonData(mon, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
 }
 
-u16 GetUnionRoomTrainerPic(void)
+enum TrainerPicID GetUnionRoomTrainerPic(void)
 {
     u8 linkId;
     u32 arrId;
@@ -2164,7 +2164,7 @@ void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, enum BattlerPosition bat
     }
 }
 
-void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerPicId, enum BattlerPosition battlerPosition)
+void SetMultiuseSpriteTemplateToTrainerBack(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition)
 {
     gMultiuseSpriteTemplate.paletteTag = trainerPicId;
     if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
@@ -2183,7 +2183,7 @@ void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerPicId, enum BattlerPositi
     }
 }
 
-void SetMultiuseSpriteTemplateToTrainerFront(u16 trainerPicId, enum BattlerPosition battlerPosition)
+void SetMultiuseSpriteTemplateToTrainerFront(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition)
 {
     if (gMonSpritesGfxPtr != NULL)
         gMultiuseSpriteTemplate = gMonSpritesGfxPtr->templates[battlerPosition];
@@ -3445,7 +3445,7 @@ void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord)
     }
 }
 
-u8 GetSecretBaseTrainerPicIndex(void)
+enum TrainerPicID GetSecretBaseTrainerPicIndex(void)
 {
     u8 facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % NUM_SECRET_BASE_CLASSES];
     return gFacilityClassToPicIndex[facilityClass];
@@ -6633,12 +6633,12 @@ u8 GetOpposingLinkMultiBattlerId(bool8 rightSide, u8 multiplayerId)
     return i;
 }
 
-u16 FacilityClassToPicIndex(u16 facilityClass)
+enum TrainerPicID FacilityClassToPicIndex(u16 facilityClass)
 {
     return gFacilityClassToPicIndex[facilityClass];
 }
 
-u16 PlayerGenderToFrontTrainerPicId(u8 playerGender)
+enum TrainerPicID PlayerGenderToFrontTrainerPicId(u8 playerGender)
 {
     if (playerGender != MALE)
         return FacilityClassToPicIndex(FACILITY_CLASS_MAY);
