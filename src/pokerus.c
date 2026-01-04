@@ -62,7 +62,7 @@ void RandomlyGivePartyPokerus(void)
         randomIndex = RandomUniform(RNG_POKERUS_PARTY_MEMBER, 0, validTargetsCount - 1);
         mon = &gPlayerParty[validTargets[randomIndex]];
 
-        if (!(CheckMonHasHadPokerus(mon)))
+        if (!CheckMonHasHadPokerus(mon))
         {
             u32 strain = GetRandomPokerusStrain();
             u32 daysLeft = GetDaysLeftBasedOnStrain(strain);
@@ -114,12 +114,9 @@ bool32 CheckMonHasHadPokerus(struct Pokemon *mon)
 
 bool32 IsPokerusVisible(struct Pokemon *mon)
 {
-    if (!GetMonData(mon, MON_DATA_IS_EGG))
-        return TRUE;
-    if (M_POKERUS_VISIBLE_ON_EGG)
+    if (M_POKERUS_VISIBLE_ON_EGG || !GetMonData(mon, MON_DATA_IS_EGG))
         return TRUE;
     return FALSE;
-
 }
 
 bool32 ShouldPokemonShowActivePokerus(struct Pokemon *mon)

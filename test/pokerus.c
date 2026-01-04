@@ -11,9 +11,9 @@
 
 TEST("(Pokerus) No infection when POKERUS_ENABLED is false")
 {
-    u32 enabled;
-    PARAMETRIZE { enabled = TRUE;}
-    PARAMETRIZE { enabled = FALSE;}
+    bool32 enabled;
+    PARAMETRIZE { enabled = TRUE; }
+    PARAMETRIZE { enabled = FALSE; }
     SetConfig(CONFIG_POKERUS_ENABLED, enabled);
 
     ZeroPlayerPartyMons();
@@ -43,9 +43,9 @@ TEST("(Pokerus) RandomlyGivePartyPokerus doesn't freeze if the party is empty")
 
 TEST("(Pokerus) Eggs can only be infected if POKERUS_INFECT_EGG is TRUE")
 {
-    u32 infectEgg;
-    PARAMETRIZE { infectEgg = TRUE;}
-    PARAMETRIZE { infectEgg = FALSE;}
+    bool32 infectEgg;
+    PARAMETRIZE { infectEgg = TRUE; }
+    PARAMETRIZE { infectEgg = FALSE; }
     SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
     SetConfig(CONFIG_POKERUS_INFECT_EGG, infectEgg);
 
