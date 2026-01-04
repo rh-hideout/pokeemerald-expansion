@@ -44,6 +44,7 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler);
 static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, u32 battlerAtk, u32 battlerDef);
 static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef);
 static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
+static bool32 DoesAbilityBenefitFromSunOrRain(u32 battler, enum Ability ability, u32 weather);
 static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef);
 
 // ewram
@@ -3890,6 +3891,34 @@ static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect)
     }
 }
 
+static bool32 DoesAbilityBenefitFromSunOrRain(u32 battler, enum Ability ability, u32 weather)
+{
+    switch (ability)
+    {
+    case ABILITY_DRY_SKIN:
+    case ABILITY_HYDRATION:
+    case ABILITY_RAIN_DISH:
+    case ABILITY_SWIFT_SWIM:
+        return (weather & B_WEATHER_RAIN);
+    case ABILITY_HARVEST:
+        if (GetItemPocket(gAiLogicData->items[battler]) != POCKET_BERRIES
+            && GetItemPocket(gBattleStruct->changedItems[battler]) != POCKET_BERRIES
+            && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) != POCKET_BERRIES)
+        {
+            return FALSE;
+        }
+    case ABILITY_CHLOROPHYLL:
+    case ABILITY_FLOWER_GIFT:
+    case ABILITY_LEAF_GUARD:
+    case ABILITY_SOLAR_POWER:
+    case ABILITY_ORICHALCUM_PULSE:
+        return (weather & B_WEATHER_SUN);
+    default:
+        break;
+    }
+    return FALSE;
+}
+
 static enum MoveComparisonResult CompareMoveAccuracies(u32 battlerAtk, u32 battlerDef, u32 moveSlot1, u32 moveSlot2)
 {
     u32 acc1 = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveSlot1];
@@ -5015,12 +5044,18 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
                 ADJUST_SCORE(DECENT_EFFECT);
             break;
         case HOLD_EFFECT_TOXIC_ORB:
-            if (!ShouldPoison(battlerAtk, battlerAtk))
+            if (!ShouldPoison(battlerAtk, battlerAtk)
+             || (gBattleMons[battlerAtk].status1 & STATUS1_PSN_ANY))
+            {
                 ADJUST_SCORE(DECENT_EFFECT);
+            }
             break;
         case HOLD_EFFECT_FLAME_ORB:
-            if (!ShouldBurn(battlerAtk, battlerAtk, aiData->abilities[battlerAtk]))
+            if (!ShouldBurn(battlerAtk, battlerAtk, aiData->abilities[battlerAtk])
+             || (gBattleMons[battlerAtk].status1 & STATUS1_BURN))
+            {
                 ADJUST_SCORE(DECENT_EFFECT);
+            }
             break;
         case HOLD_EFFECT_BLACK_SLUDGE:
             if (!IS_BATTLER_OF_TYPE(battlerDef, TYPE_POISON) && aiData->abilities[battlerDef] != ABILITY_MAGIC_GUARD)
@@ -5035,29 +5070,19 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
             ADJUST_SCORE(DECENT_EFFECT);
             break;
         case HOLD_EFFECT_UTILITY_UMBRELLA:
-            if (aiData->abilities[battlerAtk] != ABILITY_SOLAR_POWER && aiData->abilities[battlerAtk] != ABILITY_DRY_SKIN)
+            if (!(AI_GetWeather() & B_WEATHER_SUN && aiData->abilities[battlerAtk] == ABILITY_DRY_SKIN)
+             && DoesAbilityBenefitFromSunOrRain(battlerDef, aiData->abilities[battlerDef], AI_GetWeather()))
             {
-                switch (aiData->abilities[battlerDef])
-                {
-                case ABILITY_SWIFT_SWIM:
-                    if (AI_GetWeather() & B_WEATHER_RAIN)
-                        ADJUST_SCORE(DECENT_EFFECT); // Slow 'em down
-                    break;
-                case ABILITY_CHLOROPHYLL:
-                case ABILITY_FLOWER_GIFT:
-                    if (AI_GetWeather() & B_WEATHER_SUN)
-                        ADJUST_SCORE(DECENT_EFFECT); // Slow 'em down
-                    break;
-                default:
-                    break;
-                }
+                ADJUST_SCORE(DECENT_EFFECT); // Remove their weather benefit
             }
             break;
         case HOLD_EFFECT_EJECT_BUTTON:
             //if (!IsRaidBattle() && GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX && gNewBS->dynamaxData.timer[battlerDef] > 1 &&
             if (HasDamagingMove(battlerAtk)
              || (hasPartner && HasDamagingMove(BATTLE_PARTNER(battlerAtk))))
+            {
                 ADJUST_SCORE(DECENT_EFFECT); // Force 'em out next turn
+            }
             break;
         default:
             if (GetMoveEffect(move) != EFFECT_BESTOW && aiData->items[battlerAtk] == ITEM_NONE && aiData->items[battlerDef] != ITEM_NONE)
@@ -5084,6 +5109,12 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
                     break;
                 case HOLD_EFFECT_LAGGING_TAIL:
                 case HOLD_EFFECT_STICKY_BARB:
+                    break;
+                case HOLD_EFFECT_UTILITY_UMBRELLA:
+                    if ((AI_GetWeather() & B_WEATHER_SUN) && (aiData->abilities[battlerAtk] == ABILITY_DRY_SKIN || aiData->abilities[battlerDef] == ABILITY_DRY_SKIN))
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    else if (!DoesAbilityBenefitFromSunOrRain(battlerAtk, aiData->abilities[battlerAtk], AI_GetWeather()))
+                        ADJUST_SCORE(WEAK_EFFECT);
                     break;
                 default:
                     ADJUST_SCORE(WEAK_EFFECT);    //other hold effects generally universally good
