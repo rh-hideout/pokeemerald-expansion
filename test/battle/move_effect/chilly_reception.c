@@ -122,6 +122,20 @@ SINGLE_BATTLE_TEST("Chilly Reception switches the user out even if it can't chan
     }
 }
 
+SINGLE_BATTLE_TEST("Chilly Reception fails if it can't switch the user out or change the weather")
+{
+    GIVEN {
+        PLAYER(SPECIES_SLOWKING_GALAR);
+        OPPONENT(SPECIES_NINETALES_ALOLAN) { Ability(ABILITY_SNOW_WARNING); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CHILLY_RECEPTION); }
+    } SCENE {
+        MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
+        MESSAGE("But it failed!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Chilly Reception doesn't announce its move if it's called by a different move")
 {
     GIVEN {
