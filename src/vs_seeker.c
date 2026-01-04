@@ -414,8 +414,10 @@ static void GatherNearbyTrainerInfo(void)
     for (objectEventIdx = 0; objectEventIdx < gMapHeader.events->objectEventCount; objectEventIdx++)
     {
         u16 trainerIdx = GetTrainerFlagFromScript(templates[objectEventIdx].script);
-        if (trainerIdx == TRAINER_NONE && templates[objectEventIdx].trainerType == TRAINER_TYPE_NONE)
+        if (trainerIdx == TRAINER_NONE && (!I_SHOW_NO_ID_TRAINER || templates[objectEventIdx].trainerType == TRAINER_TYPE_NONE))
             continue;
+        if (trainerIdx == TRAINER_NONE && templates[objectEventIdx].trainerType != TRAINER_TYPE_NONE)
+            DebugPrintf("Object event with local id %d is not TRAINER_TYPE_NONE but doesn't have a visible trainerID", templates[objectEventIdx].localId);
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].script = templates[objectEventIdx].script;
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].trainerIdx = trainerIdx;
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].localId = templates[objectEventIdx].localId;
