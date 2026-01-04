@@ -789,6 +789,7 @@ extern const u8 BattleScript_EffectRevivalBlessing[];
 extern const u8 BattleScript_EffectTakeHeart[];
 extern const u8 BattleScript_EffectCorrosiveGas[];
 extern const u8 BattleScript_MoveEffectSaltCure[];
+extern const u8 BattleScript_ChillyReceptionMessage[];
 extern const u8 BattleScript_EffectWeatherAndSwitch[];
 extern const u8 BattleScript_EffectMaxMove[];
 extern const u8 BattleScript_EffectBrickBreak[];
