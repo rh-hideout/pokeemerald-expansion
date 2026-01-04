@@ -1020,6 +1020,9 @@ void TryRemoveOverworldWildEncounter(u32 localId)
 
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction)
 {
+    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
+        return FALSE;
+    
     // Returns TRUE if movement is restricted.
     return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatile(objectEvent, direction))
         || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMap(objectEvent, direction)));
