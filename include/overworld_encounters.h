@@ -134,5 +134,6 @@ void Task_OWE_WaitMovements(u8 taskId);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
 void OverworldWildEncounter_InitRoamerOutbreakStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template);
 void OverworldWildEncounter_FreezeAllObjects(void);
+bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

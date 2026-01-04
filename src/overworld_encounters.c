@@ -1389,6 +1389,11 @@ static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
     return status - 1;
 }
 
+bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent)
+{
+    return objectEvent->sOverworldEncounterLevel & OWE_FLAG_START_ENCOUNTER;
+}
+
 #undef tLocalId
 #undef NOT_STARTED
 #undef STARTED

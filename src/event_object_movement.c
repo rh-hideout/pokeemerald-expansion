@@ -11746,7 +11746,7 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent 
     if (!ObjectEventExecSingleMovementAction(objectEvent, sprite))
         return FALSE;
 
-    if (objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER)
+    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
     {
         u16 speciesId = OW_SPECIES(objectEvent);
         u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
@@ -11956,11 +11956,9 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *
     }
 
     u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
-    if (!(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER))
-    {
+    if (!OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
         direction = GetOppositeDirection(direction);
-    }
+    
     SetObjectEventDirection(objectEvent, direction);
     sprite->sTypeFuncId = 11;
     return TRUE;
@@ -11979,11 +11977,9 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
     {
         struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
-
-        if (!(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER) && !(objectEvent->currentCoords.x == player->currentCoords.x || objectEvent->currentCoords.y == player->currentCoords.y))
-        {
+        if (!OverworldWildEncounter_IsStartingWildEncounter(objectEvent) && objectEvent->currentCoords.x != player->currentCoords.x && objectEvent->currentCoords.y != player->currentCoords.y)
             newDirection = GetOppositeDirection(newDirection);
-        }
+        
         movementActionId = GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
         collision = GetCollisionInDirection(objectEvent, newDirection);
 
@@ -12089,31 +12085,25 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
     bool8 collision;
     u8 movementActionId;
 
-    if (distance <= 1 && !(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER))
+    if (distance <= 1 && !OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
     {
         SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
-
         collision = GetCollisionInDirection(objectEvent, objectEvent->movementDirection);
         movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
         if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection) || collision)
         {
             struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
             u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
-
-            if (!(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER) && !(objectEvent->currentCoords.x == player->currentCoords.x || objectEvent->currentCoords.y == player->currentCoords.y))
-            {
+            if (!OverworldWildEncounter_IsStartingWildEncounter(objectEvent) && objectEvent->currentCoords.x != player->currentCoords.x && objectEvent->currentCoords.y != player->currentCoords.y)
                 newDirection = GetOppositeDirection(newDirection);
-            }
+
             movementActionId = GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
             collision = GetCollisionInDirection(objectEvent, newDirection);
-
             if (OWE_CheckRestrictedMovement(objectEvent, newDirection) || collision)
-            {
                 movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
-            }
         }
     }
-    else if (distance == OWE_APPROACH_DISTANCE && !equalDistances && !(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER))
+    else if (distance == OWE_APPROACH_DISTANCE && !equalDistances && !OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
     {
         if (sJumpTimer <= 0)
         {
