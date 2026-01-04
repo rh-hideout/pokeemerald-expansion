@@ -1074,9 +1074,7 @@ extern u8 gCategoryIconSpriteId;
 
 static inline bool32 IsBattlerAlive(u32 battler)
 {
-    if (battler >= gBattlersCount)
-        return FALSE;
-    else if (gBattleMons[battler].hp == 0)
+    if (gBattleMons[battler].hp == 0)
         return FALSE;
     else if (gAbsentBattlerFlags & (1u << battler))
         return FALSE;
