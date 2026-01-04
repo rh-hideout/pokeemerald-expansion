@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
 {
     s16 dmgBefore, dmgAfter;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE {move = MOVE_SCRATCH; }
     PARAMETRIZE {move = MOVE_GUST; }

@@ -1905,7 +1905,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Retaliates any physical hit\n"
             "with double the power."),
-        .effect = EFFECT_COUNTER,
+        .effect = EFFECT_REFLECT_DAMAGE,
         .power = 1,
         .type = TYPE_FIGHTING,
         .accuracy = 100,
@@ -1914,6 +1914,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = -5,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
+        .argument = {
+            .reflectDamage.damagePercent = 200,
+            .reflectDamage.damageCategories = 1u << DAMAGE_CATEGORY_PHYSICAL,
+        },
         .ignoresProtect = B_UPDATED_MOVE_FLAGS < GEN_5,
         .ignoresKingsRock = (B_UPDATED_MOVE_FLAGS == GEN_3 || B_UPDATED_MOVE_FLAGS == GEN_4),
         .meFirstBanned = TRUE,
@@ -2705,7 +2709,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Raises the user's Attack\n"
             "every time it is hit."),
-        .effect = EFFECT_RAGE,
+        .effect = EFFECT_HIT,
         .power = 20,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -2713,6 +2717,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_RAGE,
+        }),
         .makesContact = TRUE,
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS : CONTEST_EFFECT_REPETITION_NOT_BORING,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_TOUGH : CONTEST_CATEGORY_COOL,
@@ -3276,7 +3283,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Inflicts severe damage but\n"
             "makes the user faint."),
-        .effect = EFFECT_EXPLOSION,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_2 ? 200 : 130,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -3284,6 +3291,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_FOES_AND_ALLY,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .explosion = TRUE,
         .parentalBondBanned = TRUE,
         .dampBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_GREAT_APPEAL_BUT_NO_MORE_MOVES,
@@ -4152,7 +4160,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Inflicts severe damage but\n"
             "makes the user faint."),
-        .effect = EFFECT_EXPLOSION,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_2 ? 250 : 170,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -4160,6 +4168,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_FOES_AND_ALLY,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .explosion = TRUE,
         .parentalBondBanned = TRUE,
         .dampBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_GREAT_APPEAL_BUT_NO_MORE_MOVES,
@@ -5453,7 +5462,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Causes a sandstorm that\n"
             "rages for several turns."),
-        .effect = EFFECT_SANDSTORM,
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_ROCK,
         .accuracy = 0,
@@ -5465,6 +5474,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
         .windMove = TRUE,
+        .argument = { .weatherType = BATTLE_WEATHER_SANDSTORM },
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS : CONTEST_EFFECT_SCRAMBLE_NEXT_TURN_ORDER,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = COMBO_STARTER_SANDSTORM,
@@ -6480,7 +6490,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Boosts the power of Water-\n"
             "type moves for 5 turns."),
-        .effect = EFFECT_RAIN_DANCE,
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_WATER,
         .accuracy = 0,
@@ -6491,6 +6501,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
+        .argument = { .weatherType =  BATTLE_WEATHER_RAIN },
         .contestEffect = CONTEST_EFFECT_BETTER_WHEN_AUDIENCE_EXCITED,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_BEAUTY : CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = COMBO_STARTER_RAIN_DANCE,
@@ -6505,7 +6516,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Boosts the power of Fire-\n"
             "type moves for 5 turns."),
-        .effect = EFFECT_SUNNY_DAY,
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_FIRE,
         .accuracy = 0,
@@ -6516,6 +6527,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
+        .argument = { .weatherType = BATTLE_WEATHER_SUN },
         .contestEffect = CONTEST_EFFECT_BETTER_WHEN_AUDIENCE_EXCITED,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = COMBO_STARTER_SUNNY_DAY,
@@ -6566,7 +6578,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Counters the foe's special\n"
             "attack at double the power."),
-        .effect = EFFECT_MIRROR_COAT,
+        .effect = EFFECT_REFLECT_DAMAGE,
         .power = 1,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -6574,6 +6586,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_DEPENDS,
         .priority = -5,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = {
+            .reflectDamage.damagePercent = 200,
+            .reflectDamage.damageCategories = 1u << DAMAGE_CATEGORY_SPECIAL,
+        },
         .ignoresProtect = B_UPDATED_MOVE_FLAGS < GEN_5,
         .mirrorMoveBanned = B_UPDATED_MOVE_FLAGS >= GEN_4,
         .meFirstBanned = TRUE,
@@ -6970,13 +6986,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .description = COMPOUND_STRING(
                 "Summons a snowstorm that\n"
                 "lasts for five turns."),
-            .effect = EFFECT_SNOWSCAPE,
         #else
             .description = COMPOUND_STRING(
                 "Summons a hailstorm that\n"
                 "strikes every turn."),
-            .effect = EFFECT_HAIL,
         #endif
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_ICE,
         .accuracy = 0,
@@ -6987,6 +7002,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
+        .argument = { .weatherType = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) ? BATTLE_WEATHER_SNOW : BATTLE_WEATHER_HAIL },
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS : CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = COMBO_STARTER_HAIL,
@@ -9809,7 +9825,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Retaliates any hit with\n"
             "greater power."),
-        .effect = EFFECT_METAL_BURST,
+        .effect = EFFECT_REFLECT_DAMAGE,
         .power = 1,
         .type = TYPE_STEEL,
         .accuracy = 100,
@@ -9817,6 +9833,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_DEPENDS,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = {
+            .reflectDamage.damagePercent = 150,
+            .reflectDamage.damageCategories = 1u << DAMAGE_CATEGORY_PHYSICAL | 1u << DAMAGE_CATEGORY_SPECIAL,
+        },
         .ignoresProtect = B_UPDATED_MOVE_FLAGS < GEN_5,
         .meFirstBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_BETTER_IF_LAST,
@@ -12073,7 +12093,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Lunar Dance"),
         .description = sHealingWishDescription,
-        .effect = EFFECT_HEALING_WISH,
+        .effect = EFFECT_LUNAR_DANCE,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 0,
@@ -12566,7 +12586,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FLAME_BURST,
-            .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_SHIFT_JUDGE_ATTENTION,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -13383,6 +13402,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .explosion = B_UPDATED_MOVE_FLAGS <= GEN_5,
         .mirrorMoveBanned = TRUE,
         .parentalBondBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_GREAT_APPEAL_BUT_NO_MORE_MOVES,
@@ -15331,7 +15351,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 1,
         .category = B_UPDATED_MOVE_DATA >= GEN_7 ? DAMAGE_CATEGORY_SPECIAL : DAMAGE_CATEGORY_PHYSICAL,
-        .argument = { .speciesPowerOverride.species = SPECIES_GRENINJA_ASH, .speciesPowerOverride.power = 20, .speciesPowerOverride.numOfHits = 3 },
+        .argument = {
+            .speciesPowerOverride.species = SPECIES_GRENINJA_ASH,
+            .speciesPowerOverride.power = 20,
+            .speciesPowerOverride.numOfHits = 3
+        },
         .multiHit = TRUE,
         .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_EARLIER,
         .contestCategory = CONTEST_CATEGORY_COOL,
@@ -17856,12 +17880,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "The user attacks twice. Two\n"
             "targets are hit once each."),
-        .effect = EFFECT_DRAGON_DARTS,
+        .effect = EFFECT_HIT,
         .power = 50,
         .type = TYPE_DRAGON,
         .accuracy = 100,
         .pp = 10,
-        .target = TARGET_SELECTED,
+        .target = TARGET_SMART,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .strikeCount = 2,
@@ -18558,7 +18582,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Power goes up and damages\n"
             "all foes on Psychic Terrain."),
-        .effect = EFFECT_EXPANDING_FORCE,
+        .effect = EFFECT_TERRAIN_BOOST,
         .power = 80,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -18566,6 +18590,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument.terrainBoost = {
+            .terrain = STATUS_FIELD_PSYCHIC_TERRAIN,
+            .percent = 50,
+            .groundCheck = GROUND_CHECK_USER,
+            .hitsBothFoes = TRUE,
+        },
         .contestEffect = CONTEST_EFFECT_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -18680,7 +18710,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Hit everything and faint.\n"
             "Powers up on Misty Terrain."),
-        .effect = EFFECT_MISTY_EXPLOSION,
+        .effect = EFFECT_TERRAIN_BOOST,
         .power = 100,
         .type = TYPE_FAIRY,
         .accuracy = 100,
@@ -18688,7 +18718,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_FOES_AND_ALLY,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .explosion = TRUE,
         .dampBanned = TRUE,
+        .argument.terrainBoost = {
+            .terrain =  STATUS_FIELD_MISTY_TERRAIN,
+            .percent = 50,
+            .groundCheck = GROUND_CHECK_USER,
+        },
         .contestEffect = CONTEST_EFFECT_GREAT_APPEAL_BUT_NO_MORE_MOVES,
         .contestCategory = CONTEST_CATEGORY_CUTE,
         .contestComboStarterId = 0,
@@ -18725,7 +18761,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "This move's power doubles\n"
             "when on Electric Terrain."),
-        .effect = EFFECT_RISING_VOLTAGE,
+        .effect = EFFECT_TERRAIN_BOOST,
         .power = 70,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
@@ -18733,6 +18769,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument.terrainBoost = {
+            .terrain = STATUS_FIELD_ELECTRIC_TERRAIN,
+            .percent = 100,
+            .groundCheck = GROUND_CHECK_TARGET,
+        },
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = 0,
@@ -19921,7 +19962,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Boosts a user's stats\n"
             "depending on Tatsugiri."),
-        .effect = EFFECT_ORDER_UP,
+        .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_DRAGON,
         .accuracy = 100,
@@ -20416,7 +20457,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Bad joke summons snowstorm.\n"
             "The user also switches out."),
         #endif
-        .effect = EFFECT_CHILLY_RECEPTION,
+        .effect = EFFECT_WEATHER_AND_SWITCH,
         .power = 0,
         .type = TYPE_ICE,
         .accuracy = 0,
@@ -20428,6 +20469,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
         .metronomeBanned = TRUE,
+        .argument = { .weatherType = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL) ? BATTLE_WEATHER_HAIL : BATTLE_WEATHER_SNOW },
         .battleAnimScript = gBattleAnimMove_ChillyReception,
     },
 
@@ -20458,13 +20500,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .description = COMPOUND_STRING(
                 "Summons a hailstorm that\n"
                 "strikes every turn."),
-            .effect = EFFECT_HAIL,
         #else
             .description = COMPOUND_STRING(
                 "Summons a snowstorm that\n"
                 "lasts for five turns."),
-            .effect = EFFECT_SNOWSCAPE,
         #endif
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_ICE,
         .accuracy = 0,
@@ -20472,6 +20513,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_FIELD,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
+        .argument = { .weatherType = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL) ? BATTLE_WEATHER_HAIL : BATTLE_WEATHER_SNOW },
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
@@ -20711,7 +20753,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Retaliates strongly against\n"
             "who last hurt the user."),
-        .effect = EFFECT_METAL_BURST,
+        .effect = EFFECT_REFLECT_DAMAGE,
         .power = 1,
         .type = TYPE_DARK,
         .accuracy = 100,
@@ -20719,6 +20761,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_DEPENDS,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = {
+            .reflectDamage.damagePercent = 150,
+            .reflectDamage.damageCategories = 1u << DAMAGE_CATEGORY_PHYSICAL | 1u << DAMAGE_CATEGORY_SPECIAL,
+        },
         .makesContact = TRUE,
         .meFirstBanned = TRUE,
         .metronomeBanned = TRUE,
@@ -20898,7 +20944,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "This move's power increases\n"
             "when on Electric Terrain."),
-        .effect = EFFECT_PSYBLADE,
+        .effect = EFFECT_TERRAIN_BOOST,
         .power = 80,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -20906,6 +20952,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument.terrainBoost = {
+            .terrain = STATUS_FIELD_ELECTRIC_TERRAIN,
+            .percent = 50,
+            .groundCheck = GROUND_CHECK_NONE,
+        },
         .makesContact = TRUE,
         .slicingMove = TRUE,
         .battleAnimScript = gBattleAnimMove_Psyblade,

@@ -58,37 +58,6 @@ static struct PokemonSpriteVisualizer *GetStructPtr(u8 taskId)
     return (struct PokemonSpriteVisualizer*)(T1_READ_PTR(taskDataPtr));
 }
 
-static const union AnimCmd sAnim_Follower_1[] =
-{
-    ANIMCMD_FRAME(0, 30),
-    ANIMCMD_FRAME(1, 30),
-    ANIMCMD_FRAME(0, 30),
-    ANIMCMD_FRAME(1, 30),
-    ANIMCMD_FRAME(0, 10),
-    ANIMCMD_FRAME(2, 30),
-    ANIMCMD_FRAME(3, 30),
-    ANIMCMD_FRAME(2, 30),
-    ANIMCMD_FRAME(3, 30),
-    ANIMCMD_FRAME(2, 10),
-    ANIMCMD_FRAME(4, 30),
-    ANIMCMD_FRAME(5, 30),
-    ANIMCMD_FRAME(4, 30),
-    ANIMCMD_FRAME(5, 30),
-    ANIMCMD_FRAME(4, 10),
-    ANIMCMD_FRAME(4, 30, .hFlip = TRUE),
-    ANIMCMD_FRAME(5, 30, .hFlip = TRUE),
-    ANIMCMD_FRAME(4, 30, .hFlip = TRUE),
-    ANIMCMD_FRAME(5, 30, .hFlip = TRUE),
-    ANIMCMD_FRAME(4, 10, .hFlip = TRUE),
-    ANIMCMD_END,
-};
-
-static const union AnimCmd *const sAnims_Follower[] =
-{
-    sAnim_GeneralFrame0,
-    sAnim_Follower_1,
-};
-
 //BgTemplates
 static const struct BgTemplate sBgTemplates[] =
 {
@@ -369,36 +338,32 @@ const u8 gFrontAnimNames[][34] =
     [ANIM_SHAKE_GLOW_WHITE_SLOW]             = _("SHAKE GLOW WHITE SLOW"),
     [ANIM_SHAKE_GLOW_PURPLE_SLOW]            = _("SHAKE GLOW PURPLE SLOW"),
 };
-const u8 gBattleBackgroundNames[][30] =
-{
-    [MAP_BATTLE_SCENE_NORMAL]   = _("NORMAL                  "),
-    [MAP_BATTLE_SCENE_GYM]      = _("GYM                     "),
-    [MAP_BATTLE_SCENE_MAGMA]    = _("MAGMA                   "),
-    [MAP_BATTLE_SCENE_AQUA]     = _("AQUA                    "),
-    [MAP_BATTLE_SCENE_SIDNEY]   = _("SIDNEY                  "),
-    [MAP_BATTLE_SCENE_PHOEBE]   = _("PHOEBE                  "),
-    [MAP_BATTLE_SCENE_GLACIA]   = _("GLACIA                  "),
-    [MAP_BATTLE_SCENE_DRAKE]    = _("DRAKE                   "),
-    [MAP_BATTLE_SCENE_FRONTIER] = _("FRONTIER                "),
-    [MAP_BATTLE_SCENE_LEADER]   = _("LEADER                  "),
-    [MAP_BATTLE_SCENE_WALLACE]  = _("WALLACE                 "),
-    [MAP_BATTLE_SCENE_GROUDON]  = _("GROUDON                 "),
-    [MAP_BATTLE_SCENE_KYOGRE]   = _("KYOGRE                  "),
-    [MAP_BATTLE_SCENE_RAYQUAZA] = _("RAYQUAZA                "),
-};
 
-const u8 gBattleBackgroundTerrainNames[][26] =
+const u8 gBattleEnvironmentBackgroundNames[][17] =
 {
-    [BATTLE_ENVIRONMENT_GRASS]      = _("NORMAL - GRASS           "),
-    [BATTLE_ENVIRONMENT_LONG_GRASS] = _("NORMAL - LONG GRASS      "),
-    [BATTLE_ENVIRONMENT_SAND]       = _("NORMAL - SAND            "),
-    [BATTLE_ENVIRONMENT_UNDERWATER] = _("NORMAL - UNDERWATER      "),
-    [BATTLE_ENVIRONMENT_WATER]      = _("NORMAL - WATER           "),
-    [BATTLE_ENVIRONMENT_POND]       = _("NORMAL - POND            "),
-    [BATTLE_ENVIRONMENT_MOUNTAIN]   = _("NORMAL - MOUNTAIN        "),
-    [BATTLE_ENVIRONMENT_CAVE]       = _("NORMAL - CAVE            "),
-    [BATTLE_ENVIRONMENT_BUILDING]   = _("NORMAL - BUILDING        "),
-    [BATTLE_ENVIRONMENT_PLAIN]      = _("NORMAL - PLAIN           "),
+    [BATTLE_ENVIRONMENT_GRASS]      = _("GRASS           "),
+    [BATTLE_ENVIRONMENT_LONG_GRASS] = _("LONG GRASS      "),
+    [BATTLE_ENVIRONMENT_SAND]       = _("SAND            "),
+    [BATTLE_ENVIRONMENT_UNDERWATER] = _("UNDERWATER      "),
+    [BATTLE_ENVIRONMENT_WATER]      = _("WATER           "),
+    [BATTLE_ENVIRONMENT_POND]       = _("POND            "),
+    [BATTLE_ENVIRONMENT_MOUNTAIN]   = _("MOUNTAIN        "),
+    [BATTLE_ENVIRONMENT_CAVE]       = _("CAVE            "),
+    [BATTLE_ENVIRONMENT_BUILDING]   = _("BUILDING        "),
+    [BATTLE_ENVIRONMENT_PLAIN]      = _("PLAIN           "),
+    [BATTLE_ENVIRONMENT_FRONTIER]   = _("FRONTIER        "),
+    [BATTLE_ENVIRONMENT_GYM]        = _("GYM             "),
+    [BATTLE_ENVIRONMENT_LEADER]     = _("LEADER          "),
+    [BATTLE_ENVIRONMENT_MAGMA]      = _("MAGMA           "),
+    [BATTLE_ENVIRONMENT_AQUA]       = _("AQUA            "),
+    [BATTLE_ENVIRONMENT_SIDNEY]     = _("SIDNEY          "),
+    [BATTLE_ENVIRONMENT_PHOEBE]     = _("PHOEBE          "),
+    [BATTLE_ENVIRONMENT_GLACIA]     = _("GLACIA          "),
+    [BATTLE_ENVIRONMENT_DRAKE]      = _("DRAKE           "),
+    [BATTLE_ENVIRONMENT_CHAMPION]   = _("CHAMPION        "),
+    [BATTLE_ENVIRONMENT_GROUDON]    = _("GROUDON         "),
+    [BATTLE_ENVIRONMENT_KYOGRE]     = _("KYOGRE          "),
+    [BATTLE_ENVIRONMENT_RAYQUAZA]   = _("RAYQUAZA        "),
 };
 
 const u8 sShadowSizeLabels[][4] =
@@ -842,32 +807,32 @@ static void SpriteCB_EnemyShadowCustom(struct Sprite *shadowSprite)
 
 static void SpriteCB_Follower(struct Sprite *sprite)
 {
-    if (sprite->animDelayCounter == 0)
+    if (sprite->data[3] == 0)
     {
-        sprite->animDelayCounter = 60;
+        sprite->data[3] = 120;
         switch (sprite->animNum)
         {
-            default:
-            case 0:
-            case 1:
-                StartSpriteAnim(sprite, GetFaceDirectionAnimNum(DIR_NORTH));
-                break;
-            case 2:
-                StartSpriteAnim(sprite, GetFaceDirectionAnimNum(DIR_WEST));
-                break;
-            case 3:
-                StartSpriteAnim(sprite, GetFaceDirectionAnimNum(DIR_EAST));
-                break;
             case 4:
-                StartSpriteAnim(sprite, GetFaceDirectionAnimNum(DIR_SOUTH));
+                StartSpriteAnim(sprite, GetMoveDirectionAnimNum(DIR_NORTH));
+                break;
+            case 5:
+                StartSpriteAnim(sprite, GetMoveDirectionAnimNum(DIR_WEST));
+                break;
+            case 6:
+                StartSpriteAnim(sprite, GetMoveDirectionAnimNum(DIR_EAST));
+                break;
+            default:
+            case 7:
+                StartSpriteAnim(sprite, GetMoveDirectionAnimNum(DIR_SOUTH));
                 break;
         }
     }
     else
     {
-        sprite->animDelayCounter--;
+        sprite->data[3]--;
     }
 }
+
 static void LoadAndCreateEnemyShadowSpriteCustom(struct PokemonSpriteVisualizer *data, u16 species)
 {
     bool8 invisible = FALSE;
@@ -925,82 +890,11 @@ static void LoadAndCreateEnemyShadowSpriteCustom(struct PokemonSpriteVisualizer 
 }
 
 //Battle background functions
-static void LoadBattleBg(u8 battleBgType, enum BattleEnvironments battleEnvironment)
+static void LoadBattleBg(enum BattleEnvironments battleEnvironment)
 {
-    switch (battleBgType)
-    {
-    default:
-    case MAP_BATTLE_SCENE_NORMAL:
-        DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tileset, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tilemap, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentInfo[battleEnvironment].background.palette, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_GYM:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Building, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_BuildingGym, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_MAGMA:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumMagma, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_AQUA:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumAqua, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_SIDNEY:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumSidney, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_PHOEBE:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumPhoebe, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_GLACIA:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumGlacia, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_DRAKE:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumDrake, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_FRONTIER:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Building, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_Frontier, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_LEADER:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Building, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Building, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_BuildingLeader, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_WALLACE:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Stadium, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Stadium, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_StadiumWallace, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_GROUDON:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Cave, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Cave, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_Groudon, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_KYOGRE:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Water, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Water, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_Kyogre, 0x20, 0x60);
-        break;
-    case MAP_BATTLE_SCENE_RAYQUAZA:
-        DecompressDataWithHeaderVram(gBattleEnvironmentTiles_Rayquaza, (void*)(BG_CHAR_ADDR(2)));
-        DecompressDataWithHeaderVram(gBattleEnvironmentTilemap_Rayquaza, (void*)(BG_SCREEN_ADDR(26)));
-        LoadPalette(gBattleEnvironmentPalette_Rayquaza, 0x20, 0x60);
-        break;
-    }
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tileset, (void *)(BG_CHAR_ADDR(2)));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
+    LoadPalette(gBattleEnvironmentInfo[battleEnvironment].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
 }
 
 static void PrintBattleBgName(u8 taskId)
@@ -1009,10 +903,7 @@ static void PrintBattleBgName(u8 taskId)
     u8 fontId = 0;
     u8 text[30+1];
 
-    if (data->battleBgType == 0)
-        StringCopy(text, gBattleBackgroundTerrainNames[data->battleEnvironment]);
-    else
-        StringCopy(text, gBattleBackgroundNames[data->battleBgType]);
+    StringCopy(text, gBattleEnvironmentBackgroundNames[data->battleEnvironment]);
     AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 0, 24, 0, NULL);
 }
 
@@ -1020,54 +911,31 @@ static void UpdateBattleBg(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
 
-    if (data->battleBgType == MAP_BATTLE_SCENE_NORMAL)
+    if (data->battleEnvironment == BATTLE_ENVIRONMENT_GRASS)
     {
         if (increment)
-        {
-            if (data->battleEnvironment == BATTLE_ENVIRONMENT_PLAIN)
-                data->battleBgType += 1;
-            else
-                data->battleEnvironment += 1;
-        }
+            data->battleEnvironment += 1;
         else
-        {
-            if (data->battleEnvironment == BATTLE_ENVIRONMENT_GRASS)
-                data->battleBgType = MAP_BATTLE_SCENE_RAYQUAZA;
-            else
-                data->battleEnvironment -= 1;
-        }
+            data->battleEnvironment = BATTLE_ENVIRONMENT_RAYQUAZA;
     }
-    else if (data->battleBgType == MAP_BATTLE_SCENE_GYM)
+    else if (data->battleEnvironment == BATTLE_ENVIRONMENT_RAYQUAZA)
     {
         if (increment)
-            data->battleBgType += 1;
-        else
-        {
-            data->battleBgType = MAP_BATTLE_SCENE_NORMAL;
-            data->battleEnvironment = BATTLE_ENVIRONMENT_PLAIN;
-        }
-    }
-    else if (data->battleBgType == MAP_BATTLE_SCENE_RAYQUAZA)
-    {
-        if (increment)
-        {
-            data->battleBgType = MAP_BATTLE_SCENE_NORMAL;
             data->battleEnvironment = BATTLE_ENVIRONMENT_GRASS;
-        }
         else
-            data->battleBgType -= 1;
+            data->battleEnvironment -= 1;
     }
     else
     {
         if (increment)
-            data->battleBgType += 1;
+            data->battleEnvironment += 1;
         else
-            data->battleBgType -= 1;
+            data->battleEnvironment -= 1;
     }
 
     PrintBattleBgName(taskId);
 
-    LoadBattleBg(data->battleBgType, data->battleEnvironment);
+    LoadBattleBg(data->battleEnvironment);
 }
 
 // *******************************
@@ -1250,7 +1118,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
 
             FillBgTilemapBufferRect(0, 0, 0, 0, 32, 20, 15);
             InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
-            LoadBattleBg(0, BATTLE_ENVIRONMENT_GRASS);
+            LoadBattleBg(BATTLE_ENVIRONMENT_GRASS);
 
             gMain.state++;
             break;
@@ -1315,9 +1183,26 @@ void CB2_Pokemon_Sprite_Visualizer(void)
             gSprites[data->iconspriteId].oam.priority = 0;
 
             //Follower Sprite
-            data->followerspriteId = CreateObjectGraphicsSprite(OBJ_EVENT_MON + species, SpriteCB_Follower, VISUALIZER_FOLLOWER_X, VISUALIZER_FOLLOWER_Y, 0);
+            u16 graphicsId = species + OBJ_EVENT_MON;
+            if (data->isShiny)
+                graphicsId += OBJ_EVENT_MON_SHINY;
+            if (data->isFemale)
+                graphicsId += OBJ_EVENT_MON_FEMALE;
+            data->followerspriteId = CreateObjectGraphicsSprite(graphicsId,
+                                                        SpriteCB_Follower,
+                                                        VISUALIZER_FOLLOWER_X,
+                                                        VISUALIZER_FOLLOWER_Y,
+                                                        0);
             gSprites[data->followerspriteId].oam.priority = 0;
-            gSprites[data->followerspriteId].anims = sAnims_Follower;
+            const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
+            if (graphicsInfo != NULL)
+            {
+                gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
+                gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
+                gSprites[data->followerspriteId].images = graphicsInfo->images;
+                gSprites[data->followerspriteId].anims = graphicsInfo->anims;
+                gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
+            }
 
             //Modify Arrows
             SetUpModifyArrows(data);
@@ -1333,9 +1218,6 @@ void CB2_Pokemon_Sprite_Visualizer(void)
             data->animIdBack = GetSpeciesBackAnimSet(species) + 1;
             data->animIdFront = gSpeciesInfo[data->currentmonId].frontAnimId;
             UpdateMonAnimNames(taskId);
-
-            //BattleNg Name
-            PrintBattleBgName(taskId);
 
             //Footprint
             DrawFootprint(WIN_FOOTPRINT, species);
@@ -2017,7 +1899,15 @@ static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
                                                         VISUALIZER_FOLLOWER_Y,
                                                         0);
     gSprites[data->followerspriteId].oam.priority = 0;
-    gSprites[data->followerspriteId].anims = sAnims_Follower;
+    const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, data->isShiny, data->isFemale);
+    if (graphicsInfo != NULL)
+    {
+        gSprites[data->followerspriteId].oam.shape = graphicsInfo->oam->shape;
+        gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
+        gSprites[data->followerspriteId].images = graphicsInfo->images;
+        gSprites[data->followerspriteId].anims = graphicsInfo->anims;
+        gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
+    }
 
     //Modify Arrows
     LoadSpritePalette(&gSpritePalette_Arrow);

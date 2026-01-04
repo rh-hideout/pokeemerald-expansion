@@ -120,7 +120,7 @@ DOUBLE_BATTLE_TEST("Coaching fails if there's no ally")
 
 AI_DOUBLE_BATTLE_TEST("AI uses Coaching")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_HEADBUTT; }
     PARAMETRIZE { move = MOVE_DAZZLING_GLEAM; }
 

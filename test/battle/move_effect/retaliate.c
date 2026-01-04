@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Retaliate doubles in base power the turn after an ally faint
         HP_BAR(opponent, captureDamage: &damage[0]);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
 
@@ -40,15 +40,15 @@ SINGLE_BATTLE_TEST("Retaliate doubles in base power the turn after an ally faint
         HP_BAR(player, captureDamage: &damage[0]);
         HP_BAR(player, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
 
 DOUBLE_BATTLE_TEST("Retaliate works with passive damage")
 {
     s16 damage[2];
-    u32 move;
-    u32 move2 = MOVE_CELEBRATE;
+    enum Move move;
+    enum Move move2 = MOVE_CELEBRATE;
     struct BattlePokemon *moveTarget = playerLeft;
     PARAMETRIZE { move = MOVE_TOXIC; moveTarget = playerLeft; }
     PARAMETRIZE { move = MOVE_POISON_POWDER; moveTarget = playerLeft; }
@@ -72,8 +72,11 @@ DOUBLE_BATTLE_TEST("Retaliate works with passive damage")
         #if B_USE_FROSTBITE == TRUE
         ASSUME(GetMoveAdditionalEffectById(MOVE_ICE_BEAM, 0)->moveEffect == MOVE_EFFECT_FREEZE_OR_FROSTBITE);
         #endif
-        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
-        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
         ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
         ASSUME(GetMoveAdditionalEffectById(MOVE_MAGMA_STORM, 0)->moveEffect == MOVE_EFFECT_WRAP);
         ASSUME(GetMoveAdditionalEffectById(MOVE_FLAME_BURST, 0)->moveEffect == MOVE_EFFECT_FLAME_BURST);
@@ -92,7 +95,7 @@ DOUBLE_BATTLE_TEST("Retaliate works with passive damage")
         HP_BAR(opponentRight, captureDamage: &damage[0]);
         HP_BAR(opponentRight, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
 
@@ -115,7 +118,7 @@ SINGLE_BATTLE_TEST("Retaliate works with Perish Song")
         HP_BAR(opponent, captureDamage: &damage[0]);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
 
@@ -135,6 +138,6 @@ SINGLE_BATTLE_TEST("Retaliate works with self-inflicted fainting")
         HP_BAR(opponent, captureDamage: &damage[0]);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }

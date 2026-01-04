@@ -31,7 +31,7 @@
 #include "constants/event_objects.h" // only for SHADOW_SIZE constants
 
 // this file's functions
-static u8 GetBattlePalaceMoveGroup(u8 battler, u16 move);
+static u8 GetBattlePalaceMoveGroup(u8 battler, enum Move move);
 static u16 GetBattlePalaceTarget(u32 battler);
 static void SpriteCB_TrainerSlideVertical(struct Sprite *sprite);
 static bool8 ShouldAnimBeDoneRegardlessOfSubstitute(u8 animId);
@@ -300,7 +300,7 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
 
     if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
         chosenMoveIndex |= (battler << 8);
-    else if (moveTarget == TARGET_SELECTED)
+    else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART)
         chosenMoveIndex |= GetBattlePalaceTarget(battler);
     else
         chosenMoveIndex |= (GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler))) << 8);
@@ -317,11 +317,12 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
 #undef numMultipleMoveGroups
 #undef randSelectGroup
 
-static u8 GetBattlePalaceMoveGroup(u8 battler, u16 move)
+static u8 GetBattlePalaceMoveGroup(u8 battler, enum Move move)
 {
     switch (GetBattlerMoveTargetType(battler, move))
     {
     case TARGET_SELECTED:
+    case TARGET_SMART:
     case TARGET_OPPONENT:
     case TARGET_RANDOM:
     case TARGET_BOTH:
@@ -917,6 +918,8 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
     bool32 isShiny;
     const void *src;
     const u16 *paletteData;
+    struct Pokemon *monAtk = GetBattlerMon(battlerAtk);
+    struct Pokemon *monDef = GetBattlerMon(battlerDef);
     void *dst;
 
     if (IsContest())
@@ -942,23 +945,23 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
             else if (gBattleStruct->illusion[battlerDef].state == ILLUSION_ON)
                 targetSpecies = GetIllusionMonSpecies(battlerDef);
             else
-                targetSpecies = gBattleMons[battlerDef].species;
+                targetSpecies = GetMonData(monDef, MON_DATA_SPECIES);
         }
         else
         {
-            targetSpecies = gBattleMons[battlerAtk].species;
+            targetSpecies = GetMonData(monAtk, MON_DATA_SPECIES);
         }
         gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies = targetSpecies;
 
         if (changeType == SPECIES_GFX_CHANGE_TRANSFORM)
         {
-            personalityValue = gBattleMons[battlerAtk].volatiles.transformedMonPID;
-            isShiny = gBattleMons[battlerAtk].volatiles.isTransformedMonShiny;
+            personalityValue = gTransformedPersonalities[battlerAtk];
+            isShiny = gTransformedShininess[battlerAtk];
         }
         else
         {
-            personalityValue = gBattleMons[battlerAtk].personality;
-            isShiny = gBattleMons[battlerAtk].isShiny;
+            personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
+            isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
         }
         HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
                                  gMonSpritesGfxPtr->spritesGfx[position],
@@ -1044,7 +1047,7 @@ void LoadBattleMonGfxAndAnimate(u8 battler, bool8 loadMonSprite, u8 spriteId)
         gSprites[spriteId].y = GetBattlerSpriteDefault_Y(battler);
 }
 
-void TrySetBehindSubstituteSpriteBit(u8 battler, u16 move)
+void TrySetBehindSubstituteSpriteBit(u8 battler, enum Move move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_SUBSTITUTE || effect == EFFECT_SHED_TAIL)

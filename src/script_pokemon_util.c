@@ -157,7 +157,7 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
     }
 }
 
-void ScriptSetMonMoveSlot(u8 monIndex, u16 move, u8 slot)
+void ScriptSetMonMoveSlot(u8 monIndex, enum Move move, u8 slot)
 {
 // Allows monIndex to go out of bounds of gPlayerParty. Doesn't occur in vanilla
 #ifdef BUGFIX
@@ -505,7 +505,7 @@ u32 ScriptGiveMon(u16 species, u8 level, u16 item)
     u8 evs[NUM_STATS]        = {0, 0, 0, 0, 0, 0};
     u8 ivs[NUM_STATS]        = {MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1,   // We pass "MAX_PER_STAT_IVS + 1" here to ensure that
                                 MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1};  // ScriptGiveMonParameterized won't touch the stats' IV.
-    u16 moves[MAX_MON_MOVES] = {MOVE_NONE, MOVE_NONE, MOVE_NONE, MOVE_NONE};
+    enum Move moves[MAX_MON_MOVES] = {MOVE_NONE, MOVE_NONE, MOVE_NONE, MOVE_NONE};
 
     return ScriptGiveMonParameterized(0, PARTY_SIZE, species, level, item, ITEM_POKE_BALL, NUM_NATURES, NUM_ABILITY_PERSONALITY, MON_GENDERLESS, evs, ivs, moves, SHINY_MODE_RANDOM, FALSE, NUMBER_OF_MON_TYPES, 0);
 }
@@ -577,10 +577,10 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     speedIv                  = PARSE_FLAG(14, speedIv);
     spAtkIv                  = PARSE_FLAG(15, spAtkIv);
     spDefIv                  = PARSE_FLAG(16, spDefIv);
-    u16 move1                = PARSE_FLAG(17, MOVE_NONE);
-    u16 move2                = PARSE_FLAG(18, MOVE_NONE);
-    u16 move3                = PARSE_FLAG(19, MOVE_NONE);
-    u16 move4                = PARSE_FLAG(20, MOVE_NONE);
+    enum Move move1          = PARSE_FLAG(17, MOVE_NONE);
+    enum Move move2          = PARSE_FLAG(18, MOVE_NONE);
+    enum Move move3          = PARSE_FLAG(19, MOVE_NONE);
+    enum Move move4          = PARSE_FLAG(20, MOVE_NONE);
     enum ShinyMode shinyMode = PARSE_FLAG(21, SHINY_MODE_RANDOM);
     bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
     enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
@@ -588,7 +588,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
 
     u8 evs[NUM_STATS]        = {hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv};
     u8 ivs[NUM_STATS]        = {hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv};
-    u16 moves[MAX_MON_MOVES] = {move1, move2, move3, move4};
+    enum Move moves[MAX_MON_MOVES] = {move1, move2, move3, move4};
 
     if (side == 0)
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);

@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to it
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without breaking the disguise")
+SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without breaking the disguise - Stealth Rock")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
@@ -103,6 +103,8 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without
         EXPECT_EQ(player->species, SPECIES_MIMIKYU_DISGUISED);
     }
 }
+
+TO_DO_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without breaking the disguise - Weather")
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without breaking the disguise")
 {

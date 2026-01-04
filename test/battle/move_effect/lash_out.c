@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Lash Out damage is boosted if the user's stats are dropped the turn it is used")
 {
     s16 damage[2];
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_TACKLE; }
     PARAMETRIZE { move = MOVE_GROWL; }
@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Lash Out damage is boosted if the user's stats are dropped t
 SINGLE_BATTLE_TEST("Lash Out damage is only boosted on the turn that Intimidate switches in")
 {
     s16 damage[3] = {0};
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_LASH_OUT; }
     PARAMETRIZE { move = MOVE_SPLASH; }

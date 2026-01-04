@@ -5,7 +5,8 @@ ASSUMPTIONS
 {
     ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);
     ASSUME(I_SITRUS_BERRY_HEAL >= GEN_4);
-    ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_SUNNY_DAY);
+    ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_WEATHER);
+    ASSUME(GetMoveWeatherType(MOVE_SUNNY_DAY) == BATTLE_WEATHER_SUN);
 }
 
 SINGLE_BATTLE_TEST("Harvest has a 50% chance to restore a Berry at the end of the turn")

@@ -9748,9 +9748,9 @@ u32 CountAllStorageMons(void)
     return count;
 }
 
-bool32 AnyStorageMonWithMove(u16 move)
+bool32 AnyStorageMonWithMove(enum Move move)
 {
-    u16 moves[] = {move, MOVES_COUNT};
+    enum Move moves[] = {move, MOVES_COUNT};
     s32 i, j;
 
     for (i = 0; i < TOTAL_BOXES_COUNT; i++)

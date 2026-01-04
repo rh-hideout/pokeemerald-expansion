@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after all hits of a multi hit move
 
 SINGLE_BATTLE_TEST("White Herb wont have time to activate if it is knocked off or stolen by Thief")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_KNOCK_OFF; }
@@ -151,7 +151,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if it is knocked off o
         }
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Wobbuffet returned its stats to normal using its White Herb!");
+            MESSAGE("Slugma returned its stats to normal using its White Herb!");
         }
     } THEN {
         EXPECT(player->statStages[STAT_DEF] = DEFAULT_STAT_STAGE - 1);
@@ -176,7 +176,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if Magician steals it"
         MESSAGE("The opposing Fennekin stole Slugma's White Herb!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Wobbuffet returned its stats to normal using its White Herb!");
+            MESSAGE("Slugma returned its stats to normal using its White Herb!");
         }
     } THEN {
         EXPECT(player->statStages[STAT_DEF] = DEFAULT_STAT_STAGE - 1);
