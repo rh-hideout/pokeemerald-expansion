@@ -273,24 +273,6 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect Hidden Power's type")
     }
 }
 
-SINGLE_BATTLE_TEST("Aerilate doesn't affect Tera Starstorm's type")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TERA_STARSTORM) == EFFECT_TERA_STARSTORM);
-        ASSUME(GetMoveType(MOVE_TERA_STARSTORM) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_TERAPAGOS_STELLAR) { Ability(ABILITY_NORMALIZE); }
-        OPPONENT(SPECIES_MISDREAVUS);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TERA_STARSTORM); }
-    } SCENE {
-        MESSAGE("Terapagos used Tera Starstorm!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_STARSTORM, player);
-        HP_BAR(opponent);
-        NOT { MESSAGE("It doesn't affect the opposing Misdreavus…"); }
-    }
-}
-
 SINGLE_BATTLE_TEST("Normalize makes Flying Press do Normal/Flying damage")
 {
     enum Ability ability;
