@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Chilly Reception switches the user out even if it can't chan
     GIVEN {
         PLAYER(SPECIES_SLOWKING_GALAR);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_NINETALES_ALOLAN) { Ability(ABILITY_SNOW_WARNING); }
+        OPPONENT(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); SEND_OUT(player, 1); }
     } SCENE {
@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Chilly Reception fails if it can't switch the user out or ch
 {
     GIVEN {
         PLAYER(SPECIES_SLOWKING_GALAR);
-        OPPONENT(SPECIES_NINETALES_ALOLAN) { Ability(ABILITY_SNOW_WARNING); }
+        OPPONENT(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); }
     } SCENE {
