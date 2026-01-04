@@ -201,11 +201,11 @@
     F(COUNTER_TRY_HIT_PARTNER,   counterTryHitPartner,    (u32, GEN_COUNT - 1)) \
 
 
-#define MISC_CONFIG_DEFINITIONS(F) \
+#define POKEMON_CONFIG_DEFINITIONS(F) \
     F(POKERUS_ENABLED,           pokerusEnabled,          (u32, TRUE))          \
     F(POKERUS_SPREAD_ADJACENCY,  pokerusSpreadAdjacency,  (u32, GEN_COUNT - 1)) \
     F(POKERUS_SPREAD_DAYS_LEFT,  pokerusSpreadDaysLeft,   (u32, GEN_COUNT - 1)) \
-    F(POKERUS_INFECT_AGAIN,      pokerusInfectAgain,      (u32, TRUE))          \
+    F(POKERUS_INFECT_AGAIN,      pokerusInfectAgain,      (u32, GEN_COUNT - 1)) \
     F(POKERUS_INFECT_EGG,        pokerusInfectEgg,        (u32, TRUE))          \
     F(POKERUS_HERD_IMMUNITY,     pokerusHerdImmunity,     (u32, TRUE))          \
     F(POKERUS_WEAK_VARIANT,      pokerusWeakVariant,      (u32, TRUE))          \
@@ -219,7 +219,7 @@
 enum ConfigTag
 {
     BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_ENUMS)
-    MISC_CONFIG_DEFINITIONS(UNPACK_CONFIG_ENUMS)
+    POKEMON_CONFIG_DEFINITIONS(UNPACK_CONFIG_ENUMS)
     CONFIG_COUNT
 };
 

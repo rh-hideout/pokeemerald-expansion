@@ -3,7 +3,7 @@
 
 u32 GetDaysLeftBasedOnStrain(u32 strain);
 void RandomlyGivePartyPokerus(void);
-bool32 IsPokerusInParty(void); // IsPokerusInParty is a field_special function
+bool32 IsPokerusInParty(void);
 bool32 CheckMonPokerus(struct Pokemon *mon);
 bool32 CheckMonHasHadPokerus(struct Pokemon *mon);
 bool32 ShouldPokemonShowActivePokerus(struct Pokemon *mon);

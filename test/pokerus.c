@@ -68,8 +68,8 @@ TEST("(Pokerus) Eggs can only be infected if POKERUS_INFECT_EGG is TRUE")
 TEST("(Pokerus) No infection when POKERUS_INFECT_AGAIN is false and you already have active pokerus in party")
 {
     u32 infectAgain;
-    PARAMETRIZE { infectAgain = TRUE;}
-    PARAMETRIZE { infectAgain = FALSE;}
+    PARAMETRIZE { infectAgain = GEN_2; }
+    PARAMETRIZE { infectAgain = GEN_3; }
     SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
     SetConfig(CONFIG_POKERUS_INFECT_AGAIN, infectAgain);
 
@@ -87,16 +87,17 @@ TEST("(Pokerus) No infection when POKERUS_INFECT_AGAIN is false and you already 
     CalculatePlayerPartyCount();
     RandomlyGivePartyPokerus();
 
-    EXPECT_EQ((GetMonData(&gPlayerParty[1], MON_DATA_POKERUS) > 0), infectAgain);
+    EXPECT_EQ((GetMonData(&gPlayerParty[1], MON_DATA_POKERUS) > 0), infectAgain == GEN_2);
 }
 
 TEST("(Pokerus) Test POKERUS_HERD_IMMUNITY config in RandomlyGivePartyPokerus")
 {
     u32 herdImmunity;
-    PARAMETRIZE { herdImmunity = TRUE;}
-    PARAMETRIZE { herdImmunity = FALSE;}
+    PARAMETRIZE { herdImmunity = TRUE; }
+    PARAMETRIZE { herdImmunity = FALSE; }
     SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
     SetConfig(CONFIG_POKERUS_HERD_IMMUNITY, herdImmunity);
+    SetConfig(CONFIG_POKERUS_INFECT_AGAIN, GEN_2);
 
     ZeroPlayerPartyMons();
     RUN_OVERWORLD_SCRIPT(
@@ -116,12 +117,12 @@ TEST("(Pokerus) Test POKERUS_HERD_IMMUNITY config in RandomlyGivePartyPokerus")
     EXPECT_EQ((GetMonData(&gPlayerParty[1], MON_DATA_POKERUS) == 0), herdImmunity);
 }
 
-#if POKERUS_FLAG_INFECTION
-TEST("(Pokerus) No infection when POKERUS_FLAG_INFECTION is clear")
+#if P_POKERUS_FLAG_INFECTION
+TEST("(Pokerus) No infection when P_POKERUS_FLAG_INFECTION is clear")
 {
     u32 flag;
-    PARAMETRIZE { flag = TRUE;}
-    PARAMETRIZE { flag = FALSE;}
+    PARAMETRIZE { flag = TRUE; }
+    PARAMETRIZE { flag = FALSE; }
     SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
 
     ZeroPlayerPartyMons();
@@ -134,9 +135,9 @@ TEST("(Pokerus) No infection when POKERUS_FLAG_INFECTION is clear")
     SetMonData(&gPlayerParty[0], MON_DATA_POKERUS, &pokerus);
 
     if (flag)
-        FlagSet(POKERUS_FLAG_INFECTION);
+        FlagSet(P_POKERUS_FLAG_INFECTION);
     else
-        FlagClear(POKERUS_FLAG_INFECTION);
+        FlagClear(P_POKERUS_FLAG_INFECTION);
 
     SET_RNG(RNG_POKERUS_INFECTION, 0);
 
@@ -179,7 +180,7 @@ TEST("(Pokerus) Test SetMonData for MON_DATA_POKERUS_DAYS_LEFT and MON_DATA_POKE
     {
         for (u32 j = 0; j < 16; j++)
         {
-            PARAMETRIZE { strain = i; daysLeft = j;}
+            PARAMETRIZE { strain = i; daysLeft = j; }
         }
     }
 
@@ -206,8 +207,8 @@ TEST("(Pokerus) Test IsPokerusInParty general behavior")
         {
             if ((j & 0x0F) == 0)
                 continue;
-            PARAMETRIZE { enabled = TRUE; partyMember = i; pokerus = j;}
-            PARAMETRIZE { enabled = FALSE; partyMember = i, pokerus = j;}
+            PARAMETRIZE { enabled = TRUE; partyMember = i; pokerus = j; }
+            PARAMETRIZE { enabled = FALSE; partyMember = i, pokerus = j; }
         }
     }
     SetConfig(CONFIG_POKERUS_ENABLED, enabled);
@@ -238,8 +239,8 @@ TEST("(Pokerus) Test CheckMonPokerus general behavior")
         {
             if ((j & 0x0F) == 0)
                 continue;
-            PARAMETRIZE { enabled = TRUE; pokerus = j;}
-            PARAMETRIZE { enabled = FALSE; pokerus = j;}
+            PARAMETRIZE { enabled = TRUE; pokerus = j; }
+            PARAMETRIZE { enabled = FALSE; pokerus = j; }
         }
     }
     SetConfig(CONFIG_POKERUS_ENABLED, enabled);
@@ -265,8 +266,8 @@ TEST("(Pokerus) Test CheckMonHasHadPokerus general behavior")
     {
         for (u32 j = 1; j <= MAX_u8; j++)
         {
-            PARAMETRIZE { enabled = TRUE; pokerus = j;}
-            PARAMETRIZE { enabled = FALSE; pokerus = j;}
+            PARAMETRIZE { enabled = TRUE; pokerus = j; }
+            PARAMETRIZE { enabled = FALSE; pokerus = j; }
         }
     }
     SetConfig(CONFIG_POKERUS_ENABLED, enabled);
@@ -297,8 +298,8 @@ TEST("(Pokerus) Test UpdatePartyPokerusTime general behavior")
         {
             for (u32 k = 1; k < 4; k++)
             {
-                PARAMETRIZE {enabled = TRUE; strain = i; daysLeft = j; daysPassed = k;}
-                PARAMETRIZE {enabled = FALSE; strain = i; daysLeft = j; daysPassed = k;}
+                PARAMETRIZE { enabled = TRUE; strain = i; daysLeft = j; daysPassed = k; }
+                PARAMETRIZE { enabled = FALSE; strain = i; daysLeft = j; daysPassed = k; }
             }
         }
     }
@@ -331,6 +332,7 @@ TEST("(Pokerus) Test UpdatePartyPokerusTime general behavior")
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS_DAYS_LEFT), daysLeft);
     }
 }
+
 
 TEST("(Pokerus) Test PartySpreadPokerus general behavior")
 {
@@ -454,7 +456,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread inactive pokerus")
             continue;
         for (u32 k = 0; k < PARTY_SIZE; k++)
         {
-            PARAMETRIZE {pokerus = i; partyMember = k;}
+            PARAMETRIZE { pokerus = i; partyMember = k; }
         }
     }
     SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
@@ -487,7 +489,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread if POKERUS_ENABLED is fal
     {
         for (u32 k = 0; k < PARTY_SIZE; k++)
         {
-            PARAMETRIZE {pokerus = i; partyMember = k;}
+            PARAMETRIZE { pokerus = i; partyMember = k; }
         }
     }
     SetConfig(CONFIG_POKERUS_ENABLED, FALSE);
@@ -520,8 +522,8 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread to pokemon who got pokeru
     {
         for (u32 j = 1; j < 16; j++)
         {
-            PARAMETRIZE {pokerus1 = ((i << 4) | 1); pokerus2 = ((j << 4) | 0);}
-            PARAMETRIZE {pokerus1 = ((i << 4) | 2); pokerus2 = ((j << 4) | 1);}
+            PARAMETRIZE { pokerus1 = ((i << 4) | 1); pokerus2 = ((j << 4) | 0); }
+            PARAMETRIZE { pokerus1 = ((i << 4) | 2); pokerus2 = ((j << 4) | 1); }
         }
     }
     SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
@@ -548,8 +550,8 @@ TEST("(Pokerus) Test PartySpreadPokerus: strain 0 can be spread to if POKERUS_WE
     {
         if ((i & 0x0F) == 0)
             continue;
-        PARAMETRIZE {weakVariant = TRUE; pokerus2 = i;}
-        PARAMETRIZE {weakVariant = FALSE; pokerus2 = i;}
+        PARAMETRIZE { weakVariant = TRUE; pokerus2 = i; }
+        PARAMETRIZE { weakVariant = FALSE; pokerus2 = i; }
     }
     SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
     SetConfig(CONFIG_POKERUS_WEAK_VARIANT, weakVariant);
@@ -647,8 +649,8 @@ TEST("(Pokerus) Test PartySpreadPokerus using gen2 adjacency")
             continue;
         for (u32 k = 0; k < PARTY_SIZE; k++)
         {
-            PARAMETRIZE {pokerus = i; partyMember = k; spreadUp = TRUE;}
-            PARAMETRIZE {pokerus = i; partyMember = k; spreadUp = FALSE;}
+            PARAMETRIZE { pokerus = i; partyMember = k; spreadUp = TRUE; }
+            PARAMETRIZE { pokerus = i; partyMember = k; spreadUp = FALSE; }
         }
     }
     SetConfig(CONFIG_POKERUS_ENABLED, TRUE);

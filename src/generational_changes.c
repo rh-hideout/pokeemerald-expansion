@@ -5,12 +5,12 @@
 #include "config/pokerus.h"
 
 #define UNPACK_BATTLE_CONFIG_GEN_CHANGES(_name, _field, ...) ._field = B_##_name,
-#define UNPACK_MISC_CONFIG_GEN_CHANGES(_name, _field, ...) ._field = M_##_name,
+#define UNPACK_POKEMON_CONFIG_GEN_CHANGES(_name, _field, ...) ._field = P_##_name,
 
 const struct GenChanges sConfigChanges =
 {
     BATTLE_CONFIG_DEFINITIONS(UNPACK_BATTLE_CONFIG_GEN_CHANGES)
-    MISC_CONFIG_DEFINITIONS(UNPACK_MISC_CONFIG_GEN_CHANGES)
+    POKEMON_CONFIG_DEFINITIONS(UNPACK_POKEMON_CONFIG_GEN_CHANGES)
     /* Expands to:
     .critChance     = B_CRIT_CHANCE,
     .critMultiplier = B_CRIT_MULTIPLIER,
@@ -32,8 +32,6 @@ EWRAM_DATA struct GenChanges *gConfigChangesTestOverride = NULL;
 #define UNPACK_CONFIG_SETTERS(_name, _field, ...) case CONFIG_##_name: return;
 #endif
 
-// Gets the value of a volatile status flag for a certain battler
-// Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
 u32 GetConfig(enum ConfigTag _genConfig)
 {
 #if TESTING
@@ -42,7 +40,7 @@ u32 GetConfig(enum ConfigTag _genConfig)
         switch (_genConfig)
         {
             BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_GETTERS)
-            MISC_CONFIG_DEFINITIONS(UNPACK_CONFIG_GETTERS)
+            POKEMON_CONFIG_DEFINITIONS(UNPACK_CONFIG_GETTERS)
         /* Expands to:
             case CONFIG_CRIT_CHANCE:
                 return gConfigChangesTestOverride->critChance;
@@ -57,7 +55,7 @@ u32 GetConfig(enum ConfigTag _genConfig)
         switch (_genConfig)
         {
             BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_OVERRIDE_GETTERS)
-            MISC_CONFIG_DEFINITIONS(UNPACK_CONFIG_OVERRIDE_GETTERS)
+            POKEMON_CONFIG_DEFINITIONS(UNPACK_CONFIG_OVERRIDE_GETTERS)
         /* Expands to:
             case CONFIG_CRIT_CHANCE:
                  return sConfigChanges.critChance;
@@ -75,7 +73,7 @@ u32 GetClampedValue(enum ConfigTag _genConfig, u32 newValue)
     switch(_genConfig)
     {
         BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_CLAMPER)
-        MISC_CONFIG_DEFINITIONS(UNPACK_CONFIG_CLAMPER)
+        POKEMON_CONFIG_DEFINITIONS(UNPACK_CONFIG_CLAMPER)
         default:
             return 0;
     }
@@ -91,7 +89,7 @@ void SetConfig(enum ConfigTag _genConfig, u32 _value)
     switch (_genConfig)
     {
         BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_SETTERS)
-        MISC_CONFIG_DEFINITIONS(UNPACK_CONFIG_SETTERS)
+        POKEMON_CONFIG_DEFINITIONS(UNPACK_CONFIG_SETTERS)
     /* Expands to:
     #if TESTING
         case CONFIG_CRIT_CHANCE:
