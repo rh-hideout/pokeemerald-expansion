@@ -2137,7 +2137,7 @@ u32 GetUnownSpeciesId(u32 personality)
     return unownLetter + SPECIES_UNOWN_B - 1;
 }
 
-void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition)
+void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, enum BattlerPosition battlerPosition)
 {
     if (gMonSpritesGfxPtr != NULL)
         gMultiuseSpriteTemplate = gMonSpritesGfxPtr->templates[battlerPosition];
@@ -2164,7 +2164,7 @@ void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition)
     }
 }
 
-void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerPicId, u8 battlerPosition)
+void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerPicId, enum BattlerPosition battlerPosition)
 {
     gMultiuseSpriteTemplate.paletteTag = trainerPicId;
     if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
@@ -2183,7 +2183,7 @@ void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerPicId, u8 battlerPosition
     }
 }
 
-void SetMultiuseSpriteTemplateToTrainerFront(u16 trainerPicId, u8 battlerPosition)
+void SetMultiuseSpriteTemplateToTrainerFront(u16 trainerPicId, enum BattlerPosition battlerPosition)
 {
     if (gMonSpritesGfxPtr != NULL)
         gMultiuseSpriteTemplate = gMonSpritesGfxPtr->templates[battlerPosition];
