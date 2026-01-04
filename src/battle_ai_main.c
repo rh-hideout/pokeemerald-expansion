@@ -1986,6 +1986,13 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
                     ADJUST_SCORE(-10);
             }
             break;
+        case EFFECT_WEATHER_AND_SWITCH:
+            if (CountUsablePartyMons(battlerAtk) == 0)
+            {
+                ADJUST_SCORE(-10);
+                break;
+            }
+            // fallthrough
         case EFFECT_WEATHER:
             switch (GetMoveWeatherType(move))
             {
@@ -2041,13 +2048,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
                 ADJUST_SCORE(-6);
             break;
         case EFFECT_HIT_ESCAPE:
-            break;
-        case EFFECT_WEATHER_AND_SWITCH:
-            if (CountUsablePartyMons(battlerAtk) == 0)
-                ADJUST_SCORE(-10);
-            else if (weather & (B_WEATHER_ICY_ANY | B_WEATHER_PRIMAL_ANY)
-             || (HasPartner(battlerAtk) && AreMovesEquivalent(battlerAtk, BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove)))
-                ADJUST_SCORE(-8);
             break;
         case EFFECT_BELLY_DRUM:
         case EFFECT_FILLET_AWAY:

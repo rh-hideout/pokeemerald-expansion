@@ -3504,18 +3504,22 @@ BattleScript_EffectShoreUp::
 
 BattleScript_EffectWeather::
 	attackcanceler
+BattleScript_EffectWeatherSetWeather:
 	setfieldweather
 	attackanimation
 	waitanimation
 	call BattleScript_MoveWeatherChangeRet
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectWeatherAndSwitch::
+BattleScript_ChillyReceptionMessage::
 	printstring STRINGID_PKMNTELLCHILLINGRECEPTIONJOKE
 	waitmessage B_WAIT_TIME_LONG
-	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_EffectWeather
-	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_EffectWeather
+	return
+
+BattleScript_EffectWeatherAndSwitch::
 	attackcanceler
+	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_EffectWeatherSetWeather
+	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_EffectWeatherSetWeather
 	setfieldweather
 	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	attackanimation
