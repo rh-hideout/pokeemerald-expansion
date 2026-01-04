@@ -42,6 +42,12 @@ struct BattleAnimBackground
     const u32 *tilemap;
 };
 
+struct BattleAnimation
+{
+    struct CompressedSpriteSheet pic;
+    struct SpritePalette palette;
+};
+
 // Helper struct for link battles to show correct animations and transformations that can change their look
 // Used by EmitBattleAnimation and EmitMoveAnimation
 struct LinkBattleAnim
@@ -449,6 +455,7 @@ extern const struct OamData gOamData_AffineOff_ObjBlend_64x32;
 extern const struct OamData gOamData_AffineOff_ObjBlend_16x32;
 extern const struct OamData gOamData_AffineDouble_ObjBlend_32x8;
 
+extern const struct BattleAnimation gBattleAnimTable[];
 extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
 extern const struct SpritePalette gBattleAnimPaletteTable[];
 
