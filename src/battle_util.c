@@ -10936,7 +10936,7 @@ bool8 CanMonParticipateInSkyBattle(struct Pokemon *mon)
 
     if (monIsValidAndNotEgg)
     {
-        if ((hasLevitateAbility || isFlyingType) && !gSpeciesInfo[species].isFrontierBanned)
+        if ((hasLevitateAbility || isFlyingType) && !gSpeciesInfo[species].isSkyBattleBanned)
             return TRUE;
     }
     return FALSE;
