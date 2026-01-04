@@ -612,9 +612,6 @@ void HandleAction_UseMove(void)
         else
         {
             gBattlerTarget = gBattleStruct->moveTarget[gBattlerAttacker];
-            // if (gBattlerAttacker == 0)
-            //     DebugPrintf("gBattlerTarget %d", gBattlerTarget);
-
             if (!IsBattlerAlive(gBattlerTarget)
             && moveTarget != TARGET_OPPONENTS_FIELD
             && IsDoubleBattle()
@@ -3114,9 +3111,16 @@ static enum MoveCanceler CancelerTookAttack(struct BattleContext *ctx)
 #define skipFailure TRUE
 static bool32 IsSingleTarget(u32 battlerAtk, u32 battlerDef)
 {
-    if (gCurrentMove == MOVE_DRAGON_DARTS) // Handle partner
-        return battlerAtk == BATTLE_PARTNER(battlerDef);
-    return battlerDef != gBattlerTarget;
+    if (battlerDef != gBattlerTarget)
+        return skipFailure;
+    return checkFailure;
+}
+
+static bool32 IsSmartTarget(u32 battlerAtk, u32 battlerDef)
+{
+    if (battlerAtk == BATTLE_PARTNER(battlerDef))
+        return skipFailure;
+    return checkFailure;
 }
 
 static bool32 IsTargetingBothFoes(u32 battlerAtk, u32 battlerDef)
@@ -3199,8 +3203,6 @@ static bool32 IsTargetingAllBattlers(u32 battlerAtk, u32 battlerDef)
         return skipFailure; // In Gen3 the user checks it's own failure
     return checkFailure;
 }
-#undef checkFailure
-#undef skipFailure
 
 // ShouldCheckFailureOnTarget
 static bool32 (*const sShouldCheckTargetMoveFailure[])(u32 battlerAtk, u32 battlerDef) =
@@ -3212,6 +3214,7 @@ static bool32 (*const sShouldCheckTargetMoveFailure[])(u32 battlerAtk, u32 battl
     [TARGET_RANDOM] = IsSingleTarget,
     [TARGET_BOTH] = IsTargetingBothFoes,
     [TARGET_USER] = IsTargetingSelf,
+    [TARGET_SMART] = IsSmartTarget,
     [TARGET_ALLY] = IsTargetingAlly,
     [TARGET_USER_AND_ALLY] = IsTargetingSelfAndAlly,
     [TARGET_USER_OR_ALLY] = IsTargetingSelfOrAlly,
@@ -3224,15 +3227,21 @@ static bool32 (*const sShouldCheckTargetMoveFailure[])(u32 battlerAtk, u32 battl
 static bool32 ShouldCheckTargetMoveFailure(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTarget)
 {
     if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
-        return TRUE;
+        return skipFailure;
+
+    if (moveTarget == TARGET_FIELD || moveTarget == TARGET_OPPONENTS_FIELD)
+        return skipFailure; // Don't set any result flags
 
     if (!IsBattlerAlive(battlerDef))
     {
         gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FAILED;
-        return TRUE;
+        return skipFailure;
     }
+
     return sShouldCheckTargetMoveFailure[moveTarget](battlerAtk, battlerDef);
 }
+#undef checkFailure
+#undef skipFailure
 
 static enum MoveCanceler CancelerTargetFailures(struct BattleContext *ctx)
 {
@@ -3292,14 +3301,21 @@ static enum MoveCanceler CancelerTargetFailures(struct BattleContext *ctx)
         }
         else if (CanMoveBeBlockedByTarget(ctx, movePriority))
         {
+            
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED; // Not sure. maybe worth having a new flag?
+            targetAvoidedAttack = TRUE;
+        }
+        else if (GetMoveEffect(ctx->move) == EFFECT_SYNCHRONOISE && !DoBattlersShareType(ctx->battlerAtk, ctx->battlerDef))
+        {
+            gBattleStruct->moveResultFlags[ctx->battlerDef] = MOVE_RESULT_NO_EFFECT;
+            BattleScriptCall(BattleScript_ItDoesntAffectFoe);
             targetAvoidedAttack = TRUE;
         }
         else
         {
             CalcTypeEffectivenessMultiplier(ctx);
 
-            // Hack for status moves that handle their failure later (thuner wave).
+            // Hack for status moves that handle their failure later
             if (GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS)
                 gBattleStruct->moveResultFlags[ctx->battlerDef] = 0;
 
@@ -3362,9 +3378,7 @@ static void SetPossibleNewSmartTarget(u32 move)
      || gBattlerAttacker == partner
      || !IsBattlerAlive(partner)
      || IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), move)
-     // || GetMoveEffect(move) != EFFECT_DRAGON_DARTS
-
-     )
+     || GetBattlerMoveTargetType(gBattlerAttacker, move) != TARGET_SMART)
         return;
 
     if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT
@@ -12146,6 +12160,8 @@ bool32 BreaksThroughSemiInvulnerablity(u32 battlerAtk, u32 battlerDef, enum Abil
         if (move == MOVE_TOXIC && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
             return TRUE;
         if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
+            return TRUE;
+        if (gBattleMons[battlerDef].volatiles.lockOn && gBattleMons[battlerDef].volatiles.battlerWithSureHit == battlerAtk)
             return TRUE;
     }
 

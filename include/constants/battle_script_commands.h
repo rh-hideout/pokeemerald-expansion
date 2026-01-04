@@ -76,10 +76,6 @@
 #define BS_ABILITY_BATTLER          15
 #define BS_ATTACKER_PARTNER         16
 
-// Cmd_accuracycheck
-#define NO_ACC_CALC_CHECK_LOCK_ON 0xFFFF
-#define ACC_CURR_MOVE 0
-
 // compare operands
 #define CMP_EQUAL               0
 #define CMP_NOT_EQUAL           1

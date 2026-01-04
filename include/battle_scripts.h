@@ -757,7 +757,6 @@ extern const u8 BattleScript_FinalGambit[];
 extern const u8 BattleScript_EffectAutotomize[];
 extern const u8 BattleScript_EffectDefog[];
 extern const u8 BattleScript_EffectHitEnemyHealAlly[];
-extern const u8 BattleScript_EffectSynchronoise[];
 extern const u8 BattleScript_EffectPsychoShift[];
 extern const u8 BattleScript_EffectPowerTrick[];
 extern const u8 BattleScript_EffectAfterYou[];

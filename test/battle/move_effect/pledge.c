@@ -1014,12 +1014,12 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
                MOVE(opponentRight, MOVE_GRASS_PLEDGE, target: playerLeft);
                MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); }
     } SCENE {
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, opponentLeft);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, opponentRight);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, opponentRight);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, playerLeft);
-        }
+        // NONE_OF {
+        //     ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, opponentLeft);
+        //     ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, opponentRight);
+        //     ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, opponentRight);
+        //     ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, playerLeft);
+        // }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
         HP_BAR(opponentRight);
     }

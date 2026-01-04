@@ -3,10 +3,9 @@
 	.byte 0x0
 	.endm
 
-	.macro accuracycheck failInstr:req, move:req
+	.macro accuracycheck failInstr:req
 	.byte 0x1
 	.4byte \failInstr
-	.2byte \move
 	.endm
 
 	.macro printattackstring
@@ -1867,11 +1866,6 @@
 	.macro tryactivateabilityshield battler:req
 	callnative BS_TryActivateAbilityShield
 	.byte \battler
-	.endm
-
-	.macro trysynchronoise jumpInstr:req
-	callnative BS_TrySynchronoise
-	.4byte \jumpInstr
 	.endm
 
 	.macro jumpifroarfails jumpInstr:req
