@@ -11435,10 +11435,14 @@ static void Cmd_disablelastusedattack(void)
         gDisableStructs[gBattlerTarget].disabledMove = gBattleMons[gBattlerTarget].moves[i];
         if (B_DISABLE_TURNS >= GEN_5)
             gDisableStructs[gBattlerTarget].disableTimer = 4;
-        else if (B_DISABLE_TURNS >= GEN_4)
+        else if (B_DISABLE_TURNS == GEN_4)
             gDisableStructs[gBattlerTarget].disableTimer = (Random() & 3) + 4; // 4-7 turns
-        else
+        else if (B_DISABLE_TURNS == GEN_3)
             gDisableStructs[gBattlerTarget].disableTimer = (Random() & 3) + 2; // 2-5 turns
+        else if (B_DISABLE_TURNS == GEN_2)
+            gDisableStructs[gBattlerTarget].disableTimer = (Random() & 6) + 1; // 1-7 turns
+        else
+            gDisableStructs[gBattlerTarget].disableTimer = (Random() & 7); // 0-7 turns
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
