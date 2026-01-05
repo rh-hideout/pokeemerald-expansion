@@ -5907,12 +5907,12 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
          && !gBattleStruct->noTargetPresent)
         {
             s32 recoil = 0;
+            if (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE)
+                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
             if (B_RECOIL_IF_MISS_DMG >= GEN_5)
                 recoil = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else if (B_RECOIL_IF_MISS_DMG >= GEN_3)
-                if (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE)
-                    recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
-                else if ((GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
+                if ((GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
                     recoil = gBattleStruct->moveDamage[gBattlerTarget];
                 else
                     recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
