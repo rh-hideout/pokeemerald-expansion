@@ -5918,13 +5918,9 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
             else if (B_RECOIL_IF_MISS_DMG >= GEN_3)
             {
                 if ((GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
-                {
                     recoil = gBattleStruct->moveDamage[gBattlerTarget];
-                }
                 else
-                {
                     recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
-                }
             }
             else if (B_RECOIL_IF_MISS_DMG == GEN_2)
             {
