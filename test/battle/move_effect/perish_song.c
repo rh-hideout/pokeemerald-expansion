@@ -3,13 +3,7 @@
 
 TO_DO_BATTLE_TEST("TODO: Write Perish Song (Move Effect) test titles")
 
-#define NOT_PERISHI_SONG_AFFECTED \
-    NONE_OF { \
-        MESSAGE("Lanturn's perish count fell to 3!"); \
-        MESSAGE("Voltorb's perish count fell to 3!"); \
-    } \
-
-DOUBLE_BATTLE_TEST("Perish Song will be can be absrobed and will not effect those")
+DOUBLE_BATTLE_TEST("Perish Song can be absorbed and will not affect those that absorbed it")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -29,19 +23,13 @@ DOUBLE_BATTLE_TEST("Perish Song will be can be absrobed and will not effect thos
         ABILITY_POPUP(playerRight, ABILITY_VOLT_ABSORB);
         ABILITY_POPUP(opponentRight, ABILITY_SOUNDPROOF);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, playerLeft);
-        NOT_PERISHI_SONG_AFFECTED;
-        MESSAGE("The opposing Wobbuffet's perish count fell to 3!");
-        NOT_PERISHI_SONG_AFFECTED;
-        MESSAGE("Wobbuffet's perish count fell to 3!");
-        NOT_PERISHI_SONG_AFFECTED;
-        MESSAGE("The opposing Wobbuffet's perish count fell to 2!");
-        MESSAGE("Wobbuffet's perish count fell to 2!");
-        MESSAGE("The opposing Wobbuffet's perish count fell to 1!");
-        MESSAGE("Wobbuffet's perish count fell to 1!");
-        MESSAGE("The opposing Wobbuffet's perish count fell to 0!");
         HP_BAR(opponentLeft);
-        MESSAGE("Wobbuffet's perish count fell to 0!");
         HP_BAR(playerLeft);
+    } THEN {
+        EXPECT_EQ(playerLeft->hp, 0);
+        EXPECT_EQ(opponentLeft->hp, 0);
+        EXPECT_GT(playerRight->hp, 0);
+        EXPECT_GT(opponentRight->hp, 0);
     }
 }
 

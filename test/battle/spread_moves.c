@@ -456,23 +456,6 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
     }
 }
 
-DOUBLE_BATTLE_TEST("test x")
-{
-    GIVEN {
-        PLAYER(SPECIES_GARDEVOIR);
-        PLAYER(SPECIES_LANTURN) { HP(1); Ability(ABILITY_VOLT_ABSORB); }
-        OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
-        OPPONENT(SPECIES_VOLTORB) { Ability(ABILITY_SOUNDPROOF); }
-    } WHEN {
-        TURN {
-            MOVE(opponentLeft, MOVE_ELECTRIFY, target: playerLeft);
-            MOVE(playerLeft, MOVE_PERISH_SONG);
-        }
-        TURN {}
-    } SCENE {
-    }
-}
-
 DOUBLE_BATTLE_TEST("Spread Moves: AOE ground type move vs Levitate and Air Balloon")
 {
     GIVEN {

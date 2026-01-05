@@ -275,6 +275,8 @@ SINGLE_BATTLE_TEST("Teatime triggers Motor Drive if it has been affected by Elec
         }
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Teatime!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
+        MESSAGE("Using Liechi Berry, the Attack of the opposing Wobbuffet rose!");
         if (shouldTriggerAbility) {
             ABILITY_POPUP(player, ABILITY_MOTOR_DRIVE);
             MESSAGE("Electivire's Speed rose!");
@@ -284,12 +286,10 @@ SINGLE_BATTLE_TEST("Teatime triggers Motor Drive if it has been affected by Elec
                 MESSAGE("Electivire's Speed rose!");
             }
         }
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
         if (shouldTriggerAbility) {
             NOT MESSAGE("Using Liechi Berry, the Attack of Electivire rose!");
         } else {
             MESSAGE("Using Liechi Berry, the Attack of Electivire rose!");
         }
-        MESSAGE("Using Liechi Berry, the Attack of the opposing Wobbuffet rose!");
     }
 }

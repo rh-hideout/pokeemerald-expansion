@@ -457,10 +457,10 @@ BattleScript_EffectTeatimeNextTarget:
 	consumeberry BS_TARGET, TRUE @ consume the berry, then restore the item from changedItems
 	setbyte sBERRY_OVERRIDE, FALSE
 	removeitem BS_TARGET
-	moveendcase MOVEEND_UPDATE_LAST_MOVES @Update moves for affected target
+	moveendcase MOVEEND_NEXT_TARGET
 BattleScript_EffectTeatimeGetTarget:
 	getpossiblenexttarget BattleScript_EffectTeatimeNextTarget
-	moveendfrom MOVEEND_CLEAR_BITS
+	moveendfrom MOVEEND_ITEM_EFFECTS_ATTACKER_2
 	end
 
 BattleScript_AffectionBasedEndurance::
@@ -1270,7 +1270,7 @@ BattleScript_FlowerShieldMoveTargetEnd:
 	moveendto MOVEEND_NEXT_TARGET
 	jumpifnexttargetvalid BattleScript_FlowerShieldLoop
 	restoretarget
-	moveendfrom MOVEEND_ITEM_EFFECTS_ATTACKER_1
+	moveendfrom MOVEEND_ITEM_EFFECTS_ATTACKER_2
 	end
 
 BattleScript_EffectRototiller::
@@ -1297,10 +1297,10 @@ BattleScript_RototillerTrySpAtk::
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_EffectRototillerMoves:
-	moveendcase MOVEEND_UPDATE_LAST_MOVES @Update moves for affected target
+	moveendcase MOVEEND_NEXT_TARGET
 BattleScript_EffectRototillerGetTarget:
 	getpossiblenexttarget BattleScript_RototillerLoop
-	moveendfrom MOVEEND_CLEAR_BITS
+	moveendfrom MOVEEND_ITEM_EFFECTS_ATTACKER_2
 	end
 
 BattleScript_RototillerCantRaiseMultipleStats:

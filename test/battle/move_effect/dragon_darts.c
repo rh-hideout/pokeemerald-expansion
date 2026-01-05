@@ -323,5 +323,8 @@ DOUBLE_BATTLE_TEST("Dragon Darts will activate both targets abilities and hit no
             MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }
 }

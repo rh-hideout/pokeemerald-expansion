@@ -63,8 +63,14 @@ static bool32 IsOpposingSideEmpty(u32 battler);
 static void ResetParadoxWeatherStat(u32 battler);
 static void ResetParadoxTerrainStat(u32 battler);
 static bool32 CanBattlerFormChange(u32 battler, enum FormChanges method);
-static bool32 DoesMoveDoHalfDamage(struct BattleContext *ctx);
+static bool32 CantFullyProtectFromMove(struct BattleContext *ctx);
 static bool32 CanBattlerBounceBackMove(struct BattleContext *ctx);
+static bool32 IsPowderMoveBlocked(struct BattleContext *ctx);
+const u8 *AbsorbedByDrainHpAbility(u32 battlerDef);
+const u8 *AbsorbedByStatIncreaseAbility(u32 battlerDef, enum Ability abilityDef, enum Stat statId, u32 statAmount);
+const u8 *AbsorbedByFlashFire(u32 battlerDef);
+static bool32 TryMagicBounce(struct BattleContext *ctx);
+static bool32 TryMagicCoat(struct BattleContext *ctx);
 
 // Submoves
 static enum Move GetMirrorMoveMove(void);
@@ -2696,7 +2702,7 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
-// We don't have clear data on where this belongs to so but I assume it should at least be checked before Protean
+// We don't have clear data on where this belongs to but I assume it should at least be checked before Protean
 static enum MoveCanceler CancelerSkyBattle(struct BattleContext *ctx)
 {
     if (gBattleStruct->isSkyBattle && IsMoveSkyBattleBanned(gCurrentMove))
@@ -2921,14 +2927,14 @@ static enum MoveCanceler CancelerPriorityBlock(struct BattleContext *ctx)
     bool32 effect = FALSE;
     s32 priority = GetChosenMovePriority(ctx->battlerAtk, ctx->abilityAtk);
 
-    if (priority <= 0 || IsBattlerAlly(ctx->battlerAtk, ctx->battlerDef))
+    if (priority <= 0)
         return MOVE_STEP_SUCCESS;
 
     u32 battler;
     u32 ability = ABILITY_NONE; // ability of battler who is blocking
     for (battler = 0; battler < gBattlersCount; battler++)
     {
-        if (!IsBattlerAlive(battler))
+        if (!IsBattlerAlive(battler) || IsBattlerAlly(ctx->battlerAtk, ctx->battlerDef))
             continue;
 
         ability = GetBattlerAbility(battler);
@@ -3282,7 +3288,7 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
             BattleScriptCall(BattleScript_TargetProtected);
             targetAvoidedAttack = TRUE;
         }
-        else if (DoesMoveDoHalfDamage(ctx))
+        else if (CantFullyProtectFromMove(ctx))
         {
             BattleScriptCall(BattleScript_CouldntFullyProtect);
             targetAvoidedAttack = TRUE;
@@ -3519,13 +3525,21 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
 };
 
-enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx)
+enum MoveCanceler AtkCanceler_MoveSuccessOrder(void)
 {
     enum MoveCanceler effect = MOVE_STEP_SUCCESS;
 
+    struct BattleContext ctx = {0};
+    ctx.battlerAtk = gBattlerAttacker;
+    ctx.battlerDef = gBattlerTarget;
+    ctx.move = gCurrentMove;
+    ctx.chosenMove = gChosenMove;
+    ctx.abilityAtk = GetBattlerAbility(ctx.battlerAtk);
+    ctx.holdEffectAtk = GetBattlerHoldEffect(ctx.battlerAtk);
+
     while (gBattleStruct->eventState.atkCanceler < CANCELER_END && effect == MOVE_STEP_SUCCESS)
     {
-        effect = sMoveSuccessOrderCancelers[gBattleStruct->eventState.atkCanceler](ctx);
+        effect = sMoveSuccessOrderCancelers[gBattleStruct->eventState.atkCanceler](&ctx);
         gBattleStruct->unableToUseMove = (effect == MOVE_STEP_FAILURE);
         if (effect != MOVE_STEP_PAUSE)
             gBattleStruct->eventState.atkCanceler++;
@@ -3933,8 +3947,6 @@ void ChooseStatBoostAnimation(u32 battler)
 #undef ANIM_STAT_ACC
 #undef ANIM_STAT_EVASION
 
-static bool32 IsPowderMoveBlocked(struct BattleContext *ctx);
-
 bool32 CanMoveBeBlockedByTarget(struct BattleContext *ctx, s32 movePriority)
 {
     return CanPsychicTerrainProtectTarget(ctx, movePriority)
@@ -3988,10 +4000,6 @@ static bool32 IsPowderMoveBlocked(struct BattleContext *ctx)
 
     return TRUE;
 }
-
-const u8 *AbsorbedByDrainHpAbility(u32 battlerDef);
-const u8 *AbsorbedByStatIncreaseAbility(u32 battlerDef, enum Ability abilityDef, enum Stat statId, u32 statAmount);
-const u8 *AbsorbedByFlashFire(u32 battlerDef);
 
 bool32 CanAbilityAbsorbMove(struct BattleContext *ctx)
 {
@@ -4113,9 +4121,6 @@ const u8 *AbsorbedByFlashFire(u32 battlerDef)
         return BattleScript_FlashFireBoost;
     }
 }
-
-static bool32 TryMagicBounce(struct BattleContext *ctx);
-static bool32 TryMagicCoat(struct BattleContext *ctx);
 
 static bool32 CanBattlerBounceBackMove(struct BattleContext *ctx)
 {
@@ -7482,7 +7487,7 @@ bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, enum Ability abilityA
     return TRUE;
 }
 
-static bool32 DoesMoveDoHalfDamage(struct BattleContext *ctx)
+static bool32 CantFullyProtectFromMove(struct BattleContext *ctx)
 {
     if (MoveIgnoresProtect(ctx->move))
         return FALSE;
@@ -9997,26 +10002,26 @@ static uq4_12_t GetInverseTypeMultiplier(uq4_12_t multiplier)
 uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
 {
     uq4_12_t modifier = UQ_4_12(1.0);
-    enum Ability abilityDef = GetMonAbility(mon);
-    u16 speciesDef = GetMonData(mon, MON_DATA_SPECIES);
-    enum Type type1 = GetSpeciesType(speciesDef, 0);
-    enum Type type2 = GetSpeciesType(speciesDef, 1);
 
     if (moveType == TYPE_MYSTERY)
         return modifier;
 
     struct BattleContext ctx = {0};
+    ctx.battlerDef = GetMonData(mon, MON_DATA_SPECIES);
+    ctx.abilityDef = GetMonAbility(mon);
     ctx.move = ctx.chosenMove = MOVE_POUND;
     ctx.moveType = moveType;
     ctx.updateFlags = FALSE;
+
+    enum Type type1 = GetSpeciesType(ctx.battlerDef, 0);
+    enum Type type2 = GetSpeciesType(ctx.battlerDef, 1);
 
     MulByTypeEffectiveness(&ctx, &modifier, type1);
     if (type2 != type1)
         MulByTypeEffectiveness(&ctx, &modifier, type2);
 
-    if ((modifier <= UQ_4_12(1.0) && abilityDef == ABILITY_WONDER_GUARD)
-     // || CanAbilityAbsorbMove(0, 0, abilityDef, MOVE_NONE, moveType, CHECK_TRIGGER) // TODO
-     )
+    if ((modifier <= UQ_4_12(1.0) && ctx.abilityDef == ABILITY_WONDER_GUARD) 
+     || CanAbilityAbsorbMove(&ctx))
         modifier = UQ_4_12(0.0);
 
     return modifier;

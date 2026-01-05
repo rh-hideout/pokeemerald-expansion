@@ -1038,19 +1038,8 @@ static void Cmd_attackcanceler(void)
         return;
     }
 
-    struct BattleContext ctx = {0};
-    ctx.battlerAtk = gBattlerAttacker;
-    ctx.battlerDef = gBattlerTarget;
-    ctx.move = gCurrentMove;
-    ctx.chosenMove = gChosenMove;
-
-    if (CANCELER_MULTIHIT_MOVES < CANCELER_END)
-    {
-        ctx.abilityAtk = GetBattlerAbility(ctx.battlerAtk);
-        ctx.holdEffectAtk = GetBattlerHoldEffect(ctx.battlerAtk);
-        if (AtkCanceler_MoveSuccessOrder(&ctx) != MOVE_STEP_SUCCESS)
-            return;
-    }
+    if (AtkCanceler_MoveSuccessOrder() != MOVE_STEP_SUCCESS)
+        return;
 
     if (gBattleStruct->magicBounceActive && !gBattleStruct->bouncedMoveIsUsed)
     {
@@ -1064,7 +1053,7 @@ static void Cmd_attackcanceler(void)
     {
         gBattleStruct->bouncedMoveIsUsed = TRUE;
         gBattleStruct->magicCoatActive = FALSE;
-        gBattlerTarget = gEffectBattler = gBattleStruct->moveBouncer;
+        gEffectBattler = gBattlerTarget = gBattleStruct->moveBouncer;
         BattleScriptCall(BattleScript_MagicCoat);
         return;
     }
@@ -1081,9 +1070,11 @@ static void Cmd_attackcanceler(void)
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        if ((gProtectStructs[gBattlerByTurnOrder[i]].stealMove)
-            && MoveCanBeSnatched(gCurrentMove)
-            && (B_SNATCH < GEN_5 || !gBattleStruct->snatchedMoveIsUsed))
+        if (!gProtectStructs[gBattlerByTurnOrder[i]].stealMove
+         || !MoveCanBeSnatched(gCurrentMove))
+            continue;
+
+        if (B_SNATCH < GEN_5 || !gBattleStruct->snatchedMoveIsUsed)
         {
             gProtectStructs[gBattlerByTurnOrder[i]].stealMove = FALSE;
             gBattleStruct->snatchedMoveIsUsed = TRUE;
@@ -1248,14 +1239,26 @@ static void Cmd_printattackstring(void)
 
 static u32 GetAnyPossibleNextTarget(void)
 {
-    u32 battler;
-    for (battler = 0; battler < gBattlersCount; battler++)
+    const u8 order[MAX_BATTLERS_COUNT] = {
+        gBattlerAttacker,
+        BATTLE_PARTNER(gBattlerAttacker),
+        BATTLE_OPPOSITE(gBattlerAttacker),
+        BATTLE_OPPOSITE(BATTLE_PARTNER(gBattlerAttacker)),
+    };
+
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
+        u32 battler = order[i];
+
+        if (!IsBattlerAlive(battler))
+            continue;
+
         if (!gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler]
          && !(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT))
-            break;
+            return battler;
     }
-    return battler;
+
+    return MAX_BATTLERS_COUNT;
 }
 
 static void Cmd_getpossiblenexttarget(void)
@@ -1263,7 +1266,7 @@ static void Cmd_getpossiblenexttarget(void)
     CMD_ARGS(const u8 *jumpInstr);
 
     u32 nextTarget = GetAnyPossibleNextTarget();
-    if (nextTarget != gBattlersCount)
+    if (nextTarget != MAX_BATTLERS_COUNT)
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget;
         gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
@@ -5048,33 +5051,6 @@ static inline bool32 IsProtectivePadsProtected(u32 battler, enum HoldEffect hold
     return TRUE;
 }
 
-static inline bool32 CanEjectButtonTrigger(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect)
-{
-    if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_BUTTON
-     && battlerAtk != battlerDef
-     && IsBattlerTurnDamaged(battlerDef)
-     && IsBattlerAlive(battlerDef)
-     && CountUsablePartyMons(battlerDef) > 0
-     && !(moveEffect == EFFECT_HIT_SWITCH_TARGET && CanBattlerSwitch(battlerAtk)))
-        return TRUE;
-
-    return FALSE;
-}
-
-static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect)
-{
-    if (gBattleMons[battlerDef].volatiles.tryEjectPack
-     && GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_PACK
-     && IsBattlerAlive(battlerDef)
-     && CountUsablePartyMons(battlerDef) > 0
-     && !gProtectStructs[battlerDef].disableEjectPack
-     && !(moveEffect == EFFECT_HIT_SWITCH_TARGET && CanBattlerSwitch(battlerAtk))
-     && !(moveEffect == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))
-        return TRUE;
-
-    return FALSE;
-}
-
 static void Cmd_moveend(void)
 {
     CMD_ARGS(u8 endMode, u8 endState);
@@ -6327,15 +6303,7 @@ static void Cmd_futuresighttargetfailure(void)
         return;
     }
 
-    struct BattleContext ctx = {0};
-    ctx.battlerAtk = gBattlerAttacker;
-    ctx.battlerDef = gBattlerTarget;
-    ctx.move = gCurrentMove;
-    ctx.chosenMove = gChosenMove;
-    ctx.abilityAtk = GetBattlerAbility(ctx.battlerAtk);
-    ctx.holdEffectAtk = GetBattlerHoldEffect(ctx.battlerAtk);
-
-    if (AtkCanceler_MoveSuccessOrder(&ctx) != MOVE_STEP_SUCCESS)
+    if (AtkCanceler_MoveSuccessOrder() != MOVE_STEP_SUCCESS)
         return;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -7399,7 +7367,6 @@ static void Cmd_setseeded(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-// TODO: Needs tests for everything
 static void Cmd_manipulatedamage(void)
 {
     CMD_ARGS(u8 mode);
