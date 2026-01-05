@@ -403,7 +403,8 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         sBattleAnimScriptPtr = sBattleAnims_General[animId];
         break;
     case ANIM_TYPE_MOVE:
-        if (animId == MOVE_SECRET_POWER){
+        if (animId == MOVE_SECRET_POWER)
+        {
             if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
             {
                 switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
@@ -423,10 +424,14 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
                 }
             }
             else
+            {
                 sBattleAnimScriptPtr = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerAnimation;
+            }
         }
         else
+        {
             sBattleAnimScriptPtr = GetMoveAnimationScript(animId);
+        }
 
         break;
     case ANIM_TYPE_STATUS:
