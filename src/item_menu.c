@@ -2096,9 +2096,9 @@ static void ItemMenu_UseInBattle(u8 taskId)
         return;
 
     RemoveContextWindow();
-    if (type == ITEM_USE_BAG_MENU)
+    if (type == ITEM_USE_BAG_MENU || (type == ITEM_USE_BATTLER && !IsDoubleBattle()))
         ItemUseInBattle_BagMenu(taskId);
-    else if (type == ITEM_USE_PARTY_MENU)
+    else if (type == ITEM_USE_PARTY_MENU || (type == ITEM_USE_BATTLER && IsDoubleBattle()))
         ItemUseInBattle_PartyMenu(taskId);
     else if (type == ITEM_USE_PARTY_MENU_MOVES)
         ItemUseInBattle_PartyMenuChooseMove(taskId);
@@ -2668,7 +2668,7 @@ static void PrepareTMHMMoveWindow(void)
 static void PrintTMHMMoveData(u16 itemId)
 {
     u8 i;
-    u16 move;
+    enum Move move;
     const u8 *text;
 
     FillWindowPixelBuffer(WIN_TMHM_INFO, PIXEL_FILL(0));

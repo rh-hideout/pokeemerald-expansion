@@ -416,7 +416,7 @@ struct PokenavMatchCallEntry *GetMatchCallList(void);
 mapsec_u16_t GetMatchCallMapSec(int index);
 bool32 ShouldDrawRematchPokeballIcon(int index);
 void ClearRematchPokeballIcon(u16 windowId, u32 tileOffset);
-int GetMatchCallTrainerPic(int index);
+enum TrainerPicID GetMatchCallTrainerPic(int index);
 const u8 *GetMatchCallFlavorText(int index, int checkPageEntry);
 const u8 *GetMatchCallMessageText(int index, bool8 *newRematchRequest);
 u16 GetMatchCallOptionCursorPos(void);

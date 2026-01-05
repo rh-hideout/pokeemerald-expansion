@@ -239,7 +239,6 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingBrendan = {
     .oam = &gObjectEventOam_ORASDowse,
     .anims = sAnimTable_ORASDowsing,
     .images = sPicTable_ORASDowsingBrendan,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateORASDowsingFieldEffect,
 };
 
@@ -249,7 +248,6 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingMay = {
     .oam = &gObjectEventOam_ORASDowse,
     .anims = sAnimTable_ORASDowsing,
     .images = sPicTable_ORASDowsingMay,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateORASDowsingFieldEffect,
 };
 

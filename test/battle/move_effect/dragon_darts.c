@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_DRAGON_DARTS) == EFFECT_DRAGON_DARTS);
+    ASSUME(GetMoveTarget(MOVE_DRAGON_DARTS) == TARGET_SMART);
 }
 
 SINGLE_BATTLE_TEST("Dragon Darts strikes twice")

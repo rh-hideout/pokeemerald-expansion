@@ -217,7 +217,7 @@ SINGLE_BATTLE_TEST("Sky Attack doesn't need to charge with Power Herb")
 
 SINGLE_BATTLE_TEST("Solar Beam and Solar Blade can be used instantly in Sunlight")
 {
-    u32 move1, move2;
+    enum Move move1, move2;
     PARAMETRIZE { move1 = MOVE_SPLASH; move2 = MOVE_SOLAR_BEAM; }
     PARAMETRIZE { move1 = MOVE_SUNNY_DAY; move2 = MOVE_SOLAR_BEAM; }
     PARAMETRIZE { move1 = MOVE_SPLASH; move2 = MOVE_SOLAR_BLADE; }
@@ -264,7 +264,7 @@ SINGLE_BATTLE_TEST("Solar Beam and Solar Blade can be used instantly in Sunlight
 
 SINGLE_BATTLE_TEST("Solar Beam's power is halved in Rain", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_RAIN_DANCE; }
     GIVEN {
@@ -282,7 +282,7 @@ SINGLE_BATTLE_TEST("Solar Beam's power is halved in Rain", s16 damage)
 
 SINGLE_BATTLE_TEST("Solar Blade's power is halved in Rain", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_RAIN_DANCE; }
     GIVEN {
@@ -300,7 +300,7 @@ SINGLE_BATTLE_TEST("Solar Blade's power is halved in Rain", s16 damage)
 
 SINGLE_BATTLE_TEST("Solar Beam's power is halved in a Sandstorm", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
@@ -318,7 +318,7 @@ SINGLE_BATTLE_TEST("Solar Beam's power is halved in a Sandstorm", s16 damage)
 
 SINGLE_BATTLE_TEST("Solar Blade's power is halved in a Sandstorm", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
@@ -336,7 +336,7 @@ SINGLE_BATTLE_TEST("Solar Blade's power is halved in a Sandstorm", s16 damage)
 
 SINGLE_BATTLE_TEST("Solar Beam's power is halved in Hail", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_HAIL; }
     GIVEN {
@@ -354,7 +354,7 @@ SINGLE_BATTLE_TEST("Solar Beam's power is halved in Hail", s16 damage)
 
 SINGLE_BATTLE_TEST("Solar Blade's power is halved in Hail", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_HAIL; }
     GIVEN {
@@ -372,7 +372,7 @@ SINGLE_BATTLE_TEST("Solar Blade's power is halved in Hail", s16 damage)
 
 SINGLE_BATTLE_TEST("Solar Beam's power is halved in Snow", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     GIVEN {
@@ -390,7 +390,7 @@ SINGLE_BATTLE_TEST("Solar Beam's power is halved in Snow", s16 damage)
 
 SINGLE_BATTLE_TEST("Solar Blade's power is halved in Snow", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     GIVEN {

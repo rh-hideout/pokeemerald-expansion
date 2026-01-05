@@ -2,6 +2,7 @@
 #include "follower_npc.h"
 #include "follower_npc_alternate_sprites.h"
 #include "battle.h"
+#include "battle_partner.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
 #include "bike.h"

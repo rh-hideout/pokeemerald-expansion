@@ -231,19 +231,11 @@ static const struct SpriteTemplate sHealthboxPlayerSpriteTemplates[2] =
         .tileTag = TAG_HEALTHBOX_PLAYER1_TILE,
         .paletteTag = TAG_HEALTHBOX_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_HEALTHBOX_PLAYER2_TILE,
         .paletteTag = TAG_HEALTHBOX_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy
     }
 };
 
@@ -253,19 +245,11 @@ static const struct SpriteTemplate sHealthboxOpponentSpriteTemplates[2] =
         .tileTag = TAG_HEALTHBOX_OPPONENT1_TILE,
         .paletteTag = TAG_HEALTHBOX_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_HEALTHBOX_OPPONENT2_TILE,
         .paletteTag = TAG_HEALTHBOX_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy
     }
 };
 
@@ -274,10 +258,6 @@ static const struct SpriteTemplate sHealthboxSafariSpriteTemplate =
     .tileTag = TAG_HEALTHBOX_SAFARI_TILE,
     .paletteTag = TAG_HEALTHBOX_PAL,
     .oam = &sOamData_64x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOamData_Healthbar =
@@ -303,36 +283,24 @@ static const struct SpriteTemplate sHealthbarSpriteTemplates[MAX_BATTLERS_COUNT]
         .tileTag = TAG_HEALTHBAR_PLAYER1_TILE,
         .paletteTag = TAG_HEALTHBAR_PAL,
         .oam = &sOamData_Healthbar,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_HealthBar
     },
     {
         .tileTag = TAG_HEALTHBAR_OPPONENT1_TILE,
         .paletteTag = TAG_HEALTHBAR_PAL,
         .oam = &sOamData_Healthbar,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_HealthBar
     },
     {
         .tileTag = TAG_HEALTHBAR_PLAYER2_TILE,
         .paletteTag = TAG_HEALTHBAR_PAL,
         .oam = &sOamData_Healthbar,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_HealthBar
     },
     {
         .tileTag = TAG_HEALTHBAR_OPPONENT2_TILE,
         .paletteTag = TAG_HEALTHBAR_PAL,
         .oam = &sOamData_Healthbar,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_HealthBar
     }
 };
@@ -545,18 +513,12 @@ static const struct SpriteTemplate sStatusSummaryBarSpriteTemplates[2] =
         .tileTag = TAG_STATUS_SUMMARY_BAR_TILE,
         .paletteTag = TAG_STATUS_SUMMARY_BAR_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_StatusSummaryBar_Enter
     },
     { // Opponent
         .tileTag = TAG_STATUS_SUMMARY_BAR_TILE,
         .paletteTag = TAG_STATUS_SUMMARY_BAR_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_StatusSummaryBar_Enter
     }
 };
@@ -567,24 +529,18 @@ static const struct SpriteTemplate sStatusSummaryBallsSpriteTemplates[2] =
         .tileTag = TAG_STATUS_SUMMARY_BALLS_TILE,
         .paletteTag = TAG_STATUS_SUMMARY_BALLS_PAL,
         .oam = &sOamData_StatusSummaryBalls,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_StatusSummaryBalls_Enter
     },
     {
         .tileTag = TAG_STATUS_SUMMARY_BALLS_TILE,
         .paletteTag = TAG_STATUS_SUMMARY_BALLS_PAL,
         .oam = &sOamData_StatusSummaryBalls,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_StatusSummaryBalls_Enter
     }
 };
 
-static const u8 sEmptyWhiteText_GrayHighlight[] = __("{COLOR WHITE}{HIGHLIGHT DARK_GRAY}              ");
-static const u8 sEmptyWhiteText_TransparentHighlight[] = __("{COLOR WHITE}{HIGHLIGHT TRANSPARENT}              ");
+static const u8 sEmptyWhiteText_GrayHighlight[] = __("{COLOR WHITE}{BACKGROUND DARK_GRAY}{ACCENT DARK_GRAY}              ");
+static const u8 sEmptyWhiteText_TransparentHighlight[] = __("{COLOR WHITE}{BACKGROUND TRANSPARENT}{ACCENT TRANSPARENT}              ");
 
 enum
 {
@@ -996,7 +952,7 @@ static void UpdateOpponentHpTextDoubles(u32 healthboxSpriteId, u32 barSpriteId, 
         else
             var = 4;
 
-        txtPtr = ConvertIntToDecimalStringN(text + 6, value, STR_CONV_MODE_RIGHT_ALIGN, 3);
+        txtPtr = ConvertIntToDecimalStringN(text + 9, value, STR_CONV_MODE_RIGHT_ALIGN, 3);
         if (!maxOrCurrent)
             StringCopy(txtPtr, gText_Slash);
         RenderTextHandleBold(gMonSpritesGfxPtr->barFontGfx, FONT_BOLD, text);
@@ -1107,7 +1063,7 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, u32 maxOrCur
 // Prints mon's nature, catch and flee rate. Probably used to test pokeblock-related features.
 static void PrintSafariMonInfo(u8 healthboxSpriteId, struct Pokemon *mon)
 {
-    u8 text[20];
+    u8 text[23];
     s32 j, spriteTileNum;
     u8 *barFontGfx;
     u8 i, var, nature, healthBarSpriteId;
@@ -1116,10 +1072,10 @@ static void PrintSafariMonInfo(u8 healthboxSpriteId, struct Pokemon *mon)
     barFontGfx = &gMonSpritesGfxPtr->barFontGfx[0x520 + (GetBattlerPosition(gSprites[healthboxSpriteId].hMain_Battler) * 384)];
     var = 5;
     nature = GetNature(mon);
-    StringCopy(&text[6], gNaturesInfo[nature].name);
+    StringCopy(&text[9], gNaturesInfo[nature].name);
     RenderTextHandleBold(barFontGfx, FONT_BOLD, text);
 
-    for (j = 6, i = 0; i < var; i++, j++)
+    for (j = 9, i = 0; i < var; i++, j++)
     {
         u8 elementId;
 
@@ -1145,10 +1101,11 @@ static void PrintSafariMonInfo(u8 healthboxSpriteId, struct Pokemon *mon)
     }
 
     healthBarSpriteId = gSprites[healthboxSpriteId].hMain_HealthBarSpriteId;
-    ConvertIntToDecimalStringN(&text[6], gBattleStruct->safariCatchFactor, STR_CONV_MODE_RIGHT_ALIGN, 2);
-    ConvertIntToDecimalStringN(&text[9], gBattleStruct->safariEscapeFactor, STR_CONV_MODE_RIGHT_ALIGN, 2);
-    text[5] = CHAR_SPACE;
-    text[8] = CHAR_SLASH;
+    ConvertIntToDecimalStringN(&text[9], gBattleStruct->safariCatchFactor, STR_CONV_MODE_RIGHT_ALIGN, 2);
+    ConvertIntToDecimalStringN(&text[12], gBattleStruct->safariEscapeFactor, STR_CONV_MODE_RIGHT_ALIGN, 2);
+    text[5] = TEXT_COLOR_TRANSPARENT;
+    text[8] = TEXT_COLOR_TRANSPARENT;
+    text[11] = CHAR_SLASH;
     RenderTextHandleBold(gMonSpritesGfxPtr->barFontGfx, FONT_BOLD, text);
 
     j = healthBarSpriteId; // Needed to match for some reason.
@@ -2490,9 +2447,6 @@ static const struct SpriteTemplate sSpriteTemplate_AbilityPopUp =
     .tileTag = TAG_NONE, // Changed on the fly.
     .paletteTag = TAG_ABILITY_POP_UP,
     .oam = &sOamData_AbilityPopUp,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCb_AbilityPopUp
 };
 
@@ -2823,9 +2777,6 @@ static const struct SpriteTemplate sSpriteTemplate_LastUsedBallWindow =
     .tileTag = TAG_LAST_BALL_WINDOW,
     .paletteTag = TAG_ABILITY_POP_UP,
     .oam = &sOamData_LastUsedBall,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_LastUsedBallWin
 };
 
@@ -2853,9 +2804,6 @@ static const struct SpriteTemplate sSpriteTemplate_MoveInfoWindow =
     .tileTag = MOVE_INFO_WINDOW_TAG,
     .paletteTag = TAG_ABILITY_POP_UP,
     .oam = &sOamData_MoveInfoWindow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_MoveInfoWin
 };
 
