@@ -49,7 +49,7 @@ enum
     WINDOW_BATTLE_POINTS,
     WINDOW_DESCRIPTION,
     WINDOW_DUMMY,
-    WINDOW_COUNT
+    #define WINDOW_COUNT (WINDOW_DUMMY + 1)
 };
 
 // Windows displayed in the facilities map view.
@@ -58,7 +58,7 @@ enum
     MAP_WINDOW_UNUSED, // Overlaps the "Battle Frontier" title area of the map
     MAP_WINDOW_NAME,
     MAP_WINDOW_DESCRIPTION,
-    MAP_WINDOW_COUNT
+    #define MAP_WINDOW_COUNT (MAP_WINDOW_DESCRIPTION + 1)
 };
 
 enum
@@ -77,7 +77,7 @@ enum
     CURSOR_AREA_SYMBOL_FACTORY,
     CURSOR_AREA_SYMBOL_PIKE,
     CURSOR_AREA_SYMBOL_PYRAMID,
-    CURSOR_AREA_COUNT
+    #define CURSOR_AREA_COUNT (CURSOR_AREA_SYMBOL_PYRAMID + 1)
 };
 
 // Start of symbol cursor areas

@@ -146,14 +146,14 @@ enum {
     MATCH_BOTTOM_ROW,
     MATCH_NWSE_DIAG,
     MATCH_NESW_DIAG,
-    NUM_MATCH_LINES,
+    #define NUM_MATCH_LINES (MATCH_NESW_DIAG + 1)
 };
 
 enum {
     LEFT_REEL,
     MIDDLE_REEL,
     RIGHT_REEL,
-    NUM_REELS,
+    #define NUM_REELS (RIGHT_REEL + 1)
 };
 
 enum {
@@ -261,7 +261,7 @@ enum {
     DIG_SPRITE_REG_E,
     DIG_SPRITE_REG_G,
     DIG_SPRITE_EMPTY,
-    NUM_DIG_DISPLAY_SPRITES
+    #define NUM_DIG_DISPLAY_SPRITES (DIG_SPRITE_EMPTY + 1)
 };
 
 // IDs used by the digital display to set coords and callbacks for its sprites

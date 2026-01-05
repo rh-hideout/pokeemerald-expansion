@@ -264,7 +264,7 @@ enum
     CONTROLLER_DEBUGMENU,
     /*new controllers should go here*/
     CONTROLLER_TERMINATOR_NOP,
-    CONTROLLER_CMDS_COUNT
+    #define CONTROLLER_CMDS_COUNT (CONTROLLER_TERMINATOR_NOP + 1)
 };
 
 extern struct UnusedControllerStruct gUnusedControllerStruct;

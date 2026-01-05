@@ -72,7 +72,7 @@ enum WindowIds
 {
     WINDOW_INFO,
     WINDOW_REGISTERED,
-    WINDOW_COUNT,
+    #define WINDOW_COUNT (WINDOW_REGISTERED + 1)
 };
 
 enum Statuses

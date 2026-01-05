@@ -88,7 +88,7 @@ enum TimeOfDay
     TIME_DAY,
     TIME_EVENING,
     TIME_NIGHT,
-    TIMES_OF_DAY_COUNT,
+    #define TIMES_OF_DAY_COUNT (TIME_NIGHT + 1)
 };
 
 // for incrementing/decrementing

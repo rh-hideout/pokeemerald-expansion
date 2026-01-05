@@ -359,7 +359,7 @@ enum {
     FOOTER_NORMAL,
     FOOTER_QUIZ,
     FOOTER_ANSWER,
-    NUM_FOOTER_TYPES
+    #define NUM_FOOTER_TYPES (FOOTER_ANSWER + 1)
 };
 
 enum {

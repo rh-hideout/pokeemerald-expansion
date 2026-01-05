@@ -320,7 +320,7 @@ enum {
 enum {
     MON_SPR_GFX_MANAGER_A,
     MON_SPR_GFX_MANAGER_B, // Nothing ever sets up this manager.
-    MON_SPR_GFX_MANAGERS_COUNT
+    #define MON_SPR_GFX_MANAGERS_COUNT (MON_SPR_GFX_MANAGER_B + 1)
 };
 
 #define UNPACK_VOLATILE_STRUCT(_enum, _fieldName, _typeMaxValue, ...) INVOKE_WITH_(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeMaxValue));
@@ -564,7 +564,7 @@ enum {
     AFFINE_UNUSED_1,
     AFFINE_UNUSED_2,
     AFFINE_UNUSED_3,
-    NUM_MON_AFFINES,
+    #define NUM_MON_AFFINES (AFFINE_UNUSED_3 + 1)
 };
 
 // The animation the Pokémon does during the feeding scene depends on their nature.

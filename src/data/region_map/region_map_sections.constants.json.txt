@@ -7,7 +7,7 @@ enum {
     {{ map_section.id }},
 ## endfor
     MAPSEC_NONE,
-    MAPSEC_COUNT
+    #define MAPSEC_COUNT (MAPSEC_NONE + 1)
 };
 
 // Special location IDs that use the same value space as MAPSECs.

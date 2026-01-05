@@ -29,7 +29,7 @@ enum {
     PALSLOT_NPC_4_REFLECTION,
     PALSLOT_NPC_SPECIAL,
     PALSLOT_NPC_SPECIAL_REFLECTION,
-    OBJ_PALSLOT_COUNT
+    #define OBJ_PALSLOT_COUNT (PALSLOT_NPC_SPECIAL_REFLECTION + 1)
     // the remaining sprite palette slots (12-15) are used by field effects, the interface, etc.
 };
 
@@ -53,7 +53,7 @@ enum ReflectionTypes
     REFL_TYPE_NONE,
     REFL_TYPE_ICE,
     REFL_TYPE_WATER,
-    NUM_REFLECTION_TYPES
+    #define NUM_REFLECTION_TYPES (REFL_TYPE_WATER + 1)
 };
 
 enum FollowerTransformTypes
