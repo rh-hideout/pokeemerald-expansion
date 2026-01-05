@@ -11,7 +11,7 @@ TO_DO_BATTLE_TEST("Disabled moves can still be used via Sleep Talk");
 TO_DO_BATTLE_TEST("Disabled moves can still be used via Metronome");
 TO_DO_BATTLE_TEST("Disabled moves can still be used via Mirror Move");
 TO_DO_BATTLE_TEST("Disable lasts 0-7 turns (Gen 1)");
-TO_DO_BATTLE_TEST("Disable lasts 1-7 turns (Gen 2)");
+TO_DO_BATTLE_TEST("Disable lasts 2-8 turns (Gen 2)");
 TO_DO_BATTLE_TEST("Disable lasts 2-5 turns (Gen 3)");
 TO_DO_BATTLE_TEST("Disable lasts 4-7 turns (Gen 4)");
 TO_DO_BATTLE_TEST("Disable lasts 4 turns (Gen 5+)");
