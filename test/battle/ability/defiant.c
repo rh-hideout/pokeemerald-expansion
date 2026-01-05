@@ -151,7 +151,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Co
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); MOVE(opponent, MOVE_COURT_CHANGE); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL);}
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COURT_CHANGE, opponent);
@@ -188,7 +188,7 @@ SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed if Court Cha
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); MOVE(opponent, MOVE_COURT_CHANGE); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL);}
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COURT_CHANGE, opponent);
@@ -248,7 +248,7 @@ DOUBLE_BATTLE_TEST("Defiant is activated by Cotton Down for non-ally Pokémon")
 
 SINGLE_BATTLE_TEST("Defiant activates before White Herb")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_LEER; }
     PARAMETRIZE { move = MOVE_GROWL; }
@@ -313,7 +313,7 @@ SINGLE_BATTLE_TEST("Defiant activates for each stat that is lowered")
 
 SINGLE_BATTLE_TEST("Defiant doesn't activate if the Pokémon lowers it's own stats")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SUPERPOWER; }
     PARAMETRIZE { move = MOVE_CLOSE_COMBAT; }

@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Kee Berry effect again on the next tu
         OPPONENT(SPECIES_TAUROS_PALDEA_COMBAT) { Ability(ABILITY_CUD_CHEW); Item(ITEM_KEE_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_CELEBRATE);}
+        TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent);
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Oran Berry effect again on the next t
         OPPONENT(SPECIES_TAUROS_PALDEA_COMBAT) { MaxHP(60); HP(60); Ability(ABILITY_CUD_CHEW); Item(ITEM_ORAN_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_RAGE); }
-        TURN { MOVE(player, MOVE_CELEBRATE);}
+        TURN { MOVE(player, MOVE_CELEBRATE); }
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, player);

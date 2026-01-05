@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZAMAZENTA) { Ability(ABILITY_DAUNTLESS_SHIELD); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);

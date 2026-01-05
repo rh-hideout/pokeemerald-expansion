@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Sandstorm deals 1/16 damage per turn")
         PLAYER(SPECIES_SANDSLASH);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {MOVE(player, MOVE_SANDSTORM);}
+        TURN { MOVE(player, MOVE_SANDSTORM); }
     } SCENE {
         MESSAGE("The opposing Wobbuffet is buffeted by the sandstorm!");
         HP_BAR(opponent, captureDamage: &sandstormDamage);
@@ -19,7 +19,8 @@ SINGLE_BATTLE_TEST("Sandstorm deals 1/16 damage per turn")
 
 SINGLE_BATTLE_TEST("Sandstorm multiplies the special defense of Rock-types by 1.5x (Gen4+)", s16 damage)
 {
-    u32 move, config;
+    enum Move move;
+    u32 config;
     PARAMETRIZE { move = MOVE_CELEBRATE; config = GEN_3; }
     PARAMETRIZE { move = MOVE_SANDSTORM; config = GEN_3; }
     PARAMETRIZE { move = MOVE_SANDSTORM; config = GEN_4; }

@@ -269,7 +269,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
     PARAMETRIZE { item = ITEM_JUBILIFE_MUFFIN; }
     GIVEN {
         ASSUME(gItemsInfo[item].battleUsage == EFFECT_ITEM_CURE_STATUS);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE);};
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
         OPPONENT(SPECIES_GENGAR);
     } WHEN {
         TURN { USE_ITEM(player, item, partyIndex: 0); }
@@ -290,8 +290,8 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items"
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_PERSIM_BERRY].holdEffect == HOLD_EFFECT_CURE_CONFUSION);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE);};
-        OPPONENT(SPECIES_WOBBUFFET) { Item(item);};
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_COVET, WITH_RNG(RNG_CONFUSION, FALSE)); }
         TURN {}

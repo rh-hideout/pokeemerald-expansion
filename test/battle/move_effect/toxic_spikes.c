@@ -93,8 +93,8 @@ SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon")
 {
     u32 species = SPECIES_WOBBUFFET;
     u32 item = ITEM_NONE;
-    u32 move1 = MOVE_CELEBRATE;
-    u32 move2 = MOVE_CELEBRATE;
+    enum Move move1 = MOVE_CELEBRATE;
+    enum Move move2 = MOVE_CELEBRATE;
     bool32 airborne;
 
     ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
@@ -155,7 +155,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes are removed by grounded Poison-type Pokémon on
 {
     u32 species;
     u32 item = ITEM_NONE;
-    u32 move = MOVE_CELEBRATE;
+    enum Move move = MOVE_CELEBRATE;
     bool32 grounded;
     PARAMETRIZE { species = SPECIES_EKANS; grounded = TRUE; }
     PARAMETRIZE { species = SPECIES_ZUBAT; grounded = FALSE; }
@@ -208,10 +208,10 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on switch in after Primal Rever
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO); // Faints the user.
-        PLAYER(SPECIES_WOBBUFFET) {Speed(5); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(1); }
-        PLAYER(SPECIES_WYNAUT) {Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(15); }
+        PLAYER(SPECIES_WYNAUT) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(15); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(player, 1); }

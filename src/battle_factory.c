@@ -39,7 +39,7 @@ static void GetOpponentMostCommonMonType(void);
 static void GetOpponentBattleStyle(void);
 static void RestorePlayerPartyHeldItems(void);
 static u16 GetFactoryMonId(u8 lvlMode, u8 challengeNum, bool8 useBetterRange);
-static enum FactoryStyle GetMoveBattleStyle(u32 move);
+static enum FactoryStyle GetMoveBattleStyle(enum Move move);
 
 // Number of moves needed on the team to be considered using a certain battle style
 static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
@@ -361,7 +361,7 @@ static void SetPlayerAndOpponentParties(void)
             monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
             ivs = gSaveBlock2Ptr->frontier.rentalMons[i].ivs;
 
-            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, OT_ID_PLAYER_ID, FLAG_FRONTIER_MON_FACTORY, &gPlayerParty[i]);
+            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, READ_OTID_FROM_SAVE, FLAG_FRONTIER_MON_FACTORY, &gPlayerParty[i]);
         }
     }
 
@@ -373,7 +373,7 @@ static void SetPlayerAndOpponentParties(void)
         {
             monId = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].monId;
             ivs = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].ivs;
-            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, OT_ID_PLAYER_ID, FLAG_FRONTIER_MON_FACTORY, &gEnemyParty[i]);
+            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, READ_OTID_FROM_SAVE, FLAG_FRONTIER_MON_FACTORY, &gEnemyParty[i]);
         }
         break;
     }
@@ -562,7 +562,7 @@ static void GetOpponentBattleStyle(void)
         gSpecialVar_Result = FACTORY_NUM_STYLES;
 }
 
-static enum FactoryStyle GetMoveBattleStyle(u32 move)
+static enum FactoryStyle GetMoveBattleStyle(enum Move move)
 {
     enum FactoryStyle style = gBattleMoveEffects[GetMoveEffect(move)].battleFactoryStyle;
 
@@ -666,7 +666,7 @@ void FillFactoryBrainParty(void)
     fixedIV = GetFactoryMonFixedIV(challengeNum + 2, FALSE);
     monLevel = SetFacilityPtrsGetLevel();
     i = 0;
-    otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
+    otId = READ_OTID_FROM_SAVE;
 
     while (i != FRONTIER_PARTY_SIZE)
     {
@@ -794,9 +794,9 @@ u64 GetAiScriptsInBattleFactory(void)
     }
 }
 
-void SetMonMoveAvoidReturn(struct Pokemon *mon, u16 moveArg, u8 moveSlot)
+void SetMonMoveAvoidReturn(struct Pokemon *mon, enum Move moveArg, u8 moveSlot)
 {
-    u16 move = moveArg;
+    enum Move move = moveArg;
     if (moveArg == MOVE_RETURN)
         move = MOVE_FRUSTRATION;
     SetMonMoveSlot(mon, move, moveSlot);
@@ -845,7 +845,7 @@ static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
     }
 
     level = SetFacilityPtrsGetLevel();
-    otID = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
+    otID = READ_OTID_FROM_SAVE;
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
         u16 monId = gFrontierTempParty[i];
@@ -860,7 +860,7 @@ static void FillFactoryTentTrainerParty(u16 trainerId, u8 firstMonId)
     u8 i;
     u8 level = TENT_MIN_LEVEL;
     u8 fixedIV = 0;
-    u32 otID = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
+    u32 otID = READ_OTID_FROM_SAVE;
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {

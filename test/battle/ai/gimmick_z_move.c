@@ -140,7 +140,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Z-Moves -- Z-Destiny Bond is used when about to d
 
 AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Detect")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THUNDERBOLT; }
     PARAMETRIZE { move = MOVE_CLOSE_COMBAT; }
 

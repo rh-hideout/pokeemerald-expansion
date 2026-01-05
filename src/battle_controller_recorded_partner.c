@@ -45,6 +45,7 @@ static void RecordedPartnerHandleIntroTrainerBallThrow(u32 battler);
 static void RecordedPartnerHandleDrawPartyStatusSummary(u32 battler);
 static void RecordedPartnerHandleEndLinkBattle(u32 battler);
 static void RecordedPartnerBufferRunCommand(u32 battler);
+static void RecordedPartnerHandleStatusIconUpdate(u32 battler);
 
 static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 {
@@ -73,7 +74,7 @@ static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 b
     [CONTROLLER_23]                       = BtlController_Empty,
     [CONTROLLER_HEALTHBARUPDATE]          = BtlController_HandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = PlayerHandleExpUpdate, // Partner's player gets experience the same way as the player.
-    [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
+    [CONTROLLER_STATUSICONUPDATE]         = RecordedPartnerHandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = BtlController_HandleStatusAnimation,
     [CONTROLLER_STATUSXOR]                = BtlController_Empty,
     [CONTROLLER_DATATRANSFER]             = BtlController_Empty,
@@ -195,14 +196,14 @@ void RecordedPartnerBufferExecCompleted(u32 battler)
     }
 }
 
-static u32 RecordedPartnerGetTrainerBackPicId(enum DifficultyLevel difficulty)
+static enum TrainerPicID RecordedPartnerGetTrainerBackPicId(enum DifficultyLevel difficulty)
 {
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         trainerPicId = gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic;
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_BRENDAN;
+        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_PIC_BACK_BRENDAN;
 
     return trainerPicId;
 }
@@ -214,9 +215,9 @@ static void RecordedPartnerHandleDrawTrainerPic(u32 battler)
 {
     bool32 isFrontPic;
     s16 xPos, yPos;
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
-    trainerPicId = TRAINER_BACK_PIC_STEVEN;
+    trainerPicId = TRAINER_PIC_BACK_STEVEN;
     xPos = 90;
     yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
 
@@ -228,7 +229,7 @@ static void RecordedPartnerHandleDrawTrainerPic(u32 battler)
 static void RecordedPartnerHandleTrainerSlide(u32 battler)
 {
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
-    u32 trainerPicId = RecordedPartnerGetTrainerBackPicId(difficulty);
+    enum TrainerPicID trainerPicId = RecordedPartnerGetTrainerBackPicId(difficulty);
     BtlController_HandleTrainerSlide(battler, trainerPicId);
 }
 
@@ -287,4 +288,14 @@ static void RecordedPartnerHandleEndLinkBattle(u32 battler)
     BeginFastPaletteFade(3);
     BtlController_Complete(battler);
     gBattlerControllerFuncs[battler] = SetBattleEndCallbacks;
+}
+
+static void RecordedPartnerHandleStatusIconUpdate(u32 battler)
+{
+    if (!IsBattleSEPlaying(battler))
+    {
+        DoStatusIconUpdate(battler);
+        if (gTestRunnerEnabled)
+            TestRunner_Battle_RecordStatus1(battler, GetMonData(GetBattlerMon(battler), MON_DATA_STATUS));
+    }
 }

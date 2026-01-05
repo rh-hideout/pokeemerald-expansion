@@ -772,7 +772,7 @@ struct BattleTestData
     u8 gender;
     u8 nature;
     bool8 isShiny;
-    enum Ability forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
+    enum Ability forcedAbilities[MAX_BATTLERS_COUNT][PARTY_SIZE];
     u8 chosenGimmick[MAX_BATTLERS_COUNT][PARTY_SIZE];
     u8 forcedEnvironment;
 
@@ -986,7 +986,7 @@ void Randomly(u32 sourceLine, u32 passes, u32 trials, struct RandomlyContext);
 /* Given */
 
 struct moveWithPP {
-    u16 moveId;
+    enum Move moveId;
     u8 pp;
 };
 
@@ -1102,7 +1102,7 @@ static inline bool8 IsMultibattleTest(void)
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
 struct FourMoves
 {
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
 };
 
 struct TestAIScoreStruct

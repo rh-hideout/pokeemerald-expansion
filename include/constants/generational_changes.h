@@ -32,7 +32,7 @@
     F(HIDDEN_POWER_DMG,          hiddenPowerDmg,          (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(ROUGH_SKIN_DMG,            roughSkinDmg,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(KNOCK_OFF_DMG,             knockOffDmg,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(SPORT_DMG_REDUCTION,       sportDmgReduction,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(SPORT_DMG_REDUCTION,       sportDmgReduction,       (u32, GEN_COUNT - 1)) \
     F(EXPLOSION_DEFENSE,         explosionDefense,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(PARENTAL_BOND_DMG,         parentalBondDmg,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(MULTIPLE_TARGETS_DMG,      multipleTargetsDmg,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -46,12 +46,13 @@
     F(SHEER_COLD_IMMUNITY,       sheerColdImmunity,       (u32, GEN_COUNT - 1)) \
     F(ROOST_PURE_FLYING,         roostPureFlying,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(STATUS_TYPE_IMMUNITY,      statusTypeImmunity,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(HIDDEN_POWER_COUNTER,      hiddenPowerCounter,      (u32, GEN_COUNT - 1)) \
     /* Turn settings */ \
-    F(BINDING_TURNS,             bindingTurns,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(BINDING_TURNS,             bindingTurns,            (u32, GEN_COUNT - 1)) \
     F(UPROAR_TURNS,              uproarTurns,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(UPROAR_IGNORE_SOUNDPROOF,  uproarIgnoreSoundproof,  (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(DISABLE_TURNS,             disableTurns,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(TAILWIND_TURNS,            tailwindTurns,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(TAILWIND_TURNS,            tailwindTurns,           (u32, GEN_COUNT - 1)) \
     F(SLEEP_TURNS,               sleepTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(TAUNT_TURNS,               tauntTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(SPORT_TURNS,               sportTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -66,9 +67,10 @@
     F(RECOIL_IF_MISS_DMG,        recoilIfMissDmg,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(KLUTZ_FLING_INTERACTION,   klutzFlingInteraction,   (u32, GEN_COUNT - 1)) \
     F(UPDATED_CONVERSION,        updatedConversion,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(UPDATED_CONVERSION_2,      updatedConversion2,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(UPDATED_CONVERSION_2,      updatedConversion2,      (u32, GEN_COUNT - 1)) \
     F(PP_REDUCED_BY_SPITE,       ppReducedBySpite,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(EXTRAPOLATED_MOVE_FLAGS,   extrapolatedMoveFlags,   (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(MODERN_TRICK_CHOICE_LOCK,  modernTrickChoiceLock,   (u32, GEN_COUNT - 1)) \
     /* Ability data settings */ \
     F(UPDATED_ABILITY_DATA,      updatedAbilityData,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     /* Move accuracy settings */ \
@@ -124,6 +126,7 @@
     F(TIME_OF_DAY_HEALING_MOVES, timeOfDayHealingMoves,   (u32, GEN_COUNT - 1)) \
     F(DREAM_EATER_LIQUID_OOZE,   dreamEaterLiquidOoze,    (u32, GEN_COUNT - 1)) \
     F(FOCUS_PUNCH_FAILURE,       focusPunchFailure,       (u32, GEN_COUNT - 1)) \
+    F(RAGE_BUILDS,               rageBuilds,              (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
