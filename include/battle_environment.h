@@ -6,6 +6,7 @@
 
 struct BattleEnvironment
 {
+    u8 name[26];
     u16 naturePower;
     const void *secretPowerAnimation;
     u16 secretPowerEffect;

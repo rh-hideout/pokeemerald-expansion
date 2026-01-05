@@ -338,33 +338,6 @@ const u8 gFrontAnimNames[][34] =
     [ANIM_SHAKE_GLOW_PURPLE_SLOW]            = _("SHAKE GLOW PURPLE SLOW"),
 };
 
-const u8 gBattleEnvironmentBackgroundNames[][17] =
-{
-    [BATTLE_ENVIRONMENT_GRASS]      = _("GRASS           "),
-    [BATTLE_ENVIRONMENT_LONG_GRASS] = _("LONG GRASS      "),
-    [BATTLE_ENVIRONMENT_SAND]       = _("SAND            "),
-    [BATTLE_ENVIRONMENT_UNDERWATER] = _("UNDERWATER      "),
-    [BATTLE_ENVIRONMENT_WATER]      = _("WATER           "),
-    [BATTLE_ENVIRONMENT_POND]       = _("POND            "),
-    [BATTLE_ENVIRONMENT_MOUNTAIN]   = _("MOUNTAIN        "),
-    [BATTLE_ENVIRONMENT_CAVE]       = _("CAVE            "),
-    [BATTLE_ENVIRONMENT_BUILDING]   = _("BUILDING        "),
-    [BATTLE_ENVIRONMENT_PLAIN]      = _("PLAIN           "),
-    [BATTLE_ENVIRONMENT_FRONTIER]   = _("FRONTIER        "),
-    [BATTLE_ENVIRONMENT_GYM]        = _("GYM             "),
-    [BATTLE_ENVIRONMENT_LEADER]     = _("LEADER          "),
-    [BATTLE_ENVIRONMENT_MAGMA]      = _("MAGMA           "),
-    [BATTLE_ENVIRONMENT_AQUA]       = _("AQUA            "),
-    [BATTLE_ENVIRONMENT_SIDNEY]     = _("SIDNEY          "),
-    [BATTLE_ENVIRONMENT_PHOEBE]     = _("PHOEBE          "),
-    [BATTLE_ENVIRONMENT_GLACIA]     = _("GLACIA          "),
-    [BATTLE_ENVIRONMENT_DRAKE]      = _("DRAKE           "),
-    [BATTLE_ENVIRONMENT_CHAMPION]   = _("CHAMPION        "),
-    [BATTLE_ENVIRONMENT_GROUDON]    = _("GROUDON         "),
-    [BATTLE_ENVIRONMENT_KYOGRE]     = _("KYOGRE          "),
-    [BATTLE_ENVIRONMENT_RAYQUAZA]   = _("RAYQUAZA        "),
-};
-
 const u8 sShadowSizeLabels[][4] =
 {
     [SHADOW_SIZE_S]                 = _(" S"),
@@ -902,7 +875,7 @@ static void PrintBattleBgName(u8 taskId)
     u8 fontId = 0;
     u8 text[30+1];
 
-    StringCopy(text, gBattleEnvironmentBackgroundNames[data->battleEnvironment]);
+    StringCopy(text, gBattleEnvironmentInfo[data->battleEnvironment].name);
     AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 0, 24, 0, NULL);
 }
 
@@ -1755,7 +1728,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             SetArrowInvisibility(data);
             PrintInstructionsOnWindow(data);
             UpdateMonAnimNames(taskId);
-            
+
             if (data->followerspriteId != 0)
                 gSprites[data->followerspriteId].invisible = FALSE;
         }
