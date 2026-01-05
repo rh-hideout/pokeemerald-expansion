@@ -110,5 +110,3 @@ DOUBLE_BATTLE_TEST("Trace respects the turn order")
         ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
     }
 }
-
-TODO_BATTLE_TEST("Trace copies opponent's Intimidate and does not trigger it (Gen3)")
