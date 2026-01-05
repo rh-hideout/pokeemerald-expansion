@@ -339,7 +339,8 @@ const u8 gFrontAnimNames[][34] =
     [ANIM_SHAKE_GLOW_PURPLE_SLOW]            = _("SHAKE GLOW PURPLE SLOW"),
 };
 
-const u8 gMoveBackgroundNames[][28] =
+#define MOVE_BACKGROUND_NAME_LENGTH 28
+const u8 gMoveBackgroundNames[BG_COUNT][MOVE_BACKGROUND_NAME_LENGTH] =
 {
     [BG_NONE]                      = _("None"),
     [BG_DARK]                      = _("Dark"),
@@ -1012,7 +1013,7 @@ static void PrintMoveBackgroundName(u8 taskId)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
     u8 fontId = 0;
-    u8 text[28];
+    u8 text[MOVE_BACKGROUND_NAME_LENGTH];
 
     FillWindowPixelBuffer(WIN_BOTTOM_RIGHT, PIXEL_FILL(0));
 
@@ -1024,24 +1025,12 @@ static void UpdateMoveBackground(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
 
-    if (data->moveBackground == BG_NONE)
-    {
-        if (increment)
-            data->moveBackground += 1;
-        else
-            data->moveBackground = BG_SWAMP;
-    }
-    else if (data->moveBackground == BG_SWAMP)
-    {
-        if (increment)
-            data->moveBackground = BG_NONE;
-        else
-            data->moveBackground -= 1;
-    }
+    if (increment)
+        data->moveBackground = (data->moveBackground + 1) % BG_COUNT;
     else
     {
-        if (increment)
-            data->moveBackground += 1;
+        if (data->moveBackground == BG_NONE)
+            data->moveBackground = BG_SWAMP;
         else
             data->moveBackground -= 1;
     }
@@ -1437,15 +1426,10 @@ static void UpdateSubmenuOneOptionValue(u8 taskId, bool8 increment)
         break;
     case 1:
         if (increment)
-        {
-            if (data->animIdFront >= ANIM_SHAKE_GLOW_PURPLE_SLOW)
-                data->animIdFront = 0;
-            else
-                data->animIdFront += 1;
-            }
+            data->animIdFront = (data->animIdFront + 1) % ANIM_COUNT;
         else
         {
-            if (data->animIdFront <= 0)
+            if (data->animIdFront == ANIM_V_SQUISH_AND_BOUNCE)
                 data->animIdFront = ANIM_SHAKE_GLOW_PURPLE_SLOW;
             else
                 data->animIdFront -= 1;
@@ -1662,15 +1646,15 @@ static void UpdateSubmenuFourOptionValue(u8 taskId, bool8 increment)
     }
 }
 
-#define READ_PTR_FROM_TASK(taskId, dataId)                      \
-    (void *)(                                                   \
-    ((u16)(gTasks[taskId].data[dataId]) |                       \
+#define READ_PTR_FROM_TASK(taskId, dataId)              \
+    (void *)(                                           \
+    ((u16)(gTasks[taskId].data[dataId]) |               \
     ((u16)(gTasks[taskId].data[dataId + 1]) << 16)))
 
-#define STORE_PTR_IN_TASK(ptr, taskId, dataId)                 \
-{                                                              \
-    gTasks[taskId].data[dataId] = (u32)(ptr);                  \
-    gTasks[taskId].data[dataId + 1] = (u32)(ptr) >> 16;        \
+#define STORE_PTR_IN_TASK(ptr, taskId, dataId)          \
+{                                                       \
+    gTasks[taskId].data[dataId] = (u32)(ptr);           \
+    gTasks[taskId].data[dataId + 1] = (u32)(ptr) >> 16; \
 }
 
 #define sAnimId    data[2]
