@@ -10329,7 +10329,7 @@ static void Cmd_tryswapitems(void)
                 gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
 
             if (GetBattlerAbility(gBattlerAttacker) != ABILITY_GORILLA_TACTICS
-             && (!IsHoldEffectChoice(GetItemHoldEffect(*newItemAtk))
+             && (!IsHoldEffectChoice(GetItemHoldEffect(oldItemDef))
              || (GetConfig(CONFIG_MODERN_TRICK_CHOICE_LOCK) >= GEN_5)))
             {
                 gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
