@@ -405,16 +405,28 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
     case ANIM_TYPE_MOVE:
         if (animId == MOVE_SECRET_POWER)
         {
-            if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
-                sBattleAnimScriptPtr = gBattleAnimMove_FairyWind;
-            else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
-                sBattleAnimScriptPtr = gBattleAnimMove_NeedleArm;
-            else if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
-                sBattleAnimScriptPtr = gBattleAnimMove_ThunderShock;
-            else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
-                sBattleAnimScriptPtr = gBattleAnimMove_Confusion;
+            if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            {
+                switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+                {
+                case STATUS_FIELD_MISTY_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_FairyWind;
+                    break;
+                case STATUS_FIELD_GRASSY_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_NeedleArm;
+                    break;
+                case STATUS_FIELD_ELECTRIC_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_ThunderShock;
+                    break;
+                case STATUS_FIELD_PSYCHIC_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_Confusion;
+                    break;
+                }
+            }
             else
+            {
                 sBattleAnimScriptPtr = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerAnimation;
+            }
         }
         else
         {
