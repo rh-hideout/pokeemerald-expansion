@@ -756,7 +756,7 @@ static void ContestAICmd_if_move_excitement_not_eq(void)
 
 static void ContestAICmd_get_move_effect(void)
 {
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
 
     eContestAI.scriptResult = GetMoveContestEffect(move);
     gAIScriptPtr += 1;
@@ -784,7 +784,7 @@ static void ContestAICmd_if_move_effect_not_eq(void)
 
 static void ContestAICmd_get_move_effect_type(void)
 {
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
 
     eContestAI.scriptResult = gContestEffects[GetMoveContestEffect(move)].effectType;
     gAIScriptPtr += 1;
@@ -813,7 +813,7 @@ static void ContestAICmd_if_move_effect_type_not_eq(void)
 static void ContestAICmd_check_most_appealing_move(void)
 {
     int i;
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
     u8 appeal = gContestEffects[GetMoveContestEffect(move)].appeal;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -844,12 +844,12 @@ static void ContestAICmd_if_most_appealing_move(void)
 static void ContestAICmd_check_most_jamming_move(void)
 {
     int i;
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
     u8 jam = gContestEffects[GetMoveContestEffect(move)].jam;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        u16 newMove = gContestMons[eContestAI.contestantId].moves[i];
+        enum Move newMove = gContestMons[eContestAI.contestantId].moves[i];
         if (newMove != MOVE_NONE && jam < gContestEffects[GetMoveContestEffect(newMove)].jam)
             break;
     }
@@ -874,7 +874,7 @@ static void ContestAICmd_if_most_jamming_move(void)
 
 static void ContestAICmd_get_num_move_hearts(void)
 {
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
 
     eContestAI.scriptResult = gContestEffects[GetMoveContestEffect(move)].appeal / 10;
     gAIScriptPtr += 1;
@@ -922,7 +922,7 @@ static void ContestAICmd_if_num_move_hearts_not_eq(void)
 
 static void ContestAICmd_get_num_move_jam_hearts(void)
 {
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
 
     eContestAI.scriptResult = gContestEffects[GetMoveContestEffect(move)].jam / 10;
     gAIScriptPtr += 1;
@@ -971,7 +971,7 @@ static void ContestAICmd_if_num_move_jam_hearts_not_eq(void)
 static void ContestAICmd_get_move_used_count(void)
 {
     s16 result;
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
 
     if (move != eContestantStatus[eContestAI.contestantId].prevMove)
         result = 0; // move is unique and not reused.
@@ -1026,7 +1026,7 @@ static void ContestAICmd_check_combo_starter(void)
 {
     u8 result = 0;
     int i;
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -1072,7 +1072,7 @@ static void ContestAICmd_check_combo_finisher(void)
 {
     u8 result = 0;
     int i;
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -1117,7 +1117,7 @@ static void ContestAICmd_if_not_combo_finisher(void)
 static void ContestAICmd_check_would_finish_combo(void)
 {
     u8 result = 0;
-    u16 move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+    enum Move move = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
 
     if (eContestantStatus[eContestAI.contestantId].prevMove)
         result = AreMovesContestCombo(eContestantStatus[eContestAI.contestantId].prevMove, move);
@@ -1407,7 +1407,7 @@ static void ContestAICmd_get_used_moves_effect(void)
 {
     u8 contestant = GetContestantIdByTurn(gAIScriptPtr[1]);
     u8 round = gAIScriptPtr[2];
-    u16 move = eContest.moveHistory[round][contestant];
+    enum Move move = eContest.moveHistory[round][contestant];
 
     eContestAI.scriptResult = GetMoveContestEffect(move);
     gAIScriptPtr += 3;
@@ -1507,7 +1507,7 @@ static void ContestAICmd_get_used_moves_effect_type(void)
 {
     u8 contestant = GetContestantIdByTurn(gAIScriptPtr[1]);
     u8 round = gAIScriptPtr[2];
-    u16 move = eContest.moveHistory[round][contestant];
+    enum Move move = eContest.moveHistory[round][contestant];
 
     eContestAI.scriptResult = gContestEffects[GetMoveContestEffect(move)].effectType;
     gAIScriptPtr += 3;
@@ -1748,9 +1748,9 @@ static void ContestAICmd_check_user_has_move(void)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         #ifdef BUGFIX
-        u16 move = GetMoveContestEffect(gContestMons[eContestAI.contestantId].moves[i]);
+        enum Move move = GetMoveContestEffect(gContestMons[eContestAI.contestantId].moves[i]);
         #else
-        u16 move = gContestMons[eContestAI.contestantId].moves[i];
+        enum Move move = gContestMons[eContestAI.contestantId].moves[i];
         #endif
 
         if (move == targetMove)

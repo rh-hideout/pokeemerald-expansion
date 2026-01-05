@@ -21,7 +21,7 @@ void TestRunner_Battle_RecordExp(u32 battlerId, u32 oldExp, u32 newExp);
 void TestRunner_Battle_RecordMessage(const u8 *message);
 void TestRunner_Battle_RecordStatus1(u32 battlerId, u32 status1);
 void TestRunner_Battle_AfterLastTurn(void);
-void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target, enum Gimmick gimmick);
+void TestRunner_Battle_CheckChosenMove(u32 battlerId, enum Move moveId, u32 target, enum Gimmick gimmick);
 void TestRunner_Battle_CheckSwitch(u32 battlerId, u32 partyIndex);
 void TestRunner_Battle_CheckAiMoveScores(u32 battlerId);
 void TestRunner_Battle_AISetScore(const char *file, u32 line, u32 battlerId, u32 moveIndex, s32 score);

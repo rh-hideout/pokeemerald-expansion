@@ -20,7 +20,7 @@ TEST("Move names fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 72;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -33,7 +33,7 @@ TEST("Move names fit on Battle Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 64;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -45,7 +45,7 @@ TEST("Move names fit on Contest Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 59;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -68,7 +68,7 @@ TEST("Move names fit on TMs & HMs Bag Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 61;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -80,7 +80,7 @@ TEST("Move names fit on Move Relearner Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 72;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -92,7 +92,7 @@ TEST("Move descriptions fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 152;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT_ALL; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveDescription(i)) { move = i; }

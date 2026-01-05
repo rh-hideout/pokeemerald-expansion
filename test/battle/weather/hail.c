@@ -4,7 +4,8 @@
 // Please add Hail interactions with move, item and ability effects on their respective files.
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+    ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
+    ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
     ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
     ASSUME(GetSpeciesType(SPECIES_WYNAUT, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WYNAUT, 1) != TYPE_ICE);
     ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE || GetSpeciesType(SPECIES_GLALIE, 1) == TYPE_ICE);
@@ -18,7 +19,7 @@ SINGLE_BATTLE_TEST("Hail deals 1/16 damage per turn")
         PLAYER(SPECIES_GLALIE);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {MOVE(player, MOVE_HAIL);}
+        TURN { MOVE(player, MOVE_HAIL); }
     } SCENE {
         MESSAGE("The opposing Wobbuffet is buffeted by the hail!");
         HP_BAR(opponent, captureDamage: &hailDamage);
@@ -32,7 +33,7 @@ SINGLE_BATTLE_TEST("Hail damage does not affect Ice-type Pokémon")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GLALIE);
     } WHEN {
-        TURN {MOVE(player, MOVE_HAIL);}
+        TURN { MOVE(player, MOVE_HAIL); }
     } SCENE {
         NOT MESSAGE("The opposing Glalie is buffeted by the hail!");
     }

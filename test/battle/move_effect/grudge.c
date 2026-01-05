@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Grudge depletes all PP of the move that fainted the target")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_POUND, MOVE_SURF); };
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_POUND, MOVE_SURF); }
     } WHEN {
         TURN {
             MOVE(player, MOVE_GRUDGE);
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Grudge does not deplete PP of a Z-Move")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_POUND, MOVE_SURF); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_POUND, MOVE_SURF); }
     } WHEN {
         TURN {
             MOVE(player, MOVE_GRUDGE);
@@ -223,7 +223,8 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Fl
 SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Sandstorm")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
         PLAYER (SPECIES_WOBBUFFET) { HP(1); }
         PLAYER (SPECIES_WOBBUFFET);
         OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_SANDSTORM, MOVE_SURF); }

@@ -28,7 +28,7 @@ AI_SINGLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
 
 AI_DOUBLE_BATTLE_TEST("AI will not try to lower opposing stats if target is protected by Flower Veil")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SCARY_FACE; }
     PARAMETRIZE { move = MOVE_GROWL; }

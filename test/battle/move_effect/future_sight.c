@@ -34,8 +34,8 @@ SINGLE_BATTLE_TEST("Future Sight uses Sp. Atk stat of the original user without 
         TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(player, 1); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent, captureDamage: &seedFlareDmg);
@@ -60,8 +60,8 @@ SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if 
         TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(player, 1); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent, captureDamage: &seedFlareDmg);
@@ -88,8 +88,8 @@ SINGLE_BATTLE_TEST("Future Sight receives STAB from party mon (Gen 5+)")
         TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(player, 1); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent, captureDamage: &seedFlareDmg);
@@ -111,8 +111,8 @@ SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
         TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(player, 1); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent);
@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is 
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_MEMENTO); SEND_OUT(opponent, 1); }
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
@@ -158,7 +158,7 @@ SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints by residual d
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_WRAP); SEND_OUT(opponent, 1); }
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
@@ -178,8 +178,8 @@ SINGLE_BATTLE_TEST("Future Sight breaks Focus Sash and doesn't make the holder e
         OPPONENT(SPECIES_PIDGEY) { Level(1); Item(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
         TURN { MOVE(player, MOVE_PSYCHIC); }
     } SCENE {
         MESSAGE("The opposing Pidgey hung on using its Focus Sash!");
