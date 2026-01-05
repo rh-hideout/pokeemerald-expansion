@@ -3303,31 +3303,16 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         break;
     case MOVE_EFFECT_SECRET_POWER:
-        if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
-        {
-            switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
-            {
-            case STATUS_FIELD_MISTY_TERRAIN:
-                moveEffect = MOVE_EFFECT_SP_ATK_MINUS_1;
-                break;
-            case STATUS_FIELD_GRASSY_TERRAIN:
-                moveEffect = MOVE_EFFECT_SLEEP;
-                break;
-            case STATUS_FIELD_ELECTRIC_TERRAIN:
-                moveEffect = MOVE_EFFECT_PARALYSIS;
-                break;
-            case STATUS_FIELD_PSYCHIC_TERRAIN:
-                moveEffect = MOVE_EFFECT_SPD_MINUS_1;
-                break;
-            default:
-                moveEffect = MOVE_EFFECT_PARALYSIS;
-                break;
-            }
-        }
+        if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
+            moveEffect = MOVE_EFFECT_SP_ATK_MINUS_1;
+        else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
+            moveEffect = MOVE_EFFECT_SLEEP;
+        else if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+            moveEffect = MOVE_EFFECT_PARALYSIS;
+        else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
+            moveEffect = MOVE_EFFECT_SPD_MINUS_1;
         else
-        {
             SetMoveEffect(battler, effectBattler, gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect, battleScript, effectFlags);
-        }
         break;
     case MOVE_EFFECT_PSYCHIC_NOISE:
         battlerAbility = IsAbilityOnSide(gEffectBattler, ABILITY_AROMA_VEIL);
