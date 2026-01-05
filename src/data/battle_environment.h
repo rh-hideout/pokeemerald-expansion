@@ -55,6 +55,8 @@ const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_env
     #define BUILDING_SECRET_POWER_ANIMATION gBattleAnimMove_Strength,
 #endif
 
+#define BUILDING_SECRET_POWER_EFFECT MOVE_EFFECT_PARALYSIS
+
 const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] =
 {
     [BATTLE_ENVIRONMENT_GRASS] =
@@ -163,7 +165,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     {
         .naturePower = B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_TRI_ATTACK : MOVE_SWIFT,
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = TYPE_NORMAL,
         .background = ENVIRONMENT_BACKGROUND(Building),
     },
@@ -201,7 +203,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_FRONTIER] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Building,
@@ -215,7 +217,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_GYM] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Building,
@@ -229,7 +231,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_LEADER] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Building,
@@ -243,7 +245,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_MAGMA] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Stadium,
@@ -257,7 +259,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_AQUA] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Stadium,
@@ -271,7 +273,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_SIDNEY] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Stadium,
@@ -285,7 +287,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_PHOEBE] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Stadium,
@@ -299,7 +301,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_GLACIA] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Stadium,
@@ -313,7 +315,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_DRAKE] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Stadium,
@@ -327,7 +329,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     [BATTLE_ENVIRONMENT_CHAMPION] =
     {
         .secretPowerAnimation = BUILDING_SECRET_POWER_ANIMATION,
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Stadium,
@@ -340,7 +342,6 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
 
     [BATTLE_ENVIRONMENT_GROUDON] =
     {
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Cave,
@@ -353,7 +354,6 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
 
     [BATTLE_ENVIRONMENT_KYOGRE] =
     {
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Water,
@@ -366,7 +366,6 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
 
     [BATTLE_ENVIRONMENT_RAYQUAZA] =
     {
-        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
         .background =
         {
             .tileset = gBattleEnvironmentTiles_Rayquaza,
