@@ -9,8 +9,8 @@ enum RowGUIInfo
     ROW_WATER,
     ROW_LAND_TOP,
     ROW_LAND_BOT,
-    ROW_HIDDEN,
-    ROWS_COUNT
+    ROW_HIDDEN
+    #define ROWS_COUNT (ROW_HIDDEN + 1)
 };
 
 #define ROW_WATER_ICON_X        30

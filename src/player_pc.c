@@ -60,8 +60,8 @@ enum {
     ITEMPC_WIN_ICON,
     ITEMPC_WIN_TITLE,
     ITEMPC_WIN_QUANTITY,
-    ITEMPC_WIN_YESNO,
-    ITEMPC_WIN_COUNT
+    ITEMPC_WIN_YESNO
+    #define ITEMPC_WIN_COUNT (ITEMPC_WIN_YESNO + 1)
 };
  // When showing the main list, the first window to this window are drawn
 #define ITEMPC_WIN_LIST_END ITEMPC_WIN_TITLE

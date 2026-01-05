@@ -4,8 +4,8 @@
 enum SpeakerNames {
     SP_NAME_NONE = 0,
     SP_NAME_MOM,
-    SP_NAME_PLAYER,
-    SP_NAME_COUNT
+    SP_NAME_PLAYER
+    #define SP_NAME_COUNT (SP_NAME_PLAYER + 1)
 };
 
 #endif // GUARD_CONSTANTS_SPEAKER_NAMES_H

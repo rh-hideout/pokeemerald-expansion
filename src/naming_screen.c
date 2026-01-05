@@ -78,8 +78,8 @@ enum {
     WIN_KB_PAGE_2, // Initially WIN_KB_PAGE_1 is in front, with WIN_KB_PAGE_2 on deck
     WIN_TEXT_ENTRY,
     WIN_TEXT_ENTRY_BOX,
-    WIN_BANNER,
-    WIN_COUNT,
+    WIN_BANNER
+    #define WIN_COUNT (WIN_BANNER + 1)
 };
 
 // The constants for the pages are needlessly complicated because GF didn't keep the indexing order consistent
@@ -87,8 +87,8 @@ enum {
 enum {
     KBPAGE_SYMBOLS,
     KBPAGE_LETTERS_UPPER,
-    KBPAGE_LETTERS_LOWER,
-    KBPAGE_COUNT,
+    KBPAGE_LETTERS_LOWER
+    #define KBPAGE_COUNT (KBPAGE_LETTERS_LOWER + 1)
 };
 
 // This set is used for initializing a page's keyboard text and getting its number of columns
@@ -115,8 +115,8 @@ enum {
 enum {
     BUTTON_PAGE,
     BUTTON_BACK,
-    BUTTON_OK,
-    BUTTON_COUNT,
+    BUTTON_OK
+    #define BUTTON_COUNT (BUTTON_OK + 1)
 };
 
 // states for Task_NamingScreen

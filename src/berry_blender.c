@@ -42,8 +42,8 @@
 enum {
     SCORE_BEST,
     SCORE_GOOD,
-    SCORE_MISS,
-    NUM_SCORE_TYPES,
+    SCORE_MISS
+    #define NUM_SCORE_TYPES (SCORE_MISS + 1)
 };
 
 // Redundant with the above. Reversed

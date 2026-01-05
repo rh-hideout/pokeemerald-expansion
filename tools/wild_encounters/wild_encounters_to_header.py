@@ -31,7 +31,7 @@ class Config:
 
     def ParseTimeEnum(self, rtc_constants_file_name):
         with open(rtc_constants_file_name, 'r') as rtc_constants_file:
-            DEFAULT_TIME_PAT = re.compile(r"enum\s+TimeOfDay\s*\{(?P<rtc_val>[\s*\w+,\=\d*]+)\s*\}\s*\;")
+            DEFAULT_TIME_PAT = re.compile(r"enum\s+TimeOfDay\s*\{(?P<rtc_val>[\s*\w+,\=\d*]+)\s*[^}]+\}\s*\;")
             file = rtc_constants_file.read()
 
             m = DEFAULT_TIME_PAT.search(file)

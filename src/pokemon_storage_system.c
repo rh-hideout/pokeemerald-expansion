@@ -68,8 +68,8 @@ enum {
     OPTION_WITHDRAW,
 #endif
     OPTION_MOVE_ITEMS,
-    OPTION_EXIT,
-    OPTIONS_COUNT
+    OPTION_EXIT
+    #define OPTIONS_COUNT (OPTION_EXIT + 1)
 };
 
 // IDs for messages to print with PrintMessage
@@ -341,8 +341,8 @@ enum {
 enum {
     TILEMAPID_PKMN_DATA, // The "Pkmn Data" text at the top of the display
     TILEMAPID_PARTY_MENU,
-    TILEMAPID_CLOSE_BUTTON,
-    TILEMAPID_COUNT
+    TILEMAPID_CLOSE_BUTTON
+    #define TILEMAPID_COUNT (TILEMAPID_CLOSE_BUTTON + 1)
 };
 
 // Window IDs for sWindowTemplates
