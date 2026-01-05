@@ -6143,9 +6143,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #if B_UPDATED_MOVE_DATA >= GEN_5
             "last move over 3 turns."),
         #elif B_UPDATED_MOVE_DATA >= GEN_4
-            "last move over 3-7 turns."),
+            "last move over 3 to 7 turns."),
         #else
-            "last move over 2-6 turns."),
+            "last move over 2 to 6 turns."),
         #endif
         .effect = EFFECT_ENCORE,
         .power = 0,
