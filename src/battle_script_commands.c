@@ -10950,10 +10950,14 @@ static void Cmd_disablelastusedattack(void)
         gBattleMons[gBattlerTarget].volatiles.disabledMove = gBattleMons[gBattlerTarget].moves[i];
         if (B_DISABLE_TURNS >= GEN_5)
             gBattleMons[gBattlerTarget].volatiles.disableTimer = B_DISABLE_TIMER;
-        else if (B_DISABLE_TURNS >= GEN_4)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + B_DISABLE_TIMER; // 4-7 turns
+        else if (B_DISABLE_TURNS == GEN_4)
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = (RandomUniform(RNG_DISABLE_TURNS, 0, 3) + B_DISABLE_TIMER; // 4-7 turns
+        else if (B_DISABLE_TURNS == GEN_3)
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = (RandomUniform(RNG_DISABLE_TURNS, 0, 3) + 2; // 2-5 turns
+        else if (B_DISABLE_TURNS == GEN_2)
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = (RandomUniform(RNG_DISABLE_TURNS, 0, 6) + 1; // 1-7 turns
         else
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + 2; // 2-5 turns
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = (RandomUniform(RNG_DISABLE_TURNS, 0, 7); // 0-7 turns
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
