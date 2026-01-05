@@ -57,18 +57,20 @@ bool16 ResetAllPicSprites(void)
     return FALSE;
 }
 
-static bool16 DecompressPic(u16 species, u32 personality, bool8 isFrontPic, u8 *dest, bool8 isTrainer)
+static bool16 DecompressPic(u16 picId, u32 personality, bool8 isFrontPic, u8 *dest, bool8 isTrainer)
 {
     if (!isTrainer)
     {
+        u16 species = picId;
         LoadSpecialPokePic(dest, species, personality, isFrontPic);
     }
     else
     {
+        enum TrainerPicID trainerPicId = picId;
         if (isFrontPic)
-            DecompressPicFromTable(&gTrainerSprites[species].frontPic, dest);
+            DecompressPicFromTable(&gTrainerSprites[trainerPicId].frontPic, dest);
         else
-            CopyTrainerBackspriteFramesToDest(species, dest);
+            CopyTrainerBackspriteFramesToDest(trainerPicId, dest);
     }
     return FALSE;
 }
@@ -358,7 +360,7 @@ u16 PlayerGenderToFrontTrainerPicId_Debug(u8 gender, bool8 getClass)
     return gender;
 }
 
-void CopyTrainerBackspriteFramesToDest(u8 trainerPicId, u8 *dest)
+void CopyTrainerBackspriteFramesToDest(enum TrainerPicID trainerPicId, u8 *dest)
 {
     const struct SpriteFrameImage *frame = &gTrainerBacksprites[trainerPicId].backPic;
     // y_offset is repurposed to indicates how many frames does the trainer pic have.

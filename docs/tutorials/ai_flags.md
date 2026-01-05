@@ -207,3 +207,6 @@ This flag aims to prevent the player from PP stalling the AI by switching betwee
 
 ## `AI_FLAG_RANDOMIZE_SWITCHIN`
 AI will randomly choose between eligible switchin candidates rather than always picking the last one in the party. For example, if the AI has two mons that can revenge kill the player's mon after a KO, by default the AI will only track the most recent eligible candidate, and will always send in the last one in party order as a result. With this flag, it will instead track all of the eligible mons, and randomly choose between them when deciding which to send out.
+
+## `AI_FLAG_RANDOMIZE_PARTY_INDICES`
+AI will randomize the order of the mons in their party before battle starts. This means that lead choice is randommized, but so is the last mon for things like Illusion or the Ace flag, so be mindful when using it.
