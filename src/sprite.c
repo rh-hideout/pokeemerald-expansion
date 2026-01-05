@@ -2314,6 +2314,10 @@ void SetupSpritesForTextPrinting(u8 *spriteIds, const u32 **spriteSrc, u32 numSp
     {
         for (u32 x = 0; x < numSpritesX; x++)
         {
+            u32 spriteWidth = gOamDimensions[gSprites[spriteIds[x + y * numSpritesX]].oam.shape][gSprites[spriteIds[x + y * numSpritesY]].oam.size].width;
+            u32 spriteHeight = gOamDimensions[gSprites[spriteIds[x + y * numSpritesX]].oam.shape][gSprites[spriteIds[x + y * numSpritesY]].oam.size].height;
+            assertf(spriteWidth == 8 || spriteHeight == 8, "Sprites can't be 8px");
+
             if (spriteSrc != NULL)
                 StorePointerInSpriteData(&gSprites[spriteIds[x + y * numSpritesX]], spriteSrc[x + y * numSpritesX]);
             if (x < numSpritesX - 1)
