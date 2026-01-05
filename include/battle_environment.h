@@ -10,6 +10,7 @@ struct BattleEnvironment
     const void *secretPowerAnimation;
     u16 secretPowerEffect;
     enum Type camouflageType;
+    u16 camouflageBlend;
     struct BattleBackground background;
 };
 
