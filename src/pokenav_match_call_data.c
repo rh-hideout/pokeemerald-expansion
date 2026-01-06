@@ -314,13 +314,6 @@ static const struct MatchCallRival sBrendanMatchCallHeader =
     }
 };
 
-static const struct MatchCallLocationOverride sWallyLocationData[] = {
-    { FLAG_HIDE_MAUVILLE_CITY_WALLY,          MAPSEC_VERDANTURF_TOWN },
-    { FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT,    MAPSEC_NONE },
-    { FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY,  MAPSEC_VICTORY_ROAD },
-    { ALWAYS_AVAILABLE,                       MAPSEC_NONE }
-};
-
 static const struct MatchCallWally sWallyMatchCallHeader =
 {
     .type = MC_TYPE_WALLY,
@@ -338,7 +331,12 @@ static const struct MatchCallWally sWallyMatchCallHeader =
         { MatchCall_Text_Wally7, FLAG_DEFEATED_WALLY_VICTORY_ROAD,    NO_FLAG_TO_SET },
         MATCH_CALL_TEXT_END
     },
-    .locationData = sWallyLocationData
+    .locationData = (const struct MatchCallLocationOverride[]) {
+        { FLAG_HIDE_MAUVILLE_CITY_WALLY,          MAPSEC_VERDANTURF_TOWN },
+        { FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT,    MAPSEC_NONE },
+        { FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY,  MAPSEC_VICTORY_ROAD },
+        { ALWAYS_AVAILABLE,                       MAPSEC_NONE }
+    }
 };
 
 static const struct MatchCallStructNPC sScottMatchCallHeader =
