@@ -2007,13 +2007,17 @@ u32 *GetSrcPtrFromSprite(struct Sprite *sprite)
 
 void SetupSpritesForTextPrinting(u8 *spriteIds, const u32 **spriteSrc, u32 numSpritesX, u32 numSpritesY)
 {
+    u32 firstSpriteWidth = GetSpriteWidth(&gSprites[spriteIds[0]]);
+    u32 firstSpriteHeight = GetSpriteHeight(&gSprites[spriteIds[0]]);
+    assertf(firstSpriteWidth != 8 && firstSpriteHeight != 8, "Sprites can't be 8px");
     for (u32 y = 0; y < numSpritesY; y++)
     {
         for (u32 x = 0; x < numSpritesX; x++)
         {
             u32 spriteWidth = GetSpriteWidth(&gSprites[spriteIds[x + y * numSpritesX]]);
             u32 spriteHeight = GetSpriteHeight(&gSprites[spriteIds[x + y * numSpritesX]]);
-            assertf(spriteWidth != 8 && spriteHeight != 8, "Sprites can't be 8px");
+
+            assertf(spriteWidth == firstSpriteWidth && spriteHeight == firstSpriteHeight, "Sprites must be the same size");
 
             if (spriteSrc != NULL)
                 StorePointerInSpriteData(&gSprites[spriteIds[x + y * numSpritesX]], spriteSrc[x + y * numSpritesX]);
