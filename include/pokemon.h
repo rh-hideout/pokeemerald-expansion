@@ -628,13 +628,19 @@ struct FormChange
 
 struct FormChangeContext
 {
+    enum FormChanges method:16;
     u16 currentSpecies;
-    enum FormChanges method:8;
     u16 partyItemUsed;
     u16 heldItem;
     u16 ability;
     u16 learnedMove;
     u32 status;
+    u16 moves[MAX_MON_MOVES];
+    u16 hp;
+    u16 maxHP;
+    u32 gmaxFactor:1;
+    enum Type teraType;
+    u32 padding:15;
 };
 
 enum FusionExtraMoveHandling

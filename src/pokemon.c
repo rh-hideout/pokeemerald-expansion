@@ -6899,20 +6899,87 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
                 break;
             }
             break;
-        case FORM_CHANGE_BATTLE_SWITCH:
-        case FORM_CHANGE_BATTLE_HP_PERCENT:
         case FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM:
-        case FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE:
         case FORM_CHANGE_BATTLE_PRIMAL_REVERSION:
-        case FORM_CHANGE_BATTLE_WEATHER:
-        case FORM_CHANGE_BATTLE_TURN_END:
         case FORM_CHANGE_BATTLE_ULTRA_BURST:
+            if (ctx.heldItem == formChanges[i].param1)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE:
+            if (ctx.moves[0] == formChanges[i].param1
+                || ctx.moves[1] == formChanges[i].param1
+                || ctx.moves[2] == formChanges[i].param1
+                || ctx.moves[3] == formChanges[i].param1)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_BATTLE_SWITCH:
+            if (formChanges[i].param1 == ctx.ability || formChanges[i].param1 == ABILITY_NONE)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_BATTLE_HP_PERCENT:
+            if (formChanges[i].param1 == ctx.ability)
+            {
+                // We multiply by 100 to make sure that integer division doesn't mess with the health check.
+                u32 hpCheck = ctx.hp * 100 * 100 / ctx.maxHP;
+                switch(formChanges[i].param2)
+                {
+                case HP_HIGHER_THAN:
+                    if (hpCheck > formChanges[i].param3 * 100)
+                        targetSpecies = formChanges[i].targetSpecies;
+                    break;
+                case HP_LOWER_EQ_THAN:
+                    if (hpCheck <= formChanges[i].param3 * 100)
+                        targetSpecies = formChanges[i].targetSpecies;
+                    break;
+                }
+            }
+            break;
         case FORM_CHANGE_BATTLE_GIGANTAMAX:
+            if (ctx.gmaxFactor)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_BATTLE_WEATHER:
+            // Check if there is a required ability and if the battler's ability does not match it
+            // or is suppressed. If so, revert to the no weather form.
+            if (formChanges[i].param2
+                && ctx.ability != formChanges[i].param2
+                && formChanges[i].param1 == B_WEATHER_NONE)
+            {
+                targetSpecies = formChanges[i].targetSpecies;
+            }
+            // We need to revert the weather form if the field is under Air Lock, too.
+            else if (!HasWeatherEffect() && formChanges[i].param1 == B_WEATHER_NONE)
+            {
+                targetSpecies = formChanges[i].targetSpecies;
+            }
+            // Otherwise, just check for a match between the weather and the form change table.
+            // Added a check for whether the weather is in effect to prevent end-of-turn soft locks with Cloud Nine / Air Lock
+            else if (((gBattleWeather & formChanges[i].param1) && HasWeatherEffect())
+                || (gBattleWeather == B_WEATHER_NONE && formChanges[i].param1 == B_WEATHER_NONE))
+            {
+                targetSpecies = formChanges[i].targetSpecies;
+            }
+            break;
+        case FORM_CHANGE_BATTLE_TURN_END:
         case FORM_CHANGE_HIT_BY_MOVE:
+            if (formChanges[i].param1 == ctx.ability)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
         case FORM_CHANGE_BATTLE_TERASTALLIZATION:
+            if (ctx.teraType == formChanges[i].param1)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
         case FORM_CHANGE_BATTLE_BEFORE_MOVE:
         case FORM_CHANGE_BATTLE_AFTER_MOVE:
+            if (formChanges[i].param1 == gCurrentMove
+                && (formChanges[i].param2 == ABILITY_NONE || formChanges[i].param2 == ctx.ability))
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
         case FORM_CHANGE_BATTLE_BEFORE_MOVE_CATEGORY:
+            if (formChanges[i].param1 == GetBattleMoveCategory(gCurrentMove)
+                && (formChanges[i].param2 == ABILITY_NONE || formChanges[i].param2 == ctx.ability))
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
         case FORM_CHANGE_OVERWORLD_WEATHER:
         case FORM_CHANGE_TERMINATOR:
             break;
