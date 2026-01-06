@@ -74,6 +74,8 @@ enum FormChanges
     // - HP_LOWER_EQ_THAN if the form triggers when the current HP is lower or equal than the specified threshold.
     // param3: HP percentage threshold.
     FORM_CHANGE_BATTLE_HP_PERCENT,
+    // Same as FORM_CHANGE_BATTLE_HP_PERCENT but it triggers specifically when the Pokémon is sent out.
+    FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT,
     // Form change that activates when the mon has the defined item.
     // If it's on the player's side, it also requires ITEM_MEGA_RING in the user's bag and for the player to trigger it by pressing START before selecting a move.
     // param1: item to hold.

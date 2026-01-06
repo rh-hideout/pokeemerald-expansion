@@ -6917,6 +6917,7 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
                 targetSpecies = formChanges[i].targetSpecies;
             break;
         case FORM_CHANGE_BATTLE_HP_PERCENT:
+        case FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT:
             if (formChanges[i].param1 == ctx.ability)
             {
                 // We multiply by 100 to make sure that integer division doesn't mess with the health check.

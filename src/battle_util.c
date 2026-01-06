@@ -4713,18 +4713,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 effect++;
             }
             break;
-        case ABILITY_SCHOOLING:
-            if (gBattleMons[battler].level < 20)
-                break;
-        // Fallthrough
-        case ABILITY_ZEN_MODE:
-        case ABILITY_SHIELDS_DOWN:
-            if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
-            {
-                BattleScriptCall(BattleScript_BattlerFormChange);
-                effect++;
-            }
-            break;
         case ABILITY_INTREPID_SWORD:
             if (shouldAbilityTrigger && !GetBattlerPartyState(battler)->intrepidSwordBoost)
             {
@@ -4874,6 +4862,15 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         default:
             break;
         }
+
+        // Handle ability form changes upon switch-in.
+        if ((gLastUsedAbility != ABILITY_SCHOOLING || gBattleMons[battler].level >= 20)
+            && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT))
+        {
+            BattleScriptCall(BattleScript_BattlerFormChange);
+            effect++;
+        }
+
         break;
     case ABILITYEFFECT_ENDTURN:
         if (IsBattlerAlive(battler))
@@ -5040,27 +5037,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                     effect++;
                 }
                 break;
-            case ABILITY_SCHOOLING:
-                if (gBattleMons[battler].level < 20)
-                    break;
-            // Fallthrough
-            case ABILITY_ZEN_MODE:
-            case ABILITY_SHIELDS_DOWN:
-                if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
-                {
-                    gBattleScripting.battler = battler;
-                    BattleScriptExecute(BattleScript_BattlerFormChangeEnd2);
-                    effect++;
-                }
-                break;
-            case ABILITY_POWER_CONSTRUCT:
-                if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
-                {
-                    gBattleScripting.battler = battler;
-                    BattleScriptExecute(BattleScript_PowerConstruct);
-                    effect++;
-                }
-                break;
             case ABILITY_BALL_FETCH:
                 if (!(gBattleTypeFlags & BATTLE_TYPE_RAID)
                     && gBattleMons[battler].item == ITEM_NONE
@@ -5104,6 +5080,18 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 break;
             default:
                 break;
+            }
+
+            // Handle ability form changes at the end of the turn here.
+            if ((gLastUsedAbility != ABILITY_SCHOOLING || gBattleMons[battler].level >= 20)
+                && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
+            {
+                gBattleScripting.battler = battler;
+                if (gLastUsedAbility == ABILITY_POWER_CONSTRUCT) // Special animation
+                    BattleScriptExecute(BattleScript_PowerConstruct);
+                else
+                    BattleScriptExecute(BattleScript_BattlerFormChangeEnd2); // Generic animation
+                effect++;
             }
         }
         break;
@@ -9924,7 +9912,7 @@ static bool32 CanBattlerFormChange(u32 battler, enum FormChanges method)
     case FORM_CHANGE_BATTLE_SWITCH:
         if (IsGigantamaxed(battler))
             return TRUE;
-        else if (GetActiveGimmick(battler) == GIMMICK_TERA && GetBattlerAbility(battler) == ABILITY_HUNGER_SWITCH)
+        else if (GetActiveGimmick(battler) == GIMMICK_TERA && DoesSpeciesHaveFormChangeMethod(gBattleMons[battler].species, FORM_CHANGE_BATTLE_TURN_END))
             return FALSE;
         break;
     default:

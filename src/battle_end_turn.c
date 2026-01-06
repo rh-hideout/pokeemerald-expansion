@@ -1311,6 +1311,14 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     return effect;
 }
 
+static bool32 CanBattlerEndTurnFormChange(u32 battler, enum Ability ability)
+{
+    u32 species = gBattleMons[battler].species;
+
+    return (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_HP_PERCENT) != species
+        || GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_TURN_END) != species);
+}
+
 static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
 {
     bool32 effect = FALSE;
@@ -1319,18 +1327,8 @@ static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    switch (ability)
-    {
-    case ABILITY_POWER_CONSTRUCT:
-    case ABILITY_SCHOOLING:
-    case ABILITY_SHIELDS_DOWN:
-    case ABILITY_ZEN_MODE:
-    case ABILITY_HUNGER_SWITCH:
-        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
-            effect = TRUE;
-    default:
-        break;
-    }
+    if (CanBattlerEndTurnFormChange(battler, ability) && AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+        effect = TRUE;
 
     return effect;
 }
@@ -1389,7 +1387,7 @@ static bool32 HandleEndTurnTrainerBSlides(u32 battler)
 
     if (slide == TRUE)
     {
-        if ((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA) 
+        if ((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
         || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
         || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF))
             BattleScriptExecute(BattleScript_TrainerASlideMsgEnd2);
