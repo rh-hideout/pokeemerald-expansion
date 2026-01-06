@@ -7,6 +7,7 @@
 struct BattleEnvironment
 {
     u16 naturePower;
+    const void *secretPowerAnimation;
     u16 secretPowerEffect;
     enum Type camouflageType;
     struct BattleBackground background;

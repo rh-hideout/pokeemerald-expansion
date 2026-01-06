@@ -42,13 +42,31 @@ struct BattleAnimBackground
     const u32 *tilemap;
 };
 
+struct BattleAnimation
+{
+    struct CompressedSpriteSheet pic;
+    struct SpritePalette palette;
+};
+
+// Helper struct for link battles to show correct animations and transformations that can change their look
+// Used by EmitBattleAnimation and EmitMoveAnimation
+struct LinkBattleAnim
+{
+    u32 transformedMonPID;
+    u8 rolloutTimer;
+    u8 furyCutterCounter;
+    u8 syrupBombIsShiny:1;
+    u8 isTransformedMonShiny:1;
+    u8 padding:4;
+};
+
 #define ANIM_ARGS_COUNT 8
 
 extern void (*gAnimScriptCallback)(void);
 extern bool8 gAnimScriptActive;
 extern u8 gAnimVisualTaskCount;
 extern u8 gAnimSoundTaskCount;
-extern struct DisableStruct *gAnimDisableStructPtr;
+extern struct LinkBattleAnim *gAnimDisableStructPtr;
 extern s32 gAnimMoveDmg;
 extern u16 gAnimMovePower;
 extern u8 gAnimFriendship;
@@ -62,7 +80,7 @@ extern u8 gAnimCustomPanning;
 extern u16 gAnimMoveIndex;
 
 void ClearBattleAnimationVars(void);
-void DoMoveAnim(u16 move);
+void DoMoveAnim(enum Move move);
 void LaunchBattleAnimation(u32 animType, u32 animId);
 void DestroyAnimSprite(struct Sprite *sprite);
 void DestroyAnimVisualTask(u8 taskId);
@@ -437,8 +455,7 @@ extern const struct OamData gOamData_AffineOff_ObjBlend_64x32;
 extern const struct OamData gOamData_AffineOff_ObjBlend_16x32;
 extern const struct OamData gOamData_AffineDouble_ObjBlend_32x8;
 
-extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
-extern const struct SpritePalette gBattleAnimPaletteTable[];
+extern const struct BattleAnimation gBattleAnimTable[ANIM_TAG_COUNT];
 
 extern const struct SpriteTemplate gWaterHitSplatSpriteTemplate;
 

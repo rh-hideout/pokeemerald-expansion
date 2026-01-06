@@ -1135,6 +1135,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Fletchling,
             gShinyOverworldPalette_Fletchling
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sFletchlingLevelUpLearnset,
         .teachableLearnset = sFletchlingTeachableLearnset,
         .eggMoveLearnset = sFletchlingEggMoveLearnset,
@@ -1339,7 +1340,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Scatterbug,                                                   \
             gShinyOverworldPalette_Scatterbug                                               \
         )                                                                                   \
-        .tmIlliterate = TRUE,                                                               \
+        .teachingType = TM_ILLITERATE,                                                      \
         .levelUpLearnset = sScatterbugLevelUpLearnset,                                      \
         .teachableLearnset = sScatterbugTeachableLearnset,                                  \
         .eggMoveLearnset = sScatterbugEggMoveLearnset,                                      \
@@ -1423,7 +1424,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Spewpa,                                           \
             gShinyOverworldPalette_Spewpa                                       \
         )                                                                       \
-        .tmIlliterate = TRUE,                                                   \
+        .teachingType = TM_ILLITERATE,                                          \
         .levelUpLearnset = sSpewpaLevelUpLearnset,                              \
         .teachableLearnset = sSpewpaTeachableLearnset,                          \
         .formSpeciesIdTable = sSpewpaFormSpeciesIdTable,                        \
@@ -4674,6 +4675,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Hawlucha,
             gShinyOverworldPalette_Hawlucha
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sHawluchaLevelUpLearnset,
         .teachableLearnset = sHawluchaTeachableLearnset,
         .eggMoveLearnset = sHawluchaEggMoveLearnset,
@@ -6404,7 +6406,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_XerneasNeutral,
             gShinyOverworldPalette_XerneasNeutral
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sXerneasLevelUpLearnset,
@@ -6468,7 +6470,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_XerneasNeutral,
             gShinyOverworldPalette_XerneasNeutral
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sXerneasLevelUpLearnset,
@@ -6544,7 +6546,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Yveltal,
             gShinyOverworldPalette_Yveltal
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sYveltalLevelUpLearnset,
@@ -6609,7 +6611,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Zygarde50,
             gShinyOverworldPalette_Zygarde50
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sZygardeLevelUpLearnset,
@@ -6673,7 +6675,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Zygarde50,
             gShinyOverworldPalette_Zygarde50
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sZygardeLevelUpLearnset,
@@ -6737,7 +6739,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Zygarde10,
             gShinyOverworldPalette_Zygarde10
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sZygardeLevelUpLearnset,
@@ -6802,7 +6804,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Zygarde10,
             gShinyOverworldPalette_Zygarde10
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sZygardeLevelUpLearnset,
@@ -6875,7 +6877,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_ZygardeComplete,
             gShinyOverworldPalette_ZygardeComplete
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sZygardeLevelUpLearnset,
@@ -6933,6 +6935,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         FOOTPRINT(Zygarde)
         //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
+        .isRestrictedLegendary = TRUE,
         .levelUpLearnset = sZygardeLevelUpLearnset,
         .teachableLearnset = sZygardeTeachableLearnset,
         .formSpeciesIdTable = sZygardeFormSpeciesIdTable,
@@ -7037,7 +7040,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_MAGIC_BOUNCE, ABILITY_MAGIC_BOUNCE, ABILITY_MAGIC_BOUNCE },
         .bodyColor = BODY_COLOR_PINK,
         .speciesName = _("Diancie"),
+    #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_DIANCIE_MEGA,
+    #else
+        .cryId = CRY_DIANCIE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_DIANCIE,
         .categoryName = _("Jewel"),
         .height = 11,

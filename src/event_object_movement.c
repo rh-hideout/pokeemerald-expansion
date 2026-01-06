@@ -243,9 +243,6 @@ static const struct SpriteTemplate sCameraSpriteTemplate = {
     .tileTag = 0,
     .paletteTag = TAG_NONE,
     .oam = &gDummyOamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CameraObject
 };
 
@@ -3163,6 +3160,13 @@ u8 LoadObjectEventPalette(u16 paletteTag)
     if (i == 0xFF)
         return i;
     return LoadSpritePaletteIfTagExists(&sObjectEventSpritePalettes[i]);
+}
+
+u8 LoadObjectEventPaletteCopy(u16 originalTag, u16 copyTag)
+{
+    u32 i = FindObjectEventPaletteIndexByTag(originalTag);
+    const struct SpritePalette palette = {sObjectEventSpritePalettes[i].data, copyTag};
+    return LoadSpritePalette(&palette);
 }
 
 u8 LoadPlayerObjectEventPalette(u8 gender)

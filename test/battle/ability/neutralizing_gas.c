@@ -51,7 +51,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas prevents ally's switch-in ability from acti
 DOUBLE_BATTLE_TEST("Neutralizing Gas ignores all battlers' ability effects")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_WATER_ABSORB); }
@@ -319,7 +319,8 @@ SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate Air Loc
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(species) { Ability(ability); }
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
@@ -357,7 +358,7 @@ SINGLE_BATTLE_TEST("Neutralizing Gas only displays exiting message for the last 
 DOUBLE_BATTLE_TEST("Neutralizing Gas is active for the duration of a Spread Move even if Neutralizing Gas is no longer on the field")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_ORIGIN_PULSE) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_ORIGIN_PULSE) == TARGET_BOTH);
         PLAYER(SPECIES_WEEZING) { HP(1); Ability(ABILITY_NEUTRALIZING_GAS); }
         PLAYER(SPECIES_GOLEM) { Ability(ABILITY_STURDY); }
         OPPONENT(SPECIES_BASCULEGION) { Ability(ABILITY_MOLD_BREAKER); }
@@ -378,7 +379,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas is active for the duration of a Spread Move
 DOUBLE_BATTLE_TEST("Neutralizing Gas is active until the last Dragon Darts hit even if Neutralizing Gas is no longer on the field")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DRAGON_DARTS) == EFFECT_DRAGON_DARTS);
+        ASSUME(GetMoveTarget(MOVE_DRAGON_DARTS) == TARGET_SMART);
         PLAYER(SPECIES_WEEZING) { HP(1); Ability(ABILITY_NEUTRALIZING_GAS); }
         PLAYER(SPECIES_GOLEM) { HP(2); MaxHP(2); Ability(ABILITY_STURDY); }
         OPPONENT(SPECIES_BASCULEGION) { Ability(ABILITY_MOLD_BREAKER); }

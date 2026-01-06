@@ -1070,6 +1070,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Hoothoot,
             gShinyOverworldPalette_Hoothoot
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sHoothootLevelUpLearnset,
         .teachableLearnset = sHoothootTeachableLearnset,
         .eggMoveLearnset = sHoothootEggMoveLearnset,
@@ -1902,6 +1903,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Natu,
             gShinyOverworldPalette_Natu
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sNatuLevelUpLearnset,
         .teachableLearnset = sNatuTeachableLearnset,
         .eggMoveLearnset = sNatuEggMoveLearnset,
@@ -2237,7 +2239,11 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .abilities = { ABILITY_MOLD_BREAKER, ABILITY_MOLD_BREAKER, ABILITY_MOLD_BREAKER },
         .bodyColor = BODY_COLOR_YELLOW,
         .speciesName = _("Ampharos"),
+    #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_AMPHAROS_MEGA,
+    #else
+        .cryId = CRY_AMPHAROS,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_AMPHAROS,
         .categoryName = _("Light"),
         .height = 14,
@@ -3800,6 +3806,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             TRACKS_FOOT,
             sAnimTable_Following
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sMurkrowLevelUpLearnset,
         .teachableLearnset = sMurkrowTeachableLearnset,
         .eggMoveLearnset = sMurkrowEggMoveLearnset,
@@ -4098,9 +4105,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Unown,                                                                    \
             gShinyOverworldPalette_Unown,                                                               \
         )                                                                                               \
+        .teachingType = TM_ILLITERATE,                                                                  \
         .levelUpLearnset = sUnownLevelUpLearnset,                                                       \
         .teachableLearnset = sUnownTeachableLearnset,                                                   \
-        .tmIlliterate = TRUE,                                                                           \
         .formSpeciesIdTable = sUnownFormSpeciesIdTable,                                                 \
     }
 
@@ -4202,7 +4209,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Wynaut,
             gShinyOverworldPalette_Wynaut
         )
-        .tmIlliterate = TRUE,
+        .teachingType = TM_ILLITERATE,
         .levelUpLearnset = sWynautLevelUpLearnset,
         .teachableLearnset = sWynautTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 15, SPECIES_WOBBUFFET}),
@@ -4291,7 +4298,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             TRACKS_FOOT,
             sAnimTable_Following
         )
-        .tmIlliterate = TRUE,
+        .teachingType = TM_ILLITERATE,
         .levelUpLearnset = sWobbuffetLevelUpLearnset,
         .teachableLearnset = sWobbuffetTeachableLearnset,
     },
@@ -5513,7 +5520,11 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .abilities = { ABILITY_SKILL_LINK, ABILITY_SKILL_LINK, ABILITY_SKILL_LINK },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Heracross"),
+    #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_HERACROSS_MEGA,
+    #else
+        .cryId = CRY_HERACROSS,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_HERACROSS,
         .categoryName = _("Single Horn"),
         .height = 17,
@@ -7012,6 +7023,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Delibird,
             gShinyOverworldPalette_Delibird
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sDelibirdLevelUpLearnset,
         .teachableLearnset = sDelibirdTeachableLearnset,
         .eggMoveLearnset = sDelibirdEggMoveLearnset,
@@ -7467,7 +7479,11 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .abilities = { ABILITY_SOLAR_POWER, ABILITY_SOLAR_POWER, ABILITY_SOLAR_POWER },
         .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Houndoom"),
+    #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_HOUNDOOM_MEGA,
+    #else
+        .cryId = CRY_HOUNDOOM,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_HOUNDOOM,
         .categoryName = _("Dark"),
         .height = 19,
@@ -7883,7 +7899,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Smeargle,
             gShinyOverworldPalette_Smeargle
         )
-        .tmIlliterate = TRUE,
+        .teachingType = TM_ILLITERATE,
         .levelUpLearnset = sSmeargleLevelUpLearnset,
         .teachableLearnset = sSmeargleTeachableLearnset,
     },
@@ -8039,7 +8055,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Raikou,
             gShinyOverworldPalette_Raikou
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sRaikouLevelUpLearnset,
         .teachableLearnset = sRaikouTeachableLearnset,
@@ -8120,7 +8136,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Entei,
             gShinyOverworldPalette_Entei
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sEnteiLevelUpLearnset,
         .teachableLearnset = sEnteiTeachableLearnset,
@@ -8201,7 +8217,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Suicune,
             gShinyOverworldPalette_Suicune
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sSuicuneLevelUpLearnset,
         .teachableLearnset = sSuicuneTeachableLearnset,
@@ -8443,7 +8459,11 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .abilities = { ABILITY_SAND_STREAM, ABILITY_SAND_STREAM, ABILITY_SAND_STREAM },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Tyranitar"),
+    #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_TYRANITAR_MEGA,
+    #else
+        .cryId = CRY_TYRANITAR,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_TYRANITAR,
         .categoryName = _("Armor"),
         .height = 25,
@@ -8574,7 +8594,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Lugia,
             gShinyOverworldPalette_Lugia
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sLugiaLevelUpLearnset,
@@ -8654,7 +8674,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_HoOh,
             gShinyOverworldPalette_HoOh
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sHoOhLevelUpLearnset,

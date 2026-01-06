@@ -334,7 +334,8 @@ DOUBLE_BATTLE_TEST("Damage calculation: Combined pledge move")
 DOUBLE_BATTLE_TEST("Pledge move combo interactions with Powder are correct")
 {
     // Fire Pledge as the first move or Fire Pledge combo should fail
-    u32 moveLeft, moveRight, speedLeft, speedRight;
+    enum Move moveLeft, moveRight;
+    u32 speedLeft, speedRight;
     PARAMETRIZE { moveLeft = MOVE_FIRE_PLEDGE; moveRight = MOVE_WATER_PLEDGE; speedLeft = 4; speedRight = 3; } // FAIL 1
     PARAMETRIZE { moveLeft = MOVE_FIRE_PLEDGE; moveRight = MOVE_WATER_PLEDGE; speedLeft = 3; speedRight = 4; }
     PARAMETRIZE { moveLeft = MOVE_WATER_PLEDGE; moveRight = MOVE_FIRE_PLEDGE; speedLeft = 4; speedRight = 3; }
