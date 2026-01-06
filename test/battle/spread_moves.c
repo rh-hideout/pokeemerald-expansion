@@ -124,7 +124,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will be weakened by stron
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_AIR_LOCK); }
         PLAYER(SPECIES_RALTS);
-        OPPONENT(SPECIES_ZAPDOS)
+        OPPONENT(SPECIES_ZAPDOS);
         OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_ROCK_SLIDE); }

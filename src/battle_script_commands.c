@@ -2023,11 +2023,10 @@ static inline bool32 DoesBattlerNegateDamage(u32 battler)
 
 static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(u32 resultFlags, u32 moveTarget)
 {
-    u32 battlerDef;
     u32 ret = resultFlags;
-    for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        if ((gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT //  (MOVE_RESULT_MISSED | MOVE_RESULT_NO_EFFECT)
+        if ((gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT
          || gBattleStruct->noResultString[battlerDef] != CAN_DAMAGE)
          || !IsBattlerAlive(battlerDef)
          || IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef, moveTarget))
