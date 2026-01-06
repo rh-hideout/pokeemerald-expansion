@@ -1237,18 +1237,18 @@ static void Cmd_printattackstring(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static u32 GetAnyPossibleNextTarget(void)
+static u32 GetPossibleNextTarget(void)
 {
-    const u8 order[MAX_BATTLERS_COUNT] = {
+    const u8 targetOrder[MAX_BATTLERS_COUNT] = {
         gBattlerAttacker,
         BATTLE_PARTNER(gBattlerAttacker),
-        BATTLE_OPPOSITE(gBattlerAttacker),
-        BATTLE_OPPOSITE(BATTLE_PARTNER(gBattlerAttacker)),
+        LEFT_FOE(gBattlerAttacker),
+        RIGHT_FOE(gBattlerAttacker),
     };
 
     for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        u32 battler = order[i];
+        u32 battler = targetOrder[i];
 
         if (!IsBattlerAlive(battler))
             continue;
@@ -1265,7 +1265,7 @@ static void Cmd_getpossiblenexttarget(void)
 {
     CMD_ARGS(const u8 *jumpInstr);
 
-    u32 nextTarget = GetAnyPossibleNextTarget();
+    u32 nextTarget = GetPossibleNextTarget();
     if (nextTarget != MAX_BATTLERS_COUNT)
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget;

@@ -2934,7 +2934,7 @@ static enum MoveCanceler CancelerPriorityBlock(struct BattleContext *ctx)
     u32 ability = ABILITY_NONE; // ability of battler who is blocking
     for (battler = 0; battler < gBattlersCount; battler++)
     {
-        if (!IsBattlerAlive(battler) || IsBattlerAlly(ctx->battlerAtk, ctx->battlerDef))
+        if (!IsBattlerAlive(battler) || IsBattlerAlly(ctx->battlerAtk, battler))
             continue;
 
         ability = GetBattlerAbility(battler);

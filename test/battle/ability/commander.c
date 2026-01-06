@@ -400,7 +400,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when a 
 DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when commanding Dondozo")
 {
     bool32 targetPlayerRight;
-    // PARAMETRIZE { targetPlayerRight = TRUE; }
+    PARAMETRIZE { targetPlayerRight = TRUE; }
     PARAMETRIZE { targetPlayerRight = FALSE; }
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_DRAGON_DARTS) == TARGET_SMART);
