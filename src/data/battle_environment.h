@@ -88,7 +88,7 @@ const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_env
 #endif
 #if B_SECRET_POWER_ANIMATION >= GEN_7
     #define PLAIN_SECRET_POWER_ANIMATION gBattleAnimMove_SpitUp
-#elif B_SECRET_POWER_ANIMATION >= GEN_6
+#elif B_SECRET_POWER_ANIMATION == GEN_6
     #define PLAIN_SECRET_POWER_ANIMATION gBattleAnimMove_BodySlam
 #elif B_SECRET_POWER_ANIMATION >= GEN_4
     #define PLAIN_SECRET_POWER_ANIMATION gBattleAnimMove_MudSlap
@@ -130,7 +130,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
     #else
         .naturePower = MOVE_RAZOR_LEAF,
     #endif
-        .secretPowerAnimation = gBattleAnimMove_MagicalLeaf,
+        .secretPowerAnimation = B_SECRET_POWER_ANIMATION >= GEN_4 ? gBattleAnimMove_NeedleArm : gBattleAnimMove_MagicalLeaf,
         .secretPowerEffect = MOVE_EFFECT_SLEEP,
         .camouflageType = TYPE_GRASS,
         .camouflageBlend = RGB(0, 15, 2),
@@ -199,7 +199,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerAnimation = B_SECRET_POWER_ANIMATION >= GEN_5 ? gBattleAnimMove_MudSlap : gBattleAnimMove_RockThrow,
     #if B_SECRET_POWER_EFFECT >= GEN_5
         .secretPowerEffect = MOVE_EFFECT_ACC_MINUS_1,
-    #elif B_SECRET_POWER_EFFECT >= GEN_4
+    #elif B_SECRET_POWER_EFFECT == GEN_4
         .secretPowerEffect = MOVE_EFFECT_FLINCH,
     #else
         .secretPowerEffect = MOVE_EFFECT_CONFUSION,
@@ -555,7 +555,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .name = _("Snow                     "),
     #if B_NATURE_POWER_MOVES >= GEN_7
         .naturePower = MOVE_ICE_BEAM,
-    #elif B_NATURE_POWER_MOVES >= GEN_6
+    #elif B_NATURE_POWER_MOVES == GEN_6
         .naturePower = MOVE_FROST_BREATH,
     #else
         .naturePower = MOVE_BLIZZARD,
