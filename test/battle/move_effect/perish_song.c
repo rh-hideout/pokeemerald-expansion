@@ -58,3 +58,40 @@ DOUBLE_BATTLE_TEST("Perish Song ignores protect")
     }
 }
 
+DOUBLE_BATTLE_TEST("Perish Song will be blocked by users Soundproof in gen3")
+{
+    u32 config = GEN_3;
+
+    PARAMETRIZE { config = GEN_3; }
+    PARAMETRIZE { config = GEN_5; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_CHECK_USER_FAILURE, config);
+        PLAYER(SPECIES_VOLTORB) { Ability(ABILITY_SOUNDPROOF); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_PERISH_SONG); }
+        TURN {}
+        TURN {}
+        TURN {}
+    } SCENE {
+        if (config == GEN_3) {
+            ABILITY_POPUP(playerLeft, ABILITY_SOUNDPROOF);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, playerLeft);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, playerLeft);
+            HP_BAR(playerLeft);
+        }
+    } THEN {
+        if (config == GEN_3) {
+            EXPECT_GT(playerLeft->hp, 0);
+        } else {
+            EXPECT_EQ(playerLeft->hp, 0);
+        }
+        EXPECT_EQ(opponentLeft->hp, 0);
+        EXPECT_EQ(playerRight->hp, 0);
+        EXPECT_EQ(opponentRight->hp, 0);
+    }
+}

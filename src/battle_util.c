@@ -3158,7 +3158,7 @@ static bool32 IsTargetingSelf(u32 battlerAtk, u32 battlerDef)
 {
     if (battlerAtk != battlerDef)
         return skipFailure;
-    return skipFailure; // Potentially in Gen3 the user can absorb it's own move?
+    return skipFailure; // In Gen3 the user checks it's own failure. Unclear because no such moves exists 
 }
 
 static bool32 IsTargetingAlly(u32 battlerAtk, u32 battlerDef)
@@ -3179,7 +3179,7 @@ static bool32 IsTargetingSelfAndAlly(u32 battlerAtk, u32 battlerDef)
             gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_NO_EFFECT;
         return skipFailure;
     }
-    return checkFailure; // In Gen3 the user checks it's own failure
+    return checkFailure; // In Gen3 the user checks it's own failure. Unclear because no such moves exists
 }
 
 static bool32 IsTargetingSelfOrAlly(u32 battlerAtk, u32 battlerDef)
@@ -3193,7 +3193,7 @@ static bool32 IsTargetingSelfOrAlly(u32 battlerAtk, u32 battlerDef)
         return skipFailure;
     }
 
-    return checkFailure; // In Gen3 the user checks it's own failure
+    return checkFailure; // In Gen3 the user checks it's own failure. Unclear because no such move exists
 }
 
 static bool32 IsTargetingFoesAndAlly(u32 battlerAtk, u32 battlerDef)
@@ -3215,8 +3215,8 @@ static bool32 IsTargetingOpponentsField(u32 battlerAtk, u32 battlerDef)
 
 static bool32 IsTargetingAllBattlers(u32 battlerAtk, u32 battlerDef)
 {
-    if (battlerAtk == battlerDef)
-        return skipFailure; // In Gen3 the user checks it's own failure
+    if (GetConfig(CONFIG_CHECK_USER_FAILURE) >= GEN_5 && battlerAtk == battlerDef)
+        return skipFailure;
     return checkFailure;
 }
 
@@ -3296,6 +3296,7 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
         }
         else if (IsBattlerProtected(ctx))
         {
+            SetOrClearRageVolatile();
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED;
             gLastLandedMoves[ctx->battlerDef] = 0;
@@ -12623,3 +12624,12 @@ void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, enum Move u
         }
     }
 }
+
+void SetOrClearRageVolatile(void)
+{
+    if (GetConfig(CONFIG_RAGE_BUILDS) <= GEN_3 && MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_RAGE))
+        gBattleMons[gBattlerAttacker].volatiles.rage = TRUE;
+    else
+        gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
+}
+

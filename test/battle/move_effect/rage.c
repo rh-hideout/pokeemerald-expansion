@@ -119,7 +119,7 @@ SINGLE_BATTLE_TEST("Rage does not build Attack when user's Attack is at max stag
 SINGLE_BATTLE_TEST("Rage volatile behavior on Protect depends on generation")
 {
     u32 config;
-    // PARAMETRIZE { config = GEN_3; }
+    PARAMETRIZE { config = GEN_3; }
     PARAMETRIZE { config = GEN_4; }
     GIVEN {
         WITH_CONFIG(CONFIG_RAGE_BUILDS, config);
