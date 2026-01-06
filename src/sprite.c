@@ -1799,185 +1799,7 @@ u32 GetSpanPerImage(u32 shape, u32 size)
 #define nextX data[1]
 #define nextY data[2]
 
-enum FillMode
-{
-    FILL_MODE_CUSTOM,
-    FILL_MODE_FULL_LINES,
-    FILL_MODE_FULL_SPRITE,
-};
-
-struct SpriteToFill
-{
-    u8 spriteId;
-    u8 startX;
-    u8 startY;
-    u8 width;
-    u8 height;
-    u8 spriteWidth;
-    enum FillMode mode:8;
-    u32 color;
-};
-
-#define CURRENT_TILE_ROW ((y / 8) * rowOffset + tile * 8 + y % 8)
-
-static void FillStructWithColor(struct SpriteToFill *input)
-{
-    u32 *tiles = (u32 *)((OBJ_VRAM0) + gSprites[input->spriteId].oam.tileNum * TILE_SIZE_4BPP);
-    switch (input->mode)
-    {
-    case FILL_MODE_FULL_SPRITE:
-        for (u32 i = 0; i < input->height * (input->width >> 3); i++)
-            tiles[i] = input->color;
-        break;
-    case FILL_MODE_FULL_LINES:
-    {
-        u32 rowOffset = 8 * (input->spriteWidth >> 3);
-        for (u32 y = input->startY; y < input->startY + input->height; y++)
-            for (u32 tile = 0; tile < (input->width >> 3); tile++)
-                tiles[CURRENT_TILE_ROW] = input->color;
-        break;
-    }
-    case FILL_MODE_CUSTOM:
-    {
-        u32 rowOffset = 8 * (input->spriteWidth >> 3);
-        u32 startTile = input->startX % 8 ? (input->startX >> 3) + 1 : (input->startX >> 3);
-        //  Handle full tile widths
-        for (u32 y = input->startY; y < input->startY + input->height; y++)
-        {
-            for (u32 tile = startTile; tile < (input->startX + input->width) / 8; tile++)
-                tiles[CURRENT_TILE_ROW] = input->color;
-        }
-
-        //  Handle tiles with arbitrary widths
-        //  Also need to check that span is more than 1 tile
-        if (input->startX / 8 != (input->startX + input->width) / 8)
-        {
-            if (input->startX % 8 != 0)
-            {
-                //  Left edge is not tile aligned
-                u32 colorMask = 0xFFFFFFFF << (4 * (input->startX % 8));
-                u32 currColor = input->color & colorMask;
-                u32 tile = input->startX / 8;
-                u32 pixelMask = ~colorMask;
-                for (u32 y = input->startY; y < input->startY + input->height; y++)
-                {
-                    u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
-                    tiles[CURRENT_TILE_ROW] = currPixels | currColor;
-                }
-            }
-
-            if ((input->startX + input->width) % 8 != 0)
-            {
-                //  Right edge is not tile aligned
-                u32 colorMask = 0xFFFFFFFF >> (4 * (8 - ((input->startX + input->width) % 8)));
-                u32 currColor = input->color & colorMask;
-                u32 tile = (input->startX + input->width) / 8;
-                u32 pixelMask = ~colorMask;
-                for (u32 y = input->startY; y < input->startY + input->height; y++)
-                {
-                    u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
-                    tiles[CURRENT_TILE_ROW] = currPixels | currColor;
-                }
-            }
-        }
-        else if (input->width < 8)
-        {
-            u32 colorMask = 0xFFFFFFFF << (4 * (input->startX % 8));
-            colorMask = colorMask & (0xFFFFFFFF >> (4 * (8 - ((input->startX + input->width) % 8))));
-            u32 currColor = input->color & colorMask;
-            u32 tile = input->startX / 8;
-            u32 pixelMask = ~colorMask;
-            for (u32 y = input->startY; y < input->startY + input->height; y++)
-            {
-                u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
-                tiles[CURRENT_TILE_ROW] = currPixels | currColor;
-            }
-        }
-        break;
-    }
-    }
-}
-
-static void FillStructWithSprite(struct SpriteToFill *input)
-{
-    u32 *tiles = (u32 *)((OBJ_VRAM0) + gSprites[input->spriteId].oam.tileNum * TILE_SIZE_4BPP);
-    u32 *src = GetSrcPtrFromSprite(&gSprites[input->spriteId]);
-    switch (input->mode)
-    {
-    case FILL_MODE_FULL_SPRITE:
-        for (u32 i = 0; i < input->height * (input->width >> 3); i++)
-            tiles[i] = src[i];
-        break;
-    case FILL_MODE_FULL_LINES:
-    {
-        u32 rowOffset = 8 * (input->spriteWidth >> 3);
-        for (u32 y = input->startY; y < input->startY + input->height; y++)
-            for (u32 tile = 0; tile < (input->width >> 3); tile++)
-                tiles[CURRENT_TILE_ROW] = src[CURRENT_TILE_ROW];
-        break;
-    }
-    case FILL_MODE_CUSTOM:
-    {
-        u32 rowOffset = 8 * (input->spriteWidth >> 3);
-        u32 startTile = input->startX % 8 ? (input->startX >> 3) + 1 : (input->startX >> 3);
-        //  Handle full tile widths
-        for (u32 y = input->startY; y < input->startY + input->height; y++)
-        {
-            for (u32 tile = startTile; tile < (input->startX + input->width) / 8; tile++)
-                tiles[CURRENT_TILE_ROW] = src[CURRENT_TILE_ROW];
-        }
-
-        //  Handle tiles with arbitrary widths
-        //  Also need to check that span is more than 1 tile
-        if (input->startX / 8 != (input->startX + input->width) / 8)
-        {
-            if (input->startX % 8 != 0)
-            {
-                //  Left edge is not tile aligned
-                u32 srcMask = 0xFFFFFFFF << (4 * (input->startX % 8));
-                u32 tile = input->startX / 8;
-                u32 pixelMask = ~srcMask;
-                for (u32 y = input->startY; y < input->startY + input->height; y++)
-                {
-                    u32 currSrc = src[CURRENT_TILE_ROW] & srcMask;
-                    u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
-                    tiles[CURRENT_TILE_ROW] = currPixels | currSrc;
-                }
-            }
-
-            if ((input->startX + input->width) % 8 != 0)
-            {
-                //  Right edge is not tile aligned
-                u32 srcMask = 0xFFFFFFFF >> (4 * (8 - ((input->startX + input->width) % 8)));
-                u32 tile = (input->startX + input->width) / 8;
-                u32 pixelMask = ~srcMask;
-                for (u32 y = input->startY; y < input->startY + input->height; y++)
-                {
-                    u32 currSrc = src[CURRENT_TILE_ROW] & srcMask;
-                    u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
-                    tiles[CURRENT_TILE_ROW] = currPixels | currSrc;
-                }
-            }
-        }
-        else if (input->width < 8)
-        {
-            u32 srcMask = 0xFFFFFFFF << (4 * (input->startX % 8));
-            srcMask = srcMask & (0xFFFFFFFF >> (4 * (8 - ((input->startX + input->width) % 8))));
-            u32 tile = input->startX / 8;
-            u32 pixelMask = ~srcMask;
-            for (u32 y = input->startY; y < input->startY + input->height; y++)
-            {
-                u32 currSrc = src[CURRENT_TILE_ROW] & srcMask;
-                u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
-                tiles[CURRENT_TILE_ROW] = currPixels | currSrc;
-            }
-        }
-        break;
-    }
-    }
-}
-
-#undef CURRENT_TILE_ROW
+#define CURRENT_SPRITE_POS ((spriteY / 8) * spriteWidth + spriteX + spriteY % 8)
 
 static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 height, bool32 isColor, u32 color)
 {
@@ -1985,12 +1807,17 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
     u32 spriteWidth = GetSpriteWidth(&gSprites[spriteId]);
     u32 spriteHeight = GetSpriteHeight(&gSprites[spriteId]);
 
+    u32 *src = NULL;
+
     if (isColor)
         color = color * 0x11111111;
+    else
+        src = GetSrcPtrFromSprite(&gSprites[spriteId]);
 
+    //  Check if only one sprite is being filled
     if (left + width > spriteWidth || top + height > spriteHeight)
     {
-        //  Assume that all sprites have equal dimensions
+        //  Check if height and width overflows sprite coverage
         u32 numSpritesY = 1;
         u32 numSpritesX = 1;
         u32 tempHeight = height;
@@ -2034,255 +1861,120 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
             }
         }
 
-        struct SpriteToFill printSprites[numSpritesX * numSpritesY];
+        if (numSpritesX * spriteWidth < left + width)
+            width = numSpritesX * spriteWidth - left;
 
-        //  Fill out the sprites to print to
-
-        //  Sprite IDs, spriteWidth and color
-        u32 nextSpriteId = spriteId;
-        for (u32 y = 0; y < numSpritesY; y++)
-        {
-            u32 leftMostSpriteId = nextSpriteId;
-            for (u32 x = 0; x < numSpritesX; x++)
-            {
-                printSprites[x + y * numSpritesX].spriteId = nextSpriteId;
-                printSprites[x + y * numSpritesX].spriteWidth = spriteWidth;
-                printSprites[x + y * numSpritesX].color = color;
-
-                nextSpriteId = gSprites[nextSpriteId].nextX;
-            }
-            nextSpriteId = gSprites[leftMostSpriteId].nextY;
-        }
-
-        if (numSpritesX > 1 && numSpritesY > 1)
-        {
-            u32 rightWidth = 0;
-            if (numSpritesX > 1)
-                rightWidth = width - left - spriteWidth * (numSpritesX - 2);
-
-            //  Top edge values
-            if (numSpritesX > 1)
-            {
-                for (u32 x = 0; x < numSpritesX; x++)
-                {
-                    printSprites[x].startY = top;
-                    if (top + height > spriteHeight)
-                        printSprites[x].height = spriteHeight - top;
-                    else
-                        printSprites[x].height = height;
-
-                    if (x == 0)
-                    {
-                        printSprites[x].startX = left;
-                        printSprites[x].width = spriteWidth - left;
-                        printSprites[x].mode = FILL_MODE_CUSTOM;
-                    }
-                    else if (x == numSpritesX - 1)
-                    {
-                        printSprites[x].startX = 0;
-                        printSprites[x].width = rightWidth;
-                        printSprites[x].mode = FILL_MODE_CUSTOM;
-                    }
-                    else
-                    {
-                        printSprites[x].startX = 0;
-                        printSprites[x].width = spriteWidth;
-                        printSprites[x].mode = FILL_MODE_FULL_LINES;
-                    }
-                }
-            }
-            else
-            {
-                printSprites[0].startY = top;
-                printSprites[0].startX = left;
-                printSprites[0].width = width;
-                printSprites[0].mode = FILL_MODE_CUSTOM;
-            }
-
-            u32 bottomHeight = 0;
-            if (numSpritesY > 1)
-                bottomHeight = height - (spriteHeight - top) - spriteHeight * (numSpritesY - 2);
-
-            //  Bottom edge values
-            if (numSpritesX > 1)
-            {
-                u32 offset = (numSpritesY - 1) * numSpritesX;
-                for (u32 x = 0; x < numSpritesX; x++)
-                {
-                    printSprites[offset + x].startY = 0;
-                    printSprites[offset + x].height = bottomHeight;
-
-                    if (x == 0)
-                    {
-                        printSprites[offset + x].startX = left;
-                        printSprites[offset + x].width = spriteWidth - left;
-                        printSprites[offset + x].mode = FILL_MODE_CUSTOM;
-                    }
-                    else if (x == numSpritesX - 1)
-                    {
-                        printSprites[offset + x].startX = 0;
-                        printSprites[offset + x].width = rightWidth;
-                        printSprites[offset + x].mode = FILL_MODE_CUSTOM;
-                    }
-                    else
-                    {
-                        printSprites[offset + x].startX = 0;
-                        printSprites[offset + x].width = spriteWidth;
-                        printSprites[offset + x].mode = FILL_MODE_FULL_LINES;
-                    }
-                }
-            }
-
-            //  Left edge values
-
-            for (u32 y = 0; y < numSpritesY; y++)
-            {
-                printSprites[y * numSpritesX].startX = left;
-                if (left + width > spriteWidth)
-                    printSprites[y * numSpritesX].width = spriteWidth - left;
-                else
-                    printSprites[y * numSpritesX].width = width;
-
-                if (y == 0)
-                {
-                    printSprites[y * numSpritesX].startY = top;
-                    printSprites[y * numSpritesX].height = spriteHeight - top;
-                    printSprites[y * numSpritesX].mode = FILL_MODE_CUSTOM;
-                }
-                else if (y == numSpritesY - 1)
-                {
-                    printSprites[y * numSpritesX].startY = 0;
-                    printSprites[y * numSpritesX].height = bottomHeight;
-                    printSprites[y * numSpritesX].mode = FILL_MODE_CUSTOM;
-                }
-                else
-                {
-                    printSprites[y * numSpritesX].startY = 0;
-                    printSprites[y * numSpritesX].height = spriteHeight;
-                    printSprites[y * numSpritesX].mode = FILL_MODE_CUSTOM;
-                }
-            }
-
-            //  Right edge values
-            if (numSpritesY > 1)
-            {
-                u32 currWidth = width - (spriteWidth - left) - (numSpritesX - 2) * spriteWidth;
-                for (u32 y = 0; y < numSpritesX; y++)
-                {
-                    printSprites[(numSpritesX - 1) + numSpritesX * y].startX = 0;
-                    printSprites[(numSpritesX - 1) + numSpritesX * y].width = currWidth;
-
-                    if (y == 0)
-                    {
-                        printSprites[(numSpritesX - 1) + numSpritesX * y].startY = top;
-                        printSprites[(numSpritesX - 1) + numSpritesX * y].height = spriteHeight - top;
-                        printSprites[(numSpritesX - 1) + numSpritesX * y].mode = FILL_MODE_CUSTOM;
-                    }
-                    else if (y == numSpritesY - 1)
-                    {
-                        printSprites[(numSpritesX - 1) + numSpritesX * y].startY = 0;
-                        printSprites[(numSpritesX - 1) + numSpritesX * y].height = bottomHeight;
-                        printSprites[(numSpritesX - 1) + numSpritesX * y].mode = FILL_MODE_CUSTOM;
-                    }
-                    else
-                    {
-                        printSprites[(numSpritesX - 1) + numSpritesX * y].startY = 0;
-                        printSprites[(numSpritesX - 1) + numSpritesX * y].height = spriteHeight;
-                        printSprites[(numSpritesX - 1) + numSpritesX * y].mode = FILL_MODE_CUSTOM;
-                    }
-                }
-            }
-
-            //  Fill in center data
-            for (u32 y = 1; y < numSpritesY - 1; y++)
-            {
-                for (u32 x = 1; x < numSpritesX - 1; x++)
-                {
-                    printSprites[y * numSpritesX + x].height = spriteHeight;
-                    printSprites[y * numSpritesX + x].width = spriteWidth;
-                    printSprites[y * numSpritesX + x].startX = 0;
-                    printSprites[y * numSpritesX + x].startY = 0;
-                    printSprites[y * numSpritesX + x].mode = FILL_MODE_FULL_SPRITE;
-                }
-            }
-        }
-        else if (numSpritesX == 1)
-        {
-            for (u32 y = 0; y < numSpritesY; y++)
-            {
-                printSprites[y].startX = left;
-                printSprites[y].width = width;
-                printSprites[y].mode = FILL_MODE_CUSTOM;
-                if (y == 0)
-                {
-                    printSprites[y].startY = top;
-                    printSprites[y].height = spriteHeight - top;
-                }
-                else if (y == numSpritesY - 1)
-                {
-                    printSprites[y].startY = 0;
-                    printSprites[y].height = height - (spriteHeight - top) - spriteHeight * (numSpritesY - 2);
-                }
-                else
-                {
-                    printSprites[y].startY = 0;
-                    printSprites[y].height = spriteHeight;
-                }
-            }
-        }
-        else if (numSpritesY == 1)
-        {
-            for (u32 x = 0; x < numSpritesX; x++)
-            {
-                printSprites[x].startY = top;
-                printSprites[x].height = height;
-                printSprites[x].mode = FILL_MODE_CUSTOM;
-                if (x == 0)
-                {
-                    printSprites[x].startX = left;
-                    printSprites[x].width = spriteWidth - left;
-                }
-                else if (x == numSpritesX - 1)
-                {
-                    printSprites[x].startX = 0;
-                    printSprites[x].width = width - (spriteWidth - left) - (numSpritesX - 2) * spriteWidth;
-                }
-                else
-                {
-                    printSprites[x].startX = 0;
-                    printSprites[x].width = spriteWidth;
-                }
-            }
-        }
-
-        u32 totalSprites = numSpritesX * numSpritesY;
-        if (isColor)
-        {
-            for (u32 i = 0; i < totalSprites; i++)
-                FillStructWithColor(&printSprites[i]);
-        }
-        else
-        {
-            for (u32 i = 0; i < totalSprites; i++)
-                FillStructWithSprite(&printSprites[i]);
-        }
+        if (numSpritesY * spriteHeight < height + top)
+            height = numSpritesY * spriteHeight - top;
     }
-    else
+
+    u32 remainingWidth = width;
+    u32 currStart = left;
+    u32 *tiles = (u32 *)((OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP);
+    while (remainingWidth > 0)
     {
-        struct SpriteToFill printSprite;
-        printSprite.color = color;
-        printSprite.startX = left;
-        printSprite.startY = top;
-        printSprite.width = width;
-        printSprite.height = height;
-        printSprite.mode = FILL_MODE_CUSTOM;
-        printSprite.spriteId = spriteId;
-        printSprite.spriteWidth = spriteWidth;
-        if (isColor)
-            FillStructWithColor(&printSprite);
+        u32 currWidth;
+        u32 srcMask;
+        u32 dstMask;
+        u32 currSpriteId = spriteId;
+        if (currStart % 8 == 0 && remainingWidth >= 8)
+        {
+            //  Full tile width, nothing special
+            currWidth = 8;
+        }
+        else if (currStart % 8 == 0)
+        {
+            //  End of area starting on even tile
+            currWidth = remainingWidth;
+            srcMask = 0xFFFFFFFF >> (4 * currWidth);
+            dstMask = ~srcMask;
+        }
+        else if (remainingWidth > 8 || remainingWidth + currStart % 8 == 8)
+        {
+            //  Start of area, offset start, covers rest of tile
+            currWidth = 8 - (currStart % 8);
+            srcMask = 0xFFFFFFFF << (4 * currWidth);
+            dstMask = ~srcMask;
+        }
         else
-            FillStructWithSprite(&printSprite);
+        {
+            //  Area doesn't start or end at a tile boundry
+            currWidth = remainingWidth;
+            u32 leftMask = 0xFFFFFFFF << (4 * currStart);
+            u32 rightMask = 0xFFFFFFFF >> (4 * (8 - currStart - currWidth));
+            srcMask = leftMask & rightMask;
+            dstMask = ~srcMask;
+        }
+
+        if (currWidth == 8)
+        {
+            //  Separate out the case that doesn't need to mask the pixels
+            for (u32 row = 0; row < height; row++)
+            {
+                u32 spriteX = (currStart - (currStart % 8)) % spriteWidth;
+                u32 spriteY = (top + row) % spriteHeight;
+                if (isColor)
+                    tiles[CURRENT_SPRITE_POS] = color;
+                else
+                    tiles[CURRENT_SPRITE_POS] = src[CURRENT_SPRITE_POS];
+
+                if (row == height - 1)
+                {
+                    currSpriteId = spriteId;
+                    tiles = (u32 *)((OBJ_VRAM0) + gSprites[currSpriteId].oam.tileNum * TILE_SIZE_4BPP);
+                    src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
+                }
+                else if ((top + row) % spriteHeight == spriteHeight - 1)
+                {
+                    //  Switch sprite along Y-axis
+                    currSpriteId = gSprites[currSpriteId].nextY;
+                    tiles = (u32 *)((OBJ_VRAM0) + gSprites[currSpriteId].oam.tileNum * TILE_SIZE_4BPP);
+                    src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
+                }
+            }
+        }
+        else
+        {
+            //  Mask these since it's needed
+            for (u32 row = 0; row < height; row++)
+            {
+                u32 spriteX = (currStart - (currStart % 8)) % spriteWidth;
+                u32 spriteY = (top + row) % spriteHeight;
+                u32 orig = tiles[CURRENT_SPRITE_POS] & dstMask;
+                u32 new;
+                if (isColor)
+                    new = color & srcMask;
+                else
+                    new = src[CURRENT_SPRITE_POS] & srcMask;
+
+                tiles[CURRENT_SPRITE_POS] = orig | new;
+                if (row == height - 1)
+                {
+                    currSpriteId = spriteId;
+                    tiles = (u32 *)((OBJ_VRAM0) + gSprites[currSpriteId].oam.tileNum * TILE_SIZE_4BPP);
+                    src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
+                }
+                else if ((top + row) % spriteHeight == spriteHeight - 1)
+                {
+                    //  Switch sprite along Y-axis
+                    currSpriteId = gSprites[currSpriteId].nextY;
+                    tiles = (u32 *)((OBJ_VRAM0) + gSprites[currSpriteId].oam.tileNum * TILE_SIZE_4BPP);
+                    src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
+                }
+            }
+        }
+
+        remainingWidth -= currWidth;
+        currStart += currWidth;
+        //  Handle switching sprites along X-axis
+        if (currStart > 0 && (currStart % spriteWidth) == 0)
+        {
+            spriteId = gSprites[spriteId].nextX;
+            tiles = (u32 *)((OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP);
+            src = GetSrcPtrFromSprite(&gSprites[spriteId]);
+        }
     }
+    return;
 }
 
 void FillSpriteRectColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color)
@@ -2309,6 +2001,7 @@ u32 *GetSrcPtrFromSprite(struct Sprite *sprite)
     u16 low = (u16)sprite->data[3];
     u16 hi = (u16)sprite->data[4];
     u32 *ptr = (u32 *)(low | (hi << 16));
+    assertf(ptr != NULL, "Sprite pointer must not be NULL");
     return ptr;
 }
 
