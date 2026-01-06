@@ -626,6 +626,17 @@ struct FormChange
     u16 param3;
 };
 
+struct FormChangeContext
+{
+    u16 currentSpecies;
+    enum FormChanges method:8;
+    u16 partyItemUsed;
+    u16 heldItem;
+    u16 ability;
+    u16 learnedMove;
+    u32 status;
+};
+
 enum FusionExtraMoveHandling
 {
     FORGET_EXTRA_MOVES,
@@ -890,6 +901,7 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum);
 u16 GetFormSpeciesId(u16 speciesId, u8 formId);
 u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId);
 u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method, u32 arg);
+u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx);
 u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method, u32 arg);
 bool32 DoesSpeciesHaveFormChangeMethod(u16 species, enum FormChanges method);
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);

@@ -6781,120 +6781,147 @@ u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method, u32
 // Returns the current species if no form change is possible
 u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method, u32 arg)
 {
-    u32 i;
     u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
-    u32 targetSpecies = species;
-    const struct FormChange *formChanges = GetSpeciesFormChanges(species);
-    u16 heldItem;
-    enum Ability ability;
 
-    if (formChanges != NULL)
+    struct FormChangeContext ctx =
     {
-        heldItem = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM, NULL);
-        ability = GetAbilityBySpecies(species, GetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, NULL));
+        .method = method,
+        .currentSpecies = species,
+        .heldItem = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM, NULL),
+        .ability = GetAbilityBySpecies(species, GetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, NULL)),
+        .partyItemUsed = arg,
+        .status = GetBoxMonData(boxMon, MON_DATA_STATUS, NULL),
+    };
 
-        for (i = 0; formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
+    return GetFormChangeTargetSpecies_Internal(ctx);
+}
+
+u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
+{
+    u32 i;
+    u32 targetSpecies = ctx.currentSpecies;
+    const struct FormChange *formChanges = GetSpeciesFormChanges(ctx.currentSpecies);
+
+    if (formChanges == NULL)
+        return ctx.currentSpecies;
+
+    for (i = 0; formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
+    {
+        if (!(ctx.method == formChanges[i].method && ctx.currentSpecies != formChanges[i].targetSpecies))
+            continue;
+
+        switch (ctx.method)
         {
-            if (method == formChanges[i].method && species != formChanges[i].targetSpecies)
+        case FORM_CHANGE_ITEM_HOLD:
+            if ((ctx.heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
+                && (ctx.ability == formChanges[i].param2 || formChanges[i].param2 == ABILITY_NONE))
             {
-                switch (method)
+                // This is to prevent reverting to base form when giving the item to the corresponding form.
+                // Eg. Giving a Zap Plate to an Electric Arceus without an item (most likely to happen when using givemon)
+                bool32 currentItemForm = FALSE;
+                for (u32 j = 0; formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
                 {
-                case FORM_CHANGE_ITEM_HOLD:
-                    if ((heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
-                     && (ability == formChanges[i].param2 || formChanges[i].param2 == ABILITY_NONE))
+                    if (ctx.currentSpecies == formChanges[j].targetSpecies
+                        && formChanges[j].param1 == ctx.heldItem
+                        && formChanges[j].param1 != ITEM_NONE)
                     {
-                        // This is to prevent reverting to base form when giving the item to the corresponding form.
-                        // Eg. Giving a Zap Plate to an Electric Arceus without an item (most likely to happen when using givemon)
-                        bool32 currentItemForm = FALSE;
-                        for (u32 j = 0; formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
-                        {
-                            if (species == formChanges[j].targetSpecies
-                                && formChanges[j].param1 == heldItem
-                                && formChanges[j].param1 != ITEM_NONE)
-                            {
-                                currentItemForm = TRUE;
-                                break;
-                            }
-                        }
-                        if (!currentItemForm)
-                            targetSpecies = formChanges[i].targetSpecies;
+                        currentItemForm = TRUE;
+                        break;
                     }
-                    break;
-                case FORM_CHANGE_ITEM_USE:
-                    if (arg == formChanges[i].param1)
-                    {
-                        bool32 pass = TRUE;
-                        switch (formChanges[i].param2)
-                        {
-                        case DAY:
-                            if (GetTimeOfDay() == TIME_NIGHT)
-                                pass = FALSE;
-                            break;
-                        case NIGHT:
-                            if (GetTimeOfDay() != TIME_NIGHT)
-                                pass = FALSE;
-                            break;
-                        }
-
-                        if (formChanges[i].param3 != STATUS1_NONE && GetBoxMonData(boxMon, MON_DATA_STATUS, NULL) & formChanges[i].param3)
-                            pass = FALSE;
-
-                        if (pass)
-                            targetSpecies = formChanges[i].targetSpecies;
-                    }
-                    break;
-                case FORM_CHANGE_ITEM_USE_MULTICHOICE:
-                    if (arg == formChanges[i].param1)
-                    {
-                        if (formChanges[i].param2 == gSpecialVar_Result)
-                            targetSpecies = formChanges[i].targetSpecies;
-                    }
-                    break;
-                case FORM_CHANGE_MOVE:
-                    if (BoxMonKnowsMove(boxMon, formChanges[i].param1) != formChanges[i].param2)
-                        targetSpecies = formChanges[i].targetSpecies;
-                    break;
-                case FORM_CHANGE_BEGIN_BATTLE:
-                case FORM_CHANGE_END_BATTLE:
-                    if (heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
-                        targetSpecies = formChanges[i].targetSpecies;
-                    break;
-                case FORM_CHANGE_END_BATTLE_ENVIRONMENT:
-                    if (gBattleEnvironment == formChanges[i].param1)
-                        targetSpecies = formChanges[i].targetSpecies;
-                    break;
-                case FORM_CHANGE_WITHDRAW:
-                case FORM_CHANGE_DEPOSIT:
-                case FORM_CHANGE_FAINT:
-                case FORM_CHANGE_DAYS_PASSED:
+                }
+                if (!currentItemForm)
                     targetSpecies = formChanges[i].targetSpecies;
+            }
+            break;
+        case FORM_CHANGE_ITEM_USE:
+            if (ctx.partyItemUsed == formChanges[i].param1)
+            {
+                bool32 pass = TRUE;
+                switch (formChanges[i].param2)
+                {
+                case DAY:
+                    if (GetTimeOfDay() == TIME_NIGHT)
+                        pass = FALSE;
                     break;
-                case FORM_CHANGE_STATUS:
-                    if (GetBoxMonData(boxMon, MON_DATA_STATUS, NULL) & formChanges[i].param1)
-                        targetSpecies = formChanges[i].targetSpecies;
-                    break;
-                case FORM_CHANGE_TIME_OF_DAY:
-                    switch (formChanges[i].param1)
-                    {
-                    case DAY:
-                        if (GetTimeOfDay() != TIME_NIGHT)
-                            targetSpecies = formChanges[i].targetSpecies;
-                        break;
-                    case NIGHT:
-                        if (GetTimeOfDay() == TIME_NIGHT)
-                            targetSpecies = formChanges[i].targetSpecies;
-                        break;
-                    }
-                    break;
-                default:
+                case NIGHT:
+                    if (GetTimeOfDay() != TIME_NIGHT)
+                        pass = FALSE;
                     break;
                 }
+
+                if (formChanges[i].param3 != STATUS1_NONE && ctx.status & formChanges[i].param3)
+                    pass = FALSE;
+
+                if (pass)
+                    targetSpecies = formChanges[i].targetSpecies;
             }
+            break;
+        case FORM_CHANGE_ITEM_USE_MULTICHOICE:
+            if (ctx.partyItemUsed == formChanges[i].param1)
+            {
+                if (formChanges[i].param2 == gSpecialVar_Result)
+                    targetSpecies = formChanges[i].targetSpecies;
+            }
+            break;
+        case FORM_CHANGE_MOVE:
+            if (ctx.learnedMove != formChanges[i].param2)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_BEGIN_BATTLE:
+        case FORM_CHANGE_END_BATTLE:
+            if (ctx.heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_END_BATTLE_ENVIRONMENT:
+            if (gBattleEnvironment == formChanges[i].param1)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_WITHDRAW:
+        case FORM_CHANGE_DEPOSIT:
+        case FORM_CHANGE_FAINT:
+        case FORM_CHANGE_DAYS_PASSED:
+            targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_STATUS:
+            if (ctx.status & formChanges[i].param1)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_TIME_OF_DAY:
+            switch (formChanges[i].param1)
+            {
+            case DAY:
+                if (GetTimeOfDay() != TIME_NIGHT)
+                    targetSpecies = formChanges[i].targetSpecies;
+                break;
+            case NIGHT:
+                if (GetTimeOfDay() == TIME_NIGHT)
+                    targetSpecies = formChanges[i].targetSpecies;
+                break;
+            }
+            break;
+        case FORM_CHANGE_BATTLE_SWITCH:
+        case FORM_CHANGE_BATTLE_HP_PERCENT:
+        case FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM:
+        case FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE:
+        case FORM_CHANGE_BATTLE_PRIMAL_REVERSION:
+        case FORM_CHANGE_BATTLE_WEATHER:
+        case FORM_CHANGE_BATTLE_TURN_END:
+        case FORM_CHANGE_BATTLE_ULTRA_BURST:
+        case FORM_CHANGE_BATTLE_GIGANTAMAX:
+        case FORM_CHANGE_HIT_BY_MOVE:
+        case FORM_CHANGE_BATTLE_TERASTALLIZATION:
+        case FORM_CHANGE_BATTLE_BEFORE_MOVE:
+        case FORM_CHANGE_BATTLE_AFTER_MOVE:
+        case FORM_CHANGE_BATTLE_BEFORE_MOVE_CATEGORY:
+        case FORM_CHANGE_OVERWORLD_WEATHER:
+        case FORM_CHANGE_TERMINATOR:
+            break;
         }
     }
 
     return targetSpecies;
 }
+
 
 void TrySetDayLimitToFormChange(struct Pokemon *mon)
 {
