@@ -2613,6 +2613,10 @@ s32 MoveGetTarget(s32 battlerId, enum Move moveId, struct MoveContext *ctx, u32 
         {
             target = BATTLE_PARTNER(battlerId);
         }
+        else if (moveTarget == TARGET_USER_AND_ALLY)
+        {
+            target = battlerId;
+        }
         else
         {
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.

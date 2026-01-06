@@ -996,8 +996,6 @@ static bool32 ShouldSkipToMoveEnd(void)
 
     switch (moveTarget)
     {
-    case TARGET_USER_AND_ALLY:
-        return FALSE; // TODO
     case TARGET_NONE:
     case TARGET_FIELD:
     case TARGET_OPPONENTS_FIELD:
@@ -1010,6 +1008,7 @@ static bool32 ShouldSkipToMoveEnd(void)
     case TARGET_SELECTED:
     case TARGET_SMART:
     case TARGET_ALLY:
+    case TARGET_USER_AND_ALLY:
     case TARGET_USER_OR_ALLY:
     case TARGET_FOES_AND_ALLY:
     case TARGET_BOTH:

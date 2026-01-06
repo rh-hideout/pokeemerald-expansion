@@ -704,12 +704,29 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
     gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
-    if (!gBattleStruct->unableToUseMove
-     && IsSpreadMove(moveTarget)
-     && !gProtectStructs[gBattlerAttacker].chargingTurn)
+
+    if (gBattleStruct->unableToUseMove || gProtectStructs[gBattlerAttacker].chargingTurn)
+    {
+        DebugPrintf("[0]");
+        // unable to use move
+    }
+    else if (moveTarget == TARGET_USER_AND_ALLY) // This assumes that the effect can't be bounced back by ally
+    {   
+        u32 partner = BATTLE_PARTNER(gBattlerAttacker);
+        if (partner != gBattlerTarget && IsBattlerAlive(partner))
+        {
+            gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = partner;
+            BattleScriptPush(GetMoveBattleScript(gCurrentMove));
+            gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
+            gBattleScripting.moveendState = 0;
+            MoveValuesCleanUp();
+            return MOVEEND_STEP_BREAK;
+        }
+    }
+    else if (IsSpreadMove(moveTarget))
     {
         u32 nextTarget = GetNextTarget(moveTarget, FALSE);
-
+        
         if (nextTarget != MAX_BATTLERS_COUNT)
         {
             gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget; // Fix for moxie spread moves
