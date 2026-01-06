@@ -883,30 +883,18 @@ static void UpdateBattleBg(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
 
-    if (data->battleEnvironment == BATTLE_ENVIRONMENT_GRASS)
-    {
-        if (increment)
-            data->battleEnvironment += 1;
-        else
-            data->battleEnvironment = BATTLE_ENVIRONMENT_RAYQUAZA;
-    }
-    else if (data->battleEnvironment == BATTLE_ENVIRONMENT_RAYQUAZA)
-    {
-        if (increment)
-            data->battleEnvironment = BATTLE_ENVIRONMENT_GRASS;
-        else
-            data->battleEnvironment -= 1;
+    if (increment) {
+        data->battleEnvironment = (data->battleEnvironment + 1) % (BATTLE_ENVIRONMENT_RAYQUAZA + 1); // Can use BATTLE_ENVIRONMENT_COUNT once the remaining environments have sprites
     }
     else
     {
-        if (increment)
-            data->battleEnvironment += 1;
+        if (data->battleEnvironment == BATTLE_ENVIRONMENT_GRASS)
+            data->battleEnvironment = BATTLE_ENVIRONMENT_RAYQUAZA;
         else
             data->battleEnvironment -= 1;
     }
 
     PrintBattleBgName(taskId);
-
     LoadBattleBg(data->battleEnvironment);
 }
 
