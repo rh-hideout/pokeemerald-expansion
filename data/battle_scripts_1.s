@@ -55,7 +55,6 @@ BattleScript_TeraFormChange::
 	applyterastallization
 	playanimation BS_ATTACKER, B_ANIM_TERA_ACTIVATE
 	waitanimation
-	handleformchange BS_ATTACKER, 2
 	printstring STRINGID_PKMNTERASTALLIZEDINTO
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_ATTACKER
@@ -5649,7 +5648,6 @@ BattleScript_PowerConstruct::
 	handleformchange BS_SCRIPTING, 1
 	playanimation BS_SCRIPTING, B_ANIM_POWER_CONSTRUCT
 	waitanimation
-	handleformchange BS_SCRIPTING, 2
 	printstring STRINGID_POWERCONSTRUCTTRANSFORM
 	waitmessage B_WAIT_TIME_SHORT
 	end2
@@ -5681,7 +5679,6 @@ BattleScript_BattlerFormChangeNoPopup:
 	handleformchange BS_SCRIPTING, 1
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
-	handleformchange BS_SCRIPTING, 2
 	return
 
 BattleScript_BattlerFormChangeEnd3NoPopup::
@@ -5700,7 +5697,6 @@ BattleScript_BattlerFormChangeWithString::
 	handleformchange BS_SCRIPTING, 1
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
-	handleformchange BS_SCRIPTING, 2
 	printstring STRINGID_PKMNTRANSFORMED
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -5714,7 +5710,6 @@ BattleScript_AttackerFormChangeMoveEffect::
 	copybyte sBATTLER, gBattlerAttacker
 	printstring STRINGID_PKMNTRANSFORMED
 	waitmessage B_WAIT_TIME_LONG
-	handleformchange BS_ATTACKER, 2
 	return
 
 BattleScript_BallFetch::
@@ -5744,7 +5739,6 @@ BattleScript_TargetFormChangeNoPopup:
 	handleformchange BS_SCRIPTING, 1
 	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
 	waitanimation
-	handleformchange BS_SCRIPTING, 2
 	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
 
@@ -7175,7 +7169,6 @@ BattleScript_BattleBondActivatesOnMoveEndAttacker::
 	handleformchange BS_ATTACKER, 1
 	playanimation BS_ATTACKER, B_ANIM_FORM_CHANGE
 	waitanimation
-	handleformchange BS_ATTACKER, 2
 	printstring STRINGID_ATTACKERBECAMEASHSPECIES
 	return
 

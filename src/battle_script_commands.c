@@ -7383,21 +7383,17 @@ void BS_CourtChangeSwapSideStatuses(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void HandleScriptMegaPrimalBurst(u32 caseId, u32 battler)
+static void HandleScriptFormChange(u32 caseId, u32 battler)
 {
-    struct Pokemon *mon = GetBattlerMon(battler);
-
-    // Buffer and emit species.
-    if (caseId == 0)
+    if (caseId == 0) // Buffer name and emit species.
     {
         PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battler].species);
         BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_SPECIES_BATTLE, 1u << gBattlerPartyIndexes[battler], sizeof(gBattleMons[battler].species), &gBattleMons[battler].species);
         MarkBattlerForControllerExec(battler);
     }
-    // Update healthbox and elevation and play cry.
-    else
+    else // Update healthbox.
     {
-        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_ALL);
+        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
         if (!IsOnPlayerSide(battler))
             SetBattlerShadowSpriteCallback(battler, gBattleMons[battler].species);
     }
@@ -12593,7 +12589,7 @@ void BS_HandleMegaEvolution(void)
     NATIVE_ARGS(u8 battler, u8 caseId);
 
     u8 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptMegaPrimalBurst(cmd->caseId, battler);
+    HandleScriptFormChange(cmd->caseId, battler);
     SetGimmickAsActivated(battler, GIMMICK_MEGA);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -12603,7 +12599,7 @@ void BS_HandlePrimalReversion(void)
     NATIVE_ARGS(u8 battler, u8 caseId);
 
     u8 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptMegaPrimalBurst(cmd->caseId, battler);
+    HandleScriptFormChange(cmd->caseId, battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -12612,7 +12608,7 @@ void BS_HandleUltraBurst(void)
     NATIVE_ARGS(u8 battler, u8 caseId);
 
     u8 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptMegaPrimalBurst(cmd->caseId, battler);
+    HandleScriptFormChange(cmd->caseId, battler);
     SetGimmickAsActivated(battler, GIMMICK_ULTRA_BURST);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -14803,23 +14799,10 @@ void BS_TrySoak(void)
 
 void BS_HandleFormChange(void)
 {
-    NATIVE_ARGS(u8 battler, u8 case_);
-    u32 battler = GetBattlerForBattleScript(cmd->battler);
-    struct Pokemon *mon = GetBattlerMon(battler);
+    NATIVE_ARGS(u8 battler, u8 caseId);
 
-    if (cmd->case_ == 0) // Change species.
-    {
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_SPECIES_BATTLE, 1u << gBattlerPartyIndexes[battler], sizeof(gBattleMons[battler].species), &gBattleMons[battler].species);
-        MarkBattlerForControllerExec(battler);
-    }
-    else if (cmd->case_ == 1) // Change stats.
-    {
-        RecalcBattlerStats(battler, mon, FALSE);
-    }
-    else // Update healthbox.
-    {
-        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_ALL);
-    }
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
+    HandleScriptFormChange(cmd->caseId, battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

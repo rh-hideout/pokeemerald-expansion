@@ -2155,10 +2155,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro handleformchange battler:req, case_:req
+	.macro handleformchange battler:req, caseId:req
 	callnative BS_HandleFormChange
 	.byte \battler
-	.byte \case_
+	.byte \caseId
 	.endm
 
 	.macro tryautotomize failInstr:req
