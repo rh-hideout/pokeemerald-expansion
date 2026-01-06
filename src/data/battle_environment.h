@@ -49,7 +49,7 @@ const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_env
 
 #define DEFAULT_CAMOUFLAGE_BLEND RGB_WHITE
 
-//Cave values. Used for BATTLE_ENVIRONMENT_CAVE as well as BATTLE_ENVIRONMENT_GROUDON and BATTLE_ENVIRONMENT_KYOGRE
+// Cave values. Used for BATTLE_ENVIRONMENT_CAVE as well as BATTLE_ENVIRONMENT_GROUDON and BATTLE_ENVIRONMENT_KYOGRE
 #if B_NATURE_POWER_MOVES >= GEN_6
     #define CAVE_NATURE_POWER MOVE_POWER_GEM
 #elif B_NATURE_POWER_MOVES >= GEN_4
@@ -61,8 +61,9 @@ const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_env
 #define CAVE_SECRET_POWER_EFFECT    MOVE_EFFECT_FLINCH
 #define CAVE_CAMOUFLAGE_TYPE        TYPE_ROCK
 #define CAVE_CAMOUFLAGE_BLEND       RGB(14, 9, 3)
+#define CAVE_BATTLE_INTRO_SLIDE     BattleIntroSlide1
 
-//Building values. Used for BATTLE_ENVIRONMENT_BUILDING as well as the environments that come from the vanilla MAP_BATTLE_SCENEs: BATTLE_ENVIRONMENT_PLAIN, BATTLE_ENVIRONMENT_FRONTIER, BATTLE_ENVIRONMENT_GYM, BATTLE_ENVIRONMENT_LEADER, BATTLE_ENVIRONMENT_MAGMA, BATTLE_ENVIRONMENT_AQUA, BATTLE_ENVIRONMENT_SIDNEY, BATTLE_ENVIRONMENT_PHOEBE, BATTLE_ENVIRONMENT_GLACIA, BATTLE_ENVIRONMENT_DRAKE, BATTLE_ENVIRONMENT_CHAMPION
+// Building values. Used for BATTLE_ENVIRONMENT_BUILDING as well as the environments that come from the vanilla MAP_BATTLE_SCENEs: BATTLE_ENVIRONMENT_PLAIN, BATTLE_ENVIRONMENT_FRONTIER, BATTLE_ENVIRONMENT_GYM, BATTLE_ENVIRONMENT_LEADER, BATTLE_ENVIRONMENT_MAGMA, BATTLE_ENVIRONMENT_AQUA, BATTLE_ENVIRONMENT_SIDNEY, BATTLE_ENVIRONMENT_PHOEBE, BATTLE_ENVIRONMENT_GLACIA, BATTLE_ENVIRONMENT_DRAKE, BATTLE_ENVIRONMENT_CHAMPION
 #define BUILDING_NATURE_POWER        B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_TRI_ATTACK : MOVE_SWIFT
 #if B_SECRET_POWER_ANIMATION >= GEN_7
     #define BUILDING_SECRET_POWER_ANIMATION gBattleAnimMove_SpitUp
@@ -74,8 +75,10 @@ const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_env
 #define BUILDING_SECRET_POWER_EFFECT MOVE_EFFECT_PARALYSIS
 #define BUILDING_CAMOUFLAGE_TYPE     TYPE_NORMAL
 #define BUILDING_CAMOUFLAGE_BLEND    RGB_WHITE
+#define BUILDING_BATTLE_INTRO_SLIDE  BattleIntroSlide3
 
-//Plain values. USED for BATTLE_ENVIRONMENT_PLAIN as well as BATTLE_ENVIRONMENT_RAYQUAZA because BATTLE_ENVIRONMENT_SKY_PILLAR wasn't introduced until Gen6, so Sky Pillar's roof counts as a Route which uses Plain
+// Plain values. USED for BATTLE_ENVIRONMENT_PLAIN as well as BATTLE_ENVIRONMENT_RAYQUAZA
+// (BATTLE_ENVIRONMENT_SKY_PILLAR wasn't introduced until Gen6, so Sky Pillar's roof counts as a Route which uses Plain)
 #if B_NATURE_POWER_MOVES >= GEN_6
     #define PLAIN_NATURE_POWER MOVE_TRI_ATTACK
 #elif B_NATURE_POWER_MOVES >= GEN_4
@@ -92,9 +95,10 @@ const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_env
 #else
     #define PLAIN_SECRET_POWER_ANIMATION gBattleAnimMove_Slam
 #endif
-#define PLAIN_SECRET_POWER_EFFECT     (B_SECRET_POWER_EFFECT == GEN_4 || B_SECRET_POWER_EFFECT == GEN_5) ? MOVE_EFFECT_ACC_MINUS_1 : MOVE_EFFECT_PARALYSIS
-#define PLAIN_CAMOUFLAGE_TYPE         (B_CAMOUFLAGE_TYPES == GEN_4 || B_CAMOUFLAGE_TYPES == GEN_5) ? TYPE_GROUND : TYPE_NORMAL
-#define PLAIN_CAMOUFLAGE_BLEND        RGB_WHITE
+#define PLAIN_SECRET_POWER_EFFECT (B_SECRET_POWER_EFFECT == GEN_4 || B_SECRET_POWER_EFFECT == GEN_5) ? MOVE_EFFECT_ACC_MINUS_1 : MOVE_EFFECT_PARALYSIS
+#define PLAIN_CAMOUFLAGE_TYPE     (B_CAMOUFLAGE_TYPES == GEN_4 || B_CAMOUFLAGE_TYPES == GEN_5) ? TYPE_GROUND : TYPE_NORMAL
+#define PLAIN_CAMOUFLAGE_BLEND    RGB_WHITE
+#define PLAIN_BATTLE_INTRO_SLIDE  BattleIntroSlide3
 
 const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] =
 {
@@ -113,6 +117,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = TYPE_GRASS,
         .camouflageBlend = RGB(12, 24, 2),
         .background = ENVIRONMENT_BACKGROUND(TallGrass),
+        .battleIntroSlide = BattleIntroSlide1,
     },
 
     [BATTLE_ENVIRONMENT_LONG_GRASS] =
@@ -130,6 +135,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = TYPE_GRASS,
         .camouflageBlend = RGB(0, 15, 2),
         .background = ENVIRONMENT_BACKGROUND(LongGrass),
+        .battleIntroSlide = BattleIntroSlide1,
     },
 
     [BATTLE_ENVIRONMENT_SAND] =
@@ -141,6 +147,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = TYPE_GROUND,
         .camouflageBlend = RGB(30, 24, 11),
         .background = ENVIRONMENT_BACKGROUND(Sand),
+        .battleIntroSlide = BattleIntroSlide2,
     },
 
     [BATTLE_ENVIRONMENT_UNDERWATER] =
@@ -152,6 +159,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = TYPE_WATER,
         .camouflageBlend = RGB(0, 0, 18),
         .background = ENVIRONMENT_BACKGROUND(Underwater),
+        .battleIntroSlide = BattleIntroSlide2,
     },
 
     [BATTLE_ENVIRONMENT_WATER] =
@@ -163,6 +171,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = TYPE_WATER,
         .camouflageBlend = RGB(11, 22, 31),
         .background = ENVIRONMENT_BACKGROUND(Water),
+        .battleIntroSlide = BattleIntroSlide2,
     },
 
     [BATTLE_ENVIRONMENT_POND] =
@@ -174,6 +183,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = TYPE_WATER,
         .camouflageBlend = RGB(11, 22, 31),
         .background = ENVIRONMENT_BACKGROUND(PondWater),
+        .battleIntroSlide = BattleIntroSlide1,
     },
 
     [BATTLE_ENVIRONMENT_MOUNTAIN] =
@@ -197,6 +207,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = B_CAMOUFLAGE_TYPES >= GEN_5 ? TYPE_GROUND : TYPE_ROCK,
         .camouflageBlend = RGB(22, 16, 10),
         .background = ENVIRONMENT_BACKGROUND(Rock),
+        .battleIntroSlide = BattleIntroSlide1,
     },
 
     [BATTLE_ENVIRONMENT_CAVE] =
@@ -208,6 +219,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = CAVE_CAMOUFLAGE_TYPE,
         .camouflageBlend = CAVE_CAMOUFLAGE_BLEND,
         .background = ENVIRONMENT_BACKGROUND(Cave),
+        .battleIntroSlide = CAVE_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_BUILDING] =
@@ -219,6 +231,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
         .background = ENVIRONMENT_BACKGROUND(Building),
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_PLAIN] =
@@ -237,6 +250,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_Plain,
         },
+        .battleIntroSlide = PLAIN_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_FRONTIER] =
@@ -254,6 +268,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_Frontier,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_GYM] =
@@ -271,6 +286,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_BuildingGym,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_LEADER] =
@@ -288,6 +304,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_BuildingLeader,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_MAGMA] =
@@ -305,6 +322,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_StadiumMagma,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_AQUA] =
@@ -322,6 +340,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_StadiumAqua,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_SIDNEY] =
@@ -339,6 +358,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_StadiumSidney,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_PHOEBE] =
@@ -356,6 +376,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_StadiumPhoebe,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_GLACIA] =
@@ -373,6 +394,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_StadiumGlacia,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_DRAKE] =
@@ -390,6 +412,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_StadiumDrake,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_CHAMPION] =
@@ -407,6 +430,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
             .palette = gBattleEnvironmentPalette_StadiumWallace,
         },
+        .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_GROUDON] =
@@ -425,6 +449,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Cave,
             .palette = gBattleEnvironmentPalette_Groudon,
         },
+        .battleIntroSlide = CAVE_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_KYOGRE] =
@@ -443,6 +468,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Underwater,
             .palette = gBattleEnvironmentPalette_Kyogre,
         },
+        .battleIntroSlide = CAVE_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_RAYQUAZA] =
@@ -461,6 +487,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Rayquaza,
             .palette = gBattleEnvironmentPalette_Rayquaza,
         },
+        .battleIntroSlide = PLAIN_BATTLE_INTRO_SLIDE,
     },
 
     [BATTLE_ENVIRONMENT_SOARING] =

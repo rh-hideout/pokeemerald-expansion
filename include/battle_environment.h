@@ -13,6 +13,7 @@ struct BattleEnvironment
     enum Type camouflageType;
     u16 camouflageBlend;
     struct BattleBackground background;
+    TaskFunc battleIntroSlide;
 };
 
 extern const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT];
