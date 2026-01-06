@@ -7383,25 +7383,14 @@ void BS_CourtChangeSwapSideStatuses(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void HandleScriptMegaPrimalBurst(u32 caseId, u32 battler, u32 type)
+static void HandleScriptMegaPrimalBurst(u32 caseId, u32 battler)
 {
     struct Pokemon *mon = GetBattlerMon(battler);
 
-    // Change species.
+    // Buffer and emit species.
     if (caseId == 0)
     {
-        if (type == HANDLE_TYPE_MEGA_EVOLUTION)
-        {
-            if (!TryBattleFormChange(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM))
-                TryBattleFormChange(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE);
-        }
-        else if (type == HANDLE_TYPE_PRIMAL_REVERSION)
-            TryBattleFormChange(battler, FORM_CHANGE_BATTLE_PRIMAL_REVERSION);
-        else
-            TryBattleFormChange(battler, FORM_CHANGE_BATTLE_ULTRA_BURST);
-
         PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battler].species);
-
         BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_SPECIES_BATTLE, 1u << gBattlerPartyIndexes[battler], sizeof(gBattleMons[battler].species), &gBattleMons[battler].species);
         MarkBattlerForControllerExec(battler);
     }
@@ -7411,10 +7400,6 @@ static void HandleScriptMegaPrimalBurst(u32 caseId, u32 battler, u32 type)
         UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_ALL);
         if (!IsOnPlayerSide(battler))
             SetBattlerShadowSpriteCallback(battler, gBattleMons[battler].species);
-        if (type == HANDLE_TYPE_MEGA_EVOLUTION)
-            SetGimmickAsActivated(battler, GIMMICK_MEGA);
-        if (type == HANDLE_TYPE_ULTRA_BURST)
-            SetGimmickAsActivated(battler, GIMMICK_ULTRA_BURST);
     }
 }
 
@@ -12608,7 +12593,8 @@ void BS_HandleMegaEvolution(void)
     NATIVE_ARGS(u8 battler, u8 caseId);
 
     u8 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptMegaPrimalBurst(cmd->caseId, battler, HANDLE_TYPE_MEGA_EVOLUTION);
+    HandleScriptMegaPrimalBurst(cmd->caseId, battler);
+    SetGimmickAsActivated(battler, GIMMICK_MEGA);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -12617,7 +12603,7 @@ void BS_HandlePrimalReversion(void)
     NATIVE_ARGS(u8 battler, u8 caseId);
 
     u8 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptMegaPrimalBurst(cmd->caseId, battler, HANDLE_TYPE_PRIMAL_REVERSION);
+    HandleScriptMegaPrimalBurst(cmd->caseId, battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -12626,7 +12612,8 @@ void BS_HandleUltraBurst(void)
     NATIVE_ARGS(u8 battler, u8 caseId);
 
     u8 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptMegaPrimalBurst(cmd->caseId, battler, HANDLE_TYPE_ULTRA_BURST);
+    HandleScriptMegaPrimalBurst(cmd->caseId, battler);
+    SetGimmickAsActivated(battler, GIMMICK_ULTRA_BURST);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
