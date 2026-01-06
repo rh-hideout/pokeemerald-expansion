@@ -236,23 +236,3 @@ SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler")
         EXPECT_EQ(opponent->ability, ABILITY_QUARK_DRIVE);
     }
 }
-
-DOUBLE_BATTLE_TEST("test...")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN { SWITCH(opponentLeft, 2); }
-    } SCENE {
-    }
-}
