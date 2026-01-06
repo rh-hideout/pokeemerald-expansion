@@ -1922,14 +1922,16 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
                 {
                     currSpriteId = spriteId;
                     tiles = (u32 *)((OBJ_VRAM0) + gSprites[currSpriteId].oam.tileNum * TILE_SIZE_4BPP);
-                    src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
+                    if (!isColor)
+                        src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
                 }
                 else if ((top + row) % spriteHeight == spriteHeight - 1)
                 {
                     //  Switch sprite along Y-axis
                     currSpriteId = gSprites[currSpriteId].nextY;
                     tiles = (u32 *)((OBJ_VRAM0) + gSprites[currSpriteId].oam.tileNum * TILE_SIZE_4BPP);
-                    src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
+                    if (!isColor)
+                        src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
                 }
             }
         }
@@ -1952,14 +1954,16 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
                 {
                     currSpriteId = spriteId;
                     tiles = (u32 *)((OBJ_VRAM0) + gSprites[currSpriteId].oam.tileNum * TILE_SIZE_4BPP);
-                    src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
+                    if (!isColor)
+                        src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
                 }
                 else if ((top + row) % spriteHeight == spriteHeight - 1)
                 {
                     //  Switch sprite along Y-axis
                     currSpriteId = gSprites[currSpriteId].nextY;
                     tiles = (u32 *)((OBJ_VRAM0) + gSprites[currSpriteId].oam.tileNum * TILE_SIZE_4BPP);
-                    src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
+                    if (!isColor)
+                        src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
                 }
             }
         }
@@ -1971,7 +1975,8 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
         {
             spriteId = gSprites[spriteId].nextX;
             tiles = (u32 *)((OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP);
-            src = GetSrcPtrFromSprite(&gSprites[spriteId]);
+            if (!isColor)
+                src = GetSrcPtrFromSprite(&gSprites[spriteId]);
         }
     }
     return;
