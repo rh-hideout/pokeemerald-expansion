@@ -58,6 +58,11 @@ static struct PokemonSpriteVisualizer *GetStructPtr(u8 taskId)
     return (struct PokemonSpriteVisualizer*)(T1_READ_PTR(taskDataPtr));
 }
 
+#define BACKGROUND_1_CHAR_BASE  1
+#define BACKGROUND_1_MAP_BASE  28
+#define BACKGROUND_3_CHAR_BASE  2
+#define BACKGROUND_3_MAP_BASE  26
+
 //BgTemplates
 static const struct BgTemplate sBgTemplates[] =
 {
@@ -72,8 +77,8 @@ static const struct BgTemplate sBgTemplates[] =
     },
     {
         .bg = 1,
-        .charBaseIndex = 1,
-        .mapBaseIndex = 28,
+        .charBaseIndex = BACKGROUND_1_CHAR_BASE,
+        .mapBaseIndex = BACKGROUND_1_MAP_BASE,
         .screenSize = 2,
         .paletteMode = 0,
         .priority = 0,
@@ -90,14 +95,17 @@ static const struct BgTemplate sBgTemplates[] =
     },
    {
         .bg = 3,
-        .charBaseIndex = 2,
-        .mapBaseIndex = 26,
+        .charBaseIndex = BACKGROUND_3_CHAR_BASE,
+        .mapBaseIndex = BACKGROUND_3_MAP_BASE,
         .screenSize = 1,
         .paletteMode = 0,
         .priority = 3,
         .baseTile = 0
     },
 };
+
+#define TEXT_AREA_Y      14
+#define TEXT_AREA_HEIGHT  6
 
 //WindowTemplates
 static const struct WindowTemplate sPokemonSpriteVisualizerWindowTemplate[] =
@@ -123,18 +131,18 @@ static const struct WindowTemplate sPokemonSpriteVisualizerWindowTemplate[] =
     [WIN_BOTTOM_LEFT] = {
         .bg = 0,
         .tilemapLeft = 1,
-        .tilemapTop = 14,
+        .tilemapTop = TEXT_AREA_Y,
         .width = 6,
-        .height = 6,
+        .height = TEXT_AREA_HEIGHT,
         .paletteNum = 0xF,
         .baseBlock = 1 + 30 + 60
     },
     [WIN_BOTTOM_RIGHT] = {
         .bg = 0,
         .tilemapLeft = 7,
-        .tilemapTop = 14,
+        .tilemapTop = TEXT_AREA_Y,
         .width = 24,
-        .height = 6,
+        .height = TEXT_AREA_HEIGHT,
         .paletteNum = 0xF,
         .baseBlock = 1 + 30 + 60 + 36
     },
@@ -142,7 +150,7 @@ static const struct WindowTemplate sPokemonSpriteVisualizerWindowTemplate[] =
     {
         .bg = 0,
         .tilemapLeft = 27,
-        .tilemapTop = 14,
+        .tilemapTop = TEXT_AREA_Y,
         .width = 2,
         .height = 2,
         .paletteNum = 0xF,
@@ -967,8 +975,8 @@ static void LoadAndCreateEnemyShadowSpriteCustom(struct PokemonSpriteVisualizer 
 //Battle background functions
 static void LoadBattleBg(enum BattleEnvironments battleEnvironment)
 {
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tileset, (void *)(BG_CHAR_ADDR(2)));
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tileset, (void *)(BG_CHAR_ADDR(BACKGROUND_3_CHAR_BASE)));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tilemap, (void *)(BG_SCREEN_ADDR(BACKGROUND_3_MAP_BASE)));
     LoadPalette(gBattleEnvironmentInfo[battleEnvironment].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
 }
 
@@ -1004,9 +1012,12 @@ static void UpdateBattleBg(u8 taskId, bool8 increment)
 //Move background functions
 static void LoadMoveBackground(u8 moveBackground)
 {
-    DecompressDataWithHeaderVram(gBattleAnimBackgroundTable[moveBackground].tilemap, (void *)BG_SCREEN_ADDR(26));
-    DecompressDataWithHeaderVram(gBattleAnimBackgroundTable[moveBackground].image, (void *)BG_CHAR_ADDR(2));
+    DecompressDataWithHeaderVram(gBattleAnimBackgroundTable[moveBackground].tilemap, (void *)BG_SCREEN_ADDR(BACKGROUND_3_MAP_BASE));
+    DecompressDataWithHeaderVram(gBattleAnimBackgroundTable[moveBackground].image, (void *)BG_CHAR_ADDR(BACKGROUND_3_CHAR_BASE));
     LoadPalette(gBattleAnimBackgroundTable[moveBackground].palette, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
+    //Fill text area with white to avoid overlap with backgrounds
+    CpuFill32(0x11111111, (void *)(BG_CHAR_ADDR(BACKGROUND_1_CHAR_BASE) + TILE_OFFSET_4BPP(1)), TILE_SIZE_4BPP);
+    CpuFill32(0xF001F001, (void *)(BG_SCREEN_ADDR(BACKGROUND_1_MAP_BASE) + sizeof(u16) * 32 * TEXT_AREA_Y), sizeof(u16) * 32 * TEXT_AREA_HEIGHT);
 }
 
 static void PrintMoveBackgroundName(u8 taskId)
