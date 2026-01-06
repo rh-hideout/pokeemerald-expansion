@@ -1818,6 +1818,8 @@ struct SpriteToFill
     u32 color;
 };
 
+#define CURRENT_TILE_ROW ((y / 8) * rowOffset + tile * 8 + y % 8)
+
 static void FillStructWithColor(struct SpriteToFill *input)
 {
     u32 *tiles = (u32 *)((OBJ_VRAM0) + gSprites[input->spriteId].oam.tileNum * TILE_SIZE_4BPP);
@@ -1832,7 +1834,7 @@ static void FillStructWithColor(struct SpriteToFill *input)
         u32 rowOffset = 8 * (input->spriteWidth >> 3);
         for (u32 y = input->startY; y < input->startY + input->height; y++)
             for (u32 tile = 0; tile < (input->width >> 3); tile++)
-                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = input->color;
+                tiles[CURRENT_TILE_ROW] = input->color;
         break;
     }
     case FILL_MODE_CUSTOM:
@@ -1843,7 +1845,7 @@ static void FillStructWithColor(struct SpriteToFill *input)
         for (u32 y = input->startY; y < input->startY + input->height; y++)
         {
             for (u32 tile = startTile; tile < (input->startX + input->width) / 8; tile++)
-                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = input->color;
+                tiles[CURRENT_TILE_ROW] = input->color;
         }
 
         //  Handle tiles with arbitrary widths
@@ -1859,8 +1861,8 @@ static void FillStructWithColor(struct SpriteToFill *input)
                 u32 pixelMask = ~colorMask;
                 for (u32 y = input->startY; y < input->startY + input->height; y++)
                 {
-                    u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
-                    tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currColor;
+                    u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
+                    tiles[CURRENT_TILE_ROW] = currPixels | currColor;
                 }
             }
 
@@ -1873,8 +1875,8 @@ static void FillStructWithColor(struct SpriteToFill *input)
                 u32 pixelMask = ~colorMask;
                 for (u32 y = input->startY; y < input->startY + input->height; y++)
                 {
-                    u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
-                    tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currColor;
+                    u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
+                    tiles[CURRENT_TILE_ROW] = currPixels | currColor;
                 }
             }
         }
@@ -1887,8 +1889,8 @@ static void FillStructWithColor(struct SpriteToFill *input)
             u32 pixelMask = ~colorMask;
             for (u32 y = input->startY; y < input->startY + input->height; y++)
             {
-                u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
-                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currColor;
+                u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
+                tiles[CURRENT_TILE_ROW] = currPixels | currColor;
             }
         }
         break;
@@ -1911,7 +1913,7 @@ static void FillStructWithSprite(struct SpriteToFill *input)
         u32 rowOffset = 8 * (input->spriteWidth >> 3);
         for (u32 y = input->startY; y < input->startY + input->height; y++)
             for (u32 tile = 0; tile < (input->width >> 3); tile++)
-                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = src[(y / 8) * rowOffset + tile * 8 + y % 8];
+                tiles[CURRENT_TILE_ROW] = src[CURRENT_TILE_ROW];
         break;
     }
     case FILL_MODE_CUSTOM:
@@ -1922,7 +1924,7 @@ static void FillStructWithSprite(struct SpriteToFill *input)
         for (u32 y = input->startY; y < input->startY + input->height; y++)
         {
             for (u32 tile = startTile; tile < (input->startX + input->width) / 8; tile++)
-                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = src[(y / 8) * rowOffset + tile * 8 + y % 8];
+                tiles[CURRENT_TILE_ROW] = src[CURRENT_TILE_ROW];
         }
 
         //  Handle tiles with arbitrary widths
@@ -1937,9 +1939,9 @@ static void FillStructWithSprite(struct SpriteToFill *input)
                 u32 pixelMask = ~srcMask;
                 for (u32 y = input->startY; y < input->startY + input->height; y++)
                 {
-                    u32 currSrc = src[(y / 8) * rowOffset + tile * 8 + y % 8] & srcMask;
-                    u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
-                    tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currSrc;
+                    u32 currSrc = src[CURRENT_TILE_ROW] & srcMask;
+                    u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
+                    tiles[CURRENT_TILE_ROW] = currPixels | currSrc;
                 }
             }
 
@@ -1951,9 +1953,9 @@ static void FillStructWithSprite(struct SpriteToFill *input)
                 u32 pixelMask = ~srcMask;
                 for (u32 y = input->startY; y < input->startY + input->height; y++)
                 {
-                    u32 currSrc = src[(y / 8) * rowOffset + tile * 8 + y % 8] & srcMask;
-                    u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
-                    tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currSrc;
+                    u32 currSrc = src[CURRENT_TILE_ROW] & srcMask;
+                    u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
+                    tiles[CURRENT_TILE_ROW] = currPixels | currSrc;
                 }
             }
         }
@@ -1965,15 +1967,17 @@ static void FillStructWithSprite(struct SpriteToFill *input)
             u32 pixelMask = ~srcMask;
             for (u32 y = input->startY; y < input->startY + input->height; y++)
             {
-                u32 currSrc = src[(y / 8) * rowOffset + tile * 8 + y % 8] & srcMask;
-                u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
-                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currSrc;
+                u32 currSrc = src[CURRENT_TILE_ROW] & srcMask;
+                u32 currPixels = tiles[CURRENT_TILE_ROW] & pixelMask;
+                tiles[CURRENT_TILE_ROW] = currPixels | currSrc;
             }
         }
         break;
     }
     }
 }
+
+#undef CURRENT_TILE_ROW
 
 static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 height, bool32 isColor, u32 color)
 {
