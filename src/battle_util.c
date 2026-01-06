@@ -9828,6 +9828,7 @@ void ActivateMegaEvolution(u32 battler)
 {
     gLastUsedItem = gBattleMons[battler].item;
     SetActiveGimmick(battler, GIMMICK_MEGA);
+    SetGimmickAsActivated(battler, GIMMICK_MEGA);
 
     if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE))
     {
@@ -9844,6 +9845,7 @@ void ActivateUltraBurst(u32 battler)
 {
     gLastUsedItem = gBattleMons[battler].item;
     SetActiveGimmick(battler, GIMMICK_ULTRA_BURST);
+    SetGimmickAsActivated(battler, GIMMICK_ULTRA_BURST);
     TryBattleFormChange(battler, FORM_CHANGE_BATTLE_ULTRA_BURST);
     BattleScriptPushCursorAndCallback(BattleScript_UltraBurst);
 }

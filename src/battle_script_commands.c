@@ -12584,35 +12584,6 @@ void BS_TryRevertWeatherForm(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_HandleMegaEvolution(void)
-{
-    NATIVE_ARGS(u8 battler, u8 caseId);
-
-    u8 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptFormChange(cmd->caseId, battler);
-    SetGimmickAsActivated(battler, GIMMICK_MEGA);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_HandlePrimalReversion(void)
-{
-    NATIVE_ARGS(u8 battler, u8 caseId);
-
-    u8 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptFormChange(cmd->caseId, battler);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_HandleUltraBurst(void)
-{
-    NATIVE_ARGS(u8 battler, u8 caseId);
-
-    u8 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptFormChange(cmd->caseId, battler);
-    SetGimmickAsActivated(battler, GIMMICK_ULTRA_BURST);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_JumpIfShellTrap(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);

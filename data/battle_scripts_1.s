@@ -5613,10 +5613,10 @@ BattleScript_MegaEvolution::
 	printstring STRINGID_MEGAEVOREACTING
 BattleScript_MegaEvolutionAfterString:
 	waitmessage B_WAIT_TIME_LONG
-	handlemegaevo BS_SCRIPTING, 0
+	handleformchange BS_SCRIPTING, 0
 	playanimation BS_SCRIPTING, B_ANIM_MEGA_EVOLUTION
 	waitanimation
-	handlemegaevo BS_SCRIPTING, 1
+	handleformchange BS_SCRIPTING, 1
 	printstring STRINGID_MEGAEVOEVOLVED
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_SCRIPTING
@@ -5630,10 +5630,10 @@ BattleScript_WishMegaEvolution::
 
 BattleScript_PrimalReversion::
 	flushtextbox
-	handleprimalreversion BS_SCRIPTING, 0
-	handleprimalreversion BS_SCRIPTING, 1
+	handleformchange BS_SCRIPTING, 0
 	playanimation BS_SCRIPTING, B_ANIM_PRIMAL_REVERSION
 	waitanimation
+	handleformchange BS_SCRIPTING, 1
 	printstring STRINGID_PKMNREVERTEDTOPRIMAL
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_SCRIPTING
@@ -5645,9 +5645,9 @@ BattleScript_PowerConstruct::
 	waitmessage B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
 	handleformchange BS_SCRIPTING, 0
-	handleformchange BS_SCRIPTING, 1
 	playanimation BS_SCRIPTING, B_ANIM_POWER_CONSTRUCT
 	waitanimation
+	handleformchange BS_SCRIPTING, 1
 	printstring STRINGID_POWERCONSTRUCTTRANSFORM
 	waitmessage B_WAIT_TIME_SHORT
 	end2
@@ -5657,10 +5657,10 @@ BattleScript_UltraBurst::
 	trytrainerslidezmovemsg
 	printstring STRINGID_ULTRABURSTREACTING
 	waitmessage B_WAIT_TIME_LONG
-	handleultraburst BS_SCRIPTING, 0
+	handleformchange BS_SCRIPTING, 0
 	playanimation BS_SCRIPTING, B_ANIM_ULTRA_BURST
 	waitanimation
-	handleultraburst BS_SCRIPTING, 1
+	handleformchange BS_SCRIPTING, 1
 	printstring STRINGID_ULTRABURSTCOMPLETED
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_SCRIPTING
@@ -5676,9 +5676,9 @@ BattleScript_BattlerFormChange::
 	flushtextbox
 BattleScript_BattlerFormChangeNoPopup:
 	handleformchange BS_SCRIPTING, 0
-	handleformchange BS_SCRIPTING, 1
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
+	handleformchange BS_SCRIPTING, 1
 	return
 
 BattleScript_BattlerFormChangeEnd3NoPopup::
@@ -5694,9 +5694,9 @@ BattleScript_BattlerFormChangeWithString::
 	call BattleScript_AbilityPopUpScripting
 	flushtextbox
 	handleformchange BS_SCRIPTING, 0
-	handleformchange BS_SCRIPTING, 1
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
+	handleformchange BS_SCRIPTING, 1
 	printstring STRINGID_PKMNTRANSFORMED
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -5704,9 +5704,9 @@ BattleScript_BattlerFormChangeWithString::
 BattleScript_AttackerFormChangeMoveEffect::
 	waitmessage 1
 	handleformchange BS_ATTACKER, 0
-	handleformchange BS_ATTACKER, 1
 	playanimation BS_ATTACKER, B_ANIM_FORM_CHANGE
 	waitanimation
+	handleformchange BS_ATTACKER, 1
 	copybyte sBATTLER, gBattlerAttacker
 	printstring STRINGID_PKMNTRANSFORMED
 	waitmessage B_WAIT_TIME_LONG
@@ -5736,9 +5736,9 @@ BattleScript_ApplyDisguiseFormChangeHPLossReturn:
 BattleScript_TargetFormChangeNoPopup:
 	flushtextbox
 	handleformchange BS_SCRIPTING, 0
-	handleformchange BS_SCRIPTING, 1
 	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
 	waitanimation
+	handleformchange BS_SCRIPTING, 1
 	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
 
@@ -7166,9 +7166,9 @@ BattleScript_BattleBondActivatesOnMoveEndAttacker::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_ATTACKERBECAMEFULLYCHARGED
 	handleformchange BS_ATTACKER, 0
-	handleformchange BS_ATTACKER, 1
 	playanimation BS_ATTACKER, B_ANIM_FORM_CHANGE
 	waitanimation
+	handleformchange BS_ATTACKER, 1
 	printstring STRINGID_ATTACKERBECAMEASHSPECIES
 	return
 
