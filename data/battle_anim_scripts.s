@@ -30350,7 +30350,7 @@ gBattleAnimMove_SecretPower::
 	jumpargeq 0, BATTLE_ENVIRONMENT_SNOW,           gBattleAnimMove_Avalanche
 	jumpargeq 0, BATTLE_ENVIRONMENT_LONG_GRASS,     gBattleAnimMove_NeedleArm
 	jumpargeq 0, BATTLE_ENVIRONMENT_SAND,           gBattleAnimMove_MudSlap
-	jumpargeq 0, BATTLE_ENVIRONMENT_UNDERWATER,     gBattleAnimMove_WaterPulse
+	jumpargeq 0, BATTLE_ENVIRONMENT_UNDERWATER,     gBattleAnimMove_Waterfall
 	jumpargeq 0, BATTLE_ENVIRONMENT_WATER,          gBattleAnimMove_WaterPulse
 	jumpargeq 0, BATTLE_ENVIRONMENT_POND,           gBattleAnimMove_WaterPulse
 	jumpargeq 0, BATTLE_ENVIRONMENT_MOUNTAIN,       gBattleAnimMove_MudSlap
@@ -30361,7 +30361,7 @@ gBattleAnimMove_SecretPower::
 	jumpargeq 0, BATTLE_ENVIRONMENT_SNOW,           gBattleAnimMove_Avalanche
 	jumpargeq 0, BATTLE_ENVIRONMENT_LONG_GRASS,     gBattleAnimMove_NeedleArm
 	jumpargeq 0, BATTLE_ENVIRONMENT_SAND,           gBattleAnimMove_MudSlap
-	jumpargeq 0, BATTLE_ENVIRONMENT_UNDERWATER,     gBattleAnimMove_WaterPulse
+	jumpargeq 0, BATTLE_ENVIRONMENT_UNDERWATER,     gBattleAnimMove_Waterfall
 	jumpargeq 0, BATTLE_ENVIRONMENT_WATER,          gBattleAnimMove_WaterPulse
 	jumpargeq 0, BATTLE_ENVIRONMENT_POND,           gBattleAnimMove_WaterPulse
 	jumpargeq 0, BATTLE_ENVIRONMENT_MOUNTAIN,       gBattleAnimMove_RockThrow
