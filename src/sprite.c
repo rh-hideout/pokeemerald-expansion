@@ -1799,7 +1799,66 @@ u32 GetSpanPerImage(u32 shape, u32 size)
 #define nextX data[1]
 #define nextY data[2]
 
+static u32 UpdateFillSpanX(u32 spriteId, u32 spriteWidth, u32 left, u32 width)
+{
+    if (left + width > spriteWidth)
+    {
+        u32 numSpritesX = 1;
+        u32 tempWidth = width;
+        tempWidth -= spriteWidth - (left + width);
+        u32 nextSprite = gSprites[spriteId].nextX;
+        while (TRUE)
+        {
+            numSpritesX++;
+            if (tempWidth < spriteWidth || gSprites[nextSprite].nextX == SPRITE_NONE)
+            {
+                break;
+            }
+            else
+            {
+                tempWidth -= spriteWidth;
+                nextSprite = gSprites[nextSprite].nextX;
+            }
+        }
+
+        if (numSpritesX * spriteWidth < left + width)
+            width = numSpritesX * spriteWidth - left;
+    }
+    return width;
+}
+
+static u32 UpdateFillSpanY(u32 spriteId, u32 spriteHeight, u32 top, u32 height)
+{
+    if (top + height > spriteHeight)
+    {
+        u32 numSpritesY = 1;
+        u32 tempHeight = height;
+        tempHeight -= spriteHeight - (top + height);
+        u32 nextSprite = gSprites[spriteId].nextY;
+        while (TRUE)
+        {
+            numSpritesY++;
+            if (tempHeight < spriteHeight || gSprites[nextSprite].nextY == SPRITE_NONE)
+            {
+                break;
+            }
+            else
+            {
+                tempHeight -= spriteHeight;
+                nextSprite = gSprites[nextSprite].nextY;
+            }
+        }
+
+        if (numSpritesY * spriteHeight < height + top)
+            height = numSpritesY * spriteHeight - top;
+    }
+
+    return height;
+}
+
 #define CURRENT_SPRITE_POS ((spriteY / 8) * spriteWidth + spriteX + spriteY % 8)
+#define BITS_PER_PIXEL 4
+#define PIXELS_PER_TILE 8
 
 static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 height, bool32 isColor, u32 color)
 {
@@ -1818,54 +1877,8 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
     if (left + width > spriteWidth || top + height > spriteHeight)
     {
         //  Check if height and width overflows sprite coverage
-        u32 numSpritesY = 1;
-        u32 numSpritesX = 1;
-        u32 tempHeight = height;
-        u32 tempWidth = width;
-
-        if (top + height > spriteHeight)
-        {
-            tempHeight -= spriteHeight - (top + height);
-            u32 nextSprite = gSprites[spriteId].nextY;
-            while (TRUE)
-            {
-                numSpritesY++;
-                if (tempHeight < spriteHeight || gSprites[nextSprite].nextY == SPRITE_NONE)
-                {
-                    break;
-                }
-                else
-                {
-                    tempHeight -= spriteHeight;
-                    nextSprite = gSprites[nextSprite].nextY;
-                }
-            }
-        }
-
-        if (left + width > spriteWidth)
-        {
-            tempWidth -= spriteWidth - (left + width);
-            u32 nextSprite = gSprites[spriteId].nextX;
-            while (TRUE)
-            {
-                numSpritesX++;
-                if (tempWidth < spriteWidth || gSprites[nextSprite].nextX == SPRITE_NONE)
-                {
-                    break;
-                }
-                else
-                {
-                    tempWidth -= spriteWidth;
-                    nextSprite = gSprites[nextSprite].nextX;
-                }
-            }
-        }
-
-        if (numSpritesX * spriteWidth < left + width)
-            width = numSpritesX * spriteWidth - left;
-
-        if (numSpritesY * spriteHeight < height + top)
-            height = numSpritesY * spriteHeight - top;
+        height = UpdateFillSpanY(spriteId, spriteHeight, top, height);
+        width = UpdateFillSpanX(spriteId, spriteWidth, left, width);
     }
 
     u32 remainingWidth = width;
@@ -1877,41 +1890,41 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
         u32 srcMask;
         u32 dstMask;
         u32 currSpriteId = spriteId;
-        if (currStart % 8 == 0 && remainingWidth >= 8)
+        if (currStart % PIXELS_PER_TILE == 0 && remainingWidth >= PIXELS_PER_TILE)
         {
             //  Full tile width, nothing special
-            currWidth = 8;
+            currWidth = PIXELS_PER_TILE;
         }
-        else if (currStart % 8 == 0)
+        else if (currStart % PIXELS_PER_TILE == 0)
         {
             //  End of area starting on even tile
             currWidth = remainingWidth;
-            srcMask = 0xFFFFFFFF >> (4 * currWidth);
+            srcMask = 0xFFFFFFFF >> (BITS_PER_PIXEL * currWidth);
             dstMask = ~srcMask;
         }
-        else if (remainingWidth > 8 || remainingWidth + currStart % 8 == 8)
+        else if (remainingWidth > PIXELS_PER_TILE || remainingWidth + currStart % PIXELS_PER_TILE == PIXELS_PER_TILE)
         {
             //  Start of area, offset start, covers rest of tile
-            currWidth = 8 - (currStart % 8);
-            srcMask = 0xFFFFFFFF << (4 * currWidth);
+            currWidth = PIXELS_PER_TILE - (currStart % PIXELS_PER_TILE);
+            srcMask = 0xFFFFFFFF << (BITS_PER_PIXEL * currWidth);
             dstMask = ~srcMask;
         }
         else
         {
             //  Area doesn't start or end at a tile boundry
             currWidth = remainingWidth;
-            u32 leftMask = 0xFFFFFFFF << (4 * currStart);
-            u32 rightMask = 0xFFFFFFFF >> (4 * (8 - currStart - currWidth));
+            u32 leftMask = 0xFFFFFFFF << (BITS_PER_PIXEL * currStart);
+            u32 rightMask = 0xFFFFFFFF >> (BITS_PER_PIXEL * (PIXELS_PER_TILE - currStart - currWidth));
             srcMask = leftMask & rightMask;
             dstMask = ~srcMask;
         }
 
-        if (currWidth == 8)
+        if (currWidth == PIXELS_PER_TILE)
         {
             //  Separate out the case that doesn't need to mask the pixels
             for (u32 row = 0; row < height; row++)
             {
-                u32 spriteX = (currStart - (currStart % 8)) % spriteWidth;
+                u32 spriteX = (currStart - (currStart % PIXELS_PER_TILE)) % spriteWidth;
                 u32 spriteY = (top + row) % spriteHeight;
                 if (isColor)
                     tiles[CURRENT_SPRITE_POS] = color;
@@ -1940,7 +1953,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
             //  Mask these since it's needed
             for (u32 row = 0; row < height; row++)
             {
-                u32 spriteX = (currStart - (currStart % 8)) % spriteWidth;
+                u32 spriteX = (currStart - (currStart % PIXELS_PER_TILE)) % spriteWidth;
                 u32 spriteY = (top + row) % spriteHeight;
                 u32 orig = tiles[CURRENT_SPRITE_POS] & dstMask;
                 u32 new;
@@ -1981,6 +1994,10 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
     }
     return;
 }
+
+#undef CURRENT_SPRITE_POS
+#undef BITS_PER_PIXEL
+#undef PIXELS_PER_TILE
 
 void FillSpriteRectColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color)
 {

@@ -4867,9 +4867,9 @@ void TestThing(void)
     SetupSpritesForTextPrinting(spriteIds, srcs, 4, 3);
 
     //FillSpriteRectColor(spriteIds[0], 3, 3, 3, 3, TRUE, 7);
-    FillSpriteRectColor(spriteIds[0], 0, 0, 32, 32, 7);
+    FillSpriteRectColor(spriteIds[0], 0, 0, 64, 64, 7);
     //FillSpriteRectColor(spriteIds[0], 3, 3, 88, 88, TRUE, 7);
-    FillSpriteRectSprite(spriteIds[0], 4, 4, 24, 24);
+    FillSpriteRectSprite(spriteIds[0], 4, 4, 56, 56);
 
     //const u8 color[4] = {0, 3, 8, 0};
     const union TextColor color =
