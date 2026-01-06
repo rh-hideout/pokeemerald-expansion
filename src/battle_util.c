@@ -2814,7 +2814,8 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_PROTECT:
-        // TODO
+        if (DoesProtectFail(ctx->battlerAtk))
+            battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_REST:
         if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_SLEEP

@@ -525,7 +525,9 @@ struct BattlerState
     u16 switchIn:1;
     u16 fainted:1;
     u16 isFirstTurn:2;
-    u16 padding:12;
+    u16 protectSuccessiveFail:1; //if fails successive use
+    u16 protectTurnOrderFail:1; //if fails because moved last in turn
+    u16 padding:10;
 };
 
 struct PartyState
@@ -1072,6 +1074,8 @@ extern bool8 gLastUsedBallMenuPresent;
 extern u8 gPartyCriticalHits[PARTY_SIZE];
 extern u8 gCategoryIconSpriteId;
 
+extern const u16 gProtectSuccessRates[NUM_PROTECT_ODDS];
+
 static inline bool32 IsBattlerAlive(u32 battler)
 {
     if (battler >= gBattlersCount)
@@ -1204,6 +1208,12 @@ static inline void SetHealAmount(u32 battler, s32 value)
     if (value == 0)
         value = 1;
     gBattleStruct->passiveHpUpdate[battler] = -1 * value;
+}
+
+static inline bool32 DoesProtectFail(u32 battler)
+{
+    return (gBattleStruct->battlerState[battler].protectSuccessiveFail
+    || gBattleStruct->battlerState[battler].protectTurnOrderFail);
 }
 
 #endif // GUARD_BATTLE_H

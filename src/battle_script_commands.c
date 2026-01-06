@@ -907,7 +907,7 @@ static const struct SpriteTemplate sSpriteTemplate_MonIconOnLvlUpBanner =
     .callback = SpriteCB_MonIconOnLvlUpBanner
 };
 
-static const u16 sProtectSuccessRates[] = {USHRT_MAX, USHRT_MAX / 2, USHRT_MAX / 4, USHRT_MAX / 8};
+const u16 gProtectSuccessRates[] = {USHRT_MAX, USHRT_MAX / 2, USHRT_MAX / 4, USHRT_MAX / 8};
 
 #define _ 0
 
@@ -7422,36 +7422,15 @@ static void Cmd_unused_0x78(void)
 {
 }
 
-static void TryResetProtectUseCounter(u32 battler)
-{
-    u32 lastMove = gLastResultingMoves[battler];
-    if (lastMove == MOVE_UNAVAILABLE)
-    {
-        gBattleMons[battler].volatiles.protectUses = 0;
-        return;
-    }
-
-    enum BattleMoveEffects lastEffect = GetMoveEffect(lastMove);
-    if (!gBattleMoveEffects[lastEffect].usesProtectCounter)
-    {
-        if (GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) < GEN_9 || lastEffect != EFFECT_ALLY_SWITCH)
-            gBattleMons[battler].volatiles.protectUses = 0;
-    }
-}
-
 static void Cmd_setprotectlike(void)
 {
     CMD_ARGS();
 
-    bool32 notLastTurn = TRUE;
     u32 protectMethod = GetMoveProtectMethod(gCurrentMove);
 
-    TryResetProtectUseCounter(gBattlerAttacker);
 
-    if (IsLastMonToMove(gBattlerAttacker))
-        notLastTurn = FALSE;
 
-    if ((sProtectSuccessRates[gBattleMons[gBattlerAttacker].volatiles.protectUses] >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX) && notLastTurn)
+    if (!DoesProtectFail(gBattlerAttacker)
      || (protectMethod == PROTECT_WIDE_GUARD && GetConfig(CONFIG_WIDE_GUARD) >= GEN_6)
      || (protectMethod == PROTECT_QUICK_GUARD && GetConfig(CONFIG_QUICK_GUARD) >= GEN_6))
     {
@@ -13055,8 +13034,7 @@ void BS_TryAllySwitch(void)
     }
     else if (GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) >= GEN_9)
     {
-        TryResetProtectUseCounter(gBattlerAttacker);
-        if (sProtectSuccessRates[gBattleMons[gBattlerAttacker].volatiles.protectUses] < Random())
+        if (gBattleStruct->battlerState[gBattlerAttacker].protectSuccessiveFail)
         {
             gBattleMons[gBattlerAttacker].volatiles.protectUses = 0;
             gBattlescriptCurrInstr = cmd->failInstr;

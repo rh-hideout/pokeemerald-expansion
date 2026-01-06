@@ -5043,6 +5043,8 @@ static void TurnValuesCleanUp(bool8 var0)
 
             gBattleStruct->battlerState[i].canPickupItem = FALSE;
             gBattleStruct->battlerState[i].wasAboveHalfHp = FALSE;
+            gBattleStruct->battlerState[i].protectSuccessiveFail = FALSE;
+            gBattleStruct->battlerState[i].protectTurnOrderFail = FALSE;
         }
 
         if (gBattleMons[i].volatiles.substituteHP == 0)
@@ -5139,6 +5141,13 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
                     return TRUE;
                 case EFFECT_SHELL_TRAP:
                     BattleScriptExecute(BattleScript_ShellTrapSetUp);
+                    return TRUE;
+                case EFFECT_PROTECT:
+                TryResetProtectUseCounter(battlers[i]);
+                if ((gProtectSuccessRates[gBattleMons[battlers[i]].volatiles.protectUses] < RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX)))
+                    gBattleStruct->battlerState[battlers[i]].protectSuccessiveFail = TRUE;
+                if (IsLastMonToMove(battlers[i]))
+                    gBattleStruct->battlerState[battlers[i]].protectTurnOrderFail = TRUE;
                     return TRUE;
                 default:
                     break;
@@ -5619,6 +5628,23 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
         FreeMonSpritesGfx();
         FreeBattleResources();
         FreeBattleSpritesData();
+    }
+}
+
+void TryResetProtectUseCounter(u32 battler)
+{
+    u32 lastMove = gLastResultingMoves[battler];
+    if (lastMove == MOVE_UNAVAILABLE)
+    {
+        gBattleMons[battler].volatiles.protectUses = 0;
+        return;
+    }
+
+    enum BattleMoveEffects lastEffect = GetMoveEffect(lastMove);
+    if (!gBattleMoveEffects[lastEffect].usesProtectCounter)
+    {
+        if (GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) < GEN_9 || lastEffect != EFFECT_ALLY_SWITCH)
+            gBattleMons[battler].volatiles.protectUses = 0;
     }
 }
 

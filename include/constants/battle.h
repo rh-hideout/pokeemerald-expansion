@@ -721,6 +721,8 @@ enum MoveTarget
 #define HANDLE_TYPE_PRIMAL_REVERSION 1
 #define HANDLE_TYPE_ULTRA_BURST 2
 
+#define NUM_PROTECT_ODDS 4
+
 // Constants for Torment
 #define PERMANENT_TORMENT   0xF
 
