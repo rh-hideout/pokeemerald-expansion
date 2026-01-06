@@ -442,7 +442,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #if B_UPDATED_MOVE_DATA == GEN_3
             .description = COMPOUND_STRING(
                 "A 2-turn move that strikes\n"
-                "the foe on the 2nd turn.");
+                "the foe on the 2nd turn."),
         #else
             .description = COMPOUND_STRING(
                 "A 2-turn move with a high\n"
@@ -3226,7 +3226,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .copycatBanned = TRUE,
         .sleepTalkBanned = B_UPDATED_MOVE_FLAGS >= GEN_3,
         .instructBanned = TRUE,
-        .encoreBanned = TRUE,
+        .encoreBanned = (B_UPDATED_MOVE_FLAGS >= GEN_7 || B_UPDATED_MOVE_FLAGS < GEN_3),
         .assistBanned = TRUE,
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING : CONTEST_EFFECT_REPETITION_NOT_BORING,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -4367,7 +4367,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #else
             .description = COMPOUND_STRING(
                 "A triangular field of energy\n"
-                "is created and launched.");
+                "is created and launched."),
         #endif
         .effect = EFFECT_HIT,
         .power = 80,
@@ -5802,7 +5802,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
         .mimicBanned = TRUE,
-        .encoreBanned = TRUE,
+        .encoreBanned = (B_UPDATED_MOVE_FLAGS >= GEN_7 || B_UPDATED_MOVE_FLAGS < GEN_3),
         .assistBanned = TRUE,
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING : CONTEST_EFFECT_REPETITION_NOT_BORING,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -7208,7 +7208,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .copycatBanned = TRUE,
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
-        .encoreBanned = TRUE,
+        .encoreBanned = (B_UPDATED_MOVE_FLAGS >= GEN_7 || B_UPDATED_MOVE_FLAGS < GEN_3),
         .assistBanned = B_UPDATED_MOVE_FLAGS >= GEN_6,
         .mimicBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_BETTER_WHEN_AUDIENCE_EXCITED,
@@ -7394,7 +7394,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .ignoresProtect = TRUE,
-        .mirrorMoveBanned = TRUE,
+        .mirrorMoveBanned = (B_UPDATED_MOVE_FLAGS >= GEN_7 || B_UPDATED_MOVE_FLAGS < GEN_3),
         .metronomeBanned = B_UPDATED_MOVE_FLAGS >= GEN_4,
         .copycatBanned = TRUE,
         .sleepTalkBanned = TRUE,
@@ -8959,7 +8959,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_DEF_UP_1 },
-        .ignoresProtect = B_UPDATED_MOVE_FLAGS >= GEN_6,
+        .ignoresProtect = (B_UPDATED_MOVE_FLAGS >= GEN_6 || B_UPDATED_MOVE_FLAGS < GEN_3),
         .magicCoatAffected = TRUE,
         .contestEffect = CONTEST_EFFECT_MAKE_FOLLOWING_MONS_NERVOUS,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -10127,7 +10127,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .copycatBanned = TRUE,
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
-        .encoreBanned = TRUE,
+        .encoreBanned = (B_UPDATED_MOVE_FLAGS >= GEN_7 || B_UPDATED_MOVE_FLAGS < GEN_3),
         .assistBanned = TRUE,
         .mimicBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_EARLIER,
@@ -10158,7 +10158,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .copycatBanned = TRUE,
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
-        .encoreBanned = TRUE,
+        .encoreBanned = (B_UPDATED_MOVE_FLAGS >= GEN_7 || B_UPDATED_MOVE_FLAGS < GEN_3),
         .assistBanned = TRUE,
         .mimicBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_APPEAL_AS_GOOD_AS_PREV_ONE,
@@ -11756,6 +11756,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
         .assistBanned = TRUE,
+        .sketchBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_CONFUSION,
         #if B_UPDATED_MOVE_DATA >= GEN_6
@@ -12552,7 +12553,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FLAME_BURST,
-            .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_SHIFT_JUDGE_ATTENTION,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,

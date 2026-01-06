@@ -166,9 +166,9 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making co
 {
     u16 usedMove = MOVE_NONE;
 
-    PARAMETRIZE {usedMove = MOVE_SCRATCH; }
-    PARAMETRIZE {usedMove = MOVE_LEER; }
-    PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
+    PARAMETRIZE { usedMove = MOVE_SCRATCH; }
+    PARAMETRIZE { usedMove = MOVE_LEER; }
+    PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -218,9 +218,9 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making con
 {
     u16 usedMove = MOVE_NONE;
 
-    PARAMETRIZE {usedMove = MOVE_SCRATCH; }
-    PARAMETRIZE {usedMove = MOVE_LEER; }
-    PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
+    PARAMETRIZE { usedMove = MOVE_SCRATCH; }
+    PARAMETRIZE { usedMove = MOVE_LEER; }
+    PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -269,8 +269,8 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are alr
 SINGLE_BATTLE_TEST("Protect: Recoil damage is not applied if target was protected")
 {
     u32 j, k;
-    static const u16 protectMoves[] = { MOVE_PROTECT, MOVE_DETECT, MOVE_KINGS_SHIELD, MOVE_BANEFUL_BUNKER, MOVE_SILK_TRAP, MOVE_OBSTRUCT, MOVE_SPIKY_SHIELD };
-    static const u16 recoilMoves[] = { MOVE_VOLT_TACKLE, MOVE_HEAD_SMASH, MOVE_TAKE_DOWN, MOVE_DOUBLE_EDGE };
+    static const u16 protectMoves[] = {MOVE_PROTECT, MOVE_DETECT, MOVE_KINGS_SHIELD, MOVE_BANEFUL_BUNKER, MOVE_SILK_TRAP, MOVE_OBSTRUCT, MOVE_SPIKY_SHIELD};
+    static const u16 recoilMoves[] = {MOVE_VOLT_TACKLE, MOVE_HEAD_SMASH, MOVE_TAKE_DOWN, MOVE_DOUBLE_EDGE};
     u16 protectMove = MOVE_NONE;
     u16 recoilMove = MOVE_NONE;
 
@@ -353,6 +353,42 @@ SINGLE_BATTLE_TEST("Protect: Multi-hit moves don't hit a protected target and fa
             MESSAGE("The Pokémon was hit 4 time(s)!");
             MESSAGE("The Pokémon was hit 5 time(s)!");
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect fails if user moves last")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Protect fails when the only slower battler is a fainted ally")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
+        TURN {
+            MOVE(opponentLeft, MOVE_CELEBRATE);
+            MOVE(opponentRight, MOVE_CELEBRATE);
+            MOVE(playerLeft, MOVE_PROTECT);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        MESSAGE("Wynaut fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, playerLeft);
     }
 }
 
@@ -685,7 +721,7 @@ SINGLE_BATTLE_TEST("Protect: Protective Pads protects from secondary effects")
 DOUBLE_BATTLE_TEST("Protect is not transferred to a mon that is switched in due to Eject Button")
 {
     GIVEN {
-        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); };
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }

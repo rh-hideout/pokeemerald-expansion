@@ -531,7 +531,7 @@ void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playe
         anim += 16;
         break;
     }
-    
+
     // Don't completely restart anim if wiggling didn't stop.
     if (sprite->sPrevDowseState != ORASD_WIGGLE_NONE && sprite->sDowseState != ORASD_WIGGLE_NONE)
         SetAndStartSpriteAnim(sprite, anim, sprite->animCmdIndex);

@@ -47,6 +47,18 @@ AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Extreme Evoboost")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI uses Z-Moves to bypass move limitations")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Moves(MOVE_POUND, MOVE_LAST_RESORT); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_LAST_RESORT, gimmick: GIMMICK_Z_MOVE); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- 10,000,000 Volt Thunderbolt")
 {
     GIVEN {

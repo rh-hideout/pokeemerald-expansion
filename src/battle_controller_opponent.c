@@ -370,7 +370,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
     u32 trainerPicId;
-    
+
     // Sets Multibattle test opponent sprites to not be Hiker
     if (IsMultibattleTest())
     {
@@ -391,7 +391,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
     else
     {
         trainerPicId = OpponentGetTrainerPicId(battler);
-    
+
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon

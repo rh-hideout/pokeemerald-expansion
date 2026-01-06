@@ -57,7 +57,8 @@
       "profile": "https://github.com/ghoulslash",
       "contributions": [
         "maintenance",
-        "code"
+        "code",
+        "design"
       ]
     },
     {
@@ -375,7 +376,8 @@
       "profile": "https://github.com/Pyredrid",
       "contributions": [
         "userTesting",
-        "maintenance"
+        "maintenance",
+        "code"
       ]
     },
     {
@@ -504,6 +506,96 @@
       "profile": "https://github.com/amiosi",
       "contributions": [
         "data"
+      ]
+    },
+    {
+      "login": "mrdollsteak",
+      "name": "mrdollsteak",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5975698?v=4",
+      "profile": "https://github.com/mrdollsteak",
+      "contributions": [
+        "data"
+      ]
+    },
+    {
+      "login": "TheXaman",
+      "name": "TheXaman",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48356183?v=4",
+      "profile": "https://github.com/TheXaman",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ZnogyroP",
+      "name": "ZnogyroP",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20970593?v=4",
+      "profile": "https://github.com/ZnogyroP",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
+      "login": "luckytyphlosion",
+      "name": "luckytyphlosion",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10688458?v=4",
+      "profile": "https://github.com/luckytyphlosion",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ShinyDragonHunter",
+      "name": "Josh",
+      "avatar_url": "https://avatars.githubusercontent.com/u/32826900?v=4",
+      "profile": "https://github.com/ShinyDragonHunter",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Gamer2020",
+      "name": "Gamer2020",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6243575?v=4",
+      "profile": "https://github.com/Gamer2020",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "SonikkuA-DatH",
+      "name": "SonikkuA-DatH",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58025603?v=4",
+      "profile": "https://github.com/SonikkuA-DatH",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
+      "login": "Jaizu",
+      "name": "Jaizu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18596778?v=4",
+      "profile": "https://jaizu.moe",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "izrofid",
+      "name": "Kildemal",
+      "avatar_url": "https://avatars.githubusercontent.com/u/206095739?v=4",
+      "profile": "https://github.com/izrofid",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Skeli789",
+      "name": "Skeli",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17243618?v=4",
+      "profile": "https://github.com/Skeli789",
+      "contributions": [
+        "design"
       ]
     }
   ],

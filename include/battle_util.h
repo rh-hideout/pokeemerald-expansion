@@ -148,7 +148,7 @@ enum MoveCanceler
     MOVE_STEP_SUCCESS,
     MOVE_STEP_BREAK, // Breaks out of the function to run a script
     MOVE_STEP_FAILURE, // Same as break but breaks out of it due to move failure and jumps to script that handles the failure
-    MOVE_STEP_REMOVES_STATUS,
+    MOVE_STEP_STATUS_CHANGE,
 };
 
 extern const struct TypePower gNaturalGiftTable[];
@@ -238,6 +238,7 @@ void MarkBattlerForControllerExec(u32 battler);
 void MarkBattlerReceivedLinkData(u32 battler);
 const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState);
 bool32 WasUnableToUseMove(u32 battler);
+bool32 IsLastMonToMove(u32 battler);
 bool32 ShouldDefiantCompetitiveActivate(u32 battler, enum Ability ability);
 void PrepareStringBattle(enum StringID stringId, u32 battler);
 void ResetSentPokesToOpponentValue(void);
@@ -342,7 +343,7 @@ bool32 IsPartnerMonFromSameTrainer(u32 battler);
 enum DamageCategory GetCategoryBasedOnStats(u32 battler);
 void SetShellSideArmCategory(void);
 bool32 MoveIsAffectedBySheerForce(u32 move);
-bool32 TestIfSheerForceAffected(u32 battler, u16 move);
+bool32 IsSheerForceAffected(u16 move, enum Ability ability);
 void TryRestoreHeldItems(void);
 bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item);
 void TrySaveExchangedItem(u32 battler, u16 stolenItem);
