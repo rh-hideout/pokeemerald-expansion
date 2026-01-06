@@ -1982,8 +1982,8 @@ static void FillStructWithSprite(struct SpriteToFill *input)
 static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 height, bool32 isColor, u32 color)
 {
     //  Check if area spans more than 1 sprite
-    u32 spriteWidth = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].width;
-    u32 spriteHeight = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].height;
+    u32 spriteWidth = GetSpriteWidth(&gSprites[spriteId]);
+    u32 spriteHeight = GetSpriteHeight(&gSprites[spriteId]);
 
     if (isColor)
         color = color * 0x11111111;
@@ -2318,16 +2318,18 @@ void SetupSpritesForTextPrinting(u8 *spriteIds, const u32 **spriteSrc, u32 numSp
     {
         for (u32 x = 0; x < numSpritesX; x++)
         {
-            u32 spriteWidth = gOamDimensions[gSprites[spriteIds[x + y * numSpritesX]].oam.shape][gSprites[spriteIds[x + y * numSpritesY]].oam.size].width;
-            u32 spriteHeight = gOamDimensions[gSprites[spriteIds[x + y * numSpritesX]].oam.shape][gSprites[spriteIds[x + y * numSpritesY]].oam.size].height;
+            u32 spriteWidth = GetSpriteWidth(&gSprites[spriteIds[x + y * numSpritesX]]);
+            u32 spriteHeight = GetSpriteHeight(&gSprites[spriteIds[x + y * numSpritesX]]);
             assertf(spriteWidth != 8 && spriteHeight != 8, "Sprites can't be 8px");
 
             if (spriteSrc != NULL)
                 StorePointerInSpriteData(&gSprites[spriteIds[x + y * numSpritesX]], spriteSrc[x + y * numSpritesX]);
+
             if (x < numSpritesX - 1)
                 gSprites[spriteIds[x + y * numSpritesX]].nextX = spriteIds[x + y * numSpritesX + 1];
             else
                 gSprites[spriteIds[x + y * numSpritesX]].nextX = SPRITE_NONE;
+
             if (y < numSpritesY - 1)
                 gSprites[spriteIds[x + y * numSpritesX]].nextY = spriteIds[x + (y + 1) * numSpritesX];
             else
@@ -2338,3 +2340,13 @@ void SetupSpritesForTextPrinting(u8 *spriteIds, const u32 **spriteSrc, u32 numSp
 
 #undef nextX
 #undef nextY
+
+inline u32 GetSpriteWidth(struct Sprite *sprite)
+{
+    return gOamDimensions[sprite->oam.shape][sprite->oam.size].width;
+}
+
+inline u32 GetSpriteHeight(struct Sprite *sprite)
+{
+    return gOamDimensions[sprite->oam.shape][sprite->oam.size].height;
+}

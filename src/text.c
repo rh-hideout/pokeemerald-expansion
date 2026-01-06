@@ -842,15 +842,15 @@ u32 CopyGlyphToVRAM(struct TextPrinter *textPrinter)
         sprite = &gSprites[textPrinter->printerTemplate.spriteId];
         destTiles = (void*)(OBJ_VRAM0) + sprite->oam.tileNum * TILE_SIZE_4BPP;
 
-        if ((glyphWidth = gOamDimensions[sprite->oam.shape][sprite->oam.size].width - textPrinter->printerTemplate.currentX) > gCurGlyph.width)
+        if ((glyphWidth = GetSpriteWidth(sprite) - textPrinter->printerTemplate.currentX) > gCurGlyph.width)
             glyphWidth = gCurGlyph.width;
         else
             wasCutOff = TRUE;
 
-        if ((glyphHeight = gOamDimensions[sprite->oam.shape][sprite->oam.size].height - textPrinter->printerTemplate.currentY) > gCurGlyph.height)
+        if ((glyphHeight = GetSpriteHeight(sprite) - textPrinter->printerTemplate.currentY) > gCurGlyph.height)
             glyphHeight = gCurGlyph.height;
 
-        widthOffset = gOamDimensions[sprite->oam.shape][sprite->oam.size].width * 4;
+        widthOffset = GetSpriteWidth(sprite) * 4;
         break;
     default:
         errorf("Illegal printer type");
@@ -1361,10 +1361,10 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             {
                 struct Sprite *sprite = &gSprites[textPrinter->printerTemplate.spriteId];
                 textPrinter->printerTemplate.spriteId = textPrinter->printerTemplate.firstSpriteInRow;
-                if (textPrinter->printerTemplate.currentY  >= gOamDimensions[sprite->oam.shape][sprite->oam.size].height
+                if (textPrinter->printerTemplate.currentY  >= GetSpriteHeight(sprite)
                  && gSprites[textPrinter->printerTemplate.spriteId].nextY != SPRITE_NONE)
                 {
-                    textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.currentY - gOamDimensions[sprite->oam.shape][sprite->oam.size].height;
+                    textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.currentY - GetSpriteHeight(sprite);
                     textPrinter->printerTemplate.spriteId = gSprites[textPrinter->printerTemplate.firstSpriteInRow].nextY;
                     textPrinter->printerTemplate.firstSpriteInRow = textPrinter->printerTemplate.spriteId;
                 }

@@ -336,5 +336,7 @@ void FillSpriteRectColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height,
 void FillSpriteRectSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height);
 void SetupSpritesForTextPrinting(u8 *spriteIds, const u32 **spriteSrc, u32 numSpritesX, u32 numSpritesY);
 u32 *GetSrcPtrFromSprite(struct Sprite *sprite);
+u32 GetSpriteWidth(struct Sprite *sprite);
+u32 GetSpriteHeight(struct Sprite *sprite);
 
 #endif //GUARD_SPRITE_H
