@@ -46,8 +46,6 @@ struct WildPokemonHeader
 
 
 extern const struct WildPokemonHeader gWildMonHeaders[];
-extern const struct WildPokemonHeader gBattlePyramidWildMonHeaders[];
-extern const struct WildPokemonHeader gBattlePikeWildMonHeaders[];
 extern const struct WildPokemon gWildFeebas;
 extern bool8 gIsFishingEncounter;
 extern bool8 gIsSurfingEncounter;
