@@ -707,10 +707,9 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
 
     if (gBattleStruct->unableToUseMove || gProtectStructs[gBattlerAttacker].chargingTurn)
     {
-        DebugPrintf("[0]");
         // unable to use move
     }
-    else if (moveTarget == TARGET_USER_AND_ALLY) // This assumes that the effect can't be bounced back by ally
+    else if (moveTarget == TARGET_USER_AND_ALLY)
     {   
         u32 partner = BATTLE_PARTNER(gBattlerAttacker);
         if (partner != gBattlerTarget && IsBattlerAlive(partner))

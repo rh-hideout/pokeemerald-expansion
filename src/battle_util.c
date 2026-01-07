@@ -3242,7 +3242,7 @@ static bool32 (*const sShouldCheckTargetMoveFailure[])(u32 battlerAtk, u32 battl
 
 static bool32 ShouldCheckTargetMoveFailure(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTarget)
 {
-    // For Bounce
+    // For Bounced moves
     if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
         return skipFailure;
 
@@ -3250,6 +3250,7 @@ static bool32 ShouldCheckTargetMoveFailure(u32 battlerAtk, u32 battlerDef, u32 m
 }
 #undef checkFailure
 #undef skipFailure
+
 
 static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
 {
