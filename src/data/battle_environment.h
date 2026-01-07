@@ -38,14 +38,10 @@ const u32 gBattleEnvironmentTiles_Building[] = INCBIN_U32("graphics/battle_envir
 const u16 gBattleEnvironmentPalette_Frontier[] = INCBIN_U16("graphics/battle_environment/stadium/battle_frontier.gbapal"); // this is also used for link battles
 const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_environment/building/map.bin.smolTM");
 
-#define ENVIRONMENT_BACKGROUND(background)                      \
-{                                                               \
-    .tileset = gBattleEnvironmentTiles_##background,            \
-    .tilemap = gBattleEnvironmentTilemap_##background,          \
-    .entryTileset = gBattleEnvironmentAnimTiles_##background,   \
-    .entryTilemap = gBattleEnvironmentAnimTilemap_##background, \
-    .palette = gBattleEnvironmentPalette_##background,          \
-}
+#define ENVIRONMENT_BACKGROUND(Background)                                                           \
+    .entry = {gBattleEnvironmentAnimTiles_##Background, gBattleEnvironmentAnimTilemap_##Background}, \
+    .background = {gBattleEnvironmentTiles_##Background, gBattleEnvironmentTilemap_##Background},    \
+    .palette = gBattleEnvironmentPalette_##Background
 
 #define DEFAULT_CAMOUFLAGE_BLEND RGB_WHITE
 
@@ -242,14 +238,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = PLAIN_SECRET_POWER_EFFECT,
         .camouflageType = PLAIN_CAMOUFLAGE_TYPE,
         .camouflageBlend = PLAIN_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Building,
-            .tilemap = gBattleEnvironmentTilemap_Building,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_Plain,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Building, gBattleEnvironmentTilemap_Building},
+        .palette = gBattleEnvironmentPalette_Plain,
         .battleIntroSlide = PLAIN_BATTLE_INTRO_SLIDE,
     },
 
@@ -260,14 +251,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Building,
-            .tilemap = gBattleEnvironmentTilemap_Building,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_Frontier,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Building, gBattleEnvironmentTilemap_Building},
+        .palette = gBattleEnvironmentPalette_Frontier,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -278,14 +264,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Building,
-            .tilemap = gBattleEnvironmentTilemap_Building,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_BuildingGym,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Building, gBattleEnvironmentTilemap_Building},
+        .palette = gBattleEnvironmentPalette_BuildingGym,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -296,14 +277,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Building,
-            .tilemap = gBattleEnvironmentTilemap_Building,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_BuildingLeader,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Building, gBattleEnvironmentTilemap_Building},
+        .palette = gBattleEnvironmentPalette_BuildingLeader,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -314,14 +290,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Stadium,
-            .tilemap = gBattleEnvironmentTilemap_Stadium,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_StadiumMagma,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Stadium, gBattleEnvironmentTilemap_Stadium},
+        .palette = gBattleEnvironmentPalette_StadiumMagma,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -332,14 +303,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Stadium,
-            .tilemap = gBattleEnvironmentTilemap_Stadium,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_StadiumAqua,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Stadium, gBattleEnvironmentTilemap_Stadium},
+        .palette = gBattleEnvironmentPalette_StadiumAqua,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -350,14 +316,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Stadium,
-            .tilemap = gBattleEnvironmentTilemap_Stadium,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_StadiumSidney,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Stadium, gBattleEnvironmentTilemap_Stadium},
+        .palette = gBattleEnvironmentPalette_StadiumSidney,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -368,14 +329,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Stadium,
-            .tilemap = gBattleEnvironmentTilemap_Stadium,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_StadiumPhoebe,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Stadium, gBattleEnvironmentTilemap_Stadium},
+        .palette = gBattleEnvironmentPalette_StadiumPhoebe,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -386,14 +342,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Stadium,
-            .tilemap = gBattleEnvironmentTilemap_Stadium,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_StadiumGlacia,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Stadium, gBattleEnvironmentTilemap_Stadium},
+        .palette = gBattleEnvironmentPalette_StadiumGlacia,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -404,14 +355,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Stadium,
-            .tilemap = gBattleEnvironmentTilemap_Stadium,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_StadiumDrake,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Stadium, gBattleEnvironmentTilemap_Stadium},
+        .palette = gBattleEnvironmentPalette_StadiumDrake,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -422,14 +368,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = BUILDING_SECRET_POWER_EFFECT,
         .camouflageType = BUILDING_CAMOUFLAGE_TYPE,
         .camouflageBlend = BUILDING_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Stadium,
-            .tilemap = gBattleEnvironmentTilemap_Stadium,
-            .entryTileset = gBattleEnvironmentAnimTiles_Building,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Building,
-            .palette = gBattleEnvironmentPalette_StadiumWallace,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Building, gBattleEnvironmentAnimTilemap_Building},
+        .background = {gBattleEnvironmentTiles_Stadium, gBattleEnvironmentTilemap_Stadium},
+        .palette = gBattleEnvironmentPalette_StadiumWallace,
         .battleIntroSlide = BUILDING_BATTLE_INTRO_SLIDE,
     },
 
@@ -441,14 +382,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = CAVE_SECRET_POWER_EFFECT,
         .camouflageType = CAVE_CAMOUFLAGE_TYPE,
         .camouflageBlend = CAVE_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Cave,
-            .tilemap = gBattleEnvironmentTilemap_Cave,
-            .entryTileset = gBattleEnvironmentAnimTiles_Cave,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Cave,
-            .palette = gBattleEnvironmentPalette_Groudon,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Cave, gBattleEnvironmentAnimTilemap_Cave},
+        .background = {gBattleEnvironmentTiles_Cave, gBattleEnvironmentTilemap_Cave},
+        .palette = gBattleEnvironmentPalette_Groudon,
         .battleIntroSlide = CAVE_BATTLE_INTRO_SLIDE,
     },
 
@@ -460,14 +396,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = CAVE_SECRET_POWER_EFFECT,
         .camouflageType = CAVE_CAMOUFLAGE_TYPE,
         .camouflageBlend = CAVE_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Water,
-            .tilemap = gBattleEnvironmentTilemap_Water,
-            .entryTileset = gBattleEnvironmentAnimTiles_Underwater,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Underwater,
-            .palette = gBattleEnvironmentPalette_Kyogre,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Underwater, gBattleEnvironmentAnimTilemap_Underwater},
+        .background = {gBattleEnvironmentTiles_Water, gBattleEnvironmentTilemap_Water},
+        .palette = gBattleEnvironmentPalette_Kyogre,
         .battleIntroSlide = BattleIntroSlide2,
     },
 
@@ -479,14 +410,9 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
         .secretPowerEffect = PLAIN_SECRET_POWER_EFFECT,
         .camouflageType = PLAIN_CAMOUFLAGE_TYPE,
         .camouflageBlend = PLAIN_CAMOUFLAGE_BLEND,
-        .background =
-        {
-            .tileset = gBattleEnvironmentTiles_Rayquaza,
-            .tilemap = gBattleEnvironmentTilemap_Rayquaza,
-            .entryTileset = gBattleEnvironmentAnimTiles_Rayquaza,
-            .entryTilemap = gBattleEnvironmentAnimTilemap_Rayquaza,
-            .palette = gBattleEnvironmentPalette_Rayquaza,
-        },
+        .entry = {gBattleEnvironmentAnimTiles_Rayquaza, gBattleEnvironmentAnimTilemap_Rayquaza},
+        .background = {gBattleEnvironmentTiles_Rayquaza, gBattleEnvironmentTilemap_Rayquaza},
+        .palette = gBattleEnvironmentPalette_Rayquaza,
         .battleIntroSlide = PLAIN_BATTLE_INTRO_SLIDE,
     },
 
