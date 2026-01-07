@@ -828,7 +828,7 @@ void RestartWildEncounterImmunitySteps(void)
 
 static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
 {
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || OW_WILD_ENCOUNTERS_RANDOM == FALSE)
+    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || (!OW_WILD_ENCOUNTERS_RANDOM && OverworldWildEncounter_ShouldEnableRandomBattleFrontierSpawns()))
         return FALSE;
 
     if (sWildEncounterImmunitySteps < 4)
