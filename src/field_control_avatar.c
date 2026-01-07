@@ -566,11 +566,14 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
 
 static const u8 *GetInteractedWaterScript(struct MapPosition *position, u8 metatileBehavior, u8 direction)
 {
+    // Does this need a define for the surf elevation (1) check?
+    // Can be used in sElevationToSubpriority and other places too
     u8 objectEventId = GetObjectEventIdByPosition(position->x, position->y, 1);
-    struct ObjectEvent *object = &gObjectEvents[objectEventId];
-    if (IsPlayerFacingSurfableFishableWater() == TRUE && IsOverworldWildEncounter(object))
+    if (IsPlayerFacingSurfableFishableWater() == TRUE && ShouldRunOverworldEncounterScript(objectEventId))
     {
+        struct ObjectEvent *object = &gObjectEvents[objectEventId];
         gSpecialVar_0x8004 = OW_SPECIES(object);
+        gSpecialVar_LastTalked = object->localId;
         return InteractWithDynamicWildOverworldEncounter;
     }
 
