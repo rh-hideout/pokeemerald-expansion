@@ -1846,7 +1846,7 @@ static void TryClearChargeVolatile(enum Type moveType)
 
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
-        if (gBattleMons[battler].volatiles.chargeTimer == 2) // Has been set this turn by move
+        if (gBattleMons[battler].volatiles.chargeTimer == 2) // Has been set this turn by move or ability
             gBattleMons[battler].volatiles.chargeTimer--;
     }
 }
