@@ -187,6 +187,7 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     {
         u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
 
+        // Need Preproc checks for overworldShinyPaletteFemale
         if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
             palTag += OBJ_EVENT_MON_FEMALE;
             
