@@ -64,6 +64,7 @@ static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent);
 static u32 GetMaxOverworldEncounterSpawns(void);
 static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
 static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
+static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -204,17 +205,18 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     return TRUE;
 }
 
-void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn)
+static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn)
 {
     enum OverworldEncounterSpawnAnim spawnAnimType;
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
 
-    if (spawn)
+    if (animSpawn)
         OWE_PlayMonObjectCry(objectEvent);
-    else if (!spawn && OWE_ShouldPlayMonFleeSound(objectEvent))
+    
+    if (!animSpawn && OWE_ShouldPlayMonFleeSound(objectEvent))
         PlaySE(SE_FLEE);
 
-    if (isShiny && spawn)
+    if (isShiny && animSpawn)
     {
         PlaySE(SE_SHINY);
         spawnAnimType = OWE_SPAWN_ANIM_SHINY;
