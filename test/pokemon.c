@@ -338,6 +338,22 @@ TEST("givemon [moves]")
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), MOVE_NONE);
 }
 
+TEST("givemon [moves (default)]")
+{
+    ZeroPlayerPartyMons();
+
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_PYUKUMUKU, 100, move1=MOVE_DEFAULT, move2=MOVE_DEFAULT, move3=MOVE_DEFAULT;
+    );
+
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_PYUKUMUKU);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), MOVE_MEMENTO);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), MOVE_TOXIC);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), MOVE_SOAK);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), MOVE_RECOVER);
+}
+
 TEST("givemon [all]")
 {
     ZeroPlayerPartyMons();

@@ -1011,7 +1011,7 @@ enum __attribute__((packed)) Move
     MOVES_COUNT_ALL = MOVES_COUNT_DYNAMAX,
 };
 
-#define MOVE_DEFAULT     0xFFFE // Used when creating a mon to be replaced by a level-up move
+#define MOVE_DEFAULT     0x3FFF // Used when creating a mon to be replaced by a level-up move (needs to be less than that 0x4000 because of VarGet)
 #define MOVE_UNAVAILABLE 0xFFFF // Used for checks for moves affected by Disable, Mimic, etc.
 
 #endif  // GUARD_CONSTANTS_MOVES_H
