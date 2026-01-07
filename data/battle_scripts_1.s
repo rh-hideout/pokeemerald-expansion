@@ -5679,6 +5679,7 @@ BattleScript_BattlerFormChangeNoPopup:
 	waitanimation
 	handleformchange BS_SCRIPTING, 1
 	switchinabilities BS_SCRIPTING
+	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
 
 BattleScript_BattlerFormChangeEnd3NoPopup::

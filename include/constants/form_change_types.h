@@ -114,8 +114,12 @@ enum FormChanges
     // Form change that activates when inflicted with a specific status
     // param1: status
     FORM_CHANGE_STATUS,
-    // Form change that activates after move is used. Currently only used for activating Gulp Missile.
+    // Form change that activates after receiving an attack.
+    // param1: ability
     FORM_CHANGE_HIT_BY_MOVE,
+    // Form change that activates after hitting itself in confusion.
+    // param1: ability
+    FORM_CHANGE_BATTLE_HIT_BY_CONFUSION_SELF_DMG,
     // Form change that activates when terastallized as as a specific type
     // param1: tera type
     FORM_CHANGE_BATTLE_TERASTALLIZATION,

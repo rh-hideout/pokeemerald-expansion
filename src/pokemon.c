@@ -6963,6 +6963,7 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             break;
         case FORM_CHANGE_BATTLE_TURN_END:
         case FORM_CHANGE_HIT_BY_MOVE:
+        case FORM_CHANGE_BATTLE_HIT_BY_CONFUSION_SELF_DMG:
             if (formChanges[i].param1 == ctx.ability)
                 targetSpecies = formChanges[i].targetSpecies;
             break;

@@ -5618,9 +5618,16 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                         case SPECIES_CRAMORANT_GULPING:
                             BattleScriptCall(BattleScript_GulpMissileGulping);
                             break;
+                        default:
+                            BattleScriptCall(BattleScript_BattlerFormChange);
+                            break;
                     }
                 }
                 break;
+            case ABILITY_DISGUISE:
+                if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE)
+                    SetPassiveDamageAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 8);
+                BattleScriptCall(BattleScript_BattlerFormChange);
             default:
                 BattleScriptCall(BattleScript_BattlerFormChange);
                 break;

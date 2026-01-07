@@ -2035,16 +2035,6 @@ static void Cmd_healthbarupdate(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void HandleDisguiseFormChange(u32 battler, u32 ability, const u8 *bsPtr)
-{
-    TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_MOVE);
-    gBattleScripting.battler = battler;
-    if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE)
-        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-    BattleScriptPush(bsPtr);
-    gBattlescriptCurrInstr = BattleScript_TargetFormChange;
-}
-
 static void PassiveDataHpUpdate(u32 battler, const u8 *nextInstr)
 {
     if (gBattleStruct->passiveHpUpdate[battler] < 0)
@@ -2116,7 +2106,7 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
         gBattleStruct->moveResultFlags[battler] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
         if (GetMoveEffect(gCurrentMove) == EFFECT_OHKO)
             gProtectStructs[battler].survivedOHKO = TRUE;
-        HandleDisguiseFormChange(battler, GetBattlerAbility(battler), nextInstr);
+        gBattlescriptCurrInstr = nextInstr;
     }
     else
     {
@@ -5083,16 +5073,19 @@ static void Cmd_isdmgblockedbydisguise(void)
     CMD_ARGS();
 
     enum Ability ability = GetBattlerAbility(gBattlerAttacker);
+    bool32 wasDisguised = IsMimikyuDisguised(gBattlerAttacker);
 
-    if (!IsMimikyuDisguised(gBattlerAttacker)
-     || gBattleMons[gBattlerAttacker].volatiles.transformed
-     || !IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_DISGUISE))
+    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HIT_BY_CONFUSION_SELF_DMG))
     {
-        gBattlescriptCurrInstr = cmd->nextInstr;
+        gBattleScripting.battler = gBattlerAttacker;
+        if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE && wasDisguised)
+            SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 8);
+        BattleScriptPush(BattleScript_MoveEnd);
+        gBattlescriptCurrInstr = BattleScript_TargetFormChange;
         return;
-    }
+    };
 
-    HandleDisguiseFormChange(gBattlerAttacker, ability, BattleScript_MoveEnd);
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_return(void)
