@@ -4297,6 +4297,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
     u32 side = 0;
     u32 i = 0, j = 0;
     u32 partner = 0;
+    enum Ability abilityForm;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return 0;
@@ -4863,7 +4864,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         }
 
-        enum Ability abilityForm = gLastUsedAbility;
+        abilityForm = gLastUsedAbility;
         // Handle ability form changes upon switch-in.
         if ((gLastUsedAbility != ABILITY_SCHOOLING || gBattleMons[battler].level >= 20)
             && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT))
@@ -5085,7 +5086,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 break;
             }
 
-            enum Ability abilityForm = gLastUsedAbility;
+            abilityForm = gLastUsedAbility;
             // Handle ability form changes at the end of the turn here.
             if ((gLastUsedAbility != ABILITY_SCHOOLING || gBattleMons[battler].level >= 20)
                 && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
@@ -5537,30 +5538,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 effect++;
             }
             break;
-        case ABILITY_GULP_MISSILE:
-            if (!gBattleStruct->unableToUseMove
-             && IsBattlerTurnDamaged(gBattlerTarget)
-             && IsBattlerAlive(gBattlerAttacker)
-             && gBattleMons[gBattlerTarget].species != SPECIES_CRAMORANT)
-            {
-                if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
-                    SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
-
-                switch (gBattleMons[gBattlerTarget].species)
-                {
-                    case SPECIES_CRAMORANT_GORGING:
-                        TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_MOVE);
-                        BattleScriptCall(BattleScript_GulpMissileGorging);
-                        effect++;
-                        break;
-                    case SPECIES_CRAMORANT_GULPING:
-                        TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_MOVE);
-                        BattleScriptCall(BattleScript_GulpMissileGulping);
-                        effect++;
-                        break;
-                }
-            }
-            break;
         case ABILITY_SEED_SOWER:
             if (!gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget)
@@ -5613,6 +5590,43 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         default:
             break;
+        }
+
+        enum Ability abilityForm = gLastUsedAbility;
+        u32 speciesForm = gBattleMons[gBattlerTarget].species;
+        // Handle ability form changes when hit by a move here.
+        if (IsBattlerTurnDamaged(gBattlerTarget)
+            && TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_MOVE))
+        {
+            gBattleScripting.abilityPopupOverwrite = abilityForm;
+            gBattleScripting.battler = gBattlerTarget;
+
+            switch (abilityForm)
+            {
+            case ABILITY_GULP_MISSILE:
+                if (!gBattleStruct->unableToUseMove
+                && IsBattlerAlive(gBattlerAttacker))
+                {
+                    if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
+                        SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
+
+                    switch (speciesForm)
+                    {
+                        case SPECIES_CRAMORANT_GORGING:
+                            BattleScriptCall(BattleScript_GulpMissileGorging);
+                            break;
+                        case SPECIES_CRAMORANT_GULPING:
+                            BattleScriptCall(BattleScript_GulpMissileGulping);
+                            break;
+                    }
+                }
+                break;
+            default:
+                BattleScriptCall(BattleScript_BattlerFormChange);
+                break;
+            }
+            //BattleScriptExecute(BattleScript_BattlerFormChangeEnd2); // Generic animation
+            effect++;
         }
         break;
     case ABILITYEFFECT_MOVE_END_ATTACKER: // Same as above, but for attacker
