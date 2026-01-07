@@ -322,6 +322,8 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
     // Select a random tile in [-7, -4] [7, 4] range
     // Make sure is not directly next to player
+    // Can we make get random tile its own function for use elsewhere in the codebase?
+    // Have defines used and then replace MAP_METATILE_VIEW_X/Y with them
     do
     {
         x = (s16)(Random() % OWE_TOTAL_SPAWN_WIDTH) - OWE_SPAWN_RADUIS_WIDTH;
