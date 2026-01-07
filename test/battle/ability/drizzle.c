@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Drizzle summons rain", s16 damage)
 SINGLE_BATTLE_TEST("Drizzle sets up rain for 5 turns (Gen6+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_POLITOED) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DRIZZLE); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Drizzle sets up rain for 5 turns (Gen6+)")
 SINGLE_BATTLE_TEST("Drizzle sets up rain for 8 turns with Damp Rock (Gen6+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_POLITOED) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DRIZZLE); Item(ITEM_DAMP_ROCK); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Drizzle sets up rain for 8 turns with Damp Rock (Gen6+)")
 SINGLE_BATTLE_TEST("Drizzle sets up permanent rain (Gen3-5)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_3);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_3);
         PLAYER(SPECIES_POLITOED) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DRIZZLE); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {

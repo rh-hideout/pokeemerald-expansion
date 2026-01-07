@@ -3,11 +3,11 @@
 #include "malloc.h"
 #include "constants/generational_changes.h"
 
-#define UNPACK_CONFIG_GEN_CHANGES2(_name, _field, ...) ._field = B_##_name,
+#define UNPACK_CONFIG_GEN_CHANGES(_name, _field, ...) ._field = _name,
 
 const struct GenChanges sConfigChanges =
 {
-    CONFIG_DEFINITIONS(UNPACK_CONFIG_GEN_CHANGES2)
+    CONFIG_DEFINITIONS(UNPACK_CONFIG_GEN_CHANGES)
     /* Expands to:
     .critChance     = B_CRIT_CHANCE,
     .critMultiplier = B_CRIT_MULTIPLIER,
@@ -31,7 +31,7 @@ EWRAM_DATA struct GenChanges *gConfigChangesTestOverride = NULL;
 
 // Gets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
-u32 GetConfig(enum ConfigTag _genConfig)
+u32 GetConfigInternal(enum ConfigTag _genConfig)
 {
 #if TESTING
     if (gConfigChangesTestOverride == NULL)
@@ -40,7 +40,7 @@ u32 GetConfig(enum ConfigTag _genConfig)
         {
             CONFIG_DEFINITIONS(UNPACK_CONFIG_GETTERS)
         /* Expands to:
-            case CONFIG_CRIT_CHANCE:
+            case CONFIG_B_CRIT_CHANCE:
                 return gConfigChangesTestOverride->critChance;
         */
             default:
@@ -54,7 +54,7 @@ u32 GetConfig(enum ConfigTag _genConfig)
         {
             CONFIG_DEFINITIONS(UNPACK_CONFIG_OVERRIDE_GETTERS)
         /* Expands to:
-            case CONFIG_CRIT_CHANCE:
+            case CONFIG_B_CRIT_CHANCE:
                  return sConfigChanges.critChance;
         */
             default: // Invalid config tag
@@ -87,11 +87,11 @@ void SetConfig(enum ConfigTag _genConfig, u32 _value)
         CONFIG_DEFINITIONS(UNPACK_CONFIG_SETTERS)
     /* Expands to:
     #if TESTING
-        case CONFIG_CRIT_CHANCE:
+        case CONFIG_B_CRIT_CHANCE:
             gConfigChangesTestOverride->critChance = clampedValue;
             break;
     #else
-        case CONFIG_CRIT_CHANCE:
+        case CONFIG_B_CRIT_CHANCE:
             return;
     #endif
     */

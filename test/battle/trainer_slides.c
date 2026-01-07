@@ -108,7 +108,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Mon Unaffected")
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_MON_UNAFFECTED);
-        WITH_CONFIG(CONFIG_SHEER_COLD_IMMUNITY, GEN_7);
+        WITH_CONFIG(B_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_GLALIE) { Moves(MOVE_CELEBRATE); }
@@ -354,7 +354,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Enemy Mon Unaffected")
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_MON_UNAFFECTED);
-        WITH_CONFIG(CONFIG_SHEER_COLD_IMMUNITY, GEN_7);
+        WITH_CONFIG(B_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WYNAUT);
@@ -547,16 +547,16 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Enemy Lands First Critical Hit")
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT);
-        TIE_BREAK_TARGET(TARGET_TIE_LO, 0); 
+        TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
         MULTI_PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         MULTI_PARTNER(SPECIES_WOBBUFFET) { Speed(2); }
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Speed(4); }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_ENDURE); 
-            EXPECT_MOVE(opponentLeft, MOVE_SURGING_STRIKES, target: playerLeft); 
-            EXPECT_MOVE(opponentRight, MOVE_SURGING_STRIKES, target: playerLeft); 
-            MOVE(playerRight, MOVE_SURGING_STRIKES, target: playerLeft); 
+        TURN { MOVE(playerLeft, MOVE_ENDURE);
+            EXPECT_MOVE(opponentLeft, MOVE_SURGING_STRIKES, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SURGING_STRIKES, target: playerLeft);
+            MOVE(playerRight, MOVE_SURGING_STRIKES, target: playerLeft);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, playerLeft);
@@ -637,10 +637,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Player Lands First Down")
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Speed(3); }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN { 
-            EXPECT_MOVE(playerRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(playerRight,4); 
-            EXPECT_MOVE(opponentLeft, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentLeft,1); 
-            EXPECT_MOVE(opponentRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentRight,4); 
+        TURN {
+            EXPECT_MOVE(playerRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(playerRight,4);
+            EXPECT_MOVE(opponentLeft, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentLeft,1);
+            EXPECT_MOVE(opponentRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentRight,4);
         }
     } SCENE {
         MESSAGE("The opposing Wobbuffet fainted!");
@@ -658,7 +658,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Enemy Mon Unaffected")
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_MON_UNAFFECTED);
-        WITH_CONFIG(CONFIG_SHEER_COLD_IMMUNITY, GEN_7);
+        WITH_CONFIG(B_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         MULTI_PLAYER(SPECIES_WYNAUT);
         MULTI_PARTNER(SPECIES_GASTLY) { Moves(MOVE_CELEBRATE); }
@@ -691,10 +691,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Last Switchin")
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Speed(2); }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN { 
-            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO, target: opponentRight); EXPECT_SEND_OUT(opponentLeft,1); 
-            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight,4); 
-            EXPECT_MOVE(opponentRight, MOVE_MEMENTO, target: playerRight); EXPECT_SEND_OUT(opponentRight,4); 
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO, target: opponentRight); EXPECT_SEND_OUT(opponentLeft,1);
+            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight,4);
+            EXPECT_MOVE(opponentRight, MOVE_MEMENTO, target: playerRight); EXPECT_SEND_OUT(opponentRight,4);
         }
     } SCENE {
         MESSAGE("The opposing Wobbuffet fainted!");
@@ -759,7 +759,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Mega Evolution")
         MULTI_OPPONENT_A(SPECIES_LOPUNNY) { Speed(3); Item(ITEM_LOPUNNITE); }
         MULTI_OPPONENT_B(SPECIES_MEDICHAM) { Speed(1); Item(ITEM_MEDICHAMITE); }
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); 
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
             MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
             EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -786,8 +786,8 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Z Move")
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); Item(ITEM_NORMALIUM_Z); }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_NORMALIUM_Z); }
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: playerLeft); 
-            MOVE(playerRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); 
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: playerLeft);
+            MOVE(playerRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft);
             EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: playerLeft); }
     } SCENE {
         MESSAGE("Trainer A: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
@@ -820,16 +820,16 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Dynamax")
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_CELEBRATE); DynamaxLevel(dynamaxLevelA); }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); DynamaxLevel(dynamaxLevelB); }
     } WHEN {
-            TURN { 
+            TURN {
                 if (dynamaxLevelA == 10)
-                    EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); 
+                    EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX);
                 else
                     EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_NONE);
 
-                MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); 
+                MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX);
 
                 if (dynamaxLevelB == 10)
-                    EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); 
+                    EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX);
                 else
                     EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_NONE);
             }

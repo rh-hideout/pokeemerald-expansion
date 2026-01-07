@@ -147,7 +147,7 @@ static enum MoveEndResult MoveEnd_Absorb(void)
         {
             s32 healAmount = (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
             healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
-            if ((moveEffect == EFFECT_DREAM_EATER && GetConfig(CONFIG_DREAM_EATER_LIQUID_OOZE) < GEN_5)
+            if ((moveEffect == EFFECT_DREAM_EATER && GetConfig(B_DREAM_EATER_LIQUID_OOZE) < GEN_5)
                 || GetBattlerAbility(gBattlerTarget) != ABILITY_LIQUID_OOZE)
             {
                 SetHealAmount(gBattlerAttacker, healAmount);
@@ -354,7 +354,7 @@ static enum MoveEndResult MoveEnd_Symbiosis(void)
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if ((gSpecialStatuses[battler].berryReduced
-              || (GetConfig(CONFIG_SYMBIOSIS_GEMS) >= GEN_7 && gSpecialStatuses[battler].gemBoost))
+              || (GetConfig(B_SYMBIOSIS_GEMS) >= GEN_7 && gSpecialStatuses[battler].gemBoost))
             && TryTriggerSymbiosis(battler, BATTLE_PARTNER(battler)))
         {
             BestowItem(BATTLE_PARTNER(battler), battler);
@@ -907,7 +907,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
         {
             StealTargetItem(gBattlerAttacker, gBattlerTarget);  // Attacker steals target item
 
-            if (!(GetConfig(CONFIG_STEAL_WILD_ITEMS) >= GEN_9
+            if (!(GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
              && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
             {
                 gBattleMons[gBattlerAttacker].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
@@ -1026,7 +1026,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
          && !NoAliveMonsForEitherParty()
          && CompareStat(gBattlerAttacker, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(gBattlerAttacker)))
         {
-            SET_STATCHANGER(STAT_ATK, GetConfig(CONFIG_FELL_STINGER_STAT_RAISE) >= GEN_7 ? 3 : 2, FALSE);
+            SET_STATCHANGER(STAT_ATK, GetConfig(B_FELL_STINGER_STAT_RAISE) >= GEN_7 ? 3 : 2, FALSE);
             PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_FellStingerRaisesStat;
@@ -1191,7 +1191,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_BUTTON)
             ejectButtonBattlers |= 1u << battlerDef;
-         
+
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_RED_CARD)
             redCardBattlers |= 1u << battlerDef;
     }
@@ -1211,7 +1211,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         // Only fastest red card or eject button activates
         if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
-            result = MOVEEND_STEP_RUN_SCRIPT; 
+            result = MOVEEND_STEP_RUN_SCRIPT;
         else if (ejectButtonBattlers & 1u << battler && TryEjectButton(gBattlerAttacker, battler))
             result = MOVEEND_STEP_RUN_SCRIPT;
 
