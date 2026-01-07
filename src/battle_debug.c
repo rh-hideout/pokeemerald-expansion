@@ -686,7 +686,7 @@ void CB2_BattleDebugMenu(void)
         break;
     case 3:
         LoadPalette(sBgColor, BG_PLTT_ID(0), 2);
-        LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZEOF(4));
+        LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZEOF(8));
         gMain.state++;
         break;
     case 4:
