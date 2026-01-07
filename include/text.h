@@ -61,6 +61,12 @@ enum {
     FONTATTR_COLOR_SHADOW,
 };
 
+enum PACKED TextPrinterType
+{
+    WINDOW_TEXT_PRINTER,
+    SPRITE_TEXT_PRINTER,
+};
+
 union TextColor {
     struct {
         u8 background;
@@ -75,7 +81,7 @@ struct TextPrinterTemplate
 {
     const u8 *currentChar;
 
-    enum: u8 { WINDOW_TEXT_PRINTER, SPRITE_TEXT_PRINTER } type;
+    enum TextPrinterType type;
     union {
         u8 windowId;
         u8 spriteId;
