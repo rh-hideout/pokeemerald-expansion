@@ -1242,7 +1242,7 @@ static struct Sprite *CreateTrainerPicSprite(void)
 static void LoadCheckPageTrainerPic(struct Pokenav_MatchCallGfx *gfx)
 {
     u16 cursor;
-    int trainerPic = GetMatchCallTrainerPic(PokenavList_GetSelectedIndex());
+    enum TrainerPicID trainerPic = GetMatchCallTrainerPic(PokenavList_GetSelectedIndex());
     if (trainerPic >= 0)
     {
         DecompressPicFromTable(&gTrainerSprites[trainerPic].frontPic, gfx->trainerPicGfx);

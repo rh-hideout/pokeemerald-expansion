@@ -1070,6 +1070,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Hoothoot,
             gShinyOverworldPalette_Hoothoot
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sHoothootLevelUpLearnset,
         .teachableLearnset = sHoothootTeachableLearnset,
         .eggMoveLearnset = sHoothootEggMoveLearnset,
@@ -1902,6 +1903,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Natu,
             gShinyOverworldPalette_Natu
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sNatuLevelUpLearnset,
         .teachableLearnset = sNatuTeachableLearnset,
         .eggMoveLearnset = sNatuEggMoveLearnset,
@@ -3804,6 +3806,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             TRACKS_FOOT,
             sAnimTable_Following
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sMurkrowLevelUpLearnset,
         .teachableLearnset = sMurkrowTeachableLearnset,
         .eggMoveLearnset = sMurkrowEggMoveLearnset,
@@ -7020,6 +7023,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Delibird,
             gShinyOverworldPalette_Delibird
         )
+        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sDelibirdLevelUpLearnset,
         .teachableLearnset = sDelibirdTeachableLearnset,
         .eggMoveLearnset = sDelibirdEggMoveLearnset,

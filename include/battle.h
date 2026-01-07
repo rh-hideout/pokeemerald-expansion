@@ -187,7 +187,7 @@ struct FieldTimer
 struct AI_SavedBattleMon
 {
     enum Ability ability;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u16 heldItem;
     u16 species:15;
     u16 saved:1;
@@ -201,7 +201,7 @@ struct AiPartyMon
     u16 heldEffect;
     enum Ability ability;
     u16 level;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u32 status;
     u8 switchInCount; // Counts how many times this Pokemon has been sent out or switched into in a battle.
     u8 gender:2;
@@ -1074,9 +1074,9 @@ extern u8 gCategoryIconSpriteId;
 
 static inline bool32 IsBattlerAlive(u32 battler)
 {
-    if (gBattleMons[battler].hp == 0)
+    if (battler >= gBattlersCount)
         return FALSE;
-    else if (battler >= gBattlersCount)
+    else if (gBattleMons[battler].hp == 0)
         return FALSE;
     else if (gAbsentBattlerFlags & (1u << battler))
         return FALSE;

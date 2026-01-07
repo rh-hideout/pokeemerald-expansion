@@ -465,7 +465,7 @@ static void CB2_CreateTradeMenu(void)
         gPaletteFade.bufferTransferDisabled = FALSE;
 
         for (i = 0; i < PARTY_SIZE; i++)
-            CreateMon(&gEnemyParty[i], SPECIES_NONE, 0, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+            CreateRandomMon(&gEnemyParty[i], SPECIES_NONE, 0);
 
         PrintTradeMessage(MSG_STANDBY);
         ShowBg(0);
@@ -4565,7 +4565,7 @@ static void CreateInGameTradePokemonInternal(u8 whichPlayerMon, u8 whichInGameTr
     u8 mailNum;
     struct Pokemon *pokemon = &gEnemyParty[0];
 
-    CreateMon(pokemon, inGameTrade->species, level, USE_RANDOM_IVS, TRUE, inGameTrade->personality, OT_ID_PRESET, inGameTrade->otId);
+    CreateMon(pokemon, inGameTrade->species, level, inGameTrade->personality, OTID_STRUCT_PRESET(inGameTrade->otId));
 
     SetMonData(pokemon, MON_DATA_HP_IV, &inGameTrade->ivs[0]);
     SetMonData(pokemon, MON_DATA_ATK_IV, &inGameTrade->ivs[1]);

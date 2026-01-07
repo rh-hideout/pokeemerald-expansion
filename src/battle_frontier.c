@@ -322,7 +322,7 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
     }
 
     ModifyPersonalityForNature(&personality, fmon->nature);
-    CreateMon(dst, fmon->species, level, fixedIV, TRUE, personality, otID, OT_ID_PRESET);
+    CreateMonWithIVs(dst, fmon->species, level, personality, OTID_STRUCT_PRESET(otID), fixedIV);
 
     friendship = MAX_FRIENDSHIP;
     // Give the chosen Pokémon its specified moves.

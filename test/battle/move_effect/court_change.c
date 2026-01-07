@@ -93,10 +93,10 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps Mist, Safeguard, Auror
         TURN { MOVE(opponentLeft, MOVE_AURORA_VEIL); MOVE(opponentRight, MOVE_REFLECT); }
         TURN { MOVE(opponentLeft, MOVE_LIGHT_SCREEN); MOVE(opponentRight, MOVE_TAILWIND); }
         TURN { MOVE(playerLeft, MOVE_COURT_CHANGE); }
-        TURN { }
-        TURN { }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
     } SCENE {
         MESSAGE("Wynaut used Snowscape!");
         MESSAGE("The opposing Wobbuffet used Mist!");
@@ -132,10 +132,10 @@ DOUBLE_BATTLE_TEST("Court Change used by the opponent swaps Mist, Safeguard, Aur
         TURN { MOVE(playerLeft, MOVE_AURORA_VEIL); MOVE(playerRight, MOVE_REFLECT); }
         TURN { MOVE(playerLeft, MOVE_LIGHT_SCREEN); MOVE(playerRight, MOVE_TAILWIND); }
         TURN { MOVE(opponentLeft, MOVE_COURT_CHANGE); }
-        TURN { }
-        TURN { }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
     } SCENE {
         MESSAGE("Wobbuffet used Mist!");
         MESSAGE("Wobbuffet used Safeguard!");

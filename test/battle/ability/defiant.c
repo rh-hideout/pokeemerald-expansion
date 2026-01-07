@@ -151,7 +151,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Co
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); MOVE(opponent, MOVE_COURT_CHANGE); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL);}
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COURT_CHANGE, opponent);
@@ -188,7 +188,7 @@ SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed if Court Cha
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); MOVE(opponent, MOVE_COURT_CHANGE); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL);}
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COURT_CHANGE, opponent);

@@ -314,7 +314,6 @@ gBattleAnimMove_MetalBurst::
 	waitforvisualfinish
 	end
 
-@Credits: Skeli
 gBattleAnimMove_UTurn::
 	monbg ANIM_DEF_PARTNER
 	splitbgprio ANIM_TARGET
@@ -1850,20 +1849,19 @@ SnowSlide1:
 	delay 2
 	return
 
-@Credits to Skeli
 gBattleAnimMove_IceShard::
 	monbg ANIM_TARGET
 	splitbgprio ANIM_TARGET
 	setalpha 12, 8
-	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 4
 	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_TARGET, -31, 0, 7, RGB(0, 20, 31)
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 25, 1
@@ -2253,7 +2251,6 @@ InitRoomAnimation:
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -6, -6, 15, ANIM_TARGET, 1
 	return
 
-@ Credits to Skeli
 gBattleAnimMove_DracoMeteor::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 12, RGB(1, 2, 11)
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_WATER_GUN, 0, 10, 10, RGB_PURPLE @;Purple
@@ -5235,7 +5232,6 @@ GrassPledgeMiddleFountain:
 	delay 4
 	return
 
-@Credits to Skeli
 gBattleAnimMove_VoltSwitch::
 	playsewithpan SE_M_THUNDERBOLT, SOUND_PAN_ATTACKER
 	createsprite gVoltSwitchSpriteTemplate, ANIM_TARGET, 3, 0, 0, 0, 0, 32, 20
@@ -13145,7 +13141,6 @@ SmallAppleShower:
 	delay 2
 	return
 
-@ credits to Skeli
 gBattleAnimMove_SpiritBreak::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_CIRCLE_OF_LIGHT, 0, 16, 16, RGB_WHITE
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_TEAL_ALERT, 0, 10, 10, RGB(30, 14, 31)
@@ -13241,7 +13236,6 @@ gBattleAnimMove_Obstruct::
 	clearmonbg ANIM_ATK_PARTNER
 	end
 
-@Credits to Skeli
 gBattleAnimMove_FalseSurrender::
 	monbg ANIM_ATTACKER
 	fadetobg BG_DARK
@@ -13450,7 +13444,6 @@ SetSteelBeamBgPlayer:
 	fadetobg BG_STEEL_BEAM_PLAYER
 	goto SetHighSpeedBgFade
 
-@Credits to Skeli
 gBattleAnimMove_ExpandingForce::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_CIRCLE_OF_LIGHT, 0, 10, 10, RGB(30, 14, 31)
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION_2, 0, 10, 10, RGB(30, 14, 31)
@@ -13559,7 +13552,6 @@ MaxKnuckleExplosionGeyser:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_SteelRoller::
 	playsewithpan SE_M_DOUBLE_TEAM, SOUND_PAN_TARGET
 	createsprite gSpriteTemplate_SteelRoller, ANIM_TARGET, 3, 0, -40, 2, 50, 3
@@ -13579,7 +13571,6 @@ SteelRollerRocks:
 	createsprite gRockScatterSpriteTemplate, ANIM_TARGET, 2, 0xc, 0x19, 0x4, 0x4
 	return
 
-@Credits to Skeli
 gBattleAnimMove_ScaleShot::
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 0x4, 0x6
 	delay 3
@@ -13594,7 +13585,6 @@ gBattleAnimMove_ScaleShot::
 	waitforvisualfinish
 	end
 
-@Credits to Skeli
 gBattleAnimMove_MeteorBeam::
 	fadetobg BG_COSMIC
 	waitbgfadeout
@@ -13696,7 +13686,6 @@ gBattleAnimMove_ShellSideArmSpecial:: @ Modified Snipe Shot, placeholder
 	waitforvisualfinish
 	end
 
-@Credits to Skeli
 gBattleAnimMove_MistyExplosion::
 	createsprite gComplexPaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 8, 9, RGB(27, 18, 30), 8, RGB_BLACK, 8
 	createvisualtask AnimTask_ShakeMon2, 5, ANIM_PLAYER_LEFT, 8, 0, 40, 1
@@ -13712,7 +13701,6 @@ gBattleAnimMove_MistyExplosion::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 16, 0, RGB(31, 27, 31) @;White Pink
 	end
 
-@Credits to Skeli
 gBattleAnimMove_GrassyGlide::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_IMPACT, 0, 13, 13, RGB(6, 19, 0) @;Leaf Green
 	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_ATTACKER, 0, 2, 0, 8, RGB(12, 29, 0)
@@ -13725,12 +13713,11 @@ gBattleAnimMove_GrassyGlide::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0x0, 0x2
 	end
 
-@Credits to Skeli
 gBattleAnimMove_RisingVoltage::
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
-	createvisualtask AnimTask_GetBattleEnvironment, 0x5,
-	jumpargeq 0x0, BG_ELECTRIC_TERRAIN, ANIM_RISING_VOLTAGE_STRONGER
+	createvisualtask AnimTask_GetFieldTerrain, 0x5,
+	jumpargeq 0, STATUS_FIELD_ELECTRIC_TERRAIN, ANIM_RISING_VOLTAGE_STRONGER
 ANIM_RISING_VOLTAGE_NORMAL:
 	createvisualtask AnimTask_BlendBattleAnimPal, 2, F_PAL_BG, 1, 0, 4, RGB_BLACK @;To black
 	waitforvisualfinish
@@ -13920,7 +13907,6 @@ gBattleAnimMove_SkitterSmack::
 	waitforvisualfinish
 	end
 
-@Credits to Skeli
 gBattleAnimMove_BurningJealousy::
 	playsewithpan SE_M_DRAGON_RAGE, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 0, 2, 42, 1
@@ -13972,7 +13958,6 @@ BurningJealousyFlames:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_LashOut::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SLAM_HIT_2, 0, 10, 10, RGB_RED
 	monbg ANIM_DEF_PARTNER
@@ -14043,7 +14028,6 @@ gBattleAnimMove_Poltergeist::
 	blendoff
 	end
 
-@Credits to Skeli
 gBattleAnimMove_CorrosiveGas::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_PINK_CLOUD, 0, 14, 14, RGB(15, 15, 6) @;Garbage green
 	monbg ANIM_ATTACKER
@@ -14068,7 +14052,6 @@ gBattleAnimMove_CorrosiveGas::
 	clearmonbg ANIM_ATTACKER
 	end
 
-@Credits to Skeli
 gBattleAnimMove_Coaching::
 	playsewithpan SE_M_TAIL_WHIP, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_Splash, 2, ANIM_ATTACKER, 1
@@ -14079,7 +14062,6 @@ gBattleAnimMove_Coaching::
 	waitforvisualfinish
 	end
 
-@Credits to Skeli
 gBattleAnimMove_FlipTurn::
 	monbg ANIM_TARGET
 	setalpha 12, 8
@@ -14100,7 +14082,6 @@ gBattleAnimMove_FlipTurn::
 	end
 
 
-@Credits to Skeli
 gBattleAnimMove_TripleAxel::
 	monbg ANIM_DEF_PARTNER
 	setalpha 12, 8
@@ -14142,7 +14123,6 @@ TripleAxelEnd:
 	blendoff
 	end
 
-@Credits to Skeli
 gBattleAnimMove_DualWingbeat::
 	setalpha 12, 8
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 10, 1
@@ -14197,7 +14177,6 @@ DualWingbeatFeatherScatterRight:
 	createsprite gDualWingbeatFeatherSpriteTemplate, ANIM_TARGET, 1, 0, 0xfff8, 0xfe80, 0xffe1
 	return
 
-@ credits to Skeli
 gBattleAnimMove_ScorchingSands::
 	monbg ANIM_ATK_PARTNER
 	splitbgprio ANIM_ATTACKER
@@ -14220,7 +14199,6 @@ gBattleAnimMove_ScorchingSands::
 	blendoff
 	end
 
-@ credits to skeli
 gBattleAnimMove_JungleHealing::
 	fadetobg BG_SNUGGLE_FOREVER
 	waitbgfadeout
@@ -14255,7 +14233,6 @@ gBattleAnimMove_JungleHealing::
 	waitbgfadein
 	end
 
-@ credits to ghoulslash
 gBattleAnimMove_SilkTrap::
 	splitbgprio ANIM_ATTACKER
 	playsewithpan SE_M_STRING_SHOT2, SOUND_PAN_TARGET
@@ -14269,7 +14246,6 @@ gBattleAnimMove_SilkTrap::
 	clearmonbg ANIM_ATK_PARTNER
 	end
 
-@ Also used by Snow weather. Credits to Dat.H A
 gBattleAnimMove_Snowscape::
 	playsewithpan SE_M_GUST, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 2, 0, 4, RGB(11, 18, 22)
@@ -14285,7 +14261,6 @@ gBattleAnimMove_Snowscape::
 	waitforvisualfinish
 	end
 
-@Credits to Skeli
 gBattleAnimMove_WickedBlow::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_PAIN_SPLIT, 0, 9, 9, RGB_RED
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_FOCUS_ENERGY, 0, 8, 8, RGB_RED
@@ -14343,7 +14318,6 @@ WickedBlowBuffEffect:
 
 
 
-@Credits to Skeli
 gBattleAnimMove_SurgingStrikes::
 	jumpifmoveturn 1 SURGING_STRIKES_1
 	jumpifmoveturn 2 SURGING_STRIKES_2
@@ -14388,7 +14362,6 @@ SURGING_STRIKES_2:
 	end
 
 
-@Credits to Skeli
 gBattleAnimMove_ThunderCage::
 	monbg ANIM_TARGET
 	splitbgprio ANIM_TARGET
@@ -14423,7 +14396,6 @@ ThunderCageBolts:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_DragonEnergy::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_HYDRO_PUMP, 0, 12, 12, RGB(30, 2, 11) @;Regidrago Reddish Reddish, Purple
 	monbg ANIM_TARGET
@@ -14481,7 +14453,6 @@ DragonEnergyShot:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_FreezingGlare::
 	call SetPsychicBackground
 	createsprite gEyeSparkleSpriteTemplate, ANIM_ATTACKER, 0, 0xfff0, 0xfff8
@@ -14497,7 +14468,6 @@ gBattleAnimMove_FreezingGlare::
 	end
 
 
-@Credits to Skeli
 gBattleAnimMove_FieryWrath::
 	monbg ANIM_DEF_PARTNER
 	playsewithpan SE_M_SACRED_FIRE2, 0xc0
@@ -14575,7 +14545,6 @@ FieryWrathGeyser:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_ThunderousKick::
 	monbg ANIM_TARGET
 	fadetobg BG_MAX_LIGHTNING
@@ -14609,7 +14578,6 @@ gBattleAnimMove_ThunderousKick::
 	end
 
 
-@Credits to Skeli
 gBattleAnimMove_GlacialLance::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 10, RGB(0, 0, 15) @;Royal Blue
 	monbg ANIM_TARGET
@@ -14757,7 +14725,6 @@ AstralBarrageFlames5:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_EerieSpell::
 	call SetPsychicBackground
 	waitforvisualfinish
@@ -14799,7 +14766,6 @@ EerieSpellConvergingFlames:
 	return
 
 @@@@@@@@@@@@@@@@@@@@@@@ GEN 9 @@@@@@@@@@@@@@@@@@@@@@@
-@ credits to Skeli
 gBattleAnimMove_DireClaw::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SLASH, 0, 12, 12, RGB(24, 1, 24) 	@;Purple
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 4, 4
@@ -14818,7 +14784,6 @@ gBattleAnimMove_DireClaw::
 	end
 
 
-@ credits to Skeli
 gBattleAnimMove_PsyshieldBash::
 	call SetPsychicBackground
 	monbg ANIM_DEF_PARTNER
@@ -14845,7 +14810,6 @@ gBattleAnimMove_PsyshieldBash::
 	blendoff
 	end
 
-@ credits to skeli
 gBattleAnimMove_PowerShift::
 	monbg ANIM_ATK_PARTNER
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
@@ -14859,7 +14823,6 @@ gBattleAnimMove_PowerShift::
 	end
 
 
-@ credits to skeli
 gBattleAnimMove_StoneAxe::
 	monbg ANIM_TARGET
 	splitbgprio ANIM_TARGET
@@ -14887,7 +14850,6 @@ StoneAxeRockFragments:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_SpringtideStorm::
 	playsewithpan SE_M_GUST, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 1, 0, 88, 1
@@ -14924,7 +14886,6 @@ SpringtideStormHeartSwirl:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_MysticalPower::
 	setalpha 12, 8
 	call SetPsychicBackground
@@ -14976,7 +14937,6 @@ MysticalPowerFoeTwoRingsOnly:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_RagingFury::
 	loopsewithpan SE_M_DRAGON_RAGE, SOUND_PAN_ATTACKER, 0x8, 0x3
 	createvisualtask AnimTask_BlendColorCycle, 2, (F_PAL_BG | F_PAL_ATTACKER | F_PAL_TARGET), 2, 5, 3, 8, RGB_RED
@@ -14992,7 +14952,6 @@ gBattleAnimMove_RagingFury::
 	waitforvisualfinish
 	end
 
-@Credits to Skeli
 gBattleAnimMove_WaveCrash::
 	monbg ANIM_DEF_PARTNER
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_ATTACKER, 2, 0, 11, RGB(10, 19, 28)
@@ -15010,7 +14969,6 @@ gBattleAnimMove_WaveCrash::
 	end
 
 
-@Credits to Skeli
 gBattleAnimMove_Chloroblast::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_THIN_RING, 0, 10, 10, RGB(12, 29, 0)
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_HYDRO_PUMP, 0, 12, 12, RGB(12, 29, 0)
@@ -15069,7 +15027,6 @@ ChloroblastShot:
 	delay 2
 	return
 
-@Credits to Skeli
 gBattleAnimMove_MountainGale::
 	monbg ANIM_TARGET
 	call MountainGaleIceRock
@@ -15100,7 +15057,6 @@ MountainGaleIceRock:
 
 
 
-@Credits to Skeli
 gBattleAnimMove_VictoryDance::
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 40, 6, 3, 3
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
@@ -15119,7 +15075,6 @@ gBattleAnimMove_VictoryDance::
 	waitforvisualfinish
 	end
 
-@Credits to Skeli
 gBattleAnimMove_HeadlongRush::
 	fadetobg BG_ROCK_WRECKER
 	waitbgfadeout
@@ -15202,7 +15157,6 @@ MaxQuake_DirtGeyser:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_BarbBarrage::
 	monbg ANIM_TARGET
 	call BarbBarrageSpikeShoot
@@ -15232,7 +15186,6 @@ BarbBarrageSpikeShoot:
 
 
 
-@Credits to Skeli
 gBattleAnimMove_EsperWing::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_WHITE_FEATHER, 0, 10, 10, RGB(30, 14, 31)
 	monbg ANIM_TARGET
@@ -15267,7 +15220,6 @@ WingAttackFeatherScatter:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_BitterMalice::
 	playsewithpan SE_M_SACRED_FIRE2, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ScaryFace, 0x5		@ internally checks side
@@ -15298,7 +15250,6 @@ BitterMaliceSwirl:
 	delay 2
 	return
 
-@ credits to Skeli
 gBattleAnimMove_Shelter::
 	playsewithpan SE_M_HEADBUTT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ShellSmashShrinkAttacker, 0x2
@@ -15312,7 +15263,6 @@ gBattleAnimMove_Shelter::
 	end
 
 
-@Credits to Skeli
 gBattleAnimMove_TripleArrows::
 	monbg ANIM_DEF_PARTNER
 	splitbgprio ANIM_TARGET
@@ -15344,7 +15294,6 @@ TripleArrowsOnOpponent:
 
 
 
-@Credits to Skeli
 gBattleAnimMove_InfernalParade::
 	monbg ANIM_TARGET
 	splitbgprio_foes ANIM_TARGET
@@ -15388,7 +15337,6 @@ InfernalFlames:
 
 
 
-@Credits to Skeli
 gBattleAnimMove_CeaselessEdge::
 	playsewithpan SE_M_JUMP_KICK, SOUND_PAN_ATTACKER
 	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 44, 0, 0, 5
@@ -15425,7 +15373,6 @@ CeaselessEdgeSlashes:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_BleakwindStorm::
 	playsewithpan SE_M_GUST, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 1, 0, 88, 1
@@ -15463,7 +15410,6 @@ BleakwindStormIceSwirl:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_WildboltStorm::
 	fadetobg BG_MAX_LIGHTNING
 	waitbgfadeout
@@ -15507,7 +15453,6 @@ WildboltStormSparkSwirl:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_SandsearStorm::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_GUST, 0, 10, 10, RGB(11, 8, 6)
 	playsewithpan SE_M_GUST, SOUND_PAN_TARGET
@@ -15547,7 +15492,6 @@ SandsearStormFireSpin:
 	return
 
 
-@Credits to Skeli
 gBattleAnimMove_LunarBlessing::
 	monbg ANIM_ATK_PARTNER
 	setalpha 16, 0
@@ -15577,7 +15521,6 @@ gBattleAnimMove_LunarBlessing::
 	end
 
 
-@Credits to Skeli
 gBattleAnimMove_TakeHeart::
 	playsewithpan SE_M_BUBBLE, SOUND_PAN_ATTACKER
 	createsprite gSpriteTemplate_TakeHeartFallingHeart, ANIM_ATTACKER, 2, 0, 0x3a, 4, ANIM_ATTACKER
@@ -15668,7 +15611,6 @@ gBattleAnimMove_SyrupBomb::
 	jumpargeq 0x0, FALSE, gBattleAnimMove_SyrupBombRed
 	jumpargeq 0x0, TRUE, gBattleAnimMove_SyrupBombYellow
 
-@ Credits to Dat.H A
 gBattleAnimMove_SyrupBombRed::
 	call SyrupBombProjectileRed
 	call SyrupBombProjectileRed
@@ -15871,7 +15813,6 @@ gBattleAnimMove_AlluringVoice::
 	waitforvisualfinish
 	end
 
-@ Credits to Z-nogyroP
 gBattleAnimMove_AquaCutter::
 	createsprite gFalseSwipePositionedSliceSpriteTemplate, ANIM_TARGET, 2, 32
 	playsewithpan SE_M_DOUBLE_TEAM, SOUND_PAN_TARGET
@@ -15906,7 +15847,6 @@ gBattleAnimMove_AquaCutter::
 	waitforvisualfinish
 	end
 
-@ Credits to Z-nogyroP
 gBattleAnimMove_GigatonHammer::
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 12, 4, 2, 4
@@ -15931,7 +15871,6 @@ GigatonHammerImpact:
 	createsprite gRockScatterSpriteTemplate, ANIM_TARGET, 2, 0xc, 0x1e, 0x4, 0x3
 	return
 
-@ Credits to Z-nogyroP
 gBattleAnimMove_IceSpinner::
 	monbg ANIM_ATTACKER
 	createsprite gRapidSpinSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 32, -32, 40, -2
@@ -15970,7 +15909,6 @@ IceCrystalSpinEffect:
 	delay 2
 	return
 
-@ Credits to Z-nogyroP
 gBattleAnimMove_RagingBull::
 	choosetwoturnanim RagingBullNormal, RagingBullShatteredWall
 RagingBullNormal:
@@ -16052,7 +15990,6 @@ RagingBullShatteredWall:
 	clearmonbg ANIM_TARGET
 	end
 
-@ Credits to Z-nogyroP. Simple anim that combines Force Palm + Fake Out
 gBattleAnimMove_UpperHand::
 	monbg ANIM_DEF_PARTNER
 	splitbgprio ANIM_TARGET
@@ -18586,36 +18523,36 @@ TeraBlastBug:
 	waitforvisualfinish
 	monbg ANIM_DEF_PARTNER
 	call SetBugBg
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 3, 0, 50, 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
@@ -19674,7 +19611,7 @@ OrderUpStretchy:
 	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
 	waitforvisualfinish
 	end
-	
+
 gBattleAnimMove_MatchaGotcha::
 	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
 	createsprite gComplexPaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_ATTACKER, 4, 2, RGB_WHITE, 10, RGB_BLACK, 0
@@ -25821,7 +25758,7 @@ gBattleAnimMove_RazorLeaf::
 	end
 
 gBattleAnimMove_NaturePower::
-	@ No actual animation, uses the animation of a move from gBattleEnvironmentInfo.naturePower instead
+	@ No actual animation, uses the animation of a move from src/data/battle_environment.h instead
 
 gBattleAnimMove_AncientPower::
 	monbg ANIM_DEF_PARTNER
@@ -28464,49 +28401,7 @@ gBattleAnimMove_SkyUppercut::
 	end
 
 gBattleAnimMove_SecretPower::
-	createvisualtask AnimTask_GetFieldTerrain, 5
-	jumpargeq 0, STATUS_FIELD_MISTY_TERRAIN,    gBattleAnimMove_FairyWind
-	jumpargeq 0, STATUS_FIELD_GRASSY_TERRAIN,   gBattleAnimMove_NeedleArm
-	jumpargeq 0, STATUS_FIELD_ELECTRIC_TERRAIN, gBattleAnimMove_ThunderShock
-	jumpargeq 0, STATUS_FIELD_PSYCHIC_TERRAIN,  gBattleAnimMove_Confusion
-	createvisualtask AnimTask_GetBattleEnvironment, 5
-	jumpargeq 0, BATTLE_ENVIRONMENT_GRASS,          gBattleAnimMove_NeedleArm
-	jumpargeq 0, BATTLE_ENVIRONMENT_LONG_GRASS,     gBattleAnimMove_MagicalLeaf
-	jumpargeq 0, BATTLE_ENVIRONMENT_SAND,           gBattleAnimMove_MudShot
-	jumpargeq 0, BATTLE_ENVIRONMENT_UNDERWATER,     gBattleAnimMove_Waterfall
-	jumpargeq 0, BATTLE_ENVIRONMENT_WATER,          gBattleAnimMove_Surf
-	jumpargeq 0, BATTLE_ENVIRONMENT_POND,           gBattleAnimMove_BubbleBeam
-	jumpargeq 0, BATTLE_ENVIRONMENT_MOUNTAIN,       gBattleAnimMove_RockThrow
-	jumpargeq 0, BATTLE_ENVIRONMENT_CAVE,           gBattleAnimMove_Bite
-	jumpargeq 0, BATTLE_ENVIRONMENT_BUILDING,       gBattleAnimMove_Strength
-	jumpargeq 0, BATTLE_ENVIRONMENT_SOARING,        gBattleAnimMove_Gust
-	jumpargeq 0, BATTLE_ENVIRONMENT_SKY_PILLAR,     gBattleAnimMove_Gust
-	jumpargeq 0, BATTLE_ENVIRONMENT_BURIAL_GROUND,  gBattleAnimMove_ShadowSneak
-	jumpargeq 0, BATTLE_ENVIRONMENT_PUDDLE,         gBattleAnimMove_MudShot
-	jumpargeq 0, BATTLE_ENVIRONMENT_MARSH,          gBattleAnimMove_MudShot
-	jumpargeq 0, BATTLE_ENVIRONMENT_SWAMP,          gBattleAnimMove_MudShot
-	jumpargeq 0, BATTLE_ENVIRONMENT_ICE,            gBattleAnimMove_IceShard
-	jumpargeq 0, BATTLE_ENVIRONMENT_VOLCANO,        gBattleAnimMove_Incinerate
-	jumpargeq 0, BATTLE_ENVIRONMENT_DISTORTION_WORLD, gBattleAnimMove_Pound
-	jumpargeq 0, BATTLE_ENVIRONMENT_SPACE,          gBattleAnimMove_Swift
-	jumpargeq 0, BATTLE_ENVIRONMENT_ULTRA_SPACE,    gBattleAnimMove_Psywave
-.if B_SECRET_POWER_ANIMATION >= GEN_7
-	jumpargeq 0, BATTLE_ENVIRONMENT_SNOW,           gBattleAnimMove_IceShard
-	jumpargeq 0, BATTLE_ENVIRONMENT_BUILDING,       gBattleAnimMove_SpitUp
-	goto gBattleAnimMove_SpitUp
-.elseif B_SECRET_POWER_ANIMATION >= GEN_6
-	jumpargeq 0, BATTLE_ENVIRONMENT_SNOW,           gBattleAnimMove_Avalanche
-	jumpargeq 0, BATTLE_ENVIRONMENT_BUILDING,       gBattleAnimMove_BodySlam
-	goto gBattleAnimMove_BodySlam
-.elseif B_SECRET_POWER_ANIMATION >= GEN_4
-	jumpargeq 0, BATTLE_ENVIRONMENT_SNOW,           gBattleAnimMove_Avalanche
-	jumpargeq 0, BATTLE_ENVIRONMENT_BUILDING,       gBattleAnimMove_BodySlam
-	goto gBattleAnimMove_MudSlap
-.else
-	jumpargeq 0, BATTLE_ENVIRONMENT_SNOW,           gBattleAnimMove_Avalanche
-	jumpargeq 0, BATTLE_ENVIRONMENT_BUILDING,       gBattleAnimMove_Strength
-	goto gBattleAnimMove_Slam
-.endif
+	@ No actual animation, uses the animation of a move from src/data/battle_environment.h instead
 
 gBattleAnimMove_Twister::
 	monbg ANIM_DEF_PARTNER

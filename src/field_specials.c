@@ -1490,7 +1490,7 @@ void SetShoalItemFlag(u16 unused)
 void LoadWallyZigzagoon(void)
 {
     u16 monData;
-    CreateMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    CreateRandomMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7);
     monData = TRUE;
     SetMonData(&gPlayerParty[0], MON_DATA_ABILITY_NUM, &monData);
     monData = MOVE_TACKLE;

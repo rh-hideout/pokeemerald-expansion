@@ -49,10 +49,10 @@ So, finally, it needs to look like this:
 
  const struct TrainerBacksprite gTrainerBacksprites[] =
  {
-     TRAINER_BACK_SPRITE(TRAINER_BACK_PIC_BRENDAN, 4, gTrainerBackPic_Brendan, gTrainerPalette_Brendan, sBackAnims_Hoenn),
+     TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_BRENDAN, 4, gTrainerBackPic_Brendan, gTrainerPalette_Brendan, sBackAnims_Hoenn),
      ...
-     TRAINER_BACK_SPRITE(TRAINER_BACK_PIC_STEVEN, 4, gTrainerBackPic_Steven, gTrainerPalette_Steven, sBackAnims_Hoenn),
-+    TRAINER_BACK_SPRITE(TRAINER_BACK_PIC_NEW_ONE, 4, gTrainerBackPic_NewOne, gTrainerBackPicPalette_NewOne, sBackAnims_Hoenn),
+     TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_STEVEN, 4, gTrainerBackPic_Steven, gTrainerPalette_Steven, sBackAnims_Hoenn),
++    TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_NEW_ONE, 4, gTrainerBackPic_NewOne, gTrainerBackPicPalette_NewOne, sBackAnims_Hoenn),
 };
 ```
 
@@ -63,14 +63,17 @@ So, finally, it needs to look like this:
 Finally, let's bring it all together by defining our new trainer pic in [`include/constants/trainers.h`](./include/constants/trainers.h):
 
 ```diff
- #define TRAINER_BACK_PIC_WALLY                  6
- #define TRAINER_BACK_PIC_STEVEN                 7
-+#define TRAINER_BACK_PIC_NEW_ONE                8
+    TRAINER_PIC_BACK_RUBY_SAPPHIRE_MAY,
+    TRAINER_PIC_BACK_WALLY,
+    TRAINER_PIC_BACK_STEVEN,
++   TRAINER_PIC_BACK_NEW_ONE,
+    TRAINER_PIC_COUNT,
+    TRAINER_PIC_BACK_COUNT = (TRAINER_PIC_COUNT - TRAINER_PIC_FRONT_COUNT),
 ```
-Remember to count the number next to the trainer pic up by one!
+Remember to add new back pics after `TRAINER_PIC_FRONT_COUNT` but before `TRAINER_PIC_COUNT`!
 
 ## Usage
-You can test your new trainer back pic by going to [`src/data/battle_partners.party`](./src/data/battle_partners.party) and change the `Pic` field. The syntax should match the constant (`TRAINER_BACK_PIC_NEW_ONE`) with the underscore replaced by spaces. For example:
+You can test your new trainer back pic by going to [`src/data/battle_partners.party`](./src/data/battle_partners.party) and change the `Pic` field. The syntax should match the constant (`TRAINER_PIC_BACK_NEW_ONE`) with the underscore replaced by spaces. For example:
 ```diff
  === PARTNER_STEVEN ===
  Name: STEVEN
@@ -87,7 +90,7 @@ Otherwise if you use [`src/data/battle_partners.h`](./src/data/battle_partners.h
      {
          .trainerName = _("STEVEN"),
          .trainerClass = TRAINER_CLASS_RIVAL,
--        .trainerPic = TRAINER_BACK_PIC_STEVEN,
-+        .trainerPic = TRAINER_BACK_PIC_NEW_ONE,
+-        .trainerPic = TRAINER_PIC_BACK_STEVEN,
++        .trainerPic = TRAINER_PIC_BACK_NEW_ONE,
          .encounterMusic_gender = TRAINER_ENCOUNTER_MUSIC_MALE,
 ```

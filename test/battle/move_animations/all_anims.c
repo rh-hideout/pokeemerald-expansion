@@ -388,11 +388,11 @@ static void WhenSingles(enum Move move, struct BattlePokemon *attacker, struct B
     }
     else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
     {
-        TURN {MOVE(attacker, move);};
-        TURN {MOVE(attacker, move);};
-        TURN {MOVE(attacker, move);};
-        TURN {MOVE(attacker, move);};
-        TURN {MOVE(attacker, MOVE_HELPING_HAND);};
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, MOVE_HELPING_HAND); }
     }
 }
 
@@ -615,11 +615,11 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
     }
     else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
     {
-        TURN {MOVE(attacker, move, target: target);};
-        TURN {MOVE(attacker, move, target: target);};
-        TURN {MOVE(attacker, move, target: target);};
-        TURN {MOVE(attacker, move, target: target);};
-        TURN {MOVE(attacker, MOVE_LAST_RESORT, target: attacker);};
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, MOVE_LAST_RESORT, target: attacker); }
     }
 }
 
@@ -661,7 +661,7 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to op
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -709,7 +709,7 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (opponent to 
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -761,7 +761,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -832,7 +832,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -904,7 +904,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -976,7 +976,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1048,7 +1048,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1120,7 +1120,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1192,7 +1192,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1264,7 +1264,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1570,7 +1570,7 @@ SINGLE_BATTLE_TEST("Move Animations occur before their stat change animations - 
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {

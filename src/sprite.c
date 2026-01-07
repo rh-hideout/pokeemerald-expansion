@@ -473,11 +473,11 @@ u32 CreateInvisibleSprite(void (*callback)(struct Sprite *))
 
 u32 CreateSpriteAt(u32 index, const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
-    if (TESTING && template->tileTag > ANIM_SPRITES_START && template->tileTag < ANIM_SPRITES_END && !IsGfxLoaded(template->tileTag))
+    if (TESTING && template->tileTag > ANIM_SPRITES_START && template->tileTag < ANIM_TAG_COUNT && !IsGfxLoaded(template->tileTag))
     {
         assertf(FALSE, "createsprite with unloaded gfx: %u", template->tileTag);
     }
-    if (TESTING && template->paletteTag > ANIM_SPRITES_START && template->paletteTag < ANIM_SPRITES_END && !IsPalLoaded(template->paletteTag))
+    if (TESTING && template->paletteTag > ANIM_SPRITES_START && template->paletteTag < ANIM_TAG_COUNT && !IsPalLoaded(template->paletteTag))
     {
         assertf(FALSE, "createsprite with unloaded pal: %u", template->paletteTag);
     }

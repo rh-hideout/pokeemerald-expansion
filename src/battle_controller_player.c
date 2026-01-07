@@ -241,7 +241,8 @@ static void HandleInputChooseAction(u32 battler)
     else
         gPlayerDpadHoldFrames = 0;
 
-    if (B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == TRUE)
+    if (B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == TRUE
+    && !(B_LAST_USED_BALL_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
     {
         if (!gLastUsedBallMenuPresent)
         {
@@ -899,7 +900,8 @@ void HandleInputChooseMove(u32 battler)
             MoveSelectionDisplayMoveType(battler);
         }
     }
-    else if (JOY_NEW(B_MOVE_DESCRIPTION_BUTTON))
+    else if (JOY_NEW(B_MOVE_DESCRIPTION_BUTTON) &&
+        !(B_MOVE_DESCRIPTION_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
     {
         gBattleStruct->descriptionSubmenu = TRUE;
         TryMoveSelectionDisplayMoveDescription(battler);
@@ -1854,31 +1856,31 @@ static void PlayerHandleLoadMonSprite(u32 battler)
     gBattlerControllerFuncs[battler] = CompleteOnBattlerSpritePosX_0;
 }
 
-u32 LinkPlayerGetTrainerPicId(u32 multiplayerId)
+enum TrainerPicID LinkPlayerGetTrainerPicId(u32 multiplayerId)
 {
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     u8 gender = gLinkPlayers[multiplayerId].gender;
     u8 version = gLinkPlayers[multiplayerId].version & 0xFF;
 
     if (version == VERSION_FIRE_RED || version == VERSION_LEAF_GREEN)
-        trainerPicId = gender + TRAINER_BACK_PIC_RED;
+        trainerPicId = gender + TRAINER_PIC_BACK_RED;
     else if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
-        trainerPicId = gender + TRAINER_BACK_PIC_RUBY_SAPPHIRE_BRENDAN;
+        trainerPicId = gender + TRAINER_PIC_BACK_RUBY_SAPPHIRE_BRENDAN;
     else
-        trainerPicId = gender + TRAINER_BACK_PIC_BRENDAN;
+        trainerPicId = gender + TRAINER_PIC_BACK_BRENDAN;
 
     return trainerPicId;
 }
 
-static u32 PlayerGetTrainerBackPicId(void)
+static enum TrainerPicID PlayerGetTrainerBackPicId(void)
 {
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         trainerPicId = LinkPlayerGetTrainerPicId(GetMultiplayerId());
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_BRENDAN;
+        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_PIC_BACK_BRENDAN;
 
     return trainerPicId;
 }
@@ -1890,10 +1892,11 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
 {
     bool32 isFrontPic;
     s16 xPos, yPos;
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
+  
     if (IsMultibattleTest())
     {
-        trainerPicId = TRAINER_BACK_PIC_BRENDAN;
+        trainerPicId = TRAINER_PIC_BACK_BRENDAN;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
         else
@@ -1903,6 +1906,7 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
     else
     {
         trainerPicId = PlayerGetTrainerBackPicId();
+
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != B_FLANK_LEFT) // Second mon, on the right.
@@ -1943,7 +1947,7 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
 
 static void PlayerHandleTrainerSlide(u32 battler)
 {
-    u32 trainerPicId = PlayerGetTrainerBackPicId();
+    enum TrainerPicID trainerPicId = PlayerGetTrainerBackPicId();
     BtlController_HandleTrainerSlide(battler, trainerPicId);
 }
 
@@ -2270,7 +2274,7 @@ static void PlayerHandleOneReturnValue_Duplicate(u32 battler)
 
 static void PlayerHandleIntroTrainerBallThrow(u32 battler)
 {
-    const u32 paletteIndex = PlayerGetTrainerBackPicId();
+    const u32 paletteIndex = PlayerGetTrainerBackPicId() - TRAINER_PIC_FRONT_COUNT;
     const u16 *trainerPal = gTrainerBacksprites[paletteIndex].palette.data;
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
 }
@@ -2401,7 +2405,7 @@ static u32 CheckTypeEffectiveness(u32 battlerAtk, u32 battlerDef)
 
 static u32 CheckTargetTypeEffectiveness(u32 battler)
 {
-    u32 battlerFoe = BATTLE_OPPOSITE(GetBattlerPosition(battler));
+    u32 battlerFoe = BATTLE_OPPOSITE(battler);
     u32 foeEffectiveness = CheckTypeEffectiveness(battler, battlerFoe);
 
     if (IsDoubleBattle())
