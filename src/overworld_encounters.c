@@ -918,7 +918,9 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     templateOWE.graphicsId = graphicsId;
     templateOWE.sOverworldEncounterLevel = level;
     templateOWE.trainerType = TRAINER_TYPE_ENCOUNTER;
-    templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
+    if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
+        templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
+    
     return templateOWE;
 }
 
