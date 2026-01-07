@@ -2137,10 +2137,11 @@
 	.4byte \failInstr
 	.endm
 
-	.macro handleformchange battler:req, caseId:req
+	.macro handleformchange battler:req, caseId:req, bufferSpeciesName=TRUE
 	callnative BS_HandleFormChange
 	.byte \battler
 	.byte \caseId
+	.byte \bufferSpeciesName
 	.endm
 
 	.macro tryautotomize failInstr:req

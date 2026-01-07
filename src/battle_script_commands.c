@@ -2035,6 +2035,16 @@ static void Cmd_healthbarupdate(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+static void HandleDisguiseFormChange(u32 battler, u32 ability, const u8 *bsPtr)
+{
+    TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_MOVE);
+    gBattleScripting.battler = battler;
+    if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE)
+        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
+    BattleScriptPush(bsPtr);
+    gBattlescriptCurrInstr = BattleScript_TargetFormChange;
+}
+
 static void PassiveDataHpUpdate(u32 battler, const u8 *nextInstr)
 {
     if (gBattleStruct->passiveHpUpdate[battler] < 0)
@@ -2101,22 +2111,12 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
     }
     else if (DoesDisguiseBlockMove(battler, gCurrentMove))
     {
-        // TODO: Convert this to a proper FORM_CHANGE type.
         gBattleScripting.battler = battler;
         gBattleStruct->moveDamage[battler] = 0;
         gBattleStruct->moveResultFlags[battler] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
         if (GetMoveEffect(gCurrentMove) == EFFECT_OHKO)
             gProtectStructs[battler].survivedOHKO = TRUE;
-        if (GetBattlerPartyState(battler)->changedSpecies == SPECIES_NONE)
-            GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
-        if (gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED)
-            gBattleMons[battler].species = SPECIES_MIMIKYU_BUSTED_TOTEM;
-        else
-            gBattleMons[battler].species = SPECIES_MIMIKYU_BUSTED;
-        if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8)
-            SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-        BattleScriptPush(nextInstr);
-        gBattlescriptCurrInstr = BattleScript_TargetFormChange;
+        HandleDisguiseFormChange(battler, GetBattlerAbility(battler), nextInstr);
     }
     else
     {
@@ -5082,25 +5082,17 @@ static void Cmd_isdmgblockedbydisguise(void)
 {
     CMD_ARGS();
 
+    enum Ability ability = GetBattlerAbility(gBattlerAttacker);
+
     if (!IsMimikyuDisguised(gBattlerAttacker)
      || gBattleMons[gBattlerAttacker].volatiles.transformed
-     || !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_DISGUISE))
+     || !IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_DISGUISE))
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
 
-    gBattleScripting.battler = gBattlerAttacker;
-    if (GetBattlerPartyState(gBattlerAttacker)->changedSpecies == SPECIES_NONE)
-        GetBattlerPartyState(gBattlerAttacker)->changedSpecies = gBattleMons[gBattlerAttacker].species;
-    if (gBattleMons[gBattlerAttacker].species == SPECIES_MIMIKYU_TOTEM_DISGUISED)
-        gBattleMons[gBattlerAttacker].species = SPECIES_MIMIKYU_BUSTED_TOTEM;
-    else
-        gBattleMons[gBattlerAttacker].species = SPECIES_MIMIKYU_BUSTED;
-    if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8)
-        SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 8);
-    BattleScriptPush(BattleScript_MoveEnd);
-    gBattlescriptCurrInstr = BattleScript_TargetFormChange;
+    HandleDisguiseFormChange(gBattlerAttacker, ability, BattleScript_MoveEnd);
 }
 
 static void Cmd_return(void)
@@ -7381,22 +7373,6 @@ void BS_CourtChangeSwapSideStatuses(void)
     SWAP(sideTimerPlayer->damageNonTypesType, sideTimerOpp->damageNonTypesType, temp);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void HandleScriptFormChange(u32 caseId, u32 battler)
-{
-    if (caseId == 0) // Buffer name and emit species.
-    {
-        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battler].species);
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_SPECIES_BATTLE, 1u << gBattlerPartyIndexes[battler], sizeof(gBattleMons[battler].species), &gBattleMons[battler].species);
-        MarkBattlerForControllerExec(battler);
-    }
-    else // Update healthbox.
-    {
-        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
-        if (!IsOnPlayerSide(battler))
-            SetBattlerShadowSpriteCallback(battler, gBattleMons[battler].species);
-    }
 }
 
 static void Cmd_unused_0x78(void)
@@ -14770,10 +14746,22 @@ void BS_TrySoak(void)
 
 void BS_HandleFormChange(void)
 {
-    NATIVE_ARGS(u8 battler, u8 caseId);
+    NATIVE_ARGS(u8 battler, u8 caseId, bool8 bufferSpeciesName);
 
     u32 battler = GetBattlerForBattleScript(cmd->battler);
-    HandleScriptFormChange(cmd->caseId, battler);
+    if (cmd->caseId == 0) // Buffer name and emit species.
+    {
+        if (cmd->bufferSpeciesName)
+            PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battler].species);
+        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_SPECIES_BATTLE, 1u << gBattlerPartyIndexes[battler], sizeof(gBattleMons[battler].species), &gBattleMons[battler].species);
+        MarkBattlerForControllerExec(battler);
+    }
+    else // Update healthbox.
+    {
+        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
+        if (!IsOnPlayerSide(battler))
+            SetBattlerShadowSpriteCallback(battler, gBattleMons[battler].species);
+    }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
