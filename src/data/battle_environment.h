@@ -468,7 +468,7 @@ const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT] 
             .entryTilemap = gBattleEnvironmentAnimTilemap_Underwater,
             .palette = gBattleEnvironmentPalette_Kyogre,
         },
-        .battleIntroSlide = CAVE_BATTLE_INTRO_SLIDE,
+        .battleIntroSlide = BattleIntroSlide2,
     },
 
     [BATTLE_ENVIRONMENT_RAYQUAZA] =
