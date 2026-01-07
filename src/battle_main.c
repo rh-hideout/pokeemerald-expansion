@@ -5146,7 +5146,7 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
                 TryResetProtectUseCounter(battlers[i]);
                 if ((gProtectSuccessRates[gBattleMons[battlers[i]].volatiles.protectUses] < RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX)))
                     gBattleStruct->battlerState[battlers[i]].protectSuccessiveFail = TRUE;
-                if (IsLastMonToMove(battlers[i]))
+                else if (IsLastMonToMove(battlers[i]))
                     gBattleStruct->battlerState[battlers[i]].protectTurnOrderFail = TRUE;
                     return TRUE;
                 default:
