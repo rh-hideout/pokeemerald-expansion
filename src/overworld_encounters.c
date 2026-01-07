@@ -956,9 +956,10 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     }
 }
 
-void TryRemoveOverworldWildEncounter(u32 localId)
+void OverworldWildEncounter_RemoveObjectOnBattle(void)
 {
-    struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
+    u32 localId = gSpecialVar_LastTalked;
+    struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(localId)];
     
     if (IsOverworldWildEncounter(object))
     {
