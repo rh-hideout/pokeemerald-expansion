@@ -248,6 +248,7 @@ u32 GetOldestSlot(void)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
+        // Add a not feebas tile feebas?
         {
             oldest = slotMon;
             break;
