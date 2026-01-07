@@ -1238,6 +1238,8 @@ enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavio
 
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
 {
+    // Uses slots so needs to be generated encounters only.
+    // Or needs to change functionality to count all active encounters.
     u32 numActive = GetNumActiveOverworldEncounters();
     u32 randomIndex;
     struct ObjectEvent *slotMon;
