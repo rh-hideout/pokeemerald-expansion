@@ -112,7 +112,7 @@ static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, i
 static void CreateDomeOpponentMons(u16);
 static int SelectOpponentMons_Good(u16, bool8);
 static int SelectOpponentMons_Bad(u16, bool8);
-static int GetTypeEffectivenessPoints(int, int, int);
+static int GetTypeEffectivenessPoints(enum Move, int, int);
 static int SelectOpponentMonsFromParty(int *, bool8);
 static void Task_ShowTourneyInfoCard(u8);
 static void Task_HandleInfoCardInput(u8);
@@ -2377,7 +2377,7 @@ static int SelectOpponentMonsFromParty(int *partyMovePoints, bool8 allowRandom)
 #define TYPE_x2     40
 #define TYPE_x4     80
 
-static int GetTypeEffectivenessPoints(int move, int targetSpecies, int mode)
+static int GetTypeEffectivenessPoints(enum Move move, int targetSpecies, int mode)
 {
     enum Type defType1, defType2, moveType;
     int typePower = TYPE_x1;
@@ -3873,7 +3873,7 @@ static u8 Task_GetInfoCardInput(u8 taskId)
 
 #undef tUsingAlternateSlot
 
-static bool32 IsDomeHealingMove(u32 move)
+static bool32 IsDomeHealingMove(enum Move move)
 {
     if (IsHealingMove(move))
         return TRUE;
@@ -3934,7 +3934,7 @@ static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
     }
 }
 
-static bool32 IsDomeLuckyMove(u32 move)
+static bool32 IsDomeLuckyMove(enum Move move)
 {
     if (GetMoveAccuracy(move) <= 50 && GetMoveAccuracy(move) != 0)
         return TRUE;
@@ -3962,7 +3962,7 @@ static bool32 IsDomeLuckyMove(u32 move)
     }
 }
 
-static bool32 IsDomePopularMove(u32 move)
+static bool32 IsDomePopularMove(enum Move move)
 {
     u8 i;
     for (i = 0; i < NUM_ALL_MACHINES; i++)
@@ -3989,7 +3989,7 @@ static bool32 IsDomePopularMove(u32 move)
     }
 }
 
-static bool32 IsDomeStatusMoveEffect(u32 move)
+static bool32 IsDomeStatusMoveEffect(enum Move move)
 {
     switch(GetMoveEffect(move))
     {
@@ -4015,7 +4015,7 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
     return FALSE;
 }
 
-static bool32 IsDomeRareMove(u32 move)
+static bool32 IsDomeRareMove(enum Move move)
 {
     u16 i, j;
     u16 species = 0;
@@ -4036,17 +4036,13 @@ static bool32 IsDomeRareMove(u32 move)
     return TRUE;
 }
 
-static bool32 IsDomeComboMove(u32 move)
+static bool32 IsDomeComboMove(enum Move move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     switch(effect)
     {
     // Weather moves
-    case EFFECT_SUNNY_DAY:
-    case EFFECT_RAIN_DANCE:
-    case EFFECT_SANDSTORM:
-    case EFFECT_HAIL:
-    case EFFECT_SNOWSCAPE:
+    case EFFECT_WEATHER:
     // Terrain moves
     case EFFECT_GRASSY_TERRAIN:
     case EFFECT_ELECTRIC_TERRAIN:
@@ -4297,7 +4293,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
         {
             for (k = 0; k < NUM_MOVE_POINT_TYPES; k++)
             {
-                u32 move;
+                enum Move move;
                 if (trainerId == TRAINER_FRONTIER_BRAIN)
                     move = GetFrontierBrainMonMove(i, j);
                 else if (trainerId == TRAINER_PLAYER)
@@ -5094,7 +5090,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
 {
     int i, j, k;
     int moveScores[MAX_MON_MOVES * FRONTIER_PARTY_SIZE];
-    u16 moves[MAX_MON_MOVES * FRONTIER_PARTY_SIZE] = {MOVE_NONE};
+    enum Move moves[MAX_MON_MOVES * FRONTIER_PARTY_SIZE] = {MOVE_NONE};
     u16 bestScore = 0;
     u16 bestId = 0;
     int movePower = 0;
@@ -5106,7 +5102,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
             u32 moveIndex = i * MAX_MON_MOVES + j;
-            u32 move = moves[moveIndex];
+            enum Move move = moves[moveIndex];
 
             moveScores[moveIndex] = 0;
             if (DOME_TRAINERS[winnerTournamentId].trainerId == TRAINER_FRONTIER_BRAIN)
@@ -5115,12 +5111,11 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
                 move = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
 
             movePower = GetMovePower(move);
-            enum BattleMoveEffects effect = GetMoveEffect(move);
             if (IsBattleMoveStatus(move))
                 movePower = 40;
             else if (movePower == 1)
                 movePower = 60;
-            else if (GetConfig(CONFIG_EXPLOSION_DEFENSE) < GEN_5 && (IsExplosionMove(effect)))
+            else if (GetConfig(CONFIG_EXPLOSION_DEFENSE) < GEN_5 && IsExplosionMove(move))
                 movePower /= 2;
 
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)

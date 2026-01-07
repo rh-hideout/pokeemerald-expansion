@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -122,9 +122,9 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
         PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
         OPPONENT(SPECIES_ZAMAZENTA) { Ability(ABILITY_DAUNTLESS_SHIELD); }
     } WHEN {
-        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
-        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
-        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE); }
         TURN { MOVE(player, MOVE_SKILL_SWAP); }
     } SCENE {
         NONE_OF {
@@ -145,10 +145,10 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
     } WHEN {
-        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
-        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
-        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE);}
-        TURN { MOVE(player, MOVE_BATON_PASS); MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(player, 1); SEND_OUT(opponent, 1);}
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_IRON_DEFENSE); MOVE(opponent, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_BATON_PASS); MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
     } SCENE {
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_DAUNTLESS_SHIELD);

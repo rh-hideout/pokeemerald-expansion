@@ -35,6 +35,23 @@ SINGLE_BATTLE_TEST("Rest fails if the user is at full HP")
     }
 }
 
+SINGLE_BATTLE_TEST("Rest fails if the user is protected by Leaf Guard")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SUNNY_DAY) == BATTLE_WEATHER_SUN);
+        ASSUME(B_LEAF_GUARD_PREVENTS_REST >= GEN_5);
+        PLAYER(SPECIES_CHIKORITA) { Ability(ABILITY_LEAF_GUARD); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); MOVE(player, MOVE_REST); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
+    } THEN {
+        EXPECT(!(player->status1 & STATUS1_SLEEP));
+    }
+}
+
 SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down")
 {
     GIVEN {
@@ -51,7 +68,7 @@ SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down")
 
 SINGLE_BATTLE_TEST("Rest fails if the user is protected by Electric/Misty Terrain")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
     PARAMETRIZE { move = MOVE_MISTY_TERRAIN; }
     GIVEN {

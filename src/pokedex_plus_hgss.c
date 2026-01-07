@@ -5080,7 +5080,7 @@ static bool8 CalculateMoves(void)
     return TRUE;
 }
 
-static u16 GetSelectedMove(u32 species, u32 selected)
+static enum Move GetSelectedMove(u32 species, u32 selected)
 {
     if (selected < sPokedexView->numEggMoves)
     {
@@ -5108,7 +5108,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     u32 item = ITEM_MASTER_BALL;
     u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
     u32 selected = sPokedexView->moveSelected;
-    u32 move = GetSelectedMove(species, selected);
+    enum Move move = GetSelectedMove(species, selected);
     //Moves selected from move max
     ConvertIntToDecimalStringN(gStringVar1, (selected+1), STR_CONV_MODE_RIGHT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar2, sPokedexView->movesTotal, STR_CONV_MODE_RIGHT_ALIGN, 3);
@@ -5185,7 +5185,7 @@ static void PrintStatsScreen_Moves_Description(u8 taskId)
     u8 moves_y = 5;
 
     u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
-    u32 move = GetSelectedMove(species, sPokedexView->moveSelected);
+    enum Move move = GetSelectedMove(species, sPokedexView->moveSelected);
 
     //Move description
     if (gTasks[taskId].data[5] == 0)
@@ -5228,7 +5228,7 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
     u8 contest_jam = 0;
 
     u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
-    u32 move = GetSelectedMove(species, sPokedexView->moveSelected);
+    enum Move move = GetSelectedMove(species, sPokedexView->moveSelected);
 
     //Power + Accuracy
     if (gTasks[taskId].data[5] == 0)

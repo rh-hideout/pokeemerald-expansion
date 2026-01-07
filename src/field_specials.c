@@ -1490,7 +1490,7 @@ void SetShoalItemFlag(u16 unused)
 void LoadWallyZigzagoon(void)
 {
     u16 monData;
-    CreateMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    CreateRandomMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7);
     monData = TRUE;
     SetMonData(&gPlayerParty[0], MON_DATA_ABILITY_NUM, &monData);
     monData = MOVE_TACKLE;
@@ -4568,7 +4568,7 @@ static void Task_BoxMonReplaceMove(u8 taskId)
 
     if (IsTextPrinterActive(0) != TRUE)
     {
-        u16 move = gSpecialVar_ItemId;
+        enum Move move = gSpecialVar_ItemId;
         if(gSpecialVar_MonBoxId == 0xFF)
         {
             RemoveMonPPBonus(&gPlayerParty[gSpecialVar_MonBoxPos], GetMoveSlotToReplace());

@@ -655,14 +655,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_SANDSTORM] =
-    {
-        .battleScript = BattleScript_EffectSandstorm,
-        .battleTvScore = 4,
-        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
-        .encourageEncore = TRUE,
-    },
-
     [EFFECT_ENDURE] =
     {
         .battleScript = BattleScript_EffectEndure,
@@ -782,17 +774,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_RAIN_DANCE] =
+    [EFFECT_WEATHER] =
     {
-        .battleScript = BattleScript_EffectRainDance,
-        .battleTvScore = 4,
-        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
-        .encourageEncore = TRUE,
-    },
-
-    [EFFECT_SUNNY_DAY] =
-    {
-        .battleScript = BattleScript_EffectSunnyDay,
+        .battleScript = BattleScript_EffectWeather,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_WEATHER,
         .encourageEncore = TRUE,
@@ -915,14 +899,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectOverwriteAbility,
         .battleTvScore = 0, // TODO: Assign points
-        .encourageEncore = TRUE,
-    },
-
-    [EFFECT_HAIL] =
-    {
-        .battleScript = BattleScript_EffectHail,
-        .battleTvScore = 4,
-        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
         .encourageEncore = TRUE,
     },
 
@@ -2098,13 +2074,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_SNOWSCAPE] =
-    {
-        .battleScript = BattleScript_EffectSnow,
-        .battleTvScore = 4,
-        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
-    },
-
     [EFFECT_TAKE_HEART] =
     {
         .battleScript = BattleScript_EffectTakeHeart,
@@ -2130,9 +2099,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_CHILLY_RECEPTION] =
+    [EFFECT_WEATHER_AND_SWITCH] =
     {
-        .battleScript = BattleScript_EffectChillyReception,
+        .battleScript =BattleScript_EffectWeatherAndSwitch,
         .battleTvScore = 0, // TODO: Assign points
         .battleFactoryStyle = FACTORY_STYLE_WEATHER,
     },
