@@ -955,8 +955,8 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
 
     SetOverworldEncounterSpeciesInfo(
-        template->x - MAP_OFFSET,
-        template->y - MAP_OFFSET,
+        template->x,
+        template->y,
         &speciesId,
         &isShiny,
         &isFemale,
