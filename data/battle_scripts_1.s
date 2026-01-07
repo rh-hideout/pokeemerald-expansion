@@ -5679,6 +5679,7 @@ BattleScript_BattlerFormChangeNoPopup:
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
 	handleformchange BS_SCRIPTING, 1
+	switchinabilities BS_SCRIPTING
 	return
 
 BattleScript_BattlerFormChangeEnd3NoPopup::
@@ -5699,6 +5700,7 @@ BattleScript_BattlerFormChangeWithString::
 	handleformchange BS_SCRIPTING, 1
 	printstring STRINGID_PKMNTRANSFORMED
 	waitmessage B_WAIT_TIME_LONG
+	switchinabilities BS_SCRIPTING
 	return
 
 BattleScript_AttackerFormChangeMoveEffect::
@@ -5739,6 +5741,7 @@ BattleScript_TargetFormChangeNoPopup:
 	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
 	waitanimation
 	handleformchange BS_SCRIPTING, 1
+	switchinabilities BS_SCRIPTING
 	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
 
