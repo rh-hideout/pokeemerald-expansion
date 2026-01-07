@@ -783,7 +783,7 @@ bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
 
 bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId, u32 trainerType)
 {
-    return graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER && trainerType == TRAINER_TYPE_ENCOUNTER;
+    return graphicsId == OBJ_EVENT_GFX_OW_MON && trainerType == TRAINER_TYPE_ENCOUNTER;
 }
 
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
