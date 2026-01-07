@@ -4863,10 +4863,13 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         }
 
+        enum Ability abilityForm = gLastUsedAbility;
         // Handle ability form changes upon switch-in.
         if ((gLastUsedAbility != ABILITY_SCHOOLING || gBattleMons[battler].level >= 20)
             && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT))
         {
+            // To prevent the new form's ability from pop up
+            gBattleScripting.abilityPopupOverwrite = abilityForm;
             BattleScriptCall(BattleScript_BattlerFormChange);
             effect++;
         }
@@ -5082,11 +5085,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 break;
             }
 
+            enum Ability abilityForm = gLastUsedAbility;
             // Handle ability form changes at the end of the turn here.
             if ((gLastUsedAbility != ABILITY_SCHOOLING || gBattleMons[battler].level >= 20)
                 && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
             {
                 gBattleScripting.battler = battler;
+                // To prevent the new form's ability from pop up
+                gBattleScripting.abilityPopupOverwrite = abilityForm;
                 if (gLastUsedAbility == ABILITY_POWER_CONSTRUCT) // Special animation
                     BattleScriptExecute(BattleScript_PowerConstruct);
                 else
@@ -9952,7 +9958,6 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
     if (targetSpecies != currentSpecies && targetSpecies != SPECIES_NONE)
     {
         // Saves the original species on the first form change.
-
         if (GetBattlerPartyState(battler)->changedSpecies == SPECIES_NONE)
             GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
 
