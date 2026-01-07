@@ -5963,6 +5963,10 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, u32 battler, e
         if (species == SPECIES_TERAPAGOS_STELLAR)
             return TYPE_STELLAR;
         break;
+    case EFFECT_NATURE_POWER:
+        if (state == MON_IN_BATTLE)
+            return GetMoveType(GetNaturePowerMove(battler));
+        break;
     default:
         break;
     }
