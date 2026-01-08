@@ -42,13 +42,13 @@ const u32 gBattleEnvironmentTiles_Stadium[] = INCBIN_U32("graphics/battle_enviro
 const u32 gBattleEnvironmentTilemap_Stadium[] = INCBIN_U32("graphics/battle_environment/stadium/map.bin.smolTM");
 
 const u16 gBattleEnvironmentPalette_Frontier[] = INCBIN_U16("graphics/battle_environment/stadium/battle_frontier.gbapal"); // this is also used for link battles
-const u16 gBattleEnvironmentPalette_StadiumAqua[] = INCBIN_U16("graphics/battle_environment/stadium/palette1.gbapal");
-const u16 gBattleEnvironmentPalette_StadiumMagma[] = INCBIN_U16("graphics/battle_environment/stadium/palette2.gbapal");
-const u16 gBattleEnvironmentPalette_StadiumSidney[] = INCBIN_U16("graphics/battle_environment/stadium/palette3.gbapal");
-const u16 gBattleEnvironmentPalette_StadiumPhoebe[] = INCBIN_U16("graphics/battle_environment/stadium/palette4.gbapal");
-const u16 gBattleEnvironmentPalette_StadiumGlacia[] = INCBIN_U16("graphics/battle_environment/stadium/palette5.gbapal");
-const u16 gBattleEnvironmentPalette_StadiumDrake[] = INCBIN_U16("graphics/battle_environment/stadium/palette6.gbapal");
-const u16 gBattleEnvironmentPalette_StadiumWallace[] = INCBIN_U16("graphics/battle_environment/stadium/palette7.gbapal");
+const u16 gBattleEnvironmentPalette_StadiumAqua[] = INCBIN_U16("graphics/battle_environment/stadium/aqua.gbapal");
+const u16 gBattleEnvironmentPalette_StadiumMagma[] = INCBIN_U16("graphics/battle_environment/stadium/magma.gbapal");
+const u16 gBattleEnvironmentPalette_StadiumSidney[] = INCBIN_U16("graphics/battle_environment/stadium/sidney.gbapal");
+const u16 gBattleEnvironmentPalette_StadiumPhoebe[] = INCBIN_U16("graphics/battle_environment/stadium/phoebe.gbapal");
+const u16 gBattleEnvironmentPalette_StadiumGlacia[] = INCBIN_U16("graphics/battle_environment/stadium/glacia.gbapal");
+const u16 gBattleEnvironmentPalette_StadiumDrake[] = INCBIN_U16("graphics/battle_environment/stadium/drake.gbapal");
+const u16 gBattleEnvironmentPalette_StadiumWallace[] = INCBIN_U16("graphics/battle_environment/stadium/wallace.gbapal");
 
 const u16 gBattleEnvironmentPalette_Kyogre[] = INCBIN_U16("graphics/battle_environment/water/kyogre.gbapal");
 const u16 gBattleEnvironmentPalette_Groudon[] = INCBIN_U16("graphics/battle_environment/cave/groudon.gbapal");
