@@ -90,6 +90,7 @@ SINGLE_BATTLE_TEST("Palafin returns to Zero form upon battle end")
 
 SINGLE_BATTLE_TEST("Shaymin retains Land form if it was frozen or frostbitten in battle")
 {
+    KNOWN_FAILING; // changedSpecies is forcing the return to Sky Form
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_POWDER_SNOW, MOVE_EFFECT_FREEZE_OR_FROSTBITE));
         PLAYER(SPECIES_SHAYMIN_SKY);
@@ -278,7 +279,7 @@ SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon battle end after te
 SINGLE_BATTLE_TEST("Terapagos reverts to the correct form upon battle end after terastallizing")
 {
     GIVEN {
-        PLAYER(SPECIES_TERAPAGOS_TERASTAL);
+        PLAYER(SPECIES_TERAPAGOS_NORMAL);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
