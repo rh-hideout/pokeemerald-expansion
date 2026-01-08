@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Spectral Thief steals opponents boost before attacking", s16 damage)
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_SWORDS_DANCE; }
 

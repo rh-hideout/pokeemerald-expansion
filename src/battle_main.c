@@ -553,21 +553,6 @@ static void CB2_InitBattleInternal(void)
     if (TestRunner_Battle_GetForcedEnvironment())
         gBattleEnvironment = TestRunner_Battle_GetForcedEnvironment() - 1;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER
-                                                                        | BATTLE_TYPE_EREADER_TRAINER
-                                                                        | BATTLE_TYPE_TRAINER_HILL
-                                                                        | BATTLE_TYPE_RECORDED)))
-    {
-        switch (GetTrainerBattleType(TRAINER_BATTLE_PARAM.opponentA))
-        {
-        case TRAINER_BATTLE_TYPE_SINGLES:
-            break;
-        case TRAINER_BATTLE_TYPE_DOUBLES:
-            gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
-            break;
-        }
-    }
-
     InitBattleBgsVideo();
     LoadBattleTextboxAndBackground();
     ResetSpriteData();
@@ -1805,7 +1790,7 @@ static void FreeRestoreBattleData(void)
     FreeMonSpritesGfx();
     FreeBattleSpritesData();
     FreeBattleResources();
-    ResetDynamicAiFunc();
+    ResetDynamicAiFunctions();
 }
 
 void CB2_QuitRecordedBattle(void)
@@ -1899,6 +1884,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
     }
     if (noMoveSet)
     {
+        GiveMonInitialMoveset(mon);
         // TODO: Figure out a default strategy when moves are not set, to generate a good moveset
         return;
     }
@@ -1944,8 +1930,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             s32 ball = -1;
             u32 personalityHash = GeneratePartyHash(trainer, i);
             const struct TrainerMon *partyData = trainer->party;
-            u32 otIdType = OT_ID_RANDOM_NO_SHINY;
-            u32 fixedOtId = 0;
+            struct OriginalTrainerId otId = OTID_STRUCT_RANDOM_NO_SHINY;
             u32 abilityNum = 0;
 
             if (trainer->battleType != TRAINER_BATTLE_TYPE_SINGLES)
@@ -1965,10 +1950,10 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             ModifyPersonalityForNature(&personalityValue, partyData[monIndex].nature);
             if (partyData[monIndex].isShiny)
             {
-                otIdType = OT_ID_PRESET;
-                fixedOtId = HIHALF(personalityValue) ^ LOHALF(personalityValue);
+                otId.method = OT_ID_PRESET;
+                otId.value = HIHALF(personalityValue) ^ LOHALF(personalityValue);
             }
-            CreateMon(&party[i], partyData[monIndex].species, partyData[monIndex].lvl, 0, TRUE, personalityValue, otIdType, fixedOtId);
+            CreateMon(&party[i], partyData[monIndex].species, partyData[monIndex].lvl, personalityValue, otId);
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[monIndex].heldItem);
 
             CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
@@ -2361,7 +2346,7 @@ static void EndLinkBattleInSteps(void)
         }
         break;
     case 7:
-        if (!IsTextPrinterActive(B_WIN_MSG))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         {
             if (IsLinkTaskFinished() == TRUE)
                 gBattleCommunication[MULTIUSE_STATE]++;
@@ -2504,7 +2489,7 @@ static void AskRecordBattle(void)
         }
         break;
     case STATE_PRINT_YES_NO:
-        if (!IsTextPrinterActive(B_WIN_MSG))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         {
             HandleBattleWindow(YESNOBOX_X_Y, 0);
             BattlePutTextOnWindow(gText_BattleYesNoChoice, B_WIN_YESNO);
@@ -2610,7 +2595,7 @@ static void AskRecordBattle(void)
         }
         break;
     case STATE_RECORD_WAIT:
-        if (IsLinkTaskFinished() == TRUE && !IsTextPrinterActive(B_WIN_MSG) && --gBattleCommunication[1] == 0)
+        if (IsLinkTaskFinished() == TRUE && !IsTextPrinterActiveOnWindow(B_WIN_MSG) && --gBattleCommunication[1] == 0)
         {
             if (gMain.anyLinkBattlerHasFrontierPass)
             {
@@ -2622,7 +2607,7 @@ static void AskRecordBattle(void)
         break;
     case STATE_END_RECORD_YES:
     case STATE_END_RECORD_NO:
-        if (!IsTextPrinterActive(B_WIN_MSG))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         {
             if (gMain.anyLinkBattlerHasFrontierPass)
             {
@@ -3245,6 +3230,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
 
     gBattleStruct->moveResultFlags[battler] = 0;
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
+    gBattleStruct->battlerState[battler].fainted = FALSE;
     gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
@@ -3299,10 +3285,10 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     #if TESTING
     if (gTestRunnerEnabled)
     {
-        u32 side = GetBattlerSide(battler);
+        u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
         u32 partyIndex = gBattlerPartyIndexes[battler];
-        if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-            gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+        if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
+            gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
     }
     #endif // TESTING
 
@@ -3352,6 +3338,7 @@ const u8* FaintClearSetData(u32 battler)
     gProtectStructs[battler].pranksterElevated = FALSE;
 
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
+    gBattleStruct->battlerState[battler].fainted = TRUE;
 
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
@@ -3504,10 +3491,10 @@ static void DoBattleIntro(void)
                 #if TESTING
                 if (gTestRunnerEnabled)
                 {
-                    u32 side = GetBattlerSide(battler);
+                    u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
                     u32 partyIndex = gBattlerPartyIndexes[battler];
-                    if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                        gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+                    if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
+                        gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
                 }
                 #endif
             }
@@ -3744,7 +3731,7 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_SET_DEX_AND_BATTLE_VARS:
         if (!gBattleControllerExecFlags)
         {
-            gBattleStruct->eventState.beforeFristTurn = 0;
+            gBattleStruct->eventState.beforeFirstTurn = 0;
             gBattleStruct->switchInBattlerCounter = 0;
             Ai_InitPartyStruct(); // Save mons party counts, and first 2/4 mons on the battlefield.
 
@@ -3778,7 +3765,7 @@ static void TryDoEventsBeforeFirstTurn(void)
     if (gBattleControllerExecFlags)
         return;
 
-    switch (gBattleStruct->eventState.beforeFristTurn)
+    switch (gBattleStruct->eventState.beforeFirstTurn)
     {
     case FIRST_TURN_EVENTS_START:
         // Set invalid mons as absent(for example when starting a double battle with only one pokemon).
@@ -3799,25 +3786,25 @@ static void TryDoEventsBeforeFirstTurn(void)
         {
             for (i = 0; i < gBattlersCount; ++i)
             {
-                u32 side = GetBattlerSide(i);
+                u32 array = (!IsPartnerMonFromSameTrainer(i)) ? i : GetBattlerSide(i);
                 u32 partyIndex = gBattlerPartyIndexes[i];
-                if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                    gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+                if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
+                    gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
             }
         }
         #endif // TESTING
 
         gBattleStruct->speedTieBreaks = RandomUniform(RNG_SPEED_TIE, 0, Factorial(MAX_BATTLERS_COUNT) - 1);
         gBattleTurnCounter = 0;
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_OVERWORLD_WEATHER:
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         if (TryFieldEffects(FIELD_EFFECT_OVERWORLD_WEATHER))
             return;
         break;
     case FIRST_TURN_EVENTS_TERRAIN:
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         if (TryFieldEffects(FIELD_EFFECT_OVERWORLD_TERRAIN))
             return;
         break;
@@ -3828,7 +3815,7 @@ static void TryDoEventsBeforeFirstTurn(void)
                 return;
             break;
         }
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_TOTEM_BOOST:
         for (i = 0; i < gBattlersCount; i++)
@@ -3841,21 +3828,44 @@ static void TryDoEventsBeforeFirstTurn(void)
             }
         }
         memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts)); // erase all totem boosts for Mirror Herb and Opportunist
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_SWITCH_IN_EVENTS:
         gBattleStruct->eventState.switchIn = 0;
         for (u32 battler = 0; battler < gBattlersCount; battler++)
             gBattleStruct->battlerState[battler].switchIn = TRUE;
         BattleScriptPushCursorAndCallback(BattleScript_FirstTurnSwitchInEvents);
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_FAINTED_BATTLERS:
         // Handle any Pokemon that fainted from starting hazards before transitioning to action selection
         if (HandleFaintedMonActions())
             return;
         gBattleStruct->eventState.faintedAction = 0;
-        gBattleStruct->eventState.beforeFristTurn++;
+        gBattleStruct->eventState.beforeFirstTurn++;
+        break;
+    case FIRST_TURN_EVENTS_TRAINER_SLIDE_A:
+        if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_BEFORE_FIRST_TURN))
+            BattleScriptExecute(BattleScript_TrainerASlideMsgEnd2);
+        gBattleStruct->eventState.beforeFirstTurn++;
+        break;
+    case FIRST_TURN_EVENTS_TRAINER_SLIDE_B:
+        if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_BEFORE_FIRST_TURN))
+        {
+            // Ensures only trainer A slide is played in single-trainer doubles (B == A / B == TRAINER_NONE) and 2v1 multibattles (B == 0xFFFF)
+            if (!((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA) 
+            || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
+            || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
+            {
+                BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd2);
+            }
+        }
+        gBattleStruct->eventState.beforeFirstTurn++;
+        break;
+    case FIRST_TURN_EVENTS_TRAINER_SLIDE_PARTNER:
+        if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), TRAINER_SLIDE_BEFORE_FIRST_TURN))
+            BattleScriptExecute(BattleScript_TrainerPartnerSlideMsgEnd2);
+        gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_END:
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
@@ -3890,9 +3900,7 @@ static void TryDoEventsBeforeFirstTurn(void)
             BattleScriptExecute(BattleScript_ArenaTurnBeginning);
         }
 
-        if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_BEFORE_FIRST_TURN)))
-            BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
-        gBattleStruct->eventState.beforeFristTurn = 0;
+        gBattleStruct->eventState.beforeFirstTurn = 0;
         break;
     }
 }
@@ -3988,20 +3996,6 @@ void BattleTurnPassed(void)
         BattleScriptExecute(BattleScript_PalacePrintFlavorText);
     else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->eventState.arenaTurn == 0)
         BattleScriptExecute(BattleScript_ArenaTurnBeginning);
-    else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_LAST_LOW_HP)))
-        BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
-    else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_LAST_HALF_HP)))
-        BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
-    else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT)))
-        BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
-    else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT)))
-        BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
-    else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT)))
-        BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
-    else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE)))
-        BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
-    else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_ENEMY_MON_UNAFFECTED)))
-        BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
 }
 
 u8 IsRunningFromBattleImpossible(u32 battler)
@@ -4755,7 +4749,7 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
 
 s32 GetChosenMovePriority(u32 battler, enum Ability ability)
 {
-    u16 move;
+    enum Move move;
 
     gProtectStructs[battler].pranksterElevated = FALSE;
     if (gProtectStructs[battler].noValidMoves)
@@ -4766,7 +4760,7 @@ s32 GetChosenMovePriority(u32 battler, enum Ability ability)
     return GetBattleMovePriority(battler, ability, move);
 }
 
-s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move)
+s32 GetBattleMovePriority(u32 battler, enum Ability ability, enum Move move)
 {
     s32 priority = 0;
 
@@ -5293,6 +5287,16 @@ static void CheckChangingTurnOrderEffects(void)
 
     // setup stuff before turns/actions
     TryClearRageAndFuryCutter();
+
+    // Prevents trainer slides triggering a turn late if another slide took priority on the previous turn
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        for (enum TrainerSlideType slideId = 0; slideId < TRAINER_SLIDE_COUNT; slideId++)
+        {
+            MarkInitializedTrainerSlidesAsPlayed(i, slideId);
+        }
+    }
+
     gCurrentTurnActionNumber = 0;
     gCurrentActionFuncId = gActionsByTurnOrder[0];
     gBattleStruct->dynamicMoveType = 0;
@@ -5643,7 +5647,7 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
         {
             ZeroEnemyPartyMons();
         }
-        ResetDynamicAiFunc();
+        ResetDynamicAiFunctions();
         FreeMonSpritesGfx();
         FreeBattleResources();
         FreeBattleSpritesData();
@@ -5746,7 +5750,7 @@ void RunBattleScriptCommands(void)
         gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
 }
 
-enum Type TrySetAteType(u32 move, u32 battlerAtk, enum Ability attackerAbility)
+enum Type TrySetAteType(enum Move move, u32 battlerAtk, enum Ability attackerAbility)
 {
     enum Type ateType = TYPE_NONE;
 
@@ -5794,7 +5798,7 @@ enum Type TrySetAteType(u32 move, u32 battlerAtk, enum Ability attackerAbility)
 }
 
 // Returns TYPE_NONE if type doesn't change.
-enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState state)
+enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, u32 battler, enum MonState state)
 {
     enum Type moveType = GetMoveType(move);
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
@@ -6032,7 +6036,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
     return TYPE_NONE;
 }
 
-void SetTypeBeforeUsingMove(u32 move, u32 battler)
+void SetTypeBeforeUsingMove(enum Move move, u32 battler)
 {
     enum Type moveType;
     u32 heldItem = gBattleMons[battler].item;

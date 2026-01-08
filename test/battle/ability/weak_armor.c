@@ -11,7 +11,8 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 1 (Gen5-6) or 2 (Gen7+) when hit by a physical attack")
 {
-    u16 move, gen;
+    enum Move move;
+    u32 gen;
 
     PARAMETRIZE { move = MOVE_SCRATCH; gen = GEN_6; }
     PARAMETRIZE { move = MOVE_SCRATCH; gen = GEN_7; }

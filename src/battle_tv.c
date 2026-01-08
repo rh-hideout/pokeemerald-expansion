@@ -15,8 +15,8 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId);
 static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3);
 static void TrySetBattleSeminarShow(void);
 static void AddPointsOnFainting(void);
-static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot);
-static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride);
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, u8 moveSlot);
+static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride);
 
 #define TABLE_END ((u16)-1)
 
@@ -577,7 +577,7 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId)
         return FALSE;
 }
 
-void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags)
+void BattleTv_SetDataBasedOnMove(enum Move move, u16 weatherFlags)
 {
     struct BattleTv *tvPtr;
     u32 atkSide, defSide;
@@ -666,8 +666,8 @@ void TryPutLinkBattleTvShowOnAir(void)
     struct BattleTvMovePoints *movePoints = NULL;
     u8 countPlayer = 0, countOpponent = 0;
     s16 sum = 0;
-    u16 species = 0;
-    u16 move = MOVE_NONE;
+    u16 species = SPECIES_NONE;
+    enum Move move = MOVE_NONE;
     s32 i, j;
     int zero = 0, one = 1; //needed for matching
 
@@ -1321,7 +1321,7 @@ static void TrySetBattleSeminarShow(void)
     gBattleStruct->moveResultFlags[gBattlerTarget] = storedMoveResultFlags;
 }
 
-static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride)
+static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride)
 {
     if (IsBattleMoveStatus(move))
     {
@@ -1384,7 +1384,7 @@ void BattleTv_ClearExplosionFaintCause(void)
     }
 }
 
-u8 GetBattlerMoveSlotId(u8 battler, u16 move)
+u8 GetBattlerMoveSlotId(u8 battler, enum Move move)
 {
     s32 i;
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -1402,7 +1402,7 @@ u8 GetBattlerMoveSlotId(u8 battler, u16 move)
     return i;
 }
 
-static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot)
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, u8 moveSlot)
 {
     if (weatherFlags & B_WEATHER_RAIN)
         AddMovePoints(PTS_RAIN, move, moveSlot, 0);

@@ -409,21 +409,31 @@ void CB2_InitLearnMove(void)
     sMoveRelearnerMenuState.listRow = 0;
     sMoveRelearnerMenuState.showContestInfo = gRelearnMode == RELEARN_MODE_PSS_PAGE_CONTEST_MOVES;
 
-    switch (gMoveRelearnerState)
+    if ((!P_ENABLE_MOVE_RELEARNERS
+    && !P_TM_MOVES_RELEARNER
+    && !FlagGet(P_FLAG_EGG_MOVES)
+    && !FlagGet(P_FLAG_TUTOR_MOVES)))
     {
-    case MOVE_RELEARNER_EGG_MOVES:
-        StringCopy(gStringVar3, MoveRelearner_Text_EggMoveLWR);
-        break;
-    case MOVE_RELEARNER_TM_MOVES:
-        StringCopy(gStringVar3, MoveRelearner_Text_TMMoveLWR);
-        break;
-    case MOVE_RELEARNER_TUTOR_MOVES:
-        StringCopy(gStringVar3, MoveRelearner_Text_TutorMoveLWR);
-        break;
-    case MOVE_RELEARNER_LEVEL_UP_MOVES:
-    default:
-        StringCopy(gStringVar3, MoveRelearner_Text_LevelUpMoveLWR);
-        break;
+        StringCopy(gStringVar3, MoveRelearner_Text_MoveLWR);
+    }
+    else
+    {
+        switch (gMoveRelearnerState)
+        {
+        case MOVE_RELEARNER_EGG_MOVES:
+            StringCopy(gStringVar3, MoveRelearner_Text_EggMoveLWR);
+            break;
+        case MOVE_RELEARNER_TM_MOVES:
+            StringCopy(gStringVar3, MoveRelearner_Text_TMMoveLWR);
+            break;
+        case MOVE_RELEARNER_TUTOR_MOVES:
+            StringCopy(gStringVar3, MoveRelearner_Text_TutorMoveLWR);
+            break;
+        case MOVE_RELEARNER_LEVEL_UP_MOVES:
+        default:
+            StringCopy(gStringVar3, MoveRelearner_Text_LevelUpMoveLWR);
+            break;
+        }
     }
 
     CreateLearnableMovesList();
@@ -493,7 +503,7 @@ static void PrintMessageWithPlaceholders(const u8 *src)
 }
 
 // If reusable TMs is off, remove the TM from the bag
-static void RemoveRelearnerTMFromBag(u16 move)
+static void RemoveRelearnerTMFromBag(enum Move move)
 {
     u16 item = GetTMHMItemIdFromMoveId(move);
 
@@ -798,7 +808,7 @@ static void DoMoveRelearnerMain(void)
             }
             else
             {
-                u16 move;
+                enum Move move;
                 if(gSpecialVar_MonBoxId == 0xFF)
                 {
                     move = GetMonData(&gPlayerParty[sMoveRelearnerStruct->partyMon], MON_DATA_MOVE1 + sMoveRelearnerStruct->moveSlot);

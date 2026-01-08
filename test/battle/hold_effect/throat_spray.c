@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Throat Spray increases Sp. Atk by one stage")
 
 SINGLE_BATTLE_TEST("Throat Spray activates when a sound move is used")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SWIFT; }
     PARAMETRIZE { move = MOVE_HYPER_VOICE; }

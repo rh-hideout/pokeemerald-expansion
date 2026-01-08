@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Moonlight recovers 2/3 of the user's max HP in Sunlight (Gen
 
 SINGLE_BATTLE_TEST("Moonlight recovers 1/4 of the user's max HP in Rain, Sandstorm, Hail, and Snow (Gen3+)")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_RAIN_DANCE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     PARAMETRIZE { move = MOVE_HAIL; }

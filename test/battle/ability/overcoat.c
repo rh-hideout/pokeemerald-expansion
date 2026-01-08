@@ -52,7 +52,8 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from sandstorm")
 DOUBLE_BATTLE_TEST("Overcoat blocks damage from hail")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
         PLAYER(SPECIES_WYNAUT)    { Speed(50); Ability(ABILITY_SNOW_CLOAK); }
         PLAYER(SPECIES_SOLOSIS)   { Speed(40); Ability(ABILITY_RUN_AWAY); }
         OPPONENT(SPECIES_PINECO)  { Speed(30); Ability(ABILITY_OVERCOAT); }
@@ -78,8 +79,8 @@ SINGLE_BATTLE_TEST("Overcoat blocks Effect Spore's effect (Gen6+)")
     PARAMETRIZE { config = GEN_6; }
     GIVEN {
         WITH_CONFIG(CONFIG_POWDER_OVERCOAT, config);
-        PLAYER(SPECIES_PINECO) {Ability(ABILITY_OVERCOAT);}
-        OPPONENT(SPECIES_SHROOMISH) {Ability(ABILITY_EFFECT_SPORE);}
+        PLAYER(SPECIES_PINECO) { Ability(ABILITY_OVERCOAT); }
+        OPPONENT(SPECIES_SHROOMISH) { Ability(ABILITY_EFFECT_SPORE); }
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE, WITH_RNG(RNG_EFFECT_SPORE, 1)); }
     } SCENE {

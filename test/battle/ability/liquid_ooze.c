@@ -163,7 +163,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Dream Eater users to lose HP instead of h
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze does not cause Dream Eater users to lose HP instead of heal (Gen 3-4")
+SINGLE_BATTLE_TEST("Liquid Ooze does not cause Dream Eater users to lose HP instead of heal (Gen 3-4)")
 {
     s16 damage;
     GIVEN {
