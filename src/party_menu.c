@@ -8469,7 +8469,7 @@ static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId)
     if (!gPaletteFade.active)
     {
         LoadUserWindowBorderGfx(0, 0x4F, BG_PLTT_ID(13));
-        LoadUserWindowBorderGfx_(0, 0x58, BG_PLTT_ID(15));
+        LoadUserWindowBorderGfx_(0, 0x58, BG_PLTT_ID(13));
         if (gPartyMenu.action == PARTY_ACTION_USE_ITEM)
             DisplayPartyMenuStdMessage(PARTY_MSG_USE_ON_WHICH_MON);
         else
