@@ -214,6 +214,9 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
 
 static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn)
 {
+    if (gMain.callback2 != CB2_Overworld)
+        return;
+    
     enum OverworldEncounterSpawnAnim spawnAnimType;
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
 
@@ -579,8 +582,7 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
     objectEvent->sAge = 0;
     objectEvent->sRoamerOutbreakStatus = 0;
     
-    if (gMain.callback2 == CB2_Overworld)
-        OWE_DoSpawnDespawnAnim(objectEvent, FALSE);
+    OWE_DoSpawnDespawnAnim(objectEvent, FALSE);
 }
 
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
