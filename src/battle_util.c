@@ -5596,7 +5596,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         u32 speciesForm = gBattleMons[gBattlerTarget].species;
         // Handle ability form changes when hit by a move here.
         if (IsBattlerTurnDamaged(gBattlerTarget)
-            && TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_MOVE))
+            && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HIT_BY_MOVE_CATEGORY))
         {
             gBattleScripting.abilityPopupOverwrite = abilityForm;
             gBattleScripting.battler = gBattlerTarget;
