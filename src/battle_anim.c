@@ -514,7 +514,7 @@ bool32 StorePalTag(u32 tag)
 __attribute__((optimize("-O3"))) bool32 IsGfxLoaded(u32 tag)
 {
     u32 tag2 = (tag << 16) | tag;
-    u32 *tag2s = (uint32_t *)sAnimSpriteGfxTags;
+    u32 *tag2s = (u32 *)sAnimSpriteGfxTags;
 
     for (u32 i = 0; i < ANIM_SPRITE_GFX_COUNT / 2; i++)
     {
@@ -530,7 +530,7 @@ __attribute__((optimize("-O3"))) bool32 IsGfxLoaded(u32 tag)
 __attribute__((optimize("-O3"))) bool32 IsPalLoaded(u32 tag)
 {
     u32 tag2 = (tag << 16) | tag;
-    u32 *tag2s = (uint32_t *)sAnimSpritePalTags;
+    u32 *tag2s = (u32 *)sAnimSpritePalTags;
 
     for (u32 i = 0; i < ANIM_SPRITE_PAL_COUNT / 2; i++)
     {
