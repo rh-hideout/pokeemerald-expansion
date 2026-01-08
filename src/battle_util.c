@@ -12275,12 +12275,25 @@ static const u16 sProtectSuccessRates[] =
     USHRT_MAX / 8
 };
 
+static const u16 sGen5ProtectSuccessRates[] = 
+{
+    USHRT_MAX,
+    USHRT_MAX / 3,
+    USHRT_MAX / 6,
+    USHRT_MAX / 9
+};
+
 bool32 CanUseMoveConsecutively(u32 battler)
 {
     u32 moveUses = gBattleMons[battler].volatiles.consecutiveMoveUses;
     if (moveUses >= ARRAY_COUNT(sProtectSuccessRates))
         moveUses = ARRAY_COUNT(sProtectSuccessRates) - 1;
-    return sProtectSuccessRates[moveUses] >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX);
+
+    u32 successRate = sGen5ProtectSuccessRates[moveUses];
+    if (B_PORTECT_FAILURE_RATE < 5)
+        successRate = sProtectSuccessRates[moveUses];
+
+    return successRate >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX);
 }
 
 // Used for protect, endure and ally switch
