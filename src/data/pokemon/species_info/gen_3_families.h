@@ -10475,10 +10475,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sSnoruntTeachableLearnset,
         .eggMoveLearnset = sSnoruntEggMoveLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 42, SPECIES_GLALIE}
-                            #if P_GEN_4_CROSS_EVOS
-                                ,{EVO_ITEM, ITEM_DAWN_STONE, SPECIES_FROSLASS, CONDITIONS({IF_GENDER, MON_FEMALE})}
-                            #endif
-                            ),
+        #if P_GEN_4_CROSS_EVOS
+            ,{EVO_ITEM, ITEM_DAWN_STONE, SPECIES_FROSLASS, CONDITIONS({IF_GENDER, MON_FEMALE})}
+        #endif
+        ),
     },
 
     [SPECIES_GLALIE] =
@@ -10709,7 +10709,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .baseSpDefense = 100,
         .types = MON_TYPES(TYPE_ICE, TYPE_GHOST),
         .catchRate = 75,
-        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 168 : 187,
+        .expYield = 168,
         .evYield_Speed = 2,
         .genderRatio = MON_FEMALE,
         .eggCycles = 20,

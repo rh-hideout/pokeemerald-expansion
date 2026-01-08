@@ -819,13 +819,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .baseSpDefense = 93,
         .types = MON_TYPES(TYPE_WATER, TYPE_DRAGON),
         .catchRate = 45,
-    #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 265,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_5
-        .expYield = 239,
-    #else
-        .expYield = 210,
-    #endif
         .evYield_Attack = 2,
         .evYield_Defense = 1,
         .genderRatio = PERCENT_FEMALE(12.5),
@@ -7214,7 +7208,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .baseSpDefense = 70,
         .types = MON_TYPES(TYPE_STEEL, TYPE_FLYING),
         .catchRate = 25,
-        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 163 : 168,
+        .expYield = 163,
         .evYield_Defense = 2,
         .itemRare = ITEM_METAL_COAT,
         .genderRatio = PERCENT_FEMALE(50),
