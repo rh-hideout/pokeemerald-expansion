@@ -7161,8 +7161,7 @@ bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
         && gBattleStruct->partyState[side][monId].changedSpecies != SPECIES_NONE
         // This is added to prevent FORM_CHANGE_END_BATTLE_ENVIRONMENT from omitting move changes
         // at the end of the battle, as it was being counting as a successful form change.
-        && method == FORM_CHANGE_END_BATTLE
-    )
+        && method == FORM_CHANGE_END_BATTLE)
     {
         targetSpecies = gBattleStruct->partyState[side][monId].changedSpecies;
     }
