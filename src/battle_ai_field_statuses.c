@@ -25,7 +25,7 @@
 static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather);
 static bool32 DoesAbilityBenefitFromFieldStatus(enum Ability ability, u32 fieldStatus);
 // A move is light sensitive if it is boosted by Sunny Day and weakened by low light weathers.
-static bool32 IsLightSensitiveMove(u32 move);
+static bool32 IsLightSensitiveMove(enum Move move);
 static bool32 HasLightSensitiveMove(u32 battler);
 // The following functions all feed into WeatherChecker, which is then called by ShouldSetWeather and ShouldClearWeather.
 // BenefitsFrom functions all return FIELD_EFFECT_POSITIVE if the weather or field effect is good to have in place from the perspective of the battler, FIELD_EFFECT_NEUTRAL if it is neither good nor bad, and FIELD_EFFECT_NEGATIVE if it is bad.
@@ -50,10 +50,10 @@ static bool32 HasBattlerTerrainBoostMove(u32 battler, u32 terrain)
     if (!IsBattlerAlive(battler))
         return FALSE;
 
-    u16 *moves = GetMovesArray(battler);
+    enum Move *moves = GetMovesArray(battler);
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        u32 move = moves[moveIndex];
+        enum Move move = moves[moveIndex];
         if (GetMoveEffect(move) == EFFECT_TERRAIN_BOOST
          && GetMoveTerrainBoost_Terrain(move) == terrain)
             return TRUE;
@@ -200,7 +200,7 @@ static bool32 DoesAbilityBenefitFromFieldStatus(enum Ability ability, u32 fieldS
     return FALSE;
 }
 
-static bool32 IsLightSensitiveMove(u32 move)
+static bool32 IsLightSensitiveMove(enum Move move)
 {
     switch (GetMoveEffect(move))
     {
@@ -217,7 +217,7 @@ static bool32 IsLightSensitiveMove(u32 move)
 
 static bool32 HasLightSensitiveMove(u32 battler)
 {
-    u16 *moves = GetMovesArray(battler);
+    enum Move *moves = GetMovesArray(battler);
 
     for (u32 battlerIndex = 0; battlerIndex < MAX_MON_MOVES; battlerIndex++)
     {
@@ -493,10 +493,10 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
     // First checking if we have enough priority for one pokemon to disregard Trick Room entirely.
     if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
     {
-        u16* aiMoves = GetMovesArray(battler);
+        enum Move *aiMoves = GetMovesArray(battler);
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            u16 move = aiMoves[moveIndex];
+            enum Move move = aiMoves[moveIndex];
             if (GetBattleMovePriority(battler, gAiLogicData->abilities[battler], move) > 0 && !(GetMovePriority(move) > 0 && IsBattleMoveStatus(move)))
             {
                 return FIELD_EFFECT_POSITIVE;
@@ -511,4 +511,96 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
     return FIELD_EFFECT_POSITIVE;
 }
 
+s32 CalcWeatherScore(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData)
+{
+    s32 score = 0;
+
+    switch (GetMoveWeatherType(move))
+    {
+    case BATTLE_WEATHER_RAIN:
+        if (ShouldSetWeather(battlerAtk, B_WEATHER_RAIN))
+        {
+            score += DECENT_EFFECT;
+
+            if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL))
+                score += WEAK_EFFECT;
+            if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_DAMP_ROCK)
+                score += WEAK_EFFECT;
+            if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_MORNING_SUN)
+             || HasBattlerSideMoveWithEffect(battlerDef, EFFECT_SYNTHESIS)
+             || HasBattlerSideMoveWithEffect(battlerDef, EFFECT_SOLAR_BEAM)
+             || HasBattlerSideMoveWithEffect(battlerDef, EFFECT_MOONLIGHT))
+                score += WEAK_EFFECT;
+            if (HasDamagingMoveOfType(battlerDef, TYPE_FIRE) || HasDamagingMoveOfType(BATTLE_PARTNER(battlerDef), TYPE_FIRE))
+                score += WEAK_EFFECT;
+        }
+        break;
+    case BATTLE_WEATHER_SUN:
+        if (ShouldSetWeather(battlerAtk, B_WEATHER_SUN))
+        {
+            score += DECENT_EFFECT;
+
+            if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL))
+                score += WEAK_EFFECT;
+            if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_HEAT_ROCK)
+                score += WEAK_EFFECT;
+            if (HasDamagingMoveOfType(battlerDef, TYPE_WATER) || HasDamagingMoveOfType(BATTLE_PARTNER(battlerDef), TYPE_WATER))
+                score += WEAK_EFFECT;
+            if (HasMoveWithFlag(battlerDef, MoveHas50AccuracyInSun) || HasMoveWithFlag(BATTLE_PARTNER(battlerDef), MoveHas50AccuracyInSun))
+                score += WEAK_EFFECT;
+        }
+        break;
+    case BATTLE_WEATHER_SANDSTORM:
+        if (ShouldSetWeather(battlerAtk, B_WEATHER_SANDSTORM))
+        {
+            score += DECENT_EFFECT;
+
+            if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL))
+                score += WEAK_EFFECT;
+            if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SMOOTH_ROCK)
+                score += WEAK_EFFECT;
+            if (HasMoveWithEffect(battlerDef, EFFECT_MORNING_SUN)
+             || HasMoveWithEffect(battlerDef, EFFECT_SYNTHESIS)
+             || HasMoveWithEffect(battlerDef, EFFECT_MOONLIGHT))
+                score += WEAK_EFFECT;
+        }
+        break;
+    case BATTLE_WEATHER_HAIL:
+        if (ShouldSetWeather(battlerAtk, B_WEATHER_HAIL))
+        {
+            score += DECENT_EFFECT;
+
+            if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_AURORA_VEIL) && ShouldSetScreen(battlerAtk, battlerDef, EFFECT_AURORA_VEIL))
+                score += GOOD_EFFECT;
+            if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL))
+                score += WEAK_EFFECT;
+            if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_ICY_ROCK)
+                score += WEAK_EFFECT;
+            if (HasMoveWithEffect(battlerDef, EFFECT_MORNING_SUN)
+             || HasMoveWithEffect(battlerDef, EFFECT_SYNTHESIS)
+             || HasMoveWithEffect(battlerDef, EFFECT_MOONLIGHT))
+                score += WEAK_EFFECT;
+        }
+        break;
+    case BATTLE_WEATHER_SNOW:
+        if (ShouldSetWeather(battlerAtk, B_WEATHER_SNOW))
+        {
+            score += DECENT_EFFECT;
+
+            if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_AURORA_VEIL) && ShouldSetScreen(battlerAtk, battlerDef, EFFECT_AURORA_VEIL))
+                score += GOOD_EFFECT;
+            if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL))
+                score += WEAK_EFFECT;
+            if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_ICY_ROCK)
+                score += WEAK_EFFECT;
+            if (HasMoveWithEffect(battlerDef, EFFECT_MORNING_SUN)
+             || HasMoveWithEffect(battlerDef, EFFECT_SYNTHESIS)
+             || HasMoveWithEffect(battlerDef, EFFECT_MOONLIGHT))
+                score += WEAK_EFFECT;
+        }
+        break;
+    }
+
+    return score;
+}
 

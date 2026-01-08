@@ -1821,7 +1821,7 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
         {
             fprintf(f, "#line %d\n", trainer->pic_line);
             fprintf(f, "        .trainerPic = ");
-            fprint_constant(f, "TRAINER_PIC", trainer->pic);
+            fprint_constant(f, "TRAINER_PIC_FRONT", trainer->pic);
             fprintf(f, ",\n");
         }
 
@@ -1935,14 +1935,14 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
         {
             fprintf(f, "#line %d\n", trainer->back_pic_line);
             fprintf(f, "        .trainerBackPic = ");
-            fprint_constant(f, "TRAINER_BACK_PIC", trainer->back_pic);
+            fprint_constant(f, "TRAINER_PIC_BACK", trainer->back_pic);
             fprintf(f, ",\n");
         }
         else // defaults to front pic in absence of defined back pic
         {
             fprintf(f, "#line %d\n", trainer->back_pic_line);
             fprintf(f, "        .trainerBackPic = ");
-            fprint_constant(f, "TRAINER_PIC", trainer->pic);
+            fprint_constant(f, "TRAINER_PIC_FRONT", trainer->pic);
             fprintf(f, ",\n");
         }
 

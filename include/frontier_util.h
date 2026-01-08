@@ -12,7 +12,7 @@ void ShowRankingHallRecordsWindow(void);
 void ScrollRankingHallRecordsWindow(void);
 void ClearRankingHallRecords(void);
 void SaveGameFrontier(void);
-u8 GetFrontierBrainTrainerPicIndex(void);
+enum TrainerPicID GetFrontierBrainTrainerPicIndex(void);
 enum TrainerClassID GetFrontierBrainTrainerClass(void);
 void CopyFrontierBrainTrainerName(u8 *dst);
 bool8 IsFrontierBrainFemale(void);

@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Comatose prevents status-inducing moves")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISONPOWDER; }
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Comatose prevents status-inducing moves")
 
 SINGLE_BATTLE_TEST("Comatose may be suppressed if Pokémon transformed into a Pokémon with Comatose ability and was under the effects of Gastro Acid")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISONPOWDER; }

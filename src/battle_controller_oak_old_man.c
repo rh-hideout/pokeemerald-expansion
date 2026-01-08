@@ -270,7 +270,7 @@ static void SimulateInputChooseAction(u32 battler)
 
 static void CompleteOnInactiveTextPrinter(u32 battler)
 {
-    if (!IsTextPrinterActive(0))
+    if (!IsTextPrinterActiveOnWindow(0))
         OakOldManBufferExecCompleted(battler);
 }
 
@@ -433,7 +433,7 @@ static void PrintOakText_ForPetesSake(u32 battler)
         ++gBattleStruct->simulatedInputState0;
         break;
     case 3:
-        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_OAK_OLD_MAN))
         {
             mask = ((1 << gBattleStruct->simulatedInputState1) | (1 << gBattleStruct->simulatedInputState3)) << 16;
             BeginNormalPaletteFade(mask,
@@ -453,7 +453,7 @@ static void PrintOakText_ForPetesSake(u32 battler)
         }
         break;
     case 5:
-        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_OAK_OLD_MAN))
         {
             mask = ((1 << gBattleStruct->simulatedInputState1) | (1 << gBattleStruct->simulatedInputState3)) << 16;
             BeginNormalPaletteFade(mask,
@@ -473,7 +473,7 @@ static void PrintOakText_ForPetesSake(u32 battler)
         }
         break;
     case 7:
-        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_OAK_OLD_MAN))
         {
             BeginNormalPaletteFade(0xFFFFFF7E,
                                    4,
@@ -526,7 +526,7 @@ static void PrintOakTextWithMainBgDarkened(u32 battler, const u8 *text, u8 delay
     switch (gBattleStruct->simulatedInputState0)
     {
     case 0:
-        if (!IsTextPrinterActive(0))
+        if (!IsTextPrinterActiveOnWindow(0))
         {
             gBattleStruct->simulatedInputState3 = delay;
             ++gBattleStruct->simulatedInputState0;
@@ -556,7 +556,7 @@ static void PrintOakTextWithMainBgDarkened(u32 battler, const u8 *text, u8 delay
         ++gBattleStruct->simulatedInputState0;
         break;
     case 4:
-        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_OAK_OLD_MAN))
         {
             BeginNormalPaletteFade(0xFFFFFF7E,
                                    4,
@@ -624,7 +624,7 @@ static void PrintOakText_KeepAnEyeOnHP(u32 battler)
         ++gBattleStruct->simulatedInputState0;
         break;
     case 4:
-        if (!IsTextPrinterActive(B_WIN_OAK_OLD_MAN))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_OAK_OLD_MAN))
         {
             mask = ((1 << gBattleStruct->simulatedInputState1) | (1 << gBattleStruct->simulatedInputState3)) << 16;
             BeginNormalPaletteFade(mask,
@@ -676,13 +676,13 @@ void OakOldManBufferExecCompleted(u32 battler)
 
 static void OakOldManHandleDrawTrainerPic(u32 battler)
 {
-    u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_RED : TRAINER_BACK_PIC_OLD_MAN;
+    u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? gSaveBlock2Ptr->playerGender + TRAINER_PIC_BACK_RED : TRAINER_PIC_BACK_OLD_MAN;
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE, 80, (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80, 30);
 }
 
 static void OakOldManHandleTrainerSlide(u32 battler)
 {
-    u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_RED : TRAINER_BACK_PIC_OLD_MAN;
+    u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? gSaveBlock2Ptr->playerGender + TRAINER_PIC_BACK_RED : TRAINER_PIC_BACK_OLD_MAN;
     BtlController_HandleTrainerSlide(battler, trainerPicId);
 }
 
