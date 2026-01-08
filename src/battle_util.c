@@ -2817,7 +2817,8 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
     {
         u32 protectMethod = GetMoveProtectMethod(ctx->move);
         TryResetProtectUseCounter(ctx->battlerAtk);
-        if ((gProtectSuccessRates[gBattleMons[ctx->battlerAtk].volatiles.protectUses] < RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX))
+        if ((gProtectSuccessRates[gBattleMons[ctx->battlerAtk].volatiles.protectUses] < RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX)
+        && !IsLastMonToMove(ctx->battlerAtk))
         || (protectMethod == PROTECT_WIDE_GUARD && GetConfig(CONFIG_WIDE_GUARD) >= GEN_6)
         || (protectMethod == PROTECT_QUICK_GUARD && GetConfig(CONFIG_QUICK_GUARD) >= GEN_6))
         {
