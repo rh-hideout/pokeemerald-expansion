@@ -6363,14 +6363,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
 #endif //P_FAMILY_AZELF
 
 #if P_FAMILY_DIALGA
-#if P_UPDATED_EXP_YIELDS >= GEN_8
-    #define DIALGA_EXP_YIELD 340
-#elif P_UPDATED_EXP_YIELDS >= GEN_5
-    #define DIALGA_EXP_YIELD  306
-#else
-    #define DIALGA_EXP_YIELD  220
-#endif
-
     [SPECIES_DIALGA] =
     {
         .baseHP        = 100,
@@ -6381,7 +6373,13 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpDefense = 100,
         .types = MON_TYPES(TYPE_STEEL, TYPE_DRAGON),
         .catchRate = 3,
-        .expYield = DIALGA_EXP_YIELD,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 340,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 306,
+    #else
+        .expYield = 220,
+    #endif
         .evYield_SpAttack = 3,
         .genderRatio = MON_GENDERLESS,
         .eggCycles = 120,
@@ -6452,7 +6450,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpDefense = 120,
         .types = MON_TYPES(TYPE_STEEL, TYPE_DRAGON),
         .catchRate = 3,
-        .expYield = DIALGA_EXP_YIELD,
+        .expYield = 340,
         .evYield_SpAttack = 3,
         .genderRatio = MON_GENDERLESS,
         .eggCycles = 120,
@@ -6512,14 +6510,6 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
 #endif //P_FAMILY_DIALGA
 
 #if P_FAMILY_PALKIA
-#if P_UPDATED_EXP_YIELDS >= GEN_8
-    #define PALKIA_EXP_YIELD 340
-#elif P_UPDATED_EXP_YIELDS >= GEN_5
-    #define PALKIA_EXP_YIELD  306
-#else
-    #define PALKIA_EXP_YIELD  220
-#endif
-
     [SPECIES_PALKIA] =
     {
         .baseHP        = 90,
@@ -6530,7 +6520,13 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpDefense = 120,
         .types = MON_TYPES(TYPE_WATER, TYPE_DRAGON),
         .catchRate = 3,
-        .expYield = PALKIA_EXP_YIELD,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 340,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 306,
+    #else
+        .expYield = 220,
+    #endif
         .evYield_SpAttack = 3,
         .genderRatio = MON_GENDERLESS,
         .eggCycles = 120,
@@ -6601,7 +6597,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpDefense = 120,
         .types = MON_TYPES(TYPE_WATER, TYPE_DRAGON),
         .catchRate = 3,
-        .expYield = PALKIA_EXP_YIELD,
+        .expYield = 340,
         .evYield_SpAttack = 3,
         .genderRatio = MON_GENDERLESS,
         .eggCycles = 120,

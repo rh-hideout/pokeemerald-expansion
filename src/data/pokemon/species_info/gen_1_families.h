@@ -2726,7 +2726,6 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 
 #if P_FAMILY_PIKACHU
 #if P_GEN_2_CROSS_EVOS
-
     [SPECIES_PICHU] =
     {
         .baseHP        = 20,
@@ -4774,9 +4773,9 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 
 #if P_FAMILY_CLEFAIRY
 #if P_UPDATED_TYPES >= GEN_6
-    #define CLEFAIRY_FAMILY_TYPES { TYPE_FAIRY, TYPE_FAIRY}
+    #define CLEFAIRY_FAMILY_TYPES { TYPE_FAIRY, TYPE_FAIRY }
 #else
-    #define CLEFAIRY_FAMILY_TYPES { TYPE_NORMAL, TYPE_NORMAL}
+    #define CLEFAIRY_FAMILY_TYPES { TYPE_NORMAL, TYPE_NORMAL }
 #endif
 
 #if P_GEN_2_CROSS_EVOS
@@ -5536,11 +5535,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     },
 
 #if P_UPDATED_STATS >= GEN_6
-#define WIGGLYTUFF_SP_ATK   85
+    #define WIGGLYTUFF_SP_ATK   85
 #elif P_UPDATED_STATS >= GEN_2
-#define WIGGLYTUFF_SP_ATK   75
+    #define WIGGLYTUFF_SP_ATK   75
 #else
-#define WIGGLYTUFF_SP_ATK   50
+    #define WIGGLYTUFF_SP_ATK   50
 #endif
 
     [SPECIES_WIGGLYTUFF] =
@@ -6679,13 +6678,13 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpDefense = 70,
         .types = MON_TYPES(TYPE_GROUND),
         .catchRate = 50,
-        #if P_UPDATED_EXP_YIELDS >= GEN_7
-            .expYield = 149,
-        #elif P_UPDATED_EXP_YIELDS >= GEN_5
-            .expYield = 142,
-        #else
-            .expYield = 153,
-        #endif
+    #if P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 149,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 142,
+    #else
+        .expYield = 153,
+    #endif
         .evYield_Speed = 2,
         .itemRare = ITEM_SOFT_SAND,
         .genderRatio = PERCENT_FEMALE(50),
@@ -9453,13 +9452,13 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpDefense = 30,
         .types = MON_TYPES(TYPE_ROCK, TYPE_GROUND),
         .catchRate = 255,
-        #if P_UPDATED_EXP_YIELDS >= GEN_5
-            .expYield = 60,
-        #elif P_UPDATED_EXP_YIELDS >= GEN_4
-            .expYield = 73,
-        #else
-            .expYield = 86,
-        #endif
+    #if P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 60,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_4
+        .expYield = 73,
+    #else
+        .expYield = 86,
+    #endif
         .evYield_Defense = 1,
         .itemRare = ITEM_EVERSTONE,
         .genderRatio = PERCENT_FEMALE(50),
@@ -9604,15 +9603,15 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpDefense = P_UPDATED_STATS >= GEN_2 ? 65 : 55,
         .types = MON_TYPES(TYPE_ROCK, TYPE_GROUND),
         .catchRate = 45,
-        #if P_UPDATED_EXP_YIELDS >= GEN_8
-            .expYield = 248,
-        #elif P_UPDATED_EXP_YIELDS >= GEN_6
-            .expYield = 223,
-        #elif P_UPDATED_EXP_YIELDS >= GEN_5
-            .expYield = 218,
-        #else
-            .expYield = 177,
-        #endif
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 248,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
+        .expYield = 223,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 218,
+    #else
+        .expYield = 177,
+    #endif
         .evYield_Defense = 3,
         .itemRare = ITEM_EVERSTONE,
         .genderRatio = PERCENT_FEMALE(50),
@@ -10892,13 +10891,13 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpDefense = P_UPDATED_STATS >= GEN_2 ? 62 : 58,
         .types = MON_TYPES(TYPE_NORMAL, TYPE_FLYING),
         .catchRate = 45,
-        #if P_UPDATED_EXP_YIELDS >= GEN_7
-            .expYield = 132,
-        #elif P_UPDATED_EXP_YIELDS >= GEN_5
-            .expYield = 123,
-        #else
-            .expYield = 94,
-        #endif
+    #if P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 132,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 123,
+    #else
+        .expYield = 94,
+    #endif
         .evYield_Attack = 1,
         .itemRare = ITEM_LEEK,
         .genderRatio = PERCENT_FEMALE(50),
@@ -12020,18 +12019,18 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 
 #define GENGAR_SP_DEF (P_UPDATED_STATS >= GEN_2 ? 75 : 130)
 
-#if P_UPDATED_ABILITIES >= GEN_7
-#define GENGAR_ABILITIES {ABILITY_CURSED_BODY, ABILITY_NONE, ABILITY_NONE}
-#else
-#define GENGAR_ABILITIES {ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE}
-#endif
-
 #if P_UPDATED_EXP_YIELDS >= GEN_8
     #define GENGAR_EXP_YIELD 250
 #elif P_UPDATED_EXP_YIELDS >= GEN_5
     #define GENGAR_EXP_YIELD 225
 #else
     #define GENGAR_EXP_YIELD 190
+#endif
+
+#if P_UPDATED_ABILITIES >= GEN_7
+    #define GENGAR_ABILITIES {ABILITY_CURSED_BODY, ABILITY_NONE, ABILITY_NONE}
+#else
+    #define GENGAR_ABILITIES {ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE}
 #endif
 
     [SPECIES_GENGAR] =
@@ -12920,13 +12919,13 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpDefense = 80,
         .types = MON_TYPES(TYPE_ELECTRIC),
         .catchRate = 60,
-        #if P_UPDATED_EXP_YIELDS >= GEN_7
-            .expYield = 172,
-        #elif P_UPDATED_EXP_YIELDS >= GEN_5
-            .expYield = 168,
-        #else
-            .expYield = 150,
-        #endif
+    #if P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 172,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 168,
+    #else
+        .expYield = 150,
+    #endif
         .evYield_Speed = 2,
         .genderRatio = MON_GENDERLESS,
         .eggCycles = 20,
@@ -13206,22 +13205,22 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseDefense   = 85,
         .baseSpeed     = 55,
         .baseSpAttack  = 125,
-        #if P_UPDATED_STATS >= GEN_7
-            .baseSpDefense = 75,
-        #elif P_UPDATED_STATS >= GEN_2
-            .baseSpDefense = 65,
-        #else
-            .baseSpDefense = 125,
-        #endif
+    #if P_UPDATED_STATS >= GEN_7
+        .baseSpDefense = 75,
+    #elif P_UPDATED_STATS >= GEN_2
+        .baseSpDefense = 65,
+    #else
+        .baseSpDefense = 125,
+    #endif
         .types = MON_TYPES(TYPE_GRASS, TYPE_PSYCHIC),
         .catchRate = 45,
-        #if P_UPDATED_EXP_YIELDS >= GEN_7
-            .expYield = 186,
-        #elif P_UPDATED_EXP_YIELDS >= GEN_5
-            .expYield = 182,
-        #else
-            .expYield = 212,
-        #endif
+    #if P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 186,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 182,
+    #else
+        .expYield = 212,
+    #endif
         .evYield_SpAttack = 2,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 20,
