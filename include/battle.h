@@ -525,9 +525,7 @@ struct BattlerState
     u16 switchIn:1;
     u16 fainted:1;
     u16 isFirstTurn:2;
-    u16 protectSuccessiveFail:1; //if fails successive use
-    u16 protectTurnOrderFail:1; //if fails because moved last in turn
-    u16 padding:10;
+    u16 padding:12;
 };
 
 struct PartyState
@@ -1210,10 +1208,5 @@ static inline void SetHealAmount(u32 battler, s32 value)
     gBattleStruct->passiveHpUpdate[battler] = -1 * value;
 }
 
-static inline bool32 DoesProtectFail(u32 battler)
-{
-    return (gBattleStruct->battlerState[battler].protectSuccessiveFail
-    || gBattleStruct->battlerState[battler].protectTurnOrderFail);
-}
 
 #endif // GUARD_BATTLE_H

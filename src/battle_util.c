@@ -2814,8 +2814,17 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_PROTECT:
-        if (DoesProtectFail(ctx->battlerAtk))
+    {
+        u32 protectMethod = GetMoveProtectMethod(ctx->move);
+        TryResetProtectUseCounter(ctx->battlerAtk);
+        if ((gProtectSuccessRates[gBattleMons[ctx->battlerAtk].volatiles.protectUses] < RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX))
+        || (protectMethod == PROTECT_WIDE_GUARD && GetConfig(CONFIG_WIDE_GUARD) >= GEN_6)
+        || (protectMethod == PROTECT_QUICK_GUARD && GetConfig(CONFIG_QUICK_GUARD) >= GEN_6))
+        {
             battleScript = BattleScript_ButItFailed;
+            gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+        }    
+    }        
         break;
     case EFFECT_REST:
         if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_SLEEP
@@ -2957,8 +2966,8 @@ static enum MoveCanceler CancelerProtean(struct BattleContext *ctx)
     enum Type moveType = GetBattleMoveType(ctx->move);
     if (ProteanTryChangeType(ctx->battlerAtk, ctx->abilityAtk, ctx->move, moveType))
     {
-        if (GetConfig(CONFIG_PROTEAN_LIBERO) >= GEN_9)
-            gBattleMons[ctx->battlerAtk].volatiles.usedProteanLibero = TRUE;
+        //if (GetConfig(CONFIG_PROTEAN_LIBERO) >= GEN_9)
+        //    gBattleMons[ctx->battlerAtk].volatiles.usedProteanLibero = TRUE;
         PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
         gBattlerAbility = ctx->battlerAtk;
         PrepareStringBattle(STRINGID_EMPTYSTRING3, ctx->battlerAtk);

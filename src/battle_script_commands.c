@@ -7428,37 +7428,23 @@ static void Cmd_setprotectlike(void)
 
     u32 protectMethod = GetMoveProtectMethod(gCurrentMove);
 
-
-
-    if (!DoesProtectFail(gBattlerAttacker)
-     || (protectMethod == PROTECT_WIDE_GUARD && GetConfig(CONFIG_WIDE_GUARD) >= GEN_6)
-     || (protectMethod == PROTECT_QUICK_GUARD && GetConfig(CONFIG_QUICK_GUARD) >= GEN_6))
+    
+    if (GetMoveEffect(gCurrentMove) == EFFECT_ENDURE)
     {
-        if (GetMoveEffect(gCurrentMove) == EFFECT_ENDURE)
-        {
-            gBattleMons[gBattlerAttacker].volatiles.endured = TRUE;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_BRACED_ITSELF;
-        }
-        else if (GetProtectType(protectMethod) == PROTECT_TYPE_SIDE)
-        {
-            gProtectStructs[gBattlerAttacker].protected = protectMethod;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_TEAM;
-        }
-        else
-        {
-            gProtectStructs[gBattlerAttacker].protected = protectMethod;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
-        }
-
-        gBattleMons[gBattlerAttacker].volatiles.protectUses++;
+        gBattleMons[gBattlerAttacker].volatiles.endured = TRUE;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_BRACED_ITSELF;
     }
-    else // Protect failed
+    else if (GetProtectType(protectMethod) == PROTECT_TYPE_SIDE)
     {
-        gBattleMons[gBattlerAttacker].volatiles.protectUses = 0;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECT_FAILED;
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+        gProtectStructs[gBattlerAttacker].protected = protectMethod;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_TEAM;
     }
+    else
+    {
+        gProtectStructs[gBattlerAttacker].protected = protectMethod;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
+    }
+    gBattleMons[gBattlerAttacker].volatiles.protectUses++;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
