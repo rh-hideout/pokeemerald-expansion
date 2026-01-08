@@ -59,7 +59,7 @@ static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies, u32 var
     }
 }
 
-static u32 ParametrizeFriendship(u32 move, u32 variation)
+static u32 ParametrizeFriendship(enum Move move, u32 variation)
 {
     if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
         || gMovesInfo[move].effect == EFFECT_RETURN
@@ -77,7 +77,7 @@ static u32 ParametrizeFriendship(u32 move, u32 variation)
     return 0;
 }
 
-static u32 GetParametrizedHP(u32 move, u32 variation)
+static u32 GetParametrizedHP(enum Move move, u32 variation)
 {
     if (gMovesInfo[move].effect == EFFECT_POWER_BASED_ON_USER_HP && variation > 0)
     {
@@ -91,7 +91,7 @@ static u32 GetParametrizedHP(u32 move, u32 variation)
     return 9997;
 }
 
-static u32 GetParametrizedItem(u32 move, u32 variation)
+static u32 GetParametrizedItem(enum Move move, u32 variation)
 {
     if ((move == MOVE_TECHNO_BLAST) && variation > 0)
     {
@@ -107,7 +107,7 @@ static u32 GetParametrizedItem(u32 move, u32 variation)
     return ITEM_ORAN_BERRY;
 }
 
-static u32 GetParametrizedLevel(u32 move, u32 variation)
+static u32 GetParametrizedLevel(enum Move move, u32 variation)
 {
     if (gMovesInfo[move].effect == EFFECT_LEVEL_DAMAGE && variation > 0)
     {
@@ -119,7 +119,7 @@ static u32 GetParametrizedLevel(u32 move, u32 variation)
     return 100;
 }
 
-static bool32 GetParametrizedShinyness(u32 move, u32 variation)
+static bool32 GetParametrizedShinyness(enum Move move, u32 variation)
 {
     if ((GetMoveAnimationScript(move) == gBattleAnimMove_DragonDarts && variation == 2)
         || (GetMoveAnimationScript(move) == gBattleAnimMove_SyrupBomb && variation == 1)
@@ -128,7 +128,7 @@ static bool32 GetParametrizedShinyness(u32 move, u32 variation)
     return FALSE;
 }
 
-static bool32 TargetHasToMove(u32 move) // Opponent needs to hit the player first
+static bool32 TargetHasToMove(enum Move move) // Opponent needs to hit the player first
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_REFLECT_DAMAGE
@@ -145,7 +145,7 @@ static bool32 TargetHasToMove(u32 move) // Opponent needs to hit the player firs
     return FALSE;
 }
 
-static bool32 AttackerHasToSwitch(u32 move) // User needs to send out a different team member
+static bool32 AttackerHasToSwitch(enum Move move) // User needs to send out a different team member
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (IsExplosionMove(move)
@@ -158,12 +158,12 @@ static bool32 AttackerHasToSwitch(u32 move) // User needs to send out a differen
      || effect == EFFECT_FINAL_GAMBIT
      || effect == EFFECT_PARTING_SHOT
      || effect == EFFECT_SHED_TAIL
-     || effect == EFFECT_CHILLY_RECEPTION)
+     || effect == EFFECT_WEATHER_AND_SWITCH)
         return TRUE;
     return FALSE;
 }
 
-static bool32 UserHasToGoFirst(u32 move) // Player needs to go first
+static bool32 UserHasToGoFirst(enum Move move) // Player needs to go first
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_PROTECT
@@ -179,7 +179,7 @@ static bool32 UserHasToGoFirst(u32 move) // Player needs to go first
     return FALSE;
 }
 
-static u32 GetVariationsNumber(u32 move, bool8 isDouble)
+static u32 GetVariationsNumber(enum Move move, bool8 isDouble)
 {
     u32 variationsNumber;
 
@@ -209,7 +209,7 @@ static u32 GetVariationsNumber(u32 move, bool8 isDouble)
         variationsNumber = 1;
     return variationsNumber;
 }
-static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattlePokemon *defender, u32 variation)
+static void WhenSingles(enum Move move, struct BattlePokemon *attacker, struct BattlePokemon *defender, u32 variation)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     // Setup turn
@@ -389,15 +389,15 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
     }
     else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
     {
-        TURN {MOVE(attacker, move);};
-        TURN {MOVE(attacker, move);};
-        TURN {MOVE(attacker, move);};
-        TURN {MOVE(attacker, move);};
-        TURN {MOVE(attacker, MOVE_HELPING_HAND);};
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, MOVE_HELPING_HAND); }
     }
 }
 
-static void SceneSingles(u32 move, struct BattlePokemon *mon)
+static void SceneSingles(enum Move move, struct BattlePokemon *mon)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_FOLLOW_ME
@@ -425,7 +425,7 @@ static void SceneSingles(u32 move, struct BattlePokemon *mon)
     }
 }
 
-static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattlePokemon *target, struct BattlePokemon *ignore1, struct BattlePokemon *ignore2, u32 variation)
+static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct BattlePokemon *target, struct BattlePokemon *ignore1, struct BattlePokemon *ignore2, u32 variation)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     // Setup turn
@@ -614,15 +614,15 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
     }
     else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
     {
-        TURN {MOVE(attacker, move, target: target);};
-        TURN {MOVE(attacker, move, target: target);};
-        TURN {MOVE(attacker, move, target: target);};
-        TURN {MOVE(attacker, move, target: target);};
-        TURN {MOVE(attacker, MOVE_LAST_RESORT, target: attacker);};
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, MOVE_LAST_RESORT, target: attacker); }
     }
 }
 
-static void DoublesScene(u32 move, struct BattlePokemon *attacker)
+static void DoublesScene(enum Move move, struct BattlePokemon *attacker)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_MAGNETIC_FLUX || effect == EFFECT_GEAR_UP) // For some reason, Magnetic Flux and Gear Up are failing in Double Battles here
@@ -643,7 +643,7 @@ static void DoublesScene(u32 move, struct BattlePokemon *attacker)
     }
 }
 
-//static void SameSideTargeting(u32 move, struct BattlePokemon *attacker)
+//static void SameSideTargeting(enum Move move, struct BattlePokemon *attacker)
 //{
 //    //  Don't know how to make sure this is correct, some moves don't display
 //}
@@ -660,7 +660,7 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to op
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -708,7 +708,7 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (opponent to 
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -760,7 +760,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -831,7 +831,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -903,7 +903,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -975,7 +975,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1047,7 +1047,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1119,7 +1119,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1191,7 +1191,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1263,7 +1263,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {
@@ -1569,7 +1569,7 @@ SINGLE_BATTLE_TEST("Move Animations occur before their stat change animations - 
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
     GIVEN {

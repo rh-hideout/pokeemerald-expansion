@@ -1010,30 +1010,6 @@ const u8 gText_ByeByeVar1[] = _("Bye-bye, {STR_VAR_2}!");
 const u8 gText_XSentOverY[] = _("{STR_VAR_1} sent over {STR_VAR_3}.");
 const u8 gText_TakeGoodCareOfX[] = _("Take good care of {STR_VAR_3}!");
 
-// Easy chat group names
-const u8 gEasyChatGroupName_Pokemon[] = _("POKéMON");
-const u8 gEasyChatGroupName_Trainer[] = _("TRAINER");
-const u8 gEasyChatGroupName_Status[] = _("STATUS");
-const u8 gEasyChatGroupName_Battle[] = _("BATTLE");
-const u8 gEasyChatGroupName_Greetings[] = _("GREETINGS");
-const u8 gEasyChatGroupName_People[] = _("PEOPLE");
-const u8 gEasyChatGroupName_Voices[] = _("VOICES");
-const u8 gEasyChatGroupName_Speech[] = _("SPEECH");
-const u8 gEasyChatGroupName_Endings[] = _("ENDINGS");
-const u8 gEasyChatGroupName_Feelings[] = _("FEELINGS");
-const u8 gEasyChatGroupName_Conditions[] = _("CONDITIONS");
-const u8 gEasyChatGroupName_Actions[] = _("ACTIONS");
-const u8 gEasyChatGroupName_Lifestyle[] = _("LIFESTYLE");
-const u8 gEasyChatGroupName_Hobbies[] = _("HOBBIES");
-const u8 gEasyChatGroupName_Time[] = _("TIME");
-const u8 gEasyChatGroupName_Misc[] = _("MISC.");
-const u8 gEasyChatGroupName_Adjectives[] = _("ADJECTIVES");
-const u8 gEasyChatGroupName_Events[] = _("EVENTS");
-const u8 gEasyChatGroupName_Move1[] = _("MOVE 1");
-const u8 gEasyChatGroupName_Move2[] = _("MOVE 2");
-const u8 gEasyChatGroupName_TrendySaying[] = _("TRENDY SAYING");
-const u8 gEasyChatGroupName_Pokemon2[] = _("POKéMON2");
-
 const u8 gText_ThreeQuestionMarks[] = _("???");
 const u8 gText_MaxHP[] = _("MAX. HP");
 const u8 gText_Attack[] = _("ATTACK");

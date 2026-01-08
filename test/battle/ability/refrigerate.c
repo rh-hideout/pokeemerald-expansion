@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Refrigerate boosts power of affected moves by 20% (Gen7+) or
 
 SINGLE_BATTLE_TEST("Refrigerate doesn't affect Weather Ball's type", s16 damage)
 {
-    u16 move;
+    enum Move move;
     enum Ability ability;
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_SNOW_WARNING; }
     PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_SNOW_WARNING; }
@@ -95,7 +95,8 @@ SINGLE_BATTLE_TEST("Refrigerate doesn't affect Natural Gift's type")
 
 SINGLE_BATTLE_TEST("Refrigerate doesn't affect Judgment / Techno Blast / Multi-Attack's type")
 {
-    u16 move, item;
+    enum Move move;
+    u32 item;
     PARAMETRIZE { move = MOVE_JUDGMENT; item = ITEM_ZAP_PLATE; }
     PARAMETRIZE { move = MOVE_TECHNO_BLAST; item = ITEM_SHOCK_DRIVE; }
     PARAMETRIZE { move = MOVE_MULTI_ATTACK; item = ITEM_ELECTRIC_MEMORY; }

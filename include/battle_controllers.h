@@ -208,14 +208,14 @@ struct HpAndStatus
 
 struct MovePpInfo
 {
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u8 pp[MAX_MON_MOVES];
     u8 ppBonuses;
 };
 
 struct ChooseMoveStruct
 {
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u8 currentPp[MAX_MON_MOVES];
     u8 maxPp[MAX_MON_MOVES];
     u16 species;
@@ -316,7 +316,7 @@ void BtlController_EmitTrainerSlide(u32 battler, u32 bufferId);
 void BtlController_EmitTrainerSlideBack(u32 battler, u32 bufferId);
 void BtlController_EmitFaintAnimation(u32 battler, u32 bufferId);
 void BtlController_EmitBallThrowAnim(u32 battler, u32 bufferId, u8 caseId);
-void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, u16 move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, u8 multihit);
+void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, enum Move move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, u8 multihit);
 void BtlController_EmitPrintString(u32 battler, u32 bufferId, enum StringID stringId);
 void BtlController_EmitPrintSelectionString(u32 battler, u32 bufferId, enum StringID stringId);
 void BtlController_EmitChooseAction(u32 battler, u32 bufferId, u8 action, u16 itemId);
@@ -366,8 +366,8 @@ void BtlController_HandleSetRawMonData(u32 battler);
 void BtlController_HandleLoadMonSprite(u32 battler);
 void BtlController_HandleSwitchInAnim(u32 battler);
 void BtlController_HandleReturnMonToBall(u32 battler);
-void BtlController_HandleDrawTrainerPic(u32 battlerId, u32 trainerPicId, bool32 isFrontPic, s16 xPos, s16 yPos, s32 subpriority);
-void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId);
+void BtlController_HandleDrawTrainerPic(u32 battlerId, enum TrainerPicID trainerPicId, bool32 isFrontPic, s16 xPos, s16 yPos, s32 subpriority);
+void BtlController_HandleTrainerSlide(u32 battler, enum TrainerPicID trainerPicId);
 void BtlController_HandleTrainerSlideBack(u32 battlerId, s16 data0, bool32 startAnim);
 void BtlController_HandleFaintAnimation(u32 battler);
 void BtlController_HandleBallThrowAnim(u32 battler);
@@ -396,7 +396,7 @@ void SetControllerToPlayer(u32 battler);
 void PlayerBufferExecCompleted(u32 battler);
 void SetBattleEndCallbacks(u32 battler);
 void PlayerHandleExpUpdate(u32 battler);
-u32 LinkPlayerGetTrainerPicId(u32 multiplayerId);
+enum TrainerPicID LinkPlayerGetTrainerPicId(u32 multiplayerId);
 void CB2_SetUpReshowBattleScreenAfterMenu(void);
 void CB2_SetUpReshowBattleScreenAfterMenu2(void);
 void Task_PlayerController_RestoreBgmAfterCry(u8 taskId);

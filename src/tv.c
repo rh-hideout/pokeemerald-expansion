@@ -1257,7 +1257,7 @@ static void InterviewAfter_ContestLiveUpdates(void)
     }
 }
 
-void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, u16 move, u16 speciesPlayer, u16 speciesOpponent)
+void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, enum Move move, u16 speciesPlayer, u16 speciesOpponent)
 {
     TVShow *show;
     u8 name[32];
@@ -1388,7 +1388,7 @@ void ContestLiveUpdates_SetWinnerAppealFlag(u8 flag)
         show->contestLiveUpdates.winnerAppealFlag = flag;
 }
 
-void ContestLiveUpdates_SetWinnerMoveUsed(u16 move)
+void ContestLiveUpdates_SetWinnerMoveUsed(enum Move move)
 {
     TVShow *show = &gSaveBlock1Ptr->tvShows[LAST_TVSHOW_IDX];
     sCurTVShowSlot = FindFirstEmptyNormalTVShowSlot(gSaveBlock1Ptr->tvShows);
@@ -1445,7 +1445,7 @@ static void InterviewAfter_BravoTrainerPokemonProfile(void)
     }
 }
 
-void BravoTrainerPokemonProfile_BeforeInterview1(u16 move)
+void BravoTrainerPokemonProfile_BeforeInterview1(enum Move move)
 {
     TVShow *show = &gSaveBlock1Ptr->tvShows[LAST_TVSHOW_IDX];
     InterviewBefore_BravoTrainerPkmnProfile();
@@ -2031,7 +2031,7 @@ static void SecretBaseVisit_CalculateDecorationData(TVShow *show)
 static void SecretBaseVisit_CalculatePartyData(TVShow *show)
 {
     u8 i;
-    u16 move;
+    enum Move move;
     u16 j;
     u8 numMoves;
     u8 numPokemon;
@@ -3346,7 +3346,7 @@ static u8 GetTVGroupByShowId(u8 kind)
 
 u32 GetPlayerIDAsU32(void)
 {
-    return (gSaveBlock2Ptr->playerTrainerId[3] << 24) | (gSaveBlock2Ptr->playerTrainerId[2] << 16) | (gSaveBlock2Ptr->playerTrainerId[1] << 8) | gSaveBlock2Ptr->playerTrainerId[0];
+    return READ_OTID_FROM_SAVE;
 }
 
 u8 CheckForPlayersHouseNews(void)

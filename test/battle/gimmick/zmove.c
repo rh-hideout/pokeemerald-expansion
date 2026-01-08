@@ -313,8 +313,8 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Me First raises the user's speed by two stages an
 
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Nature Power transforms into different Z-Moves based on the current terrain")
 {
-    u32 terrainMove = MOVE_NONE;
-    u32 zMove = MOVE_NONE;
+    enum Move terrainMove = MOVE_NONE;
+    enum Move zMove = MOVE_NONE;
     PARAMETRIZE { terrainMove = MOVE_ELECTRIC_TERRAIN;  zMove = gTypesInfo[TYPE_ELECTRIC].zMove; }
     PARAMETRIZE { terrainMove = MOVE_PSYCHIC_TERRAIN;   zMove = gTypesInfo[TYPE_PSYCHIC].zMove; }
     PARAMETRIZE { terrainMove = MOVE_GRASSY_TERRAIN;    zMove = gTypesInfo[TYPE_GRASS].zMove; }
@@ -354,8 +354,8 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Hidden Power always transforms into Breakneck Bli
 
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Weather Ball transforms into different Z-Moves based on current weather")
 {
-    u32 weatherMove = MOVE_NONE;
-    u32 zMove = MOVE_NONE;
+    enum Move weatherMove = MOVE_NONE;
+    enum Move zMove = MOVE_NONE;
     PARAMETRIZE { weatherMove = MOVE_RAIN_DANCE;  zMove = gTypesInfo[TYPE_WATER].zMove; }
     PARAMETRIZE { weatherMove = MOVE_SUNNY_DAY;   zMove = gTypesInfo[TYPE_FIRE].zMove; }
     PARAMETRIZE { weatherMove = MOVE_SANDSTORM;   zMove = gTypesInfo[TYPE_ROCK].zMove; }

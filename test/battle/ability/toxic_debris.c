@@ -9,10 +9,10 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side if hit by a physical attack")
 {
-    u32 move;
+    enum Move move;
 
-    PARAMETRIZE { move = MOVE_SCRATCH;}
-    PARAMETRIZE { move = MOVE_SWIFT;}
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_SWIFT; }
 
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }

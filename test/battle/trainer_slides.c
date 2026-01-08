@@ -11,7 +11,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Before First Turn")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         MESSAGE("Trainer A: This message plays before the first turn.{PAUSE_UNTIL_PRESS}");
     }
@@ -174,7 +174,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Mega Evolution")
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_MEGA_EVOLUTION);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_LOPUNNY) {Item(ITEM_LOPUNNITE); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_LOPUNNY) { Item(ITEM_LOPUNNITE); Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {

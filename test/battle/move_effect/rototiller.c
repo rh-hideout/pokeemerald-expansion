@@ -109,6 +109,6 @@ AI_DOUBLE_BATTLE_TEST("AI uses Rototiller")
         OPPONENT(SPECIES_TANGELA) { Moves(MOVE_ROTOTILLER, MOVE_POUND); }
         OPPONENT(SPECIES_TANGELA);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, MOVE_ROTOTILLER); }
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_ROTOTILLER); }
     }
 }

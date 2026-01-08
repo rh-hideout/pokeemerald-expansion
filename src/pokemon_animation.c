@@ -1945,7 +1945,7 @@ static void FrontFlip_2(struct Sprite *sprite)
 {
     TryFlipX(sprite);
     sprite->x2++;
-    sprite->y2--;;
+    sprite->y2--;
 
     if (sprite->x2 >= 0)
     {

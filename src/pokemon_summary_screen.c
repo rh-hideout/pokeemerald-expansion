@@ -233,14 +233,14 @@ static void Task_HandleInputCantForgetHMsMoves(u8);
 static void DrawPagination(void);
 static void PositionPowerAccSlidingWindow(u16, s16);
 static void Task_SlidePowerAccWindow(u8);
-static void PositionAppealJamSlidingWindow(u16, s16, u16);
+static void PositionAppealJamSlidingWindow(u16, s16, enum Move move);
 static void Task_SlideAppealJamWindow(u8);
 static void PositionStatusSlidingWindow(u16, s16);
 static void Task_SlideStatusWindow(u8);
 static void TilemapFiveMovesDisplay(u16 *, u16, bool8);
 static void DrawPokerusCuredSymbol(struct Pokemon *);
 static void DrawExperienceProgressBar(struct Pokemon *);
-static void DrawContestMoveHearts(u16);
+static void DrawContestMoveHearts(enum Move move);
 static void LimitEggSummaryPageDisplay(void);
 static void ResetWindows(void);
 static void PrintMonInfo(void);
@@ -285,7 +285,7 @@ static void PrintMoveNameAndPP(u8);
 static void PrintContestMoves(void);
 static void Task_PrintContestMoves(u8);
 static void PrintContestMoveDescription(u8);
-static void PrintMoveDetails(u16);
+static void PrintMoveDetails(enum Move move);
 static void PrintNewMoveDetailsOrCancelText(void);
 static void AddAndFillMoveNamesWindow(void);
 static void SwapMovesNamesPP(u8, u8);
@@ -333,6 +333,8 @@ static u8 AddWindowFromTemplateList(const struct WindowTemplate *template, u8 te
 static u8 IncrementSkillsStatsMode(u8 mode);
 static void ClearStatLabel(u32 length, u32 statsCoordX, u32 statsCoordY);
 u32 GetAdjustedIvData(struct Pokemon *mon, u32 stat);
+static void TryUpdateRelearnType(enum IncrDecrUpdateValues delta);
+static void ShowRelearnPrompt(void);
 
 static const struct BgTemplate sBgTemplates[] =
 {
@@ -570,7 +572,7 @@ static const struct WindowTemplate sSummaryTemplate[] =
     },
     [PSS_LABEL_WINDOW_PROMPT_RELEARN] = {
         .bg = 0,
-        .tilemapLeft = 18,
+        .tilemapLeft = (P_ENABLE_MOVE_RELEARNERS) ? 18 : 22,
         .tilemapTop = 2,
         .width = 11,
         .height = 2,
@@ -1957,7 +1959,7 @@ bool32 CheckRelearnerStateFlag(enum MoveRelearnerStates state)
     }
 }
 
-void TryUpdateRelearnType(enum IncrDecrUpdateValues delta)
+static void TryUpdateRelearnType(enum IncrDecrUpdateValues delta)
 {
     bool32 hasRelearnableMoves = FALSE;
     u32 zeroCounter = 0;
@@ -2384,7 +2386,7 @@ static void TryDrawExperienceProgressBar(void)
 
 static void SwitchToMoveSelection(u8 taskId)
 {
-    u16 move;
+    enum Move move;
 
     sMonSummaryScreen->firstMoveIndex = 0;
     move = sMonSummaryScreen->summary.moves[sMonSummaryScreen->firstMoveIndex];
@@ -2475,7 +2477,7 @@ static bool8 HasMoreThanOneMove(void)
 static void ChangeSelectedMove(s16 *taskData, s8 direction, u8 *moveIndexPtr)
 {
     s8 i, newMoveIndex;
-    u16 move;
+    enum Move move;
 
     PlaySE(SE_SELECT);
     newMoveIndex = *moveIndexPtr;
@@ -2595,7 +2597,7 @@ static void Task_HandleInput_MovePositionSwitch(u8 taskId)
 
 static void ExitMovePositionSwitchMode(u8 taskId, bool8 swapMoves)
 {
-    u16 move;
+    enum Move move;
 
     PlaySE(SE_SELECT);
     SetMainMoveSelectorColor(0);
@@ -2631,8 +2633,8 @@ static void SwapMonMoves(struct Pokemon *mon, u8 moveIndex1, u8 moveIndex2)
 {
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
 
-    u16 move1 = summary->moves[moveIndex1];
-    u16 move2 = summary->moves[moveIndex2];
+    enum Move move1 = summary->moves[moveIndex1];
+    enum Move move2 = summary->moves[moveIndex2];
     u8 move1pp = summary->pp[moveIndex1];
     u8 move2pp = summary->pp[moveIndex2];
     u8 ppBonuses = summary->ppBonuses;
@@ -2666,8 +2668,8 @@ static void SwapBoxMonMoves(struct BoxPokemon *mon, u8 moveIndex1, u8 moveIndex2
 {
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
 
-    u16 move1 = summary->moves[moveIndex1];
-    u16 move2 = summary->moves[moveIndex2];
+    enum Move move1 = summary->moves[moveIndex1];
+    enum Move move2 = summary->moves[moveIndex2];
     u8 move1pp = summary->pp[moveIndex1];
     u8 move2pp = summary->pp[moveIndex2];
     u8 ppBonuses = summary->ppBonuses;
@@ -2784,7 +2786,7 @@ static void ShowCantForgetHMsWindow(u8 taskId)
 static void Task_HandleInputCantForgetHMsMoves(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    u16 move;
+    enum Move move;
     if (FuncIsActiveTask(Task_SlidePowerAccWindow) != 1)
     {
         if (JOY_NEW(DPAD_UP))
@@ -2998,7 +3000,7 @@ static void Task_SlidePowerAccWindow(u8 taskId)
     ScheduleBgCopyTilemapToVram(2);
 }
 
-static void PositionAppealJamSlidingWindow(u16 visibleColumns, s16 speed, u16 move)
+static void PositionAppealJamSlidingWindow(u16 visibleColumns, s16 speed, enum Move move)
 {
     if (speed > sAppealJamSlidingWindow.width)
         speed = sAppealJamSlidingWindow.width;
@@ -3191,7 +3193,7 @@ static void DrawExperienceProgressBar(struct Pokemon *unused)
         ScheduleBgCopyTilemapToVram(2);
 }
 
-static void DrawContestMoveHearts(u16 move)
+static void DrawContestMoveHearts(enum Move move)
 {
     u16 *tilemap = sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_CONTEST_MOVES][1];
     u8 i;
@@ -4140,7 +4142,7 @@ static void PrintMoveNameAndPP(u8 moveIndex)
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
     u8 moveNameWindowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_NAMES);
     u8 ppValueWindowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_PP);
-    u16 move = summary->moves[moveIndex];
+    enum Move move = summary->moves[moveIndex];
 
     if (move != 0)
     {
@@ -4167,7 +4169,7 @@ static void PrintMoveNameAndPP(u8 moveIndex)
     PrintTextOnWindow(ppValueWindowId, text, x, moveIndex * 16 + 1, 0, ppState);
 }
 
-static void PrintMovePowerAndAccuracy(u16 moveIndex)
+static void PrintMovePowerAndAccuracy(enum Move moveIndex)
 {
     const u8 *text;
     if (moveIndex != MOVE_NONE)
@@ -4254,7 +4256,7 @@ static void Task_PrintContestMoves(u8 taskId)
 
 static void PrintContestMoveDescription(u8 moveSlot)
 {
-    u16 move;
+    enum Move move;
 
     if (moveSlot == MAX_MON_MOVES)
         move = sMonSummaryScreen->newMove;
@@ -4268,7 +4270,7 @@ static void PrintContestMoveDescription(u8 moveSlot)
     }
 }
 
-static void PrintMoveDetails(u16 move)
+static void PrintMoveDetails(enum Move move)
 {
     u8 windowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_DESCRIPTION);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
@@ -4306,7 +4308,7 @@ static void PrintNewMoveDetailsOrCancelText(void)
     }
     else
     {
-        u16 move = sMonSummaryScreen->newMove;
+        enum Move move = sMonSummaryScreen->newMove;
 
         if (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES)
             PrintTextOnWindowToFit(windowId1, GetMoveName(move), 0, 65, 0, 6);
@@ -4918,7 +4920,7 @@ static inline void ShowUtilityPrompt(s16 mode)
     PrintTextOnWindow(PSS_LABEL_WINDOW_PROMPT_UTILITY, promptText, stringXPos, 1, 0, 0);
 }
 
-void ShowRelearnPrompt(void)
+static void ShowRelearnPrompt(void)
 {
     u32 currPage = sMonSummaryScreen->currPageIndex;
 
@@ -4931,15 +4933,21 @@ void ShowRelearnPrompt(void)
     if (!HasAnyRelearnableMoves(gMoveRelearnerState))
         return;
 
-    const u8* relearnText;
-
+    const u8 *relearnText;
     int relearnTextXPos;
 
-    switch (gMoveRelearnerState)
+    if ((!P_ENABLE_MOVE_RELEARNERS
+    && !P_TM_MOVES_RELEARNER
+    && !FlagGet(P_FLAG_EGG_MOVES)
+    && !FlagGet(P_FLAG_TUTOR_MOVES)))
     {
-        case MOVE_RELEARNER_LEVEL_UP_MOVES:
-            relearnText = sText_Relearn_LevelUp;
-            break;
+        relearnText = sText_Relearn;
+        relearnTextXPos = 0;
+    }
+    else
+    {
+        switch (gMoveRelearnerState)
+        {
         case MOVE_RELEARNER_EGG_MOVES:
             relearnText = sText_Relearn_Egg;
             break;
@@ -4950,11 +4958,12 @@ void ShowRelearnPrompt(void)
             relearnText = sText_Relearn_Tutor;
             break;
         default:
-            relearnText = sText_Relearn;
+        case MOVE_RELEARNER_LEVEL_UP_MOVES:
+            relearnText = sText_Relearn_LevelUp;
             break;
+        }
+        relearnTextXPos = GetStringRightAlignXOffset(FONT_NORMAL, relearnText, 0);
     }
-
-    relearnTextXPos = GetStringRightAlignXOffset(FONT_NORMAL, relearnText, 0);
 
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PROMPT_RELEARN, PIXEL_FILL(0));
     PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_RELEARN);
