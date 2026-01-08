@@ -532,6 +532,12 @@ static inline bool32 IsValidApprenticeMove(enum Move moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].validApprenticeMove;
 }
 
+static inline bool32 IsTerrainBoostMove(enum Move moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    return (gMovesInfo[moveId].argument.terrainBoost.terrain != 0);
+}
+
 static inline u32 GetMoveTwoTurnAttackStringId(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
@@ -594,28 +600,28 @@ static inline u32 GetMoveReflectDamage_DamageCategories(enum Move moveId)
 static inline u32 GetMoveTerrainBoost_Terrain(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
+    assertf(IsTerrainBoostMove(moveId), "not a terrain boosted move: %S", GetMoveName(moveId));
     return gMovesInfo[moveId].argument.terrainBoost.terrain;
 }
 
 static inline u32 GetMoveTerrainBoost_Percent(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
+    assertf(IsTerrainBoostMove(moveId), "not a terrain boosted move: %S", GetMoveName(moveId));
     return gMovesInfo[moveId].argument.terrainBoost.percent;
 }
 
 static inline u32 GetMoveTerrainBoost_GroundCheck(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
+    assertf(IsTerrainBoostMove(moveId), "not a terrain boosted move: %S", GetMoveName(moveId));
     return gMovesInfo[moveId].argument.terrainBoost.groundCheck;
 }
 
 static inline u32 GetMoveTerrainBoost_HitsBothFoes(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
+    assertf(IsTerrainBoostMove(moveId), "not a terrain boosted move: %S", GetMoveName(moveId));
     return gMovesInfo[moveId].argument.terrainBoost.hitsBothFoes;
 }
 

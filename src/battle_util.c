@@ -7732,9 +7732,6 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
         if (gProtectStructs[battlerAtk].lashOutAffected)
             basePower *= 2;
         break;
-    case EFFECT_TERRAIN_BOOST:
-        basePower = CalcTerrainBoostedPower(ctx, basePower);
-        break;
     case EFFECT_DYNAMAX_DOUBLE_DMG:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             basePower *= 2;
@@ -7790,7 +7787,10 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
     default:
         break;
     }
-
+    
+    if (IsTerrainBoostMove(move))
+        basePower = CalcTerrainBoostedPower(ctx, basePower);
+        
     if (basePower == 0)
         basePower = 1;
     return basePower;
@@ -10739,7 +10739,7 @@ bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags)
 
 static u32 CanBattlerHitBothFoesInTerrain(u32 battler, enum Move move, enum BattleMoveEffects effect)
 {
-    return effect == EFFECT_TERRAIN_BOOST
+    return IsTerrainBoostMove(move)
         && GetMoveTerrainBoost_HitsBothFoes(move)
         && IsBattlerTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), gFieldStatuses, GetMoveTerrainBoost_Terrain(move));
 }

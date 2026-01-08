@@ -71,7 +71,7 @@ bool32 AI_IsBattlerGrounded(u32 battler)
 
 static u32 AI_CanBattlerHitBothFoesInTerrain(u32 battler, enum Move move, enum BattleMoveEffects effect)
 {
-    return effect == EFFECT_TERRAIN_BOOST
+    return IsTerrainBoostMove(move)
         && GetMoveTerrainBoost_HitsBothFoes(move)
         && IsBattlerTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses, GetMoveTerrainBoost_Terrain(move));
 }

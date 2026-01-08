@@ -18583,7 +18583,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Power goes up and damages\n"
             "all foes on Psychic Terrain."),
-        .effect = EFFECT_TERRAIN_BOOST,
+        .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -18711,7 +18711,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Hit everything and faint.\n"
             "Powers up on Misty Terrain."),
-        .effect = EFFECT_TERRAIN_BOOST,
+        .effect = EFFECT_HIT,
         .power = 100,
         .type = TYPE_FAIRY,
         .accuracy = 100,
@@ -18762,7 +18762,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "This move's power doubles\n"
             "when on Electric Terrain."),
-        .effect = EFFECT_TERRAIN_BOOST,
+        .effect = EFFECT_HIT,
         .power = 70,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
@@ -20945,7 +20945,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "This move's power increases\n"
             "when on Electric Terrain."),
-        .effect = EFFECT_TERRAIN_BOOST,
+        .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,

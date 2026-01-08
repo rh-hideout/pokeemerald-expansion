@@ -54,7 +54,7 @@ static bool32 HasBattlerTerrainBoostMove(u32 battler, u32 terrain)
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         enum Move move = moves[moveIndex];
-        if (GetMoveEffect(move) == EFFECT_TERRAIN_BOOST
+        if (IsTerrainBoostMove(move)
          && GetMoveTerrainBoost_Terrain(move) == terrain)
             return TRUE;
     }

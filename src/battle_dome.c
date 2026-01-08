@@ -4059,7 +4059,6 @@ static bool32 IsDomeComboMove(enum Move move)
     case EFFECT_WEATHER_BALL:
     // Moves dependent on terrain
     case EFFECT_GRASSY_GLIDE:
-    case EFFECT_TERRAIN_BOOST:
     case EFFECT_TERRAIN_PULSE:
     // Stockpile group
     case EFFECT_STOCKPILE:
@@ -4103,6 +4102,10 @@ static bool32 IsDomeComboMove(enum Move move)
     default:
         break;
     }
+
+    //terrain depenedent
+    if (IsTerrainBoostMove(move))
+        return TRUE;
 
     // Move flags
     if (MoveAlwaysHitsInRain(move))

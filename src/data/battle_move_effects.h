@@ -30,12 +30,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 4,
     },
 
-    [EFFECT_TERRAIN_BOOST] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
     [EFFECT_DREAM_EATER] =
     {
         .battleScript = BattleScript_EffectDreamEater,

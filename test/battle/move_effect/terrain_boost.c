@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Terrain Boost: Expanding Force's power increases by 50% if t
     PARAMETRIZE { terrain = FALSE; }
     PARAMETRIZE { terrain = TRUE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPANDING_FORCE) == EFFECT_TERRAIN_BOOST);
+        ASSUME(IsTerrainBoostMove(MOVE_EXPANDING_FORCE));
         ASSUME(GetMoveTerrainBoost_Percent(MOVE_EXPANDING_FORCE) == 50);
         ASSUME(GetMoveTerrainBoost_GroundCheck(MOVE_EXPANDING_FORCE) == GROUND_CHECK_USER);
         PLAYER(SPECIES_WOBBUFFET);
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Terrain Boost: Expanding Force's power increases by 50% if t
 DOUBLE_BATTLE_TEST("Terrain Boost: Expanding Force hits both foes in Psychic Terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPANDING_FORCE) == EFFECT_TERRAIN_BOOST);
+        ASSUME(IsTerrainBoostMove(MOVE_EXPANDING_FORCE));
         ASSUME(GetMoveTerrainBoost_HitsBothFoes(MOVE_EXPANDING_FORCE));
         ASSUME(GetMoveTerrainBoost_GroundCheck(MOVE_EXPANDING_FORCE) == GROUND_CHECK_USER);
         PLAYER(SPECIES_WOBBUFFET);
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Terrain Boost: Rising Voltage doubles in power if target is 
     s16 damage[3];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RISING_VOLTAGE) == EFFECT_TERRAIN_BOOST);
+        ASSUME(IsTerrainBoostMove(MOVE_RISING_VOLTAGE));
         ASSUME(GetMoveTerrainBoost_Percent(MOVE_RISING_VOLTAGE) == 100);
         ASSUME(GetMoveTerrainBoost_GroundCheck(MOVE_RISING_VOLTAGE) == GROUND_CHECK_TARGET);
         PLAYER(SPECIES_PIDGEY); // User flying type so there is no 30% electric terrain boost
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Terrain Boost: Misty Explosion increases in power by 50% whe
     s16 damage[3];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_MISTY_EXPLOSION) == EFFECT_TERRAIN_BOOST);
+        ASSUME(IsTerrainBoostMove(MOVE_MISTY_EXPLOSION));
         ASSUME(GetMoveTerrainBoost_Percent(MOVE_MISTY_EXPLOSION) == 50);
         ASSUME(GetMoveTerrainBoost_GroundCheck(MOVE_MISTY_EXPLOSION) == GROUND_CHECK_USER);
         PLAYER(SPECIES_WOBBUFFET);
@@ -124,7 +124,7 @@ SINGLE_BATTLE_TEST("Terrain Boost: Psyblade power increases by 50% regardless if
     s16 damage[3];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PSYBLADE) == EFFECT_TERRAIN_BOOST);
+        ASSUME(IsTerrainBoostMove(MOVE_PSYBLADE));
         ASSUME(GetMoveTerrainBoost_Percent(MOVE_PSYBLADE) == 50);
         ASSUME(GetMoveTerrainBoost_GroundCheck(MOVE_PSYBLADE) == GROUND_CHECK_NONE);
         PLAYER(SPECIES_WOBBUFFET);
