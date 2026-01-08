@@ -204,3 +204,15 @@ SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Ev
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_VENUSAUR);
     }
 }
+
+SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon battle end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_RAYQUAZA);
+    }
+}
