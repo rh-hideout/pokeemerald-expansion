@@ -2783,7 +2783,27 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_PROTECT:
-        // TODO
+    case EFFECT_ENDURE:
+        TryResetConsecutiveUseCounter(gBattlerAttacker);
+        if (IsLastMonToMove(ctx->battlerAtk))
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
+        else
+        {
+            u32 protectMethod = GetMoveProtectMethod(ctx->move);
+            bool32 canUseProtectSecondTime = CanUseMoveConsecutively(ctx->battlerAtk);
+            bool32 canUseWideGuard = (GetConfig(CONFIG_WIDE_GUARD) >= GEN_6 && protectMethod == PROTECT_WIDE_GUARD);
+            bool32 canUseQuickGuard = (GetConfig(CONFIG_QUICK_GUARD) >= GEN_6 && protectMethod == PROTECT_QUICK_GUARD);
+
+            if (!canUseProtectSecondTime && !canUseWideGuard && !canUseQuickGuard)
+                battleScript = BattleScript_ButItFailed;
+        }
+        if (battleScript != NULL)
+        {
+            gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses = 0;
+            gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+        }
         break;
     case EFFECT_REST:
         if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_SLEEP
@@ -12208,3 +12228,38 @@ void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 usedMov
         }
     }
 }
+
+static const u16 sProtectSuccessRates[] = 
+{
+    USHRT_MAX, 
+    USHRT_MAX / 2, 
+    USHRT_MAX / 4, 
+    USHRT_MAX / 8
+};
+
+bool32 CanUseMoveConsecutively(u32 battler)
+{
+    u32 moveUses = gBattleMons[battler].volatiles.consecutiveMoveUses;
+    if (moveUses >= ARRAY_COUNT(sProtectSuccessRates))
+        moveUses = ARRAY_COUNT(sProtectSuccessRates) - 1;
+    return sProtectSuccessRates[moveUses] >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX);
+}
+
+// Used for protect, endure and ally switch
+void TryResetConsecutiveUseCounter(u32 battler)
+{
+    u32 lastMove = gLastResultingMoves[battler];
+    if (lastMove == MOVE_UNAVAILABLE)
+    {
+        gBattleMons[battler].volatiles.consecutiveMoveUses = 0;
+        return;
+    }
+
+    enum BattleMoveEffects lastEffect = GetMoveEffect(lastMove);
+    if (!gBattleMoveEffects[lastEffect].usesProtectCounter)
+    {
+        if (GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) < GEN_9 || lastEffect != EFFECT_ALLY_SWITCH)
+            gBattleMons[battler].volatiles.consecutiveMoveUses = 0;
+    }
+}
+
