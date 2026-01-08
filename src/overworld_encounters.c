@@ -575,6 +575,8 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
     if (!IsOverworldWildEncounter(objectEvent))
         return;
 
+    objectEvent->sOverworldEncounterLevel = 0;
+    objectEvent->sAge = 0;
     objectEvent->sRoamerOutbreakStatus = 0;
     
     if (gMain.callback2 == CB2_Overworld)
