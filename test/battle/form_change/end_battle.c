@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Zacian returns its Hero Form upon battle end")
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } THEN {
-        ASSUME(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES) == SPECIES_ZACIAN_HERO); // Assumes form change worked.
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_ZACIAN_HERO);
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), MOVE_IRON_HEAD);
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_PP1), 5); // Behemoth Blade's PP
     }
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Zamazenta returns its Hero Form upon battle end")
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } THEN {
-        ASSUME(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES) == SPECIES_ZAMAZENTA_HERO); // Assumes form change worked.
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_ZAMAZENTA_HERO);
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), MOVE_IRON_HEAD);
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_PP1), 5); // Behemoth Bash's PP
     }
@@ -160,7 +160,6 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon battle end after using
 
 SINGLE_BATTLE_TEST("Wishiwashi reverts to Solo form upon battle end after changing form at the beginning of the battle")
 {
-
     GIVEN {
         PLAYER(SPECIES_WISHIWASHI_SOLO) { Level(100); Ability(ABILITY_SCHOOLING); }
         OPPONENT(SPECIES_WOBBUFFET);
