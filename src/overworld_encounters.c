@@ -65,6 +65,7 @@ static u32 GetMaxOverworldEncounterSpawns(void);
 static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
 static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
 static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn);
+static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -153,7 +154,11 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
-    u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
+    u32 objectEventId = GetObjectEventIdByLocalId(localId);
+    struct ObjectEvent *object = &gObjectEvents[objectEventId];
+    if (OWE_ShouldDespawnGeneratedForNewOWE(object))
+        RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+    objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
     if (objectEventId >= OBJECT_EVENTS_COUNT)
     {
@@ -161,17 +166,18 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
-    gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
-    gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
-    gObjectEvents[objectEventId].sRoamerOutbreakStatus = indexRoamerOutbreak;
+    object = &gObjectEvents[objectEventId];
+    object->disableCoveringGroundEffects = TRUE;
+    object->sOverworldEncounterLevel = level;
+    object->sRoamerOutbreakStatus = indexRoamerOutbreak;
 
     u8 directions[4] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
-    ObjectEventTurn(&gObjectEvents[objectEventId], directions[Random() & 3]);
+    ObjectEventTurn(object, directions[Random() & 3]);
 
     // Hide reflections for spawns in water
     // (It just looks weird)
     if (shouldSpawnWaterMons)
-        gObjectEvents[objectEventId].hideReflection = TRUE;
+        object->hideReflection = TRUE;
 
     // Slower replacement spawning
     sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
@@ -299,14 +305,6 @@ static u8 NextSpawnMonSlot(void)
             if (GetOverworldSpeciesBySpawnSlot(spawnSlot) == SPECIES_NONE)
                 break;
         }
-    }
-
-    if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
-    {
-        u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-        u32 objectEventId = GetObjectEventIdByLocalId(localId);
-        struct ObjectEvent *object = &gObjectEvents[objectEventId];
-        RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
     }
 
     return spawnSlot;
@@ -1313,6 +1311,9 @@ static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent)
     if (!AreCoordsInsidePlayerMap(objectEvent->currentCoords.x, objectEvent->currentCoords.y))
         return FALSE;
 
+    if (OWE_ShouldDespawnGeneratedForNewOWE(objectEvent))
+        return FALSE;
+
     return OW_WILD_ENCOUNTERS_DESPAWN_SOUND;
 }
 
@@ -1358,6 +1359,14 @@ bool32 OverworldWildEncounter_ShouldEnableRandomBattleFrontierSpawns(void)
     return ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS
         || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         && !OW_WILD_ENCOUNTERS_RANDOM && OW_WILD_ENCOUNTERS_OVERWORLD);
+}
+
+static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
+{
+    if (!IsGeneratedOverworldWildEncounter(object))
+        return FALSE;
+    
+    return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumActiveGeneratedOverworldEncounters() == GetMaxOverworldEncounterSpawns();
 }
 
 #undef tLocalId
