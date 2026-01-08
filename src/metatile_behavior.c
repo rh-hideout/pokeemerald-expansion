@@ -1636,3 +1636,192 @@ bool8 MetatileBehavior_IsSpinTile(u8 metatileBehavior)
 
     return result;
 }
+
+bool8 MetatileBehavior_IsCabinet(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_CABINET)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsKitchen(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_KITCHEN)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsDresser(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_DRESSER)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsSnacks(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_SNACKS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor(u8 metatileBehavior, u8 playerDirection)
+{
+    if (playerDirection != DIR_NORTH)
+        return FALSE;
+    else if (metatileBehavior == MB_CABLE_CLUB_WIRELESS_MONITOR)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsPlayerFacingBattleRecords(u8 metatileBehavior, u8 playerDirection)
+{
+    if (playerDirection != DIR_NORTH)
+        return FALSE;
+    else if (metatileBehavior == MB_BATTLE_RECORDS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsIndigoPlateauSign1(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_INDIGO_PLATEAU_SIGN_1)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsIndigoPlateauSign2(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_INDIGO_PLATEAU_SIGN_2)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsFood(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_FOOD)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsBlueprints(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_BLUEPRINTS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsPainting(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_PAINTING)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsPowerPlantMachine(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_POWER_PLANT_MACHINE)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsTelephone(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_TELEPHONE)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsComputer(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_COMPUTER)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsAdvertisingPoster(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_ADVERTISING_POSTER)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsTastyFood(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_FOOD_SMELLS_TASTY)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsCup(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_CUP)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsBlinkingLights(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_BLINKING_LIGHTS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsNeatlyLinedUpTools(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_NEATLY_LINED_UP_TOOLS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsImpressiveMachine(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_IMPRESSIVE_MACHINE)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsVideoGame(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_VIDEO_GAME)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsBurglary(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_BURGLARY)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsTrainerTowerMonitor(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_TRAINER_TOWER_MONITOR)
+        return TRUE;
+    else
+        return FALSE;
+}
+

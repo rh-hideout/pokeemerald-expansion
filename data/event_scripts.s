@@ -1038,6 +1038,7 @@ gStdScripts_End::
 	.include "data/scripts/trainers_frlg.inc"
 	.include "data/text/trainers_frlg.inc"
 	.include "data/text/ingame_trade_frlg.inc"
+	.include "data/scripts/flavor_text.inc"
 
 .endif
 
@@ -1637,10 +1638,10 @@ EventScript_TryDarkenRuins::
 	setweather WEATHER_SHADE
 	doweather
 	return
-	
+
 Text_MonFlewAway::
 	.string "The {STR_VAR_1} flew away!$"
-	
+
 @ Call for legendary bird trio
 Text_Gyaoo::
 	.string "Gyaoo!$"
@@ -1660,7 +1661,7 @@ EventScript_PalletTown_PlayersHouse_2F_ShutDownPC::
 	special DoPCTurnOffEffect
 	releaseall
 	end
-	
+
 EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	lockall
 	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_FRLG
@@ -1671,7 +1672,7 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	waitstate
 	releaseall
 	end
-	
+
 
 	.include "data/scripts/pc_transfer.inc"
 	.include "data/scripts/questionnaire.inc"
