@@ -872,13 +872,13 @@ static void LoadBattleBg(enum BattleEnvironments battleEnvironment)
 static void PrintBattleBgName(u8 taskId)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
-    u8 fontId = 0;
-    u8 text[30+1];
 
-    StringCopy(text, gBattleEnvironmentInfo[data->battleEnvironment].name);
-    AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 0, 24, 0, NULL);
+    const u8 *name = gBattleEnvironmentInfo[data->battleEnvironment].name;
+    u8 fontId = FONT_NORMAL;
+
+    FillWindowPixelRect(WIN_BOTTOM_RIGHT, PIXEL_FILL(0), 0, 24, 80, gFonts[fontId].maxLetterHeight);
+    AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, name, 0, 24, 0, NULL);
 }
-
 static void UpdateBattleBg(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
