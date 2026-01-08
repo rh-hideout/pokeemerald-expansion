@@ -34,6 +34,22 @@ static enum MoveEndResult MoveEnd_SetValues(void)
     return MOVEEND_STEP_CONTINUE;
 }
 
+static enum MoveEndResult MoveEnd_FormChangePostAnimation(void)
+{
+    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+
+    // Gulp Missile changes
+    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT_DURING_MOVE))
+    {
+        result = MOVEEND_STEP_RUN_SCRIPT;
+        gBattleScripting.battler = gBattlerAttacker;
+        BattleScriptCall(BattleScript_BattlerFormChangeNoPopup);
+    }
+
+    gBattleScripting.moveendState++;
+    return result;
+}
+
 static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
@@ -1191,7 +1207,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_BUTTON)
             ejectButtonBattlers |= 1u << battlerDef;
-         
+
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_RED_CARD)
             redCardBattlers |= 1u << battlerDef;
     }
@@ -1211,7 +1227,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         // Only fastest red card or eject button activates
         if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
-            result = MOVEEND_STEP_RUN_SCRIPT; 
+            result = MOVEEND_STEP_RUN_SCRIPT;
         else if (ejectButtonBattlers & 1u << battler && TryEjectButton(gBattlerAttacker, battler))
             result = MOVEEND_STEP_RUN_SCRIPT;
 
@@ -1710,6 +1726,7 @@ static enum MoveEndResult MoveEnd_PursuitNextAction(void)
 static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
 {
     [MOVEEND_SET_VALUES] = MoveEnd_SetValues,
+    [MOVEEND_FORM_CHANGE_POST_ANIMATION] = MoveEnd_FormChangePostAnimation,
     [MOVEEND_PROTECT_LIKE_EFFECT] = MoveEnd_ProtectLikeEffect,
     [MOVEEND_ABSORB] = MoveEnd_Absorb,
     [MOVEEND_RAGE] = MoveEnd_Rage,

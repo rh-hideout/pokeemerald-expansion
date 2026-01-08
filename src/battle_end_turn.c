@@ -1315,7 +1315,7 @@ static bool32 CanBattlerEndTurnFormChange(u32 battler, enum Ability ability)
 {
     u32 species = gBattleMons[battler].species;
 
-    return (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_HP_PERCENT) != species
+    return (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END) != species
         || GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_TURN_END) != species);
 }
 

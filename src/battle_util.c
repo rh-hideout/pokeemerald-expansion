@@ -5089,7 +5089,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             abilityForm = gLastUsedAbility;
             // Handle ability form changes at the end of the turn here.
             if ((gLastUsedAbility != ABILITY_SCHOOLING || gBattleMons[battler].level >= 20)
-                && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
+                && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
             {
                 gBattleScripting.battler = battler;
                 // To prevent the new form's ability from pop up
@@ -5592,7 +5592,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         }
 
-        enum Ability abilityForm = gLastUsedAbility;
+        abilityForm = gLastUsedAbility;
         u32 speciesForm = gBattleMons[gBattlerTarget].species;
         // Handle ability form changes when hit by a move here.
         if (IsBattlerTurnDamaged(gBattlerTarget)
@@ -5619,7 +5619,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                             BattleScriptCall(BattleScript_GulpMissileGulping);
                             break;
                         default:
-                            BattleScriptCall(BattleScript_BattlerFormChange);
+                            BattleScriptCall(BattleScript_BattlerFormChange); // Fallback
                             break;
                     }
                 }
@@ -5675,16 +5675,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
              && !MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH))
             {
                 SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, EFFECT_PRIMARY);
-                effect++;
-            }
-            break;
-        case ABILITY_GULP_MISSILE:
-            if ((gBattleMons[gBattlerAttacker].species == SPECIES_CRAMORANT)
-             && ((gCurrentMove == MOVE_SURF && IsBattlerTurnDamaged(gBattlerTarget)) || gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable == STATE_UNDERWATER)
-             && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT))
-            {
-                gBattleScripting.battler = gBattlerAttacker;
-                BattleScriptCall(BattleScript_BattlerFormChange);
                 effect++;
             }
             break;

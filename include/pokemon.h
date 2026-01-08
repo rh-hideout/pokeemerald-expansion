@@ -624,6 +624,7 @@ struct FormChange
     u16 param1;
     u16 param2;
     u16 param3;
+    u16 param4;
 };
 
 struct FormChangeContext

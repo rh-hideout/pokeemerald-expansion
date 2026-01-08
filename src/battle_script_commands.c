@@ -1725,7 +1725,7 @@ static inline bool32 DoesBattlerNegateDamage(u32 battler)
 
     if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
-    if (ability == ABILITY_DISGUISE && species == SPECIES_MIMIKYU)
+    if (ability == ABILITY_DISGUISE && IsMimikyuDisguised(battler))
         return TRUE;
     if (ability == ABILITY_ICE_FACE && species == SPECIES_EISCUE && GetBattleMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_PHYSICAL)
         return TRUE;
@@ -13016,17 +13016,14 @@ void BS_TryTidyUp(void)
     }
 }
 
-void BS_TryGulpMissile(void)
+void BS_TryTwoTurnMovesPowerHerbFormChange(void)
 {
     NATIVE_ARGS();
 
-    if ((gBattleMons[gBattlerAttacker].species == SPECIES_CRAMORANT)
-     && (gCurrentMove == MOVE_DIVE)
-     && GetBattlerAbility(gBattlerAttacker) == ABILITY_GULP_MISSILE
-     && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT))
+    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT_DURING_MOVE))
     {
         gBattleScripting.battler = gBattlerAttacker;
-        gBattlescriptCurrInstr = BattleScript_GulpMissileFormChange;
+        gBattlescriptCurrInstr = BattleScript_TwoTurnMovesSecondTurnFormChange;
     }
     else
     {

@@ -1598,8 +1598,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro trygulpmissile
-	callnative BS_TryGulpMissile
+	.macro trytwoturnmovespowerherbformchange
+	callnative BS_TryTwoTurnMovesPowerHerbFormChange
 	.endm
 
 	.macro tryquash failInstr:req

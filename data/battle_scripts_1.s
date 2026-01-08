@@ -3017,7 +3017,7 @@ BattleScript_FirstChargingTurnAfterAttackString:
 
 BattleScript_TwoTurnMovesSecondPowerHerbActivates:
 	call BattleScript_PowerHerbActivation
-	trygulpmissile @ Edge case for Cramorant ability Gulp Missile
+	trytwoturnmovespowerherbformchange @ Edge case for Cramorant ability Gulp Missile
 BattleScript_FromTwoTurnMovesSecondTurnRet:
 	call BattleScript_TwoTurnMovesSecondTurnRet
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
@@ -5665,15 +5665,15 @@ BattleScript_UltraBurst::
 	switchinabilities BS_SCRIPTING
 	end3
 
-BattleScript_GulpMissileFormChange::
-	call BattleScript_BattlerFormChange
+BattleScript_TwoTurnMovesSecondTurnFormChange::
+	call BattleScript_BattlerFormChangeNoPopup
 	goto BattleScript_FromTwoTurnMovesSecondTurnRet
 
 BattleScript_BattlerFormChange::
 	pause 5
 	call BattleScript_AbilityPopUpScripting
 	flushtextbox
-BattleScript_BattlerFormChangeNoPopup:
+BattleScript_BattlerFormChangeNoPopup::
 	handleformchange BS_SCRIPTING, 0
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation

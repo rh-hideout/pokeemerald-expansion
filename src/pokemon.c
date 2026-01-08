@@ -6916,7 +6916,11 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             if (formChanges[i].param1 == ctx.ability || formChanges[i].param1 == ABILITY_NONE)
                 targetSpecies = formChanges[i].targetSpecies;
             break;
-        case FORM_CHANGE_BATTLE_HP_PERCENT:
+        case FORM_CHANGE_BATTLE_HP_PERCENT_DURING_MOVE:
+            if (formChanges[i].param4 != gCurrentMove)
+                break;
+            // fallthrough
+        case FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END:
         case FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT:
             if (formChanges[i].param1 == ctx.ability)
             {
