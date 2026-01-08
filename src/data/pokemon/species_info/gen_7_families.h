@@ -219,7 +219,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .baseSpDefense = 95,
         .types = MON_TYPES(TYPE_GRASS, TYPE_FIGHTING),
         .catchRate = 45,
-        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 265 : 239,
+        .expYield = 265,
         .evYield_Attack = 3,
         .genderRatio = PERCENT_FEMALE(12.5),
         .eggCycles = 15,
@@ -4478,7 +4478,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .teachableLearnset = sMiniorTeachableLearnset,                      \
         .formSpeciesIdTable = sMiniorFormSpeciesIdTable
 
-#define MINIOR_METEOR_SPECIES_INFO(Form, itemCommon)        \
+#define MINIOR_METEOR_SPECIES_INFO(Form, heldItem)          \
     {                                                       \
         .baseHP        = 60,                                \
         .baseAttack    = 60,                                \
@@ -4486,6 +4486,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .baseSpeed     = 60,                                \
         .baseSpAttack  = 60,                                \
         .baseSpDefense = 100,                               \
+        .itemCommon = heldItem                              \
         .weight = 400,                                      \
         .description = gMiniorMeteorPokedexText,            \
         .frontPic = gMonFrontPic_MiniorMeteor,              \
@@ -4517,7 +4518,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         MINIOR_MISC_INFO(BODY_COLOR_BROWN),                 \
     }
 
-#define MINIOR_CORE_SPECIES_INFO(Form, color, iconPal, itemCommon) \
+#define MINIOR_CORE_SPECIES_INFO(Form, color, iconPal, heldItem)\
     {                                                           \
         .baseHP        = 60,                                    \
         .baseAttack    = 100,                                   \
@@ -4525,6 +4526,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .baseSpeed     = 120,                                   \
         .baseSpAttack  = 100,                                   \
         .baseSpDefense = 60,                                    \
+        .itemCommon = heldItem                                  \
         .weight = 3,                                            \
         .description = gMiniorCorePokedexText,                  \
         .frontPic = gMonFrontPic_MiniorCore,                    \
