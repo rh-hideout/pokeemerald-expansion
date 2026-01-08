@@ -1688,7 +1688,8 @@ const u8 *GetTrainerBLoseText(void)
 
 const u8 *GetTrainerWonSpeech(void)
 {
-    return ReturnEmptyStringIfNull(TRAINER_BATTLE_PARAM.victoryText);
+    StringExpandPlaceholders(gStringVar4, ReturnEmptyStringIfNull(TRAINER_BATTLE_PARAM.victoryText));
+    return gStringVar4;
 }
 
 static const u8 *GetTrainerCantBattleSpeech(void)
