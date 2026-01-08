@@ -35,6 +35,8 @@
 #include "constants/items.h"
 #include "caps.h"
 
+#define HEALTHBOX_BG_INDEX 2
+
 enum
 {   // Corresponds to gHealthboxElementsGfxTable (and the tables after it) in graphics.c
     // These are indexes into the tables, which are filled with 8x8 square pixel data.
@@ -173,6 +175,7 @@ enum
 static const u8 *GetHealthboxElementGfxPtr(u8);
 static u8 *AddTextPrinterAndCreateWindowOnHealthbox(const u8 *, u32, u32, u32, u32 *);
 static u8 *AddTextPrinterAndCreateWindowOnHealthboxToFit(const u8 *, u32, u32, u32, u32 *, u32);
+static u8 *AddTextPrinterAndCreateWindowOnHealthboxWithFont(const u8 *, u32, u32, u32, u32 *, u32);
 
 static void RemoveWindowOnHealthbox(u32 windowId);
 static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp, s16 maxHp);
@@ -180,7 +183,6 @@ static void UpdateStatusIconInHealthbox(u8);
 
 static void TextIntoHealthboxObject(void *, u8 *, s32);
 static void SafariTextIntoHealthboxObject(void *, u8 *, u32);
-static void HpTextIntoHealthboxObject(void *, u8 *, u32);
 static void FillHealthboxObject(void *, u32, u32);
 
 static void Task_HidePartyStatusSummary_BattleStart_1(u8);
@@ -909,32 +911,41 @@ static void UpdateLvlInHealthbox(u8 healthboxSpriteId, u8 lvl)
     RemoveWindowOnHealthbox(windowId);
 }
 
-static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor, u32 rightTile, u32 leftTile)
+#define HP_FONT FONT_SMALL
+#define HP_MAX_DIGITS 4
+#define HP_RIGHT_SPRITE_CHARS 6
+
+static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor, u8 yOffset)
 {
-    u8 *windowTileData;
-    u32 windowId, tilesCount, x;
-    u8 text[28], *txtPtr;
-    void *objVram = (void *)(OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP;
+    u32 width;
+    u8 text[2 * HP_MAX_DIGITS + 2], *txtPtr;
+
+    const union TextColor color =
+    {
+        .background = 0,
+        .foreground = 1,
+        .shadow = 3,
+        .accent = 0
+    };
 
     // To fit 4 digit HP values we need to modify a bit the way hp is printed on Healthbox.
-    // 6 chars can fit on the right healthbox, the rest goes to the left one
-    txtPtr = ConvertIntToDecimalStringN(text, currHp, STR_CONV_MODE_RIGHT_ALIGN, 4);
+    // HP_RIGHT_SPRITE_CHARS chars can fit on the right healthbox, the rest goes to the left one
+    txtPtr = ConvertIntToDecimalStringN(text, currHp, STR_CONV_MODE_RIGHT_ALIGN, HP_MAX_DIGITS);
     *txtPtr++ = CHAR_SLASH;
-    txtPtr = ConvertIntToDecimalStringN(txtPtr, maxHp, STR_CONV_MODE_LEFT_ALIGN, 4);
-    // Print last 6 chars on the right window
-    windowTileData = AddTextPrinterAndCreateWindowOnHealthbox(txtPtr - 6, 0, 5, bgColor, &windowId);
-    HpTextIntoHealthboxObject(objVram + rightTile, windowTileData, 4);
-    RemoveWindowOnHealthbox(windowId);
+    txtPtr = ConvertIntToDecimalStringN(txtPtr, maxHp, STR_CONV_MODE_LEFT_ALIGN, HP_MAX_DIGITS);
+
+    //  Clear out old text first
+    FillSpriteRectColor(spriteId, 32, yOffset + 8, 32, 8, bgColor);
+    FillSpriteRectColor(gSprites[spriteId].oam.affineParam, 0, yOffset + 8, 32, 8, bgColor);
+
+    // Print last HP_RIGHT_SPRITE_CHARS chars on the right window
+    AddSpriteTextPrinterParameterized6(gSprites[spriteId].oam.affineParam, HP_FONT, 0, yOffset + 5, 0, 0, color, 0, txtPtr - HP_RIGHT_SPRITE_CHARS);
+
     // Print the rest of the chars on the left window
-    txtPtr[-6] = EOS;
-    // if max hp is 3 digits print on block closer to the right window, if 4 digits print further from the right window
-    if (maxHp >= 1000)
-        x = 9, tilesCount = 3;
-    else
-        x = 6, tilesCount = 2, leftTile += 0x20;
-    windowTileData = AddTextPrinterAndCreateWindowOnHealthbox(text, x, 5, bgColor, &windowId);
-    HpTextIntoHealthboxObject(objVram + leftTile, windowTileData, tilesCount);
-    RemoveWindowOnHealthbox(windowId);
+    txtPtr[-HP_RIGHT_SPRITE_CHARS] = EOS;
+
+    width = GetStringWidth(HP_FONT, text, -1) + GetFontAttribute(HP_FONT, FONTATTR_LETTER_SPACING);
+    AddSpriteTextPrinterParameterized6(spriteId, HP_FONT, 64 - width, yOffset + 5, 0, 0, color, 0, text);
 }
 
 // Note: this is only possible to trigger via debug, it was an unused GF function.
@@ -1024,7 +1035,7 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp
     {
         if (IsOnPlayerSide(battler)) // Player
         {
-            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, 2, 0xB00, 0x3A0);
+            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 16);
         }
         else // Opponent
         {
@@ -1039,12 +1050,13 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp
 static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp, s16 maxHp)
 {
     u32 barSpriteId = gSprites[healthboxSpriteId].data[5];
+    u32 battler = gSprites[healthboxSpriteId].hMain_Battler;
 
-    if (IsOnPlayerSide(gSprites[healthboxSpriteId].hMain_Battler))
+    if (IsOnPlayerSide(battler))
     {
         if (gBattleSpritesDataPtr->battlerData[gSprites[healthboxSpriteId].data[6]].hpNumbersNoBars) // don't print text if only bars are visible
         {
-            PrintHpOnHealthbox(barSpriteId, currHp, maxHp, 0, 0x80, 0x20);
+            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 8);
             // Clears the end of the healthbar gfx.
             CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_FRAME_END),
                           (void *)(OBJ_VRAM0 + 0x680) + (gSprites[healthboxSpriteId].oam.tileNum * TILE_SIZE_4BPP),
@@ -1159,6 +1171,8 @@ void SwapHpBarsWithHpText(void)
                 }
                 else // text to bars
                 {
+                    FillSpriteRectColor(gHealthboxSpriteIds[i], 32, 16, 32, 8, HEALTHBOX_BG_INDEX);
+                    FillSpriteRectColor(gSprites[gHealthboxSpriteIds[i]].oam.affineParam, 0, 16, 32, 8, HEALTHBOX_BG_INDEX);
                     UpdateStatusIconInHealthbox(gHealthboxSpriteIds[i]);
                     UpdateHealthboxAttribute(gHealthboxSpriteIds[i], mon, HEALTHBOX_HEALTH_BAR);
                     CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_FRAME_END_BAR), (void *)(OBJ_VRAM0 + 0x680 + gSprites[gHealthboxSpriteIds[i]].oam.tileNum * TILE_SIZE_4BPP), 32);
@@ -2340,11 +2354,6 @@ static void RemoveWindowOnHealthbox(u32 windowId)
 static void FillHealthboxObject(void *dest, u32 valMult, u32 numTiles)
 {
     CpuFill32(0x11111111 * valMult, dest, numTiles * TILE_SIZE_4BPP);
-}
-
-static void HpTextIntoHealthboxObject(void *dest, u8 *windowTileData, u32 windowWidth)
-{
-    CpuCopy32(windowTileData + 256, dest, windowWidth * TILE_SIZE_4BPP);
 }
 
 static void TextIntoHealthboxObject(void *dest, u8 *windowTileData, s32 windowWidth)

@@ -685,8 +685,8 @@ void CB2_BattleDebugMenu(void)
         gMain.state++;
         break;
     case 3:
-        LoadPalette(sBgColor, 0, 2);
-        LoadPalette(GetOverworldTextboxPalettePtr(), 0xf0, 16);
+        LoadPalette(sBgColor, BG_PLTT_ID(0), 2);
+        LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZEOF(8));
         gMain.state++;
         break;
     case 4:
@@ -1452,6 +1452,7 @@ static void PrintSecondaryEntries(struct BattleDebugMenu *data)
 
     yMultiplier = (GetFontAttribute(sSecondaryListTemplate.fontId, 1) + sSecondaryListTemplate.itemVerticalPadding);
 
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.windowId = data->secondaryListWindowId;
     printer.fontId = 1;
     printer.letterSpacing = 0;
