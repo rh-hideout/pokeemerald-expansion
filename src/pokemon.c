@@ -6924,9 +6924,24 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
                 targetSpecies = formChanges[i].targetSpecies;
             break;
         case FORM_CHANGE_BATTLE_HP_PERCENT_DURING_MOVE:
-            if (formChanges[i].param4 != gCurrentMove)
-                break;
-            // fallthrough
+            if (ctx.ability == formChanges[i].param1
+                && gCurrentMove == formChanges[i].param4)
+            {
+                // We multiply by 100 to make sure that integer division doesn't mess with the health check.
+                u32 hpCheck = ctx.hp * 100 * 100 / ctx.maxHP;
+                switch(formChanges[i].param2)
+                {
+                case HP_HIGHER_THAN:
+                    if (hpCheck > formChanges[i].param3 * 100)
+                        targetSpecies = formChanges[i].targetSpecies;
+                    break;
+                case HP_LOWER_EQ_THAN:
+                    if (hpCheck <= formChanges[i].param3 * 100)
+                        targetSpecies = formChanges[i].targetSpecies;
+                    break;
+                }
+            }
+            break;
         case FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END:
         case FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT:
             if (ctx.ability == formChanges[i].param1
