@@ -70,6 +70,7 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 4-8 turns: En
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
+    PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_4);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
@@ -99,6 +100,7 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 3-7 turns: En
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
+    PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_4);
@@ -130,6 +132,7 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 3-7 turns:
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
+    PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_3);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
@@ -152,12 +155,13 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 3-7 turns:
     }
 }
 
-SINGLE_BATTLE_TEST("(Gen3) Encore forces consecutive move uses for 2-6 turns: Encore used after move")
+SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns: Encore used after move")
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
+    PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_3);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
