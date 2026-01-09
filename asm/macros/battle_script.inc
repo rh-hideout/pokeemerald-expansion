@@ -1954,11 +1954,6 @@
 	.byte \battler
 	.endm
 
-	.macro setspriteignore0hp ignore0HP:req
-	callnative BS_SetSpriteIgnore0Hp
-	.byte \ignore0HP
-	.endm
-
 	.macro updatenick
 	callnative BS_UpdateNick
 	.endm
