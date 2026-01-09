@@ -286,3 +286,28 @@ SINGLE_BATTLE_TEST("Terapagos reverts to the correct form upon battle end after 
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_TERAPAGOS_NORMAL);
     }
 }
+
+SINGLE_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon battle end")
+{
+    u16 baseSpecies;
+    PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
+    PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
+
+    GIVEN {
+        PLAYER(baseSpecies)
+        {
+            Ability(ABILITY_POWER_CONSTRUCT);
+            HP((GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP) / 2) + 1);
+        }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("You sense the presence of many!");
+        ABILITY_POPUP(player, ABILITY_POWER_CONSTRUCT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_POWER_CONSTRUCT, player);
+
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), baseSpecies);
+    }
+}
