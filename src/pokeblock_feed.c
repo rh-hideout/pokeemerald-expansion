@@ -37,7 +37,7 @@ enum {
     ANIMDATA_TARGET_Y,
     ANIMDATA_APPR_TIME,
     ANIMDATA_IS_LAST,
-    NUM_ANIMDATA
+    #define NUM_ANIMDATA (ANIMDATA_IS_LAST + 1)
 };
 
 #define MON_X 48

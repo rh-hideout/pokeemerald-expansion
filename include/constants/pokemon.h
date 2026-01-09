@@ -85,9 +85,9 @@ enum __attribute__((packed)) Stat
     STAT_SPEED,
     STAT_SPATK,
     STAT_SPDEF,
-    NUM_STATS,
-    STAT_ACC = NUM_STATS, // Only in battles.
-    STAT_EVASION,         // Only in battles.
+    #define NUM_STATS (STAT_SPDEF + 1)
+    STAT_ACC,     // Only in battles.
+    STAT_EVASION, // Only in battles.
 };
 
 #define NUM_NATURE_STATS (NUM_STATS - 1) // excludes HP

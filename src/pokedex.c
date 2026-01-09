@@ -51,7 +51,7 @@ enum
     CRY_SCREEN,
     SIZE_SCREEN,
     CANCEL_SCREEN,
-    SCREEN_COUNT
+    #define SCREEN_COUNT (CANCEL_SCREEN + 1)
 };
 
 enum
@@ -63,7 +63,7 @@ enum
     SEARCH_ORDER,
     SEARCH_MODE,
     SEARCH_OK,
-    SEARCH_COUNT
+    #define SEARCH_COUNT (SEARCH_OK + 1)
 };
 
 enum
@@ -71,7 +71,7 @@ enum
     SEARCH_TOPBAR_SEARCH,
     SEARCH_TOPBAR_SHIFT,
     SEARCH_TOPBAR_CANCEL,
-    SEARCH_TOPBAR_COUNT
+    #define SEARCH_TOPBAR_COUNT (SEARCH_TOPBAR_CANCEL + 1)
 };
 
 enum

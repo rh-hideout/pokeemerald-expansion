@@ -12,7 +12,7 @@ enum {
     MAILBOXWIN_TITLE,
     MAILBOXWIN_LIST,
     MAILBOXWIN_OPTIONS,
-    MAILBOXWIN_COUNT
+    #define MAILBOXWIN_COUNT (MAILBOXWIN_OPTIONS + 1)
 };
 
 // Window IDs for the move relearner
@@ -61,7 +61,7 @@ enum {
     CONDITION_SMART,
     CONDITION_CUTE,
     CONDITION_BEAUTY,
-    CONDITION_COUNT
+    #define CONDITION_COUNT (CONDITION_BEAUTY + 1)
 };
 
 // Yet another order. This one is the same (by coincidence) as the contest categories

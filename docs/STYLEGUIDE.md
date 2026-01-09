@@ -45,6 +45,18 @@ enum
 #define ADD_FIVE(x) ((x) + 5)
 ```
 
+If the number of values in a (dense) `enum` is required, it should be
+formatted as follows:
+
+```c
+enum MY_ENUM
+{
+    MY_ENUM_IS_COOL,
+    MY_ENUM_IS_GREAT,
+    #define MY_ENUM_COUNT (MY_ENUM_IS_GREAT + 1)
+};
+```
+
 ## Coding Style
 
 ### Comments

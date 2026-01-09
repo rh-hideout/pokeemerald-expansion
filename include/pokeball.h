@@ -31,7 +31,7 @@ enum PokeBall
     BALL_PARK = 25,
     BALL_BEAST = 26,
     BALL_CHERISH = 27,
-    POKEBALL_COUNT
+    #define POKEBALL_COUNT (BALL_CHERISH + 1)
 };
 
 enum {

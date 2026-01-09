@@ -37,7 +37,7 @@ enum {
     WIN_NAME,
     WIN_NATURE,
     WIN_TEXT,
-    WIN_COUNT
+    #define WIN_COUNT (WIN_TEXT + 1)
 };
 
 #define TAG_UP_DOWN     0

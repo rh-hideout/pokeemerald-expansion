@@ -52,7 +52,7 @@ enum EndTurnResolutionOrder
     ENDTURN_FORM_CHANGE_ABILITIES,
     ENDTURN_EJECT_PACK,
     ENDTURN_DYNAMAX,
-    ENDTURN_COUNT,
+    #define ENDTURN_COUNT (ENDTURN_DYNAMAX + 1)
 };
 
 // Block that handles effects for each individual battler on the field (eg residual damage)

@@ -9,7 +9,7 @@ enum Gimmick
     GIMMICK_Z_MOVE,
     GIMMICK_DYNAMAX,
     GIMMICK_TERA,
-    GIMMICKS_COUNT,
+    #define GIMMICKS_COUNT (GIMMICK_TERA + 1)
 };
 
 struct GimmickInfo

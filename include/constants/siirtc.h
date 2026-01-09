@@ -20,7 +20,7 @@ enum Weekday
     WEEKDAY_THU,
     WEEKDAY_FRI,
     WEEKDAY_SAT,
-    WEEKDAY_COUNT,
+    #define WEEKDAY_COUNT 7
 };
 
 enum Month
@@ -37,7 +37,7 @@ enum Month
     MONTH_OCT,
     MONTH_NOV,
     MONTH_DEC,
-    MONTH_COUNT = MONTH_DEC,
+    #define MONTH_COUNT 12
 };
 
 #endif // GUARD_CONSTANTS_SIIRTC_H

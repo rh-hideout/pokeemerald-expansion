@@ -16,7 +16,7 @@ enum {
     WALLPAPER_MACHINE,
     WALLPAPER_PLAIN,
     WALLPAPER_FRIENDS, // The one received as a gift from Walda's parents.
-    WALLPAPER_COUNT
+    #define WALLPAPER_COUNT (WALLPAPER_FRIENDS + 1)
 };
 #define MAX_DEFAULT_WALLPAPER WALLPAPER_SAVANNA
 

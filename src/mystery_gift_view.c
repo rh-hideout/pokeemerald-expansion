@@ -36,7 +36,7 @@ enum {
     CARD_WIN_HEADER,
     CARD_WIN_BODY,
     CARD_WIN_FOOTER,
-    CARD_WIN_COUNT
+    #define CARD_WIN_COUNT (CARD_WIN_FOOTER + 1)
 };
 
 #define TAG_STAMP_SHADOW 0x8000
@@ -543,7 +543,7 @@ static void DestroyCardSprites(void)
 enum {
     NEWS_WIN_TITLE,
     NEWS_WIN_BODY,
-    NEWS_WIN_COUNT
+    #define NEWS_WIN_COUNT (NEWS_WIN_BODY + 1)
 };
 
 #define TAG_ARROWS 0x1000
