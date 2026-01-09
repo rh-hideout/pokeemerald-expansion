@@ -1161,6 +1161,23 @@ static inline struct PartyState *GetBattlerPartyState(u32 battler)
     return &gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
 }
 
+static inline struct PartyState *GetBattlerPartyStateByPokemon(struct Pokemon *partyMon)
+{
+    if (gBattleStruct == NULL)
+        return NULL;
+
+    for (int i = 0; i < NUM_BATTLE_SIDES; i++)
+    {
+        for (int j = 0; j < PARTY_SIZE; j++)
+        {
+            struct Pokemon *mon = &GetSideParty(i)[j];
+            if (partyMon == mon)
+                return &gBattleStruct->partyState[i][j];
+        }
+    }
+    return NULL;
+}
+
 static inline bool32 IsDoubleBattle(void)
 {
     return (gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);

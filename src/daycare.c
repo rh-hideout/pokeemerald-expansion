@@ -1272,7 +1272,6 @@ u16 GetSelectedMonNicknameAndSpecies(void)
         GetBoxMonNickname(&gPokemonStoragePtr->boxes[gSpecialVar_MonBoxId][gSpecialVar_MonBoxPos], gStringVar1);
         return GetBoxMonData(&gPokemonStoragePtr->boxes[gSpecialVar_MonBoxId][gSpecialVar_MonBoxPos], MON_DATA_SPECIES);
     }
-    
 }
 
 void GetDaycareMonNicknames(void)

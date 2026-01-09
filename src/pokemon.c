@@ -7158,25 +7158,25 @@ bool32 SpeciesHasGenderDifferences(u16 species)
 
 bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
 {
-    struct Pokemon *party = (side == B_SIDE_PLAYER) ? gPlayerParty : gEnemyParty;
+    struct Pokemon *mon = (side == B_SIDE_PLAYER) ? &gPlayerParty[monId] : &gEnemyParty[monId];
 
-    if (GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_NONE
-     || GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_EGG)
+    if (GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_NONE
+     || GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_EGG)
         return FALSE;
 
-    u32 currentSpecies = GetMonData(&party[monId], MON_DATA_SPECIES);
-    u32 targetSpecies = GetFormChangeTargetSpecies(&party[monId], method, 0);
+    u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
+    u32 targetSpecies = GetFormChangeTargetSpecies(mon, method, 0);
 
+    struct PartyState *battlePartyState = GetBattlerPartyStateByPokemon(mon);
     // If the battle ends, and there's not a specified species to change back to,,
     // use the species at the start of the battle.
     if (targetSpecies == SPECIES_NONE
-        && gBattleStruct != NULL
-        && gBattleStruct->partyState[side][monId].changedSpecies != SPECIES_NONE
+        && battlePartyState != NULL && battlePartyState->changedSpecies != SPECIES_NONE
         // This is added to prevent FORM_CHANGE_END_BATTLE_ENVIRONMENT from omitting move changes
         // at the end of the battle, as it was being counting as a successful form change.
         && method == FORM_CHANGE_END_BATTLE)
     {
-        targetSpecies = gBattleStruct->partyState[side][monId].changedSpecies;
+        targetSpecies = battlePartyState->changedSpecies;
     }
 
     assertf(targetSpecies != SPECIES_NONE, "form change target returned NONE. cur:%d, method:%d", currentSpecies, method)
@@ -7186,9 +7186,9 @@ bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
 
     if (targetSpecies != currentSpecies)
     {
-        TryToSetBattleFormChangeMoves(&party[monId], method);
-        SetMonData(&party[monId], MON_DATA_SPECIES, &targetSpecies);
-        CalculateMonStats(&party[monId]);
+        TryToSetBattleFormChangeMoves(mon, method);
+        SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
+        CalculateMonStats(mon);
         return TRUE;
     }
 
