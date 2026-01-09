@@ -2037,6 +2037,25 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_RareCandy,
     },
 
+    [ITEM_INFINITE_RARE_CANDY] =
+    {
+        .name = ITEM_NAME("InfiniteCandy"),
+        .pluralName = ITEM_PLURAL_NAME("InfiniteCandy"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A Pokemon leveler\n"
+            "with unlimited\n"
+            "uses."),
+        .importance = 1,
+        .notConsumed = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
+        .effect = gItemEffect_RareCandy,
+        .iconPic = gItemIcon_RareCandy,
+        .iconPalette = gItemIconPalette_RareCandy,
+    },
+
     [ITEM_EXP_CANDY_XS] =
     {
         .name = ITEM_NAME("Exp. Candy XS"),
