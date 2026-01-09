@@ -387,7 +387,7 @@ void BattleArena_AddSkillPoints(u8 battler)
             gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt = FALSE;
             skillPoints[battler] -= 2;
         }
-        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+        else if (IsBattlerUnaffectedByMove(gBattlerTarget))
         {
             if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED) || gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
                 skillPoints[battler] -= 2;
