@@ -6778,6 +6778,10 @@ u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId)
 u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method)
 {
     u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
+    const struct FormChange *formChanges = GetSpeciesFormChanges(species);
+
+    if (formChanges == NULL)
+        return species;
 
     struct FormChangeContext ctx =
     {

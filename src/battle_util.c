@@ -9905,6 +9905,12 @@ bool32 IsBattlerInTeraForm(u32 battler)
 
 u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method, enum Ability ability)
 {
+    u32 species = gBattleMons[battler].species;
+    const struct FormChange *formChanges = GetSpeciesFormChanges(species);
+
+    if (formChanges == NULL)
+        return species;
+
     struct FormChangeContext ctx =
     {
         .method = method,
