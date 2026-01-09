@@ -2072,14 +2072,17 @@ static void MoveBattleBarGraphically(u8 battler, u8 whichBar)
     switch (whichBar)
     {
     case HEALTH_BAR:
-    #if B_HPBAR_COLOR_THRESHOLD < GEN_5
+    if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
+    {
         maxValue = B_HEALTHBAR_PIXELS;
         currValue = CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
                             gBattleSpritesDataPtr->battleBars[battler].oldValue,
                             gBattleSpritesDataPtr->battleBars[battler].receivedValue,
                             &gBattleSpritesDataPtr->battleBars[battler].currValue,
                             array, B_HEALTHBAR_PIXELS / 8);
-    #else
+    }
+    else
+    {
         CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
                             gBattleSpritesDataPtr->battleBars[battler].oldValue,
                             gBattleSpritesDataPtr->battleBars[battler].receivedValue,
@@ -2088,7 +2091,7 @@ static void MoveBattleBarGraphically(u8 battler, u8 whichBar)
 
         maxValue  = gBattleSpritesDataPtr->battleBars[battler].maxValue;
         currValue = gBattleSpritesDataPtr->battleBars[battler].currValue;
-    #endif
+    }
 
         if (currValue > (maxValue * 50 / 100)) // more than 50 % hp
             barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
@@ -2301,13 +2304,16 @@ u8 GetHPBarLevel(s16 hp, s16 maxhp)
     }
     else
     {
-    #if B_HPBAR_COLOR_THRESHOLD < GEN_5
+    if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
+    {
         currValue = GetScaledHPFraction(hp, maxhp, B_HEALTHBAR_PIXELS);
         maxValue = B_HEALTHBAR_PIXELS;
-    #else
+    }
+    else
+    {
         currValue = hp;
         maxValue = maxhp;
-    #endif
+    }
         if (currValue > (maxValue * 50 / 100)) // more than 50 % hp
             return HP_BAR_GREEN;
         else if (currValue > (maxValue * 20 / 100)) // more than 20 % hp
