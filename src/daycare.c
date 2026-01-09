@@ -259,12 +259,7 @@ void StorePokemonInDaycare(struct Pokemon *mon, struct DaycareMon *daycareMon)
         TakeMailFromMon(mon);
     }
 
-    u32 newSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_DEPOSIT);
-    if (newSpecies != GetMonData(mon, MON_DATA_SPECIES))
-    {
-        SetMonData(mon, MON_DATA_SPECIES, &newSpecies);
-        CalculateMonStats(mon);
-    }
+    TryFormChange(mon, FORM_CHANGE_DEPOSIT);
 
     daycareMon->mon = mon->box;
     daycareMon->steps = 0;
