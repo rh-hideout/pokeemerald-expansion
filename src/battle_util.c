@@ -12279,8 +12279,8 @@ static const u16 sGen5ProtectSuccessRates[] =
 {
     USHRT_MAX,
     USHRT_MAX / 3,
-    USHRT_MAX / 6,
-    USHRT_MAX / 9
+    USHRT_MAX / 9,
+    USHRT_MAX / 27
 };
 
 bool32 CanUseMoveConsecutively(u32 battler)
