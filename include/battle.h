@@ -721,7 +721,7 @@ struct BattleStruct
     u8 echoedVoiceCounter:3;
     u8 magicCoatActive:1;
     u8 magicBounceActive:1;
-    u8 padding3:2;
+    u8 padding4:2;
     u8 moveBouncer;
 };
 
