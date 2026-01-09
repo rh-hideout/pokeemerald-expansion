@@ -1,4 +1,4 @@
-VermilionCity_Mart_MapScripts::
+VermilionCity_Mart_Frlg_MapScripts::
 	.byte 0
 
 VermilionCity_Mart_EventScript_CooltrainerF::

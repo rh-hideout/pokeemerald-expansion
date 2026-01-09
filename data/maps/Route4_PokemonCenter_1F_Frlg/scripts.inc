@@ -1,6 +1,6 @@
 .equ MAGIKARP_PRICE, 500
 
-Route4_PokemonCenter_1F_MapScripts::
+Route4_PokemonCenter_1F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route4_PokemonCenter_1F_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume
 	.byte 0
@@ -134,7 +134,7 @@ Route4_PokemonCenter_1F_EventScript_NoRoomForMagikarp::
 Route4_PokemonCenter_1F_EventScript_Nurse::
 	lock
 	faceplayer
-	call Common_EventScript_PkmnCenterNurse
+	call EventScript_PkmnCenterNurse_Frlg
 	release
 	end
 

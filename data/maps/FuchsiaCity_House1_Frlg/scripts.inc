@@ -1,4 +1,4 @@
-FuchsiaCity_House1_MapScripts::
+FuchsiaCity_House1_Frlg_MapScripts::
 	.byte 0
 
 FuchsiaCity_House1_EventScript_Woman::

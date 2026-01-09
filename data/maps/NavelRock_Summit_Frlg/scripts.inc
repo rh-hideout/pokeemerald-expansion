@@ -1,4 +1,4 @@
-NavelRock_Summit_MapScripts::
+NavelRock_Summit_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, NavelRock_Summit_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, NavelRock_Summit_OnResume
 	.byte 0

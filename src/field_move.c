@@ -10,17 +10,29 @@
 
 static bool32 IsFieldMoveUnlocked_Cut(void)
 {
+#if IS_FRLG
+    return FlagGet(FLAG_BADGE02_GET);
+#else
     return FlagGet(FLAG_BADGE01_GET);
+#endif
 }
 
 static bool32 IsFieldMoveUnlocked_Flash(void)
 {
+#if IS_FRLG
+    return FlagGet(FLAG_BADGE01_GET);
+#else
     return FlagGet(FLAG_BADGE02_GET);
+#endif
 }
 
 static bool32 IsFieldMoveUnlocked_RockSmash(void)
 {
+#if IS_FRLG
+    return FlagGet(FLAG_BADGE06_GET);
+#else
     return FlagGet(FLAG_BADGE03_GET);
+#endif
 }
 
 static bool32 IsFieldMoveUnlocked_Strength(void)
@@ -35,7 +47,11 @@ static bool32 IsFieldMoveUnlocked_Surf(void)
 
 static bool32 IsFieldMoveUnlocked_Fly(void)
 {
+#if IS_FRLG
+    return FlagGet(FLAG_BADGE03_GET);
+#else
     return FlagGet(FLAG_BADGE06_GET);
+#endif
 }
 
 static bool32 IsFieldMoveUnlocked_Dive(void)
@@ -45,7 +61,11 @@ static bool32 IsFieldMoveUnlocked_Dive(void)
 
 static bool32 IsFieldMoveUnlocked_Waterfall(void)
 {
+#if IS_FRLG
+    return FlagGet(FLAG_BADGE07_GET);
+#else
     return FlagGet(FLAG_BADGE08_GET);
+#endif
 }
 
 #if OW_ROCK_CLIMB_FIELD_MOVE == TRUE

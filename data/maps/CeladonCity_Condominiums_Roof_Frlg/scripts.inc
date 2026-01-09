@@ -1,4 +1,4 @@
-CeladonCity_Condominiums_Roof_MapScripts::
+CeladonCity_Condominiums_Roof_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_Condominiums_Roof_EventScript_Sign::

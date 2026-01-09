@@ -1,6 +1,6 @@
 .equ TRAINER_VISITING, VAR_TEMP_1
 
-SevenIsland_House_Room1_MapScripts::
+SevenIsland_House_Room1_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SevenIsland_House_Room1_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, SevenIsland_House_Room1_OnFrame
 	.byte 0

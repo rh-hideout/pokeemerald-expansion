@@ -1,4 +1,4 @@
-VermilionCity_House1_MapScripts::
+VermilionCity_House1_Frlg_MapScripts::
 	.byte 0
 
 VermilionCity_House1_EventScript_FishingGuru::

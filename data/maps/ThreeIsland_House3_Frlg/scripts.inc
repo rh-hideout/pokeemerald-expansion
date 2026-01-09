@@ -1,4 +1,4 @@
-ThreeIsland_House3_MapScripts::
+ThreeIsland_House3_Frlg_MapScripts::
 	.byte 0
 
 ThreeIsland_House3_EventScript_Beauty::

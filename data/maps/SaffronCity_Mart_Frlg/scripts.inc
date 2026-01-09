@@ -1,4 +1,4 @@
-SaffronCity_Mart_MapScripts::
+SaffronCity_Mart_Frlg_MapScripts::
 	.byte 0
 
 SaffronCity_Mart_EventScript_Lass::

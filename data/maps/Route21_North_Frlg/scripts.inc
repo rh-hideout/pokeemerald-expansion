@@ -1,4 +1,4 @@
-Route21_North_MapScripts::
+Route21_North_Frlg_MapScripts::
 	.byte 0
 
 Route21_North_Text_RonaldIntro::

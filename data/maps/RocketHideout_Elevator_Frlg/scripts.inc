@@ -1,4 +1,4 @@
-RocketHideout_Elevator_MapScripts::
+RocketHideout_Elevator_Frlg_MapScripts::
 	.byte 0
 
 RocketHideout_Elevator_EventScript_FloorSelect::

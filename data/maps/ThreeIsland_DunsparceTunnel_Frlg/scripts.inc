@@ -1,4 +1,4 @@
-ThreeIsland_DunsparceTunnel_MapScripts::
+ThreeIsland_DunsparceTunnel_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, ThreeIsland_DunsparceTunnel_OnTransition
 	.byte 0
 

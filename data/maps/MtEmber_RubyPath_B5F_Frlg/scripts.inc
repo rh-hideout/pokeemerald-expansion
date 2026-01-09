@@ -1,4 +1,4 @@
-MtEmber_RubyPath_B5F_MapScripts::
+MtEmber_RubyPath_B5F_Frlg_MapScripts::
 	.byte 0
 
 MtEmber_RubyPath_B5F_EventScript_BrailleMessage::

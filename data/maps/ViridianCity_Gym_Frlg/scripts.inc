@@ -1,4 +1,4 @@
-ViridianCity_Gym_MapScripts::
+ViridianCity_Gym_Frlg_MapScripts::
 	.byte 0
 
 ViridianCity_Gym_EventScript_Giovanni::

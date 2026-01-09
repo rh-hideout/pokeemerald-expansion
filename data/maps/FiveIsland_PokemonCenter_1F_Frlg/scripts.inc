@@ -1,4 +1,4 @@
-FiveIsland_PokemonCenter_1F_MapScripts::
+FiveIsland_PokemonCenter_1F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, FiveIsland_PokemonCenter_1F_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume
 	.byte 0
@@ -10,7 +10,7 @@ FiveIsland_PokemonCenter_1F_OnTransition::
 FiveIsland_PokemonCenter_1F_EventScript_Nurse::
 	lock
 	faceplayer
-	call Common_EventScript_PkmnCenterNurse
+	call EventScript_PkmnCenterNurse_Frlg
 	release
 	end
 

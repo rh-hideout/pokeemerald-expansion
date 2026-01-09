@@ -1,6 +1,6 @@
 .equ SHOWN_REQUESTED_MON, FLAG_TEMP_2
 
-FiveIsland_ResortGorgeous_House_MapScripts::
+FiveIsland_ResortGorgeous_House_Frlg_MapScripts::
 	.byte 0
 
 FiveIsland_ResortGorgeous_House_EventScript_Selphy::

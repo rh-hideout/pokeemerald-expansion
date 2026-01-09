@@ -3,7 +3,7 @@
 .equ HAS_TINY_MUSHROOMS, FLAG_TEMP_3
 .equ HAS_BOTH_MUSHROOMS, FLAG_TEMP_4
 
-TwoIsland_House_MapScripts::
+TwoIsland_House_Frlg_MapScripts::
 	.byte 0
 
 TwoIsland_House_EventScript_MoveManiac::

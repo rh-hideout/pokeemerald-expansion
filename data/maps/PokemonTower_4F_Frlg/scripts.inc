@@ -1,4 +1,4 @@
-PokemonTower_4F_MapScripts::
+PokemonTower_4F_Frlg_MapScripts::
 	.byte 0
 
 PokemonTower_4F_EventScript_Paula::

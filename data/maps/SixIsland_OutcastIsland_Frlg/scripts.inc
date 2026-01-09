@@ -1,4 +1,4 @@
-SixIsland_OutcastIsland_MapScripts::
+SixIsland_OutcastIsland_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_OutcastIsland_EventScript_Rocket::

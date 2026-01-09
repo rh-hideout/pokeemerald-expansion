@@ -1,4 +1,4 @@
-LavenderTown_VolunteerPokemonHouse_MapScripts::
+LavenderTown_VolunteerPokemonHouse_Frlg_MapScripts::
 	.byte 0
 
 LavenderTown_VolunteerPokemonHouse_EventScript_MrFuji::

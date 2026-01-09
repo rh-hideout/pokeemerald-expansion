@@ -1,4 +1,4 @@
-FuchsiaCity_Gym_MapScripts::
+FuchsiaCity_Gym_Frlg_MapScripts::
 	.byte 0
 
 FuchsiaCity_Gym_EventScript_Koga::

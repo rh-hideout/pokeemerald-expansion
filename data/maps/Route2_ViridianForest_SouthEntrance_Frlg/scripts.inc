@@ -1,4 +1,4 @@
-Route2_ViridianForest_SouthEntrance_MapScripts::
+Route2_ViridianForest_SouthEntrance_Frlg_MapScripts::
 	.byte 0
 
 Route2_ViridianForest_SouthEntrance_EventScript_Woman1::

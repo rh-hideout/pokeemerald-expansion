@@ -1,4 +1,4 @@
-CeruleanCity_MapScripts::
+CeruleanCity_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CeruleanCity_OnTransition
 	.byte 0
 

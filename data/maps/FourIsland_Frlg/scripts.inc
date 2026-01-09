@@ -1,4 +1,4 @@
-FourIsland_MapScripts::
+FourIsland_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, FourIsland_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, FourIsland_OnFrame
 	.byte 0

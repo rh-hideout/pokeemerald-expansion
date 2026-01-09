@@ -1,4 +1,4 @@
-ViridianCity_MapScripts::
+ViridianCity_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, ViridianCity_OnTransition
 	.byte 0
 

@@ -1,4 +1,4 @@
-CeladonCity_GameCorner_PrizeRoom_MapScripts::
+CeladonCity_GameCorner_PrizeRoom_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_GameCorner_PrizeRoom_EventScript_BaldingMan::

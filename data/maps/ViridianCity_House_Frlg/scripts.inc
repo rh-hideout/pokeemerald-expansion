@@ -1,4 +1,4 @@
-ViridianCity_House_MapScripts::
+ViridianCity_House_Frlg_MapScripts::
 	.byte 0
 
 ViridianCity_House_EventScript_BaldingMan::

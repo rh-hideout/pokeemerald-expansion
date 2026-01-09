@@ -1,4 +1,4 @@
-CeladonCity_DepartmentStore_3F_MapScripts::
+CeladonCity_DepartmentStore_3F_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_DepartmentStore_3F_EventScript_CounterTutor::

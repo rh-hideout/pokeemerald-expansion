@@ -1,4 +1,4 @@
-CeladonCity_Hotel_MapScripts::
+CeladonCity_Hotel_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_Hotel_EventScript_Receptionist::

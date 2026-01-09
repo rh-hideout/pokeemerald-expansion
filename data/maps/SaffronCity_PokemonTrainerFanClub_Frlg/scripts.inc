@@ -1,4 +1,4 @@
-SaffronCity_PokemonTrainerFanClub_MapScripts::
+SaffronCity_PokemonTrainerFanClub_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, SaffronCity_PokemonTrainerFanClub_OnFrame
 	map_script MAP_SCRIPT_ON_TRANSITION, SaffronCity_PokemonTrainerFanClub_OnTransition
 	.byte 0

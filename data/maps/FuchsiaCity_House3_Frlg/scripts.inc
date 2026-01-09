@@ -1,4 +1,4 @@
-FuchsiaCity_House3_MapScripts::
+FuchsiaCity_House3_Frlg_MapScripts::
 	.byte 0
 
 FuchsiaCity_House3_EventScript_MoveDeleter::
