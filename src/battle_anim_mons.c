@@ -827,7 +827,7 @@ bool8 IsBattlerSpritePresent(u8 battler)
         if (GetBattlerPosition(battler) == 0xff)
             return FALSE;
 
-        if (!gBattleStruct->battlerState[battler].fainted)
+        if (gBattleStruct->battlerState[battler].fainted)
             return FALSE;
         return TRUE;
     }
