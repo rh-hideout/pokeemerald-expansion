@@ -4878,9 +4878,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
 
         abilityForm = gLastUsedAbility;
         // Handle ability form changes upon switch-in.
-        if (!effect
-            && (gLastUsedAbility != ABILITY_SCHOOLING || gBattleMons[battler].level >= 20)
-            && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT))
+        if (!effect && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT))
         {
             // To prevent the new form's ability from pop up
             gBattleScripting.abilityPopupOverwrite = abilityForm;
@@ -5101,9 +5099,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
 
             abilityForm = gLastUsedAbility;
             // Handle ability form changes at the end of the turn here.
-            if (!effect
-                && (gLastUsedAbility != ABILITY_SCHOOLING || gBattleMons[battler].level >= 20)
-                && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
+            if (!effect && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
             {
                 gBattleScripting.battler = battler;
                 // To prevent the new form's ability from pop up
@@ -9925,6 +9921,7 @@ u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method, enum 
         .hp = gBattleMons[battler].hp,
         .maxHP = gBattleMons[battler].maxHP,
         .teraType = GetBattlerTeraType(battler),
+        .level = gBattleMons[battler].level,
     };
 
     for (u32 i = 0; i < MAX_MON_MOVES; i++)

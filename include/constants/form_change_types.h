@@ -71,6 +71,7 @@ enum FormChanges
     // - HP_HIGHER_THAN if the form triggers when the current HP is higher than the specified threshold.
     // - HP_LOWER_EQ_THAN if the form triggers when the current HP is lower or equal than the specified threshold.
     // param3: HP percentage threshold.
+    // param4: (optional) Minimum level to do form change
     FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END,
     // Form change that activates when the Pokémon's HP % passes a certain threshold when sent out into battle.
     // param1: Ability to check.
@@ -78,6 +79,7 @@ enum FormChanges
     // - HP_HIGHER_THAN if the form triggers when the current HP is higher than the specified threshold.
     // - HP_LOWER_EQ_THAN if the form triggers when the current HP is lower or equal than the specified threshold.
     // param3: HP percentage threshold.
+    // param4: (optional) Minimum level to do form change
     FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT,
     // Form change that activates when the Pokémon's HP % passes a certain threshold when using a move.
     // param1: Ability to check.

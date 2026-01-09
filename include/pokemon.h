@@ -642,7 +642,8 @@ struct FormChangeContext
     u16 maxHP;
     u32 gmaxFactor:1;
     enum Type teraType;
-    u32 padding:15;
+    u32 level:7;
+    u32 padding:8;
 };
 
 enum FusionExtraMoveHandling
