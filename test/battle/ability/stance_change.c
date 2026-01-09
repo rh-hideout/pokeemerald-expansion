@@ -1,7 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 
-
 SINGLE_BATTLE_TEST("Stance Change changes Aegislash from Shield to Blade when using a damaging move")
 {
     u16 move;

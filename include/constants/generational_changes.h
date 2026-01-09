@@ -147,7 +147,7 @@
     F(INTREPID_SWORD,            intrepidSword,           (u32, GEN_COUNT - 1)) \
     F(DAUNTLESS_SHIELD,          dauntlessShield,         (u32, GEN_COUNT - 1)) \
     F(DISGUISE_HP_LOSS,          disguiseHpLoss,          (u32, GEN_COUNT - 1)) \
-    F(ABILITY_TRIGGER_CHANCE,    abilityTriggerChance,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(ABILITY_TRIGGER_CHANCE,    abilityTriggerChance,    (u32, GEN_COUNT - 1)) \
     F(PICKUP_WILD,               pickupWild,              (u32, GEN_COUNT - 1)) \
     F(MAGIC_GUARD,               magicGuard,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(BATTLE_BOND,               battleBond,              (u32, GEN_COUNT - 1)) \

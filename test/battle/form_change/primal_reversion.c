@@ -332,3 +332,18 @@ DOUBLE_BATTLE_TEST("Primal reversion and other switch-in effects trigger for all
         EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
     }
 }
+
+SINGLE_BATTLE_TEST("Primal reversion is reverted upon battle end")
+{
+    u32 species, item;
+    PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }
+    PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; }
+    GIVEN {
+        PLAYER(species) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), species);
+    }
+}
