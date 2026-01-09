@@ -4079,6 +4079,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     },
 #endif //P_GEN_9_MEGA_EVOLUTIONS
 
+
 #if P_GEN_9_MEGA_EVOLUTIONS
     [SPECIES_RAICHU_MEGA_Y] =
     {

@@ -7244,6 +7244,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .formSpeciesIdTable = sMagearnaFormSpeciesIdTable,
         .formChangeTable = sMagearnaFormChangeTable,
     },
+    
     [SPECIES_MAGEARNA_ORIGINAL_MEGA] =
     {
         .baseHP        = 80,
