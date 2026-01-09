@@ -362,7 +362,6 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
 {
     struct Pokemon mon;
     u32 i;
-    u16 targetSpecies;
     bool32 isShiny;
 
     u32 personality = GetMonPersonality(species, gender, nature, RANDOM_UNOWN_LETTER);
