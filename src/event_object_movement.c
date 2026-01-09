@@ -260,220 +260,587 @@ static void (*const sCameraObjectFuncs[])(struct Sprite *) = {
 
 #include "data/object_events/object_event_graphics.h"
 
-// movement type callbacks
-static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
+struct MovementType {
+    SpriteCallback callback;
+    bool8 hasRange;
+    u8 initialDirection;
+};
+
+static const struct MovementType sMovementTypes[NUM_MOVEMENT_TYPES] =
 {
-    [MOVEMENT_TYPE_NONE] = MovementType_None,
-    [MOVEMENT_TYPE_LOOK_AROUND] = MovementType_LookAround,
-    [MOVEMENT_TYPE_WANDER_AROUND] = MovementType_WanderAround,
-    [MOVEMENT_TYPE_WANDER_UP_AND_DOWN] = MovementType_WanderUpAndDown,
-    [MOVEMENT_TYPE_WANDER_DOWN_AND_UP] = MovementType_WanderUpAndDown,
-    [MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT] = MovementType_WanderLeftAndRight,
-    [MOVEMENT_TYPE_WANDER_RIGHT_AND_LEFT] = MovementType_WanderLeftAndRight,
-    [MOVEMENT_TYPE_FACE_UP] = MovementType_FaceDirection,
-    [MOVEMENT_TYPE_FACE_DOWN] = MovementType_FaceDirection,
-    [MOVEMENT_TYPE_FACE_LEFT] = MovementType_FaceDirection,
-    [MOVEMENT_TYPE_FACE_RIGHT] = MovementType_FaceDirection,
-    [MOVEMENT_TYPE_PLAYER] = MovementType_Player,
-    [MOVEMENT_TYPE_BERRY_TREE_GROWTH] = MovementType_BerryTreeGrowth,
-    [MOVEMENT_TYPE_FACE_DOWN_AND_UP] = MovementType_FaceDownAndUp,
-    [MOVEMENT_TYPE_FACE_LEFT_AND_RIGHT] = MovementType_FaceLeftAndRight,
-    [MOVEMENT_TYPE_FACE_UP_AND_LEFT] = MovementType_FaceUpAndLeft,
-    [MOVEMENT_TYPE_FACE_UP_AND_RIGHT] = MovementType_FaceUpAndRight,
-    [MOVEMENT_TYPE_FACE_DOWN_AND_LEFT] = MovementType_FaceDownAndLeft,
-    [MOVEMENT_TYPE_FACE_DOWN_AND_RIGHT] = MovementType_FaceDownAndRight,
-    [MOVEMENT_TYPE_FACE_DOWN_UP_AND_LEFT] = MovementType_FaceDownUpAndLeft,
-    [MOVEMENT_TYPE_FACE_DOWN_UP_AND_RIGHT] = MovementType_FaceDownUpAndRight,
-    [MOVEMENT_TYPE_FACE_UP_LEFT_AND_RIGHT] = MovementType_FaceUpRightAndLeft,
-    [MOVEMENT_TYPE_FACE_DOWN_LEFT_AND_RIGHT] = MovementType_FaceDownRightAndLeft,
-    [MOVEMENT_TYPE_ROTATE_COUNTERCLOCKWISE] = MovementType_RotateCounterclockwise,
-    [MOVEMENT_TYPE_ROTATE_CLOCKWISE] = MovementType_RotateClockwise,
-    [MOVEMENT_TYPE_WALK_UP_AND_DOWN] = MovementType_WalkBackAndForth,
-    [MOVEMENT_TYPE_WALK_DOWN_AND_UP] = MovementType_WalkBackAndForth,
-    [MOVEMENT_TYPE_WALK_LEFT_AND_RIGHT] = MovementType_WalkBackAndForth,
-    [MOVEMENT_TYPE_WALK_RIGHT_AND_LEFT] = MovementType_WalkBackAndForth,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_RIGHT_LEFT_DOWN] = MovementType_WalkSequenceUpRightLeftDown,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_LEFT_DOWN_UP] = MovementType_WalkSequenceRightLeftDownUp,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_UP_RIGHT_LEFT] = MovementType_WalkSequenceDownUpRightLeft,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_DOWN_UP_RIGHT] = MovementType_WalkSequenceLeftDownUpRight,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_LEFT_RIGHT_DOWN] = MovementType_WalkSequenceUpLeftRightDown,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_RIGHT_DOWN_UP] = MovementType_WalkSequenceLeftRightDownUp,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_UP_LEFT_RIGHT] = MovementType_WalkSequenceDownUpLeftRight,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_DOWN_UP_LEFT] = MovementType_WalkSequenceRightDownUpLeft,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_UP_DOWN_RIGHT] = MovementType_WalkSequenceLeftUpDownRight,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_DOWN_RIGHT_LEFT] = MovementType_WalkSequenceUpDownRightLeft,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_LEFT_UP_DOWN] = MovementType_WalkSequenceRightLeftUpDown,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_LEFT_UP] = MovementType_WalkSequenceDownRightLeftUp,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_UP_DOWN_LEFT] = MovementType_WalkSequenceRightUpDownLeft,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_DOWN_LEFT_RIGHT] = MovementType_WalkSequenceUpDownLeftRight,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_RIGHT_UP_DOWN] = MovementType_WalkSequenceLeftRightUpDown,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_RIGHT_UP] = MovementType_WalkSequenceDownLeftRightUp,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_LEFT_DOWN_RIGHT] = MovementType_WalkSequenceUpLeftDownRight,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_UP_LEFT] = MovementType_WalkSequenceDownRightUpLeft,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_DOWN_RIGHT_UP] = MovementType_WalkSequenceLeftDownRightUp,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_UP_LEFT_DOWN] = MovementType_WalkSequenceRightUpLeftDown,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_RIGHT_DOWN_LEFT] = MovementType_WalkSequenceUpRightDownLeft,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_UP_RIGHT] = MovementType_WalkSequenceDownLeftUpRight,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_UP_RIGHT_DOWN] = MovementType_WalkSequenceLeftUpRightDown,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_DOWN_LEFT_UP] = MovementType_WalkSequenceRightDownLeftUp,
-    [MOVEMENT_TYPE_COPY_PLAYER] = MovementType_CopyPlayer,
-    [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE] = MovementType_CopyPlayer,
-    [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE] = MovementType_CopyPlayer,
-    [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE] = MovementType_CopyPlayer,
-    [MOVEMENT_TYPE_TREE_DISGUISE] = MovementType_TreeDisguise,
-    [MOVEMENT_TYPE_MOUNTAIN_DISGUISE] = MovementType_MountainDisguise,
-    [MOVEMENT_TYPE_COPY_PLAYER_IN_GRASS] = MovementType_CopyPlayerInGrass,
-    [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE_IN_GRASS] = MovementType_CopyPlayerInGrass,
-    [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE_IN_GRASS] = MovementType_CopyPlayerInGrass,
-    [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE_IN_GRASS] = MovementType_CopyPlayerInGrass,
-    [MOVEMENT_TYPE_BURIED] = MovementType_Buried,
-    [MOVEMENT_TYPE_WALK_IN_PLACE_DOWN] = MovementType_WalkInPlace,
-    [MOVEMENT_TYPE_WALK_IN_PLACE_UP] = MovementType_WalkInPlace,
-    [MOVEMENT_TYPE_WALK_IN_PLACE_LEFT] = MovementType_WalkInPlace,
-    [MOVEMENT_TYPE_WALK_IN_PLACE_RIGHT] = MovementType_WalkInPlace,
-    [MOVEMENT_TYPE_JOG_IN_PLACE_DOWN] = MovementType_JogInPlace,
-    [MOVEMENT_TYPE_JOG_IN_PLACE_UP] = MovementType_JogInPlace,
-    [MOVEMENT_TYPE_JOG_IN_PLACE_LEFT] = MovementType_JogInPlace,
-    [MOVEMENT_TYPE_JOG_IN_PLACE_RIGHT] = MovementType_JogInPlace,
-    [MOVEMENT_TYPE_RUN_IN_PLACE_DOWN] = MovementType_RunInPlace,
-    [MOVEMENT_TYPE_RUN_IN_PLACE_UP] = MovementType_RunInPlace,
-    [MOVEMENT_TYPE_RUN_IN_PLACE_LEFT] = MovementType_RunInPlace,
-    [MOVEMENT_TYPE_RUN_IN_PLACE_RIGHT] = MovementType_RunInPlace,
-    [MOVEMENT_TYPE_INVISIBLE] = MovementType_Invisible,
-    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_DOWN] = MovementType_WalkSlowlyInPlace,
-    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_UP] = MovementType_WalkSlowlyInPlace,
-    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = MovementType_WalkSlowlyInPlace,
-    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = MovementType_WalkSlowlyInPlace,
-    [MOVEMENT_TYPE_FOLLOW_PLAYER] = MovementType_FollowPlayer,
-};
+    [MOVEMENT_TYPE_NONE] =
+    {
+        .callback = MovementType_None,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
 
-static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
-    [MOVEMENT_TYPE_WANDER_AROUND] = TRUE,
-    [MOVEMENT_TYPE_WANDER_UP_AND_DOWN] = TRUE,
-    [MOVEMENT_TYPE_WANDER_DOWN_AND_UP] = TRUE,
-    [MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT] = TRUE,
-    [MOVEMENT_TYPE_WANDER_RIGHT_AND_LEFT] = TRUE,
-    [MOVEMENT_TYPE_WALK_UP_AND_DOWN] = TRUE,
-    [MOVEMENT_TYPE_WALK_DOWN_AND_UP] = TRUE,
-    [MOVEMENT_TYPE_WALK_LEFT_AND_RIGHT] = TRUE,
-    [MOVEMENT_TYPE_WALK_RIGHT_AND_LEFT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_RIGHT_LEFT_DOWN] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_LEFT_DOWN_UP] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_UP_RIGHT_LEFT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_DOWN_UP_RIGHT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_LEFT_RIGHT_DOWN] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_RIGHT_DOWN_UP] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_UP_LEFT_RIGHT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_DOWN_UP_LEFT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_UP_DOWN_RIGHT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_DOWN_RIGHT_LEFT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_LEFT_UP_DOWN] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_LEFT_UP] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_UP_DOWN_LEFT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_DOWN_LEFT_RIGHT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_RIGHT_UP_DOWN] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_RIGHT_UP] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_LEFT_DOWN_RIGHT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_UP_LEFT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_DOWN_RIGHT_UP] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_UP_LEFT_DOWN] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_RIGHT_DOWN_LEFT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_UP_RIGHT] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_UP_RIGHT_DOWN] = TRUE,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_DOWN_LEFT_UP] = TRUE,
-    [MOVEMENT_TYPE_COPY_PLAYER] = TRUE,
-    [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE] = TRUE,
-    [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE] = TRUE,
-    [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE] = TRUE,
-    [MOVEMENT_TYPE_COPY_PLAYER_IN_GRASS] = TRUE,
-    [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE_IN_GRASS] = TRUE,
-    [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE_IN_GRASS] = TRUE,
-    [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE_IN_GRASS] = TRUE,
-};
+    [MOVEMENT_TYPE_LOOK_AROUND] =
+    {
+        .callback = MovementType_LookAround,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
 
-const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
-    [MOVEMENT_TYPE_NONE] = DIR_SOUTH,
-    [MOVEMENT_TYPE_LOOK_AROUND] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WANDER_AROUND] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WANDER_UP_AND_DOWN] = DIR_NORTH,
-    [MOVEMENT_TYPE_WANDER_DOWN_AND_UP] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT] = DIR_WEST,
-    [MOVEMENT_TYPE_WANDER_RIGHT_AND_LEFT] = DIR_EAST,
-    [MOVEMENT_TYPE_FACE_UP] = DIR_NORTH,
-    [MOVEMENT_TYPE_FACE_DOWN] = DIR_SOUTH,
-    [MOVEMENT_TYPE_FACE_LEFT] = DIR_WEST,
-    [MOVEMENT_TYPE_FACE_RIGHT] = DIR_EAST,
-    [MOVEMENT_TYPE_PLAYER] = DIR_SOUTH,
-    [MOVEMENT_TYPE_BERRY_TREE_GROWTH] = DIR_SOUTH,
-    [MOVEMENT_TYPE_FACE_DOWN_AND_UP] = DIR_SOUTH,
-    [MOVEMENT_TYPE_FACE_LEFT_AND_RIGHT] = DIR_WEST,
-    [MOVEMENT_TYPE_FACE_UP_AND_LEFT] = DIR_NORTH,
-    [MOVEMENT_TYPE_FACE_UP_AND_RIGHT] = DIR_NORTH,
-    [MOVEMENT_TYPE_FACE_DOWN_AND_LEFT] = DIR_SOUTH,
-    [MOVEMENT_TYPE_FACE_DOWN_AND_RIGHT] = DIR_SOUTH,
-    [MOVEMENT_TYPE_FACE_DOWN_UP_AND_LEFT] = DIR_SOUTH,
-    [MOVEMENT_TYPE_FACE_DOWN_UP_AND_RIGHT] = DIR_SOUTH,
-    [MOVEMENT_TYPE_FACE_UP_LEFT_AND_RIGHT] = DIR_NORTH,
-    [MOVEMENT_TYPE_FACE_DOWN_LEFT_AND_RIGHT] = DIR_SOUTH,
-    [MOVEMENT_TYPE_ROTATE_COUNTERCLOCKWISE] = DIR_SOUTH,
-    [MOVEMENT_TYPE_ROTATE_CLOCKWISE] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_UP_AND_DOWN] = DIR_NORTH,
-    [MOVEMENT_TYPE_WALK_DOWN_AND_UP] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_LEFT_AND_RIGHT] = DIR_WEST,
-    [MOVEMENT_TYPE_WALK_RIGHT_AND_LEFT] = DIR_EAST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_RIGHT_LEFT_DOWN] = DIR_NORTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_LEFT_DOWN_UP] = DIR_EAST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_UP_RIGHT_LEFT] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_DOWN_UP_RIGHT] = DIR_WEST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_LEFT_RIGHT_DOWN] = DIR_NORTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_RIGHT_DOWN_UP] = DIR_WEST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_UP_LEFT_RIGHT] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_DOWN_UP_LEFT] = DIR_EAST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_UP_DOWN_RIGHT] = DIR_WEST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_DOWN_RIGHT_LEFT] = DIR_NORTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_LEFT_UP_DOWN] = DIR_EAST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_LEFT_UP] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_UP_DOWN_LEFT] = DIR_EAST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_DOWN_LEFT_RIGHT] = DIR_NORTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_RIGHT_UP_DOWN] = DIR_WEST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_RIGHT_UP] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_LEFT_DOWN_RIGHT] = DIR_NORTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_UP_LEFT] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_DOWN_RIGHT_UP] = DIR_WEST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_UP_LEFT_DOWN] = DIR_EAST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_RIGHT_DOWN_LEFT] = DIR_NORTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_UP_RIGHT] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_UP_RIGHT_DOWN] = DIR_WEST,
-    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_DOWN_LEFT_UP] = DIR_EAST,
-    [MOVEMENT_TYPE_COPY_PLAYER] = DIR_NORTH,
-    [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE] = DIR_SOUTH,
-    [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE] = DIR_WEST,
-    [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE] = DIR_EAST,
-    [MOVEMENT_TYPE_TREE_DISGUISE] = DIR_SOUTH,
-    [MOVEMENT_TYPE_MOUNTAIN_DISGUISE] = DIR_SOUTH,
-    [MOVEMENT_TYPE_COPY_PLAYER_IN_GRASS] = DIR_NORTH,
-    [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE_IN_GRASS] = DIR_SOUTH,
-    [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE_IN_GRASS] = DIR_WEST,
-    [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE_IN_GRASS] = DIR_EAST,
-    [MOVEMENT_TYPE_BURIED] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_IN_PLACE_DOWN] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_IN_PLACE_UP] = DIR_NORTH,
-    [MOVEMENT_TYPE_WALK_IN_PLACE_LEFT] = DIR_WEST,
-    [MOVEMENT_TYPE_WALK_IN_PLACE_RIGHT] = DIR_EAST,
-    [MOVEMENT_TYPE_JOG_IN_PLACE_DOWN] = DIR_SOUTH,
-    [MOVEMENT_TYPE_JOG_IN_PLACE_UP] = DIR_NORTH,
-    [MOVEMENT_TYPE_JOG_IN_PLACE_LEFT] = DIR_WEST,
-    [MOVEMENT_TYPE_JOG_IN_PLACE_RIGHT] = DIR_EAST,
-    [MOVEMENT_TYPE_RUN_IN_PLACE_DOWN] = DIR_SOUTH,
-    [MOVEMENT_TYPE_RUN_IN_PLACE_UP] = DIR_NORTH,
-    [MOVEMENT_TYPE_RUN_IN_PLACE_LEFT] = DIR_WEST,
-    [MOVEMENT_TYPE_RUN_IN_PLACE_RIGHT] = DIR_EAST,
-    [MOVEMENT_TYPE_INVISIBLE] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_DOWN] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_UP] = DIR_NORTH,
-    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = DIR_WEST,
-    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = DIR_EAST,
-    [MOVEMENT_TYPE_FOLLOW_PLAYER] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_AROUND] =
+    {
+        .callback = MovementType_WanderAround,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WANDER_UP_AND_DOWN] =
+    {
+        .callback = MovementType_WanderUpAndDown,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WANDER_DOWN_AND_UP] =
+    {
+        .callback = MovementType_WanderUpAndDown,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT] =
+    {
+        .callback = MovementType_WanderLeftAndRight,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WANDER_RIGHT_AND_LEFT] =
+    {
+        .callback = MovementType_WanderLeftAndRight,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_FACE_UP] =
+    {
+        .callback = MovementType_FaceDirection,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_DOWN] =
+    {
+        .callback = MovementType_FaceDirection,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_LEFT] =
+    {
+        .callback = MovementType_FaceDirection,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_FACE_RIGHT] =
+    {
+        .callback = MovementType_FaceDirection,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_PLAYER] =
+    {
+        .callback = MovementType_Player,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_BERRY_TREE_GROWTH] =
+    {
+        .callback = MovementType_BerryTreeGrowth,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_DOWN_AND_UP] =
+    {
+        .callback = MovementType_FaceDownAndUp,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_LEFT_AND_RIGHT] =
+    {
+        .callback = MovementType_FaceLeftAndRight,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_FACE_UP_AND_LEFT] =
+    {
+        .callback = MovementType_FaceUpAndLeft,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_UP_AND_RIGHT] =
+    {
+        .callback = MovementType_FaceUpAndRight,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_DOWN_AND_LEFT] =
+    {
+        .callback = MovementType_FaceDownAndLeft,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_DOWN_AND_RIGHT] =
+    {
+        .callback = MovementType_FaceDownAndRight,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_DOWN_UP_AND_LEFT] =
+    {
+        .callback = MovementType_FaceDownUpAndLeft,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_DOWN_UP_AND_RIGHT] =
+    {
+        .callback = MovementType_FaceDownUpAndRight,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_UP_LEFT_AND_RIGHT] =
+    {
+        .callback = MovementType_FaceUpRightAndLeft,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_FACE_DOWN_LEFT_AND_RIGHT] =
+    {
+        .callback = MovementType_FaceDownRightAndLeft,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_ROTATE_COUNTERCLOCKWISE] =
+    {
+        .callback = MovementType_RotateCounterclockwise,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_ROTATE_CLOCKWISE] =
+    {
+        .callback = MovementType_RotateClockwise,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_UP_AND_DOWN] =
+    {
+        .callback = MovementType_WalkBackAndForth,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_DOWN_AND_UP] =
+    {
+        .callback = MovementType_WalkBackAndForth,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_LEFT_AND_RIGHT] =
+    {
+        .callback = MovementType_WalkBackAndForth,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WALK_RIGHT_AND_LEFT] =
+    {
+        .callback = MovementType_WalkBackAndForth,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_RIGHT_LEFT_DOWN] =
+    {
+        .callback = MovementType_WalkSequenceUpRightLeftDown,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_LEFT_DOWN_UP] =
+    {
+        .callback = MovementType_WalkSequenceRightLeftDownUp,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_UP_RIGHT_LEFT] =
+    {
+        .callback = MovementType_WalkSequenceDownUpRightLeft,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_DOWN_UP_RIGHT] =
+    {
+        .callback = MovementType_WalkSequenceLeftDownUpRight,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_LEFT_RIGHT_DOWN] =
+    {
+        .callback = MovementType_WalkSequenceUpLeftRightDown,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_RIGHT_DOWN_UP] =
+    {
+        .callback = MovementType_WalkSequenceLeftRightDownUp,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_UP_LEFT_RIGHT] =
+    {
+        .callback = MovementType_WalkSequenceDownUpLeftRight,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_DOWN_UP_LEFT] =
+    {
+        .callback = MovementType_WalkSequenceRightDownUpLeft,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_UP_DOWN_RIGHT] =
+    {
+        .callback = MovementType_WalkSequenceLeftUpDownRight,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_DOWN_RIGHT_LEFT] =
+    {
+        .callback = MovementType_WalkSequenceUpDownRightLeft,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_LEFT_UP_DOWN] =
+    {
+        .callback = MovementType_WalkSequenceRightLeftUpDown,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_LEFT_UP] =
+    {
+        .callback = MovementType_WalkSequenceDownRightLeftUp,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_UP_DOWN_LEFT] =
+    {
+        .callback = MovementType_WalkSequenceRightUpDownLeft,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_DOWN_LEFT_RIGHT] =
+    {
+        .callback = MovementType_WalkSequenceUpDownLeftRight,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_RIGHT_UP_DOWN] =
+    {
+        .callback = MovementType_WalkSequenceLeftRightUpDown,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_RIGHT_UP] =
+    {
+        .callback = MovementType_WalkSequenceDownLeftRightUp,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_LEFT_DOWN_RIGHT] =
+    {
+        .callback = MovementType_WalkSequenceUpLeftDownRight,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_UP_LEFT] =
+    {
+        .callback = MovementType_WalkSequenceDownRightUpLeft,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_DOWN_RIGHT_UP] =
+    {
+        .callback = MovementType_WalkSequenceLeftDownRightUp,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_UP_LEFT_DOWN] =
+    {
+        .callback = MovementType_WalkSequenceRightUpLeftDown,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_UP_RIGHT_DOWN_LEFT] =
+    {
+        .callback = MovementType_WalkSequenceUpRightDownLeft,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_UP_RIGHT] =
+    {
+        .callback = MovementType_WalkSequenceDownLeftUpRight,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_UP_RIGHT_DOWN] =
+    {
+        .callback = MovementType_WalkSequenceLeftUpRightDown,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_DOWN_LEFT_UP] =
+    {
+        .callback = MovementType_WalkSequenceRightDownLeftUp,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_COPY_PLAYER] =
+    {
+        .callback = MovementType_CopyPlayer,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE] =
+    {
+        .callback = MovementType_CopyPlayer,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE] =
+    {
+        .callback = MovementType_CopyPlayer,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE] =
+    {
+        .callback = MovementType_CopyPlayer,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_TREE_DISGUISE] =
+    {
+        .callback = MovementType_TreeDisguise,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_MOUNTAIN_DISGUISE] =
+    {
+        .callback = MovementType_MountainDisguise,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_COPY_PLAYER_IN_GRASS] =
+    {
+        .callback = MovementType_CopyPlayerInGrass,
+        .hasRange = TRUE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE_IN_GRASS] =
+    {
+        .callback = MovementType_CopyPlayerInGrass,
+        .hasRange = TRUE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE_IN_GRASS] =
+    {
+        .callback = MovementType_CopyPlayerInGrass,
+        .hasRange = TRUE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE_IN_GRASS] =
+    {
+        .callback = MovementType_CopyPlayerInGrass,
+        .hasRange = TRUE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_BURIED] =
+    {
+        .callback = MovementType_Buried,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_IN_PLACE_DOWN] =
+    {
+        .callback = MovementType_WalkInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_IN_PLACE_UP] =
+    {
+        .callback = MovementType_WalkInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_IN_PLACE_LEFT] =
+    {
+        .callback = MovementType_WalkInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WALK_IN_PLACE_RIGHT] =
+    {
+        .callback = MovementType_WalkInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_JOG_IN_PLACE_DOWN] =
+    {
+        .callback = MovementType_JogInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_JOG_IN_PLACE_UP] =
+    {
+        .callback = MovementType_JogInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_JOG_IN_PLACE_LEFT] =
+    {
+        .callback = MovementType_JogInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_JOG_IN_PLACE_RIGHT] =
+    {
+        .callback = MovementType_JogInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_RUN_IN_PLACE_DOWN] =
+    {
+        .callback = MovementType_RunInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_RUN_IN_PLACE_UP] =
+    {
+        .callback = MovementType_RunInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_RUN_IN_PLACE_LEFT] =
+    {
+        .callback = MovementType_RunInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_RUN_IN_PLACE_RIGHT] =
+    {
+        .callback = MovementType_RunInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_INVISIBLE] =
+    {
+        .callback = MovementType_Invisible,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_DOWN] =
+    {
+        .callback = MovementType_WalkSlowlyInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_UP] =
+    {
+        .callback = MovementType_WalkSlowlyInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_NORTH,
+    },
+
+    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] =
+    {
+        .callback = MovementType_WalkSlowlyInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_WEST,
+    },
+
+    [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] =
+    {
+        .callback = MovementType_WalkSlowlyInPlace,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_EAST,
+    },
+
+    [MOVEMENT_TYPE_FOLLOW_PLAYER] =
+    {
+        .callback = MovementType_FollowPlayer,
+        .hasRange  = FALSE,
+        .initialDirection = DIR_SOUTH,
+    },
 };
 
 #include "data/object_events/object_event_graphics_info_pointers.h"
@@ -1461,9 +1828,9 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->trainerType = template->trainerType;
     objectEvent->mapNum = mapNum;
     objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
-    objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
+    objectEvent->previousMovementDirection = sMovementTypes[template->movementType].initialDirection;
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
-    if (sMovementTypeHasRange[objectEvent->movementType])
+    if (sMovementTypes[objectEvent->movementType].hasRange)
     {
         if (objectEvent->range.rangeX == 0)
             objectEvent->range.rangeX++;
@@ -1826,7 +2193,7 @@ static void CopyObjectGraphicsInfoToSpriteTemplate(u16 graphicsId, void (*callba
 
 static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphicsId, u16 movementType, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables)
 {
-    CopyObjectGraphicsInfoToSpriteTemplate(graphicsId, sMovementTypeCallbacks[movementType], spriteTemplate, subspriteTables);
+    CopyObjectGraphicsInfoToSpriteTemplate(graphicsId, sMovementTypes[movementType].callback, spriteTemplate, subspriteTables);
 }
 
 static void UNUSED MakeSpriteTemplateFromObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemplate, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables)
@@ -4923,7 +5290,7 @@ bool8 MovementType_WalkBackAndForth_Step1(struct ObjectEvent *objectEvent, struc
 {
     u8 direction;
 
-    direction = gInitialMovementTypeFacingDirections[objectEvent->movementType];
+    direction = sMovementTypes[objectEvent->movementType].initialDirection;
     if (objectEvent->directionSequenceIndex)
         direction = GetOppositeDirection(direction);
     SetObjectEventDirection(objectEvent, direction);
@@ -5339,7 +5706,7 @@ bool8 CopyablePlayerMovement_None(struct ObjectEvent *objectEvent, struct Sprite
 
 bool8 CopyablePlayerMovement_FaceDirection(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 playerDirection, bool8 tileCallback(u8))
 {
-    ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, playerDirection)));
+    ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, playerDirection)));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 2;
     return TRUE;
@@ -5358,7 +5725,7 @@ bool8 CopyablePlayerMovement_WalkNormal(struct ObjectEvent *objectEvent, struct 
         if (direction == DIR_NONE)
         {
             direction = playerDirection;
-            direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+            direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
             ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
             ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(direction));
             objectEvent->singleMovementActive = TRUE;
@@ -5368,7 +5735,7 @@ bool8 CopyablePlayerMovement_WalkNormal(struct ObjectEvent *objectEvent, struct 
     }
     else
     {
-        direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+        direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     }
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkNormalMovementAction(direction));
@@ -5388,7 +5755,7 @@ bool8 CopyablePlayerMovement_WalkFast(struct ObjectEvent *objectEvent, struct Sp
     s16 y;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkFastMovementAction(direction));
 
@@ -5407,7 +5774,7 @@ bool8 CopyablePlayerMovement_WalkFaster(struct ObjectEvent *objectEvent, struct 
     s16 y;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkFasterMovementAction(direction));
 
@@ -5426,7 +5793,7 @@ bool8 CopyablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Sprit
     s16 y;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetSlideMovementAction(direction));
 
@@ -5443,7 +5810,7 @@ bool8 CopyablePlayerMovement_JumpInPlace(struct ObjectEvent *objectEvent, struct
     u32 direction;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetJumpInPlaceMovementAction(direction));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 2;
@@ -5457,7 +5824,7 @@ bool8 CopyablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite
     s16 y;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetJumpMovementAction(direction));
 
@@ -5476,7 +5843,7 @@ bool8 CopyablePlayerMovement_Jump2(struct ObjectEvent *objectEvent, struct Sprit
     s16 y;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     x = objectEvent->currentCoords.x;
     y = objectEvent->currentCoords.y;
     MoveCoordsInDirection(direction, &x, &y, 2, 2);
@@ -5781,7 +6148,7 @@ bool8 FollowablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct 
     s16 y;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkFastMovementAction(direction));
     if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
@@ -5798,7 +6165,7 @@ bool8 FollowablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct 
     s16 y;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkFasterMovementAction(direction));
     if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
@@ -5815,7 +6182,7 @@ bool8 FollowablePlayerMovement_Slide(struct ObjectEvent *objectEvent, struct Spr
     s16 y;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetSlideMovementAction(direction));
     if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
@@ -5830,7 +6197,7 @@ bool8 FollowablePlayerMovement_JumpInPlace(struct ObjectEvent *objectEvent, stru
     u32 direction;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetJumpInPlaceMovementAction(direction));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 2;
@@ -5844,7 +6211,7 @@ bool8 FollowablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct 
     s16 y;
 
     direction = playerDirection;
-    direction = GetCopyDirection(gInitialMovementTypeFacingDirections[objectEvent->movementType], objectEvent->directionSequenceIndex, direction);
+    direction = GetCopyDirection(sMovementTypes[objectEvent->movementType].initialDirection, objectEvent->directionSequenceIndex, direction);
     ObjectEventMoveDestCoords(objectEvent, direction, &x, &y);
     ObjectEventSetSingleMovement(objectEvent, sprite, GetJumpMovementAction(direction));
     if (GetCollisionAtCoords(objectEvent, x, y, direction) || (tileCallback != NULL && !tileCallback(MapGridGetMetatileBehaviorAt(x, y))))
@@ -6220,7 +6587,7 @@ void SetTrainerMovementType(struct ObjectEvent *objectEvent, u8 movementType)
     objectEvent->movementType = movementType;
     objectEvent->directionSequenceIndex = 0;
     objectEvent->playerCopyableMovement = 0;
-    gSprites[objectEvent->spriteId].callback = sMovementTypeCallbacks[movementType];
+    gSprites[objectEvent->spriteId].callback = sMovementTypes[movementType].callback;
     gSprites[objectEvent->spriteId].sTypeFuncId = 0;
 }
 
@@ -8483,7 +8850,7 @@ bool8 MovementAction_JumpInPlaceRightLeft_Step1(struct ObjectEvent *objectEvent,
 
 bool8 MovementAction_FaceOriginalDirection_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    FaceDirection(objectEvent, sprite, gInitialMovementTypeFacingDirections[objectEvent->movementType]);
+    FaceDirection(objectEvent, sprite, sMovementTypes[objectEvent->movementType].initialDirection);
     return TRUE;
 }
 
