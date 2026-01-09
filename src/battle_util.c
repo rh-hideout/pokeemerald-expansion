@@ -5639,7 +5639,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             case ABILITY_DISGUISE:
                 if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE)
                     SetPassiveDamageAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 8);
-                BattleScriptCall(BattleScript_BattlerFormChange);
+                BattleScriptCall(BattleScript_BattlerFormChangeDisguise);
+                break;
             default:
                 BattleScriptCall(BattleScript_BattlerFormChange);
                 break;

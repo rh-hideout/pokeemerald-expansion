@@ -346,6 +346,7 @@ extern const u8 BattleScript_AftermathDmg[];
 extern const u8 BattleScript_BattlerFormChange[];
 extern const u8 BattleScript_BattlerFormChangeEnd2[];
 extern const u8 BattleScript_BattlerFormChangeNoPopup[];
+extern const u8 BattleScript_BattlerFormChangeDisguise[];
 extern const u8 BattleScript_AttackerFormChangeWithString[];
 extern const u8 BattleScript_TargetFormChange[];
 extern const u8 BattleScript_AnticipationActivates[];

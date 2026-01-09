@@ -5669,6 +5669,7 @@ BattleScript_BattlerFormChangeNoPopup::
 	handleformchange BS_SCRIPTING, 0
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
+BattleScript_BattlerFormChangeFromAfterAnimation::
 	handleformchange BS_SCRIPTING, 1
 	switchinabilities BS_SCRIPTING
 	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
@@ -5678,10 +5679,15 @@ BattleScript_BattlerFormChangeInstant::
 	handleformchange BS_SCRIPTING, 0
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE_INSTANT
 	waitanimation
-	handleformchange BS_SCRIPTING, 1
-	switchinabilities BS_SCRIPTING
-	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
-	return
+	goto BattleScript_BattlerFormChangeFromAfterAnimation
+
+BattleScript_BattlerFormChangeDisguise::
+	call BattleScript_AbilityPopUpScripting
+	pause 40
+	handleformchange BS_SCRIPTING, 0
+	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE_DISGUISE
+	waitanimation
+	goto BattleScript_BattlerFormChangeFromAfterAnimation
 
 BattleScript_BattlerFormChangeEnd3NoPopup::
 	call BattleScript_BattlerFormChangeNoPopup
@@ -5741,10 +5747,7 @@ BattleScript_TargetFormChangeNoPopup:
 	handleformchange BS_SCRIPTING, 0
 	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
 	waitanimation
-	handleformchange BS_SCRIPTING, 1
-	switchinabilities BS_SCRIPTING
-	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
-	return
+	goto BattleScript_BattlerFormChangeFromAfterAnimation
 
 BattleScript_TargetFormChange::
 	pause 5

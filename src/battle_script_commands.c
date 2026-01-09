@@ -5087,10 +5087,19 @@ static void Cmd_tryselfconfusiondmgformchange(void)
     if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HIT_BY_CONFUSION_SELF_DMG))
     {
         gBattleScripting.battler = gBattlerAttacker;
-        if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE && wasDisguised)
-            SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 8);
-        BattleScriptPush(BattleScript_MoveEnd);
-        gBattlescriptCurrInstr = BattleScript_TargetFormChange;
+        switch (ability)
+        {
+        case ABILITY_DISGUISE:
+            if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && wasDisguised)
+                SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 8);
+            BattleScriptPush(BattleScript_MoveEnd);
+            gBattlescriptCurrInstr = BattleScript_BattlerFormChangeDisguise;
+            break;
+        default:
+            BattleScriptPush(BattleScript_MoveEnd);
+            gBattlescriptCurrInstr = BattleScript_TargetFormChange;
+            break;
+        }
         return;
     };
 
