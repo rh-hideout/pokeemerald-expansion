@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("If a Poison- or Steel-type Pokémon with Corrosion holds a T
         PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Item(ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_ODDISH);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, badPoison: TRUE);

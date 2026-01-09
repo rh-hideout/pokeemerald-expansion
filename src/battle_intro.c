@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_environment.h"
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "bg.h"
@@ -13,28 +14,14 @@
 #include "constants/battle_partner.h"
 #include "constants/trainers.h"
 
-static void BattleIntroSlide1(u8);
-static void BattleIntroSlide2(u8);
-static void BattleIntroSlide3(u8);
+void BattleIntroSlide1(u8);
+void BattleIntroSlide2(u8);
+void BattleIntroSlide3(u8);
 static void BattleIntroSlideLink(u8);
 static void BattleIntroSlidePartner(u8);
 static void BattleIntroNoSlide(u8);
 
 static const u8 sBattleAnimBgCnts[] = {REG_OFFSET_BG0CNT, REG_OFFSET_BG1CNT, REG_OFFSET_BG2CNT, REG_OFFSET_BG3CNT};
-
-static const TaskFunc sBattleIntroSlideFuncs[] =
-{
-    [BATTLE_ENVIRONMENT_GRASS]      = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_LONG_GRASS] = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_SAND]       = BattleIntroSlide2,
-    [BATTLE_ENVIRONMENT_UNDERWATER] = BattleIntroSlide2,
-    [BATTLE_ENVIRONMENT_WATER]      = BattleIntroSlide2,
-    [BATTLE_ENVIRONMENT_POND]       = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_MOUNTAIN]   = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_CAVE]       = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_BUILDING]   = BattleIntroSlide3,
-    [BATTLE_ENVIRONMENT_PLAIN]      = BattleIntroSlide3,
-};
 
 void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value)
 {
@@ -125,10 +112,10 @@ void HandleIntroSlide(u8 environment)
     }
     else
     {
-        if (environment >= NELEMS(sBattleIntroSlideFuncs)
-         || sBattleIntroSlideFuncs[environment] == NULL)
+        if (environment >= NELEMS(gBattleEnvironmentInfo)
+         || gBattleEnvironmentInfo[environment].battleIntroSlide == NULL)
             environment = BATTLE_ENVIRONMENT_PLAIN;
-        taskId = CreateTask(sBattleIntroSlideFuncs[environment], 0);
+        taskId = CreateTask(gBattleEnvironmentInfo[environment].battleIntroSlide, 0);
     }
 
     gTasks[taskId].tState = 0;
@@ -202,7 +189,7 @@ static void BattleIntroNoSlide(u8 taskId)
     }
 }
 
-static void BattleIntroSlide1(u8 taskId)
+void BattleIntroSlide1(u8 taskId)
 {
     int i;
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
@@ -289,7 +276,7 @@ static void BattleIntroSlide1(u8 taskId)
     }
 }
 
-static void BattleIntroSlide2(u8 taskId)
+void BattleIntroSlide2(u8 taskId)
 {
     int i;
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
@@ -403,7 +390,7 @@ static void BattleIntroSlide2(u8 taskId)
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(gTasks[taskId].data[4], 0));
 }
 
-static void BattleIntroSlide3(u8 taskId)
+void BattleIntroSlide3(u8 taskId)
 {
     int i;
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)

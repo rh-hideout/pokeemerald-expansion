@@ -42,6 +42,12 @@ struct BattleAnimBackground
     const u32 *tilemap;
 };
 
+struct BattleAnimation
+{
+    struct CompressedSpriteSheet pic;
+    struct SpritePalette palette;
+};
+
 // Helper struct for link battles to show correct animations and transformations that can change their look
 // Used by EmitBattleAnimation and EmitMoveAnimation
 struct LinkBattleAnim
@@ -95,6 +101,9 @@ void LoadMoveBg(u16 bgId);
 void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value);
 void DrawBattlerOnBg(int bgId, u8 x, u8 y, u8 battlerPosition, u8 paletteId, u8 *tiles, u16 *tilemap, u16 tilesOffset);
 void HandleIntroSlide(u8 environment);
+void BattleIntroSlide1(u8 taskId);
+void BattleIntroSlide2(u8 taskId);
+void BattleIntroSlide3(u8 taskId);
 int GetAnimBgAttribute(u8 bgId, u8 attributeId);
 
 // battle_anim_mons.c
@@ -449,8 +458,7 @@ extern const struct OamData gOamData_AffineOff_ObjBlend_64x32;
 extern const struct OamData gOamData_AffineOff_ObjBlend_16x32;
 extern const struct OamData gOamData_AffineDouble_ObjBlend_32x8;
 
-extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
-extern const struct SpritePalette gBattleAnimPaletteTable[];
+extern const struct BattleAnimation gBattleAnimTable[ANIM_TAG_COUNT];
 
 extern const struct SpriteTemplate gWaterHitSplatSpriteTemplate;
 

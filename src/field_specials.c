@@ -1473,7 +1473,7 @@ void SetShoalItemFlag(u16 unused)
 void LoadWallyZigzagoon(void)
 {
     u16 monData;
-    CreateMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    CreateRandomMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7);
     monData = TRUE;
     SetMonData(&gPlayerParty[0], MON_DATA_ABILITY_NUM, &monData);
     monData = MOVE_TACKLE;
@@ -3727,7 +3727,7 @@ static void Task_LinkRetireStatusWithBattleTowerPartner(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 6:
-        if (!IsTextPrinterActive(0))
+        if (!IsTextPrinterActiveOnWindow(0))
             gTasks[taskId].tState++;
         break;
     case 7:
@@ -4370,8 +4370,7 @@ bool32 CheckPartyHasSpecies(u32 givenSpecies)
 
 void UseBlankMessageToCancelPokemonPic(void)
 {
-    u8 t = EOS;
-    AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
+    DeactivateSingleTextPrinter(0, WINDOW_TEXT_PRINTER);
     ScriptMenu_HidePokemonPic();
 }
 
