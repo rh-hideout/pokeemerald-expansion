@@ -1,6 +1,10 @@
 BattleFrontier_ExchangeServiceCorner_MapScripts::
 	.byte 0
 
+	.set JOHTO_STARTER_DOLL_BP, 80
+	.set KANTO_STARTER_DOLL_BP, 256
+	.set VITAMIN_BP, 1
+
 BattleFrontier_ExchangeServiceCorner_EventScript_ClerkWelcome::
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_WelcomePleaseChoosePrize, MSGBOX_DEFAULT
 	special ShowBattlePointsWindow
@@ -162,7 +166,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_CyndaquilDoll::
 	bufferdecorationname STR_VAR_1, DECOR_CYNDAQUIL_DOLL
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseDecor1
-	setvar VAR_0x8008, 80
+	setvar VAR_0x8008, JOHTO_STARTER_DOLL_BP
 	setvar VAR_0x8009, DECOR_CYNDAQUIL_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -171,7 +175,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_ChikoritaDoll::
 	bufferdecorationname STR_VAR_1, DECOR_CHIKORITA_DOLL
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseDecor1
-	setvar VAR_0x8008, 80
+	setvar VAR_0x8008, JOHTO_STARTER_DOLL_BP
 	setvar VAR_0x8009, DECOR_CHIKORITA_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -180,7 +184,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_TotodileDoll::
 	bufferdecorationname STR_VAR_1, DECOR_TOTODILE_DOLL
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseDecor1
-	setvar VAR_0x8008, 80
+	setvar VAR_0x8008, JOHTO_STARTER_DOLL_BP
 	setvar VAR_0x8009, DECOR_TOTODILE_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -231,7 +235,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_VenusaurDoll::
 	bufferdecorationname STR_VAR_1, DECOR_VENUSAUR_DOLL
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseDecor2
-	setvar VAR_0x8008, 256
+	setvar VAR_0x8008, KANTO_STARTER_DOLL_BP
 	setvar VAR_0x8009, DECOR_VENUSAUR_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -240,7 +244,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_CharizardDoll::
 	bufferdecorationname STR_VAR_1, DECOR_CHARIZARD_DOLL
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseDecor2
-	setvar VAR_0x8008, 256
+	setvar VAR_0x8008, KANTO_STARTER_DOLL_BP
 	setvar VAR_0x8009, DECOR_CHARIZARD_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -249,7 +253,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_BlastoiseDoll::
 	bufferdecorationname STR_VAR_1, DECOR_BLASTOISE_DOLL
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseDecor2
-	setvar VAR_0x8008, 256
+	setvar VAR_0x8008, KANTO_STARTER_DOLL_BP
 	setvar VAR_0x8009, DECOR_BLASTOISE_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -283,7 +287,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_Protein::
 	bufferitemname STR_VAR_1, ITEM_PROTEIN
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseVitamin
-	setvar VAR_0x8008, 1
+	setvar VAR_0x8008, VITAMIN_BP
 	setvar VAR_0x8009, ITEM_PROTEIN
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -292,7 +296,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_Calcium::
 	bufferitemname STR_VAR_1, ITEM_CALCIUM
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseVitamin
-	setvar VAR_0x8008, 1
+	setvar VAR_0x8008, VITAMIN_BP
 	setvar VAR_0x8009, ITEM_CALCIUM
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -301,7 +305,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_Iron::
 	bufferitemname STR_VAR_1, ITEM_IRON
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseVitamin
-	setvar VAR_0x8008, 1
+	setvar VAR_0x8008, VITAMIN_BP
 	setvar VAR_0x8009, ITEM_IRON
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -310,7 +314,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_Zinc::
 	bufferitemname STR_VAR_1, ITEM_ZINC
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseVitamin
-	setvar VAR_0x8008, 1
+	setvar VAR_0x8008, VITAMIN_BP
 	setvar VAR_0x8009, ITEM_ZINC
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -319,7 +323,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_Carbos::
 	bufferitemname STR_VAR_1, ITEM_CARBOS
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseVitamin
-	setvar VAR_0x8008, 1
+	setvar VAR_0x8008, VITAMIN_BP
 	setvar VAR_0x8009, ITEM_CARBOS
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
@@ -328,7 +332,7 @@ BattleFrontier_ExchangeServiceCorner_EventScript_HPUp::
 	bufferitemname STR_VAR_1, ITEM_HP_UP
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_ConfirmPurchase, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_ExchangeServiceCorner_EventScript_ChooseVitamin
-	setvar VAR_0x8008, 1
+	setvar VAR_0x8008, VITAMIN_BP
 	setvar VAR_0x8009, ITEM_HP_UP
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_TryPurchasePrize
 	end
