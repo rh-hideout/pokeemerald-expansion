@@ -90,8 +90,8 @@ SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and does not trigger it (
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_TRACE);
-        NONE_OF {
             ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         }
     }
