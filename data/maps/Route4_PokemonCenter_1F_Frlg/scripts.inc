@@ -134,7 +134,7 @@ Route4_PokemonCenter_1F_EventScript_NoRoomForMagikarp::
 Route4_PokemonCenter_1F_EventScript_Nurse::
 	lock
 	faceplayer
-	call Common_EventScript_PkmnCenterNurse
+	call EventScript_PkmnCenterNurse_Frlg
 	release
 	end
 

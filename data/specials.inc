@@ -622,6 +622,7 @@ gSpecials::
 	def_special Script_TryGainNewFanFromCounterFrlg
 	def_special IsNationalPokedexEnabled
 	def_special SetPostgameFlags
+	def_special IsPlayerNotInTrainerTowerLobby
 	def_special BrailleCursorToggle
 	def_special EnterHallOfFame
 	def_special CB2_StartCreditsSequence

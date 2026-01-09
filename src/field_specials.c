@@ -88,7 +88,7 @@
 #define ELEVATOR_WINDOW_HEIGHT 3
 #define ELEVATOR_LIGHT_STAGES  3
 
-enum 
+enum
 {
     CAN_LEARN_MOVE,
     CANNOT_LEARN_MOVE,
@@ -1064,7 +1064,7 @@ static bool32 IsPlayerHousePCTile(u32 tileId)
 static bool32 IsPlayerHousePCTileFrlg(u32 tileId)
 {
 #if IS_FRLG
-    return gMapHeader.mapLayout->secondaryTileset == &gTileset_GenericBuilding1 
+    return gMapHeader.mapLayout->secondaryTileset == &gTileset_GenericBuilding1
         && (tileId == METATILE_GenericBuilding1_PlayersPCOn || tileId == METATILE_GenericBuilding1_PlayersPCOff);
 #else
     return FALSE;
@@ -2699,7 +2699,7 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
         gText_WhenInDanger,
         gText_Exit
     },
-    [SCROLL_MULTI_BADGES] = 
+    [SCROLL_MULTI_BADGES] =
     {
 		gText_Boulderbadge,
 		gText_Cascadebadge,
@@ -2973,7 +2973,7 @@ void ShowNatureGirlMessage(void)
         nature = GetNature(&gPlayerParty[gSpecialVar_0x8004]);
     else
         nature = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PERSONALITY) % NUM_NATURES;
-    
+
     ShowFieldMessage(gNaturesInfo[nature].natureGirlMessage);
 }
 
@@ -4576,7 +4576,7 @@ void CanTeachMoveBoxMon(void)
                 CreateTask(Task_ReplaceBoxMonMoveYesNo, 1);
             }
         }
-        
+
     }
 }
 
@@ -4681,7 +4681,7 @@ static void Task_BoxMonReplaceMove(u8 taskId)
         if(gSpecialVar_MonBoxId == 0xFF)
         {
             RemoveMonPPBonus(&gPlayerParty[gSpecialVar_MonBoxPos], GetMoveSlotToReplace());
-            SetMonMoveSlot(&gPlayerParty[gSpecialVar_MonBoxPos], move, GetMoveSlotToReplace()); 
+            SetMonMoveSlot(&gPlayerParty[gSpecialVar_MonBoxPos], move, GetMoveSlotToReplace());
         }
         else
         {
@@ -4856,12 +4856,12 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
     //   8007 = Index of lead mon
     //   to specialvar = whether a move can be taught in the first place
     u8 i, leadMonSlot, moveCount = 0;
-    u16 moveId, tutorFlag; 
+    u16 moveId, tutorFlag;
     struct Pokemon *leadMon;
-    
+
     leadMonSlot = GetLeadMonIndex();
     leadMon = &gPlayerParty[leadMonSlot];
-    
+
     if (GetMonData(leadMon, MON_DATA_FRIENDSHIP) != 255)
         return FALSE;
 
@@ -4880,14 +4880,14 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
         default:
             return FALSE;
     }
-    
+
     StringCopy(gStringVar2, gMovesInfo[moveId].name);
     if (!I_REUSABLE_TMS && FlagGet(tutorFlag) == TRUE)
         return FALSE;
-    
+
     for (i = 0; i < MAX_MON_MOVES; i++)
         moveCount += (GetMonData(leadMon, MON_DATA_MOVE1 + i) != MOVE_NONE);
-    
+
     gSpecialVar_0x8005 = moveId;
     gSpecialVar_0x8006 = moveCount;
     gSpecialVar_0x8007 = leadMonSlot;
@@ -4934,7 +4934,7 @@ void SetSeenMon(void)
 static void Task_DrawTeleporterHousing(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    
+
     if (tTimer == 0)
     {
         // Alternate the teleporter light / brightness of the teleporter door
@@ -4951,16 +4951,16 @@ static void Task_DrawTeleporterHousing(u8 taskId)
         CurrentMapDrawMetatileAt(tX, tY);
         CurrentMapDrawMetatileAt(tX, tY + 2);
     }
-    
+
     tTimer++;
     if (tTimer != 16)
         return;
-    
+
     tTimer = 0;
     tState++;
     if (tState != 13)
         return;
-    
+
     MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_Light_Green | MAPGRID_COLLISION_MASK);
     MapGridSetMetatileIdAt(tX, tY + 2, METATILE_SeaCottage_Teleporter_Door | MAPGRID_COLLISION_MASK);
     CurrentMapDrawMetatileAt(tX, tY);
@@ -4972,7 +4972,7 @@ void AnimateTeleporterHousing(void)
 {
     u8 taskId;
     s16 *data;
-    
+
     taskId = CreateTask(Task_DrawTeleporterHousing, 0);
     gTasks[taskId].tTimer = 0;
     gTasks[taskId].tState = 0;
@@ -4990,13 +4990,13 @@ void AnimateTeleporterHousing(void)
     {
         gTasks[taskId].tX -= 1;
         gTasks[taskId].tY -= 5;
-    }    
+    }
 }
 
 static void Task_DrawTeleporterCable(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    
+
     if (tTimer == 0)
     {
         if (tState != 0)
@@ -5013,7 +5013,7 @@ static void Task_DrawTeleporterCable(u8 taskId)
                 DestroyTask(taskId);
                 return;
             }
-            
+
             tX--;
         }
 
@@ -5023,7 +5023,7 @@ static void Task_DrawTeleporterCable(u8 taskId)
         CurrentMapDrawMetatileAt(tX, tY);
         CurrentMapDrawMetatileAt(tX, tY + 1);
     }
-    
+
     tTimer++;
     if (tTimer == 4)
     {
@@ -5036,7 +5036,7 @@ void AnimateTeleporterCable(void)
 {
     u8 taskId;
     s16 *data;
-    
+
     taskId = CreateTask(Task_DrawTeleporterCable, 0);
     gTasks[taskId].tTimer = 0;
     gTasks[taskId].tState = 0;
@@ -5225,36 +5225,36 @@ static const u8 *const sFloorNamePointers[] = {
 
 static const u16 sElevatorWindowMetatilesGoingUp[][3] = {
     {
-        METATILE_SilphCo_ElevatorWindow_Top0, 
-        METATILE_SilphCo_ElevatorWindow_Top1, 
+        METATILE_SilphCo_ElevatorWindow_Top0,
+        METATILE_SilphCo_ElevatorWindow_Top1,
         METATILE_SilphCo_ElevatorWindow_Top2
     },
     {
-        METATILE_SilphCo_ElevatorWindow_Mid0, 
-        METATILE_SilphCo_ElevatorWindow_Mid1, 
+        METATILE_SilphCo_ElevatorWindow_Mid0,
+        METATILE_SilphCo_ElevatorWindow_Mid1,
         METATILE_SilphCo_ElevatorWindow_Mid2
     },
     {
-        METATILE_SilphCo_ElevatorWindow_Bottom0, 
-        METATILE_SilphCo_ElevatorWindow_Bottom1, 
+        METATILE_SilphCo_ElevatorWindow_Bottom0,
+        METATILE_SilphCo_ElevatorWindow_Bottom1,
         METATILE_SilphCo_ElevatorWindow_Bottom2
     }
 };
 
 static const u16 sElevatorWindowMetatilesGoingDown[][3] = {
     {
-        METATILE_SilphCo_ElevatorWindow_Top0, 
-        METATILE_SilphCo_ElevatorWindow_Top2, 
+        METATILE_SilphCo_ElevatorWindow_Top0,
+        METATILE_SilphCo_ElevatorWindow_Top2,
         METATILE_SilphCo_ElevatorWindow_Top1
     },
     {
-        METATILE_SilphCo_ElevatorWindow_Mid0, 
-        METATILE_SilphCo_ElevatorWindow_Mid2, 
+        METATILE_SilphCo_ElevatorWindow_Mid0,
+        METATILE_SilphCo_ElevatorWindow_Mid2,
         METATILE_SilphCo_ElevatorWindow_Mid1
     },
     {
-        METATILE_SilphCo_ElevatorWindow_Bottom0, 
-        METATILE_SilphCo_ElevatorWindow_Bottom2, 
+        METATILE_SilphCo_ElevatorWindow_Bottom0,
+        METATILE_SilphCo_ElevatorWindow_Bottom2,
         METATILE_SilphCo_ElevatorWindow_Bottom1
     }
 };
@@ -5618,6 +5618,14 @@ void ForcePlayerOntoBike(void)
     Overworld_ChangeMusicTo(MUS_CYCLING);
 }
 
+bool8 IsPlayerNotInTrainerTowerLobby(void)
+{
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_TRAINER_TOWER_LOBBY) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_TRAINER_TOWER_LOBBY))
+        return FALSE;
+    else
+        return TRUE;
+}
+
 void BrailleCursorToggle(void)
 {
     // 8004 = x - 27
@@ -5844,7 +5852,7 @@ bool8 PlayerPartyContainsSpeciesWithPlayerID(void)
     u8 i;
     for (i = 0; i < playerCount; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004 
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004
             && GetPlayerIDAsU32() == GetMonData(&gPlayerParty[i], MON_DATA_OT_ID, NULL))
             return TRUE;
     }
