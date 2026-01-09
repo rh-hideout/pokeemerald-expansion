@@ -632,6 +632,7 @@ struct FormChangeContext
     enum FormChanges method:16;
     u16 currentSpecies;
     u16 partyItemUsed;
+    u16 multichoiceSelection;
     u16 heldItem;
     u16 ability;
     u16 learnedMove;

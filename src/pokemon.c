@@ -6792,6 +6792,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
         .heldItem = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM, NULL),
         .ability = GetAbilityBySpecies(species, GetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, NULL)),
         .partyItemUsed = gSpecialVar_ItemId,
+        .multichoiceSelection = gSpecialVar_Result,
         .status = GetBoxMonData(boxMon, MON_DATA_STATUS, NULL),
     };
 
@@ -6859,10 +6860,10 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             }
             break;
         case FORM_CHANGE_ITEM_USE_MULTICHOICE:
-            if (ctx.partyItemUsed == formChanges[i].param1)
+            if (ctx.partyItemUsed == formChanges[i].param1
+             && ctx.multichoiceSelection == formChanges[i].param2)
             {
-                if (formChanges[i].param2 == gSpecialVar_Result)
-                    targetSpecies = formChanges[i].targetSpecies;
+                targetSpecies = formChanges[i].targetSpecies;
             }
             break;
         case FORM_CHANGE_MOVE:
@@ -7188,6 +7189,7 @@ bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method)
     {
         TryToSetBattleFormChangeMoves(mon, method);
         SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
+        TrySetDayLimitToFormChange(mon);
         CalculateMonStats(mon);
         return TRUE;
     }
