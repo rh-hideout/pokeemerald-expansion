@@ -2658,7 +2658,7 @@
 	msgbox \monSelectMsg, MSGBOX_DEFAULT
 	setvar VAR_0x8005, \moveId
 	call MoveTutor_EventScript_OpenBox
-	goto_if_eq VAR_RESULT, PARTY_NOTHING_CHOSEN, \declinedJmp
+	goto_if_eq VAR_RESULT, FALSE, \declinedJmp
 	.if \flagId
 		setflag \flagId
 	.endif
