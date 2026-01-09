@@ -294,7 +294,7 @@ void StoreSelectedPokemonInDaycare(void)
     }
     else
     {
-        mon = &gPlayerParty[GetCursorSelectionMonId()];
+        mon = &gPlayerParty[gSpecialVar_0x8004];
     }
     StorePokemonInEmptyDaycareSlot(mon, &gSaveBlock1Ptr->daycare);
     if (gSpecialVar_0x8004 == PC_MON_CHOSEN)

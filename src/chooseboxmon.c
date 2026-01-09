@@ -96,7 +96,7 @@ bool32 CanBoxMonBeSelected(struct BoxPokemon *boxmon)
 {
     if (!sPcMonSelectionTypes[sSelectionType].isStrict)
         return TRUE;
-    return IsBoxMonExcluded(boxmon);
+    return !IsBoxMonExcluded(boxmon);
 }
 
 static void Task_ChooseBoxMon(u8 taskId)
