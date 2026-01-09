@@ -11,11 +11,11 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 4 turns: Enc
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
+    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
     } WHEN {
         TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
@@ -40,11 +40,11 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Enc
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
+    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
         TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
         TURN { FORCED_MOVE(encoreTarget); }
@@ -66,13 +66,13 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 4-8 turns: En
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
+    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_4);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
     } WHEN {
         TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
@@ -98,12 +98,12 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 3-7 turns: En
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
+    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_4);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
     } WHEN {
         TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
         TURN { FORCED_MOVE(encoreTarget); }
@@ -125,13 +125,13 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 3-7 turns:
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
+    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_3);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
     } WHEN {
         TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
@@ -154,13 +154,13 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns:
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
+    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_3);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
         TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
         TURN { FORCED_MOVE(encoreTarget); }
