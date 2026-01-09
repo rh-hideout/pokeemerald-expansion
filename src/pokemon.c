@@ -6775,12 +6775,6 @@ u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId)
 }
 
 // Returns the current species if no form change is possible
-u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method)
-{
-    return GetFormChangeTargetSpeciesBoxMon(&mon->box, method);
-}
-
-// Returns the current species if no form change is possible
 u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method)
 {
     u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
@@ -6797,6 +6791,12 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
     };
 
     return GetFormChangeTargetSpecies_Internal(ctx);
+}
+
+// Returns the current species if no form change is possible
+u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method)
+{
+    return GetFormChangeTargetSpeciesBoxMon(&mon->box, method);
 }
 
 u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
@@ -7194,6 +7194,28 @@ bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method)
         return TRUE;
     }
 
+    return FALSE;
+}
+
+bool32 TryBoxMonFormChange(struct BoxPokemon *boxMon, enum FormChanges method)
+{
+    if (GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_NONE
+     || GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_EGG)
+        return FALSE;
+
+    u32 currentSpecies = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
+    u32 targetSpecies = GetFormChangeTargetSpeciesBoxMon(boxMon, method);
+
+    assertf(targetSpecies != SPECIES_NONE, "form change target returned NONE. cur:%d, method:%d", currentSpecies, method)
+    {
+        return FALSE;
+    }
+
+    if (targetSpecies != currentSpecies)
+    {
+        SetBoxMonData(boxMon, MON_DATA_SPECIES, &targetSpecies);
+        return TRUE;
+    }
     return FALSE;
 }
 
