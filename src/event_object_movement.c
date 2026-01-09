@@ -225,18 +225,18 @@ static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
 static void StartSlowRunningAnim(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction);
 
 const u8 gReflectionEffectPaletteMap[16] = {
-        [PALSLOT_PLAYER]                 = PALSLOT_PLAYER_REFLECTION,
-        [PALSLOT_PLAYER_REFLECTION]      = PALSLOT_PLAYER_REFLECTION,
-        [PALSLOT_NPC_1]                  = PALSLOT_NPC_1_REFLECTION,
-        [PALSLOT_NPC_2]                  = PALSLOT_NPC_2_REFLECTION,
-        [PALSLOT_NPC_3]                  = PALSLOT_NPC_3_REFLECTION,
-        [PALSLOT_NPC_4]                  = PALSLOT_NPC_4_REFLECTION,
-        [PALSLOT_NPC_1_REFLECTION]       = PALSLOT_NPC_1_REFLECTION,
-        [PALSLOT_NPC_2_REFLECTION]       = PALSLOT_NPC_2_REFLECTION,
-        [PALSLOT_NPC_3_REFLECTION]       = PALSLOT_NPC_3_REFLECTION,
-        [PALSLOT_NPC_4_REFLECTION]       = PALSLOT_NPC_4_REFLECTION,
-        [PALSLOT_NPC_SPECIAL]            = PALSLOT_NPC_SPECIAL_REFLECTION,
-        [PALSLOT_NPC_SPECIAL_REFLECTION] = PALSLOT_NPC_SPECIAL_REFLECTION
+    [PALSLOT_PLAYER]                 = PALSLOT_PLAYER_REFLECTION,
+    [PALSLOT_PLAYER_REFLECTION]      = PALSLOT_PLAYER_REFLECTION,
+    [PALSLOT_NPC_1]                  = PALSLOT_NPC_1_REFLECTION,
+    [PALSLOT_NPC_2]                  = PALSLOT_NPC_2_REFLECTION,
+    [PALSLOT_NPC_3]                  = PALSLOT_NPC_3_REFLECTION,
+    [PALSLOT_NPC_4]                  = PALSLOT_NPC_4_REFLECTION,
+    [PALSLOT_NPC_1_REFLECTION]       = PALSLOT_NPC_1_REFLECTION,
+    [PALSLOT_NPC_2_REFLECTION]       = PALSLOT_NPC_2_REFLECTION,
+    [PALSLOT_NPC_3_REFLECTION]       = PALSLOT_NPC_3_REFLECTION,
+    [PALSLOT_NPC_4_REFLECTION]       = PALSLOT_NPC_4_REFLECTION,
+    [PALSLOT_NPC_SPECIAL]            = PALSLOT_NPC_SPECIAL_REFLECTION,
+    [PALSLOT_NPC_SPECIAL_REFLECTION] = PALSLOT_NPC_SPECIAL_REFLECTION
 };
 
 static const struct SpriteTemplate sCameraSpriteTemplate = {
@@ -756,182 +756,207 @@ static const s16 sMovementDelaysShort[] =  {32, 48,  64,  80};
 
 #include "data/object_events/movement_type_func_tables.h"
 
-static const u8 sFaceDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_STD_FACE_SOUTH,
-    [DIR_SOUTH] = ANIM_STD_FACE_SOUTH,
-    [DIR_NORTH] = ANIM_STD_FACE_NORTH,
-    [DIR_WEST] = ANIM_STD_FACE_WEST,
-    [DIR_EAST] = ANIM_STD_FACE_EAST,
-    [DIR_SOUTHWEST] = ANIM_STD_FACE_WEST,
-    [DIR_SOUTHEAST] = ANIM_STD_FACE_EAST,
-    [DIR_NORTHWEST] = ANIM_STD_FACE_WEST,
-    [DIR_NORTHEAST] = ANIM_STD_FACE_EAST,
-};
-static const u8 sMoveDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_STD_GO_SOUTH,
-    [DIR_SOUTH] = ANIM_STD_GO_SOUTH,
-    [DIR_NORTH] = ANIM_STD_GO_NORTH,
-    [DIR_WEST] = ANIM_STD_GO_WEST,
-    [DIR_EAST] = ANIM_STD_GO_EAST,
-    [DIR_SOUTHWEST] = ANIM_STD_GO_WEST,
-    [DIR_SOUTHEAST] = ANIM_STD_GO_EAST,
-    [DIR_NORTHWEST] = ANIM_STD_GO_WEST,
-    [DIR_NORTHEAST] = ANIM_STD_GO_EAST,
-};
-static const u8 sMoveDirectionFastAnimNums[] = {
-    [DIR_NONE] = ANIM_STD_GO_FAST_SOUTH,
-    [DIR_SOUTH] = ANIM_STD_GO_FAST_SOUTH,
-    [DIR_NORTH] = ANIM_STD_GO_FAST_NORTH,
-    [DIR_WEST] = ANIM_STD_GO_FAST_WEST,
-    [DIR_EAST] = ANIM_STD_GO_FAST_EAST,
-    [DIR_SOUTHWEST] = ANIM_STD_GO_FAST_WEST,
-    [DIR_SOUTHEAST] = ANIM_STD_GO_FAST_EAST,
-    [DIR_NORTHWEST] = ANIM_STD_GO_FAST_WEST,
-    [DIR_NORTHEAST] = ANIM_STD_GO_FAST_EAST,
-};
-static const u8 sMoveDirectionFasterAnimNums[] = {
-    [DIR_NONE] = ANIM_STD_GO_FASTER_SOUTH,
-    [DIR_SOUTH] = ANIM_STD_GO_FASTER_SOUTH,
-    [DIR_NORTH] = ANIM_STD_GO_FASTER_NORTH,
-    [DIR_WEST] = ANIM_STD_GO_FASTER_WEST,
-    [DIR_EAST] = ANIM_STD_GO_FASTER_EAST,
-    [DIR_SOUTHWEST] = ANIM_STD_GO_FASTER_WEST,
-    [DIR_SOUTHEAST] = ANIM_STD_GO_FASTER_EAST,
-    [DIR_NORTHWEST] = ANIM_STD_GO_FASTER_WEST,
-    [DIR_NORTHEAST] = ANIM_STD_GO_FASTER_EAST,
-};
-static const u8 sMoveDirectionFastestAnimNums[] = {
-    [DIR_NONE] = ANIM_STD_GO_FASTEST_SOUTH,
-    [DIR_SOUTH] = ANIM_STD_GO_FASTEST_SOUTH,
-    [DIR_NORTH] = ANIM_STD_GO_FASTEST_NORTH,
-    [DIR_WEST] = ANIM_STD_GO_FASTEST_WEST,
-    [DIR_EAST] = ANIM_STD_GO_FASTEST_EAST,
-    [DIR_SOUTHWEST] = ANIM_STD_GO_FASTEST_WEST,
-    [DIR_SOUTHEAST] = ANIM_STD_GO_FASTEST_EAST,
-    [DIR_NORTHWEST] = ANIM_STD_GO_FASTEST_WEST,
-    [DIR_NORTHEAST] = ANIM_STD_GO_FASTEST_EAST,
-};
-static const u8 sJumpSpecialDirectionAnimNums[] = { // used for jumping onto surf mon
-    [DIR_NONE] = ANIM_GET_ON_OFF_POKEMON_SOUTH,
-    [DIR_SOUTH] = ANIM_GET_ON_OFF_POKEMON_SOUTH,
-    [DIR_NORTH] = ANIM_GET_ON_OFF_POKEMON_NORTH,
-    [DIR_WEST] = ANIM_GET_ON_OFF_POKEMON_WEST,
-    [DIR_EAST] = ANIM_GET_ON_OFF_POKEMON_EAST,
-    [DIR_SOUTHWEST] = ANIM_GET_ON_OFF_POKEMON_WEST,
-    [DIR_SOUTHEAST] = ANIM_GET_ON_OFF_POKEMON_EAST,
-    [DIR_NORTHWEST] = ANIM_GET_ON_OFF_POKEMON_WEST,
-    [DIR_NORTHEAST] = ANIM_GET_ON_OFF_POKEMON_EAST,
-};
-static const u8 sAcroWheelieDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_BUNNY_HOP_BACK_WHEEL_SOUTH,
-    [DIR_SOUTH] = ANIM_BUNNY_HOP_BACK_WHEEL_SOUTH,
-    [DIR_NORTH] = ANIM_BUNNY_HOP_BACK_WHEEL_NORTH,
-    [DIR_WEST] = ANIM_BUNNY_HOP_BACK_WHEEL_WEST,
-    [DIR_EAST] = ANIM_BUNNY_HOP_BACK_WHEEL_EAST,
-    [DIR_SOUTHWEST] = ANIM_BUNNY_HOP_BACK_WHEEL_WEST,
-    [DIR_SOUTHEAST] = ANIM_BUNNY_HOP_BACK_WHEEL_EAST,
-    [DIR_NORTHWEST] = ANIM_BUNNY_HOP_BACK_WHEEL_WEST,
-    [DIR_NORTHEAST] = ANIM_BUNNY_HOP_BACK_WHEEL_EAST,
-};
-static const u8 sAcroUnusedDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_BUNNY_HOP_FRONT_WHEEL_SOUTH,
-    [DIR_SOUTH] = ANIM_BUNNY_HOP_FRONT_WHEEL_SOUTH,
-    [DIR_NORTH] = ANIM_BUNNY_HOP_FRONT_WHEEL_NORTH,
-    [DIR_WEST] = ANIM_BUNNY_HOP_FRONT_WHEEL_WEST,
-    [DIR_EAST] = ANIM_BUNNY_HOP_FRONT_WHEEL_EAST,
-    [DIR_SOUTHWEST] = ANIM_BUNNY_HOP_FRONT_WHEEL_SOUTH,
-    [DIR_SOUTHEAST] = ANIM_BUNNY_HOP_FRONT_WHEEL_SOUTH,
-    [DIR_NORTHWEST] = ANIM_BUNNY_HOP_FRONT_WHEEL_NORTH,
-    [DIR_NORTHEAST] = ANIM_BUNNY_HOP_FRONT_WHEEL_NORTH,
-};
-static const u8 sAcroEndWheelieDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_STANDING_WHEELIE_BACK_WHEEL_SOUTH,
-    [DIR_SOUTH] = ANIM_STANDING_WHEELIE_BACK_WHEEL_SOUTH,
-    [DIR_NORTH] = ANIM_STANDING_WHEELIE_BACK_WHEEL_NORTH,
-    [DIR_WEST] = ANIM_STANDING_WHEELIE_BACK_WHEEL_WEST,
-    [DIR_EAST] = ANIM_STANDING_WHEELIE_BACK_WHEEL_EAST,
-    [DIR_SOUTHWEST] = ANIM_STANDING_WHEELIE_BACK_WHEEL_WEST,
-    [DIR_SOUTHEAST] = ANIM_STANDING_WHEELIE_BACK_WHEEL_EAST,
-    [DIR_NORTHWEST] = ANIM_STANDING_WHEELIE_BACK_WHEEL_WEST,
-    [DIR_NORTHEAST] = ANIM_STANDING_WHEELIE_BACK_WHEEL_EAST,
-};
-static const u8 sAcroUnusedActionDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_STANDING_WHEELIE_FRONT_WHEEL_SOUTH,
-    [DIR_SOUTH] = ANIM_STANDING_WHEELIE_FRONT_WHEEL_SOUTH,
-    [DIR_NORTH] = ANIM_STANDING_WHEELIE_FRONT_WHEEL_NORTH,
-    [DIR_WEST] = ANIM_STANDING_WHEELIE_FRONT_WHEEL_WEST,
-    [DIR_EAST] = ANIM_STANDING_WHEELIE_FRONT_WHEEL_EAST,
-    [DIR_SOUTHWEST] = ANIM_STANDING_WHEELIE_FRONT_WHEEL_SOUTH,
-    [DIR_SOUTHEAST] = ANIM_STANDING_WHEELIE_FRONT_WHEEL_SOUTH,
-    [DIR_NORTHWEST] = ANIM_STANDING_WHEELIE_FRONT_WHEEL_NORTH,
-    [DIR_NORTHEAST] = ANIM_STANDING_WHEELIE_FRONT_WHEEL_NORTH,
-};
-static const u8 sAcroWheeliePedalDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_MOVING_WHEELIE_SOUTH,
-    [DIR_SOUTH] = ANIM_MOVING_WHEELIE_SOUTH,
-    [DIR_NORTH] = ANIM_MOVING_WHEELIE_NORTH,
-    [DIR_WEST] = ANIM_MOVING_WHEELIE_WEST,
-    [DIR_EAST] = ANIM_MOVING_WHEELIE_EAST,
-    [DIR_SOUTHWEST] = ANIM_MOVING_WHEELIE_WEST,
-    [DIR_SOUTHEAST] = ANIM_MOVING_WHEELIE_EAST,
-    [DIR_NORTHWEST] = ANIM_MOVING_WHEELIE_WEST,
-    [DIR_NORTHEAST] = ANIM_MOVING_WHEELIE_EAST,
-};
-static const u8 sFishingDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_TAKE_OUT_ROD_SOUTH,
-    [DIR_SOUTH] = ANIM_TAKE_OUT_ROD_SOUTH,
-    [DIR_NORTH] = ANIM_TAKE_OUT_ROD_NORTH,
-    [DIR_WEST] = ANIM_TAKE_OUT_ROD_WEST,
-    [DIR_EAST] = ANIM_TAKE_OUT_ROD_EAST,
-    [DIR_SOUTHWEST] = ANIM_TAKE_OUT_ROD_SOUTH,
-    [DIR_SOUTHEAST] = ANIM_TAKE_OUT_ROD_SOUTH,
-    [DIR_NORTHWEST] = ANIM_TAKE_OUT_ROD_NORTH,
-    [DIR_NORTHEAST] = ANIM_TAKE_OUT_ROD_NORTH,
-};
-static const u8 sFishingNoCatchDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_PUT_AWAY_ROD_SOUTH,
-    [DIR_SOUTH] = ANIM_PUT_AWAY_ROD_SOUTH,
-    [DIR_NORTH] = ANIM_PUT_AWAY_ROD_NORTH,
-    [DIR_WEST] = ANIM_PUT_AWAY_ROD_WEST,
-    [DIR_EAST] = ANIM_PUT_AWAY_ROD_EAST,
-    [DIR_SOUTHWEST] = ANIM_PUT_AWAY_ROD_SOUTH,
-    [DIR_SOUTHEAST] = ANIM_PUT_AWAY_ROD_SOUTH,
-    [DIR_NORTHWEST] = ANIM_PUT_AWAY_ROD_NORTH,
-    [DIR_NORTHEAST] = ANIM_PUT_AWAY_ROD_NORTH,
-};
-static const u8 sFishingBiteDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_HOOKED_POKEMON_SOUTH,
-    [DIR_SOUTH] = ANIM_HOOKED_POKEMON_SOUTH,
-    [DIR_NORTH] = ANIM_HOOKED_POKEMON_NORTH,
-    [DIR_WEST] = ANIM_HOOKED_POKEMON_WEST,
-    [DIR_EAST] = ANIM_HOOKED_POKEMON_EAST,
-    [DIR_SOUTHWEST] = ANIM_HOOKED_POKEMON_SOUTH,
-    [DIR_SOUTHEAST] = ANIM_HOOKED_POKEMON_SOUTH,
-    [DIR_NORTHWEST] = ANIM_HOOKED_POKEMON_NORTH,
-    [DIR_NORTHEAST] = ANIM_HOOKED_POKEMON_NORTH,
-};
-static const u8 sRunningDirectionAnimNums[] = {
-    [DIR_NONE] = ANIM_RUN_SOUTH,
-    [DIR_SOUTH] = ANIM_RUN_SOUTH,
-    [DIR_NORTH] = ANIM_RUN_NORTH,
-    [DIR_WEST] = ANIM_RUN_WEST,
-    [DIR_EAST] = ANIM_RUN_EAST,
-    [DIR_SOUTHWEST] = ANIM_RUN_WEST,
-    [DIR_SOUTHEAST] = ANIM_RUN_EAST,
-    [DIR_NORTHWEST] = ANIM_RUN_WEST,
-    [DIR_NORTHEAST] = ANIM_RUN_EAST,
+struct Direction
+{
+    u8 faceDirectionAnim;
+    u8 moveDirectionAnim;
+    u8 moveDirectionFastAnim;
+    u8 moveDirectionFasterAnim;
+    u8 moveDirectionFastestAnim;
+    u8 jumpSpecialDirectionAnim; // used for jumping onto surf mon
+    u8 acroWheelieDirectionAnim;
+    u8 acroUnusedDirectionAnim;
+    u8 acroEndWheelieDirectionAnim;
+    u8 acroUnusedActionDirectionAnim;
+    u8 acroWheeliePedalDirectionAnim;
+    u8 fishingDirectionAnim;
+    u8 fishingNoCatchDirectionAnim;
+    u8 fishingBiteDirectionAnim;
+    u8 runningDirectionAnim;
+    u8 trainerFacingDirectionMovementTypes;
 };
 
-const u8 gTrainerFacingDirectionMovementTypes[] = {
-    [DIR_NONE] = MOVEMENT_TYPE_FACE_DOWN,
-    [DIR_SOUTH] = MOVEMENT_TYPE_FACE_DOWN,
-    [DIR_NORTH] = MOVEMENT_TYPE_FACE_UP,
-    [DIR_WEST] = MOVEMENT_TYPE_FACE_LEFT,
-    [DIR_EAST] = MOVEMENT_TYPE_FACE_RIGHT,
-    [DIR_SOUTHWEST] = MOVEMENT_TYPE_FACE_DOWN,
-    [DIR_SOUTHEAST] = MOVEMENT_TYPE_FACE_DOWN,
-    [DIR_NORTHWEST] = MOVEMENT_TYPE_FACE_UP,
-    [DIR_NORTHEAST] = MOVEMENT_TYPE_FACE_UP,
+static const struct Direction sDirectionInfo[] =
+{
+    [DIR_NONE] =
+    {
+        .faceDirectionAnim = ANIM_STD_FACE_SOUTH,
+        .moveDirectionAnim = ANIM_STD_GO_SOUTH,
+        .moveDirectionFastAnim = ANIM_STD_GO_FAST_SOUTH,
+        .moveDirectionFasterAnim = ANIM_STD_GO_FASTER_SOUTH,
+        .moveDirectionFastestAnim = ANIM_STD_GO_FASTEST_SOUTH,
+        .jumpSpecialDirectionAnim = ANIM_GET_ON_OFF_POKEMON_SOUTH,
+        .acroWheelieDirectionAnim = ANIM_BUNNY_HOP_BACK_WHEEL_SOUTH,
+        .acroUnusedDirectionAnim = ANIM_BUNNY_HOP_FRONT_WHEEL_SOUTH,
+        .acroEndWheelieDirectionAnim = ANIM_STANDING_WHEELIE_BACK_WHEEL_SOUTH,
+        .acroUnusedActionDirectionAnim = ANIM_STANDING_WHEELIE_FRONT_WHEEL_SOUTH,
+        .acroWheeliePedalDirectionAnim = ANIM_MOVING_WHEELIE_SOUTH,
+        .fishingDirectionAnim = ANIM_TAKE_OUT_ROD_SOUTH,
+        .fishingNoCatchDirectionAnim = ANIM_PUT_AWAY_ROD_SOUTH,
+        .fishingBiteDirectionAnim = ANIM_HOOKED_POKEMON_SOUTH,
+        .runningDirectionAnim = ANIM_RUN_SOUTH,
+        .trainerFacingDirectionMovementTypes = MOVEMENT_TYPE_FACE_DOWN,
+    },
+
+    [DIR_SOUTH] =
+    {
+        .faceDirectionAnim = ANIM_STD_FACE_SOUTH,
+        .moveDirectionAnim = ANIM_STD_GO_SOUTH,
+        .moveDirectionFastAnim = ANIM_STD_GO_FAST_SOUTH,
+        .moveDirectionFasterAnim = ANIM_STD_GO_FASTER_SOUTH,
+        .moveDirectionFastestAnim = ANIM_STD_GO_FASTEST_SOUTH,
+        .jumpSpecialDirectionAnim = ANIM_GET_ON_OFF_POKEMON_SOUTH,
+        .acroWheelieDirectionAnim = ANIM_BUNNY_HOP_BACK_WHEEL_SOUTH,
+        .acroUnusedDirectionAnim = ANIM_BUNNY_HOP_FRONT_WHEEL_SOUTH,
+        .acroEndWheelieDirectionAnim = ANIM_STANDING_WHEELIE_BACK_WHEEL_SOUTH,
+        .acroUnusedActionDirectionAnim = ANIM_STANDING_WHEELIE_FRONT_WHEEL_SOUTH,
+        .acroWheeliePedalDirectionAnim = ANIM_MOVING_WHEELIE_SOUTH,
+        .fishingDirectionAnim = ANIM_TAKE_OUT_ROD_SOUTH,
+        .fishingNoCatchDirectionAnim = ANIM_PUT_AWAY_ROD_SOUTH,
+        .fishingBiteDirectionAnim = ANIM_HOOKED_POKEMON_SOUTH,
+        .runningDirectionAnim = ANIM_RUN_SOUTH,
+        .trainerFacingDirectionMovementTypes = MOVEMENT_TYPE_FACE_DOWN,
+    },
+
+    [DIR_NORTH] =
+    {
+        .faceDirectionAnim = ANIM_STD_FACE_NORTH,
+        .moveDirectionAnim = ANIM_STD_GO_NORTH,
+        .moveDirectionFastAnim = ANIM_STD_GO_FAST_NORTH,
+        .moveDirectionFasterAnim = ANIM_STD_GO_FASTER_NORTH,
+        .moveDirectionFastestAnim = ANIM_STD_GO_FASTEST_NORTH,
+        .jumpSpecialDirectionAnim = ANIM_GET_ON_OFF_POKEMON_NORTH,
+        .acroWheelieDirectionAnim = ANIM_BUNNY_HOP_BACK_WHEEL_NORTH,
+        .acroUnusedDirectionAnim = ANIM_BUNNY_HOP_FRONT_WHEEL_NORTH,
+        .acroEndWheelieDirectionAnim = ANIM_STANDING_WHEELIE_BACK_WHEEL_NORTH,
+        .acroUnusedActionDirectionAnim = ANIM_STANDING_WHEELIE_FRONT_WHEEL_NORTH,
+        .acroWheeliePedalDirectionAnim = ANIM_MOVING_WHEELIE_NORTH,
+        .fishingDirectionAnim = ANIM_TAKE_OUT_ROD_NORTH,
+        .fishingNoCatchDirectionAnim = ANIM_PUT_AWAY_ROD_NORTH,
+        .fishingBiteDirectionAnim = ANIM_HOOKED_POKEMON_NORTH,
+        .runningDirectionAnim = ANIM_RUN_NORTH,
+        .trainerFacingDirectionMovementTypes = MOVEMENT_TYPE_FACE_UP,
+    },
+
+    [DIR_WEST] =
+    {
+        .faceDirectionAnim = ANIM_STD_FACE_WEST,
+        .moveDirectionAnim = ANIM_STD_GO_WEST,
+        .moveDirectionFastAnim = ANIM_STD_GO_FAST_WEST,
+        .moveDirectionFasterAnim = ANIM_STD_GO_FASTER_WEST,
+        .moveDirectionFastestAnim = ANIM_STD_GO_FASTEST_WEST,
+        .jumpSpecialDirectionAnim = ANIM_GET_ON_OFF_POKEMON_WEST,
+        .acroWheelieDirectionAnim = ANIM_BUNNY_HOP_BACK_WHEEL_WEST,
+        .acroUnusedDirectionAnim = ANIM_BUNNY_HOP_FRONT_WHEEL_WEST,
+        .acroEndWheelieDirectionAnim = ANIM_STANDING_WHEELIE_BACK_WHEEL_WEST,
+        .acroUnusedActionDirectionAnim = ANIM_STANDING_WHEELIE_FRONT_WHEEL_WEST,
+        .acroWheeliePedalDirectionAnim = ANIM_MOVING_WHEELIE_WEST,
+        .fishingDirectionAnim = ANIM_TAKE_OUT_ROD_WEST,
+        .fishingNoCatchDirectionAnim = ANIM_PUT_AWAY_ROD_WEST,
+        .fishingBiteDirectionAnim = ANIM_HOOKED_POKEMON_WEST,
+        .runningDirectionAnim = ANIM_RUN_WEST,
+        .trainerFacingDirectionMovementTypes = MOVEMENT_TYPE_FACE_LEFT,
+    },
+
+    [DIR_EAST] =
+    {
+        .faceDirectionAnim = ANIM_STD_FACE_EAST,
+        .moveDirectionAnim = ANIM_STD_GO_EAST,
+        .moveDirectionFastAnim = ANIM_STD_GO_FAST_EAST,
+        .moveDirectionFasterAnim = ANIM_STD_GO_FASTER_EAST,
+        .moveDirectionFastestAnim = ANIM_STD_GO_FASTEST_EAST,
+        .jumpSpecialDirectionAnim = ANIM_GET_ON_OFF_POKEMON_EAST,
+        .acroWheelieDirectionAnim = ANIM_BUNNY_HOP_BACK_WHEEL_EAST,
+        .acroUnusedDirectionAnim = ANIM_BUNNY_HOP_FRONT_WHEEL_EAST,
+        .acroEndWheelieDirectionAnim = ANIM_STANDING_WHEELIE_BACK_WHEEL_EAST,
+        .acroUnusedActionDirectionAnim = ANIM_STANDING_WHEELIE_FRONT_WHEEL_EAST,
+        .acroWheeliePedalDirectionAnim = ANIM_MOVING_WHEELIE_EAST,
+        .fishingDirectionAnim = ANIM_TAKE_OUT_ROD_EAST,
+        .fishingNoCatchDirectionAnim = ANIM_PUT_AWAY_ROD_EAST,
+        .fishingBiteDirectionAnim = ANIM_HOOKED_POKEMON_EAST,
+        .runningDirectionAnim = ANIM_RUN_EAST,
+        .trainerFacingDirectionMovementTypes = MOVEMENT_TYPE_FACE_RIGHT,
+    },
+
+    [DIR_SOUTHWEST] =
+    {
+        .faceDirectionAnim = ANIM_STD_FACE_WEST,
+        .moveDirectionAnim = ANIM_STD_GO_WEST,
+        .moveDirectionFastAnim = ANIM_STD_GO_FAST_WEST,
+        .moveDirectionFasterAnim = ANIM_STD_GO_FASTER_WEST,
+        .moveDirectionFastestAnim = ANIM_STD_GO_FASTEST_WEST,
+        .jumpSpecialDirectionAnim = ANIM_GET_ON_OFF_POKEMON_WEST,
+        .acroWheelieDirectionAnim = ANIM_BUNNY_HOP_BACK_WHEEL_WEST,
+        .acroUnusedDirectionAnim = ANIM_BUNNY_HOP_FRONT_WHEEL_SOUTH,
+        .acroEndWheelieDirectionAnim = ANIM_STANDING_WHEELIE_BACK_WHEEL_WEST,
+        .acroUnusedActionDirectionAnim = ANIM_STANDING_WHEELIE_FRONT_WHEEL_SOUTH,
+        .acroWheeliePedalDirectionAnim = ANIM_MOVING_WHEELIE_WEST,
+        .fishingDirectionAnim = ANIM_TAKE_OUT_ROD_SOUTH,
+        .fishingNoCatchDirectionAnim = ANIM_PUT_AWAY_ROD_SOUTH,
+        .fishingBiteDirectionAnim = ANIM_HOOKED_POKEMON_SOUTH,
+        .runningDirectionAnim = ANIM_RUN_WEST,
+        .trainerFacingDirectionMovementTypes = MOVEMENT_TYPE_FACE_DOWN,
+    },
+
+    [DIR_SOUTHEAST] =
+    {
+        .faceDirectionAnim = ANIM_STD_FACE_EAST,
+        .moveDirectionAnim = ANIM_STD_GO_EAST,
+        .moveDirectionFastAnim = ANIM_STD_GO_FAST_EAST,
+        .moveDirectionFasterAnim = ANIM_STD_GO_FASTER_EAST,
+        .moveDirectionFastestAnim = ANIM_STD_GO_FASTEST_EAST,
+        .jumpSpecialDirectionAnim = ANIM_GET_ON_OFF_POKEMON_EAST,
+        .acroWheelieDirectionAnim = ANIM_BUNNY_HOP_BACK_WHEEL_EAST,
+        .acroUnusedDirectionAnim = ANIM_BUNNY_HOP_FRONT_WHEEL_SOUTH,
+        .acroEndWheelieDirectionAnim = ANIM_STANDING_WHEELIE_BACK_WHEEL_EAST,
+        .acroUnusedActionDirectionAnim = ANIM_STANDING_WHEELIE_FRONT_WHEEL_SOUTH,
+        .acroWheeliePedalDirectionAnim = ANIM_MOVING_WHEELIE_EAST,
+        .fishingDirectionAnim = ANIM_TAKE_OUT_ROD_SOUTH,
+        .fishingNoCatchDirectionAnim = ANIM_PUT_AWAY_ROD_SOUTH,
+        .fishingBiteDirectionAnim = ANIM_HOOKED_POKEMON_SOUTH,
+        .runningDirectionAnim = ANIM_RUN_EAST,
+        .trainerFacingDirectionMovementTypes = MOVEMENT_TYPE_FACE_DOWN,
+    },
+
+    [DIR_NORTHWEST] =
+    {
+        .faceDirectionAnim = ANIM_STD_FACE_WEST,
+        .moveDirectionAnim = ANIM_STD_GO_WEST,
+        .moveDirectionFastAnim = ANIM_STD_GO_FAST_WEST,
+        .moveDirectionFasterAnim = ANIM_STD_GO_FASTER_WEST,
+        .moveDirectionFastestAnim = ANIM_STD_GO_FASTEST_WEST,
+        .jumpSpecialDirectionAnim = ANIM_GET_ON_OFF_POKEMON_WEST,
+        .acroWheelieDirectionAnim = ANIM_BUNNY_HOP_BACK_WHEEL_WEST,
+        .acroUnusedDirectionAnim = ANIM_BUNNY_HOP_FRONT_WHEEL_NORTH,
+        .acroEndWheelieDirectionAnim = ANIM_STANDING_WHEELIE_BACK_WHEEL_WEST,
+        .acroUnusedActionDirectionAnim = ANIM_STANDING_WHEELIE_FRONT_WHEEL_NORTH,
+        .acroWheeliePedalDirectionAnim = ANIM_MOVING_WHEELIE_WEST,
+        .fishingDirectionAnim = ANIM_TAKE_OUT_ROD_NORTH,
+        .fishingNoCatchDirectionAnim = ANIM_PUT_AWAY_ROD_NORTH,
+        .fishingBiteDirectionAnim = ANIM_HOOKED_POKEMON_NORTH,
+        .runningDirectionAnim = ANIM_RUN_WEST,
+        .trainerFacingDirectionMovementTypes = MOVEMENT_TYPE_FACE_UP,
+    },
+
+    [DIR_NORTHEAST] =
+    {
+        .faceDirectionAnim = ANIM_STD_FACE_EAST,
+        .moveDirectionAnim = ANIM_STD_GO_EAST,
+        .moveDirectionFastAnim = ANIM_STD_GO_FAST_EAST,
+        .moveDirectionFasterAnim = ANIM_STD_GO_FASTER_EAST,
+        .moveDirectionFastestAnim = ANIM_STD_GO_FASTEST_EAST,
+        .jumpSpecialDirectionAnim = ANIM_GET_ON_OFF_POKEMON_EAST,
+        .acroWheelieDirectionAnim = ANIM_BUNNY_HOP_BACK_WHEEL_EAST,
+        .acroUnusedDirectionAnim = ANIM_BUNNY_HOP_FRONT_WHEEL_NORTH,
+        .acroEndWheelieDirectionAnim = ANIM_STANDING_WHEELIE_BACK_WHEEL_EAST,
+        .acroUnusedActionDirectionAnim = ANIM_STANDING_WHEELIE_FRONT_WHEEL_NORTH,
+        .acroWheeliePedalDirectionAnim = ANIM_MOVING_WHEELIE_EAST,
+        .fishingDirectionAnim = ANIM_TAKE_OUT_ROD_NORTH,
+        .fishingNoCatchDirectionAnim = ANIM_PUT_AWAY_ROD_NORTH,
+        .fishingBiteDirectionAnim = ANIM_HOOKED_POKEMON_NORTH,
+        .runningDirectionAnim = ANIM_RUN_EAST,
+        .trainerFacingDirectionMovementTypes = MOVEMENT_TYPE_FACE_UP,
+    },
 };
 
 bool8 (*const gOppositeDirectionBlockedMetatileFuncs[])(u8) = {
@@ -6030,77 +6055,77 @@ void ClearObjectEventMovement(struct ObjectEvent *objectEvent, struct Sprite *sp
 
 u8 GetFaceDirectionAnimNum(u8 direction)
 {
-    return sFaceDirectionAnimNums[direction];
+    return sDirectionInfo[direction].faceDirectionAnim;
 }
 
 u8 GetMoveDirectionAnimNum(u8 direction)
 {
-    return sMoveDirectionAnimNums[direction];
+    return sDirectionInfo[direction].moveDirectionAnim;
 }
 
 u8 GetMoveDirectionFastAnimNum(u8 direction)
 {
-    return sMoveDirectionFastAnimNums[direction];
+    return sDirectionInfo[direction].moveDirectionFastAnim;
 }
 
 u8 GetMoveDirectionFasterAnimNum(u8 direction)
 {
-    return sMoveDirectionFasterAnimNums[direction];
+    return sDirectionInfo[direction].moveDirectionFasterAnim;
 }
 
 u8 GetMoveDirectionFastestAnimNum(u8 direction)
 {
-    return sMoveDirectionFastestAnimNums[direction];
+    return sDirectionInfo[direction].moveDirectionFastestAnim;
 }
 
 u8 GetJumpSpecialDirectionAnimNum(u8 direction)
 {
-    return sJumpSpecialDirectionAnimNums[direction];
+    return sDirectionInfo[direction].jumpSpecialDirectionAnim;
 }
 
 u8 GetAcroWheelieDirectionAnimNum(u8 direction)
 {
-    return sAcroWheelieDirectionAnimNums[direction];
+    return sDirectionInfo[direction].acroWheelieDirectionAnim;
 }
 
 u8 GetAcroUnusedDirectionAnimNum(u8 direction)
 {
-    return sAcroUnusedDirectionAnimNums[direction];
+    return sDirectionInfo[direction].acroUnusedDirectionAnim;
 }
 
 u8 GetAcroEndWheelieDirectionAnimNum(u8 direction)
 {
-    return sAcroEndWheelieDirectionAnimNums[direction];
+    return sDirectionInfo[direction].acroEndWheelieDirectionAnim;
 }
 
 u8 GetAcroUnusedActionDirectionAnimNum(u8 direction)
 {
-    return sAcroUnusedActionDirectionAnimNums[direction];
+    return sDirectionInfo[direction].acroUnusedActionDirectionAnim;
 }
 
 u8 GetAcroWheeliePedalDirectionAnimNum(u8 direction)
 {
-    return sAcroWheeliePedalDirectionAnimNums[direction];
+    return sDirectionInfo[direction].acroWheeliePedalDirectionAnim;
 }
 
 u8 GetFishingDirectionAnimNum(u8 direction)
 {
-    return sFishingDirectionAnimNums[direction];
+    return sDirectionInfo[direction].fishingDirectionAnim;
 }
 
 u8 GetFishingNoCatchDirectionAnimNum(u8 direction)
 {
-    return sFishingNoCatchDirectionAnimNums[direction];
+    return sDirectionInfo[direction].fishingNoCatchDirectionAnim;
 }
 
 u8 GetFishingBiteDirectionAnimNum(u8 direction)
 {
-    return sFishingBiteDirectionAnimNums[direction];
+    return sDirectionInfo[direction].fishingBiteDirectionAnim;
 }
 
 u8 GetRunningDirectionAnimNum(u8 direction)
 {
-    return sRunningDirectionAnimNums[direction];
+    return sDirectionInfo[direction].runningDirectionAnim;
 }
 
 static const struct StepAnimTable *GetStepAnimTable(const union AnimCmd *const *anims)
@@ -6226,7 +6251,7 @@ void SetTrainerMovementType(struct ObjectEvent *objectEvent, u8 movementType)
 
 u8 GetTrainerFacingDirectionMovementType(u8 direction)
 {
-    return gTrainerFacingDirectionMovementTypes[direction];
+    return sDirectionInfo[direction].trainerFacingDirectionMovementTypes;
 }
 
 u8 GetCollisionInDirection(struct ObjectEvent *objectEvent, u8 direction)
