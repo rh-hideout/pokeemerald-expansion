@@ -5644,7 +5644,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 BattleScriptCall(BattleScript_BattlerFormChange);
                 break;
             }
-            //BattleScriptExecute(BattleScript_BattlerFormChangeEnd2); // Generic animation
             effect++;
         }
         break;
@@ -9899,7 +9898,6 @@ bool32 IsBattlerInTeraForm(u32 battler)
     return (gSpeciesInfo[gBattleMons[battler].species].isTeraForm);
 }
 
-// Returns SPECIES_NONE if no form change is possible
 u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method)
 {
     struct FormChangeContext ctx =

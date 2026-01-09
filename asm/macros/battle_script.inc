@@ -366,8 +366,8 @@
 	.byte B_SCR_OP_WAITSTATE
 	.endm
 
-	.macro isdmgblockedbydisguise
-	.byte B_SCR_OP_ISDMGBLOCKEDBYDISGUISE
+	.macro tryselfconfusiondmgformchange
+	.byte B_SCR_OP_TRYSELFCONFUSIONDMGFORMCHANGE
 	.endm
 
 	.macro return

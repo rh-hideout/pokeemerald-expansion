@@ -47,8 +47,6 @@ enum FormChanges
     // - No parameters.
     FORM_CHANGE_WITHDRAW,
     // Form change that activates when the Pokémon faints, either in battle or in the overworld by poison.
-    // If species is not specified and it's on the player's side, it will try to use the value
-    // saved in gBattleStruct->partyState[x][y].changedSpecies from a previous form change.
     // - No parameters.
     FORM_CHANGE_FAINT,
     // Form change that activates when the Pokémon is sent out at the beginning of a battle
