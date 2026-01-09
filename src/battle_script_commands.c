@@ -4049,6 +4049,8 @@ static void Cmd_dofaintanimation(void)
         return;
     }
 
+    gBattleStruct->battlerState[battler].fainted = TRUE;
+
     BtlController_EmitFaintAnimation(battler, B_COMM_TO_CONTROLLER);
     MarkBattlerForControllerExec(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -14238,13 +14240,6 @@ void BS_TryIllusionOff(void)
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     if (TryClearIllusion(battler, GetBattlerAbility(battler)))
         return;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_SetSpriteIgnore0Hp(void)
-{
-    NATIVE_ARGS(bool8 ignore0HP);
-    gBattleStruct->spriteIgnore0Hp = cmd->ignore0HP;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
