@@ -10105,7 +10105,7 @@ static void Cmd_trymemento(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (B_MEMENTO_FAIL >= GEN_4
+    if (B_MEMENTO_FAIL >= GEN_5
       && (gBattleCommunication[MISS_TYPE] == B_MSG_PROTECTED
         || IsSemiInvulnerable(gBattlerTarget, CHECK_ALL)
         || IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove)
