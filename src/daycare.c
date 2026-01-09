@@ -295,7 +295,7 @@ static void StorePokemonInEmptyDaycareSlot(struct Pokemon *mon, struct DayCare *
 
 void StoreSelectedPokemonInDaycare(void)
 {
-    if(gSpecialVar_MonBoxId == 0xFF)
+    if (gSpecialVar_MonBoxId == 0xFF)
     {
         StorePokemonInEmptyDaycareSlot(&gPlayerParty[GetCursorSelectionMonId()], &gSaveBlock1Ptr->daycare);
     }
