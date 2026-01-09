@@ -3053,7 +3053,11 @@ static void CB2_InitInGameTrade(void)
 
 static void UpdatePokedexForReceivedMon(u8 partyIdx)
 {
-    struct Pokemon *mon = &gPlayerParty[partyIdx];
+    struct Pokemon *mon;
+    if (partyIdx == PC_MON_CHOSEN)
+        mon = &gEnemyParty[1];
+    else
+        mon = &gPlayerParty[partyIdx];
 
     if (!GetMonData(mon, MON_DATA_IS_EGG))
     {
@@ -3077,11 +3081,14 @@ static void TryEnableNationalDexFromLinkPartner(void)
 static void TradeMons(u8 playerPartyIdx, u8 partnerPartyIdx)
 {
     u8 friendship;
+    struct Pokemon *playerMon, *partnerMon;
+    if (playerPartyIdx == PC_MON_CHOSEN)
+        playerMon = &gEnemyParty[1];
+    else
+        playerMon = &gPlayerParty[playerPartyIdx];
 
-    struct Pokemon *playerMon = &gPlayerParty[playerPartyIdx];
     u16 playerMail = GetMonData(playerMon, MON_DATA_MAIL);
-
-    struct Pokemon *partnerMon = &gEnemyParty[partnerPartyIdx];
+    partnerMon = &gEnemyParty[partnerPartyIdx];
     u16 partnerMail = GetMonData(partnerMon, MON_DATA_MAIL);
 
     // The mail attached to the sent Pokémon no longer exists in your file.
@@ -3097,9 +3104,21 @@ static void TradeMons(u8 playerPartyIdx, u8 partnerPartyIdx)
         SetMonData(playerMon, MON_DATA_FRIENDSHIP, &friendship);
 
     if (partnerMail != MAIL_NONE)
-        GiveMailToMon(playerMon, &gTradeMail[partnerMail]);
-
+    {
+        if (playerPartyIdx == PC_MON_CHOSEN)
+        {
+            //TODO: add message explaining mail has been send to PC OR couldn't be saved
+            SaveMailToPC(&gTradeMail[partnerMail]);
+            TakeMailFromMon(playerMon);
+        }
+        else
+        {
+            GiveMailToMon(playerMon, &gTradeMail[partnerMail]);
+        }
+    }
     UpdatePokedexForReceivedMon(playerPartyIdx);
+    if (playerPartyIdx == PC_MON_CHOSEN)
+        CopyMonToPC(playerMon);
     if (gReceivedRemoteLinkPlayers)
         TryEnableNationalDexFromLinkPartner();
 }
@@ -4349,25 +4368,19 @@ static bool8 DoTradeAnim_Wireless(void)
             sTradeAnim->state++;
         break;
     case STATE_TRY_EVOLUTION: // Only if in-game trade, link trades use CB2_TryLinkTradeEvolution
-        if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
-        {
-            if(CalculatePartyCount(gPlayerParty) < PARTY_SIZE)
-                CopyMon(&gPlayerParty[CalculatePartyCount(gPlayerParty)], &gEnemyParty[0], 100);
-            else
-                CopyMonToPC(&gEnemyParty[0]);
-        }
-        else
-        {
-            TradeMons(gSpecialVar_0x8004, 0);
-        }
+        TradeMons(gSpecialVar_0x8004, 0);
         gCB2_AfterEvolution = CB2_InGameTrade;
-        evoTarget = GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gPlayerParty[gSelectedTradeMonPositions[TRADE_PARTNER]], NULL, CHECK_EVO);
+        struct Pokemon *canEvolveMon;
+        if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
+            canEvolveMon = &gEnemyParty[1];
+        else
+            canEvolveMon = &gPlayerParty[gSpecialVar_0x8004];
+        evoTarget = GetEvolutionTargetSpecies(canEvolveMon, EVO_MODE_TRADE, ITEM_NONE, &gEnemyParty[0], NULL, CHECK_EVO);
         if (evoTarget != SPECIES_NONE)
         {
-            GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gPlayerParty[gSelectedTradeMonPositions[TRADE_PARTNER]], NULL, DO_EVO);
-            TradeEvolutionScene(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], evoTarget, sTradeAnim->monSpriteIds[TRADE_PARTNER], gSelectedTradeMonPositions[TRADE_PLAYER]);
+            GetEvolutionTargetSpecies(canEvolveMon, EVO_MODE_TRADE, ITEM_NONE, &gEnemyParty[0], NULL, DO_EVO);
+            TradeEvolutionScene(canEvolveMon, evoTarget, sTradeAnim->monSpriteIds[TRADE_PARTNER], gSpecialVar_0x8004);
         }
-
         sTradeAnim->state++;
         break;
     case STATE_FADE_OUT_END:
