@@ -10,7 +10,6 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 4 turns: Enc
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
-    u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
@@ -39,7 +38,6 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Enc
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
-    u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
@@ -65,7 +63,6 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 4-8 turns: En
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
-    u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
@@ -96,7 +93,6 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 3-7 turns: En
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
-    u32 speedPlayer, speedOpponent;
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     GIVEN {
@@ -124,7 +120,6 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 3-7 turns:
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
-    u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
@@ -153,7 +148,6 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns:
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
-    u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
