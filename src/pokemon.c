@@ -70,6 +70,8 @@
 #include "constants/union_room.h"
 #include "constants/weather.h"
 
+extern u16 gSpecialVar_ItemId;
+
 #define FRIENDSHIP_EVO_THRESHOLD ((P_FRIENDSHIP_EVO_THRESHOLD >= GEN_8) ? 160 : 220)
 
 struct SpeciesItem
@@ -6773,13 +6775,13 @@ u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId)
 }
 
 // Returns the current species if no form change is possible
-u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method, u32 arg)
+u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method)
 {
-    return GetFormChangeTargetSpeciesBoxMon(&mon->box, method, arg);
+    return GetFormChangeTargetSpeciesBoxMon(&mon->box, method);
 }
 
 // Returns the current species if no form change is possible
-u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method, u32 arg)
+u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method)
 {
     u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
 
@@ -6789,7 +6791,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
         .currentSpecies = species,
         .heldItem = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM, NULL),
         .ability = GetAbilityBySpecies(species, GetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, NULL)),
-        .partyItemUsed = arg,
+        .partyItemUsed = gSpecialVar_ItemId,
         .status = GetBoxMonData(boxMon, MON_DATA_STATUS, NULL),
     };
 
@@ -7163,7 +7165,7 @@ bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method)
         return FALSE;
 
     u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
-    u32 targetSpecies = GetFormChangeTargetSpecies(mon, method, 0);
+    u32 targetSpecies = GetFormChangeTargetSpecies(mon, method);
 
     struct PartyState *battlePartyState = GetBattlerPartyStateByPokemon(mon);
     // If the battle ends, and there's not a specified species to change back to,,
@@ -7396,7 +7398,7 @@ void UpdateDaysPassedSinceFormChange(u16 days)
 
         if (daysSinceFormChange == 0)
         {
-            u32 targetSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_DAYS_PASSED, 0);
+            u32 targetSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_DAYS_PASSED);
 
             if (targetSpecies != currentSpecies)
             {
