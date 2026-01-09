@@ -100,7 +100,6 @@ SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate does not trigger it (Gen3
 SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and triggers it immediately (Gen4+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_TRACE, GEN_4);
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
         OPPONENT(SPECIES_MASQUERAIN) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {

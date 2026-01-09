@@ -6,20 +6,20 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
 }
 
-SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Encore used before move")
+SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 4 turns: Encore used before move")
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
-    PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 20; speedOpponent = 10; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
     } WHEN {
         TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
+        TURN { MOVE(encoreUser, MOVE_ENCORE); FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
@@ -30,28 +30,31 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Enc
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
     }
 }
 
-SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns for player: Encore used after move")
+SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Encore used after move")
 {
     struct BattlePokemon *encoreUser = NULL;
     struct BattlePokemon *encoreTarget = NULL;
     u32 speedPlayer, speedOpponent;
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
-    PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 10; speedOpponent = 20; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
     } WHEN {
+        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_CELEBRATE); }
         TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
@@ -128,5 +131,4 @@ TO_DO_BATTLE_TEST("Encore's effect ends if the encored move runs out of PP");
 TO_DO_BATTLE_TEST("Encore lasts for 2-6 turns (Gen 2-3)");
 TO_DO_BATTLE_TEST("Encore lasts for 4-8 turns (Gen 4)");
 TO_DO_BATTLE_TEST("Encore lasts for 3-7 turns (Gen 4)");
-TO_DO_BATTLE_TEST("Encore lasts for 3 turns (Gen 5+)");
 TO_DO_BATTLE_TEST("Encore randomly chooses an opponent target");
