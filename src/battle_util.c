@@ -10009,15 +10009,16 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
     if (moveType == TYPE_MYSTERY)
         return modifier;
 
+    u32 speciesDef = GetMonData(mon, MON_DATA_SPECIES);
+
     struct BattleContext ctx = {0};
-    ctx.battlerDef = GetMonData(mon, MON_DATA_SPECIES);
     ctx.abilityDef = GetMonAbility(mon);
     ctx.move = ctx.chosenMove = MOVE_POUND;
     ctx.moveType = moveType;
     ctx.updateFlags = FALSE;
 
-    enum Type type1 = GetSpeciesType(ctx.battlerDef, 0);
-    enum Type type2 = GetSpeciesType(ctx.battlerDef, 1);
+    enum Type type1 = GetSpeciesType(speciesDef, 0);
+    enum Type type2 = GetSpeciesType(speciesDef, 1);
 
     MulByTypeEffectiveness(&ctx, &modifier, type1);
     if (type2 != type1)
