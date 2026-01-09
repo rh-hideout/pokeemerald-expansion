@@ -170,3 +170,4 @@ SINGLE_BATTLE_TEST("Retaliate works with self-inflicted fainting")
         EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
+

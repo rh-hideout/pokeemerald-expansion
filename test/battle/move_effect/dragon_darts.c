@@ -309,7 +309,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first targ
     }
 }
 
-DOUBLE_BATTLE_TEST("Dragon Darts will activate both targets abilities and hit no target")
+DOUBLE_BATTLE_TEST("Dragon Darts can be absorbed by both opponents and hit neither")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
@@ -328,3 +328,4 @@ DOUBLE_BATTLE_TEST("Dragon Darts will activate both targets abilities and hit no
         EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }
 }
+

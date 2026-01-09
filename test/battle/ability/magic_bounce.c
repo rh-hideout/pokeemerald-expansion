@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Magic Bounce wont activate if ability user protects")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
             STATUS_ICON(player, badPoison: TRUE);
         }
     }
@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Magic Bounce wont activate if ability user is in a semi-invu
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
             STATUS_ICON(player, badPoison: TRUE);
         }
     }

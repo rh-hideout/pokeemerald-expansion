@@ -130,7 +130,6 @@ DOUBLE_BATTLE_TEST("Commander cannot affect a Dondozo that was previously affect
     }
 }
 
-// TODO
 DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or Tatsugiri while it's active")
 {
     GIVEN {

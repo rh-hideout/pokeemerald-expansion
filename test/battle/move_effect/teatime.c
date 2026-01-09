@@ -94,7 +94,6 @@ SINGLE_BATTLE_TEST("Teatime causes other Pokemon to consume their Berry even if 
     }
 }
 
-// Not sure if this is correct and needs research
 DOUBLE_BATTLE_TEST("Teatime causes all Pokémon to consume their berry")
 {
     struct BattlePokemon *user = NULL;
