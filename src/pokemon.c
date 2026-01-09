@@ -7159,6 +7159,23 @@ bool32 SpeciesHasGenderDifferences(u16 species)
     return FALSE;
 }
 
+static struct PartyState *GetBattlerPartyStateByPokemon(struct Pokemon *partyMon)
+{
+    if (gBattleStruct == NULL)
+        return NULL;
+
+    for (int i = 0; i < NUM_BATTLE_SIDES; i++)
+    {
+        for (int j = 0; j < PARTY_SIZE; j++)
+        {
+            struct Pokemon *mon = &GetSideParty(i)[j];
+            if (partyMon == mon)
+                return &gBattleStruct->partyState[i][j];
+        }
+    }
+    return NULL;
+}
+
 bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method)
 {
     if (GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_NONE
