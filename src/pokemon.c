@@ -5541,13 +5541,9 @@ static void SortMovesAlphabetically(u16 *moves, u32 numMoves)
 
 u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
 {
-    u16 learnedMoves[MAX_MON_MOVES] = {0};
     u32 numMoves = 0;
     u32 species = GetBoxMonData(mon, MON_DATA_SPECIES, 0);
     u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES ? MAX_LEVEL : GetBoxMonData(mon, MON_DATA_LEVEL, 0));
-
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-        learnedMoves[i] = GetBoxMonData(mon, MON_DATA_MOVE1 + i, 0);
 
     do
     {
@@ -5558,7 +5554,7 @@ u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
             if (learnset[i].level > level)
                 break;
 
-            if (!MonKnowsMove(mon, learnset[i].move))
+            if (!BoxMonKnowsMove(mon, learnset[i].move))
                 moves[numMoves++] = learnset[i].move;
         }
 
@@ -5592,7 +5588,7 @@ u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves)
 
     for (u32 i = 0; eggMoves[i] != MOVE_UNAVAILABLE; i++)
     {
-        if (!MonKnowsMove(mon, eggMoves[i]))
+        if (!BoxMonKnowsMove(mon, eggMoves[i]))
             moves[numMoves++] = eggMoves[i];
     }
 
@@ -5628,7 +5624,7 @@ u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
         if (!CanLearnTeachableMove(species, move))
             continue;
         
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(mon, move))
             moves[numMoves++] = move;
     }
 
@@ -5657,7 +5653,7 @@ u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves)
         if (!CanLearnTeachableMove(species, move))
             continue;
 
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(mon, move))
             moves[numMoves++] = move;
     }
 
