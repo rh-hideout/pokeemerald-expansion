@@ -31433,6 +31433,13 @@ gBattleAnimGeneral_FormChange::
 	clearmonbg ANIM_ATTACKER
 	end
 
+gBattleAnimGeneral_FormChangeInstant::
+	monbg ANIM_ATTACKER
+	createvisualtask AnimTask_TransformMon, 2, SPECIES_GFX_CHANGE_FORM_CHANGE_INSTANT
+	waitforvisualfinish
+	clearmonbg ANIM_ATTACKER
+	end
+
 gBattleAnimGeneral_SlideOffScreen::
 	createvisualtask AnimTask_SlideOffScreen, 5, ANIM_TARGET, 3
 	waitforvisualfinish
