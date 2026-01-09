@@ -203,7 +203,7 @@ SINGLE_BATTLE_TEST("Mimikyu Busted reverts to Disguised form upon battle end aft
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, opponent);
         ABILITY_POPUP(player, ABILITY_DISGUISE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE_DISGUISE, player);
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), species);
     }
@@ -218,8 +218,8 @@ SINGLE_BATTLE_TEST("Cramorant reverts to base Form upon battle end after using S
         TURN { MOVE(player, MOVE_SURF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE_INSTANT, player);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CRAMORANT);
     }
