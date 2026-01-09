@@ -10009,7 +10009,6 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
     if (moveType == TYPE_MYSTERY)
         return modifier;
 
-    u32 speciesDef = GetMonData(mon, MON_DATA_SPECIES);
 
     struct BattleContext ctx = {0};
     ctx.abilityDef = GetMonAbility(mon);
@@ -10017,6 +10016,7 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
     ctx.moveType = moveType;
     ctx.updateFlags = FALSE;
 
+    u32 speciesDef = GetMonData(mon, MON_DATA_SPECIES);
     enum Type type1 = GetSpeciesType(speciesDef, 0);
     enum Type type2 = GetSpeciesType(speciesDef, 1);
 
