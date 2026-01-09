@@ -3115,6 +3115,17 @@ static enum MoveCanceler CancelerMultiTargetMoves(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
+static enum MoveCanceler CancelerFormChangeDuringAnim(struct BattleContext *ctx)
+{
+    // Gulp Missile changes
+    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT_DURING_MOVE))
+    {
+        // Only execute B_ANIM_FORM_CHANGE_INSTANT for those who have changed forms
+        gAnimPendingBattlerSpriteUpdate = TRUE;
+    }
+    return MOVE_STEP_SUCCESS;
+}
+
 static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleContext *ctx) =
 {
     [CANCELER_CLEAR_FLAGS] = CancelerClearFlags,
@@ -3153,6 +3164,7 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_EXPLOSION] = CancelerExplosion,
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
     [CANCELER_MULTI_TARGET_MOVES] = CancelerMultiTargetMoves,
+    [CANCELER_FORM_CHANGE_DURING_MOVE] = CancelerFormChangeDuringAnim,
 };
 
 enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx)

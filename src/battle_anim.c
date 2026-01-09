@@ -121,6 +121,7 @@ EWRAM_DATA u8 gBattleAnimTarget = 0;
 EWRAM_DATA u16 gAnimBattlerSpecies[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gAnimCustomPanning = 0;
 EWRAM_DATA static bool8 sAnimHideHpBoxes = FALSE;
+EWRAM_DATA bool8 gAnimPendingBattlerSpriteUpdate = FALSE;
 
 #include "data/battle_anim.h"
 

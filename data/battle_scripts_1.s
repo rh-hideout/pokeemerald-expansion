@@ -5067,6 +5067,9 @@ BattleScript_PerishBodyActivates::
 
 BattleScript_GulpMissileGorging::
 	call BattleScript_AbilityPopUp
+	handleformchange BS_TARGET, 0
+	playanimation BS_TARGET, B_ANIM_FORM_CHANGE_INSTANT
+	waitanimation
 	playanimation BS_ATTACKER, B_ANIM_GULP_MISSILE
 	waitanimation
 	effectivenesssound
@@ -5078,21 +5081,17 @@ BattleScript_GulpMissileGorging::
 	tryfaintmon BS_ATTACKER
 	jumpiffainted BS_ATTACKER, TRUE, BattleScript_GulpMissileNoSecondEffectGorging
 BattleScript_GulpMissileNoDmgGorging:
-	handleformchange BS_TARGET, 0
-	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
-	waitanimation
 	swapattackerwithtarget
 	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_PARALYSIS
 	swapattackerwithtarget
-	return
 BattleScript_GulpMissileNoSecondEffectGorging:
-	handleformchange BS_TARGET, 0
-	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
-	waitanimation
 	return
 
 BattleScript_GulpMissileGulping::
 	call BattleScript_AbilityPopUp
+	handleformchange BS_TARGET, 0
+	playanimation BS_TARGET, B_ANIM_FORM_CHANGE_INSTANT
+	waitanimation
 	playanimation BS_ATTACKER, B_ANIM_GULP_MISSILE
 	waitanimation
 	effectivenesssound
@@ -5104,9 +5103,6 @@ BattleScript_GulpMissileGulping::
 	tryfaintmon BS_ATTACKER
 	jumpiffainted BS_ATTACKER, TRUE, BattleScript_GulpMissileNoSecondEffectGulping
 BattleScript_GulpMissileNoDmgGulping:
-	handleformchange BS_TARGET, 0
-	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
-	waitanimation
 	swapattackerwithtarget @ to make gStatDownStringIds down below print the right battler
 	setstatchanger STAT_DEF, 1, TRUE
 	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_GulpMissileGulpingEnd
@@ -5114,11 +5110,7 @@ BattleScript_GulpMissileNoDmgGulping:
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_GulpMissileGulpingEnd:
 	swapattackerwithtarget @ restore the battlers, just in case
-	return
 BattleScript_GulpMissileNoSecondEffectGulping:
-	handleformchange BS_TARGET, 0
-	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
-	waitanimation
 	return
 
 BattleScript_SeedSowerActivates::
@@ -5666,7 +5658,7 @@ BattleScript_UltraBurst::
 	end3
 
 BattleScript_TwoTurnMovesSecondTurnFormChange::
-	call BattleScript_BattlerFormChangeNoPopup
+	call BattleScript_BattlerFormChangeInstant
 	goto BattleScript_FromTwoTurnMovesSecondTurnRet
 
 BattleScript_BattlerFormChange::
@@ -5676,6 +5668,15 @@ BattleScript_BattlerFormChange::
 BattleScript_BattlerFormChangeNoPopup::
 	handleformchange BS_SCRIPTING, 0
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
+	waitanimation
+	handleformchange BS_SCRIPTING, 1
+	switchinabilities BS_SCRIPTING
+	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
+	return
+
+BattleScript_BattlerFormChangeInstant::
+	handleformchange BS_SCRIPTING, 0
+	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE_INSTANT
 	waitanimation
 	handleformchange BS_SCRIPTING, 1
 	switchinabilities BS_SCRIPTING

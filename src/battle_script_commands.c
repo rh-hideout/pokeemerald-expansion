@@ -333,6 +333,7 @@ static bool32 CanAbilityPreventStatLoss(enum Ability abilityDef);
 static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u8 *failInstr, enum Move move);
 static void ResetValuesForCalledMove(void);
 static bool32 CanAbilityShieldActivateForBattler(u32 battler);
+static void PlayAnimation(u32 battler, u8 animId, const u16 *argPtr, const u8 *nextInstr);
 
 static void Cmd_attackcanceler(void);
 static void Cmd_accuracycheck(void);
@@ -1967,7 +1968,15 @@ static void Cmd_waitanimation(void)
 #if T_SHOULD_RUN_MOVE_ANIM
         gCountAllocs = FALSE;
 #endif
-        gBattlescriptCurrInstr = cmd->nextInstr;
+        if (gAnimPendingBattlerSpriteUpdate)
+        {
+            gAnimPendingBattlerSpriteUpdate = FALSE;
+            PlayAnimation(gBattlerAttacker, B_ANIM_FORM_CHANGE_INSTANT, NULL, cmd->nextInstr);
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
     }
 }
 
@@ -13023,6 +13032,7 @@ void BS_TryTwoTurnMovesPowerHerbFormChange(void)
 
     if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT_DURING_MOVE))
     {
+        // Doesn't need to set B_ANIM_FORM_CHANGE_INSTANT, as it was already handled on the first turn
         gBattleScripting.battler = gBattlerAttacker;
         gBattlescriptCurrInstr = BattleScript_TwoTurnMovesSecondTurnFormChange;
     }
