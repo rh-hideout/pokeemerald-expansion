@@ -9799,12 +9799,14 @@ bool32 CanMegaEvolve(u32 battler)
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return FALSE;
 
+    enum Ability ability = GetBattlerAbility(battler);
+
     // Check if there is an entry in the form change table for regular Mega Evolution and battler is holding Mega Stone.
-    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM) != gBattleMons[battler].species)
+    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, ability) != gBattleMons[battler].species)
         return TRUE;
 
     // Check if there is an entry in the form change table for Wish Mega Evolution.
-    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE) != gBattleMons[battler].species)
+    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE, ability) != gBattleMons[battler].species)
         return TRUE;
 
     // No checks passed, the mon CAN'T mega evolve.
@@ -9833,8 +9835,10 @@ bool32 CanUltraBurst(u32 battler)
     if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
         return FALSE;
 
+    enum Ability ability = GetBattlerAbility(battler);
+
     // Check if there is an entry in the form change table for Ultra Burst and battler is holding a Z-Crystal.
-    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_ULTRA_BURST) != gBattleMons[battler].species && holdEffect == HOLD_EFFECT_Z_CRYSTAL)
+    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_ULTRA_BURST, ability) != gBattleMons[battler].species && holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return TRUE;
 
     // No checks passed, the mon CAN'T ultra burst.
@@ -9899,14 +9903,14 @@ bool32 IsBattlerInTeraForm(u32 battler)
     return (gSpeciesInfo[gBattleMons[battler].species].isTeraForm);
 }
 
-u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method)
+u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method, enum Ability ability)
 {
     struct FormChangeContext ctx =
     {
         .method = method,
         .currentSpecies = gBattleMons[battler].species,
         .heldItem = gBattleMons[battler].item,
-        .ability = GetBattlerAbility(battler),
+        .ability = ability,
         .status = gBattleMons[battler].status1,
         .gmaxFactor = GetMonData(GetBattlerMon(battler), MON_DATA_GIGANTAMAX_FACTOR),
         .hp = gBattleMons[battler].hp,
@@ -9976,7 +9980,9 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
     if (!CanBattlerFormChange(battler, method))
         return FALSE;
 
-    targetSpecies = GetBattleFormChangeTargetSpecies(battler, method);
+    enum Ability ability = GetBattlerAbility(battler);
+
+    targetSpecies = GetBattleFormChangeTargetSpecies(battler, method, ability);
     if (targetSpecies != currentSpecies && targetSpecies != SPECIES_NONE)
     {
         // Saves the original species on the first form change.
