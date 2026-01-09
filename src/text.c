@@ -2830,3 +2830,40 @@ void DestroyTextCursorSprite(u8 spriteId)
 
 #undef sDelay
 #undef sState
+
+// End FRLG
+
+void DeactivateSingleTextPrinter(u32 id, enum TextPrinterType type)
+{
+    struct TextPrinter *currentPrinter = sFirstTextPrinter;
+    while (currentPrinter != NULL)
+    {
+        switch (type)
+        {
+        case WINDOW_TEXT_PRINTER:
+            if (currentPrinter->printerTemplate.type == WINDOW_TEXT_PRINTER && currentPrinter->printerTemplate.windowId == id)
+            {
+                currentPrinter->isInUse = FALSE;
+                currentPrinter = NULL;
+            }
+            else
+            {
+                currentPrinter = currentPrinter->nextPrinter;
+            }
+            break;
+        case SPRITE_TEXT_PRINTER:
+            if (currentPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER && currentPrinter->printerTemplate.spriteId == id)
+            {
+                currentPrinter->isInUse = FALSE;
+                currentPrinter = NULL;
+            }
+            else
+            {
+                currentPrinter = currentPrinter->nextPrinter;
+            }
+            break;
+        }
+    }
+
+    FreeFinishedTextPrinters();
+}
