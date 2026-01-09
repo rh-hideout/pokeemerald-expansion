@@ -7399,15 +7399,7 @@ void UpdateDaysPassedSinceFormChange(u16 days)
         SetMonData(mon, MON_DATA_DAYS_SINCE_FORM_CHANGE, &daysSinceFormChange);
 
         if (daysSinceFormChange == 0)
-        {
-            u32 targetSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_DAYS_PASSED);
-
-            if (targetSpecies != currentSpecies)
-            {
-                SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
-                CalculateMonStats(mon);
-            }
-        }
+            TryFormChange(mon, FORM_CHANGE_DAYS_PASSED);
     }
 }
 
