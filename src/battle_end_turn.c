@@ -1327,7 +1327,7 @@ static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (CanBattlerEndTurnFormChange(battler, ability) && AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+    if (CanBattlerEndTurnFormChange(battler, ability) && AbilityBattleEffects(ABILITYEFFECT_ENDTURN_FORM_CHANGE, battler, ability, MOVE_NONE, TRUE))
         effect = TRUE;
 
     return effect;
