@@ -1725,7 +1725,7 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
         level = FRONTIER_MAX_LEVEL_50;
 
     rentalRank = GetNumPastRentalsRank(battleMode, lvlMode);
-    otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
+    otId = READ_OTID_FROM_SAVE;
 
     for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
     {
@@ -1750,7 +1750,7 @@ static void CreateSlateportTentSelectableMons(u8 firstMonId)
     u32 otId = 0;
 
     gFacilityTrainerMons = gSlateportBattleTentMons;
-    otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
+    otId = READ_OTID_FROM_SAVE;
 
     for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
     {

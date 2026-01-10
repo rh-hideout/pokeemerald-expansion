@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Sticky Barb hurts its holder at the end of the turn")
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_STICKY_BARB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         HP_BAR(player, captureDamage: &damage);
     } THEN {

@@ -231,10 +231,9 @@ SINGLE_BATTLE_TEST("Harvest can restore a Berry that was transferred from anothe
         PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); HP(100); MaxHP(500); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TRICK); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_TRICK); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ABILITY_POPUP(opponent, ABILITY_HARVEST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
@@ -251,11 +250,10 @@ SINGLE_BATTLE_TEST("Harvest can only restore the newest berry consumed that was 
         PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); HP(100); MaxHP(500); Item(ITEM_APICOT_BERRY); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TRICK); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_TRICK); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ABILITY_POPUP(opponent, ABILITY_HARVEST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);

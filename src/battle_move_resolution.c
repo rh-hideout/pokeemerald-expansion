@@ -361,7 +361,6 @@ static enum MoveEndResult MoveEnd_Symbiosis(void)
             gLastUsedAbility = gBattleMons[BATTLE_PARTNER(battler)].ability;
             gEffectBattler = battler;
             gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(battler);
-            gBattlerAttacker = battler;
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
             result = MOVEEND_STEP_RUN_SCRIPT;
@@ -1847,7 +1846,7 @@ static void TryClearChargeVolatile(enum Type moveType)
 
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
-        if (gBattleMons[battler].volatiles.chargeTimer == 2) // Has been set this turn by move
+        if (gBattleMons[battler].volatiles.chargeTimer == 2) // Has been set this turn by move or ability
             gBattleMons[battler].volatiles.chargeTimer--;
     }
 }

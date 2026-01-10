@@ -193,7 +193,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Counter fails if mon that damaged Counter us
         WITH_CONFIG(CONFIG_COUNTER_TRY_HIT_PARTNER, GEN_4);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN {
@@ -387,7 +387,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Mirror Coat fails if mon that damaged Mirror
         WITH_CONFIG(CONFIG_COUNTER_TRY_HIT_PARTNER, GEN_4);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN {
@@ -565,7 +565,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Metal Burst fails if mon that damaged Metal 
         WITH_CONFIG(CONFIG_COUNTER_TRY_HIT_PARTNER, GEN_4);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN {
