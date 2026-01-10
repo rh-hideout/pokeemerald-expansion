@@ -76,11 +76,19 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 4-8 turns: En
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
@@ -105,10 +113,18 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 3-7 turns: En
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
@@ -132,11 +148,19 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 3-7 turns:
         TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
@@ -159,10 +183,18 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns:
         TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
         TURN { FORCED_MOVE(encoreTarget); }
         TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { FORCED_MOVE(encoreTarget); }
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);

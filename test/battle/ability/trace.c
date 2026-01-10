@@ -90,8 +90,9 @@ SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and does not trigger it (
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_TRACE);
-            ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        MESSAGE("It traced the opposing Masquerain's Intimidate!");
         NONE_OF {
+            ABILITY_POPUP(player, ABILITY_INTIMIDATE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         }
     }
