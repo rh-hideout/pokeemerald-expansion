@@ -1018,6 +1018,16 @@ static bool32 ShouldSkipToMoveEnd(void)
     return FALSE;
 }
 
+static bool32 CantFullyProtectFromMove(void)
+{
+    if (MoveIgnoresProtect(gCurrentMove))
+        return FALSE;
+    if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
+        return FALSE;
+    return GetProtectType(gProtectStructs[gBattlerTarget].protected) == PROTECT_TYPE_SINGLE
+        && gProtectStructs[gBattlerTarget].protected != PROTECT_MAX_GUARD;
+}
+
 static void Cmd_attackcanceler(void)
 {
     CMD_ARGS();
@@ -1064,6 +1074,14 @@ static void Cmd_attackcanceler(void)
     if (ShouldSkipToMoveEnd())
     {
         gBattlescriptCurrInstr = BattleScript_MoveEnd;
+        return;
+    }
+
+    if (CantFullyProtectFromMove())
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        BattleScriptCall(BattleScript_CouldntFullyProtect);
+        gBattleScripting.battler = gBattlerTarget;
         return;
     }
 
@@ -6283,21 +6301,19 @@ static void Cmd_statusanimation(void)
     }
 }
 
+#define DONE_TARGET_FAILURE (gBattleStruct->eventState.atkCanceler == CANCELER_TARGET_FAILURE + 1)
 static void Cmd_futuresighttargetfailure(void)
 {
-    CMD_ARGS();
+    CMD_ARGS(const u8 *failInstr);
 
     // Just do CancelerTargetFailure
-    if (gBattleStruct->eventState.atkCanceler == CANCELER_TARGET_FAILURE + 1)
-    {
+    if (!DONE_TARGET_FAILURE && AtkCanceler_MoveSuccessOrder() != MOVE_STEP_SUCCESS)
+        return;
+
+    if (IsBattlerUnaffectedByMove(gBattlerTarget))
+        gBattlescriptCurrInstr = cmd->failInstr;
+    else
         gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-
-    if (AtkCanceler_MoveSuccessOrder() != MOVE_STEP_SUCCESS)
-        return;
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_unused_0x66(void)

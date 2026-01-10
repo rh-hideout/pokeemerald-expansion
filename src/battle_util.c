@@ -63,7 +63,6 @@ static bool32 IsOpposingSideEmpty(u32 battler);
 static void ResetParadoxWeatherStat(u32 battler);
 static void ResetParadoxTerrainStat(u32 battler);
 static bool32 CanBattlerFormChange(u32 battler, enum FormChanges method);
-static bool32 CantFullyProtectFromMove(struct BattleContext *ctx);
 static bool32 CanBattlerBounceBackMove(struct BattleContext *ctx);
 static bool32 IsPowderMoveBlocked(struct BattleContext *ctx);
 const u8 *AbsorbedByDrainHpAbility(u32 battlerDef);
@@ -3056,7 +3055,7 @@ static enum MoveCanceler CancelerCharging(struct BattleContext *ctx)
         {
             gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = TRUE;
             gBattlescriptCurrInstr = BattleScript_MoveEnd;
-            step = MOVE_STEP_PREPARE_ATTACK;
+            step = MOVE_STEP_BREAK;
         }
 
     }
@@ -3287,12 +3286,10 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
         {
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FAILED;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_AVOIDED_ATK;
-            BattleScriptCall(BattleScript_TargetProtected);
-            targetAvoidedAttack = TRUE;
-        }
-        else if (CantFullyProtectFromMove(ctx))
-        {
-            BattleScriptCall(BattleScript_CouldntFullyProtect);
+            if (GetMoveEffect(ctx->move) == EFFECT_FLING)
+                BattleScriptCall(BattleScript_TargetAvoidsAttackConsumeFlingItem);
+            else
+                BattleScriptCall(BattleScript_TargetAvoidsAttack);
             targetAvoidedAttack = TRUE;
         }
         else if (IsBattlerProtected(ctx))
@@ -3303,9 +3300,9 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
             gLastLandedMoves[ctx->battlerDef] = 0;
             gLastHitByType[ctx->battlerDef] = 0;
             if (GetMoveEffect(ctx->move) == EFFECT_FLING)
-                BattleScriptCall(BattleScript_TargetProtectedConsumeFlingItem);
+                BattleScriptCall(BattleScript_TargetAvoidsAttackConsumeFlingItem);
             else
-                BattleScriptCall(BattleScript_TargetProtected);
+                BattleScriptCall(BattleScript_TargetAvoidsAttack);
             targetAvoidedAttack = TRUE;
         }
         else if (CanBattlerBounceBackMove(ctx))
@@ -3364,6 +3361,9 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
         else if (moveTarget == TARGET_FOES_AND_ALLY)
             gBattleStruct->numSpreadTargets = CountAliveMonsInBattle(BATTLE_ALIVE_EXCEPT_BATTLER, gBattlerAttacker);
     }
+
+    ctx->battlerDef = gBattlerTarget;
+    gBattleStruct->eventState.atkCancelerBattler = 0;
     return MOVE_STEP_SUCCESS;
 }
 
@@ -3383,18 +3383,15 @@ static bool32 IsMoveParentalBondAffected(struct BattleContext *ctx)
 
 static void SetPossibleNewSmartTarget(u32 move)
 {
-    u32 partner = BATTLE_PARTNER(gBattlerTarget);
-
-    if (!IsDoubleBattle()
-     || gBattlerAttacker == partner
-     || !IsBattlerAlive(partner)
+    if (!IsBattlerUnaffectedByMove(gBattlerTarget)
+     || !CanTargetPartner(gBattlerAttacker, gBattlerTarget)
      || IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), move)
      || GetBattlerMoveTargetType(gBattlerAttacker, move) != TARGET_SMART)
         return;
 
-    if (IsBattlerUnaffectedByMove(gBattlerTarget)
-     && !IsBattlerUnaffectedByMove(partner))
-        gBattlerTarget = BATTLE_PARTNER(gBattlerTarget);
+    u32 partner = BATTLE_PARTNER(gBattlerTarget);
+    if (!IsBattlerUnaffectedByMove(partner))
+        gBattlerTarget = partner;
 }
 
 static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
@@ -3434,12 +3431,6 @@ static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
         else
         {
             gMultiHitCounter = GetMoveStrikeCount(ctx->move);
-
-            if (GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move) == TARGET_SMART
-             && !IsAffectedByFollowMe(ctx->battlerAtk, GetBattlerSide(ctx->battlerDef), ctx->move)
-             && CanTargetPartner(ctx->battlerAtk, ctx->battlerDef)
-             && IsBattlerUnaffectedByMove(ctx->battlerDef))
-                gBattlerTarget = BATTLE_PARTNER(ctx->battlerDef);
         }
 
         PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 3, 0)
@@ -7488,16 +7479,6 @@ bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, enum Ability abilityA
         return FALSE;
     }
     return TRUE;
-}
-
-static bool32 CantFullyProtectFromMove(struct BattleContext *ctx)
-{
-    if (MoveIgnoresProtect(ctx->move))
-        return FALSE;
-    if (!IsZMove(ctx->move) && !IsMaxMove(ctx->move))
-        return FALSE;
-    return GetProtectType(gProtectStructs[ctx->battlerDef].protected) == PROTECT_TYPE_SINGLE
-        && gProtectStructs[ctx->battlerDef].protected != PROTECT_MAX_GUARD;
 }
 
 static inline bool32 IsSideProtected(u32 battler, enum ProtectMethod method)

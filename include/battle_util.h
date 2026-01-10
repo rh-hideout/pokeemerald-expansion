@@ -151,8 +151,7 @@ enum MoveCanceler
     MOVE_STEP_SUCCESS,
     MOVE_STEP_BREAK, // Runs script. Increments state
     MOVE_STEP_PAUSE, // Runs script. Does not increment state
-    MOVE_STEP_FAILURE, // Move failed, jump to script that to handle the failure
-    MOVE_STEP_PREPARE_ATTACK, // Goes to moveend without failure
+    MOVE_STEP_FAILURE, // Move failed, jump to script that handles the failure
 };
 
 extern const struct TypePower gNaturalGiftTable[];

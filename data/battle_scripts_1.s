@@ -597,7 +597,7 @@ BattleScript_FlingFailConsumeItem::
 	removeitem BS_ATTACKER
 	goto BattleScript_ButItFailed
 
-BattleScript_TargetProtectedConsumeFlingItem::
+BattleScript_TargetAvoidsAttackConsumeFlingItem::
 	pause B_WAIT_TIME_SHORT
 	printfromtable gMissStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -2515,7 +2515,7 @@ BattleScript_EffectSpecialDefenseDown::
 BattleScript_EffectEvasionDown::
 	setstatchanger STAT_EVASION, 1, TRUE
 	goto BattleScript_EffectStatDown
-	
+
 BattleScript_EffectStatDown:
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed
@@ -5127,7 +5127,7 @@ BattleScript_DefogClearHazards::
 BattleScript_MonTookFutureAttack::
 	printstring STRINGID_PKMNTOOKATTACK
 	waitmessage B_WAIT_TIME_LONG
-	futuresighttargetfailure
+	futuresighttargetfailure BattleScript_DoFutureAttackResult
 	jumpifmovehadnoeffect BattleScript_FutureAttackEnd
 	accuracycheck BattleScript_MoveMissedPause
 	damagecalc
@@ -8211,7 +8211,7 @@ BattleScript_PokemonCantUseTheMove::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_TargetProtected::
+BattleScript_TargetAvoidsAttack::
 	pause B_WAIT_TIME_SHORT
 	printfromtable gMissStringIds
 	waitmessage B_WAIT_TIME_LONG
