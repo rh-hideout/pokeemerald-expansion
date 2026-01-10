@@ -12267,15 +12267,15 @@ void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, enum Move u
     }
 }
 
-static const u16 sProtectSuccessRates[] = 
+static const u16 sProtectSuccessRates[] =
 {
-    USHRT_MAX, 
-    USHRT_MAX / 2, 
-    USHRT_MAX / 4, 
+    USHRT_MAX,
+    USHRT_MAX / 2,
+    USHRT_MAX / 4,
     USHRT_MAX / 8
 };
 
-static const u16 sGen5ProtectSuccessRates[] = 
+static const u16 sGen5ProtectSuccessRates[] =
 {
     USHRT_MAX,
     USHRT_MAX / 3,
@@ -12290,13 +12290,13 @@ bool32 CanUseMoveConsecutively(u32 battler)
         moveUses = ARRAY_COUNT(sProtectSuccessRates) - 1;
 
     u32 successRate = sGen5ProtectSuccessRates[moveUses];
-    if (B_PORTECT_FAILURE_RATE < 5)
+    if (B_PROTECT_FAILURE_RATE < GEN_5)
         successRate = sProtectSuccessRates[moveUses];
 
     return successRate >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX);
 }
 
-// Used for protect, endure and ally switch
+// Used for Protect, Endure and Ally switch
 void TryResetConsecutiveUseCounter(u32 battler)
 {
     u32 lastMove = gLastResultingMoves[battler];
