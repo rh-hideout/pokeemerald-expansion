@@ -160,26 +160,25 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Hidden Power's type")
         ASSUME(GetMoveEffect(MOVE_HIDDEN_POWER) == EFFECT_HIDDEN_POWER);
         ASSUME(gTypesInfo[TYPE_ELECTRIC].isHiddenPowerType == TRUE);
         ASSUME(GetSpeciesType(SPECIES_DIGLETT, 0) == TYPE_GROUND);
-        PLAYER(SPECIES_PINSIR) { Ability(ABILITY_AERILATE); HPIV(31); AttackIV(31); DefenseIV(31); SpAttackIV(30); SpDefenseIV(31); SpeedIV(31); } // HP Electric
+        PLAYER(SPECIES_PINSIR) { Item(ITEM_PINSIRITE); HPIV(31); AttackIV(31); DefenseIV(31); SpAttackIV(30); SpDefenseIV(31); SpeedIV(31); } // HP Electric
         OPPONENT(SPECIES_DIGLETT);
     } WHEN {
-        TURN { MOVE(player, MOVE_HIDDEN_POWER); }
+        TURN { MOVE(player, MOVE_HIDDEN_POWER, gimmick: GIMMICK_MEGA); }
     } SCENE {
         NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player); }
         MESSAGE("It doesn't affect the opposing Diglett…");
     }
 }
 
-SINGLE_BATTLE_TEST("Aerilate doesn't override Electrify (Gen7+)")
+SINGLE_BATTLE_TEST("Aerilate doesn't override Electrify")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_7);
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         ASSUME(GetSpeciesType(SPECIES_SANDSHREW, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_SANDSHREW, 1) == TYPE_GROUND);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_AERILATE); }
-        OPPONENT(SPECIES_SANDSHREW);
+        PLAYER(SPECIES_PINSIR) { Item(ITEM_PINSIRITE); Speed(1); }
+        OPPONENT(SPECIES_SANDSHREW) { Moves(MOVE_ELECTRIFY); Speed(10); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
         NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player); }
@@ -187,52 +186,15 @@ SINGLE_BATTLE_TEST("Aerilate doesn't override Electrify (Gen7+)")
     }
 }
 
-SINGLE_BATTLE_TEST("Aerilate doesn't override Ion Deluge (Gen7+)")
-{
-    KNOWN_FAILING;
-    GIVEN {
-        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_7);
-        ASSUME(GetMoveEffect(MOVE_ION_DELUGE) == EFFECT_ION_DELUGE);
-        ASSUME(GetSpeciesType(SPECIES_SANDSHREW, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_SANDSHREW, 1) == TYPE_GROUND);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_AERILATE); }
-        OPPONENT(SPECIES_SANDSHREW);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_ION_DELUGE); MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ION_DELUGE, opponent);
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player); }
-        MESSAGE("It doesn't affect the opposing Sandshrew…");
-    }
-}
-
-SINGLE_BATTLE_TEST("Aerilate overrides Electrify (Gen6)")
-{
-    KNOWN_FAILING;
-    GIVEN {
-        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_6);
-        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
-        ASSUME(GetSpeciesType(SPECIES_MACHOP, 0) == TYPE_FIGHTING || GetSpeciesType(SPECIES_MACHOP, 1) == TYPE_FIGHTING);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_AERILATE); }
-        OPPONENT(SPECIES_MACHOP);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        MESSAGE("It's super effective!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Aerilate overrides Ion Deluge (Gen6)")
+SINGLE_BATTLE_TEST("Aerilate overrides Ion Deluge")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_6);
         ASSUME(GetMoveEffect(MOVE_ION_DELUGE) == EFFECT_ION_DELUGE);
         ASSUME(GetSpeciesType(SPECIES_MACHOP, 0) == TYPE_FIGHTING || GetSpeciesType(SPECIES_MACHOP, 1) == TYPE_FIGHTING);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_AERILATE); }
-        OPPONENT(SPECIES_MACHOP);
+        PLAYER(SPECIES_PINSIR) { Item(ITEM_PINSIRITE); Speed(1); }
+        OPPONENT(SPECIES_MACHOP) { Moves(MOVE_ION_DELUGE); Speed(10); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_ION_DELUGE); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_ION_DELUGE); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ION_DELUGE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
@@ -240,18 +202,40 @@ SINGLE_BATTLE_TEST("Aerilate overrides Ion Deluge (Gen6)")
     }
 }
 
-SINGLE_BATTLE_TEST("Aerilate doesn't affect Tera Starstorm's type")
+SINGLE_BATTLE_TEST("Aerilate changes Tera Blast's type when not Terastallized")
 {
-    KNOWN_FAILING;
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TERA_STARSTORM) == EFFECT_TERA_STARSTORM);
-        ASSUME(GetMoveType(MOVE_TERA_STARSTORM) == TYPE_NORMAL);
+        ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
+        ASSUME(GetMoveType(MOVE_TERA_BLAST) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_MACHOP, 0) == TYPE_FIGHTING || GetSpeciesType(SPECIES_MACHOP, 1) == TYPE_FIGHTING);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); Moves(MOVE_SKILL_SWAP); }
+        OPPONENT(SPECIES_MACHOP);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP, gimmick: GIMMICK_MEGA, target: player); }
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_TERA_BLAST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
+        MESSAGE("It's super effective!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Aerilate doesn't change Tera Blast's type when Terastallized")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
+        ASSUME(GetMoveType(MOVE_TERA_BLAST) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_AERILATE); }
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); Moves(MOVE_SKILL_SWAP); }
         OPPONENT(SPECIES_MISDREAVUS);
     } WHEN {
-        TURN { MOVE(player, MOVE_TERA_STARSTORM); }
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP, gimmick: GIMMICK_MEGA, target: player); }
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
     } SCENE {
+        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player); }
         MESSAGE("It doesn't affect the opposing Misdreavus…");
     }
 }
@@ -261,10 +245,13 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Max Strike's type")
     GIVEN {
         ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_AERILATE); }
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); Moves(MOVE_SKILL_SWAP); }
         OPPONENT(SPECIES_MISDREAVUS);
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP, gimmick: GIMMICK_MEGA, target: player); }
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
         MESSAGE("Wobbuffet used Max Strike!");
         MESSAGE("It doesn't affect the opposing Misdreavus…");
@@ -276,14 +263,16 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Terrain Pulse's type")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TERRAIN_PULSE) == EFFECT_TERRAIN_PULSE);
         ASSUME(GetMoveType(MOVE_TERRAIN_PULSE) == TYPE_NORMAL);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         ASSUME(GetSpeciesType(SPECIES_SANDSHREW, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_SANDSHREW, 1) == TYPE_GROUND);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_AERILATE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); Moves(MOVE_SKILL_SWAP); }
         OPPONENT(SPECIES_SANDSHREW);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_ELECTRIC_TERRAIN); MOVE(player, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_TERRAIN_PULSE); }
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP, gimmick: GIMMICK_MEGA, target: player); MOVE(player, MOVE_ELECTRIC_TERRAIN); }
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_TERRAIN_PULSE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
         NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_TERRAIN_PULSE, player); }
         MESSAGE("It doesn't affect the opposing Sandshrew…");
     }
@@ -294,10 +283,13 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect damaging Z-Move types")
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_MACHOP, 0) == TYPE_FIGHTING || GetSpeciesType(SPECIES_MACHOP, 1) == TYPE_FIGHTING);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_AERILATE); Item(ITEM_NORMALIUM_Z); }
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); Moves(MOVE_SKILL_SWAP); }
         OPPONENT(SPECIES_MACHOP);
     } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP, gimmick: GIMMICK_MEGA, target: player); }
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
@@ -305,16 +297,4 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect damaging Z-Move types")
     }
 }
 
-SINGLE_BATTLE_TEST("(DYNAMAX) Aerilate turns Max Strike into Max Airstream")
-{
-    KNOWN_FAILING;
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_AERILATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Max Airstream!");
-        MESSAGE("Wobbuffet's Speed rose!");
-    }
-}
+TO_DO_BATTLE_TEST("(DYNAMAX) Aerilate turns Max Strike into Max Airstream"); // All other -ate abilities do this, so interpolating this as no Aerilate mon is available in a Dynamax game

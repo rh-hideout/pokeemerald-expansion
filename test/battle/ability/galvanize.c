@@ -163,19 +163,35 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Hidden Power's type")
     }
 }
 
-SINGLE_BATTLE_TEST("Galvanize doesn't affect Tera Starstorm's type")
+SINGLE_BATTLE_TEST("Galvanize changes Tera Blast's type when not Terastallized")
 {
-    KNOWN_FAILING;
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TERA_STARSTORM) == EFFECT_TERA_STARSTORM);
-        ASSUME(GetMoveType(MOVE_TERA_STARSTORM) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_GALVANIZE); }
-        OPPONENT(SPECIES_MISDREAVUS);
+        ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
+        ASSUME(GetMoveType(MOVE_TERA_BLAST) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_ROOKIDEE, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_ROOKIDEE, 1) == TYPE_FLYING);
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); }
+        OPPONENT(SPECIES_ROOKIDEE);
     } WHEN {
-        TURN { MOVE(player, MOVE_TERA_STARSTORM); }
+        TURN { MOVE(player, MOVE_TERA_BLAST); }
     } SCENE {
-        MESSAGE("It doesn't affect the opposing Misdreavus…");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
+        MESSAGE("It's super effective!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Galvanize doesn't change Tera Blast's type when Terastallized")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
+        ASSUME(GetMoveType(MOVE_TERA_BLAST) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_SANDSHREW, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_SANDSHREW, 1) == TYPE_GROUND);
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); TeraType(TYPE_NORMAL); }
+        OPPONENT(SPECIES_SANDSHREW);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
+        NOT { MESSAGE("It doesn't affect the opposing Sandshrew…"); }
     }
 }
 
@@ -184,12 +200,12 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Max Strike's type")
     GIVEN {
         ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_GALVANIZE); }
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); }
         OPPONENT(SPECIES_MISDREAVUS);
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("Geodude used Max Strike!");
         MESSAGE("It doesn't affect the opposing Misdreavus…");
     }
 }
@@ -200,7 +216,7 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Terrain Pulse's type")
         ASSUME(GetMoveEffect(MOVE_TERRAIN_PULSE) == EFFECT_TERRAIN_PULSE);
         ASSUME(GetMoveType(MOVE_TERRAIN_PULSE) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_SANDSHREW, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_SANDSHREW, 1) == TYPE_GROUND);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_GALVANIZE); }
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); }
         OPPONENT(SPECIES_SANDSHREW);
     } WHEN {
         TURN { MOVE(opponent, MOVE_GRASSY_TERRAIN); MOVE(player, MOVE_CELEBRATE); }
@@ -217,7 +233,7 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect damaging Z-Move types")
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_GYARADOS, 0) == TYPE_WATER || GetSpeciesType(SPECIES_GYARADOS, 1) == TYPE_WATER);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_GALVANIZE); Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_GYARADOS);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
@@ -228,18 +244,5 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect damaging Z-Move types")
     }
 }
 
-SINGLE_BATTLE_TEST("(DYNAMAX) Galvanize turns Max Strike into Max Lightning when not used by Gigantamax Pikachu/Toxtricity")
-{
-    KNOWN_FAILING;
-    GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_LIGHTNING, MOVE_EFFECT_ELECTRIC_TERRAIN));
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_GALVANIZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Max Lightning!");
-        MESSAGE("Wobbuffet surrounds itself with electrified terrain!");
-    }
-}
+TO_DO_BATTLE_TEST("(DYNAMAX) Galvanize turns Max Strike into Max Lightning when not used by Gigantamax Pikachu/Toxtricity");
 //TO_DO_BATTLE_TEST("(DYNAMAX) Galvanize doesn't turn Max Strike into Max Lightning when used by Gigantamax Pikachu/Toxtricity, instead becoming G-Max Volt Crash/Stun Shock"); // Marked in Bulbapedia as "needs research", so this assumes that it behaves like Pixilate.
