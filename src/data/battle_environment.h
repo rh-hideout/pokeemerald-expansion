@@ -68,9 +68,9 @@ const u32 gBattleEnvironmentTilemap_Building[] = INCBIN_U32("graphics/battle_env
 #if B_SECRET_POWER_ANIMATION >= GEN_7
     #define BUILDING_SECRET_POWER_ANIMATION gBattleAnimMove_SpitUp
 #elif B_SECRET_POWER_ANIMATION >= GEN_4
-    #define BUILDING_SECRET_POWER_ANIMATION gBattleAnimMove_BodySlam,
+    #define BUILDING_SECRET_POWER_ANIMATION gBattleAnimMove_BodySlam
 #else
-    #define BUILDING_SECRET_POWER_ANIMATION gBattleAnimMove_Strength,
+    #define BUILDING_SECRET_POWER_ANIMATION gBattleAnimMove_Strength
 #endif
 #define BUILDING_SECRET_POWER_EFFECT MOVE_EFFECT_PARALYSIS
 #define BUILDING_CAMOUFLAGE_TYPE     TYPE_NORMAL
