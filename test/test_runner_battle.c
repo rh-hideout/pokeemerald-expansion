@@ -1660,6 +1660,65 @@ void TestRunner_Battle_RecordStatus1(u32 battlerId, u32 status1)
     }
 }
 
+static s32 TryCatchChance(s32 i, s32 n, u32 catchChance)
+{
+    struct QueuedCaptureEvent *event;
+    s32 iMax = i + n;
+    for (; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type != QUEUED_CATCH_CHANCE_EVENT)
+            continue;
+
+        event = &DATA.queuedEvents[i].as.capture;
+        *(u32 *)(u32)(event->address) = catchChance;
+        return i;
+    }
+    return -1;
+}
+
+void TestRunner_Battle_RecordCatchChance(u32 catchChance)
+{
+    s32 queuedEvent;
+    s32 match;
+    struct QueuedEvent *event;
+
+    if (DATA.trial.queuedEvent == DATA.queuedEventsCount)
+        return;
+
+    event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+    switch (event->groupType)
+    {
+    case QUEUE_GROUP_NONE:
+    case QUEUE_GROUP_ONE_OF:
+        if (TryCatchChance(DATA.trial.queuedEvent, event->groupSize, catchChance) != -1)
+            DATA.trial.queuedEvent += event->groupSize;
+        break;
+    case QUEUE_GROUP_NONE_OF:
+        queuedEvent = DATA.trial.queuedEvent;
+        do
+        {
+            if ((match = TryCatchChance(DATA.trial.queuedEvent, event->groupSize, catchChance)) != -1)
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched CATCH CHANCE", filename, line);
+            }
+
+            queuedEvent += event->groupSize;
+            if (queuedEvent == DATA.queuedEventsCount)
+                break;
+
+            event = &DATA.queuedEvents[queuedEvent];
+            if (event->groupType == QUEUE_GROUP_NONE_OF)
+                continue;
+
+            if (TryCatchChance(DATA.trial.queuedEvent, event->groupSize, catchChance) != -1)
+                DATA.trial.queuedEvent = queuedEvent + event->groupSize;
+        } while (FALSE);
+        break;
+    }
+}
+
 static const char *const sEventTypeMacros[] =
 {
     [QUEUED_ABILITY_POPUP_EVENT] = "ABILITY_POPUP",
@@ -1669,6 +1728,7 @@ static const char *const sEventTypeMacros[] =
     [QUEUED_EXP_EVENT] = "EXPERIENCE_BAR",
     [QUEUED_MESSAGE_EVENT] = "MESSAGE",
     [QUEUED_STATUS_EVENT] = "STATUS_ICON",
+    [QUEUED_CATCH_CHANCE_EVENT] = "CATCH_CHANCE",
 };
 
 void TestRunner_Battle_AfterLastTurn(void)
@@ -3367,6 +3427,23 @@ void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEve
         .as = { .status = {
             .battlerId = battlerId,
             .mask = mask,
+        }},
+    };
+}
+
+void QueueCatchingChance(u32 sourceLine, u32 *captureAddress)
+{
+    INVALID_IF(!STATE->runScene, "CAPTURE outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, ":L%s:%d: CAPTURE exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+    u32 address = (u32)captureAddress;
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_CATCH_CHANCE_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .capture = {
+            .address = address,
         }},
     };
 }
