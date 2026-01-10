@@ -71,10 +71,12 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
         MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[1]);
     } THEN {
@@ -122,17 +124,19 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will be weakened by stron
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_AIR_LOCK); }
         PLAYER(SPECIES_RALTS);
-        OPPONENT(SPECIES_ZAPDOS)
+        OPPONENT(SPECIES_ZAPDOS);
         OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { SWITCH(playerRight, 2); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_SUPER_EFFECTIVE); // SE on rayquaza
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[1]);
     } THEN {
@@ -338,6 +342,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Super Effective Message on both opposing mons"
         TURN { MOVE(playerLeft, MOVE_PRECIPICE_BLADES); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_SUPER_EFFECTIVE);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
         MESSAGE("It's super effective on the opposing Golem and Onix!");
@@ -426,10 +431,12 @@ DOUBLE_BATTLE_TEST("Spread Moves: Unless move hits every target user will not in
         TURN { MOVE(opponentRight, MOVE_ICY_WIND); MOVE(playerLeft, MOVE_ROCK_SLIDE); SEND_OUT(playerRight, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponentRight);
+        EFFECTIVENESS_SE(playerRight, SE_SUPER_EFFECTIVE); // SE against sandslash
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_SUPER_EFFECTIVE); // se against torkoal
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
         MESSAGE("It's super effective on the opposing Torkoal and Torkoal!");
