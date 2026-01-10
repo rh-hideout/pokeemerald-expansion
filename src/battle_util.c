@@ -5096,15 +5096,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             default:
                 break;
             }
-        }
-        break;
-    case ABILITYEFFECT_ENDTURN_FORM_CHANGE:
-        if (IsBattlerAlive(battler))
-        {
-            gBattlerAttacker = battler;
+
             abilityForm = gLastUsedAbility;
             // Handle ability form changes at the end of the turn here.
-            if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
+            if (!effect && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
             {
                 gBattleScripting.battler = battler;
                 // To prevent the new form's ability from pop up
