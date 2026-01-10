@@ -4,7 +4,8 @@
 // Please add Hail interactions with move, item and ability effects on their respective files.
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+    ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
+    ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
     ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
     ASSUME(GetSpeciesType(SPECIES_WYNAUT, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WYNAUT, 1) != TYPE_ICE);
     ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE || GetSpeciesType(SPECIES_GLALIE, 1) == TYPE_ICE);

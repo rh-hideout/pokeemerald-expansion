@@ -3,8 +3,8 @@
 
 // Last version: 1.14.2
 #define EXPANSION_VERSION_MAJOR 1
-#define EXPANSION_VERSION_MINOR 14
-#define EXPANSION_VERSION_PATCH 3
+#define EXPANSION_VERSION_MINOR 15
+#define EXPANSION_VERSION_PATCH 0
 
 // FALSE if this this version of Expansion is not a tagged commit, i.e.
 // it contains unreleased changes.

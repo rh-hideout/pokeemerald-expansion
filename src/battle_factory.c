@@ -39,7 +39,7 @@ static void GetOpponentMostCommonMonType(void);
 static void GetOpponentBattleStyle(void);
 static void RestorePlayerPartyHeldItems(void);
 static u16 GetFactoryMonId(u8 lvlMode, u8 challengeNum, bool8 useBetterRange);
-static u8 GetMoveBattleStyle(u16 move);
+static enum FactoryStyle GetMoveBattleStyle(enum Move move);
 
 // Number of moves needed on the team to be considered using a certain battle style
 static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
@@ -50,75 +50,6 @@ static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
     [FACTORY_STYLE_WEAKENING - 1]     = 2,
     [FACTORY_STYLE_UNPREDICTABLE - 1] = 2,
     [FACTORY_STYLE_WEATHER - 1]       = 2
-};
-
-static const u16 sMoves_TotalPreparation[] =
-{
-    MOVE_SWORDS_DANCE, MOVE_GROWTH, MOVE_MEDITATE, MOVE_AGILITY, MOVE_DOUBLE_TEAM, MOVE_HARDEN,
-    MOVE_MINIMIZE, MOVE_WITHDRAW, MOVE_DEFENSE_CURL, MOVE_BARRIER, MOVE_FOCUS_ENERGY, MOVE_AMNESIA,
-    MOVE_ACID_ARMOR, MOVE_SHARPEN, MOVE_CONVERSION, MOVE_CONVERSION_2, MOVE_BELLY_DRUM, MOVE_PSYCH_UP,
-    MOVE_CHARGE, MOVE_SNATCH, MOVE_TAIL_GLOW, MOVE_COSMIC_POWER, MOVE_IRON_DEFENSE, MOVE_HOWL, MOVE_BULK_UP, MOVE_CALM_MIND, MOVE_DRAGON_DANCE,
-    MOVE_NONE
-};
-
-static const u16 sMoves_ImpossibleToPredict[] =
-{
-    MOVE_MIMIC, MOVE_METRONOME, MOVE_MIRROR_MOVE, MOVE_TRANSFORM, MOVE_SUBSTITUTE, MOVE_SKETCH, MOVE_CURSE,
-    MOVE_PRESENT, MOVE_FOLLOW_ME, MOVE_TRICK, MOVE_ROLE_PLAY, MOVE_ASSIST, MOVE_SKILL_SWAP, MOVE_CAMOUFLAGE,
-    MOVE_NONE
-};
-
-static const u16 sMoves_WeakeningTheFoe[] =
-{
-    MOVE_SAND_ATTACK, MOVE_TAIL_WHIP, MOVE_LEER, MOVE_GROWL, MOVE_STRING_SHOT, MOVE_SCREECH, MOVE_SMOKESCREEN, MOVE_KINESIS,
-    MOVE_FLASH, MOVE_COTTON_SPORE, MOVE_SPITE, MOVE_SCARY_FACE, MOVE_CHARM, MOVE_KNOCK_OFF, MOVE_SWEET_SCENT, MOVE_FEATHER_DANCE,
-    MOVE_FAKE_TEARS, MOVE_METAL_SOUND, MOVE_TICKLE,
-    MOVE_NONE
-};
-
-static const u16 sMoves_HighRiskHighReturn[] =
-{
-    MOVE_GUILLOTINE, MOVE_HORN_DRILL, MOVE_DOUBLE_EDGE, MOVE_HYPER_BEAM, MOVE_COUNTER, MOVE_FISSURE,
-    MOVE_BIDE, MOVE_SELF_DESTRUCT, MOVE_SKY_ATTACK, MOVE_EXPLOSION, MOVE_FLAIL, MOVE_REVERSAL, MOVE_DESTINY_BOND,
-    MOVE_PERISH_SONG, MOVE_PAIN_SPLIT, MOVE_MIRROR_COAT, MOVE_MEMENTO, MOVE_GRUDGE, MOVE_FACADE, MOVE_FOCUS_PUNCH,
-    MOVE_BLAST_BURN, MOVE_HYDRO_CANNON, MOVE_OVERHEAT, MOVE_FRENZY_PLANT, MOVE_PSYCHO_BOOST, MOVE_VOLT_TACKLE,
-    MOVE_NONE
-};
-
-static const u16 sMoves_Endurance[] =
-{
-    MOVE_MIST, MOVE_RECOVER, MOVE_LIGHT_SCREEN, MOVE_HAZE, MOVE_REFLECT, MOVE_SOFT_BOILED, MOVE_REST, MOVE_PROTECT,
-    MOVE_DETECT, MOVE_ENDURE, MOVE_MILK_DRINK, MOVE_HEAL_BELL, MOVE_SAFEGUARD, MOVE_BATON_PASS, MOVE_MORNING_SUN,
-    MOVE_SYNTHESIS, MOVE_MOONLIGHT, MOVE_SWALLOW, MOVE_WISH, MOVE_INGRAIN, MOVE_MAGIC_COAT, MOVE_RECYCLE, MOVE_REFRESH,
-    MOVE_MUD_SPORT, MOVE_SLACK_OFF, MOVE_AROMATHERAPY, MOVE_WATER_SPORT,
-    MOVE_NONE
-};
-
-static const u16 sMoves_SlowAndSteady[] =
-{
-    MOVE_SING, MOVE_SUPERSONIC, MOVE_DISABLE, MOVE_LEECH_SEED, MOVE_POISON_POWDER, MOVE_STUN_SPORE, MOVE_SLEEP_POWDER,
-    MOVE_THUNDER_WAVE, MOVE_TOXIC, MOVE_HYPNOSIS, MOVE_CONFUSE_RAY, MOVE_GLARE, MOVE_POISON_GAS, MOVE_LOVELY_KISS, MOVE_SPORE,
-    MOVE_SPIDER_WEB, MOVE_SWEET_KISS, MOVE_SPIKES, MOVE_SWAGGER, MOVE_MEAN_LOOK, MOVE_ATTRACT, MOVE_ENCORE, MOVE_TORMENT,
-    MOVE_FLATTER, MOVE_WILL_O_WISP, MOVE_TAUNT, MOVE_YAWN, MOVE_IMPRISON, MOVE_SNATCH, MOVE_TEETER_DANCE, MOVE_GRASS_WHISTLE, MOVE_BLOCK,
-    MOVE_NONE
-};
-
-static const u16 sMoves_DependsOnTheBattlesFlow[] =
-{
-    MOVE_SANDSTORM, MOVE_RAIN_DANCE, MOVE_SUNNY_DAY, MOVE_HAIL, MOVE_WEATHER_BALL,
-    MOVE_NONE
-};
-
-// Excludes FACTORY_STYLE_NONE
-static const u16 *const sMoveStyles[FACTORY_NUM_STYLES - 1] =
-{
-    [FACTORY_STYLE_PREPARATION - 1]   = sMoves_TotalPreparation,
-    [FACTORY_STYLE_SLOW_STEADY - 1]   = sMoves_SlowAndSteady,
-    [FACTORY_STYLE_ENDURANCE - 1]     = sMoves_Endurance,
-    [FACTORY_STYLE_HIGH_RISK - 1]     = sMoves_HighRiskHighReturn,
-    [FACTORY_STYLE_WEAKENING - 1]     = sMoves_WeakeningTheFoe,
-    [FACTORY_STYLE_UNPREDICTABLE - 1] = sMoves_ImpossibleToPredict,
-    [FACTORY_STYLE_WEATHER - 1]       = sMoves_DependsOnTheBattlesFlow,
 };
 
 static void (*const sBattleFactoryFunctions[])(void) =
@@ -430,7 +361,7 @@ static void SetPlayerAndOpponentParties(void)
             monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
             ivs = gSaveBlock2Ptr->frontier.rentalMons[i].ivs;
 
-            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, OT_ID_PLAYER_ID, FLAG_FRONTIER_MON_FACTORY, &gPlayerParty[i]);
+            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, READ_OTID_FROM_SAVE, FLAG_FRONTIER_MON_FACTORY, &gPlayerParty[i]);
         }
     }
 
@@ -442,7 +373,7 @@ static void SetPlayerAndOpponentParties(void)
         {
             monId = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].monId;
             ivs = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].ivs;
-            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, OT_ID_PLAYER_ID, FLAG_FRONTIER_MON_FACTORY, &gEnemyParty[i]);
+            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, READ_OTID_FROM_SAVE, FLAG_FRONTIER_MON_FACTORY, &gEnemyParty[i]);
         }
         break;
     }
@@ -631,19 +562,41 @@ static void GetOpponentBattleStyle(void)
         gSpecialVar_Result = FACTORY_NUM_STYLES;
 }
 
-static u8 GetMoveBattleStyle(u16 move)
+static enum FactoryStyle GetMoveBattleStyle(enum Move move)
 {
-    const u16 *moves;
-    u8 i, j;
+    enum FactoryStyle style = gBattleMoveEffects[GetMoveEffect(move)].battleFactoryStyle;
 
-    for (i = 0; i < ARRAY_COUNT(sMoveStyles); i++)
+    if (style != FACTORY_STYLE_NONE)
+        return style;
+
+    // Conditional effects
+    switch (GetMoveEffect(move))
     {
-        for (j = 0, moves = sMoveStyles[i]; moves[j] != MOVE_NONE; j++)
-        {
-            if (moves[j] == move)
-                return i + 1;
-        }
+    case EFFECT_TWO_TURNS_ATTACK:
+        // Potential to miss a two-turn move
+        if (GetMoveAccuracy(move) < 100 && GetMoveAccuracy(move) != 0)
+            return FACTORY_STYLE_HIGH_RISK;
+        break;
+    case EFFECT_RECOIL:
+        // Only higher recoil moves are considered risky
+        if (GetMoveRecoil(move) >= 33)
+            return FACTORY_STYLE_HIGH_RISK;
+        break;
+    default:
+        break;
     }
+    // Bad secondary effects for the user
+    if (MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_RECHARGE)
+     || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_SP_ATK_MINUS_2))
+        return FACTORY_STYLE_HIGH_RISK;
+
+    // Non-volatile effects
+    if (GetMoveNonVolatileStatus(move) != MOVE_EFFECT_NONE)
+        return FACTORY_STYLE_SLOW_STEADY;
+
+    if (IsExplosionMove(move))
+        return FACTORY_STYLE_SLOW_STEADY;
+
     return FACTORY_STYLE_NONE;
 }
 
@@ -713,7 +666,7 @@ void FillFactoryBrainParty(void)
     fixedIV = GetFactoryMonFixedIV(challengeNum + 2, FALSE);
     monLevel = SetFacilityPtrsGetLevel();
     i = 0;
-    otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
+    otId = READ_OTID_FROM_SAVE;
 
     while (i != FRONTIER_PARTY_SIZE)
     {
@@ -841,10 +794,88 @@ u64 GetAiScriptsInBattleFactory(void)
     }
 }
 
-void SetMonMoveAvoidReturn(struct Pokemon *mon, u16 moveArg, u8 moveSlot)
+void SetMonMoveAvoidReturn(struct Pokemon *mon, enum Move moveArg, u8 moveSlot)
 {
-    u16 move = moveArg;
+    enum Move move = moveArg;
     if (moveArg == MOVE_RETURN)
         move = MOVE_FRUSTRATION;
     SetMonMoveSlot(mon, move, moveSlot);
+}
+
+static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
+{
+    u8 i;
+    u8 level;
+    u8 fixedIV;
+    u32 otID;
+
+    if (trainerId < FRONTIER_TRAINERS_COUNT)
+    {
+    // By mistake Battle Tower's Level 50 challenge number is used to determine the IVs for Battle Factory.
+    #ifdef BUGFIX
+        u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+        u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+        u8 challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
+    #else
+        u8 UNUSED lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+        u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+        u8 challengeNum = gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][FRONTIER_LVL_50] / FRONTIER_STAGES_PER_CHALLENGE;
+    #endif
+        if (gSaveBlock2Ptr->frontier.curChallengeBattleNum < FRONTIER_STAGES_PER_CHALLENGE - 1)
+            fixedIV = GetFactoryMonFixedIV(challengeNum, FALSE);
+        else
+            fixedIV = GetFactoryMonFixedIV(challengeNum, TRUE); // Last trainer in challenge uses higher IVs
+    }
+    else if (trainerId == TRAINER_EREADER)
+    {
+    #if FREE_BATTLE_TOWER_E_READER == FALSE
+        for (i = firstMonId; i < firstMonId + FRONTIER_PARTY_SIZE; i++)
+            CreateBattleTowerMon(&gEnemyParty[i], &gSaveBlock2Ptr->frontier.ereaderTrainer.party[i - firstMonId]);
+    #endif //FREE_BATTLE_TOWER_E_READER
+        return;
+    }
+    else if (trainerId == TRAINER_FRONTIER_BRAIN)
+    {
+        FillFactoryBrainParty();
+        return;
+    }
+    else
+    {
+        fixedIV = MAX_PER_STAT_IVS;
+    }
+
+    level = SetFacilityPtrsGetLevel();
+    otID = READ_OTID_FROM_SAVE;
+    for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    {
+        u16 monId = gFrontierTempParty[i];
+        CreateFacilityMon(&gFacilityTrainerMons[monId],
+                level, fixedIV, otID, FLAG_FRONTIER_MON_FACTORY,
+                &gEnemyParty[firstMonId + i]);
+    }
+}
+
+static void FillFactoryTentTrainerParty(u16 trainerId, u8 firstMonId)
+{
+    u8 i;
+    u8 level = TENT_MIN_LEVEL;
+    u8 fixedIV = 0;
+    u32 otID = READ_OTID_FROM_SAVE;
+
+    for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    {
+        u16 monId = gFrontierTempParty[i];
+        CreateFacilityMon(&gFacilityTrainerMons[monId],
+                level, fixedIV, otID, 0,
+                &gEnemyParty[firstMonId + i]);
+    }
+}
+
+void FillFactoryTrainerParty(void)
+{
+    ZeroEnemyPartyMons();
+    if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_TENT)
+        FillFactoryFrontierTrainerParty(TRAINER_BATTLE_PARAM.opponentA, 0);
+    else
+        FillFactoryTentTrainerParty(TRAINER_BATTLE_PARAM.opponentA, 0);
 }

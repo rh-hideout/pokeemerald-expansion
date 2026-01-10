@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Leaf Guard prevents non-volatile status conditions in sun")
 {
-    u32 move;
+    enum Move move;
     u16 status;
     PARAMETRIZE { move = MOVE_WILL_O_WISP; status = STATUS1_BURN; }
     PARAMETRIZE { move = MOVE_HYPNOSIS; status = STATUS1_SLEEP; }
@@ -33,7 +33,9 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents non-volatile status conditions in sun")
 
 SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent non-volatile status conditions if Cloud Nine/Air Lock is on the field")
 {
-    u32 move, species, ability;
+    enum Move move;
+    u32 species;
+    enum Ability ability;
     u16 status;
     PARAMETRIZE { move = MOVE_WILL_O_WISP;  status = STATUS1_BURN;         species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { move = MOVE_HYPNOSIS;     status = STATUS1_SLEEP;        species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }

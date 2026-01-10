@@ -85,9 +85,6 @@ static const struct SpriteTemplate sSpriteTemplate_SwapLine =
     .paletteTag = TAG_SWAP_LINE,
     .oam = &sOamData_SwapLine,
     .anims = sAnims_SwapLine,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // code
@@ -138,7 +135,7 @@ void DisplayMessageAndContinueTask(u8 taskId, u8 windowId, u16 tileNum, u8 palet
 bool16 RunTextPrintersRetIsActive(u8 textPrinterId)
 {
     RunTextPrinters();
-    return IsTextPrinterActive(textPrinterId);
+    return IsTextPrinterActiveOnWindow(textPrinterId);
 }
 
 static void Task_ContinueTaskAfterMessagePrints(u8 taskId)

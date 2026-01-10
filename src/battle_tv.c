@@ -15,8 +15,8 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId);
 static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3);
 static void TrySetBattleSeminarShow(void);
 static void AddPointsOnFainting(void);
-static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot);
-static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride);
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, u8 moveSlot);
+static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride);
 
 #define TABLE_END ((u16)-1)
 
@@ -577,7 +577,7 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId)
         return FALSE;
 }
 
-void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruct *disableStructPtr)
+void BattleTv_SetDataBasedOnMove(enum Move move, u16 weatherFlags)
 {
     struct BattleTv *tvPtr;
     u32 atkSide, defSide;
@@ -611,8 +611,8 @@ void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruc
         tvPtr->side[atkSide].wishMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide].wishMoveSlot = moveSlot;
     }
-    enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (effect == EFFECT_EXPLOSION || effect == EFFECT_MISTY_EXPLOSION)
+
+    if (IsExplosionMove(move))
     {
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMoveSlot = moveSlot;
@@ -666,8 +666,8 @@ void TryPutLinkBattleTvShowOnAir(void)
     struct BattleTvMovePoints *movePoints = NULL;
     u8 countPlayer = 0, countOpponent = 0;
     s16 sum = 0;
-    u16 species = 0;
-    u16 move = MOVE_NONE;
+    u16 species = SPECIES_NONE;
+    enum Move move = MOVE_NONE;
     s32 i, j;
     int zero = 0, one = 1; //needed for matching
 
@@ -816,8 +816,12 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
                 baseFromEffect += 3;
             break;
         case EFFECT_CONFUSE:
-            if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY)
+            if (GetBattlerMoveTargetType(gBattlerAttacker, move) == TARGET_FOES_AND_ALLY)
                 baseFromEffect += 2;
+            break;
+        case EFFECT_REFLECT_DAMAGE: // 5 for Counter, 6 for Mirror Coat
+            if (GetMoveReflectDamage_DamageCategories(move) == 1u << DAMAGE_CATEGORY_SPECIAL) // Mirror Coat
+                baseFromEffect++;
             break;
         default:
             break;
@@ -1272,7 +1276,7 @@ static void TrySetBattleSeminarShow(void)
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct DamageContext ctx = {0};
+            struct BattleContext ctx = {0};
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
             ctx.move = ctx.chosenMove = gCurrentMove;
@@ -1317,7 +1321,7 @@ static void TrySetBattleSeminarShow(void)
     gBattleStruct->moveResultFlags[gBattlerTarget] = storedMoveResultFlags;
 }
 
-static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride)
+static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride)
 {
     if (IsBattleMoveStatus(move))
     {
@@ -1380,7 +1384,7 @@ void BattleTv_ClearExplosionFaintCause(void)
     }
 }
 
-u8 GetBattlerMoveSlotId(u8 battler, u16 move)
+u8 GetBattlerMoveSlotId(u8 battler, enum Move move)
 {
     s32 i;
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -1398,7 +1402,7 @@ u8 GetBattlerMoveSlotId(u8 battler, u16 move)
     return i;
 }
 
-static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot)
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, u8 moveSlot)
 {
     if (weatherFlags & B_WEATHER_RAIN)
         AddMovePoints(PTS_RAIN, move, moveSlot, 0);
@@ -1406,6 +1410,6 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot)
         AddMovePoints(PTS_SUN, move, moveSlot, 0);
     else if (weatherFlags & B_WEATHER_SANDSTORM)
         AddMovePoints(PTS_SANDSTORM, move, moveSlot, 0);
-    else if (weatherFlags & (B_WEATHER_HAIL | B_WEATHER_SNOW))
+    else if (weatherFlags & B_WEATHER_ICY_ANY)
         AddMovePoints(PTS_HAIL_SNOW, move, moveSlot, 0);
 }

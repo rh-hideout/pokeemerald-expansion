@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison or badly poison a Pokemon regardless of
 
 SINGLE_BATTLE_TEST("Corrosion can poison or badly poison a Steel type with a status poison effect")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_POISON_POWDER; }
     PARAMETRIZE { move = MOVE_TOXIC; }
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("If a Poison- or Steel-type Pokémon with Corrosion holds a T
 
 SINGLE_BATTLE_TEST("If a Poison- or Steel-type Pokémon with Corrosion poisons a target with Synchronize, Synchronize will not poison Poison- or Steel-type Pokémon")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISON_POWDER; }
     GIVEN {
@@ -138,7 +138,7 @@ SINGLE_BATTLE_TEST("If a Poison- or Steel-type Pokémon with Corrosion poisons a
 
 SINGLE_BATTLE_TEST("Corrosion cannot bypass moves that prevent poisoning such as Safeguard")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISON_POWDER; }
     GIVEN {
@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Corrosion cannot bypass moves that prevent poisoning such as
 
 SINGLE_BATTLE_TEST("Corrosion cannot bypass abilities that prevent poisoning such as Immunity")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISON_POWDER; }
     GIVEN {
@@ -186,7 +186,7 @@ SINGLE_BATTLE_TEST("Corrosion cannot bypass abilities that prevent poisoning suc
 
 SINGLE_BATTLE_TEST("Corrosion allows the Pokémon with the ability to poison a Steel or Poison-type opponent by using Magic Coat")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISON_POWDER; }
     GIVEN {
@@ -212,7 +212,7 @@ SINGLE_BATTLE_TEST("Corrosion allows the Pokémon with the ability to poison a S
 
 SINGLE_BATTLE_TEST("Corrosion's effect is lost if the move used by the Pokémon with the ability is reflected by Magic Coat")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISON_POWDER; }
     GIVEN {

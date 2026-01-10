@@ -650,6 +650,12 @@ static void SpriteCB_ReelTimeDuck(struct Sprite *);
 static void SpriteCB_ReelTimeSmoke(struct Sprite *);
 static void SpriteCB_PikaPowerBolt(struct Sprite *);
 
+static const u8 sText_QuitTheGame[] = _("Quit the game?");
+static const u8 sText_YouveGot9999Coins[] = _("You've got 9,999 COINS.");
+static const u8 sText_YouveRunOutOfCoins[] = _("You've run out of COINS.\nGame over!");
+static const u8 sText_YouDontHaveThreeCoins[] = _("You don't have three COINS.");
+static const u8 sText_ReelTimeHelp[] = _("REEL TIME\nHere's your chance to take\naim and nail marks!\nReel Time continues for the\nawarded number of spins.\nIt all ends on a Big Bonus.");
+
 // Ewram variables
 static EWRAM_DATA u16 *sMenuGfx = NULL;
 static EWRAM_DATA u16 *sSelectedPikaPowerTile = NULL;
@@ -1396,7 +1402,7 @@ static bool8 SlotTask_HandleBetInput(struct Task *task)
 static bool8 SlotTask_PrintMsg_Need3Coins(struct Task *task)
 {
     DrawDialogueFrame(WIN_MSG, FALSE);
-    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, gText_YouDontHaveThreeCoins, 0, 1, 0, 0);
+    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, sText_YouDontHaveThreeCoins, 0, 1, 0, 0);
     CopyWindowToVram(WIN_MSG, COPYWIN_FULL);
     sSlotMachine->state = SLOTTASK_WAIT_MSG_NEED_3_COINS;
     return FALSE;
@@ -1661,7 +1667,7 @@ static bool8 SlotTask_NoMatches(struct Task *task)
 static bool8 SlotTask_AskQuit(struct Task *task)
 {
     DrawDialogueFrame(WIN_MSG, FALSE);
-    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, gText_QuitTheGame, 0, 1, 0, 0);
+    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, sText_QuitTheGame, 0, 1, 0, 0);
     CopyWindowToVram(WIN_MSG, COPYWIN_FULL);
     CreateYesNoMenuParameterized(0x15, 7, 0x214, 0x180, 0xE, 0xF);
     sSlotMachine->state = SLOTTASK_HANDLE_QUIT_INPUT;
@@ -1693,7 +1699,7 @@ static bool8 SlotTask_HandleQuitInput(struct Task *task)
 static bool8 SlotTask_PrintMsg_MaxCoins(struct Task *task)
 {
     DrawDialogueFrame(WIN_MSG, FALSE);
-    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, gText_YouveGot9999Coins, 0, 1, 0, 0);
+    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, sText_YouveGot9999Coins, 0, 1, 0, 0);
     CopyWindowToVram(WIN_MSG, COPYWIN_FULL);
     sSlotMachine->state = SLOTTASK_WAIT_MSG_MAX_COINS;
     return FALSE;
@@ -1714,7 +1720,7 @@ static bool8 SlotTask_WaitMsg_MaxCoins(struct Task *task)
 static bool8 SlotTask_PrintMsg_NoMoreCoins(struct Task *task)
 {
     DrawDialogueFrame(WIN_MSG, FALSE);
-    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, gText_YouveRunOutOfCoins, 0, 1, 0, 0);
+    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, sText_YouveRunOutOfCoins, 0, 1, 0, 0);
     CopyWindowToVram(WIN_MSG, COPYWIN_FULL);
     sSlotMachine->state = SLOTTASK_WAIT_MSG_NO_MORE_COINS;
     return FALSE;
@@ -3934,7 +3940,7 @@ static void InfoBox_DrawWindow(struct Task *task)
 
 static void InfoBox_AddText(struct Task *task)
 {
-    AddTextPrinterParameterized3(WIN_INFO, FONT_NORMAL, 2, 5, sColors_ReeltimeHelp, 0, gText_ReelTimeHelp);
+    AddTextPrinterParameterized3(WIN_INFO, FONT_NORMAL, 2, 5, sColors_ReeltimeHelp, 0, sText_ReelTimeHelp);
     CopyWindowToVram(WIN_INFO, COPYWIN_FULL);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
     task->tState++;
@@ -6117,8 +6123,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelSymbol =
     .paletteTag = PALTAG_REEL,
     .oam = &sOam_32x32,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ReelSymbol
 };
 
@@ -6128,8 +6132,6 @@ static const struct SpriteTemplate sSpriteTemplate_CoinNumber =
     .paletteTag = PALTAG_MISC,
     .oam = &sOam_8x16,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CoinNumber
 };
 
@@ -6139,9 +6141,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelBackground =
     .paletteTag = PALTAG_REEL,
     .oam = &sOam_64x64,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ReelTimePikachu =
@@ -6150,8 +6149,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimePikachu =
     .paletteTag = PALTAG_REEL_TIME_PIKACHU,
     .oam = &sOam_64x64,
     .anims = sAnims_ReelTimePikachu,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ReelTimePikachu
 };
 
@@ -6161,9 +6158,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimeMachineAntennae =
     .paletteTag = PALTAG_REEL_TIME_MISC,
     .oam = &sOam_8x16,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ReelTimeMachine =
@@ -6172,9 +6166,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimeMachine =
     .paletteTag = PALTAG_REEL_TIME_MACHINE,
     .oam = &sOam_8x16,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_BrokenReelTimeMachine =
@@ -6183,9 +6174,6 @@ static const struct SpriteTemplate sSpriteTemplate_BrokenReelTimeMachine =
     .paletteTag = PALTAG_REEL_TIME_MACHINE,
     .oam = &sOam_8x16,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ReelTimeNumbers =
@@ -6195,7 +6183,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimeNumbers =
     .oam = &sOam_16x16,
     .anims = sAnims_ReelTimeNumbers,
     .images = sImageTable_ReelTimeNumbers,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ReelTimeNumbers
 };
 
@@ -6206,8 +6193,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimeShadow =
     .oam = &sOam_16x16,
     .anims = sAnims_SingleFrame,
     .images = sImageTable_ReelTimeShadow,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ReelTimeNumberGap =
@@ -6217,8 +6202,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimeNumberGap =
     .oam = &sOam_16x16,
     .anims = sAnims_SingleFrame,
     .images = sImageTable_ReelTimeNumberGap,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ReelTimeBolt =
@@ -6228,7 +6211,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimeBolt =
     .oam = &sOam_16x32,
     .anims = sAnims_ReelTimeBolt,
     .images = sImageTable_ReelTimeBolt,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ReelTimeBolt
 };
 
@@ -6239,7 +6221,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimePikachuAura =
     .oam = &sOam_32x64,
     .anims = sAnims_SingleFrame,
     .images = sImageTable_ReelTimePikachuAura,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ReelTimePikachuAura
 };
 
@@ -6250,7 +6231,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimeExplosion =
     .oam = &sOam_32x32,
     .anims = sAnims_ReelTimeExplosion,
     .images = sImageTable_ReelTimeExplosion,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ReelTimeExplosion
 };
 
@@ -6261,7 +6241,6 @@ static const struct SpriteTemplate sSpriteTemplate_ReelTimeDuck =
     .oam = &sOam_8x8,
     .anims = sAnims_ReelTimeDuck,
     .images = sImageTable_ReelTimeDuck,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ReelTimeDuck
 };
 
@@ -6282,9 +6261,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Reel =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Time =
@@ -6293,9 +6269,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Time =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Insert =
@@ -6304,9 +6277,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Insert =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Stop =
@@ -6315,9 +6285,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Stop =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Win =
@@ -6326,9 +6293,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Win =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_64x32,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Lose =
@@ -6337,9 +6301,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Lose =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_64x32,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Bonus =
@@ -6348,9 +6309,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Bonus =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Big =
@@ -6359,9 +6317,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Big =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Reg =
@@ -6370,9 +6325,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Reg =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_AButton =
@@ -6381,9 +6333,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_AButton =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_32x32,
     .anims = sAnims_DigitalDisplay_AButton,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Smoke =
@@ -6392,9 +6341,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Smoke =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_SingleFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Number =
@@ -6403,9 +6349,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Number =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_16x16,
     .anims = sAnims_DigitalDisplay_Number,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Pokeball =
@@ -6414,9 +6357,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_Pokeball =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_DigitalDisplay_Pokeball,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_DPad =
@@ -6425,9 +6365,6 @@ static const struct SpriteTemplate sSpriteTemplate_DigitalDisplay_DPad =
     .paletteTag = PALTAG_DIG_DISPLAY,
     .oam = &sOam_8x8,
     .anims = sAnims_DigitalDisplay_DPad,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_PikaPowerBolt =

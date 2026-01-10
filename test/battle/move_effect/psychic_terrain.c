@@ -116,7 +116,8 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority field moves")
 
 SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-invulnerable targets")
 {
-    u32 move = 0, shouldWork = 0;
+    enum Move move = MOVE_NONE;
+    bool32 shouldWork = FALSE;
     PARAMETRIZE { move = MOVE_SOLAR_BEAM; shouldWork = FALSE; }
     PARAMETRIZE { move = MOVE_FLY; shouldWork = TRUE; }
     GIVEN {
