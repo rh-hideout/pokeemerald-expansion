@@ -1075,7 +1075,8 @@ These tables, unlike the regular form tables, registers how Pokémon can switch 
 
 ```c
 #if P_FAMILY_GASTLY
-static const struct FormChange sGengarFormChangeTable[] = {
+static const struct FormChange sGengarFormChangeTable[] =
+{
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, SPECIES_GENGAR_MEGA, ITEM_GENGARITE},
     {FORM_CHANGE_BATTLE_GIGANTAMAX,          SPECIES_GENGAR_GIGANTAMAX},
     {FORM_CHANGE_TERMINATOR},

@@ -6932,6 +6932,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .levelUpLearnset = sNecrozmaLevelUpLearnset,
         .teachableLearnset = sNecrozmaTeachableLearnset,
         .formSpeciesIdTable = sNecrozmaFormSpeciesIdTable,
+        .formChangeTable = sNecrozmaUltraFormChangeTable,
     },
 #endif //P_ULTRA_BURST_FORMS
 #endif //P_FUSION_FORMS
