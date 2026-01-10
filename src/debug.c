@@ -3009,7 +3009,10 @@ static void Debug_Display_Nature(u32 natureId, u32 digit, u8 windowId)
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
     ConvertIntToDecimalStringN(gStringVar3, natureId, STR_CONV_MODE_LEADING_ZEROS, 2);
     StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
-    StringCopy(gStringVar1, gNaturesInfo[natureId].name);
+    if (natureId == 0)
+        StringCopy(gStringVar1, COMPOUND_STRING("Random"));
+    else
+        StringCopy(gStringVar1, gNaturesInfo[natureId - 1].name);
     StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Nature ID: {STR_VAR_3}{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}"));
     AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
@@ -3059,8 +3062,8 @@ static void DebugAction_Give_Pokemon_SelectNature(u8 taskId)
         if (JOY_NEW(DPAD_UP))
         {
             gTasks[taskId].tInput += sPowersOfTen[gTasks[taskId].tDigit];
-            if (gTasks[taskId].tInput > NUM_NATURES - 1)
-                gTasks[taskId].tInput = NUM_NATURES - 1;
+            if (gTasks[taskId].tInput > NUM_NATURES)
+                gTasks[taskId].tInput = NUM_NATURES;
         }
         if (JOY_NEW(DPAD_DOWN))
         {
@@ -3074,7 +3077,10 @@ static void DebugAction_Give_Pokemon_SelectNature(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->nature = gTasks[taskId].tInput;
+        if (gTasks[taskId].tInput == 0)
+            sDebugMonData->nature = NATURE_RANDOM;
+        else
+            sDebugMonData->nature = gTasks[taskId].tInput - 1;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
 
@@ -3319,7 +3325,11 @@ static u32 GetDebugPokemonTotalEV(void)
 static void Debug_Display_MoveInfo(enum Move moveId, u32 iteration, u32 digit, u8 windowId)
 {
     // Doesn't expand placeholdes so a 4th dynamic value can be shown.
-    u8 *end = StringCopy(gStringVar1, GetMoveName(moveId));
+    u8 *end;
+    if (moveId == MOVES_COUNT)
+        end = StringCopy(gStringVar1, COMPOUND_STRING("Default"));
+    else
+        end = StringCopy(gStringVar1, GetMoveName(moveId));
     WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
     StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
     StringCopy(gStringVar4, COMPOUND_STRING("Move "));
@@ -3399,7 +3409,7 @@ static void DebugAction_Give_Pokemon_Move(u8 taskId)
     if (JOY_NEW(DPAD_ANY))
     {
         PlaySE(SE_SELECT);
-        Debug_HandleInput_Numeric(taskId, 0, MOVES_COUNT - 1, 4);
+        Debug_HandleInput_Numeric(taskId, 0, MOVES_COUNT, 4);
 
         Debug_Display_MoveInfo(gTasks[taskId].tInput, gTasks[taskId].tIterator, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
     }
@@ -3407,8 +3417,10 @@ static void DebugAction_Give_Pokemon_Move(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         // Set current value
-        sDebugMonData->monMoves[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
-
+        if (gTasks[taskId].tInput < MOVES_COUNT)
+            sDebugMonData->monMoves[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
+        else
+            sDebugMonData->monMoves[gTasks[taskId].tIterator] = MOVE_DEFAULT;
         // If MOVE_NONE selected, stop asking for additional moves
         if (gTasks[taskId].tInput == MOVE_NONE)
             gTasks[taskId].tIterator = MAX_MON_MOVES;
@@ -3442,8 +3454,6 @@ static void DebugAction_Give_Pokemon_Move(u8 taskId)
 
 static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://github.com/ghoulslash/pokeemerald/tree/custom-givemon
 {
-    enum NationalDexOrder nationalDexNum;
-    int sentToPc;
     struct Pokemon mon;
     u8 i;
     enum Move moves[MAX_MON_MOVES];
@@ -3470,9 +3480,8 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     }
 
     //Nature
-    if (nature == NUM_NATURES || nature == 0xFF)
-        nature = Random() % NUM_NATURES;
-    CreateMonWithNature(&mon, species, level, USE_RANDOM_IVS, nature);
+    u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, nature, RANDOM_UNOWN_LETTER);
+    CreateMon(&mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
 
     //Shininess
     SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
@@ -3504,6 +3513,7 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
             SetMonData(&mon, MON_DATA_HP_EV + i, &ev_val);
     }
 
+    GiveMonInitialMoveset(&mon);
     //Moves
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -3511,57 +3521,22 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
         if (moves[0] != MOVE_NONE)
             SetMonMoveSlot(&mon, MOVE_NONE, i);
 
-        if (moves[i] == MOVE_NONE || moves[i] >= MOVES_COUNT)
+        if (moves[i] == MOVE_NONE)
             continue;
 
-        SetMonMoveSlot(&mon, moves[i], i);
+        if (moves[i] == MOVE_DEFAULT)
+            GiveMonDefaultMove(&mon, i);
+        else
+            SetMonMoveSlot(&mon, moves[i], i);
     }
 
-    //Ability
-    if (abilityNum == 0xFF || GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE)
-    {
-        do {
-            abilityNum = Random() % NUM_ABILITY_SLOTS;  // includes hidden abilities
-        } while (GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE);
-    }
-
+    // Ability
     SetMonData(&mon, MON_DATA_ABILITY_NUM, &abilityNum);
 
     //Update mon stats before giving it to the player
     CalculateMonStats(&mon);
 
-    // give player the mon
-    SetMonData(&mon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
-    SetMonData(&mon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
-            break;
-    }
-
-    if (i >= PARTY_SIZE)
-    {
-        sentToPc = CopyMonToPC(&mon);
-    }
-    else
-    {
-        sentToPc = MON_GIVEN_TO_PARTY;
-        CopyMon(&gPlayerParty[i], &mon, sizeof(mon));
-        gPlayerPartyCount = i + 1;
-    }
-
-    //Pokedex entry
-    nationalDexNum = SpeciesToNationalPokedexNum(species);
-    switch(sentToPc)
-    {
-    case MON_GIVEN_TO_PARTY:
-    case MON_GIVEN_TO_PC:
-        GetSetPokedexFlag(nationalDexNum, FLAG_SET_SEEN);
-        GetSetPokedexFlag(nationalDexNum, FLAG_SET_CAUGHT);
-        break;
-    case MON_CANT_GIVE:
-        break;
-    }
+    GiveScriptedMonToPlayer(&mon, PARTY_SIZE);
 
     // Set flag for user convenience
     FlagSet(FLAG_SYS_POKEMON_GET);
@@ -3728,14 +3703,12 @@ static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
 static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffinity
 {
     int boxId, boxPosition;
-    u32 personality;
     struct BoxPokemon boxMon;
     u16 species = SPECIES_BULBASAUR;
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
 
-    personality = Random32();
-
-    CreateBoxMon(&boxMon, species, 100, USE_RANDOM_IVS, FALSE, personality, OT_ID_PLAYER_ID, 0);
+    CreateBoxMon(&boxMon, species, 100, Random32(), OTID_STRUCT_PLAYER_ID);
+    //mons are created with 0 IVs
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
     {
@@ -3773,7 +3746,9 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
             {
                 if (!spaceAvailable)
                     PlayBGM(MUS_RG_MYSTERY_GIFT);
-                CreateBoxMon(&boxMon, species, 100, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+                CreateBoxMon(&boxMon, species, 100, Random32(), OTID_STRUCT_PLAYER_ID);
+                SetBoxMonIVs(&boxMon, USE_RANDOM_IVS);
+                GiveBoxMonInitialMoveset(&boxMon);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;
                 species = (species < NUM_SPECIES - 1) ? species + 1 : 1;
                 spaceAvailable = TRUE;

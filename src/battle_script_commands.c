@@ -907,8 +907,6 @@ static const struct SpriteTemplate sSpriteTemplate_MonIconOnLvlUpBanner =
     .callback = SpriteCB_MonIconOnLvlUpBanner
 };
 
-static const u16 sProtectSuccessRates[] = {USHRT_MAX, USHRT_MAX / 2, USHRT_MAX / 4, USHRT_MAX / 8};
-
 #define _ 0
 
 static const struct PickupItem sPickupTable[] =
@@ -3112,7 +3110,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             }
         }
         else
-        SetMoveEffect(battler, effectBattler, gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect, battleScript, effectFlags);
+        {
+            SetMoveEffect(battler, effectBattler, gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect, battleScript, effectFlags);
+        }
         break;
     case MOVE_EFFECT_PSYCHIC_NOISE:
         battlerAbility = IsAbilityOnSide(gEffectBattler, ABILITY_AROMA_VEIL);
@@ -3833,6 +3833,8 @@ static void Cmd_dofaintanimation(void)
         BattleScriptCall(BattleScript_DynamaxEnds_Ret);
         return;
     }
+
+    gBattleStruct->battlerState[battler].fainted = TRUE;
 
     BtlController_EmitFaintAnimation(battler, B_COMM_TO_CONTROLLER);
     MarkBattlerForControllerExec(battler);
@@ -6616,6 +6618,7 @@ static void DrawLevelUpBannerText(void)
     GetMonNickname(mon, gStringVar4);
 
     printerTemplate.currentChar = gStringVar4;
+    printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = B_WIN_LEVEL_UP_BANNER;
     printerTemplate.fontId = FONT_SMALL;
     printerTemplate.x = 32;
@@ -7183,64 +7186,28 @@ static void Cmd_unused_0x78(void)
 {
 }
 
-static void TryResetProtectUseCounter(u32 battler)
-{
-    u32 lastMove = gLastResultingMoves[battler];
-    if (lastMove == MOVE_UNAVAILABLE)
-    {
-        gBattleMons[battler].volatiles.protectUses = 0;
-        return;
-    }
-
-    enum BattleMoveEffects lastEffect = GetMoveEffect(lastMove);
-    if (!gBattleMoveEffects[lastEffect].usesProtectCounter)
-    {
-        if (GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) < GEN_9 || lastEffect != EFFECT_ALLY_SWITCH)
-            gBattleMons[battler].volatiles.protectUses = 0;
-    }
-}
-
 static void Cmd_setprotectlike(void)
 {
     CMD_ARGS();
-
-    bool32 notLastTurn = TRUE;
     u32 protectMethod = GetMoveProtectMethod(gCurrentMove);
 
-    TryResetProtectUseCounter(gBattlerAttacker);
-
-    if (IsLastMonToMove(gBattlerAttacker))
-        notLastTurn = FALSE;
-
-    if ((sProtectSuccessRates[gBattleMons[gBattlerAttacker].volatiles.protectUses] >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX) && notLastTurn)
-     || (protectMethod == PROTECT_WIDE_GUARD && GetConfig(CONFIG_WIDE_GUARD) >= GEN_6)
-     || (protectMethod == PROTECT_QUICK_GUARD && GetConfig(CONFIG_QUICK_GUARD) >= GEN_6))
+    if (GetMoveEffect(gCurrentMove) == EFFECT_ENDURE)
     {
-        if (GetMoveEffect(gCurrentMove) == EFFECT_ENDURE)
-        {
-            gBattleMons[gBattlerAttacker].volatiles.endured = TRUE;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_BRACED_ITSELF;
-        }
-        else if (GetProtectType(protectMethod) == PROTECT_TYPE_SIDE)
-        {
-            gProtectStructs[gBattlerAttacker].protected = protectMethod;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_TEAM;
-        }
-        else
-        {
-            gProtectStructs[gBattlerAttacker].protected = protectMethod;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
-        }
-
-        gBattleMons[gBattlerAttacker].volatiles.protectUses++;
+        gBattleMons[gBattlerAttacker].volatiles.endured = TRUE;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_BRACED_ITSELF;
     }
-    else // Protect failed
+    else if (GetProtectType(protectMethod) == PROTECT_TYPE_SIDE)
     {
-        gBattleMons[gBattlerAttacker].volatiles.protectUses = 0;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECT_FAILED;
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+        gProtectStructs[gBattlerAttacker].protected = protectMethod;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_TEAM;
     }
+    else
+    {
+        gProtectStructs[gBattlerAttacker].protected = protectMethod;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED_ITSELF;
+    }
+
+    gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses++;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -10044,8 +10011,13 @@ static void Cmd_tryswapitems(void)
 
             if (GetBattlerAbility(gBattlerTarget) != ABILITY_GORILLA_TACTICS)
                 gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
-            if (GetBattlerAbility(gBattlerAttacker) != ABILITY_GORILLA_TACTICS)
+
+            if (GetBattlerAbility(gBattlerAttacker) != ABILITY_GORILLA_TACTICS
+             && (!IsHoldEffectChoice(GetItemHoldEffect(oldItemDef))
+             || (GetConfig(CONFIG_MODERN_TRICK_CHOICE_LOCK) >= GEN_5)))
+            {
                 gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
+            }
 
             gBattlescriptCurrInstr = cmd->nextInstr;
 
@@ -11263,7 +11235,7 @@ static void Cmd_givecaughtmon(void)
                 SetMonData(caughtMon, MON_DATA_HELD_ITEM, &lostItem);  // Restore non-berry items
         }
 
-        if (GiveMonToPlayer(caughtMon) != MON_GIVEN_TO_PARTY
+        if (GiveCapturedMonToPlayer(caughtMon) != MON_GIVEN_TO_PARTY
          && gBattleCommunication[MULTISTRING_CHOOSER] != B_MSG_SWAPPED_INTO_PARTY)
         {
             if (!ShouldShowBoxWasFullMessage())
@@ -12723,16 +12695,17 @@ void BS_TryAllySwitch(void)
     }
     else if (GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) >= GEN_9)
     {
-        TryResetProtectUseCounter(gBattlerAttacker);
-        if (sProtectSuccessRates[gBattleMons[gBattlerAttacker].volatiles.protectUses] < Random())
+        TryResetConsecutiveUseCounter(gBattlerAttacker);
+
+        if (CanUseMoveConsecutively(gBattlerAttacker))
         {
-            gBattleMons[gBattlerAttacker].volatiles.protectUses = 0;
-            gBattlescriptCurrInstr = cmd->failInstr;
+            gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses++;
+            gBattlescriptCurrInstr = cmd->nextInstr;
         }
         else
         {
-            gBattleMons[gBattlerAttacker].volatiles.protectUses++;
-            gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses = 0;
+            gBattlescriptCurrInstr = cmd->failInstr;
         }
     }
     else
@@ -13886,13 +13859,6 @@ void BS_TryIllusionOff(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_SetSpriteIgnore0Hp(void)
-{
-    NATIVE_ARGS(bool8 ignore0HP);
-    gBattleStruct->spriteIgnore0Hp = cmd->ignore0HP;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_UpdateNick(void)
 {
     NATIVE_ARGS();
@@ -14129,7 +14095,7 @@ void BS_ArenaJudgmentString(void)
 void BS_ArenaWaitMessage(void)
 {
     NATIVE_ARGS();
-    if (IsTextPrinterActive(ARENA_WIN_JUDGMENT_TEXT))
+    if (IsTextPrinterActiveOnWindow(ARENA_WIN_JUDGMENT_TEXT))
         return;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

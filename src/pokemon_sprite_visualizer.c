@@ -338,33 +338,6 @@ const u8 gFrontAnimNames[][34] =
     [ANIM_SHAKE_GLOW_PURPLE_SLOW]            = _("SHAKE GLOW PURPLE SLOW"),
 };
 
-const u8 gBattleEnvironmentBackgroundNames[][17] =
-{
-    [BATTLE_ENVIRONMENT_GRASS]      = _("GRASS           "),
-    [BATTLE_ENVIRONMENT_LONG_GRASS] = _("LONG GRASS      "),
-    [BATTLE_ENVIRONMENT_SAND]       = _("SAND            "),
-    [BATTLE_ENVIRONMENT_UNDERWATER] = _("UNDERWATER      "),
-    [BATTLE_ENVIRONMENT_WATER]      = _("WATER           "),
-    [BATTLE_ENVIRONMENT_POND]       = _("POND            "),
-    [BATTLE_ENVIRONMENT_MOUNTAIN]   = _("MOUNTAIN        "),
-    [BATTLE_ENVIRONMENT_CAVE]       = _("CAVE            "),
-    [BATTLE_ENVIRONMENT_BUILDING]   = _("BUILDING        "),
-    [BATTLE_ENVIRONMENT_PLAIN]      = _("PLAIN           "),
-    [BATTLE_ENVIRONMENT_FRONTIER]   = _("FRONTIER        "),
-    [BATTLE_ENVIRONMENT_GYM]        = _("GYM             "),
-    [BATTLE_ENVIRONMENT_LEADER]     = _("LEADER          "),
-    [BATTLE_ENVIRONMENT_MAGMA]      = _("MAGMA           "),
-    [BATTLE_ENVIRONMENT_AQUA]       = _("AQUA            "),
-    [BATTLE_ENVIRONMENT_SIDNEY]     = _("SIDNEY          "),
-    [BATTLE_ENVIRONMENT_PHOEBE]     = _("PHOEBE          "),
-    [BATTLE_ENVIRONMENT_GLACIA]     = _("GLACIA          "),
-    [BATTLE_ENVIRONMENT_DRAKE]      = _("DRAKE           "),
-    [BATTLE_ENVIRONMENT_CHAMPION]   = _("CHAMPION        "),
-    [BATTLE_ENVIRONMENT_GROUDON]    = _("GROUDON         "),
-    [BATTLE_ENVIRONMENT_KYOGRE]     = _("KYOGRE          "),
-    [BATTLE_ENVIRONMENT_RAYQUAZA]   = _("RAYQUAZA        "),
-};
-
 const u8 sShadowSizeLabels[][4] =
 {
     [SHADOW_SIZE_S]                 = _(" S"),
@@ -899,41 +872,29 @@ static void LoadBattleBg(enum BattleEnvironments battleEnvironment)
 static void PrintBattleBgName(u8 taskId)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
-    u8 fontId = 0;
-    u8 text[30+1];
 
-    StringCopy(text, gBattleEnvironmentBackgroundNames[data->battleEnvironment]);
-    AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 0, 24, 0, NULL);
+    const u8 *name = gBattleEnvironmentInfo[data->battleEnvironment].name;
+    u8 fontId = FONT_NORMAL;
+
+    FillWindowPixelRect(WIN_BOTTOM_RIGHT, PIXEL_FILL(0), 0, 24, 80, gFonts[fontId].maxLetterHeight);
+    AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, name, 0, 24, 0, NULL);
 }
-
 static void UpdateBattleBg(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
 
-    if (data->battleEnvironment == BATTLE_ENVIRONMENT_GRASS)
-    {
-        if (increment)
-            data->battleEnvironment += 1;
-        else
-            data->battleEnvironment = BATTLE_ENVIRONMENT_RAYQUAZA;
-    }
-    else if (data->battleEnvironment == BATTLE_ENVIRONMENT_RAYQUAZA)
-    {
-        if (increment)
-            data->battleEnvironment = BATTLE_ENVIRONMENT_GRASS;
-        else
-            data->battleEnvironment -= 1;
+    if (increment) {
+        data->battleEnvironment = (data->battleEnvironment + 1) % (BATTLE_ENVIRONMENT_RAYQUAZA + 1); // Can use BATTLE_ENVIRONMENT_COUNT once the remaining environments have sprites
     }
     else
     {
-        if (increment)
-            data->battleEnvironment += 1;
+        if (data->battleEnvironment == BATTLE_ENVIRONMENT_GRASS)
+            data->battleEnvironment = BATTLE_ENVIRONMENT_RAYQUAZA;
         else
             data->battleEnvironment -= 1;
     }
 
     PrintBattleBgName(taskId);
-
     LoadBattleBg(data->battleEnvironment);
 }
 
@@ -1139,7 +1100,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
             gReservedSpritePaletteCount = 8;
             ResetAllPicSprites();
             BlendPalettes(PALETTES_ALL, 16, RGB_BLACK);
-            LoadPalette(GetTextWindowPalette(0), 15*16, 0x40);
+            LoadPalette(GetTextWindowPalette(0), BG_PLTT_ID(15), 2 * PLTT_SIZE_4BPP);
 
             FillBgTilemapBufferRect(0, 0, 0, 0, 32, 20, 15);
             InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
@@ -1154,7 +1115,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
         case 3:
             AllocateMonSpritesGfx();
 
-            LoadPalette(sBgColor, 0, 2);
+            LoadPalette(sBgColor, BG_PLTT_ID(0), 2);
             LoadMonIconPalette(SPECIES_BULBASAUR);
 
             SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
@@ -1755,7 +1716,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             SetArrowInvisibility(data);
             PrintInstructionsOnWindow(data);
             UpdateMonAnimNames(taskId);
-            
+
             if (data->followerspriteId != 0)
                 gSprites[data->followerspriteId].invisible = FALSE;
         }
