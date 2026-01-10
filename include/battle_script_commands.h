@@ -54,7 +54,6 @@ void HandleBattleWindow(u8 xStart, u8 yStart, u8 xEnd, u8 yEnd, u8 flags);
 bool8 UproarWakeUpCheck(u8 battler);
 bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, enum Move move);
 bool32 DoesDisguiseBlockMove(u32 battler, enum Move move);
-bool32 DoesIceFaceBlockMove(u32 battler, enum Move move);
 bool32 CanUseLastResort(u8 battlerId);
 u32 IsFlowerVeilProtected(u32 battler);
 u32 IsLeafGuardProtected(u32 battler, enum Ability ability);
