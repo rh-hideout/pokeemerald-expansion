@@ -1772,9 +1772,9 @@ static void Select_CopyMonsToPlayerParty(void)
             {
                 gPlayerParty[i] = sFactorySelectScreen->mons[j].monData;
                 gSaveBlock2Ptr->frontier.rentalMons[i].monId = sFactorySelectScreen->mons[j].monId;
-                gSaveBlock2Ptr->frontier.rentalMons[i].personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY, NULL);
-                gSaveBlock2Ptr->frontier.rentalMons[i].abilityNum = GetBoxMonData(&gPlayerParty[i].box, MON_DATA_ABILITY_NUM, NULL);
-                gSaveBlock2Ptr->frontier.rentalMons[i].ivs = GetBoxMonData(&gPlayerParty[i].box, MON_DATA_ATK_IV, NULL);
+                gSaveBlock2Ptr->frontier.rentalMons[i].personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
+                gSaveBlock2Ptr->frontier.rentalMons[i].abilityNum = GetBoxMonData(&gPlayerParty[i].box, MON_DATA_ABILITY_NUM);
+                gSaveBlock2Ptr->frontier.rentalMons[i].ivs = GetBoxMonData(&gPlayerParty[i].box, MON_DATA_ATK_IV);
                 break;
             }
         }
@@ -1836,7 +1836,7 @@ static void Select_PrintMonSpecies(void)
     u8 monId = sFactorySelectScreen->cursorPos;
 
     FillWindowPixelBuffer(SELECT_WIN_SPECIES, PIXEL_FILL(0));
-    species = GetMonData(&sFactorySelectScreen->mons[monId].monData, MON_DATA_SPECIES, NULL);
+    species = GetMonData(&sFactorySelectScreen->mons[monId].monData, MON_DATA_SPECIES);
     StringCopy(gStringVar4, GetSpeciesName(species));
     x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 86);
     AddTextPrinterParameterized3(SELECT_WIN_SPECIES, FONT_NORMAL, x, 1, sSpeciesNameTextColors, 0, gStringVar4);
@@ -1956,7 +1956,7 @@ static void Select_PrintMonCategory(void)
     {
         PutWindowTilemap(SELECT_WIN_MON_CATEGORY);
         FillWindowPixelBuffer(SELECT_WIN_MON_CATEGORY, PIXEL_FILL(0));
-        species = GetMonData(&sFactorySelectScreen->mons[monId].monData, MON_DATA_SPECIES, NULL);
+        species = GetMonData(&sFactorySelectScreen->mons[monId].monData, MON_DATA_SPECIES);
         CopyMonCategoryText(species, text);
         x = GetStringRightAlignXOffset(FONT_NORMAL, text, 118);
         AddTextPrinterParameterized(SELECT_WIN_MON_CATEGORY, FONT_NORMAL, text, x, 1, 0, NULL);
@@ -1968,9 +1968,9 @@ static void Select_CreateMonSprite(void)
 {
     u8 monId = sFactorySelectScreen->cursorPos;
     struct Pokemon *mon = &sFactorySelectScreen->mons[monId].monData;
-    u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-    bool8 isShiny = GetMonData(mon, MON_DATA_IS_SHINY, NULL);
+    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    bool8 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
     sFactorySelectScreen->monPics[1].monSpriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, 88, 32, 15, TAG_NONE);
     gSprites[sFactorySelectScreen->monPics[1].monSpriteId].centerToCornerVecX = 0;
@@ -1995,9 +1995,9 @@ static void Select_ReshowMonSprite(void)
     StartSpriteAffineAnim(&gSprites[sFactorySelectScreen->monPics[1].bgSpriteId], 2);
 
     mon = &sFactorySelectScreen->mons[sFactorySelectScreen->cursorPos].monData;
-    species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-    personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-    isShiny = GetMonData(mon, MON_DATA_IS_SHINY, NULL);
+    species = GetMonData(mon, MON_DATA_SPECIES);
+    personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
     sFactorySelectScreen->monPics[1].monSpriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, 88, 32, 15, TAG_NONE);
     gSprites[sFactorySelectScreen->monPics[1].monSpriteId].centerToCornerVecX = 0;
@@ -2017,9 +2017,9 @@ static void Select_CreateChosenMonsSprites(void)
             if (sFactorySelectScreen->mons[j].selectedId == i + 1)
             {
                 struct Pokemon *mon = &sFactorySelectScreen->mons[j].monData;
-                u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-                u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-                bool8 isShiny = GetMonData(mon, MON_DATA_IS_SHINY, NULL);
+                u16 species = GetMonData(mon, MON_DATA_SPECIES);
+                u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
+                bool8 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
                 sFactorySelectScreen->monPics[i].monSpriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, (i * 72) + 16, 32, i + 13, TAG_NONE);
                 gSprites[sFactorySelectScreen->monPics[i].monSpriteId].centerToCornerVecX = 0;
@@ -2310,8 +2310,8 @@ static void CopySwappedMonData(void)
     SetMonData(&gPlayerParty[sFactorySwapScreen->playerMonId], MON_DATA_FRIENDSHIP, &friendship);
     gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].monId = gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->enemyMonId + FRONTIER_PARTY_SIZE].monId;
     gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].ivs = gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->enemyMonId + FRONTIER_PARTY_SIZE].ivs;
-    gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].personality = GetMonData(&gEnemyParty[sFactorySwapScreen->enemyMonId], MON_DATA_PERSONALITY, NULL);
-    gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].abilityNum = GetBoxMonData(&gEnemyParty[sFactorySwapScreen->enemyMonId].box, MON_DATA_ABILITY_NUM, NULL);
+    gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].personality = GetMonData(&gEnemyParty[sFactorySwapScreen->enemyMonId], MON_DATA_PERSONALITY);
+    gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].abilityNum = GetBoxMonData(&gEnemyParty[sFactorySwapScreen->enemyMonId].box, MON_DATA_ABILITY_NUM);
 }
 
 // Main swap states
@@ -3740,9 +3740,9 @@ static void Swap_PrintMonSpecies(void)
     {
         u8 monId = sFactorySwapScreen->cursorPos;
         if (!sFactorySwapScreen->inEnemyScreen)
-            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES, NULL);
+            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
         else
-            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES, NULL);
+            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
         StringCopy(gStringVar4, GetSpeciesName(species));
         x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 86);
         AddTextPrinterParameterized3(SWAP_WIN_SPECIES, FONT_NORMAL, x, 1, sSwapSpeciesNameTextColors, 0, gStringVar4);
@@ -3849,9 +3849,9 @@ static void Swap_PrintMonSpeciesAtFade(void)
     {
         u8 monId = sFactorySwapScreen->cursorPos;
         if (!sFactorySwapScreen->inEnemyScreen)
-            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES, NULL);
+            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
         else
-            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES, NULL);
+            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
         StringCopy(gStringVar4, GetSpeciesName(species));
         x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 86);
         AddTextPrinterParameterized3(SWAP_WIN_SPECIES_AT_FADE, FONT_NORMAL, x, 1, sSwapSpeciesNameTextColors, 0, gStringVar4);
@@ -3876,9 +3876,9 @@ static void Swap_PrintMonSpeciesForTransition(void)
     {
         u8 monId = sFactorySwapScreen->cursorPos;
         if (!sFactorySwapScreen->inEnemyScreen)
-            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES, NULL);
+            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
         else
-            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES, NULL);
+            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
         StringCopy(gStringVar4, GetSpeciesName(species));
         x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 86);
         AddTextPrinterParameterized3(SWAP_WIN_SPECIES, FONT_NORMAL, x, 1, sSwapSpeciesNameTextColors, 0, gStringVar4);
@@ -3902,9 +3902,9 @@ static void Swap_PrintMonCategory(void)
     {
         PutWindowTilemap(SWAP_WIN_MON_CATEGORY);
         if (!sFactorySwapScreen->inEnemyScreen)
-            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES, NULL);
+            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
         else
-            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES, NULL);
+            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
         CopyMonCategoryText(species, text);
         x = GetStringRightAlignXOffset(FONT_NORMAL, text, 118);
         AddTextPrinterParameterized(SWAP_WIN_MON_CATEGORY, FONT_NORMAL, text, x, 1, 0, NULL);
@@ -4037,9 +4037,9 @@ static void Swap_ShowSummaryMonSprite(void)
     StartSpriteAffineAnim(&gSprites[sFactorySwapScreen->monPic.bgSpriteId], 2);
 
     mon = &gPlayerParty[sFactorySwapScreen->cursorPos];
-    species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-    personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-    isShiny = GetMonData(mon, MON_DATA_IS_SHINY, NULL);
+    species = GetMonData(mon, MON_DATA_SPECIES);
+    personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
     sFactorySwapScreen->monPic.monSpriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, 88, 32, 15, TAG_NONE);
     gSprites[sFactorySwapScreen->monPic.monSpriteId].centerToCornerVecX = 0;
@@ -4113,11 +4113,11 @@ static void Swap_TaskCantHaveSameMons(u8 taskId)
 static bool8 Swap_AlreadyHasSameSpecies(u8 monId)
 {
     u8 i;
-    u16 species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES, NULL);
+    u16 species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        if (i != sFactorySwapScreen->playerMonId && (u16)(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL)) == species)
+        if (i != sFactorySwapScreen->playerMonId && (u16)(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES)) == species)
             return TRUE;
     }
     return FALSE;
@@ -4254,9 +4254,9 @@ static void Swap_CreateMonSprite(void)
     else
         mon = &gEnemyParty[sFactorySwapScreen->cursorPos];
 
-    species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-    personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-    isShiny = GetMonData(mon, MON_DATA_IS_SHINY, NULL);
+    species = GetMonData(mon, MON_DATA_SPECIES);
+    personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
     sFactorySwapScreen->monPic.monSpriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, 88, 32, 15, TAG_NONE);
     gSprites[sFactorySwapScreen->monPic.monSpriteId].centerToCornerVecX = 0;

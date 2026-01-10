@@ -575,7 +575,7 @@ static void CB2_CreateTradeMenu(void)
         for (i = 0; i < sTradeMenu->partyCounts[TRADE_PARTNER]; i++)
         {
             struct Pokemon *mon = &gEnemyParty[i];
-            sTradeMenu->partySpriteIds[TRADE_PARTNER][i] = CreateMonIcon(GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL),
+            sTradeMenu->partySpriteIds[TRADE_PARTNER][i] = CreateMonIcon(GetMonData(mon, MON_DATA_SPECIES_OR_EGG),
                                                          SpriteCB_MonIcon,
                                                          (sTradeMonSpriteCoords[i + PARTY_SIZE][0] * 8) + 14,
                                                          (sTradeMonSpriteCoords[i + PARTY_SIZE][1] * 8) - 12,
@@ -753,7 +753,7 @@ static void CB2_ReturnToTradeMenu(void)
         for (i = 0; i < sTradeMenu->partyCounts[TRADE_PLAYER]; i++)
         {
             struct Pokemon *mon = &gPlayerParty[i];
-            sTradeMenu->partySpriteIds[TRADE_PLAYER][i] = CreateMonIcon(GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL),
+            sTradeMenu->partySpriteIds[TRADE_PLAYER][i] = CreateMonIcon(GetMonData(mon, MON_DATA_SPECIES_OR_EGG),
                                                          SpriteCB_MonIcon,
                                                          (sTradeMonSpriteCoords[i][0] * 8) + 14,
                                                          (sTradeMonSpriteCoords[i][1] * 8) - 12,
@@ -764,7 +764,7 @@ static void CB2_ReturnToTradeMenu(void)
         for (i = 0; i < sTradeMenu->partyCounts[TRADE_PARTNER]; i++)
         {
             struct Pokemon *mon = &gEnemyParty[i];
-            sTradeMenu->partySpriteIds[TRADE_PARTNER][i] = CreateMonIcon(GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL),
+            sTradeMenu->partySpriteIds[TRADE_PARTNER][i] = CreateMonIcon(GetMonData(mon, MON_DATA_SPECIES_OR_EGG),
                                                          SpriteCB_MonIcon,
                                                          (sTradeMonSpriteCoords[i + PARTY_SIZE][0] * 8) + 14,
                                                          (sTradeMonSpriteCoords[i + PARTY_SIZE][1] * 8) - 12,
@@ -1964,9 +1964,9 @@ static void BufferMovesString(u8 *str, u8 whichParty, u8 partyIdx)
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             if (whichParty == TRADE_PLAYER)
-                moves[i] = GetMonData(&gPlayerParty[partyIdx], i + MON_DATA_MOVE1, NULL);
+                moves[i] = GetMonData(&gPlayerParty[partyIdx], i + MON_DATA_MOVE1);
             else
-                moves[i] = GetMonData(&gEnemyParty[partyIdx], i + MON_DATA_MOVE1, NULL);
+                moves[i] = GetMonData(&gEnemyParty[partyIdx], i + MON_DATA_MOVE1);
         }
 
         StringCopy(str, sText_EmptyString);
@@ -2022,9 +2022,9 @@ static void PrintLevelAndGender(u8 whichParty, u8 monIdx, u8 x, u8 y, u8 width, 
     CopyBgTilemapBufferToVram(1);
 
     if (whichParty == TRADE_PLAYER)
-        level = GetMonData(&gPlayerParty[monIdx], MON_DATA_LEVEL, NULL);
+        level = GetMonData(&gPlayerParty[monIdx], MON_DATA_LEVEL);
     else
-        level = GetMonData(&gEnemyParty[monIdx], MON_DATA_LEVEL, NULL);
+        level = GetMonData(&gEnemyParty[monIdx], MON_DATA_LEVEL);
 
     if (!sTradeMenu->isEgg[whichParty][monIdx])
     {
@@ -3066,8 +3066,8 @@ static void UpdatePokedexForReceivedMon(u8 partyIdx)
 
     if (!GetMonData(mon, MON_DATA_IS_EGG))
     {
-        u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-        u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
+        u16 species = GetMonData(mon, MON_DATA_SPECIES);
+        u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
         enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
         GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
         HandleSetPokedexFlag(dexNum, FLAG_SET_CAUGHT, personality);
