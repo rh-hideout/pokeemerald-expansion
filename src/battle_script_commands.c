@@ -9164,23 +9164,23 @@ static void Cmd_trysetencore(void)
         if (B_ENCORE_TURNS >= GEN_5)
         {
             if (HasBattlerActedThisTurn(gBattlerTarget))
-                gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER - 1; // 3 turns, Encore used after move
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER; // 3 turns, Encore used after move
             else
-                gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER; // 4 turns, Encore used before move
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER + 1; // 4 turns, Encore used before move
         }
         else if (B_ENCORE_TURNS == GEN_4)
         {
             if (HasBattlerActedThisTurn(gBattlerTarget))
-                gBattleMons[gBattlerTarget].volatiles.encoreTimer = (RandomUniform(RNG_ENCORE_TURNS, 3, 7)); // 3-7 turns, Encore used after move
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = (RandomUniform(RNG_ENCORE_TURNS, B_ENCORE_TIMER, 7)); // 3-7 turns, Encore used after move
             else
-                gBattleMons[gBattlerTarget].volatiles.encoreTimer = (RandomUniform(RNG_ENCORE_TURNS, B_ENCORE_TIMER, 8)); // 4-8 turns, Encore used before move
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = (RandomUniform(RNG_ENCORE_TURNS, 4, 8)); // 4-8 turns, Encore used before move
         }
         else
         {
             if (HasBattlerActedThisTurn(gBattlerTarget))
                 gBattleMons[gBattlerTarget].volatiles.encoreTimer = (RandomUniform(RNG_ENCORE_TURNS, 2, 6)); // 2-6 turns, Encore used after move
             else
-                gBattleMons[gBattlerTarget].volatiles.encoreTimer = (RandomUniform(RNG_ENCORE_TURNS, 3, 7)); // 3-7 turns, Encore used before move
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = (RandomUniform(RNG_ENCORE_TURNS, B_ENCORE_TIMER, 7)); // 3-7 turns, Encore used before move
         }
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
