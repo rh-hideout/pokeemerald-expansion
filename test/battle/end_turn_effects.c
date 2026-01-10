@@ -89,7 +89,7 @@ TWO_VS_ONE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
     s16 damage;
 
     GIVEN {
-        MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1);}
+        MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1); }
         MULTI_PARTNER(SPECIES_EKANS) { HP(100); Ability(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
         MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }
@@ -118,7 +118,7 @@ ONE_VS_TWO_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
     s16 damage;
 
     GIVEN {
-        MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1);}
+        MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1); }
         MULTI_PLAYER(SPECIES_EKANS) { HP(100); Ability(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
         MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }

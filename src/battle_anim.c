@@ -3,6 +3,7 @@
 #include "battle_anim.h"
 #include "battle_anim_scripts.h"
 #include "battle_controllers.h"
+#include "battle_environment.h"
 #include "battle_interface.h"
 #include "battle_util.h"
 #include "bg.h"
@@ -403,6 +404,32 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         break;
     case ANIM_TYPE_MOVE:
         sBattleAnimScriptPtr = GetMoveAnimationScript(animId);
+
+        if (sBattleAnimScriptPtr == gBattleAnimMove_SecretPower)
+        {
+            if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            {
+                switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+                {
+                case STATUS_FIELD_MISTY_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_FairyWind;
+                    break;
+                case STATUS_FIELD_GRASSY_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_NeedleArm;
+                    break;
+                case STATUS_FIELD_ELECTRIC_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_ThunderShock;
+                    break;
+                case STATUS_FIELD_PSYCHIC_TERRAIN:
+                    sBattleAnimScriptPtr = gBattleAnimMove_Confusion;
+                    break;
+                }
+            }
+            else
+            {
+                sBattleAnimScriptPtr = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerAnimation;
+            }
+        }
         break;
     case ANIM_TYPE_STATUS:
         sBattleAnimScriptPtr = sBattleAnims_StatusConditions[animId];
@@ -510,8 +537,8 @@ static void Cmd_loadspritegfx(void)
 
     sBattleAnimScriptPtr++;
     index = T1_READ_16(sBattleAnimScriptPtr);
-    LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)]);
-    LoadSpritePalette(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(index)]);
+    LoadCompressedSpriteSheetUsingHeap(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(index)].pic);
+    LoadSpritePalette(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(index)].palette);
     sBattleAnimScriptPtr += 2;
     AddSpriteIndex(GET_TRUE_SPRITE_INDEX(index));
     sAnimFramesToWait = 1;
@@ -524,8 +551,8 @@ static void Cmd_unloadspritegfx(void)
 
     sBattleAnimScriptPtr++;
     index = T1_READ_16(sBattleAnimScriptPtr);
-    FreeSpriteTilesByTag(gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)].tag);
-    FreeSpritePaletteByTag(gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)].tag);
+    FreeSpriteTilesByTag(gBattleAnimTable[GET_TRUE_SPRITE_INDEX(index)].pic.tag);
+    FreeSpritePaletteByTag(gBattleAnimTable[GET_TRUE_SPRITE_INDEX(index)].pic.tag);
     sBattleAnimScriptPtr += 2;
     ClearSpriteIndex(GET_TRUE_SPRITE_INDEX(index));
 }
@@ -872,8 +899,8 @@ static void Cmd_end(void)
     {
         if (sAnimSpriteIndexArray[i] != 0xFFFF)
         {
-            FreeSpriteTilesByTag(gBattleAnimPicTable[sAnimSpriteIndexArray[i]].tag);
-            FreeSpritePaletteByTag(gBattleAnimPicTable[sAnimSpriteIndexArray[i]].tag);
+            FreeSpriteTilesByTag(gBattleAnimTable[sAnimSpriteIndexArray[i]].pic.tag);
+            FreeSpritePaletteByTag(gBattleAnimTable[sAnimSpriteIndexArray[i]].pic.tag);
             sAnimSpriteIndexArray[i] = 0xFFFF; // set terminator.
         }
     }

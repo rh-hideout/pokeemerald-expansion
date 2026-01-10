@@ -923,42 +923,35 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
     return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 }
 
-static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler)
+static bool32 CanUseSuperEffectiveMoveAgainstOpponent(u32 battler, u32 opposingBattler)
 {
     enum Move move;
 
-    enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
-    u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
-
-    if (!(gAbsentBattlerFlags & (1u << opposingBattler)))
-    {
-        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-        {
-            move = gBattleMons[battler].moves[moveIndex];
-            if (move == MOVE_NONE || AI_DoesChoiceEffectBlockMove(battler, move))
-                continue;
-
-            if (gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] >= UQ_4_12(2.0))
-                return TRUE;
-        }
-    }
-    if (!IsDoubleBattle())
+    if (!IsBattlerAlive(opposingBattler))
         return FALSE;
 
-    opposingBattler = BATTLE_PARTNER(opposingPosition);
-
-    if (!(gAbsentBattlerFlags & (1u << opposingBattler)))
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-        {
-            move = gBattleMons[battler].moves[moveIndex];
-            if (move == MOVE_NONE || AI_DoesChoiceEffectBlockMove(battler, move))
-                continue;
+        move = gBattleMons[battler].moves[moveIndex];
+        if (move == MOVE_NONE || AI_DoesChoiceEffectBlockMove(battler, move))
+            continue;
 
-            if (gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] >= UQ_4_12(2.0))
-                return TRUE;
-        }
+        if (gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] >= UQ_4_12(2.0))
+            return TRUE;
     }
+    return FALSE;
+}
+
+static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler)
+{
+    u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
+    u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
+
+    if (CanUseSuperEffectiveMoveAgainstOpponent(battler, opposingBattler))
+        return TRUE;
+
+    if (IsDoubleBattle() && CanUseSuperEffectiveMoveAgainstOpponent(battler, BATTLE_PARTNER(opposingPosition)))
+        return TRUE;
 
     return FALSE;
 }
@@ -1601,7 +1594,7 @@ static u32 GetSwitchinStatusDamage(u32 battler)
     {
         if (status & STATUS1_BURN)
         {
-            if (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7)
+            if (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7 || GetConfig(CONFIG_BURN_DAMAGE) == GEN_1)
                 statusDamage = maxHP / 16;
             else
                 statusDamage = maxHP / 8;
@@ -1612,7 +1605,7 @@ static u32 GetSwitchinStatusDamage(u32 battler)
         }
         else if (status & STATUS1_FROSTBITE)
         {
-            if (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7)
+            if (GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7 || GetConfig(CONFIG_BURN_DAMAGE) == GEN_1)
                 statusDamage = maxHP / 16;
             else
                 statusDamage = maxHP / 8;

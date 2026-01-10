@@ -105,6 +105,7 @@ enum MoveSuccessOrder
     CANCELER_CLEAR_FLAGS,
     CANCELER_SKY_DROP,
     CANCELER_RECHARGE,
+    CANCELER_CHILLY_RECEPTION,
     CANCELER_ASLEEP_OR_FROZEN,
     CANCELER_POWER_POINTS,
     CANCELER_OBEDIENCE,
@@ -415,7 +416,6 @@ bool32 MoveEffectIsGuaranteed(u32 battler, enum Ability battlerAbility, const st
 void GetBattlerTypes(u32 battler, bool32 ignoreTera, enum Type types[static 3]);
 enum Type GetBattlerType(u32 battler, u32 typeIndex, bool32 ignoreTera);
 bool8 CanMonParticipateInSkyBattle(struct Pokemon *mon);
-bool8 IsMonBannedFromSkyBattles(u16 species);
 void RemoveBattlerType(u32 battler, enum Type type);
 enum Type GetBattleMoveType(enum Move move);
 void TryActivateSleepClause(u32 battler, u32 indexInParty);
@@ -468,5 +468,7 @@ bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
 void SetWrapTurns(u32 battler, enum HoldEffect holdEffect);
 bool32 ChangeOrderTargetAfterAttacker(void);
 void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, enum Move usedMove);
+bool32 CanUseMoveConsecutively(u32 battler);
+void TryResetConsecutiveUseCounter(u32 battler);
 
 #endif // GUARD_BATTLE_UTIL_H

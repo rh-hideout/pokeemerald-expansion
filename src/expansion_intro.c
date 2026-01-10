@@ -309,7 +309,7 @@ static void ExpansionIntro_LoadGraphics(void)
     DecompressDataWithHeaderVram(sBgMap_PoweredBy, (u16*) BG_SCREEN_ADDR(sBgTemplates_RhhCopyrightScreen[EXPANSION_INTRO_BG3].mapBaseIndex));
     DecompressDataWithHeaderVram(sBgTiles_RhhCredits, (void*) BG_CHAR_ADDR(sBgTemplates_RhhCopyrightScreen[EXPANSION_INTRO_BG2].charBaseIndex));
     DecompressDataWithHeaderVram(sBgMap_RhhCredits, (u16*) BG_SCREEN_ADDR(sBgTemplates_RhhCopyrightScreen[EXPANSION_INTRO_BG2].mapBaseIndex));
-    LoadPalette(sBgPal_Credits, 0x00, 0x60);
+    LoadPalette(sBgPal_Credits, BG_PLTT_ID(0), 3 * PLTT_SIZE_4BPP);
 
     LoadCompressedSpriteSheet(&sSpriteSheet_DizzyEgg);
     LoadCompressedSpriteSheet(&sSpriteSheet_Porygon);
@@ -379,9 +379,9 @@ static void SpriteCallback_PorygonHit(struct Sprite* sprite)
     if (sprite->sTimer % 8 == 0)
     {
         if (sprite->sTimer % 16 == 0)
-            LoadPalette(sSpritePal_PorygonShiny, 0x10 * (16 + sprite->oam.paletteNum), 0x20);
+            LoadPalette(sSpritePal_PorygonShiny, PLTT_ID(16 + sprite->oam.paletteNum), PLTT_SIZE_4BPP);
         else
-            LoadPalette(sSpritePal_Porygon, 0x10 * (16 + sprite->oam.paletteNum), 0x20);
+            LoadPalette(sSpritePal_Porygon, PLTT_ID(16 + sprite->oam.paletteNum), PLTT_SIZE_4BPP);
     }
 
     sprite->sTimer++;

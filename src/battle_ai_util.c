@@ -2250,7 +2250,7 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, enum Move move, enum Move pred
     s32 score = 0;
 
     // TODO more sophisticated logic
-    u32 uses = gBattleMons[battlerAtk].volatiles.protectUses;
+    u32 uses = gBattleMons[battlerAtk].volatiles.consecutiveMoveUses;
 
     /*if (GetMoveResultFlags(predictedMove) & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_MISSED))
     {

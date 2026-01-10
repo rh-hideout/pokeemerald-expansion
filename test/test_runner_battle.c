@@ -1982,17 +1982,18 @@ void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species)
     DATA.nature = NATURE_HARDY;
     (*partySize)++;
 
-    CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
-    data = MOVE_NONE;
+    CreateMon(DATA.currentMon, species, 100, 0, OTID_STRUCT_PRESET(0));
     for (i = 0; i < MAX_MON_MOVES; i++)
-        SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
-    data = 0;
-    if (B_FRIENDSHIP_BOOST)
     {
-        // This way, we avoid the boost affecting tests unless explicitly stated.
-        SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
-        CalculateMonStats(DATA.currentMon);
+        data = MOVE_NONE;
+        SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
+        data = 0x7F; // Max PP possible
+        SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
     }
+    data = 0;
+    if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
+        SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
+    CalculateMonStats(DATA.currentMon);
 }
 
 void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species)
@@ -2036,7 +2037,8 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
     DATA.isShiny = FALSE;
     (*partySize)++;
 
-    CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
+    CreateMon(DATA.currentMon, species, 100, 0, OTID_STRUCT_PRESET(0));
+
     // Reset move IDs, but force PP to be non-zero. This is a safeguard against test species that only learn 1 move having test moves with 0 PP
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -2046,12 +2048,9 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
     }
     data = 0;
-    if (B_FRIENDSHIP_BOOST)
-    {
-        // This way, we avoid the boost affecting tests unless explicitly stated.
+    if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
         SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
-        CalculateMonStats(DATA.currentMon);
-    }
+    CalculateMonStats(DATA.currentMon);
 }
 
 // (sNaturePersonalities[i] % NUM_NATURES) == i
