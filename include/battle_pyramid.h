@@ -10,7 +10,7 @@ void MarkApproachingPyramidTrainersAsBattled(void);
 void GenerateBattlePyramidWildMon(void);
 u8 GetPyramidRunMultiplier(void);
 u8 CurrentBattlePyramidLocation(void);
-bool8 InBattlePyramid_(void);
+bool8 InBattlePyramid(void);
 void PausePyramidChallenge(void);
 void SoftResetInBattlePyramid(void);
 void CopyPyramidTrainerSpeechBefore(u16 trainerId);

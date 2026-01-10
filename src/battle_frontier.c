@@ -180,10 +180,9 @@ void DoFacilityTrainerBattle(struct ScriptContext *ctx)
 
 void FacilityTrainerBattle(struct ScriptContext *ctx)
 {
-    InitTrainerBattleParameter();
-
     u8 facility = ScriptReadByte(ctx);
-    ctx->scriptPtr = BattleSetup_ConfigureFacilityTrainerBattle(facility, ctx->scriptPtr);
+
+    ConfigureFacilityTrainerBattle(facility, ctx->scriptPtr);
 }
 
 void FillFrontierTrainerParty(u8 monsCount)

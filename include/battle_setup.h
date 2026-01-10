@@ -3,8 +3,13 @@
 
 #include "battle_transition.h"
 #include "gym_leader_rematch.h"
+#include "script.h"
+#include "trainer_see.h"
 
 #define REMATCHES_COUNT 5
+
+#define TRAINERBATTLE_OPCODE_OFFSET 1  // 1 byte trainerbattle opcode
+#define FACILITYBATTLE_OPCODE_OFFSET 5 // 1 byte callnative opcode, 4 bytes func ptr
 
 struct RematchTrainer
 {
@@ -25,7 +30,9 @@ typedef union PACKED TrainerBattleParameter
         u8 isRematch:1;
         u8 playMusicA:1;
         u8 playMusicB:1;
-        u8 mode:4;
+        u8 continueScript:1;
+        u8 facePlayer:1;
+        u8 padding:2;
         u8 objEventLocalIdA;
         u16 opponentA;
         u8 *introTextA;
@@ -49,6 +56,27 @@ extern u16 gPartnerTrainerId;
 
 #define TRAINER_BATTLE_PARAM gTrainerBattleParameter.params
 
+#define DebugPrintTrainerParams(battleParameter) DebugPrintfLevel(MGBA_LOG_DEBUG, "\nisDouble: %d\nisRematch: %d\nplayMusicA: %d\nplayMusicB: %d\ncotinueScript: %d\nfacePlayer: %d\npadding: %d\nlocalIdA: %d\ntrainerA: %d\nintroA: %x\ndefeatA: %x\neventA: %x\nlocalIdB: %d\ntrainerB: %d\nintroB: %x\ndefeatB: %x\neventB: %x\nvictory: %x\nnotBattle:%x\n", \
+        battleParameter->params.isDoubleBattle, \
+        battleParameter->params.isRematch, \
+        battleParameter->params.playMusicA, \
+        battleParameter->params.playMusicB, \
+        battleParameter->params.continueScript, \
+        battleParameter->params.facePlayer, \
+        battleParameter->params.padding, \
+        battleParameter->params.objEventLocalIdA, \
+        battleParameter->params.opponentA, \
+        battleParameter->params.introTextA, \
+        battleParameter->params.defeatTextA, \
+        battleParameter->params.battleScriptRetAddrA, \
+        battleParameter->params.objEventLocalIdB, \
+        battleParameter->params.opponentB, \
+        battleParameter->params.introTextB, \
+        battleParameter->params.defeatTextB, \
+        battleParameter->params.battleScriptRetAddrB, \
+        battleParameter->params.victoryText, \
+        battleParameter->params.cannotBattleText)
+
 void BattleSetup_StartWildBattle(void);
 void BattleSetup_StartDoubleWildBattle(void);
 void BattleSetup_StartBattlePikeWildBattle(void);
@@ -68,15 +96,13 @@ void ChooseStarter(void);
 void ResetTrainerOpponentIds(void);
 void SetMapVarsToTrainerA(void);
 void SetMapVarsToTrainerB(void);
-const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data);
-const u8* BattleSetup_ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr);
-void ConfigureAndSetUpOneTrainerBattle(u8 trainerObjEventId, const u8 *trainerScript);
-void ConfigureTwoTrainersBattle(u8 trainerObjEventId, const u8 *trainerScript);
-void SetUpTwoTrainersBattle(void);
+void ConfigureTrainerBattle(struct ScriptContext *ctx);
+void ConfigureFacilityTrainerBattle(u8 facility, const u8 *scriptEndPtr);
+void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTrainer);
+void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *ApproachingTrainer);
 bool32 GetTrainerFlagFromScriptPointer(const u8 *data);
 bool32 GetRematchFromScriptPointer(const u8 *data);
 void SetTrainerFacingDirection(void);
-u8 GetTrainerBattleMode(void);
 bool8 GetTrainerFlag(void);
 bool8 HasTrainerBeenFought(u16 trainerId);
 void SetTrainerFlag(u16 trainerId);
