@@ -514,9 +514,7 @@ static void CB2_InitBattleInternal(void)
     gBattle_BG3_Y = 0;
 
     if (!DEBUG_OVERWORLD_MENU || (DEBUG_OVERWORLD_MENU && !gIsDebugBattle))
-    {
         gBattleEnvironment = BattleSetup_GetEnvironmentId();
-    }
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         gBattleEnvironment = BATTLE_ENVIRONMENT_BUILDING;
     if (TestRunner_Battle_GetForcedEnvironment())
@@ -3821,7 +3819,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_BEFORE_FIRST_TURN))
         {
             // Ensures only trainer A slide is played in single-trainer doubles (B == A / B == TRAINER_NONE) and 2v1 multibattles (B == 0xFFFF)
-            if (!((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA) 
+            if (!((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
             || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
             || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
             {
@@ -5963,6 +5961,10 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, u32 battler, e
     case EFFECT_TERA_STARSTORM:
         if (species == SPECIES_TERAPAGOS_STELLAR)
             return TYPE_STELLAR;
+        break;
+    case EFFECT_NATURE_POWER:
+        if (state == MON_IN_BATTLE)
+            return GetMoveType(GetNaturePowerMove(battler));
         break;
     default:
         break;
