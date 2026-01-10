@@ -5528,15 +5528,15 @@ static void SortMovesAlphabetically(u16 *moves, u32 numMoves)
         QuickSortMoves(moves, 0, numMoves - 1);
 }
 
-u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
+u32 GetRelearnerLevelUpMovesBox(struct BoxPokemon *boxMon, u16 *moves)
 {
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
 
     u32 numMoves = 0;
-    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES == TRUE) ? MAX_LEVEL : GetMonData(mon, MON_DATA_LEVEL, 0);
+    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES == TRUE) ? MAX_LEVEL : GetLevelFromBoxMonExp(boxMon);
 
     do
     {
@@ -5547,7 +5547,7 @@ u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
             if (learnset[i].level > level)
                 break;
 
-            if (!MonKnowsMove(mon, learnset[i].move))
+            if (!BoxMonKnowsMove(boxMon, learnset[i].move))
                 moves[numMoves++] = learnset[i].move;
         }
 
@@ -5560,12 +5560,17 @@ u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
     return numMoves;
 }
 
-u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
+u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
+{
+    return GetRelearnerLevelUpMovesBox(&mon->box, moves);
+}
+
+u32 GetRelearnerEggMovesBox(struct BoxPokemon *boxMon, u16 *moves)
 {
     if (!FlagGet(P_FLAG_EGG_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
@@ -5582,7 +5587,7 @@ u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
 
     for (u32 i = 0; eggMoves[i] != MOVE_UNAVAILABLE; i++)
     {
-        if (!MonKnowsMove(mon, eggMoves[i]))
+        if (!BoxMonKnowsMove(boxMon, eggMoves[i]))
             moves[numMoves++] = eggMoves[i];
     }
 
@@ -5592,12 +5597,17 @@ u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
     return numMoves;
 }
 
-u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
+u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
+{
+    return GetRelearnerEggMovesBox(&mon->box, moves);
+}
+
+u32 GetRelearnerTMMovesBox(struct BoxPokemon *boxMon, u16 *moves)
 {
     if (!P_TM_MOVES_RELEARNER && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
@@ -5618,7 +5628,7 @@ u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
         if (!CanLearnTeachableMove(species, move))
             continue;
         
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(boxMon, move))
             moves[numMoves++] = move;
     }
 
@@ -5628,12 +5638,17 @@ u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
     return numMoves;
 }
 
-u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
+u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
+{
+    return GetRelearnerTMMovesBox(&mon->box, moves);
+}
+
+u32 GetRelearnerTutorMovesBox(struct BoxPokemon *boxMon, u16 *moves)
 {
     if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
@@ -5647,7 +5662,7 @@ u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
         if (!CanLearnTeachableMove(species, move))
             continue;
 
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(boxMon, move))
             moves[numMoves++] = move;
     }
 
@@ -5657,14 +5672,19 @@ u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
     return numMoves;
 }
 
-bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon)
+u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
 {
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    return GetRelearnerTutorMovesBox(&mon->box, moves);
+}
+
+bool32 HasRelearnerLevelUpMovesBox(struct BoxPokemon *boxMon)
+{
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
 
-    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES == TRUE) ? MAX_LEVEL : GetMonData(mon, MON_DATA_LEVEL, 0);
+    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES == TRUE) ? MAX_LEVEL : GetLevelFromBoxMonExp(boxMon);
 
     do
     {
@@ -5675,7 +5695,7 @@ bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon)
             if (learnset[i].level > level)
                 break;
 
-            if (!MonKnowsMove(mon, learnset[i].move))
+            if (!BoxMonKnowsMove(boxMon, learnset[i].move))
                 return TRUE;
         }
 
@@ -5686,12 +5706,17 @@ bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon)
     return FALSE;
 }
 
-bool32 HasRelearnerEggMoves(struct Pokemon *mon)
+bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon)
+{
+    return HasRelearnerLevelUpMovesBox(&mon->box);
+}
+
+bool32 HasRelearnerEggMovesBox(struct BoxPokemon *boxMon)
 {
     if (!FlagGet(P_FLAG_EGG_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return FALSE;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
@@ -5706,19 +5731,24 @@ bool32 HasRelearnerEggMoves(struct Pokemon *mon)
 
     for (u32 i = 0; eggMoves[i] != MOVE_UNAVAILABLE; i++)
     {
-        if (!MonKnowsMove(mon, eggMoves[i]))
+        if (!BoxMonKnowsMove(boxMon, eggMoves[i]))
             return TRUE;
     }
 
     return FALSE;
 }
 
-bool32 HasRelearnerTMMoves(struct Pokemon *mon)
+bool32 HasRelearnerEggMoves(struct Pokemon *mon)
+{
+    return HasRelearnerEggMovesBox(&mon->box);
+}
+
+bool32 HasRelearnerTMMovesBox(struct BoxPokemon *boxMon)
 {
     if (!P_TM_MOVES_RELEARNER && !P_ENABLE_MOVE_RELEARNERS)
         return FALSE;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
@@ -5737,19 +5767,24 @@ bool32 HasRelearnerTMMoves(struct Pokemon *mon)
         if (!CanLearnTeachableMove(species, move))
             continue;
 
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(boxMon, move))
             return TRUE;
     }
 
     return FALSE;
 }
 
-bool32 HasRelearnerTutorMoves(struct Pokemon *mon)
+bool32 HasRelearnerTMMoves(struct Pokemon *mon)
+{
+    return HasRelearnerTMMovesBox(&mon->box);
+}
+
+bool32 HasRelearnerTutorMovesBox(struct BoxPokemon *boxMon)
 {
     if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return FALSE;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
@@ -5761,11 +5796,16 @@ bool32 HasRelearnerTutorMoves(struct Pokemon *mon)
         if (!CanLearnTeachableMove(species, move))
             continue;
 
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(boxMon, move))
             return TRUE;
     }
 
     return FALSE;
+}
+
+bool32 HasRelearnerTutorMoves(struct Pokemon *mon)
+{
+    return HasRelearnerTutorMovesBox(&mon->box);
 }
 
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves)

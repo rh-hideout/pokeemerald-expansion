@@ -24,6 +24,8 @@ enum RelearnMode
     RELEARN_MODE_PSS_PAGE_BATTLE_MOVES = 2,      // Relearning moves through the summary screen's battle moves page
     RELEARN_MODE_PSS_PAGE_CONTEST_MOVES = 3,     // Relearning moves through the summary screen's contest moves page (defaults to contest page on relearner screen)
     RELEARN_MODE_PARTY_MENU = 4,                 // Relearning moves through the party menu's moves submenu
+    RELEARN_MODE_BOX_PSS_PAGE_BATTLE_MOVES = 5,
+    RELEARN_MODE_BOX_PSS_PAGE_CONTEST_MOVES = 6,
 };
 
 #endif // GUARD_CONSTANTS_MOVE_RELEARNER_H
