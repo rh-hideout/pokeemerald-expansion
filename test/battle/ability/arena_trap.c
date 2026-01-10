@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Arena Trap doesn't prevent switch outs via Shed Shell")
     }
 }
 
-WILD_BATTLE_TEST("Arena Trap doesn't prevent switch outs via Run Away")
+WILD_BATTLE_TEST("Arena Trap prevents switching but Run Away allows fleeing")
 {
     GIVEN {
         PLAYER(SPECIES_RATTATA) { Ability(ABILITY_RUN_AWAY); }
@@ -87,11 +87,13 @@ WILD_BATTLE_TEST("Arena Trap doesn't prevent switch outs via Run Away")
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } THEN {
         u32 battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+        u32 trapper = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        EXPECT_EQ(IsAbilityPreventingEscape(battler), trapper + 1);
         EXPECT_EQ(IsRunningFromBattleImpossible(battler), BATTLE_RUN_SUCCESS);
     }
 }
 
-WILD_BATTLE_TEST("Arena Trap doesn't prevent switch outs via Smoke Ball")
+WILD_BATTLE_TEST("Arena Trap prevents switching but Smoke Ball allows fleeing")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_SMOKE_BALL].holdEffect == HOLD_EFFECT_CAN_ALWAYS_RUN);
@@ -101,15 +103,17 @@ WILD_BATTLE_TEST("Arena Trap doesn't prevent switch outs via Smoke Ball")
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } THEN {
         u32 battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+        u32 trapper = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        EXPECT_EQ(IsAbilityPreventingEscape(battler), trapper + 1);
         EXPECT_EQ(IsRunningFromBattleImpossible(battler), BATTLE_RUN_SUCCESS);
     }
 }
 
 SINGLE_BATTLE_TEST("Arena Trap prevents switch outs from Ghost-type Pokémon (Gen3-5)")
 {
-    bool32 trapsGhost = (B_GHOSTS_ESCAPE < GEN_6);
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SHUPPET, 0) == TYPE_GHOST);
+        WITH_CONFIG(CONFIG_GHOSTS_ESCAPE, GEN_5);
         PLAYER(SPECIES_SHUPPET);
         OPPONENT(SPECIES_DIGLETT) { Ability(ABILITY_ARENA_TRAP); }
     } WHEN {
@@ -117,10 +121,7 @@ SINGLE_BATTLE_TEST("Arena Trap prevents switch outs from Ghost-type Pokémon (Ge
     } THEN {
         u32 battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
         u32 trapper = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-        if (trapsGhost)
-            EXPECT_EQ(IsAbilityPreventingEscape(battler), trapper + 1);
-        else
-            EXPECT_EQ(IsAbilityPreventingEscape(battler), 0);
+        EXPECT_EQ(IsAbilityPreventingEscape(battler), trapper + 1);
     }
 }
 
@@ -128,6 +129,7 @@ SINGLE_BATTLE_TEST("Arena Trap doesn't prevent switch outs from Ghost-type Poké
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SHUPPET, 0) == TYPE_GHOST);
+        WITH_CONFIG(CONFIG_GHOSTS_ESCAPE, GEN_6);
         PLAYER(SPECIES_SHUPPET);
         OPPONENT(SPECIES_DIGLETT) { Ability(ABILITY_ARENA_TRAP); }
     } WHEN {

@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("Comatose makes Rest fail")
         }
     } THEN {
         EXPECT_EQ(player->hp, 1);
-        EXPECT_EQ(player->status1 & STATUS1_SLEEP, 0);
+        EXPECT_EQ(player->status1, STATUS1_NONE);
     }
 }
 
@@ -153,24 +153,25 @@ SINGLE_BATTLE_TEST("Comatose isn't affected by Poison Touch + Sunsteel Strike")
 WILD_BATTLE_TEST("Comatose boosts Dream Ball's multiplier")
 {
     enum Ability ability;
-    u16 rng;
+    u16 species;
     bool32 shouldCatch;
+    const u16 rng = 50000;
 
-    PARAMETRIZE { ability = ABILITY_COMATOSE; rng = MAX_u16; shouldCatch = TRUE; }
-    PARAMETRIZE { ability = ABILITY_INSOMNIA; rng = MAX_u16; shouldCatch = FALSE; }
+    PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; shouldCatch = TRUE; }
+    PARAMETRIZE { species = SPECIES_MIMIKYU; ability = ABILITY_DISGUISE; shouldCatch = FALSE; }
 
     GIVEN {
         ASSUME(B_DREAM_BALL_MODIFIER >= GEN_8);
-        ASSUME(gSpeciesInfo[SPECIES_DROWZEE].catchRate == 190);
+        ASSUME(gSpeciesInfo[species].catchRate == 45);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_DROWZEE) { Ability(ability); MaxHP(100); HP(90); }
+        OPPONENT(species) { Ability(ability); MaxHP(100); HP(1); }
     } WHEN {
         TURN { USE_ITEM(player, ITEM_DREAM_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, rng)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW, player);
     } THEN {
         if (shouldCatch)
-            EXPECT_EQ(gBattleResults.caughtMonSpecies, SPECIES_DROWZEE);
+            EXPECT_EQ(gBattleResults.caughtMonSpecies, species);
         else
             EXPECT_EQ(gBattleResults.caughtMonSpecies, SPECIES_NONE);
     }

@@ -350,7 +350,7 @@ DOUBLE_BATTLE_TEST("Dancer-called move doesn't update move to be Instructed")
     }
 }
 
-DOUBLE_BATTLE_TEST("Dancer-called moves doesn't update move to be called by Mimick")
+DOUBLE_BATTLE_TEST("Dancer-called moves do not update move to be called by Mimic")
 {
     GIVEN {
         ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
