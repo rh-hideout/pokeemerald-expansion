@@ -135,7 +135,26 @@ SINGLE_BATTLE_TEST("Chesto Berry cures sleep when Yawn takes effect")
     }
 }
 
-TO_DO_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comatose")
+SINGLE_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comatose")
+{
+    u16 item;
+
+    PARAMETRIZE { item = ITEM_CHESTO_BERRY; }
+    PARAMETRIZE { item = ITEM_LUM_BERRY; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHESTO_BERRY].holdEffect == HOLD_EFFECT_CURE_SLP);
+        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KOMALA) { Ability(ABILITY_COMATOSE); Item(item); }
+    } WHEN {
+        TURN { }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->item, item);
+    }
+}
 
 SINGLE_BATTLE_TEST("Cheri and Lum Berries cure paralysis")
 {
@@ -181,8 +200,7 @@ SINGLE_BATTLE_TEST("Perism and Lum Berries cure confusion")
 
 SINGLE_BATTLE_TEST("Berry hold effect cures status if a Pokémon enters a battle")
 {
-    u16 status;
-    u16 item;
+    u16 status, item;
 
     PARAMETRIZE { status = STATUS1_BURN; item = ITEM_RAWST_BERRY; }
     PARAMETRIZE { status = STATUS1_FREEZE; item = ITEM_ASPEAR_BERRY; }

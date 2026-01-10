@@ -2045,7 +2045,7 @@ static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposi
 
 static bool32 CanAbilityTrapOpponent(enum Ability ability, u32 opponent)
 {
-    if ((B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(opponent, TYPE_GHOST)))
+    if ((GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(opponent, TYPE_GHOST)))
         return FALSE;
     else if (ability == ABILITY_SHADOW_TAG)
     {
