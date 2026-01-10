@@ -5758,11 +5758,6 @@ BattleScript_TargetFormChange::
 BattleScript_TargetFormChangeWithString::
 	pause 5
 	call BattleScript_AbilityPopUpTarget
-	call BattleScript_TargetFormChangeNoPopup
-	printstring STRINGID_PKMNTRANSFORMED
-	waitmessage B_WAIT_TIME_LONG
-	return
-
 BattleScript_TargetFormChangeWithStringNoPopup::
 	call BattleScript_TargetFormChangeNoPopup
 	printstring STRINGID_PKMNTRANSFORMED
