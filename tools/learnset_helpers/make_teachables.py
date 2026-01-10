@@ -121,8 +121,6 @@ def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: 
 
     return new
 
-
-
 def prepare_header(h_align: int, tmshms: list[str], tutors: list[str], universals: list[str]) -> str:
     universals_title = "Near-universal moves found in data/special_movesets.json:"
     tmhm_title = "TM/HM moves found in \"include/constants/tms_hms.h\":"

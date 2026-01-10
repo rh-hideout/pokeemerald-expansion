@@ -2628,6 +2628,47 @@
 	callnative DoFacilityTrainerBattle
 	.byte \facility
 	.endm
+	
+	.macro ingame_trade tradeId:req wantTradeMsg:req, declineTradeJump:req, wrongMonJump:req, tradeCompleteMsg:req
+	setvar VAR_0x8005, \tradeId
+	specialvar VAR_0x8009, GetInGameTradeSpeciesInfo
+	msgbox \wantTradeMsg, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, \declineTradeJump
+	chooseboxmon SELECT_PC_MON_TRADE
+	waitstate
+	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, \declineTradeJump
+	specialvar VAR_0x800B, GetTradeSpecies
+	goto_if_ne VAR_0x800B, VAR_0x8009, \wrongMonJump
+	special CreateInGameTradePokemon
+	special DoInGameTradeScene
+	waitstate
+	msgbox \tradeCompleteMsg, MSGBOX_DEFAULT
+	.endm
+
+	.macro move_tutor moveId:req, wantTeachingMsg:req, monSelectMsg:req, declinedJmp:req, taughtJmp:req, flagId=0
+	.if \flagId
+		goto_if_set \flagId, \taughtJmp
+	.endif
+	msgbox \wantTeachingMsg, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, \declinedJmp
+	.if \flagId
+		call MoveTutor_EventScript_CanOnlyBeLearnedOnce
+		goto_if_eq VAR_RESULT, NO, \declinedJmp
+	.endif
+	msgbox \monSelectMsg, MSGBOX_DEFAULT
+	setvar VAR_0x8005, \moveId
+	call MoveTutor_EventScript_OpenBox
+	goto_if_eq VAR_RESULT, FALSE, \declinedJmp
+	.if \flagId
+		setflag \flagId
+	.endif
+	goto \taughtJmp
+	.endm
+
+	.macro chooseboxmon selectionType=SELECT_PC_MON_NORMAL
+	callnative ChooseBoxMon
+	.byte \selectionType
+	.endm
 
 @ Follower NPCs
 

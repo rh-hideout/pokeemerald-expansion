@@ -10,7 +10,9 @@ import typing
 
 CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)")
 INCFILE_HAS_TUTOR_PAT = re.compile(r"special ChooseMonForMoveTutor")
-INCFILE_MOVE_PAT = re.compile(r"setvar VAR_ITEM_ID, (MOVE_.*)")
+INCFILE_HAS_TUTOR_PAT2 = re.compile(r"chooseboxmon SELECT_PC_MON_MOVE_TUTOR")
+INCFILE_MOVE_PAT = re.compile(r"setvar VAR_0x8005, (MOVE_[A-Z_]*)")
+INCFILE_MOVE_PAT2 = re.compile(r"move_tutor (MOVE_[A-Z_]*)")
 
 def enabled() -> bool:
     """
@@ -29,10 +31,13 @@ def extract_repo_tutors() -> typing.Generator[str, None, None]:
     for inc_fname in chain(glob.glob("./data/scripts/*.inc"), glob.glob("./data/maps/*/scripts.inc")):
         with open(inc_fname, "r") as inc_fp:
             incfile = inc_fp.read()
-            if not INCFILE_HAS_TUTOR_PAT.search(incfile):
+            if not INCFILE_HAS_TUTOR_PAT.search(incfile) and not INCFILE_HAS_TUTOR_PAT2.search(incfile):
                 continue
 
             for move in INCFILE_MOVE_PAT.finditer(incfile):
+                yield move.group(1)
+
+            for move in INCFILE_MOVE_PAT2.finditer(incfile):
                 yield move.group(1)
 
 def dump_output(file, data):

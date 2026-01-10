@@ -64,6 +64,7 @@
 #include "constants/items.h"
 #include "constants/layouts.h"
 #include "constants/moves.h"
+#include "constants/party_menu.h"
 #include "constants/regions.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
@@ -1688,9 +1689,14 @@ u16 GiveMoveToBattleMon(struct BattlePokemon *mon, enum Move move)
 
 void SetMonMoveSlot(struct Pokemon *mon, enum Move move, u8 slot)
 {
-    SetMonData(mon, MON_DATA_MOVE1 + slot, &move);
+    SetBoxMonMoveSlot(&mon->box, move, slot);
+}
+
+void SetBoxMonMoveSlot(struct BoxPokemon *mon, enum Move move, u8 slot)
+{
+    SetBoxMonData(mon, MON_DATA_MOVE1 + slot, &move);
     u32 pp = GetMovePP(move);
-    SetMonData(mon, MON_DATA_PP1 + slot, &pp);
+    SetBoxMonData(mon, MON_DATA_PP1 + slot, &pp);
 }
 
 static void SetMonMoveSlot_KeepPP(struct Pokemon *mon, enum Move move, u8 slot)
@@ -3517,9 +3523,14 @@ u8 CalculatePPWithBonus(enum Move move, u8 ppBonuses, u8 moveIndex)
 
 void RemoveMonPPBonus(struct Pokemon *mon, u8 moveIndex)
 {
-    u8 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES, NULL);
+    RemoveBoxMonPPBonus(&mon->box, moveIndex);
+}
+
+void RemoveBoxMonPPBonus(struct BoxPokemon *mon, u8 moveIndex)
+{
+    u8 ppBonuses = GetBoxMonData(mon, MON_DATA_PP_BONUSES, NULL);
     ppBonuses &= gPPUpClearMask[moveIndex];
-    SetMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
+    SetBoxMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
 }
 
 void RemoveBattleMonPPBonus(struct BattlePokemon *mon, u8 moveIndex)
@@ -5528,15 +5539,11 @@ static void SortMovesAlphabetically(u16 *moves, u32 numMoves)
         QuickSortMoves(moves, 0, numMoves - 1);
 }
 
-u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
+u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
 {
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
-
-    if (species == SPECIES_EGG)
-        return 0;
-
     u32 numMoves = 0;
-    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES == TRUE) ? MAX_LEVEL : GetMonData(mon, MON_DATA_LEVEL, 0);
+    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES, 0);
+    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES ? MAX_LEVEL : GetBoxMonData(mon, MON_DATA_LEVEL, 0));
 
     do
     {
@@ -5547,7 +5554,7 @@ u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
             if (learnset[i].level > level)
                 break;
 
-            if (!MonKnowsMove(mon, learnset[i].move))
+            if (!BoxMonKnowsMove(mon, learnset[i].move))
                 moves[numMoves++] = learnset[i].move;
         }
 
@@ -5560,18 +5567,17 @@ u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
     return numMoves;
 }
 
-u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
+u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves)
 {
     if (!FlagGet(P_FLAG_EGG_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
 
     u32 numMoves = 0;
-
     while (GetSpeciesPreEvolution(species) != SPECIES_NONE)
         species = GetSpeciesPreEvolution(species);
 
@@ -5582,7 +5588,7 @@ u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
 
     for (u32 i = 0; eggMoves[i] != MOVE_UNAVAILABLE; i++)
     {
-        if (!MonKnowsMove(mon, eggMoves[i]))
+        if (!BoxMonKnowsMove(mon, eggMoves[i]))
             moves[numMoves++] = eggMoves[i];
     }
 
@@ -5592,12 +5598,12 @@ u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
     return numMoves;
 }
 
-u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
+u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
 {
     if (!P_TM_MOVES_RELEARNER && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
@@ -5618,7 +5624,7 @@ u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
         if (!CanLearnTeachableMove(species, move))
             continue;
         
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(mon, move))
             moves[numMoves++] = move;
     }
 
@@ -5628,12 +5634,12 @@ u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
     return numMoves;
 }
 
-u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
+u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves)
 {
     if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
@@ -5647,7 +5653,7 @@ u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
         if (!CanLearnTeachableMove(species, move))
             continue;
 
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(mon, move))
             moves[numMoves++] = move;
     }
 
@@ -5778,66 +5784,6 @@ u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves)
          moves[numMoves++] = learnset[i].move;
 
      return numMoves;
-}
-
-u8 GetNumberOfRelearnableMoves(struct Pokemon *mon)
-{
-    enum Move learnedMoves[MAX_MON_MOVES];
-    enum Move moves[MAX_LEVEL_UP_MOVES];
-    u8 numMoves = 0;
-    u16 species;
-    u8 level;
-    if(gSpecialVar_MonBoxId == 0xFF)
-    {
-        species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
-        level = GetMonData(mon, MON_DATA_LEVEL, 0);
-    }
-    else
-    {
-        species = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG);
-        level = GetBoxMonLevelAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
-    }
-
-    const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
-    int i, j, k;
-
-    if (species == SPECIES_EGG)
-        return 0;
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if(gSpecialVar_MonBoxId == 0xFF)
-            learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
-        else
-            learnedMoves[i] = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + i);
-    }
-
-    for (i = 0; i < MAX_LEVEL_UP_MOVES; i++)
-    {
-        u16 moveLevel;
-
-        if (learnset[i].move == LEVEL_UP_MOVE_END)
-            break;
-
-        moveLevel = learnset[i].level;
-
-        if (moveLevel <= level)
-        {
-            for (j = 0; j < MAX_MON_MOVES && learnedMoves[j] != learnset[i].move; j++)
-                ;
-
-            if (j == MAX_MON_MOVES)
-            {
-                for (k = 0; k < numMoves && moves[k] != learnset[i].move; k++)
-                    ;
-
-                if (k == numMoves)
-                    moves[numMoves++] = learnset[i].move;
-            }
-        }
-    }
-
-    return numMoves;
 }
 
 u16 SpeciesToPokedexNum(u16 species)
@@ -7305,6 +7251,16 @@ bool32 IsSpeciesOfType(u32 species, enum Type type)
      || gSpeciesInfo[species].types[1] == type)
         return TRUE;
     return FALSE;
+}
+
+struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void)
+{
+    struct BoxPokemon *boxmon;
+    if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
+        boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+    else
+        boxmon = &(gPlayerParty[gSpecialVar_0x8004].box);
+    return boxmon;
 }
 
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot)
