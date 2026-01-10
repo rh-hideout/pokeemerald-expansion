@@ -9166,7 +9166,7 @@ static void Cmd_trysetencore(void)
             if (HasBattlerActedThisTurn(gBattlerTarget))
                 gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER; // 3 turns, Encore used after move
             else
-                gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER + 1; // 4 turns, Encore used before move
+                gBattleMons[gBattlerTarget].volatiles.encoreTimer = (B_ENCORE_TIMER) + 1; // 4 turns, Encore used before move
         }
         else if (B_ENCORE_TURNS == GEN_4)
         {
