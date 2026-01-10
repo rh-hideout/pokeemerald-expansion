@@ -96,23 +96,16 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow around Sticky Hold")
+AI_DOUBLE_BATTLE_TEST("AI skips Trick around Sticky Hold")
 {
-    u16 move = MOVE_NONE, atkItem = ITEM_ORAN_BERRY, targetItem = ITEM_NONE;
-    enum Ability atkAbility = ABILITY_PRESSURE, targetAbility = ABILITY_PRESSURE;
-
-    PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE; targetItem = ITEM_LEFTOVERS; }
-    PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_PRESSURE;  targetAbility = ABILITY_STICKY_HOLD; targetItem = ITEM_LEFTOVERS; }
-    PARAMETRIZE { move = MOVE_BESTOW; atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE;  targetItem = ITEM_NONE; }
-
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(targetAbility); Item(targetItem); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_LEFTOVERS); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(atkAbility); Item(atkItem); Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); Item(ITEM_ORAN_BERRY); Moves(MOVE_TRICK, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
     } WHEN {
-        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
+        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TRICK); }
     }
 }
 

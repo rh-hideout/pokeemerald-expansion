@@ -12717,10 +12717,6 @@ static void Cmd_tryswapitems(void)
             gBattlescriptCurrInstr = cmd->failInstr;
         }
         // check if ability prevents swapping
-        else if (GetBattlerAbility(gBattlerAttacker) == ABILITY_STICKY_HOLD)
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
         else if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
         {
             gBattlescriptCurrInstr = BattleScript_StickyHoldActivates;
@@ -17479,7 +17475,6 @@ void BS_TryBestow(void)
         || gBattleMons[gBattlerTarget].item != ITEM_NONE
         || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerAttacker].item)
         || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerAttacker].item)
-        || GetBattlerAbility(gBattlerAttacker) == ABILITY_STICKY_HOLD
         || gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerTarget)] & (1u << gBattlerPartyIndexes[gBattlerTarget]))
     {
         gBattlescriptCurrInstr = cmd->failInstr;
