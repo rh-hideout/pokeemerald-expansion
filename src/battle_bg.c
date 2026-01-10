@@ -657,7 +657,7 @@ static u8 GetBattleEnvironmentOverride(void)
         return BATTLE_ENVIRONMENT_FRONTIER;
     else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
     {
-        switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL))
+        switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES))
         {
         case SPECIES_GROUDON:
             return BATTLE_ENVIRONMENT_GROUDON;

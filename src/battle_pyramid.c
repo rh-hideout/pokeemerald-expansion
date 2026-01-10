@@ -1221,13 +1221,13 @@ static void RestorePyramidPlayerParty(void)
         int partyIndex = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
         for (j = 0; j < FRONTIER_PARTY_SIZE; j++)
         {
-            if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_SPECIES, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_SPECIES, NULL))
+            if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_SPECIES) == GetMonData(&gPlayerParty[j], MON_DATA_SPECIES))
             {
                 for (k = 0; k < MAX_MON_MOVES; k++)
                 {
                     for (l = 0; l < MAX_MON_MOVES; l++)
                     {
-                        if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_MOVE1 + l, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_MOVE1 + k, NULL))
+                        if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_MOVE1 + l) == GetMonData(&gPlayerParty[j], MON_DATA_MOVE1 + k))
                             break;
                     }
                     if (l == MAX_MON_MOVES)
@@ -1414,7 +1414,7 @@ void GenerateBattlePyramidWildMon(void)
     if (round >= TOTAL_PYRAMID_ROUNDS)
         round = TOTAL_PYRAMID_ROUNDS - 1;
 
-    id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL) - 1;   // index in table (0-11) -> higher index is lower probability
+    id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) - 1;   // index in table (0-11) -> higher index is lower probability
     bstLim = 450 + (25*round) + (5*id);                             // higher BST limit for 'rarer' wild mon rolls
 
     while (1)
@@ -1522,7 +1522,7 @@ void GenerateBattlePyramidWildMon(void)
     // Initialize a random ability num
     if (GetSpeciesAbility(species, 1))
     {
-        i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
+        i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY) % 2;
         SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
     }
     else
@@ -1580,7 +1580,7 @@ void GenerateBattlePyramidWildMon(void)
     else
         wildMons = sLevel50WildMonPointers[round];
 
-    id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL) - 1;
+    id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) - 1;
     SetMonData(&gEnemyParty[0], MON_DATA_SPECIES, &wildMons[id].species);
     StringCopy(name, GetSpeciesName(wildMons[id].species));
     SetMonData(&gEnemyParty[0], MON_DATA_NICKNAME, &name);
@@ -1608,7 +1608,7 @@ void GenerateBattlePyramidWildMon(void)
     default:
         if (GetSpeciesAbility(wildMons[id].species, 1))
         {
-            i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
+            i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY) % 2;
             SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
         }
         else

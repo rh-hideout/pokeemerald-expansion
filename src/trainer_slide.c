@@ -106,10 +106,10 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive)
     {
         for (u32 i = firstId; i < lastId; i++)
         {
-            u32 species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG, NULL);
+            u32 species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG);
             if (species != SPECIES_NONE
                     && species != SPECIES_EGG
-                    && (!onlyAlive || GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_HP, NULL)))
+                    && (!onlyAlive || GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_HP)))
             {
                 count++;
             }
@@ -119,10 +119,10 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive)
     {
         for (u32 i = firstId; i < lastId; i++)
         {
-            u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG, NULL);
+            u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
             if (species != SPECIES_NONE
                     && species != SPECIES_EGG
-                    && (!onlyAlive || GetMonData(&party[i], MON_DATA_HP, NULL)))
+                    && (!onlyAlive || GetMonData(&party[i], MON_DATA_HP)))
             {
                 count++;
             }

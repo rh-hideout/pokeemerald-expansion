@@ -6939,7 +6939,7 @@ static void ReshowDisplayMon(void)
 void SetMonFormPSS(struct BoxPokemon *boxMon, enum FormChanges method)
 {
     u16 targetSpecies = GetFormChangeTargetSpeciesBoxMon(boxMon, method, 0);
-    if (targetSpecies != GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL))
+    if (targetSpecies != GetBoxMonData(boxMon, MON_DATA_SPECIES))
     {
         SetBoxMonData(boxMon, MON_DATA_SPECIES, &targetSpecies);
         sRefreshDisplayMonGfx = TRUE;

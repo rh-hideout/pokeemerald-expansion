@@ -1763,7 +1763,7 @@ static void Task_RunScriptAndFadeToActivity(u8 taskId)
             gLinkPlayers[0].id = 0;
             gLinkPlayers[1].id = 2;
             sendBuff[0] = GetMonData(&gPlayerParty[gSelectedOrderFromParty[0] - 1], MON_DATA_SPECIES);
-            sendBuff[1] = GetMonData(&gPlayerParty[gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES, NULL);
+            sendBuff[1] = GetMonData(&gPlayerParty[gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES);
             gMain.savedCallback = NULL;
             data[0] = 4;
             SaveLinkTrainerNames();
