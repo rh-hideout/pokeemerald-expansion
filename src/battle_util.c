@@ -5640,6 +5640,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                     SetPassiveDamageAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 8);
                 BattleScriptCall(BattleScript_BattlerFormChangeDisguise);
                 break;
+            case ABILITY_ICE_FACE:
+                BattleScriptCall(BattleScript_IceFaceNullsDamage);
+                break;
             default:
                 BattleScriptCall(BattleScript_BattlerFormChange);
                 break;
