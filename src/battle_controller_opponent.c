@@ -169,7 +169,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
         }
         else if (gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim)
         {
-            if (GetBattlerPosition(battler) == 3)
+            if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_RIGHT)
             {
                 if (!gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim
                  && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim)
@@ -240,7 +240,7 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_LINK)
             {
-                if (GetBattlerPosition(battler) == 1)
+                if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
                     m4aMPlayContinue(&gMPlayInfo_BGM);
             }
             else

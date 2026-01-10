@@ -3510,6 +3510,8 @@ static void DoBattleIntro(void)
                     gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES, NULL);
                 }
                 break;
+            default:
+                break;
             }
 
             if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
@@ -4089,7 +4091,7 @@ static void HandleTurnActionSelectionState(void)
     gBattleCommunication[ACTIONS_CONFIRMED_COUNT] = 0;
     for (battler = 0; battler < gBattlersCount; battler++)
     {
-        u32 position = GetBattlerPosition(battler);
+        enum BattlerPosition position = GetBattlerPosition(battler);
         switch (gBattleCommunication[battler])
         {
         case STATE_TURN_START_RECORD: // Recorded battle related action on start of every turn.

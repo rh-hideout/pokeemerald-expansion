@@ -330,7 +330,7 @@ void CreateBattlerSprite(u32 battler)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL && battler == B_POSITION_PLAYER_LEFT)
         {
-            SetMultiuseSpriteTemplateToTrainerBack(TRAINER_PIC_BACK_WALLY, GetBattlerPosition(0));
+            SetMultiuseSpriteTemplateToTrainerBack(TRAINER_PIC_BACK_WALLY, GetBattlerPosition(B_POSITION_PLAYER_LEFT));
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
                                                 (8 - gTrainerBacksprites[TRAINER_PIC_BACK_WALLY].coordinates.size) * 4 + 80,
                                                  GetBattlerSpriteSubpriority(0));

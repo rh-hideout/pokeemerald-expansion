@@ -5648,7 +5648,7 @@ bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, enum Move mo
 {
     u32 preventsStatLoss;
     enum Ability partnerAbility = aiData->abilities[battlerAtkPartner];
-    u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battlerAtk));
+    enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battlerAtk));
     u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
 
     if (gBattleMons[battlerAtkPartner].statStages[STAT_ATK] == MAX_STAT_STAGE
@@ -6330,7 +6330,7 @@ bool32 CanMoveBeBouncedBack(u32 battler, enum Move move)
 u32 GetActiveBattlerIds(u32 battler, u32 *battlerIn1, u32 *battlerIn2)
 {
     u32 opposingBattler = 0;
-    u32 battlerPosition = GetBattlerPosition(battler);
+    enum BattlerPosition battlerPosition = GetBattlerPosition(battler);
     if (IsDoubleBattle())
     {
         *battlerIn1 = battler;

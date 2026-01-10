@@ -32,6 +32,7 @@ enum BattlerPosition
     B_POSITION_PLAYER_RIGHT,
     B_POSITION_OPPONENT_RIGHT,
     MAX_POSITION_COUNT,
+    B_POSITION_ABSENT = 0xFF,
 };
 
 enum BattlerId

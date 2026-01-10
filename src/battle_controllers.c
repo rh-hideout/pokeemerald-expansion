@@ -141,7 +141,7 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         gBattlerControllerFuncs[i] = BattleControllerDummy;
-        gBattlerPositions[i] = 0xFF;
+        gBattlerPositions[i] = B_POSITION_ABSENT;
         gActionSelectionCursor[i] = 0;
         gMoveSelectionCursor[i] = 0;
     }
@@ -340,7 +340,7 @@ static void InitBtlControllersInternal(void)
 
         for (i = 0; i < MAX_LINK_PLAYERS; i++)
         {
-            u32 linkPositionLeft, linkPositionRight;
+            enum BattlerPosition linkPositionLeft, linkPositionRight;
             BattleControllerFunc linkBtlControllerFunc;
 
             if (i == multiplayerId)

@@ -162,9 +162,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
             gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;
 
             if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_RIGHT)
-            {
                 FreeShinyStars();
-            }
         }
 
         gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 3;
