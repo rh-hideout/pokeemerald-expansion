@@ -185,7 +185,7 @@
 #define B_UPROAR_TURN_COUNT  5
 #define B_RAMPAGE_TURNS      3
 #define B_DISABLE_TIMER      4
-#define B_ENCORE_TIMER       3
+#define B_ENCORE_TIMER       4
 #define B_PERISH_SONG_TIMER  3
 #define B_TAUNT_TIMER        5
 #define B_SLOW_START_TIMER   5
