@@ -156,9 +156,9 @@ SINGLE_BATTLE_TEST("Hidden Power always triggers Counter instead of Mirror Coat 
     PARAMETRIZE { hp = 31; atk = 31; def = 31; spa = 31; spd = 31; spe = 30; } // TYPE_ICE
     PARAMETRIZE { hp = 31; atk = 31; def = 30; spa = 31; spd = 31; spe = 31; } // TYPE_DRAGON
     PARAMETRIZE { hp = 31; atk = 31; def = 31; spa = 31; spd = 31; spe = 31; } // TYPE_DARK
- 
+
     GIVEN {
-        WITH_CONFIG(CONFIG_HIDDEN_POWER_COUNTER, GEN_3);
+        WITH_CONFIG(B_HIDDEN_POWER_COUNTER, GEN_3);
         ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_REFLECT_DAMAGE );
         ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_REFLECT_DAMAGE);
         ASSUME(GetMoveReflectDamage_DamageCategories(MOVE_COUNTER) == 1u << DAMAGE_CATEGORY_PHYSICAL );

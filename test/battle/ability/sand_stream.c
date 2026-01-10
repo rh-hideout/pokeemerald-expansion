@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Sand Stream sets up sandstorm for 5 turns (Gen6+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_HIPPOWDON) { Moves(MOVE_CELEBRATE); Ability(ABILITY_SAND_STREAM); }
         OPPONENT(SPECIES_SANDSLASH) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Sand Stream sets up sandstorm for 5 turns (Gen6+)")
 SINGLE_BATTLE_TEST("Sand Stream sets up sandstorm for 8 turns with Smooth Rock (Gen6+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_HIPPOWDON) { Moves(MOVE_CELEBRATE); Ability(ABILITY_SAND_STREAM); Item(ITEM_SMOOTH_ROCK); }
         OPPONENT(SPECIES_SANDSLASH) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Sand Stream sets up sandstorm for 8 turns with Smooth Rock (
 SINGLE_BATTLE_TEST("Sand Stream sets up permanent sandstorm (Gen3-5)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_3);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_3);
         PLAYER(SPECIES_HIPPOWDON) { Moves(MOVE_CELEBRATE); Ability(ABILITY_SAND_STREAM); }
         OPPONENT(SPECIES_SANDSLASH) { Moves(MOVE_CELEBRATE); }
     } WHEN {

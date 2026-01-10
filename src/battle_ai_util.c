@@ -762,7 +762,7 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
 
     u32 strikeCount = GetMoveStrikeCount(ctx->move);
 
-    if (effect == EFFECT_BEAT_UP && GetConfig(CONFIG_BEAT_UP) >= GEN_5)
+    if (effect == EFFECT_BEAT_UP && GetConfig(B_BEAT_UP) >= GEN_5)
     {
         u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
         u32 i;
@@ -835,7 +835,7 @@ static inline bool32 ShouldCalcCritDamage(struct BattleContext *ctx)
     s32 critChanceIndex = 0;
 
     // Get crit chance
-    if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
+    if (GetConfig(B_CRIT_CHANCE) == GEN_1)
         critChanceIndex = CalcCritChanceStageGen1(ctx);
     else
         critChanceIndex = CalcCritChanceStage(ctx);
@@ -844,11 +844,11 @@ static inline bool32 ShouldCalcCritDamage(struct BattleContext *ctx)
         return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_STAGE_THRESHOLD // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[ctx->battlerAtk] & AI_FLAG_RISKY)
-        && GetConfig(CONFIG_CRIT_CHANCE) != GEN_1)
+        && GetConfig(B_CRIT_CHANCE) != GEN_1)
         return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_THRESHOLD_GEN_1 // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[ctx->battlerAtk] & AI_FLAG_RISKY)
-        && GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
+        && GetConfig(B_CRIT_CHANCE) == GEN_1)
         return TRUE;
 
     return FALSE;
@@ -1240,7 +1240,7 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, enum Move m
             return TRUE;
         break;
     case EFFECT_DREAM_EATER:
-        if (abilityDef == ABILITY_LIQUID_OOZE && GetConfig(CONFIG_DREAM_EATER_LIQUID_OOZE) >= GEN_5)
+        if (abilityDef == ABILITY_LIQUID_OOZE && GetConfig(B_DREAM_EATER_LIQUID_OOZE) >= GEN_5)
             return TRUE;
         break;
     default:
@@ -1494,7 +1494,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, enum Move move)
 
     if (!DoesBattlerIgnoreAbilityChecks(battler, gAiLogicData->abilities[battler], move))
     {
-        if (GetConfig(CONFIG_STURDY) >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
+        if (GetConfig(B_STURDY) >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
             return TRUE;
         if (IsMimikyuDisguised(battlerTarget))
             return TRUE;
@@ -1913,7 +1913,7 @@ u32 AI_GetSwitchinWeather(u32 battler)
     case ABILITY_SAND_STREAM:
         return B_WEATHER_SANDSTORM;
     case ABILITY_SNOW_WARNING:
-        return GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
+        return GetConfig(B_SNOW_WARNING) >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
     default:
         return gBattleWeather;
     }
@@ -2052,7 +2052,7 @@ bool32 IsHazardClearingMove(enum Move move)
     case EFFECT_TIDY_UP:
         return TRUE;
     case EFFECT_DEFOG:
-        if (GetConfig(CONFIG_DEFOG_EFFECT_CLEARING) >= GEN_6)
+        if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_6)
             return TRUE;
         break;
     }
@@ -2318,7 +2318,7 @@ bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, 
             if (stat == STAT_DEF)
                 return FALSE;
         case ABILITY_ILLUMINATE:
-            if (GetConfig(CONFIG_ILLUMINATE_EFFECT) < GEN_9)
+            if (GetConfig(B_ILLUMINATE_EFFECT) < GEN_9)
                 break;
         case ABILITY_KEEN_EYE:
         case ABILITY_MINDS_EYE:
@@ -3070,7 +3070,7 @@ bool32 IsSwitchOutEffect(enum BattleMoveEffects effect)
     switch (effect)
     {
     case EFFECT_TELEPORT:
-        if (GetConfig(CONFIG_TELEPORT_BEHAVIOR) >= GEN_8)
+        if (GetConfig(B_TELEPORT_BEHAVIOR) >= GEN_8)
             return TRUE;
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
@@ -3826,7 +3826,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
         battlerOnField1 = gBattlerPartyIndexes[battlerId];
         battlerOnField2 = gBattlerPartyIndexes[GetPartnerBattler(battlerId)];
         // Check partner's status
-        if ((GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
+        if ((GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
             || gAiLogicData->abilities[BATTLE_PARTNER(battlerId)] != ABILITY_SOUNDPROOF
             || !checkSoundproof)
          && GetMonData(&party[battlerOnField2], MON_DATA_STATUS) != STATUS1_NONE
@@ -3840,8 +3840,8 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
     }
 
     // Check attacker's status
-    if ((GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
-      || GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) >= GEN_8
+    if ((GetConfig(B_HEAL_BELL_SOUNDPROOF) == GEN_5
+      || GetConfig(B_HEAL_BELL_SOUNDPROOF) >= GEN_8
       || gAiLogicData->abilities[battlerId] != ABILITY_SOUNDPROOF || !checkSoundproof)
      && GetMonData(&party[battlerOnField1], MON_DATA_STATUS) != STATUS1_NONE
      && ShouldCureStatus(battlerId, battlerId, gAiLogicData))
@@ -3852,7 +3852,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
     {
         if (monIndex == battlerOnField1 || monIndex == battlerOnField2)
             continue;
-        if (GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) < GEN_5
+        if (GetConfig(B_HEAL_BELL_SOUNDPROOF) < GEN_5
          && checkSoundproof
          && GetMonAbility(&party[monIndex]) == ABILITY_SOUNDPROOF)
             continue;
@@ -5795,7 +5795,7 @@ bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, enum Ability ability
         {
         case ABILITY_LIGHTNING_ROD:
         case ABILITY_STORM_DRAIN:
-            if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5)
+            if (GetConfig(B_REDIRECT_ABILITY_IMMUNITY) < GEN_5)
                 return FALSE;
             else
                 return (BattlerStatCanRise(battlerDef, ability, STAT_SPATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));
