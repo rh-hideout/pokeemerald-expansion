@@ -104,7 +104,24 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without
     }
 }
 
-TO_DO_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without breaking the disguise - Weather")
+SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without breaking the disguise - Weather")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
+        ASSUME(GetSpeciesType(SPECIES_GEODUDE, 0) == TYPE_ROCK || GetSpeciesType(SPECIES_GEODUDE, 1) == TYPE_ROCK);
+        PLAYER(SPECIES_GEODUDE);
+        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_GEODUDE);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SANDSTORM); }
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SANDSTORM, opponent);
+        HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_MIMIKYU_DISGUISED);
+    }
+}
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without breaking the disguise")
 {
