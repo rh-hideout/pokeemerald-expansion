@@ -1607,15 +1607,8 @@ static void Cmd_adjustdamage(void)
         if (DoesDisguiseBlockMove(battlerDef, gCurrentMove))
             continue;
 
-        if (GetBattlerAbility(battlerDef) == ABILITY_ICE_FACE && IsBattleMovePhysical(gCurrentMove) && gBattleMons[battlerDef].species == SPECIES_EISCUE)
-        {
-            // Damage deals typeless 0 HP.
-            gBattleStruct->moveResultFlags[battlerDef] &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE);
-            gBattleStruct->moveDamage[battlerDef] = 0;
-            RecordAbilityBattle(battlerDef, ABILITY_ICE_FACE);
-            // Form change will be done after attack animation in Cmd_resultmessage.
+        if (DoesIceFaceBlockMove(battlerDef, gCurrentMove))
             continue;
-        }
 
         if (gBattleMons[battlerDef].hp > gBattleStruct->moveDamage[battlerDef])
             continue;
@@ -1727,7 +1720,7 @@ static inline bool32 DoesBattlerNegateDamage(u32 battler)
         return FALSE;
     if (ability == ABILITY_DISGUISE && IsMimikyuDisguised(battler))
         return TRUE;
-    if (ability == ABILITY_ICE_FACE && species == SPECIES_EISCUE && GetBattleMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_PHYSICAL)
+    if (ability == ABILITY_ICE_FACE && species == SPECIES_EISCUE_ICE && GetBattleMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_PHYSICAL)
         return TRUE;
 
     return FALSE;
@@ -2107,11 +2100,12 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
         }
         return;
     }
-    else if (DoesDisguiseBlockMove(battler, gCurrentMove))
+    else if (DoesDisguiseBlockMove(battler, gCurrentMove)
+        || DoesIceFaceBlockMove(battler, gCurrentMove))
     {
-        gBattleScripting.battler = battler;
+        // Damage deals typeless 0 HP.
+        gBattleStruct->moveResultFlags[battler] &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE);
         gBattleStruct->moveDamage[battler] = 0;
-        gBattleStruct->moveResultFlags[battler] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
         if (GetMoveEffect(gCurrentMove) == EFFECT_OHKO)
             gProtectStructs[battler].survivedOHKO = TRUE;
         gBattlescriptCurrInstr = nextInstr;
@@ -10893,6 +10887,17 @@ bool32 DoesDisguiseBlockMove(u32 battler, enum Move move)
      || gBattleMons[battler].volatiles.transformed
      || IsBattleMoveStatus(move)
      || !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_DISGUISE))
+        return FALSE;
+    else
+        return TRUE;
+}
+
+bool32 DoesIceFaceBlockMove(u32 battler, enum Move move)
+{
+    if (gBattleMons[battler].species != SPECIES_EISCUE_ICE
+     || gBattleMons[battler].volatiles.transformed
+     || !IsBattleMovePhysical(move)
+     || !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_ICE_FACE))
         return FALSE;
     else
         return TRUE;
