@@ -935,7 +935,7 @@ static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor,
     txtPtr = ConvertIntToDecimalStringN(txtPtr, maxHp, STR_CONV_MODE_LEFT_ALIGN, HP_MAX_DIGITS);
 
     //  Clear out old text first
-    FillSpriteRectColor(spriteId, 32, yOffset + 8, 32, 8, bgColor);
+    FillSpriteRectColor(spriteId, 40, yOffset + 8, 24, 8, bgColor);
     FillSpriteRectColor(gSprites[spriteId].oam.affineParam, 0, yOffset + 8, 32, 8, bgColor);
 
     // Print last HP_RIGHT_SPRITE_CHARS chars on the right window
