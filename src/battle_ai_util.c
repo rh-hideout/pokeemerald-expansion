@@ -3091,7 +3091,9 @@ static u32 GetLeechSeedDamage(u32 battler)
 static u32 GetNightmareDamage(u32 battlerId)
 {
     u32 damage = 0;
-    if (gBattleMons[battlerId].volatiles.nightmare && gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+    if (gBattleMons[battlerId].volatiles.nightmare
+     && ((gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+     || gAiLogicData->abilities[battlerId] == ABILITY_COMATOSE))
     {
         damage = GetNonDynamaxMaxHP(battlerId) / 4;
         if (damage == 0)

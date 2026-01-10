@@ -22,6 +22,8 @@ SINGLE_BATTLE_TEST("Nightmare damages sleeping targets at end of turn")
 
 SINGLE_BATTLE_TEST("Nightmare affects Pokémon with Comatose")
 {
+    s16 damage;
+
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NIGHTMARE) == EFFECT_NIGHTMARE);
         PLAYER(SPECIES_WOBBUFFET);
@@ -31,9 +33,8 @@ SINGLE_BATTLE_TEST("Nightmare affects Pokémon with Comatose")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_NIGHTMARE, player);
         MESSAGE("The opposing Komala began having a nightmare!");
-        NOT HP_BAR(opponent);
+        HP_BAR(opponent, captureDamage: &damage);
     } THEN {
-        EXPECT_EQ(opponent->hp, opponent->maxHP);
-        EXPECT_EQ(opponent->volatiles.nightmare, 0);
+        EXPECT_EQ(damage, 40);
     }
 }
