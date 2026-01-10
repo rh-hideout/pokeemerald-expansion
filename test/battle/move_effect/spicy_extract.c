@@ -114,7 +114,7 @@ SINGLE_BATTLE_TEST("Spicy Extract will fail if target is in a semi-invulnerabili
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, opponent);
         MESSAGE("Wobbuffet used Spicy Extract!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
-        MESSAGE("Wobbuffet's attack missed!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
     }
 }
 

@@ -127,6 +127,7 @@
     F(DREAM_EATER_LIQUID_OOZE,   dreamEaterLiquidOoze,    (u32, GEN_COUNT - 1)) \
     F(FOCUS_PUNCH_FAILURE,       focusPunchFailure,       (u32, GEN_COUNT - 1)) \
     F(RAGE_BUILDS,               rageBuilds,              (u32, GEN_COUNT - 1)) \
+    F(CHECK_USER_FAILURE,        checkUserFailure,        (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -140,7 +141,6 @@
     F(PLUS_MINUS_INTERACTION,    plusMinusInteraction,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(WEATHER_FORMS,             weatherForms,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(SYMBIOSIS_GEMS,            symbiosisGems,           (u32, GEN_COUNT - 1)) \
-    F(ABSORBING_ABILITY_STRING,  absorbingAbilityString,  (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(REDIRECT_ABILITY_IMMUNITY, redirectAbilityImmunity, (u32, GEN_COUNT - 1)) \
     F(REDIRECT_ABILITY_ALLIES,   redirectAbilityAllies,   (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(LEAF_GUARD_PREVENTS_REST,  leafGuardPreventsRest,   (u32, GEN_COUNT - 1)) \

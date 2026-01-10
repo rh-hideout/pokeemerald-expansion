@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Storm Drain absorbs Water-type moves and increases the Sp. A
     }
 }
 
-DOUBLE_BATTLE_TEST("Storm Drain forces single-target Water-type moves to target the Pokémon with this Ability.")
+DOUBLE_BATTLE_TEST("Storm Drain forces single-target Water-type moves to target the Pokémon with this Ability")
 {
     u32 config;
     PARAMETRIZE { config = GEN_4; }

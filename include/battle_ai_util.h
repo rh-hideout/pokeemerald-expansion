@@ -169,6 +169,7 @@ u32 CountNegativeStatStages(u32 battlerId);
 
 // move checks
 bool32 Ai_IsPriorityBlocked(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData);
+bool32 AI_CanMoveBeBlockedByTarget(struct BattleContext *ctx);
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category);
 enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo);
 struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef);
