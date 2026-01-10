@@ -1191,7 +1191,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_BUTTON)
             ejectButtonBattlers |= 1u << battlerDef;
-         
+
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_RED_CARD)
             redCardBattlers |= 1u << battlerDef;
     }
@@ -1211,7 +1211,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         // Only fastest red card or eject button activates
         if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
-            result = MOVEEND_STEP_RUN_SCRIPT; 
+            result = MOVEEND_STEP_RUN_SCRIPT;
         else if (ejectButtonBattlers & 1u << battler && TryEjectButton(gBattlerAttacker, battler))
             result = MOVEEND_STEP_RUN_SCRIPT;
 

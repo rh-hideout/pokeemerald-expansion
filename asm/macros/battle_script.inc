@@ -366,8 +366,8 @@
 	.byte B_SCR_OP_WAITSTATE
 	.endm
 
-	.macro isdmgblockedbydisguise
-	.byte B_SCR_OP_ISDMGBLOCKEDBYDISGUISE
+	.macro tryselfconfusiondmgformchange
+	.byte B_SCR_OP_TRYSELFCONFUSIONDMGFORMCHANGE
 	.endm
 
 	.macro return
@@ -1456,24 +1456,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro handlemegaevo battler:req, case:req
-	callnative BS_HandleMegaEvolution
-	.byte \battler
-	.byte \case
-	.endm
-
-	.macro handleprimalreversion battler:req, case:req
-	callnative BS_HandlePrimalReversion
-	.byte \battler
-	.byte \case
-	.endm
-
-	.macro handleultraburst battler:req, case:req
-	callnative BS_HandleUltraBurst
-	.byte \battler
-	.byte \case
-	.endm
-
 	.macro jumpifshelltrap battler:req, jumpInstr:req
 	callnative BS_JumpIfShellTrap
 	.byte \battler
@@ -1616,12 +1598,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro trygulpmissile
-	callnative BS_TryGulpMissile
-	.endm
-
-	.macro tryactivategulpmissile
-	callnative BS_TryActivateGulpMissile
+	.macro trytwoturnmovespowerherbformchange
+	callnative BS_TryTwoTurnMovesPowerHerbFormChange
 	.endm
 
 	.macro tryquash failInstr:req
@@ -2150,10 +2128,11 @@
 	.4byte \failInstr
 	.endm
 
-	.macro handleformchange battler:req, case_:req
+	.macro handleformchange battler:req, caseId:req, bufferSpeciesName=TRUE
 	callnative BS_HandleFormChange
 	.byte \battler
-	.byte \case_
+	.byte \caseId
+	.byte \bufferSpeciesName
 	.endm
 
 	.macro tryautotomize failInstr:req

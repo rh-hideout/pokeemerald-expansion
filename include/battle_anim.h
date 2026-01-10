@@ -78,6 +78,7 @@ extern u8 gBattleAnimTarget;
 extern u16 gAnimBattlerSpecies[MAX_BATTLERS_COUNT];
 extern u8 gAnimCustomPanning;
 extern u16 gAnimMoveIndex;
+extern bool8 gAnimPendingBattlerSpriteUpdate;
 
 void ClearBattleAnimationVars(void);
 void DoMoveAnim(enum Move move);

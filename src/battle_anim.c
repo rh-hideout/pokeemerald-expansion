@@ -121,6 +121,7 @@ EWRAM_DATA u8 gBattleAnimTarget = 0;
 EWRAM_DATA u16 gAnimBattlerSpecies[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gAnimCustomPanning = 0;
 EWRAM_DATA static bool8 sAnimHideHpBoxes = FALSE;
+EWRAM_DATA bool8 gAnimPendingBattlerSpriteUpdate = FALSE;
 
 #include "data/battle_anim.h"
 
@@ -227,6 +228,8 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_MEGA_EVOLUTION]         = gBattleAnimGeneral_MegaEvolution,
     [B_ANIM_ILLUSION_OFF]           = gBattleAnimGeneral_IllusionOff,
     [B_ANIM_FORM_CHANGE]            = gBattleAnimGeneral_FormChange,
+    [B_ANIM_FORM_CHANGE_INSTANT]    = gBattleAnimGeneral_FormChangeInstant,
+    [B_ANIM_FORM_CHANGE_DISGUISE]   = gBattleAnimGeneral_FormChangeDisguise,
     [B_ANIM_SLIDE_OFFSCREEN]        = gBattleAnimGeneral_SlideOffScreen,
     [B_ANIM_RESTORE_BG]             = gBattleAnimGeneral_RestoreBg,
     [B_ANIM_TOTEM_FLARE]            = gBattleAnimGeneral_TotemFlare,

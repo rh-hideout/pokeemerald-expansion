@@ -259,12 +259,7 @@ void StorePokemonInDaycare(struct Pokemon *mon, struct DaycareMon *daycareMon)
         TakeMailFromMon(mon);
     }
 
-    u32 newSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_DEPOSIT, 0);
-    if (newSpecies != GetMonData(mon, MON_DATA_SPECIES))
-    {
-        SetMonData(mon, MON_DATA_SPECIES, &newSpecies);
-        CalculateMonStats(mon);
-    }
+    TryFormChange(mon, FORM_CHANGE_DEPOSIT);
 
     daycareMon->mon = mon->box;
     daycareMon->steps = 0;
@@ -370,7 +365,7 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
     species = GetBoxMonData(&daycareMon->mon, MON_DATA_SPECIES);
     BoxMonToMon(&daycareMon->mon, &pokemon);
 
-    newSpecies = GetFormChangeTargetSpecies(&pokemon, FORM_CHANGE_WITHDRAW, 0);
+    newSpecies = GetFormChangeTargetSpecies(&pokemon, FORM_CHANGE_WITHDRAW);
     if (newSpecies != species)
     {
         SetMonData(&pokemon, MON_DATA_SPECIES, &newSpecies);
@@ -1272,7 +1267,6 @@ u16 GetSelectedMonNicknameAndSpecies(void)
         GetBoxMonNickname(&gPokemonStoragePtr->boxes[gSpecialVar_MonBoxId][gSpecialVar_MonBoxPos], gStringVar1);
         return GetBoxMonData(&gPokemonStoragePtr->boxes[gSpecialVar_MonBoxId][gSpecialVar_MonBoxPos], MON_DATA_SPECIES);
     }
-    
 }
 
 void GetDaycareMonNicknames(void)
