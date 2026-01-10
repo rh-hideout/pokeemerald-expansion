@@ -393,7 +393,7 @@ top:
                 color = "\e[32m";
                 Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
             }
-            else if (gTestRunnerState.result != TEST_RESULT_ASSUMPTION_FAIL || gTestRunnerSkipIsFail)
+            else if (gTestRunnerState.result != TEST_RESULT_ASSUMPTION_FAIL || gTestRunnerIsRHH)
             {
                 gTestRunnerState.exitCode = 1;
                 color = "\e[31m";
