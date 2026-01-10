@@ -2684,6 +2684,7 @@ static void Task_OnSelectedMon(u8 taskId)
             if (sInPartyMenu)
             {
                 gSpecialVar_Result = GetBoxMonData(&gPlayerParty[sCursorPosition].box, MON_DATA_SPECIES);
+                gSpecialVar_MonBoxId = TOTAL_BOXES_COUNT;
                 gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&gPlayerParty[sCursorPosition]);
             }
             else
