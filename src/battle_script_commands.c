@@ -1939,7 +1939,7 @@ static void Cmd_attackanimation(void)
                                             gBattleStruct->moveDamage[gBattlerTarget],
                                             gBattleMons[gBattlerAttacker].friendship,
                                             multihit);
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
             gCountAllocs = TRUE;
             gSpriteAllocs = 0;
 #endif
@@ -1962,7 +1962,7 @@ static void Cmd_waitanimation(void)
 
     if (gBattleControllerExecFlags == 0 && gBattleStruct->battlerKOAnimsRunning == 0)
     {
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
         gCountAllocs = FALSE;
 #endif
         gBattlescriptCurrInstr = cmd->nextInstr;
