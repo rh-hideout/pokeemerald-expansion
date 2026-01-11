@@ -976,7 +976,7 @@ static void PrintBattleBgName(u8 taskId)
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
 
     const u8 *name = gBattleEnvironmentInfo[data->battleEnvironment].name;
-    u8 fontId = FONT_NORMAL;
+    u8 fontId = FONT_SMALL;
 
     FillWindowPixelRect(WIN_BOTTOM_RIGHT, PIXEL_FILL(0), 0, 24, 80, gFonts[fontId].maxLetterHeight);
     AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, name, 0, 24, 0, NULL);
