@@ -1,6 +1,11 @@
 BattleFrontier_ExchangeServiceCorner_MapScripts::
 	.byte 0
 
+.macro setitemandprice item:req, price:req
+	setvar VAR_0x8009, \item
+	setvar VAR_0x8008, \price
+.endm
+
 BattleFrontier_ExchangeServiceCorner_EventScript_ClerkWelcome::
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_WelcomePleaseChoosePrize, MSGBOX_DEFAULT
 	special ShowBattlePointsWindow
@@ -103,53 +108,43 @@ BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1::
 	end
 
 BattleFrontier_ExchangeServiceCorner_EventScript_KissPoster::
-	setvar VAR_0x8008, 16
-	setvar VAR_0x8009, DECOR_KISS_POSTER
+	setitemandprice DECOR_KISS_POSTER, 16
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_KissCushion::
-	setvar VAR_0x8008, 32
-	setvar VAR_0x8009, DECOR_KISS_CUSHION
+	setitemandprice DECOR_KISS_CUSHION, 32
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_SmoochumDoll::
-	setvar VAR_0x8008, 32
-	setvar VAR_0x8009, DECOR_SMOOCHUM_DOLL
+	setitemandprice DECOR_SMOOCHUM_DOLL, 32
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_TogepiDoll::
-	setvar VAR_0x8008, 48
-	setvar VAR_0x8009, DECOR_TOGEPI_DOLL
+	setitemandprice DECOR_TOGEPI_DOLL, 48
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_MeowthDoll::
-	setvar VAR_0x8008, 48
-	setvar VAR_0x8009, DECOR_MEOWTH_DOLL
+	setitemandprice DECOR_MEOWTH_DOLL, 48
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_ClefairyDoll::
-	setvar VAR_0x8008, 48
-	setvar VAR_0x8009, DECOR_CLEFAIRY_DOLL
+	setitemandprice DECOR_CLEFAIRY_DOLL, 48
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_DittoDoll::
-	setvar VAR_0x8008, 48
-	setvar VAR_0x8009, DECOR_DITTO_DOLL
+	setitemandprice DECOR_DITTO_DOLL, 48
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_CyndaquilDoll::
-	setvar VAR_0x8008, 80
-	setvar VAR_0x8009, DECOR_CYNDAQUIL_DOLL
+	setitemandprice DECOR_CYNDAQUIL_DOLL, 80
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_ChikoritaDoll::
-	setvar VAR_0x8008, 80
-	setvar VAR_0x8009, DECOR_CHIKORITA_DOLL
+	setitemandprice DECOR_CHIKORITA_DOLL, 80
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_TotodileDoll::
-	setvar VAR_0x8008, 80
-	setvar VAR_0x8009, DECOR_TOTODILE_DOLL
+	setitemandprice DECOR_TOTODILE_DOLL, 80
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_DecorClerk2::
@@ -184,28 +179,23 @@ BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2::
 	end
 
 BattleFrontier_ExchangeServiceCorner_EventScript_LaprasDoll::
-	setvar VAR_0x8008, 128
-	setvar VAR_0x8009, DECOR_LAPRAS_DOLL
+	setitemandprice DECOR_LAPRAS_DOLL, 128
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2
 
 BattleFrontier_ExchangeServiceCorner_EventScript_SnorlaxDoll::
-	setvar VAR_0x8008, 128
-	setvar VAR_0x8009, DECOR_SNORLAX_DOLL
+	setitemandprice DECOR_SNORLAX_DOLL, 128
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2
 
 BattleFrontier_ExchangeServiceCorner_EventScript_VenusaurDoll::
-	setvar VAR_0x8008, 256
-	setvar VAR_0x8009, DECOR_VENUSAUR_DOLL
+	setitemandprice DECOR_VENUSAUR_DOLL, 256
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2
 
 BattleFrontier_ExchangeServiceCorner_EventScript_CharizardDoll::
-	setvar VAR_0x8008, 256
-	setvar VAR_0x8009, DECOR_CHARIZARD_DOLL
+	setitemandprice DECOR_CHARIZARD_DOLL, 256
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2
 
 BattleFrontier_ExchangeServiceCorner_EventScript_BlastoiseDoll::
-	setvar VAR_0x8008, 256
-	setvar VAR_0x8009, DECOR_BLASTOISE_DOLL
+	setitemandprice DECOR_BLASTOISE_DOLL, 256
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2
 
 BattleFrontier_ExchangeServiceCorner_EventScript_VitaminClerk::
@@ -241,33 +231,27 @@ BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin::
 	end
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Protein::
-	setvar VAR_0x8008, 1
-	setvar VAR_0x8009, ITEM_PROTEIN
+	setitemandprice ITEM_PROTEIN, 1
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Calcium::
-	setvar VAR_0x8008, 1
-	setvar VAR_0x8009, ITEM_CALCIUM
+	setitemandprice ITEM_CALCIUM, 1
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Iron::
-	setvar VAR_0x8008, 1
-	setvar VAR_0x8009, ITEM_IRON
+	setitemandprice ITEM_IRON, 1
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Zinc::
-	setvar VAR_0x8008, 1
-	setvar VAR_0x8009, ITEM_ZINC
+	setitemandprice ITEM_ZINC, 1
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Carbos::
-	setvar VAR_0x8008, 1
-	setvar VAR_0x8009, ITEM_CARBOS
+	setitemandprice ITEM_CARBOS, 1
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_HPUp::
-	setvar VAR_0x8008, 1
-	setvar VAR_0x8009, ITEM_HP_UP
+	setitemandprice ITEM_HP_UP, 1
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 
@@ -307,48 +291,39 @@ BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem::
 	end
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Leftovers::
-	setvar VAR_0x8008, 48
-	setvar VAR_0x8009, ITEM_LEFTOVERS
+	setitemandprice ITEM_LEFTOVERS, 48
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem
 
 BattleFrontier_ExchangeServiceCorner_EventScript_WhiteHerb::
-	setvar VAR_0x8008, 48
-	setvar VAR_0x8009, ITEM_WHITE_HERB
+	setitemandprice ITEM_WHITE_HERB, 48
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem
 
 BattleFrontier_ExchangeServiceCorner_EventScript_QuickClaw::
-	setvar VAR_0x8008, 48
-	setvar VAR_0x8009, ITEM_QUICK_CLAW
+	setitemandprice ITEM_QUICK_CLAW, 48
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem
 
 BattleFrontier_ExchangeServiceCorner_EventScript_MentalHerb::
-	setvar VAR_0x8008, 48
-	setvar VAR_0x8009, ITEM_MENTAL_HERB
+	setitemandprice ITEM_MENTAL_HERB, 48
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Brightpowder::
-	setvar VAR_0x8008, 64
-	setvar VAR_0x8009, ITEM_BRIGHT_POWDER
+	setitemandprice ITEM_BRIGHT_POWDER, 64
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem
 
 BattleFrontier_ExchangeServiceCorner_EventScript_ChoiceBand::
-	setvar VAR_0x8008, 64
-	setvar VAR_0x8009, ITEM_CHOICE_BAND
+	setitemandprice ITEM_CHOICE_BAND, 64
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem
 
 BattleFrontier_ExchangeServiceCorner_EventScript_KingsRock::
-	setvar VAR_0x8008, 64
-	setvar VAR_0x8009, ITEM_KINGS_ROCK
+	setitemandprice ITEM_KINGS_ROCK, 64
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem
 
 BattleFrontier_ExchangeServiceCorner_EventScript_FocusBand::
-	setvar VAR_0x8008, 64
-	setvar VAR_0x8009, ITEM_FOCUS_BAND
+	setitemandprice ITEM_FOCUS_BAND, 64
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem
 
 BattleFrontier_ExchangeServiceCorner_EventScript_ScopeLens::
-	setvar VAR_0x8008, 64
-	setvar VAR_0x8009, ITEM_SCOPE_LENS
+	setitemandprice ITEM_SCOPE_LENS, 64
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseHoldItem
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Man::
