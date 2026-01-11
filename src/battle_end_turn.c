@@ -843,7 +843,9 @@ static bool32 HandleEndTurnDisable(enum BattlerId battler)
         if (!(GetConfig(CONFIG_DISABLE_TURNS) <= GEN_2
          && gBattleMons[battler].volatiles.unableToUseMove
          && (gBattleMons[battler].volatiles.disabledMove != gChosenMoveByBattler[battler]))) // Timer increments still if fast disable blocked move
+        {
             gBattleMons[battler].volatiles.disableTimer--;
+        }
         if (moveIndex == MAX_MON_MOVES)  // Pokémon does not have the disabled move anymore
         {
             gBattleMons[battler].volatiles.disabledMove = 0;
