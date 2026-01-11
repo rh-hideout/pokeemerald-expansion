@@ -4717,7 +4717,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
     #if P_UPDATED_TYPES >= GEN_6
         .types = MON_TYPES(TYPE_STEEL, TYPE_FAIRY),
     #else
-        .types = MON_TYPES(TYPE_STEEL, TYPE_FAIRY),
+        .types = MON_TYPES(TYPE_STEEL),
     #endif
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 133 : 98,
