@@ -11437,6 +11437,7 @@ static void Cmd_handleballthrow(void)
     }
     else
     {
+        gBallToDisplay = gLastThrownBall = gLastUsedItem;
         u32 odds = ComputeCaptureOdds(gBattlerTarget, gBattlerAttacker);
         if (gTestRunnerEnabled)
             TestRunner_Battle_RecordCatchChance(odds);
