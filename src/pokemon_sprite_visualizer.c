@@ -481,11 +481,11 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
 #if B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE
     u8 textInstructionsSubmenuTwo[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$");
     u8 textInstructionsSubmenuTwoGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$");
-    u8 textInstructionsSubmenuThree[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move Anims$");
-    u8 textInstructionsSubmenuThreeGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Move Anims$");
+    u8 textInstructionsSubmenuThree[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move BGs$");
+    u8 textInstructionsSubmenuThreeGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Move BGs$");
 #else
-    u8 textInstructionsSubmenuTwo[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move Anims$");
-    u8 textInstructionsSubmenuTwoGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Move Anims$");
+    u8 textInstructionsSubmenuTwo[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move BGs$");
+    u8 textInstructionsSubmenuTwoGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Move BGs$");
     u8 textInstructionsSubmenuThree[] = _("$");
     u8 textInstructionsSubmenuThreeGender[] = _("$");
 #endif
@@ -1037,13 +1037,16 @@ static void UpdateMoveBackground(u8 taskId, bool8 increment)
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
 
     if (increment)
+    {
         data->moveBackground = (data->moveBackground + 1) % BG_COUNT;
+        if (data->moveBackground == BG_NONE)
+            data->moveBackground = BG_DARK;
+    }
     else
     {
+        data->moveBackground -= 1;
         if (data->moveBackground == BG_NONE)
             data->moveBackground = BG_SWAMP;
-        else
-            data->moveBackground -= 1;
     }
 
     PrintMoveBackgroundName(taskId);
@@ -1882,6 +1885,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
                 data->currentSubmenu = 4;
                 PrintInstructionsOnWindow(data);
                 SetArrowInvisibility(data);
+                data->moveBackground = BG_DARK;
                 PrintMoveBackgroundName(taskId);
                 LoadMoveBackground(data->moveBackground);
             }
@@ -1937,6 +1941,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             data->currentSubmenu = 4;
             PrintInstructionsOnWindow(data);
             SetArrowInvisibility(data);
+            data->moveBackground = BG_DARK;
             PrintMoveBackgroundName(taskId);
             LoadMoveBackground(data->moveBackground);
         }
