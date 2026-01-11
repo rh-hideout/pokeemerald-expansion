@@ -1311,22 +1311,6 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     return effect;
 }
 
-static bool32 CanBattlerEndTurnFormChange(u32 battler, enum Ability ability)
-{
-    u32 species = gBattleMons[battler].species;
-
-
-    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_TURN_END, ability) != species
-     && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END))
-        return TRUE;
-
-    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END, ability) != species
-     && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
-        return TRUE;
-
-    return FALSE;
-}
-
 static bool32 HandleEndTurnFormChange(u32 battler)
 {
     bool32 effect = FALSE;
@@ -1335,7 +1319,8 @@ static bool32 HandleEndTurnFormChange(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (CanBattlerEndTurnFormChange(battler, ability))
+    if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END)
+        || TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
     {
         gBattleScripting.battler = battler;
         gBattleScripting.abilityPopupOverwrite = ability; // To prevent the new form's ability from pop up
