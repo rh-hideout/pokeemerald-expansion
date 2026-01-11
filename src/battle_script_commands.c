@@ -9167,7 +9167,7 @@ static void Cmd_trysetencore(void)
         else if (GetConfig(CONFIG_ENCORE_TURNS) == GEN_4)
             gBattleMons[gBattlerTarget].volatiles.encoreTimer = RandomUniform(RNG_ENCORE_TURNS, B_ENCORE_TIMER, 8);
         else
-           gBattleMons[gBattlerTarget].volatiles.encoreTimer = RandomUniform(RNG_ENCORE_TURNS, 3, 7);
+            gBattleMons[gBattlerTarget].volatiles.encoreTimer = RandomUniform(RNG_ENCORE_TURNS, 3, 7);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

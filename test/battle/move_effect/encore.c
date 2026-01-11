@@ -18,9 +18,9 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 4 turns: Enc
     } WHEN {
         TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
+        TURN {}
+        TURN {}
+        TURN {}
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
@@ -45,9 +45,9 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Enc
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
         TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
+        TURN {}
+        TURN {}
+        TURN {}
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
@@ -73,13 +73,13 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 4-8 turns: En
     } WHEN {
         TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
@@ -110,13 +110,13 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 3-7 turns: En
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
     } WHEN {
         TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
@@ -146,12 +146,12 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 3-7 turns:
     } WHEN {
         TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
@@ -181,12 +181,12 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns:
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
         TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
