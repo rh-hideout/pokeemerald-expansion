@@ -4867,6 +4867,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
     case ABILITYEFFECT_SWITCH_IN_FORM_CHANGE:
         if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT))
         {
+            gBattleScripting.battler = battler;
             // To prevent the new form's ability from pop up
             gBattleScripting.abilityPopupOverwrite = ability;
             BattleScriptCall(BattleScript_BattlerFormChange);
