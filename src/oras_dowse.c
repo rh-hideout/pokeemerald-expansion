@@ -239,7 +239,6 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingBrendan = {
     .oam = &gObjectEventOam_ORASDowse,
     .anims = sAnimTable_ORASDowsing,
     .images = sPicTable_ORASDowsingBrendan,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateORASDowsingFieldEffect,
 };
 
@@ -249,7 +248,6 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingMay = {
     .oam = &gObjectEventOam_ORASDowse,
     .anims = sAnimTable_ORASDowsing,
     .images = sPicTable_ORASDowsingMay,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateORASDowsingFieldEffect,
 };
 
@@ -531,7 +529,7 @@ void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playe
         anim += 16;
         break;
     }
-    
+
     // Don't completely restart anim if wiggling didn't stop.
     if (sprite->sPrevDowseState != ORASD_WIGGLE_NONE && sprite->sDowseState != ORASD_WIGGLE_NONE)
         SetAndStartSpriteAnim(sprite, anim, sprite->animCmdIndex);

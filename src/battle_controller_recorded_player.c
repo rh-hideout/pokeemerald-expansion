@@ -58,8 +58,7 @@ static void (*const sRecordedPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 ba
     [CONTROLLER_TRAINERSLIDEBACK]         = RecordedPlayerHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = BtlController_Empty,
-    [CONTROLLER_BALLTHROWANIM]            = PlayerHandleBallThrowAnim,
+    [CONTROLLER_BALLTHROWANIM]            = BtlController_HandleBallThrowAnim,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
     [CONTROLLER_PRINTSTRING]              = BtlController_HandlePrintString,
@@ -104,6 +103,7 @@ static void (*const sRecordedPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 ba
 
 void SetControllerToRecordedPlayer(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_RECORDED_PLAYER;
     gBattlerControllerEndFuncs[battler] = RecordedPlayerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = RecordedPlayerBufferRunCommand;
 }
@@ -274,29 +274,29 @@ static void RecordedPlayerHandleDrawTrainerPic(u32 battler)
 {
     bool32 isFrontPic;
     s16 xPos, yPos;
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     // Sets Multibattle test player sprites to not be Hiker
     if (IsMultibattleTest())
     {
-        trainerPicId = TRAINER_BACK_PIC_BRENDAN;
+        trainerPicId = TRAINER_PIC_BACK_BRENDAN;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
         else
             xPos = 80;
         yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
     }
-    else 
+    else
     {
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-                trainerPicId = GetBattlerLinkPlayerGender(battler);
+                trainerPicId = GetBattlerLinkPlayerGender(battler) + TRAINER_PIC_BACK_BRENDAN;
             else
-                trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender;
+                trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender + TRAINER_PIC_BACK_BRENDAN;
         }
         else
-            trainerPicId = gLinkPlayers[0].gender;
+            trainerPicId = gLinkPlayers[0].gender + TRAINER_PIC_BACK_BRENDAN;
 
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
@@ -410,13 +410,13 @@ static void RecordedPlayerHandleStatusAnimation(u32 battler)
 
 static void RecordedPlayerHandleIntroTrainerBallThrow(u32 battler)
 {
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
     const u16 *trainerPal;
 
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
-        trainerPicId = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender + TRAINER_BACK_PIC_BRENDAN;
+        trainerPicId = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender + TRAINER_PIC_BACK_BRENDAN;
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_BRENDAN;
+        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_PIC_BACK_BRENDAN;
 
     trainerPal = gTrainerBacksprites[trainerPicId].palette.data;
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F9, trainerPal, 24, Intro_TryShinyAnimShowHealthbox);

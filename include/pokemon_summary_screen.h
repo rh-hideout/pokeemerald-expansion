@@ -32,6 +32,7 @@ enum PokemonSummaryScreenMode
     SUMMARY_MODE_SELECT_MOVE,
     SUMMARY_MODE_RELEARNER_BATTLE, // returning from move relearner initiated from battle moves page
     SUMMARY_MODE_RELEARNER_CONTEST, // returning from move relearner initiated from contest moves page
+    SUMMARY_MODE_BOX_SELECT_MOVE,
 };
 
 enum PokemonSummaryScreenPage
@@ -52,12 +53,9 @@ enum PokemonSummarySkillsMode
 
 void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
 void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void), u16 newMove);
-void ShowPokemonSummaryScreenHandleDeoxys(u8 mode, struct BoxPokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
+void ShowSelectMoveBoxPokemonSummaryScreen(struct BoxPokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void), u16 newMove);
 u8 GetMoveSlotToReplace(void);
 void SummaryScreen_SetAnimDelayTaskId(u8 taskId);
-void ShowRelearnPrompt(void);
-void TryUpdateRelearnType(enum IncrDecrUpdateValues delta);
-u32 GetCurrentRelearnMovesCount(void);
-u32 GetRelearnMovesCount(enum MoveRelearnerStates state);
+bool32 CheckRelearnerStateFlag(enum MoveRelearnerStates state);
 
 #endif // GUARD_POKEMON_SUMMARY_SCREEN_H

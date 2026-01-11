@@ -93,8 +93,6 @@ static const struct SpriteTemplate sVsLetter_V_SpriteTemplate =
     .tileTag = TAG_VS_LETTERS,
     .paletteTag = TAG_VS_LETTERS,
     .oam = &sVsLetter_V_OamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sVsLetterAffineAnimTable,
     .callback = SpriteCB_VsLetterDummy
 };
@@ -104,8 +102,6 @@ static const struct SpriteTemplate sVsLetter_S_SpriteTemplate =
     .tileTag = TAG_VS_LETTERS,
     .paletteTag = TAG_VS_LETTERS,
     .oam = &sVsLetter_S_OamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sVsLetterAffineAnimTable,
     .callback = SpriteCB_VsLetterDummy
 };
@@ -613,7 +609,7 @@ const struct WindowTemplate *const gBattleWindowTemplates[] =
 };
 
 // If current map scene equals any of the values in sMapBattleSceneMapping,
-// use its battle terrain value. Otherwise, use the default.
+// use its battle environment value. Otherwise, use the default.
 static u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene)
 {
     int i;
@@ -625,26 +621,26 @@ static u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene)
     return BATTLE_ENVIRONMENT_PLAIN;
 }
 
-// Loads the initial battle terrain.
-static void LoadBattleEnvironmentGfx(u16 terrain)
+// Loads the initial battle environment.
+static void LoadBattleEnvironmentGfx(u16 environment)
 {
-    if (terrain >= NELEMS(gBattleEnvironmentInfo))
-        terrain = BATTLE_ENVIRONMENT_PLAIN;  // If higher than the number of entries in gBattleEnvironmentInfo, use the default.
+    if (environment >= NELEMS(gBattleEnvironmentInfo))
+        environment = BATTLE_ENVIRONMENT_PLAIN;  // If higher than the number of entries in gBattleEnvironmentInfo, use the default.
     // Copy to bg3
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.tileset, (void *)(BG_CHAR_ADDR(2)));
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
-    LoadPalette(gBattleEnvironmentInfo[terrain].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.tileset, (void *)(BG_CHAR_ADDR(2)));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
+    LoadPalette(gBattleEnvironmentInfo[environment].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
 }
 
-// Loads the entry associated with the battle terrain.
+// Loads the entry associated with the battle environment.
 // This can be the grass moving on the screen at the start of a wild encounter in tall grass.
-static void LoadBattleEnvironmentEntryGfx(u16 terrain)
+static void LoadBattleEnvironmentEntryGfx(u16 environment)
 {
-    if (terrain >= NELEMS(gBattleEnvironmentInfo))
-        terrain = BATTLE_ENVIRONMENT_PLAIN;
+    if (environment >= NELEMS(gBattleEnvironmentInfo))
+        environment = BATTLE_ENVIRONMENT_PLAIN;
     // Copy to bg1
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.entryTileset, (void *)BG_CHAR_ADDR(1));
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[terrain].background.entryTilemap, (void *)BG_SCREEN_ADDR(28));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.entryTileset, (void *)BG_CHAR_ADDR(1));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.entryTilemap, (void *)BG_SCREEN_ADDR(28));
 }
 
 static u8 GetBattleEnvironmentOverride(void)
@@ -1053,48 +1049,21 @@ void DrawBattleEntryBackground(void)
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
     {
-        switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL))
-        {
-        case SPECIES_GROUDON:
-            LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_CAVE);
-            break;
-        case SPECIES_KYOGRE:
-            LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_UNDERWATER);
-            break;
-        case SPECIES_RAYQUAZA:
-            LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_RAYQUAZA);
-            break;
-        default:
-            DecompressDataWithHeaderVram(gBattleEnvironmentInfo[gBattleEnvironment].background.entryTileset, (void *)(BG_CHAR_ADDR(1)));
-            DecompressDataWithHeaderVram(gBattleEnvironmentInfo[gBattleEnvironment].background.entryTilemap, (void *)(BG_SCREEN_ADDR(28)));
-            break;
-        }
+        LoadBattleEnvironmentEntryGfx(GetBattleEnvironmentOverride());
     }
     else
     {
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         {
             enum TrainerClassID trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
-            if (trainerClass == TRAINER_CLASS_LEADER)
+            if (trainerClass == TRAINER_CLASS_LEADER || trainerClass == TRAINER_CLASS_CHAMPION)
             {
-                LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_BUILDING);
-                return;
-            }
-            else if (trainerClass == TRAINER_CLASS_CHAMPION)
-            {
-                LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_BUILDING);
+                LoadBattleEnvironmentEntryGfx(GetBattleEnvironmentOverride());
                 return;
             }
         }
 
-        if (GetCurrentMapBattleScene() == MAP_BATTLE_SCENE_NORMAL)
-        {
-            LoadBattleEnvironmentEntryGfx(gBattleEnvironment);
-        }
-        else
-        {
-            LoadBattleEnvironmentEntryGfx(gBattleEnvironment);
-        }
+        LoadBattleEnvironmentEntryGfx(gBattleEnvironment);
     }
 }
 

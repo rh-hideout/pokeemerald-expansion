@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat")
 SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not both")
 {
     u16 species;
-    u32 move;
+    enum Move move;
     s16 damage[2];
 
     PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_SCRATCH; }
@@ -59,9 +59,9 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
     u16 turns;
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); };
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         for (turns = 0; turns < 5; turns++)
             TURN {}
@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ROARING_MOON) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); };
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         TURN { SWITCH(player, 1); }
     } SCENE {
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Protosynthesis prioritizes stats in the case of a tie in the
         PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Attack(stats[0]); Defense(stats[1]); SpAttack(stats[2]); SpDefense(stats[3]); Speed(stats[4]); }
         OPPONENT(SPECIES_GROUDON) { Ability(ABILITY_DROUGHT); Speed(5); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
@@ -173,10 +173,11 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler")
 SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an Utility Umbrella")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
         PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_UTILITY_UMBRELLA); }
         OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);

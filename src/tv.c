@@ -188,6 +188,17 @@ static void DoTVShowSecretBaseSecrets(void);
 static void DoTVShowSafariFanClub(void);
 static void DoTVShowLilycoveContestLady(void);
 
+static const u8 sText_Good[] = _("Good");
+static const u8 sText_VeryGood[] = _("Very good");
+static const u8 sText_Excellent[] = _("Excellent");
+static const u8 sText_SoSo[] = _("So-so");
+static const u8 sText_Bad[] = _("Bad");
+static const u8 sText_TheWorst[] = _("The worst");
+
+static const u8 sText_Slots[] = _("SLOTS");
+static const u8 sText_Roulette[] = _("ROULETTE");
+static const u8 sText_Jackpot[] = _("jackpot");
+
 static const struct {
     u16 species;
     u16 moves[MAX_MON_MOVES];
@@ -1246,7 +1257,7 @@ static void InterviewAfter_ContestLiveUpdates(void)
     }
 }
 
-void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, u16 move, u16 speciesPlayer, u16 speciesOpponent)
+void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, enum Move move, u16 speciesPlayer, u16 speciesOpponent)
 {
     TVShow *show;
     u8 name[32];
@@ -1377,7 +1388,7 @@ void ContestLiveUpdates_SetWinnerAppealFlag(u8 flag)
         show->contestLiveUpdates.winnerAppealFlag = flag;
 }
 
-void ContestLiveUpdates_SetWinnerMoveUsed(u16 move)
+void ContestLiveUpdates_SetWinnerMoveUsed(enum Move move)
 {
     TVShow *show = &gSaveBlock1Ptr->tvShows[LAST_TVSHOW_IDX];
     sCurTVShowSlot = FindFirstEmptyNormalTVShowSlot(gSaveBlock1Ptr->tvShows);
@@ -1434,7 +1445,7 @@ static void InterviewAfter_BravoTrainerPokemonProfile(void)
     }
 }
 
-void BravoTrainerPokemonProfile_BeforeInterview1(u16 move)
+void BravoTrainerPokemonProfile_BeforeInterview1(enum Move move)
 {
     TVShow *show = &gSaveBlock1Ptr->tvShows[LAST_TVSHOW_IDX];
     InterviewBefore_BravoTrainerPkmnProfile();
@@ -2020,7 +2031,7 @@ static void SecretBaseVisit_CalculateDecorationData(TVShow *show)
 static void SecretBaseVisit_CalculatePartyData(TVShow *show)
 {
     u8 i;
-    u16 move;
+    enum Move move;
     u16 j;
     u8 numMoves;
     u8 numPokemon;
@@ -3292,16 +3303,28 @@ static void ChangeBoxPokemonNickname_CB(void)
 
 void BufferMonNickname(void)
 {
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+    else
+        GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
     StringGet_Nickname(gStringVar1);
 }
 
 void IsMonOTIDNotPlayers(void)
 {
-    if (GetPlayerIDAsU32() == GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_ID, NULL))
-        gSpecialVar_Result = FALSE;
-    else
-        gSpecialVar_Result = TRUE;
+    if(gSpecialVar_MonBoxId == 0xFF){
+        if (GetPlayerIDAsU32() == GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_ID, NULL))
+            gSpecialVar_Result = FALSE;
+        else
+            gSpecialVar_Result = TRUE;
+    }
+    else{
+        if (GetPlayerIDAsU32() == GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_OT_ID))
+            gSpecialVar_Result = FALSE;
+        else
+            gSpecialVar_Result = TRUE;
+    }
+
 }
 
 static u8 GetTVGroupByShowId(u8 kind)
@@ -3323,7 +3346,7 @@ static u8 GetTVGroupByShowId(u8 kind)
 
 u32 GetPlayerIDAsU32(void)
 {
-    return (gSaveBlock2Ptr->playerTrainerId[3] << 24) | (gSaveBlock2Ptr->playerTrainerId[2] << 16) | (gSaveBlock2Ptr->playerTrainerId[1] << 8) | gSaveBlock2Ptr->playerTrainerId[0];
+    return READ_OTID_FROM_SAVE;
 }
 
 u8 CheckForPlayersHouseNews(void)
@@ -5335,15 +5358,15 @@ static void DoTVShow3CheersForPokeblocks(void)
         }
         if (show->threeCheers.sheen > 24)
         {
-            StringCopy(gStringVar2, gText_Excellent);
+            StringCopy(gStringVar2, sText_Excellent);
         }
         else if (show->threeCheers.sheen > 22)
         {
-            StringCopy(gStringVar2, gText_VeryGood);
+            StringCopy(gStringVar2, sText_VeryGood);
         }
         else
         {
-            StringCopy(gStringVar2, gText_Good);
+            StringCopy(gStringVar2, sText_Good);
         }
         TVShowConvertInternationalString(gStringVar3, show->threeCheers.playerName, show->threeCheers.language);
         sTVShowState = 2;
@@ -5373,11 +5396,11 @@ static void DoTVShow3CheersForPokeblocks(void)
         }
 
         if (show->threeCheers.sheen > 16)
-            StringCopy(gStringVar2, gText_SoSo);
+            StringCopy(gStringVar2, sText_SoSo);
         else if (show->threeCheers.sheen > 13)
-            StringCopy(gStringVar2, gText_Bad);
+            StringCopy(gStringVar2, sText_Bad);
         else
-            StringCopy(gStringVar2, gText_TheWorst);
+            StringCopy(gStringVar2, sText_TheWorst);
 
         TVShowConvertInternationalString(gStringVar3, show->threeCheers.playerName, show->threeCheers.language);
         sTVShowState = 4;
@@ -5736,10 +5759,10 @@ static void DoTVShowFindThatGamer(void)
         switch (show->findThatGamer.whichGame)
         {
         case 0:
-            StringCopy(gStringVar2, gText_Slots);
+            StringCopy(gStringVar2, sText_Slots);
             break;
         case 1:
-            StringCopy(gStringVar2, gText_Roulette);
+            StringCopy(gStringVar2, sText_Roulette);
             break;
         }
         if (show->findThatGamer.won == TRUE)
@@ -5752,10 +5775,10 @@ static void DoTVShowFindThatGamer(void)
         switch (show->findThatGamer.whichGame)
         {
         case 0:
-            StringCopy(gStringVar2, gText_Slots);
+            StringCopy(gStringVar2, sText_Slots);
             break;
         case 1:
-            StringCopy(gStringVar2, gText_Roulette);
+            StringCopy(gStringVar2, sText_Roulette);
             break;
         }
         ConvertIntToDecimalString(2, show->findThatGamer.nCoins);
@@ -5765,10 +5788,10 @@ static void DoTVShowFindThatGamer(void)
         switch (show->findThatGamer.whichGame)
         {
         case 0:
-            StringCopy(gStringVar2, gText_Slots);
+            StringCopy(gStringVar2, sText_Slots);
             break;
         case 1:
-            StringCopy(gStringVar2, gText_Roulette);
+            StringCopy(gStringVar2, sText_Roulette);
             break;
         }
         ConvertIntToDecimalString(2, show->findThatGamer.nCoins);
@@ -5779,10 +5802,10 @@ static void DoTVShowFindThatGamer(void)
         switch (show->findThatGamer.whichGame)
         {
         case 0:
-            StringCopy(gStringVar2, gText_Roulette);
+            StringCopy(gStringVar2, sText_Roulette);
             break;
         case 1:
-            StringCopy(gStringVar2, gText_Slots);
+            StringCopy(gStringVar2, sText_Slots);
             break;
         }
         TVShowDone();
@@ -5976,7 +5999,7 @@ static void DoTVShowPokemonLotteryWinnerFlashReport(void)
     state = sTVShowState;
     TVShowConvertInternationalString(gStringVar1, show->lottoWinner.playerName, show->lottoWinner.language);
     if (show->lottoWinner.whichPrize == 0)
-        StringCopy(gStringVar2, gText_Jackpot);
+        StringCopy(gStringVar2, sText_Jackpot);
     else if (show->lottoWinner.whichPrize == 1)
         StringCopy(gStringVar2, gText_First);
     else if (show->lottoWinner.whichPrize == 2)

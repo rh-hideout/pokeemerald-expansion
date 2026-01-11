@@ -1,24 +1,12 @@
 #ifndef GUARD_TEST_H
 #define GUARD_TEST_H
 
+#include "test_result.h"
 #include "test_runner.h"
 #include "random.h"
 
 #define MAX_PROCESSES 32 // See also tools/mgba-rom-test-hydra/main.c
 #define RIGGED_RNG_COUNT 8
-
-enum TestResult
-{
-    TEST_RESULT_FAIL,
-    TEST_RESULT_PASS,
-    TEST_RESULT_ASSUMPTION_FAIL,
-    TEST_RESULT_INVALID,
-    TEST_RESULT_ERROR,
-    TEST_RESULT_TIMEOUT,
-    TEST_RESULT_CRASH,
-    TEST_RESULT_TODO,
-    TEST_RESULT_KNOWN_FAIL,
-};
 
 struct TestRunner
 {
@@ -49,6 +37,16 @@ enum TestFilterMode
     TEST_FILTER_MODE_FILENAME_EXACT,
 };
 
+enum ExpectFailState
+{
+    NO_EXPECT_FAIL,
+    EXPECT_FAIL_OPEN,
+    EXPECT_FAIL_TURN_OPEN,
+    EXPECT_FAIL_SCENE_OPEN,
+    EXPECT_FAIL_SUCCESS,
+    EXPECT_FAIL_CLOSED
+};
+
 struct TestRunnerState
 {
     u8 state;
@@ -65,6 +63,8 @@ struct TestRunnerState
     bool8 inBenchmark:1;
     bool8 tearDown:1;
     u32 timeoutSeconds;
+    s32 expectedFailLine;
+    enum ExpectFailState expectedFailState;
 };
 
 struct PersistentTestRunnerState
@@ -106,7 +106,7 @@ void CB2_TestRunner(void);
 void Test_ExpectedResult(enum TestResult);
 void Test_ExpectLeaks(bool32);
 void Test_ExpectCrash(bool32);
-void Test_ExitWithResult(enum TestResult, u32 stopLine, const char *fmt, ...);
+void Test_ExpectFail(u32 failLine);
 u32 SourceLine(u32 sourceLineOffset);
 u32 SourceLineOffset(u32 sourceLine);
 void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value);
@@ -254,6 +254,8 @@ static inline struct Benchmark BenchmarkStop(void)
 
 #define KNOWN_CRASHING \
     Test_ExpectCrash(TRUE)
+
+#define EXPECT_FAIL for (u32 _expect_fail = (Test_ExpectFail(-1), 1); _expect_fail; Test_ExpectFail(__LINE__), _expect_fail = 0)
 
 #define PARAMETRIZE if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter)
 

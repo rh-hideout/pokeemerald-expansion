@@ -423,6 +423,7 @@
 #define ANIM_TAG_TATSUGIRI_CURLY            (ANIM_SPRITES_START + 409)
 #define ANIM_TAG_TATSUGIRI_DROOPY           (ANIM_SPRITES_START + 410)
 #define ANIM_TAG_TATSUGIRI_STRETCHY         (ANIM_SPRITES_START + 411)
+#define ANIM_TAG_COUNT                      GET_TRUE_SPRITE_INDEX(ANIM_TAG_TATSUGIRI_STRETCHY + 1)
 
 // battlers
 #define ANIM_ATTACKER         0
@@ -592,8 +593,9 @@
 #define B_ANIM_TERA_ACTIVATE            51
 #define B_ANIM_SIMPLE_HEAL              52
 #define B_ANIM_POWER_CONSTRUCT          53
-
-#define NUM_B_ANIMS_GENERAL             54
+#define B_ANIM_SWAP_TO_SUBSTITUTE       54
+#define B_ANIM_SWAP_FROM_SUBSTITUTE     55
+#define NUM_B_ANIMS_GENERAL             56
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0

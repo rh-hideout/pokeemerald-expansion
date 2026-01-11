@@ -80,7 +80,6 @@ struct PokemonSpriteVisualizer
 
     u8 animIdBack;
     u8 animIdFront;
-    u8 battleBgType;
     u8 battleEnvironment;
     u8 currentSubmenu;
     u8 submenuYpos[3];

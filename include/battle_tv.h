@@ -2,10 +2,10 @@
 #define GUARD_BATTLE_TV_H
 
 void BattleTv_SetDataBasedOnString(enum StringID stringId);
-void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruct *disableStructPtr);
+void BattleTv_SetDataBasedOnMove(enum Move move, u16 weatherFlags);
 void BattleTv_SetDataBasedOnAnimation(u8 animationId);
 void TryPutLinkBattleTvShowOnAir(void);
 void BattleTv_ClearExplosionFaintCause(void);
-u8 GetBattlerMoveSlotId(u8 battler, u16 move);
+u8 GetBattlerMoveSlotId(u8 battler, enum Move move);
 
 #endif // GUARD_BATTLE_TV_H
