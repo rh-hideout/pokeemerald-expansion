@@ -811,7 +811,7 @@ enum HealAmount
     PERCENT_HEAL_AMOUNT,
 };
 
-static u32 ItemHealHp(u32 battler, u32 itemId, enum HealAmount percentHeal)
+static u32 ItemHealHp(u32 battler, enum Item itemId, enum HealAmount percentHeal)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -837,7 +837,7 @@ static u32 ItemHealHp(u32 battler, u32 itemId, enum HealAmount percentHeal)
     return effect;
 }
 
-static u32 ItemRestorePp(u32 battler, u32 itemId)
+static u32 ItemRestorePp(u32 battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -877,7 +877,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId)
     return effect;
 }
 
-static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId)
+static enum ItemEffect HealConfuseBerry(u32 battler, enum Item itemId, u32 flavorId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     u32 hpFraction = B_CONFUSE_BERRIES_HEAL >= GEN_7 ? 4 : 2;
@@ -900,7 +900,7 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId)
     return effect;
 }
 
-static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId)
+static enum ItemEffect StatRaiseBerry(u32 battler, enum Item itemId, enum Stat statId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -919,7 +919,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId)
     return effect;
 }
 
-static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId)
+static enum ItemEffect CriticalHitRatioUp(u32 battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -935,7 +935,7 @@ static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId)
     return effect;
 }
 
-static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId)
+static enum ItemEffect RandomStatRaiseBerry(u32 battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Stat stat;
@@ -973,7 +973,7 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId)
     return effect;
 }
 
-static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId)
+static enum ItemEffect TrySetMicleBerry(u32 battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 

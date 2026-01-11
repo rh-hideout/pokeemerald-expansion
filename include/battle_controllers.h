@@ -319,7 +319,7 @@ void BtlController_EmitBallThrowAnim(u32 battler, u32 bufferId, u8 caseId);
 void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, enum Move move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, u8 multihit);
 void BtlController_EmitPrintString(u32 battler, u32 bufferId, enum StringID stringId);
 void BtlController_EmitPrintSelectionString(u32 battler, u32 bufferId, enum StringID stringId);
-void BtlController_EmitChooseAction(u32 battler, u32 bufferId, u8 action, u16 itemId);
+void BtlController_EmitChooseAction(u32 battler, u32 bufferId, u8 action, enum Item itemId);
 void BtlController_EmitYesNoBox(u32 battler, u32 bufferId);
 void BtlController_EmitChooseMove(u32 battler, u32 bufferId, bool8 isDoubleBattle, bool8 NoPpNumber, struct ChooseMoveStruct *movePpData);
 void BtlController_EmitChooseItem(u32 battler, u32 bufferId, u8 *battlePartyOrder);
