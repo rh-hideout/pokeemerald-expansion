@@ -3317,8 +3317,6 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
             SetOrClearRageVolatile();
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED;
-            gLastLandedMoves[ctx->battlerDef] = 0;
-            gLastHitByType[ctx->battlerDef] = 0;
             if (GetMoveEffect(ctx->move) == EFFECT_FLING)
                 BattleScriptCall(BattleScript_TargetAvoidsAttackConsumeFlingItem);
             else
