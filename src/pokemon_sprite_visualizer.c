@@ -971,16 +971,13 @@ static void LoadBattleBg(enum BattleEnvironments battleEnvironment)
     LoadPalette(gBattleEnvironmentInfo[battleEnvironment].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
 }
 
-static void PrintBattleBgName(u8 taskId)
+static void PrintBattleBgName(u8 battleEnvironment)
 {
-    struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
-
-    const u8 *name = gBattleEnvironmentInfo[data->battleEnvironment].name;
     u8 fontId = FONT_SMALL;
-
     FillWindowPixelRect(WIN_BOTTOM_RIGHT, PIXEL_FILL(0), 0, 24, 80, gFonts[fontId].maxLetterHeight);
-    AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, name, 0, 24, 0, NULL);
+    AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, gBattleEnvironmentInfo[battleEnvironment].name, 0, 24, 0, NULL);
 }
+
 static void UpdateBattleBg(u8 taskId, bool8 increment)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
@@ -996,7 +993,7 @@ static void UpdateBattleBg(u8 taskId, bool8 increment)
             data->battleEnvironment -= 1;
     }
 
-    PrintBattleBgName(taskId);
+    PrintBattleBgName(data->battleEnvironment);
     LoadBattleBg(data->battleEnvironment);
 }
 
@@ -1088,7 +1085,7 @@ static void UpdateMonAnimNames(u8 taskId)
     AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, textNum, 0, 12, 0, NULL);
     AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 18, 12, 0, NULL);
 
-    PrintBattleBgName(taskId);
+    PrintBattleBgName(data->battleEnvironment);
 }
 
 static void UpdateYPosOffsetText(struct PokemonSpriteVisualizer *data)
