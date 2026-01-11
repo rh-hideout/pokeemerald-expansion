@@ -770,12 +770,16 @@ static bool32 HandleEndTurnDisable(u32 battler)
             if (gBattleMons[battler].volatiles.disabledMove == gBattleMons[battler].moves[moveIndex])
                 break;
         }
+        if (!(GetConfig(CONFIG_DISABLE_TURNS) <= GEN_2
+         && gBattleMons[battler].volatiles.unableToUseMove
+         && (gBattleMons[battler].volatiles.disabledMove != gChosenMoveByBattler[battler]))) // Timer increments still if fast disable blocked move
+            gBattleMons[battler].volatiles.disableTimer--;
         if (moveIndex == MAX_MON_MOVES)  // Pokémon does not have the disabled move anymore
         {
             gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleMons[battler].volatiles.disableTimer = 0;
         }
-        else if (--gBattleMons[battler].volatiles.disableTimer == 0)  // disable ends
+        else if (gBattleMons[battler].volatiles.disableTimer == 0)  // disable ends
         {
             gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleScripting.battler = battler;
