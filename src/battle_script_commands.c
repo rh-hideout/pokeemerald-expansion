@@ -9057,11 +9057,11 @@ static void Cmd_disablelastusedattack(void)
     CMD_ARGS(const u8 *failInstr);
 
     s32 i;
-    u16 moveToDisable = MOVE_NONE;
+    enum Move moveToDisable = MOVE_NONE;
 
     if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_1)
     {
-        u16 eligibleMoves[MAX_MON_MOVES] = {0};
+        enum Move eligibleMoves[MAX_MON_MOVES] = {0};
         s32 eligibleMovesCount = 0;
 
         for (i = 0; i < MAX_MON_MOVES; i++)
@@ -9096,7 +9096,7 @@ static void Cmd_disablelastusedattack(void)
 
         if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_1)
         {
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (RandomUniform(RNG_DISABLE_TURNS, 0, 7)); // 0-7 turns;
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 0, 7);
 
             // If timer set to zero turns, need to release disabledMove also
             if (gBattleMons[gBattlerTarget].volatiles.disableTimer == 0)
@@ -9104,15 +9104,15 @@ static void Cmd_disablelastusedattack(void)
         }
         else if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_2)
         {
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (RandomUniform(RNG_DISABLE_TURNS, 1, 7)); // 1-7 turns
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 1, 7);
         }
         else if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_3)
         {
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (RandomUniform(RNG_DISABLE_TURNS, 2, 5)); // 2-5 turns
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 2, 5);
         }
         else if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_4)
         {
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (RandomUniform(RNG_DISABLE_TURNS, B_DISABLE_TIMER, 7)); // 4-7 turns
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, B_DISABLE_TIMER, 7);
         }
         else // GEN_5+
         {

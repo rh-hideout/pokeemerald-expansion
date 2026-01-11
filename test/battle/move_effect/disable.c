@@ -359,7 +359,8 @@ SINGLE_BATTLE_TEST("Disable lasts 4 turns (Gen 5+)")
 
 SINGLE_BATTLE_TEST("Disable's timer only counts down when trying to use a move (Gen 1-2)")
 {
-    u32 config = GEN_LATEST, move = MOVE_NONE;
+    u32 config = GEN_LATEST;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { config = GEN_1; move = MOVE_SCRATCH;      }
     PARAMETRIZE { config = GEN_1; move = MOVE_ROCK_SLIDE;   }
@@ -410,7 +411,7 @@ SINGLE_BATTLE_TEST("Disable's timer only counts down when trying to use a move (
 
 SINGLE_BATTLE_TEST("Disable's timer counts down regardless of the action (Gen 3+)")
 {
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_SCRATCH;      }
     PARAMETRIZE { move = MOVE_ROCK_SLIDE;   }
