@@ -665,13 +665,14 @@ static void SetArrowInvisibility(struct PokemonSpriteVisualizer *data)
         gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = FALSE;
         gSprites[data->optionArrows.arrowSpriteId[0]].invisible = TRUE;
         gSprites[data->yPosModifyArrows.arrowSpriteId[0]].invisible = TRUE;
+        gSprites[data->moveBackgroundArrows.arrowSpriteId[0]].invisible = TRUE;
         break;
     case SUBMENU_ANIMS_BG:
-    case SUBMENU_MOVE_BACKGROUNDS:
         gSprites[data->modifyArrows.arrowSpriteId[0]].invisible = TRUE;
         gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = TRUE;
         gSprites[data->optionArrows.arrowSpriteId[0]].invisible = FALSE;
         gSprites[data->yPosModifyArrows.arrowSpriteId[0]].invisible = TRUE;
+        gSprites[data->moveBackgroundArrows.arrowSpriteId[0]].invisible = TRUE;
         break;
     case SUBMENU_SPRITE_COORDS:
     case SUBMENU_SHADOW_COORDS:
@@ -679,6 +680,14 @@ static void SetArrowInvisibility(struct PokemonSpriteVisualizer *data)
         gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = TRUE;
         gSprites[data->optionArrows.arrowSpriteId[0]].invisible = TRUE;
         gSprites[data->yPosModifyArrows.arrowSpriteId[0]].invisible = FALSE;
+        gSprites[data->moveBackgroundArrows.arrowSpriteId[0]].invisible = TRUE;
+        break;
+    case SUBMENU_MOVE_BACKGROUNDS:
+        gSprites[data->modifyArrows.arrowSpriteId[0]].invisible = TRUE;
+        gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = TRUE;
+        gSprites[data->optionArrows.arrowSpriteId[0]].invisible = TRUE;
+        gSprites[data->yPosModifyArrows.arrowSpriteId[0]].invisible = TRUE;
+        gSprites[data->moveBackgroundArrows.arrowSpriteId[0]].invisible = FALSE;
         break;
     }
 }
@@ -699,28 +708,6 @@ static void SetUpModifyArrows(struct PokemonSpriteVisualizer *data)
 
     data->modifyArrows.currentDigit = 0;
     ValueToCharDigits(data->modifyArrows.charDigits, data->modifyArrows.currValue, data->modifyArrows.maxDigits);
-}
-
-static void SetUpOptionArrows(struct PokemonSpriteVisualizer *data)
-{
-    LoadSpritePalette(&gSpritePalette_Arrow);
-    data->optionArrows.arrowSpriteId[0] = CreateSprite(&gSpriteTemplate_Arrow, OPTIONS_ARROW_1_X, OPTIONS_ARROW_Y, 0);
-    gSprites[data->optionArrows.arrowSpriteId[0]].animNum = 2;
-
-    data->optionArrows.currentDigit = 0;
-
-    gSprites[data->optionArrows.arrowSpriteId[0]].invisible = TRUE;
-}
-
-static void SetUpYPosModifyArrows(struct PokemonSpriteVisualizer *data)
-{
-    LoadSpritePalette(&gSpritePalette_Arrow);
-    data->yPosModifyArrows.arrowSpriteId[0] = CreateSprite(&gSpriteTemplate_Arrow, OPTIONS_ARROW_1_X, OPTIONS_ARROW_Y, 0);
-    gSprites[data->yPosModifyArrows.arrowSpriteId[0]].animNum = 2;
-
-    data->yPosModifyArrows.currentDigit = 0;
-
-    gSprites[data->yPosModifyArrows.arrowSpriteId[0]].invisible = TRUE;
 }
 
 static bool32 TryMoveDigit(struct PokemonSpriteVisualizerModifyArrows *modArrows, bool32 moveUp)
@@ -1328,12 +1315,6 @@ void CB2_Pokemon_Sprite_Visualizer(void)
             SetUpModifyArrows(data);
             PrintDigitChars(data);
 
-            //Option Arrow
-            SetUpOptionArrows(data);
-
-            //Modify Y Pos Arrow
-            SetUpYPosModifyArrows(data);
-
             //Anim names
             data->animIdBack = GetSpeciesBackAnimSet(species) + 1;
             data->animIdFront = gSpeciesInfo[species].frontAnimId;
@@ -1648,16 +1629,7 @@ static void UpdateShadowSizeValue(u8 taskId, bool8 increment)
 
 static void UpdateSubmenuFourOptionValue(u8 taskId, bool8 increment)
 {
-    struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
-
-    switch (data->submenuYpos[1])
-    {
-    case 0:
-        UpdateMoveBackground(taskId, increment);
-        break;
-    default:
-        break;
-    }
+    UpdateMoveBackground(taskId, increment);
 }
 
 #define READ_PTR_FROM_TASK(taskId, dataId)              \
@@ -1703,11 +1675,6 @@ static void OpenSubmenu(u32 submenu, u8 taskId)
         UpdateShadowSettingsText(data);
         break;
     case SUBMENU_MOVE_BACKGROUNDS:
-        if (data->submenuYpos[1] > 0)
-            data->submenuYpos[1] = 0;
-
-        data->optionArrows.currentDigit = data->submenuYpos[1];
-        gSprites[data->optionArrows.arrowSpriteId[0]].y = OPTIONS_ARROW_Y + data->optionArrows.currentDigit * 12;
         data->moveBackground = BG_DARK;
         PrintMoveBackgroundName(data->moveBackground);
         LoadMoveBackground(data->moveBackground);
@@ -2082,6 +2049,11 @@ static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
     LoadSpritePalette(&gSpritePalette_Arrow);
     data->yPosModifyArrows.arrowSpriteId[0] = CreateSprite(&gSpriteTemplate_Arrow, OPTIONS_ARROW_1_X, OPTIONS_ARROW_Y + data->yPosModifyArrows.currentDigit * 12, 0);
     gSprites[data->yPosModifyArrows.arrowSpriteId[0]].animNum = 2;
+
+    //Move Background Arrow
+    LoadSpritePalette(&gSpritePalette_Arrow);
+    data->moveBackgroundArrows.arrowSpriteId[0] = CreateSprite(&gSpriteTemplate_Arrow, OPTIONS_ARROW_1_X, OPTIONS_ARROW_Y, 0);
+    gSprites[data->moveBackgroundArrows.arrowSpriteId[0]].animNum = 2;
 
     //Arrow invisibility
     SetArrowInvisibility(data);
