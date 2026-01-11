@@ -1028,13 +1028,8 @@ static void LoadMoveBackground(u8 moveBackground)
 
 static void PrintMoveBackgroundName(u8 moveBackground)
 {
-    u8 fontId = 0;
-    u8 text[MOVE_BACKGROUND_NAME_LENGTH];
-
     FillWindowPixelBuffer(WIN_BOTTOM_RIGHT, PIXEL_FILL(0));
-
-    StringCopy(text, gMoveBackgroundNames[moveBackground]);
-    AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 0, 0, 0, NULL);
+    AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, FONT_SMALL, gMoveBackgroundNames[moveBackground], 0, 0, 0, NULL);
 }
 
 static void UpdateMoveBackground(u8 taskId, bool8 increment)
