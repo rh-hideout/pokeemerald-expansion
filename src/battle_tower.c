@@ -1373,8 +1373,8 @@ static void LoadMultiPartnerCandidatesData(void)
 
 static void GetPotentialPartnerMoveAndSpecies(u16 trainerId, u16 monId)
 {
-    u16 move = MOVE_NONE;
-    u16 species = 0;
+    enum Move move = MOVE_NONE;
+    u16 species = SPECIES_NONE;
     SetFacilityPtrsGetLevel();
 
     if (trainerId != TRAINER_EREADER)

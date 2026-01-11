@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when not switching")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WISH); }
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WISH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Wish heals the user at the end of the next turn")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WISH); MOVE(opponent, MOVE_POUND); }
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WISH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);

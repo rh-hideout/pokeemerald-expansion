@@ -53,8 +53,9 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
 
 AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they both require the same number of hits to ko")
 {
-    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 hp, expectedMove, turns, expectedMove2;
+    enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
+    enum Move expectedMove, expectedMove2;
+    u16 hp, turns;
     enum Ability abilityAtk;
 
     abilityAtk = ABILITY_NONE;
@@ -138,8 +139,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they b
 AI_SINGLE_BATTLE_TEST("AI prefers moves which deal more damage instead of moves which are super-effective but deal less damage")
 {
     u8 turns = 0;
-    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 expectedMove;
+    enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
+    enum Move expectedMove;
     enum Ability abilityAtk, abilityDef;
 
     abilityAtk = ABILITY_NONE;
@@ -198,8 +199,9 @@ AI_SINGLE_BATTLE_TEST("AI prefers Earthquake over Drill Run if both require the 
 
 AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over a one with a downside effect if both require the same number of hits to ko")
 {
-    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 hp, expectedMove, turns;
+    enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
+    enum Move expectedMove;
+    u16 hp, turns;
 
     // Both moves require the same number of turns but Flamethrower will be chosen over Overheat (powerful effect)
     PARAMETRIZE { move1 = MOVE_OVERHEAT; move2 = MOVE_FLAMETHROWER; hp = 300; expectedMove = MOVE_FLAMETHROWER; turns = 2; }
@@ -236,7 +238,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with the best possible score, chosen ran
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(5); };
+        PLAYER(SPECIES_WOBBUFFET) { HP(5); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_SLUDGE_BOMB, MOVE_TAKE_DOWN); }
     } WHEN {
@@ -253,7 +255,7 @@ AI_SINGLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two
         ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_HORN_ATTACK) == DAMAGE_CATEGORY_PHYSICAL);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(277); };
+        PLAYER(SPECIES_WOBBUFFET) { HP(277); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KANGASKHAN) { Moves(MOVE_STRENGTH, MOVE_HORN_ATTACK, MOVE_SWORDS_DANCE); }
     } WHEN {
@@ -264,8 +266,8 @@ AI_SINGLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two
 
 AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking into account accuracy and move effect")
 {
-    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 expectedMove, expectedMove2 = MOVE_NONE;
+    enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
+    enum Move expectedMove, expectedMove2 = MOVE_NONE;
     enum Ability abilityAtk = ABILITY_NONE;
     u32 holdItemAtk = ITEM_NONE;
 
@@ -292,7 +294,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
         OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Item(holdItemAtk); }
     } WHEN {
         TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
-                else {EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1);}
+                else { EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1); }
              }
     }
     SCENE {
@@ -476,7 +478,7 @@ AI_SINGLE_BATTLE_TEST("AI will only choose Surf 1/3 times if the opposing mon ha
     GIVEN {
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); };
+        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
         OPPONENT(SPECIES_LANTURN) { Moves(MOVE_THUNDERBOLT, MOVE_ICE_BEAM, MOVE_SURF); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
@@ -493,7 +495,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Thunderbolt then Surf 2/3 times if the opp
     GIVEN {
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); };
+        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
         OPPONENT(SPECIES_LANTURN) { Moves(MOVE_THUNDERBOLT, MOVE_ICE_BEAM, MOVE_SURF); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_THUNDERBOLT); }
@@ -508,8 +510,8 @@ AI_SINGLE_BATTLE_TEST("AI will choose Scratch over Power-up Punch with Contrary"
 {
     enum Ability ability;
 
-    PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
-    PARAMETRIZE {ability = ABILITY_CONTRARY; }
+    PARAMETRIZE { ability = ABILITY_SUCTION_CUPS; }
+    PARAMETRIZE { ability = ABILITY_CONTRARY; }
     GIVEN {
         ASSUME(GetMovePower(MOVE_SCRATCH) == 40);
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
@@ -534,8 +536,8 @@ AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
 {
     enum Ability ability;
 
-    PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
-    PARAMETRIZE {ability = ABILITY_CONTRARY; }
+    PARAMETRIZE { ability = ABILITY_SUCTION_CUPS; }
+    PARAMETRIZE { ability = ABILITY_CONTRARY; }
     GIVEN {
         ASSUME(GetMovePower(MOVE_SUPERPOWER) == 120);
         ASSUME(GetMoveType(MOVE_SUPERPOWER) == TYPE_FIGHTING);
@@ -853,7 +855,8 @@ AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
     PARAMETRIZE { ability = ABILITY_DAMP; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
         PLAYER(SPECIES_GOLDUCK) { Ability(ability); Moves(MOVE_SCRATCH); }
         OPPONENT(SPECIES_KABUTOPS) { Ability(ABILITY_SWIFT_SWIM); Moves(MOVE_RAIN_DANCE, MOVE_POUND); }
@@ -930,10 +933,10 @@ AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
     GIVEN {
         WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
-        PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); };
+        PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); }
         OPPONENT(SPECIES_GLOOM) { Moves(MOVE_MEGA_DRAIN, MOVE_STUN_SPORE, MOVE_LEECH_SEED, MOVE_SYNTHESIS); }
     } WHEN {
-        TURN { MOVE(player, MOVE_ABSORB); EXPECT_MOVE(opponent, MOVE_MEGA_DRAIN);}
+        TURN { MOVE(player, MOVE_ABSORB); EXPECT_MOVE(opponent, MOVE_MEGA_DRAIN); }
     }
 }
 
@@ -973,7 +976,7 @@ AI_SINGLE_BATTLE_TEST("AI will use Recovery move if it outheals your damage and 
 
 AI_SINGLE_BATTLE_TEST("AI will use recovery move if it outheals your damage and is outsped")
 {
-    u32 aiMove = MOVE_NONE;
+    enum Move aiMove = MOVE_NONE;
     PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
     PARAMETRIZE{ aiMove = MOVE_RECOVER; }
     PARAMETRIZE{ aiMove = MOVE_STRENGTH_SAP; }

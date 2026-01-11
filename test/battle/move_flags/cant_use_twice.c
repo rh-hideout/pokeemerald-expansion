@@ -9,7 +9,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Struggle will be used if slow Encore is used on moves with the cantUseTwice flag")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_GIGATON_HAMMER; }
     PARAMETRIZE { move = MOVE_BLOOD_MOON; }
     GIVEN {
@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Struggle will be used if slow Encore is used on moves with t
 
 SINGLE_BATTLE_TEST("Moves with the cantUseTwice flag strike again if fast encore is used")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_GIGATON_HAMMER; }
     PARAMETRIZE { move = MOVE_BLOOD_MOON; }
     GIVEN {
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Moves with the cantUseTwice flag strike again if fast encore
 
 SINGLE_BATTLE_TEST("Moves with the cantUseTwice flag alternate with Struggle if it is the only usable move left")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_GIGATON_HAMMER; }
     PARAMETRIZE { move = MOVE_BLOOD_MOON; }
     GIVEN {

@@ -773,6 +773,19 @@ enum MoveWeatherChangeStringID
     B_MSG_STARTED_FOG,
 };
 
+// gAbilityWeatherChangeStringId
+enum AbilityWeatherChangeStringID
+{
+    B_MSG_STARTED_DRIZZLE,
+    B_MSG_STARTED_SAND_STREAM,
+    B_MSG_STARTED_DROUGHT,
+    B_MSG_STARTED_HAIL_WARNING,
+    B_MSG_STARTED_SNOW_WARNING,
+    B_MSG_STARTED_DESOLATE_LAND,
+    B_MSG_STARTED_PRIMORDIAL_SEA,
+    B_MSG_STARTED_STRONG_WINDS,
+};
+
 // gWeatherEndsStringIds
 enum WeatherEndStringID
 {
@@ -822,7 +835,6 @@ enum ProtectLikeUsedStringID
 {
     B_MSG_PROTECTED_ITSELF,
     B_MSG_BRACED_ITSELF,
-    B_MSG_PROTECT_FAILED,
     B_MSG_PROTECTED_TEAM,
 };
 

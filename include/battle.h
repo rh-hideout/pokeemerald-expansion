@@ -187,7 +187,7 @@ struct FieldTimer
 struct AI_SavedBattleMon
 {
     enum Ability ability;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u16 heldItem;
     u16 species:15;
     u16 saved:1;
@@ -201,7 +201,7 @@ struct AiPartyMon
     u16 heldEffect;
     enum Ability ability;
     u16 level;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u32 status;
     u8 switchInCount; // Counts how many times this Pokemon has been sent out or switched into in a battle.
     u8 gender:2;
@@ -681,7 +681,7 @@ struct BattleStruct
     u8 beatUpSlot:3;
     u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
-    u8 spriteIgnore0Hp:1;
+    u8 padding3:1;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
@@ -747,17 +747,17 @@ STATIC_ASSERT(sizeof(((struct BattleStruct *)0)->palaceFlags) * 8 >= MAX_BATTLER
 #define F_DYNAMIC_TYPE_IGNORE_PHYSICALITY  (1 << 6) // If set, the dynamic type's physicality won't be used for certain move effects.
 #define F_DYNAMIC_TYPE_SET                 (1 << 7) // Set for all dynamic types to distinguish a dynamic type of Normal (0) from no dynamic type.
 
-static inline bool32 IsBattleMovePhysical(u32 move)
+static inline bool32 IsBattleMovePhysical(enum Move move)
 {
     return GetBattleMoveCategory(move) == DAMAGE_CATEGORY_PHYSICAL;
 }
 
-static inline bool32 IsBattleMoveSpecial(u32 move)
+static inline bool32 IsBattleMoveSpecial(enum Move move)
 {
     return GetBattleMoveCategory(move) == DAMAGE_CATEGORY_SPECIAL;
 }
 
-static inline bool32 IsBattleMoveStatus(u32 move)
+static inline bool32 IsBattleMoveStatus(enum Move move)
 {
     return GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS;
 }
@@ -1075,9 +1075,9 @@ extern u8 gCategoryIconSpriteId;
 
 static inline bool32 IsBattlerAlive(u32 battler)
 {
-    if (gBattleMons[battler].hp == 0)
+    if (battler >= gBattlersCount)
         return FALSE;
-    else if (battler >= gBattlersCount)
+    else if (gBattleMons[battler].hp == 0)
         return FALSE;
     else if (gAbsentBattlerFlags & (1u << battler))
         return FALSE;
@@ -1095,12 +1095,12 @@ static inline bool32 IsBattlerAtMaxHp(u32 battler)
     return gBattleMons[battler].hp == gBattleMons[battler].maxHP;
 }
 
-static inline u32 GetBattlerPosition(u32 battler)
+static inline enum BattlerPosition GetBattlerPosition(u32 battler)
 {
     return gBattlerPositions[battler];
 }
 
-static inline u32 GetBattlerAtPosition(u32 position)
+static inline u32 GetBattlerAtPosition(enum BattlerPosition position)
 {
     u32 battler;
     for (battler = 0; battler < gBattlersCount; battler++)

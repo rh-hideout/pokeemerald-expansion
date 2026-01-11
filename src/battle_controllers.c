@@ -20,20 +20,21 @@
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
+#include "pokemon_animation.h"
 #include "recorded_battle.h"
 #include "string_util.h"
 #include "sound.h"
 #include "task.h"
 #include "test_runner.h"
-#include "util.h"
 #include "text.h"
+#include "util.h"
+#include "wild_encounter.h"
 #include "constants/abilities.h"
 #include "constants/item_effects.h"
 #include "constants/songs.h"
 #include "test/battle.h"
 #include "test/test.h"
 #include "test/test_runner_battle.h"
-#include "pokemon_animation.h"
 
 static EWRAM_DATA u8 sLinkSendTaskId = 0;
 static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
@@ -140,7 +141,7 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         gBattlerControllerFuncs[i] = BattleControllerDummy;
-        gBattlerPositions[i] = 0xFF;
+        gBattlerPositions[i] = B_POSITION_ABSENT;
         gActionSelectionCursor[i] = 0;
         gMoveSelectionCursor[i] = 0;
     }
@@ -152,12 +153,7 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
     BattleAI_SetupFlags();
 
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
-    {
-        ZeroEnemyPartyMons();
-        CreateMon(&gEnemyParty[0], SPECIES_ZIGZAGOON, 2, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0);
-        i = 0;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, &i);
-    }
+        CreateWildMon(SPECIES_ZIGZAGOON, 2);
 }
 
 void InitBattleControllers(void)
@@ -344,7 +340,7 @@ static void InitBtlControllersInternal(void)
 
         for (i = 0; i < MAX_LINK_PLAYERS; i++)
         {
-            u32 linkPositionLeft, linkPositionRight;
+            enum BattlerPosition linkPositionLeft, linkPositionRight;
             BattleControllerFunc linkBtlControllerFunc;
 
             if (i == multiplayerId)
@@ -953,7 +949,7 @@ static void UNUSED BtlController_EmitPause(u32 battler, u32 bufferId, u8 toWait,
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, toWait * 3 + 2);
 }
 
-void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, u16 move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, u8 multihit)
+void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, enum Move move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, u8 multihit)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_MOVEANIMATION;
     gBattleResources->transferBuffer[1] = move;
@@ -1486,10 +1482,10 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         #if TESTING
         if (gTestRunnerEnabled)
         {
-            u32 side = GetBattlerSide(battler);
+            u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
             u32 partyIndex = gBattlerPartyIndexes[battler];
-            if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+            if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
+                gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
         }
         #endif
         break;
@@ -2096,7 +2092,7 @@ static void Controller_FaintOpponentMon(u32 battler)
 
 static void Controller_DoMoveAnimation(u32 battler)
 {
-    u16 move = gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8);
+    enum Move move = gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8);
 
     switch (gBattleSpritesDataPtr->healthBoxesData[battler].animationState)
     {
@@ -2199,7 +2195,7 @@ static void Controller_WaitForTrainerPic(u32 battler)
 
 void Controller_WaitForString(u32 battler)
 {
-    if (!IsTextPrinterActive(B_WIN_MSG))
+    if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         BtlController_Complete(battler);
 }
 
@@ -2396,7 +2392,7 @@ void BtlController_HandleReturnMonToBall(u32 battler)
 
 #define sSpeedX data[0]
 
-void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 isFrontPic, s16 xPos, s16 yPos, s32 subpriority)
+void BtlController_HandleDrawTrainerPic(u32 battler, enum TrainerPicID trainerPicId, bool32 isFrontPic, s16 xPos, s16 yPos, s32 subpriority)
 {
     if (!IsOnPlayerSide(battler)) // Always the front sprite for the opponent.
     {
@@ -2461,7 +2457,7 @@ void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 is
     gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
 }
 
-void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId)
+void BtlController_HandleTrainerSlide(u32 battler, enum TrainerPicID trainerPicId)
 {
     if (IsOnPlayerSide(battler))
     {

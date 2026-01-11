@@ -55,7 +55,7 @@ STATIC_ASSERT(sizeof(struct BattleTestRunnerState) <= sizeof(sBackupMapData), sB
 static void CB2_BattleTest_NextParameter(void);
 static void CB2_BattleTest_NextTrial(void);
 static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32 byte);
-static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore);
+static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, enum Move moveId, s32 totalScore);
 static void ClearAiLog(u32 battlerId);
 static const char *BattlerIdentifier(s32 battlerId);
 
@@ -1133,7 +1133,7 @@ static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, u32 battl
     return countExpected;
 }
 
-void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target, enum Gimmick gimmick)
+void TestRunner_Battle_CheckChosenMove(u32 battlerId, enum Move moveId, u32 target, enum Gimmick gimmick)
 {
     const char *filename = gTestRunnerState.test->filename;
     u32 id = DATA.trial.aiActionsPlayed[battlerId];
@@ -1295,7 +1295,7 @@ static void CheckIfMaxScoreEqualExpectMove(u32 battlerId, s32 target, struct Exp
     }
 }
 
-static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore)
+static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, enum Move moveId, s32 totalScore)
 {
     s32 i, scoreFromLogs = 0;
 
@@ -1361,7 +1361,7 @@ void TestRunner_Battle_CheckAiMoveScores(u32 battlerId)
         struct ExpectedAiScore *scoreCtx = &DATA.expectedAiScores[battlerId][turn][i];
         if (scoreCtx->set)
         {
-            u32 moveId1 = gBattleMons[battlerId].moves[scoreCtx->moveSlot1];
+            enum Move moveId1 = gBattleMons[battlerId].moves[scoreCtx->moveSlot1];
             s32 target = scoreCtx->target;
             s32 *scores = gAiBattleData->finalScore[battlerId][target];
 
@@ -1376,7 +1376,7 @@ void TestRunner_Battle_CheckAiMoveScores(u32 battlerId)
             }
             else
             {
-                u32 moveId2 = gBattleMons[battlerId].moves[scoreCtx->moveSlot2];
+                enum Move moveId2 = gBattleMons[battlerId].moves[scoreCtx->moveSlot2];
                 PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, scores[scoreCtx->moveSlot1]);
                 PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, moveId2, scores[scoreCtx->moveSlot2]);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scores[scoreCtx->moveSlot2], scoreCtx->cmp))
@@ -1660,6 +1660,65 @@ void TestRunner_Battle_RecordStatus1(u32 battlerId, u32 status1)
     }
 }
 
+static s32 TryCatchChance(s32 i, s32 n, u32 catchChance)
+{
+    struct QueuedCaptureEvent *event;
+    s32 iMax = i + n;
+    for (; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type != QUEUED_CATCH_CHANCE_EVENT)
+            continue;
+
+        event = &DATA.queuedEvents[i].as.capture;
+        *(u32 *)(u32)(event->address) = catchChance;
+        return i;
+    }
+    return -1;
+}
+
+void TestRunner_Battle_RecordCatchChance(u32 catchChance)
+{
+    s32 queuedEvent;
+    s32 match;
+    struct QueuedEvent *event;
+
+    if (DATA.trial.queuedEvent == DATA.queuedEventsCount)
+        return;
+
+    event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+    switch (event->groupType)
+    {
+    case QUEUE_GROUP_NONE:
+    case QUEUE_GROUP_ONE_OF:
+        if (TryCatchChance(DATA.trial.queuedEvent, event->groupSize, catchChance) != -1)
+            DATA.trial.queuedEvent += event->groupSize;
+        break;
+    case QUEUE_GROUP_NONE_OF:
+        queuedEvent = DATA.trial.queuedEvent;
+        do
+        {
+            if ((match = TryCatchChance(DATA.trial.queuedEvent, event->groupSize, catchChance)) != -1)
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched CATCH CHANCE", filename, line);
+            }
+
+            queuedEvent += event->groupSize;
+            if (queuedEvent == DATA.queuedEventsCount)
+                break;
+
+            event = &DATA.queuedEvents[queuedEvent];
+            if (event->groupType == QUEUE_GROUP_NONE_OF)
+                continue;
+
+            if (TryCatchChance(DATA.trial.queuedEvent, event->groupSize, catchChance) != -1)
+                DATA.trial.queuedEvent = queuedEvent + event->groupSize;
+        } while (FALSE);
+        break;
+    }
+}
+
 static const char *const sEventTypeMacros[] =
 {
     [QUEUED_ABILITY_POPUP_EVENT] = "ABILITY_POPUP",
@@ -1669,6 +1728,7 @@ static const char *const sEventTypeMacros[] =
     [QUEUED_EXP_EVENT] = "EXPERIENCE_BAR",
     [QUEUED_MESSAGE_EVENT] = "MESSAGE",
     [QUEUED_STATUS_EVENT] = "STATUS_ICON",
+    [QUEUED_CATCH_CHANCE_EVENT] = "CATCH_CHANCE",
 };
 
 void TestRunner_Battle_AfterLastTurn(void)
@@ -1982,17 +2042,18 @@ void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species)
     DATA.nature = NATURE_HARDY;
     (*partySize)++;
 
-    CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
-    data = MOVE_NONE;
+    CreateMon(DATA.currentMon, species, 100, 0, OTID_STRUCT_PRESET(0));
     for (i = 0; i < MAX_MON_MOVES; i++)
-        SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
-    data = 0;
-    if (B_FRIENDSHIP_BOOST)
     {
-        // This way, we avoid the boost affecting tests unless explicitly stated.
-        SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
-        CalculateMonStats(DATA.currentMon);
+        data = MOVE_NONE;
+        SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
+        data = 0x7F; // Max PP possible
+        SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
     }
+    data = 0;
+    if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
+        SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
+    CalculateMonStats(DATA.currentMon);
 }
 
 void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species)
@@ -2036,7 +2097,8 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
     DATA.isShiny = FALSE;
     (*partySize)++;
 
-    CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
+    CreateMon(DATA.currentMon, species, 100, 0, OTID_STRUCT_PRESET(0));
+
     // Reset move IDs, but force PP to be non-zero. This is a safeguard against test species that only learn 1 move having test moves with 0 PP
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -2046,12 +2108,9 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
     }
     data = 0;
-    if (B_FRIENDSHIP_BOOST)
-    {
-        // This way, we avoid the boost affecting tests unless explicitly stated.
+    if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
         SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
-        CalculateMonStats(DATA.currentMon);
-    }
+    CalculateMonStats(DATA.currentMon);
 }
 
 // (sNaturePersonalities[i] % NUM_NATURES) == i
@@ -2577,7 +2636,7 @@ static struct Pokemon *CurrentMon(s32 battlerId)
     return &party[DATA.currentMonIndexes[battlerId]];
 }
 
-s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 sourceLine)
+s32 MoveGetTarget(s32 battlerId, enum Move moveId, struct MoveContext *ctx, u32 sourceLine)
 {
     s32 target = battlerId;
     if (ctx->explicitTarget)
@@ -2724,7 +2783,8 @@ u32 MoveGetFirstFainted(s32 battlerId)
 void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 {
     s32 battlerId = battler - gBattleMons;
-    u32 moveId, moveSlot;
+    u32 moveId;
+    u32 moveSlot;
     s32 target;
     bool32 requirePartyIndex = FALSE;
 
@@ -2804,7 +2864,8 @@ void ForcedMove(u32 sourceLine, struct BattlePokemon *battler)
 static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext *ctx)
 {
     s32 battlerId = battler - gBattleMons;
-    u32 moveId, moveSlot, id;
+    u32 moveId;
+    u32 moveSlot, id;
     s32 target;
 
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_MOVE outside TURN");
@@ -2872,7 +2933,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
         gTestRunnerState.expectedFailState = EXPECT_FAIL_TURN_OPEN;
 }
 
-s32 GetAiMoveTargetForScoreCompare(u32 battlerId, u32 moveId, struct MoveContext *ctx, u32 sourceLine)
+s32 GetAiMoveTargetForScoreCompare(u32 battlerId, enum Move moveId, struct MoveContext *ctx, u32 sourceLine)
 {
     s32 target;
 
@@ -3370,15 +3431,32 @@ void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEve
     };
 }
 
+void QueueCatchingChance(u32 sourceLine, u32 *captureAddress)
+{
+    INVALID_IF(!STATE->runScene, "CAPTURE outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, ":L%s:%d: CAPTURE exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+    u32 address = (u32)captureAddress;
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_CATCH_CHANCE_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .capture = {
+            .address = address,
+        }},
+    };
+}
+
 void ValidateFinally(u32 sourceLine)
 {
     // Defer this error until after estimating the cost.
     INVALID_IF(STATE->parametersCount == 0, "FINALLY without PARAMETRIZE");
 }
 
-u32 TestRunner_Battle_GetForcedAbility(u32 side, u32 partyIndex)
+u32 TestRunner_Battle_GetForcedAbility(u32 array, u32 partyIndex)
 {
-    return DATA.forcedAbilities[side][partyIndex];
+    return DATA.forcedAbilities[array][partyIndex];
 }
 
 u32 TestRunner_Battle_GetForcedEnvironment(void)

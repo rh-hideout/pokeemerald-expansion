@@ -144,7 +144,7 @@ DOUBLE_BATTLE_TEST("Ally Switch has no effect on partner's chosen move")
 
 DOUBLE_BATTLE_TEST("Ally Switch - move fails if the target was ally which changed position")
 {
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_COACHING; }
     PARAMETRIZE { move = MOVE_AROMATIC_MIST; }
@@ -196,7 +196,7 @@ DOUBLE_BATTLE_TEST("Ally Switch doesn't increase the Protect-like moves counter 
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
     } THEN {
-        EXPECT(gBattleMons[B_POSITION_PLAYER_RIGHT].volatiles.protectUses == 0);
+        EXPECT(gBattleMons[B_POSITION_PLAYER_RIGHT].volatiles.consecutiveMoveUses == 0);
     }
 }
 
@@ -211,7 +211,7 @@ DOUBLE_BATTLE_TEST("Ally Switch increases the Protect-like moves counter (Gen9+)
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
     } THEN {
-        EXPECT(gBattleMons[B_POSITION_PLAYER_RIGHT].volatiles.protectUses == 1);
+        EXPECT(gBattleMons[B_POSITION_PLAYER_RIGHT].volatiles.consecutiveMoveUses == 1);
     }
 }
 
@@ -358,7 +358,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_LEECH_SEED, target: playerLeft); }
         TURN { MOVE(opponentRight, MOVE_ALLY_SWITCH); }
-        TURN { ; }
+        TURN {}
     } SCENE {
         // turn 1
         MESSAGE("The opposing Bulbasaur used Leech Seed!");
@@ -389,7 +389,7 @@ DOUBLE_BATTLE_TEST("Ally Switch updates attract battler")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
         TURN { MOVE(opponentRight, MOVE_ALLY_SWITCH); }
-        TURN { ; }
+        TURN {}
     } SCENE {
         // turn 1
         MESSAGE("Wobbuffet used Tackle!");

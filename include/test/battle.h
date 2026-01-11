@@ -483,6 +483,12 @@
  *     ...
  *     STATUS_ICON(player, status1);
  *
+ * CATCHING_CHANCE(address)
+ * Causes the test to fail if no catching attempt is made
+ * and then writes the computed catch chance in the `address`pointer
+ *     u32 recordedCatchChance;
+ *     CATCHING_CHANCE(&recordedCatchChance);
+ *
  * NOT
  * Causes the test to fail if the SCENE command succeeds before the
  * following command succeeds.
@@ -610,6 +616,7 @@ enum
     QUEUED_EXP_EVENT,
     QUEUED_MESSAGE_EVENT,
     QUEUED_STATUS_EVENT,
+    QUEUED_CATCH_CHANCE_EVENT,
 };
 
 struct QueuedAbilityEvent
@@ -662,6 +669,11 @@ struct QueuedStatusEvent
     u32 mask:29;
 };
 
+struct QueuedCaptureEvent
+{
+    u32 address;
+};
+
 struct QueuedEvent
 {
     u8 type;
@@ -677,6 +689,7 @@ struct QueuedEvent
         struct QueuedExpEvent exp;
         struct QueuedMessageEvent message;
         struct QueuedStatusEvent status;
+        struct QueuedCaptureEvent capture;
     } as;
 };
 
@@ -772,7 +785,7 @@ struct BattleTestData
     u8 gender;
     u8 nature;
     bool8 isShiny;
-    enum Ability forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
+    enum Ability forcedAbilities[MAX_BATTLERS_COUNT][PARTY_SIZE];
     u8 chosenGimmick[MAX_BATTLERS_COUNT][PARTY_SIZE];
     u8 forcedEnvironment;
 
@@ -986,7 +999,7 @@ void Randomly(u32 sourceLine, u32 passes, u32 trials, struct RandomlyContext);
 /* Given */
 
 struct moveWithPP {
-    u16 moveId;
+    enum Move moveId;
     u8 pp;
 };
 
@@ -1102,7 +1115,7 @@ static inline bool8 IsMultibattleTest(void)
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
 struct FourMoves
 {
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
 };
 
 struct TestAIScoreStruct
@@ -1223,6 +1236,7 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
 // Static const is needed to make the modern compiler put the pattern variable in the .rodata section, instead of putting it on stack(which can break the game).
 #define MESSAGE(pattern) do {static const u8 msg[] = _(pattern); QueueMessage(__LINE__, msg);} while (0)
 #define STATUS_ICON(battler, status) QueueStatus(__LINE__, battler, (struct StatusEventContext) { status })
+#define CATCHING_CHANCE(address) QueueCatchingChance(__LINE__, address)
 #define FREEZE_OR_FROSTBURN_STATUS(battler, isFrostbite) \
     (B_USE_FROSTBITE ? STATUS_ICON(battler, frostbite: isFrostbite) : STATUS_ICON(battler, freeze: isFrostbite))
 
@@ -1312,6 +1326,7 @@ void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEve
 void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventContext);
 void QueueMessage(u32 sourceLine, const u8 *pattern);
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext);
+void QueueCatchingChance(u32 sourceLine, u32 *captureAdress);
 
 /* Then */
 
