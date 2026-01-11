@@ -8149,7 +8149,7 @@ const struct Item gItemsInfo[] =
         .name = ITEM_NAME("Lax Incense"),
         .price = (I_PRICE >= GEN_7) ? 5000 : 9600,
         .holdEffect = HOLD_EFFECT_EVASION_UP,
-        .holdEffectParam = 10,
+        .holdEffectParam = I_LAX_INCENSE_BOOST >= GEN_4 ? 10 : 5,
         .description = COMPOUND_STRING(
             "A hold item that\n"
             "slightly lowers the\n"
