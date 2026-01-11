@@ -22035,7 +22035,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_MaxHailstorm,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) ? MOVE_EFFECT_SNOW : MOVE_EFFECT_HAIL,
+            .moveEffect = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) ? MOVE_EFFECT_SNOWSCAPE : MOVE_EFFECT_HAIL,
         }),
     },
 
