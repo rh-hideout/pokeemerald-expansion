@@ -1020,15 +1020,14 @@ static void LoadMoveBackground(u8 moveBackground)
     CpuFill32(0xF001F001, (void *)(BG_SCREEN_ADDR(BACKGROUND_1_MAP_BASE) + sizeof(u16) * 32 * TEXT_AREA_Y), sizeof(u16) * 32 * TEXT_AREA_HEIGHT);
 }
 
-static void PrintMoveBackgroundName(u8 taskId)
+static void PrintMoveBackgroundName(u8 moveBackground)
 {
-    struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
     u8 fontId = 0;
     u8 text[MOVE_BACKGROUND_NAME_LENGTH];
 
     FillWindowPixelBuffer(WIN_BOTTOM_RIGHT, PIXEL_FILL(0));
 
-    StringCopy(text, gMoveBackgroundNames[data->moveBackground]);
+    StringCopy(text, gMoveBackgroundNames[moveBackground]);
     AddTextPrinterParameterized(WIN_BOTTOM_RIGHT, fontId, text, 0, 0, 0, NULL);
 }
 
@@ -1049,7 +1048,7 @@ static void UpdateMoveBackground(u8 taskId, bool8 increment)
             data->moveBackground = BG_SWAMP;
     }
 
-    PrintMoveBackgroundName(taskId);
+    PrintMoveBackgroundName(data->moveBackground);
     LoadMoveBackground(data->moveBackground);
 }
 
@@ -1683,6 +1682,38 @@ static void Task_AnimateAfterDelay(u8 taskId)
     }
 }
 
+static void OpenSubmenu(u32 submenu, u8 taskId)
+{
+    struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
+    data->currentSubmenu = submenu;
+    PrintInstructionsOnWindow(data);
+    SetArrowInvisibility(data);
+
+    switch(submenu)
+    {
+    case 0:
+    case 1:
+        break;
+    case 2:
+        SetConstSpriteValues(data);
+        UpdateYPosOffsetText(data);
+        break;
+    case 3:
+        UpdateShadowSettingsText(data);
+        break;
+    case 4:
+        if (data->submenuYpos[1] > 0)
+            data->submenuYpos[1] = 0;
+
+        data->optionArrows.currentDigit = data->submenuYpos[1];
+        gSprites[data->optionArrows.arrowSpriteId[0]].y = OPTIONS_ARROW_Y + data->optionArrows.currentDigit * 12;
+        data->moveBackground = BG_DARK;
+        PrintMoveBackgroundName(data->moveBackground);
+        LoadMoveBackground(data->moveBackground);
+        break;
+    }
+}
+
 static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
 {
     struct PokemonSpriteVisualizer *data = GetStructPtr(taskId);
@@ -1740,9 +1771,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
     {
         if (JOY_NEW(A_BUTTON))
         {
-            data->currentSubmenu = 1;
-            SetArrowInvisibility(data);
-            PrintInstructionsOnWindow(data);
+            OpenSubmenu(1, taskId);
         }
         else if (JOY_NEW(B_BUTTON))
         {
@@ -1802,32 +1831,25 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
                 gSprites[data->modifyArrows.arrowSpriteId[1]].x2 += 6;
             }
         }
-
     }
     else if (data->currentSubmenu == 1) //Submenu 1
     {
         if (JOY_NEW(A_BUTTON))
         {
-            data->currentSubmenu = 2;
-            PrintInstructionsOnWindow(data);
-            SetArrowInvisibility(data);
-            SetConstSpriteValues(data);
-            UpdateYPosOffsetText(data);
+            OpenSubmenu(2, taskId);
 
             if (data->followerspriteId != 0)
                 gSprites[data->followerspriteId].invisible = TRUE;
         }
         else if (JOY_NEW(B_BUTTON))
         {
-            data->currentSubmenu = 0;
+            OpenSubmenu(0, taskId);
             if (data->submenuYpos[1] == 3)
             {
                 data->submenuYpos[1] = 2;
                 data->optionArrows.currentDigit = data->submenuYpos[1];
                 gSprites[data->optionArrows.arrowSpriteId[0]].y = OPTIONS_ARROW_Y + data->optionArrows.currentDigit * 12;
             }
-            SetArrowInvisibility(data);
-            PrintInstructionsOnWindow(data);
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
@@ -1869,33 +1891,13 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
         if (JOY_NEW(A_BUTTON))
         {
             if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
-            {
-                data->currentSubmenu = 3;
-                PrintInstructionsOnWindow(data);
-                SetArrowInvisibility(data);
-                UpdateShadowSettingsText(data);
-            }
+                OpenSubmenu(3, taskId);
             else
-            {
-                if (data->submenuYpos[1] > 0)
-                    data->submenuYpos[1] = 0;
-
-                data->optionArrows.currentDigit = data->submenuYpos[1];
-                gSprites[data->optionArrows.arrowSpriteId[0]].y = OPTIONS_ARROW_Y + data->optionArrows.currentDigit * 12;
-                data->currentSubmenu = 4;
-                PrintInstructionsOnWindow(data);
-                SetArrowInvisibility(data);
-                data->moveBackground = BG_DARK;
-                PrintMoveBackgroundName(taskId);
-                LoadMoveBackground(data->moveBackground);
-            }
+                OpenSubmenu(4, taskId);
         }
         else if (JOY_NEW(B_BUTTON))
         {
-            data->currentSubmenu = 1;
-
-            SetArrowInvisibility(data);
-            PrintInstructionsOnWindow(data);
+            OpenSubmenu(1, taskId);
             UpdateMonAnimNames(taskId);
 
             if (data->followerspriteId != 0)
@@ -1933,25 +1935,11 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
     {
         if (JOY_NEW(A_BUTTON))
         {
-            if (data->submenuYpos[1] > 0)
-                data->submenuYpos[1] = 0;
-
-            data->optionArrows.currentDigit = data->submenuYpos[1];
-            gSprites[data->optionArrows.arrowSpriteId[0]].y = OPTIONS_ARROW_Y + data->optionArrows.currentDigit * 12;
-            data->currentSubmenu = 4;
-            PrintInstructionsOnWindow(data);
-            SetArrowInvisibility(data);
-            data->moveBackground = BG_DARK;
-            PrintMoveBackgroundName(taskId);
-            LoadMoveBackground(data->moveBackground);
+            OpenSubmenu(4, taskId);
         }
         else if (JOY_NEW(B_BUTTON))
         {
-            data->currentSubmenu = 2;
-            PrintInstructionsOnWindow(data);
-            SetArrowInvisibility(data);
-            SetConstSpriteValues(data);
-            UpdateYPosOffsetText(data);
+            OpenSubmenu(2, taskId);
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
@@ -1992,20 +1980,9 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
         if (JOY_NEW(B_BUTTON))
         {
             if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
-            {
-                data->currentSubmenu = 3;
-                PrintInstructionsOnWindow(data);
-                SetArrowInvisibility(data);
-                UpdateShadowSettingsText(data);
-            }
+                OpenSubmenu(3, taskId);
             else
-            {
-                data->currentSubmenu = 2;
-                PrintInstructionsOnWindow(data);
-                SetArrowInvisibility(data);
-                SetConstSpriteValues(data);
-                UpdateYPosOffsetText(data);
-            }
+                OpenSubmenu(2, taskId);
             LoadBattleBg(data->battleEnvironment);
         }
         else if (JOY_NEW(DPAD_LEFT))
