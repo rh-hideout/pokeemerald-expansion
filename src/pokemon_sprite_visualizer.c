@@ -550,7 +550,7 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
 
     //Bottom left text
     FillWindowPixelBuffer(WIN_BOTTOM_LEFT, PIXEL_FILL(0));
-    if (data->currentSubmenu < 2)
+    if (data->currentSubmenu == SUBMENU_SPECIES) || (data->currentSubmenu == SUBMENU_ANIMS_BG)
     {
         AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textL, 30, 0, 0, NULL);
         AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textR, 30, 12, 0, NULL);
@@ -660,21 +660,21 @@ static void SetArrowInvisibility(struct PokemonSpriteVisualizer *data)
 {
     switch (data->currentSubmenu)
     {
-    case 0:
+    case SUBMENU_SPECIES:
         gSprites[data->modifyArrows.arrowSpriteId[0]].invisible = FALSE;
         gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = FALSE;
         gSprites[data->optionArrows.arrowSpriteId[0]].invisible = TRUE;
         gSprites[data->yPosModifyArrows.arrowSpriteId[0]].invisible = TRUE;
         break;
-    case 1:
-    case 4:
+    case SUBMENU_ANIMS_BG:
+    case SUBMENU_MOVE_BACKGROUNDS:
         gSprites[data->modifyArrows.arrowSpriteId[0]].invisible = TRUE;
         gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = TRUE;
         gSprites[data->optionArrows.arrowSpriteId[0]].invisible = FALSE;
         gSprites[data->yPosModifyArrows.arrowSpriteId[0]].invisible = TRUE;
         break;
-    case 2:
-    case 3:
+    case SUBMENU_SPRITE_COORDS:
+    case SUBMENU_SHADOW_COORDS:
         gSprites[data->modifyArrows.arrowSpriteId[0]].invisible = TRUE;
         gSprites[data->modifyArrows.arrowSpriteId[1]].invisible = TRUE;
         gSprites[data->optionArrows.arrowSpriteId[0]].invisible = TRUE;
@@ -1692,17 +1692,17 @@ static void OpenSubmenu(u32 submenu, u8 taskId)
 
     switch(submenu)
     {
-    case 0:
-    case 1:
+    case SUBMENU_SPECIES:
+    case SUBMENU_ANIMS_BG:
         break;
-    case 2:
+    case SUBMENU_SPRITE_COORDS:
         SetConstSpriteValues(data);
         UpdateYPosOffsetText(data);
         break;
-    case 3:
+    case SUBMENU_SHADOW_COORDS:
         UpdateShadowSettingsText(data);
         break;
-    case 4:
+    case SUBMENU_MOVE_BACKGROUNDS:
         if (data->submenuYpos[1] > 0)
             data->submenuYpos[1] = 0;
 
@@ -1711,6 +1711,9 @@ static void OpenSubmenu(u32 submenu, u8 taskId)
         data->moveBackground = BG_DARK;
         PrintMoveBackgroundName(data->moveBackground);
         LoadMoveBackground(data->moveBackground);
+        break;
+    default:
+        errorf("Invalid submenu index %d", submenu);
         break;
     }
 }
