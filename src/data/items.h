@@ -252,7 +252,7 @@ const struct Item gItemsInfo[] =
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_PREMIER,
-        .iconPic = gItemIcon_PokeBall,
+        .iconPic = gItemIcon_PremierBall,
         .iconPalette = gItemIconPalette_PremierBall,
     },
 
