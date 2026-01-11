@@ -72,10 +72,9 @@ TEST("Move names fit on TMs & HMs Bag Screen")
 
     for (enum TMHMIndex tm = 0; tm < NUM_ALL_MACHINES; tm++)
     {
-        u32 itemMove = ItemIdToBattleMoveId(tm);
+        u32 itemMove = ItemIdToBattleMoveId(GetTMHMItemId(tm + 1));
         PARAMETRIZE_LABEL("%S", GetMoveName(move)) { move = itemMove; }
     }
-
     EXPECT_LE(GetStringWidth(fontId, GetMoveName(move), 0), widthPx);
 }
 
