@@ -1,6 +1,7 @@
 #ifndef GUARD_CONSTANTS_ITEMS_H
 #define GUARD_CONSTANTS_ITEMS_H
 
+#include "metaprogram.h"
 #include "constants/tms_hms.h"
 
 enum __attribute__((packed)) Item
