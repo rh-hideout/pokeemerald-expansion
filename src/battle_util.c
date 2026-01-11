@@ -7512,24 +7512,6 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         if (moveType == TYPE_FIRE)
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.25));
         break;
-    case ABILITY_PROTOSYNTHESIS:
-        {
-            enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
-            if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
-             && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
-             && !(gBattleMons[battlerDef].volatiles.transformed))
-                modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
-        }
-        break;
-    case ABILITY_QUARK_DRIVE:
-        {
-            u32 defHighestStat = GetParadoxBoostedStatId(battlerDef);
-            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
-             && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
-             && !(gBattleMons[battlerDef].volatiles.transformed))
-                modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
-        }
-        break;
     default:
         break;
     }
@@ -8334,6 +8316,24 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
         {
             modifier =  UQ_4_12(0.5);
             recordAbility = TRUE;
+        }
+        break;
+    case ABILITY_PROTOSYNTHESIS:
+        {
+            enum Stat defHighestStat = GetParadoxBoostedStatId(ctx->battlerDef);
+            if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[ctx->battlerDef].boosterEnergyActivated)
+             && ((IsBattleMovePhysical(ctx->move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(ctx->move) && defHighestStat == STAT_SPDEF))
+             && !(gBattleMons[ctx->battlerDef].volatiles.transformed))
+                modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+        }
+        break;
+    case ABILITY_QUARK_DRIVE:
+        {
+            u32 defHighestStat = GetParadoxBoostedStatId(ctx->battlerDef);
+            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[ctx->battlerDef].boosterEnergyActivated)
+             && ((IsBattleMovePhysical(ctx->move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(ctx->move) && defHighestStat == STAT_SPDEF))
+             && !(gBattleMons[ctx->battlerDef].volatiles.transformed))
+                modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         }
         break;
     default:
