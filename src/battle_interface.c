@@ -2304,16 +2304,17 @@ u8 GetHPBarLevel(s16 hp, s16 maxhp)
     }
     else
     {
-    if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
-    {
-        currValue = GetScaledHPFraction(hp, maxhp, B_HEALTHBAR_PIXELS);
-        maxValue = B_HEALTHBAR_PIXELS;
-    }
-    else
-    {
-        currValue = hp;
-        maxValue = maxhp;
-    }
+        if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
+        {
+            currValue = GetScaledHPFraction(hp, maxhp, B_HEALTHBAR_PIXELS);
+            maxValue = B_HEALTHBAR_PIXELS;
+        }
+        else
+        {
+            currValue = hp;
+            maxValue = maxhp;
+        }
+
         if (currValue > (maxValue * 50 / 100)) // more than 50 % hp
             return HP_BAR_GREEN;
         else if (currValue > (maxValue * 20 / 100)) // more than 20 % hp
