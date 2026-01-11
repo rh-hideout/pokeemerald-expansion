@@ -131,7 +131,6 @@ class WildEncounterAssembler:
             self.WriteLine(f".mapGroup = {map_group},", 2)
             self.WriteLine(f".mapNum = {map_num},", 2)
             if not encounter_data:
-                self.WriteLine(".encounterTypes = {{ 0 }}")
                 continue
             self.WriteLine(".encounterTypes =", 2)
             self.WriteLine("{", 2)
@@ -139,7 +138,7 @@ class WildEncounterAssembler:
                 if time not in encounter_data:
                     continue
                 if not encounter_data[time]:
-                    self.WriteLine(f"[{time}] = {{ 0 }}", 3)
+                    self.WriteLine(f"[{time}] = {{ 0 }},", 3)
                     continue
                 self.WriteLine(f"[{time}] =", 3)
                 self.WriteLine("{", 3)

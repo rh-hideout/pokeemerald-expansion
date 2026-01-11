@@ -3,6 +3,70 @@
     {
       "label": "gWildMonHeaders",
       "for_maps": true,
+      "fields": [
+        {
+          "type": "land_mons",
+          "encounter_rates": [
+            20,
+            20,
+            10,
+            10,
+            10,
+            10,
+            5,
+            5,
+            4,
+            4,
+            1,
+            1
+          ]
+        },
+        {
+          "type": "water_mons",
+          "encounter_rates": [
+            60,
+            30,
+            5,
+            4,
+            1
+          ]
+        },
+        {
+          "type": "rock_smash_mons",
+          "encounter_rates": [
+            60,
+            30,
+            5,
+            4,
+            1
+          ]
+        },
+        {
+          "type": "fishing_mons_old_rod",
+          "encounter_rates": [
+            70,
+            30
+          ]
+        },
+        {
+          "type": "fishing_mons_good_rod",
+          "encounter_rates": [
+            60,
+            20,
+            20
+          ]
+        },
+        {
+          "type": "fishing_mons_super_rod",
+          "encounter_rates": [
+            40,
+            40,
+            15,
+            4,
+            1
+          ]
+        }
+      ],
       "encounters": [
         {
           "map": "MAP_ROUTE101",
