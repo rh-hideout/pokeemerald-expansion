@@ -999,7 +999,7 @@ static void Cmd_monbg(void)
     // Move designated battler to background
     if (IsBattlerSpriteVisible(battler))
     {
-        u8 position = GetBattlerPosition(battler);
+        enum BattlerPosition position = GetBattlerPosition(battler);
         if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
             toBG_2 = FALSE;
         else
@@ -1019,7 +1019,7 @@ static void Cmd_monbg(void)
     battler ^= BIT_FLANK;
     if (IsBattlerSpriteVisible(battler))
     {
-        u8 position = GetBattlerPosition(battler);
+        enum BattlerPosition position = GetBattlerPosition(battler);
         if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
             toBG_2 = FALSE;
         else
@@ -1083,7 +1083,7 @@ void MoveBattlerSpriteToBG(u8 battler, bool8 toBG_2, bool8 setSpriteInvisible)
 
     if (!toBG_2)
     {
-        u8 battlerPosition;
+        enum BattlerPosition battlerPosition;
 
         if (IsContest() == TRUE)
         {
@@ -1299,7 +1299,7 @@ static void Task_ClearMonBg(u8 taskId)
     if (gTasks[taskId].data[1] != 1)
     {
         u8 to_BG2;
-        u8 position = GetBattlerPosition(gTasks[taskId].data[2]);
+        enum BattlerPosition position = GetBattlerPosition(gTasks[taskId].data[2]);
         if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
             to_BG2 = FALSE;
         else
@@ -1344,7 +1344,7 @@ static void Cmd_monbg_static(void)
 
     if (IsBattlerSpriteVisible(battler))
     {
-        u8 position = GetBattlerPosition(battler);
+        enum BattlerPosition position = GetBattlerPosition(battler);
         if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
             toBG_2 = FALSE;
         else
@@ -1356,7 +1356,7 @@ static void Cmd_monbg_static(void)
     battler ^= BIT_FLANK;
     if (animBattlerId > 1 && IsBattlerSpriteVisible(battler))
     {
-        u8 position = GetBattlerPosition(battler);
+        enum BattlerPosition position = GetBattlerPosition(battler);
         if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
             toBG_2 = FALSE;
         else
@@ -1408,7 +1408,7 @@ static void Task_ClearMonBgStatic(u8 taskId)
     {
         bool8 toBG_2;
         u8 battler = gTasks[taskId].data[2];
-        u8 position = GetBattlerPosition(battler);
+        enum BattlerPosition position = GetBattlerPosition(battler);
         if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
             toBG_2 = FALSE;
         else
@@ -2096,7 +2096,7 @@ static void Cmd_splitbgprio(void)
 {
     u8 wantedBattler;
     u8 battler;
-    u8 battlerPosition;
+    enum BattlerPosition battlerPosition;
 
     wantedBattler = sBattleAnimScriptPtr[1];
     sBattleAnimScriptPtr += 2;
@@ -2128,7 +2128,7 @@ static void Cmd_splitbgprio_all(void)
 static void Cmd_splitbgprio_foes(void)
 {
     u8 wantedBattler;
-    u8 battlerPosition;
+    enum BattlerPosition battlerPosition;
     u8 battler;
 
     wantedBattler = sBattleAnimScriptPtr[1];
