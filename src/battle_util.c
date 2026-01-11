@@ -3387,6 +3387,34 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
+static bool32 CantFullyProtectFromMove(u32 battlerDef)
+{
+    if (MoveIgnoresProtect(gCurrentMove))
+        return FALSE;
+    if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
+        return FALSE;
+    return GetProtectType(gProtectStructs[gBattlerTarget].protected) == PROTECT_TYPE_SINGLE
+        && gProtectStructs[gBattlerTarget].protected != PROTECT_MAX_GUARD;
+}
+
+static enum MoveCanceler CancelerNotFullyProtected(struct BattleContext *ctx)
+{
+    while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
+    {
+        u32 battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
+
+        if (CantFullyProtectFromMove(battlerDef))
+        {
+            BattleScriptCall(BattleScript_CouldntFullyProtect);
+            gBattleScripting.battler = battlerDef;
+            return MOVE_STEP_PAUSE;
+        }
+    }
+
+    gBattleStruct->eventState.atkCancelerBattler = 0;
+    return MOVE_STEP_SUCCESS;
+}
+
 static bool32 IsMoveParentalBondAffected(struct BattleContext *ctx)
 {
     if (ctx->abilityAtk != ABILITY_PARENTAL_BOND
@@ -3536,6 +3564,7 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_NO_TARGET] = CancelerNoTarget,
     [CANCELER_TOOK_ATTACK] = CancelerTookAttack,
     [CANCELER_TARGET_FAILURE] = CancelerTargetFailure,
+    [CANCELER_NOT_FULLY_PROTECTED] = CancelerNotFullyProtected,
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
 };
 

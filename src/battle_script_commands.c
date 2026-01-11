@@ -1016,16 +1016,6 @@ static bool32 ShouldSkipToMoveEnd(void)
     return FALSE;
 }
 
-static bool32 CantFullyProtectFromMove(void)
-{
-    if (MoveIgnoresProtect(gCurrentMove))
-        return FALSE;
-    if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
-        return FALSE;
-    return GetProtectType(gProtectStructs[gBattlerTarget].protected) == PROTECT_TYPE_SINGLE
-        && gProtectStructs[gBattlerTarget].protected != PROTECT_MAX_GUARD;
-}
-
 static void Cmd_attackcanceler(void)
 {
     CMD_ARGS();
@@ -1075,15 +1065,7 @@ static void Cmd_attackcanceler(void)
         return;
     }
 
-    if (CantFullyProtectFromMove())
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        BattleScriptCall(BattleScript_CouldntFullyProtect);
-        gBattleScripting.battler = gBattlerTarget;
-        return;
-    }
-
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (u32 i = 0; i < gCurrentTurnActionNumber; i++)
     {
         if (!gProtectStructs[gBattlerByTurnOrder[i]].stealMove
          || !MoveCanBeSnatched(gCurrentMove))
