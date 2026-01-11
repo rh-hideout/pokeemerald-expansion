@@ -7098,7 +7098,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
     #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_ZYGARDE_MEGA,
     #else
-        .cryId = CRY_ZYGARDE,
+        .cryId = CRY_ZYGARDE_COMPLETE,
     #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_ZYGARDE,
         .categoryName = _("Order"),

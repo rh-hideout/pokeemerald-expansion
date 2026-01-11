@@ -5423,7 +5423,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Tatsugiri"),
     #if P_MODIFIED_MEGA_CRIES
-        .cryId = CRY_TATSUGIRI_CURLY_MEGA,
+        .cryId = CRY_TATSUGIRI_MEGA,
     #else
         .cryId = CRY_TATSUGIRI_CURLY,
     #endif // P_MODIFIED_MEGA_CRIES
@@ -5481,7 +5481,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Tatsugiri"),
     #if P_MODIFIED_MEGA_CRIES
-        .cryId = CRY_TATSUGIRI_DROOPY_MEGA,
+        .cryId = CRY_TATSUGIRI_MEGA,
     #else
         .cryId = CRY_TATSUGIRI_DROOPY,
     #endif // P_MODIFIED_MEGA_CRIES
@@ -5539,7 +5539,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Tatsugiri"),
     #if P_MODIFIED_MEGA_CRIES
-        .cryId = CRY_TATSUGIRI_STRETCHY_MEGA,
+        .cryId = CRY_TATSUGIRI_MEGA,
     #else
         .cryId = CRY_TATSUGIRI_STRETCHY,
     #endif // P_MODIFIED_MEGA_CRIES

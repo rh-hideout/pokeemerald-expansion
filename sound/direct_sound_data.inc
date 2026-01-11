@@ -6176,16 +6176,8 @@ Cry_TatsugiriStretchy::
 
 .if P_MODIFIED_MEGA_CRIES == TRUE
 	.align 2
-Cry_TatsugiriCurlyMega::
-	.incbin "sound/direct_sound_samples/cries/tatsugiri_curly_mega.bin"
-
-	.align 2
-Cry_TatsugiriDroopyMega::
-	.incbin "sound/direct_sound_samples/cries/tatsugiri_droopy_mega.bin"
-
-	.align 2
-Cry_TatsugiriStretchyMega::
-	.incbin "sound/direct_sound_samples/cries/tatsugiri_stretchy_mega.bin"
+Cry_TatsugiriMega::
+	.incbin "sound/direct_sound_samples/cries/tatsugiri_mega.bin"
 .endif @ P_MODIFIED_MEGA_CRIES
 .endif @ P_FAMILY_TATSUGIRI
 
