@@ -550,7 +550,7 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
 
     //Bottom left text
     FillWindowPixelBuffer(WIN_BOTTOM_LEFT, PIXEL_FILL(0));
-    if (data->currentSubmenu == SUBMENU_SPECIES) || (data->currentSubmenu == SUBMENU_ANIMS_BG)
+    if ((data->currentSubmenu == SUBMENU_SPECIES) || (data->currentSubmenu == SUBMENU_ANIMS_BG))
     {
         AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textL, 30, 0, 0, NULL);
         AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textR, 30, 12, 0, NULL);
