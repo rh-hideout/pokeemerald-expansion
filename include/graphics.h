@@ -372,7 +372,7 @@ extern const u32 gItemIcon_UltraBall[];
 extern const u16 gItemIconPalette_UltraBall[];
 extern const u32 gItemIcon_MasterBall[];
 extern const u16 gItemIconPalette_MasterBall[];
-extern const u16 gItemIcon_PremierBall[];
+extern const u32 gItemIcon_PremierBall[];
 extern const u16 gItemIconPalette_PremierBall[];
 extern const u32 gItemIcon_HealBall[];
 extern const u16 gItemIconPalette_HealBall[];
