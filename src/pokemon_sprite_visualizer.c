@@ -105,7 +105,8 @@ static const struct BgTemplate sBgTemplates[] =
 //WindowTemplates
 static const struct WindowTemplate sPokemonSpriteVisualizerWindowTemplate[] =
 {
-    [WIN_NAME_NUMBERS] = {
+    [WIN_NAME_NUMBERS] =
+    {
         .bg = 0,
         .tilemapLeft = 15,
         .tilemapTop = 12,
@@ -114,7 +115,8 @@ static const struct WindowTemplate sPokemonSpriteVisualizerWindowTemplate[] =
         .paletteNum = 0xF,
         .baseBlock = 1
     },
-    [WIN_INSTRUCTIONS] = {
+    [WIN_INSTRUCTIONS] =
+    {
         .bg = 0,
         .tilemapLeft = 0,
         .tilemapTop = 0,
@@ -123,7 +125,8 @@ static const struct WindowTemplate sPokemonSpriteVisualizerWindowTemplate[] =
         .paletteNum = 0xF,
         .baseBlock = 1 + 30
     },
-    [WIN_BOTTOM_LEFT] = {
+    [WIN_BOTTOM_LEFT] =
+    {
         .bg = 0,
         .tilemapLeft = 1,
         .tilemapTop = TEXT_AREA_Y,
@@ -132,7 +135,8 @@ static const struct WindowTemplate sPokemonSpriteVisualizerWindowTemplate[] =
         .paletteNum = 0xF,
         .baseBlock = 1 + 30 + 60
     },
-    [WIN_BOTTOM_RIGHT] = {
+    [WIN_BOTTOM_RIGHT] =
+    {
         .bg = 0,
         .tilemapLeft = 7,
         .tilemapTop = TEXT_AREA_Y,
@@ -465,76 +469,72 @@ static void UNUSED PadString(const u8 *src, u8 *dst)
     dst[i] = EOS;
 }
 
+static const struct SubmenuText sSubmenuText[] =
+{
+    [SUBMENU_SPECIES] =
+    {
+        .instructions = COMPOUND_STRING("{START_BUTTON} Shiny\n{B_BUTTON} Exit  {A_BUTTON} Anims and BG$"),
+        .instructionsGender = COMPOUND_STRING("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Exit  {A_BUTTON} Anims and BG$"),
+    },
+
+    [SUBMENU_ANIMS_BG] =
+    {
+        .instructions = COMPOUND_STRING("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Sprite Coords$"),
+        .instructionsGender = COMPOUND_STRING("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Sprite Coords$"),
+    },
+
+    [SUBMENU_SPRITE_COORDS] =
+    {
+#if B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE
+        .instructions = COMPOUND_STRING("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$"),
+        .instructionsGender = COMPOUND_STRING("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$"),
+#else
+        .instructions = COMPOUND_STRING("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move BGs$"),
+        .instructionsGender = COMPOUND_STRING("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Move BGs$"),
+#endif
+        .bottomLeft = COMPOUND_STRING("B coords:\nF coords:\nF elev:"),
+    },
+
+    [SUBMENU_SHADOW_COORDS] =
+    {
+#if B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE
+        .instructions = COMPOUND_STRING("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move BGs$"),
+        .instructionsGender = COMPOUND_STRING("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move BGs$"),
+#else
+        .instructions = COMPOUND_STRING("$"),
+        .instructionsGender = COMPOUND_STRING("$"),
+#endif
+        .bottomLeft = COMPOUND_STRING("X coords:\nY coords:\nSize:"),
+    },
+
+    [SUBMENU_MOVE_BACKGROUNDS] =
+    {
+        .instructions = COMPOUND_STRING("{START_BUTTON} Shiny\n{B_BUTTON} Back$"),
+        .instructionsGender = COMPOUND_STRING("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back$"),
+        .bottomLeft = COMPOUND_STRING("Move BG:"),
+    },
+};
+
 static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
 {
-    u8 fontId = 0;
+    u8 fontId = FONT_SMALL;
     u8 x = 2;
-    u8 textInstructions[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Exit  {A_BUTTON} Anims and BG$");
-    u8 textInstructionsGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Exit  {A_BUTTON} Anims and BG$");
-    u8 textInstructionsSubmenuOne[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Sprite Coords$");
-    u8 textInstructionsSubmenuOneGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Sprite Coords$");
-#if B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE
-    u8 textInstructionsSubmenuTwo[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$");
-    u8 textInstructionsSubmenuTwoGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Shadow Coords$");
-    u8 textInstructionsSubmenuThree[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move BGs$");
-    u8 textInstructionsSubmenuThreeGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Move BGs$");
-#else
-    u8 textInstructionsSubmenuTwo[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back  {A_BUTTON} Move BGs$");
-    u8 textInstructionsSubmenuTwoGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back  {A_BUTTON} Move BGs$");
-    u8 textInstructionsSubmenuThree[] = _("$");
-    u8 textInstructionsSubmenuThreeGender[] = _("$");
-#endif
-    u8 textInstructionsSubmenuFour[] = _("{START_BUTTON} Shiny\n{B_BUTTON} Back$");
-    u8 textInstructionsSubmenuFourGender[] = _("{START_BUTTON} Shiny {SELECT_BUTTON} Gender\n{B_BUTTON} Back$");
-
+    u16 species = data->modifyArrows.currValue;
 
     u8 textBottom[] = _("BACK:\nFRONT:\nBG:$");
     u8 textBottomForms[] = _("BACK:\nFRONT:\nBG:\nFORMS:$");
-    u8 textBottomSubmenuTwo[] = _("B coords:\nF coords:\nF elev:");
-    u8 textBottomSubmenuThree[] = _("X coords:\nY coords:\nSize:");
-    u8 textBottomSubmenuFour[] = _("Move BG:");
-    u16 species = data->modifyArrows.currValue;
 
     u8 textL[] = _("{L_BUTTON}");
     u8 textR[] = _("{R_BUTTON}");
 
     //Instruction window
     FillWindowPixelBuffer(WIN_INSTRUCTIONS, 0x11);
-    if (data->currentSubmenu == SUBMENU_SPECIES)
-    {
-        if (SpeciesHasGenderDifferences(species))
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsGender, x, 0, 0, NULL);
-        else
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructions, x, 0, 0, NULL);
-    }
-    else if (data->currentSubmenu == SUBMENU_ANIMS_BG)
-    {
-        if (SpeciesHasGenderDifferences(species))
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuOneGender, x, 0, 0, NULL);
-        else
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuOne, x, 0, 0, NULL);
-    }
-    else if (data->currentSubmenu == SUBMENU_SPRITE_COORDS)
-    {
-        if (SpeciesHasGenderDifferences(species))
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuTwoGender, x, 0, 0, NULL);
-        else
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuTwo, x, 0, 0, NULL);
-    }
-    else if (data->currentSubmenu == SUBMENU_SHADOW_COORDS)
-    {
-        if (SpeciesHasGenderDifferences(species))
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuThreeGender, x, 0, 0, NULL);
-        else
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuThree, x, 0, 0, NULL);
-    }
-    else if (data->currentSubmenu == SUBMENU_MOVE_BACKGROUNDS)
-    {
-        if (SpeciesHasGenderDifferences(species))
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuFourGender, x, 0, 0, NULL);
-        else
-            AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuFour, x, 0, 0, NULL);
-    }
+
+    if (SpeciesHasGenderDifferences(species))
+        AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, sSubmenuText[data->currentSubmenu].instructionsGender, x, 0, 0, NULL);
+    else
+        AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, sSubmenuText[data->currentSubmenu].instructions, x, 0, 0, NULL);
+
     CopyWindowToVram(WIN_INSTRUCTIONS, COPYWIN_FULL);
 
     //Bottom left text
@@ -548,12 +548,8 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
         else
             AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottom, 0, 0, 0, NULL);
     }
-    else if (data->currentSubmenu == SUBMENU_SPRITE_COORDS)
-        AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottomSubmenuTwo, 0, 0, 0, NULL);
-    else if (data->currentSubmenu == SUBMENU_SHADOW_COORDS)
-        AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottomSubmenuThree, 0, 0, 0, NULL);
-    else if (data->currentSubmenu == SUBMENU_MOVE_BACKGROUNDS)
-        AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottomSubmenuFour, 0, 0, 0, NULL);
+    else
+        AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, sSubmenuText[data->currentSubmenu].bottomLeft, 0, 0, 0, NULL);
 }
 
 static void VBlankCB(void)
