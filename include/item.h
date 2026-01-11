@@ -9,27 +9,6 @@
 #include "constants/item_effects.h"
 #include "constants/hold_effects.h"
 
-/* Expands to:
- * enum
- * {
- *   ITEM_TM_FOCUS_PUNCH = ITEM_TM01,
- *   ...
- *   ITEM_HM_CUT = ITM_HM01,
- *   ...
- * }; */
-#define ENUM_TM(n, id) CAT(ITEM_TM_, id) = CAT(ITEM_TM, n),
-#define ENUM_HM(n, id) CAT(ITEM_HM_, id) = CAT(ITEM_HM, n),
-#define TO_TMHM_NUMS(a, ...) (__VA_ARGS__)
-enum TMHMItemId
-{
-    RECURSIVELY(R_ZIP(ENUM_TM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_TM(APPEND_COMMA))))
-    RECURSIVELY(R_ZIP(ENUM_HM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_HM(APPEND_COMMA))))
-};
-
-#undef ENUM_TM
-#undef ENUM_HM
-#undef TO_TMHM_NUMS
-
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
  * gTMHMItemMoveIds. The index for an item can be retrieved with GetItemTMHMIndex below.
  */
@@ -41,7 +20,6 @@ enum TMHMIndex
     NUM_TECHNICAL_MACHINES = (0 FOREACH_TM(PLUS_ONE)),
     NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
 };
-
 #undef UNPACK_TM_HM_ENUM
 
 enum PACKED ItemSortType
@@ -117,7 +95,7 @@ struct ALIGNED(2) BagPocket
 
 struct TmHmIndexKey
 {
-    enum TMHMItemId itemId:16;
+    enum Item itemId;
     enum Move moveId;
 };
 
@@ -167,7 +145,7 @@ static inline enum Move GetItemTMHMMoveId(u16 item)
     }
 }
 
-static inline enum TMHMItemId GetTMHMItemIdFromMoveId(enum Move move)
+static inline enum Item GetTMHMItemIdFromMoveId(enum Move move)
 {
     switch (move)
     {
@@ -191,7 +169,7 @@ static inline enum TMHMItemId GetTMHMItemIdFromMoveId(enum Move move)
 #undef UNPACK_TM_MOVE_TO_ITEM_ID
 #undef UNPACK_HM_MOVE_TO_ITEM_ID
 
-static inline enum TMHMItemId GetTMHMItemId(enum TMHMIndex index)
+static inline enum Item GetTMHMItemId(enum TMHMIndex index)
 {
     return gTMHMItemMoveIds[index].itemId;
 }

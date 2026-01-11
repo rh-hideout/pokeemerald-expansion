@@ -5606,7 +5606,7 @@ u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
 
     for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
     {
-        enum TMHMItemId item = GetTMHMItemId(i + 1);
+        enum Item item = GetTMHMItemId(i + 1);
         enum Move move = GetTMHMMoveId(i + 1);
 
         if (move == MOVE_NONE)
@@ -5725,7 +5725,7 @@ bool32 HasRelearnerTMMoves(struct Pokemon *mon)
 
     for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
     {
-        enum TMHMItemId item = GetTMHMItemId(i + 1);
+        enum Item item = GetTMHMItemId(i + 1);
         enum Move move = GetTMHMMoveId(i + 1);
 
         if (move == MOVE_NONE)
