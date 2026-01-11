@@ -188,7 +188,7 @@ void ActivateDynamax(u32 battler)
 
     // Try Gigantamax form change.
     if (!gBattleMons[battler].volatiles.transformed) // Ditto cannot Gigantamax.
-        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX);
+        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX, GetBattlerAbility(battler));
 
     BattleScriptPushCursorAndCallback(BattleScript_DynamaxBegins);
 }
@@ -211,7 +211,7 @@ void UndoDynamax(u32 battler)
 
     // Undo form change if needed.
     if (IsGigantamaxed(battler))
-        TryBattleFormChange(battler, FORM_CHANGE_END_BATTLE);
+        TryBattleFormChange(battler, FORM_CHANGE_END_BATTLE, GetBattlerAbility(battler));
 }
 
 // Certain moves are blocked by Max Guard that normally ignore protection.

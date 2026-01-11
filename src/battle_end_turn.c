@@ -1319,8 +1319,8 @@ static bool32 HandleEndTurnFormChange(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END)
-        || TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
+    if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END, ability)
+        || TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END, ability))
     {
         gBattleScripting.battler = battler;
         gBattleScripting.abilityPopupOverwrite = ability; // To prevent the new form's ability from pop up
