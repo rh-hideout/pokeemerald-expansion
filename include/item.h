@@ -86,7 +86,7 @@ enum PACKED ItemSortType
 
 typedef void (*ItemUseFunc)(u8);
 
-struct Item
+struct ItemInfo
 {
     u32 price;
     u16 secondaryId;
@@ -122,7 +122,7 @@ struct TmHmIndexKey
 };
 
 extern const u8 gQuestionMarksItemName[];
-extern const struct Item gItemsInfo[];
+extern const struct ItemInfo gItemsInfo[];
 extern struct BagPocket gBagPockets[];
 extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 

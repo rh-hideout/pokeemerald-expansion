@@ -159,7 +159,7 @@ static const u8 sGenericMulchDesc[]   = _("A fertilizer that\n"
                                           "is unsuitable for\n"
                                           "local soil.");
 
-const struct Item gItemsInfo[] =
+const struct ItemInfo gItemsInfo[] =
 {
     [ITEM_NONE] =
     {
