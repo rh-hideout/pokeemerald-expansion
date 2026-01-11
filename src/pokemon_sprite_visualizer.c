@@ -58,17 +58,6 @@ static struct PokemonSpriteVisualizer *GetStructPtr(u8 taskId)
     return (struct PokemonSpriteVisualizer*)(T1_READ_PTR(taskDataPtr));
 }
 
-#define BACKGROUND_1_CHAR_BASE  1
-#define BACKGROUND_1_MAP_BASE  28
-#define BACKGROUND_3_CHAR_BASE  2
-#define BACKGROUND_3_MAP_BASE  26
-
-#define SUBMENU_SPECIES          0
-#define SUBMENU_ANIMS_BG         1
-#define SUBMENU_SPRITE_COORDS    2
-#define SUBMENU_SHADOW_COORDS    3
-#define SUBMENU_MOVE_BACKGROUNDS 4
-
 //BgTemplates
 static const struct BgTemplate sBgTemplates[] =
 {
