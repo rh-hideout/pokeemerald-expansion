@@ -63,6 +63,12 @@ static struct PokemonSpriteVisualizer *GetStructPtr(u8 taskId)
 #define BACKGROUND_3_CHAR_BASE  2
 #define BACKGROUND_3_MAP_BASE  26
 
+#define SUBMENU_SPECIES          0
+#define SUBMENU_ANIMS_BG         1
+#define SUBMENU_SPRITE_COORDS    2
+#define SUBMENU_SHADOW_COORDS    3
+#define SUBMENU_MOVE_BACKGROUNDS 4
+
 //BgTemplates
 static const struct BgTemplate sBgTemplates[] =
 {
@@ -505,35 +511,35 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
 
     //Instruction window
     FillWindowPixelBuffer(WIN_INSTRUCTIONS, 0x11);
-    if (data->currentSubmenu == 0)
+    if (data->currentSubmenu == SUBMENU_SPECIES)
     {
         if (SpeciesHasGenderDifferences(species))
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsGender, x, 0, 0, NULL);
         else
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructions, x, 0, 0, NULL);
     }
-    else if (data->currentSubmenu == 1)
+    else if (data->currentSubmenu == SUBMENU_ANIMS_BG)
     {
         if (SpeciesHasGenderDifferences(species))
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuOneGender, x, 0, 0, NULL);
         else
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuOne, x, 0, 0, NULL);
     }
-    else if (data->currentSubmenu == 2)
+    else if (data->currentSubmenu == SUBMENU_SPRITE_COORDS)
     {
         if (SpeciesHasGenderDifferences(species))
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuTwoGender, x, 0, 0, NULL);
         else
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuTwo, x, 0, 0, NULL);
     }
-    else if (data->currentSubmenu == 3)
+    else if (data->currentSubmenu == SUBMENU_SHADOW_COORDS)
     {
         if (SpeciesHasGenderDifferences(species))
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuThreeGender, x, 0, 0, NULL);
         else
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuThree, x, 0, 0, NULL);
     }
-    else if (data->currentSubmenu == 4)
+    else if (data->currentSubmenu == SUBMENU_MOVE_BACKGROUNDS)
     {
         if (SpeciesHasGenderDifferences(species))
             AddTextPrinterParameterized(WIN_INSTRUCTIONS, fontId, textInstructionsSubmenuFourGender, x, 0, 0, NULL);
@@ -553,11 +559,11 @@ static void PrintInstructionsOnWindow(struct PokemonSpriteVisualizer *data)
         else
             AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottom, 0, 0, 0, NULL);
     }
-    else if (data->currentSubmenu == 2)
+    else if (data->currentSubmenu == SUBMENU_SPRITE_COORDS)
         AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottomSubmenuTwo, 0, 0, 0, NULL);
-    else if (data->currentSubmenu == 3)
+    else if (data->currentSubmenu == SUBMENU_SHADOW_COORDS)
         AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottomSubmenuThree, 0, 0, 0, NULL);
-    else if (data->currentSubmenu == 4)
+    else if (data->currentSubmenu == SUBMENU_MOVE_BACKGROUNDS)
         AddTextPrinterParameterized(WIN_BOTTOM_LEFT, fontId, textBottomSubmenuFour, 0, 0, 0, NULL);
 }
 
@@ -1408,7 +1414,7 @@ static void ApplyOffsetSpriteValues(struct PokemonSpriteVisualizer *data)
     //Front
     gSprites[data->frontspriteId].y = GetBattlerSpriteFinal_YCustom(species, data->offsetsSpriteValues.offset_front_picCoords, data->offsetsSpriteValues.offset_front_elevation);
 
-    if (data->currentSubmenu == 2)
+    if (data->currentSubmenu == SUBMENU_SPRITE_COORDS)
         UpdateShadowSpriteInvisible(data);
 }
 
@@ -1767,11 +1773,11 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
         PlaySE(SE_DEX_SCROLL);
     }
 
-    if (data->currentSubmenu == 0)
+    if (data->currentSubmenu == SUBMENU_SPECIES)
     {
         if (JOY_NEW(A_BUTTON))
         {
-            OpenSubmenu(1, taskId);
+            OpenSubmenu(SUBMENU_ANIMS_BG, taskId);
         }
         else if (JOY_NEW(B_BUTTON))
         {
@@ -1832,18 +1838,18 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             }
         }
     }
-    else if (data->currentSubmenu == 1) //Submenu 1
+    else if (data->currentSubmenu == SUBMENU_ANIMS_BG)
     {
         if (JOY_NEW(A_BUTTON))
         {
-            OpenSubmenu(2, taskId);
+            OpenSubmenu(SUBMENU_SPRITE_COORDS, taskId);
 
             if (data->followerspriteId != 0)
                 gSprites[data->followerspriteId].invisible = TRUE;
         }
         else if (JOY_NEW(B_BUTTON))
         {
-            OpenSubmenu(0, taskId);
+            OpenSubmenu(SUBMENU_SPECIES, taskId);
             if (data->submenuYpos[1] == 3)
             {
                 data->submenuYpos[1] = 2;
@@ -1886,18 +1892,18 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             UpdateSubmenuOneOptionValue(taskId, TRUE);
         }
     }
-    else if (data->currentSubmenu == 2) //Submenu 2
+    else if (data->currentSubmenu == SUBMENU_SPRITE_COORDS)
     {
         if (JOY_NEW(A_BUTTON))
         {
             if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
-                OpenSubmenu(3, taskId);
+                OpenSubmenu(SUBMENU_SHADOW_COORDS, taskId);
             else
-                OpenSubmenu(4, taskId);
+                OpenSubmenu(SUBMENU_MOVE_BACKGROUNDS, taskId);
         }
         else if (JOY_NEW(B_BUTTON))
         {
-            OpenSubmenu(1, taskId);
+            OpenSubmenu(SUBMENU_ANIMS_BG, taskId);
             UpdateMonAnimNames(taskId);
 
             if (data->followerspriteId != 0)
@@ -1931,15 +1937,15 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             UpdateSubmenuTwoOptionValue(taskId, TRUE);
         }
     }
-    else if (data->currentSubmenu == 3) // Submenu 3
+    else if (data->currentSubmenu == SUBMENU_SHADOW_COORDS)
     {
         if (JOY_NEW(A_BUTTON))
         {
-            OpenSubmenu(4, taskId);
+            OpenSubmenu(SUBMENU_MOVE_BACKGROUNDS, taskId);
         }
         else if (JOY_NEW(B_BUTTON))
         {
-            OpenSubmenu(2, taskId);
+            OpenSubmenu(SUBMENU_SPRITE_COORDS, taskId);
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
@@ -1975,14 +1981,14 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
                 UpdateShadowSizeValue(taskId, TRUE);
         }
     }
-    else if (data->currentSubmenu == 4) // Submenu 4
+    else if (data->currentSubmenu == SUBMENU_MOVE_BACKGROUNDS)
     {
         if (JOY_NEW(B_BUTTON))
         {
             if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
-                OpenSubmenu(3, taskId);
+                OpenSubmenu(SUBMENU_SHADOW_COORDS, taskId);
             else
-                OpenSubmenu(2, taskId);
+                OpenSubmenu(SUBMENU_SPRITE_COORDS, taskId);
             LoadBattleBg(data->battleEnvironment);
         }
         else if (JOY_NEW(DPAD_LEFT))
