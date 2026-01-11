@@ -6,6 +6,7 @@
 #include "battle_setup.h"
 #include "item.h"
 #include "malloc.h"
+#include "party_menu.h"
 #include "main_menu.h"
 #include "string_util.h"
 #include "text.h"
@@ -69,10 +70,16 @@ TEST("Move names fit on TMs & HMs Bag Screen")
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 61;
     u32 move = MOVE_NONE;
-    for (i = 1; i < MOVES_COUNT; i++)
+
+    for (i = 1; i < ITEMS_COUNT; i++)
     {
-        PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
+        u32 itemMove = ItemIdToBattleMoveId(i);
+        if (itemMove != MOVE_NONE)
+        {
+            PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = itemMove; }
+        }
     }
+
     EXPECT_LE(GetStringWidth(fontId, GetMoveName(move), 0), widthPx);
 }
 
