@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon for 5 turns 25% (Gen3-4) or 
     PARAMETRIZE { config = GEN_5; passes = 50; trials = 100; }
     PASSES_RANDOMLY(passes, trials, RNG_WRAP);
     GIVEN {
-        WITH_CONFIG(CONFIG_BINDING_TURNS, config);
+        WITH_CONFIG(B_BINDING_TURNS, config);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon for 4 turns 25% (Gen3-4) or 
     PARAMETRIZE { config = GEN_5; passes = 50; trials = 100; }
     PASSES_RANDOMLY(passes, trials, RNG_WRAP);
     GIVEN {
-        WITH_CONFIG(CONFIG_BINDING_TURNS, config);
+        WITH_CONFIG(B_BINDING_TURNS, config);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon 5 turns (Gen4) or 7 turns (G
     PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_BINDING_TURNS, config);
+        WITH_CONFIG(B_BINDING_TURNS, config);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_GRIP_CLAW); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
