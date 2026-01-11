@@ -1,10 +1,6 @@
 BattleFrontier_ExchangeServiceCorner_MapScripts::
 	.byte 0
 
-	.set JOHTO_STARTER_DOLL_BP, 80
-	.set KANTO_STARTER_DOLL_BP, 256
-	.set VITAMIN_BP, 1
-
 BattleFrontier_ExchangeServiceCorner_EventScript_ClerkWelcome::
 	msgbox BattleFrontier_ExchangeServiceCorner_Text_WelcomePleaseChoosePrize, MSGBOX_DEFAULT
 	special ShowBattlePointsWindow
@@ -142,17 +138,17 @@ BattleFrontier_ExchangeServiceCorner_EventScript_DittoDoll::
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_CyndaquilDoll::
-	setvar VAR_0x8008, JOHTO_STARTER_DOLL_BP
+	setvar VAR_0x8008, 80
 	setvar VAR_0x8009, DECOR_CYNDAQUIL_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_ChikoritaDoll::
-	setvar VAR_0x8008, JOHTO_STARTER_DOLL_BP
+	setvar VAR_0x8008, 80
 	setvar VAR_0x8009, DECOR_CHIKORITA_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
 BattleFrontier_ExchangeServiceCorner_EventScript_TotodileDoll::
-	setvar VAR_0x8008, JOHTO_STARTER_DOLL_BP
+	setvar VAR_0x8008, 80
 	setvar VAR_0x8009, DECOR_TOTODILE_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor1
 
@@ -198,17 +194,17 @@ BattleFrontier_ExchangeServiceCorner_EventScript_SnorlaxDoll::
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2
 
 BattleFrontier_ExchangeServiceCorner_EventScript_VenusaurDoll::
-	setvar VAR_0x8008, KANTO_STARTER_DOLL_BP
+	setvar VAR_0x8008, 256
 	setvar VAR_0x8009, DECOR_VENUSAUR_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2
 
 BattleFrontier_ExchangeServiceCorner_EventScript_CharizardDoll::
-	setvar VAR_0x8008, KANTO_STARTER_DOLL_BP
+	setvar VAR_0x8008, 256
 	setvar VAR_0x8009, DECOR_CHARIZARD_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2
 
 BattleFrontier_ExchangeServiceCorner_EventScript_BlastoiseDoll::
-	setvar VAR_0x8008, KANTO_STARTER_DOLL_BP
+	setvar VAR_0x8008, 256
 	setvar VAR_0x8009, DECOR_BLASTOISE_DOLL
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseDecor2
 
@@ -245,32 +241,32 @@ BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin::
 	end
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Protein::
-	setvar VAR_0x8008, VITAMIN_BP
+	setvar VAR_0x8008, 1
 	setvar VAR_0x8009, ITEM_PROTEIN
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Calcium::
-	setvar VAR_0x8008, VITAMIN_BP
+	setvar VAR_0x8008, 1
 	setvar VAR_0x8009, ITEM_CALCIUM
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Iron::
-	setvar VAR_0x8008, VITAMIN_BP
+	setvar VAR_0x8008, 1
 	setvar VAR_0x8009, ITEM_IRON
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Zinc::
-	setvar VAR_0x8008, VITAMIN_BP
+	setvar VAR_0x8008, 1
 	setvar VAR_0x8009, ITEM_ZINC
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_Carbos::
-	setvar VAR_0x8008, VITAMIN_BP
+	setvar VAR_0x8008, 1
 	setvar VAR_0x8009, ITEM_CARBOS
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
 BattleFrontier_ExchangeServiceCorner_EventScript_HPUp::
-	setvar VAR_0x8008, VITAMIN_BP
+	setvar VAR_0x8008, 1
 	setvar VAR_0x8009, ITEM_HP_UP
 	goto BattleFrontier_ExchangeServiceCorner_EventScript_PurchaseVitamin
 
