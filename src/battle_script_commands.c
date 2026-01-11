@@ -1955,20 +1955,21 @@ static void Cmd_waitanimation(void)
 {
     CMD_ARGS();
 
-    if (gBattleControllerExecFlags == 0 && gBattleStruct->battlerKOAnimsRunning == 0)
+    if (gBattleControllerExecFlags != 0 || gBattleStruct->battlerKOAnimsRunning != 0)
+        return;
+
+    #if T_SHOULD_RUN_MOVE_ANIM
+    gCountAllocs = FALSE;
+    #endif
+
+    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT_DURING_MOVE))
     {
-#if T_SHOULD_RUN_MOVE_ANIM
-        gCountAllocs = FALSE;
-#endif
-        if (gAnimPendingBattlerSpriteUpdate)
-        {
-            gAnimPendingBattlerSpriteUpdate = FALSE;
-            PlayAnimation(gBattlerAttacker, B_ANIM_FORM_CHANGE_INSTANT, NULL, cmd->nextInstr);
-        }
-        else
-        {
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
+        // Only execute B_ANIM_FORM_CHANGE_INSTANT for those who have changed forms
+        PlayAnimation(gBattlerAttacker, B_ANIM_FORM_CHANGE_INSTANT, NULL, cmd->nextInstr);
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

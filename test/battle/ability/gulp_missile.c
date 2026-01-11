@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it transforms into Gulping form if max HP is over 1/2")
+SINGLE_BATTLE_TEST("Gulp Missile: If base Cramorant hits target with Surf it transforms into Gulping form if max HP is over 1/2")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it tr
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it transforms into Gorging form if max HP is under 1/2")
+SINGLE_BATTLE_TEST("Gulp Missile: If base Cramorant hits target with Surf it transforms into Gorging form if max HP is under 1/2")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(120); MaxHP(250); Ability(ABILITY_GULP_MISSILE); }
@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it tr
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant is under water it transforms into one of its forms")
+SINGLE_BATTLE_TEST("Gulp Missile: If base Cramorant is under water it transforms into one of its forms")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant is under water it transform
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from transforming")
+SINGLE_BATTLE_TEST("Gulp Missile: Power Herb does not prevent Cramaront from transforming")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Item(ITEM_POWER_HERB); }
@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from tr
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant deal 1/4 of damage opposing mon if hit by a damaging move, Gulping also lowers defense")
+SINGLE_BATTLE_TEST("Gulp Missile: Transformed Cramorant deal 1/4 of damage opposing mon if hit by a damaging move, Gulping also lowers defense")
 {
     s16 gulpMissileDamage;
 
@@ -93,7 +93,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant deal 1/4 of damage oppo
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Cramorant in Gorging paralyzes the target if hit by a damaging move")
+SINGLE_BATTLE_TEST("Gulp Missile: Cramorant in Gorging paralyzes the target if hit by a damaging move")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(120); MaxHP(250); Ability(ABILITY_GULP_MISSILE); }
@@ -114,7 +114,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Cramorant in Gorging paralyzes the target if 
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) triggers even if the user is fainted by opposing mon")
+SINGLE_BATTLE_TEST("Gulp Missile: triggers even if the user is fainted by opposing mon")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(1); MaxHP(250); Ability(ABILITY_GULP_MISSILE); }
@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) triggers even if the user is fainted by oppos
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense but is prevented by stat reduction preventing abilities")
+SINGLE_BATTLE_TEST("Gulp Missile: Transformed Cramorant Gulping lowers defense but is prevented by stat reduction preventing abilities")
 {
     u32 species;
     enum Ability ability;
@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense 
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense and still triggers other effects after")
+SINGLE_BATTLE_TEST("Gulp Missile: Transformed Cramorant Gulping lowers defense and still triggers other effects after")
 {
     // Make sure attacker and target are correct after triggering the ability
     enum Ability ability;
@@ -225,7 +225,7 @@ SINGLE_BATTLE_TEST("Gulp Missile only changes forms for Cramorant")
     }
 }
 
-SINGLE_BATTLE_TEST("If Cramorant loses Gulp Missile, it cannot spit out its prey")
+SINGLE_BATTLE_TEST("Gulp Missile: If Cramorant loses Gulp Missile, it cannot spit out its prey")
 {
     GIVEN {
         ASSUME(!gAbilitiesInfo[ABILITY_GULP_MISSILE].cantBeSwapped);

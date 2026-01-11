@@ -3115,17 +3115,6 @@ static enum MoveCanceler CancelerMultiTargetMoves(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
-static enum MoveCanceler CancelerFormChangeDuringAnim(struct BattleContext *ctx)
-{
-    // Gulp Missile changes
-    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT_DURING_MOVE))
-    {
-        // Only execute B_ANIM_FORM_CHANGE_INSTANT for those who have changed forms
-        gAnimPendingBattlerSpriteUpdate = TRUE;
-    }
-    return MOVE_STEP_SUCCESS;
-}
-
 static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleContext *ctx) =
 {
     [CANCELER_CLEAR_FLAGS] = CancelerClearFlags,
@@ -3164,7 +3153,6 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_EXPLOSION] = CancelerExplosion,
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
     [CANCELER_MULTI_TARGET_MOVES] = CancelerMultiTargetMoves,
-    [CANCELER_FORM_CHANGE_DURING_MOVE] = CancelerFormChangeDuringAnim,
 };
 
 enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx)
@@ -4309,7 +4297,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
     u32 side = 0;
     u32 i = 0, j = 0;
     u32 partner = 0;
-    enum Ability abilityForm;
+    u32 speciesForm = SPECIES_NONE;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return 0;
@@ -4875,17 +4863,15 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         default:
             break;
         }
-
-        abilityForm = gLastUsedAbility;
-        // Handle ability form changes upon switch-in.
-        if (!effect && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT))
+        break;
+    case ABILITYEFFECT_SWITCH_IN_FORM_CHANGE:
+        if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT))
         {
             // To prevent the new form's ability from pop up
-            gBattleScripting.abilityPopupOverwrite = abilityForm;
+            gBattleScripting.abilityPopupOverwrite = ability;
             BattleScriptCall(BattleScript_BattlerFormChange);
             effect++;
         }
-
         break;
     case ABILITYEFFECT_ENDTURN:
         if (IsBattlerAlive(battler))
@@ -5068,16 +5054,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                     effect++;
                 }
                 break;
-            case ABILITY_HUNGER_SWITCH:
-                if (!gBattleMons[battler].volatiles.transformed
-                 && GetActiveGimmick(battler) != GIMMICK_TERA
-                 && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END))
-                {
-                    gBattleScripting.battler = battler;
-                    BattleScriptExecute(BattleScript_BattlerFormChangeEnd3NoPopup);
-                    effect++;
-                }
-                break;
             case ABILITY_CUD_CHEW:
                 if (gBattleMons[battler].volatiles.cudChew == TRUE)
                 {
@@ -5095,20 +5071,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 break;
             default:
                 break;
-            }
-
-            abilityForm = gLastUsedAbility;
-            // Handle ability form changes at the end of the turn here.
-            if (!effect && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
-            {
-                gBattleScripting.battler = battler;
-                // To prevent the new form's ability from pop up
-                gBattleScripting.abilityPopupOverwrite = abilityForm;
-                if (gLastUsedAbility == ABILITY_POWER_CONSTRUCT) // Special animation
-                    BattleScriptExecute(BattleScript_PowerConstruct);
-                else
-                    BattleScriptExecute(BattleScript_BattlerFormChangeEnd2); // Generic animation
-                effect++;
             }
         }
         break;
@@ -5601,54 +5563,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         default:
             break;
         }
-
-        abilityForm = gLastUsedAbility;
-        u32 speciesForm = gBattleMons[gBattlerTarget].species;
-        // Handle ability form changes when hit by a move here.
-        if (!effect
-            && IsBattlerTurnDamaged(gBattlerTarget)
-            && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HIT_BY_MOVE_CATEGORY))
-        {
-            gBattleScripting.abilityPopupOverwrite = abilityForm;
-            gBattleScripting.battler = gBattlerTarget;
-
-            switch (abilityForm)
-            {
-            case ABILITY_GULP_MISSILE:
-                if (!gBattleStruct->unableToUseMove
-                && IsBattlerAlive(gBattlerAttacker))
-                {
-                    if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
-                        SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
-
-                    switch (speciesForm)
-                    {
-                        case SPECIES_CRAMORANT_GORGING:
-                            BattleScriptCall(BattleScript_GulpMissileGorging);
-                            break;
-                        case SPECIES_CRAMORANT_GULPING:
-                            BattleScriptCall(BattleScript_GulpMissileGulping);
-                            break;
-                        default:
-                            BattleScriptCall(BattleScript_BattlerFormChange); // Fallback
-                            break;
-                    }
-                }
-                break;
-            case ABILITY_DISGUISE:
-                if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE)
-                    SetPassiveDamageAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 8);
-                BattleScriptCall(BattleScript_BattlerFormChangeDisguise);
-                break;
-            case ABILITY_ICE_FACE:
-                BattleScriptCall(BattleScript_IceFaceNullsDamage);
-                break;
-            default:
-                BattleScriptCall(BattleScript_BattlerFormChange);
-                break;
-            }
-            effect++;
-        }
         break;
     case ABILITYEFFECT_MOVE_END_ATTACKER: // Same as above, but for attacker
         switch (gLastUsedAbility)
@@ -5705,6 +5619,53 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             break;
         default:
+            break;
+        }
+        break;
+    case ABILITYEFFECT_FORM_CHANGE_ON_HIT:
+        speciesForm = gBattleMons[gBattlerTarget].species;
+
+        if (gBattleStruct->unableToUseMove
+         || !IsBattlerTurnDamaged(gBattlerTarget)
+         || !TryBattleFormChange(gBattlerTarget, FORM_CHANGE_BATTLE_HIT_BY_MOVE_CATEGORY))
+            break;
+
+        gBattleScripting.abilityPopupOverwrite = ability;
+        gBattleScripting.battler = battler;
+        effect++;
+
+        switch (ability)
+        {
+        case ABILITY_GULP_MISSILE:
+            if (!IsBattlerAlive(gBattlerAttacker))
+                break;
+
+            if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
+                SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
+
+            switch (speciesForm)
+            {
+            case SPECIES_CRAMORANT_GORGING:
+                BattleScriptCall(BattleScript_GulpMissileGorging);
+                break;
+            case SPECIES_CRAMORANT_GULPING:
+                BattleScriptCall(BattleScript_GulpMissileGulping);
+                break;
+            default:
+                BattleScriptCall(BattleScript_BattlerFormChange); // Fallback
+                break;
+            }
+            break;
+        case ABILITY_DISGUISE:
+            if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE)
+                SetPassiveDamageAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 8);
+            BattleScriptCall(BattleScript_BattlerFormChangeDisguise);
+            break;
+        case ABILITY_ICE_FACE:
+            BattleScriptCall(BattleScript_IceFaceNullsDamage);
+            break;
+        default:
+            BattleScriptCall(BattleScript_BattlerFormChange);
             break;
         }
         break;
@@ -9954,6 +9915,10 @@ static bool32 CanBattlerFormChange(u32 battler, enum FormChanges method)
         if (IsGigantamaxed(battler))
             return TRUE;
         else if (GetActiveGimmick(battler) == GIMMICK_TERA && DoesSpeciesHaveFormChangeMethod(gBattleMons[battler].species, FORM_CHANGE_BATTLE_TURN_END))
+            return FALSE;
+        break;
+    case FORM_CHANGE_BATTLE_TURN_END:
+        if (GetActiveGimmick(battler) == GIMMICK_TERA)
             return FALSE;
         break;
     default:

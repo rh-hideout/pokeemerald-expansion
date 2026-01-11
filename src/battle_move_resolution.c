@@ -231,6 +231,17 @@ static enum MoveEndResult MoveEnd_Abilities(void)
     return result;
 }
 
+static enum MoveEndResult MoveEnd_FormChangeOnHit(void)
+{
+    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+
+    if (AbilityBattleEffects(ABILITYEFFECT_FORM_CHANGE_ON_HIT, gBattlerTarget, GetBattlerAbility(gBattlerTarget), 0, TRUE))
+        result = MOVEEND_STEP_RUN_SCRIPT;
+
+    gBattleScripting.moveendState++;
+    return result;
+}
+
 static enum MoveEndResult MoveEnd_AbilitiesAttacker(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
@@ -1715,6 +1726,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_RAGE] = MoveEnd_Rage,
     [MOVEEND_SYNCHRONIZE_TARGET] = MoveEnd_SynchronizeTarget,
     [MOVEEND_ABILITIES] = MoveEnd_Abilities,
+    [MOVEEND_FORM_CHANGE_ON_HIT] = MoveEnd_FormChangeOnHit,
     [MOVEEND_ABILITIES_ATTACKER] = MoveEnd_AbilitiesAttacker,
     [MOVEEND_STATUS_IMMUNITY_ABILITIES] = MoveEnd_StatusImmunityAbilities,
     [MOVEEND_SYNCHRONIZE_ATTACKER] = MoveEnd_SynchronizeAttacker,
