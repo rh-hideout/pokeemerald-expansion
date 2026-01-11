@@ -3826,28 +3826,13 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             }
         }
         break;
-    }
-        default:
-            break;
-    }
-
-    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
-}
-
-static void SetPreAttackMoveEffect(u32 moveEffect, const u8 *battleScript)
-{
-	u32 side = 0;
-	enum Ability abilityAtk = ABILITY_NONE;
-
-	switch (moveEffect)
-	{
     case MOVE_EFFECT_BREAK_SCREEN:
         if (B_BRICK_BREAK >= GEN_4)
-        	side = GetBattlerSide(gBattlerTarget); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
+        	i = GetBattlerSide(gBattlerTarget); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
         else
-        	side = GetBattlerSide(gBattlerAttacker) ^ BIT_SIDE;
+        	i = GetBattlerSide(gBattlerAttacker) ^ BIT_SIDE;
 
-        if (gSideStatuses[side] & SIDE_STATUS_SCREEN_ANY)
+        if (gSideStatuses[i] & SIDE_STATUS_SCREEN_ANY)
         {
             bool32 failed;
 
@@ -3868,7 +3853,7 @@ static void SetPreAttackMoveEffect(u32 moveEffect, const u8 *battleScript)
 
         	if (!failed)
         	{
-            	gSideStatuses[side] &= ~SIDE_STATUS_SCREEN_ANY;
+            	gSideStatuses[i] &= ~SIDE_STATUS_SCREEN_ANY;
             	gBattleScripting.animTurn = 1;
             	gBattleScripting.animTargetsHit = 1;
             	gBattleStruct->preAttackAnimPlayed = TRUE; // The whole brick break animation is covered by the move so don't play twice
@@ -3883,13 +3868,12 @@ static void SetPreAttackMoveEffect(u32 moveEffect, const u8 *battleScript)
         }
         break;
     case MOVE_EFFECT_STEAL_STATS:
-        abilityAtk = GetBattlerAbility(gBattlerAttacker);
         CalcTypeEffectivenessMultiplierHelper(
                     	gCurrentMove,
                     	GetBattleMoveType(gCurrentMove),
                     	gBattlerAttacker,
                     	gBattlerTarget,
-                    	abilityAtk,
+                    	GetBattlerAbility(gBattlerAttacker),
                     	GetBattlerAbility(gBattlerTarget),
                     	TRUE
                     ); // Sets moveResultFlags
@@ -3899,7 +3883,7 @@ static void SetPreAttackMoveEffect(u32 moveEffect, const u8 *battleScript)
         }
         else
         {
-            bool32 contrary = abilityAtk == ABILITY_CONTRARY;
+            bool32 contrary = GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY;
             gBattleStruct->stolenStats[0] = 0; // Stats to steal.
             gBattleScripting.animArg1 = 0;
             for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
@@ -3945,9 +3929,14 @@ static void SetPreAttackMoveEffect(u32 moveEffect, const u8 *battleScript)
             }
         }
         break;
-	default:
-		break;
-	}
+
+
+    }
+        default:
+            break;
+    }
+
+    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 }
 
 static void Cmd_setpreattackadditionaleffect(void)
@@ -3958,10 +3947,19 @@ static void Cmd_setpreattackadditionaleffect(void)
     if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
     {
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-
-        SetPreAttackMoveEffect(additionalEffect->moveEffect, gBattlescriptCurrInstr);
-
         gBattleStruct->additionalEffectsCounter++;
+
+        if (!additionalEffect->preAttackEffect)
+            return;
+
+        SetMoveEffect(
+        	gBattlerAttacker,
+        	additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
+        	additionalEffect->moveEffect,
+        	gBattlescriptCurrInstr,
+        	EFFECT_PRIMARY
+        );
+
         return;
     }
 
