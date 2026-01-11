@@ -151,7 +151,7 @@
     F(INTREPID_SWORD,            intrepidSword,           (u32, GEN_COUNT - 1)) \
     F(DAUNTLESS_SHIELD,          dauntlessShield,         (u32, GEN_COUNT - 1)) \
     F(DISGUISE_HP_LOSS,          disguiseHpLoss,          (u32, GEN_COUNT - 1)) \
-    F(ABILITY_TRIGGER_CHANCE,    abilityTriggerChance,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(ABILITY_TRIGGER_CHANCE,    abilityTriggerChance,    (u32, GEN_COUNT - 1)) \
     F(PICKUP_WILD,               pickupWild,              (u32, GEN_COUNT - 1)) \
     F(MAGIC_GUARD,               magicGuard,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(BATTLE_BOND,               battleBond,              (u32, GEN_COUNT - 1)) \
@@ -194,6 +194,12 @@
     F(SECRET_POWER_ANIMATION,    secretPowerAnimation,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(NATURE_POWER_MOVES,        naturePowerMoves,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(CAMOUFLAGE_TYPES,          camouflageTypes,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    /* Catching settings */ \
+    F(SEMI_INVULNERABLE_CATCH,   semiInvulnerableCatch,   (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(INCAPACITATED_CATCH_BONUS, incapacitatedCatchBonus, (u32, GEN_COUNT - 1)) \
+    F(LOW_LEVEL_CATCH_BONUS,     lowLevlCatchBonus,       (u32, GEN_COUNT - 1)) \
+    F(MISSING_BADGE_CATCH_MALUS, missingBadgeCatchMalue,  (u32, GEN_COUNT - 1)) \
+    F(CRITICAL_CAPTURE_IF_OWNED, criticalCaptureIfOwned,  (u32, GEN_COUNT - 1)) \
     /* Other settings */ \
     F(WILD_NATURAL_ENEMIES,      wildNaturalEnemies,      (u32, TRUE))          /* TODO: use in tests */ \
     F(AFFECTION_MECHANICS,       affectionMechanics,      (u32, TRUE))          /* TODO: use in tests */ \

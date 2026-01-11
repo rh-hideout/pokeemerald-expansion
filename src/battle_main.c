@@ -1854,6 +1854,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
     }
     if (noMoveSet)
     {
+        GiveMonInitialMoveset(mon);
         // TODO: Figure out a default strategy when moves are not set, to generate a good moveset
         return;
     }
@@ -1945,7 +1946,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                     if (speciesInfo->abilities[abilityNum] == partyData[monIndex].ability)
                         break;
                 }
-                assertf(abilityNum < maxAbilityNum, "illegal ability %S for %S", gAbilitiesInfo[partyData[monIndex].ability], speciesInfo->speciesName);
+                assertf(abilityNum < maxAbilityNum, "illegal ability %S for %S", gAbilitiesInfo[partyData[monIndex].ability].name, speciesInfo->speciesName);
             }
             else if (B_TRAINER_MON_RANDOM_ABILITY)
             {
@@ -2315,7 +2316,7 @@ static void EndLinkBattleInSteps(void)
         }
         break;
     case 7:
-        if (!IsTextPrinterActive(B_WIN_MSG))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         {
             if (IsLinkTaskFinished() == TRUE)
                 gBattleCommunication[MULTIUSE_STATE]++;
@@ -2458,7 +2459,7 @@ static void AskRecordBattle(void)
         }
         break;
     case STATE_PRINT_YES_NO:
-        if (!IsTextPrinterActive(B_WIN_MSG))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         {
             HandleBattleWindow(YESNOBOX_X_Y, 0);
             BattlePutTextOnWindow(gText_BattleYesNoChoice, B_WIN_YESNO);
@@ -2564,7 +2565,7 @@ static void AskRecordBattle(void)
         }
         break;
     case STATE_RECORD_WAIT:
-        if (IsLinkTaskFinished() == TRUE && !IsTextPrinterActive(B_WIN_MSG) && --gBattleCommunication[1] == 0)
+        if (IsLinkTaskFinished() == TRUE && !IsTextPrinterActiveOnWindow(B_WIN_MSG) && --gBattleCommunication[1] == 0)
         {
             if (gMain.anyLinkBattlerHasFrontierPass)
             {
@@ -2576,7 +2577,7 @@ static void AskRecordBattle(void)
         break;
     case STATE_END_RECORD_YES:
     case STATE_END_RECORD_NO:
-        if (!IsTextPrinterActive(B_WIN_MSG))
+        if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         {
             if (gMain.anyLinkBattlerHasFrontierPass)
             {
@@ -3307,7 +3308,6 @@ const u8* FaintClearSetData(u32 battler)
     gProtectStructs[battler].pranksterElevated = FALSE;
 
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
-    gBattleStruct->battlerState[battler].fainted = TRUE;
 
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
@@ -3510,6 +3510,8 @@ static void DoBattleIntro(void)
                     MarkBattlerForControllerExec(battler);
                     gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES, NULL);
                 }
+                break;
+            default:
                 break;
             }
 
@@ -3999,7 +4001,7 @@ u8 IsRunningFromBattleImpossible(u32 battler)
 
     if (holdEffect == HOLD_EFFECT_CAN_ALWAYS_RUN)
         return BATTLE_RUN_SUCCESS;
-    if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+    if (GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return BATTLE_RUN_SUCCESS;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         return BATTLE_RUN_SUCCESS;
@@ -4090,7 +4092,7 @@ static void HandleTurnActionSelectionState(void)
     gBattleCommunication[ACTIONS_CONFIRMED_COUNT] = 0;
     for (battler = 0; battler < gBattlersCount; battler++)
     {
-        u32 position = GetBattlerPosition(battler);
+        enum BattlerPosition position = GetBattlerPosition(battler);
         switch (gBattleCommunication[battler])
         {
         case STATE_TURN_START_RECORD: // Recorded battle related action on start of every turn.

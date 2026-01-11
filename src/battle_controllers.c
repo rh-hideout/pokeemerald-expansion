@@ -141,7 +141,7 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         gBattlerControllerFuncs[i] = BattleControllerDummy;
-        gBattlerPositions[i] = 0xFF;
+        gBattlerPositions[i] = B_POSITION_ABSENT;
         gActionSelectionCursor[i] = 0;
         gMoveSelectionCursor[i] = 0;
     }
@@ -340,7 +340,7 @@ static void InitBtlControllersInternal(void)
 
         for (i = 0; i < MAX_LINK_PLAYERS; i++)
         {
-            u32 linkPositionLeft, linkPositionRight;
+            enum BattlerPosition linkPositionLeft, linkPositionRight;
             BattleControllerFunc linkBtlControllerFunc;
 
             if (i == multiplayerId)
@@ -2195,7 +2195,7 @@ static void Controller_WaitForTrainerPic(u32 battler)
 
 void Controller_WaitForString(u32 battler)
 {
-    if (!IsTextPrinterActive(B_WIN_MSG))
+    if (!IsTextPrinterActiveOnWindow(B_WIN_MSG))
         BtlController_Complete(battler);
 }
 

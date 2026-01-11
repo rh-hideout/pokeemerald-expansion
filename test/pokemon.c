@@ -327,7 +327,7 @@ TEST("givemon [moves]")
     ZeroPlayerPartyMons();
 
     RUN_OVERWORLD_SCRIPT(
-        givemon SPECIES_WOBBUFFET, 100, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_NONE;
+        givemon SPECIES_WOBBUFFET, 100, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_NONE, move4=MOVE_NONE;
     );
 
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
@@ -336,6 +336,28 @@ TEST("givemon [moves]")
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), MOVE_SPLASH);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), MOVE_NONE);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), MOVE_NONE);
+}
+
+TEST("givemon [moves (default)]")
+{
+    ZeroPlayerPartyMons();
+
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_PYUKUMUKU, 100, move1=MOVE_DEFAULT, move2=MOVE_DEFAULT, move3=MOVE_DEFAULT;
+    );
+
+    const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(SPECIES_PYUKUMUKU);
+    u32 learnsetLength;
+    for (learnsetLength = 0; learnset[learnsetLength].move != LEVEL_UP_MOVE_END; learnsetLength++)
+    {
+        ; // we just want to get length of the learnset array
+    }
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_PYUKUMUKU);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), learnset[learnsetLength - 1].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), learnset[learnsetLength - 2].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), learnset[learnsetLength - 3].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), learnset[learnsetLength - 4].move);
 }
 
 TEST("givemon [all]")

@@ -3755,7 +3755,7 @@ static void Task_LinkRetireStatusWithBattleTowerPartner(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 6:
-        if (!IsTextPrinterActive(0))
+        if (!IsTextPrinterActiveOnWindow(0))
             gTasks[taskId].tState++;
         break;
     case 7:
@@ -4398,8 +4398,7 @@ bool32 CheckPartyHasSpecies(u32 givenSpecies)
 
 void UseBlankMessageToCancelPokemonPic(void)
 {
-    u8 t = EOS;
-    AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
+    DeactivateSingleTextPrinter(0, WINDOW_TEXT_PRINTER);
     ScriptMenu_HidePokemonPic();
 }
 
@@ -4486,7 +4485,7 @@ static void Task_LearnedMoveBoxMon(u8 taskId)
 
 static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         PlayFanfare(MUS_LEVEL_UP);
         gSpecialVar_Result = CAN_LEARN_MOVE;
@@ -4497,7 +4496,7 @@ static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8 taskId)
 
 static void Task_ReplaceBoxMonMoveYesNo(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         DisplayYesNoMenuDefaultYes();
         gTasks[taskId].func = Task_HandleReplaceBoxMonMoveYesNoInput;
@@ -4523,7 +4522,7 @@ static void Task_HandleReplaceBoxMonMoveYesNoInput(u8 taskId)
 
 static void Task_ShowSummaryScreenToForgetBoxMonMove(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         DestroyTask(taskId);
         if(gSpecialVar_MonBoxId == 0xFF)
@@ -4566,7 +4565,7 @@ static void Task_ReturnToFieldWhileLearningMove(void)
 static void Task_BoxMonReplaceMove(u8 taskId)
 {
 
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         enum Move move = gSpecialVar_ItemId;
         if(gSpecialVar_MonBoxId == 0xFF)
@@ -4585,7 +4584,7 @@ static void Task_BoxMonReplaceMove(u8 taskId)
             SetBoxMonData(mon, MON_DATA_MOVE1 + GetMoveSlotToReplace(), &move);
             SetBoxMonData(mon, MON_DATA_PP1 + GetMoveSlotToReplace(), &gMovesInfo[move].pp);
         }
-     
+
         Task_LearnedMoveBoxMon(taskId);
     }
 }
@@ -4599,7 +4598,7 @@ static void StopLearningBoxMonMovePrompt(u8 taskId)
 
 static void Task_StopLearningBoxMonMoveYesNo(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         DisplayYesNoMenuDefaultYes();
         gTasks[taskId].func = Task_HandleStopLearningBoxMonMoveYesNoInput;
@@ -4635,7 +4634,7 @@ static void Task_HandleStopLearningBoxMonMoveYesNoInput(u8 taskId)
 
 static void Task_DidntLearnMove(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         DestroyTask(taskId);
         ScriptContext_Enable();

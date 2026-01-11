@@ -885,19 +885,20 @@ int main(int argc, char *argv[])
         fprintf(stdout, "\n");
         if (fails > 0)
             fprintf(stdout, "- Tests \e[31mFAILED\e[0m :         %d    Add TESTS='X' to run tests with the defined prefix.\n", fails);
-        if (expectedFails > 0)
-            fprintf(stdout, "- Tests \e[32mEXPECT_FAILING\e[0m:  %d\n", expectedFails);
+        if (expectedFailsPassing > 0)
+            fprintf(stdout, "- \e[31mEXPECTED_FAIL_PASSING\e[0m: %d\n", expectedFailsPassing);
         if (knownFails > 0)
             fprintf(stdout, "- Tests \e[33mKNOWN_FAILING\e[0m:   %d\n", knownFails);
         if (assumptionFails > 0)
             fprintf(stdout, "- \e[33mASSUMPTIONS_FAILED\e[0m:    %d\n", assumptionFails);
         if (todos > 0)
             fprintf(stdout, "- Tests \e[33mTO_DO\e[0m:           %d\n", todos);
-        if (expectedFailsPassing > 0)
-            fprintf(stdout, "- \e[31mEXPECTED_FAIL_PASSING\e[0m: %d\n", expectedFailsPassing);
         if (knownFailsPassing > 0)
             fprintf(stdout, "- \e[32mKNOWN_FAILING_PASSING\e[0m: %d   \e[33mPlease remove KNOWN_FAILING if these tests intentionally PASS\e[0m\n", knownFailsPassing);
-        fprintf(stdout, "- Tests \e[32mPASSED\e[0m:          %d\n", passes);
+        if (expectedFails > 0)
+            fprintf(stdout, "- Tests \e[32mEXPECT_FAILING\e[0m:  %d\n", expectedFails);
+        if (passes > 0)
+            fprintf(stdout, "- Tests \e[32mPASSED\e[0m:          %d\n", passes);
         fprintf(stdout, "- Tests \e[34mTOTAL\e[0m:           %d\n", results);
     }
     fprintf(stdout, "\n");

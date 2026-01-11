@@ -3255,9 +3255,9 @@ BattleScript_EffectMeanLook::
 	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
 	jumpifvolatile BS_TARGET, VOLATILE_ESCAPE_PREVENTION, BattleScript_ButItFailed
 	jumpifsubstituteblocks BattleScript_ButItFailed
-.if B_GHOSTS_ESCAPE >= GEN_6
+	jumpifgenconfiglowerthan CONFIG_GHOSTS_ESCAPE, GEN_6, BattleScript_EffectMeanLookGen5
 	jumpiftype BS_TARGET, TYPE_GHOST, BattleScript_ButItFailed
-.endif
+BattleScript_EffectMeanLookGen5:
 	attackanimation
 	waitanimation
 	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_PREVENT_ESCAPE
@@ -5769,14 +5769,12 @@ BattleScript_IllusionOffAndTerastallization::
 	goto BattleScript_Terastallization
 
 BattleScript_IllusionOff::
-	setspriteignore0hp TRUE
 	call BattleScript_SwapFromSubstitute
 	playanimation BS_SCRIPTING, B_ANIM_ILLUSION_OFF
 	waitanimation
 	call BattleScript_SwapToSubstitute
 	updatenick
 	waitstate
-	setspriteignore0hp FALSE
 	printstring STRINGID_ILLUSIONWOREOFF
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -8351,11 +8349,9 @@ BattleScript_DynamaxEnds::
 
 BattleScript_DynamaxEnds_Ret::
 	flushtextbox
-	setspriteignore0hp TRUE
 	updatedynamax
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
-	setspriteignore0hp FALSE
 	pause B_WAIT_TIME_SHORT
 	return
 

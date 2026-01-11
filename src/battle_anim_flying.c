@@ -1251,7 +1251,7 @@ void AnimTask_LoadWindstormBackground(u8 taskId)
     GetBattleAnimBg1Data(&animBg);
     AnimLoadCompressedBgGfx(animBg.bgId, gBattleAnimBgImage_Sandstorm, animBg.tilesOffset);
     AnimLoadCompressedBgTilemapHandleContest(&animBg, gBattleAnimBgTilemap_Sandstorm, 0);
-    LoadPalette(gBattleAnimSpritePal_Windstorm, animBg.paletteId * 16, 32);
+    LoadPalette(gBattleAnimSpritePal_Windstorm, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
 
     if (gBattleAnimArgs[0] && !IsOnPlayerSide(gBattleAnimAttacker))
         var0 = 1;

@@ -470,7 +470,7 @@ bool32 AI_CanBattlerEscape(u32 battler)
 {
     enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
 
-    if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+    if (GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TRUE;
     if (holdEffect == HOLD_EFFECT_SHED_SHELL)
         return TRUE;
@@ -2250,7 +2250,7 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, enum Move move, enum Move pred
     s32 score = 0;
 
     // TODO more sophisticated logic
-    u32 uses = gBattleMons[battlerAtk].volatiles.protectUses;
+    u32 uses = gBattleMons[battlerAtk].volatiles.consecutiveMoveUses;
 
     /*if (GetMoveResultFlags(predictedMove) & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_MISSED))
     {
@@ -3243,7 +3243,9 @@ static u32 GetLeechSeedDamage(u32 battler)
 static u32 GetNightmareDamage(u32 battlerId)
 {
     u32 damage = 0;
-    if (gBattleMons[battlerId].volatiles.nightmare && gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+    if (gBattleMons[battlerId].volatiles.nightmare
+     && ((gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+     || gAiLogicData->abilities[battlerId] == ABILITY_COMATOSE))
     {
         damage = GetNonDynamaxMaxHP(battlerId) / 4;
         if (damage == 0)
@@ -5648,7 +5650,7 @@ bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, enum Move mo
 {
     u32 preventsStatLoss;
     enum Ability partnerAbility = aiData->abilities[battlerAtkPartner];
-    u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battlerAtk));
+    enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battlerAtk));
     u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
 
     if (gBattleMons[battlerAtkPartner].statStages[STAT_ATK] == MAX_STAT_STAGE
@@ -6330,7 +6332,7 @@ bool32 CanMoveBeBouncedBack(u32 battler, enum Move move)
 u32 GetActiveBattlerIds(u32 battler, u32 *battlerIn1, u32 *battlerIn2)
 {
     u32 opposingBattler = 0;
-    u32 battlerPosition = GetBattlerPosition(battler);
+    enum BattlerPosition battlerPosition = GetBattlerPosition(battler);
     if (IsDoubleBattle())
     {
         *battlerIn1 = battler;

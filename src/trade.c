@@ -3860,10 +3860,10 @@ static bool8 DoTradeAnim_Cable(void)
     case STATE_TRY_EVOLUTION: // Only if in-game trade, link trades use CB2_TryLinkTradeEvolution
         TradeMons(gSpecialVar_0x8005, 0);
         gCB2_AfterEvolution = CB2_InGameTrade;
-        evoTarget = GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gPlayerParty[gSelectedTradeMonPositions[TRADE_PARTNER]], NULL, CHECK_EVO);
+        evoTarget = GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gEnemyParty[0], NULL, CHECK_EVO);
         if (evoTarget != SPECIES_NONE)
         {
-            GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gPlayerParty[gSelectedTradeMonPositions[TRADE_PARTNER]], NULL, DO_EVO);
+            GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gEnemyParty[0], NULL, DO_EVO);
             TradeEvolutionScene(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], evoTarget, sTradeAnim->monSpriteIds[TRADE_PARTNER], gSelectedTradeMonPositions[TRADE_PLAYER]);
         }
         sTradeAnim->state++;
@@ -4368,10 +4368,10 @@ static bool8 DoTradeAnim_Wireless(void)
                 CopyMonToPC(&gEnemyParty[0]);
         }
         gCB2_AfterEvolution = CB2_InGameTrade;
-        evoTarget = GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gPlayerParty[gSelectedTradeMonPositions[TRADE_PARTNER]], NULL, CHECK_EVO);
+        evoTarget = GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gEnemyParty[0], NULL, CHECK_EVO);
         if (evoTarget != SPECIES_NONE)
         {
-            GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gPlayerParty[gSelectedTradeMonPositions[TRADE_PARTNER]], NULL, DO_EVO);
+            GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gEnemyParty[0], NULL, DO_EVO);
             TradeEvolutionScene(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], evoTarget, sTradeAnim->monSpriteIds[TRADE_PARTNER], gSelectedTradeMonPositions[TRADE_PLAYER]);
         }
 
@@ -4415,10 +4415,10 @@ static void CB2_TryLinkTradeEvolution(void)
         break;
     case 4:
         gCB2_AfterEvolution = CB2_SaveAndEndTrade;
-        evoTarget = GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gPlayerParty[gSelectedTradeMonPositions[TRADE_PARTNER]], NULL, CHECK_EVO);
+        evoTarget = GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gEnemyParty[gSelectedTradeMonPositions[TRADE_PARTNER] % PARTY_SIZE], NULL, CHECK_EVO);
         if (evoTarget != SPECIES_NONE)
         {
-            GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gPlayerParty[gSelectedTradeMonPositions[TRADE_PARTNER]], NULL, DO_EVO);
+            GetEvolutionTargetSpecies(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gEnemyParty[gSelectedTradeMonPositions[TRADE_PARTNER]  % PARTY_SIZE], NULL, DO_EVO);
             TradeEvolutionScene(&gPlayerParty[gSelectedTradeMonPositions[TRADE_PLAYER]], evoTarget, sTradeAnim->monSpriteIds[TRADE_PARTNER], gSelectedTradeMonPositions[TRADE_PLAYER]);
         }
         else if (IsWirelessTrade())
@@ -4566,6 +4566,7 @@ static void CreateInGameTradePokemonInternal(u8 whichPlayerMon, u8 whichInGameTr
     struct Pokemon *pokemon = &gEnemyParty[0];
 
     CreateMon(pokemon, inGameTrade->species, level, inGameTrade->personality, OTID_STRUCT_PRESET(inGameTrade->otId));
+    GiveMonInitialMoveset(pokemon);
 
     SetMonData(pokemon, MON_DATA_HP_IV, &inGameTrade->ivs[0]);
     SetMonData(pokemon, MON_DATA_ATK_IV, &inGameTrade->ivs[1]);

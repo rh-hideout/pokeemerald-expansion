@@ -20,6 +20,7 @@ void TestRunner_Battle_RecordSubHit(u32 battlerId, u32 damage, bool32 broke);
 void TestRunner_Battle_RecordExp(u32 battlerId, u32 oldExp, u32 newExp);
 void TestRunner_Battle_RecordMessage(const u8 *message);
 void TestRunner_Battle_RecordStatus1(u32 battlerId, u32 status1);
+void TestRunner_Battle_RecordCatchChance(u32 catchChance);
 void TestRunner_Battle_AfterLastTurn(void);
 void TestRunner_Battle_CheckChosenMove(u32 battlerId, enum Move moveId, u32 target, enum Gimmick gimmick);
 void TestRunner_Battle_CheckSwitch(u32 battlerId, u32 partyIndex);
@@ -43,6 +44,7 @@ u32 TestRunner_Battle_GetForcedEnvironment(void);
 #define TestRunner_Battle_RecordExp(...) (void)0
 #define TestRunner_Battle_RecordMessage(...) (void)0
 #define TestRunner_Battle_RecordStatus1(...) (void)0
+#define TestRunner_Battle_RecordCatchChance(...) (void)0
 #define TestRunner_Battle_AfterLastTurn(...) (void)0
 #define TestRunner_Battle_CheckChosenMove(...) (void)0
 #define TestRunner_Battle_CheckSwitch(...) (void)0

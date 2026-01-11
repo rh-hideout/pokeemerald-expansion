@@ -412,7 +412,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
         }
         else if (moves[i] == MOVE_DEFAULT)
         {
-            GiveMonDefaultMove(&mon, slot);
+            GiveMonDefaultMove(&mon, i);
             continue;
         }
         else
@@ -559,10 +559,10 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
         }
     }
 
-    enum Move move1                = PARSE_FLAG(17, MOVE_DEFAULT);
-    enum Move move2                = PARSE_FLAG(18, MOVE_DEFAULT);
-    enum Move move3                = PARSE_FLAG(19, MOVE_DEFAULT);
-    enum Move move4                = PARSE_FLAG(20, MOVE_DEFAULT);
+    enum Move move1          = PARSE_FLAG(17, MOVE_DEFAULT);
+    enum Move move2          = PARSE_FLAG(18, MOVE_DEFAULT);
+    enum Move move3          = PARSE_FLAG(19, MOVE_DEFAULT);
+    enum Move move4          = PARSE_FLAG(20, MOVE_DEFAULT);
     enum ShinyMode shinyMode = PARSE_FLAG(21, SHINY_MODE_RANDOM);
     bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
     enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
