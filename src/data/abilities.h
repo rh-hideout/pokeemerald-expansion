@@ -1967,6 +1967,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeCopied = TRUE,
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
     },
 
     [ABILITY_PASTEL_VEIL] =
