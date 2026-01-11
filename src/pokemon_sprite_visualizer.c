@@ -1072,7 +1072,7 @@ static void UpdateMonAnimNames(u8 taskId)
     u8 frontAnim = data->animIdFront;
     u8 backAnim = data->animIdBack;
     u8 text[34];
-    u8 fontId = 0;
+    u8 fontId = FONT_SMALL;
     u8 textNum[4];
 
     FillWindowPixelBuffer(WIN_BOTTOM_RIGHT, PIXEL_FILL(0));
@@ -1094,7 +1094,7 @@ static void UpdateMonAnimNames(u8 taskId)
 static void UpdateYPosOffsetText(struct PokemonSpriteVisualizer *data)
 {
     u8 text[34];
-    u8 fontId = 0;
+    u8 fontId = FONT_SMALL;
     u8 textConst[] = _("const val:");
     u8 textNew[] = _("new val:");
     u8 x_const_val = 50;
@@ -1155,7 +1155,7 @@ static void UpdateShadowSettingsText(struct PokemonSpriteVisualizer *data)
         return;
 
     u8 text[16];
-    u8 fontId = 0;
+    u8 fontId = FONT_SMALL;
     u8 textConst[] = _("const val:");
     u8 textNew[] = _("new val:");
     u8 x_const_val = 50;
