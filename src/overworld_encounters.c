@@ -1358,11 +1358,13 @@ bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *object
     return objectEvent->sOverworldEncounterLevel & OWE_FLAG_START_ENCOUNTER;
 }
 
-bool32 OverworldWildEncounter_ShouldEnableRandomBattleFrontierSpawns(void)
+bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void)
 {
-    return ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS
+    if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS
         || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
-        && !OW_WILD_ENCOUNTERS_RANDOM && OW_WILD_ENCOUNTERS_OVERWORLD);
+        return FALSE;
+
+    return !OW_WILD_ENCOUNTERS_RANDOM;
 }
 
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
