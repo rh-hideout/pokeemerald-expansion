@@ -157,6 +157,15 @@ enum MoveCanceler
     MOVE_STEP_FAILURE, // Same as break but breaks out of it due to move failure and jumps to script that handles the failure
 };
 
+enum ImmunityHealStatusOutcome
+{
+    IMMUNITY_NO_EFFECT,
+    IMMUNITY_STATUS_CLEARED,
+    IMMUNITY_CONFUSION_CLEARED,
+    IMMUNITY_INFATUATION_CLEARED,
+    IMMUNITY_TAUNT_CLEARED,
+};
+
 extern const struct TypePower gNaturalGiftTable[];
 
 struct BattleContext
@@ -342,7 +351,7 @@ struct Pokemon *GetIllusionMonPtr(u32 battler);
 void ClearIllusionMon(u32 battler);
 u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, u32 battler);
 void SetIllusionMon(struct Pokemon *mon, u32 battler);
-u32 TryImmunityAbilityHealStatus(u32 battler);
+enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(u32 battler);
 bool32 ShouldGetStatBadgeBoost(u16 flagId, u32 battler);
 uq4_12_t GetBadgeBoostModifier(void);
 enum DamageCategory GetBattleMoveCategory(enum Move move);
