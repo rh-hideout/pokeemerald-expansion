@@ -10493,7 +10493,7 @@ static u32 GetFlingPowerFromItemId(enum Item itemId)
 
 bool32 CanFling(u32 battlerAtk, u32 battlerDef)
 {
-    u16 item = gBattleMons[battlerAtk].item;
+    enum Item item = gBattleMons[battlerAtk].item;
 
     if (item == ITEM_NONE
       || (GetConfig(CONFIG_KLUTZ_FLING_INTERACTION) >= GEN_5 && GetBattlerAbility(battlerAtk) == ABILITY_KLUTZ)
@@ -10572,7 +10572,7 @@ void TryRestoreHeldItems(void)
     }
 }
 
-bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item)
+bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, enum Item item)
 {
     enum BattleSide stealerSide = GetBattlerSide(battlerStealing);
 
@@ -10607,14 +10607,14 @@ bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item)
     if (GetItemHoldEffect(item) == HOLD_EFFECT_AIR_BALLOON)
         return FALSE;
 
-    if (!CanBattlerGetOrLoseItem(battlerItem, battlerStealing, item)      // Battler with item cannot have it stolen
+    if (!CanBattlerGetOrLoseItem(battlerItem, battlerStealing, item)  // Battler with item cannot have it stolen
      || !CanBattlerGetOrLoseItem(battlerStealing, battlerItem, item)) // Stealer cannot take the item
         return FALSE;
 
     return TRUE;
 }
 
-void TrySaveExchangedItem(u32 battler, u16 stolenItem)
+void TrySaveExchangedItem(u32 battler, enum Item stolenItem)
 {
     // Because BtlController_EmitSetMonData does SetMonData, we need to save the stolen item only if it matches the battler's original
     // So, if the player steals an item during battle and has it stolen from it, it will not end the battle with it (naturally)

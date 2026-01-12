@@ -1109,7 +1109,7 @@ void TryPutPokemonTodayOnAir(void)
     u16 ballsUsed;
     TVShow *show;
     u32 language2;
-    u16 itemLastUsed;
+    enum Item itemLastUsed;
 
     ballsUsed = 0;
     TryPutRandomPokeNewsOnAir();

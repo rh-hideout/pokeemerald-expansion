@@ -568,8 +568,8 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory c
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = gAiLogicData->abilities[attacker];
     ctx.abilityDef = gAiLogicData->abilities[target];
-    ctx.holdEffectAtk = gAiLogicData->items[attacker];
-    ctx.holdEffectDef = gAiLogicData->items[target];
+    ctx.holdEffectAtk = gAiLogicData->holdEffects[attacker];
+    ctx.holdEffectDef = gAiLogicData->holdEffects[target];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -1413,8 +1413,8 @@ uq4_12_t AI_GetMoveEffectiveness(enum Move move, u32 battlerAtk, u32 battlerDef)
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
     ctx.abilityDef = gAiLogicData->abilities[battlerDef];
-    ctx.holdEffectAtk = gAiLogicData->items[battlerAtk];
-    ctx.holdEffectDef = gAiLogicData->items[battlerDef];
+    ctx.holdEffectAtk = gAiLogicData->holdEffects[battlerAtk];
+    ctx.holdEffectDef = gAiLogicData->holdEffects[battlerDef];
     typeEffectiveness = CalcTypeEffectivenessMultiplier(&ctx);
 
     RestoreBattlerData(battlerAtk);
@@ -3474,7 +3474,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, enum Move move)
 #define BATTLE_TYPE_CANT_KNOCK_OFF (BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK \
                                   | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_SECRET_BASE \
                                   | (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0))
-bool32 CanKnockOffItem(u32 fromBattler, u32 battler, u32 item)
+bool32 CanKnockOffItem(u32 fromBattler, u32 battler, enum Item item)
 {
     if (item == ITEM_NONE)
         return FALSE;
@@ -4627,7 +4627,7 @@ static const u16 sRecycleEncouragedItems[] =
 };
 
 // Its assumed that the berry is strategically given, so no need to check benefits of the berry
-bool32 IsStatBoostingBerry(u32 item)
+bool32 IsStatBoostingBerry(enum Item item)
 {
     switch (item)
     {
@@ -4645,7 +4645,7 @@ bool32 IsStatBoostingBerry(u32 item)
     }
 }
 
-bool32 ShouldRestoreHpBerry(u32 battlerAtk, u32 item)
+bool32 ShouldRestoreHpBerry(u32 battlerAtk, enum Item item)
 {
     switch (item)
     {
@@ -4665,7 +4665,7 @@ bool32 ShouldRestoreHpBerry(u32 battlerAtk, u32 item)
     }
 }
 
-bool32 IsRecycleEncouragedItem(u32 item)
+bool32 IsRecycleEncouragedItem(enum Item item)
 {
     for (u32 recycleIndex = 0; recycleIndex < ARRAY_COUNT(sRecycleEncouragedItems); recycleIndex++)
     {

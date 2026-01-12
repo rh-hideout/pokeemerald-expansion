@@ -58,7 +58,7 @@ bool32 ShouldUseItem(u32 battler)
 
     for (u32 itemIndex = 0; itemIndex < MAX_TRAINER_ITEMS; itemIndex++)
     {
-        u16 item;
+        enum Item item;
         const u8 *itemEffects;
         u8 battlerSide;
 

@@ -140,7 +140,7 @@ WILD_BATTLE_TEST("Capture: Missing badge malus apply correcly in gen 9")
 
 WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, capture of owned pokemon always appear critical")
 {
-    u32 item;
+    enum Item item;
     bool32 alreadyOwned;
     u32 catchingChance;
 

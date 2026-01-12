@@ -101,7 +101,7 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId)
     return ITEM_NO_EFFECT;
 }
 
-static enum ItemEffect TryTerrainSeeds(u32 battler, u32 item)
+static enum ItemEffect TryTerrainSeeds(u32 battler, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -184,7 +184,7 @@ static enum ItemEffect TryConsumeMirrorHerb(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
+static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -232,7 +232,7 @@ static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
     return effect;
 }
 
-static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk, u32 item)
+static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battlerAtk);
@@ -330,7 +330,7 @@ static enum ItemEffect TryAbsorbBulb(u32 battlerDef)
     return effect;
 }
 
-static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk, u32 item)
+static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -352,7 +352,7 @@ static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk, u32 item)
     return effect;
 }
 
-static enum ItemEffect TryRowapBerry(u32 battlerDef, u32 battlerAtk, u32 item)
+static enum ItemEffect TryRowapBerry(u32 battlerDef, u32 battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -557,7 +557,7 @@ static enum ItemEffect TryLifeOrb(u32 battlerAtk)
     return effect;
 }
 
-static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, u32 item)
+static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -578,7 +578,7 @@ static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, 
     return effect;
 }
 
-static enum ItemEffect TryStickyBarbOnEndTurn(u32 battler, u32 item)
+static enum ItemEffect TryStickyBarbOnEndTurn(u32 battler, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -989,7 +989,7 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, enum Item itemId)
 enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect holdEffect, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    u32 item;
+    enum Item item;
 
     if (timing == IsOnBerryActivation || timing == IsOnFlingActivation)
         item = gLastUsedItem;

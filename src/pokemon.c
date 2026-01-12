@@ -75,7 +75,7 @@
 struct SpeciesItem
 {
     u16 species;
-    u16 item;
+    enum Item item;
 };
 
 static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon);
@@ -3586,7 +3586,7 @@ void CopyPartyMonToBattleData(u32 battler, u32 partyIndex)
     ClearTemporarySpeciesSpriteData(battler, FALSE, FALSE);
 }
 
-bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex)
+bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex)
 {
     return PokemonUseItemEffects(mon, item, partyIndex, moveIndex, FALSE);
 }
@@ -3617,7 +3617,7 @@ const u32 sExpCandyExperienceTable[] = {
 };
 
 // Returns TRUE if the item has no effect on the Pokémon, FALSE otherwise
-bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex, bool8 usedByAI)
+bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex, bool8 usedByAI)
 {
     u32 dataUnsigned;
     s32 dataSigned, evCap;
@@ -3631,7 +3631,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     enum HoldEffect holdEffect;
     u8 battler = MAX_BATTLERS_COUNT;
     bool32 friendshipOnly = FALSE;
-    u16 heldItem;
+    enum Item heldItem;
     u8 effectFlags;
     s8 evChange;
     u16 evCount;

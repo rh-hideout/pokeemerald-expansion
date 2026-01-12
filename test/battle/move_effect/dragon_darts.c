@@ -216,7 +216,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses")
 {
     struct BattlePokemon *chosenTarget = NULL;
     struct BattlePokemon *finalTarget = NULL;
-    u32 itemLeft, itemRight;
+    enum Item itemLeft, itemRight;
     PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentRight; itemLeft = ITEM_BRIGHT_POWDER;  itemRight = ITEM_NONE; }
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft;  itemLeft = ITEM_NONE;           itemRight = ITEM_BRIGHT_POWDER; }
     GIVEN {

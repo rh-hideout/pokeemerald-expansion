@@ -331,7 +331,7 @@ struct ApprenticeMon
 {
     u16 species;
     enum Move moves[MAX_MON_MOVES];
-    u16 item;
+    enum Item item;
 };
 
 // This is for past players Apprentices or Apprentices received via Record Mix.

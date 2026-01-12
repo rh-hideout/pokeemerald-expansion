@@ -131,7 +131,7 @@ void NONNULL BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, stru
 void ApplyNewEncryptionKeyToBagItems(u32 newKey)
 {
     enum Pocket pocketId;
-    u32 item;
+    enum Item item;
     for (pocketId = 0; pocketId < POCKETS_COUNT; pocketId++)
     {
         for (item = 0; item < gBagPockets[pocketId].capacity; item++)
@@ -864,7 +864,7 @@ ItemUseFunc GetItemFieldFunc(enum Item itemId)
 // Returns an item's battle effect script ID.
 u8 GetItemBattleUsage(enum Item itemId)
 {
-    u16 item = SanitizeItemId(itemId);
+    enum Item item = SanitizeItemId(itemId);
     // Handle E-Reader berries.
     if (item == ITEM_ENIGMA_BERRY_E_READER)
     {
