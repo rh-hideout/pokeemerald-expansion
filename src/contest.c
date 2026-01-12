@@ -99,10 +99,10 @@ static void PrintContestantMonNameWithColor(u8, u8);
 static u8 CreateJudgeSprite(void);
 static u8 CreateJudgeSpeechBubbleSprite(void);
 static u8 CreateContestantSprite(u16, bool8, u32, u32);
-static void PrintContestMoveDescription(u16);
+static void PrintContestMoveDescription(enum Move move);
 static u16 SanitizeSpecies(u16);
 static void ContestClearGeneralTextWindow(void);
-static u16 GetChosenMove(u8);
+static enum Move GetChosenMove(u8);
 static void GetAllChosenMoves(void);
 static void ContestPrintLinkStandby(void);
 static void FillContestantWindowBgs(void);
@@ -131,9 +131,9 @@ static void CalculateAppealMoveImpact(u8);
 static void SetMoveAnimAttackerData(u8);
 static void BlinkContestantBox(u8, u8);
 static u8 CreateContestantBoxBlinkSprites(u8);
-static u16 SanitizeMove(u16);
+static u16 SanitizeMove(enum Move);
 static void SetMoveSpecificAnimData(u8);
-static void SetMoveTargetPosition(u16);
+static void SetMoveTargetPosition(enum Move move);
 static void ClearMoveAnimData(u8);
 static void StopFlashJudgeAttentionEye(u8);
 static void DrawUnnervedSymbols(void);
@@ -454,10 +454,7 @@ static const struct SpriteTemplate sSpriteTemplate_SliderHeart =
     .tileTag = TAG_SLIDER_HEART,
     .paletteTag = TAG_CONTEST_SYMBOLS_PAL,
     .oam = &sOam_SliderHeart,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_SliderHeart,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_NextTurn[CONTESTANT_COUNT] =
@@ -513,37 +510,21 @@ static const struct SpriteTemplate sSpriteTemplates_NextTurn[CONTESTANT_COUNT] =
         .tileTag = TAG_NEXT_TURN_1_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     },
     {
         .tileTag = TAG_NEXT_TURN_2_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     },
     {
         .tileTag = TAG_NEXT_TURN_3_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     },
     {
         .tileTag = TAG_NEXT_TURN_4_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     }
 };
 
@@ -606,10 +587,6 @@ static const struct SpriteTemplate sSpriteTemplate_Faces =
     .tileTag = TAG_FACES_GFX,
     .paletteTag = TAG_CONTEST_SYMBOLS_PAL,
     .oam = &sOam_Faces,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ApplauseMeter =
@@ -644,10 +621,6 @@ static const struct SpriteTemplate sSpriteTemplate_ApplauseMeter =
     .tileTag = TAG_APPLAUSE_METER,
     .paletteTag = TAG_APPLAUSE_METER,
     .oam = &sOam_ApplauseMeter,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOam_Judge =
@@ -669,10 +642,6 @@ static const struct SpriteTemplate sSpriteTemplate_Judge =
     .tileTag = TAG_JUDGE,
     .paletteTag = TAG_JUDGE,
     .oam = &sOam_Judge,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_Judge =
@@ -700,10 +669,6 @@ static const struct SpriteTemplate sSpriteTemplate_JudgeSpeechBubble =
     .tileTag = TAG_JUDGE_SYMBOLS_GFX,
     .paletteTag = TAG_CONTEST_SYMBOLS_PAL,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const u16 sText_Pal[] = INCBIN_U16("graphics/contest/text.gbapal");
@@ -1006,37 +971,25 @@ static const struct SpriteTemplate sSpriteTemplates_ContestantsTurnBlinkEffect[C
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT0,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT0,
         .oam = &sOam_ContestantsTurnBlinkEffect,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
-        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT1,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT1,
         .oam = &sOam_ContestantsTurnBlinkEffect,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
-        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT2,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT2,
         .oam = &sOam_ContestantsTurnBlinkEffect,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
-        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT3,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT3,
         .oam = &sOam_ContestantsTurnBlinkEffect,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
-        .callback = SpriteCallbackDummy
     }
 };
 
@@ -1085,7 +1038,7 @@ static void CopyNicknameToFit(u8 *dest, u32 contestant)
     WrapFontIdToFit(dest, end, FONT_NORMAL, 60);
 }
 
-static void CopyMoveNameToFit(u8 *dest, u32 move)
+static void CopyMoveNameToFit(u8 *dest, enum Move move)
 {
     u8 *end = StringCopy(dest, GetMoveName(move));
     WrapFontIdToFit(dest, end, FONT_NORMAL, 84);
@@ -1621,7 +1574,7 @@ static void Task_ShowMoveSelectScreen(u8 taskId)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        u16 move = gContestMons[gContestPlayerMonIndex].moves[i];
+        enum Move move = gContestMons[gContestPlayerMonIndex].moves[i];
         u8 *moveNameBuffer = moveName;
 
         if (eContestantStatus[gContestPlayerMonIndex].prevMove != MOVE_NONE
@@ -1730,7 +1683,7 @@ static void Task_SelectedMove(u8 taskId)
 {
     if (gLinkContestFlags & LINK_CONTEST_FLAG_IS_LINK)
     {
-        u16 move = GetChosenMove(gContestPlayerMonIndex);
+        enum Move move = GetChosenMove(gContestPlayerMonIndex);
         u8 taskId2;
 
         eContestantStatus[gContestPlayerMonIndex].currMove = move;
@@ -1924,7 +1877,7 @@ static void Task_DoAppeals(u8 taskId)
         return;
     case APPEALSTATE_MOVE_ANIM:
         {
-            u16 move = SanitizeMove(eContestantStatus[eContest.currentContestant].currMove);
+            enum Move move = SanitizeMove(eContestantStatus[eContest.currentContestant].currMove);
             SetMoveSpecificAnimData(eContest.currentContestant);
             SetMoveAnimAttackerData(eContest.currentContestant);
             SetMoveTargetPosition(move);
@@ -3256,7 +3209,7 @@ static void SwapMoveDescAndContestTilemaps(void)
 }
 
 // Functionally unused
-static u16 GetMoveEffectSymbolTileOffset(u16 move, u8 contestant)
+static u16 GetMoveEffectSymbolTileOffset(enum Move move, u8 contestant)
 {
     u16 offset;
 
@@ -3282,7 +3235,7 @@ static u16 GetMoveEffectSymbolTileOffset(u16 move, u8 contestant)
     return offset;
 }
 
-static void PrintContestMoveDescription(u16 move)
+static void PrintContestMoveDescription(enum Move move)
 {
     u8 category;
     u16 categoryTile;
@@ -3329,7 +3282,7 @@ static void PrintContestMoveDescription(u16 move)
     Contest_PrintTextToBg0WindowStd(WIN_SLASH, gText_Slash);
 }
 
-static void DrawMoveEffectSymbol(u16 move, u8 contestant)
+static void DrawMoveEffectSymbol(enum Move move, u8 contestant)
 {
     u8 contestantOffset = gContestantTurnOrder[contestant] * 5 + 2;
 
@@ -3476,7 +3429,7 @@ static void ContestClearGeneralTextWindow(void)
     Contest_SetBgCopyFlags(0);
 }
 
-static u16 GetChosenMove(u8 contestant)
+static enum Move GetChosenMove(u8 contestant)
 {
     if (Contest_IsMonsTurnDisabled(contestant))
         return MOVE_NONE;
@@ -4515,7 +4468,7 @@ static void DrawContestantWindows(void)
 
 static void CalculateAppealMoveImpact(u8 contestant)
 {
-    u16 move;
+    enum Move move;
     u8 effect;
     u8 rnd;
     s32 i;
@@ -4827,7 +4780,7 @@ static void UpdateApplauseMeter(void)
     }
 }
 
-s8 Contest_GetMoveExcitement(u16 move)
+s8 Contest_GetMoveExcitement(enum Move move)
 {
     return sContestExcitementTable[gSpecialVar_ContestCategory][GetMoveContestCategory(move)];
 }
@@ -5372,23 +5325,29 @@ static void Task_WaitForSliderHeartAnim(u8 taskId)
 
 #undef tAnimId
 
-static u16 SanitizeMove(u16 move)
+static u16 SanitizeMove(enum Move move)
 {
-    if (move >= MOVES_COUNT)
-        move = MOVE_POUND;
+    assertf(move < MOVES_COUNT, "invalid move: %d", move)
+    {
+        return MOVE_POUND;
+    }
+
     return move;
 }
 
 static u16 SanitizeSpecies(u16 species)
 {
-    if (species >= NUM_SPECIES)
-        species = SPECIES_NONE;
+    assertf(species < NUM_SPECIES, "invalid species: %d", species)
+    {
+        return SPECIES_NONE;
+    }
+
     return species;
 }
 
 static void SetMoveSpecificAnimData(u8 contestant)
 {
-    u16 move = SanitizeMove(eContestantStatus[contestant].currMove);
+    enum Move move = SanitizeMove(eContestantStatus[contestant].currMove);
     u16 species = SanitizeSpecies(gContestMons[contestant].species);
     u8 targetContestant;
 
@@ -5429,6 +5388,8 @@ static void SetMoveSpecificAnimData(u8 contestant)
             gAnimMoveTurn = 1;
         }
         break;
+    default:
+        break;
     }
     SetBattleTargetSpritePosition();
 }
@@ -5467,18 +5428,19 @@ static void SetBattleTargetSpritePosition(void)
     sprite->invisible = TRUE;
 }
 
-static void SetMoveTargetPosition(u16 move)
+static void SetMoveTargetPosition(enum Move move)
 {
     switch (GetBattlerMoveTargetType(gBattlerAttacker, move))
     {
-    case MOVE_TARGET_USER:
+    case TARGET_USER:
         gBattlerTarget = B_POSITION_PLAYER_RIGHT;
         break;
-    case MOVE_TARGET_OPPONENT:
-    case MOVE_TARGET_SELECTED:
-    case MOVE_TARGET_RANDOM:
-    case MOVE_TARGET_BOTH:
-    case MOVE_TARGET_FOES_AND_ALLY:
+    case TARGET_OPPONENT:
+    case TARGET_SELECTED:
+    case TARGET_SMART:
+    case TARGET_RANDOM:
+    case TARGET_BOTH:
+    case TARGET_FOES_AND_ALLY:
     default:
         gBattlerTarget = B_POSITION_OPPONENT_RIGHT;
         break;
@@ -5490,6 +5452,7 @@ static void Contest_PrintTextToBg0WindowStd(u32 windowId, const u8 *b)
     struct TextPrinterTemplate printerTemplate;
 
     printerTemplate.currentChar = b;
+    printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = windowId;
     printerTemplate.fontId = FONT_NORMAL;
     printerTemplate.x = 0;
@@ -5498,10 +5461,10 @@ static void Contest_PrintTextToBg0WindowStd(u32 windowId, const u8 *b)
     printerTemplate.currentY = 1;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.unk = 0;
-    printerTemplate.fgColor = 15;
-    printerTemplate.bgColor = 0;
-    printerTemplate.shadowColor = 8;
+    printerTemplate.color.accent = TEXT_COLOR_TRANSPARENT;
+    printerTemplate.color.foreground = 15;
+    printerTemplate.color.background = TEXT_COLOR_TRANSPARENT;
+    printerTemplate.color.shadow = 8;
 
     AddTextPrinter(&printerTemplate, 0, 0);
     PutWindowTilemap(windowId);
@@ -5513,6 +5476,7 @@ void Contest_PrintTextToBg0WindowAt(u32 windowId, u8 *currChar, s32 x, s32 y, s3
     struct TextPrinterTemplate printerTemplate;
 
     printerTemplate.currentChar = currChar;
+    printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = windowId;
     printerTemplate.fontId = fontId;
     printerTemplate.x = x;
@@ -5521,10 +5485,10 @@ void Contest_PrintTextToBg0WindowAt(u32 windowId, u8 *currChar, s32 x, s32 y, s3
     printerTemplate.currentY = y;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.unk = 0;
-    printerTemplate.fgColor = 15;
-    printerTemplate.bgColor = 0;
-    printerTemplate.shadowColor = 8;
+    printerTemplate.color.accent = TEXT_COLOR_TRANSPARENT;
+    printerTemplate.color.foreground = 15;
+    printerTemplate.color.background = TEXT_COLOR_TRANSPARENT;
+    printerTemplate.color.shadow = 8;
 
     AddTextPrinter(&printerTemplate, 0, 0);
     PutWindowTilemap(windowId);
@@ -5537,6 +5501,7 @@ static void Contest_StartTextPrinter(const u8 *currChar, bool32 b)
     u8 speed;
 
     printerTemplate.currentChar = currChar;
+    printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = WIN_GENERAL_TEXT;
     printerTemplate.fontId = FONT_NORMAL;
     printerTemplate.x = 0;
@@ -5545,10 +5510,10 @@ static void Contest_StartTextPrinter(const u8 *currChar, bool32 b)
     printerTemplate.currentY = 1;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.unk = 0;
-    printerTemplate.fgColor = 1;
-    printerTemplate.bgColor = 0;
-    printerTemplate.shadowColor = 8;
+    printerTemplate.color.accent = TEXT_COLOR_TRANSPARENT;
+    printerTemplate.color.foreground = 1;
+    printerTemplate.color.background = TEXT_COLOR_TRANSPARENT;
+    printerTemplate.color.shadow = 8;
 
     if (!b)
     {
@@ -5581,7 +5546,7 @@ static void ContestBG_FillBoxWithTile(u8 bg, u16 firstTileNum, u8 x, u8 y, u8 wi
 static bool32 Contest_RunTextPrinters(void)
 {
     RunTextPrinters();
-    return IsTextPrinterActive(WIN_GENERAL_TEXT);
+    return IsTextPrinterActiveOnWindow(WIN_GENERAL_TEXT);
 }
 
 static void Contest_SetBgCopyFlags(u32 flagIndex)
@@ -5783,7 +5748,7 @@ static void CalculateContestLiveUpdateData(void)
     u8 loser;
     s32 i, j;
     bool32 notLastInRound1, notLastInRound2;
-    u16 appealMoves[CONTEST_NUM_APPEALS + 1];
+    enum Move appealMoves[CONTEST_NUM_APPEALS + 1];
     u8 numMoveUses[CONTEST_NUM_APPEALS + 1];
     u16 moveCandidates[CONTEST_NUM_APPEALS];
     u8 winner;

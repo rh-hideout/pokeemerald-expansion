@@ -994,6 +994,7 @@
 
 #define ITEM_STRANGE_BALL 828
 
+// Legends Z-A Mega Stones
 #define ITEM_CLEFABLITE 829
 #define ITEM_VICTREEBELITE 830
 #define ITEM_STARMINITE 831
@@ -1021,7 +1022,28 @@
 #define ITEM_DRAMPANITE 853
 #define ITEM_FALINKSITE 854
 
-#define ITEMS_COUNT 855
+// Legends Z-A: Mega Dimension DLC Mega Stones
+#define ITEM_HEATRANITE 855
+#define ITEM_DARKRANITE 856
+#define ITEM_ZERAORITE 857
+#define ITEM_RAICHUNITE_X 858
+#define ITEM_RAICHUNITE_Y 859
+#define ITEM_CHIMECHITE 860
+#define ITEM_ABSOLITE_Z 861
+#define ITEM_STARAPTITE 862
+#define ITEM_GARCHOMPITE_Z 863
+#define ITEM_LUCARIONITE_Z 864
+#define ITEM_GOLURKITE 865
+#define ITEM_MEOWSTICITE 866
+#define ITEM_CRABOMINITE 867
+#define ITEM_GOLISOPITE 868
+#define ITEM_MAGEARNITE 869
+#define ITEM_SCOVILLAINITE 870
+#define ITEM_BAXCALIBRITE 871
+#define ITEM_TATSUGIRINITE 872
+#define ITEM_GLIMMORANITE 873
+
+#define ITEMS_COUNT 874
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
@@ -1081,6 +1103,7 @@
 #define ITEM_USE_PBLOCK_CASE      3
 #define ITEM_USE_BAG_MENU         4 // No exit callback, stays in bag menu
 #define ITEM_USE_PARTY_MENU_MOVES 5
+#define ITEM_USE_BATTLER          6 // Auto-select in Singles but lets you choose from party menu in Doubles
 
 // Item battle script IDs (need to be non-zero)
 #define EFFECT_ITEM_RESTORE_HP              1

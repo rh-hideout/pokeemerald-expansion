@@ -220,8 +220,6 @@ const struct SpriteTemplate sSpriteTemplate_TypeIcons1 =
     .paletteTag = TYPE_ICON_TAG,
     .oam = &sOamData_TypeIcons,
     .anims = sSpriteAnimTable_TypeIcons,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TypeIcon
 };
 
@@ -231,8 +229,6 @@ const struct SpriteTemplate sSpriteTemplate_TypeIcons2 =
     .paletteTag = TYPE_ICON_TAG_2,
     .oam = &sOamData_TypeIcons,
     .anims = sSpriteAnimTable_TypeIcons,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TypeIcon
 };
 
@@ -241,7 +237,7 @@ void LoadTypeIcons(u32 battler)
     u32 position;
 
     struct Pokemon* mon = GetBattlerMon(battler);
-    u32 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+    u32 species = GetMonData(mon, MON_DATA_SPECIES);
 
     if (B_SHOW_TYPES == SHOW_TYPES_NEVER 
         || (B_SHOW_TYPES == SHOW_TYPES_SEEN && !GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN)))

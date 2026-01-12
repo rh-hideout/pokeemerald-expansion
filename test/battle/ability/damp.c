@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Damp prevents Explosion-like moves from enemies")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_EXPLOSION; }
     PARAMETRIZE { move = MOVE_SELF_DESTRUCT; }
     PARAMETRIZE { move = MOVE_MIND_BLOWN; }
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Damp prevents Explosion-like moves from enemies")
 
 DOUBLE_BATTLE_TEST("Damp prevents Explosion-like moves from enemies in a double battle")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_EXPLOSION; }
     PARAMETRIZE { move = MOVE_SELF_DESTRUCT; }
     PARAMETRIZE { move = MOVE_MIND_BLOWN; }
@@ -41,7 +41,7 @@ DOUBLE_BATTLE_TEST("Damp prevents Explosion-like moves from enemies in a double 
 
 SINGLE_BATTLE_TEST("Damp prevents Explosion-like moves from self")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_EXPLOSION; }
     PARAMETRIZE { move = MOVE_SELF_DESTRUCT; }
     PARAMETRIZE { move = MOVE_MIND_BLOWN; }

@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat")
 SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not both")
 {
     u16 species;
-    u32 move;
+    enum Move move;
     s16 damage[2];
 
     PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_SCRATCH; }
@@ -173,6 +173,7 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler")
 SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an Utility Umbrella")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
         PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_UTILITY_UMBRELLA); }
         OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
