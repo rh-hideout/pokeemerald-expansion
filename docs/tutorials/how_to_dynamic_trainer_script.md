@@ -61,7 +61,7 @@ To illustrate how use Dynamic Trainer Battle Scripts to customize your own battl
 The goal is to automatically heal the party whenever a trainer spots the player. 
 The GIF below shows the final result.
 
-![heal_party](img/dynamic_trainer_scripts/healparty.gif)\
+![heal_party](img/dynamic_trainer_scripts/healparty.gif)
 
 ### 1. Define the event snippet
 
@@ -79,7 +79,7 @@ in `include/event_scripts.h`:
 extern const u8 EventSnippet_HealParty[];
 ```
 
-### 2. Push the event snippet on the stack
+### 2. Push the event snippet to the stack
 
 Push the event snippet on the stack for approaching trainers. 
 I want the party heal to happen after the trainer approaches but before the intro text shows. **The order of snippets is important!** I recommend using the provided macros `PUSH`, `PUSH_IF_SET` and `PUSH_IF_ELSE` to improve readability.
