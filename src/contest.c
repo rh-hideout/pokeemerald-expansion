@@ -3015,7 +3015,7 @@ u8 GetContestEntryEligibility(struct Pokemon *pkmn)
     if (GetMonData(pkmn, MON_DATA_HP) == 0)
         return CANT_ENTER_CONTEST_FAINTED;
 
-    ribbon = MON_DATA_COOL_RIBBON + gSpecialVar_ContestCategory;
+    ribbon = GetMonData(pkmn, MON_DATA_COOL_RIBBON + gSpecialVar_ContestCategory);
 
     // Couldn't get this to match any other way.
     // Returns 2, 1, or 0 respectively if ribbon's rank is above, equal, or below
@@ -5614,7 +5614,7 @@ u8 GetContestWinnerSaveIdx(u8 rank, bool8 shift)
     default:
 //  case CONTEST_SAVE_FOR_MUSEUM:
 //  case CONTEST_SAVE_FOR_ARTIST:
-        return CONTEST_WINNER_MUSEUM_COOL + gSpecialVar_ContestCategory;
+        return MUSEUM_CONTEST_WINNERS_START + gSpecialVar_ContestCategory;
     }
 }
 
