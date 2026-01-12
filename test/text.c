@@ -70,9 +70,9 @@ TEST("Move names fit on TMs & HMs Bag Screen")
     const u32 fontId = FONT_NARROWER, widthPx = 61;
     u32 move = MOVE_NONE;
 
-    for (enum TMHMIndex tm = 0; tm < NUM_ALL_MACHINES; tm++)
+    for (enum TMHMIndex tm = 1; tm <= NUM_ALL_MACHINES; tm++)
     {
-        u32 itemMove = ItemIdToBattleMoveId(GetTMHMItemId(tm + 1));
+        u32 itemMove = ItemIdToBattleMoveId(GetTMHMItemId(tm));
         PARAMETRIZE_LABEL("%S", GetMoveName(move)) { move = itemMove; }
     }
     EXPECT_LE(GetStringWidth(fontId, GetMoveName(move), 0), widthPx);
