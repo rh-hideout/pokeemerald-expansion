@@ -82,7 +82,10 @@ extern const u8 EventSnippet_HealParty[];
 ### 2. Push the event snippet to the stack
 
 Push the event snippet on the stack for approaching trainers. 
-I want the party heal to happen after the trainer approaches but before the intro text shows. **The order of snippets is important!** I recommend using the provided macros `PUSH`, `PUSH_IF_SET` and `PUSH_IF_ELSE` to improve readability.
+I want the party heal to happen after the trainer approaches but before the intro text shows. **The order of snippets is important!** 
+
+> [!TIP]
+> Use the provided macros `PUSH`, `PUSH_IF_SET` and `PUSH_IF_ELSE` to improve readability.
 
 There are currently **4** functions that build the scripts:
 * BattleSetup_ConfigureTrainerBattle
