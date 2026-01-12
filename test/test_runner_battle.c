@@ -498,12 +498,12 @@ static void BattleTest_Run(void *data)
 
         for (i = 0; i < 3; i++)
         {
-            if(GetMonData(&DATA.recordedBattle.playerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+            if(GetMonData(&DATA.recordedBattle.playerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
                 revisedPlayerExplicitSpeeds |= 1 << i;
         }
         for (i = 3; i < PARTY_SIZE; i++)
         {
-            if(GetMonData(&DATA.recordedBattle.playerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+            if(GetMonData(&DATA.recordedBattle.playerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
             {
                 if(DATA.currentPosition == B_POSITION_PLAYER_LEFT)
                     revisedPlayerExplicitSpeeds |= 1 << i;
@@ -514,12 +514,12 @@ static void BattleTest_Run(void *data)
 
         for (i = 0; i < 3; i++)
         {
-            if(GetMonData(&DATA.recordedBattle.opponentParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+            if(GetMonData(&DATA.recordedBattle.opponentParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
                 revisedOpponentAExplicitSpeeds |= 1 << i;
         }
         for (i = 3; i < PARTY_SIZE; i++)
         {
-            if(GetMonData(&DATA.recordedBattle.opponentParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+            if(GetMonData(&DATA.recordedBattle.opponentParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
             {
                 if(DATA.currentPosition == B_POSITION_OPPONENT_LEFT)
                     revisedOpponentAExplicitSpeeds |= 1 << i;
@@ -3113,7 +3113,7 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
         INVALID_IF(!ctx.explicitMove, "%S requires an explicit move", GetItemName(ctx.itemId));
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (GetMonData(CurrentMon(battlerId), MON_DATA_MOVE1 + i, NULL) == ctx.move)
+            if (GetMonData(CurrentMon(battlerId), MON_DATA_MOVE1 + i) == ctx.move)
                 break;
         }
         INVALID_IF(i == MAX_MON_MOVES, "USE_ITEM on invalid move: %d", ctx.move);

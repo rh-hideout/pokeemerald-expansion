@@ -824,17 +824,14 @@ const struct Item gItemsInfo[] =
         .name = ITEM_NAME("Lemonade"),
         .price = (I_PRICE >= GEN_7) ? 400 : 350,
         .holdEffectParam = 70,
-#if I_HEALTH_RECOVERY >= GEN_7
         .description = COMPOUND_STRING(
             "A very sweet drink\n"
             "that restores HP\n"
+        #if I_HEALTH_RECOVERY >= GEN_7
             "by 70 points."),
-#else
-        .description = COMPOUND_STRING(
-            "A very sweet drink\n"
-            "that restores HP\n"
+        #else
             "by 80 points."),
-#endif
+        #endif
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_HEALTH_RECOVERY,
         .type = ITEM_USE_PARTY_MENU,
@@ -7051,7 +7048,7 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_QuestionMark, // gItemIcon_Staraptite,
         .iconPalette = gItemIconPalette_QuestionMark, // gItemIconPalette_Staraptite,
     },
-    
+
     [ITEM_GARCHOMPITE_Z] =
     {
         .name = ITEM_NAME("Garchompite Z"),

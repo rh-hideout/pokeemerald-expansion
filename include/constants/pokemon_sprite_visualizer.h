@@ -34,4 +34,17 @@
 #define WIN_FOOTPRINT 4
 #define WIN_END 5
 
+//Background positions
+#define BACKGROUND_1_CHAR_BASE  1
+#define BACKGROUND_1_MAP_BASE  28
+#define BACKGROUND_3_CHAR_BASE  2
+#define BACKGROUND_3_MAP_BASE  26
+
+//Submenus
+#define SUBMENU_SPECIES          0
+#define SUBMENU_ANIMS_BG         1
+#define SUBMENU_SPRITE_COORDS    2
+#define SUBMENU_SHADOW_COORDS    3
+#define SUBMENU_MOVE_BACKGROUNDS 4
+
 #endif // GUARD_CONSTANTS_POKEMON_SPRITE_VISUALIZER_H
