@@ -844,7 +844,7 @@ static const s16 sBattlerHealthboxCoords[BATTLE_COORDS_COUNT][MAX_BATTLERS_COUNT
 
 void GetBattlerHealthboxCoords(u8 battler, s16 *x, s16 *y)
 {
-    u8 position = GetBattlerPosition(battler);
+    enum BattlerPosition position = GetBattlerPosition(battler);
     enum BattleCoordTypes index = GetBattlerCoordsIndex(battler);
 
     *x = sBattlerHealthboxCoords[index][position][0];
@@ -2598,7 +2598,8 @@ static inline bool32 IsAnyAbilityPopUpActive(void)
 void CreateAbilityPopUp(u8 battler, enum Ability ability, bool32 isDoubleBattle)
 {
     u8 *spriteIds;
-    u32 xSlide, tileTag, battlerPosition = GetBattlerPosition(battler);
+    u32 xSlide, tileTag;
+    enum BattlerPosition battlerPosition = GetBattlerPosition(battler);
     struct SpriteTemplate template;
     const s16 (*coords)[2];
 
@@ -2668,7 +2669,7 @@ void UpdateAbilityPopup(u8 battler)
 static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
 {
     s16 *data = sprite->data;
-    u32 battlerPosition = GetBattlerPosition(sBattlerId);
+    enum BattlerPosition battlerPosition = GetBattlerPosition(sBattlerId);
     u32 fullX = sprite->x + sprite->x2;
     u32 speed;
 

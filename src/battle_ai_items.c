@@ -242,10 +242,10 @@ static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon)
     switch (itemEffectParam)
     {
     case ITEM6_HEAL_HP_FULL:
-        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP, NULL) - GetMonData(mon, MON_DATA_HP, NULL);
+        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP) - GetMonData(mon, MON_DATA_HP);
         break;
     case ITEM6_HEAL_HP_HALF:
-        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP, NULL) / 2;
+        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP) / 2;
         if (itemEffectParam == 0)
             itemEffectParam = 1;
         break;
@@ -253,7 +253,7 @@ static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon)
         itemEffectParam = gBattleScripting.levelUpHP;
         break;
     case ITEM6_HEAL_HP_QUARTER:
-        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP, NULL) / 4;
+        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP) / 4;
         if (itemEffectParam == 0)
             itemEffectParam = 1;
         break;

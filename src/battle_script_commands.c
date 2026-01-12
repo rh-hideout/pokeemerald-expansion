@@ -4016,7 +4016,7 @@ static void Cmd_tryfaintmon(void)
             {
                 if (gBattleResults.opponentFaintCounter < 255)
                     gBattleResults.opponentFaintCounter++;
-                gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES, NULL);
+                gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
                 gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
             }
 
@@ -10067,7 +10067,7 @@ static void Cmd_trymemento(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (B_MEMENTO_FAIL >= GEN_4
+    if (B_MEMENTO_FAIL >= GEN_5
       && (gBattleCommunication[MISS_TYPE] == B_MSG_PROTECTED
         || IsSemiInvulnerable(gBattlerTarget, CHECK_ALL)
         || IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove)
@@ -10181,7 +10181,7 @@ static void Cmd_settaunt(void)
         }
         else if (B_TAUNT_TURNS >= GEN_4)
         {
-            turns = RandomUniform(RNG_TAUNT, 2, B_TAUNT_TIMER);
+            turns = RandomUniform(RNG_TAUNT, 3, B_TAUNT_TIMER);
         }
         else
         {
@@ -11215,6 +11215,7 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
         }
         break;
     case BALL_MOON:
+    {
         const struct Evolution *evolutions = GetSpeciesEvolutions(battleMon->species);
         if (evolutions == NULL)
             break;
@@ -11225,6 +11226,7 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
                 ball->multiplier = 400;
         }
         break;
+    }
     case BALL_LOVE:
         if (battleMon->species == gBattleMons[playerBattler].species)
         {
@@ -11437,6 +11439,7 @@ static void Cmd_handleballthrow(void)
     }
     else
     {
+        gBallToDisplay = gLastThrownBall = gLastUsedItem;
         u32 odds = ComputeCaptureOdds(gBattlerTarget, gBattlerAttacker);
         if (gTestRunnerEnabled)
             TestRunner_Battle_RecordCatchChance(odds);
@@ -11637,9 +11640,9 @@ static void Cmd_givecaughtmon(void)
                 gBattleCommunication[MULTISTRING_CHOOSER]++;
         }
 
-        gBattleResults.caughtMonSpecies = GetMonData(caughtMon, MON_DATA_SPECIES, NULL);
+        gBattleResults.caughtMonSpecies = GetMonData(caughtMon, MON_DATA_SPECIES);
         GetMonData(caughtMon, MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
-        gBattleResults.caughtMonBall = GetMonData(caughtMon, MON_DATA_POKEBALL, NULL);
+        gBattleResults.caughtMonBall = GetMonData(caughtMon, MON_DATA_POKEBALL);
 
         gSelectedMonPartyId = PARTY_SIZE;
         gBattleCommunication[MULTIUSE_STATE] = 0;
@@ -11661,8 +11664,8 @@ static void Cmd_trysetcaughtmondexflags(void)
     CMD_ARGS(const u8 *failInstr);
 
     struct Pokemon *caughtMon = GetBattlerMon(GetCatchingBattler());
-    u32 species = GetMonData(caughtMon, MON_DATA_SPECIES, NULL);
-    u32 personality = GetMonData(caughtMon, MON_DATA_PERSONALITY, NULL);
+    u32 species = GetMonData(caughtMon, MON_DATA_SPECIES);
+    u32 personality = GetMonData(caughtMon, MON_DATA_PERSONALITY);
 
     if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
     {
@@ -11681,7 +11684,7 @@ static void Cmd_displaydexinfo(void)
 
     u32 caughtBattler = GetCatchingBattler();
     struct Pokemon *mon = GetBattlerMon(caughtBattler);
-    u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+    u16 species = GetMonData(mon, MON_DATA_SPECIES);
 
     switch (gBattleCommunication[0])
     {
@@ -11858,7 +11861,7 @@ static void Cmd_trygivecaughtmonnick(void)
             DoNamingScreen(NAMING_SCREEN_CAUGHT_MON, gBattleStruct->caughtMonNick,
                            GetMonData(caughtMon, MON_DATA_SPECIES),
                            GetMonGender(caughtMon),
-                           GetMonData(caughtMon, MON_DATA_PERSONALITY, NULL),
+                           GetMonData(caughtMon, MON_DATA_PERSONALITY),
                            callback);
 
             gBattleCommunication[MULTIUSE_STATE]++;
@@ -12589,9 +12592,9 @@ void BS_ItemRestorePP(void)
     // Heal PP!
     for (; i < loopEnd; i++)
     {
-        pp = GetMonData(mon, MON_DATA_PP1 + i, NULL);
-        moveId = GetMonData(mon, MON_DATA_MOVE1 + i, NULL);
-        maxPP = CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES, NULL), i);
+        pp = GetMonData(mon, MON_DATA_PP1 + i);
+        moveId = GetMonData(mon, MON_DATA_MOVE1 + i);
+        maxPP = CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES), i);
         if (pp != maxPP)
         {
             pp += effect[6];
@@ -15026,7 +15029,6 @@ void BS_TryBestow(void)
         || gBattleMons[gBattlerTarget].item != ITEM_NONE
         || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerAttacker].item)
         || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerAttacker].item)
-        || GetBattlerAbility(gBattlerAttacker) == ABILITY_STICKY_HOLD
         || GetBattlerPartyState(gBattlerTarget)->knockedOffItem)
     {
         gBattlescriptCurrInstr = cmd->failInstr;

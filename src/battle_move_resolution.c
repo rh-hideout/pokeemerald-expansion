@@ -470,7 +470,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
             {
                 if (gBattleResults.opponentFaintCounter < 255)
                     gBattleResults.opponentFaintCounter++;
-                gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_SPECIES, NULL);
+                gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_SPECIES);
                 gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
             }
             BattleScriptCall(BattleScript_FaintBattler);
@@ -968,16 +968,29 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
          && !gBattleStruct->noTargetPresent)
         {
             s32 recoil = 0;
-            if (B_RECOIL_IF_MISS_DMG >= GEN_5 || (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE))
+            if (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE)
+            {
+                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+            }
+            if (B_RECOIL_IF_MISS_DMG >= GEN_5)
+            {
                 recoil = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-            else if (B_RECOIL_IF_MISS_DMG == GEN_4 && (GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
-                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
-            else if (B_RECOIL_IF_MISS_DMG == GEN_3)
-                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+            }
+            else if (B_RECOIL_IF_MISS_DMG >= GEN_3)
+            {
+                if ((GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
+                    recoil = gBattleStruct->moveDamage[gBattlerTarget];
+                else
+                    recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+            }
             else if (B_RECOIL_IF_MISS_DMG == GEN_2)
-                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 8;
+            {
+                recoil = gBattleStruct->moveDamage[gBattlerTarget] / 8;
+            }
             else
+            {
                 recoil = 1;
+            }
             SetPassiveDamageAmount(gBattlerAttacker, recoil);
             BattleScriptCall(BattleScript_RecoilIfMiss);
             result = MOVEEND_STEP_RUN_SCRIPT;
@@ -1191,7 +1204,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_BUTTON)
             ejectButtonBattlers |= 1u << battlerDef;
-         
+
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_RED_CARD)
             redCardBattlers |= 1u << battlerDef;
     }
@@ -1211,7 +1224,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         // Only fastest red card or eject button activates
         if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
-            result = MOVEEND_STEP_RUN_SCRIPT; 
+            result = MOVEEND_STEP_RUN_SCRIPT;
         else if (ejectButtonBattlers & 1u << battler && TryEjectButton(gBattlerAttacker, battler))
             result = MOVEEND_STEP_RUN_SCRIPT;
 

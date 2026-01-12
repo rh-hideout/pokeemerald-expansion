@@ -813,6 +813,8 @@ bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool
 
 bool8 IsBattlerSpritePresent(u8 battler)
 {
+    if (GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES) == SPECIES_NONE)
+        return FALSE;
     if (IsContest())
     {
         if (gBattleAnimAttacker == battler)
@@ -824,7 +826,7 @@ bool8 IsBattlerSpritePresent(u8 battler)
     }
     else
     {
-        if (GetBattlerPosition(battler) == 0xff)
+        if (GetBattlerPosition(battler) == B_POSITION_ABSENT)
             return FALSE;
 
         if (gBattleStruct->battlerState[battler].fainted)
@@ -1977,7 +1979,7 @@ void InitPrioritiesForVisibleBattlers(void)
 
 u8 GetBattlerSpriteSubpriority(u8 battler)
 {
-    u8 position;
+    enum BattlerPosition position;
     u8 subpriority;
 
     if (IsContest())
@@ -2005,7 +2007,7 @@ u8 GetBattlerSpriteSubpriority(u8 battler)
 
 u8 GetBattlerSpriteBGPriority(u8 battler)
 {
-    u8 position = GetBattlerPosition(battler);
+    enum BattlerPosition position = GetBattlerPosition(battler);
 
     if (IsContest())
         return 2;
@@ -2019,7 +2021,7 @@ u8 GetBattlerSpriteBGPriorityRank(u8 battler)
 {
     if (!IsContest())
     {
-        u8 position = GetBattlerPosition(battler);
+        enum BattlerPosition position = GetBattlerPosition(battler);
         if (position == B_POSITION_PLAYER_LEFT || position == B_POSITION_OPPONENT_RIGHT)
             return 2;
         else

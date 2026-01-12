@@ -265,7 +265,7 @@ static inline bool32 CanBattlerWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool32
 static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 {
     //Variable initialization
-    u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
+    enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
     enum Move *playerMoves = GetMovesArray(opposingBattler);
     enum Move aiMove, playerMove, bestPlayerPriorityMove = MOVE_NONE, bestPlayerMove = MOVE_NONE, expectedMove = MOVE_NONE;
@@ -700,7 +700,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     bool32 switchMon = FALSE;
     enum Ability monAbility = gAiLogicData->abilities[battler];
     enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
-    u8 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
+    enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u8 opposingBattler = GetBattlerAtPosition(opposingPosition);
     bool32 hasStatRaised = AnyUsefulStatIsRaised(battler);
 
@@ -1051,7 +1051,7 @@ static bool32 CanMonSurviveHazardSwitchin(u32 battler)
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
-                aiMove = GetMonData(&party[monIndex], MON_DATA_MOVE1 + moveIndex, NULL);
+                aiMove = GetMonData(&party[monIndex], MON_DATA_MOVE1 + moveIndex);
                 if (IsHazardClearingMove(aiMove)) // Have a mon that can clear the hazards, so switching out is okay
                     return TRUE;
             }

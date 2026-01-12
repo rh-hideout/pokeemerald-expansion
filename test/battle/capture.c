@@ -208,3 +208,27 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, failed cap
         }
     }
 }
+
+WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
+{
+    u32 item = ITEM_NONE;
+    for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
+    {
+        PARAMETRIZE(item = gBallItemIds[ballId]);
+    }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(player, item, WITH_RNG(RNG_BALLTHROW_SHAKE, 0)); }
+    } SCENE {
+        ONE_OF
+        {
+            ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_CRITICAL_CAPTURE_THROW);
+            ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW);
+        }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKEBALL), GetItemSecondaryId(item));
+    }
+}
