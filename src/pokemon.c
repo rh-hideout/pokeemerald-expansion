@@ -5087,7 +5087,7 @@ u8 GetTrainerEncounterMusicId(u16 trainerOpponentId)
     else if (InTrainerHillChallenge())
         return GetTrainerEncounterMusicIdInTrainerHill(trainerOpponentId);
     else
-        return gTrainers[difficulty][sanitizedTrainerId].encounterMusic_gender & (F_TRAINER_FEMALE - 1);
+        return gTrainers[difficulty][sanitizedTrainerId].encounterMusic;
 }
 
 u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex)
@@ -5617,7 +5617,7 @@ u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
 
         if (!CanLearnTeachableMove(species, move))
             continue;
-        
+
         if (!MonKnowsMove(mon, move))
             moves[numMoves++] = move;
     }

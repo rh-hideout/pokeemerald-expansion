@@ -227,6 +227,7 @@ enum EjectPackTiming
 };
 
 void HandleAction_ThrowBall(void);
+uq4_12_t CalcTypeEffectivenessMultiplierHelper(enum Move move, enum Type moveType, u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, bool32 recordAbilities);
 u32 GetCurrentBattleWeather(void);
 bool32 EndOrContinueWeather(void);
 bool32 IsUnnerveBlocked(u32 battler, u32 itemId);

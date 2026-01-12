@@ -230,7 +230,7 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
 
 // Helper function for actual dmg calcs during battle. For simulated AI dmg, CalcTypeEffectivenessMultiplier should be used directly
 // This should stay a static function. Ideally everything else is handled through CalcTypeEffectivenessMultiplier just like AI
-static uq4_12_t CalcTypeEffectivenessMultiplierHelper(enum Move move, enum Type moveType, u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, bool32 recordAbilities)
+uq4_12_t CalcTypeEffectivenessMultiplierHelper(enum Move move, enum Type moveType, u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, bool32 recordAbilities)
 {
     struct BattleContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
@@ -11209,6 +11209,7 @@ void ClearDamageCalcResults(void)
     gBattleStruct->printedStrongWindsWeakenedAttack = FALSE;
     gBattleStruct->numSpreadTargets = 0;
     gBattleStruct->unableToUseMove = FALSE;
+	gBattleStruct->preAttackAnimPlayed = FALSE;
     gBattleScripting.savedDmg = 0;
     if (gCurrentMove != MOVE_NONE)
         gBattleStruct->moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) || MoveIgnoresTargetAbility(gCurrentMove);

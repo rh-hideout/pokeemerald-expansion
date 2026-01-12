@@ -4206,10 +4206,6 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     case EFFECT_TIDY_UP:
         aiEffect |= AI_EFFECT_CLEAR_HAZARDS;
         break;
-    case EFFECT_BRICK_BREAK:
-    case EFFECT_RAGING_BULL:
-        aiEffect |= AI_EFFECT_BREAK_SCREENS;
-        break;
     case EFFECT_HAZE:
         aiEffect |= AI_EFFECT_RESET_STATS;
         break;
@@ -4243,6 +4239,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     default:
         break;
     }
+
     return aiEffect;
 }
 
@@ -4288,6 +4285,9 @@ static u32 GetAIEffectGroupFromMove(u32 battler, enum Move move)
             break;
         case MOVE_EFFECT_GRAVITY:
             aiEffect |= AI_EFFECT_GRAVITY;
+			break;
+        case MOVE_EFFECT_BREAK_SCREEN:
+        	aiEffect |= AI_EFFECT_BREAK_SCREENS;
             break;
         default:
             break;

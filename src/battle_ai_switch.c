@@ -1586,7 +1586,8 @@ static u32 GetSwitchinStatusDamage(u32 battler)
     u8 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
     u16 heldItemEffect = gAiLogicData->holdEffects[battler];
     u32 status = gBattleMons[battler].status1;
-    enum Ability ability = gAiLogicData->holdEffects[battler], maxHP = gBattleMons[battler].maxHP;
+    enum Ability ability = gAiLogicData->abilities[battler];
+    u32 maxHP = gBattleMons[battler].maxHP;
     u32 statusDamage = 0;
 
     // Status condition damage
