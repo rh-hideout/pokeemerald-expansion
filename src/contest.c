@@ -3234,6 +3234,7 @@ static void PrintContestMoveDescription(enum Move move)
 {
     u16 categoryTile;
     u8 numHearts;
+    struct ContestEffect contestEffect = gContestEffects[GetMoveContestEffect(move)];
 
     // The contest category icon is implemented as a 5x2 group of tiles.
     categoryTile = gContestCategoryInfo[GetMoveContestCategory(move)].tile;
@@ -3242,27 +3243,27 @@ static void PrintContestMoveDescription(enum Move move)
     ContestBG_FillBoxWithIncrementingTile(0, categoryTile + 0x10, 0x0b, 0x20, 0x05, 0x01, 0x11, 0x01);
 
     // Appeal hearts
-    if (gContestEffects[GetMoveContestEffect(move)].appeal == 0xFF)
+    if (contestEffect.appeal == 0xFF)
         numHearts = 0;
     else
-        numHearts = gContestEffects[GetMoveContestEffect(move)].appeal / 10;
+        numHearts = contestEffect.appeal / 10;
     if (numHearts > MAX_CONTEST_MOVE_HEARTS)
         numHearts = MAX_CONTEST_MOVE_HEARTS;
     ContestBG_FillBoxWithTile(0, TILE_EMPTY_APPEAL_HEART, 0x15, 0x1f, MAX_CONTEST_MOVE_HEARTS, 0x01, 0x11);
     ContestBG_FillBoxWithTile(0, TILE_FILLED_APPEAL_HEART, 0x15, 0x1f, numHearts, 0x01, 0x11);
 
     // Jam hearts
-    if (gContestEffects[GetMoveContestEffect(move)].jam == 0xFF)
+    if (contestEffect.jam == 0xFF)
         numHearts = 0;
     else
-        numHearts = gContestEffects[GetMoveContestEffect(move)].jam / 10;
+        numHearts = contestEffect.jam / 10;
     if (numHearts > MAX_CONTEST_MOVE_HEARTS)
         numHearts = MAX_CONTEST_MOVE_HEARTS;
     ContestBG_FillBoxWithTile(0, TILE_EMPTY_JAM_HEART, 0x15, 0x20, MAX_CONTEST_MOVE_HEARTS, 0x01, 0x11);
     ContestBG_FillBoxWithTile(0, TILE_FILLED_JAM_HEART, 0x15, 0x20, numHearts, 0x01, 0x11);
 
     FillWindowPixelBuffer(WIN_MOVE_DESCRIPTION, PIXEL_FILL(0));
-    Contest_PrintTextToBg0WindowStd(WIN_MOVE_DESCRIPTION, gContestEffects[GetMoveContestEffect(move)].description);
+    Contest_PrintTextToBg0WindowStd(WIN_MOVE_DESCRIPTION, contestEffect.description);
     Contest_PrintTextToBg0WindowStd(WIN_SLASH, gText_Slash);
 }
 
