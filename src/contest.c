@@ -360,11 +360,9 @@ EWRAM_DATA u8 gCurContestWinnerSaveIdx = 0;
 // IWRAM common vars.
 COMMON_DATA rng_value_t gContestRngValue = {0};
 
-const u8 gText_LinkStandby4[] = COMPOUND_STRING("Link standby!");
-extern const u8 gText_BDot[];
-extern const u8 gText_CDot[];
-
 //Text
+const u8 gText_LinkStandby4[] = COMPOUND_STRING("Link standby!");
+
 const u8 gText_AppealNumWhichMoveWillBePlayed[] = COMPOUND_STRING("Appeal no. {STR_VAR_1}!\nWhich move will be played?");
 const u8 gText_AppealNumButItCantParticipate[] = COMPOUND_STRING("Appeal no. {STR_VAR_1}!\nBut it can't participate!");
 const u8 gText_MonAppealedWithMove[] = COMPOUND_STRING("{STR_VAR_1} appealed with\n{STR_VAR_2}!");
@@ -1583,14 +1581,14 @@ static void Task_ShowMoveSelectScreen(u8 taskId)
             && eContestantStatus[gContestPlayerMonIndex].hasJudgesAttention)
         {
             // Highlight the text because it's a combo move
-            moveNameBuffer = StringCopy(moveName, gText_ColorLightShadowDarkGray);
+            moveNameBuffer = StringCopy(moveName, COMPOUND_STRING("{COLOR LIGHT_GRAY}{SHADOW DARK_GRAY}"));
         }
         else if (move != MOVE_NONE
                  && eContestantStatus[gContestPlayerMonIndex].prevMove == move
                  && GetMoveContestEffect(move) != CONTEST_EFFECT_REPETITION_NOT_BORING)
         {
             // Gray the text because it's a repeated move
-            moveNameBuffer = StringCopy(moveName, gText_ColorBlue);
+            moveNameBuffer = StringCopy(moveName, COMPOUND_STRING("{COLOR BLUE}"));
         }
         moveNameBuffer = StringCopy(moveNameBuffer, GetMoveName(move));
 
@@ -3058,7 +3056,7 @@ static void DrawContestantWindowText(void)
 
 static u8 *Contest_CopyStringWithColor(const u8 *string, u8 color)
 {
-    u8 *ptr = StringCopy(gDisplayedStringBattle, gText_ColorTransparent);
+    u8 *ptr = StringCopy(gDisplayedStringBattle, COMPOUND_STRING("{BACKGROUND TRANSPARENT}{ACCENT TRANSPARENT}{COLOR TRANSPARENT}"));
     ptr[-1] = color; // Overwrites the "{COLOR TRANSPARENT}" part of the string.
     ptr = StringCopy(ptr, string);
 
@@ -6016,7 +6014,7 @@ static void ContestDebugPrintBitStrings(void)
     {
         for (i = 0; i < CONTESTANT_COUNT; i++)
         {
-            txtPtr = StringCopy(text1, gText_CDot);
+            txtPtr = StringCopy(text1, COMPOUND_STRING("C."));
             Contest_PrintTextToBg0WindowAt(gContestantTurnOrder[i], text1, 5, 1, FONT_NARROW);
             bits = gContestResources->tv[i].winnerFlags;
             for (j = 7; j > -1; j--) // Weird loop.
@@ -6037,7 +6035,7 @@ static void ContestDebugPrintBitStrings(void)
     {
         for (i = 0; i < CONTESTANT_COUNT; i++)
         {
-            StringCopy(text1, gText_BDot);
+            StringCopy(text1, COMPOUND_STRING("B."));
             bits = gContestResources->tv[i].loserFlags;
             txtPtr = &text1[2];
             for (j = 7; j > -1; j--) // Weird loop.
