@@ -3324,11 +3324,11 @@ void SetMoveEffect(u32 battlerAtk, u32 effectBattler, enum MoveEffect moveEffect
         break;
     case MOVE_EFFECT_PSYCHIC_NOISE:
     {
-        enum Ability ability = IsAbilityOnSide(gEffectBattler, ABILITY_AROMA_VEIL);
+        u32 battler = IsAbilityOnSide(gEffectBattler, ABILITY_AROMA_VEIL);
 
-        if (ability)
+        if (battler)
         {
-            gBattlerAbility = ability - 1;
+            gBattlerAbility = battler - 1;
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_AromaVeilProtectsRet;
         }
@@ -3964,6 +3964,9 @@ static void Cmd_setpreattackadditionaleffect(void)
 
 static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additionalEffect)
 {
+    if (additionalEffect->preAttackEffect)
+        return FALSE;
+
     // If Toxic Chain will activate it blocks all other non volatile effects
     if (gBattleStruct->toxicChainPriority && additionalEffect->moveEffect <= MOVE_EFFECT_FROSTBITE)
         return FALSE;
