@@ -5648,10 +5648,12 @@ BattleScript_BattlerFormChangeInstant::
 
 BattleScript_BattlerFormChangeDisguise::
 	call BattleScript_AbilityPopUpScripting
-	pause 40
+	pause B_WAIT_TIME_LONG
 	handleformchange BS_SCRIPTING, 0
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE_DISGUISE
 	waitanimation
+	printstring STRINGID_PKMNDISGUISEWASBUSTED
+	waitmessage B_WAIT_TIME_SHORT
 	goto BattleScript_BattlerFormChangeFromAfterAnimation
 
 BattleScript_BattlerFormChangeEnd3NoPopup::
