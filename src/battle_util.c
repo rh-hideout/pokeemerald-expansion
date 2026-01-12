@@ -430,7 +430,7 @@ bool32 HandleMoveTargetRedirection(void)
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     enum Type moveType = GetBattleMoveType(gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
-    u32 side = BATTLE_OPPOSITE(GetBattlerSide(gBattlerAttacker));
+    enum BattleSide side = BATTLE_OPPOSITE(GetBattlerSide(gBattlerAttacker));
     enum Ability ability = GetBattlerAbility(gBattleStruct->moveTarget[gBattlerAttacker]);
 
     if (moveEffect == EFFECT_REFLECT_DAMAGE)
@@ -1286,7 +1286,7 @@ bool32 IsLastMonToMove(u32 battler)
 
 bool32 ShouldDefiantCompetitiveActivate(u32 battler, enum Ability ability)
 {
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
     if (ability != ABILITY_DEFIANT && ability != ABILITY_COMPETITIVE)
         return FALSE;
     // if an ally dropped the stats (except for Sticky Web), don't activate
@@ -3810,7 +3810,7 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
     return effect;
 }
 
-static u32 GetFirstBattlerOnSide(u32 side)
+static u32 GetFirstBattlerOnSide(enum BattleSide side)
 {
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
@@ -3838,7 +3838,7 @@ static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16
     return FALSE;
 }
 
-static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 anim, u16 *timer, u16 time)
+static inline bool32 SetStartingSideStatus(u32 flag, enum BattleSide side, u32 message, u32 anim, u16 *timer, u16 time)
 {
     if (!(gSideStatuses[side] & flag))
     {
@@ -6617,7 +6617,7 @@ bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect effect, enum FunctionCallOption option)
 {
     const u8 *battleScript = NULL;
-    u32 sideBattler = ABILITY_NONE;
+    u32 sideBattler = 0;
     bool32 abilityAffected = FALSE;
 
     // Move specific checks
@@ -6895,7 +6895,7 @@ u32 SetRandomTarget(u32 battlerAtk)
 u32 GetBattleMoveTarget(enum Move move, enum MoveTarget moveTarget)
 {
     u32 targetBattler = 0;
-    u32 side;
+    enum BattleSide side;
     enum Type moveType = GetBattleMoveType(move);
 
     if (moveTarget == TARGET_NONE)
@@ -11518,13 +11518,13 @@ bool32 ItemHealMonVolatile(u32 battler, u16 itemId)
 }
 
 // Hazards are added to a queue and applied based in order (FIFO)
-void PushHazardTypeToQueue(u32 side, enum Hazards hazardType)
+void PushHazardTypeToQueue(enum BattleSide side, enum Hazards hazardType)
 {
     if (!IsHazardOnSide(side, hazardType)) // Failsafe
         gBattleStruct->hazardsQueue[side][gBattleStruct->numHazards[side]++] = hazardType;
 }
 
-bool32 IsHazardOnSide(u32 side, enum Hazards hazardType)
+bool32 IsHazardOnSide(enum BattleSide side, enum Hazards hazardType)
 {
     for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
     {
@@ -11534,12 +11534,12 @@ bool32 IsHazardOnSide(u32 side, enum Hazards hazardType)
     return FALSE;
 }
 
-bool32 AreAnyHazardsOnSide(u32 side)
+bool32 AreAnyHazardsOnSide(enum BattleSide side)
 {
     return gBattleStruct->numHazards[side] > 0;
 }
 
-bool32 IsHazardOnSideAndClear(u32 side, enum Hazards hazardType)
+bool32 IsHazardOnSideAndClear(enum BattleSide side, enum Hazards hazardType)
 {
     for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
     {
@@ -11556,7 +11556,7 @@ bool32 IsHazardOnSideAndClear(u32 side, enum Hazards hazardType)
     return FALSE;
 }
 
-void RemoveAllHazardsFromField(u32 side)
+void RemoveAllHazardsFromField(enum BattleSide side)
 {
     gSideTimers[side].spikesAmount = 0;
     gSideTimers[side].toxicSpikesAmount = 0;
@@ -11565,7 +11565,7 @@ void RemoveAllHazardsFromField(u32 side)
         gBattleStruct->hazardsQueue[side][i] = HAZARDS_NONE;
 }
 
-void RemoveHazardFromField(u32 side, enum Hazards hazardType)
+void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType)
 {
     u32 i;
     for (i = 0; i < HAZARDS_MAX_COUNT; i++)

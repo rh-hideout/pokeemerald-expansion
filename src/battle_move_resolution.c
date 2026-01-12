@@ -854,7 +854,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
          && CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerTarget].item)
          && !NoAliveMonsForEitherParty())
         {
-            u32 side = GetBattlerSide(gBattlerTarget);
+            enum BattleSide side = GetBattlerSide(gBattlerTarget);
 
             if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
             {

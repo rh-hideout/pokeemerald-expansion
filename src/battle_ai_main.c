@@ -493,7 +493,7 @@ u32 BattleAI_ChooseMoveIndex(u32 battler)
     return chosenMoveIndex;
 }
 
-static void CopyBattlerDataToAIParty(u32 bPosition, u32 side)
+static void CopyBattlerDataToAIParty(u32 bPosition, enum BattleSide side)
 {
     u32 battler = GetBattlerAtPosition(bPosition);
     struct AiPartyMon *aiMon = &gAiPartyData->mons[side][gBattlerPartyIndexes[battler]];
@@ -555,7 +555,7 @@ void Ai_InitPartyStruct(void)
 
 void Ai_UpdateSwitchInData(u32 battler)
 {
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
     struct AiPartyMon *aiMon = &gAiPartyData->mons[side][gBattlerPartyIndexes[battler]];
 
     // See if the switched-in mon has been already in battle
@@ -6723,9 +6723,9 @@ static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, enum Move move, s32
     return score;
 }
 
-bool32 DoesSideHaveDamagingHazards(u32 side)
+bool32 DoesSideHaveDamagingHazards(enum BattleSide side)
 {
-    for (u32 counter = 0; counter < HAZARDS_MAX_COUNT; counter++)
+    for (enum Hazards counter = 0; counter < HAZARDS_MAX_COUNT; counter++)
     {
         switch (gBattleStruct->hazardsQueue[side][counter])
         {

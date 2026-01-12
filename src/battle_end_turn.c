@@ -13,7 +13,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 
-static u32 GetBattlerSideForMessage(u32 side)
+static u32 GetBattlerSideForMessage(enum BattleSide side)
 {
     u32 battler = 0;
 
@@ -290,7 +290,7 @@ static bool32 HandleEndTurnWish(u32 battler)
 static bool32 HandleEndTurnFirstEventBlock(u32 battler)
 {
     bool32 effect = FALSE;
-    u32 side;
+    enum BattleSide side;
 
     if (!IsBattlerAlive(battler))
     {
@@ -960,7 +960,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
 {
     bool32 effect = FALSE;
 
-    u32 side = gBattleStruct->eventState.battlerSide;
+    enum BattleSide side = gBattleStruct->eventState.battlerSide;
 
     switch (gBattleStruct->eventState.endTurnBlock)
     {
