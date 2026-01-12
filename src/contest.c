@@ -682,6 +682,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("COOL Move"),
         .negativeTrait = COMPOUND_STRING("shyness"),
         .palette = 13,
+        .ribbon = MON_DATA_COOL_RIBBON,
+        .contestWinner = CONTEST_WINNER_MUSEUM_COOL,
+        .tile = 0x4040,
     },
 
     [CONTEST_CATEGORY_BEAUTY] =
@@ -691,6 +694,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("BEAUTY Move"),
         .negativeTrait = COMPOUND_STRING("anxiety"),
         .palette = 14,
+        .ribbon = MON_DATA_BEAUTY_RIBBON,
+        .contestWinner = CONTEST_WINNER_MUSEUM_BEAUTY,
+        .tile = 0x4045,
     },
 
     [CONTEST_CATEGORY_CUTE] =
@@ -700,6 +706,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("CUTE Move"),
         .negativeTrait = COMPOUND_STRING("laziness"),
         .palette = 14,
+        .ribbon = MON_DATA_CUTE_RIBBON,
+        .contestWinner = CONTEST_WINNER_MUSEUM_CUTE,
+        .tile = 0x404A,
     },
 
     [CONTEST_CATEGORY_SMART] =
@@ -709,6 +718,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("SMART Move"),
         .negativeTrait = COMPOUND_STRING("hesitancy"),
         .palette = 15,
+        .ribbon = MON_DATA_SMART_RIBBON,
+        .contestWinner = CONTEST_WINNER_MUSEUM_SMART,
+        .tile = 0x406A,
     },
 
     [CONTEST_CATEGORY_TOUGH] =
@@ -718,6 +730,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("TOUGH Move"),
         .negativeTrait = COMPOUND_STRING("fear"),
         .palette = 13,
+        .ribbon = MON_DATA_TOUGH_RIBBON,
+        .contestWinner = CONTEST_WINNER_MUSEUM_TOUGH,
+        .tile = 0x408A,
     },
 
     [CONTEST_CATEGORIES_COUNT] =
@@ -3009,26 +3024,8 @@ u8 GetContestEntryEligibility(struct Pokemon *pkmn)
         return CANT_ENTER_CONTEST_EGG;
     if (GetMonData(pkmn, MON_DATA_HP) == 0)
         return CANT_ENTER_CONTEST_FAINTED;
-    switch (gSpecialVar_ContestCategory)
-    {
-    case CONTEST_CATEGORY_COOL:
-        ribbon = GetMonData(pkmn, MON_DATA_COOL_RIBBON);
-        break;
-    case CONTEST_CATEGORY_BEAUTY:
-        ribbon = GetMonData(pkmn, MON_DATA_BEAUTY_RIBBON);
-        break;
-    case CONTEST_CATEGORY_CUTE:
-        ribbon = GetMonData(pkmn, MON_DATA_CUTE_RIBBON);
-        break;
-    case CONTEST_CATEGORY_SMART:
-        ribbon = GetMonData(pkmn, MON_DATA_SMART_RIBBON);
-        break;
-    case CONTEST_CATEGORY_TOUGH:
-        ribbon = GetMonData(pkmn, MON_DATA_TOUGH_RIBBON);
-        break;
-    default:
-        return CANT_ENTER_CONTEST;
-    }
+
+    ribbon = GetMonData(pkmn, gContestCategoryInfo[gSpecialVar_ContestCategory].ribbon);
 
     // Couldn't get this to match any other way.
     // Returns 2, 1, or 0 respectively if ribbon's rank is above, equal, or below
@@ -3235,22 +3232,11 @@ static u16 GetMoveEffectSymbolTileOffset(enum Move move, u8 contestant)
 
 static void PrintContestMoveDescription(enum Move move)
 {
-    u8 category;
     u16 categoryTile;
     u8 numHearts;
 
     // The contest category icon is implemented as a 5x2 group of tiles.
-    category = GetMoveContestCategory(move);
-    if      (category == CONTEST_CATEGORY_COOL)
-        categoryTile = 0x4040;
-    else if (category == CONTEST_CATEGORY_BEAUTY)
-        categoryTile = 0x4045;
-    else if (category == CONTEST_CATEGORY_CUTE)
-        categoryTile = 0x404A;
-    else if (category == CONTEST_CATEGORY_SMART)
-        categoryTile = 0x406A;
-    else
-        categoryTile = 0x408A;
+    categoryTile = gContestCategoryInfo[GetMoveContestCategory(move)].tile;
 
     ContestBG_FillBoxWithIncrementingTile(0, categoryTile,        0x0b, 0x1f, 0x05, 0x01, 0x11, 0x01);
     ContestBG_FillBoxWithIncrementingTile(0, categoryTile + 0x10, 0x0b, 0x20, 0x05, 0x01, 0x11, 0x01);
@@ -5577,24 +5563,7 @@ bool8 SaveContestWinner(u8 rank)
         return FALSE;
 
     // Adjust the random painting caption depending on the category
-    switch (gSpecialVar_ContestCategory)
-    {
-    case CONTEST_CATEGORY_COOL:
-        captionId += NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_COOL;
-        break;
-    case CONTEST_CATEGORY_BEAUTY:
-        captionId += NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_BEAUTY;
-        break;
-    case CONTEST_CATEGORY_CUTE:
-        captionId += NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_CUTE;
-        break;
-    case CONTEST_CATEGORY_SMART:
-        captionId += NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_SMART;
-        break;
-    case CONTEST_CATEGORY_TOUGH:
-        captionId += NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_TOUGH;
-        break;
-    }
+    captionId += NUM_PAINTING_CAPTIONS * gSpecialVar_ContestCategory;
 
     if (rank != CONTEST_SAVE_FOR_ARTIST)
     {
@@ -5654,20 +5623,7 @@ u8 GetContestWinnerSaveIdx(u8 rank, bool8 shift)
     default:
 //  case CONTEST_SAVE_FOR_MUSEUM:
 //  case CONTEST_SAVE_FOR_ARTIST:
-        switch (gSpecialVar_ContestCategory)
-        {
-        case CONTEST_CATEGORY_COOL:
-            return CONTEST_WINNER_MUSEUM_COOL - 1;
-        case CONTEST_CATEGORY_BEAUTY:
-            return CONTEST_WINNER_MUSEUM_BEAUTY - 1;
-        case CONTEST_CATEGORY_CUTE:
-            return CONTEST_WINNER_MUSEUM_CUTE - 1;
-        case CONTEST_CATEGORY_SMART:
-            return CONTEST_WINNER_MUSEUM_SMART - 1;
-        case CONTEST_CATEGORY_TOUGH:
-        default:
-            return CONTEST_WINNER_MUSEUM_TOUGH - 1;
-        }
+        return gContestCategoryInfo[gSpecialVar_ContestCategory].contestWinner - 1;
     }
 }
 
