@@ -12211,7 +12211,7 @@ bool32 ChangeOrderTargetAfterAttacker(void)
     return TRUE;
 }
 
-void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, enum Move usedMove)
+void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 upAmount, enum Move usedMove)
 {
     u32 i, j;
 
