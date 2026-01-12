@@ -682,8 +682,6 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("COOL Move"),
         .negativeTrait = COMPOUND_STRING("shyness"),
         .palette = 13,
-        .ribbon = MON_DATA_COOL_RIBBON,
-        .contestWinner = CONTEST_WINNER_MUSEUM_COOL,
         .tile = 0x4040,
     },
 
@@ -694,8 +692,6 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("BEAUTY Move"),
         .negativeTrait = COMPOUND_STRING("anxiety"),
         .palette = 14,
-        .ribbon = MON_DATA_BEAUTY_RIBBON,
-        .contestWinner = CONTEST_WINNER_MUSEUM_BEAUTY,
         .tile = 0x4045,
     },
 
@@ -706,8 +702,6 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("CUTE Move"),
         .negativeTrait = COMPOUND_STRING("laziness"),
         .palette = 14,
-        .ribbon = MON_DATA_CUTE_RIBBON,
-        .contestWinner = CONTEST_WINNER_MUSEUM_CUTE,
         .tile = 0x404A,
     },
 
@@ -718,8 +712,6 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("SMART Move"),
         .negativeTrait = COMPOUND_STRING("hesitancy"),
         .palette = 15,
-        .ribbon = MON_DATA_SMART_RIBBON,
-        .contestWinner = CONTEST_WINNER_MUSEUM_SMART,
         .tile = 0x406A,
     },
 
@@ -730,8 +722,6 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .generic = COMPOUND_STRING("TOUGH Move"),
         .negativeTrait = COMPOUND_STRING("fear"),
         .palette = 13,
-        .ribbon = MON_DATA_TOUGH_RIBBON,
-        .contestWinner = CONTEST_WINNER_MUSEUM_TOUGH,
         .tile = 0x408A,
     },
 
@@ -3025,7 +3015,7 @@ u8 GetContestEntryEligibility(struct Pokemon *pkmn)
     if (GetMonData(pkmn, MON_DATA_HP) == 0)
         return CANT_ENTER_CONTEST_FAINTED;
 
-    ribbon = GetMonData(pkmn, gContestCategoryInfo[gSpecialVar_ContestCategory].ribbon);
+    ribbon = MON_DATA_COOL_RIBBON + gSpecialVar_ContestCategory;
 
     // Couldn't get this to match any other way.
     // Returns 2, 1, or 0 respectively if ribbon's rank is above, equal, or below
@@ -5624,7 +5614,7 @@ u8 GetContestWinnerSaveIdx(u8 rank, bool8 shift)
     default:
 //  case CONTEST_SAVE_FOR_MUSEUM:
 //  case CONTEST_SAVE_FOR_ARTIST:
-        return gContestCategoryInfo[gSpecialVar_ContestCategory].contestWinner - 1;
+        return CONTEST_WINNER_MUSEUM_COOL + gSpecialVar_ContestCategory;
     }
 }
 

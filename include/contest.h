@@ -309,8 +309,6 @@ struct ContestCategory
     const u8 *generic;
     const u8 *negativeTrait;
     u8 palette;
-    u8 ribbon;
-    u8 contestWinner;
     u16 tile;
 };
 
