@@ -402,7 +402,7 @@ static inline bool32 IsDragonDartsSecondHit(u32 battlerAtk, enum Move move)
     return FALSE;
 }
 
-bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, enum Move move)
+bool32 IsAffectedByFollowMe(u32 battlerAtk, enum BattleSide defSide, enum Move move)
 {
     enum Ability ability = GetBattlerAbility(battlerAtk);
     enum BattleMoveEffects effect = GetMoveEffect(move);
@@ -3347,7 +3347,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
     }
 }
 
-bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
+bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, enum Ability ability)
 {
     if (gBattleWeather & sBattleWeatherInfo[battleWeatherId].flag)
         return FALSE;
@@ -5757,7 +5757,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                      && battlerDef != battler
                      && IsBattlerTurnDamaged(battlerDef)
                      && CanStealItem(battler, battlerDef, gBattleMons[battlerDef].item)
-                     && !GetBattlerPartyState(battlerDef)->knockedOffItem
+                     && !GetBattlerPartyState(battlerDef)->isKnockedOff
                      && !DoesSubstituteBlockMove(battler, battlerDef, move)
                      && (GetBattlerAbility(battlerDef) != ABILITY_STICKY_HOLD || !IsBattlerAlive(battlerDef)))
                     {
@@ -6220,12 +6220,12 @@ static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, bool
     return gBattleStruct->moldBreakerActive && gAbilitiesInfo[gBattleMons[battlerDef].ability].breakable;
 }
 
-u32 GetBattlerAbilityNoAbilityShield(u32 battler)
+enum Ability GetBattlerAbilityNoAbilityShield(u32 battler)
 {
     return GetBattlerAbilityInternal(battler, FALSE, TRUE);
 }
 
-u32 GetBattlerAbilityIgnoreMoldBreaker(u32 battler)
+enum Ability GetBattlerAbilityIgnoreMoldBreaker(u32 battler)
 {
     return GetBattlerAbilityInternal(battler, TRUE, FALSE);
 }
@@ -6235,7 +6235,7 @@ enum Ability GetBattlerAbility(u32 battler)
     return GetBattlerAbilityInternal(battler, FALSE, FALSE);
 }
 
-u32 GetBattlerAbilityInternal(u32 battler, bool32 ignoreMoldBreaker, bool32 noAbilityShield)
+enum Ability GetBattlerAbilityInternal(u32 battler, bool32 ignoreMoldBreaker, bool32 noAbilityShield)
 {
     bool32 hasAbilityShield = !noAbilityShield && GetBattlerHoldEffectIgnoreAbility(battler) == HOLD_EFFECT_ABILITY_SHIELD;
     bool32 abilityCantBeSuppressed = gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed;
@@ -6981,7 +6981,7 @@ u32 GetBattleMoveTarget(enum Move move, enum MoveTarget moveTarget)
     return targetBattler;
 }
 
-u8 GetAttackerObedienceForAction()
+enum Obedience GetAttackerObedienceForAction(void)
 {
     s32 rnd;
     s32 calc;
@@ -7219,7 +7219,7 @@ bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, enum Move move)
     return isProtected;
 }
 
-u32 GetProtectType(enum ProtectMethod method)
+enum ProtectType GetProtectType(enum ProtectMethod method)
 {
     switch (method)
     {
@@ -9895,7 +9895,7 @@ bool32 IsBattlerInTeraForm(u32 battler)
 }
 
 // Returns SPECIES_NONE if no form change is possible
-u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method)
+u32 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method)
 {
     u32 i;
     u32 species = gBattleMons[battler].species;
@@ -10239,14 +10239,14 @@ u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pok
     return PARTY_SIZE;
 }
 
-bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
+void SetIllusionMon(struct Pokemon *mon, u32 battler)
 {
     struct Pokemon *party, *partnerMon;
     u32 id;
 
     gBattleStruct->illusion[battler].state = ILLUSION_OFF;
     if (GetMonAbility(mon) != ABILITY_ILLUSION)
-        return FALSE;
+        return;
 
     party = GetBattlerParty(battler);
 
@@ -10260,10 +10260,7 @@ bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
     {
         gBattleStruct->illusion[battler].state = ILLUSION_ON;
         gBattleStruct->illusion[battler].mon = &party[id];
-        return TRUE;
     }
-
-    return FALSE;
 }
 
 u32 TryImmunityAbilityHealStatus(u32 battler)
@@ -10324,6 +10321,8 @@ u32 TryImmunityAbilityHealStatus(u32 battler)
             effect = 3;
         else if (GetConfig(CONFIG_OBLIVIOUS_TAUNT) >= GEN_6 && gBattleMons[battler].volatiles.tauntTimer != 0)
             effect = 4;
+        break;
+    default:
         break;
     }
 
@@ -10598,7 +10597,7 @@ bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item)
            | BATTLE_TYPE_LINK
            | BATTLE_TYPE_RECORDED_LINK
            | BATTLE_TYPE_SECRET_BASE))
-        && GetBattlerPartyState(battlerStealing)->knockedOffItem)
+        && GetBattlerPartyState(battlerStealing)->isKnockedOff)
     {
         return FALSE;
     }
@@ -10654,10 +10653,10 @@ bool32 IsSheerForceAffected(enum Move move, enum Ability ability)
 }
 
 // This function is the body of "jumpifstat", but can be used dynamically in a function
-bool32 CompareStat(u32 battler, enum Stat statId, u8 cmpTo, u8 cmpKind, enum Ability ability)
+bool32 CompareStat(u32 battler, enum Stat statId, u32 cmpTo, u32 cmpKind, enum Ability ability)
 {
     bool32 ret = FALSE;
-    u8 statValue = gBattleMons[battler].statStages[statId];
+    u32 statValue = gBattleMons[battler].statStages[statId];
 
     // Because this command is used as a way of checking if a stat can be lowered/raised,
     // we need to do some modification at run-time.
@@ -10868,7 +10867,7 @@ void RemoveConfusionStatus(u32 battler)
     gBattleMons[battler].volatiles.infiniteConfusion = FALSE;
 }
 
-u8 GetBattlerGender(u32 battler)
+u32 GetBattlerGender(u32 battler)
 {
     return GetGenderFromSpeciesAndPersonality(gBattleMons[battler].species,
                                               gBattleMons[battler].personality);
@@ -10876,16 +10875,16 @@ u8 GetBattlerGender(u32 battler)
 
 bool32 AreBattlersOfOppositeGender(u32 battler1, u32 battler2)
 {
-    u8 gender1 = GetBattlerGender(battler1);
-    u8 gender2 = GetBattlerGender(battler2);
+    u32 gender1 = GetBattlerGender(battler1);
+    u32 gender2 = GetBattlerGender(battler2);
 
     return (gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS && gender1 != gender2);
 }
 
 bool32 AreBattlersOfSameGender(u32 battler1, u32 battler2)
 {
-    u8 gender1 = GetBattlerGender(battler1);
-    u8 gender2 = GetBattlerGender(battler2);
+    u32 gender1 = GetBattlerGender(battler1);
+    u32 gender2 = GetBattlerGender(battler2);
 
     return (gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS && gender1 == gender2);
 }
@@ -10990,14 +10989,14 @@ bool32 MoveIsAffectedBySheerForce(enum Move move)
     return FALSE;
 }
 
-bool8 CanMonParticipateInSkyBattle(struct Pokemon *mon)
+bool32 CanMonParticipateInSkyBattle(struct Pokemon *mon)
 {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES);
-    u16 monAbilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
+    u32 species = GetMonData(mon, MON_DATA_SPECIES);
+    u32 monAbilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
 
-    bool8 hasLevitateAbility = GetSpeciesAbility(species, monAbilityNum) == ABILITY_LEVITATE;
-    bool8 isFlyingType = GetSpeciesType(species, 0) == TYPE_FLYING || GetSpeciesType(species, 1) == TYPE_FLYING;
-    bool8 monIsValidAndNotEgg = GetMonData(mon, MON_DATA_SANITY_HAS_SPECIES) && !GetMonData(mon, MON_DATA_IS_EGG);
+    bool32 hasLevitateAbility = GetSpeciesAbility(species, monAbilityNum) == ABILITY_LEVITATE;
+    bool32 isFlyingType = GetSpeciesType(species, 0) == TYPE_FLYING || GetSpeciesType(species, 1) == TYPE_FLYING;
+    bool32 monIsValidAndNotEgg = GetMonData(mon, MON_DATA_SANITY_HAS_SPECIES) && !GetMonData(mon, MON_DATA_IS_EGG);
 
     if (monIsValidAndNotEgg)
     {
@@ -11166,7 +11165,7 @@ void TryActivateSleepClause(u32 battler, u32 indexInParty)
         gBattleStruct->monCausingSleepClause[GetBattlerSide(battler)] = indexInParty;
 }
 
-void TryDeactivateSleepClause(u32 battlerSide, u32 indexInParty)
+void TryDeactivateSleepClause(enum BattleSide battlerSide, u32 indexInParty)
 {
     // If the pokemon on the given side at the given index in the party is the one causing Sleep Clause to be active,
     // set monCausingSleepClause[battlerSide] = PARTY_SIZE, which means Sleep Clause is not active for the given side
@@ -11174,7 +11173,7 @@ void TryDeactivateSleepClause(u32 battlerSide, u32 indexInParty)
         gBattleStruct->monCausingSleepClause[battlerSide] = PARTY_SIZE;
 }
 
-bool32 IsSleepClauseActiveForSide(u32 battlerSide)
+bool32 IsSleepClauseActiveForSide(enum BattleSide battlerSide)
 {
     // If monCausingSleepClause[battlerSide] == PARTY_SIZE, Sleep Clause is not active for the given side.
     // If monCausingSleepClause[battlerSide] < PARTY_SIZE, it means it is storing the index of the mon that is causing Sleep Clause to be active,
@@ -12260,6 +12259,9 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
                     if (GetMonData(monDef, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
                      && GetMonData(monDef, MON_DATA_HELD_ITEM) == evolutions[i].params[j].arg2)
                         SetMonData(monAtk, MON_DATA_EVOLUTION_TRACKER, &val);
+                    break;
+                default:
+                    assertf(FALSE, "evolution condition %d is not handled within TryUpdateEvolutionTracker", evolutionCondition) {}
                     break;
                 }
                 return;

@@ -1482,9 +1482,9 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_TRAINER_PARTNER_SLIDES] = HandleEndTurnTrainerPartnerSlides,
 };
 
-u32 DoEndTurnEffects(void)
+bool32 DoEndTurnEffects(void)
 {
-    u32 battler = MAX_BATTLERS_COUNT;
+    enum BattlerId battler = MAX_BATTLERS_COUNT;
 
     for (;;)
     {
