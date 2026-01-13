@@ -3398,8 +3398,8 @@ static bool32 CantFullyProtectFromMove(u32 battlerDef)
         return FALSE;
     if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
         return FALSE;
-    return GetProtectType(gProtectStructs[gBattlerTarget].protected) == PROTECT_TYPE_SINGLE
-        && gProtectStructs[gBattlerTarget].protected != PROTECT_MAX_GUARD;
+    return GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
+        && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD;
 }
 
 static enum MoveCanceler CancelerNotFullyProtected(struct BattleContext *ctx)
