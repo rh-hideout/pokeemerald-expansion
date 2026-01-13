@@ -8,176 +8,122 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 4 turns: Encore used before move")
 {
-    struct BattlePokemon *encoreUser = NULL;
-    struct BattlePokemon *encoreTarget = NULL;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
-        TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN { MOVE(encoreTarget, MOVE_SPLASH); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_SPLASH); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { MOVE(opponent, MOVE_SPLASH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("The opposing Wobbuffet ended its encore!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
 
 SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Encore used after move")
 {
-    struct BattlePokemon *encoreUser = NULL;
-    struct BattlePokemon *encoreTarget = NULL;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
     } WHEN {
-        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN { MOVE(encoreTarget, MOVE_SPLASH); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_ENCORE); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { MOVE(opponent, MOVE_SPLASH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("The opposing Wobbuffet ended its encore!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
 
 SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 4-8 turns: Encore used before move")
 {
-    struct BattlePokemon *encoreUser = NULL;
-    struct BattlePokemon *encoreTarget = NULL;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_4);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
-        TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN { MOVE(encoreTarget, MOVE_SPLASH); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_SPLASH); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { MOVE(opponent, MOVE_SPLASH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("The opposing Wobbuffet ended its encore!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
 
 SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 3-7 turns: Encore used after move")
 {
-    struct BattlePokemon *encoreUser = NULL;
-    struct BattlePokemon *encoreTarget = NULL;
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_4);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
     } WHEN {
-        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN { MOVE(encoreTarget, MOVE_SPLASH); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_ENCORE); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { MOVE(opponent, MOVE_SPLASH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("The opposing Wobbuffet ended its encore!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
 
 SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 3-7 turns: Encore used before move")
 {
-    struct BattlePokemon *encoreUser = NULL;
-    struct BattlePokemon *encoreTarget = NULL;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
-    PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
-    GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_3);
-        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
-    } WHEN {
-        TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN { MOVE(encoreTarget, MOVE_SPLASH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        MESSAGE("The opposing Wobbuffet ended its encore!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
-    }
-}
-
-SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns: Encore used after move")
-{
-    struct BattlePokemon *encoreUser = NULL;
-    struct BattlePokemon *encoreTarget = NULL;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_3);
@@ -185,25 +131,58 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns:
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
-        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN { MOVE(encoreTarget, MOVE_SPLASH); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_SPLASH); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { MOVE(opponent, MOVE_SPLASH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("The opposing Wobbuffet ended its encore!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns: Encore used after move")
+{
+    PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
+    GIVEN {
+        WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_3);
+        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_ENCORE); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { MOVE(opponent, MOVE_SPLASH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        MESSAGE("The opposing Wobbuffet ended its encore!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
 
