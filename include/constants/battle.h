@@ -32,6 +32,7 @@ enum BattlerPosition
     B_POSITION_PLAYER_RIGHT,
     B_POSITION_OPPONENT_RIGHT,
     MAX_POSITION_COUNT,
+    B_POSITION_ABSENT = 0xFF,
 };
 
 enum BattlerId
@@ -224,7 +225,7 @@ enum VolatileFlags
     F(VOLATILE_TRANSFORMED_MON_PID,         transformedMonPID,             (u32, UINT32_MAX)) \
     F(VOLATILE_DISABLED_MOVE,               disabledMove,                  (u32, MOVES_COUNT_ALL)) \
     F(VOLATILE_ENCORED_MOVE,                encoredMove,                   (u32, MOVES_COUNT_ALL)) \
-    F(VOLATILE_PROTECT_USES,                protectUses,                   (u32, UINT8_MAX)) \
+    F(VOLATILE_PROTECT_USES,                consecutiveMoveUses,           (u32, UINT8_MAX)) \
     F(VOLATILE_STOCKPILE_COUNTER,           stockpileCounter,              (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_DEF,               stockpileDef,                  (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_SP_DEF,            stockpileSpDef,                (u32, MAX_STAT_STAGE)) \
@@ -577,6 +578,10 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FIXED_POWER,
     // Max move effects end. They can be used for (custom) normal moves.
 
+    // Move effects that happen before the move hits. Set in SetPreAttackMoveEffect
+    MOVE_EFFECT_BREAK_SCREEN,
+    MOVE_EFFECT_STEAL_STATS,
+
     NUM_MOVE_EFFECTS
 };
 
@@ -585,8 +590,6 @@ enum __attribute__((packed)) MoveEffect
 #else
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FREEZE
 #endif
-
-#define MOVE_EFFECT_CONTINUE            0x8000
 
 // Battle environment defines for gBattleEnvironment.
 enum BattleEnvironments

@@ -835,7 +835,6 @@ enum ProtectLikeUsedStringID
 {
     B_MSG_PROTECTED_ITSELF,
     B_MSG_BRACED_ITSELF,
-    B_MSG_PROTECT_FAILED,
     B_MSG_PROTECTED_TEAM,
 };
 

@@ -481,7 +481,7 @@ void BattleSetup_StartLegendaryBattle(void)
     gMain.savedCallback = CB2_EndScriptedWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_LEGENDARY;
 
-    switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL))
+    switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES))
     {
     default:
     case SPECIES_GROUDON:

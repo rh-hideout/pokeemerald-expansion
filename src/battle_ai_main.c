@@ -2131,7 +2131,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
               || !CanBattlerGetOrLoseItem(battlerAtk, battlerDef, aiData->items[battlerDef])
               || !CanBattlerGetOrLoseItem(battlerDef, battlerAtk, aiData->items[battlerDef])
               || !CanBattlerGetOrLoseItem(battlerDef, battlerAtk, gBattleMons[battlerAtk].item)
-              || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD
               || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
                 ADJUST_SCORE(-10);
         case EFFECT_KNOCK_OFF:
@@ -2399,14 +2398,14 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
                     {
                         ADJUST_SCORE(-10); //Don't protect if you're going to faint after protecting
                     }
-                    else if (gBattleMons[battlerAtk].volatiles.protectUses == 1 && Random() % 100 < 50)
+                    else if (gBattleMons[battlerAtk].volatiles.consecutiveMoveUses == 1 && Random() % 100 < 50)
                     {
                         if (isBattle1v1)
                             ADJUST_SCORE(-6);
                         else
                             ADJUST_SCORE(-10); //Don't try double protecting in doubles
                     }
-                    else if (gBattleMons[battlerAtk].volatiles.protectUses >= 2)
+                    else if (gBattleMons[battlerAtk].volatiles.consecutiveMoveUses >= 2)
                     {
                         ADJUST_SCORE(-10);
                     }
@@ -2526,7 +2525,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
               || aiData->items[battlerDef] != ITEM_NONE
               || !CanBattlerGetOrLoseItem(battlerAtk, battlerDef, gBattleMons[battlerAtk].item)    // AI knows its own item
               || !CanBattlerGetOrLoseItem(battlerDef, battlerAtk, gBattleMons[battlerAtk].item)
-              || aiData->abilities[battlerAtk] == ABILITY_STICKY_HOLD
               || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
                 ADJUST_SCORE(-10);
             break;
@@ -4927,7 +4925,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
     case EFFECT_SWAGGER:
         if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_FOUL_PLAY)
          || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_PSYCH_UP)
-         || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_SPECTRAL_THIEF))
+         || HasBattlerSideMoveWithAdditionalEffect(battlerAtk, MOVE_EFFECT_STEAL_STATS))
             ADJUST_SCORE(DECENT_EFFECT);
         if (aiData->abilities[battlerDef] == ABILITY_CONTRARY)
             ADJUST_SCORE(GOOD_EFFECT);
@@ -4935,7 +4933,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
         break;
     case EFFECT_FLATTER:
         if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_PSYCH_UP)
-         || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_SPECTRAL_THIEF))
+         || HasBattlerSideMoveWithAdditionalEffect(battlerAtk, MOVE_EFFECT_STEAL_STATS))
             ADJUST_SCORE(DECENT_EFFECT);
         if (aiData->abilities[battlerDef] == ABILITY_CONTRARY)
             ADJUST_SCORE(GOOD_EFFECT);
@@ -5166,15 +5164,6 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
                || !CanTargetFaintAiWithMod(battlerDef, battlerAtk, toHeal, 0)))
                 ADJUST_SCORE(WEAK_EFFECT);    // Recycle healing berry if we can't otherwise faint the target and the target wont kill us after we activate the berry
         }
-        break;
-    case EFFECT_RAGING_BULL:
-    case EFFECT_BRICK_BREAK:
-        if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_REFLECT)
-            ADJUST_SCORE(DECENT_EFFECT);
-        if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_LIGHTSCREEN)
-            ADJUST_SCORE(DECENT_EFFECT);
-        if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_AURORA_VEIL)
-            ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_DOODLE:
     case EFFECT_ENTRAINMENT:
@@ -5702,9 +5691,6 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
          || (gBattleMons[battlerAtk].volatiles.leechSeed || gBattleMons[battlerAtk].volatiles.wrapped))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
-    case EFFECT_SPECTRAL_THIEF:
-        ADJUST_SCORE(AI_ShouldCopyStatChanges(battlerAtk, battlerDef));
-        break;
     case EFFECT_SMACK_DOWN:
         if (!AI_IsBattlerGrounded(battlerDef) && HasDamagingMoveOfType(battlerAtk, TYPE_GROUND) && !CanTargetFaintAi(battlerDef, battlerAtk))
             ADJUST_SCORE(DECENT_EFFECT);
@@ -6119,6 +6105,17 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, enum Mov
                     else
                         ADJUST_SCORE(BAD_EFFECT);
                 }
+				break;
+            case MOVE_EFFECT_BREAK_SCREEN:
+            	if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_REFLECT)
+            		ADJUST_SCORE(DECENT_EFFECT);
+            	if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_LIGHTSCREEN)
+            		ADJUST_SCORE(DECENT_EFFECT);
+            	if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_AURORA_VEIL)
+            		ADJUST_SCORE(DECENT_EFFECT);
+            	break;
+            case MOVE_EFFECT_STEAL_STATS:
+            	ADJUST_SCORE(AI_ShouldCopyStatChanges(battlerAtk, battlerDef));
                 break;
             default:
                 break;

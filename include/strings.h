@@ -399,15 +399,12 @@ extern const u8 gText_ThrewAwayVar2Var1s[];
 extern const u8 gText_ConfirmTossItems[];
 extern const u8 gText_MoveVar1Where[];
 
-extern const u8 gText_ColorLightShadowDarkGray[];
-extern const u8 gText_ColorBlue[];
 extern const u8 gText_Friend[];
 extern const u8 gText_FiveMarks[];
 
 extern const u8 gText_TotalRecordWLD[];
 extern const u8 gText_PlayersBattleResults[];
 extern const u8 gText_WinLoseDraw[];
-extern const u8 gText_ColorTransparent[];
 extern const u8 gText_Slash[];
 extern const u8 gText_HealthboxNickname[];
 extern const u8 gText_HealthboxGender_None[];
