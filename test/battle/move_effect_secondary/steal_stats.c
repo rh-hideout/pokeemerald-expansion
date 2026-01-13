@@ -1,6 +1,11 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+	ASSUME(MoveHasAdditionalEffect(MOVE_SPECTRAL_THIEF, MOVE_EFFECT_STEAL_STATS));
+}
+
 SINGLE_BATTLE_TEST("Spectral Thief steals opponents boost before attacking", s16 damage)
 {
     enum Move move;
@@ -9,7 +14,6 @@ SINGLE_BATTLE_TEST("Spectral Thief steals opponents boost before attacking", s16
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
-        ASSUME(GetMoveEffect(MOVE_SPECTRAL_THIEF) == EFFECT_SPECTRAL_THIEF);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -33,7 +37,6 @@ SINGLE_BATTLE_TEST("Spectral Thief can't steal opponent's boost if target is imm
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
-        ASSUME(GetMoveEffect(MOVE_SPECTRAL_THIEF) == EFFECT_SPECTRAL_THIEF);
         PLAYER(SPECIES_MEOWTH);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

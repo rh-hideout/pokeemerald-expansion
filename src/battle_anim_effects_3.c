@@ -2331,7 +2331,7 @@ void AnimTask_SwallowDeformMon(u8 taskId)
 void AnimTask_HideSwapSprite(u8 taskId)
 {
     int i, j;
-    u8 position;
+    enum BattlerPosition position;
     struct BattleAnimBgData animBg;
     u8 *dest;
     u8 *src;
@@ -2430,7 +2430,7 @@ void AnimTask_SetOpponentShadowCallbacks(u8 taskId)
 void AnimTask_TransformMon(u8 taskId)
 {
     int i, j;
-    u8 position;
+    enum BattlerPosition position;
     struct BattleAnimBgData animBg;
     u8 *dest;
     u8 *src;
@@ -2750,7 +2750,7 @@ void AnimTask_DoomDesireLightBeam(u8 taskId)
         }
         else
         {
-            u8 position = GetBattlerPosition(gBattleAnimTarget);
+            enum BattlerPosition position = GetBattlerPosition(gBattleAnimTarget);
             if (IsDoubleBattle() == TRUE)
             {
                 if (position == B_POSITION_OPPONENT_LEFT)

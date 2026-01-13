@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Zacian's Iron Head becomes Behemoth Blade upon form change")
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } THEN {
-        ASSUME(player->species == SPECIES_ZACIAN_CROWNED); // Assumes form change worked.
+        EXPECT_EQ(player->species, SPECIES_ZACIAN_CROWNED);
         EXPECT_EQ(player->moves[0], MOVE_BEHEMOTH_BLADE);
     }
 }
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Zamazenta's Iron Head becomes Behemoth Bash upon form change
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } THEN {
-        ASSUME(player->species == SPECIES_ZAMAZENTA_CROWNED); // Assumes form change worked.
+        EXPECT_EQ(player->species, SPECIES_ZAMAZENTA_CROWNED);
         EXPECT_EQ(player->moves[0], MOVE_BEHEMOTH_BASH);
     }
 }

@@ -35,7 +35,6 @@ def extract_repo_tutors() -> typing.Generator[str, None, None]:
             for move in INCFILE_MOVE_PAT.finditer(incfile):
                 yield move.group(1)
 
-
 def dump_output(file, data):
     with open(file, "w") as fp:
         fp.write(data)
@@ -55,15 +54,15 @@ def main():
 
     tutors_list = sorted(list(extract_repo_tutors()))
     new_tutors = json.dumps(tutors_list, indent=2)
+    old_tutors = ""
     if OUTPUT_FILE.exists() and OUTPUT_FILE.is_file():
         with open(OUTPUT_FILE, "r") as fp:
             old_tutors = fp.read()
-    else:
-        dump_output(OUTPUT_FILE, new_tutors)
-        return
+
+    dump_output(OUTPUT_FILE, new_tutors)
 
     if new_tutors != old_tutors:
-        dump_output(OUTPUT_FILE, new_tutors)
+        pathlib.Path("./tools/learnset_helpers/make_teachables.py").touch()
 
 if __name__ == "__main__":
     main()

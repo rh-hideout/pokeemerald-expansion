@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_BRICK_BREAK) == EFFECT_BRICK_BREAK);
-    ASSUME(GetMoveEffect(MOVE_PSYCHIC_FANGS) == EFFECT_BRICK_BREAK);
+    ASSUME(MoveHasAdditionalEffect(MOVE_BRICK_BREAK, MOVE_EFFECT_BREAK_SCREEN));
+    ASSUME(MoveHasAdditionalEffect(MOVE_PSYCHIC_FANGS, MOVE_EFFECT_BREAK_SCREEN));
     ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_WEATHER);
     ASSUME(GetMoveWeatherType(MOVE_SNOWSCAPE) == BATTLE_WEATHER_SNOW);
     ASSUME(GetMoveEffect(MOVE_LIGHT_SCREEN) == EFFECT_LIGHT_SCREEN);
@@ -158,3 +158,4 @@ DOUBLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove Light Screen, Refle
         HP_BAR(playerLeft);
     }
 }
+
