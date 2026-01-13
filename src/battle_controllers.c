@@ -3241,3 +3241,33 @@ void FreeShinyStars(void)
     FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
     FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
 }
+
+enum BattleTrainer GetBattleTrainer(enum BattlerId battler)
+{
+    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && (battler & BIT_SIDE) == B_SIDE_OPPONENT)
+        return B_TRAINER_NONE;
+
+    switch (battler)
+    {
+    case B_BATTLER_0:
+        return B_TRAINER_0;
+    case B_BATTLER_1:
+        return B_TRAINER_1;
+    case B_BATTLER_2:
+        if (!(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
+            return B_TRAINER_NONE;
+        else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            return B_TRAINER_2;
+        else
+            return B_TRAINER_0;
+    case B_BATTLER_3:
+        if (!(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
+            return B_TRAINER_NONE;
+        else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+            return B_TRAINER_3;
+        else
+            return B_TRAINER_1;
+    default:
+        return B_TRAINER_NONE;
+    }
+}
