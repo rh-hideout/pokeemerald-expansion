@@ -507,12 +507,11 @@ SINGLE_BATTLE_TEST("Fling deals damage based on items fling power")
     }
 }
 
-SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
+SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power if reusable or fails if breakable")
 {
     s16 damage[2];
 
     GIVEN {
-        ASSUME(I_REUSABLE_TMS == TRUE);
         ASSUME(GetMovePower(MOVE_EARTHQUAKE) == GetMovePower(MOVE_EGG_BOMB));
         ASSUME(!IsSpeciesOfType(SPECIES_WOBBUFFET, TYPE_DARK));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
@@ -521,11 +520,17 @@ SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
         TURN { MOVE(player, MOVE_FLING); }
         TURN { MOVE(player, MOVE_EGG_BOMB); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
-        HP_BAR(opponent, captureDamage: &damage[0]);
+        if (I_REUSABLE_TMS == TRUE) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+            HP_BAR(opponent, captureDamage: &damage[0]);
+        } else {
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+            MESSAGE("But it failed!");
+        }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EGG_BOMB, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_EQ(damage[0], damage[1]);
+        if (I_REUSABLE_TMS == TRUE)
+            EXPECT_EQ(damage[0], damage[1]);
     }
 }
