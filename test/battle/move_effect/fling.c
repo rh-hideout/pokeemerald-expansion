@@ -520,7 +520,7 @@ SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power if reusable or
         TURN { MOVE(player, MOVE_FLING); }
         TURN { MOVE(player, MOVE_EGG_BOMB); }
     } SCENE {
-        if (I_REUSABLE_TMS == TRUE) {
+        if (I_REUSABLE_TMS == FALSE) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
             HP_BAR(opponent, captureDamage: &damage[0]);
         } else {
@@ -530,7 +530,7 @@ SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power if reusable or
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EGG_BOMB, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        if (I_REUSABLE_TMS == TRUE)
+        if (I_REUSABLE_TMS == FALSE)
             EXPECT_EQ(damage[0], damage[1]);
     }
 }
