@@ -12,9 +12,9 @@
 	.byte B_SCR_OP_PRINTATTACKSTRING
 	.endm
 
-	.macro getpossiblenexttarget jumpInstr:req
-	.byte B_SCR_OP_GETPOSSIBLENEXTTARGET
-	.4byte \jumpInstr
+	.macro printselectionstringfromtable ptr:req
+	.byte B_SCR_OP_PRINTSELECTIONSTRINGFROMTABLE
+	.4byte \ptr
 	.endm
 
 	.macro critcalc
@@ -94,15 +94,12 @@
 	.4byte \ptr
 	.endm
 
-	.macro printselectionstringfromtable ptr:req
-	.byte B_SCR_OP_PRINTSELECTIONSTRINGFROMTABLE
-	.4byte \ptr
+	.macro setpreattackadditionaleffect
+	.byte B_SCR_OP_SETPREATTACKADDITIONALEFFECT
 	.endm
 
 	.macro setadditionaleffects
-	1:
 	.byte B_SCR_OP_SETADDITIONALEFFECTS
-	jumpifhalfword CMP_EQUAL, sMOVE_EFFECT, MOVE_EFFECT_CONTINUE, 1b
 	.endm
 
 	.macro seteffectprimary battler:req, effectBattler:req, moveEffect=0
@@ -615,7 +612,12 @@
 
 	.macro futuresighttargetfailure failInstr:req
 	.byte B_SCR_OP_FUTURESIGHTTARGETFAILURE
-    .4byte \failInstr
+	.4byte \failInstr
+	.endm
+
+	.macro getpossiblenexttarget jumpInstr:req
+	.byte B_SCR_OP_GETPOSSIBLENEXTTARGET
+	.4byte \jumpInstr
 	.endm
 
 	.macro yesnobox
@@ -1260,8 +1262,8 @@
 	.byte B_SCR_OP_SNATCHSETBATTLERS
 	.endm
 
-	.macro removescreens
-	.byte B_SCR_OP_REMOVESCREENS
+	.macro unused_0xee
+	.byte B_SCR_OP_UNUSED_0XEE
 	.endm
 
 	.macro handleballthrow
@@ -1716,11 +1718,6 @@
 
 	.macro removeterrain
 	callnative BS_RemoveTerrain
-	.endm
-
-	.macro tryspectralthiefsteal jumpInstr:req
-	callnative BS_TrySpectralThiefSteal
-	.4byte \jumpInstr
 	.endm
 
 	.macro spectralthiefprintstats

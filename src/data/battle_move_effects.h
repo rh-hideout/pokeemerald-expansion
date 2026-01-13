@@ -1037,12 +1037,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 4,
     },
 
-    [EFFECT_BRICK_BREAK] =
-    {
-        .battleScript = BattleScript_EffectBrickBreak,
-        .battleTvScore = 2,
-    },
-
     [EFFECT_YAWN] =
     {
         .battleScript = BattleScript_EffectYawn,
@@ -2107,7 +2101,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_RAGING_BULL] =
     {
-        .battleScript = BattleScript_EffectBrickBreak,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -2205,12 +2199,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 2,
-    },
-
-    [EFFECT_SPECTRAL_THIEF] =
-    {
-        .battleScript = BattleScript_EffectSpectralThief,
-        .battleTvScore = 0, // TODO: Assign points
     },
 
     [EFFECT_RECOIL] =

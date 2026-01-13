@@ -578,6 +578,10 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FIXED_POWER,
     // Max move effects end. They can be used for (custom) normal moves.
 
+    // Move effects that happen before the move hits. Set in SetPreAttackMoveEffect
+    MOVE_EFFECT_BREAK_SCREEN,
+    MOVE_EFFECT_STEAL_STATS,
+
     NUM_MOVE_EFFECTS
 };
 
@@ -586,8 +590,6 @@ enum __attribute__((packed)) MoveEffect
 #else
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FREEZE
 #endif
-
-#define MOVE_EFFECT_CONTINUE            0x8000
 
 // Battle environment defines for gBattleEnvironment.
 enum BattleEnvironments

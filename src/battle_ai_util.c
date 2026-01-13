@@ -470,7 +470,7 @@ bool32 AI_CanBattlerEscape(u32 battler)
 {
     enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
 
-    if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+    if (GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TRUE;
     if (holdEffect == HOLD_EFFECT_SHED_SHELL)
         return TRUE;
@@ -3248,7 +3248,9 @@ static u32 GetLeechSeedDamage(u32 battler)
 static u32 GetNightmareDamage(u32 battlerId)
 {
     u32 damage = 0;
-    if (gBattleMons[battlerId].volatiles.nightmare && gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+    if (gBattleMons[battlerId].volatiles.nightmare
+     && ((gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+     || gAiLogicData->abilities[battlerId] == ABILITY_COMATOSE))
     {
         damage = GetNonDynamaxMaxHP(battlerId) / 4;
         if (damage == 0)
@@ -4209,10 +4211,6 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     case EFFECT_TIDY_UP:
         aiEffect |= AI_EFFECT_CLEAR_HAZARDS;
         break;
-    case EFFECT_BRICK_BREAK:
-    case EFFECT_RAGING_BULL:
-        aiEffect |= AI_EFFECT_BREAK_SCREENS;
-        break;
     case EFFECT_HAZE:
         aiEffect |= AI_EFFECT_RESET_STATS;
         break;
@@ -4246,6 +4244,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     default:
         break;
     }
+
     return aiEffect;
 }
 
@@ -4291,6 +4290,9 @@ static u32 GetAIEffectGroupFromMove(u32 battler, enum Move move)
             break;
         case MOVE_EFFECT_GRAVITY:
             aiEffect |= AI_EFFECT_GRAVITY;
+			break;
+        case MOVE_EFFECT_BREAK_SCREEN:
+        	aiEffect |= AI_EFFECT_BREAK_SCREENS;
             break;
         default:
             break;
@@ -4408,7 +4410,7 @@ bool32 ShouldUseWishAromatherapy(u32 battlerAtk, u32 battlerDef, enum Move move)
         u32 currHp = GetMonData(&party[monIndex], MON_DATA_HP);
         u32 maxHp = GetMonData(&party[monIndex], MON_DATA_MAX_HP);
 
-        if (!GetMonData(&party[monIndex], MON_DATA_IS_EGG, NULL) && currHp > 0)
+        if (!GetMonData(&party[monIndex], MON_DATA_IS_EGG) && currHp > 0)
         {
             if ((currHp * 100) / maxHp < 65 // Less than 65% health remaining
               && monIndex >= firstId && monIndex < lastId) // Can only switch to mon on your team
@@ -4562,13 +4564,13 @@ bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category)
 
     for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
     {
-        if (GetMonData(&party[monIndex], MON_DATA_HP, NULL) == 0)
+        if (GetMonData(&party[monIndex], MON_DATA_HP) == 0)
             continue;
 
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            enum Move move = GetMonData(&party[monIndex], MON_DATA_MOVE1 + moveIndex, NULL);
-            u32 pp = GetMonData(&party[monIndex], MON_DATA_PP1 + moveIndex, NULL);
+            enum Move move = GetMonData(&party[monIndex], MON_DATA_MOVE1 + moveIndex);
+            u32 pp = GetMonData(&party[monIndex], MON_DATA_PP1 + moveIndex);
 
             if (pp > 0 && move != MOVE_NONE)
             {
@@ -4817,10 +4819,10 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         // If expected switchin outspeeds and has Encore, don't increase
         for (u32 monIndex = 0; monIndex < MAX_MON_MOVES; monIndex++)
         {
-            if (GetMoveEffect(GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_MOVE1 + monIndex, NULL)) == EFFECT_ENCORE
-                && GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_PP1 + monIndex, NULL) > 0);
+            if (GetMoveEffect(GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_MOVE1 + monIndex)) == EFFECT_ENCORE
+                && GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_PP1 + monIndex) > 0);
             {
-                if (GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_SPEED, NULL) > gBattleMons[battlerAtk].speed)
+                if (GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_SPEED) > gBattleMons[battlerAtk].speed)
                     return NO_INCREASE;
             }
         }
