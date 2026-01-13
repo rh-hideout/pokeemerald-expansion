@@ -416,7 +416,7 @@ SINGLE_BATTLE_TEST("Electro Shot needs a charging Turn")
         MESSAGE("Wobbuffet used Electro Shot!");
         HP_BAR(opponent);
     } THEN {
-        EXPECT_EQ(player->statStages[STAT_SPATK],  DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }
 }
 
