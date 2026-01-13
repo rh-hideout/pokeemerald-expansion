@@ -515,7 +515,7 @@ void DetermineTarget(enum MoveTarget moveTarget, bool32 overwriteTarget)
                 break;
         }
     }
-    else if (moveTarget == TARGET_USER)
+    else if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_AND_ALLY)
     {
         gBattlerTarget = gBattlerAttacker;
     }
