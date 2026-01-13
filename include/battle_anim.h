@@ -99,7 +99,7 @@ void LoadMoveBg(u16 bgId);
 
 // battle_intro.c
 void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value);
-void DrawBattlerOnBg(int bgId, u8 x, u8 y, u8 battlerPosition, u8 paletteId, u8 *tiles, u16 *tilemap, u16 tilesOffset);
+void DrawBattlerOnBg(int bgId, u8 x, u8 y, enum BattlerPosition battlerPosition, u8 paletteId, u8 *tiles, u16 *tilemap, u16 tilesOffset);
 void HandleIntroSlide(u8 environment);
 void BattleIntroSlide1(u8 taskId);
 void BattleIntroSlide2(u8 taskId);
@@ -590,5 +590,7 @@ void AnimIceBeamParticle(struct Sprite *sprite);
 
 // battle_anim_bug.c
 void AnimTranslateStinger(struct Sprite *sprite);
+
+extern const struct BattleAnimBackground gBattleAnimBackgroundTable[];
 
 #endif // GUARD_BATTLE_ANIM_H

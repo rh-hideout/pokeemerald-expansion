@@ -302,12 +302,12 @@ SINGLE_BATTLE_TEST("Sleep Clause: Yawn will fail when sleep clause is active")
     }
 }
 
-SINGLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 11% of the time with sleep clause active")
+SINGLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 11% (Gen5+) of the time with sleep clause active")
 {
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, GEN_5);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -327,12 +327,12 @@ SINGLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 11% of the time with
     }
 }
 
-DOUBLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 11% of the time with sleep clause active (Doubles)")
+DOUBLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 11% (Gen5+) of the time with sleep clause active (Doubles)")
 {
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, GEN_5);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -360,7 +360,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep from Effect Spore will not activate slee
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, GEN_5);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -388,7 +388,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep from Effect Spore will not activate slee
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, GEN_5);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -835,11 +835,14 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
 
 SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mon is woken up by Shed Skin")
 {
-    if (B_ABILITY_TRIGGER_CHANCE == GEN_4)
-        PASSES_RANDOMLY(30, 100, RNG_SHED_SKIN);
-    else
-        PASSES_RANDOMLY(33, 100, RNG_SHED_SKIN);
+    u32 config, passes;
+    PARAMETRIZE { config = GEN_3; passes = 33; }
+    PARAMETRIZE { config = GEN_4; passes = 30; }
+    PARAMETRIZE { config = GEN_5; passes = 33; }
+
+    PASSES_RANDOMLY(passes, 100, RNG_SHED_SKIN);
     GIVEN {
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -1217,7 +1220,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep caused by Effect Spore does not prevent 
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, GEN_5);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
@@ -1254,7 +1257,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Waking up after Effect Spore doesn't deactivat
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, GEN_5);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
@@ -1263,6 +1266,8 @@ SINGLE_BATTLE_TEST("Sleep Clause: Waking up after Effect Spore doesn't deactivat
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_EFFECT_SPORE); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN {}
+        TURN {}
         TURN {}
         TURN {}
         TURN {}
@@ -1292,7 +1297,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Waking up after Effect Spore doesn't deactivat
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, GEN_5);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
@@ -1469,6 +1474,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Yawn'd Pokémon slept due to Effect Spore befo
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, GEN_5);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);

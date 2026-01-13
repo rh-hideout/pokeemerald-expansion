@@ -2684,6 +2684,7 @@ static void Task_OnSelectedMon(u8 taskId)
             if (sInPartyMenu)
             {
                 gSpecialVar_Result = GetBoxMonData(&gPlayerParty[sCursorPosition].box, MON_DATA_SPECIES);
+                gSpecialVar_MonBoxId = TOTAL_BOXES_COUNT;
                 gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&gPlayerParty[sCursorPosition]);
             }
             else
@@ -6939,7 +6940,7 @@ static void ReshowDisplayMon(void)
 void SetMonFormPSS(struct BoxPokemon *boxMon, enum FormChanges method)
 {
     u16 targetSpecies = GetFormChangeTargetSpeciesBoxMon(boxMon, method, 0);
-    if (targetSpecies != GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL))
+    if (targetSpecies != GetBoxMonData(boxMon, MON_DATA_SPECIES))
     {
         SetBoxMonData(boxMon, MON_DATA_SPECIES, &targetSpecies);
         sRefreshDisplayMonGfx = TRUE;

@@ -736,11 +736,6 @@ ALIGNED(4) const u8 gText_Facility[] = _("{STR_VAR_1}");
 
 const u8 gText_Give[] = _("Give");
 const u8 gText_NoNeed[] = _("No need");
-const u8 gText_ColorLightShadowDarkGray[] = _("{COLOR LIGHT_GRAY}{SHADOW DARK_GRAY}");
-const u8 gText_ColorBlue[] = _("{COLOR BLUE}");
-const u8 gText_ColorTransparent[] = _("{BACKGROUND TRANSPARENT}{ACCENT TRANSPARENT}{COLOR TRANSPARENT}");
-const u8 gText_CDot[] = _("C.");
-const u8 gText_BDot[] = _("B.");
 const u8 gText_AnnouncingResults[] = _("Announcing the results!");
 const u8 gText_PreliminaryResults[] = _("The preliminary results!");
 const u8 gText_Round2Results[] = _("Round 2 results!");
