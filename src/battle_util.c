@@ -9991,41 +9991,6 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method, enum Ability ab
         RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
         return TRUE;
     }
-    else if (GetBattlerPartyState(battler)->changedSpecies != SPECIES_NONE)
-    {
-        bool32 restoreSpecies = FALSE;
-
-        switch (method)
-        {
-        case FORM_CHANGE_END_BATTLE:
-            restoreSpecies = TRUE;
-            break;
-        case FORM_CHANGE_FAINT:
-            if (IsBattlerMegaEvolved(battler) || IsBattlerUltraBursted(battler) || IsBattlerInTeraForm(battler) || IsGigantamaxed(battler))
-                restoreSpecies = TRUE;
-            break;
-        case FORM_CHANGE_BATTLE_SWITCH:
-            if (IsGigantamaxed(battler))
-                restoreSpecies = TRUE;
-            break;
-        default:
-            break;
-        }
-
-        if (restoreSpecies)
-        {
-            enum Ability abilityForm = gBattleMons[battler].ability;
-            // Reverts the original species
-            TryToSetBattleFormChangeMoves(&party[monId], method);
-            u32 changedSpecies = GetBattlerPartyState(battler)->changedSpecies;
-            SetMonData(&party[monId], MON_DATA_SPECIES, &changedSpecies);
-            RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
-            // Battler data is not updated with regular form's ability, not doing so could cause wrong ability activation.
-            if (method == FORM_CHANGE_FAINT)
-                gBattleMons[battler].ability = abilityForm;
-            return TRUE;
-        }
-    }
 
     return FALSE;
 }
