@@ -132,7 +132,9 @@ enum LearnMoveState
 {
     LEARN_MOVE_END,
 
-    LEARN_MOVE, //Start
+    MON_CAN_LEARN, //Start
+
+    LEARN_MOVE,
 
     ASK_REPLACEMENT_1,
     ASK_REPLACEMENT_2,
@@ -176,6 +178,23 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
     struct BoxPokemon *boxmon = LearnMove_GetBoxMonFromTaskData(partyIndex);
     switch (state)
     {
+    case MON_CAN_LEARN:
+        GetBoxMonNickname(boxmon, gStringVar1);
+        StringCopy(gStringVar2, GetMoveName(move));
+        gSpecialVar_Result = FALSE;
+        switch(CanMonLearnMove(boxmon))
+        {
+        case VALID_MON:
+            return LEARN_MOVE;
+        case ALREADY_KNOWS_MOVE:
+            ui->printMessage(gText_PkmnAlreadyKnows);
+            return LEARN_MOVE_END;
+        case CANNOT_LEARN_MOVE_IS_EGG:
+        case CANNOT_LEARN_MOVE:
+        default:
+            ui->printMessage(gText_PkmnCantLearnMove);
+            return LEARN_MOVE_END;
+        }
     case LEARN_MOVE:
         if (GiveMoveToBoxMon(boxmon, move) != MON_HAS_MAX_MOVES)
             return LEARNED_MOVE_1;
@@ -276,7 +295,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
 
 s32 GetLearnMoveStartState(void)
 {
-    return LEARN_MOVE;
+    return MON_CAN_LEARN;
 }
 
 //At the time of writing code for this, there was no prescribed way to make a task persist between scenes
