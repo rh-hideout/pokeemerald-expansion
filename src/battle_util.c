@@ -9027,6 +9027,9 @@ bool32 DoesSpeciesUseHoldItemToChangeForm(u16 species, u16 heldItemId)
     u32 i;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
 
+    if (heldItemId == ITEM_NONE)
+        return FALSE;
+
     for (i = 0; formChanges != NULL && formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
     {
         enum FormChanges method = formChanges[i].method;
