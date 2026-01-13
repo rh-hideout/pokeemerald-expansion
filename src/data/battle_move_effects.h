@@ -221,7 +221,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleFactoryStyle = FACTORY_STYLE_HIGH_RISK,
     },
 
-    [EFFECT_SHEER_COLD] =
+    [EFFECT_OHKO_FAIL_ON_TYPE] =
     {
         .battleScript = BattleScript_EffectOHKO,
         .battleTvScore = 7,

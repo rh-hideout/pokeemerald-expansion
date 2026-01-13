@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SHEER_COLD) == EFFECT_SHEER_COLD);
+    ASSUME(GetMoveEffect(MOVE_SHEER_COLD) == EFFECT_OHKO_FAIL_ON_TYPE);
 }
 
 SINGLE_BATTLE_TEST("Sheer Cold doesn't affect Ice-type Pokémon (Gen3-6)")

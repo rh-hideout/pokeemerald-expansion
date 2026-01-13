@@ -33,7 +33,7 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_LIGHT_SCREEN,
     EFFECT_REST,
     EFFECT_OHKO,
-    EFFECT_SHEER_COLD, // Same as EFFECT_OHKO but Ice-types are immune to it and has decreased accuracy for non Ice-type users.
+    EFFECT_OHKO_FAIL_ON_TYPE, // Same as EFFECT_OHKO but targets of the same type as the move immune to it and has decreased accuracy for users that aren't the same type as the move.
     EFFECT_FUSION_COMBO,
     EFFECT_FIXED_PERCENT_DAMAGE,
     EFFECT_FIXED_HP_DAMAGE,

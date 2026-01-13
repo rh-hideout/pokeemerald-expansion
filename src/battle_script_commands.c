@@ -2086,7 +2086,11 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
         gBattlescriptCurrInstr = nextInstr;
         return;
     }
-    else if (DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove) && gBattleMons[battler].volatiles.substituteHP)
+
+    u32 moveEffect = GetMoveEffect(gCurrentMove);
+    bool32 isOneHitKOMove = moveEffect == EFFECT_OHKO || moveEffect == EFFECT_OHKO_FAIL_ON_TYPE;
+
+    if (DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove) && gBattleMons[battler].volatiles.substituteHP)
     {
         if (gBattleMons[battler].volatiles.substituteHP >= gBattleStruct->moveDamage[battler])
         {
@@ -2117,7 +2121,7 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
         gBattleScripting.battler = battler;
         gBattleStruct->moveDamage[battler] = 0;
         gBattleStruct->moveResultFlags[battler] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
-        if (GetMoveEffect(gCurrentMove) == EFFECT_OHKO)
+        if (isOneHitKOMove)
             gProtectStructs[battler].survivedOHKO = TRUE;
         if (GetBattlerPartyState(battler)->changedSpecies == SPECIES_NONE)
             GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
@@ -2147,7 +2151,7 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
             // Deal damage to the battler
             if (gBattleMons[battler].hp > gBattleStruct->moveDamage[battler])
             {
-                if (GetMoveEffect(gCurrentMove) == EFFECT_OHKO && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FOE_HUNG_ON)
+                if (isOneHitKOMove && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FOE_HUNG_ON)
                 {
                     gProtectStructs[battler].survivedOHKO = TRUE;
                 }
@@ -8801,7 +8805,7 @@ static void Cmd_tryKO(void)
         if (lands == CALC_ACC)
         {
             u16 odds = GetMoveAccuracy(gCurrentMove) + (gBattleMons[gBattlerAttacker].level - gBattleMons[gBattlerTarget].level);
-            if (B_SHEER_COLD_ACC >= GEN_7 && effect == EFFECT_SHEER_COLD && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_ICE))
+            if (B_SHEER_COLD_ACC >= GEN_7 && effect == EFFECT_OHKO_FAIL_ON_TYPE && !IS_BATTLER_OF_TYPE(gBattlerAttacker, GetMoveType(gCurrentMove)))
                 odds -= 10;
             if (RandomPercentage(RNG_ACCURACY, odds) && gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level)
                 lands = SURE_HIT;

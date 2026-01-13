@@ -3445,7 +3445,7 @@ static void ForewarnChooseMove(u32 battler)
                 switch (GetMoveEffect(data[count].moveId))
                 {
                 case EFFECT_OHKO:
-                case EFFECT_SHEER_COLD:
+                case EFFECT_OHKO_FAIL_ON_TYPE:
                     data[count].power = 150;
                     break;
                 case EFFECT_REFLECT_DAMAGE:
@@ -4482,7 +4482,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
 
                             if (modifier >= UQ_4_12(2.0)
                              || moveEffect == EFFECT_OHKO
-                             || moveEffect == EFFECT_SHEER_COLD)
+                             || moveEffect == EFFECT_OHKO_FAIL_ON_TYPE)
                             {
                                 effect++;
                                 break;
@@ -9552,7 +9552,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct BattleCont
             RecordAbilityBattle(ctx->battlerDef, ABILITY_LEVITATE);
         }
     }
-    else if (GetConfig(CONFIG_SHEER_COLD_IMMUNITY) >= GEN_7 && GetMoveEffect(ctx->move) == EFFECT_SHEER_COLD && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_ICE))
+    else if (GetConfig(CONFIG_SHEER_COLD_IMMUNITY) >= GEN_7 && GetMoveEffect(ctx->move) == EFFECT_OHKO_FAIL_ON_TYPE && IS_BATTLER_OF_TYPE(ctx->battlerDef, GetMoveType(ctx->move)))
     {
         modifier = UQ_4_12(0.0);
     }
@@ -11626,7 +11626,7 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abil
     else if (gBattleMons[battlerDef].volatiles.telekinesis
           && !IsSemiInvulnerable(battlerDef, CHECK_ALL)
           && moveEffect != EFFECT_OHKO
-          && moveEffect != EFFECT_SHEER_COLD)
+          && moveEffect != EFFECT_OHKO_FAIL_ON_TYPE)
     {
         effect = TRUE;
     }

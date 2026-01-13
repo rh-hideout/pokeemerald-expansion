@@ -1787,8 +1787,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
              || !(weather & (B_WEATHER_ICY_ANY)))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_SHEER_COLD:
-            if (GetConfig(CONFIG_SHEER_COLD_IMMUNITY) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE))
+        case EFFECT_OHKO_FAIL_ON_TYPE:
+            if (GetConfig(CONFIG_SHEER_COLD_IMMUNITY) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, GetMoveType(move)))
                 RETURN_SCORE_MINUS(20);
             // fallthrough
         case EFFECT_OHKO:
@@ -4608,7 +4608,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
         }
         break;
     case EFFECT_OHKO:
-    case EFFECT_SHEER_COLD:
+    case EFFECT_OHKO_FAIL_ON_TYPE:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
         else if (gBattleMons[battlerAtk].volatiles.lockOn)
@@ -4728,7 +4728,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_LOCK_ON:
-        if (HasMoveWithEffect(battlerAtk, EFFECT_OHKO) || HasMoveWithEffect(battlerAtk, EFFECT_SHEER_COLD))
+        if (HasMoveWithEffect(battlerAtk, EFFECT_OHKO) || HasMoveWithEffect(battlerAtk, EFFECT_OHKO_FAIL_ON_TYPE))
             ADJUST_SCORE(GOOD_EFFECT);
         else if (HasMoveWithLowAccuracy(battlerAtk, battlerDef, 85, TRUE))
             ADJUST_SCORE(GOOD_EFFECT);
@@ -6310,7 +6310,7 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, enum Move move, s32 score)
     case EFFECT_FLATTER:
     case EFFECT_ATTRACT:
     case EFFECT_OHKO:
-    case EFFECT_SHEER_COLD:
+    case EFFECT_OHKO_FAIL_ON_TYPE:
         ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
     case EFFECT_HIT:
