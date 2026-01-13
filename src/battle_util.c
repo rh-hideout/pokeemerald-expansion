@@ -10265,7 +10265,7 @@ void SetIllusionMon(struct Pokemon *mon, u32 battler)
 
 enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(u32 battler)
 {
-    enum ImmunityHealStatusOutcome effect = IMMUNITY_NO_EFFECT;
+    enum ImmunityHealStatusOutcome outcome = IMMUNITY_NO_EFFECT;
     switch (GetBattlerAbilityIgnoreMoldBreaker(battler))
     {
     case ABILITY_IMMUNITY:
@@ -10273,21 +10273,21 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(u32 battler)
         if (gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON | STATUS1_TOXIC_COUNTER))
         {
             StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
-            effect = IMMUNITY_STATUS_CLEARED;
+            outcome = IMMUNITY_STATUS_CLEARED;
         }
         break;
     case ABILITY_OWN_TEMPO:
         if (gBattleMons[battler].volatiles.confusionTurns > 0)
         {
             StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
-            effect = IMMUNITY_CONFUSION_CLEARED;
+            outcome = IMMUNITY_CONFUSION_CLEARED;
         }
         break;
     case ABILITY_LIMBER:
         if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
         {
             StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
-            effect = IMMUNITY_STATUS_CLEARED;
+            outcome = IMMUNITY_STATUS_CLEARED;
         }
         break;
     case ABILITY_INSOMNIA:
@@ -10297,7 +10297,7 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(u32 battler)
             TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
             gBattleMons[battler].volatiles.nightmare = FALSE;
             StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
-            effect = IMMUNITY_STATUS_CLEARED;
+            outcome = IMMUNITY_STATUS_CLEARED;
         }
         break;
     case ABILITY_WATER_VEIL:
@@ -10306,27 +10306,27 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(u32 battler)
         if (gBattleMons[battler].status1 & STATUS1_BURN)
         {
             StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
-            effect = IMMUNITY_STATUS_CLEARED;
+            outcome = IMMUNITY_STATUS_CLEARED;
         }
         break;
     case ABILITY_MAGMA_ARMOR:
         if (gBattleMons[battler].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
         {
             StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
-            effect = IMMUNITY_STATUS_CLEARED;
+            outcome = IMMUNITY_STATUS_CLEARED;
         }
         break;
     case ABILITY_OBLIVIOUS:
         if (gBattleMons[battler].volatiles.infatuation)
-            effect = IMMUNITY_INFATUATION_CLEARED;
+            outcome = IMMUNITY_INFATUATION_CLEARED;
         else if (GetConfig(CONFIG_OBLIVIOUS_TAUNT) >= GEN_6 && gBattleMons[battler].volatiles.tauntTimer != 0)
-            effect = IMMUNITY_TAUNT_CLEARED;
+            outcome = IMMUNITY_TAUNT_CLEARED;
         break;
     default:
         break;
     }
 
-    switch (effect)
+    switch (outcome)
     {
     case IMMUNITY_STATUS_CLEARED:
         gBattleMons[battler].status1 = 0;
@@ -10351,7 +10351,7 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(u32 battler)
     gBattleScripting.battler = gBattlerAbility = battler;
     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
     MarkBattlerForControllerExec(battler);
-    return effect;
+    return outcome;
 }
 
 uq4_12_t GetBadgeBoostModifier(void)
