@@ -30,6 +30,7 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 4 turns: Enc
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        MESSAGE("The opposing Wobbuffet ended its encore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
     }
 }
@@ -55,6 +56,7 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Enc
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        MESSAGE("The opposing Wobbuffet ended its encore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
     }
 }
@@ -93,6 +95,7 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 4-8 turns: En
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        MESSAGE("The opposing Wobbuffet ended its encore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
     }
 }
@@ -128,6 +131,7 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 3-7 turns: En
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        MESSAGE("The opposing Wobbuffet ended its encore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
     }
 }
@@ -164,6 +168,7 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 3-7 turns:
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        MESSAGE("The opposing Wobbuffet ended its encore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
     }
 }
@@ -197,6 +202,7 @@ SINGLE_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns:
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
+        MESSAGE("The opposing Wobbuffet ended its encore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
     }
 }
