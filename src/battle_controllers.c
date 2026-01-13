@@ -1482,10 +1482,10 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         #if TESTING
         if (gTestRunnerEnabled)
         {
-            u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
+            enum BattleTrainer trainer = GetBattleTrainer(battler);
             u32 partyIndex = gBattlerPartyIndexes[battler];
-            if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
-                gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
+            if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
+                gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
         }
         #endif
         break;
