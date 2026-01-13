@@ -233,7 +233,7 @@ u32 GetCurrentBattleWeather(void);
 bool32 EndOrContinueWeather(void);
 bool32 IsUnnerveBlocked(u32 battler, u32 itemId);
 bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, enum Move move);
-bool32 HandleMoveTargetRedirection(void);
+void DetermineTarget(enum MoveTarget moveTarget, bool32 overwriteTarget);
 void HandleAction_UseMove(void);
 void HandleAction_Switch(void);
 void HandleAction_UseItem(void);

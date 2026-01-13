@@ -413,7 +413,7 @@ bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, enum Move move)
     return TRUE;
 }
 
-bool32 HandleMoveTargetRedirection(void)
+static bool32 HandleMoveTargetRedirection(void)
 {
     u32 redirectorOrderNum = MAX_BATTLERS_COUNT;
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
@@ -484,6 +484,53 @@ bool32 HandleMoveTargetRedirection(void)
     return FALSE;
 }
 
+void DetermineTarget(enum MoveTarget moveTarget, bool32 overwriteTarget)
+{
+    if (HandleMoveTargetRedirection())
+        return;
+
+    if (IsDoubleBattle() && moveTarget == TARGET_RANDOM)
+    {
+        gBattlerTarget = SetRandomTarget(gBattlerAttacker);
+        if (gAbsentBattlerFlags & (1u << gBattlerTarget)
+            && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
+        {
+            gBattlerTarget = GetPartnerBattler(gBattlerTarget);
+        }
+    }
+    else if (moveTarget == TARGET_ALLY)
+    {
+        if (IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker)) && !gProtectStructs[BATTLE_PARTNER(gBattlerAttacker)].usedAllySwitch)
+            gBattlerTarget = BATTLE_PARTNER(gBattlerAttacker);
+        else
+            gBattlerTarget = gBattlerAttacker;
+    }
+    else if (IsDoubleBattle() && moveTarget == TARGET_FOES_AND_ALLY)
+    {
+        for (gBattlerTarget = 0; gBattlerTarget < gBattlersCount; gBattlerTarget++)
+        {
+            if (gBattlerTarget == gBattlerAttacker)
+                continue;
+            if (IsBattlerAlive(gBattlerTarget))
+                break;
+        }
+    }
+    else if (moveTarget == TARGET_USER)
+    {
+        gBattlerTarget = gBattlerAttacker;
+    }
+    else if (overwriteTarget)
+    {
+        gBattlerTarget = gBattleStruct->moveTarget[gBattlerAttacker];
+        if (!IsBattlerAlive(gBattlerTarget)
+        && moveTarget != TARGET_OPPONENTS_FIELD
+        && IsDoubleBattle()
+        && (!IsBattlerAlly(gBattlerAttacker, gBattlerTarget)))
+        {
+            gBattlerTarget = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerTarget)));
+        }
+    }
+}
 
 static bool32 WasOriginalTargetAlly(enum MoveTarget target)
 {
@@ -583,51 +630,8 @@ void HandleAction_UseMove(void)
     gBattleCommunication[MISS_TYPE] = 0;
 
     moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+    DetermineTarget(moveTarget, TRUE);
 
-    if (!HandleMoveTargetRedirection())
-    {
-        if (IsDoubleBattle() && moveTarget == TARGET_RANDOM)
-        {
-            gBattlerTarget = SetRandomTarget(gBattlerAttacker);
-            if (gAbsentBattlerFlags & (1u << gBattlerTarget)
-                && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
-            {
-                gBattlerTarget = GetPartnerBattler(gBattlerTarget);
-            }
-        }
-        else if (moveTarget == TARGET_ALLY)
-        {
-            if (IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker)) && !gProtectStructs[BATTLE_PARTNER(gBattlerAttacker)].usedAllySwitch)
-                gBattlerTarget = BATTLE_PARTNER(gBattlerAttacker);
-            else
-                gBattlerTarget = gBattlerAttacker;
-        }
-        else if (IsDoubleBattle() && moveTarget == TARGET_FOES_AND_ALLY)
-        {
-            for (gBattlerTarget = 0; gBattlerTarget < gBattlersCount; gBattlerTarget++)
-            {
-                if (gBattlerTarget == gBattlerAttacker)
-                    continue;
-                if (IsBattlerAlive(gBattlerTarget))
-                    break;
-            }
-        }
-        else if (moveTarget == TARGET_USER)
-        {
-            gBattlerTarget = gBattlerAttacker;
-        }
-        else
-        {
-            gBattlerTarget = gBattleStruct->moveTarget[gBattlerAttacker];
-            if (!IsBattlerAlive(gBattlerTarget)
-            && moveTarget != TARGET_OPPONENTS_FIELD
-            && IsDoubleBattle()
-            && (!IsBattlerAlly(gBattlerAttacker, gBattlerTarget)))
-            {
-                gBattlerTarget = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerTarget)));
-            }
-        }
-    }
 
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE && gProtectStructs[gBattlerAttacker].palaceUnableToUseMove)
     {
@@ -2691,7 +2695,7 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
 
             // Possibly better to just move type setting and redirection to attackcanceler as a new case at this point
             SetTypeBeforeUsingMove(ctx->move, ctx->battlerAtk);
-            HandleMoveTargetRedirection();
+            DetermineTarget(moveTarget, FALSE);
             ClearDamageCalcResults();
             gBattlescriptCurrInstr = GetMoveBattleScript(ctx->move);
             return MOVE_STEP_BREAK;
