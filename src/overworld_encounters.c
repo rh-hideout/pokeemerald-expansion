@@ -913,7 +913,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
         &level,
         &indexRoamerOutbreak
     );
-    // Have a fallback incase of no header mons
+    // Have an assertf and fallback incase of no header mons
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
