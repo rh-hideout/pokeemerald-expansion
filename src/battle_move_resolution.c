@@ -867,7 +867,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
          && CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerTarget].item)
          && !NoAliveMonsForEitherParty())
         {
-            u32 side = GetBattlerSide(gBattlerTarget);
+            enum BattleSide side = GetBattlerSide(gBattlerTarget);
 
             if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
             {
@@ -893,7 +893,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             }
             else
             {
-                GetBattlerPartyState(gBattlerTarget)->knockedOffItem = TRUE;
+                GetBattlerPartyState(gBattlerTarget)->isKnockedOff = TRUE;
             }
 
             BattleScriptCall(BattleScript_KnockedOff);
@@ -1481,7 +1481,7 @@ static enum MoveEndResult MoveEnd_Pickpocket(void)
 
     if (IsBattlerAlive(gBattlerAttacker)
       && gBattleMons[gBattlerAttacker].item != ITEM_NONE // Attacker must be holding an item
-      && !GetBattlerPartyState(gBattlerAttacker)->knockedOffItem // But not knocked off
+      && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff // But not knocked off
       && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove) // Pickpocket requires contact
       && !IsBattlerUnaffectedByMove(gBattlerTarget)) // Obviously attack needs to have worked
     {
