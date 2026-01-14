@@ -1290,7 +1290,7 @@ static void TrySetBattleSeminarShow(void)
             ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
             dmgByMove[i] = CalculateMoveDamage(&ctx);
-            if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+            if (dmgByMove[i] == 0 && !IsBattlerUnaffectedByMove(gBattlerTarget))
                 dmgByMove[i] = 1;
         }
     }

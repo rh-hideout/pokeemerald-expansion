@@ -114,12 +114,12 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
     }
 }
 
-bool32 AI_IsFaster(u32 battlerAi, u32 battlerDef, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority)
+bool32 AI_IsFaster(u32 battlerAi, u32 battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority)
 {
     return (AI_WhoStrikesFirst(battlerAi, battlerDef, aiMove, playerMove, considerPriority) == AI_IS_FASTER);
 }
 
-bool32 AI_IsSlower(u32 battlerAi, u32 battlerDef, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority)
+bool32 AI_IsSlower(u32 battlerAi, u32 battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority)
 {
     return (AI_WhoStrikesFirst(battlerAi, battlerDef, aiMove, playerMove, considerPriority) == AI_IS_SLOWER);
 }
@@ -554,6 +554,11 @@ bool32 Ai_IsPriorityBlocked(u32 battlerAtk, u32 battlerDef, enum Move move, stru
     return FALSE;
 }
 
+bool32 AI_CanMoveBeBlockedByTarget(struct BattleContext *ctx)
+{
+    return CanMoveBeBlockedByTarget(ctx, GetBattleMovePriority(ctx->battlerAtk, ctx->abilityAtk, ctx->move));
+}
+
 // This function checks if all physical/special moves are either unusable or unreasonable to use.
 // Consider a pokemon boosting their attack against a ghost pokemon having only normal-type physical attacks.
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category)
@@ -568,8 +573,8 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory c
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = gAiLogicData->abilities[attacker];
     ctx.abilityDef = gAiLogicData->abilities[target];
-    ctx.holdEffectAtk = gAiLogicData->items[attacker];
-    ctx.holdEffectDef = gAiLogicData->items[target];
+    ctx.holdEffectAtk = gAiLogicData->holdEffects[attacker];
+    ctx.holdEffectDef = gAiLogicData->holdEffects[target];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -652,16 +657,17 @@ bool32 IsDamageMoveUnusable(struct BattleContext *ctx)
     if (Ai_IsPriorityBlocked(ctx->battlerAtk, ctx->battlerDef, ctx->move, aiData))
         return TRUE;
 
-    if (CanAbilityBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, battlerDefAbility, ctx->move, AI_CHECK))
-        return TRUE;
-
-    if (CanAbilityAbsorbMove(ctx->battlerAtk, ctx->battlerDef, battlerDefAbility, ctx->move, ctx->moveType, AI_CHECK))
+    if (AI_CanMoveBeBlockedByTarget(ctx))
         return TRUE;
 
     // Limited to Lighning Rod and Storm Drain because otherwise the AI would consider Water Absorb, etc...
     if (partnerDefAbility == ABILITY_LIGHTNING_ROD || partnerDefAbility == ABILITY_STORM_DRAIN)
     {
-        if (CanAbilityAbsorbMove(ctx->battlerAtk, BATTLE_PARTNER(ctx->battlerDef), partnerDefAbility, ctx->move, ctx->moveType, AI_CHECK))
+        u32 originalTarget = ctx->battlerDef; // Need to preserve origin target;
+        ctx->battlerDef = BATTLE_PARTNER(ctx->battlerDef);
+        bool32 canAbilityAbsorbMove = CanAbilityAbsorbMove(ctx);
+        ctx->battlerDef = originalTarget;
+        if (canAbilityAbsorbMove)
             return TRUE;
     }
 
@@ -1413,8 +1419,8 @@ uq4_12_t AI_GetMoveEffectiveness(enum Move move, u32 battlerAtk, u32 battlerDef)
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
     ctx.abilityDef = gAiLogicData->abilities[battlerDef];
-    ctx.holdEffectAtk = gAiLogicData->items[battlerAtk];
-    ctx.holdEffectDef = gAiLogicData->items[battlerDef];
+    ctx.holdEffectAtk = gAiLogicData->holdEffects[battlerAtk];
+    ctx.holdEffectDef = gAiLogicData->holdEffects[battlerDef];
     typeEffectiveness = CalcTypeEffectivenessMultiplier(&ctx);
 
     RestoreBattlerData(battlerAtk);
@@ -1608,7 +1614,7 @@ void GetBestDmgMovesFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcC
     }
 }
 
-u16 GetMoveIndex(u32 battler, enum Move move)
+u32 GetMoveIndex(u32 battler, enum Move move)
 {
     enum Move *moves = GetMovesArray(battler);
 
@@ -1624,7 +1630,7 @@ u16 GetMoveIndex(u32 battler, enum Move move)
 bool32 IsBestDmgMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, enum Move move)
 {
     enum Move bestMoves[MAX_MON_MOVES] = {MOVE_NONE};
-    u16 index = GetMoveIndex(battlerAtk, move);
+    u32 index = GetMoveIndex(battlerAtk, move);
 
     if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, index, AI_ATTACKING))
         return TRUE;
@@ -2073,7 +2079,7 @@ bool32 IsHazardClearingMove(enum Move move)
     return FALSE;
 }
 
-bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, enum Move allyMove)
+bool32 IsAllyProtectingFromMove(u32 battlerAtk, enum Move attackerMove, enum Move allyMove)
 {
     enum BattleMoveEffects effect = GetMoveEffect(allyMove);
 
@@ -2350,9 +2356,9 @@ bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, 
     return TRUE;
 }
 
-u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, enum Stat stat)
+enum AIScore IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, enum Stat stat)
 {
-    u32 tempScore = NO_INCREASE;
+    enum AIScore tempScore = NO_INCREASE;
 
     // Don't increase score if target is already -3 stat stage
     if (stat != STAT_SPEED && gBattleMons[battlerDef].statStages[stat] <= DEFAULT_STAT_STAGE - 3)
@@ -2939,7 +2945,6 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
 {
     switch (effect)
     {
-    case EFFECT_ATTACK_UP_USER_ALLY:
     case EFFECT_ATTACK_UP:
     case EFFECT_ATTACK_UP_2:
     case EFFECT_DEFENSE_UP:
@@ -3700,7 +3705,7 @@ bool32 AI_CanBeInfatuated(u32 battlerAtk, u32 battlerDef, enum Ability defAbilit
     return TRUE;
 }
 
-u32 ShouldTryToFlinch(u32 battlerAtk, u32 battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move)
+bool32 ShouldTryToFlinch(u32 battlerAtk, u32 battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move)
 {
     enum Move predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     if (((!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk]) && (defAbility == ABILITY_SHIELD_DUST || defAbility == ABILITY_INNER_FOCUS))
@@ -3708,7 +3713,7 @@ u32 ShouldTryToFlinch(u32 battlerAtk, u32 battlerDef, enum Ability atkAbility, e
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
       || AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))) // Opponent goes first
     {
-        return 0;
+        return FALSE;
     }
     else if ((atkAbility == ABILITY_SERENE_GRACE
       || gBattleMons[battlerDef].status1 & STATUS1_PARALYSIS
@@ -3716,10 +3721,10 @@ u32 ShouldTryToFlinch(u32 battlerAtk, u32 battlerDef, enum Ability atkAbility, e
       || gBattleMons[battlerDef].volatiles.confusionTurns > 0)
       || ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) && CanTargetFaintAi(battlerDef, battlerAtk)))
     {
-        return 2;   // good idea to flinch
+        return TRUE;   // good idea to flinch
     }
 
-    return 0;   // don't try to flinch
+    return FALSE;   // don't try to flinch
 }
 
 bool32 ShouldTrap(u32 battlerAtk, u32 battlerDef, enum Move move)
@@ -4594,7 +4599,7 @@ bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category)
     return FALSE;
 }
 
-bool32 IsAbilityOfRating(enum Ability ability, s8 rating)
+bool32 IsAbilityOfRating(enum Ability ability, s32 rating)
 {
     if (gAbilitiesInfo[ability].aiRating >= rating)
         return TRUE;
@@ -4920,12 +4925,12 @@ bool32 HasHPForDamagingSetup(u32 battlerAtk, u32 battlerDef, u32 hpThreshold)
     return FALSE;
 }
 
-u32 IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
+enum AIScore IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
 {
     return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, TRUE);
 }
 
-u32 IncreaseStatUpScoreContrary(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
+enum AIScore IncreaseStatUpScoreContrary(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
 {
     return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, FALSE);
 }
@@ -6117,8 +6122,8 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct Ai
                 }
                 else
                 {
-                    s32 score1 = IncreaseStatDownScore(battler, LEFT_FOE(battler), STAT_ATK);
-                    s32 score2 = IncreaseStatDownScore(battler, RIGHT_FOE(battler), STAT_ATK);
+                    enum AIScore score1 = IncreaseStatDownScore(battler, LEFT_FOE(battler), STAT_ATK);
+                    enum AIScore score2 = IncreaseStatDownScore(battler, RIGHT_FOE(battler), STAT_ATK);
                     if (score1 > score2)
                         return score1;
                     else
@@ -6300,6 +6305,7 @@ bool32 ShouldInstructPartner(u32 partner, enum Move move)
     case TARGET_RANDOM:
     case TARGET_BOTH:
     case TARGET_FOES_AND_ALLY:
+    case TARGET_USER_AND_ALLY:
     case TARGET_OPPONENTS_FIELD:
         return TRUE;
     default:
