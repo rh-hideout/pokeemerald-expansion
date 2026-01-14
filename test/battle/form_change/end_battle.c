@@ -259,13 +259,13 @@ SINGLE_BATTLE_TEST("Morpeko Hangry reverts to Full Belly Form upon battle end af
 
 SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon battle end after terastallizing")
 {
-    u32 species;
-    PARAMETRIZE { species = SPECIES_OGERPON_TEAL; }
-    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING; }
-    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; }
-    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; }
+    u32 species, item;
+    PARAMETRIZE { species = SPECIES_OGERPON_TEAL;        item = ITEM_NONE; }
+    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;  item = ITEM_WELLSPRING_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; item = ITEM_CORNERSTONE_MASK; }
     GIVEN {
-        PLAYER(species);
+        PLAYER(species) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }

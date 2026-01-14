@@ -72,13 +72,13 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
 
 SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon fainting after terastallizing")
 {
-    u32 species;
-    PARAMETRIZE { species = SPECIES_OGERPON_TEAL; }
-    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING; }
-    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; }
-    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; }
+    u32 species, item;
+    PARAMETRIZE { species = SPECIES_OGERPON_TEAL;        item = ITEM_NONE; }
+    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;  item = ITEM_WELLSPRING_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; item = ITEM_CORNERSTONE_MASK; }
     GIVEN {
-        PLAYER(species) { HP(1); }
+        PLAYER(species) { HP(1); Item(item); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
