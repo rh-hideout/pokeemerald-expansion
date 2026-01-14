@@ -6,6 +6,7 @@
 #include "constants/battle_switch_in.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
+#include "constants/battle_move_resolution.h"
 #include "constants/form_change_types.h"
 #include "constants/hold_effects.h"
 #include "constants/moves.h"

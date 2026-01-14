@@ -3,6 +3,7 @@
 
 #include "constants/battle_move_resolution.h"
 
+enum MoveCanceler AtkCanceler_MoveSuccessOrder(void);
 bool32 DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endState);
 void MoveValuesCleanUp(void);
 
