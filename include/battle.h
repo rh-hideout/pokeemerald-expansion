@@ -555,7 +555,7 @@ struct EventStates
     enum FirstTurnEventsStates beforeFirstTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
-    enum MoveSuccessOrder atkCanceler:8;
+    enum CancelerState atkCanceler:8;
     enum BattlerId atkCancelerBattler:4;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;

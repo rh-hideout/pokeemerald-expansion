@@ -11,15 +11,15 @@ enum Obedience
     DISOBEYS_RANDOM_MOVE,
 };
 
-enum MoveCanceler
+enum CancelerResult
 {
-    MOVE_STEP_SUCCESS,
-    MOVE_STEP_BREAK, // Runs script. Increments state
-    MOVE_STEP_PAUSE, // Runs script. Does not increment state
-    MOVE_STEP_FAILURE, // Move failed, jump to script that handles the failure
+    CANCELER_RESULT_SUCCESS,
+    CANCELER_RESULT_BREAK, // Runs script. Increments state
+    CANCELER_RESULT_PAUSE, // Runs script. Does not increment state
+    CANCELER_RESULT_FAILURE, // Move failed, jump to script that handles the failure
 };
 
-enum MoveSuccessOrder
+enum CancelerState
 {
     CANCELER_STANCE_CHANGE_1,
     CANCELER_CLEAR_FLAGS,
@@ -67,9 +67,9 @@ enum MoveSuccessOrder
 
 enum MoveEndResult
 {
-    MOVEEND_STEP_CONTINUE,
-    MOVEEND_STEP_RUN_SCRIPT,
-    MOVEEND_STEP_BREAK,
+    MOVEEND_RESULT_CONTINUE,
+    MOVEEND_RESULT_RUN_SCRIPT,
+    MOVEEND_RESULT_BREAK,
 };
 
 // cases for Cmd_moveend - Order matters!

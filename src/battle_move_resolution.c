@@ -35,12 +35,12 @@ static enum Move GetMeFirstMove(void);
 // Attackcanceler
 // ==============
 
-static enum MoveCanceler CancelerClearFlags(struct BattleContext *ctx)
+static enum CancelerResult CancelerClearFlags(struct BattleContext *ctx)
 {
     gBattleMons[ctx->battlerAtk].volatiles.grudge = FALSE;
     gBattleMons[ctx->battlerAtk].volatiles.glaiveRush = FALSE;
     gBattleStruct->eventState.atkCancelerBattler = 0;
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
 static bool32 TryFormChangeBeforeMove(void)
@@ -56,48 +56,48 @@ static bool32 TryFormChangeBeforeMove(void)
     return TRUE;
 }
 
-static enum MoveCanceler CancelerStanceChangeOne(struct BattleContext *ctx)
+static enum CancelerResult CancelerStanceChangeOne(struct BattleContext *ctx)
 {
     if (B_STANCE_CHANGE_FAIL < GEN_7 && ctx->chosenMove == ctx->move && TryFormChangeBeforeMove())
-        return MOVE_STEP_BREAK;
-    return MOVE_STEP_SUCCESS;
+        return CANCELER_RESULT_BREAK;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerSkyDrop(struct BattleContext *ctx)
+static enum CancelerResult CancelerSkyDrop(struct BattleContext *ctx)
 {
     // If Pokemon is being held in Sky Drop
     if (gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable == STATE_SKY_DROP)
     {
         gBattlescriptCurrInstr = BattleScript_MoveEnd;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerRecharge(struct BattleContext *ctx)
+static enum CancelerResult CancelerRecharge(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.rechargeTimer > 0)
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedMustRecharge;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerChillyReception(struct BattleContext *ctx)
+static enum CancelerResult CancelerChillyReception(struct BattleContext *ctx)
 {
     if (GetMoveEffect(ctx->move) == EFFECT_WEATHER_AND_SWITCH)
     {
         BattleScriptCall(BattleScript_ChillyReceptionMessage);
-        return MOVE_STEP_BREAK;
+        return CANCELER_RESULT_BREAK;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
+static enum CancelerResult CancelerAsleepOrFrozen(struct BattleContext *ctx)
 {
-    enum MoveCanceler effect = MOVE_STEP_BREAK;
+    enum CancelerResult result = CANCELER_RESULT_BREAK;
 
     if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_SLEEP)
     {
@@ -108,7 +108,7 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
             gBattleMons[ctx->battlerAtk].volatiles.nightmare = FALSE;
             gEffectBattler = ctx->battlerAtk;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP_UPROAR;
-            effect = MOVE_STEP_BREAK;
+            result = CANCELER_RESULT_BREAK;
             BattleScriptCall(BattleScript_MoveUsedWokeUp);
         }
         else
@@ -129,12 +129,12 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
             {
                 if (!IsUsableWhileAsleepEffect(moveEffect))
                 {
-                    effect = MOVE_STEP_FAILURE;
+                    result = CANCELER_RESULT_FAILURE;
                     gBattlescriptCurrInstr = BattleScript_MoveUsedIsAsleep;
                 }
                 else
                 {
-                    effect = MOVE_STEP_BREAK;
+                    result = CANCELER_RESULT_BREAK;
                 }
             }
             else
@@ -142,7 +142,7 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
                 TryDeactivateSleepClause(GetBattlerSide(ctx->battlerAtk), gBattlerPartyIndexes[ctx->battlerAtk]);
                 gBattleMons[ctx->battlerAtk].volatiles.nightmare = FALSE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP;
-                effect = MOVE_STEP_BREAK;
+                result = CANCELER_RESULT_BREAK;
                 BattleScriptCall(BattleScript_MoveUsedWokeUp);
             }
         }
@@ -152,23 +152,23 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
     {
         if (!RandomPercentage(RNG_FROZEN, 20))
         {
-            effect = MOVE_STEP_FAILURE;
+            result = CANCELER_RESULT_FAILURE;
             gBattlescriptCurrInstr = BattleScript_MoveUsedIsFrozen;
         }
         else // unfreeze
         {
             gBattleMons[ctx->battlerAtk].status1 &= ~STATUS1_FREEZE;
-            effect = MOVE_STEP_BREAK;
+            result = CANCELER_RESULT_BREAK;
             BattleScriptCall(BattleScript_MoveUsedUnfroze);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
         }
         RequestNonVolatileChangee(ctx->battlerAtk);
     }
 
-    return effect;
+    return result;
 }
 
-static enum MoveCanceler CancelerObedience(struct BattleContext *ctx)
+static enum CancelerResult CancelerObedience(struct BattleContext *ctx)
 {
     if (!gBattleMons[ctx->battlerAtk].volatiles.multipleTurns)
     {
@@ -176,14 +176,14 @@ static enum MoveCanceler CancelerObedience(struct BattleContext *ctx)
         switch (obedienceResult)
         {
         case OBEYS:
-            return MOVE_STEP_SUCCESS;
+            return CANCELER_RESULT_SUCCESS;
         case DISOBEYS_LOAFS:
             // Randomly select, then print a disobedient string
             // B_MSG_LOAFING, B_MSG_WONT_OBEY, B_MSG_TURNED_AWAY, or B_MSG_PRETEND_NOT_NOTICE
             gBattleCommunication[MULTISTRING_CHOOSER] = MOD(Random(), NUM_LOAF_STRINGS);
             gBattlescriptCurrInstr = BattleScript_MoveUsedLoafingAround;
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED;
-            return MOVE_STEP_FAILURE;
+            return CANCELER_RESULT_FAILURE;
         case DISOBEYS_HITS_SELF:
             gBattlerTarget = ctx->battlerAtk;
             struct BattleContext dmgCtx = {0};
@@ -197,29 +197,29 @@ static enum MoveCanceler CancelerObedience(struct BattleContext *ctx)
             dmgCtx.fixedBasePower = 40;
             gBattleStruct->moveDamage[ctx->battlerAtk] = CalculateMoveDamage(&dmgCtx);
             gBattlescriptCurrInstr = BattleScript_IgnoresAndHitsItself;
-            return MOVE_STEP_FAILURE; // Move doesn't fail but mon hits itself
+            return CANCELER_RESULT_FAILURE; // Move doesn't fail but mon hits itself
         case DISOBEYS_FALL_ASLEEP:
             if (IsSleepClauseEnabled())
                 gBattleStruct->battlerState[ctx->battlerAtk].sleepClauseEffectExempt = TRUE;
             gBattlescriptCurrInstr = BattleScript_IgnoresAndFallsAsleep;
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED;
-            return MOVE_STEP_FAILURE;
+            return CANCELER_RESULT_FAILURE;
             break;
         case DISOBEYS_WHILE_ASLEEP:
             gBattlescriptCurrInstr = BattleScript_IgnoresWhileAsleep;
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED;
-            return MOVE_STEP_FAILURE;
+            return CANCELER_RESULT_FAILURE;
         case DISOBEYS_RANDOM_MOVE:
             gCurrentMove = gCalledMove = gBattleMons[ctx->battlerAtk].moves[gCurrMovePos];
             BattleScriptCall(BattleScript_IgnoresAndUsesRandomMove);
             gBattlerTarget = GetBattleMoveTarget(gCalledMove, TARGET_NONE);
-            return MOVE_STEP_BREAK;
+            return CANCELER_RESULT_BREAK;
         }
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerPowerPoints(struct BattleContext *ctx)
+static enum CancelerResult CancelerPowerPoints(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].pp[gCurrMovePos] == 0
      && ctx->move != MOVE_STRUGGLE
@@ -228,13 +228,13 @@ static enum MoveCanceler CancelerPowerPoints(struct BattleContext *ctx)
     {
         gBattlescriptCurrInstr = BattleScript_NoPPForMove;
         gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
 
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerTruant(struct BattleContext *ctx)
+static enum CancelerResult CancelerTruant(struct BattleContext *ctx)
 {
     if (GetBattlerAbility(ctx->battlerAtk) == ABILITY_TRUANT && gBattleMons[ctx->battlerAtk].volatiles.truantCounter)
     {
@@ -243,12 +243,12 @@ static enum MoveCanceler CancelerTruant(struct BattleContext *ctx)
         gBattlerAbility = ctx->battlerAtk;
         gBattlescriptCurrInstr = BattleScript_TruantLoafingAround;
         gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerFocus(struct BattleContext *ctx)
+static enum CancelerResult CancelerFocus(struct BattleContext *ctx)
 {
     u32 focusPunchFailureConfig = GetConfig(CONFIG_FOCUS_PUNCH_FAILURE);
 
@@ -262,37 +262,37 @@ static enum MoveCanceler CancelerFocus(struct BattleContext *ctx)
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_FocusPunchLostFocus;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerFocusPreGen5(struct BattleContext *ctx)
+static enum CancelerResult CancelerFocusPreGen5(struct BattleContext *ctx)
 {
     if (GetConfig(CONFIG_FOCUS_PUNCH_FAILURE) < GEN_5)
         return CancelerFocus(ctx);
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerFocusGen5(struct BattleContext *ctx)
+static enum CancelerResult CancelerFocusGen5(struct BattleContext *ctx)
 {
     if (GetConfig(CONFIG_FOCUS_PUNCH_FAILURE) >= GEN_5)
         return CancelerFocus(ctx);
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerFlinch(struct BattleContext *ctx)
+static enum CancelerResult CancelerFlinch(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.flinched)
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedFlinched;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerDisabled(struct BattleContext *ctx)
+static enum CancelerResult CancelerDisabled(struct BattleContext *ctx)
 {
     if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE
      && gBattleMons[ctx->battlerAtk].volatiles.disabledMove == ctx->move
@@ -301,12 +301,12 @@ static enum MoveCanceler CancelerDisabled(struct BattleContext *ctx)
         gBattleScripting.battler = ctx->battlerAtk;
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedIsDisabled;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerVolatileBlocked(struct BattleContext *ctx)
+static enum CancelerResult CancelerVolatileBlocked(struct BattleContext *ctx)
 {
     if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE
      && gBattleMons[ctx->battlerAtk].volatiles.healBlock
@@ -315,47 +315,47 @@ static enum MoveCanceler CancelerVolatileBlocked(struct BattleContext *ctx)
         gBattleScripting.battler = ctx->battlerAtk;
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedHealBlockPrevents;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
     else if (gFieldStatuses & STATUS_FIELD_GRAVITY && IsGravityPreventingMove(ctx->move))
     {
         gBattleScripting.battler = ctx->battlerAtk;
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedGravityPrevents;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
     else if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE && gBattleMons[ctx->battlerAtk].volatiles.throatChopTimer > 0 && IsSoundMove(ctx->move))
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedIsThroatChopPrevented;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerTaunted(struct BattleContext *ctx)
+static enum CancelerResult CancelerTaunted(struct BattleContext *ctx)
 {
     if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE && gBattleMons[ctx->battlerAtk].volatiles.tauntTimer && IsBattleMoveStatus(ctx->move))
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedIsTaunted;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerImprisoned(struct BattleContext *ctx)
+static enum CancelerResult CancelerImprisoned(struct BattleContext *ctx)
 {
     if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE && GetImprisonedMovesCount(ctx->battlerAtk, ctx->move))
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedIsImprisoned;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
+static enum CancelerResult CancelerConfused(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.confusionTurns)
     {
@@ -378,25 +378,25 @@ static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
                 dmgCtx.fixedBasePower = 40;
                 gBattleStruct->passiveHpUpdate[ctx->battlerAtk] = CalculateMoveDamage(&dmgCtx);
                 gBattlescriptCurrInstr = BattleScript_MoveUsedIsConfused;
-                return MOVE_STEP_FAILURE;
+                return CANCELER_RESULT_FAILURE;
             }
             else
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = FALSE;
                 BattleScriptCall(BattleScript_MoveUsedIsConfused);
-                return MOVE_STEP_BREAK;
+                return CANCELER_RESULT_BREAK;
             }
         }
         else // snapped out of confusion
         {
             BattleScriptCall(BattleScript_MoveUsedIsConfusedNoMore);
-            return MOVE_STEP_BREAK;
+            return CANCELER_RESULT_BREAK;
         }
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerParalyzed(struct BattleContext *ctx)
+static enum CancelerResult CancelerParalyzed(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_PARALYSIS
         && !(B_MAGIC_GUARD == GEN_4 && IsAbilityAndRecord(ctx->battlerAtk, ctx->abilityAtk, ABILITY_MAGIC_GUARD))
@@ -404,12 +404,12 @@ static enum MoveCanceler CancelerParalyzed(struct BattleContext *ctx)
     {
         CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalyzed;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerInfatuation(struct BattleContext *ctx)
+static enum CancelerResult CancelerInfatuation(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.infatuation)
     {
@@ -417,20 +417,20 @@ static enum MoveCanceler CancelerInfatuation(struct BattleContext *ctx)
         if (!RandomPercentage(RNG_INFATUATION, 50))
         {
             BattleScriptCall(BattleScript_MoveUsedIsInLove);
-            return MOVE_STEP_BREAK;
+            return CANCELER_RESULT_BREAK;
         }
         else
         {
             BattleScriptPush(BattleScript_MoveUsedIsInLoveCantAttack);
             CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
             gBattlescriptCurrInstr = BattleScript_MoveUsedIsInLove;
-            return MOVE_STEP_FAILURE;
+            return CANCELER_RESULT_FAILURE;
         }
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerBide(struct BattleContext *ctx)
+static enum CancelerResult CancelerBide(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.bideTurns)
     {
@@ -449,19 +449,19 @@ static enum MoveCanceler CancelerBide(struct BattleContext *ctx)
                 if (!IsBattlerAlive(ctx->battlerDef))
                     gBattlerTarget = GetBattleMoveTarget(MOVE_BIDE, TARGET_SELECTED);
                 gBattlescriptCurrInstr = BattleScript_BideAttack;
-                return MOVE_STEP_BREAK; // Jumps to a different script but no failure
+                return CANCELER_RESULT_BREAK; // Jumps to a different script but no failure
             }
             else
             {
                 gBattlescriptCurrInstr = BattleScript_BideNoEnergyToAttack;
-                return MOVE_STEP_FAILURE;
+                return CANCELER_RESULT_FAILURE;
             }
         }
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerZMoves(struct BattleContext *ctx)
+static enum CancelerResult CancelerZMoves(struct BattleContext *ctx)
 {
     if (GetActiveGimmick(ctx->battlerAtk) == GIMMICK_Z_MOVE)
     {
@@ -475,12 +475,12 @@ static enum MoveCanceler CancelerZMoves(struct BattleContext *ctx)
         else
             BattleScriptCall(BattleScript_ZMoveActivateDamaging);
 
-        return MOVE_STEP_BREAK;
+        return CANCELER_RESULT_BREAK;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerChoiceLock(struct BattleContext *ctx)
+static enum CancelerResult CancelerChoiceLock(struct BattleContext *ctx)
 {
     u16 *choicedMoveAtk = &gBattleStruct->choicedMove[ctx->battlerAtk];
     enum HoldEffect holdEffect = GetBattlerHoldEffect(ctx->battlerAtk);
@@ -500,10 +500,10 @@ static enum MoveCanceler CancelerChoiceLock(struct BattleContext *ctx)
     if (moveIndex == MAX_MON_MOVES)
         *choicedMoveAtk = MOVE_NONE;
 
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerCallSubmove(struct BattleContext *ctx)
+static enum CancelerResult CancelerCallSubmove(struct BattleContext *ctx)
 {
     bool32 noEffect = FALSE;
     enum Move calledMove = MOVE_NONE;
@@ -544,7 +544,7 @@ static enum MoveCanceler CancelerCallSubmove(struct BattleContext *ctx)
     if (noEffect)
     {
         gBattleStruct->submoveAnnouncement = SUBMOVE_NO_EFFECT;
-        return MOVE_STEP_SUCCESS;
+        return CANCELER_RESULT_SUCCESS;
     }
 
     if (calledMove != MOVE_NONE)
@@ -557,29 +557,29 @@ static enum MoveCanceler CancelerCallSubmove(struct BattleContext *ctx)
         gBattleStruct->submoveAnnouncement = SUBMOVE_SUCCESS;
         gCalledMove = calledMove;
         BattleScriptCall(battleScript);
-        return MOVE_STEP_BREAK;
+        return CANCELER_RESULT_BREAK;
     }
 
     gBattleStruct->submoveAnnouncement = SUBMOVE_FAILURE;
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerThaw(struct BattleContext *ctx)
+static enum CancelerResult CancelerThaw(struct BattleContext *ctx)
 {
-    enum MoveCanceler effect = MOVE_STEP_BREAK;
+    enum CancelerResult result = CANCELER_RESULT_BREAK;
 
     if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_FREEZE)
     {
         if (!(IsMoveEffectRemoveSpeciesType(ctx->move, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) && !IS_BATTLER_OF_TYPE(ctx->battlerAtk, TYPE_FIRE)))
         {
             gBattleMons[ctx->battlerAtk].status1 &= ~STATUS1_FREEZE;
-            effect = MOVE_STEP_BREAK;
+            result = CANCELER_RESULT_BREAK;
             BattleScriptCall(BattleScript_MoveUsedUnfroze);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED_BY_MOVE;
         }
         else
         {
-            effect = MOVE_STEP_FAILURE;
+            result = CANCELER_RESULT_FAILURE;
         }
         RequestNonVolatileChangee(ctx->battlerAtk);
     }
@@ -588,40 +588,40 @@ static enum MoveCanceler CancelerThaw(struct BattleContext *ctx)
         if (!(IsMoveEffectRemoveSpeciesType(ctx->move, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) && !IS_BATTLER_OF_TYPE(ctx->battlerAtk, TYPE_FIRE)))
         {
             gBattleMons[ctx->battlerAtk].status1 &= ~STATUS1_FROSTBITE;
-            effect = MOVE_STEP_BREAK;
+            result = CANCELER_RESULT_BREAK;
             BattleScriptCall(BattleScript_MoveUsedUnfrostbite);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FROSTBITE_HEALED_BY_MOVE;
         }
         else
         {
-            effect = MOVE_STEP_FAILURE;
+            result = CANCELER_RESULT_FAILURE;
         }
         RequestNonVolatileChangee(ctx->battlerAtk);
     }
-    return effect;
+    return result;
 }
 
-static enum MoveCanceler CancelerStanceChangeTwo(struct BattleContext *ctx)
+static enum CancelerResult CancelerStanceChangeTwo(struct BattleContext *ctx)
 {
     if (B_STANCE_CHANGE_FAIL >= GEN_7 && gChosenMove == ctx->move && TryFormChangeBeforeMove())
-        return MOVE_STEP_BREAK;
-    return MOVE_STEP_SUCCESS;
+        return CANCELER_RESULT_BREAK;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerAttackstring(struct BattleContext *ctx)
+static enum CancelerResult CancelerAttackstring(struct BattleContext *ctx)
 {
     BattleScriptCall(BattleScript_Attackstring);
     if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
         gLastPrintedMoves[gBattlerAttacker] = gChosenMove;
-    return MOVE_STEP_BREAK;
+    return CANCELER_RESULT_BREAK;
 }
 
-static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
+static enum CancelerResult CancelerPPDeduction(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.multipleTurns
      || gSpecialStatuses[ctx->battlerAtk].dancerUsedMove
      || ctx->move == MOVE_STRUGGLE)
-        return MOVE_STEP_SUCCESS;
+        return CANCELER_RESULT_SUCCESS;
 
     s32 ppToDeduct = 1;
     u32 moveTarget = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move);
@@ -674,12 +674,12 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
         {
             gBattleStruct->submoveAnnouncement = SUBMOVE_NO_EFFECT;
             gBattlescriptCurrInstr = BattleScript_ButItFailed;
-            return MOVE_STEP_FAILURE;
+            return CANCELER_RESULT_FAILURE;
         }
-        else if (CancelerVolatileBlocked(ctx) == MOVE_STEP_FAILURE) // Check Gravity/Heal Block/Throat Chop for Submove
+        else if (CancelerVolatileBlocked(ctx) == CANCELER_RESULT_FAILURE) // Check Gravity/Heal Block/Throat Chop for Submove
         {
             gBattleStruct->submoveAnnouncement = SUBMOVE_NO_EFFECT;
-            return MOVE_STEP_FAILURE;
+            return CANCELER_RESULT_FAILURE;
         }
         else
         {
@@ -693,52 +693,54 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
             DetermineTarget(moveTarget, FALSE);
             ClearDamageCalcResults();
             gBattlescriptCurrInstr = GetMoveBattleScript(ctx->move);
-            return MOVE_STEP_BREAK;
+            return CANCELER_RESULT_BREAK;
         }
     }
 
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
 // We don't have clear data on where this belongs to but I assume it should at least be checked before Protean
-static enum MoveCanceler CancelerSkyBattle(struct BattleContext *ctx)
+static enum CancelerResult CancelerSkyBattle(struct BattleContext *ctx)
 {
     if (gBattleStruct->isSkyBattle && IsMoveSkyBattleBanned(gCurrentMove))
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerWeatherPrimal(struct BattleContext *ctx)
+static enum CancelerResult CancelerWeatherPrimal(struct BattleContext *ctx)
 {
-    enum MoveCanceler effect = MOVE_STEP_SUCCESS;
-    if (HasWeatherEffect() && GetMovePower(ctx->move) > 0)
+    enum CancelerResult result = CANCELER_RESULT_SUCCESS;
+
+    if (GetMovePower(ctx->move) > 0 && HasWeatherEffect())
     {
         enum Type moveType = GetBattleMoveType(ctx->move);
         if (moveType == TYPE_FIRE && gBattleWeather & B_WEATHER_RAIN_PRIMAL && (GetConfig(CONFIG_POWDER_STATUS_HEAVY_RAIN) >= GEN_7 || !TryActivatePowderStatus(ctx->move)))
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PRIMAL_WEATHER_FIZZLED_BY_RAIN;
-            effect = MOVE_STEP_FAILURE;
+            result = CANCELER_RESULT_FAILURE;
         }
         else if (moveType == TYPE_WATER && gBattleWeather & B_WEATHER_SUN_PRIMAL)
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PRIMAL_WEATHER_EVAPORATED_IN_SUN;
-            effect = MOVE_STEP_FAILURE;
+            result = CANCELER_RESULT_FAILURE;
         }
-        if (effect == MOVE_STEP_FAILURE)
+        if (result == CANCELER_RESULT_FAILURE)
         {
             gProtectStructs[ctx->battlerAtk].chargingTurn = FALSE;
             CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
             gBattlescriptCurrInstr = BattleScript_PrimalWeatherBlocksMove;
         }
     }
-    return effect;
+
+    return result;
 }
 
-static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
+static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
 {
     const u8 *battleScript = NULL;
 
@@ -906,13 +908,13 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
     if (battleScript != NULL)
     {
         gBattlescriptCurrInstr = battleScript;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
 
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerPowderStatus(struct BattleContext *ctx)
+static enum CancelerResult CancelerPowderStatus(struct BattleContext *ctx)
 {
     if (TryActivatePowderStatus(ctx->move))
     {
@@ -923,9 +925,9 @@ static enum MoveCanceler CancelerPowderStatus(struct BattleContext *ctx)
         if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE
          || HasTrainerUsedGimmick(ctx->battlerAtk, GIMMICK_Z_MOVE))
             gBattlescriptCurrInstr = BattleScript_MoveUsedPowder;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
 bool32 IsDazzlingAbility(enum Ability ability)
@@ -940,13 +942,13 @@ bool32 IsDazzlingAbility(enum Ability ability)
     return FALSE;
 }
 
-static enum MoveCanceler CancelerPriorityBlock(struct BattleContext *ctx)
+static enum CancelerResult CancelerPriorityBlock(struct BattleContext *ctx)
 {
     bool32 effect = FALSE;
     s32 priority = GetChosenMovePriority(ctx->battlerAtk, ctx->abilityAtk);
 
     if (priority <= 0)
-        return MOVE_STEP_SUCCESS;
+        return CANCELER_RESULT_SUCCESS;
 
     u32 battler;
     u32 ability = ABILITY_NONE; // ability of battler who is blocking
@@ -972,13 +974,13 @@ static enum MoveCanceler CancelerPriorityBlock(struct BattleContext *ctx)
         RecordAbilityBattle(battler, ability);
         gBattleScripting.battler = gBattlerAbility = battler;
         gBattlescriptCurrInstr = BattleScript_DazzlingProtected;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
 
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerProtean(struct BattleContext *ctx)
+static enum CancelerResult CancelerProtean(struct BattleContext *ctx)
 {
     enum Type moveType = GetBattleMoveType(ctx->move);
     if (ProteanTryChangeType(ctx->battlerAtk, ctx->abilityAtk, ctx->move, moveType))
@@ -990,34 +992,34 @@ static enum MoveCanceler CancelerProtean(struct BattleContext *ctx)
         PrepareStringBattle(STRINGID_EMPTYSTRING3, ctx->battlerAtk);
         gBattleCommunication[MSG_DISPLAY] = 1;
         BattleScriptCall(BattleScript_ProteanActivates);
-        return MOVE_STEP_BREAK;
+        return CANCELER_RESULT_BREAK;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerExplodingDamp(struct BattleContext *ctx)
+static enum CancelerResult CancelerExplodingDamp(struct BattleContext *ctx)
 {
     u32 dampBattler = IsAbilityOnField(ABILITY_DAMP);
     if (dampBattler && IsMoveDampBanned(ctx->move))
     {
         gBattleScripting.battler = dampBattler - 1;
         gBattlescriptCurrInstr = BattleScript_DampStopsExplosion;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerExplosion(struct BattleContext *ctx)
+static enum CancelerResult CancelerExplosion(struct BattleContext *ctx)
 {
     // KO user of Explosion; for Final Gambit doesn't happen if target is immune or if it missed
     if (IsExplosionMove(ctx->move)
      && (GetMoveEffect(ctx->move) != EFFECT_FINAL_GAMBIT || !IsBattlerUnaffectedByMove(ctx->battlerDef)))
     {
         BattleScriptCall(BattleScript_Explosion);
-        return MOVE_STEP_BREAK;
+        return CANCELER_RESULT_BREAK;
     }
 
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
 static bool32 CanTwoTurnMoveFireThisTurn(struct BattleContext *ctx)
@@ -1029,13 +1031,13 @@ static bool32 CanTwoTurnMoveFireThisTurn(struct BattleContext *ctx)
     return TRUE;
 }
 
-static enum MoveCanceler CancelerCharging(struct BattleContext *ctx)
+static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
 {
     if (!gBattleMoveEffects[GetMoveEffect(ctx->move)].twoTurnEffect
      || GetMoveEffect(ctx->move) == EFFECT_SKY_DROP)
-        return MOVE_STEP_SUCCESS;
+        return CANCELER_RESULT_SUCCESS;
 
-    enum MoveCanceler step = MOVE_STEP_SUCCESS;
+    enum CancelerResult result = CANCELER_RESULT_SUCCESS;
 
     if (gBattleMons[ctx->battlerAtk].volatiles.multipleTurns) // Second turn
     {
@@ -1044,7 +1046,7 @@ static enum MoveCanceler CancelerCharging(struct BattleContext *ctx)
         gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = FALSE;
         if (gBattleMoveEffects[GetMoveEffect(ctx->move)].semiInvulnerableEffect)
             gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
-        step = MOVE_STEP_SUCCESS;
+        result = CANCELER_RESULT_SUCCESS;
     }
     else if (!gProtectStructs[ctx->battlerAtk].chargingTurn) // First turn charge
     {
@@ -1053,7 +1055,7 @@ static enum MoveCanceler CancelerCharging(struct BattleContext *ctx)
         if (gBattleMoveEffects[GetMoveEffect(ctx->move)].semiInvulnerableEffect)
             gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = GetMoveTwoTurnAttackStatus(ctx->move);
         BattleScriptCall(BattleScript_TwoTurnMoveCharging);
-        step = MOVE_STEP_PAUSE;
+        result = CANCELER_RESULT_PAUSE;
     }
     else // Try move this turn. Otherwise use next turn
     {
@@ -1062,7 +1064,7 @@ static enum MoveCanceler CancelerCharging(struct BattleContext *ctx)
             gBattleScripting.animTurn = 1;
             gBattleScripting.animTargetsHit = 0;
             gProtectStructs[ctx->battlerAtk].chargingTurn = FALSE;
-            step = MOVE_STEP_SUCCESS;
+            result = CANCELER_RESULT_SUCCESS;
         }
         else if (ctx->holdEffectAtk == HOLD_EFFECT_POWER_HERB)
         {
@@ -1071,18 +1073,18 @@ static enum MoveCanceler CancelerCharging(struct BattleContext *ctx)
             gProtectStructs[ctx->battlerAtk].chargingTurn = FALSE;
             gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
             BattleScriptCall(BattleScript_PowerHerbActivation);
-            step = MOVE_STEP_BREAK;
+            result = CANCELER_RESULT_BREAK;
         }
         else // Use move next turn
         {
             gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = TRUE;
             gBattlescriptCurrInstr = BattleScript_MoveEnd;
-            step = MOVE_STEP_BREAK;
+            result = CANCELER_RESULT_BREAK;
         }
 
     }
 
-    return step;
+    return result;
 }
 
 static bool32 NoTargetPresent(u32 battler, u32 move, u32 moveTarget)
@@ -1115,14 +1117,14 @@ static bool32 NoTargetPresent(u32 battler, u32 move, u32 moveTarget)
     return FALSE;
 }
 
-static enum MoveCanceler CancelerNoTarget(struct BattleContext *ctx)
+static enum CancelerResult CancelerNoTarget(struct BattleContext *ctx)
 {
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move);
 
     if (NoTargetPresent(gBattlerAttacker, gCurrentMove, moveTarget))
     {
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
 
     if (ctx->battlerAtk == ctx->battlerDef
@@ -1130,21 +1132,21 @@ static enum MoveCanceler CancelerNoTarget(struct BattleContext *ctx)
      && gProtectStructs[BATTLE_PARTNER(ctx->battlerAtk)].usedAllySwitch)
     {
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
-        return MOVE_STEP_FAILURE;
+        return CANCELER_RESULT_FAILURE;
     }
 
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler CancelerTookAttack(struct BattleContext *ctx)
+static enum CancelerResult CancelerTookAttack(struct BattleContext *ctx)
 {
     if (gSpecialStatuses[gBattlerTarget].abilityRedirected)
     {
         gSpecialStatuses[gBattlerTarget].abilityRedirected = FALSE;
         BattleScriptCall(BattleScript_TookAttack);
-        return MOVE_STEP_BREAK;
+        return CANCELER_RESULT_BREAK;
     }
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
 #define checkFailure FALSE
@@ -1273,7 +1275,7 @@ static bool32 ShouldCheckTargetMoveFailure(u32 battlerAtk, u32 battlerDef, u32 m
 #undef skipFailure
 
 
-static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
+static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
 {
     bool32 targetAvoidedAttack = FALSE;
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move);
@@ -1370,7 +1372,7 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
             gBattleScripting.battler = ctx->battlerDef;
             gBattleStruct->pledgeMove = FALSE;
             CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
-            return MOVE_STEP_PAUSE;
+            return CANCELER_RESULT_PAUSE;
         }
     }
 
@@ -1384,7 +1386,7 @@ static enum MoveCanceler CancelerTargetFailure(struct BattleContext *ctx)
 
     ctx->battlerDef = gBattlerTarget;
     gBattleStruct->eventState.atkCancelerBattler = 0;
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
 static bool32 CantFullyProtectFromMove(u32 battlerDef)
@@ -1397,7 +1399,7 @@ static bool32 CantFullyProtectFromMove(u32 battlerDef)
         && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD;
 }
 
-static enum MoveCanceler CancelerNotFullyProtected(struct BattleContext *ctx)
+static enum CancelerResult CancelerNotFullyProtected(struct BattleContext *ctx)
 {
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
     {
@@ -1407,12 +1409,12 @@ static enum MoveCanceler CancelerNotFullyProtected(struct BattleContext *ctx)
         {
             BattleScriptCall(BattleScript_CouldntFullyProtect);
             gBattleScripting.battler = battlerDef;
-            return MOVE_STEP_PAUSE;
+            return CANCELER_RESULT_PAUSE;
         }
     }
 
     gBattleStruct->eventState.atkCancelerBattler = 0;
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
 static bool32 IsMoveParentalBondAffected(struct BattleContext *ctx)
@@ -1452,7 +1454,7 @@ static void SetRandomMultiHitCounter()
         gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 3, 3, 1, 1); // 37.5%: 2 hits, 37.5%: 3 hits, 12.5% 4 hits, 12.5% 5 hits.
 }
 
-static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
+static enum CancelerResult CancelerMultihitMoves(struct BattleContext *ctx)
 {
     SetPossibleNewSmartTarget(ctx->move);
 
@@ -1530,10 +1532,10 @@ static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
         gMultiHitCounter = 0;
     }
 
-    return MOVE_STEP_SUCCESS;
+    return CANCELER_RESULT_SUCCESS;
 }
 
-static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleContext *ctx) =
+static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleContext *ctx) =
 {
     [CANCELER_CLEAR_FLAGS] = CancelerClearFlags,
     [CANCELER_STANCE_CHANGE_1] = CancelerStanceChangeOne,
@@ -1578,9 +1580,9 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
 };
 
-enum MoveCanceler AtkCanceler_MoveSuccessOrder(void)
+enum CancelerResult DoAttackCanceler(void)
 {
-    enum MoveCanceler effect = MOVE_STEP_SUCCESS;
+    enum CancelerResult result = CANCELER_RESULT_SUCCESS;
 
     struct BattleContext ctx = {0};
     ctx.battlerAtk = gBattlerAttacker;
@@ -1590,15 +1592,15 @@ enum MoveCanceler AtkCanceler_MoveSuccessOrder(void)
     ctx.abilityAtk = GetBattlerAbility(ctx.battlerAtk);
     ctx.holdEffectAtk = GetBattlerHoldEffect(ctx.battlerAtk);
 
-    while (gBattleStruct->eventState.atkCanceler < CANCELER_END && effect == MOVE_STEP_SUCCESS)
+    while (gBattleStruct->eventState.atkCanceler < CANCELER_END && result == CANCELER_RESULT_SUCCESS)
     {
-        effect = sMoveSuccessOrderCancelers[gBattleStruct->eventState.atkCanceler](&ctx);
-        gBattleStruct->unableToUseMove = (effect == MOVE_STEP_FAILURE);
-        if (effect != MOVE_STEP_PAUSE)
+        result = sMoveSuccessOrderCancelers[gBattleStruct->eventState.atkCanceler](&ctx);
+        gBattleStruct->unableToUseMove = (result == CANCELER_RESULT_FAILURE);
+        if (result != CANCELER_RESULT_PAUSE)
             gBattleStruct->eventState.atkCanceler++;
     }
 
-    return effect;
+    return result;
 }
 
 // ========
@@ -1611,12 +1613,12 @@ static enum MoveEndResult MoveEnd_SetValues(void)
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleStruct->eventState.moveEndBlock = 0;
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     u32 temp = 0;
 
     if (CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
@@ -1634,7 +1636,7 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
             SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 8);
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SPIKY_SHIELD);
             BattleScriptCall(BattleScript_SpikyShieldEffect);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case PROTECT_KINGS_SHIELD:
@@ -1644,14 +1646,14 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
         else
             gBattleScripting.moveEffect = MOVE_EFFECT_ATK_MINUS_2;
         BattleScriptCall(BattleScript_KingsShieldEffect);
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
         break;
     case PROTECT_BANEFUL_BUNKER:
         if (CanBePoisoned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerTarget), GetBattlerAbility(gBattlerAttacker)))
         {
             gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
             BattleScriptCall(BattleScript_BanefulBunkerEffect);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case PROTECT_BURNING_BULWARK:
@@ -1659,20 +1661,20 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
         {
             gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
             BattleScriptCall(BattleScript_BanefulBunkerEffect);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case PROTECT_OBSTRUCT:
         SWAP(gBattlerAttacker, gBattlerTarget, temp); // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
         gBattleScripting.moveEffect = MOVE_EFFECT_DEF_MINUS_2;
         BattleScriptCall(BattleScript_KingsShieldEffect);
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
         break;
     case PROTECT_SILK_TRAP:
         SWAP(gBattlerAttacker, gBattlerTarget, temp); // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
         gBattleScripting.moveEffect = MOVE_EFFECT_SPD_MINUS_1;
         BattleScriptCall(BattleScript_KingsShieldEffect);
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
         break;
     default:
         break;
@@ -1687,7 +1689,7 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
         BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].status1), &gBattleMons[gBattlerAttacker].status1);
         MarkBattlerForControllerExec(gBattlerAttacker);
         BattleScriptCall(BattleScript_BeakBlastBurn);
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleScripting.moveendState++;
@@ -1699,7 +1701,7 @@ static enum MoveEndResult MoveEnd_Absorb(void)
     if (gBattleStruct->unableToUseMove)
     {
         gBattleScripting.moveendState++;
-        return MOVEEND_STEP_CONTINUE;
+        return MOVEEND_RESULT_CONTINUE;
     }
 
     if (IsExplosionMove(gCurrentMove)
@@ -1710,10 +1712,10 @@ static enum MoveEndResult MoveEnd_Absorb(void)
         gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
         BattleScriptCall(BattleScript_FaintAttackerForExplosion);
         gBattleScripting.moveendState++;
-        return MOVEEND_STEP_RUN_SCRIPT;
+        return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
     switch (moveEffect)
@@ -1740,7 +1742,7 @@ static enum MoveEndResult MoveEnd_Absorb(void)
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
                 BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
             }
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_MAX_HP_50_RECOIL:
@@ -1756,7 +1758,7 @@ static enum MoveEndResult MoveEnd_Absorb(void)
             gSpecialStatuses[gBattlerAttacker].mindBlownRecoil = TRUE;
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
             BattleScriptCall(BattleScript_MaxHp50Recoil);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     default:
@@ -1769,7 +1771,7 @@ static enum MoveEndResult MoveEnd_Absorb(void)
 
 static enum MoveEndResult MoveEnd_Rage(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (gBattleMons[gBattlerTarget].volatiles.rage
         && IsBattlerAlive(gBattlerTarget)
@@ -1781,7 +1783,7 @@ static enum MoveEndResult MoveEnd_Rage(void)
     {
         SET_STATCHANGER(STAT_ATK, 1, FALSE);
         BattleScriptCall(BattleScript_RageIsBuilding);
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleScripting.moveendState++;
@@ -1790,22 +1792,22 @@ static enum MoveEndResult MoveEnd_Rage(void)
 
 static enum MoveEndResult MoveEnd_SynchronizeTarget(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     if (AbilityBattleEffects(ABILITYEFFECT_SYNCHRONIZE, gBattlerTarget, 0, 0, TRUE))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
     gBattleScripting.moveendState++;
     return result;
 }
 
 static enum MoveEndResult MoveEnd_Abilities(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum Ability targetAbility = GetBattlerAbility(gBattlerTarget);
 
     if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END, gBattlerTarget, targetAbility, 0, TRUE))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
     else if (TryClearIllusion(gBattlerTarget, targetAbility))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -1813,10 +1815,10 @@ static enum MoveEndResult MoveEnd_Abilities(void)
 
 static enum MoveEndResult MoveEnd_AbilitiesAttacker(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_ATTACKER, gBattlerAttacker, 0, 0, TRUE))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -1824,25 +1826,25 @@ static enum MoveEndResult MoveEnd_AbilitiesAttacker(void)
 
 static enum MoveEndResult MoveEnd_StatusImmunityAbilities(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, 0, 0, TRUE))
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
     }
 
-    if (result == MOVEEND_STEP_CONTINUE)
+    if (result == MOVEEND_RESULT_CONTINUE)
         gBattleScripting.moveendState++;
     return result;
 }
 
 static enum MoveEndResult MoveEnd_SynchronizeAttacker(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (AbilityBattleEffects(ABILITYEFFECT_ATK_SYNCHRONIZE, gBattlerAttacker, 0, 0, TRUE))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -1850,14 +1852,14 @@ static enum MoveEndResult MoveEnd_SynchronizeAttacker(void)
 
 static enum MoveEndResult MoveEnd_AttackerInvisible(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (IsSemiInvulnerable(gBattlerAttacker, CHECK_ALL)
      && gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION))
     {
         BtlController_EmitSpriteInvisibility(gBattlerAttacker, B_COMM_TO_CONTROLLER, TRUE);
         MarkBattlerForControllerExec(gBattlerAttacker);
-        result = MOVEEND_STEP_BREAK;
+        result = MOVEEND_RESULT_BREAK;
     }
 
     gBattleScripting.moveendState++;
@@ -1866,7 +1868,7 @@ static enum MoveEndResult MoveEnd_AttackerInvisible(void)
 
 static enum MoveEndResult MoveEnd_AttackerVisible(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (IsBattlerUnaffectedByMove(gBattlerTarget)
         || !IsSemiInvulnerable(gBattlerAttacker, CHECK_ALL)
@@ -1877,7 +1879,7 @@ static enum MoveEndResult MoveEnd_AttackerVisible(void)
         gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable = STATE_NONE;
         gSpecialStatuses[gBattlerAttacker].restoredBattlerSprite = TRUE;
         gBattleScripting.moveendState++;
-        return MOVEEND_STEP_BREAK;
+        return MOVEEND_RESULT_BREAK;
     }
     gBattleScripting.moveendState++;
     return result;
@@ -1885,7 +1887,7 @@ static enum MoveEndResult MoveEnd_AttackerVisible(void)
 
 static enum MoveEndResult MoveEnd_TargetVisible(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (!gSpecialStatuses[gBattlerTarget].restoredBattlerSprite && gBattlerTarget < gBattlersCount
         && !IsSemiInvulnerable(gBattlerTarget, CHECK_ALL))
@@ -1893,7 +1895,7 @@ static enum MoveEndResult MoveEnd_TargetVisible(void)
         BtlController_EmitSpriteInvisibility(gBattlerTarget, B_COMM_TO_CONTROLLER, FALSE);
         MarkBattlerForControllerExec(gBattlerTarget);
         gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_NONE;
-        result = MOVEEND_STEP_BREAK;
+        result = MOVEEND_RESULT_BREAK;
     }
 
     gBattleScripting.moveendState++;
@@ -1902,12 +1904,12 @@ static enum MoveEndResult MoveEnd_TargetVisible(void)
 
 static enum MoveEndResult MoveEnd_ItemEffectsTarget(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(gBattlerTarget);
 
     if (ItemBattleEffects(gBattlerTarget, gBattlerAttacker, holdEffect, IsOnTargetHitActivation)
      || ItemBattleEffects(gBattlerTarget, gBattlerAttacker, holdEffect, IsOnStatusChangeActivation))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -1915,13 +1917,13 @@ static enum MoveEndResult MoveEnd_ItemEffectsTarget(void)
 
 static enum MoveEndResult MoveEnd_ItemEffectsAttacker1(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(gBattlerAttacker);
 
     if (ItemBattleEffects(gBattlerAttacker, gBattlerTarget, holdEffect, IsOnAttackerAfterHitActivation)
      || ItemBattleEffects(gBattlerAttacker, gBattlerTarget, holdEffect, IsOnStatusChangeActivation)
      || ItemBattleEffects(gBattlerAttacker, gBattlerTarget, holdEffect, IsOnHpThresholdActivation))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -1929,7 +1931,7 @@ static enum MoveEndResult MoveEnd_ItemEffectsAttacker1(void)
 
 static enum MoveEndResult MoveEnd_Symbiosis(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
@@ -1943,7 +1945,7 @@ static enum MoveEndResult MoveEnd_Symbiosis(void)
             gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(battler);
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
             break;
         }
     }
@@ -1954,7 +1956,7 @@ static enum MoveEndResult MoveEnd_Symbiosis(void)
 
 static enum MoveEndResult MoveEnd_Substitute(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
@@ -1968,7 +1970,7 @@ static enum MoveEndResult MoveEnd_Substitute(void)
 
 static enum MoveEndResult MoveEnd_FaintBlock(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     do
     {
@@ -1982,7 +1984,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
              && !IsBattlerUnaffectedByMove(gBattlerTarget))
             {
                 BattleScriptCall(BattleScript_FinalGambit);
-                result = MOVEEND_STEP_RUN_SCRIPT;
+                result = MOVEEND_RESULT_RUN_SCRIPT;
             }
             gBattleStruct->eventState.moveEndBlock++;
             break;
@@ -1991,7 +1993,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
              || gBattleStruct->battlerState[gBattlerTarget].fainted)
             {
                 gBattleScripting.moveendState++;
-                return MOVEEND_STEP_CONTINUE;
+                return MOVEEND_RESULT_CONTINUE;
             }
 
             gBattleStruct->eventState.moveEndBlock++;
@@ -2003,7 +2005,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
                 if (!IsNeutralizingGasOnField())
                 {
                     BattleScriptCall(BattleScript_NeutralizingGasExits);
-                    result = MOVEEND_STEP_RUN_SCRIPT;
+                    result = MOVEEND_RESULT_RUN_SCRIPT;
                 }
             }
             gBattleStruct->eventState.moveEndBlock++;
@@ -2054,7 +2056,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
                 gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
             }
             BattleScriptCall(BattleScript_FaintBattler);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
             gBattleStruct->eventState.moveEndBlock++;
             break;
         case FAINT_BLOCK_DO_DESTINY_BOND:
@@ -2062,7 +2064,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
             {
                 gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerAttacker].hp;
                 BattleScriptCall(BattleScript_DestinyBondTakesLife);
-                result = MOVEEND_STEP_RUN_SCRIPT;
+                result = MOVEEND_RESULT_RUN_SCRIPT;
             }
             gBattleStruct->eventState.moveEndBlock++;
             break;
@@ -2076,7 +2078,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
                 MarkBattlerForControllerExec(gBattlerAttacker);
                 PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].moves[moveIndex])
                 BattleScriptCall(BattleScript_GrudgeTakesPp);
-                result = MOVEEND_STEP_RUN_SCRIPT;
+                result = MOVEEND_RESULT_RUN_SCRIPT;
             }
             gBattleStruct->eventState.moveEndBlock++;
             break;
@@ -2087,12 +2089,12 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
             break;
         }
 
-        if (result == MOVEEND_STEP_RUN_SCRIPT)
+        if (result == MOVEEND_RESULT_RUN_SCRIPT)
             break;
 
     } while (gBattleStruct->eventState.moveEndBlock != 0);
 
-    if (result == MOVEEND_STEP_CONTINUE)
+    if (result == MOVEEND_RESULT_CONTINUE)
     {
         gBattleStruct->eventState.moveEndBlock = 0;
         gBattleScripting.moveendState++;
@@ -2103,7 +2105,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
 
 static enum MoveEndResult MoveEnd_SkyDropConfuse(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
@@ -2123,7 +2125,7 @@ static enum MoveEndResult MoveEnd_SkyDropConfuse(void)
             // Clear skyDropTargets data
             gBattleStruct->skyDropTargets[battler] = SKY_DROP_NO_TARGET;
             gBattleStruct->skyDropTargets[targetId] = SKY_DROP_NO_TARGET;
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
             break;
         }
     }
@@ -2224,7 +2226,7 @@ static enum MoveEndResult MoveEnd_UpdateLastMoves(void)
     }
 
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_MirrorMove(void)
@@ -2241,12 +2243,12 @@ static enum MoveEndResult MoveEnd_MirrorMove(void)
     }
 
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_Defrost(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (gBattleMons[gBattlerTarget].status1 & STATUS1_FREEZE
         && IsBattlerTurnDamaged(gBattlerTarget)
@@ -2259,7 +2261,7 @@ static enum MoveEndResult MoveEnd_Defrost(void)
         BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].status1), &gBattleMons[gBattlerTarget].status1);
         MarkBattlerForControllerExec(gBattlerTarget);
         BattleScriptCall(BattleScript_DefrostedViaFireMove);
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
     }
     else if (gBattleMons[gBattlerTarget].status1 & STATUS1_FROSTBITE
           && IsBattlerTurnDamaged(gBattlerTarget)
@@ -2272,7 +2274,7 @@ static enum MoveEndResult MoveEnd_Defrost(void)
         BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].status1), &gBattleMons[gBattlerTarget].status1);
         MarkBattlerForControllerExec(gBattlerTarget);
         BattleScriptCall(BattleScript_FrostbiteHealedViaFireMove);
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleScripting.moveendState++;
@@ -2299,7 +2301,7 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
             gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
             gBattleScripting.moveendState = 0;
             MoveValuesCleanUp();
-            return MOVEEND_STEP_BREAK;
+            return MOVEEND_RESULT_BREAK;
         }
     }
     else if (IsSpreadMove(moveTarget))
@@ -2320,7 +2322,7 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
             else
                 BattleScriptPush(GetMoveBattleScript(gCurrentMove));
             gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
-            return MOVEEND_STEP_BREAK;
+            return MOVEEND_RESULT_BREAK;
         }
         // Check if the move used was actually a bounced move. If so, we need to go back to the original attacker and make sure, its move hits all 2 or 3 pokemon.
         else if (gBattleStruct->bouncedMoveIsUsed)
@@ -2342,24 +2344,24 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
                 MoveValuesCleanUp();
                 BattleScriptPush(GetMoveBattleScript(gCurrentMove));
                 gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
-                return MOVEEND_STEP_BREAK;
+                return MOVEEND_RESULT_BREAK;
             }
         }
     }
 
     RecordLastUsedMoveBy(gBattlerAttacker, gCurrentMove);
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_HpThresholdItemsTarget(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (gMultiHitCounter &&
         ItemBattleEffects(gBattlerTarget, gBattlerAttacker, GetBattlerHoldEffect(gBattlerTarget), IsOnHpThresholdActivation))
     {
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleScripting.moveendState++;
@@ -2368,7 +2370,7 @@ static enum MoveEndResult MoveEnd_HpThresholdItemsTarget(void)
 
 static enum MoveEndResult MoveEnd_MultihitMove(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (!IsBattlerUnaffectedByMove(gBattlerTarget)
      && !gBattleStruct->unableToUseMove
@@ -2386,7 +2388,7 @@ static enum MoveEndResult MoveEnd_MultihitMove(void)
                 BattleScriptCall(BattleScript_ScaleShot);
             else
                 BattleScriptCall(BattleScript_MultiHitPrintStrings);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         else
         {
@@ -2413,12 +2415,12 @@ static enum MoveEndResult MoveEnd_MultihitMove(void)
                 MoveValuesCleanUp();
                 BattleScriptPush(GetMoveBattleScript(gCurrentMove));
                 gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
-                return MOVEEND_STEP_BREAK;
+                return MOVEEND_RESULT_BREAK;
             }
             else
             {
                 BattleScriptCall(BattleScript_MultiHitPrintStrings);
-                result = MOVEEND_STEP_RUN_SCRIPT;
+                result = MOVEEND_RESULT_RUN_SCRIPT;
             }
         }
     }
@@ -2432,7 +2434,7 @@ static enum MoveEndResult MoveEnd_MultihitMove(void)
 
 static enum MoveEndResult MoveEnd_MoveBlock(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum BattleSide side = GetBattlerSide(gBattlerTarget);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
@@ -2453,7 +2455,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             {
                 gBattlerAbility = gBattlerTarget;
                 BattleScriptCall(BattleScript_StickyHoldActivatesRet);
-                result = MOVEEND_STEP_RUN_SCRIPT;
+                result = MOVEEND_RESULT_RUN_SCRIPT;
                 break;
             }
 
@@ -2477,7 +2479,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             }
 
             BattleScriptCall(BattleScript_KnockedOff);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_STEAL_ITEM:
@@ -2487,14 +2489,14 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
          || !IsBattlerAlive(gBattlerAttacker)
          || !CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].item))
         {
-            result = MOVEEND_STEP_CONTINUE;
+            result = MOVEEND_RESULT_CONTINUE;
         }
         else if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
         {
             BattleScriptCall(BattleScript_NoItemSteal);
             gLastUsedAbility = gBattleMons[gBattlerTarget].ability;
             RecordAbilityBattle(gBattlerTarget, gLastUsedAbility);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         else
         {
@@ -2508,7 +2510,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             }
             gEffectBattler = gBattlerTarget;
             BattleScriptCall(BattleScript_ItemSteal);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_HIT_SWITCH_TARGET:
@@ -2538,7 +2540,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
                 gBattleScripting.switchCase = B_SWITCH_HIT;
                 BattleScriptCall(BattleScript_TryHitSwitchTarget);
             }
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_SMACK_DOWN:
@@ -2552,7 +2554,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             gBattleMons[gBattlerTarget].volatiles.magnetRise = FALSE;
             gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_NONE;
             BattleScriptCall(BattleScript_MoveEffectSmackDown);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_RECOIL_IF_MISS:
@@ -2586,7 +2588,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             }
             SetPassiveDamageAmount(gBattlerAttacker, recoil);
             BattleScriptCall(BattleScript_RecoilIfMiss);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_RECOIL:
@@ -2600,7 +2602,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             SetPassiveDamageAmount(gBattlerAttacker, gBattleScripting.savedDmg * max(1, GetMoveRecoil(gCurrentMove)) / 100);
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_CHLOROBLAST:
@@ -2615,14 +2617,14 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             SetPassiveDamageAmount(gBattlerAttacker, recoil);
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_RAPID_SPIN:
         if (IsBattlerTurnDamaged(gBattlerTarget) && IsBattlerAlive(gBattlerAttacker))
         {
             BattleScriptCall(BattleScript_RapidSpinAway);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_FELL_STINGER:
@@ -2636,7 +2638,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_FellStingerRaisesStat;
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_STONE_AXE:
@@ -2647,7 +2649,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_POINTEDSTONESFLOAT;
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_StealthRockActivates;
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_CEASELESS_EDGE:
@@ -2659,18 +2661,18 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             if (gBattleStruct->isSkyBattle)
             {
-                result = MOVEEND_STEP_CONTINUE;
+                result = MOVEEND_RESULT_CONTINUE;
             }
             else
             {
                 BattleScriptPushCursor();
                 gBattlescriptCurrInstr = BattleScript_SpikesActivates;
-                result = MOVEEND_STEP_RUN_SCRIPT;
+                result = MOVEEND_RESULT_RUN_SCRIPT;
             }
         }
         break;
     default:
-        result = MOVEEND_STEP_CONTINUE;
+        result = MOVEEND_RESULT_CONTINUE;
         break;
     }
 
@@ -2680,12 +2682,12 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
 
 static enum MoveEndResult MoveEnd_ItemEffectsAttacker2(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(gBattlerAttacker);
 
     if (ItemBattleEffects(gBattlerAttacker, gBattlerTarget, holdEffect, IsOnStatusChangeActivation)
      || ItemBattleEffects(gBattlerAttacker, gBattlerTarget, holdEffect, IsOnHpThresholdActivation))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -2693,10 +2695,10 @@ static enum MoveEndResult MoveEnd_ItemEffectsAttacker2(void)
 
 static enum MoveEndResult MoveEnd_AbilityEffectFoesFainted(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_FOES_FAINTED, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), gCurrentMove, TRUE))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -2709,7 +2711,7 @@ static enum MoveEndResult MoveEnd_SheerForce(void)
     else
         gBattleScripting.moveendState++;
 
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_ColorChange(void)
@@ -2720,12 +2722,12 @@ static enum MoveEndResult MoveEnd_ColorChange(void)
         if (battler == gBattlerAttacker)
             continue;
         if (AbilityBattleEffects(ABILITYEFFECT_COLOR_CHANGE, battler, GetBattlerAbility(battler), 0, TRUE))
-            return MOVEEND_STEP_RUN_SCRIPT;
+            return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_KeeMarangaHpThresholdItemTarget(void)
@@ -2738,11 +2740,11 @@ static enum MoveEndResult MoveEnd_KeeMarangaHpThresholdItemTarget(void)
         enum HoldEffect holdEffect = GetBattlerHoldEffect(battlerDef);
         if (ItemBattleEffects(battlerDef, gBattlerAttacker, holdEffect, IsKeeMarangaBerryActivation)
          || ItemBattleEffects(battlerDef, gBattlerAttacker, holdEffect, IsOnHpThresholdActivation))
-            return MOVEEND_STEP_RUN_SCRIPT;
+            return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static bool32 TryRedCard(u32 battlerAtk, u32 redCardBattler, u32 move)
@@ -2785,7 +2787,7 @@ static bool32 TryEjectButton(u32 battlerAtk, u32 ejectButtonBattler)
 
 static enum MoveEndResult MoveEnd_CardButton(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     u32 redCardBattlers = 0;
     u32 ejectButtonBattlers = 0;
 
@@ -2805,7 +2807,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
     if (!redCardBattlers && !ejectButtonBattlers)
     {
         gBattleScripting.moveendState++;
-        return MOVEEND_STEP_CONTINUE;
+        return MOVEEND_RESULT_CONTINUE;
     }
 
     u8 battlers[4] = {0, 1, 2, 3};
@@ -2817,11 +2819,11 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         // Only fastest red card or eject button activates
         if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         else if (ejectButtonBattlers & 1u << battler && TryEjectButton(gBattlerAttacker, battler))
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
 
-        if (result == MOVEEND_STEP_RUN_SCRIPT)
+        if (result == MOVEEND_RESULT_RUN_SCRIPT)
         {
             for (u32 i = 0; i < gBattlersCount; i++)
                 gBattleMons[i].volatiles.tryEjectPack = FALSE;
@@ -2836,10 +2838,10 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
 static enum MoveEndResult MoveEnd_LifeOrbShellBell(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (ItemBattleEffects(gBattlerAttacker, 0, GetBattlerHoldEffect(gBattlerAttacker), IsLifeOrbShellBellActivation))
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -2847,11 +2849,11 @@ static enum MoveEndResult MoveEnd_LifeOrbShellBell(void)
 
 static enum MoveEndResult MoveEnd_FormChange(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_AFTER_MOVE))
     {
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
         BattleScriptCall(BattleScript_AttackerFormChangeMoveEffect);
     }
 
@@ -2861,7 +2863,7 @@ static enum MoveEndResult MoveEnd_FormChange(void)
 
 static enum MoveEndResult MoveEnd_EmergencyExit(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     u32 numEmergencyExitBattlers = 0;
     u32 emergencyExitBattlers = 0;
 
@@ -2898,11 +2900,11 @@ static enum MoveEndResult MoveEnd_EmergencyExit(void)
 
         gBattleScripting.battler = battler;
         BattleScriptCall(BattleScript_EmergencyExit);
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
         break; // Only the fastest Emergency Exit / Wimp Out activates
     }
 
-    if (result == MOVEEND_STEP_RUN_SCRIPT)
+    if (result == MOVEEND_RESULT_RUN_SCRIPT)
         gBattleScripting.moveendState = MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE;
     else
         gBattleScripting.moveendState++;
@@ -2924,7 +2926,7 @@ static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, enum Ba
 
 static enum MoveEndResult MoveEnd_EjectPack(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     u32 ejectPackBattlers = 0;
     u32 numEjectPackBattlers = 0;
 
@@ -2963,7 +2965,7 @@ static enum MoveEndResult MoveEnd_EjectPack(void)
         gBattleStruct->battlerState[battler].usedEjectItem = TRUE;
         BattleScriptCall(BattleScript_EjectPackActivates);
         gAiLogicData->ejectPackSwitch = TRUE;
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
         break; // Only the fastest Eject item activates
     }
 
@@ -2973,7 +2975,7 @@ static enum MoveEndResult MoveEnd_EjectPack(void)
 
 static enum MoveEndResult MoveEnd_HitEscape(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (GetMoveEffect(gCurrentMove) == EFFECT_HIT_ESCAPE
      && !gBattleStruct->unableToUseMove
@@ -2981,7 +2983,7 @@ static enum MoveEndResult MoveEnd_HitEscape(void)
      && IsBattlerAlive(gBattlerAttacker)
      && !NoAliveMonsForBattlerSide(gBattlerTarget))
     {
-        result = MOVEEND_STEP_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
         BattleScriptCall(BattleScript_EffectHitEscape);
     }
 
@@ -2997,12 +2999,12 @@ static enum MoveEndResult MoveEnd_ItemsEffectsAll(void)
         enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
         if (ItemBattleEffects(battler, 0, holdEffect, IsOnStatusChangeActivation)
          || ItemBattleEffects(battler, 0, holdEffect, IsOnHpThresholdActivation))
-            return MOVEEND_STEP_RUN_SCRIPT;
+            return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_WhiteHerb(void)
@@ -3014,12 +3016,12 @@ static enum MoveEndResult MoveEnd_WhiteHerb(void)
             continue;
 
         if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsWhiteHerbActivation))
-            return MOVEEND_STEP_RUN_SCRIPT;
+            return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_Opportunist(void)
@@ -3030,12 +3032,12 @@ static enum MoveEndResult MoveEnd_Opportunist(void)
         if (!IsBattlerAlive(battler))
             continue;
         if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, GetBattlerAbility(battler), 0, TRUE))
-            return MOVEEND_STEP_RUN_SCRIPT;
+            return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_MirrorHerb(void)
@@ -3047,17 +3049,17 @@ static enum MoveEndResult MoveEnd_MirrorHerb(void)
             continue;
 
         if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
-            return MOVEEND_STEP_RUN_SCRIPT;
+            return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_Pickpocket(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (IsBattlerAlive(gBattlerAttacker)
       && gBattleMons[gBattlerAttacker].item != ITEM_NONE // Attacker must be holding an item
@@ -3086,7 +3088,7 @@ static enum MoveEndResult MoveEnd_Pickpocket(void)
 
                 gEffectBattler = gBattlerAttacker;
                 BattleScriptCall(BattleScript_Pickpocket);   // Includes sticky hold check to print separate string
-                result = MOVEEND_STEP_RUN_SCRIPT;
+                result = MOVEEND_RESULT_RUN_SCRIPT;
                 break; // Pickpocket activates on fastest mon, so exit loop.
             }
         }
@@ -3098,7 +3100,7 @@ static enum MoveEndResult MoveEnd_Pickpocket(void)
 
 static enum MoveEndResult MoveEnd_ThirdMoveBlock(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
     switch (moveEffect)
@@ -3107,7 +3109,7 @@ static enum MoveEndResult MoveEnd_ThirdMoveBlock(void)
         if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY && IsBattlerTurnDamaged(gBattlerTarget))
         {
             BattleScriptCall(BattleScript_RemoveTerrain);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_ICE_SPINNER:
@@ -3117,7 +3119,7 @@ static enum MoveEndResult MoveEnd_ThirdMoveBlock(void)
          && IsBattlerTurnDamaged(gBattlerTarget))
         {
             BattleScriptCall(BattleScript_RemoveTerrain);
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_NATURAL_GIFT:
@@ -3139,7 +3141,7 @@ static enum MoveEndResult MoveEnd_ThirdMoveBlock(void)
             ClearBattlerItemEffectHistory(gBattlerAttacker);
 
             if (!TrySymbiosis(gBattlerAttacker, item, TRUE))
-                result = MOVEEND_STEP_RUN_SCRIPT;
+                result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     default:
@@ -3162,7 +3164,7 @@ static enum MoveEndResult MoveEnd_ChangedItems(void)
     }
 
     gBattleScripting.moveendState++;
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_ClearBits(void)
@@ -3232,12 +3234,12 @@ static enum MoveEndResult MoveEnd_ClearBits(void)
     gBattleMons[gBattlerAttacker].volatiles.unableToUseMove = gBattleStruct->unableToUseMove;
     gBattleScripting.moveendState++;
 
-    return MOVEEND_STEP_CONTINUE;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEnd_Dancer(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (IsDanceMove(gCurrentMove) && !gBattleStruct->snatchedMoveIsUsed)
     {
@@ -3274,7 +3276,7 @@ static enum MoveEndResult MoveEnd_Dancer(void)
                 }
             }
             if (nextDancer && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer & 0x3, 0, gCurrentMove, TRUE))
-                result = MOVEEND_STEP_RUN_SCRIPT;
+                result = MOVEEND_RESULT_RUN_SCRIPT;
         }
     }
 
@@ -3284,7 +3286,7 @@ static enum MoveEndResult MoveEnd_Dancer(void)
 
 static enum MoveEndResult MoveEnd_PursuitNextAction(void)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (gBattleStruct->battlerState[gBattlerTarget].pursuitTarget)
     {
@@ -3304,7 +3306,7 @@ static enum MoveEndResult MoveEnd_PursuitNextAction(void)
                 gBattlescriptCurrInstr = BattleScript_DoSwitchOut;
             gBattleStruct->monToSwitchIntoId[gBattlerTarget] = gBattleStruct->pursuitStoredSwitch;
             ClearPursuitValues();
-            result = MOVEEND_STEP_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
     }
 
@@ -3362,20 +3364,20 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_PURSUIT_NEXT_ACTION] = MoveEnd_PursuitNextAction,
 };
 
-bool32 DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endState)
+enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endState)
 {
-    enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     do
     {
         result = sMoveEndHandlers[gBattleScripting.moveendState]();
 
-        if (endMode == 1 && result == MOVEEND_STEP_CONTINUE)
+        if (endMode == 1 && result == MOVEEND_RESULT_CONTINUE)
             gBattleScripting.moveendState = MOVEEND_COUNT;
         if (endMode == 2 && endState == gBattleScripting.moveendState)
             gBattleScripting.moveendState = MOVEEND_COUNT;
 
-    } while (gBattleScripting.moveendState != MOVEEND_COUNT && result == MOVEEND_STEP_CONTINUE);
+    } while (gBattleScripting.moveendState != MOVEEND_COUNT && result == MOVEEND_RESULT_CONTINUE);
 
     return result;
 }
