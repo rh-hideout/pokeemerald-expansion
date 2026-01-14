@@ -61,8 +61,11 @@ If you have read all of this and still need help, feel free to start a thread in
 - If you're new to git and GitHub, [Team Aqua's Asset Repo](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/) has a [guide on forking and cloning the repository](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/wiki/The-Basics-of-GitHub). Make sure you have a [local copy](INSTALL.md) of `pokeemerald-expansion`.
 - Make sure your contribution is in [scope](docs/team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server!](https://discord.gg/6CzjAG6GZk).
 - Choose a branch to contribute your PR to:
-    - **`master`**: Fixes for bugs that are currently present in the `master` branch.
-    - **`upcoming`**: All other pull requests.
+    - **`master`**: If your PR contains meets any of the following criteria, it should go to `master`:
+      - Fixes for bugs that are currently present in the `master` branch
+      - PR is only documentation updates / changes
+      - PR is only tests
+    - **`upcoming`**: All other pull requests go to `upcoming`.
 - Create a new branch from the most recent version of the branch you've chosen.
 - If your contribution introduces, removes, or changes a lot of existing code, we reccomend getting a maintainer to agree to review it before you start on the work! We have a table that lists all [current maintainers and their areas of expertise](#maintainers).
 

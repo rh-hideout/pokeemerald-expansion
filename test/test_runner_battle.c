@@ -2664,7 +2664,10 @@ s32 MoveGetTarget(s32 battlerId, enum Move moveId, struct MoveContext *ctx, u32 
 
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == TARGET_USER || moveTarget == TARGET_ALL_BATTLERS || moveTarget == TARGET_FIELD)
+        else if (moveTarget == TARGET_USER 
+              || moveTarget == TARGET_ALL_BATTLERS 
+              || moveTarget == TARGET_FIELD 
+              || moveTarget == TARGET_USER_AND_ALLY)
         {
             target = battlerId;
         }

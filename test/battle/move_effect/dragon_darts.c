@@ -308,3 +308,24 @@ DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first targ
         }
     }
 }
+
+DOUBLE_BATTLE_TEST("Dragon Darts can be absorbed by both opponents and hit neither")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ELECTIVIRE) { Ability(ABILITY_MOTOR_DRIVE); };
+        OPPONENT(SPECIES_ELECTIVIRE) { Ability(ABILITY_MOTOR_DRIVE); };
+    } WHEN {
+        TURN {
+            MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft);
+            MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+    }
+}
+

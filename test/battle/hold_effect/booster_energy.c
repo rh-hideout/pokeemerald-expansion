@@ -225,7 +225,8 @@ SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponent);
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.7), results[1].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.77), results[1].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(0.77), results[3].damage);
     }
 }
 

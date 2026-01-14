@@ -290,10 +290,13 @@ static void StorePokemonInEmptyDaycareSlot(struct Pokemon *mon, struct DayCare *
 
 void StoreSelectedPokemonInDaycare(void)
 {
-    u8 monId = GetCursorSelectionMonId();
-    if(gSpecialVar_MonBoxId == 0xFF)
+    if (gSpecialVar_MonBoxId == 0xFF)
     {
-        StorePokemonInEmptyDaycareSlot(&gPlayerParty[monId], &gSaveBlock1Ptr->daycare);
+        StorePokemonInEmptyDaycareSlot(&gPlayerParty[GetCursorSelectionMonId()], &gSaveBlock1Ptr->daycare);
+    }
+    else if (gSpecialVar_MonBoxId == TOTAL_BOXES_COUNT) // Selected party mon from PC
+    {
+        StorePokemonInEmptyDaycareSlot(&gPlayerParty[gSpecialVar_MonBoxPos], &gSaveBlock1Ptr->daycare);
     }
     else
     {
@@ -1261,6 +1264,11 @@ u16 GetSelectedMonNicknameAndSpecies(void)
     {
         GetBoxMonNickname(&gPlayerParty[GetCursorSelectionMonId()].box, gStringVar1);
         return GetBoxMonData(&gPlayerParty[GetCursorSelectionMonId()].box, MON_DATA_SPECIES);
+    }
+    else if (gSpecialVar_MonBoxId == TOTAL_BOXES_COUNT) // Selected party mon from PC
+    {
+        GetBoxMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos].box, gStringVar1);
+        return GetBoxMonData(&gPlayerParty[gSpecialVar_MonBoxPos].box, MON_DATA_SPECIES);
     }
     else
     {

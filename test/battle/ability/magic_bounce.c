@@ -1,7 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 
-
 SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves")
 {
     GIVEN {
@@ -17,6 +16,46 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves")
         MESSAGE("Wynaut's Toxic was bounced back by the opposing Espeon's Magic Bounce!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
         STATUS_ICON(player, badPoison: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Magic Bounce wont activate if ability user protects")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_TOXIC); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
+            STATUS_ICON(player, badPoison: TRUE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Magic Bounce wont activate if ability user is in a semi-invulnerable position")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DIG) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DIG); MOVE(player, MOVE_TOXIC); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
+            STATUS_ICON(player, badPoison: TRUE);
+        }
     }
 }
 
