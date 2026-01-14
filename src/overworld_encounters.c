@@ -170,7 +170,8 @@ void UpdateOverworldEncounters(void)
     object->sOverworldEncounterLevel = level;
     object->sRoamerOutbreakStatus = indexRoamerOutbreak;
 
-    u8 directions[4] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
+    u8 directions[4];
+    memcpy(directions, gStandardDirections, sizeof directions);
     ObjectEventTurn(object, directions[Random() & 3]);
 
     // Hide reflections for spawns in water
