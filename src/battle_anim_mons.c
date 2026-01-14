@@ -813,8 +813,6 @@ bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool
 
 bool8 IsBattlerSpritePresent(u8 battler)
 {
-    if (GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES) == SPECIES_NONE)
-        return FALSE;
     if (IsContest())
     {
         if (gBattleAnimAttacker == battler)
@@ -831,6 +829,10 @@ bool8 IsBattlerSpritePresent(u8 battler)
 
         if (gBattleStruct->battlerState[battler].fainted)
             return FALSE;
+
+        if (gAbsentBattlerFlags & 1u << battler)
+            return FALSE;
+        
         return TRUE;
     }
 }

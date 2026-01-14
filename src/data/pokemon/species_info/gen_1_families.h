@@ -4078,7 +4078,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .abilities = { ABILITY_STATIC, ABILITY_NONE, ABILITY_LIGHTNING_ROD },
         .bodyColor = BODY_COLOR_YELLOW,
         .speciesName = _("Raichu"),
-        .cryId = CRY_RAICHU, // CRY_RAICHU_MEGA_X
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_RAICHU_MEGA_X,
+    #else
+        .cryId = CRY_RAICHU,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_RAICHU,
         .categoryName = _("Mouse"),
         .height = 12,
@@ -4134,7 +4138,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .abilities = { ABILITY_STATIC, ABILITY_NONE, ABILITY_LIGHTNING_ROD },
         .bodyColor = BODY_COLOR_YELLOW,
         .speciesName = _("Raichu"),
-        .cryId = CRY_RAICHU, // CRY_RAICHU_MEGA_Y
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_RAICHU_MEGA_Y,
+    #else
+        .cryId = CRY_RAICHU,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_RAICHU,
         .categoryName = _("Mouse"),
         .height = 10,
@@ -5172,7 +5180,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .abilities = { ABILITY_CUTE_CHARM, ABILITY_MAGIC_GUARD, ABILITY_UNAWARE },
         .bodyColor = BODY_COLOR_PINK,
         .speciesName = _("Clefable"),
-        .cryId = CRY_CLEFABLE, // CRY_CLEFABLE_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_CLEFABLE_MEGA,
+    #else
+        .cryId = CRY_CLEFABLE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_CLEFABLE,
         .categoryName = _("Fairy"),
         .height = 17,
@@ -9363,7 +9375,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .bodyColor = BODY_COLOR_GREEN,
         .noFlip = TRUE,
         .speciesName = _("Victreebel"),
-        .cryId = CRY_VICTREEBEL, // CRY_VICTREEBEL_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_VICTREEBEL_MEGA,
+    #else
+        .cryId = CRY_VICTREEBEL,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_VICTREEBEL,
         .categoryName = _("Flycatcher"),
         .height = 45,
@@ -15795,7 +15811,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .abilities = { ABILITY_ILLUMINATE, ABILITY_NATURAL_CURE, ABILITY_ANALYTIC },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Starmie"),
-        .cryId = CRY_STARMIE, // CRY_STARMIE_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_STARMIE_MEGA,
+    #else
+        .cryId = CRY_STARMIE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_STARMIE,
         .categoryName = _("Mysterious"),
         .height = 23,
@@ -20337,7 +20357,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .abilities = { ABILITY_INNER_FOCUS, ABILITY_NONE, ABILITY_MULTISCALE },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Dragonite"),
-        .cryId = CRY_DRAGONITE, // CRY_DRAGONITE_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_DRAGONITE_MEGA,
+    #else
+        .cryId = CRY_DRAGONITE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_DRAGONITE,
         .categoryName = _("Dragon"),
         .height = 22,

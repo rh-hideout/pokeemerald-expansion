@@ -856,6 +856,9 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
             switch (additionalEffect->moveEffect)
             {
+            case MOVE_EFFECT_BREAK_SCREEN:
+                baseFromEffect += 1;
+                break;
             case MOVE_EFFECT_THRASH:
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 3;
@@ -1287,7 +1290,7 @@ static void TrySetBattleSeminarShow(void)
             ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
             dmgByMove[i] = CalculateMoveDamage(&ctx);
-            if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+            if (dmgByMove[i] == 0 && !IsBattlerUnaffectedByMove(gBattlerTarget))
                 dmgByMove[i] = 1;
         }
     }

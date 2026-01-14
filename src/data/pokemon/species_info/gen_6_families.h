@@ -235,7 +235,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_BULLETPROOF },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Chesnaught"),
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_CHESNAUGHT_MEGA,
+    #else
         .cryId = CRY_CHESNAUGHT,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_CHESNAUGHT,
         .categoryName = _("Spiny Armor"),
         .height = 16,
@@ -505,7 +509,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_BLAZE, ABILITY_NONE, ABILITY_MAGICIAN },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Delphox"),
-        .cryId = CRY_DELPHOX, // CRY_DELPHOX_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_DELPHOX_MEGA,
+    #else
+        .cryId = CRY_DELPHOX,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_DELPHOX,
         .categoryName = _("Fox"),
         .height = 15,
@@ -897,7 +905,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .bodyColor = BODY_COLOR_BLUE,
         .noFlip = TRUE,
         .speciesName = _("Greninja"),
-        .cryId = CRY_GRENINJA, // CRY_GRENINJA_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_GRENINJA_MEGA,
+    #else
+        .cryId = CRY_GRENINJA,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_GRENINJA,
         .categoryName = _("Ninja"),
         .height = 15,
@@ -1887,7 +1899,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_RIVALRY, ABILITY_UNNERVE, ABILITY_MOXIE },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Pyroar"),
-        .cryId = CRY_PYROAR, // CRY_PYROAR_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_PYROAR_MEGA,
+    #else
+        .cryId = CRY_PYROAR,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_PYROAR,
         .categoryName = _("Royal"),
         .height = 15,
@@ -2301,7 +2317,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_FLOWER_VEIL, ABILITY_NONE, ABILITY_SYMBIOSIS },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Floette"),
-        .cryId = CRY_FLOETTE_ETERNAL, // CRY_FLOETTE_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_FLOETTE_MEGA,
+    #else
+        .cryId = CRY_FLOETTE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_FLOETTE,
         .categoryName = _("Single Bloom"),
         // height
@@ -2921,7 +2941,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_KEEN_EYE, ABILITY_INFILTRATOR, ABILITY_PRANKSTER },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Meowstic"),
-        .cryId = CRY_MEOWSTIC, //CRY_MEOWSTIC_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_MEOWSTIC_MEGA,
+    #else
+        .cryId = CRY_MEOWSTIC,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_MEOWSTIC,
         .categoryName = _("Constraint"),
         .height = 8,
@@ -2974,7 +2998,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_KEEN_EYE, ABILITY_INFILTRATOR, ABILITY_COMPETITIVE },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Meowstic"),
-        .cryId = CRY_MEOWSTIC, //CRY_MEOWSTIC_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_MEOWSTIC_MEGA,
+    #else
+        .cryId = CRY_MEOWSTIC,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_MEOWSTIC,
         .categoryName = _("Constraint"),
         .height = 8,
@@ -3746,7 +3774,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_CONTRARY, ABILITY_SUCTION_CUPS, ABILITY_INFILTRATOR },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Malamar"),
-        .cryId = CRY_MALAMAR, // CRY_MALAMAR_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_MALAMAR_MEGA,
+    #else
+        .cryId = CRY_MALAMAR,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_MALAMAR,
         .categoryName = _("Overturning"),
         .height = 29,
@@ -3945,7 +3977,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .bodyColor = BODY_COLOR_BROWN,
         .noFlip = TRUE,
         .speciesName = _("Barbaracle"),
-        .cryId = CRY_BARBARACLE, // CRY_BARBARACLE_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_BARBARACLE_MEGA,
+    #else
+        .cryId = CRY_BARBARACLE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_BARBARACLE,
         .categoryName = _("Collective"),
         .height = 22,
@@ -4145,7 +4181,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_POISON_POINT, ABILITY_POISON_TOUCH, ABILITY_ADAPTABILITY },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Dragalge"),
-        .cryId = CRY_DRAGALGE, // CRY_DRAGALGE_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_DRAGALGE_MEGA,
+    #else
+        .cryId = CRY_DRAGALGE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_DRAGALGE,
         .categoryName = _("Mock Kelp"),
         .height = 21,
@@ -4847,7 +4887,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .abilities = { ABILITY_LIMBER, ABILITY_UNBURDEN, ABILITY_MOLD_BREAKER },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Hawlucha"),
-        .cryId = CRY_HAWLUCHA, // CRY_HAWLUCHA_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_HAWLUCHA_MEGA,
+    #else
+        .cryId = CRY_HAWLUCHA,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_HAWLUCHA,
         .categoryName = _("Wrestling"),
         .height = 10,
@@ -7051,7 +7095,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .bodyColor = BODY_COLOR_BLACK,
         .noFlip = TRUE,
         .speciesName = _("Zygarde"),
-        .cryId = CRY_ZYGARDE_COMPLETE, // CRY_ZYGARDE_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_ZYGARDE_MEGA,
+    #else
+        .cryId = CRY_ZYGARDE_COMPLETE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_ZYGARDE,
         .categoryName = _("Order"),
         .height = 77,

@@ -5267,7 +5267,11 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .abilities = { ABILITY_BATTLE_ARMOR, ABILITY_NONE, ABILITY_DEFIANT },
         .bodyColor = BODY_COLOR_YELLOW,
         .speciesName = _("Falinks"),
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_FALINKS_MEGA,
+    #else
         .cryId = CRY_FALINKS,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_FALINKS,
         .categoryName = _("Formation"),
         .height = 16,

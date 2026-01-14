@@ -955,7 +955,11 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .abilities = { ABILITY_INTIMIDATE, ABILITY_NONE, ABILITY_RECKLESS },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Staraptor"),
-        .cryId = CRY_STARAPTOR, //CRY_STARAPTOR_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_STARAPTOR_MEGA,
+    #else
+        .cryId = CRY_STARAPTOR,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_STARAPTOR,
         .categoryName = _("Predator"),
         .height = 19,
@@ -4538,7 +4542,11 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .abilities = { ABILITY_SAND_VEIL, ABILITY_NONE, ABILITY_ROUGH_SKIN },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Garchomp"),
-        .cryId = CRY_GARCHOMP, //CRY_GARCHOMP_MEGA_Z
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_GARCHOMP, //CRY_GARCHOMP_MEGA_Z (unreleased)
+    #else
+        .cryId = CRY_GARCHOMP,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_GARCHOMP,
         .categoryName = _("Mach"),
         .height = 19,
@@ -4810,7 +4818,11 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .abilities = { ABILITY_STEADFAST, ABILITY_INNER_FOCUS, ABILITY_JUSTIFIED },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Lucario"),
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_LUCARIO_MEGA_Z,
+    #else
         .cryId = CRY_LUCARIO,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_LUCARIO,
         .categoryName = _("Aura"),
         .height = 13,
@@ -6961,7 +6973,11 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .abilities = { ABILITY_FLASH_FIRE, ABILITY_NONE, ABILITY_FLAME_BODY },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Heatran"),
-        .cryId = CRY_HEATRAN, //CRY_HEATRAN_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_HEATRAN_MEGA,
+    #else
+        .cryId = CRY_HEATRAN,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_HEATRAN,
         .categoryName = _("Lava Dome"),
         .height = 28,
@@ -7581,7 +7597,11 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .abilities = { ABILITY_BAD_DREAMS, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Darkrai"),
-        .cryId = CRY_DARKRAI, //CRY_DARKRAI_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_DARKRAI_MEGA,
+    #else
+        .cryId = CRY_DARKRAI,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_DARKRAI,
         .categoryName = _("Pitch-Black"),
         .height = 30,
