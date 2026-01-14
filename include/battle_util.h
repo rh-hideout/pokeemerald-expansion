@@ -118,6 +118,7 @@ enum MoveSuccessOrder
     CANCELER_THAW,
     CANCELER_STANCE_CHANGE_2,
     CANCELER_ATTACKSTRING,
+    CANCELER_DETERMINE_TARGET,
     CANCELER_PPDEDUCTION,
     CANCELER_SKY_BATTLE,
     CANCELER_WEATHER_PRIMAL,
@@ -242,7 +243,7 @@ u32 GetCurrentBattleWeather(void);
 bool32 EndOrContinueWeather(void);
 bool32 IsUnnerveBlocked(u32 battler, u32 itemId);
 bool32 IsAffectedByFollowMe(u32 battlerAtk, enum BattleSide defSide, enum Move move);
-void DetermineTarget(enum MoveTarget moveTarget, bool32 overwriteTarget);
+void HandleMoveTargetRedirection(enum MoveTarget moveTarget);
 void HandleAction_UseMove(void);
 void HandleAction_Switch(void);
 void HandleAction_UseItem(void);
