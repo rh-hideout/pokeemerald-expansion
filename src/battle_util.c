@@ -12220,7 +12220,7 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
         return TRUE;
     }
 
-    u32 lands = NO_HIT;
+    enum OHKOResult lands = NO_HIT;
 
     if (gBattleMons[cv->battlerDef].level > gBattleMons[cv->battlerAtk].level)
     {

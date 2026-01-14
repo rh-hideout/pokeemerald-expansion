@@ -1098,18 +1098,14 @@ void Environment_(u32 sourceLine, u32 environment);
 
 static inline bool8 IsMultibattleTest(void)
 {
-    if (TESTING)
+    #if TESTING
     {
         if (((gBattleTypeFlags & BATTLE_MULTI_TEST) == BATTLE_MULTI_TEST)
-        || ((gBattleTypeFlags & BATTLE_TWO_VS_ONE_TEST) == BATTLE_TWO_VS_ONE_TEST))
+         || ((gBattleTypeFlags & BATTLE_TWO_VS_ONE_TEST) == BATTLE_TWO_VS_ONE_TEST))
             return TRUE;
-        else
-            return FALSE;
     }
-    else
-    {
-        return FALSE;
-    }
+    #endif
+    return FALSE;
 }
 
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.

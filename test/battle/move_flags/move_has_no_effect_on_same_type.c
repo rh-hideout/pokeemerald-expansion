@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(MoveHasNoEffectOnSameType(MOVE_SHEER_COLD));
 }
 
-SINGLE_BATTLE_TEST("Sheer Cold doesn't affect Ice-type Pokémon (Gen3-6)")
+SINGLE_BATTLE_TEST("Sheer Cold does affect Ice-type Pokémon (Gen3-6)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_SHEER_COLD_IMMUNITY, GEN_6);
