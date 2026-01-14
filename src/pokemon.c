@@ -7117,7 +7117,7 @@ bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method)
         && battlePartyState != NULL && battlePartyState->changedSpecies != SPECIES_NONE
         // This is added to prevent FORM_CHANGE_END_BATTLE_ENVIRONMENT from omitting move changes
         // at the end of the battle, as it was being counting as a successful form change.
-        && method == FORM_CHANGE_END_BATTLE)
+        && (method == FORM_CHANGE_END_BATTLE || method == FORM_CHANGE_FAINT))
     {
         targetSpecies = battlePartyState->changedSpecies;
     }

@@ -9979,7 +9979,25 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method, enum Ability ab
         return FALSE;
 
     targetSpecies = GetBattleFormChangeTargetSpecies(battler, method, ability);
-    if (targetSpecies != currentSpecies && targetSpecies != SPECIES_NONE)
+
+    struct PartyState *battlePartyState = GetBattlerPartyState(battler);
+    // If the battle ends, and there's not a specified species to change back to,
+    // use the species at the start of the battle.
+    if (targetSpecies == SPECIES_NONE
+        && battlePartyState != NULL && battlePartyState->changedSpecies != SPECIES_NONE
+        // This is added to prevent FORM_CHANGE_END_BATTLE_ENVIRONMENT from omitting move changes
+        // at the end of the battle, as it was being counting as a successful form change.
+        && (method == FORM_CHANGE_END_BATTLE || method == FORM_CHANGE_FAINT))
+    {
+        targetSpecies = battlePartyState->changedSpecies;
+    }
+
+    assertf(targetSpecies != SPECIES_NONE, "form change target returned NONE. cur:%d, method:%d", currentSpecies, method)
+    {
+        return FALSE;
+    }
+
+    if (targetSpecies != currentSpecies)
     {
         // Saves the original species on the first form change.
         if (GetBattlerPartyState(battler)->changedSpecies == SPECIES_NONE)
