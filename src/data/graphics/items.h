@@ -1975,3 +1975,10 @@ const u16 gItemIconPalette_SwapSnack[] = INCBIN_U16("graphics/items/icon_palette
 
 const u32 gItemIcon_TwiceSpicedRadish[] = INCBIN_U32("graphics/items/icons/twice_spiced_radish.4bpp.smol");
 const u16 gItemIconPalette_TwiceSpicedRadish[] = INCBIN_U16("graphics/items/icon_palettes/twice_spiced_radish.gbapal");
+
+const u32 gItemIcon_Leaf[] = INCBIN_U32("graphics/items/icons/leaf.4bpp.smol");
+const u16 gItemIconPalette_SilverLeaf[] = INCBIN_U16("graphics/items/icon_palettes/silver_leaf.gbapal");
+const u16 gItemIconPalette_GoldLeaf[] = INCBIN_U16("graphics/items/icon_palettes/gold_leaf.gbapal");
+
+const u32 gItemIcon_SlowpokeTail[] = INCBIN_U32("graphics/items/icons/slowpoke_tail.4bpp.smol");
+const u16 gItemIconPalette_SlowpokeTail[] = INCBIN_U16("graphics/items/icon_palettes/slowpoke_tail.gbapal");

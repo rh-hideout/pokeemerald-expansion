@@ -1043,7 +1043,12 @@
 #define ITEM_TATSUGIRINITE 872
 #define ITEM_GLIMMORANITE 873
 
-#define ITEMS_COUNT 874
+#define ITEM_SILVER_LEAF 874
+#define ITEM_GOLD_LEAF 875
+#define ITEM_SLOWPOKE_TAIL 876
+#define ITEM_SLOWPOKETAIL ITEM_SLOWPOKE_TAIL // Gen II name
+
+#define ITEMS_COUNT 877
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations
