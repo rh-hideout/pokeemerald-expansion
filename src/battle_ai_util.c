@@ -554,6 +554,11 @@ bool32 Ai_IsPriorityBlocked(u32 battlerAtk, u32 battlerDef, enum Move move, stru
     return FALSE;
 }
 
+bool32 AI_CanMoveBeBlockedByTarget(struct BattleContext *ctx)
+{
+    return CanMoveBeBlockedByTarget(ctx, GetBattleMovePriority(ctx->battlerAtk, ctx->abilityAtk, ctx->move));
+}
+
 // This function checks if all physical/special moves are either unusable or unreasonable to use.
 // Consider a pokemon boosting their attack against a ghost pokemon having only normal-type physical attacks.
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category)
@@ -568,8 +573,8 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory c
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = gAiLogicData->abilities[attacker];
     ctx.abilityDef = gAiLogicData->abilities[target];
-    ctx.holdEffectAtk = gAiLogicData->items[attacker];
-    ctx.holdEffectDef = gAiLogicData->items[target];
+    ctx.holdEffectAtk = gAiLogicData->holdEffects[attacker];
+    ctx.holdEffectDef = gAiLogicData->holdEffects[target];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -652,16 +657,17 @@ bool32 IsDamageMoveUnusable(struct BattleContext *ctx)
     if (Ai_IsPriorityBlocked(ctx->battlerAtk, ctx->battlerDef, ctx->move, aiData))
         return TRUE;
 
-    if (CanAbilityBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, battlerDefAbility, ctx->move, AI_CHECK))
-        return TRUE;
-
-    if (CanAbilityAbsorbMove(ctx->battlerAtk, ctx->battlerDef, battlerDefAbility, ctx->move, ctx->moveType, AI_CHECK))
+    if (AI_CanMoveBeBlockedByTarget(ctx))
         return TRUE;
 
     // Limited to Lighning Rod and Storm Drain because otherwise the AI would consider Water Absorb, etc...
     if (partnerDefAbility == ABILITY_LIGHTNING_ROD || partnerDefAbility == ABILITY_STORM_DRAIN)
     {
-        if (CanAbilityAbsorbMove(ctx->battlerAtk, BATTLE_PARTNER(ctx->battlerDef), partnerDefAbility, ctx->move, ctx->moveType, AI_CHECK))
+        u32 originalTarget = ctx->battlerDef; // Need to preserve origin target;
+        ctx->battlerDef = BATTLE_PARTNER(ctx->battlerDef);
+        bool32 canAbilityAbsorbMove = CanAbilityAbsorbMove(ctx);
+        ctx->battlerDef = originalTarget;
+        if (canAbilityAbsorbMove)
             return TRUE;
     }
 
@@ -1413,8 +1419,8 @@ uq4_12_t AI_GetMoveEffectiveness(enum Move move, u32 battlerAtk, u32 battlerDef)
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
     ctx.abilityDef = gAiLogicData->abilities[battlerDef];
-    ctx.holdEffectAtk = gAiLogicData->items[battlerAtk];
-    ctx.holdEffectDef = gAiLogicData->items[battlerDef];
+    ctx.holdEffectAtk = gAiLogicData->holdEffects[battlerAtk];
+    ctx.holdEffectDef = gAiLogicData->holdEffects[battlerDef];
     typeEffectiveness = CalcTypeEffectivenessMultiplier(&ctx);
 
     RestoreBattlerData(battlerAtk);
@@ -2939,7 +2945,6 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
 {
     switch (effect)
     {
-    case EFFECT_ATTACK_UP_USER_ALLY:
     case EFFECT_ATTACK_UP:
     case EFFECT_ATTACK_UP_2:
     case EFFECT_DEFENSE_UP:
@@ -6300,6 +6305,7 @@ bool32 ShouldInstructPartner(u32 partner, enum Move move)
     case TARGET_RANDOM:
     case TARGET_BOTH:
     case TARGET_FOES_AND_ALLY:
+    case TARGET_USER_AND_ALLY:
     case TARGET_OPPONENTS_FIELD:
         return TRUE;
     default:
