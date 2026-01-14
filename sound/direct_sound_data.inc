@@ -1849,6 +1849,10 @@ Cry_Ursaring::
 	.align 2
 Cry_Ursaluna::
 	.incbin "sound/direct_sound_samples/cries/ursaluna.bin"
+
+	.align 2
+Cry_UrsalunaBloodmoon::
+	.incbin "sound/direct_sound_samples/cries/ursaluna_bloodmoon.bin"
 .endif @ P_GEN_8_CROSS_EVOS
 .endif @ P_FAMILY_TEDDIURSA
 
@@ -4442,7 +4446,7 @@ Cry_Goodra::
 .if P_FAMILY_KLEFKI == TRUE
 	.align 2
 Cry_Klefki::
-	.incbin "sound/direct_sound_samples/cries/uncomp_klefki.bin"
+	.incbin "sound/direct_sound_samples/cries/klefki.bin"
 .endif @ P_FAMILY_KLEFKI
 
 .if P_FAMILY_PHANTUMP == TRUE
@@ -4644,7 +4648,7 @@ Cry_OricorioBaile::
 
 	.align 2
 Cry_OricorioPomPom::
-	.incbin "sound/direct_sound_samples/cries/uncomp_oricorio_pom_pom.bin"
+	.incbin "sound/direct_sound_samples/cries/oricorio_pom_pom.bin"
 
 	.align 2
 Cry_OricorioPau::
@@ -5232,6 +5236,10 @@ Cry_Sandaconda::
 	.align 2
 Cry_Cramorant::
 	.incbin "sound/direct_sound_samples/cries/cramorant.bin"
+
+	.align 2
+Cry_CramorantGulping::
+	.incbin "sound/direct_sound_samples/cries/cramorant_gulping.bin"
 .endif @ P_FAMILY_CRAMORANT
 
 .if P_FAMILY_ARROKUDA == TRUE
@@ -5357,21 +5365,21 @@ Cry_Stonjourner::
 .if P_FAMILY_EISCUE == TRUE
 	.align 2
 Cry_EiscueIce::
-	.incbin "sound/direct_sound_samples/cries/eiscue_ice_face.bin"
+	.incbin "sound/direct_sound_samples/cries/eiscue_ice.bin"
 
 	.align 2
 Cry_EiscueNoice::
-	.incbin "sound/direct_sound_samples/cries/eiscue_noice_face.bin"
+	.incbin "sound/direct_sound_samples/cries/eiscue_noice.bin"
 .endif @ P_FAMILY_EISCUE
 
 .if P_FAMILY_INDEEDEE == TRUE
 	.align 2
 Cry_IndeedeeM::
-	.incbin "sound/direct_sound_samples/cries/indeedee_male.bin"
+	.incbin "sound/direct_sound_samples/cries/indeedee_m.bin"
 
 	.align 2
 Cry_IndeedeeF::
-	.incbin "sound/direct_sound_samples/cries/indeedee_female.bin"
+	.incbin "sound/direct_sound_samples/cries/indeedee_f.bin"
 .endif @ P_FAMILY_INDEEDEE
 
 .if P_FAMILY_MORPEKO == TRUE
@@ -5445,21 +5453,21 @@ Cry_Dragapult::
 .if P_FAMILY_ZACIAN == TRUE
 	.align 2
 Cry_ZacianHero::
-	.incbin "sound/direct_sound_samples/cries/zacian_hero_of_many_battles.bin"
+	.incbin "sound/direct_sound_samples/cries/zacian_hero.bin"
 
 	.align 2
 Cry_ZacianCrowned::
-	.incbin "sound/direct_sound_samples/cries/zacian_crowned_sword.bin"
+	.incbin "sound/direct_sound_samples/cries/zacian_crowned.bin"
 .endif @ P_FAMILY_ZACIAN
 
 .if P_FAMILY_ZAMAZENTA == TRUE
 	.align 2
 Cry_ZamazentaHero::
-	.incbin "sound/direct_sound_samples/cries/zamazenta_hero_of_many_battles.bin"
+	.incbin "sound/direct_sound_samples/cries/zamazenta_hero.bin"
 
 	.align 2
 Cry_ZamazentaCrowned::
-	.incbin "sound/direct_sound_samples/cries/zamazenta_crowned_shield.bin"
+	.incbin "sound/direct_sound_samples/cries/zamazenta_crowned.bin"
 .endif @ P_FAMILY_ZAMAZENTA
 
 .if P_FAMILY_ETERNATUS == TRUE
@@ -5837,10 +5845,6 @@ Cry_Finizen::
 	.incbin "sound/direct_sound_samples/cries/finizen.bin"
 
 	.align 2
-Cry_PalafinZero::
-	.incbin "sound/direct_sound_samples/cries/palafin_zero.bin"
-
-	.align 2
 Cry_PalafinHero::
 	.incbin "sound/direct_sound_samples/cries/palafin_hero.bin"
 .endif @ P_FAMILY_FINIZEN
@@ -6017,8 +6021,12 @@ Cry_Baxcalibur::
 
 .if P_FAMILY_GIMMIGHOUL == TRUE
 	.align 2
-Cry_Gimmighoul::
-	.incbin "sound/direct_sound_samples/cries/gimmighoul.bin"
+Cry_GimmighoulChest::
+	.incbin "sound/direct_sound_samples/cries/gimmighoul_chest.bin"
+
+	.align 2
+Cry_GimmighoulRoaming::
+	.incbin "sound/direct_sound_samples/cries/gimmighoul_roaming.bin"
 
 	.align 2
 Cry_Gholdengo::
