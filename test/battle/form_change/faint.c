@@ -69,3 +69,46 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon fainting after terastallizing")
+{
+    u32 species;
+    PARAMETRIZE { species = SPECIES_OGERPON_TEAL; }
+    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING; }
+    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; }
+    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; }
+    GIVEN {
+        PLAYER(species) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, species);
+    }
+}
+
+SINGLE_BATTLE_TEST("Terapagos reverts to the correct form upon fainting after terastallizing")
+{
+    GIVEN {
+        PLAYER(SPECIES_TERAPAGOS_NORMAL) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_MEMENTO, gimmick: GIMMICK_TERA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_TERAPAGOS_TERASTAL); // Not Normal form due to Tera Shift
+    }
+}
