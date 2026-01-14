@@ -851,8 +851,8 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         // User recoil damage
         if (GetMoveRecoil(move) > 0)
             baseFromEffect++;
-        // Explosion move (previously EFFECT_EXPLOSION)
-        if (IsExplosionMove(move))
+        // // Explosion moves get 0 points in vanilla, so we deduct here from EFFECT_HIT's score of 1
+        if (IsExplosionMove(move) && baseFromEffect > 0)
             baseFromEffect--;
 
         // Additional move effects in any move
