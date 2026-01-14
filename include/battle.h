@@ -128,14 +128,13 @@ struct SpecialStatus
     u8 afterYou:1;
     u8 damagedByAttack:1;
     u8 dancerUsedMove:1;
-    u8 rototillerAffected:1;  // to be affected by rototiller
-    // End of byte
     u8 criticalHit:1;
+    // End of byte
     u8 instructedChosenTarget:3;
+    u8 neutralizingGasRemoved:1;
     u8 berryReduced:1;
-    u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
     u8 mindBlownRecoil:1;
-    u8 padding2:1;
+    u8 padding2:2;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
@@ -540,7 +539,7 @@ struct PartyState
     u32 timesGotHit:5;
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
     u32 sentOut:1;
-    u32 knockedOffItem;
+    u32 isKnockedOff:1;
     u32 padding:8;
     u16 usedHeldItem;
 };
@@ -557,6 +556,7 @@ struct EventStates
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
     enum MoveSuccessOrder atkCanceler:8;
+    enum BattlerId atkCancelerBattler:4;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;
     u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
@@ -621,7 +621,6 @@ struct BattleStruct
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 unused:4;
-    u8 sortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
@@ -682,7 +681,7 @@ struct BattleStruct
     u8 beatUpSlot:3;
     u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
-    u8 spriteIgnore0Hp:1;
+    u8 padding3:1;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
@@ -703,14 +702,12 @@ struct BattleStruct
     s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
     s16 moveDamage[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
-    u8 missStringId[MAX_BATTLERS_COUNT];
     enum CalcDamageState noResultString[MAX_BATTLERS_COUNT];
     u8 doneDoublesSpreadHit:1;
     u8 calculatedDamageDone:1;
     u8 calculatedSpreadMoveAccuracy:1;
     u8 printedStrongWindsWeakenedAttack:1;
-    u8 numSpreadTargets:2;
-    u8 noTargetPresent:1;
+    u8 numSpreadTargets:3;
     u8 moldBreakerActive:1;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
@@ -723,7 +720,11 @@ struct BattleStruct
     u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
-    u8 padding4:4;
+    u8 preAttackAnimPlayed:1;
+    u8 padding4:1;
+    u8 magicCoatActive:1;
+    u8 magicBounceActive:1;
+    u8 moveBouncer;
 };
 
 struct AiBattleData
@@ -1095,12 +1096,12 @@ static inline bool32 IsBattlerAtMaxHp(u32 battler)
     return gBattleMons[battler].hp == gBattleMons[battler].maxHP;
 }
 
-static inline u32 GetBattlerPosition(u32 battler)
+static inline enum BattlerPosition GetBattlerPosition(u32 battler)
 {
     return gBattlerPositions[battler];
 }
 
-static inline u32 GetBattlerAtPosition(u32 position)
+static inline u32 GetBattlerAtPosition(enum BattlerPosition position)
 {
     u32 battler;
     for (battler = 0; battler < gBattlersCount; battler++)
@@ -1172,20 +1173,6 @@ static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
     if (!IsDoubleBattle())
         return FALSE;
     return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
-}
-
-static inline bool32 IsDoubleSpreadMove(void)
-{
-    return gBattleStruct->numSpreadTargets > 1
-        && !gBattleStruct->unableToUseMove
-        && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
-}
-
-static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef, enum MoveTarget moveTarget)
-{
-    return battlerDef == battlerAtk
-        || !IsBattlerAlive(battlerDef)
-        || (battlerDef == BATTLE_PARTNER(battlerAtk) && moveTarget == TARGET_BOTH);
 }
 
 static inline u32 GetChosenMoveFromPosition(u32 battler)

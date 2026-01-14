@@ -334,7 +334,7 @@ void CreateBattlerSprite(u32 battler)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && battler == B_POSITION_PLAYER_LEFT)
         {
-            SetMultiuseSpriteTemplateToTrainerBack(IS_FRLG ? TRAINER_PIC_BACK_OLD_MAN : TRAINER_PIC_BACK_WALLY, GetBattlerPosition(0));
+            SetMultiuseSpriteTemplateToTrainerBack(IS_FRLG ? TRAINER_PIC_BACK_OLD_MAN : TRAINER_PIC_BACK_WALLY, GetBattlerPosition(B_POSITION_PLAYER_LEFT));
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
                                                 (8 - gTrainerBacksprites[IS_FRLG ? TRAINER_PIC_BACK_OLD_MAN :TRAINER_PIC_BACK_WALLY].coordinates.size) * 4 + 80,
                                                  GetBattlerSpriteSubpriority(0));

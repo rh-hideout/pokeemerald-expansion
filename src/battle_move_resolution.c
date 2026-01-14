@@ -101,7 +101,7 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
     // Not strictly a protect effect, but works the same way
     if (IsBattlerUsingBeakBlast(gBattlerTarget)
      && CanBeBurned(gBattlerAttacker, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
-     && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+     && !IsBattlerUnaffectedByMove(gBattlerTarget))
     {
         gBattleMons[gBattlerAttacker].status1 = STATUS1_BURN;
         BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].status1), &gBattleMons[gBattlerAttacker].status1);
@@ -288,7 +288,7 @@ static enum MoveEndResult MoveEnd_AttackerVisible(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
 
-    if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT
+    if (IsBattlerUnaffectedByMove(gBattlerTarget)
         || !IsSemiInvulnerable(gBattlerAttacker, CHECK_ALL)
         || gBattleStruct->unableToUseMove)
     {
@@ -399,7 +399,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
              && IsBattlerAlive(gBattlerAttacker)
              && !gBattleStruct->unableToUseMove
              && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
-             && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+             && !IsBattlerUnaffectedByMove(gBattlerTarget))
             {
                 BattleScriptCall(BattleScript_FinalGambit);
                 result = MOVEEND_STEP_RUN_SCRIPT;
@@ -470,7 +470,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
             {
                 if (gBattleResults.opponentFaintCounter < 255)
                     gBattleResults.opponentFaintCounter++;
-                gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_SPECIES, NULL);
+                gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_SPECIES);
                 gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
             }
             BattleScriptCall(BattleScript_FaintBattler);
@@ -619,7 +619,7 @@ static enum MoveEndResult MoveEnd_UpdateLastMoves(void)
         if (!(gHitMarker & HITMARKER_FAINTED(gBattlerTarget)))
             gLastHitBy[gBattlerTarget] = gBattlerAttacker;
 
-        if (!gBattleStruct->unableToUseMove && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+        if (!gBattleStruct->unableToUseMove && !IsBattlerUnaffectedByMove(gBattlerTarget))
         {
             if (gChosenMove == MOVE_UNAVAILABLE)
             {
@@ -654,7 +654,7 @@ static enum MoveEndResult MoveEnd_MirrorMove(void)
      && IsBattlerAlive(gBattlerAttacker)
      && IsBattlerAlive(gBattlerTarget)
      && !IsMoveMirrorMoveBanned(GetOriginallyUsedMove(gChosenMove))
-     && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+     && !IsBattlerUnaffectedByMove(gBattlerTarget))
     {
         gBattleStruct->lastTakenMove[gBattlerTarget] = gChosenMove;
         gBattleStruct->lastTakenMoveFrom[gBattlerTarget][gBattlerAttacker] = gChosenMove;
@@ -673,7 +673,7 @@ static enum MoveEndResult MoveEnd_Defrost(void)
         && IsBattlerAlive(gBattlerTarget)
         && gBattlerAttacker != gBattlerTarget
         && (GetBattleMoveType(gCurrentMove) == TYPE_FIRE || CanBurnHitThaw(gCurrentMove))
-        && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+        && !IsBattlerUnaffectedByMove(gBattlerTarget))
     {
         gBattleMons[gBattlerTarget].status1 &= ~STATUS1_FREEZE;
         BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].status1), &gBattleMons[gBattlerTarget].status1);
@@ -686,7 +686,7 @@ static enum MoveEndResult MoveEnd_Defrost(void)
           && IsBattlerAlive(gBattlerTarget)
           && gBattlerAttacker != gBattlerTarget
           && MoveThawsUser(GetOriginallyUsedMove(gChosenMove))
-          && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+          && !IsBattlerUnaffectedByMove(gBattlerTarget))
     {
         gBattleMons[gBattlerTarget].status1 &= ~STATUS1_FROSTBITE;
         BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].status1), &gBattleMons[gBattlerTarget].status1);
@@ -704,9 +704,25 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
     gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
-    if (!gBattleStruct->unableToUseMove
-     && IsSpreadMove(moveTarget)
-     && !gProtectStructs[gBattlerAttacker].chargingTurn)
+
+    if (gBattleStruct->unableToUseMove || gProtectStructs[gBattlerAttacker].chargingTurn)
+    {
+        // unable to use move
+    }
+    else if (moveTarget == TARGET_USER_AND_ALLY)
+    {
+        u32 partner = BATTLE_PARTNER(gBattlerAttacker);
+        if (partner != gBattlerTarget && IsBattlerAlive(partner))
+        {
+            gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = partner;
+            BattleScriptPush(GetMoveBattleScript(gCurrentMove));
+            gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
+            gBattleScripting.moveendState = 0;
+            MoveValuesCleanUp();
+            return MOVEEND_STEP_BREAK;
+        }
+    }
+    else if (IsSpreadMove(moveTarget))
     {
         u32 nextTarget = GetNextTarget(moveTarget, FALSE);
 
@@ -719,10 +735,7 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
             enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
             // Edge cases for moves that shouldn't repeat their own script
-            if (IsExplosionMove(gCurrentMove)
-             || moveEffect == EFFECT_MAGNITUDE
-             || moveEffect == EFFECT_SYNCHRONOISE
-             || gBattleMoveEffects[moveEffect].battleScript == BattleScript_EffectTwoTurnsAttack)
+            if (moveEffect == EFFECT_MAGNITUDE)
                 BattleScriptPush(gBattleMoveEffects[EFFECT_HIT].battleScript);
             else
                 BattleScriptPush(GetMoveBattleScript(gCurrentMove));
@@ -777,7 +790,7 @@ static enum MoveEndResult MoveEnd_MultihitMove(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
 
-    if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+    if (!IsBattlerUnaffectedByMove(gBattlerTarget)
      && !gBattleStruct->unableToUseMove
      && gMultiHitCounter)
     {
@@ -801,7 +814,7 @@ static enum MoveEndResult MoveEnd_MultihitMove(void)
              && !IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), gCurrentMove)
              && !(gBattleStruct->moveResultFlags[BATTLE_PARTNER(gBattlerTarget)] & MOVE_RESULT_MISSED) // didn't miss the other target
              && CanTargetPartner(gBattlerAttacker, gBattlerTarget)
-             && !TargetFullyImmuneToCurrMove(gBattlerAttacker, BATTLE_PARTNER(gBattlerTarget)))
+             && !IsBattlerUnaffectedByMove(BATTLE_PARTNER(gBattlerTarget)))
                 gBattlerTarget = BATTLE_PARTNER(gBattlerTarget); // Target the partner in doubles for second hit.
 
             enum BattleMoveEffects chosenEffect = GetMoveEffect(gChosenMove);
@@ -854,7 +867,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
          && CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerTarget].item)
          && !NoAliveMonsForEitherParty())
         {
-            u32 side = GetBattlerSide(gBattlerTarget);
+            enum BattleSide side = GetBattlerSide(gBattlerTarget);
 
             if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
             {
@@ -880,7 +893,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
             }
             else
             {
-                GetBattlerPartyState(gBattlerTarget)->knockedOffItem = TRUE;
+                GetBattlerPartyState(gBattlerTarget)->isKnockedOff = TRUE;
             }
 
             BattleScriptCall(BattleScript_KnockedOff);
@@ -964,20 +977,33 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
         break;
     case EFFECT_RECOIL_IF_MISS:
         if (IsBattlerAlive(gBattlerAttacker)
-         && (!IsBattlerTurnDamaged(gBattlerTarget) || gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
-         && !gBattleStruct->noTargetPresent)
+         && IsBattlerUnaffectedByMove(gBattlerTarget)
+         && !gBattleStruct->unableToUseMove)
         {
             s32 recoil = 0;
-            if (B_RECOIL_IF_MISS_DMG >= GEN_5 || (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE))
+            if (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE)
+            {
+                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+            }
+            if (B_RECOIL_IF_MISS_DMG >= GEN_5)
+            {
                 recoil = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-            else if (B_RECOIL_IF_MISS_DMG == GEN_4 && (GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
-                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
-            else if (B_RECOIL_IF_MISS_DMG == GEN_3)
-                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+            }
+            else if (B_RECOIL_IF_MISS_DMG >= GEN_3)
+            {
+                if ((GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
+                    recoil = gBattleStruct->moveDamage[gBattlerTarget];
+                else
+                    recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+            }
             else if (B_RECOIL_IF_MISS_DMG == GEN_2)
-                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 8;
+            {
+                recoil = gBattleStruct->moveDamage[gBattlerTarget] / 8;
+            }
             else
+            {
                 recoil = 1;
+            }
             SetPassiveDamageAmount(gBattlerAttacker, recoil);
             BattleScriptCall(BattleScript_RecoilIfMiss);
             result = MOVEEND_STEP_RUN_SCRIPT;
@@ -1191,7 +1217,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_BUTTON)
             ejectButtonBattlers |= 1u << battlerDef;
-         
+
         if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_RED_CARD)
             redCardBattlers |= 1u << battlerDef;
     }
@@ -1211,7 +1237,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         // Only fastest red card or eject button activates
         if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
-            result = MOVEEND_STEP_RUN_SCRIPT; 
+            result = MOVEEND_STEP_RUN_SCRIPT;
         else if (ejectButtonBattlers & 1u << battler && TryEjectButton(gBattlerAttacker, battler))
             result = MOVEEND_STEP_RUN_SCRIPT;
 
@@ -1455,9 +1481,9 @@ static enum MoveEndResult MoveEnd_Pickpocket(void)
 
     if (IsBattlerAlive(gBattlerAttacker)
       && gBattleMons[gBattlerAttacker].item != ITEM_NONE // Attacker must be holding an item
-      && !GetBattlerPartyState(gBattlerAttacker)->knockedOffItem // But not knocked off
+      && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff // But not knocked off
       && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove) // Pickpocket requires contact
-      && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)) // Obviously attack needs to have worked
+      && !IsBattlerUnaffectedByMove(gBattlerTarget)) // Obviously attack needs to have worked
     {
         u8 battlers[4] = {0, 1, 2, 3};
         SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
@@ -1578,7 +1604,7 @@ static enum MoveEndResult MoveEnd_ClearBits(void)
 
     if (B_RAMPAGE_CANCELLING >= GEN_5
       && MoveHasAdditionalEffectSelf(gCurrentMove, MOVE_EFFECT_THRASH)           // If we're rampaging
-      && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT  // And it is unusable
+      && IsBattlerUnaffectedByMove(gBattlerTarget)  // And it is unusable
       && gBattleMons[gBattlerAttacker].volatiles.rampageTurns != 1)  // And won't end this turn
         CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_IGNORE); // Cancel it
 
@@ -1593,7 +1619,6 @@ static enum MoveEndResult MoveEnd_ClearBits(void)
     gBattleStruct->poisonPuppeteerConfusion = FALSE;
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[gBattlerAttacker].usedMicleBerry = FALSE;
-    gBattleStruct->noTargetPresent = FALSE;
     gBattleStruct->toxicChainPriority = FALSE;
     if (gBattleStruct->unableToUseMove)
         gBattleStruct->pledgeMove = FALSE;

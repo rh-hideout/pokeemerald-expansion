@@ -106,6 +106,36 @@ SINGLE_BATTLE_TEST("Retaliate works with Perish Song")
         ASSUME(GetMoveEffect(MOVE_PERISH_SONG) == EFFECT_PERISH_SONG);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PERISH_SONG); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); SEND_OUT(opponent, 1); SEND_OUT(player, 1); }
+        TURN { MOVE(player, MOVE_RETALIATE); }
+        TURN { MOVE(player, MOVE_RETALIATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, opponent);
+        HP_BAR(opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RETALIATE, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RETALIATE, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Retaliate works with Perish Song (Gen3 Perish Song)")
+{
+    s16 damage[2];
+    GIVEN {
+        WITH_CONFIG(CONFIG_CHECK_USER_FAILURE, GEN_3);
+        ASSUME(GetMoveEffect(MOVE_PERISH_SONG) == EFFECT_PERISH_SONG);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KOMMO_O) { Ability(ABILITY_SOUNDPROOF); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_PERISH_SONG); }
@@ -121,7 +151,6 @@ SINGLE_BATTLE_TEST("Retaliate works with Perish Song")
         EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
-
 SINGLE_BATTLE_TEST("Retaliate works with self-inflicted fainting")
 {
     s16 damage[2];
@@ -141,3 +170,4 @@ SINGLE_BATTLE_TEST("Retaliate works with self-inflicted fainting")
         EXPECT_MUL_EQ(damage[1], Q_4_12(2.0), damage[0]);
     }
 }
+

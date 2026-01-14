@@ -265,7 +265,7 @@ static inline bool32 CanBattlerWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool32
 static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 {
     //Variable initialization
-    u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
+    enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
     enum Move *playerMoves = GetMovesArray(opposingBattler);
     enum Move aiMove, playerMove, bestPlayerPriorityMove = MOVE_NONE, bestPlayerMove = MOVE_NONE, expectedMove = MOVE_NONE;
@@ -463,12 +463,20 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
     }
     else
     {
+        struct BattleContext ctx = {0};
+        ctx.battlerAtk = battler;
+        ctx.battlerDef = opposingBattler;
+        ctx.abilityAtk = gAiLogicData->abilities[ctx.battlerAtk];
+        ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
+        ctx.holdEffectAtk = gAiLogicData->holdEffects[ctx.battlerAtk];
+        ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
+
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             aiMove = gBattleMons[battler].moves[moveIndex];
-            if (gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] > UQ_4_12(0.0) && aiMove != MOVE_NONE
-                && !CanAbilityAbsorbMove(battler, opposingBattler, gAiLogicData->abilities[opposingBattler], aiMove, GetBattleMoveType(aiMove), AI_CHECK)
-                && !CanAbilityBlockMove(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], aiMove, AI_CHECK)
+            if (aiMove != MOVE_NONE
+                && gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] > UQ_4_12(0.0)
+                && !AI_CanMoveBeBlockedByTarget(&ctx)
                 && (!ALL_MOVES_BAD_STATUS_MOVES_BAD || GetMovePower(aiMove) != 0)) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
                 return FALSE;
         }
@@ -527,7 +535,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     u32 opposingBattler = GetOppositeBattler(battler);
     enum Move incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
     enum Type incomingType = CheckDynamicMoveType(GetBattlerMon(opposingBattler), incomingMove, opposingBattler, MON_IN_BATTLE);
-    bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
+    bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
 
     if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
@@ -646,7 +654,7 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(u32 battler)
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
 
-    bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
+    bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
 
     if (IsDoubleBattle() || !(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
@@ -700,7 +708,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     bool32 switchMon = FALSE;
     enum Ability monAbility = gAiLogicData->abilities[battler];
     enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
-    u8 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
+    enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u8 opposingBattler = GetBattlerAtPosition(opposingPosition);
     bool32 hasStatRaised = AnyUsefulStatIsRaised(battler);
 
@@ -819,6 +827,15 @@ static bool32 GetHitEscapeTransformState(u32 battlerAtk, enum Move move)
      || (moveType == TYPE_FIRE && (AI_GetWeather() & B_WEATHER_RAIN_PRIMAL)))
         return FALSE;
 
+    struct BattleContext ctx = {0};
+    ctx.aiCalc = TRUE;
+    ctx.battlerAtk = battlerAtk;
+    ctx.move = ctx.chosenMove = move;
+    ctx.moveType = moveType;
+    ctx.holdEffectAtk = gAiLogicData->holdEffects[battlerAtk];
+    ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
+
+
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (!IsBattlerAlive(battlerDef) || IsBattlerAlly(battlerDef, battlerAtk))
@@ -832,8 +849,11 @@ static bool32 GetHitEscapeTransformState(u32 battlerAtk, enum Move move)
             move
         );
 
-        if (CanAbilityAbsorbMove(battlerAtk, battlerDef, abilityDef, move, moveType, AI_CHECK)
-         || CanAbilityBlockMove(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk], abilityDef, move, AI_CHECK))
+        ctx.battlerDef = battlerDef;
+        ctx.holdEffectDef = gAiLogicData->holdEffects[battlerDef];
+        ctx.abilityDef = abilityDef;
+
+        if (AI_CanMoveBeBlockedByTarget(&ctx))
         {
             if ((moveType == TYPE_WATER && abilityDef == ABILITY_STORM_DRAIN)
              || (moveType == TYPE_ELECTRIC && abilityDef == ABILITY_LIGHTNING_ROD))
@@ -1051,7 +1071,7 @@ static bool32 CanMonSurviveHazardSwitchin(u32 battler)
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
-                aiMove = GetMonData(&party[monIndex], MON_DATA_MOVE1 + moveIndex, NULL);
+                aiMove = GetMonData(&party[monIndex], MON_DATA_MOVE1 + moveIndex);
                 if (IsHazardClearingMove(aiMove)) // Have a mon that can clear the hazards, so switching out is okay
                     return TRUE;
             }
@@ -1092,17 +1112,25 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
 
 static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
 {
-    enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
     enum Move lastUsedMove = gAiLogicData->lastUsedMove[battler];
     u32 opposingBattler = GetOppositeBattler(battler);
     bool32 moveAffectsTarget = TRUE;
 
-    if (lastUsedMove != MOVE_NONE && (AI_GetMoveEffectiveness(lastUsedMove, battler, opposingBattler) == UQ_4_12(0.0)
-        || CanAbilityAbsorbMove(battler, opposingBattler, gAiLogicData->abilities[opposingBattler], lastUsedMove, CheckDynamicMoveType(GetBattlerMon(battler), lastUsedMove, battler, MON_IN_BATTLE), AI_CHECK)
-        || CanAbilityBlockMove(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], lastUsedMove, AI_CHECK)))
+    struct BattleContext ctx = {0};
+    ctx.battlerAtk = battler;
+    ctx.battlerDef = opposingBattler;
+    ctx.move = ctx.chosenMove = lastUsedMove;
+    ctx.moveType = GetBattleMoveType(lastUsedMove);
+    ctx.abilityAtk = gAiLogicData->abilities[ctx.battlerAtk];
+    ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
+    ctx.holdEffectAtk = gAiLogicData->holdEffects[ctx.battlerAtk];
+    ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
+
+    if (lastUsedMove != MOVE_NONE
+     && (AI_GetMoveEffectiveness(lastUsedMove, battler, opposingBattler) == UQ_4_12(0.0) || AI_CanMoveBeBlockedByTarget(&ctx)))
         moveAffectsTarget = FALSE;
 
-    if (IsHoldEffectChoice(holdEffect) && IsBattlerItemEnabled(battler))
+    if (IsHoldEffectChoice(ctx.holdEffectAtk) && IsBattlerItemEnabled(battler))
     {
         if ((GetMoveCategory(lastUsedMove) == DAMAGE_CATEGORY_STATUS || !moveAffectsTarget) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
             return SetSwitchinAndSwitch(battler, PARTY_SIZE);
@@ -1400,7 +1428,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler)
     u32 maxHP = gBattleMons[battler].maxHP;
     enum Ability ability = gAiLogicData->abilities[battler], status = gBattleMons[battler].status1;
     u32 spikesDamage = 0, tSpikesDamage = 0, hazardDamage = 0;
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
 
     // Check ways mon might avoid all hazards
     if (ability != ABILITY_MAGIC_GUARD || (heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS &&
@@ -1586,7 +1614,8 @@ static u32 GetSwitchinStatusDamage(u32 battler)
     u8 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
     u16 heldItemEffect = gAiLogicData->holdEffects[battler];
     u32 status = gBattleMons[battler].status1;
-    enum Ability ability = gAiLogicData->holdEffects[battler], maxHP = gBattleMons[battler].maxHP;
+    enum Ability ability = gAiLogicData->abilities[battler];
+    u32 maxHP = gBattleMons[battler].maxHP;
     u32 statusDamage = 0;
 
     // Status condition damage
