@@ -3852,7 +3852,6 @@ static void ForewarnChooseMove(u32 battler)
                 switch (GetMoveEffect(data[count].moveId))
                 {
                 case EFFECT_OHKO:
-                case EFFECT_SHEER_COLD:
                     data[count].power = 150;
                     break;
                 case EFFECT_REFLECT_DAMAGE:
@@ -4879,9 +4878,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                             ctx.isAnticipation = TRUE;
                             modifier = CalcTypeEffectivenessMultiplier(&ctx);
 
-                            if (modifier >= UQ_4_12(2.0)
-                             || moveEffect == EFFECT_OHKO
-                             || moveEffect == EFFECT_SHEER_COLD)
+                            if (modifier >= UQ_4_12(2.0) || moveEffect == EFFECT_OHKO)
                             {
                                 effect++;
                                 break;
@@ -9507,6 +9504,9 @@ s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
             dmg = GetNonDynamaxHP(ctx->battlerDef) - gBattleMons[ctx->battlerAtk].hp;
         }
         break;
+    case EFFECT_OHKO:
+        dmg = gBattleMons[ctx->battlerDef].hp;
+        break;
     default:
         break;
     }
@@ -9955,7 +9955,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct BattleCont
             ctx->airBalloonBlocked = TRUE;
         }
     }
-    else if (GetConfig(CONFIG_SHEER_COLD_IMMUNITY) >= GEN_7 && GetMoveEffect(ctx->move) == EFFECT_SHEER_COLD && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_ICE))
+    else if (MoveHasNoEffectOnSameType(ctx->move) && IS_BATTLER_OF_TYPE(ctx->battlerDef, GetMoveType(ctx->move)))
     {
         modifier = UQ_4_12(0.0);
     }
@@ -11989,11 +11989,9 @@ void RemoveHazardFromField(u32 side, enum Hazards hazardType)
     }
 }
 
-static bool32 CanToxicSkipAccuracyCheck(u32 battlerAtk, u32 move)
+static bool32 CanMoveSkipAccuracyCheck(u32 battlerAtk, u32 move)
 {
-    if (GetConfig(CONFIG_TOXIC_NEVER_MISS) < GEN_6)
-        return FALSE;
-    return move == MOVE_TOXIC && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON);
+    return MoveAlwaysHitsOnSameType(move) && IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move));
 }
 
 bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum ResultOption option)
@@ -12003,7 +12001,7 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abil
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if ((gBattleMons[battlerDef].volatiles.lockOn && gBattleMons[battlerDef].volatiles.battlerWithSureHit == battlerAtk)
-     || CanToxicSkipAccuracyCheck(battlerAtk, move)
+     || CanMoveSkipAccuracyCheck(battlerAtk, move)
      || gBattleMons[battlerDef].volatiles.glaiveRush)
     {
         effect = TRUE;
@@ -12026,8 +12024,7 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abil
     // If the target is under the effects of Telekinesis, and the move isn't a OH-KO move, move hits.
     else if (gBattleMons[battlerDef].volatiles.telekinesis
           && !IsSemiInvulnerable(battlerDef, CHECK_ALL)
-          && moveEffect != EFFECT_OHKO
-          && moveEffect != EFFECT_SHEER_COLD)
+          && moveEffect != EFFECT_OHKO)
     {
         effect = TRUE;
     }
@@ -12154,6 +12151,9 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, enum Move move, enum Abilit
         break;
     }
 
+    if (MoveHasIncreasedAccByTenOnSameType(move) && !IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move)))
+        calc = (calc * 110) / 100;
+
     // Attacker's hold effect
     switch (atkHoldEffect)
     {
@@ -12199,6 +12199,85 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, enum Move move, enum Abilit
     return calc;
 }
 
+bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
+{
+    enum OHKOResult {
+        NO_HIT,
+        CALC_ACC,
+        SURE_HIT,
+    };
+
+    // Dynamaxed Pokemon cannot be hit by OHKO moves.
+    if (GetActiveGimmick(cv->battlerDef) == GIMMICK_DYNAMAX)
+    {
+        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
+        return TRUE;
+    }
+
+    if (cv->abilities[cv->battlerDef] == ABILITY_STURDY)
+    {
+        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_STURDY;
+        return TRUE;
+    }
+
+    u32 lands = NO_HIT;
+
+    if (gBattleMons[cv->battlerDef].level > gBattleMons[cv->battlerAtk].level)
+    {
+        lands = NO_HIT;
+    }
+    else if ((gBattleMons[cv->battlerDef].volatiles.lockOn && gBattleMons[cv->battlerDef].volatiles.battlerWithSureHit == cv->battlerAtk)
+          || IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_NO_GUARD)
+          || IsAbilityAndRecord(cv->battlerDef, cv->abilities[cv->battlerDef], ABILITY_NO_GUARD))
+    {
+        lands = SURE_HIT;
+    }
+    else
+    {
+        lands = CALC_ACC;
+    }
+
+    if (lands == CALC_ACC)
+    {
+        u32 odds = GetMoveAccuracy(cv->move) + (gBattleMons[cv->battlerAtk].level - gBattleMons[cv->battlerDef].level);
+        if (MoveHasIncreasedAccByTenOnSameType(cv->move) && !IS_BATTLER_OF_TYPE(cv->battlerAtk, GetMoveType(cv->move)))
+            odds -= 10;
+        if (RandomPercentage(RNG_ACCURACY, odds) && gBattleMons[cv->battlerAtk].level >= gBattleMons[cv->battlerDef].level)
+            lands = SURE_HIT;
+    }
+
+    if (lands == SURE_HIT)
+    {
+        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
+        return FALSE;
+    }
+
+    if (gBattleMons[cv->battlerAtk].level < gBattleMons[cv->battlerDef].level)
+        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
+
+    return TRUE;
+}
+
+bool32 DoesMoveMissTarget(struct BattleCalcValues *cv)
+{
+    if (GetMoveEffect(cv->move) == EFFECT_OHKO)
+        return DoesOHKOMoveMissTarget(cv);
+
+    if (CanMoveSkipAccuracyCalc(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->abilities[cv->battlerDef], cv->move, RUN_SCRIPT))
+        return FALSE;
+
+    u32 accuracy = GetTotalAccuracy(
+                        cv->battlerAtk,
+                        cv->battlerDef,
+                        cv->move,
+                        cv->abilities[cv->battlerAtk],
+                        cv->abilities[cv->battlerDef],
+                        cv->holdEffects[cv->battlerAtk],
+                        cv->holdEffects[cv->battlerDef]
+                    );
+    return !RandomPercentage(RNG_ACCURACY, accuracy);
+}
+
 bool32 IsSemiInvulnerable(u32 battler, enum SemiInvulnerableExclusion excludeCommander)
 {
     if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_COMMANDER)
@@ -12212,7 +12291,7 @@ bool32 BreaksThroughSemiInvulnerablity(u32 battlerAtk, u32 battlerDef, enum Abil
 
     if (state != STATE_COMMANDER)
     {
-        if (CanToxicSkipAccuracyCheck(battlerAtk, move))
+        if (CanMoveSkipAccuracyCheck(battlerAtk, move))
             return TRUE;
         if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
             return TRUE;

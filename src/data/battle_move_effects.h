@@ -216,15 +216,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_OHKO] =
     {
-        .battleScript = BattleScript_EffectOHKO,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_HIGH_RISK,
-    },
-
-    [EFFECT_SHEER_COLD] =
-    {
-        .battleScript = BattleScript_EffectOHKO,
-        .battleTvScore = 7,
     },
 
     [EFFECT_FUSION_COMBO] =
