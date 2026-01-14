@@ -77,13 +77,12 @@ void OWE_ResetSpawnCounterPlayAmbientCry(void)
 
 void UpdateOverworldEncounters(void)
 {
-    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
+    bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
+    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING) || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
         return;
     
-    bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
     if (!OW_WILD_ENCOUNTERS_OVERWORLD
         || FlagGet(OW_FLAG_NO_ENCOUNTER)
-        || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons)
         || CurrentBattlePyramidLocation()
         || InBattlePike()
         || InTrainerHillChallenge())
