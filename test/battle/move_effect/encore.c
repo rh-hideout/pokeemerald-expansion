@@ -56,7 +56,8 @@ SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Enc
 
 SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 4-8 turns: Encore used before move")
 {
-    PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
+    PASSES_RANDOMLY(1, 1, RNG_ENCORE_TURNS);
+    u32 trialTurns = RandomUniform(RNG_ENCORE_TURNS, 3, 7); // comes into play after the timer has dropped by 1 already
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_4);
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
@@ -65,27 +66,14 @@ SINGLE_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 4-8 turns: En
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_SPLASH); }
-        TURN { FORCED_MOVE(opponent); }
-        TURN { FORCED_MOVE(opponent); }
-        TURN { FORCED_MOVE(opponent); }
-        TURN { FORCED_MOVE(opponent); }
-        TURN { FORCED_MOVE(opponent); }
-        TURN { FORCED_MOVE(opponent); }
-        TURN { FORCED_MOVE(opponent); }
-        TURN { MOVE(opponent, MOVE_SPLASH); }
+        for (u32 i = 0; i < trialTurns; i++)
+            TURN { FORCED_MOVE(opponent); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        for (u32 i = 0; i < trialTurns; i++)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("The opposing Wobbuffet ended its encore!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
 
