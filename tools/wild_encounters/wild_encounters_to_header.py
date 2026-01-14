@@ -87,7 +87,7 @@ class WildEncounterAssembler:
         self.WriteLine("{")
         self.WriteLine(f".encounterRate = {encounter_rate},", 1)
         self.WriteLine(f".numSlots = {len(mons)},", 1)
-        self.WriteLine(f".totalWeight = {sum(mon.get("weight", 1) for mon in mons)},", 1)
+        self.WriteLine(f".totalWeight = {sum(mon.get('weight', 1) for mon in mons)},", 1)
         self.WriteLine(".wildPokemon =", 1)
         self.WriteLine("{", 1)
 

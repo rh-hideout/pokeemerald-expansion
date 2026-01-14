@@ -67,7 +67,7 @@ for group in wild_encounters["wild_encounter_groups"]:
                 encounter_groups[field["type"]] = {}
                 for group_name, group_slots in field["groups"].items():
                     if interactive:
-                        new_name = input(f"Name for new field from field {field['type']}'s group {group_name} (default: {field["type"]}_{group_name}):")
+                        new_name = input(f"Name for new field from field {field['type']}'s group {group_name} (default: {field['type']}_{group_name}):")
                         if not new_name:
                             new_name = f"{field['type']}_{group_name}"
                     else:
