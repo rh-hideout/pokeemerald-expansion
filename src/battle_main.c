@@ -567,10 +567,8 @@ static void CB2_InitBattleInternal(void)
     }
 
     #if TESTING
-    {
-        gPlayerPartyCount = CalculatePartyCount(gPlayerParty);
-        gEnemyPartyCount = CalculatePartyCount(gEnemyParty);
-    }
+    gPlayerPartyCount = CalculatePartyCount(gPlayerParty);
+    gEnemyPartyCount = CalculatePartyCount(gEnemyParty);
     #endif
 
     gBattleCommunication[MULTIUSE_STATE] = 0;
