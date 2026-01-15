@@ -538,7 +538,7 @@ struct PartyState
     u32 timesGotHit:5;
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
     u32 sentOut:1;
-    u32 knockedOffItem;
+    u32 isKnockedOff:1;
     u32 padding:8;
     u16 usedHeldItem;
 };
