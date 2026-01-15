@@ -167,15 +167,10 @@ u8 GetFavorLadyState(void)
         return LILYCOVE_LADY_STATE_READY;
 }
 
-static const u8 *GetFavorLadyRequest(u8 idx)
-{
-    return sFavorLady[idx].request;
-}
-
 void BufferFavorLadyRequest(void)
 {
     sFavorLadyPtr = &gSaveBlock1Ptr->lilycoveLady.favor;
-    StringCopy(gStringVar1, GetFavorLadyRequest(sFavorLadyPtr->favorId));
+    StringCopy(gStringVar1, sFavorLady[sFavorLadyPtr->favorId].request);
 }
 
 bool8 HasAnotherPlayerGivenFavorLadyItem(void)
@@ -270,18 +265,13 @@ bool8 IsFavorLadyThresholdMet(void)
     return numItemsGiven < LILYCOVE_LADY_GIFT_THRESHOLD ? FALSE : TRUE;
 }
 
-static void FavorLadyBufferPrizeName(u16 prize)
-{
-    BufferItemName(gStringVar2, prize);
-}
-
 u16 FavorLadyGetPrize(void)
 {
     u16 prize;
 
     sFavorLadyPtr = &gSaveBlock1Ptr->lilycoveLady.favor;
     prize = sFavorLady[sFavorLadyPtr->favorId].prize;
-    FavorLadyBufferPrizeName(prize);
+    BufferItemName(gStringVar2, prize);
     sFavorLadyPtr->state = LILYCOVE_LADY_STATE_PRIZE;
     return prize;
 }
