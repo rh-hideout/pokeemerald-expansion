@@ -3552,6 +3552,7 @@ void SetMoveEffect(u32 battlerAtk, u32 effectBattler, enum MoveEffect moveEffect
             }
         }
         break;
+    }
     case MOVE_EFFECT_BREAK_SCREEN:
         if (B_BRICK_BREAK >= GEN_4)
         	i = GetBattlerSide(gBattlerTarget); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
@@ -3636,11 +3637,8 @@ void SetMoveEffect(u32 battlerAtk, u32 effectBattler, enum MoveEffect moveEffect
             }
         }
         break;
-
-
-    }
-        default:
-            break;
+    default:
+        break;
     }
 
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;

@@ -5373,7 +5373,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                         StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
                     if (gBattleMons[battler].status1 & STATUS1_BURN)
                         StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
-                    if (gBattleMons[battler].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
+                    if (gBattleMons[battler].status1 & STATUS1_ICY_ANY)
                         StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
 
                     gBattleMons[battler].status1 = 0;
@@ -7116,7 +7116,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abil
         break;
     case MOVE_EFFECT_FREEZE:
     case MOVE_EFFECT_FROSTBITE:
-        if (gBattleMons[battlerDef].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
+        if (gBattleMons[battlerDef].status1 & STATUS1_ICY_ANY)
         {
             battleScript = BattleScript_AlreadyBurned;
         }
@@ -10714,7 +10714,7 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(u32 battler)
         }
         break;
     case ABILITY_MAGMA_ARMOR:
-        if (gBattleMons[battler].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
+        if (gBattleMons[battler].status1 & STATUS1_ICY_ANY)
         {
             StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
             outcome = IMMUNITY_STATUS_CLEARED;
@@ -12738,4 +12738,3 @@ void SetOrClearRageVolatile(void)
     else
         gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
 }
-

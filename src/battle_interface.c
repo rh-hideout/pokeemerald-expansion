@@ -2078,25 +2078,41 @@ s32 MoveBattleBar(u8 battler, u8 healthboxSpriteId, u8 whichBar, u8 unused)
 static void MoveBattleBarGraphically(u8 battler, u8 whichBar)
 {
     u8 array[8];
-    u8 filledPixelsCount, level;
+    u8 level;
     u8 barElementId;
     u8 i;
+    s32 currValue, maxValue;
 
     switch (whichBar)
     {
     case HEALTH_BAR:
-        filledPixelsCount = CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
+    if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
+    {
+        maxValue = B_HEALTHBAR_PIXELS;
+        currValue = CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
+                            gBattleSpritesDataPtr->battleBars[battler].oldValue,
+                            gBattleSpritesDataPtr->battleBars[battler].receivedValue,
+                            &gBattleSpritesDataPtr->battleBars[battler].currValue,
+                            array, B_HEALTHBAR_PIXELS / 8);
+    }
+    else
+    {
+        CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
                             gBattleSpritesDataPtr->battleBars[battler].oldValue,
                             gBattleSpritesDataPtr->battleBars[battler].receivedValue,
                             &gBattleSpritesDataPtr->battleBars[battler].currValue,
                             array, B_HEALTHBAR_PIXELS / 8);
 
-        if (filledPixelsCount > (B_HEALTHBAR_PIXELS * 50 / 100)) // more than 50 % hp
+        maxValue  = gBattleSpritesDataPtr->battleBars[battler].maxValue;
+        currValue = gBattleSpritesDataPtr->battleBars[battler].currValue;
+    }
+
+        if (currValue > (maxValue * 50 / 100)) // more than 50% hp
             barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
-        else if (filledPixelsCount > (B_HEALTHBAR_PIXELS * 20 / 100)) // more than 20% hp
+        else if (currValue > (maxValue * 20 / 100)) // more than 20% hp
             barElementId = HEALTHBOX_GFX_HP_BAR_YELLOW;
         else
-            barElementId = HEALTHBOX_GFX_HP_BAR_RED; // 20 % or less
+            barElementId = HEALTHBOX_GFX_HP_BAR_RED; // 20% or less
 
         for (i = 0; i < 6; i++)
         {
@@ -2294,26 +2310,30 @@ u8 GetScaledHPFraction(s16 hp, s16 maxhp, u8 scale)
 
 u8 GetHPBarLevel(s16 hp, s16 maxhp)
 {
-    u8 result;
+    s32 currValue, maxValue;
 
     if (hp == maxhp)
+        return HP_BAR_FULL;
+
+    if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
     {
-        result = HP_BAR_FULL;
+        currValue = GetScaledHPFraction(hp, maxhp, B_HEALTHBAR_PIXELS);
+        maxValue = B_HEALTHBAR_PIXELS;
     }
     else
     {
-        u8 fraction = GetScaledHPFraction(hp, maxhp, B_HEALTHBAR_PIXELS);
-        if (fraction > (B_HEALTHBAR_PIXELS * 50 / 100)) // more than 50 % hp
-            result = HP_BAR_GREEN;
-        else if (fraction > (B_HEALTHBAR_PIXELS * 20 / 100)) // more than 20% hp
-            result = HP_BAR_YELLOW;
-        else if (fraction > 0)
-            result = HP_BAR_RED;
-        else
-            result = HP_BAR_EMPTY;
+        currValue = hp;
+        maxValue = maxhp;
     }
 
-    return result;
+    if (currValue > (maxValue * 50 / 100)) // more than 50% hp
+        return HP_BAR_GREEN;
+    else if (currValue > (maxValue * 20 / 100)) // more than 20% hp
+        return HP_BAR_YELLOW;
+    else if (currValue > 0)
+        return HP_BAR_RED; // 20% or less
+
+    return HP_BAR_EMPTY;
 }
 
 static u8 *AddTextPrinterAndCreateWindowOnHealthboxWithFont(const u8 *str, u32 x, u32 y, u32 bgColor, u32 *windowId, u32 fontId)
