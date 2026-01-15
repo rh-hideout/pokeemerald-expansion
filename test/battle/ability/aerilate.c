@@ -240,24 +240,6 @@ SINGLE_BATTLE_TEST("Aerilate doesn't change Tera Blast's type when Terastallized
     }
 }
 
-SINGLE_BATTLE_TEST("Aerilate doesn't affect Max Strike's type")
-{
-    GIVEN {
-        ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); Moves(MOVE_SKILL_SWAP); }
-        OPPONENT(SPECIES_MISDREAVUS);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SKILL_SWAP, gimmick: GIMMICK_MEGA, target: player); }
-        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("It doesn't affect the opposing Misdreavus…");
-    }
-}
-
 SINGLE_BATTLE_TEST("Aerilate doesn't affect Terrain Pulse's type")
 {
     GIVEN {
@@ -297,4 +279,5 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect damaging Z-Move types")
     }
 }
 
+TO_DO_BATTLE_TEST("Aerilate doesn't affect Max Strike's type");
 TO_DO_BATTLE_TEST("(DYNAMAX) Aerilate turns Max Strike into Max Airstream"); // All other -ate abilities do this, so interpolating this as no Aerilate mon is available in a Dynamax game

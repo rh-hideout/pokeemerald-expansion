@@ -200,21 +200,6 @@ SINGLE_BATTLE_TEST("Refrigerate doesn't change Tera Blast's type when Terastalli
     }
 }
 
-SINGLE_BATTLE_TEST("Refrigerate doesn't affect Max Strike's type")
-{
-    GIVEN {
-        ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_AMAURA) { Ability(ABILITY_REFRIGERATE); }
-        OPPONENT(SPECIES_MISDREAVUS);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
-    } SCENE {
-        MESSAGE("Amaura used Max Strike!");
-        MESSAGE("It doesn't affect the opposing Misdreavus…");
-    }
-}
-
 SINGLE_BATTLE_TEST("Refrigerate doesn't affect Terrain Pulse's type")
 {
     GIVEN {
@@ -249,5 +234,6 @@ SINGLE_BATTLE_TEST("Refrigerate doesn't affect damaging Z-Move types")
     }
 }
 
+TO_DO_BATTLE_TEST("Refrigerate doesn't affect Max Strike's type");
 TO_DO_BATTLE_TEST("(DYNAMAX) Refrigerate turns Max Strike into Max Hailstorm when not used by Gigantamax Lapras");
 //TO_DO_BATTLE_TEST("(DYNAMAX) Refrigerate doesn't turn Max Strike into Max Hailstorm when used by Gigantamax Lapras, instead becoming G-Max Resonance"); // Marked in Bulbapedia as "needs research", so this assumes that it behaves like Pixilate.

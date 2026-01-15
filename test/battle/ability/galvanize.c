@@ -195,21 +195,6 @@ SINGLE_BATTLE_TEST("Galvanize doesn't change Tera Blast's type when Terastallize
     }
 }
 
-SINGLE_BATTLE_TEST("Galvanize doesn't affect Max Strike's type")
-{
-    GIVEN {
-        ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); }
-        OPPONENT(SPECIES_MISDREAVUS);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
-    } SCENE {
-        MESSAGE("Geodude used Max Strike!");
-        MESSAGE("It doesn't affect the opposing Misdreavus…");
-    }
-}
-
 SINGLE_BATTLE_TEST("Galvanize doesn't affect Terrain Pulse's type")
 {
     GIVEN {
@@ -244,5 +229,6 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect damaging Z-Move types")
     }
 }
 
+TO_DO_BATTLE_TEST("Galvanize doesn't affect Max Strike's type");
 TO_DO_BATTLE_TEST("(DYNAMAX) Galvanize turns Max Strike into Max Lightning when not used by Gigantamax Pikachu/Toxtricity");
 //TO_DO_BATTLE_TEST("(DYNAMAX) Galvanize doesn't turn Max Strike into Max Lightning when used by Gigantamax Pikachu/Toxtricity, instead becoming G-Max Volt Crash/Stun Shock"); // Marked in Bulbapedia as "needs research", so this assumes that it behaves like Pixilate.

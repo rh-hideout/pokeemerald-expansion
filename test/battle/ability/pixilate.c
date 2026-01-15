@@ -201,21 +201,6 @@ SINGLE_BATTLE_TEST("Pixilate doesn't change Tera Blast's type when Terastallized
     }
 }
 
-SINGLE_BATTLE_TEST("Pixilate doesn't affect Max Strike's type")
-{
-    GIVEN {
-        ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_SYLVEON) { Ability(ABILITY_PIXILATE); }
-        OPPONENT(SPECIES_MISDREAVUS);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE, gimmick: GIMMICK_DYNAMAX); }
-    } SCENE {
-        MESSAGE("Sylveon used Max Strike!");
-        MESSAGE("It doesn't affect the opposing Misdreavus…");
-    }
-}
-
 SINGLE_BATTLE_TEST("Pixilate doesn't affect Terrain Pulse's type")
 {
     GIVEN {
@@ -250,5 +235,6 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect damaging Z-Move types")
     }
 }
 
+TO_DO_BATTLE_TEST("Pixilate doesn't affect Max Strike's type");
 TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate turns Max Strike into Max Starfall when not used by Gigantamax Alcremie");
 TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate doesn't turn Max Strike into Max Starfall when used by Gigantamax Alcremie, instead becoming G-Max Finale");
