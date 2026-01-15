@@ -25,6 +25,14 @@ struct LilycoveFavorLady
     u16 prize;
 };
 
+static const u16 sLilycoveLadyGfxId[] =
+{
+    [LILYCOVE_LADY_QUIZ]    = OBJ_EVENT_GFX_WOMAN_4,
+    [LILYCOVE_LADY_FAVOR]   = OBJ_EVENT_GFX_WOMAN_2,
+    [LILYCOVE_LADY_CONTEST] = OBJ_EVENT_GFX_GIRL_2,
+};
+
+// Contest Lady data
 static const struct LilycoveContestLadyValues sContestLadyValues[] =
 {
     [CONTEST_CATEGORY_COOL] = {
@@ -62,13 +70,6 @@ static const struct LilycoveContestLadyValues sContestLadyValues[] =
         .categoryName = COMPOUND_STRING("toughness"),
         .contestName = gText_ToughnessContest,
     },
-};
-
-static const u16 sLilycoveLadyGfxId[] =
-{
-    OBJ_EVENT_GFX_WOMAN_4,
-    OBJ_EVENT_GFX_WOMAN_2,
-    OBJ_EVENT_GFX_GIRL_2
 };
 
 // Quiz Lady data
@@ -411,16 +412,6 @@ static const u16 sFavorLadyAcceptedItems_Pointy[] =
     ITEM_STARDUST,
     ITEM_STAR_PIECE,
     ITEM_NONE
-};
-
-static const u16 *const sFavorLadyAcceptedItemLists[] =
-{
-    sFavorLadyAcceptedItems_Slippery,
-    sFavorLadyAcceptedItems_Roundish,
-    sFavorLadyAcceptedItems_Whamish,
-    sFavorLadyAcceptedItems_Shiny,
-    sFavorLadyAcceptedItems_Sticky,
-    sFavorLadyAcceptedItems_Pointy
 };
 
 static const struct LilycoveFavorLady sFavorLady[] =
