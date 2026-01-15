@@ -130,10 +130,10 @@ static void FavorLadyPickFavorAndBestItem(void)
     u8 numItems;
     u8 bestItem;
 
-    sFavorLadyPtr->favorId = Random() % ARRAY_COUNT(sFavorLadyRequests);
-    numItems = GetNumAcceptedItems(sFavorLadyAcceptedItemLists[sFavorLadyPtr->favorId]);
+    sFavorLadyPtr->favorId = Random() % ARRAY_COUNT(sFavorLady);
+    numItems = GetNumAcceptedItems(sFavorLady[sFavorLadyPtr->favorId].acceptedItems);
     bestItem = Random() % numItems;
-    sFavorLadyPtr->bestItem = sFavorLadyAcceptedItemLists[sFavorLadyPtr->favorId][bestItem];
+    sFavorLadyPtr->bestItem = sFavorLady[sFavorLadyPtr->favorId].acceptedItems[bestItem];
 }
 
 static void InitLilycoveFavorLady(void)
@@ -169,7 +169,7 @@ u8 GetFavorLadyState(void)
 
 static const u8 *GetFavorLadyRequest(u8 idx)
 {
-    return sFavorLadyRequests[idx];
+    return sFavorLady[idx].request;
 }
 
 void BufferFavorLadyRequest(void)
@@ -233,7 +233,7 @@ static bool8 DoesFavorLadyLikeItem(u16 itemId)
     bool8 likedItem;
 
     sFavorLadyPtr = &gSaveBlock1Ptr->lilycoveLady.favor;
-    numItems = GetNumAcceptedItems(sFavorLadyAcceptedItemLists[sFavorLadyPtr->favorId]);
+    numItems = GetNumAcceptedItems(sFavorLady[sFavorLadyPtr->favorId].acceptedItems);
     sFavorLadyPtr->state = LILYCOVE_LADY_STATE_COMPLETED;
     BufferItemName(gStringVar2, itemId);
     sFavorLadyPtr->itemId = itemId;
@@ -242,7 +242,7 @@ static bool8 DoesFavorLadyLikeItem(u16 itemId)
     likedItem = FALSE;
     for (i = 0; i < numItems; i ++)
     {
-        if (sFavorLadyAcceptedItemLists[sFavorLadyPtr->favorId][i] == itemId)
+        if (sFavorLady[sFavorLadyPtr->favorId].acceptedItems[i] == itemId)
         {
             likedItem = TRUE;
             sFavorLadyPtr->numItemsGiven++;
@@ -280,7 +280,7 @@ u16 FavorLadyGetPrize(void)
     u16 prize;
 
     sFavorLadyPtr = &gSaveBlock1Ptr->lilycoveLady.favor;
-    prize = sFavorLadyPrizes[sFavorLadyPtr->favorId];
+    prize = sFavorLady[sFavorLadyPtr->favorId].prize;
     FavorLadyBufferPrizeName(prize);
     sFavorLadyPtr->state = LILYCOVE_LADY_STATE_PRIZE;
     return prize;

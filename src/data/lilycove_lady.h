@@ -18,6 +18,13 @@ struct LilycoveQuizLadyQuestions
     u16 prize;
 };
 
+struct LilycoveFavorLady
+{
+    const u8 *request;
+    const u16 *acceptedItems;
+    u16 prize;
+};
+
 static const struct LilycoveContestLadyValues sContestLadyValues[] =
 {
     [CONTEST_CATEGORY_COOL] = {
@@ -273,7 +280,7 @@ static const u16 sQuizLadyQuestion16[QUIZ_QUESTION_LEN] =
     EC_EMPTY_WORD
 };
 
-static const struct LilycoveQuizLadyQuestions sQuizLadyQuestions[QUIZ_QUESTIONS] =
+static const struct LilycoveQuizLadyQuestions sQuizLadyQuestions[] =
 {
     {.question = sQuizLadyQuestion1,  .answer = EC_WORD_POKEDEX,    .prize = ITEM_GLITTER_MAIL},
     {.question = sQuizLadyQuestion2,  .answer = EC_WORD_DARK,       .prize = ITEM_BEAD_MAIL},
@@ -294,16 +301,6 @@ static const struct LilycoveQuizLadyQuestions sQuizLadyQuestions[QUIZ_QUESTIONS]
 };
 
 // Favor Lady data
-static const u8 *const sFavorLadyRequests[] =
-{
-    COMPOUND_STRING("slippery"),
-    COMPOUND_STRING("roundish"),
-    COMPOUND_STRING("wham-ish"),
-    COMPOUND_STRING("shiny"),
-    COMPOUND_STRING("sticky"),
-    COMPOUND_STRING("pointy"),
-};
-
 static const u16 sFavorLadyAcceptedItems_Slippery[] =
 {
     ITEM_REPEL,
@@ -426,12 +423,12 @@ static const u16 *const sFavorLadyAcceptedItemLists[] =
     sFavorLadyAcceptedItems_Pointy
 };
 
-static const u16 sFavorLadyPrizes[] =
+static const struct LilycoveFavorLady sFavorLady[] =
 {
-    ITEM_LUXURY_BALL,
-    ITEM_NUGGET,
-    ITEM_PROTEIN,
-    ITEM_HEART_SCALE,
-    ITEM_RARE_CANDY,
-    ITEM_PP_MAX
+    {.request = COMPOUND_STRING("slippery"), .acceptedItems = sFavorLadyAcceptedItems_Slippery, .prize = ITEM_LUXURY_BALL},
+    {.request = COMPOUND_STRING("roundish"), .acceptedItems = sFavorLadyAcceptedItems_Roundish, .prize = ITEM_NUGGET},
+    {.request = COMPOUND_STRING("wham-ish"), .acceptedItems = sFavorLadyAcceptedItems_Whamish,  .prize = ITEM_PROTEIN},
+    {.request = COMPOUND_STRING("shiny"),    .acceptedItems = sFavorLadyAcceptedItems_Shiny,    .prize = ITEM_HEART_SCALE},
+    {.request = COMPOUND_STRING("sticky"),   .acceptedItems = sFavorLadyAcceptedItems_Sticky,   .prize = ITEM_RARE_CANDY},
+    {.request = COMPOUND_STRING("pointy"),   .acceptedItems = sFavorLadyAcceptedItems_Pointy,   .prize = ITEM_PP_MAX},
 };
