@@ -302,9 +302,9 @@ static void QuizLadyPickQuestion(void)
     u8 questionId;
     u8 i;
 
-    questionId = Random() % ARRAY_COUNT(sQuizLadyQuizQuestions);
+    questionId = Random() % ARRAY_COUNT(sQuizLadyQuestions);
     for (i = 0; i < QUIZ_QUESTION_LEN; i ++)
-        sQuizLadyPtr->question[i] = sQuizLadyQuizQuestions[questionId][i];
+        sQuizLadyPtr->question[i] = sQuizLadyQuestions[questionId].question[i];
     sQuizLadyPtr->correctAnswer = sQuizLadyQuestions[questionId].answer;
     sQuizLadyPtr->prize = sQuizLadyQuestions[questionId].prize;
     sQuizLadyPtr->questionId = questionId;
@@ -330,7 +330,7 @@ static void InitLilycoveQuizLady(void)
 
     sQuizLadyPtr->prize = ITEM_NONE;
     sQuizLadyPtr->waitingForChallenger = FALSE;
-    sQuizLadyPtr->prevQuestionId = ARRAY_COUNT(sQuizLadyQuizQuestions);
+    sQuizLadyPtr->prevQuestionId = ARRAY_COUNT(sQuizLadyQuestions);
     sQuizLadyPtr->language = gGameLanguage;
     QuizLadyPickQuestion();
 }
@@ -366,12 +366,12 @@ u8 GetQuizAuthor(void)
         i = quiz->questionId;
         do
         {
-            if (++i >= (int)ARRAY_COUNT(sQuizLadyQuizQuestions))
+            if (++i >= (int)ARRAY_COUNT(sQuizLadyQuestions))
                 i = 0;
         } while (IsEasyChatAnswerUnlocked(sQuizLadyQuestions[i].answer) == FALSE);
 
         for (j = 0; j < QUIZ_QUESTION_LEN; j++)
-            quiz->question[j] = sQuizLadyQuizQuestions[i][j];
+            quiz->question[j] = sQuizLadyQuestions[i].question[j];
         quiz->correctAnswer = sQuizLadyQuestions[i].answer;
         quiz->prize = sQuizLadyQuestions[i].prize;
         quiz->questionId = i;
@@ -519,7 +519,7 @@ void QuizLadyPickNewQuestion(void)
     if (BufferQuizAuthorNameAndCheckIfLady())
         sQuizLadyPtr->prevQuestionId = sQuizLadyPtr->questionId;
     else
-        sQuizLadyPtr->prevQuestionId = ARRAY_COUNT(sQuizLadyQuizQuestions);
+        sQuizLadyPtr->prevQuestionId = ARRAY_COUNT(sQuizLadyQuestions);
     QuizLadyPickQuestion();
 }
 
@@ -579,17 +579,17 @@ void QuizLadyClearQuestionForRecordMix(const LilycoveLady *lilycoveLady)
     u8 i;
 
     sQuizLadyPtr = &gSaveBlock1Ptr->lilycoveLady.quiz;
-    if (lilycoveLady->quiz.prevQuestionId < ARRAY_COUNT(sQuizLadyQuizQuestions)
+    if (lilycoveLady->quiz.prevQuestionId < ARRAY_COUNT(sQuizLadyQuestions)
         && sQuizLadyPtr->id == LILYCOVE_LADY_QUIZ)
     {
         for (i = 0; i < 4; i++)
         {
             if (lilycoveLady->quiz.prevQuestionId != sQuizLadyPtr->questionId)
                 break;
-            sQuizLadyPtr->questionId = Random() % ARRAY_COUNT(sQuizLadyQuizQuestions);
+            sQuizLadyPtr->questionId = Random() % ARRAY_COUNT(sQuizLadyQuestions);
         }
         if (lilycoveLady->quiz.prevQuestionId == sQuizLadyPtr->questionId)
-            sQuizLadyPtr->questionId = (sQuizLadyPtr->questionId + 1) % (int)ARRAY_COUNT(sQuizLadyQuizQuestions);
+            sQuizLadyPtr->questionId = (sQuizLadyPtr->questionId + 1) % (int)ARRAY_COUNT(sQuizLadyQuestions);
 
         sQuizLadyPtr->prevQuestionId = lilycoveLady->quiz.prevQuestionId;
     }
