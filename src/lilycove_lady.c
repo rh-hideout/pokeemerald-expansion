@@ -305,8 +305,8 @@ static void QuizLadyPickQuestion(void)
     questionId = Random() % ARRAY_COUNT(sQuizLadyQuizQuestions);
     for (i = 0; i < QUIZ_QUESTION_LEN; i ++)
         sQuizLadyPtr->question[i] = sQuizLadyQuizQuestions[questionId][i];
-    sQuizLadyPtr->correctAnswer = sQuizLadyQuizAnswers[questionId];
-    sQuizLadyPtr->prize = sQuizLadyPrizes[questionId];
+    sQuizLadyPtr->correctAnswer = sQuizLadyQuestions[questionId].answer;
+    sQuizLadyPtr->prize = sQuizLadyQuestions[questionId].prize;
     sQuizLadyPtr->questionId = questionId;
     sQuizLadyPtr->playerName[0] = EOS;
 }
@@ -368,12 +368,12 @@ u8 GetQuizAuthor(void)
         {
             if (++i >= (int)ARRAY_COUNT(sQuizLadyQuizQuestions))
                 i = 0;
-        } while (IsEasyChatAnswerUnlocked(sQuizLadyQuizAnswers[i]) == FALSE);
+        } while (IsEasyChatAnswerUnlocked(sQuizLadyQuestions[i].answer) == FALSE);
 
         for (j = 0; j < QUIZ_QUESTION_LEN; j++)
             quiz->question[j] = sQuizLadyQuizQuestions[i][j];
-        quiz->correctAnswer = sQuizLadyQuizAnswers[i];
-        quiz->prize = sQuizLadyPrizes[i];
+        quiz->correctAnswer = sQuizLadyQuestions[i].answer;
+        quiz->prize = sQuizLadyQuestions[i].prize;
         quiz->questionId = i;
         quiz->playerName[0] = EOS;
     }

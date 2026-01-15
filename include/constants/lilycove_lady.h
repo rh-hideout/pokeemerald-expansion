@@ -16,6 +16,8 @@
 #define QUIZ_AUTHOR_OTHER_PLAYER     1
 #define QUIZ_AUTHOR_LADY             2
 
+#define QUIZ_QUESTIONS 16
+
 // Would be redundant with the above set if GF hadn't mixed the order
 #define QUIZ_AUTHOR_NAME_LADY            0
 #define QUIZ_AUTHOR_NAME_PLAYER          1

@@ -11,6 +11,12 @@ struct LilycoveContestLadyValues
     const u8 *contestName;
 };
 
+struct LilycoveQuizLadyQuestions
+{
+    u16 answer;
+    u16 prize;
+};
+
 static const struct LilycoveContestLadyValues sContestLadyValues[] =
 {
     [CONTEST_CATEGORY_COOL] = {
@@ -266,7 +272,7 @@ static const u16 sQuizLadyQuestion16[QUIZ_QUESTION_LEN] =
     EC_EMPTY_WORD
 };
 
-static const u16 *const sQuizLadyQuizQuestions[] =
+static const u16 *const sQuizLadyQuizQuestions[QUIZ_QUESTIONS] =
 {
     sQuizLadyQuestion1,
     sQuizLadyQuestion2,
@@ -286,44 +292,24 @@ static const u16 *const sQuizLadyQuizQuestions[] =
     sQuizLadyQuestion16
 };
 
-static const u16 sQuizLadyQuizAnswers[] =
+static const struct LilycoveQuizLadyQuestions sQuizLadyQuestions[QUIZ_QUESTIONS] =
 {
-    EC_WORD_POKEDEX,
-    EC_WORD_DARK,
-    EC_WORD_LEVEL,
-    EC_WORD_FLOWERS,
-    EC_WORD_EGG,
-    EC_WORD_OWN_TEMPO,
-    EC_WORD_ROCK,
-    EC_WORD_SHADOW_TAG,
-    EC_WORD_IMMUNITY,
-    EC_WORD_POKEMON,
-    EC_WORD_PC,
-    EC_WORD_TELEVISION,
-    EC_WORD_PLUSH_DOLL,
-    EC_WORD_ICE,
-    EC_WORD_FIGHTING,
-    EC_WORD_DARK
-};
-
-static const u16 sQuizLadyPrizes[] =
-{
-    ITEM_GLITTER_MAIL,
-    ITEM_BEAD_MAIL,
-    ITEM_TROPIC_MAIL,
-    ITEM_MAX_ETHER,
-    ITEM_MAX_ETHER,
-    ITEM_MAX_ETHER,
-    ITEM_WATMEL_BERRY,
-    ITEM_BELUE_BERRY,
-    ITEM_DURIN_BERRY,
-    ITEM_LUXURY_BALL,
-    ITEM_TM_HYPER_BEAM,
-    ITEM_BIG_PEARL,
-    ITEM_STAR_PIECE,
-    ITEM_RARE_CANDY,
-    ITEM_RARE_CANDY,
-    ITEM_PREMIER_BALL
+    {.answer = EC_WORD_POKEDEX,     .prize = ITEM_GLITTER_MAIL},
+    {.answer = EC_WORD_DARK,        .prize = ITEM_BEAD_MAIL},
+    {.answer = EC_WORD_LEVEL,       .prize = ITEM_TROPIC_MAIL},
+    {.answer = EC_WORD_FLOWERS,     .prize = ITEM_MAX_ETHER},
+    {.answer = EC_WORD_EGG,         .prize = ITEM_MAX_ETHER},
+    {.answer = EC_WORD_OWN_TEMPO,   .prize = ITEM_MAX_ETHER},
+    {.answer = EC_WORD_ROCK,        .prize = ITEM_WATMEL_BERRY},
+    {.answer = EC_WORD_SHADOW_TAG, .prize = ITEM_BELUE_BERRY},
+    {.answer = EC_WORD_IMMUNITY,   .prize = ITEM_DURIN_BERRY},
+    {.answer = EC_WORD_POKEMON,    .prize = ITEM_LUXURY_BALL},
+    {.answer = EC_WORD_PC,         .prize = ITEM_TM_HYPER_BEAM},
+    {.answer = EC_WORD_TELEVISION, .prize = ITEM_BIG_PEARL},
+    {.answer = EC_WORD_PLUSH_DOLL, .prize = ITEM_STAR_PIECE},
+    {.answer = EC_WORD_ICE,        .prize = ITEM_RARE_CANDY},
+    {.answer = EC_WORD_FIGHTING,   .prize = ITEM_RARE_CANDY},
+    {.answer = EC_WORD_DARK,       .prize = ITEM_PREMIER_BALL},
 };
 
 // Favor Lady data
