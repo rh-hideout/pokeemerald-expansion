@@ -1,4 +1,3 @@
-
 enum HoennDexOrder
 {
     HOENN_DEX_NONE,
