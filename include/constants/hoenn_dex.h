@@ -240,3 +240,5 @@ enum HoennDexOrder
     HOENN_DEX_JIRACHI,
     HOENN_DEX_DEOXYS,
 };
+
+#define HOENN_DEX_COUNT (HOENN_DEX_DEOXYS + 1)
