@@ -6994,7 +6994,7 @@ bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method)
         return FALSE;
     }
 
-    if (targetSpecies != currentSpecies && targetSpecies != SPECIES_NONE)
+    if (targetSpecies != currentSpecies)
     {
         TryToSetBattleFormChangeMoves(mon, method);
         SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);

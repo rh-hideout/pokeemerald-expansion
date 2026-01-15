@@ -10374,15 +10374,13 @@ bool32 TryRevertPartyMonFormChange(u32 partyIndex)
 
 bool32 TryBattleFormChange(u32 battler, enum FormChanges method, enum Ability ability)
 {
-    u32 monId = gBattlerPartyIndexes[battler];
-    struct Pokemon *party = GetBattlerParty(battler);
-    u32 currentSpecies = GetMonData(&party[monId], MON_DATA_SPECIES);
-    u32 targetSpecies;
+    struct Pokemon *mon = GetBattlerMon(battler);
 
     if (!CanBattlerFormChange(battler, method))
         return FALSE;
 
-    targetSpecies = GetBattleFormChangeTargetSpecies(battler, method, ability);
+    u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
+    u32 targetSpecies = GetBattleFormChangeTargetSpecies(battler, method, ability);
 
     struct PartyState *battlePartyState = GetBattlerPartyState(battler);
     // If the battle ends, and there's not a specified species to change back to,
@@ -10407,10 +10405,10 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method, enum Ability ab
         if (GetBattlerPartyState(battler)->changedSpecies == SPECIES_NONE)
             GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
 
-        TryToSetBattleFormChangeMoves(&party[monId], method);
-        SetMonData(&party[monId], MON_DATA_SPECIES, &targetSpecies);
+        TryToSetBattleFormChangeMoves(mon, method);
+        SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
         gBattleMons[battler].species = targetSpecies;
-        RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
+        RecalcBattlerStats(battler, mon, method == FORM_CHANGE_BATTLE_GIGANTAMAX);
         return TRUE;
     }
 
