@@ -12,7 +12,6 @@ with open("tools/hoenn_dex/hoenn_dex.txt", "r+") as file:
             hoenn_dex_order += line
             hoenn_to_national_order += line
 
-#include/constants/hoenn_dex.h src/data/hoenn_dex.h
 with open("include/constants/hoenn_dex.h", "w") as file:
     file.write(hoenn_dex_order + "};\n")
 
