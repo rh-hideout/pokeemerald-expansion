@@ -280,7 +280,7 @@ DOUBLE_BATTLE_TEST("Shell Trap does not trigger when hit into Substitute")
     }
 }
 
-DOUBLE_BATTLE_TEST("Tar Shot activates on both opposing Targets")
+DOUBLE_BATTLE_TEST("Shell Trap activates on both opposing Targets")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
@@ -301,3 +301,4 @@ DOUBLE_BATTLE_TEST("Tar Shot activates on both opposing Targets")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerRight);
     }
 }
+
