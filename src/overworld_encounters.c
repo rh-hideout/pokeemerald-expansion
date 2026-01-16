@@ -1259,15 +1259,6 @@ static bool32 OWE_DoesRoamerObjectExist(void)
     return FALSE;
 }
 
-void OverworldWildEncounter_InitRoamerOutbreakStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template)
-{
-    // See comment in OWE_CreateEnemyPartyMon.
-    if (!IsOverworldWildEncounter(objectEvent))
-        return;
-    
-    objectEvent->sRoamerOutbreakStatus = (template->trainerType >> 8) & 0xFF;
-}
-
 static bool32 OWE_CheckRestrictMovementMetatile(struct ObjectEvent *objectEvent, u32 direction)
 {
     s16 xCurrent = objectEvent->currentCoords.x;
