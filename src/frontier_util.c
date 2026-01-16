@@ -2259,7 +2259,7 @@ static void RestoreHeldItems(void)
     {
         if (gSaveBlock2Ptr->frontier.selectedPartyMons[i] != 0)
         {
-            u16 item = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_HELD_ITEM, NULL);
+            u16 item = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_HELD_ITEM);
             SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
         }
     }
@@ -2297,8 +2297,8 @@ static void ResetSketchedMoves(void)
             {
                 for (k = 0; k < MAX_MON_MOVES; k++)
                 {
-                    if (GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_MOVE1 + k, NULL)
-                        == GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + j, NULL))
+                    if (GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_MOVE1 + k)
+                        == GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + j))
                         break;
                 }
                 if (k == MAX_MON_MOVES)
@@ -2541,7 +2541,7 @@ void SaveGameFrontier(void)
 }
 
 // Frontier Brain functions.
-u8 GetFrontierBrainTrainerPicIndex(void)
+enum TrainerPicID GetFrontierBrainTrainerPicIndex(void)
 {
     s32 facility;
 
@@ -2620,16 +2620,16 @@ void CreateFrontierBrainPokemon(void)
         if (!(selectedMonBits & 1))
             continue;
 
-        do
-        {
-            j = Random32(); //should just be one while loop, but that doesn't match
-        } while (sFrontierBrainsMons[facility][symbol][i].nature != GetNatureFromPersonality(j));
-        CreateMon(&gEnemyParty[monPartyId],
+        u32 personality = GetMonPersonality(sFrontierBrainsMons[facility][symbol][i].species,
+                                            MON_GENDER_RANDOM,
+                                            sFrontierBrainsMons[facility][symbol][i].nature,
+                                            RANDOM_UNOWN_LETTER);
+        CreateMonWithIVs(&gEnemyParty[monPartyId],
                   sFrontierBrainsMons[facility][symbol][i].species,
                   monLevel,
-                  sFrontierBrainsMons[facility][symbol][i].fixedIV,
-                  TRUE, j,
-                  OT_ID_PRESET, FRONTIER_BRAIN_OTID);
+                  personality,
+                  OTID_STRUCT_PRESET(FRONTIER_BRAIN_OTID),
+                  sFrontierBrainsMons[facility][symbol][i].fixedIV);
         SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
         for (j = 0; j < NUM_STATS; j++)
             SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);
@@ -3294,10 +3294,10 @@ s32 GetHighestLevelInPlayerParty(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL)
-            && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_EGG)
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES)
+            && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
         {
-            s32 level = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL, NULL);
+            s32 level = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
             if (level > highestLevel)
                 highestLevel = level;
         }

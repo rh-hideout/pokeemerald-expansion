@@ -23,7 +23,7 @@ The best bug reports have enough information that we won't have to contact you f
 
 - A maintainer will [label](https://github.com/rh-hideout/pokeemerald-expansion/labels) the bug report.
 - A maintainer will try to reproduce the bug with your provided steps.
-    - If there are no reproduction steps or no obvious way to reproduce the issue, somebody will ask you for those steps. Until the bug can be reproduced, the bug will retain the `bug:unconfirmed` label. Unconfirmed bugs are less likely get fixed.
+    - If there are no reproduction steps or no obvious way to reproduce the issue, somebody will ask you for those steps. Until the bug can be reproduced, the bug will retain the `bug:unconfirmed` label. Unconfirmed bugs are less likely to get fixed.
 - If the team is able to reproduce the bug, it will be labeled `bug:confirmed`, and the bug will be left to be [fixed by someone](#Pull-Requests).
     - If the issue is particularly game-breaking, a maintainer will add it to a future version's [milestone](), meaning that version will not be released until the problem is solved.
 
@@ -61,8 +61,11 @@ If you have read all of this and still need help, feel free to start a thread in
 - If you're new to git and GitHub, [Team Aqua's Asset Repo](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/) has a [guide on forking and cloning the repository](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/wiki/The-Basics-of-GitHub). Make sure you have a [local copy](INSTALL.md) of `pokeemerald-expansion`.
 - Make sure your contribution is in [scope](docs/team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server!](https://discord.gg/6CzjAG6GZk).
 - Choose a branch to contribute your PR to:
-    - **`master`**: Fixes for bugs that are currently present in the `master` branch.
-    - **`upcoming`**: All other pull requests.
+    - **`master`**: If your PR contains meets any of the following criteria, it should go to `master`:
+      - Fixes for bugs that are currently present in the `master` branch
+      - PR is only documentation updates / changes
+      - PR is only tests
+    - **`upcoming`**: All other pull requests go to `upcoming`.
 - Create a new branch from the most recent version of the branch you've chosen.
 - If your contribution introduces, removes, or changes a lot of existing code, we reccomend getting a maintainer to agree to review it before you start on the work! We have a table that lists all [current maintainers and their areas of expertise](#maintainers).
 
@@ -122,21 +125,20 @@ Once all items on the merge checklist are true, the branch will be merged in.
 
 ## Maintainers
 
-This list was last updated 2025 April 1.
+This list was last updated 2025 Dec 23.
 
 | Name | Discord | Currently Active | Areas of Expertise |
 | --- | --- | --- | --- |
 | [Alex](https://github.com/AlexOn1ine) | rainonline | ✅ | Battle Engine, Battle AI
 | [Egg](https://github.com/DizzyEggg) | egg9255 | ✅ | Battle Engine, Battle AI
-| [ghoulslash](https://github.com/ghoulslash) | ghoulslash | ✅ | Dexnav, Overworld, Battle Engine
 | [Jasper](https://github.com/Bassoonian) | bassoonian | ✅ | Berries, Day / Night System, Followers, Feature Branches
 | [MGriffin](https://github.com/mrgriffin) | mgriffin | ✅ | Tests, Trainer Control
 | [psf](https://github.com/pkmnsnfrn) | pkmnsnfrn | ✅ | Rematches, Difficulty, Trainer Slides, Fake RTC, Fishing Minigames, Imperial / Metric, OW Item Balls, Sky Battles
 | [Hedara](https://github.com/hedara90) | hedara | ✅ | Compression, Sprites
 | [Pawkkie](https://github.com/Pawkkie) | pawkkie | ✅ | Battle AI
 | [SBird](https://github.com/SBird1337) | karathan | ✅ | Dynamic Multichoice, Damage Calculation, Animations, Trainer Control, Tests
-| [Agustin](https://github.com/AgustinGDLV) | agustingdlv | Inactive | Gimmicks, Battle Engine, Tests, Items
-| [tertu](https://github.com/tertu-m) | tertu | Inactive | Randomizer
+| [Jamie](https://github.com/FosterProgramming) | foster_harmony | ✅ | Overworld, Tests, Day / Night System, Dexnav, Battle Frontier, HGSS Dex, Pokerus, Learnsets, Mon Generation, Vs Seeker
+| [grintoul](https://github.com/grintoul1) | grintoul | ✅ | Tests, Battle AI, Battle Engine, Overworld, Trainer Slides, Follower NPCs, Multi Battles
 
 ## Attribution
 This guide is based on the [contributing.md](https://contributing.md/generator)!

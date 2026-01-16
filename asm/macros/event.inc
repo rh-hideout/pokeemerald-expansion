@@ -644,6 +644,10 @@
 		.endif
 	.endm
 
+	.macro waitmovementall
+	callnative Script_waitmovementall, requests_effects=1
+	.endm
+
 	@ Attempts to despawn the specified (localId) object on the specified map.
 	@ It also sets the object's visibility flag if it has one.
 	@ If no map is specified, then the current map is used.
@@ -1014,9 +1018,9 @@
 	.2byte \level
 	.ifnb \item; .set givemon_flags, givemon_flags | (1 << 0); .endif
 	.ifnb \ball; .set givemon_flags, givemon_flags | (1 << 1); .endif
-	.ifnb \nature; .set givemon_flags, givemon_flags | (1 << 2); .endif
+	.set givemon_flags, givemon_flags | (1 << 2);
 	.ifnb \abilityNum; .set givemon_flags, givemon_flags | (1 << 3); .endif
-	.ifnb \gender; .set givemon_flags, givemon_flags | (1 << 4); .endif
+	.set givemon_flags, givemon_flags | (1 << 4);
 	.ifnb \hpEv; .set givemon_flags, givemon_flags | (1 << 5); .endif
 	.ifnb \atkEv; .set givemon_flags, givemon_flags | (1 << 6); .endif
 	.ifnb \defEv; .set givemon_flags, givemon_flags | (1 << 7); .endif
@@ -1040,9 +1044,9 @@
 	.4byte givemon_flags
 	.ifnb \item; .2byte \item; .endif
 	.ifnb \ball; .2byte \ball; .endif
-	.ifnb \nature; .2byte \nature; .endif
+	.ifnb \nature; .2byte \nature; .else; .2byte NATURE_MAY_SYNCHRONIZE; .endif
 	.ifnb \abilityNum; .2byte \abilityNum; .endif
-	.ifnb \gender; .2byte \gender; .endif
+	.ifnb \gender; .2byte \gender; .else; .2byte MON_GENDER_MAY_CUTE_CHARM; .endif
 	.ifnb \hpEv; .2byte \hpEv; .endif
 	.ifnb \atkEv; .2byte \atkEv; .endif
 	.ifnb \defEv; .2byte \defEv; .endif
@@ -2125,6 +2129,11 @@
 	.4byte \func
 	.endm
 
+	.macro setdynamicswitchaifunc func:req
+	callnative ScriptSetDynamicAiSwitchFunc, requests_effects=1
+	.4byte \func
+	.endm
+
 	@ Set up a totem boost for the next battle.
 	@ 'battler' is the position of the mon you want to gain a boost. see B_POSITION_xx in include/constants/battle.h.
 	@ The rest of the arguments are the stat change values to each stat.
@@ -2346,7 +2355,7 @@
 	@ ============================ @
 	@ FAKE RTC MACROS
 	@ Will only function if OW_USE_FAKE_RTC is true. If it has any additional requirements, it will be listed accordingly.
-	
+
 	@ When OW_USE_FAKE_RTC is true and OW_FLAG_PAUSE_TIME is assigned, this macro will stop the flow of time.
 	.macro pausefakertc
 	callnative Script_PauseFakeRtc, requests_effects=1
@@ -2370,26 +2379,26 @@
 	.4byte \minutes
 	.endm
 
-	@ When OW_USE_FAKE_RTC is true, adds a specified number of days to the time. 
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days to the time.
 	.macro adddays days:req
 	callnative ScrCmd_adddays, requests_effects=1
 	.4byte \days
 	.endm
 
-	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time. 
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time.
 	.macro addhours hours:req
 	callnative ScrCmd_addhours, requests_effects=1
 	.4byte \hours
 	.endm
 
-	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time. 
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time.
 	.macro addminutes minutes:req
 	callnative ScrCmd_addminutes, requests_effects=1
 	.4byte \minutes
 	.endm
 
-	@ Forwards the time to a specified hour and minute. 
-	@ This causes the time to go to the next day if the time has already been past. 
+	@ Forwards the time to a specified hour and minute.
+	@ This causes the time to go to the next day if the time has already been past.
 	.macro fwdtime hours:req, minutes:req
 	callnative ScrCmd_fwdtime, requests_effects=1
 	.4byte \hours
@@ -2619,7 +2628,7 @@
 	callnative DoFacilityTrainerBattle
 	.byte \facility
 	.endm
-	
+
 @ Follower NPCs
 
 	@ Sets an existing NPC up to follow the player.
@@ -2736,4 +2745,10 @@
 	.macro istmrelearneractive destination:req
 	callnative ScrCmd_istmrelearneractive, requests_effects=1
 	.4byte \destination
+	.endm
+
+	@ Sets a starting status for the next battle. Can be stacked.
+	.macro setstartingstatus status:req
+	callnative ScrCmd_setstartingstatus
+	.byte \status
 	.endm

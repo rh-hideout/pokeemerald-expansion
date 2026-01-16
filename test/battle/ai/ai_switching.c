@@ -83,12 +83,12 @@ AI_SINGLE_BATTLE_TEST("AI switches if Perish Song is about to kill")
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) {Moves(MOVE_SCRATCH); }
-        OPPONENT(SPECIES_CROBAT) {Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_CROBAT) { Moves(MOVE_SCRATCH); }
     } WHEN {
             TURN { MOVE(player, MOVE_PERISH_SONG); }
-            TURN { ; }
-            TURN { ; }
+            TURN {}
+            TURN {}
             TURN { EXPECT_SWITCH(opponent, 1); }
     } SCENE {
         MESSAGE(AI_TRAINER_NAME " sent out Crobat!");
@@ -102,11 +102,11 @@ AI_SINGLE_BATTLE_TEST("AI sees on-field player ability correctly and does not se
     PARAMETRIZE { testAbility = ABILITY_VOLT_ABSORB; }
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_PIKACHU) {Level(100); Moves(MOVE_VOLT_SWITCH, MOVE_SPARKLY_SWIRL); Ability(ABILITY_LIGHTNING_ROD); };
-        PLAYER(SPECIES_LANTURN) {Level(44); Moves(MOVE_SCALD); Ability(testAbility); };
-        OPPONENT(SPECIES_SOBBLE) {Level(44); Moves(MOVE_SCRATCH); }
-        OPPONENT(SPECIES_BOMBIRDIER) {Level(42); Moves(MOVE_ROCK_SLIDE); }
-        OPPONENT(SPECIES_IRON_THORNS) {Level(43); Moves(MOVE_SUPERCELL_SLAM, MOVE_ICE_PUNCH); }
+        PLAYER(SPECIES_PIKACHU) { Level(100); Moves(MOVE_VOLT_SWITCH, MOVE_SPARKLY_SWIRL); Ability(ABILITY_LIGHTNING_ROD); }
+        PLAYER(SPECIES_LANTURN) { Level(44); Moves(MOVE_SCALD); Ability(testAbility); }
+        OPPONENT(SPECIES_SOBBLE) { Level(44); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_BOMBIRDIER) { Level(42); Moves(MOVE_ROCK_SLIDE); }
+        OPPONENT(SPECIES_IRON_THORNS) { Level(43); Moves(MOVE_SUPERCELL_SLAM, MOVE_ICE_PUNCH); }
     } WHEN {
         TURN {
             MOVE(player, MOVE_VOLT_SWITCH);
@@ -135,7 +135,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
         OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
         OPPONENT(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
     } WHEN {
-        TURN { EXPECT_SWITCH(opponentLeft, 3); };
+        TURN { EXPECT_SWITCH(opponentLeft, 3); }
     } SCENE {
         MESSAGE(AI_TRAINER_NAME " withdrew Gengar!");
         MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
@@ -167,7 +167,7 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch mid-turn into a player Pokémon
         MULTI_OPPONENT_B(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
 
     } WHEN {
-        TURN { EXPECT_SWITCH(playerRight, 5); };
+        TURN { EXPECT_SWITCH(playerRight, 5); }
     } SCENE {
         MESSAGE(AI_PARTNER_NAME " withdrew Gengar!");
         MESSAGE(AI_PARTNER_NAME " sent out Raticate!");
@@ -199,7 +199,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch mid-turn into a player Pok
         MULTI_OPPONENT_A(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
 
     } WHEN {
-        TURN { EXPECT_SWITCH(playerRight, 5); };
+        TURN { EXPECT_SWITCH(playerRight, 5); }
     } SCENE {
         MESSAGE(AI_PARTNER_NAME " withdrew Gengar!");
         MESSAGE(AI_PARTNER_NAME " sent out Raticate!");
@@ -231,7 +231,7 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch into a player Pokémon after fa
         MULTI_OPPONENT_B(SPECIES_VIBRAVA) { Moves(MOVE_CELEBRATE); }
 
     } WHEN {
-        TURN { EXPECT_MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SEND_OUT(playerRight, 5); };
+        TURN { EXPECT_MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SEND_OUT(playerRight, 5); }
     } SCENE {
         MESSAGE(AI_PARTNER_NAME " sent out Haunter!");
         NONE_OF {
@@ -261,7 +261,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch into a player Pokémon aft
         MULTI_OPPONENT_A(SPECIES_VIBRAVA) { Moves(MOVE_CELEBRATE); }
 
     } WHEN {
-        TURN { EXPECT_MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SEND_OUT(playerRight, 5); };
+        TURN { EXPECT_MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SEND_OUT(playerRight, 5); }
     } SCENE {
         MESSAGE(AI_PARTNER_NAME " sent out Haunter!");
         NONE_OF {
@@ -275,8 +275,8 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch into a player Pokémon (multi)"
 {
     u32 flags;
 
-    PARAMETRIZE {flags = AI_FLAG_SMART_SWITCHING; }
-    PARAMETRIZE {flags = 0; }
+    PARAMETRIZE { flags = AI_FLAG_SMART_SWITCHING; }
+    PARAMETRIZE { flags = 0; }
 
     PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
     GIVEN {
@@ -290,8 +290,8 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch into a player Pokémon (multi)"
         MULTI_OPPONENT_B(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
 
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:playerRight); EXPECT_SWITCH(playerRight, 4); EXPECT_SEND_OUT(playerRight, 3); };
-        TURN { EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target:opponentLeft); };
+        TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:playerRight); EXPECT_SWITCH(playerRight, 4); EXPECT_SEND_OUT(playerRight, 3); }
+        TURN { EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target:opponentLeft); }
     } SCENE {
         MESSAGE(AI_PARTNER_NAME " sent out Raticate!");
         NONE_OF {
@@ -320,8 +320,8 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch into a player Pokémon (2v
         MULTI_OPPONENT_A(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
 
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:playerRight); EXPECT_SWITCH(playerRight, 4); EXPECT_SEND_OUT(playerRight, 3); };
-        TURN { EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target:opponentLeft); };
+        TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:playerRight); EXPECT_SWITCH(playerRight, 4); EXPECT_SEND_OUT(playerRight, 3); }
+        TURN { EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target:opponentLeft); }
     } SCENE {
         MESSAGE(AI_PARTNER_NAME " sent out Raticate!");
         NONE_OF {
@@ -349,7 +349,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 
         MULTI_OPPONENT_A(SPECIES_GASTLY) { Moves(MOVE_LICK); }
         MULTI_OPPONENT_A(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
     } WHEN {
-        TURN { EXPECT_SWITCH(opponentLeft, 3); };
+        TURN { EXPECT_SWITCH(opponentLeft, 3); }
     } SCENE {
         MESSAGE(AI_TRAINER_NAME " withdrew Gengar!");
         MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
@@ -379,7 +379,7 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will not switch into a partner Pokémon in a 1v2 b
         MULTI_OPPONENT_B(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
 
     } WHEN {
-        TURN { EXPECT_SWITCH(opponentRight, 5); };
+        TURN { EXPECT_SWITCH(opponentRight, 5); }
     } SCENE {
         MESSAGE(AI_TRAINER_2_NAME " withdrew Gengar!");
         MESSAGE(AI_TRAINER_2_NAME " sent out Raticate!");
@@ -414,7 +414,7 @@ AI_SINGLE_BATTLE_TEST("When AI switches out due to having no move that affects t
         OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
         OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
     } WHEN {
-        TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_SWITCH(opponent, 2); EXPECT_SEND_OUT(opponent, 4);}
+        TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_SWITCH(opponent, 2); EXPECT_SEND_OUT(opponent, 4); }
         TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_MOVE(opponent, MOVE_TACKLE); }
     }
 }
@@ -432,7 +432,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
         OPPONENT(SPECIES_LINOONE) { Moves(MOVE_SCRATCH); }
         OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
     } WHEN {
-        TURN { EXPECT_SWITCH(opponentLeft, 3); };
+        TURN { EXPECT_SWITCH(opponentLeft, 3); }
     } SCENE {
         MESSAGE(AI_TRAINER_NAME " withdrew Linoone!");
         MESSAGE(AI_TRAINER_NAME " sent out Gengar!");
@@ -458,9 +458,9 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switch effect moves will send 
         ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
         ASSUME(GetMoveEffect(MOVE_PARTING_SHOT) == EFFECT_PARTING_SHOT);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        ASSUME(GetMoveEffect(MOVE_CHILLY_RECEPTION) == EFFECT_CHILLY_RECEPTION);
+        ASSUME(GetMoveEffect(MOVE_CHILLY_RECEPTION) == EFFECT_WEATHER_AND_SWITCH);
         ASSUME(GetMoveEffect(MOVE_SHED_TAIL) == EFFECT_SHED_TAIL);
-        WITH_CONFIG(GEN_CONFIG_TELEPORT_BEHAVIOR, GEN_8);
+        WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_8);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_ACE_POKEMON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(aiMove); }
@@ -478,7 +478,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Eject Button will send out Ace
     GIVEN {
         AI_FLAGS(flags);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
-        OPPONENT(SPECIES_ZIGZAGOON) { Item(ITEM_EJECT_BUTTON); };
+        OPPONENT(SPECIES_ZIGZAGOON) { Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); EXPECT_SEND_OUT(opponent, 1); }
@@ -603,7 +603,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI considers hazard damage whe
         OPPONENT(SPECIES_CHARIZARD) { Speed(200); Moves(MOVE_FLAMETHROWER); SpAttack(317); SpDefense(207); MaxHP(297); } // Outspeends and 2HKOs Meganium
         OPPONENT(SPECIES_TYPHLOSION) { Speed(200); Moves(MOVE_FLAMETHROWER); SpAttack(317); SpDefense(207); MaxHP(297); } // Outspeends and 2HKOs Meganium
     } WHEN {
-            TURN { MOVE(player, MOVE_STEALTH_ROCK) ;}
+            TURN { MOVE(player, MOVE_STEALTH_ROCK) ; }
             TURN { MOVE(player, MOVE_SURF); EXPECT_SEND_OUT(opponent, aiIsSmart ? 2 : 1); } // AI sends out Typhlosion to get the KO with the flag rather than Charizard
     }
 }
@@ -611,8 +611,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI considers hazard damage whe
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Mid-battle switches prioritize type matchup + SE move, then type matchup")
 {
     u32 flags = 0;
-    u32 move1;
-    u32 move2;
+    enum Move move1;
+    enum Move move2;
     u32 expectedIndex;
 
     PARAMETRIZE { expectedIndex = 3; move1 = MOVE_SCRATCH; move2 = MOVE_SCRATCH; flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; } // When not smart, AI will only switch in a defensive mon if it has a SE move, otherwise will just default to damage
@@ -639,7 +639,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Mid-battle switches prioritize
         PLAYER(SPECIES_SWELLOW) { Level(30); Moves(MOVE_WING_ATTACK, MOVE_BOOMBURST); Speed(5); SpAttack(50); }
         OPPONENT(SPECIES_PONYTA) { Level(1); Moves(MOVE_NONE); Speed(4); } // Forces switchout
         OPPONENT(SPECIES_ARON) { Level(30); Moves(MOVE_IRON_HEAD); Speed(4); SpDefense(50); } // Mid battle, AI sends out Aron
-        OPPONENT(SPECIES_ELECTRODE) { Level(30); Ability(ABILITY_STATIC); Moves(MOVE_CHARGE_BEAM); Speed(6); SpDefense(53);}
+        OPPONENT(SPECIES_ELECTRODE) { Level(30); Ability(ABILITY_STATIC); Moves(MOVE_CHARGE_BEAM); Speed(6); SpDefense(53); }
     } WHEN {
             TURN { MOVE(player, MOVE_WING_ATTACK); EXPECT_SWITCH(opponent, 1); }
     }
@@ -763,7 +763,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI switches out after sufficient
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not switch out if Pokemon would faint to hazards unless party member can clear them")
 {
-    u32 move1;
+    enum Move move1;
 
     PARAMETRIZE { move1 = MOVE_SCRATCH; }
     PARAMETRIZE { move1 = MOVE_RAPID_SPIN; }
@@ -803,7 +803,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch in trapping mon m
         ASSUME(GetSpeciesType(SPECIES_GOLURK, 1) == TYPE_GHOST);
         AI_FLAGS(flags);
         PLAYER(SPECIES_ELECTRODE) { Speed(4); Moves(MOVE_THUNDERBOLT, MOVE_AURA_SPHERE, MOVE_PROTECT); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); };
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_SNORLAX) { Speed(1); Moves(MOVE_HEADBUTT); }
         OPPONENT(SPECIES_DUGTRIO) { Speed(3); Ability(ABILITY_ARENA_TRAP); Moves(MOVE_EARTHQUAKE); }
         OPPONENT(SPECIES_GOLURK) { Speed(5); Moves(MOVE_EARTHQUAKE); }
@@ -832,7 +832,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will switch in trapping mon
         if (flags & AI_FLAG_SMART_MON_CHOICES)
             TURN{ MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_SELF_DESTRUCT); EXPECT_SEND_OUT(opponent, 1); }
         else
-            TURN{ MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_SELF_DESTRUCT); EXPECT_SEND_OUT(opponent, 2); }
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_SELF_DESTRUCT); EXPECT_SEND_OUT(opponent, 2); }
     }
 }
 
@@ -849,15 +849,15 @@ AI_SINGLE_BATTLE_TEST("AI won't use trapping behaviour if player only has 1 mon 
         OPPONENT(SPECIES_MAGNEZONE) { Speed(1); Ability(ABILITY_MAGNET_PULL); Moves(MOVE_SHOCK_WAVE); }
         OPPONENT(SPECIES_MEGANIUM) { Speed(3); Moves(MOVE_EARTH_POWER); }
     } WHEN {
-        TURN{ MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_SELF_DESTRUCT); EXPECT_SEND_OUT(opponent, 2); }
+        TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_SELF_DESTRUCT); EXPECT_SEND_OUT(opponent, 2); }
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI will trap player using Trace if player has a trapper")
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will trap player using Trace if player has a trapper")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_TRAPPER_PERCENTAGE, 100, RNG_AI_SWITCH_TRAPPER);
     GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES);
         PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_ARENA_TRAP); Moves(MOVE_ROCK_TOMB); }
         PLAYER(SPECIES_DUGTRIO);
         OPPONENT(SPECIES_GENGAR);
@@ -879,7 +879,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if mon would 
 
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_ELECTRODE) { Moves(MOVE_THUNDERBOLT, MOVE_THUNDER_WAVE, MOVE_THUNDER_SHOCK); }
-        OPPONENT(SPECIES_PELIPPER) { Moves(MOVE_EARTHQUAKE); };
+        OPPONENT(SPECIES_PELIPPER) { Moves(MOVE_EARTHQUAKE); }
         OPPONENT(SPECIES_RHYDON) { Moves(MOVE_EARTHQUAKE); Ability(ABILITY_ROCK_HEAD); }
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT) ; EXPECT_SWITCH(opponent, 1); }
@@ -1147,24 +1147,25 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if player's m
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an absorber")
 {
-    u32 aiMon; u32 move;
+    u32 aiMon;
+    enum Move move;
     enum Ability absorbingAbility;
-    PARAMETRIZE { aiMon = SPECIES_NINETALES; absorbingAbility = ABILITY_FLASH_FIRE; move = MOVE_FLAMETHROWER;}
-    PARAMETRIZE { aiMon = SPECIES_MANTINE;   absorbingAbility = ABILITY_WATER_ABSORB; move = MOVE_SURF;}
-    PARAMETRIZE { aiMon = SPECIES_TOXICROAK; absorbingAbility = ABILITY_DRY_SKIN; move = MOVE_SURF;}
-    PARAMETRIZE { aiMon = SPECIES_GASTRODON; absorbingAbility = ABILITY_STORM_DRAIN; move = MOVE_SURF;}
-    PARAMETRIZE { aiMon = SPECIES_JOLTEON; absorbingAbility = ABILITY_VOLT_ABSORB; move = MOVE_THUNDERBOLT;}
-    PARAMETRIZE { aiMon = SPECIES_ELECTIVIRE; absorbingAbility = ABILITY_MOTOR_DRIVE; move = MOVE_THUNDERBOLT;}
-    PARAMETRIZE { aiMon = SPECIES_MANECTRIC; absorbingAbility = ABILITY_LIGHTNING_ROD; move = MOVE_THUNDERBOLT;}
-    PARAMETRIZE { aiMon = SPECIES_ELECTIVIRE; absorbingAbility = ABILITY_MOTOR_DRIVE; move = MOVE_THUNDERBOLT;}
-    PARAMETRIZE { aiMon = SPECIES_AZUMARILL; absorbingAbility = ABILITY_SAP_SIPPER; move = MOVE_GIGA_DRAIN;}
-    PARAMETRIZE { aiMon = SPECIES_ORTHWORM; absorbingAbility = ABILITY_EARTH_EATER; move = MOVE_EARTHQUAKE;}
-    PARAMETRIZE { aiMon = SPECIES_BRONZONG; absorbingAbility = ABILITY_LEVITATE; move = MOVE_EARTHQUAKE;}
-    PARAMETRIZE { aiMon = SPECIES_ELECTRODE; absorbingAbility = ABILITY_SOUNDPROOF; move = MOVE_HYPER_VOICE;}
-    PARAMETRIZE { aiMon = SPECIES_CHESNAUGHT; absorbingAbility = ABILITY_BULLETPROOF; move = MOVE_SLUDGE_BOMB;}
-    PARAMETRIZE { aiMon = SPECIES_BRAMBLEGHAST; absorbingAbility = ABILITY_WIND_RIDER; move = MOVE_HURRICANE;}
+    PARAMETRIZE { aiMon = SPECIES_NINETALES; absorbingAbility = ABILITY_FLASH_FIRE; move = MOVE_FLAMETHROWER; }
+    PARAMETRIZE { aiMon = SPECIES_MANTINE;   absorbingAbility = ABILITY_WATER_ABSORB; move = MOVE_SURF; }
+    PARAMETRIZE { aiMon = SPECIES_TOXICROAK; absorbingAbility = ABILITY_DRY_SKIN; move = MOVE_SURF; }
+    PARAMETRIZE { aiMon = SPECIES_GASTRODON; absorbingAbility = ABILITY_STORM_DRAIN; move = MOVE_SURF; }
+    PARAMETRIZE { aiMon = SPECIES_JOLTEON; absorbingAbility = ABILITY_VOLT_ABSORB; move = MOVE_THUNDERBOLT; }
+    PARAMETRIZE { aiMon = SPECIES_ELECTIVIRE; absorbingAbility = ABILITY_MOTOR_DRIVE; move = MOVE_THUNDERBOLT; }
+    PARAMETRIZE { aiMon = SPECIES_MANECTRIC; absorbingAbility = ABILITY_LIGHTNING_ROD; move = MOVE_THUNDERBOLT; }
+    PARAMETRIZE { aiMon = SPECIES_ELECTIVIRE; absorbingAbility = ABILITY_MOTOR_DRIVE; move = MOVE_THUNDERBOLT; }
+    PARAMETRIZE { aiMon = SPECIES_AZUMARILL; absorbingAbility = ABILITY_SAP_SIPPER; move = MOVE_GIGA_DRAIN; }
+    PARAMETRIZE { aiMon = SPECIES_ORTHWORM; absorbingAbility = ABILITY_EARTH_EATER; move = MOVE_EARTHQUAKE; }
+    PARAMETRIZE { aiMon = SPECIES_BRONZONG; absorbingAbility = ABILITY_LEVITATE; move = MOVE_EARTHQUAKE; }
+    PARAMETRIZE { aiMon = SPECIES_ELECTRODE; absorbingAbility = ABILITY_SOUNDPROOF; move = MOVE_HYPER_VOICE; }
+    PARAMETRIZE { aiMon = SPECIES_CHESNAUGHT; absorbingAbility = ABILITY_BULLETPROOF; move = MOVE_SLUDGE_BOMB; }
+    PARAMETRIZE { aiMon = SPECIES_BRAMBLEGHAST; absorbingAbility = ABILITY_WIND_RIDER; move = MOVE_HURRICANE; }
     GIVEN {
-        ASSUME(B_REDIRECT_ABILITY_IMMUNITY >= GEN_5);
+        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(move); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
@@ -1177,7 +1178,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an 
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if opponent uses two-turn move and it has a switchin that wins 1v1")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SKY_ATTACK; }
     PARAMETRIZE { move = MOVE_FLY; }
 
@@ -1256,7 +1257,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if Encore'd i
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ENCORE_DAMAGE_PERCENTAGE, 100, RNG_AI_SWITCH_ENCORE);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ENCORE_TARGET, GEN_3);
+        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_AZURILL) { Moves(MOVE_SCRATCH, MOVE_ENCORE); }
@@ -1315,11 +1316,12 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if mon has Truant and oppon
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attacking stat lowered by 2 stages with good switchin candidate 50% of the time")
 {
-    u32 aiSpecies = SPECIES_NONE, aiMove = MOVE_NONE, move = MOVE_NONE;
+    u32 aiSpecies = SPECIES_NONE;
+    enum Move aiMove = MOVE_NONE, move = MOVE_NONE;
 
     PASSES_RANDOMLY(SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO_PERCENTAGE, 100, RNG_AI_SWITCH_STATS_LOWERED);
-    PARAMETRIZE {move = MOVE_CHARM; aiSpecies = SPECIES_FLAREON; aiMove = MOVE_FIRE_FANG; };
-    PARAMETRIZE {move = MOVE_EERIE_IMPULSE; aiSpecies = SPECIES_ESPEON; aiMove = MOVE_CONFUSION; };
+    PARAMETRIZE { move = MOVE_CHARM; aiSpecies = SPECIES_FLAREON; aiMove = MOVE_FIRE_FANG; }
+    PARAMETRIZE { move = MOVE_EERIE_IMPULSE; aiSpecies = SPECIES_ESPEON; aiMove = MOVE_CONFUSION; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_ATTACK_DOWN_2);
@@ -1336,11 +1338,12 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attac
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attacking stat lowered by 3+ stages")
 {
-    u32 aiSpecies = SPECIES_NONE, aiMove = MOVE_NONE, move = MOVE_NONE, move2 = MOVE_NONE;
+    u32 aiSpecies = SPECIES_NONE;
+    enum Move aiMove = MOVE_NONE, move = MOVE_NONE, move2 = MOVE_NONE;
 
     PASSES_RANDOMLY(SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE, 100, RNG_AI_SWITCH_STATS_LOWERED);
-    PARAMETRIZE {move = MOVE_GROWL; move2 = MOVE_CHARM; aiSpecies = SPECIES_FLAREON; aiMove = MOVE_FIRE_FANG; };
-    PARAMETRIZE {move = MOVE_CONFIDE; move2 = MOVE_EERIE_IMPULSE; aiSpecies = SPECIES_ESPEON; aiMove = MOVE_STORED_POWER; };
+    PARAMETRIZE { move = MOVE_GROWL; move2 = MOVE_CHARM; aiSpecies = SPECIES_FLAREON; aiMove = MOVE_FIRE_FANG; }
+    PARAMETRIZE { move = MOVE_CONFIDE; move2 = MOVE_EERIE_IMPULSE; aiSpecies = SPECIES_ESPEON; aiMove = MOVE_STORED_POWER; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_ATTACK_DOWN_2);
@@ -1358,7 +1361,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attac
 
 AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch into mon with good type matchup and SE move if current mon has no SE move and no stats raised")
 {
-    u32 odds = 0, species = SPECIES_NONE, move = MOVE_NONE;
+    u32 odds = 0, species = SPECIES_NONE;
+    enum Move move = MOVE_NONE;
     PARAMETRIZE { odds = 33; species = SPECIES_SCIZOR; move = MOVE_X_SCISSOR; }
     PARAMETRIZE { odds = 50; species = SPECIES_DUSCLOPS; move = MOVE_SHADOW_BALL; }
     PASSES_RANDOMLY(odds, 100, RNG_AI_SWITCH_SE_DEFENSIVE);
@@ -1376,7 +1380,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch into mon with good type matchup
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI correctly handles abilities when scoring moves")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PRANKSTER_DARK_TYPES, GEN_7);
+        WITH_CONFIG(CONFIG_PRANKSTER_DARK_TYPES, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GRENINJA, 1) == TYPE_DARK);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_MON_CHOICES);
         PLAYER(SPECIES_GRENINJA) { Moves(MOVE_WATER_GUN); }
@@ -1528,15 +1532,151 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if Palafin-Zero isn't trans
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Switch AI: AI will use pivot move to activate Palafin's Zero to Hero rather than hard switching")
+AI_SINGLE_BATTLE_TEST("Switch AI: Palafin uses Flip Turn when faster to transform (Single)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_FINIZEN);
-        OPPONENT(SPECIES_PALAFIN_ZERO) { Moves(MOVE_FLIP_TURN); }
-        OPPONENT(SPECIES_FINIZEN);
+        PLAYER(SPECIES_GLISCOR) { Speed(10); }
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(5); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_FLIP_TURN); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin uses Flip Turn when faster to transform (Doubles)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GLISCOR) { Speed(10); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_GLISCOR) { Speed(15); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(5); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(4); Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE, target:opponentLeft);
+            MOVE(playerRight, MOVE_CELEBRATE, target:opponentLeft);
+            EXPECT_MOVE(opponentLeft, MOVE_FLIP_TURN, target:playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_CELEBRATE);
+            EXPECT_SEND_OUT(opponentLeft, 2);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Switch AI: Palafin hard switches when slower even with Flip Turn (Single)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GLISCOR) { Speed(30); }
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(10); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(5); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin hard switches when slower even with Flip Turn (Doubles)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GLISCOR) { Speed(25); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_GLISCOR) { Speed(15); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(10); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(8); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(7); Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE, target:opponentLeft);
+            MOVE(playerRight, MOVE_CELEBRATE, target:opponentLeft);
+            EXPECT_SWITCH(opponentLeft, 2);
+            EXPECT_MOVE(opponentRight, MOVE_CELEBRATE);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Switch AI: Palafin hard switches into absorb abilities instead of Flip Turn (Single)")
+{
+    enum Ability palafinAbsorbAbility;
+    PARAMETRIZE { palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
+    PARAMETRIZE { palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
+    PARAMETRIZE { palafinAbsorbAbility = ABILITY_DRY_SKIN; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_GLISCOR) { Speed(10); Ability(palafinAbsorbAbility); }
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(8); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin hard switches into absorb abilities instead of Flip Turn (Doubles)")
+{
+    enum Ability palafinAbsorbAbility;
+    PARAMETRIZE { palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
+    PARAMETRIZE { palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
+    PARAMETRIZE { palafinAbsorbAbility = ABILITY_DRY_SKIN; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_GLISCOR) { Speed(5); Ability(palafinAbsorbAbility); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_GLISCOR) { Speed(4); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(8); }
+    } WHEN {
+        if (palafinAbsorbAbility == ABILITY_STORM_DRAIN)
+        {
+            TURN {
+                MOVE(playerLeft, MOVE_CELEBRATE, target:opponentLeft);
+                MOVE(playerRight, MOVE_CELEBRATE, target:opponentLeft);
+                EXPECT_SWITCH(opponentLeft, 2);
+                EXPECT_MOVE(opponentRight, MOVE_CELEBRATE);
+            }
+        }
+        else
+        {
+            TURN {
+                MOVE(playerLeft, MOVE_CELEBRATE, target:opponentLeft);
+                MOVE(playerRight, MOVE_CELEBRATE, target:opponentLeft);
+                EXPECT_MOVE(opponentLeft, MOVE_FLIP_TURN, target:playerRight);
+                EXPECT_SEND_OUT(opponentLeft, 2);
+                EXPECT_MOVE(opponentRight, MOVE_CELEBRATE);
+            }
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Switch AI: Palafin hard switches under harsh sunlight (Single)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GROUDON_PRIMAL) { Speed(15); Ability(ABILITY_DESOLATE_LAND); }
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(5); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin hard switches under harsh sunlight (Doubles)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GROUDON_PRIMAL) { Speed(18); Ability(ABILITY_DESOLATE_LAND); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_GLISCOR) { Speed(16); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(6); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_GLISCOR) { Speed(7); Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE, target:opponentLeft);
+            MOVE(playerRight, MOVE_CELEBRATE, target:opponentLeft);
+            EXPECT_SWITCH(opponentLeft, 2);
+            EXPECT_MOVE(opponentRight, MOVE_CELEBRATE);
+        }
     }
 }
 
@@ -1715,11 +1855,42 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will consider player's priori
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will consider player's endure effects when evaluating Bad Odds 1v1")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_HASBADODDS_PERCENTAGE, 100, RNG_AI_SWITCH_HASBADODDS);
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        OPPONENT(SPECIES_GENGAR) { Speed(10); Moves(MOVE_FOCUS_BLAST); }
+        OPPONENT(SPECIES_SCRAFTY) { Speed(5); Moves(MOVE_DRAIN_PUNCH); }
+        PLAYER(SPECIES_KINGAMBIT) { Speed(2); Item(ITEM_FOCUS_SASH); Moves(MOVE_KNOCK_OFF); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_KNOCK_OFF); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will consider player's endure effects when evaluating switchin candidates")
+{
+    u32 item;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_FOCUS_SASH; }
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(10); HP(1); MaxHP(400); Moves(MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_GENGAR) { Speed(10); Moves(MOVE_FOCUS_BLAST); }
+        OPPONENT(SPECIES_SCRAFTY) { Speed(5); Moves(MOVE_DRAIN_PUNCH); }
+        PLAYER(SPECIES_KINGAMBIT) { Speed(2); Item(item); Moves(MOVE_PROTECT, MOVE_KNOCK_OFF); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); item == ITEM_FOCUS_SASH ? EXPECT_SEND_OUT(opponent, 2) : EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will consider Hidden Power when triggering absorbing switches")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ABSORBS_HIDDEN_POWER_PERCENTAGE, 100, RNG_AI_SWITCH_ABSORBING_HIDDEN_POWER);
     GIVEN {
-        ASSUME(B_REDIRECT_ABILITY_IMMUNITY >= GEN_5);
+        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_HIDDEN_POWER); HPIV(31); AttackIV(30); DefenseIV(31); SpAttackIV(30); SpDefenseIV(31); SpeedIV(30); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
@@ -1782,6 +1953,27 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI considers both meeting and 
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI will not choose to switch out Dondozo with Commander Tatsugiri")
+{
+    PASSES_RANDOMLY(100, 100);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PERISH_SONG) == EFFECT_PERISH_SONG);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES);
+        OPPONENT(SPECIES_DONDOZO) { Level(50); Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_TATSUGIRI) { Moves(MOVE_WATER_GUN); Ability(ABILITY_COMMANDER); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_HEADBUTT); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE, MOVE_PERISH_SONG); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves (MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_PERISH_SONG); }
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); }
+        TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); }
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_WATER_GUN); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will randomly choose between eligible switchin candidates of the same category")
 {
     u32 trials; // Two trial counts to ensure randomization is scalable
@@ -1825,5 +2017,32 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will randomly choose betwe
         }
     } WHEN {
         TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_SMART_MON_CHOICES: AI sees its own terrain setting ability when considering switchin candidates")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_MACHAMP) { Speed(1); Ability(ABILITY_NO_GUARD); Moves(MOVE_PROTECT, MOVE_SHEER_COLD); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(2); Moves(MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_INDEEDEE_F) { Speed(2); Ability(ABILITY_PSYCHIC_SURGE); Moves(MOVE_PSYCHIC); }
+        OPPONENT(SPECIES_INDEEDEE_F) { Speed(2); Ability(ABILITY_INNER_FOCUS); Moves(MOVE_PSYCHIC); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_SMART_MON_CHOICES: AI sees its own terrain setting ability's effect on failed moves when considering switchin candidates")
+{
+    KNOWN_FAILING; // Fails because the AI can't currently see the arbitrary terrain passed to AI_CalcDamage in CanAbilityBlockMove
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_PROTECT, MOVE_QUICK_ATTACK); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_INDEEDEE_F) { HP(1); Ability(ABILITY_PSYCHIC_SURGE); Moves(MOVE_CONFUSION); }
+        OPPONENT(SPECIES_INDEEDEE_F) { HP(1); Ability(ABILITY_INNER_FOCUS); Moves(MOVE_CONFUSION); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 1); }
     }
 }

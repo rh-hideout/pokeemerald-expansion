@@ -88,19 +88,6 @@ static inline void NONNULL BagPocket_SetSlotDataPC(struct BagPocket *pocket, u32
     pocket->itemSlots[pocketPos].quantity = newSlot.quantity;
 }
 
-enum TMHMItemId GetTMHMItemIdFromMoveId(u16 move)
-{
-    if (move == MOVE_NONE)
-        return 0;
-
-    for (u16 i = 0; i < NUM_ALL_MACHINES; i++)
-    {
-        if (GetTMHMMoveId(i + 1) == move)
-            return GetTMHMItemId(i + 1);
-    }
-    return 0;
-}
-
 struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos)
 {
     switch (pocket->id)
@@ -792,10 +779,12 @@ bool32 RemovePyramidBagItem(u16 itemId, u16 count)
 
 static u16 SanitizeItemId(u16 itemId)
 {
-    if (itemId >= ITEMS_COUNT)
+    assertf(itemId < ITEMS_COUNT, "invalid item: %d", itemId)
+    {
         return ITEM_NONE;
-    else
-        return itemId;
+    }
+
+    return itemId;
 }
 
 const u8 *GetItemName(u16 itemId)
@@ -923,7 +912,7 @@ u32 GetItemStatus1Mask(u16 itemId)
         case ITEM3_PARALYSIS:
             return STATUS1_PARALYSIS;
         case ITEM3_FREEZE:
-            return STATUS1_FREEZE | STATUS1_FROSTBITE;
+            return STATUS1_ICY_ANY;
         case ITEM3_BURN:
             return STATUS1_BURN;
         case ITEM3_POISON:

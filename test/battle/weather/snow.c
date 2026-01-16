@@ -4,7 +4,8 @@
 // Please add Snow interactions with move, item and ability effects on their respective files.
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
+    ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_WEATHER);
+    ASSUME(GetMoveWeatherType(MOVE_SNOWSCAPE) == BATTLE_WEATHER_SNOW);
     ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE && GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
     ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE || GetSpeciesType(SPECIES_GLALIE, 1) == TYPE_ICE);
     ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
@@ -12,7 +13,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Snow multiplies the defense of Ice-types by 1.5x", s16 damage)
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {

@@ -68,7 +68,7 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
     // There are no trainer party settings in battles, but the AI needs to know which gimmick to use.
     if (TESTING)
     {
-        return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
+        return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattleTrainer(battler), gBattlerPartyIndexes[battler]);
     }
     // The player can bypass these checks because they can choose through the controller.
     else if (IsOnPlayerSide(battler)
@@ -91,7 +91,7 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
 // Returns whether a trainer has used a gimmick during a battle.
 bool32 HasTrainerUsedGimmick(u32 battler, enum Gimmick gimmick)
 {
-    if (IsDoubleBattle() && IsPartnerMonFromSameTrainer(battler))
+    if (IsDoubleBattle() && (IsPartnerMonFromSameTrainer(battler) || (gimmick == GIMMICK_DYNAMAX)))
     {
         u32 partner = BATTLE_PARTNER(battler);
         if (gBattleStruct->gimmick.activated[partner][gimmick]
@@ -106,7 +106,7 @@ bool32 HasTrainerUsedGimmick(u32 battler, enum Gimmick gimmick)
 void SetGimmickAsActivated(u32 battler, enum Gimmick gimmick)
 {
     gBattleStruct->gimmick.activated[battler][gimmick] = TRUE;
-    if (IsDoubleBattle() && IsPartnerMonFromSameTrainer(battler))
+    if (IsDoubleBattle() && (IsPartnerMonFromSameTrainer(battler) || (gimmick == GIMMICK_DYNAMAX)))
         gBattleStruct->gimmick.activated[BATTLE_PARTNER(battler)][gimmick] = TRUE;
 }
 
@@ -147,7 +147,7 @@ void CreateGimmickTriggerSprite(u32 battler)
 
     if (gBattleStruct->gimmick.triggerSpriteId == 0xFF)
     {
-        if (IsDoubleBattle())
+        if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES)
             gBattleStruct->gimmick.triggerSpriteId = CreateSprite(gimmick->triggerTemplate,
                                                                   gSprites[gHealthboxSpriteIds[battler]].x - DOUBLES_GIMMICK_TRIGGER_POS_X_SLIDE,
                                                                   gSprites[gHealthboxSpriteIds[battler]].y - DOUBLES_GIMMICK_TRIGGER_POS_Y_DIFF, 0);
@@ -204,7 +204,7 @@ static void SpriteCb_GimmickTrigger(struct Sprite *sprite)
     s32 yDiff;
     s32 xHealthbox = gSprites[gHealthboxSpriteIds[sprite->tBattler]].x;
 
-    if (IsDoubleBattle())
+    if (GetBattlerCoordsIndex(sprite->tBattler) == BATTLE_COORDS_DOUBLES)
     {
         xSlide = DOUBLES_GIMMICK_TRIGGER_POS_X_SLIDE;
         xPriority = DOUBLES_GIMMICK_TRIGGER_POS_X_PRIORITY;
@@ -380,7 +380,8 @@ static const s8 sIndicatorPositions[][2] =
 
 void CreateIndicatorSprite(u32 battler)
 {
-    u32 position, spriteId;
+    enum BattlerPosition position;
+    u32 spriteId;
     s16 xHealthbox = 0, x = 0, y = 0;
 
     position = GetBattlerPosition(battler);

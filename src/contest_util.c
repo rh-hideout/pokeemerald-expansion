@@ -1911,6 +1911,7 @@ static void AddContestTextPrinterFitWidth(int windowId, u8 *str, int x, int widt
 {
     struct TextPrinterTemplate textPrinter;
     textPrinter.currentChar = str;
+    textPrinter.type = WINDOW_TEXT_PRINTER;
     textPrinter.windowId = windowId;
     textPrinter.fontId = GetFontIdToFit(str, FONT_NARROW, 0, widthPx);
     textPrinter.x = x;
@@ -1919,10 +1920,10 @@ static void AddContestTextPrinterFitWidth(int windowId, u8 *str, int x, int widt
     textPrinter.currentY = 2;
     textPrinter.letterSpacing = 0;
     textPrinter.lineSpacing = 0;
-    textPrinter.unk = 0;
-    textPrinter.fgColor = 1;
-    textPrinter.bgColor = 0;
-    textPrinter.shadowColor = 8;
+    textPrinter.color.accent = TEXT_COLOR_TRANSPARENT;
+    textPrinter.color.foreground = 1;
+    textPrinter.color.background = TEXT_COLOR_TRANSPARENT;
+    textPrinter.color.shadow = 8;
     AddTextPrinter(&textPrinter, 0, NULL);
     PutWindowTilemap(windowId);
 }

@@ -7747,7 +7747,7 @@ void AnimTask_ShellSideArm(u8 taskId)
 
 void AnimTask_TerrainPulse(u8 taskId)
 {
-    if (IsBattlerTerrainAffected(gBattleAnimAttacker, GetBattlerAbility(gBattleAnimAttacker), GetBattlerHoldEffect(gBattleAnimAttacker), STATUS_FIELD_TERRAIN_ANY))
+    if (IsAnyTerrainAffected(gBattleAnimAttacker, GetBattlerAbility(gBattleAnimAttacker), GetBattlerHoldEffect(gBattleAnimAttacker), gFieldStatuses))
     {
         if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
             gBattleAnimArgs[0] = TYPE_ELECTRIC;
@@ -8120,7 +8120,7 @@ static void SpriteCB_MaxFlutterby(struct Sprite* sprite)
 {
     s16 target_x;
     s16 target_y;
-    if (GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
+    if (GetMoveTarget(gAnimMoveIndex) == TARGET_BOTH)
     {
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &target_x, &target_y);
     }
@@ -8318,7 +8318,6 @@ void AnimTask_RandomBool(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-// Credit to Skeli
 #define PRIMAL_PULSE_SCALE_SIZE 16
 #define PRIMAL_PULSE_FRAME_COUNT 4
 static const union AffineAnimCmd sSpriteAffineAnim_PrimalSymbol[] =

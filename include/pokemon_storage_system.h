@@ -49,7 +49,6 @@ void SetBoxMonNickAt(u8 boxId, u8 boxPosition, const u8 *nick);
 u32 GetAndCopyBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request, void *dst);
 void SetBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *src);
 void CopyBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *dst);
-void CreateBoxMonAt(u8 boxId, u8 boxPosition, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 personality, u8 otIDType, u32 otID);
 void ZeroBoxMonAt(u8 boxId, u8 boxPosition);
 void BoxMonAtToMon(u8 boxId, u8 boxPosition, struct Pokemon *dst);
 struct BoxPokemon *GetBoxedMonPtr(u8 boxId, u8 boxPosition);
@@ -59,7 +58,7 @@ bool8 CheckFreePokemonStorageSpace(void);
 bool32 CheckBoxMonSanityAt(u32 boxId, u32 boxPosition);
 u32 CountStorageNonEggMons(void);
 u32 CountAllStorageMons(void);
-bool32 AnyStorageMonWithMove(u16 move);
+bool32 AnyStorageMonWithMove(enum Move move);
 
 void ResetWaldaWallpaper(void);
 void SetWaldaWallpaperLockedOrUnlocked(bool32 unlocked);
@@ -76,5 +75,6 @@ bool32 IsWaldaPhraseEmpty(void);
 
 void EnterPokeStorage(u8 boxOption);
 u32 CountPartyNonEggMons(void);
+void ChooseBoxMon(void);
 
 #endif // GUARD_POKEMON_STORAGE_SYSTEM_H
