@@ -1077,9 +1077,6 @@ enum NationalDexOrder
     F(MIGHTYENA) \
     F(ZIGZAGOON) \
     F(LINOONE) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GALARIAN_FORMS
-    F(OBSTAGOON) \
-#endif
     F(WURMPLE) \
     F(SILCOON) \
     F(BEAUTIFLY) \
@@ -1098,9 +1095,6 @@ enum NationalDexOrder
     F(RALTS) \
     F(KIRLIA) \
     F(GARDEVOIR) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
-    F(GALLADE) \
-#endif
     F(SURSKIT) \
     F(MASQUERAIN) \
     F(SHROOMISH) \
@@ -1130,9 +1124,6 @@ enum NationalDexOrder
     F(GRAVELER) \
     F(GOLEM) \
     F(NOSEPASS) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
-    F(PROBOPASS) \
-#endif
     F(SKITTY) \
     F(DELCATTY) \
     F(ZUBAT) \
@@ -1156,9 +1147,6 @@ enum NationalDexOrder
     F(MINUN) \
     F(MAGNEMITE) \
     F(MAGNETON) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
-    F(MAGNEZONE) \
-#endif
     F(VOLTORB) \
     F(ELECTRODE) \
     F(VOLBEAT) \
@@ -1169,13 +1157,7 @@ enum NationalDexOrder
     F(BELLOSSOM) \
     F(DODUO) \
     F(DODRIO) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
-    F(BUDEW) \
-#endif
     F(ROSELIA) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
-    F(ROSERADE) \
-#endif
     F(GULPIN) \
     F(SWALOT) \
     F(CARVANHA) \
@@ -1231,13 +1213,7 @@ enum NationalDexOrder
     F(BANETTE) \
     F(DUSKULL) \
     F(DUSCLOPS) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
-    F(DUSKNOIR) \
     F(TROPIUS) \
-    F(CHINGLING) \
-#else
-    F(TROPIUS) \
-#endif
     F(CHIMECHO) \
     F(ABSOL) \
     F(VULPIX) \
@@ -1252,23 +1228,14 @@ enum NationalDexOrder
     F(NATU) \
     F(XATU) \
     F(GIRAFARIG) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_9_CROSS_EVOS
-    F(FARIGIRAF) \
-#endif
     F(PHANPY) \
     F(DONPHAN) \
     F(PINSIR) \
     F(HERACROSS) \
     F(RHYHORN) \
     F(RHYDON) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
-    F(RHYPERIOR) \
-#endif
     F(SNORUNT) \
     F(GLALIE) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
-    F(FROSLASS) \
-#endif
     F(SPHEAL) \
     F(SEALEO) \
     F(WALREIN) \
@@ -1277,9 +1244,6 @@ enum NationalDexOrder
     F(GOREBYSS) \
     F(RELICANTH) \
     F(CORSOLA) \
-#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GALARIAN_FORMS
-    F(CURSOLA) \
-#endif
     F(CHINCHOU) \
     F(LANTURN) \
     F(LUVDISC) \
