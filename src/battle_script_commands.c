@@ -13632,7 +13632,6 @@ void BS_TryFlingHoldEffect(void)
         return;
     }
 
-
     switch (holdEffect)
     {
     case HOLD_EFFECT_FLAME_ORB:
@@ -13669,8 +13668,6 @@ void BS_TryFlingHoldEffect(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
     }
-
-    gBattleStruct->flingItem = ITEM_NONE;
 }
 
 void BS_JumpIfNoWhiteOut(void)
