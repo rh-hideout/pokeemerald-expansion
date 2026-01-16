@@ -218,12 +218,12 @@ static u32 ChooseTypeFilteredWildMonIndex(const struct WildPokemonInfo *encounte
     u32 index;
     if (equalizeWeights && filteredCount > 0)
     {
-        u32 filteredIdx = (Random() * filteredCount) >> 16;
-        index = filteredSlots[filteredIdx].index;
+        const struct FilteredSlot *slot = RandomElementArray(RNG_ENCOUNTER_SLOT, filteredSlots, sizeof(struct FilteredSlot), filteredCount);
+        index = slot->index;
     }
     else if (filteredWeightTotal > 0)
     {
-        u32 val = (Random() * filteredWeightTotal) >> 16;
+        u32 val = RandomUniform(RNG_ENCOUNTER_SLOT, 0, filteredWeightTotal - 1);
         u32 filteredIdx = 0;
         while (val >= filteredSlots[filteredIdx].threshold)
             filteredIdx++;
@@ -240,7 +240,7 @@ static u32 ChooseTypeFilteredWildMonIndex(const struct WildPokemonInfo *encounte
 
 inline u32 ChooseWildMonIndex(const struct WildPokemonInfo *encounterTable)
 {
-    u32 val = (Random() * encounterTable->totalWeight) >> 16;
+    u32 val = RandomUniform(RNG_ENCOUNTER_SLOT, 0, encounterTable->totalWeight - 1);
     u32 index = 0;
     u32 cumulativeWeight = encounterTable->wildPokemon[0].weight;
     while (val >= cumulativeWeight) {
@@ -254,8 +254,7 @@ static u8 ChooseWildMonLevel(const struct WildPokemonInfo *wildMonInfo, u8 wildM
 {
     u8 min;
     u8 max;
-    u8 range;
-    u8 rand;
+    u8 level;
 
     if (LURE_STEP_COUNT == 0)
     {
@@ -270,8 +269,7 @@ static u8 ChooseWildMonLevel(const struct WildPokemonInfo *wildMonInfo, u8 wildM
             min = wildMonInfo->wildPokemon[wildMonIndex].maxLevel;
             max = wildMonInfo->wildPokemon[wildMonIndex].minLevel;
         }
-        range = max - min + 1;
-        rand = Random() % range;
+        level = RandomUniform(RNG_ENCOUNTER_LEVEL, min, max);
 
         // check ability for max level mon
         if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
@@ -279,14 +277,14 @@ static u8 ChooseWildMonLevel(const struct WildPokemonInfo *wildMonInfo, u8 wildM
             enum Ability ability = GetMonAbility(&gPlayerParty[0]);
             if (ability == ABILITY_HUSTLE || ability == ABILITY_VITAL_SPIRIT || ability == ABILITY_PRESSURE)
             {
-                if (Random() % 2 == 0)
+                if (RandomPercentage(RNG_ENCOUNTER_MAX_LEVEL_ABILITY, 50))
                     return max;
 
-                if (rand != 0)
-                    rand--;
+                if (level != min)
+                    level--;
             }
         }
-        return min + rand;
+        return level;
     }
     else
     {
@@ -407,7 +405,7 @@ void CreateWildMon(u16 species, u8 level)
 
 static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildPokemonArea area, u8 flags)
 {
-    u8 wildMonIndex = 0;
+    u8 wildMonIndex;
     u8 level;
 
     if (wildMonInfo->numSlots == 0)
@@ -415,7 +413,7 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
 
     if ((area == WILD_AREA_LAND || area == WILD_AREA_WATER)
         && !GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && Random() % 2)
+        && RandomPercentage(RNG_ENCOUNTER_TYPE_FILTER_ABILITY, 50))
     {
         switch (GetMonAbility(&gPlayerParty[0]))
         {
@@ -429,25 +427,25 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
             if (OW_LIGHTNING_ROD >= GEN_8)
                 wildMonIndex = ChooseTypeFilteredWildMonIndex(wildMonInfo, TYPE_ELECTRIC, TRUE);
             else
-                ChooseWildMonIndex(wildMonInfo);
+                wildMonIndex = ChooseWildMonIndex(wildMonInfo);
             break;
         case ABILITY_FLASH_FIRE:
             if (OW_FLASH_FIRE >= GEN_8)
                 wildMonIndex = ChooseTypeFilteredWildMonIndex(wildMonInfo, TYPE_FIRE, TRUE);
             else
-                ChooseWildMonIndex(wildMonInfo);
+                wildMonIndex = ChooseWildMonIndex(wildMonInfo);
             break;
         case ABILITY_HARVEST:
             if (OW_HARVEST >= GEN_8)
                 wildMonIndex = ChooseTypeFilteredWildMonIndex(wildMonInfo, TYPE_GRASS, TRUE);
             else
-                ChooseWildMonIndex(wildMonInfo);
+                wildMonIndex = ChooseWildMonIndex(wildMonInfo);
             break;
         case ABILITY_STORM_DRAIN:
             if (OW_STORM_DRAIN >= GEN_8)
                 wildMonIndex = ChooseTypeFilteredWildMonIndex(wildMonInfo, TYPE_WATER, TRUE);
             else
-                ChooseWildMonIndex(wildMonInfo);
+                wildMonIndex = ChooseWildMonIndex(wildMonInfo);
             break;
         default:
             wildMonIndex = ChooseWildMonIndex(wildMonInfo);

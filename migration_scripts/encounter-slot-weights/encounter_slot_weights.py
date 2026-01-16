@@ -105,8 +105,5 @@ for group in wild_encounters["wild_encounter_groups"]:
         if (sort):
             sort_encounter_slots(map_encounters)
 
-
-
-
 with open("src/data/wild_encounters.json", 'w') as wild_enc_out:
     json.dump(wild_encounters, wild_enc_out, indent=2)
