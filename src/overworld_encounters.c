@@ -413,8 +413,17 @@ void CreateOverworldWildEncounter(void)
 
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
-    bool32 isFemale = OW_FEMALE(object) ? TRUE : FALSE;
+    u32 gender = OW_FEMALE(object) ? MON_FEMALE : MON_MALE;
     u32 level = (object->sOverworldEncounterLevel &= ~OWE_FLAG_START_ENCOUNTER);
+    u32 personality;
+
+    switch (gSpeciesInfo[speciesId].genderRatio)
+    {
+    case MON_MALE:
+    case MON_FEMALE:
+    case MON_GENDERLESS:
+        gender = gSpeciesInfo[speciesId].genderRatio;
+    }
 
     if (level > MAX_LEVEL)
         level = MAX_LEVEL;
@@ -422,15 +431,9 @@ void CreateOverworldWildEncounter(void)
         level = MIN_LEVEL;
 
     ZeroEnemyPartyMons();
-    CreateMonWithGender(
-        &gEnemyParty[0],
-        speciesId,
-        level,
-        USE_RANDOM_IVS,
-        OT_ID_PLAYER_ID,
-        0,
-        isFemale
-    );
+    personality = GetMonPersonality(speciesId, gender, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
+    CreateMonWithIVs(&gEnemyParty[0], speciesId, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gEnemyParty[0]);
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
     
     if (CreateOverworldWildEncounter_CheckMassOutbreak(indexRoamerOutbreak, speciesId))
@@ -622,7 +625,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     if (*speciesId == SPECIES_UNOWN)
         *speciesId = GetUnownSpeciesId(personality);
 
-    *isShiny = ComputePlayerShinyOdds(personality);
+    *isShiny = ComputePlayerShinyOdds(personality, READ_OTID_FROM_SAVE);
     if (GetGenderFromSpeciesAndPersonality(*speciesId, personality) == MON_FEMALE)
         *isFemale = TRUE;
     else
