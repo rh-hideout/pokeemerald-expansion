@@ -235,6 +235,7 @@ static bool8 DoesFavorLadyLikeItem(u16 itemId)
     SetFavorLadyPlayerName(gSaveBlock2Ptr->playerName, sFavorLadyPtr->playerName);
     sFavorLadyPtr->language = gGameLanguage;
     likedItem = FALSE;
+
     for (i = 0; i < numItems; i ++)
     {
         if (sFavorLady[sFavorLadyPtr->favorId].acceptedItems[i] == itemId)
@@ -295,6 +296,7 @@ static void QuizLadyPickQuestion(void)
     questionId = Random() % ARRAY_COUNT(sQuizLadyQuestions);
     for (i = 0; i < QUIZ_QUESTION_LEN; i ++)
         sQuizLadyPtr->question[i] = sQuizLadyQuestions[questionId].question[i];
+
     sQuizLadyPtr->correctAnswer = sQuizLadyQuestions[questionId].answer;
     sQuizLadyPtr->prize = sQuizLadyQuestions[questionId].prize;
     sQuizLadyPtr->questionId = questionId;
@@ -362,11 +364,13 @@ u8 GetQuizAuthor(void)
 
         for (j = 0; j < QUIZ_QUESTION_LEN; j++)
             quiz->question[j] = sQuizLadyQuestions[i].question[j];
+
         quiz->correctAnswer = sQuizLadyQuestions[i].answer;
         quiz->prize = sQuizLadyQuestions[i].prize;
         quiz->questionId = i;
         quiz->playerName[0] = EOS;
     }
+
     authorNameId = BufferQuizAuthorName();
     if (authorNameId == QUIZ_AUTHOR_NAME_LADY)
         return QUIZ_AUTHOR_LADY;
@@ -520,6 +524,7 @@ void ClearQuizLadyQuestionAndAnswer(void)
     sQuizLadyPtr = &gSaveBlock1Ptr->lilycoveLady.quiz;
     for (i = 0; i < QUIZ_QUESTION_LEN; i++)
         sQuizLadyPtr->question[i] = EC_EMPTY_WORD;
+
     sQuizLadyPtr->correctAnswer = EC_EMPTY_WORD;
 }
 
@@ -540,8 +545,10 @@ void QuizLadyRecordCustomQuizData(void)
 
     sQuizLadyPtr = &gSaveBlock1Ptr->lilycoveLady.quiz;
     sQuizLadyPtr->prize = gSpecialVar_ItemId;
+
     for (i = 0; i < TRAINER_ID_LENGTH; i++)
         sQuizLadyPtr->playerTrainerId[i] = gSaveBlock2Ptr->playerTrainerId[i];
+
     StringCopy_PlayerName(sQuizLadyPtr->playerName, gSaveBlock2Ptr->playerName);
     sQuizLadyPtr->language = gGameLanguage;
 }
@@ -578,6 +585,7 @@ void QuizLadyClearQuestionForRecordMix(const LilycoveLady *lilycoveLady)
                 break;
             sQuizLadyPtr->questionId = Random() % ARRAY_COUNT(sQuizLadyQuestions);
         }
+
         if (lilycoveLady->quiz.prevQuestionId == sQuizLadyPtr->questionId)
             sQuizLadyPtr->questionId = (sQuizLadyPtr->questionId + 1) % (int)ARRAY_COUNT(sQuizLadyQuestions);
 
