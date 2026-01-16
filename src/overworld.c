@@ -1155,6 +1155,20 @@ static bool16 IsInfiltratedSpaceCenter(struct WarpData *warp)
     return FALSE;
 }
 
+static const u16 sNightMusicTable[END_MUS - START_MUS] =
+{
+    [MUS_SOOTOPOLIS - START_MUS] = MUS_LITTLEROOT,
+};
+
+static u16 GetNightMusicFromTrack(u16 track)
+{
+    if (GetTimeOfDay() != TIME_NIGHT)
+        return track;
+    if (sNightMusicTable[track - START_MUS] >= START_MUS && sNightMusicTable[track - START_MUS] <= END_MUS)
+        return sNightMusicTable[track - START_MUS];
+    return track;
+}
+
 u16 GetLocationMusic(struct WarpData *warp)
 {
     if (NoMusicInSootopolisWithLegendaries(warp) == TRUE)
@@ -1229,6 +1243,8 @@ void Overworld_PlaySpecialMapMusic(void)
             music = MUS_SURF;
     }
 
+    music = GetNightMusicFromTrack(music);
+
     if (music != GetCurrentMapMusic())
         PlayNewMapMusic(music);
 }
@@ -1247,7 +1263,7 @@ static void TransitionMapMusic(void)
 {
     if (FlagGet(FLAG_DONT_TRANSITION_MUSIC) != TRUE)
     {
-        u16 newMusic = GetWarpDestinationMusic();
+        u16 newMusic = GetNightMusicFromTrack(GetWarpDestinationMusic());
         u16 currentMusic = GetCurrentMapMusic();
         if (newMusic != MUS_ABNORMAL_WEATHER && newMusic != MUS_NONE)
         {
@@ -1292,7 +1308,7 @@ u8 GetMapMusicFadeoutSpeed(void)
 void TryFadeOutOldMapMusic(void)
 {
     u16 currentMusic = GetCurrentMapMusic();
-    u16 warpMusic = GetWarpDestinationMusic();
+    u16 warpMusic = GetNightMusicFromTrack(GetWarpDestinationMusic());
     if (FlagGet(FLAG_DONT_TRANSITION_MUSIC) != TRUE && warpMusic != GetCurrentMapMusic())
     {
         if (currentMusic == MUS_SURF
