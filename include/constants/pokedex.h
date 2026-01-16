@@ -1304,7 +1304,7 @@ enum NationalDexOrder
     F(GROUDON) \
     F(RAYQUAZA) \
     F(JIRACHI) \
-    F(DEOXYS) \
+    F(DEOXYS)
 
 // Hoenn Pokédex order
 enum HoennDexOrder
