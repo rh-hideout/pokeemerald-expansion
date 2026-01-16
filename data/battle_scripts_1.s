@@ -557,14 +557,12 @@ BattleScript_SkyDropFlyingAlreadyConfused:
 
 BattleScript_EffectFling::
 	attackcanceler
-	setlastuseditem BS_ATTACKER
 	accuracycheck BattleScript_FlingMissed
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNFLUNG
 	waitmessage B_WAIT_TIME_SHORT
 	damagecalc
 	adjustdamage
-	removeitem BS_ATTACKER
 	attackanimation
 	waitanimation
 	effectivenesssound
@@ -577,6 +575,7 @@ BattleScript_EffectFling::
 	resultmessage
 	waitmessage B_WAIT_TIME_MED
 	tryflingholdeffect
+	removeitem BS_ATTACKER
 	goto BattleScript_FlingEnd
 
 BattleScript_EffectFlingConsumeBerry::

@@ -550,3 +550,4 @@ SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
+

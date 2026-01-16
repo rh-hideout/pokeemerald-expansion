@@ -13618,9 +13618,11 @@ void BS_JumpIfCanGigantamax(void)
 void BS_TryFlingHoldEffect(void)
 {
     NATIVE_ARGS();
-    enum HoldEffect holdEffect = GetItemHoldEffect(gBattleStruct->flingItem);
 
-    if (GetItemPocket(gBattleStruct->flingItem) == POCKET_BERRIES)
+    u32 flingItem = gLastUsedItem = gBattleMons[gBattlerAttacker].item;
+    enum HoldEffect holdEffect = GetItemHoldEffect(flingItem);
+
+    if (GetItemPocket(flingItem) == POCKET_BERRIES)
     {
         gBattlescriptCurrInstr = BattleScript_EffectFlingConsumeBerry;
         return;
@@ -13644,7 +13646,7 @@ void BS_TryFlingHoldEffect(void)
         SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_PARALYSIS, cmd->nextInstr, NO_FLAGS);
         break;
     case HOLD_EFFECT_TYPE_POWER:
-        if (GetItemSecondaryId(gBattleStruct->flingItem) != TYPE_POISON)
+        if (GetItemSecondaryId(flingItem) != TYPE_POISON)
             gBattlescriptCurrInstr = cmd->nextInstr;
         else
             SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_POISON, cmd->nextInstr, NO_FLAGS);
@@ -13806,7 +13808,6 @@ void BS_SetLastUsedItem(void)
 {
     NATIVE_ARGS(u8 battler);
     gLastUsedItem = gBattleMons[GetBattlerForBattleScript(cmd->battler)].item;
-    gBattleStruct->flingItem = gLastUsedItem;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
