@@ -1082,6 +1082,14 @@ enum NationalDexOrder
 
 #define POKEMON_SLOTS_NUMBER (NATIONAL_DEX_COUNT + 1)
 
+#if P_NEW_EVOS_IN_REGIONAL_DEX
+#define HOENN_DEX_IF(config, ...) CAT(HOENN_DEX_IF_, config)(__VA_ARGS__)
+#define HOENN_DEX_IF_0(...)
+#define HOENN_DEX_IF_1(...) __VA_ARGS__
+#else
+#define HOENN_DEX_IF(config, ...)
+#endif
+
 #define FOREACH_SPECIES_IN_HOENN_DEX_ORDER(F) \
     F(TREECKO) \
     F(GROVYLE) \
@@ -1096,6 +1104,7 @@ enum NationalDexOrder
     F(MIGHTYENA) \
     F(ZIGZAGOON) \
     F(LINOONE) \
+    HOENN_DEX_IF(P_GALARIAN_FORMS, F(OBSTAGOON)) \
     F(WURMPLE) \
     F(SILCOON) \
     F(BEAUTIFLY) \
@@ -1114,6 +1123,7 @@ enum NationalDexOrder
     F(RALTS) \
     F(KIRLIA) \
     F(GARDEVOIR) \
+    HOENN_DEX_IF(P_GEN_4_CROSS_EVOS, F(GALLADE)) \
     F(SURSKIT) \
     F(MASQUERAIN) \
     F(SHROOMISH) \
@@ -1143,6 +1153,7 @@ enum NationalDexOrder
     F(GRAVELER) \
     F(GOLEM) \
     F(NOSEPASS) \
+    HOENN_DEX_IF(P_GEN_4_CROSS_EVOS, F(PROBOPASS)) \
     F(SKITTY) \
     F(DELCATTY) \
     F(ZUBAT) \
@@ -1166,6 +1177,7 @@ enum NationalDexOrder
     F(MINUN) \
     F(MAGNEMITE) \
     F(MAGNETON) \
+    HOENN_DEX_IF(P_GEN_4_CROSS_EVOS, F(MAGNEZONE)) \
     F(VOLTORB) \
     F(ELECTRODE) \
     F(VOLBEAT) \
@@ -1176,7 +1188,9 @@ enum NationalDexOrder
     F(BELLOSSOM) \
     F(DODUO) \
     F(DODRIO) \
+    HOENN_DEX_IF(P_GEN_4_CROSS_EVOS, F(BUDEW)) \
     F(ROSELIA) \
+    HOENN_DEX_IF(P_GEN_4_CROSS_EVOS, F(ROSERADE)) \
     F(GULPIN) \
     F(SWALOT) \
     F(CARVANHA) \
@@ -1232,7 +1246,9 @@ enum NationalDexOrder
     F(BANETTE) \
     F(DUSKULL) \
     F(DUSCLOPS) \
+    HOENN_DEX_IF(P_GEN_4_CROSS_EVOS, F(DUSKNOIR)) \
     F(TROPIUS) \
+    HOENN_DEX_IF(P_GEN_4_CROSS_EVOS, F(CHINGLING)) \
     F(CHIMECHO) \
     F(ABSOL) \
     F(VULPIX) \
@@ -1247,14 +1263,17 @@ enum NationalDexOrder
     F(NATU) \
     F(XATU) \
     F(GIRAFARIG) \
+    HOENN_DEX_IF(P_GEN_9_CROSS_EVOS, F(FARIGIRAF)) \
     F(PHANPY) \
     F(DONPHAN) \
     F(PINSIR) \
     F(HERACROSS) \
     F(RHYHORN) \
     F(RHYDON) \
+    HOENN_DEX_IF(P_GEN_4_CROSS_EVOS, F(RHYPERIOR)) \
     F(SNORUNT) \
     F(GLALIE) \
+    HOENN_DEX_IF(P_GEN_4_CROSS_EVOS, F(FROSLASS)) \
     F(SPHEAL) \
     F(SEALEO) \
     F(WALREIN) \
@@ -1263,6 +1282,7 @@ enum NationalDexOrder
     F(GOREBYSS) \
     F(RELICANTH) \
     F(CORSOLA) \
+    HOENN_DEX_IF(P_GALARIAN_FORMS, F(CURSOLA)) \
     F(CHINCHOU) \
     F(LANTURN) \
     F(LUVDISC) \
