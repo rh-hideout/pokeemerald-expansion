@@ -716,6 +716,7 @@ struct BattleStruct
     enum SubmoveState submoveAnnouncement:2;
     u8 tryDestinyBond:1;
     u8 tryGrudge:1;
+    u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
     u8 preAttackAnimPlayed:1;
