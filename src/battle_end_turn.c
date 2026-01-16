@@ -13,7 +13,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 
-static u32 GetBattlerSideForMessage(u32 side)
+static u32 GetBattlerSideForMessage(enum BattleSide side)
 {
     u32 battler = 0;
 
@@ -246,6 +246,7 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
         gBattlerTarget = battler;
         gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
         gCurrentMove = gBattleStruct->futureSight[battler].move;
+        gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
         if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
@@ -290,7 +291,7 @@ static bool32 HandleEndTurnWish(u32 battler)
 static bool32 HandleEndTurnFirstEventBlock(u32 battler)
 {
     bool32 effect = FALSE;
-    u32 side;
+    enum BattleSide side;
 
     if (!IsBattlerAlive(battler))
     {
@@ -960,7 +961,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
 {
     bool32 effect = FALSE;
 
-    u32 side = gBattleStruct->eventState.battlerSide;
+    enum BattleSide side = gBattleStruct->eventState.battlerSide;
 
     switch (gBattleStruct->eventState.endTurnBlock)
     {
@@ -1482,9 +1483,9 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_TRAINER_PARTNER_SLIDES] = HandleEndTurnTrainerPartnerSlides,
 };
 
-u32 DoEndTurnEffects(void)
+bool32 DoEndTurnEffects(void)
 {
-    u32 battler = MAX_BATTLERS_COUNT;
+    enum BattlerId battler = MAX_BATTLERS_COUNT;
 
     for (;;)
     {

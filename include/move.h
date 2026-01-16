@@ -31,7 +31,8 @@ struct AdditionalEffect
     u8 onlyIfTargetRaisedStats:1;
     u8 onChargeTurnOnly:1;
     u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
-    u8 padding:4;
+    u8 preAttackEffect:1;
+    u8 padding:3;
     union PACKED {
         enum WrappedStringID wrapped;
     } multistring;
@@ -88,7 +89,7 @@ struct MoveInfo
     // end of word
     s32 priority:4;
     u32 strikeCount:4; // Max 15 hits. Defaults to 1 if not set. May apply its effect on each hit.
-    u32 multiHit:1; // Takes presendance over strikeCount
+    u32 multiHit:1; // Takes precedence over strikeCount
     u32 explosion:1;
     u32 criticalHitStage:2;
     bool32 alwaysCriticalHit:1;

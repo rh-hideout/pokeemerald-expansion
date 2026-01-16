@@ -10347,7 +10347,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Chimecho"),
-        .cryId = CRY_CHIMECHO, // CRY_CHIMECHO_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_CHIMECHO_MEGA,
+    #else
+        .cryId = CRY_CHIMECHO,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_CHIMECHO,
         .categoryName = _("Wind Chime"),
         .height = 12,
@@ -10560,7 +10564,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .bodyColor = BODY_COLOR_WHITE,
         .noFlip = TRUE,
         .speciesName = _("Absol"),
-        .cryId = CRY_ABSOL, //CRY_ABSOL_MEGA_Z
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_ABSOL_MEGA_Z,
+    #else
+        .cryId = CRY_ABSOL,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_ABSOL,
         .categoryName = _("Disaster"),
         .height = 12,
@@ -10920,7 +10928,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .abilities = { ABILITY_SNOW_CLOAK, ABILITY_NONE, ABILITY_CURSED_BODY },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Froslass"),
-        .cryId = CRY_FROSLASS, // CRY_FROSLASS_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_FROSLASS_MEGA,
+    #else
+        .cryId = CRY_FROSLASS,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_FROSLASS,
         .categoryName = _("Snow Land"),
         .height = 26,

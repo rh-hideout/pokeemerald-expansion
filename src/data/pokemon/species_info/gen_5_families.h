@@ -538,7 +538,11 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .bodyColor = BODY_COLOR_RED,
         .noFlip = TRUE,
         .speciesName = _("Emboar"),
-        .cryId = CRY_EMBOAR, // CRY_EMBOAR_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_EMBOAR_MEGA,
+    #else
+        .cryId = CRY_EMBOAR,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_EMBOAR,
         .categoryName = _("Fire Pig"),
         .height = 18,
@@ -2851,7 +2855,11 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .bodyColor = BODY_COLOR_GRAY,
         .noFlip = TRUE,
         .speciesName = _("Excadrill"),
-        .cryId = CRY_EXCADRILL, // CRY_EXCADRILL_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_EXCADRILL_MEGA,
+    #else
+        .cryId = CRY_EXCADRILL,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_EXCADRILL,
         .categoryName = _("Subterrene"),
         .height = 9,
@@ -4079,7 +4087,11 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .abilities = { ABILITY_POISON_POINT, ABILITY_SWARM, ABILITY_SPEED_BOOST },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Scolipede"),
-        .cryId = CRY_SCOLIPEDE, // CRY_SCOLIPEDE_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_SCOLIPEDE_MEGA,
+    #else
+        .cryId = CRY_SCOLIPEDE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_SCOLIPEDE,
         .categoryName = _("Megapede"),
         .height = 32,
@@ -5811,7 +5823,11 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .abilities = { ABILITY_SHED_SKIN, ABILITY_MOXIE, ABILITY_INTIMIDATE },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Scrafty"),
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_SCRAFTY_MEGA,
+    #else
         .cryId = CRY_SCRAFTY,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_SCRAFTY,
         .categoryName = _("Hoodlum"),
         .height = 11,
@@ -9804,7 +9820,11 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Eelektross"),
-        .cryId = CRY_EELEKTROSS, // CRY_EELEKTROSS_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_EELEKTROSS_MEGA,
+    #else
+        .cryId = CRY_EELEKTROSS,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_EELEKTROSS,
         .categoryName = _("EleFish"),
         .height = 30,
@@ -10227,7 +10247,11 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .bodyColor = BODY_COLOR_BLACK,
         .noFlip = TRUE,
         .speciesName = _("Chandelure"),
-        .cryId = CRY_CHANDELURE, // CRY_CHANDELURE_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_CHANDELURE_MEGA,
+    #else
+        .cryId = CRY_CHANDELURE,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_CHANDELURE,
         .categoryName = _("Luring"),
         .height = 25,
@@ -11346,7 +11370,11 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .bodyColor = BODY_COLOR_GREEN,
         .noFlip = TRUE,
         .speciesName = _("Golurk"),
-        .cryId = CRY_GOLURK, //CRY_GOLURK_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_GOLURK_MEGA,
+    #else
+        .cryId = CRY_GOLURK,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_GOLURK,
         .categoryName = _("Automaton"),
         .height = 40,

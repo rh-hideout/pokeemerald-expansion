@@ -1482,10 +1482,10 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         #if TESTING
         if (gTestRunnerEnabled)
         {
-            u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
+            enum BattleTrainer trainer = GetBattleTrainer(battler);
             u32 partyIndex = gBattlerPartyIndexes[battler];
-            if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
-                gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
+            if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
+                gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
         }
         #endif
         break;
@@ -3240,4 +3240,27 @@ void FreeShinyStars(void)
     }
     FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
     FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
+}
+
+enum BattleTrainer GetBattleTrainer(enum BattlerId battler)
+{
+    switch (battler)
+    {
+    case B_BATTLER_0:
+        return B_TRAINER_0;
+    case B_BATTLER_1:
+        return B_TRAINER_1;
+    case B_BATTLER_2:
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            return B_TRAINER_2;
+        else
+            return B_TRAINER_0;
+    case B_BATTLER_3:
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+            return B_TRAINER_3;
+        else
+            return B_TRAINER_1;
+    default:
+        return B_TRAINER_1;
+    }
 }

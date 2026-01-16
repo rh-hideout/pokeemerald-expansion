@@ -144,6 +144,7 @@
 #define B_COUNTER_MIRROR_COAT_ALLY  GEN_LATEST // In Gen5+, an ally's attack does not count for uses of Counter/Mirror Coat/Metal Burst. In Gen4-, if the last attack taken was from an ally, Counter/Mirror Coat/Metal Burst would fail.
 #define B_COUNTER_TRY_HIT_PARTNER   GEN_LATEST // In Gen5+, if the user of the last attack is not on the field, it will be redirected to the partner. In Gen4-, Counter/Mirror Coat/Metal Burst would fail.
 #define B_RAGE_BUILDS               GEN_LATEST // In Gen4+, Rage's effect only sets in when it successfully hits. In Gen3, Rage's effect sets in regardless of whether it hits, misses or fails.
+#define B_CHECK_USER_FAILURE        GEN_LATEST // In Gen5+, The user no longer checks it's own failure, e.g. Soundproof will not block it's own Perish Song             
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+, Gale Wings requires full HP to activate.
@@ -158,7 +159,6 @@
 #define B_PLUS_MINUS_INTERACTION    GEN_LATEST // In Gen5+, Plus and Minus can be activated by themselves in addition to the opposite ability.
 #define B_WEATHER_FORMS             GEN_LATEST // In Gen5+, Castform and Cherrim revert to their base form upon losing their respective ability. Cherrim needs Flower Gift to change forms.
 #define B_SYMBIOSIS_GEMS            GEN_LATEST // In Gen7+, Symbiosis passes an item after a Gem-boosted attack. Previously, items were passed before the Gem-boosted attack hit, making the item's effect apply.
-#define B_ABSORBING_ABILITY_STRING  GEN_LATEST // In Gen5+, Abilities that absorb moves of certain types use a generic string for stat increases and decreases.
 #define B_REDIRECT_ABILITY_IMMUNITY GEN_LATEST // In Gen5+, Pokémon with Lightning Rod/Storm Drain are immune to Electric-/Water-type moves and increase their Sp. Attack by 1 stage ontop of the redirecting effect.
 #define B_REDIRECT_ABILITY_ALLIES   GEN_LATEST // In Gen4+, Lightning Rod/Storm Drain redirect ally's moves as well.
 #define B_LEAF_GUARD_PREVENTS_REST  GEN_LATEST // In Gen5+, Leaf Guard prevents the use of Rest in the sun.
@@ -316,6 +316,7 @@
 #define B_ANIMATE_MON_AFTER_KO              TRUE // If set to TRUE, if a Pokémon on the opposing side faints, the non-fainted Pokémon will play their animations.
 #define B_ANIMATE_MON_AFTER_FAILED_POKEBALL TRUE  // If set to TRUE, a wild Pokémon that breaks of a thrown Poké Ball will play its animation.
 #define B_SHOW_DYNAMAX_MESSAGE              FALSE // If set to TRUE, an additional battle message is shown after completing Dynamaxing/Gigantamaxing.
+#define B_HPBAR_COLOR_THRESHOLD             GEN_LATEST // In Gen 5+, HP bar color thresholds were changed to be based on the actual HP values instead of the pixel length of the HP bar, leading to more accurate HP bar colors.
 
 // Catching settings
 #define B_SEMI_INVULNERABLE_CATCH       GEN_LATEST // In Gen4+, you cannot throw a ball against a Pokémon that is in a semi-invulnerable state (Dig/Fly/etc).

@@ -669,6 +669,7 @@ static bool32 CanSelectBattler(enum MoveTarget target)
     case TARGET_USER:
     case TARGET_ALLY:
     case TARGET_USER_OR_ALLY:
+    case TARGET_USER_AND_ALLY:
         return TRUE;
     default:
         break;
@@ -693,7 +694,7 @@ void HandleInputChooseMove(u32 battler)
         PlaySE(SE_SELECT);
 
         enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[gMoveSelectionCursor[battler]]);
-        bool32 isUserOrAlly = moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY;
+        bool32 isUserOrAlly = moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY || moveTarget == TARGET_USER_AND_ALLY;
 
         if (gBattleStruct->zmove.viewing)
         {
@@ -739,7 +740,7 @@ void HandleInputChooseMove(u32 battler)
 
                     canSelectTarget = 3;
                 }
-                else if (IsSpreadMove(moveTarget) || moveTarget == TARGET_OPPONENTS_FIELD)
+                else if (IsSpreadMove(moveTarget) || moveTarget == TARGET_OPPONENTS_FIELD || moveTarget == TARGET_USER_AND_ALLY)
                 {
                     TryShowAsTarget(gMultiUsePlayerCursor);
                     TryShowAsTarget(BATTLE_PARTNER(gMultiUsePlayerCursor));
@@ -1762,7 +1763,7 @@ static void MoveSelectionDisplayMoveDescription(u32 battler)
     u8 acc_desc[7] = _("ACC: ");
     u8 cat_start[] = _("{CLEAR_TO 0x03}");
     u8 pwr_start[] = _("{CLEAR_TO 0x38}");
-    u8 acc_start[] = _("{CLEAR_TO 0x6D}");
+    u8 acc_start[] = _("{CLEAR_TO 0x6C}");
     LoadMessageBoxAndBorderGfx();
     DrawStdWindowFrame(B_WIN_MOVE_DESCRIPTION, FALSE);
     if (pwr < 2)
@@ -2035,6 +2036,10 @@ static void PlayerHandleChooseAction(u32 battler)
                 StringAppend(gStringVar1, COMPOUND_STRING(" {DOWN_ARROW}-"));
             else if (gAiBattleData->chosenTarget[B_POSITION_PLAYER_RIGHT] == B_POSITION_PLAYER_RIGHT)
                 StringAppend(gStringVar1, COMPOUND_STRING(" -{DOWN_ARROW}"));
+        }
+        else if (moveTarget == TARGET_USER_AND_ALLY)
+        {
+            StringAppend(gStringVar1, COMPOUND_STRING(" {DOWN_ARROW}{DOWN_ARROW}"));
         }
         else if (moveTarget == TARGET_BOTH)
         {

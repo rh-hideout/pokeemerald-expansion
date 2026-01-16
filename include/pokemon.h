@@ -65,6 +65,8 @@ enum MonData {
     MON_DATA_FRIENDSHIP,
     MON_DATA_SMART,
     MON_DATA_POKERUS,
+    MON_DATA_POKERUS_STRAIN,
+    MON_DATA_POKERUS_DAYS_LEFT,
     MON_DATA_MET_LOCATION,
     MON_DATA_MET_LEVEL,
     MON_DATA_MET_GAME,
@@ -832,21 +834,24 @@ void AdjustFriendship(struct Pokemon *mon, u8 event);
 u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect);
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
-void RandomlyGivePartyPokerus(struct Pokemon *party);
-u8 CheckPartyPokerus(struct Pokemon *party, u8 selection);
-u8 CheckPartyHasHadPokerus(struct Pokemon *party, u8 selection);
-void UpdatePartyPokerusTime(u16 days);
-void PartySpreadPokerus(struct Pokemon *party);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
 u8 CanLearnTeachableMove(u16 species, enum Move move);
 u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerLevelUpMovesBox(struct BoxPokemon *boxMon, u16 *moves);
 u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerEggMovesBox(struct BoxPokemon *boxMon, u16 *moves);
 u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerTMMovesBox(struct BoxPokemon *boxMon, u16 *moves);
 u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerTutorMovesBox(struct BoxPokemon *boxMon, u16 *moves);
 bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon);
+bool32 HasRelearnerLevelUpMovesBox(struct BoxPokemon *boxMon);
 bool32 HasRelearnerEggMoves(struct Pokemon *mon);
+bool32 HasRelearnerEggMovesBox(struct BoxPokemon *boxMon);
 bool32 HasRelearnerTMMoves(struct Pokemon *mon);
+bool32 HasRelearnerTMMovesBox(struct BoxPokemon *boxMon);
 bool32 HasRelearnerTutorMoves(struct Pokemon *mon);
+bool32 HasRelearnerTutorMovesBox(struct BoxPokemon *boxMon);
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves);
 u8 GetNumberOfRelearnableMoves(struct Pokemon *mon);
 u16 SpeciesToPokedexNum(u16 species);
