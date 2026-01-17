@@ -511,7 +511,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u8 gender         = PARSE_FLAG(4, MON_GENDER_RANDOM);
 
     u32 i;
-    u16 evs[NUM_STATS];;
+    u16 evs[NUM_STATS];
     for (i = 0; i < NUM_STATS; i++)
     {
         evs[i] = PARSE_FLAG(5 + i, 0);
