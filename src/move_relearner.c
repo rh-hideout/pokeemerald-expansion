@@ -1200,8 +1200,7 @@ static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
     if (species == SPECIES_EGG)
         return 0;
 
-    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES ? MAX_LEVEL : GetBoxMonData(mon, MON_DATA_LEVEL));
-
+    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES ? MAX_LEVEL : GetLevelFromBoxMonExp(mon));
     do
     {
         const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
