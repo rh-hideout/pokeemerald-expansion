@@ -1,6 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 #include "battle_ai_util.h"
+#include "move.h"
 
 AI_SINGLE_BATTLE_TEST("AI will not try to lower opposing stats if target is protected by it's ability")
 {
@@ -46,5 +47,81 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { SCORE_LT_VAL(opponentLeft, move, AI_SCORE_DEFAULT, target: playerRight); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefers it otherwise (Single)")
+{
+    u32 species;
+    enum Ability ability;
+    bool32 shouldProtect;
+
+    PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC;      shouldProtect = TRUE; }
+    PARAMETRIZE { species = SPECIES_URSHIFU; ability = ABILITY_UNSEEN_FIST; shouldProtect = FALSE; }
+
+    PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        ASSUME(MoveMakesContact(MOVE_TACKLE));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        PLAYER(species) { Ability(ability); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_PROTECT, MOVE_SCRATCH); }
+    } WHEN {
+        if (shouldProtect)
+        {
+            TURN {
+                MOVE(player, MOVE_TACKLE);
+                EXPECT_MOVE(opponent, MOVE_PROTECT);
+                SCORE_GT(opponent, MOVE_PROTECT, MOVE_SCRATCH);
+            }
+        }
+        else
+        {
+            TURN {
+                MOVE(player, MOVE_TACKLE);
+                NOT_EXPECT_MOVE(opponent, MOVE_PROTECT);
+                SCORE_LT(opponent, MOVE_PROTECT, MOVE_SCRATCH);
+            }
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefers it otherwise (Doubles)")
+{
+    u32 species;
+    enum Ability ability;
+    bool32 shouldProtect;
+
+    PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC;      shouldProtect = TRUE; }
+    PARAMETRIZE { species = SPECIES_URSHIFU; ability = ABILITY_UNSEEN_FIST; shouldProtect = FALSE; }
+
+    PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        ASSUME(MoveMakesContact(MOVE_TACKLE));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        PLAYER(species) { Ability(ability); Moves(MOVE_TACKLE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_PROTECT, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH); }
+    } WHEN {
+        if (shouldProtect)
+        {
+            TURN {
+                MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft);
+                MOVE(playerRight, MOVE_CELEBRATE);
+                EXPECT_MOVE(opponentLeft, MOVE_PROTECT);
+                SCORE_GT(opponentLeft, MOVE_PROTECT, MOVE_SCRATCH, target: playerLeft);
+            }
+        }
+        else
+        {
+            TURN {
+                MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft);
+                MOVE(playerRight, MOVE_CELEBRATE);
+                NOT_EXPECT_MOVE(opponentLeft, MOVE_PROTECT);
+                SCORE_LT(opponentLeft, MOVE_PROTECT, MOVE_SCRATCH, target: playerLeft);
+            }
+        }
     }
 }
