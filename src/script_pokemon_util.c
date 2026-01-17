@@ -511,9 +511,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u8 gender         = PARSE_FLAG(4, MON_GENDER_RANDOM);
 
     u32 i;
-    u16 evs[NUM_STATS];
-    u32 evTotal = 0;
-    u32 evCap = GetCurrentEVCap();
+    u16 evs[NUM_STATS];;
     for (i = 0; i < NUM_STATS; i++)
     {
         evs[i] = PARSE_FLAG(5 + i, 0);
@@ -521,7 +519,6 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
         {
             evs[i] = MAX_PER_STAT_EVS;
         }
-        evTotal += evs[i];
     }
 
     u16 ivs[NUM_STATS];
@@ -531,7 +528,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     for (i = 0; i < NUM_STATS; i++)
     {
         ivs[i] = PARSE_FLAG(11 + i, USE_RANDOM_IVS);
-        assertf(ivs[i] <= USE_RANDOM_IVS, "invalid iv value of %d  above maximum of %d", ivs[i], MAX_PER_STAT_IVS);
+        assertf(ivs[i] <= USE_RANDOM_IVS, "invalid iv value of %d above maximum of %d", ivs[i], MAX_PER_STAT_IVS);
         {
             ivs[i] = MAX_PER_STAT_IVS;
         }
