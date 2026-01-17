@@ -18193,6 +18193,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .metronomeBanned = TRUE,
+        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SPD_PLUS_1,
             .self = TRUE,
