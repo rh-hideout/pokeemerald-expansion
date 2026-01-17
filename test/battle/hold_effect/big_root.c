@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Big Root increases healing from absorbing moves", s16 damage, s16 heal)
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_BIG_ROOT; }
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Big Root increases healing from absorbing moves", s16 damage
 
 SINGLE_BATTLE_TEST("Big Root increases the damage restored from Leech Seed, Ingrain and Aqua Ring", s16 heal, s16 damage)
 {
-    u32 item;
+    enum Item item;
     enum Move move;
 
     PARAMETRIZE { item = ITEM_NONE;     move = MOVE_LEECH_SEED; }
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Big Root increases the damage restored from Leech Seed, Ingr
 
 SINGLE_BATTLE_TEST("Big Root increases damage from absorbing Liquid Ooze", s16 damage)
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_BIG_ROOT; }

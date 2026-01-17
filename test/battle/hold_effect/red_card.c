@@ -166,7 +166,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if knocked off")
 
 SINGLE_BATTLE_TEST("Red Card does not activate if stolen by a move")
 {
-    u32 item;
+    enum Item item;
     bool32 activate;
     PARAMETRIZE { item = ITEM_NONE; activate = FALSE; }
     PARAMETRIZE { item = ITEM_POTION; activate = TRUE; }
@@ -196,7 +196,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if stolen by a move")
 
 SINGLE_BATTLE_TEST("Red Card does not activate if stolen by Magician")
 {
-    u32 item;
+    enum Item item;
     bool32 activate;
     PARAMETRIZE { item = ITEM_NONE; activate = FALSE; }
     PARAMETRIZE { item = ITEM_POTION; activate = TRUE; }

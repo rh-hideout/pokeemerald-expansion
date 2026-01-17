@@ -190,7 +190,7 @@ bool8 HasAnotherPlayerGivenFavorLadyItem(void)
     return FALSE;
 }
 
-static void BufferItemName(u8 *dest, u16 itemId)
+static void BufferItemName(u8 *dest, enum Item itemId)
 {
     StringCopy(dest, GetItemName(itemId));
 }
@@ -226,7 +226,7 @@ void Script_FavorLadyOpenBagMenu(void)
     FavorLadyOpenBagMenu();
 }
 
-static bool8 DoesFavorLadyLikeItem(u16 itemId)
+static bool8 DoesFavorLadyLikeItem(enum Item itemId)
 {
     u8 numItems;
     u8 i;

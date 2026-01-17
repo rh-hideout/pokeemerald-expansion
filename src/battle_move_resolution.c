@@ -1549,7 +1549,7 @@ static enum MoveEndResult MoveEnd_ThirdMoveBlock(void)
     case EFFECT_NATURAL_GIFT:
         if (!gBattleStruct->unableToUseMove && GetItemPocket(gBattleMons[gBattlerAttacker].item) == POCKET_BERRIES)
         {
-            u32 item = gBattleMons[gBattlerAttacker].item;
+            enum Item item = gBattleMons[gBattlerAttacker].item;
             gBattleMons[gBattlerAttacker].item = ITEM_NONE;
             gBattleStruct->battlerState[gBattlerAttacker].canPickupItem = TRUE;
             GetBattlerPartyState(gBattlerAttacker)->usedHeldItem = item;
