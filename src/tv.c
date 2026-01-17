@@ -3278,10 +3278,7 @@ static void ChangeBoxPokemonNickname_CB(void)
 
 void ChangePokemonNickname(void)
 {
-    struct BoxPokemon *boxMon = GetSelectedBoxMonFromPcOrParty();
-    GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar3);
-    GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar2);
-    DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, GetBoxMonData(boxMon, MON_DATA_SPECIES), GetBoxMonGender(boxMon), GetBoxMonData(boxMon, MON_DATA_PERSONALITY), ChangeBoxPokemonNickname_CB);
+    ChangePokemonNicknameWithCallback(ChangeBoxPokemonNickname_CB);
 }
 
 void BufferMonNickname(void)
