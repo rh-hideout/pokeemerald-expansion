@@ -6,6 +6,7 @@
 #include "field_weather.h"
 #include "menu.h"
 #include "move.h"
+#include "move_relearner.h"
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -37,6 +38,7 @@ static u32 IsNotEgg(struct BoxPokemon *boxmon);
 static u32 IsMatchingSpecies(struct BoxPokemon *boxmon);
 static u32 CanMonDeleteMove(struct BoxPokemon *boxmon);
 static u32 CanMonLearnMove(struct BoxPokemon *boxmon);
+static u32 CanRelearnMoves(struct BoxPokemon *boxmon);
 
 static const struct PcMonSelection sPcMonSelectionTypes[] =
 {
@@ -45,7 +47,7 @@ static const struct PcMonSelection sPcMonSelectionTypes[] =
     [SELECT_PC_MON_DAYCARE] = {ChooseSendDaycareMon, IsNotEgg, NULL, TRUE},
     [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, CanMonLearnMove, MoveTutor_AfterChooseBoxMon, FALSE},
     [SELECT_PC_MON_MOVE_DELETER] = {ChoosePartyMon, CanMonDeleteMove, NULL, FALSE},
-    [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, IsNotEgg, NULL, TRUE}
+    [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, CanRelearnMoves, NULL, FALSE}
 };
 
 static u32 NoFilter(struct BoxPokemon *boxmon)
@@ -58,6 +60,15 @@ static u32 IsNotEgg(struct BoxPokemon *boxmon)
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return INVALID_MON;
     return VALID_MON;
+}
+
+static u32 CanRelearnMoves(struct BoxPokemon *boxmon)
+{
+    if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
+        return INVALID_MON;
+    if (CanBoxMonRelearnMoves(boxmon, gMoveRelearnerState))
+        return VALID_MON;
+    return INVALID_MON;
 }
 
 static u32 IsMatchingSpecies(struct BoxPokemon *boxmon)
