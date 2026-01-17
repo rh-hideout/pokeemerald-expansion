@@ -563,23 +563,6 @@ static enum MoveEndResult MoveEnd_UpdateLastMoves(void)
      || gBattleStruct->unableToUseMove)
         gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
 
-    // Set ShellTrap to activate after the attacker's turn if target was hit by a physical move.
-    if (GetMoveEffect(gChosenMoveByBattler[gBattlerTarget]) == EFFECT_SHELL_TRAP
-        && IsBattleMovePhysical(gCurrentMove)
-        && IsBattlerTurnDamaged(gBattlerTarget)
-        && gBattlerTarget != gBattlerAttacker
-        && !IsBattlerAlly(gBattlerTarget, gBattlerAttacker)
-        && gProtectStructs[gBattlerTarget].physicalBattlerId == gBattlerAttacker
-        && !IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
-    {
-        gProtectStructs[gBattlerTarget].shellTrap = TRUE;
-        // Change move order in double battles, so the hit mon with shell trap moves immediately after being hit.
-        if (IsDoubleBattle())
-        {
-            ChangeOrderTargetAfterAttacker();
-        }
-    }
-
     // After swapattackerwithtarget is used for snatch the correct battlers have to be restored so data is stored correctly
     if (gBattleStruct->snatchedMoveIsUsed)
     {
@@ -1132,6 +1115,29 @@ static enum MoveEndResult MoveEnd_SheerForce(void)
     return MOVEEND_STEP_CONTINUE;
 }
 
+static enum MoveEndResult MoveEnd_ShellTrap(void)
+{
+    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        if (battlerDef == gBattlerAttacker || IsBattlerAlly(battlerDef, gBattlerAttacker))
+            continue;
+
+        // Set ShellTrap to activate after the attacker's turn if target was hit by a physical move.
+        if (GetMoveEffect(gChosenMoveByBattler[battlerDef]) == EFFECT_SHELL_TRAP
+         && IsBattleMovePhysical(gCurrentMove)
+         && IsBattlerTurnDamaged(battlerDef)
+         && gProtectStructs[battlerDef].physicalBattlerId == gBattlerAttacker)
+        {
+            gProtectStructs[battlerDef].shellTrap = TRUE;
+            if (IsDoubleBattle()) // Change move order in double battles, so the hit mon with shell trap moves immediately after being hit.
+                ChangeOrderTargetAfterAttacker(); // In what order should 2 targets move that will activate a trap?
+        }
+    }
+
+    gBattleScripting.moveendState++;
+    return MOVEEND_STEP_CONTINUE;
+}
+
 static enum MoveEndResult MoveEnd_ColorChange(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
@@ -1543,7 +1549,7 @@ static enum MoveEndResult MoveEnd_ThirdMoveBlock(void)
     case EFFECT_NATURAL_GIFT:
         if (!gBattleStruct->unableToUseMove && GetItemPocket(gBattleMons[gBattlerAttacker].item) == POCKET_BERRIES)
         {
-            u32 item = gBattleMons[gBattlerAttacker].item;
+            enum Item item = gBattleMons[gBattlerAttacker].item;
             gBattleMons[gBattlerAttacker].item = ITEM_NONE;
             gBattleStruct->battlerState[gBattlerAttacker].canPickupItem = TRUE;
             GetBattlerPartyState(gBattlerAttacker)->usedHeldItem = item;
@@ -1762,6 +1768,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_ITEM_EFFECTS_ATTACKER_2] = MoveEnd_ItemEffectsAttacker2,
     [MOVEEND_ABILITY_EFFECT_FOES_FAINTED] = MoveEnd_AbilityEffectFoesFainted,
     [MOVEEND_SHEER_FORCE] = MoveEnd_SheerForce,
+    [MOVEEND_SHELL_TRAP] = MoveEnd_ShellTrap,
     [MOVEEND_COLOR_CHANGE] = MoveEnd_ColorChange,
     [MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET] = MoveEnd_KeeMarangaHpThresholdItemTarget,
     [MOVEEND_CARD_BUTTON] = MoveEnd_CardButton,

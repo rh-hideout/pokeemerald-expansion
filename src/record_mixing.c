@@ -899,7 +899,7 @@ static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *records, size
             // Both daycare slots can hold an item, choose which one to use.
             // If either one is the only one to have associated mail, use that one.
             // If both do or don't have associated mail, choose one randomly.
-            u32 itemId1, itemId2;
+            enum Item itemId1, itemId2;
             idxs[j][MULTIPLAYER_ID] = i;
             itemId1 = GetDaycareMailItemId(&mixMail->mail[0]);
             itemId2 = GetDaycareMailItemId(&mixMail->mail[1]);
