@@ -84,7 +84,7 @@ void FormChangeTimeUpdate()
     s32 i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon *mon = &gPlayerParty[i];
+        struct Pokemon *mon = &gParties[B_TRAINER_0][i];
         u32 targetSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_TIME_OF_DAY, 0);
         u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
 

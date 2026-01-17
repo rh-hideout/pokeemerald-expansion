@@ -80,14 +80,14 @@ static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species)
 
 static bool32 IsSynchronizeActive(void)
 {
-    return ((!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_SYNCHRONIZE));
+    return ((!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG)
+        && GetMonAbility(&gParties[B_TRAINER_0][0]) == ABILITY_SYNCHRONIZE));
 }
 
 static bool32 IsCuteCharmActive(void)
 {
-     return ((!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM));
+     return ((!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG)
+        && GetMonAbility(&gParties[B_TRAINER_0][0]) == ABILITY_CUTE_CHARM));
 }
 
 u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, u32 species)
@@ -96,7 +96,7 @@ u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, u32 species)
         return NATURE_RANDOM;
     if (!(sSynchronizeModes[origin](species)))
         return NATURE_RANDOM;
-    return GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY) % NUM_NATURES;
+    return GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_PERSONALITY) % NUM_NATURES;
 }
 
 u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, u32 species)
@@ -105,7 +105,7 @@ u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, u32 species)
         return MON_GENDER_RANDOM;
     if (!(sCuteCharmModes[origin](species)))
         return MON_GENDER_RANDOM;
-    u8 leadingMonGender = GetMonGender(&gPlayerParty[0]);
+    u8 leadingMonGender = GetMonGender(&gParties[B_TRAINER_0][0]);
     // misses mon is genderless check, although no genderless mon can have cute charm as ability
     if (leadingMonGender == MON_FEMALE)
         return MON_MALE;

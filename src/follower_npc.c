@@ -1160,9 +1160,9 @@ static void ChooseFirstThreeEligibleMons(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0
-         && GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) == FALSE
-         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP) != 0
+         && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG) == FALSE
+         && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) != SPECIES_NONE)
         {
             gSelectedOrderFromParty[count] = (i + 1);
             count++;

@@ -432,7 +432,7 @@ static void DoBattlePyramidTrainerHillBattle(void)
 // Initiates battle where Wally catches Ralts
 void StartWallyTutorialBattle(void)
 {
-    CreateMaleMon(&gEnemyParty[0], SPECIES_RALTS, 5);
+    CreateMaleMon(&gParties[B_TRAINER_1][0], SPECIES_RALTS, 5);
     LockPlayerFieldControls();
     gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
     gBattleTypeFlags = BATTLE_TYPE_WALLY_TUTORIAL;
@@ -481,7 +481,7 @@ void BattleSetup_StartLegendaryBattle(void)
     gMain.savedCallback = CB2_EndScriptedWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_LEGENDARY;
 
-    switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES))
+    switch (GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES))
     {
     default:
     case SPECIES_GROUDON:
@@ -543,7 +543,7 @@ void StartRegiBattle(void)
     gMain.savedCallback = CB2_EndScriptedWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_LEGENDARY;
 
-    species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+    species = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
     switch (species)
     {
     case SPECIES_REGIROCK:
@@ -575,8 +575,8 @@ static void DowngradeBadPoison(void)
         return;
     for(i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SANITY_HAS_SPECIES) && GetMonData(&gPlayerParty[i], MON_DATA_STATUS) == STATUS1_TOXIC_POISON)
-            SetMonData(&gPlayerParty[i], MON_DATA_STATUS, &status);
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SANITY_HAS_SPECIES) && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS) == STATUS1_TOXIC_POISON)
+            SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS, &status);
     }
 }
 
@@ -721,11 +721,11 @@ static u16 GetSumOfPlayerPartyLevel(u8 numMons)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        u32 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+        u32 species = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG);
 
-        if (species != SPECIES_EGG && species != SPECIES_NONE && GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0)
+        if (species != SPECIES_EGG && species != SPECIES_NONE && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP) != 0)
         {
-            sum += GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
+            sum += GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_LEVEL);
             if (--numMons == 0)
                 break;
         }
@@ -755,7 +755,7 @@ static u8 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons)
 enum BattleTransition GetWildBattleTransition(void)
 {
     u8 transitionType = GetBattleTransitionTypeByMap();
-    u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+    u8 enemyLevel = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL);
     u8 playerLevel = GetSumOfPlayerPartyLevel(1);
 
     if (enemyLevel < playerLevel)
@@ -820,7 +820,7 @@ enum BattleTransition GetTrainerBattleTransition(void)
 enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id)
 {
     u16 var;
-    u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+    u8 enemyLevel = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL);
     u8 playerLevel = GetSumOfPlayerPartyLevel(1);
 
     if (enemyLevel < playerLevel)
@@ -1236,16 +1236,16 @@ void BattleSetup_StartTrainerBattle(void)
         if (gNoOfApproachingTrainers == 2)
         {
             FillFrontierTrainersParties(1);
-            ZeroMonData(&gEnemyParty[1]);
-            ZeroMonData(&gEnemyParty[2]);
-            ZeroMonData(&gEnemyParty[4]);
-            ZeroMonData(&gEnemyParty[5]);
+            ZeroMonData(&gParties[B_TRAINER_1][1]);
+            ZeroMonData(&gParties[B_TRAINER_1][2]);
+            ZeroMonData(&gParties[B_TRAINER_1][4]);
+            ZeroMonData(&gParties[B_TRAINER_1][5]);
         }
         else
         {
             FillFrontierTrainerParty(1);
-            ZeroMonData(&gEnemyParty[1]);
-            ZeroMonData(&gEnemyParty[2]);
+            ZeroMonData(&gParties[B_TRAINER_1][1]);
+            ZeroMonData(&gParties[B_TRAINER_1][2]);
         }
 
         MarkApproachingPyramidTrainersAsBattled();
@@ -1288,7 +1288,7 @@ static void CB2_EndDebugBattle(void)
         {
             u16 monId = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
             if (monId < PARTY_SIZE)
-                SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
+                SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gParties[B_TRAINER_0][i]);
         }
         LoadPlayerParty();
     }
@@ -1316,7 +1316,7 @@ static void SaveChangesToPlayerParty(void)
     {
         if ((participatedPokemon >> i & 1) == 1)
         {
-            SavePlayerPartyMon(i, &gPlayerParty[j]);
+            SavePlayerPartyMon(i, &gParties[B_TRAINER_0][j]);
             j++;
         }
     }

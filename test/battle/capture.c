@@ -229,6 +229,6 @@ WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
             ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW);
         }
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKEBALL), GetItemSecondaryId(item));
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKEBALL), GetItemSecondaryId(item));
     }
 }

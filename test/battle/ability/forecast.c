@@ -388,7 +388,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back when it switches out")
         MESSAGE("Castform transformed!");
         SWITCH_OUT_MESSAGE("Castform");
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CASTFORM);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_CASTFORM);
     }
 }
 
@@ -409,7 +409,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back when it uses a move that f
         MESSAGE("Castform transformed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CASTFORM);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_CASTFORM);
     }
 }
 

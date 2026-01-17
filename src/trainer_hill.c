@@ -911,7 +911,7 @@ static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
     for (i = firstMonId, partySlot = 0; i < firstMonId + PARTY_SIZE / 2; i++, partySlot++)
     {
         u8 id = sTrainerPartySlots[trId][partySlot];
-        struct Pokemon *mon = &gEnemyParty[i];
+        struct Pokemon *mon = &gParties[B_TRAINER_1][i];
 
         CreateBattleTowerMon(mon, &sHillData->floors[floorId].trainers[trId].mons[id]);
         SetTrainerHillMonLevel(mon, level);

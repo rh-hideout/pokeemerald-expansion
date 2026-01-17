@@ -681,10 +681,12 @@ struct OriginalTrainerId
 #define OTID_STRUCT_PRESET(value)   ((struct OriginalTrainerId) {OT_ID_PRESET, value})
 #define OTID_STRUCT_RANDOM_NO_SHINY ((struct OriginalTrainerId) {OT_ID_RANDOM_NO_SHINY, 0})
 
-extern u8 gPlayerPartyCount;
-extern struct Pokemon gPlayerParty[PARTY_SIZE];
-extern u8 gEnemyPartyCount;
-extern struct Pokemon gEnemyParty[PARTY_SIZE];
+extern u8 gPartiesCount[MAX_BATTLE_TRAINERS];
+extern struct Pokemon gParties[MAX_BATTLE_TRAINERS][PARTY_SIZE];
+#define gPlayerParty gParties[B_TRAINER_0]
+#define gEnemyParty gParties[B_TRAINER_1]
+#define gPlayerPartyCount gPartiesCount[B_TRAINER_0]
+#define gEnemyPartyCount gPartiesCount[B_TRAINER_1]
 extern struct SpriteTemplate gMultiuseSpriteTemplate;
 extern u16 gFollowerSteps;
 extern bool32 consumeItem;
@@ -707,7 +709,9 @@ extern const struct NatureInfo gNaturesInfo[];
 
 void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
+void ZeroPartyMons(struct Pokemon *party);
 void ZeroPlayerPartyMons(void);
+void ZeroPartnerPartyMons(void);
 void ZeroEnemyPartyMons(void);
 u32 GetMonPersonality(u16 species, u8 gender, u8 nature, u8 unownLetter);
 void CreateMon(struct Pokemon *mon, u16 species, u8 level, u32 personality, struct OriginalTrainerId);
@@ -906,7 +910,8 @@ void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method)
 u32 GetMonFriendshipScore(struct Pokemon *pokemon);
 u32 GetMonAffectionHearts(struct Pokemon *pokemon);
 void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality);
-u8 CalculatePartyCount(struct Pokemon *party);
+u8 CalculatePartyCount(enum BattleTrainer trainer);
+u8 CalculatePartyCountOfSide(enum BattlerId battler);
 u16 SanitizeSpeciesId(u16 species);
 bool32 IsSpeciesEnabled(u16 species);
 enum PokemonCry GetCryIdBySpecies(u16 species);

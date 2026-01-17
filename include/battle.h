@@ -211,7 +211,7 @@ struct AiPartyMon
 
 struct AiPartyData // Opposing battlers - party mons.
 {
-    struct AiPartyMon mons[NUM_BATTLE_SIDES][PARTY_SIZE]; // 2 parties(player, opponent). Used to save information on opposing party.
+    struct AiPartyMon mons[MAX_BATTLE_TRAINERS][PARTY_SIZE]; // 4 parties(player, partner, and two opponent). Used to save information on opposing party.
     u8 count[NUM_BATTLE_SIDES];
 };
 
@@ -1072,6 +1072,7 @@ extern u16 gBallToDisplay;
 extern bool8 gLastUsedBallMenuPresent;
 extern u8 gPartyCriticalHits[PARTY_SIZE];
 extern u8 gCategoryIconSpriteId;
+struct Pokemon *GetBattlerParty(enum BattlerId battler);
 
 static inline bool32 IsBattlerAlive(u32 battler)
 {
@@ -1144,17 +1145,12 @@ static inline u32 GetOpposingSideBattler(u32 battler)
 static inline struct Pokemon* GetBattlerMon(u32 battler)
 {
     u32 index = gBattlerPartyIndexes[battler];
-    return !IsOnPlayerSide(battler) ? &gEnemyParty[index] : &gPlayerParty[index];
+    return !IsOnPlayerSide(battler) ? &gParties[B_TRAINER_1][index] : &gParties[B_TRAINER_0][index];
 }
 
 static inline struct Pokemon *GetSideParty(enum BattleSide side)
 {
-    return side == B_SIDE_PLAYER ? gPlayerParty : gEnemyParty;
-}
-
-static inline struct Pokemon *GetBattlerParty(u32 battler)
-{
-    return GetSideParty(GetBattlerSide(battler));
+    return side == B_SIDE_PLAYER ? gParties[B_TRAINER_0] : gParties[B_TRAINER_1];
 }
 
 static inline struct PartyState *GetBattlerPartyState(u32 battler)

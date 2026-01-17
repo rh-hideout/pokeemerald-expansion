@@ -100,7 +100,7 @@ static const s8 sMultiBattleOrder[] = {0, 2, 3, 1, 4, 5};
 static u32 GetPartyMonCount(u32 firstId, u32 lastId, enum BattleSide side, bool32 onlyAlive)
 {
     u32 count = 0;
-    struct Pokemon* party = (side == B_SIDE_OPPONENT ? gEnemyParty : gPlayerParty);
+    struct Pokemon* party = (side == B_SIDE_OPPONENT ? gParties[B_TRAINER_1] : gParties[B_TRAINER_0]);
 
     if (IsMultiBattle() && side == B_SIDE_PLAYER)
     {

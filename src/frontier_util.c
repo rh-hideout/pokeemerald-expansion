@@ -998,7 +998,7 @@ static void SaveSelectedParty(void)
     {
         u16 monId = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
         if (monId < PARTY_SIZE)
-            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
+            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gParties[B_TRAINER_0][i]);
     }
 }
 
@@ -2112,10 +2112,10 @@ static void CheckPartyIneligibility(void)
         numEligibleMons = 0;
         do
         {
-            u16 species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
-            u16 heldItem = GetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM);
-            u8 level = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
-            u16 hp = GetMonData(&gPlayerParty[monId], MON_DATA_HP);
+            u16 species = GetMonData(&gParties[B_TRAINER_0][monId], MON_DATA_SPECIES_OR_EGG);
+            u16 heldItem = GetMonData(&gParties[B_TRAINER_0][monId], MON_DATA_HELD_ITEM);
+            u8 level = GetMonData(&gParties[B_TRAINER_0][monId], MON_DATA_LEVEL);
+            u16 hp = GetMonData(&gParties[B_TRAINER_0][monId], MON_DATA_HP);
             if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_PYRAMID)
             {
                 if (heldItem == ITEM_NONE)
@@ -2153,7 +2153,7 @@ static void CheckPartyIneligibility(void)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+            u16 species = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG);
             if (species == SPECIES_EGG || species == SPECIES_NONE)
                 continue;
             if (gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned)
@@ -2260,7 +2260,7 @@ static void RestoreHeldItems(void)
         if (gSaveBlock2Ptr->frontier.selectedPartyMons[i] != 0)
         {
             u16 item = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_HELD_ITEM);
-            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
+            SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HELD_ITEM, &item);
         }
     }
 }
@@ -2298,13 +2298,13 @@ static void ResetSketchedMoves(void)
                 for (k = 0; k < MAX_MON_MOVES; k++)
                 {
                     if (GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_MOVE1 + k)
-                        == GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + j))
+                        == GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_MOVE1 + j))
                         break;
                 }
                 if (k == MAX_MON_MOVES)
-                    SetMonMoveSlot(&gPlayerParty[i], MOVE_SKETCH, j);
+                    SetMonMoveSlot(&gParties[B_TRAINER_0][i], MOVE_SKETCH, j);
             }
-            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
+            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gParties[B_TRAINER_0][i]);
         }
     }
 }
@@ -2525,17 +2525,17 @@ void SaveGameFrontier(void)
     struct Pokemon *monsParty = AllocZeroed(sizeof(struct Pokemon) * PARTY_SIZE);
 
     for (i = 0; i < PARTY_SIZE; i++)
-        monsParty[i] = gPlayerParty[i];
+        monsParty[i] = gParties[B_TRAINER_0][i];
 
-    i = gPlayerPartyCount;
+    i = gPartiesCount[B_TRAINER_0];
     LoadPlayerParty();
     SetContinueGameWarpStatusToDynamicWarp();
     TrySavingData(SAVE_LINK);
     ClearContinueGameWarpStatus2();
-    gPlayerPartyCount = i;
+    gPartiesCount[B_TRAINER_0] = i;
 
     for (i = 0; i < PARTY_SIZE; i++)
-        gPlayerParty[i] = monsParty[i];
+        gParties[B_TRAINER_0][i] = monsParty[i];
 
     Free(monsParty);
 }
@@ -2624,26 +2624,26 @@ void CreateFrontierBrainPokemon(void)
                                             MON_GENDER_RANDOM,
                                             sFrontierBrainsMons[facility][symbol][i].nature,
                                             RANDOM_UNOWN_LETTER);
-        CreateMonWithIVs(&gEnemyParty[monPartyId],
+        CreateMonWithIVs(&gParties[B_TRAINER_1][monPartyId],
                   sFrontierBrainsMons[facility][symbol][i].species,
                   monLevel,
                   personality,
                   OTID_STRUCT_PRESET(FRONTIER_BRAIN_OTID),
                   sFrontierBrainsMons[facility][symbol][i].fixedIV);
-        SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
+        SetMonData(&gParties[B_TRAINER_1][monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
         for (j = 0; j < NUM_STATS; j++)
-            SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);
+            SetMonData(&gParties[B_TRAINER_1][monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);
         friendship = MAX_FRIENDSHIP;
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
-            SetMonMoveSlot(&gEnemyParty[monPartyId], sFrontierBrainsMons[facility][symbol][i].moves[j], j);
+            SetMonMoveSlot(&gParties[B_TRAINER_1][monPartyId], sFrontierBrainsMons[facility][symbol][i].moves[j], j);
             if (GetMoveEffect(sFrontierBrainsMons[facility][symbol][i].moves[j]) == EFFECT_FRUSTRATION)
                 friendship = 0;
         }
-        SetMonData(&gEnemyParty[monPartyId], MON_DATA_FRIENDSHIP, &friendship);
+        SetMonData(&gParties[B_TRAINER_1][monPartyId], MON_DATA_FRIENDSHIP, &friendship);
         j = FALSE;
-        SetMonData(&gPlayerParty[MULTI_PARTY_SIZE + i], MON_DATA_IS_SHINY, &j);
-        CalculateMonStats(&gEnemyParty[monPartyId]);
+        SetMonData(&gParties[B_TRAINER_0][MULTI_PARTY_SIZE + i], MON_DATA_IS_SHINY, &j);
+        CalculateMonStats(&gParties[B_TRAINER_1][monPartyId]);
         monPartyId++;
     }
 }
@@ -3294,10 +3294,10 @@ s32 GetHighestLevelInPlayerParty(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES)
-            && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES)
+            && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
         {
-            s32 level = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
+            s32 level = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_LEVEL);
             if (level > highestLevel)
                 highestLevel = level;
         }

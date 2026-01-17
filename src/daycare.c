@@ -297,11 +297,11 @@ void StoreSelectedPokemonInDaycare(void)
 {
     if (gSpecialVar_MonBoxId == 0xFF)
     {
-        StorePokemonInEmptyDaycareSlot(&gPlayerParty[GetCursorSelectionMonId()], &gSaveBlock1Ptr->daycare);
+        StorePokemonInEmptyDaycareSlot(&gParties[B_TRAINER_0][GetCursorSelectionMonId()], &gSaveBlock1Ptr->daycare);
     }
     else if (gSpecialVar_MonBoxId == TOTAL_BOXES_COUNT) // Selected party mon from PC
     {
-        StorePokemonInEmptyDaycareSlot(&gPlayerParty[gSpecialVar_MonBoxPos], &gSaveBlock1Ptr->daycare);
+        StorePokemonInEmptyDaycareSlot(&gParties[B_TRAINER_0][gSpecialVar_MonBoxPos], &gSaveBlock1Ptr->daycare);
     }
     else
     {
@@ -391,10 +391,10 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
         ApplyDaycareExperience(&pokemon);
     }
 
-    gPlayerParty[PARTY_SIZE - 1] = pokemon;
+    gParties[B_TRAINER_0][PARTY_SIZE - 1] = pokemon;
     if (daycareMon->mail.message.itemId)
     {
-        GiveMailToMon(&gPlayerParty[PARTY_SIZE - 1], &daycareMon->mail.message);
+        GiveMailToMon(&gParties[B_TRAINER_0][PARTY_SIZE - 1], &daycareMon->mail.message);
         ClearDaycareMonMail(&daycareMon->mail);
     }
 
@@ -1119,7 +1119,7 @@ static void _GiveEggFromDaycare(struct DayCare *daycare)
 
     isEgg = TRUE;
     SetMonData(&egg, MON_DATA_IS_EGG, &isEgg);
-    gPlayerParty[PARTY_SIZE - 1] = egg;
+    gParties[B_TRAINER_0][PARTY_SIZE - 1] = egg;
     CompactPartySlots();
     CalculatePlayerPartyCount();
     RemoveEggFromDayCare(daycare);
@@ -1206,14 +1206,14 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
 
         daycare->stepCounter = 0;
 
-        for (i = 0; i < gPlayerPartyCount; i++)
+        for (i = 0; i < gPartiesCount[B_TRAINER_0]; i++)
         {
-            if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
+            if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG))
                 continue;
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SANITY_IS_BAD_EGG))
+            if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SANITY_IS_BAD_EGG))
                 continue;
 
-            eggCycles = GetMonData(&gPlayerParty[i], MON_DATA_FRIENDSHIP);
+            eggCycles = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP);
             if (eggCycles != 0)
             {
                 if (eggCycles >= toSub)
@@ -1221,7 +1221,7 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
                 else
                     eggCycles -= 1;
 
-                SetMonData(&gPlayerParty[i], MON_DATA_FRIENDSHIP, &eggCycles);
+                SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP, &eggCycles);
             }
             else
             {
@@ -1267,13 +1267,13 @@ u16 GetSelectedMonNicknameAndSpecies(void)
 {
     if(gSpecialVar_MonBoxId == 0xFF)
     {
-        GetBoxMonNickname(&gPlayerParty[GetCursorSelectionMonId()].box, gStringVar1);
-        return GetBoxMonData(&gPlayerParty[GetCursorSelectionMonId()].box, MON_DATA_SPECIES);
+        GetBoxMonNickname(&gParties[B_TRAINER_0][GetCursorSelectionMonId()].box, gStringVar1);
+        return GetBoxMonData(&gParties[B_TRAINER_0][GetCursorSelectionMonId()].box, MON_DATA_SPECIES);
     }
     else if (gSpecialVar_MonBoxId == TOTAL_BOXES_COUNT) // Selected party mon from PC
     {
-        GetBoxMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos].box, gStringVar1);
-        return GetBoxMonData(&gPlayerParty[gSpecialVar_MonBoxPos].box, MON_DATA_SPECIES);
+        GetBoxMonNickname(&gParties[B_TRAINER_0][gSpecialVar_MonBoxPos].box, gStringVar1);
+        return GetBoxMonData(&gParties[B_TRAINER_0][gSpecialVar_MonBoxPos].box, MON_DATA_SPECIES);
     }
     else
     {

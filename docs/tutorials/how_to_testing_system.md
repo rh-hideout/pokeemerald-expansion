@@ -139,7 +139,7 @@ The `HP_BAR` command's `captureDamage` causes the change in HP to be stored in a
 You might notice that all the tests check the outputs the player could see rather than the internal battle state. e.g. the Meditate test could have used `gBattleMons[B_POSITION_OPPONENT_LEFT].hp` instead of using `HP_BAR` to capture the damage. This is a deliberate choice, by checking what the player can observe the tests are more robust to refactoring, e.g. if `gBattleMons` got moved into `gBattleStruct` then any test that used it would need to be updated.
 
 ### Note on Overworld Tests
-The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gPlayerParty`, but `addobject` cannot because it affects object events (which aren't loaded).
+The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gParties[B_TRAINER_0]`, but `addobject` cannot because it affects object events (which aren't loaded).
 
 ## REFERENCE
 

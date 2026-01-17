@@ -1181,7 +1181,7 @@ static void DexNavUpdateSearchWindow(u8 proximity, u8 searchLevel)
 //////////////////////////////
 static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityNum, u16 item, u16 *moves)
 {
-    struct Pokemon *mon = &gEnemyParty[0];
+    struct Pokemon *mon = &gParties[B_TRAINER_1][0];
     u8 iv[3] = {NUM_STATS};
     u8 i;
     u8 perfectIv = 31;
@@ -1280,12 +1280,12 @@ static void DexNavGenerateMoveset(u16 species, u8 searchLevel, u8 encounterLevel
 
     // Store generated mon moves into Dex Nav Struct
     for (i = 0; i < MAX_MON_MOVES; i++)
-        moveDst[i] = GetMonData(&gEnemyParty[0], MON_DATA_MOVE1 + i);
+        moveDst[i] = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_MOVE1 + i);
 
     // set first move slot to a random egg move if search level is good enough
     if (genMove)
     {
-        u8 numEggMoves = GetEggMoves(&gEnemyParty[0], eggMoveBuffer);
+        u8 numEggMoves = GetEggMoves(&gParties[B_TRAINER_1][0], eggMoveBuffer);
         if (numEggMoves != 0)
             moveDst[0] = eggMoveBuffer[Random() % numEggMoves];
     }

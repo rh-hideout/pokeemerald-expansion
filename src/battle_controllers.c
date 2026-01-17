@@ -3264,3 +3264,20 @@ enum BattleTrainer GetBattleTrainer(enum BattlerId battler)
         return B_TRAINER_1;
     }
 }
+
+enum BattleTrainer GetAllyTrainer(enum BattleTrainer trainer)
+{
+    switch (trainer)
+    {
+    case B_TRAINER_0:
+        return B_TRAINER_2;
+    case B_TRAINER_1:
+        return B_TRAINER_3;
+    case B_TRAINER_2:
+        return B_TRAINER_0;
+    case B_TRAINER_3:
+        return B_TRAINER_1;
+    default:
+        return B_TRAINER_3;
+    }
+}

@@ -69,10 +69,7 @@ static u32 GetWishHealAmountForBattler(u32 battler)
 
     if (B_WISH_HP_SOURCE >= GEN_5)
     {
-        if (IsOnPlayerSide(battler))
-            wishHeal = GetMonData(&gPlayerParty[gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
-        else
-            wishHeal = GetMonData(&gEnemyParty[gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
+        wishHeal = GetMonData(&gParties[GetBattleTrainer(battler)][gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
     }
     else
     {
@@ -193,11 +190,11 @@ bool32 IsAceMon(u32 battler, u32 monPartyId)
 {
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ACE_POKEMON
      && !gProtectStructs[battler].forcedSwitch
-     && monPartyId == CalculateEnemyPartyCountInSide(battler)-1)
+     && monPartyId == CalculatePartyCountOfSide(battler)-1)
         return TRUE;
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DOUBLE_ACE_POKEMON
      && !gProtectStructs[battler].forcedSwitch
-     && (monPartyId == CalculateEnemyPartyCount()-1 || monPartyId == CalculateEnemyPartyCount()-2))
+     && (monPartyId == CalculatePartyCount(battler)-1 || monPartyId == CalculatePartyCount(battler)-2))
         return TRUE;
     return FALSE;
 }

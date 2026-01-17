@@ -466,5 +466,6 @@ void BtlController_HandleSwitchInShowSubstitute(u32 battler);
 bool32 ShouldBattleRestrictionsApply(u32 battler);
 void FreeShinyStars(void);
 enum BattleTrainer GetBattleTrainer(enum BattlerId battler);
+enum BattleTrainer GetAllyTrainer(enum BattleTrainer trainer);
 
 #endif // GUARD_BATTLE_CONTROLLERS_H
