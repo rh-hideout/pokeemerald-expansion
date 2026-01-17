@@ -195,13 +195,13 @@ u32 RandomWeightedArrayDefault(enum RandomTag tag, u32 sum, u32 n, const u16 *we
 {
     assertf(n > 0);
     assertf(sum <= MAX_u16);
-    s32 i, targetSum;
+    u32 i, targetSum;
     targetSum = (sum * Random()) >> 16;
     for (i = 0; i < n - 1; i++)
     {
-        targetSum -= weights[i];
-        if (targetSum < 0)
+        if (targetSum < weights[i])
             return i;
+        targetSum -= weights[i];
     }
     return n - 1;
 }
