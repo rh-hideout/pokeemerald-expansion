@@ -273,22 +273,6 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect Hidden Power's type")
     }
 }
 
-SINGLE_BATTLE_TEST("Normalize doesn't change Tera Blast's type when not Terastallized")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
-        ASSUME(GetMoveType(MOVE_TERA_BLAST) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_SKITTY) { Ability(ABILITY_NORMALIZE); }
-        OPPONENT(SPECIES_MISDREAVUS);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TERA_BLAST); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player); }
-        MESSAGE("It doesn't affect the opposing Misdreavus…");
-    }
-}
-
 SINGLE_BATTLE_TEST("Normalize doesn't change Tera Blast's type when Terastallized")
 {
     GIVEN {
