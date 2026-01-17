@@ -12626,7 +12626,7 @@ static void Cmd_settaunt(void)
         }
         else if (B_TAUNT_TURNS >= GEN_4)
         {
-            turns = RandomUniform(RNG_TAUNT, 3, 5);
+            turns = RandomUniform(RNG_TAUNT_TURNS, 3, 5);
         }
         else
         {
