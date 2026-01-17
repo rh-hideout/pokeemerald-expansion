@@ -1184,34 +1184,39 @@ BattleScript_EffectPartingShotTrySpAtk:
 	setstatchanger STAT_SPATK, 1, TRUE
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_EffectPartingShotMaybeSwitch
 	call BattleScript_EffectPartingShotMaybePrintStat
-	goto BattleScript_EffectPartingShotMaybeSwitch
+BattleScript_EffectPartingShotMaybeSwitch:
+	jumpifgenconfiglowerthan CONFIG_PARTING_SHOT_SWITCH, GEN_7, BattleScript_EffectPartingShotSwitch
+	jumpifbyte CMP_NOT_EQUAL, sB_ANIM_TARGETS_HIT, 0, BattleScript_EffectPartingShotSwitch
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectPartingShotSwitch:
+	moveendall
+	goto BattleScript_MoveSwitchPursuitEnd
+
 BattleScript_EffectPartingShotCantLowerMultipleStats:
 	pause B_WAIT_TIME_SHORT
 	setmoveresultflags MOVE_RESULT_FAILED
 	call BattleScript_EffectPartingShotPrintWontDecrease
 	setbyte sB_ANIM_TARGETS_HIT, 0
 	goto BattleScript_EffectPartingShotMaybeSwitch
-BattleScript_EffectPartingShotMaybeSwitch:
-	jumpifgenconfiglowerthan CONFIG_PARTING_SHOT_SWITCH, GEN_7, BattleScript_EffectPartingShotSwitch
-	jumpifbyte CMP_NOT_EQUAL, sB_ANIM_TARGETS_HIT, 0, BattleScript_EffectPartingShotSwitch
-	goto BattleScript_MoveEnd
-BattleScript_EffectPartingShotSwitch:
-	moveendall
-	goto BattleScript_MoveSwitchPursuitEnd
+
 BattleScript_EffectPartingShotMaybePrintStat:
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_ATTACKER_STAT_CHANGED, BattleScript_EffectPartingShotPrintStat
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_DEFENDER_STAT_CHANGED, BattleScript_EffectPartingShotPrintStat
 	return
+
 BattleScript_EffectPartingShotPrintStat:
 	setbyte sB_ANIM_TARGETS_HIT, 1
 	printfromtable gStatDownStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return
+
 BattleScript_EffectPartingShotPrintWontDecrease:
 	jumpifability BS_TARGET, ABILITY_CONTRARY, BattleScript_EffectPartingShotPrintWontDecreaseContrary
 	printstring STRINGID_STATSWONTDECREASE2
 	waitmessage B_WAIT_TIME_LONG
 	return
+
 BattleScript_EffectPartingShotPrintWontDecreaseContrary:
 	swapattackerwithtarget
 	printstring STRINGID_STATSWONTDECREASE2

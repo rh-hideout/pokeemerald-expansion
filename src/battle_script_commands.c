@@ -10375,7 +10375,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
         }
         else if (battlerAbility == ABILITY_MIRROR_ARMOR && !flags.mirrorArmored && gBattlerAttacker != gBattlerTarget && battler == gBattlerTarget)
         {
-            if (gCurrentMove == MOVE_PARTING_SHOT)
+            if (GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT)
                 gBattleScripting.animTargetsHit = 1;
             if (flags.allowPtr)
             {
