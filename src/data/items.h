@@ -8508,7 +8508,7 @@ const struct Item gItemsInfo[] =
     #if I_LAX_INCENSE_BOOST >= GEN_4
         .holdEffectParam = 10,
         .description = COMPOUND_STRING(
-            "A hold item that\n"
+            "A held item that\n"
             "cuts the\n"
             "foe's accuracy."),
     #else
