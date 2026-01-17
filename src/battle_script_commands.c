@@ -11504,11 +11504,7 @@ static void Cmd_trysetencore(void)
         if (gDisableStructs[gBattlerTarget].encoredMove != GetChosenMoveFromPosition(gBattlerTarget))
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
-        // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
-        if (HasBattlerActedThisTurn(gBattlerTarget))
-            gDisableStructs[gBattlerTarget].encoreTimer = 4;
-        else
-            gDisableStructs[gBattlerTarget].encoreTimer = 3;
+        gDisableStructs[gBattlerTarget].encoreTimer = 4;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -12512,7 +12508,7 @@ static void Cmd_trymemento(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (B_MEMENTO_FAIL >= GEN_5
+    if (B_MEMENTO_FAIL >= GEN_4
       && (gBattleCommunication[MISS_TYPE] == B_MSG_PROTECTED
         || IsSemiInvulnerable(gBattlerTarget, CHECK_ALL)
         || IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove)
@@ -12627,8 +12623,6 @@ static void Cmd_settaunt(void)
         if (B_TAUNT_TURNS >= GEN_5)
         {
             turns = 4;
-            if (!HasBattlerActedThisTurn(gBattlerTarget))
-                turns--; // If the target hasn't yet moved this turn, Taunt lasts for only three turns (source: Bulbapedia)
         }
         else if (B_TAUNT_TURNS >= GEN_4)
         {

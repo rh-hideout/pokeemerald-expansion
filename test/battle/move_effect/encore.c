@@ -6,58 +6,51 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
 }
 
-SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns: Encore used before move")
+SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 4 turns: Encore used before move")
 {
-    struct BattlePokemon *encoreUser = NULL;
-    struct BattlePokemon *encoreTarget = NULL;
-    u32 speedPlayer, speedOpponent;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
-    PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 20; speedOpponent = 10; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
-        TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { MOVE(encoreTarget, MOVE_SPLASH); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_SPLASH); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { MOVE(opponent, MOVE_SPLASH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        MESSAGE("The opposing Wobbuffet ended its encore!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
 
-SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns for player: Encore used after move")
+SINGLE_BATTLE_TEST("(Gen5+) Encore forces consecutive move uses for 3 turns: Encore used after move")
 {
-    struct BattlePokemon *encoreUser = NULL;
-    struct BattlePokemon *encoreTarget = NULL;
-    u32 speedPlayer, speedOpponent;
-    PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
-    PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 10; speedOpponent = 20; }
     GIVEN {
         WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
     } WHEN {
-        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { MOVE(encoreTarget, MOVE_SPLASH); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_ENCORE); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { MOVE(opponent, MOVE_SPLASH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, encoreUser);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, encoreTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        MESSAGE("The opposing Wobbuffet ended its encore!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
 
@@ -125,7 +118,6 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can be encored immediately after
 }
 
 TO_DO_BATTLE_TEST("Encore's effect ends if the encored move runs out of PP");
-TO_DO_BATTLE_TEST("Encore lasts for 2-6 turns (Gen 2-3)");
-TO_DO_BATTLE_TEST("Encore lasts for 3-7 turns (Gen 4)");
-TO_DO_BATTLE_TEST("Encore lasts for 3 turns (Gen 5+)");
+TO_DO_BATTLE_TEST("(Gens2-3) Encore forces consecutive move uses for 2-6 turns: Encore used after move");
+TO_DO_BATTLE_TEST("(Gen4) Encore forces consecutive move uses for 3-7 turns: Encore used after move");
 TO_DO_BATTLE_TEST("Encore randomly chooses an opponent target");
