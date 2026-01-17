@@ -49,6 +49,7 @@
 enum OverworldEncounterSpawnAnim
 {
     OWE_SPAWN_ANIM_GRASS,
+    OWE_SPAWN_ANIM_LONG_GRASS,
     OWE_SPAWN_ANIM_WATER,
     OWE_SPAWN_ANIM_UNDERWATER,
     OWE_SPAWN_ANIM_CAVE,
@@ -117,11 +118,10 @@ u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
 u32 RemoveOldestOverworldEncounter(void);
-void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn);
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
-struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
+const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
-void TryRemoveOverworldWildEncounter(u32 localId);
+void OverworldWildEncounter_RemoveObjectOnBattle(void);
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
 void DespawnOldestOWE_Pal(void);
 bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon);
@@ -131,7 +131,8 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
-void OverworldWildEncounter_InitRoamerOutbreakStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template);
 void OverworldWildEncounter_FreezeAllObjects(void);
+bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent);
+bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

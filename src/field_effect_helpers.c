@@ -1530,14 +1530,14 @@ u32 FldEff_OWE_SpawnAnim(void)
         yOffset = 8;
         break;
 
-    case OWE_SPAWN_ANIM_WATER:
-        visual = FLDEFFOBJ_JUMP_BIG_SPLASH;
+    case OWE_SPAWN_ANIM_LONG_GRASS:
+        visual = FLDEFFOBJ_JUMP_LONG_GRASS;
         xOffset = 0;
         yOffset = 0;
         break;
 
-    case OWE_SPAWN_ANIM_CAVE:
-        visual = FLDEFFOBJ_GROUND_IMPACT_DUST;
+    case OWE_SPAWN_ANIM_WATER:
+        visual = FLDEFFOBJ_JUMP_BIG_SPLASH;
         xOffset = 0;
         yOffset = 8;
         break;
@@ -1546,6 +1546,12 @@ u32 FldEff_OWE_SpawnAnim(void)
         visual = FLDEFFOBJ_BUBBLES;
         xOffset = 0;
         yOffset = 0;
+        break;
+
+    case OWE_SPAWN_ANIM_CAVE:
+        visual = FLDEFFOBJ_GROUND_IMPACT_DUST;
+        xOffset = 0;
+        yOffset = 8;
         break;
     
     case OWE_SPAWN_ANIM_SHINY:

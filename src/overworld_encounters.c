@@ -17,22 +17,23 @@
 #include "sprite.h"
 #include "sound.h"
 #include "task.h"
+#include "trainer_hill.h"
 #include "wild_encounter.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
 #include "constants/layouts.h"
+#include "constants/item.h"
 #include "constants/map_types.h"
 #include "constants/trainer_types.h"
 #include "constants/songs.h"
 #include "constants/vars.h"
 #include "constants/wild_encounter.h"
-// #include "data/wild_encounters.h"
 
 #define sOverworldEncounterLevel trainerRange_berryTreeId
 #define sAge                     playerCopyableMovement
 #define sRoamerOutbreakStatus    directionSequenceIndex
-#define OWE_NON_ROAMER_OUTBREAK  ROAMER_COUNT // If less than this value, OWE is a roamer.
-#define OWE_MASS_OUTBREAK_INDEX  OWE_NON_ROAMER_OUTBREAK + 1
+#define OWE_NON_ROAMER_OUTBREAK  0
+#define OWE_MASS_OUTBREAK_INDEX  ROAMER_COUNT + 1
 
 static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
@@ -57,10 +58,14 @@ static u32 GetNumActiveOverworldEncounters(void);
 static u32 GetNumActiveGeneratedOverworldEncounters(void);
 static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
 static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak);
-static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
 static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId);
 static bool32 CreateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEvent *objectEvent, u32 headerId);
 static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent);
+static u32 GetMaxOverworldEncounterSpawns(void);
+static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
+static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
+static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn);
+static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -72,13 +77,15 @@ void OWE_ResetSpawnCounterPlayAmbientCry(void)
 
 void UpdateOverworldEncounters(void)
 {
-    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
+    bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
+    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING) || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
         return;
     
-    bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
     if (!OW_WILD_ENCOUNTERS_OVERWORLD
         || FlagGet(OW_FLAG_NO_ENCOUNTER)
-        || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
+        || CurrentBattlePyramidLocation()
+        || InBattlePike()
+        || InTrainerHillChallenge())
     {
         if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
         {
@@ -92,7 +99,13 @@ void UpdateOverworldEncounters(void)
         OverworldWildEncounter_SetMinimumSpawnTimer();
     }
 
-    if (sOWESpawnCountdown != 0)
+    u16 spawnSlot = NextSpawnMonSlot();
+    if (LURE_STEP_COUNT && spawnSlot != INVALID_SPAWN_SLOT
+        && (GetNumActiveGeneratedOverworldEncounters() < GetMaxOverworldEncounterSpawns()))
+    {
+        OverworldWildEncounter_SetMinimumSpawnTimer();
+    }
+    else if (sOWESpawnCountdown)
     {
         sOWESpawnCountdown--;
         return;
@@ -102,7 +115,6 @@ void UpdateOverworldEncounters(void)
         return;
 
     s16 x, y;
-    u16 spawnSlot = NextSpawnMonSlot();
     if (spawnSlot == INVALID_SPAWN_SLOT
         || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters())
         || !TrySelectTile(&x, &y))
@@ -119,7 +131,7 @@ void UpdateOverworldEncounters(void)
     u32 level;
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
 
-    if (speciesId == SPECIES_NONE || !IsWildLevelAllowedByRepel(level))
+    if (speciesId == SPECIES_NONE || !IsWildLevelAllowedByRepel(level) || !IsAbilityAllowingEncounter(level))
     {
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
@@ -141,7 +153,11 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
-    u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
+    u32 objectEventId = GetObjectEventIdByLocalId(localId);
+    struct ObjectEvent *object = &gObjectEvents[objectEventId];
+    if (OWE_ShouldDespawnGeneratedForNewOWE(object))
+        RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+    objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
     if (objectEventId >= OBJECT_EVENTS_COUNT)
     {
@@ -149,17 +165,19 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
-    gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
-    gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
-    gObjectEvents[objectEventId].sRoamerOutbreakStatus = indexRoamerOutbreak;
+    object = &gObjectEvents[objectEventId];
+    object->disableCoveringGroundEffects = TRUE;
+    object->sOverworldEncounterLevel = level;
+    object->sRoamerOutbreakStatus = indexRoamerOutbreak;
 
-    u8 directions[4] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
-    ObjectEventTurn(&gObjectEvents[objectEventId], directions[Random() & 3]);
+    u8 directions[4];
+    memcpy(directions, gStandardDirections, sizeof directions);
+    ObjectEventTurn(object, directions[Random() & 3]);
 
     // Hide reflections for spawns in water
     // (It just looks weird)
     if (shouldSpawnWaterMons)
-        gObjectEvents[objectEventId].hideReflection = TRUE;
+        object->hideReflection = TRUE;
 
     // Slower replacement spawning
     sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
@@ -175,6 +193,7 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     {
         u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
 
+        // Need Preproc checks for overworldShinyPaletteFemale
         if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
             palTag += OBJ_EVENT_MON_FEMALE;
             
@@ -193,17 +212,21 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     return TRUE;
 }
 
-void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn)
+static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn)
 {
+    if (gMain.callback2 != CB2_Overworld)
+        return;
+    
     enum OverworldEncounterSpawnAnim spawnAnimType;
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
 
-    if (spawn)
+    if (animSpawn)
         OWE_PlayMonObjectCry(objectEvent);
-    else if (!spawn && OWE_ShouldPlayMonFleeSound(objectEvent))
+    
+    if (!animSpawn && OWE_ShouldPlayMonFleeSound(objectEvent))
         PlaySE(SE_FLEE);
 
-    if (isShiny && spawn)
+    if (isShiny && animSpawn)
     {
         PlaySE(SE_SHINY);
         spawnAnimType = OWE_SPAWN_ANIM_SHINY;
@@ -216,7 +239,7 @@ void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 spawn)
     MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
 
-static u8 GetMaxOverworldEncounterSpawns(void)
+static u32 GetMaxOverworldEncounterSpawns(void)
 {
     if (OWE_ShouldSpawnWaterMons())
         return OWE_MAX_WATER_SPAWNS;
@@ -235,6 +258,7 @@ u32 GetOldestSlot(void)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
+        // Add a not feebas tile feebas?
         {
             oldest = slotMon;
             break;
@@ -286,14 +310,6 @@ static u8 NextSpawnMonSlot(void)
         }
     }
 
-    if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
-    {
-        u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-        u32 objectEventId = GetObjectEventIdByLocalId(localId);
-        struct ObjectEvent *object = &gObjectEvents[objectEventId];
-        RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
-    }
-
     return spawnSlot;
 }
 
@@ -314,6 +330,8 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
     // Select a random tile in [-7, -4] [7, 4] range
     // Make sure is not directly next to player
+    // Can we make get random tile its own function for use elsewhere in the codebase?
+    // Have defines used and then replace MAP_METATILE_VIEW_X/Y with them
     do
     {
         x = (s16)(Random() % OWE_TOTAL_SPAWN_WIDTH) - OWE_SPAWN_RADUIS_WIDTH;
@@ -380,9 +398,9 @@ void CreateOverworldWildEncounter(void)
 {
     u32 localId = gSpecialVar_LastTalked;
     u32 objEventId = GetObjectEventIdByLocalId(localId);
-    u32 indexRoamerOutbreak;
     u32 headerId = GetCurrentMapWildMonHeaderId();
     struct ObjectEvent *object = &gObjectEvents[objEventId];
+    u32 indexRoamerOutbreak = object->sRoamerOutbreakStatus;
 
     if (objEventId >= OBJECT_EVENTS_COUNT)
         return;
@@ -390,8 +408,7 @@ void CreateOverworldWildEncounter(void)
     if (!IsOverworldWildEncounter(object))
         return;
 
-    indexRoamerOutbreak = object->sRoamerOutbreakStatus;
-    if (CreateOverworldWildEncounter_CheckRoamer(indexRoamerOutbreak))
+    if (indexRoamerOutbreak && CreateOverworldWildEncounter_CheckRoamer(OWE_GetObjectRoamerOutbreakStatus(object)))
         return;
 
     u16 speciesId = OW_SPECIES(object);
@@ -415,9 +432,6 @@ void CreateOverworldWildEncounter(void)
         isFemale
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
-
-    if (CreateOverworldWildEncounter_CheckBattleFrontier(headerId))
-        return;
     
     if (CreateOverworldWildEncounter_CheckMassOutbreak(indexRoamerOutbreak, speciesId))
         return;
@@ -430,7 +444,8 @@ void CreateOverworldWildEncounter(void)
 
 static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak)
 {
-    if (indexRoamerOutbreak < OWE_NON_ROAMER_OUTBREAK && IsRoamerAt(indexRoamerOutbreak, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+    if (indexRoamerOutbreak < ROAMER_COUNT
+        && IsRoamerAt(indexRoamerOutbreak, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
         CreateRoamerMonInstance(indexRoamerOutbreak);
         gEncounteredRoamerIndex = indexRoamerOutbreak;
@@ -441,32 +456,12 @@ static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak)
     return FALSE;
 }
 
-static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId)
-{
-    if (headerId == HEADER_NONE)
-    {
-        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
-        {
-            TryGenerateBattlePikeWildMon(FALSE);
-            BattleSetup_StartBattlePikeWildBattle();
-            return TRUE;
-        }
-        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
-        {
-            GenerateBattlePyramidWildMon();
-            BattleSetup_StartWildBattle();
-            return TRUE;
-        }
-    }
-
-    return FALSE;
-}
-
 static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId)
 {
-    if (indexRoamerOutbreak == OWE_MASS_OUTBREAK_INDEX && gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId
-     && gSaveBlock1Ptr->location.mapNum == gSaveBlock1Ptr->outbreakLocationMapNum
-     && gSaveBlock1Ptr->location.mapGroup == gSaveBlock1Ptr->outbreakLocationMapGroup)
+    if (indexRoamerOutbreak == OWE_MASS_OUTBREAK_INDEX
+        && gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId
+        && gSaveBlock1Ptr->location.mapNum == gSaveBlock1Ptr->outbreakLocationMapNum
+        && gSaveBlock1Ptr->location.mapGroup == gSaveBlock1Ptr->outbreakLocationMapGroup)
     {
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
             SetMonMoveSlot(&gEnemyParty[0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
@@ -583,10 +578,11 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
     if (!IsOverworldWildEncounter(objectEvent))
         return;
 
+    objectEvent->sOverworldEncounterLevel = 0;
+    objectEvent->sAge = 0;
     objectEvent->sRoamerOutbreakStatus = 0;
     
-    if (gMain.callback2 == CB2_Overworld)
-        OWE_DoSpawnDespawnAnim(objectEvent, FALSE);
+    OWE_DoSpawnDespawnAnim(objectEvent, FALSE);
 }
 
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
@@ -644,30 +640,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     u32 metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
 
     if (headerId == HEADER_NONE)
-    {
-        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
-        {
-            headerId = GetBattlePikeWildMonHeaderId();
-            timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-            if (TryGenerateWildMon(gBattlePikeWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
-                return FALSE;
-            
-            TryGenerateBattlePikeWildMon(FALSE);
-            return TRUE;
-        }
-        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
-        {
-            headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
-            timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-            if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
-                return FALSE;
-
-            GenerateBattlePyramidWildMon();
-            return TRUE;
-        }
-
         return FALSE;
-    }
 
     if (MetatileBehavior_IsWaterWildEncounter(metatileBehavior))
     {
@@ -684,37 +657,19 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
 
     /*
     These functions perform checks of various encounter types in the following order:
-        1. Manual/Semi-Manual OWE Defined Roamer Encounter
-        2. Manual/Semi-Manual OWE Defined Mass Outbreak Encounter
-        3. Attempted Generated Roamer Encounter
-        4. Attempted Generated Feebas encounter
-        5. Attempted Generated Mass Outbreak Encounter
-        6. Attempted Generated Standard Wild Encounter generation
-        Note: While a player cannot be stopped from trying to trigger checks 1 and 2, it is not recommended.
-              This is due to the fact that it requires careful tracking of the Roamer/Mass Outbreak in the save.
-              Regardless of this, 'functionality' is provided mostly to prevent breakages if the player does so,
-              accidentally.
+        1. Attempted Generated Roamer Encounter
+        2. Attempted Generated Feebas Encounter
+        3. Attempted Generated Mass Outbreak Encounter
+        4. Attempted Generated Standard Wild Encounter generation
     
     The structure of this statement ensures that only one of these encounter types can succeed per call,
     with the resultant wild mon being created in gEnemyParty[0].
     If none of these checks succeed, speciesId is set to SPECIES_NONE and FALSE is returned.
     */
 
-    // REGARDING ABOVE: A sanitisation check to clean the top 8 bits of trainerType when it is read from templates would prevent it, but remove 'functionality'.
-
-    if (*indexRoamerOutbreak < OWE_NON_ROAMER_OUTBREAK && IsRoamerAt(*indexRoamerOutbreak, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+    if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist())
     {
-        CreateRoamerMonInstance(*indexRoamerOutbreak);
-    }
-    else if (*indexRoamerOutbreak == OWE_MASS_OUTBREAK_INDEX && gSaveBlock1Ptr->outbreakPokemonSpecies != SPECIES_NONE
-     && gSaveBlock1Ptr->location.mapNum == gSaveBlock1Ptr->outbreakLocationMapNum
-     && gSaveBlock1Ptr->location.mapGroup == gSaveBlock1Ptr->outbreakLocationMapGroup)
-    {
-        SetUpMassOutbreakEncounter(0);
-    }
-    else if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist())
-    {
-        *indexRoamerOutbreak = gEncounteredRoamerIndex;
+        *indexRoamerOutbreak = OWE_GetObjectRoamerStatusFromIndex(gEncounteredRoamerIndex);
     }
     else if (OW_WILD_ENCOUNTERS_FEEBAS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
     {
@@ -724,10 +679,10 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     }
     else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
     {
-        SetUpMassOutbreakEncounter(WILD_CHECK_KEEN_EYE);
+        SetUpMassOutbreakEncounter(0);
         *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
     }
-    else if (!TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_KEEN_EYE))
+    else if (!TryGenerateWildMon(wildMonInfo, wildArea, 0))
     {
         return FALSE;
     }
@@ -801,21 +756,7 @@ static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons)
     enum TimeOfDay timeOfDay;
 
     if (headerId == HEADER_NONE)
-    {
-        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS)
-        {
-            headerId = GetBattlePikeWildMonHeaderId();
-            timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-            return gBattlePikeWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo != NULL;
-        }
-        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
-        {
-            headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
-            timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-            return gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo != NULL;
-        }
         return FALSE;
-    }
 
     if (shouldSpawnWaterMons)
     {
@@ -848,7 +789,7 @@ bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
 
 bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId, u32 trainerType)
 {
-    return graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER && trainerType == TRAINER_TYPE_ENCOUNTER;
+    return graphicsId == OBJ_EVENT_GFX_OW_MON && trainerType == TRAINER_TYPE_ENCOUNTER;
 }
 
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
@@ -933,8 +874,13 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
 
+    if (!IsOverworldWildEncounter(object))
+        return FALSE;
+
     if (IsGeneratedOverworldWildEncounter(object)
-        || (IsManualOverworldWildEncounter(object) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL))
+        || (!IsGeneratedOverworldWildEncounter(object)
+        && (GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL
+        || GetObjectEventScriptPointerByObjectEventId(objectEventId) == InteractWithDynamicWildOverworldEncounter)))
     {
         gSpecialVar_0x8004 = OW_SPECIES(object);
         return TRUE;
@@ -943,7 +889,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
     return FALSE;
 }
 
-struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
+const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
     if (!IsSemiManualOverworldWildEncounter(template->graphicsId, template->trainerType))
         return *template;
@@ -957,21 +903,17 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
     bool32 isFemale = FALSE;
     u32 level;
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
-    u32 storedRoamer = (template->trainerType >> 8) & 0xFF;
-
-    if (storedRoamer)
-        indexRoamerOutbreak = storedRoamer;
 
     SetOverworldEncounterSpeciesInfo(
-        template->x - MAP_OFFSET,
-        template->y - MAP_OFFSET,
+        template->x,
+        template->y,
         &speciesId,
         &isShiny,
         &isFemale,
         &level,
         &indexRoamerOutbreak
     );
-    // Have a fallback incase of no header mons
+    // Have an assertf and fallback incase of no header mons
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
@@ -981,7 +923,9 @@ struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const 
 
     templateOWE.graphicsId = graphicsId;
     templateOWE.sOverworldEncounterLevel = level;
-    templateOWE.trainerType = (TRAINER_TYPE_ENCOUNTER & 0xFF) | ((indexRoamerOutbreak & 0xFF) << 8);
+    if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
+        templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
+    
     return templateOWE;
 }
 
@@ -999,7 +943,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 {
     // The only automatically interacts with an OW Encounter when;
     // Not using a repel or the DexNav is inactive.
-    if (/* VarGet(VAR_REPEL_STEP_COUNT) > 0 || */ FlagGet(DN_FLAG_SEARCHING))
+    if (REPEL_STEP_COUNT || FlagGet(DN_FLAG_SEARCHING))
         return;
 
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle));
@@ -1017,9 +961,10 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     }
 }
 
-void TryRemoveOverworldWildEncounter(u32 localId)
+void OverworldWildEncounter_RemoveObjectOnBattle(void)
 {
-    struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
+    u32 localId = gSpecialVar_LastTalked;
+    struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(localId)];
     
     if (IsOverworldWildEncounter(object))
     {
@@ -1030,6 +975,9 @@ void TryRemoveOverworldWildEncounter(u32 localId)
 
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction)
 {
+    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
+        return FALSE;
+    
     // Returns TRUE if movement is restricted.
     return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatile(objectEvent, direction))
         || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMap(objectEvent, direction)));
@@ -1226,14 +1174,11 @@ void Task_OWE_WaitMovements(u8 taskId)
 
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior)
 {
-    // Need to edit anims:
-    // If object is on water then use water anim.
-    // If object is indoor, need an indoor anim?
-    // Long grass anim?
-
     if (MetatileBehavior_IsPokeGrass(metatileBehavior) || MetatileBehavior_IsAshGrass(metatileBehavior))
         return OWE_SPAWN_ANIM_GRASS;
-    else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior))
+    else if (MetatileBehavior_IsLongGrass(metatileBehavior))
+        return OWE_SPAWN_ANIM_LONG_GRASS;
+    else if (MetatileBehavior_IsSurfableFishableWater(metatileBehavior) && gMapHeader.mapType != MAP_TYPE_UNDERWATER)
         return OWE_SPAWN_ANIM_WATER;
     else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
         return OWE_SPAWN_ANIM_UNDERWATER;
@@ -1243,6 +1188,8 @@ enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavio
 
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
 {
+    // Uses slots so needs to be generated encounters only.
+    // Or needs to change functionality to count all active encounters.
     u32 numActive = GetNumActiveOverworldEncounters();
     u32 randomIndex;
     struct ObjectEvent *slotMon;
@@ -1304,20 +1251,11 @@ static bool32 OWE_DoesRoamerObjectExist(void)
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         struct ObjectEvent *object = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(object) && object->sRoamerOutbreakStatus == gEncounteredRoamerIndex)
+        if (IsOverworldWildEncounter(object) && OWE_GetObjectRoamerOutbreakStatus(object) == gEncounteredRoamerIndex)
             return TRUE;
     }
 
     return FALSE;
-}
-
-void OverworldWildEncounter_InitRoamerOutbreakStatus(struct ObjectEvent *objectEvent, const struct ObjectEventTemplate *template)
-{
-    // See comment in OWE_CreateEnemyPartyMon.
-    if (!IsOverworldWildEncounter(objectEvent))
-        return;
-    
-    objectEvent->sRoamerOutbreakStatus = (template->trainerType >> 8) & 0xFF;
 }
 
 static bool32 OWE_CheckRestrictMovementMetatile(struct ObjectEvent *objectEvent, u32 direction)
@@ -1367,6 +1305,9 @@ static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent)
     if (!AreCoordsInsidePlayerMap(objectEvent->currentCoords.x, objectEvent->currentCoords.y))
         return FALSE;
 
+    if (OWE_ShouldDespawnGeneratedForNewOWE(objectEvent))
+        return FALSE;
+
     return OW_WILD_ENCOUNTERS_DESPAWN_SOUND;
 }
 
@@ -1378,6 +1319,50 @@ void OverworldWildEncounter_FreezeAllObjects(void)
         if (IsOverworldWildEncounter(objectEvent))
             FreezeObjectEvent(objectEvent);
     }
+}
+
+static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index)
+{
+    if (index < ROAMER_COUNT)
+        return index + 1;
+    
+    return index;
+}
+
+static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
+{
+    if (!IsOverworldWildEncounter(objectEvent))
+        return OWE_NON_ROAMER_OUTBREAK;
+
+    u32 status = objectEvent->sRoamerOutbreakStatus;
+    if (status == OWE_NON_ROAMER_OUTBREAK || status == OWE_MASS_OUTBREAK_INDEX)
+    {
+        return status;
+    }
+    
+    return status - 1;
+}
+
+bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent)
+{
+    return objectEvent->sOverworldEncounterLevel & OWE_FLAG_START_ENCOUNTER;
+}
+
+bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void)
+{
+    if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS
+        || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+        return FALSE;
+
+    return !OW_WILD_ENCOUNTERS_RANDOM;
+}
+
+static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
+{
+    if (!IsGeneratedOverworldWildEncounter(object))
+        return FALSE;
+    
+    return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumActiveGeneratedOverworldEncounters() == GetMaxOverworldEncounterSpawns();
 }
 
 #undef tLocalId

@@ -258,7 +258,7 @@ static void Task_BattleStart(u8 taskId)
             SetMainCallback2(CB2_InitBattle);
             RestartWildEncounterImmunitySteps();
             ClearPoisonStepCounter();
-            TryRemoveOverworldWildEncounter(gSpecialVar_LastTalked);
+            OverworldWildEncounter_RemoveObjectOnBattle();
             DestroyTask(taskId);
         }
         break;

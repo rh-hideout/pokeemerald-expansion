@@ -400,12 +400,12 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
     gSpecialVar_Facing = direction;
 
-    if (ShouldRunOverworldEncounterScript(objectEventId))
-        script = InteractWithDynamicWildOverworldEncounter;
-    else if (InTrainerHill() == TRUE)
+    if (InTrainerHill() == TRUE)
         script = GetTrainerHillTrainerScript();
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
+    else if (ShouldRunOverworldEncounterScript(objectEventId))
+        script = InteractWithDynamicWildOverworldEncounter;
     else
         script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
 
@@ -564,8 +564,19 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
     return NULL;
 }
 
-static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metatileBehavior, u8 direction)
+static const u8 *GetInteractedWaterScript(struct MapPosition *position, u8 metatileBehavior, u8 direction)
 {
+    // Does this need a define for the surf elevation (1) check?
+    // Can be used in sElevationToSubpriority and other places too
+    u8 objectEventId = GetObjectEventIdByPosition(position->x, position->y, 1);
+    if (IsPlayerFacingSurfableFishableWater() == TRUE && ShouldRunOverworldEncounterScript(objectEventId))
+    {
+        struct ObjectEvent *object = &gObjectEvents[objectEventId];
+        gSpecialVar_0x8004 = OW_SPECIES(object);
+        gSpecialVar_LastTalked = object->localId;
+        return InteractWithDynamicWildOverworldEncounter;
+    }
+
     if (IsFieldMoveUnlocked(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF)
      )
@@ -817,7 +828,7 @@ void RestartWildEncounterImmunitySteps(void)
 
 static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
 {
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || OW_WILD_ENCOUNTERS_RANDOM == FALSE)
+    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || OverworldWildEncounter_ShouldDisableRandomEncounters())
         return FALSE;
 
     if (sWildEncounterImmunitySteps < 4)

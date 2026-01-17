@@ -1477,7 +1477,6 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->mapNum = mapNum;
     objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
     objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
-    OverworldWildEncounter_InitRoamerOutbreakStatus(objectEvent, template);
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
     if (sMovementTypeHasRange[objectEvent->movementType])
     {
@@ -1541,8 +1540,8 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
 
 void RemoveObjectEvent(struct ObjectEvent *objectEvent)
 {
-    objectEvent->active = FALSE;
     OverworldWildEncounter_OnObjectEventRemoved(objectEvent);
+    objectEvent->active = FALSE;
     RemoveObjectEventInternal(objectEvent);
     // zero potential species info
     objectEvent->graphicsId = objectEvent->shiny = 0;
@@ -1770,14 +1769,14 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     const struct ObjectEventGraphicsInfo *graphicsInfo;
     const struct SubspriteTable *subspriteTables = NULL;
     // May be a good idea to move the if check contained by this function to outside it for clarity.
-    struct ObjectEventTemplate objectEventTemplateTemp = TryGetObjectEventTemplateForOverworldEncounter(objectEventTemplate);
-    u16 graphicsId = objectEventTemplateTemp.graphicsId;
+    const struct ObjectEventTemplate objectEventTemplateLocal = TryGetObjectEventTemplateForOverworldEncounter(objectEventTemplate);
+    u16 graphicsId = objectEventTemplateLocal.graphicsId;
 
     graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
-    CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(graphicsId, objectEventTemplateTemp.movementType, &spriteTemplate, &subspriteTables);
+    CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(graphicsId, objectEventTemplateLocal.movementType, &spriteTemplate, &subspriteTables);
     spriteFrameImage.size = graphicsInfo->size;
     spriteTemplate.images = &spriteFrameImage;
-    objectEventId = TrySetupObjectEventSprite(&objectEventTemplateTemp, &spriteTemplate, mapNum, mapGroup, cameraX, cameraY);
+    objectEventId = TrySetupObjectEventSprite(&objectEventTemplateLocal, &spriteTemplate, mapNum, mapGroup, cameraX, cameraY);
     if (objectEventId == OBJECT_EVENTS_COUNT)
         return OBJECT_EVENTS_COUNT;
 
@@ -6465,7 +6464,7 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
     {
         curObject = &gObjectEvents[i];
         if (curObject->active && (curObject->movementType != MOVEMENT_TYPE_FOLLOW_PLAYER || objectEvent != &gObjectEvents[gPlayerAvatar.objectEventId]) && curObject != objectEvent
-         && !FollowerNPC_IsCollisionExempt(curObject, objectEvent) // Partner
+         && !FollowerNPC_IsCollisionExempt(curObject, objectEvent)
          )
         {
             // check for collision if curObject is active, not the object in question, and not exempt from collisions
@@ -6473,8 +6472,6 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
             {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
                 {
-                    // check if objects can actually collide with this or if it returns no too early
-                    // should be fine
                     OWE_TryTriggerEncounter(objectEvent, curObject);
                     return i;
                 }
@@ -11748,7 +11745,7 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent 
     if (!ObjectEventExecSingleMovementAction(objectEvent, sprite))
         return FALSE;
 
-    if (objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER)
+    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
     {
         u16 speciesId = OW_SPECIES(objectEvent);
         u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
@@ -11958,11 +11955,9 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *
     }
 
     u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
-    if (!(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER))
-    {
+    if (!OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
         direction = GetOppositeDirection(direction);
-    }
+    
     SetObjectEventDirection(objectEvent, direction);
     sprite->sTypeFuncId = 11;
     return TRUE;
@@ -11981,11 +11976,9 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
     {
         struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
-
-        if (!(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER) && !(objectEvent->currentCoords.x == player->currentCoords.x || objectEvent->currentCoords.y == player->currentCoords.y))
-        {
+        if (!OverworldWildEncounter_IsStartingWildEncounter(objectEvent) && objectEvent->currentCoords.x != player->currentCoords.x && objectEvent->currentCoords.y != player->currentCoords.y)
             newDirection = GetOppositeDirection(newDirection);
-        }
+        
         movementActionId = GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
         collision = GetCollisionInDirection(objectEvent, newDirection);
 
@@ -12091,31 +12084,25 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
     bool8 collision;
     u8 movementActionId;
 
-    if (distance <= 1 && !(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER))
+    if (distance <= 1 && !OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
     {
         SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
-
         collision = GetCollisionInDirection(objectEvent, objectEvent->movementDirection);
         movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
         if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection) || collision)
         {
             struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
             u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
-
-            if (!(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER) && !(objectEvent->currentCoords.x == player->currentCoords.x || objectEvent->currentCoords.y == player->currentCoords.y))
-            {
+            if (!OverworldWildEncounter_IsStartingWildEncounter(objectEvent) && objectEvent->currentCoords.x != player->currentCoords.x && objectEvent->currentCoords.y != player->currentCoords.y)
                 newDirection = GetOppositeDirection(newDirection);
-            }
+
             movementActionId = GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
             collision = GetCollisionInDirection(objectEvent, newDirection);
-
             if (OWE_CheckRestrictedMovement(objectEvent, newDirection) || collision)
-            {
                 movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
-            }
         }
     }
-    else if (distance == OWE_APPROACH_DISTANCE && !equalDistances && !(objectEvent->trainerRange_berryTreeId & OWE_FLAG_START_ENCOUNTER))
+    else if (distance == OWE_APPROACH_DISTANCE && !equalDistances && !OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
     {
         if (sJumpTimer <= 0)
         {
