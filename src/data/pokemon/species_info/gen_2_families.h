@@ -251,7 +251,11 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .abilities = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_LEAF_GUARD },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Meganium"),
-        .cryId = CRY_MEGANIUM, // CRY_MEGANIUM_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_MEGANIUM_MEGA,
+    #else
+        .cryId = CRY_MEGANIUM,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_MEGANIUM,
         .categoryName = _("Herb"),
         .height = 24,
@@ -810,7 +814,11 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .abilities = { ABILITY_TORRENT, ABILITY_NONE, ABILITY_SHEER_FORCE },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Feraligatr"),
-        .cryId = CRY_FERALIGATR, // CRY_FERALIGATR_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_FERALIGATR_MEGA,
+    #else
+        .cryId = CRY_FERALIGATR,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_FERALIGATR,
         .categoryName = _("Double Jaw"),
         .height = 23,
@@ -6134,7 +6142,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .bodyColor = BODY_COLOR_BROWN,
         .noFlip = TRUE,
         .speciesName = _("Ursaluna"),
-        .cryId = CRY_URSALUNA,
+        .cryId = CRY_URSALUNA_BLOODMOON,
         .natDexNum = NATIONAL_DEX_URSALUNA,
         .categoryName = _("Peat"),
         .height = 27,
@@ -7262,7 +7270,11 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .abilities = { ABILITY_KEEN_EYE, ABILITY_STURDY, ABILITY_WEAK_ARMOR },
         .bodyColor = BODY_COLOR_GRAY,
         .speciesName = _("Skarmory"),
-        .cryId = CRY_SKARMORY, // CRY_SKARMORY_MEGA,
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_SKARMORY_MEGA,
+    #else
+        .cryId = CRY_SKARMORY,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_SKARMORY,
         .categoryName = _("Armor Bird"),
         .height = 17,

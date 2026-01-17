@@ -33,6 +33,7 @@
 #include "pokemon_sprite_visualizer.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_summary_screen.h"
+#include "pokerus.h"
 #include "region_map.h"
 #include "scanline_effect.h"
 #include "sound.h"
@@ -146,7 +147,7 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         u8 metGame; // 0xB
         u32 pid; // 0xC
         u32 exp; // 0x10
-        u16 moves[MAX_MON_MOVES]; // 0x14
+        enum Move moves[MAX_MON_MOVES]; // 0x14
         u8 pp[MAX_MON_MOVES]; // 0x1C
         u16 currentHP; // 0x20
         u16 maxHP; // 0x22
@@ -155,7 +156,7 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         u16 spatk; // 0x28
         u16 spdef; // 0x2A
         u16 speed; // 0x2C
-        u16 item; // 0x2E
+        enum Item item; // 0x2E
         u16 friendship; // 0x30
         u8 OTGender; // 0x32
         u8 nature; // 0x33
@@ -319,7 +320,9 @@ static bool32 ShouldShowRename(void);
 static bool32 ShouldShowIvEvPrompt(void);
 static void BufferLeftColumnIvEvStats(void);
 static void CB2_ReturnToSummaryScreenFromNamingScreen(void);
+static void CB2_ReturnToSummaryScreenFromNamingScreenBox(void);
 static void CB2_PssChangePokemonNickname(void);
+static void CB2_PssChangeBoxPokemonNickname(void);
 static void ShowUtilityPrompt(s16 mode);
 static void ShowMonSkillsInfo(u8 taskId, s16 mode);
 static void WriteToStatsTilemapBuffer(u32 length, u32 block, u32 statsCoordX, u32 statsCoordY);
@@ -1194,7 +1197,7 @@ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, 
     sMonSummaryScreen->mode = mode;
     if (monIndex == PC_MON_CHOSEN)
     {
-        sMonSummaryScreen->monList.boxMons = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);;
+        sMonSummaryScreen->monList.boxMons = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
         sMonSummaryScreen->curMonIndex = 0;
         sMonSummaryScreen->maxMonIndex = 0;
     }
@@ -1732,8 +1735,11 @@ static void Task_HandleInput(u8 taskId)
                 {
                     if (ShouldShowRename())
                     {
+                        if (sMonSummaryScreen->isBoxMon)
+                            gSpecialVar_0x8004 == PC_MON_CHOSEN;
+                        else
+                            gSpecialVar_0x8004 = sMonSummaryScreen->curMonIndex;
                         sMonSummaryScreen->callback = CB2_PssChangePokemonNickname;
-                        gSpecialVar_0x8004 = sMonSummaryScreen->curMonIndex;
                     }
 
                     StopPokemonAnimations();
@@ -1768,8 +1774,17 @@ static void Task_HandleInput(u8 taskId)
         {
             sMonSummaryScreen->callback = CB2_InitLearnMove;
             gSpecialVar_0x8004 = sMonSummaryScreen->curMonIndex;
-            gRelearnMode = sMonSummaryScreen->currPageIndex;
-            gSpecialVar_MonBoxId = 0xFF;
+            gSpecialVar_MonBoxPos = sMonSummaryScreen->curMonIndex;
+            if (!sMonSummaryScreen->isBoxMon)
+            {
+                gRelearnMode = sMonSummaryScreen->currPageIndex;
+                gSpecialVar_MonBoxId = 0xFF;
+            }
+            else
+            {
+                gRelearnMode = sMonSummaryScreen->currPageIndex + 3;
+                gSpecialVar_MonBoxId = StorageGetCurrentBox();
+            }
             StopPokemonAnimations();
             PlaySE(SE_SELECT);
             BeginCloseSummaryScreen(taskId);
@@ -3129,7 +3144,7 @@ static void TilemapFiveMovesDisplay(u16 *dst, u16 palette, bool8 remove)
 
 static void DrawPokerusCuredSymbol(struct Pokemon *mon) // This checks if the mon has been cured of pokerus
 {
-    if (!CheckPartyPokerus(mon, 0) && CheckPartyHasHadPokerus(mon, 0)) // If yes it draws the cured symbol
+    if (ShouldPokemonShowCuredPokerus(mon))
     {
         sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_INFO][0][0x223] = 0x2C;
         sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_INFO][1][0x223] = 0x2C;
@@ -4817,8 +4832,6 @@ static inline bool32 ShouldShowMoveRelearner(void)
 {
     return (P_SUMMARY_SCREEN_MOVE_RELEARNER
          && !sMonSummaryScreen->lockMovesFlag
-         && !sMonSummaryScreen->isBoxMon
-         && sMonSummaryScreen->mode != SUMMARY_MODE_BOX
          && sMonSummaryScreen->mode != SUMMARY_MODE_BOX_CURSOR
          && sMonSummaryScreen->hasRelearnableMoves
          && !InBattleFactory()
@@ -4831,8 +4844,6 @@ static inline bool32 ShouldShowRename(void)
     return (P_SUMMARY_SCREEN_RENAME
          && !sMonSummaryScreen->lockMovesFlag
          && !sMonSummaryScreen->summary.isEgg
-         && !sMonSummaryScreen->isBoxMon
-         && sMonSummaryScreen->mode != SUMMARY_MODE_BOX
          && sMonSummaryScreen->mode != SUMMARY_MODE_BOX_CURSOR
          && !InBattleFactory()
          && !InSlateportBattleTent()
@@ -4972,15 +4983,14 @@ static void ShowRelearnPrompt(void)
 
 static void CB2_ReturnToSummaryScreenFromNamingScreen(void)
 {
-    SetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar2);
-    ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, gInitialSummaryScreenCallback);
+    SetBoxMonData(GetSelectedBoxMonFromPcOrParty(), MON_DATA_NICKNAME, gStringVar2);
+    //if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
+    //    ShowPokemonSummaryScreen(SUMMARY_MODE_BOX, GetBoxedMonPtr(gSpecialVar_MonBoxId), gSpecialVar_MonBoxPos, IN_BOX_COUNT - 1, gInitialSummaryScreenCallback);
+    //else
+        ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, gInitialSummaryScreenCallback);
 }
 
 static void CB2_PssChangePokemonNickname(void)
 {
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar3);
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar2);
-    DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES),
-                   GetMonGender(&gPlayerParty[gSpecialVar_0x8004]), GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_PERSONALITY),
-                   CB2_ReturnToSummaryScreenFromNamingScreen);
+    ChangePokemonNicknameWithCallback(CB2_ReturnToSummaryScreenFromNamingScreen);
 }

@@ -90,7 +90,7 @@ void AnimSetCenterToCornerVecX(struct Sprite *sprite);
 void BeginBattleIntroDummy(void);
 void BeginBattleIntro(void);
 void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy);
-const u8* FaintClearSetData(u32 battler);
+const u8 *FaintClearSetData(u32 battler);
 void BattleTurnPassed(void);
 u8 IsRunningFromBattleImpossible(u32 battler);
 void SwitchTwoBattlersInParty(u32 battler, u32 battler2);

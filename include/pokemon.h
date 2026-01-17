@@ -65,6 +65,8 @@ enum MonData {
     MON_DATA_FRIENDSHIP,
     MON_DATA_SMART,
     MON_DATA_POKERUS,
+    MON_DATA_POKERUS_STRAIN,
+    MON_DATA_POKERUS_DAYS_LEFT,
     MON_DATA_MET_LOCATION,
     MON_DATA_MET_LEVEL,
     MON_DATA_MET_GAME,
@@ -340,7 +342,7 @@ struct BattlePokemon
     /*0x06*/ u16 speed;
     /*0x08*/ u16 spAttack;
     /*0x0A*/ u16 spDefense;
-    /*0x0C*/ u16 moves[MAX_MON_MOVES];
+    /*0x0C*/ enum Move moves[MAX_MON_MOVES];
     /*0x14*/ u32 hpIV:5;
     /*0x14*/ u32 attackIV:5;
     /*0x15*/ u32 defenseIV:5;
@@ -356,7 +358,7 @@ struct BattlePokemon
     /*0x2B*/ u8 level;
     /*0x2C*/ u8 friendship;
     /*0x2D*/ u16 maxHP;
-    /*0x2F*/ u16 item;
+    /*0x2F*/ enum Item item;
     /*0x31*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
     /*0x3C*/ u8 ppBonuses;
     /*0x3D*/ u8 otName[PLAYER_NAME_LENGTH + 1];
@@ -404,8 +406,8 @@ struct SpeciesInfo /*0xC4*/
     u16 evYield_SpAttack:2;
     u16 evYield_SpDefense:2;
     u16 padding2:4;
-    u16 itemCommon;
-    u16 itemRare;
+    enum Item itemCommon;
+    enum Item itemRare;
     u8 genderRatio;
     u8 eggCycles;
     u8 friendship;
@@ -636,7 +638,7 @@ enum FusionExtraMoveHandling
 struct Fusion
 {
     u16 fusionStorageIndex;
-    u16 itemId;
+    enum Item itemId;
     u16 targetSpecies1;
     u16 targetSpecies2;
     u16 fusingIntoMon;
@@ -807,11 +809,11 @@ void RemoveBoxMonPPBonus(struct BoxPokemon *mon, u8 moveIndex);
 void RemoveBattleMonPPBonus(struct BattlePokemon *mon, u8 moveIndex);
 void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst);
 void CopyPartyMonToBattleData(u32 battler, u32 partyIndex);
-bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex);
-bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex, u8 usedByAI);
+bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex);
+bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex, u8 usedByAI);
 bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, u8 battler);
-u8 GetItemEffectParamOffset(u32 battler, u16 itemId, u8 effectByte, u8 effectBit);
-u8 *UseStatIncreaseItem(u16 itemId);
+u8 GetItemEffectParamOffset(u32 battler, enum Item itemId, u8 effectByte, u8 effectBit);
+u8 *UseStatIncreaseItem(enum Item itemId);
 u8 GetNature(struct Pokemon *mon);
 u8 GetNatureFromPersonality(u32 personality);
 u32 GetGMaxTargetSpecies(u32 species);
@@ -834,11 +836,6 @@ void AdjustFriendship(struct Pokemon *mon, u8 event);
 u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect);
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
-void RandomlyGivePartyPokerus(struct Pokemon *party);
-u8 CheckPartyPokerus(struct Pokemon *party, u8 selection);
-u8 CheckPartyHasHadPokerus(struct Pokemon *party, u8 selection);
-void UpdatePartyPokerusTime(u16 days);
-void PartySpreadPokerus(struct Pokemon *party);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
 u8 CanLearnTeachableMove(u16 species, enum Move move);
 u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves);
@@ -846,9 +843,13 @@ u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves);
 u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves);
 u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves);
 bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon);
+bool32 HasRelearnerLevelUpMovesBox(struct BoxPokemon *boxMon);
 bool32 HasRelearnerEggMoves(struct Pokemon *mon);
+bool32 HasRelearnerEggMovesBox(struct BoxPokemon *boxMon);
 bool32 HasRelearnerTMMoves(struct Pokemon *mon);
+bool32 HasRelearnerTMMovesBox(struct BoxPokemon *boxMon);
 bool32 HasRelearnerTutorMoves(struct Pokemon *mon);
+bool32 HasRelearnerTutorMovesBox(struct BoxPokemon *boxMon);
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves);
 u16 SpeciesToPokedexNum(u16 species);
 bool32 IsSpeciesInHoennDex(u16 species);
@@ -923,5 +924,6 @@ void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 bool32 IsSpeciesOfType(u32 species, enum Type type);
 struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
+void ChangePokemonNicknameWithCallback(void (*callback)(void));
 
 #endif // GUARD_POKEMON_H

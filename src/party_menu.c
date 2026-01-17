@@ -53,6 +53,7 @@
 #include "pokemon_jump.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_summary_screen.h"
+#include "pokerus.h"
 #include "region_map.h"
 #include "reshow_battle_screen.h"
 #include "scanline_effect.h"
@@ -280,7 +281,7 @@ static void DisplayPartyPokemonHP(u16 hp, u16 maxHp, struct PartyMenuBox *menuBo
 static void DisplayPartyPokemonMaxHP(u16, struct PartyMenuBox *);
 static void DisplayPartyPokemonHPBar(u16, u16, struct PartyMenuBox *);
 static void CreatePartyMonIconSpriteParameterized(u16 species, u32 pid, bool32 isEgg, struct PartyMenuBox *menuBox, u8 priority);
-static void CreatePartyMonHeldItemSpriteParameterized(u16, u16, struct PartyMenuBox *);
+static void CreatePartyMonHeldItemSpriteParameterized(u16, enum Item, struct PartyMenuBox *);
 static void CreatePartyMonPokeballSpriteParameterized(u16, struct PartyMenuBox *);
 static void CreatePartyMonStatusSpriteParameterized(u16, u8, struct PartyMenuBox *);
 // These next 4 functions are essentially redundant with the above 4
@@ -380,7 +381,7 @@ static u16 GetFieldMoveMonSpecies(void);
 static void UpdatePartyMonHPBar(u8, struct Pokemon *);
 static void SpriteCB_UpdatePartyMonIcon(struct Sprite *);
 static void SpriteCB_BouncePartyMonIcon(struct Sprite *);
-static void ShowOrHideHeldItemSprite(u16, struct PartyMenuBox *);
+static void ShowOrHideHeldItemSprite(enum Item, struct PartyMenuBox *);
 static void CreateHeldItemSpriteForTrade(u8, bool8);
 static void SpriteCB_HeldItem(struct Sprite *);
 static void SetPartyMonAilmentGfx(struct Pokemon *, struct PartyMenuBox *);
@@ -431,7 +432,7 @@ static void CB2_WriteMailToGiveMonFromBag(void);
 static void GiveItemToSelectedMon(u8);
 static void Task_UpdateHeldItemSpriteAndClosePartyMenu(u8);
 static void CB2_ReturnToPartyOrBagMenuFromWritingMail(void);
-static bool8 ReturnGiveItemToBagOrPC(u16);
+static bool8 ReturnGiveItemToBagOrPC(enum Item);
 static void Task_DisplayGaveMailFromBagMessage(u8);
 static void Task_HandleSwitchItemsFromBagYesNoInput(u8);
 static void Task_ValidateChosenHalfParty(u8);
@@ -1135,7 +1136,7 @@ static void DisplayPartyPokemonDataForBattlePyramidHeldItem(u8 slot)
 static bool8 DisplayPartyPokemonDataForMoveTutorOrEvolutionItem(u8 slot)
 {
     struct Pokemon *currentPokemon = &gPlayerParty[slot];
-    u16 item = gSpecialVar_ItemId;
+    enum Item item = gSpecialVar_ItemId;
 
     if (gPartyMenu.action == PARTY_ACTION_MOVE_TUTOR)
     {
@@ -1990,7 +1991,7 @@ static void Task_ReturnToChooseMonAfterText(u8 taskId)
     }
 }
 
-static void DisplayGaveHeldItemMessage(struct Pokemon *mon, u16 item, bool8 keepOpen, u8 unused)
+static void DisplayGaveHeldItemMessage(struct Pokemon *mon, enum Item item, bool8 keepOpen, u8 unused)
 {
     GetMonNickname(mon, gStringVar1);
     CopyItemName(item, gStringVar2);
@@ -1999,7 +2000,7 @@ static void DisplayGaveHeldItemMessage(struct Pokemon *mon, u16 item, bool8 keep
     ScheduleBgCopyTilemapToVram(2);
 }
 
-static void DisplayTookHeldItemMessage(struct Pokemon *mon, u16 item, bool8 keepOpen)
+static void DisplayTookHeldItemMessage(struct Pokemon *mon, enum Item item, bool8 keepOpen)
 {
     GetMonNickname(mon, gStringVar1);
     CopyItemName(item, gStringVar2);
@@ -2008,7 +2009,7 @@ static void DisplayTookHeldItemMessage(struct Pokemon *mon, u16 item, bool8 keep
     ScheduleBgCopyTilemapToVram(2);
 }
 
-static void DisplayAlreadyHoldingItemSwitchMessage(struct Pokemon *mon, u16 item, bool8 keepOpen)
+static void DisplayAlreadyHoldingItemSwitchMessage(struct Pokemon *mon, enum Item item, bool8 keepOpen)
 {
     GetMonNickname(mon, gStringVar1);
     CopyItemName(item, gStringVar2);
@@ -2017,7 +2018,7 @@ static void DisplayAlreadyHoldingItemSwitchMessage(struct Pokemon *mon, u16 item
     ScheduleBgCopyTilemapToVram(2);
 }
 
-static void DisplaySwitchedHeldItemMessage(u16 item, u16 item2, bool8 keepOpen)
+static void DisplaySwitchedHeldItemMessage(enum Item item, enum Item item2, bool8 keepOpen)
 {
     CopyItemName(item, gStringVar1);
     CopyItemName(item2, gStringVar2);
@@ -2026,7 +2027,7 @@ static void DisplaySwitchedHeldItemMessage(u16 item, u16 item2, bool8 keepOpen)
     ScheduleBgCopyTilemapToVram(2);
 }
 
-static void GiveItemToMon(struct Pokemon *mon, u16 item)
+static void GiveItemToMon(struct Pokemon *mon, enum Item item)
 {
     u8 itemBytes[2];
 
@@ -2043,7 +2044,7 @@ static void GiveItemToMon(struct Pokemon *mon, u16 item)
 
 static u8 TryTakeMonItem(struct Pokemon *mon)
 {
-    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
 
     if (item == ITEM_NONE)
         return 0;
@@ -2164,7 +2165,7 @@ u8 GetMonAilment(struct Pokemon *mon)
     ailment = GetAilmentFromStatus(GetMonData(mon, MON_DATA_STATUS));
     if (ailment != AILMENT_NONE)
         return ailment;
-    if (CheckPartyPokerus(mon, 0))
+    if (ShouldPokemonShowActivePokerus(mon))
         return AILMENT_PKRS;
     return AILMENT_NONE;
 }
@@ -2990,7 +2991,7 @@ static u8 GetPartyMenuActionsType(struct Pokemon *mon)
 static bool8 CreateSelectionWindow(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item;
+    enum Item item;
 
     GetMonNickname(mon, gStringVar1);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
@@ -3437,7 +3438,7 @@ static void CB2_GiveHoldItem(void)
 
 static void Task_GiveHoldItem(u8 taskId)
 {
-    u16 item;
+    enum Item item;
 
     if (!gPaletteFade.active)
     {
@@ -3528,7 +3529,7 @@ static void CB2_WriteMailToGiveMon(void)
 static void CB2_ReturnToPartyMenuFromWritingMail(void)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
 
     // Canceled writing mail
     if (gSpecialVar_Result == FALSE)
@@ -3580,7 +3581,7 @@ static void Task_UpdateHeldItemSprite(u8 taskId)
 static void CursorCb_TakeItem(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
 
     PlaySE(SE_SELECT);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
@@ -3607,7 +3608,7 @@ static void CursorCb_TakeItem(u8 taskId)
 static void CursorCb_Toss(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
 
     PlaySE(SE_SELECT);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
@@ -3664,7 +3665,7 @@ static void Task_TossHeldItem(u8 taskId)
 
     if (IsPartyMenuTextPrinterActive() != TRUE)
     {
-        u16 item = ITEM_NONE;
+        enum Item item = ITEM_NONE;
 
         SetMonData(mon, MON_DATA_HELD_ITEM, &item);
         UpdatePartyMonHeldItemSprite(mon, &sPartyMenuBoxes[gPartyMenu.slotId]);
@@ -3758,7 +3759,7 @@ static void Task_LoseMailMessageYesNo(u8 taskId)
 
 static void Task_HandleLoseMailMessageYesNoInput(u8 taskId)
 {
-    u16 item;
+    enum Item item;
 
     switch (Menu_ProcessInputNoWrapClearOnChoose())
     {
@@ -4405,7 +4406,7 @@ static void CreatePartyMonHeldItemSprite(struct Pokemon *mon, struct PartyMenuBo
     }
 }
 
-static void CreatePartyMonHeldItemSpriteParameterized(u16 species, u16 item, struct PartyMenuBox *menuBox)
+static void CreatePartyMonHeldItemSpriteParameterized(u16 species, enum Item item, struct PartyMenuBox *menuBox)
 {
     if (species != SPECIES_NONE)
     {
@@ -4420,7 +4421,7 @@ static void UpdatePartyMonHeldItemSprite(struct Pokemon *mon, struct PartyMenuBo
     ShowOrHideHeldItemSprite(GetMonData(mon, MON_DATA_HELD_ITEM), menuBox);
 }
 
-static void ShowOrHideHeldItemSprite(u16 item, struct PartyMenuBox *menuBox)
+static void ShowOrHideHeldItemSprite(enum Item item, struct PartyMenuBox *menuBox)
 {
     if (item == ITEM_NONE)
     {
@@ -4445,7 +4446,7 @@ void LoadHeldItemIcons(void)
 void DrawHeldItemIconsForTrade(u8 *partyCounts, u8 *partySpriteIds, u8 whichParty)
 {
     u16 i;
-    u16 item;
+    enum Item item;
 
     switch (whichParty)
     {
@@ -4675,7 +4676,7 @@ static void Task_SetSacredAshCB(u8 taskId)
     }
 }
 
-static bool8 IsHPRecoveryItem(u16 item)
+static bool32 IsHPRecoveryItem(enum Item item)
 {
     const u8 *effect = GetItemEffect(item);
 
@@ -4688,7 +4689,7 @@ static bool8 IsHPRecoveryItem(u16 item)
         return FALSE;
 }
 
-static void GetMedicineItemEffectMessage(u16 item, u32 statusCured)
+static void GetMedicineItemEffectMessage(enum Item item, u32 statusCured)
 {
     switch (GetItemEffectType(item))
     {
@@ -4756,14 +4757,14 @@ static void GetMedicineItemEffectMessage(u16 item, u32 statusCured)
     }
 }
 
-static bool8 NotUsingHPEVItemOnShedinja(struct Pokemon *mon, u16 item)
+static bool32 NotUsingHPEVItemOnShedinja(struct Pokemon *mon, enum Item item)
 {
     if (GetItemEffectType(item) == ITEM_EFFECT_HP_EV && GetMonData(mon, MON_DATA_SPECIES) == SPECIES_SHEDINJA)
         return FALSE;
     return TRUE;
 }
 
-static bool32 IsItemFlute(u16 item)
+static bool32 IsItemFlute(enum Item item)
 {
     if (item == ITEM_BLUE_FLUTE || item == ITEM_RED_FLUTE || item == ITEM_YELLOW_FLUTE)
         return TRUE;
@@ -4806,7 +4807,7 @@ void ItemUseCB_Medicine(u8 taskId, TaskFunc task)
 {
     u16 hp = 0;
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = gSpecialVar_ItemId;
+    enum Item item = gSpecialVar_ItemId;
     bool8 canHeal, cannotUse;
     u32 oldStatus = GetMonData(mon, MON_DATA_STATUS);
 
@@ -5185,7 +5186,7 @@ static void Task_ClosePartyMenuAfterText(u8 taskId)
 void ItemUseCB_ResetEVs(u8 taskId, TaskFunc task)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = gSpecialVar_ItemId;
+    enum Item item = gSpecialVar_ItemId;
     bool8 cannotUseEffect = ExecuteTableBasedItemEffect(mon, item, gPartyMenu.slotId, 0);
 
     if (cannotUseEffect)
@@ -5212,7 +5213,7 @@ void ItemUseCB_ResetEVs(u8 taskId, TaskFunc task)
 void ItemUseCB_ReduceEV(u8 taskId, TaskFunc task)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = gSpecialVar_ItemId;
+    enum Item item = gSpecialVar_ItemId;
     u8 effectType = GetItemEffectType(item);
     u16 friendship = GetMonData(mon, MON_DATA_FRIENDSHIP);
     u16 ev = ItemEffectToMonEv(mon, effectType);
@@ -5400,7 +5401,7 @@ static void TryUseItemOnMove(u8 taskId)
     {
         enum Move move = MOVE_NONE;
         s16 *moveSlot = &gPartyMenu.data1;
-        u16 item = gSpecialVar_ItemId;
+        enum Item item = gSpecialVar_ItemId;
 
         if (ExecuteTableBasedItemEffect(mon, item, ptr->slotId, *moveSlot))
         {
@@ -5433,7 +5434,7 @@ void ItemUseCB_PPUp(u8 taskId, TaskFunc task)
     gTasks[taskId].func = Task_HandleWhichMoveInput;
 }
 
-enum Move ItemIdToBattleMoveId(u16 item)
+enum Move ItemIdToBattleMoveId(enum Item item)
 {
     return (GetItemPocket(item) == POCKET_TM_HM) ? GetItemTMHMMoveId(item) : MOVE_NONE;
 }
@@ -5480,7 +5481,7 @@ static void DisplayLearnMoveMessageAndClose(u8 taskId, const u8 *str)
 void ItemUseCB_TMHM(u8 taskId, TaskFunc task)
 {
     struct Pokemon *mon;
-    u16 item = gSpecialVar_ItemId;
+    enum Item item = gSpecialVar_ItemId;
     enum Move move = ItemIdToBattleMoveId(item);
 
     gPartyMenu.data1 = move;
@@ -5517,7 +5518,7 @@ static void Task_LearnedMove(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
     s16 *move = &gPartyMenu.data1;
-    u16 item = gSpecialVar_ItemId;
+    enum Item item = gSpecialVar_ItemId;
 
     if (move[1] == 0)
     {
@@ -6914,7 +6915,7 @@ void TryItemHoldFormChange(struct Pokemon *mon, s8 slotId)
 #undef tAnimWait
 #undef tNextFunc
 
-u8 GetItemEffectType(u16 item)
+u8 GetItemEffectType(enum Item item)
 {
     u32 statusCure;
     const u8 *itemEffect = GetItemEffect(item);
@@ -7058,7 +7059,7 @@ static void GiveItemOrMailToSelectedMon(u8 taskId)
 
 static void GiveItemToSelectedMon(u8 taskId)
 {
-    u16 item;
+    enum Item item;
 
     if (!gPaletteFade.active)
     {
@@ -7097,7 +7098,7 @@ static void CB2_WriteMailToGiveMonFromBag(void)
 static void CB2_ReturnToPartyOrBagMenuFromWritingMail(void)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
 
     // Canceled writing mail
     if (gSpecialVar_Result == FALSE)
@@ -7138,7 +7139,7 @@ static void Task_SwitchItemsFromBagYesNo(u8 taskId)
 
 static void Task_HandleSwitchItemsFromBagYesNoInput(u8 taskId)
 {
-    u16 item;
+    enum Item item;
 
     switch (Menu_ProcessInputNoWrapClearOnChoose())
     {
@@ -7182,7 +7183,7 @@ static void DisplayItemMustBeRemovedFirstMessage(u8 taskId)
 
 // Returns FALSE if there was no space to return the item
 // but there always should be, and the return is ignored in all uses
-static bool8 ReturnGiveItemToBagOrPC(u16 item)
+static bool8 ReturnGiveItemToBagOrPC(enum Item item)
 {
     if (gPartyMenu.action == PARTY_ACTION_GIVE_ITEM)
         return AddBagItem(item, 1);
@@ -7291,7 +7292,7 @@ static u8 CheckBattleEntriesAndGetMessage(void)
     for (i = 0; i < maxBattlers - 1; i++)
     {
         u16 species = GetMonData(&party[order[i] - 1], MON_DATA_SPECIES);
-        u16 item = GetMonData(&party[order[i] - 1], MON_DATA_HELD_ITEM);
+        enum Item item = GetMonData(&party[order[i] - 1], MON_DATA_HELD_ITEM);
         for (j = i + 1; j < maxBattlers; j++)
         {
             if (species == GetMonData(&party[order[j] - 1], MON_DATA_SPECIES))
@@ -8170,7 +8171,7 @@ static void CursorCb_LearnMovesSubMenu(u8 taskId)
 
 void CursorCb_MoveItemCallback(u8 taskId)
 {
-    u16 item1, item2;
+    enum Item item1, item2;
     u8 buffer[100];
 
     if (gPaletteFade.active || MenuHelpers_ShouldWaitForLinkRecv())

@@ -18,7 +18,7 @@ struct StatFractions
 
 struct PickupItem
 {
-    u16 itemId;
+    enum Item itemId;
     u8 percentage[10];
 };
 
@@ -64,9 +64,7 @@ bool32 CanCamouflage(u8 battlerId);
 void StealTargetItem(u8 battlerStealer, u8 battlerItem);
 u8 GetCatchingBattler(void);
 bool32 ProteanTryChangeType(u32 battler, enum Ability ability, enum Move move, enum Type moveType);
-bool32 IsMoveNotAllowedInSkyBattles(enum Move move);
 u8 GetFirstFaintedPartyIndex(u8 battlerId);
-bool32 IsMoveAffectedByParentalBond(enum Move move, u32 battler);
 void SaveBattlerTarget(u32 battler);
 void SaveBattlerAttacker(u32 battler);
 bool32 CanBurnHitThaw(enum Move move);

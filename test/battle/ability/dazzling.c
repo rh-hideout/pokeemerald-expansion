@@ -276,3 +276,29 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block high-p
         NOT ABILITY_POPUP(opponent, ability);
     }
 }
+
+DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail from partner don't block priority moves that target it")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
+    PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; }
+    PARAMETRIZE { species = SPECIES_TSAREENA; ability = ABILITY_QUEENLY_MAJESTY; }
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_COACHING) == TARGET_ALLY);
+        PLAYER(SPECIES_MURKROW) { Ability(ABILITY_PRANKSTER); }
+        PLAYER(species) { Ability(ability); }
+        OPPONENT(species) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_COACHING, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COACHING, playerLeft);
+        NONE_OF {
+            ABILITY_POPUP(opponentLeft, ability);
+            ABILITY_POPUP(playerRight, ability);
+        }
+    }
+}

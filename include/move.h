@@ -89,7 +89,7 @@ struct MoveInfo
     // end of word
     s32 priority:4;
     u32 strikeCount:4; // Max 15 hits. Defaults to 1 if not set. May apply its effect on each hit.
-    u32 multiHit:1; // Takes presendance over strikeCount
+    u32 multiHit:1; // Takes precedence over strikeCount
     u32 explosion:1;
     u32 criticalHitStage:2;
     bool32 alwaysCriticalHit:1;

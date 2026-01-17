@@ -30,6 +30,7 @@
 #include "m4a.h"
 #include "main.h"
 #include "move_relearner.h"
+#include "naming_screen.h"
 #include "overworld.h"
 #include "party_menu.h"
 #include "pokedex.h"
@@ -39,6 +40,7 @@
 #include "pokemon_icon.h"
 #include "pokemon_summary_screen.h"
 #include "pokemon_storage_system.h"
+#include "pokerus.h"
 #include "random.h"
 #include "recorded_battle.h"
 #include "regions.h"
@@ -76,7 +78,7 @@
 struct SpeciesItem
 {
     u16 species;
-    u16 item;
+    enum Item item;
 };
 
 static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon);
@@ -2393,6 +2395,12 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_POKERUS:
             retVal = GetSubstruct3(boxMon)->pokerus;
             break;
+        case MON_DATA_POKERUS_STRAIN:
+            retVal = ((GetSubstruct3(boxMon)->pokerus & 0xF0) >> 4);
+            break;
+        case MON_DATA_POKERUS_DAYS_LEFT:
+            retVal = (GetSubstruct3(boxMon)->pokerus & 0x0F);
+            break;
         case MON_DATA_MET_LOCATION:
             retVal = GetSubstruct3(boxMon)->metLocation;
             break;
@@ -2901,6 +2909,12 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             break;
         case MON_DATA_POKERUS:
             SET8(GetSubstruct3(boxMon)->pokerus);
+            break;
+        case MON_DATA_POKERUS_STRAIN:
+            GetSubstruct3(boxMon)->pokerus = (*data << 4) | (GetSubstruct3(boxMon)->pokerus & 0x0F);
+            break;
+        case MON_DATA_POKERUS_DAYS_LEFT:
+            GetSubstruct3(boxMon)->pokerus = (GetSubstruct3(boxMon)->pokerus & 0xF0) | *data;
             break;
         case MON_DATA_MET_LOCATION:
             SET8(GetSubstruct3(boxMon)->metLocation);
@@ -3589,7 +3603,7 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
 
 void CopyPartyMonToBattleData(u32 battler, u32 partyIndex)
 {
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
     struct Pokemon *party = GetSideParty(side);
     PokemonToBattleMon(&party[partyIndex], &gBattleMons[battler]);
     gBattleStruct->battlerState[battler].hpOnSwitchout = gBattleMons[battler].hp;
@@ -3597,7 +3611,7 @@ void CopyPartyMonToBattleData(u32 battler, u32 partyIndex)
     ClearTemporarySpeciesSpriteData(battler, FALSE, FALSE);
 }
 
-bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex)
+bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex)
 {
     return PokemonUseItemEffects(mon, item, partyIndex, moveIndex, FALSE);
 }
@@ -3628,7 +3642,7 @@ const u32 sExpCandyExperienceTable[] = {
 };
 
 // Returns TRUE if the item has no effect on the Pokémon, FALSE otherwise
-bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex, bool8 usedByAI)
+bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex, bool8 usedByAI)
 {
     u32 dataUnsigned;
     s32 dataSigned, evCap;
@@ -3642,7 +3656,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     enum HoldEffect holdEffect;
     u8 battler = MAX_BATTLERS_COUNT;
     bool32 friendshipOnly = FALSE;
-    u16 heldItem;
+    enum Item heldItem;
     u8 effectFlags;
     s8 evChange;
     u16 evCount;
@@ -3732,7 +3746,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                 retVal = FALSE;
             if ((itemEffect[i] & ITEM3_BURN) && HealStatusConditions(mon, STATUS1_BURN, battler) == 0)
                 retVal = FALSE;
-            if ((itemEffect[i] & ITEM3_FREEZE) && HealStatusConditions(mon, STATUS1_FREEZE | STATUS1_FROSTBITE, battler) == 0)
+            if ((itemEffect[i] & ITEM3_FREEZE) && HealStatusConditions(mon, STATUS1_ICY_ANY, battler) == 0)
                 retVal = FALSE;
             if ((itemEffect[i] & ITEM3_PARALYSIS) && HealStatusConditions(mon, STATUS1_PARALYSIS, battler) == 0)
                 retVal = FALSE;
@@ -4112,7 +4126,7 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, u8 battler)
     }
 }
 
-u8 GetItemEffectParamOffset(u32 battler, u16 itemId, u8 effectByte, u8 effectBit)
+u8 GetItemEffectParamOffset(u32 battler, enum Item itemId, u8 effectByte, u8 effectBit)
 {
     const u8 *temp;
     const u8 *itemEffect;
@@ -4242,7 +4256,7 @@ static void BufferStatRoseMessage(enum Stat statIdx)
     BattleStringExpandPlaceholdersToDisplayedString(gText_DefendersStatRose);
 }
 
-u8 *UseStatIncreaseItem(u16 itemId)
+u8 *UseStatIncreaseItem(enum Item itemId)
 {
     const u8 *itemEffect;
 
@@ -5247,7 +5261,7 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
         if (totalEVs >= currentEVCap)
             break;
 
-        if (CheckPartyHasHadPokerus(mon, 0))
+        if (CheckMonHasHadPokerus(mon))
             multiplier = 2;
         else
             multiplier = 1;
@@ -5324,152 +5338,6 @@ u16 GetMonEVCount(struct Pokemon *mon)
     return count;
 }
 
-void RandomlyGivePartyPokerus(struct Pokemon *party)
-{
-    u16 rnd = Random();
-    if (rnd == 0x4000 || rnd == 0x8000 || rnd == 0xC000)
-    {
-        struct Pokemon *mon;
-
-        do
-        {
-            rnd = Random() % PARTY_SIZE;
-            mon = &party[rnd];
-        }
-        while (!GetMonData(mon, MON_DATA_SPECIES, 0) || GetMonData(mon, MON_DATA_IS_EGG, 0));
-
-        if (!(CheckPartyHasHadPokerus(party, 1u << rnd)))
-        {
-            u8 rnd2;
-
-            do
-            {
-                rnd2 = Random();
-            }
-            while ((rnd2 & 0x7) == 0);
-
-            if (rnd2 & 0xF0)
-                rnd2 &= 0x7;
-
-            rnd2 |= (rnd2 << 4);
-            rnd2 &= 0xF3;
-            rnd2++;
-
-            SetMonData(&party[rnd], MON_DATA_POKERUS, &rnd2);
-        }
-    }
-}
-
-u8 CheckPartyPokerus(struct Pokemon *party, u8 selection)
-{
-    u8 retVal;
-
-    int partyIndex = 0;
-    unsigned curBit = 1;
-    retVal = 0;
-
-    if (selection)
-    {
-        do
-        {
-            if ((selection & 1) && (GetMonData(&party[partyIndex], MON_DATA_POKERUS, 0) & 0xF))
-                retVal |= curBit;
-            partyIndex++;
-            curBit <<= 1;
-            selection >>= 1;
-        }
-        while (selection);
-    }
-    else if (GetMonData(&party[0], MON_DATA_POKERUS, 0) & 0xF)
-    {
-        retVal = 1;
-    }
-
-    return retVal;
-}
-
-u8 CheckPartyHasHadPokerus(struct Pokemon *party, u8 selection)
-{
-    u8 retVal;
-
-    int partyIndex = 0;
-    unsigned curBit = 1;
-    retVal = 0;
-
-    if (selection)
-    {
-        do
-        {
-            if ((selection & 1) && GetMonData(&party[partyIndex], MON_DATA_POKERUS, 0))
-                retVal |= curBit;
-            partyIndex++;
-            curBit <<= 1;
-            selection >>= 1;
-        }
-        while (selection);
-    }
-    else if (GetMonData(&party[0], MON_DATA_POKERUS, 0))
-    {
-        retVal = 1;
-    }
-
-    return retVal;
-}
-
-void UpdatePartyPokerusTime(u16 days)
-{
-    int i;
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, 0))
-        {
-            u8 pokerus = GetMonData(&gPlayerParty[i], MON_DATA_POKERUS, 0);
-            if (pokerus & 0xF)
-            {
-                if ((pokerus & 0xF) < days || days > 4)
-                    pokerus &= 0xF0;
-                else
-                    pokerus -= days;
-
-                if (pokerus == 0)
-                    pokerus = 0x10;
-
-                SetMonData(&gPlayerParty[i], MON_DATA_POKERUS, &pokerus);
-            }
-        }
-    }
-}
-
-void PartySpreadPokerus(struct Pokemon *party)
-{
-    if ((Random() % 3) == 0)
-    {
-        int i;
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            if (GetMonData(&party[i], MON_DATA_SPECIES, 0))
-            {
-                u8 pokerus = GetMonData(&party[i], MON_DATA_POKERUS, 0);
-                u8 curPokerus = pokerus;
-                if (pokerus)
-                {
-                    if (pokerus & 0xF)
-                    {
-                        // Spread to adjacent party members.
-                        if (i != 0 && !(GetMonData(&party[i - 1], MON_DATA_POKERUS, 0) & 0xF0))
-                            SetMonData(&party[i - 1], MON_DATA_POKERUS, &curPokerus);
-                        if (i != (PARTY_SIZE - 1) && !(GetMonData(&party[i + 1], MON_DATA_POKERUS, 0) & 0xF0))
-                        {
-                            SetMonData(&party[i + 1], MON_DATA_POKERUS, &curPokerus);
-                            i++;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 bool8 TryIncrementMonLevel(struct Pokemon *mon)
 {
     u16 species = GetMonData(mon, MON_DATA_SPECIES, 0);
@@ -5542,8 +5410,12 @@ static void SortMovesAlphabetically(u16 *moves, u32 numMoves)
 u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
 {
     u32 numMoves = 0;
-    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES, 0);
-    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES ? MAX_LEVEL : GetBoxMonData(mon, MON_DATA_LEVEL, 0));
+    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
+
+    if (species == SPECIES_EGG)
+        return 0;
+
+    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES ? MAX_LEVEL : GetBoxMonData(mon, MON_DATA_LEVEL));
 
     do
     {
@@ -5612,7 +5484,7 @@ u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
 
     for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
     {
-        enum TMHMItemId item = GetTMHMItemId(i + 1);
+        enum Item item = GetTMHMItemId(i + 1);
         enum Move move = GetTMHMMoveId(i + 1);
 
         if (move == MOVE_NONE)
@@ -5623,7 +5495,7 @@ u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
 
         if (!CanLearnTeachableMove(species, move))
             continue;
-
+        
         if (!BoxMonKnowsMove(mon, move))
             moves[numMoves++] = move;
     }
@@ -5663,14 +5535,14 @@ u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves)
     return numMoves;
 }
 
-bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon)
+bool32 HasRelearnerLevelUpMovesBox(struct BoxPokemon *boxMon)
 {
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
 
-    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES == TRUE) ? MAX_LEVEL : GetMonData(mon, MON_DATA_LEVEL, 0);
+    u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES == TRUE) ? MAX_LEVEL : GetLevelFromBoxMonExp(boxMon);
 
     do
     {
@@ -5681,7 +5553,7 @@ bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon)
             if (learnset[i].level > level)
                 break;
 
-            if (!MonKnowsMove(mon, learnset[i].move))
+            if (!BoxMonKnowsMove(boxMon, learnset[i].move))
                 return TRUE;
         }
 
@@ -5692,12 +5564,17 @@ bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon)
     return FALSE;
 }
 
-bool32 HasRelearnerEggMoves(struct Pokemon *mon)
+bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon)
+{
+    return HasRelearnerLevelUpMovesBox(&mon->box);
+}
+
+bool32 HasRelearnerEggMovesBox(struct BoxPokemon *boxMon)
 {
     if (!FlagGet(P_FLAG_EGG_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return FALSE;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
@@ -5712,26 +5589,31 @@ bool32 HasRelearnerEggMoves(struct Pokemon *mon)
 
     for (u32 i = 0; eggMoves[i] != MOVE_UNAVAILABLE; i++)
     {
-        if (!MonKnowsMove(mon, eggMoves[i]))
+        if (!BoxMonKnowsMove(boxMon, eggMoves[i]))
             return TRUE;
     }
 
     return FALSE;
 }
 
-bool32 HasRelearnerTMMoves(struct Pokemon *mon)
+bool32 HasRelearnerEggMoves(struct Pokemon *mon)
+{
+    return HasRelearnerEggMovesBox(&mon->box);
+}
+
+bool32 HasRelearnerTMMovesBox(struct BoxPokemon *boxMon)
 {
     if (!P_TM_MOVES_RELEARNER && !P_ENABLE_MOVE_RELEARNERS)
         return FALSE;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
 
     for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
     {
-        enum TMHMItemId item = GetTMHMItemId(i + 1);
+        enum Item item = GetTMHMItemId(i + 1);
         enum Move move = GetTMHMMoveId(i + 1);
 
         if (move == MOVE_NONE)
@@ -5743,19 +5625,24 @@ bool32 HasRelearnerTMMoves(struct Pokemon *mon)
         if (!CanLearnTeachableMove(species, move))
             continue;
 
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(boxMon, move))
             return TRUE;
     }
 
     return FALSE;
 }
 
-bool32 HasRelearnerTutorMoves(struct Pokemon *mon)
+bool32 HasRelearnerTMMoves(struct Pokemon *mon)
+{
+    return HasRelearnerTMMovesBox(&mon->box);
+}
+
+bool32 HasRelearnerTutorMovesBox(struct BoxPokemon *boxMon)
 {
     if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return FALSE;
 
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
@@ -5767,11 +5654,16 @@ bool32 HasRelearnerTutorMoves(struct Pokemon *mon)
         if (!CanLearnTeachableMove(species, move))
             continue;
 
-        if (!MonKnowsMove(mon, move))
+        if (!BoxMonKnowsMove(boxMon, move))
             return TRUE;
     }
 
     return FALSE;
+}
+
+bool32 HasRelearnerTutorMoves(struct Pokemon *mon)
+{
+    return HasRelearnerTutorMovesBox(&mon->box);
 }
 
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves)
@@ -7305,4 +7197,12 @@ u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot)
         HandleSetPokedexFlagFromMon(mon, FLAG_SET_CAUGHT);
     }
     return sentToPc;
+}
+
+void ChangePokemonNicknameWithCallback(void (*callback)(void))
+{
+    struct BoxPokemon *boxMon = GetSelectedBoxMonFromPcOrParty();
+    GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar3);
+    GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar2);
+    DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, GetBoxMonData(boxMon, MON_DATA_SPECIES), GetBoxMonGender(boxMon), GetBoxMonData(boxMon, MON_DATA_PERSONALITY), callback);
 }

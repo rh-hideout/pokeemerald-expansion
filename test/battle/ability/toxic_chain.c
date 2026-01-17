@@ -79,7 +79,7 @@ DOUBLE_BATTLE_TEST("Toxic Chain can inflict bad poison on both foes")
 
 SINGLE_BATTLE_TEST("Toxic Chain makes Lum/Pecha Berry trigger before being knocked off")
 {
-    u16 item = 0;
+    enum Item item = ITEM_NONE;
 
     PARAMETRIZE { item = ITEM_PECHA_BERRY; }
     PARAMETRIZE { item = ITEM_LUM_BERRY; }
