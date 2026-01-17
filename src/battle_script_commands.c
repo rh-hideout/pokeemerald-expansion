@@ -1277,7 +1277,8 @@ static void Cmd_damagecalc(void)
 {
     CMD_ARGS();
 
-    if (gBattleStruct->calculatedDamageDone)
+    // Test if unableToUseMove check is needed
+    if (gBattleStruct->calculatedDamageDone || gBattleStruct->unableToUseMove)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
@@ -1312,6 +1313,14 @@ static void Cmd_damagecalc(void)
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
+
+    if (gSpecialStatuses[gBattlerAttacker].gemBoost
+     && gBattleMons[gBattlerAttacker].item
+     && IsAnyTargetAffected())
+    {
+        BattleScriptCall(BattleScript_GemActivates);
+        gLastUsedItem = gBattleMons[gBattlerAttacker].item;
+    }
 }
 
 static void Cmd_typecalc(void)
@@ -1334,20 +1343,12 @@ static void Cmd_typecalc(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+// Will be deprecated next release
 static void Cmd_adjustdamage(void)
 {
     CMD_ARGS();
-
     gBattlescriptCurrInstr = cmd->nextInstr;
 
-    if (gSpecialStatuses[gBattlerAttacker].gemBoost
-        && !IsBattlerUnaffectedByMove(gBattlerTarget)
-        && !gBattleStruct->unableToUseMove
-        && gBattleMons[gBattlerAttacker].item)
-    {
-        BattleScriptCall(BattleScript_GemActivates);
-        gLastUsedItem = gBattleMons[gBattlerAttacker].item;
-    }
 }
 
 static void Cmd_multihitresultmessage(void)
@@ -1633,9 +1634,7 @@ static void DoublesHPBarReduction(void)
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (IsBattlerUnaffectedByMove(battlerDef)
-         || gBattleStruct->moveDamage[battlerDef] == 0
-         || DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove)
-         || DoesDisguiseBlockMove(battlerDef, gCurrentMove))
+         || gBattleStruct->moveDamage[battlerDef] == 0)
             continue;
 
         s32 dmgUpdate = min(gBattleStruct->moveDamage[battlerDef], 10000);
