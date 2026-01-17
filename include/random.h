@@ -222,7 +222,7 @@ enum RandomTag
     RNG_MAGNITUDE,
     RNG_FISHING_BITE,
     RNG_FISHING_GEN3_STICKY,
-    RNG_ENCORE_TURNS,
+    RNG_TAUNT_TURNS,
 };
 
 #define RandomWeighted(tag, ...) \
