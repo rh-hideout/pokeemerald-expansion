@@ -52,21 +52,28 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
 
 AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefers it otherwise (Single)")
 {
-    u32 species;
-    enum Ability ability;
-    enum Move protectMove;
-    bool32 shouldProtect;
+    u32 paramIdx;
+    static const enum Move protectMoves[] =
+    {
+        MOVE_PROTECT,
+        MOVE_DETECT,
+        MOVE_SPIKY_SHIELD,
+        MOVE_KINGS_SHIELD,
+        MOVE_BANEFUL_BUNKER,
+        MOVE_BURNING_BULWARK,
+        MOVE_OBSTRUCT,
+        MOVE_SILK_TRAP,
+    };
+    u32 species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
+    enum Move protectMove = MOVE_NONE;
+    bool32 shouldProtect = FALSE;
 
-    PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC;      shouldProtect = TRUE; }
-    PARAMETRIZE { species = SPECIES_URSHIFU; ability = ABILITY_UNSEEN_FIST; shouldProtect = FALSE; }
-    PARAMETRIZE { protectMove = MOVE_PROTECT; }
-    PARAMETRIZE { protectMove = MOVE_DETECT; }
-    PARAMETRIZE { protectMove = MOVE_SPIKY_SHIELD; }
-    PARAMETRIZE { protectMove = MOVE_KINGS_SHIELD; }
-    PARAMETRIZE { protectMove = MOVE_BANEFUL_BUNKER; }
-    PARAMETRIZE { protectMove = MOVE_BURNING_BULWARK; }
-    PARAMETRIZE { protectMove = MOVE_OBSTRUCT; }
-    PARAMETRIZE { protectMove = MOVE_SILK_TRAP; }
+    for (paramIdx = 0; paramIdx < ARRAY_COUNT(protectMoves); paramIdx++)
+    {
+        PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC;      shouldProtect = TRUE;  protectMove = protectMoves[paramIdx]; }
+        PARAMETRIZE { species = SPECIES_URSHIFU; ability = ABILITY_UNSEEN_FIST; shouldProtect = FALSE; protectMove = protectMoves[paramIdx]; }
+    }
 
     PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
     GIVEN {
@@ -95,21 +102,28 @@ AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefer
 
 AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefers it otherwise (Doubles)")
 {
-    u32 species;
-    enum Ability ability;
-    enum Move protectMove;
-    bool32 shouldProtect;
+    u32 paramIdx;
+    static const enum Move protectMoves[] =
+    {
+        MOVE_PROTECT,
+        MOVE_DETECT,
+        MOVE_SPIKY_SHIELD,
+        MOVE_KINGS_SHIELD,
+        MOVE_BANEFUL_BUNKER,
+        MOVE_BURNING_BULWARK,
+        MOVE_OBSTRUCT,
+        MOVE_SILK_TRAP,
+    };
+    u32 species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
+    enum Move protectMove = MOVE_NONE;
+    bool32 shouldProtect = FALSE;
 
-    PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC;      shouldProtect = TRUE; }
-    PARAMETRIZE { species = SPECIES_URSHIFU; ability = ABILITY_UNSEEN_FIST; shouldProtect = FALSE; }
-    PARAMETRIZE { protectMove = MOVE_PROTECT; }
-    PARAMETRIZE { protectMove = MOVE_DETECT; }
-    PARAMETRIZE { protectMove = MOVE_SPIKY_SHIELD; }
-    PARAMETRIZE { protectMove = MOVE_KINGS_SHIELD; }
-    PARAMETRIZE { protectMove = MOVE_BANEFUL_BUNKER; }
-    PARAMETRIZE { protectMove = MOVE_BURNING_BULWARK; }
-    PARAMETRIZE { protectMove = MOVE_OBSTRUCT; }
-    PARAMETRIZE { protectMove = MOVE_SILK_TRAP; }
+    for (paramIdx = 0; paramIdx < ARRAY_COUNT(protectMoves); paramIdx++)
+    {
+        PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC;      shouldProtect = TRUE;  protectMove = protectMoves[paramIdx]; }
+        PARAMETRIZE { species = SPECIES_URSHIFU; ability = ABILITY_UNSEEN_FIST; shouldProtect = FALSE; protectMove = protectMoves[paramIdx]; }
+    }
 
     PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
     GIVEN {
