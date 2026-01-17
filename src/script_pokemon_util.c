@@ -528,7 +528,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     for (i = 0; i < NUM_STATS; i++)
     {
         ivs[i] = PARSE_FLAG(11 + i, USE_RANDOM_IVS);
-        assertf(ivs[i] <= USE_RANDOM_IVS, "invalid iv value of %d above maximum of %d", ivs[i], MAX_PER_STAT_IVS);
+        assertf(ivs[i] <= USE_RANDOM_IVS, "invalid iv value of %d above maximum of %d", ivs[i], MAX_PER_STAT_IVS)
         {
             ivs[i] = MAX_PER_STAT_IVS;
         }
