@@ -120,7 +120,8 @@ enum PcMonSelectionType
     SELECT_PC_MON_MOVE_RELEARNER,
 };
 
-enum {
+enum CanMoveBeLearned
+{
     CAN_LEARN_MOVE,
     CANNOT_LEARN_MOVE,
     ALREADY_KNOWS_MOVE,
