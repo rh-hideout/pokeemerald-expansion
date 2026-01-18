@@ -15,7 +15,7 @@ static void ValidateBattlers(void);
 static enum Move GetOriginallyUsedMove(enum Move chosenMove);
 static void SetSameMoveTurnValues(u32 moveEffect);
 static void TryClearChargeVolatile(enum Type moveType);
-static inline bool32 IsBattlerUsingBeakBlast(u32 battler);
+static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler);
 
 // Attackcanceler
 
@@ -246,7 +246,7 @@ static enum MoveEndResult MoveEnd_StatusImmunityAbilities(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
 
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, 0, 0, TRUE))
             result = MOVEEND_STEP_RUN_SCRIPT;
@@ -351,7 +351,7 @@ static enum MoveEndResult MoveEnd_Symbiosis(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
 
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if ((gSpecialStatuses[battler].berryReduced
               || (GetConfig(CONFIG_SYMBIOSIS_GEMS) >= GEN_7 && gSpecialStatuses[battler].gemBoost))
@@ -525,7 +525,7 @@ static enum MoveEndResult MoveEnd_SkyDropConfuse(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
 
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (gBattleStruct->skyDropTargets[battler] == SKY_DROP_RELEASED_TARGET)
         {
@@ -1142,7 +1142,7 @@ static enum MoveEndResult MoveEnd_ColorChange(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        u32 battler = gBattleStruct->eventState.moveEndBattler++;
+        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
         if (battler == gBattlerAttacker)
             continue;
         if (AbilityBattleEffects(ABILITYEFFECT_COLOR_CHANGE, battler, GetBattlerAbility(battler), 0, TRUE))
@@ -1239,7 +1239,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        u32 battler = battlers[battlerDef];
+        enum BattlerId battler = battlers[battlerDef];
 
         // Only fastest red card or eject button activates
         if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
@@ -1317,7 +1317,7 @@ static enum MoveEndResult MoveEnd_EmergencyExit(void)
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        u32 battler = battlers[i];
+        enum BattlerId battler = battlers[i];
 
         if (!(emergencyExitBattlers & 1u << battler))
             continue;
@@ -1379,7 +1379,7 @@ static enum MoveEndResult MoveEnd_EjectPack(void)
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        u32 battler = battlers[i];
+        enum BattlerId battler = battlers[i];
 
         if (!(ejectPackBattlers & 1u << battler))
             continue;
@@ -1419,7 +1419,7 @@ static enum MoveEndResult MoveEnd_ItemsEffectsAll(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        u32 battler = gBattleStruct->eventState.moveEndBattler++;
+        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
         enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
         if (ItemBattleEffects(battler, 0, holdEffect, IsOnStatusChangeActivation)
          || ItemBattleEffects(battler, 0, holdEffect, IsOnHpThresholdActivation))
@@ -1435,7 +1435,7 @@ static enum MoveEndResult MoveEnd_WhiteHerb(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        u32 battler = gBattleStruct->eventState.moveEndBattler++;
+        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
         if (!IsBattlerAlive(battler))
             continue;
 
@@ -1452,7 +1452,7 @@ static enum MoveEndResult MoveEnd_Opportunist(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        u32 battler = gBattleStruct->eventState.moveEndBattler++;
+        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
         if (!IsBattlerAlive(battler))
             continue;
         if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, GetBattlerAbility(battler), 0, TRUE))
@@ -1468,7 +1468,7 @@ static enum MoveEndResult MoveEnd_MirrorHerb(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        u32 battler = gBattleStruct->eventState.moveEndBattler++;
+        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
         if (!IsBattlerAlive(battler))
             continue;
 
@@ -1578,7 +1578,7 @@ static enum MoveEndResult MoveEnd_ThirdMoveBlock(void)
 
 static enum MoveEndResult MoveEnd_ChangedItems(void)
 {
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (gBattleStruct->changedItems[battler] != ITEM_NONE)
         {
@@ -1667,7 +1667,7 @@ static enum MoveEndResult MoveEnd_Dancer(void)
 
     if (IsDanceMove(gCurrentMove) && !gBattleStruct->snatchedMoveIsUsed)
     {
-        u32 battler, nextDancer = 0;
+        enum BattlerId battler, nextDancer = 0;
         bool32 hasDancerTriggered = FALSE;
 
         for (battler = 0; battler < gBattlersCount; battler++)
@@ -1876,14 +1876,14 @@ static void TryClearChargeVolatile(enum Type moveType)
     if (moveType == TYPE_ELECTRIC && gBattleMons[gBattlerAttacker].volatiles.chargeTimer == 1)
         gBattleMons[gBattlerAttacker].volatiles.chargeTimer = 0;
 
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (gBattleMons[battler].volatiles.chargeTimer == 2) // Has been set this turn by move or ability
             gBattleMons[battler].volatiles.chargeTimer--;
     }
 }
 
-static inline bool32 IsBattlerUsingBeakBlast(u32 battler)
+static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler)
 {
     if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE)
         return FALSE;

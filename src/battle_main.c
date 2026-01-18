@@ -112,7 +112,7 @@ static void TryDoEventsBeforeFirstTurn(void);
 static void HandleTurnActionSelectionState(void);
 static void RunTurnActionsFunctions(void);
 static void SetActionsAndBattlersTurnOrder(void);
-static void UpdateBattlerPartyOrdersOnSwitch(u32 battler);
+static void UpdateBattlerPartyOrdersOnSwitch(enum BattlerId battler);
 static bool8 AllAtActionConfirmed(void);
 static void TryChangeTurnOrder(void);
 static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32 *quickClawRandom, u32 *quickDrawRandom);
@@ -710,7 +710,7 @@ static void SetAllPlayersBerryData(void)
     {
         s32 numPlayers;
         struct BattleEnigmaBerry *src;
-        u32 battler;
+        enum BattlerId battler;
 
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
@@ -2974,7 +2974,7 @@ void BeginBattleIntro(void)
 
 static void BattleMainCB1(void)
 {
-    u32 battler;
+    enum BattlerId battler;
 
     gBattleMainFunc();
     for (battler = 0; battler < gBattlersCount; battler++)
@@ -3118,7 +3118,7 @@ static void BattleStartClearSetData(void)
 
 #define UNPACK_VOLATILE_BATON_PASSABLES(_enum, _fieldName, _typeMaxValue, ...) __VA_OPT__(if ((FIRST(__VA_ARGS__)) & V_BATON_PASSABLE) gBattleMons[battler].volatiles._fieldName = volatilesCopy->_fieldName;)
 
-void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
+void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCopy)
 {
     s32 i;
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
@@ -3266,7 +3266,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     Ai_UpdateSwitchInData(battler);
 }
 
-const u8* FaintClearSetData(u32 battler)
+const u8* FaintClearSetData(enum BattlerId battler)
 {
     s32 i;
     const u8 *result = NULL;
@@ -3406,7 +3406,7 @@ const u8* FaintClearSetData(u32 battler)
 static void DoBattleIntro(void)
 {
     s32 i;
-    u32 battler;
+    enum BattlerId battler;
 
     switch ((enum BattleIntroStates)gBattleStruct->eventState.battleIntro)
     {
@@ -3804,7 +3804,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         break;
     case FIRST_TURN_SWITCH_IN_EVENTS:
         gBattleStruct->eventState.switchIn = 0;
-        for (u32 battler = 0; battler < gBattlersCount; battler++)
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
             gBattleStruct->battlerState[battler].switchIn = TRUE;
         BattleScriptPushCursorAndCallback(BattleScript_FirstTurnSwitchInEvents);
         gBattleStruct->eventState.beforeFirstTurn++;
@@ -3970,7 +3970,7 @@ void BattleTurnPassed(void)
         BattleScriptExecute(BattleScript_ArenaTurnBeginning);
 }
 
-u8 IsRunningFromBattleImpossible(u32 battler)
+u8 IsRunningFromBattleImpossible(enum BattlerId battler)
 {
     enum HoldEffect holdEffect;
     u32 i;
@@ -4025,7 +4025,7 @@ u8 IsRunningFromBattleImpossible(u32 battler)
     return BATTLE_RUN_SUCCESS;
 }
 
-void SwitchTwoBattlersInParty(u32 battler, u32 battler2)
+void SwitchTwoBattlersInParty(enum BattlerId battler, u32 battler2)
 {
     s32 i;
     u32 partyId1, partyId2;
@@ -4044,7 +4044,7 @@ void SwitchTwoBattlersInParty(u32 battler, u32 battler2)
     }
 }
 
-void SwitchPartyOrder(u32 battler)
+void SwitchPartyOrder(enum BattlerId battler)
 {
     s32 i;
     u32 partyId1, partyId2;
@@ -4626,7 +4626,7 @@ static bool8 AllAtActionConfirmed(void)
         return FALSE;
 }
 
-static void UpdateBattlerPartyOrdersOnSwitch(u32 battler)
+static void UpdateBattlerPartyOrdersOnSwitch(enum BattlerId battler)
 {
     gBattleStruct->monToSwitchIntoId[battler] = gBattleResources->bufferB[battler][1];
     RecordedBattle_SetBattlerAction(battler, gBattleResources->bufferB[battler][1]);
@@ -4652,7 +4652,7 @@ void SwapTurnOrder(u8 id1, u8 id2)
 }
 
 // For AI, so it doesn't 'cheat' by knowing player's ability
-u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect holdEffect)
+u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
 {
     u32 speed = gBattleMons[battler].speed;
 
@@ -4719,7 +4719,7 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
     return speed;
 }
 
-s32 GetChosenMovePriority(u32 battler, enum Ability ability)
+s32 GetChosenMovePriority(enum BattlerId battler, enum Ability ability)
 {
     enum Move move;
 
@@ -4732,7 +4732,7 @@ s32 GetChosenMovePriority(u32 battler, enum Ability ability)
     return GetBattleMovePriority(battler, ability, move);
 }
 
-s32 GetBattleMovePriority(u32 battler, enum Ability ability, enum Move move)
+s32 GetBattleMovePriority(enum BattlerId battler, enum Ability ability, enum Move move)
 {
     s32 priority = 0;
 
@@ -5078,7 +5078,7 @@ static void PopulateArrayWithBattlers(u8 *battlers)
         battlers[i] = i;
 }
 
-static bool32 TryActivateGimmick(u32 battler)
+static bool32 TryActivateGimmick(enum BattlerId battler)
 {
     if ((gBattleStruct->gimmick.toActivate & (1u << battler)) && !(gProtectStructs[battler].noValidMoves))
     {
@@ -5764,7 +5764,7 @@ enum Type TrySetAteType(enum Move move, u32 battlerAtk, enum Ability attackerAbi
 }
 
 // Returns TYPE_NONE if type doesn't change.
-enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, u32 battler, enum MonState state)
+enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState state)
 {
     enum Type moveType = GetMoveType(move);
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
@@ -6002,7 +6002,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, u32 battler, e
     return TYPE_NONE;
 }
 
-void SetTypeBeforeUsingMove(enum Move move, u32 battler)
+void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler)
 {
     enum Type moveType;
     u32 heldItem = gBattleMons[battler].item;
@@ -6041,7 +6041,7 @@ void SetTypeBeforeUsingMove(enum Move move, u32 battler)
 // Queues stat boosts for a given battler for totem battles
 void ScriptSetTotemBoost(struct ScriptContext *ctx)
 {
-    u32 battler = VarGet(ScriptReadHalfword(ctx));
+    enum BattlerId battler = VarGet(ScriptReadHalfword(ctx));
     u32 stat;
     u32 i;
 

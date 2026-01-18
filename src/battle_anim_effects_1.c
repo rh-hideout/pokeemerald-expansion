@@ -6527,7 +6527,7 @@ static inline void SwapStructData(void *s1, void *s2, void *data, u32 size)
     memcpy(s2, data, size);
 }
 
-static void ReloadBattlerSprites(u32 battler, struct Pokemon *party)
+static void ReloadBattlerSprites(enum BattlerId battler, struct Pokemon *party)
 {
     struct Pokemon *mon = &party[gBattlerPartyIndexes[battler]];
     BattleLoadMonSpriteGfx(mon, battler);

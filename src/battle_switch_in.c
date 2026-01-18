@@ -10,12 +10,12 @@
 #include "constants/moves.h"
 
 static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues);
-static bool32 TryHazardsOnSwitchIn(u32 battler, enum Ability ability, enum HoldEffect holdEffect, enum Hazards hazardType);
+static bool32 TryHazardsOnSwitchIn(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum Hazards hazardType);
 static bool32 SecondEventBlockEvents(struct BattleCalcValues *calcValues);
 
 bool32 DoSwitchInEvents(void)
 {
-    u32 battler;
+    enum BattlerId battler;
 
     struct BattleCalcValues calcValues = {0};
     for (battler = 0; battler < gBattlersCount; battler++)
@@ -120,7 +120,7 @@ bool32 DoSwitchInEvents(void)
     case SWITCH_IN_EVENTS_WHITE_HERB:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
-            u32 battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
+            enum BattlerId battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
             if (ItemBattleEffects(battler, 0, calcValues.holdEffects[battler], IsWhiteHerbActivation))
                 return TRUE;
         }
@@ -130,7 +130,7 @@ bool32 DoSwitchInEvents(void)
     case SWITCH_IN_EVENTS_OPPORTUNIST:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
-            u32 battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
+            enum BattlerId battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
             if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, calcValues.abilities[battler], 0, TRUE))
                 return TRUE;
         }
@@ -140,7 +140,7 @@ bool32 DoSwitchInEvents(void)
     case SWITCH_IN_EVENTS_MIRROR_HERB:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
-            u32 battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
+            enum BattlerId battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
             if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
                 return TRUE;
         }
@@ -171,7 +171,7 @@ bool32 DoSwitchInEvents(void)
     return FALSE;
 }
 
-static bool32 CanBattlerBeHealed(u32 battler)
+static bool32 CanBattlerBeHealed(enum BattlerId battler)
 {
     if (GetConfig(CONFIG_HEALING_WISH_SWITCH) < GEN_8)
         return TRUE;
@@ -194,7 +194,7 @@ static bool32 CanBattlerBeHealed(u32 battler)
 static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
 {
     bool32 effect = FALSE;
-    u32 battler = calcValues->battlerAtk;
+    enum BattlerId battler = calcValues->battlerAtk;
 
     switch (gBattleStruct->eventState.battlerSwitchIn)
     {
@@ -289,7 +289,7 @@ static void SetDmgHazardsBattlescript(u8 battler, u8 multistringId)
     BattleScriptCall(BattleScript_DmgHazardsOnBattler);
 }
 
-static bool32 TryHazardsOnSwitchIn(u32 battler, enum Ability ability, enum HoldEffect holdEffect, enum Hazards hazardType)
+static bool32 TryHazardsOnSwitchIn(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum Hazards hazardType)
 {
     bool32 effect = FALSE;
     enum BattleSide side = GetBattlerSide(battler);
@@ -389,7 +389,7 @@ static bool32 TryHazardsOnSwitchIn(u32 battler, enum Ability ability, enum HoldE
 static bool32 SecondEventBlockEvents(struct BattleCalcValues *calcValues)
 {
     bool32 effect = FALSE;
-    u32 battler = calcValues->battlerAtk;
+    enum BattlerId battler = calcValues->battlerAtk;
 
     switch (gBattleStruct->eventState.battlerSwitchIn)
     {

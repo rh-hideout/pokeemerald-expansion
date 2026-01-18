@@ -1915,7 +1915,7 @@ void DeleteFirstMoveAndGiveMoveToBoxMon(struct BoxPokemon *boxMon, enum Move mov
     SetBoxMonData(boxMon, MON_DATA_PP_BONUSES, &ppBonuses);
 }
 
-u8 CountAliveMonsInBattle(u8 caseId, u32 battler)
+u8 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
 {
     u32 i;
     u32 retVal = 0;
@@ -3204,7 +3204,7 @@ u8 CalculatePartyCount(struct Pokemon *party)
     return partyCount;
 }
 
-u8 CalculatePartyCountOfSide(u32 battler, struct Pokemon *party)
+u8 CalculatePartyCountOfSide(enum BattlerId battler, struct Pokemon *party)
 {
     s32 partyCount, partySize;
     GetAIPartyIndexes(battler, &partyCount, &partySize);
@@ -3230,7 +3230,7 @@ u8 CalculateEnemyPartyCount(void)
     return gEnemyPartyCount;
 }
 
-u8 CalculateEnemyPartyCountInSide(u32 battler)
+u8 CalculateEnemyPartyCountInSide(enum BattlerId battler)
 {
     return CalculatePartyCountOfSide(battler, gEnemyParty);
 }
@@ -3589,7 +3589,7 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
     memset(&dst->volatiles, 0, sizeof(struct Volatiles));
 }
 
-void CopyPartyMonToBattleData(u32 battler, u32 partyIndex)
+void CopyPartyMonToBattleData(enum BattlerId battler, u32 partyIndex)
 {
     enum BattleSide side = GetBattlerSide(battler);
     struct Pokemon *party = GetSideParty(side);
@@ -4114,7 +4114,7 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, u8 battler)
     }
 }
 
-u8 GetItemEffectParamOffset(u32 battler, enum Item itemId, u8 effectByte, u8 effectBit)
+u8 GetItemEffectParamOffset(enum BattlerId battler, enum Item itemId, u8 effectByte, u8 effectBit)
 {
     const u8 *temp;
     const u8 *itemEffect;
@@ -5494,7 +5494,7 @@ u32 GetRelearnerTMMovesBox(struct BoxPokemon *boxMon, u16 *moves)
 
         if (!CanLearnTeachableMove(species, move))
             continue;
-        
+
         if (!BoxMonKnowsMove(boxMon, move))
             moves[numMoves++] = move;
     }
@@ -7112,7 +7112,7 @@ void UpdateDaysPassedSinceFormChange(u16 days)
     }
 }
 
-enum Type CheckDynamicMoveType(struct Pokemon *mon, enum Move move, u32 battler, enum MonState state)
+enum Type CheckDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState state)
 {
     enum Type moveType = GetDynamicMoveType(mon, move, battler, state);
     if (moveType != TYPE_NONE)

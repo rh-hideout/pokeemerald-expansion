@@ -789,7 +789,7 @@ void InitSpritePosToAnimBothTargets(struct Sprite *sprite, bool8 respectMonPicOf
 
 bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool8 respectMonPicOffsets)
 {
-    u32 battler = GetAnimBattlerId(animBattlerId);
+    enum BattlerId battler = GetAnimBattlerId(animBattlerId);
     if (GetAnimBattlerSpriteId(animBattlerId) == 0xFF || !IsBattlerSpriteVisible(battler))
     {
         DestroyAnimSprite(sprite);
@@ -832,7 +832,7 @@ bool8 IsBattlerSpritePresent(u8 battler)
 
         if (gAbsentBattlerFlags & 1u << battler)
             return FALSE;
-        
+
         return TRUE;
     }
 }
@@ -2033,7 +2033,7 @@ u8 GetBattlerSpriteBGPriorityRank(u8 battler)
 }
 
 // Create Pokémon sprite to be used for a move animation effect (e.g. Role Play / Snatch)
-u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 id, s16 x, s16 y, u8 subpriority, u32 personality, bool8 isShiny, u32 battler)
+u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 id, s16 x, s16 y, u8 subpriority, u32 personality, bool8 isShiny, enum BattlerId battler)
 {
     u8 spriteId;
     u16 sheet = LoadSpriteSheet(&sSpriteSheets_MoveEffectMons[id]);

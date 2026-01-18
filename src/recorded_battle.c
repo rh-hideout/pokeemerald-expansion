@@ -617,7 +617,7 @@ static void RecordedBattle_RestoreSavedParties(void)
     }
 }
 
-u8 GetBattlerLinkPlayerGender(u32 battler)
+u8 GetBattlerLinkPlayerGender(enum BattlerId battler)
 {
     s32 i;
 
@@ -659,7 +659,7 @@ u8 GetTextSpeedInRecordedBattle(void)
     return sTextSpeed;
 }
 
-void RecordedBattle_CopyBattlerMoves(u32 battler)
+void RecordedBattle_CopyBattlerMoves(enum BattlerId battler)
 {
     s32 i;
 
@@ -783,7 +783,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
     }
 }
 
-u64 GetAiScriptsInRecordedBattle(u32 battler)
+u64 GetAiScriptsInRecordedBattle(enum BattlerId battler)
 {
     return sAI_Scripts[battler];
 }

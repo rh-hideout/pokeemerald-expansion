@@ -32,7 +32,7 @@
 
 // this file's functions
 static u8 GetBattlePalaceMoveGroup(u8 battler, enum Move move);
-static u16 GetBattlePalaceTarget(u32 battler);
+static u16 GetBattlePalaceTarget(enum BattlerId battler);
 static void SpriteCB_TrainerSlideVertical(struct Sprite *sprite);
 static bool8 ShouldAnimBeDoneRegardlessOfSubstitute(u8 animId);
 static void Task_ClearBitWhenBattleTableAnimDone(u8 taskId);
@@ -140,7 +140,7 @@ void FreeBattleSpritesData(void)
 }
 
 // Pokémon chooses move to use in Battle Palace rather than player
-u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
+u16 ChooseMoveAndTargetInBattlePalace(enum BattlerId battler)
 {
     s32 i, var1, var2;
     s32 chosenMoveIndex = -1;
@@ -347,7 +347,7 @@ static u8 GetBattlePalaceMoveGroup(u8 battler, enum Move move)
     }
 }
 
-static u16 GetBattlePalaceTarget(u32 battler)
+static u16 GetBattlePalaceTarget(enum BattlerId battler)
 {
     if (IsDoubleBattle())
     {
@@ -460,7 +460,7 @@ static void SpriteCB_TrainerSlideVertical(struct Sprite *sprite)
 
 #undef sSpeedX
 
-void InitAndLaunchChosenStatusAnimation(u32 battler, bool32 isVolatile, u32 status)
+void InitAndLaunchChosenStatusAnimation(enum BattlerId battler, bool32 isVolatile, u32 status)
 {
     gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive = 1;
     if (!isVolatile)
@@ -614,7 +614,7 @@ bool8 IsBattleSEPlaying(u8 battler)
     return TRUE;
 }
 
-void BattleLoadMonSpriteGfx(struct Pokemon *mon, u32 battler)
+void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler)
 {
     u32 personalityValue, isShiny, species, paletteOffset;
     enum BattlerPosition position;
@@ -780,7 +780,7 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
         {
             if (state == 2)
             {
-                switch (GetBattlerCoordsIndex(B_POSITION_PLAYER_LEFT))
+                switch (GetBattlerCoordsIndex(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
                 {
                 default:
                     LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
@@ -1157,7 +1157,7 @@ void SetBattlerSpriteAffineMode(u8 affineMode)
 #define SPRITE_SIDE_LEFT    0
 #define SPRITE_SIDE_RIGHT   1
 
-void CreateEnemyShadowSprite(u32 battler)
+void CreateEnemyShadowSprite(enum BattlerId battler)
 {
     if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
     {
@@ -1392,7 +1392,7 @@ void FillAroundBattleWindows(void)
     }
 }
 
-void ClearTemporarySpeciesSpriteData(u32 battler, bool32 dontClearTransform, bool32 dontClearSubstitute)
+void ClearTemporarySpeciesSpriteData(enum BattlerId battler, bool32 dontClearTransform, bool32 dontClearSubstitute)
 {
     if (!dontClearTransform)
         gBattleSpritesDataPtr->battlerData[battler].transformSpecies = SPECIES_NONE;

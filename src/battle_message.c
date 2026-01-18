@@ -2058,7 +2058,7 @@ static const struct BattleWindowText *const sBattleTextOnWindowsInfo[] =
 
 static const u8 sRecordedBattleTextSpeeds[] = {8, 4, 1, 0};
 
-void BufferStringBattle(enum StringID stringID, u32 battler)
+void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
 {
     s32 i;
     const u8 *stringPtr = NULL;
@@ -2593,7 +2593,7 @@ static const u8 *TryGetStatusString(u8 *src)
     return NULL;
 }
 
-static void GetBattlerNick(u32 battler, u8 *dst)
+static void GetBattlerNick(enum BattlerId battler, u8 *dst)
 {
     struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -3372,7 +3372,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
     return dstID;
 }
 
-static void IllusionNickHack(u32 battler, u32 partyId, u8 *dst)
+static void IllusionNickHack(enum BattlerId battler, u32 partyId, u8 *dst)
 {
     u32 id = PARTY_SIZE;
     // we know it's gEnemyParty
@@ -3611,7 +3611,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     }
 }
 
-void SetPpNumbersPaletteInMoveSelection(u32 battler)
+void SetPpNumbersPaletteInMoveSelection(enum BattlerId battler)
 {
     struct ChooseMoveStruct *chooseMoveStruct = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     const u16 *palPtr = gPPTextPalette;

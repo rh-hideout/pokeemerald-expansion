@@ -108,7 +108,7 @@ enum
     HEALTHBOX_SAFARI_BALLS_TEXT
 };
 
-enum BattleCoordTypes GetBattlerCoordsIndex(u32 battler);
+enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler);
 u8 CreateBattlerHealthboxSprites(u8 battler);
 u8 CreateSafariPlayerHealthboxSprites(void);
 void SetBattleBarStruct(u8 battler, u8 healthboxSpriteId, s32 maxVal, s32 oldVal, s32 receivedValue);

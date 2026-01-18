@@ -592,7 +592,7 @@ static const struct WindowTemplate sHealthboxWindowTemplate = {
 
 // This function is here to cover a specific case - one player's mon in a 2 vs 1 double battle. In this scenario - display singles layout.
 // The same goes for a 2 vs 1 where opponent has only one pokemon.
-enum BattleCoordTypes GetBattlerCoordsIndex(u32 battler)
+enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler)
 {
     if (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT && gPlayerPartyCount == 1 && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         return BATTLE_COORDS_SINGLES;
@@ -953,7 +953,7 @@ static void UpdateOpponentHpTextDoubles(u32 healthboxSpriteId, u32 barSpriteId, 
 {
     u8 text[32], *txtPtr;
     u32 i, var;
-    u32 battler = gSprites[healthboxSpriteId].hMain_Battler;
+    enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
 
     if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
     {
@@ -999,7 +999,7 @@ static void UpdateOpponentHpTextSingles(u32 healthboxSpriteId, s16 value, u32 ma
 {
     u8 text[32];
     u32 var, i;
-    u32 battler = gSprites[healthboxSpriteId].hMain_Battler;
+    enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
 
     memcpy(text, sEmptyWhiteText_GrayHighlight, sizeof(sEmptyWhiteText_GrayHighlight));
     if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
@@ -1023,7 +1023,7 @@ static void UpdateOpponentHpTextSingles(u32 healthboxSpriteId, s16 value, u32 ma
 
 void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp, s16 maxHp)
 {
-    u32 battler = gSprites[healthboxSpriteId].hMain_Battler;
+    enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
     switch (GetBattlerCoordsIndex(battler))
     {
     default:
@@ -1050,7 +1050,7 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp
 static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp, s16 maxHp)
 {
     u32 barSpriteId = gSprites[healthboxSpriteId].data[5];
-    u32 battler = gSprites[healthboxSpriteId].hMain_Battler;
+    enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
 
     if (IsOnPlayerSide(battler))
     {
@@ -1957,7 +1957,7 @@ static void UpdateLeftNoOfBallsTextOnHealthbox(u8 healthboxSpriteId)
 
 void UpdateHealthboxAttribute(u8 healthboxSpriteId, struct Pokemon *mon, u8 elementId)
 {
-    u32 battler = gSprites[healthboxSpriteId].hMain_Battler;
+    enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
     s32 maxHp = GetMonData(mon, MON_DATA_MAX_HP);
     s32 currHp = GetMonData(mon, MON_DATA_HP);
 
@@ -2535,7 +2535,7 @@ static void TextIntoAbilityPopUp(void *dest, u8 *windowTileData, s32 windowWidth
     #undef PIXELS
 }
 
-static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTileData2, u32 x, u32 y, u32 bgColor, u32 fgColor, u32 shadowColor, u32 printNickname, u32 battler)
+static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTileData2, u32 x, u32 y, u32 bgColor, u32 fgColor, u32 shadowColor, u32 printNickname, enum BattlerId battler)
 {
     u32 windowId, fontId;
     u8 *windowTileData = AddTextPrinterAndCreateWindowOnAbilityPopUp(str, x, y, bgColor, fgColor, shadowColor, &windowId);
@@ -2606,7 +2606,7 @@ static void PrintAbilityOnAbilityPopUp(enum Ability ability, u8 spriteId1, u8 sp
 static inline bool32 IsAnyAbilityPopUpActive(void)
 {
     u32 activeAbilityPopUps = 0;
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (gBattleStruct->battlerState[battler].activeAbilityPopUps)
             activeAbilityPopUps++;
@@ -2766,7 +2766,7 @@ static void Task_FreeAbilityPopUpGfx(u8 taskId)
 {
     if (!IsAnyAbilityPopUpActive())
     {
-        for (u32 battler = 0; battler < gBattlersCount; battler++)
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
             if (IndexOfSpriteTileTag(TAG_ABILITY_POP_UP_PLAYER1 + battler) != 0xFF)
                 FreeSpriteTilesByTag(TAG_ABILITY_POP_UP_PLAYER1 + battler);

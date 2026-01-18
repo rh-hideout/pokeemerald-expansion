@@ -36,7 +36,7 @@ bool32 IsForceTriggerItemActivation(enum HoldEffect holdEffect)
         || gHoldEffectsInfo[holdEffect].onHpThreshold;
 }
 
-static enum ItemEffect TryDoublePrize(u32 battler)
+static enum ItemEffect TryDoublePrize(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -49,7 +49,7 @@ static enum ItemEffect TryDoublePrize(u32 battler)
     return effect;
 }
 
-enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability)
+enum ItemEffect TryBoosterEnergy(enum BattlerId battler, enum Ability ability)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -71,7 +71,7 @@ enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability)
     return effect;
 }
 
-static enum ItemEffect TryRoomService(u32 battler)
+static enum ItemEffect TryRoomService(enum BattlerId battler)
 {
     if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && CompareStat(battler, STAT_SPEED, MIN_STAT_STAGE, CMP_GREATER_THAN, GetBattlerAbility(battler)))
     {
@@ -87,7 +87,7 @@ static enum ItemEffect TryRoomService(u32 battler)
     return ITEM_NO_EFFECT;
 }
 
-enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId)
+enum ItemEffect TryHandleSeed(enum BattlerId battler, u32 terrainFlag, enum Stat statId)
 {
     if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
     {
@@ -101,7 +101,7 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId)
     return ITEM_NO_EFFECT;
 }
 
-static enum ItemEffect TryTerrainSeeds(u32 battler, enum Item item)
+static enum ItemEffect TryTerrainSeeds(enum BattlerId battler, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -124,7 +124,7 @@ static enum ItemEffect TryTerrainSeeds(u32 battler, enum Item item)
     return effect;
 }
 
-static bool32 CanBeInfinitelyConfused(u32 battler)
+static bool32 CanBeInfinitelyConfused(enum BattlerId battler)
 {
     enum Ability ability = GetBattlerAbility(battler);
     if  (ability == ABILITY_OWN_TEMPO
@@ -134,7 +134,7 @@ static bool32 CanBeInfinitelyConfused(u32 battler)
     return TRUE;
 }
 
-static enum ItemEffect TryBerserkGene(u32 battler)
+static enum ItemEffect TryBerserkGene(enum BattlerId battler)
 {
     if (CanBeInfinitelyConfused(battler))
         gBattleMons[battler].volatiles.infiniteConfusion = TRUE;
@@ -146,7 +146,7 @@ static enum ItemEffect TryBerserkGene(u32 battler)
     return ITEM_STATS_CHANGE;
 }
 
-static enum ItemEffect RestoreWhiteHerbStats(u32 battler, ActivationTiming timing)
+static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -169,7 +169,7 @@ static enum ItemEffect RestoreWhiteHerbStats(u32 battler, ActivationTiming timin
     return effect;
 }
 
-static enum ItemEffect TryConsumeMirrorHerb(u32 battler)
+static enum ItemEffect TryConsumeMirrorHerb(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -210,7 +210,7 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, enum Item it
     return effect;
 }
 
-static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryAirBalloon(enum BattlerId battler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -412,7 +412,7 @@ static enum ItemEffect TryBlunderPolicy(u32 battlerAtk)
     return effect;
 }
 
-static enum ItemEffect TryMentalHerb(u32 battler)
+static enum ItemEffect TryMentalHerb(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -578,7 +578,7 @@ static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, 
     return effect;
 }
 
-static enum ItemEffect TryStickyBarbOnEndTurn(u32 battler, enum Item item)
+static enum ItemEffect TryStickyBarbOnEndTurn(enum BattlerId battler, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -593,7 +593,7 @@ static enum ItemEffect TryStickyBarbOnEndTurn(u32 battler, enum Item item)
     return effect;
 }
 
-static enum ItemEffect TryToxicOrb(u32 battler)
+static enum ItemEffect TryToxicOrb(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -608,7 +608,7 @@ static enum ItemEffect TryToxicOrb(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryFlameOrb(u32 battler)
+static enum ItemEffect TryFlameOrb(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -623,7 +623,7 @@ static enum ItemEffect TryFlameOrb(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryLeftovers(u32 battler, enum HoldEffect holdEffect)
+static enum ItemEffect TryLeftovers(enum BattlerId battler, enum HoldEffect holdEffect)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -639,7 +639,7 @@ static enum ItemEffect TryLeftovers(u32 battler, enum HoldEffect holdEffect)
     return effect;
 }
 
-static enum ItemEffect TryBlackSludgeDamage(u32 battler, enum HoldEffect holdEffect)
+static enum ItemEffect TryBlackSludgeDamage(enum BattlerId battler, enum HoldEffect holdEffect)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -654,7 +654,7 @@ static enum ItemEffect TryBlackSludgeDamage(u32 battler, enum HoldEffect holdEff
     return effect;
 }
 
-static enum ItemEffect TryCureParalysis(u32 battler)
+static enum ItemEffect TryCureParalysis(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -669,7 +669,7 @@ static enum ItemEffect TryCureParalysis(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryCurePoison(u32 battler)
+static enum ItemEffect TryCurePoison(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -684,7 +684,7 @@ static enum ItemEffect TryCurePoison(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryCureBurn(u32 battler)
+static enum ItemEffect TryCureBurn(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -699,7 +699,7 @@ static enum ItemEffect TryCureBurn(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryCureFreezeOrFrostbite(u32 battler)
+static enum ItemEffect TryCureFreezeOrFrostbite(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -722,7 +722,7 @@ static enum ItemEffect TryCureFreezeOrFrostbite(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryCureSleep(u32 battler)
+static enum ItemEffect TryCureSleep(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -739,7 +739,7 @@ static enum ItemEffect TryCureSleep(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryCureConfusion(u32 battler)
+static enum ItemEffect TryCureConfusion(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -753,7 +753,7 @@ static enum ItemEffect TryCureConfusion(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryCureAnyStatus(u32 battler)
+static enum ItemEffect TryCureAnyStatus(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     u32 string = 0;
@@ -811,7 +811,7 @@ enum HealAmount
     PERCENT_HEAL_AMOUNT,
 };
 
-static u32 ItemHealHp(u32 battler, enum Item itemId, enum HealAmount percentHeal)
+static u32 ItemHealHp(enum BattlerId battler, enum Item itemId, enum HealAmount percentHeal)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -837,7 +837,7 @@ static u32 ItemHealHp(u32 battler, enum Item itemId, enum HealAmount percentHeal
     return effect;
 }
 
-static u32 ItemRestorePp(u32 battler, enum Item itemId)
+static u32 ItemRestorePp(enum BattlerId battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -877,7 +877,7 @@ static u32 ItemRestorePp(u32 battler, enum Item itemId)
     return effect;
 }
 
-static enum ItemEffect HealConfuseBerry(u32 battler, enum Item itemId, u32 flavorId)
+static enum ItemEffect HealConfuseBerry(enum BattlerId battler, enum Item itemId, u32 flavorId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     u32 hpFraction = B_CONFUSE_BERRIES_HEAL >= GEN_7 ? 4 : 2;
@@ -900,7 +900,7 @@ static enum ItemEffect HealConfuseBerry(u32 battler, enum Item itemId, u32 flavo
     return effect;
 }
 
-static enum ItemEffect StatRaiseBerry(u32 battler, enum Item itemId, enum Stat statId)
+static enum ItemEffect StatRaiseBerry(enum BattlerId battler, enum Item itemId, enum Stat statId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -919,7 +919,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, enum Item itemId, enum Stat s
     return effect;
 }
 
-static enum ItemEffect CriticalHitRatioUp(u32 battler, enum Item itemId)
+static enum ItemEffect CriticalHitRatioUp(enum BattlerId battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -935,7 +935,7 @@ static enum ItemEffect CriticalHitRatioUp(u32 battler, enum Item itemId)
     return effect;
 }
 
-static enum ItemEffect RandomStatRaiseBerry(u32 battler, enum Item itemId)
+static enum ItemEffect RandomStatRaiseBerry(enum BattlerId battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Stat stat;
@@ -973,7 +973,7 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, enum Item itemId)
     return effect;
 }
 
-static enum ItemEffect TrySetMicleBerry(u32 battler, enum Item itemId)
+static enum ItemEffect TrySetMicleBerry(enum BattlerId battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -986,7 +986,7 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, enum Item itemId)
     return effect;
 }
 
-enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect holdEffect, ActivationTiming timing)
+enum ItemEffect ItemBattleEffects(u32 itemBattler, enum BattlerId battler, enum HoldEffect holdEffect, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Item item;

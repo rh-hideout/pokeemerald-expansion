@@ -1073,7 +1073,7 @@ extern bool8 gLastUsedBallMenuPresent;
 extern u8 gPartyCriticalHits[PARTY_SIZE];
 extern u8 gCategoryIconSpriteId;
 
-static inline bool32 IsBattlerAlive(u32 battler)
+static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {
     if (battler >= gBattlersCount)
         return FALSE;
@@ -1085,24 +1085,24 @@ static inline bool32 IsBattlerAlive(u32 battler)
         return TRUE;
 }
 
-static inline bool32 IsBattlerTurnDamaged(u32 battler)
+static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler)
 {
     return gSpecialStatuses[battler].damagedByAttack;
 }
 
-static inline bool32 IsBattlerAtMaxHp(u32 battler)
+static inline bool32 IsBattlerAtMaxHp(enum BattlerId battler)
 {
     return gBattleMons[battler].hp == gBattleMons[battler].maxHP;
 }
 
-static inline enum BattlerPosition GetBattlerPosition(u32 battler)
+static inline enum BattlerPosition GetBattlerPosition(enum BattlerId battler)
 {
     return gBattlerPositions[battler];
 }
 
 static inline u32 GetBattlerAtPosition(enum BattlerPosition position)
 {
-    u32 battler;
+    enum BattlerId battler;
     for (battler = 0; battler < gBattlersCount; battler++)
     {
         if (GetBattlerPosition(battler) == position)
@@ -1111,22 +1111,22 @@ static inline u32 GetBattlerAtPosition(enum BattlerPosition position)
     return battler;
 }
 
-static inline u32 GetPartnerBattler(u32 battler)
+static inline u32 GetPartnerBattler(enum BattlerId battler)
 {
     return GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(battler)));
 }
 
-static inline u32 GetOppositeBattler(u32 battler)
+static inline u32 GetOppositeBattler(enum BattlerId battler)
 {
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerPosition(battler)));
 }
 
-static inline u32 GetBattlerSide(u32 battler)
+static inline u32 GetBattlerSide(enum BattlerId battler)
 {
     return GetBattlerPosition(battler) & BIT_SIDE;
 }
 
-static inline bool32 IsOnPlayerSide(u32 battler)
+static inline bool32 IsOnPlayerSide(enum BattlerId battler)
 {
     return GetBattlerSide(battler) == B_SIDE_PLAYER;
 }
@@ -1136,12 +1136,12 @@ static inline bool32 IsBattlerAlly(u32 battlerAtk, u32 battlerDef)
     return GetBattlerSide(battlerAtk) == GetBattlerSide(battlerDef);
 }
 
-static inline u32 GetOpposingSideBattler(u32 battler)
+static inline u32 GetOpposingSideBattler(enum BattlerId battler)
 {
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler)));
 }
 
-static inline struct Pokemon* GetBattlerMon(u32 battler)
+static inline struct Pokemon* GetBattlerMon(enum BattlerId battler)
 {
     u32 index = gBattlerPartyIndexes[battler];
     return !IsOnPlayerSide(battler) ? &gEnemyParty[index] : &gPlayerParty[index];
@@ -1152,12 +1152,12 @@ static inline struct Pokemon *GetSideParty(enum BattleSide side)
     return side == B_SIDE_PLAYER ? gPlayerParty : gEnemyParty;
 }
 
-static inline struct Pokemon *GetBattlerParty(u32 battler)
+static inline struct Pokemon *GetBattlerParty(enum BattlerId battler)
 {
     return GetSideParty(GetBattlerSide(battler));
 }
 
-static inline struct PartyState *GetBattlerPartyState(u32 battler)
+static inline struct PartyState *GetBattlerPartyState(enum BattlerId battler)
 {
     return &gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
 }
@@ -1174,19 +1174,19 @@ static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
     return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
 }
 
-static inline u32 GetChosenMoveFromPosition(u32 battler)
+static inline u32 GetChosenMoveFromPosition(enum BattlerId battler)
 {
     return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
 }
 
-static inline void SetPassiveDamageAmount(u32 battler, s32 value)
+static inline void SetPassiveDamageAmount(enum BattlerId battler, s32 value)
 {
     if (value == 0)
         value = 1;
     gBattleStruct->passiveHpUpdate[battler] = value;
 }
 
-static inline void SetHealAmount(u32 battler, s32 value)
+static inline void SetHealAmount(enum BattlerId battler, s32 value)
 {
     if (value == 0)
         value = 1;

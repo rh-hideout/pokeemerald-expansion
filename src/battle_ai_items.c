@@ -22,10 +22,10 @@
 #include "constants/moves.h"
 
 // this file's functions
-static bool32 AI_ShouldHeal(u32 battler, u32 healAmount);
+static bool32 AI_ShouldHeal(enum BattlerId battler, u32 healAmount);
 static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 
-bool32 ShouldUseItem(u32 battler)
+bool32 ShouldUseItem(enum BattlerId battler)
 {
     struct Pokemon *party;
     u8 validMons = 0;
@@ -196,7 +196,7 @@ bool32 ShouldUseItem(u32 battler)
     return FALSE;
 }
 
-static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
+static bool32 AI_ShouldHeal(enum BattlerId battler, u32 healAmount)
 {
     bool32 shouldHeal = FALSE;
     u32 maxDamage = 0;

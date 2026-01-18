@@ -673,7 +673,7 @@ static void SetPalettesToColor(u32 selectedPalettes, u16 color)
 
 void AnimTask_BlendNonAttackerPalettes(u8 taskId)
 {
-    u32 battler;
+    enum BattlerId battler;
     int j;
     u32 selectedPalettes = 0;
 
@@ -1069,7 +1069,7 @@ void AnimTask_CanBattlerSwitch(u8 taskId)
 
 void AnimTask_SetInvisible(u8 taskId)
 {
-    u32 battlerId = GetAnimBattlerId(gBattleAnimArgs[0]);
+    enum BattlerId battlerId = GetAnimBattlerId(gBattleAnimArgs[0]);
     u32 spriteId = gBattlerSpriteIds[battlerId];
 
     gSprites[spriteId].invisible = gBattleSpritesDataPtr->battlerData[battlerId].invisible = gBattleAnimArgs[1];

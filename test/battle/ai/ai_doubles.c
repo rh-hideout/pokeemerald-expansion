@@ -602,7 +602,7 @@ AI_DOUBLE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (doubles)"
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    u32 battler;
+    enum BattlerId battler;
 
     PARAMETRIZE { aiFlags = 0; battler = 1; }
     PARAMETRIZE { aiFlags = 0; battler = 3; }

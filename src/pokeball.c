@@ -18,9 +18,9 @@
 #include "constants/songs.h"
 
 static void Task_DoPokeballSendOutAnim(u8 taskId);
-static inline void DoPokeballSendOutSoundEffect(u32 battler);
+static inline void DoPokeballSendOutSoundEffect(enum BattlerId battler);
 static inline void *GetOpponentMonSendOutCallback(void);
-static inline bool32 IsBattlerPlayer(u32 battler);
+static inline bool32 IsBattlerPlayer(enum BattlerId battler);
 static void SpriteCB_MonSendOut_1(struct Sprite *sprite);
 static void SpriteCB_MonSendOut_2(struct Sprite *sprite);
 static void SpriteCB_OpponentMonSendOut(struct Sprite *sprite);
@@ -549,7 +549,7 @@ const u16 gBallItemIds[POKEBALL_COUNT] =
     [BALL_CHERISH] = ITEM_CHERISH_BALL,
 };
 
-u8 DoPokeballSendOutAnimation(u32 battler, s16 pan, u8 kindOfThrow)
+u8 DoPokeballSendOutAnimation(enum BattlerId battler, s16 pan, u8 kindOfThrow)
 {
     u8 taskId;
 
@@ -635,7 +635,7 @@ static void Task_DoPokeballSendOutAnim(u8 taskId)
     PlaySE(SE_BALL_THROW);
 }
 
-static inline void DoPokeballSendOutSoundEffect(u32 battler)
+static inline void DoPokeballSendOutSoundEffect(enum BattlerId battler)
 {
     if (IsBattlerPlayer(battler) && B_PLAYER_THROW_BALLS_SOUND < GEN_5)
         return;
@@ -1150,7 +1150,7 @@ static void SpriteCB_BallThrow_CaptureMon(struct Sprite *sprite)
     }
 }
 
-static inline bool32 IsBattlerPlayer(u32 battler)
+static inline bool32 IsBattlerPlayer(enum BattlerId battler)
 {
     return (battler % B_POSITION_PLAYER_RIGHT) ? FALSE : TRUE;
 }
