@@ -5394,12 +5394,12 @@ static void CreateInvisibleBattleTargetSprite(void)
 
 static void SetBattleTargetSpritePosition(void)
 {
-    struct Sprite *sprite = &gSprites[gBattlerSpriteIds[B_POSITION_OPPONENT_RIGHT]];
+    struct Sprite *sprite = &gSprites[gBattlerSpriteIds[B_BATTLER_3]];
 
     sprite->x2 = 0;
     sprite->y2 = 0;
-    sprite->x = GetBattlerSpriteCoord(B_POSITION_OPPONENT_RIGHT, BATTLER_COORD_X);
-    sprite->y = GetBattlerSpriteCoord(B_POSITION_OPPONENT_RIGHT, BATTLER_COORD_Y);
+    sprite->x = GetBattlerSpriteCoord(B_BATTLER_3, BATTLER_COORD_X);
+    sprite->y = GetBattlerSpriteCoord(B_BATTLER_3, BATTLER_COORD_Y);
     sprite->invisible = TRUE;
 }
 

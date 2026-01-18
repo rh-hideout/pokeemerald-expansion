@@ -1057,7 +1057,7 @@ u8 GetAnimBattlerId(u8 wantedBattler)
     }
 }
 
-bool8 IsBattlerSpriteVisible(u8 battler)
+bool8 IsBattlerSpriteVisible(enum BattlerId battler)
 {
     if (IsContest())
     {
@@ -1076,7 +1076,7 @@ bool8 IsBattlerSpriteVisible(u8 battler)
     return FALSE;
 }
 
-void MoveBattlerSpriteToBG(u8 battler, bool8 toBG_2, bool8 setSpriteInvisible)
+void MoveBattlerSpriteToBG(enum BattlerId battler, bool8 toBG_2, bool8 setSpriteInvisible)
 {
     struct BattleAnimBgData animBg;
     u8 battlerSpriteId;

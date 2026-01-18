@@ -76,7 +76,7 @@ static const struct SpriteSheet sSpriteSheets_MoveEffectMons[] =
     { gMiscBlank_Gfx, MON_PIC_SIZE, TAG_MOVE_EFFECT_MON_2, },
 };
 
-u8 GetBattlerSpriteCoord(u8 battler, u8 coordType)
+u8 GetBattlerSpriteCoord(enum BattlerId battler, u8 coordType)
 {
     u8 retVal;
     u16 species;
@@ -240,12 +240,12 @@ u8 GetBattlerSpriteCoord2(u8 battler, u8 coordType)
     }
 }
 
-u8 GetBattlerSpriteDefault_Y(u8 battler)
+u8 GetBattlerSpriteDefault_Y(enum BattlerId battler)
 {
     return GetBattlerSpriteCoord(battler, BATTLER_COORD_Y_PIC_OFFSET_DEFAULT);
 }
 
-u8 GetSubstituteSpriteDefault_Y(u8 battler)
+u8 GetSubstituteSpriteDefault_Y(enum BattlerId battler)
 {
     u16 y;
     if (!IsOnPlayerSide(battler))
@@ -2019,7 +2019,7 @@ u8 GetBattlerSpriteBGPriority(u8 battler)
         return GetAnimBgAttribute(1, BG_ANIM_PRIORITY);
 }
 
-u8 GetBattlerSpriteBGPriorityRank(u8 battler)
+u8 GetBattlerSpriteBGPriorityRank(enum BattlerId battler)
 {
     if (!IsContest())
     {
@@ -2172,7 +2172,7 @@ s16 GetBattlerSpriteCoordAttr(u8 battler, u8 attr)
     }
 }
 
-void SetAverageBattlerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, s16 *y)
+void SetAverageBattlerPositions(enum BattlerId battler, bool8 respectMonPicOffsets, s16 *x, s16 *y)
 {
     u8 xCoordType, yCoordType;
     s16 battlerX, battlerY;
@@ -2206,7 +2206,7 @@ void SetAverageBattlerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, 
     *y = (battlerY + partnerY) / 2;
 }
 
-void SetToPartnerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, s16 *y)
+void SetToPartnerPositions(enum BattlerId battler, bool8 respectMonPicOffsets, s16 *x, s16 *y)
 {
     u8 xCoordType, yCoordType;
     s16 returnX, returnY;

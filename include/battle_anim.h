@@ -86,8 +86,8 @@ void DestroyAnimSprite(struct Sprite *sprite);
 void DestroyAnimVisualTask(u8 taskId);
 void DestroyAnimSoundTask(u8 taskId);
 u8 GetAnimBattlerId(u8 wantedBattler);
-bool8 IsBattlerSpriteVisible(u8 battler);
-void MoveBattlerSpriteToBG(u8 battler, bool8 toBG_2, bool8 setSpriteInvisible);
+bool8 IsBattlerSpriteVisible(enum BattlerId battler);
+void MoveBattlerSpriteToBG(enum BattlerId battler, bool8 toBG_2, bool8 setSpriteInvisible);
 bool8 IsContest(void);
 s8 BattleAnimAdjustPanning(s8 pan);
 s8 BattleAnimAdjustPanning2(s8 pan);
@@ -113,8 +113,8 @@ void AnimTranslateLinearAndFlicker_Flipped(struct Sprite *sprite);
 void AnimWeatherBallUp(struct Sprite *sprite);
 void AnimWeatherBallDown(struct Sprite *sprite);
 void AnimSpinningSparkle(struct Sprite *sprite);
-void SetAverageBattlerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, s16 *y);
-void SetToPartnerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, s16 *y);
+void SetAverageBattlerPositions(enum BattlerId battler, bool8 respectMonPicOffsets, s16 *x, s16 *y);
+void SetToPartnerPositions(enum BattlerId battler, bool8 respectMonPicOffsets, s16 *x, s16 *y);
 void DestroySpriteAndMatrix(struct Sprite *sprite);
 void TranslateSpriteLinearFixedPoint(struct Sprite *sprite);
 void InitSpritePosToAnimAttacker(struct Sprite *sprite, bool8 respectMonPicOffsets);
@@ -210,17 +210,17 @@ enum
     BATTLER_COORD_ATTR_RAW_BOTTOM,
 };
 
-u8 GetBattlerSpriteCoord(u8 battler, u8 coordType);
+u8 GetBattlerSpriteCoord(enum BattlerId battler, u8 coordType);
 
 bool8 IsBattlerSpritePresent(u8 battler);
 void ClearBattleAnimBg(u32 bgId);
 u8 GetAnimBattlerSpriteId(u8 wantedBattler);
 u8 GetBattleBgPaletteNum(void);
-u8 GetBattlerSpriteBGPriorityRank(u8 battler);
+u8 GetBattlerSpriteBGPriorityRank(enum BattlerId battler);
 void StoreSpriteCallbackInData6(struct Sprite *sprite, void (*callback)(struct Sprite *));
 void SetSpritePrimaryCoordsFromSecondaryCoords(struct Sprite *sprite);
-u8 GetBattlerSpriteDefault_Y(u8 battler);
-u8 GetSubstituteSpriteDefault_Y(u8 battler);
+u8 GetBattlerSpriteDefault_Y(enum BattlerId battler);
+u8 GetSubstituteSpriteDefault_Y(enum BattlerId battler);
 
 // battle_anim_status_effects.c
 #define STAT_ANIM_PLUS1  (MOVE_EFFECT_ATK_PLUS_1 - 1)

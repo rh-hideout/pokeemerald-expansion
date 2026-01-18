@@ -2305,7 +2305,7 @@ u32 GetBattlerTurnOrderNum(enum BattlerId battler)
 }
 
 // battlerStealer steals the item of itemBattler
-void StealTargetItem(u8 battlerStealer, u8 itemBattler)
+void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler)
 {
     gLastUsedItem = gBattleMons[itemBattler].item;
     gBattleMons[itemBattler].item = ITEM_NONE;
@@ -6934,7 +6934,7 @@ static void Cmd_useitemonopponent(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-bool32 CanUseLastResort(u8 battler)
+bool32 CanUseLastResort(enum BattlerId battler)
 {
     u32 moveIndex;
     for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
@@ -7475,9 +7475,9 @@ static void Cmd_unused_0x83(void)
 {
 }
 
-bool8 UproarWakeUpCheck(u8 battler)
+bool8 UproarWakeUpCheck(enum BattlerId battler)
 {
-    s32 i;
+    enum BattlerId i;
     bool32 hasSoundproof = (B_UPROAR_IGNORE_SOUNDPROOF < GEN_5 && GetBattlerAbility(battler) == ABILITY_SOUNDPROOF);
 
     for (i = 0; i < gBattlersCount; i++)
@@ -8043,7 +8043,7 @@ static void Cmd_statbuffchange(void)
         gBattlescriptCurrInstr = failInstr;
 }
 
-bool32 TryResetBattlerStatChanges(u8 battler)
+bool32 TryResetBattlerStatChanges(enum BattlerId battler)
 {
     u32 j;
     bool32 ret = FALSE;
@@ -10730,7 +10730,7 @@ static void Cmd_tryrecycleitem(void)
     }
 }
 
-bool32 CanCamouflage(u8 battler)
+bool32 CanCamouflage(enum BattlerId battler)
 {
     if (IS_BATTLER_OF_TYPE(battler, gBattleEnvironmentInfo[gBattleEnvironment].camouflageType))
         return FALSE;
@@ -12083,7 +12083,7 @@ static void TryUpdateRoundTurnOrder(void)
     }
 }
 
-u8 GetFirstFaintedPartyIndex(u8 battler)
+u8 GetFirstFaintedPartyIndex(enum BattlerId battler)
 {
     u32 i;
     u32 start = 0;
