@@ -351,7 +351,7 @@ static u16 GetBattlePalaceTarget(enum BattlerId battler)
 {
     if (IsDoubleBattle())
     {
-        u8 opposing1, opposing2;
+        enum BattlerId opposing1, opposing2;
 
         if (IsOnPlayerSide(battler))
         {
@@ -566,7 +566,7 @@ static bool8 ShouldAnimBeDoneRegardlessOfSubstitute(u8 animId)
 
 #define tBattlerId data[0]
 
-void InitAndLaunchSpecialAnimation(u8 activeBattler, u8 atkBattler, u8 defBattler, u8 tableId)
+void InitAndLaunchSpecialAnimation(enum BattlerId activeBattler, enum BattlerId atkBattler, enum BattlerId defBattler, u8 tableId)
 {
     u8 taskId;
 
@@ -1093,7 +1093,7 @@ void HandleLowHpMusicChange(struct Pokemon *mon, enum BattlerId battler)
 
 void BattleStopLowHpSound(void)
 {
-    u8 playerBattler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+    enum BattlerId playerBattler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
 
     gBattleSpritesDataPtr->battlerData[playerBattler].lowHpSong = 0;
     if (IsDoubleBattle())

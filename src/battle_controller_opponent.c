@@ -560,7 +560,8 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
         if (chosenMonId == PARTY_SIZE) // Advanced logic failed so we pick the next available battler
         {
-            s32 battler1, battler2, firstId, lastId;
+            enum BattlerId battler1, battler2;
+            s32 firstId, lastId;
 
             if (!IsDoubleBattle())
             {

@@ -2547,7 +2547,7 @@ void BtlController_HandleFaintAnimation(enum BattlerId battler)
 #undef sSpeedX
 #undef sSpeedY
 
-static void HandleBallThrow(enum BattlerId battler, u32 target, u32 animId, bool32 allowCriticalCapture)
+static void HandleBallThrow(enum BattlerId battler, enum BattlerId target, u32 animId, bool32 allowCriticalCapture)
 {
     gDoingBattleAnim = TRUE;
     if (allowCriticalCapture && IsCriticalCapture())
@@ -2561,7 +2561,7 @@ void BtlController_HandleBallThrowAnim(enum BattlerId battler)
 {
     bool32 allowCriticalCapture = FALSE;
     u32 animId = B_ANIM_BALL_THROW;
-    u32 target = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+    enum BattlerId target = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
 
     if (BattlerIsPlayer(battler))
     {

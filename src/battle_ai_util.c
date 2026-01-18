@@ -3495,7 +3495,7 @@ enum AIPivot ShouldPivot(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
 #define BATTLE_TYPE_CANT_KNOCK_OFF (BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK \
                                   | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_SECRET_BASE \
                                   | (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0))
-bool32 CanKnockOffItem(u32 fromBattler, enum BattlerId battler, enum Item item)
+bool32 CanKnockOffItem(enum BattlerId fromBattler, enum BattlerId battler, enum Item item)
 {
     if (item == ITEM_NONE)
         return FALSE;

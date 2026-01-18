@@ -145,7 +145,7 @@ enum AIPivot ShouldPivot(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
 bool32 IsRecycleEncouragedItem(enum Item item);
 bool32 ShouldRestoreHpBerry(enum BattlerId battlerAtk, enum Item item);
 bool32 IsStatBoostingBerry(enum Item item);
-bool32 CanKnockOffItem(u32 fromBattler, enum BattlerId battler, enum Item item);
+bool32 CanKnockOffItem(enum BattlerId fromBattler, enum BattlerId battler, enum Item item);
 bool32 IsAbilityOfRating(enum Ability ability, s32 rating);
 bool32 AI_IsAbilityOnSide(enum BattlerId battlerId, enum Ability ability);
 bool32 AI_MoveMakesContact(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability ability, enum HoldEffect holdEffect, enum Move move);

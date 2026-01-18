@@ -7588,7 +7588,7 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, enum 
     u8 partyIndexes[PARTY_SIZE];
     int i, j;
 
-    u8 leftBattler;
+    enum BattlerId leftBattler;
     if (IsOnPlayerSide(battler))
         leftBattler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
     else
@@ -7625,7 +7625,7 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, enum 
     }
     else
     {
-        u8 rightBattler;
+        enum BattlerId rightBattler;
         if (IsOnPlayerSide(battler))
             rightBattler = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
         else

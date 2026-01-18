@@ -497,7 +497,7 @@ static void SetDigScanlineEffect(u8 useBG1, s16 y, s16 endY)
 // arg 5: duration
 void AnimDirtPlumeParticle(struct Sprite *sprite)
 {
-    s8 battler;
+    enum BattlerId battler;
     s16 xOffset;
 
     if (gBattleAnimArgs[0] == ANIM_ATTACKER)
@@ -536,7 +536,7 @@ static void AnimDirtPlumeParticle_Step(struct Sprite *sprite)
 // arg 2: duration
 static void AnimDigDirtMound(struct Sprite *sprite)
 {
-    s8 battler;
+    enum BattlerId battler;
 
     if (gBattleAnimArgs[0] == 0)
         battler = gBattleAnimAttacker;

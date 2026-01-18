@@ -55,7 +55,7 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
 {
     enum BattlerId battler;
     u32 selectedPalettes;
-    u8 animBattlers[2];
+    enum BattlerId animBattlers[2];
 
     animBattlers[1] = 0xFF;
     selectedPalettes = UnpackSelectedBattlePalettes(F_PAL_BG);

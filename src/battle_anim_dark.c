@@ -273,7 +273,7 @@ static void AnimPunishment(struct Sprite *sprite)
 
 void AnimTask_AttackerFadeToInvisible(u8 taskId)
 {
-    int battler;
+    enum BattlerId battler;
     gTasks[taskId].data[0] = gBattleAnimArgs[0];
     battler = gBattleAnimAttacker;
     gTasks[taskId].data[1] = 16;

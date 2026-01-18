@@ -4737,9 +4737,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         {
         case ABILITY_TRACE:
             {
-                u32 chosenTarget;
-                u32 target1;
-                u32 target2;
+                enum BattlerId chosenTarget;
+                enum BattlerId target1;
+                enum BattlerId target2;
 
                 if (GetBattlerHoldEffectIgnoreAbility(battler) == HOLD_EFFECT_ABILITY_SHIELD)
                     break;
@@ -7258,7 +7258,7 @@ void HandleAction_RunBattleScript(void) // identical to RunBattleScriptCommands
 
 u32 SetRandomTarget(enum BattlerId battlerAtk)
 {
-    u32 target;
+    enum BattlerId target;
     static const u8 targets[2][2] =
     {
         [B_SIDE_PLAYER] = {B_POSITION_OPPONENT_LEFT, B_POSITION_OPPONENT_RIGHT},

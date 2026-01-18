@@ -568,7 +568,8 @@ u8 DoPokeballSendOutAnimation(enum BattlerId battler, s16 pan, u8 kindOfThrow)
 
 static void Task_DoPokeballSendOutAnim(u8 taskId)
 {
-    u32 throwCaseId, ballId, battler, ballSpriteId;
+    u32 throwCaseId, ballId, ballSpriteId;
+    enum BattlerId battler;
     bool32 notSendOut = FALSE;
     u32 throwXoffset = (B_ENEMY_THROW_BALLS >= GEN_6 && !gTestRunnerHeadless) ? 24 : 0;
     s32 throwYoffset = (B_ENEMY_THROW_BALLS >= GEN_6 && !gTestRunnerHeadless) ? -16 : 24;

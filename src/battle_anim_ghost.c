@@ -824,7 +824,7 @@ static void AnimDestinyBondWhiteShadow_Step(struct Sprite *sprite)
 void AnimTask_DestinyBondWhiteShadow(u8 taskId)
 {
     struct Task *task;
-    s16 battler;
+    enum BattlerId battler;
     u8 spriteId;
     s16 baseX, baseY;
     s16 x, y;

@@ -9,7 +9,7 @@ void SpriteCB_TrainerSlideIn(struct Sprite *sprite);
 void SpriteCB_TrainerSpawn(struct Sprite *sprite);
 void InitAndLaunchChosenStatusAnimation(enum BattlerId battler, bool32 isVolatile, u32 status);
 bool8 TryHandleLaunchBattleTableAnimation(u8 activeBattlerId, u8 attacker, u8 target, u8 tableId, u16 argument);
-void InitAndLaunchSpecialAnimation(u8 activeBattlerId, u8 attacker, u8 target, u8 tableId);
+void InitAndLaunchSpecialAnimation(enum BattlerId activeBattlerId, enum BattlerId attacker, enum BattlerId target, u8 tableId);
 bool8 IsBattleSEPlaying(enum BattlerId battler);
 void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler);
 void BattleGfxSfxDummy2(u16 species);

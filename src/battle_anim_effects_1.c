@@ -3873,7 +3873,7 @@ void AnimTeraStarstormStars(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     if (gBattleAnimArgs[5] == 1)
     {
-        u32 targetPartner;
+        enum BattlerId targetPartner;
         if (IsOnPlayerSide(gBattleAnimTarget))
         {
             if (gBattleAnimTarget == 0)

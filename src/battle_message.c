@@ -2605,7 +2605,7 @@ static void GetBattlerNick(enum BattlerId battler, u8 *dst)
 }
 
 #define HANDLE_NICKNAME_STRING_CASE(battler)                            \
-    if (!IsOnPlayerSide(battler))                       \
+    if (!IsOnPlayerSide(battler))                                       \
     {                                                                   \
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)                     \
             toCpy = sText_FoePkmnPrefix;                                \

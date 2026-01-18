@@ -815,8 +815,8 @@ void AnimTask_InvertScreenColor(u8 taskId)
 #define tColorB        data[7]
 void AnimTask_TintPalettes(u8 taskId)
 {
-    u8 attackerBattler;
-    u8 targetBattler;
+    enum BattlerId attackerBattler;
+    enum BattlerId targetBattler;
     u8 paletteIndex;
     u32 selectedPalettes = 0;
 

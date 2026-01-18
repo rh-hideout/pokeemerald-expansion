@@ -709,7 +709,7 @@ static bool32 ShouldSwitchIfBadlyStatused(enum BattlerId battler)
     enum Ability monAbility = gAiLogicData->abilities[battler];
     enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
     enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
-    u8 opposingBattler = GetBattlerAtPosition(opposingPosition);
+    enum BattlerId opposingBattler = GetBattlerAtPosition(opposingPosition);
     bool32 hasStatRaised = AnyUsefulStatIsRaised(battler);
 
     //Perish Song

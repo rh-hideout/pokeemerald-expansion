@@ -959,7 +959,7 @@ static void AnimWaveFromCenterOfTarget(struct Sprite *sprite)
 static void InitSwirlingFogAnim(struct Sprite *sprite)
 {
     s16 tempVar;
-    u8  battler;
+    enum BattlerId battler;
 
     if (gBattleAnimArgs[4] == 0)
     {
@@ -1494,21 +1494,21 @@ static bool8 GenerateHailParticle(u8 hailStructId, u8 affineAnimNum, u8 taskId, 
 
     if (type != HAILSTRUCTTYPE_FIXED_POSITION)
     {
-        id = GetBattlerAtPosition(sHailCoordData[hailStructId].bPosition);
-        if (IsBattlerSpriteVisible(id))
+        enum BattlerId battler = GetBattlerAtPosition(sHailCoordData[hailStructId].bPosition);
+        if (IsBattlerSpriteVisible(battler))
         {
             shouldSpawnImpactEffect = TRUE;
-            battlerX = GetBattlerSpriteCoord(id, BATTLER_COORD_X_2);
-            battlerY = GetBattlerSpriteCoord(id, BATTLER_COORD_Y_PIC_OFFSET);
+            battlerX = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2);
+            battlerY = GetBattlerSpriteCoord(battler, BATTLER_COORD_Y_PIC_OFFSET);
             switch (type)
             {
             case HAILSTRUCTTYPE_NEGATIVE_POS_MOD:
-                battlerX -= GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_WIDTH) / 6;
-                battlerY -= GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_HEIGHT) / 6;
+                battlerX -= GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_WIDTH) / 6;
+                battlerY -= GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_HEIGHT) / 6;
                 break;
             case HAILSTRUCTTYPE_POSITIVE_POS_MOD:
-                battlerX += GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_WIDTH) / 6;
-                battlerY += GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_HEIGHT) / 6;
+                battlerX += GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_WIDTH) / 6;
+                battlerY += GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_HEIGHT) / 6;
                 break;
             }
         }

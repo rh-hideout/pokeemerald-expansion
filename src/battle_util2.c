@@ -78,11 +78,11 @@ void FreeBattleResources(void)
 
 void AdjustFriendshipOnBattleFaint(enum BattlerId battler)
 {
-    u8 opposingBattlerId;
+    enum BattlerId opposingBattlerId;
 
     if (IsDoubleBattle())
     {
-        u8 opposingBattlerId2;
+        enum BattlerId opposingBattlerId2;
 
         opposingBattlerId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         opposingBattlerId2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);

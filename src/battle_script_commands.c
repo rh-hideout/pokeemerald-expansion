@@ -5293,7 +5293,8 @@ static void Cmd_switchinanim(void)
 
 bool32 CanBattlerSwitch(enum BattlerId battler)
 {
-    s32 i, lastMonId, battlerIn1, battlerIn2;
+    s32 i, lastMonId;
+    enum BattlerId battlerIn1, battlerIn2;
     bool32 ret = FALSE;
     struct Pokemon *party;
 
@@ -9241,7 +9242,7 @@ static void Cmd_healpartystatus(void)
     u32 i = 0;
     u32 zero = 0;
     u32 toHeal = 0;
-    u32 partner = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerAttacker)));
+    enum BattlerId partner = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerAttacker)));
     struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
     bool32 isSoundMove = IsSoundMove(gCurrentMove);
 

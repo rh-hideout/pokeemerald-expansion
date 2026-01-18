@@ -582,7 +582,7 @@ struct BattleStruct
     u8 expSentInMons; // As bits for player party mons - not including exp share mons.
     u8 wildVictorySong;
     enum Type dynamicMoveType;
-    u8 battlerPreventingSwitchout;
+    enum BattlerId battlerPreventingSwitchout;
     u8 moneyMultiplier:6;
     u8 moneyMultiplierItem:1;
     u8 moneyMultiplierMove:1;
