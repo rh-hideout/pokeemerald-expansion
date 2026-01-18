@@ -172,11 +172,11 @@ void InitBattleControllers(void)
 
     SetBattlePartyIds();
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
-    {
+    //if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+    //{
         for (i = 0; i < gBattlersCount; i++)
             BufferBattlePartyCurrentOrderBySide(i, 0);
-    }
+    //}
 
     for (i = 0; i < sizeof(gBattleStruct->tvMovePoints); i++)
         *((u8 *)(&gBattleStruct->tvMovePoints) + i) = 0;
@@ -320,18 +320,21 @@ static void InitBtlControllersInternal(void)
 
         if (bufferPartyOrders)
         {
-            BufferBattlePartyCurrentOrderBySide(0, 0);
-            BufferBattlePartyCurrentOrderBySide(1, 0);
-            BufferBattlePartyCurrentOrderBySide(2, 1);
-            BufferBattlePartyCurrentOrderBySide(3, 1);
+            //BufferBattlePartyCurrentOrderBySide(0, 0);
+            //BufferBattlePartyCurrentOrderBySide(1, 0);
+            //BufferBattlePartyCurrentOrderBySide(2, 1);
+            //BufferBattlePartyCurrentOrderBySide(3, 1);
 
             gBattlerPartyIndexes[0] = 0;
             gBattlerPartyIndexes[1] = 0;
-            gBattlerPartyIndexes[2] = 3;
-            if (!isLink && isInGamePartner && (BATTLE_TWO_VS_ONE_OPPONENT || WILD_DOUBLE_BATTLE))
-                gBattlerPartyIndexes[3] = 1;
+            if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
+                gBattlerPartyIndexes[2] = 0;
             else
-                gBattlerPartyIndexes[3] = 3;
+                gBattlerPartyIndexes[2] = 1;
+            if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
+                gBattlerPartyIndexes[3] = 0;
+            else
+                gBattlerPartyIndexes[3] = 1;
         }
     }
     else
@@ -3280,4 +3283,27 @@ enum BattleTrainer GetAllyTrainer(enum BattleTrainer trainer)
     default:
         return B_TRAINER_3;
     }
+}
+
+bool32 BattleSideHasTwoTrainers(enum BattleSide side)
+{
+    switch (side)
+    {
+    case B_SIDE_PLAYER:
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            return TRUE;
+        break;
+    case B_SIDE_OPPONENT:
+    default:
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+            return TRUE;
+        break;
+    }
+
+    return FALSE;
+}
+
+bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
+{
+    return (GetBattleTrainer(battler1) == GetBattleTrainer(battler2));
 }

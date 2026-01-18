@@ -4428,15 +4428,12 @@ bool32 NoAliveMonsForBattlerSide(u32 battler)
 bool32 NoAliveMonsForPlayer(void)
 {
     u32 i;
-    u32 maxI = PARTY_SIZE;
+    u32 maxIneligible = (B_MULTI_BATTLE_WHITEOUT > GEN_3) ? 12 : 6;
     u32 HP_count = 0;
     u32 ineligibleMonsCount = 0;
 
-    if (B_MULTI_BATTLE_WHITEOUT < GEN_4 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
-        maxI = MULTI_PARTY_SIZE;
-
     // Get total HP for the player's party to determine if the player has lost
-    for (i = 0; i < maxI; i++)
+    for (i = 0; i < PARTY_SIZE; i++)
     {
         if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG)
             && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i))))
@@ -4444,25 +4441,41 @@ bool32 NoAliveMonsForPlayer(void)
             HP_count += GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP);
         }
         // Get the number of fainted mons or eggs (not empty slots) in the first three party slots.
-        if (i < 3 && ((GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP))
-         || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG)))
+        if ((GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP))
+         || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG))
             ineligibleMonsCount++;
     }
 
-    if (B_MULTI_BATTLE_WHITEOUT > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)
-     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA) && !(IsMultibattleTest())) // Multibattle tests appear to not save the player party data for the check below.
+    if (B_MULTI_BATTLE_WHITEOUT > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
     {
+        // Get total HP for the partner's party
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (!GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_SPECIES)
-             || !GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HP)
-             || GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_IS_EGG))
+            if (GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_IS_EGG)
+                && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i))))
+            {
+                HP_count += GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_HP);
+            }
+            // Get the number of fainted mons or eggs (not empty slots) in the first three party slots.
+            if ((GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_HP))
+            || GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_IS_EGG))
                 ineligibleMonsCount++;
         }
 
-        // If the total number of ineligible mons is 6 or more, lose the battle.
-        if (ineligibleMonsCount >= 6)
-            return TRUE;
+        if( !(gBattleTypeFlags & BATTLE_TYPE_ARENA) || (IsMultibattleTest()))
+        {
+            for (i = 0; i < PARTY_SIZE; i++)
+            {
+                if (!GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_SPECIES)
+                || !GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HP)
+                || GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_IS_EGG))
+                    ineligibleMonsCount++;
+            }
+
+            // If the total number of ineligible mons is 6 or more, lose the battle.
+            if (ineligibleMonsCount >= maxIneligible)
+                return TRUE;
+        }
     }
 
     return (HP_count == 0);
@@ -4480,6 +4493,18 @@ static bool32 NoAliveMonsForOpponent(void)
          && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostOpponentMons & (1u << i))))
         {
             HP_count += GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HP);
+        }
+    }
+
+    if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
+    {
+        for (i = 0; i < PARTY_SIZE; i++)
+        {
+            if (GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_IS_EGG)
+            && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostOpponentMons & (1u << i))))
+            {
+                HP_count += GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_HP);
+            }
         }
     }
 
@@ -5143,33 +5168,33 @@ static void Cmd_returnatktoball(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static bool32 IsValidSwitchIn(enum BattleSide side, u32 index)
+static bool32 IsValidSwitchIn(enum BattleTrainer trainer, u32 index)
 {
     if (index >= PARTY_SIZE)
         return FALSE;
 
-    struct Pokemon *party = GetSideParty(side);
+    struct Pokemon *party = gParties[trainer];
     if (!IsValidForBattle(&party[index]))
         return FALSE;
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        if (GetBattlerSide(i) == side && gBattlerPartyIndexes[i] == index && IsBattlerAlive(i))
+        if (GetBattleTrainer(i) == trainer && gBattlerPartyIndexes[i] == index && IsBattlerAlive(i))
             return FALSE;
     }
 
     return TRUE;
 }
 
-static u32 GetArbitraryValidSwitchIn(enum BattleSide side)
+static u32 GetArbitraryValidSwitchIn(enum BattleTrainer trainer)
 {
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        if (IsValidSwitchIn(side, i))
+        if (IsValidSwitchIn(trainer, i))
             return i;
     }
 
-    errorf("no valid switch ins for side: %d", side);
+    errorf("no valid switch ins for party: %d", trainer);
     return 0;
 }
 
@@ -5181,10 +5206,10 @@ static void Cmd_getswitchedmondata(void)
     if (gBattleControllerExecFlags)
         return;
 
-    enum BattleSide side = GetBattlerSide(battler);
-    assertf(IsValidSwitchIn(side, gBattleStruct->monToSwitchIntoId[battler]))
+    enum BattleTrainer trainer = GetBattleTrainer(battler);
+    assertf(IsValidSwitchIn(trainer, gBattleStruct->monToSwitchIntoId[battler]))
     {
-        gBattleStruct->monToSwitchIntoId[battler] = GetArbitraryValidSwitchIn(side);
+        gBattleStruct->monToSwitchIntoId[battler] = GetArbitraryValidSwitchIn(trainer);
     }
 
     gBattlerPartyIndexes[battler] = gBattleStruct->monToSwitchIntoId[battler];
@@ -5213,10 +5238,10 @@ static void Cmd_switchindataupdate(void)
     for (i = 0; i < sizeof(struct BattlePokemon); i++)
         monData[i] = gBattleResources->bufferB[battler][4 + i];
 
-    enum BattleSide side = GetBattlerSide(battler);
+    enum BattleTrainer trainer = GetBattleTrainer(battler);
     assertf(IsBattlerAlive(battler))
     {
-        gBattlerPartyIndexes[battler] = gBattleStruct->monToSwitchIntoId[battler] = GetArbitraryValidSwitchIn(side);
+        gBattlerPartyIndexes[battler] = gBattleStruct->monToSwitchIntoId[battler] = GetArbitraryValidSwitchIn(trainer);
         BtlController_EmitGetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_ALL_BATTLE, 1u << gBattlerPartyIndexes[battler]);
         MarkBattlerForControllerExec(battler);
         return;
@@ -5294,142 +5319,28 @@ bool32 CanBattlerSwitch(u32 battler)
 {
     s32 i, lastMonId, battlerIn1, battlerIn2;
     bool32 ret = FALSE;
-    struct Pokemon *party;
+    struct Pokemon *party = GetBattlerParty(battler);
 
-    if (BATTLE_TWO_VS_ONE_OPPONENT && !IsOnPlayerSide(battler))
-    {
-        battlerIn1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-        battlerIn2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-        party = gParties[B_TRAINER_1];
-
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            if (GetMonData(&party[i], MON_DATA_HP) != 0
-             && GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && i != gBattlerPartyIndexes[battlerIn1] && i != gBattlerPartyIndexes[battlerIn2])
-                break;
-        }
-
-        ret = (i != PARTY_SIZE);
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-    {
-        party = GetBattlerParty(battler);
-
-        lastMonId = 0;
-        if (battler & 2)
-            lastMonId = MULTI_PARTY_SIZE;
-
-        for (i = lastMonId; i < lastMonId + MULTI_PARTY_SIZE; i++)
-        {
-            if (GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && GetMonData(&party[i], MON_DATA_HP) != 0
-             && gBattlerPartyIndexes[battler] != i)
-                break;
-        }
-
-        ret = (i != lastMonId + MULTI_PARTY_SIZE);
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-    {
-        if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
-        {
-            if (IsOnPlayerSide(battler))
-            {
-                party = gParties[B_TRAINER_0];
-
-                lastMonId = 0;
-                if (GetLinkTrainerFlankId(GetBattlerMultiplayerId(battler)) == TRUE)
-                    lastMonId = MULTI_PARTY_SIZE;
-            }
-            else
-            {
-                party = gParties[B_TRAINER_1];
-
-                if (battler == 1)
-                    lastMonId = 0;
-                else
-                    lastMonId = MULTI_PARTY_SIZE;
-            }
-        }
-        else
-        {
-            party = GetBattlerParty(battler);
-
-            lastMonId = 0;
-            if (GetLinkTrainerFlankId(GetBattlerMultiplayerId(battler)) == TRUE)
-                lastMonId = MULTI_PARTY_SIZE;
-        }
-
-        for (i = lastMonId; i < lastMonId + MULTI_PARTY_SIZE; i++)
-        {
-            if (GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && GetMonData(&party[i], MON_DATA_HP) != 0
-             && gBattlerPartyIndexes[battler] != i)
-                break;
-        }
-
-        ret = (i != lastMonId + MULTI_PARTY_SIZE);
-    }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !IsOnPlayerSide(battler))
-    {
-        party = gParties[B_TRAINER_1];
-
-        lastMonId = 0;
-        if (battler == B_POSITION_OPPONENT_RIGHT)
-            lastMonId = PARTY_SIZE / 2;
-
-        for (i = lastMonId; i < lastMonId + (PARTY_SIZE / 2); i++)
-        {
-            if (GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && GetMonData(&party[i], MON_DATA_HP) != 0
-             && gBattlerPartyIndexes[battler] != i)
-                break;
-        }
-
-        ret = (i != lastMonId + (PARTY_SIZE / 2));
-    }
+    if (BattleSideHasTwoTrainers(GetBattlerSide(battler)) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES)) 
+        lastMonId = MULTI_PARTY_SIZE;
     else
+        lastMonId = PARTY_SIZE;
+
+    battlerIn1 = GetBattlerAtPosition(GetBattlerPosition(battler));
+    battlerIn2 = HasPartnerIgnoreFlags(battlerIn1) ? BATTLE_PARTNER(battlerIn1) : battlerIn1;
+    
+    for (i = 0; i < lastMonId; i++)
     {
-        if (!IsOnPlayerSide(battler))
-        {
-            battlerIn1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-
-            if (IsDoubleBattle())
-                battlerIn2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-            else
-                battlerIn2 = battlerIn1;
-
-            party = gParties[B_TRAINER_1];
-        }
-        else
-        {
-            // Check if attacker side has mon to switch into
-            battlerIn1 = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-
-            if (IsDoubleBattle())
-                battlerIn2 = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
-            else
-                battlerIn2 = battlerIn1;
-
-            party = gParties[B_TRAINER_0];
-        }
-
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            if (GetMonData(&party[i], MON_DATA_HP) != 0
-             && GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && i != gBattlerPartyIndexes[battlerIn1] && i != gBattlerPartyIndexes[battlerIn2])
-                break;
-        }
-
-        ret = (i != PARTY_SIZE);
+        if (GetMonData(&party[i], MON_DATA_HP) != 0
+            && GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
+            && !GetMonData(&party[i], MON_DATA_IS_EGG)
+            && !(i == gBattlerPartyIndexes[battlerIn1] && BattlersShareParty(battler, battlerIn1))
+            && !(i == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(battler, battlerIn2)))
+            break;
     }
+
+    ret = (i != lastMonId);
+
     return ret;
 }
 
@@ -12294,7 +12205,7 @@ void BS_ItemRestorePP(void)
     const u8 *effect = GetItemEffect(gLastUsedItem);
     u32 i, pp, maxPP, moveId, loopEnd;
     u32 battler = MAX_BATTLERS_COUNT;
-    struct Pokemon *mon = (IsOnPlayerSide(gBattlerAttacker)) ? &gParties[B_TRAINER_0][gBattleStruct->itemPartyIndex[gBattlerAttacker]] : &gParties[B_TRAINER_1][gBattleStruct->itemPartyIndex[gBattlerAttacker]];
+    struct Pokemon *mon = &gParties[GetBattleTrainer(gBattlerAttacker)][gBattleStruct->itemPartyIndex[gBattlerAttacker]];
 
     // Check whether to apply to all moves.
     if (effect[4] & ITEM4_HEAL_PP_ONE)
@@ -13210,7 +13121,7 @@ void BS_JumpIfCommanderActive(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void UpdatePokeFlutePartyStatus(struct Pokemon* party, u8 position)
+static void UpdatePokeFlutePartyStatus(struct Pokemon* party, enum BattlerPosition position)
 {
     s32 i;
     u8 battler;
@@ -13243,8 +13154,7 @@ void BS_CheckPokeFlute(void)
     NATIVE_ARGS();
     gBattleCommunication[MULTISTRING_CHOOSER] = 0;
 
-    s32 i;
-    for (i = 0; i < gBattlersCount; i++)
+    for (s32 i = 0; i < gBattlersCount; i++)
     {
         if (GetBattlerAbility(i) != ABILITY_SOUNDPROOF)
         {
@@ -13253,8 +13163,11 @@ void BS_CheckPokeFlute(void)
         }
     }
 
-    UpdatePokeFlutePartyStatus(gParties[B_TRAINER_0], B_POSITION_PLAYER_LEFT);
-    UpdatePokeFlutePartyStatus(gParties[B_TRAINER_1], B_POSITION_OPPONENT_LEFT);
+    for (enum BattlerPosition position = B_POSITION_PLAYER_LEFT; position < MAX_POSITION_COUNT; position++)
+    {
+        enum BattleTrainer trainer = GetBattleTrainer(GetBattlerAtPosition(position));
+        UpdatePokeFlutePartyStatus(gParties[trainer], position);
+    }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

@@ -212,7 +212,7 @@ struct AiPartyMon
 struct AiPartyData // Opposing battlers - party mons.
 {
     struct AiPartyMon mons[MAX_BATTLE_TRAINERS][PARTY_SIZE]; // 4 parties(player, partner, and two opponent). Used to save information on opposing party.
-    u8 count[NUM_BATTLE_SIDES];
+    u8 count[MAX_BATTLE_TRAINERS];
 };
 
 struct SimulatedDamage
@@ -467,7 +467,7 @@ struct BattleGimmickData
     u8 triggerSpriteId;
     u8 indicatorSpriteId[MAX_BATTLERS_COUNT];
     u8 toActivate;                                       // stores whether a battler should transform at start of turn as bitfield
-    u8 activeGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];      // stores the active gimmick for each party member
+    u8 activeGimmick[MAX_BATTLE_TRAINERS][PARTY_SIZE];      // stores the active gimmick for each party member
     bool8 activated[MAX_BATTLERS_COUNT][GIMMICKS_COUNT]; // stores whether a trainer has used gimmick
 };
 
@@ -566,7 +566,7 @@ struct EventStates
 struct BattleStruct
 {
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
-    struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
+    struct PartyState partyState[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     struct EventStates eventState;
     struct FutureSight futureSight[MAX_BATTLERS_COUNT];
     struct Wish wish[MAX_BATTLERS_COUNT];
@@ -662,7 +662,7 @@ struct BattleStruct
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
     u8 quickClawBattlerId;
-    struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
+    struct LostItem itemLost[MAX_BATTLE_TRAINERS][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate
     u8 swapDamageCategory:1; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
     u8 bouncedMoveIsUsed:1;

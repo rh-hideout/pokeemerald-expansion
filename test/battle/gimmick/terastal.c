@@ -887,10 +887,10 @@ MULTI_BATTLE_TEST("(TERA) Every battler can use Terastalization - Multi")
     PARAMETRIZE { battler = opponentLeft; }
     PARAMETRIZE { battler = opponentRight; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PARTNER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
     } WHEN {
         TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
@@ -907,10 +907,10 @@ TWO_VS_ONE_BATTLE_TEST("(TERA) Every battler can use Terastalization - 2v1")
     PARAMETRIZE { battler = opponentLeft; }
     PARAMETRIZE { battler = opponentRight; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PARTNER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
     } WHEN {
         TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
@@ -927,10 +927,10 @@ ONE_VS_TWO_BATTLE_TEST("(TERA) Every battler can use Terastalization - 1v2")
     PARAMETRIZE { battler = opponentLeft; }
     PARAMETRIZE { battler = opponentRight; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
     } WHEN {
         TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {

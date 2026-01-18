@@ -90,7 +90,6 @@ static void CB2_HandleStartMultiPartnerBattle(void);
 static void CB2_HandleStartMultiBattle(void);
 static void CB2_HandleStartBattle(void);
 static void TryCorrectShedinjaLanguage(struct Pokemon *mon);
-static bool32 BattleSideHasTwoTrainers(enum BattleSide side);
 static enum BattleTrainer GetBattleTrainerFromParty(struct Pokemon *party);
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum);
 static void BattleMainCB1(void);
@@ -551,7 +550,7 @@ static void CB2_InitBattleInternal(void)
         {
             CreateNPCTrainerParty(&gParties[B_TRAINER_1][0], TRAINER_BATTLE_PARAM.opponentA);
             if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
-                CreateNPCTrainerParty(&gParties[B_TRAINER_1][PARTY_SIZE / 2], TRAINER_BATTLE_PARAM.opponentB);
+                CreateNPCTrainerParty(&gParties[B_TRAINER_3][0], TRAINER_BATTLE_PARAM.opponentB);
             SetWildMonHeldItem();
             CalculateEnemyPartyCount();
         }
@@ -1237,6 +1236,24 @@ static void CB2_HandleStartMultiPartnerBattle(void)
         }
         break;
     case 13:
+        s32 i;
+        // Move received mons to appropriate parties if ally party currently empty (Link battle)
+        if (BattleSideHasTwoTrainers(B_SIDE_PLAYER) && (GetMonData(&gParties[B_TRAINER_2][0], MON_DATA_SPECIES) == SPECIES_NONE))
+        {
+            for (i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
+            {
+                CopyMon(&gParties[B_TRAINER_2][i - MULTI_PARTY_SIZE], &gParties[B_TRAINER_0][i], sizeof(gParties[B_TRAINER_0][i]));
+                ZeroMonData(&gParties[B_TRAINER_0][i]);
+            }
+        }
+        if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && (GetMonData(&gParties[B_TRAINER_3][0], MON_DATA_SPECIES) == SPECIES_NONE))
+        {
+            for (i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
+            {
+                CopyMon(&gParties[B_TRAINER_3][i - MULTI_PARTY_SIZE], &gParties[B_TRAINER_1][i], sizeof(gParties[B_TRAINER_1][i]));
+                ZeroMonData(&gParties[B_TRAINER_1][i]);
+            }
+        }
         InitBattleControllers();
         RecordedBattle_SetTrainerInfo();
         gBattleCommunication[SPRITES_INIT_STATE1] = 0;
@@ -1672,6 +1689,24 @@ static void CB2_HandleStartMultiBattle(void)
         }
         break;
     case 7:
+        s32 i;
+        // Move received mons to appropriate parties if ally party currently empty (Link battle)
+        if (BattleSideHasTwoTrainers(B_SIDE_PLAYER) && (GetMonData(&gParties[B_TRAINER_2][0], MON_DATA_SPECIES) == SPECIES_NONE))
+        {
+            for (i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
+            {
+                CopyMon(&gParties[B_TRAINER_2][i - MULTI_PARTY_SIZE], &gParties[B_TRAINER_0][i], sizeof(gParties[B_TRAINER_0][i]));
+                ZeroMonData(&gParties[B_TRAINER_0][i]);
+            }
+        }
+        if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && (GetMonData(&gParties[B_TRAINER_3][0], MON_DATA_SPECIES) == SPECIES_NONE))
+        {
+            for (i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
+            {
+                CopyMon(&gParties[B_TRAINER_3][i - MULTI_PARTY_SIZE], &gParties[B_TRAINER_1][i], sizeof(gParties[B_TRAINER_1][i]));
+                ZeroMonData(&gParties[B_TRAINER_1][i]);
+            }
+        }
         InitBattleControllers();
         RecordedBattle_SetTrainerInfo();
         gBattleCommunication[SPRITES_INIT_STATE1] = 0;
@@ -2005,25 +2040,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
     return trainer->partySize;
 }
 
-static bool32 BattleSideHasTwoTrainers(enum BattleSide side)
-{
-    switch (side)
-    {
-    case B_SIDE_PLAYER:
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-            return TRUE;
-        break;
-    case B_SIDE_OPPONENT:
-    default:
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-            return TRUE;
-        break;
-    }
-
-    return FALSE;
-}
-
-static enum BattleTrainer GetBattleTrainerFromParty(struct Pokemon *party)
+enum BattleTrainer GetBattleTrainerFromParty(struct Pokemon *party)
 {
     return ((party - gParties[B_TRAINER_0]) / PARTY_SIZE);
 }
@@ -3119,11 +3136,12 @@ static void BattleStartClearSetData(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        gBattleStruct->partyState[B_SIDE_PLAYER][i].usedHeldItem = ITEM_NONE;
-        gBattleStruct->partyState[B_SIDE_OPPONENT][i].usedHeldItem = ITEM_NONE;
-        gBattleStruct->itemLost[B_SIDE_PLAYER][i].originalItem = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HELD_ITEM);
-        gBattleStruct->itemLost[B_SIDE_OPPONENT][i].originalItem = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HELD_ITEM);
-        gPartyCriticalHits[i] = 0;
+        for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+        {
+            gBattleStruct->partyState[trainer][i].usedHeldItem = ITEM_NONE;
+            gBattleStruct->itemLost[trainer][i].originalItem = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HELD_ITEM);
+            gPartyCriticalHits[i] = 0;
+        }
     }
 
     gBattleStruct->swapDamageCategory = FALSE; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
@@ -3550,7 +3568,7 @@ static void DoBattleIntro(void)
         else // Skip party summary since it is a wild battle.
             gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_INTRO_TEXT;
         break;
-    case BATTLE_INTRO_STATE_DRAW_PARTY_SUMMARY:
+    case BATTLE_INTRO_STATE_DRAW_PARTY_SUMMARY: // grintoul TO DO
         if (!gBattleControllerExecFlags)
         {
             struct HpAndStatus hpStatus[PARTY_SIZE];
@@ -5523,16 +5541,16 @@ static void HandleEndTurn_FinishBattle(void)
                                   | BATTLE_TYPE_TRAINER_HILL
                                   | BATTLE_TYPE_FRONTIER)))
         {
-            for (enum BattleSide side = 0; side < NUM_BATTLE_SIDES; side++)
+            for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
             {
-                struct Pokemon *party = GetSideParty(side);
+                struct Pokemon *party = gParties[trainer];
 
-                if (side == B_SIDE_PLAYER && !B_PARTNER_MONS_MARKED_SEEN)
+                if ((trainer & BIT_SIDE) == B_SIDE_PLAYER && !B_PARTNER_MONS_MARKED_SEEN)
                     continue;
 
                 for (u32 partySlot = 0; partySlot < PARTY_SIZE; partySlot++)
                 {
-                    if (gBattleStruct->partyState[side][partySlot].sentOut)
+                    if (gBattleStruct->partyState[trainer][partySlot].sentOut)
                         HandleSetPokedexFlagFromMon(&party[partySlot], FLAG_SET_SEEN);
                 }
             }

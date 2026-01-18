@@ -467,5 +467,7 @@ bool32 ShouldBattleRestrictionsApply(u32 battler);
 void FreeShinyStars(void);
 enum BattleTrainer GetBattleTrainer(enum BattlerId battler);
 enum BattleTrainer GetAllyTrainer(enum BattleTrainer trainer);
+bool32 BattleSideHasTwoTrainers(enum BattleSide side);
+bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2);
 
 #endif // GUARD_BATTLE_CONTROLLERS_H

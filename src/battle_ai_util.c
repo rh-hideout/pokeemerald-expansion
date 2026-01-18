@@ -6274,7 +6274,8 @@ bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount)
 
 void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
 {
-    if (BATTLE_TWO_VS_ONE_OPPONENT && (battler & BIT_SIDE) == B_SIDE_OPPONENT)
+    if ((BATTLE_TWO_VS_ONE_OPPONENT && (battler & BIT_SIDE) == B_SIDE_OPPONENT)
+     || (gBattleTypeFlags & BATTLE_TYPE_TWELVES))
     {
         *firstId = 0, *lastId = PARTY_SIZE;
     }

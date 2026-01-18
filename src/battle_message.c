@@ -3372,7 +3372,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
     return dstID;
 }
 
-static void IllusionNickHack(u32 battler, u32 partyId, u8 *dst)
+static void IllusionNickHack(u32 battler, u32 partyId, u8 *dst) // grintoul TO DO
 {
     u32 id = PARTY_SIZE;
     // we know it's gParties[B_TRAINER_1]

@@ -372,8 +372,8 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
     s16 xPos;
     enum TrainerPicID trainerPicId;
 
-    // Sets Multibattle test opponent sprites to not be Hiker
-    if (IsMultibattleTest())
+    // Sets battle test opponent sprites to Leaf and Red
+    if (TESTING)
     {
         if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
@@ -575,8 +575,8 @@ static void OpponentHandleChoosePokemon(u32 battler)
             for (chosenMonId = firstId; chosenMonId < lastId; chosenMonId++)
             {
                 if (IsValidForBattle(&gParties[GetBattleTrainer(battler)][chosenMonId])
-                 && chosenMonId != gBattlerPartyIndexes[battler1]
-                 && chosenMonId != gBattlerPartyIndexes[battler2])
+                 && !((chosenMonId == gBattlerPartyIndexes[battler1]) && BattlersShareParty(battler, battler1))
+                 && !((chosenMonId == gBattlerPartyIndexes[battler2]) && BattlersShareParty(battler, battler2)))
                     break;
             }
         }
