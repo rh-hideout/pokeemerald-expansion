@@ -197,7 +197,7 @@ static void SpriteCB_StatusSummaryBalls_Enter(struct Sprite *);
 static void SpriteCB_StatusSummaryBalls_Exit(struct Sprite *);
 static void SpriteCB_StatusSummaryBalls_OnSwitchout(struct Sprite *);
 
-static u8 GetStatusIconForBattlerId(u8, u8);
+static u8 GetStatusIconForBattlerId(u8, enum BattlerId);
 static s32 CalcNewBarValue(s32, s32, s32, s32 *, u8, u16);
 static u8 GetScaledExpFraction(s32, s32, s32, u8);
 static void MoveBattleBarGraphically(u8, u8);
