@@ -7464,7 +7464,6 @@ static bool8 TrySwitchInPokemon(void)
 {
     u8 slot = GetCursorSelectionMonId();
     u8 newSlot;
-    u8 i;
 
     // In a multi battle, slots 1, 4, and 5 are the partner's Pokémon
     if (IsMultiBattle() == TRUE && (slot == 1 || slot == 4 || slot == 5))
@@ -7479,7 +7478,7 @@ static bool8 TrySwitchInPokemon(void)
         StringExpandPlaceholders(gStringVar4, gText_PkmnHasNoEnergy);
         return FALSE;
     }
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsOnPlayerSide(i) && GetPartyIdFromBattleSlot(slot) == gBattlerPartyIndexes[i])
         {

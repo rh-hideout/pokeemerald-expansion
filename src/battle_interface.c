@@ -807,9 +807,7 @@ static void TryToggleHealboxVisibility(u32 priority, u32 healthboxLeftSpriteId, 
 
 void UpdateOamPriorityInAllHealthboxes(u8 priority, bool32 hideHPBoxes)
 {
-    s32 i;
-
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         u8 healthboxLeftSpriteId = gHealthboxSpriteIds[i];
         u8 healthboxRightSpriteId = gSprites[gHealthboxSpriteIds[i]].oam.affineParam;
@@ -1140,9 +1138,9 @@ static void PrintSafariMonInfo(u8 healthboxSpriteId, struct Pokemon *mon)
 
 void SwapHpBarsWithHpText(void)
 {
-    u32 healthBarSpriteId, i;
+    u32 healthBarSpriteId;
 
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         struct Pokemon *mon = GetBattlerMon(i);
         if (gSprites[gHealthboxSpriteIds[i]].callback == SpriteCallbackDummy

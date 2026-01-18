@@ -174,8 +174,8 @@ void InitBattleControllers(void)
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
     {
-        for (i = 0; i < gBattlersCount; i++)
-            BufferBattlePartyCurrentOrderBySide(i, 0);
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+            BufferBattlePartyCurrentOrderBySide(battler, 0);
     }
 
     for (i = 0; i < sizeof(gBattleStruct->tvMovePoints); i++)
@@ -458,13 +458,11 @@ bool32 ShouldUpdateTvData(enum BattlerId battler)
 
 static void SetBattlePartyIds(void)
 {
-    s32 i, j;
-
     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
     {
-        for (i = 0; i < gBattlersCount; i++)
+        for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
-            for (j = 0; j < PARTY_SIZE; j++)
+            for (u32 j = 0; j < PARTY_SIZE; j++)
             {
                 if (i < 2)
                 {

@@ -1917,7 +1917,7 @@ void DeleteFirstMoveAndGiveMoveToBoxMon(struct BoxPokemon *boxMon, enum Move mov
 
 u8 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
 {
-    u32 i;
+    enum BattlerId i;
     u32 retVal = 0;
 
     switch (caseId)

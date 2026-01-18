@@ -658,9 +658,9 @@ struct BattleStruct
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
     enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     struct Illusion illusion[MAX_BATTLERS_COUNT];
-    u8 soulheartBattlerId;
-    u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
-    u8 quickClawBattlerId;
+    enum BattlerId soulheartBattlerId;
+    enum BattlerId friskedBattler; // Frisk needs to identify 2 battlers in double battles.
+    enum BattlerId quickClawBattlerId;
     struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate
     u8 swapDamageCategory:1; // Photon Geyser, Shell Side Arm, Light That Burns the Sky

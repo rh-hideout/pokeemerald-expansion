@@ -410,8 +410,14 @@ static void HandleInputChooseAction(enum BattlerId battler)
 
 void HandleInputChooseTarget(enum BattlerId battler)
 {
-    s32 i;
-    static const u8 identities[MAX_BATTLERS_COUNT] = {B_POSITION_PLAYER_LEFT, B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_RIGHT, B_POSITION_OPPONENT_LEFT};
+    enum BattlerId i;
+    static const enum BattlerPosition identities[MAX_BATTLERS_COUNT] =
+    {
+        B_POSITION_PLAYER_LEFT,
+        B_POSITION_PLAYER_RIGHT,
+        B_POSITION_OPPONENT_RIGHT,
+        B_POSITION_OPPONENT_LEFT,
+    };
     enum Move move = GetMonData(GetBattlerMon(battler), MON_DATA_MOVE1 + gMoveSelectionCursor[battler]);
     u16 moveTarget = GetBattlerMoveTargetType(battler, move);
 
@@ -567,8 +573,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
 
 static void HideAllTargets(void)
 {
-    s32 i;
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         if (IsBattlerAlive(i) && gBattleSpritesDataPtr->healthBoxesData[i].healthboxIsBouncing)
         {
@@ -734,8 +739,7 @@ void HandleInputChooseMove(enum BattlerId battler)
                 // Show all available targets for multi-target moves
                 if (moveTarget == TARGET_ALL_BATTLERS || moveTarget == TARGET_FIELD)
                 {
-                    u32 i = 0;
-                    for (i = 0; i < gBattlersCount; i++)
+                    for (enum BattlerId i = 0; i < gBattlersCount; i++)
                         TryShowAsTarget(i);
 
                     canSelectTarget = 3;

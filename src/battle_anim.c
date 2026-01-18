@@ -557,12 +557,12 @@ static void Cmd_unloadspritegfx(void)
     ClearSpriteIndex(GET_TRUE_SPRITE_INDEX(index));
 }
 
-static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
+static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, enum BattlerId *targets)
 {
     u8 numTargets = 0;
     enum AnimBattler battlerAnimId = gBattleAnimArgs[battlerArgIndex];   // ANIM_xx input
-    u32 i;
-    u32 ignoredTgt;
+    enum BattlerId i;
+    enum BattlerId ignoredTgt;
     u32 target = GetBattlerMoveTargetType(gBattleAnimAttacker, gAnimMoveIndex);
 
     switch (battlerAnimId)
@@ -676,8 +676,9 @@ static void Cmd_createsprite(void)
 
 static void CreateSpriteOnTargets(const struct SpriteTemplate *template, u8 argVar, u8 battlerArgIndex, u8 argsCount, bool32 overwriteAnimTgt)
 {
-    u32 i, battler;
-    u8 targets[MAX_BATTLERS_COUNT];
+    u32 i;
+    enum BattlerId battler;
+    enum BattlerId targets[MAX_BATTLERS_COUNT];
     int ntargets;
     s16 subpriority;
 
@@ -695,7 +696,7 @@ static void CreateSpriteOnTargets(const struct SpriteTemplate *template, u8 argV
 
     for (i = 0; i < ntargets; i++)
     {
-        battler = GetAnimBattlerId(targets[i]);
+        battler = targets[i];
         if (overwriteAnimTgt)
             gBattleAnimArgs[battlerArgIndex] = targets[i];
 
@@ -795,7 +796,7 @@ static void Cmd_createvisualtaskontargets(void)
     u8 numArgs;
     u8 battlerArgIndex; // index in gBattleAnimArgs that has the battlerId
     s32 i;
-    u8 targets[MAX_BATTLERS_COUNT] = {0};
+    enum BattlerId targets[MAX_BATTLERS_COUNT] = {0};
 
     sBattleAnimScriptPtr++;
 

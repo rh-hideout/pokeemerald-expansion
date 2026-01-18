@@ -903,9 +903,7 @@ static void ClearSpritesBattlerHealthboxAnimData(void)
 
 void CopyAllBattleSpritesInvisibilities(void)
 {
-    s32 i;
-
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleSpritesDataPtr->battlerData[i].invisible = gSprites[gBattlerSpriteIds[i]].invisible;
 }
 
@@ -1130,9 +1128,7 @@ void HandleBattleLowHpMusicChange(void)
 
 void SetBattlerSpriteAffineMode(u8 affineMode)
 {
-    s32 i;
-
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsBattlerSpritePresent(i))
         {
@@ -1211,7 +1207,7 @@ void CreateEnemyShadowSprite(enum BattlerId battler)
 void LoadAndCreateEnemyShadowSprites(void)
 {
     enum BattlerId battler;
-    u32 i;
+    enum BattlerId i;
 
     if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
     {

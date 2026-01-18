@@ -7420,8 +7420,8 @@ static void AnimTask_DynamaxGrowthStep(u8 taskId) // from CFRU
 
 void AnimTask_AllBattlersInvisible(u8 taskId)
 {
-    u32 i, spriteId;
-    for (i = 0; i < gBattlersCount; i++)
+    u32 spriteId;
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         spriteId = gBattlerSpriteIds[i];
         if (spriteId != 0xFF)
@@ -7432,8 +7432,8 @@ void AnimTask_AllBattlersInvisible(u8 taskId)
 
 void AnimTask_AllBattlersVisible(u8 taskId)
 {
-    u32 i, spriteId;
-    for (i = 0; i < gBattlersCount; ++i)
+    u32 spriteId;
+    for (enum BattlerId i = 0; i < gBattlersCount; ++i)
     {
         spriteId = gBattlerSpriteIds[i];
         if (IsBattlerSpriteVisible(i) && spriteId != 0xFF)
@@ -7445,8 +7445,7 @@ void AnimTask_AllBattlersVisible(u8 taskId)
 
 void AnimTask_AllBattlersInvisibleExceptAttackerAndTarget(u8 taskId)
 {
-    u32 i;
-    for (i = 0; i < gBattlersCount; ++i)
+    for (enum BattlerId i = 0; i < gBattlersCount; ++i)
     {
         u8 spriteId = gBattlerSpriteIds[i];
         if (spriteId == GetAnimBattlerSpriteId(ANIM_ATTACKER) || spriteId == GetAnimBattlerSpriteId(ANIM_TARGET))

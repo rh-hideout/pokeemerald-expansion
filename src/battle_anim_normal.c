@@ -561,7 +561,6 @@ static void AnimTask_BlendColorCycleLoop(u8 taskId)
 // See AnimTask_BlendColorCycle. Same, but excludes Attacker and Target
 void AnimTask_BlendColorCycleExclude(u8 taskId)
 {
-    int battler;
     u32 selectedPalettes = 0;
 
     gTasks[taskId].data[0] = gBattleAnimArgs[0];
@@ -572,7 +571,7 @@ void AnimTask_BlendColorCycleExclude(u8 taskId)
     gTasks[taskId].tBlendColor = gBattleAnimArgs[5];
     gTasks[taskId].tRestoreBlend = 0;
 
-    for (battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (battler != gBattleAnimAttacker && battler != gBattleAnimTarget)
             selectedPalettes |= 1 << (battler + 16);
@@ -904,7 +903,6 @@ static void AnimShakeMonOrBattlePlatforms(struct Sprite *sprite)
 
 static void AnimShakeMonOrBattlePlatforms_Step(struct Sprite *sprite)
 {
-    u8 i;
     u16 var0;
 
     if (sprite->data[3] > 0)
@@ -927,7 +925,7 @@ static void AnimShakeMonOrBattlePlatforms_Step(struct Sprite *sprite)
         var0 = sprite->data[5] - 2;
         if (var0 < 2)
         {
-            for (i = 0; i < gBattlersCount; i++)
+            for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 gSprites[gBattlerSpriteIds[i]].coordOffsetEnabled = FALSE;
         }
 

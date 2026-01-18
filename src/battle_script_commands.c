@@ -3130,8 +3130,8 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_HAZE:
-        for (i = 0; i < gBattlersCount; i++)
-            TryResetBattlerStatChanges(i);
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+            TryResetBattlerStatChanges(battler);
         BattleScriptPush(battleScript);
         gBattlescriptCurrInstr = BattleScript_MoveEffectHaze;
         break;
@@ -4513,7 +4513,8 @@ static void Cmd_checkteamslost(void)
     // In non-multi battles, jump to pointer if 1 spot is missing on both sides
     if (gBattleOutcome == 0 && (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER)))
     {
-        s32 i, emptyPlayerSpots, emptyOpponentSpots;
+        enum BattlerId i;
+        s32 emptyPlayerSpots, emptyOpponentSpots;
 
         for (emptyPlayerSpots = 0, i = 0; i < gBattlersCount; i += 2)
         {
@@ -5152,7 +5153,7 @@ static bool32 IsValidSwitchIn(enum BattleSide side, u32 index)
     if (!IsValidForBattle(&party[index]))
         return FALSE;
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (GetBattlerSide(i) == side && gBattlerPartyIndexes[i] == index && IsBattlerAlive(i))
             return FALSE;
@@ -5470,7 +5471,7 @@ static void Cmd_openpartyscreen(void)
 
     u32 flags = 0;
     u8 hitmarkerFaintBits = 0;
-    u32 i, battler = 0;
+    enum BattlerId battler = 0;
     const u8 *failInstr = cmd->failInstr;
 
     if (cmd->battler == BS_FAINTED_MULTIPLE_1)
@@ -5506,7 +5507,7 @@ static void Cmd_openpartyscreen(void)
             bool32 hasReplacement;
 
             hitmarkerFaintBits = gHitMarker >> 28;
-            for (i = 0; i < gBattlersCount; i++)
+            for (enum BattlerId i = 0; i < gBattlersCount; i++)
             {
                 if (((1u << i) & hitmarkerFaintBits))
                 {
@@ -5544,7 +5545,7 @@ static void Cmd_openpartyscreen(void)
                 }
             }
 
-            for (i = 0; i < NUM_BATTLE_SIDES; i++)
+            for (enum BattlerId i = 0; i < 2; i++) // 2 was originally NUM_BATTLE_SIDES for some reason
             {
                 if (!(gSpecialStatuses[i].faintedHasReplacement))
                 {
@@ -5571,7 +5572,7 @@ static void Cmd_openpartyscreen(void)
             if (IsDoubleBattle())
             {
                 hitmarkerFaintBits = gHitMarker >> 28;
-                for (i = 0; i < NUM_BATTLE_SIDES; i++)
+                for (enum BattlerId i = 0; i < 2; i++) // 2 was originally NUM_BATTLE_SIDES for some reason
                 {
                     if ((1 << BATTLE_PARTNER(i)) & hitmarkerFaintBits && (1 << i) & hitmarkerFaintBits)
                     {
@@ -5648,7 +5649,7 @@ static void Cmd_openpartyscreen(void)
 
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
             {
-                for (i = 0; i < gBattlersCount; i++)
+                for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 {
                     if (i != battler)
                     {
@@ -6107,8 +6108,7 @@ static void Cmd_hitanimation(void)
     }
     else if (!gBattleStruct->doneDoublesSpreadHit)
     {
-        enum BattlerId battlerDef;
-        for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+        for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
         {
             if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
                 continue;
@@ -7971,7 +7971,7 @@ static u32 ChangeStatBuffs(enum BattlerId battler, s8 statValue, enum Stat statI
             if (statIncrease)
             {
                 // Check Mirror Herb / Opportunist
-                for (index = 0; index < gBattlersCount; index++)
+                for (enum BattlerId index = 0; index < gBattlersCount; index++)
                 {
                     if (IsBattlerAlly(index, battler))
                         continue; // Only triggers on opposing side
@@ -8066,9 +8066,7 @@ static void Cmd_normalisebuffs(void)
 {
     CMD_ARGS();
 
-    s32 i;
-
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
         TryResetBattlerStatChanges(i);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -9380,10 +9378,9 @@ static void Cmd_trysetperishsong(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    s32 i = 0;
     s32 notAffectedCount = 0;
 
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (gBattleMons[i].volatiles.perishSong
             || IsBattlerUnaffectedByMove(i)
@@ -12884,7 +12881,7 @@ void BS_TryActivateGulpMissile(void)
 void BS_TryQuash(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u32 i, j;
+    enum BattlerId i, j;
 
     // It's true if foe is faster, has a bigger priority, or switches
     if (HasBattlerActedThisTurn(gBattlerTarget))
@@ -13081,9 +13078,9 @@ static bool32 IsTeatimeAffected(enum BattlerId battler)
 void BS_CheckTeaTimeTargets(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u32 count = 0, i;
+    u32 count = 0;
 
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsTeatimeAffected(i))
             count++;
@@ -13136,7 +13133,7 @@ void BS_ResetTerrainAbilityFlags(void)
 {
     NATIVE_ARGS();
     // reset terrain ability checks
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleMons[i].volatiles.terrainAbilityDone = 0;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -13243,8 +13240,7 @@ void BS_CheckPokeFlute(void)
     NATIVE_ARGS();
     gBattleCommunication[MULTISTRING_CHOOSER] = 0;
 
-    s32 i;
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (GetBattlerAbility(i) != ABILITY_SOUNDPROOF)
         {
@@ -15043,7 +15039,7 @@ void BS_TryToClearPrimalWeather(void)
     NATIVE_ARGS();
     bool32 shouldNotClear = FALSE;
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         enum Ability ability = GetBattlerAbility(i);
         if (((ability == ABILITY_DESOLATE_LAND && gBattleWeather & B_WEATHER_SUN_PRIMAL)

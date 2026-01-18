@@ -817,14 +817,12 @@ bool32 TryRunFromBattle(enum BattlerId battler)
 
 void HandleAction_Run(void)
 {
-    s32 i;
-
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
     {
         gCurrentTurnActionNumber = gBattlersCount;
 
-        for (i = 0; i < gBattlersCount; i++)
+        for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
             if (IsOnPlayerSide(i))
             {
@@ -1025,10 +1023,10 @@ void HandleAction_ActionFinished(void)
         // taken action. It's been previously increased, which we want in order to not recalculate the turn of the mon that just finished its action
 
         struct BattleCalcValues calcValues = {0};
-        for (i = 0; i < gBattlersCount; i++)
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
-            calcValues.abilities[i] = GetBattlerAbility(i);
-            calcValues.holdEffects[i] = GetBattlerHoldEffect(i);
+            calcValues.abilities[battler] = GetBattlerAbility(battler);
+            calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
         }
         for (i = gCurrentTurnActionNumber; i < gBattlersCount - 1; i++)
         {
@@ -1131,7 +1129,7 @@ enum BattlerId GetBattlerForBattleScript(u8 caseId)
 
 static void UNUSED MarkAllBattlersForControllerExec(void)
 {
-    int i;
+    enum BattlerId i;
 
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
     {
@@ -1273,7 +1271,7 @@ bool32 IsLastMonToMove(enum BattlerId battler)
 
     for (i = battlerTurnOrderNum + 1; i < gBattlersCount; i++)
     {
-        u32 otherBattler = gBattlerByTurnOrder[i];
+        enum BattlerId otherBattler = gBattlerByTurnOrder[i];
         if (!IsBattlerAlive(otherBattler))
             continue;
         if (gActionsByTurnOrder[i] == B_ACTION_USE_MOVE)
@@ -1921,13 +1919,12 @@ bool32 HandleFaintedMonActions(void)
 
     do
     {
-        s32 i;
         switch (gBattleStruct->eventState.faintedAction)
         {
         case FAINTED_ACTIONS_NO_MONS_TO_SWITCH:
             gBattleStruct->eventState.faintedActionBattler = 0;
             gBattleStruct->eventState.faintedAction++;
-            for (i = 0; i < gBattlersCount; i++)
+            for (enum BattlerId i = 0; i < gBattlersCount; i++)
             {
                 if (gAbsentBattlerFlags & (1u << i) && !HasNoMonsToSwitch(i, PARTY_SIZE, PARTY_SIZE))
                     gAbsentBattlerFlags &= ~(1u << i);
@@ -2006,8 +2003,7 @@ bool32 HandleFaintedMonActions(void)
 
 void TryClearRageAndFuryCutter(void)
 {
-    s32 i;
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (!MoveHasAdditionalEffect(gChosenMoveByBattler[i], MOVE_EFFECT_RAGE))
             gBattleMons[i].volatiles.rage = FALSE;
@@ -2640,7 +2636,7 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
      || moveTarget == TARGET_FIELD
      || MoveForcesPressure(ctx->move))
     {
-        for (u32 i = 0; i < gBattlersCount; i++)
+        for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
             if (!IsBattlerAlly(i, ctx->battlerAtk) && IsBattlerAlive(i))
                 ppToDeduct += (GetBattlerAbility(i) == ABILITY_PRESSURE);
@@ -3794,7 +3790,7 @@ bool32 TryChangeBattleWeather(enum BattlerId battler, u32 battleWeatherId, enum 
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[battleWeatherId].moveStartMessage;
     }
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         gBattleMons[i].volatiles.weatherAbilityDone = FALSE;
         ResetParadoxWeatherStat(i);
@@ -3812,7 +3808,7 @@ bool32 TryChangeBattleTerrain(enum BattlerId battler, u32 statusFlag)
     {
         gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
         gFieldStatuses |= statusFlag;
-        for (u32 i = 0; i < gBattlersCount; i++)
+        for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
             gBattleMons[i].volatiles.terrainAbilityDone = FALSE;
             ResetParadoxTerrainStat(i);
@@ -3933,9 +3929,9 @@ bool32 HadMoreThanHalfHpNowDoesnt(enum BattlerId battler)
 
 u32 NumFaintedBattlersByAttacker(enum BattlerId battlerAtk)
 {
-    enum BattlerId battler, numMonsFainted = 0;
+    u32 numMonsFainted = 0;
 
-    for (battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (battler == battlerAtk)
             continue;
@@ -6177,7 +6173,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
 
                 for (u32 i = 0; i < gBattlersCount; i++)
                 {
-                    u32 targetBattler = battlers[i];
+                    enum BattlerId targetBattler = battlers[i];
 
                     if (!(magicianTargets & 1u << targetBattler))
                         continue;
@@ -6584,9 +6580,7 @@ bool32 TryPrimalReversion(enum BattlerId battler)
 
 bool32 IsNeutralizingGasOnField(void)
 {
-    u32 i;
-
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (gBattleMons[i].volatiles.neutralizingGas && !gBattleMons[i].volatiles.gastroAcid)
             return TRUE;
@@ -6684,9 +6678,7 @@ u32 IsAbilityOnOpposingSide(enum BattlerId battler, enum Ability ability)
 
 u32 IsAbilityOnField(enum Ability ability)
 {
-    u32 i;
-
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsBattlerAlive(i) && GetBattlerAbility(i) == ability)
             return i + 1;
@@ -6697,9 +6689,7 @@ u32 IsAbilityOnField(enum Ability ability)
 
 u32 IsAbilityOnFieldExcept(enum BattlerId battler, enum Ability ability)
 {
-    u32 i;
-
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (i != battler && IsBattlerAlive(i) && GetBattlerAbility(i) == ability)
             return i + 1;
@@ -7467,7 +7457,7 @@ enum Obedience GetAttackerObedienceForAction(void)
         if (calc < obedienceLevel && CanBeSlept(gBattlerAttacker, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), NOT_BLOCKED_BY_SLEEP_CLAUSE))
         {
             // try putting asleep
-            int i;
+            enum BattlerId i;
             for (i = 0; i < gBattlersCount; i++)
                 if (gBattleMons[i].volatiles.uproarTurns)
                     break;
@@ -10912,7 +10902,8 @@ bool32 CanFling(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 // Useful for effects like pickpocket, eject button, red card, dancer
 void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast)
 {
-    int i, j, currSpeed, currBattler;
+    int i, j, currSpeed;
+    enum BattlerId currBattler;
     u16 speeds[MAX_BATTLERS_COUNT] = {0};
 
     for (i = 0; i < gBattlersCount; i++)
@@ -11139,8 +11130,7 @@ bool32 CantPickupItem(u32 _battler)
 
 bool32 PickupHasValidTarget(enum BattlerId battler)
 {
-    u32 i;
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (!CantPickupItem(i))
             return TRUE;
@@ -11664,7 +11654,7 @@ bool32 IsPursuitTargetSet(void)
 
 void ClearPursuitValues(void)
 {
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleStruct->battlerState[i].pursuitTarget = FALSE;
     gBattleStruct->pursuitStoredSwitch = PARTY_SIZE;
 }
@@ -11737,7 +11727,7 @@ bool32 TrySwitchInEjectPack(enum EjectPackTiming timing)
     u32 ejectPackBattlers = 0;
     u32 numEjectPackBattlers = 0;
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (gBattleMons[i].volatiles.tryEjectPack
          && GetBattlerHoldEffect(i) == HOLD_EFFECT_EJECT_PACK
@@ -11756,7 +11746,7 @@ bool32 TrySwitchInEjectPack(enum EjectPackTiming timing)
     if (numEjectPackBattlers > 1)
         SortBattlersBySpeed(battlers, FALSE);
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
     for (u32 i = 0; i < gBattlersCount; i++)
@@ -12278,7 +12268,8 @@ bool32 IsAffectedByPowderMove(enum BattlerId battler, enum Ability ability, enum
 
 static enum Move GetMirrorMoveMove(void)
 {
-    s32 i, validMovesCount;
+    enum BattlerId i;
+    s32 validMovesCount;
     enum Move move = MOVE_NONE;
     u16 validMoves[MAX_BATTLERS_COUNT] = {0};
 

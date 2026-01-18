@@ -376,7 +376,7 @@ static enum MoveEndResult MoveEnd_Substitute(void)
 {
     enum MoveEndResult result = MOVEEND_STEP_CONTINUE;
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (gBattleMons[i].volatiles.substituteHP == 0)
             gBattleMons[i].volatiles.substitute = FALSE;
@@ -530,7 +530,7 @@ static enum MoveEndResult MoveEnd_SkyDropConfuse(void)
         if (gBattleStruct->skyDropTargets[battler] == SKY_DROP_RELEASED_TARGET)
         {
             // Find the battler id of the Pokemon that was held by Sky Drop
-            u32 targetId;
+            enum BattlerId targetId;
             for (targetId = 0; targetId < gBattlersCount; targetId++)
             {
                 if (gBattleStruct->skyDropTargets[targetId] == battler)
@@ -732,7 +732,7 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
             gBattleStruct->bouncedMoveIsUsed = FALSE;
             gBattlerAttacker = gBattleStruct->attackerBeforeBounce;
             gBattleStruct->battlerState[gBattlerAttacker].targetsDone[originalBounceTarget] = TRUE;
-            for (u32 i = 0; i < gBattlersCount; i++)
+            for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 gBattleStruct->battlerState[originalBounceTarget].targetsDone[i] = FALSE;
             nextTarget = GetNextTarget(moveTarget, FALSE);
             if (nextTarget != MAX_BATTLERS_COUNT)
@@ -1249,7 +1249,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
 
         if (result == MOVEEND_STEP_RUN_SCRIPT)
         {
-            for (u32 i = 0; i < gBattlersCount; i++)
+            for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 gBattleMons[i].volatiles.tryEjectPack = FALSE;
             gBattleScripting.moveendState = MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE;
             return result;
@@ -1293,7 +1293,7 @@ static enum MoveEndResult MoveEnd_EmergencyExit(void)
 
     // Because sorting the battlers by speed takes lots of cycles,
     // we check if EE can be activated and count how many.
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsBattlerTurnDamaged(i) && EmergencyExitCanBeTriggered(i))
         {
@@ -1308,7 +1308,7 @@ static enum MoveEndResult MoveEnd_EmergencyExit(void)
         return result;
     }
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
     enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
@@ -1355,7 +1355,7 @@ static enum MoveEndResult MoveEnd_EjectPack(void)
     u32 numEjectPackBattlers = 0;
 
     // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (CanEjectPackTrigger(gBattlerAttacker, i, GetMoveEffect(gCurrentMove)))
         {
@@ -1374,7 +1374,7 @@ static enum MoveEndResult MoveEnd_EjectPack(void)
     if (numEjectPackBattlers > 1)
         SortBattlersBySpeed(battlers, FALSE);
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
     for (u32 i = 0; i < gBattlersCount; i++)
@@ -1640,14 +1640,14 @@ static enum MoveEndResult MoveEnd_ClearBits(void)
         ExpendTypeStellarBoost(gBattlerAttacker, moveType);
     memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts));
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         gBattleStruct->battlerState[gBattlerAttacker].targetsDone[i] = FALSE;
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
         if (gBattleStruct->battlerState[i].commanderSpecies != SPECIES_NONE && !IsBattlerAlive(i))
         {
-            u32 partner = BATTLE_PARTNER(i);
+            enum BattlerId partner = BATTLE_PARTNER(i);
             gBattleStruct->battlerState[i].commanderSpecies = SPECIES_NONE;
             if (IsBattlerAlive(partner))
                 gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
@@ -1667,7 +1667,8 @@ static enum MoveEndResult MoveEnd_Dancer(void)
 
     if (IsDanceMove(gCurrentMove) && !gBattleStruct->snatchedMoveIsUsed)
     {
-        enum BattlerId battler, nextDancer = 0;
+        enum BattlerId battler;
+        u32 nextDancer = 0;
         bool32 hasDancerTriggered = FALSE;
 
         for (battler = 0; battler < gBattlersCount; battler++)

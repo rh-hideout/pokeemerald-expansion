@@ -680,12 +680,12 @@ void RecordedBattle_CopyBattlerMoves(enum BattlerId battler)
 
 void RecordedBattle_CheckMovesetChanges(u8 mode)
 {
-    s32 battler, j, k;
+    s32 j, k;
 
     if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return;
 
-    for (battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         // Player's side only
         if (IsOnPlayerSide(battler))
