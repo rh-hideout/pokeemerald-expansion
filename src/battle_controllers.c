@@ -1480,7 +1480,7 @@ static u32 GetBattlerMonData(enum BattlerId battler, struct Pokemon *party, u32 
         #if TESTING
         if (gTestRunnerEnabled)
         {
-            enum BattleTrainer trainer = GetBattleTrainer(battler);
+            enum BattleTrainer trainer = GetBattlerTrainer(battler);
             u32 partyIndex = gBattlerPartyIndexes[battler];
             if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
                 gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
@@ -3245,7 +3245,7 @@ void FreeShinyStars(void)
     FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
 }
 
-enum BattleTrainer GetBattleTrainer(enum BattlerId battler)
+enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
 {
     switch (battler)
     {
