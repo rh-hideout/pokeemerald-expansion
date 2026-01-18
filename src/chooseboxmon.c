@@ -27,7 +27,8 @@ struct PcMonSelection
     void      (*partyMonBackup)(void);
     u32       (*isMonInvalid)(struct BoxPokemon *);
     const u8* postSelectionScript;
-    bool32    isStrict;
+    u32 isStrict:1;
+    u32 padding:31; 
 };
 
 static EWRAM_DATA u8 sSelectionType = 0;
