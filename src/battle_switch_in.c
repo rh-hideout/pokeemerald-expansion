@@ -282,7 +282,7 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
     return effect;
 }
 
-static void SetDmgHazardsBattlescript(u8 battler, u8 multistringId)
+static void SetDmgHazardsBattlescript(enum BattlerId battler, u8 multistringId)
 {
     gBattleScripting.battler = battler;
     gBattleCommunication[MULTISTRING_CHOOSER] = multistringId;

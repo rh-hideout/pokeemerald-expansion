@@ -3885,7 +3885,7 @@ void AnimTask_SlideMonForFocusBand(u8 taskId)
 // arg 1: num squishes
 void AnimTask_SquishAndSweatDroplets(u8 taskId)
 {
-    u8 battler;
+    enum BattlerId battler;
     struct Task *task = &gTasks[taskId];
     enum AnimBattler animBattler = gBattleAnimArgs[0];
 
@@ -4377,7 +4377,7 @@ static void AnimTask_BarrageBall_Step(u8 taskId)
 // arg 2: num squishes
 static void AnimSmellingSaltsHand(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
 
     if (gBattleAnimArgs[0] == ANIM_ATTACKER)
         battler = gBattleAnimAttacker;
@@ -4758,20 +4758,22 @@ static void AnimTask_HelpingHandAttackerMovement_Step(u8 taskId)
 // arg 0: magnifying glass target mon
 static void AnimForesightMagnifyingGlass(struct Sprite *sprite)
 {
+    enum BattlerId battler;
     if (gBattleAnimArgs[0] == ANIM_ATTACKER)
     {
         InitSpritePosToAnimAttacker(sprite, TRUE);
-        sprite->data[7] = gBattleAnimAttacker;
+        battler = gBattleAnimAttacker;
     }
     else
     {
-        sprite->data[7] = gBattleAnimTarget;
+        battler = gBattleAnimTarget;
     }
+    sprite->data[7] = battler;
 
-    if (!IsOnPlayerSide(sprite->data[7]))
+    if (!IsOnPlayerSide(battler))
         sprite->oam.matrixNum = ST_OAM_HFLIP;
 
-    sprite->oam.priority = GetBattlerSpriteBGPriority(sprite->data[7]);
+    sprite->oam.priority = GetBattlerSpriteBGPriority(battler);
     sprite->oam.objMode = ST_OAM_OBJ_BLEND;
     sprite->callback = AnimForesightMagnifyingGlass_Step;
 }

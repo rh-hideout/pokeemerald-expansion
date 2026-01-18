@@ -760,7 +760,7 @@ static void AnimThunderboltOrb(struct Sprite *sprite)
 
 void AnimSparkElectricityFlashing(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
 
     sprite->data[0] = gBattleAnimArgs[3];
     if (gBattleAnimArgs[7] & 0x8000)

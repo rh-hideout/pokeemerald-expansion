@@ -430,7 +430,7 @@ static void AnimBite_Step2(struct Sprite *sprite)
 // Launches a tear drop away from the battler. Used by Fake Tears
 void AnimTearDrop(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
     s8 xOffset;
 
     if (gBattleAnimArgs[0] == ANIM_ATTACKER)
@@ -1008,7 +1008,7 @@ static void AnimTask_MetallicShine_Step(u8 taskId)
 void AnimTask_SetGrayscaleOrOriginalPal(u8 taskId)
 {
     u8 spriteId;
-    u8 battler;
+    enum BattlerId battler;
     bool8 calcSpriteId = FALSE;
     u8 position = B_POSITION_PLAYER_LEFT;
     enum AnimBattler animBattler = gBattleAnimArgs[0];

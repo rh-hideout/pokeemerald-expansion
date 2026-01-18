@@ -592,7 +592,7 @@ static void SlideMonToOriginalPos_Step(struct Sprite *sprite)
 // arg 4: duration
 static void SlideMonToOffset(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
     u8 monSpriteId;
     if (!gBattleAnimArgs[0])
         battler = gBattleAnimAttacker;
@@ -625,7 +625,7 @@ static void SlideMonToOffset(struct Sprite *sprite)
 
 static void SlideMonToOffsetPartner(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
     u8 monSpriteId;
     if (!gBattleAnimArgs[0])
         battler = BATTLE_PARTNER(gBattleAnimAttacker);
@@ -659,7 +659,7 @@ static void SlideMonToOffsetPartner(struct Sprite *sprite)
 static void SlideMonToOffsetAndBack(struct Sprite *sprite)
 {
     u8 spriteId;
-    u8 battler;
+    enum BattlerId battler;
     sprite->invisible = TRUE;
 
     if (gBattleAnimArgs[0] == ANIM_ATTACKER)

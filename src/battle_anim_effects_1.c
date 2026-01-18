@@ -4844,7 +4844,7 @@ static void AnimTask_LeafBlade_Step2_Callback(struct Sprite *sprite)
 
 static void AnimFlyingParticle(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
     if (!gBattleAnimArgs[6])
         battler = gBattleAnimAttacker;
     else
@@ -5431,7 +5431,7 @@ void AnimGrantingStars(struct Sprite *sprite)
 
 static void AnimSparklingStars(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
     if (!gBattleAnimArgs[2])
         battler = gBattleAnimAttacker;
     else
@@ -7072,7 +7072,7 @@ static void AnimSlowFlyingMusicNotes_Step(struct Sprite *sprite)
     }
 }
 
-void SetSpriteNextToMonHead(u8 battler, struct Sprite *sprite)
+void SetSpriteNextToMonHead(enum BattlerId battler, struct Sprite *sprite)
 {
     if (IsOnPlayerSide(battler))
         sprite->x = GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_RIGHT) + 8;
@@ -7085,7 +7085,7 @@ void SetSpriteNextToMonHead(u8 battler, struct Sprite *sprite)
 void AnimThoughtBubble(struct Sprite *sprite)
 {
     u8 animNum;
-    u8 battler;
+    enum BattlerId battler;
     if (gBattleAnimArgs[0] == 0)
         battler = gBattleAnimAttacker;
     else
@@ -7112,7 +7112,7 @@ static void AnimThoughtBubble_Step(struct Sprite *sprite)
 
 void AnimMetronomeFinger(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
     if (gBattleAnimArgs[0] == 0)
         battler = gBattleAnimAttacker;
     else
@@ -7136,7 +7136,7 @@ static void AnimMetronomeFinger_Step(struct Sprite *sprite)
 
 void AnimFollowMeFinger(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
     if (gBattleAnimArgs[0] == 0)
         battler = gBattleAnimAttacker;
     else
@@ -7194,7 +7194,7 @@ static void AnimFollowMeFinger_Step2(struct Sprite *sprite)
 
 static void AnimTauntFinger(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
     if (gBattleAnimArgs[0] == 0)
         battler = gBattleAnimAttacker;
     else

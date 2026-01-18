@@ -151,13 +151,13 @@ void RecordedBattle_SetTrainerInfo(void)
     }
 }
 
-void RecordedBattle_SetBattlerAction(u8 battler, u8 action)
+void RecordedBattle_SetBattlerAction(enum BattlerId battler, u8 action)
 {
     if (sBattlerRecordSizes[battler] < BATTLER_RECORD_SIZE && sRecordMode != B_RECORD_MODE_PLAYBACK)
         sBattleRecords[battler][sBattlerRecordSizes[battler]++] = action;
 }
 
-void RecordedBattle_ClearBattlerAction(u8 battler, u8 bytesToClear)
+void RecordedBattle_ClearBattlerAction(enum BattlerId battler, u8 bytesToClear)
 {
     s32 i;
 
@@ -170,7 +170,7 @@ void RecordedBattle_ClearBattlerAction(u8 battler, u8 bytesToClear)
     }
 }
 
-u8 RecordedBattle_GetBattlerAction(u32 actionType, u8 battler)
+u8 RecordedBattle_GetBattlerAction(u32 actionType, enum BattlerId battler)
 {
     if (gTestRunnerEnabled)
         TestRunner_Battle_CheckBattleRecordActionType(battler, sBattlerRecordSizes[battler], actionType);

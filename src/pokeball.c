@@ -45,7 +45,7 @@ static void SpriteCB_TradePokeballEnd(struct Sprite *sprite);
 static void SpriteCB_HealthboxSlideInDelayed(struct Sprite *sprite);
 static void SpriteCB_HealthboxSlideIn(struct Sprite *sprite);
 static void SpriteCB_HitAnimHealthoxEffect(struct Sprite *sprite);
-static u16 GetBattlerPokeballItemId(u8 battler);
+static u16 GetBattlerPokeballItemId(enum BattlerId battler);
 
 // rom const data
 
@@ -1494,7 +1494,7 @@ static void UNUSED DestroySpriteAndFreeResources_Ball(struct Sprite *sprite)
 
 #define sDelayTimer data[1]
 
-void StartHealthboxSlideIn(u8 battler)
+void StartHealthboxSlideIn(enum BattlerId battler)
 {
     struct Sprite *healthboxSprite = &gSprites[gHealthboxSpriteIds[battler]];
 
@@ -1537,7 +1537,7 @@ static void SpriteCB_HealthboxSlideIn(struct Sprite *sprite)
 #undef sSpeedY
 #undef sDelayTimer
 
-void DoHitAnimHealthboxEffect(u8 battler)
+void DoHitAnimHealthboxEffect(enum BattlerId battler)
 {
     u8 spriteId;
 
@@ -1590,7 +1590,7 @@ void FreeBallGfx(u8 ballId)
     FreeSpritePaletteByTag(gBallSpritePalettes[ballId].tag);
 }
 
-static u16 GetBattlerPokeballItemId(u8 battler)
+static u16 GetBattlerPokeballItemId(enum BattlerId battler)
 {
     struct Pokemon *illusionMon;
     struct Pokemon *mon = GetBattlerMon(battler);

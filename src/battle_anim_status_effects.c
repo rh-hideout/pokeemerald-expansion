@@ -245,7 +245,7 @@ static const struct SpriteTemplate sFlashingCircleImpactSpriteTemplate =
     .callback = AnimFlashingCircleImpact,
 };
 
-static u8 UNUSED Task_FlashingCircleImpacts(u8 battler, bool8 red)
+static u8 UNUSED Task_FlashingCircleImpacts(enum BattlerId battler, bool8 red)
 {
     u8 battlerSpriteId = gBattlerSpriteIds[battler];
     u8 taskId = CreateTask(Task_UpdateFlashingCircleImpacts, 10);
@@ -564,7 +564,7 @@ void AnimTask_StatsChange(u8 taskId)
 
 #undef CASE
 
-void LaunchStatusAnimation(u8 battler, u8 statusAnimId)
+void LaunchStatusAnimation(enum BattlerId battler, u8 statusAnimId)
 {
     u8 taskId;
 

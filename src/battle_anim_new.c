@@ -6329,7 +6329,7 @@ void AnimTask_IsTargetPartner(u8 taskId)
 
 static u8 LoadBattleAnimTarget(u8 arg)
 {
-    u8 battler;
+    enum BattlerId battler;
 
     if (IsDoubleBattle())
     {
@@ -6360,7 +6360,7 @@ static u8 LoadBattleAnimTarget(u8 arg)
     return battler;
 }
 
-static u8 GetProperCentredCoord(u8 battler, u8 coordType)
+static u8 GetProperCentredCoord(enum BattlerId battler, u8 coordType)
 {
     if (IsDoubleBattle())
         return (GetBattlerSpriteCoord2(battler, coordType) + GetBattlerSpriteCoord2(BATTLE_PARTNER(battler), coordType)) / 2;
@@ -6612,7 +6612,7 @@ static void SpriteCB_ToxicThreadWrap(struct Sprite *sprite)
 
 static void SpriteCB_GrowingSuperpower(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
 
     if (gBattleAnimArgs[0] == 0)
     {

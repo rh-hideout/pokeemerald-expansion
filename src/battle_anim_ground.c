@@ -734,7 +734,7 @@ void AnimTask_IsPowerOver99(u8 taskId)
 void AnimTask_PositionFissureBgOnBattler(u8 taskId)
 {
     struct Task *newTask;
-    u8 battler = (gBattleAnimArgs[0] & ANIM_TARGET) ? gBattleAnimTarget : gBattleAnimAttacker;
+    enum BattlerId battler = (gBattleAnimArgs[0] & ANIM_TARGET) ? gBattleAnimTarget : gBattleAnimAttacker;
 
     if (gBattleAnimArgs[0] > ANIM_TARGET)
         battler = BATTLE_PARTNER(battler);

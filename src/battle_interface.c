@@ -604,7 +604,7 @@ enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler)
         return BATTLE_COORDS_SINGLES;
 }
 
-u8 CreateBattlerHealthboxSprites(u8 battler)
+u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
 {
     s16 data6 = 0;
     u8 healthboxLeftSpriteId, healthboxRightSpriteId;
@@ -753,7 +753,7 @@ static void SpriteCB_HealthBoxOther(struct Sprite *sprite)
     sprite->y2 = gSprites[healthboxMainSpriteId].y2;
 }
 
-void SetBattleBarStruct(u8 battler, u8 healthboxSpriteId, s32 maxVal, s32 oldVal, s32 receivedValue)
+void SetBattleBarStruct(enum BattlerId battler, u8 healthboxSpriteId, s32 maxVal, s32 oldVal, s32 receivedValue)
 {
     gBattleSpritesDataPtr->battleBars[battler].healthboxSpriteId = healthboxSpriteId;
     gBattleSpritesDataPtr->battleBars[battler].maxValue = maxVal;
@@ -842,7 +842,7 @@ static const s16 sBattlerHealthboxCoords[BATTLE_COORDS_COUNT][MAX_BATTLERS_COUNT
     },
 };
 
-void GetBattlerHealthboxCoords(u8 battler, s16 *x, s16 *y)
+void GetBattlerHealthboxCoords(enum BattlerId battler, s16 *x, s16 *y)
 {
     enum BattlerPosition position = GetBattlerPosition(battler);
     enum BattleCoordTypes index = GetBattlerCoordsIndex(battler);
@@ -851,7 +851,7 @@ void GetBattlerHealthboxCoords(u8 battler, s16 *x, s16 *y)
     *y = sBattlerHealthboxCoords[index][position][1];
 }
 
-void InitBattlerHealthboxCoords(u8 battler)
+void InitBattlerHealthboxCoords(enum BattlerId battler)
 {
     s16 x, y;
 
@@ -1219,7 +1219,7 @@ void SwapHpBarsWithHpText(void)
 #define tIsBattleStart          data[10]
 #define tBlend                  data[15]
 
-u8 CreatePartyStatusSummarySprites(u8 battler, struct HpAndStatus *partyInfo, bool8 skipPlayer, bool8 isBattleStart)
+u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *partyInfo, bool8 skipPlayer, bool8 isBattleStart)
 {
     bool8 isOpponent;
     s16 bar_X, bar_Y, bar_pos2_X, bar_data0;
@@ -1856,7 +1856,7 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     TryAddPokeballIconToHealthbox(healthboxSpriteId, FALSE);
 }
 
-static u8 GetStatusIconForBattlerId(u8 statusElementId, u8 battler)
+static u8 GetStatusIconForBattlerId(u8 statusElementId, enum BattlerId battler)
 {
     u8 ret = statusElementId;
 
@@ -2037,7 +2037,7 @@ void UpdateHealthboxAttribute(u8 healthboxSpriteId, struct Pokemon *mon, u8 elem
 #define B_EXPBAR_PIXELS 64
 #define B_HEALTHBAR_PIXELS 48
 
-s32 MoveBattleBar(u8 battler, u8 healthboxSpriteId, u8 whichBar, u8 unused)
+s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar, u8 unused)
 {
     s32 currentBarValue;
 
@@ -2075,7 +2075,7 @@ s32 MoveBattleBar(u8 battler, u8 healthboxSpriteId, u8 whichBar, u8 unused)
     return currentBarValue;
 }
 
-static void MoveBattleBarGraphically(u8 battler, u8 whichBar)
+static void MoveBattleBarGraphically(enum BattlerId battler, u8 whichBar)
 {
     u8 array[8];
     u8 level;
@@ -2561,7 +2561,7 @@ static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTi
     RemoveWindow(windowId);
 }
 
-static void PrintBattlerOnAbilityPopUp(u8 battler, u8 spriteId1, u8 spriteId2)
+static void PrintBattlerOnAbilityPopUp(enum BattlerId battler, u8 spriteId1, u8 spriteId2)
 {
     u32 totalChar = 0, lastChar;
     struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
@@ -2615,7 +2615,7 @@ static inline bool32 IsAnyAbilityPopUpActive(void)
     return activeAbilityPopUps;
 }
 
-void CreateAbilityPopUp(u8 battler, enum Ability ability, bool32 isDoubleBattle)
+void CreateAbilityPopUp(enum BattlerId battler, enum Ability ability, bool32 isDoubleBattle)
 {
     u8 *spriteIds;
     u32 xSlide, tileTag;
@@ -2678,7 +2678,7 @@ void CreateAbilityPopUp(u8 battler, enum Ability ability, bool32 isDoubleBattle)
     PrintAbilityOnAbilityPopUp(ability, spriteIds[0], spriteIds[1]);
 }
 
-void UpdateAbilityPopup(u8 battler)
+void UpdateAbilityPopup(enum BattlerId battler)
 {
     u8 *spriteIds = gBattleStruct->abilityPopUpSpriteIds[battler];
     enum Ability ability = (gBattleScripting.abilityPopupOverwrite) ? gBattleScripting.abilityPopupOverwrite
@@ -2753,7 +2753,7 @@ static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
     }
 }
 
-void DestroyAbilityPopUp(u8 battler)
+void DestroyAbilityPopUp(enum BattlerId battler)
 {
     if (gBattleStruct->battlerState[battler].activeAbilityPopUps)
     {

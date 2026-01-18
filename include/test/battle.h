@@ -621,7 +621,7 @@ enum
 
 struct QueuedAbilityEvent
 {
-    u8 battlerId;
+    enum BattlerId battlerId;
     enum Ability ability;
 };
 

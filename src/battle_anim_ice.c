@@ -1031,10 +1031,11 @@ static void AnimSwirlingFogAnim(struct Sprite *sprite)
         sprite->x2 += Sin(sprite->data[5], sprite->data[6]);
         sprite->y2 += Cos(sprite->data[5], -6);
 
+        enum BattlerId battler = sprite->data[7];
         if ((u16)(sprite->data[5] - 64) <= 0x7F)
-            sprite->oam.priority = GetBattlerSpriteBGPriority(sprite->data[7]);
+            sprite->oam.priority = GetBattlerSpriteBGPriority(battler);
         else
-            sprite->oam.priority = GetBattlerSpriteBGPriority(sprite->data[7]) + 1;
+            sprite->oam.priority = GetBattlerSpriteBGPriority(battler) + 1;
 
         sprite->data[5] = (sprite->data[5] + 3) & 0xFF;
     }

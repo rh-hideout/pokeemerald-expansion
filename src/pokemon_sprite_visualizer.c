@@ -782,13 +782,13 @@ static void UpdateBattlerValue(struct PokemonSpriteVisualizer *data)
     }
 }
 
-static void BattleLoadOpponentMonSpriteGfxCustom(u16 species, bool8 isFemale, bool8 isShiny, u8 battlerId)
+static void BattleLoadOpponentMonSpriteGfxCustom(u16 species, bool8 isFemale, bool8 isShiny, enum BattlerId battler)
 {
     const u16 *palette = GetMonSpritePalFromSpecies(species, isShiny, isFemale);
-    u16 paletteOffset = OBJ_PLTT_ID(battlerId);
+    u16 paletteOffset = OBJ_PLTT_ID(battler);
 
     LoadPalette(palette, paletteOffset, PLTT_SIZE_4BPP);
-    LoadPalette(palette, BG_PLTT_ID(8) + BG_PLTT_ID(battlerId), PLTT_SIZE_4BPP);
+    LoadPalette(palette, BG_PLTT_ID(8) + BG_PLTT_ID(battler), PLTT_SIZE_4BPP);
 }
 
 static void SetConstSpriteValues(struct PokemonSpriteVisualizer *data)

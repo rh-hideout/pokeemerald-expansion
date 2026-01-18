@@ -130,7 +130,7 @@ u8 GetBattlerSpriteCoord(enum BattlerId battler, u8 coordType)
     return retVal;
 }
 
-u8 GetBattlerYDelta(u8 battler, u16 species)
+u8 GetBattlerYDelta(enum BattlerId battler, u16 species)
 {
     u32 personality;
     struct BattleSpriteInfo *spriteInfo;
@@ -168,7 +168,7 @@ u8 GetBattlerYDelta(u8 battler, u16 species)
     return ret;
 }
 
-u8 GetBattlerElevation(u8 battler, u16 species)
+u8 GetBattlerElevation(enum BattlerId battler, u16 species)
 {
     u8 ret = 0;
     if (!IsOnPlayerSide(battler))
@@ -182,7 +182,7 @@ u8 GetBattlerElevation(u8 battler, u16 species)
     return ret;
 }
 
-u8 GetBattlerSpriteFinal_Y(u8 battler, u16 species, bool8 a3)
+u8 GetBattlerSpriteFinal_Y(enum BattlerId battler, u16 species, bool8 a3)
 {
     u16 offset;
     u8 y;
@@ -207,7 +207,7 @@ u8 GetBattlerSpriteFinal_Y(u8 battler, u16 species, bool8 a3)
     return y;
 }
 
-u8 GetBattlerSpriteCoord2(u8 battler, u8 coordType)
+u8 GetBattlerSpriteCoord2(enum BattlerId battler, u8 coordType)
 {
     u16 species;
     struct BattleSpriteInfo *spriteInfo;
@@ -255,7 +255,7 @@ u8 GetSubstituteSpriteDefault_Y(enum BattlerId battler)
     return y;
 }
 
-u8 GetBattlerYCoordWithElevation(u8 battler)
+u8 GetBattlerYCoordWithElevation(enum BattlerId battler)
 {
     u16 species;
     u8 y;
@@ -811,7 +811,7 @@ bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool
     return TRUE;
 }
 
-bool8 IsBattlerSpritePresent(u8 battler)
+bool8 IsBattlerSpritePresent(enum BattlerId battler)
 {
     if (IsContest())
     {
@@ -889,7 +889,7 @@ void GetBattleAnimBgData(struct BattleAnimBgData *out, u32 bgId)
     }
 }
 
-void GetBgDataForTransform(struct BattleAnimBgData *out, u8 battler)
+void GetBgDataForTransform(struct BattleAnimBgData *out, enum BattlerId battler)
 {
     out->bgTiles = gBattleAnimBgTileBuffer;
     out->bgTilemap = (u16 *)gBattleAnimBgTilemapBuffer;
@@ -1227,7 +1227,7 @@ static bool8 ShouldRotScaleSpeciesBeFlipped(void)
 
 void PrepareBattlerSpriteForRotScale(u8 spriteId, u8 objMode)
 {
-    u8 battler = gSprites[spriteId].data[0];
+    enum BattlerId battler = gSprites[spriteId].data[0];
 
     if (IsContest() || IsBattlerSpriteVisible(battler))
         gSprites[spriteId].invisible = FALSE;
@@ -1435,7 +1435,7 @@ u32 GetBattleMonSpritePalettesMask(u8 playerLeft, u8 playerRight, u8 opponentLef
     return selectedPalettes;
 }
 
-u8 GetSpritePalIdxByBattler(u8 battler)
+u8 GetSpritePalIdxByBattler(enum BattlerId battler)
 {
     return battler;
 }
@@ -1549,7 +1549,8 @@ static void AnimThrowProjectile_Step(struct Sprite *sprite)
 void AnimTravelDiagonally(struct Sprite *sprite)
 {
     bool8 respectOffsets;
-    u8 battler, coordType;
+    enum BattlerId battler;
+    u8 coordType;
 
     if (!gBattleAnimArgs[6])
     {
@@ -1861,7 +1862,7 @@ void SetBattlerSpriteYOffsetFromOtherYScale(u8 spriteId, u8 otherSpriteId)
 static u16 GetBattlerYDeltaFromSpriteId(u8 spriteId)
 {
     struct BattleSpriteInfo *spriteInfo;
-    u8 battler = gSprites[spriteId].data[0];
+    enum BattlerId battler = gSprites[spriteId].data[0];
     u16 species;
     u16 i;
 
@@ -2008,7 +2009,7 @@ u8 GetBattlerSpriteSubpriority(enum BattlerId battler)
     return subpriority;
 }
 
-u8 GetBattlerSpriteBGPriority(u8 battler)
+u8 GetBattlerSpriteBGPriority(enum BattlerId battler)
 {
     enum BattlerPosition position = GetBattlerPosition(battler);
 
@@ -2080,7 +2081,7 @@ void DestroySpriteAndFreeResources_(struct Sprite *sprite)
     DestroySpriteAndFreeResources(sprite);
 }
 
-s16 GetBattlerSpriteCoordAttr(u8 battler, u8 attr)
+s16 GetBattlerSpriteCoordAttr(enum BattlerId battler, u8 attr)
 {
     u16 species;
     u32 personality;
