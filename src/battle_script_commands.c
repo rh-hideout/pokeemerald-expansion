@@ -6328,8 +6328,8 @@ static void Cmd_statusanimation(void)
 
     if (gBattleControllerExecFlags == 0)
     {
-        enum BattlerId battler = GetBattlerForBattleScript(cmd->battler),
-            statusFlag = (cmd->isVolatile || cmd->status) ? cmd->status : gBattleMons[battler].status1;
+        enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+        u32 statusFlag = (cmd->isVolatile || cmd->status) ? cmd->status : gBattleMons[battler].status1;
         if (!IsSemiInvulnerable(battler, CHECK_ALL)
             && gBattleMons[battler].volatiles.substituteHP == 0
             && !(gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION)))
