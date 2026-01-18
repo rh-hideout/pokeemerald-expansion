@@ -174,7 +174,6 @@ enum
 
 static const u8 *GetHealthboxElementGfxPtr(u8);
 static u8 *AddTextPrinterAndCreateWindowOnHealthbox(const u8 *, u32, u32, u32, u32 *);
-static u8 *AddTextPrinterAndCreateWindowOnHealthboxToFit(const u8 *, u32, u32, u32, u32 *, u32);
 static u8 *AddTextPrinterAndCreateWindowOnHealthboxWithFont(const u8 *, u32, u32, u32, u32 *, u32);
 
 static void RemoveWindowOnHealthbox(u32 windowId);
@@ -934,18 +933,26 @@ static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor,
     *txtPtr++ = CHAR_SLASH;
     txtPtr = ConvertIntToDecimalStringN(txtPtr, maxHp, STR_CONV_MODE_LEFT_ALIGN, HP_MAX_DIGITS);
 
+    u32 spriteId2 = gSprites[spriteId].oam.affineParam;
+
+    //  Don't assume that healthbox sprites don't have data in the fields used for sprite printing
+    //  and set up temporary values with what's needed
+    s16 savedValue1 = gSprites[spriteId].data[1];
+    s16 savedValue2 = gSprites[spriteId2].data[1];
+    gSprites[spriteId].data[1] = spriteId2;
+    gSprites[spriteId2].data[1] = SPRITE_NONE;
+
     //  Clear out old text first
-    FillSpriteRectColor(spriteId, 40, yOffset + 8, 24, 8, bgColor);
-    FillSpriteRectColor(gSprites[spriteId].oam.affineParam, 0, yOffset + 8, 32, 8, bgColor);
-
-    // Print last HP_RIGHT_SPRITE_CHARS chars on the right window
-    AddSpriteTextPrinterParameterized6(gSprites[spriteId].oam.affineParam, HP_FONT, 0, yOffset + 5, 0, 0, color, 0, txtPtr - HP_RIGHT_SPRITE_CHARS);
-
-    // Print the rest of the chars on the left window
-    txtPtr[-HP_RIGHT_SPRITE_CHARS] = EOS;
+    FillSpriteRectColor(spriteId, 40, yOffset + 8, 56, 8, bgColor);
 
     width = GetStringWidth(HP_FONT, text, -1) + GetFontAttribute(HP_FONT, FONTATTR_LETTER_SPACING);
-    AddSpriteTextPrinterParameterized6(spriteId, HP_FONT, 64 - width, yOffset + 5, 0, 0, color, 0, text);
+    if (width < 32)
+        AddSpriteTextPrinterParameterized6(spriteId2, HP_FONT, 32 - width, yOffset + 5, 0, 0, color, 0, text);
+    else
+        AddSpriteTextPrinterParameterized6(spriteId, HP_FONT, 64 - (width - 32), yOffset + 5, 0, 0, color, 0, text);
+
+    gSprites[spriteId].data[1] = savedValue1;
+    gSprites[spriteId2].data[1] = savedValue2;
 }
 
 // Note: this is only possible to trigger via debug, it was an unused GF function.
@@ -1683,19 +1690,18 @@ static void SpriteCB_StatusSummaryBalls_OnSwitchout(struct Sprite *sprite)
 
 static void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon)
 {
+    u32 healthboxSpriteId2 = gSprites[healthboxSpriteId].oam.affineParam;
     u8 nickname[POKEMON_NAME_LENGTH + 1];
     void *ptr;
-    u32 windowId, spriteTileNum, species;
-    u8 *windowTileData;
+    u32 species;
     u8 gender;
     struct Pokemon *illusionMon = GetIllusionMonPtr(gSprites[healthboxSpriteId].hMain_Battler);
     if (illusionMon != NULL)
         mon = illusionMon;
 
-    StringCopy(gDisplayedStringBattle, gText_HealthboxNickname);
     GetMonData(mon, MON_DATA_NICKNAME, nickname);
     StringGet_Nickname(nickname);
-    ptr = StringAppend(gDisplayedStringBattle, nickname);
+    ptr = StringCopy(gDisplayedStringBattle, nickname);
 
     gender = GetMonGender(mon);
     species = GetMonData(mon, MON_DATA_SPECIES);
@@ -1716,31 +1722,34 @@ static void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon)
         break;
     }
 
-    windowTileData = AddTextPrinterAndCreateWindowOnHealthboxToFit(gDisplayedStringBattle, 0, 3, 2, &windowId, 55);
+    //  Don't assume that healthbox sprites don't have data in the fields used for sprite printing
+    //  and set up temporary values with what's needed
+    s16 savedValue1 = gSprites[healthboxSpriteId].data[1];
+    s16 savedValue2 = gSprites[healthboxSpriteId2].data[1];
+    gSprites[healthboxSpriteId].data[1] = healthboxSpriteId2;
+    gSprites[healthboxSpriteId2].data[1] = SPRITE_NONE;
 
-    spriteTileNum = gSprites[healthboxSpriteId].oam.tileNum * TILE_SIZE_4BPP;
+    const union TextColor color =
+    {
+        .background = 0,
+        .foreground = 1,
+        .shadow = 3,
+        .accent = 0
+    };
+
+    u32 fontId = GetFontIdToFit(ptr, FONT_SMALL, 0, 55);
 
     if (IsOnPlayerSide(gSprites[healthboxSpriteId].data[6]))
     {
-        TextIntoHealthboxObject((void *)(OBJ_VRAM0 + 0x40 + spriteTileNum), windowTileData, 6);
-        ptr = (void *)(OBJ_VRAM0);
-        switch (GetBattlerCoordsIndex(gSprites[healthboxSpriteId].data[6]))
-        {
-        case BATTLE_COORDS_SINGLES:
-            ptr += spriteTileNum + 0x800;
-            break;
-        default:
-            ptr += spriteTileNum + 0x400;
-            break;
-        }
-        TextIntoHealthboxObject(ptr, windowTileData + 0xC0, 1);
+        AddSpriteTextPrinterParameterized6(healthboxSpriteId, fontId, 16, 3, 0, 0, color, 0, gDisplayedStringBattle);
     }
     else
     {
-        TextIntoHealthboxObject((void *)(OBJ_VRAM0 + 0x20 + spriteTileNum), windowTileData, 7);
+        AddSpriteTextPrinterParameterized6(healthboxSpriteId, fontId, 8, 3, 0, 0, color, 0, gDisplayedStringBattle);
     }
 
-    RemoveWindowOnHealthbox(windowId);
+    gSprites[healthboxSpriteId].data[1] = savedValue1;
+    gSprites[healthboxSpriteId2].data[1] = savedValue2;
 }
 
 static void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus)
@@ -2358,12 +2367,6 @@ static u8 *AddTextPrinterAndCreateWindowOnHealthboxWithFont(const u8 *str, u32 x
 static u8 *AddTextPrinterAndCreateWindowOnHealthbox(const u8 *str, u32 x, u32 y, u32 bgColor, u32 *windowId)
 {
     return AddTextPrinterAndCreateWindowOnHealthboxWithFont(str, x, y, bgColor, windowId, FONT_SMALL);
-}
-
-static u8 *AddTextPrinterAndCreateWindowOnHealthboxToFit(const u8 *str, u32 x, u32 y, u32 bgColor, u32 *windowId, u32 width)
-{
-    u32 fontId = GetFontIdToFit(str, FONT_SMALL, 0, width);
-    return AddTextPrinterAndCreateWindowOnHealthboxWithFont(str, x, y, bgColor, windowId, fontId);
 }
 
 static void RemoveWindowOnHealthbox(u32 windowId)
