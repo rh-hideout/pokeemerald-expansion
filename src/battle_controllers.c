@@ -763,7 +763,7 @@ void TryReceiveLinkBattleData(void)
 static void Task_HandleCopyReceivedLinkBuffersData(u8 taskId)
 {
     u16 blockSize;
-    u8 battler;
+    enum BattlerId battler;
     u8 playerId;
 
     #define BYTE_TO_RECEIVE(offset) \
@@ -2907,7 +2907,7 @@ static void Task_StartSendOutAnim(u8 taskId)
 
 static void SpriteCB_FreePlayerSpriteLoadMonSprite(struct Sprite *sprite)
 {
-    u8 battler = sprite->sBattlerId;
+    enum BattlerId battler = sprite->sBattlerId;
 
     // Free player trainer sprite
     FreeSpriteOamMatrix(sprite);

@@ -582,7 +582,7 @@ void AnimTask_UnusedLevelUpHealthBox(u8 taskId)
 {
     struct BattleAnimBgData animBgData;
     u8 healthBoxSpriteId;
-    u8 battler;
+    enum BattlerId battler;
     u8 spriteId1, spriteId2, spriteId3, spriteId4;
 
     battler = gBattleAnimAttacker;
@@ -629,9 +629,7 @@ void AnimTask_UnusedLevelUpHealthBox(u8 taskId)
 static void AnimTask_UnusedLevelUpHealthBox_Step(u8 taskId)
 {
     u8 spriteId1, spriteId2;
-    u8 battler;
-
-    battler = gBattleAnimAttacker;
+    enum BattlerId battler = gBattleAnimAttacker;
     gTasks[taskId].data[13] += gTasks[taskId].data[1];
     gBattle_BG1_Y += (u16)gTasks[taskId].data[13] >> 8;
     gTasks[taskId].data[13] &= 0xFF;
@@ -2372,7 +2370,7 @@ void TryShinyAnimation(enum BattlerId battler, struct Pokemon *mon)
 
 static void Task_ShinyStars(u8 taskId)
 {
-    u8 battler;
+    enum BattlerId battler;
     u8 x, y;
     u8 spriteId;
     u16 timer;
@@ -2445,7 +2443,7 @@ static void Task_ShinyStars(u8 taskId)
 
 static void Task_ShinyStars_Wait(u8 taskId)
 {
-    u8 battler;
+    enum BattlerId battler;
 
     if (gTasks[taskId].tNumStars == 0)
     {

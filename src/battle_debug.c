@@ -54,8 +54,8 @@ struct BattleDebugModifyArrows
 
 struct BattleDebugMenu
 {
-    u8 battlerId:2;
-    u8 aiBattlerId:2;
+    enum BattlerId battlerId:3;
+    enum BattlerId aiBattlerId:3;
 
     u8 battlerWindowId;
 

@@ -15,8 +15,8 @@
 
 struct AnimStatsChangeData
 {
-    u8 battler1;
-    u8 battler2;
+    enum BattlerId battler1;
+    enum BattlerId battler2;
     bool8 hidBattler2;
     s16 data[8];
     u16 species;
@@ -53,7 +53,7 @@ void AnimTask_BlendBattleAnimPal(u8 taskId)
 
 void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
 {
-    u8 battler;
+    enum BattlerId battler;
     u32 selectedPalettes;
     u8 animBattlers[2];
 

@@ -979,8 +979,8 @@ extern u8 gBattlersCount;
 extern u16 gBattlerPartyIndexes[MAX_BATTLERS_COUNT];
 extern u8 gBattlerPositions[MAX_BATTLERS_COUNT];
 extern u8 gActionsByTurnOrder[MAX_BATTLERS_COUNT];
-extern u8 gBattlerByTurnOrder[MAX_BATTLERS_COUNT];
-extern u8 gBattlersBySpeed[MAX_BATTLERS_COUNT];
+extern enum BattlerId gBattlerByTurnOrder[MAX_BATTLERS_COUNT];
+extern enum BattlerId gBattlersBySpeed[MAX_BATTLERS_COUNT];
 extern u8 gCurrentTurnActionNumber;
 extern u8 gCurrentActionFuncId;
 extern struct BattlePokemon gBattleMons[MAX_BATTLERS_COUNT];
@@ -1054,7 +1054,7 @@ extern u16 gMoveToLearn;
 extern u32 gFieldStatuses;
 extern struct FieldTimer gFieldTimers;
 extern u16 gBattleTurnCounter;
-extern u8 gBattlerAbility;
+extern enum BattlerId gBattlerAbility;
 extern struct QueuedStatBoost gQueuedStatBoosts[MAX_BATTLERS_COUNT];
 
 extern MainCallback gPreBattleCallback1;
@@ -1099,7 +1099,7 @@ static inline enum BattlerPosition GetBattlerPosition(enum BattlerId battler)
     return gBattlerPositions[battler];
 }
 
-static inline u32 GetBattlerAtPosition(enum BattlerPosition position)
+static inline enum BattlerId GetBattlerAtPosition(enum BattlerPosition position)
 {
     enum BattlerId battler;
     for (battler = 0; battler < gBattlersCount; battler++)

@@ -1075,9 +1075,9 @@ static inline uq4_12_t PercentToUQ4_12AddOne(u32 percent)
     return uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12(percent));
 }
 
-u8 GetBattlerForBattleScript(u8 caseId)
+enum BattlerId GetBattlerForBattleScript(u8 caseId)
 {
-    u8 ret = 0;
+    enum BattlerId ret = 0;
     switch (caseId)
     {
     case BS_TARGET:
@@ -3831,7 +3831,7 @@ bool32 TryChangeBattleTerrain(enum BattlerId battler, u32 statusFlag)
 static void ForewarnChooseMove(enum BattlerId battler)
 {
     struct Forewarn {
-        u8 battler;
+        enum BattlerId battler;
         u8 power;
         u16 moveId;
     };
@@ -6171,7 +6171,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     break;
                 }
 
-                u8 battlers[4] = {0, 1, 2, 3};
+                enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
                 if (numMagicianTargets > 1)
                     SortBattlersBySpeed(battlers, FALSE);
 
@@ -10910,7 +10910,7 @@ bool32 CanFling(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 
 // Sort an array of battlers by speed
 // Useful for effects like pickpocket, eject button, red card, dancer
-void SortBattlersBySpeed(u8 *battlers, bool32 slowToFast)
+void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast)
 {
     int i, j, currSpeed, currBattler;
     u16 speeds[MAX_BATTLERS_COUNT] = {0};
@@ -11752,7 +11752,7 @@ bool32 TrySwitchInEjectPack(enum EjectPackTiming timing)
     if (numEjectPackBattlers == 0)
         return FALSE;
 
-    u8 battlers[4] = {0, 1, 2, 3};
+    enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
     if (numEjectPackBattlers > 1)
         SortBattlersBySpeed(battlers, FALSE);
 

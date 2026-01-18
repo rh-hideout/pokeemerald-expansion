@@ -29,7 +29,7 @@ bool32 DoSwitchInEvents(void)
     switch (gBattleStruct->eventState.switchIn)
     {
     case SWITCH_IN_EVENTS_ORDER_BY_SPEED:
-        for (u32 i = 0; i < gBattlersCount; i++)
+        for (enum BattlerId i = 0; i < gBattlersCount; i++)
             gBattlersBySpeed[i] = i;
         SortBattlersBySpeed(gBattlersBySpeed, FALSE);
         gBattleStruct->battlersSorted = TRUE;

@@ -376,8 +376,8 @@ void AnimTask_CentredFrozenIceCube(u8 taskId)
     // same as AnimTask_FrozenIceCube but center position on target(s)
     s16 x, y;
     u8 spriteId;
-    u8 battler1 = gBattleAnimTarget;
-    u8 battler2 = BATTLE_PARTNER(battler1);
+    enum BattlerId battler1 = gBattleAnimTarget;
+    enum BattlerId battler2 = BATTLE_PARTNER(battler1);
 
     if (!IsDoubleBattle() || IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {

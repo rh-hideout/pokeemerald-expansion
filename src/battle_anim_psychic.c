@@ -512,8 +512,8 @@ static void AnimDefensiveWall(struct Sprite *sprite)
 
     if (!isContest)
     {
-        u8 battlerCopy;
-        u8 battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        enum BattlerId battlerCopy;
+        enum BattlerId battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         u8 rank = GetBattlerSpriteBGPriorityRank(battler);
         int var0 = 1;
         u8 toBG_2 = (rank ^ var0) != 0;
@@ -564,7 +564,7 @@ static void AnimDefensiveWall(struct Sprite *sprite)
 
 static void AnimDefensiveWall_Step1(struct Sprite *sprite)
 {
-    u8 battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+    enum BattlerId battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
     if (!sprite->data[7])
     {
         sprite->data[7] = 1;
@@ -621,8 +621,8 @@ static void AnimDefensiveWall_Step4(struct Sprite *sprite)
     {
         if (!IsContest())
         {
-            u8 battlerCopy;
-            u8 battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+            enum BattlerId battlerCopy;
+            enum BattlerId battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
 
             if (IsBattlerSpriteVisible(battler))
                 gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
@@ -641,8 +641,8 @@ static void AnimDefensiveWall_Step5(struct Sprite *sprite)
 {
     if (!IsContest())
     {
-        u8 battlerCopy;
-        u8 battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        enum BattlerId battlerCopy;
+        enum BattlerId battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         u8 rank = GetBattlerSpriteBGPriorityRank(battler);
         int var0 = 1;
         bool8 toBG2 = (rank ^ var0) != 0;

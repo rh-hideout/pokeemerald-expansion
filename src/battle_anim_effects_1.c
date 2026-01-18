@@ -6208,8 +6208,7 @@ void AnimTask_Conversion2AlphaBlend(u8 taskId)
 
 static void UNUSED AnimTask_HideBattlersHealthbox(u8 taskId)
 {
-    u8 i;
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (gBattleAnimArgs[0] == TRUE && IsOnPlayerSide(i))
             SetHealthboxSpriteInvisible(gHealthboxSpriteIds[i]);
@@ -6223,8 +6222,7 @@ static void UNUSED AnimTask_HideBattlersHealthbox(u8 taskId)
 
 static void UNUSED AnimTask_ShowBattlersHealthbox(u8 taskId)
 {
-    u8 i;
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[i]);
 
     DestroyAnimVisualTask(taskId);
@@ -6565,12 +6563,12 @@ static void ReloadBattlerSprites(enum BattlerId battler, struct Pokemon *party)
 
 static void TrySwapSkyDropTargets(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
-    u32 i, temp;
+    u32 temp;
 
     // battlerAtk is using Ally Switch
     // check if our partner is the target of sky drop
     // If so, change that index to battlerAtk
-    for (i = 0; i < gBattlersCount; i++) {
+    for (enum BattlerId i = 0; i < gBattlersCount; i++) {
         if (gBattleStruct->skyDropTargets[i] == battlerPartner) {
             gBattleStruct->skyDropTargets[i] = battlerAtk;
             break;
@@ -6598,13 +6596,13 @@ static void TrySwapStickyWebBattlerId(enum BattlerId battlerAtk, enum BattlerId 
 
 static void TrySwapWishBattlerIds(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
-    u32 i, temp;
+    u32 temp;
 
     // if used future sight on opposing side, properly track who used it
     if (gBattleStruct->futureSight[LEFT_FOE(battlerAtk)].counter > 0
      || gBattleStruct->futureSight[RIGHT_FOE(battlerAtk)].counter > 0)
     {
-        for (i = 0; i < gBattlersCount; i++)
+        for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
             if (IsBattlerAlly(i, battlerAtk))
                 continue;   // only on opposing side
@@ -6638,7 +6636,7 @@ static void TrySwapAttractBattlerIds(enum BattlerId battlerAtk, enum BattlerId b
     // our own infatuation handled with gBattleMons struct data swapping
 
     // if another battler is infatuated with one of us, change to other battler
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (i == battlerAtk || i == battlerPartner || !gBattleMons[i].volatiles.infatuation)
             continue;
@@ -6678,7 +6676,7 @@ static void SwapBattlerMoveData(enum BattlerId battler1, enum BattlerId battler2
 
 static void AnimTask_AllySwitchDataSwap(u8 taskId)
 {
-    s32 i, j;
+    enum BattlerId i, j;
     struct Pokemon *party;
     u32 temp;
     enum BattlerId battlerAtk = gBattlerAttacker;

@@ -1234,7 +1234,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
         return MOVEEND_STEP_CONTINUE;
     }
 
-    u8 battlers[4] = {0, 1, 2, 3};
+    enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
     SortBattlersBySpeed(battlers, FALSE);
 
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -1311,7 +1311,7 @@ static enum MoveEndResult MoveEnd_EmergencyExit(void)
     for (u32 i = 0; i < gBattlersCount; i++)
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
-    u8 battlers[4] = {0, 1, 2, 3};
+    enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
     if (numEmergencyExitBattlers > 1)
         SortBattlersBySpeed(battlers, FALSE);
 
@@ -1370,7 +1370,7 @@ static enum MoveEndResult MoveEnd_EjectPack(void)
         return result;
     }
 
-    u8 battlers[4] = {0, 1, 2, 3};
+    enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
     if (numEjectPackBattlers > 1)
         SortBattlersBySpeed(battlers, FALSE);
 
@@ -1491,11 +1491,11 @@ static enum MoveEndResult MoveEnd_Pickpocket(void)
       && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove) // Pickpocket requires contact
       && !IsBattlerUnaffectedByMove(gBattlerTarget)) // Obviously attack needs to have worked
     {
-        u8 battlers[4] = {0, 1, 2, 3};
+        enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
         SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
         for (u32 i = 0; i < gBattlersCount; i++)
         {
-            u8 battler = battlers[i];
+            enum BattlerId battler = battlers[i];
             // Attacker is mon who made contact, battler is mon with pickpocket
             if (battler != gBattlerAttacker                                                     // Cannot pickpocket yourself
               && GetBattlerAbility(battler) == ABILITY_PICKPOCKET                               // Target must have pickpocket ability

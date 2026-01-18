@@ -33,7 +33,7 @@ static bool32 HandleEndTurnOrder(enum BattlerId battler)
     gBattleTurnCounter++;
     gBattleStruct->eventState.endTurn++;
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattlerByTurnOrder[i] = i;
     SortBattlersBySpeed(gBattlerByTurnOrder, FALSE);
 
@@ -42,7 +42,6 @@ static bool32 HandleEndTurnOrder(enum BattlerId battler)
 
 static bool32 HandleEndTurnVarious(enum BattlerId battler)
 {
-    u32 i;
     bool32 effect = FALSE;
 
     gBattleStruct->eventState.endTurn++;
@@ -50,13 +49,13 @@ static bool32 HandleEndTurnVarious(enum BattlerId battler)
     if (gFieldTimers.fairyLockTimer > 0 && --gFieldTimers.fairyLockTimer == 0)
         gFieldStatuses &= ~STATUS_FIELD_FAIRY_LOCK;
 
-    for (i = 0; i < NUM_BATTLE_SIDES; i++)
+    for (enum BattleSide i = 0; i < NUM_BATTLE_SIDES; i++)
     {
         if (gSideTimers[i].damageNonTypesTimer > 0 && --gSideTimers[i].damageNonTypesTimer == 0)
             gSideStatuses[i] &= ~SIDE_STATUS_DAMAGE_NON_TYPES;
     }
 
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (gBattleMons[i].volatiles.throatChopTimer > 0)
             gBattleMons[i].volatiles.throatChopTimer--;

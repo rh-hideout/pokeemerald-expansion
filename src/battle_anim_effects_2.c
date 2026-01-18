@@ -2538,8 +2538,8 @@ void AnimHyperVoiceRing(struct Sprite *sprite)
     s16 x = 0;
     s16 y = 0;
     u8 yCoordType;
-    u8 battler1;
-    u8 battler2;
+    enum BattlerId battler1;
+    enum BattlerId battler2;
     u8 xCoordType;
 
     if (gBattleAnimArgs[5] == 0)

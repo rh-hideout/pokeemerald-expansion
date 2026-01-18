@@ -986,8 +986,8 @@ static void Cmd_monbg(void)
 {
     bool8 toBG_2;
     u8 taskId;
-    u8 battler;
-    u8 animBattler;
+    enum BattlerId battler;
+    enum AnimBattler animBattler;
 
     sBattleAnimScriptPtr++;
 
@@ -1263,8 +1263,8 @@ static void Task_UpdateMonBg(u8 taskId)
 
 static void Cmd_clearmonbg(void)
 {
-    u8 animBattlerId;
-    u8 battler;
+    enum AnimBattler animBattlerId;
+    enum BattlerId battler;
     u8 taskId;
 
     sBattleAnimScriptPtr++;
@@ -1326,8 +1326,8 @@ static void Task_ClearMonBg(u8 taskId)
 static void Cmd_monbg_static(void)
 {
     bool8 toBG_2;
-    u8 battler;
-    u8 animBattlerId;
+    enum BattlerId battler;
+    enum AnimBattler animBattlerId;
 
     sBattleAnimScriptPtr++;
 
@@ -1371,8 +1371,8 @@ static void Cmd_monbg_static(void)
 
 static void Cmd_clearmonbg_static(void)
 {
-    u8 animBattlerId;
-    u8 battler;
+    enum AnimBattler animBattlerId;
+    enum BattlerId battler;
     u8 taskId;
 
     sBattleAnimScriptPtr++;
@@ -1408,7 +1408,7 @@ static void Task_ClearMonBgStatic(u8 taskId)
     if (gTasks[taskId].data[1] != 1)
     {
         bool8 toBG_2;
-        u8 battler = gTasks[taskId].data[2];
+        enum BattlerId battler = gTasks[taskId].data[2];
         enum BattlerPosition position = GetBattlerPosition(battler);
         if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
             toBG_2 = FALSE;
@@ -2095,8 +2095,8 @@ static void Cmd_jumpifcontest(void)
 
 static void Cmd_splitbgprio(void)
 {
-    u8 wantedBattler;
-    u8 battler;
+    enum AnimBattler wantedBattler;
+    enum BattlerId battler;
     enum BattlerPosition battlerPosition;
 
     wantedBattler = sBattleAnimScriptPtr[1];
@@ -2128,9 +2128,9 @@ static void Cmd_splitbgprio_all(void)
 
 static void Cmd_splitbgprio_foes(void)
 {
-    u8 wantedBattler;
+    enum AnimBattler wantedBattler;
     enum BattlerPosition battlerPosition;
-    u8 battler;
+    enum BattlerId battler;
 
     wantedBattler = sBattleAnimScriptPtr[1];
     sBattleAnimScriptPtr += 2;
