@@ -211,7 +211,6 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
             return LEARNED_MOVE_1;
         else
             return ASK_REPLACEMENT_1;
-
     case ASK_REPLACEMENT_1:
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
@@ -230,7 +229,6 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
             return REFUSE_REPLACE_1;
         }
         return state;
-
     case REFUSE_REPLACE_1:
         StringCopy(gStringVar2, GetMoveName(move));
         ui->printMessage(gText_StopLearningMove2);
@@ -248,7 +246,6 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
             return WANT_REPLACE_1;
         }
         return state;
-
     case WANT_REPLACE_1:
         ui->printMessage(gText_WhichMoveToForget);
         return WANT_REPLACE_2;
@@ -260,7 +257,6 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
             return REFUSE_REPLACE_1;
         else
             return FORGOT_MOVE_1;
-
     case LEARNED_MOVE_1:
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
@@ -270,13 +266,11 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         gSpecialVar_Result = TRUE;
         ui->playFanfare(MUS_LEVEL_UP);
         return LEARN_MOVE_END;
-
     case FORGOT_MOVE_1:
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(GetBoxMonData(boxmon, MON_DATA_MOVE1 + GetMoveSlotToReplace())));
         ui->printMessage(gText_12PoofForgotMove);
         return REPLACE_MOVE_1;
-
     case REPLACE_MOVE_1:
         u32 slot = GetMoveSlotToReplace();
         RemoveBoxMonPPBonus(boxmon, slot);
@@ -288,14 +282,12 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         gSpecialVar_Result = TRUE;
         ui->printMessage(gText_PkmnLearnedMove4);
         return LEARN_MOVE_END;
-
     case DID_NOT_LEARN_1:
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = FALSE;
         ui->printMessage(gText_MoveNotLearned);
         return LEARN_MOVE_END;
-
     default:
         errorf("Unknown LearnMove state %d\nEnding move learning ...", state);
     case LEARN_MOVE_END:
