@@ -129,97 +129,97 @@ static const struct CaptureStar sCaptureStars[] =
     },
 };
 
-#define TAG_PARTICLES_STRANGEBALL 65030
-#define TAG_PARTICLES_POKEBALL    65031
-#define TAG_PARTICLES_GREATBALL   65032
-#define TAG_PARTICLES_ULTRABALL   65033
-#define TAG_PARTICLES_MASTERBALL  65034
-#define TAG_PARTICLES_PREMIERBALL 65035
-#define TAG_PARTICLES_HEALBALL    65036
-#define TAG_PARTICLES_NETBALL     65037
-#define TAG_PARTICLES_NESTBALL    65038
-#define TAG_PARTICLES_DIVEBALL    65039
-#define TAG_PARTICLES_DUSKBALL    65040
-#define TAG_PARTICLES_TIMERBALL   65041
-#define TAG_PARTICLES_QUICKBALL   65042
-#define TAG_PARTICLES_REPEATBALL  65043
-#define TAG_PARTICLES_LUXURYBALL  65044
-#define TAG_PARTICLES_LEVELBALL   65045
-#define TAG_PARTICLES_LUREBALL    65046
-#define TAG_PARTICLES_MOONBALL    65047
-#define TAG_PARTICLES_FRIENDBALL  65048
-#define TAG_PARTICLES_LOVEBALL    65049
-#define TAG_PARTICLES_FASTBALL    65050
-#define TAG_PARTICLES_HEAVYBALL   65051
-#define TAG_PARTICLES_DREAMBALL   65052
-#define TAG_PARTICLES_SAFARIBALL  65053
-#define TAG_PARTICLES_SPORTBALL   65054
-#define TAG_PARTICLES_PARKBALL    65055
-#define TAG_PARTICLES_BEASTBALL   65056
-#define TAG_PARTICLES_CHERISHBALL 65057
+#define TAG_PARTICLES_STRANGE_BALL 65030
+#define TAG_PARTICLES_POKE_BALL    65031
+#define TAG_PARTICLES_GREAT_BALL   65032
+#define TAG_PARTICLES_ULTRA_BALL   65033
+#define TAG_PARTICLES_MASTER_BALL  65034
+#define TAG_PARTICLES_PREMIER_BALL 65035
+#define TAG_PARTICLES_HEAL_BALL    65036
+#define TAG_PARTICLES_NET_BALL     65037
+#define TAG_PARTICLES_NEST_BALL    65038
+#define TAG_PARTICLES_DIVE_BALL    65039
+#define TAG_PARTICLES_DUSK_BALL    65040
+#define TAG_PARTICLES_TIMER_BALL   65041
+#define TAG_PARTICLES_QUICK_BALL   65042
+#define TAG_PARTICLES_REPEAT_BALL  65043
+#define TAG_PARTICLES_LUXURY_BALL  65044
+#define TAG_PARTICLES_LEVEL_BALL   65045
+#define TAG_PARTICLES_LURE_BALL    65046
+#define TAG_PARTICLES_MOON_BALL    65047
+#define TAG_PARTICLES_FRIEND_BALL  65048
+#define TAG_PARTICLES_LOVE_BALL    65049
+#define TAG_PARTICLES_FAST_BALL    65050
+#define TAG_PARTICLES_HEAVY_BALL   65051
+#define TAG_PARTICLES_DREAM_BALL   65052
+#define TAG_PARTICLES_SAFARI_BALL  65053
+#define TAG_PARTICLES_SPORT_BALL   65054
+#define TAG_PARTICLES_PARK_BALL    65055
+#define TAG_PARTICLES_BEAST_BALL   65056
+#define TAG_PARTICLES_CHERISH_BALL 65057
 
 static const struct CompressedSpriteSheet sBallParticleSpriteSheets[] =
 {
-    [BALL_STRANGE]  = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_STRANGEBALL},
-    [BALL_POKE]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_POKEBALL},
-    [BALL_GREAT]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_GREATBALL},
-    [BALL_ULTRA]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_ULTRABALL},
-    [BALL_MASTER]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_MASTERBALL},
-    [BALL_PREMIER]  = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_PREMIERBALL},
-    [BALL_HEAL]     = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_HEALBALL},
-    [BALL_NET]      = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_NETBALL},
-    [BALL_NEST]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_NESTBALL},
-    [BALL_DIVE]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_DIVEBALL},
-    [BALL_DUSK]     = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_DUSKBALL},
-    [BALL_TIMER]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_TIMERBALL},
-    [BALL_QUICK]    = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_QUICKBALL},
-    [BALL_REPEAT]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_REPEATBALL},
-    [BALL_LUXURY]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_LUXURYBALL},
-    [BALL_LEVEL]    = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_LEVELBALL},
-    [BALL_LURE]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_LUREBALL},
-    [BALL_MOON]     = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_MOONBALL},
-    [BALL_FRIEND]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_FRIENDBALL},
-    [BALL_LOVE]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_LOVEBALL},
-    [BALL_FAST]     = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_FASTBALL},
-    [BALL_HEAVY]    = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_HEAVYBALL},
-    [BALL_DREAM]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_DREAMBALL},
-    [BALL_SAFARI]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_SAFARIBALL},
-    [BALL_SPORT]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_SPORTBALL},
-    [BALL_PARK]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_PARKBALL},
-    [BALL_BEAST]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_BEASTBALL},
-    [BALL_CHERISH]  = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_CHERISHBALL},
+    [BALL_STRANGE]  = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_STRANGE_BALL},
+    [BALL_POKE]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_POKE_BALL},
+    [BALL_GREAT]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_GREAT_BALL},
+    [BALL_ULTRA]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_ULTRA_BALL},
+    [BALL_MASTER]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_MASTER_BALL},
+    [BALL_PREMIER]  = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_PREMIER_BALL},
+    [BALL_HEAL]     = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_HEAL_BALL},
+    [BALL_NET]      = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_NET_BALL},
+    [BALL_NEST]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_NEST_BALL},
+    [BALL_DIVE]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_DIVE_BALL},
+    [BALL_DUSK]     = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_DUSK_BALL},
+    [BALL_TIMER]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_TIMER_BALL},
+    [BALL_QUICK]    = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_QUICK_BALL},
+    [BALL_REPEAT]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_REPEAT_BALL},
+    [BALL_LUXURY]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_LUXURY_BALL},
+    [BALL_LEVEL]    = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_LEVEL_BALL},
+    [BALL_LURE]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_LURE_BALL},
+    [BALL_MOON]     = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_MOON_BALL},
+    [BALL_FRIEND]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_FRIEND_BALL},
+    [BALL_LOVE]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_LOVE_BALL},
+    [BALL_FAST]     = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_FAST_BALL},
+    [BALL_HEAVY]    = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_HEAVY_BALL},
+    [BALL_DREAM]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_DREAM_BALL},
+    [BALL_SAFARI]   = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_SAFARI_BALL},
+    [BALL_SPORT]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_SPORT_BALL},
+    [BALL_PARK]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_PARK_BALL},
+    [BALL_BEAST]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_BEAST_BALL},
+    [BALL_CHERISH]  = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_CHERISH_BALL},
 };
 
 static const struct SpritePalette sBallParticlePalettes[] =
 {
-    [BALL_STRANGE]  = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_STRANGEBALL},
-    [BALL_POKE]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_POKEBALL},
-    [BALL_GREAT]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_GREATBALL},
-    [BALL_ULTRA]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_ULTRABALL},
-    [BALL_MASTER]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_MASTERBALL},
-    [BALL_PREMIER]  = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_PREMIERBALL},
-    [BALL_HEAL]     = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_HEALBALL},
-    [BALL_NET]      = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_NETBALL},
-    [BALL_NEST]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_NESTBALL},
-    [BALL_DIVE]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_DIVEBALL},
-    [BALL_DUSK]     = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_DUSKBALL},
-    [BALL_TIMER]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_TIMERBALL},
-    [BALL_QUICK]    = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_QUICKBALL},
-    [BALL_REPEAT]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_REPEATBALL},
-    [BALL_LUXURY]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_LUXURYBALL},
-    [BALL_LEVEL]    = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_LEVELBALL},
-    [BALL_LURE]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_LUREBALL},
-    [BALL_MOON]     = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_MOONBALL},
-    [BALL_FRIEND]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_FRIENDBALL},
-    [BALL_LOVE]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_LOVEBALL},
-    [BALL_FAST]     = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_FASTBALL},
-    [BALL_HEAVY]    = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_HEAVYBALL},
-    [BALL_DREAM]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_DREAMBALL},
-    [BALL_SAFARI]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_SAFARIBALL},
-    [BALL_SPORT]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_SPORTBALL},
-    [BALL_PARK]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_PARKBALL},
-    [BALL_BEAST]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_BEASTBALL},
-    [BALL_CHERISH]  = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_CHERISHBALL},
+    [BALL_STRANGE]  = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_STRANGE_BALL},
+    [BALL_POKE]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_POKE_BALL},
+    [BALL_GREAT]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_GREAT_BALL},
+    [BALL_ULTRA]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_ULTRA_BALL},
+    [BALL_MASTER]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_MASTER_BALL},
+    [BALL_PREMIER]  = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_PREMIER_BALL},
+    [BALL_HEAL]     = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_HEAL_BALL},
+    [BALL_NET]      = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_NET_BALL},
+    [BALL_NEST]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_NEST_BALL},
+    [BALL_DIVE]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_DIVE_BALL},
+    [BALL_DUSK]     = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_DUSK_BALL},
+    [BALL_TIMER]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_TIMER_BALL},
+    [BALL_QUICK]    = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_QUICK_BALL},
+    [BALL_REPEAT]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_REPEAT_BALL},
+    [BALL_LUXURY]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_LUXURY_BALL},
+    [BALL_LEVEL]    = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_LEVEL_BALL},
+    [BALL_LURE]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_LURE_BALL},
+    [BALL_MOON]     = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_MOON_BALL},
+    [BALL_FRIEND]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_FRIEND_BALL},
+    [BALL_LOVE]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_LOVE_BALL},
+    [BALL_FAST]     = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_FAST_BALL},
+    [BALL_HEAVY]    = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_HEAVY_BALL},
+    [BALL_DREAM]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_DREAM_BALL},
+    [BALL_SAFARI]   = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_SAFARI_BALL},
+    [BALL_SPORT]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_SPORT_BALL},
+    [BALL_PARK]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_PARK_BALL},
+    [BALL_BEAST]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_BEAST_BALL},
+    [BALL_CHERISH]  = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_CHERISH_BALL},
 };
 
 static const union AnimCmd sAnim_RegularBall[] =
@@ -342,170 +342,170 @@ static const TaskFunc sBallParticleAnimationFuncs[POKEBALL_COUNT] =
 static const struct SpriteTemplate sBallParticleSpriteTemplates[POKEBALL_COUNT] =
 {
     [BALL_STRANGE] = {
-        .tileTag = TAG_PARTICLES_STRANGEBALL,
-        .paletteTag = TAG_PARTICLES_STRANGEBALL,
+        .tileTag = TAG_PARTICLES_STRANGE_BALL,
+        .paletteTag = TAG_PARTICLES_STRANGE_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_POKE] = {
-        .tileTag = TAG_PARTICLES_POKEBALL,
-        .paletteTag = TAG_PARTICLES_POKEBALL,
+        .tileTag = TAG_PARTICLES_POKE_BALL,
+        .paletteTag = TAG_PARTICLES_POKE_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_GREAT] = {
-        .tileTag = TAG_PARTICLES_GREATBALL,
-        .paletteTag = TAG_PARTICLES_GREATBALL,
+        .tileTag = TAG_PARTICLES_GREAT_BALL,
+        .paletteTag = TAG_PARTICLES_GREAT_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_ULTRA] = {
-        .tileTag = TAG_PARTICLES_ULTRABALL,
-        .paletteTag = TAG_PARTICLES_ULTRABALL,
+        .tileTag = TAG_PARTICLES_ULTRA_BALL,
+        .paletteTag = TAG_PARTICLES_ULTRA_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_MASTER] = {
-        .tileTag = TAG_PARTICLES_MASTERBALL,
-        .paletteTag = TAG_PARTICLES_MASTERBALL,
+        .tileTag = TAG_PARTICLES_MASTER_BALL,
+        .paletteTag = TAG_PARTICLES_MASTER_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_PREMIER] = {
-        .tileTag = TAG_PARTICLES_PREMIERBALL,
-        .paletteTag = TAG_PARTICLES_PREMIERBALL,
+        .tileTag = TAG_PARTICLES_PREMIER_BALL,
+        .paletteTag = TAG_PARTICLES_PREMIER_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_HEAL] = {
-        .tileTag = TAG_PARTICLES_HEALBALL,
-        .paletteTag = TAG_PARTICLES_HEALBALL,
+        .tileTag = TAG_PARTICLES_HEAL_BALL,
+        .paletteTag = TAG_PARTICLES_HEAL_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_NET] = {
-        .tileTag = TAG_PARTICLES_NETBALL,
-        .paletteTag = TAG_PARTICLES_NETBALL,
+        .tileTag = TAG_PARTICLES_NET_BALL,
+        .paletteTag = TAG_PARTICLES_NET_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_NEST] = {
-        .tileTag = TAG_PARTICLES_NESTBALL,
-        .paletteTag = TAG_PARTICLES_NESTBALL,
+        .tileTag = TAG_PARTICLES_NEST_BALL,
+        .paletteTag = TAG_PARTICLES_NEST_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_DIVE] = {
-        .tileTag = TAG_PARTICLES_DIVEBALL,
-        .paletteTag = TAG_PARTICLES_DIVEBALL,
+        .tileTag = TAG_PARTICLES_DIVE_BALL,
+        .paletteTag = TAG_PARTICLES_DIVE_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_DUSK] = {
-        .tileTag = TAG_PARTICLES_DUSKBALL,
-        .paletteTag = TAG_PARTICLES_DUSKBALL,
+        .tileTag = TAG_PARTICLES_DUSK_BALL,
+        .paletteTag = TAG_PARTICLES_DUSK_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_TIMER] = {
-        .tileTag = TAG_PARTICLES_TIMERBALL,
-        .paletteTag = TAG_PARTICLES_TIMERBALL,
+        .tileTag = TAG_PARTICLES_TIMER_BALL,
+        .paletteTag = TAG_PARTICLES_TIMER_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_QUICK] = {
-        .tileTag = TAG_PARTICLES_QUICKBALL,
-        .paletteTag = TAG_PARTICLES_QUICKBALL,
+        .tileTag = TAG_PARTICLES_QUICK_BALL,
+        .paletteTag = TAG_PARTICLES_QUICK_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_REPEAT] = {
-        .tileTag = TAG_PARTICLES_REPEATBALL,
-        .paletteTag = TAG_PARTICLES_REPEATBALL,
+        .tileTag = TAG_PARTICLES_REPEAT_BALL,
+        .paletteTag = TAG_PARTICLES_REPEAT_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_LUXURY] = {
-        .tileTag = TAG_PARTICLES_LUXURYBALL,
-        .paletteTag = TAG_PARTICLES_LUXURYBALL,
+        .tileTag = TAG_PARTICLES_LUXURY_BALL,
+        .paletteTag = TAG_PARTICLES_LUXURY_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_LEVEL] = {
-        .tileTag = TAG_PARTICLES_LEVELBALL,
-        .paletteTag = TAG_PARTICLES_LEVELBALL,
+        .tileTag = TAG_PARTICLES_LEVEL_BALL,
+        .paletteTag = TAG_PARTICLES_LEVEL_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_LURE] = {
-        .tileTag = TAG_PARTICLES_LUREBALL,
-        .paletteTag = TAG_PARTICLES_LUREBALL,
+        .tileTag = TAG_PARTICLES_LURE_BALL,
+        .paletteTag = TAG_PARTICLES_LURE_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_MOON] = {
-        .tileTag = TAG_PARTICLES_MOONBALL,
-        .paletteTag = TAG_PARTICLES_MOONBALL,
+        .tileTag = TAG_PARTICLES_MOON_BALL,
+        .paletteTag = TAG_PARTICLES_MOON_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_FRIEND] = {
-        .tileTag = TAG_PARTICLES_FRIENDBALL,
-        .paletteTag = TAG_PARTICLES_FRIENDBALL,
+        .tileTag = TAG_PARTICLES_FRIEND_BALL,
+        .paletteTag = TAG_PARTICLES_FRIEND_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_LOVE] = {
-        .tileTag = TAG_PARTICLES_LOVEBALL,
-        .paletteTag = TAG_PARTICLES_LOVEBALL,
+        .tileTag = TAG_PARTICLES_LOVE_BALL,
+        .paletteTag = TAG_PARTICLES_LOVE_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_FAST] = {
-        .tileTag = TAG_PARTICLES_FASTBALL,
-        .paletteTag = TAG_PARTICLES_FASTBALL,
+        .tileTag = TAG_PARTICLES_FAST_BALL,
+        .paletteTag = TAG_PARTICLES_FAST_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_HEAVY] = {
-        .tileTag = TAG_PARTICLES_HEAVYBALL,
-        .paletteTag = TAG_PARTICLES_HEAVYBALL,
+        .tileTag = TAG_PARTICLES_HEAVY_BALL,
+        .paletteTag = TAG_PARTICLES_HEAVY_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_DREAM] = {
-        .tileTag = TAG_PARTICLES_DREAMBALL,
-        .paletteTag = TAG_PARTICLES_DREAMBALL,
+        .tileTag = TAG_PARTICLES_DREAM_BALL,
+        .paletteTag = TAG_PARTICLES_DREAM_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_SAFARI] = {
-        .tileTag = TAG_PARTICLES_SAFARIBALL,
-        .paletteTag = TAG_PARTICLES_SAFARIBALL,
+        .tileTag = TAG_PARTICLES_SAFARI_BALL,
+        .paletteTag = TAG_PARTICLES_SAFARI_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_SPORT] = {
-        .tileTag = TAG_PARTICLES_SPORTBALL,
-        .paletteTag = TAG_PARTICLES_SPORTBALL,
+        .tileTag = TAG_PARTICLES_SPORT_BALL,
+        .paletteTag = TAG_PARTICLES_SPORT_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_PARK] = {
-        .tileTag = TAG_PARTICLES_PARKBALL,
-        .paletteTag = TAG_PARTICLES_PARKBALL,
+        .tileTag = TAG_PARTICLES_PARK_BALL,
+        .paletteTag = TAG_PARTICLES_PARK_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_BEAST] = {
-        .tileTag = TAG_PARTICLES_BEASTBALL,
-        .paletteTag = TAG_PARTICLES_BEASTBALL,
+        .tileTag = TAG_PARTICLES_BEAST_BALL,
+        .paletteTag = TAG_PARTICLES_BEAST_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
     [BALL_CHERISH] = {
-        .tileTag = TAG_PARTICLES_CHERISHBALL,
-        .paletteTag = TAG_PARTICLES_CHERISHBALL,
+        .tileTag = TAG_PARTICLES_CHERISH_BALL,
+        .paletteTag = TAG_PARTICLES_CHERISH_BALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
     },
