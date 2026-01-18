@@ -52,7 +52,6 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
 
 AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefers it otherwise (Single)")
 {
-    u32 paramIdx;
     static const enum Move protectMoves[] =
     {
         MOVE_PROTECT,
@@ -69,7 +68,7 @@ AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefer
     enum Move protectMove = MOVE_NONE;
     bool32 shouldProtect = FALSE;
 
-    for (paramIdx = 0; paramIdx < ARRAY_COUNT(protectMoves); paramIdx++)
+    for (u32 paramIdx = 0; paramIdx < ARRAY_COUNT(protectMoves); paramIdx++)
     {
         PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC;      shouldProtect = TRUE;  protectMove = protectMoves[paramIdx]; }
         PARAMETRIZE { species = SPECIES_URSHIFU; ability = ABILITY_UNSEEN_FIST; shouldProtect = FALSE; protectMove = protectMoves[paramIdx]; }
@@ -102,7 +101,6 @@ AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefer
 
 AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefers it otherwise (Doubles)")
 {
-    u32 paramIdx;
     static const enum Move protectMoves[] =
     {
         MOVE_PROTECT,
@@ -119,7 +117,7 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefer
     enum Move protectMove = MOVE_NONE;
     bool32 shouldProtect = FALSE;
 
-    for (paramIdx = 0; paramIdx < ARRAY_COUNT(protectMoves); paramIdx++)
+    for (u32 paramIdx = 0; paramIdx < ARRAY_COUNT(protectMoves); paramIdx++)
     {
         PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC;      shouldProtect = TRUE;  protectMove = protectMoves[paramIdx]; }
         PARAMETRIZE { species = SPECIES_URSHIFU; ability = ABILITY_UNSEEN_FIST; shouldProtect = FALSE; protectMove = protectMoves[paramIdx]; }
