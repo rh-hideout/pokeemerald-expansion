@@ -613,6 +613,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
 
     if (!OWE_CreateEnemyPartyMon(speciesId, level, indexRoamerOutbreak, x, y))
     {
+        // May be good to convert this to an assertf
         ZeroEnemyPartyMons();
         *speciesId = SPECIES_NONE;
         return;
@@ -657,6 +658,9 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
         timeOfDay = GetTimeOfDayForEncounters(headerId, wildArea);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
     }
+
+    if (wildMonInfo == NULL)
+        return FALSE;
 
     /*
     These functions perform checks of various encounter types in the following order:
@@ -906,17 +910,26 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     bool32 isFemale = FALSE;
     u32 level;
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
+    u32 x = template->x;
+    u32 y = template->y;
 
     SetOverworldEncounterSpeciesInfo(
-        template->x,
-        template->y,
+        x,
+        y,
         &speciesId,
         &isShiny,
         &isFemale,
         &level,
         &indexRoamerOutbreak
     );
-    // Have an assertf and fallback incase of no header mons
+
+    assertf(speciesId != SPECIES_NONE && speciesId < NUM_SPECIES && IsSpeciesEnabled(speciesId), "invalid semi-manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
+    {
+        // Currently causes assertf on each player step as function is called.
+        templateOWE.graphicsId = OBJ_EVENT_GFX_BOY_1;
+        templateOWE.trainerType = TRAINER_TYPE_NONE;
+        return templateOWE;
+    }
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
