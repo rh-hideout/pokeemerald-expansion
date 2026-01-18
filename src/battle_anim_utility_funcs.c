@@ -204,10 +204,11 @@ static void AnimTask_TraceMonBlended_Step(u8 taskId)
         }
         else
         {
-            task->data[6] = CloneBattlerSpriteWithBlend(task->data[0]);
+            enum AnimBattler animBattler = task->data[0];
+            task->data[6] = CloneBattlerSpriteWithBlend(animBattler);
             if (task->data[6] >= 0)
             {
-                gSprites[task->data[6]].oam.priority = task->data[0] ? 1 : 2;
+                gSprites[task->data[6]].oam.priority = animBattler != ANIM_ATTACKER ? 1 : 2;
                 gSprites[task->data[6]].data[0] = task->data[3];
                 gSprites[task->data[6]].data[1] = taskId;
                 gSprites[task->data[6]].data[2] = 5;

@@ -6468,7 +6468,7 @@ static void AnimHornHit_Step(struct Sprite *sprite)
 #define sSinIndexMod        data[5]
 #define sBattlerFlank       data[6]
 
-void PrepareDoubleTeamAnim(u32 taskId, u32 animBattler, bool32 forAllySwitch)
+void PrepareDoubleTeamAnim(u32 taskId, enum AnimBattler animBattler, bool32 forAllySwitch)
 {
     s32 i, spriteId;
     u16 palOffsetBattler, palOffsetSpoon;

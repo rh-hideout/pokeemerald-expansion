@@ -316,7 +316,7 @@ u8 GetAnimBattlerSpriteId(enum AnimBattler animBattler)
             return SPRITE_NONE;
         break;
     case ANIM_PLAYER_LEFT ... ANIM_OPPONENT_RIGHT:
-        partner = animBattler - MAX_BATTLERS_COUNT;
+        partner = animBattler - ANIM_PLAYER_LEFT;
         if (IsBattlerSpriteVisible(partner))
             return gBattlerSpriteIds[partner];
         else
@@ -1581,7 +1581,7 @@ void AnimTravelDiagonally(struct Sprite *sprite)
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
-s16 CloneBattlerSpriteWithBlend(u8 animBattler)
+s16 CloneBattlerSpriteWithBlend(enum AnimBattler animBattler)
 {
     u16 i;
     u8 spriteId = GetAnimBattlerSpriteId(animBattler);
@@ -2389,7 +2389,7 @@ static void AnimTask_AttackerPunchWithTrace_Step(u8 taskId)
 
 static void CreateBattlerTrace(struct Task *task, u8 taskId)
 {
-    s16 spriteId = CloneBattlerSpriteWithBlend(0);
+    s16 spriteId = CloneBattlerSpriteWithBlend(ANIM_ATTACKER);
     if (spriteId >= 0)
     {
         gSprites[spriteId].oam.priority = task->tPriority;
