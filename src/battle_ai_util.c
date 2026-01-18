@@ -770,7 +770,7 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
 
     if (effect == EFFECT_BEAT_UP && GetConfig(CONFIG_BEAT_UP) >= GEN_5)
     {
-        u32 partyCount = CalculatePartyCount(GetBattleTrainer(ctx->battlerAtk));
+        u32 partyCount = CalculatePartyCount(GetBattlerTrainer(ctx->battlerAtk));
         u32 i;
         gBattleStruct->beatUpSlot = 0;
         ctx->isCrit = FALSE;
@@ -1221,10 +1221,12 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, enum Move m
 
     if (GetMoveStrikeCount(move) > 1 || IsMultiHitMove(move))
     {
-        if (AI_MoveMakesContact(abilityAtk, gAiLogicData->holdEffects[battlerAtk], move)
+        if (AI_MoveMakesContact(battlerAtk, battlerDef, abilityAtk, gAiLogicData->holdEffects[battlerAtk], move)
          && abilityAtk != ABILITY_MAGIC_GUARD
          && (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_ROCKY_HELMET || abilityDef == ABILITY_IRON_BARBS))
+        {
             return TRUE;
+        }
     }
 
     if (IsExplosionMove(move))
@@ -2258,6 +2260,18 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, enum Move move, enum Move pred
     // TODO more sophisticated logic
     u32 uses = gBattleMons[battlerAtk].volatiles.consecutiveMoveUses;
 
+    if (predictedMove != MOVE_NONE && predictedMove != MOVE_UNAVAILABLE)
+    {
+        if (MoveIgnoresProtect(predictedMove))
+            return WORST_EFFECT;
+    }
+
+    if (GetMoveProtectMethod(move) != PROTECT_MAX_GUARD
+     && IsUnseenFistContactMove(battlerDef, battlerAtk, predictedMove))
+    {
+        return WORST_EFFECT;
+    }
+
     /*if (GetMoveResultFlags(predictedMove) & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_MISSED))
     {
         ADJUST_SCORE_PTR(-5);
@@ -2266,7 +2280,7 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, enum Move move, enum Move pred
 
     if (uses == 0)
     {
-        if (predictedMove != MOVE_NONE && predictedMove != 0xFFFF && !IsBattleMoveStatus(predictedMove))
+        if (predictedMove != MOVE_NONE && predictedMove != MOVE_UNAVAILABLE && !IsBattleMoveStatus(predictedMove))
             score += DECENT_EFFECT;
         else if (Random() % 256 < 100)
             score += WEAK_EFFECT;
@@ -5112,13 +5126,44 @@ void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 
     }
 }
 
-bool32 AI_MoveMakesContact(enum Ability ability, enum HoldEffect holdEffect, enum Move move)
+bool32 AI_MoveMakesContact(u32 battlerAtk, u32 battlerDef, enum Ability ability, enum HoldEffect holdEffect, enum Move move)
 {
-    if (MoveMakesContact(move)
-      && ability != ABILITY_LONG_REACH
-      && holdEffect != HOLD_EFFECT_PROTECTIVE_PADS)
-        return TRUE;
-    return FALSE;
+    if (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM)
+    {
+        if (gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] != DAMAGE_CATEGORY_PHYSICAL)
+            return FALSE;
+    }
+    else if (!MoveMakesContact(move))
+    {
+        return FALSE;
+    }
+    if (ability == ABILITY_LONG_REACH)
+        return FALSE;
+    if (holdEffect == HOLD_EFFECT_PROTECTIVE_PADS)
+        return FALSE;
+    if (holdEffect == HOLD_EFFECT_PUNCHING_GLOVE && IsPunchingMove(move))
+        return FALSE;
+    return TRUE;
+}
+
+bool32 IsUnseenFistContactMove(u32 battlerAtk, u32 battlerDef, enum Move move)
+{
+    if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
+        return FALSE;
+    if (gAiLogicData->abilities[battlerAtk] != ABILITY_UNSEEN_FIST)
+        return FALSE;
+    if (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM)
+    {
+        if (gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] != DAMAGE_CATEGORY_PHYSICAL)
+            return FALSE;
+    }
+    else if (!MoveMakesContact(move))
+    {
+        return FALSE;
+    }
+    if (gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_PUNCHING_GLOVE && IsPunchingMove(move))
+        return FALSE;
+    return TRUE;
 }
 
 

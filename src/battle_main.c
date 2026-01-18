@@ -90,7 +90,7 @@ static void CB2_HandleStartMultiPartnerBattle(void);
 static void CB2_HandleStartMultiBattle(void);
 static void CB2_HandleStartBattle(void);
 static void TryCorrectShedinjaLanguage(struct Pokemon *mon);
-static enum BattleTrainer GetBattleTrainerFromParty(struct Pokemon *party);
+static enum BattleTrainer GetBattlerTrainerFromParty(struct Pokemon *party);
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum);
 static void BattleMainCB1(void);
 static void CB2_EndLinkBattle(void);
@@ -2040,7 +2040,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
     return trainer->partySize;
 }
 
-enum BattleTrainer GetBattleTrainerFromParty(struct Pokemon *party)
+enum BattleTrainer GetBattlerTrainerFromParty(struct Pokemon *party)
 {
     return ((party - gParties[B_TRAINER_0]) / PARTY_SIZE);
 }
@@ -2048,7 +2048,7 @@ enum BattleTrainer GetBattleTrainerFromParty(struct Pokemon *party)
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 {
     u8 retVal; 
-    bool32 halfTeam = (BattleSideHasTwoTrainers(GetBattleTrainerFromParty(party) & BIT_SIDE) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES));
+    bool32 halfTeam = (BattleSideHasTwoTrainers(GetBattlerTrainerFromParty(party) & BIT_SIDE) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES));
 
     if (trainerNum == TRAINER_SECRET_BASE)
         return 0;
@@ -3299,7 +3299,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     #if TESTING
     if (gTestRunnerEnabled)
     {
-        enum BattleTrainer trainer = GetBattleTrainer(battler);
+        enum BattleTrainer trainer = GetBattlerTrainer(battler);
         u32 partyIndex = gBattlerPartyIndexes[battler];
         if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
             gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
@@ -3504,7 +3504,7 @@ static void DoBattleIntro(void)
                 #if TESTING
                 if (gTestRunnerEnabled)
                 {
-                    enum BattleTrainer trainer = GetBattleTrainer(battler);
+                    enum BattleTrainer trainer = GetBattlerTrainer(battler);
                     u32 partyIndex = gBattlerPartyIndexes[battler];
                     if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
                         gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
@@ -3801,7 +3801,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         {
             for (i = 0; i < gBattlersCount; ++i)
             {
-                enum BattleTrainer trainer = GetBattleTrainer(i);
+                enum BattleTrainer trainer = GetBattlerTrainer(i);
                 u32 partyIndex = gBattlerPartyIndexes[i];
                 if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
                     gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);

@@ -467,7 +467,7 @@ static void BattleTest_Run(void *data)
 
     for (i = 0; i < STATE->battlersCount; i++)
     {
-        requiredPartySizes[GetBattleTrainer(i)] = DATA.currentMonIndexes[i] + 1;
+        requiredPartySizes[GetBattlerTrainer(i)] = DATA.currentMonIndexes[i] + 1;
     }
     for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
@@ -601,7 +601,7 @@ u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
 
 }
 
-u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller)
 {
     //Detect inconsistent sum
     u32 weightSum = 0;
@@ -706,7 +706,7 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
     return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
 }
 
-static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller)
 {
     //rigged
     const struct BattlerTurn *turn = NULL;
@@ -2073,13 +2073,13 @@ void ClosePokemon(u32 sourceLine)
 
 static void SetGimmick(u32 sourceLine, u32 battler, u32 partyIndex, enum Gimmick gimmick)
 {
-    enum Gimmick currentGimmick = DATA.chosenGimmick[GetBattleTrainer(battler)][partyIndex];
+    enum Gimmick currentGimmick = DATA.chosenGimmick[GetBattlerTrainer(battler)][partyIndex];
     if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)
        || (currentGimmick == GIMMICK_Z_MOVE && gimmick == GIMMICK_ULTRA_BURST)))
     {
         INVALID_IF(currentGimmick != GIMMICK_NONE && currentGimmick != gimmick, "Cannot set %s because %s already set", sGimmickIdentifiers[gimmick], sGimmickIdentifiers[currentGimmick]);
     }
-    DATA.chosenGimmick[GetBattleTrainer(battler)][partyIndex] = gimmick;
+    DATA.chosenGimmick[GetBattlerTrainer(battler)][partyIndex] = gimmick;
 }
 
 void Gender_(u32 sourceLine, u32 gender)
@@ -2507,11 +2507,11 @@ static void SetSlowerThan(s32 battlerId)
             continue;
         if (DATA.moveBattlers & (1 << i))
         {
-            trainer = GetBattleTrainer(i);
+            trainer = GetBattlerTrainer(i);
             slowerThan |= (1u << ((6 * trainer) + DATA.currentMonIndexes[i]));
         }
     }
-    DATA.slowerThan[GetBattleTrainer(battlerId)][DATA.currentMonIndexes[battlerId]] |= slowerThan;
+    DATA.slowerThan[GetBattlerTrainer(battlerId)][DATA.currentMonIndexes[battlerId]] |= slowerThan;
 }
 
 static void SetAiActionToPass(u32 sourceLine, s32 battlerId)
@@ -2545,7 +2545,7 @@ void CloseTurn(u32 sourceLine)
 
 static struct Pokemon *CurrentMon(s32 battlerId)
 {
-    enum BattleTrainer trainer = GetBattleTrainer(battlerId);
+    enum BattleTrainer trainer = GetBattlerTrainer(battlerId);
     struct Pokemon *party = DATA.recordedBattle.parties[trainer];
     
     return &party[DATA.currentMonIndexes[battlerId]];
@@ -2579,9 +2579,9 @@ s32 MoveGetTarget(s32 battlerId, enum Move moveId, struct MoveContext *ctx, u32 
 
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == TARGET_USER 
-              || moveTarget == TARGET_ALL_BATTLERS 
-              || moveTarget == TARGET_FIELD 
+        else if (moveTarget == TARGET_USER
+              || moveTarget == TARGET_ALL_BATTLERS
+              || moveTarget == TARGET_FIELD
               || moveTarget == TARGET_USER_AND_ALLY)
         {
             target = battlerId;
@@ -2668,7 +2668,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
 u32 MoveGetFirstFainted(s32 battlerId)
 {
     u32 i;
-    enum BattleTrainer trainer = GetBattleTrainer(battlerId);
+    enum BattleTrainer trainer = GetBattlerTrainer(battlerId);
     struct Pokemon *party = DATA.recordedBattle.parties[trainer];
     u32 partySize = DATA.partySizes[trainer];
 
@@ -2707,7 +2707,7 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 
     // Check party menu moves.
     INVALID_IF(requirePartyIndex && !ctx.explicitPartyIndex, "%S requires explicit party index", GetMoveName(moveId));
-    INVALID_IF(requirePartyIndex && ctx.partyIndex >= DATA.partySizes[GetBattleTrainer(battlerId)], \
+    INVALID_IF(requirePartyIndex && ctx.partyIndex >= DATA.partySizes[GetBattlerTrainer(battlerId)], \
                 "MOVE to invalid party index");
 
     if (ctx.explicitHit)
@@ -2812,8 +2812,8 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     s32 battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_SEND_OUT outside TURN");
     INVALID_IF(!IsAITest(), "EXPECT_SEND_OUT is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWO_VS_ONE_TEST, and AI_ONE_VS_TWO_TEST");
-    DebugPrintf("ExpectSendOut battlerId %d trainer %d partyIndex %d DATA.partySizes[GetBattleTrainer(battlerId)] %d", battlerId, GetBattleTrainer(battlerId), partyIndex, DATA.partySizes[GetBattleTrainer(battlerId)]);
-    INVALID_IF(partyIndex >= DATA.partySizes[GetBattleTrainer(battlerId)], "EXPECT_SEND_OUT to invalid party index");
+    DebugPrintf("ExpectSendOut battlerId %d trainer %d partyIndex %d DATA.partySizes[GetBattlerTrainer(battlerId)] %d", battlerId, GetBattlerTrainer(battlerId), partyIndex, DATA.partySizes[GetBattlerTrainer(battlerId)]);
+    INVALID_IF(partyIndex >= DATA.partySizes[GetBattlerTrainer(battlerId)], "EXPECT_SEND_OUT to invalid party index");
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
@@ -2931,7 +2931,7 @@ void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     s32 battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SWITCH outside TURN");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
-    INVALID_IF(partyIndex >= DATA.partySizes[GetBattleTrainer(battlerId)], "SWITCH to invalid party index");
+    INVALID_IF(partyIndex >= DATA.partySizes[GetBattlerTrainer(battlerId)], "SWITCH to invalid party index");
     INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "SWITCH is not allowed for opponent in AI tests. Use EXPECT_SWITCH instead");
 
     for (i = 0; i < STATE->battlersCount; i++)
@@ -2954,7 +2954,7 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_SWITCH outside TURN");
     INVALID_IF(!IsAITest(), "EXPECT_SWITCH is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWO_VS_ONE_TEST, and AI_ONE_VS_TWO_TEST");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
-    INVALID_IF(partyIndex >= DATA.partySizes[GetBattleTrainer(battlerId)], "EXPECT_SWITCH to invalid party index");
+    INVALID_IF(partyIndex >= DATA.partySizes[GetBattlerTrainer(battlerId)], "EXPECT_SWITCH to invalid party index");
 
     for (i = 0; i < STATE->battlersCount; i++)
     {
@@ -2971,7 +2971,7 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     DATA.expectedAiActions[battlerId][id].sourceLine = sourceLine;
     DATA.expectedAiActions[battlerId][id].actionSet = TRUE;
     DATA.expectedAiActionIndex[battlerId]++;
-    
+
     if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
         gTestRunnerState.expectedFailState = EXPECT_FAIL_TURN_OPEN;
 }
@@ -2988,7 +2988,7 @@ void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     s32 i;
     s32 battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SEND_OUT outside TURN");
-    INVALID_IF(partyIndex >= DATA.partySizes[GetBattleTrainer(battlerId)], "SEND_OUT of invalid party index");
+    INVALID_IF(partyIndex >= DATA.partySizes[GetBattlerTrainer(battlerId)], "SEND_OUT of invalid party index");
     INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "SEND_OUT is not allowed for opponent in AI tests. Use EXPECT_SEND_OUT instead");
     for (i = 0; i < STATE->battlersCount; i++)
     {
@@ -3014,7 +3014,7 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
     INVALID_IF(ctx.itemId >= ITEMS_COUNT, "Illegal item: %d", ctx.itemId);
     // Check party menu items.
     INVALID_IF(requirePartyIndex && !ctx.explicitPartyIndex, "%S requires explicit party index", GetItemName(ctx.itemId));
-    INVALID_IF(requirePartyIndex && ctx.partyIndex >= DATA.partySizes[GetBattleTrainer(battlerId)], \
+    INVALID_IF(requirePartyIndex && ctx.partyIndex >= DATA.partySizes[GetBattlerTrainer(battlerId)], \
                 "USE_ITEM to invalid party index");
     // Check move slot items.
     if (GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU_MOVES)

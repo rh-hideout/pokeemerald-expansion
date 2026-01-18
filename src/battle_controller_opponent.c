@@ -574,7 +574,7 @@ static void OpponentHandleChoosePokemon(u32 battler)
             GetAIPartyIndexes(battler, &firstId, &lastId);
             for (chosenMonId = firstId; chosenMonId < lastId; chosenMonId++)
             {
-                if (IsValidForBattle(&gParties[GetBattleTrainer(battler)][chosenMonId])
+                if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][chosenMonId])
                  && !((chosenMonId == gBattlerPartyIndexes[battler1]) && BattlersShareParty(battler, battler1))
                  && !((chosenMonId == gBattlerPartyIndexes[battler2]) && BattlersShareParty(battler, battler2)))
                     break;

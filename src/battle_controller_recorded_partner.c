@@ -45,7 +45,6 @@ static void RecordedPartnerHandleIntroTrainerBallThrow(u32 battler);
 static void RecordedPartnerHandleDrawPartyStatusSummary(u32 battler);
 static void RecordedPartnerHandleEndLinkBattle(u32 battler);
 static void RecordedPartnerBufferRunCommand(u32 battler);
-static void RecordedPartnerHandleStatusIconUpdate(u32 battler);
 
 static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 {
@@ -74,7 +73,7 @@ static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 b
     [CONTROLLER_23]                       = BtlController_Empty,
     [CONTROLLER_HEALTHBARUPDATE]          = BtlController_HandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = PlayerHandleExpUpdate, // Partner's player gets experience the same way as the player.
-    [CONTROLLER_STATUSICONUPDATE]         = RecordedPartnerHandleStatusIconUpdate,
+    [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = BtlController_HandleStatusAnimation,
     [CONTROLLER_STATUSXOR]                = BtlController_Empty,
     [CONTROLLER_DATATRANSFER]             = BtlController_Empty,
@@ -288,14 +287,4 @@ static void RecordedPartnerHandleEndLinkBattle(u32 battler)
     BeginFastPaletteFade(3);
     BtlController_Complete(battler);
     gBattlerControllerFuncs[battler] = SetBattleEndCallbacks;
-}
-
-static void RecordedPartnerHandleStatusIconUpdate(u32 battler)
-{
-    if (!IsBattleSEPlaying(battler))
-    {
-        DoStatusIconUpdate(battler);
-        if (gTestRunnerEnabled)
-            TestRunner_Battle_RecordStatus1(battler, GetMonData(GetBattlerMon(battler), MON_DATA_STATUS));
-    }
 }

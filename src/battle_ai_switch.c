@@ -69,7 +69,7 @@ static u32 GetWishHealAmountForBattler(u32 battler)
 
     if (B_WISH_HP_SOURCE >= GEN_5)
     {
-        wishHeal = GetMonData(&gParties[GetBattleTrainer(battler)][gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
+        wishHeal = GetMonData(&gParties[GetBattlerTrainer(battler)][gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
     }
     else
     {

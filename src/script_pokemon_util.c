@@ -512,21 +512,13 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
 
     u32 i;
     u16 evs[NUM_STATS];
-    u32 evTotal = 0;
-    u32 evCap = GetCurrentEVCap();
     for (i = 0; i < NUM_STATS; i++)
     {
         evs[i] = PARSE_FLAG(5 + i, 0);
         assertf(evs[i] <= MAX_PER_STAT_EVS, "invalid ev value of %d above maximum of %d", evs[i], MAX_PER_STAT_EVS)
         {
-            evs[i] = 0;
+            evs[i] = MAX_PER_STAT_EVS;
         }
-        evTotal += evs[i];
-    }
-    assertf(evTotal <= evCap, "total ev count of %d above maximum of %d", evTotal, evCap)
-    {
-        for (i = 0; i < NUM_STATS; i++)
-            evs[i] = 0;
     }
 
     u16 ivs[NUM_STATS];
@@ -536,8 +528,10 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     for (i = 0; i < NUM_STATS; i++)
     {
         ivs[i] = PARSE_FLAG(11 + i, USE_RANDOM_IVS);
-        if (ivs[i] > USE_RANDOM_IVS)
-            errorf("invalid iv value of %d  above maximum of %d", ivs[i], MAX_PER_STAT_IVS);
+        assertf(ivs[i] <= USE_RANDOM_IVS, "invalid iv value of %d above maximum of %d", ivs[i], MAX_PER_STAT_IVS)
+        {
+            ivs[i] = MAX_PER_STAT_IVS;
+        }
         if (ivs[i] == USE_RANDOM_IVS)
         {
             availableIVs[nonFixedIvCount] = i;

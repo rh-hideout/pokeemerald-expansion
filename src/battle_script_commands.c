@@ -5179,7 +5179,7 @@ static bool32 IsValidSwitchIn(enum BattleTrainer trainer, u32 index)
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        if (GetBattleTrainer(i) == trainer && gBattlerPartyIndexes[i] == index && IsBattlerAlive(i))
+        if (GetBattlerTrainer(i) == trainer && gBattlerPartyIndexes[i] == index && IsBattlerAlive(i))
             return FALSE;
     }
 
@@ -5206,7 +5206,7 @@ static void Cmd_getswitchedmondata(void)
     if (gBattleControllerExecFlags)
         return;
 
-    enum BattleTrainer trainer = GetBattleTrainer(battler);
+    enum BattleTrainer trainer = GetBattlerTrainer(battler);
     assertf(IsValidSwitchIn(trainer, gBattleStruct->monToSwitchIntoId[battler]))
     {
         gBattleStruct->monToSwitchIntoId[battler] = GetArbitraryValidSwitchIn(trainer);
@@ -5238,7 +5238,7 @@ static void Cmd_switchindataupdate(void)
     for (i = 0; i < sizeof(struct BattlePokemon); i++)
         monData[i] = gBattleResources->bufferB[battler][4 + i];
 
-    enum BattleTrainer trainer = GetBattleTrainer(battler);
+    enum BattleTrainer trainer = GetBattlerTrainer(battler);
     assertf(IsBattlerAlive(battler))
     {
         gBattlerPartyIndexes[battler] = gBattleStruct->monToSwitchIntoId[battler] = GetArbitraryValidSwitchIn(trainer);
@@ -5254,7 +5254,7 @@ static void Cmd_switchindataupdate(void)
     #if TESTING
     if (gTestRunnerEnabled)
     {
-        enum BattleTrainer trainer = GetBattleTrainer(battler);
+        enum BattleTrainer trainer = GetBattlerTrainer(battler);
         u32 partyIndex = gBattlerPartyIndexes[battler];
         if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
             gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
@@ -9220,7 +9220,7 @@ static void Cmd_healpartystatus(void)
                 #if TESTING
                 if (gTestRunnerEnabled)
                 {
-                    enum BattleTrainer trainer = GetBattleTrainer(gBattlerAttacker);
+                    enum BattleTrainer trainer = GetBattlerTrainer(gBattlerAttacker);
                     if (TestRunner_Battle_GetForcedAbility(trainer, i))
                         ability = TestRunner_Battle_GetForcedAbility(trainer, i);
                 }
@@ -12205,7 +12205,7 @@ void BS_ItemRestorePP(void)
     const u8 *effect = GetItemEffect(gLastUsedItem);
     u32 i, pp, maxPP, moveId, loopEnd;
     u32 battler = MAX_BATTLERS_COUNT;
-    struct Pokemon *mon = &gParties[GetBattleTrainer(gBattlerAttacker)][gBattleStruct->itemPartyIndex[gBattlerAttacker]];
+    struct Pokemon *mon = &gParties[GetBattlerTrainer(gBattlerAttacker)][gBattleStruct->itemPartyIndex[gBattlerAttacker]];
 
     // Check whether to apply to all moves.
     if (effect[4] & ITEM4_HEAL_PP_ONE)
@@ -13165,7 +13165,7 @@ void BS_CheckPokeFlute(void)
 
     for (enum BattlerPosition position = B_POSITION_PLAYER_LEFT; position < MAX_POSITION_COUNT; position++)
     {
-        enum BattleTrainer trainer = GetBattleTrainer(GetBattlerAtPosition(position));
+        enum BattleTrainer trainer = GetBattlerTrainer(GetBattlerAtPosition(position));
         UpdatePokeFlutePartyStatus(gParties[trainer], position);
     }
 
