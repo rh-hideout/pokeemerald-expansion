@@ -1368,15 +1368,21 @@ static void Task_TradeEvolutionScene(u8 taskId)
 
                 if (gTasks[taskId].tPartyId == PC_MON_CHOSEN)
                 {
-                    ShowSelectMovePokemonSummaryScreen(gEnemyParty, 1,
+                    ShowSelectMovePokemonSummaryScreen(
+                                gEnemyParty, 
+                                1,
                                 CB2_TradeEvolutionSceneLoadGraphics,
-                                gMoveToLearn);
+                                gMoveToLearn
+                            );
                 }
                 else
                 {
-                    ShowSelectMovePokemonSummaryScreen(gPlayerParty, gTasks[taskId].tPartyId,
+                    ShowSelectMovePokemonSummaryScreen(
+                                gPlayerParty, 
+                                gTasks[taskId].tPartyId,
                                 CB2_TradeEvolutionSceneLoadGraphics,
-                                gMoveToLearn);
+                                gMoveToLearn
+                            );
                 }
                 gTasks[taskId].tLearnMoveState++;
             }

@@ -4463,10 +4463,10 @@ static void CreateMovingMonIcon(void)
 static bool32 ShouldBoxmonSpriteBeTransparent(u32 boxId, u32 boxPosition)
 {
     if (sStorage->boxOption == OPTION_MOVE_ITEMS
-    && GetBoxMonDataAt(boxId, boxPosition, MON_DATA_HELD_ITEM) == ITEM_NONE)
+     && GetBoxMonDataAt(boxId, boxPosition, MON_DATA_HELD_ITEM) == ITEM_NONE)
         return TRUE;
     if (sStorage->boxOption == OPTION_SELECT_MON
-    && IsBoxMonExcluded(GetBoxedMonPtr(boxId, boxPosition)))
+     && IsBoxMonExcluded(GetBoxedMonPtr(boxId, boxPosition)))
         return TRUE;
     return FALSE;
 }
