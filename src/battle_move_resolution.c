@@ -1607,7 +1607,7 @@ enum CancelerResult DoAttackCanceler(void)
 // Move End
 // ========
 
-static enum MoveEndResult MoveEnd_SetValues(void)
+static enum MoveEndResult MoveEndSetValues(void)
 {
     gBattleScripting.savedDmg += gBattleStruct->moveDamage[gBattlerTarget];
     gBattleStruct->eventState.moveEndBattler = 0;
@@ -1616,7 +1616,7 @@ static enum MoveEndResult MoveEnd_SetValues(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
+static enum MoveEndResult MoveEndProtectLikeEffect(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     u32 temp = 0;
@@ -1696,7 +1696,7 @@ static enum MoveEndResult MoveEnd_ProtectLikeEffect(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_Absorb(void)
+static enum MoveEndResult MoveEndAbsorb(void)
 {
     if (gBattleStruct->unableToUseMove)
     {
@@ -1769,7 +1769,7 @@ static enum MoveEndResult MoveEnd_Absorb(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_Rage(void)
+static enum MoveEndResult MoveEndRage(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -1790,7 +1790,7 @@ static enum MoveEndResult MoveEnd_Rage(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_SynchronizeTarget(void)
+static enum MoveEndResult MoveEndSynchronizeTarget(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     if (AbilityBattleEffects(ABILITYEFFECT_SYNCHRONIZE, gBattlerTarget, 0, 0, TRUE))
@@ -1799,7 +1799,7 @@ static enum MoveEndResult MoveEnd_SynchronizeTarget(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_Abilities(void)
+static enum MoveEndResult MoveEndAbilities(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum Ability targetAbility = GetBattlerAbility(gBattlerTarget);
@@ -1813,7 +1813,7 @@ static enum MoveEndResult MoveEnd_Abilities(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_AbilitiesAttacker(void)
+static enum MoveEndResult MoveEndAbilitiesAttacker(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -1824,7 +1824,7 @@ static enum MoveEndResult MoveEnd_AbilitiesAttacker(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_StatusImmunityAbilities(void)
+static enum MoveEndResult MoveEndStatusImmunityAbilities(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -1839,7 +1839,7 @@ static enum MoveEndResult MoveEnd_StatusImmunityAbilities(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_SynchronizeAttacker(void)
+static enum MoveEndResult MoveEndSynchronizeAttacker(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -1850,7 +1850,7 @@ static enum MoveEndResult MoveEnd_SynchronizeAttacker(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_AttackerInvisible(void)
+static enum MoveEndResult MoveEndAttackerInvisible(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -1866,7 +1866,7 @@ static enum MoveEndResult MoveEnd_AttackerInvisible(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_AttackerVisible(void)
+static enum MoveEndResult MoveEndAttackerVisible(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -1885,7 +1885,7 @@ static enum MoveEndResult MoveEnd_AttackerVisible(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_TargetVisible(void)
+static enum MoveEndResult MoveEndTargetVisible(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -1902,7 +1902,7 @@ static enum MoveEndResult MoveEnd_TargetVisible(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_ItemEffectsTarget(void)
+static enum MoveEndResult MoveEndItemEffectsTarget(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(gBattlerTarget);
@@ -1915,7 +1915,7 @@ static enum MoveEndResult MoveEnd_ItemEffectsTarget(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_ItemEffectsAttacker1(void)
+static enum MoveEndResult MoveEndItemEffectsAttacker1(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(gBattlerAttacker);
@@ -1929,7 +1929,7 @@ static enum MoveEndResult MoveEnd_ItemEffectsAttacker1(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_Symbiosis(void)
+static enum MoveEndResult MoveEndSymbiosis(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -1954,7 +1954,7 @@ static enum MoveEndResult MoveEnd_Symbiosis(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_Substitute(void)
+static enum MoveEndResult MoveEndSubstitute(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -1968,7 +1968,7 @@ static enum MoveEndResult MoveEnd_Substitute(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_FaintBlock(void)
+static enum MoveEndResult MoveEndFaintBlock(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -2103,7 +2103,7 @@ static enum MoveEndResult MoveEnd_FaintBlock(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_SkyDropConfuse(void)
+static enum MoveEndResult MoveEndSkyDropConfuse(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -2134,7 +2134,7 @@ static enum MoveEndResult MoveEnd_SkyDropConfuse(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_UpdateLastMoves(void)
+static enum MoveEndResult MoveEndUpdateLastMoves(void)
 {
     if (!IsOnPlayerSide(gBattlerAttacker))
         UpdateStallMons();
@@ -2212,7 +2212,7 @@ static enum MoveEndResult MoveEnd_UpdateLastMoves(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_MirrorMove(void)
+static enum MoveEndResult MoveEndMirrorMove(void)
 {
     if (!gBattleStruct->unableToUseMove
      && gBattlerAttacker != gBattlerTarget
@@ -2229,7 +2229,7 @@ static enum MoveEndResult MoveEnd_MirrorMove(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_Defrost(void)
+static enum MoveEndResult MoveEndDefrost(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -2264,7 +2264,7 @@ static enum MoveEndResult MoveEnd_Defrost(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_NextTarget(void)
+static enum MoveEndResult MoveEndNextTarget(void)
 {
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
@@ -2337,7 +2337,7 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_HpThresholdItemsTarget(void)
+static enum MoveEndResult MoveEndHpThresholdItemsTarget(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -2351,7 +2351,7 @@ static enum MoveEndResult MoveEnd_HpThresholdItemsTarget(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_MultihitMove(void)
+static enum MoveEndResult MoveEndMultihitMove(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -2415,7 +2415,7 @@ static enum MoveEndResult MoveEnd_MultihitMove(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_MoveBlock(void)
+static enum MoveEndResult MoveEndMoveBlock(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum BattleSide side = GetBattlerSide(gBattlerTarget);
@@ -2663,7 +2663,7 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_ItemEffectsAttacker2(void)
+static enum MoveEndResult MoveEndItemEffectsAttacker2(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(gBattlerAttacker);
@@ -2676,7 +2676,7 @@ static enum MoveEndResult MoveEnd_ItemEffectsAttacker2(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_AbilityEffectFoesFainted(void)
+static enum MoveEndResult MoveEndAbilityEffectFoesFainted(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -2687,7 +2687,7 @@ static enum MoveEndResult MoveEnd_AbilityEffectFoesFainted(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_SheerForce(void)
+static enum MoveEndResult MoveEndSheerForce(void)
 {
     if (IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
         gBattleScripting.moveendState = MOVEEND_EJECT_PACK;
@@ -2697,7 +2697,7 @@ static enum MoveEndResult MoveEnd_SheerForce(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_ShellTrap(void)
+static enum MoveEndResult MoveEndShellTrap(void)
 {
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
@@ -2720,7 +2720,7 @@ static enum MoveEndResult MoveEnd_ShellTrap(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_ColorChange(void)
+static enum MoveEndResult MoveEndColorChange(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
@@ -2736,7 +2736,7 @@ static enum MoveEndResult MoveEnd_ColorChange(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_KeeMarangaHpThresholdItemTarget(void)
+static enum MoveEndResult MoveEndKeeMarangaHpThresholdItemTarget(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
@@ -2791,7 +2791,7 @@ static bool32 TryEjectButton(u32 battlerAtk, u32 ejectButtonBattler)
     return TRUE;
 }
 
-static enum MoveEndResult MoveEnd_CardButton(void)
+static enum MoveEndResult MoveEndCardButton(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     u32 redCardBattlers = 0;
@@ -2842,7 +2842,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_LifeOrbShellBell(void)
+static enum MoveEndResult MoveEndLifeOrbShellBell(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -2853,7 +2853,7 @@ static enum MoveEndResult MoveEnd_LifeOrbShellBell(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_FormChange(void)
+static enum MoveEndResult MoveEndFormChange(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -2867,7 +2867,7 @@ static enum MoveEndResult MoveEnd_FormChange(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_EmergencyExit(void)
+static enum MoveEndResult MoveEndEmergencyExit(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     u32 numEmergencyExitBattlers = 0;
@@ -2930,7 +2930,7 @@ static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, enum Ba
     return FALSE;
 }
 
-static enum MoveEndResult MoveEnd_EjectPack(void)
+static enum MoveEndResult MoveEndEjectPack(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     u32 ejectPackBattlers = 0;
@@ -2979,7 +2979,7 @@ static enum MoveEndResult MoveEnd_EjectPack(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_HitEscape(void)
+static enum MoveEndResult MoveEndHitEscape(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -2997,7 +2997,7 @@ static enum MoveEndResult MoveEnd_HitEscape(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_ItemsEffectsAll(void)
+static enum MoveEndResult MoveEndItemsEffectsAll(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
@@ -3013,7 +3013,7 @@ static enum MoveEndResult MoveEnd_ItemsEffectsAll(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_WhiteHerb(void)
+static enum MoveEndResult MoveEndWhiteHerb(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
@@ -3030,7 +3030,7 @@ static enum MoveEndResult MoveEnd_WhiteHerb(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_Opportunist(void)
+static enum MoveEndResult MoveEndOpportunist(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
@@ -3046,7 +3046,7 @@ static enum MoveEndResult MoveEnd_Opportunist(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_MirrorHerb(void)
+static enum MoveEndResult MoveEndMirrorHerb(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
@@ -3063,7 +3063,7 @@ static enum MoveEndResult MoveEnd_MirrorHerb(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_Pickpocket(void)
+static enum MoveEndResult MoveEndPickpocket(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -3104,7 +3104,7 @@ static enum MoveEndResult MoveEnd_Pickpocket(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_ThirdMoveBlock(void)
+static enum MoveEndResult MoveEndThirdMoveBlock(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
@@ -3158,7 +3158,7 @@ static enum MoveEndResult MoveEnd_ThirdMoveBlock(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_ChangedItems(void)
+static enum MoveEndResult MoveEndChangedItems(void)
 {
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
@@ -3173,7 +3173,7 @@ static enum MoveEndResult MoveEnd_ChangedItems(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_ClearBits(void)
+static enum MoveEndResult MoveEndClearBits(void)
 {
     ValidateBattlers();
 
@@ -3243,7 +3243,7 @@ static enum MoveEndResult MoveEnd_ClearBits(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEnd_Dancer(void)
+static enum MoveEndResult MoveEndDancer(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -3290,7 +3290,7 @@ static enum MoveEndResult MoveEnd_Dancer(void)
     return result;
 }
 
-static enum MoveEndResult MoveEnd_PursuitNextAction(void)
+static enum MoveEndResult MoveEndPursuitNextAction(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -3322,53 +3322,53 @@ static enum MoveEndResult MoveEnd_PursuitNextAction(void)
 
 static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
 {
-    [MOVEEND_SET_VALUES] = MoveEnd_SetValues,
-    [MOVEEND_PROTECT_LIKE_EFFECT] = MoveEnd_ProtectLikeEffect,
-    [MOVEEND_ABSORB] = MoveEnd_Absorb,
-    [MOVEEND_RAGE] = MoveEnd_Rage,
-    [MOVEEND_SYNCHRONIZE_TARGET] = MoveEnd_SynchronizeTarget,
-    [MOVEEND_ABILITIES] = MoveEnd_Abilities,
-    [MOVEEND_ABILITIES_ATTACKER] = MoveEnd_AbilitiesAttacker,
-    [MOVEEND_STATUS_IMMUNITY_ABILITIES] = MoveEnd_StatusImmunityAbilities,
-    [MOVEEND_SYNCHRONIZE_ATTACKER] = MoveEnd_SynchronizeAttacker,
-    [MOVEEND_ATTACKER_INVISIBLE] = MoveEnd_AttackerInvisible,
-    [MOVEEND_ATTACKER_VISIBLE] = MoveEnd_AttackerVisible,
-    [MOVEEND_TARGET_VISIBLE] = MoveEnd_TargetVisible,
-    [MOVEEND_ITEM_EFFECTS_TARGET] = MoveEnd_ItemEffectsTarget,
-    [MOVEEND_ITEM_EFFECTS_ATTACKER_1] = MoveEnd_ItemEffectsAttacker1,
-    [MOVEEND_SYMBIOSIS] = MoveEnd_Symbiosis,
-    [MOVEEND_SUBSTITUTE] = MoveEnd_Substitute,
-    [MOVEEND_FAINT_BLOCK] = MoveEnd_FaintBlock,
-    [MOVEEND_SKY_DROP_CONFUSE] = MoveEnd_SkyDropConfuse,
-    [MOVEEND_UPDATE_LAST_MOVES] = MoveEnd_UpdateLastMoves,
-    [MOVEEND_MIRROR_MOVE] = MoveEnd_MirrorMove,
-    [MOVEEND_DEFROST] = MoveEnd_Defrost,
-    [MOVEEND_NEXT_TARGET] = MoveEnd_NextTarget,
-    [MOVEEND_HP_THRESHOLD_ITEMS_TARGET] = MoveEnd_HpThresholdItemsTarget,
-    [MOVEEND_MULTIHIT_MOVE] = MoveEnd_MultihitMove,
-    [MOVEEND_MOVE_BLOCK] = MoveEnd_MoveBlock,
-    [MOVEEND_ITEM_EFFECTS_ATTACKER_2] = MoveEnd_ItemEffectsAttacker2,
-    [MOVEEND_ABILITY_EFFECT_FOES_FAINTED] = MoveEnd_AbilityEffectFoesFainted,
-    [MOVEEND_SHEER_FORCE] = MoveEnd_SheerForce,
-    [MOVEEND_SHELL_TRAP] = MoveEnd_ShellTrap,
-    [MOVEEND_COLOR_CHANGE] = MoveEnd_ColorChange,
-    [MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET] = MoveEnd_KeeMarangaHpThresholdItemTarget,
-    [MOVEEND_CARD_BUTTON] = MoveEnd_CardButton,
-    [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEnd_LifeOrbShellBell,
-    [MOVEEND_FORM_CHANGE] = MoveEnd_FormChange,
-    [MOVEEND_EMERGENCY_EXIT] = MoveEnd_EmergencyExit,
-    [MOVEEND_EJECT_PACK] = MoveEnd_EjectPack,
-    [MOVEEND_HIT_ESCAPE] = MoveEnd_HitEscape,
-    [MOVEEND_ITEMS_EFFECTS_ALL] = MoveEnd_ItemsEffectsAll,
-    [MOVEEND_WHITE_HERB] = MoveEnd_WhiteHerb,
-    [MOVEEND_OPPORTUNIST] = MoveEnd_Opportunist,
-    [MOVEEND_MIRROR_HERB] = MoveEnd_MirrorHerb,
-    [MOVEEND_PICKPOCKET] = MoveEnd_Pickpocket,
-    [MOVEEND_THIRD_MOVE_BLOCK] = MoveEnd_ThirdMoveBlock,
-    [MOVEEND_CHANGED_ITEMS] = MoveEnd_ChangedItems,
-    [MOVEEND_CLEAR_BITS] = MoveEnd_ClearBits,
-    [MOVEEND_DANCER] = MoveEnd_Dancer,
-    [MOVEEND_PURSUIT_NEXT_ACTION] = MoveEnd_PursuitNextAction,
+    [MOVEEND_SET_VALUES] = MoveEndSetValues,
+    [MOVEEND_PROTECT_LIKE_EFFECT] = MoveEndProtectLikeEffect,
+    [MOVEEND_ABSORB] = MoveEndAbsorb,
+    [MOVEEND_RAGE] = MoveEndRage,
+    [MOVEEND_SYNCHRONIZE_TARGET] = MoveEndSynchronizeTarget,
+    [MOVEEND_ABILITIES] = MoveEndAbilities,
+    [MOVEEND_ABILITIES_ATTACKER] = MoveEndAbilitiesAttacker,
+    [MOVEEND_STATUS_IMMUNITY_ABILITIES] = MoveEndStatusImmunityAbilities,
+    [MOVEEND_SYNCHRONIZE_ATTACKER] = MoveEndSynchronizeAttacker,
+    [MOVEEND_ATTACKER_INVISIBLE] = MoveEndAttackerInvisible,
+    [MOVEEND_ATTACKER_VISIBLE] = MoveEndAttackerVisible,
+    [MOVEEND_TARGET_VISIBLE] = MoveEndTargetVisible,
+    [MOVEEND_ITEM_EFFECTS_TARGET] = MoveEndItemEffectsTarget,
+    [MOVEEND_ITEM_EFFECTS_ATTACKER_1] = MoveEndItemEffectsAttacker1,
+    [MOVEEND_SYMBIOSIS] = MoveEndSymbiosis,
+    [MOVEEND_SUBSTITUTE] = MoveEndSubstitute,
+    [MOVEEND_FAINT_BLOCK] = MoveEndFaintBlock,
+    [MOVEEND_SKY_DROP_CONFUSE] = MoveEndSkyDropConfuse,
+    [MOVEEND_UPDATE_LAST_MOVES] = MoveEndUpdateLastMoves,
+    [MOVEEND_MIRROR_MOVE] = MoveEndMirrorMove,
+    [MOVEEND_DEFROST] = MoveEndDefrost,
+    [MOVEEND_NEXT_TARGET] = MoveEndNextTarget,
+    [MOVEEND_HP_THRESHOLD_ITEMS_TARGET] = MoveEndHpThresholdItemsTarget,
+    [MOVEEND_MULTIHIT_MOVE] = MoveEndMultihitMove,
+    [MOVEEND_MOVE_BLOCK] = MoveEndMoveBlock,
+    [MOVEEND_ITEM_EFFECTS_ATTACKER_2] = MoveEndItemEffectsAttacker2,
+    [MOVEEND_ABILITY_EFFECT_FOES_FAINTED] = MoveEndAbilityEffectFoesFainted,
+    [MOVEEND_SHEER_FORCE] = MoveEndSheerForce,
+    [MOVEEND_SHELL_TRAP] = MoveEndShellTrap,
+    [MOVEEND_COLOR_CHANGE] = MoveEndColorChange,
+    [MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET] = MoveEndKeeMarangaHpThresholdItemTarget,
+    [MOVEEND_CARD_BUTTON] = MoveEndCardButton,
+    [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEndLifeOrbShellBell,
+    [MOVEEND_FORM_CHANGE] = MoveEndFormChange,
+    [MOVEEND_EMERGENCY_EXIT] = MoveEndEmergencyExit,
+    [MOVEEND_EJECT_PACK] = MoveEndEjectPack,
+    [MOVEEND_HIT_ESCAPE] = MoveEndHitEscape,
+    [MOVEEND_ITEMS_EFFECTS_ALL] = MoveEndItemsEffectsAll,
+    [MOVEEND_WHITE_HERB] = MoveEndWhiteHerb,
+    [MOVEEND_OPPORTUNIST] = MoveEndOpportunist,
+    [MOVEEND_MIRROR_HERB] = MoveEndMirrorHerb,
+    [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
+    [MOVEEND_THIRD_MOVE_BLOCK] = MoveEndThirdMoveBlock,
+    [MOVEEND_CHANGED_ITEMS] = MoveEndChangedItems,
+    [MOVEEND_CLEAR_BITS] = MoveEndClearBits,
+    [MOVEEND_DANCER] = MoveEndDancer,
+    [MOVEEND_PURSUIT_NEXT_ACTION] = MoveEndPursuitNextAction,
 };
 
 enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endState)
