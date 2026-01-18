@@ -9738,18 +9738,15 @@ s32 CalcCritChanceStageGen1(struct BattleContext *ctx)
     if (critChance > 255)
         critChance = 255;
 
-    // Prevented crits
     if (ctx->abilityDef == ABILITY_BATTLE_ARMOR || ctx->abilityDef == ABILITY_SHELL_ARMOR)
     {
         if (ctx->updateFlags)
             RecordAbilityBattle(ctx->battlerDef, ctx->abilityDef);
         critChance = CRITICAL_HIT_BLOCKED;
     }
-
-    // Guaranteed crits
     else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
-             || MoveAlwaysCrits(ctx->move)
-             || (ctx->abilityAtk == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
+          || MoveAlwaysCrits(ctx->move)
+          || (ctx->abilityAtk == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
         critChance = CRITICAL_HIT_ALWAYS;
     }
@@ -9795,7 +9792,7 @@ static bool32 IsCriticalHit(struct BattleContext *ctx)
     return isCrit;
 }
 
-s32 AdjustDamage(struct BattleContext *ctx, s32 damage)
+s32 GetAdjustedDamage(struct BattleContext *ctx, s32 damage)
 {
     if (DoesSubstituteBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->move)
      || DoesDisguiseBlockMove(ctx->battlerDef, ctx->move))
@@ -9857,10 +9854,9 @@ s32 AdjustDamage(struct BattleContext *ctx, s32 damage)
         }
     }
 
-    // Reduce damage to 1 hp.
     if (enduredHit)
     {
-        damage = gBattleMons[ctx->battlerDef].hp - 1;
+        damage = gBattleMons[ctx->battlerDef].hp - 1; // Reduce damage to 1 hp.
         gProtectStructs[ctx->battlerDef].assuranceDoubled = TRUE;
     }
 
@@ -9884,7 +9880,7 @@ s32 CalculateMoveDamage(struct BattleContext *ctx)
     else
         damage = DoMoveDamageCalc(ctx);
 
-    return AdjustDamage(ctx, damage);
+    return GetAdjustedDamage(ctx, damage);
 }
 
 // for AI so that typeEffectivenessModifier, weather, abilities and holdEffects are calculated only once
