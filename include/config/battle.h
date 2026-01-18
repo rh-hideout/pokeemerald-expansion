@@ -67,7 +67,7 @@
 #define B_UPDATED_MOVE_FLAGS        GEN_LATEST // Updates move flags in gMovesInfo.
 #define B_PHYSICAL_SPECIAL_SPLIT    GEN_LATEST // In Gens1-3, a move's type determines if it will do physical or special damage. The category icon in the summary will reflect this.
 #define B_RECOIL_IF_MISS_DMG        GEN_LATEST // Crash damage's formula. See EFFECT_RECOIL_IF_MISS.
-#define B_KLUTZ_FLING_INTERACTION   GEN_LATEST // In Gen5+, Pokémon with the Klutz ability can no longer use Fling.
+#define B_KLUTZ_FLING_INTERACTION   GEN_LATEST // In Gen5+, Pokémon with the Klutz Ability can no longer use Fling.
 #define B_UPDATED_CONVERSION        GEN_LATEST // In Gen6+, Conversion changes the user's type to match that of their first move. In Gen5 and earlier, it would choose a move at random.
 #define B_UPDATED_CONVERSION_2      GEN_LATEST // In Gen5+, Conversion 2 changes the user's type to a type that resists the last move used by the selected target. In Gen4 and earlier, it would consider the last move the user was successfully hit by. Additionally, Struggle was considered Normal-type.
 #define B_PP_REDUCED_BY_SPITE       GEN_LATEST // In Gen4+, Spite reduces the PP of the target's last move by 4 instead of 2-5.
@@ -191,7 +191,7 @@
 #define B_HEAL_BLOCK_TIMER   5
 #define B_LASER_FOCUS_TIMER  2
 #define B_THROAT_CHOP_TIMER  2
-#define B_WRAP_TURNS         7 // Max number of turns with Grip Claw
+#define B_WRAP_TURNS         7 // Max number of turns with a Grip Claw.
 #define B_SYRUP_BOMB_TIMER   3
 #define B_TORMENT_TIMER      3
 
@@ -202,7 +202,7 @@
 #define B_MENTAL_HERB               GEN_LATEST // In Gen5+, Mental Herb cures Taunt, Encore, Torment, Heal Block, and Disable in addition to Infatuation from before.
 #define B_TRAINERS_KNOCK_OFF_ITEMS  TRUE       // If TRUE, Trainers can steal/swap your items (non-berries are restored after battle). In vanilla games, Trainers cannot steal items outside of facilities.
 #define B_RETURN_STOLEN_NPC_ITEMS   GEN_LATEST // In Gen5+, Thief and Covet no longer permanently steal items from NPCs.
-#define B_STEAL_WILD_ITEMS          GEN_LATEST // In Gen9+, Thief and Covet steal a wild Pokémon's item and send it to the bag. In Gen8 and earlier, the stolen item would be held by the Thief/Covet user.
+#define B_STEAL_WILD_ITEMS          GEN_LATEST // In Gen9+, Thief and Covet steal a wild Pokémon's item and send it to the Bag. In Gen8 and earlier, the stolen item would be held by the Thief/Covet user.
 #define B_RESTORE_HELD_BATTLE_ITEMS GEN_LATEST // In Gen9+, all non-Berry items are restored after battle.
 #define B_SOUL_DEW_BOOST            GEN_LATEST // In Gen7+, Soul Dew increases the power of the Latis' Psychic- and Dragon-type moves by ~20%. In Gen6 and earlier, it increased their Sp. Atk and Sp. Def by 50% each.
 #define B_NET_BALL_MODIFIER         GEN_LATEST // In Gen7+, Net Ball's catch multiplier is 5x instead of 3x.
@@ -253,7 +253,7 @@
 
 #define B_VAR_DIFFICULTY            0     // If not 0, you can use this var to control which difficulty version of a Trainer is loaded. This should be manually set by the developer using Script_SetDifficulty AFTER NewGameInitData has run.
 
-// No bag settings
+// No Bag settings
 #define NO_BAG_RESTRICTION       0
 #define NO_BAG_AGAINST_TRAINER   1
 #define NO_BAG_IN_BATTLE         2
