@@ -9809,7 +9809,7 @@ s32 GetAdjustedDamage(struct BattleContext *ctx, s32 damage)
     if (gBattleMons[ctx->battlerDef].hp > damage)
         return damage;
 
-    u32 enduredHit = FALSE;
+    bool32 enduredHit = FALSE;
     u32 rand = Random() % 100;
     u32 affectionScore = GetBattlerAffectionHearts(ctx->battlerDef);
 

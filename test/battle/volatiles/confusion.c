@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Confusion self hit does not consume Gems")
 SINGLE_BATTLE_TEST("Confusion damage activates Focus Sash")
 {
     GIVEN {
-        ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(1); Item(ITEM_FOCUS_SASH); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {

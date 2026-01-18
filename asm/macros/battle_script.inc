@@ -30,10 +30,6 @@
 	.byte B_SCR_OP_TYPECALC
 	.endm
 
-	.macro adjustdamage
-	.byte B_SCR_OP_ADJUSTDAMAGE
-	.endm
-
 	.macro multihitresultmessage
 	.byte B_SCR_OP_MULTIHITRESULTMESSAGE
 	.endm
@@ -1337,6 +1333,10 @@
 	.macro tryoverwriteability failInstr:req
 	.byte B_SCR_OP_TRYOVERWRITEABILITY
 	.4byte \failInstr
+	.endm
+
+	.macro unused_1
+	.byte B_SCR_UNUSED_1
 	.endm
 
 	.macro callnative func:req
