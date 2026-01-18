@@ -50,7 +50,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefers it otherwise (Single)")
+AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact (Single)")
 {
     static const enum Move protectMoves[] =
     {
@@ -99,7 +99,7 @@ AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefer
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefers it otherwise (Doubles)")
+AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact (Doubles)")
 {
     static const enum Move protectMoves[] =
     {
@@ -148,6 +148,73 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact, prefer
                 MOVE(playerRight, MOVE_CELEBRATE);
                 SCORE_LT(opponentLeft, protectMove, MOVE_SCRATCH, target: playerLeft);
             }
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs moves that ignore protection (Single)")
+{
+    enum Move move = MOVE_NONE;
+    bool32 shouldProtect = FALSE;
+
+    PARAMETRIZE { move = MOVE_TACKLE; shouldProtect = TRUE; }
+    PARAMETRIZE { move = MOVE_FEINT; shouldProtect = FALSE; }
+    PARAMETRIZE { move = MOVE_SHADOW_FORCE; shouldProtect = FALSE; }
+    PARAMETRIZE { move = MOVE_PHANTOM_FORCE; shouldProtect = FALSE; }
+    PARAMETRIZE { move = MOVE_HYPERSPACE_HOLE; shouldProtect = FALSE; }
+    PARAMETRIZE { move = MOVE_HYPERSPACE_FURY; shouldProtect = FALSE; }
+
+    PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
+    GIVEN {
+        if (shouldProtect)
+            ASSUME(!MoveIgnoresProtect(move));
+        else
+            ASSUME(MoveIgnoresProtect(move));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(move); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_PROTECT, MOVE_SCRATCH); }
+    } WHEN {
+        TURN {
+            MOVE(player, move);
+            if (shouldProtect)
+                SCORE_GT(opponent, MOVE_PROTECT, MOVE_SCRATCH);
+            else
+                SCORE_LT(opponent, MOVE_PROTECT, MOVE_SCRATCH);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs moves that ignore protection (Doubles)")
+{
+    enum Move move = MOVE_NONE;
+    bool32 shouldProtect = FALSE;
+
+    PARAMETRIZE { move = MOVE_TACKLE; shouldProtect = TRUE; }
+    PARAMETRIZE { move = MOVE_FEINT; shouldProtect = FALSE; }
+    PARAMETRIZE { move = MOVE_SHADOW_FORCE; shouldProtect = FALSE; }
+    PARAMETRIZE { move = MOVE_PHANTOM_FORCE; shouldProtect = FALSE; }
+    PARAMETRIZE { move = MOVE_HYPERSPACE_HOLE; shouldProtect = FALSE; }
+    PARAMETRIZE { move = MOVE_HYPERSPACE_FURY; shouldProtect = FALSE; }
+
+    PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
+    GIVEN {
+        if (shouldProtect)
+            ASSUME(!MoveIgnoresProtect(move));
+        else
+            ASSUME(MoveIgnoresProtect(move));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(move); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_PROTECT, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, move, target: opponentLeft);
+            MOVE(playerRight, MOVE_CELEBRATE);
+            if (shouldProtect)
+                SCORE_GT(opponentLeft, MOVE_PROTECT, MOVE_SCRATCH, target: playerLeft);
+            else
+                SCORE_LT(opponentLeft, MOVE_PROTECT, MOVE_SCRATCH, target: playerLeft);
         }
     }
 }

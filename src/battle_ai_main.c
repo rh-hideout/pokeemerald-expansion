@@ -2391,6 +2391,14 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
 
                 if (decreased)
                     break;
+                if (predictedMove != MOVE_NONE && predictedMove != MOVE_UNAVAILABLE)
+                {
+                    if (MoveIgnoresProtect(predictedMove))
+                    {
+                        ADJUST_SCORE(-10);
+                        break;
+                    }
+                }
                 if (protectMethod != PROTECT_MAX_GUARD
                  && IsUnseenFistContactMove(battlerDef, battlerAtk, predictedMove))
                 {
