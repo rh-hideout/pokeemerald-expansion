@@ -574,7 +574,6 @@ static const union TextColor sHealthBoxTextColor =
     .accent = 0
 };
 
-
 // Because the healthbox is too large to fit into one sprite, it is divided into two sprites.
 // healthboxLeft  or healthboxMain  is the left part that is used as the 'main' sprite.
 // healthboxRight or healthboxOther is the right part of the healthbox.
