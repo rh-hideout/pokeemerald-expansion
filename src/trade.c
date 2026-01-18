@@ -2959,7 +2959,7 @@ static void CB2_InitInGameTrade(void)
 
     struct Pokemon *playerMon;
     if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
-        playerMon = &gEnemyParty[1];
+        playerMon = &gEnemyParty[TRADEMON_FROM_PC];
     else
         playerMon = &gPlayerParty[gSpecialVar_0x8004];
 
@@ -2969,8 +2969,8 @@ static void CB2_InitInGameTrade(void)
         //If ChooseBoxMon points to a pc mon, we store it into gEnemyParty
         if(gSpecialVar_0x8004 == PC_MON_CHOSEN)
         {
-            gSelectedTradeMonPositions[TRADE_PLAYER] = 1;
-            RemoveSelectedPcMon(&gEnemyParty[1]);
+            gSelectedTradeMonPositions[TRADE_PLAYER] = TRADEMON_FROM_PC;
+            RemoveSelectedPcMon(&gEnemyParty[TRADEMON_FROM_PC]);
         }
         else
         {
@@ -3055,7 +3055,7 @@ static void UpdatePokedexForReceivedMon(u8 partyIdx)
 {
     struct Pokemon *mon;
     if (partyIdx == PC_MON_CHOSEN)
-        mon = &gEnemyParty[1];
+        mon = &gEnemyParty[TRADEMON_FROM_PC];
     else
         mon = &gPlayerParty[partyIdx];
 
@@ -3083,7 +3083,7 @@ static void TradeMons(u8 playerPartyIdx, u8 partnerPartyIdx)
     u8 friendship;
     struct Pokemon *playerMon, *partnerMon;
     if (playerPartyIdx == PC_MON_CHOSEN)
-        playerMon = &gEnemyParty[1];
+        playerMon = &gEnemyParty[TRADEMON_FROM_PC];
     else
         playerMon = &gPlayerParty[playerPartyIdx];
 
@@ -3342,7 +3342,7 @@ static void BufferTradeSceneStrings(void)
         StringCopy(gStringVar1, ingameTrade->otName);
         StringCopy_Nickname(gStringVar3, ingameTrade->nickname);
         if(gSpecialVar_0x8004 == PC_MON_CHOSEN)
-            GetMonData(&gEnemyParty[1], MON_DATA_NICKNAME, name);
+            GetMonData(&gEnemyParty[TRADEMON_FROM_PC], MON_DATA_NICKNAME, name);
         else
             GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, name);
         StringCopy_Nickname(gStringVar2, name);
@@ -4372,7 +4372,7 @@ static bool8 DoTradeAnim_Wireless(void)
         gCB2_AfterEvolution = CB2_InGameTrade;
         struct Pokemon *canEvolveMon;
         if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
-            canEvolveMon = &gEnemyParty[1];
+            canEvolveMon = &gEnemyParty[TRADEMON_FROM_PC];
         else
             canEvolveMon = &gPlayerParty[gSpecialVar_0x8004];
         evoTarget = GetEvolutionTargetSpecies(canEvolveMon, EVO_MODE_TRADE, ITEM_NONE, &gEnemyParty[0], NULL, CHECK_EVO);

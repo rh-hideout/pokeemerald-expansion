@@ -382,7 +382,7 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
 {
     struct Pokemon *mon;
     if (gTasks[sEvoStructPtr->evoTaskId].tPartyId == PC_MON_CHOSEN)
-        mon = &gEnemyParty[1];
+        mon = &gEnemyParty[TRADEMON_FROM_PC];
     else
         mon = &gPlayerParty[gTasks[sEvoStructPtr->evoTaskId].tPartyId];
     u16 postEvoSpecies = gTasks[sEvoStructPtr->evoTaskId].tPostEvoSpecies;
@@ -1105,7 +1105,7 @@ static void Task_TradeEvolutionScene(u8 taskId)
     u32 var = 0;
     struct Pokemon *mon;
     if (gTasks[taskId].tPartyId == PC_MON_CHOSEN)
-        mon = &gEnemyParty[1];
+        mon = &gEnemyParty[TRADEMON_FROM_PC];
     else
         mon = &gPlayerParty[gTasks[taskId].tPartyId];
 
@@ -1370,7 +1370,7 @@ static void Task_TradeEvolutionScene(u8 taskId)
                 {
                     ShowSelectMovePokemonSummaryScreen(
                                 gEnemyParty, 
-                                1,
+                                TRADEMON_FROM_PC,
                                 CB2_TradeEvolutionSceneLoadGraphics,
                                 gMoveToLearn
                             );
