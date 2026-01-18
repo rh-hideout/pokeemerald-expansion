@@ -34,7 +34,7 @@
 #define B_ROUGH_SKIN_DMG            GEN_LATEST // In Gen4+, Rough Skin's contact damage is 1/8 of max HP instead of 1/16. This also applies to Iron Barbs.
 #define B_KNOCK_OFF_DMG             GEN_LATEST // In Gen6+, Knock Off deals 50% more damage if the target is holding an item that can be knocked off.
 #define B_SPORT_DMG_REDUCTION       GEN_LATEST // In Gen5+, Water/Mud Sport reduce Fire-/Electric-type damage by 67% instead of 50%.
-#define B_EXPLOSION_DEFENSE         GEN_LATEST // In Gen5+, Self-Destruct and Explosion no longer halve the targets' defense.
+#define B_EXPLOSION_DEFENSE         GEN_LATEST // In Gen5+, Self-Destruct and Explosion no longer halve the targets' Defense.
 #define B_PARENTAL_BOND_DMG         GEN_LATEST // In Gen7+, Parental Bond's second hit does 25% of the initial hit's damage instead of 50%.
 #define B_MULTIPLE_TARGETS_DMG      GEN_LATEST // In Gen4+, damage dealt by moves that hit multiple targets at once is reduced to 75%. Previously, it was 50%, unless the move hit the entire field, in which case there was no reduction.
 
@@ -73,7 +73,7 @@
 #define B_PP_REDUCED_BY_SPITE       GEN_LATEST // In Gen4+, Spite reduces the PP of the target's last move by 4 instead of 2-5.
 #define B_EXTRAPOLATED_MOVE_FLAGS   TRUE       // Adds flags to moves that they don't officially have, but would likely have if they were in the latest core series game.
 #define B_HIDDEN_POWER_COUNTER      GEN_LATEST // In Gen3 and earlier, Counter and Mirror Coat treat Hidden Power as physical regardless of type.
-#define B_MODERN_TRICK_CHOICE_LOCK  GEN_LATEST // In Gen5+, if a Choice item is swapped for another Choice item, the Trick/Switcheroo user can choose another move before being locked into it.
+#define B_MODERN_TRICK_CHOICE_LOCK  GEN_LATEST // In Gen5+, if a choice item is swapped for another choice item, the Trick/Switcheroo user can choose another move before being locked into it.
 #define B_PROTECT_FAILURE_RATE      GEN_LATEST // In Gen5+, protection moves fail 1/3 of the time instead of 1/2.
 
 // Ability data settings
@@ -92,7 +92,7 @@
 #define B_CHARGE_SPDEF_RAISE        GEN_LATEST // In Gen5+, Charge raises the user's Sp. Def by 1 stage.
 #define B_MINIMIZE_EVASION          GEN_LATEST // In Gen5+, Minimize raises the user's evasion by 2 stages instead of 1.
 #define B_GROWTH_STAT_RAISE         GEN_LATEST // In Gen5+, Growth raises the user's Attack in addition to its Sp. Atk. They are each raised by 1 stage normally, and by 2 stages if it's sunny.
-#define B_FOCUS_ENERGY_CRIT_RATIO   GEN_LATEST // In Gen3+, Focus Energy increases the critical-hit ratio of the user's moves by 2 stages instead of 1.
+#define B_FOCUS_ENERGY_CRIT_RATIO   GEN_LATEST // In Gen3+, Focus Energy raises the critical-hit ratio of the user's moves by 2 stages instead of 1.
 
 // Other move settings
 #define B_INCINERATE_GEMS           GEN_LATEST // In Gen6+, Incinerate can destroy Gems.
@@ -100,7 +100,7 @@
 #define B_CRASH_IF_TARGET_IMMUNE    GEN_LATEST // In Gen4+, moves with crash damage will crash if the user attacks a target that is immune due to their typing.
 #define B_MEMENTO_FAIL              GEN_LATEST // In Gen4+, Memento no longer fails if the target already has -6 Attack and Sp. Atk. Additionally, in Gen5+, it fails if there is no target, or if the target is protected or behind a Substitute.
 #define B_GLARE_GHOST               GEN_LATEST // In Gen4+, Glare can hit Ghost-type Pokémon.
-#define B_SKILL_SWAP                GEN_LATEST // In Gen4+, Skill Swap triggers switch-in abilities after use.
+#define B_SKILL_SWAP                GEN_LATEST // In Gen4+, Skill Swap triggers switch-in Abilities after use.
 #define B_BRICK_BREAK               GEN_LATEST // In Gen4+, you can destroy your own side's screens. Additionally, in Gen5+, screens are no longer destroyed if the target is immune due to their typing.
 #define B_WISH_HP_SOURCE            GEN_LATEST // In Gen5+, Wish heals by half of the user's max HP instead of the recipient's.
 #define B_RAMPAGE_CANCELLING        GEN_LATEST // In Gen5+, a failed Thrash, etc, will still confuse the user if it is disrupted on the final turn of the move.
@@ -129,7 +129,7 @@
 #define B_AFTER_YOU_TURN_ORDER      GEN_LATEST // In Gen8+, After You no longer fails if the turn order wouldn't change after use.
 #define B_QUASH_TURN_ORDER          GEN_LATEST // In Gen8+, Quash-affected battlers move according to Speed order. In Gen7 and earlier, Quash-affected battlers move in the order they were affected by Quash.
 #define B_DESTINY_BOND_FAIL         GEN_LATEST // In Gen7+, Destiny Bond fails if used repeatedly.
-#define B_PURSUIT_TARGET            GEN_LATEST // In Gen4+, Pursuit automatically targets and attacks any switching opponent. Previously, it only attacked a switching opponent if it chose them as its target.
+#define B_PURSUIT_TARGET            GEN_LATEST // In Gen4+, Pursuit automatically targets and attacks any switching opponent. Previously, it only attacked a switching opponent if they were chose as the target.
 #define B_SKIP_RECHARGE             GEN_LATEST // In Gen1 only, moves with recharge turns do not need to recharge if they knock out the target.
 #define B_ENCORE_TARGET             GEN_LATEST // In Gen5+, an encored Pokémon can select the target of its move.
 #define B_TIME_OF_DAY_HEALING_MOVES GEN_LATEST // In Gen2 only, the amount of HP restored by Morning Sun, Synthesis, and Moonlight doubles during the morning, day, and night, respectively.
@@ -157,7 +157,7 @@
 #define B_PLUS_MINUS_INTERACTION    GEN_LATEST // In Gen5+, Plus and Minus can be activated by themselves in addition to the opposite Ability.
 #define B_WEATHER_FORMS             GEN_LATEST // In Gen5+, Castform and Cherrim revert to their base form upon losing their respective Ability. Cherrim needs Flower Gift to change forms.
 #define B_SYMBIOSIS_GEMS            GEN_LATEST // In Gen7+, Symbiosis passes an item after a Gem-boosted attack. Previously, items were passed before the Gem-boosted attack hit, making the item's effect apply.
-#define B_REDIRECT_ABILITY_IMMUNITY GEN_LATEST // In Gen5+, Pokémon with Lightning Rod/Storm Drain are immune to Electric-/Water-type moves and increase their Sp. Atk by 1 stage ontop of the redirecting effect.
+#define B_REDIRECT_ABILITY_IMMUNITY GEN_LATEST // In Gen5+, Pokémon with Lightning Rod/Storm Drain are immune to Electric-/Water-type moves and raises their Sp. Atk by 1 stage ontop of the redirecting effect.
 #define B_REDIRECT_ABILITY_ALLIES   GEN_LATEST // In Gen4+, Lightning Rod and Storm Drain also redirect ally's moves.
 #define B_LEAF_GUARD_PREVENTS_REST  GEN_LATEST // In Gen5+, Leaf Guard prevents the use of Rest in the sun.
 #define B_TRANSISTOR_BOOST          GEN_LATEST // In Gen9+, Transistor increases the power of Electric-type moves by 1.3x instead of 1.5x.
@@ -171,7 +171,7 @@
                                                // In Gen5+, Effect Spore has an 11% chance to sleep, a 9% chance to poison and a 10% chance to paralyze. In Gen4, Effect Spore has a 30% chance to sleep, poison, or paralyze, each with an equal chance. In Gen3, it's 10%.
 #define B_PICKUP_WILD               GEN_LATEST // In Gen9+, Pickup allows its user to pick up its own used item at the end of the turn in wild battles.
 #define B_MAGIC_GUARD               GEN_LATEST // In Gen4 only, Magic Guard ignores immobilization caused by paralysis.
-#define B_BATTLE_BOND               GEN_LATEST // In Gen9+, Battle Bond increases Attack, Sp. Atk, and Speed by 1 stage, once per battle.
+#define B_BATTLE_BOND               GEN_LATEST // In Gen9+, Battle Bond raises Attack, Sp. Atk, and Speed by 1 stage, once per battle. Previously, the Pokémon would change into Ash-Greninja.
 #define B_ATE_MULTIPLIER            GEN_LATEST // In Gen7+, -ate Abilities (Aerilate, Galvanize, Normalize, Pixilate, Refrigerate) increase damage by 1.2x. In Gen6 and earlier, it was 1.3x, except Normalize, which had no multiplier.
 #define B_DEFIANT_STICKY_WEB        GEN_LATEST // In Gen9+, Defiant triggers on Sticky Web regardless of who set it up. In Gen8, it does not trigger on a Sticky Web set up by an ally after Court Change swaps its side.
 #define B_POWDER_OVERCOAT           GEN_LATEST // In Gen6+, Overcoat blocks powder and spore moves.
@@ -281,8 +281,8 @@
 #define B_ICE_WEATHER_SNOW              2
 
 #define B_ABILITY_WEATHER               GEN_LATEST // In Gen6+, Ability-induced weather lasts 5 turns. In Gen5 and earlier, it lasted until the battle ended or until it was changed by another weather condition.
-#define B_SANDSTORM_SPDEF_BOOST         GEN_LATEST // In Gen4+, sandstorm weather increases the Sp. Def of Rock-type Pokémon by 1.5x.
-#define B_SANDSTORM_SOLAR_BEAM          GEN_LATEST // In Gen3+, sandstorm decreases the power of Solar Beam, when it didn't before.
+#define B_SANDSTORM_SPDEF_BOOST         GEN_LATEST // In Gen4+, sandstorm increases the Sp. Def of Rock-type Pokémon by 1.5x.
+#define B_SANDSTORM_SOLAR_BEAM          GEN_LATEST // In Gen3+, sandstorm decreases the power of Solar Beam.
 #define B_OVERWORLD_FOG                 GEN_LATEST // In Gen8+, overworld fog summons Misty Terrain in battle. In Gen4 only, overworld fog summons the unique fog weather condition in battle.
 #define B_OVERWORLD_SNOW                GEN_LATEST // In Gen9+, overworld snow will summon snow instead of hail in battle.
 #define B_SNOW_WARNING                  GEN_LATEST // In Gen9+, Snow Warning will summon snow instead of hail.
@@ -291,7 +291,7 @@
 // Terrain settings
 #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.
 #define B_THUNDERSTORM_TERRAIN      TRUE       // If set to TRUE, overworld Thunderstorm summons rain and Electric Terrain as in Gen8.
-#define B_TERRAIN_TYPE_BOOST        GEN_LATEST // In Gen8+, terrain increases the power of same-typed moves by 30% instead of 50%.
+#define B_TERRAIN_TYPE_BOOST        GEN_LATEST // In Gen8+, terrain increases the power of same-type moves by 30% instead of 50%.
 #define B_SECRET_POWER_EFFECT       GEN_LATEST // Secret Power's effects change depending on the terrain and generation. See MOVE_EFFECT_SECRET_POWER's case in `SetMoveEffect`.
 #define B_SECRET_POWER_ANIMATION    GEN_LATEST // Secret Power's animations change depending on the terrain and generation.
 #define B_NATURE_POWER_MOVES        GEN_LATEST // Nature Power calls different moves depending on the terrain and generation. See gBattleEnvironmentInfo.
@@ -339,7 +339,7 @@
 #define B_EVOLUTION_AFTER_WHITEOUT      GEN_LATEST // In Gen6+, Pokémon that qualify for evolution after battle will evolve even if the player loses.
 #define B_WILD_NATURAL_ENEMIES          TRUE       // If set to TRUE, certain wild Pokémon species will attack other species when partnered in Double Battles (eg. Zangoose vs Seviper)
 #define B_AFFECTION_MECHANICS           TRUE       // In Gen6+, there's a stat called affection that can trigger different effects in battle. From LGPE onwards, these effects use friendship instead.
-#define B_TRAINER_CLASS_POKE_BALLS      GEN_LATEST // In Gen7+, Trainers will use certain types of Poké Balls depending on their Trainer class.
+#define B_TRAINER_CLASS_POKE_BALLS      GEN_LATEST // In Gen7+, Trainers will use certain kinds of Poké Balls depending on their Trainer class.
 #define B_TRAINER_MON_RANDOM_ABILITY    FALSE      // If set to TRUE, a random legal Ability will be generated for Trainers' Pokémon.
 #define B_OBEDIENCE_MECHANICS           GEN_LATEST // In PLA onwards (GEN_8 here), obedience restrictions also apply to non-outsider Pokémon, albeit based on their met level rather than their current level.
 #define B_USE_FROSTBITE                 FALSE      // In PLA, Frostbite replaces Freeze. Enabling this flag does the same here. Moves can still be cherry-picked to either Freeze or Frostbite. Freeze-Dry, Secret Power & Tri Attack depend on this config.
