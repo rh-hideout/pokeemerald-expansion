@@ -514,6 +514,7 @@ extern const u8 BattleScript_Explosion[];
 extern const u8 BattleScript_ActivateSwitchInAbility[];
 extern const u8 BattleScript_BreakScreens[];
 extern const u8 BattleScript_StealStats[];
+extern const u8 BattleScript_BeatUpAttackMessage[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
