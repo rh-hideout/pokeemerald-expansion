@@ -93,7 +93,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
 const u8 *FaintClearSetData(enum BattlerId battler);
 void BattleTurnPassed(void);
 u8 IsRunningFromBattleImpossible(enum BattlerId battler);
-void SwitchTwoBattlersInParty(enum BattlerId battler, u32 battler2);
+void SwitchTwoBattlersInParty(enum BattlerId battler, enum BattlerId battler2);
 void SwitchPartyOrder(enum BattlerId battler);
 void SwapTurnOrder(u8 id1, u8 id2);
 u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);

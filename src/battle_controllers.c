@@ -2876,7 +2876,7 @@ static void Task_StartSendOutAnim(u8 taskId)
     }
     else
     {
-        u32 battlerPartner;
+        enum BattlerId battlerPartner;
         enum BattlerId battler = gTasks[taskId].tBattlerId;
 
         if (TwoMonsAtSendOut(battler))

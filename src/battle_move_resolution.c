@@ -1117,7 +1117,7 @@ static enum MoveEndResult MoveEnd_SheerForce(void)
 
 static enum MoveEndResult MoveEnd_ShellTrap(void)
 {
-    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (battlerDef == gBattlerAttacker || IsBattlerAlly(battlerDef, gBattlerAttacker))
             continue;
@@ -1158,7 +1158,7 @@ static enum MoveEndResult MoveEnd_KeeMarangaHpThresholdItemTarget(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        u32 battlerDef = gBattleStruct->eventState.moveEndBattler++;
+        enum BattlerId battlerDef = gBattleStruct->eventState.moveEndBattler++;
         if (battlerDef == gBattlerAttacker)
             continue;
         enum HoldEffect holdEffect = GetBattlerHoldEffect(battlerDef);
@@ -1171,7 +1171,7 @@ static enum MoveEndResult MoveEnd_KeeMarangaHpThresholdItemTarget(void)
     return MOVEEND_STEP_CONTINUE;
 }
 
-static bool32 TryRedCard(u32 battlerAtk, u32 redCardBattler, u32 move)
+static bool32 TryRedCard(enum BattlerId battlerAtk, u32 redCardBattler, u32 move)
 {
     if (!IsBattlerAlive(redCardBattler)
      || !IsBattlerTurnDamaged(redCardBattler)
@@ -1194,7 +1194,7 @@ static bool32 TryRedCard(u32 battlerAtk, u32 redCardBattler, u32 move)
     return TRUE;
 }
 
-static bool32 TryEjectButton(u32 battlerAtk, u32 ejectButtonBattler)
+static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler)
 {
     if (!IsBattlerTurnDamaged(ejectButtonBattler)
      || !IsBattlerAlive(ejectButtonBattler)
@@ -1216,7 +1216,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
     u32 ejectButtonBattlers = 0;
 
     // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
-    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (gBattlerAttacker == battlerDef)
             continue;
@@ -1237,7 +1237,7 @@ static enum MoveEndResult MoveEnd_CardButton(void)
     u8 battlers[4] = {0, 1, 2, 3};
     SortBattlersBySpeed(battlers, FALSE);
 
-    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         enum BattlerId battler = battlers[battlerDef];
 
@@ -1335,7 +1335,7 @@ static enum MoveEndResult MoveEnd_EmergencyExit(void)
     return result;
 }
 
-static inline bool32 CanEjectPackTrigger(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect)
+static inline bool32 CanEjectPackTrigger(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum BattleMoveEffects moveEffect)
 {
     if (gBattleMons[battlerDef].volatiles.tryEjectPack
      && GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_PACK

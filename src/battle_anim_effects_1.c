@@ -6563,7 +6563,7 @@ static void ReloadBattlerSprites(enum BattlerId battler, struct Pokemon *party)
     }
 }
 
-static void TrySwapSkyDropTargets(u32 battlerAtk, u32 battlerPartner)
+static void TrySwapSkyDropTargets(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
     u32 i, temp;
 
@@ -6587,7 +6587,7 @@ static void TrySwapSkyDropTargets(u32 battlerAtk, u32 battlerPartner)
     else if (gSideTimers[side].field == battlerPartner)             \
         gSideTimers[side].field = battlerAtk;
 
-static void TrySwapStickyWebBattlerId(u32 battlerAtk, u32 battlerPartner)
+static void TrySwapStickyWebBattlerId(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
     u32 oppSide = GetBattlerSide(BATTLE_OPPOSITE(battlerAtk));
 
@@ -6596,7 +6596,7 @@ static void TrySwapStickyWebBattlerId(u32 battlerAtk, u32 battlerPartner)
 }
 #undef TRY_SIDE_TIMER_BATTLER_ID_SWAP
 
-static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
+static void TrySwapWishBattlerIds(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
     u32 i, temp;
 
@@ -6631,7 +6631,7 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
         SWAP(gBattleStruct->wish[battlerAtk].partyId, gBattleStruct->wish[battlerPartner].partyId, temp);
 }
 
-static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)
+static void TrySwapAttractBattlerIds(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
     u32 attractedTo;
 
@@ -6657,7 +6657,7 @@ static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)
     }
 }
 
-static void SwapBattlerMoveData(u32 battler1, u32 battler2)
+static void SwapBattlerMoveData(enum BattlerId battler1, enum BattlerId battler2)
 {
     u32 temp;
     SWAP(gBattleStruct->chosenMovePositions[battler1], gBattleStruct->chosenMovePositions[battler2], temp);
@@ -6681,8 +6681,8 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     s32 i, j;
     struct Pokemon *party;
     u32 temp;
-    u32 battlerAtk = gBattlerAttacker;
-    u32 battlerPartner = BATTLE_PARTNER(battlerAtk);
+    enum BattlerId battlerAtk = gBattlerAttacker;
+    enum BattlerId battlerPartner = BATTLE_PARTNER(battlerAtk);
 
     void *data = Alloc(0x200);
     if (data == NULL)

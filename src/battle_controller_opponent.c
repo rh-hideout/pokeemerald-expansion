@@ -496,9 +496,10 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
         }
         else if (IsDoubleBattle())
         {
+            enum BattlerId targetBattler;
             do {
-                target = GetBattlerAtPosition(Random() & 2);
-            } while (!CanTargetBattler(battler, target, move));
+                targetBattler = GetBattlerAtPosition(Random() & 2);
+            } while (!CanTargetBattler(battler, targetBattler, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
             if (B_WILD_NATURAL_ENEMIES == TRUE && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
@@ -509,7 +510,7 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
 
                 bool32 isPartnerEnemy = IsNaturalEnemy(speciesAttacker, speciesTarget);
 
-                if (isPartnerEnemy && CanTargetBattler(battler, target, move))
+                if (isPartnerEnemy && CanTargetBattler(battler, targetBattler, move))
                     BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (GetBattlerAtPosition(BATTLE_PARTNER(battler)) << 8));
                 else
                     BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (target << 8));

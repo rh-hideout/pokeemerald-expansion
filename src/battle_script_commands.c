@@ -1096,7 +1096,7 @@ static void Cmd_setchargingturn(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static bool32 ShouldSkipAccuracyCalcPastFirstHit(u32 battlerAtk, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 moveEffect)
+static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 moveEffect)
 {
     if (gSpecialStatuses[battlerAtk].parentalBondState == PARENTAL_BOND_2ND_HIT)
         return TRUE;
@@ -1131,7 +1131,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     bool32 calcSpreadMove = IsSpreadMove(moveTarget);
 
-    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (gBattleStruct->calculatedSpreadMoveAccuracy)
             break;
@@ -1295,7 +1295,7 @@ static void Cmd_damagecalc(void)
 
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
-        u32 battlerDef;
+        enum BattlerId battlerDef;
         for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
         {
             if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
@@ -1340,7 +1340,7 @@ static void Cmd_adjustdamage(void)
 
     enum HoldEffect holdEffect;
     u8 param;
-    u32 battlerDef;
+    enum BattlerId battlerDef;
     u32 rand = Random() % 100;
     u32 affectionScore;
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
@@ -1496,7 +1496,7 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(u32 resultFlags)
     // Only play the "best" sound
     for (u32 sound = 0; sound < 3; sound++)
     {
-        for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+        for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
         {
             if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
                 continue;
@@ -1524,7 +1524,7 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(u32 resultFlags)
     return resultFlags;
 }
 
-static inline bool32 TryStrongWindsWeakenAttack(u32 battlerDef, enum Type moveType)
+static inline bool32 TryStrongWindsWeakenAttack(enum BattlerId battlerDef, enum Type moveType)
 {
     if (gBattleWeather & B_WEATHER_STRONG_WINDS && HasWeatherEffect())
     {
@@ -1542,7 +1542,7 @@ static inline bool32 TryStrongWindsWeakenAttack(u32 battlerDef, enum Type moveTy
     return FALSE;
 }
 
-static inline bool32 TryTeraShellDistortTypeMatchups(u32 battlerDef)
+static inline bool32 TryTeraShellDistortTypeMatchups(enum BattlerId battlerDef)
 {
     if (gSpecialStatuses[battlerDef].teraShellAbilityDone)
     {
@@ -1556,7 +1556,7 @@ static inline bool32 TryTeraShellDistortTypeMatchups(u32 battlerDef)
 
 // According to Gen5 Weakness berry activation happens after the attackanimation.
 // It doesn't have any impact on gameplay and is only a visual thing which can be adjusted later.
-static inline bool32 TryActivateWeaknessBerry(u32 battlerDef)
+static inline bool32 TryActivateWeaknessBerry(enum BattlerId battlerDef)
 {
     if (DoesDisguiseBlockMove(battlerDef, gCurrentMove))
     {
@@ -1582,7 +1582,7 @@ static bool32 ProcessPreAttackAnimationFuncs(void)
     {
         if (!gBattleStruct->printedStrongWindsWeakenedAttack)
         {
-            for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+            for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
             {
                 if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
                     continue;
@@ -1591,7 +1591,7 @@ static bool32 ProcessPreAttackAnimationFuncs(void)
             }
         }
 
-        for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+        for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
         {
             if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
                 continue;
@@ -1728,7 +1728,7 @@ static void DoublesHPBarReduction(void)
     if (gBattleStruct->doneDoublesSpreadHit)
         return;
 
-    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (IsBattlerUnaffectedByMove(battlerDef)
          || gBattleStruct->moveDamage[battlerDef] == 0
@@ -5659,7 +5659,7 @@ static void Cmd_openpartyscreen(void)
             }
             else
             {
-                u32 battlerOpposite = GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerPosition(battler)));
+                enum BattlerId battlerOpposite = GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerPosition(battler)));
                 if (gAbsentBattlerFlags & (1u << battlerOpposite))
                     battlerOpposite ^= BIT_FLANK;
 
@@ -6107,7 +6107,7 @@ static void Cmd_hitanimation(void)
     }
     else if (!gBattleStruct->doneDoublesSpreadHit)
     {
-        u32 battlerDef;
+        enum BattlerId battlerDef;
         for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
         {
             if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
@@ -6882,7 +6882,7 @@ static void Cmd_hpthresholds(void)
     if (!(IsDoubleBattle()))
     {
         enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-        u32 opposingBattler = BATTLE_OPPOSITE(battler);
+        enum BattlerId opposingBattler = BATTLE_OPPOSITE(battler);
 
         s32 result = gBattleMons[opposingBattler].hp * 100 / gBattleMons[opposingBattler].maxHP;
         if (result == 0)
@@ -6908,7 +6908,7 @@ static void Cmd_hpthresholds2(void)
     if (!(IsDoubleBattle()))
     {
         enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-        u32 opposingBattler = BATTLE_OPPOSITE(battler);
+        enum BattlerId opposingBattler = BATTLE_OPPOSITE(battler);
         u32 hpSwitchout = gBattleStruct->battlerState[opposingBattler].hpOnSwitchout;
         s32 result = (hpSwitchout - gBattleMons[opposingBattler].hp) * 100 / hpSwitchout;
 
@@ -7044,7 +7044,7 @@ static bool32 DefogClearHazards(u32 saveBattler, enum BattleSide side, bool32 cl
     return FALSE;
 }
 
-static bool32 TryDefogClear(u32 battlerAtk, bool32 clear)
+static bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
 {
     s32 i;
     u8 saveBattler = gBattlerAttacker;
@@ -7094,7 +7094,7 @@ static bool32 TryDefogClear(u32 battlerAtk, bool32 clear)
     return FALSE;
 }
 
-static bool32 TryTidyUpClear(u32 battlerAtk, bool32 clear)
+static bool32 TryTidyUpClear(enum BattlerId battlerAtk, bool32 clear)
 {
     u32 i;
     u32 saveBattler = gBattlerAttacker;
@@ -10670,7 +10670,7 @@ static void Cmd_settypebasedhalvers(void)
         gBattlescriptCurrInstr = cmd->failInstr;
 }
 
-bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, enum Move move)
+bool32 DoesSubstituteBlockMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     if (!gBattleMons[battlerDef].volatiles.substitute)
         return FALSE;

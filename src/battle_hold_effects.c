@@ -184,7 +184,7 @@ static enum ItemEffect TryConsumeMirrorHerb(enum BattlerId battler)
     return effect;
 }
 
-static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, enum Item item)
+static enum ItemEffect TryKingsRock(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -232,7 +232,7 @@ static enum ItemEffect TryAirBalloon(enum BattlerId battler, ActivationTiming ti
     return effect;
 }
 
-static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk, enum Item item)
+static enum ItemEffect TryRockyHelmet(enum BattlerId battlerDef, enum BattlerId battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battlerAtk);
@@ -251,7 +251,7 @@ static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk, enum Item 
     return effect;
 }
 
-static enum ItemEffect TryWeaknessPolicy(u32 battlerDef)
+static enum ItemEffect TryWeaknessPolicy(enum BattlerId battlerDef)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -266,7 +266,7 @@ static enum ItemEffect TryWeaknessPolicy(u32 battlerDef)
     return effect;
 }
 
-static enum ItemEffect TrySnowball(u32 battlerDef)
+static enum ItemEffect TrySnowball(enum BattlerId battlerDef)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -282,7 +282,7 @@ static enum ItemEffect TrySnowball(u32 battlerDef)
     return effect;
 }
 
-static enum ItemEffect TryLuminousMoss(u32 battlerDef)
+static enum ItemEffect TryLuminousMoss(enum BattlerId battlerDef)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -298,7 +298,7 @@ static enum ItemEffect TryLuminousMoss(u32 battlerDef)
     return effect;
 }
 
-static enum ItemEffect TryCellBattery(u32 battlerDef)
+static enum ItemEffect TryCellBattery(enum BattlerId battlerDef)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -314,7 +314,7 @@ static enum ItemEffect TryCellBattery(u32 battlerDef)
     return effect;
 }
 
-static enum ItemEffect TryAbsorbBulb(u32 battlerDef)
+static enum ItemEffect TryAbsorbBulb(enum BattlerId battlerDef)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -330,7 +330,7 @@ static enum ItemEffect TryAbsorbBulb(u32 battlerDef)
     return effect;
 }
 
-static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk, enum Item item)
+static enum ItemEffect TryJabocaBerry(enum BattlerId battlerDef, enum BattlerId battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -352,7 +352,7 @@ static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk, enum Item 
     return effect;
 }
 
-static enum ItemEffect TryRowapBerry(u32 battlerDef, u32 battlerAtk, enum Item item)
+static enum ItemEffect TryRowapBerry(enum BattlerId battlerDef, enum BattlerId battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -374,7 +374,7 @@ static enum ItemEffect TryRowapBerry(u32 battlerDef, u32 battlerAtk, enum Item i
     return effect;
 }
 
-static enum ItemEffect TrySetEnigmaBerry(u32 battlerDef, u32 battlerAtk)
+static enum ItemEffect TrySetEnigmaBerry(enum BattlerId battlerDef, enum BattlerId battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -395,7 +395,7 @@ static enum ItemEffect TrySetEnigmaBerry(u32 battlerDef, u32 battlerAtk)
     return effect;
 }
 
-static enum ItemEffect TryBlunderPolicy(u32 battlerAtk)
+static enum ItemEffect TryBlunderPolicy(enum BattlerId battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -472,7 +472,7 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler)
     return effect;
 }
 
-static enum ItemEffect TryThroatSpray(u32 battlerAtk)
+static enum ItemEffect TryThroatSpray(enum BattlerId battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -491,7 +491,7 @@ static enum ItemEffect TryThroatSpray(u32 battlerAtk)
     return effect;
 }
 
-static enum ItemEffect DamagedStatBoostBerryEffect(u32 battlerDef, u32 battlerAtk, enum Stat statId, enum DamageCategory category)
+static enum ItemEffect DamagedStatBoostBerryEffect(enum BattlerId battlerDef, enum BattlerId battlerAtk, enum Stat statId, enum DamageCategory category)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -517,7 +517,7 @@ static enum ItemEffect DamagedStatBoostBerryEffect(u32 battlerDef, u32 battlerAt
     return effect;
 }
 
-static enum ItemEffect TryShellBell(u32 battlerAtk)
+static enum ItemEffect TryShellBell(enum BattlerId battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -538,7 +538,7 @@ static enum ItemEffect TryShellBell(u32 battlerAtk)
     return effect;
 }
 
-static enum ItemEffect TryLifeOrb(u32 battlerAtk)
+static enum ItemEffect TryLifeOrb(enum BattlerId battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -557,7 +557,7 @@ static enum ItemEffect TryLifeOrb(u32 battlerAtk)
     return effect;
 }
 
-static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, enum Item item)
+static enum ItemEffect TryStickyBarbOnTargetHit(enum BattlerId battlerDef, enum BattlerId battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 

@@ -35,20 +35,20 @@ struct IncomingHealInfo
 static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler);
 static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flags, u32 moduloPercent);
 static u32 GetSwitchinHazardsDamage(enum BattlerId battler);
-static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, u32 opponent);
-static u32 GetBattlerTypeMatchup(u32 opposingBattler, enum BattlerId battler);
+static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, enum BattlerId opposingBattler);
+static u32 GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler);
 static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const struct IncomingHealInfo *healInfo, u32 originalHp);
 static void GetIncomingHealInfo(enum BattlerId battler, struct IncomingHealInfo *healInfo);
 static u32 GetWishHealAmountForBattler(enum BattlerId battler);
 
-static void InitializeSwitchinCandidate(u32 switchinBattler, struct Pokemon *mon)
+static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, struct Pokemon *mon)
 {
     PokemonToBattleMon(mon, &gBattleMons[switchinBattler]);
     // Setup switchin battler data
     gAiThinkingStruct->saved[switchinBattler].saved = TRUE;
     SetBattlerAiData(switchinBattler, gAiLogicData);
     SetBattlerFieldStatusForSwitchin(switchinBattler);
-    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
         if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
             continue;
@@ -266,7 +266,7 @@ static bool32 ShouldSwitchIfHasBadOdds(enum BattlerId battler)
 {
     //Variable initialization
     enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
-    u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
+    enum BattlerId opposingBattler = GetBattlerAtPosition(opposingPosition);
     enum Move *playerMoves = GetMovesArray(opposingBattler);
     enum Move aiMove, playerMove, bestPlayerPriorityMove = MOVE_NONE, bestPlayerMove = MOVE_NONE, expectedMove = MOVE_NONE;
     enum Ability aiAbility = gAiLogicData->abilities[battler];
@@ -409,7 +409,7 @@ static bool32 ShouldSwitchIfTruant(enum BattlerId battler)
     return FALSE;
 }
 
-static u32 FindMonWithMoveOfEffectiveness(enum BattlerId battler, u32 opposingBattler, uq4_12_t effectiveness)
+static u32 FindMonWithMoveOfEffectiveness(enum BattlerId battler, enum BattlerId opposingBattler, uq4_12_t effectiveness)
 {
     enum Move move;
     s32 firstId;
@@ -444,7 +444,7 @@ static u32 FindMonWithMoveOfEffectiveness(enum BattlerId battler, u32 opposingBa
 static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler)
 {
     u32 moveIndex;
-    u32 opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
     enum Move aiMove;
 
     // Switch if no moves affect opponents
@@ -496,7 +496,7 @@ static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler)
 
 static bool32 ShouldSwitchIfWonderGuard(enum BattlerId battler)
 {
-    u32 opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
 
     if (IsDoubleBattle())
         return FALSE;
@@ -524,7 +524,7 @@ static bool32 ShouldSwitchIfWonderGuard(enum BattlerId battler)
 
 static bool32 FindMonThatAbsorbsOpponentsMove(enum BattlerId battler)
 {
-    u32 battlerIn1, battlerIn2;
+    enum BattlerId battlerIn1, battlerIn2;
     u8 numAbsorbingAbilities = 0;
     enum Ability absorbingTypeAbilities[3]; // Array size is maximum number of absorbing abilities for a single type
     s32 firstId;
@@ -532,7 +532,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(enum BattlerId battler)
     struct Pokemon *party;
     enum Ability monAbility;
     enum Move aiMove;
-    u32 opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
     enum Move incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
     enum Type incomingType = CheckDynamicMoveType(GetBattlerMon(opposingBattler), incomingMove, opposingBattler, MON_IN_BATTLE);
     bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
@@ -651,7 +651,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(enum BattlerId battler)
 
 static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(enum BattlerId battler)
 {
-    u32 opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
 
     bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
@@ -803,7 +803,7 @@ static bool32 ShouldSwitchIfBadlyStatused(enum BattlerId battler)
     return FALSE;
 }
 
-static bool32 GetHitEscapeTransformState(u32 battlerAtk, enum Move move)
+static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move move)
 {
     u32 moveIndex;
     bool32 hasValidTarget = FALSE;
@@ -836,7 +836,7 @@ static bool32 GetHitEscapeTransformState(u32 battlerAtk, enum Move move)
     ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
 
 
-    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (!IsBattlerAlive(battlerDef) || IsBattlerAlly(battlerDef, battlerAtk))
             continue;
@@ -943,7 +943,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
     return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 }
 
-static bool32 CanUseSuperEffectiveMoveAgainstOpponent(enum BattlerId battler, u32 opposingBattler)
+static bool32 CanUseSuperEffectiveMoveAgainstOpponent(enum BattlerId battler, enum BattlerId opposingBattler)
 {
     enum Move move;
 
@@ -965,7 +965,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponent(enum BattlerId battler, u3
 static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler)
 {
     u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
-    u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
+    enum BattlerId opposingBattler = GetBattlerAtPosition(opposingPosition);
 
     if (CanUseSuperEffectiveMoveAgainstOpponent(battler, opposingBattler))
         return TRUE;
@@ -978,7 +978,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler)
 
 static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flags, u32 percentChance)
 {
-    u32 battlerIn1, battlerIn2;
+    enum BattlerId battlerIn1, battlerIn2;
     s32 firstId;
     s32 lastId; // + 1
     struct Pokemon *party;
@@ -1041,7 +1041,7 @@ static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flag
 
 static bool32 CanMonSurviveHazardSwitchin(enum BattlerId battler)
 {
-    u32 battlerIn1, battlerIn2;
+    enum BattlerId battlerIn1, battlerIn2;
     u32 hazardDamage = 0, battlerHp = gBattleMons[battler].hp;
     enum Ability ability = gAiLogicData->abilities[battler];
     enum Move aiMove;
@@ -1085,7 +1085,7 @@ static bool32 CanMonSurviveHazardSwitchin(enum BattlerId battler)
 static bool32 ShouldSwitchIfEncored(enum BattlerId battler)
 {
     enum Move encoredMove = gBattleMons[battler].volatiles.encoredMove;
-    u32 opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
 
     // Only use this if AI_FLAG_SMART_SWITCHING is set for the trainer
     if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
@@ -1113,7 +1113,7 @@ static bool32 ShouldSwitchIfEncored(enum BattlerId battler)
 static bool32 ShouldSwitchIfBadChoiceLock(enum BattlerId battler)
 {
     enum Move lastUsedMove = gAiLogicData->lastUsedMove[battler];
-    u32 opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
     bool32 moveAffectsTarget = TRUE;
 
     struct BattleContext ctx = {0};
@@ -1215,7 +1215,7 @@ static bool32 CanBattlerConsiderSwitch(enum BattlerId battler)
 
 bool32 ShouldSwitch(enum BattlerId battler)
 {
-    u32 battlerIn1, battlerIn2;
+    enum BattlerId battlerIn1, battlerIn2;
     s32 firstId;
     s32 lastId; // + 1
     struct Pokemon *party;
@@ -1350,7 +1350,7 @@ bool32 ShouldStayInToUseMove(enum BattlerId battler)
 
 void ModifySwitchAfterMoveScoring(enum BattlerId battler)
 {
-    u32 battlerIn1, battlerIn2;
+    enum BattlerId battlerIn1, battlerIn2;
     s32 firstId;
     s32 lastId; // + 1
     struct Pokemon *party;
@@ -1709,7 +1709,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     u32 hitsToKO = 0;
     u16 maxHP = gBattleMons[battler].maxHP, item = gAiLogicData->items[battler], heldItemEffect = GetItemHoldEffect(item);
     u8 weatherDuration = gBattleStruct->weatherDuration, holdEffectParam = GetItemHoldEffectParam(item);
-    u32 opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
     enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->abilities[battler];
     bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility);
     s32 currentHP = startingHP, singleUseItemHeal = 0;
@@ -1815,7 +1815,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     return hitsToKO;
 }
 
-static u32 GetBattlerTypeMatchup(u32 opposingBattler, enum BattlerId battler)
+static u32 GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler)
 {
     // Check type matchup
     u32 typeEffectiveness1 = UQ_4_12(1.0), typeEffectiveness2 = UQ_4_12(1.0);
@@ -1895,7 +1895,7 @@ static u32 GetValidSwitchinCandidate(u32 validMonIds, enum BattlerId battler, u3
     return PARTY_SIZE;
 }
 
-static s32 GetMaxDamagePlayerCouldDealToSwitchin(enum BattlerId battler, u32 opposingBattler, enum Move *bestPlayerMove)
+static s32 GetMaxDamagePlayerCouldDealToSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, enum Move *bestPlayerMove)
 {
     enum Move playerMove;
     enum Move *playerMoves = GetMovesArray(opposingBattler);
@@ -1922,7 +1922,7 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(enum BattlerId battler, u32 opp
     return maxDamageTaken;
 }
 
-static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(enum BattlerId battler, u32 opposingBattler, enum Move *bestPlayerPriorityMove)
+static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, enum Move *bestPlayerPriorityMove)
 {
     enum Move playerMove;
     enum Move *playerMoves = GetMovesArray(opposingBattler);
@@ -1953,7 +1953,7 @@ static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(enum BattlerId battler,
     return maxDamageTaken;
 }
 
-static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, u32 opposingBattler)
+static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, enum BattlerId opposingBattler)
 {
     if (AI_CanBattlerEscape(opposingBattler))
         return FALSE;
@@ -1974,7 +1974,7 @@ static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, u32 opposi
         return FALSE;
 }
 
-static inline bool32 IsFreeSwitch(enum SwitchType switchType, u32 battlerSwitchingOut, u32 opposingBattler)
+static inline bool32 IsFreeSwitch(enum SwitchType switchType, enum BattlerId battlerSwitchingOut, enum BattlerId opposingBattler)
 {
     bool32 movedSecond = GetBattlerTurnOrderNum(battlerSwitchingOut) > GetBattlerTurnOrderNum(opposingBattler) ? TRUE : FALSE;
 
@@ -2031,7 +2031,7 @@ static inline bool32 CanSwitchinWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool3
 
 // This function splits switching behaviour depending on whether the switch is free.
 // Everything runs in the same loop to minimize computation time. This makes it harder to read, but hopefully the comments can guide you!
-static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, enum BattlerId battler, u32 opposingBattler, u32 battlerIn1, u32 battlerIn2, enum SwitchType switchType)
+static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, enum BattlerId battler, enum BattlerId opposingBattler, enum BattlerId battlerIn1, enum BattlerId battlerIn2, enum SwitchType switchType)
 {
     struct IncomingHealInfo healInfoData;
     const struct IncomingHealInfo *healInfo = &healInfoData;
@@ -2272,7 +2272,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     return PARTY_SIZE;
 }
 
-static u32 GetBestMonVanilla(struct Pokemon *party, int firstId, int lastId, enum BattlerId battler, u32 opposingBattler, u32 battlerIn1, u32 battlerIn2, enum SwitchType switchType)
+static u32 GetBestMonVanilla(struct Pokemon *party, int firstId, int lastId, enum BattlerId battler, enum BattlerId opposingBattler, enum BattlerId battlerIn1, enum BattlerId battlerIn2, enum SwitchType switchType)
 {
     s32 aceMonCount = 0;
     u32 validMonIds = 0, batonPassIds = 0, typeMatchupIds = 0, bestDamageId = PARTY_SIZE, aceMonId = PARTY_SIZE;
@@ -2384,9 +2384,9 @@ static u32 GetNextMonInParty(struct Pokemon *party, int firstId, int lastId, u32
 
 u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType)
 {
-    u32 opposingBattler = 0;
+    enum BattlerId opposingBattler = 0;
     u32 bestMonId = PARTY_SIZE;
-    u32 battlerIn1 = 0, battlerIn2 = 0;
+    enum BattlerId battlerIn1 = 0, battlerIn2 = 0;
     s32 firstId = 0;
     s32 lastId = 0; // + 1
     struct Pokemon *party;
@@ -2424,7 +2424,7 @@ u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switc
 u32 AI_SelectRevivalBlessingMon(enum BattlerId battler)
 {
     s32 firstId = 0, lastId = 0;
-    u32 opposingBattler = 0;
+    enum BattlerId opposingBattler = 0;
     struct Pokemon *party = GetBattlerParty(battler);
     u32 bestMonId = PARTY_SIZE;
     s32 bestScore = -1;

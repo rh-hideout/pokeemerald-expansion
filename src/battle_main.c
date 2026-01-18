@@ -4025,7 +4025,7 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
     return BATTLE_RUN_SUCCESS;
 }
 
-void SwitchTwoBattlersInParty(enum BattlerId battler, u32 battler2)
+void SwitchTwoBattlersInParty(enum BattlerId battler, enum BattlerId battler2)
 {
     s32 i;
     u32 partyId1, partyId2;
@@ -5184,8 +5184,8 @@ static void TryChangeTurnOrder(void)
 
 static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32 *quickClawRandom, u32 *quickDrawRandom)
 {
-    u32 battler1 = calcValues->battlerAtk;
-    u32 battler2 = calcValues->battlerDef;
+    enum BattlerId battler1 = calcValues->battlerAtk;
+    enum BattlerId battler2 = calcValues->battlerDef;
     enum Ability ability1 = calcValues->abilities[calcValues->battlerAtk];
     enum Ability ability2 = calcValues->abilities[calcValues->battlerDef];
     enum HoldEffect holdEffectBattler1 = calcValues->holdEffects[calcValues->battlerAtk];
@@ -5716,7 +5716,7 @@ void RunBattleScriptCommands(void)
         gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
 }
 
-enum Type TrySetAteType(enum Move move, u32 battlerAtk, enum Ability attackerAbility)
+enum Type TrySetAteType(enum Move move, enum BattlerId battlerAtk, enum Ability attackerAbility)
 {
     enum Type ateType = TYPE_NONE;
 
