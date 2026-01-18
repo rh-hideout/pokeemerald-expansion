@@ -35,7 +35,7 @@ enum BattlerPosition
     B_POSITION_ABSENT = 0xFF,
 };
 
-enum BattlerId
+enum __attribute__((packed)) BattlerId
 {
     B_BATTLER_0,
     B_BATTLER_1,
