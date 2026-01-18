@@ -21,6 +21,7 @@ newMacro = """
 
 output = ""
 crossEvo = False
+lastSpecies = ""
 
 with open("include/constants/pokedex.h", "r") as file:
     lines = file.readlines()
@@ -32,6 +33,7 @@ with open("include/constants/pokedex.h", "r") as file:
 """
         elif "    HOENN_DEX_" in line:
             macroedSpecies = line.replace("HOENN_DEX_", "F(")
+            lastSpecies = macroedSpecies.strip().replace(",", "")
             if crossEvo:
                 newMacro += macroedSpecies.strip().replace(",", ")) \\")
             else:
@@ -52,6 +54,7 @@ with open("include/constants/pokedex.h", "r") as file:
             output += line
 
 lineBeforeMacro = "#define POKEMON_SLOTS_NUMBER (NATIONAL_DEX_COUNT + 1)"
+newMacro = newMacro.replace(lastSpecies + ") \\", lastSpecies + ")")
 output = output.replace(lineBeforeMacro, lineBeforeMacro + newMacro)
 
 with open("include/constants/pokedex.h", "w") as f:
