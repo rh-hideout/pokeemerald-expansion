@@ -138,5 +138,7 @@ void UpdateAbilityPopup(u8 battlerId);
 void CategoryIcons_LoadSpritesGfx(void);
 void TryToAddMoveInfoWindow(void);
 void TryToHideMoveInfoWindow(void);
+void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus);
+void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon);
 
 #endif // GUARD_BATTLE_INTERFACE_H

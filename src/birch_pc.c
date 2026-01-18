@@ -51,11 +51,11 @@ static const u8 *const sBirchDexRatingTexts[BIRCH_DEX_STRINGS] =
 const u8 *GetPokedexRatingText(u32 count)
 {
     u32 i, j;
-    u16 maxDex = HOENN_DEX_COUNT - 1;
+    u16 maxDex = REGIONAL_DEX_COUNT - 1;
     // doesNotCountForRegionalPokedex
-    for(i = 0; i < HOENN_DEX_COUNT; i++)
+    for(i = 0; i < REGIONAL_DEX_COUNT; i++)
     {
-        j = NationalPokedexNumToSpecies(HoennToNationalOrder(i + 1));
+        j = NationalPokedexNumToSpecies(RegionalToNationalOrder(i + 1));
         if (gSpeciesInfo[j].isMythical && !gSpeciesInfo[j].dexForceRequired)
         {
             if (GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
@@ -93,13 +93,13 @@ u16 GetFrlgPokedexCount(void)
 {
     if (gSpecialVar_0x8004 == 0)
     {
-        gSpecialVar_0x8005 = GetKantoPokedexCount(0);
-        gSpecialVar_0x8006 = GetKantoPokedexCount(1);
+        gSpecialVar_0x8005 = GetKantoPokedexCount(FLAG_GET_SEEN);
+        gSpecialVar_0x8006 = GetKantoPokedexCount(FLAG_GET_CAUGHT);
     }
     else
     {
-        gSpecialVar_0x8005 = GetNationalPokedexCount(0);
-        gSpecialVar_0x8006 = GetNationalPokedexCount(1);
+        gSpecialVar_0x8005 = GetNationalPokedexCount(FLAG_GET_SEEN);
+        gSpecialVar_0x8006 = GetNationalPokedexCount(FLAG_GET_CAUGHT);
     }
     return IsNationalPokedexEnabled();
 }
@@ -107,7 +107,7 @@ u16 GetFrlgPokedexCount(void)
 static const u8 *GetProfOaksRatingMessageByCount(u16 count)
 {
     gSpecialVar_Result = FALSE;
-    
+
     if (count > 0 && GetSetPokedexFlag(NATIONAL_DEX_MEW, FLAG_GET_CAUGHT))
         count--;
 
