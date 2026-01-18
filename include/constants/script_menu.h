@@ -219,6 +219,7 @@
 #define STDSTRING_MARSH_BADGE      35
 #define STDSTRING_VOLCANO_BADGE    36
 #define STDSTRING_EARTH_BADGE      37
+#define STDSTRING_COINS            38
 
 // Dynamic Multichoice Callbacks
 

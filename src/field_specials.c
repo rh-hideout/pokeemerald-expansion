@@ -5976,3 +5976,11 @@ u16 StickerManGetBragFlags(void)
         result |= 1 << 2;
     return result;
 }
+
+bool8 CheckAddCoins(void)
+{
+    if (gSpecialVar_Result + gSpecialVar_0x8006 > 9999)
+        return FALSE;
+    else
+        return TRUE;
+}

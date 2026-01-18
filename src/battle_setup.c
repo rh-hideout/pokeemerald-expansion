@@ -515,7 +515,7 @@ void StartMarowakBattle(void)
     {
         u32 personality = GetMonPersonality(SPECIES_MAROWAK, MON_FEMALE, NATURE_SERIOUS, RANDOM_UNOWN_LETTER);
 
-        CreateMonWithIVs(gEnemyParty, SPECIES_MAROWAK, 30, personality, OTID_STRUCT_PLAYER_ID, 31);
+        CreateMonWithIVsPersonality(&gEnemyParty[0], SPECIES_MAROWAK, 30, 31, personality);
     }
 
     CreateBattleStartTask(GetWildBattleTransition(), 0);

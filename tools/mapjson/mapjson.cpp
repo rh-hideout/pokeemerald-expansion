@@ -322,13 +322,9 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(bg_event, "y") << ", "
                      << json_to_string(bg_event, "elevation") << ", "
                      << json_to_string(bg_event, "item") << ", "
-                     << json_to_string(bg_event, "flag");
-                if (version == "firered") {
-                    text << ", "
-                         << json_to_string(bg_event, "quantity") << ", "
-                         << json_to_string(bg_event, "underfoot");
-                }
-                text << "\n";
+                     << json_to_string(bg_event, "flag") << ", "
+                     << json_to_string(bg_event, "quantity", true) << ", "
+                     << json_to_string(bg_event, "underfoot", true) << "\n";
             }
             else if (type == "secret_base") {
                 text << "\tbg_secret_base_event "
@@ -450,7 +446,7 @@ string generate_groups_text(Json groups_data, vector<string> &invalid_maps) {
                 valid_maps.push_back(map_name_str);
             }
         }
-        
+
         if (valid_maps.size() > 0) {
             text << group << "::\n";
             for (string map : valid_maps)
@@ -692,7 +688,7 @@ string generate_layout_headers_text(Json layouts_data) {
             text << "\t.byte TRUE\n";
         else
             text << "\t.byte FALSE\n";
-        
+
         if (layout_version == "frlg")
         {
             text << "\t.byte " << json_to_string(layout, "border_width") << "\n"

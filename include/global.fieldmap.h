@@ -180,12 +180,12 @@ struct BgEvent
         const u8 *script;
         struct {
             u16 item;
-            u16 hiddenItemId;
+            u16 hiddenItemId:8;
+            u16 quantity:7;
+            u16 underfoot:1;
         } hiddenItem;
         u32 secretBaseId;
     } bgUnion;
-    u32 quantity:31;
-    bool32 underfoot:1;
 };
 
 struct MapEvents
