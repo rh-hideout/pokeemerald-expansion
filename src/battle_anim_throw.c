@@ -564,8 +564,7 @@ static const union AnimCmd *const sAnims_SafariRock[] = {
     sAnim_SafariRock,
 };
 
-// Unused, leftover from FRLG
-static const struct SpriteTemplate sSafariRockSpriteTemplate =
+const struct SpriteTemplate sSafariRockSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ROCKS,
     .paletteTag = ANIM_TAG_ROCKS,
@@ -2724,4 +2723,14 @@ static void GhostBallDodge2(struct Sprite *sprite)
     sprite->callback = DestroySpriteAfterOneFrame;
     gDoingBattleAnim = FALSE;
     UpdateOamPriorityInAllHealthboxes(1, FALSE);
+}
+
+void AnimTask_SafariGetReaction(u8 taskId)
+{
+    if (gBattleCommunication[MULTISTRING_CHOOSER] >= NUM_SAFARI_REACTIONS)
+        gBattleAnimArgs[7] = 0;
+    else
+        gBattleAnimArgs[7] = gBattleCommunication[MULTISTRING_CHOOSER];
+
+    DestroyAnimVisualTask(taskId);
 }

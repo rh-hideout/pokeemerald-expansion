@@ -1,4 +1,5 @@
 #include "config/battle.h"
+#include "constants/global.h"
 #include "constants/battle.h"
 #include "constants/battle_script_commands.h"
 #include "constants/battle_anim.h"
@@ -33,6 +34,8 @@ gBattlescriptsForSafariActions::
 	.4byte BattleScript_ActionGetNear
 	.4byte BattleScript_ActionThrowPokeblock
 	.4byte BattleScript_ActionWallyThrow
+	.4byte BattleScript_ActionThrowRock
+	.4byte BattleScript_ActionThrowBait
 
 BattleScript_ItemEnd:
 	end
@@ -249,8 +252,11 @@ BattleScript_RunByUsingItem::
 	finishturn
 
 BattleScript_ActionWatchesCarefully:
-	printstring STRINGID_PKMNWATCHINGCAREFULLY
+	printfromtable gSafariReactionStringIds
 	waitmessage B_WAIT_TIME_LONG
+#if IS_FRLG
+	playanimation BS_OPPONENT1, B_ANIM_SAFARI_REACTION
+#endif
 	end2
 
 BattleScript_ActionGetNear:
@@ -321,3 +327,15 @@ BattleScript_GhostBallDodge::
 	printstring STRINGID_ITDODGEDBALL
 	waitmessage B_WAIT_TIME_LONG
 	finishaction
+
+BattleScript_ActionThrowRock::
+	printstring STRINGID_THREWROCK
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_ATTACKER, B_ANIM_ROCK_THROW
+	end2
+
+BattleScript_ActionThrowBait::
+	printstring STRINGID_THREWBAIT
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_ATTACKER, B_ANIM_POKEBLOCK_THROW
+	end2

@@ -749,7 +749,11 @@ static void CreatePCMultichoice(void)
 
     // Change PC name if player has met Lanette
     if (FlagGet(FLAG_SYS_PC_LANETTE))
+#if IS_FRLG
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_BillsPc, x, 1, TEXT_SKIP_DRAW, NULL);
+#else
         AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_LanettesPC, x, 1, TEXT_SKIP_DRAW, NULL);
+#endif
     else
         AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_SomeonesPC, x, 1, TEXT_SKIP_DRAW, NULL);
 
@@ -1227,7 +1231,7 @@ void DrawSeagallopDestinationMenu(void)
     fontHeight = GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT);
     windowId = CreateWindowFromRect(17, top, 11, numItems * 2);
     SetStandardWindowBorderStyle(windowId, FALSE);
-    
+
     // -2 excludes "Other" and "Exit", appended after the loop
     for (i = 0; i < numItems - 2; i++)
     {

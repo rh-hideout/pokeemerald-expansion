@@ -496,6 +496,7 @@ const u8 gText_TMs_Hms[] = _("TMs & HMs");
 const u8 gText_Berries2[] = _("BERRIES");
 const u8 gText_SomeonesPC[] = _("SOMEONE'S PC");
 const u8 gText_LanettesPC[] = _("LANETTE'S PC");
+const u8 gText_BillsPc[] = _("BILL'S PC");
 const u8 gText_PlayersPC[] = _("{PLAYER}'s PC");
 const u8 gText_HallOfFame[] = _("HALL OF FAME");
 const u8 gText_LogOff[] = _("LOG OFF");

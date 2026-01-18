@@ -66,6 +66,60 @@ gBattleAnimGeneral_SilphScoped::
 	clearmonbg ANIM_ATTACKER
 	end
 
+gBattleAnimGeneral_SafariRockThrow::
+	createvisualtask AnimTask_SetAttackerTargetLeftPos, 2, 0
+	waitforvisualfinish
+	loadspritegfx ANIM_TAG_ROCKS
+	loadspritegfx ANIM_TAG_IMPACT
+	delay 0
+	waitplaysewithpan SE_M_JUMP_KICK, SOUND_PAN_ATTACKER, 22
+	createsprite sSafariRockSpriteTemplate, ANIM_TARGET, 3, -17, 14, 8, 0
+	delay 50
+	monbg ANIM_DEF_PARTNER
+	setalpha 12, 8
+	delay 0
+	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_TARGET, 2, -4, -20, 1, 2
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
+	blendoff
+	waitforvisualfinish
+	end
+
+gBattleAnimGeneral_SafariReaction::
+	createvisualtask AnimTask_SafariGetReaction, 2
+	waitforvisualfinish
+	jumpreteq B_MSG_MON_WATCHING, SafariReaction_WatchingCarefully
+	jumpreteq B_MSG_MON_ANGRY, SafariReaction_Angry
+	jumpreteq B_MSG_MON_EATING, SafariReaction_Eating
+	end
+
+SafariReaction_WatchingCarefully:
+	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET
+	createvisualtask AnimTask_RotateMonToSideAndRestore, 2, 16, 96, 0, 2
+	waitforvisualfinish
+	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET
+	createvisualtask AnimTask_RotateMonToSideAndRestore, 2, 16, -96, 0, 2
+	end
+
+SafariReaction_Angry:
+	loadspritegfx ANIM_TAG_ANGER
+	createsprite gAngerMarkSpriteTemplate, ANIM_TARGET, 2, 1, 20, -20
+	playsewithpan SE_M_SWAGGER2, SOUND_PAN_TARGET
+	waitforvisualfinish
+	delay 12
+	createsprite gAngerMarkSpriteTemplate, ANIM_TARGET, 2, 1, -20, -20
+	playsewithpan SE_M_SWAGGER2, SOUND_PAN_TARGET
+	end
+
+SafariReaction_Eating:
+	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET
+	createvisualtask AnimTask_RotateMonToSideAndRestore, 2, 8, 136, 0, 2
+	waitforvisualfinish
+	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_TARGET
+	createvisualtask AnimTask_RotateMonToSideAndRestore, 2, 8, 136, 0, 2
+	end
+
 @@@@@@@@@@@@@@@@@@@@@@@ GEN 4 @@@@@@@@@@@@@@@@@@@@@@@
 gBattleAnimMove_Roost::
 	loadspritegfx ANIM_TAG_WHITE_FEATHER

@@ -175,6 +175,7 @@ const u8 *const gPokeblockWasTooXStringTable[FLAVOR_COUNT] =
 
 static const u8 sText_Someones[] = _("someone's");
 static const u8 sText_Lanettes[] = _("LANETTE's"); //no decapitalize until it is everywhere
+static const u8 sText_Bills[] = _("BILL's");
 static const u8 sText_EnigmaBerry[] = _("ENIGMA BERRY"); //no decapitalize until it is everywhere
 static const u8 sText_BerrySuffix[] = _(" BERRY"); //no decapitalize until it is everywhere
 const u8 gText_EmptyString3[] = _("");
@@ -893,6 +894,10 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_SILPHSCOPEUNVEILED]                   = COMPOUND_STRING("SILPH SCOPE unveiled the GHOST's\nidentity!"),
     [STRINGID_GHOSTWASMAROWAK]                      = COMPOUND_STRING("The GHOST was MAROWAK!\p\n"),
     [STRINGID_TRAINER1MON1COMEBACK]                 = COMPOUND_STRING("{B_TRAINER1_NAME}: {B_OPPONENT_MON1_NAME}, come back!"),
+    [STRINGID_THREWROCK]                            = COMPOUND_STRING("{B_PLAYER_NAME} threw a ROCK\nat the {B_OPPONENT_MON1_NAME}!"),
+    [STRINGID_THREWBAIT]                            = COMPOUND_STRING("{B_PLAYER_NAME} threw some BAIT\nat the {B_OPPONENT_MON1_NAME}!"),
+    [STRINGID_PKMNANGRY]                            = COMPOUND_STRING("{B_OPPONENT_MON1_NAME} is angry!"),
+    [STRINGID_PKMNEATING]                           = COMPOUND_STRING("{B_OPPONENT_MON1_NAME} is eating!"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -1313,6 +1318,13 @@ const u16 gInobedientStringIds[] =
     [B_MSG_INCAPABLE_OF_POWER] = STRINGID_PKMNINCAPABLEOFPOWER
 };
 
+const u16 gSafariReactionStringIds[NUM_SAFARI_REACTIONS] =
+{
+    [B_MSG_MON_WATCHING] = STRINGID_PKMNWATCHINGCAREFULLY,
+    [B_MSG_MON_ANGRY]    = STRINGID_PKMNANGRY,
+    [B_MSG_MON_EATING]   = STRINGID_PKMNEATING
+};
+
 const u16 gSafariGetNearStringIds[] =
 {
     [B_MSG_CREPT_CLOSER]    = STRINGID_CREPTCLOSER,
@@ -1417,6 +1429,7 @@ const u8 gText_WhatWillWallyDo[] = _("What will\nWALLY do?");
 const u8 gText_LinkStandby[] = _("{PAUSE 16}Link standby…");
 const u8 gText_BattleMenu[] = _("Battle{CLEAR_TO 56}Bag\nPokémon{CLEAR_TO 56}Run");
 const u8 gText_SafariZoneMenu[] = _("Ball{CLEAR_TO 56}{POKEBLOCK}\nGo Near{CLEAR_TO 56}Run");
+const u8 gText_SafariZoneMenuFrlg[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW 13 14 15}BALL{CLEAR_TO 56}BAIT\nROCK{CLEAR_TO 56}RUN");
 const u8 gText_MoveInterfacePP[] = _("PP ");
 const u8 gText_MoveInterfaceType[] = _("TYPE/");
 const u8 gText_MoveInterfacePpType[] = _("{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}PP\nTYPE/");
@@ -3141,7 +3154,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 break;
             case B_TXT_PC_CREATOR_NAME: // lanette pc
                 if (FlagGet(FLAG_SYS_PC_LANETTE))
-                    toCpy = sText_Lanettes;
+                    toCpy = IS_FRLG ? sText_Bills : sText_Lanettes;
                 else
                     toCpy = sText_Someones;
                 break;
