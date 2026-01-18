@@ -2157,13 +2157,13 @@ void ClosePokemon(u32 sourceLine)
 
 static void SetGimmick(u32 sourceLine, u32 battler, u32 partyIndex, enum Gimmick gimmick)
 {
-    enum Gimmick currentGimmick = DATA.chosenGimmick[GetBattleTrainer(battler)][partyIndex];
+    enum Gimmick currentGimmick = DATA.chosenGimmick[GetBattlerTrainer(battler)][partyIndex];
     if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)
        || (currentGimmick == GIMMICK_Z_MOVE && gimmick == GIMMICK_ULTRA_BURST)))
     {
         INVALID_IF(currentGimmick != GIMMICK_NONE && currentGimmick != gimmick, "Cannot set %s because %s already set", sGimmickIdentifiers[gimmick], sGimmickIdentifiers[currentGimmick]);
     }
-    DATA.chosenGimmick[GetBattleTrainer(battler)][partyIndex] = gimmick;
+    DATA.chosenGimmick[GetBattlerTrainer(battler)][partyIndex] = gimmick;
 }
 
 void Gender_(u32 sourceLine, u32 gender)
@@ -2666,9 +2666,9 @@ s32 MoveGetTarget(s32 battlerId, enum Move moveId, struct MoveContext *ctx, u32 
 
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == TARGET_USER 
-              || moveTarget == TARGET_ALL_BATTLERS 
-              || moveTarget == TARGET_FIELD 
+        else if (moveTarget == TARGET_USER
+              || moveTarget == TARGET_ALL_BATTLERS
+              || moveTarget == TARGET_FIELD
               || moveTarget == TARGET_USER_AND_ALLY)
         {
             target = battlerId;
@@ -3066,7 +3066,7 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     DATA.expectedAiActions[battlerId][id].sourceLine = sourceLine;
     DATA.expectedAiActions[battlerId][id].actionSet = TRUE;
     DATA.expectedAiActionIndex[battlerId]++;
-    
+
     if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
         gTestRunnerState.expectedFailState = EXPECT_FAIL_TURN_OPEN;
 }
