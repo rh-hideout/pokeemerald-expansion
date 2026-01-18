@@ -840,3 +840,101 @@ SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly - Opponent")
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     }
 }
+
+SINGLE_BATTLE_TEST("(TERA) Every battler can use Terastalization - Singles")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = player; }
+    PARAMETRIZE { battler = opponent; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
+    }
+}
+
+DOUBLE_BATTLE_TEST("(TERA) Every battler can use Terastalization - Doubles")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
+    }
+}
+
+MULTI_BATTLE_TEST("(TERA) Every battler can use Terastalization - Multi")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_PARTNER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
+    }
+}
+
+TWO_VS_ONE_BATTLE_TEST("(TERA) Every battler can use Terastalization - 2v1")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_PARTNER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
+    }
+}
+
+ONE_VS_TWO_BATTLE_TEST("(TERA) Every battler can use Terastalization - 1v2")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
+    }
+}

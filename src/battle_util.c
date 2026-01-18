@@ -55,7 +55,7 @@
 
 static bool32 TryRemoveScreens(u32 battler);
 static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler);
-static u32 GetFlingPowerFromItemId(u32 itemId);
+static u32 GetFlingPowerFromItemId(enum Item itemId);
 static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, enum Ability abilityDef, bool32 abilityAffected, const u8 *battleScript, enum ResultOption option);
 static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum ResultOption option);
 static bool32 IsOpposingSideEmpty(u32 battler);
@@ -329,7 +329,7 @@ static bool32 ShouldTeraShellDistortTypeMatchups(enum Move move, u32 battlerDef,
     return FALSE;
 }
 
-bool32 IsUnnerveBlocked(u32 battler, u32 itemId)
+bool32 IsUnnerveBlocked(u32 battler, enum Item itemId)
 {
     if (GetItemPocket(itemId) != POCKET_BERRIES)
         return FALSE;
@@ -3740,7 +3740,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                         StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
                     if (gBattleMons[battler].status1 & STATUS1_BURN)
                         StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
-                    if (gBattleMons[battler].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
+                    if (gBattleMons[battler].status1 & STATUS1_ICY_ANY)
                         StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
 
                     gBattleMons[battler].status1 = 0;
@@ -5483,7 +5483,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abil
         break;
     case MOVE_EFFECT_FREEZE:
     case MOVE_EFFECT_FROSTBITE:
-        if (gBattleMons[battlerDef].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
+        if (gBattleMons[battlerDef].status1 & STATUS1_ICY_ANY)
         {
             battleScript = BattleScript_AlreadyBurned;
         }
@@ -5602,7 +5602,7 @@ bool32 CanBeConfused(u32 battler)
 }
 
 // second argument is 1/X of current hp compared to max hp
-bool32 HasEnoughHpToEatBerry(u32 battler, enum Ability ability, u32 hpFraction, u32 itemId)
+bool32 HasEnoughHpToEatBerry(u32 battler, enum Ability ability, u32 hpFraction, enum Item itemId)
 {
     if (!IsBattlerAlive(battler))
         return FALSE;
@@ -8907,7 +8907,7 @@ bool32 DoBattlersShareType(u32 battler1, u32 battler2)
     return FALSE;
 }
 
-bool32 CanBattlerGetOrLoseItem(u32 fromBattler, u32 battler, u16 itemId)
+bool32 CanBattlerGetOrLoseItem(u32 fromBattler, u32 battler, enum Item itemId)
 {
     u16 species = gBattleMons[fromBattler].species;
     enum HoldEffect holdEffect = GetItemHoldEffect(itemId); // Raw hold effect
@@ -9081,7 +9081,7 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(u32 battler)
         }
         break;
     case ABILITY_MAGMA_ARMOR:
-        if (gBattleMons[battler].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
+        if (gBattleMons[battler].status1 & STATUS1_ICY_ANY)
         {
             StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
             outcome = IMMUNITY_STATUS_CLEARED;
@@ -9245,7 +9245,7 @@ enum DamageCategory GetCategoryBasedOnStats(u32 battler)
         return DAMAGE_CATEGORY_PHYSICAL;
 }
 
-static u32 GetFlingPowerFromItemId(u32 itemId)
+static u32 GetFlingPowerFromItemId(enum Item itemId)
 {
     if (gItemsInfo[itemId].pocket == POCKET_TM_HM)
     {
@@ -9260,7 +9260,7 @@ static u32 GetFlingPowerFromItemId(u32 itemId)
 
 bool32 CanFling(u32 battlerAtk, u32 battlerDef)
 {
-    u16 item = gBattleMons[battlerAtk].item;
+    enum Item item = gBattleMons[battlerAtk].item;
 
     if (item == ITEM_NONE
       || (GetConfig(CONFIG_KLUTZ_FLING_INTERACTION) >= GEN_5 && GetBattlerAbility(battlerAtk) == ABILITY_KLUTZ)
@@ -9339,7 +9339,7 @@ void TryRestoreHeldItems(void)
     }
 }
 
-bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item)
+bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, enum Item item)
 {
     enum BattleSide stealerSide = GetBattlerSide(battlerStealing);
 
@@ -9374,14 +9374,14 @@ bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item)
     if (GetItemHoldEffect(item) == HOLD_EFFECT_AIR_BALLOON)
         return FALSE;
 
-    if (!CanBattlerGetOrLoseItem(battlerItem, battlerStealing, item)      // Battler with item cannot have it stolen
+    if (!CanBattlerGetOrLoseItem(battlerItem, battlerStealing, item)  // Battler with item cannot have it stolen
      || !CanBattlerGetOrLoseItem(battlerStealing, battlerItem, item)) // Stealer cannot take the item
         return FALSE;
 
     return TRUE;
 }
 
-void TrySaveExchangedItem(u32 battler, u16 stolenItem)
+void TrySaveExchangedItem(u32 battler, enum Item stolenItem)
 {
     // Because BtlController_EmitSetMonData does SetMonData, we need to save the stolen item only if it matches the battler's original
     // So, if the player steals an item during battle and has it stolen from it, it will not end the battle with it (naturally)
@@ -10161,7 +10161,7 @@ bool32 TryTriggerSymbiosis(u32 battler, u32 ally)
 }
 
 // Called by Cmd_removeitem. itemId represents the item that was removed, not being given.
-bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd)
+bool32 TrySymbiosis(u32 battler, enum Item itemId, bool32 moveEnd)
 {
     if (!gBattleStruct->itemLost[B_SIDE_PLAYER][gBattlerPartyIndexes[battler]].stolen
         && gBattleStruct->changedItems[battler] == ITEM_NONE
@@ -10240,7 +10240,7 @@ void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
     }
 }
 
-bool32 ItemHealMonVolatile(u32 battler, u16 itemId)
+bool32 ItemHealMonVolatile(u32 battler, enum Item itemId)
 {
     bool32 statusChanged = FALSE;
     const u8 *effect = GetItemEffect(itemId);
@@ -10918,4 +10918,3 @@ void SetOrClearRageVolatile(void)
     else
         gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
 }
-

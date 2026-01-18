@@ -2328,11 +2328,6 @@
 	callnative BS_TryResetNegativeStatStages
 	.endm
 
-	.macro jumpiflastuseditemberry jumpInstr:req
-	callnative BS_JumpIfLastUsedItemBerry
-	.4byte \jumpInstr
-	.endm
-
 	.macro savebattleritem
 	callnative BS_SaveBattlerItem
 	.endm

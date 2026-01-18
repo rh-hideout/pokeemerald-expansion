@@ -224,7 +224,7 @@ typedef union // size = 0x24
         /*0x02*/ u8 priceReduced;
         /*0x03*/ u8 language;
         /*0x04*/ u8 filler_04[2];
-        /*0x06*/ u16 itemIds[SMARTSHOPPER_NUM_ITEMS];
+        /*0x06*/ enum Item itemIds[SMARTSHOPPER_NUM_ITEMS];
         /*0x0C*/ u16 itemAmounts[SMARTSHOPPER_NUM_ITEMS];
         /*0x12*/ mapsec_u8_t shopLocation;
         /*0x13*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
@@ -308,7 +308,7 @@ typedef union // size = 0x24
     struct {
         /*0x00*/ u8 kind;
         /*0x01*/ bool8 active;
-        /*0x02*/ u16 item;
+        /*0x02*/ enum Item item;
         /*0x04*/ mapsec_u8_t location;
         /*0x05*/ u8 language;
         /*0x06*/ u16 mapLayoutId;
@@ -367,7 +367,7 @@ typedef union // size = 0x24
     struct {
         /*0x00*/ u8 kind;
         /*0x01*/ bool8 active;
-        /*0x02*/ u16 item;
+        /*0x02*/ enum Item item;
         /*0x04*/ u8 whichPrize;
         /*0x05*/ u8 language;
         /*0x06*/ u8 filler_06[13];
@@ -451,7 +451,7 @@ typedef union // size = 0x24
         /*0x02*/ u16 stepsInBase;
         /*0x04*/ u8 baseOwnersName[PLAYER_NAME_LENGTH + 1];
         /*0x0C*/ u32 flags;
-        /*0x10*/ u16 item;
+        /*0x10*/ enum Item item;
         /*0x12*/ u8 savedState;
         /*0x13*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
         /*0x1B*/ u8 language;

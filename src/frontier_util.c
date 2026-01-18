@@ -2078,7 +2078,7 @@ static void AppendIfValid(u16 species, u16 heldItem, u16 hp, u8 lvlMode, u8 monL
 static void CheckPartyIneligibility(void)
 {
     u16 speciesArray[PARTY_SIZE];
-    u16 itemArray[PARTY_SIZE];
+    enum Item itemArray[PARTY_SIZE];
     s32 monId = 0;
     s32 toChoose = 0;
     u8 count = 0;
@@ -2113,7 +2113,7 @@ static void CheckPartyIneligibility(void)
         do
         {
             u16 species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
-            u16 heldItem = GetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM);
+            enum Item heldItem = GetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM);
             u8 level = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
             u16 hp = GetMonData(&gPlayerParty[monId], MON_DATA_HP);
             if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_PYRAMID)
@@ -2259,7 +2259,7 @@ static void RestoreHeldItems(void)
     {
         if (gSaveBlock2Ptr->frontier.selectedPartyMons[i] != 0)
         {
-            u16 item = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_HELD_ITEM);
+            enum Item item = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_HELD_ITEM);
             SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
         }
     }
