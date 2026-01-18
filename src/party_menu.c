@@ -8002,14 +8002,14 @@ void BufferMoveDeleterNicknameAndMove(void)
 
 void MoveDeleterForgetMove(void)
 {
-    u32 i;
+    enum Move move = MOVE_NONE;
     struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
-    SetBoxMonData(boxmon, MON_DATA_MOVE1 + gSpecialVar_0x8005, &i);
+    SetBoxMonData(boxmon, MON_DATA_MOVE1 + gSpecialVar_0x8005, &move);
     SetBoxMonData(boxmon, MON_DATA_PP1 + gSpecialVar_0x8005, &gMovesInfo[MOVE_NONE].pp);
     u8 ppBonuses = GetBoxMonData(boxmon, MON_DATA_PP_BONUSES);
     ppBonuses &= gPPUpClearMask[gSpecialVar_0x8005];
     SetBoxMonData(boxmon, MON_DATA_PP_BONUSES, &ppBonuses);
-    for (i = gSpecialVar_0x8005; i < MAX_MON_MOVES - 1; i++)
+    for (u32 i = gSpecialVar_0x8005; i < MAX_MON_MOVES - 1; i++)
         ShiftMoveSlot(boxmon, i, i + 1);
 }
 
