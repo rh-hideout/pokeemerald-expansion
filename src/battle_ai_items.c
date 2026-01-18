@@ -211,7 +211,7 @@ static bool32 AI_ShouldHeal(enum BattlerId battler, u32 healAmount)
     }
 
     //calculate max expected damage from the opponent
-    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
         if (IsOnPlayerSide(battlerIndex))
         {

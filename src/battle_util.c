@@ -4241,7 +4241,7 @@ static inline bool32 SetStartingSideStatus(u32 flag, enum BattleSide side, u32 m
 {
     if (!(gSideStatuses[side] & flag))
     {
-        gBattlerAttacker = gBattlerTarget = side;
+        gBattlerAttacker = gBattlerTarget = (enum BattlerId)side;
         gBattleCommunication[MULTISTRING_CHOOSER] = message;
         gSideStatuses[side] |= flag;
         gBattleScripting.animArg1 = anim;

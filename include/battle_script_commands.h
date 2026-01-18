@@ -45,7 +45,7 @@ u32 GetBattlerTurnOrderNum(enum BattlerId battler);
 bool32 NoAliveMonsForBattlerSide(enum BattlerId battler);
 bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);
-void SetMoveEffect(enum BattlerId battlerAtk, u32 effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags);
+void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags);
 bool32 CanBattlerSwitch(enum BattlerId battlerId);
 void BattleDestroyYesNoCursorAt(u8 cursorPosition);
 void BattleCreateYesNoCursorAt(u8 cursorPosition);

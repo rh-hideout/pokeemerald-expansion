@@ -1428,7 +1428,7 @@ static void SpriteCB_Ball_Capture(struct Sprite *sprite)
 // Fade and unfade ball, create star animations, play sound effects
 static void SpriteCB_Ball_Capture_Step(struct Sprite *sprite)
 {
-    u8 *battler = &gBattleAnimTarget;
+    enum BattlerId *battler = &gBattleAnimTarget;
 
     sprite->sTimer++;
     if (sprite->sTimer == 40)

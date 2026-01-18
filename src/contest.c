@@ -5408,7 +5408,7 @@ static void SetMoveTargetPosition(enum Move move)
     switch (GetBattlerMoveTargetType(gBattlerAttacker, move))
     {
     case TARGET_USER:
-        gBattlerTarget = B_POSITION_PLAYER_RIGHT;
+        gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
         break;
     case TARGET_OPPONENT:
     case TARGET_SELECTED:
@@ -5418,7 +5418,7 @@ static void SetMoveTargetPosition(enum Move move)
     case TARGET_FOES_AND_ALLY:
     case TARGET_USER_AND_ALLY:
     default:
-        gBattlerTarget = B_POSITION_OPPONENT_RIGHT;
+        gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
         break;
     }
 }

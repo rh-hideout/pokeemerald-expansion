@@ -219,9 +219,9 @@ static bool32 HasLightSensitiveMove(enum BattlerId battler)
 {
     enum Move *moves = GetMovesArray(battler);
 
-    for (u32 battlerIndex = 0; battlerIndex < MAX_MON_MOVES; battlerIndex++)
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (moves[battlerIndex] != MOVE_NONE && moves[battlerIndex] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[battlerIndex]))
+        if (moves[moveIndex] != MOVE_NONE && moves[moveIndex] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[moveIndex]))
             return TRUE;
     }
 

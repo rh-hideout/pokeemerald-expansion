@@ -2367,7 +2367,7 @@ static u32 GetBestMonVanilla(struct Pokemon *party, int firstId, int lastId, enu
     return PARTY_SIZE;
 }
 
-static u32 GetNextMonInParty(struct Pokemon *party, int firstId, int lastId, u32 battlerIn1, u32 battlerIn2)
+static u32 GetNextMonInParty(struct Pokemon *party, int firstId, int lastId, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
 {
     // Iterate through mons
     for (u32 monIndex = firstId; monIndex < lastId; monIndex++)

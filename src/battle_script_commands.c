@@ -2381,7 +2381,7 @@ static inline bool32 TrySetLightScreen(enum BattlerId battler)
     return FALSE;
 }
 
-static void SetNonVolatileStatus(u32 effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger)
+static void SetNonVolatileStatus(enum BattlerId effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger)
 {
     gEffectBattler = effectBattler;
 
@@ -2458,7 +2458,7 @@ static void SetNonVolatileStatus(u32 effectBattler, enum MoveEffect effect, cons
 }
 
 // To avoid confusion the arguments are naned battler/effectBattler since they can be different from gBattlerAttacker/gBattlerTarget
-void SetMoveEffect(enum BattlerId battlerAtk, u32 effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)
+void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)
 {
     enum Ability abilities[MAX_BATTLERS_COUNT] = {ABILITY_NONE};
     abilities[battlerAtk] = GetBattlerAbility(battlerAtk);
@@ -3765,7 +3765,7 @@ static void Cmd_seteffectprimary(void)
     CMD_ARGS(u8 battler, u8 effectBattler);
 
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    u32 effectBattler = GetBattlerForBattleScript(cmd->effectBattler);
+    enum BattlerId effectBattler = GetBattlerForBattleScript(cmd->effectBattler);
     SetMoveEffect(battler, effectBattler, gBattleScripting.moveEffect, cmd->nextInstr, EFFECT_PRIMARY);
 }
 
@@ -3774,7 +3774,7 @@ static void Cmd_seteffectsecondary(void)
     CMD_ARGS(u8 battler, u8 effectBattler);
 
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    u32 effectBattler = GetBattlerForBattleScript(cmd->effectBattler);
+    enum BattlerId effectBattler = GetBattlerForBattleScript(cmd->effectBattler);
     SetMoveEffect(battler, effectBattler, gBattleScripting.moveEffect, cmd->nextInstr, EFFECT_PRIMARY);
 }
 
