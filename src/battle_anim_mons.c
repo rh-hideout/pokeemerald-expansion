@@ -277,7 +277,7 @@ u8 GetBattlerYCoordWithElevation(u8 battler)
     return y;
 }
 
-u8 GetAnimBattlerSpriteId(u8 animBattler)
+u8 GetAnimBattlerSpriteId(enum AnimBattler animBattler)
 {
     u32 partner;
 
@@ -1671,7 +1671,8 @@ static void AnimTask_AlphaFadeIn_Step(u8 taskId)
 // arg 4: number of times to blend in and out
 void AnimTask_BlendMonInAndOut(u8 task)
 {
-    u8 spriteId = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
+    u8 spriteId = GetAnimBattlerSpriteId(animBattler);
     if (spriteId == SPRITE_NONE)
     {
         DestroyAnimVisualTask(task);
@@ -1979,14 +1980,14 @@ void InitPrioritiesForVisibleBattlers(void)
     }
 }
 
-u8 GetBattlerSpriteSubpriority(u8 battler)
+u8 GetBattlerSpriteSubpriority(enum BattlerId battler)
 {
     enum BattlerPosition position;
     u8 subpriority;
 
     if (IsContest())
     {
-        if (battler == 2)
+        if (battler == B_BATTLER_2)
             return 30;
         else
             return 40;

@@ -2097,7 +2097,8 @@ void AnimTask_Splash(u8 taskId)
     }
     else
     {
-        u8 spriteId = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
+        enum AnimBattler animBattler = gBattleAnimArgs[0];
+        u8 spriteId = GetAnimBattlerSpriteId(animBattler);
         task->data[0] = spriteId;
         task->data[1] = 0;
         task->data[2] = gBattleAnimArgs[1];
@@ -3608,7 +3609,8 @@ static void AnimMovementWaves_Step(struct Sprite *sprite)
 
 void AnimTask_UproarDistortion(u8 taskId)
 {
-    u8 spriteId = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
+    u8 spriteId = GetAnimBattlerSpriteId(animBattler);
 
     PrepareAffineAnimInTaskData(&gTasks[taskId], spriteId, sAffineAnims_UproarDistortion);
     gTasks[taskId].func = AnimTask_UproarDistortion_Step;

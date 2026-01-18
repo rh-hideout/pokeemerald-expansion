@@ -1219,6 +1219,7 @@ void AnimTask_TransparentCloneGrowAndShrink(u8 taskId)
     s16 spriteId;
     s16 matrixNum;
     struct Task *task = &gTasks[taskId];
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
 
     matrixNum = AllocOamMatrix();
     if (matrixNum == 0xFF)
@@ -1227,7 +1228,7 @@ void AnimTask_TransparentCloneGrowAndShrink(u8 taskId)
         return;
     }
 
-    spriteId = CloneBattlerSpriteWithBlend(gBattleAnimArgs[0]);
+    spriteId = CloneBattlerSpriteWithBlend(animBattler);
     if (spriteId < 0)
     {
         FreeOamMatrix(matrixNum);
@@ -1242,7 +1243,7 @@ void AnimTask_TransparentCloneGrowAndShrink(u8 taskId)
     gSprites[spriteId].subpriority++;
     SetSpriteRotScale(spriteId, 256, 256, 0);
     CalcCenterToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
-    task->data[13] = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
+    task->data[13] = GetAnimBattlerSpriteId(animBattler);
     task->data[14] = matrixNum;
     task->data[15] = spriteId;
     task->func = AnimTask_TransparentCloneGrowAndShrink_Step;

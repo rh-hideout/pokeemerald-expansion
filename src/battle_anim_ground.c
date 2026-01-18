@@ -569,6 +569,7 @@ void AnimTask_HorizontalShake(u8 taskId)
 {
     u16 i;
     struct Task *task = &gTasks[taskId];
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
 
     if (gBattleAnimArgs[1] != 0)
         task->tHorizOffset = task->tInitHorizOffset = gBattleAnimArgs[1] + 3;
@@ -576,13 +577,13 @@ void AnimTask_HorizontalShake(u8 taskId)
         task->tHorizOffset = task->tInitHorizOffset = (gAnimMovePower / 10) + 3;
 
     task->tMaxTime = gBattleAnimArgs[2];
-    switch (gBattleAnimArgs[0])
+    switch (animBattler)
     {
-    case MAX_BATTLERS_COUNT + 1: // Shake platforms
+    case ANIM_OPPONENT_LEFT: // Shake platforms
         task->tInitialX = gBattle_BG3_X;
         task->func = AnimTask_ShakePlatforms;
         break;
-    case MAX_BATTLERS_COUNT: // Shake all battlers
+    case ANIM_PLAYER_LEFT: // Shake all battlers
         task->tNumBattlers = 0;
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
         {
@@ -595,7 +596,7 @@ void AnimTask_HorizontalShake(u8 taskId)
         task->func = AnimTask_ShakeBattlers;
         break;
     default: // Shake specific battler
-        task->tbattlerSpriteIds(0) = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
+        task->tbattlerSpriteIds(0) = GetAnimBattlerSpriteId(animBattler);
         if (task->tbattlerSpriteIds(0) == SPRITE_NONE)
         {
             DestroyAnimVisualTask(taskId);

@@ -560,9 +560,9 @@ static void Cmd_unloadspritegfx(void)
 static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
 {
     u8 numTargets = 0;
-    u32 battlerAnimId = gBattleAnimArgs[battlerArgIndex];   // ANIM_xx input
+    enum AnimBattler battlerAnimId = gBattleAnimArgs[battlerArgIndex];   // ANIM_xx input
     u32 i;
-    u32 ignoredTgt = gBattlerAttacker;
+    u32 ignoredTgt;
     u32 target = GetBattlerMoveTargetType(gBattleAnimAttacker, gAnimMoveIndex);
 
     switch (battlerAnimId)
@@ -573,6 +573,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
         break;
     case ANIM_TARGET:
     case ANIM_DEF_PARTNER:
+    default:
         ignoredTgt = gBattlerAttacker;
         break;
     }
@@ -1039,7 +1040,7 @@ static void Cmd_monbg(void)
     gAnimScriptCallback = WaitAnimFrameCount;
 }
 
-u8 GetAnimBattlerId(u8 wantedBattler)
+enum BattlerId GetAnimBattlerId(enum AnimBattler wantedBattler)
 {
     switch (wantedBattler)
     {
@@ -2154,9 +2155,8 @@ static void Cmd_splitbgprio_foes(void)
 
 static void Cmd_invisible(void)
 {
-    u8 spriteId;
-
-    spriteId = GetAnimBattlerSpriteId(sBattleAnimScriptPtr[1]);
+    enum AnimBattler animBattler = sBattleAnimScriptPtr[1];
+    u8 spriteId = GetAnimBattlerSpriteId(animBattler);
     if (spriteId != SPRITE_NONE)
         gSprites[spriteId].invisible = TRUE;
 
@@ -2165,9 +2165,8 @@ static void Cmd_invisible(void)
 
 static void Cmd_visible(void)
 {
-    u8 spriteId;
-
-    spriteId = GetAnimBattlerSpriteId(sBattleAnimScriptPtr[1]);
+    enum AnimBattler animBattler = sBattleAnimScriptPtr[1];
+    u8 spriteId = GetAnimBattlerSpriteId(animBattler);
     if (spriteId != SPRITE_NONE)
         gSprites[spriteId].invisible = FALSE;
 

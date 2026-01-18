@@ -1071,7 +1071,8 @@ void AnimHitSplatRandom(struct Sprite *sprite)
 
 void AnimHitSplatOnMonEdge(struct Sprite *sprite)
 {
-    sprite->data[0] = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
+    sprite->data[0] = GetAnimBattlerSpriteId(animBattler);
     sprite->x = gSprites[sprite->data[0]].x + gSprites[sprite->data[0]].x2;
     sprite->y = gSprites[sprite->data[0]].y + gSprites[sprite->data[0]].y2;
     sprite->x2 = gBattleAnimArgs[1];
