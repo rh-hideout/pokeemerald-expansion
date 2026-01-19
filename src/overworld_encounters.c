@@ -1252,7 +1252,7 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
 #define MAP_METATILE_VIEW_Y 5
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
 {
-    if (!IS_OW_MON_OBJ(objectEvent))
+    if (!IsOverworldWildEncounter(objectEvent))
         return;
     
     u32 speciesId = OW_SPECIES(objectEvent);
