@@ -2255,15 +2255,6 @@ BattleScript_Hit_RetFromAtkAnimation::
 	setadditionaleffects
 	return
 
-BattleScript_EffectNaturalGift::
-	attackcanceler
-	jumpifnotberry BS_ATTACKER, BattleScript_ButItFailed
-	jumpifword CMP_COMMON_BITS, gFieldStatuses, STATUS_FIELD_MAGIC_ROOM, BattleScript_ButItFailed
-	jumpifability BS_ATTACKER, ABILITY_KLUTZ, BattleScript_ButItFailed
-	jumpifvolatile BS_ATTACKER, VOLATILE_EMBARGO, BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause
-	call BattleScript_HitFromDamageCalc
-
 BattleScript_MakeMoveMissed::
 	setmoveresultflags MOVE_RESULT_MISSED
 BattleScript_MoveMissedPause::

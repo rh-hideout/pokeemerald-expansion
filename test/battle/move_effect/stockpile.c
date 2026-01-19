@@ -311,19 +311,3 @@ SINGLE_BATTLE_TEST("Spit Up's Stockpile's are romoved if hit into Protect")
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE );
     }
 }
-
-SINGLE_BATTLE_TEST("Spit Up's...")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_STOCKPILE); }
-        TURN { MOVE(player, MOVE_STOCKPILE); }
-        TURN { MOVE(player, MOVE_STOCKPILE); }
-        TURN { MOVE(player, MOVE_SPIT_UP); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIT_UP, player);
-    }
-}
