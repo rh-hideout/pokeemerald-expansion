@@ -1306,8 +1306,6 @@ static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, u32 
     s16 yCurrent = objectEvent->currentCoords.y;
     s16 xNew = xCurrent + gDirectionToVectors[direction].x;
     s16 yNew = yCurrent + gDirectionToVectors[direction].y;
-    u32 mapGroup = objectEvent->mapGroup;
-    u32 mapNum = objectEvent->mapNum;
 
     if (AreCoordsInsidePlayerMap(xCurrent, yCurrent))
         return !AreCoordsInsidePlayerMap(xNew, yNew);
