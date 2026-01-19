@@ -24,8 +24,8 @@ enum __attribute__((packed)) Type
     TYPE_DRAGON = 17,
     TYPE_DARK = 18,
     TYPE_FAIRY = 19,
-    TYPE_STELLAR = 20,
-    NUMBER_OF_MON_TYPES
+    TYPE_STELLAR = 20
+    #define NUMBER_OF_MON_TYPES (TYPE_STELLAR + 1)
 };
 
 // Pokémon egg groups
