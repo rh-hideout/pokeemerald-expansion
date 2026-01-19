@@ -22,9 +22,9 @@ A pull request meets the scope criteria if:
 2. **SS Moves**: Adds Moves and Move Animations that have appeared in a Showdown-supported title
 3. **SS Abilities**: Adds Abilities that have appeared in a Showdown-supported title
 4. **SS Items**: Items that meet ALL the following requirements are in scope:
-- Has appeared in a Showdown supported title
-- Is mechanically / functionally unique from existing items (ie. not Relic Crown, Silver Leaf), with the exception of items with in-battle functionality (ie. Lumiose Gallette)
-- Do not ONLY exist for story related purpose (ie. Jade Orb)
+   - Has appeared in a Showdown supported title
+   - Is mechanically / functionally unique from existing items (ie. not Relic Crown, Silver Leaf), with the exception of items with in-battle functionality (ie. Lumiose Gallette)
+   - Do not ONLY exist for story related purpose (ie. Jade Orb)
 5. **SS Gimmicks**: Adds Gimmicks that have appeared in a Showdown-supported title (Dynamax, Mega Evolution, etc.) 
 6. **SS Battle Types**: Adds Special Battle Types that have appeared in a Showdown-supported title (Triple battles, etc.)
 7. **SS Battle Mechanics**: Adds mechanical battle changes that have appeared in a Showdown-supported title, and allow developers to choose which generation suits them where applicable
