@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a single battle", s16 damage)
 {
-    u16 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_BERSERK_GENE; }
     GIVEN {
@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a single 
 
 DOUBLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a double battle", s16 damage)
 {
-    u16 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_BERSERK_GENE; }
     GIVEN {
@@ -60,7 +60,7 @@ DOUBLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a double 
 
 SINGLE_BATTLE_TEST("Berserk Gene activates on switch in", s16 damage)
 {
-    u16 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_BERSERK_GENE; }
     GIVEN {
@@ -87,7 +87,7 @@ SINGLE_BATTLE_TEST("Berserk Gene activates on switch in", s16 damage)
 
 SINGLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but still raises attack sharply in a single battle", s16 damage)
 {
-    u16 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_BERSERK_GENE; }
     GIVEN {
@@ -115,7 +115,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
 
 DOUBLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but still raises attack sharply in a double battle", s16 damage)
 {
-    u16 item;
+    enum Item item;
     bool8 positionLeft = FALSE;
 
     PARAMETRIZE { item = ITEM_NONE; }
@@ -255,7 +255,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop")
 
 SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
 {
-    u16 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_FULL_HEAL; }
     PARAMETRIZE { item = ITEM_HEAL_POWDER; }
     PARAMETRIZE { item = ITEM_PEWTER_CRUNCHIES; }
@@ -284,7 +284,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
 
 SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items")
 {
-    u16 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_PERSIM_BERRY; }
     PARAMETRIZE { item = ITEM_LUM_BERRY; }
 

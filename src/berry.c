@@ -15,7 +15,7 @@
 #include "constants/event_object_movement.h"
 #include "constants/items.h"
 
-static u16 BerryTypeToItemId(u16 berry);
+static enum Item BerryTypeToItemId(u16 berry);
 static u8 BerryTreeGetNumStagesWatered(struct BerryTree *tree);
 static u8 GetNumStagesWateredByBerryTreeId(u8 id);
 static u8 CalcBerryYieldInternal(u16 max, u16 min, u8 water);
@@ -2000,7 +2000,7 @@ u8 GetMulchByBerryTreeId(u8 id)
     return gSaveBlock1Ptr->berryTrees[id].mulch;
 }
 
-u8 ItemIdToBerryType(u16 item)
+u8 ItemIdToBerryType(enum Item item)
 {
     u16 berry = item - FIRST_BERRY_INDEX;
 
@@ -2010,9 +2010,9 @@ u8 ItemIdToBerryType(u16 item)
         return ITEM_TO_BERRY(item);
 }
 
-static u16 BerryTypeToItemId(u16 berry)
+static enum Item BerryTypeToItemId(u16 berry)
 {
-    u16 item = berry - 1;
+    enum Item item = berry - 1;
 
     if (item > LAST_BERRY_INDEX - FIRST_BERRY_INDEX)
         return FIRST_BERRY_INDEX;

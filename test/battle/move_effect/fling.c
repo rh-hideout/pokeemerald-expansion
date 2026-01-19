@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Fling fails if Pokémon holds no item")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_RAZOR_CLAW; }
@@ -202,7 +202,7 @@ SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a b
 SINGLE_BATTLE_TEST("Fling doesn't consume the item if Pokémon is asleep/frozen/paralyzed")
 {
     u32 status;
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { status = STATUS1_SLEEP_TURN(2); item = ITEM_RAZOR_CLAW; }
     PARAMETRIZE { status = STATUS1_PARALYSIS; item = ITEM_RAZOR_CLAW; }
@@ -252,7 +252,7 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if Pokémon is asleep/frozen/
 
 SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_FLAME_ORB; }
     PARAMETRIZE { item = ITEM_LIGHT_BALL; }
@@ -302,13 +302,15 @@ SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
                 MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
             }
             break;
+        default:
+            break;
         }
     }
 }
 
 SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_FLAME_ORB; }
     PARAMETRIZE { item = ITEM_LIGHT_BALL; }
@@ -378,8 +380,12 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
                     case ITEM_KINGS_ROCK:
                         MESSAGE("The King's Rock was used up…");
                         break;
+                    default:
+                        break;
                 }
             }
+            break;
+        default:
             break;
         }
     }
@@ -387,8 +393,9 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
 
 SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even if the trigger conditions are not met")
 {
-    u16 item, effect;
-    u8 statId = 0;
+    enum Item item;
+    enum HoldEffect effect;
+    enum Stat statId = STAT_HP;
     u32 status1 = STATUS1_NONE;
 
     PARAMETRIZE { item = ITEM_ORAN_BERRY; effect = HOLD_EFFECT_RESTORE_HP; }

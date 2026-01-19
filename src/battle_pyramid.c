@@ -1180,7 +1180,7 @@ static void UpdatePyramidLightRadius(void)
 static void ClearPyramidPartyHeldItems(void)
 {
     int i, j;
-    u16 item = 0;
+    enum Item item = ITEM_NONE;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {

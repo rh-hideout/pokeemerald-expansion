@@ -44,6 +44,15 @@ enum BattlerId
     MAX_BATTLERS_COUNT,
 };
 
+enum __attribute__((packed)) BattleTrainer
+{
+    B_TRAINER_0,
+    B_TRAINER_1,
+    B_TRAINER_2,
+    B_TRAINER_3,
+    MAX_BATTLE_TRAINERS,
+};
+
 // These macros can be used with either battler ID or positions to get the partner or the opposite mon
 #define BATTLE_OPPOSITE(id) ((id) ^ BIT_SIDE)
 #define BATTLE_PARTNER(id) ((id) ^ BIT_FLANK)

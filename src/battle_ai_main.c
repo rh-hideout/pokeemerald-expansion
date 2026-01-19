@@ -2391,6 +2391,20 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
 
                 if (decreased)
                     break;
+                if (predictedMove != MOVE_NONE && predictedMove != MOVE_UNAVAILABLE)
+                {
+                    if (MoveIgnoresProtect(predictedMove))
+                    {
+                        ADJUST_SCORE(-10);
+                        break;
+                    }
+                }
+                if (protectMethod != PROTECT_MAX_GUARD
+                 && IsUnseenFistContactMove(battlerDef, battlerAtk, predictedMove))
+                {
+                    ADJUST_SCORE(-10);
+                    break;
+                }
                 if (IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef]))
                 {
                     ADJUST_SCORE(-10);
@@ -5160,7 +5174,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
             ADJUST_SCORE(WEAK_EFFECT);
         if (aiData->abilities[battlerAtk] == ABILITY_RIPEN)
         {
-            u32 item = GetBattlerPartyState(battlerAtk)->usedHeldItem;
+            enum Item item = GetBattlerPartyState(battlerAtk)->usedHeldItem;
             u32 toHeal = (GetItemHoldEffectParam(item) == 10) ? 10 : gBattleMons[battlerAtk].maxHP / GetItemHoldEffectParam(item);
 
             if (IsStatBoostingBerry(item) && aiData->hpPercents[battlerAtk] > 60)

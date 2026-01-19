@@ -196,7 +196,7 @@ enum ItemObtainFlags
     FLAG_GET_ITEM_OBTAINED,
     FLAG_SET_ITEM_OBTAINED,
 };
-bool8 GetSetItemObtained(u16 item, enum ItemObtainFlags caseId);
+bool8 GetSetItemObtained(enum Item item, enum ItemObtainFlags caseId);
 
 void Overworld_CreditsMainCB(void);
 bool32 Overworld_DoScrollSceneForCredits(u8 *, const struct CreditsOverworldCmd *);

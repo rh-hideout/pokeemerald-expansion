@@ -32,7 +32,6 @@ static void SafariHandleDrawTrainerPic(u32 battler);
 static void SafariHandleChooseAction(u32 battler);
 static void SafariHandleChooseItem(u32 battler);
 static void SafariHandleChoosePokemon(u32 battler);
-static void SafariHandleStatusIconUpdate(u32 battler);
 static void SafariHandleFaintingCry(u32 battler);
 static void SafariHandleIntroTrainerBallThrow(u32 battler);
 static void SafariHandleEndLinkBattle(u32 battler);
@@ -68,7 +67,7 @@ static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_23]                       = BtlController_Empty,
     [CONTROLLER_HEALTHBARUPDATE]          = BtlController_Empty,
     [CONTROLLER_EXPUPDATE]                = BtlController_Empty,
-    [CONTROLLER_STATUSICONUPDATE]         = SafariHandleStatusIconUpdate,
+    [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = BtlController_Empty,
     [CONTROLLER_STATUSXOR]                = BtlController_Empty,
     [CONTROLLER_DATATRANSFER]             = BtlController_Empty,
@@ -338,12 +337,6 @@ static void SafariHandleChoosePokemon(u32 battler)
         gBattlerControllerFuncs[battler] = OpenPartyMenuToChooseMon;
         gBattlerInMenuId = battler;
     }
-}
-
-static void SafariHandleStatusIconUpdate(u32 battler)
-{
-    UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_SAFARI_BALLS_TEXT);
-    BtlController_Complete(battler);
 }
 
 // All of the other controllers(except Wally's) use CRY_MODE_FAINT.

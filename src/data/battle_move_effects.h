@@ -340,7 +340,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_TRANSFORM] =
     {
         .battleScript = BattleScript_EffectTransform,
-        .battleTvScore = 0, // TODO: Assign points
+        .battleTvScore = 0, // Natural 0
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
@@ -954,7 +954,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_NATURE_POWER] =
     {
         .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 0, // TODO: Assign points
+        .battleTvScore = 0, // Natural 0
     },
 
     [EFFECT_CHARGE] =
