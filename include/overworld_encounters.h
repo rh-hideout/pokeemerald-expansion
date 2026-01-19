@@ -120,7 +120,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 void OverworldWildEncounter_RemoveObjectOnBattle(void);
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
 void DespawnOldestOWE_Pal(void);
-bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon);
+bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon);
 bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);

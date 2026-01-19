@@ -1003,6 +1003,9 @@ bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 directio
 {
     if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
         return FALSE;
+
+    if (OWE_CanAwareMonSeePlayer(objectEvent) && OW_WILD_ENCOUNTERS_UNRESTRICT_SIGHT)
+        return FALSE;
     
     // Returns TRUE if movement is restricted.
     return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatile(objectEvent, direction))
@@ -1028,9 +1031,10 @@ void DespawnOldestOWE_Pal(void)
     }
 }
 
-bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
+bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon)
 {
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    if (mon->movementType == MOVEMENT_TYPE_WANDER_AROUND_OWE)
+        return FALSE;
 
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
     {
@@ -1039,6 +1043,7 @@ bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
     }
     else
     {
+        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
         u32 speciesId = OW_SPECIES(mon);
         u32 viewDistance = OWE_GetViewDistanceFromSpecies(speciesId);
         u32 viewWidth = OWE_GetViewWidthFromSpecies(speciesId);
@@ -1287,6 +1292,11 @@ static bool32 OWE_CheckRestrictMovementMetatile(struct ObjectEvent *objectEvent,
         && MetatileBehavior_IsIndoorEncounter(metatileBehaviourNew))
         return FALSE;
 
+    if (!MetatileBehavior_IsLandWildEncounter(metatileBehaviourCurrent)
+        && !MetatileBehavior_IsWaterWildEncounter(metatileBehaviourCurrent)
+        && !MetatileBehavior_IsIndoorEncounter(metatileBehaviourCurrent))
+        return FALSE;
+
     return TRUE;
 }
 
@@ -1299,7 +1309,7 @@ static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, u32 
     u32 mapGroup = objectEvent->mapGroup;
     u32 mapNum = objectEvent->mapNum;
 
-    if (mapGroup == gSaveBlock1Ptr->location.mapGroup && mapNum == gSaveBlock1Ptr->location.mapNum)
+    if (AreCoordsInsidePlayerMap(xCurrent, yCurrent))
         return !AreCoordsInsidePlayerMap(xNew, yNew);
     else
         return AreCoordsInsidePlayerMap(xNew, yNew);

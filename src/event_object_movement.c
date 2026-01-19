@@ -11824,7 +11824,7 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent 
         if (OW_MON_WANDER_WALK == TRUE && IS_OW_MON_OBJ(objectEvent))
             UpdateMonMoveInPlace(objectEvent, sprite);
 
-        if (OWE_CanMonSeePlayer(objectEvent) && objectEvent->movementType != MOVEMENT_TYPE_WANDER_AROUND_OWE)
+        if (OWE_CanAwareMonSeePlayer(objectEvent))
         {
             sprite->sTypeFuncId = 7;
             return FALSE;
