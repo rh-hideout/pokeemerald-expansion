@@ -188,14 +188,14 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     u32 numFreePalSlots = CountFreePaletteSlots();
     u32 tag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
 
+        // Need Preproc checks for overworldShinyPaletteFemale
+    if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
+        tag += OBJ_EVENT_MON_FEMALE;
+
     // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
     // Add this and tiles to seperate graphics check function
     if (numFreePalSlots == 1)
     {
-
-        // Need Preproc checks for overworldShinyPaletteFemale
-        if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
-            tag += OBJ_EVENT_MON_FEMALE;
             
         // If the mon's palette isn't already loaded, don't spawn.
         if (IndexOfSpritePaletteTag(tag) == 0xFF)
@@ -209,7 +209,9 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
         return FALSE;
     }
 
-    const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(speciesId, isShiny, isFemale);
+    // const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(speciesId, isShiny, isFemale);
+    const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(tag);
+    tag = LoadSheetGraphicsInfo(graphicsInfo, tag, NULL);
     u32 tileCount = graphicsInfo->size / TILE_SIZE_4BPP;
     if (OW_GFX_COMPRESS)
     {
@@ -231,6 +233,7 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     }
 
     DebugPrintf("\n\nSPAWN\nSpecies: %S\nSheet Tile Count: %d", GetSpeciesName(speciesId), tileCount);
+    FreeSpriteTilesByTag(tag);
     return TRUE;
 }
 
