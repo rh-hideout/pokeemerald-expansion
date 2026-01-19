@@ -186,19 +186,19 @@ void UpdateOverworldEncounters(void)
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny)
 {
     u32 numFreePalSlots = CountFreePaletteSlots();
+    u32 tag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
 
     // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
     // Add this and tiles to seperate graphics check function
     if (numFreePalSlots == 1)
     {
-        u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
 
         // Need Preproc checks for overworldShinyPaletteFemale
         if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
-            palTag += OBJ_EVENT_MON_FEMALE;
+            tag += OBJ_EVENT_MON_FEMALE;
             
         // If the mon's palette isn't already loaded, don't spawn.
-        if (IndexOfSpritePaletteTag(palTag) == 0xFF)
+        if (IndexOfSpritePaletteTag(tag) == 0xFF)
             return FALSE;
 
         // Add check if field effect pallete is already loaded
@@ -206,6 +206,29 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     }
     else if (numFreePalSlots == 0)
     {
+        return FALSE;
+    }
+
+    const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(speciesId, isShiny, isFemale);
+    u32 tileCount = graphicsInfo->size / TILE_SIZE_4BPP;
+    DebugPrintf("\n\nSpecies: %S\nSheet Tile Count: %d", GetSpeciesName(speciesId), tileCount);
+    if (OW_GFX_COMPRESS)
+    {
+        // If tiles are already existing return early, spritesheet is loaded when compressed
+        if (IndexOfSpriteTileTag(tag) != 0xFF)
+        {
+            DebugPrintf("Already Loaded");
+            return TRUE;
+        }
+        
+        u32 frames = graphicsInfo->anims == sAnimTable_Following_Asym ? 8 : 6;
+        tileCount *= frames;
+        DebugPrintf("Tile Count for all Anims: %d", tileCount);
+    }
+    
+    if (!CanAllocSpriteTiles(tileCount))
+    {
+        DebugPrintf("No Spawn");
         return FALSE;
     }
 

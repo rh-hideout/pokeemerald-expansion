@@ -5,10 +5,6 @@
 #error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_WILD_ENCOUNTERS_OVERWORLD to work."
 #endif
 
-#if OW_GFX_COMPRESS == TRUE && OW_WILD_ENCOUNTERS_OVERWORLD == TRUE
-#error "OW_GFX_COMPRESS needs to be FALSE in order for OW_WILD_ENCOUNTERS_OVERWORLD to work."
-#endif
-
 #define OWE_MAX_SPAWN_SLOTS   5
 
 #define OWE_MAX_LAND_SPAWNS         3
