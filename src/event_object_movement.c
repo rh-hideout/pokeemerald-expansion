@@ -11741,6 +11741,20 @@ static void MoveToPlayerForEncounter(struct ObjectEvent *objectEvent, struct Spr
     u8 direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
     bool8 collision;
     u8 movementActionId;
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (objectEvent->singleMovementActive == 0 && player->singleMovementActive == 0)
+    {
+        // Let the mon continue to take steps until right next to the player.
+        if (OWE_IsMonNextToPlayer(objectEvent))
+        {
+            gSpecialVar_LastTalked = objectEvent->localId;
+            gSpecialVar_0x8004 = speciesId;
+            ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
+            FreezeObjectEvent(objectEvent);
+            return;
+        }
+    }
     
     SetObjectEventDirection(objectEvent, direction);
     collision = GetCollisionInDirection(objectEvent, objectEvent->movementDirection);
