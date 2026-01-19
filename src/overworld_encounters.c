@@ -968,16 +968,6 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     return templateOWE;
 }
 
-static bool32 OWE_IsWaitTaskActive(void)
-{
-    if (FindTaskIdByFunc(Task_OWE_WaitMovements) != TASK_NONE)
-        return TRUE;
-
-    return FALSE;
-}
-
-#define tLocalId           gTasks[taskId].data[0]
-
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
     // The only automatically interacts with an OW Encounter when;
@@ -988,15 +978,12 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle));
     bool32 playerIsObstacle = (obstacle->isPlayer && IsOverworldWildEncounter(collider));
 
-    if ((playerIsCollider || playerIsObstacle) && !OWE_IsWaitTaskActive())
+    if ((playerIsCollider || playerIsObstacle))
     {
         struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
 
         LockPlayerFieldControls();
-        // Wait for both the player and the mon to finish their current movements.
-        u8 taskId = CreateTask(Task_OWE_WaitMovements, 0);
         wildMon->trainerRange_berryTreeId |= OWE_FLAG_START_ENCOUNTER;
-        tLocalId = wildMon->localId;
     }
 }
 
@@ -1102,6 +1089,7 @@ bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon)
 
 static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, u32 newDirection)
 {
+    // TODO: Add handling for restricted movement.
     s16 x = mon->currentCoords.x;
     s16 y = mon->currentCoords.y;
 
@@ -1190,25 +1178,6 @@ u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equal
         return absY;
     else
         return absX;
-}
-
-void Task_OWE_WaitMovements(u8 taskId)
-{
-    struct ObjectEvent *mon = &gObjectEvents[GetObjectEventIdByLocalId(tLocalId)];
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-
-    if (mon->singleMovementActive == 0 && player->singleMovementActive == 0)
-    {
-        // Let the mon continue to take steps until right next to the player.
-        if (OWE_IsMonNextToPlayer(mon))
-        {
-            gSpecialVar_LastTalked = tLocalId;
-            gSpecialVar_0x8004 = OW_SPECIES(&gObjectEvents[GetObjectEventIdByLocalId(tLocalId)]);
-            ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
-            FreezeObjectEvent(mon);
-            DestroyTask(taskId);
-        }
-    }
 }
 
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior)
@@ -1404,9 +1373,6 @@ static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
     return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumActiveGeneratedOverworldEncounters() == GetMaxOverworldEncounterSpawns();
 }
 
-#undef tLocalId
-#undef NOT_STARTED
-#undef STARTED
 #undef sOverworldEncounterLevel
 #undef sAge
 #undef sRoamerOutbreakStatus
