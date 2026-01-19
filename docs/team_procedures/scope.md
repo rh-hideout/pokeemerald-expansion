@@ -21,7 +21,7 @@ A pull request meets the scope criteria if:
 1. **SS Species**: Adds Species that have appeared in a Showdown-supported title. Includes follower sprites for all defined species including battle-only ones (ie. Megas)
 2. **SS Moves**: Adds Moves and Move Animations that have appeared in a Showdown-supported title
 3. **SS Abilities**: Adds Abilities that have appeared in a Showdown-supported title
-4. **SS Items**: Adds Items that have appeared in a Showdown-supported title
+4. **SS Items**: Adds Items that have appeared in a Showdown-supported title. These items must also NOT only exist for story related purpose, and be mechanically / functionally unique from existing items. Items with in-battle functionaly are excepted from the latter requirement. (Relic Crown, Jade Orb, Silver Leaf are not in scope; Lumiose Gallette is in scope)
 5. **SS Gimmicks**: Adds Gimmicks that have appeared in a Showdown-supported title (Dynamax, Mega Evolution, etc.) 
 6. **SS Battle Types**: Adds Special Battle Types that have appeared in a Showdown-supported title (Triple battles, etc.)
 7. **SS Battle Mechanics**: Adds mechanical battle changes that have appeared in a Showdown-supported title, and allow developers to choose which generation suits them where applicable
