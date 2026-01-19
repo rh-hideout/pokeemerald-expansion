@@ -1079,6 +1079,7 @@ bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon)
 
 static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, u32 newDirection)
 {
+    // TODO: Add handling for restricted movement.
     s16 x = mon->currentCoords.x;
     s16 y = mon->currentCoords.y;
 
