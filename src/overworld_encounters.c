@@ -211,27 +211,26 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
 
     const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(speciesId, isShiny, isFemale);
     u32 tileCount = graphicsInfo->size / TILE_SIZE_4BPP;
-    DebugPrintf("\n\nSpecies: %S\nSheet Tile Count: %d", GetSpeciesName(speciesId), tileCount);
     if (OW_GFX_COMPRESS)
     {
         // If tiles are already existing return early, spritesheet is loaded when compressed
         if (IndexOfSpriteTileTag(tag) != 0xFF)
         {
-            DebugPrintf("Already Loaded");
+            DebugPrintf("\n\nALREADY LOADED\nSpecies: %S", GetSpeciesName(speciesId));
             return TRUE;
         }
         
         u32 frames = graphicsInfo->anims == sAnimTable_Following_Asym ? 8 : 6;
         tileCount *= frames;
-        DebugPrintf("Tile Count for all Anims: %d", tileCount);
     }
     
     if (!CanAllocSpriteTiles(tileCount))
     {
-        DebugPrintf("No Spawn");
+        DebugPrintf("\n\nNO SPAWN\nSpecies: %S\nSheet Tile Count: %d", GetSpeciesName(speciesId), tileCount);
         return FALSE;
     }
 
+    DebugPrintf("\n\nSPAWN\nSpecies: %S\nSheet Tile Count: %d", GetSpeciesName(speciesId), tileCount);
     return TRUE;
 }
 
