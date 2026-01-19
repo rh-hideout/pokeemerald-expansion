@@ -7,9 +7,8 @@ enum {
     HEAL_LOCATION_NONE,
 ## for heal_location in heal_locations
     {{ heal_location.id }},
-    #undef NUM_HEAL_LOCATIONS
-    #define NUM_HEAL_LOCATIONS ({{ heal_location.id }} + 1)
 ## endfor
+    #define NUM_HEAL_LOCATIONS ({{ last(heal_locations).id }} + 1)
 };
 
 #endif // GUARD_CONSTANTS_HEAL_LOCATIONS_H
