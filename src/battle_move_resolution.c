@@ -2426,6 +2426,18 @@ static enum MoveEndResult MoveEndMoveBlock(void)
 
     switch (moveEffect)
     {
+    case EFFECT_SPIT_UP:
+    case EFFECT_SWALLOW:
+        if (!gBattleStruct->unableToUseMove)
+        {
+            gBattleMons[gBattlerAttacker].volatiles.stockpileCounter = 0;
+            if (B_STOCKPILE_RAISES_DEFS >= GEN_4)
+            {
+                BattleScriptCall(BattleScript_MoveEffectStockpileWoreOff);
+                result = MOVEEND_STEP_RUN_SCRIPT;
+            }
+        }
+        break;
     case EFFECT_KNOCK_OFF:
         if (gBattleMons[gBattlerTarget].item != ITEM_NONE
          && IsBattlerAlive(gBattlerAttacker)

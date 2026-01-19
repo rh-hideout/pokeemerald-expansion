@@ -3546,11 +3546,9 @@ BattleScript_EffectStockpileSpDef::
 	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectStockpileWoreOff::
-	.if B_STOCKPILE_RAISES_DEFS >= GEN_4
 	dostockpilestatchangeswearoff BS_ATTACKER, BattleScript_StockpileStatChangeDown
 	printstring STRINGID_STOCKPILEDEFFECTWOREOFF
 	waitmessage B_WAIT_TIME_SHORT
-	.endif
 	return
 
 BattleScript_StockpileStatChangeDown:
@@ -3562,19 +3560,10 @@ BattleScript_StockpileStatChangeDown_Ret:
 
 BattleScript_EffectSpitUp::
 	attackcanceler
-	jumpifbyte CMP_EQUAL, cMISS_TYPE, B_MSG_PROTECTED, BattleScript_SpitUpFailProtect
 	accuracycheck BattleScript_MoveMissedPause
 	damagecalc
 	stockpiletobasedamage
 	call BattleScript_Hit_RetFromAtkAnimation
-	removestockpilecounters
-	goto BattleScript_MoveEnd
-
-BattleScript_SpitUpFailProtect::
-	pause B_WAIT_TIME_LONG
-	stockpiletobasedamage
-	resultmessage
-	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectSwallow::
@@ -3586,7 +3575,6 @@ BattleScript_EffectSwallow::
 	datahpupdate BS_TARGET, PASSIVE_HP_UPDATE
 	printstring STRINGID_PKMNREGAINEDHEALTH
 	waitmessage B_WAIT_TIME_LONG
-	removestockpilecounters
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectTorment::

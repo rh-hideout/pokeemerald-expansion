@@ -7465,10 +7465,7 @@ static void Cmd_stockpile(void)
 static void Cmd_stockpiletobasedamage(void)
 {
     CMD_ARGS();
-
-    if (gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
-        gBattleScripting.animTurn = gBattleMons[gBattlerAttacker].volatiles.stockpileCounter;
-
+    gBattleScripting.animTurn = gBattleMons[gBattlerAttacker].volatiles.stockpileCounter;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -7499,24 +7496,6 @@ static void Cmd_stockpiletohpheal(void)
 
         gBattlescriptCurrInstr = cmd->nextInstr;
         gBattlerTarget = gBattlerAttacker;
-    }
-}
-
-void BS_RemoveStockpileCounters(void)
-{
-    NATIVE_ARGS();
-
-    if (GetMoveEffect(gCurrentMove) == EFFECT_SPIT_UP
-     && gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
-     && IsBattlerAlive(gBattlerTarget))
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattleMons[gBattlerAttacker].volatiles.stockpileCounter = 0;
-        BattleScriptPush(cmd->nextInstr);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectStockpileWoreOff;
     }
 }
 

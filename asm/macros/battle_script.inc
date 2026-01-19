@@ -761,10 +761,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro removestockpilecounters
-	callnative BS_RemoveStockpileCounters
-	.endm
-
 	.macro unused_0x88
 	.byte B_SCR_OP_UNUSED_0X88
 	.endm
