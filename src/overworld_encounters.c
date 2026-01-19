@@ -1382,8 +1382,6 @@ static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
 }
 
 #undef tLocalId
-#undef NOT_STARTED
-#undef STARTED
 #undef sOverworldEncounterLevel
 #undef sAge
 #undef sRoamerOutbreakStatus
