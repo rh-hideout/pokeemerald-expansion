@@ -52,7 +52,7 @@ formatted as follows:
 enum MY_ENUM
 {
     MY_ENUM_IS_COOL,
-    MY_ENUM_IS_GREAT,
+    MY_ENUM_IS_GREAT
     #define MY_ENUM_COUNT (MY_ENUM_IS_GREAT + 1)
 };
 ```
