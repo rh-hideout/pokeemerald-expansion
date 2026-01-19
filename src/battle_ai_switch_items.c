@@ -565,6 +565,11 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_WIND_RIDER;
     }
+    else if (IsPowderMove(incomingMove) || (isOpposingBattlerChargingOrInvulnerable && IsPowderMove(incomingMove)))
+    {
+        if (GetConfig(CONFIG_POWDER_OVERCOAT) >= GEN_6)
+            absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_OVERCOAT;
+    }
     else
     {
         return FALSE;
