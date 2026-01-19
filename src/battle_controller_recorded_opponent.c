@@ -63,7 +63,6 @@ static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 
     [CONTROLLER_TRAINERSLIDEBACK]         = RecordedOpponentHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = BtlController_Empty,
     [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
@@ -109,6 +108,7 @@ static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 
 
 void SetControllerToRecordedOpponent(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_RECORDED_OPPONENT;
     gBattlerControllerEndFuncs[battler] = RecordedOpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = RecordedOpponentBufferRunCommand;
 }
@@ -274,14 +274,14 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
 static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     // Sets Multibattle test opponent sprites to not be Hiker
     if (IsMultibattleTest())
     {
         if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
-            trainerPicId = TRAINER_PIC_LEAF;
+            trainerPicId = TRAINER_PIC_FRONT_LEAF;
             if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
                 xPos = 176;
             else
@@ -289,7 +289,7 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
         }
         else
         {
-            trainerPicId = TRAINER_PIC_RED;
+            trainerPicId = TRAINER_PIC_FRONT_RED;
             xPos = 152;
         }
     }

@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Leaf Guard prevents non-volatile status conditions in sun")
 {
-    u32 move;
+    enum Move move;
     u16 status;
     PARAMETRIZE { move = MOVE_WILL_O_WISP; status = STATUS1_BURN; }
     PARAMETRIZE { move = MOVE_HYPNOSIS; status = STATUS1_SLEEP; }
@@ -33,7 +33,9 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents non-volatile status conditions in sun")
 
 SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent non-volatile status conditions if Cloud Nine/Air Lock is on the field")
 {
-    u32 move, species, ability;
+    enum Move move;
+    u32 species;
+    enum Ability ability;
     u16 status;
     PARAMETRIZE { move = MOVE_WILL_O_WISP;  status = STATUS1_BURN;         species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { move = MOVE_HYPNOSIS;     status = STATUS1_SLEEP;        species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
@@ -121,7 +123,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents Rest during sun (Gen 5+)")
     PARAMETRIZE { gen = GEN_4; }
     PARAMETRIZE { gen = GEN_5; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_LEAF_GUARD_PREVENTS_REST, gen);
+        WITH_CONFIG(CONFIG_LEAF_GUARD_PREVENTS_REST, gen);
         ASSUME(GetMoveEffect(MOVE_REST) == EFFECT_REST);
         PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); HP(100); MaxHP(200); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -151,7 +153,7 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_LEAF_GUARD_PREVENTS_REST, GEN_5);
+        WITH_CONFIG(CONFIG_LEAF_GUARD_PREVENTS_REST, GEN_5);
         ASSUME(GetMoveEffect(MOVE_REST) == EFFECT_REST);
         PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); HP(100); MaxHP(200); }
         OPPONENT(species) { Ability(ability); }

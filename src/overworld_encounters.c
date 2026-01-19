@@ -413,8 +413,17 @@ void CreateOverworldWildEncounter(void)
 
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
-    bool32 isFemale = OW_FEMALE(object) ? TRUE : FALSE;
+    u32 gender = OW_FEMALE(object) ? MON_FEMALE : MON_MALE;
     u32 level = (object->sOverworldEncounterLevel &= ~OWE_FLAG_START_ENCOUNTER);
+    u32 personality;
+
+    switch (gSpeciesInfo[speciesId].genderRatio)
+    {
+    case MON_MALE:
+    case MON_FEMALE:
+    case MON_GENDERLESS:
+        gender = gSpeciesInfo[speciesId].genderRatio;
+    }
 
     if (level > MAX_LEVEL)
         level = MAX_LEVEL;
@@ -422,15 +431,9 @@ void CreateOverworldWildEncounter(void)
         level = MIN_LEVEL;
 
     ZeroEnemyPartyMons();
-    CreateMonWithGender(
-        &gEnemyParty[0],
-        speciesId,
-        level,
-        USE_RANDOM_IVS,
-        OT_ID_PLAYER_ID,
-        0,
-        isFemale
-    );
+    personality = GetMonPersonality(speciesId, gender, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
+    CreateMonWithIVs(&gEnemyParty[0], speciesId, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gEnemyParty[0]);
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
     
     if (CreateOverworldWildEncounter_CheckMassOutbreak(indexRoamerOutbreak, speciesId))
@@ -610,6 +613,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
 
     if (!OWE_CreateEnemyPartyMon(speciesId, level, indexRoamerOutbreak, x, y))
     {
+        // May be good to convert this to an assertf
         ZeroEnemyPartyMons();
         *speciesId = SPECIES_NONE;
         return;
@@ -622,7 +626,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     if (*speciesId == SPECIES_UNOWN)
         *speciesId = GetUnownSpeciesId(personality);
 
-    *isShiny = ComputePlayerShinyOdds(personality);
+    *isShiny = ComputePlayerShinyOdds(personality, READ_OTID_FROM_SAVE);
     if (GetGenderFromSpeciesAndPersonality(*speciesId, personality) == MON_FEMALE)
         *isFemale = TRUE;
     else
@@ -654,6 +658,9 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
         timeOfDay = GetTimeOfDayForEncounters(headerId, wildArea);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
     }
+
+    if (wildMonInfo == NULL)
+        return FALSE;
 
     /*
     These functions perform checks of various encounter types in the following order:
@@ -903,17 +910,26 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     bool32 isFemale = FALSE;
     u32 level;
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
+    u32 x = template->x;
+    u32 y = template->y;
 
     SetOverworldEncounterSpeciesInfo(
-        template->x,
-        template->y,
+        x,
+        y,
         &speciesId,
         &isShiny,
         &isFemale,
         &level,
         &indexRoamerOutbreak
     );
-    // Have an assertf and fallback incase of no header mons
+
+    assertf(speciesId != SPECIES_NONE && speciesId < NUM_SPECIES && IsSpeciesEnabled(speciesId), "invalid semi-manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
+    {
+        // Currently causes assertf on each player step as function is called.
+        templateOWE.graphicsId = OBJ_EVENT_GFX_BOY_1;
+        templateOWE.trainerType = TRAINER_TYPE_NONE;
+        return templateOWE;
+    }
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)

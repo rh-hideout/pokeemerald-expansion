@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Neutralizing Gas")
         PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Item(item); }
         OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
@@ -122,7 +122,60 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Sunsteel Strike (no message)
     }
 }
 
-SINGLE_BATTLE_TEST("Ability Shield protects the user's ability from being suppressed by Gastro Acid")
+SINGLE_BATTLE_TEST("Ability Shield activates a previously suppressed ability when obtained")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
+        PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); Item(ITEM_POTION); }
+        OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); Item(ITEM_ABILITY_SHIELD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); MOVE(opponent, MOVE_TRICK); }
+        TURN { MOVE(opponent, MOVE_TRICK); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
+            ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
+        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
+        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Ability Shield doesn't reactivate an ability when receiving if user already had an Ability Shield")
+{
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
+        PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); Item(ITEM_ABILITY_SHIELD); }
+        OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); Item(ITEM_ABILITY_SHIELD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
+        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
+            ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Ability Shield protects the user from having its ability suppressed by Gastro Acid")
 {
     u32 item;
 
@@ -143,6 +196,24 @@ SINGLE_BATTLE_TEST("Ability Shield protects the user's ability from being suppre
             ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
             NOT ABILITY_POPUP(player, ABILITY_SPEED_BOOST);
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Ability Shield doesn't protect the user's ability from being suppressed by Gastro Acid")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
+        PLAYER(SPECIES_BLAZIKEN) { Ability(ABILITY_SPEED_BOOST); Item(ITEM_POTION); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ABILITY_SHIELD); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GASTRO_ACID); MOVE(player, MOVE_TRICK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
+        NOT ABILITY_POPUP(player, ABILITY_SPEED_BOOST);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_ABILITY_SHIELD);
     }
 }
 

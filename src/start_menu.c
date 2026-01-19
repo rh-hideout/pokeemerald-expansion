@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/save.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
@@ -1063,7 +1064,7 @@ static u8 SaveConfirmInputCallback(void)
         {
         case SAVE_STATUS_EMPTY:
         case SAVE_STATUS_CORRUPT:
-            if (gDifferentSaveFile == FALSE)
+            if (gDifferentSaveFile == FALSE && !SKIP_SAVE_CONFIRMATION)
             {
                 sSaveDialogCallback = SaveFileExistsCallback;
                 return SAVE_IN_PROGRESS;
@@ -1072,7 +1073,10 @@ static u8 SaveConfirmInputCallback(void)
             sSaveDialogCallback = SaveSavingMessageCallback;
             return SAVE_IN_PROGRESS;
         default:
-            sSaveDialogCallback = SaveFileExistsCallback;
+            if (SKIP_SAVE_CONFIRMATION)
+                sSaveDialogCallback = SaveSavingMessageCallback;
+            else
+                sSaveDialogCallback = SaveFileExistsCallback;
             return SAVE_IN_PROGRESS;
         }
     case MENU_B_PRESSED:
@@ -1165,7 +1169,7 @@ static u8 SaveDoSaveCallback(void)
 
 static u8 SaveSuccessCallback(void)
 {
-    if (!IsTextPrinterActive(0))
+    if (!IsTextPrinterActiveOnWindow(0))
     {
         PlaySE(SE_SAVE);
         sSaveDialogCallback = SaveReturnSuccessCallback;
@@ -1189,7 +1193,7 @@ static u8 SaveReturnSuccessCallback(void)
 
 static u8 SaveErrorCallback(void)
 {
-    if (!IsTextPrinterActive(0))
+    if (!IsTextPrinterActiveOnWindow(0))
     {
         PlaySE(SE_BOO);
         sSaveDialogCallback = SaveReturnErrorCallback;

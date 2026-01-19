@@ -160,7 +160,7 @@ static const u32 sWirelessLinkDisplayGfx[] = INCBIN_U32("graphics/link/wireless_
 static const u32 sWirelessLinkDisplayTilemap[] = INCBIN_U32("graphics/link/wireless_display.bin.smolTM");
 static const u16 sLinkTestDigitsPal[] = INCBIN_U16("graphics/link/test_digits.gbapal");
 static const u16 sLinkTestDigitsGfx[] = INCBIN_U16("graphics/link/test_digits.4bpp");
-static const u8 sUnusedTransparentWhite[] = _("{HIGHLIGHT TRANSPARENT}{COLOR WHITE}");
+static const u8 sUnusedTransparentWhite[] = _("{BACKGROUND TRANSPARENT}{ACCENT TRANSPARENT}{COLOR WHITE}");
 static const u16 sCommErrorBg_Gfx[] = INCBIN_U16("graphics/link/comm_error_bg.4bpp");
 static const struct BlockRequest sBlockRequests[] = {
     [BLOCK_REQ_SIZE_NONE] = {gBlockSendBuffer, 200},
@@ -312,7 +312,7 @@ void SetLocalLinkPlayerId(u8 playerId)
 
 static void InitLocalLinkPlayer(void)
 {
-    gLocalLinkPlayer.trainerId = gSaveBlock2Ptr->playerTrainerId[0] | (gSaveBlock2Ptr->playerTrainerId[1] << 8) | (gSaveBlock2Ptr->playerTrainerId[2] << 16) | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+    gLocalLinkPlayer.trainerId = READ_OTID_FROM_SAVE;
     StringCopy(gLocalLinkPlayer.name, gSaveBlock2Ptr->playerName);
     gLocalLinkPlayer.gender = gSaveBlock2Ptr->playerGender;
     gLocalLinkPlayer.linkType = gLinkType;
