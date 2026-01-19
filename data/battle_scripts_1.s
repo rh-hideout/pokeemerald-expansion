@@ -3558,14 +3558,6 @@ BattleScript_StockpileStatChangeDown:
 BattleScript_StockpileStatChangeDown_Ret:
 	return
 
-BattleScript_EffectSpitUp::
-	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
-	damagecalc
-	stockpiletobasedamage
-	call BattleScript_Hit_RetFromAtkAnimation
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectSwallow::
 	attackcanceler
 	stockpiletohpheal BattleScript_ButItFailed

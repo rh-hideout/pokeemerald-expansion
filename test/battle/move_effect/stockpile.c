@@ -276,7 +276,7 @@ DOUBLE_BATTLE_TEST("Stockpile's Def and Sp. Def boost is lost after using Spit U
 SINGLE_BATTLE_TEST("Spit Up's Stockpile's are romoved if move is absorbed")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTIFY);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
     } WHEN {
@@ -309,5 +309,21 @@ SINGLE_BATTLE_TEST("Spit Up's Stockpile's are romoved if hit into Protect")
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE );
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE );
+    }
+}
+
+SINGLE_BATTLE_TEST("Spit Up's...")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_STOCKPILE); }
+        TURN { MOVE(player, MOVE_STOCKPILE); }
+        TURN { MOVE(player, MOVE_STOCKPILE); }
+        TURN { MOVE(player, MOVE_SPIT_UP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIT_UP, player);
     }
 }

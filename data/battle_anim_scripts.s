@@ -28872,8 +28872,9 @@ gBattleAnimMove_SpitUp::
 	createsprite gSpitUpOrbSpriteTemplate, ANIM_ATTACKER, 2, 192, 12
 	createsprite gSpitUpOrbSpriteTemplate, ANIM_ATTACKER, 2, 224, 12
 	delay 5
-	jumpifmoveturn 2, SpitUpStrong
-	jumpifmoveturn 3, SpitUpStrongest
+	createvisualtask AnimTask_GetStockpileCounter, 2
+	jumpreteq 2, SpitUpStrong
+	jumpreteq 3, SpitUpStrongest
 SpitUpContinue:
 	delay 5
 	createvisualtask AnimTask_ShakeTargetBasedOnMovePowerOrDmg, 2, FALSE, 1, 8, 1, 0

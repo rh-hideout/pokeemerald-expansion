@@ -876,7 +876,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SPIT_UP] =
     {
-        .battleScript = BattleScript_EffectSpitUp,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
         .encourageEncore = TRUE,
     },
