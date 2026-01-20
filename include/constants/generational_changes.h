@@ -89,6 +89,7 @@
     F(B_CAN_SPITE_FAIL,            canSpiteFail,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_CRASH_IF_TARGET_IMMUNE,    crashIfTargetImmune,     (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_MEMENTO_FAIL,              mementoFail,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_PARTING_SHOT_SWITCH,       partingShotSwitch,       (u32, GEN_COUNT - 1)) \
     F(B_GLARE_GHOST,               glareGhost,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SKILL_SWAP,                skillSwap,               (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_BRICK_BREAK,               brickBreak,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

@@ -5500,9 +5500,9 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                 tailwindScore += 1;
             if (speed <= foe2Speed && (speed * 2) > foe2Speed)
                 tailwindScore += 1;
-            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+            if (partnerSpeed <= foe1Speed && (partnerSpeed * 2) > foe1Speed)
                 tailwindScore += 1;
-            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+            if (partnerSpeed <= foe2Speed && (partnerSpeed * 2) > foe2Speed)
                 tailwindScore += 1;
 
             if (tailwindScore > 0)

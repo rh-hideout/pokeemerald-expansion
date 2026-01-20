@@ -183,3 +183,15 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
         EXPECT(opponent->item == ITEM_LUM_BERRY);
     }
 }
+
+SINGLE_BATTLE_TEST("Trick can be used against targets with an active form change that doesn't require items")
+{
+    GIVEN {
+        PLAYER(SPECIES_XERNEAS);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TRICK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
+    }
+}

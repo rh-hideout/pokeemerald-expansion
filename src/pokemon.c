@@ -7154,10 +7154,19 @@ bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
     u32 currentSpecies = GetMonData(&party[monId], MON_DATA_SPECIES);
     u32 targetSpecies = GetFormChangeTargetSpecies(&party[monId], method, 0);
 
-    if (targetSpecies == currentSpecies && gBattleStruct != NULL && gBattleStruct->partyState[side][monId].changedSpecies != SPECIES_NONE)
+    // If the battle ends, and there's not a specified species to change back to,,
+    // use the species at the start of the battle.
+    if (targetSpecies == SPECIES_NONE
+        && gBattleStruct != NULL
+        && gBattleStruct->partyState[side][monId].changedSpecies != SPECIES_NONE
+        // This is added to prevent FORM_CHANGE_END_BATTLE_ENVIRONMENT from omitting move changes
+        // at the end of the battle, as it was being counting as a successful form change.
+        && method == FORM_CHANGE_END_BATTLE)
+    {
         targetSpecies = gBattleStruct->partyState[side][monId].changedSpecies;
+    }
 
-    if (targetSpecies != currentSpecies)
+    if (targetSpecies != currentSpecies && targetSpecies != SPECIES_NONE)
     {
         TryToSetBattleFormChangeMoves(&party[monId], method);
         SetMonData(&party[monId], MON_DATA_SPECIES, &targetSpecies);
@@ -7367,7 +7376,7 @@ void UpdateDaysPassedSinceFormChange(u16 days)
         {
             u32 targetSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_DAYS_PASSED, 0);
 
-            if (targetSpecies != currentSpecies)
+            if (targetSpecies != currentSpecies && targetSpecies != SPECIES_NONE)
             {
                 SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
                 CalculateMonStats(mon);

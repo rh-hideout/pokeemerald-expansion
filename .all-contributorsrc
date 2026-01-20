@@ -597,6 +597,24 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "ostomachion",
+      "name": "Josh Hufford",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8021794?v=4",
+      "profile": "http://hufford.io",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Kasenn",
+      "name": "Kasenn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/115586266?v=4",
+      "profile": "https://github.com/Kasenn",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

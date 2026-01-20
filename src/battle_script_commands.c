@@ -72,6 +72,26 @@
 #include "load_save.h"
 #include "test/test_runner_battle.h"
 
+// Helper for accessing command arguments and advancing gBattlescriptCurrInstr.
+//
+// For example accuracycheck is defined as:
+//
+//     .macro accuracycheck failInstr:req, move:req
+//     .byte 0x1
+//     .4byte \failInstr
+//     .2byte \move
+//     .endm
+//
+// Which corresponds to:
+//
+//     CMD_ARGS(const u8 *failInstr, u16 move);
+//
+// The arguments can be accessed as cmd->failInstr and cmd->move.
+// gBattlescriptCurrInstr = cmd->nextInstr; advances to the next instruction.
+#define CMD_ARGS(...) const struct __attribute__((packed)) { u8 opcode; RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) const u8 nextInstr[0]; } *const cmd UNUSED = (const void *)gBattlescriptCurrInstr
+#define VARIOUS_ARGS(...) CMD_ARGS(u8 battler, u8 id, ##__VA_ARGS__)
+#define NATIVE_ARGS(...) CMD_ARGS(void (*func)(void), ##__VA_ARGS__)
+
 // table to avoid ugly powing on gba (courtesy of doesnt)
 // this returns (i^2.5)/4
 // the quarters cancel so no need to re-quadruple them in actual calculation
@@ -10375,6 +10395,8 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
         }
         else if (battlerAbility == ABILITY_MIRROR_ARMOR && !flags.mirrorArmored && gBattlerAttacker != gBattlerTarget && battler == gBattlerTarget)
         {
+            if (GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT)
+                gBattleScripting.animTargetsHit = 1;
             if (flags.allowPtr)
             {
                 SET_STATCHANGER(statId, GET_STAT_BUFF_VALUE(statValue) | STAT_BUFF_NEGATIVE, TRUE);
@@ -12512,7 +12534,7 @@ static void Cmd_trymemento(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (B_MEMENTO_FAIL >= GEN_5
+    if (B_MEMENTO_FAIL >= GEN_4
       && (gBattleCommunication[MISS_TYPE] == B_MSG_PROTECTED
         || IsSemiInvulnerable(gBattlerTarget, CHECK_ALL)
         || IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove)
@@ -18076,6 +18098,46 @@ void BS_TryAbsorbToxicSpikesOnFaint(void)
         RemoveHazardFromField(side, HAZARDS_TOXIC_SPIKES);
         gEffectBattler = battler;
         BattleScriptCall(BattleScript_ToxicSpikesAbsorbed);
+        return;
+    }
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+// Updates Dynamax HP multipliers and healthboxes.
+void BS_UpdateDynamax(void)
+{
+    NATIVE_ARGS();
+    u32 battler = gBattleScripting.battler;
+    struct Pokemon *mon = GetBattlerMon(battler);
+
+    if (!IsGigantamaxed(battler)) // RecalcBattlerStats will get called on form change.
+        RecalcBattlerStats(battler, mon, GetActiveGimmick(battler) == GIMMICK_DYNAMAX);
+
+    UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_ALL);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+// Goes to the jump instruction if the target is Dynamaxed.
+void BS_JumpIfDynamaxed(void)
+{
+    NATIVE_ARGS(const u8 *jumpInstr);
+    if ((GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_UndoDynamax(void)
+{
+    NATIVE_ARGS(u8 battler);
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
+
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX)
+    {
+        UndoDynamax(battler);
+        gBattleScripting.battler = battler;
+        BattleScriptCall(BattleScript_DynamaxEnds_Ret);
         return;
     }
 
