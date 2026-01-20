@@ -28,7 +28,7 @@ static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 bool32 ShouldUseItem(u32 battler)
 {
     struct Pokemon *party;
-    u8 validMons = 0;
+    u32 validMons = 0;
     bool32 shouldUse = FALSE;
     u32 healAmount = 0;
 
@@ -51,16 +51,14 @@ bool32 ShouldUseItem(u32 battler)
     for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
     {
         if (IsValidForBattle(&party[monIndex]))
-        {
             validMons++;
-        }
     }
 
     for (u32 itemIndex = 0; itemIndex < MAX_TRAINER_ITEMS; itemIndex++)
     {
         enum Item item;
         const u8 *itemEffects;
-        u8 battlerSide;
+        u32 battlerSide;
 
         item = gBattleHistory->trainerItems[itemIndex];
         if (item == ITEM_NONE)
@@ -226,13 +224,17 @@ static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
     if (AI_OpponentCanFaintAiWithMod(battler, 0)
       && !AI_OpponentCanFaintAiWithMod(battler, healAmount)
       && healAmount > 2*maxDamage)
+    {
         return TRUE;
+    }
 
     // also heal, if the expected damage is outhealed and it's the last remaining mon
     if (AI_OpponentCanFaintAiWithMod(battler, 0)
       && !AI_OpponentCanFaintAiWithMod(battler, healAmount)
       && CountUsablePartyMons(battler) == 0)
+    {
         return TRUE;
+    }
 
     return shouldHeal;
 }

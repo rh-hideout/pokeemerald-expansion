@@ -312,7 +312,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
         aiMoveEffect = GetMoveEffect(aiMove);
         if (aiMove != MOVE_NONE && gBattleMons[battler].pp[moveIndex] > 0)
         {
-            u32 nonVolatileStatus = GetMoveNonVolatileStatus(aiMove);
+            enum MoveEffect nonVolatileStatus = GetMoveNonVolatileStatus(aiMove);
             // Check if mon has an "important" status move
             if (aiMoveEffect == EFFECT_REFLECT || aiMoveEffect == EFFECT_LIGHT_SCREEN
             || aiMoveEffect == EFFECT_SPIKES || aiMoveEffect == EFFECT_TOXIC_SPIKES || aiMoveEffect == EFFECT_STEALTH_ROCK || aiMoveEffect == EFFECT_STICKY_WEB || aiMoveEffect == EFFECT_LEECH_SEED
@@ -652,7 +652,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
 static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(u32 battler)
 {
     u32 opposingBattler = GetOppositeBattler(battler);
-    u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
+    enum Move incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
 
     bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
 
@@ -1326,7 +1326,8 @@ bool32 ShouldSwitchIfAllScoresBad(u32 battler)
 
 bool32 ShouldStayInToUseMove(u32 battler)
 {
-    u32 aiMove, opposingBattler = GetOppositeBattler(battler);
+    enum Move aiMove;
+    u32 opposingBattler = GetOppositeBattler(battler);
     enum BattleMoveEffects aiMoveEffect;
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -1424,9 +1425,10 @@ bool32 IsSwitchinValid(u32 battler)
 static u32 GetSwitchinHazardsDamage(u32 battler)
 {
     u8 tSpikesLayers;
-    u16 heldItemEffect = gAiLogicData->holdEffects[battler];
+    enum HoldEffect heldItemEffect = gAiLogicData->holdEffects[battler];
     u32 maxHP = gBattleMons[battler].maxHP;
-    enum Ability ability = gAiLogicData->abilities[battler], status = gBattleMons[battler].status1;
+    enum Ability ability = gAiLogicData->abilities[battler];
+    u32 status = gBattleMons[battler].status1;
     u32 spikesDamage = 0, tSpikesDamage = 0, hazardDamage = 0;
     enum BattleSide side = GetBattlerSide(battler);
 
@@ -2315,7 +2317,7 @@ static u32 GetBestMonVanilla(struct Pokemon *party, int firstId, int lastId, u32
             if (gBattleMons[battler].pp[moveIndex] < 1)
                 continue;
 
-            u32 aiMove = gBattleMons[battler].moves[moveIndex];
+            enum Move aiMove = gBattleMons[battler].moves[moveIndex];
 
             // Baton Pass
             if (GetMoveEffect(aiMove) == EFFECT_BATON_PASS)

@@ -1116,29 +1116,33 @@ enum __attribute__((packed)) Item
 #define EXP_30000 5
 
 // Item type IDs (used to determine the exit callback)
-#define ITEM_USE_MAIL             0
-#define ITEM_USE_PARTY_MENU       1
-#define ITEM_USE_FIELD            2
-#define ITEM_USE_PBLOCK_CASE      3
-#define ITEM_USE_BAG_MENU         4 // No exit callback, stays in bag menu
-#define ITEM_USE_PARTY_MENU_MOVES 5
-#define ITEM_USE_BATTLER          6 // Auto-select in Singles but lets you choose from party menu in Doubles
+enum ItemType
+{
+    ITEM_USE_MAIL,
+    ITEM_USE_PARTY_MENU,
+    ITEM_USE_FIELD,
+    ITEM_USE_PBLOCK_CASE,
+    ITEM_USE_BAG_MENU, // No exit callback, stays in bag menu
+    ITEM_USE_PARTY_MENU_MOVES,
+    ITEM_USE_BATTLER, // Auto-select in Singles but lets you choose from party menu in Doubles
+};
 
 // Item battle script IDs (need to be non-zero)
-#define EFFECT_ITEM_RESTORE_HP              1
-#define EFFECT_ITEM_CURE_STATUS             2
-#define EFFECT_ITEM_HEAL_AND_CURE_STATUS    3
-#define EFFECT_ITEM_INCREASE_STAT           4
-#define EFFECT_ITEM_SET_MIST                5
-#define EFFECT_ITEM_SET_FOCUS_ENERGY        6
-#define EFFECT_ITEM_ESCAPE                  7
-#define EFFECT_ITEM_THROW_BALL              8
-#define EFFECT_ITEM_REVIVE                  9
-#define EFFECT_ITEM_RESTORE_PP              10
-#define EFFECT_ITEM_INCREASE_ALL_STATS      11
-#define EFFECT_ITEM_USE_POKE_FLUTE          12
-
-// Enigma Berry dummy constant
-#define EFFECT_ITEM_ENIGMA_BERRY_EREADER    1
+enum EffectItem
+{
+    EFFECT_ITEM_ENIGMA_BERRY_EREADER = 1, // dummy constant
+    EFFECT_ITEM_RESTORE_HP = 1, // needs to be non-zero
+    EFFECT_ITEM_CURE_STATUS,
+    EFFECT_ITEM_HEAL_AND_CURE_STATUS,
+    EFFECT_ITEM_INCREASE_STAT,
+    EFFECT_ITEM_SET_MIST,
+    EFFECT_ITEM_SET_FOCUS_ENERGY,
+    EFFECT_ITEM_ESCAPE,
+    EFFECT_ITEM_THROW_BALL,
+    EFFECT_ITEM_REVIVE,
+    EFFECT_ITEM_RESTORE_PP,
+    EFFECT_ITEM_INCREASE_ALL_STATS,
+    EFFECT_ITEM_USE_POKE_FLUTE,
+};
 
 #endif  // GUARD_CONSTANTS_ITEMS_H
