@@ -1820,7 +1820,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
 static u32 GetBattlerTypeMatchup(u32 opposingBattler, u32 battler)
 {
     // Check type matchup
-    u32 typeEffectiveness1 = UQ_4_12(1.0), typeEffectiveness2 = UQ_4_12(1.0);
+    uq4_12_t typeEffectiveness1 = UQ_4_12(1.0), typeEffectiveness2 = UQ_4_12(1.0);
     enum Type atkType1 = gBattleMons[opposingBattler].types[0], atkType2 = gBattleMons[opposingBattler].types[1];
     enum Type defType1 = gBattleMons[battler].types[0], defType2 = gBattleMons[battler].types[1];
 
