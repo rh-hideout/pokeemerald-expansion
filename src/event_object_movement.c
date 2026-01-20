@@ -12004,6 +12004,9 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
     if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection))
     {
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
+
+        if (newDirection != objectEvent->movementDirection)
+            newDirection = GetOppositeDirection(newDirection);
         
         movementActionId = GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
 

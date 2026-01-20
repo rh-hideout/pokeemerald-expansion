@@ -1077,6 +1077,9 @@ static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, u32 newDi
     MoveCoords(newDirection, &x, &y);
     if (!GetCollisionAtCoords(mon, x, y, newDirection) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
     {
+        if (mon->movementType == MOVEMENT_TYPE_FLEE_PLAYER_OWE)
+            return GetOppositeDirection(newDirection);
+
         MoveCoords(mon->movementDirection, &x, &y);
         if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
             return newDirection;
@@ -1088,6 +1091,9 @@ static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, u32 newDi
     MoveCoords(GetOppositeDirection(newDirection), &x, &y);
     if (!GetCollisionAtCoords(mon, x, y, GetOppositeDirection(newDirection)) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
     {
+        if (mon->movementType == MOVEMENT_TYPE_FLEE_PLAYER_OWE)
+            return newDirection;
+
         MoveCoords(mon->movementDirection, &x, &y);
         if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
             return GetOppositeDirection(newDirection);
