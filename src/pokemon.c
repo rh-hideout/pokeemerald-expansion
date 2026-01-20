@@ -5496,7 +5496,7 @@ u32 GetRelearnerTMMovesBox(struct BoxPokemon *boxMon, u16 *moves)
 
         if (!CanLearnTeachableMove(species, move))
             continue;
-        
+
         if (!BoxMonKnowsMove(boxMon, move))
             moves[numMoves++] = move;
     }
@@ -6731,7 +6731,7 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
                 || ctx.moves[3] == formChanges[i].param1)
                 targetSpecies = formChanges[i].targetSpecies;
             break;
-        case FORM_CHANGE_BATTLE_SWITCH:
+        case FORM_CHANGE_BATTLE_SWITCH_OUT:
             if (formChanges[i].param1 == ctx.ability || formChanges[i].param1 == ABILITY_NONE)
                 targetSpecies = formChanges[i].targetSpecies;
             break;
@@ -6805,6 +6805,7 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
                 && formChanges[i].param2 == GetBattleMoveCategory(gCurrentMove))
                 targetSpecies = formChanges[i].targetSpecies;
             break;
+        case FORM_CHANGE_BATTLE_SWITCH_IN:
         case FORM_CHANGE_BATTLE_TURN_END:
         case FORM_CHANGE_BATTLE_HIT_BY_CONFUSION_SELF_DMG:
             if (formChanges[i].param1 == ctx.ability)

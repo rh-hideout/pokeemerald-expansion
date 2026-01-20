@@ -5836,7 +5836,7 @@ static void Cmd_returntoball(void)
 
     // Don't always execute a form change here otherwise we can stomp gigantamax
     if (!cmd->changingForm)
-        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_SWITCH, GetBattlerAbility(battler));
+        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_SWITCH_OUT, GetBattlerAbility(battler));
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

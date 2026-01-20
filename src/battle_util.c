@@ -702,7 +702,7 @@ void HandleAction_Switch(void)
     if (gBattleResults.playerSwitchesCounter < 255)
         gBattleResults.playerSwitchesCounter++;
 
-    TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_SWITCH, GetBattlerAbility(gBattlerAttacker));
+    TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_SWITCH_OUT, GetBattlerAbility(gBattlerAttacker));
 }
 
 void HandleAction_UseItem(void)
@@ -6351,12 +6351,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         }
         break;
     case ABILITYEFFECT_TERA_SHIFT:
-        if (ability == ABILITY_TERA_SHIFT
-         && gBattleMons[battler].species == SPECIES_TERAPAGOS_NORMAL
-         && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_SWITCH, ability))
+        if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_SWITCH_IN, ability))
         {
             gBattleScripting.battler = battler;
-            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_TERA_SHIFT;
+            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ability;
             BattleScriptCall(BattleScript_BattlerFormChangeWithString);
             effect++;
         }
@@ -10339,7 +10337,7 @@ static bool32 CanBattlerFormChange(u32 battler, enum FormChanges method)
         if (IsBattlerMegaEvolved(battler) || IsBattlerUltraBursted(battler) || IsBattlerInTeraForm(battler) || IsGigantamaxed(battler))
             return TRUE;
         break;
-    case FORM_CHANGE_BATTLE_SWITCH:
+    case FORM_CHANGE_BATTLE_SWITCH_OUT:
         if (IsGigantamaxed(battler))
             return TRUE;
         else if (GetActiveGimmick(battler) == GIMMICK_TERA && DoesSpeciesHaveFormChangeMethod(gBattleMons[battler].species, FORM_CHANGE_BATTLE_TURN_END))
