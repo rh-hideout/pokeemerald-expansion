@@ -340,7 +340,6 @@ static void Cmd_printselectionstringfromtable(void);
 static void Cmd_critcalc(void);
 static void Cmd_damagecalc(void);
 static void Cmd_typecalc(void);
-static void Cmd_adjustdamage(void);
 static void Cmd_multihitresultmessage(void);
 static void Cmd_attackanimation(void);
 static void Cmd_waitanimation(void);
@@ -588,6 +587,7 @@ static void Cmd_averagestats(void);
 static void Cmd_jumpifcaptivateaffected(void);
 static void Cmd_setnonvolatilestatus(void);
 static void Cmd_tryoverwriteability(void);
+static void Cmd_unused_1(void);
 static void Cmd_callnative(void);
 
 void (*const gBattleScriptingCommandsTable[])(void) =
@@ -599,7 +599,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_CRITCALC]                              = Cmd_critcalc,
     [B_SCR_OP_DAMAGECALC]                            = Cmd_damagecalc,
     [B_SCR_OP_TYPECALC]                              = Cmd_typecalc,
-    [B_SCR_OP_ADJUSTDAMAGE]                          = Cmd_adjustdamage,
     [B_SCR_OP_MULTIHITRESULTMESSAGE]                 = Cmd_multihitresultmessage,
     [B_SCR_OP_ATTACKANIMATION]                       = Cmd_attackanimation,
     [B_SCR_OP_WAITANIMATION]                         = Cmd_waitanimation,
@@ -847,6 +846,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPIFCAPTIVATEAFFECTED]               = Cmd_jumpifcaptivateaffected,
     [B_SCR_OP_SETNONVOLATILESTATUS]                  = Cmd_setnonvolatilestatus,
     [B_SCR_OP_TRYOVERWRITEABILITY]                   = Cmd_tryoverwriteability,
+    [B_SCR_OP_UNUSED_1]                              = Cmd_unused_1,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -1286,7 +1286,8 @@ static void Cmd_damagecalc(void)
 {
     CMD_ARGS();
 
-    if (gBattleStruct->calculatedDamageDone)
+    // Test if unableToUseMove check is needed
+    if (gBattleStruct->calculatedDamageDone || gBattleStruct->unableToUseMove)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
@@ -1304,8 +1305,7 @@ static void Cmd_damagecalc(void)
 
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
-        u32 battlerDef;
-        for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+        for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
         {
             if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
                 continue;
@@ -1313,6 +1313,7 @@ static void Cmd_damagecalc(void)
             ctx.battlerDef = battlerDef;
             CalculateAndSetMoveDamage(&ctx);
         }
+        gBattleStruct->calculatedDamageDone = TRUE;
     }
     else
     {
@@ -1321,6 +1322,14 @@ static void Cmd_damagecalc(void)
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
+
+    if (gSpecialStatuses[gBattlerAttacker].gemBoost
+     && gBattleMons[gBattlerAttacker].item
+     && IsAnyTargetAffected())
+    {
+        BattleScriptCall(BattleScript_GemActivates);
+        gLastUsedItem = gBattleMons[gBattlerAttacker].item;
+    }
 }
 
 static void Cmd_typecalc(void)
@@ -1341,118 +1350,6 @@ static void Cmd_typecalc(void)
     CalcTypeEffectivenessMultiplier(&ctx);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_adjustdamage(void)
-{
-    CMD_ARGS();
-
-    enum HoldEffect holdEffect;
-    u8 param;
-    u32 battlerDef;
-    u32 rand = Random() % 100;
-    u32 affectionScore;
-    enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
-    bool32 calcSpreadMoveDamage = IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
-    u32 enduredHit = 0;
-
-    for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
-    {
-        if (gBattleStruct->calculatedDamageDone)
-            break;
-
-        if (!calcSpreadMoveDamage && battlerDef != gBattlerTarget)
-            continue;
-
-        if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
-            continue;
-
-        if (DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove))
-            continue;
-
-        if (DoesDisguiseBlockMove(battlerDef, gCurrentMove))
-            continue;
-
-        if (GetBattlerAbility(battlerDef) == ABILITY_ICE_FACE && IsBattleMovePhysical(gCurrentMove) && gBattleMons[battlerDef].species == SPECIES_EISCUE)
-        {
-            // Damage deals typeless 0 HP.
-            gBattleStruct->moveResultFlags[battlerDef] &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE);
-            gBattleStruct->moveDamage[battlerDef] = 0;
-            RecordAbilityBattle(battlerDef, ABILITY_ICE_FACE);
-            gBattleMons[battlerDef].volatiles.triggerIceFace = TRUE;
-            // Form change will be done after attack animation in Cmd_resultmessage.
-            continue;
-        }
-
-        if (gBattleMons[battlerDef].hp > gBattleStruct->moveDamage[battlerDef])
-            continue;
-
-        holdEffect = GetBattlerHoldEffect(battlerDef);
-        param = GetBattlerHoldEffectParam(battlerDef);
-        affectionScore = GetBattlerAffectionHearts(battlerDef);
-
-        if (moveEffect == EFFECT_FALSE_SWIPE)
-        {
-            enduredHit |= 1u << battlerDef;
-        }
-        else if (gBattleMons[battlerDef].volatiles.endured)
-        {
-            enduredHit |= 1u << battlerDef;
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED;
-        }
-        else if (holdEffect == HOLD_EFFECT_FOCUS_BAND && rand < param)
-        {
-            enduredHit |= 1u << battlerDef;
-            RecordItemEffectBattle(battlerDef, holdEffect);
-            gLastUsedItem = gBattleMons[battlerDef].item;
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
-        }
-        else if (IsBattlerAtMaxHp(battlerDef) && GetConfig(CONFIG_STURDY) >= GEN_5 && GetBattlerAbility(battlerDef) == ABILITY_STURDY)
-        {
-            enduredHit |= 1u << battlerDef;
-            RecordAbilityBattle(battlerDef, ABILITY_STURDY);
-            gLastUsedAbility = ABILITY_STURDY;
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_STURDIED;
-        }
-        else if (holdEffect == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(battlerDef))
-        {
-            enduredHit |= 1u << battlerDef;
-            RecordItemEffectBattle(battlerDef, holdEffect);
-            gLastUsedItem = gBattleMons[battlerDef].item;
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
-        }
-        else if (B_AFFECTION_MECHANICS == TRUE && IsOnPlayerSide(battlerDef) && affectionScore >= AFFECTION_THREE_HEARTS)
-        {
-            if ((affectionScore == AFFECTION_FIVE_HEARTS && rand < 20)
-             || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 15)
-             || (affectionScore == AFFECTION_THREE_HEARTS && rand < 10))
-            {
-                enduredHit |= 1u << battlerDef;
-                gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
-            }
-        }
-
-        // Handle reducing the dmg to 1 hp.
-        if (enduredHit & 1u << battlerDef)
-        {
-            gBattleStruct->moveDamage[battlerDef] = gBattleMons[battlerDef].hp - 1;
-            gProtectStructs[battlerDef].assuranceDoubled = TRUE;
-        }
-    }
-
-    if (calcSpreadMoveDamage)
-        gBattleStruct->calculatedDamageDone = TRUE;
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-
-    if (gSpecialStatuses[gBattlerAttacker].gemBoost
-        && !IsBattlerUnaffectedByMove(gBattlerTarget)
-        && !gBattleStruct->unableToUseMove
-        && gBattleMons[gBattlerAttacker].item)
-    {
-        BattleScriptCall(BattleScript_GemActivates);
-        gLastUsedItem = gBattleMons[gBattlerAttacker].item;
-    }
 }
 
 static void Cmd_multihitresultmessage(void)
@@ -1738,9 +1635,7 @@ static void DoublesHPBarReduction(void)
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (IsBattlerUnaffectedByMove(battlerDef)
-         || gBattleStruct->moveDamage[battlerDef] == 0
-         || DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove)
-         || DoesDisguiseBlockMove(battlerDef, gCurrentMove))
+         || gBattleStruct->moveDamage[battlerDef] == 0)
             continue;
 
         s32 dmgUpdate = min(gBattleStruct->moveDamage[battlerDef], 10000);
@@ -2334,7 +2229,7 @@ void StealTargetItem(u8 battlerStealer, u8 itemBattler)
         MarkBattlerForControllerExec(battlerStealer);
     }
 
-    RecordItemEffectBattle(itemBattler, ITEM_NONE);
+    RecordItemEffectBattle(itemBattler, HOLD_EFFECT_NONE);
     CheckSetUnburden(itemBattler);
 
     BtlController_EmitSetMonData(itemBattler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[itemBattler].item), &gBattleMons[itemBattler].item);  // remove target item
@@ -2348,7 +2243,7 @@ void StealTargetItem(u8 battlerStealer, u8 itemBattler)
 
 static inline bool32 TrySetReflect(u32 battler)
 {
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
     if (!(gSideStatuses[side] & SIDE_STATUS_REFLECT))
     {
         gSideStatuses[side] |= SIDE_STATUS_REFLECT;
@@ -2369,7 +2264,7 @@ static inline bool32 TrySetReflect(u32 battler)
 
 static inline bool32 TrySetLightScreen(u32 battler)
 {
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
     if (!(gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN))
     {
         gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
@@ -3559,6 +3454,7 @@ void SetMoveEffect(u32 battlerAtk, u32 effectBattler, enum MoveEffect moveEffect
             }
         }
         break;
+    }
     case MOVE_EFFECT_BREAK_SCREEN:
         if (B_BRICK_BREAK >= GEN_4)
         	i = GetBattlerSide(gBattlerTarget); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
@@ -3643,11 +3539,8 @@ void SetMoveEffect(u32 battlerAtk, u32 effectBattler, enum MoveEffect moveEffect
             }
         }
         break;
-
-
-    }
-        default:
-            break;
+    default:
+        break;
     }
 
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
@@ -3988,7 +3881,7 @@ static void Cmd_jumpifsideaffecting(void)
 {
     CMD_ARGS(u8 battler, u32 flags, const u8 *jumpInstr);
 
-    u32 side = GetBattlerSide(GetBattlerForBattleScript(cmd->battler));
+    enum BattleSide side = GetBattlerSide(GetBattlerForBattleScript(cmd->battler));
 
     if (gSideStatuses[side] & cmd->flags)
         gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -4080,7 +3973,7 @@ static bool32 BattleTypeAllowsExp(void)
 static u32 GetMonHoldEffect(struct Pokemon *mon)
 {
     enum HoldEffect holdEffect;
-    u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
 
     if (item == ITEM_ENIGMA_BERRY_E_READER)
     #if FREE_ENIGMA_BERRY == FALSE
@@ -5238,14 +5131,14 @@ static void Cmd_switchindataupdate(void)
     #if TESTING
     if (gTestRunnerEnabled)
     {
-        u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
+        enum BattleTrainer trainer = GetBattlerTrainer(battler);
         u32 partyIndex = gBattlerPartyIndexes[battler];
-        if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
-            gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
+        if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
+            gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
     }
     #endif
 
-    if (GetBattlerPartyState(battler)->knockedOffItem)
+    if (GetBattlerPartyState(battler)->isKnockedOff)
     {
         gBattleMons[battler].item = ITEM_NONE;
     }
@@ -6479,7 +6372,7 @@ static void Cmd_setgravity(void)
     }
 }
 
-static bool32 TryCheekPouch(u32 battler, u32 itemId, const u8 *nextInstr)
+static bool32 TryCheekPouch(u32 battler, enum Item itemId, const u8 *nextInstr)
 {
     if (GetItemPocket(itemId) == POCKET_BERRIES
         && GetBattlerAbility(battler) == ABILITY_CHEEK_POUCH
@@ -6501,7 +6394,7 @@ static void Cmd_removeitem(void)
     CMD_ARGS(u8 battler);
 
     u32 battler;
-    u16 itemId = 0;
+    enum Item itemId = 0;
 
     if (gBattleScripting.overrideBerryRequirements)
     {
@@ -7027,7 +6920,7 @@ static void RemoveAllTerrains(void)
     }                                                       \
 }
 
-static bool32 DefogClearHazards(u32 saveBattler, u32 side, bool32 clear)
+static bool32 DefogClearHazards(u32 saveBattler, enum BattleSide side, bool32 clear)
 {
     if (!AreAnyHazardsOnSide(side))
         return FALSE;
@@ -9201,9 +9094,9 @@ static void Cmd_healpartystatus(void)
                 #if TESTING
                 if (gTestRunnerEnabled)
                 {
-                    u32 array = (!IsPartnerMonFromSameTrainer(gBattlerAttacker)) ? gBattlerAttacker : GetBattlerSide(gBattlerAttacker);
-                    if (TestRunner_Battle_GetForcedAbility(array, i))
-                        ability = TestRunner_Battle_GetForcedAbility(array, i);
+                    enum BattleTrainer trainer = GetBattlerTrainer(gBattlerAttacker);
+                    if (TestRunner_Battle_GetForcedAbility(trainer, i))
+                        ability = TestRunner_Battle_GetForcedAbility(trainer, i);
                 }
                 #endif
             }
@@ -9445,15 +9338,6 @@ static void Cmd_magnitudedamagecalculation(void)
     }
 
     PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff1, 2, magnitude)
-
-    for (gBattlerTarget = 0; gBattlerTarget < gBattlersCount; gBattlerTarget++)
-    {
-        if (gBattlerTarget == gBattlerAttacker)
-            continue;
-        if (!(gAbsentBattlerFlags & (1u << gBattlerTarget))) // A valid target was found.
-            break;
-    }
-
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -9934,7 +9818,7 @@ static void Cmd_tryswapitems(void)
                              | BATTLE_TYPE_FRONTIER
                              | BATTLE_TYPE_SECRET_BASE
                              | BATTLE_TYPE_RECORDED_LINK))
-            && (GetBattlerPartyState(gBattlerAttacker)->knockedOffItem || GetBattlerPartyState(gBattlerTarget)->knockedOffItem))
+            && (GetBattlerPartyState(gBattlerAttacker)->isKnockedOff || GetBattlerPartyState(gBattlerTarget)->isKnockedOff))
         {
             gBattlescriptCurrInstr = cmd->failInstr;
         }
@@ -11734,6 +11618,10 @@ static void Cmd_tryoverwriteability(void)
     }
 }
 
+static void Cmd_unused_1(void)
+{
+}
+
 static void Cmd_callnative(void)
 {
     CMD_ARGS(void (*func)(void));
@@ -11900,7 +11788,7 @@ void BS_CheckParentalBondCounter(void)
 void BS_JumpIfCantLoseItem(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
-    u32 item = gBattleMons[gBattlerTarget].item;
+    enum Item item = gBattleMons[gBattlerTarget].item;
 
     if (item == ITEM_NONE || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, item))
         gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -12510,7 +12398,7 @@ void BS_SetPledgeStatus(void)
     NATIVE_ARGS(u8 battler, u32 sideStatus);
 
     u32 battler = GetBattlerForBattleScript(cmd->battler);
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
 
     gBattleStruct->pledgeMove = FALSE;
     if (!(gSideStatuses[side] & cmd->sideStatus))
@@ -13520,7 +13408,12 @@ void BS_TryFlingHoldEffect(void)
 {
     NATIVE_ARGS();
     enum HoldEffect holdEffect = GetItemHoldEffect(gBattleStruct->flingItem);
-    gBattleStruct->flingItem = ITEM_NONE;
+
+    if (GetItemPocket(gBattleStruct->flingItem) == POCKET_BERRIES)
+    {
+        gBattlescriptCurrInstr = BattleScript_EffectFlingConsumeBerry;
+        return;
+    }
 
     if (IsMoveEffectBlockedByTarget(GetBattlerAbility(gBattlerTarget)))
     {
@@ -13540,7 +13433,7 @@ void BS_TryFlingHoldEffect(void)
         SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_PARALYSIS, cmd->nextInstr, NO_FLAGS);
         break;
     case HOLD_EFFECT_TYPE_POWER:
-        if (GetItemSecondaryId(gLastUsedItem) != TYPE_POISON)
+        if (GetItemSecondaryId(gBattleStruct->flingItem) != TYPE_POISON)
             gBattlescriptCurrInstr = cmd->nextInstr;
         else
             SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_POISON, cmd->nextInstr, NO_FLAGS);
@@ -13973,7 +13866,7 @@ void BS_ArenaJudgmentWindow(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void SetArenMonLostValues(u32 battler, u32 side)
+static void SetArenMonLostValues(u32 battler, enum BattleSide side)
 {
     gBattleMons[battler].hp = 0;
     gHitMarker |= HITMARKER_FAINTED(battler);
@@ -14282,7 +14175,7 @@ void BS_PlayMoveAnimation(void)
 void BS_SetLuckyChant(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u32 side = GetBattlerSide(gBattlerAttacker);
+    enum BattleSide side = GetBattlerSide(gBattlerAttacker);
     if (!(gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT))
     {
         gSideStatuses[side] |= SIDE_STATUS_LUCKY_CHANT;
@@ -14573,7 +14466,7 @@ void BS_TryBestow(void)
         || gBattleMons[gBattlerTarget].item != ITEM_NONE
         || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerAttacker].item)
         || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerAttacker].item)
-        || GetBattlerPartyState(gBattlerTarget)->knockedOffItem)
+        || GetBattlerPartyState(gBattlerTarget)->isKnockedOff)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -14674,7 +14567,7 @@ void BS_TryTrainerSlideMsgLastOn(void)
 void BS_SetAuroraVeil(void)
 {
     NATIVE_ARGS();
-    u32 side = GetBattlerSide(gBattlerAttacker);
+    enum BattleSide side = GetBattlerSide(gBattlerAttacker);
     if (gSideStatuses[side] & SIDE_STATUS_AURORA_VEIL)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
@@ -15135,15 +15028,6 @@ void BS_TryResetNegativeStatStages(void)
         if (gBattleMons[gBattlerTarget].statStages[stat] < DEFAULT_STAT_STAGE)
             gBattleMons[gBattlerTarget].statStages[stat] = DEFAULT_STAT_STAGE;
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_JumpIfLastUsedItemBerry(void)
-{
-    NATIVE_ARGS(const u8 *jumpInstr);
-    if (GetItemPocket(gLastUsedItem) == POCKET_BERRIES)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_SaveBattlerItem(void)

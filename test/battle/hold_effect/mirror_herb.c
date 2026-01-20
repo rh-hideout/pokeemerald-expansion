@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Mirror Herb copies all of foe's positive stat changes in a turn", s16 damage)
 {
-    u32 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_MIRROR_HERB; }
     GIVEN {

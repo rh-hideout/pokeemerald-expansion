@@ -42,7 +42,7 @@ bool8 MonHasMail(struct Pokemon *mon)
         return FALSE;
 }
 
-u8 GiveMailToMonByItemId(struct Pokemon *mon, u16 itemId)
+u8 GiveMailToMonByItemId(struct Pokemon *mon, enum Item itemId)
 {
     u8 heldItem[2];
     u8 id, i;
@@ -111,7 +111,7 @@ u16 MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer)
 u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
 {
     u8 heldItem[2];
-    u16 itemId = mail->itemId;
+    enum Item itemId = mail->itemId;
     u8 mailId = GiveMailToMonByItemId(mon, itemId);
 
     if (mailId == MAIL_NONE)
@@ -182,7 +182,7 @@ u8 TakeMailFromMonAndSave(struct Pokemon *mon)
     return MAIL_NONE;
 }
 
-bool8 ItemIsMail(u16 itemId)
+bool8 ItemIsMail(enum Item itemId)
 {
     switch (itemId)
     {

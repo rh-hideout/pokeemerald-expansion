@@ -68,7 +68,7 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
 {
     // There are no trainer party settings in battles, but the AI needs to know which gimmick to use.
     #if TESTING
-    return gimmick == TestRunner_Battle_GetChosenGimmick(battler, gBattlerPartyIndexes[battler]);
+    return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattlerTrainer(battler), gBattlerPartyIndexes[battler]);
     #else
     // The player can bypass these checks because they can choose through the controller.
     if (IsOnPlayerSide(battler) && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT))

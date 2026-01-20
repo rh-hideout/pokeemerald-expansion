@@ -205,7 +205,7 @@ static u16 GetPrevBall(u16 ballId)
         index--;
         if (index == -1)
             index = POKEBALL_COUNT - 1;
-        newBall = gBallItemIds[index];
+        newBall = gPokeBalls[index].itemId;
         if (CheckBagHasItem(newBall, 1))
             return newBall;
     }
@@ -222,7 +222,7 @@ static u32 GetNextBall(u32 ballId)
         index++;
         if (index == POKEBALL_COUNT)
             index = 0;
-        newBall = gBallItemIds[index];
+        newBall = gPokeBalls[index].itemId;
         if (CheckBagHasItem(newBall, 1))
             return newBall;
     }
@@ -231,7 +231,7 @@ static u32 GetNextBall(u32 ballId)
 
 static void HandleInputChooseAction(u32 battler)
 {
-    u16 itemId = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
+    enum Item itemId = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
 
     DoBounceEffect(battler, BOUNCE_HEALTHBOX, 7, 1);
     DoBounceEffect(battler, BOUNCE_MON, 7, 1);
@@ -1898,7 +1898,7 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
     bool32 isFrontPic;
     s16 xPos, yPos;
     enum TrainerPicID trainerPicId;
-  
+
     if (IsMultibattleTest())
     {
         trainerPicId = TRAINER_PIC_BACK_BRENDAN;
