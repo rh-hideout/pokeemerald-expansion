@@ -6043,7 +6043,7 @@ void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *sco
     bool32 partnerHasBadAbility = FALSE;
     enum Ability partnerAbility = ABILITY_NONE;
     bool32 attackerHasBadAbility = (gAbilitiesInfo[abilityAtk].aiRating < 0);
-    s32 currentAbilityScore, transferredAbilityScore = 0;
+    enum AIScore currentAbilityScore, transferredAbilityScore = NO_INCREASE;
 
     if (HasPartner(battlerAtk))
     {
@@ -6107,7 +6107,7 @@ void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *sco
     }
 }
 
-s32 BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct AiLogicData *aiData)
+enum AIScore BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct AiLogicData *aiData)
 {
     if (gAbilitiesInfo[ability].aiRating < 0)
         return WORST_EFFECT;
