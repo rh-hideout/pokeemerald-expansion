@@ -52,8 +52,8 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 static bool32 OWE_DoesRoamerObjectExist(void);
-static bool32 OWE_CheckRestrictMovementMetatile(struct ObjectEvent *objectEvent, u32 direction);
-static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, u32 direction);
+static bool32 OWE_CheckRestrictMovementMetatileAtCoords(struct ObjectEvent *objectEvent, u32 direction, u32 xCurrent, u32 yCurrent);
+static bool32 OWE_CheckRestrictMovementMapAtCoords(struct ObjectEvent *objectEvent, u32 direction, u32 xCurrent, u32 yCurrent);
 static u32 GetNumActiveOverworldEncounters(void);
 static u32 GetNumActiveGeneratedOverworldEncounters(void);
 static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
@@ -985,8 +985,8 @@ bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 directio
         return TRUE;
     
     // Returns TRUE if movement is restricted.
-    return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatile(objectEvent, direction))
-        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMap(objectEvent, direction)));
+    return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(objectEvent, direction, objectEvent->currentCoords.x, objectEvent->currentCoords.y))
+        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(objectEvent, direction, objectEvent->currentCoords.x, objectEvent->currentCoords.y)));
 }
 
 void DespawnOldestOWE_Pal(void)
@@ -1069,15 +1069,14 @@ bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon)
 
 static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, u32 newDirection)
 {
-    // TODO: Add handling for restricted movement.
     s16 x = mon->currentCoords.x;
     s16 y = mon->currentCoords.y;
 
     MoveCoords(newDirection, &x, &y);
-    if (!GetCollisionAtCoords(mon, x, y, newDirection))
+    if (!GetCollisionAtCoords(mon, x, y, newDirection) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
     {
         MoveCoords(mon->movementDirection, &x, &y);
-        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection))
+        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
             return newDirection;
     }
 
@@ -1085,10 +1084,10 @@ static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, u32 newDi
     y = mon->currentCoords.y;
 
     MoveCoords(GetOppositeDirection(newDirection), &x, &y);
-    if (!GetCollisionAtCoords(mon, x, y, GetOppositeDirection(newDirection)))
+    if (!GetCollisionAtCoords(mon, x, y, GetOppositeDirection(newDirection)) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
     {
         MoveCoords(mon->movementDirection, &x, &y);
-        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection))
+        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
             return GetOppositeDirection(newDirection);
     }
 
@@ -1246,10 +1245,8 @@ static bool32 OWE_DoesRoamerObjectExist(void)
     return FALSE;
 }
 
-static bool32 OWE_CheckRestrictMovementMetatile(struct ObjectEvent *objectEvent, u32 direction)
+static bool32 OWE_CheckRestrictMovementMetatileAtCoords(struct ObjectEvent *objectEvent, u32 direction, u32 xCurrent, u32 yCurrent)
 {
-    s16 xCurrent = objectEvent->currentCoords.x;
-    s16 yCurrent = objectEvent->currentCoords.y;
     s16 xNew = xCurrent + gDirectionToVectors[direction].x;
     s16 yNew = yCurrent + gDirectionToVectors[direction].y;
     u32 metatileBehaviourCurrent = MapGridGetMetatileBehaviorAt(xCurrent, yCurrent);
@@ -1270,10 +1267,8 @@ static bool32 OWE_CheckRestrictMovementMetatile(struct ObjectEvent *objectEvent,
     return TRUE;
 }
 
-static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, u32 direction)
+static bool32 OWE_CheckRestrictMovementMapAtCoords(struct ObjectEvent *objectEvent, u32 direction, u32 xCurrent, u32 yCurrent)
 {
-    s16 xCurrent = objectEvent->currentCoords.x;
-    s16 yCurrent = objectEvent->currentCoords.y;
     s16 xNew = xCurrent + gDirectionToVectors[direction].x;
     s16 yNew = yCurrent + gDirectionToVectors[direction].y;
     u32 mapGroup = objectEvent->mapGroup;
