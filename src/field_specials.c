@@ -146,7 +146,7 @@ static void CloseScrollableMultichoice(u8);
 static void ScrollableMultichoice_RemoveScrollArrows(u8);
 static void Task_ScrollableMultichoice_WaitReturnToList(u8);
 static void Task_ScrollableMultichoice_ReturnToList(u8);
-static void ShowFrontierExchangeCornerItemIcon(u16);
+static void ShowFrontierExchangeCornerItemIcon(enum Item);
 static void Task_DeoxysRockInteraction(u8);
 static void ChangeDeoxysRockLevel(u8);
 static void WaitForDeoxysRockMovement(u8);
@@ -182,6 +182,13 @@ static const u8 sText_99TimesPlus[] = _("99 times +");
 static const u8 sText_1MinutePlus[] = _("1 minute +");
 static const u8 sText_SpaceSeconds[] = _(" seconds");
 static const u8 sText_SpaceTimes[] = _(" time(s)");
+
+static const u8 sText_Wallace[] = _("WALLACE");
+static const u8 sText_Steven[] = _("STEVEN");
+static const u8 sText_Brawly[] = _("BRAWLY");
+static const u8 sText_Winona[] = _("WINONA");
+static const u8 sText_Phoebe[] = _("PHOEBE");
+static const u8 sText_Glacia[] = _("GLACIA");
 
 void Special_ShowDiploma(void)
 {
@@ -1431,7 +1438,7 @@ bool8 FoundAbandonedShipRoom6Key(void)
 
 bool8 LeadMonHasEffortRibbon(void)
 {
-    return GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_EFFORT_RIBBON, NULL);
+    return GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_EFFORT_RIBBON);
 }
 
 void GiveLeadMonEffortRibbon(void)
@@ -1483,7 +1490,7 @@ void SetShoalItemFlag(u16 unused)
 void LoadWallyZigzagoon(void)
 {
     u16 monData;
-    CreateMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    CreateRandomMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7);
     monData = TRUE;
     SetMonData(&gPlayerParty[0], MON_DATA_ABILITY_NUM, &monData);
     monData = MOVE_TACKLE;
@@ -1501,7 +1508,7 @@ bool8 IsStarterInParty(void)
     u8 partyCount = CalculatePlayerPartyCount();
     for (i = 0; i < partyCount; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == starter)
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) == starter)
             return TRUE;
     }
     return FALSE;
@@ -1510,14 +1517,6 @@ bool8 IsStarterInParty(void)
 bool8 ScriptCheckFreePokemonStorageSpace(void)
 {
     return CheckFreePokemonStorageSpace();
-}
-
-bool8 IsPokerusInParty(void)
-{
-    if (!CheckPartyPokerus(gPlayerParty, (1 << PARTY_SIZE) - 1))
-        return FALSE;
-
-    return TRUE;
 }
 
 // Task data for Task_ShakeCamera
@@ -1594,8 +1593,8 @@ u8 GetLeadMonIndex(void)
     u8 partyCount = CalculatePlayerPartyCount();
     for (i = 0; i < partyCount; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_EGG
-         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_NONE)
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
+         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE)
             return i;
     }
     return 0;
@@ -2632,7 +2631,7 @@ static void Task_ShowScrollableMultichoice(u8 taskId)
     sScrollableMultichoice_ItemSpriteId = MAX_SPRITES;
     FillFrontierExchangeCornerWindowAndItemIcon(task->tScrollMultiId, 0);
     ShowBattleFrontierTutorWindow(task->tScrollMultiId, 0);
-    sScrollableMultichoice_ListMenuItem = AllocZeroed(task->tNumItems * 8);
+    sScrollableMultichoice_ListMenuItem = AllocZeroed(task->tNumItems * sizeof(struct ListMenuItem));
     sFrontierExchangeCorner_NeverRead = 0;
     InitScrollableMultichoice();
 
@@ -3082,7 +3081,7 @@ static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti menu, u
     }
 }
 
-static void ShowFrontierExchangeCornerItemIcon(u16 item)
+static void ShowFrontierExchangeCornerItemIcon(enum Item item)
 {
     FreeSpriteTilesByTag(TAG_ITEM_ICON);
     FreeSpritePaletteByTag(TAG_ITEM_ICON);
@@ -3748,7 +3747,7 @@ static void Task_LinkRetireStatusWithBattleTowerPartner(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 6:
-        if (!IsTextPrinterActive(0))
+        if (!IsTextPrinterActiveOnWindow(0))
             gTasks[taskId].tState++;
         break;
     case 7:
@@ -4209,25 +4208,25 @@ static void BufferFanClubTrainerName_(struct LinkBattleRecords *linkRecords, u8 
         switch (whichNPCTrainer)
         {
         case 0:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
         case 1:
-            StringCopy(gStringVar1, gText_Steven);
+            StringCopy(gStringVar1, sText_Steven);
             break;
         case 2:
-            StringCopy(gStringVar1, gText_Brawly);
+            StringCopy(gStringVar1, sText_Brawly);
             break;
         case 3:
-            StringCopy(gStringVar1, gText_Winona);
+            StringCopy(gStringVar1, sText_Winona);
             break;
         case 4:
-            StringCopy(gStringVar1, gText_Phoebe);
+            StringCopy(gStringVar1, sText_Phoebe);
             break;
         case 5:
-            StringCopy(gStringVar1, gText_Glacia);
+            StringCopy(gStringVar1, sText_Glacia);
             break;
         default:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
         }
     }
@@ -4244,25 +4243,25 @@ static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer)
     switch (whichNPCTrainer)
     {
         case 0:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
         case 1:
-            StringCopy(gStringVar1, gText_Steven);
+            StringCopy(gStringVar1, sText_Steven);
             break;
         case 2:
-            StringCopy(gStringVar1, gText_Brawly);
+            StringCopy(gStringVar1, sText_Brawly);
             break;
         case 3:
-            StringCopy(gStringVar1, gText_Winona);
+            StringCopy(gStringVar1, sText_Winona);
             break;
         case 4:
-            StringCopy(gStringVar1, gText_Phoebe);
+            StringCopy(gStringVar1, sText_Phoebe);
             break;
         case 5:
-            StringCopy(gStringVar1, gText_Glacia);
+            StringCopy(gStringVar1, sText_Glacia);
             break;
         default:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
     }
 }
@@ -4309,7 +4308,7 @@ void TrySkyBattle(void)
     for (i = 0; i < CalculatePlayerPartyCount(); i++)
     {
         struct Pokemon* pokemon = &gPlayerParty[i];
-        if (CanMonParticipateInSkyBattle(pokemon) && GetMonData(pokemon, MON_DATA_HP, NULL) > 0)
+        if (CanMonParticipateInSkyBattle(pokemon) && GetMonData(pokemon, MON_DATA_HP) > 0)
         {
             PreparePartyForSkyBattle();
             gSpecialVar_Result = TRUE;
@@ -4391,8 +4390,7 @@ bool32 CheckPartyHasSpecies(u32 givenSpecies)
 
 void UseBlankMessageToCancelPokemonPic(void)
 {
-    u8 t = EOS;
-    AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
+    DeactivateSingleTextPrinter(0, WINDOW_TEXT_PRINTER);
     ScriptMenu_HidePokemonPic();
 }
 
@@ -4479,7 +4477,7 @@ static void Task_LearnedMoveBoxMon(u8 taskId)
 
 static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         PlayFanfare(MUS_LEVEL_UP);
         gSpecialVar_Result = CAN_LEARN_MOVE;
@@ -4490,7 +4488,7 @@ static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8 taskId)
 
 static void Task_ReplaceBoxMonMoveYesNo(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         DisplayYesNoMenuDefaultYes();
         gTasks[taskId].func = Task_HandleReplaceBoxMonMoveYesNoInput;
@@ -4516,7 +4514,7 @@ static void Task_HandleReplaceBoxMonMoveYesNoInput(u8 taskId)
 
 static void Task_ShowSummaryScreenToForgetBoxMonMove(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         DestroyTask(taskId);
         if(gSpecialVar_MonBoxId == 0xFF)
@@ -4559,9 +4557,9 @@ static void Task_ReturnToFieldWhileLearningMove(void)
 static void Task_BoxMonReplaceMove(u8 taskId)
 {
 
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
-        u16 move = gSpecialVar_ItemId;
+        enum Move move = gSpecialVar_ItemId;
         if(gSpecialVar_MonBoxId == 0xFF)
         {
             RemoveMonPPBonus(&gPlayerParty[gSpecialVar_MonBoxPos], GetMoveSlotToReplace());
@@ -4578,7 +4576,7 @@ static void Task_BoxMonReplaceMove(u8 taskId)
             SetBoxMonData(mon, MON_DATA_MOVE1 + GetMoveSlotToReplace(), &move);
             SetBoxMonData(mon, MON_DATA_PP1 + GetMoveSlotToReplace(), &gMovesInfo[move].pp);
         }
-     
+
         Task_LearnedMoveBoxMon(taskId);
     }
 }
@@ -4592,7 +4590,7 @@ static void StopLearningBoxMonMovePrompt(u8 taskId)
 
 static void Task_StopLearningBoxMonMoveYesNo(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         DisplayYesNoMenuDefaultYes();
         gTasks[taskId].func = Task_HandleStopLearningBoxMonMoveYesNoInput;
@@ -4628,7 +4626,7 @@ static void Task_HandleStopLearningBoxMonMoveYesNoInput(u8 taskId)
 
 static void Task_DidntLearnMove(u8 taskId)
 {
-    if (IsTextPrinterActive(0) != TRUE)
+    if (IsTextPrinterActiveOnWindow(0) != TRUE)
     {
         DestroyTask(taskId);
         ScriptContext_Enable();

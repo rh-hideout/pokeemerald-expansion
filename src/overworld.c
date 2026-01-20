@@ -1116,7 +1116,7 @@ static bool16 ShouldLegendaryMusicPlayAtLocation(struct WarpData *warp)
     return FALSE;
 }
 
-static bool16 NoMusicInSotopolisWithLegendaries(struct WarpData *warp)
+static bool16 NoMusicInSootopolisWithLegendaries(struct WarpData *warp)
 {
     if (VarGet(VAR_SKY_PILLAR_STATE) != 1)
         return FALSE;
@@ -1141,7 +1141,7 @@ static bool16 IsInfiltratedWeatherInstitute(struct WarpData *warp)
         return FALSE;
 }
 
-static bool16 IsInflitratedSpaceCenter(struct WarpData *warp)
+static bool16 IsInfiltratedSpaceCenter(struct WarpData *warp)
 {
     if (VarGet(VAR_MOSSDEEP_CITY_STATE) == 0)
         return FALSE;
@@ -1157,11 +1157,11 @@ static bool16 IsInflitratedSpaceCenter(struct WarpData *warp)
 
 u16 GetLocationMusic(struct WarpData *warp)
 {
-    if (NoMusicInSotopolisWithLegendaries(warp) == TRUE)
+    if (NoMusicInSootopolisWithLegendaries(warp) == TRUE)
         return MUS_NONE;
     else if (ShouldLegendaryMusicPlayAtLocation(warp) == TRUE)
         return MUS_ABNORMAL_WEATHER;
-    else if (IsInflitratedSpaceCenter(warp) == TRUE)
+    else if (IsInfiltratedSpaceCenter(warp) == TRUE)
         return MUS_ENCOUNTER_MAGMA;
     else if (IsInfiltratedWeatherInstitute(warp) == TRUE)
         return MUS_MT_CHIMNEY;
@@ -1707,11 +1707,12 @@ static void OverworldBasic(void)
         gTimeUpdateCounter = (SECONDS_PER_MINUTE * 60 / FakeRtc_GetSecondsRatio());
         UpdateTimeOfDay();
         FormChangeTimeUpdate();
-        if (bld0[0] != bld1[0]
+        if (MapHasNaturalLight(gMapHeader.mapType) &&
+           (bld0[0] != bld1[0]
          || bld0[1] != bld1[1]
-         || bld0[2] != bld1[2])
+         || bld0[2] != bld1[2]))
         {
-           ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
+            ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
 }
@@ -3494,7 +3495,7 @@ static void SpriteCB_LinkPlayer(struct Sprite *sprite)
 #define ITEM_ICON_Y     24
 #define ITEM_TAG        0x2722 //same as money label
 
-bool8 GetSetItemObtained(u16 item, enum ItemObtainFlags caseId)
+bool8 GetSetItemObtained(enum Item item, enum ItemObtainFlags caseId)
 {
 #if OW_SHOW_ITEM_DESCRIPTIONS == OW_ITEM_DESCRIPTIONS_FIRST_TIME
     u8 index = item / 8;
@@ -3516,10 +3517,10 @@ EWRAM_DATA static u8 sHeaderBoxWindowId = 0;
 EWRAM_DATA u8 sItemIconSpriteId = 0;
 EWRAM_DATA u8 sItemIconSpriteId2 = 0;
 
-static void ShowItemIconSprite(u16 item, bool8 firstTime, bool8 flash);
+static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash);
 static void DestroyItemIconSprite(void);
 
-static u8 ReformatItemDescription(u16 item, u8 *dest)
+static u8 ReformatItemDescription(enum Item item, u8 *dest)
 {
     u8 count = 0;
     u8 numLines = 1;
@@ -3574,7 +3575,7 @@ void ScriptShowItemDescription(struct ScriptContext *ctx)
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
     struct WindowTemplate template;
-    u16 item = gSpecialVar_0x8006;
+    enum Item item = gSpecialVar_0x8006;
     u8 textY;
     u8 *dst;
     bool8 handleFlash = FALSE;
@@ -3629,7 +3630,7 @@ void ScriptHideItemDescription(struct ScriptContext *ctx)
     }
 }
 
-static void ShowItemIconSprite(u16 item, bool8 firstTime, bool8 flash)
+static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash)
 {
     s16 x = 0, y = 0;
     u8 iconSpriteId;

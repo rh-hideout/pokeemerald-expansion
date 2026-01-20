@@ -315,7 +315,7 @@ static void ContestEffect_JamsOthersButMissOneTurn(void)
 // Startles POK�MON that made a same-type appeal.
 static void ContestEffect_StartleMonsSameTypeAppeal(void)
 {
-    u16 move = eContestantStatus[eContestAppealResults.contestant].currMove;
+    enum Move move = eContestantStatus[eContestAppealResults.contestant].currMove;
     JamByMoveCategory(GetMoveContestCategory(move));
     SetContestantEffectStringID(eContestAppealResults.contestant, CONTEST_STRING_ATTEMPT_STARTLE);
 }
@@ -524,7 +524,7 @@ static void ContestEffect_BetterIfFirst(void)
 {
     if (gContestantTurnOrder[eContestAppealResults.contestant] == 0)
     {
-        u16 move = eContestantStatus[eContestAppealResults.contestant].currMove;
+        enum Move move = eContestantStatus[eContestAppealResults.contestant].currMove;
         eContestantStatus[eContestAppealResults.contestant].appeal += 2 * gContestEffects[GetMoveContestEffect(move)].appeal;
         SetContestantEffectStringID(eContestAppealResults.contestant, CONTEST_STRING_HUSTLE_STANDOUT);
     }
@@ -535,7 +535,7 @@ static void ContestEffect_BetterIfLast(void)
 {
     if (gContestantTurnOrder[eContestAppealResults.contestant] == 3)
     {
-        u16 move = eContestantStatus[eContestAppealResults.contestant].currMove;
+        enum Move move = eContestantStatus[eContestAppealResults.contestant].currMove;
         eContestantStatus[eContestAppealResults.contestant].appeal += 2 * gContestEffects[GetMoveContestEffect(move)].appeal;
         SetContestantEffectStringID(eContestAppealResults.contestant, CONTEST_STRING_WORK_HARD_UNNOTICED);
     }
@@ -649,7 +649,7 @@ static void ContestEffect_BetterIfSameType(void)
 {
     s8 turnOrder = eContestAppealResults.turnOrder[eContestAppealResults.contestant];
     s8 i = turnOrder - 1, j;
-    u16 move;
+    enum Move move;
 
     if (turnOrder == 0)
         return;
@@ -685,7 +685,7 @@ static void ContestEffect_BetterIfDiffType(void)
 {
     if (eContestAppealResults.turnOrder[eContestAppealResults.contestant] != 0)
     {
-        u16 move = eContestantStatus[eContestAppealResults.contestant].currMove;
+        enum Move move = eContestantStatus[eContestAppealResults.contestant].currMove;
         int i;
 
         for (i = 0; i < CONTESTANT_COUNT; i++)

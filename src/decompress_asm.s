@@ -1,12 +1,12 @@
     .syntax unified
 
     .arm
-    .section .iwram.code
+    .section .iwram.code, "ax", %progbits
     .align 2
 
 .global FastUnsafeCopy32
 .type FastUnsafeCopy32, %function
-    
+
     @ Word aligned, 32-byte copy
     @ This function WILL overwrite your buffer, so make sure it is at least 32 bytes larger than the desired size.
 FastUnsafeCopy32:
@@ -18,10 +18,7 @@ FastUnsafeCopy32:
     bgt     .Lloop_32
     pop     {r4-r10}
     bx    lr
-    
-    
-@ Credit to:  luckytyphlosion as it's his implementation
-    
+
     .section .text @Copied to stack on run-time
     .align 2
 
@@ -126,6 +123,6 @@ LZ77_EightBlockLoop_HandleLoop:
 LZ77_Done:
 	pop {r4, r5, r6, lr}
 	bx lr
-    
+
 .global LZ77UnCompWRAMOptimized_end
 LZ77UnCompWRAMOptimized_end:

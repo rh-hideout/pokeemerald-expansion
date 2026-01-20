@@ -292,7 +292,7 @@ static void SetDmgHazardsBattlescript(u8 battler, u8 multistringId)
 static bool32 TryHazardsOnSwitchIn(u32 battler, enum Ability ability, enum HoldEffect holdEffect, enum Hazards hazardType)
 {
     bool32 effect = FALSE;
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
     bool32 clearedToxicSpikes = FALSE;
 
     switch (hazardType)

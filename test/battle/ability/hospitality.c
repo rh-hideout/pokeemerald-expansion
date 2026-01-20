@@ -14,7 +14,7 @@ DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         if (health == 75) {
             ABILITY_POPUP(playerLeft, ABILITY_HOSPITALITY);
@@ -72,8 +72,8 @@ DOUBLE_BATTLE_TEST("Hospitality ignores Substitute")
 DOUBLE_BATTLE_TEST("Hospitality does not trigger if there is no ally on the field")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);  }
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);  }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_POLTCHAGEIST) { Ability(ABILITY_HOSPITALITY); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

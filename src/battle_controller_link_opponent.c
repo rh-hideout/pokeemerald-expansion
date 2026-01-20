@@ -162,9 +162,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
             gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;
 
             if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_RIGHT)
-            {
                 FreeShinyStars();
-            }
         }
 
         gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 3;
@@ -279,7 +277,7 @@ void LinkOpponentBufferExecCompleted(u32 battler)
 static void LinkOpponentHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
@@ -353,7 +351,7 @@ static void LinkOpponentHandleDrawTrainerPic(u32 battler)
 
 static void LinkOpponentHandleTrainerSlide(u32 battler)
 {
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     if (battler == B_POSITION_OPPONENT_LEFT)
         trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);

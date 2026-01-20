@@ -25,19 +25,11 @@
 #define MOVE_LIMITATIONS_ALL                    0xFFFF
 
 // Switches between simulated battle calc and actual battle combat
-enum FunctionCallOption
+enum ResultOption
 {
     CHECK_TRIGGER, // Check the function without running scripts / setting any flags.
     AI_CHECK,  // Check the function without running scripts / setting any flags. Same as CHECK_TRIGGER but only used when additional data has to be fetched during ai calcs
-    RUN_SCRIPT, // Used during actual combat where a script has to be run / flags need to be set
-};
-
-enum MoveAbsorbed
-{
-    MOVE_ABSORBED_BY_NO_ABILITY,
-    MOVE_ABSORBED_BY_DRAIN_HP_ABILITY,
-    MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY,
-    MOVE_ABSORBED_BY_BOOST_FLASH_FIRE,
+    RUN_SCRIPT,
 };
 
 enum FieldEffectCases
@@ -58,6 +50,7 @@ enum AbilityEffect
     ABILITYEFFECT_SYNCHRONIZE,
     ABILITYEFFECT_ATK_SYNCHRONIZE,
     ABILITYEFFECT_MOVE_END_OTHER,
+    ABILITYEFFECT_MOVE_END_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
 
     // On Switch in
     ABILITYEFFECT_TERA_SHIFT,
@@ -104,6 +97,7 @@ enum MoveSuccessOrder
     CANCELER_CLEAR_FLAGS,
     CANCELER_SKY_DROP,
     CANCELER_RECHARGE,
+    CANCELER_CHILLY_RECEPTION,
     CANCELER_ASLEEP_OR_FROZEN,
     CANCELER_POWER_POINTS,
     CANCELER_OBEDIENCE,
@@ -125,6 +119,7 @@ enum MoveSuccessOrder
     CANCELER_STANCE_CHANGE_2,
     CANCELER_ATTACKSTRING,
     CANCELER_PPDEDUCTION,
+    CANCELER_SKY_BATTLE,
     CANCELER_WEATHER_PRIMAL,
     CANCELER_FOCUS_PRE_GEN5,
     CANCELER_MOVE_FAILURE,
@@ -132,8 +127,13 @@ enum MoveSuccessOrder
     CANCELER_PRIORITY_BLOCK,
     CANCELER_PROTEAN,
     CANCELER_EXPLODING_DAMP,
+    CANCELER_EXPLOSION,
+    CANCELER_CHARGING,
+    CANCELER_NO_TARGET,
+    CANCELER_TOOK_ATTACK,
+    CANCELER_TARGET_FAILURE,
+    CANCELER_NOT_FULLY_PROTECTED,
     CANCELER_MULTIHIT_MOVES,
-    CANCELER_MULTI_TARGET_MOVES,
     CANCELER_END,
 };
 
@@ -150,9 +150,18 @@ enum Obedience
 enum MoveCanceler
 {
     MOVE_STEP_SUCCESS,
-    MOVE_STEP_BREAK, // Breaks out of the function to run a script
-    MOVE_STEP_FAILURE, // Same as break but breaks out of it due to move failure and jumps to script that handles the failure
-    MOVE_STEP_REMOVES_STATUS,
+    MOVE_STEP_BREAK, // Runs script. Increments state
+    MOVE_STEP_PAUSE, // Runs script. Does not increment state
+    MOVE_STEP_FAILURE, // Move failed, jump to script that handles the failure
+};
+
+enum ImmunityHealStatusOutcome
+{
+    IMMUNITY_NO_EFFECT,
+    IMMUNITY_STATUS_CLEARED,
+    IMMUNITY_CONFUSION_CLEARED,
+    IMMUNITY_INFATUATION_CLEARED,
+    IMMUNITY_TAUNT_CLEARED,
 };
 
 extern const struct TypePower gNaturalGiftTable[];
@@ -166,8 +175,8 @@ struct BattleContext
     u32 unused:2;
     u32 fieldStatuses;
 
-    u32 move:13;
-    u32 chosenMove:13; // May be different to 'move', e.g. for Z moves.
+    enum Move move:13;
+    enum Move chosenMove:13; // May be different to 'move', e.g. for Z moves.
     enum Type moveType:6;
 
     uq4_12_t typeEffectivenessModifier;
@@ -184,7 +193,10 @@ struct BattleContext
     u32 isSelfInflicted:1;
     u32 aiCalc:1;
     u32 aiCheckBerryModifier:1; // Flags that KOing through a berry should be checked
-    u32 padding:25;
+    u32 airBalloonBlocked:1;
+    u32 abilityBlocked:1;
+    u32 runScript:1;  // Used during actual combat where scripts have to be run / flags need to be set
+    u32 padding:22;
 };
 
 // Helper struct to keep the arg list small and prevent constant recalculations of abilities/hold effects.
@@ -192,7 +204,7 @@ struct BattleCalcValues
 {
     u32 battlerAtk:3;
     u32 battlerDef:3;
-    u32 move:16;
+    enum Move move:16;
     u32 padding:10;
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
@@ -225,11 +237,12 @@ enum EjectPackTiming
 };
 
 void HandleAction_ThrowBall(void);
+uq4_12_t CalcTypeEffectivenessMultiplierHelper(enum Move move, enum Type moveType, u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, bool32 recordAbilities);
 u32 GetCurrentBattleWeather(void);
 bool32 EndOrContinueWeather(void);
-bool32 IsUnnerveBlocked(u32 battler, u32 itemId);
-bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move);
-bool32 HandleMoveTargetRedirection(void);
+bool32 IsUnnerveBlocked(u32 battler, enum Item itemId);
+bool32 IsAffectedByFollowMe(u32 battlerAtk, enum BattleSide defSide, enum Move move);
+void DetermineTarget(enum MoveTarget moveTarget, bool32 overwriteTarget);
 void HandleAction_UseMove(void);
 void HandleAction_Switch(void);
 void HandleAction_UseItem(void);
@@ -262,51 +275,53 @@ void BattleScriptPop(void);
 u32 TrySetCantSelectMoveBattleScript(u32 battler);
 u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check);
 bool32 AreAllMovesUnusable(u32 battler);
-u8 GetImprisonedMovesCount(u32 battler, u16 move);
+u8 GetImprisonedMovesCount(u32 battler, enum Move move);
 s32 GetDrainedBigRootHp(u32 battler, s32 hp);
 bool32 IsAbilityAndRecord(u32 battler, enum Ability battlerAbility, enum Ability abilityToCheck);
-u32 DoEndTurnEffects(void);
 bool32 HandleFaintedMonActions(void);
 void TryClearRageAndFuryCutter(void);
-enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx);
+enum MoveCanceler AtkCanceler_MoveSuccessOrder(void);
 bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2);
-bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability);
+bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, enum Ability ability);
 bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag);
-bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, u32 move, enum FunctionCallOption option);
-bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef, u32 move, enum Type moveType, enum FunctionCallOption option);
+bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, u32 move, enum ResultOption option);
+bool32 CanTargetBlockPranksterMove(struct BattleContext *ctx, s32 movePriority);
+bool32 CanPsychicTerrainProtectTarget(struct BattleContext *ctx, s32 movePriority);
+bool32 CanMoveBeBlockedByTarget(struct BattleContext *ctx, s32 movePriority);
+bool32 CanAbilityAbsorbMove(struct BattleContext *ctx);
 bool32 TryFieldEffects(enum FieldEffectCases caseId);
-u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ability, u32 move, bool32 shouldAbilityTrigger);
+u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger);
 bool32 TryPrimalReversion(u32 battler);
 bool32 IsNeutralizingGasOnField(void);
 bool32 IsMoldBreakerTypeAbility(u32 battler, enum Ability ability);
-u32 GetBattlerAbilityIgnoreMoldBreaker(u32 battler);
-u32 GetBattlerAbilityNoAbilityShield(u32 battler);
-u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker, u32 noAbilityShield);
+enum Ability GetBattlerAbilityIgnoreMoldBreaker(u32 battler);
+enum Ability GetBattlerAbilityNoAbilityShield(u32 battler);
+enum Ability GetBattlerAbilityInternal(u32 battler, bool32 ignoreMoldBreaker, bool32 noAbilityShield);
 enum Ability GetBattlerAbility(u32 battler);
 u32 IsAbilityOnSide(u32 battler, enum Ability ability);
 u32 IsAbilityOnOpposingSide(u32 battler, enum Ability ability);
 u32 IsAbilityOnField(enum Ability ability);
 u32 IsAbilityOnFieldExcept(u32 battler, enum Ability ability);
 u32 IsAbilityPreventingEscape(u32 battler);
-bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move);
-u32 GetProtectType(enum ProtectMethod method);
+bool32 IsBattlerProtected(struct BattleContext *ctx);
+enum ProtectType GetProtectType(enum ProtectMethod method);
 bool32 CanBattlerEscape(u32 battler); // no ability check
 void BattleScriptExecute(const u8 *BS_ptr);
 void BattleScriptPushCursorAndCallback(const u8 *BS_ptr);
 void ClearVariousBattlerFlags(u32 battler);
 void HandleAction_RunBattleScript(void);
 u32 SetRandomTarget(u32 battler);
-u32 GetBattleMoveTarget(u32 move, enum MoveTarget moveTarget);
-u8 GetAttackerObedienceForAction();
+u32 GetBattleMoveTarget(enum Move move, enum MoveTarget moveTarget);
+enum Obedience GetAttackerObedienceForAction(void);
 enum HoldEffect GetBattlerHoldEffect(u32 battler);
 enum HoldEffect GetBattlerHoldEffectIgnoreAbility(u32 battler);
 enum HoldEffect GetBattlerHoldEffectIgnoreNegation(u32 battler);
-enum HoldEffect GetBattlerHoldEffectInternal(u32 battler, u32 ability);
+enum HoldEffect GetBattlerHoldEffectInternal(u32 battler, enum Ability ability);
 u32 GetBattlerHoldEffectParam(u32 battler);
-bool32 CanBattlerAvoidContactEffects(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 move);
-bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 move);
+bool32 CanBattlerAvoidContactEffects(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, enum Move move);
+bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, enum Move move);
 bool32 IsBattlerGrounded(u32 battler, enum Ability ability, enum HoldEffect holdEffect);
-u32 GetMoveSlot(u16 *moves, u32 move);
+u32 GetMoveSlot(u16 *moves, enum Move move);
 u32 GetBattlerWeight(u32 battler);
 s32 CalcCritChanceStage(struct BattleContext *ctx);
 s32 CalcCritChanceStageGen1(struct BattleContext *ctx);
@@ -315,7 +330,7 @@ s32 CalculateMoveDamageVars(struct BattleContext *ctx);
 s32 DoFixedDamageMoveCalc(struct BattleContext *ctx);
 s32 ApplyModifiersAfterDmgRoll(struct BattleContext *ctx, s32 dmg);
 uq4_12_t CalcTypeEffectivenessMultiplier(struct BattleContext *ctx);
-uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, enum Ability abilityDef);
+uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(enum Move move, u16 speciesDef, enum Ability abilityDef);
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType);
 uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType);
 void UpdateMoveResultFlags(uq4_12_t modifier, u16 *resultFlags);
@@ -328,57 +343,57 @@ void ActivateUltraBurst(u32 battler);
 bool32 IsBattlerMegaEvolved(u32 battler);
 bool32 IsBattlerPrimalReverted(u32 battler);
 bool32 IsBattlerUltraBursted(u32 battler);
-u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method);
+u32 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method);
 bool32 TryRevertPartyMonFormChange(u32 partyIndex);
 bool32 TryBattleFormChange(u32 battler, enum FormChanges method);
 bool32 DoBattlersShareType(u32 battler1, u32 battler2);
-bool32 CanBattlerGetOrLoseItem(u32 fromBattler, u32 battler, u16 itemId);
+bool32 CanBattlerGetOrLoseItem(u32 fromBattler, u32 battler, enum Item itemId);
 u32 GetBattlerVisualSpecies(u32 battler);
 bool32 TryClearIllusion(u32 battler, enum Ability ability);
 u32 GetIllusionMonSpecies(u32 battler);
 struct Pokemon *GetIllusionMonPtr(u32 battler);
 void ClearIllusionMon(u32 battler);
 u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, u32 battler);
-bool32 SetIllusionMon(struct Pokemon *mon, u32 battler);
-u32 TryImmunityAbilityHealStatus(u32 battler);
+void SetIllusionMon(struct Pokemon *mon, u32 battler);
+enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(u32 battler);
 bool32 ShouldGetStatBadgeBoost(u16 flagId, u32 battler);
 uq4_12_t GetBadgeBoostModifier(void);
-enum DamageCategory GetBattleMoveCategory(u32 move);
-void SetDynamicMoveCategory(u32 battlerAtk, u32 battlerDef, u32 move);
+enum DamageCategory GetBattleMoveCategory(enum Move move);
+void SetDynamicMoveCategory(u32 battlerAtk, u32 battlerDef, enum Move move);
 bool32 CanFling(u32 battlerAtk, u32 battlerDef);
 bool32 IsTelekinesisBannedSpecies(u16 species);
-bool32 IsHealBlockPreventingMove(u32 battler, u32 move);
-bool32 IsBelchPreventingMove(u32 battler, u32 move);
-bool32 HasEnoughHpToEatBerry(u32 battler, enum Ability ability, u32 hpFraction, u32 itemId);
+bool32 IsHealBlockPreventingMove(u32 battler, enum Move move);
+bool32 IsBelchPreventingMove(u32 battler, enum Move move);
+bool32 HasEnoughHpToEatBerry(u32 battler, enum Ability ability, u32 hpFraction, enum Item itemId);
 bool32 IsPartnerMonFromSameTrainer(u32 battler);
 enum DamageCategory GetCategoryBasedOnStats(u32 battler);
 void SetShellSideArmCategory(void);
-bool32 MoveIsAffectedBySheerForce(u32 move);
-bool32 TestIfSheerForceAffected(u32 battler, u16 move);
+bool32 MoveIsAffectedBySheerForce(enum Move move);
+bool32 IsSheerForceAffected(enum Move move, enum Ability ability);
 void TryRestoreHeldItems(void);
-bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item);
-void TrySaveExchangedItem(u32 battler, u16 stolenItem);
-bool32 IsPartnerMonFromSameTrainer(u32 battler);
+bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, enum Item item);
+void TrySaveExchangedItem(u32 battler, enum Item stolenItem);
 bool32 IsBattlerAffectedByHazards(u32 battler, enum HoldEffect holdEffect, bool32 toxicSpikes);
 void SortBattlersBySpeed(u8 *battlers, bool32 slowToFast);
-bool32 CompareStat(u32 battler, enum Stat statId, u8 cmpTo, u8 cmpKind, enum Ability ability);
-bool32 BlocksPrankster(u16 move, u32 battlerPrankster, u32 battlerDef, bool32 checkTarget);
+bool32 CompareStat(u32 battler, enum Stat statId, u32 cmpTo, u32 cmpKind, enum Ability ability);
+bool32 BlocksPrankster(enum Move move, u32 battlerPrankster, u32 battlerDef, bool32 checkTarget);
 bool32 PickupHasValidTarget(u32 battler);
 bool32 CantPickupItem(u32 battler);
 bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags);
-u32 GetBattlerMoveTargetType(u32 battler, u32 move);
-bool32 CanTargetBattler(u32 battlerAtk, u32 battlerDef, u16 move);
+enum MoveTarget GetBattlerMoveTargetType(u32 battler, enum Move move);
+bool32 CanTargetBattler(u32 battlerAtk, u32 battlerDef, enum Move move);
+u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent);
 void CopyMonLevelAndBaseStatsToBattleMon(u32 battler, struct Pokemon *mon);
 void CopyMonAbilityAndTypesToBattleMon(u32 battler, struct Pokemon *mon);
 void RecalcBattlerStats(u32 battler, struct Pokemon *mon, bool32 isDynamaxing);
 bool32 IsGen6ExpShareEnabled(void);
-bool32 MoveHasAdditionalEffect(u32 move, u32 moveEffect);
-bool32 MoveHasAdditionalEffectWithChance(u32 move, u32 moveEffect, u32 chance);
-bool32 MoveHasAdditionalEffectSelf(u32 move, u32 moveEffect);
-bool32 IsMoveEffectRemoveSpeciesType(u32 move, u32 moveEffect, u32 argument);
-bool32 MoveHasChargeTurnAdditionalEffect(u32 move);
+bool32 MoveHasAdditionalEffect(enum Move move, enum MoveEffect moveEffect);
+bool32 MoveHasAdditionalEffectWithChance(enum Move move, enum MoveEffect moveEffect, u32 chance);
+bool32 MoveHasAdditionalEffectSelf(enum Move move, enum MoveEffect moveEffect);
+bool32 IsMoveEffectRemoveSpeciesType(enum Move move, enum MoveEffect moveEffect, u32 argument);
+bool32 MoveHasChargeTurnAdditionalEffect(enum Move move);
 bool32 CanTargetPartner(u32 battlerAtk, u32 battlerDef);
-bool32 TargetFullyImmuneToCurrMove(u32 battlerAtk, u32 battlerDef);
+bool32 IsBattlerUnaffectedByMove(u32 battler);
 bool32 MoodyCantRaiseStat(u32 stat);
 bool32 MoodyCantLowerStat(u32 stat);
 bool32 IsPsychicTerrainAffected(u32 battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses);
@@ -387,9 +402,9 @@ bool32 IsGrassyTerrainAffected(u32 battler, enum Ability ability, enum HoldEffec
 bool32 IsElectricTerrainAffected(u32 battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses);
 bool32 IsAnyTerrainAffected(u32 battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses);
 bool32 IsBattlerTerrainAffected(u32 battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses, u32 terrainFlag);
-u32 GetHighestStatId(u32 battler);
-u32 GetParadoxHighestStatId(u32 battler);
-u32 GetParadoxBoostedStatId(u32 battler);
+enum Stat GetHighestStatId(u32 battler);
+enum Stat GetParadoxHighestStatId(u32 battler);
+enum Stat GetParadoxBoostedStatId(u32 battler);
 
 bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef, enum SleepClauseBlock isBlockedBySleepClause);
 bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef);
@@ -397,7 +412,7 @@ bool32 CanBeBurned(u32 battlerAtk, u32 battlerDef, enum Ability ability);
 bool32 CanBeParalyzed(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef);
 bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef);
 bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef);
-bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect secondaryMoveEffect, enum FunctionCallOption option);
+bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect secondaryMoveEffect, enum ResultOption option);
 bool32 CanBeConfused(u32 battler);
 u32 GetBattlerAffectionHearts(u32 battler);
 void TryToRevertMimicryAndFlags(void);
@@ -406,60 +421,70 @@ u32 CountBattlerStatIncreases(u32 battler, bool32 countEvasionAcc);
 bool32 BattlerHasCopyableChanges(u32 battler);
 bool32 ChangeTypeBasedOnTerrain(u32 battler);
 void RemoveConfusionStatus(u32 battler);
-u8 GetBattlerGender(u32 battler);
+u32 GetBattlerGender(u32 battler);
 bool32 AreBattlersOfOppositeGender(u32 battler1, u32 battler2);
 bool32 AreBattlersOfSameGender(u32 battler1, u32 battler2);
 u32 CalcSecondaryEffectChance(u32 battler, enum Ability battlerAbility, const struct AdditionalEffect *additionalEffect);
 bool32 MoveEffectIsGuaranteed(u32 battler, enum Ability battlerAbility, const struct AdditionalEffect *additionalEffect);
 void GetBattlerTypes(u32 battler, bool32 ignoreTera, enum Type types[static 3]);
 enum Type GetBattlerType(u32 battler, u32 typeIndex, bool32 ignoreTera);
-bool8 CanMonParticipateInSkyBattle(struct Pokemon *mon);
-bool8 IsMonBannedFromSkyBattles(u16 species);
+bool32 CanMonParticipateInSkyBattle(struct Pokemon *mon);
 void RemoveBattlerType(u32 battler, enum Type type);
-enum Type GetBattleMoveType(u32 move);
+enum Type GetBattleMoveType(enum Move move);
 void TryActivateSleepClause(u32 battler, u32 indexInParty);
-void TryDeactivateSleepClause(u32 battlerSide, u32 indexInParty);
-bool32 IsSleepClauseActiveForSide(u32 battlerSide);
-bool32 IsSleepClauseEnabled();
+void TryDeactivateSleepClause(enum BattleSide battlerSide, u32 indexInParty);
+bool32 IsSleepClauseActiveForSide(enum BattleSide battlerSide);
+bool32 IsSleepClauseEnabled(void);
 void ClearDamageCalcResults(void);
 u32 DoesDestinyBondFail(u32 battler);
 bool32 IsMoveEffectBlockedByTarget(enum Ability ability);
+bool32 SetTargetToNextPursuiter(u32 battlerDef);
 bool32 IsPursuitTargetSet(void);
 void ClearPursuitValuesIfSet(u32 battler);
 void ClearPursuitValues(void);
 bool32 HasWeatherEffect(void);
-bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, u32 move);
+bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, enum Move move);
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
 void ChooseStatBoostAnimation(u32 battler);
 void UpdateStallMons(void);
 bool32 TrySwitchInEjectPack(enum EjectPackTiming timing);
-bool32 TryEmergencyExit(void);
 bool32 EmergencyExitCanBeTriggered(u32 battler);
+bool32 TryTriggerSymbiosis(u32 battler, u32 ally);
+bool32 TrySymbiosis(u32 battler, enum Item itemId, bool32 moveEnd);
+void BestowItem(u32 battlerAtk, u32 battlerDef);
 ARM_FUNC u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile);
 void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue);
-bool32 ItemHealMonVolatile(u32 battler, u16 itemId);
-void PushHazardTypeToQueue(u32 side, enum Hazards hazardType);
-bool32 IsHazardOnSide(u32 side, enum Hazards hazardType);
-bool32 AreAnyHazardsOnSide(u32 side);
-void RemoveAllHazardsFromField(u32 side);
-bool32 IsHazardOnSideAndClear(u32 side, enum Hazards hazardType);
-void RemoveHazardFromField(u32 side, enum Hazards hazardType);
-bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, u32 move, enum FunctionCallOption option);
-u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkAbility, enum Ability defAbility, enum HoldEffect atkHoldEffect, enum HoldEffect defHoldEffect);
+bool32 ItemHealMonVolatile(u32 battler, enum Item itemId);
+void PushHazardTypeToQueue(enum BattleSide side, enum Hazards hazardType);
+bool32 IsHazardOnSide(enum BattleSide side, enum Hazards hazardType);
+bool32 AreAnyHazardsOnSide(enum BattleSide side);
+void RemoveAllHazardsFromField(enum BattleSide side);
+bool32 IsHazardOnSideAndClear(enum BattleSide side, enum Hazards hazardType);
+void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType);
+bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum ResultOption option);
+u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, enum Move move, enum Ability atkAbility, enum Ability defAbility, enum HoldEffect atkHoldEffect, enum HoldEffect defHoldEffect);
 bool32 IsSemiInvulnerable(u32 battler, enum SemiInvulnerableExclusion excludeCommander);
-bool32 BreaksThroughSemiInvulnerablity(u32 battler, u32 move);
+bool32 BreaksThroughSemiInvulnerablity(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move);
 bool32 HasPartnerTrainer(u32 battler);
-bool32 IsAffectedByPowderMove(u32 battler, u32 ability, enum HoldEffect holdEffect);
-u32 GetNaturePowerMove(u32 battler);
-u32 GetNaturePowerMove(u32 battler);
+bool32 IsAffectedByPowderMove(u32 battler, enum Ability ability, enum HoldEffect holdEffect);
+enum Move GetNaturePowerMove(u32 battler);
 void RemoveAbilityFlags(u32 battler);
+void CheckSetUnburden(u32 battler);
 bool32 IsDazzlingAbility(enum Ability ability);
 bool32 IsAllowedToUseBag(void);
 bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
+bool32 IsAnyTargetAffected(void);
 bool32 IsMimikyuDisguised(u32 battler);
+bool32 IsDoubleSpreadMove(void);
+bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef);
 void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
 bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
 void SetWrapTurns(u32 battler, enum HoldEffect holdEffect);
+bool32 ChangeOrderTargetAfterAttacker(void);
+void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 upAmount, enum Move usedMove);
+bool32 CanUseMoveConsecutively(u32 battler);
+void TryResetConsecutiveUseCounter(u32 battler);
+void SetOrClearRageVolatile(void);
 
 #endif // GUARD_BATTLE_UTIL_H

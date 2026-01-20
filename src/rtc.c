@@ -19,6 +19,8 @@ static u16 sSavedIme;
 COMMON_DATA struct Time gLocalTime = {0};
 
 // const rom
+static const u8 sText_AM[] = _("AM");
+static const u8 sText_PM[] = _("PM");
 
 static const struct SiiRtcInfo sRtcDummy = {0, MONTH_JAN, 1}; // 2000 Jan 1
 
@@ -240,7 +242,7 @@ void RtcReset(void)
     RtcRestoreInterrupts();
 }
 
-void FormatDecimalTime(u8 *dest, s32 hour, s32 minute, s32 second)
+static void UNUSED FormatDecimalTime(u8 *dest, s32 hour, s32 minute, s32 second)
 {
     dest = ConvertIntToDecimalStringN(dest, hour, STR_CONV_MODE_LEADING_ZEROS, 2);
     *dest++ = CHAR_COLON;
@@ -250,7 +252,7 @@ void FormatDecimalTime(u8 *dest, s32 hour, s32 minute, s32 second)
     *dest = EOS;
 }
 
-void FormatHexTime(u8 *dest, s32 hour, s32 minute, s32 second)
+static void UNUSED FormatHexTime(u8 *dest, s32 hour, s32 minute, s32 second)
 {
     dest = ConvertIntToHexStringN(dest, hour, STR_CONV_MODE_LEADING_ZEROS, 2);
     *dest++ = CHAR_COLON;
@@ -260,12 +262,12 @@ void FormatHexTime(u8 *dest, s32 hour, s32 minute, s32 second)
     *dest = EOS;
 }
 
-void FormatHexRtcTime(u8 *dest)
+static void UNUSED FormatHexRtcTime(u8 *dest)
 {
     FormatHexTime(dest, sRtc.hour, sRtc.minute, sRtc.second);
 }
 
-void FormatDecimalDate(u8 *dest, s32 year, s32 month, s32 day)
+static void UNUSED FormatDecimalDate(u8 *dest, s32 year, s32 month, s32 day)
 {
     dest = ConvertIntToDecimalStringN(dest, year, STR_CONV_MODE_LEADING_ZEROS, 4);
     *dest++ = CHAR_HYPHEN;
@@ -275,7 +277,7 @@ void FormatDecimalDate(u8 *dest, s32 year, s32 month, s32 day)
     *dest = EOS;
 }
 
-void FormatHexDate(u8 *dest, s32 year, s32 month, s32 day)
+static void UNUSED FormatHexDate(u8 *dest, s32 year, s32 month, s32 day)
 {
     dest = ConvertIntToHexStringN(dest, year, STR_CONV_MODE_LEADING_ZEROS, 4);
     *dest++ = CHAR_HYPHEN;
@@ -412,9 +414,9 @@ void FormatDecimalTimeWithoutSeconds(u8 *txtPtr, s8 hour, s8 minute, bool32 is24
         txtPtr = ConvertIntToDecimalStringN(txtPtr, minute, STR_CONV_MODE_LEADING_ZEROS, 2);
         txtPtr = StringAppend(txtPtr, gText_Space);
         if (hour < 12)
-            txtPtr = StringAppend(txtPtr, gText_AM);
+            txtPtr = StringAppend(txtPtr, sText_AM);
         else
-            txtPtr = StringAppend(txtPtr, gText_PM);
+            txtPtr = StringAppend(txtPtr, sText_PM);
     }
 
     *txtPtr++ = EOS;
@@ -459,10 +461,21 @@ enum Weekday GetDayOfWeek(void)
 
 enum TimeOfDay GenConfigTimeOfDay(enum TimeOfDay timeOfDay)
 {
-    if ((((timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING) && OW_TIMES_OF_DAY == GEN_3)
-        || (timeOfDay == TIME_EVENING && OW_TIMES_OF_DAY == GEN_4))
-        && timeOfDay < TIME_LAST)
-        timeOfDay++;
+    if (timeOfDay >= TIME_LAST)
+        return timeOfDay;
+
+    switch (OW_TIMES_OF_DAY)
+    {
+    case GEN_3:
+        if (timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING)
+            timeOfDay++;
+        break;
+    case GEN_2:
+    case GEN_4:
+        if (timeOfDay == TIME_EVENING)
+            timeOfDay++;
+        break;
+    }
 
     return timeOfDay;
 }
