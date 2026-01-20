@@ -2381,6 +2381,7 @@ static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
                 dmgCtx.updateFlags = TRUE;
                 dmgCtx.isSelfInflicted = TRUE;
                 dmgCtx.fixedBasePower = 40;
+                gBattlerTarget = gBattlerAttacker;
                 gBattleStruct->passiveHpUpdate[ctx->battlerAtk] = CalculateMoveDamage(&dmgCtx);
                 gBattlescriptCurrInstr = BattleScript_MoveUsedIsConfused;
                 return MOVE_STEP_FAILURE;
@@ -9737,20 +9738,15 @@ s32 CalcCritChanceStageGen1(struct BattleContext *ctx)
     if (critChance > 255)
         critChance = 255;
 
-    // Prevented crits
-    if (gSideStatuses[ctx->battlerDef] & SIDE_STATUS_LUCKY_CHANT)
-        critChance = CRITICAL_HIT_BLOCKED;
-    else if (ctx->abilityDef == ABILITY_BATTLE_ARMOR || ctx->abilityDef == ABILITY_SHELL_ARMOR)
+    if (ctx->abilityDef == ABILITY_BATTLE_ARMOR || ctx->abilityDef == ABILITY_SHELL_ARMOR)
     {
         if (ctx->updateFlags)
             RecordAbilityBattle(ctx->battlerDef, ctx->abilityDef);
         critChance = CRITICAL_HIT_BLOCKED;
     }
-
-    // Guaranteed crits
     else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
-             || MoveAlwaysCrits(ctx->move)
-             || (ctx->abilityAtk == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
+          || MoveAlwaysCrits(ctx->move)
+          || (ctx->abilityAtk == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
         critChance = CRITICAL_HIT_ALWAYS;
     }
@@ -9760,6 +9756,14 @@ s32 CalcCritChanceStageGen1(struct BattleContext *ctx)
 
 static bool32 IsCriticalHit(struct BattleContext *ctx)
 {
+
+    if (gBattleTypeFlags & (BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_FIRST_BATTLE))
+        return FALSE;
+    if (ctx->isSelfInflicted)
+        return FALSE;
+    if (gSideStatuses[ctx->battlerDef] & SIDE_STATUS_LUCKY_CHANT)
+        return FALSE;
+
     bool32 isCrit = FALSE;
     s32 critChance = 0;
 
@@ -9768,21 +9772,16 @@ static bool32 IsCriticalHit(struct BattleContext *ctx)
     else
         critChance = CalcCritChanceStage(ctx);
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_FIRST_BATTLE))
+    if (critChance == CRITICAL_HIT_BLOCKED)
         isCrit = FALSE;
-    else if (critChance == -1)
-        isCrit = FALSE;
-    else if (critChance == -2)
+    else if (critChance == CRITICAL_HIT_ALWAYS)
         isCrit = TRUE;
+    else if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
+        isCrit = RandomChance(RNG_CRITICAL_HIT, critChance, 256);
+    else if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_2)
+        isCrit = RandomChance(RNG_CRITICAL_HIT, GetCriticalHitOdds(critChance), 256);
     else
-    {
-        if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
-            isCrit = RandomChance(RNG_CRITICAL_HIT, critChance, 256);
-        else if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_2)
-            isCrit = RandomChance(RNG_CRITICAL_HIT, GetCriticalHitOdds(critChance), 256);
-        else
-            isCrit = RandomChance(RNG_CRITICAL_HIT, 1, GetCriticalHitOdds(critChance));
-    }
+        isCrit = RandomChance(RNG_CRITICAL_HIT, 1, GetCriticalHitOdds(critChance));
 
     // Counter for IF_CRITICAL_HITS_GE evolution condition.
     if (isCrit && IsOnPlayerSide(ctx->battlerAtk)
@@ -9793,21 +9792,95 @@ static bool32 IsCriticalHit(struct BattleContext *ctx)
     return isCrit;
 }
 
+s32 GetAdjustedDamage(struct BattleContext *ctx, s32 damage)
+{
+    if (DoesSubstituteBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->move)
+     || DoesDisguiseBlockMove(ctx->battlerDef, ctx->move))
+        return damage; // No damage will be dealt
+
+    if (ctx->abilityDef == ABILITY_ICE_FACE && IsBattleMovePhysical(ctx->move) && gBattleMons[ctx->battlerDef].species == SPECIES_EISCUE)
+    {
+        gBattleStruct->moveResultFlags[ctx->battlerDef] &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE);
+        RecordAbilityBattle(ctx->battlerDef, ABILITY_ICE_FACE);
+        gBattleMons[ctx->battlerDef].volatiles.triggerIceFace = TRUE; // Form change will be done after attack animation in Cmd_resultmessage.
+        return 0; // Typeless damage 0 HP.
+    }
+
+    if (gBattleMons[ctx->battlerDef].hp > damage)
+        return damage;
+
+    bool32 enduredHit = FALSE;
+    u32 rand = Random() % 100;
+    u32 affectionScore = GetBattlerAffectionHearts(ctx->battlerDef);
+
+    if (GetMoveEffect(ctx->move) == EFFECT_FALSE_SWIPE)
+    {
+        enduredHit = TRUE;
+    }
+    else if (gBattleMons[ctx->battlerDef].volatiles.endured)
+    {
+        enduredHit = TRUE;
+        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_ENDURED;
+    }
+    else if (ctx->holdEffectDef == HOLD_EFFECT_FOCUS_BAND && rand < GetBattlerHoldEffectParam(ctx->battlerDef))
+    {
+        enduredHit = TRUE;
+        RecordItemEffectBattle(ctx->battlerDef, ctx->holdEffectDef);
+        gLastUsedItem = gBattleMons[ctx->battlerDef].item;
+        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
+    }
+    else if (GetConfig(CONFIG_STURDY) >= GEN_5 && ctx->abilityDef == ABILITY_STURDY && IsBattlerAtMaxHp(ctx->battlerDef))
+    {
+        enduredHit = TRUE;
+        RecordAbilityBattle(ctx->battlerDef, ABILITY_STURDY);
+        gLastUsedAbility = ABILITY_STURDY;
+        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_STURDIED;
+    }
+    else if (ctx->holdEffectDef == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(ctx->battlerDef))
+    {
+        enduredHit = TRUE;
+        RecordItemEffectBattle(ctx->battlerDef, ctx->holdEffectDef);
+        gLastUsedItem = gBattleMons[ctx->battlerDef].item;
+        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
+    }
+    else if (B_AFFECTION_MECHANICS == TRUE && IsOnPlayerSide(ctx->battlerDef) && affectionScore >= AFFECTION_THREE_HEARTS)
+    {
+        if ((affectionScore == AFFECTION_FIVE_HEARTS && rand < 20)
+         || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 15)
+         || (affectionScore == AFFECTION_THREE_HEARTS && rand < 10))
+        {
+            enduredHit = TRUE;
+            gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
+        }
+    }
+
+    if (enduredHit)
+    {
+        damage = gBattleMons[ctx->battlerDef].hp - 1; // Reduce damage to 1 hp.
+        gProtectStructs[ctx->battlerDef].assuranceDoubled = TRUE;
+    }
+
+    return damage;
+}
+
 s32 CalculateMoveDamage(struct BattleContext *ctx)
 {
+    s32 damage = 0;
+
     ctx->abilityAtk = GetBattlerAbility(ctx->battlerAtk);
     ctx->abilityDef = GetBattlerAbility(ctx->battlerDef);
     ctx->holdEffectAtk = GetBattlerHoldEffect(ctx->battlerAtk);
     ctx->holdEffectDef = GetBattlerHoldEffect(ctx->battlerDef);
 
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
-    if (!ctx->isSelfInflicted)
-        ctx->isCrit = IsCriticalHit(ctx);
+    ctx->isCrit = IsCriticalHit(ctx);
 
     if (IsFutureSightAttackerInParty(ctx->battlerAtk, ctx->battlerDef, ctx->move))
-        return DoFutureSightAttackDamageCalc(ctx);
+        damage = DoFutureSightAttackDamageCalc(ctx);
+    else
+        damage = DoMoveDamageCalc(ctx);
 
-    return DoMoveDamageCalc(ctx);
+    return GetAdjustedDamage(ctx, damage);
 }
 
 // for AI so that typeEffectivenessModifier, weather, abilities and holdEffects are calculated only once

@@ -11,6 +11,28 @@ struct LilycoveContestLadyValues
     const u8 *contestName;
 };
 
+struct LilycoveQuizLadyQuestions
+{
+    const u16 *question;
+    u16 answer;
+    u16 prize;
+};
+
+struct LilycoveFavorLady
+{
+    const u8 *request;
+    const u16 *acceptedItems;
+    u16 prize;
+};
+
+static const u16 sLilycoveLadyGfxId[] =
+{
+    [LILYCOVE_LADY_QUIZ]    = OBJ_EVENT_GFX_WOMAN_4,
+    [LILYCOVE_LADY_FAVOR]   = OBJ_EVENT_GFX_WOMAN_2,
+    [LILYCOVE_LADY_CONTEST] = OBJ_EVENT_GFX_GIRL_2,
+};
+
+// Contest Lady data
 static const struct LilycoveContestLadyValues sContestLadyValues[] =
 {
     [CONTEST_CATEGORY_COOL] = {
@@ -48,13 +70,6 @@ static const struct LilycoveContestLadyValues sContestLadyValues[] =
         .categoryName = COMPOUND_STRING("toughness"),
         .contestName = gText_ToughnessContest,
     },
-};
-
-static const u16 sLilycoveLadyGfxId[] =
-{
-    OBJ_EVENT_GFX_WOMAN_4,
-    OBJ_EVENT_GFX_WOMAN_2,
-    OBJ_EVENT_GFX_GIRL_2
 };
 
 // Quiz Lady data
@@ -266,77 +281,27 @@ static const u16 sQuizLadyQuestion16[QUIZ_QUESTION_LEN] =
     EC_EMPTY_WORD
 };
 
-static const u16 *const sQuizLadyQuizQuestions[] =
+static const struct LilycoveQuizLadyQuestions sQuizLadyQuestions[] =
 {
-    sQuizLadyQuestion1,
-    sQuizLadyQuestion2,
-    sQuizLadyQuestion3,
-    sQuizLadyQuestion4,
-    sQuizLadyQuestion5,
-    sQuizLadyQuestion6,
-    sQuizLadyQuestion7,
-    sQuizLadyQuestion8,
-    sQuizLadyQuestion9,
-    sQuizLadyQuestion10,
-    sQuizLadyQuestion11,
-    sQuizLadyQuestion12,
-    sQuizLadyQuestion13,
-    sQuizLadyQuestion14,
-    sQuizLadyQuestion15,
-    sQuizLadyQuestion16
-};
-
-static const u16 sQuizLadyQuizAnswers[] =
-{
-    EC_WORD_POKEDEX,
-    EC_WORD_DARK,
-    EC_WORD_LEVEL,
-    EC_WORD_FLOWERS,
-    EC_WORD_EGG,
-    EC_WORD_OWN_TEMPO,
-    EC_WORD_ROCK,
-    EC_WORD_SHADOW_TAG,
-    EC_WORD_IMMUNITY,
-    EC_WORD_POKEMON,
-    EC_WORD_PC,
-    EC_WORD_TELEVISION,
-    EC_WORD_PLUSH_DOLL,
-    EC_WORD_ICE,
-    EC_WORD_FIGHTING,
-    EC_WORD_DARK
-};
-
-static const u16 sQuizLadyPrizes[] =
-{
-    ITEM_GLITTER_MAIL,
-    ITEM_BEAD_MAIL,
-    ITEM_TROPIC_MAIL,
-    ITEM_MAX_ETHER,
-    ITEM_MAX_ETHER,
-    ITEM_MAX_ETHER,
-    ITEM_WATMEL_BERRY,
-    ITEM_BELUE_BERRY,
-    ITEM_DURIN_BERRY,
-    ITEM_LUXURY_BALL,
-    ITEM_TM_HYPER_BEAM,
-    ITEM_BIG_PEARL,
-    ITEM_STAR_PIECE,
-    ITEM_RARE_CANDY,
-    ITEM_RARE_CANDY,
-    ITEM_PREMIER_BALL
+    {.question = sQuizLadyQuestion1,  .answer = EC_WORD_POKEDEX,    .prize = ITEM_GLITTER_MAIL},
+    {.question = sQuizLadyQuestion2,  .answer = EC_WORD_DARK,       .prize = ITEM_BEAD_MAIL},
+    {.question = sQuizLadyQuestion3,  .answer = EC_WORD_LEVEL,      .prize = ITEM_TROPIC_MAIL},
+    {.question = sQuizLadyQuestion4,  .answer = EC_WORD_FLOWERS,    .prize = ITEM_MAX_ETHER},
+    {.question = sQuizLadyQuestion5,  .answer = EC_WORD_EGG,        .prize = ITEM_MAX_ETHER},
+    {.question = sQuizLadyQuestion6,  .answer = EC_WORD_OWN_TEMPO,  .prize = ITEM_MAX_ETHER},
+    {.question = sQuizLadyQuestion7,  .answer = EC_WORD_ROCK,       .prize = ITEM_WATMEL_BERRY},
+    {.question = sQuizLadyQuestion8,  .answer = EC_WORD_SHADOW_TAG, .prize = ITEM_BELUE_BERRY},
+    {.question = sQuizLadyQuestion9,  .answer = EC_WORD_IMMUNITY,   .prize = ITEM_DURIN_BERRY},
+    {.question = sQuizLadyQuestion10, .answer = EC_WORD_POKEMON,    .prize = ITEM_LUXURY_BALL},
+    {.question = sQuizLadyQuestion11, .answer = EC_WORD_PC,         .prize = ITEM_TM_HYPER_BEAM},
+    {.question = sQuizLadyQuestion12, .answer = EC_WORD_TELEVISION, .prize = ITEM_BIG_PEARL},
+    {.question = sQuizLadyQuestion13, .answer = EC_WORD_PLUSH_DOLL, .prize = ITEM_STAR_PIECE},
+    {.question = sQuizLadyQuestion14, .answer = EC_WORD_ICE,        .prize = ITEM_RARE_CANDY},
+    {.question = sQuizLadyQuestion15, .answer = EC_WORD_FIGHTING,   .prize = ITEM_RARE_CANDY},
+    {.question = sQuizLadyQuestion16, .answer = EC_WORD_DARK,       .prize = ITEM_PREMIER_BALL},
 };
 
 // Favor Lady data
-static const u8 *const sFavorLadyRequests[] =
-{
-    COMPOUND_STRING("slippery"),
-    COMPOUND_STRING("roundish"),
-    COMPOUND_STRING("wham-ish"),
-    COMPOUND_STRING("shiny"),
-    COMPOUND_STRING("sticky"),
-    COMPOUND_STRING("pointy"),
-};
-
 static const u16 sFavorLadyAcceptedItems_Slippery[] =
 {
     ITEM_REPEL,
@@ -449,22 +414,12 @@ static const u16 sFavorLadyAcceptedItems_Pointy[] =
     ITEM_NONE
 };
 
-static const u16 *const sFavorLadyAcceptedItemLists[] =
+static const struct LilycoveFavorLady sFavorLady[] =
 {
-    sFavorLadyAcceptedItems_Slippery,
-    sFavorLadyAcceptedItems_Roundish,
-    sFavorLadyAcceptedItems_Whamish,
-    sFavorLadyAcceptedItems_Shiny,
-    sFavorLadyAcceptedItems_Sticky,
-    sFavorLadyAcceptedItems_Pointy
-};
-
-static const u16 sFavorLadyPrizes[] =
-{
-    ITEM_LUXURY_BALL,
-    ITEM_NUGGET,
-    ITEM_PROTEIN,
-    ITEM_HEART_SCALE,
-    ITEM_RARE_CANDY,
-    ITEM_PP_MAX
+    {.request = COMPOUND_STRING("slippery"), .acceptedItems = sFavorLadyAcceptedItems_Slippery, .prize = ITEM_LUXURY_BALL},
+    {.request = COMPOUND_STRING("roundish"), .acceptedItems = sFavorLadyAcceptedItems_Roundish, .prize = ITEM_NUGGET},
+    {.request = COMPOUND_STRING("wham-ish"), .acceptedItems = sFavorLadyAcceptedItems_Whamish,  .prize = ITEM_PROTEIN},
+    {.request = COMPOUND_STRING("shiny"),    .acceptedItems = sFavorLadyAcceptedItems_Shiny,    .prize = ITEM_HEART_SCALE},
+    {.request = COMPOUND_STRING("sticky"),   .acceptedItems = sFavorLadyAcceptedItems_Sticky,   .prize = ITEM_RARE_CANDY},
+    {.request = COMPOUND_STRING("pointy"),   .acceptedItems = sFavorLadyAcceptedItems_Pointy,   .prize = ITEM_PP_MAX},
 };
