@@ -214,7 +214,7 @@ WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
     u32 item = ITEM_NONE;
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
-        PARAMETRIZE(item = gBallItemIds[ballId]);
+        PARAMETRIZE(item = gPokeBalls[ballId].itemId);
     }
 
     GIVEN {

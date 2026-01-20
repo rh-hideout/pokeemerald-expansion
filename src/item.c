@@ -237,7 +237,7 @@ bool32 HasAtLeastOnePokeBall(void)
 {
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
-        if (CheckBagHasItem(gBallItemIds[ballId], 1) == TRUE)
+        if (CheckBagHasItem(gPokeBalls[ballId].itemId, 1) == TRUE)
             return TRUE;
     }
     return FALSE;
