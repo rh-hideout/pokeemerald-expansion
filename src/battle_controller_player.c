@@ -205,7 +205,7 @@ static u16 GetPrevBall(u16 ballId)
         index--;
         if (index == -1)
             index = POKEBALL_COUNT - 1;
-        newBall = gBallItemIds[index];
+        newBall = gPokeBalls[index].itemId;
         if (CheckBagHasItem(newBall, 1))
             return newBall;
     }
@@ -222,7 +222,7 @@ static u32 GetNextBall(u32 ballId)
         index++;
         if (index == POKEBALL_COUNT)
             index = 0;
-        newBall = gBallItemIds[index];
+        newBall = gPokeBalls[index].itemId;
         if (CheckBagHasItem(newBall, 1))
             return newBall;
     }
