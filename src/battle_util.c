@@ -6219,7 +6219,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
 
                 if (GetConfig(CONFIG_BATTLE_BOND) < GEN_9)
                 {
-                    // TODO: Convert this to a proper FORM_CHANGE type.
+                    // Can't use TryBattleFormChange as we can't test form change const data changes.
                     gLastUsedAbility = ability;
                     GetBattlerPartyState(battler)->battleBondBoost = TRUE;
                     PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battler].species);
