@@ -980,6 +980,9 @@ bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 directio
 {
     if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
         return FALSE;
+
+    if (GetCollisionInDirection(objectEvent, direction))
+        return TRUE;
     
     // Returns TRUE if movement is restricted.
     return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatile(objectEvent, direction))
