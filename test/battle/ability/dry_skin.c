@@ -149,7 +149,7 @@ SINGLE_BATTLE_TEST("Dry Skin is only triggered once on multi strike moves")
 
 SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activating")
 {
-    u32 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_ABSORB_BULB; }
     PARAMETRIZE { item = ITEM_LUMINOUS_MOSS; }
     GIVEN {

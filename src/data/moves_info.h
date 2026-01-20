@@ -7227,7 +7227,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .type = TYPE_NORMAL,
         .accuracy = 0,
         .pp = 20,
-        .target = TARGET_DEPENDS,
+        .target = B_UPDATED_MOVE_FLAGS >= GEN_6 ? TARGET_SELECTED : TARGET_DEPENDS,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .metronomeBanned = B_UPDATED_MOVE_FLAGS >= GEN_5,

@@ -3,7 +3,7 @@
 
 DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_BERRY_JUICE; }
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }
@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
 
 DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing after a recoil move")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_BERRY_JUICE; }
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }

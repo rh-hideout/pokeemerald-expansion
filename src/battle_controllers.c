@@ -1050,7 +1050,7 @@ void BtlController_EmitPrintSelectionString(u32 battler, u32 bufferId, enum Stri
 }
 
 // itemId only relevant for B_ACTION_USE_ITEM
-void BtlController_EmitChooseAction(u32 battler, u32 bufferId, u8 action, u16 itemId)
+void BtlController_EmitChooseAction(u32 battler, u32 bufferId, u8 action, enum Item itemId)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_CHOOSEACTION;
     gBattleResources->transferBuffer[1] = action;
@@ -1482,7 +1482,7 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         #if TESTING
         if (gTestRunnerEnabled)
         {
-            enum BattleTrainer trainer = GetBattleTrainer(battler);
+            enum BattleTrainer trainer = GetBattlerTrainer(battler);
             u32 partyIndex = gBattlerPartyIndexes[battler];
             if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
                 gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
@@ -2666,20 +2666,25 @@ void BtlController_HandleHealthBarUpdate(u32 battler)
     gBattlerControllerFuncs[battler] = Controller_WaitForHealthBar;
 }
 
-void DoStatusIconUpdate(u32 battler)
-{
-    struct Pokemon *mon = GetBattlerMon(battler);
-
-    UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_STATUS_ICON);
-    gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive = 0;
-    gBattlerControllerFuncs[battler] = Controller_WaitForStatusAnimation;
-}
-
 void BtlController_HandleStatusIconUpdate(u32 battler)
 {
     if (!IsBattleSEPlaying(battler))
     {
-        DoStatusIconUpdate(battler);
+        struct Pokemon *mon = GetBattlerMon(battler);
+
+        if (IsControllerSafari(battler))
+        {
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_SAFARI_BALLS_TEXT);
+            BtlController_Complete(battler);
+        }
+        else
+        {
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_STATUS_ICON);
+            gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive = 0;
+            gBattlerControllerFuncs[battler] = Controller_WaitForStatusAnimation;
+            if (gTestRunnerEnabled && BattlerIsRecorded(battler))
+                TestRunner_Battle_RecordStatus1(battler, GetMonData(GetBattlerMon(battler), MON_DATA_STATUS));
+        }
     }
 }
 
@@ -3242,7 +3247,7 @@ void FreeShinyStars(void)
     FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
 }
 
-enum BattleTrainer GetBattleTrainer(enum BattlerId battler)
+enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
 {
     switch (battler)
     {

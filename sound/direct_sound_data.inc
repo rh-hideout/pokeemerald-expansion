@@ -1895,6 +1895,10 @@ Cry_Ursaring::
 	.align 2
 Cry_Ursaluna::
 	.incbin "sound/direct_sound_samples/cries/ursaluna.bin"
+	
+	.align 2
+Cry_UrsalunaBloodmoon::
+	.incbin "sound/direct_sound_samples/cries/ursaluna_bloodmoon.bin"
 .endif @ P_GEN_8_CROSS_EVOS
 .endif @ P_FAMILY_TEDDIURSA
 
@@ -5460,6 +5464,10 @@ Cry_Sandaconda::
 	.align 2
 Cry_Cramorant::
 	.incbin "sound/direct_sound_samples/cries/cramorant.bin"
+	
+	.align 2
+Cry_CramorantGulping::
+	.incbin "sound/direct_sound_samples/cries/cramorant_gulping.bin"
 .endif @ P_FAMILY_CRAMORANT
 
 .if P_FAMILY_ARROKUDA == TRUE

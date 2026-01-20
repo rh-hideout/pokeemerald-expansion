@@ -196,8 +196,8 @@ struct AI_SavedBattleMon
 struct AiPartyMon
 {
     u16 species;
-    u16 item;
-    u16 heldEffect;
+    enum Item item;
+    enum HoldEffect heldEffect;
     enum Ability ability;
     u16 level;
     enum Move moves[MAX_MON_MOVES];
@@ -226,12 +226,12 @@ struct SimulatedDamage
 struct AiLogicData
 {
     enum Ability abilities[MAX_BATTLERS_COUNT];
-    u16 items[MAX_BATTLERS_COUNT];
-    u16 holdEffects[MAX_BATTLERS_COUNT];
+    enum Item items[MAX_BATTLERS_COUNT];
+    enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
     u8 holdEffectParams[MAX_BATTLERS_COUNT];
-    u16 lastUsedMove[MAX_BATTLERS_COUNT];
+    enum Move lastUsedMove[MAX_BATTLERS_COUNT];
     u8 hpPercents[MAX_BATTLERS_COUNT];
-    u16 partnerMove;
+    enum Move partnerMove;
     u16 speedStats[MAX_BATTLERS_COUNT]; // Speed stats for all battles, calculated only once, same way as damages
     struct SimulatedDamage simulatedDmg[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // attacker, target, moveIndex
     uq4_12_t effectiveness[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // attacker, target, moveIndex
@@ -239,7 +239,7 @@ struct AiLogicData
     u8 moveLimitations[MAX_BATTLERS_COUNT];
     u8 monToSwitchInId[MAX_BATTLERS_COUNT]; // ID of the mon to switch in.
     u8 mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
-    u16 predictedMove[MAX_BATTLERS_COUNT];
+    enum Move predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
 
     // Flags
