@@ -4021,6 +4021,8 @@ static bool32 IsDomeRareMove(enum Move move)
     u16 species = 0;
     for(i = 0; i < NUM_SPECIES; i++)
     {
+        if (!IsSpeciesEnabled(i))
+            continue;
         const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(i);
         for(j = 0; learnset[j].move != LEVEL_UP_MOVE_END; j++)
         {
