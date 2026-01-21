@@ -1112,6 +1112,9 @@ static enum CancelerResult CancelerMoveSpecificMessage(struct BattleContext *ctx
             return CANCELER_RESULT_BREAK;
         }
         break;
+    case EFFECT_SNORE:
+        BattleScriptCall(BattleScript_SnoreMessage);
+        return CANCELER_RESULT_BREAK;
     default:
         break;
     }

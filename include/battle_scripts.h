@@ -517,6 +517,7 @@ extern const u8 BattleScript_StealStats[];
 extern const u8 BattleScript_BeatUpAttackMessage[];
 extern const u8 BattleScript_MagnitudeMessage[];
 extern const u8 BattleScript_FickleBeamMessage[];
+extern const u8 BattleScript_SnoreMessage[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -621,7 +622,6 @@ extern const u8 BattleScript_EffectHappyHour[];
 extern const u8 BattleScript_EffectDisable[];
 extern const u8 BattleScript_EffectEncore[];
 extern const u8 BattleScript_EffectPainSplit[];
-extern const u8 BattleScript_EffectSnore[];
 extern const u8 BattleScript_EffectConversion2[];
 extern const u8 BattleScript_EffectLockOn[];
 extern const u8 BattleScript_EffectSketch[];

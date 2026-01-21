@@ -3000,12 +3000,15 @@ BattleScript_EffectPainSplit::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectSnore::
-	attackcanceler
-	jumpifhalfword CMP_EQUAL, gChosenMove, MOVE_SLEEP_TALK, BattleScript_DoSnore
+BattleScript_SnoreMessage::
 	printstring STRINGID_PKMNFASTASLEEP
 	waitmessage B_WAIT_TIME_LONG
 	statusanimation BS_ATTACKER
+    return
+
+BattleScript_EffectSnore::
+	attackcanceler
+	jumpifhalfword CMP_EQUAL, gChosenMove, MOVE_SLEEP_TALK, BattleScript_DoSnore
 BattleScript_DoSnore::
 	accuracycheck BattleScript_MoveMissedPause
 	goto BattleScript_HitFromDamageCalc

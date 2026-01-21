@@ -502,7 +502,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SNORE] =
     {
-        .battleScript = BattleScript_EffectSnore,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
     },
 
