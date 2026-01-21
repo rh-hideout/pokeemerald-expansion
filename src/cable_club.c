@@ -651,7 +651,7 @@ static void Task_ValidateMixingGameLanguage(u8 taskId)
             for (i = 0; i < playerCount; i++)
             {
                 enum GameVersion version = (u8)gLinkPlayers[i].version;
-                u32 language = gLinkPlayers[i].language;
+                enum Language language = gLinkPlayers[i].language;
 
                 if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
                 {

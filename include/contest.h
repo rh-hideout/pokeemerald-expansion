@@ -370,6 +370,6 @@ void ResetContestLinkResults(void);
 bool8 SaveContestWinner(u8 rank);
 u8 GetContestWinnerSaveIdx(u8 rank, bool8 shift);
 void ClearContestWinnerPicsInContestHall(void);
-void StripPlayerAndMonNamesForLinkContest(struct ContestPokemon *mon, s32 language);
+void StripPlayerAndMonNamesForLinkContest(struct ContestPokemon *mon, enum Language language);
 
 #endif //GUARD_CONTEST_H

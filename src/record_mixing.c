@@ -787,7 +787,7 @@ static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *records, size
     anyRS = Link_AnyPartnersPlayingRubyOrSapphire();
     for (i = 0; i < GetLinkPlayerCount(); i++)
     {
-        u32 language;
+        enum Language language;
         enum GameVersion version;
 
         mixMail = (void *)records + i * recordSize;
@@ -796,7 +796,7 @@ static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *records, size
 
         for (j = 0; j < mixMail->numDaycareMons; j++)
         {
-            u16 otNameLanguage, nicknameLanguage;
+            enum Language otNameLanguage, nicknameLanguage;
             struct DaycareMail *daycareMail = &mixMail->mail[j];
 
             if (daycareMail->message.itemId == ITEM_NONE)

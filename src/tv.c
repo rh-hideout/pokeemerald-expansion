@@ -1108,7 +1108,7 @@ void TryPutPokemonTodayOnAir(void)
     u8 i;
     u16 ballsUsed;
     TVShow *show;
-    u32 language2;
+    enum Language language2;
     enum Item itemLastUsed;
 
     ballsUsed = 0;
@@ -4053,7 +4053,7 @@ static void TranslateRubyShows(TVShow *shows)
     }
 }
 
-static u8 GetStringLanguage(u8 *str)
+static enum Language GetStringLanguage(u8 *str)
 {
     return IsStringJapanese(str) ? LANGUAGE_JAPANESE : GAME_LANGUAGE;
 }

@@ -50,14 +50,17 @@ enum GameVersion
     NUM_VERSIONS = VERSION_GAMECUBE,
 };
 
-#define LANGUAGE_JAPANESE 1
-#define LANGUAGE_ENGLISH  2
-#define LANGUAGE_FRENCH   3
-#define LANGUAGE_ITALIAN  4
-#define LANGUAGE_GERMAN   5
-#define LANGUAGE_KOREAN   6 // 6 goes unused but the theory is it was meant to be Korean
-#define LANGUAGE_SPANISH  7
-#define NUM_LANGUAGES     7
+enum Language
+{
+    LANGUAGE_JAPANESE = 1,
+    LANGUAGE_ENGLISH = 2,
+    LANGUAGE_FRENCH = 3,
+    LANGUAGE_ITALIAN = 4,
+    LANGUAGE_GERMAN = 5,
+    LANGUAGE_KOREAN = 6, // 6 goes unused but the theory is it was meant to be Korean,
+    LANGUAGE_SPANISH = 7,
+    NUM_LANGUAGES = LANGUAGE_SPANISH,
+};
 
 #define GAME_VERSION (VERSION_EMERALD)
 #define GAME_LANGUAGE (LANGUAGE_ENGLISH)

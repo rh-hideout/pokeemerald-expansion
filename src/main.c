@@ -38,7 +38,7 @@ extern void CB2_FlashNotDetectedScreen(void);
 
 const enum GameVersion gGameVersion = GAME_VERSION;
 
-const u8 gGameLanguage = GAME_LANGUAGE; // English
+const enum Language gGameLanguage = GAME_LANGUAGE; // English
 
 const char BuildDateTime[] = "2005 02 21 11:10";
 
