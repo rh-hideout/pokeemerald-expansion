@@ -5617,15 +5617,32 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
                 tailwindScore += 1;
             if (speed <= foe2Speed && (speed * 2) > foe2Speed)
                 tailwindScore += 1;
-            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+            if (partnerSpeed <= foe1Speed && (partnerSpeed * 2) > foe1Speed)
                 tailwindScore += 1;
-            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+            if (partnerSpeed <= foe2Speed && (partnerSpeed * 2) > foe2Speed)
                 tailwindScore += 1;
 
             if (tailwindScore > 0)
                 tailwindScore += 1;
 
             ADJUST_SCORE(tailwindScore);
+
+            if (IsBattlerAlive(BATTLE_PARTNER(battlerAtk))
+             && !(gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_TAILWIND))
+            {
+                if (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_WIND_RIDER)
+                {
+                    ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), battlerDef, STAT_CHANGE_ATK));
+                }
+                else if (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_WIND_POWER)
+                {
+                    if (gBattleMons[BATTLE_PARTNER(battlerAtk)].volatiles.chargeTimer == 0
+                     && HasDamagingMoveOfType(BATTLE_PARTNER(battlerAtk), TYPE_ELECTRIC))
+                    {
+                        ADJUST_SCORE(GOOD_EFFECT);
+                    }
+                }
+            }
         }
         break;
     }

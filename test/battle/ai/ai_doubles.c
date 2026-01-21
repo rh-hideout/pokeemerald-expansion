@@ -973,6 +973,53 @@ AI_DOUBLE_BATTLE_TEST("AI uses Tailwind")
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider ally")
+{
+    bool32 expectTailwind;
+    u32 ability;
+
+    PARAMETRIZE { ability = ABILITY_WIND_RIDER; expectTailwind = TRUE; }
+    PARAMETRIZE { ability = ABILITY_INFILTRATOR; expectTailwind = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_BRAMBLEGHAST) { Ability(ability); Speed(5); Moves(MOVE_HEADBUTT); }
+    } WHEN {
+        if (expectTailwind)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power ally")
+{
+    bool32 expectTailwind;
+    u32 ability;
+
+    PARAMETRIZE { ability = ABILITY_WIND_POWER; expectTailwind = TRUE; }
+    PARAMETRIZE { ability = ABILITY_COMPETITIVE; expectTailwind = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
+        ASSUME(GetMoveType(MOVE_THUNDERSHOCK) == TYPE_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_KILOWATTREL) { Ability(ability); Speed(5); Moves(MOVE_THUNDERSHOCK); }
+    } WHEN {
+        if (expectTailwind)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI uses Guard Split to improve its stats")
 {
 
