@@ -296,7 +296,7 @@
 #define VAR_PREV_TEXT_COLOR        0x8013
 #define VAR_0x8014                 0x8014 // Unknown/unused
 
-#define SPECIAL_VARS_END_FRLG           0x8014
+#define SPECIAL_VARS_END_FRLG      0x8014
 
 // Text color ids for VAR_TEXT_COLOR / VAR_PREV_TEXT_COLOR
 #define NPC_TEXT_COLOR_MALE      0 // Blue, for male NPCs

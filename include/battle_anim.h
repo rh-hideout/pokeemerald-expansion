@@ -190,7 +190,7 @@ void DestroySpriteAndFreeResources_(struct Sprite *sprite);
 void SetBattlerSpriteYOffsetFromOtherYScale(u8 spriteId, u8 otherSpriteId);
 void ConvertPosDataToTranslateLinearData(struct Sprite *sprite);
 void InitAnimFastLinearTranslationWithSpeedAndPos(struct Sprite *sprite);
-u8 GetGhostSpriteDefault_Y(u8 battlerId);
+u8 GetGhostSpriteDefault_Y(enum BattlerId battler);
 
 enum
 {

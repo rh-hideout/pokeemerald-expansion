@@ -832,7 +832,7 @@ bool8 IsBattlerSpritePresent(u8 battler)
 
         if (gAbsentBattlerFlags & 1u << battler)
             return FALSE;
-        
+
         return TRUE;
     }
 }
@@ -2470,10 +2470,10 @@ void AnimWeatherBallDown(struct Sprite *sprite)
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
-u8 GetGhostSpriteDefault_Y(u8 battlerId)
+u8 GetGhostSpriteDefault_Y(enum BattlerId battler)
 {
-    if (GetBattlerSide(battlerId) != B_SIDE_OPPONENT)
-        return GetBattlerSpriteCoord(battlerId, BATTLER_COORD_Y_PIC_OFFSET_DEFAULT);
+    if (GetBattlerSide(battler) != B_SIDE_OPPONENT)
+        return GetBattlerSpriteCoord(battler, BATTLER_COORD_Y_PIC_OFFSET_DEFAULT);
     else
-        return GetBattlerSpriteCoord(battlerId, BATTLER_COORD_Y);
+        return GetBattlerSpriteCoord(battler, BATTLER_COORD_Y);
 }

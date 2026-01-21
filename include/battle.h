@@ -1195,7 +1195,7 @@ static inline void SetHealAmount(u32 battler, s32 value)
     gBattleStruct->passiveHpUpdate[battler] = -1 * value;
 }
 
-static inline bool32 IsGhostBattleWithoutScope()
+static inline bool32 IsGhostBattleWithoutScope(void)
 {
     return (gBattleTypeFlags & BATTLE_TYPE_GHOST) && !CheckBagHasItem(ITEM_SILPH_SCOPE, 1);
 }
