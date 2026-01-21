@@ -14,7 +14,7 @@
 
 static void ValidateBattlers(void);
 static enum Move GetOriginallyUsedMove(enum Move chosenMove);
-static void SetSameMoveTurnValues(u32 moveEffect);
+static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect);
 static void TryClearChargeVolatile(enum Type moveType);
 static inline bool32 IsBattlerUsingBeakBlast(u32 battler);
 static void RequestNonVolatileChangee(u32 battlerAtk);
@@ -483,7 +483,7 @@ static enum CancelerResult CancelerZMoves(struct BattleContext *ctx)
 
 static enum CancelerResult CancelerChoiceLock(struct BattleContext *ctx)
 {
-    u16 *choicedMoveAtk = &gBattleStruct->choicedMove[ctx->battlerAtk];
+    enum Move *choicedMoveAtk = &gBattleStruct->choicedMove[ctx->battlerAtk];
     enum HoldEffect holdEffect = GetBattlerHoldEffect(ctx->battlerAtk);
 
     if (gChosenMove != MOVE_STRUGGLE
@@ -625,7 +625,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleContext *ctx)
         return CANCELER_RESULT_SUCCESS;
 
     s32 ppToDeduct = 1;
-    u32 moveTarget = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move);
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move);
     u32 movePosition = gCurrMovePos;
 
     if (gBattleStruct->submoveAnnouncement == SUBMOVE_SUCCESS)
@@ -832,7 +832,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         }
         else
         {
-            u32 protectMethod = GetMoveProtectMethod(ctx->move);
+            enum ProtectMethod protectMethod = GetMoveProtectMethod(ctx->move);
             bool32 canUseProtectSecondTime = CanUseMoveConsecutively(ctx->battlerAtk);
             bool32 canUseWideGuard = (GetConfig(CONFIG_WIDE_GUARD) >= GEN_6 && protectMethod == PROTECT_WIDE_GUARD);
             bool32 canUseQuickGuard = (GetConfig(CONFIG_QUICK_GUARD) >= GEN_6 && protectMethod == PROTECT_QUICK_GUARD);
@@ -864,7 +864,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         break;
     case EFFECT_UPPER_HAND:
     {
-        u32 prio = GetChosenMovePriority(ctx->battlerDef, GetBattlerAbility(ctx->battlerDef));
+        s32 prio = GetChosenMovePriority(ctx->battlerDef, GetBattlerAbility(ctx->battlerDef));
         if (prio < 1 || prio > 3 // Fails if priority is less than 1 or greater than 3, if target already moved, or if using a status
          || HasBattlerActedThisTurn(ctx->battlerDef)
          || gChosenMoveByBattler[ctx->battlerDef] == MOVE_NONE
@@ -952,7 +952,7 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleContext *ctx)
         return CANCELER_RESULT_SUCCESS;
 
     u32 battler;
-    u32 ability = ABILITY_NONE; // ability of battler who is blocking
+    enum Ability ability = ABILITY_NONE; // ability of battler who is blocking
     bool32 isSpreadMove = IsSpreadMove(GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move));
     for (battler = 0; battler < gBattlersCount; battler++)
     {
@@ -1088,7 +1088,7 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
     return result;
 }
 
-static bool32 NoTargetPresent(u32 battler, u32 move, u32 moveTarget)
+static bool32 NoTargetPresent(u32 battler, enum Move move, enum MoveTarget moveTarget)
 {
     switch (moveTarget)
     {
@@ -1112,6 +1112,8 @@ static bool32 NoTargetPresent(u32 battler, u32 move, u32 moveTarget)
     case TARGET_FOES_AND_ALLY:
         if (!IsBattlerAlive(gBattlerTarget) && !IsBattlerAlive(BATTLE_PARTNER(gBattlerTarget)) && !IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker)))
             return TRUE;
+        break;
+    default:
         break;
     }
 
@@ -1264,7 +1266,7 @@ static bool32 (*const sShouldCheckTargetMoveFailure[])(u32 battlerAtk, u32 battl
     [TARGET_ALL_BATTLERS] = IsTargetingAllBattlers,
 };
 
-static bool32 ShouldCheckTargetMoveFailure(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTarget)
+static bool32 ShouldCheckTargetMoveFailure(u32 battlerAtk, u32 battlerDef, enum Move move, enum MoveTarget moveTarget)
 {
     // For Bounced moves
     if (IsBattlerUnaffectedByMove(battlerDef))
@@ -2503,7 +2505,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
          && IsBattlerAlive(gBattlerAttacker)
          && gBattleMons[BATTLE_PARTNER(gBattlerTarget)].volatiles.semiInvulnerable != STATE_COMMANDER)
         {
-            u32 targetAbility = GetBattlerAbility(gBattlerTarget);
+            enum Ability targetAbility = GetBattlerAbility(gBattlerTarget);
             if (targetAbility == ABILITY_GUARD_DOG)
                 break;
 
@@ -2754,7 +2756,7 @@ static enum MoveEndResult MoveEndKeeMarangaHpThresholdItemTarget(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static bool32 TryRedCard(u32 battlerAtk, u32 redCardBattler, u32 move)
+static bool32 TryRedCard(u32 battlerAtk, u32 redCardBattler, enum Move move)
 {
     if (!IsBattlerAlive(redCardBattler)
      || !IsBattlerTurnDamaged(redCardBattler)
@@ -3409,7 +3411,7 @@ static enum Move GetOriginallyUsedMove(enum Move chosenMove)
     return (gChosenMove == MOVE_UNAVAILABLE) ? MOVE_NONE : gChosenMove;
 }
 
-static void SetSameMoveTurnValues(u32 moveEffect)
+static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect)
 {
     bool32 increment = IsAnyTargetAffected()
                     && !gBattleStruct->unableToUseMove
@@ -3499,7 +3501,7 @@ static enum Move GetMirrorMoveMove(void)
 {
     s32 i, validMovesCount;
     enum Move move = MOVE_NONE;
-    u16 validMoves[MAX_BATTLERS_COUNT] = {0};
+    enum Move validMoves[MAX_BATTLERS_COUNT] = {MOVE_NONE};
 
     for (validMovesCount = 0, i = 0; i < gBattlersCount; i++)
     {
@@ -3563,7 +3565,7 @@ static enum Move GetAssistMove(void)
     enum Move move = MOVE_NONE;
     u32 chooseableMovesNo = 0;
     struct Pokemon *party;
-    u16 validMoves[PARTY_SIZE * MAX_MON_MOVES] = {MOVE_NONE};
+    enum Move validMoves[PARTY_SIZE * MAX_MON_MOVES] = {MOVE_NONE};
 
     party = GetBattlerParty(gBattlerAttacker);
 
@@ -3708,7 +3710,7 @@ static bool32 TryMagicCoat(struct BattleContext *ctx)
 
 static bool32 TryActivatePowderStatus(enum Move move)
 {
-    u32 partnerMove = GetChosenMoveFromPosition(BATTLE_PARTNER(gBattlerAttacker));
+    enum Move partnerMove = GetChosenMoveFromPosition(BATTLE_PARTNER(gBattlerAttacker));
     if (!gBattleMons[gBattlerAttacker].volatiles.powder)
         return FALSE;
     if (GetBattleMoveType(move) == TYPE_FIRE && !gBattleStruct->pledgeMove)
