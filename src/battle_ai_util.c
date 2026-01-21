@@ -1243,6 +1243,13 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, enum Move m
         if (AI_IsDamagedByRecoil(battlerAtk))
             return TRUE;
         break;
+    case EFFECT_SEMI_INVULNERABLE:
+        if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
+        {
+            if (gAiLogicData->holdEffects[battlerAtk] != HOLD_EFFECT_POWER_HERB)
+                return TRUE;
+        }
+        break;
     case EFFECT_ABSORB:
         if (abilityDef == ABILITY_LIQUID_OOZE)
             return TRUE;
