@@ -548,7 +548,7 @@ u32 GetZMovePower(enum Move move)
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return 0;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    if (moveEffect == EFFECT_OHKO || moveEffect == EFFECT_SHEER_COLD)
+    if (moveEffect == EFFECT_OHKO)
         return 180;
 
     u32 power = GetMoveZPowerOverride(move);
