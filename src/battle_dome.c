@@ -3945,7 +3945,6 @@ static bool32 IsDomeLuckyMove(enum Move move)
             return FALSE;
         // fallthrough
     case EFFECT_OHKO:
-    case EFFECT_SHEER_COLD:
     case EFFECT_METRONOME:
     case EFFECT_MIRROR_MOVE:
     case EFFECT_SKETCH:
@@ -4021,6 +4020,8 @@ static bool32 IsDomeRareMove(enum Move move)
     u16 species = 0;
     for(i = 0; i < NUM_SPECIES; i++)
     {
+        if (!IsSpeciesEnabled(i))
+            continue;
         const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(i);
         for(j = 0; learnset[j].move != LEVEL_UP_MOVE_END; j++)
         {
@@ -5104,13 +5105,14 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
             u32 moveIndex = i * MAX_MON_MOVES + j;
-            enum Move move = moves[moveIndex];
+            enum Move move;
 
             moveScores[moveIndex] = 0;
             if (DOME_TRAINERS[winnerTournamentId].trainerId == TRAINER_FRONTIER_BRAIN)
                 move = GetFrontierBrainMonMove(i, j);
             else
                 move = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
+            moves[moveIndex] = move;
 
             movePower = GetMovePower(move);
             if (IsBattleMoveStatus(move))

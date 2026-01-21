@@ -123,7 +123,7 @@ static const struct YesNoFuncTable sUseTMHMYesNoFuncTable =
 #define tEnigmaBerryType data[4]
 static void SetUpItemUseCallback(u8 taskId)
 {
-    u8 type;
+    enum ItemType type;
     if (gSpecialVar_ItemId == ITEM_ENIGMA_BERRY_E_READER)
         type = gTasks[taskId].tEnigmaBerryType - 1;
     else

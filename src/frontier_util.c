@@ -2143,6 +2143,8 @@ static void CheckPartyIneligibility(void)
 
         for (i = 0; i < NUM_SPECIES; i++)
         {
+            if (!IsSpeciesEnabled(i))
+                continue;
             baseSpecies = GET_BASE_SPECIES_ID(i);
             if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
             {

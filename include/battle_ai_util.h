@@ -265,7 +265,7 @@ bool32 DoesAbilityRaiseStatsWhenLowered(enum Ability ability);
 bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, enum Ability ability);
 bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData);
 void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *score, struct AiLogicData *aiData);
-s32 BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct AiLogicData *aiData);
+enum AIScore BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct AiLogicData *aiData);
 
 // partner logic
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef);

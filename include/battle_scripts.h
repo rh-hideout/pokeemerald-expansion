@@ -587,7 +587,6 @@ extern const u8 BattleScript_EffectLightScreen[];
 extern const u8 BattleScript_EffectRest[];
 extern const u8 BattleScript_RestIsAlreadyAsleep[];
 extern const u8 BattleScript_InsomniaProtects[];
-extern const u8 BattleScript_EffectOHKO[];
 extern const u8 BattleScript_EffectHealBlock[];
 extern const u8 BattleScript_RecoilIfMiss[];
 extern const u8 BattleScript_EffectMist[];
