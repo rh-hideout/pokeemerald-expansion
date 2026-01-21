@@ -531,3 +531,39 @@ AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts")
             TURN { EXPECT_MOVE(opponent, MOVE_SCALD); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI uses Bolt Beak and Fishious Rend when faster (Single)")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_BOLT_BEAK; }
+    PARAMETRIZE { move = MOVE_FISHIOUS_REND; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(move) == EFFECT_BOLT_BEAK);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(12); Moves(move, MOVE_TACKLE); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, move); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI uses Bolt Beak and Fishious Rend when faster (Doubles)")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_BOLT_BEAK; }
+    PARAMETRIZE { move = MOVE_FISHIOUS_REND; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(move) == EFFECT_BOLT_BEAK);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(12); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(15); Moves(move, MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, move); }
+    }
+}

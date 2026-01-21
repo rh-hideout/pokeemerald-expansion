@@ -5748,6 +5748,25 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
         //break;
     //case EFFECT_SKY_DROP
         //break;
+    case EFFECT_BOLT_BEAK:
+    {
+        bool32 fasterThanAll = TRUE;
+
+        if (hasTwoOpponents)
+        {
+            fasterThanAll =
+                AI_IsFaster(battlerAtk, LEFT_FOE(battlerAtk), move, GetIncomingMoveSpeedCheck(battlerAtk, LEFT_FOE(battlerAtk), aiData), CONSIDER_PRIORITY)
+             && AI_IsFaster(battlerAtk, RIGHT_FOE(battlerAtk), move, GetIncomingMoveSpeedCheck(battlerAtk, RIGHT_FOE(battlerAtk), aiData), CONSIDER_PRIORITY);
+        }
+        else
+        {
+            fasterThanAll = AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
+        }
+
+        if (fasterThanAll)
+            ADJUST_SCORE(BEST_EFFECT);
+        break;
+    }
     case EFFECT_JUNGLE_HEALING:
     {
         bool32 canCureSelf = (gBattleMons[battlerAtk].status1 & STATUS1_ANY) && ShouldCureStatus(battlerAtk, battlerAtk, aiData);
