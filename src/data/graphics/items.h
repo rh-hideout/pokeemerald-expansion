@@ -21,7 +21,7 @@ const u16 gItemIconPalette_UltraBall[] = INCBIN_U16("graphics/items/icon_palette
 const u32 gItemIcon_MasterBall[] = INCBIN_U32("graphics/items/icons/master_ball.4bpp.smol");
 const u16 gItemIconPalette_MasterBall[] = INCBIN_U16("graphics/items/icon_palettes/master_ball.gbapal");
 
-const u32 gItemIcon_PremierBall[] = INCBIN_U16("graphics/items/icons/premier_ball.4bpp.smol");
+const u32 gItemIcon_PremierBall[] = INCBIN_U32("graphics/items/icons/premier_ball.4bpp.smol");
 const u16 gItemIconPalette_PremierBall[] = INCBIN_U16("graphics/items/icon_palettes/premier_ball.gbapal");
 
 const u32 gItemIcon_HealBall[] = INCBIN_U32("graphics/items/icons/heal_ball.4bpp.smol");

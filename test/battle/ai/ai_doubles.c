@@ -780,27 +780,33 @@ AI_DOUBLE_BATTLE_TEST("AI does not use Helping Hand on Good as Gold ally")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI uses Tailwind")
+AI_DOUBLE_BATTLE_TEST("AI uses Tailwind based on speed matchups")
 {
     u32 speed1, speed2, speed3, speed4;
+    bool32 expectTailwind;
 
-    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 = 20; speed4 = 20; }
-    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 =  5; speed4 =  5; }
-    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 = 15; speed4 = 15; }
-    PARAMETRIZE { speed1 =  1; speed2 =  1; speed3 =  5; speed4 =  5; }
-    PARAMETRIZE { speed1 =  1; speed2 = 20; speed3 = 15; speed4 = 15; }
-    PARAMETRIZE { speed1 =  1; speed2 = 20; speed3 = 20; speed4 = 15; }
+    // All four comparisons qualify -> tailwindScore = 5
+    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 = 20; speed4 = 20; expectTailwind = TRUE; }
+    // Only the attacker flips one foe matchup -> tailwindScore = 2
+    PARAMETRIZE { speed1 = 20; speed2 = 40; speed3 = 20; speed4 = 50; expectTailwind = TRUE; }
+    // Only the partner flips one foe matchup -> tailwindScore = 2
+    PARAMETRIZE { speed1 = 10; speed2 = 29; speed3 = 50; speed4 = 15; expectTailwind = TRUE; }
+    // Too slow: even after doubling, still slower than both foes -> tailwindScore = 0.
+    PARAMETRIZE { speed1 = 40; speed2 = 40; speed3 = 10; speed4 = 10; expectTailwind = FALSE; }
+    // Already faster: Tailwind doesn't improve matchups -> tailwindScore = 0.
+    PARAMETRIZE { speed1 =  5; speed2 =  5; speed3 = 10; speed4 = 10; expectTailwind = FALSE; }
+    // Boundary: speed*2 == foe speed does not count -> tailwindScore = 0.
+    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 = 10; speed4 = 30; expectTailwind = FALSE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_AFTER_YOU) == EFFECT_AFTER_YOU);
-        ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speed1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(speed2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speed3); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speed4); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
     } WHEN {
-        if (speed3 > 10)
+        if (expectTailwind)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }
         else
             TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }
