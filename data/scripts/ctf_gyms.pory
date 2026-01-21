@@ -1,0 +1,329 @@
+// ======================
+// Helpers (optional)
+// ======================
+#define MSG_DEFAULT MSGBOX_DEFAULT
+
+// =====================================================
+// GYM 1
+// =====================================================
+script CtfGym1_Terminal {
+  lock
+  faceplayer
+  msgbox "Gib das Codewort ein (GROSSBUCHSTABEN)." MSG_DEFAULT
+
+  setvar VAR_0x8000 1
+  callnative Ctf_FlagTerminal
+  waitstate
+
+  compare VAR_RESULT 1
+  if eq goto .ok
+
+  msgbox "Falsch." MSG_DEFAULT
+  release
+  end
+
+.ok:
+  setflag FLAG_CTF_GYM1_ACCESS
+  msgbox "Korrekt. Die Tuer ist entriegelt." MSG_DEFAULT
+  release
+  end
+}
+
+script CtfGym1_Leader {
+  lock
+  faceplayer
+
+  checkflag FLAG_CTF_GYM1_ACCESS
+  if 0 goto .noaccess
+
+  checkflag FLAG_CTF_GYM1_DEFEATED
+  if 1 goto .after
+
+  msgbox "Du hast das Codewort. Dann kaempfen wir!" MSG_DEFAULT
+  trainerbattle SINGLE TRAINER_CTF_GYM1_LEADER 0 "Du hast gewonnen..." "Stark!" 0
+  setflag FLAG_CTF_GYM1_DEFEATED
+
+  // Optional: Teleporter erscheint nach Sieg
+  setflag FLAG_CTF_GYM1_TELEPORT
+
+  msgbox "Orden erhalten. Weiter geht's!" MSG_DEFAULT
+  release
+  end
+
+.after:
+  msgbox "Du hast mich bereits besiegt." MSG_DEFAULT
+  release
+  end
+
+.noaccess:
+  msgbox "Ohne Codewort kein Kampf." MSG_DEFAULT
+  release
+  end
+}
+
+script CtfGym1_Teleporter {
+  lock
+  // Hier könnt ihr je nach Map einen Warp machen:
+  // warp MAP_CTF_HUB 5 6
+  msgbox "Teleport aktiviert!" MSG_DEFAULT
+  release
+  end
+}
+
+// =====================================================
+// GYM 2
+// =====================================================
+script CtfGym2_Terminal {
+  lock
+  faceplayer
+  msgbox "Gib das Codewort ein (GROSSBUCHSTABEN)." MSG_DEFAULT
+
+  setvar VAR_0x8000 2
+  callnative Ctf_FlagTerminal
+  waitstate
+
+  compare VAR_RESULT 1
+  if eq goto .ok
+
+  msgbox "Falsch." MSG_DEFAULT
+  release
+  end
+
+.ok:
+  setflag FLAG_CTF_GYM2_ACCESS
+  msgbox "Korrekt. Zugang freigeschaltet." MSG_DEFAULT
+  release
+  end
+}
+
+script CtfGym2_Leader {
+  lock
+  faceplayer
+  checkflag FLAG_CTF_GYM2_ACCESS
+  if 0 goto .noaccess
+  checkflag FLAG_CTF_GYM2_DEFEATED
+  if 1 goto .after
+
+  msgbox "Dann zeig, was du kannst!" MSG_DEFAULT
+  trainerbattle SINGLE TRAINER_CTF_GYM2_LEADER 0 "..." "..." 0
+  setflag FLAG_CTF_GYM2_DEFEATED
+  setflag FLAG_CTF_GYM2_TELEPORT
+  msgbox "Gut gekaempft." MSG_DEFAULT
+  release
+  end
+
+.after:
+  msgbox "Du warst schon hier." MSG_DEFAULT
+  release
+  end
+
+.noaccess:
+  msgbox "Erst das Codewort." MSG_DEFAULT
+  release
+  end
+}
+
+script CtfGym2_Teleporter {
+  lock
+  msgbox "Teleport aktiviert!" MSG_DEFAULT
+  release
+  end
+}
+
+// =====================================================
+// GYM 3
+// =====================================================
+script CtfGym3_Terminal {
+  lock
+  faceplayer
+  msgbox "Gib das Codewort ein (GROSSBUCHSTABEN)." MSG_DEFAULT
+  setvar VAR_0x8000 3
+  callnative Ctf_FlagTerminal
+  waitstate
+  compare VAR_RESULT 1
+  if eq goto .ok
+  msgbox "Falsch." MSG_DEFAULT
+  release
+  end
+.ok:
+  setflag FLAG_CTF_GYM3_ACCESS
+  msgbox "Korrekt." MSG_DEFAULT
+  release
+  end
+}
+
+script CtfGym3_Leader {
+  lock
+  faceplayer
+  checkflag FLAG_CTF_GYM3_ACCESS
+  if 0 goto .noaccess
+  checkflag FLAG_CTF_GYM3_DEFEATED
+  if 1 goto .after
+
+  msgbox "Bereit fuer Runde 3?" MSG_DEFAULT
+  trainerbattle SINGLE TRAINER_CTF_GYM3_LEADER 0 "..." "..." 0
+  setflag FLAG_CTF_GYM3_DEFEATED
+  setflag FLAG_CTF_GYM3_TELEPORT
+  msgbox "Weiter!" MSG_DEFAULT
+  release
+  end
+
+.after:
+  msgbox "Schon erledigt." MSG_DEFAULT
+  release
+  end
+
+.noaccess:
+  msgbox "Kein Code, kein Kampf." MSG_DEFAULT
+  release
+  end
+}
+
+script CtfGym3_Teleporter { lock msgbox "Teleport aktiviert!" MSG_DEFAULT release end }
+
+// =====================================================
+// GYM 4
+// =====================================================
+script CtfGym4_Terminal { lock faceplayer msgbox "Codewort?" MSG_DEFAULT
+  setvar VAR_0x8000 4
+  callnative Ctf_FlagTerminal
+  waitstate
+  compare VAR_RESULT 1
+  if eq goto .ok
+  msgbox "Falsch." MSG_DEFAULT release end
+.ok:
+  setflag FLAG_CTF_GYM4_ACCESS
+  msgbox "Korrekt." MSG_DEFAULT release end
+}
+script CtfGym4_Leader { lock faceplayer
+  checkflag FLAG_CTF_GYM4_ACCESS
+  if 0 goto .noaccess
+  checkflag FLAG_CTF_GYM4_DEFEATED
+  if 1 goto .after
+  msgbox "Arena 4!" MSG_DEFAULT
+  trainerbattle SINGLE TRAINER_CTF_GYM4_LEADER 0 "..." "..." 0
+  setflag FLAG_CTF_GYM4_DEFEATED
+  setflag FLAG_CTF_GYM4_TELEPORT
+  msgbox "Gut!" MSG_DEFAULT release end
+.after: msgbox "Schon besiegt." MSG_DEFAULT release end
+.noaccess: msgbox "Erst Codewort." MSG_DEFAULT release end
+}
+script CtfGym4_Teleporter { lock msgbox "Teleport aktiviert!" MSG_DEFAULT release end }
+
+// =====================================================
+// GYM 5
+// =====================================================
+script CtfGym5_Terminal { lock faceplayer msgbox "Codewort?" MSG_DEFAULT
+  setvar VAR_0x8000 5
+  callnative Ctf_FlagTerminal
+  waitstate
+  compare VAR_RESULT 1
+  if eq goto .ok
+  msgbox "Falsch." MSG_DEFAULT release end
+.ok:
+  setflag FLAG_CTF_GYM5_ACCESS
+  msgbox "Korrekt." MSG_DEFAULT release end
+}
+script CtfGym5_Leader { lock faceplayer
+  checkflag FLAG_CTF_GYM5_ACCESS
+  if 0 goto .noaccess
+  checkflag FLAG_CTF_GYM5_DEFEATED
+  if 1 goto .after
+  msgbox "Arena 5!" MSG_DEFAULT
+  trainerbattle SINGLE TRAINER_CTF_GYM5_LEADER 0 "..." "..." 0
+  setflag FLAG_CTF_GYM5_DEFEATED
+  setflag FLAG_CTF_GYM5_TELEPORT
+  msgbox "Weiter!" MSG_DEFAULT release end
+.after: msgbox "Schon besiegt." MSG_DEFAULT release end
+.noaccess: msgbox "Erst Codewort." MSG_DEFAULT release end
+}
+script CtfGym5_Teleporter { lock msgbox "Teleport aktiviert!" MSG_DEFAULT release end }
+
+// =====================================================
+// GYM 6
+// =====================================================
+script CtfGym6_Terminal { lock faceplayer msgbox "Codewort?" MSG_DEFAULT
+  setvar VAR_0x8000 6
+  callnative Ctf_FlagTerminal
+  waitstate
+  compare VAR_RESULT 1
+  if eq goto .ok
+  msgbox "Falsch." MSG_DEFAULT release end
+.ok:
+  setflag FLAG_CTF_GYM6_ACCESS
+  msgbox "Korrekt." MSG_DEFAULT release end
+}
+script CtfGym6_Leader { lock faceplayer
+  checkflag FLAG_CTF_GYM6_ACCESS
+  if 0 goto .noaccess
+  checkflag FLAG_CTF_GYM6_DEFEATED
+  if 1 goto .after
+  msgbox "Arena 6!" MSG_DEFAULT
+  trainerbattle SINGLE TRAINER_CTF_GYM6_LEADER 0 "..." "..." 0
+  setflag FLAG_CTF_GYM6_DEFEATED
+  setflag FLAG_CTF_GYM6_TELEPORT
+  msgbox "Stark." MSG_DEFAULT release end
+.after: msgbox "Schon besiegt." MSG_DEFAULT release end
+.noaccess: msgbox "Erst Codewort." MSG_DEFAULT release end
+}
+script CtfGym6_Teleporter { lock msgbox "Teleport aktiviert!" MSG_DEFAULT release end }
+
+// =====================================================
+// GYM 7
+// =====================================================
+script CtfGym7_Terminal { lock faceplayer msgbox "Codewort?" MSG_DEFAULT
+  setvar VAR_0x8000 7
+  callnative Ctf_FlagTerminal
+  waitstate
+  compare VAR_RESULT 1
+  if eq goto .ok
+  msgbox "Falsch." MSG_DEFAULT release end
+.ok:
+  setflag FLAG_CTF_GYM7_ACCESS
+  msgbox "Korrekt." MSG_DEFAULT release end
+}
+script CtfGym7_Leader { lock faceplayer
+  checkflag FLAG_CTF_GYM7_ACCESS
+  if 0 goto .noaccess
+  checkflag FLAG_CTF_GYM7_DEFEATED
+  if 1 goto .after
+  msgbox "Arena 7!" MSG_DEFAULT
+  trainerbattle SINGLE TRAINER_CTF_GYM7_LEADER 0 "..." "..." 0
+  setflag FLAG_CTF_GYM7_DEFEATED
+  setflag FLAG_CTF_GYM7_TELEPORT
+  msgbox "Fast am Ziel." MSG_DEFAULT release end
+.after: msgbox "Schon besiegt." MSG_DEFAULT release end
+.noaccess: msgbox "Erst Codewort." MSG_DEFAULT release end
+}
+script CtfGym7_Teleporter { lock msgbox "Teleport aktiviert!" MSG_DEFAULT release end }
+
+// =====================================================
+// GYM 8
+// =====================================================
+script CtfGym8_Terminal { lock faceplayer msgbox "Finales Codewort?" MSG_DEFAULT
+  setvar VAR_0x8000 8
+  callnative Ctf_FlagTerminal
+  waitstate
+  compare VAR_RESULT 1
+  if eq goto .ok
+  msgbox "Falsch." MSG_DEFAULT release end
+.ok:
+  setflag FLAG_CTF_GYM8_ACCESS
+  msgbox "Korrekt. Finale Arena!" MSG_DEFAULT release end
+}
+script CtfGym8_Leader { lock faceplayer
+  checkflag FLAG_CTF_GYM8_ACCESS
+  if 0 goto .noaccess
+  checkflag FLAG_CTF_GYM8_DEFEATED
+  if 1 goto .after
+  msgbox "Finale!" MSG_DEFAULT
+  trainerbattle SINGLE TRAINER_CTF_GYM8_LEADER 0 "..." "..." 0
+  setflag FLAG_CTF_GYM8_DEFEATED
+  setflag FLAG_CTF_GYM8_TELEPORT
+  msgbox "Du hast alle Orden!" MSG_DEFAULT
+  release
+  end
+.after: msgbox "Champion-Status bestaetigt." MSG_DEFAULT release end
+.noaccess: msgbox "Erst das finale Codewort." MSG_DEFAULT release end
+}
+script CtfGym8_Teleporter { lock msgbox "Teleport aktiviert!" MSG_DEFAULT release end }
