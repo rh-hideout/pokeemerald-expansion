@@ -973,21 +973,24 @@ AI_DOUBLE_BATTLE_TEST("AI uses Tailwind")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider ally")
+AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Doubles)")
 {
     bool32 expectTailwind;
-    u32 ability;
+    u16 tailwindSpecies, partnerSpecies;
+    enum Ability tailwindAbility, partnerAbility;
 
-    PARAMETRIZE { ability = ABILITY_WIND_RIDER; expectTailwind = TRUE; }
-    PARAMETRIZE { ability = ABILITY_INFILTRATOR; expectTailwind = FALSE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_WIND_RIDER;  partnerSpecies = SPECIES_BRAMBLEGHAST; partnerAbility = ABILITY_WIND_RIDER;  expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_WIND_RIDER;  partnerSpecies = SPECIES_BRAMBLEGHAST; partnerAbility = ABILITY_INFILTRATOR; expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_INFILTRATOR; partnerSpecies = SPECIES_BRAMBLEGHAST; partnerAbility = ABILITY_WIND_RIDER;  expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_INFILTRATOR; partnerSpecies = SPECIES_BRAMBLEGHAST; partnerAbility = ABILITY_INFILTRATOR; expectTailwind = FALSE; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
-        OPPONENT(SPECIES_BRAMBLEGHAST) { Ability(ability); Speed(5); Moves(MOVE_HEADBUTT); }
+        OPPONENT(tailwindSpecies) { Ability(tailwindAbility); Speed(9); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
+        OPPONENT(partnerSpecies) { Ability(partnerAbility); Speed(9); Moves(MOVE_HEADBUTT); }
     } WHEN {
         if (expectTailwind)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }
@@ -996,13 +999,16 @@ AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider ally")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power ally")
+AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power (Doubles)")
 {
     bool32 expectTailwind;
-    u32 ability;
+    u16 tailwindSpecies, partnerSpecies;
+    enum Ability tailwindAbility, partnerAbility;
 
-    PARAMETRIZE { ability = ABILITY_WIND_POWER; expectTailwind = TRUE; }
-    PARAMETRIZE { ability = ABILITY_COMPETITIVE; expectTailwind = FALSE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_WIND_POWER;  partnerSpecies = SPECIES_KILOWATTREL; partnerAbility = ABILITY_WIND_POWER;  expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_WIND_POWER;  partnerSpecies = SPECIES_KILOWATTREL; partnerAbility = ABILITY_COMPETITIVE; expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_COMPETITIVE; partnerSpecies = SPECIES_KILOWATTREL; partnerAbility = ABILITY_WIND_POWER;  expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_COMPETITIVE; partnerSpecies = SPECIES_KILOWATTREL; partnerAbility = ABILITY_COMPETITIVE; expectTailwind = FALSE; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
@@ -1010,8 +1016,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power ally")
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
-        OPPONENT(SPECIES_KILOWATTREL) { Ability(ability); Speed(5); Moves(MOVE_THUNDERSHOCK); }
+        OPPONENT(tailwindSpecies) { Ability(tailwindAbility); Speed(21); Moves(MOVE_TAILWIND, MOVE_THUNDERSHOCK); }
+        OPPONENT(partnerSpecies) { Ability(partnerAbility); Speed(21); Moves(MOVE_THUNDERSHOCK); }
     } WHEN {
         if (expectTailwind)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }

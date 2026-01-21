@@ -46,6 +46,7 @@ static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingSt
 static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
 static bool32 DoesAbilityBenefitFromSunOrRain(u32 battler, enum Ability ability, u32 weather);
 static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef);
+static u32 GetWindAbilityScore(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData);
 
 // ewram
 EWRAM_DATA const u8 *gAIScriptPtr = NULL;   // Still used in contests
@@ -3948,6 +3949,26 @@ static bool32 DoesAbilityBenefitFromSunOrRain(u32 battler, enum Ability ability,
     return FALSE;
 }
 
+static u32 GetWindAbilityScore(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData)
+{
+    u32 score = 0;
+
+    if (aiData->abilities[battlerAtk] == ABILITY_WIND_RIDER)
+    {
+        score = IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK);
+    }
+    else if (aiData->abilities[battlerAtk] == ABILITY_WIND_POWER)
+    {
+        if (gBattleMons[battlerAtk].volatiles.chargeTimer == 0
+         && HasDamagingMoveOfType(battlerAtk, TYPE_ELECTRIC))
+        {
+            score = DECENT_EFFECT;
+        }
+    }
+
+    return score;
+}
+
 static enum MoveComparisonResult CompareMoveAccuracies(u32 battlerAtk, u32 battlerDef, u32 moveSlot1, u32 moveSlot2)
 {
     u32 acc1 = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveSlot1];
@@ -5604,6 +5625,14 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
 
             if (CountUsablePartyMons(battlerAtk) != 0)
                 ADJUST_SCORE(WEAK_EFFECT);
+
+            if (!(gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_TAILWIND))
+            {
+                u32 windAbilityScore = GetWindAbilityScore(battlerAtk, battlerDef, aiData);
+
+                if (windAbilityScore > 0)
+                    ADJUST_SCORE(windAbilityScore);
+            }
         }
         else
         {
@@ -5627,21 +5656,15 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, enum Move move
 
             ADJUST_SCORE(tailwindScore);
 
-            if (IsBattlerAlive(BATTLE_PARTNER(battlerAtk))
-             && !(gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_TAILWIND))
+            if (!(gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_TAILWIND))
             {
-                if (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_WIND_RIDER)
-                {
-                    ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), battlerDef, STAT_CHANGE_ATK));
-                }
-                else if (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_WIND_POWER)
-                {
-                    if (gBattleMons[BATTLE_PARTNER(battlerAtk)].volatiles.chargeTimer == 0
-                     && HasDamagingMoveOfType(BATTLE_PARTNER(battlerAtk), TYPE_ELECTRIC))
-                    {
-                        ADJUST_SCORE(GOOD_EFFECT);
-                    }
-                }
+                u32 windAbilityScore = GetWindAbilityScore(battlerAtk, battlerDef, aiData);
+
+                if (IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+                    windAbilityScore += GetWindAbilityScore(BATTLE_PARTNER(battlerAtk), battlerDef, aiData);
+
+                if (windAbilityScore > 0)
+                    ADJUST_SCORE(windAbilityScore);
             }
         }
         break;
