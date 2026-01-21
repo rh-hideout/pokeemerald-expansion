@@ -112,10 +112,13 @@ enum Language
 #define HALL_RECORDS_COUNT 3
 
 // Battle Frontier level modes.
-#define FRONTIER_LVL_50         0
-#define FRONTIER_LVL_OPEN       1
-#define FRONTIER_LVL_MODE_COUNT 2
-#define FRONTIER_LVL_TENT       FRONTIER_LVL_MODE_COUNT // Special usage for indicating Battle Tent
+enum FrontierLevelMode
+{
+    FRONTIER_LVL_50,
+    FRONTIER_LVL_OPEN,
+    FRONTIER_LVL_TENT, // Special usage for indicating Battle Tent
+    FRONTIER_LVL_MODE_COUNT = FRONTIER_LVL_TENT,
+};
 
 #define TRAINER_ID_LENGTH 4
 #define MAX_MON_MOVES 4
