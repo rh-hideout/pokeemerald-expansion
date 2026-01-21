@@ -421,14 +421,16 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target
         } else if (move == MOVE_HYPER_VOICE) {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
             MESSAGE("The opposing Wobbuffet protected itself!");
-            NOT HP_BAR(opponentLeft);
             MESSAGE("The opposing Wobbuffet protected itself!");
-            NOT HP_BAR(opponentRight);
+            NONE_OF {
+                HP_BAR(opponentLeft);
+                HP_BAR(opponentRight);
+            }
         } else { // Surf
+            MESSAGE("The opposing Wobbuffet protected itself!");
             MESSAGE("The opposing Wobbuffet protected itself!");
             NOT HP_BAR(opponentLeft);
             HP_BAR(playerRight);
-            MESSAGE("The opposing Wobbuffet protected itself!");
             NOT HP_BAR(opponentRight);
         }
     }
@@ -634,13 +636,10 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Tangela's Defense rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         MESSAGE("The opposing Sunkern's Defense rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Tangrowth's Defense rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Sunflora's Defense rose!");
     }

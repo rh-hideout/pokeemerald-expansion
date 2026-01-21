@@ -187,7 +187,8 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
 
 AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi battle when forced out")
 {
-    u32 item, move;
+    enum Item item;
+    enum Move move;
     PARAMETRIZE { item = ITEM_EJECT_BUTTON; move = MOVE_TACKLE; }
     PARAMETRIZE { item = ITEM_EJECT_PACK; move = MOVE_TAIL_WHIP; }
     PARAMETRIZE { item = ITEM_NONE; move = MOVE_ROAR; }

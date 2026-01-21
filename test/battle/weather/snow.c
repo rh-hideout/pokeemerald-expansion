@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Snow multiplies the defense of Ice-types by 1.5x", s16 damag
 SINGLE_BATTLE_TEST("Snowscape fails if Desolate Land or Primordial Sea are active")
 {
     u32 species;
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_WOBBUFFET; item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }

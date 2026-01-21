@@ -299,7 +299,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
         switch (effect)
         {
         //TODO: AI HANDLING
-        case EFFECT_SHEER_COLD: // Guillotine is crashing the test entirely.
+        case EFFECT_OHKO: // Guillotine is crashing the test entirely.
         case EFFECT_WATER_SPORT:
         case EFFECT_LUCKY_CHANT:
         case EFFECT_ME_FIRST:
@@ -323,7 +323,6 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
         // tests exist elsewhere
         case EFFECT_GRAVITY:
         case EFFECT_HEAL_BELL:
-        case EFFECT_ATTACK_UP_USER_ALLY:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:

@@ -41,17 +41,17 @@
 #include "battle_message.h"
 
 static u32 BattlerHPPercentage(u32 battler, u32 operation, u32 threshold);
-static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive);
+static u32 GetPartyMonCount(u32 firstId, u32 lastId, enum BattleSide side, bool32 onlyAlive);
 static bool32 DoesTrainerHaveSlideMessage(enum DifficultyLevel difficulty, u32 trainerId, u32 slideId);
 static bool32 ShouldRunTrainerSlidePlayerLandsFirstCriticalHit(u32 battler, enum TrainerSlideType slideId);
 static bool32 ShouldRunTrainerSlideEnemyLandsFirstCriticalHit(u32 battler, enum TrainerSlideType slideId);
 static bool32 ShouldRunTrainerSlidePlayerLandsFirstSuperEffectiveHit(u32 battler, enum TrainerSlideType slideId);
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstSTABMove(u32 firstId, u32 lastId, u32 side, u32 battler, enum TrainerSlideType slideId);
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstDown(u32 firstId, u32 lastId, u32 side);
-static bool32 ShouldRunTrainerSlideEnemyMonUnaffected(u32 firstId, u32 lastId, u32 side, u32 battler, enum TrainerSlideType slideId);
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstSTABMove(u32 firstId, u32 lastId, enum BattleSide side, u32 battler, enum TrainerSlideType slideId);
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstDown(u32 firstId, u32 lastId, enum BattleSide side);
+static bool32 ShouldRunTrainerSlideEnemyMonUnaffected(u32 firstId, u32 lastId, enum BattleSide side, u32 battler, enum TrainerSlideType slideId);
 static bool32 ShouldRunTrainerSlideLastSwitchIn(u32 battler);
-static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, u32 side, u32 battler);
-static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, u32 side, u32 battler);
+static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, enum BattleSide side, u32 battler);
+static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, enum BattleSide side, u32 battler);
 static void SetTrainerSlideParameters(u32 battler, u32* firstId, u32* lastId, u32* trainerId, u32* retValue);
 static bool32 IsSlideInitalizedOrPlayed(u32 battler, enum TrainerSlideType slideId);
 
@@ -97,7 +97,7 @@ static u32 BattlerHPPercentage(u32 battler, u32 operation, u32 threshold)
 
 static const s8 sMultiBattleOrder[] = {0, 2, 3, 1, 4, 5};
 
-static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive)
+static u32 GetPartyMonCount(u32 firstId, u32 lastId, enum BattleSide side, bool32 onlyAlive)
 {
     u32 count = 0;
     struct Pokemon* party = (side == B_SIDE_OPPONENT ? gEnemyParty : gPlayerParty);
@@ -106,10 +106,10 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive)
     {
         for (u32 i = firstId; i < lastId; i++)
         {
-            u32 species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG, NULL);
+            u32 species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG);
             if (species != SPECIES_NONE
                     && species != SPECIES_EGG
-                    && (!onlyAlive || GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_HP, NULL)))
+                    && (!onlyAlive || GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_HP)))
             {
                 count++;
             }
@@ -119,10 +119,10 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive)
     {
         for (u32 i = firstId; i < lastId; i++)
         {
-            u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG, NULL);
+            u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
             if (species != SPECIES_NONE
                     && species != SPECIES_EGG
-                    && (!onlyAlive || GetMonData(&party[i], MON_DATA_HP, NULL)))
+                    && (!onlyAlive || GetMonData(&party[i], MON_DATA_HP)))
             {
                 count++;
             }
@@ -201,7 +201,7 @@ static bool32 ShouldRunTrainerSlidePlayerLandsFirstSuperEffectiveHit(u32 battler
     return TRUE;
 }
 
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstSTABMove(u32 firstId, u32 lastId, u32 side, u32 battler, enum TrainerSlideType slideId)
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstSTABMove(u32 firstId, u32 lastId, enum BattleSide side, u32 battler, enum TrainerSlideType slideId)
 {
     if (!IsTrainerSlideInitialized(battler, slideId))
         return FALSE;
@@ -212,12 +212,12 @@ static bool32 ShouldRunTrainerSlidePlayerLandsFirstSTABMove(u32 firstId, u32 las
     return TRUE;
 }
 
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstDown(u32 firstId, u32 lastId, u32 side)
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstDown(u32 firstId, u32 lastId, enum BattleSide side)
 {
     return ((GetPartyMonCount(firstId, lastId, side, TRUE) == (GetPartyMonCount(firstId, lastId, side, FALSE) - 1)));
 }
 
-static bool32 ShouldRunTrainerSlideEnemyMonUnaffected(u32 firstId, u32 lastId, u32 side, u32 battler, enum TrainerSlideType slideId)
+static bool32 ShouldRunTrainerSlideEnemyMonUnaffected(u32 firstId, u32 lastId, enum BattleSide side, u32 battler, enum TrainerSlideType slideId)
 {
     if (!IsTrainerSlideInitialized(battler, slideId))
         return FALSE;
@@ -230,7 +230,7 @@ static bool32 ShouldRunTrainerSlideLastSwitchIn(u32 battler)
     return !CanBattlerSwitch(battler);
 }
 
-static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, u32 side, u32 battler)
+static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, enum BattleSide side, u32 battler)
 {
     if (GetPartyMonCount(firstId, lastId, side, TRUE) != 1)
         return FALSE;
@@ -241,7 +241,7 @@ static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, u32 side,
     return (BattlerHPPercentage(battler, GREATER_THAN, 4));
 }
 
-static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, u32 side, u32 battler)
+static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, enum BattleSide side, u32 battler)
 {
     if (GetPartyMonCount(firstId, lastId, side, TRUE) != 1)
         return FALSE;
@@ -291,7 +291,7 @@ static void SetTrainerSlideParameters(u32 battler, u32* firstId, u32* lastId, u3
 enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType slideId)
 {
     u32 firstId = 0, lastId = PARTY_SIZE, trainerId = 0;
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
     u32 retValue = TRAINER_SLIDE_TARGET_TRAINER_A;
     bool32 shouldRun = FALSE;
 

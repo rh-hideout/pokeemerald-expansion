@@ -561,6 +561,7 @@ void Test_ExpectFail(u32 failLine)
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
+    TestInitConfigData();
     ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
     SeedRng(0);
@@ -581,6 +582,7 @@ static void FunctionTest_Run(void *data)
 static void FunctionTest_TearDown(void *data)
 {
     (void)data;
+    TestFreeConfigData();
     FREE_AND_SET_NULL(gFunctionTestRunnerState);
 }
 
@@ -615,7 +617,7 @@ static u32 FunctionTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32
     return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
 }
 
-static u32 FunctionTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+static u32 FunctionTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller)
 {
     //rigged
     for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
@@ -1028,7 +1030,7 @@ u32 RandomUniformExcept(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
         return RandomUniformExceptDefault(tag, lo, hi, reject);
 }
 
-u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
+u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u16 *weights)
 {
     void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
     if (gTestRunnerState.test->runner->randomWeightedArray)
@@ -1061,7 +1063,7 @@ u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*rejec
     return default_;
 }
 
-u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u8 *weights, void *caller)
+u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u16 *weights, void *caller)
 {
     while (weights[n-1] == 0)
     {

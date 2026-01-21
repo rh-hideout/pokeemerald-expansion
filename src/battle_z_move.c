@@ -142,7 +142,7 @@ bool32 CanUseZMove(u32 battler)
 
 enum Move GetUsableZMove(u32 battler, enum Move move)
 {
-    u32 item = gBattleMons[battler].item;
+    enum Item item = gBattleMons[battler].item;
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
@@ -165,7 +165,7 @@ void ActivateZMove(u32 battler)
 
 bool32 IsViableZMove(u32 battler, enum Move move)
 {
-    u32 item;
+    enum Item item;
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
     int moveSlotIndex;
 
@@ -226,7 +226,7 @@ bool32 TryChangeZTrigger(u32 battler, u32 moveIndex)
     return viableZMove;
 }
 
-enum Move GetSignatureZMove(enum Move move, u32 species, u32 item)
+enum Move GetSignatureZMove(enum Move move, u32 species, enum Item item)
 {
     u32 i;
 
@@ -277,7 +277,7 @@ bool32 MoveSelectionDisplayZMove(enum Move zmove, u32 battler)
 
         if (IsBattleMoveStatus(move))
         {
-            u8 zEffect = GetMoveZEffect(move);
+            enum ZEffect zEffect = GetMoveZEffect(move);
 
             gDisplayedStringBattle[0] = EOS;
 
@@ -436,7 +436,7 @@ static void ZMoveSelectionDisplayMoveType(enum Move zMove, u32 battler)
 void SetZEffect(void)
 {
     u32 i;
-    u32 effect = GetMoveZEffect(gChosenMove);
+    enum ZEffect effect = GetMoveZEffect(gChosenMove);
 
     if (effect == Z_EFFECT_CURSE)
     {
@@ -548,7 +548,7 @@ u32 GetZMovePower(enum Move move)
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return 0;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    if (moveEffect == EFFECT_OHKO || moveEffect == EFFECT_SHEER_COLD)
+    if (moveEffect == EFFECT_OHKO)
         return 180;
 
     u32 power = GetMoveZPowerOverride(move);
