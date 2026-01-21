@@ -123,6 +123,7 @@ static void (*const sOakOldManBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler
 
 void SetControllerToOakOrOldMan(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_OAK_OLD_MAN;
     gBattlerControllerEndFuncs[battler] = OakOldManBufferExecCompleted;
     gBattlerControllerFuncs[battler] = OakOldManBufferRunCommand;
     gBattleStruct->simulatedInputState0 = 0;
@@ -335,7 +336,7 @@ static void CompleteWhenChoseItem(u32 battler)
 {
     if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
     {
-        if (!BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_HP_RESTORE)
+        if (IS_FRLG && !BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_HP_RESTORE)
          && gSpecialVar_ItemId == ITEM_POTION
          && gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
         {
@@ -709,7 +710,7 @@ static void OakOldManHandlePrintString(u32 battler)
             switch (*stringId)
             {
             case STRINGID_DEFENDERSSTATFELL:
-                if (!BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_STAT_CHG))
+                if (IS_FRLG && !BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_STAT_CHG))
                 {
                     BtlCtrl_OakOldMan_SetState2Flag(FIRST_BATTLE_MSG_FLAG_STAT_CHG);
                     gBattlerControllerFuncs[battler] = PrintOakText_LoweringStats;
