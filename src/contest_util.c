@@ -1973,6 +1973,8 @@ u16 HasMonWonThisContestBefore(void)
         if (GetMonData(mon, MON_DATA_TOUGH_RIBBON) > gSpecialVar_ContestRank)
             hasRankRibbon = TRUE;
         break;
+    default:
+        break;
     }
 
     return hasRankRibbon;
@@ -2036,6 +2038,8 @@ void GiveMonContestRibbon(void)
             if (GetRibbonCount(&gPlayerParty[gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
                 TryPutSpotTheCutiesOnAir(&gPlayerParty[gContestMonPartyIndex], MON_DATA_TOUGH_RIBBON);
         }
+        break;
+    default:
         break;
     }
 }

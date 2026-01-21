@@ -2737,7 +2737,7 @@ void CopyContestRankToStringVar(u8 varIdx, u8 rank)
     }
 }
 
-void CopyContestCategoryToStringVar(u8 varIdx, u8 category)
+void CopyContestCategoryToStringVar(u8 varIdx, enum ContestCategories category)
 {
     switch (category)
     {
@@ -2755,6 +2755,8 @@ void CopyContestCategoryToStringVar(u8 varIdx, u8 category)
         break;
     case CONTEST_CATEGORY_TOUGH:
         StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_TOUGH]);
+        break;
+    default:
         break;
     }
 }
