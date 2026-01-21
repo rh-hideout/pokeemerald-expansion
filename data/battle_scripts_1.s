@@ -2230,16 +2230,14 @@ BattleScript_HitFromAccCheck::
 	setpreattackadditionaleffect
 BattleScript_HitFromDamageCalc::
 	damagecalc
-BattleScript_HitFromAtkAnimation::
 	call BattleScript_Hit_RetFromAtkAnimation
 BattleScript_MoveEnd::
 	moveendall
 	end
 
-BattleScript_EffectHit_Ret::
-	attackcanceler
 BattleScript_EffectHit_RetFromAccCheck::
 	accuracycheck BattleScript_MoveMissedPause
+	setpreattackadditionaleffect
 	damagecalc
 BattleScript_Hit_RetFromAtkAnimation::
 	attackanimation

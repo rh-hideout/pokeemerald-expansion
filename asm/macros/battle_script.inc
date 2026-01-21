@@ -683,10 +683,6 @@
 	.byte B_SCR_OP_USEITEMONOPPONENT
 	.endm
 
-	.macro unused_0x78
-	.byte B_SCR_OP_UNUSED_0X78
-	.endm
-
 	.macro setprotectlike
 	.byte B_SCR_OP_SETPROTECTLIKE
 	.endm
@@ -710,10 +706,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trymirrormove
-	.byte B_SCR_OP_UNUSED_0X7E
-	.endm
-
 	.macro setfieldweather
 	.byte B_SCR_OP_SETFIELDWEATHER
 	.endm
@@ -735,14 +727,6 @@
 	.byte B_SCR_OP_TRYSETREST
 	.endm
 
-	.macro unused_0x82
-	.byte B_SCR_OP_UNUSED_0X82
-	.endm
-
-	.macro unused_0x83
-	.byte B_SCR_OP_UNUSED_0X83
-	.endm
-
 	.macro jumpifuproarwakes jumpInstr:req
 	.byte B_SCR_OP_JUMPIFUPROARWAKES
 	.4byte \jumpInstr
@@ -759,10 +743,6 @@
 	.macro stockpiletohpheal failInstr:req
 	.byte B_SCR_OP_STOCKPILETOHPHEAL
 	.4byte \failInstr
-	.endm
-
-	.macro unused_0x88
-	.byte B_SCR_OP_UNUSED_0X88
 	.endm
 
 	.macro statbuffchange battler:req, flags:req, failInstr:req, stats=0
@@ -880,22 +860,6 @@
 	.byte B_SCR_OP_SETCALLEDMOVE
 	.endm
 
-	.macro unused_0x9f
-	.byte B_SCR_OP_UNUSED_0X9F
-	.endm
-
-	.macro unused_0xA0
-	.byte B_SCR_OP_UNUSED_0XA0
-	.endm
-
-	.macro unused_0xA1
-	.byte B_SCR_OP_UNUSED_0XA1
-	.endm
-
-	.macro unused_0xA2
-	.byte B_SCR_OP_UNUSED_0XA2
-	.endm
-
 	.macro disablelastusedattack failInstr:req
 	.byte B_SCR_OP_DISABLELASTUSEDATTACK
 	.4byte \failInstr
@@ -923,20 +887,6 @@
 	.macro copymovepermanently failInstr:req
 	.byte B_SCR_OP_COPYMOVEPERMANENTLY
 	.4byte \failInstr
-	.endm
-
-	.macro trychoosesleeptalkmove failInstr:req
-	.byte B_SCR_OP_UNUSED_0XA9
-	.4byte \failInstr
-	.endm
-
-	.macro trysetdestinybond failInstr:req
-	.byte B_SCR_OP_UNUSED_AA
-	.4byte \failInstr
-	.endm
-
-	.macro unused_0xab
-	.byte B_SCR_OP_UNUSED_0XAB
 	.endm
 
 	.macro settailwind failInstr:req
@@ -975,18 +925,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro unused_0xb3
-	.byte B_SCR_OP_UNUSED_0XB3
-	.endm
-
 	.macro jumpifconfusedandstatmaxed stat:req, jumpInstr:req
 	.byte B_SCR_OP_JUMPIFCONFUSEDANDSTATMAXED
 	.byte \stat
 	.4byte \jumpInstr
-	.endm
-
-	.macro unused_0xb5
-	.byte B_SCR_OP_UNUSED_0XB5
 	.endm
 
 	.macro setembargo failInstr:req
@@ -1059,18 +1001,6 @@
 	setsemiinvulnerablebit TRUE
 	.endm
 
-	.macro unused_0xC6
-	.byte B_SCR_OP_UNUSED_0XC6
-	.endm
-
-	.macro unused_0xC7
-	.byte B_SCR_OP_UNUSED_0XC7
-	.endm
-
-	.macro unused_c8
-	.byte B_SCR_OP_UNUSED_C8
-	.endm
-
 	.macro trymemento failInstr:req
 	.byte B_SCR_OP_TRYMEMENTO
 	.4byte \failInstr
@@ -1078,15 +1008,6 @@
 
 	.macro setforcedtarget
 	.byte B_SCR_OP_SETFORCEDTARGET
-	.endm
-
-	.macro unused_0xcb battler:req
-	.byte B_SCR_OP_UNUSED_0XCB
-	.byte \battler
-	.endm
-
-	.macro unused_0xCC
-	.byte B_SCR_OP_UNUSED_0XCC
 	.endm
 
 	.macro curestatuswithmove failInstr:req
@@ -1097,10 +1018,6 @@
 	.macro settorment failInstr:req
 	.byte B_SCR_OP_SETTORMENT
 	.4byte \failInstr
-	.endm
-
-	.macro unused_0xcf
-	.byte B_SCR_OP_UNUSED_0XCF
 	.endm
 
 	.macro settaunt failInstr:req
@@ -1144,10 +1061,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro Cmd_unused0xd8
-	.byte B_SCR_OP_UNUSED0XD8
-	.endm
-
 	.macro setroom
 	.byte B_SCR_OP_SETROOM
 	.endm
@@ -1174,11 +1087,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro assistattackselect failInstr:req
-	.byte B_SCR_OP_UNUSED_0XDE
-	.4byte \failInstr
-	.endm
-
 	.macro trysetmagiccoat failInstr:req
 	.byte B_SCR_OP_TRYSETMAGICCOAT
 	.4byte \failInstr
@@ -1187,11 +1095,6 @@
 	.macro trysetsnatch failInstr:req
 	.byte B_SCR_OP_TRYSETSNATCH
 	.4byte \failInstr
-	.endm
-
-	.macro unused2 ptr:req
-	.byte B_SCR_OP_UNUSED2
-	.4byte \ptr
 	.endm
 
 	.macro switchoutabilities battler:req
@@ -1205,20 +1108,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused_0xE4
-	.byte B_SCR_OP_UNUSED_0XE4
-	.endm
-
 	.macro pickup
 	.byte B_SCR_OP_PICKUP
-	.endm
-
-	.macro unused_0xE6
-	.byte B_SCR_OP_UNUSED_0XE6
-	.endm
-
-	.macro unused_0xE7
-	.byte B_SCR_OP_UNUSED_0XE7
 	.endm
 
 	.macro settypebasedhalvers failInstr:req
@@ -1248,10 +1139,6 @@
 
 	.macro snatchsetbattlers
 	.byte B_SCR_OP_SNATCHSETBATTLERS
-	.endm
-
-	.macro unused_0xee
-	.byte B_SCR_OP_UNUSED_0XEE
 	.endm
 
 	.macro handleballthrow
@@ -1325,14 +1212,6 @@
 	.macro tryoverwriteability failInstr:req
 	.byte B_SCR_OP_TRYOVERWRITEABILITY
 	.4byte \failInstr
-	.endm
-
-	.macro unused_1
-	.byte B_SCR_OP_UNUSED_1
-	.endm
-
-	.macro unused_2
-	.byte B_SCR_OP_UNUSED_2
 	.endm
 
 	.macro callnative func:req
