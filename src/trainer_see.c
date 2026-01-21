@@ -203,7 +203,7 @@ static const union AnimCmd *const sSpriteAnimTable_Emoticons[] = {
 
 static const struct SpriteTemplate sSpriteTemplate_Emoticons = {
     .tileTag = TAG_NONE,
-    .paletteTag = OBJ_EVENT_PAL_TAG_MAY,
+    .paletteTag = OBJ_EVENT_PAL_TAG_PLAYER_RED,
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Emoticons,
     .images = sSpriteImages_Emoticons,
@@ -498,8 +498,8 @@ bool8 CheckForTrainersWantingBattle(void)
     if (InBattlePyramid_() || InTrainerHillChallenge())
     {
         u8 facility = InBattlePyramid_() ? FACILITY_BATTLE_PYRAMID : FACILITY_BATTLE_TRAINER_HILL;
-        
-        if (gNoOfApproachingTrainers > 0) 
+
+        if (gNoOfApproachingTrainers > 0)
         {
             ResetTrainerOpponentIds();
             InitTrainerBattleParameter();
@@ -507,7 +507,7 @@ bool8 CheckForTrainersWantingBattle(void)
             gSelectedObjectEvent = gApproachingTrainers[0].objectEventId;
             gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[0].objectEventId].localId;
             BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
-            if (gNoOfApproachingTrainers > 1) 
+            if (gNoOfApproachingTrainers > 1)
             {
                 gApproachingTrainerId++;
                 gSelectedObjectEvent = gApproachingTrainers[1].objectEventId;
