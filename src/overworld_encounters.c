@@ -701,7 +701,6 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
 
 static bool8 IsSafeToSpawnObjectEvents(void)
 {
-    // Can this just be a check for player not moving?
     struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     // Only spawn when player is at a valid tile position
