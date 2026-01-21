@@ -1002,10 +1002,6 @@
 	.byte B_SCR_OP_SETSAFEGUARD
 	.endm
 
-	.macro magnitudedamagecalculation
-	.byte B_SCR_OP_MAGNITUDEDAMAGECALCULATION
-	.endm
-
 	.macro jumpifnopursuitswitchdmg jumpInstr:req
 	.byte B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG
 	.4byte \jumpInstr
@@ -1332,7 +1328,11 @@
 	.endm
 
 	.macro unused_1
-	.byte B_SCR_UNUSED_1
+	.byte B_SCR_OP_UNUSED_1
+	.endm
+
+	.macro unused_2
+	.byte B_SCR_OP_UNUSED_2
 	.endm
 
 	.macro callnative func:req
@@ -1631,10 +1631,6 @@
 	.macro jumpifsleepclause jumpInstr:req
 	callnative BS_JumpIfSleepClause
 	.4byte \jumpInstr
-	.endm
-
-	.macro ficklebeamdamagecalculation
-	callnative BS_FickleBeamDamageCalculation
 	.endm
 
 	.macro trytarshot failInstr:req

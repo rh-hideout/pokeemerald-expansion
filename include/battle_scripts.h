@@ -515,6 +515,8 @@ extern const u8 BattleScript_ActivateSwitchInAbility[];
 extern const u8 BattleScript_BreakScreens[];
 extern const u8 BattleScript_StealStats[];
 extern const u8 BattleScript_BeatUpAttackMessage[];
+extern const u8 BattleScript_MagnitudeMessage[];
+extern const u8 BattleScript_FickleBeamMessage[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -641,7 +643,6 @@ extern const u8 BattleScript_EffectSwagger[];
 extern const u8 BattleScript_EffectAttract[];
 extern const u8 BattleScript_EffectPresent[];
 extern const u8 BattleScript_EffectSafeguard[];
-extern const u8 BattleScript_EffectMagnitude[];
 extern const u8 BattleScript_EffectBatonPass[];
 extern const u8 BattleScript_EffectCaptivate[];
 extern const u8 BattleScript_EffectMorningSun[];
@@ -807,6 +808,5 @@ extern const u8 BattleScript_EffectFilletAway[];
 extern const u8 BattleScript_EffectShedTail[];
 extern const u8 BattleScript_EffectTidyUp[];
 extern const u8 BattleScript_EffectSpicyExtract[];
-extern const u8 BattleScript_EffectFickleBeam[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

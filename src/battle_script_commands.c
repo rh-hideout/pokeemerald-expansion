@@ -517,7 +517,6 @@ static void Cmd_unused_0xb5(void);
 static void Cmd_setembargo(void);
 static void Cmd_presentdamagecalculation(void);
 static void Cmd_setsafeguard(void);
-static void Cmd_magnitudedamagecalculation(void);
 static void Cmd_jumpifnopursuitswitchdmg(void);
 static void Cmd_tryactivateitem(void);
 static void Cmd_halvehp(void);
@@ -588,6 +587,7 @@ static void Cmd_jumpifcaptivateaffected(void);
 static void Cmd_setnonvolatilestatus(void);
 static void Cmd_tryoverwriteability(void);
 static void Cmd_unused_1(void);
+static void Cmd_unused_2(void);
 static void Cmd_callnative(void);
 
 void (*const gBattleScriptingCommandsTable[])(void) =
@@ -776,7 +776,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETEMBARGO]                            = Cmd_setembargo,
     [B_SCR_OP_PRESENTDAMAGECALCULATION]              = Cmd_presentdamagecalculation,
     [B_SCR_OP_SETSAFEGUARD]                          = Cmd_setsafeguard,
-    [B_SCR_OP_MAGNITUDEDAMAGECALCULATION]            = Cmd_magnitudedamagecalculation,
     [B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG]              = Cmd_jumpifnopursuitswitchdmg,
     [B_SCR_OP_TRYACTIVATEITEM]                       = Cmd_tryactivateitem,
     [B_SCR_OP_HALVEHP]                               = Cmd_halvehp,
@@ -847,6 +846,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETNONVOLATILESTATUS]                  = Cmd_setnonvolatilestatus,
     [B_SCR_OP_TRYOVERWRITEABILITY]                   = Cmd_tryoverwriteability,
     [B_SCR_OP_UNUSED_1]                              = Cmd_unused_1,
+    [B_SCR_OP_UNUSED_2]                              = Cmd_unused_2,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -9288,52 +9288,6 @@ static void Cmd_setsafeguard(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_magnitudedamagecalculation(void)
-{
-    CMD_ARGS();
-
-    u32 magnitude = RandomUniform(RNG_MAGNITUDE, 0, 99);
-
-    if (magnitude < 5)
-    {
-        gBattleStruct->magnitudeBasePower = 10;
-        magnitude = 4;
-    }
-    else if (magnitude < 15)
-    {
-        gBattleStruct->magnitudeBasePower = 30;
-        magnitude = 5;
-    }
-    else if (magnitude < 35)
-    {
-        gBattleStruct->magnitudeBasePower = 50;
-        magnitude = 6;
-    }
-    else if (magnitude < 65)
-    {
-        gBattleStruct->magnitudeBasePower = 70;
-        magnitude = 7;
-    }
-    else if (magnitude < 85)
-    {
-        gBattleStruct->magnitudeBasePower = 90;
-        magnitude = 8;
-    }
-    else if (magnitude < 95)
-    {
-        gBattleStruct->magnitudeBasePower = 110;
-        magnitude = 9;
-    }
-    else
-    {
-        gBattleStruct->magnitudeBasePower = 150;
-        magnitude = 10;
-    }
-
-    PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff1, 2, magnitude)
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_jumpifnopursuitswitchdmg(void)
 {
     CMD_ARGS(const u8 *jumpInstr);
@@ -11599,6 +11553,10 @@ static void Cmd_unused_1(void)
 {
 }
 
+static void Cmd_unused_2(void)
+{
+}
+
 static void Cmd_callnative(void)
 {
     CMD_ARGS(void (*func)(void));
@@ -12751,21 +12709,6 @@ void BS_JumpIfSleepClause(void)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_FickleBeamDamageCalculation(void)
-{
-    NATIVE_ARGS();
-
-    if (RandomPercentage(RNG_FICKLE_BEAM, 30))
-    {
-        gBattleStruct->fickleBeamBoosted = TRUE;
-        gBattlescriptCurrInstr = BattleScript_FickleBeamDoubled;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
 }
 
 void BS_TryTarShot(void)

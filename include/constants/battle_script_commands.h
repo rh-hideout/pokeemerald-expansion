@@ -187,7 +187,6 @@ enum BattleScriptOpcode
     B_SCR_OP_SETEMBARGO,
     B_SCR_OP_PRESENTDAMAGECALCULATION,
     B_SCR_OP_SETSAFEGUARD,
-    B_SCR_OP_MAGNITUDEDAMAGECALCULATION,
     B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG,
     B_SCR_OP_TRYACTIVATEITEM,
     B_SCR_OP_HALVEHP,
@@ -262,6 +261,7 @@ enum BattleScriptOpcode
     // They are reserved for expansion usage.
     // Use callnatives instead.
     B_SCR_OP_UNUSED_1,
+    B_SCR_OP_UNUSED_2,
     B_SCR_OP_CALLNATIVE,
 };
 

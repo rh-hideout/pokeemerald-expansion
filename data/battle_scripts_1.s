@@ -22,16 +22,17 @@
 
 	.section script_data, "aw", %progbits
 
-BattleScript_EffectFickleBeam::
-	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
-	ficklebeamdamagecalculation
-	goto BattleScript_HitFromDamageCalc
-BattleScript_FickleBeamDoubled::
+BattleScript_FickleBeamMessage::
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_FICKLEBEAMDOUBLED
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_HitFromDamageCalc
+    return
+
+BattleScript_MagnitudeMessage::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_MAGNITUDESTRENGTH
+	waitmessage B_WAIT_TIME_LONG
+    return
 
 BattleScript_Terastallization::
 	@ TODO: no string prints in S/V, but right now this helps with clarity
@@ -3289,15 +3290,6 @@ BattleScript_EffectSafeguard::
 	attackcanceler
 	setsafeguard
 	goto BattleScript_PrintReflectLightScreenSafeguardString
-
-BattleScript_EffectMagnitude::
-	attackcanceler
-	magnitudedamagecalculation
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_MAGNITUDESTRENGTH
-	waitmessage B_WAIT_TIME_LONG
-	accuracycheck BattleScript_MoveMissedPause
-	goto BattleScript_HitFromDamageCalc
 
 BattleScript_EffectBatonPass::
 	attackcanceler
