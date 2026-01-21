@@ -89,7 +89,7 @@
 	@ Defines a generic background event for map data. Mirrors the struct layout of BgEvent in include/global.fieldmap.h
 	@ 'kind' is any BG_EVENT_* constant (see include/constants/event_bg.h).
 	@ 'arg6' and 'arg7' are used differently depending on the bg event type. See macros below
-	.macro bg_event x:req, y:req, elevation:req, kind:req, arg6:req, arg7, arg8
+	.macro bg_event x:req, y:req, elevation:req, kind:req, arg6:req, arg7
 	.2byte \x, \y
 	.byte \elevation
 	.byte \kind
@@ -98,8 +98,7 @@
 		.4byte \arg6
 	.else
 		.2byte \arg6
-		.byte \arg7
-		.byte \arg8
+		.2byte \arg7
 	.endif
 	inc _num_signs
 	.endm
@@ -114,7 +113,13 @@
 	.if \flag < FLAG_HIDDEN_ITEMS_START
 	.error "Hidden Item flag \flag is too small. Must be >= FLAG_HIDDEN_ITEMS_START."
 	.endif
-	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item, ((\flag) - FLAG_HIDDEN_ITEMS_START), \quantity | (\underfoot << 7)
+	.if \quantity > (1 << 7) - 1
+	.error "quantity \quantity too large"
+	.endif
+	.if \underfoot > TRUE
+	.error "underfoot too large"
+	.endif
+	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item, ((\flag) - FLAG_HIDDEN_ITEMS_START) | (\quantity << 8) | (\underfoot << 15)
 	.endm
 
 	@ Defines a background secret base event for map data

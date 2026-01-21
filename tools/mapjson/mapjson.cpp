@@ -317,14 +317,22 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(bg_event, "script") << "\n";
             }
             else if (type == "hidden_item") {
+                string quantity = json_to_string(bg_event, "quantity", true);
+                if (quantity.empty()) {
+                    quantity = "1";
+                }
+                string underfoot = json_to_string(bg_event, "underfoot", true);
+                if (underfoot.empty()) {
+                    underfoot = "FALSE";
+                }
                 text << "\tbg_hidden_item_event "
                      << json_to_string(bg_event, "x") << ", "
                      << json_to_string(bg_event, "y") << ", "
                      << json_to_string(bg_event, "elevation") << ", "
                      << json_to_string(bg_event, "item") << ", "
                      << json_to_string(bg_event, "flag") << ", "
-                     << json_to_string(bg_event, "quantity", true) << ", "
-                     << json_to_string(bg_event, "underfoot", true) << "\n";
+                     << quantity << ", "
+                     << underfoot << "\n";
             }
             else if (type == "secret_base") {
                 text << "\tbg_secret_base_event "

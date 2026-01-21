@@ -177,7 +177,7 @@ EventScript_HiddenItemScript::
 	waitse
 	goto_if_eq VAR_0x8005, 0, EventScript_TryPickUpHiddenCoins
 	copyvar VAR_0x8006, VAR_0x8005
-	additem VAR_0x8005
+	additem VAR_0x8005, VAR_0x8009
 	copyvar VAR_0x8007, VAR_RESULT
 	bufferitemnameplural STR_VAR_2, VAR_0x8005, 1
 	checkitemtype VAR_0x8005
@@ -201,9 +201,19 @@ EventScript_FoundHiddenTMHM::
 	end
 
 EventScript_FoundHiddenItem::
-	message gText_PlayerFoundOneItem
+	call_if_eq VAR_0x8009, 1, EventScript_FoundSingleItem
+	call_if_ne VAR_0x8009, 1, EventScript_FoundMultipleItems
 	goto EventScript_PutHiddenItemInPocket
 	end
+
+EventScript_FoundSingleItem::
+	message gText_PlayerFoundOneItem
+	return
+
+EventScript_FoundMultipleItems::
+	buffernumberstring STR_VAR_1, VAR_0x8009
+	message gText_FoundXItems
+	return
 
 EventScript_PutHiddenItemInPocket::
 	callnative Script_ClearDowsingColor
@@ -279,21 +289,21 @@ EventScript_TryPickUpHiddenCoins::
 	call EventScript_FoundCoins
 	waitfanfare
 	waitmessage
-	msgbox Text_PutCoinsAwayInCoinCase
+	msgbox gText_PutCoinsAwayInCoinCase
 	special SetHiddenItemFlag
 	releaseall
 	end
 
 EventScript_FoundCoins::
 	buffernumberstring STR_VAR_1, VAR_0x8006
-	message Text_FoundXCoins
+	message gText_FoundXCoins
 	return
 
 EventScript_HiddenCoinsButCaseIsFull::
 	buffernumberstring STR_VAR_1, VAR_0x8006
 	bufferstdstring STR_VAR_2, STDSTRING_COINS
-	msgbox Text_FoundXCoins
-	msgbox Text_CoinCaseIsFull
+	msgbox gText_FoundXCoins
+	msgbox gText_CoinCaseIsFull
 	setvar VAR_RESULT, 0
 	releaseall
 	end
@@ -301,24 +311,8 @@ EventScript_HiddenCoinsButCaseIsFull::
 EventScript_NoCaseForHiddenCoins::
 	buffernumberstring STR_VAR_1, VAR_0x8006
 	bufferstdstring STR_VAR_2, STDSTRING_COINS
-	msgbox Text_FoundXCoins
-	msgbox Text_NothingToPutThemIn
+	msgbox gText_FoundXCoins
+	msgbox gText_NothingToPutThemIn
 	setvar VAR_RESULT, 0
 	releaseall
 	end
-
-Text_PutCoinsAwayInCoinCase::
-	.string "{PLAYER} put the COINS away in\n"
-	.string "the COIN CASE.$"
-
-Text_FoundXCoins::
-	.string "{PLAYER} found\n"
-	.string "{STR_VAR_1} {STR_VAR_2}!$"
-
-Text_CoinCaseIsFull::
-	.string "Too bad!\n"
-	.string "The COIN CASE is full…$"
-
-Text_NothingToPutThemIn::
-	.string "Too bad!\n"
-	.string "There's nothing to put them in…$"
