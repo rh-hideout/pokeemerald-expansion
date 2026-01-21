@@ -3169,7 +3169,7 @@ u8 LoadObjectEventPaletteCopy(u16 originalTag, u16 copyTag)
     return LoadSpritePalette(&palette);
 }
 
-u8 LoadPlayerObjectEventPalette(u8 gender)
+u8 LoadPlayerObjectEventPalette(enum Gender gender)
 {
     u16 paletteTag;
     switch (gender)

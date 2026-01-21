@@ -161,9 +161,12 @@ enum ContestCategories
 
 #define MAX_STAMP_CARD_STAMPS 7
 
-#define MALE 0
-#define FEMALE 1
-#define GENDER_COUNT 2
+enum Gender
+{
+    MALE,
+    FEMALE,
+    GENDER_COUNT,
+};
 
 #define NUM_BARD_SONG_WORDS    6
 #define NUM_STORYTELLER_TALES  4
