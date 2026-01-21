@@ -236,7 +236,7 @@ static const u8 sTeraShardDesc[]      = _("Shards that may\n"
 
 static const u8 sGenericMulchDesc[]   = _("It appears to be\n"
                                           "unsuitable for\n"
-                                          "the soil in Hoenn.");
+                                          "the soil.");
 
 const struct Item gItemsInfo[] =
 {
@@ -2472,7 +2472,7 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_EscapeRope,
     },
 
-// Battle items
+// X items
 
     [ITEM_X_ATTACK] =
     {
@@ -5272,7 +5272,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_MEMORY,
         .holdEffectParam = 0,
         .description = COMPOUND_STRING(
-            "Contants Grass-\n"
+            "Contains Grass-\n"
             "type data. Changes\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,

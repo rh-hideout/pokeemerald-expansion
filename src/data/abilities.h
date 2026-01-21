@@ -244,7 +244,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_SHADOW_TAG] =
     {
         .name = _("Shadow Tag"),
-        .description = COMPOUND_STRING("Prevents foes' escape."),
+        .description = COMPOUND_STRING("Prevents the foes' escape."),
         .aiRating = 10,
     },
 
@@ -298,7 +298,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_NATURAL_CURE] =
     {
         .name = _("Natural Cure"),
-        .description = COMPOUND_STRING("Cures status upon switch."),
+        .description = COMPOUND_STRING("Heals status upon switch."),
         .aiRating = 7,
     },
 
@@ -555,7 +555,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_SHED_SKIN] =
     {
         .name = _("Shed Skin"),
-        .description = COMPOUND_STRING("May cure status problems."),
+        .description = COMPOUND_STRING("May heal status problems."),
         .aiRating = 7,
     },
 

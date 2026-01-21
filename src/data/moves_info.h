@@ -9656,8 +9656,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Healing Wish"),
         .description = COMPOUND_STRING(
-            "The user faints to restore\n"
-            "and cure the next Pokémon."),
+            "Faints to restore the HP and\n"
+            "status of the next Pokémon."),
         .effect = EFFECT_HEALING_WISH,
         .power = 0,
         .type = TYPE_PSYCHIC,
@@ -12101,8 +12101,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Lunar Dance"),
         .description = COMPOUND_STRING(
-            "The user faints to restore\n"
-            "and cure the next Pokémon."),
+            "Faints to heal the HP, PP, and\n"
+            "status of the next Pokémon."),
         .effect = EFFECT_LUNAR_DANCE,
         .power = 0,
         .type = TYPE_PSYCHIC,
