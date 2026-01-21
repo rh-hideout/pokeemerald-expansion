@@ -48,6 +48,7 @@ static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
+static void OWE_SetNewSpawnCountdown(void);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
@@ -181,8 +182,18 @@ void UpdateOverworldEncounters(void)
     if (shouldSpawnWaterMons)
         object->hideReflection = TRUE;
 
-    // Slower replacement spawning
-    sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
+    OWE_SetNewSpawnCountdown();
+    // sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
+}
+
+static void OWE_SetNewSpawnCountdown(void)
+{
+    u32 numActive = GetNumActiveGeneratedOverworldEncounters();
+
+    if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && numActive >= GetMaxOverworldEncounterSpawns())
+        sOWESpawnCountdown = OWE_SPAWN_TIME_REPLACEMENT;
+    else
+        sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM + (OWE_SPAWN_TIME_PER_ACTIVE * numActive);
 }
 
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny)
