@@ -984,6 +984,7 @@ void OverworldWildEncounter_RemoveObjectOnBattle(void)
     if (IsOverworldWildEncounter(object))
     {
         RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+        OWE_SetNewSpawnCountdown();
         gSpecialVar_LastTalked = LOCALID_NONE;
     }
 }
