@@ -46,27 +46,27 @@
 // Bits 12-15 are the same for the player's party.
 // Used by Quest Log.
 #define VAR_QUEST_LOG_MON_COUNTS           0x4027
-#define VAR_WONDER_NEWS_STEP_COUNTER_FRLG       0x4028
+#define VAR_WONDER_NEWS_STEP_COUNTER_FRLG  0x4028
 #define VAR_0x4029                         0x4029
 #define VAR_0x402A                         0x402A
 #define VAR_0x402B                         0x402B
-#define VAR_DAYS_FRLG                           0x402C // was VAR_RESET_RTC_ENABLE
+#define VAR_DAYS_FRLG                      0x402C // was VAR_RESET_RTC_ENABLE
 #define VAR_0x402D                         0x402D
 #define VAR_0x402E                         0x402E
 
 #define VAR_0x402F                         0x402F
 
-#define VAR_ICE_STEP_COUNT_FRLG                 0x4030
-#define VAR_STARTER_MON_FRLG                    0x4031 // 0: Bulbasaur, 1: Squirtle, 2: Charmander
-#define VAR_RESET_RTC_ENABLE_FRLG               0x4032
-#define VAR_ENIGMA_BERRY_AVAILABLE_FRLG         0x4033
+#define VAR_ICE_STEP_COUNT_FRLG            0x4030
+#define VAR_STARTER_MON_FRLG               0x4031 // 0: Bulbasaur, 1: Squirtle, 2: Charmander
+#define VAR_RESET_RTC_ENABLE_FRLG          0x4032
+#define VAR_ENIGMA_BERRY_AVAILABLE_FRLG    0x4033
 
 #define VAR_0x4034                         0x4034
 #define VAR_RESORT_GOREGEOUS_STEP_COUNTER  0x4035
 #define VAR_RESORT_GORGEOUS_REQUESTED_MON  0x4036
-#define VAR_PC_BOX_TO_SEND_MON_FRLG             0x4037
-#define VAR_FANCLUB_FAN_COUNTER_FRLG            0x4038
-#define VAR_FANCLUB_LOSE_FAN_TIMER_FRLG         0x4039
+#define VAR_PC_BOX_TO_SEND_MON_FRLG        0x4037
+#define VAR_FANCLUB_FAN_COUNTER_FRLG       0x4038
+#define VAR_FANCLUB_LOSE_FAN_TIMER_FRLG    0x4039
 #define VAR_ELEVATOR_FLOOR                 0x403A
 #define VAR_RESORT_GORGEOUS_REWARD         0x403B
 #define VAR_0x403C                         0x403C // Set to 0x0302, never read
@@ -87,7 +87,7 @@
 #define VAR_LINK_WIN_BRAG_STATE            0x404B
 #define VAR_POKELOT_RND2                   0x404C
 #define VAR_QL_ENTRANCE                    0x404D
-#define VAR_NATIONAL_DEX_FRLG                   0x404E
+#define VAR_NATIONAL_DEX_FRLG              0x404E
 #define VAR_LOTAD_SIZE_RECORD              0x404F
 
 // Map Scene
@@ -122,7 +122,7 @@
 #define VAR_MAP_SCENE_PEWTER_CITY                                              0x406C
 #define VAR_0x406D                                                             0x406D
 #define VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE                        0x406E
-#define VAR_CABLE_CLUB_STATE_FRLG                                                   0x406F
+#define VAR_CABLE_CLUB_STATE_FRLG                                              0x406F
 #define VAR_MAP_SCENE_PALLET_TOWN_SIGN_LADY                                    0x4070
 #define VAR_MAP_SCENE_CINNABAR_ISLAND                                          0x4071
 #define VAR_0x4072                                                             0x4072
@@ -269,8 +269,8 @@
 #define VAR_0x40FE                 0x40FE
 #define VAR_0x40FF                 0x40FF
 
-#define VARS_END_FRLG                   0x40FF
-#define VARS_COUNT_FRLG                 (VARS_END_FRLG - VARS_START_FRLG + 1)
+#define VARS_END_FRLG              0x40FF
+#define VARS_COUNT_FRLG            (VARS_END_FRLG - VARS_START_FRLG + 1)
 
 #define SPECIAL_VARS_START         0x8000
 
@@ -290,8 +290,8 @@
 #define VAR_RESULT                 0x800D
 #define VAR_ITEM_ID                0x800E
 #define VAR_LAST_TALKED            0x800F
-#define VAR_MON_BOX_ID_FRLG             0x8010
-#define VAR_MON_BOX_POS_FRLG            0x8011
+#define VAR_MON_BOX_ID_FRLG        0x8010
+#define VAR_MON_BOX_POS_FRLG       0x8011
 #define VAR_TEXT_COLOR             0x8012
 #define VAR_PREV_TEXT_COLOR        0x8013
 #define VAR_0x8014                 0x8014 // Unknown/unused
