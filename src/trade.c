@@ -2446,7 +2446,7 @@ s32 GetGameProgressForLinkTrade(void)
     // The usage of this value is a little unusual given it's treated as a bool,
     // but it's the result of its usage in FRLG, where 0 is FRLG, 1 is RS, and 2 is Emerald.
     s32 versionId; // 0: RSE, 2: FRLG
-    u16 version;
+    enum GameVersion version;
 
     if (gReceivedRemoteLinkPlayers)
     {
@@ -2488,7 +2488,7 @@ int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct Rf
     bool8 playerCanLinkNationally = player.canLinkNationally;
     bool8 partnerHasNationalDex = partner.hasNationalDex;
     bool8 partnerCanLinkNationally = partner.canLinkNationally;
-    u8 partnerVersion = partner.version;
+    enum GameVersion partnerVersion = partner.version;
 
     // If partner is not using Emerald, both players must have progressed the story
     // to a certain point (becoming champion in RSE, finishing the Sevii islands in FRLG)

@@ -36,7 +36,7 @@ static void IntrDummy(void);
 extern void gInitialMainCB2(void);
 extern void CB2_FlashNotDetectedScreen(void);
 
-const u8 gGameVersion = GAME_VERSION;
+const enum GameVersion gGameVersion = GAME_VERSION;
 
 const u8 gGameLanguage = GAME_LANGUAGE; // English
 

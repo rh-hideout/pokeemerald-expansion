@@ -2467,7 +2467,7 @@ void SetLinkContestPlayerGfx(void)
     {
         for (i = 0; i < gNumLinkContestPlayers; i++)
         {
-            int version = (u8)gLinkPlayers[i].version;
+            enum GameVersion version = (u8)gLinkPlayers[i].version;
             if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
             {
                 if (gLinkPlayers[i].gender == MALE)
@@ -2488,7 +2488,7 @@ void LoadLinkContestPlayerPalettes(void)
 {
     int i;
     u8 objectEventId;
-    int version;
+    enum GameVersion version;
     struct Sprite *sprite;
     static const u8 sContestantLocalIds[CONTESTANT_COUNT] = {
         LOCALID_CONTESTANT_1,

@@ -34,19 +34,21 @@
 // In Gen 4 only, migrated Pokémon with Diamond, Pearl, or Platinum's ID show as "----------".
 // Gen 5 and up read Diamond, Pearl, or Platinum's ID as "Sinnoh".
 // In Gen 4 and up, migrated Pokémon with HeartGold or SoulSilver's ID show the otherwise unused "Johto" string.
-#define VERSION_SAPPHIRE 1
-#define VERSION_RUBY 2
-#define VERSION_EMERALD 3
-#define VERSION_FIRE_RED 4
-#define VERSION_LEAF_GREEN 5
-#define VERSION_HEART_GOLD 7
-#define VERSION_SOUL_SILVER 8
-#define VERSION_DIAMOND 10
-#define VERSION_PEARL 11
-#define VERSION_PLATINUM 12
-#define VERSION_GAMECUBE 15
-
-#define NUM_VERSIONS 15
+enum GameVersion
+{
+    VERSION_SAPPHIRE = 1,
+    VERSION_RUBY = 2,
+    VERSION_EMERALD = 3,
+    VERSION_FIRE_RED = 4,
+    VERSION_LEAF_GREEN = 5,
+    VERSION_HEART_GOLD = 7,
+    VERSION_SOUL_SILVER = 8,
+    VERSION_DIAMOND = 10,
+    VERSION_PEARL = 11,
+    VERSION_PLATINUM = 12,
+    VERSION_GAMECUBE = 15,
+    NUM_VERSIONS = VERSION_GAMECUBE,
+};
 
 #define LANGUAGE_JAPANESE 1
 #define LANGUAGE_ENGLISH  2

@@ -1866,7 +1866,7 @@ enum TrainerPicID LinkPlayerGetTrainerPicId(u32 multiplayerId)
     enum TrainerPicID trainerPicId;
 
     u8 gender = gLinkPlayers[multiplayerId].gender;
-    u8 version = gLinkPlayers[multiplayerId].version & 0xFF;
+    enum GameVersion version = gLinkPlayers[multiplayerId].version & 0xFF;
 
     if (version == VERSION_FIRE_RED || version == VERSION_LEAF_GREEN)
         trainerPicId = gender + TRAINER_PIC_BACK_RED;

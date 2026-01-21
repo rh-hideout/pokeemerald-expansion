@@ -594,7 +594,8 @@ void SpawnLinkPartnerObjectEvent(void)
     {
         if (myLinkPlayerNumber != i)
         {
-            switch ((u8)gLinkPlayers[i].version)
+            enum GameVersion version = (u8)gLinkPlayers[i].version;
+            switch (version)
             {
             case VERSION_RUBY:
             case VERSION_SAPPHIRE:

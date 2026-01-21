@@ -3442,7 +3442,7 @@ void HideBattleTowerReporter(void)
 void ReceiveTvShowsData(void *src, u32 size, u8 playersLinkId)
 {
     u8 i;
-    u16 version;
+    enum GameVersion version;
     TVShow (*rmBuffer2)[MAX_LINK_PLAYERS][TV_SHOWS_COUNT];
     TVShow (*rmBuffer)[MAX_LINK_PLAYERS][TV_SHOWS_COUNT];
 
