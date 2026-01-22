@@ -203,18 +203,17 @@ enum Direction
     DIR_NORTHEAST,
 };
 
-#define AXIS_X     0
-#define AXIS_Y     1
-#define AXIS_COUNT 2
-
-#define CONNECTION_INVALID -1
-#define CONNECTION_NONE     0
-#define CONNECTION_SOUTH    1
-#define CONNECTION_NORTH    2
-#define CONNECTION_WEST     3
-#define CONNECTION_EAST     4
-#define CONNECTION_DIVE     5
-#define CONNECTION_EMERGE   6
+enum Connection
+{
+    CONNECTION_INVALID = -1,
+    CONNECTION_NONE,
+    CONNECTION_SOUTH,
+    CONNECTION_NORTH,
+    CONNECTION_WEST,
+    CONNECTION_EAST,
+    CONNECTION_DIVE,
+    CONNECTION_EMERGE
+};
 
 #if TESTING
 #include "config/test.h"

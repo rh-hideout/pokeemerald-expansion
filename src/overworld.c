@@ -803,7 +803,7 @@ const struct MapConnection *GetMapConnection(u8 dir)
     return NULL;
 }
 
-static bool8 SetDiveWarp(u8 dir, u16 x, u16 y)
+static bool8 SetDiveWarp(enum Connection dir, u16 x, u16 y)
 {
     const struct MapConnection *connection = GetMapConnection(dir);
 

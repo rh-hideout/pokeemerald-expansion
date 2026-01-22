@@ -568,7 +568,7 @@ static u32 CalculateFishingProximityBoost()
             numQualifyingTile++;
         else if (MapGridGetCollisionAt(tile_x, tile_y))
             numQualifyingTile++;
-        else if (GetMapBorderIdAt(tile_x, tile_y) == -1)
+        else if (GetMapBorderIdAt(tile_x, tile_y) == CONNECTION_INVALID)
             numQualifyingTile++;
     }
 
