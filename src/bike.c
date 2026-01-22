@@ -12,20 +12,20 @@
 
 // this file's functions
 static void MovePlayerOnMachBike(enum Direction, u16, u16);
-static u8 GetMachBikeTransition(enum Direction *);
+static enum MachTransition GetMachBikeTransition(enum Direction *);
 static void MachBikeTransition_FaceDirection(enum Direction);
 static void MachBikeTransition_TurnDirection(enum Direction);
 static void MachBikeTransition_TrySpeedUp(enum Direction);
 static void MachBikeTransition_TrySlowDown(enum Direction);
 static void MovePlayerOnAcroBike(enum Direction, u16, u16);
-static u8 CheckMovementInputAcroBike(enum Direction *, u16, u16);
-static u8 AcroBikeHandleInputNormal(enum Direction *, u16, u16);
-static u8 AcroBikeHandleInputTurning(enum Direction *, u16, u16);
-static u8 AcroBikeHandleInputWheelieStanding(enum Direction *, u16, u16);
-static u8 AcroBikeHandleInputBunnyHop(enum Direction *, u16, u16);
-static u8 AcroBikeHandleInputWheelieMoving(enum Direction *, u16, u16);
-static u8 AcroBikeHandleInputSidewaysJump(enum Direction *, u16, u16);
-static u8 AcroBikeHandleInputTurnJump(enum Direction *, u16, u16);
+static enum AcroTransition CheckMovementInputAcroBike(enum Direction *, u16, u16);
+static enum AcroTransition AcroBikeHandleInputNormal(enum Direction *, u16, u16);
+static enum AcroTransition AcroBikeHandleInputTurning(enum Direction *, u16, u16);
+static enum AcroTransition AcroBikeHandleInputWheelieStanding(enum Direction *, u16, u16);
+static enum AcroTransition AcroBikeHandleInputBunnyHop(enum Direction *, u16, u16);
+static enum AcroTransition AcroBikeHandleInputWheelieMoving(enum Direction *, u16, u16);
+static enum AcroTransition AcroBikeHandleInputSidewaysJump(enum Direction *, u16, u16);
+static enum AcroTransition AcroBikeHandleInputTurnJump(enum Direction *, u16, u16);
 static void AcroBikeTransition_FaceDirection(enum Direction);
 static void AcroBikeTransition_TurnDirection(enum Direction);
 static void AcroBikeTransition_Moving(enum Direction);
@@ -96,7 +96,7 @@ static void (*const sAcroBikeTransitions[])(enum Direction) =
     AcroBikeTransition_WheelieLoweringMoving,
 };
 
-static u8 (*const sAcroBikeInputHandlers[])(enum Direction *, u16, u16) =
+static enum AcroTransition (*const sAcroBikeInputHandlers[])(enum Direction *, u16, u16) =
 {
     AcroBikeHandleInputNormal,
     AcroBikeHandleInputTurning,
@@ -108,7 +108,7 @@ static u8 (*const sAcroBikeInputHandlers[])(enum Direction *, u16, u16) =
 };
 
 // used with bikeFrameCounter from mach bike
-static const u16 sMachBikeSpeeds[] = {PLAYER_SPEED_NORMAL, PLAYER_SPEED_FAST, PLAYER_SPEED_FASTEST};
+static const enum PlayerSpeed sMachBikeSpeeds[] = {PLAYER_SPEED_NORMAL, PLAYER_SPEED_FAST, PLAYER_SPEED_FASTEST};
 
 // this is a list of timers to compare against later, terminated with 0. the only timer being compared against is 4 frames in this list.
 static const u8 sAcroBikeJumpTimerList[] = {4, 0};
@@ -138,7 +138,7 @@ static void MovePlayerOnMachBike(enum Direction direction, u16 newKeys, u16 held
 }
 
 // dirTraveling is a variable that is DIR_NONE when the player is standing still.
-static u8 GetMachBikeTransition(enum Direction *dirTraveling)
+static enum MachTransition GetMachBikeTransition(enum Direction *dirTraveling)
 {
     // if the dir updated before this function, get the relevent new direction to check later.
     enum Direction direction = GetPlayerMovementDirection();
@@ -296,12 +296,12 @@ static void MovePlayerOnAcroBike(enum Direction newDirection, u16 newKeys, u16 h
     sAcroBikeTransitions[CheckMovementInputAcroBike(&newDirection, newKeys, heldKeys)](newDirection);
 }
 
-static u8 CheckMovementInputAcroBike(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
+static enum AcroTransition CheckMovementInputAcroBike(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
 {
     return sAcroBikeInputHandlers[gPlayerAvatar.acroBikeState](newDirection, newKeys, heldKeys);
 }
 
-static u8 AcroBikeHandleInputNormal(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
+static enum AcroTransition AcroBikeHandleInputNormal(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
 {
     enum Direction direction = GetPlayerMovementDirection();
 
@@ -341,7 +341,7 @@ static u8 AcroBikeHandleInputNormal(enum Direction *newDirection, u16 newKeys, u
     return ACRO_TRANS_MOVING;
 }
 
-static u8 AcroBikeHandleInputTurning(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
+static enum AcroTransition AcroBikeHandleInputTurning(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
 {
     enum Direction direction;
 
@@ -380,7 +380,7 @@ static u8 AcroBikeHandleInputTurning(enum Direction *newDirection, u16 newKeys, 
     return ACRO_TRANS_FACE_DIRECTION;
 }
 
-static u8 AcroBikeHandleInputWheelieStanding(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
+static enum AcroTransition AcroBikeHandleInputWheelieStanding(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
 {
     enum Direction direction;
     struct ObjectEvent *playerObjEvent;
@@ -430,7 +430,7 @@ static u8 AcroBikeHandleInputWheelieStanding(enum Direction *newDirection, u16 n
     return ACRO_TRANS_WHEELIE_IDLE;
 }
 
-static u8 AcroBikeHandleInputBunnyHop(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
+static enum AcroTransition AcroBikeHandleInputBunnyHop(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
 {
     enum Direction direction;
     struct ObjectEvent *playerObjEvent;
@@ -477,7 +477,7 @@ static u8 AcroBikeHandleInputBunnyHop(enum Direction *newDirection, u16 newKeys,
     return ACRO_TRANS_WHEELIE_HOPPING_MOVING;
 }
 
-static u8 AcroBikeHandleInputWheelieMoving(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
+static enum AcroTransition AcroBikeHandleInputWheelieMoving(enum Direction *newDirection, u16 newKeys, u16 heldKeys)
 {
     enum Direction direction;
     struct ObjectEvent *playerObjEvent;
@@ -532,7 +532,7 @@ static u8 AcroBikeHandleInputWheelieMoving(enum Direction *newDirection, u16 new
     return ACRO_TRANS_WHEELIE_MOVING;
 }
 
-static u8 AcroBikeHandleInputSidewaysJump(enum Direction *ptr, u16 newKeys, u16 heldKeys)
+static enum AcroTransition AcroBikeHandleInputSidewaysJump(enum Direction *ptr, u16 newKeys, u16 heldKeys)
 {
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
@@ -542,7 +542,7 @@ static u8 AcroBikeHandleInputSidewaysJump(enum Direction *ptr, u16 newKeys, u16 
     return CheckMovementInputAcroBike(ptr, newKeys, heldKeys);
 }
 
-static u8 AcroBikeHandleInputTurnJump(enum Direction *ptr, u16 newKeys, u16 heldKeys)
+static enum AcroTransition AcroBikeHandleInputTurnJump(enum Direction *ptr, u16 newKeys, u16 heldKeys)
 {
     gPlayerAvatar.acroBikeState = ACRO_STATE_NORMAL;
     return CheckMovementInputAcroBike(ptr, newKeys, heldKeys);
@@ -1043,10 +1043,10 @@ static void Bike_SetBikeStill(void)
     gPlayerAvatar.bikeSpeed = PLAYER_SPEED_STANDING;
 }
 
-s16 GetPlayerSpeed(void)
+enum PlayerSpeed GetPlayerSpeed(void)
 {
     // because the player pressed a direction, it won't ever return a speed of 0 since this function returns the player's current speed.
-    s16 machSpeeds[3];
+    enum PlayerSpeed machSpeeds[3];
 
     memcpy(machSpeeds, sMachBikeSpeeds, sizeof(machSpeeds));
 
