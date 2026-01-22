@@ -11798,13 +11798,6 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent 
 {
     if (!ObjectEventExecSingleMovementAction(objectEvent, sprite))
         return FALSE;
-
-    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
-    {
-        MoveToPlayerForEncounter(objectEvent, sprite);
-        sprite->sTypeFuncId = 6;
-        return FALSE;
-    }
     
     SetMovementDelay(sprite, sMovementDelaysOWE[Random() % ARRAY_COUNT(sMovementDelaysOWE)]);
     sprite->sTypeFuncId = 3;
@@ -11813,6 +11806,14 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent 
 
 bool8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
+    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
+    {
+        ClearObjectEventMovement(objectEvent, sprite);
+        MoveToPlayerForEncounter(objectEvent, sprite);
+        sprite->sTypeFuncId = 6;
+        return FALSE;
+    }
+
     if (WaitForMovementDelay(sprite))
     {
         // resets a mid-movement sprite
