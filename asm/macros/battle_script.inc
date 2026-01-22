@@ -2190,8 +2190,9 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setpoltergeistmessage
+	.macro setpoltergeistmessage failInstr:req
 	callnative BS_SetPoltergeistMessage
+	.4byte \failInstr
 	.endm
 
 	.macro tryresetnegativestatstages

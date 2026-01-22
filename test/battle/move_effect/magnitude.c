@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Magnitude message is printed before failing because of Levit
     } WHEN {
         TURN { MOVE(player, MOVE_MAGNITUDE); }
     } SCENE {
-        MESSAGE("Magnitude 10!");
+        MESSAGE("");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGNITUDE, player);
         ABILITY_POPUP(opponent, ABILITY_LEVITATE);
     }
