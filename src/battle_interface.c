@@ -2086,26 +2086,29 @@ static void MoveBattleBarGraphically(u8 battler, u8 whichBar)
     switch (whichBar)
     {
     case HEALTH_BAR:
-    if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
-    {
-        maxValue = B_HEALTHBAR_PIXELS;
-        currValue = CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
-                            gBattleSpritesDataPtr->battleBars[battler].oldValue,
-                            gBattleSpritesDataPtr->battleBars[battler].receivedValue,
-                            &gBattleSpritesDataPtr->battleBars[battler].currValue,
-                            array, B_HEALTHBAR_PIXELS / 8);
-    }
-    else
-    {
-        CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
-                            gBattleSpritesDataPtr->battleBars[battler].oldValue,
-                            gBattleSpritesDataPtr->battleBars[battler].receivedValue,
-                            &gBattleSpritesDataPtr->battleBars[battler].currValue,
-                            array, B_HEALTHBAR_PIXELS / 8);
+        if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
+        {
+            maxValue = B_HEALTHBAR_PIXELS;
+            currValue = CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
+                                gBattleSpritesDataPtr->battleBars[battler].oldValue,
+                                gBattleSpritesDataPtr->battleBars[battler].receivedValue,
+                                &gBattleSpritesDataPtr->battleBars[battler].currValue,
+                                array, B_HEALTHBAR_PIXELS / 8);
+        }
+        else
+        {
+            CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
+                                gBattleSpritesDataPtr->battleBars[battler].oldValue,
+                                gBattleSpritesDataPtr->battleBars[battler].receivedValue,
+                                &gBattleSpritesDataPtr->battleBars[battler].currValue,
+                                array, B_HEALTHBAR_PIXELS / 8);
 
-        maxValue  = gBattleSpritesDataPtr->battleBars[battler].maxValue;
-        currValue = gBattleSpritesDataPtr->battleBars[battler].currValue;
-    }
+            maxValue = gBattleSpritesDataPtr->battleBars[battler].maxValue;
+            currValue = ClampSignedValue(0,
+                                maxValue,
+                                gBattleSpritesDataPtr->battleBars[battler].oldValue,
+                                gBattleSpritesDataPtr->battleBars[battler].receivedValue);
+        }
 
         if (currValue > (maxValue * 50 / 100)) // more than 50% hp
             barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
@@ -2163,12 +2166,7 @@ static s32 CalcNewBarValue(s32 maxValue, s32 oldValue, s32 receivedValue, s32 *c
             *currValue = oldValue;
     }
 
-    newValue = oldValue - receivedValue;
-    if (newValue < 0)
-        newValue = 0;
-    else if (newValue > maxValue)
-        newValue = maxValue;
-
+    newValue = ClampSignedValue(0, maxValue, oldValue, receivedValue);
     if (maxValue < scale)
     {
         if (newValue == Q_24_8_TO_INT(*currValue) && (*currValue & 0xFF) == 0)
@@ -2234,12 +2232,7 @@ static u8 CalcBarFilledPixels(s32 maxValue, s32 oldValue, s32 receivedValue, s32
     u8 pixels, filledPixels, totalPixels;
     u8 i;
 
-    s32 newValue = oldValue - receivedValue;
-    if (newValue < 0)
-        newValue = 0;
-    else if (newValue > maxValue)
-        newValue = maxValue;
-
+    s32 newValue = ClampSignedValue(0, maxValue, oldValue, receivedValue);
     totalPixels = scale * 8;
 
     for (i = 0; i < scale; i++)
@@ -2284,12 +2277,7 @@ static u8 GetScaledExpFraction(s32 oldValue, s32 receivedValue, s32 maxValue, u8
     s8 oldToMax, newToMax;
 
     scale *= (B_FAST_EXP_GROW) ? 2 : 8;
-    newVal = oldValue - receivedValue;
-
-    if (newVal < 0)
-        newVal = 0;
-    else if (newVal > maxValue)
-        newVal = maxValue;
+    newVal = ClampSignedValue(0, maxValue, oldValue, receivedValue);
 
     oldToMax = oldValue * scale / maxValue;
     newToMax = newVal * scale / maxValue;
