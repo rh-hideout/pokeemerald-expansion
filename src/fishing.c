@@ -541,7 +541,8 @@ static u32 CalculateFishingFollowerBoost()
 static u32 CalculateFishingProximityBoost()
 {
     s16 bobber_x, bobber_y, tile_x, tile_y;
-    u32 direction, facingDirection, numQualifyingTile = 0;
+    enum Direction direction, facingDirection;
+    u32 numQualifyingTile = 0;
     struct ObjectEvent *objectEvent;
 
     if (!I_FISHING_PROXIMITY)
