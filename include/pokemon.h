@@ -868,8 +868,8 @@ const u16 *GetMonSpritePalFromSpeciesIsEgg(u16 species, bool32 isShiny, bool32 i
 bool32 IsMoveHM(enum Move move);
 bool32 CannotForgetMove(enum Move move);
 bool8 IsMonSpriteNotFlipped(u16 species);
-s8 GetMonFlavorRelation(struct Pokemon *mon, u8 flavor);
-s8 GetFlavorRelationByPersonality(u32 personality, u8 flavor);
+s8 GetMonFlavorRelation(struct Pokemon *mon, enum Flavor flavor);
+s8 GetFlavorRelationByPersonality(u32 personality, enum Flavor flavor);
 bool8 IsTradedMon(struct Pokemon *mon);
 bool8 IsOtherTrainer(u32 otId, u8 *otName);
 void MonRestorePP(struct Pokemon *mon);

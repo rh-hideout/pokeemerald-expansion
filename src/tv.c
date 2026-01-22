@@ -1296,7 +1296,7 @@ void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, enum Move move, u16 specie
     }
 }
 
-bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, u8 flavor, u8 color, u8 sheen, u8 language)
+bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, enum Flavor flavor, u8 color, u8 sheen, u8 language)
 {
     TVShow *show;
     u8 name[32];
@@ -5342,20 +5342,22 @@ static void DoTVShow3CheersForPokeblocks(void)
     case 1:
         switch (show->threeCheers.flavor)
         {
-        case 0:
+        case FLAVOR_SPICY:
             StringCopy(gStringVar1, gText_Spicy2);
             break;
-        case 1:
+        case FLAVOR_DRY:
             StringCopy(gStringVar1, gText_Dry2);
             break;
-        case 2:
+        case FLAVOR_SWEET:
             StringCopy(gStringVar1, gText_Sweet2);
             break;
-        case 3:
+        case FLAVOR_BITTER:
             StringCopy(gStringVar1, gText_Bitter2);
             break;
-        case 4:
+        case FLAVOR_SOUR:
             StringCopy(gStringVar1, gText_Sour2);
+            break;
+        default:
             break;
         }
         if (show->threeCheers.sheen > 24)
@@ -5380,20 +5382,22 @@ static void DoTVShow3CheersForPokeblocks(void)
     case 3:
         switch (show->threeCheers.flavor)
         {
-        case 0:
+        case FLAVOR_SPICY:
             StringCopy(gStringVar1, gText_Spicy2);
             break;
-        case 1:
+        case FLAVOR_DRY:
             StringCopy(gStringVar1, gText_Dry2);
             break;
-        case 2:
+        case FLAVOR_SWEET:
             StringCopy(gStringVar1, gText_Sweet2);
             break;
-        case 3:
+        case FLAVOR_BITTER:
             StringCopy(gStringVar1, gText_Bitter2);
             break;
-        case 4:
+        case FLAVOR_SOUR:
             StringCopy(gStringVar1, gText_Sour2);
+            break;
+        default:
             break;
         }
 
