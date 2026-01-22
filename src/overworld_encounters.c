@@ -1352,7 +1352,7 @@ static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent)
     return OW_WILD_ENCOUNTERS_DESPAWN_SOUND;
 }
 
-void OverworldWildEncounter_FreezeAllObjects(void)
+void UNUSED_OverworldWildEncounter_FreezeAllObjects(void)
 {
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {

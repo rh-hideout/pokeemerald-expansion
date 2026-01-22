@@ -131,7 +131,7 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
-void OverworldWildEncounter_FreezeAllObjects(void);
+void UNUSED_OverworldWildEncounter_FreezeAllObjects(void);
 bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent);
 bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void);
 
