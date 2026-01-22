@@ -334,6 +334,7 @@ void SetSpriteOamFlipBits(struct Sprite *sprite, u8 hFlip, u8 vFlip);
 u8 IndexOfSpriteTileTag(u16 tag);
 void FillSpriteRectColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color);
 void FillSpriteRectSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height);
+void FillSpriteRectSpriteWithSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 *sprite);
 void SetupSpritesForTextPrinting(u8 *spriteIds, const u32 **spriteSrc, u32 numSpritesX, u32 numSpritesY);
 u32 *GetSrcPtrFromSprite(struct Sprite *sprite);
 u32 GetSpriteWidth(struct Sprite *sprite);

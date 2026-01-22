@@ -34,28 +34,33 @@
 // In Gen 4 only, migrated Pokémon with Diamond, Pearl, or Platinum's ID show as "----------".
 // Gen 5 and up read Diamond, Pearl, or Platinum's ID as "Sinnoh".
 // In Gen 4 and up, migrated Pokémon with HeartGold or SoulSilver's ID show the otherwise unused "Johto" string.
-#define VERSION_SAPPHIRE 1
-#define VERSION_RUBY 2
-#define VERSION_EMERALD 3
-#define VERSION_FIRE_RED 4
-#define VERSION_LEAF_GREEN 5
-#define VERSION_HEART_GOLD 7
-#define VERSION_SOUL_SILVER 8
-#define VERSION_DIAMOND 10
-#define VERSION_PEARL 11
-#define VERSION_PLATINUM 12
-#define VERSION_GAMECUBE 15
+enum GameVersion
+{
+    VERSION_SAPPHIRE = 1,
+    VERSION_RUBY = 2,
+    VERSION_EMERALD = 3,
+    VERSION_FIRE_RED = 4,
+    VERSION_LEAF_GREEN = 5,
+    VERSION_HEART_GOLD = 7,
+    VERSION_SOUL_SILVER = 8,
+    VERSION_DIAMOND = 10,
+    VERSION_PEARL = 11,
+    VERSION_PLATINUM = 12,
+    VERSION_GAMECUBE = 15,
+    NUM_VERSIONS = VERSION_GAMECUBE,
+};
 
-#define NUM_VERSIONS 15
-
-#define LANGUAGE_JAPANESE 1
-#define LANGUAGE_ENGLISH  2
-#define LANGUAGE_FRENCH   3
-#define LANGUAGE_ITALIAN  4
-#define LANGUAGE_GERMAN   5
-#define LANGUAGE_KOREAN   6 // 6 goes unused but the theory is it was meant to be Korean
-#define LANGUAGE_SPANISH  7
-#define NUM_LANGUAGES     7
+enum Language
+{
+    LANGUAGE_JAPANESE = 1,
+    LANGUAGE_ENGLISH = 2,
+    LANGUAGE_FRENCH = 3,
+    LANGUAGE_ITALIAN = 4,
+    LANGUAGE_GERMAN = 5,
+    LANGUAGE_KOREAN = 6, // 6 goes unused but the theory is it was meant to be Korean,
+    LANGUAGE_SPANISH = 7,
+    NUM_LANGUAGES = LANGUAGE_SPANISH,
+};
 
 #define GAME_VERSION (VERSION_EMERALD)
 #define GAME_LANGUAGE (LANGUAGE_ENGLISH)
@@ -107,24 +112,31 @@
 #define HALL_RECORDS_COUNT 3
 
 // Battle Frontier level modes.
-#define FRONTIER_LVL_50         0
-#define FRONTIER_LVL_OPEN       1
-#define FRONTIER_LVL_MODE_COUNT 2
-#define FRONTIER_LVL_TENT       FRONTIER_LVL_MODE_COUNT // Special usage for indicating Battle Tent
+enum FrontierLevelMode
+{
+    FRONTIER_LVL_50,
+    FRONTIER_LVL_OPEN,
+    FRONTIER_LVL_TENT, // Special usage for indicating Battle Tent
+    FRONTIER_LVL_MODE_COUNT = FRONTIER_LVL_TENT,
+};
 
 #define TRAINER_ID_LENGTH 4
 #define MAX_MON_MOVES 4
 #define ALL_MOVES_MASK ((1 << MAX_MON_MOVES) - 1)
 
 #define CONTESTANT_COUNT 4
-#define CONTEST_CATEGORY_COOL      0
-#define CONTEST_CATEGORY_BEAUTIFUL 1
-#define CONTEST_CATEGORY_BEAUTY    CONTEST_CATEGORY_BEAUTIFUL
-#define CONTEST_CATEGORY_CUTE      2
-#define CONTEST_CATEGORY_CLEVER    3
-#define CONTEST_CATEGORY_SMART     CONTEST_CATEGORY_CLEVER
-#define CONTEST_CATEGORY_TOUGH     4
-#define CONTEST_CATEGORIES_COUNT   5
+
+enum ContestCategories
+{
+    CONTEST_CATEGORY_COOL,
+    CONTEST_CATEGORY_BEAUTIFUL,
+    CONTEST_CATEGORY_BEAUTY = CONTEST_CATEGORY_BEAUTIFUL,
+    CONTEST_CATEGORY_CUTE,
+    CONTEST_CATEGORY_CLEVER,
+    CONTEST_CATEGORY_SMART = CONTEST_CATEGORY_CLEVER,
+    CONTEST_CATEGORY_TOUGH,
+    CONTEST_CATEGORIES_COUNT
+};
 
 // string lengths
 #define ITEM_NAME_LENGTH 20
@@ -149,9 +161,12 @@
 
 #define MAX_STAMP_CARD_STAMPS 7
 
-#define MALE 0
-#define FEMALE 1
-#define GENDER_COUNT 2
+enum Gender
+{
+    MALE,
+    FEMALE,
+    GENDER_COUNT,
+};
 
 #define NUM_BARD_SONG_WORDS    6
 #define NUM_STORYTELLER_TALES  4
@@ -174,29 +189,31 @@
 #define OPTIONS_BATTLE_STYLE_SHIFT 0
 #define OPTIONS_BATTLE_STYLE_SET 1
 
-#define DIR_NONE        0
-#define DIR_SOUTH       1
-#define DIR_NORTH       2
-#define DIR_WEST        3
-#define DIR_EAST        4
-#define DIR_SOUTHWEST   5
-#define DIR_SOUTHEAST   6
-#define DIR_NORTHWEST   7
-#define DIR_NORTHEAST   8
-#define CARDINAL_DIRECTION_COUNT DIR_SOUTHWEST
+enum Direction
+{
+    DIR_NONE,
+    DIR_SOUTH,
+    DIR_NORTH,
+    DIR_WEST,
+    DIR_EAST,
+    CARDINAL_DIRECTION_COUNT,
+    DIR_SOUTHWEST = CARDINAL_DIRECTION_COUNT,
+    DIR_SOUTHEAST,
+    DIR_NORTHWEST,
+    DIR_NORTHEAST,
+};
 
-#define AXIS_X     0
-#define AXIS_Y     1
-#define AXIS_COUNT 2
-
-#define CONNECTION_INVALID -1
-#define CONNECTION_NONE     0
-#define CONNECTION_SOUTH    1
-#define CONNECTION_NORTH    2
-#define CONNECTION_WEST     3
-#define CONNECTION_EAST     4
-#define CONNECTION_DIVE     5
-#define CONNECTION_EMERGE   6
+enum Connection
+{
+    CONNECTION_INVALID = -1,
+    CONNECTION_NONE,
+    CONNECTION_SOUTH,
+    CONNECTION_NORTH,
+    CONNECTION_WEST,
+    CONNECTION_EAST,
+    CONNECTION_DIVE,
+    CONNECTION_EMERGE
+};
 
 #if TESTING
 #include "config/test.h"
