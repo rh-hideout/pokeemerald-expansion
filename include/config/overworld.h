@@ -83,6 +83,7 @@
 #define OW_WILD_ENCOUNTERS_AMBIENT_CRIES        TRUE    // If TRUE, generated overworld encounters will play ambient cries based on their location relative to the player.
 #define OW_WILD_ENCOUNTERS_FEEBAS               FALSE   // If TRUE, any spot that could result in a Feebas fishing encounter can spawn a Feebas overworld wild encounter.
 #define OW_WILD_ENCOUNTERS_DESPAWN_SOUND        TRUE    // If TRUE, plays SE_FLEE when an overworld wild encounter despawns.
+#define OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE  TRUE    // If TRUE, the mon will take steps to be right next to the player before the battle starts.
 
 // Out-of-battle Ability effects
 #define OW_SYNCHRONIZE_NATURE       GEN_LATEST // In Gen8+, if a Pokémon with Synchronize leads the party, wild Pokémon will always have their same Nature as opposed to the 50% chance in previous games. Gift Pokémon excluded.

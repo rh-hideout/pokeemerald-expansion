@@ -69,6 +69,7 @@ static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
 static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
 static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn);
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
+static void OWE_StartEncounterInstant(struct ObjectEvent *mon);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -971,6 +972,9 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
 
         LockPlayerFieldControls();
+        if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
+            OWE_StartEncounterInstant(wildMon);
+
         wildMon->trainerRange_berryTreeId |= OWE_FLAG_START_ENCOUNTER;
     }
 }
@@ -1404,6 +1408,14 @@ static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
         return FALSE;
     
     return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumActiveGeneratedOverworldEncounters() == GetMaxOverworldEncounterSpawns();
+}
+
+void OWE_StartEncounterInstant(struct ObjectEvent *mon)
+{
+    gSpecialVar_LastTalked = mon->localId;
+    gSpecialVar_0x8004 = OW_SPECIES(mon);
+    ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
+    FreezeObjectEvents();
 }
 
 #undef sOverworldEncounterLevel
