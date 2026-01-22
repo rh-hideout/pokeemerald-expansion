@@ -183,7 +183,6 @@ void UpdateOverworldEncounters(void)
         object->hideReflection = TRUE;
 
     OWE_SetNewSpawnCountdown();
-    // sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
 }
 
 static void OWE_SetNewSpawnCountdown(void)
