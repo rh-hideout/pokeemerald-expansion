@@ -84,7 +84,8 @@ gFieldEffectScriptPointers::
 	.4byte gFieldEffectScript_UseRockClimb              @ FLDEFF_USE_ROCK_CLIMB
 	.4byte gFieldEffectScript_RockClimbDust             @ FLDEFF_ROCK_CLIMB_DUST
 	.4byte gFieldEffectScript_ORASDowse                 @ FLDEFF_ORAS_DOWSE
-	.4byte gFieldEffectScript_OWE_SpawnAnim				@ FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_ANIM
+	.4byte gFieldEffectScript_OWE_SpawnAnim0			@ FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_0
+	.4byte gFieldEffectScript_OWE_SpawnAnim1			@ FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_1
 
 gFieldEffectScript_ExclamationMarkIcon1::
 	field_eff_callnative FldEff_ExclamationMarkIcon
@@ -304,8 +305,12 @@ gFieldEffectScript_Bubbles::
 	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect0, FldEff_Bubbles
 	field_eff_end
 
-gFieldEffectScript_OWE_SpawnAnim::
+gFieldEffectScript_OWE_SpawnAnim0::
 	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect0, FldEff_OWE_SpawnAnim
+	field_eff_end
+
+gFieldEffectScript_OWE_SpawnAnim1::
+	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect1, FldEff_OWE_SpawnAnim
 	field_eff_end
 
 gFieldEffectScript_Sparkle::
