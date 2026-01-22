@@ -125,17 +125,22 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleContext *ctx)
             else
                 gBattleMons[ctx->battlerAtk].status1 -= toSub;
 
-            enum BattleMoveEffects moveEffect = GetMoveEffect(ctx->move);
             if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_SLEEP)
             {
-                if (!IsUsableWhileAsleepEffect(moveEffect))
+                enum BattleMoveEffects moveEffect = GetMoveEffect(ctx->move);
+                if (moveEffect == EFFECT_SNORE)
                 {
-                    result = CANCELER_RESULT_FAILURE;
-                    gBattlescriptCurrInstr = BattleScript_MoveUsedIsAsleep;
+                    BattleScriptCall(BattleScript_BeforeSnoreMessage);
+                    result = CANCELER_RESULT_BREAK;
+                }
+                else if (moveEffect == EFFECT_SLEEP_TALK)
+                {
+                    result = CANCELER_RESULT_BREAK;
                 }
                 else
                 {
-                    result = CANCELER_RESULT_BREAK;
+                    gBattlescriptCurrInstr = BattleScript_MoveUsedIsAsleep;
+                    result = CANCELER_RESULT_FAILURE;
                 }
             }
             else
@@ -1112,9 +1117,6 @@ static enum CancelerResult CancelerMoveSpecificMessage(struct BattleContext *ctx
             return CANCELER_RESULT_BREAK;
         }
         break;
-    case EFFECT_SNORE:
-        BattleScriptCall(BattleScript_SnoreMessage);
-        return CANCELER_RESULT_BREAK;
     default:
         break;
     }
@@ -1216,9 +1218,7 @@ static bool32 IsTargetingBothFoes(u32 battlerAtk, u32 battlerDef)
 
 static bool32 IsTargetingSelf(u32 battlerAtk, u32 battlerDef)
 {
-    if (battlerAtk != battlerDef)
-        return skipFailure;
-    return skipFailure; // In Gen3 the user checks it's own failure. Unclear because no such moves exists
+    return skipFailure;
 }
 
 static bool32 IsTargetingAlly(u32 battlerAtk, u32 battlerDef)
@@ -1239,7 +1239,7 @@ static bool32 IsTargetingSelfAndAlly(u32 battlerAtk, u32 battlerDef)
             gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_NO_EFFECT;
         return skipFailure;
     }
-    return checkFailure; // In Gen3 the user checks it's own failure. Unclear because no such moves exists
+    return checkFailure;
 }
 
 static bool32 IsTargetingSelfOrAlly(u32 battlerAtk, u32 battlerDef)
@@ -1253,7 +1253,7 @@ static bool32 IsTargetingSelfOrAlly(u32 battlerAtk, u32 battlerDef)
         return skipFailure;
     }
 
-    return checkFailure; // In Gen3 the user checks it's own failure. Unclear because no such move exists
+    return checkFailure;
 }
 
 static bool32 IsTargetingFoesAndAlly(u32 battlerAtk, u32 battlerDef)
@@ -1280,7 +1280,6 @@ static bool32 IsTargetingAllBattlers(u32 battlerAtk, u32 battlerDef)
     return checkFailure;
 }
 
-// ShouldCheckFailureOnTarget
 static bool32 (*const sShouldCheckTargetMoveFailure[])(u32 battlerAtk, u32 battlerDef) =
 {
     [TARGET_NONE] = IsTargetingField,

@@ -517,7 +517,7 @@ extern const u8 BattleScript_StealStats[];
 extern const u8 BattleScript_BeatUpAttackMessage[];
 extern const u8 BattleScript_MagnitudeMessage[];
 extern const u8 BattleScript_FickleBeamMessage[];
-extern const u8 BattleScript_SnoreMessage[];
+extern const u8 BattleScript_BeforeSnoreMessage[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
