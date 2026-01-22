@@ -413,16 +413,11 @@ void CameraUpdateNoObjectRefresh(void)
     if (deltaX != 0 || deltaY != 0)
     {
         CameraMove(deltaX, deltaY);
-        // UpdateObjectEventsForCameraUpdate(deltaX, deltaY);
-        // RotatingGatePuzzleCameraUpdate(deltaX, deltaY);
-        // SetBerryTreesSeen();
         AddCameraTileOffset(&sFieldCameraOffset, deltaX * 2, deltaY * 2);
         RedrawMapSlicesForCameraUpdate(&sFieldCameraOffset, deltaX * 2, deltaY * 2);
     }
 
     AddCameraPixelOffset(&sFieldCameraOffset, movementSpeedX, movementSpeedY);
-    // gTotalCameraPixelOffsetX -= movementSpeedX;
-    // gTotalCameraPixelOffsetY -= movementSpeedY;
 }
 
 void CameraUpdate(void)

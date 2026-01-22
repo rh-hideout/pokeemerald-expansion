@@ -290,8 +290,8 @@ static bool8 TryStartInteractionScript(struct MapPosition *position, u16 metatil
 
     // Don't play interaction sound for certain scripts.
     if (script != LittlerootTown_BrendansHouse_2F_EventScript_PC
-    && script != LittlerootTown_MaysHouse_2F_EventScript_PC
-    && script != EventScript_PalletTown_PlayersHouse_2F_TurnOnPC
+     && script != LittlerootTown_MaysHouse_2F_EventScript_PC
+     && script != EventScript_PalletTown_PlayersHouse_2F_TurnOnPC
      && script != SecretBase_EventScript_PC
      && script != SecretBase_EventScript_RecordMixingPC
      && script != SecretBase_EventScript_DollInteract
@@ -513,64 +513,66 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         return EventScript_Questionnaire;
     if (MetatileBehavior_IsTrainerHillTimer(metatileBehavior) == TRUE)
         return EventScript_TrainerHillTimer;
-#if IS_FRLG
-    if (MetatileBehavior_IsFood(metatileBehavior) == TRUE)
-        return EventScript_Food;
-    if (MetatileBehavior_IsImpressiveMachine(metatileBehavior) == TRUE)
-        return EventScript_ImpressiveMachine;
-    if (MetatileBehavior_IsBlueprints(metatileBehavior) == TRUE)
-        return EventScript_Blueprints;
-    if (MetatileBehavior_IsVideoGame(metatileBehavior) == TRUE)
-        return EventScript_VideoGame;
-    if (MetatileBehavior_IsBurglary(metatileBehavior) == TRUE)
-        return EventScript_Burglary;
-    if (MetatileBehavior_IsTrainerTowerMonitor(metatileBehavior) == TRUE)
-        return TrainerTower_EventScript_ShowTime;
-    if (MetatileBehavior_IsComputer(metatileBehavior) == TRUE)
-        return EventScript_Computer;
-    if (MetatileBehavior_IsCabinet(metatileBehavior) == TRUE)
-        return EventScript_Cabinet;
-    if (MetatileBehavior_IsKitchen(metatileBehavior) == TRUE)
-        return EventScript_Kitchen;
-    if (MetatileBehavior_IsDresser(metatileBehavior) == TRUE)
-        return EventScript_Dresser;
-    if (MetatileBehavior_IsSnacks(metatileBehavior) == TRUE)
-        return EventScript_Snacks;
-    if (MetatileBehavior_IsPainting(metatileBehavior) == TRUE)
-        return EventScript_Painting;
-    if (MetatileBehavior_IsPowerPlantMachine(metatileBehavior) == TRUE)
-        return EventScript_PowerPlantMachine;
-    if (MetatileBehavior_IsTelephone(metatileBehavior) == TRUE)
-        return EventScript_Telephone;
-    if (MetatileBehavior_IsAdvertisingPoster(metatileBehavior) == TRUE)
-        return EventScript_AdvertisingPoster;
-    if (MetatileBehavior_IsTastyFood(metatileBehavior) == TRUE)
-        return EventScript_TastyFood;
-    if (MetatileBehavior_IsCup(metatileBehavior) == TRUE)
-        return EventScript_Cup;
-    if (MetatileBehavior_IsBlinkingLights(metatileBehavior) == TRUE)
-        return EventScript_BlinkingLights;
-    if (MetatileBehavior_IsNeatlyLinedUpTools(metatileBehavior) == TRUE)
-        return EventScript_NeatlyLinedUpTools;
-    if (MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor(metatileBehavior, direction) == TRUE)
-        return CableClub_EventScript_ShowWirelessCommunicationScreen_Frlg;
-    if (MetatileBehavior_IsPlayerFacingBattleRecords(metatileBehavior, direction) == TRUE)
-        return CableClub_EventScript_ShowBattleRecords_Frlg;
-    if (MetatileBehavior_IsIndigoPlateauSign1(metatileBehavior) == TRUE)
+    if (IS_FRLG)
     {
-        if(direction != DIR_NORTH)
-            return NULL;
-        SetMsgSignPostAndVarFacing(direction);
-        return EventScript_Indigo_UltimateGoal;
+        if (MetatileBehavior_IsFood(metatileBehavior) == TRUE)
+            return EventScript_Food;
+        if (MetatileBehavior_IsImpressiveMachine(metatileBehavior) == TRUE)
+            return EventScript_ImpressiveMachine;
+        if (MetatileBehavior_IsBlueprints(metatileBehavior) == TRUE)
+            return EventScript_Blueprints;
+        if (MetatileBehavior_IsVideoGame(metatileBehavior) == TRUE)
+            return EventScript_VideoGame;
+        if (MetatileBehavior_IsBurglary(metatileBehavior) == TRUE)
+            return EventScript_Burglary;
+        if (MetatileBehavior_IsTrainerTowerMonitor(metatileBehavior) == TRUE)
+            return TrainerTower_EventScript_ShowTime;
+        if (MetatileBehavior_IsComputer(metatileBehavior) == TRUE)
+            return EventScript_Computer;
+        if (MetatileBehavior_IsCabinet(metatileBehavior) == TRUE)
+            return EventScript_Cabinet;
+        if (MetatileBehavior_IsKitchen(metatileBehavior) == TRUE)
+            return EventScript_Kitchen;
+        if (MetatileBehavior_IsDresser(metatileBehavior) == TRUE)
+            return EventScript_Dresser;
+        if (MetatileBehavior_IsSnacks(metatileBehavior) == TRUE)
+            return EventScript_Snacks;
+        if (MetatileBehavior_IsPainting(metatileBehavior) == TRUE)
+            return EventScript_Painting;
+        if (MetatileBehavior_IsPowerPlantMachine(metatileBehavior) == TRUE)
+            return EventScript_PowerPlantMachine;
+        if (MetatileBehavior_IsTelephone(metatileBehavior) == TRUE)
+            return EventScript_Telephone;
+        if (MetatileBehavior_IsAdvertisingPoster(metatileBehavior) == TRUE)
+            return EventScript_AdvertisingPoster;
+        if (MetatileBehavior_IsTastyFood(metatileBehavior) == TRUE)
+            return EventScript_TastyFood;
+        if (MetatileBehavior_IsCup(metatileBehavior) == TRUE)
+            return EventScript_Cup;
+        if (MetatileBehavior_IsBlinkingLights(metatileBehavior) == TRUE)
+            return EventScript_BlinkingLights;
+        if (MetatileBehavior_IsNeatlyLinedUpTools(metatileBehavior) == TRUE)
+            return EventScript_NeatlyLinedUpTools;
+        if (MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor(metatileBehavior, direction) == TRUE)
+            return CableClub_EventScript_ShowWirelessCommunicationScreen_Frlg;
+        if (MetatileBehavior_IsPlayerFacingBattleRecords(metatileBehavior, direction) == TRUE)
+            return CableClub_EventScript_ShowBattleRecords_Frlg;
+        if (MetatileBehavior_IsIndigoPlateauSign1(metatileBehavior) == TRUE)
+        {
+            if(direction != DIR_NORTH)
+                return NULL;
+            SetMsgSignPostAndVarFacing(direction);
+            return EventScript_Indigo_UltimateGoal;
+        }
+        if (MetatileBehavior_IsIndigoPlateauSign2(metatileBehavior) == TRUE)
+        {
+            if(direction != DIR_NORTH)
+                return NULL;
+            SetMsgSignPostAndVarFacing(direction);
+            return EventScript_Indigo_HighestAuthority;
+        }
     }
-    if (MetatileBehavior_IsIndigoPlateauSign2(metatileBehavior) == TRUE)
-    {
-        if(direction != DIR_NORTH)
-            return NULL;
-        SetMsgSignPostAndVarFacing(direction);
-        return EventScript_Indigo_HighestAuthority;
-    }
-#endif // IS_FRLG
+
     if (MetatileBehavior_IsPokeMartSign(metatileBehavior) == TRUE)
     {
         if(direction != DIR_NORTH)

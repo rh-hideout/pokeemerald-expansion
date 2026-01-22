@@ -1113,16 +1113,33 @@ static bool32 ShouldSkipAccuracyCalcPastFirstHit(u32 battlerAtk, enum Ability ab
     return FALSE;
 }
 
+static bool32 ShouldBypassAccuracyCheckFrlg(void)
+{
+    if (!IS_FRLG)
+        return FALSE;
+
+    if ((gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE
+        && (!BtlCtrl_OakOldMan_TestState2Flag(1) || !BtlCtrl_OakOldMan_TestState2Flag(2))
+        && gMovesInfo[gCurrentMove].power != 0
+        && GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER))
+    {
+        return TRUE;
+    }
+
+    if (gBattleTypeFlags & BATTLE_TYPE_POKEDUDE);
+        return TRUE;
+
+    return FALSE;
+}
+
 static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u8 *failInstr)
 {
     enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
     enum HoldEffect holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker);
 
-    if (IS_FRLG &&
-        ((gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && (!BtlCtrl_OakOldMan_TestState2Flag(1) || !BtlCtrl_OakOldMan_TestState2Flag(2))
-        && gMovesInfo[gCurrentMove].power != 0 && GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER)
-        || (gBattleTypeFlags & BATTLE_TYPE_POKEDUDE)))
-    {    if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED)
+    if (ShouldBypassAccuracyCheckFrlg())
+    {
+        if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED)
         {
             gBattleStruct->moveResultFlags[gBattlerTarget] = MOVE_RESULT_MISSED;
             gLastLandedMoves[gBattlerTarget] = 0;
@@ -1133,6 +1150,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
         {
             gBattlescriptCurrInstr = nextInstr;
         }
+        return;
     }
 
     if (ShouldSkipAccuracyCalcPastFirstHit(gBattlerAttacker, abilityAtk, holdEffectAtk, GetMoveEffect(gCurrentMove))
