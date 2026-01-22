@@ -44,12 +44,12 @@ static u8 AcroBike_GetJumpDirection(void);
 static void Bike_UpdateDirTimerHistory(enum Direction);
 static void Bike_UpdateABStartSelectHistory(u8);
 static enum Direction Bike_DPadToDirection(u16);
-static u8 GetBikeCollision(enum Direction);
-static u8 GetBikeCollisionAt(struct ObjectEvent *, s16, s16, enum Direction, u8);
+static enum Collision GetBikeCollision(enum Direction);
+static enum Collision GetBikeCollisionAt(struct ObjectEvent *, s16, s16, enum Direction, u8);
 static bool8 IsRunningDisallowedByMetatile(u8);
 static void Bike_TryAdvanceCyclingRoadCollisions();
 static u8 CanBikeFaceDirOnMetatile(enum Direction, u8);
-static bool8 WillPlayerCollideWithCollision(u8, enum Direction);
+static bool8 WillPlayerCollideWithCollision(enum Collision, enum Direction);
 static void Bike_SetBikeStill(void);
 
 // const rom data
@@ -216,7 +216,7 @@ static void MachBikeTransition_TurnDirection(enum Direction direction)
 static void MachBikeTransition_TrySpeedUp(enum Direction direction)
 {
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
-    u8 collision;
+    enum Collision collision;
 
     if (CanBikeFaceDirOnMetatile(direction, playerObjEvent->currentMetatileBehavior) == FALSE)
     {
@@ -229,7 +229,7 @@ static void MachBikeTransition_TrySpeedUp(enum Direction direction)
     else
     {
         collision = GetBikeCollision(direction);
-        if (collision > 0 && collision < COLLISION_VERTICAL_RAIL)
+        if (collision > COLLISION_NONE && collision < COLLISION_VERTICAL_RAIL)
         {
             // we hit a solid object, but check to see if its a ledge and then jump.
             if (collision == COLLISION_LEDGE_JUMP)
@@ -262,7 +262,7 @@ static void MachBikeTransition_TrySpeedUp(enum Direction direction)
 
 static void MachBikeTransition_TrySlowDown(enum Direction direction)
 {
-    u8 collision;
+    enum Collision collision;
 
     if (gPlayerAvatar.bikeSpeed != PLAYER_SPEED_STANDING)
         gPlayerAvatar.bikeFrameCounter = --gPlayerAvatar.bikeSpeed;
@@ -564,7 +564,7 @@ static void AcroBikeTransition_TurnDirection(enum Direction direction)
 
 static void AcroBikeTransition_Moving(enum Direction direction)
 {
-    u8 collision;
+    enum Collision collision;
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     if (CanBikeFaceDirOnMetatile(direction, playerObjEvent->currentMetatileBehavior) == 0)
@@ -573,7 +573,7 @@ static void AcroBikeTransition_Moving(enum Direction direction)
         return;
     }
     collision = GetBikeCollision(direction);
-    if (collision > 0 && collision < COLLISION_VERTICAL_RAIL)
+    if (collision > COLLISION_NONE && collision < COLLISION_VERTICAL_RAIL)
     {
         if (collision == COLLISION_LEDGE_JUMP)
             PlayerJumpLedge(direction);
@@ -629,7 +629,7 @@ static void AcroBikeTransition_WheelieHoppingStanding(enum Direction direction)
 
 static void AcroBikeTransition_WheelieHoppingMoving(enum Direction direction)
 {
-    u8 collision;
+    enum Collision collision;
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     if (CanBikeFaceDirOnMetatile(direction, playerObjEvent->currentMetatileBehavior) == 0)
@@ -660,7 +660,7 @@ static void AcroBikeTransition_WheelieHoppingMoving(enum Direction direction)
 
 static void AcroBikeTransition_SideJump(enum Direction direction)
 {
-    u8 collision;
+    enum Collision collision;
     struct ObjectEvent *playerObjEvent;
 
     collision = GetBikeCollision(direction);
@@ -692,7 +692,7 @@ static void AcroBikeTransition_TurnJump(enum Direction direction)
 
 static void AcroBikeTransition_WheelieMoving(enum Direction direction)
 {
-    u8 collision;
+    enum Collision collision;
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     if (CanBikeFaceDirOnMetatile(direction, playerObjEvent->currentMetatileBehavior) == 0)
@@ -701,7 +701,7 @@ static void AcroBikeTransition_WheelieMoving(enum Direction direction)
         return;
     }
     collision = GetBikeCollision(direction);
-    if (collision > 0 && collision < COLLISION_VERTICAL_RAIL)
+    if (collision > COLLISION_NONE && collision < COLLISION_VERTICAL_RAIL)
     {
         if (collision == COLLISION_LEDGE_JUMP)
         {
@@ -727,7 +727,7 @@ static void AcroBikeTransition_WheelieMoving(enum Direction direction)
 
 static void AcroBikeTransition_WheelieRisingMoving(enum Direction direction)
 {
-    u8 collision;
+    enum Collision collision;
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     if (CanBikeFaceDirOnMetatile(direction, playerObjEvent->currentMetatileBehavior) == 0)
@@ -736,7 +736,7 @@ static void AcroBikeTransition_WheelieRisingMoving(enum Direction direction)
         return;
     }
     collision = GetBikeCollision(direction);
-    if (collision > 0 && collision < COLLISION_VERTICAL_RAIL)
+    if (collision > COLLISION_NONE && collision < COLLISION_VERTICAL_RAIL)
     {
         if (collision == COLLISION_LEDGE_JUMP)
         {
@@ -762,7 +762,7 @@ static void AcroBikeTransition_WheelieRisingMoving(enum Direction direction)
 
 static void AcroBikeTransition_WheelieLoweringMoving(enum Direction direction)
 {
-    u8 collision;
+    enum Collision collision;
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     if (CanBikeFaceDirOnMetatile(direction, playerObjEvent->currentMetatileBehavior) == 0)
@@ -771,7 +771,7 @@ static void AcroBikeTransition_WheelieLoweringMoving(enum Direction direction)
         return;
     }
     collision = GetBikeCollision(direction);
-    if (collision > 0 && collision < COLLISION_VERTICAL_RAIL)
+    if (collision > COLLISION_NONE && collision < COLLISION_VERTICAL_RAIL)
     {
         if (collision == COLLISION_LEDGE_JUMP)
             PlayerJumpLedge(direction);
@@ -888,7 +888,7 @@ static enum Direction Bike_DPadToDirection(u16 heldKeys)
     return DIR_NONE;
 }
 
-static u8 GetBikeCollision(enum Direction direction)
+static enum Collision GetBikeCollision(enum Direction direction)
 {
     u8 metatileBehavior;
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -899,9 +899,9 @@ static u8 GetBikeCollision(enum Direction direction)
     return GetBikeCollisionAt(playerObjEvent, x, y, direction, metatileBehavior);
 }
 
-static u8 GetBikeCollisionAt(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
+static enum Collision GetBikeCollisionAt(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
 {
-    u8 collision = CheckForObjectEventCollision(objectEvent, x, y, direction, metatileBehavior);
+    enum Collision collision = CheckForObjectEventCollision(objectEvent, x, y, direction, metatileBehavior);
 
     if (collision > COLLISION_OBJECT_EVENT)
         return collision;
@@ -957,7 +957,7 @@ static bool8 CanBikeFaceDirOnMetatile(enum Direction direction, u8 tile)
     return TRUE;
 }
 
-static bool8 WillPlayerCollideWithCollision(u8 newTileCollision, enum Direction direction)
+static bool8 WillPlayerCollideWithCollision(enum Collision newTileCollision, enum Direction direction)
 {
     if (direction == DIR_NORTH || direction == DIR_SOUTH)
     {

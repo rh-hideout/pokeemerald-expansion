@@ -866,7 +866,7 @@ void DestroyFollowerNPC(void)
 u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, enum Direction direction)
 {
     u32 newState = MOVEMENT_INVALID;
-    u32 collision = COLLISION_NONE;
+    enum Collision collision = COLLISION_NONE;
     s16 followerX = follower->currentCoords.x;
     s16 followerY = follower->currentCoords.y;
     u32 currentBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
@@ -927,6 +927,8 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, enum Dire
         break;
     case COLLISION_SIDEWAYS_STAIRS_TO_RIGHT:
         follower->directionOverwrite = GetRightSideStairsDirection(direction);
+        break;
+    default:
         break;
     }
 

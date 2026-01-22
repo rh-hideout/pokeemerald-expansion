@@ -93,13 +93,13 @@ static u8 CheckMovementInputNotOnBike(enum Direction);
 static void PlayerNotOnBikeNotMoving(enum Direction, u16);
 static void PlayerNotOnBikeTurningInPlace(enum Direction, u16);
 static void PlayerNotOnBikeMoving(enum Direction, u16);
-static u8 CheckForPlayerAvatarCollision(enum Direction);
-static u8 CheckForPlayerAvatarStaticCollision(enum Direction);
-static u8 CheckForObjectEventStaticCollision(struct ObjectEvent *, s16, s16, enum Direction, u8);
+static enum Collision CheckForPlayerAvatarCollision(enum Direction);
+static enum Collision CheckForPlayerAvatarStaticCollision(enum Direction);
+static enum Collision CheckForObjectEventStaticCollision(struct ObjectEvent *, s16, s16, enum Direction, u8);
 static bool8 CanStopSurfing(s16, s16, enum Direction);
 static bool8 ShouldJumpLedge(s16, s16, enum Direction);
 static bool8 TryPushBoulder(s16, s16, enum Direction);
-static void CheckAcroBikeCollision(s16, s16, u8, u8 *);
+static void CheckAcroBikeCollision(s16, s16, u8, enum Collision *);
 
 static void DoPlayerAvatarTransition(void);
 static void PlayerAvatarTransition_Dummy(struct ObjectEvent *);
@@ -211,7 +211,7 @@ static bool8 (*const sAcroBikeTrickMetatiles[NUM_ACRO_BIKE_COLLISIONS])(u8) =
     MetatileBehavior_IsHorizontalRail,
 };
 
-static const u8 sAcroBikeTrickCollisionTypes[NUM_ACRO_BIKE_COLLISIONS] = {
+static const enum Collision sAcroBikeTrickCollisionTypes[NUM_ACRO_BIKE_COLLISIONS] = {
     COLLISION_WHEELIE_HOP,
     COLLISION_ISOLATED_VERTICAL_RAIL,
     COLLISION_ISOLATED_HORIZONTAL_RAIL,
@@ -472,7 +472,7 @@ static bool8 ForcedMovement_None(void)
 static bool8 DoForcedMovement(enum Direction direction, void (*moveFunc)(enum Direction))
 {
     struct PlayerAvatar *playerAvatar = &gPlayerAvatar;
-    u8 collision;
+    enum Collision collision;
 
     // Check for sideways stairs onto ice movement.
     switch (direction)
@@ -780,7 +780,7 @@ static void PlayerNotOnBikeTurningInPlace(enum Direction direction, u16 heldKeys
 
 static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys)
 {
-    u8 collision = CheckForPlayerAvatarCollision(direction);
+    enum Collision collision = CheckForPlayerAvatarCollision(direction);
 
     if (collision)
     {
@@ -871,7 +871,7 @@ static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys)
     }
 }
 
-static u8 CheckForPlayerAvatarCollision(enum Direction direction)
+static enum Collision CheckForPlayerAvatarCollision(enum Direction direction)
 {
     s16 x, y;
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -885,7 +885,7 @@ static u8 CheckForPlayerAvatarCollision(enum Direction direction)
     return CheckForObjectEventCollision(playerObjEvent, x, y, direction, MapGridGetMetatileBehaviorAt(x, y));
 }
 
-static u8 CheckForPlayerAvatarStaticCollision(enum Direction direction)
+static enum Collision CheckForPlayerAvatarStaticCollision(enum Direction direction)
 {
     s16 x, y;
     struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -896,9 +896,9 @@ static u8 CheckForPlayerAvatarStaticCollision(enum Direction direction)
     return CheckForObjectEventStaticCollision(playerObjEvent, x, y, direction, MapGridGetMetatileBehaviorAt(x, y));
 }
 
-u8 CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
+enum Collision CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
 {
-    u8 collision = GetCollisionAtCoords(objectEvent, x, y, direction);
+    enum Collision collision = GetCollisionAtCoords(objectEvent, x, y, direction);
 
     if (collision == COLLISION_ELEVATION_MISMATCH && CanStopSurfing(x, y, direction))
         return COLLISION_STOP_SURFING;
@@ -921,9 +921,9 @@ u8 CheckForObjectEventCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, e
     return collision;
 }
 
-static u8 CheckForObjectEventStaticCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
+static enum Collision CheckForObjectEventStaticCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 metatileBehavior)
 {
-    u8 collision = GetCollisionAtCoords(objectEvent, x, y, direction);
+    enum Collision collision = GetCollisionAtCoords(objectEvent, x, y, direction);
 
     if (collision == COLLISION_NONE)
     {
@@ -981,7 +981,7 @@ static bool8 TryPushBoulder(s16 x, s16 y, enum Direction direction)
     return FALSE;
 }
 
-static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, u8 *collision)
+static void CheckAcroBikeCollision(s16 x, s16 y, u8 metatileBehavior, enum Collision *collision)
 {
     u8 i;
 
