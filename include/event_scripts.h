@@ -689,7 +689,7 @@ extern const u8 EventScript_LostSignal[];
 extern const u8 EventScript_TooDark[];
 extern const u8 EventScript_MovedTooFast[];
 
-// oak speech
+extern const u8 MoveTutor_AfterChooseBoxMon[];
 
 extern const u8 gOtherText_NewName[];
 extern const u8 gNameChoice_Green[];

@@ -70,7 +70,7 @@ Route4_PokemonCenter_1F_EventScript_BuyMagikarpPC::
 	goto_if_eq VAR_RESULT, NO, Route4_PokemonCenter_1F_EventScript_TransferMagikarpCloseMoneyBox
 	fadescreen FADE_TO_BLACK
 	hidemoneybox
-	special ChangeBoxPokemonNickname
+	special ChangePokemonNickname
 	waitstate
 	lock
 	faceplayer

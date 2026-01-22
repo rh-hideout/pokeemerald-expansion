@@ -877,7 +877,7 @@ static u32 ItemRestorePp(u32 battler, enum Item itemId)
     return effect;
 }
 
-static enum ItemEffect HealConfuseBerry(u32 battler, enum Item itemId, u32 flavorId)
+static enum ItemEffect HealConfuseBerry(u32 battler, enum Item itemId, enum Flavor flavorId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     u32 hpFraction = B_CONFUSE_BERRIES_HEAL >= GEN_7 ? 4 : 2;
