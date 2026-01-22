@@ -1966,7 +1966,21 @@ bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove)
     switch (protectMethod)
     {
     case PROTECT_CRAFTY_SHIELD:
-        return IsBattleMoveStatus(attackerMove) && GetMoveEffect(attackerMove) != EFFECT_COACHING;
+        if (!IsBattleMoveStatus(attackerMove))
+        {
+            return FALSE;
+        }
+        else if (GetMoveEffect(attackerMove) == EFFECT_HOLD_HANDS)
+        {
+            return TRUE;
+        }
+        else
+        {
+            u32 moveTarget = GetBattlerMoveTargetType(battlerAtk, attackerMove);
+            return (GetBattlerSide(battlerAtk) != GetBattlerSide(BATTLE_PARTNER(battlerAtk))
+                && moveTarget != MOVE_TARGET_OPPONENTS_FIELD
+                && moveTarget != MOVE_TARGET_ALL_BATTLERS);
+        }
     case PROTECT_WIDE_GUARD:
         return IsSpreadMove(GetBattlerMoveTargetType(battlerAtk, attackerMove));
     case PROTECT_NORMAL:

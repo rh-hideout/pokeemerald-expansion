@@ -6653,9 +6653,17 @@ bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move)
     bool32 isProtected = FALSE;
 
     if (IsSideProtected(battlerDef, PROTECT_CRAFTY_SHIELD)
-     && IsBattleMoveStatus(move)
-     && GetMoveEffect(move) != EFFECT_COACHING)
-        isProtected = TRUE;
+     && IsBattleMoveStatus(move))
+    {
+        u32 moveTarget = GetBattlerMoveTargetType(battlerAtk, move);
+        if (GetMoveEffect(move) == EFFECT_HOLD_HANDS
+         || (GetBattlerSide(battlerAtk) != GetBattlerSide(battlerDef)
+          && moveTarget != MOVE_TARGET_OPPONENTS_FIELD
+          && moveTarget != MOVE_TARGET_ALL_BATTLERS))
+        {
+            isProtected = TRUE;
+        }
+    }
     else if (MoveIgnoresProtect(move))
         isProtected = FALSE;
     else if (IsSideProtected(battlerDef, PROTECT_WIDE_GUARD) && IsSpreadMove(GetBattlerMoveTargetType(battlerAtk, move)))

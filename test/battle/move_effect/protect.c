@@ -528,7 +528,7 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6
     }
 }
 
-DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status moves")
+DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from opposing status moves")
 {
     u16 move = MOVE_NONE;
     struct BattlePokemon *targetOpponent = NULL;
@@ -565,6 +565,72 @@ DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status mo
                 NOT MESSAGE("The opposing Wobbuffet protected itself!");
                 HP_BAR(opponentRight);
             }
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Crafty Shield does not protect against status moves used on the user's side")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_AROMATHERAPY; }
+    PARAMETRIZE { move = MOVE_ACUPRESSURE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
+        ASSUME(GetMoveEffect(MOVE_ACUPRESSURE) == EFFECT_ACUPRESSURE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(5); Status1(STATUS1_BURN); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_CRAFTY_SHIELD);
+            if (move == MOVE_ACUPRESSURE)
+                MOVE(opponentRight, move, target: opponentLeft);
+            else
+                MOVE(opponentRight, move);
+        }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRAFTY_SHIELD, opponentLeft);
+        if (move == MOVE_ACUPRESSURE) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, opponentRight);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATHERAPY, opponentRight);
+            STATUS_ICON(opponentRight, none: TRUE);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Crafty Shield does not protect against entry hazard moves")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_SPIKES; }
+    PARAMETRIZE { move = MOVE_STEALTH_ROCK; }
+    PARAMETRIZE { move = MOVE_TOXIC_SPIKES; }
+    PARAMETRIZE { move = MOVE_STICKY_WEB; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(playerLeft, move, target: opponentLeft); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRAFTY_SHIELD, opponentLeft);
+        if (move == MOVE_SPIKES) {
+            MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+        } else if (move == MOVE_TOXIC_SPIKES) {
+            MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
+        } else if (move == MOVE_STEALTH_ROCK) {
+            MESSAGE("Pointed stones float in the air around the opposing team!");
+        } else {
+            MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
         }
     }
 }
@@ -618,6 +684,11 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
 
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all battlers")
 {
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_FLOWER_SHIELD; }
+    PARAMETRIZE { move = MOVE_PERISH_SONG; }
+
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
         ASSUME(GetSpeciesType(SPECIES_TANGROWTH, 0) == TYPE_GRASS);
@@ -628,21 +699,29 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all
         OPPONENT(SPECIES_SUNKERN);
         OPPONENT(SPECIES_SUNFLORA);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_FLOWER_SHIELD); MOVE(playerRight, MOVE_CELEBRATE); }
+        TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerLeft, move); MOVE(playerRight, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Tangela used Flower Shield!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Tangela's Defense rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("The opposing Sunkern's Defense rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Tangrowth's Defense rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("The opposing Sunflora's Defense rose!");
+        if (move == MOVE_FLOWER_SHIELD) {
+            MESSAGE("Tangela used Flower Shield!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+            MESSAGE("Tangela's Defense rose!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            MESSAGE("The opposing Sunkern's Defense rose!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+            MESSAGE("Tangrowth's Defense rose!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+            MESSAGE("The opposing Sunflora's Defense rose!");
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, playerLeft);
+            NONE_OF {
+                MESSAGE("The opposing Sunkern protected itself!");
+                MESSAGE("The opposing Sunflora protected itself!");
+            }
+        }
     }
 }
 
