@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Hyperspace Fury fails if used by a Pokémon other than Hoopa
 
     GIVEN {
         PLAYER(species);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         TURN { MOVE(player, MOVE_HYPERSPACE_FURY); }
     } SCENE {
@@ -47,7 +47,7 @@ DOUBLE_BATTLE_TEST("Hyperspace Fury hits the target through Protect and breaks i
     GIVEN {
         PLAYER(SPECIES_HOOPA_UNBOUND);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_REGIROCK);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_PROTECT); MOVE(playerLeft, MOVE_HYPERSPACE_FURY, target: opponentLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Hyperspace Fury lowers the user's Defense by 1 stage after h
 {
     GIVEN {
         PLAYER(SPECIES_HOOPA_UNBOUND);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_REGIROCK);
     } WHEN {
         TURN { MOVE(player, MOVE_HYPERSPACE_FURY); }
     } SCENE {
@@ -80,7 +80,7 @@ DOUBLE_BATTLE_TEST("Hyperspace Fury breaks protection and lowers the user's Defe
     GIVEN {
         PLAYER(SPECIES_HOOPA_UNBOUND);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_REGIROCK);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_PROTECT); MOVE(playerLeft, MOVE_HYPERSPACE_FURY, target: opponentLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
