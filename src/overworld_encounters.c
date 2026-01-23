@@ -1020,7 +1020,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
             OWE_StartEncounterInstant(wildMon);
 
-        wildMon->trainerRange_berryTreeId |= OWE_FLAG_START_ENCOUNTER;
+        wildMon->sOverworldEncounterLevel |= OWE_FLAG_START_ENCOUNTER;
     }
 }
 
