@@ -1465,7 +1465,7 @@ void OWE_StartEncounterInstant(struct ObjectEvent *mon)
 
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent)
 {
-    if (!IsGeneratedOverworldWildEncounter(curObject) || IsOverworldWildEncounter(objectEvent))
+    if (!IsGeneratedOverworldWildEncounter(curObject) || IsOverworldWildEncounter(objectEvent) || objectEvent->isPlayer)
         return FALSE;
 
     RemoveObjectEventByLocalIdAndMap(curObject->localId, curObject->mapNum, curObject->mapGroup);
