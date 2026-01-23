@@ -2795,7 +2795,7 @@ const struct SpriteTemplate gZingZapRingTemplate =
     .callback = AnimUproarRing
 };
 
-// Nature's madness
+// Nature's Madness
 const struct SpriteTemplate gNaturesMadnessPinkStarsTemplate =
 {
     .tileTag = ANIM_TAG_SPARKLE_2,
@@ -3464,7 +3464,7 @@ static const union AffineAnimCmd* const sSpriteAffineAnimTable_GrowingSuperpower
     sSpriteAffineAnim_GrowingSuperpowerPlayerAttack,
     sSpriteAffineAnim_GrowingSuperpowerEnemyAttack,
 };
-const struct SpriteTemplate gGrowingSuperpowerTemplate =    //used in Breakneck Blitz
+const struct SpriteTemplate gGrowingSuperpowerTemplate =    // Used in Breakneck Blitz
 {
     .tileTag = ANIM_TAG_METEOR,
     .paletteTag = ANIM_TAG_METEOR,
@@ -4739,7 +4739,7 @@ const struct SpriteTemplate gDevastatingDrakeExplosion2SpriteTemplate =
     .callback = AnimSpriteOnMonPos
 };
 
-// Black Hole eclipse
+// Black Hole Eclipse
 const struct SpriteTemplate gBlackHoleEclipseShockwaveSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -4931,7 +4931,7 @@ const struct SpriteTemplate gTwinkleTackleImpactStarsSpriteTemplate =
     .callback = AnimDizzyPunchDuck
 };
 
-// Catastrokpika
+// Catastropika
 const struct SpriteTemplate gCatastrokpikaSuperpowerSpriteTemplate =
 {
     .tileTag = ANIM_TAG_METEOR,
