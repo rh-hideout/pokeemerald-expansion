@@ -449,7 +449,7 @@ void CreateOverworldWildEncounter(void)
     if (objEventId >= OBJECT_EVENTS_COUNT)
         return;
 
-    if (!IsOverworldWildEncounter(object))
+    if (!IsOverworldWildEncounter(object, OWE_ANY))
         return;
 
     if (indexRoamerOutbreak && CreateOverworldWildEncounter_CheckRoamer(OWE_GetObjectRoamerOutbreakStatus(object)))
@@ -611,10 +611,10 @@ static void SortOWEMonAges(void)
 
 void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
-    if (!IsOverworldWildEncounter(objectEvent))
+    if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return;
     
-    if (IsGeneratedOverworldWildEncounter(objectEvent))
+    if (IsOverworldWildEncounter(objectEvent, OWE_GENERATED))
         SortOWEMonAges();
 
     OWE_DoSpawnDespawnAnim(objectEvent, TRUE);
@@ -622,7 +622,7 @@ void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent
 
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-    if (!IsOverworldWildEncounter(objectEvent))
+    if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return;
 
     objectEvent->sOverworldEncounterLevel = 0;
@@ -754,7 +754,7 @@ static u32 GetNumActiveOverworldEncounters(void)
     u32 numActive = 0;
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        if (IsOverworldWildEncounter(&gObjectEvents[i]))
+        if (IsOverworldWildEncounter(&gObjectEvents[i], OWE_ANY))
             numActive++;
     }
     return numActive;
@@ -783,7 +783,7 @@ void RemoveAllGeneratedOverworldEncounterObjects(void)
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
-        if (IsGeneratedOverworldWildEncounter(obj) && obj->active)
+        if (IsOverworldWildEncounter(obj, OWE_GENERATED) && obj->active)
             RemoveObjectEventByLocalIdAndMap(obj->localId, obj->mapNum, obj->mapGroup);
     }
 }
@@ -818,28 +818,23 @@ static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons)
     return gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo != NULL;
 }
 
-bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent)
+bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType)
 {
-    return (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
-}
+    bool32 isOWE = (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
+    switch (oweType)
+    {
+    default:
+    case OWE_ANY:
+        return isOWE;
+    
+    case OWE_GENERATED:
+        return isOWE && (objectEvent->localId <= LOCALID_OW_ENCOUNTER_END
+            && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
 
-bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent)
-{
-    return IsOverworldWildEncounter(objectEvent)
-        && (objectEvent->localId <= LOCALID_OW_ENCOUNTER_END
-        && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
-}
-
-bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
-{
-    return IsOverworldWildEncounter(objectEvent)
-        && (objectEvent->localId > LOCALID_OW_ENCOUNTER_END
-        || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
-}
-
-bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId, u32 trainerType)
-{
-    return graphicsId == OBJ_EVENT_GFX_OW_MON && trainerType == TRAINER_TYPE_ENCOUNTER;
+    case OWE_MANUAL:
+        return isOWE && (objectEvent->localId > LOCALID_OW_ENCOUNTER_END
+            || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
+    }
 }
 
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
@@ -924,11 +919,11 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
 
-    if (!IsOverworldWildEncounter(object))
+    if (!IsOverworldWildEncounter(object, OWE_ANY))
         return FALSE;
 
-    if (IsGeneratedOverworldWildEncounter(object)
-        || (!IsGeneratedOverworldWildEncounter(object)
+    if (IsOverworldWildEncounter(object, OWE_GENERATED)
+        || (!IsOverworldWildEncounter(object, OWE_GENERATED)
         && (GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL
         || GetObjectEventScriptPointerByObjectEventId(objectEventId) == InteractWithDynamicWildOverworldEncounter)))
     {
@@ -1010,8 +1005,8 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     if (REPEL_STEP_COUNT || FlagGet(DN_FLAG_SEARCHING))
         return;
 
-    bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle));
-    bool32 playerIsObstacle = (obstacle->isPlayer && IsOverworldWildEncounter(collider));
+    bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle, OWE_ANY));
+    bool32 playerIsObstacle = (obstacle->isPlayer && IsOverworldWildEncounter(collider, OWE_ANY));
 
     if ((playerIsCollider || playerIsObstacle))
     {
@@ -1030,7 +1025,7 @@ void OverworldWildEncounter_RemoveObjectOnBattle(void)
     u32 localId = gSpecialVar_LastTalked;
     struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(localId)];
     
-    if (IsOverworldWildEncounter(object))
+    if (IsOverworldWildEncounter(object, OWE_ANY))
     {
         RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
         OWE_SetNewSpawnCountdown();
@@ -1265,7 +1260,7 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
     for (u32 i = 0; i < numActive; i++)
     {
         slotMon = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(slotMon) && (i == randomIndex))
+        if (IsOverworldWildEncounter(slotMon, OWE_ANY) && (i == randomIndex))
             return slotMon;
     }
     return NULL;
@@ -1276,7 +1271,7 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
 #define MAP_METATILE_VIEW_Y 5
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
 {
-    if (!IsOverworldWildEncounter(objectEvent))
+    if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return;
     
     u32 speciesId = OW_SPECIES(objectEvent);
@@ -1314,7 +1309,7 @@ static bool32 OWE_DoesRoamerObjectExist(void)
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         struct ObjectEvent *object = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(object) && OWE_GetObjectRoamerOutbreakStatus(object) == gEncounteredRoamerIndex)
+        if (IsOverworldWildEncounter(object, OWE_ANY) && OWE_GetObjectRoamerOutbreakStatus(object) == gEncounteredRoamerIndex)
             return TRUE;
     }
 
@@ -1398,7 +1393,7 @@ static bool32 OWE_CheckRestrictMovementMapAtCoords(struct ObjectEvent *objectEve
 
 static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent)
 {
-    if (!IsOverworldWildEncounter(objectEvent) || OW_SPECIES(objectEvent) == SPECIES_NONE)
+    if (!IsOverworldWildEncounter(objectEvent, OWE_ANY) || OW_SPECIES(objectEvent) == SPECIES_NONE)
         return FALSE;
 
     if (!AreCoordsInsidePlayerMap(objectEvent->currentCoords.x, objectEvent->currentCoords.y))
@@ -1421,7 +1416,7 @@ static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index)
 
 static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
 {
-    if (!IsOverworldWildEncounter(objectEvent))
+    if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return OWE_NON_ROAMER_OUTBREAK;
 
     u32 status = objectEvent->sRoamerOutbreakStatus;
@@ -1449,7 +1444,7 @@ bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void)
 
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
 {
-    if (!IsGeneratedOverworldWildEncounter(object))
+    if (!IsOverworldWildEncounter(object, OWE_GENERATED))
         return FALSE;
     
     return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumActiveGeneratedOverworldEncounters() == GetMaxOverworldEncounterSpawns();
@@ -1465,7 +1460,7 @@ void OWE_StartEncounterInstant(struct ObjectEvent *mon)
 
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent)
 {
-    if (!IsGeneratedOverworldWildEncounter(curObject) || IsOverworldWildEncounter(objectEvent) || objectEvent->isPlayer)
+    if (!IsOverworldWildEncounter(curObject, OWE_GENERATED) || IsOverworldWildEncounter(objectEvent, OWE_ANY) || objectEvent->isPlayer)
         return FALSE;
 
     RemoveObjectEventByLocalIdAndMap(curObject->localId, curObject->mapNum, curObject->mapGroup);
@@ -1477,7 +1472,7 @@ u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y)
     if ((collision & (1 << (COLLISION_OBJECT_EVENT - 1))))
     {
         struct ObjectEvent *objectEvent = &gObjectEvents[GetObjectEventIdByXY(x, y)];
-        if (IsGeneratedOverworldWildEncounter(objectEvent))
+        if (IsOverworldWildEncounter(objectEvent, OWE_GENERATED))
         {
             RemoveObjectEventByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup);
             collision &= 1 << (COLLISION_OBJECT_EVENT - 1);

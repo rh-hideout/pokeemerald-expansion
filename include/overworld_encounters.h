@@ -52,17 +52,12 @@ enum OverworldEncounterSpawnAnim
     OWE_SPAWN_ANIM_SHINY,
 };
 
-/*
-Combine OWE Type Checks into one function using these.
-Need to figure a clean way to adjust SemiManual check as takes template.
 enum OverworldObjectEncounterType
 {
-    OWE_NONE,
+    OWE_ANY,
     OWE_GENERATED,
-    OWE_SEMI_MANUAL,
-    OWE_MANUAL,
+    OWE_MANUAL
 };
-*/
 
 // OWE_SPEED_FASTER seems to visually bug out sometimes.
 enum OWESpeeds
@@ -106,10 +101,7 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
 void OverworldWildEncounter_SetMinimumSpawnTimer(void);
 void RemoveAllGeneratedOverworldEncounterObjects(void);
-bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
-bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent);
-bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent);
-bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId, u32 trainerType);
+bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
