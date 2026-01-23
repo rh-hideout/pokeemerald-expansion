@@ -399,6 +399,8 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
         if(y == 0 && x < 0)
             y = 1;
         break;
+    default:
+        break;
     }
     
     PlayerGetDestCoords(&playerX, &playerY);

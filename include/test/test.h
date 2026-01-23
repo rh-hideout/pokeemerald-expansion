@@ -17,7 +17,7 @@ struct TestRunner
     bool32 (*checkProgress)(void *);
     bool32 (*handleExitWithResult)(void *, enum TestResult);
     u32 (*randomUniform)(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
-    u32 (*randomWeightedArray)(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller);
+    u32 (*randomWeightedArray)(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller);
     const void* (*randomElementArray)(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 };
 

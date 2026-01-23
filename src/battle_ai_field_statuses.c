@@ -341,7 +341,6 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler)
      || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_NEGATIVE;
 
-
     return FIELD_EFFECT_NEUTRAL;
 }
 
@@ -475,7 +474,6 @@ static enum FieldEffectOutcome BenefitsFromGravity(u32 battler)
     return FIELD_EFFECT_NEUTRAL;
 }
 
-
 static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
 {
     // If we're in singles, we literally only care about speed.
@@ -603,4 +601,3 @@ s32 CalcWeatherScore(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLo
 
     return score;
 }
-

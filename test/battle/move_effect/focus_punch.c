@@ -73,7 +73,7 @@ DOUBLE_BATTLE_TEST("Focus Punch activation is based on Speed")
 
 SINGLE_BATTLE_TEST("Focus Punch activates when Focus Band/Focus Sash blocks OHKO move")
 {
-    u32 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_FOCUS_BAND; }
     PARAMETRIZE { item = ITEM_FOCUS_SASH; }
@@ -139,7 +139,8 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Disguise block a OHKO move (Gen8+
 
 SINGLE_BATTLE_TEST("Focus Punch does not activate when Focus Band/Focus Sash/Sturdy prevent getting one-shot by an attack")
 {
-    u32 item, ability;
+    enum Item item;
+    enum Ability ability;
     PARAMETRIZE { item = ITEM_NONE; ability = ABILITY_STURDY; }
     PARAMETRIZE { item = ITEM_FOCUS_BAND; ability = ABILITY_SHADOW_TAG; }
     PARAMETRIZE { item = ITEM_FOCUS_SASH; ability = ABILITY_SHADOW_TAG; }

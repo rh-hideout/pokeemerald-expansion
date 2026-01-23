@@ -786,7 +786,7 @@ void SanitizeMauvilleOldManForRuby(union OldMan *oldMan)
     }
 }
 
-static void UNUSED SetMauvilleOldManLanguage(union OldMan *oldMan, u32 language1, u32 language2, u32 language3)
+static void UNUSED SetMauvilleOldManLanguage(union OldMan *oldMan, enum Language language1, enum Language language2, enum Language language3)
 {
     s32 i;
 
@@ -851,7 +851,7 @@ static void UNUSED SetMauvilleOldManLanguage(union OldMan *oldMan, u32 language1
     }
 }
 
-void SanitizeReceivedEmeraldOldMan(union OldMan *oldMan, u32 version, u32 language)
+void SanitizeReceivedEmeraldOldMan(union OldMan *oldMan, enum Language language)
 {
     u8 playerName[PLAYER_NAME_LENGTH + 1];
     s32 i;
@@ -874,7 +874,7 @@ void SanitizeReceivedEmeraldOldMan(union OldMan *oldMan, u32 version, u32 langua
     }
 }
 
-void SanitizeReceivedRubyOldMan(union OldMan *oldMan, u32 version, u32 language)
+void SanitizeReceivedRubyOldMan(union OldMan *oldMan, enum GameVersion version, enum Language language)
 {
     bool32 isRuby = (version == VERSION_SAPPHIRE || version == VERSION_RUBY);
 

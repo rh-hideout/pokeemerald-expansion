@@ -179,8 +179,8 @@ SINGLE_BATTLE_TEST("Teatime does not affect Pokémon in the semi-invulnerable tu
 SINGLE_BATTLE_TEST("Teatime triggers Volt Absorb if it has been affected by Electrify or Plasma Fists, even when not holding a Berry")
 {
     enum Move move;
-    u32 item = ITEM_LIECHI_BERRY;
-    bool8 shouldTriggerAbility = TRUE;
+    enum Item item = ITEM_LIECHI_BERRY;
+    bool32 shouldTriggerAbility = TRUE;
 
     PARAMETRIZE { move = MOVE_CELEBRATE; shouldTriggerAbility = FALSE; }
     PARAMETRIZE { move = MOVE_ELECTRIFY; }
@@ -217,8 +217,8 @@ SINGLE_BATTLE_TEST("Teatime triggers Volt Absorb if it has been affected by Elec
 SINGLE_BATTLE_TEST("Teatime triggers Lightning Rod if it has been affected by Electrify or Plasma Fists, even when not holding a Berry")
 {
     enum Move move;
-    u32 item = ITEM_LIECHI_BERRY;
-    bool8 shouldTriggerAbility = TRUE;
+    enum Item item = ITEM_LIECHI_BERRY;
+    bool32 shouldTriggerAbility = TRUE;
 
     PARAMETRIZE { move = MOVE_CELEBRATE; shouldTriggerAbility = FALSE; }
     PARAMETRIZE { move = MOVE_ELECTRIFY; }
@@ -259,8 +259,8 @@ SINGLE_BATTLE_TEST("Teatime triggers Lightning Rod if it has been affected by El
 SINGLE_BATTLE_TEST("Teatime triggers Motor Drive if it has been affected by Electrify or Plasma Fists, even when not holding a Berry")
 {
     enum Move move;
-    u32 item= ITEM_LIECHI_BERRY;
-    bool8 shouldTriggerAbility = TRUE;
+    enum Item item = ITEM_LIECHI_BERRY;
+    bool32 shouldTriggerAbility = TRUE;
 
     PARAMETRIZE { move = MOVE_CELEBRATE; shouldTriggerAbility = FALSE; }
     PARAMETRIZE { move = MOVE_ELECTRIFY; }

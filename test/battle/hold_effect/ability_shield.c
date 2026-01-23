@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Ability Shield protects against Neutralizing Gas")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_ABILITY_SHIELD; }
     PARAMETRIZE { item = ITEM_NONE; }
@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Neutralizing Gas")
 
 SINGLE_BATTLE_TEST("Ability Shield protects against Mold Breaker (no message)")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_ABILITY_SHIELD; }
     PARAMETRIZE { item = ITEM_NONE; }
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Mold Breaker (no message)")
 
 SINGLE_BATTLE_TEST("Ability Shield protects against Mycelium Might (no message)")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_ABILITY_SHIELD; }
     PARAMETRIZE { item = ITEM_NONE; }
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Mycelium Might (no message)"
 
 SINGLE_BATTLE_TEST("Ability Shield protects against Sunsteel Strike (no message)")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_ABILITY_SHIELD; }
     PARAMETRIZE { item = ITEM_NONE; }
@@ -177,7 +177,7 @@ SINGLE_BATTLE_TEST("Ability Shield doesn't reactivate an ability when receiving 
 
 SINGLE_BATTLE_TEST("Ability Shield protects the user from having its ability suppressed by Gastro Acid")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_ABILITY_SHIELD; }
     PARAMETRIZE { item = ITEM_NONE; }
@@ -219,7 +219,7 @@ SINGLE_BATTLE_TEST("Ability Shield doesn't protect the user's ability from being
 
 SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_ABILITY_SHIELD; }
     PARAMETRIZE { item = ITEM_NONE; }
@@ -247,7 +247,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap")
 
 SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap even if user has Klutz")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_ABILITY_SHIELD; }
     PARAMETRIZE { item = ITEM_NONE; }

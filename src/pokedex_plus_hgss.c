@@ -596,7 +596,7 @@ static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum);
 u32 GetSpeciesNameFontId(u32 nameWidth);
 u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
 bool32 IsSpeciesAlcremie(u32 targetSpecies);
-bool32 IsItemSweet(u32 item);
+bool32 IsItemSweet(enum Item item);
 
 //Stat bars by DizzyEgg
 #define TAG_STAT_BAR 4097
@@ -5104,7 +5104,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     u8 moves_x = 5;
     u8 moves_y = 3;
 
-    u32 item = ITEM_MASTER_BALL;
+    enum Item item = ITEM_MASTER_BALL;
     u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
     u32 selected = sPokedexView->moveSelected;
     enum Move move = GetSelectedMove(species, selected);
@@ -5130,7 +5130,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     }
     else if (move)
     {
-        u32 TMHMItemId = ITEM_NONE;
+        enum Item TMHMItemId = ITEM_NONE;
         for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
         {
             if (move == GetTMHMMoveId(i + 1))
@@ -6399,7 +6399,7 @@ bool32 IsSpeciesAlcremie(u32 targetSpecies)
     return GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_ALCREMIE;
 }
 
-bool32 IsItemSweet(u32 item)
+bool32 IsItemSweet(enum Item item)
 {
     return item >= ITEM_STRAWBERRY_SWEET && item <= ITEM_RIBBON_SWEET;
 }

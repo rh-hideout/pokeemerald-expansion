@@ -3,6 +3,7 @@
 
 #include "constants/battle.h"
 #include "battle_bg.h"
+#include "task.h"
 
 struct BattleEnvironment
 {
