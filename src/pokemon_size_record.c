@@ -4,6 +4,7 @@
 #include "pokedex.h"
 #include "pokemon.h"
 #include "pokemon_size_record.h"
+#include "pokemon_storage_system.h"
 #include "string_util.h"
 #include "text.h"
 
@@ -45,18 +46,26 @@ static const u8 sGiftRibbonsMonDataIds[GIFT_RIBBONS_COUNT - 4] =
     MON_DATA_WORLD_RIBBON
 };
 
+enum
+{
+    POKEMON_NONE,
+    POKEMON_INCORRECT_SPECIES,
+    POKEMON_SIZE_SMALLER,
+    POKEMON_SIZE_LARGER
+};
+
 extern const u8 gText_DecimalPoint[];
 extern const u8 gText_Marco[];
 
-static u32 GetMonSizeHash(struct Pokemon *pkmn)
+static u32 GetBoxMonSizeHash(struct BoxPokemon *pkmn)
 {
-    u16 personality = GetMonData(pkmn, MON_DATA_PERSONALITY);
-    u16 hpIV = GetMonData(pkmn, MON_DATA_HP_IV) & 0xF;
-    u16 attackIV = GetMonData(pkmn, MON_DATA_ATK_IV) & 0xF;
-    u16 defenseIV = GetMonData(pkmn, MON_DATA_DEF_IV) & 0xF;
-    u16 speedIV = GetMonData(pkmn, MON_DATA_SPEED_IV) & 0xF;
-    u16 spAtkIV = GetMonData(pkmn, MON_DATA_SPATK_IV) & 0xF;
-    u16 spDefIV = GetMonData(pkmn, MON_DATA_SPDEF_IV) & 0xF;
+    u16 personality = GetBoxMonData(pkmn, MON_DATA_PERSONALITY);
+    u16 hpIV = GetBoxMonData(pkmn, MON_DATA_HP_IV) & 0xF;
+    u16 attackIV = GetBoxMonData(pkmn, MON_DATA_ATK_IV) & 0xF;
+    u16 defenseIV = GetBoxMonData(pkmn, MON_DATA_DEF_IV) & 0xF;
+    u16 speedIV = GetBoxMonData(pkmn, MON_DATA_SPEED_IV) & 0xF;
+    u16 spAtkIV = GetBoxMonData(pkmn, MON_DATA_SPATK_IV) & 0xF;
+    u16 spDefIV = GetBoxMonData(pkmn, MON_DATA_SPDEF_IV) & 0xF;
     u32 hibyte = ((attackIV ^ defenseIV) * hpIV) ^ (personality & 0xFF);
     u32 lobyte = ((spAtkIV ^ spDefIV) * speedIV) ^ (personality >> 8);
 
@@ -118,35 +127,32 @@ static u8 CompareMonSize(u16 species, u16 *sizeRecord)
 {
     if (gSpecialVar_Result == 0xFF)
     {
-        return 0;
+        return POKEMON_NONE;
+    }
+
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    if (GetBoxMonData(boxmon, MON_DATA_IS_EGG) == TRUE || GetBoxMonData(boxmon, MON_DATA_SPECIES) != species)
+    {
+        return POKEMON_INCORRECT_SPECIES;
     }
     else
     {
-        struct Pokemon *pkmn = &gPlayerParty[gSpecialVar_Result];
+        u32 oldSize;
+        u32 newSize;
+        u16 sizeParams;
 
-        if (GetMonData(pkmn, MON_DATA_IS_EGG) == TRUE || GetMonData(pkmn, MON_DATA_SPECIES) != species)
+        *(&sizeParams) = GetBoxMonSizeHash(boxmon);
+        newSize = GetMonSize(species, sizeParams);
+        oldSize = GetMonSize(species, *sizeRecord);
+        FormatMonSizeRecord(gStringVar2, newSize);
+        if (newSize <= oldSize)
         {
-            return 1;
+            return POKEMON_SIZE_SMALLER;
         }
         else
         {
-            u32 oldSize;
-            u32 newSize;
-            u16 sizeParams;
-
-            *(&sizeParams) = GetMonSizeHash(pkmn);
-            newSize = GetMonSize(species, sizeParams);
-            oldSize = GetMonSize(species, *sizeRecord);
-            FormatMonSizeRecord(gStringVar2, newSize);
-            if (newSize <= oldSize)
-            {
-                return 2;
-            }
-            else
-            {
-                *sizeRecord = sizeParams;
-                return 3;
-            }
+            *sizeRecord = sizeParams;
+            return POKEMON_SIZE_LARGER;
         }
     }
 }

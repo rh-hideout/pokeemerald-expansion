@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Arena Trap doesn't prevent switch outs via moves that switch
     PARAMETRIZE { move = MOVE_PARTING_SHOT; effect = EFFECT_PARTING_SHOT; }
     PARAMETRIZE { move = MOVE_TELEPORT; effect = EFFECT_TELEPORT; }
     PARAMETRIZE { move = MOVE_SHED_TAIL; effect = EFFECT_SHED_TAIL; }
-    PARAMETRIZE { move = MOVE_CHILLY_RECEPTION; effect = EFFECT_CHILLY_RECEPTION; }
+    PARAMETRIZE { move = MOVE_CHILLY_RECEPTION; effect = EFFECT_WEATHER_AND_SWITCH; }
     GIVEN {
         ASSUME(GetMoveEffect(move) == effect);
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);

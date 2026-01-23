@@ -198,7 +198,6 @@ static const struct SpriteTemplate sSpriteTemplate_SecretPowerCave =
     .oam = &sOam_SecretPower,
     .anims = sAnimTable_SecretPowerCave,
     .images = sPicTable_SecretPowerCave,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CaveEntranceInit,
 };
 
@@ -209,7 +208,6 @@ static const struct SpriteTemplate sSpriteTemplate_SecretPowerTree =
     .oam = &sOam_SecretPower,
     .anims = sAnimTable_SecretPowerTree,
     .images = sPicTable_SecretPowerTree,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TreeEntranceInit,
 };
 
@@ -220,7 +218,6 @@ static const struct SpriteTemplate sSpriteTemplate_SecretPowerShrub =
     .oam = &sOam_SecretPower,
     .anims = sAnimTable_SecretPowerShrub,
     .images = sPicTable_SecretPowerShrub,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ShrubEntranceInit,
 };
 
@@ -266,7 +263,6 @@ static const struct SpriteTemplate sSpriteTemplate_SandPillar =
     .oam = &sOam_SandPillar,
     .anims = sAnimTable_SandPillar,
     .images = sPicTable_SandPillar,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SandPillar_BreakTop,
 };
 
@@ -304,8 +300,6 @@ static const struct SpriteTemplate sSpriteTemplate_RecordMixLights =
     .oam = &gObjectEventBaseOam_32x8,
     .anims = sAnimTable_RecordMixLights,
     .images = sPicTable_RecordMixLights,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // For accessing Pokémon storage PC or the Hall of Fame PC
@@ -498,9 +492,10 @@ static void SetCurrentSecretBase(void)
 
 static void AdjustSecretPowerSpritePixelOffsets(void)
 {
+    enum Direction direction = gFieldEffectArguments[1];
     if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
     {
-        switch (gFieldEffectArguments[1])
+        switch (direction)
         {
         case DIR_SOUTH:
             gFieldEffectArguments[5] = 16;
@@ -517,12 +512,14 @@ static void AdjustSecretPowerSpritePixelOffsets(void)
         case DIR_EAST:
             gFieldEffectArguments[5] = 24;
             gFieldEffectArguments[6] = 24;
+            break;
+        default:
             break;
         }
     }
     else
     {
-        switch (gFieldEffectArguments[1])
+        switch (direction)
         {
         case DIR_SOUTH:
             gFieldEffectArguments[5] = 8;
@@ -539,6 +536,8 @@ static void AdjustSecretPowerSpritePixelOffsets(void)
         case DIR_EAST:
             gFieldEffectArguments[5] = 24;
             gFieldEffectArguments[6] = 24;
+            break;
+        default:
             break;
         }
     }
@@ -935,7 +934,7 @@ static void Task_ShatterSecretBaseBreakableDoor(u8 taskId)
 
 void ShatterSecretBaseBreakableDoor(s16 x, s16 y)
 {
-    u8 dir = GetPlayerFacingDirection();
+    enum Direction dir = GetPlayerFacingDirection();
 
     if (dir == DIR_SOUTH)
     {
@@ -1072,6 +1071,8 @@ bool8 FldEff_SandPillar(void)
                      gSprites[gPlayerAvatar.spriteId].oam.y + 16,
                      148);
 
+        break;
+    default:
         break;
     }
 

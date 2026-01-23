@@ -62,19 +62,11 @@ static const struct SpriteTemplate sSpriteTemplates_MoveEffectMons[] =
         .tileTag = TAG_MOVE_EFFECT_MON_1,
         .paletteTag = TAG_MOVE_EFFECT_MON_1,
         .oam = &gOamData_AffineNormal_ObjNormal_64x64,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     },
     {
         .tileTag = TAG_MOVE_EFFECT_MON_2,
         .paletteTag = TAG_MOVE_EFFECT_MON_2,
         .oam = &gOamData_AffineNormal_ObjNormal_64x64,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     }
 };
 
@@ -832,11 +824,15 @@ bool8 IsBattlerSpritePresent(u8 battler)
     }
     else
     {
-        if (GetBattlerPosition(battler) == 0xff)
+        if (GetBattlerPosition(battler) == B_POSITION_ABSENT)
             return FALSE;
 
-        if (!gBattleStruct->spriteIgnore0Hp && GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0)
+        if (gBattleStruct->battlerState[battler].fainted)
             return FALSE;
+
+        if (gAbsentBattlerFlags & 1u << battler)
+            return FALSE;
+        
         return TRUE;
     }
 }
@@ -1985,7 +1981,7 @@ void InitPrioritiesForVisibleBattlers(void)
 
 u8 GetBattlerSpriteSubpriority(u8 battler)
 {
-    u8 position;
+    enum BattlerPosition position;
     u8 subpriority;
 
     if (IsContest())
@@ -2013,7 +2009,7 @@ u8 GetBattlerSpriteSubpriority(u8 battler)
 
 u8 GetBattlerSpriteBGPriority(u8 battler)
 {
-    u8 position = GetBattlerPosition(battler);
+    enum BattlerPosition position = GetBattlerPosition(battler);
 
     if (IsContest())
         return 2;
@@ -2027,7 +2023,7 @@ u8 GetBattlerSpriteBGPriorityRank(u8 battler)
 {
     if (!IsContest())
     {
-        u8 position = GetBattlerPosition(battler);
+        enum BattlerPosition position = GetBattlerPosition(battler);
         if (position == B_POSITION_PLAYER_LEFT || position == B_POSITION_OPPONENT_RIGHT)
             return 2;
         else

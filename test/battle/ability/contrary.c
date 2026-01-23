@@ -288,3 +288,5 @@ SINGLE_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-p
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
 }
+
+TO_DO_BATTLE_TEST("Contrary inverts stat changes from X Attack and other stat-boosting items.")

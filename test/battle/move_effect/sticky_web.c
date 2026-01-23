@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Sticky Web can only be set up 1 time")
 DOUBLE_BATTLE_TEST("Sticky Web lowers Speed by 1 in a double battle after Explosion fainting both mons")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         PLAYER(SPECIES_WOBBUFFET) { HP(1500); Speed(10); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }

@@ -2,9 +2,10 @@
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
-#include "battle_tower.h"
+#include "battle_special.h"
 #include "cable_club.h"
 #include "data.h"
+#include "daycare.h"
 #include "decoration.h"
 #include "diploma.h"
 #include "event_data.h"
@@ -21,6 +22,7 @@
 #include "international_string_util.h"
 #include "item.h"
 #include "item_icon.h"
+#include "item_menu.h"
 #include "link.h"
 #include "list_menu.h"
 #include "load_save.h"
@@ -35,6 +37,7 @@
 #include "pokedex.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
+#include "pokemon_summary_screen.h"
 #include "random.h"
 #include "rayquaza_scene.h"
 #include "region_map.h"
@@ -73,6 +76,7 @@
 #include "palette.h"
 #include "battle_util.h"
 #include "naming_screen.h"
+#include "chooseboxmon.h"
 
 #define TAG_ITEM_ICON 5500
 
@@ -135,7 +139,7 @@ static void CloseScrollableMultichoice(u8);
 static void ScrollableMultichoice_RemoveScrollArrows(u8);
 static void Task_ScrollableMultichoice_WaitReturnToList(u8);
 static void Task_ScrollableMultichoice_ReturnToList(u8);
-static void ShowFrontierExchangeCornerItemIcon(u16);
+static void ShowFrontierExchangeCornerItemIcon(enum Item);
 static void Task_DeoxysRockInteraction(u8);
 static void ChangeDeoxysRockLevel(u8);
 static void WaitForDeoxysRockMovement(u8);
@@ -145,6 +149,8 @@ static void Task_CloseBattlePikeCurtain(u8);
 static u8 DidPlayerGetFirstFans(void);
 static void SetInitialFansOfPlayer(void);
 static u16 PlayerGainRandomTrainerFan(void);
+static void CB2_ReturnToFieldWhileLearningMove(void);
+static void Task_ReturnToFieldWhileLearningMove(u8);
 #if FREE_LINK_BATTLE_RECORDS == FALSE
 static void BufferFanClubTrainerName_(struct LinkBattleRecords *, u8, u8);
 #else
@@ -159,6 +165,13 @@ static const u8 sText_99TimesPlus[] = _("99 times +");
 static const u8 sText_1MinutePlus[] = _("1 minute +");
 static const u8 sText_SpaceSeconds[] = _(" seconds");
 static const u8 sText_SpaceTimes[] = _(" time(s)");
+
+static const u8 sText_Wallace[] = _("WALLACE");
+static const u8 sText_Steven[] = _("STEVEN");
+static const u8 sText_Brawly[] = _("BRAWLY");
+static const u8 sText_Winona[] = _("WINONA");
+static const u8 sText_Phoebe[] = _("PHOEBE");
+static const u8 sText_Glacia[] = _("GLACIA");
 
 void Special_ShowDiploma(void)
 {
@@ -533,7 +546,7 @@ void SpawnLinkPartnerObjectEvent(void)
         {-1,  0}
     };
     u8 myLinkPlayerNumber;
-    u8 playerFacingDirection;
+    enum Direction playerFacingDirection;
     u8 linkSpriteId;
     u8 i;
 
@@ -559,12 +572,16 @@ void SpawnLinkPartnerObjectEvent(void)
         j = 3;
         x = gSaveBlock1Ptr->pos.x;
         y = gSaveBlock1Ptr->pos.y + 1;
+    default:
+        break;
     }
+
     for (i = 0; i < gSpecialVar_0x8004; i++)
     {
         if (myLinkPlayerNumber != i)
         {
-            switch ((u8)gLinkPlayers[i].version)
+            enum GameVersion version = (u8)gLinkPlayers[i].version;
+            switch (version)
             {
             case VERSION_RUBY:
             case VERSION_SAPPHIRE:
@@ -1039,7 +1056,7 @@ static void Task_PCTurnOnEffect(u8 taskId)
 
 static void PCTurnOnEffect(struct Task *task)
 {
-    u8 playerDirection;
+    enum Direction playerDirection;
     s8 dx = 0;
     s8 dy = 0;
     if (task->tTimer == 6)
@@ -1061,6 +1078,8 @@ static void PCTurnOnEffect(struct Task *task)
         case DIR_EAST:
             dx = 1;
             dy = -1;
+            break;
+        default:
             break;
         }
 
@@ -1116,7 +1135,7 @@ static void PCTurnOffEffect(void)
     u16 metatileId = 0;
 
     // Get where the PC should be, depending on where the player is looking.
-    u8 playerDirection = GetPlayerFacingDirection();
+    enum Direction playerDirection = GetPlayerFacingDirection();
 
     if (IsPlayerInFrontOfPC() == FALSE)
         return;
@@ -1133,6 +1152,8 @@ static void PCTurnOffEffect(void)
     case DIR_EAST:
         dx = 1;
         dy = -1;
+        break;
+    default:
         break;
     }
 
@@ -1408,7 +1429,7 @@ bool8 FoundAbandonedShipRoom6Key(void)
 
 bool8 LeadMonHasEffortRibbon(void)
 {
-    return GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_EFFORT_RIBBON, NULL);
+    return GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_EFFORT_RIBBON);
 }
 
 void GiveLeadMonEffortRibbon(void)
@@ -1460,7 +1481,7 @@ void SetShoalItemFlag(u16 unused)
 void LoadWallyZigzagoon(void)
 {
     u16 monData;
-    CreateMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
+    CreateRandomMon(&gPlayerParty[0], SPECIES_ZIGZAGOON, 7);
     monData = TRUE;
     SetMonData(&gPlayerParty[0], MON_DATA_ABILITY_NUM, &monData);
     monData = MOVE_TACKLE;
@@ -1478,7 +1499,7 @@ bool8 IsStarterInParty(void)
     u8 partyCount = CalculatePlayerPartyCount();
     for (i = 0; i < partyCount; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == starter)
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) == starter)
             return TRUE;
     }
     return FALSE;
@@ -1487,14 +1508,6 @@ bool8 IsStarterInParty(void)
 bool8 ScriptCheckFreePokemonStorageSpace(void)
 {
     return CheckFreePokemonStorageSpace();
-}
-
-bool8 IsPokerusInParty(void)
-{
-    if (!CheckPartyPokerus(gPlayerParty, (1 << PARTY_SIZE) - 1))
-        return FALSE;
-
-    return TRUE;
 }
 
 // Task data for Task_ShakeCamera
@@ -1571,8 +1584,8 @@ u8 GetLeadMonIndex(void)
     u8 partyCount = CalculatePlayerPartyCount();
     for (i = 0; i < partyCount; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_EGG
-         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_NONE)
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
+         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE)
             return i;
     }
     return 0;
@@ -1581,6 +1594,12 @@ u8 GetLeadMonIndex(void)
 u16 ScriptGetPartyMonSpecies(void)
 {
     return GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG, NULL);
+}
+
+u16 ScriptGetSelectedMonSpecies(void)
+{
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    return GetBoxMonData(boxmon, MON_DATA_SPECIES_OR_EGG);
 }
 
 // Removed for Emerald
@@ -1608,10 +1627,11 @@ u16 SetPacifidlogTMReceivedDay(void)
 
 bool8 MonOTNameNotPlayer(void)
 {
-    if (GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_LANGUAGE) != GAME_LANGUAGE)
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    if (GetBoxMonData(boxmon, MON_DATA_LANGUAGE) != GAME_LANGUAGE)
         return TRUE;
 
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_NAME, gStringVar1);
+    GetBoxMonData(boxmon, MON_DATA_OT_NAME, gStringVar1);
 
     if (!StringCompare(gSaveBlock2Ptr->playerName, gStringVar1))
         return FALSE;
@@ -2005,15 +2025,15 @@ static void Task_MoveElevatorWindowLights(u8 taskId)
 
 void BufferVarsForIVRater(void)
 {
-    u8 i;
+    u32 i;
     u32 ivStorage[NUM_STATS];
 
-    ivStorage[STAT_HP] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HP_IV);
-    ivStorage[STAT_ATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ATK_IV);
-    ivStorage[STAT_DEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_DEF_IV);
-    ivStorage[STAT_SPEED] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPEED_IV);
-    ivStorage[STAT_SPATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPATK_IV);
-    ivStorage[STAT_SPDEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPDEF_IV);
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();;
+
+    for (i = 0; i < NUM_STATS; i++)
+    {
+       ivStorage[i] = GetBoxMonData(boxmon, MON_DATA_HP_IV + i);
+    }
 
     gSpecialVar_0x8005 = 0;
 
@@ -2250,7 +2270,7 @@ void BufferBattleTowerElevatorFloors(void)
 
     u8 i;
     u16 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
-    u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     if (battleMode == FRONTIER_MODE_MULTIS && !FlagGet(FLAG_CHOSEN_MULTI_BATTLE_NPC_PARTNER))
     {
@@ -2818,12 +2838,13 @@ void SetBattleTowerLinkPlayerGfx(void)
 
 void ShowNatureGirlMessage(void)
 {
-    u8 nature;
+    u32 nature;
+    u32 personality;
 
-    if (gSpecialVar_0x8004 >= PARTY_SIZE)
-        gSpecialVar_0x8004 = 0;
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
 
-    nature = GetNature(&gPlayerParty[gSpecialVar_0x8004]);
+    personality = GetBoxMonData(boxmon, MON_DATA_PERSONALITY);
+    nature = GetNatureFromPersonality(personality);
     ShowFieldMessage(gNaturesInfo[nature].natureGirlMessage);
 }
 
@@ -3040,7 +3061,7 @@ static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti menu, u
     }
 }
 
-static void ShowFrontierExchangeCornerItemIcon(u16 item)
+static void ShowFrontierExchangeCornerItemIcon(enum Item item)
 {
     FreeSpriteTilesByTag(TAG_ITEM_ICON);
     FreeSpritePaletteByTag(TAG_ITEM_ICON);
@@ -3706,7 +3727,7 @@ static void Task_LinkRetireStatusWithBattleTowerPartner(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 6:
-        if (!IsTextPrinterActive(0))
+        if (!IsTextPrinterActiveOnWindow(0))
             gTasks[taskId].tState++;
         break;
     case 7:
@@ -4167,25 +4188,25 @@ static void BufferFanClubTrainerName_(struct LinkBattleRecords *linkRecords, u8 
         switch (whichNPCTrainer)
         {
         case 0:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
         case 1:
-            StringCopy(gStringVar1, gText_Steven);
+            StringCopy(gStringVar1, sText_Steven);
             break;
         case 2:
-            StringCopy(gStringVar1, gText_Brawly);
+            StringCopy(gStringVar1, sText_Brawly);
             break;
         case 3:
-            StringCopy(gStringVar1, gText_Winona);
+            StringCopy(gStringVar1, sText_Winona);
             break;
         case 4:
-            StringCopy(gStringVar1, gText_Phoebe);
+            StringCopy(gStringVar1, sText_Phoebe);
             break;
         case 5:
-            StringCopy(gStringVar1, gText_Glacia);
+            StringCopy(gStringVar1, sText_Glacia);
             break;
         default:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
         }
     }
@@ -4202,25 +4223,25 @@ static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer)
     switch (whichNPCTrainer)
     {
         case 0:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
         case 1:
-            StringCopy(gStringVar1, gText_Steven);
+            StringCopy(gStringVar1, sText_Steven);
             break;
         case 2:
-            StringCopy(gStringVar1, gText_Brawly);
+            StringCopy(gStringVar1, sText_Brawly);
             break;
         case 3:
-            StringCopy(gStringVar1, gText_Winona);
+            StringCopy(gStringVar1, sText_Winona);
             break;
         case 4:
-            StringCopy(gStringVar1, gText_Phoebe);
+            StringCopy(gStringVar1, sText_Phoebe);
             break;
         case 5:
-            StringCopy(gStringVar1, gText_Glacia);
+            StringCopy(gStringVar1, sText_Glacia);
             break;
         default:
-            StringCopy(gStringVar1, gText_Wallace);
+            StringCopy(gStringVar1, sText_Wallace);
             break;
     }
 }
@@ -4267,7 +4288,7 @@ void TrySkyBattle(void)
     for (i = 0; i < CalculatePlayerPartyCount(); i++)
     {
         struct Pokemon* pokemon = &gPlayerParty[i];
-        if (CanMonParticipateInSkyBattle(pokemon) && GetMonData(pokemon, MON_DATA_HP, NULL) > 0)
+        if (CanMonParticipateInSkyBattle(pokemon) && GetMonData(pokemon, MON_DATA_HP) > 0)
         {
             PreparePartyForSkyBattle();
             gSpecialVar_Result = TRUE;
@@ -4349,10 +4370,106 @@ bool32 CheckPartyHasSpecies(u32 givenSpecies)
 
 void UseBlankMessageToCancelPokemonPic(void)
 {
-    u8 t = EOS;
-    AddTextPrinterParameterized(0, FONT_NORMAL, &t, 0, 1, 0, NULL);
+    DeactivateSingleTextPrinter(0, WINDOW_TEXT_PRINTER);
     ScriptMenu_HidePokemonPic();
 }
+
+static void UIAskConfirmation(void)
+{
+    DisplayYesNoMenuDefaultYes();
+}
+
+static s32 UIWaitConfirmation(void)
+{
+    return Menu_ProcessInputNoWrapClearOnChoose();
+}
+
+static void UIPrintMessage(const u8 *message)
+{
+    ShowFieldMessage(message);
+}
+
+static void UIPlayFanfare(u32 songId)
+{
+    PlayFanfare(songId);
+}
+
+static void UIEndTask(u8 taskId)
+{
+    DestroyTask(taskId);
+    ScriptContext_Enable();
+}
+
+#define tState         data[0]
+#define tPartyIndex    data[1]
+#define tMove          data[2]
+
+static void UIShowMoveList(u8 taskId)
+{
+    gSpecialVar_0x8008 = gTasks[taskId].tPartyIndex;
+    gSpecialVar_0x8009 = gTasks[taskId].tMove;
+    DestroyTask(taskId);
+    ShowSelectMovePokemonSummaryScreen(gPlayerParty, gTasks[taskId].tPartyIndex, CB2_ReturnToFieldWhileLearningMove, gTasks[taskId].tMove);
+}
+
+static const struct MoveLearnUI sMoveLearnUI =
+{
+    .askConfirmation = UIAskConfirmation,
+    .waitConfirmation = UIWaitConfirmation,
+    .printMessage = UIPrintMessage,
+    .playFanfare = UIPlayFanfare,
+    .showMoveList = UIShowMoveList,
+    .endTask = UIEndTask
+};
+
+static void Task_LearnMove(u8 taskId)
+{
+    if (IsTextPrinterActiveOnWindow(0))
+        return;
+    gTasks[taskId].tState = LearnMove(&sMoveLearnUI, taskId);
+}
+
+void CanTeachMoveBoxMon(void)
+{
+    if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
+    {
+        // We want to wait one frame before using ScriptContext_Enable() or the game freezes
+        CreateTask(UIEndTask, 1);
+        return;
+    }
+    u32 taskId = CreateTask(Task_LearnMove, 1);
+    gTasks[taskId].tState = GetLearnMoveStartState();
+    gTasks[taskId].tPartyIndex = gSpecialVar_0x8004;
+    gTasks[taskId].tMove = gSpecialVar_0x8005;
+}
+
+static void FieldCB_ContinueLearningMove(void)
+{
+    LockPlayerFieldControls();
+    FadeInFromBlack();
+    CreateTask(Task_ReturnToFieldWhileLearningMove, 1);
+}
+
+static void CB2_ReturnToFieldWhileLearningMove(void)
+{
+    gFieldCallback = FieldCB_ContinueLearningMove;
+    CB2_ReturnToField();
+}
+
+static void Task_ReturnToFieldWhileLearningMove(u8 taskId)
+{
+    if (IsWeatherNotFadingIn() == TRUE)
+    {
+        gTasks[taskId].func = Task_LearnMove;
+        gTasks[taskId].tState = GetLearnMoveResumeAfterSummaryScreenState();
+        gTasks[taskId].tPartyIndex = gSpecialVar_0x8008;
+        gTasks[taskId].tMove = gSpecialVar_0x8009;
+    }
+}
+
+#undef tState
+#undef tPartyIndex
+#undef tMove
 
 void EnterCode(void)
 {

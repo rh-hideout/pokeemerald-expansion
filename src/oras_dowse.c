@@ -19,7 +19,7 @@
 
 static void StartORASDowseFieldEffect(void);
 static void UpdateORASDowsingFieldEffect(struct Sprite *sprite);
-static void ChangeDowsingColor(u8 direction, struct Sprite *sprite);
+static void ChangeDowsingColor(enum Direction direction, struct Sprite *sprite);
 static void ClearDowsingColor(struct Sprite *sprite);
 static void PlayDowseSound(u32 dowseState);
 
@@ -239,7 +239,6 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingBrendan = {
     .oam = &gObjectEventOam_ORASDowse,
     .anims = sAnimTable_ORASDowsing,
     .images = sPicTable_ORASDowsingBrendan,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateORASDowsingFieldEffect,
 };
 
@@ -249,7 +248,6 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingMay = {
     .oam = &gObjectEventOam_ORASDowse,
     .anims = sAnimTable_ORASDowsing,
     .images = sPicTable_ORASDowsingMay,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateORASDowsingFieldEffect,
 };
 
@@ -398,8 +396,8 @@ void UpdateDowseState(struct Sprite *sprite)
     {
         s8 distX = sprite->tItemDistanceX;
         s8 distY = sprite->tItemDistanceY;
-        u8 directionToItem = CARDINAL_DIRECTION_COUNT;
-        u8 playerDirToItem = GetDirectionToHiddenItem(distX, distY);
+        enum Direction directionToItem = CARDINAL_DIRECTION_COUNT;
+        enum Direction playerDirToItem = GetDirectionToHiddenItem(distX, distY);
         if (playerDirToItem != DIR_NONE)
             directionToItem = sClockwiseDirections[GetDirectionToHiddenItem(distX, distY) - 1];
 
@@ -436,7 +434,7 @@ void UpdateDowseState(struct Sprite *sprite)
     UpdateDowsingAnimDirection(sprite, playerObj);
 }
 
-static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
+static void ChangeDowsingColor(enum Direction direction, struct Sprite *sprite)
 {
     s16 distance;
     u16 color = I_ORAS_DOWSING_COLOR_NONE;

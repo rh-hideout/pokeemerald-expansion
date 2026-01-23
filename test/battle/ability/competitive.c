@@ -237,7 +237,7 @@ DOUBLE_BATTLE_TEST("Competitive is activated by Cotton Down for non-ally pokemon
 
 SINGLE_BATTLE_TEST("Competitive activates before White Herb")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_LEER; }
     PARAMETRIZE { move = MOVE_CONFIDE; }
@@ -303,7 +303,7 @@ SINGLE_BATTLE_TEST("Competitive activates for each stat that is lowered")
 
 SINGLE_BATTLE_TEST("Competitive doesn't activate if the pokemon lowers it's own stats")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SUPERPOWER; }
     PARAMETRIZE { move = MOVE_CLOSE_COMBAT; }

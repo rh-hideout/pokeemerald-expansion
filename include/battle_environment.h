@@ -3,13 +3,18 @@
 
 #include "constants/battle.h"
 #include "battle_bg.h"
+#include "task.h"
 
 struct BattleEnvironment
 {
+    u8 name[26];
     u16 naturePower;
+    const void *secretPowerAnimation;
     u16 secretPowerEffect;
     enum Type camouflageType;
+    u16 camouflageBlend;
     struct BattleBackground background;
+    TaskFunc battleIntroSlide;
 };
 
 extern const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_COUNT];

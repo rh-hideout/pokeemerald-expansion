@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after all hits of a multi hit move
 
 SINGLE_BATTLE_TEST("White Herb wont have time to activate if it is knocked off or stolen by Thief")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_KNOCK_OFF; }

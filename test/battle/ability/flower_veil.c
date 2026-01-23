@@ -17,7 +17,7 @@ ASSUMPTIONS
 
 DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - right target")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISON_GAS; }
@@ -41,7 +41,7 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - right ta
 
 DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - left target")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISON_GAS; }

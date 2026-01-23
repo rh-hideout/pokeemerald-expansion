@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
 
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat stage reduction from moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     u32 j, species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     static const u16 statReductionMoves[] = {
@@ -144,7 +144,7 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
     u32 j, k, species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     enum Ability breakerAbility = ABILITY_NONE;
-    u16 move = ABILITY_NONE;
+    enum Move move = MOVE_NONE;
     static const u16 breakerAbilities[] = {
         ABILITY_MOLD_BREAKER,
         ABILITY_TERAVOLT,
@@ -388,7 +388,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPECTRAL_THIEF) == EFFECT_SPECTRAL_THIEF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_SPECTRAL_THIEF, MOVE_EFFECT_STEAL_STATS));
         ASSUME(GetMoveEffect(MOVE_AGILITY) == EFFECT_SPEED_UP_2);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(species) { Speed(5); Ability(ability); }
@@ -426,11 +426,11 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
 
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke protect from Protect's secondary effects")
 {
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     u32 species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
 
-    static const u32 moves[] = {
+    static const enum Move moves[] = {
         MOVE_SPIKY_SHIELD,
         MOVE_KINGS_SHIELD,
         MOVE_SILK_TRAP,

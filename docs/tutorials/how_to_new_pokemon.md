@@ -707,7 +707,7 @@ We're almost there just a bit left!
         ...
         .abilities = { ABILITY_INSOMNIA, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_PURPLE,
-+       .isLegendary = TRUE,
++       .isRestrictedLegendary = TRUE,
 +       .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
     },
  };
@@ -715,9 +715,10 @@ We're almost there just a bit left!
 Each species flag provides properties to the species:
 - `perfectIVCount` ***(1.10 onwards)***:
     - Guarantees that the number of IVs specified here will be perfect.
-- `isLegendary`:
-    - ***1.10 onwards:*** Does nothing.
-    - ***1.9 and earlier:*** Guaranteed 3 perfect IVs for the species.
+- `isRestrictedLegendary`:
+    - ***1.14.3 onwards:*** Does nothing.
+- `isSubLegendary`:
+    - ***1.14.3 onwards:*** Does nothing.
 - `isMythical`:
     - Is skipped during Pokédex evaluations.
         - Unless it also has the `dexForceRequired` flag.
@@ -952,7 +953,7 @@ Edit `gSpeciesInfo`:
      {
         ...
         FOOTPRINT(Mewtwo)
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .levelUpLearnset = sMewtwoLevelUpLearnset,
         .teachableLearnset = sMewtwoTeachableLearnset,
         .formSpeciesIdTable = sMewtwoFormSpeciesIdTable,
