@@ -42,19 +42,21 @@ SINGLE_BATTLE_TEST("Hyperspace Fury fails if used by a Pokémon other than Hoopa
     }
 }
 
-SINGLE_BATTLE_TEST("Hyperspace Fury hits the target through Protect and breaks it")
+DOUBLE_BATTLE_TEST("Hyperspace Fury hits the target through Protect and breaks it")
 {
     GIVEN {
         PLAYER(SPECIES_HOOPA_UNBOUND);
+        PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_HYPERSPACE_FURY); }
+        TURN { MOVE(opponentLeft, MOVE_PROTECT); MOVE(playerLeft, MOVE_HYPERSPACE_FURY, target: opponentLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPERSPACE_FURY, player); // TODO: Is this supposed to happen after the message?
-        MESSAGE("It broke through the opposing Wobbuffet's protection!");
-    } THEN {
-        EXPECT_NE(opponent->hp, opponent->maxHP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPERSPACE_FURY, playerLeft);
+        HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        HP_BAR(opponentLeft);
     }
 }
 
@@ -73,20 +75,23 @@ SINGLE_BATTLE_TEST("Hyperspace Fury lowers the user's Defense by 1 stage after h
     }
 }
 
-SINGLE_BATTLE_TEST("Hyperspace Fury breaks Protection and lowers the user's Defense by 1 stage after use")
+DOUBLE_BATTLE_TEST("Hyperspace Fury breaks protection and lowers the user's Defense by 1 stage")
 {
     GIVEN {
         PLAYER(SPECIES_HOOPA_UNBOUND);
+        PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_HYPERSPACE_FURY); }
+        TURN { MOVE(opponentLeft, MOVE_PROTECT); MOVE(playerLeft, MOVE_HYPERSPACE_FURY, target: opponentLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPERSPACE_FURY, player); // TODO: Is this supposed to happen after the message?
-        MESSAGE("It broke through the opposing Wobbuffet's protection!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPERSPACE_FURY, playerLeft);
+        HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        HP_BAR(opponentLeft);
     } THEN {
-        EXPECT_NE(opponent->hp, opponent->maxHP);
-        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(playerLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
     }
 }
