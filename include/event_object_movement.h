@@ -556,6 +556,6 @@ u8 GetObjectEventApricornTreeId(u8 objectEventId);
 
 bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent);
 
-extern const u8 gStandardDirections[];
+extern const enum Direction gStandardDirections[];
 
 #endif //GUARD_EVENT_OBJECT_MOVEMENT_H

@@ -10047,6 +10047,8 @@ void ObjectEventTurnToObject(struct ObjectEvent *objectOne, struct ObjectEvent *
         case DIR_EAST:
             objectDirOne = DIR_WEST;
             break;
+        default:
+            break;
         }
 
         ObjectEventTurn(objectOne, objectDirOne);
