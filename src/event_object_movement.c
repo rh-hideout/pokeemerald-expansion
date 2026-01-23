@@ -6478,12 +6478,9 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
             {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
                 {
-                    // Despawn the OW encounter if an NPC tries to path into it.
-                    if (curObject->trainerType == TRAINER_TYPE_ENCOUNTER && !objectEvent->isPlayer && objectEvent->trainerType != TRAINER_TYPE_ENCOUNTER)
-                    {
-                        RemoveObjectEventByLocalIdAndMap(curObject->localId, curObject->mapNum, curObject->mapGroup);
+                    if (OWE_DespawnMonDueToNPCCollision(curObject, objectEvent))
                         continue;
-                    }
+
                     OWE_TryTriggerEncounter(objectEvent, curObject);
                     return i;
                 }
@@ -11788,13 +11785,9 @@ bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim sp
 {
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
     gFieldEffectArguments[3] = spawnAnimType;
-
-    if (spawnAnimType == OWE_SPAWN_ANIM_GRASS || spawnAnimType == OWE_SPAWN_ANIM_LONG_GRASS)
-        FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_1);
-    else
-        FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_0);
-
+    FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
     return TRUE;
 }
 
@@ -11832,7 +11825,7 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent 
         if (OW_MON_WANDER_WALK == TRUE && IS_OW_MON_OBJ(objectEvent))
             UpdateMonMoveInPlace(objectEvent, sprite);
 
-        if (OWE_CanMonSeePlayer(objectEvent) && objectEvent->movementType != MOVEMENT_TYPE_WANDER_AROUND_OWE)
+        if (OWE_CanAwareMonSeePlayer(objectEvent))
         {
             sprite->sTypeFuncId = 7;
             return FALSE;

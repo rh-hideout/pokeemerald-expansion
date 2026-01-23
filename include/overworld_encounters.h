@@ -5,10 +5,6 @@
 #error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_WILD_ENCOUNTERS_OVERWORLD to work."
 #endif
 
-#if OW_GFX_COMPRESS == TRUE && OW_WILD_ENCOUNTERS_OVERWORLD == TRUE
-#error "OW_GFX_COMPRESS needs to be FALSE in order for OW_WILD_ENCOUNTERS_OVERWORLD to work."
-#endif
-
 #define OWE_MAX_SPAWN_SLOTS   5
 
 #define OWE_MAX_LAND_SPAWNS         3
@@ -124,15 +120,16 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 void OverworldWildEncounter_RemoveObjectOnBattle(void);
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
 void DespawnOldestOWE_Pal(void);
-bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon);
+bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon);
 bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
-void UNUSED_OverworldWildEncounter_FreezeAllObjects(void);
 bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent);
 bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void);
+bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent);
+u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

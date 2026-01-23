@@ -1,7 +1,6 @@
 #include "global.h"
 #include "sprite.h"
 #include "main.h"
-#include "overworld_encounters.h"
 #include "palette.h"
 #include "string_util.h"
 #include "text.h"
@@ -679,6 +678,44 @@ s16 AllocSpriteTiles(u16 tileCount)
         ALLOC_SPRITE_TILE(i);
 
     return start;
+}
+
+bool32 CanAllocSpriteTiles(u16 tileCount)
+{
+    u16 i;
+    u16 numTilesFound;
+
+    if (tileCount == 0)
+        return TRUE;
+
+    i = gReservedSpriteTileCount;
+
+    for (;;)
+    {
+        while (SPRITE_TILE_IS_ALLOCATED(i))
+        {
+            i++;
+            if (i == TOTAL_OBJ_TILE_COUNT)
+                return FALSE;
+        }
+
+        numTilesFound = 1;
+
+        while (numTilesFound != tileCount)
+        {
+            i++;
+            if (i == TOTAL_OBJ_TILE_COUNT)
+                return FALSE;
+
+            if (!SPRITE_TILE_IS_ALLOCATED(i))
+                numTilesFound++;
+            else
+                break;
+        }
+
+        if (numTilesFound == tileCount)
+            return TRUE;
+    }
 }
 
 u8 SpriteTileAllocBitmapOp(u16 bit, u8 op)
