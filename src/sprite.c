@@ -683,7 +683,6 @@ s16 AllocSpriteTiles(u16 tileCount)
 bool32 CanAllocSpriteTiles(u16 tileCount)
 {
     u16 i;
-    s16 start;
     u16 numTilesFound;
 
     if (tileCount == 0)
@@ -700,7 +699,6 @@ bool32 CanAllocSpriteTiles(u16 tileCount)
                 return FALSE;
         }
 
-        start = i;
         numTilesFound = 1;
 
         while (numTilesFound != tileCount)
