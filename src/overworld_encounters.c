@@ -148,7 +148,7 @@ void UpdateOverworldEncounters(void)
         .y = y - MAP_OFFSET,
         .elevation = MapGridGetElevationAt(x, y),
         .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
-        .trainerType = TRAINER_TYPE_ENCOUNTER,
+        .trainerType = TRAINER_TYPE_NONE, // Not set in template to avoid check in TryGetObjectEventTemplateForOverworldEncounter
     };
 
     if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
@@ -170,6 +170,7 @@ void UpdateOverworldEncounters(void)
     }
 
     object = &gObjectEvents[objectEventId];
+    object->trainerType = TRAINER_TYPE_ENCOUNTER;
     object->disableCoveringGroundEffects = TRUE;
     object->sOverworldEncounterLevel = level;
     object->sRoamerOutbreakStatus = indexRoamerOutbreak;
@@ -939,17 +940,17 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
-    if (!IsSemiManualOverworldWildEncounter(template->graphicsId, template->trainerType))
+    if (template->trainerType != TRAINER_TYPE_ENCOUNTER)
         return *template;
 
     struct ObjectEventTemplate templateOWE = *template;
     
     // Does this work?
     u32 graphicsId;
-    u16 speciesId;
-    bool32 isShiny = FALSE;
-    bool32 isFemale = FALSE;
-    u32 level;
+    u16 speciesId, speciesTemplate = SanitizeSpeciesId(templateOWE.graphicsId & OBJ_EVENT_MON_SPECIES_MASK);
+    bool32 isShiny = FALSE, isShinyTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_SHINY) ? TRUE : FALSE;
+    bool32 isFemale = FALSE, isFemaleTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_FEMALE) ? TRUE : FALSE;
+    u32 level, levelTemplate = templateOWE.sOverworldEncounterLevel;
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
     u32 x = template->x;
     u32 y = template->y;
@@ -964,11 +965,28 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
         &indexRoamerOutbreak
     );
 
+    if (speciesTemplate)
+        speciesId = speciesTemplate;
+
+    if (isShinyTemplate)
+        isShiny = isShinyTemplate;
+
+    if (isFemaleTemplate)
+        isFemale = isFemaleTemplate;
+
+    if (levelTemplate)
+        level = levelTemplate;
+
+    if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
+        templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
+
     assertf(speciesId != SPECIES_NONE && speciesId < NUM_SPECIES && IsSpeciesEnabled(speciesId), "invalid semi-manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
     {
         // Currently causes assertf on each player step as function is called.
         templateOWE.graphicsId = OBJ_EVENT_GFX_BOY_1;
         templateOWE.trainerType = TRAINER_TYPE_NONE;
+        templateOWE.sOverworldEncounterLevel = 0;
+        templateOWE.movementType = MOVEMENT_TYPE_NONE;
         return templateOWE;
     }
 
@@ -980,8 +998,6 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
 
     templateOWE.graphicsId = graphicsId;
     templateOWE.sOverworldEncounterLevel = level;
-    if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
-        templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
     
     return templateOWE;
 }
