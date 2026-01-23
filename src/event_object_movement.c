@@ -6478,12 +6478,9 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
             {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
                 {
-                    // Despawn the OW encounter if an NPC tries to path into it.
-                    if (curObject->trainerType == TRAINER_TYPE_ENCOUNTER && !objectEvent->isPlayer && objectEvent->trainerType != TRAINER_TYPE_ENCOUNTER)
-                    {
-                        RemoveObjectEventByLocalIdAndMap(curObject->localId, curObject->mapNum, curObject->mapGroup);
+                    if (OWE_DespawnMonDueToNPCCollision(curObject, objectEvent))
                         continue;
-                    }
+
                     OWE_TryTriggerEncounter(objectEvent, curObject);
                     return i;
                 }

@@ -1453,6 +1453,30 @@ void OWE_StartEncounterInstant(struct ObjectEvent *mon)
     FreezeObjectEvents();
 }
 
+bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent)
+{
+    if (!IsGeneratedOverworldWildEncounter(curObject) || IsOverworldWildEncounter(objectEvent))
+        return FALSE;
+
+    RemoveObjectEventByLocalIdAndMap(curObject->localId, curObject->mapNum, curObject->mapGroup);
+    return TRUE;
+}
+
+u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y)
+{
+    if ((collision & (1 << (COLLISION_OBJECT_EVENT - 1))))
+    {
+        struct ObjectEvent *objectEvent = &gObjectEvents[GetObjectEventIdByXY(x, y)];
+        if (IsGeneratedOverworldWildEncounter(objectEvent))
+        {
+            RemoveObjectEventByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup);
+            collision &= 1 << (COLLISION_OBJECT_EVENT - 1);
+        }
+    }
+
+    return collision;
+}
+
 #undef sOverworldEncounterLevel
 #undef sAge
 #undef sRoamerOutbreakStatus

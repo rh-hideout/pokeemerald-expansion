@@ -130,5 +130,7 @@ enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavio
 void UNUSED_OverworldWildEncounter_FreezeAllObjects(void);
 bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent);
 bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void);
+bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent);
+u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
