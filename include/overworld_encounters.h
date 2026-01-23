@@ -19,9 +19,6 @@
 #define OWE_SPAWN_RADUIS_WIDTH      (OWE_TOTAL_SPAWN_WIDTH - 1) / 2     // Distance from center to left/right edge (not including center).
 #define OWE_SPAWN_RADUIS_HEIGHT     (OWE_TOTAL_SPAWN_HEIGHT - 1) / 2    // Distance from center to top/bottom edge (not including center).
 
-// #define OWE_TIME_BETWEEN_SPAWNS     60  // Minimum wait time (in frames) between spawns.
-// #define OWE_SPAWN_TIME_VARIABILITY  30  // A random number of frames between 0 and this value will be added to OWE_TIME_BETWEEN_SPAWNS every reset for variability.
-
 #define OWE_SPAWN_TIME_MINIMUM      30  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 #define OWE_SPAWN_TIME_PER_ACTIVE   30  // The number of frames that will be added to the countdown per currently active spawn.
 #define OWE_SPAWN_TIME_REPLACEMENT  240 // The number of frames before an existing spawn will be replaced with a new one (requires OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT).
@@ -130,7 +127,7 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
-void OverworldWildEncounter_FreezeAllObjects(void);
+void UNUSED_OverworldWildEncounter_FreezeAllObjects(void);
 bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent);
 bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void);
 

@@ -647,6 +647,17 @@ static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 ap
     {
         // Check for collisions on approach, ignoring the "out of range" collision for regular movement
         collision = GetCollisionFlagsAtCoords(trainerObj, x, y, direction);
+        if ((collision & (1 << (COLLISION_OBJECT_EVENT - 1))))
+        {
+            u32 objectId = GetObjectEventIdByXY(x, y);
+
+            if (gObjectEvents[objectId].trainerType == TRAINER_TYPE_ENCOUNTER)
+            {
+                RemoveObjectEventByLocalIdAndMap(gObjectEvents[objectId].localId, gObjectEvents[objectId].mapNum, gObjectEvents[objectId].mapGroup);
+                collision &= 1 << (COLLISION_OBJECT_EVENT - 1);
+            }
+        }
+
         if (collision != 0 && (collision & ~(1 << (COLLISION_OUTSIDE_RANGE - 1))))
             return 0;
     }

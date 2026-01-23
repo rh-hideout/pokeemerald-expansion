@@ -6478,6 +6478,12 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
             {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
                 {
+                    // Despawn the OW encounter if an NPC tries to path into it.
+                    if (curObject->trainerType == TRAINER_TYPE_ENCOUNTER && !objectEvent->isPlayer && objectEvent->trainerType != TRAINER_TYPE_ENCOUNTER)
+                    {
+                        RemoveObjectEventByLocalIdAndMap(curObject->localId, curObject->mapNum, curObject->mapGroup);
+                        continue;
+                    }
                     OWE_TryTriggerEncounter(objectEvent, curObject);
                     return i;
                 }
@@ -11782,9 +11788,13 @@ bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim sp
 {
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
-    gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
     gFieldEffectArguments[3] = spawnAnimType;
-    FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
+
+    if (spawnAnimType == OWE_SPAWN_ANIM_GRASS || spawnAnimType == OWE_SPAWN_ANIM_LONG_GRASS)
+        FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_1);
+    else
+        FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_0);
+
     return TRUE;
 }
 
@@ -11794,13 +11804,6 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent 
 {
     if (!ObjectEventExecSingleMovementAction(objectEvent, sprite))
         return FALSE;
-
-    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
-    {
-        MoveToPlayerForEncounter(objectEvent, sprite);
-        sprite->sTypeFuncId = 6;
-        return FALSE;
-    }
     
     SetMovementDelay(sprite, sMovementDelaysOWE[Random() % ARRAY_COUNT(sMovementDelaysOWE)]);
     sprite->sTypeFuncId = 3;
@@ -11809,6 +11812,14 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent 
 
 bool8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
+    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
+    {
+        ClearObjectEventMovement(objectEvent, sprite);
+        MoveToPlayerForEncounter(objectEvent, sprite);
+        sprite->sTypeFuncId = 6;
+        return FALSE;
+    }
+
     if (WaitForMovementDelay(sprite))
     {
         // resets a mid-movement sprite

@@ -745,6 +745,7 @@ static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSi
 
         if (fldEffId != 0)
         {
+            RemoveAllGeneratedOverworldEncounterObjects();
             gFieldEffectArguments[0] = sDexNavSearchDataPtr->tileX;
             gFieldEffectArguments[1] = sDexNavSearchDataPtr->tileY;
             gFieldEffectArguments[2] = 0xFF; // subpriority
@@ -847,7 +848,6 @@ static bool8 InitDexNavSearch(u32 species, u32 environment)
         return TRUE;
     }
     FlagSet(DN_FLAG_SEARCHING);
-    OverworldWildEncounter_FreezeAllObjects();
 
     // assign non-objects to struct
     sDexNavSearchDataPtr->species = species;
@@ -2567,7 +2567,6 @@ bool32 TryFindHiddenPokemon(void)
 
         sDexNavSearchDataPtr = AllocZeroed(sizeof(struct DexNavSearch));
         FlagSet(DN_FLAG_SEARCHING);
-        OverworldWildEncounter_FreezeAllObjects();
         // init search data
         sDexNavSearchDataPtr->isHiddenMon = isHiddenMon;
         sDexNavSearchDataPtr->species = species;

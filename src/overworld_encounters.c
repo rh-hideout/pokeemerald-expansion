@@ -69,6 +69,7 @@ static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
 static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
 static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn);
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
+static void OWE_StartEncounterInstant(struct ObjectEvent *mon);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -183,7 +184,6 @@ void UpdateOverworldEncounters(void)
         object->hideReflection = TRUE;
 
     OWE_SetNewSpawnCountdown();
-    // sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
 }
 
 static void OWE_SetNewSpawnCountdown(void)
@@ -997,6 +997,9 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
 
         LockPlayerFieldControls();
+        if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
+            OWE_StartEncounterInstant(wildMon);
+
         wildMon->trainerRange_berryTreeId |= OWE_FLAG_START_ENCOUNTER;
     }
 }
@@ -1014,20 +1017,23 @@ void OverworldWildEncounter_RemoveObjectOnBattle(void)
     }
 }
 
+// Returns TRUE if movement is restricted.
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction)
 {
     if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
         return FALSE;
+    
+    if ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileInDirection(objectEvent, direction))
+        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapInDirection(objectEvent, direction)))
+        return TRUE;
 
     if (OWE_CanAwareMonSeePlayer(objectEvent) && OW_WILD_ENCOUNTERS_UNRESTRICT_SIGHT)
         return FALSE;
     
     if (GetCollisionInDirection(objectEvent, direction))
         return TRUE;
-    
-    // Returns TRUE if movement is restricted.
-    return ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileInDirection(objectEvent, direction))
-        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapInDirection(objectEvent, direction)));
+
+    return FALSE;
 }
 
 void DespawnOldestOWE_Pal(void)
@@ -1383,7 +1389,7 @@ static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent)
     return OW_WILD_ENCOUNTERS_DESPAWN_SOUND;
 }
 
-void OverworldWildEncounter_FreezeAllObjects(void)
+void UNUSED_OverworldWildEncounter_FreezeAllObjects(void)
 {
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
@@ -1435,6 +1441,14 @@ static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
         return FALSE;
     
     return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumActiveGeneratedOverworldEncounters() == GetMaxOverworldEncounterSpawns();
+}
+
+void OWE_StartEncounterInstant(struct ObjectEvent *mon)
+{
+    gSpecialVar_LastTalked = mon->localId;
+    gSpecialVar_0x8004 = OW_SPECIES(mon);
+    ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
+    FreezeObjectEvents();
 }
 
 #undef sOverworldEncounterLevel
