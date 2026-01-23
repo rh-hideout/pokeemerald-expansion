@@ -1309,7 +1309,7 @@ static void TryCloseBagToGiveItem(u8 taskId)
 static void BagAction_UseInBattle(u8 taskId)
 {
     // Safety check
-    u16 type = GetItemType(gSpecialVar_ItemId);
+    enum ItemType type = GetItemType(gSpecialVar_ItemId);
     if (!GetItemBattleUsage(gSpecialVar_ItemId))
         return;
 

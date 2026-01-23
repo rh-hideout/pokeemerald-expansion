@@ -650,8 +650,8 @@ static void Task_ValidateMixingGameLanguage(u8 taskId)
             playerCount = GetLinkPlayerCount();
             for (i = 0; i < playerCount; i++)
             {
-                u32 version = (u8)gLinkPlayers[i].version;
-                u32 language = gLinkPlayers[i].language;
+                enum GameVersion version = (u8)gLinkPlayers[i].version;
+                enum Language language = gLinkPlayers[i].language;
 
                 if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
                 {
@@ -956,7 +956,7 @@ static void CB2_ReturnFromUnionRoomBattle(void)
         linkedWithFRLG = FALSE;
         for (i = 0; i < playerCount; i++)
         {
-            u32 version = (u8)gLinkPlayers[i].version;
+            enum GameVersion version = (u8)gLinkPlayers[i].version;
             if (version == VERSION_FIRE_RED || version == VERSION_LEAF_GREEN)
             {
                 linkedWithFRLG = TRUE;

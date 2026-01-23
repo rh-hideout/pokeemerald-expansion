@@ -843,6 +843,8 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         case MOVE_EFFECT_TOXIC:
             baseFromEffect += 5;
             break;
+        default:
+            break;
         }
 
         // Guaranteed hit but without negative priority

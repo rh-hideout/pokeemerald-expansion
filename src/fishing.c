@@ -541,7 +541,8 @@ static u32 CalculateFishingFollowerBoost()
 static u32 CalculateFishingProximityBoost()
 {
     s16 bobber_x, bobber_y, tile_x, tile_y;
-    u32 direction, facingDirection, numQualifyingTile = 0;
+    enum Direction direction, facingDirection;
+    u32 numQualifyingTile = 0;
     struct ObjectEvent *objectEvent;
 
     if (!I_FISHING_PROXIMITY)
@@ -567,7 +568,7 @@ static u32 CalculateFishingProximityBoost()
             numQualifyingTile++;
         else if (MapGridGetCollisionAt(tile_x, tile_y))
             numQualifyingTile++;
-        else if (GetMapBorderIdAt(tile_x, tile_y) == -1)
+        else if (GetMapBorderIdAt(tile_x, tile_y) == CONNECTION_INVALID)
             numQualifyingTile++;
     }
 

@@ -3794,8 +3794,8 @@ static void DebugAction_PCBag_Fill_PocketPokeBalls(u8 taskId)
 {
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
-        if (CheckBagHasSpace(gBallItemIds[ballId], MAX_BAG_ITEM_CAPACITY))
-            AddBagItem(gBallItemIds[ballId], MAX_BAG_ITEM_CAPACITY);
+        if (CheckBagHasSpace(gPokeBalls[ballId].itemId, MAX_BAG_ITEM_CAPACITY))
+            AddBagItem(gPokeBalls[ballId].itemId, MAX_BAG_ITEM_CAPACITY);
     }
 }
 
@@ -4719,7 +4719,7 @@ void DebugNative_Party_SetFriendship(void)
 static void Debug_Display_PokerusDaysLeftInfo(s32 daysLeft, s32 strain, u32 digit, u8 windowId)
 {
     ConvertIntToDecimalStringN(gStringVar1, daysLeft, STR_CONV_MODE_LEADING_ZEROS, 2);
-    
+
     if (daysLeft == 0 && strain)
         StringCopy(gStringVar2, COMPOUND_STRING("Inactive"));
     else if (daysLeft == 0)
