@@ -283,7 +283,7 @@ EventScript_TryPickUpHiddenCoins::
 	checkcoins VAR_RESULT
 	specialvar VAR_RESULT, CheckAddCoins
 	goto_if_eq VAR_RESULT, FALSE, EventScript_HiddenCoinsButCaseIsFull
-	addcoins VAR_0x8006
+	addcoins VAR_0x8009
 	bufferstdstring STR_VAR_2, STDSTRING_COINS
 	call EventScript_PlayFanfareObtainedItem
 	call EventScript_FoundCoins
@@ -295,12 +295,12 @@ EventScript_TryPickUpHiddenCoins::
 	end
 
 EventScript_FoundCoins::
-	buffernumberstring STR_VAR_1, VAR_0x8006
+	buffernumberstring STR_VAR_1, VAR_0x8009
 	message gText_FoundXCoins
 	return
 
 EventScript_HiddenCoinsButCaseIsFull::
-	buffernumberstring STR_VAR_1, VAR_0x8006
+	buffernumberstring STR_VAR_1, VAR_0x8009
 	bufferstdstring STR_VAR_2, STDSTRING_COINS
 	msgbox gText_FoundXCoins
 	msgbox gText_CoinCaseIsFull
@@ -309,7 +309,7 @@ EventScript_HiddenCoinsButCaseIsFull::
 	end
 
 EventScript_NoCaseForHiddenCoins::
-	buffernumberstring STR_VAR_1, VAR_0x8006
+	buffernumberstring STR_VAR_1, VAR_0x8009
 	bufferstdstring STR_VAR_2, STDSTRING_COINS
 	msgbox gText_FoundXCoins
 	msgbox gText_NothingToPutThemIn
