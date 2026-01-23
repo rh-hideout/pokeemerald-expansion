@@ -2202,7 +2202,8 @@ static const struct NamingScreenTemplate sCodeScreenTemplate =
     .title = COMPOUND_STRING("Enter code:"),
 };
 
-static const struct NamingScreenTemplate sRivalNamingScreenTemplate = {
+static const struct NamingScreenTemplate sRivalNamingScreenTemplate =
+{
     .copyExistingString = FALSE,
     .maxChars = PLAYER_NAME_LENGTH,
     .iconFunction = 6,

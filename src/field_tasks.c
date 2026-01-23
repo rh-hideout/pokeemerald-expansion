@@ -974,8 +974,7 @@ static void Task_MuddySlope(u8 taskId)
 
 static void MarkIcefallCavePuzzleCoordVisited(s16 x, s16 y)
 {
-    u8 i;
-    for (i = 0; i < ARRAY_COUNT(sIcefallCaveIceCoords); i++)
+    for (u32 i = 0; i < ARRAY_COUNT(sIcefallCaveIceCoords); i++)
     {
         if (sIcefallCaveIceCoords[i][0] + MAP_OFFSET == x && sIcefallCaveIceCoords[i][1] + MAP_OFFSET == y)
         {
@@ -987,8 +986,7 @@ static void MarkIcefallCavePuzzleCoordVisited(s16 x, s16 y)
 
 void SetIcefallCaveCrackedIceMetatiles(void)
 {
-    u8 i;
-    for (i = 0; i < ARRAY_COUNT(sIcefallCaveIceCoords); i++)
+    for (u32 i = 0; i < ARRAY_COUNT(sIcefallCaveIceCoords); i++)
     {
         if (FlagGet(i + 1) == TRUE)
         {

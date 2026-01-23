@@ -68,7 +68,7 @@ enum {
 // Background IDs for Game Freak logo scene
 enum {
     BG_GF_TEXT_LOGO = 2,
-    BG_GF_BACKGROUND   
+    BG_GF_BACKGROUND
 };
 
 
@@ -904,7 +904,7 @@ static void VBlankCB_Copyright(void)
 static void CB2_WaitFadeBeforeSetUpIntro(void)
 {
     if (!UpdatePaletteFade())
-    {        
+    {
 #if EXPANSION_INTRO == TRUE
         SetMainCallback2(CB2_ExpansionIntro);
         CreateTask(Task_HandleExpansionIntro, 0);
@@ -1092,7 +1092,7 @@ static void SetIntroCB(struct IntroSequenceData * ptr, IntroCallback cb)
 static void Task_CallIntroCallback(u8 taskId)
 {
     struct IntroSequenceData * ptr = (void *)GetWordTaskArg(taskId, 0);
-    
+
     // End intro early if player presses A/Start/Select
     if (JOY_NEW(A_BUTTON | START_BUTTON | SELECT_BUTTON) && ptr->callback != IntroCB_ExitToTitleScreen)
         SetIntroCB(ptr, IntroCB_ExitToTitleScreen);
@@ -2304,6 +2304,14 @@ static void SpriteCB_SparklesSmall_Star(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
+#undef sSmSparkleStar_BaseX
+#undef sSmSparkleStar_BaseY
+#undef sSmSparkleStar_SpeedX
+#undef sSmSparkleStar_SpeedY
+#undef sSmSparkleStar_FallSpeed
+#undef sSmSparkleStar_FallDist
+#undef sSmSparkleStar_Timer
+
 // Callback for the small sparkles during the "Game Freak" text reveal
 static void SpriteCB_SparklesSmall_Name(struct Sprite *sprite)
 {
@@ -2352,6 +2360,14 @@ static void SpriteCB_SparklesSmall_Name(struct Sprite *sprite)
             DestroySprite(sprite);
     }
 }
+
+#undef sStar_BaseX
+#undef sStar_BaseY
+#undef sStar_SpeedX
+#undef sStar_SpeedY
+#undef sStar_SinIdx
+#undef sStar_SparkleTimer
+#undef sStar_SparkleRngSeed
 
 // Callback for the big sparkles during the "Game Freak" text reveal
 static void SpriteCB_SparklesBig(struct Sprite *sprite)
@@ -2609,7 +2625,7 @@ static void SpriteCB_RecoilDust(struct Sprite *sprite)
             DestroySprite(sprite);
         break;
     }
-    
+
     // Recoil dust flashes in and out
     if (++sInvisibleTimer > 1)
     {
@@ -2764,7 +2780,7 @@ static void SpriteCB_NidorinoAttack(struct Sprite *sprite)
         sprite->sTimer += sprite->sSpeed;
         sprite->x2 = -(sprite->sTimer >> 4);
         sprite->y2 = -((gSineTable[sprite->sTimer >> 4] * sNidorinoJumpMult) >> sNidorinoJumpDiv);
-        sprite->sShakeTimer++; // Does nothing   
+        sprite->sShakeTimer++; // Does nothing
         if (sprite->sSpeed > 12)
             sprite->sSpeed--; // Decelerate as jump progresses
         if ((sprite->sTimer >> 4) > 63)

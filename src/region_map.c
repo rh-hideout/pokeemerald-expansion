@@ -1166,6 +1166,7 @@ enum RegionMapType GetRegionMapType(u32 mapSecId)
                 case KANTO_SUBREGION_SEVII67:
                     return REGION_MAP_SEVII67;
                 case KANTO_SUBREGION_KANTO:
+                default:
                     return REGION_MAP_KANTO;
             }
         case REGION_HOENN:
@@ -1195,6 +1196,7 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
                 case KANTO_SUBREGION_SEVII67:
                     return sRegionMapSections_Sevii67[y][x];
                 case KANTO_SUBREGION_KANTO:
+                default:
                     return sRegionMapSections_Kanto[y][x];
             }
         case REGION_HOENN:
@@ -2118,7 +2120,7 @@ struct FlyLocation
 };
 
 static const struct FlyLocation sFlyLocations[] =
-{    
+{
     {
         .regionMapType = REGION_MAP_HOENN,
         .mapsec = MAPSEC_LITTLEROOT_TOWN,

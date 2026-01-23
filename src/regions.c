@@ -2,8 +2,8 @@
 #include "regions.h"
 
 
-static const u16 sKantoSubregionMapsecs[KANTO_SUBREGION_SEVII67 + 1][30] = {
-    [KANTO_SUBREGION_KANTO] = 
+static const u16 sKantoSubregionMapsecs[KANTO_SUBREGION_COUNT][30] = {
+    [KANTO_SUBREGION_KANTO] =
     {
         MAPSEC_NONE
     },

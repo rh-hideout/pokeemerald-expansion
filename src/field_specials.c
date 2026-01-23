@@ -1019,43 +1019,39 @@ void FieldShowRegionMap(void)
 
 static bool32 IsBuildingPCTile(u32 tileId)
 {
-#if IS_FRLG
-    return FALSE;
-#else
+    if (IS_FRLG)
+        return FALSE;
+
     return (MetatileBehavior_IsPC(GetAttributeByMetatileIdAndMapLayout(tileId, METATILE_ATTRIBUTE_BEHAVIOR, FALSE)));
-#endif
 }
 
 static bool32 IsBuildingPCTileFrlg(u32 tileId)
 {
-#if IS_FRLG
-    return gMapHeader.mapLayout->primaryTileset == &gTileset_BuildingFrlg && (tileId == METATILE_BuildingFrlg_PCOn || tileId == METATILE_BuildingFrlg_PCOff);
-#else
+    if (IS_FRLG)
+        return gMapHeader.mapLayout->primaryTileset == &gTileset_BuildingFrlg && (tileId == METATILE_BuildingFrlg_PCOn || tileId == METATILE_BuildingFrlg_PCOff);
+
     return FALSE;
-#endif
 }
 
 static bool32 IsPlayerHousePCTile(u32 tileId)
 {
-#if IS_FRLG
-    return FALSE;
-#else
+    if (IS_FRLG)
+        return FALSE;
+
     return gMapHeader.mapLayout->secondaryTileset == &gTileset_BrendansMaysHouse
         && (tileId == METATILE_BrendansMaysHouse_BrendanPC_On
             || tileId == METATILE_BrendansMaysHouse_BrendanPC_Off
             || tileId == METATILE_BrendansMaysHouse_MayPC_On
             || tileId == METATILE_BrendansMaysHouse_MayPC_Off);
-#endif
 }
 
 static bool32 IsPlayerHousePCTileFrlg(u32 tileId)
 {
-#if IS_FRLG
-    return gMapHeader.mapLayout->secondaryTileset == &gTileset_GenericBuilding1
-        && (tileId == METATILE_GenericBuilding1_PlayersPCOn || tileId == METATILE_GenericBuilding1_PlayersPCOff);
-#else
+    if (IS_FRLG)
+        return gMapHeader.mapLayout->secondaryTileset == &gTileset_GenericBuilding1
+            && (tileId == METATILE_GenericBuilding1_PlayersPCOn || tileId == METATILE_GenericBuilding1_PlayersPCOff);
+
     return FALSE;
-#endif
 }
 
 static bool8 IsPlayerInFrontOfPC(void)
@@ -4629,39 +4625,10 @@ u16 GetFirstPartnerMove(u16 species)
     switch(species)
     {
         case SPECIES_VENUSAUR:
-        case SPECIES_MEGANIUM:
-        case SPECIES_SCEPTILE:
-        case SPECIES_TORTERRA:
-        case SPECIES_SERPERIOR:
-        case SPECIES_CHESNAUGHT:
-        case SPECIES_DECIDUEYE:
-        case SPECIES_DECIDUEYE_HISUI:
-        case SPECIES_RILLABOOM:
-        case SPECIES_MEOWSCARADA:
             return MOVE_FRENZY_PLANT;
         case SPECIES_CHARIZARD:
-        case SPECIES_TYPHLOSION:
-        case SPECIES_TYPHLOSION_HISUI:
-        case SPECIES_BLAZIKEN:
-        case SPECIES_INFERNAPE:
-        case SPECIES_EMBOAR:
-        case SPECIES_DELPHOX:
-        case SPECIES_INCINEROAR:
-        case SPECIES_CINDERACE:
-        case SPECIES_SKELEDIRGE:
             return MOVE_BLAST_BURN;
         case SPECIES_BLASTOISE:
-        case SPECIES_FERALIGATR:
-        case SPECIES_SWAMPERT:
-        case SPECIES_EMPOLEON:
-        case SPECIES_SAMUROTT:
-        case SPECIES_SAMUROTT_HISUI:
-        case SPECIES_GRENINJA:
-        case SPECIES_GRENINJA_ASH:
-        case SPECIES_GRENINJA_BATTLE_BOND:
-        case SPECIES_PRIMARINA:
-        case SPECIES_INTELEON:
-        case SPECIES_QUAQUAVAL:
             return MOVE_HYDRO_CANNON;
         default:
             return MOVE_NONE;
@@ -4702,7 +4669,7 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
     }
 
     StringCopy(gStringVar2, gMovesInfo[moveId].name);
-    if (!I_REUSABLE_TMS && FlagGet(tutorFlag) == TRUE)
+    if (FlagGet(tutorFlag) == TRUE)
         return FALSE;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -4718,11 +4685,6 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
 bool8 HasLearnedAllMovesFromCapeBrinkTutor(void)
 {
     // 8005 is set by CapeBrinkGetMoveToTeachLeadPokemon
-    if (I_REUSABLE_TMS)
-    {
-        return FALSE;
-    }
-
     switch (gSpecialVar_0x8005)
     {
         case MOVE_FRENZY_PLANT:

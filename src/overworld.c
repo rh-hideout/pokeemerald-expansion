@@ -188,7 +188,7 @@ static enum Direction GetAdjustedInitialDirection(struct InitialPlayerAvatarStat
 static u16 GetCenterScreenMetatileBehavior(void);
 static bool32 SetUpScrollSceneForCredits(u8 *state, u8 unused);
 static bool8 MapLdr_Credits(void);
-static void CameraCB_CreditsPan(struct CameraObject * camera);
+static void CameraCB_CreditsPan(struct CameraObject *camera);
 static void Task_OvwldCredits_FadeOut(u8 taskId);
 static void Task_OvwldCredits_WaitFade(u8 taskId);
 
@@ -534,7 +534,7 @@ void LoadObjEventTemplatesFromHeader(void)
     // Clear map object templates
     CpuFill32(0, gSaveBlock1Ptr->objectEventTemplates, sizeof(gSaveBlock1Ptr->objectEventTemplates));
 
-    for (u32 i = 0, j = 0; i < gMapHeader.events->objectEventCount; i++)
+    for (u32 i = 0; i < gMapHeader.events->objectEventCount; i++)
     {
         if (gMapHeader.events->objectEvents[i].kind == OBJ_KIND_CLONE)
         {
@@ -542,22 +542,20 @@ void LoadObjEventTemplatesFromHeader(void)
             u8 localId = gMapHeader.events->objectEvents[i].targetLocalId;
             u8 mapNum = gMapHeader.events->objectEvents[i].targetMapNum;
             u8 mapGroup = gMapHeader.events->objectEvents[i].targetMapGroup;
-            const struct MapHeader * connectionMap = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
+            const struct MapHeader *connectionMap = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
 
-            gSaveBlock1Ptr->objectEventTemplates[j] = connectionMap->events->objectEvents[localId - 1];
-            gSaveBlock1Ptr->objectEventTemplates[j].localId = gMapHeader.events->objectEvents[i].localId;
-            gSaveBlock1Ptr->objectEventTemplates[j].x = gMapHeader.events->objectEvents[i].x;
-            gSaveBlock1Ptr->objectEventTemplates[j].y = gMapHeader.events->objectEvents[i].y;
-            gSaveBlock1Ptr->objectEventTemplates[j].targetLocalId = localId;
-            gSaveBlock1Ptr->objectEventTemplates[j].targetMapNum = mapNum;
-            gSaveBlock1Ptr->objectEventTemplates[j].targetMapGroup = mapGroup;
-            gSaveBlock1Ptr->objectEventTemplates[j].kind = OBJ_KIND_CLONE;
-            j++;
+            gSaveBlock1Ptr->objectEventTemplates[i] = connectionMap->events->objectEvents[localId - 1];
+            gSaveBlock1Ptr->objectEventTemplates[i].localId = gMapHeader.events->objectEvents[i].localId;
+            gSaveBlock1Ptr->objectEventTemplates[i].x = gMapHeader.events->objectEvents[i].x;
+            gSaveBlock1Ptr->objectEventTemplates[i].y = gMapHeader.events->objectEvents[i].y;
+            gSaveBlock1Ptr->objectEventTemplates[i].targetLocalId = localId;
+            gSaveBlock1Ptr->objectEventTemplates[i].targetMapNum = mapNum;
+            gSaveBlock1Ptr->objectEventTemplates[i].targetMapGroup = mapGroup;
+            gSaveBlock1Ptr->objectEventTemplates[i].kind = OBJ_KIND_CLONE;
         }
         else
         {
-            gSaveBlock1Ptr->objectEventTemplates[j] = gMapHeader.events->objectEvents[i];
-            j++;
+            gSaveBlock1Ptr->objectEventTemplates[i] = gMapHeader.events->objectEvents[i];
         }
     }
 }

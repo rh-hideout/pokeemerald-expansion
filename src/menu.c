@@ -1994,7 +1994,7 @@ bool8 IsBlendTaskActive(void)
 
 static void Task_SmoothBlendLayers(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
 
     if (tEvStepCount != 0)
     {
