@@ -622,7 +622,7 @@ u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
 
 }
 
-u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller)
 {
     //Detect inconsistent sum
     u32 weightSum = 0;
@@ -727,7 +727,7 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
     return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
 }
 
-static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller)
 {
     //rigged
     const struct BattlerTurn *turn = NULL;
@@ -2157,13 +2157,13 @@ void ClosePokemon(u32 sourceLine)
 
 static void SetGimmick(u32 sourceLine, u32 battler, u32 partyIndex, enum Gimmick gimmick)
 {
-    enum Gimmick currentGimmick = DATA.chosenGimmick[GetBattleTrainer(battler)][partyIndex];
+    enum Gimmick currentGimmick = DATA.chosenGimmick[GetBattlerTrainer(battler)][partyIndex];
     if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)
        || (currentGimmick == GIMMICK_Z_MOVE && gimmick == GIMMICK_ULTRA_BURST)))
     {
         INVALID_IF(currentGimmick != GIMMICK_NONE && currentGimmick != gimmick, "Cannot set %s because %s already set", sGimmickIdentifiers[gimmick], sGimmickIdentifiers[currentGimmick]);
     }
-    DATA.chosenGimmick[GetBattleTrainer(battler)][partyIndex] = gimmick;
+    DATA.chosenGimmick[GetBattlerTrainer(battler)][partyIndex] = gimmick;
 }
 
 void Gender_(u32 sourceLine, u32 gender)
@@ -2666,9 +2666,9 @@ s32 MoveGetTarget(s32 battlerId, enum Move moveId, struct MoveContext *ctx, u32 
 
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == TARGET_USER 
-              || moveTarget == TARGET_ALL_BATTLERS 
-              || moveTarget == TARGET_FIELD 
+        else if (moveTarget == TARGET_USER
+              || moveTarget == TARGET_ALL_BATTLERS
+              || moveTarget == TARGET_FIELD
               || moveTarget == TARGET_USER_AND_ALLY)
         {
             target = battlerId;
@@ -2732,7 +2732,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
 
     if (ctx->explicitGimmick && ctx->gimmick != GIMMICK_NONE)
     {
-        u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+        enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
         enum HoldEffect holdEffect = GetItemHoldEffect(item);
         u32 species = GetMonData(mon, MON_DATA_SPECIES);
 
@@ -3066,7 +3066,7 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     DATA.expectedAiActions[battlerId][id].sourceLine = sourceLine;
     DATA.expectedAiActions[battlerId][id].actionSet = TRUE;
     DATA.expectedAiActionIndex[battlerId]++;
-    
+
     if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
         gTestRunnerState.expectedFailState = EXPECT_FAIL_TURN_OPEN;
 }
@@ -3100,9 +3100,10 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
 {
     s32 i;
     s32 battlerId = battler - gBattleMons;
-    bool32 requirePartyIndex = GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU
-                            || GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU_MOVES
-                            || (GetItemType(ctx.itemId) == ITEM_USE_BATTLER && GetBattleTest()->type != BATTLE_TEST_AI_DOUBLES && STATE->battlersCount > 2);
+    enum ItemType ctxItemType = GetItemType(ctx.itemId);
+    bool32 requirePartyIndex = ctxItemType == ITEM_USE_PARTY_MENU
+                            || ctxItemType == ITEM_USE_PARTY_MENU_MOVES
+                            || (ctxItemType == ITEM_USE_BATTLER && GetBattleTest()->type != BATTLE_TEST_AI_DOUBLES && STATE->battlersCount > 2);
     // Check general bad use.
     INVALID_IF(DATA.turnState == TURN_CLOSED, "USE_ITEM outside TURN");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
@@ -3112,7 +3113,7 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
     INVALID_IF(requirePartyIndex && ctx.partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), \
                 "USE_ITEM to invalid party index");
     // Check move slot items.
-    if (GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU_MOVES)
+    if (ctxItemType == ITEM_USE_PARTY_MENU_MOVES)
     {
         INVALID_IF(!ctx.explicitMove, "%S requires an explicit move", GetItemName(ctx.itemId));
         for (i = 0; i < MAX_MON_MOVES; i++)

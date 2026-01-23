@@ -1,6 +1,8 @@
 #ifndef GUARD_STRING_UTIL_H
 #define GUARD_STRING_UTIL_H
 
+#include "constants/global.h"
+
 extern u8 gStringVar1[0x100];
 extern u8 gStringVar2[0x100];
 extern u8 gStringVar3[0x100];
@@ -50,7 +52,7 @@ bool32 IsStringJapanese(u8 *str);
 bool32 IsStringNJapanese(u8 *str, s32 n);
 u8 GetExtCtrlCodeLength(u8 code);
 s32 StringCompareWithoutExtCtrlCodes(const u8 *str1, const u8 *str2);
-void ConvertInternationalString(u8 *s, u8 language);
+void ConvertInternationalString(u8 *s, enum Language language);
 void StripExtCtrlCodes(u8 *str);
 u8 *StringCopyUppercase(u8 *dest, const u8 *src);
 

@@ -319,7 +319,7 @@ void BtlController_EmitBallThrowAnim(u32 battler, u32 bufferId, u8 caseId);
 void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, enum Move move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, u8 multihit);
 void BtlController_EmitPrintString(u32 battler, u32 bufferId, enum StringID stringId);
 void BtlController_EmitPrintSelectionString(u32 battler, u32 bufferId, enum StringID stringId);
-void BtlController_EmitChooseAction(u32 battler, u32 bufferId, u8 action, u16 itemId);
+void BtlController_EmitChooseAction(u32 battler, u32 bufferId, u8 action, enum Item itemId);
 void BtlController_EmitYesNoBox(u32 battler, u32 bufferId);
 void BtlController_EmitChooseMove(u32 battler, u32 bufferId, bool8 isDoubleBattle, bool8 NoPpNumber, struct ChooseMoveStruct *movePpData);
 void BtlController_EmitChooseItem(u32 battler, u32 bufferId, u8 *battlePartyOrder);
@@ -375,7 +375,6 @@ void BtlController_HandleMoveAnimation(u32 battler);
 void BtlController_HandlePrintString(u32 battler);
 void BtlController_HandlePrintStringPlayerOnly(u32 battler);
 void BtlController_HandleHealthBarUpdate(u32 battler);
-void DoStatusIconUpdate(u32 battler);
 void BtlController_HandleStatusIconUpdate(u32 battler);
 void BtlController_HandleStatusAnimation(u32 battler);
 void BtlController_HandleHitAnimation(u32 battler);
@@ -465,6 +464,6 @@ void BtlController_HandleSwitchInShowSubstitute(u32 battler);
 
 bool32 ShouldBattleRestrictionsApply(u32 battler);
 void FreeShinyStars(void);
-enum BattleTrainer GetBattleTrainer(enum BattlerId battler);
+enum BattleTrainer GetBattlerTrainer(enum BattlerId battler);
 
 #endif // GUARD_BATTLE_CONTROLLERS_H

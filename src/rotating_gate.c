@@ -911,7 +911,7 @@ static void RotatingGate_TriggerRotationAnimation(u8 gateId, s32 rotationDirecti
     }
 }
 
-static u8 RotatingGate_GetRotationInfo(u8 direction, s16 x, s16 y)
+static u8 RotatingGate_GetRotationInfo(enum Direction direction, s16 x, s16 y)
 {
     const u8 *ptr;
 
@@ -957,7 +957,7 @@ void RotatingGate_InitPuzzleAndGraphics(void)
     }
 }
 
-bool32 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
+bool32 CheckForRotatingGatePuzzleCollision(enum Direction direction, s16 x, s16 y)
 {
     s32 i;
 
@@ -995,7 +995,7 @@ bool32 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
     return FALSE;
 }
 
-bool32 CheckForRotatingGatePuzzleCollisionWithoutAnimation(u8 direction, s16 x, s16 y)
+bool32 CheckForRotatingGatePuzzleCollisionWithoutAnimation(enum Direction direction, s16 x, s16 y)
 {
     s32 i;
 

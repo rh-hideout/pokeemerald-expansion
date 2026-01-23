@@ -397,6 +397,51 @@ AI_SINGLE_BATTLE_TEST("AI uses Trick Room (singles)")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Single)")
+{
+    bool32 expectTailwind;
+    u16 tailwindSpecies;
+    enum Ability tailwindAbility;
+
+    PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_WIND_RIDER;  expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_INFILTRATOR; expectTailwind = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(tailwindSpecies) { Ability(tailwindAbility); Speed(9); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
+    } WHEN {
+        if (expectTailwind)
+            TURN { EXPECT_MOVE(opponent, MOVE_TAILWIND); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponent, MOVE_TAILWIND); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power (Single)")
+{
+    bool32 expectTailwind;
+    u16 tailwindSpecies;
+    enum Ability tailwindAbility;
+
+    PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_WIND_POWER;  expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_COMPETITIVE; expectTailwind = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
+        ASSUME(GetMoveType(MOVE_THUNDERSHOCK) == TYPE_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(tailwindSpecies) { Ability(tailwindAbility); Speed(9); Moves(MOVE_TAILWIND, MOVE_THUNDERSHOCK); }
+    } WHEN {
+        if (expectTailwind)
+            TURN { EXPECT_MOVE(opponent, MOVE_TAILWIND); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponent, MOVE_TAILWIND); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI uses Quick Guard against Quick Attack when opponent would take poison damage")
 {
     PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
