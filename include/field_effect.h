@@ -1,6 +1,8 @@
 #ifndef GUARD_FIELD_EFFECTS_H
 #define GUARD_FIELD_EFFECTS_H
 
+#include "field_weather.h"
+
 extern const struct SpritePalette gNewGameBirchObjectPaletteInfo;
 extern const struct SpriteTemplate gNewGameBirchObjectTemplate;
 extern const struct OamData gNewGameBirchOamAttributes;
@@ -23,6 +25,7 @@ void MultiplyInvertedPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b);
 void FieldEffectActiveListAdd(u8 id);
 void FieldEffectScript_LoadTiles(u8 **script);
 void FieldEffectScript_LoadFadedPalette(u8 **script);
+void FieldEffect_LoadFadedPalette(struct SpritePalette *palette, enum ColorMapType colorMap);
 void FieldEffectScript_LoadPalette(u8 **script);
 void FieldEffectScript_CallNative(u8 **script, u32 *val);
 void FieldEffectFreeGraphicsResources(struct Sprite *sprite);

@@ -11788,13 +11788,9 @@ bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim sp
 {
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
     gFieldEffectArguments[3] = spawnAnimType;
-
-    if (spawnAnimType == OWE_SPAWN_ANIM_GRASS || spawnAnimType == OWE_SPAWN_ANIM_LONG_GRASS)
-        FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_1);
-    else
-        FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_0);
-
+    FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
     return TRUE;
 }
 

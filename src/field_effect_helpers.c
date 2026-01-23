@@ -1521,6 +1521,7 @@ u32 FldEff_OWE_SpawnAnim(void)
     u8 spriteId;
     u8 visual;
     s16 xOffset, yOffset;
+    struct SpritePalette palette = gSpritePalette_GeneralFieldEffect0;
 
     switch (gFieldEffectArguments[3])
     {
@@ -1528,12 +1529,14 @@ u32 FldEff_OWE_SpawnAnim(void)
         visual = FLDEFFOBJ_JUMP_TALL_GRASS;
         xOffset = 0;
         yOffset = 8;
+        palette = gSpritePalette_GeneralFieldEffect1;
         break;
 
     case OWE_SPAWN_ANIM_LONG_GRASS:
         visual = FLDEFFOBJ_JUMP_LONG_GRASS;
         xOffset = 0;
         yOffset = 0;
+        palette = gSpritePalette_GeneralFieldEffect1;
         break;
 
     case OWE_SPAWN_ANIM_WATER:
@@ -1562,6 +1565,7 @@ u32 FldEff_OWE_SpawnAnim(void)
         break;
     }
 
+    FieldEffect_LoadFadedPalette(&palette, COLOR_MAP_DARK_CONTRAST);
     SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 0);
     spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[visual], gFieldEffectArguments[0] + xOffset, gFieldEffectArguments[1] + yOffset, 82);
     if (spriteId != MAX_SPRITES)
