@@ -692,7 +692,7 @@ void HandleInputChooseMove(u32 battler)
     {
         TryToHideMoveInfoWindow();
         if (B_MOVE_TYPE_SPRITES)
-            TryToHideMoveTypeIconSpriteWithDelay(TYPE_ICON_DO_MOVE_DELAY);
+            TryToHideMoveTypeIconSpriteWithDelay(MOVE_TYPE_ICON_DO_MOVE_DELAY);
         PlaySE(SE_SELECT);
 
         enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[gMoveSelectionCursor[battler]]);
@@ -803,7 +803,7 @@ void HandleInputChooseMove(u32 battler)
             BtlController_Complete(battler);
             TryToHideMoveInfoWindow();
             if (B_MOVE_TYPE_SPRITES)
-                TryToHideMoveTypeIconSpriteWithDelay(TYPE_ICON_BACK_MENU_DELAY);
+                TryToHideMoveTypeIconSpriteWithDelay(MOVE_TYPE_ICON_BACK_MENU_DELAY);
         }
     }
     else if (JOY_NEW(DPAD_LEFT) && !gBattleStruct->zmove.viewing)

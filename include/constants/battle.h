@@ -35,8 +35,6 @@ enum BattlerPosition
     B_POSITION_ABSENT = 0xFF,
 };
 
-#define MOVE_TYPE_ICON (MAX_POSITION_COUNT + 1)
-
 enum BattlerId
 {
     B_BATTLER_0,

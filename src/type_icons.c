@@ -60,7 +60,7 @@ const struct Coords16 sTypeIconPositions[][2] =
     },
 
     // for move info
-    [MOVE_TYPE_ICON] =
+    [MOVE_TYPE_ICON_POS] =
     {
         [FALSE] = {216, 144},
     },
@@ -368,7 +368,7 @@ const struct CompressedSpriteSheet sSpriteSheet_MoveTypeIcons =
 {
     .data = gMoveTypes_Gfx,
     .size = (NUMBER_OF_MON_TYPES + CONTEST_CATEGORIES_COUNT) * 0x100,
-    .tag = TAG_MOVE_TYPES,
+    .tag = MOVE_TYPE_ICON_TAG,
 };
 
 const struct SpriteTemplate sSpriteTemplate_TypeIcons1 =
@@ -391,8 +391,8 @@ const struct SpriteTemplate sSpriteTemplate_TypeIcons2 =
 
 const struct SpriteTemplate sSpriteTemplate_MoveTypeIcon =
 {
-    .tileTag = TAG_MOVE_TYPES,
-    .paletteTag = TAG_MOVE_TYPES,
+    .tileTag = MOVE_TYPE_ICON_TAG,
+    .paletteTag = MOVE_TYPE_ICON_TAG,
     .oam = &sOamData_MoveTypeIcon,
     .anims = sSpriteAnimTable_MoveTypeIcons,
     .callback = SpriteCB_MoveTypeIcon,
@@ -434,7 +434,7 @@ static void LoadTypeSpritesAndPalettes(void)
 
 void LoadMoveTypeIconSpritesAndPalettes(void)
 {
-    if (IndexOfSpritePaletteTag(TAG_MOVE_TYPES) != UCHAR_MAX)
+    if (IndexOfSpritePaletteTag(MOVE_TYPE_ICON_TAG) != UCHAR_MAX)
         return;
 
     LoadCompressedSpriteSheet(&sSpriteSheet_MoveTypeIcons);
@@ -467,7 +467,7 @@ void LoadTypeIconForMoveInfo(enum Type type)
     enum Type types[1];
 
     types[typeNum] = type;
-    CreateSpriteFromType(MOVE_TYPE_ICON, FALSE, types, typeNum, B_POSITION_PLAYER_LEFT);
+    CreateSpriteFromType(MOVE_TYPE_ICON_POS, FALSE, types, typeNum, B_POSITION_PLAYER_LEFT);
 }
 
 static bool32 UseDoubleBattleCoords(u32 position)
@@ -567,12 +567,12 @@ static void CreateSpriteFromType(u32 position, bool32 useDoubleBattleCoords, enu
 {
     s32 x = 0, y = 0;
 
-    if (ShouldSkipSecondType(types, typeNum) && position != MOVE_TYPE_ICON)
+    if (ShouldSkipSecondType(types, typeNum) && position != MOVE_TYPE_ICON_POS)
         return;
 
     SetTypeIconXY(&x, &y, position, useDoubleBattleCoords, typeNum);
 
-    if (position == MOVE_TYPE_ICON)
+    if (position == MOVE_TYPE_ICON_POS)
         CreateMoveTypeIconSpriteAndSetAttributes(types[typeNum], x, y);
     else
         CreateSpriteAndSetTypeSpriteAttributes(types[typeNum], x, y, position, battler, useDoubleBattleCoords);
@@ -655,7 +655,7 @@ static void SpriteCB_TypeIcon(struct Sprite *sprite)
     u32 battlerId = sprite->tBattlerId;
     bool32 useDoubleBattleCoords = UseDoubleBattleCoords(GetBattlerAtPosition(position));
 
-    if (sprite->tHideIconTimer == NUM_FRAMES_HIDE_TYPE_ICON)
+    if (sprite->tHideIconTimer == MOVE_TYPE_ICON_NUM_FRAMES_HIDE)
     {
         DestroyTypeIcon(sprite);
         return;
@@ -676,8 +676,8 @@ static void SpriteCB_MoveTypeIcon(struct Sprite *sprite)
 {
     if (!gMain.inBattle)
     {
-        FreeSpriteTilesByTag(TAG_MOVE_TYPES);
-        FreeSpritePaletteByTag(TAG_MOVE_TYPES);
+        FreeSpriteTilesByTag(MOVE_TYPE_ICON_TAG);
+        FreeSpritePaletteByTag(MOVE_TYPE_ICON_TAG);
         DestroySpriteAndFreeResources(sprite);
     }
     else if (sprite->tHide && sprite->animDelayCounter == 0)
