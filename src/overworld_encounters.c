@@ -49,7 +49,7 @@ static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
 static void OWE_SetNewSpawnCountdown(void);
-static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
+static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 static bool32 OWE_DoesRoamerObjectExist(void);
@@ -135,10 +135,12 @@ void UpdateOverworldEncounters(void)
     u32 level;
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
 
+    // Does X and Y need to be adjusted for map offset here, for all subsequent?
+    // If so can be done when setting them originally?
     if (speciesId == SPECIES_NONE
         || !IsWildLevelAllowedByRepel(level)
         || !IsAbilityAllowingEncounter(level)
-        || !OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
+        || !OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny, x, y))
     {
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
@@ -188,7 +190,7 @@ static void OWE_SetNewSpawnCountdown(void)
 }
 
 #define OWE_FIELD_EFFECT_TILE_NUM 16 // Number of tiiles to add for field effect spawning
-static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny)
+static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y)
 {
     u32 numFreePalSlots = CountFreePaletteSlots();
     u32 tag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
@@ -202,13 +204,11 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     // Add this and tiles to seperate graphics check function
     if (numFreePalSlots == 1)
     {
-            
-        // If the mon's palette isn't already loaded, don't spawn.
-        if (IndexOfSpritePaletteTag(tag) == 0xFF)
+        u32 metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+        struct SpritePalette palette = OWE_GetSpawnAnimFldEffPalette(OWE_GetSpawnDespawnAnimType(metatileBehavior));
+        // If the mon's palette or field effect palette isn't already loaded, don't spawn.
+        if (IndexOfSpritePaletteTag(tag) == 0xFF || IndexOfSpritePaletteTag(palette.tag) == 0xFF)
             return FALSE;
-
-        // Add check if field effect pallete is already loaded
-        // Bubbles field effect occurs on every movement
     }
     else if (numFreePalSlots == 0)
     {
@@ -1469,6 +1469,27 @@ u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y)
 
     RemoveObjectEventByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup);
     return collision & (1 << (COLLISION_OBJECT_EVENT - 1));
+}
+
+struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim)
+{
+    struct SpritePalette palette = gSpritePalette_GeneralFieldEffect0;
+    switch (spawnAnim)
+    {
+    case OWE_SPAWN_ANIM_GRASS:
+    case OWE_SPAWN_ANIM_LONG_GRASS:
+        palette = gSpritePalette_GeneralFieldEffect1;
+        break;
+
+    case OWE_SPAWN_ANIM_WATER:
+    case OWE_SPAWN_ANIM_UNDERWATER:
+    case OWE_SPAWN_ANIM_CAVE:
+    case OWE_SPAWN_ANIM_SHINY:
+    default:
+        break;
+    }
+
+    return palette;
 }
 
 #undef sOverworldEncounterLevel

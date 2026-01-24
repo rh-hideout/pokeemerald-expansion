@@ -1521,19 +1521,18 @@ u32 FldEff_OWE_SpawnAnim(void)
     u8 spriteId;
     u8 visual;
     s16 xOffset = 0, yOffset = 0;
-    struct SpritePalette palette = gSpritePalette_GeneralFieldEffect0;
+    enum OverworldEncounterSpawnAnim spawnAnim = gFieldEffectArguments[2];
+    struct SpritePalette palette = OWE_GetSpawnAnimFldEffPalette(spawnAnim);
 
-    switch (gFieldEffectArguments[2])
+    switch (spawnAnim)
     {
     case OWE_SPAWN_ANIM_GRASS:
         visual = FLDEFFOBJ_JUMP_TALL_GRASS;
         yOffset = 8;
-        palette = gSpritePalette_GeneralFieldEffect1;
         break;
 
     case OWE_SPAWN_ANIM_LONG_GRASS:
         visual = FLDEFFOBJ_JUMP_LONG_GRASS;
-        palette = gSpritePalette_GeneralFieldEffect1;
         break;
 
     case OWE_SPAWN_ANIM_WATER:
