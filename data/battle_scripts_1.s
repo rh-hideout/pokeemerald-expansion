@@ -8289,9 +8289,12 @@ BattleScript_WildBattleVictory::
 	jumpifnoballs BattleScript_WildBattleVictoryRet
 	printstring STRINGID_VICTORYCATCH
 	setbyte gBattleCommunication, 0
-	yesnobox
+	catchornot
 	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication + 1, 0, BattleScript_WildBattleVictoryRet
 	catchaftervictory
+	return
+
 BattleScript_WildBattleVictoryRet:
+	handlefailedvictorycatch
 	return
 

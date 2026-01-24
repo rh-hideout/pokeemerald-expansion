@@ -2434,3 +2434,8 @@
 	.macro handlefailedvictorycatch
 	callnative BS_HandleFailedVictoryCatch
 	.endm
+
+	.macro catchornot
+	callnative BS_CatchOrNot
+	.endm
+
