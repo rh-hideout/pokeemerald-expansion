@@ -1470,17 +1470,15 @@ bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct Obj
 
 u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y)
 {
-    if ((collision & (1 << (COLLISION_OBJECT_EVENT - 1))))
-    {
-        struct ObjectEvent *objectEvent = &gObjectEvents[GetObjectEventIdByXY(x, y)];
-        if (IsOverworldWildEncounter(objectEvent, OWE_GENERATED))
-        {
-            RemoveObjectEventByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup);
-            collision &= 1 << (COLLISION_OBJECT_EVENT - 1);
-        }
-    }
+    if (!(collision & (1 << (COLLISION_OBJECT_EVENT - 1))))
+        return collision;
 
-    return collision;
+    struct ObjectEvent *objectEvent = &gObjectEvents[GetObjectEventIdByXY(x, y)];
+    if (!IsOverworldWildEncounter(objectEvent, OWE_GENERATED))
+        return collision;
+
+    RemoveObjectEventByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup);
+    return collision & (1 << (COLLISION_OBJECT_EVENT - 1));
 }
 
 #undef sOverworldEncounterLevel
