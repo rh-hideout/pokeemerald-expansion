@@ -5417,7 +5417,8 @@ static void AnimMilkBottle_Step2(struct Sprite *sprite, int unk1, int unk2)
 
 void AnimGrantingStars(struct Sprite *sprite)
 {
-    if (!InitSpritePosToAnimBattler(gBattleAnimArgs[2], sprite, FALSE))
+    enum AnimBattler animBattler = gBattleAnimArgs[2];
+    if (!InitSpritePosToAnimBattler(animBattler, sprite, FALSE))
         return;
 
     SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);

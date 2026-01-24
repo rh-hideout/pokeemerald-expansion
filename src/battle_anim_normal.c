@@ -1055,10 +1055,11 @@ static void AnimHitSplatHandleInvert(struct Sprite *sprite)
 
 void AnimHitSplatRandom(struct Sprite *sprite)
 {
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
     if (gBattleAnimArgs[1] == -1)
         gBattleAnimArgs[1] = Random2() & 3;
 
-    if (!InitSpritePosToAnimBattler(gBattleAnimArgs[0], sprite, FALSE))
+    if (!InitSpritePosToAnimBattler(animBattler, sprite, FALSE))
         return;
     StartSpriteAffineAnim(sprite, gBattleAnimArgs[1]);
 
