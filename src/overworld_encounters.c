@@ -1071,7 +1071,7 @@ void DespawnOldestOWE_Pal(void)
 
 bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon)
 {
-    if (mon->movementType == MOVEMENT_TYPE_WANDER_AROUND_OWE)
+    if (!IsOverworldWildEncounter(mon, OWE_ANY) || mon->movementType == MOVEMENT_TYPE_WANDER_AROUND_OWE)
         return FALSE;
 
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
@@ -1116,6 +1116,9 @@ bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon)
 
 bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon)
 {
+    if (!IsOverworldWildEncounter(mon, OWE_ANY))
+        return FALSE;
+    
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     u32 distance = OWE_CHASE_RANGE;
     u32 speciesId = OW_SPECIES(mon);
