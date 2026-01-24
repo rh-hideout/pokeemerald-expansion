@@ -149,6 +149,7 @@ void UpdateOverworldEncounters(void)
         .elevation = MapGridGetElevationAt(x, y),
         .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
         .trainerType = TRAINER_TYPE_ENCOUNTER,
+        .script = InteractWithDynamicWildOverworldEncounter,
     };
 
     if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
@@ -917,20 +918,11 @@ bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
-
-    if (!IsOverworldWildEncounter(object, OWE_ANY))
+    if (!IsOverworldWildEncounter(object, OWE_ANY) || GetObjectEventScriptPointerByObjectEventId(objectEventId) != InteractWithDynamicWildOverworldEncounter)
         return FALSE;
 
-    if (IsOverworldWildEncounter(object, OWE_GENERATED)
-        || (!IsOverworldWildEncounter(object, OWE_GENERATED)
-        && (GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL
-        || GetObjectEventScriptPointerByObjectEventId(objectEventId) == InteractWithDynamicWildOverworldEncounter)))
-    {
-        gSpecialVar_0x8004 = OW_SPECIES(object);
-        return TRUE;
-    }
-
-    return FALSE;
+    gSpecialVar_0x8004 = OW_SPECIES(object);
+    return TRUE;
 }
 
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
@@ -975,6 +967,9 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
 
     if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
         templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
+
+    if (templateOWE.script == NULL)
+        templateOWE.script = InteractWithDynamicWildOverworldEncounter;
 
     assertf(speciesId != SPECIES_NONE && speciesId < NUM_SPECIES && IsSpeciesEnabled(speciesId), "invalid semi-manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
     {
