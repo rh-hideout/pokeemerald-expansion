@@ -186,7 +186,7 @@ static void SetConestLiveUpdateTVData(void);
 static void SetContestLiveUpdateFlags(u8);
 static void ContestDebugPrintBitStrings(void);
 static void StripPlayerNameForLinkContest(u8 *);
-static void StripMonNameForLinkContest(u8 *, s32);
+static void StripMonNameForLinkContest(u8 *, enum Language);
 static void SwapMoveDescAndContestTilemaps(void);
 
 // An index into a palette where the text color for each contestant is stored.
@@ -347,7 +347,7 @@ EWRAM_DATA u8 gLinkContestFlags = 0;
 // Bit 0: Is a link contest
 // Bit 1: Link contest uses wireless adapter
 EWRAM_DATA u8 gContestLinkLeaderIndex = 0;
-EWRAM_DATA u16 gSpecialVar_ContestCategory = 0;
+EWRAM_DATA enum ContestCategories gSpecialVar_ContestCategory = 0;
 EWRAM_DATA u16 gSpecialVar_ContestRank = 0;
 EWRAM_DATA u8 gNumLinkContestPlayers = 0;
 EWRAM_DATA u8 gHighestRibbonRank = 0;
@@ -2901,7 +2901,7 @@ void CreateContestMonFromParty(u8 partyIndex)
     gContestMons[gContestPlayerMonIndex].tough = tough;
 }
 
-void SetContestants(u8 contestType, u8 rank)
+void SetContestants(enum ContestCategories contestType, u8 rank)
 {
     s32 i;
     u8 opponentsCount = 0;
@@ -2957,7 +2957,7 @@ void SetContestants(u8 contestType, u8 rank)
     CreateContestMonFromParty(gContestMonPartyIndex);
 }
 
-void SetLinkAIContestants(u8 contestType, u8 rank, bool32 isPostgame)
+void SetLinkAIContestants(enum ContestCategories contestType, u8 rank, bool32 isPostgame)
 {
     s32 i, j;
     u8 opponentsCount = 0;
@@ -3080,7 +3080,7 @@ static void PrintContestantMonNameWithColor(u8 contestant, u8 color)
     Contest_PrintTextToBg0WindowAt(gContestantTurnOrder[contestant], gDisplayedStringBattle, 5, 1, GetFontIdToFit(gContestMons[contestant].nickname, FONT_NARROW, 0, 50));
 }
 
-static u16 CalculateContestantRound1Points(u8 who, u8 contestCategory)
+static u16 CalculateContestantRound1Points(u8 who, enum ContestCategories contestCategory)
 {
     u8 statMain;
     u8 statSub1;
@@ -3118,7 +3118,7 @@ static u16 CalculateContestantRound1Points(u8 who, u8 contestCategory)
     return statMain + (statSub1 + statSub2 + gContestMons[who].sheen) / 2;
 }
 
-void CalculateRound1Points(u8 contestCategory)
+void CalculateRound1Points(enum ContestCategories contestCategory)
 {
     s32 i;
 
@@ -6003,9 +6003,9 @@ static void ContestDebugPrintBitStrings(void)
     SwapMoveDescAndContestTilemaps();
 }
 
-static u8 GetMonNicknameLanguage(u8 *nickname)
+static enum Language GetMonNicknameLanguage(u8 *nickname)
 {
-    u8 ret = GAME_LANGUAGE;
+    enum Language ret = GAME_LANGUAGE;
 
     if (nickname[0] == EXT_CTRL_CODE_BEGIN && nickname[1] == EXT_CTRL_CODE_JPN)
         return GAME_LANGUAGE;
@@ -6060,7 +6060,7 @@ static void StripPlayerNameForLinkContest(u8 *playerName)
     playerName[PLAYER_NAME_LENGTH] = chr;
 }
 
-static void StripMonNameForLinkContest(u8 *monName, s32 language)
+static void StripMonNameForLinkContest(u8 *monName, enum Language language)
 {
     u8 chr;
 
@@ -6078,7 +6078,7 @@ static void StripMonNameForLinkContest(u8 *monName, s32 language)
     }
 }
 
-void StripPlayerAndMonNamesForLinkContest(struct ContestPokemon *mon, s32 language)
+void StripPlayerAndMonNamesForLinkContest(struct ContestPokemon *mon, enum Language language)
 {
     u8 *name = mon->nickname;
 

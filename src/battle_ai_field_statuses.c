@@ -341,7 +341,6 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battle
      || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_NEGATIVE;
 
-
     return FIELD_EFFECT_NEUTRAL;
 }
 
@@ -474,7 +473,6 @@ static enum FieldEffectOutcome BenefitsFromGravity(enum BattlerId battler)
 
     return FIELD_EFFECT_NEUTRAL;
 }
-
 
 static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler)
 {

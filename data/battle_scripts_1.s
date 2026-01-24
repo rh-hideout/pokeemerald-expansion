@@ -2675,18 +2675,6 @@ BattleScript_AbilityPreventsRest::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectOHKO::
-	attackcanceler
-	typecalc
-	jumpifmovehadnoeffect BattleScript_HitFromAtkAnimation
-	tryKO BattleScript_KOFail
-	goto BattleScript_HitFromAtkAnimation
-BattleScript_KOFail::
-	pause B_WAIT_TIME_LONG
-	printfromtable gKOFailedStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_RecoilIfMiss::
 	printstring STRINGID_PKMNCRASHED
 	waitmessage B_WAIT_TIME_LONG

@@ -3027,7 +3027,7 @@ static void AnimWoodHammerHammer_WaitForDestruction(struct Sprite *sprite)
 #undef HAMMER_PUNCH_WAIT_FRAMES
 
 // Animates the falling particles that horizontally wave back and forth.
-// Used by Sleep Powder, Stun Spore, and Poison Powder.
+// Used by Sleep Powder, Stun Spore, Poison Powder, and Magic Powder.
 // arg 0: initial x pixel offset
 // arg 1: initial y pixel offset
 // arg 2: total duration in frames

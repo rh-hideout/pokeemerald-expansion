@@ -279,7 +279,7 @@ bool32 MoveSelectionDisplayZMove(enum Move zmove, enum BattlerId battler)
 
         if (IsBattleMoveStatus(move))
         {
-            u8 zEffect = GetMoveZEffect(move);
+            enum ZEffect zEffect = GetMoveZEffect(move);
 
             gDisplayedStringBattle[0] = EOS;
 
@@ -438,7 +438,7 @@ static void ZMoveSelectionDisplayMoveType(enum Move zMove, enum BattlerId battle
 void SetZEffect(void)
 {
     u32 i;
-    u32 effect = GetMoveZEffect(gChosenMove);
+    enum ZEffect effect = GetMoveZEffect(gChosenMove);
 
     if (effect == Z_EFFECT_CURSE)
     {
@@ -550,7 +550,7 @@ u32 GetZMovePower(enum Move move)
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return 0;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    if (moveEffect == EFFECT_OHKO || moveEffect == EFFECT_SHEER_COLD)
+    if (moveEffect == EFFECT_OHKO)
         return 180;
 
     u32 power = GetMoveZPowerOverride(move);
