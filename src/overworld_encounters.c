@@ -148,7 +148,7 @@ void UpdateOverworldEncounters(void)
         .y = y - MAP_OFFSET,
         .elevation = MapGridGetElevationAt(x, y),
         .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
-        .trainerType = TRAINER_TYPE_NONE, // Not set in template to avoid check in TryGetObjectEventTemplateForOverworldEncounter
+        .trainerType = TRAINER_TYPE_ENCOUNTER,
     };
 
     if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
@@ -170,7 +170,6 @@ void UpdateOverworldEncounters(void)
     }
 
     object = &gObjectEvents[objectEventId];
-    object->trainerType = TRAINER_TYPE_ENCOUNTER;
     object->disableCoveringGroundEffects = TRUE;
     object->sOverworldEncounterLevel = level;
     object->sRoamerOutbreakStatus = indexRoamerOutbreak;
@@ -184,7 +183,6 @@ void UpdateOverworldEncounters(void)
     if (shouldSpawnWaterMons)
         object->hideReflection = TRUE;
 
-    OverworldWildEncounter_OnObjectEventSpawned(object);
     OWE_SetNewSpawnCountdown();
 }
 
@@ -937,7 +935,8 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
-    if (template->trainerType != TRAINER_TYPE_ENCOUNTER)
+    if (template->trainerType != TRAINER_TYPE_ENCOUNTER || (template->localId <= LOCALID_OW_ENCOUNTER_END
+        && template->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS)))
         return *template;
 
     struct ObjectEventTemplate templateOWE = *template;
