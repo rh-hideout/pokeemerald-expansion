@@ -820,6 +820,9 @@ static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons)
 
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType)
 {
+    if (objectEvent->isPlayer)
+        return FALSE;
+    
     bool32 isOWE = (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
     switch (oweType)
     {
