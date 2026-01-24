@@ -175,7 +175,7 @@ void UpdateOverworldEncounters(void)
     object->sOverworldEncounterLevel = level;
     object->sRoamerOutbreakStatus = indexRoamerOutbreak;
 
-    u8 directions[4];
+    enum Direction directions[4];
     memcpy(directions, gStandardDirections, sizeof directions);
     ObjectEventTurn(object, directions[Random() & 3]);
 
