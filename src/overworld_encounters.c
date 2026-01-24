@@ -135,7 +135,10 @@ void UpdateOverworldEncounters(void)
     u32 level;
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
 
-    if (speciesId == SPECIES_NONE || !IsWildLevelAllowedByRepel(level) || !IsAbilityAllowingEncounter(level))
+    if (speciesId == SPECIES_NONE
+        || !IsWildLevelAllowedByRepel(level)
+        || !IsAbilityAllowingEncounter(level)
+        || !OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
     {
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
@@ -151,13 +154,6 @@ void UpdateOverworldEncounters(void)
         .trainerType = TRAINER_TYPE_ENCOUNTER,
         .script = InteractWithDynamicWildOverworldEncounter,
     };
-
-    if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
-    {
-        OWE_ResetSpawnCounterPlayAmbientCry();
-        return;
-    }
-
     u32 objectEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
     if (OWE_ShouldDespawnGeneratedForNewOWE(object))
