@@ -75,7 +75,7 @@ static void OWE_StartEncounterInstant(struct ObjectEvent *mon);
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
     OverworldWildEncounter_SetMinimumSpawnTimer();
-    // Currently may not play manual or semi-manual encounter cries if no wild mon header exists
+    // Currently may not play manual encounter cries if no wild mon header exists
     if (OW_WILD_ENCOUNTERS_AMBIENT_CRIES && GetNumActiveOverworldEncounters())
         OWE_PlayMonObjectCry(OWE_GetRandomActiveEncounterObject());
 }
@@ -965,7 +965,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     if (templateOWE.script == NULL)
         templateOWE.script = InteractWithDynamicWildOverworldEncounter;
 
-    assertf(speciesId != SPECIES_NONE && speciesId < NUM_SPECIES && IsSpeciesEnabled(speciesId), "invalid semi-manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
+    assertf(speciesId != SPECIES_NONE && speciesId < NUM_SPECIES && IsSpeciesEnabled(speciesId), "invalid manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
     {
         // Currently causes assertf on each player step as function is called.
         templateOWE.graphicsId = OBJ_EVENT_GFX_BOY_1;
