@@ -922,7 +922,7 @@ static void PutAiInfoText(struct BattleDebugMenu *data)
             enum Ability ability = gAiLogicData->abilities[battler];
             enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
             enum Item item = gAiLogicData->items[battler];
-            u8 x = (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT) ? 83 + (battler) * 75 : 83 + (battler-1) * 75;
+            u8 x = (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT) ? 83 + battler * 75 : 83 + (battler - 1) * 75;
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, gAbilitiesInfo[ability].name, x, 0, 0, NULL);
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetItemName(item), x, 15, 0, NULL);
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetHoldEffectName(holdEffect), x, 30, 0, NULL);
