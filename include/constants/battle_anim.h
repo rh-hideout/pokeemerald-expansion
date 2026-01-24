@@ -426,7 +426,7 @@
 #define ANIM_TAG_COUNT                      GET_TRUE_SPRITE_INDEX(ANIM_TAG_TATSUGIRI_STRETCHY + 1)
 
 // battlers
-enum __attribute__((packed)) AnimBattler
+enum AnimBattler
 {
     ANIM_ATTACKER,
     ANIM_TARGET,
