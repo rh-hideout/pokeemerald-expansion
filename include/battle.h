@@ -6,6 +6,7 @@
 #include "constants/battle_switch_in.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
+#include "constants/battle_move_resolution.h"
 #include "constants/form_change_types.h"
 #include "constants/hold_effects.h"
 #include "constants/moves.h"
@@ -554,7 +555,7 @@ struct EventStates
     enum FirstTurnEventsStates beforeFirstTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
-    enum MoveSuccessOrder atkCanceler:8;
+    enum CancelerState atkCanceler:8;
     enum BattlerId atkCancelerBattler:4;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;

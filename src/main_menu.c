@@ -1518,8 +1518,8 @@ static void Task_NewGameBirchSpeech_WaitToShowGenderMenu(u8 taskId)
 
 static void Task_NewGameBirchSpeech_ChooseGender(u8 taskId)
 {
-    int gender = NewGameBirchSpeech_ProcessGenderMenuInput();
-    int gender2;
+    enum Gender gender = NewGameBirchSpeech_ProcessGenderMenuInput();
+    enum Gender gender2;
 
     switch (gender)
     {
@@ -1534,6 +1534,8 @@ static void Task_NewGameBirchSpeech_ChooseGender(u8 taskId)
             gSaveBlock2Ptr->playerGender = gender;
             NewGameBirchSpeech_ClearGenderWindow(1, 1);
             gTasks[taskId].func = Task_NewGameBirchSpeech_WhatsYourName;
+            break;
+        default: //repeat task if nothing is selected
             break;
     }
     gender2 = Menu_GetCursorPos();

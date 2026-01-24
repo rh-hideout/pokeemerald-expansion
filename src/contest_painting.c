@@ -396,7 +396,8 @@ static void LoadContestPaintingFrame(u8 contestWinnerId, bool8 isForArtist)
     if (isForArtist == TRUE)
     {
         // Load Artist's frame
-        switch (gContestPaintingWinner->contestCategory / NUM_PAINTING_CAPTIONS)
+        enum ContestCategories category = gContestPaintingWinner->contestCategory / NUM_PAINTING_CAPTIONS;
+        switch (category)
         {
         case CONTEST_CATEGORY_COOL:
             DecompressDataWithHeaderVram(sPictureFrameTiles_Cool, (void *)VRAM);
@@ -417,6 +418,8 @@ static void LoadContestPaintingFrame(u8 contestWinnerId, bool8 isForArtist)
         case CONTEST_CATEGORY_TOUGH:
             DecompressDataWithHeaderVram(sPictureFrameTiles_Tough, (void *)VRAM);
             DecompressDataWithHeaderWram(sPictureFrameTilemap_Tough, gContestMonPixels);
+            break;
+        default:
             break;
         }
 
@@ -447,7 +450,8 @@ static void LoadContestPaintingFrame(u8 contestWinnerId, bool8 isForArtist)
     else
     {
         // Load Museum frame
-        switch (gContestPaintingWinner->contestCategory / NUM_PAINTING_CAPTIONS)
+        enum ContestCategories category = gContestPaintingWinner->contestCategory / NUM_PAINTING_CAPTIONS;
+        switch (category)
         {
         case CONTEST_CATEGORY_COOL:
             DecompressDataWithHeaderVram(sPictureFrameTiles_Cool, (void *)VRAM);
@@ -468,6 +472,8 @@ static void LoadContestPaintingFrame(u8 contestWinnerId, bool8 isForArtist)
         case CONTEST_CATEGORY_TOUGH:
             DecompressDataWithHeaderVram(sPictureFrameTiles_Tough, (void *)VRAM);
             DecompressDataWithHeaderVram(sPictureFrameTilemap_Tough, (void *)(BG_SCREEN_ADDR(12)));
+            break;
+        default:
             break;
         }
     }
@@ -494,7 +500,7 @@ static void InitPaintingMonOamData(u8 contestWinnerId)
 
 static u8 GetImageEffectForContestWinner(u8 contestWinnerId)
 {
-    u8 contestCategory;
+    enum ContestCategories contestCategory;
 
     if (contestWinnerId < MUSEUM_CONTEST_WINNERS_START)
         contestCategory = gContestPaintingWinner->contestCategory;
@@ -513,6 +519,8 @@ static u8 GetImageEffectForContestWinner(u8 contestWinnerId)
         return IMAGE_EFFECT_CHARCOAL;
     case CONTEST_CATEGORY_TOUGH:
         return IMAGE_EFFECT_GRAYSCALE_LIGHT;
+    default:
+        break;
     }
 
     return contestCategory;

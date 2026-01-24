@@ -44,10 +44,11 @@ bool32 CanActivateGimmick(u32 battler, enum Gimmick gimmick)
 bool32 IsGimmickSelected(u32 battler, enum Gimmick gimmick)
 {
     // There's no player select in tests, but some gimmicks need to test choice before they are fully activated.
-    if (TESTING)
-        return (gBattleStruct->gimmick.toActivate & (1u << battler)) && gBattleStruct->gimmick.usableGimmick[battler] == gimmick;
-    else
-        return gBattleStruct->gimmick.usableGimmick[battler] == gimmick && gBattleStruct->gimmick.playerSelect;
+    #if TESTING
+    return (gBattleStruct->gimmick.toActivate & (1u << battler)) && gBattleStruct->gimmick.usableGimmick[battler] == gimmick;
+    #else
+    return gBattleStruct->gimmick.usableGimmick[battler] == gimmick && gBattleStruct->gimmick.playerSelect;
+    #endif
 }
 
 // Sets a battler as having a gimmick active using their party index.
@@ -66,13 +67,11 @@ enum Gimmick GetActiveGimmick(u32 battler)
 bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
 {
     // There are no trainer party settings in battles, but the AI needs to know which gimmick to use.
-    if (TESTING)
-    {
-        return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattlerTrainer(battler), gBattlerPartyIndexes[battler]);
-    }
+    #if TESTING
+    return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattlerTrainer(battler), gBattlerPartyIndexes[battler]);
+    #else
     // The player can bypass these checks because they can choose through the controller.
-    else if (IsOnPlayerSide(battler)
-         && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT))
+    if (IsOnPlayerSide(battler) && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT))
     {
         return TRUE;
     }
@@ -84,6 +83,7 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
         if (gimmick == GIMMICK_DYNAMAX && gBattleStruct->opponentMonCanDynamax & 1 << gBattlerPartyIndexes[battler])
             return TRUE;
     }
+    #endif
 
     return FALSE;
 }

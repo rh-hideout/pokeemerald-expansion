@@ -772,7 +772,7 @@ s32 StringCompareWithoutExtCtrlCodes(const u8 *str1, const u8 *str2)
     return retVal;
 }
 
-void ConvertInternationalString(u8 *s, u8 language)
+void ConvertInternationalString(u8 *s, enum Language language)
 {
     if (language == LANGUAGE_JAPANESE)
     {

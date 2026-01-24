@@ -10,7 +10,6 @@ enum BattleScriptOpcode
     B_SCR_OP_CRITCALC,
     B_SCR_OP_DAMAGECALC,
     B_SCR_OP_TYPECALC,
-    B_SCR_OP_ADJUSTDAMAGE,
     B_SCR_OP_MULTIHITRESULTMESSAGE,
     B_SCR_OP_ATTACKANIMATION,
     B_SCR_OP_WAITANIMATION,
@@ -258,6 +257,11 @@ enum BattleScriptOpcode
     B_SCR_OP_JUMPIFCAPTIVATEAFFECTED,
     B_SCR_OP_SETNONVOLATILESTATUS,
     B_SCR_OP_TRYOVERWRITEABILITY,
+
+    // Expansion users, please don't use any of the unused commands.
+    // They are reserved for expansion usage.
+    // Use callnatives instead.
+    B_SCR_OP_UNUSED_1,
     B_SCR_OP_CALLNATIVE,
 };
 

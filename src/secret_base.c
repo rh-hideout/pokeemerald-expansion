@@ -1332,7 +1332,7 @@ void SecretBasePerStepCallback(u8 taskId)
 #undef tPlayerY
 #undef tFldEff
 
-static void SaveSecretBase(u8 secretBaseIdx, struct SecretBase *secretBase, u32 version, u32 language)
+static void SaveSecretBase(u8 secretBaseIdx, struct SecretBase *secretBase, enum GameVersion version, enum Language language)
 {
     int stringLength;
     u8 *name;
