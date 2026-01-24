@@ -8071,48 +8071,38 @@ void IsLastMonThatKnowsSurf(void)
     }
 }
 
-static void CursorCb_ChangeLevelUpMoves(u8 taskId)
+static void OpenMoveRelearner(u8 taskId)
 {
     PlaySE(SE_SELECT);
-	gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
     gRelearnMode = RELEARN_MODE_PARTY_MENU;
     gLastViewedMonIndex = gPartyMenu.slotId;
     gSpecialVar_0x8004 = gLastViewedMonIndex;
-    TeachMoveRelearnerMove();
+    sPartyMenuInternal->exitCallback = CB2_InitLearnMove;
     Task_ClosePartyMenu(taskId);
+}
+
+static void CursorCb_ChangeLevelUpMoves(u8 taskId)
+{
+    gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
+    OpenMoveRelearner(taskId);
 }
 
 static void CursorCb_ChangeEggMoves(u8 taskId)
 {
-    PlaySE(SE_SELECT);
-	gMoveRelearnerState = MOVE_RELEARNER_EGG_MOVES;
-    gRelearnMode = RELEARN_MODE_PARTY_MENU;
-    gLastViewedMonIndex = gPartyMenu.slotId;
-    gSpecialVar_0x8004 = gLastViewedMonIndex;
-    TeachMoveRelearnerMove();
-    Task_ClosePartyMenu(taskId);
+    gMoveRelearnerState = MOVE_RELEARNER_EGG_MOVES;
+    OpenMoveRelearner(taskId);
 }
 
 static void CursorCb_ChangeTMMoves(u8 taskId)
 {
-    PlaySE(SE_SELECT);
-	gMoveRelearnerState = MOVE_RELEARNER_TM_MOVES;
-    gRelearnMode = RELEARN_MODE_PARTY_MENU;
-    gLastViewedMonIndex = gPartyMenu.slotId;
-    gSpecialVar_0x8004 = gLastViewedMonIndex;
-    TeachMoveRelearnerMove();
-    Task_ClosePartyMenu(taskId);
+    gMoveRelearnerState = MOVE_RELEARNER_TM_MOVES;
+    OpenMoveRelearner(taskId);
 }
 
 static void CursorCb_ChangeTutorMoves(u8 taskId)
 {
-    PlaySE(SE_SELECT);
-	gMoveRelearnerState = MOVE_RELEARNER_TUTOR_MOVES;
-    gRelearnMode = RELEARN_MODE_PARTY_MENU;
-    gLastViewedMonIndex = gPartyMenu.slotId;
-    gSpecialVar_0x8004 = gLastViewedMonIndex;
-    TeachMoveRelearnerMove();
-    Task_ClosePartyMenu(taskId);
+    gMoveRelearnerState = MOVE_RELEARNER_TUTOR_MOVES;
+    OpenMoveRelearner(taskId);
 }
 
 static void CursorCb_LearnMovesSubMenu(u8 taskId)

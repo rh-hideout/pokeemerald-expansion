@@ -534,16 +534,13 @@ static void CB2_MoveRelearnerMain(void)
     UpdatePaletteFade();
 }
 
-// If reusable TMs is off, remove the TM from the bag
-static void RemoveRelearnerTMFromBag(enum Move move)
+static bool32 ShouldConsumeTmItem(enum Move move)
 {
-    enum Item item = GetTMHMItemIdFromMoveId(move);
-
-    if (!I_REUSABLE_TMS && !P_ENABLE_ALL_TM_MOVES
-     && gMoveRelearnerState == MOVE_RELEARNER_TM_MOVES && GetItemTMHMIndex(item) <= NUM_TECHNICAL_MACHINES)
-    {
-        RemoveBagItem(item, 1);
-    }
+    if (gMoveRelearnerState != MOVE_RELEARNER_TM_MOVES || gRelearnMode == RELEARN_MODE_SCRIPT)
+        return FALSE;
+    if (I_REUSABLE_TMS || P_ENABLE_ALL_TM_MOVES)
+        return FALSE;
+    return TRUE;
 }
 
 static void FreeMoveRelearnerResources(void)
@@ -589,6 +586,19 @@ static void UIShowMoveList(u8 taskId)
 
 static void UIEndTask(u8 taskId)
 {
+    if (gSpecialVar_Result == TRUE && ShouldConsumeTmItem(gTasks[taskId].tMove))
+    {
+        enum Item item = GetTMHMItemIdFromMoveId(gTasks[taskId].tMove);
+        if (!GetItemImportance(item))
+        {
+            RemoveBagItem(item, 1);
+            if (!CheckBagHasItem(item, 1))
+            {
+                CreateLearnableMovesList();
+                RedrawListMenu(sMoveRelearnerStruct->moveListMenuTask);
+            }
+        }
+    }
     if (gRelearnMode == RELEARN_MODE_SCRIPT && gSpecialVar_Result == TRUE)
     {
         gTasks[taskId].func = Task_MoveRelearner_Quit;
@@ -707,17 +717,28 @@ static void Task_MoveRelearner_HandleInput(u8 taskId)
         PlaySE(SE_SELECT);
         RemoveScrollArrows();
         gTasks[taskId].func = Task_MoveRelearner_Giveup_Prompt;
-        StringExpandPlaceholders(gStringVar4, gText_MoveRelearnerGiveUp);
+        if (gRelearnMode == RELEARN_MODE_SCRIPT)
+            StringExpandPlaceholders(gStringVar4, gText_MoveRelearnerGiveUp);
+        else
+            StringExpandPlaceholders(gStringVar4, gText_MoveRelearnerStop);
         MoveRelearnerPrintMessage(gStringVar4);
         break;
     default:
         PlaySE(SE_SELECT);
         RemoveScrollArrows();
         StringCopy(gStringVar2, GetMoveName(itemId));
-        UIPrintMessage(gText_MoveRelearnerTeachMoveConfirm);
         gTasks[taskId].func = Task_MoveRelearner_LearnMove;
         gTasks[taskId].tMove = GetCurrentSelectedMove();
         gTasks[taskId].tState = GetLearnMoveStartAfterPromptState();
+        const u8 *message = gText_MoveRelearnerTeachMoveConfirm;
+        if (ShouldConsumeTmItem(gTasks[taskId].tMove))
+        {
+            enum Item item = GetTMHMItemIdFromMoveId(gTasks[taskId].tMove);
+            StringCopy(gStringVar3, GetItemName(item));
+            if (!GetItemImportance(item))
+                message = gText_MoveRelearnerTeachMoveConfirmUseTm;
+        }
+        UIPrintMessage(message);
         break;
     }
 }
