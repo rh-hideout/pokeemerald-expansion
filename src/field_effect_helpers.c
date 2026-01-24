@@ -1520,11 +1520,10 @@ u32 FldEff_OWE_SpawnAnim(void)
 {
     u8 spriteId;
     u8 visual;
-    u8 subpriority = 0;
     s16 xOffset = 0, yOffset = 0;
     struct SpritePalette palette = gSpritePalette_GeneralFieldEffect0;
 
-    switch (gFieldEffectArguments[3])
+    switch (gFieldEffectArguments[2])
     {
     case OWE_SPAWN_ANIM_GRASS:
         visual = FLDEFFOBJ_JUMP_TALL_GRASS;
@@ -1544,7 +1543,6 @@ u32 FldEff_OWE_SpawnAnim(void)
 
     case OWE_SPAWN_ANIM_UNDERWATER:
         visual = FLDEFFOBJ_BUBBLES;
-        subpriority = 82;
         break;
 
     case OWE_SPAWN_ANIM_CAVE:
@@ -1555,18 +1553,17 @@ u32 FldEff_OWE_SpawnAnim(void)
     case OWE_SPAWN_ANIM_SHINY:
     default:
         visual = FLDEFFOBJ_SHINY_SPARKLE;
-        subpriority = 82;
         break;
     }
 
     FieldEffect_LoadFadedPalette(&palette, COLOR_MAP_DARK_CONTRAST);
     SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 0);
-    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[visual], gFieldEffectArguments[0] + xOffset, gFieldEffectArguments[1] + yOffset, subpriority);
+    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[visual], gFieldEffectArguments[0] + xOffset, gFieldEffectArguments[1] + yOffset, 82);
     if (spriteId != MAX_SPRITES)
     {
         struct Sprite *sprite = &gSprites[spriteId];
         sprite->coordOffsetEnabled = TRUE;
-        sprite->oam.priority = gFieldEffectArguments[2];
+        sprite->oam.priority = 2;
     }
     return spriteId;
 }
