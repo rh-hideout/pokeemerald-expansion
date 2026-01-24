@@ -563,7 +563,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, enum BattlerId *targets)
     enum AnimBattler battlerAnimId = gBattleAnimArgs[battlerArgIndex];   // ANIM_xx input
     enum BattlerId i;
     enum BattlerId ignoredTgt;
-    u32 target = GetBattlerMoveTargetType(gBattleAnimAttacker, gAnimMoveIndex);
+    enum MoveTarget target = GetBattlerMoveTargetType(gBattleAnimAttacker, gAnimMoveIndex);
 
     switch (battlerAnimId)
     {

@@ -419,7 +419,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
         B_POSITION_OPPONENT_LEFT,
     };
     enum Move move = GetMonData(GetBattlerMon(battler), MON_DATA_MOVE1 + gMoveSelectionCursor[battler]);
-    u16 moveTarget = GetBattlerMoveTargetType(battler, move);
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, move);
 
     DoBounceEffect(gMultiUsePlayerCursor, BOUNCE_HEALTHBOX, 15, 1);
     for (i = 0; i < gBattlersCount; i++)

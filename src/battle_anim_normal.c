@@ -381,7 +381,7 @@ u32 UnpackSelectedBattlePalettes(s16 selector)
     bool8 targetPartner = (selector >> 4) & 1;
     bool8 anim1 = (selector >> 5) & 1;
     bool8 anim2 = (selector >> 6) & 1;
-    u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gAnimMoveIndex);
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gAnimMoveIndex);
 
     switch (moveTarget)
     {

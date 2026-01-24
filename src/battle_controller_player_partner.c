@@ -280,7 +280,7 @@ static void PlayerPartnerHandleChooseMove(enum BattlerId battler)
 
     chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
     gBattlerTarget = gAiBattleData->chosenTarget[battler];
-    u32 moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
 
     if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
     {

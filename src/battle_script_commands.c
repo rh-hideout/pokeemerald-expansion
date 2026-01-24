@@ -1525,7 +1525,7 @@ static void Cmd_attackanimation(void)
     if (gBattleControllerExecFlags || ProcessPreAttackAnimationFuncs())
         return;
 
-    u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     u32 moveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
@@ -2514,7 +2514,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         if (IsOnPlayerSide(gBattlerAttacker) && gSpecialStatuses[gBattlerAttacker].parentalBondState!= PARENTAL_BOND_2ND_HIT)
         {
             u16 payday = gPaydayMoney;
-            u16 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+            enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
             gPaydayMoney += (gBattleMons[gBattlerAttacker].level * 5);
             if (payday > gPaydayMoney)
                 gPaydayMoney = 0xFFFF;

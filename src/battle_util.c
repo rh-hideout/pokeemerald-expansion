@@ -534,7 +534,8 @@ static bool32 WasOriginalTargetAlly(enum MoveTarget target)
 // Functions
 void HandleAction_UseMove(void)
 {
-    u32 i, moveTarget;
+    u32 i;
+    enum MoveTarget moveTarget;
 
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     if (gAbsentBattlerFlags & 1u << gBattlerAttacker
