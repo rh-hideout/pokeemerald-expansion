@@ -1288,6 +1288,7 @@ BattleScript_EffectMagneticFluxTrySpDef:
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_EffectMagneticFluxLoop:
 	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_EffectMagneticFluxEnd
+	jumpifnoally BS_ATTACKER, BattleScript_EffectMagneticFluxEnd
 	setallytonexttarget BattleScript_EffectMagneticFluxStart
 BattleScript_EffectMagneticFluxEnd:
 	restoretarget
@@ -1325,6 +1326,7 @@ BattleScript_EffectGearUpTrySpAtk:
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_EffectGearUpLoop:
 	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_EffectGearUpEnd
+	jumpifnoally BS_ATTACKER, BattleScript_EffectGearUpEnd
 	setallytonexttarget BattleScript_EffectGearUpStart
 BattleScript_EffectGearUpEnd:
 	restoretarget
