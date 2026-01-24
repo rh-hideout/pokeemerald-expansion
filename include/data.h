@@ -61,7 +61,7 @@ struct TrainerMon
     const u8 *nickname;
     const u8 *ev;
     u32 iv;
-    u16 moves[4];
+    enum Move moves[MAX_MON_MOVES];
     u16 species;
     u16 heldItem;
     enum Ability ability;
@@ -116,11 +116,12 @@ struct Trainer
 {
     u64 aiFlags;
     const struct TrainerMon *party;
-    u16 items[MAX_TRAINER_ITEMS];
+    enum Item items[MAX_TRAINER_ITEMS];
     struct StartingStatuses startingStatus; // this trainer starts a battle with a given status. see include/constants/battle.h for values
     u8 trainerClass;
-    u8 encounterMusic_gender; // last bit is gender
-    u8 trainerPic;
+    u8 encounterMusic:7;
+    u8 gender:1;
+    enum TrainerPicID trainerPic;
     u8 trainerName[TRAINER_NAME_LENGTH + 1];
     u8 battleType:2;
     u8 mugshotColor:6;
@@ -130,7 +131,7 @@ struct Trainer
     u8 poolPickIndex;
     u8 poolPruneIndex;
     u16 overrideTrainer;
-    u8 trainerBackPic;
+    enum TrainerPicID trainerBackPic;
 };
 
 struct TrainerClass
@@ -293,7 +294,7 @@ static inline const u8 *GetTrainerNameFromId(u16 trainerId)
     return GetTrainerStructFromId(trainerId)->trainerName;
 }
 
-static inline const u8 GetTrainerPicFromId(u16 trainerId)
+static inline const enum TrainerPicID GetTrainerPicFromId(u16 trainerId)
 {
     enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
 

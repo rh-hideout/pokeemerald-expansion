@@ -54,10 +54,10 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
 static u32 GetFollowerNPCSprite(void);
 static bool32 FollowerNPCHasRunningFrames(void);
 static bool32 IsStateMovement(u32 state);
-static u32 GetNewPlayerMovementDirection(u32 state);
-static bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, u8 direction);
+static enum Direction GetNewPlayerMovementDirection(u32 state);
+static bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, enum Direction direction);
 static u32 GetPlayerFaceToDoorDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
-static u32 ReturnFollowerNPCDelayedState(u32 direction);
+static u32 ReturnFollowerNPCDelayedState(enum Direction direction);
 static void TryUpdateFollowerNPCSpriteUnderwater(void);
 static void SetSurfJump(void);
 static void SetUpSurfBlobFieldEffect(struct ObjectEvent *npc);
@@ -227,7 +227,7 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
     SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
     if (FollowerNPCHasRunningFrames())
         followerFlags |= FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES;
-        
+
     SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
@@ -358,7 +358,7 @@ static bool32 IsStateMovement(u32 state)
 // Because we want the NPC follower's movements to happen simultaneously with the player's,
 // we need to set the follower's movement before the player object's movementDirection parameter gets set.
 // This function allows us to determine the player's new movement direction before it gets set.
-static u32 GetNewPlayerMovementDirection(u32 state)
+static enum Direction GetNewPlayerMovementDirection(u32 state)
 {
     switch (state)
     {
@@ -419,9 +419,9 @@ static u32 GetNewPlayerMovementDirection(u32 state)
     }
 }
 
-static bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, u8 direction)
+static bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, enum Direction direction)
 {
-    u8 oppositeDirection = DIR_NONE;
+    enum Direction oppositeDirection = DIR_NONE;
 
     switch (metatileBehavior)
     {
@@ -457,7 +457,7 @@ static bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, u8 direction)
     return FALSE;
 }
 
-void GetXYCoordsPlayerMovementDest(u32 direction, s16 *x, s16 *y)
+void GetXYCoordsPlayerMovementDest(enum Direction direction, s16 *x, s16 *y)
 {
     *x = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x;
     *y = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y;
@@ -476,7 +476,7 @@ static u32 GetPlayerFaceToDoorDirection(struct ObjectEvent *player, struct Objec
     return DIR_NORTH;
 }
 
-static u32 ReturnFollowerNPCDelayedState(u32 direction)
+static u32 ReturnFollowerNPCDelayedState(enum Direction direction)
 {
     u32 newState = GetFollowerNPCData(FNPC_DATA_DELAYED_STATE);
     SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, 0);
@@ -499,7 +499,7 @@ static void TryUpdateFollowerNPCSpriteUnderwater(void)
 static void SetSurfJump(void)
 {
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
-    u32 direction;
+    enum Direction direction;
     u32 jumpState;
 
     ObjectEventClearHeldMovement(follower);
@@ -547,7 +547,7 @@ static void SetUpSurfBlobFieldEffect(struct ObjectEvent *npc)
 static void SetSurfDismount(void)
 {
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
-    u32 direction;
+    enum Direction direction;
     u32 jumpState;
     u32 task;
 
@@ -811,7 +811,7 @@ void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
 {
     if (PlayerHasFollowerNPC())
         return;
-        
+
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     struct ObjectEvent *follower;
     struct ObjectEventTemplate npc = 
@@ -828,7 +828,7 @@ void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
     follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
     follower->movementType = MOVEMENT_TYPE_NONE;
     gSprites[follower->spriteId].callback = MovementType_None;
-    
+
     SetFollowerNPCData(FNPC_DATA_IN_PROGRESS, TRUE);
     SetFollowerNPCData(FNPC_DATA_GFX_ID, follower->graphicsId);
     SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
@@ -836,7 +836,7 @@ void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
     SetFollowerNPCScriptPointer(scriptPtr);
     if (FollowerNPCHasRunningFrames())
         followerFlags |= FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES;
-        
+
     SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
@@ -863,10 +863,10 @@ void DestroyFollowerNPC(void)
 }
 
 #define RETURN_STATE(state, dir) return newState == MOVEMENT_INVALID ? state + (dir - 1) : ReturnFollowerNPCDelayedState(dir - 1);
-u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction)
+u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, enum Direction direction)
 {
     u32 newState = MOVEMENT_INVALID;
-    u32 collision = COLLISION_NONE;
+    enum Collision collision = COLLISION_NONE;
     s16 followerX = follower->currentCoords.x;
     s16 followerY = follower->currentCoords.y;
     u32 currentBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
@@ -874,7 +874,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
     u32 noSpecialAnimFrames = (GetFollowerNPCSprite() == GetFollowerNPCData(FNPC_DATA_GFX_ID));
     u32 delayedState = GetFollowerNPCData(FNPC_DATA_DELAYED_STATE);
     s16 playerDestX, playerDestY;
-    u32 playerMoveDirection = GetNewPlayerMovementDirection(state);
+    enum Direction playerMoveDirection = GetNewPlayerMovementDirection(state);
     u32 newPlayerMB;
 
     MoveCoords(direction, &followerX, &followerY);
@@ -888,7 +888,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
     // Follower won't move if player is forced back onto the same tile.
     if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_FORCED_STAY)
         return MOVEMENT_ACTION_NONE;
-        
+
     GetXYCoordsPlayerMovementDest(playerMoveDirection, &playerDestX, &playerDestY);
     newPlayerMB = MapGridGetMetatileBehaviorAt(playerDestX, playerDestY);
 
@@ -927,6 +927,8 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
         break;
     case COLLISION_SIDEWAYS_STAIRS_TO_RIGHT:
         follower->directionOverwrite = GetRightSideStairsDirection(direction);
+        break;
+    default:
         break;
     }
 
@@ -1182,7 +1184,7 @@ void NPCFollow(struct ObjectEvent *npc, u32 state, bool32 ignoreScriptActive)
 {
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
-    u32 dir;
+    enum Direction dir;
     u32 newState;
     u32 taskId;
 
@@ -1328,6 +1330,8 @@ void CreateFollowerNPCAvatar(void)
     case DIR_EAST:
         clone.movementType = MOVEMENT_TYPE_FACE_RIGHT;
         break;
+    default:
+        break;
     }
 
     // Create NPC and store ID.
@@ -1359,7 +1363,7 @@ void FollowerNPC_HandleSprite(void)
     }
 }
 
-u32 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
+enum Direction DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
 {
     s32 delta_x = follower->currentCoords.x - player->currentCoords.x;
     s32 delta_y = follower->currentCoords.y - player->currentCoords.y;
@@ -1611,6 +1615,8 @@ void FollowerNPCWalkIntoPlayerForLeaveMap(void)
     case DIR_WEST:
         ObjectEventSetHeldMovement(follower, MOVEMENT_ACTION_WALK_NORMAL_LEFT);
         break;
+    default:
+        break;
     }
 }
 
@@ -1820,7 +1826,7 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
     if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
 
-    u32 playerDirection, followerDirection;
+    enum Direction playerDirection, followerDirection;
     struct ObjectEvent *player, *follower;
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
     follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
@@ -1845,6 +1851,8 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
         case DIR_EAST:
             playerDirection = DIR_WEST;
             break;
+        default:
+            break;
         }
 
         ObjectEventTurn(player, playerDirection);
@@ -1864,13 +1872,13 @@ void ScriptHideNPCFollower(struct ScriptContext *ctx)
 {
     if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
-        
+
     u32 walkSpeed = ScriptReadByte(ctx);
     struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
 
     if (npc->invisible == FALSE)
     {
-        u32 direction = DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], npc);
+        enum Direction direction = DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], npc);
 
         if (walkSpeed > 3)
             walkSpeed = 3;
@@ -1894,7 +1902,7 @@ void ScriptChangeFollowerNPCBattlePartner(struct ScriptContext *ctx)
 {
     if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
-        
+
     u32 newBattlePartner = ScriptReadHalfword(ctx);
 
     SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, newBattlePartner);

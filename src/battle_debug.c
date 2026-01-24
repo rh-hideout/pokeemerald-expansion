@@ -685,8 +685,8 @@ void CB2_BattleDebugMenu(void)
         gMain.state++;
         break;
     case 3:
-        LoadPalette(sBgColor, 0, 2);
-        LoadPalette(GetOverworldTextboxPalettePtr(), 0xf0, 16);
+        LoadPalette(sBgColor, BG_PLTT_ID(0), 2);
+        LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZEOF(8));
         gMain.state++;
         break;
     case 4:
@@ -921,7 +921,7 @@ static void PutAiInfoText(struct BattleDebugMenu *data)
         {
             enum Ability ability = gAiLogicData->abilities[i];
             enum HoldEffect holdEffect = gAiLogicData->holdEffects[i];
-            u16 item = gAiLogicData->items[i];
+            enum Item item = gAiLogicData->items[i];
             u8 x = (i == B_POSITION_PLAYER_LEFT) ? 83 + (i) * 75 : 83 + (i-1) * 75;
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, gAbilitiesInfo[ability].name, x, 0, 0, NULL);
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetItemName(item), x, 15, 0, NULL);
@@ -1452,6 +1452,7 @@ static void PrintSecondaryEntries(struct BattleDebugMenu *data)
 
     yMultiplier = (GetFontAttribute(sSecondaryListTemplate.fontId, 1) + sSecondaryListTemplate.itemVerticalPadding);
 
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.windowId = data->secondaryListWindowId;
     printer.fontId = 1;
     printer.letterSpacing = 0;
@@ -1685,7 +1686,7 @@ static void ValueToCharDigits(u8 *charDigits, u32 newValue, u8 maxDigits)
 
 static void ChangeHazardsValue(struct BattleDebugMenu *data)
 {
-    u32 side = GetBattlerSide(data->battlerId);
+    enum BattleSide side = GetBattlerSide(data->battlerId);
 
     switch (data->currentSecondaryListItemId)
     {

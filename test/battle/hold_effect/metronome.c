@@ -107,10 +107,10 @@ SINGLE_BATTLE_TEST("Metronome Item counts called moves instead of the calling mo
 
 SINGLE_BATTLE_TEST("Metronome Item counts charging turn of moves for its attacking turn", s16 damage)
 {
-    u32 item;
+    enum Item item;
 
-    PARAMETRIZE {item = ITEM_NONE; }
-    PARAMETRIZE {item = ITEM_METRONOME; }
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_METRONOME; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SOLAR_BEAM) == EFFECT_SOLAR_BEAM);
         PLAYER(SPECIES_WOBBUFFET) { Item(item); }

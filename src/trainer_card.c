@@ -119,7 +119,7 @@ static u8 GetRubyTrainerStars(struct TrainerCard *);
 static u16 GetCaughtMonsCount(void);
 static void SetPlayerCardData(struct TrainerCard *, u8);
 static void TrainerCard_GenerateCardForPlayer(struct TrainerCard *);
-static u8 VersionToCardType(u8);
+static u8 VersionToCardType(enum GameVersion);
 static void SetDataFromTrainerCard(void);
 static void InitGpuRegs(void);
 static void ResetGpuRegs(void);
@@ -1870,7 +1870,7 @@ static u8 GetSetCardType(void)
     }
 }
 
-static u8 VersionToCardType(u8 version)
+static u8 VersionToCardType(enum GameVersion version)
 {
     if (version == VERSION_FIRE_RED || version == VERSION_LEAF_GREEN)
         return CARD_TYPE_FRLG;

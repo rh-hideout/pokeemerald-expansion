@@ -312,7 +312,7 @@ void SetLocalLinkPlayerId(u8 playerId)
 
 static void InitLocalLinkPlayer(void)
 {
-    gLocalLinkPlayer.trainerId = gSaveBlock2Ptr->playerTrainerId[0] | (gSaveBlock2Ptr->playerTrainerId[1] << 8) | (gSaveBlock2Ptr->playerTrainerId[2] << 16) | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+    gLocalLinkPlayer.trainerId = READ_OTID_FROM_SAVE;
     StringCopy(gLocalLinkPlayer.name, gSaveBlock2Ptr->playerName);
     gLocalLinkPlayer.gender = gSaveBlock2Ptr->playerGender;
     gLocalLinkPlayer.linkType = gLinkType;
@@ -734,7 +734,7 @@ u8 GetLinkPlayerCount(void)
     return EXTRACT_PLAYER_COUNT(gLinkStatus);
 }
 
-static int AreAnyLinkPlayersUsingVersions(u32 version1, u32 version2)
+static int AreAnyLinkPlayersUsingVersions(enum GameVersion version1, enum GameVersion version2)
 {
     int i;
     u8 nPlayers;
@@ -765,23 +765,13 @@ static bool32 UNUSED IsFullLinkGroupWithNoRS(void)
 
 bool32 Link_AnyPartnersPlayingRubyOrSapphire(void)
 {
-    if (AreAnyLinkPlayersUsingVersions(VERSION_RUBY, VERSION_SAPPHIRE) >= 0)
-    {
-        return TRUE;
-    }
-    return FALSE;
+    return (AreAnyLinkPlayersUsingVersions(VERSION_RUBY, VERSION_SAPPHIRE) >= 0);
 }
 
 bool32 Link_AnyPartnersPlayingFRLG_JP(void)
 {
-    int i;
-
-    i = AreAnyLinkPlayersUsingVersions(VERSION_FIRE_RED, VERSION_LEAF_GREEN);
-    if (i >= 0 && gLinkPlayers[i].language == LANGUAGE_JAPANESE)
-    {
-        return TRUE;
-    }
-    return FALSE;
+    int i = AreAnyLinkPlayersUsingVersions(VERSION_FIRE_RED, VERSION_LEAF_GREEN);
+    return (i >= 0 && gLinkPlayers[i].language == LANGUAGE_JAPANESE);
 }
 
 void OpenLinkTimed(void)

@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Accuracy controls the proportion of misses")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_DYNAMIC_PUNCH; }
     PARAMETRIZE { move = MOVE_THUNDER; }
     PARAMETRIZE { move = MOVE_HYDRO_PUMP; }
@@ -23,7 +23,8 @@ SINGLE_BATTLE_TEST("Accuracy controls the proportion of misses")
 
 SINGLE_BATTLE_TEST("AdditionalEffect.chance controls the proportion of secondary effects")
 {
-    u32 move, chance;
+    enum Move move;
+    u32 chance;
     PARAMETRIZE { move = MOVE_THUNDER_SHOCK; chance = 10; }
     PARAMETRIZE { move = MOVE_DISCHARGE; chance = 30; }
     PARAMETRIZE { move = MOVE_NUZZLE; chance = 100; }
@@ -157,7 +158,7 @@ SINGLE_BATTLE_TEST("Critical hits deal 100% (Gen 1-5) or 50% (Gen 6+) more damag
 
 SINGLE_BATTLE_TEST("Critical hits do not ignore positive stat stages", s16 damage)
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_HOWL; }
     PARAMETRIZE { move = MOVE_TAIL_WHIP; }
@@ -178,7 +179,7 @@ SINGLE_BATTLE_TEST("Critical hits do not ignore positive stat stages", s16 damag
 
 SINGLE_BATTLE_TEST("Critical hits ignore negative stat stages", s16 damage)
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_HARDEN; }
     PARAMETRIZE { move = MOVE_GROWL; }

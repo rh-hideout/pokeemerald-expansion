@@ -1,4 +1,5 @@
 #include "constants/abilities.h"
+#include "constants/teaching_types.h"
 #include "species_info/shared_dex_text.h"
 #include "species_info/shared_front_pic_anims.h"
 
@@ -101,7 +102,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
     [SPECIES_NONE] =
     {
         .speciesName = _("??????????"),
-        .cryId = CRY_NONE,
+        .cryId = CRY_PORYGON,
         .natDexNum = NATIONAL_DEX_NONE,
         .categoryName = _("Unknown"),
         .height = 0,

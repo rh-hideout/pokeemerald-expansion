@@ -140,10 +140,7 @@ void RecordedBattle_SetTrainerInfo(void)
     else
     {
         // Local battle, just record own info
-        sPlayers[0].trainerId = (gSaveBlock2Ptr->playerTrainerId[0])
-                              | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
-                              | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
-                              | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+        sPlayers[0].trainerId = READ_OTID_FROM_SAVE;
 
         sPlayers[0].gender = gSaveBlock2Ptr->playerGender;
         sPlayers[0].battler = 0;
@@ -760,12 +757,12 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
                     {
                         struct Pokemon *mon = GetBattlerMon(battler);
                         for (j = 0; j < MAX_MON_MOVES; j++)
-                            ppBonuses[j] = (GetMonData(mon, MON_DATA_PP_BONUSES, NULL) & ((3 << (j << 1)))) >> (j << 1);
+                            ppBonuses[j] = (GetMonData(mon, MON_DATA_PP_BONUSES) & ((3 << (j << 1)))) >> (j << 1);
 
                         for (j = 0; j < MAX_MON_MOVES; j++)
                         {
-                            movePp.moves[j] = GetMonData(mon, MON_DATA_MOVE1 + moveSlots[j], NULL);
-                            movePp.currentPp[j] = GetMonData(mon, MON_DATA_PP1 + moveSlots[j], NULL);
+                            movePp.moves[j] = GetMonData(mon, MON_DATA_MOVE1 + moveSlots[j]);
+                            movePp.currentPp[j] = GetMonData(mon, MON_DATA_PP1 + moveSlots[j]);
                             movePp.maxPp[j] = ppBonuses[moveSlots[j]];
                         }
                         for (j = 0; j < MAX_MON_MOVES; j++)

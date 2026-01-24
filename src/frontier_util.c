@@ -1074,13 +1074,13 @@ static void TowerPrintStreak(const u8 *str, u16 num, u8 x1, u8 x2, u8 y)
     AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, x2, y, TEXT_SKIP_DRAW, NULL);
 }
 
-static void TowerPrintRecordStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void TowerPrintRecordStreak(u8 battleMode, enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     u16 num = gSaveBlock2Ptr->frontier.towerRecordWinStreaks[battleMode][lvlMode];
     TowerPrintStreak(gText_Record, num, x1, x2, y);
 }
 
-static u16 TowerGetWinStreak(u8 battleMode, u8 lvlMode)
+static u16 TowerGetWinStreak(u8 battleMode, enum FrontierLevelMode lvlMode)
 {
     u16 winStreak = gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode];
     if (winStreak > MAX_STREAK)
@@ -1089,7 +1089,7 @@ static u16 TowerGetWinStreak(u8 battleMode, u8 lvlMode)
         return winStreak;
 }
 
-static void TowerPrintPrevOrCurrentStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void TowerPrintPrevOrCurrentStreak(u8 battleMode, enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     bool8 isCurrent;
     u16 winStreak = TowerGetWinStreak(battleMode, lvlMode);
@@ -1155,7 +1155,7 @@ static void ShowTowerResultsWindow(u8 battleMode)
 }
 
 // Battle Dome records.
-static u16 DomeGetWinStreak(u8 battleMode, u8 lvlMode)
+static u16 DomeGetWinStreak(u8 battleMode, enum FrontierLevelMode lvlMode)
 {
     u16 winStreak = gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode];
     if (winStreak > MAX_STREAK)
@@ -1172,7 +1172,7 @@ static void PrintTwoStrings(const u8 *str1, const u8 *str2, u16 num, u8 x1, u8 x
     AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, x2, y, TEXT_SKIP_DRAW, NULL);
 }
 
-static void DomePrintPrevOrCurrentStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void DomePrintPrevOrCurrentStreak(u8 battleMode, enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     bool8 isCurrent;
     u16 winStreak = DomeGetWinStreak(battleMode, lvlMode);
@@ -1234,13 +1234,13 @@ static void PalacePrintStreak(const u8 *str, u16 num, u8 x1, u8 x2, u8 y)
     AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, x2, y, TEXT_SKIP_DRAW, NULL);
 }
 
-static void PalacePrintRecordStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void PalacePrintRecordStreak(u8 battleMode, enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     u16 num = gSaveBlock2Ptr->frontier.palaceRecordWinStreaks[battleMode][lvlMode];
     PalacePrintStreak(gText_Record, num, x1, x2, y);
 }
 
-static u16 PalaceGetWinStreak(u8 battleMode, u8 lvlMode)
+static u16 PalaceGetWinStreak(u8 battleMode, enum FrontierLevelMode lvlMode)
 {
     u16 winStreak = gSaveBlock2Ptr->frontier.palaceWinStreaks[battleMode][lvlMode];
     if (winStreak > MAX_STREAK)
@@ -1249,7 +1249,7 @@ static u16 PalaceGetWinStreak(u8 battleMode, u8 lvlMode)
         return winStreak;
 }
 
-static void PalacePrintPrevOrCurrentStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void PalacePrintPrevOrCurrentStreak(u8 battleMode, enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     bool8 isCurrent;
     u16 winStreak = PalaceGetWinStreak(battleMode, lvlMode);
@@ -1298,7 +1298,7 @@ static void ShowPalaceResultsWindow(u8 battleMode)
 }
 
 // Battle Pike records.
-static u16 PikeGetWinStreak(u8 lvlMode)
+static u16 PikeGetWinStreak(enum FrontierLevelMode lvlMode)
 {
     u16 winStreak = gSaveBlock2Ptr->frontier.pikeWinStreaks[lvlMode];
     if (winStreak > MAX_STREAK)
@@ -1315,7 +1315,7 @@ static void PikePrintCleared(const u8 *str1, const u8 *str2, u16 num, u8 x1, u8 
     AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, x2, y, TEXT_SKIP_DRAW, NULL);
 }
 
-static void PikePrintPrevOrCurrentStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void PikePrintPrevOrCurrentStreak(enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     bool8 isCurrent;
     u16 winStreak = PikeGetWinStreak(lvlMode);
@@ -1362,13 +1362,13 @@ static void ArenaPrintStreak(const u8 *str, u16 num, u8 x1, u8 x2, u8 y)
     AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, x2, y, TEXT_SKIP_DRAW, NULL);
 }
 
-static void ArenaPrintRecordStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void ArenaPrintRecordStreak(enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     u16 num = gSaveBlock2Ptr->frontier.arenaRecordStreaks[lvlMode];
     ArenaPrintStreak(gText_Record, num, x1, x2, y);
 }
 
-static u16 ArenaGetWinStreak(u8 lvlMode)
+static u16 ArenaGetWinStreak(enum FrontierLevelMode lvlMode)
 {
     u16 winStreak = gSaveBlock2Ptr->frontier.arenaWinStreaks[lvlMode];
     if (winStreak > MAX_STREAK)
@@ -1377,7 +1377,7 @@ static u16 ArenaGetWinStreak(u8 lvlMode)
         return winStreak;
 }
 
-static void ArenaPrintPrevOrCurrentStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void ArenaPrintPrevOrCurrentStreak(enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     bool8 isCurrent;
     u16 winStreak = ArenaGetWinStreak(lvlMode);
@@ -1426,14 +1426,14 @@ static void FactoryPrintStreak(const u8 *str, u16 num1, u16 num2, u8 x1, u8 x2, 
     AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, x3, y, TEXT_SKIP_DRAW, NULL);
 }
 
-static void FactoryPrintRecordStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 x3, u8 y)
+static void FactoryPrintRecordStreak(u8 battleMode, enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 x3, u8 y)
 {
     u16 num1 = gSaveBlock2Ptr->frontier.factoryRecordWinStreaks[battleMode][lvlMode];
     u16 num2 = gSaveBlock2Ptr->frontier.factoryRecordRentsCount[battleMode][lvlMode];
     FactoryPrintStreak(gText_Record, num1, num2, x1, x2, x3, y);
 }
 
-static u16 FactoryGetWinStreak(u8 battleMode, u8 lvlMode)
+static u16 FactoryGetWinStreak(u8 battleMode, enum FrontierLevelMode lvlMode)
 {
     u16 winStreak = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode];
     if (winStreak > MAX_STREAK)
@@ -1442,7 +1442,7 @@ static u16 FactoryGetWinStreak(u8 battleMode, u8 lvlMode)
         return winStreak;
 }
 
-static u16 FactoryGetRentsCount(u8 battleMode, u8 lvlMode)
+static u16 FactoryGetRentsCount(u8 battleMode, enum FrontierLevelMode lvlMode)
 {
     u16 rents = gSaveBlock2Ptr->frontier.factoryRentsCount[battleMode][lvlMode];
     if (rents > MAX_STREAK)
@@ -1451,7 +1451,7 @@ static u16 FactoryGetRentsCount(u8 battleMode, u8 lvlMode)
         return rents;
 }
 
-static void FactoryPrintPrevOrCurrentStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 x3, u8 y)
+static void FactoryPrintPrevOrCurrentStreak(u8 battleMode, enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 x3, u8 y)
 {
     bool8 isCurrent;
     u16 winStreak = FactoryGetWinStreak(battleMode, lvlMode);
@@ -1513,13 +1513,13 @@ static void PyramidPrintStreak(const u8 *str, u16 num, u8 x1, u8 x2, u8 y)
     AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gStringVar4, x2, y, TEXT_SKIP_DRAW, NULL);
 }
 
-static void PyramidPrintRecordStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void PyramidPrintRecordStreak(enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     u16 num = gSaveBlock2Ptr->frontier.pyramidRecordStreaks[lvlMode];
     PyramidPrintStreak(gText_Record, num, x1, x2, y);
 }
 
-static u16 PyramidGetWinStreak(u8 lvlMode)
+static u16 PyramidGetWinStreak(enum FrontierLevelMode lvlMode)
 {
     u16 winStreak = gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode];
     if (winStreak > MAX_STREAK)
@@ -1528,7 +1528,7 @@ static u16 PyramidGetWinStreak(u8 lvlMode)
         return winStreak;
 }
 
-static void PyramidPrintPrevOrCurrentStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
+static void PyramidPrintPrevOrCurrentStreak(enum FrontierLevelMode lvlMode, u8 x1, u8 x2, u8 y)
 {
     bool8 isCurrent;
     u16 winStreak = PyramidGetWinStreak(lvlMode);
@@ -2043,7 +2043,7 @@ static void AppendCaughtBannedMonSpeciesName(u16 species, u8 count, s32 numBanne
     StringAppend(gStringVar1, GetSpeciesName(species));
 }
 
-static void AppendIfValid(u16 species, u16 heldItem, u16 hp, u8 lvlMode, u8 monLevel, u16 *speciesArray, u16 *itemsArray, u8 *count)
+static void AppendIfValid(u16 species, u16 heldItem, u16 hp, enum FrontierLevelMode lvlMode, u8 monLevel, u16 *speciesArray, u16 *itemsArray, u8 *count)
 {
     s32 i = 0;
 
@@ -2078,7 +2078,7 @@ static void AppendIfValid(u16 species, u16 heldItem, u16 hp, u8 lvlMode, u8 monL
 static void CheckPartyIneligibility(void)
 {
     u16 speciesArray[PARTY_SIZE];
-    u16 itemArray[PARTY_SIZE];
+    enum Item itemArray[PARTY_SIZE];
     s32 monId = 0;
     s32 toChoose = 0;
     u8 count = 0;
@@ -2113,7 +2113,7 @@ static void CheckPartyIneligibility(void)
         do
         {
             u16 species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
-            u16 heldItem = GetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM);
+            enum Item heldItem = GetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM);
             u8 level = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
             u16 hp = GetMonData(&gPlayerParty[monId], MON_DATA_HP);
             if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_PYRAMID)
@@ -2143,6 +2143,8 @@ static void CheckPartyIneligibility(void)
 
         for (i = 0; i < NUM_SPECIES; i++)
         {
+            if (!IsSpeciesEnabled(i))
+                continue;
             baseSpecies = GET_BASE_SPECIES_ID(i);
             if (baseSpecies == i && IsSpeciesFrontierBanned(baseSpecies))
             {
@@ -2259,7 +2261,7 @@ static void RestoreHeldItems(void)
     {
         if (gSaveBlock2Ptr->frontier.selectedPartyMons[i] != 0)
         {
-            u16 item = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_HELD_ITEM, NULL);
+            enum Item item = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_HELD_ITEM);
             SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
         }
     }
@@ -2297,8 +2299,8 @@ static void ResetSketchedMoves(void)
             {
                 for (k = 0; k < MAX_MON_MOVES; k++)
                 {
-                    if (GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_MOVE1 + k, NULL)
-                        == GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + j, NULL))
+                    if (GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_MOVE1 + k)
+                        == GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + j))
                         break;
                 }
                 if (k == MAX_MON_MOVES)
@@ -2541,7 +2543,7 @@ void SaveGameFrontier(void)
 }
 
 // Frontier Brain functions.
-u8 GetFrontierBrainTrainerPicIndex(void)
+enum TrainerPicID GetFrontierBrainTrainerPicIndex(void)
 {
     s32 facility;
 
@@ -2620,16 +2622,16 @@ void CreateFrontierBrainPokemon(void)
         if (!(selectedMonBits & 1))
             continue;
 
-        do
-        {
-            j = Random32(); //should just be one while loop, but that doesn't match
-        } while (sFrontierBrainsMons[facility][symbol][i].nature != GetNatureFromPersonality(j));
-        CreateMon(&gEnemyParty[monPartyId],
+        u32 personality = GetMonPersonality(sFrontierBrainsMons[facility][symbol][i].species,
+                                            MON_GENDER_RANDOM,
+                                            sFrontierBrainsMons[facility][symbol][i].nature,
+                                            RANDOM_UNOWN_LETTER);
+        CreateMonWithIVs(&gEnemyParty[monPartyId],
                   sFrontierBrainsMons[facility][symbol][i].species,
                   monLevel,
-                  sFrontierBrainsMons[facility][symbol][i].fixedIV,
-                  TRUE, j,
-                  OT_ID_PRESET, FRONTIER_BRAIN_OTID);
+                  personality,
+                  OTID_STRUCT_PRESET(FRONTIER_BRAIN_OTID),
+                  sFrontierBrainsMons[facility][symbol][i].fixedIV);
         SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
         for (j = 0; j < NUM_STATS; j++)
             SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);
@@ -3267,7 +3269,7 @@ u8 SetFacilityPtrsGetLevel(void)
     }
 }
 
-u8 GetFrontierEnemyMonLevel(u8 lvlMode)
+u8 GetFrontierEnemyMonLevel(enum FrontierLevelMode lvlMode)
 {
     u8 level;
 
@@ -3294,10 +3296,10 @@ s32 GetHighestLevelInPlayerParty(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL)
-            && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_EGG)
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES)
+            && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
         {
-            s32 level = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL, NULL);
+            s32 level = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
             if (level > highestLevel)
                 highestLevel = level;
         }

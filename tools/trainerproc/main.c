@@ -115,7 +115,7 @@ struct Trainer
     struct String encounter_music;
     int encounter_music_line;
 
-    enum Gender gender;
+    struct String gender;
     int gender_line;
 
     struct String pic;
@@ -1206,8 +1206,7 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             if (trainer->gender_line)
                 any_error = !set_show_parse_error(p, key.location, "duplicate 'Gender'");
             trainer->gender_line = value.location.line;
-            if (!token_gender(p, &value, &trainer->gender))
-                any_error = !show_parse_error(p);
+            trainer->gender = token_string(&value);
         }
         else if (is_literal_token(&key, "Pic"))
         {
@@ -1821,27 +1820,25 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
         {
             fprintf(f, "#line %d\n", trainer->pic_line);
             fprintf(f, "        .trainerPic = ");
-            fprint_constant(f, "TRAINER_PIC", trainer->pic);
+            fprint_constant(f, "TRAINER_PIC_FRONT", trainer->pic);
             fprintf(f, ",\n");
         }
 
-        fprintf(f, "        .encounterMusic_gender =\n");
-        if (trainer->gender == GENDER_FEMALE)
+        if (!is_empty_string(trainer->gender))
         {
             fprintf(f, "#line %d\n", trainer->gender_line);
-            fprintf(f, "F_TRAINER_FEMALE | \n");
+            fprintf(f, "        .gender = ");
+            fprint_constant(f, "TRAINER_GENDER", trainer->gender);
+            fprintf(f, ",\n");
         }
+
         if (!is_empty_string(trainer->encounter_music))
         {
             fprintf(f, "#line %d\n", trainer->encounter_music_line);
-            fprintf(f, "            ");
+            fprintf(f, "        .encounterMusic = ");
             fprint_constant(f, "TRAINER_ENCOUNTER_MUSIC", trainer->encounter_music);
+            fprintf(f, ",\n");
         }
-        else
-        {
-            fprintf(f, "0");
-        }
-        fprintf(f, ",\n");
 
         if (trainer->items_n > 0)
         {
@@ -1935,14 +1932,14 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
         {
             fprintf(f, "#line %d\n", trainer->back_pic_line);
             fprintf(f, "        .trainerBackPic = ");
-            fprint_constant(f, "TRAINER_BACK_PIC", trainer->back_pic);
+            fprint_constant(f, "TRAINER_PIC_BACK", trainer->back_pic);
             fprintf(f, ",\n");
         }
         else // defaults to front pic in absence of defined back pic
         {
             fprintf(f, "#line %d\n", trainer->back_pic_line);
             fprintf(f, "        .trainerBackPic = ");
-            fprint_constant(f, "TRAINER_PIC", trainer->pic);
+            fprint_constant(f, "TRAINER_PIC_FRONT", trainer->pic);
             fprintf(f, ",\n");
         }
 

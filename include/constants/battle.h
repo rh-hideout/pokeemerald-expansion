@@ -32,6 +32,7 @@ enum BattlerPosition
     B_POSITION_PLAYER_RIGHT,
     B_POSITION_OPPONENT_RIGHT,
     MAX_POSITION_COUNT,
+    B_POSITION_ABSENT = 0xFF,
 };
 
 enum BattlerId
@@ -41,6 +42,15 @@ enum BattlerId
     B_BATTLER_2,
     B_BATTLER_3,
     MAX_BATTLERS_COUNT,
+};
+
+enum __attribute__((packed)) BattleTrainer
+{
+    B_TRAINER_0,
+    B_TRAINER_1,
+    B_TRAINER_2,
+    B_TRAINER_3,
+    MAX_BATTLE_TRAINERS,
 };
 
 // These macros can be used with either battler ID or positions to get the partner or the opposite mon
@@ -171,7 +181,7 @@ enum VolatileFlags
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
     F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
-    F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL)) \
+    F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL - 1)) \
     F(VOLATILE_POWDER,                      powder,                        (u32, 1)) \
     F(VOLATILE_UNUSED,                      padding,                       (u32, 1)) \
     F(VOLATILE_INFATUATION,                 infatuation,                   (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
@@ -179,7 +189,7 @@ enum VolatileFlags
     F(VOLATILE_TRANSFORMED,                 transformed,                   (u32, 1)) \
     F(VOLATILE_RAGE,                        rage,                          (u32, 1)) \
     F(VOLATILE_SUBSTITUTE,                  substitute,                    (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, 3)) \
+    F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, 2)) \
     F(VOLATILE_ESCAPE_PREVENTION,           escapePrevention,              (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_NIGHTMARE,                   nightmare,                     (u32, 1)) \
     F(VOLATILE_CURSED,                      cursed,                        (u32, 1), V_BATON_PASSABLE) \
@@ -187,7 +197,7 @@ enum VolatileFlags
     F(VOLATILE_DRAGON_CHEER,                dragonCheer,                   (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FOCUS_ENERGY,                focusEnergy,                   (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_BONUS_CRIT_STAGES,           bonusCritStages,               (u32, 4)) \
-    F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (u32, SEMI_INVULNERABLE_COUNT)) \
+    F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (enum SemiInvulnerableState, SEMI_INVULNERABLE_COUNT)) \
     F(VOLATILE_ELECTRIFIED,                 electrified,                   (u32, 1)) \
     F(VOLATILE_MUD_SPORT,                   mudSport,                      (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_WATER_SPORT,                 waterSport,                    (u32, 1), V_BATON_PASSABLE) \
@@ -202,7 +212,7 @@ enum VolatileFlags
     F(VOLATILE_MINIMIZE,                    minimize,                      (u32, 1)) \
     F(VOLATILE_CHARGE_TIMER,                chargeTimer,                   (u32, 3)) \
     F(VOLATILE_ROOT,                        root,                          (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_YAWN,                        yawn,                          (u32, 3)) \
+    F(VOLATILE_YAWN,                        yawn,                          (u32, 2)) \
     F(VOLATILE_IMPRISON,                    imprison,                      (u32, 1)) \
     F(VOLATILE_GRUDGE,                      grudge,                        (u32, 1)) \
     F(VOLATILE_GASTRO_ACID,                 gastroAcid,                    (u32, 1), V_BATON_PASSABLE) \
@@ -224,7 +234,7 @@ enum VolatileFlags
     F(VOLATILE_TRANSFORMED_MON_PID,         transformedMonPID,             (u32, UINT32_MAX)) \
     F(VOLATILE_DISABLED_MOVE,               disabledMove,                  (u32, MOVES_COUNT_ALL)) \
     F(VOLATILE_ENCORED_MOVE,                encoredMove,                   (u32, MOVES_COUNT_ALL)) \
-    F(VOLATILE_PROTECT_USES,                protectUses,                   (u32, UINT8_MAX)) \
+    F(VOLATILE_PROTECT_USES,                consecutiveMoveUses,           (u32, UINT8_MAX)) \
     F(VOLATILE_STOCKPILE_COUNTER,           stockpileCounter,              (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_DEF,               stockpileDef,                  (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_SP_DEF,            stockpileSpDef,                (u32, MAX_STAT_STAGE)) \
@@ -232,28 +242,28 @@ enum VolatileFlags
     F(VOLATILE_STOCKPILE_BEFORE_SP_DEF,     stockpileBeforeSpDef,          (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_SUBSTITUTE_HP,               substituteHP,                  (u32, UINT8_MAX)) \
     F(VOLATILE_ENCORED_MOVE_POS,            encoredMovePos,                (u32, MAX_BITS(MAX_MON_MOVES))) \
-    F(VOLATILE_DISABLE_TIMER,               disableTimer,                  (u32, B_DISABLE_TIMER + 1)) \
-    F(VOLATILE_ENCORE_TIMER,                encoreTimer,                   (u32, B_ENCORE_TIMER + 1)) \
-    F(VOLATILE_PERISH_SONG_TIMER,           perishSongTimer,               (u32, B_PERISH_SONG_TIMER + 1)) \
+    F(VOLATILE_DISABLE_TIMER,               disableTimer,                  (u32, B_DISABLE_TIMER)) \
+    F(VOLATILE_ENCORE_TIMER,                encoreTimer,                   (u32, B_ENCORE_TIMER)) \
+    F(VOLATILE_PERISH_SONG_TIMER,           perishSongTimer,               (u32, B_PERISH_SONG_TIMER)) \
     F(VOLATILE_ROLLOUT_TIMER,               rolloutTimer,                  (u32, UINT8_MAX)) \
     F(VOLATILE_FURY_CUTTER_COUNTER,         furyCutterCounter,             (u32, UINT8_MAX)) \
     F(VOLATILE_METRONOME_ITEM_COUNTER,      metronomeItemCounter,          (u32, UINT8_MAX)) \
     F(VOLATILE_BATTLER_PREVENTING_ESCAPE,   battlerPreventingEscape,       (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_BATTLER_WITH_SURE_HIT,       battlerWithSureHit,            (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_MIMICKED_MOVES,              mimickedMoves,                 (u32, MAX_BITS(MAX_MON_MOVES))) \
-    F(VOLATILE_RECHARGE_TIMER,              rechargeTimer,                 (u32, 3)) \
+    F(VOLATILE_RECHARGE_TIMER,              rechargeTimer,                 (u32, 2)) \
     F(VOLATILE_AUTOTOMIZE_COUNT,            autotomizeCount,               (u32, UINT8_MAX)) \
-    F(VOLATILE_SLOW_START_TIMER,            slowStartTimer,                (u32, B_SLOW_START_TIMER + 1)) \
-    F(VOLATILE_EMBARGO_TIMER,               embargoTimer,                  (u32, B_EMBARGO_TIMER + 1)) \
-    F(VOLATILE_MAGNET_RISE_TIMER,           magnetRiseTimer,               (u32, B_MAGNET_RISE_TIMER + 1)) \
-    F(VOLATILE_TELEKINESIS_TIMER,           telekinesisTimer,              (u32, B_TELEKINESIS_TIMER + 1)) \
-    F(VOLATILE_HEAL_BLOCK_TIMER,            healBlockTimer,                (u32, B_HEAL_BLOCK_TIMER + 1)) \
-    F(VOLATILE_TAUNT_TIMER,                 tauntTimer,                    (u32, B_TAUNT_TIMER + 1)) \
-    F(VOLATILE_TORMENT_TIMER,               tormentTimer,                  (u32, B_TORMENT_TIMER + 1)) \
-    F(VOLATILE_LASER_FOCUS_TIMER,           laserFocusTimer,               (u32, B_LASER_FOCUS_TIMER + 1)) \
-    F(VOLATILE_THROAT_CHOP_TIMER,           throatChopTimer,               (u32, B_THROAT_CHOP_TIMER + 1)) \
-    F(VOLATILE_WRAP_TURNS,                  wrapTurns,                     (u32, B_WRAP_TURNS + 1)) \
-    F(VOLATILE_SYRUP_BOMB_TIMER,            syrupBombTimer,                (u32, B_SYRUP_BOMB_TIMER + 1)) \
+    F(VOLATILE_SLOW_START_TIMER,            slowStartTimer,                (u32, B_SLOW_START_TIMER)) \
+    F(VOLATILE_EMBARGO_TIMER,               embargoTimer,                  (u32, B_EMBARGO_TIMER)) \
+    F(VOLATILE_MAGNET_RISE_TIMER,           magnetRiseTimer,               (u32, B_MAGNET_RISE_TIMER)) \
+    F(VOLATILE_TELEKINESIS_TIMER,           telekinesisTimer,              (u32, B_TELEKINESIS_TIMER)) \
+    F(VOLATILE_HEAL_BLOCK_TIMER,            healBlockTimer,                (u32, B_HEAL_BLOCK_TIMER)) \
+    F(VOLATILE_TAUNT_TIMER,                 tauntTimer,                    (u32, B_TAUNT_TIMER)) \
+    F(VOLATILE_TORMENT_TIMER,               tormentTimer,                  (u32, B_TORMENT_TIMER)) \
+    F(VOLATILE_LASER_FOCUS_TIMER,           laserFocusTimer,               (u32, B_LASER_FOCUS_TIMER)) \
+    F(VOLATILE_THROAT_CHOP_TIMER,           throatChopTimer,               (u32, B_THROAT_CHOP_TIMER)) \
+    F(VOLATILE_WRAP_TURNS,                  wrapTurns,                     (u32, B_WRAP_TURNS)) \
+    F(VOLATILE_SYRUP_BOMB_TIMER,            syrupBombTimer,                (u32, B_SYRUP_BOMB_TIMER)) \
     F(VOLATILE_USED_MOVES,                  usedMoves,                     (u32, MAX_BITS(MAX_MON_MOVES))) \
     F(VOLATILE_TRUANT_COUNTER,              truantCounter,                 (u32, 1)) \
     F(VOLATILE_TRUANT_SWITCH_IN_HACK,       truantSwitchInHack,            (u32, 1)) \
@@ -266,7 +276,7 @@ enum VolatileFlags
     F(VOLATILE_USED_PROTEAN_LIBERO,         usedProteanLibero,             (u32, 1)) \
     F(VOLATILE_FLASH_FIRE_BOOSTED,          flashFireBoosted,              (u32, 1)) \
     F(VOLATILE_BOOSTER_ENERGY_ACTIVATED,    boosterEnergyActivated,        (u32, 1)) \
-    F(VOLATILE_OVERWRITTEN_ABILITY,         overwrittenAbility,            (u32, ABILITIES_COUNT)) \
+    F(VOLATILE_OVERWRITTEN_ABILITY,         overwrittenAbility,            (enum Ability, ABILITIES_COUNT)) \
     F(VOLATILE_ROOST_ACTIVE,                roostActive,                   (u32, 1)) \
     F(VOLATILE_UNBURDEN_ACTIVE,             unburdenActive,                (u32, 1)) \
     F(VOLATILE_NEUTRALIZING_GAS,            neutralizingGas,               (u32, 1)) \
@@ -275,7 +285,7 @@ enum VolatileFlags
     F(VOLATILE_ENDURED,                     endured,                       (u32, 1)) \
     F(VOLATILE_TRY_EJECT_PACK,              tryEjectPack,                  (u32, 1)) \
     F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
-    F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (u32, NUM_STATS)) \
+    F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
     F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1))
 
 
@@ -305,7 +315,7 @@ enum SemiInvulnerableState
     STATE_PHANTOM_FORCE,
     STATE_SKY_DROP,
     STATE_COMMANDER,
-    SEMI_INVULNERABLE_COUNT,
+    SEMI_INVULNERABLE_COUNT
 };
 
 enum SemiInvulnerableExclusion
@@ -396,13 +406,15 @@ enum TypeSideHazard
 #define MOVE_RESULT_NOT_VERY_EFFECTIVE    (1 << 2)
 #define MOVE_RESULT_DOESNT_AFFECT_FOE     (1 << 3)
 #define MOVE_RESULT_ONE_HIT_KO            (1 << 4)
-#define MOVE_RESULT_FAILED                (1 << 5)
-#define MOVE_RESULT_FOE_ENDURED           (1 << 6)
-#define MOVE_RESULT_FOE_HUNG_ON           (1 << 7)
-#define MOVE_RESULT_STURDIED              (1 << 8)
-#define MOVE_RESULT_FOE_ENDURED_AFFECTION (1 << 9)
-#define MOVE_RESULT_SYNCHRONOISE_AFFECTED (1 << 10)
-#define MOVE_RESULT_NO_EFFECT             (MOVE_RESULT_MISSED | MOVE_RESULT_DOESNT_AFFECT_FOE | MOVE_RESULT_FAILED)
+#define MOVE_RESULT_ONE_HIT_KO_NO_AFFECT  (1 << 5)
+#define MOVE_RESULT_ONE_HIT_KO_STURDY     (1 << 6)
+#define MOVE_RESULT_FAILED                (1 << 7)
+#define MOVE_RESULT_FOE_ENDURED           (1 << 8)
+#define MOVE_RESULT_FOE_HUNG_ON           (1 << 9)
+#define MOVE_RESULT_STURDIED              (1 << 10)
+#define MOVE_RESULT_FOE_ENDURED_AFFECTION (1 << 11)
+#define MOVE_RESULT_AVOIDED_ATTACK        (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED)
+#define MOVE_RESULT_NO_EFFECT             (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE)
 
 enum BattleWeather
 {
@@ -577,6 +589,10 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FIXED_POWER,
     // Max move effects end. They can be used for (custom) normal moves.
 
+    // Move effects that happen before the move hits. Set in SetPreAttackMoveEffect
+    MOVE_EFFECT_BREAK_SCREEN,
+    MOVE_EFFECT_STEAL_STATS,
+
     NUM_MOVE_EFFECTS
 };
 
@@ -585,8 +601,6 @@ enum __attribute__((packed)) MoveEffect
 #else
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FREEZE
 #endif
-
-#define MOVE_EFFECT_CONTINUE            0x8000
 
 // Battle environment defines for gBattleEnvironment.
 enum BattleEnvironments
@@ -614,7 +628,7 @@ enum BattleEnvironments
     BATTLE_ENVIRONMENT_GROUDON,
     BATTLE_ENVIRONMENT_KYOGRE,
     BATTLE_ENVIRONMENT_RAYQUAZA,
-    // New battle environments are used for Secret Power but not fully implemented.
+    // New battle environments are used for Secret Power and Nature Power but not fully implemented.
     BATTLE_ENVIRONMENT_SOARING,
     BATTLE_ENVIRONMENT_SKY_PILLAR,
     BATTLE_ENVIRONMENT_BURIAL_GROUND,
@@ -689,20 +703,18 @@ enum BattleEnvironments
 // Indicator for the party summary bar to display an empty slot.
 #define HP_EMPTY_SLOT 0xFFFF
 
- // (TARGET_USER | TARGET_ALLY)
-
-
 enum MoveTarget
 {
     TARGET_NONE,
     TARGET_SELECTED,
+    TARGET_SMART, // Like target select but can also smartly redirect to partner. Works only with strikeCount > 1 moves
     TARGET_DEPENDS,
     TARGET_OPPONENT,
     TARGET_RANDOM,
     TARGET_BOTH,
     TARGET_USER,
     TARGET_ALLY,
-    TARGET_USER_AND_ALLY, // TODO: No functionality yet but would be used for howl in the future
+    TARGET_USER_AND_ALLY,
     TARGET_USER_OR_ALLY, // Acupressure
     TARGET_FOES_AND_ALLY,
     TARGET_FIELD, // Moves that target the field, e.g. Rain Dance

@@ -232,8 +232,8 @@ struct ObjectEvent
              u16 movementDirection:4;
              struct __attribute__((packed))
              {
-                u16 rangeX:4;
-                u16 rangeY:4;
+                u8 rangeX:4;
+                u8 rangeY:4;
              } range;
     /*0x1A*/ u8 fieldEffectSpriteId;
     /*0x1B*/ u8 warpArrowSpriteId;
@@ -306,7 +306,7 @@ enum
     ACRO_BIKE_STATE6,
 };
 
-enum
+enum Collision
 {
     COLLISION_NONE,
     COLLISION_OUTSIDE_RANGE,

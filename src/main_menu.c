@@ -712,7 +712,7 @@ static void Task_MainMenuCheckSaveFile(u8 taskId)
 static void Task_WaitForSaveFileErrorWindow(u8 taskId)
 {
     RunTextPrinters();
-    if (!IsTextPrinterActive(7) && (JOY_NEW(A_BUTTON)))
+    if (!IsTextPrinterActiveOnWindow(7) && (JOY_NEW(A_BUTTON)))
     {
         ClearWindowTilemap(7);
         ClearMainMenuWindowTilemap(&sWindowTemplates_MainMenu[7]);
@@ -747,7 +747,7 @@ static void Task_MainMenuCheckBattery(u8 taskId)
 static void Task_WaitForBatteryDryErrorWindow(u8 taskId)
 {
     RunTextPrinters();
-    if (!IsTextPrinterActive(7) && (JOY_NEW(A_BUTTON)))
+    if (!IsTextPrinterActiveOnWindow(7) && (JOY_NEW(A_BUTTON)))
     {
         ClearWindowTilemap(7);
         ClearMainMenuWindowTilemap(&sWindowTemplates_MainMenu[7]);
@@ -1163,7 +1163,7 @@ static void Task_DisplayMainMenuInvalidActionError(u8 taskId)
             break;
         case 2:
             RunTextPrinters();
-            if (!IsTextPrinterActive(7))
+            if (!IsTextPrinterActiveOnWindow(7))
                 gTasks[taskId].tCurrItem++;
             break;
         case 3:
@@ -1518,8 +1518,8 @@ static void Task_NewGameBirchSpeech_WaitToShowGenderMenu(u8 taskId)
 
 static void Task_NewGameBirchSpeech_ChooseGender(u8 taskId)
 {
-    int gender = NewGameBirchSpeech_ProcessGenderMenuInput();
-    int gender2;
+    enum Gender gender = NewGameBirchSpeech_ProcessGenderMenuInput();
+    enum Gender gender2;
 
     switch (gender)
     {
@@ -1534,6 +1534,8 @@ static void Task_NewGameBirchSpeech_ChooseGender(u8 taskId)
             gSaveBlock2Ptr->playerGender = gender;
             NewGameBirchSpeech_ClearGenderWindow(1, 1);
             gTasks[taskId].func = Task_NewGameBirchSpeech_WhatsYourName;
+            break;
+        default: //repeat task if nothing is selected
             break;
     }
     gender2 = Menu_GetCursorPos();
