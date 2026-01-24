@@ -123,5 +123,6 @@ bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *object
 bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void);
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent);
 u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
+void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

@@ -1482,6 +1482,17 @@ u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y)
     return collision;
 }
 
+#define sTypeFuncId         data[1]
+#define sSavedMovementState warpArrowSpriteId
+
+void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (IsOverworldWildEncounter(objectEvent, OWE_ANY))
+        sprite->sTypeFuncId = objectEvent->sSavedMovementState;
+}
+
 #undef sOverworldEncounterLevel
 #undef sAge
 #undef sRoamerOutbreakStatus
+#undef sSavedMovementState
+#undef sTypeFuncId

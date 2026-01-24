@@ -2,8 +2,8 @@
 #define GUARD_POKEMON_H
 
 #include "contest_effect.h"
-#include "overworld_encounters.h"
 #include "sprite.h"
+#include "overworld_encounters.h"
 #include "constants/battle.h"
 #include "constants/cries.h"
 #include "constants/egg_ids.h"
