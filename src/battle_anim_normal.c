@@ -398,6 +398,8 @@ u32 UnpackSelectedBattlePalettes(s16 selector)
             attackerPartner |= 1;
         }
         break;
+    default:
+        break;
     }
 
     return GetBattlePalettesMask(battleBackground, attacker, target, attackerPartner, targetPartner, anim1, anim2);
