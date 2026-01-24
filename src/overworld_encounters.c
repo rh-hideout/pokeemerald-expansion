@@ -184,6 +184,7 @@ void UpdateOverworldEncounters(void)
     if (shouldSpawnWaterMons)
         object->hideReflection = TRUE;
 
+    OverworldWildEncounter_OnObjectEventSpawned(object);
     OWE_SetNewSpawnCountdown();
 }
 
