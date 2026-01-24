@@ -178,12 +178,6 @@ void UpdateOverworldEncounters(void)
     enum Direction directions[4];
     memcpy(directions, gStandardDirections, sizeof directions);
     ObjectEventTurn(object, directions[Random() & 3]);
-
-    // Hide reflections for spawns in water
-    // (It just looks weird)
-    if (shouldSpawnWaterMons)
-        object->hideReflection = TRUE;
-
     OWE_SetNewSpawnCountdown();
 }
 
