@@ -6,6 +6,7 @@
 #include "random.h"
 #include "trainer_pools.h"
 #include "constants/battle.h"
+#include "constants/battle_ai.h"
 #include "constants/items.h"
 
 #include "data/battle_pool_rules.h"
@@ -167,6 +168,10 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
     //  If no mon has been found yet continue looking
     if (monIndex == POOL_SLOT_DISABLED)
         monIndex = pickFunctions.OtherFunction(trainer, poolIndexArray, partyIndex, monsCount, battleTypeFlags, rules);
+    //  If a mon still hasn't been found, return POOL_SLOT_DISABLED which makes party generation default to regular party generation
+    if (monIndex == POOL_SLOT_DISABLED)
+        return monIndex;
+
     u32 chosenTags = trainer->party[monIndex].tags;
     u16 chosenSpecies = trainer->party[monIndex].species;
     u16 chosenItem = trainer->party[monIndex].heldItem;
@@ -243,7 +248,7 @@ static u32 GetPoolSeed(const struct Trainer *trainer)
     if (B_POOL_SETTING_USE_FIXED_SEED)
         seed = B_POOL_SETTING_FIXED_SEED;
     else
-        seed = gSaveBlock2Ptr->playerTrainerId[0] + (gSaveBlock2Ptr->playerTrainerId[1] << 8) + (gSaveBlock2Ptr->playerTrainerId[2] << 16) + (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+        seed = READ_OTID_FROM_SAVE;
     seed ^= (u32)trainer;
     return seed;
 }
@@ -366,6 +371,14 @@ void DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsC
 {
         bool32 usingPool = FALSE;
         struct PoolRules rules = defaultPoolRules;
+        struct Trainer tempTrainer;
+        if (trainer->poolSize == 0 && (trainer->aiFlags & AI_FLAG_RANDOMIZE_PARTY_INDICES))
+        {
+            tempTrainer = *trainer;
+            tempTrainer.poolSize = tempTrainer.partySize;
+            trainer = &tempTrainer;
+        }
+
         if (trainer->poolSize != 0)
         {
             usingPool = TRUE;

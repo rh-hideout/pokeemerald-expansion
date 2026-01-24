@@ -53,16 +53,16 @@ enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (gDisableStructs[battler].boosterEnergyActivated || gBattleMons[battler].volatiles.transformed)
+    if (gBattleMons[battler].volatiles.boosterEnergyActivated || gBattleMons[battler].volatiles.transformed)
         return ITEM_NO_EFFECT;
 
     if (((ability == ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
      || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
     {
-        gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, gDisableStructs[battler].paradoxBoostedStat);
+        gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
+        PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
         gBattlerAbility = gBattleScripting.battler = battler;
-        gDisableStructs[battler].boosterEnergyActivated = TRUE;
+        gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         RecordAbilityBattle(battler, ability);
         BattleScriptCall(BattleScript_BoosterEnergyRet);
         effect = ITEM_EFFECT_OTHER;
@@ -101,7 +101,7 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId)
     return ITEM_NO_EFFECT;
 }
 
-static enum ItemEffect TryTerrainSeeds(u32 battler, u32 item)
+static enum ItemEffect TryTerrainSeeds(u32 battler, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -128,7 +128,7 @@ static bool32 CanBeInfinitelyConfused(u32 battler)
 {
     enum Ability ability = GetBattlerAbility(battler);
     if  (ability == ABILITY_OWN_TEMPO
-      || IsBattlerTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), STATUS_FIELD_MISTY_TERRAIN)
+      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldStatuses)
       || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
         return FALSE;
     return TRUE;
@@ -184,7 +184,7 @@ static enum ItemEffect TryConsumeMirrorHerb(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
+static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -222,9 +222,8 @@ static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
             effect = ITEM_EFFECT_OTHER;
         }
     }
-    else if (!gSpecialStatuses[battler].switchInItemDone)
+    else if (gBattleStruct->battlerState[battler].switchIn)
     {
-        gSpecialStatuses[battler].switchInItemDone = TRUE;
         BattleScriptCall(BattleScript_AirBalloonMsgInRet);
         RecordItemEffectBattle(battler, HOLD_EFFECT_AIR_BALLOON);
         effect = ITEM_EFFECT_OTHER;
@@ -233,7 +232,7 @@ static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
     return effect;
 }
 
-static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk, u32 item)
+static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battlerAtk);
@@ -331,7 +330,7 @@ static enum ItemEffect TryAbsorbBulb(u32 battlerDef)
     return effect;
 }
 
-static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk, u32 item)
+static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -353,7 +352,7 @@ static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk, u32 item)
     return effect;
 }
 
-static enum ItemEffect TryRowapBerry(u32 battlerDef, u32 battlerAtk, u32 item)
+static enum ItemEffect TryRowapBerry(u32 battlerDef, u32 battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -428,18 +427,18 @@ static enum ItemEffect TryMentalHerb(u32 battler)
     if (B_MENTAL_HERB >= GEN_5)
     {
         // Check taunt
-        if (gDisableStructs[battler].tauntTimer != 0)
+        if (gBattleMons[battler].volatiles.tauntTimer != 0)
         {
-            gDisableStructs[battler].tauntTimer = 0;
+            gBattleMons[battler].volatiles.tauntTimer = 0;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MENTALHERBCURE_TAUNT;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_TAUNT);
             effect = ITEM_EFFECT_OTHER;
         }
         // Check encore
-        if (gDisableStructs[battler].encoreTimer != 0)
+        if (gBattleMons[battler].volatiles.encoreTimer != 0)
         {
-            gDisableStructs[battler].encoredMove = 0;
-            gDisableStructs[battler].encoreTimer = 0;
+            gBattleMons[battler].volatiles.encoredMove = 0;
+            gBattleMons[battler].volatiles.encoreTimer = 0;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MENTALHERBCURE_ENCORE;
             effect = ITEM_EFFECT_OTHER;
         }
@@ -458,10 +457,10 @@ static enum ItemEffect TryMentalHerb(u32 battler)
             effect = ITEM_EFFECT_OTHER;
         }
         // Check disable
-        if (gDisableStructs[battler].disableTimer != 0)
+        if (gBattleMons[battler].volatiles.disableTimer != 0)
         {
-            gDisableStructs[battler].disableTimer = 0;
-            gDisableStructs[battler].disabledMove = 0;
+            gBattleMons[battler].volatiles.disableTimer = 0;
+            gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MENTALHERBCURE_DISABLE;
             effect = ITEM_EFFECT_OTHER;
         }
@@ -523,7 +522,7 @@ static enum ItemEffect TryShellBell(u32 battlerAtk)
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     if (gBattleScripting.savedDmg > 0
-     && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+     && !gBattleStruct->unableToUseMove
      && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
      && !IsBattlerAtMaxHp(battlerAtk)
      && IsBattlerAlive(battlerAtk)
@@ -544,7 +543,7 @@ static enum ItemEffect TryLifeOrb(u32 battlerAtk)
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     if (IsBattlerAlive(battlerAtk)
-     && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+     && !gBattleStruct->unableToUseMove
      && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD)
      && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT
@@ -558,7 +557,7 @@ static enum ItemEffect TryLifeOrb(u32 battlerAtk)
     return effect;
 }
 
-static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, u32 item)
+static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -579,7 +578,7 @@ static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, 
     return effect;
 }
 
-static enum ItemEffect TryStickyBarbOnEndTurn(u32 battler, u32 item)
+static enum ItemEffect TryStickyBarbOnEndTurn(u32 battler, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -812,7 +811,7 @@ enum HealAmount
     PERCENT_HEAL_AMOUNT,
 };
 
-static u32 ItemHealHp(u32 battler, u32 itemId, enum HealAmount percentHeal)
+static u32 ItemHealHp(u32 battler, enum Item itemId, enum HealAmount percentHeal)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -838,7 +837,7 @@ static u32 ItemHealHp(u32 battler, u32 itemId, enum HealAmount percentHeal)
     return effect;
 }
 
-static u32 ItemRestorePp(u32 battler, u32 itemId)
+static u32 ItemRestorePp(u32 battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -847,7 +846,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        u32 move = GetMonData(mon, MON_DATA_MOVE1 + i);
+        enum Move move = GetMonData(mon, MON_DATA_MOVE1 + i);
         u32 currentPP = GetMonData(mon, MON_DATA_PP1 + i);
         u32 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
         u32 maxPP = CalculatePPWithBonus(move, ppBonuses, i);
@@ -878,7 +877,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId)
     return effect;
 }
 
-static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId)
+static enum ItemEffect HealConfuseBerry(u32 battler, enum Item itemId, enum Flavor flavorId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     u32 hpFraction = B_CONFUSE_BERRIES_HEAL >= GEN_7 ? 4 : 2;
@@ -901,7 +900,7 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId)
     return effect;
 }
 
-static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId)
+static enum ItemEffect StatRaiseBerry(u32 battler, enum Item itemId, enum Stat statId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -920,7 +919,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId)
     return effect;
 }
 
-static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId)
+static enum ItemEffect CriticalHitRatioUp(u32 battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -936,7 +935,7 @@ static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId)
     return effect;
 }
 
-static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId)
+static enum ItemEffect RandomStatRaiseBerry(u32 battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Stat stat;
@@ -974,7 +973,7 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId)
     return effect;
 }
 
-static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId)
+static enum ItemEffect TrySetMicleBerry(u32 battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -990,7 +989,7 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId)
 enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect holdEffect, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    u32 item;
+    enum Item item;
 
     if (timing == IsOnBerryActivation || timing == IsOnFlingActivation)
         item = gLastUsedItem;

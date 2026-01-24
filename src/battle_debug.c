@@ -685,8 +685,8 @@ void CB2_BattleDebugMenu(void)
         gMain.state++;
         break;
     case 3:
-        LoadPalette(sBgColor, 0, 2);
-        LoadPalette(GetOverworldTextboxPalettePtr(), 0xf0, 16);
+        LoadPalette(sBgColor, BG_PLTT_ID(0), 2);
+        LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZEOF(8));
         gMain.state++;
         break;
     case 4:
@@ -921,7 +921,7 @@ static void PutAiInfoText(struct BattleDebugMenu *data)
         {
             enum Ability ability = gAiLogicData->abilities[i];
             enum HoldEffect holdEffect = gAiLogicData->holdEffects[i];
-            u16 item = gAiLogicData->items[i];
+            enum Item item = gAiLogicData->items[i];
             u8 x = (i == B_POSITION_PLAYER_LEFT) ? 83 + (i) * 75 : 83 + (i-1) * 75;
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, gAbilitiesInfo[ability].name, x, 0, 0, NULL);
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetItemName(item), x, 15, 0, NULL);
@@ -1452,14 +1452,15 @@ static void PrintSecondaryEntries(struct BattleDebugMenu *data)
 
     yMultiplier = (GetFontAttribute(sSecondaryListTemplate.fontId, 1) + sSecondaryListTemplate.itemVerticalPadding);
 
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.windowId = data->secondaryListWindowId;
     printer.fontId = 1;
-    printer.unk = 0;
     printer.letterSpacing = 0;
     printer.lineSpacing = 1;
-    printer.fgColor = 2;
-    printer.bgColor = 1;
-    printer.shadowColor = 3;
+    printer.color.accent = 1;
+    printer.color.foreground = 2;
+    printer.color.background = 1;
+    printer.color.shadow = 3;
     printer.x = sSecondaryListTemplate.item_X;
     printer.currentX = sSecondaryListTemplate.item_X;
     printer.currentChar = text;
@@ -1685,7 +1686,7 @@ static void ValueToCharDigits(u8 *charDigits, u32 newValue, u8 maxDigits)
 
 static void ChangeHazardsValue(struct BattleDebugMenu *data)
 {
-    u32 side = GetBattlerSide(data->battlerId);
+    enum BattleSide side = GetBattlerSide(data->battlerId);
 
     switch (data->currentSecondaryListItemId)
     {
@@ -1981,12 +1982,14 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         }
         else if (data->currentSecondaryListItemId == VARIOUS_SUBSTITUTE_HP)
         {
+            u32 subHp = gBattleMons[data->battlerId].volatiles.substituteHP;
             data->modifyArrows.minValue = 0;
             data->modifyArrows.maxValue = 255;
             data->modifyArrows.maxDigits = 3;
-            data->modifyArrows.modifiedValPtr = &gDisableStructs[data->battlerId].substituteHP;
+            data->modifyArrows.modifiedValPtr = &subHp;
+            gBattleMons[data->battlerId].volatiles.substituteHP = subHp;
             data->modifyArrows.typeOfVal = VAR_SUBSTITUTE;
-            data->modifyArrows.currValue = gDisableStructs[data->battlerId].substituteHP;
+            data->modifyArrows.currValue = gBattleMons[data->battlerId].volatiles.substituteHP;
         }
         else if (data->currentSecondaryListItemId == VARIOUS_IN_LOVE)
         {

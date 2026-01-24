@@ -54,7 +54,6 @@ static void (*const sLinkPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battl
     [CONTROLLER_TRAINERSLIDEBACK]         = LinkPartnerHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = BtlController_Empty,
     [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
@@ -135,7 +134,7 @@ void LinkPartnerBufferExecCompleted(u32 battler)
 static void LinkPartnerHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
@@ -162,7 +161,7 @@ static void LinkPartnerHandleTrainerSlideBack(u32 battler)
 
 static void LinkPartnerHandleIntroTrainerBallThrow(u32 battler)
 {
-    u32 trainerPicId = LinkPlayerGetTrainerPicId(GetBattlerMultiplayerId(battler));
+    enum TrainerPicID trainerPicId = LinkPlayerGetTrainerPicId(GetBattlerMultiplayerId(battler));
     const u16 *trainerPal = gTrainerBacksprites[trainerPicId].palette.data;
     // Link partner uses the same intro sequence as the player partner.
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F9, trainerPal, 24, Controller_PlayerPartnerShowIntroHealthbox);

@@ -41,7 +41,6 @@ static void RecordedOpponentHandleChooseAction(u32 battler);
 static void RecordedOpponentHandleChooseMove(u32 battler);
 static void RecordedOpponentHandleChooseItem(u32 battler);
 static void RecordedOpponentHandleChoosePokemon(u32 battler);
-static void RecordedOpponentHandleStatusIconUpdate(u32 battler);
 static void RecordedOpponentHandleStatusAnimation(u32 battler);
 static void RecordedOpponentHandleIntroTrainerBallThrow(u32 battler);
 static void RecordedOpponentHandleDrawPartyStatusSummary(u32 battler);
@@ -63,7 +62,6 @@ static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 
     [CONTROLLER_TRAINERSLIDEBACK]         = RecordedOpponentHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = BtlController_Empty,
     [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
@@ -77,7 +75,7 @@ static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 
     [CONTROLLER_23]                       = BtlController_Empty,
     [CONTROLLER_HEALTHBARUPDATE]          = BtlController_HandleHealthBarUpdate,
     [CONTROLLER_EXPUPDATE]                = BtlController_Empty,
-    [CONTROLLER_STATUSICONUPDATE]         = RecordedOpponentHandleStatusIconUpdate,
+    [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = RecordedOpponentHandleStatusAnimation,
     [CONTROLLER_STATUSXOR]                = BtlController_Empty,
     [CONTROLLER_DATATRANSFER]             = BtlController_Empty,
@@ -275,14 +273,14 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
 static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     // Sets Multibattle test opponent sprites to not be Hiker
     if (IsMultibattleTest())
     {
         if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
-            trainerPicId = TRAINER_PIC_LEAF;
+            trainerPicId = TRAINER_PIC_FRONT_LEAF;
             if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
                 xPos = 176;
             else
@@ -290,7 +288,7 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
         }
         else
         {
-            trainerPicId = TRAINER_PIC_RED;
+            trainerPicId = TRAINER_PIC_FRONT_RED;
             xPos = 152;
         }
     }
@@ -373,16 +371,6 @@ static void RecordedOpponentHandleChoosePokemon(u32 battler)
     gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
     BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->monToSwitchIntoId[battler], NULL);
     BtlController_Complete(battler);
-}
-
-static void RecordedOpponentHandleStatusIconUpdate(u32 battler)
-{
-    if (!IsBattleSEPlaying(battler))
-    {
-        DoStatusIconUpdate(battler);
-        if (gTestRunnerEnabled)
-            TestRunner_Battle_RecordStatus1(battler, GetMonData(GetBattlerMon(battler), MON_DATA_STATUS));
-    }
 }
 
 static void RecordedOpponentHandleStatusAnimation(u32 battler)

@@ -45,6 +45,22 @@ bool8 ScriptMovement_IsObjectMovementFinished(u8 localId, u8 mapNum, u8 mapGroup
     return IsMovementScriptFinished(taskId, moveScrId);
 }
 
+bool32 ScriptMovement_IsAllObjectMovementFinished(void)
+{
+    u8 taskId = GetMoveObjectsTaskId();
+    if (taskId != TASK_NONE)
+    {
+        u32 finishedMovements = gTasks[taskId].data[0];
+        const u8 *objEventIds = (u8 *)&gTasks[taskId].data[1];
+        for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
+        {
+            if (objEventIds[i] != 0xFF && !(finishedMovements & (1 << i)))
+                return FALSE;
+        }
+    }
+    return TRUE;
+}
+
 void ScriptMovement_UnfreezeObjectEvents(void)
 {
     u8 taskId;

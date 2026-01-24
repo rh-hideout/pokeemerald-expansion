@@ -173,11 +173,20 @@ bool32 DoSwitchInEvents(void)
 
 static bool32 CanBattlerBeHealed(u32 battler)
 {
-    if (GetGenConfig(GEN_CONFIG_HEALING_WISH_SWITCH) < GEN_8)
+    if (GetConfig(CONFIG_HEALING_WISH_SWITCH) < GEN_8)
         return TRUE;
 
     if (gBattleMons[battler].hp != gBattleMons[battler].maxHP || gBattleMons[battler].status1)
         return TRUE;
+
+    if (gBattleStruct->battlerState[battler].storedLunarDance
+     && (gBattleMons[battler].pp[0] < CalculatePPWithBonus(gBattleMons[battler].moves[0], gBattleMons[battler].ppBonuses, 0)
+      || gBattleMons[battler].pp[1] < CalculatePPWithBonus(gBattleMons[battler].moves[1], gBattleMons[battler].ppBonuses, 1)
+      || gBattleMons[battler].pp[2] < CalculatePPWithBonus(gBattleMons[battler].moves[2], gBattleMons[battler].ppBonuses, 2)
+      || gBattleMons[battler].pp[3] < CalculatePPWithBonus(gBattleMons[battler].moves[3], gBattleMons[battler].ppBonuses, 3)))
+    {
+        return TRUE;
+    }
 
     return FALSE;
 }
@@ -229,7 +238,6 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
         else if (EmergencyExitCanBeTriggered(battler))
         {
             gBattleScripting.battler = gBattlerAbility = battler;
-            gSpecialStatuses[battler].switchInItemDone = FALSE;
             gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
             gBattleStruct->eventState.switchIn = 0;
             BattleScriptCall(BattleScript_EmergencyExit);
@@ -284,7 +292,7 @@ static void SetDmgHazardsBattlescript(u8 battler, u8 multistringId)
 static bool32 TryHazardsOnSwitchIn(u32 battler, enum Ability ability, enum HoldEffect holdEffect, enum Hazards hazardType)
 {
     bool32 effect = FALSE;
-    u32 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
     bool32 clearedToxicSpikes = FALSE;
 
     switch (hazardType)
