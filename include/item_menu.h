@@ -19,6 +19,7 @@ enum {
     ITEMMENULOCATION_WALLY,
     ITEMMENULOCATION_PCBOX,
     ITEMMENULOCATION_BERRY_TREE_MULCH,
+    ITEMMENULOCATION_RAIDEND,
     ITEMMENULOCATION_LAST,
 };
 
@@ -120,6 +121,7 @@ void DisplayItemMessage(u8 taskId, u8 fontId, const u8 *str, TaskFunc callback);
 void DisplayItemMessageOnField(u8 taskId, const u8 *string, TaskFunc callback);
 void CloseItemMessage(u8 taskId);
 void ItemMenu_RotomCatalog(u8 taskId);
+void CB2_ChooseBall(void);
 void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type);
 
 #endif //GUARD_ITEM_MENU_H

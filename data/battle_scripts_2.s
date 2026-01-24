@@ -227,6 +227,7 @@ BattleScript_ShakeBallThrow::
 	printfromtable gBallEscapeStringIds
 	waitanimation
 	waitmessage B_WAIT_TIME_LONG
+	handlefailedvictorycatch
 	jumpifword CMP_NO_COMMON_BITS, gBattleTypeFlags, BATTLE_TYPE_SAFARI, BattleScript_ShakeBallThrowEnd
 	jumpifbyte CMP_NOT_EQUAL, gNumSafariBalls, 0, BattleScript_ShakeBallThrowEnd
 	printstring STRINGID_OUTOFSAFARIBALLS
@@ -240,6 +241,14 @@ BattleScript_TrainerBallBlock::
 	printstring STRINGID_TRAINERBLOCKEDBALL
 	waitmessage B_WAIT_TIME_LONG
 	printstring STRINGID_DONTBEATHIEF
+	waitmessage B_WAIT_TIME_LONG
+	finishaction
+
+BattleScript_LegendaryBallBlock::
+	waitmessage B_WAIT_TIME_LONG
+	printstring STRINGID_LEGENDARYFENDEDBALLOFF
+	waitmessage B_WAIT_TIME_LONG
+	printstring STRINGID_YOUMUSTWEAKENIT
 	waitmessage B_WAIT_TIME_LONG
 	finishaction
 

@@ -12,6 +12,7 @@
 #include "battle_z_move.h"
 #include "battle_move_resolution.h"
 #include "item.h"
+#include "item_menu.h"
 #include "util.h"
 #include "pokemon.h"
 #include "random.h"
@@ -2359,7 +2360,6 @@ static void SetNonVolatileStatus(u32 effectBattler, enum MoveEffect effect, cons
         gBattleStruct->poisonPuppeteerConfusion = TRUE;
 }
 
-// To avoid confusion the arguments are naned battler/effectBattler since they can be different from gBattlerAttacker/gBattlerTarget
 void SetMoveEffect(u32 battlerAtk, u32 effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)
 {
     enum Ability abilities[MAX_BATTLERS_COUNT] = {ABILITY_NONE};
@@ -10616,11 +10616,13 @@ static void FinalizeCapture(void)
 {
     u32 ballId = ItemIdToBallId(gLastThrownBall);
     enum NationalDexOrder natDexNo = SpeciesToNationalPokedexNum(gBattleMons[gBattlerTarget].species);
+
     if (GetConfig(CONFIG_CRITICAL_CAPTURE_IF_OWNED) >= GEN_9 && GetSetPokedexFlag(natDexNo, FLAG_GET_CAUGHT))
     {
         gBattleSpritesDataPtr->animationData->isCriticalCapture = TRUE;
         gBattleSpritesDataPtr->animationData->criticalCaptureSuccess = TRUE;
     }
+
     BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_3_SHAKES_SUCCESS);
     MarkBattlerForControllerExec(gBattlerAttacker);
     TryBattleFormChange(gBattlerTarget, FORM_CHANGE_END_BATTLE);
@@ -10961,6 +10963,74 @@ static u32 ComputeBallShakeOdds(u32 odds)
     return odds;
 }
 
+static void SetBallThrowShakes(void)
+{
+    gBallToDisplay = gLastThrownBall = gLastUsedItem;
+
+    u32 odds = ComputeCaptureOdds(gBattlerTarget, gBattlerAttacker);
+    if (gTestRunnerEnabled)
+        TestRunner_Battle_RecordCatchChance(odds);
+
+    u32 ballId = ItemIdToBallId(gLastUsedItem);
+    if (gBattleResults.catchAttempts[ballId] < 255)
+        gBattleResults.catchAttempts[ballId]++;
+
+    // Master Ball check occurs before critical capture check
+    if (odds == CAPTURE_GUARANTEED || IsVictoryCatchGuaranteed())
+    {
+        FinalizeCapture();
+        return;
+    }
+
+    u8 shakes;
+    u8 maxShakes;
+
+    gBattleSpritesDataPtr->animationData->isCriticalCapture = FALSE;
+    gBattleSpritesDataPtr->animationData->criticalCaptureSuccess = FALSE;
+
+    if (CriticalCapture(odds))
+    {
+        maxShakes = BALL_1_SHAKE;  // critical capture doesn't guarantee capture
+        gBattleSpritesDataPtr->animationData->isCriticalCapture = TRUE;
+    }
+    else
+    {
+        maxShakes = BALL_3_SHAKES_SUCCESS;
+    }
+
+    if (odds > 254)
+    {
+        FinalizeCapture();
+        return;
+    }
+    odds = ComputeBallShakeOdds(odds);
+    for (shakes = 0; shakes < maxShakes; shakes++)
+    {
+        if (RandomUniform(RNG_BALLTHROW_SHAKE, 0, MAX_u16) >= odds)
+            break;
+    }
+
+    if (shakes == maxShakes) // mon caught, copy of the code above
+    {
+        if (IsCriticalCapture())
+            gBattleSpritesDataPtr->animationData->criticalCaptureSuccess = TRUE;
+        FinalizeCapture();
+        return;
+    }
+
+    if (!gHasFetchedBall)
+        gLastUsedBall = gLastUsedItem;
+
+    if (IsCriticalCapture())
+        gBattleCommunication[MULTISTRING_CHOOSER] = BALL_3_SHAKES_FAIL;
+    else
+        gBattleCommunication[MULTISTRING_CHOOSER] = shakes;
+
+    BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, shakes);
+    MarkBattlerForControllerExec(gBattlerAttacker);
+    gBattlescriptCurrInstr = BattleScript_ShakeBallThrow;
+}
+
 static void Cmd_handleballthrow(void)
 {
     CMD_ARGS();
@@ -10982,71 +11052,15 @@ static void Cmd_handleballthrow(void)
         MarkBattlerForControllerExec(gBattlerAttacker);
         gBattlescriptCurrInstr = BattleScript_WallyBallThrow;
     }
+    else if (IsVictoryCatch())
+    {
+        BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_TRAINER_BLOCK);
+        MarkBattlerForControllerExec(gBattlerAttacker);
+        gBattlescriptCurrInstr = BattleScript_LegendaryBallBlock;
+    }
     else
     {
-        gBallToDisplay = gLastThrownBall = gLastUsedItem;
-        u32 odds = ComputeCaptureOdds(gBattlerTarget, gBattlerAttacker);
-        if (gTestRunnerEnabled)
-            TestRunner_Battle_RecordCatchChance(odds);
-
-        u32 ballId = ItemIdToBallId(gLastUsedItem);
-        if (gBattleResults.catchAttempts[ballId] < 255)
-            gBattleResults.catchAttempts[ballId]++;
-
-        //Master Ball check occurs before critical capture check
-        if (odds == CAPTURE_GUARANTEED)
-        {
-            FinalizeCapture();
-            return;
-        }
-
-        u8 shakes;
-        u8 maxShakes;
-
-        gBattleSpritesDataPtr->animationData->isCriticalCapture = FALSE;
-        gBattleSpritesDataPtr->animationData->criticalCaptureSuccess = FALSE;
-
-        if (CriticalCapture(odds))
-        {
-            maxShakes = BALL_1_SHAKE;  // critical capture doesn't guarantee capture
-            gBattleSpritesDataPtr->animationData->isCriticalCapture = TRUE;
-        }
-        else
-        {
-            maxShakes = BALL_3_SHAKES_SUCCESS;
-        }
-
-        if (odds > 254)
-        {
-            FinalizeCapture();
-            return;
-        }
-        odds = ComputeBallShakeOdds(odds);
-        for (shakes = 0; shakes < maxShakes; shakes++)
-        {
-            if (RandomUniform(RNG_BALLTHROW_SHAKE, 0, MAX_u16) >= odds)
-                break;
-        }
-
-        if (shakes == maxShakes) // mon caught, copy of the code above
-        {
-            if (IsCriticalCapture())
-                gBattleSpritesDataPtr->animationData->criticalCaptureSuccess = TRUE;
-            FinalizeCapture();
-            return;
-        }
-
-        if (!gHasFetchedBall)
-            gLastUsedBall = gLastUsedItem;
-
-        if (IsCriticalCapture())
-            gBattleCommunication[MULTISTRING_CHOOSER] = BALL_3_SHAKES_FAIL;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = shakes;
-
-        BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, shakes);
-        MarkBattlerForControllerExec(gBattlerAttacker);
-        gBattlescriptCurrInstr = BattleScript_ShakeBallThrow;
+        SetBallThrowShakes();
     }
 }
 
@@ -15094,5 +15108,63 @@ void BS_TryActivateAbilityWithAbilityShield(void)
     {
         gBattleScripting.battler = battler;
         BattleScriptCall(BattleScript_ActivateSwitchInAbility);
+    }
+}
+
+void BS_CatchAfterVictory(void)
+{
+    NATIVE_ARGS();
+
+    if (gBattleStruct->victoryCatchState == VICTORY_CATCH_START) // open bag if end sequence just began
+    {
+        gBattleStruct->victoryCatchState = VICTORY_CATCH_OPEN_BAG;
+        gSpecialVar_ItemId = ITEM_NONE;
+        RecalcBattlerStats(gBattlerTarget, GetBattlerMon(gBattlerTarget), FALSE);
+        BtlController_EmitChooseItem(gBattlerAttacker, B_COMM_TO_CONTROLLER, gBattleStruct->battlerPartyOrders[gBattlerAttacker]);
+        MarkBattlerForControllerExec(gBattlerAttacker);
+    }
+    else if (gSpecialVar_ItemId != ITEM_NONE) // do catch sequence if ball selected
+    {
+        gLastUsedItem = gSpecialVar_ItemId; // selected ball
+        SetBallThrowShakes();
+    }
+    else // no item selected, do faint sequence
+    {
+        gBattleStruct->victoryCatchState = VICTORY_CATCH_FAINTED;
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+}
+
+void BS_JumpIfNoBalls(void)
+{
+    NATIVE_ARGS(const u8 *jumpInstr);
+
+    if (IsBagPocketNonEmpty(POCKET_POKE_BALLS) && !IsPokemonStorageFull())
+    {
+        gBattleStruct->victoryCatchState = VICTORY_CATCH_START;
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+    }
+}
+
+void BS_HandleFailedVictoryCatch(void)
+{
+    NATIVE_ARGS();
+
+    if (!IsVictoryCatch())
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    else
+    {
+        u8 hp = 0;
+        gBattleMons[gBattlerTarget].hp = hp;
+        SetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_HP, &hp);
+        gBattleStruct->victoryCatchState = VICTORY_CATCH_FAINTED;
+        gBattleOutcome |= B_OUTCOME_WON; // need research into what happens when the mon isn't captured after fainting it
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
     }
 }

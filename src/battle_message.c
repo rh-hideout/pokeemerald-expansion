@@ -107,6 +107,7 @@ static const u8 sText_GoTwoPkmn[] = _("Go! {B_PLAYER_MON1_NAME} and {B_PLAYER_MO
 static const u8 sText_GoPkmn2[] = _("Go! {B_BUFF1}!");
 static const u8 sText_DoItPkmn[] = _("You're in charge, {B_BUFF1}!");
 static const u8 sText_GoForItPkmn[] = _("Go for it, {B_BUFF1}!");
+static const u8 sText_BeCarefulPkmn[] = _("Be careful, {B_PLAYER_MON1_NAME}!");
 static const u8 sText_JustALittleMorePkmn[] = _("Just a little more! Hang in there, {B_BUFF1}!"); //currently unused, will require code changes
 static const u8 sText_YourFoesWeakGetEmPkmn[] = _("Your opponent's weak! Get 'em, {B_BUFF1}!");
 static const u8 sText_LinkPartnerSentOutPkmn1GoPkmn[] = _("{B_LINK_PARTNER_NAME} sent out {B_LINK_PLAYER_MON1_NAME}! Go! {B_LINK_PLAYER_MON2_NAME}!");
@@ -885,6 +886,9 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_POWERCONSTRUCTPRESENCEOFMANY]         = COMPOUND_STRING("You sense the presence of many!"),
     [STRINGID_POWERCONSTRUCTTRANSFORM]              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} transformed into its Complete Forme!"),
     [STRINGID_ABILITYSHIELDPROTECTS]                = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s Ability is protected by the effects of its {B_LAST_ITEM}!"),
+    [STRINGID_LEGENDARYFENDEDBALLOFF]               = COMPOUND_STRING("Wild {B_DEF_NAME} fended the BALL off!"),
+    [STRINGID_YOUMUSTWEAKENIT]                      = COMPOUND_STRING("You must weaken it before\nattempting to catch it!"),
+    [STRINGID_VICTORYCATCH]                         = COMPOUND_STRING("Wild {B_DEF_NAME} submits.\nShall I capture it?"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -2173,6 +2177,10 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                 else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
                 {
                     stringPtr = sText_GoTwoPkmn;
+                }
+                else if (gBattleTypeFlags & BATTLE_TYPE_RAID)
+                {
+                    stringPtr = sText_BeCarefulPkmn;
                 }
                 else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                 {

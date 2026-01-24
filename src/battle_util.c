@@ -11069,3 +11069,16 @@ void SetOrClearRageVolatile(void)
     else
         gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
 }
+
+bool32 IsVictoryCatch(void)
+{
+    return gBattleTypeFlags & BATTLE_TYPE_RAID
+        || FlagGet(B_FLAG_VICTORY_CATCH_RANDOM)
+        || FlagGet(B_FLAG_VICTORY_CATCH_GUARANTEED);
+}
+
+bool32 IsVictoryCatchGuaranteed(void)
+{
+    return gBattleTypeFlags & BATTLE_TYPE_RAID
+        || FlagGet(B_FLAG_VICTORY_CATCH_GUARANTEED);
+}

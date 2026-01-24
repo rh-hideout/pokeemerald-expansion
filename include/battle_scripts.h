@@ -235,6 +235,7 @@ extern const u8 BattleScript_SuccessBallThrow[];
 extern const u8 BattleScript_WallyBallThrow[];
 extern const u8 BattleScript_ShakeBallThrow[];
 extern const u8 BattleScript_TrainerBallBlock[];
+extern const u8 BattleScript_LegendaryBallBlock[];
 extern const u8 BattleScript_RunByUsingItem[];
 extern const u8 BattleScript_ActionWatchesCarefully[];
 extern const u8 BattleScript_ActionGetNear[];
@@ -514,6 +515,7 @@ extern const u8 BattleScript_Explosion[];
 extern const u8 BattleScript_ActivateSwitchInAbility[];
 extern const u8 BattleScript_BreakScreens[];
 extern const u8 BattleScript_StealStats[];
+extern const u8 BattleScript_WildBattleVictory[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];

@@ -2421,3 +2421,16 @@
 	.byte \battler
 	.byte \switchedItems
 	.endm
+
+	.macro catchaftervictory
+	callnative BS_CatchAfterVictory
+	.endm
+
+	.macro jumpifnoballs jumpInstr:req
+	callnative BS_JumpIfNoBalls
+	.4byte \jumpInstr
+	.endm
+
+	.macro handlefailedvictorycatch
+	callnative BS_HandleFailedVictoryCatch
+	.endm

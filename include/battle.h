@@ -619,8 +619,9 @@ struct BattleStruct
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
-    u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
-    u8 unused:4;
+    u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use battle mon volatile struct field
+    enum VictoryCatch victoryCatchState:2;
+    u8 unused:2;
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];

@@ -830,4 +830,11 @@ enum SubmoveState
     SUBMOVE_FAILURE,
 };
 
+enum VictoryCatch
+{
+    VICTORY_CATCH_START,
+    VICTORY_CATCH_OPEN_BAG,
+    VICTORY_CATCH_FAINTED,
+};
+
 #endif // GUARD_CONSTANTS_BATTLE_H
