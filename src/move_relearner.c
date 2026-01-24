@@ -347,20 +347,16 @@ static bool32 HasRelearnerLevelUpMoves(struct BoxPokemon *boxMon);
 static bool32 HasRelearnerEggMoves(struct BoxPokemon *boxMon);
 static bool32 HasRelearnerTMMoves(struct BoxPokemon *boxMon);
 static bool32 HasRelearnerTutorMoves(struct BoxPokemon *boxMon);
-static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, enum Move *moves);
-static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, enum Move *moves);
-static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, enum Move *moves);
-static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, enum Move *moves);
+static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves);
+static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves);
+static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves);
+static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves);
 
 static void Task_MoveRelearner_HandleInput(u8 taskId);
 static void Task_MoveRelearner_LearnMove(u8 taskId);
+static void Task_MoveRelearner_Quit(u8 taskId);
 static void SortMovesAlphabetically(u16 *moves, u32 numMoves);
 static void QuickSortMoves(u16 *moves, s32 left, s32 right);
-
-bool32 (*hasMoveToRelearn)(struct BoxPokemon*);
-    bool32 (*isActive)(void);
-    u32 (*getMoves)(struct BoxPokemon *, enum Move *);
-    const u8 *moveText;
 
 static const struct RelearnType sRelearnTypes[MOVE_RELEARNER_COUNT] =
 {
@@ -402,6 +398,7 @@ void TeachMoveRelearnerMove(void)
 {
     LockPlayerFieldControls();
     CreateTask(Task_WaitForFadeOut, 10);
+    gRelearnMode = RELEARN_MODE_SCRIPT;
     // Fade to black
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
 }
@@ -592,9 +589,17 @@ static void UIShowMoveList(u8 taskId)
 
 static void UIEndTask(u8 taskId)
 {
-    ShowTeachMoveText();
-    AddScrollArrows();
-    gTasks[taskId].func = Task_MoveRelearner_HandleInput;
+    if (gRelearnMode == RELEARN_MODE_SCRIPT && gSpecialVar_Result == TRUE)
+    {
+        gTasks[taskId].func = Task_MoveRelearner_Quit;
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    }
+    else
+    {
+        ShowTeachMoveText();
+        AddScrollArrows();
+        gTasks[taskId].func = Task_MoveRelearner_HandleInput;
+    }
 }
 
 static const struct MoveLearnUI sMoveLearnUI =
@@ -634,6 +639,8 @@ static void Task_MoveRelearner_Giveup_Answer(u8 taskId)
     switch (Menu_ProcessInputNoWrapClearOnChoose())
     {
     case 0: // Yes
+        if (gRelearnMode == RELEARN_MODE_SCRIPT)
+            gSpecialVar_Result = FALSE;
         gTasks[taskId].func = Task_MoveRelearner_Quit;
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
         break;
@@ -787,7 +794,7 @@ static void CreateLearnableMovesList(void)
     s32 i;
 
     struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
-    if (!GetBoxMonData(boxmon, MON_DATA_IS_EGG) && sRelearnTypes[gMoveRelearnerState].isActive())
+    if (gRelearnMode == RELEARN_MODE_SCRIPT || sRelearnTypes[gMoveRelearnerState].isActive())
         sMoveRelearnerStruct->numMenuChoices = sRelearnTypes[gMoveRelearnerState].getMoves(boxmon, sMoveRelearnerStruct->movesToLearn);
 
     if (P_SORT_MOVES)
@@ -903,7 +910,16 @@ static void SortMovesAlphabetically(u16 *moves, u32 numMoves)
         QuickSortMoves(moves, 0, numMoves - 1);
 }
 
-static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, enum Move *moves)
+static bool32 IsTmAvailable(enum Item item)
+{
+    if (P_ENABLE_ALL_TM_MOVES)
+        return TRUE;
+    if (gRelearnMode == RELEARN_MODE_SCRIPT)
+        return TRUE;
+    return CheckBagHasItem(item, 1);
+}
+
+static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
 {
     u32 species = GetBoxMonData(mon, MON_DATA_SPECIES);
     u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES ? MAX_LEVEL : GetLevelFromBoxMonExp(mon));
@@ -927,7 +943,7 @@ static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, enum Move *moves)
     return numMoves;
 }
 
-static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, enum Move *moves)
+static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves)
 {
     u32 species = GetBoxMonData(mon, MON_DATA_SPECIES);
     u32 numMoves = 0;
@@ -948,7 +964,7 @@ static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, enum Move *moves)
     return numMoves;
 }
 
-static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, enum Move *moves)
+static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
 {
     u32 species = GetBoxMonData(mon, MON_DATA_SPECIES);
     u32 numMoves = 0;
@@ -961,7 +977,7 @@ static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, enum Move *moves)
         if (move == MOVE_NONE)
             continue;
 
-        if (!P_ENABLE_ALL_TM_MOVES && !CheckBagHasItem(item, 1))
+        if (!IsTmAvailable(item))
             continue;
 
         if (!CanLearnTeachableMove(species, move))
@@ -974,7 +990,7 @@ static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, enum Move *moves)
     return numMoves;
 }
 
-static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, enum Move *moves)
+static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves)
 {
     u32 species = GetBoxMonData(mon, MON_DATA_SPECIES);
     u32 numMoves = 0;
@@ -993,10 +1009,10 @@ static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, enum Move *moves)
     return numMoves;
 }
 
-void HasMovesToRelearn(void)
+void Special_HasMoveToRelearn(void)
 {
     struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
-    if (CanBoxMonRelearnMoves(boxmon, gMoveRelearnerState))
+    if (HasMoveToRelearn(boxmon, gMoveRelearnerState))
         gSpecialVar_Result = TRUE;
     else
         gSpecialVar_Result = FALSE;
@@ -1022,6 +1038,11 @@ bool32 CanBoxMonRelearnMoves(struct BoxPokemon *boxMon, enum MoveRelearnerStates
         return FALSE;
     if (GetBoxMonData(boxMon, MON_DATA_IS_EGG))
         return FALSE;
+    return sRelearnTypes[state].hasMoveToRelearn(boxMon);
+}
+
+bool32 HasMoveToRelearn(struct BoxPokemon *boxMon, enum MoveRelearnerStates state)
+{
     return sRelearnTypes[state].hasMoveToRelearn(boxMon);
 }
 
@@ -1081,7 +1102,8 @@ static bool32 HasRelearnerTMMoves(struct BoxPokemon *boxMon)
         if (move == MOVE_NONE)
             continue;
 
-        if (!P_ENABLE_ALL_TM_MOVES && !CheckBagHasItem(item, 1))
+        bool32 tmAvailable = IsTmAvailable(item);
+        if (!tmAvailable)
             continue;
 
         if (!CanLearnTeachableMove(species, move))

@@ -65,9 +65,10 @@ static u32 IsNotEgg(struct BoxPokemon *boxmon)
 
 static u32 CanRelearnMoves(struct BoxPokemon *boxmon)
 {
+    gRelearnMode = RELEARN_MODE_SCRIPT;
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return INVALID_MON;
-    if (CanBoxMonRelearnMoves(boxmon, gMoveRelearnerState))
+    if (HasMoveToRelearn(boxmon, gMoveRelearnerState))
         return VALID_MON;
     return INVALID_MON;
 }
