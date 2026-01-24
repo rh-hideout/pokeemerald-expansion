@@ -29,11 +29,12 @@
 #include "constants/vars.h"
 #include "constants/wild_encounter.h"
 
-#define sOverworldEncounterLevel trainerRange_berryTreeId
-#define sAge                     playerCopyableMovement
-#define sRoamerOutbreakStatus    directionSequenceIndex
-#define OWE_NON_ROAMER_OUTBREAK  0
-#define OWE_MASS_OUTBREAK_INDEX  ROAMER_COUNT + 1
+#define sOverworldEncounterLevel    trainerRange_berryTreeId
+#define sAge                        playerCopyableMovement
+#define sRoamerOutbreakStatus       directionSequenceIndex
+#define OWE_NON_ROAMER_OUTBREAK     0
+#define OWE_MASS_OUTBREAK_INDEX     ROAMER_COUNT + 1
+#define OWE_INVALID_ROAMER_OUTBREAK OWE_MASS_OUTBREAK_INDEX + 1
 
 static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
@@ -708,7 +709,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     If none of these checks succeed, speciesId is set to SPECIES_NONE and FALSE is returned.
     */
 
-    if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist())
+    if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist() && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
     {
         *indexRoamerOutbreak = OWE_GetObjectRoamerStatusFromIndex(gEncounteredRoamerIndex);
     }
@@ -718,7 +719,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
         *speciesId = gWildFeebas.species;
         CreateWildMon(*speciesId, *level);
     }
-    else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
+    else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior)  && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
     {
         SetUpMassOutbreakEncounter(0);
         *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
@@ -932,7 +933,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     bool32 isShiny = FALSE, isShinyTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_SHINY) ? TRUE : FALSE;
     bool32 isFemale = FALSE, isFemaleTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_FEMALE) ? TRUE : FALSE;
     u32 level, levelTemplate = templateOWE.sOverworldEncounterLevel;
-    u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
+    u32 indexRoamerOutbreak = OWE_INVALID_ROAMER_OUTBREAK;
     u32 x = template->x;
     u32 y = template->y;
 
