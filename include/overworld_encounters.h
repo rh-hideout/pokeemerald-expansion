@@ -79,7 +79,7 @@ struct OWESpeciesBehavior
     enum OWESpeeds activeSpeed;
 };
 
-enum OverworldEncounterBehaviors
+enum __attribute__((packed)) OverworldEncounterBehaviors
 {
     OWE_IGNORE_PLAYER,
     OWE_CHASE_PLAYER_SLOW,
