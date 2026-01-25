@@ -392,6 +392,7 @@ extern const u8 PlayersHouse_2F_EventScript_SetWallClock[];
 extern const u8 PlayersHouse_2F_EventScript_CheckWallClock[];
 extern const u8 Debug_CheckSaveBlock[];
 extern const u8 Debug_CheckROMSpace[];
+extern const u8 Debug_CheckBattleStruct[];
 extern const u8 Debug_BoxFilledMessage[];
 extern const u8 Debug_ShowExpansionVersion[];
 extern const u8 Debug_EventScript_EWRAMCounters[];
@@ -682,6 +683,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_ROMInfo2[] =
 {
     { COMPOUND_STRING("Save Block space"),  DebugAction_ExecuteScript, Debug_CheckSaveBlock },
     { COMPOUND_STRING("ROM space"),         DebugAction_ExecuteScript, Debug_CheckROMSpace },
+    { COMPOUND_STRING("BattleStruct size"), DebugAction_ExecuteScript, Debug_CheckBattleStruct },
     { COMPOUND_STRING("Expansion Version"), DebugAction_ExecuteScript, Debug_ShowExpansionVersion },
     { NULL }
 };
@@ -4886,3 +4888,183 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
     ConvertIntToDecimalStringN(gStringVar1, gFollowerSteps, STR_CONV_MODE_LEFT_ALIGN, 5);
     ConvertIntToDecimalStringN(gStringVar2, gChainFishingDexNavStreak, STR_CONV_MODE_LEFT_ALIGN, 5);
 }
+
+static void PrintStructName(u8 windowId, u32 instanceId, u8 y);
+static void Task_StructSizesWindowInput(u8 taskId);
+
+#define tWindowId     data[0]
+#define tMenuTaskId   data[1]
+#define tArrowTaskId  data[2]
+#define tScrollOffset data[3]
+#define tListPointerElemId 4
+
+/* Structs to check */
+#define STRUCT_CHECK_DEFINITIONS(F)             \
+    F(BattleStruct,         1)                  \
+    F(BattlePokemon,        MAX_BATTLERS_COUNT) \
+    F(SideTimer,            NUM_BATTLE_SIDES)   \
+    F(ProtectStruct,        MAX_BATTLERS_COUNT) \
+    F(SpecialStatus,        MAX_BATTLERS_COUNT) \
+    F(FieldTimer,           1)                  \
+    F(QueuedStatBoost,      MAX_BATTLERS_COUNT) \
+    F(BattleEnigmaBerry,    MAX_BATTLERS_COUNT) \
+    F(BattleScripting,      1)                  \
+    F(BattleHistory,        1)                  \
+    F(BattleResources,      1)                  \
+    F(BattleSpriteData,     1)                  \
+    F(BattleResults,        1)                  \
+    F(MonSpritesGfx,        1)                  \
+    F(StartingStatuses,     1)                  \
+    F(AiBattleData,         1)                  \
+    F(AiThinkingStruct,     1)                  \
+    F(AiLogicData,          1)                  \
+    F(AiPartyData,          1)                  \
+
+#define UNPACK_STRUCT_CHECK_ENUMS(_struct, ...) STRUCT_CHECK_##_struct,
+
+enum StructSizeEnum
+{
+    STRUCT_CHECK_DEFINITIONS(UNPACK_STRUCT_CHECK_ENUMS)
+    STRUCT_CHECK_TOTAL,
+    STRUCT_CHECK_COUNT
+};
+
+static const struct ListMenuTemplate sStructSizesListTemplate =
+{
+    .items = NULL,
+    .isDynamic = TRUE,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .itemPrintFunc = PrintStructName,
+    .maxShowed = min(STRUCT_CHECK_COUNT, 8),
+    .header_X = 0,
+    .item_X = 8,
+    .cursor_X = 0,
+    .upText_Y = 1,
+    .cursorPal = 2,
+    .fillValue = 1,
+    .cursorShadowPal = 3,
+    .lettersSpacing = 1,
+    .itemVerticalPadding = 0,
+    .scrollMultiple = LIST_NO_MULTIPLE_SCROLL,
+    .fontId = FONT_NORMAL,
+    .cursorKind = 0
+};
+
+static const struct WindowTemplate sStructSizesWindowTemplateMain =
+{
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 20,
+    .height = 2 * min(STRUCT_CHECK_COUNT, 8),
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
+#define TAG_LIST_ARROWS 5425
+static const struct ScrollArrowsTemplate sStructSizesScrollArrowsTemplate =
+{
+    .firstArrowType = SCROLL_ARROW_UP,
+    .firstX = 56,
+    .firstY = 8,
+    .secondArrowType = SCROLL_ARROW_DOWN,
+    .secondX = 56,
+    .secondY = 8 + (16 * min(STRUCT_CHECK_COUNT, 8)),
+    .fullyUpThreshold = 0,
+    .fullyDownThreshold = 0,
+    .tileTag = TAG_LIST_ARROWS,
+    .palTag = TAG_LIST_ARROWS,
+    .palNum = 0,
+};
+
+#define UNPACK_STRUCT_CHECK_STRING(_struct, _count, ...)                                \
+    case STRUCT_CHECK_##_struct:                                                        \
+        StringCopy(gStringVar4, COMPOUND_STRING(#_struct " x"));                        \
+        ConvertIntToDecimalStringN(gStringVar2, _count, STR_CONV_MODE_LEFT_ALIGN, 1);   \
+        StringAppend(gStringVar4, gStringVar2);                                         \
+        StringAppend(gStringVar4, COMPOUND_STRING(": {CLEAR_TO 120}"));                 \
+        break;
+
+static void PrintStructName(u8 windowId, u32 instanceId, u8 y)
+{
+    u8 colors[3] = {
+        sStructSizesListTemplate.fillValue,
+        sStructSizesListTemplate.cursorPal,
+        sStructSizesListTemplate.cursorShadowPal
+    };
+    u16 *list = (u16 *) GetWordTaskArg(gSpecialVar_0x8006, tListPointerElemId);
+
+    switch (instanceId)
+    {
+    STRUCT_CHECK_DEFINITIONS(UNPACK_STRUCT_CHECK_STRING)
+    case STRUCT_CHECK_TOTAL: StringCopy(gStringVar4, COMPOUND_STRING("Total size: {CLEAR_TO 120}")); break;
+    }
+    ConvertIntToDecimalStringN(gStringVar2, list[instanceId], STR_CONV_MODE_RIGHT_ALIGN, 4);
+    StringAppend(gStringVar4, gStringVar2);
+    StringAppend(gStringVar4, COMPOUND_STRING("b"));
+    AddTextPrinterParameterized4(windowId,
+                                 sStructSizesListTemplate.fontId,
+                                 sStructSizesListTemplate.item_X, y,
+                                 sStructSizesListTemplate.lettersSpacing, 0, colors, TEXT_SKIP_DRAW,
+                                 gStringVar4);
+}
+
+#define UNPACK_STRUCT_CHECK_SIZEOF(_struct, _count, ...) listItems[STRUCT_CHECK_##_struct] = sizeof(struct _struct) * _count; totalSize += sizeof(struct _struct) * _count;
+
+void ShowStructSizes(void)
+{
+    u8 windowId;
+    struct ListMenuTemplate listTemplate = sStructSizesListTemplate;
+    listTemplate.totalItems = STRUCT_CHECK_COUNT;
+
+    // create window
+    LoadMessageBoxAndBorderGfx();
+    windowId = AddWindow(&sStructSizesWindowTemplateMain);
+    DrawStdWindowFrame(windowId, FALSE);
+    listTemplate.windowId = windowId;
+
+    u16 *listItems = AllocZeroed(sizeof(u16) * STRUCT_CHECK_COUNT);
+    u32 totalSize = 0;
+    STRUCT_CHECK_DEFINITIONS(UNPACK_STRUCT_CHECK_SIZEOF)
+    listItems[STRUCT_CHECK_TOTAL] = totalSize;
+
+    u32 inputTaskId = CreateTask(Task_StructSizesWindowInput, 3);
+    gTasks[inputTaskId].tWindowId = windowId;
+    gSpecialVar_0x8006 = inputTaskId;
+    SetWordTaskArg(inputTaskId, tListPointerElemId, (u32)listItems);
+    u32 menuTaskId = ListMenuInit(&listTemplate, 0, 0);
+    gTasks[inputTaskId].tMenuTaskId = menuTaskId;
+    gTasks[inputTaskId].tArrowTaskId = TASK_NONE;
+    if (listTemplate.totalItems > listTemplate.maxShowed)
+    {
+        gTempScrollArrowTemplate = sStructSizesScrollArrowsTemplate;
+        gTempScrollArrowTemplate.fullyDownThreshold = listTemplate.totalItems - listTemplate.maxShowed;
+        gTasks[inputTaskId].tArrowTaskId = AddScrollIndicatorArrowPair(&gTempScrollArrowTemplate, (u16 *)&gTasks[inputTaskId].tScrollOffset);
+    }
+
+    // draw everything
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+}
+
+static void Task_StructSizesWindowInput(u8 taskId)
+{
+    ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+    ListMenuGetScrollAndRow(gTasks[taskId].tMenuTaskId, (u16 *)&gTasks[taskId].tScrollOffset, NULL);
+    if (JOY_NEW(B_BUTTON))
+    {
+        ScriptContext_Enable();
+        if (gTasks[taskId].tArrowTaskId < TASK_NONE)
+            RemoveScrollIndicatorArrowPair(gTasks[taskId].tArrowTaskId);
+        Free((struct ListItem *)(GetWordTaskArg(taskId, tListPointerElemId)));
+        DestroyListMenuTask(gTasks[taskId].tMenuTaskId, NULL, NULL);
+        ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+        RemoveWindow(gTasks[taskId].tWindowId);
+        DestroyTask(taskId);
+    }
+}
+
+#undef tWindowId
+#undef tMenuTaskId
+#undef tArrowTaskId
+#undef tScrollOffset
+#undef tListPointerElemId

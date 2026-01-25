@@ -513,7 +513,7 @@ static const struct ListMenuTemplate sSecondaryListTemplate =
     .cursorShadowPal = 3,
     .lettersSpacing = 1,
     .itemVerticalPadding = 0,
-    .scrollMultiple = LIST_NO_MULTIPLE_SCROLL,
+    .scrollMultiple = LIST_MULTIPLE_SCROLL_DPAD,
     .fontId = 1,
     .cursorKind = 0
 };
