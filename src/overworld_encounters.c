@@ -1566,13 +1566,14 @@ static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction 
     s16 x = player->currentCoords.x;
     s16 y = player->currentCoords.y;
     u32 i;
-    u32 collision;
 
     for (i = 0; i < distance; i++)
     {
         MoveCoords(direction, &x, &y);
-        collision = GetCollisionFlagsAtCoords(player, x, y, direction);
-        if (collision != 0 && (collision & ~(1 << (COLLISION_OUTSIDE_RANGE - 1))))
+        if (MapGridGetCollisionAt(x, y)
+            || GetMapBorderIdAt(x, y) == CONNECTION_INVALID
+            || IsMetatileDirectionallyImpassable(player, x, y, GetOppositeDirection(direction))
+            || IsElevationMismatchAt(player->currentElevation, x, y))
             return FALSE;
     }
 
