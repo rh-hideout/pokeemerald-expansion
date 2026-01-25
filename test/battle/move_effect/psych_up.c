@@ -50,6 +50,9 @@ SINGLE_BATTLE_TEST("Psych Up ignores Spiky Shield and Baneful Bunker but fails a
     PARAMETRIZE { protectMove = MOVE_CRAFTY_SHIELD; shouldFail = TRUE; }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPIKY_SHIELD) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_BANEFUL_BUNKER) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_CRAFTY_SHIELD) == EFFECT_PROTECT);
         PLAYER(SPECIES_TORNADUS) { Speed(66); }
         OPPONENT(SPECIES_LANDORUS) { Speed(99); }
     } WHEN {
