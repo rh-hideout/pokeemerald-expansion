@@ -1,5 +1,5 @@
 CableClub_OnTransition_Frlg::
-	call CableClub_EventScript_HideOrShowMysteryGiftMan
+	call CableClub_EventScript_HideOrShowMysteryGiftMan_Frlg
 	end
 
 CableClub_EventScript_HideOrShowMysteryGiftMan_Frlg::
@@ -47,19 +47,19 @@ CableClub_OnLoad_Frlg::
 	end
 
 EventScript_OnLoadFromColosseum_Frlg::
-	call CableClub_EventScript_OpenDirectCornerBarrier
+	call CableClub_EventScript_OpenDirectCornerBarrier_Frlg
 	end
 
 EventScript_OnLoadFromTradeCenter_Frlg::
-	call CableClub_EventScript_OpenDirectCornerBarrier
+	call CableClub_EventScript_OpenDirectCornerBarrier_Frlg
 	end
 
 EventScript_OnLoadFromUnionRoom_Frlg::
-	call CableClub_EventScript_OpenUnionRoomBarrier
+	call CableClub_EventScript_OpenUnionRoomBarrier_Frlg
 	end
 
 EventScript_OnLoadFromBerryCrush_Frlg::
-	call CableClub_EventScript_OpenDirectCornerBarrier
+	call CableClub_EventScript_OpenDirectCornerBarrier_Frlg
 	end
 
 EventScript_OnLoadFromGameCorner_Frlg::
@@ -67,20 +67,20 @@ EventScript_OnLoadFromGameCorner_Frlg::
 	end
 
 CableClub_OnFrame_Frlg::
-	map_script_2 VAR_MAP_SCENE_POKEMON_CENTER_TEALA, 1, CableClub_EventScript_Tutorial
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_SINGLE_BATTLE, CableClub_EventScript_ExitLinkRoom
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_DOUBLE_BATTLE, CableClub_EventScript_ExitLinkRoom
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_MULTI_BATTLE, CableClub_EventScript_ExitLinkRoom
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_TRADE_CENTER, CableClub_EventScript_ExitTradeCenter
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_UNION_ROOM, CableClub_EventScript_ExitUnionRoom
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_BERRY_CRUSH, CableClub_EventScript_ExitLinkRoom
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_MINIGAME, CableClub_EventScript_ExitMinigameRoom
+	map_script_2 VAR_MAP_SCENE_POKEMON_CENTER_TEALA, 1, CableClub_EventScript_Tutorial_Frlg
+	map_script_2 VAR_CABLE_CLUB_STATE, USING_SINGLE_BATTLE, CableClub_EventScript_ExitLinkRoom_Frlg
+	map_script_2 VAR_CABLE_CLUB_STATE, USING_DOUBLE_BATTLE, CableClub_EventScript_ExitLinkRoom_Frlg
+	map_script_2 VAR_CABLE_CLUB_STATE, USING_MULTI_BATTLE, CableClub_EventScript_ExitLinkRoom_Frlg
+	map_script_2 VAR_CABLE_CLUB_STATE, USING_TRADE_CENTER, CableClub_EventScript_ExitTradeCenter_Frlg
+	map_script_2 VAR_CABLE_CLUB_STATE, USING_UNION_ROOM, CableClub_EventScript_ExitUnionRoom_Frlg
+	map_script_2 VAR_CABLE_CLUB_STATE, USING_BERRY_CRUSH, CableClub_EventScript_ExitLinkRoom_Frlg
+	map_script_2 VAR_CABLE_CLUB_STATE, USING_MINIGAME, CableClub_EventScript_ExitMinigameRoom_Frlg
 	.2byte 0
 
 CableClub_EventScript_ExitLinkRoom_Frlg::
 	lockall
-	call CableClub_EventScript_CloseLinkAndExitLinkRoom
-	call CableClub_EventScript_CloseDirectCornerBarrier
+	call CableClub_EventScript_CloseLinkAndExitLinkRoom_Frlg
+	call CableClub_EventScript_CloseDirectCornerBarrier_Frlg
 	special DrawWholeMapView
 	playse SE_CLICK
 	erasebox 0, 0, 29, 19
@@ -89,7 +89,7 @@ CableClub_EventScript_ExitLinkRoom_Frlg::
 
 CableClub_EventScript_ExitMinigameRoom_Frlg::
 	lockall
-	call CableClub_EventScript_CloseLinkAndExitLinkRoom
+	call CableClub_EventScript_CloseLinkAndExitLinkRoom_Frlg
 	call CableClub_EventScript_CloseGameCornerBarrier_Frlg
 	special DrawWholeMapView
 	playse SE_CLICK
@@ -100,7 +100,7 @@ CableClub_EventScript_ExitMinigameRoom_Frlg::
 CableClub_EventScript_CloseLinkAndExitLinkRoom_Frlg::
 	setvar VAR_CABLE_CLUB_STATE, 0
 	textcolor NPC_TEXT_COLOR_FEMALE
-	goto_if_eq VAR_0x8007, 0, CableClub_EventScript_PlayerExitLinkRoom
+	goto_if_eq VAR_0x8007, 0, CableClub_EventScript_PlayerExitLinkRoom_Frlg
 	applymovement VAR_0x8007, Movement_AttendantFaceLeft
 	waitmovement 0
 	applymovement LOCALID_PLAYER, Movement_PlayerExitLinkRoom
@@ -111,8 +111,8 @@ CableClub_EventScript_CloseLinkAndExitLinkRoom_Frlg::
 
 CableClub_EventScript_ExitTradeCenter_Frlg::
 	lockall
-	call CableClub_EventScript_PlayerExitTradeCenter
-	call CableClub_EventScript_CloseDirectCornerBarrier
+	call CableClub_EventScript_PlayerExitTradeCenter_Frlg
+	call CableClub_EventScript_CloseDirectCornerBarrier_Frlg
 	special DrawWholeMapView
 	playse SE_CLICK
 	erasebox 0, 0, 29, 19
@@ -123,18 +123,18 @@ CableClub_EventScript_PlayerExitTradeCenter_Frlg::
 	special CloseLink
 	setvar VAR_CABLE_CLUB_STATE, 0
 	textcolor NPC_TEXT_COLOR_FEMALE
-	goto_if_eq VAR_0x8007, 0, CableClub_EventScript_PlayerExitLinkRoom
+	goto_if_eq VAR_0x8007, 0, CableClub_EventScript_PlayerExitLinkRoom_Frlg
 	applymovement LOCALID_PLAYER, Movement_PlayerFaceAttendantRight
 	waitmovement 0
 	applymovement VAR_0x8007, Movement_AttendantFaceLeft
 	waitmovement 0
-	call CableClub_EventScript_TrainerCardDataOverwritten
+	call CableClub_EventScript_TrainerCardDataOverwritten_Frlg
 	return
 
 CableClub_EventScript_ExitUnionRoom_Frlg::
 	lockall
-	call CableClub_EventScript_PlayerExitUnionRoom
-	call CableClub_EventScript_CloseUnionRoomBarrier
+	call CableClub_EventScript_PlayerExitUnionRoom_Frlg
+	call CableClub_EventScript_CloseUnionRoomBarrier_Frlg
 	special DrawWholeMapView
 	playse SE_CLICK
 	erasebox 0, 0, 29, 19
@@ -144,19 +144,19 @@ CableClub_EventScript_ExitUnionRoom_Frlg::
 CableClub_EventScript_PlayerExitUnionRoom_Frlg::
 	setvar VAR_CABLE_CLUB_STATE, 0
 	textcolor NPC_TEXT_COLOR_FEMALE
-	goto_if_eq VAR_0x8007, 0, CableClub_EventScript_PlayerExitLinkRoom
+	goto_if_eq VAR_0x8007, 0, CableClub_EventScript_PlayerExitLinkRoom_Frlg
 	applymovement LOCALID_PLAYER, Movement_PlayerFaceAttendantRight
 	waitmovement 0
 	applymovement VAR_0x8007, Movement_AttendantFaceLeft
 	waitmovement 0
-	call CableClub_EventScript_TrainerCardDataOverwritten
+	call CableClub_EventScript_TrainerCardDataOverwritten_Frlg
 	return
 
 CableClub_EventScript_TrainerCardDataOverwritten_Frlg::
-	message CableClub_Text_TrainerCardDataOverwritten
+	message CableClub_Text_TrainerCardDataOverwritten_Frlg
 	waitmessage
 	playse SE_PIN
-	message CableClub_Text_HopeToSeeYouAgain
+	message CableClub_Text_HopeToSeeYouAgain_Frlg
 	waitmessage
 	applymovement LOCALID_PLAYER, Movement_PlayerExitLinkRoom
 	waitmovement 0
@@ -174,12 +174,12 @@ CableClub_EventScript_Tutorial_Frlg::
 	textcolor NPC_TEXT_COLOR_FEMALE
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
-	msgbox CableClub_Text_FirstTimeRightThisWay
+	msgbox CableClub_Text_FirstTimeRightThisWay_Frlg
 	closemessage
 	applymovement LOCALID_PLAYER, Movement_PlayerApproachCounter
 	waitmovement 0
 	delay 30
-	msgbox CableClub_Text_ExplainWirelessClubFirstTime
+	msgbox CableClub_Text_ExplainWirelessClubFirstTime_Frlg
 	setvar VAR_MAP_SCENE_POKEMON_CENTER_TEALA, 2
 	releaseall
 	end
@@ -190,70 +190,70 @@ Movement_PlayerApproachCounter:
 	step_end
 
 CableClub_EventScript_WelcomeToCableClub_Frlg::
-	message CableClub_Text_WelcomeWhichCableClubService
+	message CableClub_Text_WelcomeWhichCableClubService_Frlg
 	waitmessage
 	delay 15
-	goto CableClub_EventScript_SelectCableClubRoom
+	goto CableClub_EventScript_SelectCableClubRoom_Frlg
 	end
 
 CableClub_EventScript_UnusedWelcomeToCableClub_Frlg::
-	msgbox CableClub_Text_WhichService
-	goto CableClub_EventScript_SelectCableClubRoom
+	msgbox CableClub_Text_WhichService_Frlg
+	goto CableClub_EventScript_SelectCableClubRoom_Frlg
 	end
 
 CableClub_EventScript_SelectCableClubRoom_Frlg::
 	setvar VAR_0x8004, 0
 	multichoice 0, 0, MULTI_CABLE_CLUB_NO_RECORD_MIX, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_TradeCenter
-	case 1, CableClub_EventScript_Colosseum
+	case 0, CableClub_EventScript_TradeCenter_Frlg
+	case 1, CableClub_EventScript_Colosseum_Frlg
 	case 2, CableClub_EventScript_AbortLink_Frlg
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink_Frlg
 	end
 
 CableClub_EventScript_Colosseum_Frlg::
 	copyvar VAR_0x8007, VAR_LAST_TALKED
-	goto CableClub_EventScript_SelectBattleMode
+	goto CableClub_EventScript_SelectBattleMode_Frlg
 	end
 
 CableClub_EventScript_SelectBattleMode_Frlg::
-	message CableClub_Text_PlayWhichBattleMode
+	message CableClub_Text_PlayWhichBattleMode_Frlg
 	waitmessage
 	multichoice 0, 0, MULTI_BATTLE_MODE, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_SingleBattleMode
-	case 1, CableClub_EventScript_DoubleBattleMode
-	case 2, CableClub_EventScript_MultiBattleMode
-	case 3, CableClub_EventScript_BattleModeInfo
+	case 0, CableClub_EventScript_SingleBattleMode_Frlg
+	case 1, CableClub_EventScript_DoubleBattleMode_Frlg
+	case 2, CableClub_EventScript_MultiBattleMode_Frlg
+	case 3, CableClub_EventScript_BattleModeInfo_Frlg
 	case 4, CableClub_EventScript_AbortLink_Frlg
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink_Frlg
 	end
 
 CableClub_EventScript_BattleModeInfo_Frlg::
-	msgbox CableClub_Text_ExplainBattleModes
-	goto CableClub_EventScript_SelectBattleMode
+	msgbox CableClub_Text_ExplainBattleModes_Frlg
+	goto CableClub_EventScript_SelectBattleMode_Frlg
 	end
 
 CableClub_EventScript_SingleBattleMode_Frlg::
 	setvar VAR_0x8004, USING_SINGLE_BATTLE
-	goto CableClub_EventScript_TryEnterColosseum
+	goto CableClub_EventScript_TryEnterColosseum_Frlg
 	end
 
 CableClub_EventScript_DoubleBattleMode_Frlg::
 	special HasEnoughMonsForDoubleBattle
-	goto_if_ne VAR_RESULT, PLAYER_HAS_TWO_USABLE_MONS, CableClub_EventScript_NeedTwoMonsForDoubleBattle
+	goto_if_ne VAR_RESULT, PLAYER_HAS_TWO_USABLE_MONS, CableClub_EventScript_NeedTwoMonsForDoubleBattle_Frlg
 	setvar VAR_0x8004, USING_DOUBLE_BATTLE
-	goto CableClub_EventScript_TryEnterColosseum
+	goto CableClub_EventScript_TryEnterColosseum_Frlg
 	end
 
 CableClub_EventScript_NeedTwoMonsForDoubleBattle_Frlg::
-	msgbox CableClub_Text_NeedTwoMonsForDoubleBattle
-	goto CableClub_EventScript_SelectBattleMode
+	msgbox CableClub_Text_NeedTwoMonsForDoubleBattle_Frlg
+	goto CableClub_EventScript_SelectBattleMode_Frlg
 	end
 
 CableClub_EventScript_MultiBattleMode_Frlg::
 	setvar VAR_0x8004, USING_MULTI_BATTLE
-	goto CableClub_EventScript_TryEnterColosseum
+	goto CableClub_EventScript_TryEnterColosseum_Frlg
 	end
 
 CableClub_EventScript_TryEnterColosseum_Frlg::
@@ -265,12 +265,12 @@ CableClub_EventScript_TryEnterColosseum_Frlg::
 	special TryBattleLinkup
 	waitstate
 	call EventScript_RestorePrevTextColor
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterColosseum
-	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, CableClub_EventScript_AbortLinkSomeoneNotReady
-	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, CableClub_EventScript_AbortLinkDifferentSelections
-	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, CableClub_EventScript_AbortLinkIncorrectNumberOfBattlers
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterColosseum_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, CableClub_EventScript_AbortLinkSomeoneNotReady_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, CableClub_EventScript_AbortLinkDifferentSelections_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, CableClub_EventScript_AbortLinkIncorrectNumberOfBattlers_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_AbortLink_Frlg
-	goto_if_eq VAR_RESULT, LINKUP_CONNECTION_ERROR, CableClub_EventScript_AbortLinkConnectionError
+	goto_if_eq VAR_RESULT, LINKUP_CONNECTION_ERROR, CableClub_EventScript_AbortLinkConnectionError_Frlg
 	end
 
 CableClub_EventScript_EnterColosseum_Frlg::
@@ -278,9 +278,9 @@ CableClub_EventScript_EnterColosseum_Frlg::
 	special SavePlayerParty
 	special LoadPlayerBag
 	copyvar VAR_CABLE_CLUB_STATE, VAR_0x8004
-	messageautoscroll CableClub_Text_PleaseEnter
+	messageautoscroll CableClub_Text_PleaseEnter_Frlg
 	waitmessage
-	call CableClub_EventScript_OpenDirectCornerBarrier
+	call CableClub_EventScript_OpenDirectCornerBarrier_Frlg
 	special DrawWholeMapView
 	playse SE_CLICK
 	delay 60
@@ -297,7 +297,7 @@ CableClub_EventScript_EnterColosseum_Frlg::
 	closedoor 9, 1
 	waitdooranim
 	release
-	goto_if_eq VAR_0x8004, USING_MULTI_BATTLE, CableClub_EventScript_WarpTo4PColosseum
+	goto_if_eq VAR_0x8004, USING_MULTI_BATTLE, CableClub_EventScript_WarpTo4PColosseum_Frlg
 	special SetCableClubWarp
 	warp MAP_BATTLE_COLOSSEUM_2P, 6, 8
 	special DoCableClubWarp
@@ -319,39 +319,39 @@ CableClub_EventScript_WarpTo4PColosseum_Frlg::
 
 CableClub_EventScript_AbortLinkIncorrectNumberOfBattlers_Frlg::
 	switch VAR_0x8004
-	case USING_SINGLE_BATTLE, CableClub_EventScript_AbortLinkWrongNumberForSingleBattle
-	case USING_DOUBLE_BATTLE, CableClub_EventScript_AbortLinkWrongNumberForDoubleBattle
-	case USING_MULTI_BATTLE, CableClub_EventScript_AbortLinkNeedFourPlayers
-	goto CableClub_EventScript_AbortLinkIncorrectNumberOfParticipants
+	case USING_SINGLE_BATTLE, CableClub_EventScript_AbortLinkWrongNumberForSingleBattle_Frlg
+	case USING_DOUBLE_BATTLE, CableClub_EventScript_AbortLinkWrongNumberForDoubleBattle_Frlg
+	case USING_MULTI_BATTLE, CableClub_EventScript_AbortLinkNeedFourPlayers_Frlg
+	goto CableClub_EventScript_AbortLinkIncorrectNumberOfParticipants_Frlg
 	end
 
 CableClub_EventScript_AbortLinkNeedFourPlayers_Frlg::
 	special CloseLink
-	msgbox CableClub_Text_NeedFourPlayers
-	goto CableClub_EventScript_ConfirmNumberAndRestart
+	msgbox CableClub_Text_NeedFourPlayers_Frlg
+	goto CableClub_EventScript_ConfirmNumberAndRestart_Frlg
 	end
 
 CableClub_EventScript_AbortLinkWrongNumberForDoubleBattle_Frlg::
 	special CloseLink
-	msgbox CableClub_Text_CantDoubleBattleWithXPlayers
-	goto CableClub_EventScript_ConfirmNumberAndRestart
+	msgbox CableClub_Text_CantDoubleBattleWithXPlayers_Frlg
+	goto CableClub_EventScript_ConfirmNumberAndRestart_Frlg
 	end
 
 CableClub_EventScript_AbortLinkWrongNumberForSingleBattle_Frlg::
 	special CloseLink
-	msgbox CableClub_Text_CantSingleBattleWithXPlayers
-	goto CableClub_EventScript_ConfirmNumberAndRestart
+	msgbox CableClub_Text_CantSingleBattleWithXPlayers_Frlg
+	goto CableClub_EventScript_ConfirmNumberAndRestart_Frlg
 	end
 
 CableClub_EventScript_ConfirmNumberAndRestart_Frlg::
 	special CloseLink  @ Redundant
-	msgbox CableClub_Text_PleaseConfirmNumberAndRestart
+	msgbox CableClub_Text_PleaseConfirmNumberAndRestart_Frlg
 	release
 	end
 
 CableClub_EventScript_TradeCenter_Frlg::
 	copyvar VAR_0x8007, VAR_LAST_TALKED
-	call CableClub_EventScript_CheckPartyTradeRequirements
+	call CableClub_EventScript_CheckPartyTradeRequirements_Frlg
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink_Frlg
 	call CableClubSaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink_Frlg
@@ -361,22 +361,22 @@ CableClub_EventScript_TradeCenter_Frlg::
 	special TryTradeLinkup
 	waitstate
 	call EventScript_RestorePrevTextColor
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterTradeCenter
-	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, CableClub_EventScript_AbortLinkSomeoneNotReady
-	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, CableClub_EventScript_AbortLinkDifferentSelections
-	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, CableClub_EventScript_AbortLinkIncorrectNumberOfParticipants
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterTradeCenter_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, CableClub_EventScript_AbortLinkSomeoneNotReady_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, CableClub_EventScript_AbortLinkDifferentSelections_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_WRONG_NUM_PLAYERS, CableClub_EventScript_AbortLinkIncorrectNumberOfParticipants_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_AbortLink_Frlg
-	goto_if_eq VAR_RESULT, LINKUP_CONNECTION_ERROR, CableClub_EventScript_AbortLinkConnectionError
-	goto_if_eq VAR_RESULT, LINKUP_PLAYER_NOT_READY, CableClub_EventScript_AbortLinkPlayerNotReady
-	goto_if_eq VAR_RESULT, LINKUP_PARTNER_NOT_READY, CableClub_EventScript_AbortLinkOtherTrainerNotReady
+	goto_if_eq VAR_RESULT, LINKUP_CONNECTION_ERROR, CableClub_EventScript_AbortLinkConnectionError_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_PLAYER_NOT_READY, CableClub_EventScript_AbortLinkPlayerNotReady_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_PARTNER_NOT_READY, CableClub_EventScript_AbortLinkOtherTrainerNotReady_Frlg
 	end
 
 CableClub_EventScript_EnterTradeCenter_Frlg::
 	setvar VAR_0x8004, USING_TRADE_CENTER
 	copyvar VAR_CABLE_CLUB_STATE, VAR_0x8004
-	messageautoscroll CableClub_Text_PleaseEnter
+	messageautoscroll CableClub_Text_PleaseEnter_Frlg
 	waitmessage
-	call CableClub_EventScript_OpenDirectCornerBarrier
+	call CableClub_EventScript_OpenDirectCornerBarrier_Frlg
 	special DrawWholeMapView
 	playse SE_CLICK
 	delay 60
@@ -401,19 +401,19 @@ CableClub_EventScript_EnterTradeCenter_Frlg::
 
 CableClub_EventScript_CheckPartyTradeRequirements_Frlg::
 	specialvar VAR_RESULT, CalculatePlayerPartyCount
-	goto_if_lt VAR_RESULT, 2, CableClub_EventScript_NeedTwoMonsToTrade
+	goto_if_lt VAR_RESULT, 2, CableClub_EventScript_NeedTwoMonsToTrade_Frlg
 	specialvar VAR_RESULT, DoesPartyHaveEnigmaBerry
-	goto_if_eq VAR_RESULT, TRUE, CableClub_EventScript_CantTradeEnigmaBerry
+	goto_if_eq VAR_RESULT, TRUE, CableClub_EventScript_CantTradeEnigmaBerry_Frlg
 	setvar VAR_RESULT, TRUE
 	return
 
 CableClub_EventScript_NeedTwoMonsToTrade_Frlg::
-	msgbox CableClub_Text_NeedTwoMonsToTrade
+	msgbox CableClub_Text_NeedTwoMonsToTrade_Frlg
 	setvar VAR_RESULT, FALSE
 	return
 
 CableClub_EventScript_CantTradeEnigmaBerry_Frlg::
-	msgbox CableClub_Text_CantTradeEnigmaBerry
+	msgbox CableClub_Text_CantTradeEnigmaBerry_Frlg
 	setvar VAR_RESULT, FALSE
 	return
 
@@ -423,7 +423,7 @@ CableClub_EventScript_RecordCorner_Frlg::
 
 CableClub_EventScript_AbortLinkPlayerNotReady_Frlg::
 	special CloseLink
-	msgbox CableClub_Text_NotSetUpForFarAwayRegion
+	msgbox CableClub_Text_NotSetUpForFarAwayRegion_Frlg
 	release
 	end
 
@@ -472,13 +472,13 @@ CableClub_EventScript_CableClubWarp_Frlg::
 
 CableClub_EventScript_AbortLinkIncorrectNumberOfParticipants_Frlg::
 	special CloseLink
-	msgbox CableClub_Text_IncorrectNumberOfParticipants
+	msgbox CableClub_Text_IncorrectNumberOfParticipants_Frlg
 	release
 	end
 
 CableClub_EventScript_AbortLinkPlayerHasBadEgg_Frlg::
 	special CloseLink
-	msgbox CableClub_Text_YouHaveAMonThatCantBeTaken
+	msgbox CableClub_Text_YouHaveAMonThatCantBeTaken_Frlg
 	release
 	end
 
@@ -716,13 +716,13 @@ CableClub_EventScript_DoLinkRoomExit_Frlg::
 CableClub_EventScript_UnionRoomAttendant_Frlg::
 	lock
 	faceplayer
-	goto_if_unset FLAG_SYS_POKEDEX_GET, CableClub_EventScript_WirelessClubAdjustements
+	goto_if_unset FLAG_SYS_POKEDEX_GET, CableClub_EventScript_WirelessClubAdjustements_Frlg
 	specialvar VAR_RESULT, IsBadEggInParty
-	goto_if_eq VAR_RESULT, TRUE, CableClub_EventScript_AbortLinkPlayerHasBadEgg
+	goto_if_eq VAR_RESULT, TRUE, CableClub_EventScript_AbortLinkPlayerHasBadEgg_Frlg
 	copyvar VAR_0x8007, VAR_LAST_TALKED
 	specialvar VAR_RESULT, IsWirelessAdapterConnected
-	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_UnionRoomAdapterNotConnected
-	message CableClub_Text_WelcomeUnionRoomEnter
+	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_UnionRoomAdapterNotConnected_Frlg
+	message CableClub_Text_WelcomeUnionRoomEnter_Frlg
 	waitmessage
 	goto CableClub_EventScript_AskEnterUnionRoom_Frlg
 	end
@@ -732,27 +732,27 @@ CableClub_EventScript_AskEnterUnionRoom_Frlg::
 	switch VAR_RESULT
 	case 0, CableClub_EventScript_EnterUnionRoom_Frlg
 	case 1, CableClub_EventScript_AbortLink_Frlg
-	case 2, CableClub_EventScript_UnionRoomInfo
+	case 2, CableClub_EventScript_UnionRoomInfo_Frlg
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink_Frlg
 	end
 
 CableClub_EventScript_UnionRoomInfo_Frlg::
-	message CableClub_Text_UnionRoomInfo
+	message CableClub_Text_UnionRoomInfo_Frlg
 	waitmessage
 	goto CableClub_EventScript_AskEnterUnionRoom_Frlg
 	end
 
 CableClub_EventScript_EnterUnionRoom_Frlg::
-	call CableClub_EventScript_CheckPartyUnionRoomRequirements
+	call CableClub_EventScript_CheckPartyUnionRoomRequirements_Frlg
 	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_AbortLink_Frlg
 	call CableClubSaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink_Frlg
-	msgbox CableClub_Text_EnjoyUnionRoom
+	msgbox CableClub_Text_EnjoyUnionRoom_Frlg
 	closemessage
 	special HealPlayerParty
 	setvar VAR_0x8004, USING_UNION_ROOM
 	copyvar VAR_CABLE_CLUB_STATE, VAR_0x8004
-	call CableClub_EventScript_OpenUnionRoomBarrier
+	call CableClub_EventScript_OpenUnionRoomBarrier_Frlg
 	special DrawWholeMapView
 	playse SE_CLICK
 	delay 60
@@ -777,63 +777,63 @@ CableClub_EventScript_EnterUnionRoom_Frlg::
 
 CableClub_EventScript_CheckPartyUnionRoomRequirements_Frlg::
 	specialvar VAR_RESULT, CountPartyNonEggMons
-	goto_if_lt VAR_RESULT, 2, CableClub_EventScript_NeedTwoMonsForUnionRoom
+	goto_if_lt VAR_RESULT, 2, CableClub_EventScript_NeedTwoMonsForUnionRoom_Frlg
 	specialvar VAR_RESULT, DoesPartyHaveEnigmaBerry
-	goto_if_eq VAR_RESULT, TRUE, CableClub_EventScript_NoEnigmaBerryInUnionRoom
+	goto_if_eq VAR_RESULT, TRUE, CableClub_EventScript_NoEnigmaBerryInUnionRoom_Frlg
 	setvar VAR_RESULT, TRUE
 	return
 
 CableClub_EventScript_NeedTwoMonsForUnionRoom_Frlg::
-	msgbox CableClub_Text_NeedTwoMonsForUnionRoom
+	msgbox CableClub_Text_NeedTwoMonsForUnionRoom_Frlg
 	goto EventScript_SetResultFalse
 	end
 
 CableClub_EventScript_NoEnigmaBerryInUnionRoom_Frlg::
-	msgbox CableClub_Text_NoEnigmaBerryInUnionRoom
+	msgbox CableClub_Text_NoEnigmaBerryInUnionRoom_Frlg
 	goto EventScript_SetResultFalse
 	end
 
 CableClub_EventScript_UnionRoomAdapterNotConnected_Frlg::
-	msgbox CableClub_Text_UnionRoomAdapterNotConnected
+	msgbox CableClub_Text_UnionRoomAdapterNotConnected_Frlg
 	release
 	return
 
 CableClub_EventScript_WirelessClubAttendant_Frlg::
 	lock
 	faceplayer
-	goto_if_unset FLAG_SYS_POKEDEX_GET, CableClub_EventScript_WirelessClubAdjustements
-	msgbox CableClub_Text_AskAboutLinking, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, CableClub_EventScript_DontAskAboutLinking
-	msgbox CableClub_Text_ExplainWirelessClub
+	goto_if_unset FLAG_SYS_POKEDEX_GET, CableClub_EventScript_WirelessClubAdjustements_Frlg
+	msgbox CableClub_Text_AskAboutLinking_Frlg, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, CableClub_EventScript_DontAskAboutLinking_Frlg
+	msgbox CableClub_Text_ExplainWirelessClub_Frlg
 	release
 	return
 
 CableClub_EventScript_DontAskAboutLinking_Frlg::
-	msgbox CableClub_Text_HopeYouEnjoyWirelessSystem
+	msgbox CableClub_Text_HopeYouEnjoyWirelessSystem_Frlg
 	release
 	return
 
 CableClub_EventScript_DirectCornerAttendant_Frlg::
 	lock
 	faceplayer
-	goto_if_unset FLAG_SYS_POKEDEX_GET, CableClub_EventScript_WirelessClubAdjustements
+	goto_if_unset FLAG_SYS_POKEDEX_GET, CableClub_EventScript_WirelessClubAdjustements_Frlg
 	specialvar VAR_RESULT, IsBadEggInParty
-	goto_if_eq VAR_RESULT, TRUE, CableClub_EventScript_AbortLinkPlayerHasBadEgg
+	goto_if_eq VAR_RESULT, TRUE, CableClub_EventScript_AbortLinkPlayerHasBadEgg_Frlg
 	specialvar VAR_RESULT, IsWirelessAdapterConnected
-	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_WelcomeToCableClub
-	message CableClub_Text_WelcomeWhichDirectCornerRoom
+	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_WelcomeToCableClub_Frlg
+	message CableClub_Text_WelcomeWhichDirectCornerRoom_Frlg
 	waitmessage
 	delay 15
-	goto CableClub_EventScript_DirectCornerSelectService
+	goto CableClub_EventScript_DirectCornerSelectService_Frlg
 	end
 
 CableClub_EventScript_DirectCornerSelectService_Frlg::
-	goto_if_unset FLAG_GOT_POWDER_JAR, CableClub_EventScript_DirectCornerNoBerry
+	goto_if_unset FLAG_GOT_POWDER_JAR, CableClub_EventScript_DirectCornerNoBerry_Frlg
 	multichoice 0, 0, MULTI_WIRELESS_NO_RECORD, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_WirelessTrade
-	case 1, CableClub_EventScript_WirelessBattleSelect
-	case 2, CableClub_EventScript_WirelessBerryCrush
+	case 0, CableClub_EventScript_WirelessTrade_Frlg
+	case 1, CableClub_EventScript_WirelessBattleSelect_Frlg
+	case 2, CableClub_EventScript_WirelessBerryCrush_Frlg
 	case 3, CableClub_EventScript_AbortLink_Frlg
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink_Frlg
 	end
@@ -841,170 +841,170 @@ CableClub_EventScript_DirectCornerSelectService_Frlg::
 CableClub_EventScript_DirectCornerNoBerry_Frlg::
 	multichoice 0, 0, MULTI_WIRELESS_NO_RECORD_BERRY, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_WirelessTrade
-	case 1, CableClub_EventScript_WirelessBattleSelect
+	case 0, CableClub_EventScript_WirelessTrade_Frlg
+	case 1, CableClub_EventScript_WirelessBattleSelect_Frlg
 	case 2, CableClub_EventScript_AbortLink_Frlg
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink_Frlg
 	end
 
 CableClub_EventScript_WirelessTrade_Frlg::
-	msgbox CableClub_Text_TradePokemon, MSGBOX_YESNO
+	msgbox CableClub_Text_TradePokemon_Frlg, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, CableClub_EventScript_AbortLink_Frlg
-	call CableClub_EventScript_CheckPartyTradeRequirements
+	call CableClub_EventScript_CheckPartyTradeRequirements_Frlg
 	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_AbortLink_Frlg
 	setvar VAR_0x8004, LINK_GROUP_TRADE
-	goto CableClub_EventScript_SaveAndChooseLinkLeader
+	goto CableClub_EventScript_SaveAndChooseLinkLeader_Frlg
 	end
 
 CableClub_EventScript_WirelessBattleSelect_Frlg::
-	message CableClub_Text_PlayWhichBattleMode
+	message CableClub_Text_PlayWhichBattleMode_Frlg
 	waitmessage
 	multichoice 0, 0, MULTI_BATTLE_MODE, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_WirelessSingleBattle
-	case 1, CableClub_EventScript_WirelessDoubleBattle
-	case 2, CableClub_EventScript_WirelessMultiBattle
-	case 3, CableClub_EventScript_WirelessBattleInfo
+	case 0, CableClub_EventScript_WirelessSingleBattle_Frlg
+	case 1, CableClub_EventScript_WirelessDoubleBattle_Frlg
+	case 2, CableClub_EventScript_WirelessMultiBattle_Frlg
+	case 3, CableClub_EventScript_WirelessBattleInfo_Frlg
 	case 4, CableClub_EventScript_AbortLink_Frlg
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink_Frlg
 	end
 
 CableClub_EventScript_WirelessSingleBattle_Frlg::
 	setvar VAR_0x8004, LINK_GROUP_SINGLE_BATTLE
-	goto CableClub_EventScript_SaveAndChooseLinkLeader
+	goto CableClub_EventScript_SaveAndChooseLinkLeader_Frlg
 	end
 
 CableClub_EventScript_WirelessDoubleBattle_Frlg::
 	special HasEnoughMonsForDoubleBattle
-	goto_if_ne VAR_RESULT, PLAYER_HAS_TWO_USABLE_MONS, CableClub_EventScript_TwoMonsNeededForWirelessDoubleBattle
+	goto_if_ne VAR_RESULT, PLAYER_HAS_TWO_USABLE_MONS, CableClub_EventScript_TwoMonsNeededForWirelessDoubleBattle_Frlg
 	setvar VAR_0x8004, LINK_GROUP_DOUBLE_BATTLE
-	goto CableClub_EventScript_SaveAndChooseLinkLeader
+	goto CableClub_EventScript_SaveAndChooseLinkLeader_Frlg
 	end
 
 CableClub_EventScript_TwoMonsNeededForWirelessDoubleBattle_Frlg::
-	msgbox CableClub_Text_NeedTwoMonsForDoubleBattle
-	goto CableClub_EventScript_WirelessBattleSelect
+	msgbox CableClub_Text_NeedTwoMonsForDoubleBattle_Frlg
+	goto CableClub_EventScript_WirelessBattleSelect_Frlg
 	end
 
 CableClub_EventScript_WirelessMultiBattle_Frlg::
 	setvar VAR_0x8004, LINK_GROUP_MULTI_BATTLE
-	goto CableClub_EventScript_SaveAndChooseLinkLeader
+	goto CableClub_EventScript_SaveAndChooseLinkLeader_Frlg
 	end
 
 CableClub_EventScript_WirelessBattleInfo_Frlg::
-	msgbox CableClub_Text_ExplainBattleModes
-	goto CableClub_EventScript_WirelessBattleSelect
+	msgbox CableClub_Text_ExplainBattleModes_Frlg
+	goto CableClub_EventScript_WirelessBattleSelect_Frlg
 	end
 
 CableClub_EventScript_WirelessBerryCrush_Frlg::
-	msgbox CableClub_Text_UseBerryCrush, MSGBOX_YESNO
+	msgbox CableClub_Text_UseBerryCrush_Frlg, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, CableClub_EventScript_AbortLink_Frlg
 	special HasAtLeastOneBerry
-	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_NeedBerryForBerryCrush
+	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_NeedBerryForBerryCrush_Frlg
 	setvar VAR_0x8004, LINK_GROUP_BERRY_CRUSH
-	goto CableClub_EventScript_SaveAndChooseLinkLeader
+	goto CableClub_EventScript_SaveAndChooseLinkLeader_Frlg
 	end
 
 CableClub_EventScript_NeedBerryForBerryCrush_Frlg::
-	msgbox CableClub_Text_NeedBerryForBerryCrush
-	goto CableClub_EventScript_DirectCornerSelectService
+	msgbox CableClub_Text_NeedBerryForBerryCrush_Frlg
+	goto CableClub_EventScript_DirectCornerSelectService_Frlg
 	end
 
 CableClub_EventScript_SaveAndChooseLinkLeader_Frlg::
 	call CableClubSaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink_Frlg
 	switch VAR_0x8004
-	case LINK_GROUP_TRADE, CableClub_EventScript_ChooseLinkLeaderFrom2
-	case LINK_GROUP_SINGLE_BATTLE, CableClub_EventScript_ChooseLinkLeaderFrom2
-	case LINK_GROUP_DOUBLE_BATTLE, CableClub_EventScript_ChooseLinkLeaderFrom2
-	case LINK_GROUP_MULTI_BATTLE, CableClub_EventScript_ChooseLinkLeaderFrom4
-	case LINK_GROUP_BERRY_CRUSH, CableClub_EventScript_ChooseLinkLeader
+	case LINK_GROUP_TRADE, CableClub_EventScript_ChooseLinkLeaderFrom2_Frlg
+	case LINK_GROUP_SINGLE_BATTLE, CableClub_EventScript_ChooseLinkLeaderFrom2_Frlg
+	case LINK_GROUP_DOUBLE_BATTLE, CableClub_EventScript_ChooseLinkLeaderFrom2_Frlg
+	case LINK_GROUP_MULTI_BATTLE, CableClub_EventScript_ChooseLinkLeaderFrom4_Frlg
+	case LINK_GROUP_BERRY_CRUSH, CableClub_EventScript_ChooseLinkLeader_Frlg
 	end
 
 CableClub_EventScript_ChooseLinkLeaderFrom2_Frlg::
 	textcolor NPC_TEXT_COLOR_NEUTRAL
-	message CableClub_Text_ChooseGroupLeaderOfTwo
+	message CableClub_Text_ChooseGroupLeaderOfTwo_Frlg
 	waitmessage
 	call EventScript_RestorePrevTextColor
 	multichoice 13, 6, MULTI_LINK_LEADER, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_TryJoinGroup2Players
-	case 1, CableClub_EventScript_TryLeadGroup2Players
+	case 0, CableClub_EventScript_TryJoinGroup2Players_Frlg
+	case 1, CableClub_EventScript_TryLeadGroup2Players_Frlg
 	case 2, CableClub_EventScript_AbortLink_Frlg
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink_Frlg
 	end
 
 CableClub_EventScript_TryLeadGroup2Players_Frlg::
-	call CableClub_EventScript_TryBecomeLinkLeader
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom
-	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderFrom2
-	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryLeadGroup2Players
+	call CableClub_EventScript_TryBecomeLinkLeader_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderFrom2_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryLeadGroup2Players_Frlg
 	release
 	return
 
 CableClub_EventScript_TryJoinGroup2Players_Frlg::
-	call CableClub_EventScript_TryJoinLinkGroup
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom
-	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderFrom2
-	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryJoinGroup2Players
+	call CableClub_EventScript_TryJoinLinkGroup_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderFrom2_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryJoinGroup2Players_Frlg
 	release
 	return
 
 CableClub_EventScript_ChooseLinkLeaderFrom4_Frlg::
 	textcolor NPC_TEXT_COLOR_NEUTRAL
-	message CableClub_Text_ChooseGroupLeaderOfFour
+	message CableClub_Text_ChooseGroupLeaderOfFour_Frlg
 	waitmessage
 	call EventScript_RestorePrevTextColor
 	multichoice 13, 6, MULTI_LINK_LEADER, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_TryJoinGroup4Players
-	case 1, CableClub_EventScript_TryLeadGroup4Players
+	case 0, CableClub_EventScript_TryJoinGroup4Players_Frlg
+	case 1, CableClub_EventScript_TryLeadGroup4Players_Frlg
 	case 2, CableClub_EventScript_AbortLink_Frlg
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink_Frlg
 	end
 
 CableClub_EventScript_TryLeadGroup4Players_Frlg::
-	call CableClub_EventScript_TryBecomeLinkLeader
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom
-	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderFrom4
-	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryLeadGroup4Players
+	call CableClub_EventScript_TryBecomeLinkLeader_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderFrom4_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryLeadGroup4Players_Frlg
 	release
 	return
 
 CableClub_EventScript_TryJoinGroup4Players_Frlg::
-	call CableClub_EventScript_TryJoinLinkGroup
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom
-	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderFrom4
-	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryJoinGroup4Players
+	call CableClub_EventScript_TryJoinLinkGroup_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderFrom4_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryJoinGroup4Players_Frlg
 	release
 	return
 
 CableClub_EventScript_ChooseLinkLeader_Frlg::
 	textcolor NPC_TEXT_COLOR_NEUTRAL
-	message CableClub_Text_ChooseGroupLeader
+	message CableClub_Text_ChooseGroupLeader_Frlg
 	waitmessage
 	call EventScript_RestorePrevTextColor
 	multichoice 13, 6, MULTI_LINK_LEADER, FALSE
 	switch VAR_RESULT
-	case 0, CableClub_EventScript_TryJoinGroupXPlayers
-	case 1, CableClub_EventScript_TryLeadGroupXPlayers
+	case 0, CableClub_EventScript_TryJoinGroupXPlayers_Frlg
+	case 1, CableClub_EventScript_TryLeadGroupXPlayers_Frlg
 	case 2, CableClub_EventScript_AbortLink_Frlg
 	case MULTI_B_PRESSED, CableClub_EventScript_AbortLink_Frlg
 	end
 
 CableClub_EventScript_TryLeadGroupXPlayers_Frlg::
-	call CableClub_EventScript_TryBecomeLinkLeader
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom
-	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeader
-	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryLeadGroupXPlayers
+	call CableClub_EventScript_TryBecomeLinkLeader_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeader_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryLeadGroupXPlayers_Frlg
 	release
 	return
 
 CableClub_EventScript_TryJoinGroupXPlayers_Frlg::
-	call CableClub_EventScript_TryJoinLinkGroup
-	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom
-	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeader
-	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryJoinGroupXPlayers
+	call CableClub_EventScript_TryJoinLinkGroup_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterWirelessLinkRoom_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeader_Frlg
+	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryJoinGroupXPlayers_Frlg
 	release
 	return
 
@@ -1019,12 +1019,12 @@ CableClub_EventScript_TryJoinLinkGroup_Frlg::
 	return
 
 CableClub_EventScript_EnterWirelessLinkRoom_Frlg::
-	messageautoscroll CableClub_Text_DirectYouToYourRoom
+	messageautoscroll CableClub_Text_DirectYouToYourRoom_Frlg
 	waitmessage
 	delay 60
 	closemessage
 	copyvar VAR_0x8007, VAR_LAST_TALKED
-	call CableClub_EventScript_OpenDirectCornerBarrier
+	call CableClub_EventScript_OpenDirectCornerBarrier_Frlg
 	special DrawWholeMapView
 	playse SE_CLICK
 	delay 60
@@ -1046,18 +1046,18 @@ CableClub_EventScript_EnterWirelessLinkRoom_Frlg::
 
 CableClub_EventScript_ShowWirelessCommunicationScreen_Frlg::
 	lockall
-	goto_if_unset FLAG_SYS_POKEDEX_GET, CableClub_EventScript_NotReadyYet
+	goto_if_unset FLAG_SYS_POKEDEX_GET, CableClub_EventScript_NotReadyYet_Frlg
 	specialvar VAR_RESULT, IsWirelessAdapterConnected
-	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_AdapterNotConnected
+	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_AdapterNotConnected_Frlg
 	fadescreen FADE_TO_BLACK
 	special ShowWirelessCommunicationScreen
 	waitstate
-	msgbox CableClub_Text_ParticipantsStepUpToCounter
+	msgbox CableClub_Text_ParticipantsStepUpToCounter_Frlg
 	releaseall
 	end
 
 CableClub_EventScript_AdapterNotConnected_Frlg::
-	msgbox CableClub_Text_AdapterNotConnected
+	msgbox CableClub_Text_AdapterNotConnected_Frlg
 	releaseall
 	end
 
@@ -1167,7 +1167,7 @@ CableClub_EventScript_PlayDodrioBerryPicking_Frlg::
 
 CableClub_EventScript_ChooseLinkLeaderMinigame_Frlg::
 	textcolor NPC_TEXT_COLOR_NEUTRAL
-	message CableClub_Text_ChooseGroupLeader
+	message CableClub_Text_ChooseGroupLeader_Frlg
 	waitmessage
 	call EventScript_RestorePrevTextColor
 	multichoice 13, 6, MULTI_LINK_LEADER, FALSE
@@ -1179,7 +1179,7 @@ CableClub_EventScript_ChooseLinkLeaderMinigame_Frlg::
 	end
 
 CableClub_EventScript_TryBecomeMinigameLinkLeader_Frlg::
-	call CableClub_EventScript_TryBecomeLinkLeader
+	call CableClub_EventScript_TryBecomeLinkLeader_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterMinigame_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderMinigame_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryBecomeMinigameLinkLeader_Frlg
@@ -1187,7 +1187,7 @@ CableClub_EventScript_TryBecomeMinigameLinkLeader_Frlg::
 	return
 
 CableClub_EventScript_TryJoinMinigameLinkGroup_Frlg::
-	call CableClub_EventScript_TryJoinLinkGroup
+	call CableClub_EventScript_TryJoinLinkGroup_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterMinigame_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_FAILED, CableClub_EventScript_ChooseLinkLeaderMinigame_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_RETRY_ROLE_ASSIGN, CableClub_EventScript_TryJoinMinigameLinkGroup_Frlg

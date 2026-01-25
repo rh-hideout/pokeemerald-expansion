@@ -1585,15 +1585,27 @@ EventScript_CableClub_SetVarResult0::
 	return
 
 Common_EventScript_UnionRoomAttendant::
+#if IS_FRLG
+	call CableClub_EventScript_UnionRoomAttendant_Frlg
+#else
 	call CableClub_EventScript_UnionRoomAttendant
+#endif
 	end
 
 Common_EventScript_WirelessClubAttendant::
+#if IS_FRLG
+	call CableClub_EventScript_WirelessClubAttendant_Frlg
+#else
 	call CableClub_EventScript_WirelessClubAttendant
+#endif
 	end
 
 Common_EventScript_DirectCornerAttendant::
+#if IS_FRLG
+	call CableClub_EventScript_DirectCornerAttendant_Frlg
+#else
 	call CableClub_EventScript_DirectCornerAttendant
+#endif
 	end
 
 Common_EventScript_RemoveStaticPokemon::
