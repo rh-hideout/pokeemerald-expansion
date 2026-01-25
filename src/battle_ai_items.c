@@ -185,7 +185,7 @@ bool32 ShouldUseItem(u32 battler)
             if (gBattleStruct->battlerState[battler].itemPartyId == PARTY_SIZE)
                 gBattleStruct->battlerState[battler].itemPartyId = gBattlerPartyIndexes[battler];
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
-            gBattleStruct->chosenItem[battler] = item;
+            gBattleStruct->battlerState[battler].chosenItem = item;
             gBattleHistory->trainerItems[itemIndex] = 0;
             return shouldUse;
         }

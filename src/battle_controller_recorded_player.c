@@ -377,10 +377,10 @@ static void RecordedPlayerHandleChooseItem(u32 battler)
 {
     u8 byte1 = RecordedBattle_GetBattlerAction(RECORDED_ITEM_ID, battler);
     u8 byte2 = RecordedBattle_GetBattlerAction(RECORDED_ITEM_ID, battler);
-    gBattleStruct->chosenItem[battler] = (byte1 << 8) | byte2;
+    gBattleStruct->battlerState[battler].chosenItem = (byte1 << 8) | byte2;
     gBattleStruct->battlerState[battler].itemPartyId = RecordedBattle_GetBattlerAction(RECORDED_ITEM_TARGET, battler);
     gBattleStruct->battlerState[battler].itemMoveSlot = RecordedBattle_GetBattlerAction(RECORDED_ITEM_MOVE, battler);
-    BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->chosenItem[battler]);
+    BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->battlerState[battler].chosenItem);
     BtlController_Complete(battler);
 }
 
