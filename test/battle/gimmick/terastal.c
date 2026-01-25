@@ -327,33 +327,6 @@ SINGLE_BATTLE_TEST("(TERA) Reflect Type fails if used by a Terastallized Pokemon
     }
 }
 
-SINGLE_BATTLE_TEST("(TERA) Conversion fails if used by a Terastallized Pokemon")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_PSYCHIC); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_CONVERSION, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Conversion!");
-        MESSAGE("But it failed!");
-    }
-}
-
-SINGLE_BATTLE_TEST("(TERA) Conversion2 fails if used by a Terastallized Pokemon")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_PSYCHIC); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_CONVERSION_2, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Conversion 2!");
-        MESSAGE("But it failed!");
-    }
-}
-
 SINGLE_BATTLE_TEST("(TERA) Reflect Type copies a Terastallized Pokemon's Tera Type")
 {
     GIVEN {
@@ -420,8 +393,8 @@ SINGLE_BATTLE_TEST("(TERA) Double Shock does not remove the user's Electric type
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); MOVE(opponent, MOVE_RECOVER); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_RECOVER); }
-        TURN { SWITCH(player, 0); MOVE(opponent, MOVE_RECOVER); }
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); MOVE(opponent, MOVE_RECOVER); }
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); }
     } SCENE {
@@ -506,26 +479,6 @@ SINGLE_BATTLE_TEST("(TERA) Revelation Dance uses a Stellar-type Pokemon's base t
     }
 }
 
-#if B_UPDATED_CONVERSION_2 < GEN_5
-SINGLE_BATTLE_TEST("(TERA) Conversion2 fails if last hit by a Stellar-type move")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
-        TURN { MOVE(opponent, MOVE_CONVERSION_2); }
-    } SCENE {
-        // turn 1
-        MESSAGE("Wobbuffet used Tera Blast!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
-        // turn 2
-        MESSAGE("The opposing Wobbuffet used Conversion 2!");
-        MESSAGE("But it failed!");
-    }
-}
-#endif
-
 SINGLE_BATTLE_TEST("(TERA) Roost does not remove Flying-type ground immunity when Terastallized into the Stellar type")
 {
     GIVEN {
@@ -606,14 +559,14 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar type boosts all moves
     s16 damage[4];
     GIVEN {
         ASSUME(GetMovePower(MOVE_MEGA_DRAIN) == 40);
-        ASSUME(GetMovePower(MOVE_BUBBLE) == 40);
+        ASSUME(GetMovePower(MOVE_WATER_GUN) == 40);
         PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MEGA_DRAIN); }
         TURN { MOVE(player, MOVE_MEGA_DRAIN, gimmick: GIMMICK_TERA); }
         TURN { MOVE(player, MOVE_MEGA_DRAIN); }
-        TURN { MOVE(player, MOVE_BUBBLE); }
+        TURN { MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
         // turn 1
         MESSAGE("Wobbuffet used Mega Drain!");
@@ -628,8 +581,8 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar type boosts all moves
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEGA_DRAIN, player);
         HP_BAR(opponent, captureDamage: &damage[2]);
         // turn 4
-        MESSAGE("Wobbuffet used Bubble!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUBBLE, player);
+        MESSAGE("Wobbuffet used Water Gun!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, player);
         HP_BAR(opponent, captureDamage: &damage[3]);
     } THEN {
         // The jump from 40 BP to 72 BP (60 * 1.2x) is a 1.8x boost.
@@ -639,17 +592,21 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar type boosts all moves
     }
 }
 
-SINGLE_BATTLE_TEST("(TERA) Protean cannot change the type of a Terastallized Pokemon")
+SINGLE_BATTLE_TEST("(TERA) Protean/Libero cannot change the type of a Terastallized Pokemon")
 {
+    u32 ability, species;
+    PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_GRENINJA; }
+    PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
-        PLAYER(SPECIES_GRENINJA) { Ability(ABILITY_PROTEAN); TeraType(TYPE_GRASS); }
+        PLAYER(species) { Ability(ability); TeraType(TYPE_GRASS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BUBBLE, gimmick: GIMMICK_TERA);
                MOVE(opponent, MOVE_EMBER); }
     } SCENE {
-        MESSAGE("Greninja used Bubble!");
-        MESSAGE("The opposing Wobbuffet used Ember!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUBBLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         MESSAGE("It's super effective!");
     }
 }
@@ -804,25 +761,25 @@ SINGLE_BATTLE_TEST("(TERA) Transformed Pokémon can't Terastalize")
 
 SINGLE_BATTLE_TEST("(TERA) Pokemon with Tera forms change upon Terastallizing")
 {
-    u32 species, targetSpecies;
-    PARAMETRIZE { species = SPECIES_OGERPON_TEAL;             targetSpecies = SPECIES_OGERPON_TEAL_TERA; }
-    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;       targetSpecies = SPECIES_OGERPON_WELLSPRING_TERA; }
-    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME;      targetSpecies = SPECIES_OGERPON_HEARTHFLAME_TERA; }
-    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE;      targetSpecies = SPECIES_OGERPON_CORNERSTONE_TERA; }
-    PARAMETRIZE { species = SPECIES_TERAPAGOS_TERASTAL;       targetSpecies = SPECIES_TERAPAGOS_STELLAR; }
+    u32 species, target, item;
+    PARAMETRIZE { species = SPECIES_OGERPON_TEAL;        target = SPECIES_OGERPON_TEAL_TERA;        item = ITEM_NONE; }
+    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;  target = SPECIES_OGERPON_WELLSPRING_TERA;  item = ITEM_WELLSPRING_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; target = SPECIES_OGERPON_HEARTHFLAME_TERA; item = ITEM_HEARTHFLAME_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; target = SPECIES_OGERPON_CORNERSTONE_TERA; item = ITEM_CORNERSTONE_MASK; }
+    PARAMETRIZE { species = SPECIES_TERAPAGOS_TERASTAL;  target = SPECIES_TERAPAGOS_STELLAR;        item = ITEM_NONE; }
     GIVEN {
-        PLAYER(species);
+        PLAYER(species) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } THEN {
-        EXPECT_EQ(player->species, targetSpecies);
+        EXPECT_EQ(player->species, target);
     }
 }
 
 SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly")
 {
-    u32 type;
+    enum Type type;
     PARAMETRIZE { type = TYPE_NONE; }
     PARAMETRIZE { type = TYPE_NORMAL; }
     PARAMETRIZE { type = TYPE_FIGHTING; }
@@ -854,7 +811,7 @@ SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly")
 
 SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly - Opponent")
 {
-    u32 type;
+    enum Type type;
     PARAMETRIZE { type = TYPE_NONE; }
     PARAMETRIZE { type = TYPE_NORMAL; }
     PARAMETRIZE { type = TYPE_FIGHTING; }

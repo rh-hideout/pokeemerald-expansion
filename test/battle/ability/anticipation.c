@@ -10,9 +10,21 @@ SINGLE_BATTLE_TEST("Anticipation causes notifies if an opponent has a super-effe
         PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CLOSE_COMBAT, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ANTICIPATION);
+    }
+}
+
+SINGLE_BATTLE_TEST("Anticipation does not trigger even when a move is super effective on only 1 type")
+{
+    GIVEN {
+        PLAYER(SPECIES_WHISCASH) { Ability(ABILITY_ANTICIPATION); }
+        OPPONENT(SPECIES_PIKACHU) { Moves(MOVE_CELEBRATE, MOVE_THUNDERBOLT); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
 }
 
@@ -23,7 +35,7 @@ SINGLE_BATTLE_TEST("Anticipation causes notifies if an opponent has a One-hit KO
         PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FISSURE, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
@@ -36,7 +48,7 @@ SINGLE_BATTLE_TEST("Anticipation treats Self-Destruct and Explosion like all oth
         PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EXPLOSION, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
@@ -51,7 +63,7 @@ SINGLE_BATTLE_TEST("Anticipation doesn't consider Normalize into their effective
         PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_DELCATTY) { Ability(ABILITY_NORMALIZE); Moves(MOVE_CLOSE_COMBAT, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
@@ -59,28 +71,25 @@ SINGLE_BATTLE_TEST("Anticipation doesn't consider Normalize into their effective
 
 SINGLE_BATTLE_TEST("Anticipation doesn't consider Scrappy into their effectiveness (Gen5+)")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveType(MOVE_CLOSE_COMBAT) == TYPE_FIGHTING);
-        ASSUME(GetSpeciesType(SPECIES_EEVEE, 0) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_EEVEE, 1) == TYPE_NORMAL);
-        PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
-        OPPONENT(SPECIES_KANGASKHAN) { Ability(ABILITY_SCRAPPY); Moves(MOVE_CLOSE_COMBAT, MOVE_TRICK_OR_TREAT, MOVE_SKILL_SWAP, MOVE_CELEBRATE); }
+        ASSUME(GetSpeciesType(SPECIES_DOUBLADE, 0) == TYPE_STEEL);
+        ASSUME(GetSpeciesType(SPECIES_DOUBLADE, 1) == TYPE_GHOST);
+        PLAYER(SPECIES_WORMADAM_TRASH) { Ability(ABILITY_ANTICIPATION); Moves(MOVE_SKILL_SWAP, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_KANGASKHAN) { Ability(ABILITY_SCRAPPY); Moves(MOVE_CLOSE_COMBAT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_DOUBLADE) { Ability(ABILITY_NO_GUARD); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TRICK_OR_TREAT); MOVE(player, MOVE_SKILL_SWAP); }
-        TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
+        TURN { MOVE(player, MOVE_SKILL_SWAP, target: opponent); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
+        TURN { SWITCH(opponent, 0); }
     } SCENE {
-        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_OR_TREAT, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
-        NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
+        NOT ABILITY_POPUP(opponent, ABILITY_ANTICIPATION);
     }
 }
 
 SINGLE_BATTLE_TEST("Anticipation doesn't consider Gravity into their effectiveness (Gen5+)")
 {
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_SKARMORY);
         OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); Moves(MOVE_EARTHQUAKE, MOVE_GRAVITY, MOVE_SCRATCH, MOVE_POUND); }
@@ -95,7 +104,8 @@ SINGLE_BATTLE_TEST("Anticipation doesn't consider Gravity into their effectivene
 
 SINGLE_BATTLE_TEST("Anticipation counts Counter, Metal Burst or Mirror Coat as attacking moves of their types (Gen5+)")
 {
-    u32 move, species, typeAtk, typeDef;
+    u32 move, species;
+    enum Type typeAtk, typeDef;
     PARAMETRIZE { move = MOVE_COUNTER; species = SPECIES_RATICATE; typeAtk = TYPE_FIGHTING; typeDef = TYPE_NORMAL; }
     PARAMETRIZE { move = MOVE_METAL_BURST; species = SPECIES_ROGGENROLA; typeAtk = TYPE_STEEL; typeDef = TYPE_ROCK; }
     PARAMETRIZE { move = MOVE_MIRROR_COAT; species = SPECIES_NIDORINO; typeAtk = TYPE_PSYCHIC; typeDef = TYPE_POISON; }
@@ -191,7 +201,7 @@ SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (N
         PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_ARCEUS) { Item(ITEM_FIST_PLATE); Moves(MOVE_JUDGMENT, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
@@ -224,7 +234,7 @@ SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (N
         PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEPPA_BERRY); Moves(MOVE_NATURAL_GIFT, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
@@ -239,7 +249,7 @@ SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (N
         PLAYER(SPECIES_FERROTHORN) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_GENESECT) { Item(ITEM_BURN_DRIVE); Moves(MOVE_TECHNO_BLAST, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
@@ -255,7 +265,7 @@ SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (N
         PLAYER(SPECIES_FERROTHORN) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_ORICORIO_BAILE) { Moves(MOVE_REVELATION_DANCE, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
@@ -270,7 +280,7 @@ SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (N
         PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_SILVALLY) { Item(ITEM_FIGHTING_MEMORY); Moves(MOVE_MULTI_ATTACK, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
@@ -302,7 +312,7 @@ SINGLE_BATTLE_TEST("Anticipation does not consider ate-abilities")
         PLAYER(SPECIES_WORMADAM_PLANT) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_AURORUS) { Ability(ABILITY_REFRIGERATE); Moves(MOVE_GROWL, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
@@ -337,7 +347,7 @@ SINGLE_BATTLE_TEST("Anticipation considers Inverse Battle types")
         PLAYER(SPECIES_FERROTHORN) { Ability(ABILITY_ANTICIPATION); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_GROWL, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }

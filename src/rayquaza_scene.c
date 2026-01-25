@@ -5,7 +5,6 @@
 #include "task.h"
 #include "graphics.h"
 #include "bg.h"
-#include "main.h"
 #include "malloc.h"
 #include "palette.h"
 #include "scanline_effect.h"
@@ -1287,7 +1286,7 @@ static const struct BgTemplate sBgTemplates_ChasesAway[] =
     }
 };
 
-void DoRayquazaScene(u8 animId, bool8 endEarly, void (*exitCallback)(void))
+void DoRayquazaScene(u8 animId, bool8 endEarly, MainCallback exitCallback)
 {
     sRayScene = AllocZeroed(sizeof(*sRayScene));
     sRayScene->animId = animId;

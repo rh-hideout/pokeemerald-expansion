@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a single battle", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a single battle",
 
 DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle", s16 damageLeft, s16 damageRight)
 {
-    u32 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE { abilityLeft = ABILITY_CONTRARY; abilityRight = ABILITY_CONTRARY; }
     PARAMETRIZE { abilityLeft = ABILITY_TANGLED_FEET; abilityRight = ABILITY_TANGLED_FEET; }
@@ -78,7 +78,7 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
 
 SINGLE_BATTLE_TEST("Contrary raises stats after using a move which would normally lower them: Overheat", s16 damageBefore, s16 damageAfter)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -122,7 +122,7 @@ SINGLE_BATTLE_TEST("Contrary raises stats after using a move which would normall
 
 SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normally raise it: Swords Dance", s16 damageBefore, s16 damageAfter)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -159,7 +159,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
 
 SINGLE_BATTLE_TEST("Contrary raises a stat after using a move which would normally lower it: Growl", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -190,7 +190,7 @@ SINGLE_BATTLE_TEST("Contrary raises a stat after using a move which would normal
 
 SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normally raise it: Belly Drum", s16 damageBefore, s16 damageAfter)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -242,4 +242,49 @@ SINGLE_BATTLE_TEST("Sticky Web raises Speed by 1 for Contrary mon on switch-in")
     }
 }
 
-TO_DO_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")
+AI_SINGLE_BATTLE_TEST("AI sees Contrary-effected moves correctly in MoveEffectInPlus instead of as a neutral effect")
+{
+    GIVEN{
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_HERACROSS) {
+            Level(44);
+            HP(1);
+            Speed(5);
+            Nature(NATURE_ADAMANT);
+            Item(ITEM_LOADED_DICE);
+            Moves(MOVE_PIN_MISSILE);
+        }
+        OPPONENT(SPECIES_SERPERIOR) {
+            Level(44);
+            Speed(10);
+            Nature(NATURE_TIMID);
+            Ability(ABILITY_CONTRARY);
+            Moves(MOVE_DRAGON_PULSE, MOVE_SPIN_OUT, MOVE_HIDDEN_POWER, MOVE_GLARE);
+        }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_PIN_MISSILE);
+            EXPECT_MOVE(opponent, MOVE_SPIN_OUT); // previously all 107, now sees speed can rise w/ Contrary
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, opponent);
+        MESSAGE("2 sent out Snivy!");
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}

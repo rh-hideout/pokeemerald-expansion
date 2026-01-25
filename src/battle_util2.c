@@ -132,6 +132,7 @@ u32 BattlePalace_TryEscapeStatus(u8 battler)
                 if (UproarWakeUpCheck(battler))
                 {
                     // Wake up from Uproar
+                    gEffectBattler = battler;
                     gBattleMons[battler].status1 &= ~(STATUS1_SLEEP);
                     gBattleMons[battler].volatiles.nightmare = FALSE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP_UPROAR;

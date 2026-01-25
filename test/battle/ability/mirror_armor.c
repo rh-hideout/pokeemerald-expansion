@@ -5,15 +5,15 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
 {
     u16 move, statId;
 
-    PARAMETRIZE { move = MOVE_LEER; statId = STAT_DEF; }
-    PARAMETRIZE { move = MOVE_GROWL; statId = STAT_ATK; }
+    PARAMETRIZE { move = MOVE_LEER;        statId = STAT_DEF; }
+    PARAMETRIZE { move = MOVE_GROWL;       statId = STAT_ATK; }
     PARAMETRIZE { move = MOVE_SWEET_SCENT; statId = STAT_EVASION; }
     PARAMETRIZE { move = MOVE_SAND_ATTACK; statId = STAT_ACC; }
-    PARAMETRIZE { move = MOVE_CONFIDE; statId = STAT_SPATK; }
-    PARAMETRIZE { move = MOVE_FAKE_TEARS; statId = STAT_SPDEF; }
+    PARAMETRIZE { move = MOVE_CONFIDE;     statId = STAT_SPATK; }
+    PARAMETRIZE { move = MOVE_FAKE_TEARS;  statId = STAT_SPDEF; }
 
     GIVEN {
-        PLAYER(SPECIES_CORVIKNIGHT) {Ability(ABILITY_MIRROR_ARMOR);}
+        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -29,7 +29,11 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
             MESSAGE("The opposing Wynaut's Attack fell!");
             break;
         case STAT_EVASION:
-            MESSAGE("The opposing Wynaut's evasiveness harshly fell!");
+            if (GetMoveEffect(move) == EFFECT_EVASION_DOWN_2) {
+                MESSAGE("The opposing Wynaut's evasiveness harshly fell!");
+            } else {
+                MESSAGE("The opposing Wynaut's evasiveness fell!");
+            }
             break;
         case STAT_ACC:
             MESSAGE("The opposing Wynaut's accuracy fell!");
@@ -43,7 +47,7 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
         }
     } THEN {
         EXPECT_EQ(player->statStages[statId], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(opponent->statStages[statId], (statId == STAT_SPDEF || statId == STAT_EVASION) ? DEFAULT_STAT_STAGE - 2 : DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->statStages[statId], (statId == STAT_SPDEF || (statId == STAT_EVASION && GetMoveEffect(move) == EFFECT_EVASION_DOWN_2)) ? DEFAULT_STAT_STAGE - 2 : DEFAULT_STAT_STAGE - 1);
     }
 }
 
@@ -125,8 +129,8 @@ SINGLE_BATTLE_TEST("Mirror Armor doesn't lower the stats of an attacking Pokemon
 SINGLE_BATTLE_TEST("Mirror Armor raises the stat of an attacking Pokemon with Contrary")
 {
     GIVEN {
-        PLAYER(SPECIES_CORVIKNIGHT) {Ability(ABILITY_MIRROR_ARMOR);}
-        OPPONENT(SPECIES_SHUCKLE) {Ability(ABILITY_CONTRARY);}
+        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+        OPPONENT(SPECIES_SHUCKLE) { Ability(ABILITY_CONTRARY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_LEER); }
     } SCENE {
@@ -143,7 +147,7 @@ SINGLE_BATTLE_TEST("Mirror Armor raises the stat of an attacking Pokemon with Co
 SINGLE_BATTLE_TEST("Mirror Armor doesn't lower the stat of the attacking Pokemon if it is already at -6")
 {
     GIVEN {
-        PLAYER(SPECIES_CORVIKNIGHT) {Ability(ABILITY_MIRROR_ARMOR);}
+        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_SCREECH); }
@@ -173,15 +177,15 @@ DOUBLE_BATTLE_TEST("Mirror Armor lowers Speed of the partner Pokemon after Court
         ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_CORVIKNIGHT) {Ability(ABILITY_MIRROR_ARMOR); Item(ITEM_IRON_BALL); }
+        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); Item(ITEM_IRON_BALL); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_STICKY_WEB); }
         TURN { MOVE(opponentLeft, MOVE_COURT_CHANGE); }
-        TURN { SWITCH(playerRight, 2);}
-        TURN { }
+        TURN { SWITCH(playerRight, 2); }
+        TURN {}
     } SCENE {
         MESSAGE("Wobbuffet used Sticky Web!");
         MESSAGE("The opposing Wynaut used Court Change!");

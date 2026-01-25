@@ -3,7 +3,8 @@
 
 DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh raises Attack by one stage after directly causing a Pokemon to faint")
 {
-    u32 species = 0, ability = 0, abilityPopUp = 0;
+    u32 species = 0, abilityPopUp = 0;
+    enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_SALAMENCE;   ability = ABILITY_MOXIE;            abilityPopUp = ABILITY_MOXIE;          }
     PARAMETRIZE { species = SPECIES_GLASTRIER;   ability = ABILITY_CHILLING_NEIGH;   abilityPopUp = ABILITY_CHILLING_NEIGH; }
     PARAMETRIZE { species = SPECIES_CALYREX_ICE; ability = ABILITY_AS_ONE_ICE_RIDER; abilityPopUp = ABILITY_CHILLING_NEIGH; }
@@ -15,7 +16,7 @@ DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh raises Attack by one stage after direct
         OPPONENT(SPECIES_ABRA) { HP(1); }
         OPPONENT(SPECIES_ABRA);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); SEND_OUT(opponentLeft, 2);  }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         MESSAGE("The opposing Glalie fainted!");
@@ -36,7 +37,8 @@ DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh raises Attack by one stage after direct
 
 DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger if Pokemon faint to indirect damage or damage from other Pokemon")
 {
-    u32 species = 0, ability = 0, abilityPopUp = 0;
+    u32 species = 0, abilityPopUp = 0;
+    enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_SALAMENCE;   ability = ABILITY_MOXIE;            abilityPopUp = ABILITY_MOXIE;          }
     PARAMETRIZE { species = SPECIES_GLASTRIER;   ability = ABILITY_CHILLING_NEIGH;   abilityPopUp = ABILITY_CHILLING_NEIGH; }
     PARAMETRIZE { species = SPECIES_CALYREX_ICE; ability = ABILITY_AS_ONE_ICE_RIDER; abilityPopUp = ABILITY_CHILLING_NEIGH; }
@@ -47,7 +49,7 @@ DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger if Pokemon faint to in
         OPPONENT(SPECIES_ABRA) { HP(1); }
         OPPONENT(SPECIES_ABRA);
     } WHEN {
-        TURN { MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentRight); SEND_OUT(opponentLeft, 2);  }
+        TURN { MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentRight); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         int i;
 
@@ -73,7 +75,8 @@ DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger if Pokemon faint to in
 
 SINGLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger when already at maximum Attack stage")
 {
-    u32 species = 0, ability = 0, abilityPopUp = 0;
+    u32 species = 0, abilityPopUp = 0;
+    enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_SALAMENCE;   ability = ABILITY_MOXIE;            abilityPopUp = ABILITY_MOXIE;          }
     PARAMETRIZE { species = SPECIES_GLASTRIER;   ability = ABILITY_CHILLING_NEIGH;   abilityPopUp = ABILITY_CHILLING_NEIGH; }
     PARAMETRIZE { species = SPECIES_CALYREX_ICE; ability = ABILITY_AS_ONE_ICE_RIDER; abilityPopUp = ABILITY_CHILLING_NEIGH; }
@@ -111,7 +114,8 @@ SINGLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger when already at maximu
 DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh does not increase damage done by the same move that causes another Pokemon to faint")
 {
     s16 damage[2];
-    u32 species = 0, ability = 0, abilityPopUp = 0;
+    u32 species = 0, abilityPopUp = 0;
+    enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_SALAMENCE;   ability = ABILITY_MOXIE;            abilityPopUp = ABILITY_MOXIE;          }
     PARAMETRIZE { species = SPECIES_GLASTRIER;   ability = ABILITY_CHILLING_NEIGH;   abilityPopUp = ABILITY_CHILLING_NEIGH; }
     PARAMETRIZE { species = SPECIES_CALYREX_ICE; ability = ABILITY_AS_ONE_ICE_RIDER; abilityPopUp = ABILITY_CHILLING_NEIGH; }

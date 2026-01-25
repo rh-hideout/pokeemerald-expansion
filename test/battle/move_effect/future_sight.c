@@ -1,10 +1,18 @@
 #include "global.h"
 #include "test/battle.h"
 
+#if B_UPDATED_MOVE_DATA >= GEN_6
+    #define FUTURE_SIGHT_EQUIVALENT MOVE_SEED_FLARE /* 120 power */
+#elif B_UPDATED_MOVE_DATA >= GEN_5
+    #define FUTURE_SIGHT_EQUIVALENT MOVE_DYNAMAX_CANNON /* 100 power */
+#else
+    #define FUTURE_SIGHT_EQUIVALENT MOVE_EXTRASENSORY /* 80 power */
+#endif
+
 ASSUMPTIONS
 {
-    ASSUME(GetMovePower(MOVE_SEED_FLARE) == GetMovePower(MOVE_FUTURE_SIGHT));
-    ASSUME(GetMoveCategory(MOVE_SEED_FLARE) == GetMoveCategory(MOVE_FUTURE_SIGHT));
+    ASSUME(GetMovePower(FUTURE_SIGHT_EQUIVALENT) == GetMovePower(MOVE_FUTURE_SIGHT));
+    ASSUME(GetMoveCategory(FUTURE_SIGHT_EQUIVALENT) == GetMoveCategory(MOVE_FUTURE_SIGHT));
     ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
     ASSUME(GetMovePower(MOVE_FUTURE_SIGHT) > 0);
 }
@@ -23,13 +31,13 @@ SINGLE_BATTLE_TEST("Future Sight uses Sp. Atk stat of the original user without 
         PLAYER(SPECIES_RAICHU) { Item(item); }
         OPPONENT(SPECIES_REGICE);
     } WHEN {
-        TURN { MOVE(player, MOVE_SEED_FLARE, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
+        TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(player, 1); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SEED_FLARE, player);
+        ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent, captureDamage: &seedFlareDmg);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         MESSAGE("The opposing Regice took the Future Sight attack!");
@@ -49,13 +57,13 @@ SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if 
         PLAYER(SPECIES_RAICHU) { Item(ITEM_LIFE_ORB); }
         OPPONENT(SPECIES_REGICE);
     } WHEN {
-        TURN { MOVE(player, MOVE_SEED_FLARE, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
+        TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(player, 1); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SEED_FLARE, player);
+        ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent, captureDamage: &seedFlareDmg);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         MESSAGE("The opposing Regice took the Future Sight attack!");
@@ -77,13 +85,13 @@ SINGLE_BATTLE_TEST("Future Sight receives STAB from party mon (Gen 5+)")
         PLAYER(SPECIES_RAICHU);
         OPPONENT(SPECIES_REGICE);
     } WHEN {
-        TURN { MOVE(player, MOVE_SEED_FLARE, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
+        TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(player, 1); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SEED_FLARE, player);
+        ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent, captureDamage: &seedFlareDmg);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         HP_BAR(opponent, captureDamage: &futureSightDmg);
@@ -100,13 +108,13 @@ SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
         PLAYER(SPECIES_RAICHU);
         OPPONENT(SPECIES_HOUNDOOM);
     } WHEN {
-        TURN { MOVE(player, MOVE_SEED_FLARE, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
+        TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { SWITCH(player, 1); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SEED_FLARE, player);
+        ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         MESSAGE("The opposing Houndoom took the Future Sight attack!");
@@ -128,7 +136,7 @@ SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is 
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_MEMENTO); SEND_OUT(opponent, 1); }
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
@@ -150,7 +158,7 @@ SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints by residual d
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_WRAP); SEND_OUT(opponent, 1); }
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
@@ -170,8 +178,8 @@ SINGLE_BATTLE_TEST("Future Sight breaks Focus Sash and doesn't make the holder e
         OPPONENT(SPECIES_PIDGEY) { Level(1); Item(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
         TURN { MOVE(player, MOVE_PSYCHIC); }
     } SCENE {
         MESSAGE("The opposing Pidgey hung on using its Focus Sash!");

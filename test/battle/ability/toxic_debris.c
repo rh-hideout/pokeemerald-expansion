@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side if hit b
 {
     u32 move;
 
-    PARAMETRIZE { move = MOVE_SCRATCH;}
-    PARAMETRIZE { move = MOVE_SWIFT;}
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_SWIFT; }
 
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }
@@ -118,5 +118,25 @@ SINGLE_BATTLE_TEST("Air Balloon is popped after Toxic Debris activates")
         ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
         MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
         MESSAGE("Glimmora's Air Balloon popped!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even when hit by an ally")
+{
+    struct BattlePokemon *user = NULL;
+
+    PARAMETRIZE{ user = opponentLeft; }
+    PARAMETRIZE{ user = opponentRight; }
+    PARAMETRIZE{ user = playerRight; }
+    GIVEN {
+        PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }
+        PLAYER(SPECIES_WYNAUT) { }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { }
+    } WHEN {
+        TURN { MOVE(user, MOVE_SCRATCH, target: playerLeft); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_TOXIC_DEBRIS);
+        MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
     }
 }

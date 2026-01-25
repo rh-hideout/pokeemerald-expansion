@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Neutralizing Gas")
         PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Item(item); }
         OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");

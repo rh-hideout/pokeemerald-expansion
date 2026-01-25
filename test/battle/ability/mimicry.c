@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Mimicry changes the battler's type based on Terrain")
 {
     u32 j;
     u32 terrainMove = MOVE_NONE;
-    u32 terrainType = TYPE_NONE;
+    enum Type terrainType = TYPE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(terrainData); j++)
         PARAMETRIZE { terrainMove = terrainData[j][0]; terrainType = terrainData[j][1]; }
@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_STUNFISK_GALAR, 0) == TYPE_GROUND);
         ASSUME(GetSpeciesType(SPECIES_STUNFISK_GALAR, 1) == TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET); 
+        PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STUNFISK_GALAR) { Ability(ABILITY_MIMICRY); }
     } WHEN {
         TURN { MOVE(opponent, terrainMove); MOVE(player, removeTerrainMove); }

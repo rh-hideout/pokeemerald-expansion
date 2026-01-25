@@ -3424,7 +3424,7 @@ void AnimHyperBeamOrb(struct Sprite *sprite)
     u16 speed;
     u16 animNum = Random2();
 
-    StartSpriteAnim(sprite, animNum % 8);
+    StartSpriteAnim(sprite, animNum % ARRAY_COUNT(gSolarBeamBigOrbAnimTable));
     sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     if (!IsOnPlayerSide(gBattleAnimAttacker))
@@ -5194,7 +5194,7 @@ void AnimNeedleArmSpike(struct Sprite *sprite)
     {
         if (gBattleAnimArgs[0] == 0)
         {
-            if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
+            if (GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
             {
                 SetAverageBattlerPositions(gBattleAnimAttacker, TRUE, &a, &b);
             }
@@ -5206,7 +5206,7 @@ void AnimNeedleArmSpike(struct Sprite *sprite)
         }
         else
         {
-            if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
+            if (GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
             {
                 SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &a, &b);
             }
@@ -6836,10 +6836,10 @@ static void TrySwapStickyWebBattlerId(u32 battlerAtk, u32 battlerPartner)
 static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
 {
     u32 i, temp;
-    u32 oppSide = GetBattlerSide(BATTLE_OPPOSITE(battlerAtk));
 
     // if used future sight on opposing side, properly track who used it
-    if (gSideStatuses[oppSide] & SIDE_STATUS_FUTUREATTACK)
+    if (gWishFutureKnock.futureSightCounter[LEFT_FOE(battlerAtk)] > 0
+     || gWishFutureKnock.futureSightCounter[RIGHT_FOE(battlerAtk)] > 0)
     {
         for (i = 0; i < gBattlersCount; i++)
         {
@@ -6863,8 +6863,8 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     }
 
     // swap wish party indices
-    if (gWishFutureKnock.wishCounter[battlerAtk] > gBattleTurnCounter
-     || gWishFutureKnock.wishCounter[battlerPartner] > gBattleTurnCounter)
+    if (gWishFutureKnock.wishCounter[battlerAtk] > 0
+     || gWishFutureKnock.wishCounter[battlerPartner] > 0)
         SWAP(gWishFutureKnock.wishPartyId[battlerAtk], gWishFutureKnock.wishPartyId[battlerPartner], temp);
 }
 
@@ -6969,7 +6969,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     // For Snipe Shot and abilities Stalwart/Propeller Tail - keep the original target.
     for (i = 0; i < gBattlersCount; i++)
     {
-        u16 ability = GetBattlerAbility(i);
+        enum Ability ability = GetBattlerAbility(i);
         // if not targeting a slot that got switched, continue
         if (!IsBattlerAlly(gBattleStruct->moveTarget[i], battlerAtk))
             continue;
