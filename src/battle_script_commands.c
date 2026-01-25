@@ -4884,7 +4884,7 @@ static void Cmd_call(void)
 {
     CMD_ARGS(const u8 *instr);
 
-    assertf(gBattleResources->battleScriptsStack->size != UINT8_MAX, "call used, but battleScriptsStack is full!");
+    assertf(gBattleResources->battleScriptsStack->size < UINT8_MAX, "call used, but battleScriptsStack is full!");
 
     BattleScriptPush(cmd->nextInstr);
     gBattlescriptCurrInstr = cmd->instr;
