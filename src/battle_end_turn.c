@@ -70,7 +70,7 @@ static bool32 HandleEndTurnVarious(u32 battler)
         if (gBattleMons[i].volatiles.laserFocusTimer > 0 && --gBattleMons[i].volatiles.laserFocusTimer == 0)
             gBattleMons[i].volatiles.laserFocus = FALSE;
 
-        gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
+        GetBattlerState(i)->wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
     }
 
     if (gBattleStruct->incrementEchoedVoice)
@@ -264,13 +264,13 @@ static bool32 HandleEndTurnWish(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleStruct->battlerState[battler].wishTimer > 0 && --gBattleStruct->battlerState[battler].wishTimer == 0 && IsBattlerAlive(battler))
+    if (GetBattlerState(battler)->wishTimer > 0 && --GetBattlerState(battler)->wishTimer == 0 && IsBattlerAlive(battler))
     {
         s32 wishHeal = 0;
         gBattlerTarget = battler;
-        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gBattleStruct->battlerState[battler].wishPartyId)
+        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, GetBattlerState(battler)->wishPartyId)
         if (GetConfig(CONFIG_WISH_HP_SOURCE) >= GEN_5)
-            wishHeal = GetMonData(&GetBattlerParty(battler)[gBattleStruct->battlerState[battler].wishPartyId], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&GetBattlerParty(battler)[GetBattlerState(battler)->wishPartyId], MON_DATA_MAX_HP) / 2;
         else
             wishHeal = GetNonDynamaxMaxHP(battler) / 2;
 

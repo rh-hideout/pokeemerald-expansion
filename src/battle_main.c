@@ -3011,7 +3011,7 @@ static void BattleStartClearSetData(void)
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        gBattleStruct->battlerState[i].isFirstTurn = 2;
+        GetBattlerState(i)->isFirstTurn = 2;
         gLastMoves[i] = MOVE_NONE;
         gLastLandedMoves[i] = MOVE_NONE;
         gLastHitByType[i] = 0;
@@ -3022,7 +3022,7 @@ static void BattleStartClearSetData(void)
         gLastPrintedMoves[i] = MOVE_NONE;
         gPalaceSelectionBattleScripts[i] = 0;
         gBattleStruct->lastTakenMove[i] = MOVE_NONE;
-        gBattleStruct->battlerState[i].choicedMove = MOVE_NONE;
+        GetBattlerState(i)->choicedMove = MOVE_NONE;
         gBattleStruct->changedItems[i] = 0;
         gBattleStruct->lastTakenMoveFrom[i][0] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][1] = MOVE_NONE;
@@ -3199,8 +3199,8 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     }
 
     gBattleStruct->moveResultFlags[battler] = 0;
-    gBattleStruct->battlerState[battler].isFirstTurn = 2;
-    gBattleStruct->battlerState[battler].fainted = FALSE;
+    GetBattlerState(battler)->isFirstTurn = 2;
+    GetBattlerState(battler)->fainted = FALSE;
     gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
@@ -3215,10 +3215,10 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
-    gBattleStruct->battlerState[battler].stompingTantrumTimer = 0;
+    GetBattlerState(battler)->stompingTantrumTimer = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
-    gBattleStruct->battlerState[battler].canPickupItem = FALSE;
-    gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
+    GetBattlerState(battler)->canPickupItem = FALSE;
+    GetBattlerState(battler)->wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
     gBattleStruct->hazardsCounter = 0;
 
     ClearPursuitValuesIfSet(battler);
@@ -3238,7 +3238,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
         gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
     }
 
-    gBattleStruct->battlerState[battler].choicedMove = MOVE_NONE;
+    GetBattlerState(battler)->choicedMove = MOVE_NONE;
     gBattleStruct->eventState.arenaTurn = 0xFF;
 
     // Reset damage to prevent things like red card activating if the switched-in mon is holding it
@@ -3307,7 +3307,7 @@ const u8* FaintClearSetData(u32 battler)
     gProtectStructs[battler].statRaised = FALSE;
     gProtectStructs[battler].pranksterElevated = FALSE;
 
-    gBattleStruct->battlerState[battler].isFirstTurn = 2;
+    GetBattlerState(battler)->isFirstTurn = 2;
 
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
@@ -3317,7 +3317,7 @@ const u8* FaintClearSetData(u32 battler)
     gLastPrintedMoves[battler] = MOVE_NONE;
     gLastHitBy[battler] = 0xFF;
 
-    gBattleStruct->battlerState[battler].choicedMove = MOVE_NONE;
+    GetBattlerState(battler)->choicedMove = MOVE_NONE;
     gBattleStruct->lastTakenMove[battler] = MOVE_NONE;
     gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
@@ -3327,7 +3327,7 @@ const u8* FaintClearSetData(u32 battler)
 
     ClearPursuitValuesIfSet(battler);
 
-    if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
+    if (GetBattlerState(battler)->commanderSpecies != SPECIES_NONE)
     {
         u32 partner = BATTLE_PARTNER(battler);
         if (IsBattlerAlive(partner))
@@ -3453,7 +3453,7 @@ static void DoBattleIntro(void)
                 gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1);
                 gBattleMons[battler].types[2] = TYPE_MYSTERY;
                 gBattleMons[battler].ability = GetAbilityBySpecies(gBattleMons[battler].species, gBattleMons[battler].abilityNum);
-                gBattleStruct->battlerState[battler].hpOnSwitchout = gBattleMons[battler].hp;
+                GetBattlerState(battler)->hpOnSwitchout = gBattleMons[battler].hp;
                 memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
                 for (i = 0; i < NUM_BATTLE_STATS; i++)
                     gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
@@ -3804,7 +3804,7 @@ static void TryDoEventsBeforeFirstTurn(void)
     case FIRST_TURN_SWITCH_IN_EVENTS:
         gBattleStruct->eventState.switchIn = 0;
         for (u32 battler = 0; battler < gBattlersCount; battler++)
-            gBattleStruct->battlerState[battler].switchIn = TRUE;
+            GetBattlerState(battler)->switchIn = TRUE;
         BattleScriptPushCursorAndCallback(BattleScript_FirstTurnSwitchInEvents);
         gBattleStruct->eventState.beforeFirstTurn++;
         break;
@@ -3945,8 +3945,8 @@ void BattleTurnPassed(void)
         gBattleMons[i].volatiles.flinched = FALSE;
         gBattleMons[i].volatiles.powder = FALSE;
 
-        if (gBattleStruct->battlerState[i].stompingTantrumTimer > 0)
-            gBattleStruct->battlerState[i].stompingTantrumTimer--;
+        if (GetBattlerState(i)->stompingTantrumTimer > 0)
+            GetBattlerState(i)->stompingTantrumTimer--;
     }
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
@@ -4107,7 +4107,7 @@ static void HandleTurnActionSelectionState(void)
                 || gAbsentBattlerFlags & 1u << GetBattlerAtPosition(BATTLE_PARTNER(position))
                 || gBattleCommunication[GetBattlerAtPosition(BATTLE_PARTNER(position))] == STATE_WAIT_ACTION_CONFIRMED)
             {
-                if (gAbsentBattlerFlags & 1u << battler || gBattleStruct->battlerState[battler].commandingDondozo)
+                if (gAbsentBattlerFlags & 1u << battler || GetBattlerState(battler)->commandingDondozo)
                 {
                     gChosenActionByBattler[battler] = B_ACTION_NOTHING_FAINTED;
                     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
@@ -4143,7 +4143,7 @@ static void HandleTurnActionSelectionState(void)
                     }
                     else
                     {
-                        gBattleStruct->battlerState[battler].itemPartyId = PARTY_SIZE;
+                        GetBattlerState(battler)->itemPartyId = PARTY_SIZE;
                         BtlController_EmitChooseAction(battler, B_COMM_TO_CONTROLLER, gChosenActionByBattler[0], gBattleResources->bufferB[0][1] | (gBattleResources->bufferB[0][2] << 8));
                         MarkBattlerForControllerExec(battler);
                         gBattleCommunication[battler]++;
@@ -4163,15 +4163,15 @@ static void HandleTurnActionSelectionState(void)
                     if (AreAllMovesUnusable(battler))
                     {
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
-                        gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                        GetBattlerState(battler)->selectionScriptFinished = FALSE;
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
-                        gBattleStruct->battlerState[battler].moveTarget = gBattleResources->bufferB[battler][3];
+                        GetBattlerState(battler)->moveTarget = gBattleResources->bufferB[battler][3];
                         return;
                     }
                     else if (GetConfig(CONFIG_ENCORE_TARGET) < GEN_5 && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
                     {
                         gChosenMoveByBattler[battler] = gBattleMons[battler].volatiles.encoredMove;
-                        gBattleStruct->battlerState[battler].chosenMovePosition = gBattleMons[battler].volatiles.encoredMovePos;
+                        GetBattlerState(battler)->chosenMovePosition = gBattleMons[battler].volatiles.encoredMovePos;
                         gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
                         if (gTestRunnerEnabled)
                         {
@@ -4212,7 +4212,7 @@ static void HandleTurnActionSelectionState(void)
                         RecordedBattle_ClearBattlerAction(battler, 1);
                         gSelectionBattleScripts[battler] = BattleScript_ActionSelectionItemsCantBeUsed;
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
-                        gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                        GetBattlerState(battler)->selectionScriptFinished = FALSE;
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
                         return;
                     }
@@ -4228,7 +4228,7 @@ static void HandleTurnActionSelectionState(void)
                         RecordedBattle_ClearBattlerAction(battler, 1);
                         gSelectionBattleScripts[battler] = BattleScript_ActionSelectionItemsCantBeUsed;
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
-                        gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                        GetBattlerState(battler)->selectionScriptFinished = FALSE;
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
                         return;
                     }
@@ -4239,7 +4239,7 @@ static void HandleTurnActionSelectionState(void)
                     }
                     break;
                 case B_ACTION_SWITCH:
-                    gBattleStruct->battlerState[battler].partyId = gBattlerPartyIndexes[battler];
+                    GetBattlerState(battler)->partyId = gBattlerPartyIndexes[battler];
                     if (gBattleTypeFlags & BATTLE_TYPE_ARENA
                         || (!CanBattlerEscape(battler) && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SHED_SHELL))
                     {
@@ -4266,7 +4266,7 @@ static void HandleTurnActionSelectionState(void)
                     {
                         gSelectionBattleScripts[battler] = BattleScript_PrintFullBox;
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
-                        gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                        GetBattlerState(battler)->selectionScriptFinished = FALSE;
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
                         return;
                     }
@@ -4327,7 +4327,7 @@ static void HandleTurnActionSelectionState(void)
                 {
                     gSelectionBattleScripts[battler] = BattleScript_AskIfWantsToForfeitMatch;
                     gBattleCommunication[battler] = STATE_SELECTION_SCRIPT_MAY_RUN;
-                    gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                    GetBattlerState(battler)->selectionScriptFinished = FALSE;
                     gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
                     return;
                 }
@@ -4335,7 +4335,7 @@ static void HandleTurnActionSelectionState(void)
                 {
                     gSelectionBattleScripts[battler] = BattleScript_QuestionForfeitBattle;
                     gBattleCommunication[battler] = STATE_SELECTION_SCRIPT_MAY_RUN;
-                    gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                    GetBattlerState(battler)->selectionScriptFinished = FALSE;
                     gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
                     return;
                 }
@@ -4352,7 +4352,7 @@ static void HandleTurnActionSelectionState(void)
                 {
                     gSelectionBattleScripts[battler] = BattleScript_PrintCantEscapeFromBattle;
                     gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
-                    gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                    GetBattlerState(battler)->selectionScriptFinished = FALSE;
                     gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
                     return;
                 }
@@ -4394,7 +4394,7 @@ static void HandleTurnActionSelectionState(void)
                         {
                             RecordedBattle_ClearBattlerAction(battler, 1);
                             gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
-                            gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                            GetBattlerState(battler)->selectionScriptFinished = FALSE;
                             gBattleResources->bufferB[battler][1] = B_ACTION_USE_MOVE;
                             gBattleStruct->stateIdAfterSelScript[battler] = STATE_WAIT_ACTION_CHOSEN;
                             return;
@@ -4408,9 +4408,9 @@ static void HandleTurnActionSelectionState(void)
                             }
 
                             // Get the chosen move position (and thus the chosen move) and target from the returned buffer.
-                            gBattleStruct->battlerState[battler].chosenMovePosition = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
+                            GetBattlerState(battler)->chosenMovePosition = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
                             gChosenMoveByBattler[battler] = GetChosenMoveFromPosition(battler);
-                            gBattleStruct->battlerState[battler].moveTarget = gBattleResources->bufferB[battler][3];
+                            GetBattlerState(battler)->moveTarget = gBattleResources->bufferB[battler][3];
                             if (IsBattleMoveStatus(gChosenMoveByBattler[battler]) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
                                 gProtectStructs[battler].myceliumMight = TRUE;
                             if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LAGGING_TAIL)
@@ -4432,7 +4432,7 @@ static void HandleTurnActionSelectionState(void)
                                 UNUSED enum Gimmick gimmick = GIMMICK_NONE;
                                 if (gBattleResources->bufferB[battler][2] & RET_GIMMICK)
                                     gimmick = gBattleStruct->gimmick.usableGimmick[battler];
-                                TestRunner_Battle_CheckChosenMove(battler, gChosenMoveByBattler[battler], gBattleStruct->battlerState[battler].moveTarget, gimmick);
+                                TestRunner_Battle_CheckChosenMove(battler, gChosenMoveByBattler[battler], GetBattlerState(battler)->moveTarget, gimmick);
                             }
                         }
                         break;
@@ -4528,7 +4528,7 @@ static void HandleTurnActionSelectionState(void)
             }
             break;
         case STATE_SELECTION_SCRIPT:
-            if (gBattleStruct->battlerState[battler].selectionScriptFinished)
+            if (GetBattlerState(battler)->selectionScriptFinished)
             {
                 gSelectionBattleScripts[battler] = NULL;
                 gBattleCommunication[battler] = gBattleStruct->stateIdAfterSelScript[battler];
@@ -4552,7 +4552,7 @@ static void HandleTurnActionSelectionState(void)
             }
             break;
         case STATE_SELECTION_SCRIPT_MAY_RUN:
-            if (gBattleStruct->battlerState[battler].selectionScriptFinished)
+            if (GetBattlerState(battler)->selectionScriptFinished)
             {
                 gSelectionBattleScripts[battler] = NULL;
                 if (gBattleResources->bufferB[battler][1] == B_ACTION_NOTHING_FAINTED)
@@ -5042,24 +5042,24 @@ static void TurnValuesCleanUp(bool8 var0)
         {
             memset(&gProtectStructs[i], 0, sizeof(struct ProtectStruct));
 
-            if (gBattleStruct->battlerState[i].isFirstTurn)
-                gBattleStruct->battlerState[i].isFirstTurn--;
+            if (GetBattlerState(i)->isFirstTurn)
+                GetBattlerState(i)->isFirstTurn--;
 
             if (gBattleMons[i].volatiles.rechargeTimer)
                 gBattleMons[i].volatiles.rechargeTimer--;
 
-            gBattleStruct->battlerState[i].canPickupItem = FALSE;
-            gBattleStruct->battlerState[i].wasAboveHalfHp = FALSE;
+            GetBattlerState(i)->canPickupItem = FALSE;
+            GetBattlerState(i)->wasAboveHalfHp = FALSE;
         }
 
         if (gBattleMons[i].volatiles.substituteHP == 0)
             gBattleMons[i].volatiles.substitute = FALSE;
 
         if (gBattleMons[i].volatiles.semiInvulnerable != STATE_COMMANDER)
-            gBattleStruct->battlerState[i].commandingDondozo = FALSE;
+            GetBattlerState(i)->commandingDondozo = FALSE;
 
         gSpecialStatuses[i].parentalBondState = PARENTAL_BOND_OFF;
-        gBattleStruct->battlerState[i].usedEjectItem = FALSE;
+        GetBattlerState(i)->usedEjectItem = FALSE;
         gProtectStructs[i].lashOutAffected = FALSE;
         gBattleMons[i].volatiles.endured = FALSE;
     }
@@ -5129,12 +5129,12 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
         SortBattlersBySpeed(battlers, FALSE);
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (!gBattleStruct->battlerState[battlers[i]].focusPunchBattlers
+            if (!GetBattlerState(battlers[i])->focusPunchBattlers
                 && !(gBattleMons[battlers[i]].status1 & STATUS1_SLEEP)
                 && !(gBattleMons[battlers[i]].volatiles.truantCounter)
                 && !(gProtectStructs[battlers[i]].noValidMoves))
             {
-                gBattleStruct->battlerState[battlers[i]].focusPunchBattlers = TRUE;
+                GetBattlerState(battlers[i])->focusPunchBattlers = TRUE;
                 gBattlerAttacker = battlers[i];
                 switch (GetMoveEffect(gChosenMoveByBattler[gBattlerAttacker]))
                 {
@@ -5278,8 +5278,8 @@ static void CheckChangingTurnOrderEffects(void)
     gBattleStruct->effectsBeforeUsingMoveDone = FALSE;
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        gBattleStruct->battlerState[i].focusPunchBattlers = FALSE;
-        gBattleStruct->battlerState[i].ateBoost = FALSE;
+        GetBattlerState(i)->focusPunchBattlers = FALSE;
+        GetBattlerState(i)->ateBoost = FALSE;
         gSpecialStatuses[i].gemBoost = FALSE;
     }
 
@@ -5986,7 +5986,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, u32 battler, e
     {
         u32 ateType = TrySetAteType(move, battler, ability);
         if (ateType != TYPE_NONE && state == MON_IN_BATTLE)
-            gBattleStruct->battlerState[battler].ateBoost = TRUE;
+            GetBattlerState(battler)->ateBoost = TRUE;
         return ateType;
     }
     else if (moveEffect != EFFECT_CHANGE_TYPE_ON_ITEM
@@ -5998,7 +5998,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, u32 battler, e
           && gimmick != GIMMICK_Z_MOVE)
     {
         if (state == MON_IN_BATTLE && gimmick != GIMMICK_DYNAMAX)
-            gBattleStruct->battlerState[battler].ateBoost = TRUE;
+            GetBattlerState(battler)->ateBoost = TRUE;
         return TYPE_NORMAL;
     }
 
@@ -6012,7 +6012,7 @@ void SetTypeBeforeUsingMove(enum Move move, u32 battler)
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
 
     gBattleStruct->dynamicMoveType = 0;
-    gBattleStruct->battlerState[battler].ateBoost = FALSE;
+    GetBattlerState(battler)->ateBoost = FALSE;
     gSpecialStatuses[battler].gemBoost = FALSE;
 
     moveType = GetDynamicMoveType(GetBattlerMon(battler),

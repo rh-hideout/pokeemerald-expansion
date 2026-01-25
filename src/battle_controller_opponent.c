@@ -528,7 +528,7 @@ static void OpponentHandleChooseMove(u32 battler)
 
 static void OpponentHandleChooseItem(u32 battler)
 {
-    BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE,  gBattleStruct->battlerState[battler].chosenItem);
+    BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE,  GetBattlerState(battler)->chosenItem);
     BtlController_Complete(battler);
 }
 

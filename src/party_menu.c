@@ -4759,7 +4759,7 @@ void ItemUseCB_BattleScript(u8 taskId, TaskFunc task)
     }
     else
     {
-        gBattleStruct->battlerState[gBattlerInMenuId].itemPartyId = GetPartyIdFromBattleSlot(gPartyMenu.slotId);
+        GetBattlerState(gBattlerInMenuId)->itemPartyId = GetPartyIdFromBattleSlot(gPartyMenu.slotId);
         gPartyMenuUseExitCallback = TRUE;
         PlaySE(SE_SELECT);
         if (!IsItemFlute(gSpecialVar_ItemId))
@@ -5362,8 +5362,8 @@ static void TryUseItemOnMove(u8 taskId)
         }
         else
         {
-            gBattleStruct->battlerState[gBattlerInMenuId].itemPartyId = GetPartyIdFromBattleSlot(gPartyMenu.slotId);
-            gBattleStruct->battlerState[gBattlerInMenuId].itemMoveSlot = ptr->data1;
+            GetBattlerState(gBattlerInMenuId)->itemPartyId = GetPartyIdFromBattleSlot(gPartyMenu.slotId);
+            GetBattlerState(gBattlerInMenuId)->itemMoveSlot = ptr->data1;
             gPartyMenuUseExitCallback = TRUE;
             RemoveBagItem(gSpecialVar_ItemId, 1);
             ScheduleBgCopyTilemapToVram(2);

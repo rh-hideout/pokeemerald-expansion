@@ -6626,9 +6626,9 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     }
 
     // swap wish party indices to restore them after swapping battler states before
-    if (gBattleStruct->battlerState[battlerAtk].wishTimer > 0
-     || gBattleStruct->battlerState[battlerPartner].wishTimer > 0)
-        SWAP(gBattleStruct->battlerState[battlerAtk].wishPartyId, gBattleStruct->battlerState[battlerPartner].wishPartyId, temp);
+    if (GetBattlerState(battlerAtk)->wishTimer > 0
+     || GetBattlerState(battlerPartner)->wishTimer > 0)
+        SWAP(GetBattlerState(battlerAtk)->wishPartyId, GetBattlerState(battlerPartner)->wishPartyId, temp);
 }
 
 static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)
@@ -6693,7 +6693,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SwapStructData(&gProtectStructs[battlerAtk], &gProtectStructs[battlerPartner], data, sizeof(struct ProtectStruct));
     SwapStructData(&gBattleSpritesDataPtr->battlerData[battlerAtk], &gBattleSpritesDataPtr->battlerData[battlerPartner], data, sizeof(struct BattleSpriteInfo));
     SwapStructData(&gBattleStruct->illusion[battlerAtk], &gBattleStruct->illusion[battlerPartner], data, sizeof(struct Illusion));
-    SwapStructData(&gBattleStruct->battlerState[battlerAtk], &gBattleStruct->battlerState[battlerPartner], data, sizeof(struct BattlerState));
+    SwapStructData(GetBattlerState(battlerAtk), GetBattlerState(battlerPartner), data, sizeof(struct BattlerState));
 
     SWAP(gBattleSpritesDataPtr->battlerData[battlerAtk].invisible, gBattleSpritesDataPtr->battlerData[battlerPartner].invisible, temp);
     SWAP(gTransformedPersonalities[battlerAtk], gTransformedPersonalities[battlerPartner], temp);
@@ -6732,11 +6732,11 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     {
         enum Ability ability = GetBattlerAbility(i);
         // if not targeting a slot that got switched, continue
-        if (!IsBattlerAlly(gBattleStruct->battlerState[i].moveTarget, battlerAtk))
+        if (!IsBattlerAlly(GetBattlerState(i)->moveTarget, battlerAtk))
             continue;
 
         if (GetMoveEffect(gChosenMoveByBattler[i]) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
-            gBattleStruct->battlerState[i].moveTarget ^= BIT_FLANK;
+            GetBattlerState(i)->moveTarget ^= BIT_FLANK;
     }
 
     // For some reason the order in which the sprites are created matters. Looks like an issue with the sprite system, potentially with the Sprite Template.

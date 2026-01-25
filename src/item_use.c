@@ -1381,7 +1381,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
 
 void ItemUseInBattle_BagMenu(u8 taskId)
 {
-    gPartyMenu.slotId = gBattleStruct->battlerState[gBattlerInMenuId].itemPartyId = gBattlerPartyIndexes[gBattlerInMenuId];
+    gPartyMenu.slotId = GetBattlerState(gBattlerInMenuId)->itemPartyId = gBattlerPartyIndexes[gBattlerInMenuId];
     if (CannotUseItemsInBattle(gSpecialVar_ItemId, NULL))
     {
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)

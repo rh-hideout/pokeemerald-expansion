@@ -222,7 +222,7 @@ static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
             effect = ITEM_EFFECT_OTHER;
         }
     }
-    else if (gBattleStruct->battlerState[battler].switchIn)
+    else if (GetBattlerState(battler)->switchIn)
     {
         BattleScriptCall(BattleScript_AirBalloonMsgInRet);
         RecordItemEffectBattle(battler, HOLD_EFFECT_AIR_BALLOON);
@@ -979,7 +979,7 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, enum Item itemId)
 
     if (HasEnoughHpToEatBerry(battler, GetBattlerAbility(battler), 4, itemId))
     {
-        gBattleStruct->battlerState[battler].usedMicleBerry = TRUE;
+        GetBattlerState(battler)->usedMicleBerry = TRUE;
         BattleScriptCall(BattleScript_MicleBerryActivate);
         effect = ITEM_EFFECT_OTHER;
     }

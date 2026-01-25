@@ -66,15 +66,15 @@ static u32 GetWishHealAmountForBattler(u32 battler)
 {
     u32 wishHeal = 0;
 
-    if (gBattleStruct->battlerState[battler].wishTimer == 0)
+    if (GetBattlerState(battler)->wishTimer == 0)
         return wishHeal;
 
     if (B_WISH_HP_SOURCE >= GEN_5)
     {
         if (IsOnPlayerSide(battler))
-            wishHeal = GetMonData(&gPlayerParty[gBattleStruct->battlerState[battler].wishPartyId], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&gPlayerParty[GetBattlerState(battler)->wishPartyId], MON_DATA_MAX_HP) / 2;
         else
-            wishHeal = GetMonData(&gEnemyParty[gBattleStruct->battlerState[battler].wishPartyId], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&gEnemyParty[GetBattlerState(battler)->wishPartyId], MON_DATA_MAX_HP) / 2;
     }
     else
     {
@@ -89,13 +89,13 @@ static void GetIncomingHealInfo(u32 battler, struct IncomingHealInfo *healInfo)
     memset(healInfo, 0, sizeof(*healInfo));
 
     // Healing Wish / Lunar Dance heal to full and clear status before hazards
-    if (gBattleStruct->battlerState[battler].storedHealingWish)
+    if (GetBattlerState(battler)->storedHealingWish)
     {
         healInfo->hasHealing = TRUE;
         healInfo->healBeforeHazards = TRUE;
         healInfo->curesStatus = TRUE;
     }
-    if (gBattleStruct->battlerState[battler].storedLunarDance)
+    if (GetBattlerState(battler)->storedLunarDance)
     {
         healInfo->hasHealing = TRUE;
         healInfo->healBeforeHazards = TRUE;
@@ -110,11 +110,11 @@ static void GetIncomingHealInfo(u32 battler, struct IncomingHealInfo *healInfo)
     }
 
     // Wish heals at end of turn
-    if (gBattleStruct->battlerState[battler].wishTimer > 0)
+    if (GetBattlerState(battler)->wishTimer > 0)
     {
         healInfo->hasHealing = TRUE;
         healInfo->healEndOfTurn = TRUE;
-        healInfo->wishTimer = gBattleStruct->battlerState[battler].wishTimer;
+        healInfo->wishTimer = GetBattlerState(battler)->wishTimer;
         healInfo->healAmount = GetWishHealAmountForBattler(battler);
     }
 }
@@ -1208,7 +1208,7 @@ static bool32 CanBattlerConsiderSwitch(u32 battler)
         return FALSE;
     if (IsAbilityPreventingEscape(battler))
         return FALSE;
-    if (gBattleStruct->battlerState[battler].commanderSpecies)
+    if (GetBattlerState(battler)->commanderSpecies)
         return FALSE;
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
         return FALSE;
@@ -1911,7 +1911,7 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattle
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
         {
             damageTaken = AI_GetDamage(opposingBattler, battler, moveIndex, AI_DEFENDING, gAiLogicData);
-            if (playerMove == gBattleStruct->battlerState[opposingBattler].choicedMove) // If player is choiced, only care about the choice locked move
+            if (playerMove == GetBattlerState(opposingBattler)->choicedMove) // If player is choiced, only care about the choice locked move
             {
                 *bestPlayerMove = playerMove;
                 return damageTaken;
@@ -1935,14 +1935,14 @@ static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposi
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         // If player is choiced into a non-priority move, AI understands that it can't deal priority damage
-        if (gBattleStruct->battlerState[opposingBattler].choicedMove != MOVE_NONE && GetMovePriority(gBattleStruct->battlerState[opposingBattler].choicedMove) < 1)
+        if (GetBattlerState(opposingBattler)->choicedMove != MOVE_NONE && GetMovePriority(GetBattlerState(opposingBattler)->choicedMove) < 1)
             break;
         playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[moveIndex] : playerMoves[moveIndex];
         if (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], playerMove) > 0
             && playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
         {
             damageTaken = AI_GetDamage(opposingBattler, battler, moveIndex, AI_DEFENDING, gAiLogicData);
-            if (playerMove == gBattleStruct->battlerState[opposingBattler].choicedMove) // If player is choiced, only care about the choice locked move
+            if (playerMove == GetBattlerState(opposingBattler)->choicedMove) // If player is choiced, only care about the choice locked move
             {
                 *bestPlayerPriorityMove = playerMove;
                 return damageTaken;

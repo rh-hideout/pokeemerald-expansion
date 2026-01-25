@@ -2543,7 +2543,7 @@ static inline bool32 IsAnyAbilityPopUpActive(void)
     u32 activeAbilityPopUps = 0;
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
-        if (gBattleStruct->battlerState[battler].activeAbilityPopUps)
+        if (GetBattlerState(battler)->activeAbilityPopUps)
             activeAbilityPopUps++;
     }
 
@@ -2603,7 +2603,7 @@ void CreateAbilityPopUp(u8 battler, enum Ability ability, bool32 isDoubleBattle)
     if (!IsAnyAbilityPopUpActive())
         CreateTask(Task_FreeAbilityPopUpGfx, 5);
 
-    gBattleStruct->battlerState[battler].activeAbilityPopUps = TRUE;
+    GetBattlerState(battler)->activeAbilityPopUps = TRUE;
 
     gSprites[spriteIds[0]].sIsMain = TRUE;
     gSprites[spriteIds[0]].sBattlerId = battler;
@@ -2680,7 +2680,7 @@ static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
     case APU_STATE_END:
     {
         if (sIsMain)
-            gBattleStruct->battlerState[sBattlerId].activeAbilityPopUps = FALSE;
+            GetBattlerState(sBattlerId)->activeAbilityPopUps = FALSE;
 
         DestroySprite(sprite);
         break;
@@ -2690,7 +2690,7 @@ static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
 
 void DestroyAbilityPopUp(u8 battler)
 {
-    if (gBattleStruct->battlerState[battler].activeAbilityPopUps)
+    if (GetBattlerState(battler)->activeAbilityPopUps)
     {
         gSprites[gBattleStruct->abilityPopUpSpriteIds[battler][0]].sAutoDestroy = TRUE;
         gSprites[gBattleStruct->abilityPopUpSpriteIds[battler][1]].sAutoDestroy = TRUE;

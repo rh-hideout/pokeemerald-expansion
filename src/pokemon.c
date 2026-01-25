@@ -3605,7 +3605,7 @@ void CopyPartyMonToBattleData(u32 battler, u32 partyIndex)
     enum BattleSide side = GetBattlerSide(battler);
     struct Pokemon *party = GetSideParty(side);
     PokemonToBattleMon(&party[partyIndex], &gBattleMons[battler]);
-    gBattleStruct->battlerState[battler].hpOnSwitchout = gBattleMons[battler].hp;
+    GetBattlerState(battler)->hpOnSwitchout = gBattleMons[battler].hp;
     UpdateSentPokesToOpponentValue(battler);
     ClearTemporarySpeciesSpriteData(battler, FALSE, FALSE);
 }

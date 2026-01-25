@@ -87,7 +87,7 @@ bool32 ShouldUseItem(u32 battler)
                 shouldUse = ShouldCureStatusWithItem(battler, battler, gAiLogicData);
             break;
         case EFFECT_ITEM_INCREASE_STAT:
-            if (gBattleStruct->battlerState[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
+            if (GetBattlerState(battler)->isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
             {
                 if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
                 {
@@ -114,7 +114,7 @@ bool32 ShouldUseItem(u32 battler)
         case EFFECT_ITEM_INCREASE_ALL_STATS:
             if (gAiLogicData->abilities[battler] == ABILITY_CONTRARY)
                 break;
-            if (gBattleStruct->battlerState[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
+            if (GetBattlerState(battler)->isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
             {
                 if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
                 {
@@ -140,7 +140,7 @@ bool32 ShouldUseItem(u32 battler)
             }
             break;
         case EFFECT_ITEM_SET_FOCUS_ENERGY:
-            if (!gBattleStruct->battlerState[battler].isFirstTurn
+            if (!GetBattlerState(battler)->isFirstTurn
                 || gBattleMons[battler].volatiles.dragonCheer
                 || gBattleMons[battler].volatiles.focusEnergy
                 || AI_OpponentCanFaintAiWithMod(battler, 0))
@@ -164,12 +164,12 @@ bool32 ShouldUseItem(u32 battler)
             break;
         case EFFECT_ITEM_SET_MIST:
             battlerSide = GetBattlerSide(battler);
-            if (gBattleStruct->battlerState[battler].isFirstTurn && !(gSideStatuses[battlerSide] & SIDE_STATUS_MIST))
+            if (GetBattlerState(battler)->isFirstTurn && !(gSideStatuses[battlerSide] & SIDE_STATUS_MIST))
                 shouldUse = TRUE;
             break;
         case EFFECT_ITEM_REVIVE:
-            gBattleStruct->battlerState[battler].itemPartyId = GetFirstFaintedPartyIndex(battler);
-            if (gBattleStruct->battlerState[battler].itemPartyId != PARTY_SIZE) // Revive if possible.
+            GetBattlerState(battler)->itemPartyId = GetFirstFaintedPartyIndex(battler);
+            if (GetBattlerState(battler)->itemPartyId != PARTY_SIZE) // Revive if possible.
                 shouldUse = TRUE;
             break;
         case EFFECT_ITEM_USE_POKE_FLUTE:
@@ -182,10 +182,10 @@ bool32 ShouldUseItem(u32 battler)
         if (shouldUse)
         {
             // Set selected party ID to current battler if none chosen.
-            if (gBattleStruct->battlerState[battler].itemPartyId == PARTY_SIZE)
-                gBattleStruct->battlerState[battler].itemPartyId = gBattlerPartyIndexes[battler];
+            if (GetBattlerState(battler)->itemPartyId == PARTY_SIZE)
+                GetBattlerState(battler)->itemPartyId = gBattlerPartyIndexes[battler];
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
-            gBattleStruct->battlerState[battler].chosenItem = item;
+            GetBattlerState(battler)->chosenItem = item;
             gBattleHistory->trainerItems[itemIndex] = 0;
             return shouldUse;
         }

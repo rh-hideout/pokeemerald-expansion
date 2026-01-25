@@ -638,7 +638,7 @@ bool32 IsDamageMoveUnusable(struct BattleContext *ctx)
 
     if (ctx->typeEffectivenessModifier == UQ_4_12(0.0))
         return TRUE;
-    if (gBattleStruct->battlerState[ctx->battlerDef].commandingDondozo)
+    if (GetBattlerState(ctx->battlerDef)->commandingDondozo)
         return TRUE;
 
     // aiData->abilities does not check for Mold Breaker since it happens during combat so it needs to be done manually
@@ -713,7 +713,7 @@ bool32 IsDamageMoveUnusable(struct BattleContext *ctx)
             return TRUE;
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (!gBattleStruct->battlerState[ctx->battlerAtk].isFirstTurn)
+        if (!GetBattlerState(ctx->battlerAtk)->isFirstTurn)
             return TRUE;
         break;
     default:
@@ -4185,7 +4185,7 @@ bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, enum Move move,
     if (!IsBattlerAlive(battlerAtkPartner) || partnerMove == MOVE_NONE)
         return FALSE;
 
-    u32 battlerDef = gBattleStruct->battlerState[battlerAtk].moveTarget;
+    u32 battlerDef = GetBattlerState(battlerAtk)->moveTarget;
 
     // We don't care the effect is basically the same; we would use this move anyway.
     if (IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
@@ -4199,7 +4199,7 @@ bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, enum Move move,
     {
         if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
-            if (battlerDef == gBattleStruct->battlerState[battlerAtkPartner].moveTarget)
+            if (battlerDef == GetBattlerState(battlerAtkPartner)->moveTarget)
                 return TRUE;
             else
                 return FALSE;
@@ -4339,7 +4339,7 @@ bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, enum
     {
         if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
-            return gBattleStruct->battlerState[battlerAtkPartner].moveTarget == battlerDef;
+            return GetBattlerState(battlerAtkPartner)->moveTarget == battlerDef;
         }
         return TRUE;
     }
@@ -4355,7 +4355,7 @@ bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef
     enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
     enum MoveEffect nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
     if (partnerMove != MOVE_NONE
-     && gBattleStruct->battlerState[battlerAtkPartner].moveTarget == battlerDef
+     && GetBattlerState(battlerAtkPartner)->moveTarget == battlerDef
      && (nonVolatileStatus == MOVE_EFFECT_POISON
        || nonVolatileStatus == MOVE_EFFECT_TOXIC
        || nonVolatileStatus == MOVE_EFFECT_SLEEP
@@ -4395,7 +4395,7 @@ bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, enum M
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
-    if (partnerMove != MOVE_NONE && move == partnerMove && gBattleStruct->battlerState[battlerAtkPartner].moveTarget == battlerDef)
+    if (partnerMove != MOVE_NONE && move == partnerMove && GetBattlerState(battlerAtkPartner)->moveTarget == battlerDef)
         return TRUE;
     return FALSE;
 }

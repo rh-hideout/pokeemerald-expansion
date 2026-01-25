@@ -529,6 +529,7 @@ struct BattlerState
     u32 itemMoveSlot:BIT_SIZE(MAX_MON_MOVES - 1); // 2 bits
     u32 chosenItem:BIT_SIZE(ITEMS_COUNT); // 10 bits
     u32 padding:9;
+    // End of Word
     u32 choicedMove:BIT_SIZE(MOVES_COUNT); // 10 bits
     u32 padding2:22;
 };
@@ -1155,6 +1156,11 @@ static inline struct Pokemon *GetBattlerParty(u32 battler)
     return GetSideParty(GetBattlerSide(battler));
 }
 
+static inline struct BattlerState *GetBattlerState(u32 battler)
+{
+    return &gBattleStruct->battlerState[battler];
+}
+
 static inline struct PartyState *GetBattlerPartyState(u32 battler)
 {
     return &gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
@@ -1174,7 +1180,7 @@ static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
 
 static inline u32 GetChosenMoveFromPosition(u32 battler)
 {
-    return gBattleMons[battler].moves[gBattleStruct->battlerState[battler].chosenMovePosition];
+    return gBattleMons[battler].moves[GetBattlerState(battler)->chosenMovePosition];
 }
 
 static inline void SetPassiveDamageAmount(u32 battler, s32 value)
