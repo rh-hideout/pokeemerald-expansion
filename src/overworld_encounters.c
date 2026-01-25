@@ -9,11 +9,13 @@
 #include "fieldmap.h"
 #include "field_effect.h"
 #include "field_player_avatar.h"
+#include "follower_npc.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "random.h"
 #include "roamer.h"
 #include "script.h"
+#include "script_movement.h"
 #include "sprite.h"
 #include "sound.h"
 #include "task.h"
@@ -993,7 +995,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     return templateOWE;
 }
 
-void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
+void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider, s32 xCollision, s32 yCollision)
 {
     // The only automatically interacts with an OW Encounter when;
     // Not using a repel or the DexNav is inactive.
@@ -1016,7 +1018,31 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 
     LockPlayerFieldControls();
     if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
+    {
         OWE_StartEncounterInstant(wildMon);
+        return;
+    }
+
+    struct ObjectEvent *followerMon = GetFollowerObject();
+    if (followerMon != NULL && !followerMon->invisible
+        && ((followerMon->currentCoords.x == xCollision && followerMon->currentCoords.y == yCollision)
+        || (followerMon->previousCoords.x == xCollision && followerMon->previousCoords.y == yCollision)))
+    {
+        ClearObjectEventMovement(followerMon, &gSprites[followerMon->spriteId]);
+        gSprites[followerMon->spriteId].animCmdIndex = 0;
+        ObjectEventSetHeldMovement(followerMon, MOVEMENT_ACTION_ENTER_POKEBALL);
+    }
+
+    u32 idFollowerNPC = GetFollowerNPCObjectId();
+    struct ObjectEvent *followerNPC = &gObjectEvents[idFollowerNPC];
+    if (FNPC_ENABLE_NPC_FOLLOWERS && PlayerHasFollowerNPC() && !followerNPC->invisible
+        && ((followerNPC->currentCoords.x == xCollision && followerNPC->currentCoords.y == yCollision)
+        || (followerNPC->previousCoords.x == xCollision && followerNPC->previousCoords.y == yCollision)))
+    {
+        enum Direction direction = DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], followerNPC);
+        ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, followerNPC->mapGroup, followerNPC->mapNum, GetFollowerNPCHideMovementsSpeed(direction, 3));
+        SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
+    }
 
     wildMon->sOverworldEncounterLevel |= OWE_FLAG_START_ENCOUNTER;
 }

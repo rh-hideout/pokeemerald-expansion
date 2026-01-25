@@ -142,4 +142,6 @@ void FollowerNPC_TryRemoveFollowerOnWhiteOut(void);
 void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId);
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId);
 
+const u8 *const GetFollowerNPCHideMovementsSpeed(enum Direction direction, u32 walkSpeed);
+
 #endif // GUARD_FOLLOWER_NPC_H
