@@ -11902,8 +11902,8 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent 
 
     if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
     {
-        sprite->sTypeFuncId = 12;
         MoveToPlayerForEncounter(objectEvent, sprite);
+        sprite->sTypeFuncId = 12;
         return FALSE;
     }
 
