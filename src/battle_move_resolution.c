@@ -2282,7 +2282,7 @@ static enum MoveEndResult MoveEndNextTarget(void)
         u32 partner = BATTLE_PARTNER(gBattlerAttacker);
         if (partner != gBattlerTarget && IsBattlerAlive(partner))
         {
-            gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = partner;
+            gBattleStruct->battlerState[gBattlerAttacker].moveTarget = gBattlerTarget = partner;
             BattleScriptPush(GetMoveBattleScript(gCurrentMove));
             gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
             gBattleScripting.moveendState = 0;
@@ -2296,7 +2296,7 @@ static enum MoveEndResult MoveEndNextTarget(void)
 
         if (nextTarget != MAX_BATTLERS_COUNT)
         {
-            gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget; // Fix for moxie spread moves
+            gBattleStruct->battlerState[gBattlerAttacker].moveTarget = gBattlerTarget = nextTarget; // Fix for moxie spread moves
             gBattleScripting.moveendState = 0;
             MoveValuesCleanUp();
 
@@ -2323,7 +2323,7 @@ static enum MoveEndResult MoveEndNextTarget(void)
             if (nextTarget != MAX_BATTLERS_COUNT)
             {
                 // We found another target for the original move user.
-                gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget;
+                gBattleStruct->battlerState[gBattlerAttacker].moveTarget = gBattlerTarget = nextTarget;
                 gBattleScripting.moveendState = 0;
                 gBattleScripting.animTurn = 0;
                 gBattleScripting.animTargetsHit = 0;
@@ -3185,9 +3185,9 @@ static enum MoveEndResult MoveEndClearBits(void)
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
     if (gSpecialStatuses[gBattlerAttacker].instructedChosenTarget)
-        gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].instructedChosenTarget & 0x3;
+        gBattleStruct->battlerState[gBattlerAttacker].moveTarget = gSpecialStatuses[gBattlerAttacker].instructedChosenTarget & 0x3;
     if (gSpecialStatuses[gBattlerAttacker].dancerOriginalTarget)
-        gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].dancerOriginalTarget & 0x3;
+        gBattleStruct->battlerState[gBattlerAttacker].moveTarget = gSpecialStatuses[gBattlerAttacker].dancerOriginalTarget & 0x3;
 
     // If the Pokémon needs to keep track of move usage for its evolutions, do it
     if (originallyUsedMove != MOVE_NONE)
@@ -3303,7 +3303,7 @@ static enum MoveEndResult MoveEndPursuitNextAction(void)
         if (SetTargetToNextPursuiter(gBattlerTarget))
         {
             ChangeOrderTargetAfterAttacker();
-            gBattleStruct->moveTarget[gBattlerTarget] = storedTarget;
+            gBattleStruct->battlerState[gBattlerTarget].moveTarget = storedTarget;
             gBattlerTarget = storedTarget;
         }
         else if (IsBattlerAlive(gBattlerTarget))

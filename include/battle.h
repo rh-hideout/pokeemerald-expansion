@@ -523,7 +523,8 @@ struct BattlerState
     u16 wishTimer:2;
     // End of Word
     u32 wishPartyId:BIT_SIZE(PARTY_SIZE); // 3 bits
-    u32 padding:29;
+    enum BattlerId moveTarget:BIT_SIZE(MAX_BATTLERS_COUNT);  // 3 bits
+    u32 padding:26;
 };
 
 struct PartyState
@@ -569,7 +570,6 @@ struct BattleStruct
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     struct EventStates eventState;
     struct FutureSight futureSight[MAX_BATTLERS_COUNT];
-    u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
     u8 weatherDuration;

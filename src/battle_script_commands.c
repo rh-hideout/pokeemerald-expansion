@@ -6311,7 +6311,7 @@ static void Cmd_getpossiblenexttarget(void)
     u32 nextTarget = GetPossibleNextTarget();
     if (nextTarget != MAX_BATTLERS_COUNT)
     {
-        gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget;
+        gBattleStruct->battlerState[gBattlerAttacker].moveTarget = gBattlerTarget = nextTarget;
         gBattleStruct->battlerState[gBattlerAttacker].targetsDone |= (1u << gBattlerTarget);
         gBattlescriptCurrInstr = cmd->jumpInstr;
     }
@@ -8762,7 +8762,7 @@ static void Cmd_trysetencore(void)
         // the target will select a random opposing target
         // Redirection such as Follow Me is already covered in HandleAction_UseMove of battle_util.c
         if (gBattleMons[gBattlerTarget].volatiles.encoredMove != GetChosenMoveFromPosition(gBattlerTarget))
-            gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
+            gBattleStruct->battlerState[gBattlerTarget].moveTarget = SetRandomTarget(gBattlerTarget);
 
         // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
         if (HasBattlerActedThisTurn(gBattlerTarget))
@@ -9374,7 +9374,7 @@ static void Cmd_jumpifnopursuitswitchdmg(void)
         ChangeOrderTargetAfterAttacker();
         gBattleStruct->battlerState[gBattlerAttacker].pursuitTarget = TRUE;
         gBattleStruct->pursuitStoredSwitch = gBattleStruct->monToSwitchIntoId[gBattlerAttacker];
-        gBattleStruct->moveTarget[gBattlerTarget] = gBattlerAttacker;
+        gBattleStruct->battlerState[gBattlerTarget].moveTarget = gBattlerAttacker;
         gBattlerTarget = savedTarget;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
@@ -14344,7 +14344,7 @@ void BS_TryInstruct(void)
     }
     else
     {
-        gSpecialStatuses[gBattlerTarget].instructedChosenTarget = gBattleStruct->moveTarget[gBattlerTarget] | 0x4;
+        gSpecialStatuses[gBattlerTarget].instructedChosenTarget = gBattleStruct->battlerState[gBattlerTarget].moveTarget | 0x4;
         gCalledMove = move;
         u32 moveIndex;
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)

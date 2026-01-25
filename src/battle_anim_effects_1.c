@@ -6662,7 +6662,6 @@ static void SwapBattlerMoveData(u32 battler1, u32 battler2)
     u32 temp;
     SWAP(gBattleStruct->chosenMovePositions[battler1], gBattleStruct->chosenMovePositions[battler2], temp);
     SWAP(gChosenMoveByBattler[battler1], gChosenMoveByBattler[battler2], temp);
-    SWAP(gBattleStruct->moveTarget[battler1], gBattleStruct->moveTarget[battler2], temp);
     SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], temp);
     SWAP(gLockedMoves[battler1], gLockedMoves[battler2], temp);
 
@@ -6734,11 +6733,11 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     {
         enum Ability ability = GetBattlerAbility(i);
         // if not targeting a slot that got switched, continue
-        if (!IsBattlerAlly(gBattleStruct->moveTarget[i], battlerAtk))
+        if (!IsBattlerAlly(gBattleStruct->battlerState[i].moveTarget, battlerAtk))
             continue;
 
         if (GetMoveEffect(gChosenMoveByBattler[i]) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
-            gBattleStruct->moveTarget[i] ^= BIT_FLANK;
+            gBattleStruct->battlerState[i].moveTarget ^= BIT_FLANK;
     }
 
     // For some reason the order in which the sprites are created matters. Looks like an issue with the sprite system, potentially with the Sprite Template.
