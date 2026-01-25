@@ -192,6 +192,7 @@ static struct BoxPokemon *LearnMove_GetBoxMonFromTaskData(u8 partyIndex)
 #define state         gTasks[taskId].data[0]
 #define partyIndex    gTasks[taskId].data[1]
 #define move          gTasks[taskId].data[2]
+#define recoverPP     gTasks[taskId].data[3]
 // MoveLearnUI does not contain a waitMessage function and LearnMove assumes the calling task will wait when a printer is active
 // Remember to update Task_LearnMove is you wish to change to an explicit waitMessage system
 s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
@@ -297,9 +298,11 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
     case REPLACE_MOVE_1:
         u32 slot = GetMoveSlotToReplace();
         RemoveBoxMonPPBonus(boxmon, slot);
+        u32 originalPP = GetBoxMonData(boxmon, MON_DATA_PP1 + slot);
         u32 pp = GetMovePP(move);
         SetBoxMonData(boxmon, MON_DATA_MOVE1 + slot, &move);
-        SetBoxMonData(boxmon, MON_DATA_PP1 + slot, &pp);
+        if (recoverPP || (pp < originalPP))
+            SetBoxMonData(boxmon, MON_DATA_PP1 + slot, &pp);
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = TRUE;
