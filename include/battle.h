@@ -526,10 +526,11 @@ struct BattlerState
     u16 ateBoost:1;
     u16 wasAboveHalfHp:1; // For Berserk, Emergency Exit, Wimp Out and Anger Shell.
     u16 selectionScriptFinished:1;
+    enum Move lastTakenMove:10;
     u16 usedEjectItem:1;
     u16 sleepClauseEffectExempt:1; // Stores whether effect should be exempt from triggering Sleep Clause (Effect Spore)
     u16 usedMicleBerry:1;
-    u16 padding:13;
+    u16 padding:3;
     // End of Word
 };
 
@@ -614,7 +615,6 @@ struct BattleStruct
     u8 wallyMovesState;
     u8 wallyWaitFrames;
     u8 wallyMoveFrames;
-    u16 lastTakenMove[MAX_BATTLERS_COUNT]; // Last move that a battler was hit with.
     u32 savedBattleTypeFlags;
     u16 abilityPreventingSwitchout;
     u8 hpScale;

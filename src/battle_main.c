@@ -3021,7 +3021,7 @@ static void BattleStartClearSetData(void)
         gLockedMoves[i] = MOVE_NONE;
         gLastPrintedMoves[i] = MOVE_NONE;
         gPalaceSelectionBattleScripts[i] = 0;
-        gBattleStruct->lastTakenMove[i] = MOVE_NONE;
+        GetBattlerState(i)->lastTakenMove = MOVE_NONE;
         GetBattlerState(i)->choicedMove = MOVE_NONE;
         gBattleStruct->changedItems[i] = 0;
         gBattleStruct->lastTakenMoveFrom[i][0] = MOVE_NONE;
@@ -3210,7 +3210,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     gLastPrintedMoves[battler] = MOVE_NONE;
     gLastHitBy[battler] = 0xFF;
 
-    gBattleStruct->lastTakenMove[battler] = 0;
+    GetBattlerState(battler)->lastTakenMove = 0;
     gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
@@ -3233,7 +3233,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     for (i = 0; i < gBattlersCount; i++)
     {
         if (i != battler && !IsBattlerAlly(i, battler))
-            gBattleStruct->lastTakenMove[i] = MOVE_NONE;
+            GetBattlerState(i)->lastTakenMove = MOVE_NONE;
 
         gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
     }
@@ -3318,7 +3318,7 @@ const u8* FaintClearSetData(u32 battler)
     gLastHitBy[battler] = 0xFF;
 
     GetBattlerState(battler)->choicedMove = MOVE_NONE;
-    gBattleStruct->lastTakenMove[battler] = MOVE_NONE;
+    GetBattlerState(battler)->lastTakenMove = MOVE_NONE;
     gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
@@ -3347,7 +3347,7 @@ const u8* FaintClearSetData(u32 battler)
     for (i = 0; i < gBattlersCount; i++)
     {
         if (i != battler && !IsBattlerAlly(i, battler))
-            gBattleStruct->lastTakenMove[i] = MOVE_NONE;
+            GetBattlerState(i)->lastTakenMove = MOVE_NONE;
 
         gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
     }

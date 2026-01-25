@@ -2226,7 +2226,7 @@ static enum MoveEndResult MoveEndMirrorMove(void)
      && !IsMoveMirrorMoveBanned(GetOriginallyUsedMove(gChosenMove))
      && !IsBattlerUnaffectedByMove(gBattlerTarget))
     {
-        gBattleStruct->lastTakenMove[gBattlerTarget] = gChosenMove;
+        GetBattlerState(gBattlerTarget)->lastTakenMove = gChosenMove;
         gBattleStruct->lastTakenMoveFrom[gBattlerTarget][gBattlerAttacker] = gChosenMove;
     }
 
@@ -3516,7 +3516,7 @@ static enum Move GetMirrorMoveMove(void)
         }
     }
 
-    move = gBattleStruct->lastTakenMove[gBattlerAttacker];
+    move = GetBattlerState(gBattlerAttacker)->lastTakenMove;
     if ((move == MOVE_NONE || move == MOVE_UNAVAILABLE) && validMovesCount != 0)
         move = validMoves[Random() % validMovesCount];
 
