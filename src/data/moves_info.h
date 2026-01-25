@@ -6592,7 +6592,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = B_UPDATED_MOVE_FLAGS >= GEN_4,
         .meFirstBanned = TRUE,
         .metronomeBanned = TRUE,
-        .copycatBanned = TRUE,
+        .copycatBanned = B_UPDATED_MOVE_FLAGS <= GEN_8,
         .assistBanned = TRUE,
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_BETTER_IF_LAST : CONTEST_EFFECT_AVOID_STARTLE_ONCE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
