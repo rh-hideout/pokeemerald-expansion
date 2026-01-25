@@ -535,19 +535,21 @@ struct BattlerState
 
 struct PartyState
 {
-    u32 intrepidSwordBoost:1;
-    u32 dauntlessShieldBoost:1;
-    u32 ateBerry:1;
-    u32 battleBondBoost:1;
-    u32 transformZeroToHero:1;
-    u32 supersweetSyrup:1;
-    u32 timesGotHit:5;
-    u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
-    u32 sentOut:1;
-    u32 isKnockedOff:1;
-    u32 padding:8;
+    enum Item usedHeldItem:10;
+    u16 timesGotHit:5;
+    u16 sentOut:1;
+    enum Item lostItem:10;
+    u16 intrepidSwordBoost:1;
+    u16 dauntlessShieldBoost:1;
+    u16 ateBerry:1;
+    u16 battleBondBoost:1;
+    u16 transformZeroToHero:1;
+    u16 supersweetSyrup:1;
     // End of Word
-    u16 usedHeldItem;
+    u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
+    u32 isKnockedOff:1;
+    u16 itemWasLost:1;
+    u32 padding:19;
 };
 
 struct EventStates
@@ -662,7 +664,6 @@ struct BattleStruct
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
     u8 quickClawBattlerId;
-    struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate
     u8 swapDamageCategory:1; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
     u8 bouncedMoveIsUsed:1;
