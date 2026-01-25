@@ -7914,7 +7914,7 @@ static inline s32 DoFutureSightAttackDamageCalcVars(struct BattleContext *ctx)
     enum Type moveType = ctx->moveType;
 
     struct Pokemon *party = GetBattlerParty(battlerAtk);
-    struct Pokemon *partyMon = &party[gBattleStruct->futureSight[battlerDef].partyIndex];
+    struct Pokemon *partyMon = &party[GetBattlerState(battlerDef)->futureSightPartyId];
     u32 partyMonLevel = GetMonData(partyMon, MON_DATA_LEVEL);
     u32 partyMonSpecies = GetMonData(partyMon, MON_DATA_SPECIES);
     gBattleMovePower = GetMovePower(move);
@@ -7964,11 +7964,11 @@ bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, enum Move mo
     struct Pokemon *party = GetBattlerParty(battlerAtk);
     if (IsDoubleBattle())
     {
-        return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]]
-            && &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[BATTLE_PARTNER(battlerAtk)]];
+        return &party[GetBattlerState(battlerDef)->futureSightPartyId] != &party[gBattlerPartyIndexes[battlerAtk]]
+            && &party[GetBattlerState(battlerDef)->futureSightPartyId] != &party[gBattlerPartyIndexes[BATTLE_PARTNER(battlerAtk)]];
     }
 
-    return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]];
+    return &party[GetBattlerState(battlerDef)->futureSightPartyId] != &party[gBattlerPartyIndexes[battlerAtk]];
 }
 
 #undef DAMAGE_APPLY_MODIFIER

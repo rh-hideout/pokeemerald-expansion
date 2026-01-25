@@ -483,14 +483,6 @@ struct BattleVideo {
     rng_value_t rngSeed;
 };
 
-struct FutureSight
-{
-    u16 move;
-    u16 counter:10;
-    u16 battlerIndex:3;
-    u16 partyIndex:3;
-};
-
 struct BattlerState
 {
     u32 commandingDondozo:1;
@@ -531,7 +523,11 @@ struct BattlerState
     u32 padding:9;
     // End of Word
     u32 choicedMove:BIT_SIZE(MOVES_COUNT); // 10 bits
-    u32 padding2:22;
+    u32 futureSightMove:BIT_SIZE(MOVES_COUNT); // 10 bits
+    u32 futureSightTimer:BIT_SIZE(3); // 2 bits
+    u32 futureSightBattler:BIT_SIZE(MAX_BATTLERS_COUNT); // 3 bits
+    u32 futureSightPartyId:BIT_SIZE(PARTY_SIZE); // 3 bits
+    u32 padding2:4;
 };
 
 struct PartyState
@@ -576,7 +572,6 @@ struct BattleStruct
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     struct EventStates eventState;
-    struct FutureSight futureSight[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
     u8 weatherDuration;

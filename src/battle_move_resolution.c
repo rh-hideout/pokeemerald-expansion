@@ -808,7 +808,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FUTURE_SIGHT:
-        if (gBattleStruct->futureSight[ctx->battlerDef].counter > 0)
+        if (GetBattlerState(ctx->battlerDef)->futureSightTimer > 0)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_LAST_RESORT:
