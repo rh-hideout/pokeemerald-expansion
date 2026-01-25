@@ -72,6 +72,7 @@ static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
 static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn);
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
 static void OWE_StartEncounterInstant(struct ObjectEvent *mon);
+static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction direction, u32 distance);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -1079,47 +1080,61 @@ bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon)
     if (!IsOverworldWildEncounter(mon, OWE_ANY) || mon->movementType == MOVEMENT_TYPE_WANDER_AROUND_OWE)
         return FALSE;
 
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
+    if ((TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
      || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
-        return OWE_IsPlayerInsideMonActiveDistance(mon);
+     && OWE_IsPlayerInsideMonActiveDistance(mon));
+        return TRUE;
 
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     u32 speciesId = OW_SPECIES(mon);
     u32 viewDistance = OWE_GetViewDistanceFromSpecies(speciesId);
     u32 viewWidth = OWE_GetViewWidthFromSpecies(speciesId);
     s32 halfWidth = (viewWidth - 1) / 2;
+    enum Direction direction = mon->facingDirection;
+    bool32 retVal = FALSE;
 
-    switch (mon->facingDirection)
+    switch (direction)
     {
     case DIR_NORTH:
         if (player->currentCoords.y < mon->currentCoords.y
          && mon->currentCoords.y - player->currentCoords.y <= viewDistance
          && player->currentCoords.x >= mon->currentCoords.x - halfWidth
          && player->currentCoords.x <= mon->currentCoords.x + halfWidth)
-            return TRUE;
+            retVal = TRUE;
+        break;
 
     case DIR_SOUTH:
         if (player->currentCoords.y > mon->currentCoords.y
          && player->currentCoords.y - mon->currentCoords.y <= viewDistance
          && player->currentCoords.x >= mon->currentCoords.x - halfWidth
          && player->currentCoords.x <= mon->currentCoords.x + halfWidth)
-            return TRUE;
+            retVal = TRUE;
+        break;
 
     case DIR_EAST:
         if (player->currentCoords.x > mon->currentCoords.x
          && player->currentCoords.x - mon->currentCoords.x <= viewDistance
          && player->currentCoords.y >= mon->currentCoords.y - halfWidth
          && player->currentCoords.y <= mon->currentCoords.y + halfWidth)
-            return TRUE;
+            retVal = TRUE;
+        break;
 
     case DIR_WEST:
         if (player->currentCoords.x < mon->currentCoords.x
          && mon->currentCoords.x - player->currentCoords.x <= viewDistance
          && player->currentCoords.y >= mon->currentCoords.y - halfWidth
          && player->currentCoords.y <= mon->currentCoords.y + halfWidth)
-            return TRUE;
+            retVal = TRUE;
+        break;
+
+    default:
+        retVal = FALSE;
+        break;
     }
 
+    if (retVal && OWE_IsLineOfSightClear(player, GetOppositeDirection(direction), viewDistance))
+        return TRUE;
+    
     return FALSE;
 }
 
@@ -1522,6 +1537,24 @@ void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sp
 void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent, u32 state)
 {
     objectEvent->sSavedMovementState = state;
+}
+
+static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction direction, u32 distance)
+{
+    s16 x = player->currentCoords.x;
+    s16 y = player->currentCoords.y;
+    u32 i;
+    u32 collision;
+
+    for (i = 0; i < distance; i++)
+    {
+        MoveCoords(direction, &x, &y);
+        collision = GetCollisionFlagsAtCoords(player, x, y, direction);
+        if (collision != 0 && (collision & ~(1 << (COLLISION_OUTSIDE_RANGE - 1))))
+            return FALSE;
+    }
+
+    return TRUE;
 }
 
 #undef sOverworldEncounterLevel
