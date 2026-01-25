@@ -387,9 +387,9 @@ static void CB2_InitLearnMove_Basic(void)
             gTasks[sMoveRelearnerStruct->mainTask].func = Task_MoveRelearner_HandleInput;
         }
         if (gRelearnMode == RELEARN_MODE_SCRIPT)
-            gTasks[taskId].tRecoverPp = TRUE;
+            gTasks[sMoveRelearnerStruct->mainTask].tRecoverPp = TRUE;
         else
-            gTasks[taskId].tRecoverPp = P_SUMMARY_MOVE_RELEARNER_FULL_PP;
+            gTasks[sMoveRelearnerStruct->mainTask].tRecoverPp = P_SUMMARY_MOVE_RELEARNER_FULL_PP;
         SetVBlankCallback(VBlankCB_MoveRelearner);
         SetMainCallback2(CB2_MoveRelearnerMain);
         break;
