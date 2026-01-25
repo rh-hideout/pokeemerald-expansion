@@ -3760,6 +3760,7 @@ BattleScript_EffectBellyDrum::
 
 BattleScript_EffectPsychUp::
 	attackcanceler
+	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	copyfoestats
 	attackanimation
 	waitanimation
