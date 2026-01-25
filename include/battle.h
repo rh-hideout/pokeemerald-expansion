@@ -499,8 +499,6 @@ struct FutureSight
 
 struct BattlerState
 {
-    u8 targetsDone[MAX_BATTLERS_COUNT];
-
     u32 commandingDondozo:1;
     u32 focusPunchBattlers:1;
     u32 multipleSwitchInBattlers:1;
@@ -526,7 +524,8 @@ struct BattlerState
     u16 fainted:1;
     u16 isFirstTurn:2;
     u16 supremeOverlordCounter:3; // To store up to 5
-    u16 padding:9;
+    u16 targetsDone:MAX_BATTLERS_COUNT;
+    u16 padding:5;
     // End of Word
 };
 
@@ -543,6 +542,7 @@ struct PartyState
     u32 sentOut:1;
     u32 isKnockedOff:1;
     u32 padding:8;
+    // End of Word
     u16 usedHeldItem;
 };
 

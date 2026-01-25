@@ -6296,7 +6296,7 @@ static u32 GetPossibleNextTarget(void)
         if (!IsBattlerAlive(battler))
             continue;
 
-        if (!gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler]
+        if (!(gBattleStruct->battlerState[gBattlerAttacker].targetsDone & (1u << battler))
          && !IsBattlerUnaffectedByMove(battler))
             return battler;
     }
@@ -6312,7 +6312,7 @@ static void Cmd_getpossiblenexttarget(void)
     if (nextTarget != MAX_BATTLERS_COUNT)
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget;
-        gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
+        gBattleStruct->battlerState[gBattlerAttacker].targetsDone |= (1u << gBattlerTarget);
         gBattlescriptCurrInstr = cmd->jumpInstr;
     }
     else

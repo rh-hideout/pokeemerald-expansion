@@ -9640,7 +9640,7 @@ u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
             continue;
 
         if (!(excludeCurrent && battler == gBattlerTarget)
-         && !gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler]
+         && !(gBattleStruct->battlerState[gBattlerAttacker].targetsDone & (1u << battler))
          && (!IsBattlerAlly(battler, gBattlerAttacker) || moveTarget == TARGET_FOES_AND_ALLY))
             break;
     }

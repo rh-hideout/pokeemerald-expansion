@@ -2271,7 +2271,7 @@ static enum MoveEndResult MoveEndNextTarget(void)
 {
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
-    gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
+    gBattleStruct->battlerState[gBattlerAttacker].targetsDone |= (1u << gBattlerTarget);
 
     if (gBattleStruct->unableToUseMove || gProtectStructs[gBattlerAttacker].chargingTurn)
     {
@@ -2316,9 +2316,9 @@ static enum MoveEndResult MoveEndNextTarget(void)
             u8 originalBounceTarget = gBattlerAttacker;
             gBattleStruct->bouncedMoveIsUsed = FALSE;
             gBattlerAttacker = gBattleStruct->attackerBeforeBounce;
-            gBattleStruct->battlerState[gBattlerAttacker].targetsDone[originalBounceTarget] = TRUE;
+            gBattleStruct->battlerState[gBattlerAttacker].targetsDone |= (1u << originalBounceTarget);
             for (u32 i = 0; i < gBattlersCount; i++)
-                gBattleStruct->battlerState[originalBounceTarget].targetsDone[i] = FALSE;
+                gBattleStruct->battlerState[originalBounceTarget].targetsDone &= ~(1u << i);
             nextTarget = GetNextTarget(moveTarget, FALSE);
             if (nextTarget != MAX_BATTLERS_COUNT)
             {
@@ -3227,7 +3227,7 @@ static enum MoveEndResult MoveEndClearBits(void)
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        gBattleStruct->battlerState[gBattlerAttacker].targetsDone[i] = FALSE;
+        gBattleStruct->battlerState[gBattlerAttacker].targetsDone &= ~(1u << i);
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
         if (gBattleStruct->battlerState[i].commanderSpecies != SPECIES_NONE && !IsBattlerAlive(i))
@@ -3721,4 +3721,3 @@ static bool32 TryActivatePowderStatus(enum Move move)
         return TRUE;
     return FALSE;
 }
-
