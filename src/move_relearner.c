@@ -158,9 +158,12 @@ static EWRAM_DATA struct
     u8 moveDisplayArrowTask;
     u16 scrollOffset;
     u8 categoryIconSpriteId;
+} *sMoveRelearnerStruct = {0};
+
+static EWRAM_DATA struct {
     u16 listOffset;
     u16 listRow;
-} *sMoveRelearnerStruct = {0};
+} sMoveRelearnerScrollState = {0};
 
 EWRAM_DATA enum MoveRelearnerStates gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
 EWRAM_DATA enum RelearnMode gRelearnMode = RELEARN_MODE_NONE;
@@ -443,7 +446,7 @@ static void CB2_InitLearnMove_Basic(void)
     case 3:
         StoreMoveText();
         CreateLearnableMovesList();
-        sMoveRelearnerStruct->moveListMenuTask = ListMenuInit(&gMultiuseListMenuTemplate, sMoveRelearnerStruct->listOffset, sMoveRelearnerStruct->listRow);
+        sMoveRelearnerStruct->moveListMenuTask = ListMenuInit(&gMultiuseListMenuTemplate, sMoveRelearnerScrollState.listOffset, sMoveRelearnerScrollState.listRow);
         gMain.state++;
         break;
     case 4:
@@ -479,6 +482,8 @@ void CB2_InitLearnMove(void)
     ResetTasks();
     sMoveRelearnerStruct = AllocZeroed(sizeof(*sMoveRelearnerStruct));
     sMoveRelearnerStruct->mainTask = CreateTask(TaskDummy, 1);
+    sMoveRelearnerScrollState.listOffset = 0;
+    sMoveRelearnerScrollState.listRow = 0;
     gTasks[sMoveRelearnerStruct->mainTask].tState = 0;
     gTasks[sMoveRelearnerStruct->mainTask].tPartyIndex = gSpecialVar_0x8004;
     gTasks[sMoveRelearnerStruct->mainTask].tMove = MOVE_NONE;
@@ -546,7 +551,7 @@ static bool32 ShouldConsumeTmItem(enum Move move)
 static void FreeMoveRelearnerResources(void)
 {
     RemoveScrollArrows();
-    DestroyListMenuTask(sMoveRelearnerStruct->moveListMenuTask, &sMoveRelearnerStruct->listOffset, &sMoveRelearnerStruct->listRow);
+    DestroyListMenuTask(sMoveRelearnerStruct->moveListMenuTask, &sMoveRelearnerScrollState.listOffset, &sMoveRelearnerScrollState.listRow);
     FreeAllWindowBuffers();
     FREE_AND_SET_NULL(sMoveRelearnerStruct);
     ResetSpriteData();
@@ -685,7 +690,7 @@ static void Task_MoveRelearner_LearnMove(u8 taskId)
 static void Task_MoveRelearner_HandleInput(u8 taskId)
 {
     s32 itemId = ListMenu_ProcessInput(sMoveRelearnerStruct->moveListMenuTask);
-    ListMenuGetScrollAndRow(sMoveRelearnerStruct->moveListMenuTask, &sMoveRelearnerStruct->listOffset, &sMoveRelearnerStruct->listRow);
+    ListMenuGetScrollAndRow(sMoveRelearnerStruct->moveListMenuTask, &sMoveRelearnerScrollState.listOffset, &sMoveRelearnerScrollState.listRow);
 
     switch (itemId)
     {
@@ -745,7 +750,7 @@ static void Task_MoveRelearner_HandleInput(u8 taskId)
 
 static s32 GetCurrentSelectedMove(void)
 {
-    return sMoveRelearnerStruct->menuItems[sMoveRelearnerStruct->listRow + sMoveRelearnerStruct->listOffset].id;
+    return sMoveRelearnerStruct->menuItems[sMoveRelearnerScrollState.listRow + sMoveRelearnerScrollState.listOffset].id;
 }
 
 static void ShowTeachMoveText(void)
@@ -791,7 +796,7 @@ static void AddScrollArrows(void)
     {
         gTempScrollArrowTemplate = sMoveListScrollArrowsTemplate;
         gTempScrollArrowTemplate.fullyDownThreshold = sMoveRelearnerStruct->numMenuChoices - sMoveRelearnerStruct->numToShowAtOnce;
-        sMoveRelearnerStruct->moveListScrollArrowTask = AddScrollIndicatorArrowPair(&gTempScrollArrowTemplate, &sMoveRelearnerStruct->listOffset);
+        sMoveRelearnerStruct->moveListScrollArrowTask = AddScrollIndicatorArrowPair(&gTempScrollArrowTemplate, &sMoveRelearnerScrollState.listOffset);
     }
 }
 
