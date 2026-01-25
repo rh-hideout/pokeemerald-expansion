@@ -1037,17 +1037,17 @@ void OverworldWildEncounter_RemoveObjectOnBattle(void)
 // Returns TRUE if movement is restricted.
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction)
 {
+    if (GetCollisionInDirection(objectEvent, direction))
+        return TRUE;
+
     if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
         return FALSE;
-    
-    if ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileInDirection(objectEvent, direction))
-        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapInDirection(objectEvent, direction)))
-        return TRUE;
 
     if (OWE_CanAwareMonSeePlayer(objectEvent) && OW_WILD_ENCOUNTERS_UNRESTRICT_SIGHT)
         return FALSE;
     
-    if (GetCollisionInDirection(objectEvent, direction))
+    if ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileInDirection(objectEvent, direction))
+        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapInDirection(objectEvent, direction)))
         return TRUE;
 
     return FALSE;
