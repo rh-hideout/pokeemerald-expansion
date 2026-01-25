@@ -524,7 +524,8 @@ struct BattlerState
     // End of Word
     u32 wishPartyId:BIT_SIZE(PARTY_SIZE); // 3 bits
     enum BattlerId moveTarget:BIT_SIZE(MAX_BATTLERS_COUNT);  // 3 bits
-    u32 padding:26;
+    u32 chosenMovePosition:BIT_SIZE(MAX_MON_MOVES - 1); // 2 bits
+    u32 padding:24;
 };
 
 struct PartyState
@@ -598,7 +599,6 @@ struct BattleStruct
     u8 safariCatchFactor;
     u8 linkBattleVsSpriteId_V; // The letter "V"
     u8 linkBattleVsSpriteId_S; // The letter "S"
-    u8 chosenMovePositions[MAX_BATTLERS_COUNT];
     u8 stateIdAfterSelScript[MAX_BATTLERS_COUNT];
     u8 prevSelectedPartySlot;
     u8 stringMoveType;
@@ -1173,7 +1173,7 @@ static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
 
 static inline u32 GetChosenMoveFromPosition(u32 battler)
 {
-    return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
+    return gBattleMons[battler].moves[gBattleStruct->battlerState[battler].chosenMovePosition];
 }
 
 static inline void SetPassiveDamageAmount(u32 battler, s32 value)

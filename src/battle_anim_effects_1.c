@@ -6660,7 +6660,6 @@ static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)
 static void SwapBattlerMoveData(u32 battler1, u32 battler2)
 {
     u32 temp;
-    SWAP(gBattleStruct->chosenMovePositions[battler1], gBattleStruct->chosenMovePositions[battler2], temp);
     SWAP(gChosenMoveByBattler[battler1], gChosenMoveByBattler[battler2], temp);
     SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], temp);
     SWAP(gLockedMoves[battler1], gLockedMoves[battler2], temp);

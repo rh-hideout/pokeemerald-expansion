@@ -2074,7 +2074,7 @@ static enum MoveEndResult MoveEndFaintBlock(void)
         case FAINT_BLOCK_DO_GRUDGE:
             if (gBattleStruct->tryGrudge)
             {
-                u32 moveIndex = gBattleStruct->chosenMovePositions[gBattlerAttacker];
+                u32 moveIndex = gBattleStruct->battlerState[gBattlerAttacker].chosenMovePosition;
 
                 gBattleMons[gBattlerAttacker].pp[moveIndex] = 0;
                 BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, moveIndex + REQUEST_PPMOVE1_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].pp[moveIndex]), &gBattleMons[gBattlerAttacker].pp[moveIndex]);

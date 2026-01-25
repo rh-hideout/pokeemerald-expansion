@@ -545,7 +545,7 @@ void HandleAction_UseMove(void)
         return;
     }
 
-    gCurrMovePos = gChosenMovePos = gBattleStruct->chosenMovePositions[gBattlerAttacker];
+    gCurrMovePos = gChosenMovePos = gBattleStruct->battlerState[gBattlerAttacker].chosenMovePosition;
 
     // choose move
     if (gProtectStructs[gBattlerAttacker].noValidMoves)
