@@ -1006,7 +1006,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     if ((playerIsCollider || playerIsObstacle))
     {
         struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
-        if (!IsRoamerAt(OWE_GetObjectRoamerOutbreakStatus(wildMon),
+        if (wildMon->sRoamerOutbreakStatus && !IsRoamerAt(OWE_GetObjectRoamerOutbreakStatus(wildMon),
             gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
         {
             RemoveObjectEventByLocalIdAndMap(wildMon->localId, wildMon->mapNum, wildMon->mapGroup);
