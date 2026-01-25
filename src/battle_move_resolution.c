@@ -483,23 +483,25 @@ static enum CancelerResult CancelerZMoves(struct BattleContext *ctx)
 
 static enum CancelerResult CancelerChoiceLock(struct BattleContext *ctx)
 {
-    enum Move *choicedMoveAtk = &gBattleStruct->choicedMove[ctx->battlerAtk];
+    enum Move choicedMoveAtk = gBattleStruct->battlerState[ctx->battlerAtk].choicedMove;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(ctx->battlerAtk);
 
     if (gChosenMove != MOVE_STRUGGLE
-     && (*choicedMoveAtk == MOVE_NONE || *choicedMoveAtk == MOVE_UNAVAILABLE)
+     && (choicedMoveAtk == MOVE_NONE || choicedMoveAtk == MOVE_UNAVAILABLE)
      && (IsHoldEffectChoice(holdEffect) || ctx->abilityAtk == ABILITY_GORILLA_TACTICS))
-        *choicedMoveAtk = gChosenMove;
+        choicedMoveAtk = gChosenMove;
 
     u32 moveIndex;
     for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (gBattleMons[ctx->battlerAtk].moves[moveIndex] == *choicedMoveAtk)
+        if (gBattleMons[ctx->battlerAtk].moves[moveIndex] == choicedMoveAtk)
             break;
     }
 
     if (moveIndex == MAX_MON_MOVES)
-        *choicedMoveAtk = MOVE_NONE;
+        choicedMoveAtk = MOVE_NONE;
+
+    gBattleStruct->battlerState[ctx->battlerAtk].choicedMove = choicedMoveAtk;
 
     return CANCELER_RESULT_SUCCESS;
 }
@@ -2448,7 +2450,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
             gLastUsedItem = gBattleMons[gBattlerTarget].item;
             gBattleMons[gBattlerTarget].item = 0;
             if (gBattleMons[gBattlerTarget].ability != ABILITY_GORILLA_TACTICS)
-                gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
+                gBattleStruct->battlerState[gBattlerTarget].choicedMove = MOVE_NONE;
             CheckSetUnburden(gBattlerTarget);
 
             // In Gen 5+, Knock Off removes the target's item rather than rendering it unusable

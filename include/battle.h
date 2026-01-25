@@ -529,6 +529,8 @@ struct BattlerState
     u32 itemMoveSlot:BIT_SIZE(MAX_MON_MOVES - 1); // 2 bits
     u32 chosenItem:BIT_SIZE(ITEMS_COUNT); // 10 bits
     u32 padding:9;
+    u32 choicedMove:BIT_SIZE(MOVES_COUNT); // 10 bits
+    u32 padding2:22;
 };
 
 struct PartyState
@@ -622,7 +624,6 @@ struct BattleStruct
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 unused:4;
     void (*savedCallback)(void);
-    u16 choicedMove[MAX_BATTLERS_COUNT];
     u16 changedItems[MAX_BATTLERS_COUNT];
     u8 switchInBattlerCounter;
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]

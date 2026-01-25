@@ -2240,7 +2240,7 @@ void StealTargetItem(u8 battlerStealer, u8 itemBattler)
     MarkBattlerForControllerExec(itemBattler);
 
     if (GetBattlerAbility(itemBattler) != ABILITY_GORILLA_TACTICS)
-        gBattleStruct->choicedMove[itemBattler] = MOVE_NONE;
+        gBattleStruct->battlerState[itemBattler].choicedMove = MOVE_NONE;
 
     TrySaveExchangedItem(itemBattler, gLastUsedItem);
 }
@@ -9883,13 +9883,13 @@ static void Cmd_tryswapitems(void)
             MarkBattlerForControllerExec(gBattlerTarget);
 
             if (GetBattlerAbility(gBattlerTarget) != ABILITY_GORILLA_TACTICS)
-                gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
+                gBattleStruct->battlerState[gBattlerTarget].choicedMove = MOVE_NONE;
 
             if (GetBattlerAbility(gBattlerAttacker) != ABILITY_GORILLA_TACTICS
              && (!IsHoldEffectChoice(GetItemHoldEffect(oldItemDef))
              || (GetConfig(CONFIG_MODERN_TRICK_CHOICE_LOCK) >= GEN_5)))
             {
-                gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
+                gBattleStruct->battlerState[gBattlerAttacker].choicedMove = MOVE_NONE;
             }
 
             gBattlescriptCurrInstr = cmd->nextInstr;
@@ -13833,11 +13833,11 @@ void BS_UpdateChoiceMoveOnLvlUp(void)
         u32 moveIndex;
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            if (gBattleMons[battler].moves[moveIndex] == gBattleStruct->choicedMove[battler])
+            if (gBattleMons[battler].moves[moveIndex] == gBattleStruct->battlerState[battler].choicedMove)
                 break;
         }
         if (moveIndex == MAX_MON_MOVES)
-            gBattleStruct->choicedMove[battler] = MOVE_NONE;
+            gBattleStruct->battlerState[battler].choicedMove = MOVE_NONE;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

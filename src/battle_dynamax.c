@@ -184,7 +184,7 @@ void ActivateDynamax(u32 battler)
     ClearBehindSubstituteBit(battler);
 
     // Choiced Moves are reset upon Dynamaxing.
-    gBattleStruct->choicedMove[battler] = MOVE_NONE;
+    gBattleStruct->battlerState[battler].choicedMove = MOVE_NONE;
 
     // Try Gigantamax form change.
     if (!gBattleMons[battler].volatiles.transformed) // Ditto cannot Gigantamax.

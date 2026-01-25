@@ -1911,7 +1911,7 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattle
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
         {
             damageTaken = AI_GetDamage(opposingBattler, battler, moveIndex, AI_DEFENDING, gAiLogicData);
-            if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
+            if (playerMove == gBattleStruct->battlerState[opposingBattler].choicedMove) // If player is choiced, only care about the choice locked move
             {
                 *bestPlayerMove = playerMove;
                 return damageTaken;
@@ -1935,14 +1935,14 @@ static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposi
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         // If player is choiced into a non-priority move, AI understands that it can't deal priority damage
-        if (gBattleStruct->choicedMove[opposingBattler] != MOVE_NONE && GetMovePriority(gBattleStruct->choicedMove[opposingBattler]) < 1)
+        if (gBattleStruct->battlerState[opposingBattler].choicedMove != MOVE_NONE && GetMovePriority(gBattleStruct->battlerState[opposingBattler].choicedMove) < 1)
             break;
         playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[moveIndex] : playerMoves[moveIndex];
         if (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], playerMove) > 0
             && playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
         {
             damageTaken = AI_GetDamage(opposingBattler, battler, moveIndex, AI_DEFENDING, gAiLogicData);
-            if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
+            if (playerMove == gBattleStruct->battlerState[opposingBattler].choicedMove) // If player is choiced, only care about the choice locked move
             {
                 *bestPlayerPriorityMove = playerMove;
                 return damageTaken;

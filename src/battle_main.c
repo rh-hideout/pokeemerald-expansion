@@ -3022,7 +3022,7 @@ static void BattleStartClearSetData(void)
         gLastPrintedMoves[i] = MOVE_NONE;
         gPalaceSelectionBattleScripts[i] = 0;
         gBattleStruct->lastTakenMove[i] = MOVE_NONE;
-        gBattleStruct->choicedMove[i] = MOVE_NONE;
+        gBattleStruct->battlerState[i].choicedMove = MOVE_NONE;
         gBattleStruct->changedItems[i] = 0;
         gBattleStruct->lastTakenMoveFrom[i][0] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][1] = MOVE_NONE;
@@ -3238,7 +3238,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
         gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
     }
 
-    gBattleStruct->choicedMove[battler] = MOVE_NONE;
+    gBattleStruct->battlerState[battler].choicedMove = MOVE_NONE;
     gBattleStruct->eventState.arenaTurn = 0xFF;
 
     // Reset damage to prevent things like red card activating if the switched-in mon is holding it
@@ -3317,7 +3317,7 @@ const u8* FaintClearSetData(u32 battler)
     gLastPrintedMoves[battler] = MOVE_NONE;
     gLastHitBy[battler] = 0xFF;
 
-    gBattleStruct->choicedMove[battler] = MOVE_NONE;
+    gBattleStruct->battlerState[battler].choicedMove = MOVE_NONE;
     gBattleStruct->lastTakenMove[battler] = MOVE_NONE;
     gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
