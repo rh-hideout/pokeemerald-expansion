@@ -4845,6 +4845,7 @@ static void Cmd_end(void)
 {
     CMD_ARGS();
 
+    assertf(gSelectionBattleScripts[gBattlerAttacker] == NULL, "incorrect use of end in selection script, did you mean endselectionscript?");
     assertf(gBattleMainFunc != RunBattleScriptCommands, "incorrect use of end in battle script, did you mean end3?");
 
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
@@ -4857,6 +4858,7 @@ static void Cmd_end2(void)
 {
     CMD_ARGS();
 
+    assertf(gSelectionBattleScripts[gBattlerAttacker] == NULL, "incorrect use of end2 in selection script, did you mean endselectionscript?");
     assertf(gBattleMainFunc != RunBattleScriptCommands, "incorrect use of end2 in battle script, did you mean end3?");
 
     gCurrentActionFuncId = B_ACTION_TRY_FINISH;
@@ -4866,6 +4868,8 @@ static void Cmd_end2(void)
 static void Cmd_end3(void)
 {
     CMD_ARGS();
+
+    assertf(gSelectionBattleScripts[gBattlerAttacker] == NULL, "incorrect use of end3 in selection script, did you mean endselectionscript?");
 
     BattleScriptPop();
     if (gBattleResources->battleCallbackStack->size != 0)
@@ -4915,7 +4919,7 @@ static void Cmd_endselectionscript(void)
 {
     CMD_ARGS();
 
-    assertf(gSelectionBattleScripts[gBattlerAttacker] != NULL, "wrong use of endselectionstring");
+    assertf(gSelectionBattleScripts[gBattlerAttacker] != NULL, "wrong use of endselectionscript");
     gBattleStruct->battlerState[gBattlerAttacker].selectionScriptFinished = TRUE;
 }
 
