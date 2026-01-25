@@ -1077,9 +1077,8 @@ bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon)
     if (!IsOverworldWildEncounter(mon, OWE_ANY) || mon->movementType == MOVEMENT_TYPE_WANDER_AROUND_OWE)
         return FALSE;
 
-    if ((TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
-     || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
-     && OWE_IsPlayerInsideMonActiveDistance(mon));
+    if (OWE_IsPlayerInsideMonActiveDistance(mon) && (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
+     || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING)))
         return TRUE;
 
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
