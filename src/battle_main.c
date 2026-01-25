@@ -4530,6 +4530,7 @@ static void HandleTurnActionSelectionState(void)
         case STATE_SELECTION_SCRIPT:
             if (gBattleStruct->battlerState[battler].selectionScriptFinished)
             {
+                gSelectionBattleScripts[battler] = NULL;
                 gBattleCommunication[battler] = gBattleStruct->stateIdAfterSelScript[battler];
             }
             else
@@ -4552,6 +4553,7 @@ static void HandleTurnActionSelectionState(void)
         case STATE_SELECTION_SCRIPT_MAY_RUN:
             if (gBattleStruct->battlerState[battler].selectionScriptFinished)
             {
+                gSelectionBattleScripts[battler] = NULL;
                 if (gBattleResources->bufferB[battler][1] == B_ACTION_NOTHING_FAINTED)
                 {
                     gHitMarker |= HITMARKER_RUN;

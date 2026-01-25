@@ -1423,6 +1423,21 @@ void BattleScriptPop(void)
         gBattlescriptCurrInstr = gBattleResources->battleScriptsStack->ptr[--gBattleResources->battleScriptsStack->size];
 }
 
+void BattleScriptExecute(const u8 *BS_ptr)
+{
+    gBattlescriptCurrInstr = BS_ptr;
+    gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
+    gBattleMainFunc = RunBattleScriptCommands_PopCallbacksStack;
+    gCurrentActionFuncId = 0;
+}
+
+void BattleScriptPushCursorAndCallback(const u8 *BS_ptr)
+{
+    BattleScriptCall(BS_ptr);
+    gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
+    gBattleMainFunc = RunBattleScriptCommands;
+}
+
 bool32 IsGravityPreventingMove(enum Move move)
 {
     if (!(gFieldStatuses & STATUS_FIELD_GRAVITY))
@@ -5116,21 +5131,6 @@ bool32 CanBattlerEscape(u32 battler) // no ability check
         return FALSE;
     else
         return TRUE;
-}
-
-void BattleScriptExecute(const u8 *BS_ptr)
-{
-    gBattlescriptCurrInstr = BS_ptr;
-    gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
-    gBattleMainFunc = RunBattleScriptCommands_PopCallbacksStack;
-    gCurrentActionFuncId = 0;
-}
-
-void BattleScriptPushCursorAndCallback(const u8 *BS_ptr)
-{
-    BattleScriptCall(BS_ptr);
-    gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
-    gBattleMainFunc = RunBattleScriptCommands;
 }
 
 bool32 IsPsychicTerrainAffected(u32 battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses)
