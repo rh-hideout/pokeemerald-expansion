@@ -257,7 +257,7 @@ CableClub_EventScript_MultiBattleMode_Frlg::
 	end
 
 CableClub_EventScript_TryEnterColosseum_Frlg::
-	call CableClubSaveGame
+	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink_Frlg
 	message CableClub_Text_PleaseWaitBCancel_Frlg
 	waitmessage
@@ -353,7 +353,7 @@ CableClub_EventScript_TradeCenter_Frlg::
 	copyvar VAR_0x8007, VAR_LAST_TALKED
 	call CableClub_EventScript_CheckPartyTradeRequirements_Frlg
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink_Frlg
-	call CableClubSaveGame
+	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink_Frlg
 	message CableClub_Text_PleaseWaitBCancel_Frlg
 	waitmessage
@@ -394,7 +394,7 @@ CableClub_EventScript_EnterTradeCenter_Frlg::
 	waitdooranim
 	release
 	special SetCableClubWarp
-	setwarp MAP_TRADE_CENTER, 5, 8
+	setwarp MAP_TRADE_CENTER_FRLG, 5, 8
 	special DoCableClubWarp
 	waitstate
 	end
@@ -745,7 +745,7 @@ CableClub_EventScript_UnionRoomInfo_Frlg::
 CableClub_EventScript_EnterUnionRoom_Frlg::
 	call CableClub_EventScript_CheckPartyUnionRoomRequirements_Frlg
 	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_AbortLink_Frlg
-	call CableClubSaveGame
+	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink_Frlg
 	msgbox CableClub_Text_EnjoyUnionRoom_Frlg
 	closemessage
@@ -769,7 +769,7 @@ CableClub_EventScript_EnterUnionRoom_Frlg::
 	waitdooranim
 	special Script_ResetUnionRoomTrade
 	special SetCableClubWarp
-	warpspinenter MAP_UNION_ROOM, 7, 11
+	warpspinenter MAP_UNION_ROOM_FRLG, 7, 11
 	waitstate
 	special RunUnionRoom
 	waitstate
@@ -911,7 +911,7 @@ CableClub_EventScript_NeedBerryForBerryCrush_Frlg::
 	end
 
 CableClub_EventScript_SaveAndChooseLinkLeader_Frlg::
-	call CableClubSaveGame
+	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortLink_Frlg
 	switch VAR_0x8004
 	case LINK_GROUP_TRADE, CableClub_EventScript_ChooseLinkLeaderFrom2_Frlg
@@ -1144,7 +1144,7 @@ CableClub_EventScript_PlayPokemonJump_Frlg::
 	special ChooseMonForWirelessMinigame
 	waitstate
 	goto_if_ge VAR_0x8004, PARTY_SIZE, CableClub_EventScript_AbortMinigame_Frlg
-	call CableClubSaveGame
+	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortMinigame_Frlg
 	setvar VAR_0x8004, LINK_GROUP_POKEMON_JUMP
 	goto CableClub_EventScript_ChooseLinkLeaderMinigame_Frlg
@@ -1159,7 +1159,7 @@ CableClub_EventScript_PlayDodrioBerryPicking_Frlg::
 	special ChooseMonForWirelessMinigame
 	waitstate
 	goto_if_ge VAR_0x8004, PARTY_SIZE, CableClub_EventScript_AbortMinigame_Frlg
-	call CableClubSaveGame
+	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortMinigame_Frlg
 	setvar VAR_0x8004, LINK_GROUP_BERRY_PICKING
 	goto CableClub_EventScript_ChooseLinkLeaderMinigame_Frlg
