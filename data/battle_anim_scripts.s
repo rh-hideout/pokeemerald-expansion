@@ -33795,10 +33795,10 @@ ShatteredPsycheFinish:
 	restorebg
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 15, 1
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -4, -4, 15, ANIM_TARGET, 1
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, 0x1, 0x0, 0x0, 0x0  		@ -8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, 0x1, 0x1, 0x0, 0x0
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, 0x1, 0x2, 0x0, 0x0
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, 0x1, 0x3, 0x0, 0x0
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 0, 0, 0  		@ -8, -12
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 1, 0, 0
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 2, 0, 0
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 3, 0, 0
 	waitbgfadeout
 	createvisualtask AnimTask_AllBattlersVisible, 0xA
 	waitforvisualfinish
@@ -33976,10 +33976,10 @@ SubzeroSlammerFinish:
 	loadspritegfx ANIM_TAG_TORN_METAL
 	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
 	delay 3
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, 0x1, 0x0, 0x0, 0x0  		@ -8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, 0x1, 0x1, 0x0, 0x0
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, 0x1, 0x2, 0x0, 0x0
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, 0x1, 0x3, 0x0, 0x0
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 0, 0, 0  		@ -8, -12
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 1, 0, 0
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 2, 0, 0
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 3, 0, 0
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 8, 28
 	call SubzeroSlammerExplosion
 	call SubzeroSlammerExplosion
