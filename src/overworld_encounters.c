@@ -32,6 +32,7 @@
 #define sOverworldEncounterLevel    trainerRange_berryTreeId
 #define sAge                        playerCopyableMovement
 #define sRoamerOutbreakStatus       directionSequenceIndex
+#define sSavedMovementState         warpArrowSpriteId
 #define OWE_NON_ROAMER_OUTBREAK     0
 #define OWE_MASS_OUTBREAK_INDEX     ROAMER_COUNT + 1
 #define OWE_INVALID_ROAMER_OUTBREAK OWE_MASS_OUTBREAK_INDEX + 1
@@ -1506,17 +1507,20 @@ struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnA
     return palette;
 }
 
-#define sTypeFuncId         data[1]
-#define sSavedMovementState warpArrowSpriteId
-
+#define sTypeFuncId data[1] // Same as in src/event_object_movement.c
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     if (IsOverworldWildEncounter(objectEvent, OWE_ANY))
         sprite->sTypeFuncId = objectEvent->sSavedMovementState;
+}
+#undef sTypeFuncId
+
+void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent, u32 state)
+{
+    objectEvent->sSavedMovementState = state;
 }
 
 #undef sOverworldEncounterLevel
 #undef sAge
 #undef sRoamerOutbreakStatus
 #undef sSavedMovementState
-#undef sTypeFuncId

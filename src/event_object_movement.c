@@ -11847,19 +11847,15 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step5(struct ObjectEvent 
     return TRUE;
 }
 
-#define sSavedMovementState warpArrowSpriteId
-
 movement_type_def(MovementType_ChasePlayer_OverworldWildEncounter, gMovementTypeFuncs_ChasePlayer_OverworldWildEncounter)
 
 bool8 MovementType_Common_OverworldWildEncounter_Step7(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     ClearObjectEventMovement(objectEvent, sprite);
-    objectEvent->sSavedMovementState = 10;
+    OWE_SetSavedMovementState(objectEvent, 10);
     sprite->sTypeFuncId = 8;
     return TRUE;
 }
-
-#undef sSavedMovementState
 
 bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {

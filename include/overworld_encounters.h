@@ -125,5 +125,6 @@ bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct Obj
 u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
 struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim);
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent, u32 state);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
