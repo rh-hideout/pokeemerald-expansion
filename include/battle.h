@@ -523,7 +523,7 @@ struct BattlerState
     u16 switchIn:1;
     u16 fainted:1;
     u16 isFirstTurn:2;
-    u16 supremeOverlordCounter:3; // To store up to 5
+    u16 supremeOverlordCounter:BIT_SIZE(5); // 3 bits
     u16 targetsDone:MAX_BATTLERS_COUNT;
     u16 padding:5;
     // End of Word
