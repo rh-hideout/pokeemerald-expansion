@@ -525,7 +525,8 @@ struct BattlerState
     u16 isFirstTurn:2;
     u16 supremeOverlordCounter:BIT_SIZE(5); // 3 bits
     u16 targetsDone:MAX_BATTLERS_COUNT;
-    u16 padding:5;
+    u16 partyId:BIT_SIZE(PARTY_SIZE); // 3 bits
+    u16 padding:2;
     // End of Word
 };
 
@@ -592,7 +593,6 @@ struct BattleStruct
     u8 moneyMultiplierMove:1;
     u8 savedTurnActionNumber;
     u8 scriptPartyIdx; // for printing the nickname
-    u8 battlerPartyIndexes[MAX_BATTLERS_COUNT];
     u8 monToSwitchIntoId[MAX_BATTLERS_COUNT];
     u8 battlerPartyOrders[MAX_BATTLERS_COUNT][PARTY_SIZE / 2];
     u8 runTries;

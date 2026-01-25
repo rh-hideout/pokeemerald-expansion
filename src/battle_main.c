@@ -4239,7 +4239,7 @@ static void HandleTurnActionSelectionState(void)
                     }
                     break;
                 case B_ACTION_SWITCH:
-                    gBattleStruct->battlerPartyIndexes[battler] = gBattlerPartyIndexes[battler];
+                    gBattleStruct->battlerState[battler].partyId = gBattlerPartyIndexes[battler];
                     if (gBattleTypeFlags & BATTLE_TYPE_ARENA
                         || (!CanBattlerEscape(battler) && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SHED_SHELL))
                     {

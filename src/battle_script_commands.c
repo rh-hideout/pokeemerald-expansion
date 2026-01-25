@@ -5379,7 +5379,7 @@ static void Cmd_jumpifcantswitch(void)
 // Note that this is not used by the Switch action, only replacing fainted Pokémon or Baton Pass
 static void ChooseMonToSendOut(u32 battler, u8 slotId)
 {
-    gBattleStruct->battlerPartyIndexes[battler] = gBattlerPartyIndexes[battler];
+    gBattleStruct->battlerState[battler].partyId = gBattlerPartyIndexes[battler];
     gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
     gBattleStruct->field_93 &= ~(1u << battler);
 
@@ -5557,7 +5557,7 @@ static void Cmd_openpartyscreen(void)
         }
         else
         {
-            gBattleStruct->battlerPartyIndexes[battler] = gBattlerPartyIndexes[battler];
+            gBattleStruct->battlerState[battler].partyId = gBattlerPartyIndexes[battler];
             gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
             gBattleStruct->field_93 &= ~(1u << battler);
 
@@ -8210,7 +8210,7 @@ static void Cmd_forcerandomswitch(void)
         }
         else
         {
-            gBattleStruct->battlerPartyIndexes[gBattlerTarget] = gBattlerPartyIndexes[gBattlerTarget];
+            gBattleStruct->battlerState[gBattlerTarget].partyId = gBattlerPartyIndexes[gBattlerTarget];
             gBattlescriptCurrInstr = BattleScript_RoarSuccessSwitch;
             gProtectStructs[gBattlerTarget].forcedSwitch = TRUE;
             gBattleStruct->monToSwitchIntoId[gBattlerTarget] = validMons[RandomUniform(RNG_FORCE_RANDOM_SWITCH, 0, validMonsCount - 1)];
@@ -10293,7 +10293,7 @@ static void Cmd_switchoutabilities(void)
 
         gBattleMons[battler].status1 = 0;
         BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE,
-                                        1u << gBattleStruct->battlerPartyIndexes[battler],
+                                        1u << gBattleStruct->battlerState[battler].partyId,
                                         sizeof(gBattleMons[battler].status1),
                                         &gBattleMons[battler].status1);
         MarkBattlerForControllerExec(battler);
@@ -10305,7 +10305,7 @@ static void Cmd_switchoutabilities(void)
         if (regenerate > gBattleMons[battler].maxHP)
             regenerate = gBattleMons[battler].maxHP;
         BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HP_BATTLE,
-                                        1u << gBattleStruct->battlerPartyIndexes[battler],
+                                        1u << gBattleStruct->battlerState[battler].partyId,
                                         sizeof(regenerate),
                                         &regenerate);
         MarkBattlerForControllerExec(battler);
