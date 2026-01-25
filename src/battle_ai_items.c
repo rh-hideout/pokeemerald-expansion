@@ -168,8 +168,8 @@ bool32 ShouldUseItem(u32 battler)
                 shouldUse = TRUE;
             break;
         case EFFECT_ITEM_REVIVE:
-            gBattleStruct->itemPartyIndex[battler] = GetFirstFaintedPartyIndex(battler);
-            if (gBattleStruct->itemPartyIndex[battler] != PARTY_SIZE) // Revive if possible.
+            gBattleStruct->battlerState[battler].itemPartyId = GetFirstFaintedPartyIndex(battler);
+            if (gBattleStruct->battlerState[battler].itemPartyId != PARTY_SIZE) // Revive if possible.
                 shouldUse = TRUE;
             break;
         case EFFECT_ITEM_USE_POKE_FLUTE:
@@ -182,8 +182,8 @@ bool32 ShouldUseItem(u32 battler)
         if (shouldUse)
         {
             // Set selected party ID to current battler if none chosen.
-            if (gBattleStruct->itemPartyIndex[battler] == PARTY_SIZE)
-                gBattleStruct->itemPartyIndex[battler] = gBattlerPartyIndexes[battler];
+            if (gBattleStruct->battlerState[battler].itemPartyId == PARTY_SIZE)
+                gBattleStruct->battlerState[battler].itemPartyId = gBattlerPartyIndexes[battler];
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
             gBattleStruct->chosenItem[battler] = item;
             gBattleHistory->trainerItems[itemIndex] = 0;

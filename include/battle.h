@@ -525,7 +525,8 @@ struct BattlerState
     u32 wishPartyId:BIT_SIZE(PARTY_SIZE); // 3 bits
     enum BattlerId moveTarget:BIT_SIZE(MAX_BATTLERS_COUNT);  // 3 bits
     u32 chosenMovePosition:BIT_SIZE(MAX_MON_MOVES - 1); // 2 bits
-    u32 padding:24;
+    u32 itemPartyId:BIT_SIZE(PARTY_SIZE); // 3 bits
+    u32 padding:21;
 };
 
 struct PartyState
@@ -679,7 +680,6 @@ struct BattleStruct
     u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
     u8 padding3:1;
-    u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
