@@ -4535,6 +4535,7 @@ static void HandleTurnActionSelectionState(void)
             }
             else
             {
+                assertf(gSelectionBattleScripts[battler] != NULL, "selection script set to run, but pointer is null");
                 gBattlerAttacker = battler;
                 gBattlescriptCurrInstr = gSelectionBattleScripts[battler];
                 if (!IsBattleControllerActiveOrPendingSyncAnywhere(battler))
@@ -4568,6 +4569,7 @@ static void HandleTurnActionSelectionState(void)
             }
             else
             {
+                assertf(gSelectionBattleScripts[battler] != NULL, "selection script set to run, but pointer is null");
                 gBattlerAttacker = battler;
                 gBattlescriptCurrInstr = gSelectionBattleScripts[battler];
                 if (!IsBattleControllerActiveOrPendingSyncAnywhere(battler))
