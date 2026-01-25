@@ -1984,15 +1984,15 @@ gBattleAnimMove_IceShard::
 	setalpha 12, 8
 	loadspritegfx ANIM_TAG_ICE_CRYSTALS
 	loadspritegfx ANIM_TAG_IMPACT
-	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gIceShardSpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 4
 	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_TARGET, -31, 0, 7, RGB(0, 20, 31)
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 25, 1
@@ -19861,36 +19861,36 @@ TeraBlastBug:
 	waitforvisualfinish
 	monbg ANIM_DEF_PARTNER
 	call SetBugBg
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 3, 0, 50, 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	delay 1
-	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30 
+	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
 	delay 1
 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
@@ -20994,7 +20994,7 @@ OrderUpStretchy:
 	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
 	waitforvisualfinish
 	end
-	
+
 gBattleAnimMove_MatchaGotcha::
 	loadspritegfx ANIM_TAG_POISON_BUBBLE
 	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER

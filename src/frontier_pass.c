@@ -606,7 +606,7 @@ static void LeaveFrontierPass(void)
 
 static u32 AllocateFrontierPassData(MainCallback callback)
 {
-    // This variable is a MAPSEC initially, but is recycled as a 
+    // This variable is a MAPSEC initially, but is recycled as a
     // bare integer near the end of the function.
     mapsec_u8_t i;
 

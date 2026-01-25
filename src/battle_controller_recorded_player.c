@@ -286,7 +286,7 @@ static void RecordedPlayerHandleDrawTrainerPic(u32 battler)
             xPos = 80;
         yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
     }
-    else 
+    else
     {
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
         {
