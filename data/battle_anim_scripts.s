@@ -17063,6 +17063,10 @@ gBattleAnimMove_RagingBull::
 	choosetwoturnanim RagingBullNormal, RagingBullShatteredWall
 RagingBullNormal:
 	call RagingBullCommon1
+	call SetImpactBackground
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 20, 0, 0, 4
+	delay 3
+	waitforvisualfinish
 	call RagingBullCommon2
 RagingBullEnd:
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 5
@@ -17075,6 +17079,10 @@ RagingBullEnd:
 	end
 RagingBullShatteredWall:
 	call RagingBullCommon1
+	call SetImpactBackground
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 20, 0, 0, 4
+	delay 3
+	waitforvisualfinish
 	createsprite gBrickBreakWallSpriteTemplate, ANIM_ATTACKER, 3, ANIM_TARGET, 0, 0, 90, 10
 	call RagingBullCommon2
 	break_screen_animation
@@ -17092,10 +17100,6 @@ RagingBullCommon1:
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 18, 6, 2, 4
 	waitforvisualfinish
 	playsewithpan SE_M_SWIFT, SOUND_PAN_ATTACKER
-	call SetImpactBackground
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 20, 0, 0, 4
-	delay 3
-	waitforvisualfinish
 	return
 
 RagingBullCommon2:
