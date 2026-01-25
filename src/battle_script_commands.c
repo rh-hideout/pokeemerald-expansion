@@ -12110,7 +12110,7 @@ void BS_ItemRestorePP(void)
     // Check whether to apply to all moves.
     if (effect[4] & ITEM4_HEAL_PP_ONE)
     {
-        i = gBattleStruct->itemMoveIndex[gBattlerAttacker];
+        i = gBattleStruct->battlerState[gBattlerAttacker].itemMoveSlot;
         loopEnd = i + 1;
     }
     else
