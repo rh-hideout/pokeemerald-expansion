@@ -1079,41 +1079,45 @@ bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon)
     if (!IsOverworldWildEncounter(mon, OWE_ANY) || mon->movementType == MOVEMENT_TYPE_WANDER_AROUND_OWE)
         return FALSE;
 
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
-    {
-        if (OWE_IsPlayerInsideMonActiveDistance(mon))
-            return TRUE;
-    }
-    else
-    {
-        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-        u32 speciesId = OW_SPECIES(mon);
-        u32 viewDistance = OWE_GetViewDistanceFromSpecies(speciesId);
-        u32 viewWidth = OWE_GetViewWidthFromSpecies(speciesId);
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
+     || (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && gPlayerAvatar.runningState == MOVING))
+        return OWE_IsPlayerInsideMonActiveDistance(mon);
 
-        switch (mon->facingDirection)
-        {
-        case DIR_NORTH:
-            if (player->currentCoords.y < mon->currentCoords.y && (mon->currentCoords.y - player->currentCoords.y) <= viewDistance
-             && player->currentCoords.x >= (mon->currentCoords.x - ((viewWidth - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((viewWidth - 1) / 2)))
-                return TRUE;
-            break;
-        case DIR_SOUTH:
-            if (player->currentCoords.y > mon->currentCoords.y && (player->currentCoords.y - mon->currentCoords.y) <= viewDistance
-             && player->currentCoords.x >= (mon->currentCoords.x - ((viewWidth - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((viewWidth - 1) / 2)))
-                return TRUE;
-            break;
-        case DIR_EAST:
-            if (player->currentCoords.x > mon->currentCoords.x && (player->currentCoords.x - mon->currentCoords.x) <= viewDistance
-             && player->currentCoords.y >= (mon->currentCoords.y - ((viewWidth - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((viewWidth - 1) / 2)))
-                return TRUE;
-            break;
-        case DIR_WEST:
-            if (player->currentCoords.x < mon->currentCoords.x && (mon->currentCoords.x - player->currentCoords.x) <= viewDistance
-             && player->currentCoords.y >= (mon->currentCoords.y - ((viewWidth - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((viewWidth - 1) / 2)))
-                return TRUE;
-            break;
-        }
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u32 speciesId = OW_SPECIES(mon);
+    u32 viewDistance = OWE_GetViewDistanceFromSpecies(speciesId);
+    u32 viewWidth = OWE_GetViewWidthFromSpecies(speciesId);
+    s32 halfWidth = (viewWidth - 1) / 2;
+
+    switch (mon->facingDirection)
+    {
+    case DIR_NORTH:
+        if (player->currentCoords.y < mon->currentCoords.y
+         && mon->currentCoords.y - player->currentCoords.y <= viewDistance
+         && player->currentCoords.x >= mon->currentCoords.x - halfWidth
+         && player->currentCoords.x <= mon->currentCoords.x + halfWidth)
+            return TRUE;
+
+    case DIR_SOUTH:
+        if (player->currentCoords.y > mon->currentCoords.y
+         && player->currentCoords.y - mon->currentCoords.y <= viewDistance
+         && player->currentCoords.x >= mon->currentCoords.x - halfWidth
+         && player->currentCoords.x <= mon->currentCoords.x + halfWidth)
+            return TRUE;
+
+    case DIR_EAST:
+        if (player->currentCoords.x > mon->currentCoords.x
+         && player->currentCoords.x - mon->currentCoords.x <= viewDistance
+         && player->currentCoords.y >= mon->currentCoords.y - halfWidth
+         && player->currentCoords.y <= mon->currentCoords.y + halfWidth)
+            return TRUE;
+
+    case DIR_WEST:
+        if (player->currentCoords.x < mon->currentCoords.x
+         && mon->currentCoords.x - player->currentCoords.x <= viewDistance
+         && player->currentCoords.y >= mon->currentCoords.y - halfWidth
+         && player->currentCoords.y <= mon->currentCoords.y + halfWidth)
+            return TRUE;
     }
 
     return FALSE;
