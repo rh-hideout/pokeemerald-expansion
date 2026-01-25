@@ -28,7 +28,17 @@ Special spawns can be one of three types, in decreasing priority: A Roamer, Feeb
 - If any OWE spawns on a tile where a Feebas would spawn, it may appear is a Feebas.
 - If a Generated OWE spawns on a route that has a mass outbreak occuring, it may spawn as an encounter from that mass outbreak.
 
-## High Priority and Low Priority OWE Behaviours
-## Encounter Types
+### Restricted Despawning
+## High Priority and Low Priority OWEs
+Low Priority OWEs may face not be spawned or even be destroyed in certain situations. There are palettes and object tiles checks to prevent these from spawning if it would fail, as well as similar checks for number of event objects, palettes and object tiles that despawn the oldest if High Priority OWEs or other objects event are attempting to be spawned and Low Priority OWEs are using these resources. High priority OWEs are treated as regular objects, and will not be destroyed, may cause the destruction of Generated OWEs and will not face spawning restrictions as all outlined above.
+These despawn conditions will overwrite the restrictive despawns mentioned above.
+> Is this true? Does it take the oldest or oldest not marked for restriction, what if all are marked to not despawn.
+> Setting `OW_GFX_COMPRESS` to `FALSE` will free more space in VRAM, allowing for more large OWEs to spawn.
+
+## Encountering an OWE
+Collision between Player and OWE or Interacting with one. Can also interact with an OWE in the water even when the player is not.
+### Encounter Types
 ## Repel and Lure Behaviours
 ## OWE Behaviour Types
+## OWE Movements
+### Restricted Movements
