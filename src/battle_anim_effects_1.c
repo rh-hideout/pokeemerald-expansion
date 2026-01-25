@@ -6625,10 +6625,10 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
         }
     }
 
-    // swap wish party indices
-    if (gBattleStruct->wish[battlerAtk].counter > 0
-     || gBattleStruct->wish[battlerPartner].counter > 0)
-        SWAP(gBattleStruct->wish[battlerAtk].partyId, gBattleStruct->wish[battlerPartner].partyId, temp);
+    // swap wish party indices to restore them after swapping battler states before
+    if (gBattleStruct->battlerState[battlerAtk].wishTimer > 0
+     || gBattleStruct->battlerState[battlerPartner].wishTimer > 0)
+        SWAP(gBattleStruct->battlerState[battlerAtk].wishPartyId, gBattleStruct->battlerState[battlerPartner].wishPartyId, temp);
 }
 
 static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)

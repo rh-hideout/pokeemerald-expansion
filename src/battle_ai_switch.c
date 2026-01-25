@@ -25,13 +25,15 @@
 struct IncomingHealInfo
 {
     u16 healAmount:16;
-    u16 wishCounter:8;
+    u16 wishTimer:2;
     u16 hasHealing:1;
     u16 healBeforeHazards:1;
     u16 healAfterHazards:1;
     u16 healEndOfTurn:1;
     u16 curesStatus:1;
+    u16 padding:6;
 };
+
 static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler);
 static bool32 FindMonWithFlagsAndSuperEffective(u32 battler, u16 flags, u32 moduloPercent);
 static u32 GetSwitchinHazardsDamage(u32 battler);
@@ -64,15 +66,15 @@ static u32 GetWishHealAmountForBattler(u32 battler)
 {
     u32 wishHeal = 0;
 
-    if (gBattleStruct->wish[battler].counter == 0)
+    if (gBattleStruct->battlerState[battler].wishTimer == 0)
         return wishHeal;
 
     if (B_WISH_HP_SOURCE >= GEN_5)
     {
         if (IsOnPlayerSide(battler))
-            wishHeal = GetMonData(&gPlayerParty[gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&gPlayerParty[gBattleStruct->battlerState[battler].wishPartyId], MON_DATA_MAX_HP) / 2;
         else
-            wishHeal = GetMonData(&gEnemyParty[gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&gEnemyParty[gBattleStruct->battlerState[battler].wishPartyId], MON_DATA_MAX_HP) / 2;
     }
     else
     {
@@ -108,11 +110,11 @@ static void GetIncomingHealInfo(u32 battler, struct IncomingHealInfo *healInfo)
     }
 
     // Wish heals at end of turn
-    if (gBattleStruct->wish[battler].counter > 0)
+    if (gBattleStruct->battlerState[battler].wishTimer > 0)
     {
         healInfo->hasHealing = TRUE;
         healInfo->healEndOfTurn = TRUE;
-        healInfo->wishCounter = gBattleStruct->wish[battler].counter;
+        healInfo->wishTimer = gBattleStruct->battlerState[battler].wishTimer;
         healInfo->healAmount = GetWishHealAmountForBattler(battler);
     }
 }
@@ -1715,7 +1717,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
     enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->abilities[battler];
     bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility);
     s32 currentHP = startingHP, singleUseItemHeal = 0;
-    bool32 applyWishNow = healInfo->healEndOfTurn && healInfo->wishCounter == 1;
+    bool32 applyWishNow = healInfo->healEndOfTurn && healInfo->wishTimer == 1;
 
     // No damage being dealt
     if ((damageTaken + statusDamage + recurringDamage <= recurringHealing) || damageTaken + statusDamage + recurringDamage == 0)

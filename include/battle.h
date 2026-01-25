@@ -483,12 +483,6 @@ struct BattleVideo {
     rng_value_t rngSeed;
 };
 
-struct Wish
-{
-    u16 counter;
-    u8 partyId;
-};
-
 struct FutureSight
 {
     u16 move;
@@ -526,8 +520,10 @@ struct BattlerState
     u16 supremeOverlordCounter:BIT_SIZE(5); // 3 bits
     u16 targetsDone:MAX_BATTLERS_COUNT;
     u16 partyId:BIT_SIZE(PARTY_SIZE); // 3 bits
-    u16 padding:2;
+    u16 wishTimer:2;
     // End of Word
+    u32 wishPartyId:BIT_SIZE(PARTY_SIZE); // 3 bits
+    u32 padding:29;
 };
 
 struct PartyState
@@ -573,7 +569,6 @@ struct BattleStruct
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     struct EventStates eventState;
     struct FutureSight futureSight[MAX_BATTLERS_COUNT];
-    struct Wish wish[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;

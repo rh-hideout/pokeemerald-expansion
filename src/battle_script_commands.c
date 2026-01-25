@@ -9978,10 +9978,10 @@ static void Cmd_trywish(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (gBattleStruct->wish[gBattlerAttacker].counter == 0)
+    else if (gBattleStruct->battlerState[gBattlerAttacker].wishTimer == 0)
     {
-        gBattleStruct->wish[gBattlerAttacker].counter = 2;
-        gBattleStruct->wish[gBattlerAttacker].partyId = gBattlerPartyIndexes[gBattlerAttacker];
+        gBattleStruct->battlerState[gBattlerAttacker].wishTimer = 2;
+        gBattleStruct->battlerState[gBattlerAttacker].wishPartyId = gBattlerPartyIndexes[gBattlerAttacker];
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else

@@ -2558,7 +2558,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_WISH:
-            if (gBattleStruct->wish[battlerAtk].counter > 0)
+            if (gBattleStruct->battlerState[battlerAtk].wishTimer > 0)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_ASSIST:
