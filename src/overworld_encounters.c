@@ -460,9 +460,7 @@ void CreateOverworldWildEncounter(void)
         gender = gSpeciesInfo[speciesId].genderRatio;
     }
 
-    if (level > MAX_LEVEL)
-        level = MAX_LEVEL;
-    else if ( level < MIN_LEVEL)
+    if (level < MIN_LEVEL || level > MAX_LEVEL)
         level = MIN_LEVEL;
 
     ZeroEnemyPartyMons();
@@ -699,10 +697,10 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
 
     /*
     These functions perform checks of various encounter types in the following order:
-        1. Attempted Generated Roamer Encounter
-        2. Attempted Generated Feebas Encounter
-        3. Attempted Generated Mass Outbreak Encounter
-        4. Attempted Generated Standard Wild Encounter generation
+        1. Attempt to generate a Roamer Encounter
+        2. Attempt to generate a Feebas Encounter
+        3. Attempt to generate a Mass Outbreak Encounter
+        4. Attempt to generate a Standard Wild Encounter
     
     The structure of this statement ensures that only one of these encounter types can succeed per call,
     with the resultant wild mon being created in gEnemyParty[0].
@@ -719,7 +717,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
         *speciesId = gWildFeebas.species;
         CreateWildMon(*speciesId, *level);
     }
-    else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior)  && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
+    else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior) && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
     {
         SetUpMassOutbreakEncounter(0);
         *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
@@ -931,7 +929,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     u32 graphicsId;
     u16 speciesId, speciesTemplate = SanitizeSpeciesId(templateOWE.graphicsId & OBJ_EVENT_MON_SPECIES_MASK);
     bool32 isShiny = FALSE, isShinyTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_SHINY) ? TRUE : FALSE;
-    bool32 isFemale = FALSE, isFemaleTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_FEMALE) ? TRUE : FALSE;
+    bool32 isFemale = FALSE;
     u32 level, levelTemplate = templateOWE.sOverworldEncounterLevel;
     u32 indexRoamerOutbreak = OWE_INVALID_ROAMER_OUTBREAK;
     u32 x = template->x;
@@ -950,21 +948,6 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     if (speciesTemplate)
         speciesId = speciesTemplate;
 
-    if (isShinyTemplate)
-        isShiny = isShinyTemplate;
-
-    if (isFemaleTemplate)
-        isFemale = isFemaleTemplate;
-
-    if (levelTemplate)
-        level = levelTemplate;
-
-    if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
-        templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
-
-    if (templateOWE.script == NULL)
-        templateOWE.script = InteractWithDynamicWildOverworldEncounter;
-
     assertf(speciesId != SPECIES_NONE && speciesId < NUM_SPECIES && IsSpeciesEnabled(speciesId), "invalid manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
     {
         // Currently causes assertf on each player step as function is called.
@@ -974,6 +957,30 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
         templateOWE.movementType = MOVEMENT_TYPE_NONE;
         return templateOWE;
     }
+
+    if (isShinyTemplate)
+        isShiny = isShinyTemplate;
+
+    if (templateOWE.graphicsId & OBJ_EVENT_MON && templateOWE.graphicsId & OBJ_EVENT_MON_FEMALE)
+        isFemale = TRUE;
+    else if (templateOWE.graphicsId & OBJ_EVENT_MON)
+        isFemale = FALSE;
+    else
+        isFemale = GetGenderFromSpeciesAndPersonality(speciesId, Random32()) == MON_FEMALE;
+
+    if (levelTemplate)
+        level = levelTemplate;
+
+    assertf(level < MIN_LEVEL || level > MAX_LEVEL, "invalid manual overworld encounter\nlevel: %d\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", level, speciesId, x, y)
+    {
+        level = MIN_LEVEL;
+    }
+
+    if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
+        templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
+
+    if (templateOWE.script == NULL)
+        templateOWE.script = InteractWithDynamicWildOverworldEncounter;
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
