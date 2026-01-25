@@ -33,6 +33,10 @@ OldaleTown_EventScript_Girl::
 	msgbox OldaleTown_Text_SavingMyProgress, MSGBOX_NPC
 	end
 
+OldaleTOwn_EventScript_TestNPC::
+	msgbox OldaleTown_Text_TestNPC, MSGBOX_NPC
+	end
+
 OldaleTown_EventScript_MartEmployee::
 	lock
 	faceplayer
@@ -395,3 +399,6 @@ OldaleTown_Text_TownSign:
 	.string "OLDALE TOWN\n"
 	.string "“Where things start off scarce.”$"
 
+OldaleTown_Text_TestNPC:
+	.string "Testing string\n"
+	.string "fuck yeah$"
