@@ -11770,8 +11770,8 @@ gBattleAnimMove_PsychicFangs::
 	monbg ANIM_TARGET
 	call SetPsychicBackground
 	setalpha 12, 8
-	choosetwoturnanim PsychicFangsRegular PsychicFangsDestroyWall
-PsychicFangsRegular:
+	choosetwoturnanim PsychicFangsNormal, PsychicFangsShatteredWall
+PsychicFangsNormal:
 	call PsychicFangsCommon
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 8, 4, 2
 PsychicFangsEnd:
@@ -11781,13 +11781,13 @@ PsychicFangsEnd:
 	blendoff
 	call UnsetPsychicBg
 	end
-PsychicFangsDestroyWall:
+PsychicFangsShatteredWall:
 	createsprite gBrickBreakWallSpriteTemplate, ANIM_ATTACKER, 3, 1, 0, 0, 33, 10
 	call PsychicFangsCommon
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, 1, 0, -8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, 1, 1, 8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, 1, 2, -8, 12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, 1, 3, 8, 12
+	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, -8, -12
+	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 8, -12
+	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 2, -8, 12
+	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 3, 8, 12
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 8, 4, 2
 	delay 16
