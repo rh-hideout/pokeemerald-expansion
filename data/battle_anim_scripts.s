@@ -11782,13 +11782,9 @@ PsychicFangsEnd:
 	call UnsetPsychicBg
 	end
 PsychicFangsShatteredWall:
-	createsprite gBrickBreakWallSpriteTemplate, ANIM_ATTACKER, 3, 1, 0, 0, 33, 10
+	createsprite gBrickBreakWallSpriteTemplate, ANIM_ATTACKER, 3, ANIM_TARGET, 0, 0, 33, 10
 	call PsychicFangsCommon
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, -8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 2, -8, 12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 3, 8, 12
-	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
+	break_screen_animation
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 8, 4, 2
 	delay 16
 	goto PsychicFangsEnd
@@ -17081,11 +17077,7 @@ RagingBullShatteredWall:
 	call RagingBullCommon1
 	createsprite gBrickBreakWallSpriteTemplate, ANIM_ATTACKER, 3, ANIM_TARGET, 0, 0, 90, 10
 	call RagingBullCommon2
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, -8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 2, -8, 12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 3, 8, 12
-	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
+	break_screen_animation
 	goto RagingBullEnd
 
 RagingBullCommon1:
@@ -24359,11 +24351,7 @@ BrickBreakShatteredWall:
 	call BrickBreakCommon1
 	createsprite gBrickBreakWallSpriteTemplate, ANIM_ATTACKER, 3, ANIM_TARGET, 0, 0, 90, 10
 	call BrickBreakCommon2
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, -8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 8, -12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 2, -8, 12
-	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 3, 8, 12
-	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
+	break_screen_animation
 	waitforvisualfinish
 	goto BrickBreakEnd
 
