@@ -2001,6 +2001,18 @@ static enum MoveEndResult MoveEndFaintBlock(void)
 
             gBattleStruct->eventState.moveEndBlock++;
             break;
+        case FAINT_BLOCK_VICTORY_CATCH:
+            if (IsVictoryCatch()
+             && gBattleStruct->victoryCatchState != VICTORY_CATCH_FAINTED
+             && !IsOnPlayerSide(gBattlerTarget))
+            {
+                u8 hp = 1;
+                SetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_HP, &hp);
+                BattleScriptCall(BattleScript_WildBattleVictory);
+                result = MOVEEND_RESULT_RUN_SCRIPT;
+            }
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
         case FAINT_BLOCK_END_NEUTRALIZING_GAS:
             if (gBattleMons[gBattlerTarget].volatiles.neutralizingGas)
             {

@@ -8282,3 +8282,19 @@ BattleScript_SwapToSubstituteContinue:
 	waitanimation
 BattleScript_SwapToSubstituteReturn:
 	return
+
+BattleScript_WildBattleVictory::
+	playfaintcry BS_TARGET
+	waitcry
+	jumpifnoballs BattleScript_WildBattleVictoryRet
+	printstring STRINGID_VICTORYCATCH
+	setbyte gBattleCommunication, 0
+	catchornot
+	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication + 1, 0, BattleScript_WildBattleVictoryRet
+	catchaftervictory
+	return
+
+BattleScript_WildBattleVictoryRet:
+	handlefailedvictorycatch
+	return
+

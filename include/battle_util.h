@@ -425,5 +425,7 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
 bool32 CanUseMoveConsecutively(u32 battler);
 void TryResetConsecutiveUseCounter(u32 battler);
 void SetOrClearRageVolatile(void);
+bool32 IsVictoryCatch(void);
+bool32 IsVictoryCatchGuaranteed(void);
 
 #endif // GUARD_BATTLE_UTIL_H
