@@ -1000,6 +1000,12 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     if ((playerIsCollider || playerIsObstacle))
     {
         struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
+        if (!IsRoamerAt(OWE_GetObjectRoamerOutbreakStatus(wildMon),
+            gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
+        {
+            RemoveObjectEventByLocalIdAndMap(wildMon->localId, wildMon->mapNum, wildMon->mapGroup);
+            return;
+        }
 
         LockPlayerFieldControls();
         if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
@@ -1409,12 +1415,12 @@ static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index)
 static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
 {
     if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
-        return OWE_NON_ROAMER_OUTBREAK;
+        return OWE_INVALID_ROAMER_OUTBREAK;
 
     u32 status = objectEvent->sRoamerOutbreakStatus;
     if (status == OWE_NON_ROAMER_OUTBREAK || status == OWE_MASS_OUTBREAK_INDEX)
     {
-        return status;
+        return OWE_INVALID_ROAMER_OUTBREAK;
     }
     
     return status - 1;
