@@ -1003,22 +1003,22 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle, OWE_ANY));
     bool32 playerIsObstacle = (obstacle->isPlayer && IsOverworldWildEncounter(collider, OWE_ANY));
 
-    if ((playerIsCollider || playerIsObstacle))
+    if (!(playerIsCollider || playerIsObstacle))
+        return;
+
+    struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
+    if (wildMon->sRoamerOutbreakStatus && !IsRoamerAt(OWE_GetObjectRoamerOutbreakStatus(wildMon),
+        gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
-        struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
-        if (wildMon->sRoamerOutbreakStatus && !IsRoamerAt(OWE_GetObjectRoamerOutbreakStatus(wildMon),
-            gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
-        {
-            RemoveObjectEventByLocalIdAndMap(wildMon->localId, wildMon->mapNum, wildMon->mapGroup);
-            return;
-        }
-
-        LockPlayerFieldControls();
-        if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
-            OWE_StartEncounterInstant(wildMon);
-
-        wildMon->sOverworldEncounterLevel |= OWE_FLAG_START_ENCOUNTER;
+        RemoveObjectEventByLocalIdAndMap(wildMon->localId, wildMon->mapNum, wildMon->mapGroup);
+        return;
     }
+
+    LockPlayerFieldControls();
+    if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
+        OWE_StartEncounterInstant(wildMon);
+
+    wildMon->sOverworldEncounterLevel |= OWE_FLAG_START_ENCOUNTER;
 }
 
 void OverworldWildEncounter_RemoveObjectOnBattle(void)
