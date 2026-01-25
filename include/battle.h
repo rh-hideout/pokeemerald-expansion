@@ -485,49 +485,52 @@ struct BattleVideo {
 
 struct BattlerState
 {
-    u32 commandingDondozo:1;
-    u32 focusPunchBattlers:1;
-    u32 multipleSwitchInBattlers:1;
-    u32 alreadyStatusedMoveAttempt:1; // For example when using Thunder Wave on an already paralyzed Pokémon.
-    u32 activeAbilityPopUps:1;
-    u32 forcedSwitch:1;
+    // 4-byte alignments here
+    enum BattlerId futureSightBattler:3;
+    enum BattlerId moveTarget:3;
+    enum BattlerId lastMoveTarget:3; // The last target on which each mon used a move, for the sake of Instruct
+    u32 targetsDone:4; // Battlers bitfield
+    u32 switchIn:1;
+    u32 fainted:1;
+    u32 chosenMovePosition:2;
+    u32 partyId:3;
+    u32 wishTimer:2;
+    u32 wishPartyId:3;
+    u32 itemPartyId:3;
+    u32 itemMoveSlot:2;
+    u32 isFirstTurn:2;
+    // End of Word
+    u32 hpOnSwitchout:16;
+    u32 commanderSpecies:11;
+    u32 supremeOverlordCounter:3;
     u32 storedHealingWish:1;
     u32 storedLunarDance:1;
-    u32 usedEjectItem:1;
-    u32 sleepClauseEffectExempt:1; // Stores whether effect should be exempt from triggering Sleep Clause (Effect Spore)
-    u32 usedMicleBerry:1;
-    u32 pursuitTarget:1;
-    u32 stompingTantrumTimer:2;
-    u32 canPickupItem:1;
-    u32 ateBoost:1;
-    u32 wasAboveHalfHp:1; // For Berserk, Emergency Exit, Wimp Out and Anger Shell.
-    u32 commanderSpecies:11;
-    u32 selectionScriptFinished:1;
-    u32 lastMoveTarget:3; // The last target on which each mon used a move, for the sake of Instruct
     // End of Word
-    u16 hpOnSwitchout;
-    u16 switchIn:1;
-    u16 fainted:1;
-    u16 isFirstTurn:2;
-    u16 supremeOverlordCounter:BIT_SIZE(5); // 3 bits
-    u16 targetsDone:MAX_BATTLERS_COUNT;
-    u16 partyId:BIT_SIZE(PARTY_SIZE); // 3 bits
-    u16 wishTimer:2;
+
+    // 2-byte alignments below
+    enum Move choicedMove:10;
+    u16 commandingDondozo:1;
+    u16 focusPunchBattlers:1;
+    u16 multipleSwitchInBattlers:1;
+    u16 alreadyStatusedMoveAttempt:1; // For example when using Thunder Wave on an already paralyzed Pokémon.
+    u16 activeAbilityPopUps:1;
+    u16 forcedSwitch:1;
+    enum Move futureSightMove:10;
+    u16 futureSightTimer:2;
+    u16 futureSightPartyId:3;
+    u16 pursuitTarget:1;
     // End of Word
-    u32 wishPartyId:BIT_SIZE(PARTY_SIZE); // 3 bits
-    enum BattlerId moveTarget:BIT_SIZE(MAX_BATTLERS_COUNT);  // 3 bits
-    u32 chosenMovePosition:BIT_SIZE(MAX_MON_MOVES - 1); // 2 bits
-    u32 itemPartyId:BIT_SIZE(PARTY_SIZE); // 3 bits
-    u32 itemMoveSlot:BIT_SIZE(MAX_MON_MOVES - 1); // 2 bits
-    u32 chosenItem:BIT_SIZE(ITEMS_COUNT); // 10 bits
-    u32 padding:9;
+    enum Item chosenItem:10;
+    u16 stompingTantrumTimer:2;
+    u16 canPickupItem:1;
+    u16 ateBoost:1;
+    u16 wasAboveHalfHp:1; // For Berserk, Emergency Exit, Wimp Out and Anger Shell.
+    u16 selectionScriptFinished:1;
+    u16 usedEjectItem:1;
+    u16 sleepClauseEffectExempt:1; // Stores whether effect should be exempt from triggering Sleep Clause (Effect Spore)
+    u16 usedMicleBerry:1;
+    u16 padding:13;
     // End of Word
-    u32 choicedMove:BIT_SIZE(MOVES_COUNT); // 10 bits
-    u32 futureSightMove:BIT_SIZE(MOVES_COUNT); // 10 bits
-    u32 futureSightTimer:BIT_SIZE(3); // 2 bits
-    u32 futureSightBattler:BIT_SIZE(MAX_BATTLERS_COUNT); // 3 bits
-    u32 futureSightPartyId:BIT_SIZE(PARTY_SIZE); // 3 bits
-    u32 padding2:4;
 };
 
 struct PartyState
