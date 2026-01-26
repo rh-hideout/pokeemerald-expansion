@@ -79,7 +79,8 @@ static void BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battlePar
     return;
 }
 ```
->[!NOTE] The function was simplified here for this demonstration.  
+> [!NOTE] 
+> The function was simplified here for this demonstration.  
 
 The `PUSH` macro (and variants) pushes the event snippet to the script stack passed to the function. Some snippets should always happen such as `EventSnippet_Lock`, others only if a condition is met. Consider the highlighted line. The snippet responsible for displaying the intro text is only pushed to the stack if the `introTextA` parameter is not null. The table below shows the finished stack.
 
