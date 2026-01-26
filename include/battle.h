@@ -1174,7 +1174,7 @@ static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
     return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
 }
 
-static inline u32 GetChosenMoveFromPosition(enum BattlerId battler)
+static inline u32 GetBattlerChosenMove(enum BattlerId battler)
 {
     return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
 }

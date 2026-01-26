@@ -4404,7 +4404,7 @@ static void HandleTurnActionSelectionState(void)
 
                             // Get the chosen move position (and thus the chosen move) and target from the returned buffer.
                             gBattleStruct->chosenMovePositions[battler] = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
-                            gChosenMoveByBattler[battler] = GetChosenMoveFromPosition(battler);
+                            gChosenMoveByBattler[battler] = GetBattlerChosenMove(battler);
                             gBattleStruct->moveTarget[battler] = gBattleResources->bufferB[battler][3];
                             if (IsBattleMoveStatus(gChosenMoveByBattler[battler]) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
                                 gProtectStructs[battler].myceliumMight = TRUE;
@@ -4418,7 +4418,7 @@ static void HandleTurnActionSelectionState(void)
                             // Max Move check
                             if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
                             {
-                                gBattleStruct->dynamax.baseMoves[battler] = GetChosenMoveFromPosition(battler);
+                                gBattleStruct->dynamax.baseMoves[battler] = GetBattlerChosenMove(battler);
                             }
                             gBattleCommunication[battler]++;
 
@@ -4726,7 +4726,7 @@ s32 GetChosenMovePriority(enum BattlerId battler, enum Ability ability)
     if (gProtectStructs[battler].noValidMoves)
         move = MOVE_STRUGGLE;
     else
-        move = GetChosenMoveFromPosition(battler);
+        move = GetBattlerChosenMove(battler);
 
     return GetBattleMovePriority(battler, ability, move);
 }

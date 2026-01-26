@@ -6545,7 +6545,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
             basePower = CalcBeatUpPower();
         break;
     case EFFECT_MAX_MOVE:
-        basePower = GetMaxMovePower(GetChosenMoveFromPosition(battlerAtk));
+        basePower = GetMaxMovePower(GetBattlerChosenMove(battlerAtk));
         break;
     case EFFECT_RAGE_FIST:
         basePower += 50 * GetBattlerPartyState(battlerAtk)->timesGotHit;

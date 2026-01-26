@@ -2028,7 +2028,7 @@ static void PlayerHandleChooseAction(enum BattlerId battler)
     if (B_SHOW_PARTNER_TARGET && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && IsBattlerAlive(partner))
     {
         StringCopy(gStringVar1, COMPOUND_STRING("Partner will use:\n"));
-        enum Move move = GetChosenMoveFromPosition(partner);
+        enum Move move = GetBattlerChosenMove(partner);
         StringAppend(gStringVar1, GetMoveName(move));
         enum MoveTarget moveTarget = GetBattlerMoveTargetType(partner, move);
         if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART)
