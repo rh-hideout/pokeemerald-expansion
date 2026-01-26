@@ -1968,7 +1968,7 @@ u8 CreateVirtualObject(u16 graphicsId, u8 virtualObjId, s16 x, s16 y, u8 elevati
 struct Pokemon *GetFirstLiveMon(void)
 {
     u32 i;
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (i = 0; i < gPlayerPartyCount; i++)
     {
         struct Pokemon *mon = &gPlayerParty[i];
         if ((OW_FOLLOWERS_ALLOWED_SPECIES && GetMonData(mon, MON_DATA_SPECIES_OR_EGG) != VarGet(OW_FOLLOWERS_ALLOWED_SPECIES))
