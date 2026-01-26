@@ -20,7 +20,7 @@ Assuming the following `graphicsId` have `.trainerType` set to `TRAINER_TYPE_ENC
 
 As level and species are potentially taken from the Wild Encounter Header, an `assertf` to let developers know when an invalid value is used. If the resultant level is invalid, it will be set to `MIN_LEVEL` (1). If the species is invalid, a replacement object will be created using `OBJ_EVENT_GFX_BOY_1`, this will not be an OWE of any kind.
 
-No matter how much of a Manual OWE is defined, it is considered a high priority OWE, and treated as a regular object event in all ways other than ones outlined above. These however, have restricted special spawns types.
+No matter how much of a Manual OWE is defined, it is considered a high priority OWE, and treated as a regular object event in all ways other than ones outlined above. They will always spawn, regardless of level of abilties of player Pokémon, however, they have restricted special spawns types.
 
 ### Special Spawns
 Special spawns can be one of three types, in decreasing priority: A Roamer, Feebas, or Mass Outbreak Encounter. Generated OWEs can have any of these, however, Manual OWEs can only have the Feebas Special Spawn. These work exactly as they would normally;
