@@ -66,7 +66,8 @@ SINGLE_BATTLE_TEST("Illusion cannot imitate if the user is on the last slot")
         TURN { SWITCH(player, 1); }
     } THEN {
         EXPECT_EQ(player->species, SPECIES_ZOROARK);
-        EXPECT_EQ(gBattleStruct->illusion[0].state, ILLUSION_OFF); // Battler is Zoroark and not Illusioned
+        enum IllusionState illusionState = GetBattlerState(0)->illusionState;
+        EXPECT_EQ(illusionState, ILLUSION_OFF); // Battler is Zoroark and not Illusioned
     }
 }
 

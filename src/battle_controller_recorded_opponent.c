@@ -358,10 +358,10 @@ static void RecordedOpponentHandleChooseItem(u32 battler)
 {
     u8 byte1 = RecordedBattle_GetBattlerAction(RECORDED_ITEM_ID, battler);
     u8 byte2 = RecordedBattle_GetBattlerAction(RECORDED_ITEM_ID, battler);
-    gBattleStruct->chosenItem[battler] = (byte1 << 8) | byte2;
-    gBattleStruct->itemPartyIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_TARGET, battler);
-    gBattleStruct->itemMoveIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_MOVE, battler);
-    BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->chosenItem[battler]);
+    GetBattlerState(battler)->chosenItem = (byte1 << 8) | byte2;
+    GetBattlerState(battler)->itemPartyId = RecordedBattle_GetBattlerAction(RECORDED_ITEM_TARGET, battler);
+    GetBattlerState(battler)->itemMoveSlot = RecordedBattle_GetBattlerAction(RECORDED_ITEM_MOVE, battler);
+    BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, GetBattlerState(battler)->chosenItem);
     BtlController_Complete(battler);
 }
 

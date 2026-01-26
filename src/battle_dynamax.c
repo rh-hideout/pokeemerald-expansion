@@ -177,14 +177,14 @@ void ActivateDynamax(u32 battler)
     // Set appropriate use flags.
     SetActiveGimmick(battler, GIMMICK_DYNAMAX);
     SetGimmickAsActivated(battler, GIMMICK_DYNAMAX);
-    gBattleStruct->dynamax.dynamaxTurns[battler] = DYNAMAX_TURNS_COUNT;
+    GetBattlerState(battler)->dynamaxTimer = DYNAMAX_TURNS_COUNT;
 
     // Substitute is removed upon Dynamaxing.
     gBattleMons[battler].volatiles.substitute = FALSE;
     ClearBehindSubstituteBit(battler);
 
     // Choiced Moves are reset upon Dynamaxing.
-    gBattleStruct->choicedMove[battler] = MOVE_NONE;
+    GetBattlerState(battler)->choicedMove = MOVE_NONE;
 
     // Try Gigantamax form change.
     if (!gBattleMons[battler].volatiles.transformed) // Ditto cannot Gigantamax.

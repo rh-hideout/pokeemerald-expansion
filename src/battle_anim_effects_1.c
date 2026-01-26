@@ -6601,34 +6601,34 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     u32 i, temp;
 
     // if used future sight on opposing side, properly track who used it
-    if (gBattleStruct->futureSight[LEFT_FOE(battlerAtk)].counter > 0
-     || gBattleStruct->futureSight[RIGHT_FOE(battlerAtk)].counter > 0)
+    if (GetBattlerState(LEFT_FOE(battlerAtk))->futureSightTimer > 0
+     || GetBattlerState(RIGHT_FOE(battlerAtk))->futureSightTimer > 0)
     {
         for (i = 0; i < gBattlersCount; i++)
         {
             if (IsBattlerAlly(i, battlerAtk))
                 continue;   // only on opposing side
 
-            if (gBattleStruct->futureSight[i].battlerIndex == battlerAtk)
+            if (GetBattlerState(i)->futureSightBattler == battlerAtk)
             {
                 // if target was attacked with future sight from us, now they'll be the partner slot
-                gBattleStruct->futureSight[i].battlerIndex = battlerPartner;
-                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerPartner];
+                GetBattlerState(i)->futureSightBattler = battlerPartner;
+                GetBattlerState(i)->futureSightPartyId = gBattlerPartyIndexes[battlerPartner];
                 break;
             }
-            else if (gBattleStruct->futureSight[i].battlerIndex == battlerPartner)
+            else if (GetBattlerState(i)->futureSightBattler == battlerPartner)
             {
-                gBattleStruct->futureSight[i].battlerIndex = battlerAtk;
-                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerAtk];
+                GetBattlerState(i)->futureSightBattler = battlerAtk;
+                GetBattlerState(i)->futureSightPartyId = gBattlerPartyIndexes[battlerAtk];
                 break;
             }
         }
     }
 
-    // swap wish party indices
-    if (gBattleStruct->wish[battlerAtk].counter > 0
-     || gBattleStruct->wish[battlerPartner].counter > 0)
-        SWAP(gBattleStruct->wish[battlerAtk].partyId, gBattleStruct->wish[battlerPartner].partyId, temp);
+    // swap wish party indices to restore them after swapping battler states before
+    if (GetBattlerState(battlerAtk)->wishTimer > 0
+     || GetBattlerState(battlerPartner)->wishTimer > 0)
+        SWAP(GetBattlerState(battlerAtk)->wishPartyId, GetBattlerState(battlerPartner)->wishPartyId, temp);
 }
 
 static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)
@@ -6660,9 +6660,7 @@ static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)
 static void SwapBattlerMoveData(u32 battler1, u32 battler2)
 {
     u32 temp;
-    SWAP(gBattleStruct->chosenMovePositions[battler1], gBattleStruct->chosenMovePositions[battler2], temp);
     SWAP(gChosenMoveByBattler[battler1], gChosenMoveByBattler[battler2], temp);
-    SWAP(gBattleStruct->moveTarget[battler1], gBattleStruct->moveTarget[battler2], temp);
     SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], temp);
     SWAP(gLockedMoves[battler1], gLockedMoves[battler2], temp);
 
@@ -6694,8 +6692,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SwapStructData(&gSpecialStatuses[battlerAtk], &gSpecialStatuses[battlerPartner], data, sizeof(struct SpecialStatus));
     SwapStructData(&gProtectStructs[battlerAtk], &gProtectStructs[battlerPartner], data, sizeof(struct ProtectStruct));
     SwapStructData(&gBattleSpritesDataPtr->battlerData[battlerAtk], &gBattleSpritesDataPtr->battlerData[battlerPartner], data, sizeof(struct BattleSpriteInfo));
-    SwapStructData(&gBattleStruct->illusion[battlerAtk], &gBattleStruct->illusion[battlerPartner], data, sizeof(struct Illusion));
-    SwapStructData(&gBattleStruct->battlerState[battlerAtk], &gBattleStruct->battlerState[battlerPartner], data, sizeof(struct BattlerState));
+    SwapStructData(GetBattlerState(battlerAtk), GetBattlerState(battlerPartner), data, sizeof(struct BattlerState));
 
     SWAP(gBattleSpritesDataPtr->battlerData[battlerAtk].invisible, gBattleSpritesDataPtr->battlerData[battlerPartner].invisible, temp);
     SWAP(gTransformedPersonalities[battlerAtk], gTransformedPersonalities[battlerPartner], temp);
@@ -6734,11 +6731,11 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     {
         enum Ability ability = GetBattlerAbility(i);
         // if not targeting a slot that got switched, continue
-        if (!IsBattlerAlly(gBattleStruct->moveTarget[i], battlerAtk))
+        if (!IsBattlerAlly(GetBattlerState(i)->moveTarget, battlerAtk))
             continue;
 
         if (GetMoveEffect(gChosenMoveByBattler[i]) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
-            gBattleStruct->moveTarget[i] ^= BIT_FLANK;
+            GetBattlerState(i)->moveTarget ^= BIT_FLANK;
     }
 
     // For some reason the order in which the sprites are created matters. Looks like an issue with the sprite system, potentially with the Sprite Template.

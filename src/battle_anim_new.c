@@ -8367,7 +8367,7 @@ const union AffineAnimCmd* const gSpriteAffineAnimTable_MegaSymbol[] =
 // Used for determining which animation to use for Order Up
 void AnimTask_GetCommanderType(u8 taskId)
 {
-    switch (gBattleStruct->battlerState[gEffectBattler].commanderSpecies)
+    switch (GetBattlerState(gEffectBattler)->commanderSpecies)
     {
     case SPECIES_TATSUGIRI_CURLY:
         gBattleAnimArgs[ARG_RET_ID] = ANIM_ORDER_UP_CURLY;

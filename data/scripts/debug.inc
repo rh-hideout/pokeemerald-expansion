@@ -215,6 +215,12 @@ Debug_ROMSize::
 	.string "ROM size: {STR_VAR_1}MB/32MB.\n"
 	.string "Free space: {STR_VAR_2}MB.$"
 
+Debug_CheckBattleStruct::
+	callnative ShowStructSizes
+	waitstate
+	release
+	end
+
 Debug_HatchAnEgg::
 	lockall
 	getpartysize

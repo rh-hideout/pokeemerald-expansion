@@ -70,7 +70,7 @@ static bool32 HandleEndTurnVarious(u32 battler)
         if (gBattleMons[i].volatiles.laserFocusTimer > 0 && --gBattleMons[i].volatiles.laserFocusTimer == 0)
             gBattleMons[i].volatiles.laserFocus = FALSE;
 
-        gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
+        GetBattlerState(i)->wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
     }
 
     if (gBattleStruct->incrementEchoedVoice)
@@ -230,22 +230,22 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleStruct->futureSight[battler].counter > 0
-     && --gBattleStruct->futureSight[battler].counter == 0)
+    if (GetBattlerState(battler)->futureSightTimer > 0
+     && --GetBattlerState(battler)->futureSightTimer == 0)
     {
         if (!IsBattlerAlive(battler))
             return effect;
 
-        if (gBattleStruct->futureSight[battler].move == MOVE_FUTURE_SIGHT)
+        if (GetBattlerState(battler)->futureSightMove == MOVE_FUTURE_SIGHT)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FUTURE_SIGHT;
         else
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DOOM_DESIRE;
 
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->futureSight[battler].move);
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, GetBattlerState(battler)->futureSightMove);
 
         gBattlerTarget = battler;
-        gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
-        gCurrentMove = gBattleStruct->futureSight[battler].move;
+        gBattlerAttacker = GetBattlerState(battler)->futureSightBattler;
+        gCurrentMove = GetBattlerState(battler)->futureSightMove;
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
         if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
@@ -264,13 +264,13 @@ static bool32 HandleEndTurnWish(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleStruct->wish[battler].counter > 0 && --gBattleStruct->wish[battler].counter == 0 && IsBattlerAlive(battler))
+    if (GetBattlerState(battler)->wishTimer > 0 && --GetBattlerState(battler)->wishTimer == 0 && IsBattlerAlive(battler))
     {
         s32 wishHeal = 0;
         gBattlerTarget = battler;
-        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gBattleStruct->wish[battler].partyId)
+        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, GetBattlerState(battler)->wishPartyId)
         if (GetConfig(CONFIG_WISH_HP_SOURCE) >= GEN_5)
-            wishHeal = GetMonData(&GetBattlerParty(battler)[gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
+            wishHeal = GetMonData(&GetBattlerParty(battler)[GetBattlerState(battler)->wishPartyId], MON_DATA_MAX_HP) / 2;
         else
             wishHeal = GetNonDynamaxMaxHP(battler) / 2;
 
@@ -1348,7 +1348,7 @@ static bool32 HandleEndTurnDynamax(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gBattleStruct->dynamax.dynamaxTurns[battler] > 0 && --gBattleStruct->dynamax.dynamaxTurns[battler] == 0)
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetBattlerState(battler)->dynamaxTimer > 0 && --GetBattlerState(battler)->dynamaxTimer == 0)
     {
         gBattleScripting.battler = battler;
         UndoDynamax(battler);
@@ -1390,7 +1390,7 @@ static bool32 HandleEndTurnTrainerBSlides(u32 battler)
 
     if (slide == TRUE)
     {
-        if ((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA) 
+        if ((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
         || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
         || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF))
             BattleScriptExecute(BattleScript_TrainerASlideMsgEnd2);

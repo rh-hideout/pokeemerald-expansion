@@ -638,7 +638,7 @@ bool32 IsDamageMoveUnusable(struct BattleContext *ctx)
 
     if (ctx->typeEffectivenessModifier == UQ_4_12(0.0))
         return TRUE;
-    if (gBattleStruct->battlerState[ctx->battlerDef].commandingDondozo)
+    if (GetBattlerState(ctx->battlerDef)->commandingDondozo)
         return TRUE;
 
     // aiData->abilities does not check for Mold Breaker since it happens during combat so it needs to be done manually
@@ -713,7 +713,7 @@ bool32 IsDamageMoveUnusable(struct BattleContext *ctx)
             return TRUE;
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (!gBattleStruct->battlerState[ctx->battlerAtk].isFirstTurn)
+        if (!GetBattlerState(ctx->battlerAtk)->isFirstTurn)
             return TRUE;
         break;
     default:
@@ -909,18 +909,18 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, u32 battlerAtk, u32 battler
         move = GetNaturePowerMove(battlerAtk);
 
     // Temporarily enable gimmicks for damage calcs if planned
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
-        && gBattleStruct->gimmick.usableGimmick[battlerAtk] != GIMMICK_NONE && considerGimmickAtk == USE_GIMMICK)
+    if (GetBattlerState(battlerAtk)->usableGimmick && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
+        && GetBattlerState(battlerAtk)->usableGimmick != GIMMICK_NONE && considerGimmickAtk == USE_GIMMICK)
     {
         toggledGimmickAtk = TRUE;
-        SetActiveGimmick(battlerAtk, gBattleStruct->gimmick.usableGimmick[battlerAtk]);
+        SetActiveGimmick(battlerAtk, GetBattlerState(battlerAtk)->usableGimmick);
     }
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerDef] && GetActiveGimmick(battlerDef) == GIMMICK_NONE
-        && gBattleStruct->gimmick.usableGimmick[battlerDef] != GIMMICK_NONE && considerGimmickDef == USE_GIMMICK)
+    if (GetBattlerState(battlerDef)->usableGimmick && GetActiveGimmick(battlerDef) == GIMMICK_NONE
+        && GetBattlerState(battlerDef)->usableGimmick != GIMMICK_NONE && considerGimmickDef == USE_GIMMICK)
     {
         toggledGimmickDef = TRUE;
-        SetActiveGimmick(battlerDef, gBattleStruct->gimmick.usableGimmick[battlerDef]);
+        SetActiveGimmick(battlerDef, GetBattlerState(battlerDef)->usableGimmick);
     }
 
     SetDynamicMoveCategory(battlerAtk, battlerDef, move);
@@ -4190,7 +4190,7 @@ bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, enum Move move,
     if (!IsBattlerAlive(battlerAtkPartner) || partnerMove == MOVE_NONE)
         return FALSE;
 
-    u32 battlerDef = gBattleStruct->moveTarget[battlerAtk];
+    u32 battlerDef = GetBattlerState(battlerAtk)->moveTarget;
 
     // We don't care the effect is basically the same; we would use this move anyway.
     if (IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
@@ -4204,7 +4204,7 @@ bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, enum Move move,
     {
         if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
-            if (battlerDef == gBattleStruct->moveTarget[battlerAtkPartner])
+            if (battlerDef == GetBattlerState(battlerAtkPartner)->moveTarget)
                 return TRUE;
             else
                 return FALSE;
@@ -4344,7 +4344,7 @@ bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, enum
     {
         if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
-            return gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef;
+            return GetBattlerState(battlerAtkPartner)->moveTarget == battlerDef;
         }
         return TRUE;
     }
@@ -4360,7 +4360,7 @@ bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef
     enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
     enum MoveEffect nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
     if (partnerMove != MOVE_NONE
-     && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef
+     && GetBattlerState(battlerAtkPartner)->moveTarget == battlerDef
      && (nonVolatileStatus == MOVE_EFFECT_POISON
        || nonVolatileStatus == MOVE_EFFECT_TOXIC
        || nonVolatileStatus == MOVE_EFFECT_SLEEP
@@ -4400,7 +4400,7 @@ bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, enum M
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
-    if (partnerMove != MOVE_NONE && move == partnerMove && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef)
+    if (partnerMove != MOVE_NONE && move == partnerMove && GetBattlerState(battlerAtkPartner)->moveTarget == battlerDef)
         return TRUE;
     return FALSE;
 }
@@ -5191,7 +5191,7 @@ bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, enum Move move)
     if (GetMovePower(move) == 0 && GetMoveZEffect(move) == Z_EFFECT_NONE)
         return FALSE;
 
-    return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
+    return GetBattlerState(battlerAtk)->usableGimmick == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
 }
 
 //TODO - this could use some more sophisticated logic
@@ -5388,7 +5388,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
 
 void DecideTerastal(u32 battler)
 {
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA)
+    if (GetBattlerState(battler)->usableGimmick != GIMMICK_TERA)
         return;
 
     if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
