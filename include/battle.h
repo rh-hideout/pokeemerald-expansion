@@ -487,11 +487,9 @@ struct BattlerState
     u32 switchIn:1;
     u32 fainted:1;
     u32 chosenMovePosition:2;
-    u32 partyId:3;
+    u32 trainerSlideSpriteId:8;
     u32 wishTimer:2;
     u32 wishPartyId:3;
-    u32 itemPartyId:3;
-    u32 itemMoveSlot:2;
     u32 isFirstTurn:2;
     // End of Word
     u32 hpOnSwitchout:16;
@@ -527,9 +525,11 @@ struct BattlerState
     u16 padding:3;
     // End of Word
     enum Item changedItem:10;
-    u16 padding2:6;
+    u16 partyId:3;
+    u16 itemPartyId:3;
     enum Ability tracedAbility:9;
-    u16 padding3:7;
+    u16 itemMoveSlot:2;
+    u16 padding3:5;
     // End of Word
 };
 
@@ -709,7 +709,6 @@ struct BattleStruct
     u8 numSpreadTargets:3;
     u8 moldBreakerActive:1;
     struct MessageStatus slideMessageStatus;
-    u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
