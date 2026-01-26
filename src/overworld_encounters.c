@@ -142,8 +142,6 @@ void UpdateOverworldEncounters(void)
     u32 level;
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
 
-    // Does X and Y need to be adjusted for map offset here, for all subsequent?
-    // If so can be done when setting them originally?
     if (speciesId == SPECIES_NONE
         || !IsWildLevelAllowedByRepel(level)
         || !IsAbilityAllowingEncounter(level)
