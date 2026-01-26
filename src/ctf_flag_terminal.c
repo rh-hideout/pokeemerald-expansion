@@ -6,6 +6,12 @@
 #include "save.h"
 #include "script.h"
 
+#include "event_data.h"
+#include "string_util.h"
+#include "constants/vars.h"
+#include "constants/characters.h"
+
+
 // ============================================================================
 // "Terminal" callable from scripts via `callnative Ctf_FlagTerminal`
 // ============================================================================
@@ -28,7 +34,7 @@ static u8 sCtfInput[PLAYER_NAME_LENGTH + 1];
 static void CB2_ReturnToFieldContinueScript_CtfTerminal(void)
 {
     // Validate input and store result for the script.
-    gSpecialVar_Result = Ctf_IsGymFlagCorrect(sCtfGymId, sCtfInput);
+    VarSet(VAR_RESULT, Ctf_IsGymFlagCorrect(sCtfGymId, sCtfInput) ? 1 : 0);
 
     // Mark terminal flow complete and continue the running script.
     sCtfTerminalDone = TRUE;
@@ -41,12 +47,12 @@ bool8 Ctf_FlagTerminal(void)
 {
     if (!sCtfTerminalActive)
     {
-        sCtfGymId = (u8)gSpecialVar_0x8000; // script passes gymId via 0x8000
+        sCtfGymId = (u8)VarGet(VAR_0x8000); // script passes gymId via 0x8000
 
         // Invalid gymId -> fail fast
         if (sCtfGymId == 0 || sCtfGymId > CTF_GYM_COUNT)
         {
-            gSpecialVar_Result = 0;
+            VarSet(VAR_RESULT, 0);
             return TRUE;
         }
 
