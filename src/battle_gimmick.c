@@ -22,12 +22,12 @@ void AssignUsableGimmicks(void)
     u32 battler, gimmick;
     for (battler = 0; battler < gBattlersCount; ++battler)
     {
-        gBattleStruct->gimmick.usableGimmick[battler] = GIMMICK_NONE;
+        GetBattlerState(battler)->usableGimmick = GIMMICK_NONE;
         for (gimmick = 0; gimmick < GIMMICKS_COUNT; ++gimmick)
         {
             if (CanActivateGimmick(battler, gimmick))
             {
-                gBattleStruct->gimmick.usableGimmick[battler] = gimmick;
+                GetBattlerState(battler)->usableGimmick = gimmick;
                 break;
             }
         }
@@ -45,22 +45,22 @@ bool32 IsGimmickSelected(u32 battler, enum Gimmick gimmick)
 {
     // There's no player select in tests, but some gimmicks need to test choice before they are fully activated.
     #if TESTING
-    return (gBattleStruct->gimmick.toActivate & (1u << battler)) && gBattleStruct->gimmick.usableGimmick[battler] == gimmick;
+    return GetBattlerState(battler)->toActivateGimmick && GetBattlerState(battler)->usableGimmick == gimmick;
     #else
-    return gBattleStruct->gimmick.usableGimmick[battler] == gimmick && gBattleStruct->gimmick.playerSelect;
+    return GetBattlerState(battler)->usableGimmick == gimmick && gBattleStruct->playerSelectGimmick;
     #endif
 }
 
 // Sets a battler as having a gimmick active using their party index.
 void SetActiveGimmick(u32 battler, enum Gimmick gimmick)
 {
-    gBattleStruct->gimmick.activeGimmick[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]] = gimmick;
+    GetBattlerPartyState(battler)->activeGimmick = gimmick;
 }
 
 // Returns a battler's active gimmick, if any.
 enum Gimmick GetActiveGimmick(u32 battler)
 {
-    return gBattleStruct->gimmick.activeGimmick[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
+    return GetBattlerPartyState(battler)->activeGimmick;
 }
 
 // Returns whether a trainer mon is intended to use an unrestrictive gimmick via .useGimmick (i.e Tera).
@@ -94,20 +94,20 @@ bool32 HasTrainerUsedGimmick(u32 battler, enum Gimmick gimmick)
     if (IsDoubleBattle() && (IsPartnerMonFromSameTrainer(battler) || (gimmick == GIMMICK_DYNAMAX)))
     {
         u32 partner = BATTLE_PARTNER(battler);
-        if (gBattleStruct->gimmick.activated[partner][gimmick]
-         || ((gBattleStruct->gimmick.toActivate & (1u << partner)) && gBattleStruct->gimmick.usableGimmick[partner] == gimmick))
+        if ((GetBattlerState(partner)->activatedGimmicks & (1u << gimmick))
+         || (GetBattlerState(partner)->toActivateGimmick && GetBattlerState(partner)->usableGimmick == gimmick))
             return TRUE;
     }
 
-    return gBattleStruct->gimmick.activated[battler][gimmick];
+    return GetBattlerState(battler)->activatedGimmicks & (1u << gimmick);
 }
 
 // Sets a gimmick as used by a trainer with checks for Multi Battles.
 void SetGimmickAsActivated(u32 battler, enum Gimmick gimmick)
 {
-    gBattleStruct->gimmick.activated[battler][gimmick] = TRUE;
+    GetBattlerState(battler)->activatedGimmicks |= (1u << gimmick);
     if (IsDoubleBattle() && (IsPartnerMonFromSameTrainer(battler) || (gimmick == GIMMICK_DYNAMAX)))
-        gBattleStruct->gimmick.activated[BATTLE_PARTNER(battler)][gimmick] = TRUE;
+        GetBattlerState(BATTLE_PARTNER(battler))->activatedGimmicks |= (1u << gimmick);
 }
 
 #define SINGLES_GIMMICK_TRIGGER_POS_X_OPTIMAL (30)
@@ -130,13 +130,13 @@ void ChangeGimmickTriggerSprite(u32 spriteId, u32 animId)
 
 void CreateGimmickTriggerSprite(u32 battler)
 {
-    const struct GimmickInfo * gimmick = &gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]];
+    const struct GimmickInfo * gimmick = &gGimmicksInfo[GetBattlerState(battler)->usableGimmick];
 
     // Exit if there shouldn't be a sprite produced.
     if (!IsOnPlayerSide(battler)
-     || gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_NONE
+     || GetBattlerState(battler)->usableGimmick == GIMMICK_NONE
      || gimmick->triggerSheet == NULL
-     || HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler]))
+     || HasTrainerUsedGimmick(battler, GetBattlerState(battler)->usableGimmick))
     {
         return;
     }
@@ -145,22 +145,22 @@ void CreateGimmickTriggerSprite(u32 battler)
     if (GetSpriteTileStartByTag(TAG_GIMMICK_TRIGGER_TILE) == 0xFFFF)
         LoadSpriteSheet(gimmick->triggerSheet);
 
-    if (gBattleStruct->gimmick.triggerSpriteId == 0xFF)
+    if (gBattleStruct->gimmickTriggerSpriteId == 0xFF)
     {
         if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES)
-            gBattleStruct->gimmick.triggerSpriteId = CreateSprite(gimmick->triggerTemplate,
+            gBattleStruct->gimmickTriggerSpriteId = CreateSprite(gimmick->triggerTemplate,
                                                                   gSprites[gHealthboxSpriteIds[battler]].x - DOUBLES_GIMMICK_TRIGGER_POS_X_SLIDE,
                                                                   gSprites[gHealthboxSpriteIds[battler]].y - DOUBLES_GIMMICK_TRIGGER_POS_Y_DIFF, 0);
         else
-            gBattleStruct->gimmick.triggerSpriteId = CreateSprite(gimmick->triggerTemplate,
+            gBattleStruct->gimmickTriggerSpriteId = CreateSprite(gimmick->triggerTemplate,
                                                                   gSprites[gHealthboxSpriteIds[battler]].x - SINGLES_GIMMICK_TRIGGER_POS_X_SLIDE,
                                                                   gSprites[gHealthboxSpriteIds[battler]].y - SINGLES_GIMMICK_TRIGGER_POS_Y_DIFF, 0);
     }
 
-    gSprites[gBattleStruct->gimmick.triggerSpriteId].tBattler = battler;
-    gSprites[gBattleStruct->gimmick.triggerSpriteId].tHide = FALSE;
+    gSprites[gBattleStruct->gimmickTriggerSpriteId].tBattler = battler;
+    gSprites[gBattleStruct->gimmickTriggerSpriteId].tHide = FALSE;
 
-    ChangeGimmickTriggerSprite(gBattleStruct->gimmick.triggerSpriteId, 0);
+    ChangeGimmickTriggerSprite(gBattleStruct->gimmickTriggerSpriteId, 0);
 }
 
 bool32 IsGimmickTriggerSpriteActive(void)
@@ -175,17 +175,17 @@ bool32 IsGimmickTriggerSpriteActive(void)
 
 bool32 IsGimmickTriggerSpriteMatchingBattler(u32 battler)
 {
-    if (battler == gSprites[gBattleStruct->gimmick.triggerSpriteId].tBattler)
+    if (battler == gSprites[gBattleStruct->gimmickTriggerSpriteId].tBattler)
         return TRUE;
     return FALSE;
 }
 
 void HideGimmickTriggerSprite(void)
 {
-    if (gBattleStruct->gimmick.triggerSpriteId != 0xFF)
+    if (gBattleStruct->gimmickTriggerSpriteId != 0xFF)
     {
-        ChangeGimmickTriggerSprite(gBattleStruct->gimmick.triggerSpriteId, 0);
-        gSprites[gBattleStruct->gimmick.triggerSpriteId].tHide = TRUE;
+        ChangeGimmickTriggerSprite(gBattleStruct->gimmickTriggerSpriteId, 0);
+        gSprites[gBattleStruct->gimmickTriggerSpriteId].tHide = TRUE;
     }
 }
 
@@ -193,9 +193,9 @@ void DestroyGimmickTriggerSprite(void)
 {
     FreeSpritePaletteByTag(TAG_GIMMICK_TRIGGER_PAL);
     FreeSpriteTilesByTag(TAG_GIMMICK_TRIGGER_TILE);
-    if (gBattleStruct->gimmick.triggerSpriteId != 0xFF)
-        DestroySprite(&gSprites[gBattleStruct->gimmick.triggerSpriteId]);
-    gBattleStruct->gimmick.triggerSpriteId = 0xFF;
+    if (gBattleStruct->gimmickTriggerSpriteId != 0xFF)
+        DestroySprite(&gSprites[gBattleStruct->gimmickTriggerSpriteId]);
+    gBattleStruct->gimmickTriggerSpriteId = 0xFF;
 }
 
 static void SpriteCb_GimmickTrigger(struct Sprite *sprite)
@@ -283,7 +283,7 @@ static void SpriteCb_GimmickIndicator(struct Sprite *sprite)
 
 static inline u32 GetIndicatorSpriteId(u32 healthboxId)
 {
-    return gBattleStruct->gimmick.indicatorSpriteId[gSprites[healthboxId].hMain_Battler];
+    return GetBattlerState(gSprites[healthboxId].hMain_Battler)->indicatorSpriteId;
 }
 
 const u32 *GetIndicatorSpriteSrc(u32 battler)
@@ -392,7 +392,7 @@ void CreateIndicatorSprite(u32 battler)
 
     LoadSpriteSheet(&sBattler_GimmickSpritesheets[battler]);
     spriteId = CreateSprite(&(sSpriteTemplate_BattlerIndicators[battler]), 0, y, 0);
-    gBattleStruct->gimmick.indicatorSpriteId[battler] = spriteId;
+    GetBattlerState(battler)->indicatorSpriteId = spriteId;
     gSprites[spriteId].tBattler = battler;
     gSprites[spriteId].tPosX = x;
     gSprites[spriteId].invisible = FALSE;

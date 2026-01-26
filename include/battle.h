@@ -462,17 +462,6 @@ struct DynamaxData
     u16 lastUsedBaseMove;
 };
 
-struct BattleGimmickData
-{
-    u8 usableGimmick[MAX_BATTLERS_COUNT];                // first usable gimmick that can be selected for each battler
-    bool8 playerSelect;                                  // used to toggle trigger and update battle UI
-    u8 triggerSpriteId;
-    u8 indicatorSpriteId[MAX_BATTLERS_COUNT];
-    u8 toActivate;                                       // stores whether a battler should transform at start of turn as bitfield
-    u8 activeGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];      // stores the active gimmick for each party member
-    bool8 activated[MAX_BATTLERS_COUNT][GIMMICKS_COUNT]; // stores whether a trainer has used gimmick
-};
-
 struct BattleVideo {
     u32 battleTypeFlags;
     rng_value_t rngSeed;
@@ -485,19 +474,22 @@ struct BattlerState
     enum BattlerId moveTarget:3;
     enum BattlerId lastMoveTarget:3; // The last target on which each mon used a move, for the sake of Instruct
     u32 targetsDone:4; // Battlers bitfield
-    u32 switchIn:1;
-    u32 fainted:1;
-    u32 chosenMovePosition:2;
+    enum Gimmick usableGimmick:3;
     u32 trainerSlideSpriteId:8;
-    u32 wishTimer:2;
-    u32 wishPartyId:3;
-    u32 isFirstTurn:2;
+    u32 indicatorSpriteId:8;
     // End of Word
     u32 hpOnSwitchout:16;
     u32 commanderSpecies:11;
-    u32 supremeOverlordCounter:3;
+    u32 switchIn:1;
+    u32 isFirstTurn:2;
     u32 storedHealingWish:1;
     u32 storedLunarDance:1;
+    // End of Word
+    u32 fainted:1;
+    u32 chosenMovePosition:2;
+    u32 activatedGimmicks:6;
+    u32 toActivateGimmick:1; // stores whethershould transform at start of turn
+    u32 padding:26;
     // End of Word
 
     // 2-byte alignments below
@@ -523,14 +515,15 @@ struct BattlerState
     u16 usedEjectItem:1;
     u16 sleepClauseEffectExempt:1; // Stores whether effect should be exempt from triggering Sleep Clause (Effect Spore)
     u16 usedMicleBerry:1;
-    u16 padding:3;
+    u16 supremeOverlordCounter:3;
     // End of Word
     enum Item changedItem:10;
     u16 partyId:3;
     u16 itemPartyId:3;
     enum Ability tracedAbility:9;
     u16 itemMoveSlot:2;
-    u16 padding3:5;
+    u16 wishTimer:2;
+    u16 wishPartyId:3;
     // End of Word
 };
 
@@ -547,10 +540,11 @@ struct PartyState
     u16 transformZeroToHero:1;
     u16 supersweetSyrup:1;
     // End of Word
+    enum Gimmick activeGimmick:3;
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
     u32 isKnockedOff:1;
-    u16 itemWasLost:1;
-    u32 padding:19;
+    u32 itemWasLost:1;
+    u32 padding:16;
 };
 
 struct SideState
@@ -660,7 +654,6 @@ struct BattleStruct
     u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];    // two per battler
     struct ZMoveData zmove;
     struct DynamaxData dynamax;
-    struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
     struct Illusion illusion[MAX_BATTLERS_COUNT];
@@ -677,6 +670,7 @@ struct BattleStruct
     u8 throwingPokeBall:1;
     u8 ballSpriteIds[2];    // item gfx, window gfx
     u8 moveInfoSpriteId; // move info, window gfx
+    u8 gimmickTriggerSpriteId;
     u8 skyDropTargets[MAX_BATTLERS_COUNT]; // For Sky Drop, to account for if multiple Pokemon use Sky Drop in a double battle.
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
     u16 beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes
@@ -684,7 +678,7 @@ struct BattleStruct
     u8 beatUpSlot:3;
     u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
-    u8 padding3:1;
+    u8 playerSelectGimmick:1; // used to toggle trigger and update battle UI
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
     s32 aiDelayCycles; // Number of cycles it took to choose an action.

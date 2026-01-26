@@ -5802,8 +5802,8 @@ enum Obedience GetAttackerObedienceForAction(void)
     //  Clear the Z-Move flags if the battler is disobedient as to not waste the Z-Move
     if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE)
     {
-        gBattleStruct->gimmick.activated[gBattlerAttacker][GIMMICK_Z_MOVE] = FALSE;
-        gBattleStruct->gimmick.activeGimmick[GetBattlerSide(gBattlerAttacker)][gBattlerPartyIndexes[gBattlerAttacker]] = GIMMICK_NONE;
+        GetBattlerState(gBattlerAttacker)->activatedGimmicks &= ~(1u << GIMMICK_Z_MOVE);
+        GetBattlerPartyState(gBattlerAttacker)->activeGimmick = GIMMICK_NONE;
     }
 
     // is not obedient

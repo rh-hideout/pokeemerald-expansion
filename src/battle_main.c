@@ -4177,7 +4177,7 @@ static void HandleTurnActionSelectionState(void)
                         {
                             UNUSED enum Gimmick gimmick = GIMMICK_NONE;
                             if (gBattleResources->bufferB[battler][2] & RET_GIMMICK)
-                                gimmick = gBattleStruct->gimmick.usableGimmick[battler];
+                                gimmick = GetBattlerState(battler)->usableGimmick;
                             TestRunner_Battle_CheckChosenMove(battler, gBattleMons[battler].volatiles.encoredMove, gBattleMons[battler].volatiles.encoredMovePos, gimmick);
                         }
                         return;
@@ -4311,7 +4311,7 @@ static void HandleTurnActionSelectionState(void)
                         RecordedBattle_ClearBattlerAction(GetPartnerBattler(battler), 3);
                     }
 
-                    gBattleStruct->gimmick.toActivate &= ~((1u << BATTLE_PARTNER(GetBattlerPosition(battler))));
+                    GetBattlerState(BATTLE_PARTNER(GetBattlerPosition(battler)))->toActivateGimmick = FALSE;
                     BtlController_EmitEndBounceEffect(battler, B_COMM_TO_CONTROLLER);
                     MarkBattlerForControllerExec(battler);
                     return;
@@ -4418,7 +4418,7 @@ static void HandleTurnActionSelectionState(void)
 
                             // Check to see if any gimmicks need to be prepared.
                             if (gBattleResources->bufferB[battler][2] & RET_GIMMICK)
-                                gBattleStruct->gimmick.toActivate |= 1u << battler;
+                                GetBattlerState(battler)->toActivateGimmick = TRUE;
 
                             // Max Move check
                             if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
@@ -4431,7 +4431,7 @@ static void HandleTurnActionSelectionState(void)
                             {
                                 UNUSED enum Gimmick gimmick = GIMMICK_NONE;
                                 if (gBattleResources->bufferB[battler][2] & RET_GIMMICK)
-                                    gimmick = gBattleStruct->gimmick.usableGimmick[battler];
+                                    gimmick = GetBattlerState(battler)->usableGimmick;
                                 TestRunner_Battle_CheckChosenMove(battler, gChosenMoveByBattler[battler], GetBattlerState(battler)->moveTarget, gimmick);
                             }
                         }
@@ -5083,13 +5083,13 @@ static void PopulateArrayWithBattlers(u8 *battlers)
 
 static bool32 TryActivateGimmick(u32 battler)
 {
-    if ((gBattleStruct->gimmick.toActivate & (1u << battler)) && !(gProtectStructs[battler].noValidMoves))
+    if (GetBattlerState(battler)->toActivateGimmick && !(gProtectStructs[battler].noValidMoves))
     {
         gBattlerAttacker = gBattleScripting.battler = battler;
-        gBattleStruct->gimmick.toActivate &= ~(1u << battler);
-        if (gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].ActivateGimmick != NULL)
+        GetBattlerState(battler)->toActivateGimmick = FALSE;
+        if (gGimmicksInfo[GetBattlerState(battler)->usableGimmick].ActivateGimmick != NULL)
         {
-            gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].ActivateGimmick(battler);
+            gGimmicksInfo[GetBattlerState(battler)->usableGimmick].ActivateGimmick(battler);
             return TRUE;
         }
     }
@@ -5098,7 +5098,7 @@ static bool32 TryActivateGimmick(u32 battler)
 
 static bool32 TryDoGimmicksBeforeMoves(void)
 {
-    if (!(gHitMarker & HITMARKER_RUN) && gBattleStruct->gimmick.toActivate)
+    if (!(gHitMarker & HITMARKER_RUN))
     {
         u32 i;
         u8 order[MAX_BATTLERS_COUNT];

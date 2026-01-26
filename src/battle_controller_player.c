@@ -431,7 +431,7 @@ void HandleInputChooseTarget(u32 battler)
     {
         PlaySE(SE_SELECT);
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_HideAsMoveTarget;
-        if (gBattleStruct->gimmick.playerSelect)
+        if (gBattleStruct->playerSelectGimmick)
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
         else
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
@@ -445,9 +445,9 @@ void HandleInputChooseTarget(u32 battler)
         PlaySE(SE_SELECT);
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_HideAsMoveTarget;
         gBattlerControllerFuncs[battler] = HandleInputChooseMove;
-        if (gBattleStruct->gimmick.playerSelect == 1 && gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE)
+        if (gBattleStruct->playerSelectGimmick && GetBattlerState(battler)->usableGimmick == GIMMICK_Z_MOVE)
         {
-            gBattleStruct->gimmick.playerSelect = 0;
+            gBattleStruct->playerSelectGimmick = FALSE;
             gBattleStruct->zmove.viewing = TRUE;
             ReloadMoveNames(battler);
         }
@@ -602,7 +602,7 @@ void HandleInputShowEntireFieldTargets(u32 battler)
     {
         PlaySE(SE_SELECT);
         HideAllTargets();
-        if (gBattleStruct->gimmick.playerSelect)
+        if (gBattleStruct->playerSelectGimmick)
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
         else
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
@@ -630,7 +630,7 @@ void HandleInputShowTargets(u32 battler)
     {
         PlaySE(SE_SELECT);
         HideShownTargets(battler);
-        if (gBattleStruct->gimmick.playerSelect)
+        if (gBattleStruct->playerSelectGimmick)
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
         else
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
@@ -755,7 +755,7 @@ void HandleInputChooseMove(u32 battler)
         {
         case 0:
         default:
-            if (gBattleStruct->gimmick.playerSelect)
+            if (gBattleStruct->playerSelectGimmick)
                 BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | RET_GIMMICK | (gMultiUsePlayerCursor << 8));
             else
                 BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
@@ -788,11 +788,11 @@ void HandleInputChooseMove(u32 battler)
     else if ((JOY_NEW(B_BUTTON) || gPlayerDpadHoldFrames > 59)  && !gBattleStruct->descriptionSubmenu)
     {
         PlaySE(SE_SELECT);
-        gBattleStruct->gimmick.playerSelect = FALSE;
+        gBattleStruct->playerSelectGimmick = FALSE;
         if (gBattleStruct->zmove.viewing)
         {
             ReloadMoveNames(battler);
-            ChangeGimmickTriggerSprite(gBattleStruct->gimmick.triggerSpriteId, gBattleStruct->gimmick.playerSelect);
+            ChangeGimmickTriggerSprite(gBattleStruct->gimmickTriggerSpriteId, gBattleStruct->playerSelectGimmick);
         }
         else
         {
@@ -913,14 +913,14 @@ void HandleInputChooseMove(u32 battler)
     }
     else if (JOY_NEW(START_BUTTON))
     {
-        if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE
-            && !HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler])
-            && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE
+        if (GetBattlerState(battler)->usableGimmick != GIMMICK_NONE
+            && !HasTrainerUsedGimmick(battler, GetBattlerState(battler)->usableGimmick)
+            && !(GetBattlerState(battler)->usableGimmick == GIMMICK_Z_MOVE
                  && GetUsableZMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]) == MOVE_NONE))
         {
-            gBattleStruct->gimmick.playerSelect ^= 1;
+            gBattleStruct->playerSelectGimmick ^= 1;
             ReloadMoveNames(battler);
-            ChangeGimmickTriggerSprite(gBattleStruct->gimmick.triggerSpriteId, gBattleStruct->gimmick.playerSelect);
+            ChangeGimmickTriggerSprite(gBattleStruct->gimmickTriggerSpriteId, gBattleStruct->playerSelectGimmick);
             PlaySE(SE_SELECT);
         }
     }
@@ -2111,17 +2111,17 @@ void PlayerHandleChooseMove(u32 battler)
         struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
         InitMoveSelectionsVarsAndStrings(battler);
-        gBattleStruct->gimmick.playerSelect = FALSE;
+        gBattleStruct->playerSelectGimmick = FALSE;
         TryToAddMoveInfoWindow();
 
         AssignUsableZMoves(battler, moveInfo->moves);
         gBattleStruct->zmove.viable = (gBattleStruct->zmove.possibleZMoves[battler] & (1u << gMoveSelectionCursor[battler])) != 0;
 
         if (!IsGimmickTriggerSpriteActive())
-            gBattleStruct->gimmick.triggerSpriteId = 0xFF;
+            gBattleStruct->gimmickTriggerSpriteId = SPRITE_NONE;
         else if (!IsGimmickTriggerSpriteMatchingBattler(battler))
             DestroyGimmickTriggerSprite();
-        if (!(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE && !gBattleStruct->zmove.viable))
+        if (!(GetBattlerState(battler)->usableGimmick == GIMMICK_Z_MOVE && !gBattleStruct->zmove.viable))
             CreateGimmickTriggerSprite(battler);
 
         gBattlerControllerFuncs[battler] = HandleChooseMoveAfterDma3;

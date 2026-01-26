@@ -171,7 +171,7 @@ bool32 IsViableZMove(u32 battler, enum Move move)
 
     item = gBattleMons[battler].item;
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_Z_MOVE)
+    if (GetBattlerState(battler)->usableGimmick != GIMMICK_Z_MOVE)
         return FALSE;
 
     for (moveSlotIndex = 0; moveSlotIndex < MAX_MON_MOVES; moveSlotIndex++)

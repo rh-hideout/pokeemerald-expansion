@@ -397,10 +397,10 @@ void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, enum Move move)
 {
     // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necessary.
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move))
+    if (GetBattlerState(battlerAtk)->usableGimmick == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move))
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT)
+    if (GetBattlerState(battlerAtk)->usableGimmick == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT)
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
@@ -476,12 +476,12 @@ u32 BattleAI_ChooseMoveIndex(u32 battler)
     SetAIUsingGimmick(battler, USE_GIMMICK);
     SetupRandomRollsForAIMoveSelection(battler);
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
+    if (GetBattlerState(battler)->usableGimmick == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
         DecideTerastal(battler);
 
     chosenMoveIndex = ChooseMoveOrAction(battler);
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
+    if (GetBattlerState(battler)->usableGimmick != GIMMICK_NONE)
         ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[chosenMoveIndex]);
 
     // Clear protect structures, some flags may be set during AI calcs

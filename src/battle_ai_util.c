@@ -909,18 +909,18 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, u32 battlerAtk, u32 battler
         move = GetNaturePowerMove(battlerAtk);
 
     // Temporarily enable gimmicks for damage calcs if planned
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
-        && gBattleStruct->gimmick.usableGimmick[battlerAtk] != GIMMICK_NONE && considerGimmickAtk == USE_GIMMICK)
+    if (GetBattlerState(battlerAtk)->usableGimmick && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
+        && GetBattlerState(battlerAtk)->usableGimmick != GIMMICK_NONE && considerGimmickAtk == USE_GIMMICK)
     {
         toggledGimmickAtk = TRUE;
-        SetActiveGimmick(battlerAtk, gBattleStruct->gimmick.usableGimmick[battlerAtk]);
+        SetActiveGimmick(battlerAtk, GetBattlerState(battlerAtk)->usableGimmick);
     }
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerDef] && GetActiveGimmick(battlerDef) == GIMMICK_NONE
-        && gBattleStruct->gimmick.usableGimmick[battlerDef] != GIMMICK_NONE && considerGimmickDef == USE_GIMMICK)
+    if (GetBattlerState(battlerDef)->usableGimmick && GetActiveGimmick(battlerDef) == GIMMICK_NONE
+        && GetBattlerState(battlerDef)->usableGimmick != GIMMICK_NONE && considerGimmickDef == USE_GIMMICK)
     {
         toggledGimmickDef = TRUE;
-        SetActiveGimmick(battlerDef, gBattleStruct->gimmick.usableGimmick[battlerDef]);
+        SetActiveGimmick(battlerDef, GetBattlerState(battlerDef)->usableGimmick);
     }
 
     SetDynamicMoveCategory(battlerAtk, battlerDef, move);
@@ -5186,7 +5186,7 @@ bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, enum Move move)
     if (GetMovePower(move) == 0 && GetMoveZEffect(move) == Z_EFFECT_NONE)
         return FALSE;
 
-    return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
+    return GetBattlerState(battlerAtk)->usableGimmick == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
 }
 
 //TODO - this could use some more sophisticated logic
@@ -5383,7 +5383,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
 
 void DecideTerastal(u32 battler)
 {
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA)
+    if (GetBattlerState(battler)->usableGimmick != GIMMICK_TERA)
         return;
 
     if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
