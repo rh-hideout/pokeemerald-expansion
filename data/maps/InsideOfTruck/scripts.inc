@@ -56,3 +56,58 @@ InsideOfTruck_Text_BoxPrintedWithMonLogo:
 	.string "It's a POKéMON brand moving and\n"
 	.string "delivery service.$"
 
+
+
+
+
+    .align 2
+
+CtfTruck_Terminal::
+    lock
+    faceplayer
+    msgbox CtfTruck_Text_Prompt, MSGBOX_DEFAULT
+
+    setvar VAR_0x8000, 1        @ Gym 1 (Index 1)
+    callnative Ctf_FlagTerminal
+    waitstate
+
+    compare VAR_RESULT, 1
+    goto_if_eq CtfTruck_Terminal_Ok
+
+    msgbox CtfTruck_Text_Wrong, MSGBOX_DEFAULT
+    release
+    end
+
+CtfTruck_Terminal_Ok::
+    setflag FLAG_CTF_TRUCK_TELEPORT
+    msgbox CtfTruck_Text_Ok, MSGBOX_DEFAULT
+    release
+    end
+
+
+CtfTruck_Teleporter::
+    lock
+    checkplayergender
+    compare VAR_RESULT, FEMALE
+    goto_if_eq CtfTruck_Teleporter_May
+
+    @ Brendan House (male)
+    warp MAP_GROUP(LITTLEROOT_TOWN_BRENDANS_HOUSE_1F), MAP_NUM(LITTLEROOT_TOWN_BRENDANS_HOUSE_1F), 0, 6, 7
+    release
+    end
+
+CtfTruck_Teleporter_May::
+    @ May House (female)
+    warp MAP_GROUP(LITTLEROOT_TOWN_MAYS_HOUSE_1F), MAP_NUM(LITTLEROOT_TOWN_MAYS_HOUSE_1F), 0, 6, 7
+    release
+    end
+
+
+CtfTruck_Text_Prompt::
+    .string "CTF-Terminal: Gib die erste Flag ein.@"
+
+CtfTruck_Text_Wrong::
+    .string "Falsch.@"
+
+CtfTruck_Text_Ok::
+    .string "Korrekt! Ein Teleporter ist erschienen.@"
