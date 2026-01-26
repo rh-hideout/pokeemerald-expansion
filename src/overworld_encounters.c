@@ -77,6 +77,8 @@ static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animS
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
 static void OWE_StartEncounterInstant(struct ObjectEvent *mon);
 static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction direction, u32 distance);
+static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 x, s16 y, enum Direction newDirection, enum Direction collisionDirection);
+static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Direction newDirection);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -1267,33 +1269,46 @@ bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon)
     return FALSE;
 }
 
-static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, u32 newDirection)
+static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 x, s16 y, enum Direction newDirection, enum Direction collisionDirection)
+{
+    if (OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y))
+        return FALSE;
+
+    if (OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y))
+        return FALSE;
+
+    if (GetCollisionAtCoords(mon, x, y, collisionDirection))
+        return FALSE;
+
+    return TRUE;
+}
+
+static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Direction newDirection)
 {
     s16 x = mon->currentCoords.x;
     s16 y = mon->currentCoords.y;
 
     MoveCoords(newDirection, &x, &y);
-    if (!GetCollisionAtCoords(mon, x, y, newDirection) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
+    if (OWE_CheckRestrictedMovementAtCoords(mon, x, y, newDirection, newDirection))
     {
         if (mon->movementType == MOVEMENT_TYPE_FLEE_PLAYER_OWE)
             return GetOppositeDirection(newDirection);
 
         MoveCoords(mon->movementDirection, &x, &y);
-        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
+        if (OWE_CheckRestrictedMovementAtCoords(mon, x, y, newDirection, mon->movementDirection))
             return newDirection;
     }
 
     x = mon->currentCoords.x;
     y = mon->currentCoords.y;
-
     MoveCoords(GetOppositeDirection(newDirection), &x, &y);
-    if (!GetCollisionAtCoords(mon, x, y, GetOppositeDirection(newDirection)) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
+    if (OWE_CheckRestrictedMovementAtCoords(mon, x, y, newDirection, newDirection))
     {
         if (mon->movementType == MOVEMENT_TYPE_FLEE_PLAYER_OWE)
             return newDirection;
 
         MoveCoords(mon->movementDirection, &x, &y);
-        if (!GetCollisionAtCoords(mon, x, y, mon->movementDirection) && !(OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileAtCoords(mon, newDirection, x, y)) && !(OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapAtCoords(mon, newDirection, x, y)))
+        if (OWE_CheckRestrictedMovementAtCoords(mon, x, y, newDirection, mon->movementDirection))
             return GetOppositeDirection(newDirection);
     }
 
@@ -1495,6 +1510,9 @@ static bool32 OWE_CheckRestrictMovementMapInDirection(struct ObjectEvent *object
 
 static bool32 OWE_CheckRestrictMovementMetatileAtCoords(struct ObjectEvent *objectEvent, u32 direction, u32 xNew, u32 yNew)
 {
+    if (!OW_WILD_ENCOUNTERS_RESTRICT_METATILE)
+        return FALSE;
+    
     s16 xCurrent = xNew - gDirectionToVectors[direction].x;
     s16 yCurrent = yNew - gDirectionToVectors[direction].y;
     u32 metatileBehaviourCurrent = MapGridGetMetatileBehaviorAt(xCurrent, yCurrent);
@@ -1517,6 +1535,9 @@ static bool32 OWE_CheckRestrictMovementMetatileAtCoords(struct ObjectEvent *obje
 
 static bool32 OWE_CheckRestrictMovementMapAtCoords(struct ObjectEvent *objectEvent, u32 direction, u32 xNew, u32 yNew)
 {
+    if (!OW_WILD_ENCOUNTERS_RESTRICT_MAP)
+        return FALSE;
+    
     u32 mapGroup = objectEvent->mapGroup;
     u32 mapNum = objectEvent->mapNum;
 
