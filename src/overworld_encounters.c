@@ -75,7 +75,7 @@ static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animS
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
 static void OWE_StartEncounterInstant(struct ObjectEvent *mon);
 static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction direction, u32 distance);
-static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 x, s16 y, enum Direction newDirection, enum Direction collisionDirection);
+static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 xNew, s16 yNew, enum Direction newDirection, enum Direction collisionDirection);
 static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Direction newDirection);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
@@ -1274,15 +1274,15 @@ bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon)
     return FALSE;
 }
 
-static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 x, s16 y, enum Direction newDirection, enum Direction collisionDirection)
+static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 xNew, s16 yNew, enum Direction newDirection, enum Direction collisionDirection)
 {
-    if (OWE_CheckRestrictMovementMetatile(mon->currentCoords.x, mon->currentCoords.y, x, y))
+    if (OWE_CheckRestrictMovementMetatile(mon->currentCoords.x, mon->currentCoords.y, xNew, yNew))
         return FALSE;
 
-    if (OWE_CheckRestrictMovementMap(mon, x, y))
+    if (OWE_CheckRestrictMovementMap(mon, xNew, yNew))
         return FALSE;
 
-    if (GetCollisionAtCoords(mon, x, y, collisionDirection))
+    if (GetCollisionAtCoords(mon, xNew, yNew, collisionDirection))
         return FALSE;
 
     return TRUE;
