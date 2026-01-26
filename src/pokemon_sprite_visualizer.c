@@ -1859,7 +1859,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
             SetArrowInvisibility(data);
             PrintInstructionsOnWindow(data);
             UpdateMonAnimNames(taskId);
-            
+
             if (data->followerspriteId != 0)
                 gSprites[data->followerspriteId].invisible = FALSE;
         }

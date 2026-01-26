@@ -626,10 +626,10 @@ static void AnimTask_LoadSandstormBackground_Step(u8 taskId)
 #define sFractionalY data[4] // 256ths of a pixel
 #define sMirroredX   data[5] // init'd from gBattleAnimArgs[3]
 
-// The fields named "velocity" are arguably more like "acceleration," 
+// The fields named "velocity" are arguably more like "acceleration,"
 // and the fields named "fractional" are arguably more like "velocity."
 //
-// ...is what I WOULD say if the "fractional" fields weren't AND'd with 
+// ...is what I WOULD say if the "fractional" fields weren't AND'd with
 // 0xFF after every frame.
 
 void AnimFlyingSandCrescent(struct Sprite *sprite)
