@@ -125,6 +125,36 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
     }
 }
 
+SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct don't lower stats when charging a two turn move")
+{
+    u32 move, protectMove;
+    PARAMETRIZE { move = MOVE_BOUNCE; protectMove = MOVE_KINGS_SHIELD; }
+    PARAMETRIZE { move = MOVE_DIG;    protectMove = MOVE_KINGS_SHIELD; }
+    PARAMETRIZE { move = MOVE_BOUNCE; protectMove = MOVE_SILK_TRAP; }
+    PARAMETRIZE { move = MOVE_DIG;    protectMove = MOVE_SILK_TRAP; }
+    PARAMETRIZE { move = MOVE_BOUNCE; protectMove = MOVE_OBSTRUCT; }
+    PARAMETRIZE { move = MOVE_DIG;    protectMove = MOVE_OBSTRUCT; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BOUNCE));
+        ASSUME(MoveMakesContact(MOVE_DIG));
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, protectMove); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, protectMove, player);
+
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            HP_BAR(player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers making contact and may faint them")
 {
     u16 usedMove = MOVE_NONE;
@@ -158,6 +188,32 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
                 MESSAGE("Wobbuffet fainted!");
                 SEND_IN_MESSAGE("Wobbuffet");
             }
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect: Spiky Shield doesn't hurt attacker when charging a two turn move")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_BOUNCE; }
+    PARAMETRIZE { move = MOVE_DIG; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BOUNCE));
+        ASSUME(MoveMakesContact(MOVE_DIG));
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPIKY_SHIELD); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKY_SHIELD, player);
+
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            HP_BAR(player);
+            HP_BAR(opponent);
         }
     }
 }
@@ -214,6 +270,32 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are al
     }
 }
 
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker doesn't poison attacker when charging a two turn move")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_BOUNCE; }
+    PARAMETRIZE { move = MOVE_DIG; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BOUNCE));
+        ASSUME(MoveMakesContact(MOVE_DIG));
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BANEFUL_BUNKER); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BANEFUL_BUNKER, player);
+
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            HP_BAR(player);
+            STATUS_ICON(opponent, STATUS1_POISON);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making contact")
 {
     u16 usedMove = MOVE_NONE;
@@ -262,6 +344,32 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are alr
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
             HP_BAR(opponent);
             STATUS_ICON(player, STATUS1_BURN);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark doesn't burn attacker when charging a two turn move")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_BOUNCE; }
+    PARAMETRIZE { move = MOVE_DIG; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BOUNCE));
+        ASSUME(MoveMakesContact(MOVE_DIG));
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BURNING_BULWARK); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BURNING_BULWARK, player);
+
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            HP_BAR(player);
+            STATUS_ICON(opponent, STATUS1_BURN);
         }
     }
 }
