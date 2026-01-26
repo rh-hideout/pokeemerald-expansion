@@ -1162,8 +1162,10 @@ bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 directio
     if (OWE_CanAwareMonSeePlayer(objectEvent) && OW_WILD_ENCOUNTERS_UNRESTRICT_SIGHT)
         return FALSE;
     
-    if ((OW_WILD_ENCOUNTERS_RESTRICT_METATILE && OWE_CheckRestrictMovementMetatileInDirection(objectEvent, direction))
-        || (OW_WILD_ENCOUNTERS_RESTRICT_MAP && OWE_CheckRestrictMovementMapInDirection(objectEvent, direction)))
+    if (OWE_CheckRestrictMovementMetatileInDirection(objectEvent, direction))
+        return TRUE;
+    
+    if (OWE_CheckRestrictMovementMapInDirection(objectEvent, direction))
         return TRUE;
 
     return FALSE;
@@ -1468,6 +1470,9 @@ static bool32 OWE_DoesRoamerObjectExist(void)
 
 static bool32 OWE_CheckRestrictMovementMetatileInDirection(struct ObjectEvent *objectEvent, u32 direction)
 {
+    if (!OW_WILD_ENCOUNTERS_RESTRICT_METATILE)
+        return FALSE;
+    
     s16 xCurrent = objectEvent->currentCoords.x;
     s16 yCurrent = objectEvent->currentCoords.y;
     s16 xNew = xCurrent + gDirectionToVectors[direction].x;
@@ -1497,6 +1502,9 @@ static bool32 OWE_CheckRestrictMovementMetatileInDirection(struct ObjectEvent *o
 
 static bool32 OWE_CheckRestrictMovementMapInDirection(struct ObjectEvent *objectEvent, u32 direction)
 {
+    if (!OW_WILD_ENCOUNTERS_RESTRICT_MAP)
+        return FALSE;
+    
     s16 xCurrent = objectEvent->currentCoords.x;
     s16 yCurrent = objectEvent->currentCoords.y;
     s16 xNew = xCurrent + gDirectionToVectors[direction].x;
