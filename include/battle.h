@@ -472,12 +472,6 @@ struct BattleGimmickData
     bool8 activated[MAX_BATTLERS_COUNT][GIMMICKS_COUNT]; // stores whether a trainer has used gimmick
 };
 
-struct LostItem
-{
-    u16 originalItem:15;
-    u16 stolen:1;
-};
-
 struct BattleVideo {
     u32 battleTypeFlags;
     rng_value_t rngSeed;
