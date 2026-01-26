@@ -440,12 +440,6 @@ enum IllusionState
     ILLUSION_ON
 };
 
-struct Illusion
-{
-    enum IllusionState state;
-    struct Pokemon *mon;
-};
-
 struct ZMoveData
 {
     u8 viable:1;   // current move can become a z move
@@ -471,23 +465,26 @@ struct BattlerState
     u32 trainerSlideSpriteId:8;
     u32 indicatorSpriteId:8;
     // End of Word
+    struct Pokemon *illusionMon;
+    // End of Word
     u32 hpOnSwitchout:16;
     u32 commanderSpecies:11;
     u32 switchIn:1;
     u32 isFirstTurn:2;
-    u32 storedHealingWish:1;
-    u32 storedLunarDance:1;
+    enum IllusionState illusionState:2;
     // End of Word
+
+    // 2-byte alignments below
     enum Move dynamaxBaseMove:10;
     u16 activatedGimmicks:6;
     u16 fainted:1;
     u16 chosenMovePosition:2;
     u16 toActivateGimmick:1; // stores whethershould transform at start of turn
     u16 dynamaxTimer:2;
-    u16 padding:10;
+    u16 storedHealingWish:1;
+    u16 storedLunarDance:1;
+    u16 padding:8;
     // End of Word
-
-    // 2-byte alignments below
     enum Move choicedMove:10;
     u16 commandingDondozo:1;
     u16 focusPunchBattlers:1;
@@ -651,7 +648,6 @@ struct BattleStruct
     enum Move dynamaxLastUsedBaseMove:10;
     const u8 *trainerSlideMsg;
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
-    struct Illusion illusion[MAX_BATTLERS_COUNT];
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
     u8 quickClawBattlerId;

@@ -322,7 +322,7 @@ DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
     } THEN {
-        EXPECT(&gPlayerParty[2] == gBattleStruct->illusion[0].mon);
+        EXPECT(&gPlayerParty[2] == GetBattlerState(0)->illusionMon);
     }
 }
 

@@ -36,7 +36,7 @@ void ActivateTera(u32 battler)
     PREPARE_TYPE_BUFFER(gBattleTextBuff1, GetBattlerTeraType(battler));
     if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_TERASTALLIZATION))
         BattleScriptPushCursorAndCallback(BattleScript_TeraFormChange);
-    else if (gBattleStruct->illusion[gBattlerAttacker].state == ILLUSION_ON
+    else if (GetBattlerState(gBattlerAttacker)->illusionState == ILLUSION_ON
           && DoesSpeciesHaveFormChangeMethod(GetIllusionMonSpecies(gBattlerAttacker), FORM_CHANGE_BATTLE_TERASTALLIZATION))
         BattleScriptPushCursorAndCallback(BattleScript_IllusionOffAndTerastallization);
     else

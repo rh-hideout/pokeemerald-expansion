@@ -3173,7 +3173,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                     && !gBattleMons[diagonalBattler].volatiles.substitute
                     && !gBattleMons[diagonalBattler].volatiles.transformed
                     && !gBattleMons[battler].volatiles.transformed
-                    && gBattleStruct->illusion[diagonalBattler].state != ILLUSION_ON
+                    && GetBattlerState(diagonalBattler)->illusionState != ILLUSION_ON
                     && !IsSemiInvulnerable(diagonalBattler, EXCLUDE_COMMANDER))
                 {
                     SaveBattlerAttacker(gBattlerAttacker);
@@ -4278,7 +4278,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             break;
         case ABILITY_ILLUSION:
-            if (gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON && IsBattlerTurnDamaged(gBattlerTarget))
+            if (GetBattlerState(battler)->illusionState == ILLUSION_ON && IsBattlerTurnDamaged(gBattlerTarget))
             {
                 gBattleScripting.battler = gBattlerTarget;
                 BattleScriptCall(BattleScript_IllusionOff);
@@ -9011,7 +9011,7 @@ u32 GetBattlerVisualSpecies(u32 battler)
 
 bool32 TryClearIllusion(u32 battler, enum Ability ability)
 {
-    if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
+    if (GetBattlerState(battler)->illusionState != ILLUSION_ON)
         return FALSE;
     if (ability == ABILITY_ILLUSION && IsBattlerAlive(battler))
         return FALSE;
@@ -9023,17 +9023,18 @@ bool32 TryClearIllusion(u32 battler, enum Ability ability)
 
 struct Pokemon *GetIllusionMonPtr(u32 battler)
 {
-    if (gBattleStruct->illusion[battler].state == ILLUSION_NOT_SET)
+    if (GetBattlerState(battler)->illusionState == ILLUSION_NOT_SET)
         SetIllusionMon(GetBattlerMon(battler), battler);
-    if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
+    if (GetBattlerState(battler)->illusionState != ILLUSION_ON)
         return NULL;
 
-    return gBattleStruct->illusion[battler].mon;
+    return GetBattlerState(battler)->illusionMon;
 }
 
 void ClearIllusionMon(u32 battler)
 {
-    memset(&gBattleStruct->illusion[battler], 0, sizeof(gBattleStruct->illusion[battler]));
+    GetBattlerState(battler)->illusionState = ILLUSION_NOT_SET;
+    GetBattlerState(battler)->illusionMon = NULL;
 }
 
 u32 GetIllusionMonSpecies(u32 battler)
@@ -9089,7 +9090,7 @@ void SetIllusionMon(struct Pokemon *mon, u32 battler)
     struct Pokemon *party, *partnerMon;
     u32 id;
 
-    gBattleStruct->illusion[battler].state = ILLUSION_OFF;
+    GetBattlerState(battler)->illusionState = ILLUSION_OFF;
     if (GetMonAbility(mon) != ABILITY_ILLUSION)
         return;
 
@@ -9103,8 +9104,8 @@ void SetIllusionMon(struct Pokemon *mon, u32 battler)
     id = GetIllusionMonPartyId(party, mon, partnerMon, battler);
     if (id != PARTY_SIZE)
     {
-        gBattleStruct->illusion[battler].state = ILLUSION_ON;
-        gBattleStruct->illusion[battler].mon = &party[id];
+        GetBattlerState(battler)->illusionState = ILLUSION_ON;
+        GetBattlerState(battler)->illusionMon = &party[id];
     }
 }
 
