@@ -212,7 +212,8 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
         u32 metatileBehavior = MapGridGetMetatileBehaviorAt(x, y);
         struct SpritePalette palette = OWE_GetSpawnAnimFldEffPalette(OWE_GetSpawnDespawnAnimType(metatileBehavior));
         // If the mon's palette or field effect palette isn't already loaded, don't spawn.
-        if (IndexOfSpritePaletteTag(tag) == 0xFF || IndexOfSpritePaletteTag(palette.tag) == 0xFF)
+        // Include check if female or shiny mon is loaded and use that tag if possible
+        if (IndexOfSpritePaletteTag(tag) == 0xFF && IndexOfSpritePaletteTag(palette.tag) == 0xFF)
             return FALSE;
     }
     else if (numFreePalSlots == 0)
