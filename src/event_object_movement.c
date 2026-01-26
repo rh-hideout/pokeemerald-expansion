@@ -9947,6 +9947,9 @@ enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objec
     s16 distanceX = objectOne->currentCoords.x - objectTwo->currentCoords.x;
     s16 distanceY = objectOne->currentCoords.y - objectTwo->currentCoords.y;
 
+    if (distanceX == 0 && distanceY == 0)
+        return DIR_NONE;
+
     // Get absolute X distance.
     if (distanceX < 0)
         absX = distanceX * -1;
@@ -10019,8 +10022,6 @@ enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objec
             }
         }
     }
-    
-    return DIR_NONE;
 }
 
 void ObjectEventTurnToObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
