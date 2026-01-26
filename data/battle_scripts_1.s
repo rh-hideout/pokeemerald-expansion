@@ -3482,7 +3482,6 @@ BattleScript_EffectSpikes::
 BattleScript_EffectForesight::
 	attackcanceler
 	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
-	jumpifgenconfiglowerthan CONFIG_FORESIGHT_FAIL, GEN_2, BattleScript_ForesightSet
 	jumpifgenconfiglowerthan CONFIG_FORESIGHT_FAIL, GEN_3, BattleScript_ForesightFailCheck
 	jumpifgenconfiglowerthan CONFIG_FORESIGHT_FAIL, GEN_5, BattleScript_ForesightSet
 BattleScript_ForesightFailCheck:
