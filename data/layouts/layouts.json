@@ -4410,6 +4410,26 @@
       "secondary_tileset": "gTileset_MysteryEventsHouse",
       "border_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/border.bin",
       "blockdata_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/map.bin"
+    },
+    {
+      "id": "LAYOUT_KLASSENZIMMER",
+      "name": "Klassenzimmer_Layout",
+      "width": 12,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/Klassenzimmer/border.bin",
+      "blockdata_filepath": "data/layouts/Klassenzimmer/map.bin"
+    },
+    {
+      "id": "LAYOUT_TESTMAP",
+      "name": "Testmap_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_dhbw_gebaeude",
+      "border_filepath": "data/layouts/Testmap/border.bin",
+      "blockdata_filepath": "data/layouts/Testmap/map.bin"
     }
   ]
 }
