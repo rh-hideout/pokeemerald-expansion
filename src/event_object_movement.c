@@ -136,7 +136,6 @@ static void TryEnableObjectEventAnim(struct ObjectEvent *, struct Sprite *);
 static void ObjectEventExecHeldMovementAction(struct ObjectEvent *, struct Sprite *);
 static void UpdateObjectEventSpriteAnimPause(struct ObjectEvent *, struct Sprite *);
 static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *, s16, s16);
-static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *, s16, s16, enum Direction);
 static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *, s16, s16);
 static void UpdateObjectEventOffscreen(struct ObjectEvent *, struct Sprite *);
 static void UpdateObjectEventSpriteVisibility(struct ObjectEvent *, struct Sprite *);
@@ -6432,7 +6431,7 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
     return FALSE;
 }
 
-static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
+bool32 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
 {
     if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior)
         || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y)))
@@ -6470,7 +6469,7 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
                     if (OWE_DespawnMonDueToNPCCollision(curObject, objectEvent))
                         continue;
 
-                    OWE_TryTriggerEncounter(objectEvent, curObject);
+                    OWE_TryTriggerEncounter(objectEvent, curObject, x, y);
                     return i;
                 }
             }
@@ -9948,6 +9947,9 @@ enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objec
     s16 distanceX = objectOne->currentCoords.x - objectTwo->currentCoords.x;
     s16 distanceY = objectOne->currentCoords.y - objectTwo->currentCoords.y;
 
+    if (distanceX == 0 && distanceY == 0)
+        return DIR_NONE;
+
     // Get absolute X distance.
     if (distanceX < 0)
         absX = distanceX * -1;
@@ -10020,8 +10022,6 @@ enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objec
             }
         }
     }
-    
-    return DIR_NONE;
 }
 
 void ObjectEventTurnToObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
@@ -11847,19 +11847,15 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step5(struct ObjectEvent 
     return TRUE;
 }
 
-#define sSavedMovementState warpArrowSpriteId
-
 movement_type_def(MovementType_ChasePlayer_OverworldWildEncounter, gMovementTypeFuncs_ChasePlayer_OverworldWildEncounter)
 
 bool8 MovementType_Common_OverworldWildEncounter_Step7(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     ClearObjectEventMovement(objectEvent, sprite);
-    objectEvent->sSavedMovementState = 10;
+    OWE_SetSavedMovementState(objectEvent, 10);
     sprite->sTypeFuncId = 8;
     return TRUE;
 }
-
-#undef sSavedMovementState
 
 bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
@@ -11906,8 +11902,8 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent 
 
     if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
     {
-        sprite->sTypeFuncId = 12;
         MoveToPlayerForEncounter(objectEvent, sprite);
+        sprite->sTypeFuncId = 12;
         return FALSE;
     }
 

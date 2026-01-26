@@ -571,9 +571,7 @@ static const u8 *GetInteractedWaterScript(struct MapPosition *position, u8 metat
     u8 objectEventId = GetObjectEventIdByPosition(position->x, position->y, 1);
     if (IsPlayerFacingSurfableFishableWater() == TRUE && ShouldRunOverworldEncounterScript(objectEventId))
     {
-        struct ObjectEvent *object = &gObjectEvents[objectEventId];
-        gSpecialVar_0x8004 = OW_SPECIES(object);
-        gSpecialVar_LastTalked = object->localId;
+        gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
         return InteractWithDynamicWildOverworldEncounter;
     }
 

@@ -2206,3 +2206,32 @@ u16 GetBattlePyramidPickupItemId(void)
     else
         return sPickupItemsLvl50[round][i];
 }
+
+u32 GetBattlePyramidWildMonHeaderIdFromSpecies(u32 species, u32 round, enum FrontierLevelMode levelMode)
+{
+    // This check may return an incorrect index if duplicate species exist in the same round's table.
+    // This does no occur in vanilla Emerald.
+    const struct PyramidWildMon *wildMons;
+    u32 i;
+
+    if (round >= TOTAL_PYRAMID_ROUNDS)
+        return 0;
+
+    if (levelMode != FRONTIER_LVL_50)
+        wildMons = sOpenLevelWildMonPointers[round];
+    else
+        wildMons = sLevel50WildMonPointers[round];
+
+    for (i = 0; ; i++)
+    {
+        u32 entrySpecies = SanitizeSpeciesId(wildMons[i].species);
+        // Will trigger an assert and failure if species in the table before desired species is disabled. 
+
+        if (entrySpecies == SPECIES_NONE)
+            return 0;
+
+        if (entrySpecies == species)
+            return i + 1;
+    }
+}
+

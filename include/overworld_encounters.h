@@ -79,7 +79,7 @@ struct OWESpeciesBehavior
     enum OWESpeeds activeSpeed;
 };
 
-enum OverworldEncounterBehaviors
+enum __attribute__((packed)) OverworldEncounterBehaviors
 {
     OWE_IGNORE_PLAYER,
     OWE_CHASE_PLAYER_SLOW,
@@ -108,7 +108,7 @@ bool32 CanRemoveOverworldEncounter(u32 localId);
 u32 RemoveOldestOverworldEncounter(void);
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
-void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
+void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider, s32 xCollision, s32 yCollision);
 void OverworldWildEncounter_RemoveObjectOnBattle(void);
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
 void DespawnOldestOWE_Pal(void);
@@ -123,6 +123,8 @@ bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *object
 bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void);
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent);
 u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
+struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim);
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent, u32 state);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

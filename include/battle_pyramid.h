@@ -22,5 +22,6 @@ void LoadBattlePyramidObjectEventTemplates(void);
 void LoadBattlePyramidFloorObjectEventScripts(void);
 u8 GetNumBattlePyramidObjectEvents(void);
 u16 GetBattlePyramidPickupItemId(void);
+u32 GetBattlePyramidWildMonHeaderIdFromSpecies(u32 species, u32 round, enum FrontierLevelMode levelMode);
 
 #endif // GUARD_BATTLE_PYRAMID_H
