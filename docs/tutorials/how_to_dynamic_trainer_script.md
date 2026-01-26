@@ -57,9 +57,45 @@ With Dynamic Trainer Battle Scripts, simply changing the pointer to `NULL` will 
 trainerbattle_single TRAINER_TIANA, NULL, Route102_Text_TianaDefeated
 ```
 
-| with intro | without intro |
+| `introTextA` = Route102_Text_TianaIntro | `introTextA` = NULL |
 | ---------- | ------------|
 | ![with_intro](img/dynamic_trainer_scripts/with_intro.gif) | ![no_intro](img/dynamic_trainer_scripts/no_intro.gif) |
+
+To understand how this works lets examine how the script stack is build.
+When talking to the trainer, the `trainerbattle` macro will eventually invoke the function `BattleSetup_ConfigureTrainerBattle`, which is responsible for populating the script stack.
+
+```diff
+static void BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
+{
+    PUSH       (EventSnippet_Lock)
+    PUSH_IF_SET(EventSnippet_FacePlayer, battleParams->params.facePlayer)
+    PUSH       (EventSnippet_RevealTrainer)
+    PUSH_IF_SET(EventSnippet_PlayTrainerEncounterMusic, battleParams->params.playMusicA)
+    PUSH       (EventSnippet_SetTrainerFacingDirection);
+!   PUSH_IF_SET(EventSnippet_ShowTrainerIntroMsg, battleParams->params.introTextA)
+    PUSH_IF_ELSE(EventSnippet_DoRematchTrainerBattle, EventSnippet_DoTrainerBattle, battleParams->params.isRematch)
+    PUSH_IF_ELSE(EventSnippet_GotoPostBattleScript, EventSnippet_EndTrainerBattle, battleParams->params.continueScript)
+
+    return;
+}
+```
+>[!NOTE] The function was simplified here for this demonstration.  
+
+The `PUSH` macro (and variants) pushes the event snippet to the script stack passed to the function. Some snippets should always happen such as `EventSnippet_Lock`, others only if a condition is met. Consider the highlighted line. The snippet responsible for displaying the intro text is only pushed to the stack if the `introTextA` parameter is not null. The table below shows the finished stack.
+
+| `introTextA` = Route102_Text_TianaIntro | `introTextA` = NULL |
+| ---------- | ------------|
+| **Stack Top**
+| EventSnippet_EndTrainerBattle | EventSnippet_EndTrainerBattle |
+| EventSnippet_DoTrainerBattle | EventSnippet_DoTrainerBattle |
+| EventSnippet_ShowTrainerIntroMsg | EventSnippet_SetTrainerFacingDirection |
+| EventSnippet_SetTrainerFacingDirection | ... |
+| ... | ... |
+| **Stack Bottom** |
+
+Please note, that at this point the snippets sit on the stack in reversed order (the *last* snippet at the top and vice versa).
+Here, the snippets are first pushed to a temporary stack and then later popped and pushed to the global script stack, reversing their order (see: `ConfigureTrainerBattle`).
+This allows us to write the snippets in sequential order from first to last. 
 
 ## Customizing a battle
 
@@ -94,10 +130,10 @@ I want the party heal to happen after the trainer approaches but before the intr
 > Use the provided macros `PUSH`, `PUSH_IF_SET` and `PUSH_IF_ELSE` to improve readability.
 
 There are currently **4** functions that build the scripts:
-* BattleSetup_ConfigureTrainerBattle
-* BattleSetup_ConfigureApproachingTrainerBattle
-* BattleSetup_ConfigureFacilityTrainerBattle
-* BattleSetup_ConfigureApproachingFacilityTrainerBattle
+* `BattleSetup_ConfigureTrainerBattle`
+* `BattleSetup_ConfigureApproachingTrainerBattle`
+* `BattleSetup_ConfigureFacilityTrainerBattle`
+* `BattleSetup_ConfigureApproachingFacilityTrainerBattle`
 
 Since I only want the party to be healed when a regular trainer spots the player, I make the change in `BattleSetup_ConfigureApproachingTrainerBattle`. 
 
@@ -128,12 +164,6 @@ static void BattleSetup_ConfigureApproachingTrainerBattle(TrainerBattleParameter
     return;
 }
 ```
-
-> [!NOTE]
-> Experienced users might have noticed that the snippets are technically pushed in incorrect order to the stack.
-> Since stacks are a LIFO data type, the last snippet should be pushed first, and vice versa.
-> Please note that the snippets are first pushed to a temporary script stack from which they are then popped and pushed to the global script stack.
-> Refer to `ConfigureTrainerBattle` and analogous functions for more insight on this.
 
 ## Limitations
 
