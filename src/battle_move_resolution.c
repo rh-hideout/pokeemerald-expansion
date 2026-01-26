@@ -1632,11 +1632,11 @@ enum CancelerResult DoAttackCanceler(void)
     while (gBattleStruct->eventState.atkCanceler < CANCELER_END && result == CANCELER_RESULT_SUCCESS)
     {
         result = sMoveSuccessOrderCancelers[gBattleStruct->eventState.atkCanceler](&ctx);
-        gBattleStruct->unableToUseMove = (result == CANCELER_RESULT_FAILURE);
         if (result != CANCELER_RESULT_PAUSE)
             gBattleStruct->eventState.atkCanceler++;
     }
 
+    gBattleStruct->unableToUseMove = (result == CANCELER_RESULT_FAILURE);
     return result;
 }
 
