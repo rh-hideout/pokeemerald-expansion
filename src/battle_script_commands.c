@@ -10514,17 +10514,17 @@ static void Cmd_tryrecycleitem(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    enum Item usedHeldItem;
+    struct PartyState *partyState;
 
     if (gCurrentMove == MOVE_NONE && GetBattlerAbility(gBattlerAttacker) == ABILITY_PICKUP)
-        usedHeldItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
+        partyState = GetBattlerPartyState(gBattlerTarget);
     else
-        usedHeldItem = GetBattlerPartyState(gBattlerAttacker)->usedHeldItem;
+        partyState = GetBattlerPartyState(gBattlerAttacker);
 
-    if (usedHeldItem != ITEM_NONE && gBattleMons[gBattlerAttacker].item == ITEM_NONE)
+    if (partyState->usedHeldItem != ITEM_NONE && gBattleMons[gBattlerAttacker].item == ITEM_NONE)
     {
-        gLastUsedItem = usedHeldItem;
-        GetBattlerPartyState(gBattlerAttacker)->usedHeldItem = ITEM_NONE;
+        gLastUsedItem = partyState->usedHeldItem;
+        partyState->usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerAttacker].item = gLastUsedItem;
 
         BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
