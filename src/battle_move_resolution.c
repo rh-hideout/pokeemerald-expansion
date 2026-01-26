@@ -2492,7 +2492,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
              && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
             {
                 gBattleMons[gBattlerAttacker].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
-                gBattleStruct->changedItems[gBattlerAttacker] = gLastUsedItem; // Stolen item to be assigned later
+                GetBattlerState(gBattlerAttacker)->changedItem = gLastUsedItem; // Stolen item to be assigned later
             }
             gEffectBattler = gBattlerTarget;
             BattleScriptCall(BattleScript_ItemSteal);
@@ -3165,10 +3165,10 @@ static enum MoveEndResult MoveEndChangedItems(void)
 {
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
-        if (gBattleStruct->changedItems[battler] != ITEM_NONE)
+        if (GetBattlerState(battler)->changedItem != ITEM_NONE)
         {
-            gBattleMons[battler].item = gBattleStruct->changedItems[battler];
-            gBattleStruct->changedItems[battler] = ITEM_NONE;
+            gBattleMons[battler].item = GetBattlerState(battler)->changedItem;
+            GetBattlerState(battler)->changedItem = ITEM_NONE;
         }
     }
 

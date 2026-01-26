@@ -418,7 +418,7 @@ BattleScript_EffectTeatime::
 BattleScript_EffectTeatimeNextTarget:
 	jumpifnoberry BS_TARGET, BattleScript_EffectTeatimeGetTarget
 	setbyte sBERRY_OVERRIDE, TRUE @ override the requirements for eating berries
-	consumeberry BS_TARGET, TRUE @ consume the berry, then restore the item from changedItems
+	consumeberry BS_TARGET, TRUE @ consume the berry, then restore the item from changedItem
 	setbyte sBERRY_OVERRIDE, FALSE
 	removeitem BS_TARGET
 	moveendcase MOVEEND_NEXT_TARGET

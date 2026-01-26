@@ -3153,7 +3153,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 if (effect != 0)
                 {
                     BattleScriptCall(BattleScript_TraceActivates);
-                    gBattleStruct->tracedAbility[battler] = gLastUsedAbility = gBattleMons[chosenTarget].ability;
+                    GetBattlerState(battler)->tracedAbility = gLastUsedAbility = gBattleMons[chosenTarget].ability;
                     RecordAbilityBattle(chosenTarget, gLastUsedAbility); // Record the opposing battler has this ability
                     PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff1, chosenTarget, gBattlerPartyIndexes[chosenTarget])
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff2, gLastUsedAbility)
@@ -3683,7 +3683,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             {
             case ABILITY_PICKUP:
                 if (gBattleMons[battler].item == ITEM_NONE
-                 && gBattleStruct->changedItems[battler] == ITEM_NONE   // Will not inherit an item
+                 && GetBattlerState(battler)->changedItem == ITEM_NONE   // Will not inherit an item
                  && PickupHasValidTarget(battler))
                 {
                     gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
@@ -3695,7 +3695,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             case ABILITY_HARVEST:
                 if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
                  && gBattleMons[battler].item == ITEM_NONE
-                 && gBattleStruct->changedItems[battler] == ITEM_NONE   // Will not inherit an item
+                 && GetBattlerState(battler)->changedItem == ITEM_NONE   // Will not inherit an item
                  && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
                 {
                     gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
@@ -10238,7 +10238,7 @@ bool32 TryTriggerSymbiosis(u32 battler, u32 ally)
 bool32 TrySymbiosis(u32 battler, enum Item itemId, bool32 moveEnd)
 {
     if (!GetBattlerPartyState(battler)->itemWasLost
-        && gBattleStruct->changedItems[battler] == ITEM_NONE
+        && GetBattlerState(battler)->changedItem == ITEM_NONE
         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_EJECT_BUTTON
         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_EJECT_PACK
         && (GetConfig(CONFIG_SYMBIOSIS_GEMS) < GEN_7 || !(gSpecialStatuses[battler].gemBoost))

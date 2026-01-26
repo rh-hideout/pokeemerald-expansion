@@ -13341,7 +13341,7 @@ void BS_TryRecycleBerry(void)
     NATIVE_ARGS(const u8 *failInstr);
     enum Item usedHeldItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
     if (gBattleMons[gBattlerTarget].item == ITEM_NONE
-        && gBattleStruct->changedItems[gBattlerTarget] == ITEM_NONE   // Will not inherit an item
+        && GetBattlerState(gBattlerTarget)->changedItem == ITEM_NONE   // Will not inherit an item
         && GetItemPocket(usedHeldItem) == POCKET_BERRIES)
     {
         gLastUsedItem = usedHeldItem;
@@ -13710,7 +13710,7 @@ void BS_SetTracedAbility(void)
 {
     NATIVE_ARGS(u8 battler);
     u32 battler = GetBattlerForBattleScript(cmd->battler);
-    gBattleMons[battler].ability = gBattleMons[battler].volatiles.overwrittenAbility = gBattleStruct->tracedAbility[battler];
+    gBattleMons[battler].ability = gBattleMons[battler].volatiles.overwrittenAbility = GetBattlerState(battler)->tracedAbility;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -14141,7 +14141,7 @@ void BS_TryActivateReceiver(void)
         && GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD
         && !gAbilitiesInfo[gBattleMons[battler].ability].cantBeCopied)
     {
-        gBattleStruct->tracedAbility[gBattlerAbility] = gBattleMons[battler].ability; // re-using the variable for trace
+        GetBattlerState(gBattlerAbility)->tracedAbility = gBattleMons[battler].ability; // re-using the variable for trace
         gBattleScripting.battler = battler;
         BattleScriptPush(cmd->nextInstr);
         gBattlescriptCurrInstr = BattleScript_ReceiverActivates;

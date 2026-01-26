@@ -3929,7 +3929,7 @@ static bool32 DoesAbilityBenefitFromSunOrRain(u32 battler, enum Ability ability,
         return (weather & B_WEATHER_RAIN);
     case ABILITY_HARVEST:
         if (GetItemPocket(gAiLogicData->items[battler]) != POCKET_BERRIES
-            && GetItemPocket(gBattleStruct->changedItems[battler]) != POCKET_BERRIES
+            && GetItemPocket(GetBattlerState(battler)->changedItem) != POCKET_BERRIES
             && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) != POCKET_BERRIES)
         {
             return FALSE;

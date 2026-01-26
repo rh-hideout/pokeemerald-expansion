@@ -526,6 +526,11 @@ struct BattlerState
     u16 usedMicleBerry:1;
     u16 padding:3;
     // End of Word
+    enum Item changedItem:10;
+    u16 padding2:6;
+    enum Ability tracedAbility:9;
+    u16 padding3:7;
+    // End of Word
 };
 
 struct PartyState
@@ -627,7 +632,6 @@ struct BattleStruct
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 unused:4;
     void (*savedCallback)(void);
-    u16 changedItems[MAX_BATTLERS_COUNT];
     u8 switchInBattlerCounter;
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]
     union {
@@ -658,7 +662,6 @@ struct BattleStruct
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
-    enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     struct Illusion illusion[MAX_BATTLERS_COUNT];
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
