@@ -196,18 +196,19 @@ struct AI_SavedBattleMon
 
 struct AiPartyMon
 {
-    u16 species;
-    enum Item item;
-    enum HoldEffect heldEffect;
-    enum Ability ability;
-    u16 level;
-    enum Move moves[MAX_MON_MOVES];
     u32 status;
-    u8 switchInCount; // Counts how many times this Pokemon has been sent out or switched into in a battle.
+    enum Ability ability:9;
+    u16 level:7;
+    enum Item item:10;
+    u16 switchInCount:6; // Counts how many times this Pokemon has been sent out or switched into in a battle.
+    enum HoldEffect heldEffect:8;
     u8 gender:2;
     u8 isFainted:1;
     u8 wasSentInBattle:1;
     u8 padding:4;
+    u16 species:11;
+    u8 padding2:5;
+    enum Move moves[MAX_MON_MOVES];
 };
 
 struct AiPartyData // Opposing battlers - party mons.
