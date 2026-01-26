@@ -1,18 +1,24 @@
 # How to create a dynamic Trainer Battle Script
 
-Dynamic Trainer Battle Scripting enables more fine-grained control over pre-battle scripts while reducing the implementation effort for different `trainerbattle` macros.\
-Previously, different behavior of pre-battle scripts were statically defined by *modes* such as `TRAINER_BATTLE_SINGLE` or `TRAINER_BATTLE_DOUBLE`. Each small variation of these modes required its own dedicated mode, leading to a quick explosion in possible states. For instance, `TRAINER_BATTLE_CONTINUE_SCRIPT` and `TRAINER_BATTLE_CONTINUE_SCRIPT_NO_MUSIC`.\
-Additionally, the static system encouraged duplicate script fragments for various modes.
-Dynamic Trainer Battle Scripting removes modes entirely and instead constructs a pre-battle script depending on which parameters have been initialized. This depends on two previous PRs: [Trainer Battle Parameter Consolidation](https://github.com/rh-hideout/pokeemerald-expansion/pull/5982) and [Trainer Battle Type Differentiation](https://github.com/rh-hideout/pokeemerald-expansion/pull/6424). I advise to check them out briefly if you are unaware of the changes they made.
+Dynamic Trainer Battle Scripting enables more fine-grained control over pre-battle scripts while reducing the implementation effort for different `trainerbattle` macros.
+
+Previously, different behavior of pre-battle scripts were statically defined by *modes* such as `TRAINER_BATTLE_SINGLE` or `TRAINER_BATTLE_DOUBLE`. Each small variation of these modes required its own dedicated mode, leading to a quick explosion in possible states. Additionally, the static system encouraged duplicate script fragments for various modes.
+
+Dynamic Trainer Battle Scripting removes modes entirely and instead constructs a pre-battle script depending on which parameters have been initialized. 
+
+This behavior depends on three PRs: 
+- [Trainer Battle Parameter Consolidation](https://github.com/rh-hideout/pokeemerald-expansion/pull/5982) 
+- [Trainer Battle Type Differentiation](https://github.com/rh-hideout/pokeemerald-expansion/pull/6424)
+- [Dynamic Trainer Battle Scripting](https://github.com/rh-hideout/pokeemerald-expansion/pull/8678)
+
+There may be follow up PRs but their functionality is not covered here.
 
 ## Terminology
-
-Some terminology has to be explained:
 
 * **trainerbattle scripts** are those invoked by the `trainerbattle` or `facilitybattle` macros, as well as parameterized versions such as `trainerbattle_single`. These scripts define the events when the player either **talks to** or **is spotted by** an undefeated trainer up to the point the battle intro transition starts, as well as any events immediately following the return to the overworld after the battle ends.
     * e.g. `EventScript_TryDoNormalTrainerBattle` and those that follow
 * **trainerbattle modes** (previously) defined different battle types that could be handled, like single, double and rematch battles. Additionally, they controlled small variations of these standard types. For example, to omit the intro text or to continue to a specified script after the battle ends.
-    * see `include/constants/battle_setup.h` (note that this file will be removed with this PR)
+    * Different modes can be seen in [`include/constants/battle_setup.h`](https://github.com/rh-hideout/pokeemerald-expansion/blob/1cbbb304a9576c5e665348cd2b48dbff2a98a9a4/include/constants/battle_setup.h#L4), but note that this file has been removed in #8678
 * **event scripts** are the discrete scripts which make up a **trainerbattle script**. Usually prefixed by `EventScript`
 * **event snippets** define *small* **event scripts** that usually define a single event, like showing the intro message. They are the building blocks from which the battle scripts are compiled. A snippet should contain any instruction necessary for an event, but no more than necessary. However, *small* is not a strict qualifier here, so a snippet may contain any number of statements. There are some (loose) rules when working with snippets: 
     * A snippet **must** end with a `return` statement if other snippets should be able to execute after it. 
@@ -26,7 +32,7 @@ Some terminology has to be explained:
 
 ## Concept
 
-Previously, trainerbattle scripts were relatively static. On mode selection, the appropriate event script was loaded and executed on the global script context. With Dynamic Trainer Battle Scripts the final script is instead assembled from event snippets. On **talking to** or **being spotted by** a trainer, the game performs various checks and pushes appropriate event snippets to the global script stack. By default, these checks often determine if a member of the global trainerbattle parameter struct is **NOT NULL** and push the related event snippet if it is not null. Once the stack is filled with snippets, the first snippet is popped from the top of the stack and executed. `return`s at the end of a snippet will pop the next snippet from the stack until the stack is empty or an `end` is encounterd. 
+Previously, trainerbattle scripts were relatively static. On mode selection, the appropriate event script was loaded and executed on the global script context. With Dynamic Trainer Battle Scripts the final script is instead assembled from event snippets. On **talking to** or **being spotted by** a trainer, the game performs various checks and pushes appropriate event snippets to the global script stack. By default, these checks often determine if a member of the global trainerbattle parameter struct is **NOT NULL** and push the related event snippet if it is not null. Once the stack is filled with snippets, the first snippet is popped from the top of the stack and executed. `return`s at the end of a snippet will pop the next snippet from the stack until the stack is empty or an `end` is encounterd.
 
 Let's go over a simple example to illustrate this. Consider the following trainer battle: 
 
