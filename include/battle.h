@@ -455,13 +455,6 @@ struct ZMoveData
     u16 baseMoves[MAX_BATTLERS_COUNT];
 };
 
-struct DynamaxData
-{
-    u16 dynamaxTurns[MAX_BATTLERS_COUNT];
-    u16 baseMoves[MAX_BATTLERS_COUNT]; // base move of Max Move
-    u16 lastUsedBaseMove;
-};
-
 struct BattleVideo {
     u32 battleTypeFlags;
     rng_value_t rngSeed;
@@ -485,11 +478,13 @@ struct BattlerState
     u32 storedHealingWish:1;
     u32 storedLunarDance:1;
     // End of Word
-    u32 fainted:1;
-    u32 chosenMovePosition:2;
-    u32 activatedGimmicks:6;
-    u32 toActivateGimmick:1; // stores whethershould transform at start of turn
-    u32 padding:26;
+    enum Move dynamaxBaseMove:10;
+    u16 activatedGimmicks:6;
+    u16 fainted:1;
+    u16 chosenMovePosition:2;
+    u16 toActivateGimmick:1; // stores whethershould transform at start of turn
+    u16 dynamaxTimer:2;
+    u16 padding:10;
     // End of Word
 
     // 2-byte alignments below
@@ -653,7 +648,7 @@ struct BattleStruct
     u8 savedAttackerCount:4;
     u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];    // two per battler
     struct ZMoveData zmove;
-    struct DynamaxData dynamax;
+    enum Move dynamaxLastUsedBaseMove:10;
     const u8 *trainerSlideMsg;
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
     struct Illusion illusion[MAX_BATTLERS_COUNT];

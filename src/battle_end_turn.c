@@ -1348,7 +1348,7 @@ static bool32 HandleEndTurnDynamax(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gBattleStruct->dynamax.dynamaxTurns[battler] > 0 && --gBattleStruct->dynamax.dynamaxTurns[battler] == 0)
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetBattlerState(battler)->dynamaxTimer > 0 && --GetBattlerState(battler)->dynamaxTimer == 0)
     {
         gBattleScripting.battler = battler;
         UndoDynamax(battler);

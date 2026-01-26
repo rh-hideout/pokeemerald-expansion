@@ -4423,7 +4423,7 @@ static void HandleTurnActionSelectionState(void)
                             // Max Move check
                             if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
                             {
-                                gBattleStruct->dynamax.baseMoves[battler] = GetChosenMoveFromPosition(battler);
+                                GetBattlerState(battler)->dynamaxBaseMove = GetChosenMoveFromPosition(battler);
                             }
                             gBattleCommunication[battler]++;
 

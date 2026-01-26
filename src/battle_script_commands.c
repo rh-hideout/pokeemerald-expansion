@@ -8730,7 +8730,7 @@ static void Cmd_trysetencore(void)
     {
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (gBattleMons[gBattlerTarget].moves[i] == gBattleStruct->dynamax.baseMoves[gBattlerTarget])
+            if (gBattleMons[gBattlerTarget].moves[i] == GetBattlerState(gBattlerTarget)->dynamaxBaseMove)
                 break;
         }
     }
@@ -8987,7 +8987,7 @@ static void Cmd_tryspiteppreduce(void)
         {
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (gBattleStruct->dynamax.baseMoves[gBattlerTarget] == gBattleMons[gBattlerTarget].moves[i])
+                if (GetBattlerState(gBattlerTarget)->dynamaxBaseMove == gBattleMons[gBattlerTarget].moves[i])
                     break;
             }
         }
