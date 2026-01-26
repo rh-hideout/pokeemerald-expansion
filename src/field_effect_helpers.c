@@ -65,6 +65,9 @@ void SetUpShadow(struct ObjectEvent *objectEvent)
 
 void SetUpReflection(struct ObjectEvent *objectEvent, struct Sprite *sprite, bool8 stillReflection)
 {
+    if (IsOverworldWildEncounter(objectEvent, OWE_GENERATED))
+        return;
+    
     struct Sprite *reflectionSprite;
 
     reflectionSprite = &gSprites[CreateCopySpriteAt(sprite, sprite->x, sprite->y, 152)];
