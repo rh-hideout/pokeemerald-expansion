@@ -95,7 +95,7 @@ void UpdateOverworldEncounters(void)
     if (!OW_WILD_ENCOUNTERS_OVERWORLD
         || FlagGet(OW_FLAG_NO_ENCOUNTER)
         || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !OW_WILD_ENCOUNTERS_BATTLE_PIKE)
-        || (CurrentBattlePyramidLocation() && !OW_WILD_ENCOUNTERS_BATTLE_PYRAMID)
+        || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR && !OW_WILD_ENCOUNTERS_BATTLE_PYRAMID)
         || InTrainerHillChallenge())
     {
         if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
