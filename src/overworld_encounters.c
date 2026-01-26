@@ -1059,7 +1059,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     if (levelTemplate)
         level = levelTemplate;
 
-    assertf(level < MIN_LEVEL || level > MAX_LEVEL, "invalid manual overworld encounter\nlevel: %d\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", level, speciesId, x, y)
+    assertf(level >= MIN_LEVEL && level <= MAX_LEVEL, "invalid manual overworld encounter\nlevel: %d\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", level, speciesId, x, y)
     {
         level = MIN_LEVEL;
     }
