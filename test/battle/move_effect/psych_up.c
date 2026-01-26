@@ -9,13 +9,14 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Psych Up displays the correct battlers when used by the player")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
         PLAYER(SPECIES_TORNADUS) { Speed(66); }
         OPPONENT(SPECIES_LANDORUS) { Speed(99); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SWORDS_DANCE); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_PSYCH_UP); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("The opposing Landorus used Swords Dance!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
         MESSAGE("Tornadus copied the opposing Landorus's stat changes!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], opponent->statStages[STAT_ATK]);
@@ -26,13 +27,14 @@ SINGLE_BATTLE_TEST("Psych Up displays the correct battlers when used by the play
 SINGLE_BATTLE_TEST("Psych Up displays the correct battlers when used by the opponent")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
         PLAYER(SPECIES_TORNADUS) { Speed(66); }
         OPPONENT(SPECIES_LANDORUS) { Speed(99); }
     } WHEN {
         TURN { MOVE(player, MOVE_SWORDS_DANCE); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(opponent, MOVE_PSYCH_UP); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Tornadus used Swords Dance!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         MESSAGE("The opposing Landorus copied Tornadus's stat changes!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], player->statStages[STAT_ATK]);
@@ -50,6 +52,7 @@ SINGLE_BATTLE_TEST("Psych Up ignores Spiky Shield and Baneful Bunker but fails a
     PARAMETRIZE { protectMove = MOVE_CRAFTY_SHIELD; shouldFail = TRUE; }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
         ASSUME(GetMoveEffect(MOVE_SPIKY_SHIELD) == EFFECT_PROTECT);
         ASSUME(GetMoveEffect(MOVE_BANEFUL_BUNKER) == EFFECT_PROTECT);
         ASSUME(GetMoveEffect(MOVE_CRAFTY_SHIELD) == EFFECT_PROTECT);
