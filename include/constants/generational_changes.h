@@ -119,6 +119,8 @@
     F(AFTER_YOU_TURN_ORDER,      afterYouTurnOrder,       (u32, GEN_COUNT - 1)) \
     F(QUASH_TURN_ORDER,          quashTurnOrder,          (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(DESTINY_BOND_FAIL,         destinyBondFail,         (u32, GEN_COUNT - 1)) \
+    F(FORESIGHT_FAIL,            foresightFail,           (u32, GEN_COUNT - 1)) \
+    F(MIRACLE_EYE_FAIL,          miracleEyeFail,          (u32, GEN_COUNT - 1)) \
     F(PURSUIT_TARGET,            pursuitTarget,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(SKIP_RECHARGE,             skipRecharge,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(ENCORE_TARGET,             encoreTarget,            (u32, GEN_COUNT - 1)) \
