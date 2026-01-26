@@ -3606,8 +3606,8 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
 
 void CopyPartyMonToBattleData(u32 battler, u32 partyIndex)
 {
-    enum BattleSide side = GetBattlerSide(battler);
-    struct Pokemon *party = GetSideParty(side);
+    //enum BattleSide side = GetBattlerSide(battler); // grintoul TO DO - check
+    struct Pokemon *party = GetBattlerParty(battler);
     PokemonToBattleMon(&party[partyIndex], &gBattleMons[battler]);
     gBattleStruct->battlerState[battler].hpOnSwitchout = gBattleMons[battler].hp;
     UpdateSentPokesToOpponentValue(battler);
@@ -4107,11 +4107,10 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, u8 battler)
             gBattleMons[battler].status1 &= ~healMask;
             if((healMask & STATUS1_SLEEP))
             {
-                u32 i = 0;
                 u32 battlerSide = GetBattlerSide(battler);
-                struct Pokemon *party = GetSideParty(battlerSide);
+                struct Pokemon *party = GetBattlerParty(battler); // grintoul TO DO - check
 
-                for (i = 0; i < PARTY_SIZE; i++)
+                for (u32 i = 0; i < PARTY_SIZE; i++)
                 {
                     if (&party[i] == mon)
                     {
@@ -6506,7 +6505,7 @@ bool32 SpeciesHasGenderDifferences(u16 species)
 
 bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
 {
-    struct Pokemon *party = (side == B_SIDE_PLAYER) ? gParties[B_TRAINER_0] : gParties[B_TRAINER_1];
+    struct Pokemon *party = (side == B_SIDE_PLAYER) ? gParties[B_TRAINER_0] : gParties[B_TRAINER_1]; // grintoul TO DO 
 
     if (GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_NONE
      || GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_EGG)

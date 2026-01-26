@@ -2005,18 +2005,17 @@ void TryClearRageAndFuryCutter(void)
 bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2)
 {
     u32 i, playerId, flankId;
-    struct Pokemon *party;
+    struct Pokemon *party = GetBattlerParty(battler);
 
     if (!IsDoubleBattle())
         return FALSE;
 
-    bool32 isPlayerside = IsOnPlayerSide(battler);
+    bool32 isPlayerSide = IsOnPlayerSide(battler);
 
-    if (BATTLE_TWO_VS_ONE_OPPONENT && !isPlayerside)
+    if (BATTLE_TWO_VS_ONE_OPPONENT && !isPlayerSide)
     {
         flankId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         playerId = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-        party = gParties[B_TRAINER_1];
 
         // Edge case: If both opposing Pokemon were knocked out on the same turn,
         // make sure opponent only sends out the final Pokemon once.
@@ -2049,8 +2048,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
-        party = GetBattlerParty(battler);
-        if (!isPlayerside && WILD_DOUBLE_BATTLE)
+        if (!isPlayerSide && WILD_DOUBLE_BATTLE)
         {
             flankId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             playerId = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
@@ -2084,15 +2082,13 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
     {
         if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
         {
-            if (isPlayerside)
+            if (isPlayerSide)
             {
-                party = gParties[B_TRAINER_0];
                 flankId = GetBattlerMultiplayerId(battler);
                 playerId = GetLinkTrainerFlankId(flankId);
             }
             else
             {
-                party = gParties[B_TRAINER_1];
                 if (battler == 1)
                     playerId = 0;
                 else
@@ -2102,7 +2098,6 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
         else
         {
             flankId = GetBattlerMultiplayerId(battler);
-            party = GetBattlerParty(battler);
             playerId = GetLinkTrainerFlankId(flankId);
         }
 
@@ -2113,10 +2108,8 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
         }
         return (i == playerId * MULTI_PARTY_SIZE + MULTI_PARTY_SIZE);
     }
-    else if ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !isPlayerside)
+    else if ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !isPlayerSide)
     {
-        party = gParties[B_TRAINER_1];
-
         if (battler == 1)
             playerId = 0;
         else
@@ -2131,17 +2124,15 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
     }
     else
     {
-        if (!isPlayerside)
+        if (!isPlayerSide)
         {
             flankId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             playerId = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-            party = gParties[B_TRAINER_1];
         }
         else
         {
             flankId = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
             playerId = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
-            party = gParties[B_TRAINER_0];
         }
 
         if (partyIdBattlerOn1 == PARTY_SIZE)

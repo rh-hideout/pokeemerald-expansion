@@ -1116,7 +1116,7 @@ static void CB2_HandleStartMultiPartnerBattle(void)
         break;
     case 3:
         // Link battle, send/receive party Pokémon in groups
-        if (IsLinkTaskFinished())
+        if (IsLinkTaskFinished()) // grintoul TO DO - do we want to change the parties here? Currently resolved at the end; depends on if want to make 12v12 possible
         {
             // Send Pokémon 1-2
             SendBlock(BitmaskAllOtherLinkPlayers(), gParties[B_TRAINER_0], sizeof(struct Pokemon) * 2);
@@ -1301,17 +1301,17 @@ static void SetMultiPartnerMenuParty(u8 offset)
 
     for (i = 0; i < MULTI_PARTY_SIZE; i++)
     {
-        gMultiPartnerParty[i].species     = GetMonData(&gParties[B_TRAINER_0][offset + i], MON_DATA_SPECIES);
-        gMultiPartnerParty[i].heldItem    = GetMonData(&gParties[B_TRAINER_0][offset + i], MON_DATA_HELD_ITEM);
-        GetMonData(&gParties[B_TRAINER_0][offset + i], MON_DATA_NICKNAME, gMultiPartnerParty[i].nickname);
-        gMultiPartnerParty[i].level       = GetMonData(&gParties[B_TRAINER_0][offset + i], MON_DATA_LEVEL);
-        gMultiPartnerParty[i].hp          = GetMonData(&gParties[B_TRAINER_0][offset + i], MON_DATA_HP);
-        gMultiPartnerParty[i].maxhp       = GetMonData(&gParties[B_TRAINER_0][offset + i], MON_DATA_MAX_HP);
-        gMultiPartnerParty[i].status      = GetMonData(&gParties[B_TRAINER_0][offset + i], MON_DATA_STATUS);
-        gMultiPartnerParty[i].personality = GetMonData(&gParties[B_TRAINER_0][offset + i], MON_DATA_PERSONALITY);
-        gMultiPartnerParty[i].gender      = GetMonGender(&gParties[B_TRAINER_0][offset + i]);
+        gMultiPartnerParty[i].species     = GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_SPECIES);
+        gMultiPartnerParty[i].heldItem    = GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_HELD_ITEM);
+        GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_NICKNAME, gMultiPartnerParty[i].nickname);
+        gMultiPartnerParty[i].level       = GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_LEVEL);
+        gMultiPartnerParty[i].hp          = GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_HP);
+        gMultiPartnerParty[i].maxhp       = GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_MAX_HP);
+        gMultiPartnerParty[i].status      = GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_STATUS);
+        gMultiPartnerParty[i].personality = GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_PERSONALITY);
+        gMultiPartnerParty[i].gender      = GetMonGender(&gParties[B_TRAINER_2][offset + i]);
         StripExtCtrlCodes(gMultiPartnerParty[i].nickname);
-        if (GetMonData(&gParties[B_TRAINER_0][offset + i], MON_DATA_LANGUAGE) != LANGUAGE_JAPANESE)
+        if (GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_LANGUAGE) != LANGUAGE_JAPANESE)
             PadNameString(gMultiPartnerParty[i].nickname, CHAR_SPACE);
     }
     memcpy(sMultiPartnerPartyBuffer, gMultiPartnerParty, sizeof(gMultiPartnerParty));
@@ -1429,7 +1429,7 @@ static void CB2_PreInitIngamePlayerPartnerBattle(void)
     {
     case 0:
         sMultiPartnerPartyBuffer = Alloc(sizeof(gMultiPartnerParty));
-        SetMultiPartnerMenuParty(MULTI_PARTY_SIZE);
+        SetMultiPartnerMenuParty(0);
         gBattleCommunication[MULTIUSE_STATE]++;
         *savedCallback = gMain.savedCallback;
         *savedBattleTypeFlags = gBattleTypeFlags;
@@ -2039,7 +2039,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
     return trainer->partySize;
 }
 
-enum BattleTrainer GetBattlerTrainerFromParty(struct Pokemon *party)
+static enum BattleTrainer GetBattlerTrainerFromParty(struct Pokemon *party)
 {
     return ((party - gParties[B_TRAINER_0]) / PARTY_SIZE);
 }
@@ -2143,7 +2143,7 @@ static void BufferPartyVsScreenHealth_AtEnd(u8 taskId)
     u32 flags;
     s32 i;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI) // grintoul TO DO
     {
         switch (gLinkPlayers[multiplayerId].id)
         {
@@ -3572,18 +3572,52 @@ static void DoBattleIntro(void)
         {
             struct HpAndStatus hpStatus[PARTY_SIZE];
 
-            for (i = 0; i < PARTY_SIZE; i++)
+            if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES)) // grintoul TO DO - second party for 12 sides
             {
-                if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                 || GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                for (i = 0; i < MULTI_PARTY_SIZE; i++)
                 {
-                    hpStatus[i].hp = HP_EMPTY_SLOT;
-                    hpStatus[i].status = 0;
+                    if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                     || GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    {
+                        hpStatus[i].hp = HP_EMPTY_SLOT;
+                        hpStatus[i].status = 0;
+                    }
+                    else
+                    {
+                        hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HP);
+                        hpStatus[i].status = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_STATUS);
+                    }
                 }
-                else
+                for (i = 0; i < MULTI_PARTY_SIZE; i++)
                 {
-                    hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HP);
-                    hpStatus[i].status = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_STATUS);
+                    if (GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                     || GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    {
+                        hpStatus[i + MULTI_PARTY_SIZE].hp = HP_EMPTY_SLOT;
+                        hpStatus[i + MULTI_PARTY_SIZE].status = 0;
+                    }
+                    else
+                    {
+                        hpStatus[i + MULTI_PARTY_SIZE].hp = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_HP);
+                        hpStatus[i + MULTI_PARTY_SIZE].status = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_STATUS);
+                    }
+                }
+            }
+            else
+            {
+                for (i = 0; i < PARTY_SIZE; i++)
+                {
+                    if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                     || GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    {
+                        hpStatus[i].hp = HP_EMPTY_SLOT;
+                        hpStatus[i].status = 0;
+                    }
+                    else
+                    {
+                        hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HP);
+                        hpStatus[i].status = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_STATUS);
+                    }
                 }
             }
 
@@ -3591,18 +3625,52 @@ static void DoBattleIntro(void)
             BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus, PARTY_SUMM_SKIP_DRAW_DELAY);
             MarkBattlerForControllerExec(battler);
 
-            for (i = 0; i < PARTY_SIZE; i++)
+            if (BattleSideHasTwoTrainers(B_SIDE_PLAYER) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES)) // grintoul TO DO - second party for 12 sides
             {
-                if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                 || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                for (i = 0; i < MULTI_PARTY_SIZE; i++)
                 {
-                    hpStatus[i].hp = HP_EMPTY_SLOT;
-                    hpStatus[i].status = 0;
+                    if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                     || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    {
+                        hpStatus[i].hp = HP_EMPTY_SLOT;
+                        hpStatus[i].status = 0;
+                    }
+                    else
+                    {
+                        hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP);
+                        hpStatus[i].status = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS);
+                    }
                 }
-                else
+                for (i = 0; i < MULTI_PARTY_SIZE; i++)
                 {
-                    hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP);
-                    hpStatus[i].status = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS);
+                    if (GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                     || GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    {
+                        hpStatus[i + MULTI_PARTY_SIZE].hp = HP_EMPTY_SLOT;
+                        hpStatus[i + MULTI_PARTY_SIZE].status = 0;
+                    }
+                    else
+                    {
+                        hpStatus[i + MULTI_PARTY_SIZE].hp = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_HP);
+                        hpStatus[i + MULTI_PARTY_SIZE].status = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_STATUS);
+                    }
+                }
+            }
+            else
+            {
+                for (i = 0; i < PARTY_SIZE; i++)
+                {
+                    if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                     || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    {
+                        hpStatus[i].hp = HP_EMPTY_SLOT;
+                        hpStatus[i].status = 0;
+                    }
+                    else
+                    {
+                        hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP);
+                        hpStatus[i].status = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS);
+                    }
                 }
             }
 
@@ -5501,7 +5569,7 @@ static void HandleEndTurn_MonFled(void)
     gBattleMainFunc = HandleEndTurn_FinishBattle;
 }
 
-static void HandleEndTurn_FinishBattle(void)
+static void HandleEndTurn_FinishBattle(void) //grintoul TO DO
 {
     u32 i, battler;
 
@@ -5573,7 +5641,7 @@ static void HandleEndTurn_FinishBattle(void)
         if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE || B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
             TryRestoreHeldItems();
 
-        for (i = 0; i < PARTY_SIZE; i++)
+        for (i = 0; i < PARTY_SIZE; i++) // grintoul TO DO - link battles when player on right?
         {
             bool32 changedForm = TryRevertPartyMonFormChange(i);
 

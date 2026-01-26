@@ -170,13 +170,13 @@ void InitBattleControllers(void)
 
     InitBtlControllersInternal();
 
-    SetBattlePartyIds();
+    SetBattlePartyIds(); // grintoul TO DO 
 
-    //if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
-    //{
+    if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+    {
         for (i = 0; i < gBattlersCount; i++)
             BufferBattlePartyCurrentOrderBySide(i, 0);
-    //}
+    }
 
     for (i = 0; i < sizeof(gBattleStruct->tvMovePoints); i++)
         *((u8 *)(&gBattleStruct->tvMovePoints) + i) = 0;
@@ -479,7 +479,7 @@ static void SetBattlePartyIds(void)
                 }
                 else
                 {
-                    if (gBattlerPartyIndexes[i - 2] == j)
+                    if (gBattlerPartyIndexes[i - 2] == j && BattlersShareParty(i - 2, i))
                     {
                         // Exclude already assigned pokemon;
                     }
@@ -508,7 +508,7 @@ static void SetBattlePartyIds(void)
         }
 
         if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-            gBattlerPartyIndexes[1] = 0, gBattlerPartyIndexes[3] = 3;
+            gBattlerPartyIndexes[1] = 0, gBattlerPartyIndexes[3] = 0;
     }
 }
 
@@ -3288,6 +3288,11 @@ enum BattleTrainer GetAllyTrainer(enum BattleTrainer trainer)
     default:
         return B_TRAINER_3;
     }
+}
+
+enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position)
+{
+    return GetBattlerTrainer(GetBattlerAtPosition(position));
 }
 
 bool32 BattleSideHasTwoTrainers(enum BattleSide side)

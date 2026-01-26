@@ -1123,8 +1123,11 @@ void HandleBattleLowHpMusicChange(void)
 
         if (GetMonData(&gParties[B_TRAINER_0][battler1PartyId], MON_DATA_HP) != 0)
             HandleLowHpMusicChange(&gParties[B_TRAINER_0][battler1PartyId], playerBattler1);
-        if (IsDoubleBattle() && GetMonData(&gParties[B_TRAINER_0][battler2PartyId], MON_DATA_HP) != 0)
-            HandleLowHpMusicChange(&gParties[B_TRAINER_0][battler2PartyId], playerBattler2);
+        if (BattlersShareParty(playerBattler1, playerBattler2))
+        {
+            if (IsDoubleBattle() && GetMonData(&gParties[B_TRAINER_0][battler2PartyId], MON_DATA_HP) != 0)
+                HandleLowHpMusicChange(&gParties[B_TRAINER_0][battler2PartyId], playerBattler2);
+        }
     }
 }
 

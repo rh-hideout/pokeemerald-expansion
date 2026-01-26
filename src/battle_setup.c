@@ -714,7 +714,7 @@ static enum TransitionType GetBattleTransitionTypeByMap(void)
     }
 }
 
-static u16 GetSumOfPlayerPartyLevel(u8 numMons)
+static u16 GetSumOfPlayerPartyLevel(u8 numMons) // grintoul TO DO - check if needs update
 {
     u8 sum = 0;
     int i;
@@ -733,7 +733,7 @@ static u16 GetSumOfPlayerPartyLevel(u8 numMons)
     return sum;
 }
 
-static u8 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons)
+static u8 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons) // grintoul TO DO - check if needs update
 {
     u8 i;
     u8 sum;
@@ -1238,8 +1238,8 @@ void BattleSetup_StartTrainerBattle(void)
             FillFrontierTrainersParties(1);
             ZeroMonData(&gParties[B_TRAINER_1][1]);
             ZeroMonData(&gParties[B_TRAINER_1][2]);
-            ZeroMonData(&gParties[B_TRAINER_1][4]);
-            ZeroMonData(&gParties[B_TRAINER_1][5]);
+            ZeroMonData(&gParties[B_TRAINER_3][1]);
+            ZeroMonData(&gParties[B_TRAINER_3][2]);
         }
         else
         {
@@ -1280,7 +1280,7 @@ void BattleSetup_StartTrainerBattle(void)
     ScriptContext_Stop();
 }
 
-static void CB2_EndDebugBattle(void)
+static void CB2_EndDebugBattle(void) // grintoul TO DO - check if needs update
 {
     if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {

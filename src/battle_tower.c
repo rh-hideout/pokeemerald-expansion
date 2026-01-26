@@ -1173,7 +1173,7 @@ static void BattleTowerNop2(void)
 
 }
 
-static void GetApprenticeMultiPartnerParty(u16 trainerId)
+static void GetApprenticeMultiPartnerParty(u16 trainerId) // grintoul TO DO - what is this
 {
     s32 i, count;
     u32 validSpecies[MULTI_PARTY_SIZE];
@@ -1198,7 +1198,7 @@ static void GetApprenticeMultiPartnerParty(u16 trainerId)
     } while (gFrontierTempParty[0] == gFrontierTempParty[1]);
 }
 
-static void GetRecordMixFriendMultiPartnerParty(u16 trainerId)
+static void GetRecordMixFriendMultiPartnerParty(u16 trainerId) // grintoul TO DO - what is this
 {
     s32 i, count;
     u32 validSpecies[3];
@@ -1226,7 +1226,7 @@ static void GetRecordMixFriendMultiPartnerParty(u16 trainerId)
     } while (gFrontierTempParty[2] == gFrontierTempParty[3]);
 }
 
-static void LoadMultiPartnerCandidatesData(void)
+static void LoadMultiPartnerCandidatesData(void) // grintoul TO DO - what is this
 {
     s32 i, j, k;
     u32 spArray[5];
@@ -2125,15 +2125,25 @@ void TrySetLinkBattleTowerEnemyPartyLevel(void)
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         {
+            u32 i, species;
             u8 enemyLevel = SetFacilityPtrsGetLevel();
 
-            for (u32 i = 0; i < PARTY_SIZE; i++)
+            for (i = 0; i < PARTY_SIZE; i++)
             {
-                u32 species = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES);
+                species = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES);
                 if (species)
                 {
                     SetMonData(&gParties[B_TRAINER_1][i], MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][enemyLevel]);
                     CalculateMonStats(&gParties[B_TRAINER_1][i]);
+                }
+            }
+            for (i = 0; i < PARTY_SIZE; i++)
+            {
+                species = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES);
+                if (species)
+                {
+                    SetMonData(&gParties[B_TRAINER_3][i], MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][enemyLevel]);
+                    CalculateMonStats(&gParties[B_TRAINER_3][i]);
                 }
             }
         }

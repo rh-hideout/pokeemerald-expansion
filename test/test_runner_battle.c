@@ -2029,6 +2029,7 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, u32 species)
     if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
         SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
     CalculateMonStats(DATA.currentMon);
+    //DebugPrintf("line %d, trainer %d, index %d, species %S, party species %S, partySize %d", sourceLine, trainer, DATA.currentPartyIndex, GetSpeciesName(species), GetSpeciesName(GetMonData(DATA.currentMon, MON_DATA_SPECIES)), *partySize);
 }
 
 // (sNaturePersonalities[i] % NUM_NATURES) == i

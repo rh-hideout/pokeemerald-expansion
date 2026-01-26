@@ -3725,7 +3725,7 @@ static void GetMetLevelString(u8 *output)
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(3, output);
 }
 
-static bool8 DoesMonOTMatchOwner(void)
+static bool8 DoesMonOTMatchOwner(void) // grintoul TO DO
 {
     struct PokeSummary *sum = &sMonSummaryScreen->summary;
     u32 trainerId;

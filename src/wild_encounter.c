@@ -730,7 +730,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                     {
                         struct Pokemon mon1 = gParties[B_TRAINER_1][0];
                         TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE);
-                        gParties[B_TRAINER_1][1] = mon1;
+                        gParties[B_TRAINER_3][0] = mon1;
                         BattleSetup_StartDoubleWildBattle();
                     }
                     else
@@ -775,7 +775,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                     {
                         struct Pokemon mon1 = gParties[B_TRAINER_1][0];
                         TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_KEEN_EYE);
-                        gParties[B_TRAINER_1][1] = mon1;
+                        gParties[B_TRAINER_3][0] = mon1;
                         BattleSetup_StartDoubleWildBattle();
                     }
                     else
@@ -815,7 +815,7 @@ void RockSmashWildEncounter(void)
             {
                 struct Pokemon mon1 = gParties[B_TRAINER_1][0];
                 TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE);
-                gParties[B_TRAINER_1][1] = mon1;
+                gParties[B_TRAINER_3][0] = mon1;
                 BattleSetup_StartDoubleWildBattle();
                 gSpecialVar_Result = TRUE;
             }

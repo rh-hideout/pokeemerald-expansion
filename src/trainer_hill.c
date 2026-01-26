@@ -896,7 +896,7 @@ static void ShowTrainerHillPostBattleText(void)
     ShowFieldMessageFromBuffer();
 }
 
-static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
+static void CreateNPCTrainerHillParty(u16 trainerId, enum BattleTrainer trainer)
 {
     u8 trId, level;
     s32 i, floorId, partySlot;
@@ -908,10 +908,10 @@ static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
     SetUpDataStruct();
     level = GetHighestLevelInPlayerParty();
     floorId = GetFloorId();
-    for (i = firstMonId, partySlot = 0; i < firstMonId + PARTY_SIZE / 2; i++, partySlot++)
+    for (i = 0, partySlot = 0; i < MULTI_PARTY_SIZE; i++, partySlot++)
     {
         u8 id = sTrainerPartySlots[trId][partySlot];
-        struct Pokemon *mon = &gParties[B_TRAINER_1][i];
+        struct Pokemon *mon = &gParties[trainer][i];
 
         CreateBattleTowerMon(mon, &sHillData->floors[floorId].trainers[trId].mons[id]);
         SetTrainerHillMonLevel(mon, level);
@@ -923,14 +923,14 @@ static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
 void FillHillTrainerParty(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, 0);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_1);
 }
 
 void FillHillTrainersParties(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, 0);
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, PARTY_SIZE / 2);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_1);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, B_TRAINER_3);
 }
 
 // This function is unused, but my best guess is

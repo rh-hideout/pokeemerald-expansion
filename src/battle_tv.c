@@ -658,7 +658,7 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
     }
 }
 
-void TryPutLinkBattleTvShowOnAir(void)
+void TryPutLinkBattleTvShowOnAir(void) // grintoul TO DO
 {
     u16 playerBestSpecies = 0, opponentBestSpecies = 0;
     s16 playerBestSum = 0, opponentBestSum = SHRT_MAX;
@@ -680,6 +680,10 @@ void TryPutLinkBattleTvShowOnAir(void)
         if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) != SPECIES_NONE)
             countPlayer++;
         if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES) != SPECIES_NONE)
+            countOpponent++;
+        if (GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES) != SPECIES_NONE)
+            countPlayer++;
+        if (GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES) != SPECIES_NONE)
             countOpponent++;
     }
 

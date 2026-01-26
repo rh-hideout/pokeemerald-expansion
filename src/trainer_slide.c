@@ -54,6 +54,7 @@ static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, enum Batt
 static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, enum BattleSide side, u32 battler);
 static void SetTrainerSlideParameters(u32 battler, u32* firstId, u32* lastId, u32* trainerId, u32* retValue);
 static bool32 IsSlideInitalizedOrPlayed(u32 battler, enum TrainerSlideType slideId);
+static void GetPartyAndIndexFromSideAndSlot(enum BattleSide side, u8 partySlot, struct Pokemon **party, s8 *partyIndex);
 
 // Partner trainers must be added as TRAINER_PARTNER(PARTNER_XXXX)
 static const u8* const sTrainerSlides[DIFFICULTY_COUNT][TRAINER_PARTNER(PARTNER_COUNT)][TRAINER_SLIDE_COUNT] =
@@ -100,32 +101,19 @@ static const s8 sMultiBattleOrder[] = {0, 2, 3, 1, 4, 5};
 static u32 GetPartyMonCount(u32 firstId, u32 lastId, enum BattleSide side, bool32 onlyAlive)
 {
     u32 count = 0;
-    struct Pokemon* party = (side == B_SIDE_OPPONENT ? gParties[B_TRAINER_1] : gParties[B_TRAINER_0]);
+    struct Pokemon* party = NULL;
+    s8 partyIndex = 0;
 
-    if (IsMultiBattle() && side == B_SIDE_PLAYER)
+    for (u32 i = firstId; i < lastId; i++)
     {
-        for (u32 i = firstId; i < lastId; i++)
+        GetPartyAndIndexFromSideAndSlot(side, i, &party, &partyIndex);
+
+        u32 species = GetMonData(&party[partyIndex], MON_DATA_SPECIES_OR_EGG);
+        if (species != SPECIES_NONE
+                && species != SPECIES_EGG
+                && (!onlyAlive || GetMonData(&party[partyIndex], MON_DATA_HP)))
         {
-            u32 species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG);
-            if (species != SPECIES_NONE
-                    && species != SPECIES_EGG
-                    && (!onlyAlive || GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_HP)))
-            {
-                count++;
-            }
-        }
-    }
-    else
-    {
-        for (u32 i = firstId; i < lastId; i++)
-        {
-            u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
-            if (species != SPECIES_NONE
-                    && species != SPECIES_EGG
-                    && (!onlyAlive || GetMonData(&party[i], MON_DATA_HP)))
-            {
-                count++;
-            }
+            count++;
         }
     }
 
@@ -485,4 +473,34 @@ void MarkTrainerSlideAsPlayed(u32 battler, enum TrainerSlideType slideId)
     u32 bitPosition = slideId % TRAINER_SLIDES_PER_ARRAY;
 
     gBattleStruct->slideMessageStatus.messagePlayed[battler][arrayIndex] |= (1 << bitPosition);
+}
+
+static void GetPartyAndIndexFromSideAndSlot(enum BattleSide side, u8 partySlot, struct Pokemon **party, s8 *partyIndex)
+{
+    if (side == B_SIDE_PLAYER)
+    {
+        if (partySlot >= MULTI_PARTY_SIZE && gBattleTypeFlags & BATTLE_TYPE_MULTI && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+        {
+            *party = gParties[B_TRAINER_2];
+            *partyIndex = partySlot - MULTI_PARTY_SIZE;
+        }
+        else
+        {
+            *party = gParties[B_TRAINER_0];
+            *partyIndex = partySlot;
+        }
+    }
+    else
+    {
+        if (partySlot >= MULTI_PARTY_SIZE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+        {
+            *party = gParties[B_TRAINER_3];
+            *partyIndex = partySlot - MULTI_PARTY_SIZE;
+        }
+        else
+        {
+            *party = gParties[B_TRAINER_1];
+            *partyIndex = partySlot;
+        }
+    }
 }

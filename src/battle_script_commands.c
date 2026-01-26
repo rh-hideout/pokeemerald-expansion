@@ -11792,18 +11792,16 @@ u8 GetFirstFaintedPartyIndex(u8 battler)
     struct Pokemon *party = GetBattlerParty(battler);
 
     // Check whether partner is separate trainer.
-    if ((IsOnPlayerSide(battler) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-        || (!IsOnPlayerSide(battler) && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+    if (BattleSideHasTwoTrainers(battler & BIT_SIDE) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
     {
-        if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT
-            || GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
-        {
-            end = PARTY_SIZE / 2;
-        }
+        if ((battler & BIT_FLANK) == B_FLANK_LEFT)
+            start = 0, end = PARTY_SIZE / 2;
         else
-        {
-            start = PARTY_SIZE / 2;
-        }
+            start = PARTY_SIZE / 2, end = PARTY_SIZE;
+    }
+    else
+    {
+        start = 0, end = PARTY_SIZE;
     }
 
     // Loop through to find fainted battler.

@@ -3480,7 +3480,7 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             }
             else
             {
-                if (IsOnPlayerSide(src[srcID + 1]))
+                if (IsOnPlayerSide(src[srcID + 1])) // grintoul TO DO
                     GetMonData(&gParties[B_TRAINER_0][src[srcID + 2]], MON_DATA_NICKNAME, dst);
                 else
                     GetMonData(&gParties[B_TRAINER_1][src[srcID + 2]], MON_DATA_NICKNAME, dst);

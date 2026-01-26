@@ -45,10 +45,13 @@ static void HandleSpecialTrainerBattleEnd(void)
         CopyEReaderTrainerFarewellMessage();
         break;
     case SPECIAL_BATTLE_MULTI:
-        for (i = 0; i < 3; i++)
+        if (!(gBattleTypeFlags & BATTLE_TYPE_TWELVES)) // grintoul TO DO - test
         {
-            if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
-                gSaveBlock1Ptr->playerParty[i] = gParties[B_TRAINER_0][i];
+            for (i = 0; i < 3; i++)
+            {
+                if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
+                    gSaveBlock1Ptr->playerParty[i] = gParties[B_TRAINER_0][i];
+            }
         }
         break;
     }

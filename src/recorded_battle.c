@@ -498,6 +498,7 @@ void SetPartiesFromRecordedSave(struct RecordedBattleSave *src)
     s32 i;
 
     ZeroPlayerPartyMons();
+    ZeroPartnerPartyMons();
     ZeroEnemyPartyMons();
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -609,6 +610,8 @@ void RecordedBattle_SaveParties(void)
     {
         sSavedParties[B_TRAINER_0][i] = gParties[B_TRAINER_0][i];
         sSavedParties[B_TRAINER_1][i] = gParties[B_TRAINER_1][i];
+        sSavedParties[B_TRAINER_2][i] = gParties[B_TRAINER_2][i];
+        sSavedParties[B_TRAINER_3][i] = gParties[B_TRAINER_3][i];
     }
 }
 
@@ -620,6 +623,8 @@ static void RecordedBattle_RestoreSavedParties(void)
     {
         gParties[B_TRAINER_0][i] = sSavedParties[B_TRAINER_0][i];
         gParties[B_TRAINER_1][i] = sSavedParties[B_TRAINER_1][i];
+        gParties[B_TRAINER_2][i] = sSavedParties[B_TRAINER_2][i];
+        gParties[B_TRAINER_3][i] = sSavedParties[B_TRAINER_3][i];
     }
 }
 

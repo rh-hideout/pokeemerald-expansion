@@ -494,10 +494,10 @@ u32 BattleAI_ChooseMoveIndex(u32 battler)
     return chosenMoveIndex;
 }
 
-static void CopyBattlerDataToAIParty(u32 bPosition, enum BattleSide side)
+static void CopyBattlerDataToAIParty(u32 bPosition, enum BattleTrainer trainer)
 {
     u32 battler = GetBattlerAtPosition(bPosition);
-    struct AiPartyMon *aiMon = &gAiPartyData->mons[side][gBattlerPartyIndexes[battler]];
+    struct AiPartyMon *aiMon = &gAiPartyData->mons[trainer][gBattlerPartyIndexes[battler]];
     struct BattlePokemon *bMon = &gBattleMons[battler];
 
     aiMon->species = bMon->species;
@@ -515,19 +515,21 @@ void Ai_InitPartyStruct(void)
     bool32 hasPartyKnowledge = (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_KNOW_OPPONENT_PARTY) || (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_KNOW_OPPONENT_PARTY);
     struct Pokemon *mon;
 
-    gAiPartyData->count[B_SIDE_PLAYER] = CalculatePartyCountOfSide(B_BATTLER_0);
-    gAiPartyData->count[B_SIDE_OPPONENT] = CalculatePartyCountOfSide(B_BATTLER_1);
+    gAiPartyData->count[B_TRAINER_0] = CalculatePartyCount(B_TRAINER_0);
+    gAiPartyData->count[B_TRAINER_1] = CalculatePartyCount(B_TRAINER_1);
+    gAiPartyData->count[B_TRAINER_2] = CalculatePartyCount(B_TRAINER_2);
+    gAiPartyData->count[B_TRAINER_3] = CalculatePartyCount(B_TRAINER_3);
 
     // Save first 2 or 4(in doubles) mons
-    CopyBattlerDataToAIParty(B_POSITION_PLAYER_LEFT, B_SIDE_PLAYER);
+    CopyBattlerDataToAIParty(B_POSITION_PLAYER_LEFT, GetTrainerFromBattlePosition(B_POSITION_PLAYER_LEFT));
     if (IsDoubleBattle())
-        CopyBattlerDataToAIParty(B_POSITION_PLAYER_RIGHT, B_SIDE_PLAYER);
+        CopyBattlerDataToAIParty(B_POSITION_PLAYER_RIGHT, GetTrainerFromBattlePosition(B_POSITION_PLAYER_RIGHT));
 
     // If player's partner is AI, save opponent mons
     if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
-        CopyBattlerDataToAIParty(B_POSITION_OPPONENT_LEFT, B_SIDE_OPPONENT);
-        CopyBattlerDataToAIParty(B_POSITION_OPPONENT_RIGHT, B_SIDE_OPPONENT);
+        CopyBattlerDataToAIParty(B_POSITION_OPPONENT_LEFT, GetTrainerFromBattlePosition(B_POSITION_OPPONENT_LEFT));
+        CopyBattlerDataToAIParty(B_POSITION_OPPONENT_RIGHT, GetTrainerFromBattlePosition(B_POSITION_OPPONENT_RIGHT));
     }
 
     // Find fainted mons
@@ -538,26 +540,47 @@ void Ai_InitPartyStruct(void)
 
         mon = &gParties[B_TRAINER_0][monIndex];
         if (GetMonData(&gParties[B_TRAINER_0][monIndex], MON_DATA_HP) == 0)
-            gAiPartyData->mons[B_SIDE_PLAYER][monIndex].isFainted = TRUE;
+            gAiPartyData->mons[B_TRAINER_0][monIndex].isFainted = TRUE;
 
         if (isOmniscient || hasPartyKnowledge)
-            gAiPartyData->mons[B_SIDE_PLAYER][monIndex].species = GetMonData(mon, MON_DATA_SPECIES);
+            gAiPartyData->mons[B_TRAINER_0][monIndex].species = GetMonData(mon, MON_DATA_SPECIES);
 
         if (isOmniscient)
         {
-            gAiPartyData->mons[B_SIDE_PLAYER][monIndex].item = GetMonData(mon, MON_DATA_HELD_ITEM);
-            gAiPartyData->mons[B_SIDE_PLAYER][monIndex].heldEffect = GetItemHoldEffect(gAiPartyData->mons[B_SIDE_PLAYER][monIndex].item);
-            gAiPartyData->mons[B_SIDE_PLAYER][monIndex].ability = GetMonAbility(mon);
+            gAiPartyData->mons[B_TRAINER_0][monIndex].item = GetMonData(mon, MON_DATA_HELD_ITEM);
+            gAiPartyData->mons[B_TRAINER_0][monIndex].heldEffect = GetItemHoldEffect(gAiPartyData->mons[B_TRAINER_0][monIndex].item);
+            gAiPartyData->mons[B_TRAINER_0][monIndex].ability = GetMonAbility(mon);
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-                gAiPartyData->mons[B_SIDE_PLAYER][monIndex].moves[moveIndex] = GetMonData(mon, MON_DATA_MOVE1 + moveIndex);
+                gAiPartyData->mons[B_TRAINER_0][monIndex].moves[moveIndex] = GetMonData(mon, MON_DATA_MOVE1 + moveIndex);
+        }
+    }
+    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    {
+        if (GetMonData(&gParties[B_TRAINER_2][monIndex], MON_DATA_SPECIES) == SPECIES_NONE)
+            continue;
+
+        mon = &gParties[B_TRAINER_2][monIndex];
+        if (GetMonData(&gParties[B_TRAINER_2][monIndex], MON_DATA_HP) == 0)
+            gAiPartyData->mons[B_TRAINER_2][monIndex].isFainted = TRUE;
+
+        if (isOmniscient || hasPartyKnowledge)
+            gAiPartyData->mons[B_TRAINER_2][monIndex].species = GetMonData(mon, MON_DATA_SPECIES);
+
+        if (isOmniscient)
+        {
+            gAiPartyData->mons[B_TRAINER_2][monIndex].item = GetMonData(mon, MON_DATA_HELD_ITEM);
+            gAiPartyData->mons[B_TRAINER_2][monIndex].heldEffect = GetItemHoldEffect(gAiPartyData->mons[B_TRAINER_2][monIndex].item);
+            gAiPartyData->mons[B_TRAINER_2][monIndex].ability = GetMonAbility(mon);
+            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+                gAiPartyData->mons[B_TRAINER_2][monIndex].moves[moveIndex] = GetMonData(mon, MON_DATA_MOVE1 + moveIndex);
         }
     }
 }
 
 void Ai_UpdateSwitchInData(u32 battler)
 {
-    enum BattleSide side = GetBattlerSide(battler);
-    struct AiPartyMon *aiMon = &gAiPartyData->mons[side][gBattlerPartyIndexes[battler]];
+    enum BattleTrainer trainer = GetBattlerTrainer(battler);
+    struct AiPartyMon *aiMon = &gAiPartyData->mons[trainer][gBattlerPartyIndexes[battler]];
 
     // See if the switched-in mon has been already in battle
     if (aiMon->wasSentInBattle)
@@ -579,7 +602,7 @@ void Ai_UpdateSwitchInData(u32 battler)
         ClearBattlerMoveHistory(battler);
         ClearBattlerAbilityHistory(battler);
         ClearBattlerItemEffectHistory(battler);
-        CopyBattlerDataToAIParty(GetBattlerPosition(battler), side);
+        CopyBattlerDataToAIParty(GetBattlerPosition(battler), trainer);
     }
 }
 
@@ -779,7 +802,7 @@ static u32 PpStallReduction(enum Move move, u32 battlerAtk)
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
         u32 currentStallValue = gAiBattleData->playerStallMons[partyIndex];
-        if (currentStallValue == 0 || GetMonData(&gParties[B_TRAINER_0][partyIndex], MON_DATA_HP) == 0)
+        if (currentStallValue == 0 || GetMonData(&gParties[B_TRAINER_0][partyIndex], MON_DATA_HP) == 0) // grintoul TO DO - check if need to add trainer 2
             continue;
         PokemonToBattleMon(&gParties[B_TRAINER_0][partyIndex], &gBattleMons[tempBattleMonIndex]);
         ctx.battlerDef = tempBattleMonIndex;
