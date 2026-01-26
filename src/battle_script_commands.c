@@ -9753,7 +9753,8 @@ static void Cmd_setprotectlike(void)
 
     if ((sProtectSuccessRates[gDisableStructs[gBattlerAttacker].protectUses] >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX) && notLastTurn)
      || (protectMethod == PROTECT_WIDE_GUARD && GetConfig(CONFIG_WIDE_GUARD) >= GEN_6)
-     || (protectMethod == PROTECT_QUICK_GUARD && GetConfig(CONFIG_QUICK_GUARD) >= GEN_6))
+     || (protectMethod == PROTECT_QUICK_GUARD && GetConfig(CONFIG_QUICK_GUARD) >= GEN_6)
+     || (protectMethod == PROTECT_CRAFTY_SHIELD))
     {
         if (GetMoveEffect(gCurrentMove) == EFFECT_ENDURE)
         {
