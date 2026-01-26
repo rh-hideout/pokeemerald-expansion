@@ -1866,8 +1866,3 @@ void ScriptChangeFollowerNPCBattlePartner(struct ScriptContext *ctx)
 
     SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, newBattlePartner);
 }
-
-const u8 *const GetFollowerNPCHideMovementsSpeed(enum Direction direction, u32 walkSpeed)
-{
-    return FollowerNPCHideMovementsSpeedTable[direction][walkSpeed];
-}

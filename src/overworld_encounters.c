@@ -1125,8 +1125,10 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         || (followerNPC->previousCoords.x == xCollision && followerNPC->previousCoords.y == yCollision)))
     {
         enum Direction direction = DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], followerNPC);
-        ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_NPC_FOLLOWER, followerNPC->mapGroup, followerNPC->mapNum, GetFollowerNPCHideMovementsSpeed(direction, 3));
-        SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
+        ClearObjectEventMovement(followerNPC, &gSprites[followerNPC->spriteId]);
+        gSprites[followerNPC->spriteId].animCmdIndex = 0;
+        ObjectEventSetHeldMovement(followerNPC, GetWalkNormalMovementAction(direction));
+        CreateTask(Task_HideNPCFollowerAfterMovementFinish, 2);
     }
 
     wildMon->sOverworldEncounterLevel |= OWE_FLAG_START_ENCOUNTER;
