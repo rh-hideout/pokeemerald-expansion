@@ -1402,11 +1402,13 @@ void UpdateSentPokesToOpponentValue(enum BattlerId battler)
 
 void BattleScriptPush(const u8 *bsPtr)
 {
+    assertf(gBattleResources->battleScriptsStack->size < UINT8_MAX, "attempted to push a battle script, but battleScriptsStack is full!");
     gBattleResources->battleScriptsStack->ptr[gBattleResources->battleScriptsStack->size++] = bsPtr;
 }
 
 void BattleScriptPushCursor(void)
 {
+    assertf(gBattleResources->battleScriptsStack->size < UINT8_MAX, "attempted to push cursor, but battleScriptsStack is full!");
     gBattleResources->battleScriptsStack->ptr[gBattleResources->battleScriptsStack->size++] = gBattlescriptCurrInstr;
 }
 
@@ -1420,6 +1422,21 @@ void BattleScriptPop(void)
 {
     if (gBattleResources->battleScriptsStack->size != 0)
         gBattlescriptCurrInstr = gBattleResources->battleScriptsStack->ptr[--gBattleResources->battleScriptsStack->size];
+}
+
+void BattleScriptExecute(const u8 *BS_ptr)
+{
+    gBattlescriptCurrInstr = BS_ptr;
+    gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
+    gBattleMainFunc = RunBattleScriptCommands_PopCallbacksStack;
+    gCurrentActionFuncId = 0;
+}
+
+void BattleScriptPushCursorAndCallback(const u8 *BS_ptr)
+{
+    BattleScriptCall(BS_ptr);
+    gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
+    gBattleMainFunc = RunBattleScriptCommands;
 }
 
 bool32 IsGravityPreventingMove(enum Move move)
@@ -5107,21 +5124,6 @@ bool32 CanBattlerEscape(enum BattlerId battler) // no ability check
         return FALSE;
     else
         return TRUE;
-}
-
-void BattleScriptExecute(const u8 *BS_ptr)
-{
-    gBattlescriptCurrInstr = BS_ptr;
-    gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
-    gBattleMainFunc = RunBattleScriptCommands_PopCallbacksStack;
-    gCurrentActionFuncId = 0;
-}
-
-void BattleScriptPushCursorAndCallback(const u8 *BS_ptr)
-{
-    BattleScriptCall(BS_ptr);
-    gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
-    gBattleMainFunc = RunBattleScriptCommands;
 }
 
 bool32 IsPsychicTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses)
