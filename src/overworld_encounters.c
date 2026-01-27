@@ -1622,20 +1622,26 @@ static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction 
 #define tObjectId data[0]
 void OWE_ApproachForBattle(void)
 {
-    if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
-        return;
-    
     u32 objectEventId = GetObjectEventIdByLocalId(gSpecialVar_LastTalked);
     struct ObjectEvent *objectEvent = &gObjectEvents[objectEventId];
+    if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE || !IsOverworldWildEncounter(objectEvent, OWE_ANY))
+    {
+        FreezeObjectEvent(objectEvent);
+        return;
+    }
+    
     if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return;
     
     u32 taskId = CreateTask(Task_OWE_ApproachForBattle, 2);
-    if (FindTaskIdByFunc(Task_OWE_ApproachForBattle) != TASK_NONE)
+    if (FindTaskIdByFunc(Task_OWE_ApproachForBattle) == TASK_NONE)
     {
-        ScriptContext_Stop();
-        gTasks[taskId].tObjectId = objectEventId;
+        FreezeObjectEvent(objectEvent);
+        return;
     }
+    
+    ScriptContext_Stop();
+    gTasks[taskId].tObjectId = objectEventId;
 }
 
 static void Task_OWE_ApproachForBattle(u8 taskId)
