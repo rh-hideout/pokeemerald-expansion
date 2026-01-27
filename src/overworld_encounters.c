@@ -170,7 +170,7 @@ void UpdateOverworldEncounters(void)
         RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
     objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
-    if (objectEventId >= OBJECT_EVENTS_COUNT)
+    assertf(objectEventId < OBJECT_EVENTS_COUNT, "could not spawn generated overworld encounter. too many object events exist")
     {
         OWE_ResetSpawnCounterPlayAmbientCry();
         return;
