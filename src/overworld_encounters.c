@@ -60,8 +60,7 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 static bool32 OWE_DoesRoamerObjectExist(void);
 static bool32 OWE_CheckRestrictMovementMetatile(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew);
 static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, s32 xNew, s32 yNew);
-static u32 GetNumActiveOverworldEncounters(void);
-static u32 GetNumActiveGeneratedOverworldEncounters(void);
+static u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType);
 static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
 static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak);
 static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
@@ -84,7 +83,7 @@ void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
     OverworldWildEncounter_SetMinimumSpawnTimer();
     // Currently may not play manual encounter cries if no wild mon header exists
-    if (OW_WILD_ENCOUNTERS_AMBIENT_CRIES && GetNumActiveOverworldEncounters())
+    if (OW_WILD_ENCOUNTERS_AMBIENT_CRIES && GetNumberActiveOverworldEncounters(OWE_ANY))
         OWE_PlayMonObjectCry(OWE_GetRandomActiveEncounterObject());
 }
 
@@ -114,7 +113,7 @@ void UpdateOverworldEncounters(void)
 
     u16 spawnSlot = NextSpawnMonSlot();
     if (LURE_STEP_COUNT && spawnSlot != INVALID_SPAWN_SLOT
-        && (GetNumActiveGeneratedOverworldEncounters() < GetMaxOverworldEncounterSpawns()))
+        && (GetNumberActiveOverworldEncounters(OWE_GENERATED) < GetMaxOverworldEncounterSpawns()))
     {
         OverworldWildEncounter_SetMinimumSpawnTimer();
     }
@@ -188,7 +187,7 @@ void UpdateOverworldEncounters(void)
 
 static void OWE_SetNewSpawnCountdown(void)
 {
-    u32 numActive = GetNumActiveGeneratedOverworldEncounters();
+    u32 numActive = GetNumberActiveOverworldEncounters(OWE_GENERATED);
 
     if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && numActive >= GetMaxOverworldEncounterSpawns())
         sOWESpawnCountdown = OWE_SPAWN_TIME_REPLACEMENT;
@@ -327,7 +326,7 @@ static u8 NextSpawnMonSlot(void)
     u32 maxSpawns = GetMaxOverworldEncounterSpawns();
 
     // All mon slots are in use
-    if (GetNumActiveGeneratedOverworldEncounters() >= maxSpawns)
+    if (GetNumberActiveOverworldEncounters(OWE_GENERATED) >= maxSpawns)
     {
         if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
         {
@@ -601,7 +600,7 @@ static void SortOWEMonAges(void)
     struct ObjectEvent *slotMon;
     struct AgeSort array[OWE_MAX_SPAWN_SLOTS];
     struct AgeSort current;
-    u32 numActive = GetNumActiveGeneratedOverworldEncounters();
+    u32 numActive = GetNumberActiveOverworldEncounters(OWE_GENERATED);
     u32 count = 0;
     s32 i, j;
 
@@ -810,27 +809,15 @@ static bool8 IsSafeToSpawnObjectEvents(void)
     return (player->currentCoords.x == player->previousCoords.x && player->currentCoords.y == player->previousCoords.y);
 }
 
-static u32 GetNumActiveOverworldEncounters(void)
+static u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType)
 {
     u32 numActive = 0;
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        if (IsOverworldWildEncounter(&gObjectEvents[i], OWE_ANY))
+        if (IsOverworldWildEncounter(&gObjectEvents[i], oweType))
             numActive++;
     }
     return numActive;
-}
-
-static u32 GetNumActiveGeneratedOverworldEncounters(void)
-{
-    u32 count = 0;
-
-    for (u32 spawnSlot = 0; spawnSlot < OWE_MAX_SPAWN_SLOTS; spawnSlot++)
-    {
-        if (GetOverworldSpeciesBySpawnSlot(spawnSlot) != SPECIES_NONE)
-            count++;
-    }
-    return count;
 }
 
 static bool32 OWE_ShouldSpawnWaterMons(void)
@@ -955,7 +942,7 @@ u32 GetNewestOWEncounterLocalId(void)
 bool32 CanRemoveOverworldEncounter(u32 localId)
 {
     // Include a check for the encounter not being shiny or a roamer.
-    return (OW_WILD_ENCOUNTERS_OVERWORLD && GetNumActiveGeneratedOverworldEncounters() != 0
+    return (OW_WILD_ENCOUNTERS_OVERWORLD && GetNumberActiveOverworldEncounters(OWE_GENERATED) != 0
         && (localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS + 1)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
@@ -1141,7 +1128,7 @@ void DespawnOldestOWE_Pal(void)
     // Should have similar naming convention for these despawn functions based on Num Object Events, Pals & Tiles
     if (OW_WILD_ENCOUNTERS_OVERWORLD && CountFreePaletteSlots() < 2)
     {
-        u32 count = GetNumActiveGeneratedOverworldEncounters();
+        u32 count = GetNumberActiveOverworldEncounters(OWE_GENERATED);
 
         if (count > 0)
         {
@@ -1365,7 +1352,7 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
 {
     // Uses slots so needs to be generated encounters only.
     // Or needs to change functionality to count all active encounters.
-    u32 numActive = GetNumActiveOverworldEncounters();
+    u32 numActive = GetNumberActiveOverworldEncounters(OWE_ANY);
     u32 randomIndex;
     struct ObjectEvent *slotMon;
 
@@ -1523,7 +1510,7 @@ static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
     if (!IsOverworldWildEncounter(object, OWE_GENERATED))
         return FALSE;
     
-    return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumActiveGeneratedOverworldEncounters() == GetMaxOverworldEncounterSpawns();
+    return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumberActiveOverworldEncounters(OWE_GENERATED) == GetMaxOverworldEncounterSpawns();
 }
 
 void OWE_StartEncounter(struct ObjectEvent *mon)
