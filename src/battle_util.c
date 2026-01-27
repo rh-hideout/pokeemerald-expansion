@@ -5626,7 +5626,7 @@ void HandleAction_RunBattleScript(void) // identical to RunBattleScriptCommands
 u32 SetRandomTarget(enum BattlerId battlerAtk)
 {
     enum BattlerId target;
-    static const u8 targets[2][2] =
+    static const u8 targets[NUM_BATTLE_SIDES][MAX_BATTLERS_COUNT / 2] =
     {
         [B_SIDE_PLAYER] = {B_POSITION_OPPONENT_LEFT, B_POSITION_OPPONENT_RIGHT},
         [B_SIDE_OPPONENT] = {B_POSITION_PLAYER_LEFT, B_POSITION_PLAYER_RIGHT},

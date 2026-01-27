@@ -12359,7 +12359,7 @@ void BS_SetPledge(void)
     NATIVE_ARGS(const u8 *jumpInstr);
 
     enum BattlerId partner = BATTLE_PARTNER(gBattlerAttacker);
-    u32 partnerMove = GetBattlerChosenMove(partner);
+    enum Move partnerMove = GetBattlerChosenMove(partner);
     u32 i = 0;
     u32 k = 0;
 
