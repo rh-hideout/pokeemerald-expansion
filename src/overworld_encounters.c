@@ -526,15 +526,7 @@ static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId)
         }
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         {
-            enum FrontierLevelMode levelMode = gSaveBlock2Ptr->frontier.lvlMode;
-            u32 species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
-            u32 round = (gSaveBlock2Ptr->frontier.pyramidWinStreaks[levelMode] / FRONTIER_STAGES_PER_CHALLENGE) % TOTAL_PYRAMID_ROUNDS;
-            u32 id = GetBattlePyramidWildMonHeaderIdFromSpecies(species, round, levelMode);
-            assertf(id, "could not find species in battle pyramid wild mon data. defaulting to regular encounter.\nspecies: %d\nround: %d\nlevel mode: %d", species, round, levelMode);
-            {
-                return FALSE;
-            }
-            
+            u32 id = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
             SetMonData(&gEnemyParty[0], MON_DATA_SPECIES, &id);
             GenerateBattlePyramidWildMon();
             BattleSetup_StartWildBattle();
@@ -749,7 +741,9 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
             if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
                 return FALSE;
 
+            u32 id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
             GenerateBattlePyramidWildMon();
+            SetMonData(&gEnemyParty[0], MON_DATA_LEVEL, &id);
             return TRUE;
         }
 
