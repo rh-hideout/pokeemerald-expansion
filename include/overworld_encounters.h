@@ -123,5 +123,6 @@ u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
 struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim);
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent, u32 state);
+u32 OWE_GetWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 speed);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

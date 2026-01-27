@@ -1654,7 +1654,7 @@ static void Task_OWE_ApproachForBattle(u8 taskId)
         u8 movementActionId;
     
         SetObjectEventDirection(OWE, direction);
-        movementActionId = GetWalkMovementActionInDirectionWithSpeed(OWE->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+        movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(OWE->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
         
         if (OWE_CheckRestrictedMovement(OWE, OWE->movementDirection))
         {
@@ -1690,7 +1690,7 @@ static void Task_OWE_ApproachForBattle(u8 taskId)
             {
                 direction = OWE_DirectionToPlayerFromCollision(OWE);
                 SetObjectEventDirection(OWE, direction);
-                movementActionId = GetWalkMovementActionInDirectionWithSpeed(OWE->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+                movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(OWE->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
             }
         }
         ObjectEventSetHeldMovement(OWE, movementActionId);
@@ -1698,6 +1698,21 @@ static void Task_OWE_ApproachForBattle(u8 taskId)
     
 }
 #undef tObjectId
+
+u32 OWE_GetWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 speed)
+{
+    switch (speed)
+    {
+    case OWE_SPEED_SLOW:
+        return GetWalkSlowMovementAction(direction);
+    case OWE_SPEED_FAST:
+        return GetWalkFastMovementAction(direction);
+    case OWE_SPEED_FASTER:
+        return GetWalkFasterMovementAction(direction);
+    }
+
+    return GetWalkNormalMovementAction(direction);
+}
 
 #undef sOverworldEncounterLevel
 #undef sAge
