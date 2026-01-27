@@ -1651,14 +1651,15 @@ static void Task_OWE_ApproachForBattle(u8 taskId)
     // Let the mon continue to take steps until right next to the player.
     if (ObjectEventClearHeldMovementIfFinished(OWE))
     {
+        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
         if (OWE_IsMonNextToPlayer(OWE))
         {
+            ObjectEventsTurnToEachOther(player, OWE);
             ScriptContext_Enable();
             DestroyTask(taskId);
             return;
         }
 
-        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
         u16 speciesId = OW_SPECIES(OWE);
         enum Direction direction = DetermineObjectEventDirectionFromObject(player, OWE);
         u8 movementActionId;
