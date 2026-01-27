@@ -1,6 +1,6 @@
 InteractWithDynamicWildOverworldEncounter::
     lockall
-    callnative OWE_ApproachForBattle
+    overworldwildencounterapproach
     applymovement VAR_LAST_TALKED, Common_Movement_ExclamationMark
     facetogether
     playmoncry VAR_0x8004, CRY_MODE_DOUBLES

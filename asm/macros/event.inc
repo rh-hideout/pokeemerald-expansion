@@ -2803,3 +2803,8 @@
 	.macro tryoverworldwildencounter
 	callnative CreateOverworldWildEncounter
 	.endm
+
+	@ Start a scripted approach for an overworld wild encounter towards the player.
+	.macro overworldwildencounterapproach
+	callnative OWE_ApproachForBattle
+	.endm
