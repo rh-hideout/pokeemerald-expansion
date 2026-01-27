@@ -103,9 +103,9 @@ bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldO
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
-u32 RemoveOldestOverworldEncounter(void);
-bool32 OWE_TryAndRemoveOldestOverworldEncounter_Object(u32 localId, u8 *objectEventId);
-void OWE_TryAndRemoveOldestOverworldEncounter_Palette(void);
+u32 RemoveOldestGeneratedOverworldEncounter(void);
+bool32 OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Object(u32 localId, u8 *objectEventId);
+void OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Palette(void);
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void OverworldWildEncounter_RemoveObjectOnBattle(void);

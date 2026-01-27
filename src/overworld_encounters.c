@@ -197,11 +197,11 @@ static void OWE_SetNewSpawnCountdown(void)
         sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM + (OWE_SPAWN_TIME_PER_ACTIVE * numActive);
 }
 
-bool32 OWE_TryAndRemoveOldestOverworldEncounter_Object(u32 localId, u8 *objectEventId)
+bool32 OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Object(u32 localId, u8 *objectEventId)
 {
     if (CanRemoveOverworldEncounter(localId))
     {
-        *objectEventId = RemoveOldestOverworldEncounter();
+        *objectEventId = RemoveOldestGeneratedOverworldEncounter();
 
         if (*objectEventId == OBJECT_EVENTS_COUNT)
             return TRUE;
@@ -212,7 +212,7 @@ bool32 OWE_TryAndRemoveOldestOverworldEncounter_Object(u32 localId, u8 *objectEv
     return TRUE;
 }
 
-void OWE_TryAndRemoveOldestOverworldEncounter_Palette(void)
+void OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Palette(void)
 {
     // Should have similar naming convention for these despawn functions based on Num Object Events, Pals & Tiles
     if (OW_WILD_ENCOUNTERS_OVERWORLD && CountFreePaletteSlots() < 2)
@@ -223,7 +223,7 @@ void OWE_TryAndRemoveOldestOverworldEncounter_Palette(void)
         {
             for (; count > 0; count--)
             {
-                RemoveOldestOverworldEncounter();
+                RemoveOldestGeneratedOverworldEncounter();
                 if (CountFreePaletteSlots() >= 2)
                     break;
             }
@@ -1005,7 +1005,7 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
-u32 RemoveOldestOverworldEncounter(void)
+u32 RemoveOldestGeneratedOverworldEncounter(void)
 {
     u32 oldestSlot = GetOldestSlot();
 
