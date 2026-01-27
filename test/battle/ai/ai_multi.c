@@ -20,10 +20,10 @@ AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         BATTLER_AI_FLAGS(battler, aiFlags);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PARTNER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT_A(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
-        OPPONENT_B(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PARTNER(SPECIES_WOBBUFFET) { HP(1); Speed(2); }
+        OPPONENT_A(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); Speed(3); }
+        OPPONENT_B(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); Speed(4); }
     } WHEN {
         if (aiFlags == 0)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
@@ -114,15 +114,22 @@ AI_TWO_VS_ONE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (2v1)"
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         BATTLER_AI_FLAGS(battler, aiFlags);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PARTNER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT_A(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
-        OPPONENT_A(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
+        TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PARTNER(SPECIES_WOBBUFFET) { HP(1); Speed(2); }
+        OPPONENT_A(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); Speed(3); }
+        OPPONENT_A(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); Speed(4); }
     } WHEN {
         if (aiFlags == 0 || battler == 3)
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
+            TURN { 
+                EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft);
+                EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft);
+            }
         else
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_EXPLOSION); }
+            TURN { 
+                EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION, target: playerLeft);
+                EXPECT_MOVE(opponentRight, MOVE_EXPLOSION);
+            }
     }
 }
 
@@ -134,7 +141,7 @@ AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon when running out")
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
-        PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO); }
+        PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO, MOVE_CELEBRATE); } // grintoul TO DO - previously did not have to set Celebrate here
         OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -154,7 +161,7 @@ AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon to delay using their a
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
-        PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO); }
+        PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO, MOVE_CELEBRATE); } // grintoul TO DO - previously did not have to set Celebrate here
         PARTNER(SPECIES_METAGROSS) { Moves(MOVE_CELEBRATE); }
         OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
@@ -231,7 +238,7 @@ AI_MULTI_BATTLE_TEST("Pollen Puff: AI correctly scores moves with EFFECT_HIT_ENE
         ASSUME(GetMoveEffect(MOVE_POLLEN_PUFF) == EFFECT_HIT_ENEMY_HEAL_ALLY);
         // Speed tie so all think they are faster
         PLAYER(SPECIES_WOBBUFFET)     { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF, MOVE_CELEBRATE); }
-        PARTNER(SPECIES_WOBBUFFET)    { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
+        PARTNER(SPECIES_WOBBUFFET)    { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF, MOVE_CELEBRATE); } // grintoul TO DO - previously did not have to set Celebrate here
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
     } WHEN {

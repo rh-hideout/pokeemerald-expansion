@@ -11787,22 +11787,14 @@ static void TryUpdateRoundTurnOrder(void)
 u8 GetFirstFaintedPartyIndex(u8 battler)
 {
     u32 i;
-    u32 start = 0;
-    u32 end = PARTY_SIZE;
+    u32 start = 0, end;
     struct Pokemon *party = GetBattlerParty(battler);
 
     // Check whether partner is separate trainer.
     if (BattleSideHasTwoTrainers(battler & BIT_SIDE) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
-    {
-        if ((battler & BIT_FLANK) == B_FLANK_LEFT)
-            start = 0, end = PARTY_SIZE / 2;
-        else
-            start = PARTY_SIZE / 2, end = PARTY_SIZE;
-    }
+        end = PARTY_SIZE / 2;
     else
-    {
-        start = 0, end = PARTY_SIZE;
-    }
+        end = PARTY_SIZE;
 
     // Loop through to find fainted battler.
     for (i = start; i < end; ++i)

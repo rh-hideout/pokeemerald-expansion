@@ -188,14 +188,20 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
 
 bool32 IsAceMon(u32 battler, u32 monPartyId) // grintoul TO DO - Does this work if there are two trainers but only one with Ace?
 {
+    enum BattleTrainer trainer = GetBattlerTrainer(battler);
+
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ACE_POKEMON
      && !gProtectStructs[battler].forcedSwitch
-     && monPartyId == CalculatePartyCount(battler)-1)
+     && monPartyId == CalculatePartyCount(trainer)-1)
+    {
         return TRUE;
+    }
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DOUBLE_ACE_POKEMON
      && !gProtectStructs[battler].forcedSwitch
-     && (monPartyId == CalculatePartyCount(battler)-1 || monPartyId == CalculatePartyCount(battler)-2))
+     && (monPartyId == CalculatePartyCount(trainer)-1 || monPartyId == CalculatePartyCount(trainer)-2))
+    {
         return TRUE;
+    }
     return FALSE;
 }
 

@@ -379,7 +379,7 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will not switch into a partner Pokémon in a 1v2 b
         OPPONENT_B(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
 
     } WHEN {
-        TURN { EXPECT_SWITCH(opponentRight, 5); }
+        TURN { EXPECT_SWITCH(opponentRight, 2); }
     } SCENE {
         MESSAGE(AI_TRAINER_2_NAME " withdrew Gengar!");
         MESSAGE(AI_TRAINER_2_NAME " sent out Raticate!");

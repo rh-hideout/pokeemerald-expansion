@@ -769,9 +769,7 @@ extern struct BattleTrialData gBattleTrialData;
 struct BattleTestData
 {
     u8 stack[BATTLE_TEST_STACK_SIZE];
-
     u8 partySizes[MAX_BATTLE_TRAINERS];
-    //u8 opponentPartySize;
     u8 explicitMoves[MAX_BATTLE_TRAINERS];
     bool8 hasExplicitSpeeds;
     u8 explicitSpeeds[MAX_BATTLE_TRAINERS];
