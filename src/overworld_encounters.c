@@ -1024,6 +1024,11 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
     if (!IsOverworldWildEncounter(object, OWE_ANY))
         return FALSE;
 
+    if (IsOverworldWildEncounter(object, OWE_MANUAL)
+        && GetObjectEventScriptPointerByObjectEventId(objectEventId) != InteractWithDynamicWildOverworldEncounter
+        && GetObjectEventScriptPointerByObjectEventId(objectEventId) != NULL)
+        return FALSE;
+
     gSpecialVar_0x8004 = OW_SPECIES(object);
     return TRUE;
 }
