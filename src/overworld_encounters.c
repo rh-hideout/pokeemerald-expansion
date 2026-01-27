@@ -197,6 +197,40 @@ static void OWE_SetNewSpawnCountdown(void)
         sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM + (OWE_SPAWN_TIME_PER_ACTIVE * numActive);
 }
 
+bool32 OWE_TryAndRemoveOldestOverworldEncounter_Object(u32 localId, u8 *objectEventId)
+{
+    if (CanRemoveOverworldEncounter(localId))
+    {
+        *objectEventId = RemoveOldestOverworldEncounter();
+
+        if (*objectEventId == OBJECT_EVENTS_COUNT)
+            return TRUE;
+        else
+            return FALSE;
+    }
+    
+    return TRUE;
+}
+
+void OWE_TryAndRemoveOldestOverworldEncounter_Palette(void)
+{
+    // Should have similar naming convention for these despawn functions based on Num Object Events, Pals & Tiles
+    if (OW_WILD_ENCOUNTERS_OVERWORLD && CountFreePaletteSlots() < 2)
+    {
+        u32 count = GetNumberActiveOverworldEncounters(OWE_GENERATED);
+
+        if (count > 0)
+        {
+            for (; count > 0; count--)
+            {
+                RemoveOldestOverworldEncounter();
+                if (CountFreePaletteSlots() >= 2)
+                    break;
+            }
+        }
+    }
+}
+
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y)
 {
     assertf(OWE_CanEncounterBeLoaded_Palette(speciesId, isFemale, isShiny, x, y), "could not load palette for overworld encounter\nspecies: %d\nfemale: %d\nshiny: %d\ncoords: %d %d", speciesId, isFemale, isShiny, x, y)
@@ -986,21 +1020,6 @@ u32 RemoveOldestOverworldEncounter(void)
     return objectEventId;
 }
 
-bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
-{
-    if (CanRemoveOverworldEncounter(localId))
-    {
-        *objectEventId = RemoveOldestOverworldEncounter();
-
-        if (*objectEventId == OBJECT_EVENTS_COUNT)
-            return TRUE;
-        else
-            return FALSE;
-    }
-    
-    return TRUE;
-}
-
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
@@ -1145,25 +1164,6 @@ bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, enum Directi
         return TRUE;
 
     return FALSE;
-}
-
-void DespawnOldestOWE_Pal(void)
-{
-    // Should have similar naming convention for these despawn functions based on Num Object Events, Pals & Tiles
-    if (OW_WILD_ENCOUNTERS_OVERWORLD && CountFreePaletteSlots() < 2)
-    {
-        u32 count = GetNumberActiveOverworldEncounters(OWE_GENERATED);
-
-        if (count > 0)
-        {
-            for (; count > 0; count--)
-            {
-                RemoveOldestOverworldEncounter();
-                if (CountFreePaletteSlots() >= 2)
-                    break;
-            }
-        }
-    }
 }
 
 bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon)

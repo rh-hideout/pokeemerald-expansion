@@ -1539,7 +1539,7 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
             return TRUE;
     }
     if (i >= OBJECT_EVENTS_COUNT)
-        return TryAndRemoveOldestOverworldEncounter(localId, objectEventId);
+        return OWE_TryAndRemoveOldestOverworldEncounter_Object(localId, objectEventId);
     *objectEventId = i;
     for (; i < OBJECT_EVENTS_COUNT; i++)
     {
