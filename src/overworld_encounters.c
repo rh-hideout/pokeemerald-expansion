@@ -78,6 +78,7 @@ static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction 
 static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 xNew, s16 yNew, enum Direction newDirection, enum Direction collisionDirection);
 static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Direction newDirection);
 static void Task_OWE_ApproachForBattle(u8 taskId);
+static bool32 OWE_CheckSpecies(u32 speciesId);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -669,6 +670,7 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
 {
     SetOverworldEncounterSpeciesInfo(x, y, speciesId, isShiny, isFemale, level, indexRoamerOutbreak);
+    assertf(OWE_CheckSpecies(*speciesId), "invalid generated overworld encounter\nspecies: %d\ncheck if valid wild mon header exists", speciesId, x, y);
     u16 graphicsId = *speciesId + OBJ_EVENT_MON;
 
     if (*isFemale)
@@ -691,7 +693,6 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
 
     if (!OWE_CreateEnemyPartyMon(speciesId, level, indexRoamerOutbreak, x, y))
     {
-        // May be good to convert this to an assertf
         ZeroEnemyPartyMons();
         *speciesId = SPECIES_NONE;
         return;
@@ -1030,7 +1031,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     if (speciesTemplate)
         speciesId = speciesTemplate;
 
-    assertf(speciesId != SPECIES_NONE && speciesId < NUM_SPECIES && IsSpeciesEnabled(speciesId), "invalid manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
+    assertf(OWE_CheckSpecies(speciesId), "invalid manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
     {
         // Currently causes assertf on each player step as function is called.
         templateOWE.graphicsId = OBJ_EVENT_GFX_BOY_1;
@@ -1706,6 +1707,13 @@ u32 OWE_GetWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 
     }
 
     return GetWalkNormalMovementAction(direction);
+}
+
+static bool32 OWE_CheckSpecies(u32 speciesId)
+{
+    return speciesId != SPECIES_NONE
+        && speciesId < NUM_SPECIES
+        && IsSpeciesEnabled(speciesId);
 }
 
 #undef sOverworldEncounterLevel
