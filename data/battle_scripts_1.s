@@ -563,7 +563,6 @@ BattleScript_EffectFling::
 	printstring STRINGID_PKMNFLUNG
 	waitmessage B_WAIT_TIME_SHORT
 	damagecalc
-	adjustdamage
 	removeitem BS_ATTACKER
 	attackanimation
 	waitanimation
@@ -576,11 +575,10 @@ BattleScript_EffectFling::
 	waitmessage B_WAIT_TIME_MED
 	resultmessage
 	waitmessage B_WAIT_TIME_MED
-	jumpiflastuseditemberry BattleScript_EffectFlingConsumeBerry
 	tryflingholdeffect
 	goto BattleScript_FlingEnd
 
-BattleScript_EffectFlingConsumeBerry:
+BattleScript_EffectFlingConsumeBerry::
 	savebattleritem
 	battleritemtolastuseditem
 	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
@@ -2231,7 +2229,6 @@ BattleScript_HitFromAccCheck::
 	setpreattackadditionaleffect
 BattleScript_HitFromDamageCalc::
 	damagecalc
-	adjustdamage
 BattleScript_HitFromAtkAnimation::
 	call BattleScript_Hit_RetFromAtkAnimation
 BattleScript_MoveEnd::
@@ -2243,7 +2240,6 @@ BattleScript_EffectHit_Ret::
 BattleScript_EffectHit_RetFromAccCheck::
 	accuracycheck BattleScript_MoveMissedPause
 	damagecalc
-	adjustdamage
 BattleScript_Hit_RetFromAtkAnimation::
 	attackanimation
 	waitanimation
@@ -2676,18 +2672,6 @@ BattleScript_RestIsAlreadyAsleep::
 BattleScript_AbilityPreventsRest::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_BUTITFAILED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectOHKO::
-	attackcanceler
-	typecalc
-	jumpifmovehadnoeffect BattleScript_HitFromAtkAnimation
-	tryKO BattleScript_KOFail
-	goto BattleScript_HitFromAtkAnimation
-BattleScript_KOFail::
-	pause B_WAIT_TIME_LONG
-	printfromtable gKOFailedStringIds
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -3589,7 +3573,6 @@ BattleScript_EffectSpitUp::
 	jumpifbyte CMP_EQUAL, cMISS_TYPE, B_MSG_PROTECTED, BattleScript_SpitUpFailProtect
 	accuracycheck BattleScript_MoveMissedPause
 	damagecalc
-	adjustdamage
 	stockpiletobasedamage
 	call BattleScript_Hit_RetFromAtkAnimation
 	removestockpilecounters
@@ -4672,7 +4655,6 @@ BattleScript_BideAttack::
 	typecalc
 	clearmoveresultflags MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE
 	copybidedmg
-	adjustdamage
 	setbyte sB_ANIM_TURN, 1
 	attackanimation
 	waitanimation
@@ -5096,7 +5078,6 @@ BattleScript_MonTookFutureAttack::
 	jumpifmovehadnoeffect BattleScript_FutureAttackEnd
 	accuracycheck BattleScript_MoveMissedPause
 	damagecalc
-	adjustdamage
 	jumpifmovehadnoeffect BattleScript_DoFutureAttackResult
 	jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, B_MSG_FUTURE_SIGHT, BattleScript_FutureHitAnimDoomDesire
 	playanimation BS_ATTACKER, B_ANIM_FUTURE_SIGHT_HIT
@@ -5810,7 +5791,6 @@ BattleScript_MoveUsedIsConfused::
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, FALSE, BattleScript_MoveUsedIsConfusedRet
 BattleScript_DoSelfConfusionDmg::
 	cancelmultiturnmoves
-	adjustdamage
 	printstring STRINGID_ITHURTCONFUSION
 	waitmessage B_WAIT_TIME_LONG
 	effectivenesssound
@@ -7106,7 +7086,6 @@ BattleScript_BerryCureStatusRet::
 BattleScript_GemActivates::
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
 	waitanimation
-	setlastuseditem BS_ATTACKER
 	printstring STRINGID_GEMACTIVATES
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_ATTACKER
@@ -7115,7 +7094,6 @@ BattleScript_GemActivates::
 BattleScript_BerryReduceDmg::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	waitanimation
-	setlastuseditem BS_SCRIPTING
 	printstring STRINGID_BERRYDMGREDUCES
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING

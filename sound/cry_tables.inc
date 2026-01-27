@@ -648,6 +648,7 @@ gCryTable::
 	cry Cry_Ursaring
 .if P_GEN_8_CROSS_EVOS == TRUE
 	cry Cry_Ursaluna
+	cry Cry_UrsalunaBloodmoon
 .endif @ P_GEN_8_CROSS_EVOS
 .endif @ P_FAMILY_TEDDIURSA
 .if P_FAMILY_SLUGMA == TRUE
@@ -2143,6 +2144,7 @@ gCryTable::
 .endif @ P_FAMILY_SILICOBRA
 .if P_FAMILY_CRAMORANT == TRUE
 	cry Cry_Cramorant
+	cry Cry_CramorantGulping
 .endif @ P_FAMILY_CRAMORANT
 .if P_FAMILY_ARROKUDA == TRUE
 	cry Cry_Arrokuda
@@ -3202,6 +3204,7 @@ gCryTable_Reverse::
 	cry_reverse Cry_Ursaring
 .if P_GEN_8_CROSS_EVOS == TRUE
 	cry_reverse Cry_Ursaluna
+	cry_reverse Cry_UrsalunaBloodmoon
 .endif @ P_GEN_8_CROSS_EVOS
 .endif @ P_FAMILY_TEDDIURSA
 .if P_FAMILY_SLUGMA == TRUE
@@ -4697,6 +4700,7 @@ gCryTable_Reverse::
 .endif @ P_FAMILY_SILICOBRA
 .if P_FAMILY_CRAMORANT == TRUE
 	cry_reverse Cry_Cramorant
+	cry_reverse Cry_CramorantGulping
 .endif @ P_FAMILY_CRAMORANT
 .if P_FAMILY_ARROKUDA == TRUE
 	cry_reverse Cry_Arrokuda

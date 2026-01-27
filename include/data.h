@@ -116,7 +116,7 @@ struct Trainer
 {
     u64 aiFlags;
     const struct TrainerMon *party;
-    u16 items[MAX_TRAINER_ITEMS];
+    enum Item items[MAX_TRAINER_ITEMS];
     struct StartingStatuses startingStatus; // this trainer starts a battle with a given status. see include/constants/battle.h for values
     u8 trainerClass;
     u8 encounterMusic:7;

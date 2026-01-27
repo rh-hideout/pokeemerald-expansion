@@ -236,7 +236,7 @@ SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after the 4
 
 SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after killing opposing with less then 4 hits")
 {
-    u32 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_LOADED_DICE; }
 

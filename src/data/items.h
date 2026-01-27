@@ -238,7 +238,7 @@ static const u8 sGenericMulchDesc[]   = _("It appears to be\n"
                                           "unsuitable for\n"
                                           "the soil.");
 
-const struct Item gItemsInfo[] =
+const struct ItemInfo gItemsInfo[] =
 {
     [ITEM_NONE] =
     {

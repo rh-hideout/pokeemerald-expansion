@@ -1855,22 +1855,48 @@ static u32 UpdateFillSpanY(u32 spriteId, u32 spriteHeight, u32 top, u32 height)
     return height;
 }
 
+enum SpriteFillMode
+{
+    SPRITE_FILL_COLOR,
+    SPRITE_FILL_EXISTING_SPRITE,
+    SPRITE_FILL_PROVIDED_SPRITE,
+};
+
+union FillInput
+{
+    u32 color;
+    u32 *spriteSrc;
+};
+
 #define CURRENT_SPRITE_POS ((spriteY / 8) * spriteWidth + spriteX + spriteY % 8)
 #define BITS_PER_PIXEL 4
 #define PIXELS_PER_TILE 8
 
-static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 height, bool32 isColor, u32 color)
+static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 height, enum SpriteFillMode mode, union FillInput input)
 {
     //  Check if area spans more than 1 sprite
     u32 spriteWidth = GetSpriteWidth(&gSprites[spriteId]);
     u32 spriteHeight = GetSpriteHeight(&gSprites[spriteId]);
+    u32 color = 0;
+    bool32 isColor;
 
     u32 *src = NULL;
 
-    if (isColor)
-        color = color * 0x11111111;
-    else
+    switch (mode)
+    {
+    case SPRITE_FILL_COLOR:
+        color = input.color * 0x11111111;
+        isColor = TRUE;
+        break;
+    case SPRITE_FILL_EXISTING_SPRITE:
         src = GetSrcPtrFromSprite(&gSprites[spriteId]);
+        isColor = FALSE;
+        break;
+    case SPRITE_FILL_PROVIDED_SPRITE:
+        src = input.spriteSrc;
+        isColor = FALSE;
+        break;
+    }
 
     //  Check if only one sprite is being filled
     if (left + width > spriteWidth || top + height > spriteHeight)
@@ -2000,12 +2026,23 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
 
 void FillSpriteRectColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color)
 {
-    FillSpriteRect(spriteId, left, top, width, height, TRUE, color);
+    union FillInput input;
+    input.color = color;
+    FillSpriteRect(spriteId, left, top, width, height, SPRITE_FILL_COLOR, input);
 }
 
 void FillSpriteRectSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height)
 {
-    FillSpriteRect(spriteId, left, top, width, height, FALSE, 0);
+    union FillInput input;
+    input.spriteSrc = NULL;
+    FillSpriteRect(spriteId, left, top, width, height, SPRITE_FILL_EXISTING_SPRITE, input);
+}
+
+void FillSpriteRectSpriteWithSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 *sprite)
+{
+    union FillInput input;
+    input.spriteSrc = sprite;
+    FillSpriteRect(spriteId, left, top, width, height, SPRITE_FILL_PROVIDED_SPRITE, input);
 }
 
 static void StorePointerInSpriteData(struct Sprite *sprite, const u32 *ptr)

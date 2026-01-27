@@ -30,10 +30,6 @@
 	.byte B_SCR_OP_TYPECALC
 	.endm
 
-	.macro adjustdamage
-	.byte B_SCR_OP_ADJUSTDAMAGE
-	.endm
-
 	.macro multihitresultmessage
 	.byte B_SCR_OP_MULTIHITRESULTMESSAGE
 	.endm
@@ -1339,6 +1335,10 @@
 	.4byte \failInstr
 	.endm
 
+	.macro unused_1
+	.byte B_SCR_UNUSED_1
+	.endm
+
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
 	.4byte \func
@@ -2326,11 +2326,6 @@
 
 	.macro tryresetnegativestatstages
 	callnative BS_TryResetNegativeStatStages
-	.endm
-
-	.macro jumpiflastuseditemberry jumpInstr:req
-	callnative BS_JumpIfLastUsedItemBerry
-	.4byte \jumpInstr
 	.endm
 
 	.macro savebattleritem
