@@ -54,7 +54,6 @@ static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, u32 battl
 static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, u32 battler);
 static void SetTrainerSlideParameters(u32 battler, u32* firstId, u32* lastId, u32* trainerId, u32* retValue);
 static bool32 IsSlideInitalizedOrPlayed(u32 battler, enum TrainerSlideType slideId);
-static void GetPartyAndIndexFromSideAndSlot(enum BattleSide side, u8 partySlot, struct Pokemon **party, s8 *partyIndex);
 
 // Partner trainers must be added as TRAINER_PARTNER(PARTNER_XXXX)
 static const u8* const sTrainerSlides[DIFFICULTY_COUNT][TRAINER_PARTNER(PARTNER_COUNT)][TRAINER_SLIDE_COUNT] =
@@ -468,34 +467,4 @@ void MarkTrainerSlideAsPlayed(u32 battler, enum TrainerSlideType slideId)
     u32 bitPosition = slideId % TRAINER_SLIDES_PER_ARRAY;
 
     gBattleStruct->slideMessageStatus.messagePlayed[battler][arrayIndex] |= (1 << bitPosition);
-}
-
-static void GetPartyAndIndexFromSideAndSlot(enum BattleSide side, u8 partySlot, struct Pokemon **party, s8 *partyIndex)
-{
-    if (side == B_SIDE_PLAYER)
-    {
-        if (partySlot >= MULTI_PARTY_SIZE && gBattleTypeFlags & BATTLE_TYPE_MULTI && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
-        {
-            *party = gParties[B_TRAINER_2];
-            *partyIndex = partySlot - MULTI_PARTY_SIZE;
-        }
-        else
-        {
-            *party = gParties[B_TRAINER_0];
-            *partyIndex = partySlot;
-        }
-    }
-    else
-    {
-        if (partySlot >= MULTI_PARTY_SIZE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
-        {
-            *party = gParties[B_TRAINER_3];
-            *partyIndex = partySlot - MULTI_PARTY_SIZE;
-        }
-        else
-        {
-            *party = gParties[B_TRAINER_1];
-            *partyIndex = partySlot;
-        }
-    }
 }

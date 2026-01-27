@@ -1144,11 +1144,6 @@ static inline u32 GetOpposingSideBattler(u32 battler)
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler)));
 }
 
-static inline struct Pokemon *GetSideParty(enum BattleSide side)
-{
-    return side == B_SIDE_PLAYER ? gParties[B_TRAINER_0] : gParties[B_TRAINER_1];
-}
-
 static inline struct PartyState *GetBattlerPartyState(u32 battler)
 {
     return &gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
