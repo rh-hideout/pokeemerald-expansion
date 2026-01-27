@@ -1,5 +1,6 @@
 import json
 import re
+from operator import itemgetter
 
 TIME_OF_DAY_ENCOUNTERS_PAT = re.compile(r'\s*#\s*define OW_TIME_OF_DAY_ENCOUNTERS\s+(\w+)')
 TIME_OF_DAY_DISABLE_FALLBACK_PAT = re.compile(r'\s*#\s*define OW_TIME_OF_DAY_DISABLE_FALLBACK\s+(\w+)')
@@ -83,19 +84,24 @@ class WildEncounterAssembler:
         self.output_file.write("\n\n")
 
     def WriteMonInfos(self, name, mons, encounter_rate):
+        for mon in mons:
+            mon["weight"] = mon.get("weight", 1)
+
         self.WriteLine(f"const struct WildPokemonInfo {name}Info =")
         self.WriteLine("{")
         self.WriteLine(f".encounterRate = {encounter_rate},", 1)
         self.WriteLine(f".numSlots = {len(mons)},", 1)
-        self.WriteLine(f".totalWeight = {sum(mon.get('weight', 1) for mon in mons)},", 1)
+        self.WriteLine(f".totalWeight = {sum(mon['weight'] for mon in mons)},", 1)
         self.WriteLine(".wildPokemon =", 1)
         self.WriteLine("{", 1)
 
-        for mon in mons:
+        sorted_mons = sorted(mons, key=itemgetter("weight"))
+
+        for mon in sorted_mons:
             species = mon["species"]
             min_level = mon.get("min_level", 2)
             max_level = mon.get("max_level", 100)
-            weight = mon.get("weight", 1)
+            weight = mon["weight"]
             self.WriteLine(f"{{ .minLevel={min_level}, .maxLevel={max_level}, .species={species}, .weight={weight} }},", 2)
 
         self.WriteLine("},", 1)
