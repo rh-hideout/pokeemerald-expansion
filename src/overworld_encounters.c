@@ -63,7 +63,7 @@ static bool32 OWE_DoesRoamerObjectExist(void);
 static bool32 OWE_CheckRestrictMovementMetatile(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew);
 static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, s32 xNew, s32 yNew);
 static u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType);
-static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
+static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y, bool32 *isFeebasSpot);
 static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak);
 static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
 static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId);
@@ -346,7 +346,7 @@ static u32 GetMaxGeneratedOverworldEncounterSpawns(void)
         return OWE_MAX_LAND_SPAWNS;
 }
 
-u32 GetOldestSlot(void)
+u32 GetOldestSlot(bool32 forceRemove)
 {
     struct ObjectEvent *slotMon, *oldest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
     u32 spawnSlot;
@@ -354,8 +354,7 @@ u32 GetOldestSlot(void)
     for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWN_SLOTS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
-        // Add a not feebas tile feebas?
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_REPLACE_FLAG) || forceRemove == TRUE))
         {
             oldest = slotMon;
             break;
@@ -368,7 +367,7 @@ u32 GetOldestSlot(void)
     for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWN_SLOTS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_REPLACE_FLAG) || forceRemove == TRUE))
         {
             if (slotMon->sAge > oldest->sAge)
                 oldest = slotMon;
@@ -389,7 +388,7 @@ static u8 NextSpawnMonSlot(void)
         if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
         {
             // Cycle through so we remove the oldest mon first
-            spawnSlot = GetOldestSlot();
+            spawnSlot = GetOldestSlot(FALSE);
             if (spawnSlot == INVALID_SPAWN_SLOT)
                 return INVALID_SPAWN_SLOT;
         }
@@ -527,7 +526,7 @@ void CreateOverworldWildEncounter(void)
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
     u32 gender = OW_FEMALE(object) ? MON_FEMALE : MON_MALE;
-    u32 level = object->sOverworldEncounterLevel;
+    u32 level = (object->sOverworldEncounterLevel &= ~OWE_NO_REPLACE_FLAG);
     u32 personality;
 
     switch (gSpeciesInfo[speciesId].genderRatio)
@@ -748,8 +747,9 @@ void OverworldWildEncounter_SetMinimumSpawnTimer(void)
 static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
 {
     u32 personality;
+    bool32 isFeebasSpot = FALSE;
 
-    if (!OWE_CreateEnemyPartyMon(speciesId, level, indexRoamerOutbreak, x, y))
+    if (!OWE_CreateEnemyPartyMon(speciesId, level, indexRoamerOutbreak, x, y, &isFeebasSpot))
     {
         ZeroEnemyPartyMons();
         *speciesId = SPECIES_NONE;
@@ -769,10 +769,13 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     else
         *isFemale = FALSE;
 
+    if ((OW_WILD_ENCOUNTERS_PREVENT_SHINY_REPLACEMENT && *isShiny) || (OW_WILD_ENCOUNTERS_PREVENT_FEEBAS_REPLACEMENT && isFeebasSpot))
+        *level |= OWE_NO_REPLACE_FLAG;
+
     ZeroEnemyPartyMons();
 }
 
-static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
+static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y, bool32 *isFeebasSpot)
 {
     const struct WildPokemonInfo *wildMonInfo;
     enum WildPokemonArea wildArea;
@@ -845,6 +848,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     {
         *level = ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING);
         *speciesId = gWildFeebas.species;
+        *isFeebasSpot = TRUE;
         CreateWildMon(*speciesId, *level);
     }
     else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior) && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
@@ -1008,7 +1012,7 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
 
 u32 RemoveOldestGeneratedOverworldEncounter(void)
 {
-    u32 oldestSlot = GetOldestSlot();
+    u32 oldestSlot = GetOldestSlot(TRUE);
 
     if (oldestSlot == INVALID_SPAWN_SLOT)
         return OBJECT_EVENTS_COUNT;
@@ -1536,7 +1540,7 @@ static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
 {
     if (!IsOverworldWildEncounter(object, OWE_GENERATED))
         return FALSE;
-    
+
     return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumberActiveOverworldEncounters(OWE_GENERATED) == GetMaxGeneratedOverworldEncounterSpawns();
 }
 

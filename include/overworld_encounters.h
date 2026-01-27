@@ -41,6 +41,8 @@
 #define INVALID_SPAWN_SLOT          0xFF
 
 #define OWE_SAVED_MOVEMENT_STATE        0x80
+#define OWE_NO_REPLACE_FLAG         0x80
+
 #define OWE_RESTORED_MOVEMENT_FUNC_ID   10
 
 enum OverworldEncounterSpawnAnim
@@ -95,7 +97,7 @@ extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void);
 void UpdateOverworldEncounters(void);
-u32 GetOldestSlot(void);
+u32 GetOldestSlot(bool32 forceRemove);
 void CreateOverworldWildEncounter(void);
 void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
