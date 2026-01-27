@@ -19,4 +19,17 @@ SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales", s16 
     }
 }
 
+SINGLE_BATTLE_TEST("Mold Breaker will be inactive if user faints due to recoil")
+{
+    GIVEN {
+        PLAYER(SPECIES_PINSIR) { HP(1); Ability(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLARE_BLITZ); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLARE_BLITZ, player);
+        ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
+    }
+}
+
 TO_DO_BATTLE_TEST("TODO: Write more Mold Breaker (Ability) test titles")

@@ -4808,6 +4808,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_COMMANDER:
             if (IsBattlerAlive(partner)
              && IsBattlerAlive(battler)
+             && gChosenActionByBattler[partner] != B_ACTION_SWITCH
              && gBattleStruct->battlerState[partner].commanderSpecies == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
              && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
@@ -4997,7 +4998,7 @@ static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, bool
 {
     if (hasAbilityShield || ignoreMoldBreaker || battlerDef == battlerAtk)
         return FALSE;
-    return gBattleStruct->moldBreakerActive && gAbilitiesInfo[gBattleMons[battlerDef].ability].breakable;
+    return gBattleMons[battlerAtk].volatiles.moldBreakerActive && gAbilitiesInfo[gBattleMons[battlerDef].ability].breakable;
 }
 
 enum Ability GetBattlerAbilityNoAbilityShield(u32 battler)
@@ -10029,9 +10030,9 @@ void ClearDamageCalcResults(void)
 	gBattleStruct->preAttackAnimPlayed = FALSE;
     gBattleScripting.savedDmg = 0;
     if (gCurrentMove != MOVE_NONE)
-        gBattleStruct->moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) || MoveIgnoresTargetAbility(gCurrentMove);
+        gBattleMons[gBattlerAttacker].volatiles.moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) || MoveIgnoresTargetAbility(gCurrentMove);
     else
-        gBattleStruct->moldBreakerActive = FALSE;
+        gBattleMons[gBattlerAttacker].volatiles.moldBreakerActive = FALSE;
 }
 
 bool32 DoesDestinyBondFail(u32 battler)
