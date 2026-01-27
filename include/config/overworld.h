@@ -85,6 +85,7 @@
 #define OW_WILD_ENCOUNTERS_FLEE_DESPAWN                 TRUE    // If TRUE, a fleeing OW Pokémon will despawn if it is unable to take a step for a short time.
 #define OW_VANILLA_AMBIENT_CRIES                        TRUE    // If TRUE, the ambient wild Pokémon cries will play on routes with encounter tables.
 #define OW_WILD_ENCOUNTERS_AMBIENT_CRIES                TRUE    // If TRUE, generated overworld encounters will play ambient cries based on their location relative to the player.
+#define OW_WILD_ENCOUNTERS_SHINY_SPARKLE                FALSE   // If TRUE, a shiny overworld wild encounter will spawn with a sparkle animation and play the shiny sound effect.
 #define OW_WILD_ENCOUNTERS_FEEBAS                       FALSE   // If TRUE, any spot that could result in a Feebas fishing encounter can spawn a Feebas overworld wild encounter.
 #define OW_WILD_ENCOUNTERS_DESPAWN_SOUND                TRUE    // If TRUE, plays SE_FLEE when an overworld wild encounter despawns.
 #define OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE          TRUE    // If TRUE, the mon will take steps to be right next to the player before the battle starts.

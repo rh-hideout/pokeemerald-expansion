@@ -320,7 +320,7 @@ static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animS
     if (!animSpawn && OWE_ShouldPlayMonFleeSound(objectEvent))
         PlaySE(SE_FLEE);
 
-    if (isShiny && animSpawn)
+    if (OW_WILD_ENCOUNTERS_SHINY_SPARKLE && isShiny && animSpawn)
     {
         PlaySE(SE_SHINY);
         spawnAnimType = OWE_SPAWN_ANIM_SHINY;
