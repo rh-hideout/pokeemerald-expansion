@@ -400,6 +400,7 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
     gSpecialVar_Facing = direction;
 
+    DebugPrintf("shouldrunowescript=%d", ShouldRunOverworldEncounterScript(objectEventId));
     if (InTrainerHill() == TRUE)
         script = GetTrainerHillTrainerScript();
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())

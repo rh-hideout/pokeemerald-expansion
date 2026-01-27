@@ -1021,7 +1021,7 @@ u32 RemoveOldestGeneratedOverworldEncounter(void)
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
-    if (!IsOverworldWildEncounter(object, OWE_ANY) || GetObjectEventScriptPointerByObjectEventId(objectEventId) != InteractWithDynamicWildOverworldEncounter)
+    if (!IsOverworldWildEncounter(object, OWE_ANY))
         return FALSE;
 
     gSpecialVar_0x8004 = OW_SPECIES(object);
