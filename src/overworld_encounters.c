@@ -67,7 +67,7 @@ static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
 static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId);
 static bool32 CreateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEvent *objectEvent, u32 headerId);
 static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent);
-static u32 GetMaxOverworldEncounterSpawns(void);
+static u32 GetMaxGeneratedOverworldEncounterSpawns(void);
 static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
 static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
 static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn);
@@ -113,7 +113,7 @@ void UpdateOverworldEncounters(void)
 
     u16 spawnSlot = NextSpawnMonSlot();
     if (LURE_STEP_COUNT && spawnSlot != INVALID_SPAWN_SLOT
-        && (GetNumberActiveOverworldEncounters(OWE_GENERATED) < GetMaxOverworldEncounterSpawns()))
+        && (GetNumberActiveOverworldEncounters(OWE_GENERATED) < GetMaxGeneratedOverworldEncounterSpawns()))
     {
         OverworldWildEncounter_SetMinimumSpawnTimer();
     }
@@ -189,7 +189,7 @@ static void OWE_SetNewSpawnCountdown(void)
 {
     u32 numActive = GetNumberActiveOverworldEncounters(OWE_GENERATED);
 
-    if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && numActive >= GetMaxOverworldEncounterSpawns())
+    if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && numActive >= GetMaxGeneratedOverworldEncounterSpawns())
         sOWESpawnCountdown = OWE_SPAWN_TIME_REPLACEMENT;
     else
         sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM + (OWE_SPAWN_TIME_PER_ACTIVE * numActive);
@@ -278,8 +278,10 @@ static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animS
     MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
 
-static u32 GetMaxOverworldEncounterSpawns(void)
+static u32 GetMaxGeneratedOverworldEncounterSpawns(void)
 {
+    // Should this just be a flat number?
+    // How does it effect things if going from water to land etc or vice versa
     if (OWE_ShouldSpawnWaterMons())
         return OWE_MAX_WATER_SPAWNS;
     else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
@@ -323,7 +325,7 @@ u32 GetOldestSlot(void)
 static u8 NextSpawnMonSlot(void)
 {
     u32 spawnSlot;
-    u32 maxSpawns = GetMaxOverworldEncounterSpawns();
+    u32 maxSpawns = GetMaxGeneratedOverworldEncounterSpawns();
 
     // All mon slots are in use
     if (GetNumberActiveOverworldEncounters(OWE_GENERATED) >= maxSpawns)
@@ -1510,7 +1512,7 @@ static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
     if (!IsOverworldWildEncounter(object, OWE_GENERATED))
         return FALSE;
     
-    return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumberActiveOverworldEncounters(OWE_GENERATED) == GetMaxOverworldEncounterSpawns();
+    return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumberActiveOverworldEncounters(OWE_GENERATED) == GetMaxGeneratedOverworldEncounterSpawns();
 }
 
 void OWE_StartEncounter(struct ObjectEvent *mon)
