@@ -40,9 +40,9 @@
 
 #define INVALID_SPAWN_SLOT          0xFF
 
-#define OWE_SAVED_MOVEMENT_STATE        0x80
 #define OWE_NO_REPLACE_FLAG         0x80
 
+#define OWE_SAVED_MOVEMENT_STATE_FLAG   0x80
 #define OWE_RESTORED_MOVEMENT_FUNC_ID   10
 
 enum OverworldEncounterSpawnAnim
