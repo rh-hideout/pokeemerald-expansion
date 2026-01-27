@@ -586,8 +586,8 @@ TEST("Battle strings fit on the battle message window")
         givemon SPECIES_WOBBUFFET, 100;
         createmon 1, 0, SPECIES_WOBBUFFET, 100;
     );
-    SetMonData(&gPlayerParty[0], MON_DATA_NICKNAME, nickname);
-    SetMonData(&gEnemyParty[0], MON_DATA_NICKNAME, nickname);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_NICKNAME, nickname);
+    SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_NICKNAME, nickname);
 
     for (i = start; i <= end; i++)
     {

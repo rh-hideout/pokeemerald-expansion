@@ -34,7 +34,6 @@
 #include "constants/songs.h"
 #include "test/battle.h"
 #include "test/test.h"
-#include "test/test_runner_battle.h"
 
 static EWRAM_DATA u8 sLinkSendTaskId = 0;
 static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
@@ -170,7 +169,7 @@ void InitBattleControllers(void)
 
     InitBtlControllersInternal();
 
-    SetBattlePartyIds();
+    SetBattlePartyIds(); // grintoul TO DO 
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
     {
@@ -327,11 +326,14 @@ static void InitBtlControllersInternal(void)
 
             gBattlerPartyIndexes[0] = 0;
             gBattlerPartyIndexes[1] = 0;
-            gBattlerPartyIndexes[2] = 3;
-            if (!isLink && isInGamePartner && (BATTLE_TWO_VS_ONE_OPPONENT || WILD_DOUBLE_BATTLE))
-                gBattlerPartyIndexes[3] = 1;
+            if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
+                gBattlerPartyIndexes[2] = 0;
             else
-                gBattlerPartyIndexes[3] = 3;
+                gBattlerPartyIndexes[2] = 1;
+            if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
+                gBattlerPartyIndexes[3] = 0;
+            else
+                gBattlerPartyIndexes[3] = 1;
         }
     }
     else
@@ -476,7 +478,7 @@ static void SetBattlePartyIds(void)
                 }
                 else
                 {
-                    if (gBattlerPartyIndexes[i - 2] == j)
+                    if (gBattlerPartyIndexes[i - 2] == j && BattlersShareParty(i - 2, i))
                     {
                         // Exclude already assigned pokemon;
                     }
@@ -505,7 +507,7 @@ static void SetBattlePartyIds(void)
         }
 
         if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-            gBattlerPartyIndexes[1] = 0, gBattlerPartyIndexes[3] = 3;
+            gBattlerPartyIndexes[1] = 0, gBattlerPartyIndexes[3] = 0;
     }
 }
 
@@ -3268,4 +3270,32 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
     default:
         return B_TRAINER_1;
     }
+}
+
+enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position)
+{
+    return GetBattlerTrainer(GetBattlerAtPosition(position));
+}
+
+bool32 BattleSideHasTwoTrainers(enum BattleSide side)
+{
+    switch (side)
+    {
+    case B_SIDE_PLAYER:
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            return TRUE;
+        break;
+    case B_SIDE_OPPONENT:
+    default:
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+            return TRUE;
+        break;
+    }
+
+    return FALSE;
+}
+
+bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
+{
+    return (GetBattlerTrainer(battler1) == GetBattlerTrainer(battler2));
 }

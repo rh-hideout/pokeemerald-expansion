@@ -157,10 +157,10 @@ MULTI_BATTLE_TEST("A spread move will do correct damage to the second mon if the
 {
     s16 damage[6];
     GIVEN {
-        MULTI_PLAYER(SPECIES_REGIROCK);
-        MULTI_PARTNER(SPECIES_REGIROCK);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_REGIROCK);
+        PARTNER(SPECIES_REGIROCK);
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        OPPONENT_B(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
@@ -191,10 +191,10 @@ TWO_VS_ONE_BATTLE_TEST("A spread move will do correct damage to the second mon i
 {
     s16 damage[6];
     GIVEN {
-        MULTI_PLAYER(SPECIES_REGIROCK);
-        MULTI_PARTNER(SPECIES_REGIROCK);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_REGIROCK);
+        PARTNER(SPECIES_REGIROCK);
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
@@ -225,10 +225,10 @@ ONE_VS_TWO_BATTLE_TEST("A spread move will do correct damage to the second mon i
 {
     s16 damage[6];
     GIVEN {
-        MULTI_PLAYER(SPECIES_REGIROCK);
-        MULTI_PLAYER(SPECIES_REGIROCK);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_REGIROCK);
+        PLAYER(SPECIES_REGIROCK);
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        OPPONENT_B(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }

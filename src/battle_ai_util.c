@@ -769,7 +769,7 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
 
     if (effect == EFFECT_BEAT_UP && GetConfig(CONFIG_BEAT_UP) >= GEN_5)
     {
-        u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
+        u32 partyCount = CalculatePartyCount(GetBattlerTrainer(ctx->battlerAtk));
         u32 i;
         gBattleStruct->beatUpSlot = 0;
         ctx->isCrit = FALSE;
@@ -6336,21 +6336,10 @@ bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount)
 
 void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
 {
-    if (BATTLE_TWO_VS_ONE_OPPONENT && (battler & BIT_SIDE) == B_SIDE_OPPONENT)
-    {
-        *firstId = 0, *lastId = PARTY_SIZE;
-    }
-    else if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TOWER_LINK_MULTI))
-    {
-        if ((battler & BIT_FLANK) == B_FLANK_LEFT)
-            *firstId = 0, *lastId = PARTY_SIZE / 2;
-        else
-            *firstId = PARTY_SIZE / 2, *lastId = PARTY_SIZE;
-    }
+    if (BattleSideHasTwoTrainers(battler & BIT_SIDE) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+        *firstId = 0, *lastId = PARTY_SIZE / 2;
     else
-    {
         *firstId = 0, *lastId = PARTY_SIZE;
-    }
 }
 
 bool32 ShouldInstructPartner(u32 partner, enum Move move)
@@ -6423,7 +6412,7 @@ u32 GetActiveBattlerIds(u32 battler, u32 *battlerIn1, u32 *battlerIn2)
     return opposingBattler;
 }
 
-bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, u32 battlerIn1, u32 battlerIn2)
+bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, u32 battlerIn1, u32 battlerIn2) // grintoul TO DO - how to make this work for everywhere it's used
 {
     if (partyIndex == gBattlerPartyIndexes[battlerIn1]
             || partyIndex == gBattlerPartyIndexes[battlerIn2])

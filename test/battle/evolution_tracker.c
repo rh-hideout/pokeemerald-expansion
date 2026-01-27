@@ -18,7 +18,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader'
     } SCENE {
         HP_BAR(opponent, hp: 0);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 1);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EVOLUTION_TRACKER), 1);
     }
 }
 
@@ -37,7 +37,7 @@ DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing multiple Bisharps holding 
         HP_BAR(opponentLeft, hp: 0);
         HP_BAR(playerRight, hp: 0);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 2);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EVOLUTION_TRACKER), 2);
     }
 }
 
@@ -51,7 +51,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that doesn't hold 
     } SCENE {
         HP_BAR(opponent, hp: 0);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EVOLUTION_TRACKER), 0);
     }
 }
 
@@ -69,7 +69,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a non-Bisharp that holds Lea
     } SCENE {
         HP_BAR(opponent, hp: 0);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EVOLUTION_TRACKER), 0);
     }
 }
 
@@ -83,7 +83,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Pawniard KO-ing a Bisharp that holds Leader
     } SCENE {
         HP_BAR(opponent, hp: 0);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EVOLUTION_TRACKER), 0);
     }
 }
 
@@ -99,7 +99,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler from contac
     } SCENE {
         HP_BAR(opponent, hp: 0);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EVOLUTION_TRACKER), 0);
     }
 }
 
@@ -114,7 +114,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with passiv
     } SCENE {
         HP_BAR(opponent, hp: 0);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EVOLUTION_TRACKER), 0);
     }
 }
 
@@ -132,6 +132,6 @@ DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with burs
     } SCENE {
         HP_BAR(opponentLeft, hp: 0);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EVOLUTION_TRACKER), 0);
     }
 }

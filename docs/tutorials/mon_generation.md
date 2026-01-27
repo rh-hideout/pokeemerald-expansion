@@ -54,7 +54,7 @@ Static encounters and Gift mons eligibility to Synchronize vary through generati
 
 A lot of places in the game generate mons, when you start a wild encounter, when a trainer generates its party from the data in trainers.party or even when you call one of the script described in the previous section. So let's go through some of the most common functions.
 Note: None of the functions described here allocate memory for the Pokemon struct, they all expect a pointer they will fill the data with.
-It means they are usually called with `&gPlayerParty[index]` or `&gEnemyParty[index]` because these are places in memory reserved for Pokemon struct.
+It means they are usually called with `&gParties[B_TRAINER_0][index]` or `&gParties[B_TRAINER_1][index]` because these are places in memory reserved for Pokemon struct.
 
 ### The basics
 

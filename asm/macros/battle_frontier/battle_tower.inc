@@ -124,7 +124,7 @@
 	multi_do MULTI_BATTLE_2_VS_1
 	.endm
 
-	@ Wild mons need to be assigned to gEnemyParty 0 and 3 slots, other slots need to be cleared out.
+	@ Wild mons need to be assigned to opponent party 0 and 3 slots, other slots need to be cleared out.
 	.macro multi_wild partnerId:req
 	special SavePlayerParty
 	setmultitrainerbattle TRAINER_NONE, NULL, TRAINER_NONE, NULL, \partnerId
@@ -153,7 +153,7 @@
 	multi_do_fixed MULTI_BATTLE_2_VS_1
 	.endm
 
-	@ Wild mons need to be assigned to gEnemyParty 0 and 3 slots, other slots need to be cleared out.
+	@ Wild mons need to be assigned to opponent party 0 and 3 slots, other slots need to be cleared out.
 	.macro multi_fixed_wild partnerId:req
 	special SavePlayerParty
 	setmultitrainerbattle TRAINER_NONE, NULL, TRAINER_NONE, NULL, \partnerId
