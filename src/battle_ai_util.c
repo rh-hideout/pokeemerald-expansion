@@ -6332,16 +6332,9 @@ bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount)
 void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
 {
     if (BattleSideHasTwoTrainers(battler & BIT_SIDE) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
-    {
-        if ((battler & BIT_FLANK) == B_FLANK_LEFT)
-            *firstId = 0, *lastId = PARTY_SIZE / 2;
-        else
-            *firstId = PARTY_SIZE / 2, *lastId = PARTY_SIZE;
-    }
+        *firstId = 0, *lastId = PARTY_SIZE / 2;
     else
-    {
         *firstId = 0, *lastId = PARTY_SIZE;
-    }
 }
 
 bool32 ShouldInstructPartner(u32 partner, enum Move move)

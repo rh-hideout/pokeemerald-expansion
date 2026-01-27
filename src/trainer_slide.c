@@ -106,7 +106,7 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, enum BattleSide side, bool3
 
     for (u32 i = firstId; i < lastId; i++)
     {
-        GetPartyAndIndexFromSideAndSlot(side, i, &party, &partyIndex);
+        GetPartyAndIndexFromSideAndSlot(side, sMultiBattleOrder[i], &party, &partyIndex);
 
         u32 species = GetMonData(&party[partyIndex], MON_DATA_SPECIES_OR_EGG);
         if (species != SPECIES_NONE

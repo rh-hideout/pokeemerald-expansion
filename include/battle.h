@@ -1074,6 +1074,7 @@ extern bool8 gLastUsedBallMenuPresent;
 extern u8 gPartyCriticalHits[PARTY_SIZE];
 extern u8 gCategoryIconSpriteId;
 struct Pokemon *GetBattlerParty(enum BattlerId battler);
+struct Pokemon* GetBattlerMon(enum BattlerId battler);
 
 static inline bool32 IsBattlerAlive(u32 battler)
 {
@@ -1141,12 +1142,6 @@ static inline bool32 IsBattlerAlly(u32 battlerAtk, u32 battlerDef)
 static inline u32 GetOpposingSideBattler(u32 battler)
 {
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler)));
-}
-
-static inline struct Pokemon* GetBattlerMon(u32 battler)
-{
-    u32 index = gBattlerPartyIndexes[battler];
-    return !IsOnPlayerSide(battler) ? &gParties[B_TRAINER_1][index] : &gParties[B_TRAINER_0][index];
 }
 
 static inline struct Pokemon *GetSideParty(enum BattleSide side)

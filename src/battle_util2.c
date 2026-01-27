@@ -210,3 +210,10 @@ struct Pokemon *GetBattlerParty(enum BattlerId battler)
 {
     return gParties[GetBattlerTrainer(battler)];
 }
+
+struct Pokemon* GetBattlerMon(enum BattlerId battler)
+{
+    u32 index = gBattlerPartyIndexes[battler];
+
+    return &gParties[GetBattlerTrainer(battler)][index];
+}

@@ -320,10 +320,10 @@ static void InitBtlControllersInternal(void)
 
         if (bufferPartyOrders)
         {
-            //BufferBattlePartyCurrentOrderBySide(0, 0);
-            //BufferBattlePartyCurrentOrderBySide(1, 0);
-            //BufferBattlePartyCurrentOrderBySide(2, 1);
-            //BufferBattlePartyCurrentOrderBySide(3, 1);
+            BufferBattlePartyCurrentOrderBySide(0, 0);
+            BufferBattlePartyCurrentOrderBySide(1, 0);
+            BufferBattlePartyCurrentOrderBySide(2, 1);
+            BufferBattlePartyCurrentOrderBySide(3, 1);
 
             gBattlerPartyIndexes[0] = 0;
             gBattlerPartyIndexes[1] = 0;

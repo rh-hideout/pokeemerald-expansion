@@ -2029,7 +2029,6 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, u32 species)
     if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
         SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
     CalculateMonStats(DATA.currentMon);
-    //DebugPrintf("line %d, trainer %d, index %d, species %S, party species %S, partySize %d", sourceLine, trainer, DATA.currentPartyIndex, GetSpeciesName(species), GetSpeciesName(GetMonData(DATA.currentMon, MON_DATA_SPECIES)), *partySize);
 }
 
 // (sNaturePersonalities[i] % NUM_NATURES) == i
@@ -2813,7 +2812,6 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     s32 battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_SEND_OUT outside TURN");
     INVALID_IF(!IsAITest(), "EXPECT_SEND_OUT is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWO_VS_ONE_TEST, and AI_ONE_VS_TWO_TEST");
-    DebugPrintf("ExpectSendOut battlerId %d trainer %d partyIndex %d DATA.partySizes[GetBattlerTrainer(battlerId)] %d", battlerId, GetBattlerTrainer(battlerId), partyIndex, DATA.partySizes[GetBattlerTrainer(battlerId)]);
     INVALID_IF(partyIndex >= DATA.partySizes[GetBattlerTrainer(battlerId)], "EXPECT_SEND_OUT to invalid party index");
     for (i = 0; i < STATE->battlersCount; i++)
     {
