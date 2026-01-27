@@ -199,11 +199,15 @@ static void OWE_SetNewSpawnCountdown(void)
 
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y)
 {
-    if (!OWE_CanEncounterBeLoaded_Palette(speciesId, isFemale, isShiny, x, y))
+    assertf(OWE_CanEncounterBeLoaded_Palette(speciesId, isFemale, isShiny, x, y), "could not load palette for overworld encounter\nspecies: %d\nfemale: %d\nshiny: %d\ncoords: %d %d", speciesId, isFemale, isShiny, x, y)
+    {
         return FALSE;
+    }
 
-    if (!OWE_CanEncounterBeLoaded_Tiles(speciesId, isFemale, isShiny, x, y))
+    assertf(OWE_CanEncounterBeLoaded_Tiles(speciesId, isFemale, isShiny, x, y), "could not load palette for overworld encounter\nspecies: %d\nfemale: %d\nshiny: %d\ncoords: %d %d", speciesId, isFemale, isShiny, x, y)
+    {
         return FALSE;
+    }
 
     return TRUE;
 }
