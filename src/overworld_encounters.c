@@ -514,8 +514,12 @@ void CreateOverworldWildEncounter(void)
     struct ObjectEvent *object = &gObjectEvents[objEventId];
     u32 indexRoamerOutbreak = object->sRoamerOutbreakStatus;
 
-    if (objEventId >= OBJECT_EVENTS_COUNT || !IsOverworldWildEncounter(object, OWE_ANY))
+    assertf(objEventId < OBJECT_EVENTS_COUNT && IsOverworldWildEncounter(object, OWE_ANY), "cannot start overworld wild enocunter as the selected object is invalid.\nlocalId: %d", localId)
+    {
+        UnlockPlayerFieldControls();
+        UnfreezeObjectEvents();
         return;
+    }
 
     if (indexRoamerOutbreak && CreateOverworldWildEncounter_CheckRoamer(OWE_GetObjectRoamerOutbreakStatus(object)))
         return;
