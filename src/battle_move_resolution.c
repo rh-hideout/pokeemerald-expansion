@@ -1636,7 +1636,8 @@ enum CancelerResult DoAttackCanceler(void)
             gBattleStruct->eventState.atkCanceler++;
     }
 
-    gBattleStruct->unableToUseMove = (result == CANCELER_RESULT_FAILURE);
+    if (result == CANCELER_RESULT_FAILURE)
+        gBattleStruct->unableToUseMove = TRUE;
     return result;
 }
 
