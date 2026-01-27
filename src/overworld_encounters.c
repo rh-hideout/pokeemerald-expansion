@@ -1389,43 +1389,44 @@ static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void)
     return NULL;
 }
 
-// Are these needed? Not defined elsewhere? I don't think so.
-#define MAP_METATILE_VIEW_X 7
-#define MAP_METATILE_VIEW_Y 5
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
 {
     if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return;
-    
-    u32 speciesId = OW_SPECIES(objectEvent);
-    u32 volume;
-    s32 pan;
-    s32 distanceX = objectEvent->currentCoords.x - gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x;
-    s32 distanceY = objectEvent->currentCoords.y - gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y;
 
     // TESTING: Setting this species can be used as a test to play a consistent sound to check how often the
     //          code in UpdateOverworldEncounters runs, as OWE_GetRandomActiveEncounterObject cuurently returns
     //          the player object.
     if (objectEvent == NULL)
         return;
+    
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u32 speciesId = OW_SPECIES(objectEvent);
+    s32 distanceX = objectEvent->currentCoords.x - player->currentCoords.x;
+    s32 distanceY = objectEvent->currentCoords.y - player->currentCoords.y;
+    u32 distanceMax = OWE_SPAWN_RADUIS_WIDTH + OWE_SPAWN_RADUIS_HEIGHT;
+    u32 distance;
+    u32 volume;
+    s32 pan;
 
-    if (distanceX > MAP_METATILE_VIEW_X)
-        distanceX = MAP_METATILE_VIEW_X;
-    else if (distanceX < -MAP_METATILE_VIEW_X)
-        distanceX = -MAP_METATILE_VIEW_X;
+    if (distanceX > OWE_SPAWN_RADUIS_WIDTH)
+        distanceX = OWE_SPAWN_RADUIS_WIDTH;
+    else if (distanceX < -OWE_SPAWN_RADUIS_WIDTH)
+        distanceX = -OWE_SPAWN_RADUIS_WIDTH;
 
-    if (distanceY > MAP_METATILE_VIEW_Y)
-        distanceY = MAP_METATILE_VIEW_Y;
-    else if (distanceY < -MAP_METATILE_VIEW_Y)
-        distanceY = -MAP_METATILE_VIEW_Y;
+    distanceY = abs(distanceY);
+    if (distanceY > OWE_SPAWN_RADUIS_HEIGHT)
+        distanceY = OWE_SPAWN_RADUIS_HEIGHT;
 
-    pan = (distanceX * 44) / MAP_METATILE_VIEW_X;
-    volume = 50 + ((distanceY + MAP_METATILE_VIEW_Y) * 30) / (2 * MAP_METATILE_VIEW_Y);
+    distance = abs(distanceX) + distanceY;
+    if (distance > distanceMax)
+        distance = distanceMax;
+
+    volume = 80 - (distance * (80 - 50)) / distanceMax;
+    pan = 212 + ((distanceX + OWE_SPAWN_RADUIS_WIDTH) * (300 - 212)) / (2 * OWE_SPAWN_RADUIS_WIDTH);
     
     PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
 }
-#undef MAP_METATILE_VIEW_X
-#undef MAP_METATILE_VIEW_Y
 
 static bool32 OWE_DoesRoamerObjectExist(void)
 {
