@@ -4712,7 +4712,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornTree = {
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CtfTerminal = {
     .tileTag = TAG_NONE,
-    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_3,
+    .paletteTag = OBJ_EVENT_PAL_TAG_CTF_TERMINAL,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
     .size = 256, // 16x32, 1 Frame
     .width = 16,
