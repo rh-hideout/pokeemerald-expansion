@@ -288,8 +288,8 @@ SINGLE_BATTLE_TEST("Spit Up's Stockpile's are romoved if move is absorbed")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIT_UP, player);
         ABILITY_POPUP(opponent, ABILITY_LIGHTNING_ROD);
     } THEN {
-        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE );
-        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE );
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
     }
 }
 
