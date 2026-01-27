@@ -43,7 +43,6 @@
 #include "constants/event_objects.h"
 #include "constants/moves.h"
 #include "test/battle.h"
-#include "test/test_runner_battle.h"
 
 // This file's functions.
 static void InitTowerChallenge(void);
@@ -2121,7 +2120,7 @@ bool32 ValidateBattleTowerRecord(u8 recordId) // unused
 
 void TrySetLinkBattleTowerEnemyPartyLevel(void)
 {
-    if (!IsMultibattleTest())
+    if (!TESTING)
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         {

@@ -47,7 +47,6 @@
 #include "type_icons.h"
 #include "pokedex.h"
 #include "test/battle.h"
-#include "test/test_runner_battle.h"
 
 static void PlayerHandleLoadMonSprite(u32 battler);
 static void PlayerHandleDrawTrainerPic(u32 battler);
@@ -1899,7 +1898,7 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
     s16 xPos, yPos;
     enum TrainerPicID trainerPicId;
 
-    if (IsMultibattleTest())
+    if (TESTING)
     {
         trainerPicId = TRAINER_PIC_BACK_BRENDAN;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)

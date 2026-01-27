@@ -73,7 +73,6 @@
 #include "test/battle.h"
 #include "follower_npc.h"
 #include "load_save.h"
-#include "test/test_runner_battle.h"
 
 // table to avoid ugly powing on gba (courtesy of doesnt)
 // this returns (i^2.5)/4
@@ -4364,7 +4363,7 @@ bool32 NoAliveMonsForPlayer(void)
                 ineligibleMonsCount++;
         }
 
-        if( !(gBattleTypeFlags & BATTLE_TYPE_ARENA) || (IsMultibattleTest()))
+        if(!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || (IsMultibattleTest()))
         {
             for (i = 0; i < PARTY_SIZE; i++)
             {

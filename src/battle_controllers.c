@@ -34,7 +34,6 @@
 #include "constants/songs.h"
 #include "test/battle.h"
 #include "test/test.h"
-#include "test/test_runner_battle.h"
 
 static EWRAM_DATA u8 sLinkSendTaskId = 0;
 static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
@@ -3270,23 +3269,6 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
             return B_TRAINER_1;
     default:
         return B_TRAINER_1;
-    }
-}
-
-enum BattleTrainer GetAllyTrainer(enum BattleTrainer trainer)
-{
-    switch (trainer)
-    {
-    case B_TRAINER_0:
-        return B_TRAINER_2;
-    case B_TRAINER_1:
-        return B_TRAINER_3;
-    case B_TRAINER_2:
-        return B_TRAINER_0;
-    case B_TRAINER_3:
-        return B_TRAINER_1;
-    default:
-        return B_TRAINER_3;
     }
 }
 
