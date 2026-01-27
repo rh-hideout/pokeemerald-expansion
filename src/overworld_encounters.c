@@ -1599,14 +1599,19 @@ struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnA
 #define sTypeFuncId data[1] // Same as in src/event_object_movement.c
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (IsOverworldWildEncounter(objectEvent, OWE_ANY))
-        sprite->sTypeFuncId = objectEvent->sSavedMovementState;
+    if (IsOverworldWildEncounter(objectEvent, OWE_ANY) && objectEvent->sSavedMovementState & OWE_SAVED_MOVEMENT_STATE)
+        sprite->sTypeFuncId = OWE_RESTORED_MOVEMENT_FUNC_ID;
 }
 #undef sTypeFuncId
 
-void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent, u32 state)
+void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent)
 {
-    objectEvent->sSavedMovementState = state;
+    objectEvent->sSavedMovementState |= OWE_SAVED_MOVEMENT_STATE;
+}
+
+void OWE_ClearSavedMovementState(struct ObjectEvent *objectEvent)
+{
+    objectEvent->sSavedMovementState ^= OWE_SAVED_MOVEMENT_STATE;
 }
 
 static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction direction, u32 distance)

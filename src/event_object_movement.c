@@ -11778,7 +11778,7 @@ movement_type_def(MovementType_ChasePlayer_OverworldWildEncounter, gMovementType
 bool8 MovementType_Common_OverworldWildEncounter_Step7(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     ClearObjectEventMovement(objectEvent, sprite);
-    OWE_SetSavedMovementState(objectEvent, 10);
+    OWE_SetSavedMovementState(objectEvent);
     sprite->sTypeFuncId = 8;
     return TRUE;
 }
@@ -11861,6 +11861,7 @@ bool8 MovementType_Common_OverworldWildEncounter_Step12(struct ObjectEvent *obje
 
         if (!OWE_IsPlayerInsideMonActiveDistance(objectEvent))
         {
+            OWE_ClearSavedMovementState(objectEvent);
             sprite->sTypeFuncId = 0;
             return FALSE;
         }
