@@ -3001,8 +3001,8 @@ static void AnimateMonAfterKnockout(enum BattlerId battler)
     if (B_ANIMATE_MON_AFTER_KO == FALSE)
         return;
 
-    u32 oppositeBattler = BATTLE_OPPOSITE(battler);
-    u32 partnerBattler = BATTLE_PARTNER(oppositeBattler);
+    enum BattlerId oppositeBattler = BATTLE_OPPOSITE(battler);
+    enum BattlerId partnerBattler = BATTLE_PARTNER(oppositeBattler);
     bool32 wasPlayerSideKnockedOut = (IsOnPlayerSide(battler));
 
     if (IsBattlerAlive(oppositeBattler))

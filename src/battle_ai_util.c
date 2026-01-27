@@ -4175,7 +4175,7 @@ bool32 IsTargetingPartner(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 
 enum Move GetAllyChosenMove(enum BattlerId battlerId)
 {
-    u32 partnerBattler = BATTLE_PARTNER(battlerId);
+    enum BattlerId partnerBattler = BATTLE_PARTNER(battlerId);
 
     if (!IsBattlerAlive(partnerBattler) || !IsAiBattlerAware(partnerBattler))
         return MOVE_NONE;

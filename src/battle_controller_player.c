@@ -2424,7 +2424,7 @@ static u32 CheckTargetTypeEffectiveness(enum BattlerId battler)
 
     if (IsDoubleBattle())
     {
-        u32 partnerFoe = BATTLE_PARTNER(battlerFoe);
+        enum BattlerId partnerFoe = BATTLE_PARTNER(battlerFoe);
         u32 partnerFoeEffectiveness = CheckTypeEffectiveness(battler, partnerFoe);
         if (!IsBattlerAlive(battlerFoe))
             return partnerFoeEffectiveness;

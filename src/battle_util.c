@@ -770,7 +770,7 @@ bool32 TryRunFromBattle(enum BattlerId battler)
     }
     else
     {
-        u8 runningFromBattler = BATTLE_OPPOSITE(battler);
+        enum BattlerId runningFromBattler = BATTLE_OPPOSITE(battler);
         if (!IsBattlerAlive(runningFromBattler))
             runningFromBattler |= BIT_FLANK;
 
@@ -3160,7 +3160,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_IMPOSTER:
             if (gBattleStruct->battlerState[battler].switchIn)
             {
-                u32 diagonalBattler = BATTLE_OPPOSITE(battler);
+                enum BattlerId diagonalBattler = BATTLE_OPPOSITE(battler);
                 if (IsDoubleBattle())
                     diagonalBattler = BATTLE_PARTNER(diagonalBattler);
 
@@ -10583,7 +10583,7 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     }
 
     // Attacker's ally's ability
-    u32 atkAlly = BATTLE_PARTNER(battlerAtk);
+    enum BattlerId atkAlly = BATTLE_PARTNER(battlerAtk);
     switch (GetBattlerAbility(atkAlly))
     {
     case ABILITY_VICTORY_STAR:
@@ -10774,7 +10774,7 @@ bool32 HasPartnerTrainer(enum BattlerId battler)
 
 static bool32 IsOpposingSideEmpty(enum BattlerId battler)
 {
-    u32 oppositeBattler = BATTLE_OPPOSITE(battler);
+    enum BattlerId oppositeBattler = BATTLE_OPPOSITE(battler);
 
     if (IsBattlerAlive(oppositeBattler))
         return FALSE;

@@ -450,7 +450,7 @@ static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler)
     // Switch if no moves affect opponents
     if (IsDoubleBattle())
     {
-        u32 opposingPartner = BATTLE_PARTNER(opposingBattler);
+        enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             aiMove = gBattleMons[battler].moves[moveIndex];
@@ -969,13 +969,13 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponent(enum BattlerId battler, en
 
 static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler)
 {
-    u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
+    enum BattlerPosition opposingPosition = GetBattlerPosition(BATTLE_OPPOSITE(battler));
     enum BattlerId opposingBattler = GetBattlerAtPosition(opposingPosition);
 
     if (CanUseSuperEffectiveMoveAgainstOpponent(battler, opposingBattler))
         return TRUE;
 
-    if (IsDoubleBattle() && CanUseSuperEffectiveMoveAgainstOpponent(battler, BATTLE_PARTNER(opposingPosition)))
+    if (IsDoubleBattle() && CanUseSuperEffectiveMoveAgainstOpponent(battler, BATTLE_PARTNER(BATTLE_OPPOSITE(battler))))
         return TRUE;
 
     return FALSE;
@@ -1407,7 +1407,7 @@ bool32 IsSwitchinValid(enum BattlerId battler)
     // Edge case: See if partner already chose to switch into the same mon
     if (IsDoubleBattle())
     {
-        u32 partner = BATTLE_PARTNER(battler);
+        enum BattlerId partner = BATTLE_PARTNER(battler);
         if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE) // Generic switch
         {
             if ((gAiLogicData->shouldSwitch & (1u << partner)) && gAiLogicData->monToSwitchInId[partner] == gAiLogicData->mostSuitableMonId[battler])

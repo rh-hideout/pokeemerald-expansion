@@ -837,8 +837,8 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             bool32 canUseWideGuard = (GetConfig(CONFIG_WIDE_GUARD) >= GEN_6 && protectMethod == PROTECT_WIDE_GUARD);
             bool32 canUseQuickGuard = (GetConfig(CONFIG_QUICK_GUARD) >= GEN_6 && protectMethod == PROTECT_QUICK_GUARD);
 
-            if (!canUseProtectSecondTime 
-             && !canUseWideGuard 
+            if (!canUseProtectSecondTime
+             && !canUseWideGuard
              && !canUseQuickGuard
              && protectMethod != PROTECT_CRAFTY_SHIELD)
                 battleScript = BattleScript_ButItFailed;
@@ -1445,7 +1445,7 @@ static void SetPossibleNewSmartTarget(u32 move)
      || GetBattlerMoveTargetType(gBattlerAttacker, move) != TARGET_SMART)
         return;
 
-    u32 partner = BATTLE_PARTNER(gBattlerTarget);
+    enum BattlerId partner = BATTLE_PARTNER(gBattlerTarget);
     if (!IsBattlerUnaffectedByMove(partner))
         gBattlerTarget = partner;
 }
@@ -2283,7 +2283,7 @@ static enum MoveEndResult MoveEndNextTarget(void)
     }
     else if (moveTarget == TARGET_USER_AND_ALLY)
     {
-        u32 partner = BATTLE_PARTNER(gBattlerAttacker);
+        enum BattlerId partner = BATTLE_PARTNER(gBattlerAttacker);
         if (partner != gBattlerTarget && IsBattlerAlive(partner))
         {
             gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = partner;
