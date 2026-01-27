@@ -256,6 +256,56 @@ static const u32 sBirchSpeechShadowGfx[] = INCBIN_U32("graphics/birch_speech/sha
 static const u32 sBirchSpeechBgMap[] = INCBIN_U32("graphics/birch_speech/map.bin.smolTM");
 static const u16 sBirchSpeechBgGradientPal[] = INCBIN_U16("graphics/birch_speech/bg2.gbapal");
 
+// --- CTF Terminal sprite for Birch Speech (reuses object_event graphics) ---
+
+#define TAG_BIRCH_SPEECH_TERMINAL  0x4F01
+
+// Wenn ObjectEvent "compressed = FALSE" ist, existiert normalerweise .4bpp (uncompressed)
+static const u32 sBirchSpeechTerminalTiles[] =
+    INCBIN_U32("graphics/object_events/pics/misc/ctf_terminal.4bpp");
+
+static const u16 sBirchSpeechTerminalPal[] =
+    INCBIN_U16("graphics/object_events/pics/misc/ctf_terminal.gbapal");
+
+static const struct SpriteSheet sBirchSpeechTerminalSheet =
+{
+    .data = sBirchSpeechTerminalTiles,
+    .size = 256, // 16x32 @ 4bpp = 16*32/2 = 256 bytes
+    .tag = TAG_BIRCH_SPEECH_TERMINAL,
+};
+
+static const struct SpritePalette sBirchSpeechTerminalPalette =
+{
+    .data = sBirchSpeechTerminalPal,
+    .tag = TAG_BIRCH_SPEECH_TERMINAL,
+};
+
+static const union AnimCmd sAnim_Terminal[] =
+{
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+static const union AnimCmd *const sAnimTable_Terminal[] =
+{
+    sAnim_Terminal
+};
+
+// 16x32 OAM: Idealerweise wie ObjectEvent (gObjectEventBaseOam_16x32).
+// Falls das Symbol hier nicht sichtbar ist, siehe Hinweis weiter unten.
+extern const struct OamData gObjectEventBaseOam_16x32;
+
+static const struct SpriteTemplate sBirchSpeechTerminalTemplate =
+{
+    .tileTag = TAG_BIRCH_SPEECH_TERMINAL,
+    .paletteTag = TAG_BIRCH_SPEECH_TERMINAL,
+    .oam = &gObjectEventBaseOam_16x32,
+    .anims = sAnimTable_Terminal,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+
+
 static const u8 gText_SaveFileCorrupted[] = _("The save file is corrupted. The\nprevious save file will be loaded.");
 static const u8 gText_SaveFileErased[] = _("The save file has been erased\ndue to corruption or damage.");
 static const u8 gJPText_No1MSubCircuit[] = _("1Mサブきばんが ささっていません！");
@@ -1394,7 +1444,7 @@ static void Task_NewGameBirchSpeechSub_InitPokeBall(u8 taskId)
     gSprites[spriteId].invisible = FALSE;
     gSprites[spriteId].data[0] = 0;
 
-    CreatePokeballSpriteToReleaseMon(spriteId, gSprites[spriteId].oam.paletteNum, 112, 58, 0, 0, 32, PALETTES_BG, SPECIES_LOTAD);
+    // CreatePokeballSpriteToReleaseMon(spriteId, gSprites[spriteId].oam.paletteNum, 112, 58, 0, 0, 32, PALETTES_BG, SPECIES_LOTAD); // Pokéball Animation im Intro
     gTasks[taskId].func = Task_NewGameBirchSpeechSub_WaitForLotad;
     gTasks[sBirchSpeechMainTaskId].tTimer = 0;
 }
@@ -1798,12 +1848,17 @@ static void Task_NewGameBirchSpeech_Cleanup(u8 taskId)
     if (!gPaletteFade.active)
     {
         FreeAllWindowBuffers();
-        FreeAndDestroyMonPicSprite(gTasks[taskId].tLotadSpriteId);
-        ResetAllPicSprites();
+
+        DestroySprite(&gSprites[gTasks[taskId].tLotadSpriteId]);
+        FreeSpriteTilesByTag(TAG_BIRCH_SPEECH_TERMINAL);
+        FreeSpritePaletteByTag(TAG_BIRCH_SPEECH_TERMINAL);
+
+        ResetAllPicSprites(); // kann bleiben, auch wenn keine MonPics mehr genutzt werden
         SetMainCallback2(CB2_NewGame);
         DestroyTask(taskId);
     }
 }
+
 
 static void CB2_NewGameBirchSpeech_ReturnFromNamingScreen(void)
 {
@@ -1896,8 +1951,10 @@ static void SpriteCB_MovePlayerDownWhileShrinking(struct Sprite *sprite)
 
 static u8 NewGameBirchSpeech_CreateLotadSprite(u8 x, u8 y)
 {
-    return CreateMonPicSprite_Affine(SPECIES_LOTAD, FALSE, 0, MON_PIC_AFFINE_FRONT, x, y, 14, TAG_NONE);
+    // Wir behalten den Funktionsnamen, damit keine Callsites geändert werden müssen.
+    return CreateSprite(&sBirchSpeechTerminalTemplate, x, y, 14);
 }
+
 
 static void AddBirchSpeechObjects(u8 taskId)
 {
@@ -1906,13 +1963,17 @@ static void AddBirchSpeechObjects(u8 taskId)
     u8 brendanSpriteId;
     u8 maySpriteId;
 
+    LoadSpriteSheet(&sBirchSpeechTerminalSheet);
+    LoadSpritePalette(&sBirchSpeechTerminalPalette);
+
+
     birchSpriteId = AddNewGameBirchObject(0x88, 0x3C, 1);
     gSprites[birchSpriteId].callback = SpriteCB_Null;
     gSprites[birchSpriteId].oam.priority = 0;
     gSprites[birchSpriteId].invisible = TRUE;
     gTasks[taskId].tBirchSpriteId = birchSpriteId;
     lotadSpriteId = NewGameBirchSpeech_CreateLotadSprite(100, 0x4B);
-    gSprites[lotadSpriteId].callback = SpriteCB_Null;
+    gSprites[lotadSpriteId].callback = SpriteCallbackDummy;
     gSprites[lotadSpriteId].oam.priority = 0;
     gSprites[lotadSpriteId].invisible = TRUE;
     gTasks[taskId].tLotadSpriteId = lotadSpriteId;

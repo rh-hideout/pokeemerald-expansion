@@ -617,6 +617,9 @@ gSongTable::
 	song ph_nurse_held, MUSIC_PLAYER_SE2, 2
 	song ph_nurse_solo, MUSIC_PLAYER_SE2, 2
 
+	song mus_ctf_bgm_loop, MUSIC_PLAYER_BGM, 2
+
+
 	.align 2
 dummy_song_header:
 	.byte 0, 0, 0, 0

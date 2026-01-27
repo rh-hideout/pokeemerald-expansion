@@ -253,6 +253,9 @@
 // is 65519, but even considering follower Pokémon, this should be more than enough :)
 #define NUM_OBJ_EVENT_GFX                        243
 
+//CTF ITEMS
+#define OBJ_EVENT_GFX_CTF_TERMINAL               244
+
 
 // These are dynamic object gfx ids.
 // They correspond with the values of the VAR_OBJ_GFX_ID_X vars.

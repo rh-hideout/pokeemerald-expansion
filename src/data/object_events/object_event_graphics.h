@@ -467,3 +467,5 @@ const u32 gFieldEffectObjectPic_CaveDust[] = INCBIN_U32("graphics/field_effects/
 const u16 gFieldEffectObjectPalette_CaveDust[] = INCBIN_U16("graphics/field_effects/palettes/cave_dust.gbapal");
 
 const u32 gObjectEventPic_ApricornTree[] = INCBIN_U32("graphics/object_events/pics/misc/apricorn_tree.4bpp");
+
+const u32 gObjectEventPic_CtfTerminal[] = INCBIN_U32("graphics/object_events/pics/misc/ctf_terminal.4bpp");

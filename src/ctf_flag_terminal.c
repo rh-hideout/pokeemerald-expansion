@@ -1,85 +1,45 @@
 #include "global.h"
 #include "ctf_flags.h"
 
-#include "naming_screen.h"
-#include "overworld.h"
-#include "save.h"
-#include "script.h"
+#include "event_data.h"          // VarGet / VarSet
+#include "script.h"              // ScriptContext2_Enable/Disable
+#include "naming_screen.h"       // DoNamingScreen, NAMING_SCREEN_*
+#include "constants/vars.h"      // VAR_0x8000, VAR_RESULT
+#include "constants/characters.h"// EOS / CHAR_EOS (je nach Branch)
+#include "overworld.h"           // CB2_ReturnToFieldContinueScript (oft hier deklariert)
 
-#include "event_data.h"
-#include "string_util.h"
-#include "constants/vars.h"
-#include "constants/characters.h"
+// Größer als PLAYER_NAME_LENGTH, damit NAMING_SCREEN_CODE nicht overflowen kann
+#define CTF_INPUT_BUF_SIZE 16
 
-
-// ============================================================================
-// "Terminal" callable from scripts via `callnative Ctf_FlagTerminal`
-// ============================================================================
-//
-// Usage in script (poryscript):
-//   setvar VAR_0x8000, 1   // gymId 1..8
-//   callnative Ctf_FlagTerminal
-//   waitstate
-//   compare VAR_RESULT, 1
-//   if eq goto .success
-//
-// Result:
-//   VAR_RESULT (gSpecialVar_Result) = 1 on success, 0 otherwise.
-
-static bool8 sCtfTerminalActive;
-static bool8 sCtfTerminalDone;
 static u8 sCtfGymId;
-static u8 sCtfInput[PLAYER_NAME_LENGTH + 1];
+static u8 sCtfInput[CTF_INPUT_BUF_SIZE];
 
-static void CB2_ReturnToFieldContinueScript_CtfTerminal(void)
+static void CtfTerminal_ReturnFromNamingScreen(void)
 {
-    // Validate input and store result for the script.
+    // Ergebnis setzen (1 = korrekt, 0 = falsch)
     VarSet(VAR_RESULT, Ctf_IsGymFlagCorrect(sCtfGymId, sCtfInput) ? 1 : 0);
 
-    // Mark terminal flow complete and continue the running script.
-    sCtfTerminalDone = TRUE;
+    // waitstate freigeben und Script fortsetzen
+    ScriptContext2_Disable();
     CB2_ReturnToFieldContinueScript();
 }
 
-// Native script callback for `callnative`.
-// Return TRUE to continue script execution, FALSE to keep waiting.
+// callnative Ctf_FlagTerminal
+// Erwartet: VAR_0x8000 = gymId (1..8)
+// Setzt:    VAR_RESULT = 1/0
 bool8 Ctf_FlagTerminal(void)
 {
-    if (!sCtfTerminalActive)
-    {
-        sCtfGymId = (u8)VarGet(VAR_0x8000); // script passes gymId via 0x8000
+    sCtfGymId = (u8)VarGet(VAR_0x8000);
 
-        // Invalid gymId -> fail fast
-        if (sCtfGymId == 0 || sCtfGymId > CTF_GYM_COUNT)
-        {
-            VarSet(VAR_RESULT, 0);
-            return TRUE;
-        }
+    // Buffer leeren
+    sCtfInput[0] = EOS;
 
-        sCtfTerminalActive = TRUE;
-        sCtfTerminalDone = FALSE;
-        sCtfInput[0] = EOS;
+    // Script soll per waitstate warten
+    ScriptContext2_Enable();
 
-        // Open the vanilla player naming screen to enter the flag word.
-        // Note: This limits input to PLAYER_NAME_LENGTH.
-        DoNamingScreen(
-            NAMING_SCREEN_PLAYER,
-            sCtfInput,
-            gSaveBlock2Ptr->playerGender,
-            0,
-            0,
-            CB2_ReturnToFieldContinueScript_CtfTerminal
-        );
+    // Wichtig: NAMING_SCREEN_CODE zeigt nicht "Enter your name",
+    // sondern den Code-Prompt (passt besser für Flags).
+    DoNamingScreen(NAMING_SCREEN_CODE, sCtfInput, 0, 0, 0, CtfTerminal_ReturnFromNamingScreen);
 
-        return FALSE; // script waits until naming screen returns
-    }
-
-    if (sCtfTerminalDone)
-    {
-        // Reset state for next terminal use.
-        sCtfTerminalActive = FALSE;
-        return TRUE;
-    }
-
-    return FALSE;
+    return TRUE; // One-shot native: der Script wartet über waitstate auf ScriptContext2_Disable()
 }

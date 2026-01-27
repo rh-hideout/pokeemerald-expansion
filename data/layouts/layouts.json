@@ -4430,6 +4430,16 @@
       "secondary_tileset": "gTileset_dhbw_gebaeude",
       "border_filepath": "data/layouts/Testmap/border.bin",
       "blockdata_filepath": "data/layouts/Testmap/map.bin"
+    },
+    {
+      "id": "LAYOUT_SONG_FLAG_ROOM",
+      "name": "SongFlagRoom_Layout",
+      "width": 19,
+      "height": 10,
+      "primary_tileset": "gTileset_SecretBase",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/SongFlagRoom/border.bin",
+      "blockdata_filepath": "data/layouts/SongFlagRoom/map.bin"
     }
   ]
 }

@@ -1167,3 +1167,5 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Klassenzimmer/scripts.inc"
 
 	.include "data/maps/Testmap/scripts.inc"
+
+	.include "data/maps/SongFlagRoom/scripts.inc"
