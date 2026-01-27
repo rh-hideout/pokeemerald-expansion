@@ -55,6 +55,8 @@ static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
 static void OWE_SetNewSpawnCountdown(void);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
+static bool32 OWE_CanEncounterBeLoaded_Palette(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
+static bool32 OWE_CanEncounterBeLoaded_Tiles(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 static bool32 OWE_DoesRoamerObjectExist(void);
@@ -195,8 +197,18 @@ static void OWE_SetNewSpawnCountdown(void)
         sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM + (OWE_SPAWN_TIME_PER_ACTIVE * numActive);
 }
 
-#define OWE_FIELD_EFFECT_TILE_NUM 16 // Number of tiiles to add for field effect spawning
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y)
+{
+    if (!OWE_CanEncounterBeLoaded_Palette(speciesId, isFemale, isShiny, x, y))
+        return FALSE;
+
+    if (!OWE_CanEncounterBeLoaded_Tiles(speciesId, isFemale, isShiny, x, y))
+        return FALSE;
+
+    return TRUE;
+}
+
+static bool32 OWE_CanEncounterBeLoaded_Palette(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y)
 {
     u32 numFreePalSlots = CountFreePaletteSlots();
     u32 tag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
@@ -222,6 +234,12 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
         return FALSE;
     }
 
+    return TRUE;
+}
+#define OWE_FIELD_EFFECT_TILE_NUM 16 // Number of tiiles to add for field effect spawning
+static bool32 OWE_CanEncounterBeLoaded_Tiles(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y)
+{
+    u32 tag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
     // const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(speciesId, isShiny, isFemale);
     const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(tag);
     tag = LoadSheetGraphicsInfo(graphicsInfo, tag, NULL);
@@ -250,7 +268,7 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     FreeSpriteTilesByTag(tag);
     return TRUE;
 }
-
+#undef OWE_FIELD_EFFECT_TILE_NUM
 static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn)
 {
     if (gMain.callback2 != CB2_Overworld)
