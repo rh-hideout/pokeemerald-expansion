@@ -247,6 +247,10 @@ inline u32 ChooseWildMonIndex(const struct WildPokemonInfo *encounterTable)
         index++;
         cumulativeWeight += encounterTable->wildPokemon[index].weight;
     }
+
+    if (LURE_STEP_COUNT != 0 && RandomPercentage(RNG_ENCOUNTER_LURE, 20))
+        index = encounterTable->numSlots - index - 1;
+
     return index;
 }
 
@@ -290,10 +294,7 @@ static u8 ChooseWildMonLevel(const struct WildPokemonInfo *wildMonInfo, u8 wildM
     {
         // Looks for the max level of all slots that share the same species as the selected slot.
         max = GetMaxLevelOfSpeciesInWildTable(wildMonInfo, wildMonInfo->wildPokemon[wildMonIndex].species);
-        if (max > 0)
-            return max + 1;
-        else // Failsafe
-            return wildMonInfo->wildPokemon[wildMonIndex].maxLevel + 1;
+        return max + 1;
     }
 }
 
@@ -456,9 +457,13 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
         wildMonIndex = ChooseWildMonIndex(wildMonInfo);
 
     level = ChooseWildMonLevel(wildMonInfo, wildMonIndex);
+
     if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(level))
         return FALSE;
-    if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && flags & WILD_CHECK_KEEN_EYE && !IsAbilityAllowingEncounter(level))
+
+    if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS
+        && flags & WILD_CHECK_KEEN_EYE
+        && !IsAbilityAllowingEncounter(level))
         return FALSE;
 
     CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
