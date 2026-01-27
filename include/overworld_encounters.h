@@ -88,8 +88,7 @@ enum __attribute__((packed)) OverworldEncounterBehaviors
     OWE_SPECIES_BEHAVIOR_COUNT
 };
 
-extern const u8 InteractWithDynamicWildOverworldEncounterInstant[];
-extern const u8 InteractWithDynamicWildOverworldEncounterApproach[];
+extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void);
 void UpdateOverworldEncounters(void);
@@ -104,13 +103,13 @@ bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldO
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
-u32 RemoveOldestOverworldEncounter(void);
-bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
+u32 RemoveOldestGeneratedOverworldEncounter(void);
+bool32 OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Object(u32 localId, u8 *objectEventId);
+void OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Palette(void);
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void OverworldWildEncounter_RemoveObjectOnBattle(void);
-bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
-void DespawnOldestOWE_Pal(void);
+bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, enum Direction direction);
 bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon);
 bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
@@ -124,6 +123,6 @@ u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
 struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim);
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent, u32 state);
-const u8 *OWE_GetScriptPointer(void);
+u32 OWE_GetWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 speed);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

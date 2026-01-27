@@ -1260,6 +1260,19 @@ static const u8 sOppositeDirections[] = {
     DIR_SOUTHEAST,
     DIR_SOUTHWEST,
 };
+// Should this and above be enum Direction?
+static const u8 sRotate90Direction[][2] =
+{
+    [DIR_NONE]      = { DIR_NONE,       DIR_NONE },
+    [DIR_SOUTH]     = { DIR_EAST,       DIR_WEST },
+    [DIR_NORTH]     = { DIR_WEST,       DIR_EAST },
+    [DIR_WEST]      = { DIR_SOUTH,      DIR_NORTH },
+    [DIR_EAST]      = { DIR_NORTH,      DIR_SOUTH },
+    [DIR_SOUTHWEST] = { DIR_SOUTHEAST,  DIR_NORTHWEST },
+    [DIR_SOUTHEAST] = { DIR_NORTHEAST,  DIR_SOUTHWEST },
+    [DIR_NORTHWEST] = { DIR_SOUTHWEST,  DIR_NORTHEAST },
+    [DIR_NORTHEAST] = { DIR_NORTHWEST,  DIR_SOUTHEAST },
+};
 
 // Takes the player's original and current facing direction to get the direction that should be considered to copy.
 // Note that this means an NPC who copies the player's movement changes how they copy them based on how
@@ -1526,7 +1539,7 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
             return TRUE;
     }
     if (i >= OBJECT_EVENTS_COUNT)
-        return TryAndRemoveOldestOverworldEncounter(localId, objectEventId);
+        return OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Object(localId, objectEventId);
     *objectEventId = i;
     for (; i < OBJECT_EVENTS_COUNT; i++)
     {
@@ -6802,6 +6815,15 @@ enum Direction GetOppositeDirection(enum Direction direction)
     return directions[direction - 1];
 }
 
+enum Direction GetNinetyDegreeDirection(enum Direction direction, bool32 clockwise)
+{
+    if (direction <= DIR_NONE || direction >= NELEMS(sRotate90Direction))
+        return DIR_NONE;
+
+    return sRotate90Direction[direction][clockwise];
+}
+
+
 // Takes the player's original and current direction and gives a direction the copy NPC should consider as the player's direction.
 // See comments at the table's definition.
 static u32 GetPlayerDirectionForCopy(u8 initDir, u8 moveDir)
@@ -9933,12 +9955,12 @@ bool32 AreElevationsCompatible(u32 a, u32 b)
     return TRUE;
 }
 
-void ScriptFaceLastTalked(struct ScriptContext *ctx)
+void ScriptFaceEachOther(struct ScriptContext *ctx)
 {
     struct ObjectEvent *player, *npc;
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
     npc = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
-    ObjectEventTurnToObject(player, npc);
+    ObjectEventsTurnToEachOther(player, npc);
 }
 
 enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
@@ -10024,7 +10046,7 @@ enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objec
     }
 }
 
-void ObjectEventTurnToObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
+void ObjectEventsTurnToEachOther(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
 {
     enum Direction objectDirOne, objectDirTwo;
 
@@ -11684,50 +11706,6 @@ u8 GetObjectEventApricornTreeId(u8 objectEventId)
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }
 
-static u32 TurnDirectionNinetyDegrees(u32 direction, bool32 counterclockwise)
-{
-    switch (direction)
-    {
-    case DIR_NORTH:
-        if (counterclockwise)
-            return DIR_WEST;
-        else
-            return DIR_EAST;
-    case DIR_SOUTH:
-        if (counterclockwise)
-            return DIR_EAST;
-        else
-            return DIR_WEST;
-    case DIR_EAST:
-        if (counterclockwise)
-            return DIR_NORTH;
-        else
-            return DIR_SOUTH;
-    case DIR_WEST:
-        if (counterclockwise)
-            return DIR_SOUTH;
-        else
-            return DIR_NORTH;
-    }
-
-    return DIR_NONE;
-}
-
-u8 GetWalkMovementActionInDirectionWithSpeed(u32 direction, u32 speed)
-{
-    switch (speed)
-    {
-    case OWE_SPEED_SLOW:
-        return GetWalkSlowMovementAction(direction);
-    case OWE_SPEED_FAST:
-        return GetWalkFastMovementAction(direction);
-    case OWE_SPEED_FASTER:
-        return GetWalkFasterMovementAction(direction);
-    }
-
-    return GetWalkNormalMovementAction(direction);
-}
-
 bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent)
 {
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
@@ -11777,7 +11755,7 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step4(struct ObjectEvent 
     u8 chosenDirection = objectEvent->movementDirection;
 
     if ((Random() & 3) != 0)
-        chosenDirection = TurnDirectionNinetyDegrees(chosenDirection, Random() & 2);
+        chosenDirection = GetNinetyDegreeDirection(chosenDirection, Random() % 2);
 
     SetObjectEventDirection(objectEvent, chosenDirection);
     sprite->sTypeFuncId = 5;
@@ -11789,7 +11767,7 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step4(struct ObjectEvent 
 
 bool8 MovementType_WanderAround_OverworldWildEncounter_Step5(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetIdleSpeedFromSpecies(OW_SPECIES(objectEvent))));
+    ObjectEventSetSingleMovement(objectEvent, sprite, OWE_GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetIdleSpeedFromSpecies(OW_SPECIES(objectEvent))));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 6;
     return TRUE;
@@ -11848,7 +11826,7 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent 
     u16 speciesId = OW_SPECIES(objectEvent);
     u8 movementActionId;
 
-    movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+    movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
     sprite->sTypeFuncId = 12;
 
     if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection))
@@ -11864,7 +11842,7 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent 
             return FALSE;
         }
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
-        movementActionId = GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+        movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
 
         if (OWE_CheckRestrictedMovement(objectEvent, newDirection))
             movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
@@ -11928,7 +11906,7 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
     u16 speciesId = OW_SPECIES(objectEvent);
     u8 movementActionId;
 
-    movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+    movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
 
     if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection))
     {
@@ -11937,7 +11915,7 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
         if (newDirection != objectEvent->movementDirection)
             newDirection = GetOppositeDirection(newDirection);
         
-        movementActionId = GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+        movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
 
         if (OWE_CheckRestrictedMovement(objectEvent, newDirection))
         {
@@ -12044,7 +12022,7 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
     if (distance <= 1)
     {
         SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
-        movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+        movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
         if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection))
         {
             struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -12052,7 +12030,7 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
             if (objectEvent->currentCoords.x != player->currentCoords.x && objectEvent->currentCoords.y != player->currentCoords.y)
                 newDirection = GetOppositeDirection(newDirection);
 
-            movementActionId = GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+            movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
             if (OWE_CheckRestrictedMovement(objectEvent, newDirection))
                 movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
         }
@@ -12073,7 +12051,7 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
     }
     else
     {
-        movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+        movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
 
         if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection))
         {
@@ -12088,7 +12066,7 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
                 return FALSE;
             }
             u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
-            movementActionId = GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+            movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
 
             if (OWE_CheckRestrictedMovement(objectEvent, newDirection))
                 movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);

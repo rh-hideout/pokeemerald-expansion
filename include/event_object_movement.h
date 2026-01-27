@@ -186,6 +186,7 @@ void InitObjectEventPalettes(u8 reflectionType);
 void UpdateObjectEventCurrentMovement(struct ObjectEvent *objectEvent, struct Sprite *sprite, bool8 (*callback)(struct ObjectEvent *, struct Sprite *));
 bool8 ObjectEventFaceOppositeDirection(struct ObjectEvent *objectEvent, enum Direction direction);
 enum Direction GetOppositeDirection(enum Direction direction);
+enum Direction GetNinetyDegreeDirection(enum Direction direction, bool32 clockwise);
 u8 GetWalkInPlaceFasterMovementAction(u32);
 u8 GetWalkInPlaceFastMovementAction(u32);
 u8 GetWalkInPlaceNormalMovementAction(u32);
@@ -273,7 +274,7 @@ u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female);
 u16 GetObjectEventFlagIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup);
 bool32 AreElevationsCompatible(u32, u32);
 enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo);
-void ObjectEventTurnToObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo);
+void ObjectEventsTurnToEachOther(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo);
 
 void MovementType_None(struct Sprite *sprite);
 void MovementType_LookAround(struct Sprite *sprite);
@@ -556,7 +557,6 @@ bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent);
 u8 GetObjectEventApricornTreeId(u8 objectEventId);
 
 bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent);
-u8 GetWalkMovementActionInDirectionWithSpeed(u32 direction, u32 speed);
 
 extern const enum Direction gStandardDirections[];
 

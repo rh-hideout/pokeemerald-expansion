@@ -400,12 +400,13 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
     gSpecialVar_Facing = direction;
 
+    DebugPrintf("shouldrunowescript=%d", ShouldRunOverworldEncounterScript(objectEventId));
     if (InTrainerHill() == TRUE)
         script = GetTrainerHillTrainerScript();
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
     else if (ShouldRunOverworldEncounterScript(objectEventId))
-        script = OWE_GetScriptPointer();
+        script = InteractWithDynamicWildOverworldEncounter;
     else
         script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
 
@@ -572,7 +573,7 @@ static const u8 *GetInteractedWaterScript(struct MapPosition *position, u8 metat
     if (IsPlayerFacingSurfableFishableWater() == TRUE && ShouldRunOverworldEncounterScript(objectEventId))
     {
         gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
-        return OWE_GetScriptPointer();
+        return InteractWithDynamicWildOverworldEncounter;
     }
 
     if (IsFieldMoveUnlocked(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
