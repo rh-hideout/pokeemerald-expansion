@@ -1880,6 +1880,76 @@ static bool32 BattleTest_CheckProgress(void *data)
     return madeProgress;
 }
 
+bool32 CheckSpeciesIsChanged(u32 species)
+{
+    bool32 type1Changed = FALSE;
+    bool32 type2Changed = FALSE;
+    bool32 ability0Changed = FALSE;
+    bool32 hpChanged = FALSE;
+    bool32 atkChanged = FALSE;
+    bool32 defChanged = FALSE;
+    bool32 spaChanged = FALSE;
+    bool32 spdChanged = FALSE;
+    bool32 speChanged = FALSE;
+    const struct SpeciesInfo *a = &gSpeciesInfo[species];
+    const struct TestSpeciesInfo *b = &gTestSpecies[species];
+
+    if (a->types[0] != b->types[0])
+        type1Changed = TRUE;
+
+    if (a->types[1] != b->types[1])
+        type2Changed = TRUE;
+
+    if (a->abilities[0] != b->abilities[0])
+        ability0Changed = TRUE;
+
+    if (a->baseHP != b->baseHP)
+        hpChanged = TRUE;
+
+    if (a->baseAttack != b->baseAttack)
+        atkChanged = TRUE;
+
+    if (a->baseDefense != b->baseDefense)
+        defChanged = TRUE;
+
+    if (a->baseSpAttack != b->baseSpAttack)
+        spaChanged = TRUE;
+
+    if (a->baseSpDefense != b->baseSpDefense)
+        spdChanged = TRUE;
+
+    if (a->baseSpeed != b->baseSpeed)
+        speChanged = TRUE;
+
+    if (type1Changed || type2Changed || ability0Changed
+     || hpChanged    || atkChanged   || defChanged
+     || spaChanged   || spdChanged   || speChanged)
+    {
+        Test_MgbaPrintf("\e[31m==== %S ====\e[0m", GetSpeciesName(species));
+        if (type1Changed)
+            Test_MgbaPrintf("\e[31mType 1 changed: %S to %S\e[0m", gTypesInfo[b->types[0]].name, gTypesInfo[a->types[0]].name);
+        if (type2Changed)
+            Test_MgbaPrintf("\e[31mType 2 changed: %S to %S\e[0m", gTypesInfo[b->types[1]].name, gTypesInfo[a->types[1]].name);
+        if (ability0Changed)
+            Test_MgbaPrintf("\e[31mAbility 0 changed: %S to %S\e[0m", gAbilitiesInfo[b->abilities[0]].name, gAbilitiesInfo[a->abilities[0]].name);
+        if (hpChanged)
+            Test_MgbaPrintf("\e[31mHP  changed: %d to %d\e[0m", b->baseHP, a->baseHP);
+        if (atkChanged)
+            Test_MgbaPrintf("\e[31mAtk changed: %d to %d\e[0m", b->baseAttack, a->baseAttack);
+        if (defChanged)
+            Test_MgbaPrintf("\e[31mDef changed: %d to %d\e[0m", b->baseDefense, a->baseDefense);
+        if (spaChanged)
+            Test_MgbaPrintf("\e[31mSpA changed: %d to %d\e[0m", b->baseSpAttack, a->baseSpAttack);
+        if (spdChanged)
+            Test_MgbaPrintf("\e[31mSpD changed: %d to %d\e[0m", b->baseSpDefense, a->baseSpDefense);
+        if (speChanged)
+            Test_MgbaPrintf("\e[31mSpe changed: %d to %d\e[0m", b->baseSpeed, a->baseSpeed);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 static bool32 BattleTest_HandleExitWithResult(void *data, enum TestResult result)
 {
     if (result != TEST_RESULT_ASSUMPTION_FAIL
@@ -1893,6 +1963,18 @@ static bool32 BattleTest_HandleExitWithResult(void *data, enum TestResult result
     }
     else
     {
+        //  Check if a species changed from upstream
+        for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+        {
+            u32 playerSpecies = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
+            u32 enemySpecies = GetMonData(&gEnemyParty[partyIndex], MON_DATA_SPECIES);
+
+            if (playerSpecies != SPECIES_NONE)
+                CheckSpeciesIsChanged(playerSpecies);
+
+            if (enemySpecies != SPECIES_NONE)
+                CheckSpeciesIsChanged(enemySpecies);
+        }
         return FALSE;
     }
 }
