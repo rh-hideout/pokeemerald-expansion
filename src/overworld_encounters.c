@@ -1016,7 +1016,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
         &indexRoamerOutbreak
     );
 
-    if (speciesTemplate)
+    if (speciesTemplate && gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         speciesId = speciesTemplate;
 
     assertf(OWE_CheckSpecies(speciesId), "invalid manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
@@ -1032,19 +1032,22 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     if (isShinyTemplate)
         isShiny = isShinyTemplate;
 
-    if (templateOWE.graphicsId & OBJ_EVENT_MON && templateOWE.graphicsId & OBJ_EVENT_MON_FEMALE)
-        isFemale = TRUE;
-    else if (templateOWE.graphicsId & OBJ_EVENT_MON)
-        isFemale = FALSE;
-    else
-        isFemale = GetGenderFromSpeciesAndPersonality(speciesId, Random32()) == MON_FEMALE;
-
-    if (levelTemplate)
-        level = levelTemplate;
-
-    assertf(level >= MIN_LEVEL && level <= MAX_LEVEL, "invalid manual overworld encounter\nlevel: %d\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", level, speciesId, x, y)
+    if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
     {
-        level = MIN_LEVEL;
+        if (templateOWE.graphicsId & OBJ_EVENT_MON && templateOWE.graphicsId & OBJ_EVENT_MON_FEMALE)
+            isFemale = TRUE;
+        else if (templateOWE.graphicsId & OBJ_EVENT_MON)
+            isFemale = FALSE;
+        else
+            isFemale = GetGenderFromSpeciesAndPersonality(speciesId, Random32()) == MON_FEMALE;
+
+        if (levelTemplate)
+            level = levelTemplate;
+
+        assertf(level >= MIN_LEVEL && level <= MAX_LEVEL, "invalid manual overworld encounter\nlevel: %d\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", level, speciesId, x, y)
+        {
+            level = MIN_LEVEL;
+        }
     }
 
     if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
