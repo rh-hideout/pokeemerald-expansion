@@ -837,7 +837,10 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             bool32 canUseWideGuard = (GetConfig(CONFIG_WIDE_GUARD) >= GEN_6 && protectMethod == PROTECT_WIDE_GUARD);
             bool32 canUseQuickGuard = (GetConfig(CONFIG_QUICK_GUARD) >= GEN_6 && protectMethod == PROTECT_QUICK_GUARD);
 
-            if (!canUseProtectSecondTime && !canUseWideGuard && !canUseQuickGuard)
+            if (!canUseProtectSecondTime 
+             && !canUseWideGuard 
+             && !canUseQuickGuard
+             && protectMethod != PROTECT_CRAFTY_SHIELD)
                 battleScript = BattleScript_ButItFailed;
         }
         if (battleScript != NULL)
@@ -1624,7 +1627,8 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     u32 temp = 0;
 
-    if (CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
+    if (gProtectStructs[gBattlerAttacker].chargingTurn
+     || CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
     {
         gBattleScripting.moveendState++;
         return result;
@@ -1685,8 +1689,8 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
 
     // Not strictly a protect effect, but works the same way
     if (IsBattlerUsingBeakBlast(gBattlerTarget)
-     && CanBeBurned(gBattlerAttacker, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
-     && !IsBattlerUnaffectedByMove(gBattlerTarget))
+     && IsBattlerTurnDamaged(gBattlerTarget)
+     && CanBeBurned(gBattlerAttacker, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)))
     {
         gBattleMons[gBattlerAttacker].status1 = STATUS1_BURN;
         BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].status1), &gBattleMons[gBattlerAttacker].status1);

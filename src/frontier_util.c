@@ -2643,8 +2643,6 @@ void CreateFrontierBrainPokemon(void)
                 friendship = 0;
         }
         SetMonData(&gParties[B_TRAINER_1][monPartyId], MON_DATA_FRIENDSHIP, &friendship);
-        j = FALSE;
-        SetMonData(&gParties[B_TRAINER_0][MULTI_PARTY_SIZE + i], MON_DATA_IS_SHINY, &j); // grintoul TO DO - was the original code here bugged?
         CalculateMonStats(&gParties[B_TRAINER_1][monPartyId]);
         monPartyId++;
     }

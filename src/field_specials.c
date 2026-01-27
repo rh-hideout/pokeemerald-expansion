@@ -150,7 +150,7 @@ static u8 DidPlayerGetFirstFans(void);
 static void SetInitialFansOfPlayer(void);
 static u16 PlayerGainRandomTrainerFan(void);
 static void CB2_ReturnToFieldWhileLearningMove(void);
-static void Task_ReturnToFieldWhileLearningMove(void);
+static void Task_ReturnToFieldWhileLearningMove(u8);
 #if FREE_LINK_BATTLE_RECORDS == FALSE
 static void BufferFanClubTrainerName_(struct LinkBattleRecords *, u8, u8);
 #else
@@ -4443,18 +4443,28 @@ void CanTeachMoveBoxMon(void)
     gTasks[taskId].tMove = gSpecialVar_0x8005;
 }
 
+static void FieldCB_ContinueLearningMove(void)
+{
+    LockPlayerFieldControls();
+    FadeInFromBlack();
+    CreateTask(Task_ReturnToFieldWhileLearningMove, 1);
+}
+
 static void CB2_ReturnToFieldWhileLearningMove(void)
 {
-    gFieldCallback = Task_ReturnToFieldWhileLearningMove;
+    gFieldCallback = FieldCB_ContinueLearningMove;
     CB2_ReturnToField();
 }
 
-static void Task_ReturnToFieldWhileLearningMove(void)
+static void Task_ReturnToFieldWhileLearningMove(u8 taskId)
 {
-    u32 taskId = CreateTask(Task_LearnMove, 1);
-    gTasks[taskId].tState = GetLearnMoveResumeAfterSummaryScreenState();
-    gTasks[taskId].tPartyIndex = gSpecialVar_0x8008;
-    gTasks[taskId].tMove = gSpecialVar_0x8009;
+    if (IsWeatherNotFadingIn() == TRUE)
+    {
+        gTasks[taskId].func = Task_LearnMove;
+        gTasks[taskId].tState = GetLearnMoveResumeAfterSummaryScreenState();
+        gTasks[taskId].tPartyIndex = gSpecialVar_0x8008;
+        gTasks[taskId].tMove = gSpecialVar_0x8009;
+    }
 }
 
 #undef tState
