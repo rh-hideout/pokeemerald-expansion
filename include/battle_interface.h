@@ -138,5 +138,6 @@ void UpdateAbilityPopup(u8 battlerId);
 void CategoryIcons_LoadSpritesGfx(void);
 void TryToAddMoveInfoWindow(void);
 void TryToHideMoveInfoWindow(void);
+void TryToHideMoveTypeIconSpriteWithDelay(u32 delay);
 
 #endif // GUARD_BATTLE_INTERFACE_H
