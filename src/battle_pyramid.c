@@ -1653,7 +1653,7 @@ u8 CurrentBattlePyramidLocation(void)
         return PYRAMID_LOCATION_NONE;
 }
 
-bool8 InBattlePyramid_(void)
+bool8 InBattlePyramid(void)
 {
     return gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR
         || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP;
