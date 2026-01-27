@@ -1260,6 +1260,19 @@ static const u8 sOppositeDirections[] = {
     DIR_SOUTHEAST,
     DIR_SOUTHWEST,
 };
+// Should this and above be enum Direction?
+static const u8 sRotate90Direction[][2] =
+{
+    [DIR_NONE]      = { DIR_NONE,       DIR_NONE },
+    [DIR_SOUTH]     = { DIR_EAST,       DIR_WEST },
+    [DIR_NORTH]     = { DIR_WEST,       DIR_EAST },
+    [DIR_WEST]      = { DIR_SOUTH,      DIR_NORTH },
+    [DIR_EAST]      = { DIR_NORTH,      DIR_SOUTH },
+    [DIR_SOUTHWEST] = { DIR_SOUTHEAST,  DIR_NORTHWEST },
+    [DIR_SOUTHEAST] = { DIR_NORTHEAST,  DIR_SOUTHWEST },
+    [DIR_NORTHWEST] = { DIR_SOUTHWEST,  DIR_NORTHEAST },
+    [DIR_NORTHEAST] = { DIR_NORTHWEST,  DIR_SOUTHEAST },
+};
 
 // Takes the player's original and current facing direction to get the direction that should be considered to copy.
 // Note that this means an NPC who copies the player's movement changes how they copy them based on how
@@ -6802,6 +6815,15 @@ enum Direction GetOppositeDirection(enum Direction direction)
     return directions[direction - 1];
 }
 
+enum Direction GetNinetyDegreeDirection(enum Direction direction, bool32 clockwise)
+{
+    if (direction <= DIR_NONE || direction >= NELEMS(sRotate90Direction))
+        return DIR_NONE;
+
+    return sRotate90Direction[direction][clockwise];
+}
+
+
 // Takes the player's original and current direction and gives a direction the copy NPC should consider as the player's direction.
 // See comments at the table's definition.
 static u32 GetPlayerDirectionForCopy(u8 initDir, u8 moveDir)
@@ -11684,35 +11706,6 @@ u8 GetObjectEventApricornTreeId(u8 objectEventId)
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }
 
-static u32 TurnDirectionNinetyDegrees(enum Direction direction, bool32 counterclockwise)
-{
-    switch (direction)
-    {
-    case DIR_NORTH:
-        if (counterclockwise)
-            return DIR_WEST;
-        else
-            return DIR_EAST;
-    case DIR_SOUTH:
-        if (counterclockwise)
-            return DIR_EAST;
-        else
-            return DIR_WEST;
-    case DIR_EAST:
-        if (counterclockwise)
-            return DIR_NORTH;
-        else
-            return DIR_SOUTH;
-    case DIR_WEST:
-        if (counterclockwise)
-            return DIR_SOUTH;
-        else
-            return DIR_NORTH;
-    }
-
-    return DIR_NONE;
-}
-
 bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent)
 {
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
@@ -11762,7 +11755,7 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step4(struct ObjectEvent 
     u8 chosenDirection = objectEvent->movementDirection;
 
     if ((Random() & 3) != 0)
-        chosenDirection = TurnDirectionNinetyDegrees(chosenDirection, Random() & 2);
+        chosenDirection = GetNinetyDegreeDirection(chosenDirection, Random() % 2);
 
     SetObjectEventDirection(objectEvent, chosenDirection);
     sprite->sTypeFuncId = 5;

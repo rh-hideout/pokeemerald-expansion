@@ -186,6 +186,7 @@ void InitObjectEventPalettes(u8 reflectionType);
 void UpdateObjectEventCurrentMovement(struct ObjectEvent *objectEvent, struct Sprite *sprite, bool8 (*callback)(struct ObjectEvent *, struct Sprite *));
 bool8 ObjectEventFaceOppositeDirection(struct ObjectEvent *objectEvent, enum Direction direction);
 enum Direction GetOppositeDirection(enum Direction direction);
+enum Direction GetNinetyDegreeDirection(enum Direction direction, bool32 clockwise);
 u8 GetWalkInPlaceFasterMovementAction(u32);
 u8 GetWalkInPlaceFastMovementAction(u32);
 u8 GetWalkInPlaceNormalMovementAction(u32);
