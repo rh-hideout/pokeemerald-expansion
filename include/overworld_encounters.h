@@ -108,7 +108,7 @@ bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void OverworldWildEncounter_RemoveObjectOnBattle(void);
-bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
+bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, enum Direction direction);
 void DespawnOldestOWE_Pal(void);
 bool32 OWE_CanAwareMonSeePlayer(struct ObjectEvent *mon);
 bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon);

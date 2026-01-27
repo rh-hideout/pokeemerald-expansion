@@ -11684,7 +11684,7 @@ u8 GetObjectEventApricornTreeId(u8 objectEventId)
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }
 
-static u32 TurnDirectionNinetyDegrees(u32 direction, bool32 counterclockwise)
+static u32 TurnDirectionNinetyDegrees(enum Direction direction, bool32 counterclockwise)
 {
     switch (direction)
     {

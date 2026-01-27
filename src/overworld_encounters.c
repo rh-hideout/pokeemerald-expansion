@@ -1120,7 +1120,7 @@ void OverworldWildEncounter_RemoveObjectOnBattle(void)
 }
 
 // Returns TRUE if movement is restricted.
-bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction)
+bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, enum Direction direction)
 {
     if (GetCollisionInDirection(objectEvent, direction))
         return TRUE;
