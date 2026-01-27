@@ -3122,7 +3122,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     ClearIllusionMon(battler);
     if (effect != EFFECT_BATON_PASS)
     {
-        for (u32 i = 0; i < NUM_BATTLE_STATS; i++)
+        for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
             gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
@@ -3267,7 +3267,7 @@ const u8* FaintClearSetData(enum BattlerId battler)
 {
     const u8 *result = NULL;
 
-    for (u32 i = 0; i < NUM_BATTLE_STATS; i++)
+    for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
     bool32 keepGastroAcid = gBattleMons[battler].volatiles.gastroAcid;

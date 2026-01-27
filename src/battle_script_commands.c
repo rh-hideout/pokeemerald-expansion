@@ -5488,7 +5488,7 @@ static void Cmd_openpartyscreen(void)
                 }
             }
 
-            for (enum BattlerId i = 0; i < 2; i++) // 2 was originally NUM_BATTLE_SIDES for some reason
+            for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT / 2; i++)
             {
                 if (!(gSpecialStatuses[i].faintedHasReplacement))
                 {
@@ -5515,7 +5515,7 @@ static void Cmd_openpartyscreen(void)
             if (IsDoubleBattle())
             {
                 hitmarkerFaintBits = gHitMarker >> 28;
-                for (enum BattlerId i = 0; i < 2; i++) // 2 was originally NUM_BATTLE_SIDES for some reason
+                for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT / 2; i++)
                 {
                     if ((1 << BATTLE_PARTNER(i)) & hitmarkerFaintBits && (1 << i) & hitmarkerFaintBits)
                     {
