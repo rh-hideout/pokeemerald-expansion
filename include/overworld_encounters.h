@@ -88,8 +88,7 @@ enum __attribute__((packed)) OverworldEncounterBehaviors
     OWE_SPECIES_BEHAVIOR_COUNT
 };
 
-extern const u8 InteractWithDynamicWildOverworldEncounterInstant[];
-extern const u8 InteractWithDynamicWildOverworldEncounterApproach[];
+extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void);
 void UpdateOverworldEncounters(void);
@@ -124,6 +123,5 @@ u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
 struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim);
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent, u32 state);
-const u8 *OWE_GetScriptPointer(void);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

@@ -160,7 +160,7 @@ void UpdateOverworldEncounters(void)
         .elevation = MapGridGetElevationAt(x, y),
         .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
         .trainerType = TRAINER_TYPE_ENCOUNTER,
-        .script = OWE_GetScriptPointer(),
+        .script = InteractWithDynamicWildOverworldEncounter,
     };
     u32 objectEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
@@ -998,7 +998,7 @@ bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
-    if (!IsOverworldWildEncounter(object, OWE_ANY) || GetObjectEventScriptPointerByObjectEventId(objectEventId) != OWE_GetScriptPointer())
+    if (!IsOverworldWildEncounter(object, OWE_ANY) || GetObjectEventScriptPointerByObjectEventId(objectEventId) != InteractWithDynamicWildOverworldEncounter)
         return FALSE;
 
     gSpecialVar_0x8004 = OW_SPECIES(object);
@@ -1068,7 +1068,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
         templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
 
     if (templateOWE.script == NULL)
-        templateOWE.script = OWE_GetScriptPointer();
+        templateOWE.script = InteractWithDynamicWildOverworldEncounter;
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
@@ -1542,7 +1542,7 @@ void OWE_StartEncounter(struct ObjectEvent *mon)
     if (mon->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_DOWN && mon->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_RIGHT)
         ClearObjectEventMovement(mon, &gSprites[mon->spriteId]);
 
-    ScriptContext_SetupScript(OWE_GetScriptPointer());
+    ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
 }
 
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent)
@@ -1620,21 +1620,18 @@ static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction 
     return TRUE;
 }
 
-const u8 *OWE_GetScriptPointer(void)
-{
-    if (OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
-        return InteractWithDynamicWildOverworldEncounterApproach;
-    else
-        return InteractWithDynamicWildOverworldEncounterInstant;
-}
-
-#define tObjectId   data[0]
-
+#define tObjectId data[0]
 void OWE_ApproachForBattle(void)
 {
-    u32 taskId = CreateTask(Task_OWE_ApproachForBattle, 2);
+    if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
+        return;
     
-    gTasks[taskId].tObjectId = GetObjectEventIdByLocalId(gSpecialVar_LastTalked);
+    u32 taskId = CreateTask(Task_OWE_ApproachForBattle, 2);
+    if (FindTaskIdByFunc(Task_OWE_ApproachForBattle) != TASK_NONE)
+    {
+        ScriptContext_Stop();
+        gTasks[taskId].tObjectId = GetObjectEventIdByLocalId(gSpecialVar_LastTalked);
+    }
 }
 
 static void Task_OWE_ApproachForBattle(u8 taskId)
@@ -1700,6 +1697,7 @@ static void Task_OWE_ApproachForBattle(u8 taskId)
     }
     
 }
+#undef tObjectId
 
 #undef sOverworldEncounterLevel
 #undef sAge
