@@ -7,9 +7,7 @@
 
 #define OWE_MAX_SPAWN_SLOTS   5
 
-#define OWE_MAX_LAND_SPAWNS         3
-#define OWE_MAX_WATER_SPAWNS        5
-#define OWE_MAX_CAVE_SPAWNS         4
+#define OWE_MAX_SPAWNS              4
 
 #define OWE_SPAWN_DISTANCE_LAND     1   // A spawn cannot happen within this many tiles of the player position.
 #define OWE_SPAWN_DISTANCE_WATER    3   // A spawn cannot happen within this many tiles of the player position (while surfing).
