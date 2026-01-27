@@ -1103,7 +1103,7 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
 
 static enum CancelerResult CancelerMoveSpecificMessage(struct BattleContext *ctx)
 {
-    switch(GetMoveEffect(ctx->move))
+    switch (GetMoveEffect(ctx->move))
     {
     case EFFECT_MAGNITUDE:
         CalculateMagnitudeDamage();
