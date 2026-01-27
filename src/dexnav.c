@@ -834,7 +834,6 @@ static void DexNavSearchBail(const u8 *script)
 {
     TRY_FREE_AND_SET_NULL(sDexNavSearchDataPtr);
     FlagClear(DN_FLAG_SEARCHING);
-    UnfreezeObjectEvents();
     FreeMonIconPalettes();
     ScriptContext_SetupScript(script);
 }
@@ -976,7 +975,6 @@ void EndDexNavSearch(void)
     FieldEffectStop(&gSprites[sDexNavSearchDataPtr->fldEffSpriteId], sDexNavSearchDataPtr->fldEffId);
     FREE_AND_SET_NULL(sDexNavSearchDataPtr);
     FlagClear(DN_FLAG_SEARCHING);
-    UnfreezeObjectEvents();
 }
 
 static void EndDexNavSearchSetupScript(const u8 *script)
@@ -1107,7 +1105,6 @@ bool32 OnStep_DexNavSearch(void)
         ScriptContext_SetupScript(EventScript_StartDexNavBattle);
         FREE_AND_SET_NULL(sDexNavSearchDataPtr);
         FlagClear(DN_FLAG_SEARCHING);
-        UnfreezeObjectEvents();
         return TRUE;
     }
 
@@ -2577,7 +2574,6 @@ bool32 TryFindHiddenPokemon(void)
         {
             FREE_AND_SET_NULL(sDexNavSearchDataPtr);
             FlagClear(DN_FLAG_SEARCHING);
-            UnfreezeObjectEvents();
             return FALSE;
         }
 
@@ -2586,7 +2582,6 @@ bool32 TryFindHiddenPokemon(void)
         {
             FREE_AND_SET_NULL(sDexNavSearchDataPtr);
             FlagClear(DN_FLAG_SEARCHING);
-            UnfreezeObjectEvents();
             return FALSE;
         }
 
