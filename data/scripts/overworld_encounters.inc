@@ -2,10 +2,10 @@ InteractWithDynamicWildOverworldEncounter::
     lockall
     callnative OWE_ApproachForBattle
     applymovement VAR_LAST_TALKED, Common_Movement_ExclamationMark
-    callnative ScriptFaceLastTalked
+    facetogether
     playmoncry VAR_0x8004, CRY_MODE_DOUBLES
     waitmoncry
-    special CreateOverworldWildEncounter
+    tryoverworldwildencounter
     waitstate
     end
 

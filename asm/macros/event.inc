@@ -2793,3 +2793,13 @@
 	callnative ScrCmd_setstartingstatus
 	.byte \status
 	.endm
+
+	@ Makes the player and selected object (if there is one) face one another.
+	.macro facetogether
+	callnative ScriptFaceEachOther
+	.endm
+
+	@ Starts an Overworld Wild Encounter with a selected object, if possible.
+	.macro tryoverworldwildencounter
+	callnative CreateOverworldWildEncounter
+	.endm

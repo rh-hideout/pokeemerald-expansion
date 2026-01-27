@@ -1816,7 +1816,7 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
     struct ObjectEvent *player, *follower;
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
     follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
-    ObjectEventTurnToObject(player, follower);
+    ObjectEventsTurnToEachOther(player, follower);
 }
 
 static const u8 *const FollowerNPCHideMovementsSpeedTable[][4] = 

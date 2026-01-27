@@ -9955,12 +9955,12 @@ bool32 AreElevationsCompatible(u32 a, u32 b)
     return TRUE;
 }
 
-void ScriptFaceLastTalked(struct ScriptContext *ctx)
+void ScriptFaceEachOther(struct ScriptContext *ctx)
 {
     struct ObjectEvent *player, *npc;
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
     npc = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
-    ObjectEventTurnToObject(player, npc);
+    ObjectEventsTurnToEachOther(player, npc);
 }
 
 enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
@@ -10046,7 +10046,7 @@ enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objec
     }
 }
 
-void ObjectEventTurnToObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
+void ObjectEventsTurnToEachOther(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
 {
     enum Direction objectDirOne, objectDirTwo;
 

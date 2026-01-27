@@ -514,10 +514,7 @@ void CreateOverworldWildEncounter(void)
     struct ObjectEvent *object = &gObjectEvents[objEventId];
     u32 indexRoamerOutbreak = object->sRoamerOutbreakStatus;
 
-    if (objEventId >= OBJECT_EVENTS_COUNT)
-        return;
-
-    if (!IsOverworldWildEncounter(object, OWE_ANY))
+    if (objEventId >= OBJECT_EVENTS_COUNT || !IsOverworldWildEncounter(object, OWE_ANY))
         return;
 
     if (indexRoamerOutbreak && CreateOverworldWildEncounter_CheckRoamer(OWE_GetObjectRoamerOutbreakStatus(object)))
