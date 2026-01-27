@@ -167,7 +167,7 @@ void UpdateOverworldEncounters(void)
     u32 objectEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
     if (OWE_ShouldDespawnGeneratedForNewOWE(object))
-        RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+        RemoveObjectEvent(object);
     objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
     assertf(objectEventId < OBJECT_EVENTS_COUNT, "could not spawn generated overworld encounter. too many object events exist")
@@ -890,7 +890,7 @@ void RemoveAllGeneratedOverworldEncounterObjects(void)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
         if (IsOverworldWildEncounter(obj, OWE_GENERATED) && obj->active)
-            RemoveObjectEventByLocalIdAndMap(obj->localId, obj->mapNum, obj->mapGroup);
+            RemoveObjectEvent(obj);
     }
 }
 
@@ -1012,11 +1012,8 @@ u32 RemoveOldestGeneratedOverworldEncounter(void)
     if (oldestSlot == INVALID_SPAWN_SLOT)
         return OBJECT_EVENTS_COUNT;
 
-    u32 localId = GetLocalIdByOverworldSpawnSlot(oldestSlot);
-    u32 objectEventId = GetObjectEventIdByLocalId(localId);
-    struct ObjectEvent *object = &gObjectEvents[objectEventId];
-
-    RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+    u32 objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(oldestSlot));
+    RemoveObjectEvent(&gObjectEvents[objectEventId]);
     return objectEventId;
 }
 
@@ -1123,7 +1120,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     if (wildMon->sRoamerOutbreakStatus && !IsRoamerAt(OWE_GetObjectRoamerOutbreakStatus(wildMon),
         gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
-        RemoveObjectEventByLocalIdAndMap(wildMon->localId, wildMon->mapNum, wildMon->mapGroup);
+        RemoveObjectEvent(wildMon);
         return;
     }
 
@@ -1132,12 +1129,10 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 
 void OverworldWildEncounter_RemoveObjectOnBattle(void)
 {
-    u32 localId = gSpecialVar_LastTalked;
-    struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(localId)];
-    
+    struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
     if (IsOverworldWildEncounter(object, OWE_ANY))
     {
-        RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+        RemoveObjectEvent(object);
         OWE_SetNewSpawnCountdown();
         gSpecialVar_LastTalked = LOCALID_NONE;
     }
@@ -1555,7 +1550,7 @@ bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct Obj
     if (!IsOverworldWildEncounter(curObject, OWE_GENERATED) || IsOverworldWildEncounter(objectEvent, OWE_ANY) || objectEvent->isPlayer)
         return FALSE;
 
-    RemoveObjectEventByLocalIdAndMap(curObject->localId, curObject->mapNum, curObject->mapGroup);
+    RemoveObjectEvent(curObject);
     return TRUE;
 }
 
@@ -1568,7 +1563,7 @@ u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y)
     if (!IsOverworldWildEncounter(objectEvent, OWE_GENERATED))
         return collision;
 
-    RemoveObjectEventByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup);
+    RemoveObjectEvent(objectEvent);
     return collision & (1 << (COLLISION_OBJECT_EVENT - 1));
 }
 
