@@ -5,7 +5,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gSpeciesInfo[SPECIES_CLEFFA].catchRate == 150);
+    ASSUME(GetSpeciesCatchRate(SPECIES_CLEFFA) == 150);
 }
 
 WILD_BATTLE_TEST("Capture: Incapacitated catch bonus apply correcly with all gen configs")
@@ -152,7 +152,7 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, capture of
     PARAMETRIZE(item = ITEM_MASTER_BALL, alreadyOwned = TRUE);
 
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_CATERPIE].catchRate > 155);
+        ASSUME(GetSpeciesCatchRate(SPECIES_CATERPIE) > 155);
         if (alreadyOwned)
             GetSetPokedexFlag(SPECIES_CATERPIE, FLAG_SET_CAUGHT);
         WITH_CONFIG(CONFIG_MISSING_BADGE_CATCH_MALUS, GEN_7);

@@ -391,7 +391,7 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
     chorus = 0;
 
     // If we're not using extra mega cries, we need to modify the cry mode for mega evolutions.
-    if (!P_MODIFIED_MEGA_CRIES && gSpeciesInfo[species].isMegaEvolution)
+    if (!P_MODIFIED_MEGA_CRIES && IsSpeciesMegaEvolution(species))
         mode = P_MODIFIED_MEGA_CRY_MODE;
 
     switch (mode)
@@ -478,11 +478,14 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
     SetPokemonCryChorus(chorus);
     SetPokemonCryPriority(priority);
 
-    enum PokemonCry cryId = GetCryIdBySpecies(species);
-    if (cryId != CRY_NONE)
+    if (!gTestRunnerHeadless)
     {
-        cryId--;
-        gMPlay_PokemonCry = SetPokemonCryTone(reverse ? &gCryTable_Reverse[cryId] : &gCryTable[cryId]);
+        enum PokemonCry cryId = GetSpeciesCryId(species);
+        if (cryId != CRY_NONE)
+        {
+            cryId--;
+            gMPlay_PokemonCry = SetPokemonCryTone(reverse ? &gCryTable_Reverse[cryId] : &gCryTable[cryId]);
+        }
     }
 }
 

@@ -96,6 +96,8 @@ struct GFRomHeader
     u32 unk20;
 };
 
+#undef gSpeciesInfo // Allowed to be called from here
+
 // This seems to need to be in the text section for some reason.
 // To avoid a changed section attributes warning it's put in a special .text.header_gf section.
 __attribute__((section(".text.header_gf"))) USED static const struct GFRomHeader sGFRomHeader = {

@@ -321,7 +321,7 @@ void ToggleGigantamaxFactor(struct ScriptContext *ctx)
     {
         bool32 gigantamaxFactor;
 
-        if (gSpeciesInfo[SanitizeSpeciesId(GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES))].isMythical)
+        if (IsSpeciesMythical(GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES)))
             return;
 
         gigantamaxFactor = GetMonData(&gPlayerParty[partyIndex], MON_DATA_GIGANTAMAX_FACTOR);
@@ -541,16 +541,17 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     }
 
     // Perfect IV calculation
-    if (gSpeciesInfo[species].perfectIVCount != 0)
+    u32 perfectIVCount = GetSpeciesPerfectIVCount(species);
+    if (perfectIVCount != 0)
     {
         // Select the IVs that will be perfected.
-        for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
+        for (i = 0; i < nonFixedIvCount && i < perfectIVCount; i++)
         {
             u8 index = Random() % (nonFixedIvCount - i);
             selectedIvs[i] = availableIVs[index];
             RemoveIVIndexFromList(availableIVs, index);
         }
-        for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
+        for (i = 0; i < nonFixedIvCount && i < perfectIVCount; i++)
         {
             ivs[selectedIvs[i]] = MAX_PER_STAT_IVS;
         }

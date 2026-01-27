@@ -1848,7 +1848,7 @@ u32 GetBattlerAffectionHearts(u32 battler)
 
     if (!IsOnPlayerSide(battler))
         return AFFECTION_NO_HEARTS;
-    else if (gSpeciesInfo[species].isMegaEvolution
+    else if (IsSpeciesMegaEvolution(species)
           || (gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
                                 | BATTLE_TYPE_FRONTIER
                                 | BATTLE_TYPE_LINK
@@ -8733,7 +8733,7 @@ bool32 IsBattlerMegaEvolved(u32 battler)
     // While Transform does copy stats and visuals, it shouldn't be counted as true Mega Evolution.
     if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
-    return (gSpeciesInfo[gBattleMons[battler].species].isMegaEvolution);
+    return (IsSpeciesMegaEvolution(gBattleMons[battler].species));
 }
 
 bool32 IsBattlerPrimalReverted(u32 battler)
@@ -8741,7 +8741,7 @@ bool32 IsBattlerPrimalReverted(u32 battler)
     // While Transform does copy stats and visuals, it shouldn't be counted as true Primal Revesion.
     if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
-    return (gSpeciesInfo[gBattleMons[battler].species].isPrimalReversion);
+    return (IsSpeciesPrimalReversion(gBattleMons[battler].species));
 }
 
 bool32 IsBattlerUltraBursted(u32 battler)
@@ -8749,7 +8749,7 @@ bool32 IsBattlerUltraBursted(u32 battler)
     // While Transform does copy stats and visuals, it shouldn't be counted as true Ultra Burst.
     if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
-    return (gSpeciesInfo[gBattleMons[battler].species].isUltraBurst);
+    return (IsSpeciesUltraBurst(gBattleMons[battler].species));
 }
 
 bool32 IsBattlerInTeraForm(u32 battler)
@@ -8757,7 +8757,7 @@ bool32 IsBattlerInTeraForm(u32 battler)
     // While Transform does copy stats and visuals, it shouldn't be counted as a true Tera Form.
     if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
-    return (gSpeciesInfo[gBattleMons[battler].species].isTeraForm);
+    return (IsSpeciesTeraForm(gBattleMons[battler].species));
 }
 
 // Returns SPECIES_NONE if no form change is possible
@@ -9016,7 +9016,7 @@ bool32 CanBattlerGetOrLoseItem(u32 fromBattler, u32 battler, enum Item itemId)
     else if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return FALSE;
     else if (holdEffect == HOLD_EFFECT_BOOSTER_ENERGY
-         && (gSpeciesInfo[gBattleMons[fromBattler].species].isParadox || gSpeciesInfo[gBattleMons[battler].species].isParadox))
+         && (IsSpeciesParadox(gBattleMons[fromBattler].species) || IsSpeciesParadox(gBattleMons[battler].species)))
         return FALSE;
     else
         return TRUE;
@@ -9853,7 +9853,7 @@ bool32 CanMonParticipateInSkyBattle(struct Pokemon *mon)
 
     if (monIsValidAndNotEgg)
     {
-        if ((hasLevitateAbility || isFlyingType) && !gSpeciesInfo[species].isSkyBattleBanned)
+        if ((hasLevitateAbility || isFlyingType) && !IsSpeciesSkyBattleBanned(species))
             return TRUE;
     }
     return FALSE;

@@ -1833,13 +1833,13 @@ void ModifyPersonalityForNature(u32 *personality, u32 newNature)
 
 u32 GeneratePersonalityForGender(u32 gender, u32 species)
 {
-    const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
+    u8 genderRatio = GetSpeciesGenderRatio(species);
     if (gender == MON_GENDERLESS)
         return 0;
     else if (gender == MON_MALE)
-        return ((255 - speciesInfo->genderRatio) / 2) + speciesInfo->genderRatio;
+        return ((255 - genderRatio) / 2) + genderRatio;
     else
-        return speciesInfo->genderRatio / 2;
+        return genderRatio / 2;
 }
 
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry)
@@ -1939,20 +1939,17 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             if (partyData[monIndex].ability != ABILITY_NONE)
             {
-                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[monIndex].species];
-                u32 maxAbilityNum = ARRAY_COUNT(speciesInfo->abilities);
-                for (abilityNum = 0; abilityNum < maxAbilityNum; ++abilityNum)
+                for (abilityNum = 0; abilityNum < NUM_ABILITY_SLOTS; ++abilityNum)
                 {
-                    if (speciesInfo->abilities[abilityNum] == partyData[monIndex].ability)
+                    if (GetSpeciesAbility(partyData[monIndex].species, abilityNum) == partyData[monIndex].ability)
                         break;
                 }
-                assertf(abilityNum < maxAbilityNum, "illegal ability %S for %S", gAbilitiesInfo[partyData[monIndex].ability].name, speciesInfo->speciesName);
+                assertf(abilityNum < NUM_ABILITY_SLOTS, "illegal ability %S for %S", gAbilitiesInfo[partyData[monIndex].ability].name, GetSpeciesName(partyData[monIndex].species));
             }
             else if (B_TRAINER_MON_RANDOM_ABILITY)
             {
-                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[monIndex].species];
-                abilityNum = personalityHash % 3;
-                while (speciesInfo->abilities[abilityNum] == ABILITY_NONE)
+                abilityNum = personalityHash % NUM_ABILITY_SLOTS;
+                while (GetSpeciesAbility(partyData[monIndex].species, abilityNum) == ABILITY_NONE)
                 {
                     abilityNum--;
                 }
@@ -2697,7 +2694,7 @@ void SpriteCB_FaintOpponentMon(struct Sprite *sprite)
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)
         species = GetUnownSpeciesId(personality);
-    yOffset = gSpeciesInfo[species].frontPicYOffset;
+    yOffset = GetSpeciesFrontPicYOffset(species);
 
     sprite->data[3] = 8 - yOffset / 8;
     sprite->data[4] = 1;
@@ -3072,7 +3069,7 @@ static void BattleStartClearSetData(void)
     gBattleStruct->runTries = 0;
     gBattleStruct->safariGoNearCounter = 0;
     gBattleStruct->safariPkblThrowCounter = 0;
-    gBattleStruct->safariCatchFactor = gSpeciesInfo[GetMonData(&gEnemyParty[0], MON_DATA_SPECIES)].catchRate * 100 / 1275;
+    gBattleStruct->safariCatchFactor = GetSpeciesCatchRate(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES)) * 100 / 1275;
     gBattleStruct->safariEscapeFactor = 3;
     gBattleStruct->wildVictorySong = 0;
     gBattleStruct->moneyMultiplier = 1;

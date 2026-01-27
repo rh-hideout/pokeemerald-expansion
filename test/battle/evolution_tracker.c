@@ -3,9 +3,10 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gSpeciesInfo[SPECIES_BISHARP].evolutions[0].params->condition == IF_DEFEAT_X_WITH_ITEMS);
-    ASSUME(gSpeciesInfo[SPECIES_BISHARP].evolutions[0].params->arg1 == SPECIES_BISHARP);
-    ASSUME(gSpeciesInfo[SPECIES_BISHARP].evolutions[0].params->arg2 == ITEM_LEADERS_CREST);
+    const struct Evolution* evolutions = GetSpeciesEvolutions(SPECIES_BISHARP);
+    ASSUME(evolutions[0].params->condition == IF_DEFEAT_X_WITH_ITEMS);
+    ASSUME(evolutions[0].params->arg1 == SPECIES_BISHARP);
+    ASSUME(evolutions[0].params->arg2 == ITEM_LEADERS_CREST);
 }
 
 WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader's Crest increases tracker")

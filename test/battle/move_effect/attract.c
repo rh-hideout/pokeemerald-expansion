@@ -4,8 +4,8 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_ATTRACT) == EFFECT_ATTRACT);
-    ASSUME(gSpeciesInfo[SPECIES_NIDOKING].genderRatio == MON_MALE);
-    ASSUME(gSpeciesInfo[SPECIES_NIDOQUEEN].genderRatio == MON_FEMALE);
+    ASSUME(GetSpeciesGenderRatio(SPECIES_NIDOKING) == MON_MALE);
+    ASSUME(GetSpeciesGenderRatio(SPECIES_NIDOQUEEN) == MON_FEMALE);
 }
 
 SINGLE_BATTLE_TEST("Attract causes the target to become infatuated with the user if they have opposite genders")
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Attract fails when used on a Pokémon of the same gender")
 SINGLE_BATTLE_TEST("Attract fails when used on a genderless Pokémon")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_STARMIE].genderRatio == MON_GENDERLESS);
+        ASSUME(GetSpeciesGenderRatio(SPECIES_STARMIE) == MON_GENDERLESS);
         PLAYER(SPECIES_NIDOQUEEN);
         OPPONENT(SPECIES_STARMIE);
     } WHEN {

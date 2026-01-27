@@ -5108,11 +5108,9 @@ static u16 TryLoadMonIconTiles(u16 species, u32 personality, bool32 isEgg)
 {
     u16 i, offset;
 
-#if P_GENDER_DIFFERENCES
     // Treat female mons as a seperate species as they may have a different icon than males
-    if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
+    if (SpeciesHasGenderDifferences(species) && IsPersonalityFemale(species, personality))
         species |= (1 << 15);
-#endif
 
     // Search icon list for this species
     for (i = 0; i < MAX_MON_ICONS; i++)
@@ -5180,20 +5178,18 @@ static struct Sprite *CreateMonIconSprite(u16 species, u32 personality, s16 x, s
     species = GetIconSpecies(species, personality);
     if (isEgg)
     {
-        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
-            template.paletteTag = PALTAG_MON_ICON_0 + gEggDatas[gSpeciesInfo[species].eggId].eggIconPalIndex;
+        if (GetSpeciesEggId(species) != EGG_ID_NONE)
+            template.paletteTag = PALTAG_MON_ICON_0 + gEggDatas[GetSpeciesEggId(species)].eggIconPalIndex;
         else
-            template.paletteTag = PALTAG_MON_ICON_0 + gSpeciesInfo[SPECIES_EGG].iconPalIndex;
+            template.paletteTag = PALTAG_MON_ICON_0 + GetSpeciesIconPalIndex(SPECIES_EGG);
     }
-#if P_GENDER_DIFFERENCES
-    else if (gSpeciesInfo[species].iconSpriteFemale != NULL && IsPersonalityFemale(species, personality))
+    else if (IsPersonalityFemale(species, personality))
     {
-        template.paletteTag = PALTAG_MON_ICON_0 + gSpeciesInfo[species].iconPalIndexFemale;
+        template.paletteTag = PALTAG_MON_ICON_0 + GetSpeciesIconPalIndexFemale(species);
     }
-#endif
     else
     {
-        template.paletteTag = PALTAG_MON_ICON_0 + gSpeciesInfo[species].iconPalIndex;
+        template.paletteTag = PALTAG_MON_ICON_0 + GetSpeciesIconPalIndex(species);
     }
 
     tileNum = TryLoadMonIconTiles(species, personality, isEgg);
@@ -8545,7 +8541,7 @@ static void MultiMove_SetIconToBg(u8 x, u8 y)
     if (species != SPECIES_NONE)
     {
         const u8 *iconGfx = GetMonIconPtrIsEgg(species, personality, isEgg);
-        u8 index = GetValidMonIconPalIndex(species) + 8;
+        u8 index = GetSpeciesIconPalIndex(species);
 
         BlitBitmapRectToWindow4BitTo8Bit(sStorage->multiMoveWindowId,
                                          iconGfx,

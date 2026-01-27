@@ -2,10 +2,9 @@
 #define GUARD_POKEMON_H
 
 #include "contest_effect.h"
+#include "species_info.h"
 #include "sprite.h"
 #include "constants/battle.h"
-#include "constants/cries.h"
-#include "constants/egg_ids.h"
 #include "constants/form_change_types.h"
 #include "constants/hold_effects.h"
 #include "constants/items.h"
@@ -14,7 +13,6 @@
 #include "constants/region_map_sections.h"
 #include "constants/map_groups.h"
 #include "constants/battle.h"
-#include "constants/abilities.h"
 #include "contest_effect.h"
 #include "constants/trainers.h"
 
@@ -371,154 +369,6 @@ struct BattlePokemon
     /*0x62*/ bool8 isShiny;
 };
 
-struct EvolutionParam
-{
-    u16 condition;
-    u16 arg1;
-    u16 arg2;
-    u16 arg3;
-};
-
-struct Evolution
-{
-    u16 method;
-    u16 param;
-    u16 targetSpecies;
-    const struct EvolutionParam *params;
-};
-
-struct SpeciesInfo /*0xC4*/
-{
-    u8 baseHP;
-    u8 baseAttack;
-    u8 baseDefense;
-    u8 baseSpeed;
-    u8 baseSpAttack;
-    u8 baseSpDefense;
-    enum Type types[2];
-    u8 catchRate;
-    u8 forceTeraType;
-    u16 expYield; // expYield was changed from u8 to u16 for the new Exp System.
-    u16 evYield_HP:2;
-    u16 evYield_Attack:2;
-    u16 evYield_Defense:2;
-    u16 evYield_Speed:2;
-    u16 evYield_SpAttack:2;
-    u16 evYield_SpDefense:2;
-    u16 padding2:4;
-    enum Item itemCommon;
-    enum Item itemRare;
-    u8 genderRatio;
-    u8 eggCycles;
-    u8 friendship;
-    u8 growthRate;
-    u8 eggGroups[2];
-    enum Ability abilities[NUM_ABILITY_SLOTS]; // 3 abilities, no longer u8 because we have over 255 abilities now.
-    u8 safariZoneFleeRate;
-
-    // Pokédex data
-    u8 categoryName[13];
-    u8 speciesName[POKEMON_NAME_LENGTH + 1];
-    enum PokemonCry cryId:16;
-    enum NationalDexOrder natDexNum:16;
-    u16 height; //in decimeters
-    u16 weight; //in hectograms
-    u16 pokemonScale;
-    u16 pokemonOffset;
-    u16 trainerScale;
-    u16 trainerOffset;
-    const u8 *description;
-    enum BodyColor bodyColor:7;
-    // Graphical Data
-    u8 noFlip:1;
-    u8 frontAnimDelay;
-    u8 frontAnimId;
-    u8 backAnimId;
-    const union AnimCmd *const *frontAnimFrames;
-    const u32 *frontPic;
-    const u32 *backPic;
-    const u16 *palette;
-    const u16 *shinyPalette;
-    const u8 *iconSprite;
-#if P_GENDER_DIFFERENCES
-    const u32 *frontPicFemale;
-    const u32 *backPicFemale;
-    const u16 *paletteFemale;
-    const u16 *shinyPaletteFemale;
-    const u8 *iconSpriteFemale;
-#endif //P_GENDER_DIFFERENCES
-#if P_FOOTPRINTS
-    const u8 *footprint;
-#endif
-    // All Pokémon pics are 64x64, but this data table defines where in this 64x64 frame the sprite's non-transparent pixels actually are.
-    u8 frontPicSize; // The dimensions of this drawn pixel area.
-    u8 frontPicYOffset; // The number of pixels between the drawn pixel area and the bottom edge.
-    u8 backPicSize; // The dimensions of this drawn pixel area.
-    u8 backPicYOffset; // The number of pixels between the drawn pixel area and the bottom edge.
-#if P_GENDER_DIFFERENCES
-    u8 frontPicSizeFemale; // The dimensions of this drawn pixel area.
-    u8 backPicSizeFemale; // The dimensions of this drawn pixel area.
-#endif //P_GENDER_DIFFERENCES
-    u8 iconPalIndex:3;
-#if P_GENDER_DIFFERENCES
-    u8 iconPalIndexFemale:3;
-#else
-    u8 paddingF:3;
-#endif //P_GENDER_DIFFERENCES
-    u8 pokemonJumpType:2; // According to the clerk, the Pokémon allowed in Pokémon Jump are all <= 28 inches/71 cm, and do not only swim, burrow, or fly.
-    u8 enemyMonElevation; // This determines how much higher above the usual position the enemy Pokémon is during battle. Species that float or fly have nonzero values.
-    // Flags
-    u32 isRestrictedLegendary:1;
-    u32 isSubLegendary:1;
-    u32 isMythical:1;
-    u32 isUltraBeast:1;
-    u32 isParadox:1;
-    u32 isTotem:1;
-    u32 isMegaEvolution:1;
-    u32 isPrimalReversion:1;
-    u32 isUltraBurst:1;
-    u32 isGigantamax:1;
-    u32 isTeraForm:1;
-    u32 isAlolanForm:1;
-    u32 isGalarianForm:1;
-    u32 isHisuianForm:1;
-    u32 isPaldeanForm:1;
-    u32 cannotBeTraded:1;
-    u32 perfectIVCount:3;   // This species will always generate with the specified amount of perfect IVs.
-    u32 dexForceRequired:1; // This species will be taken into account for Pokédex ratings even if they have the "isMythical" flag set.
-    u32 teachingType:1; // Not used in the ROM but used in compilation (check constants/teaching_types.h for explanations)
-    u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
-    u32 isSkyBattleBanned:1;
-    u32 padding4:9;
-    // Shadow settings
-    s8 enemyShadowXOffset; // This determines the X-offset for an enemy Pokémon's shadow during battle; negative values point left, positive values point right.
-    s8 enemyShadowYOffset; // This determines the Y-offset for an enemy Pokémon's shadow during battle; negative values point up, positive values point down.
-    u16 enemyShadowSize:3; // This determines the size of the shadow sprite used for an enemy Pokémon's front sprite during battle.
-    u16 suppressEnemyShadow:1; // If set to true, then a shadow will not be drawn beneath an enemy Pokémon's front sprite during battle.
-    enum EggIds eggId:12;
-    // Move Data
-    const struct LevelUpMove *levelUpLearnset;
-    const u16 *teachableLearnset;
-    const u16 *eggMoveLearnset;
-    const struct Evolution *evolutions;
-    const u16 *formSpeciesIdTable;
-    const struct FormChange *formChangeTable;
-#if OW_POKEMON_OBJECT_EVENTS
-    struct ObjectEventGraphicsInfo overworldData;
-#if P_GENDER_DIFFERENCES
-    struct ObjectEventGraphicsInfo overworldDataFemale;
-#endif //P_GENDER_DIFFERENCES
-#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const void* overworldPalette;
-    const void* overworldShinyPalette;
-#if P_GENDER_DIFFERENCES
-    const void* overworldPaletteFemale;
-    const void* overworldShinyPaletteFemale;
-#endif //P_GENDER_DIFFERENCES
-#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
-#endif //OW_POKEMON_OBJECT_EVENTS
-};
-
 struct EggData
 {
     const u8 *eggIcon;
@@ -693,7 +543,6 @@ extern u32 removeBagItemCount;
 
 extern const u16 gFacilityClassToPicIndex[];
 extern const enum TrainerClassID gFacilityClassToTrainerClass[];
-extern const struct SpeciesInfo gSpeciesInfo[];
 extern const u32 gExperienceTables[][MAX_LEVEL + 1];
 extern const u8 gPPUpGetMask[];
 extern const u8 gPPUpClearMask[];
@@ -783,26 +632,6 @@ enum TrainerPicID GetSecretBaseTrainerPicIndex(void);
 enum TrainerClassID GetSecretBaseTrainerClass(void);
 bool8 IsPlayerPartyAndPokemonStorageFull(void);
 bool8 IsPokemonStorageFull(void);
-const u8 *GetSpeciesName(u16 species);
-const u8 *GetSpeciesCategory(u16 species);
-const u8 *GetSpeciesPokedexDescription(u16 species);
-u32 GetSpeciesHeight(u16 species);
-u32 GetSpeciesWeight(u16 species);
-enum Type GetSpeciesType(u16 species, u8 slot);
-enum Ability GetSpeciesAbility(u16 species, u8 slot);
-u32 GetSpeciesBaseHP(u16 species);
-u32 GetSpeciesBaseAttack(u16 species);
-u32 GetSpeciesBaseDefense(u16 species);
-u32 GetSpeciesBaseSpAttack(u16 species);
-u32 GetSpeciesBaseSpDefense(u16 species);
-u32 GetSpeciesBaseSpeed(u16 species);
-u32 GetSpeciesBaseStat(u16 species, u32 statIndex);
-const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species);
-const u16 *GetSpeciesTeachableLearnset(u16 species);
-const u16 *GetSpeciesEggMoves(u16 species);
-const struct Evolution *GetSpeciesEvolutions(u16 species);
-const u16 *GetSpeciesFormTable(u16 species);
-const struct FormChange *GetSpeciesFormChanges(u16 species);
 u8 CalculatePPWithBonus(enum Move move, u8 ppBonuses, u8 moveIndex);
 void RemoveMonPPBonus(struct Pokemon *mon, u8 moveIndex);
 void RemoveBoxMonPPBonus(struct BoxPokemon *mon, u8 moveIndex);
@@ -822,7 +651,6 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon);
 u16 NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum);
 enum HoennDexOrder NationalToHoennOrder(enum NationalDexOrder nationalNum);
-enum NationalDexOrder SpeciesToNationalPokedexNum(u16 species);
 enum HoennDexOrder SpeciesToHoennPokedexNum(u16 species);
 enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum);
 void DrawSpindaSpots(u32 personality, u8 *dest, bool32 isSecondFrame);
@@ -852,7 +680,6 @@ const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFema
 const u16 *GetMonSpritePalFromSpeciesIsEgg(u16 species, bool32 isShiny, bool32 isFemale, bool32 isEgg);
 bool32 IsMoveHM(enum Move move);
 bool32 CannotForgetMove(enum Move move);
-bool8 IsMonSpriteNotFlipped(u16 species);
 s8 GetMonFlavorRelation(struct Pokemon *mon, enum Flavor flavor);
 s8 GetFlavorRelationByPersonality(u32 personality, enum Flavor flavor);
 bool8 IsTradedMon(struct Pokemon *mon);
@@ -885,16 +712,12 @@ bool32 DoesSpeciesHaveFormChangeMethod(u16 species, enum FormChanges method);
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
 void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv);
 void TrySpecialOverworldEvo(void);
-bool32 SpeciesHasGenderDifferences(u16 species);
 bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method);
 void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method);
 u32 GetMonFriendshipScore(struct Pokemon *pokemon);
 u32 GetMonAffectionHearts(struct Pokemon *pokemon);
 void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality);
 u8 CalculatePartyCount(struct Pokemon *party);
-u16 SanitizeSpeciesId(u16 species);
-bool32 IsSpeciesEnabled(u16 species);
-enum PokemonCry GetCryIdBySpecies(u16 species);
 u16 GetSpeciesPreEvolution(u16 species);
 void HealPokemon(struct Pokemon *mon);
 void HealBoxPokemon(struct BoxPokemon *boxMon);

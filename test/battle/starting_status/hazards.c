@@ -92,8 +92,8 @@ SINGLE_BATTLE_TEST("Starting Stealth Rock damages the opposing switch-in")
     SetStartingStatus(STARTING_STATUS_STEALTH_ROCK_OPPONENT);
 
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_CHARIZARD].types[0] == TYPE_FIRE);
-        ASSUME(gSpeciesInfo[SPECIES_CHARIZARD].types[1] == TYPE_FLYING);
+        ASSUME(GetSpeciesType(SPECIES_CHARIZARD, 0) == TYPE_FIRE);
+        ASSUME(GetSpeciesType(SPECIES_CHARIZARD, 1) == TYPE_FLYING);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHARIZARD);
@@ -114,7 +114,8 @@ SINGLE_BATTLE_TEST("Starting sharp steel damages the opposing switch-in")
     SetStartingStatus(STARTING_STATUS_SHARP_STEEL_OPPONENT);
 
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_SYLVEON].types[0] == TYPE_FAIRY);
+        ASSUME(GetSpeciesType(SPECIES_SYLVEON, 0) == TYPE_FAIRY);
+        ASSUME(GetSpeciesType(SPECIES_SYLVEON, 1) == TYPE_FAIRY);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SYLVEON);
@@ -222,8 +223,8 @@ SINGLE_BATTLE_TEST("Starting Stealth Rock damages the player's switch-in")
     SetStartingStatus(STARTING_STATUS_STEALTH_ROCK_PLAYER);
 
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_CHARIZARD].types[0] == TYPE_FIRE);
-        ASSUME(gSpeciesInfo[SPECIES_CHARIZARD].types[1] == TYPE_FLYING);
+        ASSUME(GetSpeciesType(SPECIES_CHARIZARD, 0) == TYPE_FIRE);
+        ASSUME(GetSpeciesType(SPECIES_CHARIZARD, 1) == TYPE_FLYING);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CHARIZARD);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -244,7 +245,8 @@ SINGLE_BATTLE_TEST("Starting sharp steel damages the player's switch-in")
     SetStartingStatus(STARTING_STATUS_SHARP_STEEL_PLAYER);
 
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_SYLVEON].types[0] == TYPE_FAIRY);
+        ASSUME(GetSpeciesType(SPECIES_SYLVEON, 0) == TYPE_FAIRY);
+        ASSUME(GetSpeciesType(SPECIES_SYLVEON, 1) == TYPE_FAIRY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_SYLVEON);
         OPPONENT(SPECIES_WOBBUFFET);

@@ -95,6 +95,8 @@
 #define FLIP    0
 #define NO_FLIP 1
 
+#undef gSpeciesInfo // Can be called here directly
+
 const struct SpeciesInfo gSpeciesInfo[] =
 {
     [SPECIES_NONE] =
@@ -252,3 +254,7 @@ const struct EggData gEggDatas[EGG_ID_COUNT] =
 {
 #include "egg_data.h"
 };
+
+#define gSpeciesInfo \
+_Pragma("GCC error \"Use getters instead of accessing gSpeciesInfo directly.\"") \
+gSpeciesInfo

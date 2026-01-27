@@ -2168,21 +2168,20 @@ static void SetGimmick(u32 sourceLine, u32 battler, u32 partyIndex, enum Gimmick
 
 void Gender_(u32 sourceLine, u32 gender)
 {
-    const struct SpeciesInfo *info;
     INVALID_IF(!DATA.currentMon, "Gender outside of PLAYER/OPPONENT");
-    info = &gSpeciesInfo[GetMonData(DATA.currentMon, MON_DATA_SPECIES)];
+    u32 genderRatio = GetSpeciesGenderRatio(GetMonData(DATA.currentMon, MON_DATA_SPECIES));
     switch (gender)
     {
     case MON_MALE:
         DATA.gender = 0xFF;
-        INVALID_IF(info->genderRatio == MON_GENDERLESS || info->genderRatio == MON_FEMALE, "Illegal male");
+        INVALID_IF(genderRatio == MON_GENDERLESS || genderRatio == MON_FEMALE, "Illegal male");
         break;
     case MON_FEMALE:
         DATA.gender = 0x00;
-        INVALID_IF(info->genderRatio == MON_GENDERLESS || info->genderRatio == MON_MALE, "Illegal female");
+        INVALID_IF(genderRatio == MON_GENDERLESS || genderRatio == MON_MALE, "Illegal female");
         break;
     case MON_GENDERLESS:
-        INVALID_IF(info->genderRatio != gender, "Illegal genderless");
+        INVALID_IF(genderRatio != gender, "Illegal genderless");
         break;
     }
 }
@@ -2198,14 +2197,12 @@ void Ability_(u32 sourceLine, enum Ability ability)
 {
     s32 i;
     u32 species;
-    const struct SpeciesInfo *info;
     INVALID_IF(!DATA.currentMon, "Ability outside of PLAYER/OPPONENT");
     INVALID_IF(ability >= ABILITIES_COUNT, "Illegal ability id: %d", ability);
     species = GetMonData(DATA.currentMon, MON_DATA_SPECIES);
-    info = &gSpeciesInfo[species];
     for (i = 0; i < NUM_ABILITY_SLOTS; i++)
     {
-        if (info->abilities[i] == ability)
+        if (GetSpeciesAbility(species, i) == ability)
         {
             SetMonData(DATA.currentMon, MON_DATA_ABILITY_NUM, &i);
             break;
@@ -2225,7 +2222,7 @@ void Level_(u32 sourceLine, u32 level)
     INVALID_IF(!DATA.currentMon, "Level outside of PLAYER/OPPONENT");
     INVALID_IF(level == 0 || level > MAX_LEVEL, "Illegal level: %d", level);
     SetMonData(DATA.currentMon, MON_DATA_LEVEL, &level);
-    SetMonData(DATA.currentMon, MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][level]);
+    SetMonData(DATA.currentMon, MON_DATA_EXP, &gExperienceTables[GetSpeciesGrowthRate(species)][level]);
     gMain.inBattle = TRUE;
     CalculateMonStats(DATA.currentMon);
     gMain.inBattle = FALSE;

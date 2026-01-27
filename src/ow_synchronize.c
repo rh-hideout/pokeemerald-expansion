@@ -10,7 +10,7 @@ static UNUSED bool32 IsFalse(u32 species);
 static UNUSED bool32 IsTrue(u32 species);
 static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species);
 
-const static bool32 (*sSynchronizeModes[]) (u32) = 
+const static bool32 (*sSynchronizeModes[]) (u32) =
 {
 #if OW_SYNCHRONIZE_NATURE == GEN_3
     [WILDMON_ORIGIN] = HasHalfChance,
@@ -45,7 +45,7 @@ const static bool32 (*sSynchronizeModes[]) (u32) =
 #endif
 };
 
-const static bool32 (*sCuteCharmModes[]) (u32) = 
+const static bool32 (*sCuteCharmModes[]) (u32) =
 {
     [WILDMON_ORIGIN] = HasTwoThirdsChance,
     [STATIC_WILDMON_ORIGIN] = HasTwoThirdsChance,
@@ -75,7 +75,7 @@ static UNUSED bool32 IsTrue(u32 species)
 
 static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species)
 {
-    return (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED);
+    return (GetSpeciesEggGroup(species, 0) == EGG_GROUP_NO_EGGS_DISCOVERED);
 }
 
 static bool32 IsSynchronizeActive(void)
