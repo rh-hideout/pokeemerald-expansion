@@ -1002,8 +1002,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
-    if (template->trainerType != TRAINER_TYPE_ENCOUNTER || (template->localId <= LOCALID_OW_ENCOUNTER_END
-        && template->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS)))
+    if (!IsOverworldWildEncounter((struct ObjectEvent *)template, OWE_MANUAL))
         return *template;
 
     struct ObjectEventTemplate templateOWE = *template;
