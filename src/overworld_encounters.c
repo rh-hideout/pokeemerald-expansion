@@ -73,10 +73,11 @@ static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
 static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
 static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn);
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
-static void OWE_StartEncounterInstant(struct ObjectEvent *mon);
+static void OWE_StartEncounter(struct ObjectEvent *mon);
 static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction direction, u32 distance);
 static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 xNew, s16 yNew, enum Direction newDirection, enum Direction collisionDirection);
 static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Direction newDirection);
+static void Task_OWE_ApproachForBattle(u8 taskId);
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void)
 {
@@ -159,7 +160,7 @@ void UpdateOverworldEncounters(void)
         .elevation = MapGridGetElevationAt(x, y),
         .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
         .trainerType = TRAINER_TYPE_ENCOUNTER,
-        .script = InteractWithDynamicWildOverworldEncounter,
+        .script = OWE_GetScriptPointer(),
     };
     u32 objectEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
@@ -467,7 +468,7 @@ void CreateOverworldWildEncounter(void)
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
     u32 gender = OW_FEMALE(object) ? MON_FEMALE : MON_MALE;
-    u32 level = (object->sOverworldEncounterLevel &= ~OWE_FLAG_START_ENCOUNTER);
+    u32 level = object->sOverworldEncounterLevel;
     u32 personality;
 
     switch (gSpeciesInfo[speciesId].genderRatio)
@@ -997,7 +998,7 @@ bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
-    if (!IsOverworldWildEncounter(object, OWE_ANY) || GetObjectEventScriptPointerByObjectEventId(objectEventId) != InteractWithDynamicWildOverworldEncounter)
+    if (!IsOverworldWildEncounter(object, OWE_ANY) || GetObjectEventScriptPointerByObjectEventId(objectEventId) != OWE_GetScriptPointer())
         return FALSE;
 
     gSpecialVar_0x8004 = OW_SPECIES(object);
@@ -1067,7 +1068,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
         templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
 
     if (templateOWE.script == NULL)
-        templateOWE.script = InteractWithDynamicWildOverworldEncounter;
+        templateOWE.script = OWE_GetScriptPointer();
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
@@ -1081,7 +1082,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     return templateOWE;
 }
 
-void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider, s32 xCollision, s32 yCollision)
+void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
     // The only automatically interacts with an OW Encounter when;
     // Not using a repel or the DexNav is inactive.
@@ -1102,37 +1103,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         return;
     }
 
-    LockPlayerFieldControls();
-    if (!OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
-    {
-        OWE_StartEncounterInstant(wildMon);
-        return;
-    }
-
-    struct ObjectEvent *followerMon = GetFollowerObject();
-    if (followerMon != NULL && !followerMon->invisible
-        && ((followerMon->currentCoords.x == xCollision && followerMon->currentCoords.y == yCollision)
-        || (followerMon->previousCoords.x == xCollision && followerMon->previousCoords.y == yCollision)))
-    {
-        ClearObjectEventMovement(followerMon, &gSprites[followerMon->spriteId]);
-        gSprites[followerMon->spriteId].animCmdIndex = 0;
-        ObjectEventSetHeldMovement(followerMon, MOVEMENT_ACTION_ENTER_POKEBALL);
-    }
-
-    u32 idFollowerNPC = GetFollowerNPCObjectId();
-    struct ObjectEvent *followerNPC = &gObjectEvents[idFollowerNPC];
-    if (FNPC_ENABLE_NPC_FOLLOWERS && PlayerHasFollowerNPC() && !followerNPC->invisible
-        && ((followerNPC->currentCoords.x == xCollision && followerNPC->currentCoords.y == yCollision)
-        || (followerNPC->previousCoords.x == xCollision && followerNPC->previousCoords.y == yCollision)))
-    {
-        enum Direction direction = DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], followerNPC);
-        ClearObjectEventMovement(followerNPC, &gSprites[followerNPC->spriteId]);
-        gSprites[followerNPC->spriteId].animCmdIndex = 0;
-        ObjectEventSetHeldMovement(followerNPC, GetWalkNormalMovementAction(direction));
-        CreateTask(Task_HideNPCFollowerAfterMovementFinish, 2);
-    }
-
-    wildMon->sOverworldEncounterLevel |= OWE_FLAG_START_ENCOUNTER;
+    OWE_StartEncounter(wildMon);
 }
 
 void OverworldWildEncounter_RemoveObjectOnBattle(void)
@@ -1153,9 +1124,6 @@ bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 directio
 {
     if (GetCollisionInDirection(objectEvent, direction))
         return TRUE;
-
-    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
-        return FALSE;
 
     if (OWE_CanAwareMonSeePlayer(objectEvent) && OW_WILD_ENCOUNTERS_UNRESTRICT_SIGHT)
         return FALSE;
@@ -1547,11 +1515,6 @@ static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
     return status - 1;
 }
 
-bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent)
-{
-    return objectEvent->sOverworldEncounterLevel & OWE_FLAG_START_ENCOUNTER;
-}
-
 bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void)
 {
     if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !OW_WILD_ENCOUNTERS_BATTLE_PIKE)
@@ -1569,12 +1532,17 @@ static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
     return OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumActiveGeneratedOverworldEncounters() == GetMaxOverworldEncounterSpawns();
 }
 
-void OWE_StartEncounterInstant(struct ObjectEvent *mon)
+void OWE_StartEncounter(struct ObjectEvent *mon)
 {
     gSpecialVar_LastTalked = mon->localId;
     gSpecialVar_0x8004 = OW_SPECIES(mon);
-    ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
-    FreezeObjectEvents();
+    gSelectedObjectEvent = GetObjectEventIdByLocalId(mon->localId);
+
+    // Stop the bobbing animation.
+    if (mon->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_DOWN && mon->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_RIGHT)
+        ClearObjectEventMovement(mon, &gSprites[mon->spriteId]);
+
+    ScriptContext_SetupScript(OWE_GetScriptPointer());
 }
 
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent)
@@ -1650,6 +1618,87 @@ static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction 
     }
 
     return TRUE;
+}
+
+const u8 *OWE_GetScriptPointer(void)
+{
+    if (OW_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE)
+        return InteractWithDynamicWildOverworldEncounterApproach;
+    else
+        return InteractWithDynamicWildOverworldEncounterInstant;
+}
+
+#define tObjectId   data[0]
+
+void OWE_ApproachForBattle(void)
+{
+    u32 taskId = CreateTask(Task_OWE_ApproachForBattle, 2);
+    
+    gTasks[taskId].tObjectId = GetObjectEventIdByLocalId(gSpecialVar_LastTalked);
+}
+
+static void Task_OWE_ApproachForBattle(u8 taskId)
+{
+    struct ObjectEvent *OWE = &gObjectEvents[gTasks[taskId].tObjectId];
+
+    // Let the mon continue to take steps until right next to the player.
+    if (ObjectEventClearHeldMovementIfFinished(OWE))
+    {
+        if (OWE_IsMonNextToPlayer(OWE))
+        {
+            ScriptContext_Enable();
+            DestroyTask(taskId);
+            return;
+        }
+
+        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+        u16 speciesId = OW_SPECIES(OWE);
+        enum Direction direction = DetermineObjectEventDirectionFromObject(player, OWE);
+        u8 movementActionId;
+    
+        SetObjectEventDirection(OWE, direction);
+        movementActionId = GetWalkMovementActionInDirectionWithSpeed(OWE->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+        
+        if (OWE_CheckRestrictedMovement(OWE, OWE->movementDirection))
+        {
+            struct ObjectEvent *followerMon = GetFollowerObject();
+            u32 idFollowerNPC = GetFollowerNPCObjectId();
+            struct ObjectEvent *followerNPC = &gObjectEvents[idFollowerNPC];
+            s16 x = OWE->currentCoords.x;
+            s16 y = OWE->currentCoords.y;
+            u32 collidingObject;
+
+            MoveCoords(OWE->movementDirection, &x, &y);
+            collidingObject = GetObjectObjectCollidesWith(OWE, x, y, FALSE);
+
+            if (collidingObject == GetObjectEventIdByLocalId(followerMon->localId) && followerMon != NULL && !followerMon->invisible)
+            {
+                ClearObjectEventMovement(followerMon, &gSprites[followerMon->spriteId]);
+                gSprites[followerMon->spriteId].animCmdIndex = 0;
+                ObjectEventSetHeldMovement(followerMon, MOVEMENT_ACTION_ENTER_POKEBALL);
+            }
+            else if (collidingObject == idFollowerNPC && FNPC_ENABLE_NPC_FOLLOWERS && PlayerHasFollowerNPC() && !followerNPC->invisible)
+            {
+                enum Direction direction = DetermineFollowerNPCDirection(&gObjectEvents[gPlayerAvatar.objectEventId], followerNPC);
+                ClearObjectEventMovement(followerNPC, &gSprites[followerNPC->spriteId]);
+                gSprites[followerNPC->spriteId].animCmdIndex = 0;
+                ObjectEventSetHeldMovement(followerNPC, GetWalkNormalMovementAction(direction));
+                CreateTask(Task_HideNPCFollowerAfterMovementFinish, 2);
+            }
+            else if (collidingObject == gPlayerAvatar.objectEventId)
+            {
+                movementActionId = GetFaceDirectionMovementAction(OWE->facingDirection);
+            }
+            else
+            {
+                direction = OWE_DirectionToPlayerFromCollision(OWE);
+                SetObjectEventDirection(OWE, direction);
+                movementActionId = GetWalkMovementActionInDirectionWithSpeed(OWE->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+            }
+        }
+        ObjectEventSetHeldMovement(OWE, movementActionId);
+    }
+    
 }
 
 #undef sOverworldEncounterLevel

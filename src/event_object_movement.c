@@ -6469,7 +6469,7 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
                     if (OWE_DespawnMonDueToNPCCollision(curObject, objectEvent))
                         continue;
 
-                    OWE_TryTriggerEncounter(objectEvent, curObject, x, y);
+                    OWE_TryTriggerEncounter(objectEvent, curObject);
                     return i;
                 }
             }
@@ -11713,7 +11713,7 @@ static u32 TurnDirectionNinetyDegrees(u32 direction, bool32 counterclockwise)
     return DIR_NONE;
 }
 
-static u8 GetWalkMovementActionInDirectionWithSpeed(u32 direction, u32 speed)
+u8 GetWalkMovementActionInDirectionWithSpeed(u32 direction, u32 speed)
 {
     switch (speed)
     {
@@ -11726,50 +11726,6 @@ static u8 GetWalkMovementActionInDirectionWithSpeed(u32 direction, u32 speed)
     }
 
     return GetWalkNormalMovementAction(direction);
-}
-
-static void MoveToPlayerForEncounter(struct ObjectEvent *objectEvent, struct Sprite *sprite)
-{
-    u16 speciesId = OW_SPECIES(objectEvent);
-    enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-    u8 movementActionId;
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-
-    if (objectEvent->singleMovementActive == 0 && player->singleMovementActive == 0)
-    {
-        // Let the mon continue to take steps until right next to the player.
-        if (OWE_IsMonNextToPlayer(objectEvent))
-        {
-            gSpecialVar_LastTalked = objectEvent->localId;
-            gSpecialVar_0x8004 = speciesId;
-            ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
-            FreezeObjectEvent(objectEvent);
-            return;
-        }
-    }
-    
-    SetObjectEventDirection(objectEvent, direction);
-    movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
-        
-    if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection))
-    {
-        s16 x = objectEvent->currentCoords.x;
-        s16 y = objectEvent->currentCoords.y;
-        MoveCoords(objectEvent->movementDirection, &x, &y);
-        // If colliding with the player object, don't try to walk around it.
-        if (GetObjectObjectCollidesWith(objectEvent, x, y, FALSE) == gPlayerAvatar.objectEventId)
-        {
-            movementActionId = GetFaceDirectionMovementAction(objectEvent->facingDirection);
-        }
-        else
-        {
-            direction = OWE_DirectionToPlayerFromCollision(objectEvent);
-            SetObjectEventDirection(objectEvent, direction);
-            movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
-        }
-    }
-    ObjectEventSetSingleMovement(objectEvent, sprite, movementActionId);
-    objectEvent->singleMovementActive = TRUE;
 }
 
 bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent)
@@ -11795,14 +11751,6 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent 
 
 bool8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
-    {
-        ClearObjectEventMovement(objectEvent, sprite);
-        MoveToPlayerForEncounter(objectEvent, sprite);
-        sprite->sTypeFuncId = 6;
-        return FALSE;
-    }
-
     if (WaitForMovementDelay(sprite))
     {
         // resets a mid-movement sprite
@@ -11900,13 +11848,6 @@ bool8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent 
     u16 speciesId = OW_SPECIES(objectEvent);
     u8 movementActionId;
 
-    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
-    {
-        MoveToPlayerForEncounter(objectEvent, sprite);
-        sprite->sTypeFuncId = 12;
-        return FALSE;
-    }
-
     movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
     sprite->sTypeFuncId = 12;
 
@@ -11987,13 +11928,6 @@ bool8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *
     u16 speciesId = OW_SPECIES(objectEvent);
     u8 movementActionId;
 
-    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
-    {
-        MoveToPlayerForEncounter(objectEvent, sprite);
-        sprite->sTypeFuncId = 12;
-        return FALSE;
-    }
-
     movementActionId = GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
 
     if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection))
@@ -12060,12 +11994,6 @@ bool8 MovementType_WatchPlayer_OverworldWildEncounter_Step10(struct ObjectEvent 
 
 bool8 MovementType_WatchPlayer_OverworldWildEncounter_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
-    {
-        MoveToPlayerForEncounter(objectEvent, sprite);
-        sprite->sTypeFuncId = 12;
-        return FALSE;
-    }
 
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection));
     objectEvent->singleMovementActive = TRUE;
@@ -12112,13 +12040,6 @@ bool8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEve
     u32 distance = OWE_GetApproachingMonDistanceToPlayer(objectEvent, &equalDistances);
     u16 speciesId = OW_SPECIES(objectEvent);
     u8 movementActionId;
-
-    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
-    {
-        MoveToPlayerForEncounter(objectEvent, sprite);
-        sprite->sTypeFuncId = 12;
-        return FALSE;
-    }
 
     if (distance <= 1)
     {
@@ -12210,12 +12131,6 @@ bool8 MovementType_Despawn_OverworldWildEncounter_Step10(struct ObjectEvent *obj
 
 bool8 MovementType_Despawn_OverworldWildEncounter_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (OverworldWildEncounter_IsStartingWildEncounter(objectEvent))
-    {
-        MoveToPlayerForEncounter(objectEvent, sprite);
-        sprite->sTypeFuncId = 12;
-        return FALSE;
-    }
 
     if (sDespawnTimer == OWE_DESPAWN_FRAMES)
     {

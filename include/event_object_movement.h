@@ -556,6 +556,7 @@ bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent);
 u8 GetObjectEventApricornTreeId(u8 objectEventId);
 
 bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent);
+u8 GetWalkMovementActionInDirectionWithSpeed(u32 direction, u32 speed);
 
 extern const enum Direction gStandardDirections[];
 

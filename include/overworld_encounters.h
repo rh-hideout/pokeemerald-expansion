@@ -40,8 +40,6 @@
 
 #define INVALID_SPAWN_SLOT          0xFF
 
-#define OWE_FLAG_START_ENCOUNTER    0x80
-
 enum OverworldEncounterSpawnAnim
 {
     OWE_SPAWN_ANIM_GRASS,
@@ -90,7 +88,8 @@ enum __attribute__((packed)) OverworldEncounterBehaviors
     OWE_SPECIES_BEHAVIOR_COUNT
 };
 
-extern const u8 InteractWithDynamicWildOverworldEncounter[];
+extern const u8 InteractWithDynamicWildOverworldEncounterInstant[];
+extern const u8 InteractWithDynamicWildOverworldEncounterApproach[];
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void);
 void UpdateOverworldEncounters(void);
@@ -108,7 +107,7 @@ bool32 CanRemoveOverworldEncounter(u32 localId);
 u32 RemoveOldestOverworldEncounter(void);
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
-void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider, s32 xCollision, s32 yCollision);
+void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void OverworldWildEncounter_RemoveObjectOnBattle(void);
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
 void DespawnOldestOWE_Pal(void);
@@ -119,12 +118,12 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 void Task_OWE_WaitMovements(u8 taskId);
 enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
-bool32 OverworldWildEncounter_IsStartingWildEncounter(struct ObjectEvent *objectEvent);
 bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void);
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent);
 u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
 struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim);
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent, u32 state);
+const u8 *OWE_GetScriptPointer(void);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
