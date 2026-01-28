@@ -356,7 +356,7 @@ PlayersHouse_1F_Text_IsThatAPokenav:
 	.string "your mom?\p"
 	.string "… … …$"
 
-PlayersHouse_1F_Text_RegisteredBELLA:
+PlayersHouse_1F_Text_RegisteredMom:
 	.string "Registered MOM\n"
 	.string "in the POKéNAV.$"
 

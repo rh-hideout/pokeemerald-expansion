@@ -298,7 +298,7 @@ PlayersHouse_1F_Movement_MomReturnToSeatFemale:
 	walk_in_place_faster_left
 	step_end
 
-PlayersHouse_1F_EventScript_BELLA::
+PlayersHouse_1F_EventScript_Mom::
 	lock
 	faceplayer
 	goto_if_eq VAR_LITTLEROOT_HOUSES_STATE_MAY, 4, PlayersHouse_1F_EventScript_DontPushYourselfTooHard
@@ -316,7 +316,7 @@ PlayersHouse_1F_EventScript_DontPushYourselfTooHard::
 	release
 	end
 
-PlayersHouse_1F_EventScript_TryRegisterBELLA::
+PlayersHouse_1F_EventScript_TryRegisterMom::
 	goto_if_set FLAG_ENABLE_MOM_MATCH_CALL, PlayersHouse_1F_EventScript_CheckGiveAmuletCoin
 	msgbox PlayersHouse_1F_Text_IsThatAPokenav, MSGBOX_DEFAULT
 	closemessage

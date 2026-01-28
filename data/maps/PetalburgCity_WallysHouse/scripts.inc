@@ -52,7 +52,7 @@ PetalburgCity_WallysHouse_EventScript_PlayedWithWally::
 	release
 	end
 
-PetalburgCity_WallysHouse_EventScript_WallysBELLA::
+PetalburgCity_WallysHouse_EventScript_WallysMom::
 	lock
 	faceplayer
 	goto_if_set FLAG_RECEIVED_HM_SURF, PetalburgCity_WallysHouse_EventScript_ReceivedHMSurf

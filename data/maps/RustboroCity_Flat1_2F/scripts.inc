@@ -68,7 +68,7 @@ RustboroCity_Flat1_2F_EventScript_WaldasDadFaceWalda::
 	turnobject LOCALID_WALDAS_DAD, DIR_EAST
 	return
 
-RustboroCity_Flat1_2F_EventScript_WaldasBELLA::
+RustboroCity_Flat1_2F_EventScript_WaldasMom::
 	msgbox RustboroCity_Flat1_2F_Text_ComingUpWithMealsIsHard, MSGBOX_NPC
 	end
 

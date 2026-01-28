@@ -129,7 +129,7 @@ LittlerootTown_EventScript_StepOffTruckFemale::
 	releaseall
 	end
 
-LittlerootTown_EventScript_GoInsideWithBELLA::
+LittlerootTown_EventScript_GoInsideWithMom::
 	delay 15
 	playse SE_LEDGE
 	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerStepOffTruck
@@ -866,7 +866,7 @@ LittlerootTown_Movement_MomExitThroughDoor:
 	walk_up
 	step_end
 
-LittlerootTown_EventScript_BELLA::
+LittlerootTown_EventScript_Mom::
 	lock
 	faceplayer
 	checkplayergender

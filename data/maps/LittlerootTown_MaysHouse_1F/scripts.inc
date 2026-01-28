@@ -109,7 +109,7 @@ LittlerootTown_MaysHouse_1F_Movement_RivalMomApproach:
 	walk_left
 	step_end
 
-RivalsHouse_1F_EventScript_RivalBELLA::
+RivalsHouse_1F_EventScript_RivalMom::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_RIVAL_ROUTE103, RivalsHouse_1F_EventScript_GoHomeEverySoOften
