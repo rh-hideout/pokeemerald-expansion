@@ -1,4 +1,4 @@
-Route1_MapScripts::
+Route1_Frlg_MapScripts::
 	.byte 0
 
 Route1_EventScript_MartClerk::

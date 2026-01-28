@@ -8,7 +8,7 @@ AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    u32 battler;
+    enum BattlerId battler;
 
     PARAMETRIZE { aiFlags = 0; battler = 1; }
     PARAMETRIZE { aiFlags = 0; battler = 3; }
@@ -38,7 +38,7 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will only explode and kill everything on the field
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    u32 battler;
+    enum BattlerId battler;
 
     PARAMETRIZE { aiFlags = 0; battler = 1; }
     PARAMETRIZE { aiFlags = 0; battler = 3; }
@@ -102,7 +102,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (2v1)"
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    u32 battler;
+    enum BattlerId battler;
 
     PARAMETRIZE { aiFlags = 0; battler = 1; }
     PARAMETRIZE { aiFlags = 0; battler = 3; }

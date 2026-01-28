@@ -24,10 +24,10 @@
 #include "constants/items.h"
 
 static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
-static u32 GetAIEffectGroupFromMove(u32 battler, enum Move move);
+static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move);
 
 // Functions
-enum Ability AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move)
+enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move)
 {
     if (MoveIgnoresTargetAbility(move))
         return ABILITY_NONE;
@@ -38,7 +38,7 @@ enum Ability AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abil
     return abilityDef;
 }
 
-static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, enum Move move)
+static bool32 AI_IsDoubleSpreadMove(enum BattlerId battlerAtk, enum Move move)
 {
     u32 numOfTargets = 0;
     enum MoveTarget moveTargetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
@@ -46,7 +46,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, enum Move move)
     if (!IsSpreadMove(moveTargetType))
         return FALSE;
 
-    for (u32 battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
+    for (enum BattlerId battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
     {
         if (battlerAtk == battlerDef)
             continue;
@@ -64,19 +64,19 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, enum Move move)
     return FALSE;
 }
 
-bool32 AI_IsBattlerGrounded(u32 battler)
+bool32 AI_IsBattlerGrounded(enum BattlerId battler)
 {
     return IsBattlerGrounded(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler]);
 }
 
-static bool32 AI_CanBattlerHitBothFoesInTerrain(u32 battler, enum Move move, enum BattleMoveEffects effect)
+static bool32 AI_CanBattlerHitBothFoesInTerrain(enum BattlerId battler, enum Move move, enum BattleMoveEffects effect)
 {
     return effect == EFFECT_TERRAIN_BOOST
         && GetMoveTerrainBoost_HitsBothFoes(move)
         && IsBattlerTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses, GetMoveTerrainBoost_Terrain(move));
 }
 
-enum MoveTarget AI_GetBattlerMoveTargetType(u32 battler, enum Move move)
+enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_CURSE && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
@@ -89,7 +89,7 @@ enum MoveTarget AI_GetBattlerMoveTargetType(u32 battler, enum Move move)
     return GetMoveTarget(move);
 }
 
-u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
+u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
 {
     if (calcContext == AI_ATTACKING && BattlerHasAi(battlerAtk))
     {
@@ -113,17 +113,17 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
     }
 }
 
-bool32 AI_IsFaster(u32 battlerAi, u32 battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority)
+bool32 AI_IsFaster(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority)
 {
     return (AI_WhoStrikesFirst(battlerAi, battlerDef, aiMove, playerMove, considerPriority) == AI_IS_FASTER);
 }
 
-bool32 AI_IsSlower(u32 battlerAi, u32 battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority)
+bool32 AI_IsSlower(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority)
 {
     return (AI_WhoStrikesFirst(battlerAi, battlerDef, aiMove, playerMove, considerPriority) == AI_IS_SLOWER);
 }
 
-enum Move GetAIChosenMove(u32 battlerId)
+enum Move GetAIChosenMove(enum BattlerId battlerId)
 {
     return (gBattleMons[battlerId].moves[gAiBattleData->chosenMoveIndex[battlerId]]);
 }
@@ -137,7 +137,7 @@ bool32 AI_RandLessThan(u32 val)
 
 bool32 IsAiFlagPresent(u64 flag)
 {
-    for (u32 battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
+    for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
     {
         if (gAiThinkingStruct->aiFlags[battlerIndex] & flag)
             return TRUE;
@@ -146,7 +146,7 @@ bool32 IsAiFlagPresent(u64 flag)
     return FALSE;
 }
 
-bool32 IsAiBattlerAware(u32 battlerId)
+bool32 IsAiBattlerAware(enum BattlerId battlerId)
 {
     if (IsAiFlagPresent(AI_FLAG_OMNISCIENT))
         return TRUE;
@@ -154,7 +154,7 @@ bool32 IsAiBattlerAware(u32 battlerId)
     return BattlerHasAi(battlerId);
 }
 
-bool32 IsAiBattlerAssumingStab(u32 battlerId)
+bool32 IsAiBattlerAssumingStab(enum BattlerId battlerId)
 {
     if (IsAiFlagPresent(AI_FLAG_ASSUME_STAB))
         return TRUE;
@@ -162,7 +162,7 @@ bool32 IsAiBattlerAssumingStab(u32 battlerId)
     return FALSE;
 }
 
-bool32 IsAiBattlerAssumingStatusMoves(u32 battlerId)
+bool32 IsAiBattlerAssumingStatusMoves(enum BattlerId battlerId)
 {
     if (IsAiFlagPresent(AI_FLAG_ASSUME_STATUS_MOVES))
         return TRUE;
@@ -170,7 +170,7 @@ bool32 IsAiBattlerAssumingStatusMoves(u32 battlerId)
     return FALSE;
 }
 
-bool32 IsAiBattlerPredictingAbility(u32 battlerId)
+bool32 IsAiBattlerPredictingAbility(enum BattlerId battlerId)
 {
     if (IsAiFlagPresent(AI_FLAG_WEIGH_ABILITY_PREDICTION))
         return TRUE;
@@ -178,7 +178,7 @@ bool32 IsAiBattlerPredictingAbility(u32 battlerId)
     return FALSE;
 }
 
-bool32 CanAiPredictMove(u32 battlerId)
+bool32 CanAiPredictMove(enum BattlerId battlerId)
 {
     if (IsAiFlagPresent(AI_FLAG_PREDICT_MOVE))
         return TRUE;
@@ -186,10 +186,10 @@ bool32 CanAiPredictMove(u32 battlerId)
     return FALSE;
 }
 
-bool32 IsBattlerPredictedToSwitch(u32 battler)
+bool32 IsBattlerPredictedToSwitch(enum BattlerId battler)
 {
     // Check for prediction flag on AI, whether they're using those predictions this turn, and whether the AI thinks the player should switch
-    for (u32 battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
+    for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
     {
         if (gAiThinkingStruct->aiFlags[battlerIndex] & AI_FLAG_PREDICT_SWITCH)
         {
@@ -201,7 +201,7 @@ bool32 IsBattlerPredictedToSwitch(u32 battler)
 }
 
 // Either a predicted move or the last used move from an opposing battler
-enum Move GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData)
+enum Move GetIncomingMove(enum BattlerId battler, enum BattlerId opposingBattler, struct AiLogicData *aiData)
 {
     if (aiData->predictingMove && CanAiPredictMove(battler))
         return aiData->predictedMove[opposingBattler];
@@ -209,7 +209,7 @@ enum Move GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *
 }
 
 // When not predicting, don't want to reference player's previous move; leads to weird behaviour for cases like Fake Out or Protect, especially in doubles
-enum Move GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData)
+enum Move GetIncomingMoveSpeedCheck(enum BattlerId battler, enum BattlerId opposingBattler, struct AiLogicData *aiData)
 {
     if (aiData->predictingMove && CanAiPredictMove(battler))
     {
@@ -221,14 +221,14 @@ enum Move GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiL
     return MOVE_NONE;
 }
 
-void ClearBattlerMoveHistory(u32 battlerId)
+void ClearBattlerMoveHistory(enum BattlerId battlerId)
 {
     memset(gBattleHistory->usedMoves[battlerId], 0, sizeof(gBattleHistory->usedMoves[battlerId]));
     memset(gBattleHistory->moveHistory[battlerId], 0, sizeof(gBattleHistory->moveHistory[battlerId]));
     gBattleHistory->moveHistoryIndex[battlerId] = 0;
 }
 
-void RecordLastUsedMoveBy(u32 battlerId, enum Move move)
+void RecordLastUsedMoveBy(enum BattlerId battlerId, enum Move move)
 {
     u8 *index = &gBattleHistory->moveHistoryIndex[battlerId];
 
@@ -237,7 +237,7 @@ void RecordLastUsedMoveBy(u32 battlerId, enum Move move)
     gBattleHistory->moveHistory[battlerId][*index] = move;
 }
 
-void RecordKnownMove(u32 battler, enum Move move)
+void RecordKnownMove(enum BattlerId battler, enum Move move)
 {
     s32 moveIndex;
 
@@ -254,34 +254,34 @@ void RecordKnownMove(u32 battler, enum Move move)
     }
 }
 
-void RecordAllMoves(u32 battler)
+void RecordAllMoves(enum BattlerId battler)
 {
     memcpy(gAiPartyData->mons[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].moves, gBattleMons[battler].moves, MAX_MON_MOVES * sizeof(u16));
 }
 
-void RecordAbilityBattle(u32 battlerId, enum Ability abilityId)
+void RecordAbilityBattle(enum BattlerId battlerId, enum Ability abilityId)
 {
     gBattleHistory->abilities[battlerId] = abilityId;
     gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].ability = abilityId;
 }
 
-void ClearBattlerAbilityHistory(u32 battlerId)
+void ClearBattlerAbilityHistory(enum BattlerId battlerId)
 {
     gBattleHistory->abilities[battlerId] = ABILITY_NONE;
 }
 
-void RecordItemEffectBattle(u32 battlerId, enum HoldEffect itemEffect)
+void RecordItemEffectBattle(enum BattlerId battlerId, enum HoldEffect itemEffect)
 {
     gBattleHistory->itemEffects[battlerId] = itemEffect;
     gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect = itemEffect;
 }
 
-void ClearBattlerItemEffectHistory(u32 battlerId)
+void ClearBattlerItemEffectHistory(enum BattlerId battlerId)
 {
     gBattleHistory->itemEffects[battlerId] = HOLD_EFFECT_NONE;
 }
 
-void SaveBattlerData(u32 battlerId)
+void SaveBattlerData(enum BattlerId battlerId)
 {
     if (!BattlerHasAi(battlerId) && !gAiThinkingStruct->saved[battlerId].saved)
     {
@@ -357,7 +357,7 @@ bool32 ShouldRecordStatusMove(enum Move move)
     return RandomPercentage(RNG_AI_ASSUME_ALL_STATUS, ASSUME_ALL_STATUS_ODDS) && IsBattleMoveStatus(move);
 }
 
-static bool32 ShouldFailForIllusion(u32 illusionSpecies, u32 battlerId)
+static bool32 ShouldFailForIllusion(u32 illusionSpecies, enum BattlerId battlerId)
 {
     u32 learnsetMoveIndex;
     const struct LevelUpMove *learnset;
@@ -393,7 +393,7 @@ static bool32 ShouldFailForIllusion(u32 illusionSpecies, u32 battlerId)
     return TRUE;
 }
 
-void SetBattlerData(u32 battlerId)
+void SetBattlerData(enum BattlerId battlerId)
 {
     if (!BattlerHasAi(battlerId) && gAiThinkingStruct->saved[battlerId].saved)
     {
@@ -437,7 +437,7 @@ void SetBattlerData(u32 battlerId)
     }
 }
 
-void RestoreBattlerData(u32 battlerId)
+void RestoreBattlerData(enum BattlerId battlerId)
 {
     if (!BattlerHasAi(battlerId) && gAiThinkingStruct->saved[battlerId].saved)
     {
@@ -452,12 +452,12 @@ void RestoreBattlerData(u32 battlerId)
     gBattleMons[battlerId].types[1] = gAiThinkingStruct->saved[battlerId].types[1];
 }
 
-u32 GetHealthPercentage(u32 battlerId)
+u32 GetHealthPercentage(enum BattlerId battlerId)
 {
     return (u32)((100 * gBattleMons[battlerId].hp) / gBattleMons[battlerId].maxHP);
 }
 
-bool32 AI_BattlerAtMaxHp(u32 battlerId)
+bool32 AI_BattlerAtMaxHp(enum BattlerId battlerId)
 {
     if (gAiLogicData->hpPercents[battlerId] == 100)
         return TRUE;
@@ -465,7 +465,7 @@ bool32 AI_BattlerAtMaxHp(u32 battlerId)
 }
 
 
-bool32 AI_CanBattlerEscape(u32 battler)
+bool32 AI_CanBattlerEscape(enum BattlerId battler)
 {
     enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
 
@@ -477,7 +477,7 @@ bool32 AI_CanBattlerEscape(u32 battler)
     return FALSE;
 }
 
-bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef)
+bool32 IsBattlerTrapped(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (AI_CanBattlerEscape(battlerDef))
         return FALSE;
@@ -518,7 +518,7 @@ u32 GetTotalBaseStat(u32 species)
          + GetSpeciesBaseSpDefense(species);
 }
 
-bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler)
+bool32 IsTruantMonVulnerable(enum BattlerId battlerAI, enum BattlerId opposingBattler)
 {
     enum Move predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAI, opposingBattler, gAiLogicData);
 
@@ -534,7 +534,7 @@ bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler)
     return FALSE;
 }
 
-bool32 Ai_IsPriorityBlocked(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData)
+bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, struct AiLogicData *aiData)
 {
     s32 atkPriority = GetBattleMovePriority(battlerAtk, aiData->abilities[battlerAtk], move);
 
@@ -595,7 +595,7 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory c
 }
 
 // To save computation time this function has 2 variants. One saves, sets and restores battlers, while the other doesn't.
-struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef)
+struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef)
 {
     struct SimulatedDamage dmg;
 
@@ -723,7 +723,7 @@ bool32 IsDamageMoveUnusable(struct BattleContext *ctx)
     return FALSE;
 }
 
-bool32 IsAdditionalEffectBlocked(u32 battlerAtk, u32 abilityAtk, u32 battlerDef, enum Ability abilityDef)
+bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, u32 abilityAtk, enum BattlerId battlerDef, enum Ability abilityDef)
 {
     if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK)
         return TRUE;
@@ -744,14 +744,14 @@ static inline s32 GetDamageByRollType(s32 dmg, enum DamageRollType rollType)
         return DmgRoll(dmg);
 }
 
-static inline void AI_StoreBattlerTypes(u32 battlerAtk, enum Type *types)
+static inline void AI_StoreBattlerTypes(enum BattlerId battlerAtk, enum Type *types)
 {
     types[0] = gBattleMons[battlerAtk].types[0];
     types[1] = gBattleMons[battlerAtk].types[1];
     types[2] = gBattleMons[battlerAtk].types[2];
 }
 
-static inline void AI_RestoreBattlerTypes(u32 battlerAtk, enum Type *types)
+static inline void AI_RestoreBattlerTypes(enum BattlerId battlerAtk, enum Type *types)
 {
     gBattleMons[battlerAtk].types[0] = types[0];
     gBattleMons[battlerAtk].types[1] = types[1];
@@ -892,7 +892,7 @@ static s32 AI_ApplyModifiersAfterDmgRoll(struct BattleContext *ctx, s32 dmg)
     return dmg;
 }
 
-struct SimulatedDamage AI_CalcDamage(enum Move move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, u32 fieldStatuses)
+struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, u32 fieldStatuses)
 {
     struct SimulatedDamage simDamage = {0};
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
@@ -906,7 +906,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, u32 battlerAtk, u32 battler
         return simDamage;
 
     if (moveEffect == EFFECT_NATURE_POWER)
-        move = GetNaturePowerMove(battlerAtk);
+        move = GetNaturePowerMove();
 
     // Temporarily enable gimmicks for damage calcs if planned
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
@@ -1020,7 +1020,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, u32 battlerAtk, u32 battler
     return simDamage;
 }
 
-bool32 AI_IsDamagedByRecoil(u32 battler)
+bool32 AI_IsDamagedByRecoil(enum BattlerId battler)
 {
     enum Ability ability = gAiLogicData->abilities[battler];
     if (ability == ABILITY_MAGIC_GUARD || ability == ABILITY_ROCK_HEAD)
@@ -1029,7 +1029,7 @@ bool32 AI_IsDamagedByRecoil(u32 battler)
 }
 
 // Decide whether move having an additional effect for .
-static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, enum Move move, s32 noOfHitsToKo)
+static bool32 AI_IsMoveEffectInPlus(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 noOfHitsToKo)
 {
     enum Ability abilityDef = gAiLogicData->abilities[battlerDef];
     enum Ability abilityAtk = gAiLogicData->abilities[battlerAtk];
@@ -1213,7 +1213,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, enum Move mo
     return FALSE;
 }
 
-static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, enum Move move, s32 noOfHitsToKo)
+static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 noOfHitsToKo)
 {
     enum Ability abilityAtk = gAiLogicData->abilities[battlerAtk];
     enum Ability abilityDef = gAiLogicData->abilities[battlerDef];
@@ -1318,7 +1318,7 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, enum Move m
 }
 
 // Checks if one of the moves has side effects or perks, assuming equal dmg or equal no of hits to KO
-enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo)
+enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, enum BattlerId battlerAtk, enum BattlerId battlerDef, s32 noOfHitsToKo)
 {
     bool32 effect1, effect2;
     enum Ability defAbility = gAiLogicData->abilities[battlerDef];
@@ -1362,12 +1362,12 @@ u32 GetNoOfHitsToKO(u32 dmg, s32 hp)
     return (hp + dmg - 1) / dmg;
 }
 
-u32 GetNoOfHitsToKOBattlerDmg(u32 dmg, u32 battlerDef)
+u32 GetNoOfHitsToKOBattlerDmg(u32 dmg, enum BattlerId battlerDef)
 {
     return GetNoOfHitsToKO(dmg, gBattleMons[battlerDef].hp);
 }
 
-u32 GetNoOfHitsToKOBattler(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, enum AiConsiderEndure considerEndure)
+u32 GetNoOfHitsToKOBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, enum AiConsiderEndure considerEndure)
 {
     u32 hitsToKO = GetNoOfHitsToKOBattlerDmg(AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, gAiLogicData), battlerDef);
     enum Move *moves = GetMovesArray(battlerAtk);
@@ -1378,7 +1378,7 @@ u32 GetNoOfHitsToKOBattler(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum D
     return hitsToKO;
 }
 
-u32 GetBestNoOfHitsToKO(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext)
+u32 GetBestNoOfHitsToKO(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum DamageCalcContext calcContext)
 {
     u32 result = 100;
     u32 tempResult = 0;
@@ -1400,14 +1400,14 @@ u32 GetBestNoOfHitsToKO(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext c
     return result;
 }
 
-u32 GetCurrDamageHpPercent(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext)
+u32 GetCurrDamageHpPercent(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum DamageCalcContext calcContext)
 {
     int bestDmg = AI_GetDamage(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, calcContext, gAiLogicData);
 
     return (bestDmg * 100) / gBattleMons[battlerDef].maxHP;
 }
 
-uq4_12_t AI_GetMoveEffectiveness(enum Move move, u32 battlerAtk, u32 battlerDef)
+uq4_12_t AI_GetMoveEffectiveness(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     uq4_12_t typeEffectiveness;
 
@@ -1443,7 +1443,7 @@ uq4_12_t AI_GetMoveEffectiveness(enum Move move, u32 battlerAtk, u32 battlerDef)
     * AI_IS_FASTER: is user(ai) faster
     * AI_IS_SLOWER: is target faster
 */
-s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, enum Move aiMoveConsidered, enum Move playerMoveConsidered, enum ConsiderPriority considerPriority)
+s32 AI_WhoStrikesFirst(enum BattlerId battlerAI, enum BattlerId battler, enum Move aiMoveConsidered, enum Move playerMoveConsidered, enum ConsiderPriority considerPriority)
 {
     u32 speedBattlerAI, speedBattler;
     enum HoldEffect holdEffectAI = gAiLogicData->holdEffects[battlerAI];
@@ -1497,7 +1497,7 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, enum Move aiMoveConsidered, e
     return AI_IS_SLOWER;
 }
 
-bool32 CanEndureHit(u32 battler, u32 battlerTarget, enum Move move)
+bool32 CanEndureHit(enum BattlerId battler, enum BattlerId battlerTarget, enum Move move)
 {
     if (!AI_BattlerAtMaxHp(battlerTarget) || IsMultiHitMove(move) || gAiLogicData->abilities[battler]  == ABILITY_PARENTAL_BOND)
         return FALSE;
@@ -1521,7 +1521,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, enum Move move)
 }
 
 // Check if target has means to faint ai mon.
-bool32 CanTargetFaintAi(u32 battlerDef, u32 battlerAtk)
+bool32 CanTargetFaintAi(enum BattlerId battlerDef, enum BattlerId battlerAtk)
 {
     struct AiLogicData *aiData = gAiLogicData;
     enum Move *moves = GetMovesArray(battlerDef);
@@ -1540,7 +1540,7 @@ bool32 CanTargetFaintAi(u32 battlerDef, u32 battlerAtk)
     return FALSE;
 }
 
-u32 NoOfHitsForTargetToFaintBattler(u32 battlerDef, u32 battlerAtk, enum AiConsiderEndure considerEndure)
+u32 NoOfHitsForTargetToFaintBattler(enum BattlerId battlerDef, enum BattlerId battlerAtk, enum AiConsiderEndure considerEndure)
 {
     u32 currNumberOfHits;
     u32 leastNumberOfHits = UNKNOWN_NO_OF_HITS;
@@ -1557,7 +1557,7 @@ u32 NoOfHitsForTargetToFaintBattler(u32 battlerDef, u32 battlerAtk, enum AiConsi
     return leastNumberOfHits;
 }
 
-u32 NoOfHitsForTargetToFaintBattlerWithMod(u32 battlerDef, u32 battlerAtk, s32 hpMod)
+u32 NoOfHitsForTargetToFaintBattlerWithMod(enum BattlerId battlerDef, enum BattlerId battlerAtk, s32 hpMod)
 {
     u32 currNumberOfHits;
     u32 leastNumberOfHits = UNKNOWN_NO_OF_HITS;
@@ -1582,7 +1582,7 @@ u32 NoOfHitsForTargetToFaintBattlerWithMod(u32 battlerDef, u32 battlerAtk, s32 h
     return leastNumberOfHits;
 }
 
-void GetBestDmgMovesFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, enum Move *bestMoves)
+void GetBestDmgMovesFromBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum DamageCalcContext calcContext, enum Move *bestMoves)
 {
     struct AiLogicData *aiData = gAiLogicData;
     u32 bestDmg = 0;
@@ -1622,7 +1622,7 @@ void GetBestDmgMovesFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcC
     }
 }
 
-u32 GetMoveIndex(u32 battler, enum Move move)
+u32 GetMoveIndex(enum BattlerId battler, enum Move move)
 {
     enum Move *moves = GetMovesArray(battler);
 
@@ -1635,7 +1635,7 @@ u32 GetMoveIndex(u32 battler, enum Move move)
     return MAX_MON_MOVES;
 }
 
-bool32 IsBestDmgMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, enum Move move)
+bool32 IsBestDmgMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum DamageCalcContext calcContext, enum Move move)
 {
     enum Move bestMoves[MAX_MON_MOVES] = {MOVE_NONE};
     u32 index = GetMoveIndex(battlerAtk, move);
@@ -1654,7 +1654,7 @@ bool32 IsBestDmgMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calc
     return FALSE;
 }
 
-bool32 BestDmgMoveHasEffect(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, enum BattleMoveEffects moveEffect)
+bool32 BestDmgMoveHasEffect(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum DamageCalcContext calcContext, enum BattleMoveEffects moveEffect)
 {
     enum Move bestMoves[MAX_MON_MOVES] = {MOVE_NONE};
 
@@ -1672,7 +1672,7 @@ bool32 BestDmgMoveHasEffect(u32 battlerAtk, u32 battlerDef, enum DamageCalcConte
     return FALSE;
 }
 
-u32 GetBestDmgFromBattler(u32 battler, u32 battlerTarget, enum DamageCalcContext calcContext)
+u32 GetBestDmgFromBattler(enum BattlerId battler, enum BattlerId battlerTarget, enum DamageCalcContext calcContext)
 {
     struct AiLogicData *aiData = gAiLogicData;
     u32 bestDmg = 0;
@@ -1694,7 +1694,7 @@ u32 GetBestDmgFromBattler(u32 battler, u32 battlerTarget, enum DamageCalcContext
 
 // Check if AI mon has the means to faint the target with any of its moves.
 // If numHits > 1, check if the target will be KO'ed by that number of hits (ignoring healing effects)
-bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits)
+bool32 CanAIFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 numHits)
 {
     struct AiLogicData *aiData = gAiLogicData;
     s32 dmg;
@@ -1725,7 +1725,7 @@ bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits)
 }
 
 // Can battler KO the target ignoring any Endure effects (Sturdy, Focus Sash, etc.)
-bool32 CanBattlerKOTargetIgnoringSturdy(u32 battlerAtk, u32 battlerDef)
+bool32 CanBattlerKOTargetIgnoringSturdy(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     struct AiLogicData *aiData = gAiLogicData;
     s32 dmg;
@@ -1744,7 +1744,7 @@ bool32 CanBattlerKOTargetIgnoringSturdy(u32 battlerAtk, u32 battlerDef)
     return FALSE;
 }
 
-bool32 CanTargetMoveFaintAi(enum Move move, u32 battlerDef, u32 battlerAtk, u32 nHits)
+bool32 CanTargetMoveFaintAi(enum Move move, enum BattlerId battlerDef, enum BattlerId battlerAtk, u32 nHits)
 {
     u32 indexSlot = GetMoveSlot(GetMovesArray(battlerDef), move);
     if (indexSlot < MAX_MON_MOVES)
@@ -1757,7 +1757,7 @@ bool32 CanTargetMoveFaintAi(enum Move move, u32 battlerDef, u32 battlerAtk, u32 
 }
 
 // Check if target has means to faint ai mon after modding hp/dmg
-bool32 CanTargetFaintAiWithMod(u32 battlerDef, u32 battlerAtk, s32 hpMod, s32 dmgMod)
+bool32 CanTargetFaintAiWithMod(enum BattlerId battlerDef, enum BattlerId battlerAtk, s32 hpMod, s32 dmgMod)
 {
     struct AiLogicData *aiData = gAiLogicData;
     s32 dmg;
@@ -1792,7 +1792,7 @@ bool32 CanTargetFaintAiWithMod(u32 battlerDef, u32 battlerAtk, s32 hpMod, s32 dm
     return FALSE;
 }
 
-bool32 AI_IsAbilityOnSide(u32 battlerId, enum Ability ability)
+bool32 AI_IsAbilityOnSide(enum BattlerId battlerId, enum Ability ability)
 {
     if (IsBattlerAlive(battlerId) && gAiLogicData->abilities[battlerId] == ability)
         return TRUE;
@@ -1803,7 +1803,7 @@ bool32 AI_IsAbilityOnSide(u32 battlerId, enum Ability ability)
 }
 
 // does NOT include ability suppression checks
-enum Ability AI_DecideKnownAbilityForTurn(u32 battlerId)
+enum Ability AI_DecideKnownAbilityForTurn(enum BattlerId battlerId)
 {
     enum Ability validAbilities[NUM_ABILITY_SLOTS];
     u8 numValidAbilities = 0;
@@ -1849,7 +1849,7 @@ enum Ability AI_DecideKnownAbilityForTurn(u32 battlerId)
     return ABILITY_NONE; // Unknown.
 }
 
-enum HoldEffect AI_DecideHoldEffectForTurn(u32 battlerId)
+enum HoldEffect AI_DecideHoldEffectForTurn(enum BattlerId battlerId)
 {
     enum HoldEffect holdEffect = HOLD_EFFECT_NONE;
 
@@ -1874,7 +1874,7 @@ enum HoldEffect AI_DecideHoldEffectForTurn(u32 battlerId)
     return holdEffect;
 }
 
-bool32 DoesBattlerIgnoreAbilityChecks(u32 battlerAtk, enum Ability atkAbility, enum Move move)
+bool32 DoesBattlerIgnoreAbilityChecks(enum BattlerId battlerAtk, enum Ability atkAbility, enum Move move)
 {
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_NEGATE_UNAWARE)
         return FALSE;   // AI handicap flag: doesn't understand ability suppression concept
@@ -1906,7 +1906,7 @@ u32 AI_GetWeather(void)
     return gBattleWeather;
 }
 
-u32 AI_GetSwitchinWeather(u32 battler)
+u32 AI_GetSwitchinWeather(enum BattlerId battler)
 {
     enum Ability ability = gBattleMons[battler].ability;
     // Forced weather behaviour
@@ -1948,7 +1948,7 @@ u32 SwitchinChangeBattleTerrain(u32 newTerrain, u32 fieldStatus)
     return fieldStatus;
 }
 
-u32 AI_GetSwitchinFieldStatus(u32 battler)
+u32 AI_GetSwitchinFieldStatus(enum BattlerId battler)
 {
     enum Ability ability = gBattleMons[battler].ability;
     u32 startingFieldStatus = gFieldStatuses;
@@ -2089,7 +2089,7 @@ bool32 IsHazardClearingMove(enum Move move)
     return FALSE;
 }
 
-bool32 IsAllyProtectingFromMove(u32 battlerAtk, enum Move attackerMove, enum Move allyMove)
+bool32 IsAllyProtectingFromMove(enum BattlerId battlerAtk, enum Move attackerMove, enum Move allyMove)
 {
     enum BattleMoveEffects effect = GetMoveEffect(allyMove);
 
@@ -2139,7 +2139,7 @@ bool32 IsAllyProtectingFromMove(u32 battlerAtk, enum Move attackerMove, enum Mov
     }
 }
 
-bool32 IsMoveRedirectionPrevented(u32 battlerAtk, enum Move move, enum Ability atkAbility)
+bool32 IsMoveRedirectionPrevented(enum BattlerId battlerAtk, enum Move move, enum Ability atkAbility)
 {
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_NEGATE_UNAWARE)
         return FALSE;
@@ -2153,7 +2153,7 @@ bool32 IsMoveRedirectionPrevented(u32 battlerAtk, enum Move move, enum Ability a
     return FALSE;
 }
 
-bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move)
+bool32 ShouldTryOHKO(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move)
 {
     enum HoldEffect holdEffect = gAiLogicData->holdEffects[battlerDef];
     u32 accuracy = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex];
@@ -2185,7 +2185,7 @@ bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, enum Ability atkAbility, en
     return FALSE;
 }
 
-bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
+bool32 ShouldRaiseAnyStat(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (AreBattlersStatsMaxed(battlerAtk))
         return FALSE;
@@ -2222,7 +2222,7 @@ bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
     return TRUE;
 }
 
-bool32 ShouldSetWeather(u32 battler, u32 weather)
+bool32 ShouldSetWeather(enum BattlerId battler, u32 weather)
 {
     if (AI_GetWeather() & weather)
         return FALSE;
@@ -2230,12 +2230,12 @@ bool32 ShouldSetWeather(u32 battler, u32 weather)
     return WeatherChecker(battler, weather, FIELD_EFFECT_POSITIVE);
 }
 
-bool32 ShouldClearWeather(u32 battler, u32 weather)
+bool32 ShouldClearWeather(enum BattlerId battler, u32 weather)
 {
     return WeatherChecker(battler, weather, FIELD_EFFECT_NEGATIVE);
 }
 
-bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus)
+bool32 ShouldSetFieldStatus(enum BattlerId battler, u32 fieldStatus)
 {
     if (gFieldStatuses & fieldStatus)
     {
@@ -2249,12 +2249,12 @@ bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus)
     return FieldStatusChecker(battler, fieldStatus, FIELD_EFFECT_POSITIVE);
 }
 
-bool32 ShouldClearFieldStatus(u32 battler, u32 fieldStatus)
+bool32 ShouldClearFieldStatus(enum BattlerId battler, u32 fieldStatus)
 {
     return FieldStatusChecker(battler, fieldStatus, FIELD_EFFECT_NEGATIVE);
 }
 
-bool32 IsBattlerDamagedByStatus(u32 battler)
+bool32 IsBattlerDamagedByStatus(enum BattlerId battler)
 {
     return gBattleMons[battler].status1 & STATUS1_DAMAGING
         || gBattleMons[battler].volatiles.wrapped
@@ -2266,7 +2266,7 @@ bool32 IsBattlerDamagedByStatus(u32 battler)
         || gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_DAMAGE_NON_TYPES);
 }
 
-s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, enum Move move, enum Move predictedMove)
+s32 ProtectChecks(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum Move predictedMove)
 {
     s32 score = 0;
 
@@ -2320,7 +2320,7 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, enum Move move, enum Move pred
 }
 
 // stat stages
-bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, enum Stat stat)
+bool32 CanLowerStat(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct AiLogicData *aiData, enum Stat stat)
 {
     if (gBattleMons[battlerDef].statStages[stat] == MIN_STAT_STAGE)
         return FALSE;
@@ -2383,7 +2383,7 @@ bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, 
     return TRUE;
 }
 
-enum AIScore IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, enum Stat stat)
+enum AIScore IncreaseStatDownScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat)
 {
     enum AIScore tempScore = NO_INCREASE;
 
@@ -2456,7 +2456,7 @@ enum AIScore IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, enum Stat sta
     return (tempScore > BEST_EFFECT) ? BEST_EFFECT : tempScore; // don't inflate score so only max +4
 }
 
-bool32 BattlerStatCanRise(u32 battler, enum Ability battlerAbility, enum Stat stat)
+bool32 BattlerStatCanRise(enum BattlerId battler, enum Ability battlerAbility, enum Stat stat)
 {
     if ((gBattleMons[battler].statStages[stat] < MAX_STAT_STAGE && battlerAbility != ABILITY_CONTRARY)
       || (battlerAbility == ABILITY_CONTRARY && gBattleMons[battler].statStages[stat] > MIN_STAT_STAGE))
@@ -2464,7 +2464,7 @@ bool32 BattlerStatCanRise(u32 battler, enum Ability battlerAbility, enum Stat st
     return FALSE;
 }
 
-bool32 AreBattlersStatsMaxed(u32 battlerId)
+bool32 AreBattlersStatsMaxed(enum BattlerId battlerId)
 {
     for (enum Stat statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
     {
@@ -2474,7 +2474,7 @@ bool32 AreBattlersStatsMaxed(u32 battlerId)
     return TRUE;
 }
 
-bool32 AnyStatIsRaised(u32 battlerId)
+bool32 AnyStatIsRaised(enum BattlerId battlerId)
 {
     for (enum Stat statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
     {
@@ -2484,7 +2484,7 @@ bool32 AnyStatIsRaised(u32 battlerId)
     return FALSE;
 }
 
-u32 CountPositiveStatStages(u32 battlerId)
+u32 CountPositiveStatStages(enum BattlerId battlerId)
 {
     u32 count = 0;
     for (enum Stat statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
@@ -2495,7 +2495,7 @@ u32 CountPositiveStatStages(u32 battlerId)
     return count;
 }
 
-u32 CountNegativeStatStages(u32 battlerId)
+u32 CountNegativeStatStages(enum BattlerId battlerId)
 {
     u32 count = 0;
     for (enum Stat statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
@@ -2506,7 +2506,7 @@ u32 CountNegativeStatStages(u32 battlerId)
     return count;
 }
 
-bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext)
+bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext)
 {
     s32 dmg;
     enum Move *moves = gBattleMons[battlerAtk].moves;
@@ -2521,7 +2521,7 @@ bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 moveIndex, en
     return FALSE;
 }
 
-enum Move *GetMovesArray(u32 battler)
+enum Move *GetMovesArray(enum BattlerId battler)
 {
     if (IsAiBattlerAware(battler) || IsAiBattlerAware(BATTLE_PARTNER(battler)))
         return gBattleMons[battler].moves;
@@ -2529,7 +2529,7 @@ enum Move *GetMovesArray(u32 battler)
         return gBattleHistory->usedMoves[battler];
 }
 
-u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect)
+u32 GetBattlerMoveIndexWithEffect(enum BattlerId battler, enum BattleMoveEffects effect)
 {
     enum Move *moves = GetMovesArray(battler);
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
@@ -2540,7 +2540,7 @@ u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect)
     return MAX_MON_MOVES;
 }
 
-bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext)
+bool32 HasPhysicalBestMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum DamageCalcContext calcContext)
 {
     enum Move atkBestMoves[MAX_MON_MOVES] = {MOVE_NONE};
     GetBestDmgMovesFromBattler(battlerAtk, battlerDef, calcContext, atkBestMoves);
@@ -2563,7 +2563,7 @@ bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContex
     return bestMoveIsPhysical;
 }
 
-bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive)
+bool32 HasOnlyMovesWithCategory(enum BattlerId battlerId, enum DamageCategory category, bool32 onlyOffensive)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -2578,7 +2578,7 @@ bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, boo
     return TRUE;
 }
 
-bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category)
+bool32 HasMoveWithCategory(enum BattlerId battler, enum DamageCategory category)
 {
     enum Move *moves = GetMovesArray(battler);
 
@@ -2590,7 +2590,7 @@ bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category)
     return FALSE;
 }
 
-bool32 HasMoveWithType(u32 battler, enum Type type)
+bool32 HasMoveWithType(enum BattlerId battler, enum Type type)
 {
     enum Move *moves = GetMovesArray(battler);
 
@@ -2603,7 +2603,7 @@ bool32 HasMoveWithType(u32 battler, enum Type type)
     return FALSE;
 }
 
-bool32 HasMoveWithEffect(u32 battler, enum BattleMoveEffects effect)
+bool32 HasMoveWithEffect(enum BattlerId battler, enum BattleMoveEffects effect)
 {
     enum Move *moves = GetMovesArray(battler);
 
@@ -2616,7 +2616,7 @@ bool32 HasMoveWithEffect(u32 battler, enum BattleMoveEffects effect)
     return FALSE;
 }
 
-bool32 HasMoveWithAIEffect(u32 battler, u32 aiEffect)
+bool32 HasMoveWithAIEffect(enum BattlerId battler, u32 aiEffect)
 {
     enum Move *moves = GetMovesArray(battler);
 
@@ -2632,7 +2632,7 @@ bool32 HasMoveWithAIEffect(u32 battler, u32 aiEffect)
     return FALSE;
 }
 
-bool32 HasBattlerSideMoveWithEffect(u32 battler, enum BattleMoveEffects effect)
+bool32 HasBattlerSideMoveWithEffect(enum BattlerId battler, enum BattleMoveEffects effect)
 {
     if (HasMoveWithEffect(battler, effect))
         return TRUE;
@@ -2641,7 +2641,7 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, enum BattleMoveEffects effect)
     return FALSE;
 }
 
-bool32 HasBattlerSideMoveWithAIEffect(u32 battler, u32 aiEffect)
+bool32 HasBattlerSideMoveWithAIEffect(enum BattlerId battler, u32 aiEffect)
 {
     if (HasMoveWithAIEffect(battler, aiEffect))
         return TRUE;
@@ -2653,7 +2653,7 @@ bool32 HasBattlerSideMoveWithAIEffect(u32 battler, u32 aiEffect)
 // HasBattlerSideMoveWithEffect checks if the AI knows a side has a move effect,
 // while HasBattlerSideUsedMoveWithEffect checks if the side has actively USED the move effect.
 // It matches both on move effect and on AI move effect; eg, EFFECT_HAZE will also bring up Freezy Frost or Clear Smog, anything with AI_EFFECT_RESET_STATS.
-bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, enum BattleMoveEffects effect)
+bool32 HasBattlerSideUsedMoveWithEffect(enum BattlerId battler, enum BattleMoveEffects effect)
 {
     u32 aiEffect = GetAIEffectGroup(effect);
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
@@ -2682,7 +2682,7 @@ bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, enum BattleMoveEffects effe
     return FALSE;
 }
 
-bool32 HasNonVolatileMoveEffect(u32 battlerId, enum MoveEffect effect)
+bool32 HasNonVolatileMoveEffect(enum BattlerId battlerId, enum MoveEffect effect)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -2695,7 +2695,7 @@ bool32 HasNonVolatileMoveEffect(u32 battlerId, enum MoveEffect effect)
     return FALSE;
 }
 
-bool32 IsPowerBasedOnStatus(u32 battlerId, enum BattleMoveEffects effect, u32 argument)
+bool32 IsPowerBasedOnStatus(enum BattlerId battlerId, enum BattleMoveEffects effect, u32 argument)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -2710,7 +2710,7 @@ bool32 IsPowerBasedOnStatus(u32 battlerId, enum BattleMoveEffects effect, u32 ar
     return FALSE;
 }
 
-bool32 HasMoveWithAdditionalEffect(u32 battlerId, enum MoveEffect moveEffect)
+bool32 HasMoveWithAdditionalEffect(enum BattlerId battlerId, enum MoveEffect moveEffect)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -2724,7 +2724,7 @@ bool32 HasMoveWithAdditionalEffect(u32 battlerId, enum MoveEffect moveEffect)
     return FALSE;
 }
 
-bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, enum MoveEffect moveEffect)
+bool32 HasBattlerSideMoveWithAdditionalEffect(enum BattlerId battler, enum MoveEffect moveEffect)
 {
     if (HasMoveWithAdditionalEffect(battler, moveEffect))
         return TRUE;
@@ -2733,7 +2733,7 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, enum MoveEffect moveE
     return FALSE;
 }
 
-bool32 HasMoveWithCriticalHitChance(u32 battlerId)
+bool32 HasMoveWithCriticalHitChance(enum BattlerId battlerId)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -2747,7 +2747,7 @@ bool32 HasMoveWithCriticalHitChance(u32 battlerId)
     return FALSE;
 }
 
-bool32 HasMoveWithMoveEffectExcept(u32 battlerId, enum MoveEffect moveEffect, enum BattleMoveEffects exception)
+bool32 HasMoveWithMoveEffectExcept(enum BattlerId battlerId, enum MoveEffect moveEffect, enum BattleMoveEffects exception)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -2762,7 +2762,7 @@ bool32 HasMoveWithMoveEffectExcept(u32 battlerId, enum MoveEffect moveEffect, en
     return FALSE;
 }
 
-bool32 HasMove(u32 battlerId, enum Move move)
+bool32 HasMove(enum BattlerId battlerId, enum Move move)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -2775,7 +2775,7 @@ bool32 HasMove(u32 battlerId, enum Move move)
     return FALSE;
 }
 
-bool32 HasAnyKnownMove(u32 battlerId)
+bool32 HasAnyKnownMove(enum BattlerId battlerId)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -2788,7 +2788,7 @@ bool32 HasAnyKnownMove(u32 battlerId)
     return FALSE;
 }
 
-bool32 HasMoveThatLowersOwnStats(u32 battlerId)
+bool32 HasMoveThatLowersOwnStats(enum BattlerId battlerId)
 {
     enum Move aiMove;
     enum Move *moves = GetMovesArray(battlerId);
@@ -2810,7 +2810,7 @@ bool32 HasMoveThatLowersOwnStats(u32 battlerId)
     return FALSE;
 }
 
-bool32 HasMoveThatRaisesOwnStats(u32 battlerId)
+bool32 HasMoveThatRaisesOwnStats(enum BattlerId battlerId)
 {
     enum Move aiMove;
     enum Move *moves = GetMovesArray(battlerId);
@@ -2832,7 +2832,7 @@ bool32 HasMoveThatRaisesOwnStats(u32 battlerId)
     return FALSE;
 }
 
-bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus)
+bool32 HasMoveWithLowAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 accCheck, bool32 ignoreStatus)
 {
     enum Move *moves = GetMovesArray(battlerAtk);
     u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
@@ -2859,7 +2859,7 @@ bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool
     return FALSE;
 }
 
-bool32 HasSleepMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef)
+bool32 HasSleepMoveWithLowAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     enum Move *moves = GetMovesArray(battlerAtk);
     u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
@@ -2876,7 +2876,7 @@ bool32 HasSleepMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef)
     return FALSE;
 }
 
-bool32 HasHealingEffect(u32 battlerId)
+bool32 HasHealingEffect(enum BattlerId battlerId)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -2903,7 +2903,7 @@ bool32 IsTrappingMove(enum Move move)
     }
 }
 
-bool32 HasTrappingMoveEffect(u32 battler)
+bool32 HasTrappingMoveEffect(enum BattlerId battler)
 {
     enum Move *moves = GetMovesArray(battler);
 
@@ -2916,7 +2916,7 @@ bool32 HasTrappingMoveEffect(u32 battler)
     return FALSE;
 }
 
-bool32 HasThawingMove(u32 battler)
+bool32 HasThawingMove(enum BattlerId battler)
 {
     enum Move *moves = GetMovesArray(battler);
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
@@ -2927,7 +2927,7 @@ bool32 HasThawingMove(u32 battler)
     return FALSE;
 }
 
-bool32 HasUsableWhileAsleepMove(u32 battler)
+bool32 HasUsableWhileAsleepMove(enum BattlerId battler)
 {
     enum Move *moves = GetMovesArray(battler);
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
@@ -3199,7 +3199,7 @@ static inline bool32 IsMoveSleepClauseTrigger(enum Move move)
     return FALSE;
 }
 
-bool32 HasDamagingMove(u32 battler)
+bool32 HasDamagingMove(enum BattlerId battler)
 {
     enum Move *moves = GetMovesArray(battler);
 
@@ -3212,7 +3212,7 @@ bool32 HasDamagingMove(u32 battler)
     return FALSE;
 }
 
-bool32 HasDamagingMoveOfType(u32 battler, enum Type type)
+bool32 HasDamagingMoveOfType(enum BattlerId battler, enum Type type)
 {
     enum Move *moves = GetMovesArray(battler);
 
@@ -3226,7 +3226,7 @@ bool32 HasDamagingMoveOfType(u32 battler, enum Type type)
                 return TRUE;
             if (GetMoveType(moves[moveIndex]) == type)
                 return TRUE;
-            if (GetMoveEffect(moves[moveIndex]) == EFFECT_NATURE_POWER && GetMoveType(GetNaturePowerMove(moves[moveIndex])) == type)
+            if (GetMoveEffect(moves[moveIndex]) == EFFECT_NATURE_POWER && GetMoveType(GetNaturePowerMove()) == type)
                 return TRUE;
         }
     }
@@ -3234,7 +3234,7 @@ bool32 HasDamagingMoveOfType(u32 battler, enum Type type)
     return FALSE;
 }
 
-bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlag)
+bool32 HasMoveWithFlag(enum BattlerId battler, MoveFlag getFlag)
 {
     enum Move *moves = GetMovesArray(battler);
     u32 moveLimitations = gAiLogicData->moveLimitations[battler];
@@ -3250,7 +3250,7 @@ bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlag)
     return FALSE;
 }
 
-bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, enum Move move)
+bool32 IsTwoTurnNotSemiInvulnerableMove(enum BattlerId battlerAtk, enum Move move)
 {
     switch (GetMoveEffect(move))
     {
@@ -3263,7 +3263,7 @@ bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, enum Move move)
     }
 }
 
-static u32 GetLeechSeedDamage(u32 battler)
+static u32 GetLeechSeedDamage(enum BattlerId battler)
 {
     u32 damage = 0;
     u32 leechSeeder = gBattleMons[battler].volatiles.leechSeed;
@@ -3276,7 +3276,7 @@ static u32 GetLeechSeedDamage(u32 battler)
      return damage;
 }
 
-static u32 GetNightmareDamage(u32 battlerId)
+static u32 GetNightmareDamage(enum BattlerId battlerId)
 {
     u32 damage = 0;
     if (gBattleMons[battlerId].volatiles.nightmare
@@ -3290,7 +3290,7 @@ static u32 GetNightmareDamage(u32 battlerId)
     return damage;
 }
 
-static u32 GetCurseDamage(u32 battlerId)
+static u32 GetCurseDamage(enum BattlerId battlerId)
 {
     u32 damage = 0;
     if (gBattleMons[battlerId].volatiles.cursed)
@@ -3302,7 +3302,7 @@ static u32 GetCurseDamage(u32 battlerId)
     return damage;
 }
 
-static u32 GetTrapDamage(u32 battler)
+static u32 GetTrapDamage(enum BattlerId battler)
 {
     // ai has no knowledge about turns remaining
     u32 damage = 0;
@@ -3319,7 +3319,7 @@ static u32 GetTrapDamage(u32 battler)
     return damage;
 }
 
-static u32 GetPoisonDamage(u32 battlerId)
+static u32 GetPoisonDamage(enum BattlerId battlerId)
 {
     u32 damage = 0;
 
@@ -3345,7 +3345,7 @@ static u32 GetPoisonDamage(u32 battlerId)
     return damage;
 }
 
-static bool32 BattlerAffectedBySandstorm(u32 battlerId, enum Ability ability)
+static bool32 BattlerAffectedBySandstorm(enum BattlerId battlerId, enum Ability ability)
 {
     if (!IS_BATTLER_ANY_TYPE(battlerId, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
       && ability != ABILITY_SAND_VEIL
@@ -3356,7 +3356,7 @@ static bool32 BattlerAffectedBySandstorm(u32 battlerId, enum Ability ability)
     return FALSE;
 }
 
-static bool32 BattlerAffectedByHail(u32 battlerId, enum Ability ability)
+static bool32 BattlerAffectedByHail(enum BattlerId battlerId, enum Ability ability)
 {
     if (!IS_BATTLER_OF_TYPE(battlerId, TYPE_ICE)
       && ability != ABILITY_SNOW_CLOAK
@@ -3366,7 +3366,7 @@ static bool32 BattlerAffectedByHail(u32 battlerId, enum Ability ability)
     return FALSE;
 }
 
-static u32 GetWeatherDamage(u32 battlerId)
+static u32 GetWeatherDamage(enum BattlerId battlerId)
 {
     enum Ability ability = gAiLogicData->abilities[battlerId];
     enum HoldEffect holdEffect = gAiLogicData->holdEffects[battlerId];
@@ -3402,7 +3402,7 @@ static u32 GetWeatherDamage(u32 battlerId)
     return damage;
 }
 
-u32 GetBattlerSecondaryDamage(u32 battlerId)
+u32 GetBattlerSecondaryDamage(enum BattlerId battlerId)
 {
     u32 secondaryDamage;
 
@@ -3419,7 +3419,7 @@ u32 GetBattlerSecondaryDamage(u32 battlerId)
     return secondaryDamage;
 }
 
-bool32 BattlerWillFaintFromWeather(u32 battler, enum Ability ability)
+bool32 BattlerWillFaintFromWeather(enum BattlerId battler, enum Ability ability)
 {
     if ((BattlerAffectedBySandstorm(battler, ability) || BattlerAffectedByHail(battler, ability))
       && gBattleMons[battler].hp <= max(1, gBattleMons[battler].maxHP / 16))
@@ -3428,7 +3428,7 @@ bool32 BattlerWillFaintFromWeather(u32 battler, enum Ability ability)
     return FALSE;
 }
 
-bool32 BattlerWillFaintFromSecondaryDamage(u32 battler, enum Ability ability)
+bool32 BattlerWillFaintFromSecondaryDamage(enum BattlerId battler, enum Ability ability)
 {
     if (GetBattlerSecondaryDamage(battler) != 0
       && gBattleMons[battler].hp <= max(1, gBattleMons[battler].maxHP / 16))
@@ -3436,7 +3436,7 @@ bool32 BattlerWillFaintFromSecondaryDamage(u32 battler, enum Ability ability)
     return FALSE;
 }
 
-bool32 AnyUsefulStatIsRaised(u32 battler)
+bool32 AnyUsefulStatIsRaised(enum BattlerId battler)
 {
     for (enum Stat statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
     {
@@ -3463,7 +3463,7 @@ bool32 AnyUsefulStatIsRaised(u32 battler)
     return FALSE;
 }
 
-bool32 BattlerHasMaxHPProtection(u32 battler)
+bool32 BattlerHasMaxHPProtection(enum BattlerId battler)
 {
     enum Ability ability = gAiLogicData->abilities[battler];
     if (!AI_BattlerAtMaxHp(battler))
@@ -3477,7 +3477,7 @@ bool32 BattlerHasMaxHPProtection(u32 battler)
     return FALSE;
 }
 
-enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, enum Move move)
+enum AIPivot ShouldPivot(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     enum Move predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
@@ -3512,7 +3512,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, enum Move move)
 #define BATTLE_TYPE_CANT_KNOCK_OFF (BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK \
                                   | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_SECRET_BASE \
                                   | (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0))
-bool32 CanKnockOffItem(u32 fromBattler, u32 battler, enum Item item)
+bool32 CanKnockOffItem(enum BattlerId fromBattler, enum BattlerId battler, enum Item item)
 {
     if (item == ITEM_NONE)
         return FALSE;
@@ -3531,7 +3531,7 @@ bool32 CanKnockOffItem(u32 fromBattler, u32 battler, enum Item item)
 #undef BATTLE_TYPE_CANT_KNOCK_OFF
 
 // status checks
-bool32 IsBattlerIncapacitated(u32 battler, enum Ability ability)
+bool32 IsBattlerIncapacitated(enum BattlerId battler, enum Ability ability)
 {
     if ((gBattleMons[battler].status1 & STATUS1_FREEZE) && !HasThawingMove(battler))
         return TRUE;    // if battler has thawing move we assume they will definitely use it, and thus being frozen should be neglected
@@ -3545,7 +3545,7 @@ bool32 IsBattlerIncapacitated(u32 battler, enum Ability ability)
     return FALSE;
 }
 
-bool32 AI_CanPutToSleep(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, enum Move move, enum Move partnerMove)
+bool32 AI_CanPutToSleep(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility, enum Move move, enum Move partnerMove)
 {
     if (!CanBeSlept(battlerAtk, battlerDef, defAbility, BLOCKED_BY_SLEEP_CLAUSE)
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
@@ -3554,7 +3554,7 @@ bool32 AI_CanPutToSleep(u32 battlerAtk, u32 battlerDef, enum Ability defAbility,
     return TRUE;
 }
 
-static inline bool32 DoesBattlerBenefitFromAllVolatileStatus(u32 battler, enum Ability ability)
+static inline bool32 DoesBattlerBenefitFromAllVolatileStatus(enum BattlerId battler, enum Ability ability)
 {
     if (ability == ABILITY_MARVEL_SCALE
      || ability == ABILITY_QUICK_FEET
@@ -3566,7 +3566,7 @@ static inline bool32 DoesBattlerBenefitFromAllVolatileStatus(u32 battler, enum A
     return FALSE;
 }
 
-bool32 ShouldPoison(u32 battlerAtk, u32 battlerDef)
+bool32 ShouldPoison(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     enum Ability abilityDef = gAiLogicData->abilities[battlerDef];
     // Battler can be poisoned and has move/ability that synergizes with being poisoned
@@ -3586,7 +3586,7 @@ bool32 ShouldPoison(u32 battlerAtk, u32 battlerDef)
         return TRUE;
 }
 
-bool32 ShouldBurn(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
+bool32 ShouldBurn(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef)
 {
     // Battler can be burned and has move/ability that synergizes with being burned
     if (CanBeBurned(battlerAtk, battlerDef, abilityDef) && (
@@ -3606,7 +3606,7 @@ bool32 ShouldBurn(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
         return TRUE;
 }
 
-bool32 ShouldFreezeOrFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
+bool32 ShouldFreezeOrFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef)
 {
     if (!B_USE_FROSTBITE)
     {
@@ -3638,7 +3638,7 @@ bool32 ShouldFreezeOrFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability abil
     }
 }
 
-bool32 ShouldParalyze(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
+bool32 ShouldParalyze(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef)
 {
     // Battler can be paralyzed and has move/ability that synergizes with being paralyzed
     if (CanBeParalyzed(battlerAtk, battlerDef, abilityDef) && (
@@ -3655,7 +3655,7 @@ bool32 ShouldParalyze(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
         return TRUE;
 }
 
-bool32 AI_CanPoison(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, enum Move move, enum Move partnerMove)
+bool32 AI_CanPoison(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility, enum Move move, enum Move partnerMove)
 {
     if (!CanBePoisoned(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk], defAbility)
       || gAiLogicData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] == UQ_4_12(0.0)
@@ -3666,7 +3666,7 @@ bool32 AI_CanPoison(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, enu
     return TRUE;
 }
 
-bool32 AI_CanParalyze(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, enum Move move, enum Move partnerMove)
+bool32 AI_CanParalyze(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility, enum Move move, enum Move partnerMove)
 {
     if (!CanBeParalyzed(battlerAtk, battlerDef, defAbility)
       || gAiLogicData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] == UQ_4_12(0.0)
@@ -3676,7 +3676,7 @@ bool32 AI_CanParalyze(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, e
     return TRUE;
 }
 
-bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, enum Move move, enum Ability abilityDef)
+bool32 AI_CanBeConfused(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum Ability abilityDef)
 {
     if (gBattleMons[battlerDef].volatiles.confusionTurns > 0
      || (abilityDef == ABILITY_OWN_TEMPO && !DoesBattlerIgnoreAbilityChecks(battlerAtk, gAiLogicData->abilities[battlerAtk], move))
@@ -3687,7 +3687,7 @@ bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, enum Move move, enum Abi
     return TRUE;
 }
 
-bool32 AI_CanConfuse(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, u32 battlerAtkPartner, enum Move move, enum Move partnerMove)
+bool32 AI_CanConfuse(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility, enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove)
 {
     if (AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_FOES_AND_ALLY
      && AI_CanBeConfused(battlerAtk, battlerDef, move, defAbility)
@@ -3701,7 +3701,7 @@ bool32 AI_CanConfuse(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, u3
     return TRUE;
 }
 
-bool32 AI_CanBurn(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, u32 battlerAtkPartner, enum Move move, enum Move partnerMove)
+bool32 AI_CanBurn(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility, enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove)
 {
     if (!CanBeBurned(battlerAtk, battlerDef, defAbility)
       || gAiLogicData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] == UQ_4_12(0.0)
@@ -3713,7 +3713,7 @@ bool32 AI_CanBurn(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, u32 b
     return TRUE;
 }
 
-bool32 AI_CanGiveFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, u32 battlerAtkPartner, enum Move move, enum Move partnerMove)
+bool32 AI_CanGiveFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility, enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove)
 {
     if (!CanBeFrozen(battlerAtk, battlerDef, defAbility)
       || gAiLogicData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] == UQ_4_12(0.0)
@@ -3725,7 +3725,7 @@ bool32 AI_CanGiveFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability defAbili
     return TRUE;
 }
 
-bool32 AI_CanBeInfatuated(u32 battlerAtk, u32 battlerDef, enum Ability defAbility)
+bool32 AI_CanBeInfatuated(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility)
 {
     if (gBattleMons[battlerDef].volatiles.infatuation
       || gAiLogicData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] == UQ_4_12(0.0)
@@ -3736,7 +3736,7 @@ bool32 AI_CanBeInfatuated(u32 battlerAtk, u32 battlerDef, enum Ability defAbilit
     return TRUE;
 }
 
-bool32 ShouldTryToFlinch(u32 battlerAtk, u32 battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move)
+bool32 ShouldTryToFlinch(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move)
 {
     enum Move predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     if (((!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk]) && (defAbility == ABILITY_SHIELD_DUST || defAbility == ABILITY_INNER_FOCUS))
@@ -3758,7 +3758,7 @@ bool32 ShouldTryToFlinch(u32 battlerAtk, u32 battlerDef, enum Ability atkAbility
     return FALSE;   // don't try to flinch
 }
 
-bool32 ShouldTrap(u32 battlerAtk, u32 battlerDef, enum Move move)
+bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     if (AI_CanBattlerEscape(battlerDef))
         return FALSE;
@@ -3778,7 +3778,7 @@ bool32 ShouldTrap(u32 battlerAtk, u32 battlerDef, enum Move move)
     return FALSE;
 }
 
-bool32 IsFlinchGuaranteed(u32 battlerAtk, u32 battlerDef, enum Move move)
+bool32 IsFlinchGuaranteed(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     if (!MoveHasAdditionalEffect(move, MOVE_EFFECT_FLINCH))
         return FALSE;
@@ -3810,7 +3810,7 @@ bool32 IsFlinchGuaranteed(u32 battlerAtk, u32 battlerDef, enum Move move)
     return FALSE;
 }
 
-bool32 HasChoiceEffect(u32 battler)
+bool32 HasChoiceEffect(enum BattlerId battler)
 {
     enum Ability ability = gAiLogicData->abilities[battler];
     if (ability == ABILITY_GORILLA_TACTICS)
@@ -3831,7 +3831,7 @@ bool32 HasChoiceEffect(u32 battler)
     }
 }
 
-static u32 FindMoveUsedXTurnsAgo(u32 battlerId, u32 x)
+static u32 FindMoveUsedXTurnsAgo(enum BattlerId battlerId, u32 x)
 {
     s32 index = gBattleHistory->moveHistoryIndex[battlerId];
     for (u32 turnsAgo = 0; turnsAgo < x; turnsAgo++)
@@ -3842,7 +3842,7 @@ static u32 FindMoveUsedXTurnsAgo(u32 battlerId, u32 x)
     return gBattleHistory->moveHistory[battlerId][index];
 }
 
-bool32 IsWakeupTurn(u32 battler)
+bool32 IsWakeupTurn(enum BattlerId battler)
 {
     // Check if rest was used 2 turns ago
     if ((gBattleMons[battler].status1 & STATUS1_SLEEP) == 1 && GetMoveEffect(FindMoveUsedXTurnsAgo(battler, 2)) == EFFECT_REST)
@@ -3851,7 +3851,7 @@ bool32 IsWakeupTurn(u32 battler)
         return FALSE;
 }
 
-bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
+bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof)
 {
     struct Pokemon *party;
     u32 battlerOnField1, battlerOnField2;
@@ -3901,7 +3901,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
     return hasStatusToCure;
 }
 
-bool32 ShouldUseRecoilMove(u32 battlerAtk, u32 battlerDef, u32 recoilDmg, u32 moveIndex)
+bool32 ShouldUseRecoilMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 recoilDmg, u32 moveIndex)
 {
     if (recoilDmg >= gBattleMons[battlerAtk].hp //Recoil kills attacker
       && CountUsablePartyMons(battlerDef) != 0) //Foe has more than 1 target left
@@ -3915,7 +3915,7 @@ bool32 ShouldUseRecoilMove(u32 battlerAtk, u32 battlerDef, u32 recoilDmg, u32 mo
     return TRUE;
 }
 
-static inline bool32 RecoveryEnablesWinning1v1(u32 battlerAtk, u32 battlerDef, enum Move move, bool32 aiIsFaster, u32 healAmount)
+static inline bool32 RecoveryEnablesWinning1v1(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, bool32 aiIsFaster, u32 healAmount)
 {
     if (aiIsFaster)
     {
@@ -3937,7 +3937,7 @@ static inline bool32 RecoveryEnablesWinning1v1(u32 battlerAtk, u32 battlerDef, e
     return FALSE;
 }
 
-static inline bool32 ShouldDrainHPToWithstandHit(u32 battlerAtk, u32 battlerDef, u32 currHP, u32 healAmount)
+static inline bool32 ShouldDrainHPToWithstandHit(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 currHP, u32 healAmount)
 {
     s32 bestDamageFromPlayer = GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING);
 
@@ -3950,7 +3950,7 @@ static inline bool32 ShouldDrainHPToWithstandHit(u32 battlerAtk, u32 battlerDef,
     return FALSE;
 }
 
-bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, enum Move move)
+bool32 ShouldAbsorb(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     u32 maxHP = gBattleMons[battlerAtk].maxHP;
     u32 currHP = gBattleMons[battlerAtk].hp;
@@ -3977,7 +3977,7 @@ bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, enum Move move)
     return FALSE;
 }
 
-bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, enum Move move, u32 healPercent)
+bool32 ShouldRecover(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, u32 healPercent)
 {
     u32 maxHP = gBattleMons[battlerAtk].maxHP;
     u32 currHP = gBattleMons[battlerAtk].hp;
@@ -3996,7 +3996,7 @@ bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, enum Move move, u32 healPer
     return FALSE;
 }
 
-bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect)
+bool32 ShouldSetScreen(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum BattleMoveEffects moveEffect)
 {
     enum BattleSide atkSide = GetBattlerSide(battlerAtk);
 
@@ -4031,7 +4031,7 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     return FALSE;
 }
 
-static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 usingItem, struct AiLogicData *aiData)
+static bool32 ShouldCureStatusInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, bool32 usingItem, struct AiLogicData *aiData)
 {
     bool32 targetingSelf = (battlerAtk == battlerDef);
     bool32 targetingAlly = IsTargetingPartner(battlerAtk, battlerDef);
@@ -4117,12 +4117,12 @@ static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 us
     }
 }
 
-bool32 ShouldCureStatus(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData)
+bool32 ShouldCureStatus(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct AiLogicData *aiData)
 {
     return ShouldCureStatusInternal(battlerAtk, battlerDef, FALSE, aiData);
 }
 
-bool32 ShouldCureStatusWithItem(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData)
+bool32 ShouldCureStatusWithItem(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct AiLogicData *aiData)
 {
     return ShouldCureStatusInternal(battlerAtk, battlerDef, TRUE, aiData);
 }
@@ -4131,13 +4131,13 @@ bool32 ShouldCureStatusWithItem(u32 battlerAtk, u32 battlerDef, struct AiLogicDa
 bool32 IsBattle1v1(void)
 {
     if (IsDoubleBattle()
-      && ((IsBattlerAlive(B_POSITION_PLAYER_LEFT) && IsBattlerAlive(B_POSITION_PLAYER_RIGHT))
-      || (IsBattlerAlive(B_POSITION_OPPONENT_LEFT) && IsBattlerAlive(B_POSITION_OPPONENT_RIGHT))))
+      && ((IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)) && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)))
+      || (IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)) && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)))))
         return FALSE;
     return TRUE;
 }
 
-bool32 HasTwoOpponents(u32 battler)
+bool32 HasTwoOpponents(enum BattlerId battler)
 {
     if (IsDoubleBattle()
       && IsBattlerAlive(LEFT_FOE(battler)) && IsBattlerAlive(RIGHT_FOE(battler)))
@@ -4145,7 +4145,7 @@ bool32 HasTwoOpponents(u32 battler)
     return FALSE;
 }
 
-bool32 HasPartner(u32 battler)
+bool32 HasPartner(enum BattlerId battler)
 {
     if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
     {
@@ -4157,7 +4157,7 @@ bool32 HasPartner(u32 battler)
     return FALSE;
 }
 
-bool32 HasPartnerIgnoreFlags(u32 battler)
+bool32 HasPartnerIgnoreFlags(enum BattlerId battler)
 {
     if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
     {
@@ -4166,31 +4166,31 @@ bool32 HasPartnerIgnoreFlags(u32 battler)
     return FALSE;
 }
 
-bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef)
+bool32 IsTargetingPartner(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ATTACKS_PARTNER)
         return FALSE;
     return ((battlerAtk) == (battlerDef ^ BIT_FLANK));
 }
 
-enum Move GetAllyChosenMove(u32 battlerId)
+enum Move GetAllyChosenMove(enum BattlerId battlerId)
 {
-    u32 partnerBattler = BATTLE_PARTNER(battlerId);
+    enum BattlerId partnerBattler = BATTLE_PARTNER(battlerId);
 
     if (!IsBattlerAlive(partnerBattler) || !IsAiBattlerAware(partnerBattler))
         return MOVE_NONE;
     else if (partnerBattler > battlerId) // Battler with the lower id chooses the move first.
         return gAiLogicData->lastUsedMove[partnerBattler];
     else
-        return GetChosenMoveFromPosition(partnerBattler);
+        return GetBattlerChosenMove(partnerBattler);
 }
 
-bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, enum Move move, enum Move partnerMove)
+bool32 AreMovesEquivalent(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove)
 {
     if (!IsBattlerAlive(battlerAtkPartner) || partnerMove == MOVE_NONE)
         return FALSE;
 
-    u32 battlerDef = gBattleStruct->moveTarget[battlerAtk];
+    enum BattlerId battlerDef = gBattleStruct->moveTarget[battlerAtk];
 
     // We don't care the effect is basically the same; we would use this move anyway.
     if (IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
@@ -4279,7 +4279,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     return aiEffect;
 }
 
-static u32 GetAIEffectGroupFromMove(u32 battler, enum Move move)
+static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move)
 {
     u32 aiEffect = GetAIEffectGroup(GetMoveEffect(move));
 
@@ -4334,7 +4334,7 @@ static u32 GetAIEffectGroupFromMove(u32 battler, enum Move move)
 }
 
 // It matches both on move effect and on AI move effect; eg, EFFECT_HAZE will also bring up Freezy Frost or Clear Smog, anything with AI_EFFECT_RESET_STATS.
-bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, enum Move move, enum Move partnerMove)
+bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove)
 {
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
@@ -4352,7 +4352,7 @@ bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, enum
 }
 
 //PARTNER_MOVE_EFFECT_IS_STATUS_SAME_TARGET
-bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef, enum Move partnerMove)
+bool32 PartnerMoveEffectIsStatusSameTarget(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move partnerMove)
 {
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
@@ -4372,7 +4372,7 @@ bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef
 }
 
 //PARTNER_MOVE_EFFECT_IS
-bool32 PartnerMoveEffectIs(u32 battlerAtkPartner, enum Move partnerMove, enum BattleMoveEffects effectCheck)
+bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, enum BattleMoveEffects effectCheck)
 {
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
@@ -4384,7 +4384,7 @@ bool32 PartnerMoveEffectIs(u32 battlerAtkPartner, enum Move partnerMove, enum Ba
 }
 
 //PARTNER_MOVE_IS_TAILWIND_TRICKROOM
-bool32 PartnerMoveIs(u32 battlerAtkPartner, enum Move partnerMove, enum Move moveCheck)
+bool32 PartnerMoveIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, enum Move moveCheck)
 {
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
@@ -4395,7 +4395,7 @@ bool32 PartnerMoveIs(u32 battlerAtkPartner, enum Move partnerMove, enum Move mov
 }
 
 //PARTNER_MOVE_IS_SAME
-bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, enum Move move, enum Move partnerMove)
+bool32 PartnerMoveIsSameAsAttacker(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove)
 {
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
@@ -4406,7 +4406,7 @@ bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, enum M
 }
 
 //PARTNER_MOVE_IS_SAME_NO_TARGET
-bool32 PartnerMoveIsSameNoTarget(u32 battlerAtkPartner, enum Move move, enum Move partnerMove)
+bool32 PartnerMoveIsSameNoTarget(enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove)
 {
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
@@ -4422,7 +4422,7 @@ bool32 PartnerMoveActivatesSleepClause(enum Move partnerMove)
     return IsMoveSleepClauseTrigger(partnerMove);
 }
 
-bool32 ShouldUseWishAromatherapy(u32 battlerAtk, u32 battlerDef, enum Move move)
+bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     s32 firstId, lastId;
     struct Pokemon *party;
@@ -4516,7 +4516,7 @@ void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData)
 }
 
 // Set potential field effect from ability for switch in
-void SetBattlerFieldStatusForSwitchin(u32 battler)
+void SetBattlerFieldStatusForSwitchin(enum BattlerId battler)
 {
     switch (gAiLogicData->abilities[battler])
     {
@@ -4538,7 +4538,7 @@ void SetBattlerFieldStatusForSwitchin(u32 battler)
 }
 
 // party logic
-s32 CountUsablePartyMons(u32 battlerId)
+s32 CountUsablePartyMons(enum BattlerId battlerId)
 {
     s32 battlerOnField1, battlerOnField2, ret;
     struct Pokemon *party;
@@ -4572,7 +4572,7 @@ s32 CountUsablePartyMons(u32 battlerId)
     return ret;
 }
 
-bool32 IsPartyFullyHealedExceptBattler(u32 battlerId)
+bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battlerId)
 {
     struct Pokemon *party = GetBattlerParty(battlerId);
 
@@ -4588,7 +4588,7 @@ bool32 IsPartyFullyHealedExceptBattler(u32 battlerId)
     return TRUE;
 }
 
-bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category)
+bool32 PartyHasMoveCategory(enum BattlerId battlerId, enum DamageCategory category)
 {
     struct Pokemon *party = GetBattlerParty(battlerId);
 
@@ -4614,7 +4614,7 @@ bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category)
     return FALSE;
 }
 
-bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category)
+bool32 SideHasMoveCategory(enum BattlerId battlerId, enum DamageCategory category)
 {
     if (HasPartnerIgnoreFlags(battlerId))
     {
@@ -4682,7 +4682,7 @@ bool32 IsStatBoostingBerry(enum Item item)
     }
 }
 
-bool32 ShouldRestoreHpBerry(u32 battlerAtk, enum Item item)
+bool32 ShouldRestoreHpBerry(enum BattlerId battlerAtk, enum Item item)
 {
     switch (item)
     {
@@ -4712,7 +4712,7 @@ bool32 IsRecycleEncouragedItem(enum Item item)
     return FALSE;
 }
 
-static bool32 HasMoveThatChangesKOThreshold(u32 battlerId, u32 noOfHitsToFaint, bool32 aiIsFaster)
+static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHitsToFaint, bool32 aiIsFaster)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -4810,7 +4810,7 @@ static u32 GetStagesOfStatChange(enum StatChange statChange)
     return 0; // STAT_HP, should never be getting changed
 }
 
-static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, enum StatChange statChange, bool32 considerContrary)
+static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statChange, bool32 considerContrary)
 {
     enum AIScore tempScore = NO_INCREASE;
     u32 noOfHitsToFaint = NoOfHitsForTargetToFaintBattler(battlerDef, battlerAtk, DONT_CONSIDER_ENDURE);
@@ -4934,7 +4934,7 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
     return tempScore;
 }
 
-bool32 HasHPForDamagingSetup(u32 battlerAtk, u32 battlerDef, u32 hpThreshold)
+bool32 HasHPForDamagingSetup(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 hpThreshold)
 {
     bool32 bestMoveIsPhysical = HasPhysicalBestMove(battlerDef, battlerAtk, AI_DEFENDING);
 
@@ -4955,17 +4955,17 @@ bool32 HasHPForDamagingSetup(u32 battlerAtk, u32 battlerDef, u32 hpThreshold)
     return FALSE;
 }
 
-enum AIScore IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
+enum AIScore IncreaseStatUpScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statChange)
 {
     return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, TRUE);
 }
 
-enum AIScore IncreaseStatUpScoreContrary(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
+enum AIScore IncreaseStatUpScoreContrary(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statChange)
 {
     return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, FALSE);
 }
 
-void IncreasePoisonScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *score)
+void IncreasePoisonScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score)
 {
     if (((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT) && CanAIFaintTarget(battlerAtk, battlerDef, 0))
             || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_PSN || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_STATUS)
@@ -4988,7 +4988,7 @@ void IncreasePoisonScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *sc
     }
 }
 
-void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *score)
+void IncreaseBurnScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score)
 {
     if (((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT) && CanAIFaintTarget(battlerAtk, battlerDef, 0))
             || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_BRN || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_STATUS)
@@ -5029,7 +5029,7 @@ void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *scor
     }
 }
 
-void IncreaseParalyzeScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *score)
+void IncreaseParalyzeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score)
 {
     if (((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT) && CanAIFaintTarget(battlerAtk, battlerDef, 0))
             || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_PAR || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_STATUS)
@@ -5051,7 +5051,7 @@ void IncreaseParalyzeScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *
     }
 }
 
-void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *score)
+void IncreaseSleepScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score)
 {
     if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_SLP || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_STATUS)
         return;
@@ -5083,7 +5083,7 @@ void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *sco
         ADJUST_SCORE_PTR(WEAK_EFFECT);
 }
 
-void IncreaseConfusionScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *score)
+void IncreaseConfusionScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score)
 {
     if (((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT) && CanAIFaintTarget(battlerAtk, battlerDef, 0))
             || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_CONFUSION || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CURE_STATUS)
@@ -5102,7 +5102,7 @@ void IncreaseConfusionScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 
     }
 }
 
-void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *score)
+void IncreaseFrostbiteScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score)
 {
     if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT) && CanAIFaintTarget(battlerAtk, battlerDef, 0))
         return;
@@ -5142,7 +5142,7 @@ void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 
     }
 }
 
-bool32 AI_MoveMakesContact(u32 battlerAtk, u32 battlerDef, enum Ability ability, enum HoldEffect holdEffect, enum Move move)
+bool32 AI_MoveMakesContact(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability ability, enum HoldEffect holdEffect, enum Move move)
 {
     if (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM)
     {
@@ -5163,7 +5163,7 @@ bool32 AI_MoveMakesContact(u32 battlerAtk, u32 battlerDef, enum Ability ability,
     return TRUE;
 }
 
-bool32 IsUnseenFistContactMove(u32 battlerAtk, u32 battlerDef, enum Move move)
+bool32 IsUnseenFistContactMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
         return FALSE;
@@ -5186,7 +5186,7 @@ bool32 IsUnseenFistContactMove(u32 battlerAtk, u32 battlerDef, enum Move move)
 }
 
 
-bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, enum Move move)
+bool32 IsConsideringZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     if (GetMovePower(move) == 0 && GetMoveZEffect(move) == Z_EFFECT_NONE)
         return FALSE;
@@ -5195,7 +5195,7 @@ bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, enum Move move)
 }
 
 //TODO - this could use some more sophisticated logic
-bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, enum Move chosenMove)
+bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move chosenMove)
 {
     // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
     enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAtk, chosenMove);
@@ -5365,7 +5365,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, enum Move chosenMove)
     return FALSE;
 }
 
-void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use)
+void SetAIUsingGimmick(enum BattlerId battler, enum AIConsiderGimmick use)
 {
     if (use == USE_GIMMICK)
         gAiBattleData->aiUsingGimmick |= (1<<battler);
@@ -5373,7 +5373,7 @@ void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use)
         gAiBattleData->aiUsingGimmick &= ~(1<<battler);
 }
 
-bool32 IsAIUsingGimmick(u32 battler)
+bool32 IsAIUsingGimmick(enum BattlerId battler)
 {
     return (gAiBattleData->aiUsingGimmick & (1<<battler)) != 0;
 }
@@ -5384,9 +5384,9 @@ struct AltTeraCalcs
     struct SimulatedDamage dealtWithoutTera[MAX_MON_MOVES];
 };
 
-enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs);
+enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerId opposingBattler, struct AltTeraCalcs *altCalcs);
 
-void DecideTerastal(u32 battler)
+void DecideTerastal(enum BattlerId battler)
 {
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA)
         return;
@@ -5401,7 +5401,7 @@ void DecideTerastal(u32 battler)
     // TODO: A lot of these checks are most effective for an omnicient ai.
     // If we don't have enough information about the opponent's moves, consider simpler checks based on type effectivness.
 
-    u32 opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
 
     // Default calculations automatically assume gimmicks for the attacker, but not the defender.
     // Consider calcs for the other possibilities.
@@ -5466,7 +5466,7 @@ void DecideTerastal(u32 battler)
 #define takenWithTera altCalcs->takenWithTera
 #define takenWithoutTera gAiLogicData->simulatedDmg[opposingBattler][battler]
 
-enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs)
+enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerId opposingBattler, struct AltTeraCalcs *altCalcs)
 {
     struct Pokemon *party = GetBattlerParty(battler);
 
@@ -5628,12 +5628,12 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, str
 #undef takenWithTera
 #undef takenWithoutTera
 
-bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId)
+bool32 AI_IsBattlerAsleepOrComatose(enum BattlerId battlerId)
 {
     return (gBattleMons[battlerId].status1 & STATUS1_SLEEP) || gAiLogicData->abilities[battlerId] == ABILITY_COMATOSE;
 }
 
-s32 AI_TryToClearStats(u32 battlerAtk, u32 battlerDef, bool32 isDoubleBattle)
+s32 AI_TryToClearStats(enum BattlerId battlerAtk, enum BattlerId battlerDef, bool32 isDoubleBattle)
 {
     if (isDoubleBattle)
         return min(CountPositiveStatStages(battlerDef) + CountPositiveStatStages(BATTLE_PARTNER(battlerDef)), 7);
@@ -5641,7 +5641,7 @@ s32 AI_TryToClearStats(u32 battlerAtk, u32 battlerDef, bool32 isDoubleBattle)
         return min(CountPositiveStatStages(battlerDef), 4);
 }
 
-bool32 AI_ShouldCopyStatChanges(u32 battlerAtk, u32 battlerDef)
+bool32 AI_ShouldCopyStatChanges(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     // Want to copy positive stat changes
     for (enum Stat statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
@@ -5672,7 +5672,7 @@ bool32 AI_ShouldCopyStatChanges(u32 battlerAtk, u32 battlerDef)
 }
 
 //TODO - track entire opponent party data to determine hazard effectiveness
-bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData)
+bool32 AI_ShouldSetUpHazards(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, struct AiLogicData *aiData)
 {
     if (CountUsablePartyMons(battlerDef) == 0
      || HasBattlerSideMoveWithAIEffect(battlerDef, AI_EFFECT_CLEAR_HAZARDS))
@@ -5697,7 +5697,7 @@ bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, enum Move move, str
     return TRUE;
 }
 
-void IncreaseTidyUpScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *score)
+void IncreaseTidyUpScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score)
 {
     if (AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
         ADJUST_SCORE_PTR(GOOD_EFFECT);
@@ -5715,12 +5715,12 @@ void IncreaseTidyUpScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *sc
         ADJUST_SCORE_PTR(-2);
 }
 
-bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, enum Move move, struct AiLogicData *aiData)
+bool32 AI_ShouldSpicyExtract(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Move move, struct AiLogicData *aiData)
 {
     bool32 preventsStatLoss;
     enum Ability partnerAbility = aiData->abilities[battlerAtkPartner];
     enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battlerAtk));
-    u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
+    enum BattlerId opposingBattler = GetBattlerAtPosition(opposingPosition);
 
     if (gBattleMons[battlerAtkPartner].statStages[STAT_ATK] == MAX_STAT_STAGE
      || partnerAbility == ABILITY_CONTRARY
@@ -5748,7 +5748,7 @@ bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, enum Move mo
          && HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL));
 }
 
-u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, enum Move move)
+u32 IncreaseSubstituteMoveScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     u32 scoreIncrease = 0;
@@ -5788,7 +5788,7 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, enum Move move)
     return scoreIncrease;
 }
 
-bool32 IsBattlerItemEnabled(u32 battler)
+bool32 IsBattlerItemEnabled(enum BattlerId battler)
 {
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_NEGATE_UNAWARE)
         return TRUE;
@@ -5801,7 +5801,7 @@ bool32 IsBattlerItemEnabled(u32 battler)
     return TRUE;
 }
 
-u32 GetFriendlyFireKOThreshold(u32 battler)
+u32 GetFriendlyFireKOThreshold(enum BattlerId battler)
 {
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY)
         return FRIENDLY_FIRE_RISKY_THRESHOLD;
@@ -5858,7 +5858,7 @@ bool32 DoesIntimidateRaiseStats(enum Ability ability)
 }
 
 // TODO: work out when to attack into the player's contextually 'beneficial' ability
-bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, enum Ability ability)
+bool32 ShouldTriggerAbility(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability ability)
 {
     if (IsTargetingPartner(battlerAtk, battlerDef))
     {
@@ -5913,7 +5913,7 @@ bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, enum Ability ability
 
 // Used by CheckBadMove; this is determining purely if the effect CAN change an ability, not if it SHOULD.
 // At the moment, the parts about Mummy and Wandering Spirit are not actually used.
-bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData)
+bool32 CanEffectChangeAbility(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, struct AiLogicData *aiData)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
 
@@ -6046,7 +6046,7 @@ bool32 DoesEffectReplaceTargetAbility(u32 effect)
     }
 }
 
-void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *score, struct AiLogicData *aiData)
+void AbilityChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score, struct AiLogicData *aiData)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     bool32 isTargetingPartner = IsTargetingPartner(battlerAtk, battlerDef);
@@ -6119,7 +6119,7 @@ void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, enum Move move, s32 *sco
     }
 }
 
-enum AIScore BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct AiLogicData *aiData)
+enum AIScore BattlerBenefitsFromAbilityScore(enum BattlerId battler, enum Ability ability, struct AiLogicData *aiData)
 {
     if (gAbilitiesInfo[ability].aiRating < 0)
         return WORST_EFFECT;
@@ -6272,7 +6272,7 @@ u32 GetAIExplosionChanceFromHP(u32 hpPercent)
     return (EXPLOSION_HIGHER_HP_THRESHOLD - hpPercent);
 }
 
-bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster)
+bool32 ShouldFinalGambit(enum BattlerId battlerAtk, enum BattlerId battlerDef, bool32 aiIsFaster)
 {
     if (!gAiLogicData->shouldConsiderFinalGambit)
         return FALSE;
@@ -6291,7 +6291,7 @@ bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster)
     return FALSE;
 }
 
-bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum Move move, bool32 aiIsFaster)
+bool32 ShouldConsiderSelfSacrificeDamageEffect(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, bool32 aiIsFaster)
 {
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE)
         return TRUE;
@@ -6302,7 +6302,7 @@ bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, e
     return FALSE;
 }
 
-bool32 AiExpectsToFaintPlayer(u32 battler)
+bool32 AiExpectsToFaintPlayer(enum BattlerId battler)
 {
     u8 target = gAiBattleData->chosenTarget[battler];
 
@@ -6320,10 +6320,10 @@ bool32 AiExpectsToFaintPlayer(u32 battler)
     return FALSE;
 }
 
-bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount)
+bool32 AI_OpponentCanFaintAiWithMod(enum BattlerId battler, u32 healAmount)
 {
     // Check special cases to NOT heal
-    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
         if (IsOnPlayerSide(battlerIndex) && CanTargetFaintAiWithMod(battlerIndex, battler, healAmount, 0))
         {
@@ -6334,7 +6334,7 @@ bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount)
     return FALSE;
 }
 
-void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
+void GetAIPartyIndexes(enum BattlerId battler, s32 *firstId, s32 *lastId)
 {
     if (BATTLE_TWO_VS_ONE_OPPONENT && (battler & BIT_SIDE) == B_SIDE_OPPONENT)
     {
@@ -6353,7 +6353,7 @@ void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
     }
 }
 
-bool32 ShouldInstructPartner(u32 partner, enum Move move)
+bool32 ShouldInstructPartner(enum BattlerId partner, enum Move move)
 {
     if (GetMoveEffect(move) == EFFECT_MAX_HP_50_RECOIL && gAiLogicData->abilities[partner] != ABILITY_MAGIC_GUARD)
         return FALSE;
@@ -6377,7 +6377,7 @@ bool32 ShouldInstructPartner(u32 partner, enum Move move)
     return FALSE;
 }
 
-bool32 CanMoveBeBouncedBack(u32 battler, enum Move move)
+bool32 CanMoveBeBouncedBack(enum BattlerId battler, enum Move move)
 {
     if (!MoveCanBeBouncedBack(move) || !IsBattleMoveStatus(move))
         return FALSE;
@@ -6397,9 +6397,9 @@ bool32 CanMoveBeBouncedBack(u32 battler, enum Move move)
     return FALSE;
 }
 
-u32 GetActiveBattlerIds(u32 battler, u32 *battlerIn1, u32 *battlerIn2)
+u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum BattlerId *battlerIn2)
 {
-    u32 opposingBattler = 0;
+    enum BattlerId opposingBattler = 0;
     enum BattlerPosition battlerPosition = GetBattlerPosition(battler);
     if (IsDoubleBattle())
     {
@@ -6423,7 +6423,7 @@ u32 GetActiveBattlerIds(u32 battler, u32 *battlerIn1, u32 *battlerIn2)
     return opposingBattler;
 }
 
-bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, u32 battlerIn1, u32 battlerIn2)
+bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
 {
     if (partyIndex == gBattlerPartyIndexes[battlerIn1]
             || partyIndex == gBattlerPartyIndexes[battlerIn2])

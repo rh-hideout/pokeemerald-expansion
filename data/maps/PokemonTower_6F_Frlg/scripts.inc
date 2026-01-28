@@ -1,4 +1,4 @@
-PokemonTower_6F_MapScripts::
+PokemonTower_6F_Frlg_MapScripts::
 	.byte 0
 
 PokemonTower_6F_EventScript_MarowakGhost::

@@ -1,4 +1,4 @@
-SevenIsland_House_Room2_MapScripts::
+SevenIsland_House_Room2_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SevenIsland_House_Room2_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, SevenIsland_House_Room2_OnFrame
 	.byte 0

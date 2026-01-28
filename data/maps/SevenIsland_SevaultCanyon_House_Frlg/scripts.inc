@@ -1,6 +1,6 @@
 .set DID_CHANSEY_DANCE, FLAG_TEMP_2
 
-SevenIsland_SevaultCanyon_House_MapScripts::
+SevenIsland_SevaultCanyon_House_Frlg_MapScripts::
 	.byte 0
 
 SevenIsland_SevaultCanyon_House_EventScript_ChanseyDanceMan::
