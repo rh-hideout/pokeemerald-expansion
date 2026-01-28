@@ -35,7 +35,46 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "EventScript_CutTree",
+      "flag": "FLAG_TEMP_1"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_CTF_TERMINAL",
+      "x": 8,
+      "y": 9,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Testmap_EventScript_TutorialTerminal",
+      "flag": "FLAG_CTF_TUTORIAL_DONE"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_FAT_MAN",
+      "x": 12,
+      "y": 9,
+      "elevation": 1,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Testmap_EventScript_BlockNpc",
+      "flag": "FLAG_CTF_TUTORIAL_DONE"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ROOFTOP_SALE_WOMAN",
+      "x": 9,
+      "y": 13,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 2,
+      "movement_range_y": 2,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Testmap_EventScript_TutorialNpc",
       "flag": "0"
     }
   ],
@@ -45,6 +84,22 @@
       "y": 9,
       "elevation": 0,
       "dest_map": "MAP_KLASSENZIMMER",
+      "dest_warp_id": "1"
+    },
+    {
+      "warp_id": "WARP_HINTERHOF_1",
+      "x": 13,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_HINTERHOF",
+      "dest_warp_id": "0"
+    },
+    {
+      "warp_id": "WARP_HINTERHOF_2",
+      "x": 14,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_HINTERHOF",
       "dest_warp_id": "1"
     }
   ],

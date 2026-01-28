@@ -41,7 +41,24 @@
       "flag": "0"
     }
   ],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "warp_id": "0",
+      "x": 4,
+      "y": 0,
+      "elevation": 0,
+      "dest_map": "MAP_TESTMAP",
+      "dest_warp_id": "WARP_HINTERHOF_1"
+    },
+    {
+      "warp_id": "1",
+      "x": 5,
+      "y": 0,
+      "elevation": 0,
+      "dest_map": "MAP_TESTMAP",
+      "dest_warp_id": "WARP_HINTERHOF_2"
+    }
+  ],
   "coord_events": [],
   "bg_events": []
 }

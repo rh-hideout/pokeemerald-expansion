@@ -310,8 +310,8 @@ PlayersHouse_1F_Text_OhComeQuickly:
 	.string "Quick! Come quickly!$"
 
 PlayersHouse_1F_Text_MaybeDadWillBeOn:
-	.string "BELLA: Look, Britney did something stupid again!\n"
-	.string "Maybe we'll see her cameltoe!$"
+	.string "BELLA: Look, Britney did something stupid\n"
+	.string "again! Maybe we'll see her cameltoe!$"
 
 PlayersHouse_1F_Text_ItsOverWeMissedHim:
 	.string "BELLA: Oh… It's over.\p"
@@ -320,7 +320,7 @@ PlayersHouse_1F_Text_ItsOverWeMissedHim:
 
 PlayersHouse_1F_Text_GoIntroduceYourselfNextDoor:
 	.string "Oh, yes.\n"
-	.string "One of DAD's friends lives in town.\p"
+	.string "One of our new PROFESSORS lives in town.\p"
 	.string "PROF. BIRCH is his name.\p"
 	.string "He lives right next door, so you should\n"
 	.string "go over and introduce yourself.$"
@@ -367,8 +367,8 @@ PlayersHouse_1F_Text_Vigoroth2:
 	.string "Huggoh, uggo uggo…$"
 
 PlayersHouse_1F_Text_ReportFromPetalburgGym:
-	.string "INTERVIEWER: …We brought you this\n"
-	.string "report from in front of PETALBURG GYM.$"
+	.string "INTERVIEWER: This was BRITNEY WATCH\n"
+	.string "with all your nasty news!$"
 
 PlayersHouse_1F_Text_TheresAMovieOnTV:
 	.string "There is a movie on TV.\p"

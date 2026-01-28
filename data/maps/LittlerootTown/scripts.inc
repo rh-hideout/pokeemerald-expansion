@@ -906,9 +906,9 @@ LittlerootTown_EventScript_GiveRunningShoes::
 
 LittlerootTown_Text_OurNewHomeLetsGoInside:
 	.string "BELLA: There you are at last.\p"
-	.string "Our shared apartment here is nothing special,\n"
-	.string "but it serves its purpose.\p"
-	.string "Well, this is NEUOSTHEIM.\p"
+	.string "Our shared apartment here is nothing \n"
+	.string "special, but it serves its purpose.\p"
+	.string "Well, this is JUNGBUSCH.\p"
 	.string "How do you like it?\n"
 	.string "This is our new home!\p"
 	.string "It has a quaint feel, but it seems to be\n"

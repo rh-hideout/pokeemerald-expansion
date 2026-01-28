@@ -19,7 +19,7 @@ static u8 sCtfInput[CTF_INPUT_BUF_SIZE];
 static void CtfTerminal_ReturnFromNamingScreen(void)
 {
     // Ergebnis setzen (1 = korrekt, 0 = falsch)
-    VarSet(VAR_RESULT, Ctf_IsGymFlagCorrect(sCtfGymId, sCtfInput) ? 1 : 0);
+    VarSet(VAR_RESULT, Ctf_IsFlagCorrect(sCtfGymId, sCtfInput) ? 1 : 0);
 
     // Script/Field wieder aufnehmen (setzt intern den Script-Flow fort)
     CB2_ReturnToFieldContinueScript();

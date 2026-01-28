@@ -18,25 +18,17 @@ Route101_EventScript_HideMapNamePopup::
 
 Route101_EventScript_StartBirchRescue::
 	lockall
+	setvar VAR_ROUTE101_STATE, 2
 	playbgm MUS_HELP, TRUE
 
-	@ Szene sichtbar machen 
 	clearflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
 	clearflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
-
-	@ Zigzagoon am Anfang NICHT sichtbar
 	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 
-	@ Birch sicher an deine Wunschposition
 	setobjectxy LOCALID_ROUTE101_BIRCH, 6, 14
 	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 5, 14
 
 	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
-	closemessage
-	msgbox Route101_Text_PleaseHelp, MSGBOX_DEFAULT
-	closemessage
-
-	setvar VAR_ROUTE101_STATE, 2
 	releaseall
 	end
 
@@ -100,18 +92,20 @@ Route101_EventScript_RouteSign::
 Route101_EventScript_BirchsBag::
 	lock
 	faceplayer
+
+	msgbox Route101_Text_PleaseHelp, MSGBOX_DEFAULT
+
 	setflag FLAG_SYS_POKEMON_GET
-	setflag FLAG_RESCUED_BIRCH
 	fadescreen FADE_TO_BLACK
 
-	@ Spieler “an die Tasche” ausrichten
-	setobjectxy LOCALID_PLAYER, 7, 15
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
-	waitmovement 0
+	@ (Wichtig: NICHT setflag FLAG_RESCUED_BIRCH hier!)
 
-	@ Starter wählen
+	@ Wenn du Spieler positionieren willst: besser Movement statt setobjectxy
+	@ (setobjectxy kann Coord-Events triggern und “hakelig” machen)
+
 	special ChooseStarter
 	waitstate
+
 	fadescreen FADE_FROM_BLACK
 	waitstate
 
@@ -119,6 +113,50 @@ Route101_EventScript_BirchsBag::
 	msgbox Route101_Text_WhyNotGiveNicknameToMon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, Route101_EventScript_NicknameStarter
 	goto Route101_EventScript_AfterNickname
+
+Route101_EventScript_NicknameStarter:
+	setvar VAR_0x8004, 0
+	call Common_EventScript_NameReceivedPartyMon
+
+Route101_EventScript_AfterNickname:
+	clearflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 8, 14
+
+	msgbox Route101_Text_Battle, MSGBOX_DEFAULT
+
+	release
+	end
+
+Route101_EventScript_ZigzagoonInteract::
+	lockall
+
+	setwildbattle SPECIES_ZIGZAGOON, 2, ITEM_NONE
+	dowildbattle
+	reloadmapafterbattle
+
+	setflag FLAG_RESCUED_BIRCH
+
+	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+
+	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
+
+	special HealPlayerParty
+
+	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeaveScene
+	waitmovement 0
+	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
+	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
+
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
+	clearflag FLAG_HIDE_ROUTE_101_BOY
+	setvar VAR_ROUTE101_STATE, 3
+	setvar VAR_BIRCH_LAB_STATE, 3
+
+	clearflag FLAG_HIDE_MAP_NAME_POPUP
+	fadedefaultbgm
+
+	releaseall
+	end
 
 Route101_EventScript_NicknameStarter:
 	setvar VAR_0x8004, 0
@@ -217,11 +255,11 @@ Route101_Text_HelpMe:
 
 
 Route101_Text_PleaseHelp:
-	.string "BUM: Hello! You over there!\n"
+	.string "BUM: Hello! You interested?!\n"
 	.string "{PLAYER}: You wanna sell me drugs?\n"
 	.string "BUM: No, no, I'll show you the hottest shit!!\n"
 	.string "In my BAG!\n"
-	.string "Take a look!$"
+	.string "Take a look and pick one!$"
 
 Route101_Text_WhyNotGiveNicknameToMon:
 	.string "BUM: Why not give your new POKéMON a nickname?\n"
@@ -230,7 +268,8 @@ Route101_Text_DontLeaveMe:
 	.string "BUM: Don't leave kid! Come here!$"
 
 Route101_Text_Battle:
-	.string "BUM: Here, fight my ZIGZAGOON!$"
+	.string "BUM: Nice pick! \n"
+	.string "Here, fight my ZIGZAGOON!$"
 
 Route101_Text_YouSavedMe:
 	.string "BUM: Nice one, kid!\p"
