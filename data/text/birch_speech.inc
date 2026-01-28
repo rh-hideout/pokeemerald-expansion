@@ -2,7 +2,7 @@ gText_Birch_Welcome::
 	.string "Welcome to your computer science \p"
 	.string "studies at DHBW Cooperative\p"
 	.string "State University.\p"
-	.string "My name is Professor Farmer\n"
+	.string "My name is PROFESSOR FARMER\n"
 	.string "and I'm your Course Director.\p"
 	.string "$"
 
@@ -34,7 +34,7 @@ gText_Birch_SoItsPlayer::
 gText_Birch_YourePlayer::
 	.string "Ah, okay!\p"
 	.string "You're {PLAYER}{KUN} who's moving to an\n"
-	.string "apartment in NEUOSTHEIM.\l"
+	.string "apartment in JUNGBUSCH.\l"
 	.string "I get it now!\p"
 	.string "$"
 
