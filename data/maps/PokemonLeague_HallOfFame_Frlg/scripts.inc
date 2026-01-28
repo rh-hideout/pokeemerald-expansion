@@ -1,4 +1,4 @@
-PokemonLeague_HallOfFame_MapScripts::
+PokemonLeague_HallOfFame_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, PokemonLeague_HallOfFame_OnFrame
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, PokemonLeague_HallOfFame_OnWarp
 	.byte 0

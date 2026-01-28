@@ -187,7 +187,7 @@ static void FieldUpdateRegionMap(void)
                     sFieldRegionMapHandler->state++;
                     break;
                 case MAP_INPUT_R_BUTTON:
-                    if (sFieldRegionMapHandler->regionMap.mapSecType == MAPSECTYPE_CITY_CANFLY 
+                    if (sFieldRegionMapHandler->regionMap.mapSecType == MAPSECTYPE_CITY_CANFLY
                         && FlagGet(OW_FLAG_POKE_RIDER) && Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) == TRUE)
                     {
                         PlaySE(SE_SELECT);

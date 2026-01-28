@@ -1,4 +1,4 @@
-CinnabarIsland_MapScripts::
+CinnabarIsland_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CinnabarIsland_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, CinnabarIsland_OnFrame
 	.byte 0

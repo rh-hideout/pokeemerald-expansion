@@ -1,4 +1,4 @@
-Route8_WestEntrance_MapScripts::
+Route8_WestEntrance_Frlg_MapScripts::
 	.byte 0
 
 Route8_WestEntrance_EventScript_Guard::

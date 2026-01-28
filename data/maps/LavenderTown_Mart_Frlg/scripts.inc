@@ -1,4 +1,4 @@
-LavenderTown_Mart_MapScripts::
+LavenderTown_Mart_Frlg_MapScripts::
 	.byte 0
 
 LavenderTown_Mart_EventScript_BaldingMan::

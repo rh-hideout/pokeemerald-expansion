@@ -1,4 +1,4 @@
-SSAnne_Kitchen_MapScripts::
+SSAnne_Kitchen_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_Kitchen_EventScript_Chef1::

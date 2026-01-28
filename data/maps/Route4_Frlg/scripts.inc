@@ -1,4 +1,4 @@
-Route4_MapScripts::
+Route4_Frlg_MapScripts::
 	.byte 0
 
 Route4_EventScript_Unused::

@@ -1,4 +1,4 @@
-SSAnne_2F_Corridor_MapScripts::
+SSAnne_2F_Corridor_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_2F_Corridor_EventScript_RivalTriggerLeft::
