@@ -496,7 +496,7 @@ void AnimTask_UnusedLevelUpHealthBox(u8 taskId)
 {
     struct BattleAnimBgData animBgData;
     u8 healthBoxSpriteId;
-    u8 battler;
+    enum BattlerId battler;
     u8 spriteId1, spriteId2, spriteId3, spriteId4;
 
     battler = gBattleAnimAttacker;
@@ -543,9 +543,7 @@ void AnimTask_UnusedLevelUpHealthBox(u8 taskId)
 static void AnimTask_UnusedLevelUpHealthBox_Step(u8 taskId)
 {
     u8 spriteId1, spriteId2;
-    u8 battler;
-
-    battler = gBattleAnimAttacker;
+    enum BattlerId battler = gBattleAnimAttacker;
     gTasks[taskId].data[13] += gTasks[taskId].data[1];
     gBattle_BG1_Y += (u16)gTasks[taskId].data[13] >> 8;
     gTasks[taskId].data[13] &= 0xFF;
@@ -600,7 +598,7 @@ static void AnimTask_UnusedLevelUpHealthBox_Step(u8 taskId)
     }
 }
 
-static void LoadHealthboxPalsForLevelUp(u8 *paletteId1, u8 *paletteId2, u8 battler)
+static void LoadHealthboxPalsForLevelUp(u8 *paletteId1, u8 *paletteId2, enum BattlerId battler)
 {
     u8 healthBoxSpriteId;
     u8 spriteId1, spriteId2;
@@ -629,7 +627,7 @@ void AnimTask_LoadHealthboxPalsForLevelUp(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-static void FreeHealthboxPalsForLevelUp(u8 battler)
+static void FreeHealthboxPalsForLevelUp(enum BattlerId battler)
 {
     u8 healthBoxSpriteId;
     u8 spriteId1, spriteId2;
@@ -1342,7 +1340,7 @@ static void SpriteCB_Ball_Capture(struct Sprite *sprite)
 // Fade and unfade ball, create star animations, play sound effects
 static void SpriteCB_Ball_Capture_Step(struct Sprite *sprite)
 {
-    u8 *battler = &gBattleAnimTarget;
+    enum BattlerId *battler = &gBattleAnimTarget;
 
     sprite->sTimer++;
     if (sprite->sTimer == 40)
@@ -2249,7 +2247,7 @@ void AnimTask_SetTargetToEffectBattler(u8 taskId)
 #define sPhase  data[1] // For encircling stars
 #define sTimer  data[1] // For diagnoal stars
 
-void TryShinyAnimation(u8 battler, struct Pokemon *mon)
+void TryShinyAnimation(enum BattlerId battler, struct Pokemon *mon)
 {
     bool8 isShiny;
     u8 taskCirc, taskDgnl;
@@ -2286,7 +2284,7 @@ void TryShinyAnimation(u8 battler, struct Pokemon *mon)
 
 static void Task_ShinyStars(u8 taskId)
 {
-    u8 battler;
+    enum BattlerId battler;
     u8 x, y;
     u8 spriteId;
     u16 timer;
@@ -2359,7 +2357,7 @@ static void Task_ShinyStars(u8 taskId)
 
 static void Task_ShinyStars_Wait(u8 taskId)
 {
-    u8 battler;
+    enum BattlerId battler;
 
     if (gTasks[taskId].tNumStars == 0)
     {

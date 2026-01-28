@@ -76,13 +76,13 @@ void FreeBattleResources(void)
     }
 }
 
-void AdjustFriendshipOnBattleFaint(u8 battler)
+void AdjustFriendshipOnBattleFaint(enum BattlerId battler)
 {
-    u8 opposingBattlerId;
+    enum BattlerId opposingBattlerId;
 
     if (IsDoubleBattle())
     {
-        u8 opposingBattlerId2;
+        enum BattlerId opposingBattlerId2;
 
         opposingBattlerId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         opposingBattlerId2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
@@ -101,7 +101,7 @@ void AdjustFriendshipOnBattleFaint(u8 battler)
         AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
 }
 
-void SwitchPartyOrderInGameMulti(u8 battler, u8 arg1)
+void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
 {
     if (IsOnPlayerSide(battler))
     {
@@ -118,7 +118,7 @@ void SwitchPartyOrderInGameMulti(u8 battler, u8 arg1)
 
 // Called when a Pokémon is unable to attack during a Battle Palace battle.
 // Check if it was because they are frozen/asleep, and if so try to cure the status.
-u32 BattlePalace_TryEscapeStatus(u8 battler)
+u32 BattlePalace_TryEscapeStatus(enum BattlerId battler)
 {
     u32 effect = 0;
 

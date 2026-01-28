@@ -22,9 +22,11 @@
 #include "overworld.h"
 #include "item.h"
 #include "regions.h"
+#include "malloc.h"
 #include "constants/form_change_types.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "constants/party_menu.h"
 #include "constants/region_map_sections.h"
 
 #define IS_DITTO(species) (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_DITTO || gSpeciesInfo[species].eggGroups[1] == EGG_GROUP_DITTO)
@@ -276,17 +278,6 @@ void StorePokemonInDaycare(struct Pokemon *mon, struct DaycareMon *daycareMon)
         TransferEggMoves();
 }
 
-static void StoreBoxMonInDaycare(struct BoxPokemon *mon, struct DaycareMon *daycareMon)
-{
-
-    daycareMon->mon = *mon;
-    daycareMon->steps = 0;
-    ZeroBoxMonData(mon);
-
-    if (P_EGG_MOVE_TRANSFER >= GEN_8)
-        TransferEggMoves();
-}
-
 static void StorePokemonInEmptyDaycareSlot(struct Pokemon *mon, struct DayCare *daycare)
 {
     s8 slotId = Daycare_FindEmptySpot(daycare);
@@ -295,19 +286,19 @@ static void StorePokemonInEmptyDaycareSlot(struct Pokemon *mon, struct DayCare *
 
 void StoreSelectedPokemonInDaycare(void)
 {
-    if (gSpecialVar_MonBoxId == 0xFF)
+    struct Pokemon *mon;
+    if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
     {
-        StorePokemonInEmptyDaycareSlot(&gPlayerParty[GetCursorSelectionMonId()], &gSaveBlock1Ptr->daycare);
-    }
-    else if (gSpecialVar_MonBoxId == TOTAL_BOXES_COUNT) // Selected party mon from PC
-    {
-        StorePokemonInEmptyDaycareSlot(&gPlayerParty[gSpecialVar_MonBoxPos], &gSaveBlock1Ptr->daycare);
+        mon = Alloc(sizeof(struct Pokemon));
+        RemoveSelectedPcMon(mon);
     }
     else
     {
-        s8 slotId = Daycare_FindEmptySpot(&gSaveBlock1Ptr->daycare);
-        StoreBoxMonInDaycare(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), &gSaveBlock1Ptr->daycare.mons[slotId]);
+        mon = &gPlayerParty[gSpecialVar_0x8004];
     }
+    StorePokemonInEmptyDaycareSlot(mon, &gSaveBlock1Ptr->daycare);
+    if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
+        Free(mon);
 }
 
 // Shifts the second daycare Pokémon slot into the first slot.
@@ -1129,7 +1120,7 @@ void CreateEgg(struct Pokemon *mon, u16 species, bool8 setHotSpringsLocation)
 {
     u8 metLevel;
     enum PokeBall ball;
-    u8 language;
+    enum Language language;
     metloc_u8_t metLocation;
     u8 isEgg;
 
@@ -1265,21 +1256,9 @@ static void _GetDaycareMonNicknames(struct DayCare *daycare)
 
 u16 GetSelectedMonNicknameAndSpecies(void)
 {
-    if(gSpecialVar_MonBoxId == 0xFF)
-    {
-        GetBoxMonNickname(&gPlayerParty[GetCursorSelectionMonId()].box, gStringVar1);
-        return GetBoxMonData(&gPlayerParty[GetCursorSelectionMonId()].box, MON_DATA_SPECIES);
-    }
-    else if (gSpecialVar_MonBoxId == TOTAL_BOXES_COUNT) // Selected party mon from PC
-    {
-        GetBoxMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos].box, gStringVar1);
-        return GetBoxMonData(&gPlayerParty[gSpecialVar_MonBoxPos].box, MON_DATA_SPECIES);
-    }
-    else
-    {
-        GetBoxMonNickname(&gPokemonStoragePtr->boxes[gSpecialVar_MonBoxId][gSpecialVar_MonBoxPos], gStringVar1);
-        return GetBoxMonData(&gPokemonStoragePtr->boxes[gSpecialVar_MonBoxId][gSpecialVar_MonBoxPos], MON_DATA_SPECIES);
-    }
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    GetBoxMonNickname(boxmon, gStringVar1);
+    return GetBoxMonData(boxmon, MON_DATA_SPECIES);
 }
 
 void GetDaycareMonNicknames(void)

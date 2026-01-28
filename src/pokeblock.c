@@ -1408,7 +1408,7 @@ s16 GetPokeblockData(const struct Pokeblock *pokeblock, u8 field)
 
 s16 PokeblockGetGain(u8 nature, const struct Pokeblock *pokeblock)
 {
-    u8 flavor;
+    enum Flavor flavor;
     s16 curGain, totalGain = 0;
 
     for (flavor = 0; flavor < FLAVOR_COUNT; flavor++)

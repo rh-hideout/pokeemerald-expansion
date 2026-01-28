@@ -24,13 +24,13 @@ body:
       description: |
         What exact steps can somebody else follow in order to recreate the issue on their own?
       placeholder: |
-        Provide as much context as possible as to what was done to create the issue. 
+        Provide as much context as possible as to what was done to create the issue.
     validations:
-      required: true 
+      required: true
   - type: textarea
-    id: media 
+    id: media
     attributes:
-      label: Images / Video 
+      label: Images / Video
       description: |
         Do you have images or videos to show the problem happen?
       placeholder: |
