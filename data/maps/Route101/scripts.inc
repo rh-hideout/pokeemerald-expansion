@@ -18,18 +18,49 @@ Route101_EventScript_HideMapNamePopup::
 
 Route101_EventScript_StartBirchRescue::
 	lockall
-	setvar VAR_ROUTE101_STATE, 2
 	playbgm MUS_HELP, TRUE
 
+	@ Szene sichtbar machen
 	clearflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
 	clearflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
+
+	@ Zigzagoon am Anfang unsichtbar
 	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 
+	@ Bum + Zig Startposition
 	setobjectxy LOCALID_ROUTE101_BIRCH, 6, 14
 	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 5, 14
 
+	@ Gate zurücksetzen (Bum muss einmal angesprochen werden)
+	clearflag FLAG_TEMP_4
+
+	@ 2 Schritte ins Bild (WICHTIG: erst bewegen, dann STATE=2 setzen!)
+	applymovement LOCALID_PLAYER, Route101_Movement_PlayerUp2
+	waitmovement 0
+
 	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
+
+	@ Ab jetzt Ausgänge blocken
+	setvar VAR_ROUTE101_STATE, 2
+
 	releaseall
+	end
+
+Route101_Movement_PlayerUp2:
+	walk_up
+	walk_up
+	step_end
+
+Route101_EventScript_BumTalk::
+	lock
+	faceplayer
+	goto_if_set FLAG_TEMP_4, Route101_BumTalk_Done
+
+	msgbox Route101_Text_PleaseHelp, MSGBOX_DEFAULT
+	setflag FLAG_TEMP_4
+
+Route101_BumTalk_Done:
+	release
 	end
 
 Route101_EventScript_PreventExitSouth::
@@ -93,15 +124,15 @@ Route101_EventScript_BirchsBag::
 	lock
 	faceplayer
 
-	msgbox Route101_Text_PleaseHelp, MSGBOX_DEFAULT
+	@ Bag erst nutzen, wenn Bum angesprochen wurde
+	goto_if_set FLAG_TEMP_4, Route101_Bag_DoChoose
+	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
+	release
+	end
 
+Route101_Bag_DoChoose:
 	setflag FLAG_SYS_POKEMON_GET
 	fadescreen FADE_TO_BLACK
-
-	@ (Wichtig: NICHT setflag FLAG_RESCUED_BIRCH hier!)
-
-	@ Wenn du Spieler positionieren willst: besser Movement statt setobjectxy
-	@ (setobjectxy kann Coord-Events triggern und “hakelig” machen)
 
 	special ChooseStarter
 	waitstate
@@ -119,23 +150,32 @@ Route101_EventScript_NicknameStarter:
 	call Common_EventScript_NameReceivedPartyMon
 
 Route101_EventScript_AfterNickname:
+	@ Zig erscheint neben Bum
 	clearflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 8, 14
 
+	@ Text kommt direkt nach Auswahl/Nickname (wie gewünscht)
 	msgbox Route101_Text_Battle, MSGBOX_DEFAULT
 
 	release
 	end
+
 
 Route101_EventScript_ZigzagoonInteract::
 	lockall
 
 	setwildbattle SPECIES_ZIGZAGOON, 2, ITEM_NONE
 	dowildbattle
+	waitstate
+	reloadmapafterbattle
 
+	@ nur wenn gewonnen (bei dir bisher: 1)
+	goto_if_eq VAR_RESULT, 1, Route101_Zig_BattleWon
+	releaseall
+	end
 
+Route101_Zig_BattleWon:
 	setflag FLAG_RESCUED_BIRCH
-
 	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 
 	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
@@ -144,6 +184,7 @@ Route101_EventScript_ZigzagoonInteract::
 
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeaveScene
 	waitmovement 0
+
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 

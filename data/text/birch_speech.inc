@@ -14,7 +14,7 @@ gText_Birch_Pokemon::
 
 gText_Birch_MainSpeech::
 	.string "To pass a semester, you must enter \n"
-	.string "the flag into this terminal.\p"
+	.string "the correct flag into this terminal.\p"
 	.string "$"
 
 gText_Birch_AndYouAre::
