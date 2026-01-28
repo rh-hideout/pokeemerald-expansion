@@ -12671,7 +12671,7 @@ static void Cmd_settaunt(void)
         }
         else if (B_TAUNT_TURNS >= GEN_4)
         {
-            turns = (Random() & 2) + 3;
+            turns = (Random() % 3) + 3;
         }
         else
         {
