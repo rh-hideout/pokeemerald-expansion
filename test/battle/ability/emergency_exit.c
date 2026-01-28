@@ -266,7 +266,7 @@ SINGLE_BATTLE_TEST("Emergency Exit is not triggered by Pain Split")
 SINGLE_BATTLE_TEST("Emergency Exit will trigger due to Jump Kick recoil")
 {
     GIVEN {
-        // ASSUME(GetMoveEffect(MOVE_MIND_BLOWN) == EFFECT_MAX_HP_50_RECOIL);
+        ASSUME(GetMoveEffect(MOVE_JUMP_KICK) == EFFECT_RECOIL_IF_MISS);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(262); }
         OPPONENT(SPECIES_WOBBUFFET);
