@@ -63,7 +63,7 @@ static bool32 OWE_DoesRoamerObjectExist(void);
 static bool32 OWE_CheckRestrictMovementMetatile(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew);
 static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, s32 xNew, s32 yNew);
 static u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType);
-static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y, bool32 *isFeebasSpot);
+static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
 static bool32 CreateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak);
 static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
 static bool32 CreateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId);
@@ -736,9 +736,8 @@ void OverworldWildEncounter_SetMinimumSpawnTimer(void)
 static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
 {
     u32 personality;
-    bool32 isFeebasSpot = FALSE;
 
-    if (!OWE_CreateEnemyPartyMon(speciesId, level, indexRoamerOutbreak, x, y, &isFeebasSpot))
+    if (!OWE_CreateEnemyPartyMon(speciesId, level, indexRoamerOutbreak, x, y))
     {
         ZeroEnemyPartyMons();
         *speciesId = SPECIES_NONE;
@@ -758,13 +757,13 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     else
         *isFemale = FALSE;
 
-    if ((OWE_WILD_ENCOUNTERS_PREVENT_SHINY_REPLACEMENT && *isShiny) || (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_REPLACEMENT && isFeebasSpot))
+    if ((OWE_WILD_ENCOUNTERS_PREVENT_SHINY_REPLACEMENT && *isShiny))
         *level |= OWE_NO_REPLACE_FLAG;
 
     ZeroEnemyPartyMons();
 }
 
-static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y, bool32 *isFeebasSpot)
+static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
 {
     const struct WildPokemonInfo *wildMonInfo;
     enum WildPokemonArea wildArea;
@@ -836,8 +835,9 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     else if (OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
     {
         *level = ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING);
+        if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_REPLACEMENT)
+            *level |= OWE_NO_REPLACE_FLAG;
         *speciesId = gWildFeebas.species;
-        *isFeebasSpot = TRUE;
         CreateWildMon(*speciesId, *level);
     }
     else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior) && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
