@@ -703,6 +703,9 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
     if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return;
 
+    if (IsOverworldWildEncounter(objectEvent, OWE_MANUAL))
+        FlagSet(GetObjectEventFlagIdByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup));
+
     objectEvent->sOverworldEncounterLevel = 0;
     objectEvent->sAge = 0;
     objectEvent->sRoamerOutbreakStatus = 0;
