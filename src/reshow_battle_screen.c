@@ -338,7 +338,7 @@ void CreateBattlerSprite(enum BattlerId battler)
         {
             SetMultiuseSpriteTemplateToTrainerBack(IS_FRLG ? TRAINER_PIC_BACK_OLD_MAN : TRAINER_PIC_BACK_WALLY, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
-                                                (8 - gTrainerBacksprites[IS_FRLG ? TRAINER_PIC_BACK_OLD_MAN :TRAINER_PIC_BACK_WALLY].coordinates.size) * 4 + 80,
+                                                (8 - gTrainerBacksprites[IS_FRLG ? TRAINER_PIC_BACK_OLD_MAN : TRAINER_PIC_BACK_WALLY].coordinates.size) * 4 + 80,
                                                  GetBattlerSpriteSubpriority(0));
             gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = (8 + battler / 2);
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
