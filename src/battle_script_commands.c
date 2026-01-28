@@ -11530,14 +11530,19 @@ static void Cmd_trysetencore(void)
         // Encore duration varies by generation; add 1 if it was applied after the target already acted.
         u8 turns;
         if (B_ENCORE_TURNS >= GEN_5)
+        {
             turns = 3;
+            if (HasBattlerActedThisTurn(gBattlerTarget))
+                turns++; // If the target already moved this turn, Encore lasts for four turns
+        }
         else if (B_ENCORE_TURNS >= GEN_4)
+        {
             turns = (Random() % 5) + 3; // 3-7 turns
+        }
         else
+        {
             turns = (Random() % 5) + 2; // 2-6 turns
-
-        if (HasBattlerActedThisTurn(gBattlerTarget))
-            turns++;
+        }
 
         gDisableStructs[gBattlerTarget].encoreTimer = turns;
         gBattlescriptCurrInstr = cmd->nextInstr;
