@@ -125,7 +125,7 @@ SINGLE_BATTLE_TEST("Meloetta returns to Aria form upon battle end after using Re
 SINGLE_BATTLE_TEST("Battle Bond Greninja returns to base form upon battle end after knocking out an opponent")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_BATTLE_BOND, GEN_8);
+        WITH_CONFIG(B_BATTLE_BOND, GEN_8);
         PLAYER(SPECIES_GRENINJA_BATTLE_BOND);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Mimikyu Busted reverts to Disguised form upon battle end aft
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_7);
+        WITH_CONFIG(B_DISGUISE_HP_LOSS, GEN_7);
         PLAYER(species) { Ability(ABILITY_DISGUISE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

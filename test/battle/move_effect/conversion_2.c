@@ -6,7 +6,7 @@ TO_DO_BATTLE_TEST("Conversion 2's type change considers Inverse Battles");
 SINGLE_BATTLE_TEST("Conversion 2 randomly changes the type of the user to a type that resists the last move that hit the user (Gen 1-4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_4);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_4);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Conversion 2 randomly changes the type of the user to a type
 SINGLE_BATTLE_TEST("Conversion 2's type change considers Struggle to be Normal type (Gen 1-4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_4);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_4);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers Struggle to be Normal t
 SINGLE_BATTLE_TEST("Conversion 2 randomly changes the type of the user to a type that resists the last used target's move (Gen 5+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Conversion 2 randomly changes the type of the user to a type
 SINGLE_BATTLE_TEST("Conversion 2's type change considers status moves (Gen 5+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers status moves (Gen 5+)")
 SINGLE_BATTLE_TEST("Conversion 2's type change considers the type of moves called by other moves")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers the type of moves calle
 SINGLE_BATTLE_TEST("Conversion 2's type change considers dynamic type moves")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers dynamic type moves")
 SINGLE_BATTLE_TEST("Conversion 2's type change considers move types changed by Normalize and Electrify")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_NORMALIZE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -158,7 +158,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change considers move types changed by N
 SINGLE_BATTLE_TEST("Conversion 2's type change fails targeting Struggle (Gen 5+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -176,7 +176,7 @@ SINGLE_BATTLE_TEST("Conversion 2's type change fails targeting Struggle (Gen 5+)
 SINGLE_BATTLE_TEST("Conversion 2 fails if the move used is of typeless damage (Gen 5+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_5);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ENTEI);
     } WHEN {
@@ -228,7 +228,7 @@ SINGLE_BATTLE_TEST("Conversion 2 fails if used by a Terastallized Pokemon")
 SINGLE_BATTLE_TEST("Conversion 2 fails if last hit by a Stellar-type move (Gen 1-4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_CONVERSION_2, GEN_4);
+        WITH_CONFIG(B_UPDATED_CONVERSION_2, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

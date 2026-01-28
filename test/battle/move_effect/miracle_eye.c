@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Miracle Eye causes moves against the target to ignore positi
 SINGLE_BATTLE_TEST("Miracle Eye fails if the target is already affected by Miracle Eye (Gen5+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MIRACLE_EYE_FAIL, GEN_5);
+        WITH_CONFIG(B_MIRACLE_EYE_FAIL, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Miracle Eye fails if the target is already affected by Mirac
 SINGLE_BATTLE_TEST("Miracle Eye does not fail if the target is already affected by Miracle Eye (Gen4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MIRACLE_EYE_FAIL, GEN_4);
+        WITH_CONFIG(B_MIRACLE_EYE_FAIL, GEN_4);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

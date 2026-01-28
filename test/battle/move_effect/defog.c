@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change")
 SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4)"
 SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change behind Substitute (Gen4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Ability(ABILITY_SIMPLE); }
     } WHEN {
@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute
     PARAMETRIZE { move = MOVE_CELEBRATE; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_5);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
@@ -333,7 +333,7 @@ DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from user's side (
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_5; }
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_6; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
@@ -417,7 +417,7 @@ SINGLE_BATTLE_TEST("Defog removes Spikes from user's side (Gen 6+)")
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_5; }
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_6; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
@@ -457,7 +457,7 @@ SINGLE_BATTLE_TEST("Defog removes terrain (Gen 8+)")
     PARAMETRIZE { move = MOVE_MISTY_TERRAIN;    config = GEN_8; }
     PARAMETRIZE { move = MOVE_GRASSY_TERRAIN;   config = GEN_8; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
@@ -534,7 +534,7 @@ SINGLE_BATTLE_TEST("Defog removes Toxic Spikes from user's side (Gen 6+)")
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_5; }
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_6; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
@@ -650,7 +650,7 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
     PARAMETRIZE { config = GEN_5; }
     PARAMETRIZE { config = GEN_6; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_GLALIE) { Speed(4); }
@@ -728,7 +728,7 @@ SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind 
     PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

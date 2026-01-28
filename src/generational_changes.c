@@ -3,7 +3,7 @@
 #include "malloc.h"
 #include "constants/generational_changes.h"
 
-#define UNPACK_CONFIG_GEN_CHANGES2(_name, _field, ...) ._field = B_##_name,
+#define UNPACK_CONFIG_GEN_CHANGES2(_name, _field, ...) ._field = _name,
 
 const struct GenChanges sConfigChanges =
 {
@@ -31,7 +31,7 @@ EWRAM_DATA struct GenChanges *gConfigChangesTestOverride = NULL;
 
 // Gets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
-u32 GetConfig(enum ConfigTag _genConfig)
+u32 GetConfigInternal(enum ConfigTag _genConfig)
 {
 #if TESTING
     if (gConfigChangesTestOverride == NULL)
