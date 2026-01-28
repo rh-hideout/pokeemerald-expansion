@@ -4,8 +4,7 @@ Testmap_MapScripts::
 Testmap_EventScript_TutorialNpc::
 	lock
 	faceplayer
-	checkflag FLAG_CTF_TUTORIAL_DONE
-	goto_if_set Testmap_TutorialNpc_After
+	goto_if_set FLAG_CTF_TUTORIAL_DONE, Testmap_TutorialNpc_After
 	msgbox Testmap_Text_Hint, MSGBOX_NPC
 	release
 	end
@@ -19,8 +18,7 @@ Testmap_EventScript_TutorialTerminal::
 	lock
 	faceplayer
 
-	checkflag FLAG_CTF_TUTORIAL_DONE
-	goto_if_set Testmap_Terminal_Already
+	goto_if_set FLAG_CTF_TUTORIAL_DONE, Testmap_Terminal_Already
 
 	msgbox Testmap_Text_EnterFlag, MSGBOX_DEFAULT
 

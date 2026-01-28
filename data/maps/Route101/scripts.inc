@@ -132,7 +132,7 @@ Route101_EventScript_ZigzagoonInteract::
 
 	setwildbattle SPECIES_ZIGZAGOON, 2, ITEM_NONE
 	dowildbattle
-	reloadmapafterbattle
+
 
 	setflag FLAG_RESCUED_BIRCH
 
@@ -156,65 +156,6 @@ Route101_EventScript_ZigzagoonInteract::
 	fadedefaultbgm
 
 	releaseall
-	end
-
-Route101_EventScript_NicknameStarter:
-	setvar VAR_0x8004, 0
-	call Common_EventScript_NameReceivedPartyMon
-	@ fallthrough
-
-
-Route101_EventScript_AfterNickname:
-	@ Zigzagoon erscheint rechts neben Bum
-	clearflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
-	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 8, 14
-
-	msgbox Route101_Text_Battle, MSGBOX_DEFAULT
-	closemessage
-
-	@ Kampf starten
-	setwildbattle SPECIES_ZIGZAGOON, 2, ITEM_NONE
-	dowildbattle
-
-	@ Zig wieder weg
-	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
-
-	@ Bum “spricht danach”
-	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchApproachPlayer
-	waitmovement 0
-	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
-	closemessage
-	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
-
-	special HealPlayerParty
-
-	@ Bum und Tasche verschwinden 
-	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
-
-	@ Birch im Labor soll später da sein
-	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
-
-	@ Story-States: Route normal freigeben
-	clearflag FLAG_HIDE_ROUTE_101_BOY
-	setvar VAR_ROUTE101_STATE, 3
-	setvar VAR_BIRCH_LAB_STATE, 3
-
-	@ Bum geht weg
-	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeaveScene
-	waitmovement 0	
-
-	@ Mapname Popup wieder normal
-	clearflag FLAG_HIDE_MAP_NAME_POPUP
-
-	@ Rival im Schlafzimmer verstecken
-	checkplayergender
-	call_if_eq VAR_RESULT, MALE, Route101_EventScript_HideMayInBedroom
-	call_if_eq VAR_RESULT, FEMALE, Route101_EventScript_HideBrendanInBedroom
-
-	@ Musik wieder zurück auf die Map-Musik
-	fadedefaultbgm
-
-	release
 	end
 
 Route101_Movement_BumLeaveScene:
