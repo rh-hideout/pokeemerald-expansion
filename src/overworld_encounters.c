@@ -160,7 +160,7 @@ void UpdateOverworldEncounters(void)
         .y = y - MAP_OFFSET,
         .elevation = MapGridGetElevationAt(x, y),
         .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
-        .trainerType = TRAINER_TYPE_ENCOUNTER,
+        .trainerType = TRAINER_TYPE_OW_WILD_ENCOUNTER,
         .script = InteractWithDynamicWildOverworldEncounter,
     };
     u32 objectEventId = GetObjectEventIdByLocalId(localId);
@@ -931,7 +931,7 @@ static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons)
 
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType)
 {
-    bool32 isOWE = (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
+    bool32 isOWE = (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_OW_WILD_ENCOUNTER);
     switch (oweType)
     {
     default:
@@ -1025,7 +1025,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
-    if (template->trainerType != TRAINER_TYPE_ENCOUNTER || (template->localId <= LOCALID_OW_ENCOUNTER_END
+    if (template->trainerType != TRAINER_TYPE_OW_WILD_ENCOUNTER || (template->localId <= LOCALID_OW_ENCOUNTER_END
         && template->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS)))
         return *template;
 

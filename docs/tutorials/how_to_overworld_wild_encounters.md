@@ -6,14 +6,14 @@ Overworld Wild Encounters (OWEs), refer to the wild encounters that can be seen 
 Generated OWEs are spawned automatically when `OWE_WILD_ENCOUNTERS_OVERWORLD` is set to `TRUE`, being spawned on a random encounter tile near the player, with the encounter table used dependant on it. These are considered low priority OWEs, and automatically populate a level, species, gender and shinyness exactly how a vanilla wild encounter would, or can even be a special spawn, but more on those later.
 
 ### Manual OWEs
-Manual OWEs are created by the developer as any other object event would be and are defined by having the `.trainerType` set to `TRAINER_TYPE_ENCOUNTER`. These can be fully customised by the developer, with the level, species, gender and shinyness all able to be specified. The level can be set by filling the desired value in the `trainerRange_berryTreeId`. The latter three are specified by the `graphicsId` of the object, for example;
+Manual OWEs are created by the developer as any other object event would be and are defined by having the `.trainerType` set to `TRAINER_TYPE_OW_WILD_ENCOUNTER`. These can be fully customised by the developer, with the level, species, gender and shinyness all able to be specified. The level can be set by filling the desired value in the `trainerRange_berryTreeId`. The latter three are specified by the `graphicsId` of the object, for example;
 - `OBJ_EVENT_GFX_SPECIES(BULBASAUR)` will produce a male, non-shiny Bulbasaur.
 - `OBJ_EVENT_GFX_SPECIES_SHINY(CHARMANDER)` will produce a male, shiny Charmander.
 - `OBJ_EVENT_GFX_SPECIES_FEMALE(SQUIRTLE)` will produce a female, non-shiny Squirtle.
 - `OBJ_EVENT_GFX_SPECIES_SHINY_FEMALE(PIKACHU)` will produce a female, shiny Pikachu.
 
 However Manual OWEs do not have to be defined fully, leaving any of the level, species, gender, shinyness or script zeroed will revert to default behaviours and any set parameters used. Leaving the level or species blank will take one the relevant encounter table. Leaving the shinyness blank will revert to default shiny odds, although this can still be affected by `P_FLAG_FORCE_SHINY` and `P_FLAG_FORCE_NO_SHINY`. Setting the `OBJ_EVENT_MON` bit of the `graphicsId`, but not the `OBJ_EVENT_MON_FEMALE` will result in a male encounter, setting both will result in a female encounter, as seen above, but setting neither will randomise the gender based on species. A species can be defined with a random gender by just using the species define. A specific script can be specified, but if not the default OWE encounter script will be used.
-Assuming the following `graphicsId` have `.trainerType` set to `TRAINER_TYPE_ENCOUNTER`;
+Assuming the following `graphicsId` have `.trainerType` set to `TRAINER_TYPE_OW_WILD_ENCOUNTER`;
 - `SPECIES_EEVEE` will result in an Eevee with a randomised level, gender and shinyness, using the default encounter script.
 - `OBJ_EVENT_GFX_SPECIES(NONE)` will result in a male randomised species of randomised level, gender and shinyness, using the default encounter script.
 - `OBJ_EVENT_GFX_SPECIES_SHINY_FEMALE(PIKACHU)` will result in a female, shiny randomised species with randomised level and gender, using the default encounter script.
