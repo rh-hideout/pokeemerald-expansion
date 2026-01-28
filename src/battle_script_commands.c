@@ -7014,7 +7014,7 @@ static void Cmd_moveend(void)
             }
 
             if (IsBattlerAlive(gBattlerAttacker)
-              && attackerItem != ITEM_NONE        // Attacker must be holding an item
+              && attackerItem != ITEM_NONE        // Attacker must have an item (including pending stolen item)
               && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker])))   // But not knocked off
             {
                 u8 battlers[4] = {0, 1, 2, 3};
