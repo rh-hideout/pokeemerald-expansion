@@ -3,7 +3,7 @@
 Overworld Wild Encounters (OWEs), refer to the wild encounters that can be seen as object events in the overworld, prior to engaging in battle with them. They use either the `WILD_AREA_LAND` or `WILD_AREA_WATER` encounter tables by default. OWEs come in two types, Generated or Manual.
 
 ### Generated OWEs
-Generated OWEs are spawned automatically when `OW_WILD_ENCOUNTERS_OVERWORLD` is set to `TRUE`, being spawned on a random encounter tile near the player, with the encounter table used dependant on it. These are considered low priority OWEs, and automatically populate a level, species, gender and shinyness exactly how a vanilla wild encounter would, or can even be a special spawn, but more on those later.
+Generated OWEs are spawned automatically when `OWE_WILD_ENCOUNTERS_OVERWORLD` is set to `TRUE`, being spawned on a random encounter tile near the player, with the encounter table used dependant on it. These are considered low priority OWEs, and automatically populate a level, species, gender and shinyness exactly how a vanilla wild encounter would, or can even be a special spawn, but more on those later.
 
 ### Manual OWEs
 Manual OWEs are created by the developer as any other object event would be and are defined by having the `.trainerType` set to `TRAINER_TYPE_ENCOUNTER`. These can be fully customised by the developer, with the level, species, gender and shinyness all able to be specified. The level can be set by filling the desired value in the `trainerRange_berryTreeId`. The latter three are specified by the `graphicsId` of the object, for example;

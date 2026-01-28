@@ -26,6 +26,7 @@
 #include "config/general.h"
 #include "config/item.h"
 #include "config/overworld.h"
+#include "config/overworld_encounters.h"
 #include "config/pokemon.h"
 #include "config/summary_screen.h"
 

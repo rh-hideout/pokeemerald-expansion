@@ -1323,7 +1323,7 @@ void Overworld_FadeOutMapMusic(void)
 
 static void PlayAmbientCry(void)
 {
-    if (!OW_VANILLA_AMBIENT_CRIES)
+    if (!OWE_VANILLA_AMBIENT_CRIES)
         return;
     
     s16 x, y;

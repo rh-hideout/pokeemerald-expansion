@@ -1,8 +1,8 @@
 #ifndef GUARD_OVERWORLD_ENCOUNTERS_H
 #define GUARD_OVERWORLD_ENCOUNTERS_H
 
-#if OW_POKEMON_OBJECT_EVENTS == FALSE && OW_WILD_ENCOUNTERS_OVERWORLD == TRUE
-#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_WILD_ENCOUNTERS_OVERWORLD to work."
+#if OW_POKEMON_OBJECT_EVENTS == FALSE && OWE_WILD_ENCOUNTERS_OVERWORLD == TRUE
+#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OWE_WILD_ENCOUNTERS_OVERWORLD to work."
 #endif
 
 #define OWE_MAX_SPAWN_SLOTS   5
@@ -19,7 +19,7 @@
 
 #define OWE_SPAWN_TIME_MINIMUM      30  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 #define OWE_SPAWN_TIME_PER_ACTIVE   30  // The number of frames that will be added to the countdown per currently active spawn.
-#define OWE_SPAWN_TIME_REPLACEMENT  240 // The number of frames before an existing spawn will be replaced with a new one (requires OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT).
+#define OWE_SPAWN_TIME_REPLACEMENT  240 // The number of frames before an existing spawn will be replaced with a new one (requires OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT).
 
 #define OWE_MON_SIGHT_WIDTH         3
 #define OWE_MON_SIGHT_LENGTH        4
