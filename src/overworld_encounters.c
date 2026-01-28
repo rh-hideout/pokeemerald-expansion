@@ -397,7 +397,6 @@ static u8 NextSpawnMonSlot(void)
 
 static bool8 TrySelectTile(s16* outX, s16* outY)
 {
-DebugPrintf("Try Select Tile");
     u8 elevation;
     u16 tileBehavior;
     s16 playerX, playerY;
