@@ -3071,7 +3071,6 @@ static void BattleStartClearSetData(void)
         gPalaceSelectionBattleScripts[i] = 0;
         gBattleStruct->lastTakenMove[i] = MOVE_NONE;
         gBattleStruct->choicedMove[i] = MOVE_NONE;
-        gBattleStruct->changedItems[i] = 0;
         gBattleStruct->lastTakenMoveFrom[i][0] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][1] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][2] = MOVE_NONE;

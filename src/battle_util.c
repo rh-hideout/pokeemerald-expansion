@@ -3768,7 +3768,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             {
             case ABILITY_PICKUP:
                 if (gBattleMons[battler].item == ITEM_NONE
-                 && gBattleStruct->changedItems[battler] == ITEM_NONE   // Will not inherit an item
                  && PickupHasValidTarget(battler))
                 {
                     gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
@@ -3780,7 +3779,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             case ABILITY_HARVEST:
                 if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
                  && gBattleMons[battler].item == ITEM_NONE
-                 && gBattleStruct->changedItems[battler] == ITEM_NONE   // Will not inherit an item
                  && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
                 {
                     gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
@@ -10343,7 +10341,6 @@ bool32 TryTriggerSymbiosis(enum BattlerId battler, u32 ally)
 bool32 TrySymbiosis(enum BattlerId battler, enum Item itemId, bool32 moveEnd)
 {
     if (!gBattleStruct->itemLost[B_SIDE_PLAYER][gBattlerPartyIndexes[battler]].stolen
-        && gBattleStruct->changedItems[battler] == ITEM_NONE
         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_EJECT_BUTTON
         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_EJECT_PACK
         && (GetConfig(CONFIG_SYMBIOSIS_GEMS) < GEN_7 || !(gSpecialStatuses[battler].gemBoost))
