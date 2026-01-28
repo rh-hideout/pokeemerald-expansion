@@ -782,13 +782,13 @@ static void UpdateBattlerValue(struct PokemonSpriteVisualizer *data)
     }
 }
 
-static void BattleLoadOpponentMonSpriteGfxCustom(u16 species, bool8 isFemale, bool8 isShiny, u8 battlerId)
+static void BattleLoadOpponentMonSpriteGfxCustom(u16 species, bool8 isFemale, bool8 isShiny, enum BattlerId battler)
 {
     const u16 *palette = GetMonSpritePalFromSpecies(species, isShiny, isFemale);
-    u16 paletteOffset = OBJ_PLTT_ID(battlerId);
+    u16 paletteOffset = OBJ_PLTT_ID(battler);
 
     LoadPalette(palette, paletteOffset, PLTT_SIZE_4BPP);
-    LoadPalette(palette, BG_PLTT_ID(8) + BG_PLTT_ID(battlerId), PLTT_SIZE_4BPP);
+    LoadPalette(palette, BG_PLTT_ID(8) + BG_PLTT_ID(battler), PLTT_SIZE_4BPP);
 }
 
 static void SetConstSpriteValues(struct PokemonSpriteVisualizer *data)
@@ -968,7 +968,7 @@ static void LoadBattleBg(enum BattleEnvironments battleEnvironment)
 {
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tileset, (void *)(BG_CHAR_ADDR(BACKGROUND_3_CHAR_BASE)));
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[battleEnvironment].background.tilemap, (void *)(BG_SCREEN_ADDR(BACKGROUND_3_MAP_BASE)));
-    LoadPalette(gBattleEnvironmentInfo[battleEnvironment].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+    LoadPalette(gBattleEnvironmentInfo[battleEnvironment].palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
 }
 
 static void PrintBattleBgName(u8 battleEnvironment)

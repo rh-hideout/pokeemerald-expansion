@@ -1,4 +1,4 @@
-SafariZone_Center_RestHouse_MapScripts::
+SafariZone_Center_RestHouse_Frlg_MapScripts::
 	.byte 0
 
 SafariZone_Center_RestHouse_EventScript_Sara::

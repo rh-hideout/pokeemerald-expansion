@@ -1,4 +1,4 @@
-ThreeIsland_BerryForest_MapScripts::
+ThreeIsland_BerryForest_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, ThreeIsland_BerryForest_OnTransition
 	.byte 0
 

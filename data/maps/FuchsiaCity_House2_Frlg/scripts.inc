@@ -1,4 +1,4 @@
-FuchsiaCity_House2_MapScripts::
+FuchsiaCity_House2_Frlg_MapScripts::
 	.byte 0
 
 FuchsiaCity_House2_EventScript_FishingGurusBrother::

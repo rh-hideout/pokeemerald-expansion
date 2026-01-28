@@ -7,7 +7,7 @@ body:
       value: |
         Please fill in all fields with as many details as possible.
         Once your bug is posted, make sure you and your collaborators are added to `CREDITS.md` by [tagging the bot on GitHub](https://github.com/rh-hideout/pokeemerald-expansion/wiki/CREDITS.md-Frequently-Asked-Questions). EVERY contribution matters, even reporting bugs!
-  - type: textarea         
+  - type: textarea
     id: description
     attributes:
       label: Description
@@ -24,13 +24,13 @@ body:
       description: |
         What exact steps can somebody else follow in order to recreate the issue on their own?
       placeholder: |
-        Provide as much context as possible as to what was done to create the issue. 
+        Provide as much context as possible as to what was done to create the issue.
     validations:
       required: true
   - type: textarea
-    id: media 
+    id: media
     attributes:
-      label: Images / Video 
+      label: Images / Video
       description: |
         Do you have images or videos to show the problem happen?
       placeholder: |

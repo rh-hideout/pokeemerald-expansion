@@ -1,15 +1,13 @@
 #ifndef GUARD_OVERWORLD_ENCOUNTERS_H
 #define GUARD_OVERWORLD_ENCOUNTERS_H
 
-#if OW_POKEMON_OBJECT_EVENTS == FALSE && OW_WILD_ENCOUNTERS_OVERWORLD == TRUE
-#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_WILD_ENCOUNTERS_OVERWORLD to work."
+#if OW_POKEMON_OBJECT_EVENTS == FALSE && OWE_WILD_ENCOUNTERS_OVERWORLD == TRUE
+#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OWE_WILD_ENCOUNTERS_OVERWORLD to work."
 #endif
 
 #define OWE_MAX_SPAWN_SLOTS   5
 
-#define OWE_MAX_LAND_SPAWNS         3
-#define OWE_MAX_WATER_SPAWNS        5
-#define OWE_MAX_CAVE_SPAWNS         4
+#define OWE_MAX_SPAWNS              4
 
 #define OWE_SPAWN_DISTANCE_LAND     1   // A spawn cannot happen within this many tiles of the player position.
 #define OWE_SPAWN_DISTANCE_WATER    3   // A spawn cannot happen within this many tiles of the player position (while surfing).
@@ -21,7 +19,7 @@
 
 #define OWE_SPAWN_TIME_MINIMUM      30  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 #define OWE_SPAWN_TIME_PER_ACTIVE   30  // The number of frames that will be added to the countdown per currently active spawn.
-#define OWE_SPAWN_TIME_REPLACEMENT  240 // The number of frames before an existing spawn will be replaced with a new one (requires OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT).
+#define OWE_SPAWN_TIME_REPLACEMENT  240 // The number of frames before an existing spawn will be replaced with a new one (requires OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT).
 
 #define OWE_MON_SIGHT_WIDTH         3
 #define OWE_MON_SIGHT_LENGTH        4
@@ -40,7 +38,9 @@
 
 #define INVALID_SPAWN_SLOT          0xFF
 
-#define OWE_SAVED_MOVEMENT_STATE        0x80
+#define OWE_NO_REPLACE_FLAG         0x80
+
+#define OWE_SAVED_MOVEMENT_STATE_FLAG   0x80
 #define OWE_RESTORED_MOVEMENT_FUNC_ID   10
 
 enum OverworldEncounterSpawnAnim
@@ -95,7 +95,7 @@ extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
 void OWE_ResetSpawnCounterPlayAmbientCry(void);
 void UpdateOverworldEncounters(void);
-u32 GetOldestSlot(void);
+u32 GetOldestSlot(bool32 forceRemove);
 void CreateOverworldWildEncounter(void);
 void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
