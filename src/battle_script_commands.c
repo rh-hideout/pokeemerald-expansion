@@ -7003,9 +7003,7 @@ static void Cmd_moveend(void)
         case MOVEEND_PICKPOCKET:
             if (IsBattlerAlive(gBattlerAttacker)
               && gBattleMons[gBattlerAttacker].item != ITEM_NONE        // Attacker must be holding an item
-              && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker]))   // But not knocked off
-              && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)    // Pickpocket requires contact
-              && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))           // Obviously attack needs to have worked
+              && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker])))   // But not knocked off
             {
                 u8 battlers[4] = {0, 1, 2, 3};
                 SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
@@ -7016,6 +7014,8 @@ static void Cmd_moveend(void)
                     if (battler != gBattlerAttacker                                                     // Cannot pickpocket yourself
                       && GetBattlerAbility(battler) == ABILITY_PICKPOCKET                               // Target must have pickpocket ability
                       && IsBattlerTurnDamaged(battler)                                                  // Target needs to have been damaged
+                      && IsMoveMakingContact(gBattlerAttacker, battler, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)    // Pickpocket requires contact
+                      && !(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)             // Move needs to have affected this battler
                       && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)              // Subsitute unaffected
                       && IsBattlerAlive(battler)                                                        // Battler must be alive to pickpocket
                       && gBattleMons[battler].item == ITEM_NONE                                         // Pickpocketer can't have an item already
