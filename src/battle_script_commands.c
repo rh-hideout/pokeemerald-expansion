@@ -11527,11 +11527,19 @@ static void Cmd_trysetencore(void)
         if (gDisableStructs[gBattlerTarget].encoredMove != GetChosenMoveFromPosition(gBattlerTarget))
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
-        // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
-        if (HasBattlerActedThisTurn(gBattlerTarget))
-            gDisableStructs[gBattlerTarget].encoreTimer = 4;
+        // Encore duration varies by generation; add 1 if it was applied after the target already acted.
+        u8 turns;
+        if (B_ENCORE_TURNS >= GEN_5)
+            turns = 3;
+        else if (B_ENCORE_TURNS >= GEN_4)
+            turns = (Random() % 5) + 3; // 3-7 turns
         else
-            gDisableStructs[gBattlerTarget].encoreTimer = 3;
+            turns = (Random() % 5) + 2; // 2-6 turns
+
+        if (HasBattlerActedThisTurn(gBattlerTarget))
+            turns++;
+
+        gDisableStructs[gBattlerTarget].encoreTimer = turns;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

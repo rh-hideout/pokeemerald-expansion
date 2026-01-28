@@ -6115,8 +6115,16 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Encore"),
         .description = COMPOUND_STRING(
+        #if B_ENCORE_TURNS >= GEN_5
             "Makes the foe repeat its\n"
             "last move over 3 turns."),
+        #elif B_ENCORE_TURNS >= GEN_4
+            "Makes the foe repeat its\n"
+            "last move over 3-7 turns."),
+        #else
+            "Makes the foe repeat its\n"
+            "last move over 2-6 turns."),
+        #endif
         .effect = EFFECT_ENCORE,
         .power = 0,
         .type = TYPE_NORMAL,
