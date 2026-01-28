@@ -7,7 +7,7 @@ ASSUMPTIONS
     ASSUME(MoveMakesContact(MOVE_BREAKING_SWIPE));
 }
 
-DOUBLE_BATTLE_TEST("Pickpocket activates on a contact spread move even if the other target is immune")
+DOUBLE_BATTLE_TEST("Pickpocket checks contact/effect per target for spread moves")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_CLEFAIRY, 0) == TYPE_FAIRY
