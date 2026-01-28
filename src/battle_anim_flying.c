@@ -441,19 +441,19 @@ static void AnimGustToTarget(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
-    InitAnimLinearTranslation(sprite);
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = RunStoredCallbackWhenAffineAnimEnds;
     StoreSpriteCallbackInData6(sprite, AnimGustToTarget_Step);
 }
 
 static void AnimGustToTarget_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -477,21 +477,21 @@ void AnimAirWaveCrescent(struct Sprite *sprite)
     sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->x += gBattleAnimArgs[0];
     sprite->y += gBattleAnimArgs[1];
-    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->sDuration_lti = gBattleAnimArgs[4];
 
     if (gBattleAnimArgs[6] == 0)
     {
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     }
     else
     {
-        SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->data[2], &sprite->data[4]);
+        SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->sInputEndX_lti, &sprite->sInputEndY_lti);
     }
 
-    sprite->data[2] = sprite->data[2] + gBattleAnimArgs[2];
-    sprite->data[4] = sprite->data[4] + gBattleAnimArgs[3];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->sInputEndX_lti = sprite->sInputEndX_lti + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = sprite->sInputEndY_lti + gBattleAnimArgs[3];
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
 
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     SeekSpriteAnim(sprite, gBattleAnimArgs[5]);
@@ -536,21 +536,21 @@ void AnimFlyBallAttack(struct Sprite *sprite)
         sprite->y = -32;
     }
 
-    sprite->data[0] = gBattleAnimArgs[0];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sDuration_lti = gBattleAnimArgs[0];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->data[5] = gBattleAnimArgs[1]; // if sprite is to remain invisible
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimFlyBallAttack_Step;
 }
 
 void AnimFlyBallAttack_Step(struct Sprite *sprite)
 {
-    sprite->data[0] = 1;
-    AnimTranslateLinear(sprite);
+    sprite->sDuration_lti = 1;
+    UpdateSpriteLinearTranslationIterator(sprite);
     if (((u16)sprite->data[3] >> 8) > 200)
     {
         sprite->x += sprite->x2;
