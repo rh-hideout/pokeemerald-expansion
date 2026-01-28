@@ -340,7 +340,7 @@ PlayersHouse_1F_Text_YouShouldRestABit:
 PlayersHouse_1F_Text_TakeCareHoney:
 	.string "BELLA: Take care, hobo!$"
 
-PlayersHouse_1F_Text_GotDadsBadgeHeresSomethingFromBELLA:
+PlayersHouse_1F_Text_GotDadsBadgeHeresSomethingFromMom:
 	.string "BELLA: Oh? Did DAD give you that BADGE?\p"
 	.string "Then here's something from your MOM!$"
 

@@ -116,7 +116,6 @@ Route101_EventScript_BirchsBag::
 	waitstate
 
 	bufferleadmonspeciesname STR_VAR_1
-	msgbox Route101_Text_StarterIsYours, MSGBOX_DEFAULT
 	msgbox Route101_Text_WhyNotGiveNicknameToMon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, Route101_EventScript_NicknameStarter
 	goto Route101_EventScript_AfterNickname
@@ -150,12 +149,6 @@ Route101_EventScript_AfterNickname:
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 
 	special HealPlayerParty
-
-	call Route101_EventScript_NicknameStarter
-
-	@ Bum geht weg 
-	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeave
-	waitmovement 0
 
 	@ Bum und Tasche verschwinden 
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
@@ -229,6 +222,9 @@ Route101_Text_PleaseHelp:
 	.string "BUM: No, no, I'll show you the hottest shit!!\n"
 	.string "In my BAG!\n"
 	.string "Take a look!$"
+
+Route101_Text_WhyNotGiveNicknameToMon:
+	.string "BUM: Why not give your new POKéMON a nickname?\n"
 
 Route101_Text_DontLeaveMe:
 	.string "BUM: Don't leave kid! Come here!$"
