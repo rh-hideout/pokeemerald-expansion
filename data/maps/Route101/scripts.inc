@@ -163,14 +163,15 @@ Route101_EventScript_AfterNickname:
 
 Route101_EventScript_ZigzagoonInteract::
 	lockall
-
 	setwildbattle SPECIES_ZIGZAGOON, 2, ITEM_NONE
 	dowildbattle
 	waitstate
-	reloadmapafterbattle
 
-	@ nur wenn gewonnen (bei dir bisher: 1)
-	goto_if_eq VAR_RESULT, 1, Route101_Zig_BattleWon
+	specialvar VAR_RESULT, GetBattleOutcome
+
+	goto_if_eq VAR_RESULT, B_OUTCOME_WON, Route101_Zig_BattleWon
+	goto_if_eq VAR_RESULT, B_OUTCOME_CAUGHT, Route101_Zig_BattleWon
+
 	releaseall
 	end
 
