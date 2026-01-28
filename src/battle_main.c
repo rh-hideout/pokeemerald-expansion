@@ -3371,6 +3371,8 @@ const u8* FaintClearSetData(enum BattlerId battler)
     gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
+    if (battler == gBattlerAttacker)
+        gBattleStruct->moldBreakerActive = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
