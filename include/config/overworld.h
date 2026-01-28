@@ -74,7 +74,7 @@
 #define OW_FOLLOWERS_ALLOWED_MET_LOC (0)
 
 // Overworld Encounters
-#define OW_WILD_ENCOUNTERS_RANDOM                       TRUE    // If TRUE, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
+#define OW_VANILLA_RANDOM_ENCOUNTERS                    TRUE    // If TRUE, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
 #define OW_WILD_ENCOUNTERS_OVERWORLD                    FALSE   // If TRUE, OW Pokémon can spawn as overworld wild encounters on the current map. Requires OW_POKEMON_OBJECT_EVENTS.
 #define OW_WILD_ENCOUNTERS_BATTLE_PIKE                  TRUE    // If TRUE, overworld wild encounters can spawn in the Battle Pike, if FALSE random encounters will be enabled instead. Requires OW_WILD_ENCOUNTERS_OVERWORLD to be TRUE.
 #define OW_WILD_ENCOUNTERS_BATTLE_PYRAMID               TRUE    // If TRUE, overworld wild encounters can spawn in the Battle Pyramid, if FALSE random encounters will be enabled instead. Requires OW_WILD_ENCOUNTERS_OVERWORLD to be TRUE.

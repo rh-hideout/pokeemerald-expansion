@@ -1519,7 +1519,7 @@ bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void)
         || (CurrentBattlePyramidLocation() && !OW_WILD_ENCOUNTERS_BATTLE_PYRAMID))
         return FALSE;
 
-    return !OW_WILD_ENCOUNTERS_RANDOM;
+    return !OW_VANILLA_RANDOM_ENCOUNTERS;
 }
 
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
