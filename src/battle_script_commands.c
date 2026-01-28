@@ -11527,7 +11527,6 @@ static void Cmd_trysetencore(void)
         if (gDisableStructs[gBattlerTarget].encoredMove != GetChosenMoveFromPosition(gBattlerTarget))
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
-        // Encore duration varies by generation; add 1 if it was applied after the target already acted.
         u8 turns;
         if (B_ENCORE_TURNS >= GEN_5)
         {
