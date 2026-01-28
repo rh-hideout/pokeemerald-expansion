@@ -84,6 +84,7 @@
     F(B_MINIMIZE_EVASION,          minimizeEvasion,         (u32, GEN_COUNT - 1)) \
     F(B_GROWTH_STAT_RAISE,         growthStatRaise,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_FOCUS_ENERGY_CRIT_RATIO,   focusEnergyCritRatio,    (u32, GEN_COUNT - 1)) \
+    F(B_PSYCH_UP_CRIT_RATIO,       psychUpCritRatio,        (u32, GEN_COUNT - 1)) \
     /* Other move settings */ \
     F(B_INCINERATE_GEMS,           incinerateGems,          (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_CAN_SPITE_FAIL,            canSpiteFail,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -119,6 +120,8 @@
     F(B_AFTER_YOU_TURN_ORDER,      afterYouTurnOrder,       (u32, GEN_COUNT - 1)) \
     F(B_QUASH_TURN_ORDER,          quashTurnOrder,          (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_DESTINY_BOND_FAIL,         destinyBondFail,         (u32, GEN_COUNT - 1)) \
+    F(B_FORESIGHT_FAIL,            foresightFail,           (u32, GEN_COUNT - 1)) \
+    F(B_MIRACLE_EYE_FAIL,          miracleEyeFail,          (u32, GEN_COUNT - 1)) \
     F(B_PURSUIT_TARGET,            pursuitTarget,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SKIP_RECHARGE,             skipRecharge,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_ENCORE_TARGET,             encoreTarget,            (u32, GEN_COUNT - 1)) \

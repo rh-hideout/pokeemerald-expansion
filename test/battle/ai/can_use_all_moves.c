@@ -546,7 +546,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_AURORA_VEIL:
         case EFFECT_GEAR_UP:
         case EFFECT_MAGNETIC_FLUX:
- 
+
         // Skipped on purpose.
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:

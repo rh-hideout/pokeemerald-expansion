@@ -615,6 +615,24 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "SabataLunar",
+      "name": "SabataLunar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26584469?v=4",
+      "profile": "https://github.com/SabataLunar",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
+      "login": "PacFire",
+      "name": "PacFire",
+      "avatar_url": "https://avatars.githubusercontent.com/u/108960850?v=4",
+      "profile": "https://github.com/PacFire",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,

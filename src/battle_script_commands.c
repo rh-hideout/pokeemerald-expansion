@@ -3471,7 +3471,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         if (i)
         {
             BattleScriptPush(battleScript);
-            if (gCurrentMove == MOVE_HYPERSPACE_FURY)
+            if (GetMoveEffect(gCurrentMove) == EFFECT_HYPERSPACE_FURY)
                 gBattlescriptCurrInstr = BattleScript_HyperspaceFuryRemoveProtect;
             else
                 gBattlescriptCurrInstr = BattleScript_MoveEffectFeint;
@@ -6173,7 +6173,7 @@ static void Cmd_moveend(void)
                 // Not strictly a protect effect, but works the same way
                 if (IsBattlerUsingBeakBlast(gBattlerTarget)
                  && CanBeBurned(gBattlerAttacker, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
-                 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+                 && IsBattlerTurnDamaged(gBattlerTarget))
                 {
                     gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                     gBattleMons[gBattlerAttacker].status1 = STATUS1_BURN;
@@ -9753,7 +9753,8 @@ static void Cmd_setprotectlike(void)
 
     if ((sProtectSuccessRates[gDisableStructs[gBattlerAttacker].protectUses] >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX) && notLastTurn)
      || (protectMethod == PROTECT_WIDE_GUARD && GetConfig(B_WIDE_GUARD) >= GEN_6)
-     || (protectMethod == PROTECT_QUICK_GUARD && GetConfig(B_QUICK_GUARD) >= GEN_6))
+     || (protectMethod == PROTECT_QUICK_GUARD && GetConfig(B_QUICK_GUARD) >= GEN_6)
+     || (protectMethod == PROTECT_CRAFTY_SHIELD))
     {
         if (GetMoveEffect(gCurrentMove) == EFFECT_ENDURE)
         {
@@ -12287,7 +12288,15 @@ static void Cmd_copyfoestats(void)
     {
         gBattleMons[gBattlerAttacker].statStages[i] = gBattleMons[gBattlerTarget].statStages[i];
     }
-    gBattleScripting.battler = gBattlerTarget;
+    if (GetConfig(B_PSYCH_UP_CRIT_RATIO) >= GEN_6)
+    {
+        // Copy crit boosts (Focus Energy, Dragon Cheer, G-Max Chi Strike)
+        gBattleMons[gBattlerAttacker].volatiles.focusEnergy = gBattleMons[gBattlerTarget].volatiles.focusEnergy;
+        gBattleMons[gBattlerAttacker].volatiles.dragonCheer = gBattleMons[gBattlerTarget].volatiles.dragonCheer;
+        gBattleMons[gBattlerAttacker].volatiles.bonusCritStages = gBattleMons[gBattlerTarget].volatiles.bonusCritStages;
+    }
+    gEffectBattler = gBattlerTarget;
+    gBattleScripting.battler = gBattlerAttacker;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
