@@ -4602,6 +4602,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
              && IsBattlerAlive(battler)
              && gBattleStruct->battlerState[partner].commanderSpecies == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
+             && (gChosenActionByBattler[partner] != B_ACTION_SWITCH || HasBattlerActedThisTurn(partner))
              && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
             {
                 SaveBattlerAttacker(gBattlerAttacker);
