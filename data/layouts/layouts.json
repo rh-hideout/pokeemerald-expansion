@@ -4440,6 +4440,16 @@
       "secondary_tileset": "gTileset_MeteorFalls",
       "border_filepath": "data/layouts/SongFlagRoom/border.bin",
       "blockdata_filepath": "data/layouts/SongFlagRoom/map.bin"
+    },
+    {
+      "id": "LAYOUT_HINTERHOF",
+      "name": "HINTERHOF_Layout",
+      "width": 10,
+      "height": 6,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Lab",
+      "border_filepath": "data/layouts/HINTERHOF/border.bin",
+      "blockdata_filepath": "data/layouts/HINTERHOF/map.bin"
     }
   ]
 }

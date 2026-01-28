@@ -19,24 +19,23 @@ Route101_EventScript_HideMapNamePopup::
 Route101_EventScript_StartBirchRescue::
 	lockall
 	playbgm MUS_HELP, TRUE
+
+	@ Szene sichtbar machen 
+	clearflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
+	clearflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
+
+	@ Zigzagoon am Anfang NICHT sichtbar
+	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+
+	@ Birch sicher an deine Wunschposition
+	setobjectxy LOCALID_ROUTE101_BIRCH, 6, 14
+	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 5, 14
+
 	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
 	closemessage
-	setobjectxy LOCALID_ROUTE101_BIRCH, 0, 15
-	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 0, 16
-	applymovement LOCALID_PLAYER, Route101_Movement_EnterScene
-	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchRunAway1
-	applymovement LOCALID_ROUTE101_ZIGZAGOON, Route101_Movement_ZigzagoonChase1
-	waitmovement 0
-	applymovement LOCALID_ROUTE101_ZIGZAGOON, Route101_Movement_ZigzagoonChaseInCircles
-	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchRunInCircles
-	waitmovement 0
-	applymovement LOCALID_ROUTE101_BIRCH, Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	applymovement LOCALID_ROUTE101_ZIGZAGOON, Route101_Movement_ZigzagoonFaceBirch
-	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchFaceZigzagoon
-	waitmovement 0
 	msgbox Route101_Text_PleaseHelp, MSGBOX_DEFAULT
 	closemessage
+
 	setvar VAR_ROUTE101_STATE, 2
 	releaseall
 	end
@@ -80,127 +79,10 @@ Route101_Movement_PreventExitNorth:
 	walk_down
 	step_end
 
-Route101_Movement_ZigzagoonChaseInCircles:
-	walk_fast_up
-	walk_fast_up
-	walk_fast_up
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_down
-	walk_fast_down
-	walk_fast_left
-	walk_fast_left
-	walk_fast_left
-	walk_fast_up
-	walk_fast_up
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_down
-	walk_fast_down
-	walk_fast_left
-	walk_fast_left
-	walk_fast_left
-	walk_fast_up
-	walk_fast_up
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_down
-	walk_fast_down
-	walk_fast_left
-	walk_fast_left
-	step_end
-
-Route101_Movement_ZigzagoonChase1:
-	walk_fast_up
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_up
-	step_end
-
 @ Leftover data? This command is unused.
 	step_end
 
-Route101_Movement_ZigzagoonFaceBirch:
-	walk_in_place_fast_left
-	walk_in_place_fast_left
-	walk_in_place_fast_left
-	walk_in_place_fast_left
-	step_end
-
-Route101_Movement_EnterScene:
-	walk_fast_up
-	walk_fast_up
-	walk_fast_up
-	walk_fast_up
-	walk_in_place_faster_left
-	step_end
-
-Route101_Movement_BirchRunInCircles:
-	walk_fast_up
-	walk_fast_up
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_down
-	walk_fast_down
-	walk_fast_left
-	walk_fast_left
-	walk_fast_left
-	walk_fast_up
-	walk_fast_up
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_down
-	walk_fast_down
-	walk_fast_left
-	walk_fast_left
-	walk_fast_left
-	walk_fast_up
-	walk_fast_up
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_down
-	walk_fast_down
-	walk_fast_left
-	walk_fast_left
-	walk_fast_left
-	step_end
-
-Route101_Movement_BirchRunAway1:
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_right
-	walk_fast_up
-	walk_fast_up
-	step_end
-
 @ Leftover data? This command is unused.
-	step_end
-
-Route101_Movement_BirchFaceZigzagoon:
-	walk_in_place_fast_right
-	walk_in_place_fast_right
-	walk_in_place_fast_right
-	walk_in_place_fast_right
-	step_end
-
-Route101_Movement_Unused1:
-	walk_up
-	walk_up
-	step_end
-
-Route101_Movement_Unused2:
-	walk_up
-	walk_left
-	walk_up
 	step_end
 
 Route101_EventScript_Youngster::
@@ -221,29 +103,101 @@ Route101_EventScript_BirchsBag::
 	setflag FLAG_SYS_POKEMON_GET
 	setflag FLAG_RESCUED_BIRCH
 	fadescreen FADE_TO_BLACK
-	removeobject LOCALID_ROUTE101_ZIGZAGOON
-	setobjectxy LOCALID_PLAYER, 6, 13
+
+	@ Spieler “an die Tasche” ausrichten
+	setobjectxy LOCALID_PLAYER, 7, 15
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
+
+	@ Starter wählen
 	special ChooseStarter
 	waitstate
+	fadescreen FADE_FROM_BLACK
+	waitstate
+
+	bufferleadmonspeciesname STR_VAR_1
+	msgbox Route101_Text_StarterIsYours, MSGBOX_DEFAULT
+	msgbox Route101_Text_WhyNotGiveNicknameToMon, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, Route101_EventScript_NicknameStarter
+	goto Route101_EventScript_AfterNickname
+
+Route101_EventScript_NicknameStarter:
+	setvar VAR_0x8004, 0
+	call Common_EventScript_NameReceivedPartyMon
+	@ fallthrough
+
+
+Route101_EventScript_AfterNickname:
+	@ Zigzagoon erscheint rechts neben Bum
+	clearflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 8, 14
+
+	msgbox Route101_Text_Battle, MSGBOX_DEFAULT
+	closemessage
+
+	@ Kampf starten
+	setwildbattle SPECIES_ZIGZAGOON, 2, ITEM_NONE
+	dowildbattle
+
+	@ Zig wieder weg
+	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+
+	@ Bum “spricht danach”
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchApproachPlayer
 	waitmovement 0
 	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
-	special HealPlayerParty
-	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
-	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
+	closemessage
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
-	setvar VAR_BIRCH_LAB_STATE, 2
+
+	special HealPlayerParty
+
+	call Route101_EventScript_NicknameStarter
+
+	@ Bum geht weg 
+	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeave
+	waitmovement 0
+
+	@ Bum und Tasche verschwinden 
+	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
+
+	@ Birch im Labor soll später da sein
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
+
+	@ Story-States: Route normal freigeben
+	clearflag FLAG_HIDE_ROUTE_101_BOY
 	setvar VAR_ROUTE101_STATE, 3
+	setvar VAR_BIRCH_LAB_STATE, 3
+
+	@ Bum geht weg
+	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeaveScene
+	waitmovement 0	
+
+	@ Mapname Popup wieder normal
 	clearflag FLAG_HIDE_MAP_NAME_POPUP
+
+	@ Rival im Schlafzimmer verstecken
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, Route101_EventScript_HideMayInBedroom
 	call_if_eq VAR_RESULT, FEMALE, Route101_EventScript_HideBrendanInBedroom
-	warp MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB, 6, 5
-	waitstate
+
+	@ Musik wieder zurück auf die Map-Musik
+	fadedefaultbgm
+
 	release
 	end
+
+Route101_Movement_BumLeaveScene:
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	step_end
 
 Route101_EventScript_HideMayInBedroom::
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM
@@ -254,32 +208,43 @@ Route101_EventScript_HideBrendanInBedroom::
 	return
 
 Route101_Movement_BirchApproachPlayer:
-	walk_right
+	face_right
+	face_down
 	step_end
 
+Route101_Movement_BumLeave:
+	walk_fast_down
+	walk_fast_down
+	walk_fast_down
+	step_end
+
+
 Route101_Text_HelpMe:
-	.string "H-help me!$"
+	.string "BUM: Yo Kid, come over 'ere!$"
+
 
 Route101_Text_PleaseHelp:
-	.string "Hello! You over there!\n"
-	.string "Please! Help!\p"
+	.string "BUM: Hello! You over there!\n"
+	.string "{PLAYER}: You wanna sell me drugs?\n"
+	.string "BUM: No, no, I'll show you the hottest shit!!\n"
 	.string "In my BAG!\n"
-	.string "There's a POKé BALL!$"
+	.string "Take a look!$"
 
 Route101_Text_DontLeaveMe:
-	.string "Wh-Where are you going?!\n"
-	.string "Don't leave me like this!$"
+	.string "BUM: Don't leave kid! Come here!$"
+
+Route101_Text_Battle:
+	.string "BUM: Here, fight my ZIGZAGOON!$"
 
 Route101_Text_YouSavedMe:
-	.string "PROF. BIRCH: Whew…\p"
-	.string "I was in the tall grass studying wild\n"
-	.string "POKéMON when I was jumped.\p"
-	.string "You saved me.\n"
-	.string "Thanks a lot!\p"
-	.string "Oh?\p"
-	.string "Hi, you're {PLAYER}{KUN}!\p"
-	.string "This is not the place to chat, so come\n"
-	.string "by my POKéMON LAB later, okay?$"
+	.string "BUM: Nice one, kid!\p"
+	.string "You had fun?\n"
+	.string "{PLAYER}: Yeah!\n"
+	.string "BUM: You want to keep it?\p"
+	.string "{PLAYER}: Sure, what do you want for it?\p"
+	.string "BUM: First one is always free.\p"
+	.string "This is not the place to chat,\n"
+	.string "see you later!$"
 
 Route101_Text_TakeTiredPokemonToPokeCenter:
 	.string "If POKéMON get tired, take them to\n"
@@ -295,5 +260,5 @@ Route101_Text_WildPokemonInTallGrass:
 
 Route101_Text_RouteSign:
 	.string "ROUTE 101\n"
-	.string "{UP_ARROW} OLDALE TOWN$"
+	.string "{UP_ARROW} NEUOSTHEIM$"
 

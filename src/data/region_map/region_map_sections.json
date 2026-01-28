@@ -490,7 +490,7 @@
     },
     {
       "id": "MAPSEC_ABANDONED_SHIP",
-      "name": "ABANDONED SHIP",
+      "name": "DHBW",
       "x": 6,
       "y": 14,
       "width": 1,
@@ -1230,6 +1230,10 @@
       "y": 4,
       "width": 1,
       "height": 1
+    },
+    {
+      "id": "MAPSEC_DHBW",
+      "name": "DHBW"
     }
   ]
 }

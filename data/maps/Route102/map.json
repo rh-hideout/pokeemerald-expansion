@@ -19,7 +19,7 @@
       "direction": "left"
     },
     {
-      "map": "MAP_OLDALE_TOWN",
+      "map": "MAP_TESTMAP",
       "offset": 0,
       "direction": "right"
     }

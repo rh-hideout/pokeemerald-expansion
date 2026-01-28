@@ -261,7 +261,7 @@ static const u16 sBirchSpeechBgGradientPal[] = INCBIN_U16("graphics/birch_speech
 #define TAG_BIRCH_SPEECH_TERMINAL 0x4F01
 
 // Palette-Daten kommen aus src/event_object_movement.c (OBJ_EVENT_PAL_TAG_NPC_3)
-extern const u16 gObjectEventPal_Npc3[];
+extern const u16 gObjectEventPal_CtfTerminal[];
 
 // OAM wie dein ObjectEvent: 16x32
 extern const struct OamData gObjectEventBaseOam_16x32;
@@ -279,7 +279,7 @@ static const struct SpriteSheet sBirchSpeechTerminalSheet =
 
 static const struct SpritePalette sBirchSpeechTerminalPalette =
 {
-    .data = gObjectEventPal_Npc3,
+    .data = gObjectEventPal_CtfTerminal,
     .tag = TAG_BIRCH_SPEECH_TERMINAL,
 };
 
@@ -1406,7 +1406,7 @@ static void Task_NewGameBirchSpeech_WaitForSpriteFadeInWelcome(u8 taskId)
             NewGameBirchSpeech_ClearWindow(0);
             StringExpandPlaceholders(gStringVar4, gText_Birch_Welcome);
             AddTextPrinterForMessage(TRUE);
-            gTasks[taskId].func = Task_NewGameBirchSpeech_ThisIsAPokemon;
+            // gTasks[taskId].func = Task_NewGameBirchSpeech_ThisIsAPokemon;
         }
     }
 }
