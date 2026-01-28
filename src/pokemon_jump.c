@@ -46,8 +46,8 @@ enum {
 // IDs for persistent windows
 enum {
     WIN_POINTS,
-    WIN_TIMES,
-    NUM_WINDOWS
+    WIN_TIMES
+    #define NUM_WINDOWS (WIN_TIMES + 1)
 };
 
 enum {
@@ -93,8 +93,8 @@ enum {
     VINE_UPSWING_LOWER,
     VINE_UPSWING_LOW,
     VINE_UPSWING_HIGH,
-    VINE_UPSWING_HIGHER,
-    NUM_VINESTATES
+    VINE_UPSWING_HIGHER
+    #define NUM_VINESTATES (VINE_UPSWING_HIGHER + 1)
 };
 
 // Used to compare limits for vineStateTimer

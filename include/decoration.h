@@ -36,8 +36,8 @@ enum DecorationCategory
     DECORCAT_MAT,
     DECORCAT_POSTER,
     DECORCAT_DOLL,
-    DECORCAT_CUSHION,
-    DECORCAT_COUNT,
+    DECORCAT_CUSHION
+    #define DECORCAT_COUNT (DECORCAT_CUSHION + 1)
 };
 
 struct Decoration

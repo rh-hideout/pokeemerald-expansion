@@ -73,8 +73,8 @@ enum
     AREA_SCREEN,
     CRY_SCREEN,
     SIZE_SCREEN,
-    CANCEL_SCREEN,
-    SCREEN_COUNT
+    CANCEL_SCREEN
+    #define SCREEN_COUNT (CANCEL_SCREEN + 1)
 };
 
 enum
@@ -85,16 +85,16 @@ enum
     SEARCH_TYPE_RIGHT,
     SEARCH_ORDER,
     SEARCH_MODE,
-    SEARCH_OK,
-    SEARCH_COUNT
+    SEARCH_OK
+    #define SEARCH_COUNT (SEARCH_OK + 1)
 };
 
 enum
 {
     SEARCH_TOPBAR_SEARCH,
     SEARCH_TOPBAR_SHIFT,
-    SEARCH_TOPBAR_CANCEL,
-    SEARCH_TOPBAR_COUNT
+    SEARCH_TOPBAR_CANCEL
+    #define SEARCH_TOPBAR_COUNT (SEARCH_TOPBAR_CANCEL + 1)
 };
 
 enum
@@ -6761,7 +6761,6 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                     switch ((enum Region)evolutions[i].params[j].arg1)
                     {
                     case REGION_NONE:
-                    case REGIONS_COUNT:
                         StringAppend(gStringVar4, COMPOUND_STRING("???"));
                         break;
                     case REGION_KANTO: StringAppend(gStringVar4, COMPOUND_STRING("Kanto")); break;
