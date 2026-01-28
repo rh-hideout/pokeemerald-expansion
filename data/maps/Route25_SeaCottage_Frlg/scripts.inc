@@ -1,7 +1,7 @@
 .equ BILL_IN_TELEPORTER,     FLAG_TEMP_2
 .equ RETURN_AFTER_SS_TICKET, FLAG_TEMP_3
 
-Route25_SeaCottage_MapScripts::
+Route25_SeaCottage_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route25_SeaCottage_OnTransition
 	.byte 0
 

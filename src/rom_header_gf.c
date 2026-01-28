@@ -73,7 +73,7 @@ struct GFRomHeader
     const struct SpeciesInfo *speciesInfo;
     const u8 (*abilityNames)[];
     const u8 *const *abilityDescriptions;
-    const struct Item *items;
+    const struct ItemInfo *items;
     const struct MoveInfo *moves;
     const struct CompressedSpriteSheet *ballGfx;
     const struct SpritePalette *ballPalettes;
@@ -157,8 +157,8 @@ __attribute__((section(".text.header_gf"))) USED static const struct GFRomHeader
     //.abilityDescriptions = gAbilityDescriptionPointers, //handled in gAbilitiesInfo
     .items = gItemsInfo,
     .moves = gMovesInfo,
-    .ballGfx = gBallSpriteSheets,
-    .ballPalettes = gBallSpritePalettes,
+    //.ballGfx = gBallSpriteSheets, //handled in gPokeBalls
+    //.ballPalettes = gBallSpritePalettes, //handled in gPokeBalls
     .gcnLinkFlagsOffset = offsetof(struct SaveBlock2, gcnLinkFlags),
     .gameClearFlag = FLAG_SYS_GAME_CLEAR,
     .ribbonFlag = FLAG_SYS_RIBBON_GET,

@@ -22,9 +22,11 @@
 #include "overworld.h"
 #include "item.h"
 #include "regions.h"
+#include "malloc.h"
 #include "constants/form_change_types.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "constants/party_menu.h"
 #include "constants/region_map_sections.h"
 
 #define IS_DITTO(species) (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_DITTO || gSpeciesInfo[species].eggGroups[1] == EGG_GROUP_DITTO)
@@ -86,7 +88,7 @@ static const struct ListMenuTemplate sDaycareListMenuLevelTemplate =
 
 static const struct {
   u16 currSpecies;
-  u16 item;
+  enum Item item;
   u16 babySpecies;
 } sIncenseBabyTable[] =
 {
@@ -276,17 +278,6 @@ void StorePokemonInDaycare(struct Pokemon *mon, struct DaycareMon *daycareMon)
         TransferEggMoves();
 }
 
-static void StoreBoxMonInDaycare(struct BoxPokemon *mon, struct DaycareMon *daycareMon)
-{
-
-    daycareMon->mon = *mon;
-    daycareMon->steps = 0;
-    ZeroBoxMonData(mon);
-
-    if (P_EGG_MOVE_TRANSFER >= GEN_8)
-        TransferEggMoves();
-}
-
 static void StorePokemonInEmptyDaycareSlot(struct Pokemon *mon, struct DayCare *daycare)
 {
     s8 slotId = Daycare_FindEmptySpot(daycare);
@@ -295,16 +286,19 @@ static void StorePokemonInEmptyDaycareSlot(struct Pokemon *mon, struct DayCare *
 
 void StoreSelectedPokemonInDaycare(void)
 {
-    u8 monId = GetCursorSelectionMonId();
-    if(gSpecialVar_MonBoxId == 0xFF)
+    struct Pokemon *mon;
+    if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
     {
-        StorePokemonInEmptyDaycareSlot(&gPlayerParty[monId], &gSaveBlock1Ptr->daycare);
+        mon = Alloc(sizeof(struct Pokemon));
+        RemoveSelectedPcMon(mon);
     }
     else
     {
-        s8 slotId = Daycare_FindEmptySpot(&gSaveBlock1Ptr->daycare);
-        StoreBoxMonInDaycare(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), &gSaveBlock1Ptr->daycare.mons[slotId]);
+        mon = &gPlayerParty[gSpecialVar_0x8004];
     }
+    StorePokemonInEmptyDaycareSlot(mon, &gSaveBlock1Ptr->daycare);
+    if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
+        Free(mon);
 }
 
 // Shifts the second daycare Pokémon slot into the first slot.
@@ -591,7 +585,7 @@ static void _TriggerPendingDaycareEgg(struct DayCare *daycare)
     // inherit nature
     else
     {
-        u8 wantedNature = GetNatureFromPersonality(GetBoxMonData(&daycare->mons[parent].mon, MON_DATA_PERSONALITY, NULL));
+        u8 wantedNature = GetNatureFromPersonality(GetBoxMonData(&daycare->mons[parent].mon, MON_DATA_PERSONALITY));
         u32 personality;
 
         do
@@ -985,8 +979,8 @@ static void AlterEggSpeciesWithIncenseItem(u16 *species, struct DayCare *daycare
 
 static const struct {
   u16 offspring;
-  u16 item;
-  u16 move;
+  enum Item item;
+  enum Move move;
 } sBreedingSpecialMoveItemTable[] =
 {
     // Offspring,    Item,            Move
@@ -1126,7 +1120,7 @@ void CreateEgg(struct Pokemon *mon, u16 species, bool8 setHotSpringsLocation)
 {
     u8 metLevel;
     enum PokeBall ball;
-    u8 language;
+    enum Language language;
     metloc_u8_t metLocation;
     u8 isEgg;
 
@@ -1233,6 +1227,10 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
 
 bool8 ShouldEggHatch(void)
 {
+#if IS_FRLG
+    if (GetBoxMonData(&gSaveBlock1Ptr->route5DayCareMon.mon, MON_DATA_SANITY_HAS_SPECIES))
+        gSaveBlock1Ptr->route5DayCareMon.steps++;
+#endif
     return TryProduceOrHatchEgg(&gSaveBlock1Ptr->daycare);
 }
 
@@ -1262,17 +1260,9 @@ static void _GetDaycareMonNicknames(struct DayCare *daycare)
 
 u16 GetSelectedMonNicknameAndSpecies(void)
 {
-    if(gSpecialVar_MonBoxId == 0xFF)
-    {
-        GetBoxMonNickname(&gPlayerParty[GetCursorSelectionMonId()].box, gStringVar1);
-        return GetBoxMonData(&gPlayerParty[GetCursorSelectionMonId()].box, MON_DATA_SPECIES);
-    }
-    else
-    {
-        GetBoxMonNickname(&gPokemonStoragePtr->boxes[gSpecialVar_MonBoxId][gSpecialVar_MonBoxPos], gStringVar1);
-        return GetBoxMonData(&gPokemonStoragePtr->boxes[gSpecialVar_MonBoxId][gSpecialVar_MonBoxPos], MON_DATA_SPECIES);
-    }
-    
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    GetBoxMonNickname(boxmon, gStringVar1);
+    return GetBoxMonData(boxmon, MON_DATA_SPECIES);
 }
 
 void GetDaycareMonNicknames(void)
@@ -1628,4 +1618,52 @@ static u8 ModifyBreedingScoreForOvalCharm(u8 score)
     }
 
     return score;
+}
+
+// Route 5 Daycare
+
+void PutMonInRoute5Daycare(void)
+{
+#if IS_FRLG
+    u8 monIdx = GetCursorSelectionMonId();
+    StorePokemonInDaycare(&gPlayerParty[monIdx], &gSaveBlock1Ptr->route5DayCareMon);
+#endif
+}
+
+void GetCostToWithdrawRoute5DaycareMon(void)
+{
+#if IS_FRLG
+    u16 cost = GetDaycareCostForSelectedMon(&gSaveBlock1Ptr->route5DayCareMon);
+#else
+    u16 cost = 100;
+#endif
+    gSpecialVar_0x8005 = cost;
+}
+
+bool8 IsThereMonInRoute5Daycare(void)
+{
+#if IS_FRLG
+    if (GetBoxMonData(&gSaveBlock1Ptr->route5DayCareMon.mon, MON_DATA_SPECIES) != SPECIES_NONE)
+        return TRUE;
+#endif
+
+    return FALSE;
+}
+
+u8 GetNumLevelsGainedForRoute5DaycareMon(void)
+{
+#if IS_FRLG
+    return GetNumLevelsGainedForDaycareMon(&gSaveBlock1Ptr->route5DayCareMon);
+#else
+    return 0;
+#endif
+}
+
+u16 TakePokemonFromRoute5Daycare(void)
+{
+#if IS_FRLG
+    return TakeSelectedPokemonFromDaycare(&gSaveBlock1Ptr->route5DayCareMon);
+#else
+    return SPECIES_NONE;
+#endif
 }

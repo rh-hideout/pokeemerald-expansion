@@ -1,4 +1,4 @@
-SilphCo_8F_MapScripts::
+SilphCo_8F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, SilphCo_8F_OnLoad
 	.byte 0
 

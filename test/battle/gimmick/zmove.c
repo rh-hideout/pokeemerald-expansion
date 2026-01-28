@@ -1,6 +1,5 @@
 #include "global.h"
 #include "test/battle.h"
-#include "constants/battle_z_move_effects.h"
 
 // Basic Functionality
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves do not retain priority")
@@ -684,6 +683,99 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Revelation Dance always transforms into Breakneck
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - Singles")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = player; }
+    PARAMETRIZE { battler = opponent; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, battler);
+    }
+}
+
+DOUBLE_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - Doubles")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, battler);
+    }
+}
+
+MULTI_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - Multi")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        MULTI_PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, battler);
+    }
+}
+
+TWO_VS_ONE_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - 2v1")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        MULTI_PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, battler);
+    }
+}
+
+ONE_VS_TWO_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - 1v2")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, battler);
     }
 }
 

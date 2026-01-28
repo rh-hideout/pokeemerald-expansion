@@ -1,6 +1,6 @@
 .equ REQUIRED_SEEN_MONS, 10
 
-Route2_EastBuilding_MapScripts::
+Route2_EastBuilding_Frlg_MapScripts::
 	.byte 0
 
 Route2_EastBuilding_EventScript_Aide::

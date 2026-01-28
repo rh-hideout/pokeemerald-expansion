@@ -87,7 +87,7 @@ static void ClearPyramidPartyHeldItems(void);
 static void SetPyramidFloorPalette(void);
 static void BattlePyramidStartMenu(void);
 static void RestorePyramidPlayerParty(void);
-static void InitPyramidBagItems(u8);
+static void InitPyramidBagItems(enum FrontierLevelMode lvlMode);
 static u8 GetPyramidFloorTemplateId(void);
 static u8 GetPostBattleDirectionHintTextIndex(int *, u8, u8);
 static void Task_SetPyramidFloorPalette(u8);
@@ -847,7 +847,7 @@ void CallBattlePyramidFunction(void)
 static void InitPyramidChallenge(void)
 {
     bool32 isCurrent;
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     gSaveBlock2Ptr->frontier.challengeStatus = 0;
     gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
@@ -870,7 +870,7 @@ static void InitPyramidChallenge(void)
 
 static void GetBattlePyramidData(void)
 {
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     switch (gSpecialVar_0x8005)
     {
@@ -903,7 +903,7 @@ static void GetBattlePyramidData(void)
 
 static void SetBattlePyramidData(void)
 {
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     switch (gSpecialVar_0x8005)
     {
@@ -947,7 +947,7 @@ static void SavePyramidChallenge(void)
 
 static void SetBattlePyramidPrize(void)
 {
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     if (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] > 41)
         gSaveBlock2Ptr->frontier.pyramidPrize = sLongStreakRewardItems[Random() % ARRAY_COUNT(sLongStreakRewardItems)];
@@ -987,7 +987,7 @@ static void SetPickupItem(void)
     u32 randSeedIndex, randSeed;
     u8 id;
     rng_value_t rand;
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u32 floor = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
     u32 round = (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] / FRONTIER_STAGES_PER_CHALLENGE) % TOTAL_PYRAMID_ROUNDS;
 
@@ -1119,7 +1119,7 @@ static void ShowPostBattleHintText(void)
 
 static void UpdatePyramidWinStreak(void)
 {
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     if (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] < 999)
         gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode]++;
@@ -1180,7 +1180,7 @@ static void UpdatePyramidLightRadius(void)
 static void ClearPyramidPartyHeldItems(void)
 {
     int i, j;
-    u16 item = 0;
+    enum Item item = ITEM_NONE;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -1221,13 +1221,13 @@ static void RestorePyramidPlayerParty(void)
         int partyIndex = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
         for (j = 0; j < FRONTIER_PARTY_SIZE; j++)
         {
-            if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_SPECIES, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_SPECIES, NULL))
+            if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_SPECIES) == GetMonData(&gPlayerParty[j], MON_DATA_SPECIES))
             {
                 for (k = 0; k < MAX_MON_MOVES; k++)
                 {
                     for (l = 0; l < MAX_MON_MOVES; l++)
                     {
-                        if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_MOVE1 + l, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_MOVE1 + k, NULL))
+                        if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_MOVE1 + l) == GetMonData(&gPlayerParty[j], MON_DATA_MOVE1 + k))
                             break;
                     }
                     if (l == MAX_MON_MOVES)
@@ -1414,7 +1414,7 @@ void GenerateBattlePyramidWildMon(void)
     if (round >= TOTAL_PYRAMID_ROUNDS)
         round = TOTAL_PYRAMID_ROUNDS - 1;
 
-    id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL) - 1;   // index in table (0-11) -> higher index is lower probability
+    id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) - 1;   // index in table (0-11) -> higher index is lower probability
     bstLim = 450 + (25*round) + (5*id);                             // higher BST limit for 'rarer' wild mon rolls
 
     while (1)
@@ -1522,7 +1522,7 @@ void GenerateBattlePyramidWildMon(void)
     // Initialize a random ability num
     if (GetSpeciesAbility(species, 1))
     {
-        i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
+        i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY) % 2;
         SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
     }
     else
@@ -1569,7 +1569,7 @@ void GenerateBattlePyramidWildMon(void)
     int i;
     const struct PyramidWildMon *wildMons;
     u32 id;
-    u32 lvl = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvl = gSaveBlock2Ptr->frontier.lvlMode;
     u16 round = (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvl] / FRONTIER_STAGES_PER_CHALLENGE) % TOTAL_PYRAMID_ROUNDS;
 
     if (round >= TOTAL_PYRAMID_ROUNDS)
@@ -1580,7 +1580,7 @@ void GenerateBattlePyramidWildMon(void)
     else
         wildMons = sLevel50WildMonPointers[round];
 
-    id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL) - 1;
+    id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) - 1;
     SetMonData(&gEnemyParty[0], MON_DATA_SPECIES, &wildMons[id].species);
     StringCopy(name, GetSpeciesName(wildMons[id].species));
     SetMonData(&gEnemyParty[0], MON_DATA_NICKNAME, &name);
@@ -1608,7 +1608,7 @@ void GenerateBattlePyramidWildMon(void)
     default:
         if (GetSpeciesAbility(wildMons[id].species, 1))
         {
-            i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
+            i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY) % 2;
             SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
         }
         else
@@ -1712,7 +1712,7 @@ static u16 GetUniqueTrainerId(u8 objectEventId)
 {
     int i;
     u16 trainerId;
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u32 challengeNum = gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
     u32 floor = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
     if (floor == FRONTIER_STAGES_PER_CHALLENGE)
@@ -2166,7 +2166,7 @@ u8 GetNumBattlePyramidObjectEvents(void)
     return i;
 }
 
-static void InitPyramidBagItems(u8 lvlMode)
+static void InitPyramidBagItems(enum FrontierLevelMode lvlMode)
 {
     int i;
 
@@ -2184,7 +2184,7 @@ u16 GetBattlePyramidPickupItemId(void)
 {
     int rand;
     u32 i;
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     int round = (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] / FRONTIER_STAGES_PER_CHALLENGE);
 
     if (round >= TOTAL_PYRAMID_ROUNDS)

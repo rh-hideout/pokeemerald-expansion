@@ -81,8 +81,16 @@ struct PokemonSpriteVisualizer
     u8 animIdBack;
     u8 animIdFront;
     u8 battleEnvironment;
+    u8 moveBackground;
     u8 currentSubmenu;
     u8 submenuYpos[3];
+};
+
+struct SubmenuText
+{
+    const u8 *instructions;
+    const u8 *instructionsGender;
+    const u8 *bottomLeft;
 };
 
 void CB2_Pokemon_Sprite_Visualizer(void);

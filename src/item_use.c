@@ -56,7 +56,7 @@ static void Task_UseItemfinder(u8);
 static void Task_CloseItemfinderMessage(u8);
 static void Task_HiddenItemNearby(u8);
 static void Task_StandingOnHiddenItem(u8);
-static void PlayerFaceHiddenItem(u8);
+static void PlayerFaceHiddenItem(enum Direction);
 static void CheckForHiddenItemsInMapConnection(u8);
 static void Task_OpenRegisteredPokeblockCase(u8);
 static void Task_AccessPokemonBoxLink(u8);
@@ -123,7 +123,7 @@ static const struct YesNoFuncTable sUseTMHMYesNoFuncTable =
 #define tEnigmaBerryType data[4]
 static void SetUpItemUseCallback(u8 taskId)
 {
-    u8 type;
+    enum ItemType type;
     if (gSpecialVar_ItemId == ITEM_ENIGMA_BERRY_E_READER)
         type = gTasks[taskId].tEnigmaBerryType - 1;
     else
@@ -219,14 +219,14 @@ static void Task_CloseCantUseKeyItemMessage(u8 taskId)
     UnlockPlayerFieldControls();
 }
 
-u8 CheckIfItemIsTMHMOrEvolutionStone(u16 itemId)
+u8 CheckIfItemIsTMHMOrEvolutionStone(enum Item itemId)
 {
     if (GetItemFieldFunc(itemId) == ItemUseOutOfBattle_TMHM)
-        return 1;
+        return ITEM_IS_TM_HM;
     else if (GetItemFieldFunc(itemId) == ItemUseOutOfBattle_EvolutionStone)
-        return 2;
+        return ITEM_IS_EVOLUTION_STONE;
     else
-        return 0;
+        return ITEM_IS_OTHER;
 }
 
 // Mail in the bag menu can't have a message but it can be checked (view the mail background, no message)
@@ -298,7 +298,9 @@ void ItemUseOutOfBattle_Bike(u8 taskId)
 
 static void ItemUseOnFieldCB_Bike(u8 taskId)
 {
-    if (GetItemSecondaryId(gSpecialVar_ItemId) == MACH_BIKE)
+    if (GetItemSecondaryId(gSpecialVar_ItemId) == STANDARD_BIKE)
+        GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE);
+    else if (GetItemSecondaryId(gSpecialVar_ItemId) == MACH_BIKE)
         GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE);
     else // ACRO_BIKE
         GetOnOffBike(PLAYER_AVATAR_FLAG_ACRO_BIKE);
@@ -621,7 +623,7 @@ static void SetDistanceOfClosestHiddenItem(u8 taskId, s16 itemDistanceX, s16 ite
     }
 }
 
-u8 GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
+enum Direction GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
 {
     s16 absX, absY;
 
@@ -667,7 +669,7 @@ u8 GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
     }
 }
 
-static void PlayerFaceHiddenItem(u8 direction)
+static void PlayerFaceHiddenItem(enum Direction direction)
 {
     ObjectEventClearHeldMovementIfFinished(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0)]);
     ObjectEventClearHeldMovement(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0)]);
@@ -1146,7 +1148,7 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_TWO_MONS;
     else if (IsPlayerPartyAndPokemonStorageFull() == TRUE)
         return BALL_THROW_UNABLE_NO_ROOM;
-    else if (B_SEMI_INVULNERABLE_CATCH >= GEN_4 &&  IsSemiInvulnerable(GetCatchingBattler(), CHECK_ALL))
+    else if (GetConfig(CONFIG_SEMI_INVULNERABLE_CATCH) >= GEN_4 &&  IsSemiInvulnerable(GetCatchingBattler(), CHECK_ALL))
         return BALL_THROW_UNABLE_SEMI_INVULNERABLE;
     else if (FlagGet(B_FLAG_NO_CATCHING) || !IsAllowedToUseBag())
         return BALL_THROW_UNABLE_DISABLED_FLAG;
@@ -1227,7 +1229,7 @@ void ItemUseInBattle_PartyMenuChooseMove(u8 taskId)
     ItemUseInBattle_ShowPartyMenu(taskId);
 }
 
-static bool32 IteamHealsMonVolatile(u32 battler, u16 itemId)
+static bool32 IteamHealsMonVolatile(enum BattlerId battler, enum Item itemId)
 {
     const u8 *effect = GetItemEffect(itemId);
     if (effect[3] & ITEM3_STATUS_ALL)
@@ -1240,7 +1242,7 @@ static bool32 IteamHealsMonVolatile(u32 battler, u16 itemId)
     return FALSE;
 }
 
-static bool32 SelectedMonHasVolatile(u16 itemId)
+static bool32 SelectedMonHasVolatile(enum Item itemId)
 {
     if (gPartyMenu.slotId == 0)
         return IteamHealsMonVolatile(0, itemId);
@@ -1250,7 +1252,7 @@ static bool32 SelectedMonHasVolatile(u16 itemId)
 }
 
 // Returns whether an item can be used in battle and sets the fail text.
-bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
+bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
 {
     u16 battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;

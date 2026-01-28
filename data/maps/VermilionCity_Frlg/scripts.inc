@@ -1,4 +1,4 @@
-VermilionCity_MapScripts::
+VermilionCity_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, VermilionCity_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, VermilionCity_OnFrame
 	.byte 0

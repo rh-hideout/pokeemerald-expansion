@@ -761,19 +761,19 @@ SINGLE_BATTLE_TEST("(TERA) Transformed Pokémon can't Terastalize")
 
 SINGLE_BATTLE_TEST("(TERA) Pokemon with Tera forms change upon Terastallizing")
 {
-    u32 species, targetSpecies;
-    PARAMETRIZE { species = SPECIES_OGERPON_TEAL;             targetSpecies = SPECIES_OGERPON_TEAL_TERA; }
-    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;       targetSpecies = SPECIES_OGERPON_WELLSPRING_TERA; }
-    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME;      targetSpecies = SPECIES_OGERPON_HEARTHFLAME_TERA; }
-    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE;      targetSpecies = SPECIES_OGERPON_CORNERSTONE_TERA; }
-    PARAMETRIZE { species = SPECIES_TERAPAGOS_TERASTAL;       targetSpecies = SPECIES_TERAPAGOS_STELLAR; }
+    u32 species, target, item;
+    PARAMETRIZE { species = SPECIES_OGERPON_TEAL;        target = SPECIES_OGERPON_TEAL_TERA;        item = ITEM_NONE; }
+    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;  target = SPECIES_OGERPON_WELLSPRING_TERA;  item = ITEM_WELLSPRING_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; target = SPECIES_OGERPON_HEARTHFLAME_TERA; item = ITEM_HEARTHFLAME_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; target = SPECIES_OGERPON_CORNERSTONE_TERA; item = ITEM_CORNERSTONE_MASK; }
+    PARAMETRIZE { species = SPECIES_TERAPAGOS_TERASTAL;  target = SPECIES_TERAPAGOS_STELLAR;        item = ITEM_NONE; }
     GIVEN {
-        PLAYER(species);
+        PLAYER(species) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } THEN {
-        EXPECT_EQ(player->species, targetSpecies);
+        EXPECT_EQ(player->species, target);
     }
 }
 
@@ -838,5 +838,103 @@ SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly - Opponent")
         OPPONENT(SPECIES_WOBBUFFET) { TeraType(type); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    }
+}
+
+SINGLE_BATTLE_TEST("(TERA) Every battler can use Terastalization - Singles")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = player; }
+    PARAMETRIZE { battler = opponent; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
+    }
+}
+
+DOUBLE_BATTLE_TEST("(TERA) Every battler can use Terastalization - Doubles")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        OPPONENT(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
+    }
+}
+
+MULTI_BATTLE_TEST("(TERA) Every battler can use Terastalization - Multi")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_PARTNER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
+    }
+}
+
+TWO_VS_ONE_BATTLE_TEST("(TERA) Every battler can use Terastalization - 2v1")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_PARTNER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
+    }
+}
+
+ONE_VS_TWO_BATTLE_TEST("(TERA) Every battler can use Terastalization - 1v2")
+{
+    struct BattlePokemon *battler = NULL;
+    PARAMETRIZE { battler = playerLeft; }
+    PARAMETRIZE { battler = playerRight; }
+    PARAMETRIZE { battler = opponentLeft; }
+    PARAMETRIZE { battler = opponentRight; }
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, battler);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, battler);
     }
 }

@@ -1,4 +1,4 @@
-CeladonCity_DepartmentStore_1F_MapScripts::
+CeladonCity_DepartmentStore_1F_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_DepartmentStore_1F_EventScript_Receptionist::

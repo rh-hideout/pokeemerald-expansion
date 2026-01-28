@@ -1,4 +1,4 @@
-Route2_ViridianForest_NorthEntrance_MapScripts::
+Route2_ViridianForest_NorthEntrance_Frlg_MapScripts::
 	.byte 0
 
 Route2_ViridianForest_NorthEntrance_EventScript_Youngster::

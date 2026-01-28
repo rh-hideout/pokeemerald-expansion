@@ -1763,7 +1763,7 @@ static void Task_RunScriptAndFadeToActivity(u8 taskId)
             gLinkPlayers[0].id = 0;
             gLinkPlayers[1].id = 2;
             sendBuff[0] = GetMonData(&gPlayerParty[gSelectedOrderFromParty[0] - 1], MON_DATA_SPECIES);
-            sendBuff[1] = GetMonData(&gPlayerParty[gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES, NULL);
+            sendBuff[1] = GetMonData(&gPlayerParty[gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES);
             gMain.savedCallback = NULL;
             data[0] = 4;
             SaveLinkTrainerNames();
@@ -2483,7 +2483,7 @@ static void Task_RunUnionRoom(u8 taskId)
 {
     u32 id = 0;
     s32 input = 0;
-    s32 playerGender = MALE;
+    enum Gender playerGender = MALE;
     struct WirelessLink_URoom *uroom = sWirelessLinkMain.uRoom;
     s16 *taskData = gTasks[taskId].data;
 

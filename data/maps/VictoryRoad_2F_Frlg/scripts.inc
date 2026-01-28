@@ -1,4 +1,4 @@
-VictoryRoad_2F_MapScripts::
+VictoryRoad_2F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, VictoryRoad_2F_OnLoad
 	.byte 0
 

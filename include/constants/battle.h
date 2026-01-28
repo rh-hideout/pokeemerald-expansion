@@ -32,15 +32,25 @@ enum BattlerPosition
     B_POSITION_PLAYER_RIGHT,
     B_POSITION_OPPONENT_RIGHT,
     MAX_POSITION_COUNT,
+    B_POSITION_ABSENT = 0xFF,
 };
 
-enum BattlerId
+enum __attribute__((packed)) BattlerId
 {
     B_BATTLER_0,
     B_BATTLER_1,
     B_BATTLER_2,
     B_BATTLER_3,
     MAX_BATTLERS_COUNT,
+};
+
+enum __attribute__((packed)) BattleTrainer
+{
+    B_TRAINER_0,
+    B_TRAINER_1,
+    B_TRAINER_2,
+    B_TRAINER_3,
+    MAX_BATTLE_TRAINERS,
 };
 
 // These macros can be used with either battler ID or positions to get the partner or the opposite mon
@@ -75,7 +85,7 @@ enum BattleSide
 #define BATTLE_TYPE_MULTI              (1 << 6)
 #define BATTLE_TYPE_SAFARI             (1 << 7)
 #define BATTLE_TYPE_BATTLE_TOWER       (1 << 8)
-#define BATTLE_TYPE_WALLY_TUTORIAL     (1 << 9) // Used in pokefirered as BATTLE_TYPE_OLD_MAN_TUTORIAL.
+#define BATTLE_TYPE_CATCH_TUTORIAL     (1 << 9) // Used in pokefirered as BATTLE_TYPE_OLD_MAN_TUTORIAL.
 #define BATTLE_TYPE_ROAMER             (1 << 10)
 #define BATTLE_TYPE_EREADER_TRAINER    (1 << 11)
 #define BATTLE_TYPE_RAID               (1 << 12)
@@ -93,15 +103,16 @@ enum BattleSide
 #define BATTLE_TYPE_RECORDED           (1 << 24)
 #define BATTLE_TYPE_RECORDED_LINK      (1 << 25)
 #define BATTLE_TYPE_TRAINER_HILL       (1 << 26)
+#define BATTLE_TYPE_TRAINER_TOWER      BATTLE_TYPE_TRAINER_HILL
 #define BATTLE_TYPE_SECRET_BASE        (1 << 27)
-#define BATTLE_TYPE_28                 (1 << 28)
-#define BATTLE_TYPE_29                 (1 << 29)
+#define BATTLE_TYPE_GHOST              (1 << 28)
+#define BATTLE_TYPE_POKEDUDE           (1 << 29)
 #define BATTLE_TYPE_30                 (1 << 30)
 #define BATTLE_TYPE_RECORDED_IS_MASTER (1 << 31)
 #define BATTLE_TYPE_FRONTIER                (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOME | BATTLE_TYPE_PALACE | BATTLE_TYPE_ARENA | BATTLE_TYPE_FACTORY | BATTLE_TYPE_PIKE | BATTLE_TYPE_PYRAMID)
 #define BATTLE_TYPE_FRONTIER_NO_PYRAMID     (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOME | BATTLE_TYPE_PALACE | BATTLE_TYPE_ARENA | BATTLE_TYPE_FACTORY | BATTLE_TYPE_PIKE)
 #define BATTLE_TYPE_RECORDED_INVALID        ((BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_FIRST_BATTLE                  \
-                                             | BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_ROAMER | BATTLE_TYPE_EREADER_TRAINER    \
+                                             | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_ROAMER | BATTLE_TYPE_EREADER_TRAINER    \
                                              | BATTLE_TYPE_LEGENDARY                                                            \
                                              | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE))
 
@@ -115,6 +126,9 @@ enum BattleSide
 // Multibattle test composite flags
 #define BATTLE_MULTI_TEST                   (BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS)
 #define BATTLE_TWO_VS_ONE_TEST              (BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI)
+
+#define RIVAL_BATTLE_HEAL_AFTER  1
+#define RIVAL_BATTLE_TUTORIAL    3
 
 // Battle Outcome defines
 #define B_OUTCOME_WON                  1
@@ -224,7 +238,7 @@ enum VolatileFlags
     F(VOLATILE_TRANSFORMED_MON_PID,         transformedMonPID,             (u32, UINT32_MAX)) \
     F(VOLATILE_DISABLED_MOVE,               disabledMove,                  (u32, MOVES_COUNT_ALL)) \
     F(VOLATILE_ENCORED_MOVE,                encoredMove,                   (u32, MOVES_COUNT_ALL)) \
-    F(VOLATILE_PROTECT_USES,                protectUses,                   (u32, UINT8_MAX)) \
+    F(VOLATILE_PROTECT_USES,                consecutiveMoveUses,           (u32, UINT8_MAX)) \
     F(VOLATILE_STOCKPILE_COUNTER,           stockpileCounter,              (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_DEF,               stockpileDef,                  (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_SP_DEF,            stockpileSpDef,                (u32, MAX_STAT_STAGE)) \
@@ -396,13 +410,15 @@ enum TypeSideHazard
 #define MOVE_RESULT_NOT_VERY_EFFECTIVE    (1 << 2)
 #define MOVE_RESULT_DOESNT_AFFECT_FOE     (1 << 3)
 #define MOVE_RESULT_ONE_HIT_KO            (1 << 4)
-#define MOVE_RESULT_FAILED                (1 << 5)
-#define MOVE_RESULT_FOE_ENDURED           (1 << 6)
-#define MOVE_RESULT_FOE_HUNG_ON           (1 << 7)
-#define MOVE_RESULT_STURDIED              (1 << 8)
-#define MOVE_RESULT_FOE_ENDURED_AFFECTION (1 << 9)
-#define MOVE_RESULT_SYNCHRONOISE_AFFECTED (1 << 10)
-#define MOVE_RESULT_NO_EFFECT             (MOVE_RESULT_MISSED | MOVE_RESULT_DOESNT_AFFECT_FOE | MOVE_RESULT_FAILED)
+#define MOVE_RESULT_ONE_HIT_KO_NO_AFFECT  (1 << 5)
+#define MOVE_RESULT_ONE_HIT_KO_STURDY     (1 << 6)
+#define MOVE_RESULT_FAILED                (1 << 7)
+#define MOVE_RESULT_FOE_ENDURED           (1 << 8)
+#define MOVE_RESULT_FOE_HUNG_ON           (1 << 9)
+#define MOVE_RESULT_STURDIED              (1 << 10)
+#define MOVE_RESULT_FOE_ENDURED_AFFECTION (1 << 11)
+#define MOVE_RESULT_AVOIDED_ATTACK        (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED)
+#define MOVE_RESULT_NO_EFFECT             (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE)
 
 enum BattleWeather
 {
@@ -577,6 +593,11 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FIXED_POWER,
     // Max move effects end. They can be used for (custom) normal moves.
 
+    // Move effects that happen before the move hits. Set in SetPreAttackMoveEffect
+    MOVE_EFFECT_BREAK_SCREEN,
+    MOVE_EFFECT_STEAL_STATS,
+    MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2,3 and 4
+
     NUM_MOVE_EFFECTS
 };
 
@@ -585,8 +606,6 @@ enum __attribute__((packed)) MoveEffect
 #else
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FREEZE
 #endif
-
-#define MOVE_EFFECT_CONTINUE            0x8000
 
 // Battle environment defines for gBattleEnvironment.
 enum BattleEnvironments
@@ -672,6 +691,7 @@ enum BattleEnvironments
 #define B_WIN_VS_OUTCOME_LEFT    22
 #define B_WIN_VS_OUTCOME_RIGHT   23
 #define B_WIN_MOVE_DESCRIPTION   24
+#define B_WIN_OAK_OLD_MAN        25
 
 // The following are duplicate id values for windows that Battle Arena uses differently.
 #define ARENA_WIN_PLAYER_NAME      15
@@ -689,9 +709,6 @@ enum BattleEnvironments
 // Indicator for the party summary bar to display an empty slot.
 #define HP_EMPTY_SLOT 0xFFFF
 
- // (TARGET_USER | TARGET_ALLY)
-
-
 enum MoveTarget
 {
     TARGET_NONE,
@@ -703,7 +720,7 @@ enum MoveTarget
     TARGET_BOTH,
     TARGET_USER,
     TARGET_ALLY,
-    TARGET_USER_AND_ALLY, // TODO: No functionality yet but would be used for howl in the future
+    TARGET_USER_AND_ALLY,
     TARGET_USER_OR_ALLY, // Acupressure
     TARGET_FOES_AND_ALLY,
     TARGET_FIELD, // Moves that target the field, e.g. Rain Dance

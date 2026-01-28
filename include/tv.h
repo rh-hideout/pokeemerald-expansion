@@ -38,7 +38,7 @@ void IncrementDailyWildBattles(void);
 void IncrementDailyBerryBlender(void);
 void SanitizeTVShowsForRuby(TVShow *shows);
 void TryPutSafariFanClubOnAir(u8 monsCaught, u8 pokeblocksUsed);
-bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, u8 flavor, u8 color, u8 sheen, u8 language);
+bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, enum Flavor flavor, u8 color, u8 sheen, u8 language);
 void SetPokemonAnglerSpecies(u16 species);
 void UpdateTVShowsPerDay(u16 days);
 void TryPutPokemonTodayOnAir(void);

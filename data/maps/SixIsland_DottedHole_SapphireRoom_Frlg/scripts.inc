@@ -1,4 +1,4 @@
-SixIsland_DottedHole_SapphireRoom_MapScripts::
+SixIsland_DottedHole_SapphireRoom_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_DottedHole_SapphireRoom_EventScript_Sapphire::

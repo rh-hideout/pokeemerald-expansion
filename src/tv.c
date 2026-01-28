@@ -1108,8 +1108,8 @@ void TryPutPokemonTodayOnAir(void)
     u8 i;
     u16 ballsUsed;
     TVShow *show;
-    u32 language2;
-    u16 itemLastUsed;
+    enum Language language2;
+    enum Item itemLastUsed;
 
     ballsUsed = 0;
     TryPutRandomPokeNewsOnAir();
@@ -1242,7 +1242,7 @@ static void InterviewAfter_ContestLiveUpdates(void)
         show2->contestLiveUpdates.active = TRUE;
         StringCopy(show2->contestLiveUpdates.winningTrainerName, gSaveBlock2Ptr->playerName); // Show only begins running if player won, so always load players name
         show2->contestLiveUpdates.category = gSpecialVar_ContestCategory;
-        show2->contestLiveUpdates.winningSpecies = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_SPECIES, NULL);
+        show2->contestLiveUpdates.winningSpecies = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_SPECIES);
         show2->contestLiveUpdates.losingSpecies = show->contestLiveUpdates.losingSpecies;
         show2->contestLiveUpdates.loserAppealFlag = show->contestLiveUpdates.loserAppealFlag;
         show2->contestLiveUpdates.round1Placing = show->contestLiveUpdates.round1Placing;
@@ -1296,7 +1296,7 @@ void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, enum Move move, u16 specie
     }
 }
 
-bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, u8 flavor, u8 color, u8 sheen, u8 language)
+bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, enum Flavor flavor, u8 color, u8 sheen, u8 language)
 {
     TVShow *show;
     u8 name[32];
@@ -1467,7 +1467,7 @@ void BravoTrainerPokemonProfile_BeforeInterview2(u8 contestStandingPlace)
         show->bravoTrainer.contestResult = contestStandingPlace;
         show->bravoTrainer.contestCategory = gSpecialVar_ContestCategory;
         show->bravoTrainer.contestRank = gSpecialVar_ContestRank;
-        show->bravoTrainer.species = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_SPECIES, NULL);
+        show->bravoTrainer.species = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_SPECIES);
         GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_NICKNAME10, show->bravoTrainer.pokemonNickname);
         StripExtCtrlCodes(show->bravoTrainer.pokemonNickname);
         show->bravoTrainer.pokemonNameLanguage = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_LANGUAGE);
@@ -1534,26 +1534,28 @@ void TryPutSmartShopperOnAir(void)
 void PutNameRaterShowOnTheAir(void)
 {
     TVShow *show;
+    struct BoxPokemon *boxmon;
 
     InterviewBefore_NameRater();
     if (gSpecialVar_Result != 1)
     {
-        GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+        boxmon = GetSelectedBoxMonFromPcOrParty();
+        GetBoxMonData(boxmon, MON_DATA_NICKNAME, gStringVar1);
         if (StringLength(gSaveBlock2Ptr->playerName) > 1 && StringLength(gStringVar1) > 1)
         {
             show = &gSaveBlock1Ptr->tvShows[sCurTVShowSlot];
             show->nameRaterShow.kind = TVSHOW_NAME_RATER_SHOW;
             show->nameRaterShow.active = TRUE;
-            show->nameRaterShow.species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES, NULL);
+            show->nameRaterShow.species = GetBoxMonData(boxmon, MON_DATA_SPECIES);
             show->nameRaterShow.random = Random() % 3;
             show->nameRaterShow.random2 = Random() % 2;
             show->nameRaterShow.randomSpecies = GetRandomDifferentSpeciesSeenByPlayer(show->nameRaterShow.species);
             StringCopy(show->nameRaterShow.trainerName, gSaveBlock2Ptr->playerName);
-            GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME10, show->nameRaterShow.pokemonName);
+            GetBoxMonData(boxmon, MON_DATA_NICKNAME10, show->nameRaterShow.pokemonName);
             StripExtCtrlCodes(show->nameRaterShow.pokemonName);
             StorePlayerIdInNormalShow(show);
             show->nameRaterShow.language = gGameLanguage;
-            show->nameRaterShow.pokemonNameLanguage = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_LANGUAGE);
+            show->nameRaterShow.pokemonNameLanguage = GetBoxMonData(boxmon, MON_DATA_LANGUAGE);
         }
     }
 }
@@ -1601,7 +1603,7 @@ static void InterviewAfter_FanClubLetter(void)
     show->fanclubLetter.kind = TVSHOW_FAN_CLUB_LETTER;
     show->fanclubLetter.active = TRUE;
     StringCopy(show->fanclubLetter.playerName, gSaveBlock2Ptr->playerName);
-    show->fanclubLetter.species = GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_SPECIES, NULL);
+    show->fanclubLetter.species = GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_SPECIES);
     StorePlayerIdInNormalShow(show);
     show->fanclubLetter.language = gGameLanguage;
 }
@@ -1622,12 +1624,12 @@ static void InterviewAfter_PkmnFanClubOpinions(void)
     TVShow *show = &gSaveBlock1Ptr->tvShows[sCurTVShowSlot];
     show->fanclubOpinions.kind = TVSHOW_PKMN_FAN_CLUB_OPINIONS;
     show->fanclubOpinions.active = TRUE;
-    show->fanclubOpinions.friendshipHighNybble = GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_FRIENDSHIP, NULL) >> 4;
+    show->fanclubOpinions.friendshipHighNybble = GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_FRIENDSHIP) >> 4;
     show->fanclubOpinions.questionAsked = gSpecialVar_0x8007;
     StringCopy(show->fanclubOpinions.playerName, gSaveBlock2Ptr->playerName);
     GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_NICKNAME10, show->fanclubOpinions.nickname);
     StripExtCtrlCodes(show->fanclubOpinions.nickname);
-    show->fanclubOpinions.species = GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_SPECIES, NULL);
+    show->fanclubOpinions.species = GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_SPECIES);
     StorePlayerIdInNormalShow(show);
     show->fanclubOpinions.language = gGameLanguage;
     if (gGameLanguage == LANGUAGE_JAPANESE || GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_LANGUAGE) == LANGUAGE_JAPANESE)
@@ -1848,7 +1850,7 @@ void TryPutTodaysRivalTrainerOnAir(void)
         if (IsNationalPokedexEnabled())
             show->rivalTrainer.dexCount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
         else
-            show->rivalTrainer.dexCount = GetHoennPokedexCount(FLAG_GET_CAUGHT);
+            show->rivalTrainer.dexCount = GetRegionalPokedexCount(FLAG_GET_CAUGHT);
         show->rivalTrainer.location = gMapHeader.regionMapSectionId;
         show->rivalTrainer.mapLayoutId = gMapHeader.mapLayoutId;
         show->rivalTrainer.nSilverSymbols = 0;
@@ -2390,23 +2392,23 @@ void TryPutFrontierTVShowOnAir(u16 winStreak, u8 facilityAndMode)
         case FRONTIER_SHOW_PALACE_SINGLES:
         case FRONTIER_SHOW_PALACE_DOUBLES:
         case FRONTIER_SHOW_PYRAMID:
-            show->frontier.species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES, NULL);
-            show->frontier.species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES, NULL);
-            show->frontier.species3 = GetMonData(&gPlayerParty[2], MON_DATA_SPECIES, NULL);
+            show->frontier.species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
+            show->frontier.species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES);
+            show->frontier.species3 = GetMonData(&gPlayerParty[2], MON_DATA_SPECIES);
             break;
         case FRONTIER_SHOW_TOWER_DOUBLES:
-            show->frontier.species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES, NULL);
-            show->frontier.species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES, NULL);
-            show->frontier.species3 = GetMonData(&gPlayerParty[2], MON_DATA_SPECIES, NULL);
-            show->frontier.species4 = GetMonData(&gPlayerParty[3], MON_DATA_SPECIES, NULL);
+            show->frontier.species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
+            show->frontier.species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES);
+            show->frontier.species3 = GetMonData(&gPlayerParty[2], MON_DATA_SPECIES);
+            show->frontier.species4 = GetMonData(&gPlayerParty[3], MON_DATA_SPECIES);
             break;
         case FRONTIER_SHOW_TOWER_MULTIS:
-            show->frontier.species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES, NULL);
-            show->frontier.species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES, NULL);
+            show->frontier.species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
+            show->frontier.species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES);
             break;
         case FRONTIER_SHOW_TOWER_LINK_MULTIS:
-            show->frontier.species1 = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[0] - 1), MON_DATA_SPECIES, NULL);
-            show->frontier.species2 = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[1] - 1), MON_DATA_SPECIES, NULL);
+            show->frontier.species1 = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[0] - 1), MON_DATA_SPECIES);
+            show->frontier.species2 = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[1] - 1), MON_DATA_SPECIES);
             break;
         }
         StorePlayerIdInRecordMixShow(show);
@@ -2737,7 +2739,7 @@ void CopyContestRankToStringVar(u8 varIdx, u8 rank)
     }
 }
 
-void CopyContestCategoryToStringVar(u8 varIdx, u8 category)
+void CopyContestCategoryToStringVar(u8 varIdx, enum ContestCategories category)
 {
     switch (category)
     {
@@ -2755,6 +2757,8 @@ void CopyContestCategoryToStringVar(u8 varIdx, u8 category)
         break;
     case CONTEST_CATEGORY_TOUGH:
         StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_TOUGH]);
+        break;
+    default:
         break;
     }
 }
@@ -2915,7 +2919,7 @@ static void InterviewBefore_FanClubLetter(void)
     TryReplaceOldTVShowOfKind(TVSHOW_FAN_CLUB_LETTER);
     if (!gSpecialVar_Result)
     {
-        StringCopy(gStringVar1, GetSpeciesName(GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_SPECIES, NULL)));
+        StringCopy(gStringVar1, GetSpeciesName(GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_SPECIES)));
         InitializeEasyChatWordArray(gSaveBlock1Ptr->tvShows[sCurTVShowSlot].fanclubLetter.words,
                         ARRAY_COUNT(gSaveBlock1Ptr->tvShows[sCurTVShowSlot].fanclubLetter.words));
     }
@@ -2936,7 +2940,7 @@ static void InterviewBefore_PkmnFanClubOpinions(void)
     TryReplaceOldTVShowOfKind(TVSHOW_PKMN_FAN_CLUB_OPINIONS);
     if (!gSpecialVar_Result)
     {
-        StringCopy(gStringVar1, GetSpeciesName(GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_SPECIES, NULL)));
+        StringCopy(gStringVar1, GetSpeciesName(GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_SPECIES)));
         GetMonData(&gPlayerParty[GetLeadMonIndex()], MON_DATA_NICKNAME, gStringVar2);
         StringGet_Nickname(gStringVar2);
         InitializeEasyChatWordArray(gSaveBlock1Ptr->tvShows[sCurTVShowSlot].fanclubOpinions.words,
@@ -2996,7 +3000,7 @@ static bool8 IsPartyMonNicknamedOrNotEnglish(u8 monIdx)
     pokemon = &gPlayerParty[monIdx];
     GetMonData(pokemon, MON_DATA_NICKNAME, gStringVar1);
     language = GetMonData(pokemon, MON_DATA_LANGUAGE, &language);
-    if (language == GAME_LANGUAGE && !StringCompare(GetSpeciesName(GetMonData(pokemon, MON_DATA_SPECIES, NULL)), gStringVar1))
+    if (language == GAME_LANGUAGE && !StringCompare(GetSpeciesName(GetMonData(pokemon, MON_DATA_SPECIES)), gStringVar1))
         return FALSE;
 
     return TRUE;
@@ -3260,7 +3264,7 @@ bool8 IsTVShowAlreadyInQueue(void)
 
 bool8 TryPutNameRaterShowOnTheAir(void)
 {
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+    GetBoxMonData(GetSelectedBoxMonFromPcOrParty(), MON_DATA_NICKNAME, gStringVar1);
 
     // Nickname wasnt changed
     if (!StringCompare(gStringVar3, gStringVar1))
@@ -3270,61 +3274,31 @@ bool8 TryPutNameRaterShowOnTheAir(void)
     return TRUE;
 }
 
-void ChangePokemonNickname(void)
-{
-    void ChangePokemonNickname_CB(void);
-
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar3);
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar2);
-    DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES, NULL), GetMonGender(&gPlayerParty[gSpecialVar_0x8004]), GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_PERSONALITY, NULL), ChangePokemonNickname_CB);
-}
-
-void ChangePokemonNickname_CB(void)
-{
-    SetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar2);
-    CB2_ReturnToFieldContinueScriptPlayMapMusic();
-}
-
-void ChangeBoxPokemonNickname(void)
-{
-    struct BoxPokemon *boxMon;
-
-    boxMon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
-    GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar3);
-    GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar2);
-    DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL), GetBoxMonGender(boxMon), GetBoxMonData(boxMon, MON_DATA_PERSONALITY, NULL), ChangeBoxPokemonNickname_CB);
-}
-
 static void ChangeBoxPokemonNickname_CB(void)
 {
-    SetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar2);
+    SetBoxMonData(GetSelectedBoxMonFromPcOrParty(), MON_DATA_NICKNAME, gStringVar2);
     CB2_ReturnToFieldContinueScriptPlayMapMusic();
+}
+
+void ChangePokemonNickname(void)
+{
+    ChangePokemonNicknameWithCallback(ChangeBoxPokemonNickname_CB);
 }
 
 void BufferMonNickname(void)
 {
-    if(gSpecialVar_MonBoxId == 0xFF)
-        GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
-    else
-        GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
-    StringGet_Nickname(gStringVar1);
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    GetBoxMonData(boxmon, MON_DATA_NICKNAME, gStringVar1);
+    //StringGet_Nickname(gStringVar1);
 }
 
 void IsMonOTIDNotPlayers(void)
 {
-    if(gSpecialVar_MonBoxId == 0xFF){
-        if (GetPlayerIDAsU32() == GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_ID, NULL))
-            gSpecialVar_Result = FALSE;
-        else
-            gSpecialVar_Result = TRUE;
-    }
-    else{
-        if (GetPlayerIDAsU32() == GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_OT_ID))
-            gSpecialVar_Result = FALSE;
-        else
-            gSpecialVar_Result = TRUE;
-    }
-
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    if (GetPlayerIDAsU32() == GetBoxMonData(boxmon, MON_DATA_OT_ID))
+        gSpecialVar_Result = FALSE;
+    else
+        gSpecialVar_Result = TRUE;
 }
 
 static u8 GetTVGroupByShowId(u8 kind)
@@ -3442,7 +3416,7 @@ void HideBattleTowerReporter(void)
 void ReceiveTvShowsData(void *src, u32 size, u8 playersLinkId)
 {
     u8 i;
-    u16 version;
+    enum GameVersion version;
     TVShow (*rmBuffer2)[MAX_LINK_PLAYERS][TV_SHOWS_COUNT];
     TVShow (*rmBuffer)[MAX_LINK_PLAYERS][TV_SHOWS_COUNT];
 
@@ -4053,7 +4027,7 @@ static void TranslateRubyShows(TVShow *shows)
     }
 }
 
-static u8 GetStringLanguage(u8 *str)
+static enum Language GetStringLanguage(u8 *str)
 {
     return IsStringJapanese(str) ? LANGUAGE_JAPANESE : GAME_LANGUAGE;
 }
@@ -5340,20 +5314,22 @@ static void DoTVShow3CheersForPokeblocks(void)
     case 1:
         switch (show->threeCheers.flavor)
         {
-        case 0:
+        case FLAVOR_SPICY:
             StringCopy(gStringVar1, gText_Spicy2);
             break;
-        case 1:
+        case FLAVOR_DRY:
             StringCopy(gStringVar1, gText_Dry2);
             break;
-        case 2:
+        case FLAVOR_SWEET:
             StringCopy(gStringVar1, gText_Sweet2);
             break;
-        case 3:
+        case FLAVOR_BITTER:
             StringCopy(gStringVar1, gText_Bitter2);
             break;
-        case 4:
+        case FLAVOR_SOUR:
             StringCopy(gStringVar1, gText_Sour2);
+            break;
+        default:
             break;
         }
         if (show->threeCheers.sheen > 24)
@@ -5378,20 +5354,22 @@ static void DoTVShow3CheersForPokeblocks(void)
     case 3:
         switch (show->threeCheers.flavor)
         {
-        case 0:
+        case FLAVOR_SPICY:
             StringCopy(gStringVar1, gText_Spicy2);
             break;
-        case 1:
+        case FLAVOR_DRY:
             StringCopy(gStringVar1, gText_Dry2);
             break;
-        case 2:
+        case FLAVOR_SWEET:
             StringCopy(gStringVar1, gText_Sweet2);
             break;
-        case 3:
+        case FLAVOR_BITTER:
             StringCopy(gStringVar1, gText_Bitter2);
             break;
-        case 4:
+        case FLAVOR_SOUR:
             StringCopy(gStringVar1, gText_Sour2);
+            break;
+        default:
             break;
         }
 

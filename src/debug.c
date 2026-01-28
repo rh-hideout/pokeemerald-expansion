@@ -5,6 +5,7 @@
 #include "clock.h"
 #include "coins.h"
 #include "credits.h"
+#include "credits_frlg.h"
 #include "data.h"
 #include "daycare.h"
 #include "debug.h"
@@ -285,6 +286,7 @@ static void DebugAction_PCBag_ClearBag(u8 taskId);
 static void DebugAction_PCBag_ClearBoxes(u8 taskId);
 
 static void DebugAction_Party_HealParty(u8 taskId);
+static void DebugAction_Party_ClearPokerus(u8 taskId);
 static void DebugAction_Party_ClearParty(u8 taskId);
 static void DebugAction_Party_SetParty(u8 taskId);
 static void DebugAction_Party_BattleSingle(u8 taskId);
@@ -366,6 +368,7 @@ extern const u8 Debug_FlagsAndVarNotSetBattleConfigMessage[];
 extern const u8 Debug_EventScript_FontTest[];
 extern const u8 Debug_EventScript_CheckEVs[];
 extern const u8 Debug_EventScript_CheckIVs[];
+extern const u8 Debug_EventScript_GivePokerus[];
 extern const u8 Debug_EventScript_InflictStatus1[];
 extern const u8 Debug_EventScript_KoPokemon[];
 extern const u8 Debug_EventScript_SetHiddenNature[];
@@ -385,6 +388,7 @@ extern const u8 DebugScript_ZeroDaycareMons[];
 
 extern const u8 Debug_ShowFieldMessageStringVar4[];
 extern const u8 Debug_CheatStart[];
+extern const u8 Debug_CheatStartFrlg[];
 extern const u8 Debug_HatchAnEgg[];
 extern const u8 PlayersHouse_2F_EventScript_SetWallClock[];
 extern const u8 PlayersHouse_2F_EventScript_CheckWallClock[];
@@ -612,6 +616,8 @@ static const struct DebugMenuOption sDebugMenu_Actions_Party[] =
     { COMPOUND_STRING("Edit Pokemon"),       DebugAction_OpenSubMenu, sDebugMenu_Actions_EditPokemon },
     { COMPOUND_STRING("Check EVs"),          DebugAction_ExecuteScript, Debug_EventScript_CheckEVs },
     { COMPOUND_STRING("Check IVs"),          DebugAction_ExecuteScript, Debug_EventScript_CheckIVs },
+    { COMPOUND_STRING("Give Pokerus"),       DebugAction_ExecuteScript, Debug_EventScript_GivePokerus },
+    { COMPOUND_STRING("Clear Pokerus"),      DebugAction_Party_ClearPokerus},
     { COMPOUND_STRING("Clear Party"),        DebugAction_Party_ClearParty },
     { COMPOUND_STRING("Set Party"),          DebugAction_Party_SetParty },
     { COMPOUND_STRING("Start Debug Battle"), DebugAction_Party_BattleSingle },
@@ -1129,6 +1135,26 @@ static const u16 sLocationFlags[] =
     FLAG_VISITED_EVER_GRANDE_CITY,
     FLAG_LANDMARK_POKEMON_LEAGUE,
     FLAG_LANDMARK_BATTLE_FRONTIER,
+    FLAG_WORLD_MAP_PALLET_TOWN,
+    FLAG_WORLD_MAP_VIRIDIAN_CITY,
+    FLAG_WORLD_MAP_PEWTER_CITY,
+    FLAG_WORLD_MAP_CERULEAN_CITY,
+    FLAG_WORLD_MAP_LAVENDER_TOWN,
+    FLAG_WORLD_MAP_VERMILION_CITY,
+    FLAG_WORLD_MAP_CELADON_CITY,
+    FLAG_WORLD_MAP_FUCHSIA_CITY,
+    FLAG_WORLD_MAP_CINNABAR_ISLAND,
+    FLAG_WORLD_MAP_INDIGO_PLATEAU_EXTERIOR,
+    FLAG_WORLD_MAP_SAFFRON_CITY,
+    FLAG_WORLD_MAP_ONE_ISLAND,
+    FLAG_WORLD_MAP_TWO_ISLAND,
+    FLAG_WORLD_MAP_THREE_ISLAND,
+    FLAG_WORLD_MAP_FOUR_ISLAND,
+    FLAG_WORLD_MAP_FIVE_ISLAND,
+    FLAG_WORLD_MAP_SEVEN_ISLAND,
+    FLAG_WORLD_MAP_SIX_ISLAND,
+    FLAG_WORLD_MAP_ROUTE4_POKEMON_CENTER_1F,
+    FLAG_WORLD_MAP_ROUTE10_POKEMON_CENTER_1F,
 };
 
 static u8 Debug_CheckToggleFlags(u8 id)
@@ -1738,7 +1764,10 @@ static void DebugAction_Util_CheatStart(u8 taskId)
         RtcInitLocalTimeOffset(0, 0);
 
     InitTimeBasedEvents();
-    Debug_DestroyMenu_Full_Script(taskId, Debug_CheatStart);
+    if (IS_FRLG)
+        Debug_DestroyMenu_Full_Script(taskId, Debug_CheatStartFrlg);
+    else
+        Debug_DestroyMenu_Full_Script(taskId, Debug_CheatStart);
 }
 
 void BufferExpansionVersion(struct ScriptContext *ctx)
@@ -2593,7 +2622,7 @@ static void DebugAction_FlagsVars_CatchingOnOff(u8 taskId)
 #define tItemId    data[5]
 #define tSpriteId  data[6]
 
-static void Debug_Display_ItemInfo(u32 itemId, u32 digit, u8 windowId)
+static void Debug_Display_ItemInfo(enum Item itemId, u32 digit, u8 windowId)
 {
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
     u8* end = CopyItemName(itemId, gStringVar1);
@@ -2692,7 +2721,7 @@ static void DebugAction_Give_Item_SelectId(u8 taskId)
 
 static void DebugAction_Give_Item_SelectQuantity(u8 taskId)
 {
-    u32 itemId = gTasks[taskId].tItemId;
+    enum Item itemId = gTasks[taskId].tItemId;
 
     if (JOY_NEW(DPAD_ANY))
     {
@@ -3553,7 +3582,7 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
 //Decoration
 #define tSpriteId  data[6]
 
-static void Debug_Display_DecorationInfo(u32 itemId, u32 digit, u8 windowId)
+static void Debug_Display_DecorationInfo(enum Item itemId, u32 digit, u8 windowId)
 {
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
     u8* end = StringCopy(gStringVar1, gDecorations[itemId].name);
@@ -3766,7 +3795,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PCItemStorage(u8 taskId)
 {
-    u16 itemId;
+    enum Item itemId;
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
@@ -3777,7 +3806,7 @@ static void DebugAction_PCBag_Fill_PCItemStorage(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketItems(u8 taskId)
 {
-    u16 itemId;
+    enum Item itemId;
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
@@ -3790,8 +3819,8 @@ static void DebugAction_PCBag_Fill_PocketPokeBalls(u8 taskId)
 {
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
-        if (CheckBagHasSpace(ballId, MAX_BAG_ITEM_CAPACITY))
-            AddBagItem(gBallItemIds[ballId], MAX_BAG_ITEM_CAPACITY);
+        if (CheckBagHasSpace(gPokeBalls[ballId].itemId, MAX_BAG_ITEM_CAPACITY))
+            AddBagItem(gPokeBalls[ballId].itemId, MAX_BAG_ITEM_CAPACITY);
     }
 }
 
@@ -3809,7 +3838,7 @@ static void DebugAction_PCBag_Fill_PocketTMHM(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketBerries(u8 taskId)
 {
-    u16 itemId;
+    enum Item itemId;
 
     for (itemId = FIRST_BERRY_INDEX; itemId < LAST_BERRY_INDEX; itemId++)
     {
@@ -3820,7 +3849,7 @@ static void DebugAction_PCBag_Fill_PocketBerries(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketKeyItems(u8 taskId)
 {
-    u16 itemId;
+    enum Item itemId;
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
@@ -4708,14 +4737,126 @@ void DebugNative_Party_SetFriendship(void)
     }
 }
 
-#undef tPartyId
 #undef tFriendship
+
+#define tStrain            data[6]
+
+static void Debug_Display_PokerusDaysLeftInfo(s32 daysLeft, s32 strain, u32 digit, u8 windowId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, daysLeft, STR_CONV_MODE_LEADING_ZEROS, 2);
+
+    if (daysLeft == 0 && strain)
+        StringCopy(gStringVar2, COMPOUND_STRING("Inactive"));
+    else if (daysLeft == 0)
+        StringCopy(gStringVar2, COMPOUND_STRING("No Pokerus"));
+    else
+        StringCopy(gStringVar2, COMPOUND_STRING(""));
+    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Days Left:\n{STR_VAR_1}\n{STR_VAR_2}{CLEAR_TO 90}\n{STR_VAR_3}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugNativeStep_Party_SetPokerusDaysLeftSelect(u8 taskId)
+{
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        SetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
+        DebugNativeStep_CloseDebugWindow(taskId);
+        return;
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        DebugNativeStep_CloseDebugWindow(taskId);
+        return;
+    }
+
+    Debug_HandleInput_Numeric(taskId, 0, 15, 2);
+
+    if (JOY_NEW(DPAD_ANY) || JOY_NEW(A_BUTTON))
+        Debug_Display_PokerusDaysLeftInfo(gTasks[taskId].tInput, gTasks[taskId].tStrain, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void Debug_Display_PokerusStrainInfo(s32 strain, u32 digit, u8 windowId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, strain, STR_CONV_MODE_LEADING_ZEROS, 2);
+    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Strain:\n{STR_VAR_1}\n\n{STR_VAR_3}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
+{
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        gTasks[taskId].tStrain = gTasks[taskId].tInput;
+        SetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
+        gTasks[taskId].tInput = GetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
+        Debug_Display_PokerusDaysLeftInfo(gTasks[taskId].tInput, gTasks[taskId].tStrain, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        gTasks[taskId].func = DebugNativeStep_Party_SetPokerusDaysLeftSelect;
+        return;
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        DebugNativeStep_CloseDebugWindow(taskId);
+        return;
+    }
+
+    Debug_HandleInput_Numeric(taskId, 0, 15, 2);
+
+    if (JOY_NEW(DPAD_ANY) || JOY_NEW(A_BUTTON))
+        Debug_Display_PokerusStrainInfo(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void DebugNativeStep_Party_SetPokerusMain(u8 taskId)
+{
+    u8 windowId = DebugNativeStep_CreateDebugWindow();
+    u32 strain = GetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN);
+
+    // Display initial flag
+    Debug_Display_PokerusStrainInfo(strain, 0, windowId);
+
+    gTasks[taskId].func = DebugNativeStep_Party_SetPokerusStrainSelect;
+    gTasks[taskId].tSubWindowId = windowId;
+    gTasks[taskId].tStrain = strain;
+    gTasks[taskId].tInput = strain;
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tPartyId = 0;
+}
+
+void DebugNative_Party_SetPokerus(void)
+{
+    if (gSpecialVar_0x8004 < PARTY_SIZE)
+    {
+        u32 taskId = CreateTask(DebugNativeStep_Party_SetPokerusMain, 1);
+        gTasks[taskId].tPartyId = gSpecialVar_0x8004;
+    }
+}
+
+#undef tStrain
+#undef tPartyId
 
 #undef tMenuTaskId
 #undef tWindowId
 #undef tSubWindowId
 #undef tInput
 #undef tDigit
+
+static void DebugAction_Party_ClearPokerus(u8 taskId)
+{
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+    {
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
+            continue;
+        u32 data = 0;
+        SetMonData(&gPlayerParty[i], MON_DATA_POKERUS, &data);
+    }
+    ScriptContext_Enable();
+    Debug_DestroyMenu_Full(taskId);
+}
 
 static void DebugAction_Party_ClearParty(u8 taskId)
 {
