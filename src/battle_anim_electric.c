@@ -645,11 +645,12 @@ static void AnimCirclingElectricShock(struct Sprite *sprite)
 // arg 6: increase battler sprite priority by 1
 void AnimSparkElectricity(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
     u32 matrixNum;
     s16 sineVal;
+    enum AnimBattler animBattler = gBattleAnimArgs[4];
 
-    switch (gBattleAnimArgs[4])
+    switch (animBattler)
     {
     case ANIM_ATTACKER:
         battler = gBattleAnimAttacker;
@@ -759,7 +760,7 @@ static void AnimThunderboltOrb(struct Sprite *sprite)
 
 void AnimSparkElectricityFlashing(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
 
     sprite->data[0] = gBattleAnimArgs[3];
     if (gBattleAnimArgs[7] & 0x8000)
@@ -799,7 +800,8 @@ static void AnimSparkElectricityFlashing_Step(struct Sprite *sprite)
 // Electricity arcs around the target. Used for Paralysis and various electric move hits
 void AnimElectricity(struct Sprite *sprite)
 {
-    if (!InitSpritePosToAnimBattler(gBattleAnimArgs[4], sprite, FALSE))
+    enum AnimBattler animBattler = gBattleAnimArgs[4];
+    if (!InitSpritePosToAnimBattler(animBattler, sprite, FALSE))
         return;
     sprite->oam.tileNum += gBattleAnimArgs[3] * 4;
 
@@ -1309,7 +1311,8 @@ void AnimGrowingShockWaveOrb(struct Sprite *sprite)
 void AnimTask_ShockWaveProgressingBolt(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    u8 target = GetAnimBattlerId(gBattleAnimArgs[0]);
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
+    enum BattlerId target = GetAnimBattlerId(animBattler);
 
     switch (task->data[0])
     {
@@ -1435,7 +1438,8 @@ static void AnimShockWaveProgressingBolt(struct Sprite *sprite)
 void AnimTask_ShockWaveLightning(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    u8 target = GetAnimBattlerId(gBattleAnimArgs[0]);
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
+    enum BattlerId target = GetAnimBattlerId(animBattler);
 
     switch (task->data[0])
     {
