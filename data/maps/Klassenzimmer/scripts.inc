@@ -1,18 +1,29 @@
 Klassenzimmer_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Klassenzimmer_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, Klassenzimmer_OnFrame
 	.byte 0
 
-
 Klassenzimmer_OnTransition:
+	@ OnTransition nur vorbereiten – keine msgbox/Bewegung hier!
 	goto_if_set FLAG_CTF_CLASSROOM_INTRO_DONE, Klassenzimmer_OnTransition_End
-	goto Klassenzimmer_EventScript_FirstEntry
+	setvar VAR_TEMP_0, 0
+	end
 
 Klassenzimmer_OnTransition_End:
 	end
 
+Klassenzimmer_OnFrame:
+	@ Cutscene läuft erst im Frame-Loop, wenn Map sichtbar ist
+	map_script_2 VAR_TEMP_0, 0, Klassenzimmer_EventScript_FirstEntry
+	.2byte 0
 
+
+@ Erstes Betreten des Klassenzimmers
 Klassenzimmer_EventScript_FirstEntry::
+	@ sofort "deaktivieren", damit es nicht mehrfach triggert
+	setvar VAR_TEMP_0, 1
 	setflag FLAG_CTF_CLASSROOM_INTRO_DONE
+
 	lockall
 
 	turnobject LOCALID_PROF_FARMER, DIR_SOUTH
@@ -35,13 +46,12 @@ Klassenzimmer_EventScript_FirstEntry::
 	setflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
 	setflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
 
-	@ WICHTIG: Kein fadescreen/waitstate hier -> verhindert Black-Screen-Hänger
+	@ Script freigeben bevor Warp (robuster)
 	releaseall
 
-	@ Warp-ID 1 = der neue Entry-Warp in Museum_Flag1 bei (17,6)
-	warp MAP_MUSEUM_FLAG1, 1, 0, 0
+	@ Warp per Koordinate (dein Branch kann 255 offenbar)
+	warp MAP_MUSEUM_FLAG1, 255, 17, 6
 	end
-
 
 
 Klassenzimmer_Movement_PlayerToSeat:
