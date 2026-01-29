@@ -18,7 +18,7 @@ Museum_Flag1_MapScripts::
 
 
 Museum_Flag1_OnTransition:
-	@ Türzustand anwenden (ok im Transition)
+	@ Tür dauerhaft anwenden, falls schon geöffnet
 	goto_if_set FLAG_CTF_MUSEUM_DOOR_OPEN, Museum_Flag1_ApplyDoorOnLoad
 
 	@ Cutscene nur "armen", nicht starten
@@ -27,11 +27,14 @@ Museum_Flag1_OnTransition:
 
 Museum_Flag1_ApplyDoorOnLoad:
 	call Museum_Flag1_EventScript_ApplyDoorOpen
-	@ weiter
 	goto_if_set FLAG_CTF_MUSEUM_SCENE_PENDING, Museum_Flag1_ArmScene
 	end
 
 Museum_Flag1_ArmScene:
+	@ sofort Bewegungen verhindern + Spieler nach oben schauen lassen
+	lockall
+	turnobject LOCALID_PLAYER, DIR_NORTH
+
 	@ sorgt dafür, dass OnFrame sie 1x ausführt
 	setvar VAR_TEMP_1, 0
 	end
@@ -153,13 +156,14 @@ Museum_Flag1_Terminal_Correct:
 
 
 Museum_Flag1_EventScript_ApplyDoorOpen::
-	setmetatile 0,  9, 0x0261, FALSE
-	setmetatile 1,  9, 0x0207, FALSE
-	setmetatile 2,  9, 0x0257, FALSE
 
-	setmetatile 0, 10, 0x0262, FALSE
-	setmetatile 1, 10, 0x020F, FALSE
-	setmetatile 2, 10, 0x025F, FALSE
+	setmetatile 9,  0, 0x0261, FALSE    @ oben links
+	setmetatile 10,  0, 0x0207, FALSE   @ oben mitte
+	setmetatile 11,  0, 0x0257, FALSE   @ oben rechts
+
+	setmetatile 9,  1, 0x0262, FALSE    @ unten links
+	setmetatile 10,  1, 0x020F, FALSE   @ unten mitte (Warp)
+	setmetatile 11,  1, 0x025F, FALSE   @ unten rechts
 	return
 
 
