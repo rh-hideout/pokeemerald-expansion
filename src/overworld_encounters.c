@@ -64,9 +64,9 @@ void OWE_ClearSavedMovementState(struct ObjectEvent *objectEvent)
     objectEvent->sRoamerOutbreakStatus &= ~OWE_SAVED_MOVEMENT_STATE_FLAG;
 }
 
-static inline u32 OWE_GetEncounterLevel(const struct ObjectEvent *object)
+static inline u32 OWE_GetEncounterLevel(u32 level)
 {
-    return object->sOverworldEncounterLevel & ~OWE_NO_DESPAWN_FLAG;
+    return level & ~OWE_NO_DESPAWN_FLAG;
 }
 
 static inline void OWE_SetEncounterLevel(u32 *level, u8 newLevel)
@@ -547,7 +547,7 @@ void CreateOverworldWildEncounter(void)
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
     u32 gender = OW_FEMALE(object) ? MON_FEMALE : MON_MALE;
-    u32 level = OWE_GetEncounterLevel(object);
+    u32 level = OWE_GetEncounterLevel(object->sOverworldEncounterLevel);
     u32 personality;
 
     switch (gSpeciesInfo[speciesId].genderRatio)
@@ -1119,7 +1119,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     if (levelTemplate)
         level = levelTemplate;
 
-    assertf(level >= MIN_LEVEL && level <= MAX_LEVEL, "invalid manual overworld encounter\nlevel: %d\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", level, speciesId, x, y)
+    assertf(OWE_GetEncounterLevel(level) >= MIN_LEVEL && OWE_GetEncounterLevel(level) <= MAX_LEVEL, "invalid manual overworld encounter\nlevel: %d\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", level, speciesId, x, y)
     {
         level = MIN_LEVEL;
     }
