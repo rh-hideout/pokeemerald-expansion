@@ -31,6 +31,19 @@ SINGLE_BATTLE_TEST("Cloud Nine/Air Lock prevent basic weather effects, but witho
     }
 }
 
+SINGLE_BATTLE_TEST("Cloud Nine does not reactivate if it is skill swapped")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PSYDUCK) { Ability(ABILITY_CLOUD_NINE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SKILL_SWAP); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_CLOUD_NINE);
+        NOT ABILITY_POPUP(player, ABILITY_CLOUD_NINE);
+    }
+}
+
 TO_DO_BATTLE_TEST("Cloud Nine/Air Lock prevent basic weather effects, but without them disappearing - Sun");
 TO_DO_BATTLE_TEST("Cloud Nine/Air Lock prevent basic weather effects, but without them disappearing - Rain");
 TO_DO_BATTLE_TEST("Cloud Nine/Air Lock prevent basic weather effects, but without them disappearing - Hail");

@@ -1729,8 +1729,8 @@
 	1:
 	.endm
 
-	.macro jumpifabilitycantbereactivated battler:req, jumpInstr:req
-	callnative BS_JumpIfAbilityCantBeReactivated
+	.macro jumpifabilitycantbesuppressed battler:req, jumpInstr:req
+	callnative BS_JumpIfAbilityCantBeSuppressed
 	.byte \battler
 	.4byte \jumpInstr
 	.endm
