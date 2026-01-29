@@ -1,4 +1,4 @@
-CeladonCity_House1_MapScripts::
+CeladonCity_House1_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_House1_EventScript_RocketChief::

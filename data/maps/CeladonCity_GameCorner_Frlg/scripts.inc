@@ -1,4 +1,4 @@
-CeladonCity_GameCorner_MapScripts::
+CeladonCity_GameCorner_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, CeladonCity_GameCorner_OnLoad
 	.byte 0
 

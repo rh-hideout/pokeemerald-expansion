@@ -1,4 +1,4 @@
-Route14_MapScripts::
+Route14_Frlg_MapScripts::
 	.byte 0
 
 Route14_EventScript_RouteSign::

@@ -1,4 +1,4 @@
-VermilionCity_House3_MapScripts::
+VermilionCity_House3_Frlg_MapScripts::
 	.byte 0
 
 VermilionCity_House3_EventScript_Boy::

@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("Confusion damage Breaks Ice Face")
         TURN { MOVE(opponent, MOVE_CONFUSE_RAY); MOVE(player, MOVE_FAIRY_WIND); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
-        HP_BAR(player); // Confusion damage
+        NOT HP_BAR(player); // Confusion damage is blocked by Ice Face
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
     } THEN {
         EXPECT_EQ(player->species, SPECIES_EISCUE_NOICE);

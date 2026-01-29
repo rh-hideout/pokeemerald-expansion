@@ -1,4 +1,4 @@
-DiglettsCave_SouthEntrance_MapScripts::
+DiglettsCave_SouthEntrance_Frlg_MapScripts::
 	.byte 0
 
 DiglettsCave_SouthEntrance_EventScript_OldMan::

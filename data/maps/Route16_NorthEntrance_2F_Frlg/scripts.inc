@@ -1,6 +1,6 @@
 .equ REQUIRED_CAUGHT_MONS, 40
 
-Route16_NorthEntrance_2F_MapScripts::
+Route16_NorthEntrance_2F_Frlg_MapScripts::
 	.byte 0
 
 Route16_NorthEntrance_2F_EventScript_LittleBoy::

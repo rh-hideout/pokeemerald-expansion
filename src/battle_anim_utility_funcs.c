@@ -15,8 +15,8 @@
 
 struct AnimStatsChangeData
 {
-    u8 battler1;
-    u8 battler2;
+    enum BattlerId battler1;
+    enum BattlerId battler2;
     bool8 hidBattler2;
     s16 data[8];
     u16 species;
@@ -53,15 +53,16 @@ void AnimTask_BlendBattleAnimPal(u8 taskId)
 
 void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
 {
-    u8 battler;
+    enum BattlerId battler;
     u32 selectedPalettes;
-    u8 animBattlers[2];
+    enum BattlerId animBattlers[2];
 
     animBattlers[1] = 0xFF;
     selectedPalettes = UnpackSelectedBattlePalettes(F_PAL_BG);
-    switch (gBattleAnimArgs[0])
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
+    switch (animBattler)
     {
-    case 2:
+    case ANIM_ATK_PARTNER:
         selectedPalettes = 0;
         // fall through
     case ANIM_ATTACKER:
@@ -70,24 +71,24 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
 #endif
         animBattlers[0] = gBattleAnimAttacker;
         break;
-    case 3:
+    case ANIM_DEF_PARTNER:
         selectedPalettes = 0;
         // fall through
     case ANIM_TARGET:
         animBattlers[0] = gBattleAnimTarget;
         break;
-    case 4:
+    case ANIM_PLAYER_LEFT:
         animBattlers[0] = gBattleAnimAttacker;
         animBattlers[1] = gBattleAnimTarget;
         break;
-    case 5:
+    case ANIM_OPPONENT_LEFT:
         animBattlers[0] = 0xFF;
         break;
-    case 6:
+    case ANIM_PLAYER_RIGHT:
         selectedPalettes = 0;
         animBattlers[0] = BATTLE_PARTNER(gBattleAnimAttacker);
         break;
-    case 7:
+    case ANIM_OPPONENT_RIGHT:
         selectedPalettes = 0;
         animBattlers[0] = BATTLE_PARTNER(gBattleAnimTarget);
         break;
@@ -203,10 +204,11 @@ static void AnimTask_TraceMonBlended_Step(u8 taskId)
         }
         else
         {
-            task->data[6] = CloneBattlerSpriteWithBlend(task->data[0]);
+            enum AnimBattler animBattler = task->data[0];
+            task->data[6] = CloneBattlerSpriteWithBlend(animBattler);
             if (task->data[6] >= 0)
             {
-                gSprites[task->data[6]].oam.priority = task->data[0] ? 1 : 2;
+                gSprites[task->data[6]].oam.priority = animBattler != ANIM_ATTACKER ? 1 : 2;
                 gSprites[task->data[6]].data[0] = task->data[3];
                 gSprites[task->data[6]].data[1] = taskId;
                 gSprites[task->data[6]].data[2] = 5;
@@ -332,7 +334,7 @@ static void AnimTask_DrawFallingWhiteLinesOnAttacker_Step(u8 taskId)
             SetGpuReg(REG_OFFSET_DISPCNT, GetGpuReg(REG_OFFSET_DISPCNT) ^ DISPCNT_OBJWIN_ON);
             SetGpuReg(REG_OFFSET_BLDCNT, 0);
             SetGpuReg(REG_OFFSET_BLDALPHA, 0);
-            sprite = &gSprites[GetAnimBattlerSpriteId(0)]; // unused
+            sprite = &gSprites[GetAnimBattlerSpriteId(ANIM_ATTACKER)]; // unused
             sprite = &gSprites[gTasks[taskId].data[0]];
             DestroySprite(sprite);
 
@@ -673,7 +675,7 @@ static void SetPalettesToColor(u32 selectedPalettes, u16 color)
 
 void AnimTask_BlendNonAttackerPalettes(u8 taskId)
 {
-    u32 battler;
+    enum BattlerId battler;
     int j;
     u32 selectedPalettes = 0;
 
@@ -751,9 +753,7 @@ void AnimTask_GetTargetIsAttackerPartner(u8 taskId)
 // For hiding or subsequently revealing all other battlers
 void AnimTask_SetAllNonAttackersInvisiblity(u8 taskId)
 {
-    u16 battler;
-
-    for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+    for (enum BattlerId battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
     {
         if (battler != gBattleAnimAttacker && IsBattlerSpriteVisible(battler))
             gSprites[gBattlerSpriteIds[battler]].invisible = gBattleAnimArgs[0];
@@ -762,13 +762,13 @@ void AnimTask_SetAllNonAttackersInvisiblity(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, u8 battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
+void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
 {
     u16 species;
     u8 spriteId, spriteId2;
     u32 bg1Cnt;
     struct BattleAnimBgData animBgData;
-    u8 battler2;
+    enum BattlerId battler2;
 
     spriteId2 = 0;
     battler2 = BATTLE_PARTNER(battler);
@@ -1069,7 +1069,7 @@ void AnimTask_CanBattlerSwitch(u8 taskId)
 
 void AnimTask_SetInvisible(u8 taskId)
 {
-    u32 battlerId = GetAnimBattlerId(gBattleAnimArgs[0]);
+    enum BattlerId battlerId = GetAnimBattlerId(gBattleAnimArgs[0]);
     u32 spriteId = gBattlerSpriteIds[battlerId];
 
     gSprites[spriteId].invisible = gBattleSpritesDataPtr->battlerData[battlerId].invisible = gBattleAnimArgs[1];

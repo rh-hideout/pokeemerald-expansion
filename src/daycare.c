@@ -261,12 +261,7 @@ void StorePokemonInDaycare(struct Pokemon *mon, struct DaycareMon *daycareMon)
         TakeMailFromMon(mon);
     }
 
-    u32 newSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_DEPOSIT, 0);
-    if (newSpecies != GetMonData(mon, MON_DATA_SPECIES))
-    {
-        SetMonData(mon, MON_DATA_SPECIES, &newSpecies);
-        CalculateMonStats(mon);
-    }
+    TryFormChange(mon, FORM_CHANGE_DEPOSIT);
 
     daycareMon->mon = mon->box;
     daycareMon->steps = 0;
@@ -355,22 +350,13 @@ static u32 GetExpAtLevelCap(struct Pokemon *mon)
 
 static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
 {
-    u32 species;
-    u32 newSpecies;
     u32 experience;
     struct Pokemon pokemon;
 
     GetBoxMonNickname(&daycareMon->mon, gStringVar1);
-    species = GetBoxMonData(&daycareMon->mon, MON_DATA_SPECIES);
     BoxMonToMon(&daycareMon->mon, &pokemon);
 
-    newSpecies = GetFormChangeTargetSpecies(&pokemon, FORM_CHANGE_WITHDRAW, 0);
-    if (newSpecies != species)
-    {
-        SetMonData(&pokemon, MON_DATA_SPECIES, &newSpecies);
-        CalculateMonStats(&pokemon);
-        species = newSpecies;
-    }
+    TryFormChange(&pokemon, FORM_CHANGE_WITHDRAW);
 
     if (GetMonData(&pokemon, MON_DATA_LEVEL) < GetCurrentLevelCap())
     {
@@ -393,7 +379,7 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
     daycareMon->steps = 0;
     CompactPartySlots();
     CalculatePlayerPartyCount();
-    return species;
+    return GetMonData(&pokemon, MON_DATA_SPECIES);
 }
 
 static u16 TakeSelectedPokemonMonFromDaycareShiftSlots(struct DayCare *daycare, u8 slotId)
@@ -1227,6 +1213,10 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
 
 bool8 ShouldEggHatch(void)
 {
+#if IS_FRLG
+    if (GetBoxMonData(&gSaveBlock1Ptr->route5DayCareMon.mon, MON_DATA_SANITY_HAS_SPECIES))
+        gSaveBlock1Ptr->route5DayCareMon.steps++;
+#endif
     return TryProduceOrHatchEgg(&gSaveBlock1Ptr->daycare);
 }
 
@@ -1614,4 +1604,52 @@ static u8 ModifyBreedingScoreForOvalCharm(u8 score)
     }
 
     return score;
+}
+
+// Route 5 Daycare
+
+void PutMonInRoute5Daycare(void)
+{
+#if IS_FRLG
+    u8 monIdx = GetCursorSelectionMonId();
+    StorePokemonInDaycare(&gPlayerParty[monIdx], &gSaveBlock1Ptr->route5DayCareMon);
+#endif
+}
+
+void GetCostToWithdrawRoute5DaycareMon(void)
+{
+#if IS_FRLG
+    u16 cost = GetDaycareCostForSelectedMon(&gSaveBlock1Ptr->route5DayCareMon);
+#else
+    u16 cost = 100;
+#endif
+    gSpecialVar_0x8005 = cost;
+}
+
+bool8 IsThereMonInRoute5Daycare(void)
+{
+#if IS_FRLG
+    if (GetBoxMonData(&gSaveBlock1Ptr->route5DayCareMon.mon, MON_DATA_SPECIES) != SPECIES_NONE)
+        return TRUE;
+#endif
+
+    return FALSE;
+}
+
+u8 GetNumLevelsGainedForRoute5DaycareMon(void)
+{
+#if IS_FRLG
+    return GetNumLevelsGainedForDaycareMon(&gSaveBlock1Ptr->route5DayCareMon);
+#else
+    return 0;
+#endif
+}
+
+u16 TakePokemonFromRoute5Daycare(void)
+{
+#if IS_FRLG
+    return TakeSelectedPokemonFromDaycare(&gSaveBlock1Ptr->route5DayCareMon);
+#else
+    return SPECIES_NONE;
+#endif
 }
