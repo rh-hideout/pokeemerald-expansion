@@ -145,7 +145,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses Sleep Talk only when it will not wake up with 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_DODUO) { Ability(ability); Status1(STATUS1_SLEEP_TURN(2)); Moves(MOVE_SLEEP_TALK, MOVE_TACKLE); }
+        OPPONENT(SPECIES_DODRIO) { Ability(ability); Status1(STATUS1_SLEEP_TURN(2)); Moves(MOVE_SLEEP_TALK, MOVE_TACKLE); }
     } WHEN {
         if (ability == ABILITY_EARLY_BIRD)
             TURN { EXPECT_MOVE(opponent, MOVE_TACKLE); }
