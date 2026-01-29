@@ -5,6 +5,7 @@ Route101_MapScripts::
 
 Route101_OnTransition:
 	call ProfBirch_EventScript_UpdateLocation
+	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 	end
 
 Route101_OnFrame:
@@ -12,24 +13,24 @@ Route101_OnFrame:
 	.2byte 0
 
 Route101_EventScript_HideMapNamePopup::
-	setflag FLAG_HIDE_MAP_NAME_POPUP
-	setvar VAR_ROUTE101_STATE, 1
-	end
+    setflag FLAG_HIDE_MAP_NAME_POPUP
+    setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+    setvar VAR_ROUTE101_STATE, 1
+    end
+
 
 Route101_EventScript_StartBirchRescue::
-	lockall
-	playbgm MUS_HELP, TRUE
+    lockall
+    playbgm MUS_HELP, TRUE
 
-	@ Szene sichtbar machen
-	clearflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
-	clearflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
+    setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON  
+
+    clearflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
+    clearflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 
 	@ Bum + Zig Startposition
 	setobjectxy LOCALID_ROUTE101_BIRCH, 6, 14
 	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 5, 14
-
-	@ Zigzagoon am Anfang unsichtbar
-	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 
 	@ Gate zurücksetzen (Bum muss einmal angesprochen werden)
 	clearflag FLAG_TEMP_4
@@ -143,14 +144,14 @@ Route101_Bag_DoChoose:
 
 Route101_EventScript_NicknameStarter:
 	setvar VAR_0x8004, 0
+	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 	call Common_EventScript_NameReceivedPartyMon
 
 Route101_EventScript_AfterNickname:
 	@ Zig erscheint neben Bum
 	clearflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
-	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 8, 14
+	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 5, 14
 
-	@ Text kommt direkt nach Auswahl/Nickname (wie gewünscht)
 	msgbox Route101_Text_Battle, MSGBOX_DEFAULT
 
 	release
@@ -159,31 +160,38 @@ Route101_EventScript_AfterNickname:
 
 Route101_EventScript_ZigzagoonInteract::
 	lockall
+
 	setwildbattle SPECIES_ZIGZAGOON, 2, ITEM_NONE
-	dowildbattle
+	special BattleSetup_StartScriptedWildBattle
 	waitstate
 
 	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_eq VAR_RESULT, 1, Route101_Zig_BattleWon
+	goto_if_eq VAR_RESULT, 7, Route101_Zig_BattleWon
 
-	goto_if_eq VAR_RESULT, B_OUTCOME_WON, Route101_Zig_BattleWon
-	goto_if_eq VAR_RESULT, B_OUTCOME_CAUGHT, Route101_Zig_BattleWon
-
+	@ Wenn verloren/geflohen: alles wieder freigeben
 	releaseall
 	end
+
 
 Route101_Zig_BattleWon:
 	setflag FLAG_RESCUED_BIRCH
 	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 
 	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
+	closemessage
 
 	special HealPlayerParty
 
+	@ sicherstellen, dass Bum existiert/sichtbar ist, bevor Bewegung
+	clearflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
+
+	applymovement LOCALID_PLAYER, Route101_Movement_StepLeft
+	waitmovement 0
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeaveScene
 	waitmovement 0
 
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
-	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
 	clearflag FLAG_HIDE_ROUTE_101_BOY
@@ -196,15 +204,20 @@ Route101_Zig_BattleWon:
 	releaseall
 	end
 
+Route101_Movement_StepLeft:
+    walk_left
+    step_end
+
+
 Route101_Movement_BumLeaveScene:
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
 	walk_down
 	walk_down
 	walk_down
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
 	walk_down
 	walk_down
 	step_end
@@ -241,7 +254,8 @@ Route101_Text_PleaseHelp:
 	.string "Take a look and pick one!$"
 
 Route101_Text_WhyNotGiveNicknameToMon:
-	.string "BUM: Why not give your new POKéMON a nickname?$"
+	.string "BUM: Why not give your new POKéMON a\n"
+	.string "nickname?$"
 
 Route101_Text_DontLeaveMe:
 	.string "BUM: Don't leave kid! Come here!$"

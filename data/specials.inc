@@ -176,6 +176,7 @@ gSpecials::
 	def_special Special_ViewWallClock
 	def_special ChooseStarter
 	def_special ChooseStarterNoBattle
+	def_special BattleSetup_StartScriptedWildBattle
 	def_special StartWallyTutorialBattle
 	def_special ChangePokemonNickname
 	def_special ChoosePartyMon
