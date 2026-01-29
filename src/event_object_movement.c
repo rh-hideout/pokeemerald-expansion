@@ -2973,7 +2973,7 @@ void RemoveObjectEventsOutsideView(void)
     }
 }
 
-bool32 IsObjectEventOutsideView(struct ObjectEvent *objectEvent)
+static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
 {
     s16 left =   gSaveBlock1Ptr->pos.x - 2;
     s16 right =  gSaveBlock1Ptr->pos.x + 17;
@@ -2982,18 +2982,11 @@ bool32 IsObjectEventOutsideView(struct ObjectEvent *objectEvent)
 
     if (objectEvent->currentCoords.x >= left && objectEvent->currentCoords.x <= right
      && objectEvent->currentCoords.y >= top && objectEvent->currentCoords.y <= bottom)
-        return FALSE;
+        return;
     if (objectEvent->initialCoords.x >= left && objectEvent->initialCoords.x <= right
      && objectEvent->initialCoords.y >= top && objectEvent->initialCoords.y <= bottom)
-        return FALSE;
-    
-    return TRUE;
-}
-
-static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
-{
-    if (IsObjectEventOutsideView(objectEvent))
-        RemoveObjectEvent(objectEvent);
+        return;
+    RemoveObjectEvent(objectEvent);
 }
 
 void SpawnObjectEventsOnReturnToField(s16 x, s16 y)
