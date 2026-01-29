@@ -221,7 +221,6 @@ void LoadObjectEvents(void)
     int i;
     u16 graphicsId;
 
-    OWE_ResetAmbientCryTimer();
     OverworldWildEncounter_SetMinimumSpawnTimer();
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
