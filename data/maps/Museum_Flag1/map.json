@@ -90,6 +90,13 @@
       "elevation": 0,
       "dest_map": "MAP_MUSEUM2_FLAG1",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 17,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_KLASSENZIMMER",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [],
