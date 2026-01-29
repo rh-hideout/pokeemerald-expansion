@@ -18,11 +18,12 @@ DOUBLE_BATTLE_TEST("Forewarn warns about the highest power move among all opposi
 
 SINGLE_BATTLE_TEST("Forewarn randomly chooses between same-power moves on one opponent")
 {
-    PASSES_RANDOMLY(1, 2, RNG_FOREWARN);
+    PASSES_RANDOMLY(1, 3, RNG_FOREWARN);
     GIVEN {
         ASSUME(GetMovePower(MOVE_TACKLE) == GetMovePower(MOVE_POUND));
+        ASSUME(GetMovePower(MOVE_TACKLE) == GetMovePower(MOVE_SCRATCH));
         PLAYER(SPECIES_MUSHARNA) { Ability(ABILITY_FOREWARN); }
-        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
         TURN {}
     } SCENE {
@@ -33,13 +34,15 @@ SINGLE_BATTLE_TEST("Forewarn randomly chooses between same-power moves on one op
 
 DOUBLE_BATTLE_TEST("Forewarn randomly chooses between opponents with same-power moves")
 {
-    PASSES_RANDOMLY(1, 2, RNG_FOREWARN);
+    PASSES_RANDOMLY(1, 4, RNG_FOREWARN);
     GIVEN {
         ASSUME(GetMovePower(MOVE_TACKLE) == GetMovePower(MOVE_POUND));
+        ASSUME(GetMovePower(MOVE_TACKLE) == GetMovePower(MOVE_SCRATCH));
+        ASSUME(GetMovePower(MOVE_TACKLE) == GetMovePower(MOVE_QUICK_ATTACK));
         PLAYER(SPECIES_MUSHARNA) { Ability(ABILITY_FOREWARN); }
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_EXCADRILL) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_PECK, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_EXCADRILL) { Moves(MOVE_SCRATCH, MOVE_QUICK_ATTACK, MOVE_ABSORB, MOVE_CELEBRATE); }
     } WHEN {
         TURN {}
     } SCENE {
