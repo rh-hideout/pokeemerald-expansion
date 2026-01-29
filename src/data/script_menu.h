@@ -6,6 +6,8 @@ static const struct MenuAction MultichoiceList_BrineyOnDewford[] =
     {gText_Exit},
 };
 
+const u8 gText_Info2[] = _("INFO");
+
 static const struct MenuAction MultichoiceList_EnterInfo[] =
 {
     {COMPOUND_STRING("ENTER")},
@@ -30,6 +32,10 @@ static const struct MenuAction MultichoiceList_ContestType[] =
     {gText_ToughnessContest},
     {gText_Exit},
 };
+
+const u8 gText_Decoration2[] = _("DECORATION");
+const u8 gText_PackUp[] = _("PACK UP");
+const u8 gText_Registry[] = _("REGISTRY");
 
 static const struct MenuAction MultichoiceList_BasePCWithRegistry[] =
 {
@@ -288,6 +294,8 @@ static const struct MenuAction MultichoiceList_HowsFishing[] =
     {COMPOUND_STRING("Not so good")},
 };
 
+const u8 gText_LilycoveCity[] = _("LILYCOVE CITY");
+
 static const struct MenuAction MultichoiceList_SSTidalSlateportWithBF[] =
 {
     {gText_LilycoveCity},
@@ -323,6 +331,11 @@ static const struct MenuAction MultichoiceList_Floors[] =
     {gText_1F},
     {gText_Exit},
 };
+
+const u8 gText_RedShard[] = _("RED SHARD");
+const u8 gText_YellowShard[] = _("YELLOW SHARD");
+const u8 gText_BlueShard[] = _("BLUE SHARD");
+const u8 gText_GreenShard[] = _("GREEN SHARD");
 
 static const struct MenuAction MultichoiceList_ShardsR[] =
 {
@@ -431,6 +444,13 @@ static const struct MenuAction MultichoiceList_ShardsRYBG[] =
     {gText_Exit},
 };
 
+const u8 gText_Opponent[] = _("OPPONENT");
+const u8 gText_Tourney_Tree[] = _("TOURNEY TREE");
+const u8 gText_ReadyToStart[] = _("READY TO START");
+const u8 gText_Record2[] = _("RECORD");
+const u8 gText_Rest[] = _("REST");
+const u8 gText_Retire[] = _("RETIRE");
+
 static const struct MenuAction MultichoiceList_TourneyWithRecord[] =
 {
     {gText_Opponent},
@@ -456,6 +476,10 @@ static const struct MenuAction MultichoiceList_Tent[] =
     {COMPOUND_STRING("BLUE TENT")},
 };
 
+const u8 gText_TradeCenter[] = _("TRADE CENTER");
+const u8 gText_Colosseum[] = _("COLOSSEUM");
+const u8 gText_RecordCorner[] = _("RECORD CORNER");
+
 static const struct MenuAction MultichoiceList_LinkServicesNoBerry[] =
 {
     {gText_TradeCenter},
@@ -479,6 +503,8 @@ static const struct MenuAction MultichoiceList_BattleMode[] =
     {gText_Info2},
     {gText_Exit},
 };
+
+const u8 gText_BerryCrush3[] = _("BERRY CRUSH");
 
 static const struct MenuAction MultichoiceList_LinkServicesNoRecord[] =
 {
@@ -555,7 +581,7 @@ static const struct MenuAction MultichoiceList_ForcedStartMenu[] =
     {gText_MenuOptionPokemon},
     {gText_MenuOptionBag},
     {gText_MenuOptionPokenav},
-    {gText_Blank}, // blank because it's filled by the player's name
+    {COMPOUND_STRING("")}, // blank because it's filled by the player's name
     {gText_MenuOptionSave},
     {gText_MenuOptionOption},
     {gText_MenuOptionExit},
@@ -629,6 +655,11 @@ static const struct MenuAction MultichoiceList_FrontierPassInfo[] =
     {gText_Exit},
 };
 
+const u8 gText_BattleRules[] = _("BATTLE RULES");
+const u8 gText_JudgeMind[] = _("JUDGE: MIND");
+const u8 gText_JudgeSkill[] = _("JUDGE: SKILL");
+const u8 gText_JudgeBody[] = _("JUDGE: BODY");
+
 static const struct MenuAction MultichoiceList_BattleArenaRules[] =
 {
     {gText_BattleRules},
@@ -654,6 +685,11 @@ static const struct MenuAction MultichoiceList_BattleDomeRules[] =
     {COMPOUND_STRING("DOUBLE KO")},
     {gText_Exit},
 };
+
+const u8 gText_BasicRules[] = _("BASIC RULES");
+const u8 gText_SwapPartners[] = _("SWAP: PARTNER");
+const u8 gText_SwapNumber[] = _("SWAP: NUMBER");
+const u8 gText_SwapNotes[] = _("SWAP: NOTES");
 
 static const struct MenuAction MultichoiceList_BattleFactoryRules[] =
 {
@@ -691,6 +727,8 @@ static const struct MenuAction MultichoiceList_BattlePikeRules[] =
     {COMPOUND_STRING("POKéMON ORDER")},
     {gText_Exit},
 };
+
+const u8 gText_GoOn[] = _("GO ON");
 
 static const struct MenuAction MultichoiceList_GoOnRecordRestRetire[] =
 {
@@ -795,10 +833,6 @@ static const u8 gText_SeviiIslands[] = _("SEVII ISLANDS");
 static const u8 gText_OneIsland[] = _("ONE ISLAND");
 static const u8 gText_TwoIsland[] = _("TWO ISLAND");
 static const u8 gText_ThreeIsland[] = _("THREE ISLAND");
-static const u8 gText_FourIsland[] = _("FOUR ISLAND");
-static const u8 gText_FiveIsland[] = _("FIVE ISLAND");
-static const u8 gText_SixIsland[] = _("SIX ISLAND");
-static const u8 gText_SevenIsland[] = _("SEVEN ISLAND");
 static const u8 gText_Vermilion[] = _("VERMILION");
 
 static const struct MenuAction sMultichoiceList_Island23[] = {
@@ -1270,23 +1304,23 @@ const u8 *const gStdStrings[] =
     [STDSTRING_SMART] = gText_Smart,
     [STDSTRING_TOUGH] = gText_Tough,
     [STDSTRING_NORMAL] = gText_Normal,
-    [STDSTRING_SUPER] = gText_Super,
-    [STDSTRING_HYPER] = gText_Hyper,
-    [STDSTRING_MASTER] = gText_Master,
-    [STDSTRING_COOL2] = gText_Cool2,
-    [STDSTRING_BEAUTY2] = gText_Beauty2,
-    [STDSTRING_CUTE2] = gText_Cute2,
-    [STDSTRING_SMART2] = gText_Smart2,
-    [STDSTRING_TOUGH2] = gText_Tough2,
-    [STDSTRING_ITEMS] = gText_Items,
-    [STDSTRING_KEYITEMS] = gText_Key_Items,
-    [STDSTRING_POKEBALLS] = gText_Poke_Balls,
-    [STDSTRING_TMHMS] = gText_TMs_Hms,
-    [STDSTRING_BERRIES] = gText_Berries2,
-    [STDSTRING_SINGLE] = gText_Single2,
-    [STDSTRING_DOUBLE] = gText_Double2,
-    [STDSTRING_MULTI] = gText_Multi,
-    [STDSTRING_MULTI_LINK] = gText_MultiLink,
+    [STDSTRING_SUPER] = COMPOUND_STRING("SUPER"),
+    [STDSTRING_HYPER] = COMPOUND_STRING("HYPER"),
+    [STDSTRING_MASTER] = COMPOUND_STRING("MASTER"),
+    [STDSTRING_COOL2] = COMPOUND_STRING("COOL"),
+    [STDSTRING_BEAUTY2] = COMPOUND_STRING("BEAUTY"),
+    [STDSTRING_CUTE2] = COMPOUND_STRING("CUTE"),
+    [STDSTRING_SMART2] = COMPOUND_STRING("SMART"),
+    [STDSTRING_TOUGH2] = COMPOUND_STRING("TOUGH"),
+    [STDSTRING_ITEMS] = COMPOUND_STRING("ITEMS"),
+    [STDSTRING_KEYITEMS] = COMPOUND_STRING("KEY ITEMS"),
+    [STDSTRING_POKEBALLS] = COMPOUND_STRING("POKé BALLS"),
+    [STDSTRING_TMHMS] = COMPOUND_STRING("TMs & HMs"),
+    [STDSTRING_BERRIES] = COMPOUND_STRING("BERRIES"),
+    [STDSTRING_SINGLE] = COMPOUND_STRING("SINGLE"),
+    [STDSTRING_DOUBLE] = COMPOUND_STRING("DOUBLE"),
+    [STDSTRING_MULTI] = COMPOUND_STRING("MULTI"),
+    [STDSTRING_MULTI_LINK] = COMPOUND_STRING("MULTI-LINK"),
     [STDSTRING_BATTLE_TOWER] = gText_BattleTower2,
     [STDSTRING_BATTLE_DOME] = gText_BattleDome,
     [STDSTRING_BATTLE_FACTORY] = gText_BattleFactory,
@@ -1294,15 +1328,15 @@ const u8 *const gStdStrings[] =
     [STDSTRING_BATTLE_ARENA] = gText_BattleArena,
     [STDSTRING_BATTLE_PIKE] = gText_BattlePike,
     [STDSTRING_BATTLE_PYRAMID] = gText_BattlePyramid,
-    [STDSTRING_BOULDER_BADGE]    = gText_Boulderbadge,
-    [STDSTRING_CASCADE_BADGE]    = gText_Cascadebadge,
-    [STDSTRING_THUNDER_BADGE]    = gText_Thunderbadge,
-    [STDSTRING_RAINBOW_BADGE]    = gText_Rainbowbadge,
-    [STDSTRING_SOUL_BADGE]       = gText_Soulbadge,
-    [STDSTRING_MARSH_BADGE]      = gText_Marshbadge,
-    [STDSTRING_VOLCANO_BADGE]    = gText_Volcanobadge,
-    [STDSTRING_EARTH_BADGE]      = gText_Earthbadge,
-    [STDSTRING_COINS]            = COMPOUND_STRING("COINS"),
+    [STDSTRING_BOULDER_BADGE] = gText_Boulderbadge,
+    [STDSTRING_CASCADE_BADGE] = gText_Cascadebadge,
+    [STDSTRING_THUNDER_BADGE] = gText_Thunderbadge,
+    [STDSTRING_RAINBOW_BADGE] = gText_Rainbowbadge,
+    [STDSTRING_SOUL_BADGE]    = gText_Soulbadge,
+    [STDSTRING_MARSH_BADGE]   = gText_Marshbadge,
+    [STDSTRING_VOLCANO_BADGE] = gText_Volcanobadge,
+    [STDSTRING_EARTH_BADGE]   = gText_Earthbadge,
+    [STDSTRING_COINS]         = COMPOUND_STRING("COINS"),
 };
 
 static const u8 sLinkServicesMultichoiceIds[] =
@@ -1376,14 +1410,13 @@ static const u8 *const sWirelessOptions_NoRecordMixBerryCrush[] =
     CableClub_Text_CancelSelectedItem,
 };
 
-
 static const u8 *const sSeagallopDestStrings[] = {
     [SEAGALLOP_VERMILION_CITY] = gText_Vermilion,
     [SEAGALLOP_ONE_ISLAND]     = gText_OneIsland,
     [SEAGALLOP_TWO_ISLAND]     = gText_TwoIsland,
     [SEAGALLOP_THREE_ISLAND]   = gText_ThreeIsland,
-    [SEAGALLOP_FOUR_ISLAND]    = gText_FourIsland,
-    [SEAGALLOP_FIVE_ISLAND]    = gText_FiveIsland,
-    [SEAGALLOP_SIX_ISLAND]     = gText_SixIsland,
-    [SEAGALLOP_SEVEN_ISLAND]   = gText_SevenIsland,
+    [SEAGALLOP_FOUR_ISLAND]    = COMPOUND_STRING("FOUR ISLAND"),
+    [SEAGALLOP_FIVE_ISLAND]    = COMPOUND_STRING("FIVE ISLAND"),
+    [SEAGALLOP_SIX_ISLAND]     = COMPOUND_STRING("SIX ISLAND"),
+    [SEAGALLOP_SEVEN_ISLAND]   = COMPOUND_STRING("SEVEN ISLAND"),
 };
