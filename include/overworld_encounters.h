@@ -5,8 +5,6 @@
 #error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OWE_WILD_ENCOUNTERS_OVERWORLD to work."
 #endif
 
-#define OWE_MAX_SPAWN_SLOTS   5
-
 #define OWE_MAX_SPAWNS              4
 
 #define OWE_SPAWN_DISTANCE_LAND     1   // A spawn cannot happen within this many tiles of the player position.

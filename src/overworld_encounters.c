@@ -329,7 +329,7 @@ u32 GetOldestSlot(bool32 forceRemove)
     struct ObjectEvent *slotMon, *oldest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
     u32 spawnSlot;
 
-    for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWN_SLOTS; spawnSlot++)
+    for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_REPLACE_FLAG) || forceRemove == TRUE))
@@ -339,10 +339,10 @@ u32 GetOldestSlot(bool32 forceRemove)
         }
     }
 
-    if (spawnSlot >= OWE_MAX_SPAWN_SLOTS)
+    if (spawnSlot >= OWE_MAX_SPAWNS)
         return INVALID_SPAWN_SLOT;
 
-    for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWN_SLOTS; spawnSlot++)
+    for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_REPLACE_FLAG) || forceRemove == TRUE))
@@ -636,13 +636,13 @@ struct AgeSort
 static void SortOWEMonAges(void)
 {
     struct ObjectEvent *slotMon;
-    struct AgeSort array[OWE_MAX_SPAWN_SLOTS];
+    struct AgeSort array[OWE_MAX_SPAWNS];
     struct AgeSort current;
     u32 numActive = GetNumberActiveOverworldEncounters(OWE_GENERATED);
     u32 count = 0;
     s32 i, j;
 
-    for (i = 0; i < OWE_MAX_SPAWN_SLOTS; i++)
+    for (i = 0; i < OWE_MAX_SPAWNS; i++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE)
@@ -937,11 +937,11 @@ bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldO
     
     case OWE_GENERATED:
         return isOWE && (objectEvent->localId <= LOCALID_OW_ENCOUNTER_END
-            && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
+            && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWNS));
 
     case OWE_MANUAL:
         return isOWE && (objectEvent->localId > LOCALID_OW_ENCOUNTER_END
-            || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
+            || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWNS));
     }
 }
 
@@ -972,7 +972,7 @@ u32 GetNewestOWEncounterLocalId(void)
     struct ObjectEvent *newest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
     u32 i;
     
-    for (i = 0; i < OWE_MAX_SPAWN_SLOTS; i++)
+    for (i = 0; i < OWE_MAX_SPAWNS; i++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE)
@@ -989,7 +989,7 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
 {
     // Include a check for the encounter not being shiny or a roamer.
     return (OWE_WILD_ENCOUNTERS_OVERWORLD && GetNumberActiveOverworldEncounters(OWE_GENERATED) != 0
-        && (localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS + 1)
+        && (localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWNS + 1)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
@@ -1023,7 +1023,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
     if (template->trainerType != TRAINER_TYPE_OW_WILD_ENCOUNTER || (template->localId <= LOCALID_OW_ENCOUNTER_END
-        && template->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS)))
+        && template->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWNS)))
         return *template;
 
     struct ObjectEventTemplate templateOWE = *template;
