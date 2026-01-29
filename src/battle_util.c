@@ -9330,7 +9330,7 @@ static u32 GetFlingPowerFromItemId(enum Item itemId)
         return GetItemFlingPower(itemId);
 }
 
-bool32 CanFling(u32 battlerAtk, u32 battlerDef)
+bool32 CanFling(u32 battlerAtk)
 {
     enum Item item = gBattleMons[battlerAtk].item;
 
@@ -9339,7 +9339,7 @@ bool32 CanFling(u32 battlerAtk, u32 battlerDef)
       || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
       || gBattleMons[battlerAtk].volatiles.embargo
       || GetFlingPowerFromItemId(item) == 0
-      || !CanBattlerGetOrLoseItem(battlerAtk, battlerDef, item))
+      || !CanBattlerGetOrLoseItem(battlerAtk, battlerAtk, item)) // defender being a paradox mon doesn't matter
         return FALSE;
 
     return TRUE;

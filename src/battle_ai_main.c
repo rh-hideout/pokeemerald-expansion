@@ -2764,7 +2764,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, enum Move move, s32 s
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FLING:
-            if (!CanFling(battlerAtk, battlerDef))
+            if (!CanFling(battlerAtk))
             {
                 ADJUST_SCORE(-10);
             }

@@ -296,7 +296,7 @@ bool32 ShouldGetStatBadgeBoost(u16 flagId, u32 battler);
 uq4_12_t GetBadgeBoostModifier(void);
 enum DamageCategory GetBattleMoveCategory(enum Move move);
 void SetDynamicMoveCategory(u32 battlerAtk, u32 battlerDef, enum Move move);
-bool32 CanFling(u32 battlerAtk, u32 battlerDef);
+bool32 CanFling(u32 battlerAtk);
 bool32 IsTelekinesisBannedSpecies(u16 species);
 bool32 IsHealBlockPreventingMove(u32 battler, enum Move move);
 bool32 IsGravityPreventingMove(enum Move move);

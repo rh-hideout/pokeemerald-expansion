@@ -796,7 +796,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FLING:
-        if (!CanFling(ctx->battlerAtk, ctx->battlerDef))
+        if (!CanFling(ctx->battlerAtk))
             battleScript = BattleScript_ButItFailed;
         else if (!IsBattlerAlive(ctx->battlerDef)) // Edge case for removing a mon's item when there is no target available after using Fling.
             battleScript = BattleScript_FlingFailConsumeItem;
