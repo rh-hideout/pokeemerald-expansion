@@ -91,6 +91,8 @@ EWRAM_DATA static u8 *sTrainerBattleEndScript = NULL;
 EWRAM_DATA static bool8 sShouldCheckTrainerBScript = FALSE;
 EWRAM_DATA static u8 sNoOfPossibleTrainerRetScripts = 0;
 
+static bool8 sSkipFirstBattleAfterChoosingStarter = FALSE;
+
 // The first transition is used if the enemy Pokémon are lower level than our Pokémon.
 // Otherwise, the second transition is used.
 static const u8 sBattleTransitionTable_Wild[][2] =
@@ -868,9 +870,19 @@ enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id)
 
 void ChooseStarter(void)
 {
+    sSkipFirstBattleAfterChoosingStarter = FALSE;
     SetMainCallback2(CB2_ChooseStarter);
     gMain.savedCallback = CB2_GiveStarter;
 }
+
+// Neu: gleiche UI, aber ohne Auto-Kampf
+void ChooseStarterNoBattle(void)
+{
+    sSkipFirstBattleAfterChoosingStarter = TRUE;
+    SetMainCallback2(CB2_ChooseStarter);
+    gMain.savedCallback = CB2_GiveStarter;
+}
+
 
 static void CB2_GiveStarter(void)
 {
@@ -880,10 +892,19 @@ static void CB2_GiveStarter(void)
     starterMon = GetStarterPokemon(gSpecialVar_Result);
     ScriptGiveMon(starterMon, 5, ITEM_NONE);
     ResetTasks();
+
+    if (sSkipFirstBattleAfterChoosingStarter)
+    {
+        sSkipFirstBattleAfterChoosingStarter = FALSE;
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        return;
+    }
+
     PlayBattleBGM();
     SetMainCallback2(CB2_StartFirstBattle);
     BattleTransition_Start(B_TRANSITION_BLUR);
 }
+
 
 static void CB2_StartFirstBattle(void)
 {

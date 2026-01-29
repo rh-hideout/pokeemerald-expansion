@@ -24,12 +24,12 @@ Route101_EventScript_StartBirchRescue::
 	clearflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
 	clearflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 
-	@ Zigzagoon am Anfang unsichtbar
-	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
-
 	@ Bum + Zig Startposition
 	setobjectxy LOCALID_ROUTE101_BIRCH, 6, 14
 	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 5, 14
+
+	@ Zigzagoon am Anfang unsichtbar
+	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 
 	@ Gate zurücksetzen (Bum muss einmal angesprochen werden)
 	clearflag FLAG_TEMP_4
@@ -134,7 +134,7 @@ Route101_Bag_DoChoose:
 	setflag FLAG_SYS_POKEMON_GET
 	fadescreen FADE_TO_BLACK
 
-	special ChooseStarter
+	special ChooseStarterNoBattle
 	waitstate
 
 	fadescreen FADE_FROM_BLACK
@@ -239,13 +239,13 @@ Route101_Text_HelpMe:
 
 Route101_Text_PleaseHelp:
 	.string "BUM: Hello! You interested?!\n"
-	.string "{PLAYER}: You wanna sell me drugs?\n"
+	.string "{PLAYER}: You wanna sell me drugs?\p"
 	.string "BUM: No, no, I'll show you the hottest shit!!\n"
-	.string "In my BAG!\n"
+	.string "In my BAG!\p"
 	.string "Take a look and pick one!$"
 
 Route101_Text_WhyNotGiveNicknameToMon:
-	.string "BUM: Why not give your new POKéMON a nickname?\n"
+	.string "BUM: Why not give your new POKéMON a nickname?$"
 
 Route101_Text_DontLeaveMe:
 	.string "BUM: Don't leave kid! Come here!$"
@@ -257,7 +257,7 @@ Route101_Text_Battle:
 Route101_Text_YouSavedMe:
 	.string "BUM: Nice one, kid!\p"
 	.string "You had fun?\n"
-	.string "{PLAYER}: Yeah!\n"
+	.string "{PLAYER}: Yeah!\p"
 	.string "BUM: You want to keep it?\p"
 	.string "{PLAYER}: Sure, what do you want for it?\p"
 	.string "BUM: First one is always free.\p"
