@@ -1,4 +1,4 @@
-Route11_EastEntrance_1F_MapScripts::
+Route11_EastEntrance_1F_Frlg_MapScripts::
 	.byte 0
 
 Route11_EastEntrance_1F_EventScript_TopGuard::

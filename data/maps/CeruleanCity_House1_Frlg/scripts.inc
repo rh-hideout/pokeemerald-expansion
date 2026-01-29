@@ -1,4 +1,4 @@
-CeruleanCity_House1_MapScripts::
+CeruleanCity_House1_Frlg_MapScripts::
 	.byte 0
 
 CeruleanCity_House1_EventScript_BadgeGuy::

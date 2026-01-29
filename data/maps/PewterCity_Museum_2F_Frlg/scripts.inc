@@ -1,4 +1,4 @@
-PewterCity_Museum_2F_MapScripts::
+PewterCity_Museum_2F_Frlg_MapScripts::
 	.byte 0
 
 PewterCity_Museum_2F_EventScript_Man::

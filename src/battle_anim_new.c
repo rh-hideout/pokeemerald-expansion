@@ -6327,31 +6327,32 @@ void AnimTask_IsTargetPartner(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-static u8 LoadBattleAnimTarget(u8 arg)
+static enum BattlerId LoadBattleAnimTarget(u8 arg)
 {
-    u8 battler;
+    enum BattlerId battler;
+    enum AnimBattler animBattler = gBattleAnimArgs[arg];
 
     if (IsDoubleBattle())
     {
-        switch (gBattleAnimArgs[arg])
+        switch (animBattler)
         {
-        case 0:
+        case ANIM_ATTACKER:
             battler = gBattleAnimAttacker;
             break;
         default:
             battler = gBattleAnimTarget;
             break;
-        case 2:
+        case ANIM_ATK_PARTNER:
             battler = BATTLE_PARTNER(gBattleAnimAttacker);
             break;
-        case 3:
+        case ANIM_DEF_PARTNER:
             battler = BATTLE_PARTNER(gBattleAnimTarget);
             break;
         }
     }
     else
     {
-        if (gBattleAnimArgs[arg] == 0)
+        if (animBattler == ANIM_ATTACKER)
             battler = gBattleAnimAttacker;
         else
             battler = gBattleAnimTarget;
@@ -6360,7 +6361,7 @@ static u8 LoadBattleAnimTarget(u8 arg)
     return battler;
 }
 
-static u8 GetProperCentredCoord(u8 battler, u8 coordType)
+static u8 GetProperCentredCoord(enum BattlerId battler, u8 coordType)
 {
     if (IsDoubleBattle())
         return (GetBattlerSpriteCoord2(battler, coordType) + GetBattlerSpriteCoord2(BATTLE_PARTNER(battler), coordType)) / 2;
@@ -6368,7 +6369,7 @@ static u8 GetProperCentredCoord(u8 battler, u8 coordType)
     return GetBattlerSpriteCoord(battler, coordType);
 }
 
-static void InitSpritePosToGivenTarget(struct Sprite *sprite, u8 target)
+static void InitSpritePosToGivenTarget(struct Sprite *sprite, enum BattlerId target)
 {
     sprite->x = GetBattlerSpriteCoord2(target, BATTLER_COORD_X);
     sprite->y = GetBattlerSpriteCoord2(target, BATTLER_COORD_Y);
@@ -6575,7 +6576,7 @@ static void SpriteCB_SpriteToCentreOfSide(struct Sprite *sprite)
 
 static void SpriteCB_SpriteOnMonForDuration(struct Sprite *sprite)
 {
-    u8 target = LoadBattleAnimTarget(0);
+    enum BattlerId target = LoadBattleAnimTarget(0);
 
     if (!IsBattlerSpriteVisible(target))
     {
@@ -6612,7 +6613,7 @@ static void SpriteCB_ToxicThreadWrap(struct Sprite *sprite)
 
 static void SpriteCB_GrowingSuperpower(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
 
     if (gBattleAnimArgs[0] == 0)
     {
@@ -6702,7 +6703,7 @@ static void SpriteCB_CoreEnforcerBeam(struct Sprite *sprite)
 static void SpriteCB_TranslateAnimSpriteToTargetMonLocationDoubles(struct Sprite *sprite)
 {
     bool8 respectMonPicOffsets;
-    u8 target;
+    enum BattlerId target;
     u8 coordType;
 
     if (!(gBattleAnimArgs[5] & 0xff00))
@@ -6740,7 +6741,7 @@ static void SpriteCB_TranslateAnimSpriteToTargetMonLocationDoubles(struct Sprite
 //arg 3: anim battler
 static void SpriteCB_FallingObject(struct Sprite *sprite)
 {
-    u8 target = LoadBattleAnimTarget(3);
+    enum BattlerId target = LoadBattleAnimTarget(3);
 
     if (!IsBattlerSpriteVisible(target))
         DestroyAnimSprite(sprite);
@@ -7156,7 +7157,7 @@ static void SpriteCB_AcidDripSingleTarget(struct Sprite *sprite)
 //arg 2: anim battler
 static void SpriteCB_WaterDroplet(struct Sprite *sprite)
 {
-    u8 target = LoadBattleAnimTarget(2);
+    enum BattlerId target = LoadBattleAnimTarget(2);
 
     if (!IsBattlerSpriteVisible(target))
         DestroyAnimSprite(sprite);
@@ -7197,7 +7198,7 @@ static void SpriteCB_AnimSpriteOnSelectedMonPos(struct Sprite *sprite)
 {
     if (!sprite->data[0])
     {
-        u8 target = LoadBattleAnimTarget(2);
+        enum BattlerId target = LoadBattleAnimTarget(2);
 
         if (!IsBattlerSpriteVisible(target))
             DestroyAnimSprite(sprite);
@@ -7235,7 +7236,7 @@ static void SpriteCB_SurroundingRing(struct Sprite *sprite)
 //arg 5: affine anim start delay
 static void SpriteCB_PhotonGeyserBeam(struct Sprite *sprite)
 {
-    u8 target = LoadBattleAnimTarget(2);
+    enum BattlerId target = LoadBattleAnimTarget(2);
 
     if (!IsBattlerSpriteVisible(target))
         DestroyAnimSprite(sprite);
@@ -7288,7 +7289,7 @@ static void AnimSkyDropBallUp(struct Sprite *sprite)
 
 static void SpriteCB_SearingShotRock(struct Sprite *sprite)
 {
-    u8 target = LoadBattleAnimTarget(4);
+    enum BattlerId target = LoadBattleAnimTarget(4);
 
     if (!IsBattlerSpriteVisible(target))
     {
@@ -7420,8 +7421,8 @@ static void AnimTask_DynamaxGrowthStep(u8 taskId) // from CFRU
 
 void AnimTask_AllBattlersInvisible(u8 taskId)
 {
-    u32 i, spriteId;
-    for (i = 0; i < gBattlersCount; i++)
+    u32 spriteId;
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         spriteId = gBattlerSpriteIds[i];
         if (spriteId != 0xFF)
@@ -7432,8 +7433,8 @@ void AnimTask_AllBattlersInvisible(u8 taskId)
 
 void AnimTask_AllBattlersVisible(u8 taskId)
 {
-    u32 i, spriteId;
-    for (i = 0; i < gBattlersCount; ++i)
+    u32 spriteId;
+    for (enum BattlerId i = 0; i < gBattlersCount; ++i)
     {
         spriteId = gBattlerSpriteIds[i];
         if (IsBattlerSpriteVisible(i) && spriteId != 0xFF)
@@ -7445,8 +7446,7 @@ void AnimTask_AllBattlersVisible(u8 taskId)
 
 void AnimTask_AllBattlersInvisibleExceptAttackerAndTarget(u8 taskId)
 {
-    u32 i;
-    for (i = 0; i < gBattlersCount; ++i)
+    for (enum BattlerId i = 0; i < gBattlersCount; ++i)
     {
         u8 spriteId = gBattlerSpriteIds[i];
         if (spriteId == GetAnimBattlerSpriteId(ANIM_ATTACKER) || spriteId == GetAnimBattlerSpriteId(ANIM_TARGET))
@@ -7895,7 +7895,7 @@ static void SpriteCB_ShellSmashShell_DestroyDuringFadeOut(struct Sprite* sprite)
 
 static void SpriteCB_AnimSpriteOnTargetSideCentre(struct Sprite *sprite)
 {
-    u8 target = LoadBattleAnimTarget(2);
+    enum BattlerId target = LoadBattleAnimTarget(2);
 
     if (!sprite->data[0])
     {
@@ -7924,7 +7924,7 @@ static void SpriteCB_AnimSpriteOnTargetSideCentre(struct Sprite *sprite)
 
 static void SpriteCB_SpriteOnMonUntilAffineAnimEnds(struct Sprite* sprite)
 {
-    u8 target = LoadBattleAnimTarget(0);
+    enum BattlerId target = LoadBattleAnimTarget(0);
 
     if (!IsBattlerSpriteVisible(target))
         DestroyAnimSprite(sprite);
@@ -7939,7 +7939,7 @@ static void SpriteCB_SpriteOnMonUntilAffineAnimEnds(struct Sprite* sprite)
 
 static void SpriteCB_SpriteOnMonForDurationUseY(struct Sprite *sprite)
 {
-    u8 target = LoadBattleAnimTarget(0);
+    enum BattlerId target = LoadBattleAnimTarget(0);
 
     if (!IsBattlerSpriteVisible(target))
         DestroyAnimSprite(sprite);
@@ -8072,8 +8072,8 @@ static void SpriteCB_FlippableSlash(struct Sprite* sprite)
 static void SpriteCB_DragonEnergyShot(struct Sprite* sprite)
 {
     s16 startingX, finishingX, y;
-    u8 def1 = gBattleAnimTarget;
-    u8 def2 = BATTLE_PARTNER(def1);
+    enum BattlerId def1 = gBattleAnimTarget;
+    enum BattlerId def2 = BATTLE_PARTNER(def1);
 
     if (!IsDoubleBattle() || IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         y = GetBattlerSpriteCoord(def1, BATTLER_COORD_Y_PIC_OFFSET);
@@ -8179,8 +8179,8 @@ static void SpriteCB_MaxFlutterbyStep2(struct Sprite* sprite)
 //arg 6: duration to target
 static void SpriteCB_GlacialLance(struct Sprite* sprite)
 {
-    u8 def1 = gBattleAnimTarget;
-    u8 def2 = BATTLE_PARTNER(def1);
+    enum BattlerId def1 = gBattleAnimTarget;
+    enum BattlerId def2 = BATTLE_PARTNER(def1);
 
     InitSpritePosToAnimAttacker(sprite, TRUE);
     sprite->data[5] = gBattleAnimArgs[4];

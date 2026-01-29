@@ -1,4 +1,4 @@
-SafariZone_West_RestHouse_MapScripts::
+SafariZone_West_RestHouse_Frlg_MapScripts::
 	.byte 0
 
 SafariZone_West_RestHouse_EventScript_Man::

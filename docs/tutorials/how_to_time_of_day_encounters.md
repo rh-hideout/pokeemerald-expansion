@@ -10,7 +10,7 @@
 - [So what are the `#define` options in `overworld.h`?](#so-what-are-the-define-options-in-overworldh)
 - [Examples](#examples)
 
-## What is the Time-Based Encounters feature? 
+## What is the Time-Based Encounters feature?
 Time-Based Encounters lets you pick which Pokémon appear based on the in-game clock, per route!
 Gen 2 had this feature, and Gen 4 brought it back- for instance, in Sinnoh's Route 201 you have a higher chance of catching a Bidoof than a Starly at night.
 

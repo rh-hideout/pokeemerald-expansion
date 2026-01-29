@@ -1,4 +1,4 @@
-SixIsland_House_MapScripts::
+SixIsland_House_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_House_EventScript_OldMan::

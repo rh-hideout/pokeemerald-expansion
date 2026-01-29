@@ -9,7 +9,7 @@ SOUND_BIN_DIR := sound
 # Needs to recompile for B_NUM_LOW_HEALTH_BEEPS in battle.h
 EXPANSION_BATTLE_CONFIG := include/config/battle.h
 
-SPECIAL_OUTDIRS := $(MID_ASM_DIR) $(CRY_BIN_DIR) 
+SPECIAL_OUTDIRS := $(MID_ASM_DIR) $(CRY_BIN_DIR)
 SPECIAL_OUTDIRS += $(SOUND_BIN_DIR) $(SOUND_BIN_DIR)/direct_sound_samples/phonemes $(SOUND_BIN_DIR)/direct_sound_samples/cries
 $(shell mkdir -p $(SPECIAL_OUTDIRS) )
 
@@ -25,11 +25,11 @@ $(CRY_BIN_DIR)/%.bin: $(CRY_SUBDIR)/%.wav
 	$(WAV2AGB) -b -c -l 1 --no-pad $< $@
 
 # Uncompressed cries
-$(CRY_BIN_DIR)/uncomp_%.bin: $(CRY_SUBDIR)/uncomp_%.aif 
+$(CRY_BIN_DIR)/uncomp_%.bin: $(CRY_SUBDIR)/uncomp_%.aif
 	$(AIF) $< $@
 
 # Uncompressed sounds
-$(SOUND_BIN_DIR)/%.bin: sound/%.wav 
+$(SOUND_BIN_DIR)/%.bin: sound/%.wav
 	$(WAV2AGB) -b $< $@
 
 # For each line in midi.cfg, we do some trickery to convert it into a make rule for the `.mid` file described on the line

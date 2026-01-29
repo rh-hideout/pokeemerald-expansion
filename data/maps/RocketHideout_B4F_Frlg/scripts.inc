@@ -1,6 +1,6 @@
 .equ NUM_DOOR_GRUNTS_DEFEATED, VAR_TEMP_1
 
-RocketHideout_B4F_MapScripts::
+RocketHideout_B4F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, RocketHideout_B4F_OnLoad
 	.byte 0
 
