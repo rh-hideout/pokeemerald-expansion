@@ -651,7 +651,7 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
         string map_name = json_to_string(map_data, "name");
 
         if ((version == "emerald" && region != "REGION_HOENN" && !FRLG_INCLUDE_KANTO_MAPS)
-         || (version == "firered" && region != "REGION_KANTO")) {
+         || (version == "firered" && region != "REGION_KANTO" && !FRLG_INCLUDE_HOENN_MAPS)) {
             invalid_maps.push_back(map_name);
         }
     }
@@ -681,7 +681,7 @@ string generate_layout_headers_text(Json layouts_data) {
         if (layout == Json::object()) continue;
         string layout_version = json_to_string(layout, "layout_version");
         if ((version == "emerald" && layout_version != "emerald" && !FRLG_INCLUDE_KANTO_MAPS)
-         || (version == "firered" && layout_version != "frlg"))
+         || (version == "firered" && layout_version != "frlg" && !FRLG_INCLUDE_HOENN_MAPS))
             continue;
         string layoutName = json_to_string(layout, "name");
         string border_label = layoutName + "_Border";
@@ -731,7 +731,7 @@ string generate_layouts_table_text(Json layouts_data) {
     for (auto &layout : layouts_data["layouts"].array_items()) {
         string layout_version = json_to_string(layout, "layout_version");
         if ((version == "emerald" && layout_version != "emerald" && !FRLG_INCLUDE_KANTO_MAPS)
-         || (version == "firered" && layout_version != "frlg")) {
+         || (version == "firered" && layout_version != "frlg" && !FRLG_INCLUDE_HOENN_MAPS)) {
             text << "\t.4byte NULL\n";
         } else
         {
