@@ -3335,6 +3335,12 @@ static void ForewarnChooseMove(u32 battler)
         }
     }
 
+    if (count == 0)
+    {
+        Free(data);
+        return;
+    }
+
     for (bestId = 0, i = 1; i < count; i++)
     {
         if (data[i].power > data[bestId].power)
@@ -4155,7 +4161,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             return effect; // Note: It returns effect as to not record the ability if Frisk does not activate.
         case ABILITY_FOREWARN:
-            if (!gSpecialStatuses[battler].switchInAbilityDone)
+            if (!gSpecialStatuses[battler].switchInAbilityDone && !IsOpposingSideEmpty(battler))
             {
                 ForewarnChooseMove(battler);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_FOREWARN;
