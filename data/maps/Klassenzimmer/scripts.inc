@@ -31,7 +31,7 @@ Klassenzimmer_EventScript_FirstEntry::
 	closemessage
 
 	fadescreen FADE_TO_BLACK
-	waitfadescreen
+	waitstate
 
 	@ Museum-Cutscene beim Ankommen starten lassen
     setflag FLAG_CTF_MUSEUM_SCENE_PENDING
@@ -46,7 +46,7 @@ Klassenzimmer_EventScript_FirstEntry::
 	waitstate
 
 	fadescreen FADE_FROM_BLACK
-	waitfadescreen
+	waitstate
 
 	releaseall
 	end

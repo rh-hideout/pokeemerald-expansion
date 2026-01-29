@@ -1,11 +1,4 @@
-@ -------------------------
-@ Local IDs (in Porymap als ZAHLEN eintragen: 1/2/3)
-@ -------------------------
-#define LOCALID_MUSEUM_JESSIE    1
-#define LOCALID_MUSEUM_JAMES     2
-#define LOCALID_MUSEUM_STUDENT   3
-
-@ Spawn rechts (wie von dir beschrieben)
+@ Spawn rechts 
 #define ROCKET_SPAWN_X  19
 #define JESSIE_SPAWN_Y  3
 #define JAMES_SPAWN_Y   4
@@ -94,10 +87,6 @@ Museum_Flag1_EventScript_RocketCutscene::
 
 	applymovement LOCALID_MUSEUM_STUDENT, Museum_Flag1_Movement_StudentEnter
 	waitmovement 0
-
-	@ optional: Ausrufezeichen-Emote
-	showemote EMOTE_EXCLAMATION_MARK, LOCALID_MUSEUM_STUDENT, 15
-	delay 16
 
 	msgbox Museum_Flag1_Text_StudentDialog, MSGBOX_DEFAULT
 	closemessage
