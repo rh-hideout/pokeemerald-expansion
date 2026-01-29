@@ -776,7 +776,9 @@ LittlerootTown_ProfessorBirchsLab_Text_OhYourBagsFull:
 
 LittlerootTown_ProfessorBirchsLab_Text_MayWhereShouldIGoNext:
 	.string "MAY: I wonder where I should go look\n"
-	.string "for POKéMON next?$"
+	.string "for POKéMON next? Maybe we should go\p"
+	.string "to the University left of NEUOSTHEIM\n"
+	.string "first and take our course.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_BrendanGotPokedexTooTakeThese:
 	.string "BRENDAN: Huh…\n"
@@ -797,7 +799,9 @@ LittlerootTown_ProfessorBirchsLab_Text_HeyYourBagsFull:
 
 LittlerootTown_ProfessorBirchsLab_Text_BrendanWhereShouldIGoNext:
 	.string "BRENDAN: Where should I look for\n"
-	.string "POKéMON next…$"
+	.string "POKéMON next? Maybe we should go\p"
+	.string "to the University left of NEUOSTHEIM\n"
+	.string "first and take our course.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_SeriousLookingMachine:
 	.string "It's a serious-looking machine.\n"

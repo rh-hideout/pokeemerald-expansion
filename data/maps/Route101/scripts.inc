@@ -193,6 +193,9 @@ Route101_Zig_BattleWon:
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeaveScene
 	waitmovement 0
 
+	msgbox Route101_Text_YGoToMay, MSGBOX_DEFAULT
+	closemessage
+
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
 	removeobject LOCALID_ROUTE101_BIRCH  
 
@@ -260,8 +263,8 @@ Route101_Text_DontLeaveMe:
 	.string "BUM: Don't leave kid! Come here!$"
 
 Route101_Text_Battle:
-	.string "BUM: Nice pick! \n"
-	.string "Here, fight my ZIGZAGOON!$"
+	.string "BUM: Nice pick! Why not try it\n"
+	.string "out and fight my ZIGZAGOON!$"
 
 Route101_Text_YouSavedMe:
 	.string "BUM: Nice one, kid!\p"
@@ -290,4 +293,9 @@ Route101_Text_WildPokemonInTallGrass:
 Route101_Text_RouteSign:
 	.string "ROUTE 101\n"
 	.string "{UP_ARROW} NEUOSTHEIM$"
+
+Route101_Text_GoToMay:
+	.string "{PLAYER}: I should go find {RIVAL}\n"
+	.string "at ROUTE 103.$"
+
 

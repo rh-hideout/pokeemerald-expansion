@@ -975,7 +975,6 @@ gText_MomExplainHPGetPotions::
 	.string "If you're going to travel far away,\n"
 	.string "the smart TRAINER stocks up on\l"
 	.string "POTIONS at the POKéMON MART.\p"
-	.string "Make me proud, honey!\p"
 	.string "Take care!$"
 
 gText_RegisteredTrainerinPokeNav::

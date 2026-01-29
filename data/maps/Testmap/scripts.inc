@@ -5,24 +5,22 @@ Testmap_EventScript_TutorialNpc::
 	lock
 	faceplayer
 	goto_if_set FLAG_CTF_TUTORIAL_DONE, Testmap_TutorialNpc_After
-	msgbox Testmap_Text_Hint, MSGBOX_NPC
+	msgbox Testmap_Text_Hint, MSGBOX_DEFAULT
 	release
 	end
 
 Testmap_TutorialNpc_After:
-	msgbox Testmap_Text_After, MSGBOX_NPC
+	msgbox Testmap_Text_After, MSGBOX_DEFAULT
 	release
 	end
 
 Testmap_EventScript_TutorialTerminal::
 	lock
 	faceplayer
-
 	goto_if_set FLAG_CTF_TUTORIAL_DONE, Testmap_Terminal_Already
 
 	msgbox Testmap_Text_EnterFlag, MSGBOX_DEFAULT
 
-	@ Wichtig: 9 = Tutorial-ID (siehe C-Code-Anpassung)
 	setvar VAR_0x8000, 9
 	callnative Ctf_FlagTerminal
 	waitstate
@@ -35,15 +33,24 @@ Testmap_EventScript_TutorialTerminal::
 	end
 
 Testmap_Terminal_Ok:
-	setflag FLAG_CTF_TUTORIAL_DONE
-	msgbox Testmap_Text_Ok, MSGBOX_DEFAULT
+    msgbox Testmap_Text_Ok, MSGBOX_DEFAULT
 
-	@ Sofort entfernen (LocalIds aus Porymap!)
-	removeobject 3  @ Blocker
-	removeobject 2  @ Terminal
+    applymovement LOCALID_TESTMAP_BLOCKER, Testmap_Movement_SleepStep
+    waitmovement 0
 
-	release
-	end
+    msgbox Testmap_Text_WokeUp, MSGBOX_DEFAULT
+
+    applymovement LOCALID_TESTMAP_BLOCKER, Testmap_Movement_SleepLeave
+    waitmovement 0
+
+    setflag FLAG_CTF_TUTORIAL_DONE
+
+    removeobject LOCALID_TESTMAP_BLOCKER
+    removeobject LOCALID_TESTMAP_TERMINAL
+
+    release
+    end
+
 
 Testmap_Terminal_Already:
 	msgbox Testmap_Text_Already, MSGBOX_DEFAULT
@@ -51,9 +58,28 @@ Testmap_Terminal_Already:
 	end
 
 Testmap_EventScript_BlockNpc::
-	msgbox Testmap_Text_Block, MSGBOX_NPC
+	lock
+	faceplayer
+	msgbox Testmap_Text_Block, MSGBOX_DEFAULT
 	release
 	end
+
+Testmap_Movement_SleepStep:
+	walk_fast_down
+	look_left
+	look_right
+	step_end
+
+Testmap_Movement_SleepLeave:
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	step_end
+
 
 Testmap_Text_Block:
 	.string "This guy is sleeping on the stairs.\n"
@@ -61,10 +87,10 @@ Testmap_Text_Block:
 
 Testmap_Text_Hint:
 	.string "The man sleeps all day. Maybe you can\n" 
-	.string "wake him up with a loud BANG?.$"
+	.string "wake him up with a loud BANG?$"
 
 Testmap_Text_After:
-	.string "You did it!.$"
+	.string "You did it!$"
 
 Testmap_Text_EnterFlag:
 	.string "TERMINAL: Enter flag.$"
@@ -74,7 +100,11 @@ Testmap_Text_Wrong:
 
 Testmap_Text_Ok:
 	.string "TERMINAL: Correct. <There is a very \n"
-	.string "loud BANG coming from the terminal>.$"
+	.string "loud BANG coming from the terminal>$"
 
 Testmap_Text_Already:
 	.string "TERMINAL: Already cleared.$"
+
+Testmap_Text_WokeUp:
+	.string "SLEEPYHEAD: Holy shit!\n"
+	.string "What was that?!$"

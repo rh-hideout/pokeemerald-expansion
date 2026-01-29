@@ -347,17 +347,17 @@ PlayersHouse_1F_Text_GotDadsBadgeHeresSomethingFromMom:
 PlayersHouse_1F_Text_DontPushYourselfTooHard:
 	.string "Don't push yourself too hard, dear.\n"
 	.string "You can always come home.\p"
-	.string "Go for it, honey!$"
+	.string "You can count on me!$"
 
 PlayersHouse_1F_Text_IsThatAPokenav:
-	.string "BELLA: What is that, honey? A POKéNAV?\n"
+	.string "BELLA: What is that, {NAME}? A POKéNAV?\n"
 	.string "Someone from DEVON gave it to you?\p"
-	.string "Well, honey, how about registering\n"
-	.string "your mom?\p"
+	.string "Well, {NAME}, how about registering\n"
+	.string "your roommate?\p"
 	.string "… … …$"
 
 PlayersHouse_1F_Text_RegisteredMom:
-	.string "Registered MOM\n"
+	.string "Registered BELLA\n"
 	.string "in the POKéNAV.$"
 
 PlayersHouse_1F_Text_Vigoroth1:

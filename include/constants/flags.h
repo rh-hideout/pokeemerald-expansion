@@ -1691,9 +1691,6 @@
 
 #define FLAG_CTF_TUTORIAL_DONE      FLAG_UNUSED_0x039
 
-// CTF - Testflag 
-#define FLAG_CTF_TRUCK_TELEPORT     FLAG_UNUSED_0x038
-
 
 // Temp flag aliases
 #define FLAG_TEMP_SKIP_GABBY_INTERVIEW          FLAG_TEMP_1
