@@ -42,7 +42,7 @@
 
 #define OWE_FLAG_BIT                    (1 << 7)
 #define OWE_SAVED_MOVEMENT_STATE_FLAG   OWE_FLAG_BIT
-#define OWE_NO_REPLACE_FLAG             OWE_FLAG_BIT
+#define OWE_NO_DESPAWN_FLAG             OWE_FLAG_BIT
 
 static inline u32 OWE_GetRoamerIndex(const struct ObjectEvent *object)
 {
@@ -66,22 +66,22 @@ void OWE_ClearSavedMovementState(struct ObjectEvent *objectEvent)
 
 static inline u32 OWE_GetEncounterLevel(const struct ObjectEvent *object)
 {
-    return object->sOverworldEncounterLevel & ~OWE_NO_REPLACE_FLAG;
+    return object->sOverworldEncounterLevel & ~OWE_NO_DESPAWN_FLAG;
 }
 
 static inline void OWE_SetEncounterLevel(u32 *level, u8 newLevel)
 {
-    *level = (*level & OWE_NO_REPLACE_FLAG) | (newLevel & ~OWE_NO_REPLACE_FLAG);
+    *level = (*level & OWE_NO_DESPAWN_FLAG) | (newLevel & ~OWE_NO_DESPAWN_FLAG);
 }
 
-static inline bool32 OWE_HasNoReplaceFlag(const struct ObjectEvent *object)
+static inline bool32 OWE_HasNoDespawnFlag(const struct ObjectEvent *object)
 {
-    return object->sOverworldEncounterLevel & OWE_NO_REPLACE_FLAG;
+    return object->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG;
 }
 
-static inline void OWE_SetNoReplaceFlag(u32 *level)
+static inline void OWE_SetNoDespawnFlag(u32 *level)
 {
-    *level |= OWE_NO_REPLACE_FLAG;
+    *level |= OWE_NO_DESPAWN_FLAG;
 }
 
 static bool8 TrySelectTile(s16* outX, s16* outY);
@@ -376,7 +376,7 @@ u32 GetOldestSlot(bool32 forceRemove)
     for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!OWE_HasNoReplaceFlag(slotMon) || forceRemove == TRUE))
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!OWE_HasNoDespawnFlag(slotMon) || forceRemove == TRUE))
         {
             oldest = slotMon;
             break;
@@ -389,7 +389,7 @@ u32 GetOldestSlot(bool32 forceRemove)
     for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!OWE_HasNoReplaceFlag(slotMon) || forceRemove == TRUE))
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!OWE_HasNoDespawnFlag(slotMon) || forceRemove == TRUE))
         {
             if (slotMon->sAge > oldest->sAge)
                 oldest = slotMon;
@@ -686,6 +686,9 @@ static void SortOWEMonAges(void)
     u32 count = 0;
     s32 i, j;
 
+    if (OWE_MAX_SPAWNS <= 1)
+        return;
+
     for (i = 0; i < OWE_MAX_SPAWNS; i++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
@@ -795,8 +798,8 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     else
         *isFemale = FALSE;
 
-    if ((OWE_WILD_ENCOUNTERS_PREVENT_SHINY_REPLACEMENT && *isShiny))
-        OWE_SetNoReplaceFlag(level);
+    if ((OWE_WILD_ENCOUNTERS_PREVENT_SHINY_DESPAWN && *isShiny))
+        OWE_SetNoDespawnFlag(level);
 
     ZeroEnemyPartyMons();
 }
@@ -873,8 +876,8 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     else if (OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
     {
         CreateWildMon(gWildFeebas.species, ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING));
-        if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_REPLACEMENT)
-            OWE_SetNoReplaceFlag(level);
+        if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN)
+            OWE_SetNoDespawnFlag(level);
     }
     else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior) && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
     {
@@ -1778,6 +1781,14 @@ static bool32 OWE_CheckSpecies(u32 speciesId)
 void OWE_PlayAmbientCry(void)
 {
     OWE_PlayMonObjectCry(OWE_GetRandomActiveEncounterObject());
+}
+
+bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent)
+{
+    if (objectEvent->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG)
+        return TRUE;
+
+    return FALSE;
 }
 
 #undef sOverworldEncounterLevel
