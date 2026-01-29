@@ -40,6 +40,7 @@
 #define OWE_MASS_OUTBREAK_INDEX     ROAMER_COUNT + 1
 #define OWE_INVALID_ROAMER_OUTBREAK OWE_MASS_OUTBREAK_INDEX + 1
 
+static EWRAM_DATA u16 sOWEAmbientCryTimer = 0;
 static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
 static bool8 TrySelectTile(s16* outX, s16* outY);
@@ -80,18 +81,26 @@ static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Dire
 static void Task_OWE_ApproachForBattle(u8 taskId);
 static bool32 OWE_CheckSpecies(u32 speciesId);
 
-void OWE_ResetSpawnCounterPlayAmbientCry(void)
-{
-    OverworldWildEncounter_SetMinimumSpawnTimer();
-    // Currently may not play manual encounter cries if no wild mon header exists
-    if (OWE_WILD_ENCOUNTERS_AMBIENT_CRIES && GetNumberActiveOverworldEncounters(OWE_ANY))
-        OWE_PlayMonObjectCry(OWE_GetRandomActiveEncounterObject());
-}
-
 void UpdateOverworldEncounters(void)
 {
     bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
-    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING) || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
+    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
+        return;
+
+    if (OWE_WILD_ENCOUNTERS_AMBIENT_CRIES)
+    {
+        if (sOWEAmbientCryTimer <= 0)
+        {
+            OWE_PlayMonObjectCry(OWE_GetRandomActiveEncounterObject());
+            OWE_ResetAmbientCryTimer();
+        }
+        else
+        {
+            sOWEAmbientCryTimer--;
+        }
+    }  
+    
+    if (!OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
         return;
     
     if (!OWE_WILD_ENCOUNTERS_OVERWORLD
@@ -132,7 +141,7 @@ void UpdateOverworldEncounters(void)
         || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters())
         || !TrySelectTile(&x, &y))
     {
-        OWE_ResetSpawnCounterPlayAmbientCry();
+        OverworldWildEncounter_SetMinimumSpawnTimer();
         return;
     }
 
@@ -149,7 +158,7 @@ void UpdateOverworldEncounters(void)
         || !IsAbilityAllowingEncounter(level)
         || !OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny, x, y))
     {
-        OWE_ResetSpawnCounterPlayAmbientCry();
+        OverworldWildEncounter_SetMinimumSpawnTimer();
         return;
     }
     
@@ -171,7 +180,7 @@ void UpdateOverworldEncounters(void)
 
     assertf(objectEventId < OBJECT_EVENTS_COUNT, "could not spawn generated overworld encounter. too many object events exist")
     {
-        OWE_ResetSpawnCounterPlayAmbientCry();
+        OverworldWildEncounter_SetMinimumSpawnTimer();
         return;
     }
 
@@ -183,6 +192,7 @@ void UpdateOverworldEncounters(void)
     enum Direction directions[4];
     memcpy(directions, gStandardDirections, sizeof directions);
     ObjectEventTurn(object, directions[Random() & 3]);
+    OWE_ResetAmbientCryTimer();
     OWE_SetNewSpawnCountdown();
 }
 
@@ -723,6 +733,11 @@ u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, boo
         graphicsId += OBJ_EVENT_MON_SHINY;
 
     return graphicsId;
+}
+
+void OWE_ResetAmbientCryTimer(void)
+{
+    sOWEAmbientCryTimer = OWE_AMBIENT_CRY_TIMER_MIN + (Random() % (OWE_AMBIENT_CRY_TIMER_MAX - OWE_AMBIENT_CRY_TIMER_MIN));
 }
 
 void OverworldWildEncounter_SetMinimumSpawnTimer(void)
@@ -1397,7 +1412,7 @@ static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
 
     // TESTING: Setting this species can be used as a test to play a consistent sound to check how often the
     //          code in UpdateOverworldEncounters runs, as OWE_GetRandomActiveEncounterObject cuurently returns
-    //          the player object.
+    //          NULL.
     if (objectEvent == NULL)
         return;
     
