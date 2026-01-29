@@ -634,7 +634,12 @@ static enum CancelerResult CancelerAttackstring(struct BattleContext *ctx)
 {
     BattleScriptCall(BattleScript_Attackstring);
     if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
+    {
+        gBattleMons[gBattlerAttacker].volatiles.usedMoves |= 1u << gCurrMovePos;
+        gBattleStruct->battlerState[gBattlerAttacker].lastMoveTarget = gBattlerTarget;
         gLastPrintedMoves[gBattlerAttacker] = gChosenMove;
+        RecordKnownMove(gBattlerAttacker, gChosenMove);
+    }
     return CANCELER_RESULT_BREAK;
 }
 
@@ -2208,12 +2213,6 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
     if (!IsOnPlayerSide(gBattlerAttacker))
         UpdateStallMons();
 
-    if ((gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE))
-     || gBattleMons[gBattlerAttacker].volatiles.flinched
-     || gBattleStruct->pledgeMove == TRUE // Is the battler that uses the first Pledge move in the combo
-     || gBattleStruct->unableToUseMove)
-        gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
-
     // After swapattackerwithtarget is used for snatch the correct battlers have to be restored so data is stored correctly
     if (gBattleStruct->snatchedMoveIsUsed)
     {
@@ -2221,14 +2220,8 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         SWAP(gBattlerAttacker, gBattlerTarget, temp);
     }
 
-    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
-    {
-        gBattleMons[gBattlerAttacker].volatiles.usedMoves |= 1u << gCurrMovePos;
-        gBattleStruct->battlerState[gBattlerAttacker].lastMoveTarget = gBattlerTarget;
-    }
-
     enum BattleMoveEffects originalEffect = GetMoveEffect(GetOriginallyUsedMove(gChosenMove));
-    if (IsBattlerAlive(gBattlerAttacker)
+    if (IsBattlerAlive(gBattlerAttacker) // Why do we need to check if user fainted? We just want to set with what move the target got hit
      && originalEffect != EFFECT_BATON_PASS
      && originalEffect != EFFECT_HEALING_WISH
      && originalEffect != EFFECT_LUNAR_DANCE)
@@ -2238,7 +2231,6 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
             if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
             {
                 gLastMoves[gBattlerAttacker] = gChosenMove;
-                RecordKnownMove(gBattlerAttacker, gChosenMove);
                 gLastResultingMoves[gBattlerAttacker] = gCurrentMove;
                 gLastUsedMoveType[gBattlerAttacker] = GetBattleMoveType(gCurrentMove);
             }
@@ -3247,6 +3239,28 @@ static enum MoveEndResult MoveEndChangedItems(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
+static bool32 ShouldSetStompingTantrumTimer(void)
+{
+    u32 numNotAffectedTargets = 0;
+
+    if (gBattleStruct->pledgeMove == TRUE // Is the battler that uses the first Pledge move in the combo
+     || gBattleStruct->unableToUseMove)
+        return TRUE;
+
+    if (!IsDoubleSpreadMove())
+        return gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE);
+
+    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        if (gBattlerAttacker == battlerDef)
+            continue;
+        if (gBattleStruct->moveResultFlags[battlerDef] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE))
+            numNotAffectedTargets++;
+    }
+
+    return numNotAffectedTargets == gBattleStruct->numSpreadTargets;
+}
+
 static enum MoveEndResult MoveEndClearBits(void)
 {
     ValidateBattlers();
@@ -3254,6 +3268,9 @@ static enum MoveEndResult MoveEndClearBits(void)
     enum Move originallyUsedMove = GetOriginallyUsedMove(gChosenMove);
     enum Type moveType = GetBattleMoveType(gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
+
+    if (ShouldSetStompingTantrumTimer())
+        gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
 
     if (gSpecialStatuses[gBattlerAttacker].instructedChosenTarget)
         gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].instructedChosenTarget & 0x3;

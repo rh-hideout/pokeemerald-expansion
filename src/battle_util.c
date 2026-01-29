@@ -4339,11 +4339,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         case ABILITY_COTTON_DOWN:
-            if (IsBattlerAlive(gBattlerAttacker)
-             && !gBattleStruct->unableToUseMove
-             && IsBattlerTurnDamaged(gBattlerTarget))
+            if (IsBattlerTurnDamaged(gBattlerTarget))
             {
                 gEffectBattler = gBattlerTarget;
+                // Will ability popup activate if there is only one target?
                 BattleScriptCall(BattleScript_CottonDownActivates);
                 effect++;
             }
