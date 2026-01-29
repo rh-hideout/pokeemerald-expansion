@@ -34,8 +34,7 @@
 
 #define sOverworldEncounterLevel    trainerRange_berryTreeId
 #define sAge                        playerCopyableMovement
-#define sRoamerOutbreakStatus       directionSequenceIndex
-#define sSavedMovementState         warpArrowSpriteId
+#define sRoamerOutbreakStatus       warpArrowSpriteId
 #define OWE_NON_ROAMER_OUTBREAK     0
 #define OWE_MASS_OUTBREAK_INDEX     ROAMER_COUNT + 1
 #define OWE_INVALID_ROAMER_OUTBREAK OWE_MASS_OUTBREAK_INDEX + 1
@@ -488,7 +487,7 @@ void CreateOverworldWildEncounter(void)
     u32 objEventId = GetObjectEventIdByLocalId(localId);
     u32 headerId = GetCurrentMapWildMonHeaderId();
     struct ObjectEvent *object = &gObjectEvents[objEventId];
-    u32 indexRoamerOutbreak = object->sRoamerOutbreakStatus;
+    u32 indexRoamerOutbreak = object->sRoamerOutbreakStatus &~ OWE_SAVED_MOVEMENT_STATE_FLAG;
 
     assertf(objEventId < OBJECT_EVENTS_COUNT && IsOverworldWildEncounter(object, OWE_ANY), "cannot start overworld wild enocunter as the selected object is invalid.\nlocalId: %d", localId)
     {
@@ -1111,8 +1110,9 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         return;
 
     struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
-    if (wildMon->sRoamerOutbreakStatus
-        && wildMon->sRoamerOutbreakStatus < OWE_MASS_OUTBREAK_INDEX
+    u32 indexRoamerOutbreak = wildMon->sRoamerOutbreakStatus &~ OWE_SAVED_MOVEMENT_STATE_FLAG;
+    if (indexRoamerOutbreak
+        && indexRoamerOutbreak < OWE_MASS_OUTBREAK_INDEX
         && !IsRoamerAt(OWE_GetObjectRoamerOutbreakStatus(wildMon),
         gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
@@ -1510,7 +1510,7 @@ static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
     if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return OWE_INVALID_ROAMER_OUTBREAK;
 
-    u32 status = objectEvent->sRoamerOutbreakStatus;
+    u32 status = objectEvent->sRoamerOutbreakStatus &~ OWE_SAVED_MOVEMENT_STATE_FLAG;
     if (status == OWE_NON_ROAMER_OUTBREAK || status == OWE_MASS_OUTBREAK_INDEX)
     {
         return OWE_INVALID_ROAMER_OUTBREAK;
@@ -1595,19 +1595,19 @@ struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnA
 #define sTypeFuncId data[1] // Same as in src/event_object_movement.c
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (IsOverworldWildEncounter(objectEvent, OWE_ANY) && objectEvent->sSavedMovementState & OWE_SAVED_MOVEMENT_STATE_FLAG)
+    if (IsOverworldWildEncounter(objectEvent, OWE_ANY) && objectEvent->sRoamerOutbreakStatus & OWE_SAVED_MOVEMENT_STATE_FLAG)
         sprite->sTypeFuncId = OWE_RESTORED_MOVEMENT_FUNC_ID;
 }
 #undef sTypeFuncId
 
 void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent)
 {
-    objectEvent->sSavedMovementState |= OWE_SAVED_MOVEMENT_STATE_FLAG;
+    objectEvent->sRoamerOutbreakStatus |= OWE_SAVED_MOVEMENT_STATE_FLAG;
 }
 
 void OWE_ClearSavedMovementState(struct ObjectEvent *objectEvent)
 {
-    objectEvent->sSavedMovementState ^= OWE_SAVED_MOVEMENT_STATE_FLAG;
+    objectEvent->sRoamerOutbreakStatus &= ~OWE_SAVED_MOVEMENT_STATE_FLAG;
 }
 
 static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction direction, u32 distance)
@@ -1750,4 +1750,3 @@ void OWE_PlayAmbientCry(void)
 #undef sOverworldEncounterLevel
 #undef sAge
 #undef sRoamerOutbreakStatus
-#undef sSavedMovementState
