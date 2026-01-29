@@ -18,8 +18,8 @@ Klassenzimmer_EventScript_FirstEntry::
 
 	lockall
 
-	turnobject LOCALID_PROF_FARMER, DIR_DOWN
-	turnobject LOCALID_PLAYER, DIR_UP
+	turnobject LOCALID_PROF_FARMER, DIR_SOUTH
+	turnobject LOCALID_PLAYER, DIR_NORTH
 
 	msgbox Klassenzimmer_Text_Welcome, MSGBOX_DEFAULT
 	closemessage
