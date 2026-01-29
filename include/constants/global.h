@@ -62,7 +62,18 @@ enum Language
     NUM_LANGUAGES = LANGUAGE_SPANISH,
 };
 
-#define GAME_VERSION (VERSION_EMERALD)
+#ifdef FIRERED
+    #define GAME_VERSION (VERSION_FIRE_RED)
+    #define IS_FRLG 1
+#else
+    #ifdef LEAFGREEN
+    #define GAME_VERSION (VERSION_LEAF_GREEN)
+    #define IS_FRLG 1
+    #else
+    #define GAME_VERSION (VERSION_EMERALD)
+    #define IS_FRLG 0
+    #endif
+#endif
 #define GAME_LANGUAGE (LANGUAGE_ENGLISH)
 
 // party sizes

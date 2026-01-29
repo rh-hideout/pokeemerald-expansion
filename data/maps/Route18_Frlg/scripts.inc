@@ -1,4 +1,4 @@
-Route18_MapScripts::
+Route18_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route18_OnTransition
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, Route18_OnWarp
 	.byte 0

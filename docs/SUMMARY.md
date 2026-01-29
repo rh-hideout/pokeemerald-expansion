@@ -45,6 +45,7 @@
   - [Vs. Seeker](tutorials/vs_seeker.md)
   - [Teachable Learnsets Explanations](tutorials/teachable_learnsets.md)
   - [Struct Pokemon Generation](tutorials/mon_generation.md)
+  - [How to use FRLG](tutorials/how_to_frlg.md)
 - [Changelog](./CHANGELOG.md)
     - [1.14.x]()
         - [Version 1.14.2](changelogs/1.14.x/1.14.2.md)

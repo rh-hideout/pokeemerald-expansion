@@ -1,5 +1,5 @@
 # How to Use Follower NPCs
-*Written by Bivurnum*  
+*Written by Bivurnum*
 *gif by ghoulslash*
 
 ![follower-npc](img/follower_npc/follower-npc.gif)
@@ -11,22 +11,22 @@ The configs for follower NPCs can be found in [include/config/follower_npc.h](ht
 * `FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE`: The player's party can be automatically healed after every partner battle. Set it to a flag to toggle it on/off with scripts, or set it to `FNPC_ALWAYS` to have it happen every time.
 * `FNPC_FLAG_PARTNER_WILD_BATTLES`: The battle partner can join the player for wild battles. Set it to a flag to toggle it on/off with scripts, or set it to `FNPC_ALWAYS` to have it happen every time.
 * `FNPC_NPC_FOLLOWER_WILD_BATTLE_VS_2`: Wild battles with a battle partner default to two wild Pokémon appearing. You can set this to `FALSE` to make only one wild Pokémon appear.
-* `FNPC_NPC_FOLLOWER_PARTY_PREVIEW`: By default, a preview of the player's and partner's teams will be shown at the start of every trainer battle. Set this to `FALSE` to disable this feature. 
+* `FNPC_NPC_FOLLOWER_PARTY_PREVIEW`: By default, a preview of the player's and partner's teams will be shown at the start of every trainer battle. Set this to `FALSE` to disable this feature.
 * `FNPC_FACE_NPC_FOLLOWER_ON_DOOR_EXIT`: If `TRUE` the player will turn to face the follower when they exit a doorway.
 * `FNPC_NPC_FOLLOWER_SHOW_AFTER_LEAVE_ROUTE`: If `TRUE` the follower will walk out of the player automatically after using Fly, Teleport, or Escape Rope.
 
 ## Set the Follower
 The `setfollowernpc` macro will turn the specified object into an NPC follower. It requires the object id, the [follower flags](#follower-flags), and optionally a custom script and a [battle partner](#battle-partner). If you do not include a custom script name (or you set it to `0`), the NPC follower will default to their normal interaction script. If there is a follower Pokémon present, it will be returned to its Pokeball until the NPC follower is destroyed.
 
-Here's an example:  
-`setfollowernpc 3, FNPC_ALL, MyScript_Eventscript_CustomFollowerScript, PARTNER_STEVEN`  
+Here's an example:
+`setfollowernpc 3, FNPC_ALL, MyScript_Eventscript_CustomFollowerScript, PARTNER_STEVEN`
 This would turn object number 3 on the current map into an NPC follower, give them access to all following behaviors, run that custom script when the player interacts with them, and adds the Steven battle partner to the follower ([more on this later](#battle-partner)).
 
 The object ***MUST*** have an event flag or the NPC follower will not be created!
 
 ## Create a Follower
-The `createfollowernpc` macro will create a new follower without needing to convert an existing NPC. It works similarly to `setfollowernpc`, but instead of providing an object id, you give it a GFX id. For example, if you wanted to create a follower with the May sprite, you could do something like this:  
-`createfollowernpc OBJ_EVENT_GFX_RIVAL_MAY_NORMAL, FNPC_ALL, EventScript_MayFollow`  
+The `createfollowernpc` macro will create a new follower without needing to convert an existing NPC. It works similarly to `setfollowernpc`, but instead of providing an object id, you give it a GFX id. For example, if you wanted to create a follower with the May sprite, you could do something like this:
+`createfollowernpc OBJ_EVENT_GFX_RIVAL_MAY_NORMAL, FNPC_ALL, EventScript_MayFollow`
 The created follower NPC will initially be invisible until the player takes a step.
 
 ## Follower Flags

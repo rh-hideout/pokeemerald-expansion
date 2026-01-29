@@ -1,7 +1,7 @@
 .equ PLAYER_X_POS, VAR_0x8004
 .equ PLAYER_Y_POS, VAR_0x8005
 
-FiveIsland_RocketWarehouse_MapScripts::
+FiveIsland_RocketWarehouse_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, FiveIsland_RocketWarehouse_OnLoad
 	map_script MAP_SCRIPT_ON_TRANSITION, FiveIsland_RocketWarehouse_OnTransition
 	.byte 0

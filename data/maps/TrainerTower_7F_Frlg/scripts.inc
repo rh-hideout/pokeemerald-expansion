@@ -1,4 +1,4 @@
-TrainerTower_7F_MapScripts::
+TrainerTower_7F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, TrainerTower_OnResume
 	map_script MAP_SCRIPT_ON_TRANSITION, TrainerTower_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, TrainerTower_OnFrame
