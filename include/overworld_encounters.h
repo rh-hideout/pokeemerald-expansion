@@ -5,8 +5,6 @@
 #error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OWE_WILD_ENCOUNTERS_OVERWORLD to work."
 #endif
 
-#define OWE_MAX_SPAWN_SLOTS   5
-
 #define OWE_MAX_SPAWNS              4
 
 #define OWE_SPAWN_DISTANCE_LAND     1   // A spawn cannot happen within this many tiles of the player position.
@@ -20,9 +18,6 @@
 #define OWE_SPAWN_TIME_MINIMUM      30  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 #define OWE_SPAWN_TIME_PER_ACTIVE   30  // The number of frames that will be added to the countdown per currently active spawn.
 #define OWE_SPAWN_TIME_REPLACEMENT  240 // The number of frames before an existing spawn will be replaced with a new one (requires OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT).
-
-#define OWE_AMBIENT_CRY_TIMER_MIN   300     // The minimum number of frames between OWE ambient cries.
-#define OWE_AMBIENT_CRY_TIMER_MAX   1000    // The maximum number of frames between OWE ambient cries.
 
 #define OWE_MON_SIGHT_WIDTH         3
 #define OWE_MON_SIGHT_LENGTH        4
@@ -102,7 +97,6 @@ void CreateOverworldWildEncounter(void);
 void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
-void OWE_ResetAmbientCryTimer(void);
 void OverworldWildEncounter_SetMinimumSpawnTimer(void);
 void RemoveAllGeneratedOverworldEncounterObjects(void);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
@@ -131,5 +125,7 @@ void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sp
 void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent);
 void OWE_ClearSavedMovementState(struct ObjectEvent *objectEvent);
 u32 OWE_GetWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 speed);
+void OWE_PlayAmbientCry(void);
+u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

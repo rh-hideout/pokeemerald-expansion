@@ -1395,9 +1395,38 @@ void Overworld_FadeOutMapMusic(void)
     FadeOutMapMusic(4);
 }
 
+static bool32 ShouldPlayVanillaAmbientCry(void)
+{
+    bool32 owePlayed = FALSE;
+
+    if (GetNumberActiveOverworldEncounters(OWE_ANY))
+    {
+        switch (OW_AMBIENT_CRIES)
+        {
+        case OW_AMBIENT_CRIES_OWE_ONLY:
+        case OW_AMBIENT_CRIES_OWE_PRIORITY:
+            OWE_PlayAmbientCry();
+            owePlayed = TRUE;
+            break;
+        }
+    }
+
+    switch (OW_AMBIENT_CRIES)
+    {
+    case OW_AMBIENT_CRIES_VANILLA:
+        return TRUE;
+
+    case OW_AMBIENT_CRIES_OWE_PRIORITY:
+        return !owePlayed;
+
+    default:
+        return FALSE;
+    }
+}
+
 static void PlayAmbientCry(void)
 {
-    if (!OWE_VANILLA_AMBIENT_CRIES)
+    if (!ShouldPlayVanillaAmbientCry())
         return;
     
     s16 x, y;

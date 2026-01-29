@@ -4,6 +4,7 @@ Overworld Wild Encounters (OWEs), refer to the wild encounters that can be seen 
 
 ### Generated OWEs
 Generated OWEs are spawned automatically when `OWE_WILD_ENCOUNTERS_OVERWORLD` is set to `TRUE`, being spawned on a random encounter tile near the player, with the encounter table used dependant on it. These are considered low priority OWEs, and automatically populate a level, species, gender and shinyness exactly how a vanilla wild encounter would, or can even be a special spawn, but more on those later.
+> Setting `OW_GFX_COMPRESS` to `FALSE` will free more space in VRAM, allowing for more large OWEs to spawn, and reducing the chance of running into a tiles error when trying to spawn Generated OWEs.
 
 ### Manual OWEs
 Manual OWEs are created by the developer as any other object event would be and are defined by having the `.trainerType` set to `TRAINER_TYPE_OW_WILD_ENCOUNTER`. These can be fully customised by the developer, with the level, species, gender and shinyness all able to be specified. The level can be set by filling the desired value in the `trainerRange_berryTreeId`. The latter three are specified by the `graphicsId` of the object, for example;
@@ -22,18 +23,20 @@ As level and species are potentially taken from the Wild Encounter Header, an `a
 
 No matter how much of a Manual OWE is defined, it is considered a high priority OWE, and treated as a regular object event in all ways other than ones outlined above. They will always spawn, regardless of level of abilties of player Pokémon, however, they have restricted special spawns types.
 
+> Flags are set when removed.
+
 ### Special Spawns
 Special spawns can be one of three types, in decreasing priority: A Roamer, Feebas, or Mass Outbreak Encounter. Generated OWEs can have any of these, however, Manual OWEs can only have the Feebas Special Spawn. These work exactly as they would normally;
 - If a Roamer is on the route and is able to spawn, then it may appear where a Generated OWE would.
 - If any OWE spawns on a tile where a Feebas would spawn, it may appear is a Feebas.
 - If a Generated OWE spawns on a route that has a mass outbreak occuring, it may spawn as an encounter from that mass outbreak.
+> OWE_MAX_ROAMERS
 
 ### Restricted Despawning
 ## High Priority and Low Priority OWEs
 Low Priority OWEs may face not be spawned or even be destroyed in certain situations. There are palettes and object tiles checks to prevent these from spawning if it would fail, as well as similar checks for number of event objects, palettes and object tiles that despawn the oldest of High Priority OWEs or other objects event are attempting to be spawned and Low Priority OWEs are using these resources. Low Priority OWEs may also be destroyed by NPC object events colliding with them due to their movement functions or them being in the way of a trainer interaction. High priority OWEs are treated as regular objects and will not be destroyed in the ways outlined above, but may cause the destruction of Generated OWEs and will not face spawning restrictions.
 These despawn conditions will overwrite the restrictive despawns mentioned above.
 > Is this true? Does it take the oldest or oldest not marked for restriction, what if all are marked to not despawn.
-> Setting `OW_GFX_COMPRESS` to `FALSE` will free more space in VRAM, allowing for more large OWEs to spawn.
 
 ## Encountering an OWE
 Collision between Player and OWE or Interacting with one. Can also interact with an OWE in the water even when the player is not.
