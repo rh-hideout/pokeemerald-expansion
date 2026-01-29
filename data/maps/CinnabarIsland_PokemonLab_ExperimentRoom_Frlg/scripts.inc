@@ -2,7 +2,7 @@
 .equ DOME_FOSSIL,  2
 .equ OLD_AMBER,    3
 
-CinnabarIsland_PokemonLab_ExperimentRoom_MapScripts::
+CinnabarIsland_PokemonLab_ExperimentRoom_Frlg_MapScripts::
 	.byte 0
 
 CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_Garett::

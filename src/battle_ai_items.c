@@ -22,13 +22,13 @@
 #include "constants/moves.h"
 
 // this file's functions
-static bool32 AI_ShouldHeal(u32 battler, u32 healAmount);
+static bool32 AI_ShouldHeal(enum BattlerId battler, u32 healAmount);
 static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 
-bool32 ShouldUseItem(u32 battler)
+bool32 ShouldUseItem(enum BattlerId battler)
 {
     struct Pokemon *party;
-    u8 validMons = 0;
+    u32 validMons = 0;
     bool32 shouldUse = FALSE;
     u32 healAmount = 0;
 
@@ -51,16 +51,14 @@ bool32 ShouldUseItem(u32 battler)
     for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
     {
         if (IsValidForBattle(&party[monIndex]))
-        {
             validMons++;
-        }
     }
 
     for (u32 itemIndex = 0; itemIndex < MAX_TRAINER_ITEMS; itemIndex++)
     {
         enum Item item;
         const u8 *itemEffects;
-        u8 battlerSide;
+        u32 battlerSide;
 
         item = gBattleHistory->trainerItems[itemIndex];
         if (item == ITEM_NONE)
@@ -196,7 +194,7 @@ bool32 ShouldUseItem(u32 battler)
     return FALSE;
 }
 
-static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
+static bool32 AI_ShouldHeal(enum BattlerId battler, u32 healAmount)
 {
     bool32 shouldHeal = FALSE;
     u32 maxDamage = 0;
@@ -211,7 +209,7 @@ static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
     }
 
     //calculate max expected damage from the opponent
-    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
         if (IsOnPlayerSide(battlerIndex))
         {
@@ -226,13 +224,17 @@ static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
     if (AI_OpponentCanFaintAiWithMod(battler, 0)
       && !AI_OpponentCanFaintAiWithMod(battler, healAmount)
       && healAmount > 2*maxDamage)
+    {
         return TRUE;
+    }
 
     // also heal, if the expected damage is outhealed and it's the last remaining mon
     if (AI_OpponentCanFaintAiWithMod(battler, 0)
       && !AI_OpponentCanFaintAiWithMod(battler, healAmount)
       && CountUsablePartyMons(battler) == 0)
+    {
         return TRUE;
+    }
 
     return shouldHeal;
 }

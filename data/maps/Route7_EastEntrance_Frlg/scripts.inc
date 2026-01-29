@@ -1,4 +1,4 @@
-Route7_EastEntrance_MapScripts::
+Route7_EastEntrance_Frlg_MapScripts::
 	.byte 0
 
 Route7_EastEntrance_EventScript_Guard::

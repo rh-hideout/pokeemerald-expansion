@@ -56,7 +56,7 @@ static void Task_UseItemfinder(u8);
 static void Task_CloseItemfinderMessage(u8);
 static void Task_HiddenItemNearby(u8);
 static void Task_StandingOnHiddenItem(u8);
-static void PlayerFaceHiddenItem(u8);
+static void PlayerFaceHiddenItem(enum Direction);
 static void CheckForHiddenItemsInMapConnection(u8);
 static void Task_OpenRegisteredPokeblockCase(u8);
 static void Task_AccessPokemonBoxLink(u8);
@@ -123,7 +123,7 @@ static const struct YesNoFuncTable sUseTMHMYesNoFuncTable =
 #define tEnigmaBerryType data[4]
 static void SetUpItemUseCallback(u8 taskId)
 {
-    u8 type;
+    enum ItemType type;
     if (gSpecialVar_ItemId == ITEM_ENIGMA_BERRY_E_READER)
         type = gTasks[taskId].tEnigmaBerryType - 1;
     else
@@ -222,11 +222,11 @@ static void Task_CloseCantUseKeyItemMessage(u8 taskId)
 u8 CheckIfItemIsTMHMOrEvolutionStone(enum Item itemId)
 {
     if (GetItemFieldFunc(itemId) == ItemUseOutOfBattle_TMHM)
-        return 1;
+        return ITEM_IS_TM_HM;
     else if (GetItemFieldFunc(itemId) == ItemUseOutOfBattle_EvolutionStone)
-        return 2;
+        return ITEM_IS_EVOLUTION_STONE;
     else
-        return 0;
+        return ITEM_IS_OTHER;
 }
 
 // Mail in the bag menu can't have a message but it can be checked (view the mail background, no message)
@@ -298,7 +298,9 @@ void ItemUseOutOfBattle_Bike(u8 taskId)
 
 static void ItemUseOnFieldCB_Bike(u8 taskId)
 {
-    if (GetItemSecondaryId(gSpecialVar_ItemId) == MACH_BIKE)
+    if (GetItemSecondaryId(gSpecialVar_ItemId) == STANDARD_BIKE)
+        GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE);
+    else if (GetItemSecondaryId(gSpecialVar_ItemId) == MACH_BIKE)
         GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE);
     else // ACRO_BIKE
         GetOnOffBike(PLAYER_AVATAR_FLAG_ACRO_BIKE);
@@ -621,7 +623,7 @@ static void SetDistanceOfClosestHiddenItem(u8 taskId, s16 itemDistanceX, s16 ite
     }
 }
 
-u8 GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
+enum Direction GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
 {
     s16 absX, absY;
 
@@ -667,7 +669,7 @@ u8 GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
     }
 }
 
-static void PlayerFaceHiddenItem(u8 direction)
+static void PlayerFaceHiddenItem(enum Direction direction)
 {
     ObjectEventClearHeldMovementIfFinished(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0)]);
     ObjectEventClearHeldMovement(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0)]);
@@ -1227,7 +1229,7 @@ void ItemUseInBattle_PartyMenuChooseMove(u8 taskId)
     ItemUseInBattle_ShowPartyMenu(taskId);
 }
 
-static bool32 IteamHealsMonVolatile(u32 battler, enum Item itemId)
+static bool32 IteamHealsMonVolatile(enum BattlerId battler, enum Item itemId)
 {
     const u8 *effect = GetItemEffect(itemId);
     if (effect[3] & ITEM3_STATUS_ALL)

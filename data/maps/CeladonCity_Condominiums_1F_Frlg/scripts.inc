@@ -1,4 +1,4 @@
-CeladonCity_Condominiums_1F_MapScripts::
+CeladonCity_Condominiums_1F_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_Condominiums_1F_EventScript_TeaWoman::

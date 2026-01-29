@@ -6920,6 +6920,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .isHisuianForm = TRUE,
         .levelUpLearnset = sZoruaHisuiLevelUpLearnset,
         .teachableLearnset = sZoruaHisuiTeachableLearnset,
+        .eggMoveLearnset = sZoruaHisuiEggMoveLearnset,
         .formSpeciesIdTable = sZoruaFormSpeciesIdTable,
         .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_ZOROARK_HISUI}),
     },

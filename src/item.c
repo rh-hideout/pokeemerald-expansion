@@ -237,7 +237,7 @@ bool32 HasAtLeastOnePokeBall(void)
 {
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
-        if (CheckBagHasItem(gBallItemIds[ballId], 1) == TRUE)
+        if (CheckBagHasItem(gPokeBalls[ballId].itemId, 1) == TRUE)
             return TRUE;
     }
     return FALSE;
@@ -851,7 +851,7 @@ enum Pocket GetItemPocket(enum Item itemId)
     return gItemsInfo[SanitizeItemId(itemId)].pocket;
 }
 
-u8 GetItemType(enum Item itemId)
+enum ItemType GetItemType(enum Item itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].type;
 }
@@ -862,7 +862,7 @@ ItemUseFunc GetItemFieldFunc(enum Item itemId)
 }
 
 // Returns an item's battle effect script ID.
-u8 GetItemBattleUsage(enum Item itemId)
+enum EffectItem GetItemBattleUsage(enum Item itemId)
 {
     enum Item item = SanitizeItemId(itemId);
     // Handle E-Reader berries.

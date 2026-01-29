@@ -3,6 +3,7 @@
 
 #include "constants/battle.h"
 #include "battle_bg.h"
+#include "task.h"
 
 struct BattleEnvironment
 {
@@ -12,7 +13,9 @@ struct BattleEnvironment
     u16 secretPowerEffect;
     enum Type camouflageType;
     u16 camouflageBlend;
+    struct BattleBackgroundEntry entry;
     struct BattleBackground background;
+    const void *palette;
     TaskFunc battleIntroSlide;
 };
 
