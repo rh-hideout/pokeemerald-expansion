@@ -144,10 +144,13 @@ Route101_Bag_DoChoose:
 
 Route101_EventScript_NicknameStarter:
 	setvar VAR_0x8004, 0
-	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 	call Common_EventScript_NameReceivedPartyMon
+	goto Route101_EventScript_AfterNickname
 
 Route101_EventScript_AfterNickname:
+    setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
+    removeobject LOCALID_ROUTE101_BIRCH_STARTERS_BAG
+
 	@ Zig erscheint neben Bum
 	clearflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
 	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 5, 14
@@ -177,6 +180,7 @@ Route101_EventScript_ZigzagoonInteract::
 Route101_Zig_BattleWon:
 	setflag FLAG_RESCUED_BIRCH
 	setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+	removeobject LOCALID_ROUTE101_ZIGZAGOON 
 
 	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
 	closemessage
@@ -186,12 +190,11 @@ Route101_Zig_BattleWon:
 	@ sicherstellen, dass Bum existiert/sichtbar ist, bevor Bewegung
 	clearflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
 
-	applymovement LOCALID_PLAYER, Route101_Movement_StepLeft
-	waitmovement 0
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeaveScene
 	waitmovement 0
 
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
+	removeobject LOCALID_ROUTE101_BIRCH  
 
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
 	clearflag FLAG_HIDE_ROUTE_101_BOY
@@ -203,10 +206,6 @@ Route101_Zig_BattleWon:
 
 	releaseall
 	end
-
-Route101_Movement_StepLeft:
-    walk_left
-    step_end
 
 
 Route101_Movement_BumLeaveScene:
@@ -273,6 +272,8 @@ Route101_Text_YouSavedMe:
 	.string "BUM: First one is always free.\p"
 	.string "This is not the place to chat,\n"
 	.string "see you later!$"
+	.string "{PLAYER}: I should visit PROF. BIRCH\n"
+	.string "in his LAB.$"
 
 Route101_Text_TakeTiredPokemonToPokeCenter:
 	.string "If POKéMON get tired, take them to\n"
