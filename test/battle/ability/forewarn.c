@@ -16,6 +16,38 @@ DOUBLE_BATTLE_TEST("Forewarn warns about the highest power move among all opposi
     }
 }
 
+SINGLE_BATTLE_TEST("Forewarn randomly chooses between same-power moves on one opponent")
+{
+    PASSES_RANDOMLY(1, 2, RNG_FOREWARN);
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_TACKLE) == GetMovePower(MOVE_POUND));
+        PLAYER(SPECIES_MUSHARNA) { Ability(ABILITY_FOREWARN); }
+        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE, MOVE_POUND); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_FOREWARN);
+        MESSAGE("Forewarn alerted Musharna to the opposing Zubat's Tackle!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Forewarn randomly chooses between opponents with same-power moves")
+{
+    PASSES_RANDOMLY(1, 2, RNG_FOREWARN);
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_TACKLE) == GetMovePower(MOVE_POUND));
+        PLAYER(SPECIES_MUSHARNA) { Ability(ABILITY_FOREWARN); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_EXCADRILL) { Moves(MOVE_POUND); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_FOREWARN);
+        MESSAGE("Forewarn alerted Musharna to the opposing Zubat's Tackle!");
+    }
+}
+
 DOUBLE_BATTLE_TEST("Forewarn does not trigger if a mon switches in while the opposing field is empty")
 {
     GIVEN {

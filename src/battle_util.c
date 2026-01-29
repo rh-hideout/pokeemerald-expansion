@@ -3345,7 +3345,7 @@ static void ForewarnChooseMove(u32 battler)
     {
         if (data[i].power > data[bestId].power)
             bestId = i;
-        else if (data[i].power == data[bestId].power && Random() & 1)
+        else if (data[i].power == data[bestId].power && RandomPercentage(RNG_FOREWARN, 50))
             bestId = i;
     }
 
