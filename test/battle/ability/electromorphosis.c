@@ -10,8 +10,6 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
     PARAMETRIZE { move = MOVE_GUST; }
 
     GIVEN {
-        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
-        ASSUME(GetMoveCategory(MOVE_GUST) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_THUNDER_SHOCK) != DAMAGE_CATEGORY_STATUS);
