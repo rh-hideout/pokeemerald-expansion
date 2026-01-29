@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Forewarn randomly chooses between same-power moves on one op
     GIVEN {
         ASSUME(GetMovePower(MOVE_TACKLE) == GetMovePower(MOVE_POUND));
         PLAYER(SPECIES_MUSHARNA) { Ability(ABILITY_FOREWARN); }
-        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE, MOVE_POUND); }
+        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE, MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
         TURN {}
     } SCENE {
@@ -38,8 +38,8 @@ DOUBLE_BATTLE_TEST("Forewarn randomly chooses between opponents with same-power 
         ASSUME(GetMovePower(MOVE_TACKLE) == GetMovePower(MOVE_POUND));
         PLAYER(SPECIES_MUSHARNA) { Ability(ABILITY_FOREWARN); }
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE); }
-        OPPONENT(SPECIES_EXCADRILL) { Moves(MOVE_POUND); }
+        OPPONENT(SPECIES_ZUBAT) { Moves(MOVE_TACKLE, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_EXCADRILL) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
     } WHEN {
         TURN {}
     } SCENE {
