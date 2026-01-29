@@ -137,7 +137,7 @@ void UpdateOverworldEncounters(void)
     {
         if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
         {
-            RemoveAllGeneratedOverworldEncounterObjects();
+            RemoveAllOverworldWildEncounterObjects(OWE_GENERATED);
             sOWESpawnCountdown = OWE_NO_ENCOUNTER_SET;
         }
         return;
@@ -917,12 +917,12 @@ static bool32 OWE_ShouldSpawnWaterMons(void)
     return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
-void RemoveAllGeneratedOverworldEncounterObjects(void)
+void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType)
 {
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(obj, OWE_GENERATED) && obj->active)
+        if (IsOverworldWildEncounter(obj, oweType) && obj->active)
             RemoveObjectEvent(obj);
     }
 }
