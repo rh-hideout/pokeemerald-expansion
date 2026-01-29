@@ -42,9 +42,9 @@ Klassenzimmer_EventScript_FirstEntry::
 	setflag FLAG_CTF_MUSEUM_SCENE_PENDING
 
 	@ Rocket + Schülerin beim Laden verstecken
-	clearflag FLAG_HIDE_MUSEUM_FLAG1_JESSIE
-	clearflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
-	clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
+	setflag FLAG_HIDE_MUSEUM_FLAG1_JESSIE
+	setflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
+	setflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
 
 	@ Script freigeben bevor Warp (robuster)
 	releaseall
