@@ -1357,6 +1357,7 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
     }
     return isShiny;
 }
+
 void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
 {
     u32 i, value;
