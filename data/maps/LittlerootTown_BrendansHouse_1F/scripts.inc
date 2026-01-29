@@ -350,9 +350,9 @@ PlayersHouse_1F_Text_DontPushYourselfTooHard:
 	.string "You can count on me!$"
 
 PlayersHouse_1F_Text_IsThatAPokenav:
-	.string "BELLA: What is that, {NAME}? A POKéNAV?\n"
+	.string "BELLA: What is that, {PLAYER}? A POKéNAV?\n"
 	.string "Someone from DEVON gave it to you?\p"
-	.string "Well, {NAME}, how about registering\n"
+	.string "Well, {PLAYER}, how about registering\n"
 	.string "your roommate?\p"
 	.string "… … …$"
 
