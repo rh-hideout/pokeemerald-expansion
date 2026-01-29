@@ -2987,13 +2987,8 @@ static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
      && objectEvent->initialCoords.y >= top && objectEvent->initialCoords.y <= bottom)
         return;
     
-    if (IsOverworldWildEncounter(objectEvent, OWE_ANY))
-    {
-        if (OWE_IsMonRemovalExempt(objectEvent) && AreCoordsInsidePlayerMap(objectEvent->currentCoords.x, objectEvent->currentCoords.y))
-            return;
-
-        objectEvent->offScreen = TRUE;
-    }
+    if (OWE_IsMonRemovalExempt(objectEvent))
+        return;
 
     RemoveObjectEvent(objectEvent);
 }

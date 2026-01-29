@@ -745,7 +745,7 @@ static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSi
 
         if (fldEffId != 0)
         {
-            RemoveAllGeneratedOverworldEncounterObjects();
+            RemoveAllOverworldWildEncounterObjects(OWE_GENERATED);
             gFieldEffectArguments[0] = sDexNavSearchDataPtr->tileX;
             gFieldEffectArguments[1] = sDexNavSearchDataPtr->tileY;
             gFieldEffectArguments[2] = 0xFF; // subpriority

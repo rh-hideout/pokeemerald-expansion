@@ -36,9 +36,6 @@
 
 #define INVALID_SPAWN_SLOT          0xFF
 
-#define OWE_NO_DESPAWN_FLAG         0x80
-
-#define OWE_SAVED_MOVEMENT_STATE_FLAG   0x80
 #define OWE_RESTORED_MOVEMENT_FUNC_ID   10
 
 enum OverworldEncounterSpawnAnim
@@ -98,7 +95,7 @@ void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
 void OverworldWildEncounter_SetMinimumSpawnTimer(void);
-void RemoveAllGeneratedOverworldEncounterObjects(void);
+void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);

@@ -32,15 +32,57 @@
 #include "constants/vars.h"
 #include "constants/wild_encounter.h"
 
-#define sOverworldEncounterLevel    trainerRange_berryTreeId
-#define sAge                        playerCopyableMovement
-#define sRoamerOutbreakStatus       directionSequenceIndex
-#define sSavedMovementState         warpArrowSpriteId
-#define OWE_NON_ROAMER_OUTBREAK     0
-#define OWE_MASS_OUTBREAK_INDEX     ROAMER_COUNT + 1
-#define OWE_INVALID_ROAMER_OUTBREAK OWE_MASS_OUTBREAK_INDEX + 1
 
-static EWRAM_DATA u8 sOWESpawnCountdown = 0;
+#define sOverworldEncounterLevel        trainerRange_berryTreeId
+#define sAge                            playerCopyableMovement
+#define sRoamerOutbreakStatus           warpArrowSpriteId
+#define OWE_NON_ROAMER_OUTBREAK         0
+#define OWE_MASS_OUTBREAK_INDEX         ROAMER_COUNT + 1
+#define OWE_INVALID_ROAMER_OUTBREAK     OWE_MASS_OUTBREAK_INDEX + 1
+
+#define OWE_FLAG_BIT                    (1 << 7)
+#define OWE_SAVED_MOVEMENT_STATE_FLAG   OWE_FLAG_BIT
+#define OWE_NO_DESPAWN_FLAG             OWE_FLAG_BIT
+
+static inline u32 OWE_GetRoamerIndex(const struct ObjectEvent *object)
+{
+    return object->sRoamerOutbreakStatus & ~OWE_SAVED_MOVEMENT_STATE_FLAG;
+}
+
+static inline bool32 OWE_HasSavedMovementState(const struct ObjectEvent *object)
+{
+    return object->sRoamerOutbreakStatus & OWE_SAVED_MOVEMENT_STATE_FLAG;
+}
+
+void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent)
+{
+    objectEvent->sRoamerOutbreakStatus |= OWE_SAVED_MOVEMENT_STATE_FLAG;
+}
+
+void OWE_ClearSavedMovementState(struct ObjectEvent *objectEvent)
+{
+    objectEvent->sRoamerOutbreakStatus &= ~OWE_SAVED_MOVEMENT_STATE_FLAG;
+}
+
+static inline u32 OWE_GetEncounterLevel(u32 level)
+{
+    return level & ~OWE_NO_DESPAWN_FLAG;
+}
+
+static inline void OWE_SetEncounterLevel(u32 *level, u8 newLevel)
+{
+    *level = (*level & OWE_NO_DESPAWN_FLAG) | (newLevel & ~OWE_NO_DESPAWN_FLAG);
+}
+
+static inline bool32 OWE_HasNoDespawnFlag(const struct ObjectEvent *object)
+{
+    return object->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG;
+}
+
+static inline void OWE_SetNoDespawnFlag(u32 *level)
+{
+    *level |= OWE_NO_DESPAWN_FLAG;
+}
 
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
@@ -79,6 +121,8 @@ static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Dire
 static void Task_OWE_ApproachForBattle(u8 taskId);
 static bool32 OWE_CheckSpecies(u32 speciesId);
 
+static EWRAM_DATA u8 sOWESpawnCountdown = 0;
+
 void UpdateOverworldEncounters(void)
 {
     bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
@@ -93,7 +137,7 @@ void UpdateOverworldEncounters(void)
     {
         if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
         {
-            RemoveAllGeneratedOverworldEncounterObjects();
+            RemoveAllOverworldWildEncounterObjects(OWE_GENERATED);
             sOWESpawnCountdown = OWE_NO_ENCOUNTER_SET;
         }
         return;
@@ -332,7 +376,7 @@ u32 GetOldestSlot(bool32 forceRemove)
     for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG) || forceRemove == TRUE))
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!OWE_HasNoDespawnFlag(slotMon) || forceRemove == TRUE))
         {
             oldest = slotMon;
             break;
@@ -345,7 +389,7 @@ u32 GetOldestSlot(bool32 forceRemove)
     for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG) || forceRemove == TRUE))
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!OWE_HasNoDespawnFlag(slotMon) || forceRemove == TRUE))
         {
             if (slotMon->sAge > oldest->sAge)
                 oldest = slotMon;
@@ -488,7 +532,7 @@ void CreateOverworldWildEncounter(void)
     u32 objEventId = GetObjectEventIdByLocalId(localId);
     u32 headerId = GetCurrentMapWildMonHeaderId();
     struct ObjectEvent *object = &gObjectEvents[objEventId];
-    u32 indexRoamerOutbreak = object->sRoamerOutbreakStatus;
+    u32 indexRoamerOutbreak = OWE_GetRoamerIndex(object);
 
     assertf(objEventId < OBJECT_EVENTS_COUNT && IsOverworldWildEncounter(object, OWE_ANY), "cannot start overworld wild enocunter as the selected object is invalid.\nlocalId: %d", localId)
     {
@@ -503,7 +547,7 @@ void CreateOverworldWildEncounter(void)
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
     u32 gender = OW_FEMALE(object) ? MON_FEMALE : MON_MALE;
-    u32 level = (object->sOverworldEncounterLevel &= ~OWE_NO_DESPAWN_FLAG);
+    u32 level = OWE_GetEncounterLevel(object->sOverworldEncounterLevel);
     u32 personality;
 
     switch (gSpeciesInfo[speciesId].genderRatio)
@@ -742,7 +786,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     }
  
     *speciesId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
-    *level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+    OWE_SetEncounterLevel(level, GetMonData(&gEnemyParty[0], MON_DATA_LEVEL));
     personality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);
 
     if (*speciesId == SPECIES_UNOWN)
@@ -755,7 +799,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
         *isFemale = FALSE;
 
     if ((OWE_WILD_ENCOUNTERS_PREVENT_SHINY_DESPAWN && *isShiny))
-        *level |= OWE_NO_DESPAWN_FLAG;
+        OWE_SetNoDespawnFlag(level);
 
     ZeroEnemyPartyMons();
 }
@@ -831,11 +875,9 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     }
     else if (OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
     {
-        *level = ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING);
+        CreateWildMon(gWildFeebas.species, ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING));
         if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN)
-            *level |= OWE_NO_DESPAWN_FLAG;
-        *speciesId = gWildFeebas.species;
-        CreateWildMon(*speciesId, *level);
+            OWE_SetNoDespawnFlag(level);
     }
     else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior) && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
     {
@@ -875,12 +917,12 @@ static bool32 OWE_ShouldSpawnWaterMons(void)
     return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
-void RemoveAllGeneratedOverworldEncounterObjects(void)
+void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType)
 {
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(obj, OWE_GENERATED) && obj->active)
+        if (IsOverworldWildEncounter(obj, oweType) && obj->active)
             RemoveObjectEvent(obj);
     }
 }
@@ -1054,14 +1096,26 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     if (speciesTemplate)
         speciesId = speciesTemplate;
 
-    assertf(OWE_CheckSpecies(speciesId), "invalid manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
+    if (levelTemplate)
+        level = levelTemplate;
+
+    bool32 validSpecies = OWE_CheckSpecies(speciesId);
+    bool32 validLevel = OWE_GetEncounterLevel(level) >= MIN_LEVEL && OWE_GetEncounterLevel(level) <= MAX_LEVEL;
+    assertf(validSpecies && validLevel, "invalid manual overworld encounter\nspecies: %d\nlevel: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, level, x, y)
     {
-        // Currently causes assertf on each player step as function is called.
-        templateOWE.graphicsId = OBJ_EVENT_GFX_BOY_1;
-        templateOWE.trainerType = TRAINER_TYPE_NONE;
-        templateOWE.sOverworldEncounterLevel = 0;
-        templateOWE.movementType = MOVEMENT_TYPE_NONE;
-        return templateOWE;
+        if (!validSpecies)
+        {
+            // Currently causes assertf on each player step as function is called.
+            templateOWE.graphicsId = OBJ_EVENT_GFX_BOY_1;
+            templateOWE.trainerType = TRAINER_TYPE_NONE;
+            templateOWE.sOverworldEncounterLevel = 0;
+            templateOWE.movementType = MOVEMENT_TYPE_NONE;
+            return templateOWE;
+        }
+        else if (!validLevel)
+        {
+            level = MIN_LEVEL;
+        }
     }
 
     if (isShinyTemplate)
@@ -1074,19 +1128,8 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     else
         isFemale = GetGenderFromSpeciesAndPersonality(speciesId, Random32()) == MON_FEMALE;
 
-    if (levelTemplate)
-        level = levelTemplate;
-
-    assertf(level >= MIN_LEVEL && level <= MAX_LEVEL, "invalid manual overworld encounter\nlevel: %d\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", level, speciesId, x, y)
-    {
-        level = MIN_LEVEL;
-    }
-
     if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
         templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
-
-    if (templateOWE.script == NULL)
-        templateOWE.script = InteractWithDynamicWildOverworldEncounter;
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
@@ -1114,7 +1157,10 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         return;
 
     struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
-    if (wildMon->sRoamerOutbreakStatus && !IsRoamerAt(OWE_GetObjectRoamerOutbreakStatus(wildMon),
+    u32 indexRoamerOutbreak = OWE_GetRoamerIndex(wildMon);
+    if (indexRoamerOutbreak
+        && indexRoamerOutbreak < OWE_MASS_OUTBREAK_INDEX
+        && !IsRoamerAt(OWE_GetObjectRoamerOutbreakStatus(wildMon),
         gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
         RemoveObjectEvent(wildMon);
@@ -1511,7 +1557,7 @@ static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
     if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return OWE_INVALID_ROAMER_OUTBREAK;
 
-    u32 status = objectEvent->sRoamerOutbreakStatus;
+    u32 status = OWE_GetRoamerIndex(objectEvent);
     if (status == OWE_NON_ROAMER_OUTBREAK || status == OWE_MASS_OUTBREAK_INDEX)
     {
         return OWE_INVALID_ROAMER_OUTBREAK;
@@ -1596,20 +1642,10 @@ struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnA
 #define sTypeFuncId data[1] // Same as in src/event_object_movement.c
 void OWE_RestoreBehaviorState(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (IsOverworldWildEncounter(objectEvent, OWE_ANY) && objectEvent->sSavedMovementState & OWE_SAVED_MOVEMENT_STATE_FLAG)
+    if (IsOverworldWildEncounter(objectEvent, OWE_ANY) && OWE_HasSavedMovementState(objectEvent))
         sprite->sTypeFuncId = OWE_RESTORED_MOVEMENT_FUNC_ID;
 }
 #undef sTypeFuncId
-
-void OWE_SetSavedMovementState(struct ObjectEvent *objectEvent)
-{
-    objectEvent->sSavedMovementState |= OWE_SAVED_MOVEMENT_STATE_FLAG;
-}
-
-void OWE_ClearSavedMovementState(struct ObjectEvent *objectEvent)
-{
-    objectEvent->sSavedMovementState ^= OWE_SAVED_MOVEMENT_STATE_FLAG;
-}
 
 static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction direction, u32 distance)
 {
@@ -1750,13 +1786,16 @@ void OWE_PlayAmbientCry(void)
 
 bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent)
 {
-    if (objectEvent->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG)
+    if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
+        return FALSE;
+
+    if (OWE_HasNoDespawnFlag(objectEvent) && AreCoordsInsidePlayerMap(objectEvent->currentCoords.x, objectEvent->currentCoords.y))
         return TRUE;
 
+    objectEvent->offScreen = TRUE;
     return FALSE;
 }
 
 #undef sOverworldEncounterLevel
 #undef sAge
 #undef sRoamerOutbreakStatus
-#undef sSavedMovementState
