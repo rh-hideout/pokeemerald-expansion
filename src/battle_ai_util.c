@@ -3829,17 +3829,6 @@ bool32 HasChoiceEffect(u32 battler)
     }
 }
 
-static u32 FindMoveUsedXTurnsAgo(u32 battlerId, u32 x)
-{
-    s32 i, index = gBattleHistory->moveHistoryIndex[battlerId];
-    for (i = 0; i < x; i++)
-    {
-        if (--index < 0)
-            index = AI_MOVE_HISTORY_COUNT - 1;
-    }
-    return gBattleHistory->moveHistory[battlerId][index];
-}
-
 bool32 IsWakeupTurn(u32 battler)
 {
     u32 sleepTurns = gBattleMons[battler].status1 & STATUS1_SLEEP;
