@@ -57,9 +57,9 @@ Museum_Flag1_EventScript_RocketCutscene::
 	setobjectxy LOCALID_MUSEUM_JESSIE, ROCKET_SPAWN_X, JESSIE_SPAWN_Y
 	setobjectxy LOCALID_MUSEUM_JAMES,  ROCKET_SPAWN_X, JAMES_SPAWN_Y
 
-	turnobject LOCALID_MUSEUM_JESSIE, DIR_LEFT
-	turnobject LOCALID_MUSEUM_JAMES,  DIR_LEFT
-	turnobject LOCALID_PLAYER, DIR_RIGHT
+	turnobject LOCALID_MUSEUM_JESSIE, DIR_WEST
+	turnobject LOCALID_MUSEUM_JAMES,  DIR_WEST
+	turnobject LOCALID_PLAYER, DIR_EAST
 
 	@ 3 Felder nach links reinlaufen
 	applymovement LOCALID_MUSEUM_JESSIE, Museum_Flag1_Movement_RocketEnter
@@ -83,7 +83,7 @@ Museum_Flag1_EventScript_RocketCutscene::
 	@ Schülerin rein
 	clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
 	setobjectxy LOCALID_MUSEUM_STUDENT, STUDENT_SPAWN_X, STUDENT_SPAWN_Y
-	turnobject LOCALID_MUSEUM_STUDENT, DIR_LEFT
+	turnobject LOCALID_MUSEUM_STUDENT, DIR_WEST
 
 	applymovement LOCALID_MUSEUM_STUDENT, Museum_Flag1_Movement_StudentEnter
 	waitmovement 0
