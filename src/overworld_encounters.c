@@ -1096,14 +1096,26 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     if (speciesTemplate)
         speciesId = speciesTemplate;
 
-    assertf(OWE_CheckSpecies(speciesId), "invalid manual overworld encounter\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, x, y)
+    if (levelTemplate)
+        level = levelTemplate;
+
+    bool32 validSpecies = OWE_CheckSpecies(speciesId);
+    bool32 validLevel = OWE_GetEncounterLevel(level) >= MIN_LEVEL && OWE_GetEncounterLevel(level) <= MAX_LEVEL;
+    assertf(validSpecies && validLevel, "invalid manual overworld encounter\nspecies: %d\nlevel: %d\nx: %d y: %d\ncheck if valid wild mon header exists", speciesId, level, x, y)
     {
-        // Currently causes assertf on each player step as function is called.
-        templateOWE.graphicsId = OBJ_EVENT_GFX_BOY_1;
-        templateOWE.trainerType = TRAINER_TYPE_NONE;
-        templateOWE.sOverworldEncounterLevel = 0;
-        templateOWE.movementType = MOVEMENT_TYPE_NONE;
-        return templateOWE;
+        if (!validSpecies)
+        {
+            // Currently causes assertf on each player step as function is called.
+            templateOWE.graphicsId = OBJ_EVENT_GFX_BOY_1;
+            templateOWE.trainerType = TRAINER_TYPE_NONE;
+            templateOWE.sOverworldEncounterLevel = 0;
+            templateOWE.movementType = MOVEMENT_TYPE_NONE;
+            return templateOWE;
+        }
+        else if (!validLevel)
+        {
+            level = MIN_LEVEL;
+        }
     }
 
     if (isShinyTemplate)
@@ -1115,14 +1127,6 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
         isFemale = FALSE;
     else
         isFemale = GetGenderFromSpeciesAndPersonality(speciesId, Random32()) == MON_FEMALE;
-
-    if (levelTemplate)
-        level = levelTemplate;
-
-    assertf(OWE_GetEncounterLevel(level) >= MIN_LEVEL && OWE_GetEncounterLevel(level) <= MAX_LEVEL, "invalid manual overworld encounter\nlevel: %d\nspecies: %d\nx: %d y: %d\ncheck if valid wild mon header exists", level, speciesId, x, y)
-    {
-        level = MIN_LEVEL;
-    }
 
     if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
         templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
