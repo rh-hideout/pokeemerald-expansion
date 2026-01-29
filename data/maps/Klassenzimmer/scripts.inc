@@ -11,11 +11,8 @@ Klassenzimmer_OnTransition_End:
 	end
 
 
-@ Erstes Betreten des Klassenzimmers (Flag 1)
 Klassenzimmer_EventScript_FirstEntry::
-	@ sofort setzen => garantiert nur beim ersten Betreten
 	setflag FLAG_CTF_CLASSROOM_INTRO_DONE
-
 	lockall
 
 	turnobject LOCALID_PROF_FARMER, DIR_SOUTH
@@ -30,26 +27,21 @@ Klassenzimmer_EventScript_FirstEntry::
 	msgbox Klassenzimmer_Text_Museum, MSGBOX_DEFAULT
 	closemessage
 
-	fadescreen FADE_TO_BLACK
-	waitstate
-
 	@ Museum-Cutscene beim Ankommen starten lassen
-    setflag FLAG_CTF_MUSEUM_SCENE_PENDING
+	setflag FLAG_CTF_MUSEUM_SCENE_PENDING
 
-    @ Rocket + Schülerin beim Laden verstecken
-    setflag FLAG_HIDE_MUSEUM_FLAG1_JESSIE
-    setflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
-    setflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
+	@ Rocket + Schülerin beim Laden verstecken
+	setflag FLAG_HIDE_MUSEUM_FLAG1_JESSIE
+	setflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
+	setflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
 
-	@ Zielmap: data/maps/Museum_Flag1
-	warp MAP_MUSEUM_FLAG1, 255, 17, 6
-	waitstate
-
-	fadescreen FADE_FROM_BLACK
-	waitstate
-
+	@ WICHTIG: Kein fadescreen/waitstate hier -> verhindert Black-Screen-Hänger
 	releaseall
+
+	@ Warp-ID 1 = der neue Entry-Warp in Museum_Flag1 bei (17,6)
+	warp MAP_MUSEUM_FLAG1, 1, 0, 0
 	end
+
 
 
 Klassenzimmer_Movement_PlayerToSeat:
