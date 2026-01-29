@@ -1131,9 +1131,6 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     if (templateOWE.movementType == MOVEMENT_TYPE_NONE)
         templateOWE.movementType = OWE_GetMovementTypeFromSpecies(speciesId);
 
-    if (templateOWE.script == NULL)
-        templateOWE.script = InteractWithDynamicWildOverworldEncounter;
-
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
         graphicsId += OBJ_EVENT_MON_FEMALE;
