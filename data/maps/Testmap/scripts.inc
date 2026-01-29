@@ -66,8 +66,8 @@ Testmap_EventScript_BlockNpc::
 
 Testmap_Movement_SleepStep:
 	walk_fast_down
-	look_left
-	look_right
+	face_left
+	face_right
 	step_end
 
 Testmap_Movement_SleepLeave:
