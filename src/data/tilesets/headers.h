@@ -833,7 +833,9 @@ const struct Tileset gTileset_UnionRoom =
     .callback = NULL,
 };
 
-#else
+#endif // !IS_FRLG
+
+#if IS_FRLG || FRLG_INCLUDE_TILESETS
 
 // FRLG tilesets
 const struct Tileset gTileset_BuildingFrlg =
@@ -1540,4 +1542,4 @@ const struct Tileset gTileset_HallOfFame =
     .callback = NULL,
 };
 
-#endif // IS_FRLG
+#endif // IS_FRLG || FRLG_INCLUDE_TILESETS
