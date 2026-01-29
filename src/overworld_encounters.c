@@ -1785,9 +1785,13 @@ void OWE_PlayAmbientCry(void)
 
 bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent)
 {
-    if (objectEvent->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG)
+    if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
+        return FALSE;
+
+    if (OWE_HasNoDespawnFlag(objectEvent) && AreCoordsInsidePlayerMap(objectEvent->currentCoords.x, objectEvent->currentCoords.y))
         return TRUE;
 
+    objectEvent->offScreen = TRUE;
     return FALSE;
 }
 
