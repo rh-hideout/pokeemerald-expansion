@@ -43,10 +43,10 @@ Testmap_Terminal_Ok:
     applymovement LOCALID_TESTMAP_BLOCKER, Testmap_Movement_SleepLeave
     waitmovement 0
 
-    setflag FLAG_CTF_TUTORIAL_DONE
-
     removeobject LOCALID_TESTMAP_BLOCKER
     removeobject LOCALID_TESTMAP_TERMINAL
+
+	setflag FLAG_CTF_TUTORIAL_DONE
 
     release
     end
@@ -58,17 +58,25 @@ Testmap_Terminal_Already:
 	end
 
 Testmap_EventScript_BlockNpc::
-	lock
-	faceplayer
-	msgbox Testmap_Text_Block, MSGBOX_DEFAULT
-	release
-	end
+    lock
+    msgbox Testmap_Text_Block, MSGBOX_DEFAULT
+    applymovement LOCALID_TESTMAP_BLOCKER, Testmap_Movement_FaceDown
+    waitmovement 0
+    release
+    end
+
+Testmap_Movement_FaceDown:
+    face_down
+    step_end
 
 Testmap_Movement_SleepStep:
 	walk_fast_down
 	face_left
+	delay_16
 	face_right
+	delay_16
 	step_end
+
 
 Testmap_Movement_SleepLeave:
 	walk_fast_right
@@ -79,6 +87,28 @@ Testmap_Movement_SleepLeave:
 	walk_fast_right
 	walk_fast_right
 	step_end
+
+Testmap_EventScript_BlockRoute102::
+    goto_if_set FLAG_CTF_GYM1_DEFEATED, Testmap_BlockRoute102_End
+
+    lockall
+    msgbox Testmap_Text_GoUniversityFirst, MSGBOX_DEFAULT
+    closemessage
+
+    applymovement LOCALID_PLAYER, Testmap_Movement_TurnAndStepRight
+    waitmovement 0
+
+    releaseall
+Testmap_BlockRoute102_End:
+    end
+
+Testmap_Movement_TurnAndStepRight:
+    face_right
+    walk_right
+    step_end
+
+Testmap_Text_GoUniversityFirst:
+    .string "I should go to the university first.$"
 
 
 Testmap_Text_Block:

@@ -9127,7 +9127,7 @@ static const struct LevelUpMove sBanetteLevelUpLearnset[] = {
 
 #if P_FAMILY_DUSKULL
 static const struct LevelUpMove sDuskullLevelUpLearnset[] = {
-    LEVEL_UP_MOVE( 1, MOVE_LEER),
+    LEVEL_UP_MOVE( 1, MOVE_TACKLE),
     LEVEL_UP_MOVE( 1, MOVE_ASTONISH),
     LEVEL_UP_MOVE( 4, MOVE_DISABLE),
     LEVEL_UP_MOVE( 8, MOVE_SHADOW_SNEAK),
