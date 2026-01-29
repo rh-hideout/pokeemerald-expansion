@@ -1,4 +1,11 @@
-@ Spawn rechts 
+@ -------------------------
+@ Local IDs (in Porymap als ZAHLEN eintragen: 1/2/3)
+@ -------------------------
+#define LOCALID_MUSEUM_JESSIE    1
+#define LOCALID_MUSEUM_JAMES     2
+#define LOCALID_MUSEUM_STUDENT   3
+
+@ Spawn rechts (wie von dir beschrieben)
 #define ROCKET_SPAWN_X  19
 #define JESSIE_SPAWN_Y  3
 #define JAMES_SPAWN_Y   4
@@ -8,64 +15,60 @@
 
 @ Wo die Schülerin nach 3 Schritten links steht
 #define STUDENT_END_X   16
-#define STUDENT_END_Y   5
+#define STUDENT_END_Y   3
 
 
 Museum_Flag1_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Museum_Flag1_OnTransition
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, Museum_Flag1_OnFrame
 	.byte 0
 
 
 Museum_Flag1_OnTransition:
-	@ Türzustand anwenden ist ok im Transition
+	@ Tür dauerhaft anwenden, falls schon geöffnet
 	goto_if_set FLAG_CTF_MUSEUM_DOOR_OPEN, Museum_Flag1_ApplyDoorOnLoad
 
-	@ Cutscene nur “armen”, NICHT starten
-	goto_if_set FLAG_CTF_MUSEUM_SCENE_PENDING, Museum_Flag1_ArmScene
+Museum_Flag1_CheckScene:
+	@ Wenn Cutscene schon vorbei ist: Student korrekt positionieren
+	goto_if_set FLAG_CTF_MUSEUM_ROCKET_SCENE_DONE, Museum_Flag1_PostSceneState
+
+	@ Cutscene nur starten, wenn sie vom Klassenzimmer "pending" gesetzt wurde
+	goto_if_set FLAG_CTF_MUSEUM_SCENE_PENDING, Museum_Flag1_EventScript_RocketCutscene
 	end
 
 Museum_Flag1_ApplyDoorOnLoad:
 	call Museum_Flag1_EventScript_ApplyDoorOpen
-	goto_if_set FLAG_CTF_MUSEUM_SCENE_PENDING, Museum_Flag1_ArmScene
+	goto Museum_Flag1_CheckScene
+
+Museum_Flag1_PostSceneState:
+	@ Student sichtbar lassen und an Endposition setzen
+	clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
+	setobjectxy LOCALID_MUSEUM_STUDENT, STUDENT_END_X, STUDENT_END_Y
 	end
 
-Museum_Flag1_ArmScene:
-	setvar VAR_TEMP_1, 0
-	end
 
-
-Museum_Flag1_OnFrame:
-	map_script_2 VAR_TEMP_1, 0, Museum_Flag1_EventScript_RocketCutscene
-	.2byte 0
-
-
+@ --------------------------------------------------------------------------
+@ CUTSCENE nach dem Teleport
+@ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_RocketCutscene::
-	@ sofort deaktivieren
-	setvar VAR_TEMP_1, 1
 	clearflag FLAG_CTF_MUSEUM_SCENE_PENDING
 
 	lockall
 
-	@ Spieler soll nach dem Teleport nach oben schauen
-	turnobject LOCALID_PLAYER, DIR_NORTH
-
 	msgbox Museum_Flag1_Text_FarmerMess, MSGBOX_DEFAULT
 	closemessage
 
-	@ Rockets sichtbar machen + sofort spawnen
+	@ Rockets sichtbar machen + Position setzen
 	clearflag FLAG_HIDE_MUSEUM_FLAG1_JESSIE
 	clearflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
-	addobject LOCALID_MUSEUM_JESSIE
-	addobject LOCALID_MUSEUM_JAMES
 
-	setobjectxy LOCALID_MUSEUM_JESSIE, 19, 3
-	setobjectxy LOCALID_MUSEUM_JAMES,  19, 4
+	setobjectxy LOCALID_MUSEUM_JESSIE, ROCKET_SPAWN_X, JESSIE_SPAWN_Y
+	setobjectxy LOCALID_MUSEUM_JAMES,  ROCKET_SPAWN_X, JAMES_SPAWN_Y
 
-	turnobject LOCALID_MUSEUM_JESSIE, DIR_WEST
-	turnobject LOCALID_MUSEUM_JAMES,  DIR_WEST
-	turnobject LOCALID_PLAYER, DIR_EAST
+	turnobject LOCALID_MUSEUM_JESSIE, DIR_LEFT
+	turnobject LOCALID_MUSEUM_JAMES,  DIR_LEFT
+	turnobject LOCALID_PLAYER, DIR_RIGHT
 
+	@ 3 Felder nach links reinlaufen
 	applymovement LOCALID_MUSEUM_JESSIE, Museum_Flag1_Movement_RocketEnter
 	applymovement LOCALID_MUSEUM_JAMES,  Museum_Flag1_Movement_RocketEnter
 	waitmovement 0
@@ -73,24 +76,28 @@ Museum_Flag1_EventScript_RocketCutscene::
 	msgbox Museum_Flag1_Text_RocketDialog, MSGBOX_DEFAULT
 	closemessage
 
+	@ wieder nach rechts raus
 	applymovement LOCALID_MUSEUM_JESSIE, Museum_Flag1_Movement_RocketLeave
 	applymovement LOCALID_MUSEUM_JAMES,  Museum_Flag1_Movement_RocketLeave
 	waitmovement 0
 
-	@ verschwinden + dauerhaft verstecken
+	@ verschwinden
 	setflag FLAG_HIDE_MUSEUM_FLAG1_JESSIE
 	setflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
 	removeobject LOCALID_MUSEUM_JESSIE
 	removeobject LOCALID_MUSEUM_JAMES
 
-	@ Student sichtbar machen + sofort spawnen
+	@ Schülerin rein
 	clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
-	addobject LOCALID_MUSEUM_STUDENT
-	setobjectxy LOCALID_MUSEUM_STUDENT, 19, 3
-	turnobject LOCALID_MUSEUM_STUDENT, DIR_WEST
+	setobjectxy LOCALID_MUSEUM_STUDENT, STUDENT_SPAWN_X, STUDENT_SPAWN_Y
+	turnobject LOCALID_MUSEUM_STUDENT, DIR_LEFT
 
 	applymovement LOCALID_MUSEUM_STUDENT, Museum_Flag1_Movement_StudentEnter
 	waitmovement 0
+
+	@ optional: Ausrufezeichen-Emote
+	showemote EMOTE_EXCLAMATION_MARK, LOCALID_MUSEUM_STUDENT, 15
+	delay 16
 
 	msgbox Museum_Flag1_Text_StudentDialog, MSGBOX_DEFAULT
 	closemessage
@@ -99,7 +106,6 @@ Museum_Flag1_EventScript_RocketCutscene::
 
 	releaseall
 	end
-
 
 
 Museum_Flag1_Movement_RocketEnter:
@@ -121,6 +127,9 @@ Museum_Flag1_Movement_StudentEnter:
 	step_end
 
 
+@ --------------------------------------------------------------------------
+@ TERMINAL: Gym 1 Flag prüfen (VAR_0x8000 = 1 -> "SLEEP")
+@ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_Terminal::
 	lock
 	faceplayer
@@ -130,12 +139,14 @@ Museum_Flag1_EventScript_Terminal::
 	msgbox Museum_Flag1_Text_TerminalPrompt, MSGBOX_DEFAULT
 	closemessage
 
+	@ Gym 1 = 1
 	setvar VAR_0x8000, 1
 	callnative Ctf_FlagTerminal
 	waitstate
 
 	goto_if_eq VAR_RESULT, 1, Museum_Flag1_Terminal_Correct
 	goto Museum_Flag1_Terminal_Wrong
+
 
 Museum_Flag1_Terminal_Wrong:
 	msgbox Museum_Flag1_Text_TerminalWrong, MSGBOX_DEFAULT
@@ -152,6 +163,8 @@ Museum_Flag1_Terminal_Correct:
 	closemessage
 
 	setflag FLAG_CTF_MUSEUM_DOOR_OPEN
+
+	@ 3x2 Tür in die Wand setzen
 	call Museum_Flag1_EventScript_ApplyDoorOpen
 	special DrawWholeMapView
 
@@ -159,18 +172,25 @@ Museum_Flag1_Terminal_Correct:
 	end
 
 
+@ --------------------------------------------------------------------------
+@ TÜR 3x2 METATILES setzen (DEINE WERTE)
+@ Top-Left: (0,9)
+@ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_ApplyDoorOpen::
+	setmetatile 0,  9, 0x0261, FALSE   @ oben links
+	setmetatile 1,  9, 0x0207, FALSE   @ oben mitte
+	setmetatile 2,  9, 0x0257, FALSE   @ oben rechts
 
-	setmetatile 9,  0, 0x0261, FALSE    @ oben links
-	setmetatile 10,  0, 0x0207, FALSE   @ oben mitte
-	setmetatile 11,  0, 0x0257, FALSE   @ oben rechts
+	setmetatile 0, 10, 0x0262, FALSE   @ unten links
+	setmetatile 1, 10, 0x020F, FALSE   @ unten mitte (HIER Warp in Porymap!)
+	setmetatile 2, 10, 0x025F, FALSE   @ unten rechts
 
-	setmetatile 9,  1, 0x0262, FALSE    @ unten links
-	setmetatile 10,  1, 0x020F, FALSE   @ unten mitte (Warp)
-	setmetatile 11,  1, 0x025F, FALSE   @ unten rechts
 	return
 
 
+@ --------------------------------------------------------------------------
+@ TEXTE
+@ --------------------------------------------------------------------------
 Museum_Flag1_Text_FarmerMess:
 	.string "PROF. FARMER: What's all\n"
 	.string "this mess?$"
