@@ -193,7 +193,7 @@ Route101_Zig_BattleWon:
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BumLeaveScene
 	waitmovement 0
 
-	msgbox Route101_Text_YGoToMay, MSGBOX_DEFAULT
+	msgbox Route101_Text_GoToMay, MSGBOX_DEFAULT
 	closemessage
 
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
