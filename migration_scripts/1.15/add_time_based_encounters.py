@@ -27,7 +27,7 @@ def GetWildEncounterFile():
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
 
-    config = Config('include/config/overworld.h', 'include/constants/rtc.h', wData)
+    config = Config(wData)
     timeOfDay = config.times_of_day
 
 
