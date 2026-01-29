@@ -642,6 +642,9 @@ static void SortOWEMonAges(void)
     u32 count = 0;
     s32 i, j;
 
+    if (OWE_MAX_SPAWNS <= 1)
+        return;
+
     for (i = 0; i < OWE_MAX_SPAWNS; i++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
