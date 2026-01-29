@@ -43,10 +43,10 @@ Testmap_Terminal_Ok:
     applymovement LOCALID_TESTMAP_BLOCKER, Testmap_Movement_SleepLeave
     waitmovement 0
 
-    setflag FLAG_CTF_TUTORIAL_DONE
-
     removeobject LOCALID_TESTMAP_BLOCKER
     removeobject LOCALID_TESTMAP_TERMINAL
+
+	setflag FLAG_CTF_TUTORIAL_DONE
 
     release
     end
