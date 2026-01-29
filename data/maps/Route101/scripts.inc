@@ -132,12 +132,8 @@ Route101_EventScript_BirchsBag::
 
 Route101_Bag_DoChoose:
 	setflag FLAG_SYS_POKEMON_GET
-	fadescreen FADE_TO_BLACK
 
 	special ChooseStarterNoBattle
-	waitstate
-
-	fadescreen FADE_FROM_BLACK
 	waitstate
 
 	bufferleadmonspeciesname STR_VAR_1
@@ -240,8 +236,8 @@ Route101_Text_HelpMe:
 Route101_Text_PleaseHelp:
 	.string "BUM: Hello! You interested?!\n"
 	.string "{PLAYER}: You wanna sell me drugs?\p"
-	.string "BUM: No, no, I'll show you the hottest shit!!\n"
-	.string "In my BAG!\p"
+	.string "BUM: No, no, I'll show you the hottest\n"
+	.string "shit! It's in my BAG!\p"
 	.string "Take a look and pick one!$"
 
 Route101_Text_WhyNotGiveNicknameToMon:

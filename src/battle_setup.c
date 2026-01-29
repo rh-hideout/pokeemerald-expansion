@@ -875,14 +875,12 @@ void ChooseStarter(void)
     gMain.savedCallback = CB2_GiveStarter;
 }
 
-// Neu: gleiche UI, aber ohne Auto-Kampf
 void ChooseStarterNoBattle(void)
 {
     sSkipFirstBattleAfterChoosingStarter = TRUE;
     SetMainCallback2(CB2_ChooseStarter);
     gMain.savedCallback = CB2_GiveStarter;
 }
-
 
 static void CB2_GiveStarter(void)
 {
@@ -896,6 +894,9 @@ static void CB2_GiveStarter(void)
     if (sSkipFirstBattleAfterChoosingStarter)
     {
         sSkipFirstBattleAfterChoosingStarter = FALSE;
+
+        ResetPaletteFade();
+
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
         return;
     }
@@ -904,7 +905,6 @@ static void CB2_GiveStarter(void)
     SetMainCallback2(CB2_StartFirstBattle);
     BattleTransition_Start(B_TRANSITION_BLUR);
 }
-
 
 static void CB2_StartFirstBattle(void)
 {
