@@ -107,10 +107,14 @@ void DoSpecialTrainerBattle(void)
         {
             TRAINER_BATTLE_PARAM.opponentB = 0xFFFF;
             gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
+            if (gSpecialVar_0x8005) // 12 vs 6
+                gBattleTypeFlags |= BATTLE_TYPE_TWELVES;
         }
         else // MULTI_BATTLE_2_VS_2
         {
             gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
+            if (gSpecialVar_0x8005) // 12 vs 12
+                gBattleTypeFlags |= BATTLE_TYPE_TWELVES;
         }
 
         FillPartnerParty(gPartnerTrainerId);

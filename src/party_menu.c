@@ -7470,7 +7470,7 @@ void ChooseMonForWirelessMinigame(void)
 
 static u8 GetPartyLayoutFromBattleType(void)
 {
-    if (IsMultiBattle() == TRUE)
+    if (IsMultiBattle() == TRUE && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
         return PARTY_LAYOUT_MULTI;
     if (!IsDoubleBattle() || gPartiesCount[B_TRAINER_0] == 1) // Draw the single layout in a double battle where the player has only one pokemon.
         return PARTY_LAYOUT_SINGLE;

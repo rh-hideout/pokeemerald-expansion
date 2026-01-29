@@ -1433,8 +1433,11 @@ static void CB2_PreInitIngamePlayerPartnerBattle(void)
         *savedCallback = gMain.savedCallback;
         *savedBattleTypeFlags = gBattleTypeFlags;
         gMain.savedCallback = CB2_PreInitIngamePlayerPartnerBattle;
-        if (!PlayerHasFollowerNPC() || !FollowerNPCIsBattlePartner() || (FNPC_NPC_FOLLOWER_PARTY_PREVIEW && FollowerNPCIsBattlePartner()))
+        if ((!PlayerHasFollowerNPC() || !FollowerNPCIsBattlePartner() || (FNPC_NPC_FOLLOWER_PARTY_PREVIEW && FollowerNPCIsBattlePartner()))
+         && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+        {
             ShowPartyMenuToShowcaseMultiBattleParty();
+        }
 
         break;
     case 1:
@@ -3569,36 +3572,70 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_DRAW_PARTY_SUMMARY: // grintoul TO DO
         if (!gBattleControllerExecFlags)
         {
-            struct HpAndStatus hpStatus[PARTY_SIZE];
+            struct HpAndStatus hpStatus[MAX_BATTLE_TRAINERS/2][PARTY_SIZE];
 
-            if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES)) // grintoul TO DO - second party for 12 sides
+            if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
             {
-                for (i = 0; i < MULTI_PARTY_SIZE; i++)
+                if (!(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
                 {
-                    if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                     || GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {
-                        hpStatus[i].hp = HP_EMPTY_SLOT;
-                        hpStatus[i].status = 0;
+                        if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        {
+                            hpStatus[0][i].hp = HP_EMPTY_SLOT;
+                            hpStatus[0][i].status = 0;
+                        }
+                        else
+                        {
+                            hpStatus[0][i].hp = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HP);
+                            hpStatus[0][i].status = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_STATUS);
+                        }
                     }
-                    else
+                    for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {
-                        hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HP);
-                        hpStatus[i].status = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_STATUS);
+                        if (GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        {
+                            hpStatus[0][i + MULTI_PARTY_SIZE].hp = HP_EMPTY_SLOT;
+                            hpStatus[0][i + MULTI_PARTY_SIZE].status = 0;
+                        }
+                        else
+                        {
+                            hpStatus[0][i + MULTI_PARTY_SIZE].hp = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_HP);
+                            hpStatus[0][i + MULTI_PARTY_SIZE].status = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_STATUS);
+                        }
                     }
                 }
-                for (i = 0; i < MULTI_PARTY_SIZE; i++)
+                else
                 {
-                    if (GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                     || GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    for (i = 0; i < PARTY_SIZE; i++)
                     {
-                        hpStatus[i + MULTI_PARTY_SIZE].hp = HP_EMPTY_SLOT;
-                        hpStatus[i + MULTI_PARTY_SIZE].status = 0;
+                        if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        {
+                            hpStatus[0][i].hp = HP_EMPTY_SLOT;
+                            hpStatus[0][i].status = 0;
+                        }
+                        else
+                        {
+                            hpStatus[0][i].hp = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HP);
+                            hpStatus[0][i].status = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_STATUS);
+                        }
                     }
-                    else
+                    for (i = 0; i < PARTY_SIZE; i++)
                     {
-                        hpStatus[i + MULTI_PARTY_SIZE].hp = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_HP);
-                        hpStatus[i + MULTI_PARTY_SIZE].status = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_STATUS);
+                        if (GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        {
+                            hpStatus[1][i].hp = HP_EMPTY_SLOT;
+                            hpStatus[1][i].status = 0;
+                        }
+                        else
+                        {
+                            hpStatus[1][i].hp = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_HP);
+                            hpStatus[1][i].status = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_STATUS);
+                        }
                     }
                 }
             }
@@ -3609,49 +3646,83 @@ static void DoBattleIntro(void)
                     if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
                      || GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
                     {
-                        hpStatus[i].hp = HP_EMPTY_SLOT;
-                        hpStatus[i].status = 0;
+                        hpStatus[0][i].hp = HP_EMPTY_SLOT;
+                        hpStatus[0][i].status = 0;
                     }
                     else
                     {
-                        hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HP);
-                        hpStatus[i].status = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_STATUS);
+                        hpStatus[0][i].hp = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_HP);
+                        hpStatus[0][i].status = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_STATUS);
                     }
                 }
             }
 
             battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-            BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus, PARTY_SUMM_SKIP_DRAW_DELAY);
+            BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[0], PARTY_SUMM_SKIP_DRAW_DELAY);
             MarkBattlerForControllerExec(battler);
 
-            if (BattleSideHasTwoTrainers(B_SIDE_PLAYER) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES)) // grintoul TO DO - second party for 12 sides
+            if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
             {
-                for (i = 0; i < MULTI_PARTY_SIZE; i++)
+                if (!(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
                 {
-                    if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                     || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {
-                        hpStatus[i].hp = HP_EMPTY_SLOT;
-                        hpStatus[i].status = 0;
+                        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        {
+                            hpStatus[0][i].hp = HP_EMPTY_SLOT;
+                            hpStatus[0][i].status = 0;
+                        }
+                        else
+                        {
+                            hpStatus[0][i].hp = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP);
+                            hpStatus[0][i].status = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS);
+                        }
                     }
-                    else
+                    for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {
-                        hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP);
-                        hpStatus[i].status = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS);
+                        if (GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        {
+                            hpStatus[0][i + MULTI_PARTY_SIZE].hp = HP_EMPTY_SLOT;
+                            hpStatus[0][i + MULTI_PARTY_SIZE].status = 0;
+                        }
+                        else
+                        {
+                            hpStatus[0][i + MULTI_PARTY_SIZE].hp = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_HP);
+                            hpStatus[0][i + MULTI_PARTY_SIZE].status = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_STATUS);
+                        }
                     }
                 }
-                for (i = 0; i < MULTI_PARTY_SIZE; i++)
+                else
                 {
-                    if (GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                     || GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                    for (i = 0; i < PARTY_SIZE; i++)
                     {
-                        hpStatus[i + MULTI_PARTY_SIZE].hp = HP_EMPTY_SLOT;
-                        hpStatus[i + MULTI_PARTY_SIZE].status = 0;
+                        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        {
+                            hpStatus[0][i].hp = HP_EMPTY_SLOT;
+                            hpStatus[0][i].status = 0;
+                        }
+                        else
+                        {
+                            hpStatus[0][i].hp = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP);
+                            hpStatus[0][i].status = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS);
+                        }
                     }
-                    else
+                    for (i = 0; i < PARTY_SIZE; i++)
                     {
-                        hpStatus[i + MULTI_PARTY_SIZE].hp = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_HP);
-                        hpStatus[i + MULTI_PARTY_SIZE].status = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_STATUS);
+                        if (GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        {
+                            hpStatus[1][i].hp = HP_EMPTY_SLOT;
+                            hpStatus[1][i].status = 0;
+                        }
+                        else
+                        {
+                            hpStatus[1][i].hp = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_HP);
+                            hpStatus[1][i].status = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_STATUS);
+                        }
                     }
                 }
             }
@@ -3662,19 +3733,19 @@ static void DoBattleIntro(void)
                     if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
                      || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
                     {
-                        hpStatus[i].hp = HP_EMPTY_SLOT;
-                        hpStatus[i].status = 0;
+                        hpStatus[0][i].hp = HP_EMPTY_SLOT;
+                        hpStatus[0][i].status = 0;
                     }
                     else
                     {
-                        hpStatus[i].hp = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP);
-                        hpStatus[i].status = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS);
+                        hpStatus[0][i].hp = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP);
+                        hpStatus[0][i].status = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS);
                     }
                 }
             }
 
             battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-            BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus, PARTY_SUMM_SKIP_DRAW_DELAY);
+            BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[0], PARTY_SUMM_SKIP_DRAW_DELAY);
             MarkBattlerForControllerExec(battler);
 
             gBattleStruct->eventState.battleIntro++;

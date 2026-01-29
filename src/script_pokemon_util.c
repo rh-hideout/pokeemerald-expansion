@@ -224,7 +224,7 @@ static void CB2_ReturnFromChooseBattleFrontierParty(void)
 
 void ReducePlayerPartyToSelectedMons(void)
 {
-    struct Pokemon party[MAX_FRONTIER_PARTY_SIZE];
+    /*struct Pokemon party[MAX_FRONTIER_PARTY_SIZE];
     int i;
 
     CpuFill32(0, party, sizeof party);
@@ -238,7 +238,7 @@ void ReducePlayerPartyToSelectedMons(void)
 
     // overwrite the first 4 with the order copied to.
     for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
-        gParties[B_TRAINER_0][i] = party[i];
+        gParties[B_TRAINER_0][i] = party[i];*/
 
     CalculatePlayerPartyCount();
 }
