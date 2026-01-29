@@ -1488,6 +1488,9 @@ static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent)
     if (OWE_ShouldDespawnGeneratedForNewOWE(objectEvent))
         return FALSE;
 
+    if (objectEvent->offScreen)
+        return FALSE;
+
     return OWE_WILD_ENCOUNTERS_DESPAWN_SOUND;
 
 }

@@ -2986,6 +2986,9 @@ static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
     if (objectEvent->initialCoords.x >= left && objectEvent->initialCoords.x <= right
      && objectEvent->initialCoords.y >= top && objectEvent->initialCoords.y <= bottom)
         return;
+    
+    if (IsOverworldWildEncounter(objectEvent, OWE_ANY))
+        objectEvent->offScreen = TRUE;
     RemoveObjectEvent(objectEvent);
 }
 
