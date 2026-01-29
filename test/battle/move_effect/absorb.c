@@ -24,6 +24,7 @@ SINGLE_BATTLE_TEST("Absorb recovers 50% of the damage dealt")
     }
 }
 
+// The animation makes the recording freeze. Changing it fixes it
 SINGLE_BATTLE_TEST("Absorb fails if Heal Block applies")
 {
     GIVEN {

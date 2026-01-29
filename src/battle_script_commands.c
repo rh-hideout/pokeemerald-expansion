@@ -7338,14 +7338,8 @@ static void Cmd_manipulatedamage(void)
 
     switch (cmd->mode)
     {
-    case DMG_CHANGE_SIGN:
-        gBattleStruct->passiveHpUpdate[gBattlerAttacker] *= -1;
-        break;
     case DMG_1_8_TARGET_HP:
         SetPassiveDamageAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 8);
-        break;
-    case DMG_BIG_ROOT:
-        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = -1 * GetDrainedBigRootHp(gBattlerAttacker, gBattleStruct->passiveHpUpdate[gBattlerAttacker]);
         break;
     }
 
@@ -13396,30 +13390,41 @@ void BS_TrySetFairyLock(void)
 void BS_GetStatValue(void)
 {
     NATIVE_ARGS(u8 stat);
+
+    if (IsBattlerAtMaxHp(gBattlerAttacker))
+    {
+        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
+
     u32 stat = cmd->stat;
+    u32 healAmount = 0;
     switch (stat)
     {
     case STAT_ATK:
-        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerTarget].attack;
+        healAmount = gBattleMons[gBattlerTarget].attack;
         break;
     case STAT_DEF:
-        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerTarget].defense;
+        healAmount = gBattleMons[gBattlerTarget].defense;
         break;
     case STAT_SPATK:
-        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerTarget].spAttack;
+        healAmount = gBattleMons[gBattlerTarget].spAttack;
         break;
     case STAT_SPDEF:
-        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerTarget].spDefense;
+        healAmount = gBattleMons[gBattlerTarget].spDefense;
         break;
     case STAT_SPEED:
-        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerTarget].speed;
+        healAmount = gBattleMons[gBattlerTarget].speed;
         break;
     default:
         errorf("Illegal stat requested");
         return;
     }
-    gBattleStruct->passiveHpUpdate[gBattlerAttacker] *= gStatStageRatios[gBattleMons[gBattlerTarget].statStages[stat]][0];
-    gBattleStruct->passiveHpUpdate[gBattlerAttacker] /= gStatStageRatios[gBattleMons[gBattlerTarget].statStages[stat]][1];
+
+    healAmount *= gStatStageRatios[gBattleMons[gBattlerTarget].statStages[stat]][0];
+    healAmount /= gStatStageRatios[gBattleMons[gBattlerTarget].statStages[stat]][1];
+    gBattleStruct->passiveHpUpdate[gBattlerAttacker] = healAmount;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
