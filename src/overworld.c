@@ -46,6 +46,7 @@
 #include "money.h"
 #include "new_game.h"
 #include "oras_dowse.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 #include "play_time.h"
 #include "random.h"
@@ -925,6 +926,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
          || gMapHeader.regionMapSectionId != sLastMapSectionId)
             ShowMapNamePopup();
     }
+    OverworldWildEncounter_SetMinimumSpawnTimer();
 }
 
 static void LoadMapFromWarp(bool32 a1)
@@ -985,6 +987,7 @@ static void LoadMapFromWarp(bool32 a1)
         UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
         InitSecretBaseAppearance(TRUE);
     }
+    OverworldWildEncounter_SetMinimumSpawnTimer();
 }
 
 void ResetInitialPlayerAvatarState(void)
@@ -1394,6 +1397,9 @@ void Overworld_FadeOutMapMusic(void)
 
 static void PlayAmbientCry(void)
 {
+    if (!OWE_VANILLA_AMBIENT_CRIES)
+        return;
+    
     s16 x, y;
     s8 pan;
     s8 volume;
@@ -1555,6 +1561,23 @@ mapsec_u8_t GetCurrentRegionMapSectionId(void)
 enum MapBattleScene GetCurrentMapBattleScene(void)
 {
     return Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum)->battleType;
+}
+
+bool32 AreCoordsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
+{
+    const struct MapLayout *layout = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->mapLayout;
+    s32 width = layout->width + MAP_OFFSET;
+    s32 height = layout->height + MAP_OFFSET;
+
+    if (x >= 0 && x < width && y >= 0 && y < height)
+        return TRUE;
+
+    return FALSE;
+}
+
+bool32 AreCoordsInsidePlayerMap(s16 x, s16 y)
+{
+    return AreCoordsInsideMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, x, y);
 }
 
 static void InitOverworldBgs(void)
@@ -1816,6 +1839,7 @@ static void OverworldBasic(void)
             ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
+    UpdateOverworldEncounters();
 }
 
 // This CB2 is used when starting

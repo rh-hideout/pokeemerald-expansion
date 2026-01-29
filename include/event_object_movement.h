@@ -124,6 +124,9 @@ extern const u8 gReflectionEffectPaletteMap[];
 extern const struct SpriteFrameImage *const gBerryTreePicTablePointers[];
 extern const u8 *const gBerryTreePaletteSlotTablePointers[];
 
+extern const struct SpritePalette gSpritePalette_GeneralFieldEffect0;
+extern const struct SpritePalette gSpritePalette_GeneralFieldEffect1;
+
 void ResetObjectEvents(void);
 u8 GetMoveDirectionAnimNum(enum Direction direction);
 u8 GetObjectEventIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroupId);
@@ -183,17 +186,20 @@ void InitObjectEventPalettes(u8 reflectionType);
 void UpdateObjectEventCurrentMovement(struct ObjectEvent *objectEvent, struct Sprite *sprite, bool8 (*callback)(struct ObjectEvent *, struct Sprite *));
 bool8 ObjectEventFaceOppositeDirection(struct ObjectEvent *objectEvent, enum Direction direction);
 enum Direction GetOppositeDirection(enum Direction direction);
+enum Direction GetNinetyDegreeDirection(enum Direction direction, bool32 clockwise);
 u8 GetWalkInPlaceFasterMovementAction(u32);
 u8 GetWalkInPlaceFastMovementAction(u32);
 u8 GetWalkInPlaceNormalMovementAction(u32);
 u8 GetWalkInPlaceSlowMovementAction(u32);
 enum Collision GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction dir);
+bool32 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction);
 u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, bool32 addCoords);
 void MoveCoords(enum Direction direction, s16 *x, s16 *y);
 bool8 ObjectEventIsHeldMovementActive(struct ObjectEvent *objectEvent);
 u8 ObjectEventClearHeldMovementIfFinished(struct ObjectEvent *objectEvent);
 u8 GetObjectEventIdByPosition(u16 x, u16 y, u8 elevation);
 void SetTrainerMovementType(struct ObjectEvent *objectEvent, u8 movementType);
+u8 GetCollisionInDirection(struct ObjectEvent *, enum Direction);
 u8 GetTrainerFacingDirectionMovementType(enum Direction direction);
 const u8 *GetObjectEventScriptPointerByObjectEventId(u8 objectEventId);
 u8 GetCollisionFlagsAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction);
@@ -261,11 +267,16 @@ u8 GetObjectEventBerryTreeId(u8 objectEventId);
 void SetBerryTreeJustPicked(u8 mapId, u8 mapNumber, u8 mapGroup);
 bool8 IsBerryTreeSparkling(u8 localId, u8 mapNum, u8 mapGroup);
 const struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup);
+u16 LoadSheetGraphicsInfo(const struct ObjectEventGraphicsInfo *info, u16 uuid, struct Sprite *sprite);
 u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY);
 bool8 GetFollowerInfo(u32 *species, bool32 *shiny, bool32 *female);
 const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 shiny, bool32 female);
+u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female);
 u16 GetObjectEventFlagIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup);
 void CopyObjectGraphicsInfoToSpriteTemplate(u16 graphicsId, void (*callback)(struct Sprite *), struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables);
+bool32 AreElevationsCompatible(u32, u32);
+enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo);
+void ObjectEventsTurnToEachOther(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo);
 
 void MovementType_None(struct Sprite *sprite);
 void MovementType_LookAround(struct Sprite *sprite);
@@ -323,6 +334,12 @@ void MovementType_RunInPlace(struct Sprite *sprite);
 void MovementType_Invisible(struct Sprite *sprite);
 void MovementType_WalkSlowlyInPlace(struct Sprite *sprite);
 void MovementType_FollowPlayer(struct Sprite *sprite);
+void MovementType_WanderAround_OverworldWildEncounter(struct Sprite *sprite);
+void MovementType_ChasePlayer_OverworldWildEncounter(struct Sprite *sprite);
+void MovementType_FleePlayer_OverworldWildEncounter(struct Sprite *sprite);
+void MovementType_WatchPlayer_OverworldWildEncounter(struct Sprite *sprite);
+void MovementType_ApproachPlayer_OverworldWildEncounter(struct Sprite *sprite);
+void MovementType_Despawn_OverworldWildEncounter(struct Sprite *sprite);
 u8 GetSlideMovementAction(u32);
 u8 GetJump2MovementAction(u32);
 u8 CopySprite(struct Sprite *sprite, s16 x, s16 y, u8 subpriority);
@@ -497,6 +514,28 @@ u8 MovementType_RunInPlace_Step0(struct ObjectEvent *objectEvent, struct Sprite 
 u8 MovementType_Invisible_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_Invisible_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_Invisible_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WanderAround_OverworldWildEncounter_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WanderAround_OverworldWildEncounter_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WanderAround_OverworldWildEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WanderAround_OverworldWildEncounter_Step5(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_Common_OverworldWildEncounter_Step7(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ChasePlayer_OverworldWildEncounter_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_Common_OverworldWildEncounter_Step9(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ChasePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ChasePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_Common_OverworldWildEncounter_Step12(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_FleePlayer_OverworldWildEncounter_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_FleePlayer_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_FleePlayer_OverworldWildEncounter_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WatchPlayer_OverworldWildEncounter_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WatchPlayer_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WatchPlayer_OverworldWildEncounter_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ApproachPlayer_OverworldWildEncounter_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ApproachPlayer_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_ApproachPlayer_OverworldWildEncounter_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_Despawn_OverworldWildEncounter_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_Despawn_OverworldWildEncounter_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_Despawn_OverworldWildEncounter_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 
 u8 CreateVirtualObject(u16 graphicsId, u8 virtualObjId, s16 x, s16 y, u8 elevation, enum Direction direction);
 void TurnVirtualObject(u8 virtualObjId, enum Direction direction);
@@ -518,5 +557,9 @@ bool8 MovementAction_EmoteDoubleExclamationMark_Step0(struct ObjectEvent *, stru
 bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent);
 
 u8 GetObjectEventApricornTreeId(u8 objectEventId);
+
+bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent);
+
+extern const enum Direction gStandardDirections[];
 
 #endif //GUARD_EVENT_OBJECT_MOVEMENT_H

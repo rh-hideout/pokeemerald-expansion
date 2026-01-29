@@ -7,6 +7,7 @@
 #include "load_save.h"
 #include "main.h"
 #include "overworld.h"
+#include "overworld_encounters.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
@@ -220,6 +221,8 @@ void LoadObjectEvents(void)
     int i;
     u16 graphicsId;
 
+    OWE_ResetAmbientCryTimer();
+    OverworldWildEncounter_SetMinimumSpawnTimer();
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         gObjectEvents[i] = gSaveBlock1Ptr->objectEvents[i];

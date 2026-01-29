@@ -29,6 +29,7 @@
 #include "secret_base.h"
 #include "string_util.h"
 #include "overworld.h"
+#include "overworld_encounters.h"
 #include "field_weather.h"
 #include "battle_tower.h"
 #include "gym_leader_rematch.h"
@@ -259,6 +260,7 @@ static void Task_BattleStart(u8 taskId)
             SetMainCallback2(CB2_InitBattle);
             RestartWildEncounterImmunitySteps();
             ClearPoisonStepCounter();
+            OverworldWildEncounter_RemoveObjectOnBattle();
             DestroyTask(taskId);
         }
         break;

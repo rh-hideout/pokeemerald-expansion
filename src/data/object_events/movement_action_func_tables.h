@@ -1758,3 +1758,72 @@ u8 (*const gMovementActionFuncs_SpinRight[])(struct ObjectEvent *, struct Sprite
     MovementAction_SpinRight_Step1,
     MovementAction_PauseSpriteAnim,
 };
+
+#define OWE_WANDER_AROUND_COMMON_STEPS                      \
+    MovementType_WanderAround_Step0,                        \
+    MovementType_WanderAround_Step1,                        \
+    MovementType_WanderAround_OverworldWildEncounter_Step2, \
+    MovementType_WanderAround_OverworldWildEncounter_Step3, \
+    MovementType_WanderAround_OverworldWildEncounter_Step4, \
+    MovementType_WanderAround_OverworldWildEncounter_Step5, \
+    MovementType_WanderAround_Step6
+
+u8 (*const gMovementTypeFuncs_WanderAround_OverworldWildEncounter[])(struct ObjectEvent *, struct Sprite *) =
+{
+    OWE_WANDER_AROUND_COMMON_STEPS,
+};
+
+u8 (*const gMovementTypeFuncs_ChasePlayer_OverworldWildEncounter[])(struct ObjectEvent *, struct Sprite *) =
+{
+    OWE_WANDER_AROUND_COMMON_STEPS,
+    MovementType_Common_OverworldWildEncounter_Step7,
+    MovementType_ChasePlayer_OverworldWildEncounter_Step8,
+    MovementType_Common_OverworldWildEncounter_Step9,
+    MovementType_ChasePlayer_OverworldWildEncounter_Step10,
+    MovementType_ChasePlayer_OverworldWildEncounter_Step11,
+    MovementType_Common_OverworldWildEncounter_Step12,
+};
+
+u8 (*const gMovementTypeFuncs_FleePlayer_OverworldWildEncounter[])(struct ObjectEvent *, struct Sprite *) =
+{
+    OWE_WANDER_AROUND_COMMON_STEPS,
+    MovementType_Common_OverworldWildEncounter_Step7,
+    MovementType_FleePlayer_OverworldWildEncounter_Step8,
+    MovementType_Common_OverworldWildEncounter_Step9,
+    MovementType_FleePlayer_OverworldWildEncounter_Step10,
+    MovementType_FleePlayer_OverworldWildEncounter_Step11,
+    MovementType_Common_OverworldWildEncounter_Step12,
+};
+
+u8 (*const gMovementTypeFuncs_WatchPlayer_OverworldWildEncounter[])(struct ObjectEvent *, struct Sprite *) =
+{
+    OWE_WANDER_AROUND_COMMON_STEPS,
+    MovementType_Common_OverworldWildEncounter_Step7,
+    MovementType_WatchPlayer_OverworldWildEncounter_Step8,
+    MovementType_Common_OverworldWildEncounter_Step9,
+    MovementType_WatchPlayer_OverworldWildEncounter_Step10,
+    MovementType_WatchPlayer_OverworldWildEncounter_Step11,
+    MovementType_Common_OverworldWildEncounter_Step12,
+};
+
+u8 (*const gMovementTypeFuncs_ApproachPlayer_OverworldWildEncounter[])(struct ObjectEvent *, struct Sprite *) =
+{
+    OWE_WANDER_AROUND_COMMON_STEPS,
+    MovementType_Common_OverworldWildEncounter_Step7,
+    MovementType_ApproachPlayer_OverworldWildEncounter_Step8,
+    MovementType_Common_OverworldWildEncounter_Step9,
+    MovementType_ApproachPlayer_OverworldWildEncounter_Step10,
+    MovementType_ApproachPlayer_OverworldWildEncounter_Step11,
+    MovementType_Common_OverworldWildEncounter_Step12,
+};
+
+u8 (*const gMovementTypeFuncs_Despawn_OverworldWildEncounter[])(struct ObjectEvent *, struct Sprite *) =
+{
+    OWE_WANDER_AROUND_COMMON_STEPS,
+    MovementType_Common_OverworldWildEncounter_Step7,
+    MovementType_Despawn_OverworldWildEncounter_Step8,
+    MovementType_Common_OverworldWildEncounter_Step9,
+    MovementType_Despawn_OverworldWildEncounter_Step10,
+    MovementType_Despawn_OverworldWildEncounter_Step11,
+    MovementType_Common_OverworldWildEncounter_Step12,
+};
