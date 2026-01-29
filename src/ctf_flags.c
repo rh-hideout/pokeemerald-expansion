@@ -54,3 +54,24 @@ bool8 Ctf_IsGymFlagCorrect(u8 gymId, const u8 *input)
         return FALSE;
     return Ctf_IsFlagCorrect(gymId, input);
 }
+
+void Ctf_GetFlagWordUpper(u8 flagId, u8 *dst, u32 dstSize)
+{
+    if (dstSize == 0)
+        return;
+
+    dst[0] = EOS;
+
+    if (flagId == 0 || flagId > CTF_FLAG_COUNT)
+        return;
+
+    // Ziel ist PLAYER_NAME_LENGTH+1 groß, wir schreiben sicherheitshalber begrenzt
+    // Normalisierung macht bereits EOS am Ende.
+    Ctf_Normalize(dst, sFlagWords[flagId - 1]);
+
+    // Falls dstSize kleiner ist, hart terminieren
+    if (dstSize <= PLAYER_NAME_LENGTH)
+        dst[dstSize - 1] = EOS;
+}
+
+
