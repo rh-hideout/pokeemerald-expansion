@@ -1762,7 +1762,7 @@ gBattleAnimMove_DrainPunch::
 	createsprite gBasicHitSplatSpriteTemplate, ANIM_TARGET, 2, 0, 0, ANIM_TARGET, 1
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 15, 1
 	delay 20
-	call MegaDrainAbsorbEffect
+	call GigaDrainAbsorbEffect
 	waitforvisualfinish
 	delay 15
 	call HealingEffect
@@ -8121,7 +8121,7 @@ gBattleAnimMove_DrainingKiss::
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 5, 5, 1
 	waitforvisualfinish
 	delay 3
-	call AbsorbEffect
+	call MegaDrainAbsorbEffect
 	waitforvisualfinish
 	delay 15
 	call HealingEffect
@@ -26608,7 +26608,11 @@ gBattleAnimMove_LeechLife::
 	waitforvisualfinish
 	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 1, 0, 7, RGB_BLACK
 	waitforvisualfinish
+.if B_UPDATED_MOVE_DATA >= GEN_7
+	call GigaDrainAbsorbEffect
+.else
 	call AbsorbEffect
+.endif
 	waitforvisualfinish
 	delay 15
 	call HealingEffect
