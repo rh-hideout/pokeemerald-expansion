@@ -562,8 +562,11 @@ static bool32 CreateOverworldWildEncounter_CheckBattleFrontier(u32 headerId)
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         {
             u32 id = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+            u32 species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
             SetMonData(&gEnemyParty[0], MON_DATA_SPECIES, &id);
-            GenerateBattlePyramidWildMon();
+            if (!BATTLE_PYRAMID_RANDOM_ENCOUNTERS)
+                species = SPECIES_NONE;
+            GenerateBattlePyramidWildMon(species);
             BattleSetup_StartWildBattle();
             return TRUE;
         }
@@ -783,7 +786,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
                 return FALSE;
 
             u32 id = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
-            GenerateBattlePyramidWildMon();
+            GenerateBattlePyramidWildMon(SPECIES_NONE);
             SetMonData(&gEnemyParty[0], MON_DATA_LEVEL, &id);
             return TRUE;
         }
