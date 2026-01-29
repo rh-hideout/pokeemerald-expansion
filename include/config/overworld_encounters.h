@@ -16,7 +16,7 @@
 #define OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS                FALSE   // If TRUE, any spot that could result in a Feebas fishing encounter can spawn a Feebas overworld wild encounter.
 #define OWE_WILD_ENCOUNTERS_DESPAWN_SOUND               TRUE    // If TRUE, plays SE_FLEE when an overworld wild encounter despawns.
 #define OWE_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE         TRUE    // If TRUE, the mon will take steps to be right next to the player before the battle starts.
-#define OWE_WILD_ENCOUNTERS_PREVENT_SHINY_REPLACEMENT   TRUE    // If TRUE, shiny OW Pokémon objects will not be despawned if OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT is TRUE.
-#define OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_REPLACEMENT  TRUE    // If TRUE, Feebas OW objects spawned from special Feebas fishing spots (when OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS is TRUE) will not be despawned if OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT is TRUE.
+#define OWE_WILD_ENCOUNTERS_PREVENT_SHINY_DESPAWN       FALSE   // If TRUE, shiny OW Pokémon objects will not be despawned when off-screen if on the same map as the player, or be replaced if OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT is TRUE.
+#define OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN      FALSE   // If TRUE, Feebas OW objects spawned from special Feebas fishing spots (when OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS is TRUE) will not be despawned when off-screen if on the same map as the player, or be replaced if OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT is TRUE.
 
 #endif // GUARD_CONFIG_OVERWORLD_ENCOUNTERS_H

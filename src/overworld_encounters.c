@@ -332,7 +332,7 @@ u32 GetOldestSlot(bool32 forceRemove)
     for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_REPLACE_FLAG) || forceRemove == TRUE))
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG) || forceRemove == TRUE))
         {
             oldest = slotMon;
             break;
@@ -345,7 +345,7 @@ u32 GetOldestSlot(bool32 forceRemove)
     for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_REPLACE_FLAG) || forceRemove == TRUE))
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && (!(slotMon->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG) || forceRemove == TRUE))
         {
             if (slotMon->sAge > oldest->sAge)
                 oldest = slotMon;
@@ -503,7 +503,7 @@ void CreateOverworldWildEncounter(void)
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
     u32 gender = OW_FEMALE(object) ? MON_FEMALE : MON_MALE;
-    u32 level = (object->sOverworldEncounterLevel &= ~OWE_NO_REPLACE_FLAG);
+    u32 level = (object->sOverworldEncounterLevel &= ~OWE_NO_DESPAWN_FLAG);
     u32 personality;
 
     switch (gSpeciesInfo[speciesId].genderRatio)
@@ -751,8 +751,8 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     else
         *isFemale = FALSE;
 
-    if ((OWE_WILD_ENCOUNTERS_PREVENT_SHINY_REPLACEMENT && *isShiny))
-        *level |= OWE_NO_REPLACE_FLAG;
+    if ((OWE_WILD_ENCOUNTERS_PREVENT_SHINY_DESPAWN && *isShiny))
+        *level |= OWE_NO_DESPAWN_FLAG;
 
     ZeroEnemyPartyMons();
 }
@@ -829,8 +829,8 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     else if (OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
     {
         *level = ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING);
-        if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_REPLACEMENT)
-            *level |= OWE_NO_REPLACE_FLAG;
+        if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN)
+            *level |= OWE_NO_DESPAWN_FLAG;
         *speciesId = gWildFeebas.species;
         CreateWildMon(*speciesId, *level);
     }
@@ -1743,6 +1743,14 @@ static bool32 OWE_CheckSpecies(u32 speciesId)
 void OWE_PlayAmbientCry(void)
 {
     OWE_PlayMonObjectCry(OWE_GetRandomActiveEncounterObject());
+}
+
+bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent)
+{
+    if (objectEvent->sOverworldEncounterLevel & OWE_NO_DESPAWN_FLAG)
+        return TRUE;
+
+    return FALSE;
 }
 
 #undef sOverworldEncounterLevel

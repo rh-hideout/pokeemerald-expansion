@@ -36,7 +36,7 @@
 
 #define INVALID_SPAWN_SLOT          0xFF
 
-#define OWE_NO_REPLACE_FLAG         0x80
+#define OWE_NO_DESPAWN_FLAG         0x80
 
 #define OWE_SAVED_MOVEMENT_STATE_FLAG   0x80
 #define OWE_RESTORED_MOVEMENT_FUNC_ID   10
@@ -127,5 +127,6 @@ void OWE_ClearSavedMovementState(struct ObjectEvent *objectEvent);
 u32 OWE_GetWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 speed);
 void OWE_PlayAmbientCry(void);
 u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType);
+bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
