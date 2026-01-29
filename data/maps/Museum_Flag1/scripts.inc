@@ -18,10 +18,10 @@ Museum_Flag1_MapScripts::
 
 
 Museum_Flag1_OnTransition:
-	@ Tür dauerhaft anwenden, falls schon geöffnet
+	@ Türzustand anwenden ist ok im Transition
 	goto_if_set FLAG_CTF_MUSEUM_DOOR_OPEN, Museum_Flag1_ApplyDoorOnLoad
 
-	@ Cutscene nur "armen", nicht starten
+	@ Cutscene nur “armen”, NICHT starten
 	goto_if_set FLAG_CTF_MUSEUM_SCENE_PENDING, Museum_Flag1_ArmScene
 	end
 
@@ -31,17 +31,11 @@ Museum_Flag1_ApplyDoorOnLoad:
 	end
 
 Museum_Flag1_ArmScene:
-	@ sofort Bewegungen verhindern + Spieler nach oben schauen lassen
-	lockall
-	turnobject LOCALID_PLAYER, DIR_NORTH
-
-	@ sorgt dafür, dass OnFrame sie 1x ausführt
 	setvar VAR_TEMP_1, 0
 	end
 
 
 Museum_Flag1_OnFrame:
-	@ Rocket Cutscene 1x starten, wenn armed
 	map_script_2 VAR_TEMP_1, 0, Museum_Flag1_EventScript_RocketCutscene
 	.2byte 0
 
@@ -53,14 +47,20 @@ Museum_Flag1_EventScript_RocketCutscene::
 
 	lockall
 
+	@ Spieler soll nach dem Teleport nach oben schauen
+	turnobject LOCALID_PLAYER, DIR_NORTH
+
 	msgbox Museum_Flag1_Text_FarmerMess, MSGBOX_DEFAULT
 	closemessage
 
+	@ Rockets sichtbar machen + sofort spawnen
 	clearflag FLAG_HIDE_MUSEUM_FLAG1_JESSIE
 	clearflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
+	addobject LOCALID_MUSEUM_JESSIE
+	addobject LOCALID_MUSEUM_JAMES
 
-	setobjectxy LOCALID_MUSEUM_JESSIE, ROCKET_SPAWN_X, JESSIE_SPAWN_Y
-	setobjectxy LOCALID_MUSEUM_JAMES,  ROCKET_SPAWN_X, JAMES_SPAWN_Y
+	setobjectxy LOCALID_MUSEUM_JESSIE, 19, 3
+	setobjectxy LOCALID_MUSEUM_JAMES,  19, 4
 
 	turnobject LOCALID_MUSEUM_JESSIE, DIR_WEST
 	turnobject LOCALID_MUSEUM_JAMES,  DIR_WEST
@@ -77,13 +77,16 @@ Museum_Flag1_EventScript_RocketCutscene::
 	applymovement LOCALID_MUSEUM_JAMES,  Museum_Flag1_Movement_RocketLeave
 	waitmovement 0
 
+	@ verschwinden + dauerhaft verstecken
 	setflag FLAG_HIDE_MUSEUM_FLAG1_JESSIE
 	setflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
 	removeobject LOCALID_MUSEUM_JESSIE
 	removeobject LOCALID_MUSEUM_JAMES
 
+	@ Student sichtbar machen + sofort spawnen
 	clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
-	setobjectxy LOCALID_MUSEUM_STUDENT, STUDENT_SPAWN_X, STUDENT_SPAWN_Y
+	addobject LOCALID_MUSEUM_STUDENT
+	setobjectxy LOCALID_MUSEUM_STUDENT, 19, 3
 	turnobject LOCALID_MUSEUM_STUDENT, DIR_WEST
 
 	applymovement LOCALID_MUSEUM_STUDENT, Museum_Flag1_Movement_StudentEnter
@@ -96,6 +99,7 @@ Museum_Flag1_EventScript_RocketCutscene::
 
 	releaseall
 	end
+
 
 
 Museum_Flag1_Movement_RocketEnter:
