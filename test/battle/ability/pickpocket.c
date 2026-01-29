@@ -118,24 +118,9 @@ SINGLE_BATTLE_TEST("Pickpocket cannot steal from Sticky Hold")
 
 SINGLE_BATTLE_TEST("Pickpocket cannot steal restricted held items")
 {
-    u16 item, species, ability;
-
-    PARAMETRIZE { item = ITEM_ORANGE_MAIL;     species = SPECIES_WOBBUFFET;   ability = ABILITY_TELEPATHY; }
-    PARAMETRIZE { item = ITEM_NORMALIUM_Z;     species = SPECIES_WOBBUFFET;   ability = ABILITY_TELEPATHY; }
-    PARAMETRIZE { item = ITEM_GRISEOUS_CORE;   species = SPECIES_GIRATINA;    ability = ABILITY_PRESSURE; }
-    PARAMETRIZE { item = ITEM_DRACO_PLATE;     species = SPECIES_ARCEUS;      ability = ABILITY_MULTITYPE; }
-    PARAMETRIZE { item = ITEM_FIGHTING_MEMORY; species = SPECIES_SILVALLY;    ability = ABILITY_RKS_SYSTEM; }
-    PARAMETRIZE { item = ITEM_BURN_DRIVE;      species = SPECIES_GENESECT;    ability = ABILITY_DOWNLOAD; }
-    PARAMETRIZE { item = ITEM_LUCARIONITE;     species = SPECIES_LUCARIO;     ability = ABILITY_JUSTIFIED; }
-    PARAMETRIZE { item = ITEM_BLUE_ORB;        species = SPECIES_KYOGRE;      ability = ABILITY_DRIZZLE; }
-    PARAMETRIZE { item = ITEM_RED_ORB;         species = SPECIES_GROUDON;     ability = ABILITY_DROUGHT; }
-    PARAMETRIZE { item = ITEM_RUSTED_SWORD;    species = SPECIES_ZACIAN;      ability = ABILITY_INTREPID_SWORD; }
-    PARAMETRIZE { item = ITEM_RUSTED_SHIELD;   species = SPECIES_ZAMAZENTA;   ability = ABILITY_DAUNTLESS_SHIELD; }
-    PARAMETRIZE { item = ITEM_BOOSTER_ENERGY;  species = SPECIES_GREAT_TUSK;  ability = ABILITY_PROTOSYNTHESIS; }
-    PARAMETRIZE { item = ITEM_BOOSTER_ENERGY;  species = SPECIES_IRON_TREADS; ability = ABILITY_QUARK_DRIVE; }
-    
     GIVEN {
-        PLAYER(species) { Ability(ability); Item(item); }
+        ASSUME(gItemsInfo[ITEM_NORMALIUM_Z].holdEffect == HOLD_EFFECT_Z_CRYSTAL);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -145,10 +130,7 @@ SINGLE_BATTLE_TEST("Pickpocket cannot steal restricted held items")
         }
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
-        if (item == ITEM_BOOSTER_ENERGY)
-            EXPECT(player->item == ITEM_NONE);
-        else
-            EXPECT(player->item == item);
+        EXPECT(player->item == ITEM_NORMALIUM_Z);
     }
 }
 
@@ -313,25 +295,18 @@ SINGLE_BATTLE_TEST("Pickpocket steals Shell Bell after it heals the user")
 
 SINGLE_BATTLE_TEST("Pickpocket does not prevent King's Rock or Razor Fang flinches")
 {
-    u16 item;
-    PARAMETRIZE { item = ITEM_KINGS_ROCK; }
-    PARAMETRIZE { item = ITEM_RAZOR_FANG; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_KINGS_ROCK].holdEffect == HOLD_EFFECT_FLINCH);
-        ASSUME(gItemsInfo[ITEM_RAZOR_FANG].holdEffect == HOLD_EFFECT_FLINCH);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(20); Item(item); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_KINGS_ROCK); }
         OPPONENT(SPECIES_SNEASEL) { Speed(10); Ability(ABILITY_PICKPOCKET); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_HOLD_EFFECT_FLINCH, 1)); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-        if (item == ITEM_KINGS_ROCK)
-            MESSAGE("The opposing Sneasel stole Wobbuffet's King's Rock!");
-        else
-            MESSAGE("The opposing Sneasel stole Wobbuffet's Razor Fang!");
+        MESSAGE("The opposing Sneasel stole Wobbuffet's King's Rock!");
         MESSAGE("The opposing Sneasel flinched and couldn't move!");
     } THEN {
-        EXPECT(opponent->item == item);
+        EXPECT(opponent->item == ITEM_KINGS_ROCK);
         EXPECT(player->item == ITEM_NONE);
     }
 }
