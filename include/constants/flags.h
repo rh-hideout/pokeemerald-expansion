@@ -1222,13 +1222,13 @@
 #define FLAG_ITEM_SAFARI_ZONE_NORTH_EAST_NUGGET                     0x491
 #define FLAG_ITEM_SAFARI_ZONE_SOUTH_EAST_BIG_PEARL                  0x492
 
-#define FLAG_UNUSED_0x493                                           0x493 // Unused Flag
-#define FLAG_UNUSED_0x494                                           0x494 // Unused Flag
-#define FLAG_UNUSED_0x495                                           0x495 // Unused Flag
-#define FLAG_UNUSED_0x496                                           0x496 // Unused Flag
-#define FLAG_UNUSED_0x497                                           0x497 // Unused Flag
-#define FLAG_UNUSED_0x498                                           0x498 // Unused Flag
-#define FLAG_UNUSED_0x499                                           0x499 // Unused Flag
+#define FLAG_CTF_CLASSROOM_INTRO_DONE                               0x493 // Erster Besuch Klassenzimmer
+#define FLAG_CTF_MUSEUM_SCENE_PENDING                               0x494 // Unused Flag
+#define FLAG_CTF_MUSEUM_ROCKET_SCENE_DONE                           0x495 // Unused Flag
+#define FLAG_CTF_MUSEUM_DOOR_OPEN                                   0x496 // Unused Flag
+#define FLAG_HIDE_MUSEUM_FLAG1_JESSIE                               0x497 // Unused Flag
+#define FLAG_HIDE_MUSEUM_FLAG1_JAMES                                0x498 // Unused Flag
+#define FLAG_HIDE_MUSEUM_FLAG1_STUDENT                              0x499 // Unused Flag
 #define FLAG_UNUSED_0x49A                                           0x49A // Unused Flag
 #define FLAG_UNUSED_0x49B                                           0x49B // Unused Flag
 #define FLAG_UNUSED_0x49C                                           0x49C // Unused Flag

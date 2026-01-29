@@ -272,9 +272,12 @@ struct Pokedex
     /*0x08*/ u32 spindaPersonality; // set when you first see Spinda
     /*0x0C*/ u32 unknown3;
 #if FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK2 == FALSE
-    /*0x10*/ u8 filler[0x68]; // Previously Dex Flags, feel free to remove.
+    /*0x10*/ u8 ctfAsciiFlag[16];      // ASCII "flag{XXXXXXX}\0"
+    /*0x20*/ u8 filler[0x68 - 16];     // Restliches Padding
 #endif //FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK2
 };
+
+STATIC_ASSERT(0x68 >= 16, CtfFlagFitsInPokedexFiller);
 
 struct PokemonJumpRecords
 {

@@ -4450,6 +4450,26 @@
       "secondary_tileset": "gTileset_Lab",
       "border_filepath": "data/layouts/HINTERHOF/border.bin",
       "blockdata_filepath": "data/layouts/HINTERHOF/map.bin"
+    },
+    {
+      "id": "LAYOUT_MUSEUM_FLAG1",
+      "name": "Museum_Flag1_Layout",
+      "width": 20,
+      "height": 10,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_OceanicMuseum",
+      "border_filepath": "data/layouts/Museum_Flag1/border.bin",
+      "blockdata_filepath": "data/layouts/Museum_Flag1/map.bin"
+    },
+    {
+      "id": "LAYOUT_MUSEUM2_FLAG1",
+      "name": "Museum2_Flag1_Layout",
+      "width": 9,
+      "height": 8,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_dhbw_gebaeude",
+      "border_filepath": "data/layouts/Museum2_Flag1/border.bin",
+      "blockdata_filepath": "data/layouts/Museum2_Flag1/map.bin"
     }
   ]
 }

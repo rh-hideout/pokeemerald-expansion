@@ -58,17 +58,25 @@ Testmap_Terminal_Already:
 	end
 
 Testmap_EventScript_BlockNpc::
-	lock
-	faceplayer
-	msgbox Testmap_Text_Block, MSGBOX_DEFAULT
-	release
-	end
+    lock
+    msgbox Testmap_Text_Block, MSGBOX_DEFAULT
+    applymovement LOCALID_TESTMAP_BLOCKER, Testmap_Movement_FaceDown
+    waitmovement 0
+    release
+    end
+
+Testmap_Movement_FaceDown:
+    face_down
+    step_end
 
 Testmap_Movement_SleepStep:
 	walk_fast_down
 	face_left
+	delay_16
 	face_right
+	delay_16
 	step_end
+
 
 Testmap_Movement_SleepLeave:
 	walk_fast_right
