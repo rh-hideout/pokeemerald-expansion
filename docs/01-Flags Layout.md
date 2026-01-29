@@ -1,12 +1,15 @@
 ## Theme
 Pokemon Rom hack:
+### Game progressing mechanic
+To skip a long term of pokemon leveling, we could use the DHBW studying time as waiting functionality. This emphasizes on the pokemon trainer's constraint that one has to study instead of becoming an actual professional in pokemon training. Nevertheless, training on weekends might happen all the same, which is why, after skipping ahead to the end of the semester (waiting e.g. studying) the pokemon leveled as well. 
+Including this would shorten the overall playthrough time of the CTF's context.
 
 ### Story:
 - Ganzer Tag Komisch
 - Glitches als Gateway --> durch flagge geöffnet
 ### Flag 0 (Tutorial Flag)
-- Links die flag in Rot13 und rechts jemand der erzählt wie toll Rot13 ist.
-	- Flagname {I_Like_Rot_13}	  
+- A guy blocks the entrance of the DHBW building. Bypassers suggest a loud bang to wake the sleephead.
+	- Flagname {Bang}	  
 ### Story: 
 - Herr Bauer sagt wir haben extra auf sie gewartet:
 	- text Pokemon Starten
@@ -14,10 +17,15 @@ Pokemon Rom hack:
 ### Flag1
 - Team Rocket hat eine Galerie verunstaltet, Bilder zuordnen Jahreszahlen
 
+==to change from one theoretical phase to the other, one must return home, go to the owned desk, and write T1000 etc. . Finishing it would prompt the player to return to DHBW for submission==
+Pokemon fights between semesters are enforced by walking from DHBW to Jungbusch and back. Terminating the CTF and T2000 etc. could activate a skript to manipulate npc, pokemon appearences and their fighting levels inside tall gras of the respective areas.
+
 ### Flag2
 - HalterWower Theo 1 --> Glitch du hast Matrikelnummer vergessen
 - Flashback ins Sekretariat --> Trainernnr + Name xor oder änhliches 
-	- Flagname {Iam_XXXXXXX}
+	- Flagname {Iam_XXXXXXX} <- maybe just the number 
+== maybe inside an room for exams, as HalterWower only appeared to this event during 2nd semester. You have to note down the matrikelnumber after flashback==
+
 ### Flag3
 - Fällt in ein Glitchloch (Keller/Werkstatt)
 	- Items linux befehle für terminal (TM sprite)
