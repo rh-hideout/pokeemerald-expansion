@@ -352,7 +352,10 @@
 #define OBJ_EVENT_ID_CAMERA LOCALID_CAMERA
 #define OBJ_EVENT_ID_PLAYER LOCALID_PLAYER
 
+//CTF
 #define OBJ_EVENT_PAL_TAG_CTF_TERMINAL            0x1125
+#define OBJ_EVENT_PAL_TAG_JESSIE                  0x1126
+#define OBJ_EVENT_PAL_TAG_JAMES                   0x1127
 
 // Moved from src/event_object_movement.c so that they're accesible from other files.
 #define OBJ_EVENT_PAL_TAG_BRENDAN                 0x1100

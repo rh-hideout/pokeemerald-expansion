@@ -55,11 +55,11 @@ const u16 gObjectEventPal_James[]  = INCBIN_U16("graphics/object_events/palettes
 
 ---
 
-## 4) PaletteTag definieren (`OBJ_EVENT_PAL_TAG_...`) in 
+## 4) PaletteTag definieren (`OBJ_EVENT_PAL_TAG_...`) in event_objects.h weit unten
 
 Stelle sicher, dass du passende Tags definiert hast, z. B.:
-- `OBJ_EVENT_PAL_TAG_JESSIE`
-- `OBJ_EVENT_PAL_TAG_JAMES`
+#define OBJ_EVENT_PAL_TAG_JESSIE                  0x1126  (Hex ändern)
+#define OBJ_EVENT_PAL_TAG_JAMES                   0x1127
 
 (Einfach in den jeweiligen Dateien passende Einträge kopieren, aber auf korrekte Details achten!)
 
@@ -127,7 +127,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Jessie = {
     .tracks = TRACKS_FOOT,
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
-    .anims = sAnimTable_Jessie,
+    .anims = sAnimTable_Standard,
     .images = sPicTable_Jessie,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
@@ -146,7 +146,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_James = {
     .tracks = TRACKS_FOOT,
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
-    .anims = sAnimTable_James,
+    .anims = sAnimTable_Standard,
     .images = sPicTable_James,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
