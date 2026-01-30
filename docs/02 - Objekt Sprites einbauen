@@ -176,6 +176,11 @@ Porymap zeigt den “N”-Platzhalter meist, wenn es die Zuordnung nicht parsen 
 
 Damit die Engine (und Porymap) wirklich weiß, welche GraphicsInfo zu welcher ID gehört:
 
+Ganz oben in die Liste:
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Jessie;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_James;
+
+Unten dann:
 ~~~c
 [OBJ_EVENT_GFX_JESSIE] = &gObjectEventGraphicsInfo_Jessie,
 [OBJ_EVENT_GFX_JAMES]  = &gObjectEventGraphicsInfo_James,

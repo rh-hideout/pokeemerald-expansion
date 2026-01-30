@@ -1366,9 +1366,9 @@ static const struct SpriteFrameImage sPicTable_CtfTerminal[] = {
 };
 
 static const struct SpriteFrameImage sPicTable_Jessie[] = {
-    overworld_ascending_frames(gObjectEventPic_Jessie, 2, 4, 0),
+    overworld_ascending_frames(gObjectEventPic_Jessie, 2, 4),
 };
 
 static const struct SpriteFrameImage sPicTable_James[] = {
-    overworld_ascending_frames(gObjectEventPic_James, 2, 4, 0),
+    overworld_ascending_frames(gObjectEventPic_James, 2, 4),
 };
