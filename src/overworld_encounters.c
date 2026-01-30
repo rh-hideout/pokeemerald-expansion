@@ -39,6 +39,11 @@
 #define OWE_NON_ROAMER_OUTBREAK         0
 #define OWE_MASS_OUTBREAK_INDEX         ROAMER_COUNT + 1
 #define OWE_INVALID_ROAMER_OUTBREAK     OWE_MASS_OUTBREAK_INDEX + 1
+#define OWE_MAX_ROAMERS                 UINT8_MAX - 2
+
+#if OWE_WILD_ENCOUNTERS_OVERWORLD == TRUE && ROAMER_COUNT >= OWE_MAX_ROAMERS
+#error "ROAMER_COUNT needs to be less than OWE_MAX_ROAMERS due to it being stored in the u8 field warpArrowSpriteId"
+#endif
 
 #define OWE_FLAG_BIT                    (1 << 7)
 #define OWE_SAVED_MOVEMENT_STATE_FLAG   OWE_FLAG_BIT
