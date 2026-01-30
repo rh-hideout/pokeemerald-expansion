@@ -453,13 +453,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .power = 80,
         .type = TYPE_NORMAL,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_3 ? 100 : 75,
-        #if B_UPDATED_MOVE_DATA >= GEN_4
-            .criticalHitStage = 1,
-        #elif B_UPDATED_MOVE_DATA == GEN_3
-            .criticalHitStage = 0,
-        #else
-            .criticalHitStage = 2,
-        #endif
+    #if B_UPDATED_MOVE_DATA >= GEN_4
+        .criticalHitStage = 1,
+    #elif B_UPDATED_MOVE_DATA == GEN_3
+        .criticalHitStage = 0,
+    #else
+        .criticalHitStage = 2,
+    #endif
         .pp = 10,
         .target = TARGET_BOTH,
         .priority = 0,
@@ -578,19 +578,19 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_ROAR,
         .power = 0,
         .type = TYPE_NORMAL,
-        #if B_UPDATED_MOVE_DATA >= GEN_6
-            .accuracy = 0,
-            .priority = -6,
-        #elif B_UPDATED_MOVE_DATA >= GEN_3
-            .accuracy = 100,
-            .priority = -6,
-        #elif B_UPDATED_MOVE_DATA == GEN_2
-            .accuracy = 100,
-            .priority = -1,
-        #else
-            .accuracy = 85,
-            .priority = 0,
-        #endif
+    #if B_UPDATED_MOVE_DATA >= GEN_6
+        .accuracy = 0,
+        .priority = -6,
+    #elif B_UPDATED_MOVE_DATA >= GEN_3
+        .accuracy = 100,
+        .priority = -6,
+    #elif B_UPDATED_MOVE_DATA == GEN_2
+        .accuracy = 100,
+        .priority = -1,
+    #else
+        .accuracy = 85,
+        .priority = 0,
+    #endif
         .pp = 20,
         .target = TARGET_SELECTED,
         .category = DAMAGE_CATEGORY_STATUS,
@@ -3172,8 +3172,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_USER,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
-        .zMove = { .effect = Z_EFFECT_ACC_UP_1 },
         .argument = { .status = VOLATILE_FOCUS_ENERGY },
+        .zMove = { .effect = Z_EFFECT_ACC_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
         .snatchAffected = TRUE,
@@ -3886,11 +3886,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .power = 140,
         .type = TYPE_FLYING,
         .accuracy = 90,
+        .criticalHitStage = B_UPDATED_MOVE_DATA >= GEN_3,
         .pp = 5,
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
-        .criticalHitStage = B_UPDATED_MOVE_DATA >= GEN_3,
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
         .argument.twoTurnAttack = { .stringId = B_UPDATED_MOVE_DATA >= GEN_4 ? STRINGID_CLOAKEDINAHARSHLIGHT : STRINGID_PKMNISGLOWING },
@@ -4493,16 +4493,16 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
-        #if B_UPDATED_MOVE_DATA >= GEN_4
-            .additionalEffects = ADDITIONAL_EFFECTS({
-                .moveEffect = MOVE_EFFECT_RECOIL_HP_25,
-                .self = TRUE,
-            }),
-        #elif B_UPDATED_MOVE_DATA >= GEN_2
-            .argument = { .recoilPercentage = 25 },
-        #else
-            .argument = { .recoilPercentage = 50 },
-        #endif
+    #if B_UPDATED_MOVE_DATA >= GEN_4
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_RECOIL_HP_25,
+            .self = TRUE,
+        }),
+    #elif B_UPDATED_MOVE_DATA >= GEN_2
+        .argument = { .recoilPercentage = 25 },
+    #else
+        .argument = { .recoilPercentage = 50 },
+    #endif
         .makesContact = TRUE,
         .mirrorMoveBanned = B_UPDATED_MOVE_FLAGS >= GEN_4,
         .meFirstBanned = TRUE,
@@ -6808,19 +6808,19 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Moves 1st and flinches. Only\n"
             "works on user's 1st turn."),
-        .priority = B_UPDATED_MOVE_DATA >= GEN_5 ? 3 : 1,
-        .makesContact = B_UPDATED_MOVE_DATA >= GEN_4,
         .effect = EFFECT_FIRST_TURN_ONLY,
         .power = 40,
         .type = TYPE_NORMAL,
         .accuracy = 100,
         .pp = 10,
         .target = TARGET_SELECTED,
+        .priority = B_UPDATED_MOVE_DATA >= GEN_5 ? 3 : 1,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FLINCH,
             .chance = 100,
         }),
+        .makesContact = B_UPDATED_MOVE_DATA >= GEN_4,
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_STARTLE_PREV_MON : CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
         .contestCategory = CONTEST_CATEGORY_CUTE,
         .contestComboStarterId = COMBO_STARTER_FAKE_OUT,
@@ -8833,9 +8833,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .pp = 5,
         .target = TARGET_SELECTED,
         .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
         .noAffectOnSameTypeTarget = B_SHEER_COLD_IMMUNITY >= GEN_7,
         .accIncreaseByTenOnSameType = B_SHEER_COLD_ACC >= GEN_7,
-        .category = DAMAGE_CATEGORY_SPECIAL,
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = 0,
@@ -8997,8 +8997,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Howls to raise the spirit\n"
             "and boosts Attack."),
-        .power = 0,
         .effect = EFFECT_ATTACK_UP,
+        .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
         .pp = 40,
@@ -13184,8 +13184,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .zMove = { .powerOverride = 160 },
         .argument = { .status = STATUS1_ANY },
+        .zMove = { .powerOverride = 160 },
         .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -14491,8 +14491,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
-        .zMove = { .powerOverride = 170 },
         .argument = { .type = TYPE_FLYING },
+        .zMove = { .powerOverride = 170 },
         .makesContact = TRUE,
         .minimizeDoubleDamage = TRUE,
         .gravityBanned = TRUE,
@@ -16223,8 +16223,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
-        .zMove = { .effect = Z_EFFECT_RESET_STATS },
         .argument = { .moveProperty = MOVE_EFFECT_FLORAL_HEALING },
+        .zMove = { .effect = Z_EFFECT_RESET_STATS },
         .healingMove = TRUE,
         .magicCoatAffected = TRUE,
         .mirrorMoveBanned = TRUE,
@@ -19686,8 +19686,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .power = B_UPDATED_MOVE_DATA >= GEN_9 ? 90 : 50,
         .type = TYPE_FIGHTING,
         .accuracy = 100,
-        .pp = B_UPDATED_MOVE_DATA >= GEN_9 ? 10 : 15,
         .criticalHitStage = B_UPDATED_MOVE_DATA >= GEN_3 ? 1 : 2,
+        .pp = B_UPDATED_MOVE_DATA >= GEN_9 ? 10 : 15,
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
@@ -21060,8 +21060,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .power = 100,
         .type = TYPE_GRASS,
         .accuracy = 100,
-        .pp = 10,
         .criticalHitStage = B_UPDATED_MOVE_DATA >= GEN_3 ? 1 : 2,
+        .pp = 10,
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
