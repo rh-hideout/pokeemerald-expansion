@@ -132,15 +132,8 @@ static const union AnimCmd *const sAnimTable_TallGrass[] =
     sAnim_TallGrass,
 };
 
-const struct SpriteSheet gSpriteSheet_TallGrass =
-{
-    .data = gFieldEffectObjectPic_TallGrass,
-    .size = sizeof(gFieldEffectObjectPic_TallGrass),
-    .tag = FLDEFF_TILE_TAG_TALL_GRASS_OWE,
-};
-
 const struct SpriteTemplate gFieldEffectObjectTemplate_TallGrass = {
-    .tileTag = FLDEFF_TILE_TAG_TALL_GRASS_OWE,
+    .tileTag = TAG_NONE,
     .paletteTag = FLDEFF_PAL_TAG_GENERAL_1,
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_TallGrass,
@@ -714,15 +707,8 @@ static const union AnimCmd *const sAnimTable_LongGrass[] =
     sAnim_LongGrass,
 };
 
-const struct SpriteSheet gSpriteSheet_LongGrass =
-{
-    .data = gFieldEffectObjectPic_LongGrass,
-    .size = sizeof(gFieldEffectObjectPic_LongGrass),
-    .tag = FLDEFF_TILE_TAG_LONG_GRASS_OWE,
-};
-
 const struct SpriteTemplate gFieldEffectObjectTemplate_LongGrass = {
-    .tileTag = FLDEFF_TILE_TAG_LONG_GRASS_OWE,
+    .tileTag = TAG_NONE,
     .paletteTag = FLDEFF_PAL_TAG_GENERAL_1,
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_LongGrass,
