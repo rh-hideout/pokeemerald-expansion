@@ -1,12 +1,10 @@
 #include "constants/flags.h"
 #include "constants/items.h"
+#include "constants/opponents.h"
+#include "constants/vars.h"
 #include "constants/field_effects.h"
 #include "constants/songs.h"
-#include "constants/opponents.h" 
-#include "constants/map_scripts.h"
-#include "constants/event_objects.h"
-#include "constants/directions.h"
-#include "constants/vars.h"
+
 
 @ -----------------------
 @ ANPASSEN:
