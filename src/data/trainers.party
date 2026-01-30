@@ -16900,7 +16900,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 
 === TRAINER_PROF_HEVL ===
-Name: PROF. HEVL
+Name: HYVL
 Class: Professor
 Pic: Leader Wattson
 Gender: Male
@@ -16921,7 +16921,7 @@ Shiny: Yes
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 
-SPECIES_UNOWN_H @ Oran Berry
+SPECIES_UNOWN_H
 Level: 5
 Shiny: Yes
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
