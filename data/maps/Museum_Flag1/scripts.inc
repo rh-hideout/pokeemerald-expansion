@@ -1,9 +1,8 @@
-#include "global.h"
 #include "constants/flags.h"
 #include "constants/items.h"
 #include "constants/field_effects.h"
 #include "constants/songs.h"
-#include "constants/opponents.h"      @ <- Trainer-IDs (wichtig!)
+#include "constants/opponents.h" 
 #include "constants/map_scripts.h"
 #include "constants/event_objects.h"
 #include "constants/directions.h"
@@ -15,13 +14,14 @@
 .set TRAINER_ROCKET_DUO, TRAINER_TEAM_ROCKET_1    @ <- dein Trainer aus opponents.h
 .set REWARD_TM_ITEM,     ITEM_TM01                @ <- später easy ändern
 
-@ TM-Objekt local_id (muss zur map.json passen)
+@ TM-Objekt local_id
 .set OBJ_MUSEUM_TM, 6
 
 @ Spawn rechts
 .set ROCKET_SPAWN_X,  19
 .set JESSIE_SPAWN_Y,  3
 .set JAMES_SPAWN_Y,   4
+.set ROCKET_ELEV, 0
 
 @ Nach 3 Schritten links stehen sie hier:
 .set ROCKET_STAND_X,  16
@@ -78,7 +78,9 @@ Museum_Flag1_PostSceneState:
 Museum_Flag1_SyncState:
     @ Wenn Trainer besiegt -> Rockets weg, TM ggf. sichtbar lassen, Student ggf. sichtbar
     checktrainerflag TRAINER_ROCKET_DUO
-    goto_if TRUE, Museum_Flag1_Sync_Defeated
+    goto_if_eq VAR_RESULT, 1, Museum_Flag1_Sync_Defeated
+
+
 
     @ NICHT besiegt: TM verstecken (bis Sieg), Student verstecken bis Szene done
     setflag FLAG_CTF_MUSEUM_TM_TAKEN
@@ -106,11 +108,6 @@ Museum_Flag1_Sync_Defeated:
     clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
     setobjectxy LOCALID_MUSEUM_STUDENT, STUDENT_END_X, STUDENT_END_Y
 2:
-    @ TM: wenn noch nicht genommen, beim Laden sichtbar machen
-    goto_if_set FLAG_CTF_MUSEUM_TM_TAKEN, 3f
-    setobjectxy OBJ_MUSEUM_TM, REWARD_X, REWARD_Y
-    addobject OBJ_MUSEUM_TM
-3:
     return
 
 
@@ -169,7 +166,7 @@ Museum_Flag1_Movement_StudentEnter:
 
 
 @ --------------------------------------------------------------------------
-@ ROCKETS: Ansprechen -> Text -> DOUBLE Kampf (normaler Whiteout)
+@ ROCKETS: Ansprechen -> Text -> DOUBLE Kampf 
 @  -> kein Lock, wenn nur 1 Mon: wir checken vorher und releasen sauber
 @ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_Rockets::
@@ -178,12 +175,12 @@ Museum_Flag1_EventScript_Rockets::
 
     @ schon besiegt?
     checktrainerflag TRAINER_ROCKET_DUO
-    goto_if TRUE, Museum_Flag1_Rockets_AlreadyGone
+    goto_if_eq VAR_RESULT, 1, Museum_Flag1_Rockets_AlreadyGone
 
     @ Double-Battle requires 2 Pokémon -> sonst kein trainerbattle call (sonst Softlock-Risiko)
-    getpartysize
-    compare VAR_RESULT, 2
-    goto_if_lt Museum_Flag1_Rockets_NotEnoughMons
+	getpartysize
+	goto_if_lt VAR_RESULT, 2, Museum_Flag1_Rockets_NotEnoughMons
+
 
     msgbox Museum_Flag1_Text_RocketPreBattle, MSGBOX_DEFAULT
     closemessage
@@ -207,18 +204,17 @@ Museum_Flag1_Rockets_AlreadyGone:
 
 @ --------------------------------------------------------------------------
 @ Nach Sieg: Rauch + verschwinden + TM drop + Student kommt
-@ (Text "blasting off again" kommt als Battle-Defeat-Text)
 @ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_Rockets_AfterBattle::
     @ Sicherheitscheck: nur wenn wirklich besiegt
     checktrainerflag TRAINER_ROCKET_DUO
-    goto_if FALSE, Museum_Flag1_Rockets_End
+    goto_if_eq VAR_RESULT, 0, Museum_Flag1_Rockets_End
 
-    @ Rauch/Poof-Illusion (Sparkle + SE)
+    @ Rauch/Poof-Illusion
     playse SE_FLEE
-    dofieldeffectsparkle ROCKET_STAND_X, JESSIE_STAND_Y, 1
-    dofieldeffectsparkle ROCKET_STAND_X, JAMES_STAND_Y, 1
-    waitfieldeffect FLDEFF_SPARKLE
+	dofieldeffectsparkle ROCKET_STAND_X, JESSIE_STAND_Y, ROCKET_ELEV
+	dofieldeffectsparkle ROCKET_STAND_X, JAMES_STAND_Y,  ROCKET_ELEV
+	waitfieldeffect FLDEFF_SPARKLE
 
     @ rauslaufen und dann despawn
     applymovement LOCALID_MUSEUM_JESSIE, Museum_Flag1_Movement_RocketLeave
@@ -231,9 +227,7 @@ Museum_Flag1_EventScript_Rockets_AfterBattle::
     removeobject LOCALID_MUSEUM_JAMES
 
     @ TM drop (Itemball erscheint)
-    clearflag FLAG_CTF_MUSEUM_TM_TAKEN
-    setobjectxy OBJ_MUSEUM_TM, REWARD_X, REWARD_Y
-    addobject OBJ_MUSEUM_TM
+	clearflag FLAG_CTF_MUSEUM_TM_TAKEN
 
     @ Jetzt Studentin rein + Dialog
     clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
@@ -260,8 +254,7 @@ Museum_Flag1_EventScript_RewardTM::
     lock
     goto_if_set FLAG_CTF_MUSEUM_TM_TAKEN, Museum_Flag1_RewardTM_Already
     giveitem REWARD_TM_ITEM, 1
-    setflag FLAG_CTF_MUSEUM_TM_TAKEN
-    removeobject OBJ_MUSEUM_TM
+	setflag FLAG_CTF_MUSEUM_TM_TAKEN
     release
     end
 
@@ -317,13 +310,13 @@ Museum_Flag1_Terminal_Correct:
 @ Top-Left: (0,9)
 @ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_ApplyDoorOpen::
-    setmetatile 0,  9, 0x0261, FALSE
-    setmetatile 1,  9, 0x0207, FALSE
-    setmetatile 2,  9, 0x0257, FALSE
+    setmetatile 0,  9, 0x0261, 0
+    setmetatile 1,  9, 0x0207, 0
+    setmetatile 2,  9, 0x0257, 0
 
-    setmetatile 0, 10, 0x0262, FALSE
-    setmetatile 1, 10, 0x020F, FALSE
-    setmetatile 2, 10, 0x025F, FALSE
+    setmetatile 0, 10, 0x0262, 0
+    setmetatile 1, 10, 0x020F, 0
+    setmetatile 2, 10, 0x025F, 0
     return
 
 
@@ -341,12 +334,12 @@ Museum_Flag1_Text_RocketDialog:
     .string "who are you?\p"
     .string "JESSIE: How rude!\p"
     .string "JAMES: We are TEAM ROCKET and\n"
-    .string "we have stolen your XXX.\p"
-    .string "JESSIE: See ya losers!$"
+	.string "were hired by Business Informatics\p"
+    .string "to steal your XXX!$"
 
 Museum_Flag1_Text_RocketPreBattle:
     .string "JESSIE: You want it back?\n"
-    .string "Too bad!\p"
+    .string "Too bad for you, losers!\p"
     .string "JAMES: Let's see what you've got!$"
 
 @ Intro-Text NUR für den Battle-Start (weil trainerbattle_double einen braucht)

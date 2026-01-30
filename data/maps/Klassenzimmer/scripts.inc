@@ -4,7 +4,7 @@ Klassenzimmer_MapScripts::
 	.byte 0
 
 Klassenzimmer_OnTransition:
-	@ OnTransition nur vorbereiten – keine msgbox/Bewegung hier!
+	@ OnTransition nur vorbereiten, keine msgbox/Bewegung hier!
 	goto_if_set FLAG_CTF_CLASSROOM_INTRO_DONE, Klassenzimmer_OnTransition_End
 	setvar VAR_TEMP_0, 0
 	end
@@ -51,11 +51,11 @@ Klassenzimmer_EventScript_FirstEntry::
 	setflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
 	setflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
 
-	@ Script freigeben bevor Warp (robuster)
+	@ Script freigeben bevor Warp
 	releaseall
 
-	@ Warp per Koordinate (dein Branch kann 255 offenbar)
-	warp MAP_MUSEUM_FLAG1, 255, 17, 6
+	@ Warp per Koordinate
+	warpsilent MAP_MUSEUM_FLAG1, 17, 6
 	end
 
 
