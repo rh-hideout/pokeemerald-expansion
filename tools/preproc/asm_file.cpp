@@ -114,6 +114,22 @@ void AsmFile::RemoveComments()
                 }
             }
         }
+        // line skip
+        else if (m_buffer[pos] == '\\')
+        {
+            // skip whitespace
+            int i = pos + 1;
+            while (m_buffer[i] == ' ')
+                i++;
+
+            if (m_buffer[i] == '\n')
+            {
+                m_buffer[pos] = ' ';
+                m_buffer[i] = ' ';
+            }
+
+            pos = i + 1;
+        }
         else
         {
             if (m_buffer[pos] == '"' || m_buffer[pos] == '\'')
