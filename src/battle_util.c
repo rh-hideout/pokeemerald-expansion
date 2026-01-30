@@ -6084,7 +6084,7 @@ bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 
 bool32 IsSafeguardProtected(u32 battlerAtk, u32 battlerDef, u32 abilityAtk)
 {
-    if (!gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
+    if (!(gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD))
         return FALSE;
     if (IsBattlerAlly(battlerAtk, battlerDef))
         return TRUE;
