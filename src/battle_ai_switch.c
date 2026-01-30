@@ -995,7 +995,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler)
     if (CanUseSuperEffectiveMoveAgainstOpponent(battler, opposingBattler))
         return TRUE;
 
-    if (HasTwoOpponents() && CanUseSuperEffectiveMoveAgainstOpponent(battler, BATTLE_PARTNER(BATTLE_OPPOSITE(battler))))
+    if (HasTwoOpponents(battler) && CanUseSuperEffectiveMoveAgainstOpponent(battler, BATTLE_PARTNER(BATTLE_OPPOSITE(battler))))
         return TRUE;
 
     return FALSE;
