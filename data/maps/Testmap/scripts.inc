@@ -116,24 +116,6 @@ Testmap_Movement_TurnAndStepRight:
     walk_right
     step_end
 
-Testmap_EventScript_ItemBall_Potion::
-    lock
-    checkitemspace ITEM_POTION, 1
-    goto_if_eq VAR_RESULT, 0, Testmap_NoRoom
-    giveitem ITEM_POTION, 1
-    setflag FLAG_TESTMAP_POTION
-    removeobject LOCALID_TESTMAP_ITEMBALL
-    release
-    end
-
-Testmap_NoRoom:
-    msgbox Testmap_Text_NoRoom, MSGBOX_DEFAULT
-    release
-    end
-
-Testmap_Text_NoRoom:
-    .string "Your bag is full.$"
-
 Testmap_Text_GoUniversityFirst:
     .string "I should go to the university first.$"
 
@@ -167,5 +149,3 @@ Testmap_Text_Already:
 Testmap_Text_WokeUp:
 	.string "SLEEPYHEAD: Holy shit!\n"
 	.string "What was that?!$"
-
-
