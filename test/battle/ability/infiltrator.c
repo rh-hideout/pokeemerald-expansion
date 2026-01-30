@@ -178,9 +178,7 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Substitute (Gen 6+)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
         if (ability == ABILITY_INFILTRATOR && config >= GEN_6) {
             NOT SUB_HIT(opponent);
-            HP_BAR(opponent);
         } else {
-            NOT HP_BAR(opponent);
             SUB_HIT(opponent);
         }
     }
