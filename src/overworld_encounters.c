@@ -1825,6 +1825,9 @@ void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void)
     if (gMapHeader.mapType != MAP_TYPE_CITY && gMapHeader.mapType != MAP_TYPE_TOWN)
         return;
 
+    if (OWE_WILD_ENCOUNTERS_DESPAWN_SOUND)
+        PlaySE(SE_FLEE);
+        
     RemoveAllOverworldWildEncounterObjects(OWE_ANY);
 }
 
