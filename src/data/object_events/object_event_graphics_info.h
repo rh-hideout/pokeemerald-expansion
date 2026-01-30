@@ -4743,7 +4743,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Jessie = {
     .tracks = TRACKS_FOOT,
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
-    .anims = sAnimTable_Jessie,
+    .anims = sAnimTable_Standard,
     .images = sPicTable_Jessie,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
@@ -4762,7 +4762,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_James = {
     .tracks = TRACKS_FOOT,
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
-    .anims = sAnimTable_James,
+    .anims = sAnimTable_Standard,
     .images = sPicTable_James,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
