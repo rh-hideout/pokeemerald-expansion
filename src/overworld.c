@@ -1215,7 +1215,7 @@ static bool16 IsInfiltratedSpaceCenter(struct WarpData *warp)
 
 static const u16 sNightMusicTable[END_MUS - START_MUS] =
 {
-    [MUS_SOOTOPOLIS - START_MUS] = MUS_LITTLEROOT,
+    // example usage: [MUS_SOOTOPOLIS - START_MUS] = MUS_LITTLEROOT,
 };
 
 static u16 GetNightMusicFromTrack(u16 track)
