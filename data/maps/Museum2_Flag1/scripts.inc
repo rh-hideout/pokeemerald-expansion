@@ -10,12 +10,11 @@ Museum2_Flag1_EventScript_Hevl::
 	faceplayer
 
 	@ Schon gewonnen?
-	checkflag FLAG_BADGE01_GET
-	goto_if_set Museum2_Flag1_After
+	goto_if_set FLAG_BADGE01_GET, Museum2_Flag1_After
 
 	msgbox Museum2_Flag1_Text_Intro, MSG_FACE
 
-	@ Verlustschutz: kein Whiteout, Script läuft danach weiter
+	@ Verlustschutz: kein Whiteout
 	setflag B_FLAG_NO_WHITEOUT
 	trainerbattle_no_intro TRAINER_PROF_HEVL, Museum2_Flag1_Text_Defeat
 	clearflag B_FLAG_NO_WHITEOUT
@@ -25,7 +24,7 @@ Museum2_Flag1_EventScript_Hevl::
 	compare VAR_RESULT, B_OUTCOME_LOST
 	goto_if_eq Museum2_Flag1_Lost
 
-	@ --- Sieg: Badge + Fanfare + TM (Original-Flow) ---
+	@ Sieg: Badge + Fanfare + TM
 	setflag FLAG_BADGE01_GET
 
 	msgbox Museum2_Flag1_Text_Win, MSG_FACE
@@ -66,13 +65,11 @@ Museum2_Flag1_Text_Defeat::
 Museum2_Flag1_Text_Lost::
 	.string "Not bad, but you need to try again.$"
 
-@ Neu: “Leader verleiht Badge” (wie im Original: Leader-Spruch vor der Fanfare)
 Museum2_Flag1_Text_Win::
 	.string "PROF. HEVL: Excellent!\n"
 	.string "You proved yourself worthy.\p"
-	.string "Take this—the FIRST BADGE.$"
+	.string "Take this, the FIRST BADGE.$"
 
-@ Neu: “You received …” (klassische Systemmeldung nach Fanfare)
 Museum2_Flag1_Text_ReceivedBadge::
 	.string "You received the FIRST BADGE!$"
 
@@ -82,3 +79,4 @@ Museum2_Flag1_Text_TM::
 Museum2_Flag1_Text_After::
 	.string "Our proof is complete.\n"
 	.string "Keep studying.$"
+
