@@ -861,7 +861,7 @@
 
 //CTF
 #define TRAINER_TEAM_ROCKET_1               855
-#define TRAINER_PROF_HEVL              856
+#define TRAINER_PROF_HEVL                   856
 
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is only space for 9 additional trainers before trainer flag space overflows
 //       More space can be made by shifting flags around in constants/flags.h or changing how trainer flags are handled
