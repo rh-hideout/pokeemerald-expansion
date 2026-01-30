@@ -38,7 +38,7 @@ Klassenzimmer_EventScript_FirstEntry::
     msgbox Museum_Text_StudentReceivesMon, MSGBOX_DEFAULT
     closemessage
 
-	givepokemon SPECIES_TAILLOW, 5, ITEM_NONE, 0, 0, 0
+	givemon SPECIES_TAILLOW, 5, ITEM_NONE
 
 	msgbox Klassenzimmer_Text_Museum, MSGBOX_DEFAULT
 	closemessage
@@ -55,7 +55,7 @@ Klassenzimmer_EventScript_FirstEntry::
 	releaseall
 
 	@ Warp per Koordinate
-	warpsilent MAP_MUSEUM_FLAG1, 17, 6
+	warpsilent MAP_MUSEUM_FLAG1, 255, 17, 6
 	end
 
 
