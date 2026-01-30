@@ -11264,7 +11264,7 @@ static void Cmd_transformdataexecution(void)
 
     gChosenMove = MOVE_UNAVAILABLE;
     gBattlescriptCurrInstr = cmd->nextInstr;
-    if ((B_UPDATED_MOVE_FLAGS >= GEN_5 && gBattleMons[gBattlerAttacker].volatiles.transformed)
+    if ((B_TRANSFORM_REUSE_FAIL >= GEN_5 && gBattleMons[gBattlerAttacker].volatiles.transformed)
         || gBattleMons[gBattlerTarget].volatiles.transformed
         || gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON
         || IsSemiInvulnerable(gBattlerTarget, EXCLUDE_COMMANDER))
