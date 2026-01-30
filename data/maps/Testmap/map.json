@@ -152,14 +152,5 @@
       "script": "Testmap_EventScript_BlockRoute102"
     }
   ],
-  "bg_events": [
-    {
-      "type": "hidden_item",
-      "x": 22,
-      "y": 15,
-      "elevation": 0,
-      "item": "ITEM_ULTRA_BALL",
-      "flag": "FLAG_TEMP_1"
-    }
-  ]
+  "bg_events": []
 }
