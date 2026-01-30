@@ -93,6 +93,7 @@ Museum_Flag1_SyncState:
 
 Museum_Flag1_Sync_StudentDone:
     clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
+    addobject LOCALID_MUSEUM_STUDENT
     setobjectxy LOCALID_MUSEUM_STUDENT, STUDENT_END_X, STUDENT_END_Y
     return
 
@@ -108,6 +109,7 @@ Museum_Flag1_Sync_Defeated:
     goto 2f
 1:
     clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
+    addobject LOCALID_MUSEUM_STUDENT
     setobjectxy LOCALID_MUSEUM_STUDENT, STUDENT_END_X, STUDENT_END_Y
 2:
     return
@@ -414,5 +416,5 @@ Museum_Flag1_Text_Heal:
     .string "Here, let me heal your POKéMON.$"
 
 
-	
+
 
