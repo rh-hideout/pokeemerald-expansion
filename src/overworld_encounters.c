@@ -143,7 +143,7 @@ void UpdateOverworldEncounters(void)
     {
         if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
         {
-            RemoveAllOverworldWildEncounterObjects(OWE_GENERATED, 0, 0);
+            RemoveAllOverworldWildEncounterObjects(OWE_GENERATED);
             sOWESpawnCountdown = OWE_NO_ENCOUNTER_SET;
         }
         return;
@@ -923,19 +923,22 @@ static bool32 OWE_ShouldSpawnWaterMons(void)
     return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
-void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType, s32 dx, s32 dy)
+void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType)
 {
+    s16 dx = 0;
+    s16 dy = 0;
+    if (gCamera.active)
+    {
+        dx = gCamera.x;
+        dy = gCamera.y;
+    }
+
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
         if (IsOverworldWildEncounter(obj, oweType) && obj->active)
         {
-            obj->initialCoords.x += dx;
-            obj->initialCoords.y += dy;
-            obj->currentCoords.x += dx;
-            obj->currentCoords.y += dy;
-            obj->previousCoords.x += dx;
-            obj->previousCoords.y += dy;
+            UpdateObjectEventCoords(obj, dx, dy);
             RemoveObjectEvent(obj);
         }
     }
@@ -1821,35 +1824,7 @@ void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(const struct MapC
     if (gMapHeader.mapType != MAP_TYPE_CITY && gMapHeader.mapType != MAP_TYPE_TOWN)
         return;
 
-    struct MapHeader const *mapHeader = GetMapHeaderFromConnection(connection);
-    s32 dx, dy;
-    switch (direction)
-    {
-    case CONNECTION_EAST:
-        dx = -mapHeader->mapLayout->width;
-        dy = connection->offset;
-        break;
-
-    case CONNECTION_WEST:
-        dx = mapHeader->mapLayout->width;
-        dy = -connection->offset;
-        break;
-
-    case CONNECTION_SOUTH:
-        dx = connection->offset;
-        dy = mapHeader->mapLayout->height;
-        break;
-
-    case CONNECTION_NORTH:
-        dx = connection->offset;
-        dy = -mapHeader->mapLayout->height;
-        break;
-
-    default:
-        return;
-    }
-
-    RemoveAllOverworldWildEncounterObjects(OWE_ANY, dx, dy);
+    RemoveAllOverworldWildEncounterObjects(OWE_ANY);
 }
 
 #undef sOverworldEncounterLevel

@@ -3507,6 +3507,19 @@ void ShiftStillObjectEventCoords(struct ObjectEvent *objectEvent)
     ShiftObjectEventCoords(objectEvent, objectEvent->currentCoords.x, objectEvent->currentCoords.y);
 }
 
+void UpdateObjectEventCoords(struct ObjectEvent *objectEvent, s16 dx, s16 dy)
+{
+    if (objectEvent->active)
+    {
+        objectEvent->initialCoords.x -= dx;
+        objectEvent->initialCoords.y -= dy;
+        objectEvent->currentCoords.x -= dx;
+        objectEvent->currentCoords.y -= dy;
+        objectEvent->previousCoords.x -= dx;
+        objectEvent->previousCoords.y -= dy;
+    }
+}
+
 void UpdateObjectEventCoordsForCameraUpdate(void)
 {
     u8 i;
@@ -3519,15 +3532,7 @@ void UpdateObjectEventCoordsForCameraUpdate(void)
         dy = gCamera.y;
         for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
         {
-            if (gObjectEvents[i].active)
-            {
-                gObjectEvents[i].initialCoords.x -= dx;
-                gObjectEvents[i].initialCoords.y -= dy;
-                gObjectEvents[i].currentCoords.x -= dx;
-                gObjectEvents[i].currentCoords.y -= dy;
-                gObjectEvents[i].previousCoords.x -= dx;
-                gObjectEvents[i].previousCoords.y -= dy;
-            }
+            UpdateObjectEventCoords(&gObjectEvents[i], dx, dy);
         }
     }
 }
