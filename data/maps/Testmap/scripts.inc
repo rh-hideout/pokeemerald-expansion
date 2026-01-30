@@ -116,6 +116,15 @@ Testmap_Movement_TurnAndStepRight:
     walk_right
     step_end
 
+Testmap_EventScript_ItemBall_Potion::
+    giveitem ITEM_POTION, 1, Testmap_Text_NoRoom
+    setflag FLAG_TESTMAP_POTION
+    removeobject LOCALID_TESTMAP_ITEMBALL   @ optional: sofort weg, LocalID aus Porymap
+    end
+
+Testmap_Text_NoRoom:
+    .string "Your bag is full.$"
+
 Testmap_Text_GoUniversityFirst:
     .string "I should go to the university first.$"
 

@@ -93,17 +93,18 @@
       "flag": "FLAG_TEMP_2"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
-      "x": 20,
-      "y": 2,
+      "local_id": "LOCALID_TESTMAP_ITEMBALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 21,
+      "y": 17,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
-      "flag": "0"
+      "script": "Testmap_EventScript_ItemBall_Potion",
+      "flag": "FLAG_TESTMAP_POTION"
     }
   ],
   "warp_events": [
@@ -151,5 +152,14 @@
       "script": "Testmap_EventScript_BlockRoute102"
     }
   ],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 22,
+      "y": 15,
+      "elevation": 0,
+      "item": "ITEM_ULTRA_BALL",
+      "flag": "FLAG_TEMP_1"
+    }
+  ]
 }
