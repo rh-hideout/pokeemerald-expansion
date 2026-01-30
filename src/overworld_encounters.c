@@ -1813,7 +1813,7 @@ bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent)
     return FALSE;
 }
 
-void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(const struct MapConnection *connection, enum Connection direction)
+void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void)
 {
     if (gMain.callback2 != CB2_Overworld)
         return;

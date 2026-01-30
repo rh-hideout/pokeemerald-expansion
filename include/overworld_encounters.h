@@ -125,6 +125,6 @@ u32 OWE_GetWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 
 void OWE_PlayAmbientCry(void);
 u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType);
 bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent);
-void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(const struct MapConnection *connection, enum Connection direction);
+void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
