@@ -117,9 +117,18 @@ Testmap_Movement_TurnAndStepRight:
     step_end
 
 Testmap_EventScript_ItemBall_Potion::
-    giveitem ITEM_POTION, 1, Testmap_Text_NoRoom
+    lock
+    checkitemspace ITEM_POTION, 1
+    goto_if_eq VAR_RESULT, 0, Testmap_NoRoom
+    giveitem ITEM_POTION, 1
     setflag FLAG_TESTMAP_POTION
-    removeobject LOCALID_TESTMAP_ITEMBALL   @ optional: sofort weg, LocalID aus Porymap
+    removeobject LOCALID_TESTMAP_ITEMBALL
+    release
+    end
+
+Testmap_NoRoom:
+    msgbox Testmap_Text_NoRoom, MSGBOX_DEFAULT
+    release
     end
 
 Testmap_Text_NoRoom:
