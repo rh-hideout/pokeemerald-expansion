@@ -1710,7 +1710,7 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
             unusableMoves |= 1u << i;
         // Taunt
         else if (check & MOVE_LIMITATION_TAUNT && gDisableStructs[battler].tauntTimer && IsBattleMoveStatus(move)
-              && (B_UPDATED_MOVE_FLAGS < GEN_5 || moveEffect != EFFECT_ME_FIRST))
+              && (B_TAUNT_ME_FIRST < GEN_5 || moveEffect != EFFECT_ME_FIRST))
             unusableMoves |= 1u << i;
         // Imprison
         else if (check & MOVE_LIMITATION_IMPRISON && GetImprisonedMovesCount(battler, move))
