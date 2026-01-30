@@ -6,7 +6,7 @@
   "region_map_section": "MAPSEC_DHBW",
   "requires_flash": false,
   "weather": "WEATHER_RAIN",
-  "map_type": "MAP_TYPE_NONE",
+  "map_type": "MAP_TYPE_TOWN",
   "allow_cycling": false,
   "allow_escaping": false,
   "allow_running": true,

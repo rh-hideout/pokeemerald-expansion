@@ -4436,7 +4436,7 @@
       "name": "SongFlagRoom_Layout",
       "width": 19,
       "height": 10,
-      "primary_tileset": "gTileset_SecretBase",
+      "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_MeteorFalls",
       "border_filepath": "data/layouts/SongFlagRoom/border.bin",
       "blockdata_filepath": "data/layouts/SongFlagRoom/map.bin"
