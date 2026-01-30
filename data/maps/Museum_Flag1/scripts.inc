@@ -39,29 +39,33 @@
 
 Museum_Flag1_MapScripts::
     map_script MAP_SCRIPT_ON_TRANSITION, Museum_Flag1_OnTransition
+    map_script MAP_SCRIPT_ON_FRAME_TABLE, Museum_Flag1_OnFrame
     .byte 0
 
 
 Museum_Flag1_OnTransition:
-    @ Tür dauerhaft anwenden, falls schon geöffnet
-    goto_if_set FLAG_CTF_MUSEUM_DOOR_OPEN, Museum_Flag1_ApplyDoorOnLoad
-
-    call Museum_Flag1_SyncState
-    goto Museum_Flag1_CheckScene
-
-Museum_Flag1_ApplyDoorOnLoad:
+    @ Tür anwenden, falls schon geöffnet
+    goto_if_set FLAG_CTF_MUSEUM_DOOR_OPEN, 1f
+    goto 2f
+1:
     call Museum_Flag1_EventScript_ApplyDoorOpen
+2:
     call Museum_Flag1_SyncState
-    goto Museum_Flag1_CheckScene
 
+    @ Cutscene NICHT hier starten -> nur vorbereiten
+    goto_if_set FLAG_CTF_MUSEUM_SCENE_PENDING, Museum_Flag1_PrepCutscene
 
-Museum_Flag1_CheckScene:
-    @ Wenn “nach Kampf + Student” fertig: Student korrekt positionieren
-    goto_if_set FLAG_CTF_MUSEUM_ROCKET_SCENE_DONE, Museum_Flag1_PostSceneState
-
-    @ Cutscene nur starten, wenn sie vom Klassenzimmer "pending" gesetzt wurde
-    goto_if_set FLAG_CTF_MUSEUM_SCENE_PENDING, Museum_Flag1_EventScript_RocketCutscene
+    setvar VAR_TEMP_0, 1
     end
+
+Museum_Flag1_PrepCutscene:
+    setvar VAR_TEMP_0, 0
+    end
+
+Museum_Flag1_OnFrame:
+    map_script_2 VAR_TEMP_0, 0, Museum_Flag1_EventScript_RocketCutscene
+    .2byte 0
+
 
 
 Museum_Flag1_PostSceneState:
@@ -113,6 +117,7 @@ Museum_Flag1_Sync_Defeated:
 @ CUTSCENE nach dem Teleport 
 @ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_RocketCutscene::
+    setvar VAR_TEMP_0, 1
     clearflag FLAG_CTF_MUSEUM_SCENE_PENDING
 
     lockall
