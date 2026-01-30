@@ -3,6 +3,7 @@
 #include "battle_ai_main.h"
 #include "battle_ai_switch.h"
 #include "battle_ai_util.h"
+#include "constants/battle.h"
 #include "constants/battle_ai.h"
 #include "battle_anim.h"
 #include "battle_arena.h"
@@ -503,7 +504,8 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
         {
             enum BattlerId targetBattler;
             do {
-                targetBattler = GetBattlerAtPosition(Random() & 2);
+                enum BattlerPosition pos = RandomPercentage(RNG_WILD_MON_TARGET, 50) ? B_POSITION_PLAYER_LEFT : B_POSITION_PLAYER_RIGHT;
+                targetBattler = GetBattlerAtPosition(pos);
             } while (!CanTargetBattler(battler, targetBattler, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
