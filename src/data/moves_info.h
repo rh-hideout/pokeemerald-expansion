@@ -12169,7 +12169,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .argument = { .nonVolatileStatus = MOVE_EFFECT_SLEEP },
         .zMove = { .effect = Z_EFFECT_RESET_STATS },
         .magicCoatAffected = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
+        .sketchBanned = B_SKETCH_BANS >= GEN_9,
         .contestEffect = CONTEST_EFFECT_MAKE_FOLLOWING_MONS_NERVOUS,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = COMBO_STARTER_DARK_VOID,
@@ -16014,7 +16014,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresProtect = TRUE,
         .ignoresSubstitute = TRUE,
         .metronomeBanned = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
+        .sketchBanned = B_SKETCH_BANS >= GEN_9,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FEINT, // TODO: Is this supposed to happen before the attack animation?
         },
@@ -20128,7 +20128,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .metronomeBanned = TRUE,
         .healingMove = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
+        .sketchBanned = B_SKETCH_BANS >= GEN_9,
         .battleAnimScript = gBattleAnimMove_RevivalBlessing,
     },
 
@@ -20820,7 +20820,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .instructBanned = TRUE,
         .encoreBanned = TRUE,
         .assistBanned = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
+        .sketchBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_BURN,
             .chance = 30,
@@ -20849,7 +20849,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .instructBanned = TRUE,
         .encoreBanned = TRUE,
         .assistBanned = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
+        .sketchBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SLEEP,
             .chance = 10,
@@ -20878,7 +20878,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .instructBanned = TRUE,
         .encoreBanned = TRUE,
         .assistBanned = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
+        .sketchBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_POISON,
             .chance = 30,
@@ -20907,7 +20907,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .instructBanned = TRUE,
         .encoreBanned = TRUE,
         .assistBanned = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
+        .sketchBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PARALYSIS,
             .chance = 30,
@@ -20936,7 +20936,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .instructBanned = TRUE,
         .encoreBanned = TRUE,
         .assistBanned = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
+        .sketchBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_CONFUSION,
             .chance = 30,
@@ -21109,7 +21109,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .assistBanned = TRUE,
         .copycatBanned = TRUE,
         .mimicBanned = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
+        .sketchBanned = B_SKETCH_BANS >= GEN_9,
         .battleAnimScript = gBattleAnimMove_TeraStarstorm,
     },
 
