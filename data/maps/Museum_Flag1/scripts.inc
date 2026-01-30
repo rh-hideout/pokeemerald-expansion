@@ -129,8 +129,13 @@ Museum_Flag1_EventScript_RocketCutscene::
     clearflag FLAG_HIDE_MUSEUM_FLAG1_JESSIE
     clearflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
 
+	addobject LOCALID_MUSEUM_JESSIE
+    addobject LOCALID_MUSEUM_JAMES
+
     setobjectxy LOCALID_MUSEUM_JESSIE, ROCKET_SPAWN_X, JESSIE_SPAWN_Y
     setobjectxy LOCALID_MUSEUM_JAMES,  ROCKET_SPAWN_X, JAMES_SPAWN_Y
+
+	special DrawWholeMapView
 
     turnobject LOCALID_MUSEUM_JESSIE, DIR_WEST
     turnobject LOCALID_MUSEUM_JAMES,  DIR_WEST
@@ -231,10 +236,14 @@ Museum_Flag1_EventScript_Rockets_AfterBattle::
 
     @ TM drop (Itemball erscheint)
 	clearflag FLAG_CTF_MUSEUM_TM_TAKEN
+	addobject OBJ_MUSEUM_TM
+    special DrawWholeMapView
 
     @ Jetzt Studentin rein + Dialog
     clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
+	addobject LOCALID_MUSEUM_STUDENT
     setobjectxy LOCALID_MUSEUM_STUDENT, STUDENT_SPAWN_X, STUDENT_SPAWN_Y
+	special DrawWholeMapView
     turnobject LOCALID_MUSEUM_STUDENT, DIR_WEST
 
     applymovement LOCALID_MUSEUM_STUDENT, Museum_Flag1_Movement_StudentEnter
@@ -256,8 +265,13 @@ Museum_Flag1_Rockets_End:
 Museum_Flag1_EventScript_RewardTM::
     lock
     goto_if_set FLAG_CTF_MUSEUM_TM_TAKEN, Museum_Flag1_RewardTM_Already
+
     giveitem REWARD_TM_ITEM, 1
-	setflag FLAG_CTF_MUSEUM_TM_TAKEN
+    setflag FLAG_CTF_MUSEUM_TM_TAKEN
+
+    removeobject OBJ_MUSEUM_TM
+    special DrawWholeMapView
+
     release
     end
 
@@ -267,7 +281,7 @@ Museum_Flag1_RewardTM_Already:
 
 
 @ --------------------------------------------------------------------------
-@ TERMINAL: Gym 1 Flag prüfen (VAR_0x8000 = 1 -> "SLEEP")
+@ TERMINAL: Gym 1 Flag prüfen
 @ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_Terminal::
     lock
@@ -309,18 +323,35 @@ Museum_Flag1_Terminal_Correct:
 
 
 @ --------------------------------------------------------------------------
-@ TÜR 3x2 METATILES (deine Werte)
-@ Top-Left: (0,9)
+@ TÜR 3x2 METATILES
+@ Top-Left:
 @ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_ApplyDoorOpen::
-    setmetatile 0,  9, 0x0261, 0
-    setmetatile 1,  9, 0x0207, 0
-    setmetatile 2,  9, 0x0257, 0
+    setmetatile 9,  0, 0x0261, 0
+    setmetatile 10,  0, 0x0207, 0
+    setmetatile 11,  0, 0x0257, 0
 
-    setmetatile 0, 10, 0x0262, 0
-    setmetatile 1, 10, 0x020F, 0
-    setmetatile 2, 10, 0x025F, 0
+    setmetatile 9, 1, 0x0262, 0
+    setmetatile 10, 1, 0x020F, 0
+    setmetatile 11, 1, 0x025F, 0
     return
+
+
+@---------- Heal
+
+Museum_Flag1_EventScript_HealGuy::
+    lock
+    faceplayer
+    msgbox Museum_Flag1_Text_Heal, MSGBOX_DEFAULT
+    closemessage
+
+    playfanfare MUS_HEAL
+    special HealPlayerParty
+    waitfanfare
+
+    release
+    end
+
 
 
 @ --------------------------------------------------------------------------
@@ -379,5 +410,9 @@ Museum_Flag1_Text_TerminalCorrect:
 Museum_Flag1_Text_TerminalAlreadyOpen:
     .string "TERMINAL: Door already opened.$"
 
+Museum_Flag1_Text_Heal:
+    .string "Here, let me heal your POKéMON.$"
 
+
+	
 
