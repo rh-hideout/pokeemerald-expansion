@@ -18,5 +18,6 @@
 #define OWE_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE         TRUE    // If TRUE, the mon will take steps to be right next to the player before the battle starts.
 #define OWE_WILD_ENCOUNTERS_PREVENT_SHINY_DESPAWN       FALSE   // If TRUE, shiny OW Pokémon objects will not be despawned when off-screen if on the same map as the player, or be replaced if OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT is TRUE.
 #define OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN      FALSE   // If TRUE, Feebas OW objects spawned from special Feebas fishing spots (when OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS is TRUE) will not be despawned when off-screen if on the same map as the player, or be replaced if OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT is TRUE.
+#define OWE_WILD_ENCOUNTERS_DESPAWN_ON_ENTER_TOWN       TRUE    // If TRUE, despawns all OW wild encounter objects upon entering a city or town (MAP_TYPE_TOWN or MAP_TYPE_CITY).
 
 #endif // GUARD_CONFIG_OVERWORLD_ENCOUNTERS_H

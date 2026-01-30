@@ -131,9 +131,18 @@ static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 void UpdateOverworldEncounters(void)
 {
     bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
+
+    if (FlagGet(FLAG_UNUSED_0x020))
+    {
+        if (OWE_WILD_ENCOUNTERS_DESPAWN_ON_ENTER_TOWN && (GetMapTypeByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) == MAP_TYPE_TOWN || GetMapTypeByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) == MAP_TYPE_CITY))
+            RemoveAllOverworldWildEncounterObjects(OWE_ANY);
+
+        FlagClear(FLAG_UNUSED_0x020);
+    }
+    
     if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING) || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
         return;
-    
+
     if (!OWE_WILD_ENCOUNTERS_OVERWORLD
         || FlagGet(OW_FLAG_NO_ENCOUNTER)
         || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !OWE_WILD_ENCOUNTERS_BATTLE_PIKE)
