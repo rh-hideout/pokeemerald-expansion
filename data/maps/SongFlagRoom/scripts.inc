@@ -1,57 +1,67 @@
 SongFlagRoom_MapScripts::
 	.byte 0
 
-@ ========== NPC (Object ID 1) ==========
+@ ========== NPC  ==========
 SongFlagRoom_EventScript_Hiker::
 	msgbox SongFlagRoom_Text_Hiker, MSGBOX_NPC
 	end
 
-@ ========== Terminal (Object ID 2) ==========
+@ ========== Terminal ==========
 SongFlagRoom_EventScript_Terminal::
-	lock
-	faceplayer
+    lock
+    faceplayer
 
-	@ Wenn der Stein schon weg ist: nix mehr eingeben lassen
-	goto_if_set FLAG_SONGFLAGROOM_ROCK_REMOVED, SongFlagRoom_Terminal_AlreadyDone
+    goto_if_set FLAG_CTF_SONGROOM_ROCK_REMOVED, SongFlagRoom_Terminal_AlreadyOpen
 
-	@ --- HIER: Flag #6 abfragen (dein CTF-Terminal-System) ---
-	@ Übergib die "6" an dein Terminal (so wie bei deinen anderen Terminal-Maps)
-	setvar VAR_0x8000, 6
-	special Special_CtfTerminal_EnterFlag
-	waitstate
+    msgbox SongFlagRoom_Text_TerminalPrompt, MSGBOX_DEFAULT
+    closemessage
 
-	@ Erwartung: Special setzt VAR_RESULT auf 1 bei Erfolg, sonst 0
-	compare VAR_RESULT, 1
-	goto_if_eq SongFlagRoom_Terminal_Success
+    setvar VAR_0x8000, 6
+    callnative Ctf_FlagTerminal
+    waitstate
 
-SongFlagRoom_Terminal_Fail::
-	msgbox SongFlagRoom_Text_TerminalFail, MSGBOX_DEFAULT
-	release
-	end
+    goto_if_eq VAR_RESULT, 1, SongFlagRoom_Terminal_Correct
+    goto SongFlagRoom_Terminal_Wrong
 
-SongFlagRoom_Terminal_Success::
-	msgbox SongFlagRoom_Text_TerminalSuccess, MSGBOX_DEFAULT
 
-	@ Stein dauerhaft entfernen:
-	setflag FLAG_SONGFLAGROOM_ROCK_REMOVED
-	removeobject 3
+SongFlagRoom_Terminal_Wrong:
+    msgbox SongFlagRoom_Text_TerminalWrong, MSGBOX_DEFAULT
+    release
+    end
 
-	release
-	end
+SongFlagRoom_Terminal_AlreadyOpen:
+    msgbox SongFlagRoom_Text_TerminalAlreadyOpen, MSGBOX_DEFAULT
+    release
+    end
 
-SongFlagRoom_Terminal_AlreadyDone::
-	msgbox SongFlagRoom_Text_TerminalAlready, MSGBOX_DEFAULT
-	release
-	end
+SongFlagRoom_Terminal_Correct:
+    msgbox SongFlagRoom_Text_TerminalCorrect, MSGBOX_DEFAULT
+    closemessage
+
+    setflag FLAG_CTF_SONGROOM_ROCK_REMOVED
+
+    @ Stein entfernen
+    removeobject 3
+    special DrawWholeMapView
+
+    release
+    end
 
 SongFlagRoom_Text_Hiker:
-	.string "Can you hear how the wind whistles through this cave? Almost like a melody.$"
+	.string "Can you hear how the wind\n"
+	.string "whistles through this cave?\p"
+	.string "Almost like a melody.$"
 
-SongFlagRoom_Text_TerminalSuccess:
-	.string "Access granted. A hidden path opens...$"
+SongFlagRoom_Text_TerminalPrompt::
+    .string "Enter access code.$"
 
-SongFlagRoom_Text_TerminalFail:
-	.string "Access denied.$"
+SongFlagRoom_Text_TerminalWrong::
+    .string "ACCESS DENIED.$"
 
-SongFlagRoom_Text_TerminalAlready:
-	.string "The terminal is already unlocked.$"
+SongFlagRoom_Text_TerminalAlreadyOpen::
+	.string "The terminal is already\n"
+	.string "unlocked.$"
+
+SongFlagRoom_Text_TerminalCorrect::
+	.string "Access granted. \n"
+	.string "Rock removed.$"
