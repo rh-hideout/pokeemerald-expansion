@@ -4470,6 +4470,16 @@
       "secondary_tileset": "gTileset_dhbw_gebaeude",
       "border_filepath": "data/layouts/Museum2_Flag1/border.bin",
       "blockdata_filepath": "data/layouts/Museum2_Flag1/map.bin"
+    },
+    {
+      "id": "LAYOUT_SONG_FLAG_ARENA",
+      "name": "SongFlagArena_Layout",
+      "width": 11,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_RustboroGym",
+      "border_filepath": "data/layouts/SongFlagArena/border.bin",
+      "blockdata_filepath": "data/layouts/SongFlagArena/map.bin"
     }
   ]
 }
