@@ -467,7 +467,7 @@ void LoadTypeIconForMoveInfo(enum Type type)
     enum Type types[1];
 
     types[typeNum] = type;
-    CreateSpriteFromType(MOVE_TYPE_ICON_POS, FALSE, types, typeNum, B_POSITION_PLAYER_LEFT);
+    CreateSpriteFromType(MOVE_TYPE_ICON_POS, FALSE, types, typeNum, B_BATTLER_0);
 }
 
 static bool32 UseDoubleBattleCoords(u32 position)
@@ -628,7 +628,10 @@ static void CreateMoveTypeIconSpriteAndSetAttributes(enum Type type, u32 x, u32 
 
     u32 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_MoveTypeIcon, x, y, UCHAR_MAX);
     if (spriteId == MAX_SPRITES)
+    {
+        DestroyMoveTypeIconSprite();
         return;
+    }
 
     gBattleStruct->moveTypeIconSpriteId = spriteId;
 
