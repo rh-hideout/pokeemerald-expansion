@@ -1229,9 +1229,9 @@
 #define FLAG_HIDE_MUSEUM_FLAG1_JESSIE                               0x497 // Flag1 Event Museum
 #define FLAG_HIDE_MUSEUM_FLAG1_JAMES                                0x498 // Flag1 Event Museum
 #define FLAG_HIDE_MUSEUM_FLAG1_STUDENT                              0x499 // Flag1 Event Museum
-#define FLAG_UNUSED_0x49A                                           0x49A // Unused Flag
-#define FLAG_UNUSED_0x49B                                           0x49B // Unused Flag
-#define FLAG_UNUSED_0x49C                                           0x49C // Unused Flag
+#define FLAG_CTF_GYM1_ROCKET_DEFEATED                               0x49A // Flag1 Event Museum
+#define FLAG_CTF_GYM1_REWARD_TAKEN                                  0x49B // Flag1 Event Museum
+#define FLAG_CTF_MUSEUM_TM_TAKEN                                    0x49C // Flag1 Event Museum
 #define FLAG_UNUSED_0x49D                                           0x49D // Unused Flag
 #define FLAG_UNUSED_0x49E                                           0x49E // Unused Flag
 #define FLAG_UNUSED_0x49F                                           0x49F // Unused Flag
@@ -1593,7 +1593,7 @@
 #define FLAG_UNUSED_0x933                           (DAILY_FLAGS_START + 0x13) // Unused Flag
 #define FLAG_DAILY_APPRENTICE_LEAVES                (DAILY_FLAGS_START + 0x14)
 
-#define FLAG_UNUSED_0x935                           (DAILY_FLAGS_START + 0x15) // Unused Flag
+#define FLAG_TESTMAP_POTION                         (DAILY_FLAGS_START + 0x15) // Potion in Ball auf Testmap
 #define FLAG_UNUSED_0x936                           (DAILY_FLAGS_START + 0x16) // Unused Flag
 #define FLAG_UNUSED_0x937                           (DAILY_FLAGS_START + 0x17) // Unused Flag
 #define FLAG_UNUSED_0x938                           (DAILY_FLAGS_START + 0x18) // Unused Flag

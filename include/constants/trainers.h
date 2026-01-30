@@ -110,6 +110,12 @@
 #define TRAINER_PIC_RS_MAY                92
 #define TRAINER_PIC_COUNT                 93
 
+//CTF
+#define TRAINER_PIC_ROCKET                94
+
+//Count immer Erhöhen!
+#define TRAINER_PIC_COUNT                 95
+
 // The player back pics are assumed to alternate according to the gender values (MALE/FEMALE)
 #define TRAINER_BACK_PIC_BRENDAN                0
 #define TRAINER_BACK_PIC_MAY                    1
@@ -353,7 +359,9 @@ enum TrainerClassID
     TRAINER_CLASS_PIKE_QUEEN,
     TRAINER_CLASS_PYRAMID_KING,
     TRAINER_CLASS_RS_PROTAG,
-    TRAINER_CLASS_COUNT,
+    TRAINER_CLASS_ROCKET, // CTF
+    TRAINER_CLASS_COUNT
+
 };
 
 #define TRAINER_ENCOUNTER_MUSIC_MALE         0 // standard male encounter music

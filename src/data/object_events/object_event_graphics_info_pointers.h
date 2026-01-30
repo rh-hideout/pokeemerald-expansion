@@ -497,6 +497,8 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_LIGHT_SPRITE] =             &gObjectEventGraphicsInfo_BallLight,
     [OBJ_EVENT_GFX_APRICORN_TREE] =            &gObjectEventGraphicsInfo_ApricornTree,
     [OBJ_EVENT_GFX_CTF_TERMINAL] =             &gObjectEventGraphicsInfo_CtfTerminal,
+    [OBJ_EVENT_GFX_JESSIE] =                   &gObjectEventGraphicsInfo_Jessie,
+    [OBJ_EVENT_GFX_JAMES] =                    &gObjectEventGraphicsInfo_James,
 
 };
 

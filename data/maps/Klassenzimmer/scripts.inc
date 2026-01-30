@@ -35,6 +35,11 @@ Klassenzimmer_EventScript_FirstEntry::
 	applymovement LOCALID_PLAYER, Klassenzimmer_Movement_PlayerToSeat
 	waitmovement 0
 
+    msgbox Museum_Text_StudentReceivesMon, MSGBOX_DEFAULT
+    closemessage
+
+	givepokemon SPECIES_TAILLOW, 5, ITEM_NONE, 0, 0, 0
+
 	msgbox Klassenzimmer_Text_Museum, MSGBOX_DEFAULT
 	closemessage
 
@@ -72,3 +77,8 @@ Klassenzimmer_Text_Museum:
 	.string "PRO. FARMER: Today we will\n"
 	.string "visit the museum...\p"
 	.string "(Platzhaltertext)$"
+
+Museum_Text_StudentReceivesMon:
+    .string "PROF. FARMER: At the beginning of your\n"
+    .string "studies, each student receives an X, which\n"
+    .string "is intended to support you in your learning.$"
