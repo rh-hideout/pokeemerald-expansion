@@ -12,7 +12,7 @@ Museum2_Flag1_EventScript_Hevl::
 	@ Schon gewonnen?
 	goto_if_set FLAG_BADGE01_GET, Museum2_Flag1_After
 
-	msgbox Museum2_Flag1_Text_Intro, MSG_FACE
+	msgbox Museum2_Flag1_Text_Intro, MSGBOX_DEFAULT
 
 	@ Verlustschutz: kein Whiteout
 	setflag B_FLAG_NO_WHITEOUT
@@ -27,7 +27,7 @@ Museum2_Flag1_EventScript_Hevl::
 	@ Sieg: Badge + Fanfare + TM
 	setflag FLAG_BADGE01_GET
 
-	msgbox Museum2_Flag1_Text_Win, MSG_FACE
+	msgbox Museum2_Flag1_Text_Win, MSGBOX_DEFAULT
 	closemessage
 
 	playfanfare MUS_OBTAIN_BADGE
@@ -42,13 +42,13 @@ Museum2_Flag1_EventScript_Hevl::
 	end
 
 Museum2_Flag1_Lost::
-	msgbox Museum2_Flag1_Text_Lost, MSG_FACE
+	msgbox Museum2_Flag1_Text_Lost, MSGBOX_DEFAULT
 	special HealPlayerParty
 	release
 	end
 
 Museum2_Flag1_After::
-	msgbox Museum2_Flag1_Text_After, MSG_FACE
+	msgbox Museum2_Flag1_Text_After, MSGBOX_DEFAULT
 	release
 	end
 
@@ -79,4 +79,3 @@ Museum2_Flag1_Text_TM::
 Museum2_Flag1_Text_After::
 	.string "Our proof is complete.\n"
 	.string "Keep studying.$"
-
