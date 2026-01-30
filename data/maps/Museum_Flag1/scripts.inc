@@ -32,7 +32,7 @@
 .set STUDENT_END_X,   16
 .set STUDENT_END_Y,   3
 
-@ Drop der TM: auf James’ Spot (16,4), damit Student (16,3) nicht kollidiert
+@ Drop der TM: 
 .set REWARD_X, 16
 .set REWARD_Y, 4
 
@@ -110,7 +110,7 @@ Museum_Flag1_Sync_Defeated:
 
 
 @ --------------------------------------------------------------------------
-@ CUTSCENE nach dem Teleport (Dialog wie vorher, ABER Rockets bleiben stehen)
+@ CUTSCENE nach dem Teleport 
 @ --------------------------------------------------------------------------
 Museum_Flag1_EventScript_RocketCutscene::
     clearflag FLAG_CTF_MUSEUM_SCENE_PENDING
