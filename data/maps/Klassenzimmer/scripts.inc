@@ -4,7 +4,7 @@ Klassenzimmer_MapScripts::
 	.byte 0
 
 Klassenzimmer_OnTransition:
-	@ OnTransition nur vorbereiten – keine msgbox/Bewegung hier!
+	@ OnTransition nur vorbereiten, keine msgbox/Bewegung hier!
 	goto_if_set FLAG_CTF_CLASSROOM_INTRO_DONE, Klassenzimmer_OnTransition_End
 	setvar VAR_TEMP_0, 0
 	end
@@ -35,6 +35,11 @@ Klassenzimmer_EventScript_FirstEntry::
 	applymovement LOCALID_PLAYER, Klassenzimmer_Movement_PlayerToSeat
 	waitmovement 0
 
+    msgbox Museum_Text_StudentReceivesMon, MSGBOX_DEFAULT
+    closemessage
+
+	givemon SPECIES_TAILLOW, 5, ITEM_NONE
+
 	msgbox Klassenzimmer_Text_Museum, MSGBOX_DEFAULT
 	closemessage
 
@@ -46,11 +51,11 @@ Klassenzimmer_EventScript_FirstEntry::
 	setflag FLAG_HIDE_MUSEUM_FLAG1_JAMES
 	setflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
 
-	@ Script freigeben bevor Warp (robuster)
+	@ Script freigeben bevor Warp
 	releaseall
 
-	@ Warp per Koordinate (dein Branch kann 255 offenbar)
-	warp MAP_MUSEUM_FLAG1, 255, 17, 6
+	@ Warp per Koordinate
+	warpsilent MAP_MUSEUM_FLAG1, 255, 17, 6
 	end
 
 
@@ -72,3 +77,11 @@ Klassenzimmer_Text_Museum:
 	.string "PRO. FARMER: Today we will\n"
 	.string "visit the museum...\p"
 	.string "(Platzhaltertext)$"
+
+Museum_Text_StudentReceivesMon:
+    .string "PROF. FARMER: At the beginning of your\n"
+    .string "studies, each student receives an\p"
+	.string "X, which is intended to support\n"
+    .string "you in your learning.$"
+
+

@@ -6,10 +6,10 @@
   "region_map_section": "MAPSEC_ABANDONED_SHIP",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
-  "map_type": "MAP_TYPE_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
   "allow_cycling": false,
   "allow_escaping": false,
-  "allow_running": false,
+  "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
@@ -37,12 +37,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Museum_Flag1_EventScript_HealGuy",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_MUSEUM_JESSIE",
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "graphics_id": "OBJ_EVENT_GFX_JESSIE",
       "x": 19,
       "y": 3,
       "elevation": 0,
@@ -51,12 +51,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Museum_Flag1_EventScript_Rockets",
       "flag": "FLAG_HIDE_MUSEUM_FLAG1_JESSIE"
     },
     {
       "local_id": "LOCALID_MUSEUM_JAMES",
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "graphics_id": "OBJ_EVENT_GFX_JAMES",
       "x": 19,
       "y": 4,
       "elevation": 0,
@@ -65,7 +65,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Museum_Flag1_EventScript_Rockets",
       "flag": "FLAG_HIDE_MUSEUM_FLAG1_JAMES"
     },
     {
@@ -81,6 +81,19 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
       "flag": "FLAG_HIDE_MUSEUM_FLAG1_STUDENT"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 16,
+      "y": 4,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Museum_Flag1_EventScript_RewardTM",
+      "flag": "FLAG_CTF_MUSEUM_TM_TAKEN"
     }
   ],
   "warp_events": [
@@ -89,13 +102,6 @@
       "y": 1,
       "elevation": 0,
       "dest_map": "MAP_MUSEUM2_FLAG1",
-      "dest_warp_id": "0"
-    },
-    {
-      "x": 17,
-      "y": 6,
-      "elevation": 0,
-      "dest_map": "MAP_MUSEUM_FLAG1",
       "dest_warp_id": "0"
     }
   ],

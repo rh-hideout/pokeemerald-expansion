@@ -1364,3 +1364,11 @@ static const struct SpriteFrameImage sPicTable_ApricornTree[] = {
 static const struct SpriteFrameImage sPicTable_CtfTerminal[] = {
     overworld_frame(gObjectEventPic_CtfTerminal, 2, 4, 0),
 };
+
+static const struct SpriteFrameImage sPicTable_Jessie[] = {
+    overworld_ascending_frames(gObjectEventPic_Jessie, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_James[] = {
+    overworld_ascending_frames(gObjectEventPic_James, 2, 4),
+};

@@ -16873,3 +16873,55 @@ Double Battle: No
 Kyogre
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+
+=== TRAINER_TEAM_ROCKET_1 ===
+Name: JESS&JAMES
+Class: Team Rocket
+Pic: Rocket
+Gender: Male
+Music: Interviewer
+Double Battle: Yes
+AI: Check Bad Move
+
+Meowth
+Level: 2
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Arbok
+Level: 2
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Weezing
+Level: 2
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+
+=== TRAINER_PROF_HEVL ===
+Name: HYVL
+Class: Professor
+Pic: Leader Wattson
+Gender: Male
+Music: Male
+Items: Potion
+Double Battle: No
+AI: Basic Trainer
+
+Plusle
+Level: 5
+Shiny: Yes
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+Minun
+Level: 5
+Shiny: Yes
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+SPECIES_UNOWN_H
+Level: 5
+Shiny: Yes
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe

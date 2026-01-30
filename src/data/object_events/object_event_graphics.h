@@ -470,3 +470,9 @@ const u32 gObjectEventPic_ApricornTree[] = INCBIN_U32("graphics/object_events/pi
 
 const u32 gObjectEventPic_CtfTerminal[] = INCBIN_U32("graphics/object_events/pics/misc/ctf_terminal.4bpp");
 const u16 gObjectEventPal_CtfTerminal[] = INCBIN_U16("graphics/object_events/palettes/ctf_terminal.gbapal");
+
+const u32 gObjectEventPic_Jessie[] = INCBIN_U32("graphics/object_events/pics/people/jessie.4bpp");
+const u16 gObjectEventPal_Jessie[] = INCBIN_U16("graphics/object_events/palettes/jessie.gbapal");
+
+const u32 gObjectEventPic_James[] = INCBIN_U32("graphics/object_events/pics/people/james.4bpp");
+const u16 gObjectEventPal_James[] = INCBIN_U16("graphics/object_events/palettes/james.gbapal");
