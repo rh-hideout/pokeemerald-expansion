@@ -54,19 +54,21 @@ Museum2_Flag1_After::
 
 
 Museum2_Flag1_Text_Intro::
-	.string "You saved XX and thus ensured\n"
-	.string "our mathematical superiority.\p"
+	.string "PROF. HYVL: You saved XX \n"
+	.string "and thus ensured our mathematical\p"
+	.string "superiority.\p"
 	.string "You can now take your exam with\n"
 	.string "me to prove yourself worthy.$"
 
 Museum2_Flag1_Text_Defeat::
-	.string "PROF. HEVL: Correct... enough.$"
+	.string "PROF. HYVL: Correct... enough.$"
 
 Museum2_Flag1_Text_Lost::
-	.string "Not bad, but you need to try again.$"
+	.string "PROF. HYVL: Not bad, but you need\n"
+	.string "to try again.$"
 
 Museum2_Flag1_Text_Win::
-	.string "PROF. HEVL: Excellent!\n"
+	.string "PROF. HYVL: Excellent!\n"
 	.string "You proved yourself worthy.\p"
 	.string "Take this, the FIRST BADGE.$"
 
@@ -74,10 +76,11 @@ Museum2_Flag1_Text_ReceivedBadge::
 	.string "You received the FIRST BADGE!$"
 
 Museum2_Flag1_Text_TM::
-	.string "You received a TM!$"
+	.string "You received a TM!\p"
+	.string "TM01 contains FOCUS PUNCH.$"
 
 Museum2_Flag1_Text_After::
-	.string "Our proof is complete.\n"
+	.string "PROF. HYVL: Our proof is complete.\n"
 	.string "Keep studying.$"
 
 
