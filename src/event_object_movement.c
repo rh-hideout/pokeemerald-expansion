@@ -57,7 +57,6 @@
 #include "constants/union_room.h"
 #include "constants/weather.h"
 
-#include "data/object_events/object_event_graphics_info.h"
 
 
 #define SPECIAL_LOCALIDS_START (min(LOCALID_CAMERA, \
