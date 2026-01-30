@@ -1,42 +1,11 @@
 #ifndef GUARD_OVERWORLD_ENCOUNTERS_H
 #define GUARD_OVERWORLD_ENCOUNTERS_H
 
-#if OW_POKEMON_OBJECT_EVENTS == FALSE && OWE_WILD_ENCOUNTERS_OVERWORLD == TRUE
-#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OWE_WILD_ENCOUNTERS_OVERWORLD to work."
-#endif
-
-#define OWE_MAX_SPAWNS              4
-
-#define OWE_SPAWN_DISTANCE_LAND     1   // A spawn cannot happen within this many tiles of the player position.
-#define OWE_SPAWN_DISTANCE_WATER    3   // A spawn cannot happen within this many tiles of the player position (while surfing).
-
-#define OWE_TOTAL_SPAWN_WIDTH       15  // Width of the on-screen spawn area in tiles.
-#define OWE_TOTAL_SPAWN_HEIGHT      9   // Height of the on-screen spawn area in tiles.
-#define OWE_SPAWN_RADUIS_WIDTH      (OWE_TOTAL_SPAWN_WIDTH - 1) / 2     // Distance from center to left/right edge (not including center).
-#define OWE_SPAWN_RADUIS_HEIGHT     (OWE_TOTAL_SPAWN_HEIGHT - 1) / 2    // Distance from center to top/bottom edge (not including center).
-
-#define OWE_SPAWN_TIME_MINIMUM      30  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
-#define OWE_SPAWN_TIME_PER_ACTIVE   30  // The number of frames that will be added to the countdown per currently active spawn.
-#define OWE_SPAWN_TIME_REPLACEMENT  240 // The number of frames before an existing spawn will be replaced with a new one (requires OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT).
-
-#define OWE_MON_SIGHT_WIDTH         3
-#define OWE_MON_SIGHT_LENGTH        4
-
-#define OWE_CHASE_RANGE             5
-#define OWE_APPROACH_DISTANCE       2
-
-#define OWE_APPROACH_JUMP_TIMER_MIN 16
-#define OWE_APPROACH_JUMP_TIMER_MAX 64
-
-#define OWE_FLEE_COLLISION_TIME     6  // If a fleeing mon is unable to take a step for this many tries it will despawn. (Multiply this value by 16 to get number of frames.)
-
-#define OWE_DESPAWN_FRAMES          30  // Number of frames before a mon despawns after noticing the player (OWE_BEHAVIOR_DESPAWN)
-
-#define OWE_NO_ENCOUNTER_SET        255
-
-#define INVALID_SPAWN_SLOT          0xFF
-
-#define OWE_RESTORED_MOVEMENT_FUNC_ID   10
+#define OWE_APPROACH_DISTANCE           2
+#define OWE_APPROACH_JUMP_TIMER_MIN     16
+#define OWE_APPROACH_JUMP_TIMER_MAX     64
+#define OWE_FLEE_COLLISION_TIME         6   // If a fleeing mon is unable to take a step for this many tries it will despawn. (Multiply this value by 16 to get number of frames.)
+#define OWE_DESPAWN_FRAMES              30  // Number of frames before a mon despawns after noticing the player (OWE_BEHAVIOR_DESPAWN)
 
 enum OverworldEncounterSpawnAnim
 {
@@ -45,7 +14,7 @@ enum OverworldEncounterSpawnAnim
     OWE_SPAWN_ANIM_WATER,
     OWE_SPAWN_ANIM_UNDERWATER,
     OWE_SPAWN_ANIM_CAVE,
-    OWE_SPAWN_ANIM_SHINY,
+    OWE_SPAWN_ANIM_SHINY
 };
 
 enum OverworldObjectEncounterType
