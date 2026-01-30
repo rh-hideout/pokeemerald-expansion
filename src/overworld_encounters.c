@@ -39,6 +39,11 @@
 #define OWE_NON_ROAMER_OUTBREAK         0
 #define OWE_MASS_OUTBREAK_INDEX         ROAMER_COUNT + 1
 #define OWE_INVALID_ROAMER_OUTBREAK     OWE_MASS_OUTBREAK_INDEX + 1
+#define OWE_MAX_ROAMERS                 UINT8_MAX - 2
+
+#if OWE_WILD_ENCOUNTERS_OVERWORLD == TRUE && ROAMER_COUNT >= OWE_MAX_ROAMERS
+#error "ROAMER_COUNT needs to be less than OWE_MAX_ROAMERS due to it being stored in the u8 field warpArrowSpriteId"
+#endif
 
 #define OWE_FLAG_BIT                    (1 << 7)
 #define OWE_SAVED_MOVEMENT_STATE_FLAG   OWE_FLAG_BIT
@@ -126,20 +131,13 @@ static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 void UpdateOverworldEncounters(void)
 {
     bool32 shouldSpawnWaterMons = OWE_ShouldSpawnWaterMons();
-
-    if (FlagGet(FLAG_UNUSED_0x020))
-    {
-        if (OWE_WILD_ENCOUNTERS_DESPAWN_ON_ENTER_TOWN && (GetMapTypeByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) == MAP_TYPE_TOWN || GetMapTypeByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) == MAP_TYPE_CITY))
-            RemoveAllOverworldWildEncounterObjects(OWE_ANY);
-
-        FlagClear(FLAG_UNUSED_0x020);
-    }
     
     if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING) || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
         return;
 
     if (!OWE_WILD_ENCOUNTERS_OVERWORLD
         || FlagGet(OW_FLAG_NO_ENCOUNTER)
+        || FlagGet(DN_FLAG_SEARCHING)
         || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !OWE_WILD_ENCOUNTERS_BATTLE_PIKE)
         || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR && !OWE_WILD_ENCOUNTERS_BATTLE_PYRAMID)
         || InTrainerHillChallenge())
@@ -928,11 +926,22 @@ static bool32 OWE_ShouldSpawnWaterMons(void)
 
 void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType)
 {
+    s16 dx = 0;
+    s16 dy = 0;
+    if (gCamera.active)
+    {
+        dx = gCamera.x;
+        dy = gCamera.y;
+    }
+
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
         if (IsOverworldWildEncounter(obj, oweType) && obj->active)
+        {
+            UpdateObjectEventCoords(obj, dx, dy);
             RemoveObjectEvent(obj);
+        }
     }
 }
 
@@ -1803,6 +1812,20 @@ bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent)
 
     objectEvent->offScreen = TRUE;
     return FALSE;
+}
+
+void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void)
+{
+    if (gMain.callback2 != CB2_Overworld)
+        return;
+
+    if (!OWE_WILD_ENCOUNTERS_DESPAWN_ON_ENTER_TOWN)
+        return;
+
+    if (gMapHeader.mapType != MAP_TYPE_CITY && gMapHeader.mapType != MAP_TYPE_TOWN)
+        return;
+
+    RemoveAllOverworldWildEncounterObjects(OWE_ANY);
 }
 
 #undef sOverworldEncounterLevel

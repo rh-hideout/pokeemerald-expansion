@@ -808,6 +808,7 @@ bool8 CameraMove(int x, int y)
         gSaveBlock1Ptr->pos.x += x;
         gSaveBlock1Ptr->pos.y += y;
         MoveMapViewToBackup(direction);
+        OWE_TryRemoveOverworldWildEncountersCrossingMapConnection();
     }
 
     return gCamera.active;

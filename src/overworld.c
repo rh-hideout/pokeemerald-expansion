@@ -927,7 +927,6 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
             ShowMapNamePopup();
     }
     OverworldWildEncounter_SetMinimumSpawnTimer();
-    FlagSet(FLAG_UNUSED_0x020);
 }
 
 static void LoadMapFromWarp(bool32 a1)
