@@ -35,6 +35,15 @@ Testmap_EventScript_TutorialTerminal::
 Testmap_Terminal_Ok:
     msgbox Testmap_Text_Ok, MSGBOX_DEFAULT
 
+    playse SE_BANG
+    setvar VAR_0x8004, 1   @ vertical pan
+    setvar VAR_0x8005, 1   @ horizontal pan
+    setvar VAR_0x8006, 10  @ num shakes
+    setvar VAR_0x8007, 2   @ shake delay
+    special ShakeCamera
+    waitstate
+    msgbox Testmap_Text_OkBang, MSGBOX_DEFAULT
+
     applymovement LOCALID_TESTMAP_BLOCKER, Testmap_Movement_SleepStep
     waitmovement 0
 
@@ -107,24 +116,6 @@ Testmap_Movement_TurnAndStepRight:
     walk_right
     step_end
 
-Testmap_EventScript_ItemBall_Potion::
-    lock
-    checkitemspace ITEM_POTION, 1
-    goto_if_eq VAR_RESULT, 0, Testmap_NoRoom
-    giveitem ITEM_POTION, 1
-    setflag FLAG_TESTMAP_POTION
-    removeobject LOCALID_TESTMAP_ITEMBALL
-    release
-    end
-
-Testmap_NoRoom:
-    msgbox Testmap_Text_NoRoom, MSGBOX_DEFAULT
-    release
-    end
-
-Testmap_Text_NoRoom:
-    .string "Your bag is full.$"
-
 Testmap_Text_GoUniversityFirst:
     .string "I should go to the university first.$"
 
@@ -147,8 +138,10 @@ Testmap_Text_Wrong:
 	.string "TERMINAL: Incorrect.$"
 
 Testmap_Text_Ok:
-	.string "TERMINAL: Correct. <There is a very \n"
-	.string "loud BANG coming from the terminal>$"
+	.string "TERMINAL: Correct.$"
+
+Testmap_Text_OkBang:
+	.string "There is a very loud \n BANG coming from the terminal!$"
 
 Testmap_Text_Already:
 	.string "TERMINAL: Already cleared.$"
@@ -156,5 +149,3 @@ Testmap_Text_Already:
 Testmap_Text_WokeUp:
 	.string "SLEEPYHEAD: Holy shit!\n"
 	.string "What was that?!$"
-
-
