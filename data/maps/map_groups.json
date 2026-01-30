@@ -34,7 +34,14 @@
     "gMapGroup_IndoorRoute123",
     "gMapGroup_IndoorRoute119",
     "gMapGroup_IndoorRoute124",
-    "gMapGroup_CTF"
+    "gMapGroup_CTF",
+    "gMapGroup_Hub",
+    "gMapGroup_Flag2",
+    "gMapGroup_Flag3",
+    "gMapGroup_Flag4",
+    "gMapGroup_Flag5",
+    "gMapGroup_Flag7",
+    "gMapGroup_Flag8"
   ],
   "gMapGroup_TownsAndRoutes": [
     "PetalburgCity",
@@ -630,5 +637,26 @@
     "Museum_Flag1",
     "Museum2_Flag1",
     "SongFlagArena"
+  ],
+  "gMapGroup_Hub": [
+    "MainHub"
+  ],
+  "gMapGroup_Flag2": [
+    "HowerClass"
+  ],
+  "gMapGroup_Flag3": [
+    "entryMapFlag3"
+  ],
+  "gMapGroup_Flag4": [
+    "entryMapFlag4"
+  ],
+  "gMapGroup_Flag5": [
+    "entryMapFlag5"
+  ],
+  "gMapGroup_Flag7": [
+    "entryMapFlag7"
+  ],
+  "gMapGroup_Flag8": [
+    "entryMapFlag8"
   ]
 }

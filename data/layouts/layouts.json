@@ -4480,6 +4480,76 @@
       "secondary_tileset": "gTileset_RustboroGym",
       "border_filepath": "data/layouts/SongFlagArena/border.bin",
       "blockdata_filepath": "data/layouts/SongFlagArena/map.bin"
+    },
+    {
+      "id": "LAYOUT_MAIN_HUB",
+      "name": "MainHub_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/MainHub/border.bin",
+      "blockdata_filepath": "data/layouts/MainHub/map.bin"
+    },
+    {
+      "id": "LAYOUT_ENTRY_MAP_FLAG5",
+      "name": "entryMapFlag5_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/entryMapFlag5/border.bin",
+      "blockdata_filepath": "data/layouts/entryMapFlag5/map.bin"
+    },
+    {
+      "id": "LAYOUT_HOWER_CLASS",
+      "name": "HowerClass_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/HowerClass/border.bin",
+      "blockdata_filepath": "data/layouts/HowerClass/map.bin"
+    },
+    {
+      "id": "LAYOUT_ENTRY_MAP_FLAG3",
+      "name": "entryMapFlag3_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/entryMapFlag3/border.bin",
+      "blockdata_filepath": "data/layouts/entryMapFlag3/map.bin"
+    },
+    {
+      "id": "LAYOUT_ENTRY_MAP_FLAG4",
+      "name": "entryMapFlag4_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/entryMapFlag4/border.bin",
+      "blockdata_filepath": "data/layouts/entryMapFlag4/map.bin"
+    },
+    {
+      "id": "LAYOUT_ENTRY_MAP_FLAG8",
+      "name": "entryMapFlag8_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/entryMapFlag8/border.bin",
+      "blockdata_filepath": "data/layouts/entryMapFlag8/map.bin"
+    },
+    {
+      "id": "LAYOUT_ENTRY_MAP_FLAG7",
+      "name": "entryMapFlag7_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/entryMapFlag7/border.bin",
+      "blockdata_filepath": "data/layouts/entryMapFlag7/map.bin"
     }
   ]
 }
