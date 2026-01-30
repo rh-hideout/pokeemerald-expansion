@@ -1174,3 +1174,5 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Museum_Flag1/scripts.inc"
 
 	.include "data/maps/Museum2_Flag1/scripts.inc"
+
+	.include "data/maps/SongFlagArena/scripts.inc"

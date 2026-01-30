@@ -82,6 +82,7 @@ Museum_Text_StudentReceivesMon:
     .string "PROF. FARMER: At the beginning of your\n"
     .string "studies, each student receives an\p"
 	.string "X, which is intended to support\n"
-    .string "you in your learning.$"
+    .string "you in your learning.\p"
+	.string "XXX has been added to your Team.$"
 
 
