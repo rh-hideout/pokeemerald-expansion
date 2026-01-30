@@ -137,6 +137,7 @@ void UpdateOverworldEncounters(void)
 
     if (!OWE_WILD_ENCOUNTERS_OVERWORLD
         || FlagGet(OW_FLAG_NO_ENCOUNTER)
+        || FlagGet(DN_FLAG_SEARCHING)
         || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !OWE_WILD_ENCOUNTERS_BATTLE_PIKE)
         || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR && !OWE_WILD_ENCOUNTERS_BATTLE_PYRAMID)
         || InTrainerHillChallenge())
