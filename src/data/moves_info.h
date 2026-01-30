@@ -4514,10 +4514,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .assistBanned = TRUE,
         .sketchBanned = TRUE,
         .mirrorMoveBanned = B_UPDATED_MOVE_FLAGS >= GEN_4,
-        .battleAnimScript = gBattleAnimMove_Struggle,
-        .validApprenticeMove = TRUE,
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_COOL : CONTEST_CATEGORY_TOUGH,
+        .battleAnimScript = gBattleAnimMove_Struggle,
+        .validApprenticeMove = TRUE,
     },
 
     [MOVE_SKETCH] =
