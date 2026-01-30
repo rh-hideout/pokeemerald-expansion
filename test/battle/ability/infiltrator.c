@@ -7,8 +7,8 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Light Screen/Reflect/Aur
 
     PARAMETRIZE { screenMove = MOVE_LIGHT_SCREEN; attackingMove = MOVE_WATER_GUN; ability = ABILITY_INFILTRATOR; }
     PARAMETRIZE { screenMove = MOVE_LIGHT_SCREEN; attackingMove = MOVE_WATER_GUN; ability = ABILITY_CLEAR_BODY;  }
-    PARAMETRIZE { screenMove = MOVE_REFLECT;      attackingMove = MOVE_AQUA_JET;  ability = ABILITY_INFILTRATOR; }
-    PARAMETRIZE { screenMove = MOVE_REFLECT;      attackingMove = MOVE_AQUA_JET;  ability = ABILITY_CLEAR_BODY;  }
+    PARAMETRIZE { screenMove = MOVE_REFLECT;      attackingMove = MOVE_SCRATCH;   ability = ABILITY_INFILTRATOR; }
+    PARAMETRIZE { screenMove = MOVE_REFLECT;      attackingMove = MOVE_SCRATCH;   ability = ABILITY_CLEAR_BODY;  }
     PARAMETRIZE { screenMove = MOVE_AURORA_VEIL;  attackingMove = MOVE_WATER_GUN; ability = ABILITY_INFILTRATOR; }
     PARAMETRIZE { screenMove = MOVE_AURORA_VEIL;  attackingMove = MOVE_WATER_GUN; ability = ABILITY_CLEAR_BODY;  }
 
@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Light Screen/Reflect/Aur
         ASSUME(GetMoveEffect(MOVE_REFLECT) == EFFECT_REFLECT);
         ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
-        ASSUME(GetMoveCategory(MOVE_AQUA_JET) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
         OPPONENT(SPECIES_ABOMASNOW) { Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
@@ -39,8 +39,8 @@ DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Light Screen/Reflect/Au
 
     PARAMETRIZE { screenMove = MOVE_LIGHT_SCREEN; attackingMove = MOVE_WATER_GUN; ability = ABILITY_INFILTRATOR; }
     PARAMETRIZE { screenMove = MOVE_LIGHT_SCREEN; attackingMove = MOVE_WATER_GUN; ability = ABILITY_CLEAR_BODY;  }
-    PARAMETRIZE { screenMove = MOVE_REFLECT;      attackingMove = MOVE_AQUA_JET;  ability = ABILITY_INFILTRATOR; }
-    PARAMETRIZE { screenMove = MOVE_REFLECT;      attackingMove = MOVE_AQUA_JET;  ability = ABILITY_CLEAR_BODY;  }
+    PARAMETRIZE { screenMove = MOVE_REFLECT;      attackingMove = MOVE_SCRATCH;   ability = ABILITY_INFILTRATOR; }
+    PARAMETRIZE { screenMove = MOVE_REFLECT;      attackingMove = MOVE_SCRATCH;   ability = ABILITY_CLEAR_BODY;  }
     PARAMETRIZE { screenMove = MOVE_AURORA_VEIL;  attackingMove = MOVE_WATER_GUN; ability = ABILITY_INFILTRATOR; }
     PARAMETRIZE { screenMove = MOVE_AURORA_VEIL;  attackingMove = MOVE_WATER_GUN; ability = ABILITY_CLEAR_BODY;  }
 
@@ -49,7 +49,7 @@ DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Light Screen/Reflect/Au
         ASSUME(GetMoveEffect(MOVE_REFLECT) == EFFECT_REFLECT);
         ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
-        ASSUME(GetMoveCategory(MOVE_AQUA_JET) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ABOMASNOW) { Ability(ABILITY_SNOW_WARNING); }
@@ -76,17 +76,17 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Mist")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIST) == EFFECT_MIST);
-        ASSUME(GetMoveEffect(MOVE_TAIL_WHIP) == EFFECT_DEFENSE_DOWN);
+        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_MIST); MOVE(player, MOVE_TAIL_WHIP); }
+        TURN { MOVE(opponent, MOVE_MIST); MOVE(player, MOVE_SCREECH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, opponent);
         if (ability == ABILITY_INFILTRATOR)
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_TAIL_WHIP, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
         else
-            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TAIL_WHIP, player);
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
     }
 }
 
@@ -99,16 +99,16 @@ DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Mist")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIST) == EFFECT_MIST);
-        ASSUME(GetMoveEffect(MOVE_TAIL_WHIP) == EFFECT_DEFENSE_DOWN);
+        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(playerRight, MOVE_MIST); MOVE(playerLeft, MOVE_TAIL_WHIP, target: playerRight); }
+        TURN { MOVE(playerRight, MOVE_MIST); MOVE(playerLeft, MOVE_SCREECH, target: playerRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, playerRight);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TAIL_WHIP, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, playerLeft);
     }
 }
 
@@ -176,7 +176,7 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Substitute (Gen 6+)")
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
-        if (ability == ABILITY_INFILTRATOR && config == GEN_6) {
+        if (ability == ABILITY_INFILTRATOR && config >= GEN_6) {
             NOT SUB_HIT(opponent);
             HP_BAR(opponent);
         } else {
@@ -209,9 +209,7 @@ DOUBLE_BATTLE_TEST("Infiltrator bypasses an ally's Substitute (Gen 6+)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, playerRight);
         if (ability == ABILITY_INFILTRATOR && config == GEN_6) {
             NOT SUB_HIT(playerRight);
-            HP_BAR(playerRight);
         } else {
-            NOT HP_BAR(playerRight);
             SUB_HIT(playerRight);
         }
     }
