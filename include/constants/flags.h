@@ -1280,7 +1280,7 @@
 #define FLAG_UNUSED_0x4CA                                           0x4CA // Unused Flag
 #define FLAG_UNUSED_0x4CB                                           0x4CB // Unused Flag
 #define FLAG_UNUSED_0x4CC                                           0x4CC // Unused Flag
-#define FLAG_SONGFLAGROOM_ROCK_REMOVED                              0x4CD // FLag 6 Song Höhle Fels entfernt
+#define FLAG_CTF_SONGROOM_ROCK_REMOVED                              0x4CD // FLag 6 Song Höhle Fels entfernt
 #define FLAG_UNUSED_0x4CE                                           0x4CE // Unused Flag
 #define FLAG_UNUSED_0x4CF                                           0x4CF // Unused Flag
 #define FLAG_UNUSED_0x4D0                                           0x4D0 // Unused Flag

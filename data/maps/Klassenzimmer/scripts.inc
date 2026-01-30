@@ -82,3 +82,4 @@ Museum_Text_StudentReceivesMon:
     .string "PROF. FARMER: At the beginning of your\n"
     .string "studies, each student receives an X, which\n"
     .string "is intended to support you in your learning.$"
+	
