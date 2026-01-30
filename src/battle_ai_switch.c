@@ -441,43 +441,63 @@ static u32 FindMonWithMoveOfEffectiveness(enum BattlerId battler, enum BattlerId
     return FALSE; // There is not a single Pokémon in the party that has a move with this effectiveness threshold
 }
 
+static bool32 CanMoveAffectTarget(struct BattleContext *ctx)
+{
+    if (ctx->move != MOVE_NONE
+        && AI_GetMoveEffectiveness(ctx->move, ctx->battlerAtk, ctx->battlerDef) > UQ_4_12(0.0)
+        && !AI_CanMoveBeBlockedByTarget(ctx))
+        return TRUE;
+    return FALSE;
+}
+
+static bool32 IsMoveBad(struct BattleContext *ctx)
+{
+    if (!CanMoveAffectTarget(ctx)
+        && (!ALL_MOVES_BAD_STATUS_MOVES_BAD || GetMovePower(ctx->move) != 0)) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
+        return TRUE;
+    return FALSE;
+}
+
 static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler)
 {
-    u32 moveIndex;
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
-    enum Move aiMove;
+    struct BattleContext ctx = {0};
+    ctx.battlerAtk = battler;
+    ctx.battlerDef = opposingBattler;
+    ctx.abilityAtk = gAiLogicData->abilities[ctx.battlerAtk];
+    ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
+    ctx.holdEffectAtk = gAiLogicData->holdEffects[ctx.battlerAtk];
+    ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
 
     // Switch if no moves affect opponents
-    if (IsDoubleBattle())
+    if (HasTwoOpponents(battler))
     {
         enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
-        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            aiMove = gBattleMons[battler].moves[moveIndex];
-            if (aiMove == MOVE_NONE)
-                continue;
-            if (gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] > UQ_4_12(0.0)
-             || gAiLogicData->effectiveness[battler][opposingPartner][moveIndex] > UQ_4_12(0.0))
+            ctx.move = ctx.chosenMove = gBattleMons[battler].moves[moveIndex];
+            ctx.moveType = GetBattleMoveType(ctx.move);
+            // Check if move is bad in the context of both opposing battlers
+            if (!IsMoveBad(&ctx))
                 return FALSE;
+            else
+            {
+                // Set partner data in ctx
+                ctx.battlerDef = opposingPartner;
+                ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
+                ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
+                if (!IsMoveBad(&ctx))
+                    return FALSE;
+            }
         }
     }
     else
     {
-        struct BattleContext ctx = {0};
-        ctx.battlerAtk = battler;
-        ctx.battlerDef = opposingBattler;
-        ctx.abilityAtk = gAiLogicData->abilities[ctx.battlerAtk];
-        ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
-        ctx.holdEffectAtk = gAiLogicData->holdEffects[ctx.battlerAtk];
-        ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
-
-        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            aiMove = gBattleMons[battler].moves[moveIndex];
-            if (aiMove != MOVE_NONE
-                && gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] > UQ_4_12(0.0)
-                && !AI_CanMoveBeBlockedByTarget(&ctx)
-                && (!ALL_MOVES_BAD_STATUS_MOVES_BAD || GetMovePower(aiMove) != 0)) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
+            ctx.move = ctx.chosenMove = gBattleMons[battler].moves[moveIndex];
+            ctx.moveType = GetBattleMoveType(ctx.move);
+            if (!IsMoveBad(&ctx))
                 return FALSE;
         }
     }
@@ -975,7 +995,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler)
     if (CanUseSuperEffectiveMoveAgainstOpponent(battler, opposingBattler))
         return TRUE;
 
-    if (IsDoubleBattle() && CanUseSuperEffectiveMoveAgainstOpponent(battler, BATTLE_PARTNER(BATTLE_OPPOSITE(battler))))
+    if (HasTwoOpponents() && CanUseSuperEffectiveMoveAgainstOpponent(battler, BATTLE_PARTNER(BATTLE_OPPOSITE(battler))))
         return TRUE;
 
     return FALSE;
@@ -1117,27 +1137,42 @@ static bool32 ShouldSwitchIfEncored(enum BattlerId battler)
 
 static bool32 ShouldSwitchIfBadChoiceLock(enum BattlerId battler)
 {
-    enum Move lastUsedMove = gAiLogicData->lastUsedMove[battler];
+    enum Move choicedMove = gBattleStruct->choicedMove[battler];
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
-    bool32 moveAffectsTarget = TRUE;
 
     struct BattleContext ctx = {0};
     ctx.battlerAtk = battler;
     ctx.battlerDef = opposingBattler;
-    ctx.move = ctx.chosenMove = lastUsedMove;
-    ctx.moveType = GetBattleMoveType(lastUsedMove);
+    ctx.move = ctx.chosenMove = choicedMove;
+    ctx.moveType = GetBattleMoveType(choicedMove);
     ctx.abilityAtk = gAiLogicData->abilities[ctx.battlerAtk];
     ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
     ctx.holdEffectAtk = gAiLogicData->holdEffects[ctx.battlerAtk];
     ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
 
-    if (lastUsedMove != MOVE_NONE
-     && (AI_GetMoveEffectiveness(lastUsedMove, battler, opposingBattler) == UQ_4_12(0.0) || AI_CanMoveBeBlockedByTarget(&ctx)))
-        moveAffectsTarget = FALSE;
+    // Not locked in to anything yet, or not choiced
+    if (choicedMove == MOVE_NONE)
+        return FALSE;
 
-    if (IsHoldEffectChoice(ctx.holdEffectAtk) && IsBattlerItemEnabled(battler))
+    if (HasTwoOpponents(battler))
     {
-        if ((GetMoveCategory(lastUsedMove) == DAMAGE_CATEGORY_STATUS || !moveAffectsTarget) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
+        enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
+        if (IsHoldEffectChoice(ctx.holdEffectAtk) && IsBattlerItemEnabled(battler))
+        {
+            if ((GetMoveCategory(choicedMove) == DAMAGE_CATEGORY_STATUS || !CanMoveAffectTarget(&ctx)))
+            {
+                // Set partner data in ctx
+                ctx.battlerDef = opposingPartner;
+                ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
+                ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
+                if (!CanMoveAffectTarget(&ctx) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
+                    return SetSwitchinAndSwitch(battler, PARTY_SIZE);
+            }
+        }
+    }
+    else if (IsHoldEffectChoice(ctx.holdEffectAtk) && IsBattlerItemEnabled(battler))
+    {
+        if ((GetMoveCategory(choicedMove) == DAMAGE_CATEGORY_STATUS || !CanMoveAffectTarget(&ctx)) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
             return SetSwitchinAndSwitch(battler, PARTY_SIZE);
     }
 
@@ -1319,9 +1354,19 @@ bool32 ShouldSwitchIfAllScoresBad(enum BattlerId battler)
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        score = gAiBattleData->finalScore[battler][opposingBattler][moveIndex];
-        if (score > AI_BAD_SCORE_THRESHOLD)
-            return FALSE;
+        if (HasTwoOpponents(battler))
+        {
+            u32 score1 = gAiBattleData->finalScore[battler][opposingBattler][moveIndex];
+            u32 score2 = gAiBattleData->finalScore[battler][BATTLE_PARTNER(opposingBattler)][moveIndex];
+            if (score1 > AI_BAD_SCORE_THRESHOLD || score2 > AI_BAD_SCORE_THRESHOLD)
+                return FALSE;
+        }
+        else
+        {
+            score = gAiBattleData->finalScore[battler][opposingBattler][moveIndex];
+            if (score > AI_BAD_SCORE_THRESHOLD)
+                return FALSE;
+        } 
     }
     if (RandomPercentage(RNG_AI_SWITCH_ALL_SCORES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_SCORES_BAD))
         && (gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE || !ALL_SCORES_BAD_NEEDS_GOOD_SWITCHIN))
@@ -1347,7 +1392,8 @@ bool32 ShouldStayInToUseMove(enum BattlerId battler)
              && !GetHitEscapeTransformState(battler, aiMove))
                 continue;
 
-            if (gAiBattleData->finalScore[battler][opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD)
+            if (gAiBattleData->finalScore[battler][opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD
+                || (HasTwoOpponents(battler) && gAiBattleData->finalScore[battler][BATTLE_PARTNER(opposingBattler)][moveIndex] > AI_GOOD_SCORE_THRESHOLD))
                 return TRUE;
         }
     }
