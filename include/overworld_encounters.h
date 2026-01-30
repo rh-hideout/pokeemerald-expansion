@@ -95,7 +95,7 @@ void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
 void OverworldWildEncounter_SetMinimumSpawnTimer(void);
-void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType);
+void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType, s32 x, s32 y);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
@@ -125,5 +125,6 @@ u32 OWE_GetWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 
 void OWE_PlayAmbientCry(void);
 u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType);
 bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent);
+void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(const struct MapConnection *connection, enum Connection direction);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
