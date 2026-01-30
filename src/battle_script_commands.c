@@ -3497,8 +3497,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         gBattlescriptCurrInstr = battleScript;
         break;
     case MOVE_EFFECT_INCINERATE:
-        if ((gBattleMons[gEffectBattler].item >= FIRST_BERRY_INDEX && gBattleMons[gEffectBattler].item <= LAST_BERRY_INDEX)
-         || (B_INCINERATE_GEMS >= GEN_6 && GetBattlerHoldEffect(gEffectBattler) == HOLD_EFFECT_GEMS))
+        if (((gBattleMons[gEffectBattler].item >= FIRST_BERRY_INDEX && gBattleMons[gEffectBattler].item <= LAST_BERRY_INDEX)
+          || (B_INCINERATE_GEMS >= GEN_6 && GetBattlerHoldEffect(gEffectBattler) == HOLD_EFFECT_GEMS))
+         && battlerAbility != ABILITY_STICKY_HOLD)
         {
             gLastUsedItem = gBattleMons[gEffectBattler].item;
             gBattleMons[gEffectBattler].item = 0;
