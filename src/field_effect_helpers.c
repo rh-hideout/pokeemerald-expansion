@@ -1549,7 +1549,7 @@ u32 FldEff_OWE_SpawnAnim(void)
 
     case OWE_SPAWN_ANIM_CAVE:
         visual = FLDEFFOBJ_GROUND_IMPACT_DUST;
-        yOffset = 8;
+        yOffset = 12;
         break;
     
     case OWE_SPAWN_ANIM_SHINY:
