@@ -25,6 +25,7 @@
 #include "title_screen.h"
 #include "expansion_intro.h"
 #include "battle_anim.h"
+#include "intro_frlg.h"
 #include "constants/rgb.h"
 #include "constants/battle_anim.h"
 
@@ -175,7 +176,7 @@ enum {
 #define TIMER_POKEBALL_FADE              28
 #define TIMER_START_LEGENDARIES          43
 
-static EWRAM_DATA u16 sIntroCharacterGender = 0;
+static EWRAM_DATA enum Gender sIntroCharacterGender = 0;
 static EWRAM_DATA u16 sFlygonYOffset = 0;
 
 COMMON_DATA u32 gIntroFrameCounter = 0;
@@ -1049,6 +1050,9 @@ static void SerialCB_CopyrightScreen(void)
 
 static u8 SetUpCopyrightScreen(void)
 {
+    if (IS_FRLG)
+        return SetUpCopyrightScreenFrlg();
+
     switch (gMain.state)
     {
     case COPYRIGHT_INITIALIZE:

@@ -71,7 +71,7 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent non-volatile status conditions if
 
 SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Toxic Orb")
 {
-    u32 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_FLAME_ORB; }
     PARAMETRIZE { item = ITEM_TOXIC_ORB; }
     GIVEN {
@@ -93,7 +93,9 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Tox
 
 SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent status conditions from Flame Orb and Toxic Orb if Cloud Nine/Air Lock is on the field")
 {
-    u32 item, species, ability;
+    enum Item item;
+    u32 species;
+    enum Ability ability;
     PARAMETRIZE { item = ITEM_FLAME_ORB; species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { item = ITEM_TOXIC_ORB; species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { item = ITEM_FLAME_ORB; species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }

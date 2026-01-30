@@ -1,4 +1,4 @@
-PokemonTower_7F_MapScripts::
+PokemonTower_7F_Frlg_MapScripts::
 	.byte 0
 
 PokemonTower_7F_EventScript_MrFuji::

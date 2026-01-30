@@ -168,6 +168,7 @@ enum RandomTag
     RNG_QUICK_DRAW,
     RNG_QUICK_CLAW,
     RNG_TRACE,
+    RNG_FOREWARN,
     RNG_FICKLE_BEAM,
     RNG_AI_ABILITY,
     RNG_AI_SCORE_TIE_DOUBLES_MOVE,
@@ -239,12 +240,13 @@ enum RandomTag
     RNG_MAGNITUDE,
     RNG_FISHING_BITE,
     RNG_FISHING_GEN3_STICKY,
+    RNG_WILD_MON_TARGET,
     RNG_TAUNT,
 };
 
 #define RandomWeighted(tag, ...) \
     ({ \
-        const u8 weights[] = { __VA_ARGS__ }; \
+        const u16 weights[] = { __VA_ARGS__ }; \
         u32 sum, i; \
         for (i = 0, sum = 0; i < ARRAY_COUNT(weights); i++) \
             sum += weights[i]; \
@@ -266,7 +268,7 @@ enum RandomTag
         } \
         else \
         { \
-          const u8 weights[] = { 100 - t, t }; \
+          const u16 weights[] = { 100 - t, t }; \
           r = RandomWeightedArray(tag, 100, ARRAY_COUNT(weights), weights); \
         } \
         r; \
@@ -279,12 +281,12 @@ enum RandomTag
 
 u32 RandomUniform(enum RandomTag, u32 lo, u32 hi);
 u32 RandomUniformExcept(enum RandomTag, u32 lo, u32 hi, bool32 (*reject)(u32));
-u32 RandomWeightedArray(enum RandomTag, u32 sum, u32 n, const u8 *weights);
+u32 RandomWeightedArray(enum RandomTag, u32 sum, u32 n, const u16 *weights);
 const void *RandomElementArray(enum RandomTag, const void *array, size_t size, size_t count);
 
 u32 RandomUniformDefault(enum RandomTag, u32 lo, u32 hi);
 u32 RandomUniformExceptDefault(enum RandomTag, u32 lo, u32 hi, bool32 (*reject)(u32));
-u32 RandomWeightedArrayDefault(enum RandomTag, u32 sum, u32 n, const u8 *weights);
+u32 RandomWeightedArrayDefault(enum RandomTag, u32 sum, u32 n, const u16 *weights);
 const void *RandomElementArrayDefault(enum RandomTag, const void *array, size_t size, size_t count);
 
 u8 RandomWeightedIndex(u8 *weights, u8 length);
@@ -295,8 +297,8 @@ u32 RandomBitIndex(enum RandomTag tag, u32 bits);
 #if TESTING
 u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
 u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
-u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller);
-u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u8 *weights, void *caller);
+u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller);
+u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u16 *weights, void *caller);
 const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 #endif

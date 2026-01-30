@@ -1,4 +1,4 @@
-FuchsiaCity_SafariZone_Office_MapScripts::
+FuchsiaCity_SafariZone_Office_Frlg_MapScripts::
 	.byte 0
 
 FuchsiaCity_SafariZone_Office_EventScript_Worker1::

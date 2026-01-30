@@ -843,6 +843,8 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         case MOVE_EFFECT_TOXIC:
             baseFromEffect += 5;
             break;
+        default:
+            break;
         }
 
         // Guaranteed hit but without negative priority
@@ -1392,7 +1394,7 @@ void BattleTv_ClearExplosionFaintCause(void)
     }
 }
 
-u8 GetBattlerMoveSlotId(u8 battler, enum Move move)
+u8 GetBattlerMoveSlotId(enum BattlerId battler, enum Move move)
 {
     s32 i;
     struct Pokemon *mon = GetBattlerMon(battler);

@@ -82,8 +82,8 @@ static void ShowNumToToss(void);
 static void CloseBattlePyramidBagTextWindow(void);
 static bool8 LoadPyramidBagGfx(void);
 static bool8 LoadPyramidBagMenu(void);
-static void ShowItemIcon(u16, u8);
-static void CopyBagItemName(u8 *, u16);
+static void ShowItemIcon(enum Item itemId, bool8 isAlt);
+static void CopyBagItemName(u8 *dst, enum Item itemId);
 static void FreeItemIconSpriteByAltId(u8);
 static void PrintItemDescription(s32);
 static void PrintSelectorArrowAtPos(u8, u8);
@@ -615,7 +615,7 @@ static void SetBagItemsListTemplate(void)
     gMultiuseListMenuTemplate.maxShowed = gPyramidBagMenu->listMenuMaxShown;
 }
 
-static void CopyBagItemName(u8 *dst, u16 itemId)
+static void CopyBagItemName(u8 *dst, enum Item itemId)
 {
     if (GetItemPocket(itemId) == POCKET_BERRIES)
     {
@@ -1309,7 +1309,7 @@ static void TryCloseBagToGiveItem(u8 taskId)
 static void BagAction_UseInBattle(u8 taskId)
 {
     // Safety check
-    u16 type = GetItemType(gSpecialVar_ItemId);
+    enum ItemType type = GetItemType(gSpecialVar_ItemId);
     if (!GetItemBattleUsage(gSpecialVar_ItemId))
         return;
 
@@ -1587,7 +1587,7 @@ static void SpriteCB_BagWaitForShake(struct Sprite *sprite)
     }
 }
 
-static void ShowItemIcon(u16 itemId, bool8 isAlt)
+static void ShowItemIcon(enum Item itemId, bool8 isAlt)
 {
     u8 itemSpriteId;
     u8 *spriteId = &gPyramidBagMenu->spriteIds[isAlt + PBAG_SPRITE_ITEM_ICON];

@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Fling fails if Pokémon holds no item")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_RAZOR_CLAW; }
@@ -199,10 +199,10 @@ SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a b
     }
 }
 
-SINGLE_BATTLE_TEST("Fling doesn't consume the item if Pokémon is asleep/frozen/paralyzed")
+SINGLE_BATTLE_TEST("Fling doesn't consume the item if the user is asleep/frozen/paralyzed")
 {
     u32 status;
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { status = STATUS1_SLEEP_TURN(2); item = ITEM_RAZOR_CLAW; }
     PARAMETRIZE { status = STATUS1_PARALYSIS; item = ITEM_RAZOR_CLAW; }
@@ -252,7 +252,7 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if Pokémon is asleep/frozen/
 
 SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_FLAME_ORB; }
     PARAMETRIZE { item = ITEM_LIGHT_BALL; }
@@ -302,13 +302,15 @@ SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
                 MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
             }
             break;
+        default:
+            break;
         }
     }
 }
 
 SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_FLAME_ORB; }
     PARAMETRIZE { item = ITEM_LIGHT_BALL; }
@@ -378,8 +380,12 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
                     case ITEM_KINGS_ROCK:
                         MESSAGE("The King's Rock was used up…");
                         break;
+                    default:
+                        break;
                 }
             }
+            break;
+        default:
             break;
         }
     }
@@ -387,8 +393,9 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
 
 SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even if the trigger conditions are not met")
 {
-    u16 item, effect;
-    u8 statId = 0;
+    enum Item item;
+    enum HoldEffect effect;
+    enum Stat statId = STAT_HP;
     u32 status1 = STATUS1_NONE;
 
     PARAMETRIZE { item = ITEM_ORAN_BERRY; effect = HOLD_EFFECT_RESTORE_HP; }
@@ -507,7 +514,7 @@ SINGLE_BATTLE_TEST("Fling deals damage based on items fling power")
     }
 }
 
-SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
+SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power if reusable or fails if breakable")
 {
     s16 damage[2];
 
@@ -520,33 +527,49 @@ SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
         TURN { MOVE(player, MOVE_FLING); }
         TURN { MOVE(player, MOVE_EGG_BOMB); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
-        HP_BAR(opponent, captureDamage: &damage[0]);
+        if (GetItemImportance(ITEM_TM_EARTHQUAKE) == 0) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+            HP_BAR(opponent, captureDamage: &damage[0]);
+        } else {
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+            MESSAGE("But it failed!");
+        }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EGG_BOMB, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_EQ(damage[0], damage[1]);
+        if (GetItemImportance(ITEM_TM_EARTHQUAKE) == 0)
+            EXPECT_EQ(damage[0], damage[1]);
     }
 }
 
-SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
+SINGLE_BATTLE_TEST("Fling fails when a Paradox mon holds a Booster Energy")
 {
-    s16 damage[2];
-
     GIVEN {
-        ASSUME(GetMovePower(MOVE_EARTHQUAKE) == GetMovePower(MOVE_EGG_BOMB));
-        ASSUME(!IsSpeciesOfType(SPECIES_WOBBUFFET, TYPE_DARK));
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
-        OPPONENT(SPECIES_HIPPOWDON);
+        ASSUME(GetItemHoldEffect(ITEM_BOOSTER_ENERGY) == HOLD_EFFECT_BOOSTER_ENERGY);
+        ASSUME(gSpeciesInfo[SPECIES_RAGING_BOLT].isParadox == TRUE);
+        PLAYER(SPECIES_RAGING_BOLT) { Item(ITEM_BOOSTER_ENERGY); Ability(ABILITY_PROTOSYNTHESIS); }
+        OPPONENT(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
-        TURN { MOVE(player, MOVE_EGG_BOMB); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->item == ITEM_BOOSTER_ENERGY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling doesn't fail when holding a Booster Energy and the target is a Paradox mon")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_BOOSTER_ENERGY) == HOLD_EFFECT_BOOSTER_ENERGY);
+        ASSUME(gSpeciesInfo[SPECIES_RAGING_BOLT].isParadox == TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_RAGING_BOLT) { Ability(ABILITY_PROTOSYNTHESIS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
-        HP_BAR(opponent, captureDamage: &damage[0]);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_EGG_BOMB, player);
-        HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_EQ(damage[0], damage[1]);
+        EXPECT(player->item == ITEM_NONE);
     }
 }
