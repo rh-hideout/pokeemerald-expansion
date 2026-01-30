@@ -283,6 +283,3 @@ AI_DOUBLE_BATTLE_TEST("Choiced Pokémon won't switch out if they can still affec
             TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_SCALD, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_SCALD, target:playerLeft); SEND_OUT(playerLeft, 0); }
     }
 }
-
-///////////// NOTE TO SELF
-// Both opponents can't switch on the same turn; in this case there are two valid candidates; it'd be good to let this happen
