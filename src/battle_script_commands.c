@@ -5293,7 +5293,7 @@ bool32 CanBattlerSwitch(enum BattlerId battler)
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+        if (IS_BATTLE_TYPE_TOWER_LINK_MULTI)
         {
             if (IsOnPlayerSide(battler))
             {

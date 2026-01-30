@@ -2184,7 +2184,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyI
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+        if (IS_BATTLE_TYPE_TOWER_LINK_MULTI)
         {
             if (isPlayerside)
             {
