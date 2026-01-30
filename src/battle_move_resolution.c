@@ -2554,8 +2554,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
             if (!(GetConfig(CONFIG_STEAL_WILD_ITEMS) >= GEN_9
              && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
             {
-                gBattleMons[gBattlerAttacker].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
-                gBattleStruct->changedItems[gBattlerAttacker] = gLastUsedItem; // Stolen item to be assigned later
+                gBattleMons[gBattlerAttacker].item = gLastUsedItem;
             }
             gEffectBattler = gBattlerTarget;
             BattleScriptCall(BattleScript_ItemSteal);
@@ -2943,7 +2942,9 @@ static enum MoveEndResult MoveEndEmergencyExit(void)
     // we check if EE can be activated and count how many.
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
-        if (IsBattlerTurnDamaged(i) && EmergencyExitCanBeTriggered(i))
+        if (!IsBattleMoveStatus(gCurrentMove)
+         && !gBattleStruct->unableToUseMove
+         && EmergencyExitCanBeTriggered(i))
         {
             emergencyExitBattlers |= 1u << i;
             numEmergencyExitBattlers++;
@@ -3134,29 +3135,28 @@ static enum MoveEndResult MoveEndPickpocket(void)
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (IsBattlerAlive(gBattlerAttacker)
-      && gBattleMons[gBattlerAttacker].item != ITEM_NONE // Attacker must be holding an item
-      && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff // But not knocked off
-      && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove) // Pickpocket requires contact
-      && !IsBattlerUnaffectedByMove(gBattlerTarget)) // Obviously attack needs to have worked
+     && gBattleMons[gBattlerAttacker].item != ITEM_NONE
+     && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
     {
         enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
         SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
         for (u32 i = 0; i < gBattlersCount; i++)
         {
-            enum BattlerId battler = battlers[i];
-            // Attacker is mon who made contact, battler is mon with pickpocket
-            if (battler != gBattlerAttacker                                                     // Cannot pickpocket yourself
-              && GetBattlerAbility(battler) == ABILITY_PICKPOCKET                               // Target must have pickpocket ability
-              && IsBattlerTurnDamaged(battler)                                                  // Target needs to have been damaged
-              && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)              // Subsitute unaffected
-              && IsBattlerAlive(battler)                                                        // Battler must be alive to pickpocket
-              && gBattleMons[battler].item == ITEM_NONE                                         // Pickpocketer can't have an item already
-              && CanStealItem(battler, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))   // Cannot steal plates, mega stones, etc
+            enum BattlerId battlerDef = battlers[i];
+            if (battlerDef != gBattlerAttacker
+              && !IsBattlerUnaffectedByMove(battlerDef)
+              && GetBattlerAbility(battlerDef) == ABILITY_PICKPOCKET
+              && IsMoveMakingContact(gBattlerAttacker, battlerDef, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)
+              && IsBattlerTurnDamaged(battlerDef)
+              && !DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove)
+              && IsBattlerAlive(battlerDef)
+              && gBattleMons[battlerDef].item == ITEM_NONE
+              && CanStealItem(battlerDef, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))
             {
-                gBattlerTarget = gBattlerAbility = battler;
+                gBattlerTarget = gBattlerAbility = battlerDef;
                 // Battle scripting is super brittle so we shall do the item exchange now (if possible)
                 if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
-                    StealTargetItem(gBattlerTarget, gBattlerAttacker);  // Target takes attacker's item
+                    StealTargetItem(battlerDef, gBattlerAttacker);  // Target takes attacker's item
 
                 gEffectBattler = gBattlerAttacker;
                 BattleScriptCall(BattleScript_Pickpocket);   // Includes sticky hold check to print separate string
@@ -3222,21 +3222,6 @@ static enum MoveEndResult MoveEndThirdMoveBlock(void)
 
     gBattleScripting.moveendState++;
     return result;
-}
-
-static enum MoveEndResult MoveEndChangedItems(void)
-{
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (gBattleStruct->changedItems[battler] != ITEM_NONE)
-        {
-            gBattleMons[battler].item = gBattleStruct->changedItems[battler];
-            gBattleStruct->changedItems[battler] = ITEM_NONE;
-        }
-    }
-
-    gBattleScripting.moveendState++;
-    return MOVEEND_RESULT_CONTINUE;
 }
 
 static bool32 ShouldSetStompingTantrumTimer(void)
@@ -3458,7 +3443,6 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_MIRROR_HERB] = MoveEndMirrorHerb,
     [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
     [MOVEEND_THIRD_MOVE_BLOCK] = MoveEndThirdMoveBlock,
-    [MOVEEND_CHANGED_ITEMS] = MoveEndChangedItems,
     [MOVEEND_CLEAR_BITS] = MoveEndClearBits,
     [MOVEEND_DANCER] = MoveEndDancer,
     [MOVEEND_PURSUIT_NEXT_ACTION] = MoveEndPursuitNextAction,

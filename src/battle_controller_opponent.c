@@ -3,6 +3,7 @@
 #include "battle_ai_main.h"
 #include "battle_ai_switch.h"
 #include "battle_ai_util.h"
+#include "constants/battle.h"
 #include "constants/battle_ai.h"
 #include "battle_anim.h"
 #include "battle_arena.h"
@@ -494,8 +495,8 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
             move = moveInfo->moves[chosenMoveIndex];
         } while (move == MOVE_NONE);
 
-        enum MoveTarget target = GetBattlerMoveTargetType(battler, move);
-        if (target == TARGET_USER || target == TARGET_USER_OR_ALLY)
+        enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, move);
+        if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (battler << 8));
         }
@@ -503,7 +504,8 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
         {
             enum BattlerId targetBattler;
             do {
-                targetBattler = GetBattlerAtPosition(Random() & 2);
+                enum BattlerPosition pos = RandomPercentage(RNG_WILD_MON_TARGET, 50) ? B_POSITION_PLAYER_LEFT : B_POSITION_PLAYER_RIGHT;
+                targetBattler = GetBattlerAtPosition(pos);
             } while (!CanTargetBattler(battler, targetBattler, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
@@ -515,14 +517,14 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
 
                 bool32 isPartnerEnemy = IsNaturalEnemy(speciesAttacker, speciesTarget);
 
-                if (isPartnerEnemy && CanTargetBattler(battler, targetBattler, move))
+                if (isPartnerEnemy && CanTargetBattler(battler, GetBattlerAtPosition(BATTLE_PARTNER(battler)), move))
                     BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (GetBattlerAtPosition(BATTLE_PARTNER(battler)) << 8));
                 else
-                    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (target << 8));
+                    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (targetBattler << 8));
             }
             else
             {
-                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (target << 8));
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (targetBattler << 8));
             }
         }
         else
