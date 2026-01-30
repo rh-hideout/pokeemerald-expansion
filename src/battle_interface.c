@@ -2106,12 +2106,20 @@ static void MoveBattleBarGraphically(enum BattlerId battler, u8 whichBar)
                                 gBattleSpritesDataPtr->battleBars[battler].receivedValue);
         }
 
-        if (currValue > (maxValue * 50 / 100)) // more than 50% hp
+        switch (GetHPBarLevel(currValue, maxValue))
+        {
+        case HP_BAR_FULL:
+        case HP_BAR_GREEN:
             barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
-        else if (currValue > (maxValue * 20 / 100)) // more than 20% hp
+            break;
+        case HP_BAR_YELLOW:
             barElementId = HEALTHBOX_GFX_HP_BAR_YELLOW;
-        else
-            barElementId = HEALTHBOX_GFX_HP_BAR_RED; // 20% or less
+            break;
+        default:
+        case HP_BAR_RED:
+            barElementId = HEALTHBOX_GFX_HP_BAR_RED;
+            break;
+        }
 
         for (i = 0; i < 6; i++)
         {
