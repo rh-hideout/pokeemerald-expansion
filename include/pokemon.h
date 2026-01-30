@@ -626,6 +626,26 @@ struct FormChange
     u16 param1;
     u16 param2;
     u16 param3;
+    u16 param4;
+};
+
+struct FormChangeContext
+{
+    enum FormChanges method:16;
+    u16 currentSpecies;
+    u16 partyItemUsed;
+    u16 multichoiceSelection;
+    u16 heldItem;
+    u16 ability;
+    u16 learnedMove;
+    u32 status;
+    u16 moves[MAX_MON_MOVES];
+    u16 hp;
+    u16 maxHP;
+    u32 gmaxFactor:1;
+    enum Type teraType;
+    u32 level:7;
+    u32 padding:8;
 };
 
 enum FusionExtraMoveHandling
@@ -887,14 +907,14 @@ void DestroyMonSpritesGfxManager(u8 managerId);
 u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum);
 u16 GetFormSpeciesId(u16 speciesId, u8 formId);
 u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId);
-u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method, u32 arg);
-u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method, u32 arg);
+u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx);
 bool32 DoesSpeciesHaveFormChangeMethod(u16 species, enum FormChanges method);
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
 void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv);
 void TrySpecialOverworldEvo(void);
 bool32 SpeciesHasGenderDifferences(u16 species);
-bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method);
+bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method);
+bool32 TryBoxMonFormChange(struct BoxPokemon *boxMon, enum FormChanges method);
 void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method);
 u32 GetMonFriendshipScore(struct Pokemon *pokemon);
 u32 GetMonAffectionHearts(struct Pokemon *pokemon);

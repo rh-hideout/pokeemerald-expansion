@@ -1816,7 +1816,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     }
 
     // Disguise will always add an extra hit to KO
-    if (!opponentCanBreakMold && gBattleMons[battler].species == SPECIES_MIMIKYU_DISGUISED)
+    if (!opponentCanBreakMold && IsMimikyuDisguised(battler))
         hitsToKO++;
 
     return hitsToKO;

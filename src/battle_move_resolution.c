@@ -46,15 +46,16 @@ static enum CancelerResult CancelerClearFlags(struct BattleContext *ctx)
 
 static bool32 TryFormChangeBeforeMove(void)
 {
-    bool32 result = TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_BEFORE_MOVE);
-    if (!result)
-        result = TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_BEFORE_MOVE_CATEGORY);
-    if (!result)
-        return FALSE;
+    enum Ability ability = GetBattlerAbility(gBattlerAttacker);
 
-    gBattleScripting.battler = gBattlerAttacker;
-    BattleScriptCall(BattleScript_BattlerFormChange);
-    return TRUE;
+    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_BEFORE_MOVE, ability)
+        || TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_BEFORE_MOVE_CATEGORY, ability))
+    {
+        gBattleScripting.battler = gBattlerAttacker;
+        BattleScriptCall(BattleScript_BattlerFormChange);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 static enum CancelerResult CancelerStanceChangeOne(struct BattleContext *ctx)
@@ -633,7 +634,12 @@ static enum CancelerResult CancelerAttackstring(struct BattleContext *ctx)
 {
     BattleScriptCall(BattleScript_Attackstring);
     if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
+    {
+        gBattleMons[gBattlerAttacker].volatiles.usedMoves |= 1u << gCurrMovePos;
+        gBattleStruct->battlerState[gBattlerAttacker].lastMoveTarget = gBattlerTarget;
         gLastPrintedMoves[gBattlerAttacker] = gChosenMove;
+        RecordKnownMove(gBattlerAttacker, gChosenMove);
+    }
     return CANCELER_RESULT_BREAK;
 }
 
@@ -816,7 +822,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FLING:
-        if (!CanFling(ctx->battlerAtk, ctx->battlerDef))
+        if (!CanFling(ctx->battlerAtk))
             battleScript = BattleScript_ButItFailed;
         else if (!IsBattlerAlive(ctx->battlerDef)) // Edge case for removing a mon's item when there is no target available after using Fling.
             battleScript = BattleScript_FlingFailConsumeItem;
@@ -1870,6 +1876,17 @@ static enum MoveEndResult MoveEndAbilities(void)
     return result;
 }
 
+static enum MoveEndResult MoveEndFormChangeOnHit(void)
+{
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+
+    if (AbilityBattleEffects(ABILITYEFFECT_FORM_CHANGE_ON_HIT, gBattlerTarget, GetBattlerAbility(gBattlerTarget), 0, TRUE))
+        result = MOVEEND_RESULT_RUN_SCRIPT;
+
+    gBattleScripting.moveendState++;
+    return result;
+}
+
 static enum MoveEndResult MoveEndAbilitiesAttacker(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
@@ -2196,12 +2213,6 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
     if (!IsOnPlayerSide(gBattlerAttacker))
         UpdateStallMons();
 
-    if ((gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE))
-     || gBattleMons[gBattlerAttacker].volatiles.flinched
-     || gBattleStruct->pledgeMove == TRUE // Is the battler that uses the first Pledge move in the combo
-     || gBattleStruct->unableToUseMove)
-        gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
-
     // After swapattackerwithtarget is used for snatch the correct battlers have to be restored so data is stored correctly
     if (gBattleStruct->snatchedMoveIsUsed)
     {
@@ -2209,14 +2220,8 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         SWAP(gBattlerAttacker, gBattlerTarget, temp);
     }
 
-    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
-    {
-        gBattleMons[gBattlerAttacker].volatiles.usedMoves |= 1u << gCurrMovePos;
-        gBattleStruct->battlerState[gBattlerAttacker].lastMoveTarget = gBattlerTarget;
-    }
-
     enum BattleMoveEffects originalEffect = GetMoveEffect(GetOriginallyUsedMove(gChosenMove));
-    if (IsBattlerAlive(gBattlerAttacker)
+    if (IsBattlerAlive(gBattlerAttacker) // Why do we need to check if user fainted? We just want to set with what move the target got hit
      && originalEffect != EFFECT_BATON_PASS
      && originalEffect != EFFECT_HEALING_WISH
      && originalEffect != EFFECT_LUNAR_DANCE)
@@ -2226,7 +2231,6 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
             if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
             {
                 gLastMoves[gBattlerAttacker] = gChosenMove;
-                RecordKnownMove(gBattlerAttacker, gChosenMove);
                 gLastResultingMoves[gBattlerAttacker] = gCurrentMove;
                 gLastUsedMoveType[gBattlerAttacker] = GetBattleMoveType(gCurrentMove);
             }
@@ -2918,7 +2922,7 @@ static enum MoveEndResult MoveEndFormChange(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_AFTER_MOVE))
+    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_AFTER_MOVE, GetBattlerAbility(gBattlerAttacker)))
     {
         result = MOVEEND_RESULT_RUN_SCRIPT;
         BattleScriptCall(BattleScript_AttackerFormChangeMoveEffect);
@@ -2938,7 +2942,9 @@ static enum MoveEndResult MoveEndEmergencyExit(void)
     // we check if EE can be activated and count how many.
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
-        if (IsBattlerTurnDamaged(i) && EmergencyExitCanBeTriggered(i))
+        if (!IsBattleMoveStatus(gCurrentMove)
+         && !gBattleStruct->unableToUseMove
+         && EmergencyExitCanBeTriggered(i))
         {
             emergencyExitBattlers |= 1u << i;
             numEmergencyExitBattlers++;
@@ -3129,29 +3135,28 @@ static enum MoveEndResult MoveEndPickpocket(void)
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (IsBattlerAlive(gBattlerAttacker)
-      && gBattleMons[gBattlerAttacker].item != ITEM_NONE // Attacker must be holding an item
-      && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff // But not knocked off
-      && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove) // Pickpocket requires contact
-      && !IsBattlerUnaffectedByMove(gBattlerTarget)) // Obviously attack needs to have worked
+     && gBattleMons[gBattlerAttacker].item != ITEM_NONE
+     && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
     {
         enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
         SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
         for (u32 i = 0; i < gBattlersCount; i++)
         {
-            enum BattlerId battler = battlers[i];
-            // Attacker is mon who made contact, battler is mon with pickpocket
-            if (battler != gBattlerAttacker                                                     // Cannot pickpocket yourself
-              && GetBattlerAbility(battler) == ABILITY_PICKPOCKET                               // Target must have pickpocket ability
-              && IsBattlerTurnDamaged(battler)                                                  // Target needs to have been damaged
-              && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)              // Subsitute unaffected
-              && IsBattlerAlive(battler)                                                        // Battler must be alive to pickpocket
-              && gBattleMons[battler].item == ITEM_NONE                                         // Pickpocketer can't have an item already
-              && CanStealItem(battler, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))   // Cannot steal plates, mega stones, etc
+            enum BattlerId battlerDef = battlers[i];
+            if (battlerDef != gBattlerAttacker
+              && !IsBattlerUnaffectedByMove(battlerDef)
+              && GetBattlerAbility(battlerDef) == ABILITY_PICKPOCKET
+              && IsMoveMakingContact(gBattlerAttacker, battlerDef, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)
+              && IsBattlerTurnDamaged(battlerDef)
+              && !DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove)
+              && IsBattlerAlive(battlerDef)
+              && gBattleMons[battlerDef].item == ITEM_NONE
+              && CanStealItem(battlerDef, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))
             {
-                gBattlerTarget = gBattlerAbility = battler;
+                gBattlerTarget = gBattlerAbility = battlerDef;
                 // Battle scripting is super brittle so we shall do the item exchange now (if possible)
                 if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
-                    StealTargetItem(gBattlerTarget, gBattlerAttacker);  // Target takes attacker's item
+                    StealTargetItem(battlerDef, gBattlerAttacker);  // Target takes attacker's item
 
                 gEffectBattler = gBattlerAttacker;
                 BattleScriptCall(BattleScript_Pickpocket);   // Includes sticky hold check to print separate string
@@ -3219,6 +3224,28 @@ static enum MoveEndResult MoveEndThirdMoveBlock(void)
     return result;
 }
 
+static bool32 ShouldSetStompingTantrumTimer(void)
+{
+    u32 numNotAffectedTargets = 0;
+
+    if (gBattleStruct->pledgeMove == TRUE // Is the battler that uses the first Pledge move in the combo
+     || gBattleStruct->unableToUseMove)
+        return TRUE;
+
+    if (!IsDoubleSpreadMove())
+        return gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE);
+
+    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        if (gBattlerAttacker == battlerDef)
+            continue;
+        if (gBattleStruct->moveResultFlags[battlerDef] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE))
+            numNotAffectedTargets++;
+    }
+
+    return numNotAffectedTargets == gBattleStruct->numSpreadTargets;
+}
+
 static enum MoveEndResult MoveEndClearBits(void)
 {
     ValidateBattlers();
@@ -3226,6 +3253,9 @@ static enum MoveEndResult MoveEndClearBits(void)
     enum Move originallyUsedMove = GetOriginallyUsedMove(gChosenMove);
     enum Type moveType = GetBattleMoveType(gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
+
+    if (ShouldSetStompingTantrumTimer())
+        gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
 
     if (gSpecialStatuses[gBattlerAttacker].instructedChosenTarget)
         gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].instructedChosenTarget & 0x3;
@@ -3375,6 +3405,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_RAGE] = MoveEndRage,
     [MOVEEND_SYNCHRONIZE_TARGET] = MoveEndSynchronizeTarget,
     [MOVEEND_ABILITIES] = MoveEndAbilities,
+    [MOVEEND_FORM_CHANGE_ON_HIT] = MoveEndFormChangeOnHit,
     [MOVEEND_ABILITIES_ATTACKER] = MoveEndAbilitiesAttacker,
     [MOVEEND_STATUS_IMMUNITY_ABILITIES] = MoveEndStatusImmunityAbilities,
     [MOVEEND_SYNCHRONIZE_ATTACKER] = MoveEndSynchronizeAttacker,

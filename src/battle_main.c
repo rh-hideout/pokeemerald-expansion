@@ -613,8 +613,8 @@ static void CB2_InitBattleInternal(void)
         AdjustFriendship(&gPlayerParty[i], FRIENDSHIP_EVENT_LEAGUE_BATTLE);
 
         // Apply party-wide start-of-battle form changes for both sides.
-        TryFormChange(i, B_SIDE_PLAYER, FORM_CHANGE_BEGIN_BATTLE);
-        TryFormChange(i, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_BATTLE);
+        TryFormChange(&gPlayerParty[i], FORM_CHANGE_BEGIN_BATTLE);
+        TryFormChange(&gEnemyParty[i], FORM_CHANGE_BEGIN_BATTLE);
     }
 
     #if TESTING
@@ -3370,6 +3370,8 @@ const u8* FaintClearSetData(enum BattlerId battler)
     gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
+    if (battler == gBattlerAttacker)
+        gBattleStruct->moldBreakerActive = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
@@ -3403,7 +3405,7 @@ const u8* FaintClearSetData(enum BattlerId battler)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;
 
     Ai_UpdateFaintData(battler);
-    TryBattleFormChange(battler, FORM_CHANGE_FAINT);
+    TryBattleFormChange(battler, FORM_CHANGE_FAINT, GetBattlerAbility(battler));
 
     // If the fainted mon was involved in a Sky Drop
     if (gBattleStruct->skyDropTargets[battler] != SKY_DROP_NO_TARGET)

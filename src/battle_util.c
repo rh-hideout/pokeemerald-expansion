@@ -691,7 +691,7 @@ void HandleAction_Switch(void)
     if (gBattleResults.playerSwitchesCounter < 255)
         gBattleResults.playerSwitchesCounter++;
 
-    TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_SWITCH);
+    TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_SWITCH_OUT, GetBattlerAbility(gBattlerAttacker));
 }
 
 void HandleAction_UseItem(void)
@@ -2380,12 +2380,43 @@ static void ForewarnChooseMove(enum BattlerId battler)
         }
     }
 
-    for (bestId = 0, i = 1; i < count; i++)
+    if (count == 0)
     {
-        if (data[i].power > data[bestId].power)
+        Free(data);
+        return;
+    }
+
+    u32 tieCount = 1;
+    u8 bestPower = data[0].power;
+
+    bestId = 0;
+    for (i = 1; i < count; i++)
+    {
+        if (data[i].power > bestPower)
+        {
+            bestPower = data[i].power;
             bestId = i;
-        else if (data[i].power == data[bestId].power && Random() & 1)
-            bestId = i;
+            tieCount = 1;
+        }
+        else if (data[i].power == bestPower)
+        {
+            tieCount++;
+        }
+    }
+
+    if (tieCount > 1)
+    {
+        u32 tieIndex = RandomUniform(RNG_FOREWARN, 0, tieCount - 1);
+        for (i = 0, bestId = 0; i < count; i++)
+        {
+            if (data[i].power != bestPower)
+                continue;
+            if (tieIndex-- == 0)
+            {
+                bestId = i;
+                break;
+            }
+        }
     }
 
     gEffectBattler = data[bestId].battler;
@@ -3184,6 +3215,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
     u32 side = 0;
     u32 i = 0, j = 0;
     u32 partner = 0;
+    u32 speciesForm = SPECIES_NONE;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return 0;
@@ -3371,7 +3403,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             return effect; // Note: It returns effect as to not record the ability if Frisk does not activate.
         case ABILITY_FOREWARN:
-            if (shouldAbilityTrigger)
+            if (shouldAbilityTrigger && !IsOpposingSideEmpty(battler))
             {
                 ForewarnChooseMove(battler);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_FOREWARN;
@@ -3598,18 +3630,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 effect++;
             }
             break;
-        case ABILITY_SCHOOLING:
-            if (gBattleMons[battler].level < 20)
-                break;
-        // Fallthrough
-        case ABILITY_ZEN_MODE:
-        case ABILITY_SHIELDS_DOWN:
-            if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
-            {
-                BattleScriptCall(BattleScript_BattlerFormChange);
-                effect++;
-            }
-            break;
         case ABILITY_INTREPID_SWORD:
             if (shouldAbilityTrigger && !GetBattlerPartyState(battler)->intrepidSwordBoost)
             {
@@ -3758,6 +3778,16 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         default:
             break;
+        }
+        break;
+    case ABILITYEFFECT_SWITCH_IN_FORM_CHANGE:
+        if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT, ability))
+        {
+            gBattleScripting.battler = battler;
+            // To prevent the new form's ability from pop up
+            gBattleScripting.abilityPopupOverwrite = ability;
+            BattleScriptCall(BattleScript_BattlerFormChange);
+            effect++;
         }
         break;
     case ABILITYEFFECT_ENDTURN:
@@ -3923,27 +3953,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     effect++;
                 }
                 break;
-            case ABILITY_SCHOOLING:
-                if (gBattleMons[battler].level < 20)
-                    break;
-            // Fallthrough
-            case ABILITY_ZEN_MODE:
-            case ABILITY_SHIELDS_DOWN:
-                if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
-                {
-                    gBattleScripting.battler = battler;
-                    BattleScriptExecute(BattleScript_BattlerFormChangeEnd2);
-                    effect++;
-                }
-                break;
-            case ABILITY_POWER_CONSTRUCT:
-                if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
-                {
-                    gBattleScripting.battler = battler;
-                    BattleScriptExecute(BattleScript_PowerConstruct);
-                    effect++;
-                }
-                break;
             case ABILITY_BALL_FETCH:
                 if (!(gBattleTypeFlags & BATTLE_TYPE_RAID)
                     && gBattleMons[battler].item == ITEM_NONE
@@ -3957,16 +3966,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     MarkBattlerForControllerExec(battler);
                     gHasFetchedBall = TRUE;
                     BattleScriptExecute(BattleScript_BallFetch);
-                    effect++;
-                }
-                break;
-            case ABILITY_HUNGER_SWITCH:
-                if (!gBattleMons[battler].volatiles.transformed
-                 && GetActiveGimmick(battler) != GIMMICK_TERA
-                 && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END))
-                {
-                    gBattleScripting.battler = battler;
-                    BattleScriptExecute(BattleScript_BattlerFormChangeEnd3NoPopup);
                     effect++;
                 }
                 break;
@@ -4369,11 +4368,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         case ABILITY_COTTON_DOWN:
-            if (IsBattlerAlive(gBattlerAttacker)
-             && !gBattleStruct->unableToUseMove
-             && IsBattlerTurnDamaged(gBattlerTarget))
+            if (IsBattlerTurnDamaged(gBattlerTarget))
             {
                 gEffectBattler = gBattlerTarget;
+                // Will ability popup activate if there is only one target?
                 BattleScriptCall(BattleScript_CottonDownActivates);
                 effect++;
             }
@@ -4424,30 +4422,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 gBattleMons[gBattlerAttacker].volatiles.perishSongTimer = 3;
                 BattleScriptCall(BattleScript_PerishBodyActivates);
                 effect++;
-            }
-            break;
-        case ABILITY_GULP_MISSILE:
-            if (!gBattleStruct->unableToUseMove
-             && IsBattlerTurnDamaged(gBattlerTarget)
-             && IsBattlerAlive(gBattlerAttacker)
-             && gBattleMons[gBattlerTarget].species != SPECIES_CRAMORANT)
-            {
-                if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
-                    SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
-
-                switch (gBattleMons[gBattlerTarget].species)
-                {
-                    case SPECIES_CRAMORANT_GORGING:
-                        TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_MOVE);
-                        BattleScriptCall(BattleScript_GulpMissileGorging);
-                        effect++;
-                        break;
-                    case SPECIES_CRAMORANT_GULPING:
-                        TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_MOVE);
-                        BattleScriptCall(BattleScript_GulpMissileGulping);
-                        effect++;
-                        break;
-                }
             }
             break;
         case ABILITY_SEED_SOWER:
@@ -4546,16 +4520,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 effect++;
             }
             break;
-        case ABILITY_GULP_MISSILE:
-            if ((gBattleMons[gBattlerAttacker].species == SPECIES_CRAMORANT)
-             && ((gCurrentMove == MOVE_SURF && IsBattlerTurnDamaged(gBattlerTarget)) || gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable == STATE_UNDERWATER)
-             && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT))
-            {
-                gBattleScripting.battler = gBattlerAttacker;
-                BattleScriptCall(BattleScript_BattlerFormChange);
-                effect++;
-            }
-            break;
         case ABILITY_POISON_PUPPETEER:
             if (gBattleMons[gBattlerAttacker].species == SPECIES_PECHARUNT
              && gBattleStruct->poisonPuppeteerConfusion == TRUE
@@ -4569,6 +4533,53 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         default:
+            break;
+        }
+        break;
+    case ABILITYEFFECT_FORM_CHANGE_ON_HIT:
+        speciesForm = gBattleMons[gBattlerTarget].species;
+
+        if (gBattleStruct->unableToUseMove
+         || !IsBattlerTurnDamaged(gBattlerTarget)
+         || !TryBattleFormChange(gBattlerTarget, FORM_CHANGE_BATTLE_HIT_BY_MOVE_CATEGORY, ability))
+            break;
+
+        gBattleScripting.abilityPopupOverwrite = ability;
+        gBattleScripting.battler = battler;
+        effect++;
+
+        switch (ability)
+        {
+        case ABILITY_GULP_MISSILE:
+            if (!IsBattlerAlive(gBattlerAttacker))
+                break;
+
+            if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
+                SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
+
+            switch (speciesForm)
+            {
+            case SPECIES_CRAMORANT_GORGING:
+                BattleScriptCall(BattleScript_GulpMissileGorging);
+                break;
+            case SPECIES_CRAMORANT_GULPING:
+                BattleScriptCall(BattleScript_GulpMissileGulping);
+                break;
+            default:
+                BattleScriptCall(BattleScript_BattlerFormChange); // Fallback
+                break;
+            }
+            break;
+        case ABILITY_DISGUISE:
+            if (GetConfig(CONFIG_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE)
+                SetPassiveDamageAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 8);
+            BattleScriptCall(BattleScript_BattlerFormChangeDisguise);
+            break;
+        case ABILITY_ICE_FACE:
+            BattleScriptCall(BattleScript_IceFaceNullsDamage);
+            break;
+        default:
+            BattleScriptCall(BattleScript_BattlerFormChange);
             break;
         }
         break;
@@ -4701,7 +4712,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
 
                 if (GetConfig(CONFIG_BATTLE_BOND) < GEN_9)
                 {
-                    // TODO: Convert this to a proper FORM_CHANGE type.
+                    // Can't use TryBattleFormChange as we can't test form change const data changes.
                     gLastUsedAbility = ability;
                     GetBattlerPartyState(battler)->battleBondBoost = TRUE;
                     PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battler].species);
@@ -4833,12 +4844,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
         break;
     case ABILITYEFFECT_TERA_SHIFT:
-        if (ability == ABILITY_TERA_SHIFT
-         && gBattleMons[battler].species == SPECIES_TERAPAGOS_NORMAL
-         && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_SWITCH))
+        if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_SWITCH_IN, ability))
         {
             gBattleScripting.battler = battler;
-            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ABILITY_TERA_SHIFT;
+            gBattleScripting.abilityPopupOverwrite = gLastUsedAbility = ability;
             BattleScriptCall(BattleScript_BattlerFormChangeWithString);
             effect++;
         }
@@ -4893,6 +4902,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && IsBattlerAlive(battler)
              && gBattleStruct->battlerState[partner].commanderSpecies == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
+             && (gChosenActionByBattler[partner] != B_ACTION_SWITCH || HasBattlerActedThisTurn(partner))
              && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
             {
                 SaveBattlerAttacker(gBattlerAttacker);
@@ -4962,7 +4972,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (((!gBattleMons[battler].volatiles.weatherAbilityDone && battlerWeatherAffected)
              || gBattleWeather == B_WEATHER_NONE
              || !HasWeatherEffect()) // Air Lock active
-             && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
+             && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER, gLastUsedAbility))
             {
                 gBattleScripting.battler = battler;
                 gBattleMons[battler].volatiles.weatherAbilityDone = TRUE;
@@ -5036,8 +5046,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
 
 bool32 TryPrimalReversion(enum BattlerId battler)
 {
-    if (GetBattlerHoldEffectIgnoreNegation(battler) == HOLD_EFFECT_PRIMAL_ORB
-     && GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_PRIMAL_REVERSION) != gBattleMons[battler].species)
+    if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_PRIMAL_REVERSION, GetBattlerAbility(battler)))
     {
         gBattleScripting.battler = battler;
         BattleScriptCall(BattleScript_PrimalReversion);
@@ -8259,16 +8268,9 @@ static bool32 IsCriticalHit(struct BattleContext *ctx)
 s32 GetAdjustedDamage(struct BattleContext *ctx, s32 damage)
 {
     if (DoesSubstituteBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->move)
-     || DoesDisguiseBlockMove(ctx->battlerDef, ctx->move))
+     || DoesDisguiseBlockMove(ctx->battlerDef, ctx->move)
+     || DoesIceFaceBlockMove(ctx->battlerDef, ctx->move))
         return damage; // No damage will be dealt
-
-    if (ctx->abilityDef == ABILITY_ICE_FACE && IsBattleMovePhysical(ctx->move) && gBattleMons[ctx->battlerDef].species == SPECIES_EISCUE)
-    {
-        gBattleStruct->moveResultFlags[ctx->battlerDef] &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE);
-        RecordAbilityBattle(ctx->battlerDef, ABILITY_ICE_FACE);
-        gBattleMons[ctx->battlerDef].volatiles.triggerIceFace = TRUE; // Form change will be done after attack animation in Cmd_resultmessage.
-        return 0; // Typeless damage 0 HP.
-    }
 
     if (gBattleMons[ctx->battlerDef].hp > damage)
         return damage;
@@ -8748,12 +8750,14 @@ bool32 CanMegaEvolve(enum BattlerId battler)
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return FALSE;
 
+    enum Ability ability = GetBattlerAbility(battler);
+
     // Check if there is an entry in the form change table for regular Mega Evolution and battler is holding Mega Stone.
-    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM) != gBattleMons[battler].species && holdEffect == HOLD_EFFECT_MEGA_STONE)
+    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, ability) != gBattleMons[battler].species)
         return TRUE;
 
     // Check if there is an entry in the form change table for Wish Mega Evolution.
-    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE) != gBattleMons[battler].species)
+    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE, ability) != gBattleMons[battler].species)
         return TRUE;
 
     // No checks passed, the mon CAN'T mega evolve.
@@ -8783,8 +8787,10 @@ bool32 CanUltraBurst(enum BattlerId battler)
     if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
         return FALSE;
 
+    enum Ability ability = GetBattlerAbility(battler);
+
     // Check if there is an entry in the form change table for Ultra Burst and battler is holding a Z-Crystal.
-    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_ULTRA_BURST) != gBattleMons[battler].species && holdEffect == HOLD_EFFECT_Z_CRYSTAL)
+    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_ULTRA_BURST, ability) != gBattleMons[battler].species && holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return TRUE;
 
     // No checks passed, the mon CAN'T ultra burst.
@@ -8793,18 +8799,29 @@ bool32 CanUltraBurst(enum BattlerId battler)
 
 void ActivateMegaEvolution(enum BattlerId battler)
 {
+    enum Ability ability = GetBattlerAbility(battler);
     gLastUsedItem = gBattleMons[battler].item;
     SetActiveGimmick(battler, GIMMICK_MEGA);
-    if (GetBattleFormChangeTargetSpecies(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE) != gBattleMons[battler].species)
+    SetGimmickAsActivated(battler, GIMMICK_MEGA);
+
+    if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE, ability))
+    {
         BattleScriptPushCursorAndCallback(BattleScript_WishMegaEvolution);
+    }
     else
+    {
+        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, ability);
         BattleScriptPushCursorAndCallback(BattleScript_MegaEvolution);
+    }
 }
 
 void ActivateUltraBurst(enum BattlerId battler)
 {
+    enum Ability ability = GetBattlerAbility(battler);
     gLastUsedItem = gBattleMons[battler].item;
     SetActiveGimmick(battler, GIMMICK_ULTRA_BURST);
+    SetGimmickAsActivated(battler, GIMMICK_ULTRA_BURST);
+    TryBattleFormChange(battler, FORM_CHANGE_BATTLE_ULTRA_BURST, ability);
     BattleScriptPushCursorAndCallback(BattleScript_UltraBurst);
 }
 
@@ -8840,114 +8857,32 @@ bool32 IsBattlerInTeraForm(enum BattlerId battler)
     return (gSpeciesInfo[gBattleMons[battler].species].isTeraForm);
 }
 
-// Returns SPECIES_NONE if no form change is possible
-u32 GetBattleFormChangeTargetSpecies(enum BattlerId battler, enum FormChanges method)
+u32 GetBattleFormChangeTargetSpecies(enum BattlerId battler, enum FormChanges method, enum Ability ability)
 {
-    u32 i;
     u32 species = gBattleMons[battler].species;
-    u32 targetSpecies = species;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
-    struct Pokemon *mon = GetBattlerMon(battler);
-    u16 heldItem = gBattleMons[battler].item;
 
-    for (i = 0; formChanges != NULL && formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
+    if (formChanges == NULL)
+        return species;
+
+    struct FormChangeContext ctx =
     {
-        if (method == formChanges[i].method && species != formChanges[i].targetSpecies)
-        {
-            switch (method)
-            {
-            case FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM:
-            case FORM_CHANGE_BATTLE_PRIMAL_REVERSION:
-            case FORM_CHANGE_BATTLE_ULTRA_BURST:
-                if (heldItem == formChanges[i].param1)
-                    targetSpecies = formChanges[i].targetSpecies;
-                break;
-            case FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE:
-                if (gBattleMons[battler].moves[0] == formChanges[i].param1
-                    || gBattleMons[battler].moves[1] == formChanges[i].param1
-                    || gBattleMons[battler].moves[2] == formChanges[i].param1
-                    || gBattleMons[battler].moves[3] == formChanges[i].param1)
-                    targetSpecies = formChanges[i].targetSpecies;
-                break;
-            case FORM_CHANGE_BATTLE_SWITCH:
-                if (formChanges[i].param1 == GetBattlerAbility(battler) || formChanges[i].param1 == ABILITY_NONE)
-                    targetSpecies = formChanges[i].targetSpecies;
-                break;
-            case FORM_CHANGE_BATTLE_HP_PERCENT:
-                if (formChanges[i].param1 == GetBattlerAbility(battler))
-                {
-                    // We multiply by 100 to make sure that integer division doesn't mess with the health check.
-                    u32 hpCheck = gBattleMons[battler].hp * 100 * 100 / gBattleMons[battler].maxHP;
-                    switch(formChanges[i].param2)
-                    {
-                    case HP_HIGHER_THAN:
-                        if (hpCheck > formChanges[i].param3 * 100)
-                            targetSpecies = formChanges[i].targetSpecies;
-                        break;
-                    case HP_LOWER_EQ_THAN:
-                        if (hpCheck <= formChanges[i].param3 * 100)
-                            targetSpecies = formChanges[i].targetSpecies;
-                        break;
-                    }
-                }
-                break;
-            case FORM_CHANGE_BATTLE_GIGANTAMAX:
-                if (GetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR))
-                    targetSpecies = formChanges[i].targetSpecies;
-                break;
-            case FORM_CHANGE_BATTLE_WEATHER:
-                // Check if there is a required ability and if the battler's ability does not match it
-                // or is suppressed. If so, revert to the no weather form.
-                if (formChanges[i].param2
-                    && GetBattlerAbility(battler) != formChanges[i].param2
-                    && formChanges[i].param1 == B_WEATHER_NONE)
-                {
-                    targetSpecies = formChanges[i].targetSpecies;
-                }
-                // We need to revert the weather form if the field is under Air Lock, too.
-                else if (!HasWeatherEffect() && formChanges[i].param1 == B_WEATHER_NONE)
-                {
-                    targetSpecies = formChanges[i].targetSpecies;
-                }
-                // Otherwise, just check for a match between the weather and the form change table.
-                // Added a check for whether the weather is in effect to prevent end-of-turn soft locks with Cloud Nine / Air Lock
-                else if (((gBattleWeather & formChanges[i].param1) && HasWeatherEffect())
-                    || (gBattleWeather == B_WEATHER_NONE && formChanges[i].param1 == B_WEATHER_NONE))
-                {
-                    targetSpecies = formChanges[i].targetSpecies;
-                }
-                break;
-            case FORM_CHANGE_BATTLE_TURN_END:
-            case FORM_CHANGE_HIT_BY_MOVE:
-                if (formChanges[i].param1 == GetBattlerAbility(battler))
-                    targetSpecies = formChanges[i].targetSpecies;
-                break;
-            case FORM_CHANGE_STATUS:
-                if (gBattleMons[battler].status1 & formChanges[i].param1)
-                    targetSpecies = formChanges[i].targetSpecies;
-                break;
-            case FORM_CHANGE_BATTLE_TERASTALLIZATION:
-                if (GetBattlerTeraType(battler) == formChanges[i].param1)
-                    targetSpecies = formChanges[i].targetSpecies;
-                break;
-            case FORM_CHANGE_BATTLE_BEFORE_MOVE:
-            case FORM_CHANGE_BATTLE_AFTER_MOVE:
-                if (formChanges[i].param1 == gCurrentMove
-                    && (formChanges[i].param2 == ABILITY_NONE || formChanges[i].param2 == GetBattlerAbility(battler)))
-                    targetSpecies = formChanges[i].targetSpecies;
-                break;
-            case FORM_CHANGE_BATTLE_BEFORE_MOVE_CATEGORY:
-                if (formChanges[i].param1 == GetBattleMoveCategory(gCurrentMove)
-                    && (formChanges[i].param2 == ABILITY_NONE || formChanges[i].param2 == GetBattlerAbility(battler)))
-                    targetSpecies = formChanges[i].targetSpecies;
-                break;
-            default:
-                break;
-            }
-        }
-    }
+        .method = method,
+        .currentSpecies = gBattleMons[battler].species,
+        .heldItem = gBattleMons[battler].item,
+        .ability = ability,
+        .status = gBattleMons[battler].status1,
+        .gmaxFactor = GetMonData(GetBattlerMon(battler), MON_DATA_GIGANTAMAX_FACTOR),
+        .hp = gBattleMons[battler].hp,
+        .maxHP = gBattleMons[battler].maxHP,
+        .teraType = GetBattlerTeraType(battler),
+        .level = gBattleMons[battler].level,
+    };
 
-    return targetSpecies;
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        ctx.moves[i] = gBattleMons[battler].moves[i];
+
+    return GetFormChangeTargetSpecies_Internal(ctx);
 }
 
 static bool32 CanBattlerFormChange(enum BattlerId battler, enum FormChanges method)
@@ -8967,10 +8902,14 @@ static bool32 CanBattlerFormChange(enum BattlerId battler, enum FormChanges meth
         if (IsBattlerMegaEvolved(battler) || IsBattlerUltraBursted(battler) || IsBattlerInTeraForm(battler) || IsGigantamaxed(battler))
             return TRUE;
         break;
-    case FORM_CHANGE_BATTLE_SWITCH:
+    case FORM_CHANGE_BATTLE_SWITCH_OUT:
         if (IsGigantamaxed(battler))
             return TRUE;
-        else if (GetActiveGimmick(battler) == GIMMICK_TERA && GetBattlerAbility(battler) == ABILITY_HUNGER_SWITCH)
+        else if (GetActiveGimmick(battler) == GIMMICK_TERA && DoesSpeciesHaveFormChangeMethod(gBattleMons[battler].species, FORM_CHANGE_BATTLE_TURN_END))
+            return FALSE;
+        break;
+    case FORM_CHANGE_BATTLE_TURN_END:
+        if (GetActiveGimmick(battler) == GIMMICK_TERA)
             return FALSE;
         break;
     default:
@@ -8985,10 +8924,10 @@ bool32 TryRevertPartyMonFormChange(u32 partyIndex)
 
     // Appeared in battle and didn't faint
     if (gBattleStruct->partyState[B_SIDE_PLAYER][partyIndex].sentOut && GetMonData(&gPlayerParty[partyIndex], MON_DATA_HP) != 0)
-        changedForm = TryFormChange(partyIndex, B_SIDE_PLAYER, FORM_CHANGE_END_BATTLE_ENVIRONMENT);
+        changedForm = TryFormChange(&gPlayerParty[partyIndex], FORM_CHANGE_END_BATTLE_ENVIRONMENT);
 
     if (!changedForm)
-        changedForm = TryFormChange(partyIndex, B_SIDE_PLAYER, FORM_CHANGE_END_BATTLE);
+        changedForm = TryFormChange(&gPlayerParty[partyIndex], FORM_CHANGE_END_BATTLE);
 
     // Clear original species field
     gBattleStruct->partyState[B_SIDE_PLAYER][partyIndex].changedSpecies = SPECIES_NONE;
@@ -8996,66 +8935,44 @@ bool32 TryRevertPartyMonFormChange(u32 partyIndex)
     return changedForm;
 }
 
-bool32 TryBattleFormChange(enum BattlerId battler, enum FormChanges method)
+bool32 TryBattleFormChange(enum BattlerId battler, enum FormChanges method, enum Ability ability)
 {
-    u32 monId = gBattlerPartyIndexes[battler];
-    struct Pokemon *party = GetBattlerParty(battler);
-    u32 currentSpecies = GetMonData(&party[monId], MON_DATA_SPECIES);
-    u32 targetSpecies;
+    struct Pokemon *mon = GetBattlerMon(battler);
 
     if (!CanBattlerFormChange(battler, method))
         return FALSE;
 
-    targetSpecies = GetBattleFormChangeTargetSpecies(battler, method);
-    if (targetSpecies == currentSpecies)
-        targetSpecies = GetFormChangeTargetSpecies(&party[monId], method, 0);
-    if (targetSpecies != currentSpecies && targetSpecies != SPECIES_NONE)
+    u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
+    u32 targetSpecies = GetBattleFormChangeTargetSpecies(battler, method, ability);
+
+    struct PartyState *battlePartyState = GetBattlerPartyState(battler);
+    // If the battle ends, and there's not a specified species to change back to,
+    // use the species at the start of the battle.
+    if (targetSpecies == SPECIES_NONE
+        && battlePartyState != NULL && battlePartyState->changedSpecies != SPECIES_NONE
+        // This is added to prevent FORM_CHANGE_END_BATTLE_ENVIRONMENT from omitting move changes
+        // at the end of the battle, as it was being counting as a successful form change.
+        && (method == FORM_CHANGE_END_BATTLE || method == FORM_CHANGE_FAINT))
+    {
+        targetSpecies = battlePartyState->changedSpecies;
+    }
+
+    assertf(targetSpecies != SPECIES_NONE, "form change target returned NONE. cur:%d, method:%d", currentSpecies, method)
+    {
+        return FALSE;
+    }
+
+    if (targetSpecies != currentSpecies)
     {
         // Saves the original species on the first form change.
-
         if (GetBattlerPartyState(battler)->changedSpecies == SPECIES_NONE)
             GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
 
-        TryToSetBattleFormChangeMoves(&party[monId], method);
-        SetMonData(&party[monId], MON_DATA_SPECIES, &targetSpecies);
+        TryToSetBattleFormChangeMoves(mon, method);
+        SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
         gBattleMons[battler].species = targetSpecies;
-        RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
+        RecalcBattlerStats(battler, mon, method == FORM_CHANGE_BATTLE_GIGANTAMAX);
         return TRUE;
-    }
-    else if (GetBattlerPartyState(battler)->changedSpecies != SPECIES_NONE)
-    {
-        bool32 restoreSpecies = FALSE;
-
-        switch (method)
-        {
-        case FORM_CHANGE_END_BATTLE:
-            restoreSpecies = TRUE;
-            break;
-        case FORM_CHANGE_FAINT:
-            if (IsBattlerMegaEvolved(battler) || IsBattlerUltraBursted(battler) || IsBattlerInTeraForm(battler) || IsGigantamaxed(battler))
-                restoreSpecies = TRUE;
-            break;
-        case FORM_CHANGE_BATTLE_SWITCH:
-            if (IsGigantamaxed(battler))
-                restoreSpecies = TRUE;
-            break;
-        default:
-            break;
-        }
-
-        if (restoreSpecies)
-        {
-            enum Ability abilityForm = gBattleMons[battler].ability;
-            // Reverts the original species
-            TryToSetBattleFormChangeMoves(&party[monId], method);
-            u32 changedSpecies = GetBattlerPartyState(battler)->changedSpecies;
-            SetMonData(&party[monId], MON_DATA_SPECIES, &changedSpecies);
-            RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
-            // Battler data is not updated with regular form's ability, not doing so could cause wrong ability activation.
-            if (method == FORM_CHANGE_FAINT)
-                gBattleMons[battler].ability = abilityForm;
-            return TRUE;
-        }
     }
 
     return FALSE;
@@ -9064,19 +8981,23 @@ bool32 TryBattleFormChange(enum BattlerId battler, enum FormChanges method)
 bool32 DoBattlersShareType(enum BattlerId battler1, enum BattlerId battler2)
 {
     s32 i;
+    s32 j;
     enum Type types1[3], types2[3];
     GetBattlerTypes(battler1, FALSE, types1);
     GetBattlerTypes(battler2, FALSE, types2);
 
-    if (types1[2] == TYPE_MYSTERY)
-        types1[2] = types1[0];
-    if (types2[2] == TYPE_MYSTERY)
-        types2[2] = types2[0];
-
     for (i = 0; i < 3; i++)
     {
-        if (types1[i] == types2[0] || types1[i] == types2[1] || types1[i] == types2[2])
-            return TRUE;
+        if (types1[i] == TYPE_MYSTERY)
+            continue;
+
+        for (j = 0; j < 3; j++)
+        {
+            if (types2[j] == TYPE_MYSTERY)
+                continue;
+            if (types1[i] == types2[j])
+                return TRUE;
+        }
     }
 
     return FALSE;
@@ -9433,7 +9354,7 @@ static u32 GetFlingPowerFromItemId(enum Item itemId)
         return GetItemFlingPower(itemId);
 }
 
-bool32 CanFling(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+bool32 CanFling(enum BattlerId battlerAtk)
 {
     enum Item item = gBattleMons[battlerAtk].item;
 
@@ -9441,8 +9362,9 @@ bool32 CanFling(enum BattlerId battlerAtk, enum BattlerId battlerDef)
       || (GetConfig(CONFIG_KLUTZ_FLING_INTERACTION) >= GEN_5 && GetBattlerAbility(battlerAtk) == ABILITY_KLUTZ)
       || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
       || gBattleMons[battlerAtk].volatiles.embargo
+      || (GetItemTMHMIndex(item) != 0 && GetItemImportance(item) == 1) // don't fling reusable TMs
       || GetFlingPowerFromItemId(item) == 0
-      || !CanBattlerGetOrLoseItem(battlerAtk, battlerDef, item))
+      || !CanBattlerGetOrLoseItem(battlerAtk, battlerAtk, item)) // defender being a paradox mon doesn't matter
         return FALSE;
 
     return TRUE;
@@ -9547,6 +9469,7 @@ bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, 
     }
 
     // It's supposed to pop before trying to steal but this also works
+    // Now that the order is correct this is redundant. The question is whether Trick can steal it.
     if (GetItemHoldEffect(item) == HOLD_EFFECT_AIR_BALLOON)
         return FALSE;
 
@@ -9765,6 +9688,15 @@ void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon 
 void CopyMonAbilityAndTypesToBattleMon(enum BattlerId battler, struct Pokemon *mon)
 {
     gBattleMons[battler].ability = GetMonAbility(mon);
+    #if TESTING
+    if (gTestRunnerEnabled)
+    {
+        u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
+        u32 partyIndex = gBattlerPartyIndexes[battler];
+        if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
+            gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
+    }
+    #endif
     gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0);
     gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1);
     gBattleMons[battler].types[2] = TYPE_MYSTERY;

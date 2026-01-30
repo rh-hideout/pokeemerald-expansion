@@ -284,7 +284,6 @@ enum VolatileFlags
     F(VOLATILE_ROOST_ACTIVE,                roostActive,                   (u32, 1)) \
     F(VOLATILE_UNBURDEN_ACTIVE,             unburdenActive,                (u32, 1)) \
     F(VOLATILE_NEUTRALIZING_GAS,            neutralizingGas,               (u32, 1)) \
-    F(VOLATILE_TRIGGER_ICE_FACE,            triggerIceFace,                (u32, 1)) \
     F(VOLATILE_UNNERVE_ACTIVATED,           unnerveActivated,              (u32, 1)) \
     F(VOLATILE_ENDURED,                     endured,                       (u32, 1)) \
     F(VOLATILE_TRY_EJECT_PACK,              tryEjectPack,                  (u32, 1)) \
@@ -732,11 +731,6 @@ enum MoveTarget
 #define PARENTAL_BOND_1ST_HIT 2
 #define PARENTAL_BOND_2ND_HIT 1
 #define PARENTAL_BOND_OFF     0
-
-// Constants for if HandleScriptMegaPrimalBurst should handle Mega Evolution, Primal Reversion, or Ultra Burst.
-#define HANDLE_TYPE_MEGA_EVOLUTION 0
-#define HANDLE_TYPE_PRIMAL_REVERSION 1
-#define HANDLE_TYPE_ULTRA_BURST 2
 
 // Constants for Torment
 #define PERMANENT_TORMENT   0xF
