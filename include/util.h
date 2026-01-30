@@ -16,7 +16,6 @@ void BlendPalette(u16 palOffset, u16 numEntries, u8 coeff, u32 blendColor);
 void DoBgAffineSet(struct BgAffineDstData *dest, u32 texX, u32 texY, s16 scrX, s16 scrY, s16 sx, s16 sy, u16 alpha);
 void CopySpriteTiles(u8 shape, u8 size, u8 *tiles, u16 *tilemap, u8 *output);
 s32 ClampSignedValue(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta);
-u32 ClampUnsignedValue(u32 lowestVal, u32 highestVal, u32 currentVal, s32 delta);
 
 
 #endif // GUARD_UTIL_H

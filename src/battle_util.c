@@ -11116,14 +11116,3 @@ s32 ClampSignedValue(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
 
     return newValue;
 }
-
-u32 ClampUnsignedValue(u32 lowestVal, u32 highestVal, u32 currentVal, s32 delta)
-{
-    u32 newValue = currentVal - delta;
-    if (newValue > highestVal)
-        newValue = highestVal;
-    else if (newValue < lowestVal)
-        newValue = lowestVal;
-
-    return newValue;
-}
