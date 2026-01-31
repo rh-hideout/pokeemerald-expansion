@@ -22330,3 +22330,5 @@ static const struct LevelUpMove sSuneonLevelUpLearnset[] = {
    LEVEL_UP_MOVE(99, MOVE_SAFEGUARD),
    LEVEL_UP_END
 };
+
+
