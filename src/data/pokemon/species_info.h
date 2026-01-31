@@ -247,4 +247,72 @@ const struct SpeciesInfo gSpeciesInfo[] =
         //.perfectIVCount = NUM_STATS,
     },
     */
+
+        [SPECIES_SUNEON] =
+    {
+        .baseHP        = 65,
+        .baseAttack    = 65,
+        .baseDefense   = 60,
+        .baseSpeed     = 130,
+        .baseSpAttack  = 110,
+        .baseSpDefense = P_UPDATED_STATS >= GEN_2 ? 95 : 110,
+        .types = MON_TYPES(TYPE_FLYING),
+        .catchRate = 45,
+        .expYield = 197,
+        .evYield_Speed = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 35,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_CHLOROPHYLL },
+        .bodyColor = BODY_COLOR_WHITE,
+        .speciesName = _("Suneon"),
+        .cryId = CRY_EEVEE,
+        .natDexNum = NATIONAL_DEX_SUNEON,
+        .categoryName = _("Flying"),
+        .height = 13,
+        .weight = 192,
+        .description = COMPOUND_STRING(
+            "Its cells generate weak power that is\n"
+            "amplified by its fur's static electricity\n"
+            "to drop thunderbolts. The bristling fur is\n"
+            "made of electrically charged needles."),
+        .pokemonScale = 283,
+        .pokemonOffset = 8,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Suneon,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_SHAKE_GLOW_WHITE_SLOW,
+        .frontAnimDelay = 15,
+        .enemyMonElevation = 6,
+        .backPic = gMonBackPic_Suneon,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 0,
+        .backAnimId = BACK_ANIM_TTRIANGLE_DOWN,
+        .palette = gMonPalette_Suneon,
+        .shinyPalette = gMonShinyPalette_Suneon,
+        .iconSprite = gMonIcon_Suneon,
+        .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 2,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 2, SHADOW_SIZE_M)
+        FOOTPRINT(Suneon)
+        OVERWORLD(
+            sPicTable_Suneon,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Suneon,
+            gShinyOverworldPalette_Suneon
+        )
+        .levelUpLearnset = sSuneonLevelUpLearnset,
+        .teachableLearnset = sSuneonTeachableLearnset,
+    },
+
 };

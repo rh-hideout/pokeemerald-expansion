@@ -14,19 +14,19 @@ Including this would shorten the overall playthrough time of the CTF's context.
 - Herr Bauer sagt wir haben extra auf sie gewartet:
 	- text Pokemon Starten
 
-### Flag1
+### Flag1 (HYVL)
 - Team Rocket hat eine Galerie verunstaltet, Bilder zuordnen Jahreszahlen
 
 ==to change from one theoretical phase to the other, one must return home, go to the owned desk, and write T1000 etc. . Finishing it would prompt the player to return to DHBW for submission==
 Pokemon fights between semesters are enforced by walking from DHBW to Jungbusch and back. Terminating the CTF and T2000 etc. could activate a skript to manipulate npc, pokemon appearences and their fighting levels inside tall gras of the respective areas.
 
-### Flag2
+### Flag2 (WOWER)
 - HalterWower Theo 1 --> Glitch du hast Matrikelnummer vergessen
 - Flashback ins Sekretariat --> Trainernnr + Name xor oder änhliches 
 	- Flagname {Iam_XXXXXXX} <- maybe just the number 
 == maybe inside an room for exams, as HalterWower only appeared to this event during 2nd semester. You have to note down the matrikelnumber after flashback==
 
-### Flag3
+### Flag3 
 - Fällt in ein Glitchloch (Keller/Werkstatt)
 	- Items linux befehle für terminal (TM sprite)
 - Rätsel durch linux Befehle zb. CD... zurück CD Ebene1
@@ -48,7 +48,7 @@ Pokemon fights between semesters are enforced by walking from DHBW to Jungbusch 
 - Hashfunktion wie Token = (Summe * 300 + 223) mod 2000 kann auch randomized sein müsste man sich überlegen
 - Irgendwo sind beispiele verteilt
 	- Zeigt Flag bei Reparatur {Reverse_it}
-### Flag6:
+### Flag6: (KALI)
 - Music Flag 
 - Story kommt noch
 - Flag in Soundtrack morse code 
@@ -83,6 +83,11 @@ Pokemon fights between semesters are enforced by walking from DHBW to Jungbusch 
         
     - „Memory Core“
         
+
+### Flag 8 (FARMER)
+
+Showdown auf dem Wasserturm
+
 
 ---
 

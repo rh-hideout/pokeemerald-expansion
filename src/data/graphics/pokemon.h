@@ -26789,3 +26789,12 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.smol");
     const u16 gMonPalette_Egg[] = INCBIN_U16("graphics/pokemon/egg/normal.gbapal");
     const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");
+
+// CTF
+
+    const u32 gMonFrontPic_Suneon[] = INCBIN_U32("graphics/pokemon/suneon/anim_front.4bpp.lz");
+    const u32 gMonBackPic_Suneon[] = INCBIN_U32("graphics/pokemon/suneon/back.4bpp.lz");
+    const u16 gMonPalette_Suneon[] = INCBIN_U16("graphics/pokemon/suneon/normal.gbapal");
+    const u16 gMonShinyPalette_Suneon[] = INCBIN_U16("graphics/pokemon/suneon/shiny.gbapal");
+    const u8 gMonIcon_Suneon[] = INCBIN_U8("graphics/pokemon/suneon/icon.4bpp");
+    const u8 gMonFootprint_Suneon[] = INCBIN_U8("graphics/pokemon/suneon/footprint.1bpp");

@@ -35921,3 +35921,16 @@ static const u16 sPecharuntTeachableLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 #endif //P_FAMILY_PECHARUNT
+
+
+static const u16 sSuneonTeachableLearnset[] = {
+
+   MOVE_HIDDEN_POWER,
+   MOVE_FLY, //x
+   MOVE_TAILWIND, //x
+   MOVE_SUNNY_DAY, //x
+   MOVE_SOLAR_BEAM, //x
+   MOVE_UNAVAILABLE, // This is required to determine where the array ends.
+};
+
+#endif

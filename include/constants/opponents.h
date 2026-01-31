@@ -273,7 +273,7 @@
 #define TRAINER_WATTSON_1                   267
 #define TRAINER_FLANNERY_1                  268
 #define TRAINER_NORMAN_1                    269
-#define TRAINER_WINONA_1                    270
+#define TRAINER_KALI                        270  //CTF
 #define TRAINER_TATE_AND_LIZA_1             271
 #define TRAINER_JUAN_1                      272
 #define TRAINER_JERRY_1                     273
