@@ -5859,7 +5859,8 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
     // Set battlerDef best dmg moves
     GetBestDmgMovesFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
 
-    if (IsSheerForceAffected(move, aiData->abilities[battlerAtk]))
+    if (IsSheerForceAffected(move, aiData->abilities[battlerAtk])
+     && !(move == MOVE_ORDER_UP && gBattleStruct->battlerState[battlerAtk].commanderSpecies != SPECIES_NONE))
         return score;
 
     // check move additional effects that are likely to happen
@@ -5904,6 +5905,31 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                 case MOVE_EFFECT_EVS_PLUS_2:
                     ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_EVASION));
                     break;
+                case MOVE_EFFECT_ORDER_UP:
+                {
+                    enum StatChange stageStatId = STAT_CHANGE_ATK;
+                    bool32 commanderAffected = TRUE;
+
+                    switch (gBattleStruct->battlerState[battlerAtk].commanderSpecies)
+                    {
+                    case SPECIES_TATSUGIRI_CURLY:
+                        stageStatId = STAT_CHANGE_ATK;
+                        break;
+                    case SPECIES_TATSUGIRI_DROOPY:
+                        stageStatId = STAT_CHANGE_DEF;
+                        break;
+                    case SPECIES_TATSUGIRI_STRETCHY:
+                        stageStatId = STAT_CHANGE_SPEED;
+                        break;
+                    default:
+                        commanderAffected = FALSE;
+                        break;
+                    }
+
+                    if (commanderAffected)
+                        ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stageStatId));
+                    break;
+                }
                 default:
                     break;
                 }
