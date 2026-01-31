@@ -1,9 +1,12 @@
+Blackhansa_Floor2_MapScripts::
+	.byte 0
+
 Blackhansa_Floor2_EventScript_IntruderTrigger::
 	@ Wenn schon erfolgreich (Antwort 2), Trigger "verschwindet" effektiv
 	goto_if_set FLAG_BLACKHANSA_F2_INTRUDER_DONE, Blackhansa_Floor2_EventScript_IntruderTrigger_End
 
 	lockall
-	turnobject PLAYER, DIR_SOUTH
+	turnobject LOCALID_PLAYER, DIR_SOUTH
 
 	msgbox Blackhansa_Floor2_Text_StopIntruder, MSGBOX_DEFAULT
 
@@ -11,7 +14,7 @@ Blackhansa_Floor2_EventScript_IntruderTrigger::
 	waitmovement 0
 
 	turnobject LOCALID_IT_MANAGER, DIR_NORTH
-	turnobject PLAYER, DIR_SOUTH
+	turnobject LOCALID_PLAYER, DIR_SOUTH
 
 	msgbox Blackhansa_Floor2_Text_WhoAreYou, MSGBOX_DEFAULT
 

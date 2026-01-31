@@ -1,4 +1,4 @@
-EntryMapFlag3_MapScripts::
+entryMapFlag3_MapScripts::
 	.byte 0
 
 @ A-Button / Sign / Background-Event
@@ -83,11 +83,6 @@ EntryMapFlag3_EventScript_DebugCheatStart::
 	additem ITEM_CONTEST_PASS, 1
 	additem ITEM_SOOT_SACK, 1
 
-	@ Abandoned Ship Keys (falls du sie nutzt)
-	additem ITEM_ROOM_1_KEY, 1
-	additem ITEM_ROOM_2_KEY, 1
-	additem ITEM_ROOM_4_KEY, 1
-	additem ITEM_ROOM_6_KEY, 1
 
 	@ Event-/Story-Tickets (optional, aber oft praktisch fürs Testen)
 	additem ITEM_EON_TICKET, 1
@@ -100,11 +95,6 @@ EntryMapFlag3_EventScript_DebugCheatStart::
 	additem ITEM_LOCKPICK_SET, 1
 	additem ITEM_PHONE_CORP_ID, 1
 
-	@ Oft storyrelevant sind Flags (Running Shoes / Dex etc.) – optional fürs Debuggen:
-	setflag FLAG_SYS_RUNNING_SHOES
-	setflag FLAG_SYS_POKEDEX_GET
-	setflag FLAG_SYS_POKENAV_GET
-	setflag FLAG_SYS_POKEMON_GET
 
 	msgbox EntryMapFlag3_Text_DebugCheatDone, MSGBOX_DEFAULT
 	release
