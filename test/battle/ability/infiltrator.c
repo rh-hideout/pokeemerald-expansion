@@ -230,7 +230,7 @@ SINGLE_BATTLE_TEST("Infiltrator doesn't ignore a battler's Substitute when using
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, move, player);
