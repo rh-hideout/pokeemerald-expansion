@@ -1866,7 +1866,7 @@ static void ParseObjectEventScript(const u8 *script)
     gPartnerTrainerId = 0;
 }
 
-static void Debug_Display_LocalTrainer(u32 localId, u32 digit, u8 windowId)
+static void Debug_Display_LocalTrainer(u32 objEventId, u32 digit, u8 windowId)
 {
     u32 trainerID = sDebugMenuListData->data[0];
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
@@ -1877,21 +1877,23 @@ static void Debug_Display_LocalTrainer(u32 localId, u32 digit, u8 windowId)
         end = StringCopy(gStringVar1, GetTrainerNameFromId(trainerID));
     WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
     StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
-    ConvertIntToDecimalStringN(gStringVar3, localId, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_LOCALID);
-    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Trainer ID: {STR_VAR_3}\n{STR_VAR_1}{CLEAR_TO 90}\n\n{STR_VAR_2}{CLEAR_TO 90}"));
+    ConvertIntToDecimalStringN(gStringVar3, objEventId, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_LOCALID);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Object ID: {STR_VAR_3}\n{STR_VAR_1}{CLEAR_TO 90}\n\n{STR_VAR_2}{CLEAR_TO 90}"));
     AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
 
-static void GetTrainerIdFromLocalId(u32 localId)
+static void GetTrainerIdFromObjEventId(u32 objEventId)
 {
     Debug_Trainers_ResetTrainersData();
-    ParseObjectEventScript(gMapHeader.events->objectEvents[localId].script);
+    ParseObjectEventScript(gMapHeader.events->objectEvents[objEventId].script);
     if (GetTrainerBattleType(sDebugMenuListData->data[0]) == TRAINER_BATTLE_TYPE_DOUBLES)
         sDebugMenuListData->data[5] = TRUE;
 }
 
 #define TRAINER_TAG 0xFDF3
 #define tSpriteId   data[5]
+#define OBJ_EVENT_MIN 0
+#define OBJ_EVENT_MAX (gMapHeader.events->objectEventCount - 1)
 
 static void DebugAction_ChooseFromMap_Select(u8 taskId)
 {
@@ -1899,17 +1901,23 @@ static void DebugAction_ChooseFromMap_Select(u8 taskId)
     {
         PlaySE(SE_SELECT);
         u32 previousInput = gTasks[taskId].tInput;
+
         do {
-            Debug_HandleInput_Numeric(taskId, 1, gMapHeader.events->objectEventCount, DEBUG_NUMBER_DIGITS_LOCALID);
-            GetTrainerIdFromLocalId(gTasks[taskId].tInput);
-        } while (sDebugMenuListData->data[0] == TRAINER_NONE && gTasks[taskId].tInput != 1 && gTasks[taskId].tInput != gMapHeader.events->objectEventCount);
+            Debug_HandleInput_Numeric(taskId, OBJ_EVENT_MIN, OBJ_EVENT_MAX, DEBUG_NUMBER_DIGITS_LOCALID);
+            GetTrainerIdFromObjEventId(gTasks[taskId].tInput);
+        } while (sDebugMenuListData->data[0] == TRAINER_NONE && gTasks[taskId].tInput != OBJ_EVENT_MIN && gTasks[taskId].tInput != OBJ_EVENT_MAX);
 
         if (sDebugMenuListData->data[0] == TRAINER_NONE)
         {
+            s32 sign = previousInput > gTasks[taskId].tInput ? 1 : -1;
+
             PlaySE(SE_FAILURE);
-            gTasks[taskId].tInput = previousInput;
-            GetTrainerIdFromLocalId(gTasks[taskId].tInput);
-            return;
+
+            while (gTasks[taskId].tInput != previousInput && sDebugMenuListData->data[0] == TRAINER_NONE)
+            {
+                gTasks[taskId].tInput += sign;
+                GetTrainerIdFromObjEventId(gTasks[taskId].tInput);
+            }
         }
 
         FreeSpritePaletteByTag(TRAINER_TAG);
@@ -1955,17 +1963,17 @@ static void DebugAction_Trainers_ChooseFromMap(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial object event
-    u32 localId = 1;
-    GetTrainerIdFromLocalId(localId);
-    Debug_Display_LocalTrainer(localId, 0, windowId);
+    u32 objEventId = OBJ_EVENT_MIN;
+    GetTrainerIdFromObjEventId(objEventId);
+    Debug_Display_LocalTrainer(objEventId, 0, windowId);
 
     //Set task data
     gTasks[taskId].func = DebugAction_ChooseFromMap_Select;
     gTasks[taskId].tSubWindowId = windowId;
-    gTasks[taskId].tInput = localId;
+    gTasks[taskId].tInput = objEventId;
     gTasks[taskId].tDigit = 0;
 
-    u32 graphicsId = gMapHeader.events->objectEvents[localId].graphicsId;
+    u32 graphicsId = gMapHeader.events->objectEvents[objEventId].graphicsId;
     u32 spriteId = CreateObjectGraphicsSprite(graphicsId, SpriteCallbackDummy, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4);
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
     gSprites[spriteId].oam.priority = 0;
@@ -1975,6 +1983,8 @@ static void DebugAction_Trainers_ChooseFromMap(u8 taskId)
 
 #undef TRAINER_TAG
 #undef tSpriteId
+#undef OBJ_EVENT_MIN
+#undef OBJ_EVENT_MAX
 
 #define tSelection  data[5]
 #define tInitial    data[6]
