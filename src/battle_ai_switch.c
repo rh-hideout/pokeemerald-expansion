@@ -441,18 +441,18 @@ static u32 FindMonWithMoveOfEffectiveness(enum BattlerId battler, enum BattlerId
     return FALSE; // There is not a single Pokémon in the party that has a move with this effectiveness threshold
 }
 
-static bool32 CanMoveAffectTarget(struct BattleContext *ctx)
+static bool32 CanMoveAffectTarget(u32 moveIndex, struct BattleContext *ctx)
 {
     if (ctx->move != MOVE_NONE
-        && AI_GetMoveEffectiveness(ctx->move, ctx->battlerAtk, ctx->battlerDef) > UQ_4_12(0.0)
+        && gAiLogicData->effectiveness[ctx->battlerAtk][ctx->battlerDef][moveIndex] > UQ_4_12(0.0)
         && !AI_CanMoveBeBlockedByTarget(ctx))
         return TRUE;
     return FALSE;
 }
 
-static bool32 IsMoveBad(struct BattleContext *ctx)
+static bool32 IsMoveBad(u32 moveIndex, struct BattleContext *ctx)
 {
-    if (CanMoveAffectTarget(ctx))
+    if (CanMoveAffectTarget(moveIndex, ctx))
         return FALSE;
     if (!ALL_MOVES_BAD_STATUS_MOVES_BAD || GetMovePower(ctx->move) != 0) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
         return TRUE;
@@ -479,7 +479,7 @@ static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler)
             ctx.move = ctx.chosenMove = gBattleMons[battler].moves[moveIndex];
             ctx.moveType = GetBattleMoveType(ctx.move);
             // Check if move is bad in the context of both opposing battlers
-            if (!IsMoveBad(&ctx))
+            if (!IsMoveBad(moveIndex, &ctx))
             {
                 return FALSE;
             }
@@ -489,7 +489,7 @@ static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler)
                 ctx.battlerDef = opposingPartner;
                 ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
                 ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
-                if (!IsMoveBad(&ctx))
+                if (!IsMoveBad(moveIndex, &ctx))
                     return FALSE;
             }
         }
@@ -500,7 +500,7 @@ static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler)
         {
             ctx.move = ctx.chosenMove = gBattleMons[battler].moves[moveIndex];
             ctx.moveType = GetBattleMoveType(ctx.move);
-            if (!IsMoveBad(&ctx))
+            if (!IsMoveBad(moveIndex, &ctx))
                 return FALSE;
         }
     }
@@ -1157,25 +1157,27 @@ static bool32 ShouldSwitchIfBadChoiceLock(enum BattlerId battler)
     if (choicedMove == MOVE_NONE)
         return FALSE;
 
+    u32 moveIndex = GetMoveIndex(battler, choicedMove);
+
     if (HasTwoOpponents(battler))
     {
         enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
         if (IsHoldEffectChoice(ctx.holdEffectAtk) && IsBattlerItemEnabled(battler))
         {
-            if (GetMoveCategory(choicedMove) == DAMAGE_CATEGORY_STATUS || !CanMoveAffectTarget(&ctx))
+            if (GetMoveCategory(choicedMove) == DAMAGE_CATEGORY_STATUS || !CanMoveAffectTarget(moveIndex, &ctx))
             {
                 // Set partner data in ctx
                 ctx.battlerDef = opposingPartner;
                 ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
                 ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
-                if (!CanMoveAffectTarget(&ctx) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
+                if (!CanMoveAffectTarget(moveIndex, &ctx) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
                     return SetSwitchinAndSwitch(battler, PARTY_SIZE);
             }
         }
     }
     else if (IsHoldEffectChoice(ctx.holdEffectAtk) && IsBattlerItemEnabled(battler))
     {
-        if ((GetMoveCategory(choicedMove) == DAMAGE_CATEGORY_STATUS || !CanMoveAffectTarget(&ctx)) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
+        if ((GetMoveCategory(choicedMove) == DAMAGE_CATEGORY_STATUS || !CanMoveAffectTarget(moveIndex, &ctx)) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
             return SetSwitchinAndSwitch(battler, PARTY_SIZE);
     }
 
