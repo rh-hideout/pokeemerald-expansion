@@ -1,5 +1,5 @@
-#ifndef GUARD_CONFIG_WILD_ENCOUNTER_OVERWORLD_H
-#define GUARD_CONFIG_WILD_ENCOUNTER_OVERWORLD_H
+#ifndef GUARD_CONFIG_WILD_ENCOUNTER_OW_H
+#define GUARD_CONFIG_WILD_ENCOUNTER_OW_H
 
 // Vanilla
 #define WE_VANILLA_RANDOM                   TRUE    // If TRUE, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
@@ -25,4 +25,4 @@
 
 // Should Move Other Configs?
 
-#endif // GUARD_CONFIG_WILD_ENCOUNTER_OVERWORLD_H
+#endif // GUARD_CONFIG_WILD_ENCOUNTER_OW_H

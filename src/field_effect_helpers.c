@@ -11,7 +11,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "trig.h"
-#include "wild_encounter_overworld.h"
+#include "wild_encounter_ow.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
 #include "constants/rgb.h"

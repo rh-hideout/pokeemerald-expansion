@@ -1,5 +1,5 @@
 #include "global.h"
-#include "wild_encounter_overworld.h"
+#include "wild_encounter_ow.h"
 #include "battle_setup.h"
 #include "battle_main.h"
 #include "battle_pike.h"

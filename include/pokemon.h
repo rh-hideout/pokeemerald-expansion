@@ -3,7 +3,7 @@
 
 #include "contest_effect.h"
 #include "sprite.h"
-#include "wild_encounter_overworld.h"
+#include "wild_encounter_ow.h"
 #include "constants/battle.h"
 #include "constants/cries.h"
 #include "constants/egg_ids.h"
