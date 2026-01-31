@@ -1,7 +1,3 @@
-#include "global.inc"
-#include "constants/items.h"
-#include "constants/flags.h"
-
 EntryMapFlag3_MapScripts::
 	.byte 0
 
@@ -116,3 +112,5 @@ EntryMapFlag3_EventScript_DebugCheatStart::
 
 EntryMapFlag3_Text_DebugCheatDone:
 	.string "Debug loot granted.$"
+
+

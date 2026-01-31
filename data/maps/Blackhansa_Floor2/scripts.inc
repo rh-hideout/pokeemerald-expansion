@@ -143,7 +143,7 @@ Blackhansa_Floor2_Text_Choice1:
 
 Blackhansa_Floor2_Text_Choice2:
 	.string "B: Please can you help me? I am \n"
-	.string "looking for a maintenance port.\"$"
+	.string "looking for a maintenance port.$"
 
 @ Reaktionen
 Blackhansa_Floor2_Text_Answer1_Response:
@@ -169,4 +169,7 @@ Blackhansa_Floor2_Text_Servers_Success:
 	.string "the server and hide it among all\p"
 	.string "the cables. Traffic is now being\n"
 	.string "recorded and sent.$"
+
+
+
 
