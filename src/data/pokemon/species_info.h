@@ -291,25 +291,25 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .frontAnimId = ANIM_SHAKE_GLOW_WHITE_SLOW,
         .frontAnimDelay = 15,
         .enemyMonElevation = 6,
-        .backPic = gMonBackPic_Suneon,
+        .backPic = gMonBackPic_Jolteon,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_TTRIANGLE_DOWN,
-        .palette = gMonPalette_Suneon,
-        .shinyPalette = gMonShinyPalette_Suneon,
-        .iconSprite = gMonIcon_Suneon,
+        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .palette = gMonPalette_Jolteon,
+        .shinyPalette = gMonShinyPalette_Jolteon,
+        .iconSprite = gMonIcon_Jolteon,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 2, SHADOW_SIZE_M)
-        FOOTPRINT(Suneon)
+        FOOTPRINT(Jolteon)
         OVERWORLD(
-            sPicTable_Suneon,
+            sPicTable_Jolteon,
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
             sAnimTable_Following,
-            gOverworldPalette_Suneon,
-            gShinyOverworldPalette_Suneon
+            gOverworldPalette_Jolteon,
+            gShinyOverworldPalette_Jolteon
         )
         .levelUpLearnset = sSuneonLevelUpLearnset,
         .teachableLearnset = sSuneonTeachableLearnset,
