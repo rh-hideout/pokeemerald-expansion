@@ -41,13 +41,38 @@
 #define OWE_INVALID_ROAMER_OUTBREAK     OWE_MASS_OUTBREAK_INDEX + 1
 #define OWE_MAX_ROAMERS                 UINT8_MAX - 2
 
+#define OWE_FLAG_BIT                    (1 << 7)
+#define OWE_SAVED_MOVEMENT_STATE_FLAG   OWE_FLAG_BIT
+#define OWE_NO_DESPAWN_FLAG             OWE_FLAG_BIT
+
+#define OWE_MAX_SPAWNS                  4
+#define OWE_SPAWN_DISTANCE_LAND         1   // A spawn cannot happen within this many tiles of the player position.
+#define OWE_SPAWN_DISTANCE_WATER        3   // A spawn cannot happen within this many tiles of the player position (while surfing).
+#define OWE_TOTAL_SPAWN_WIDTH           15  // Width of the on-screen spawn area in tiles.
+#define OWE_TOTAL_SPAWN_HEIGHT          9   // Height of the on-screen spawn area in tiles.
+#define OWE_SPAWN_RADUIS_WIDTH          (OWE_TOTAL_SPAWN_WIDTH - 1) / 2     // Distance from center to left/right edge (not including center).
+#define OWE_SPAWN_RADUIS_HEIGHT         (OWE_TOTAL_SPAWN_HEIGHT - 1) / 2    // Distance from center to top/bottom edge (not including center).
+
+#define OWE_SPAWN_TIME_MINIMUM          30  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
+#define OWE_SPAWN_TIME_PER_ACTIVE       30  // The number of frames that will be added to the countdown per currently active spawn.
+#define OWE_SPAWN_TIME_REPLACEMENT      240 // The number of frames before an existing spawn will be replaced with a new one (requires OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT).
+
+#define OWE_MON_SIGHT_WIDTH             3
+#define OWE_MON_SIGHT_LENGTH            4
+#define OWE_CHASE_RANGE                 5
+
+#define OWE_NO_ENCOUNTER_SET            0xFF
+#define OWE_INVALID_SPAWN_SLOT          0xFF
+#define OWE_RESTORED_MOVEMENT_FUNC_ID   10
+
 #if OWE_WILD_ENCOUNTERS_OVERWORLD == TRUE && ROAMER_COUNT >= OWE_MAX_ROAMERS
 #error "ROAMER_COUNT needs to be less than OWE_MAX_ROAMERS due to it being stored in the u8 field warpArrowSpriteId"
 #endif
 
-#define OWE_FLAG_BIT                    (1 << 7)
-#define OWE_SAVED_MOVEMENT_STATE_FLAG   OWE_FLAG_BIT
-#define OWE_NO_DESPAWN_FLAG             OWE_FLAG_BIT
+#if OW_POKEMON_OBJECT_EVENTS == FALSE && OWE_WILD_ENCOUNTERS_OVERWORLD == TRUE
+#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OWE_WILD_ENCOUNTERS_OVERWORLD to work."
+#endif
+
 
 static inline u32 OWE_GetRoamerIndex(const struct ObjectEvent *object)
 {
@@ -155,7 +180,7 @@ void UpdateOverworldEncounters(void)
     }
 
     u16 spawnSlot = NextSpawnMonSlot();
-    if (LURE_STEP_COUNT && spawnSlot != INVALID_SPAWN_SLOT
+    if (LURE_STEP_COUNT && spawnSlot != OWE_INVALID_SPAWN_SLOT
         && (GetNumberActiveOverworldEncounters(OWE_GENERATED) < OWE_MAX_SPAWNS))
     {
         OverworldWildEncounter_SetMinimumSpawnTimer();
@@ -170,7 +195,7 @@ void UpdateOverworldEncounters(void)
         return;
 
     s16 x, y;
-    if (spawnSlot == INVALID_SPAWN_SLOT
+    if (spawnSlot == OWE_INVALID_SPAWN_SLOT
         || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters())
         || !TrySelectTile(&x, &y))
     {
@@ -391,7 +416,7 @@ u32 GetOldestSlot(bool32 forceRemove)
     }
 
     if (spawnSlot >= OWE_MAX_SPAWNS)
-        return INVALID_SPAWN_SLOT;
+        return OWE_INVALID_SPAWN_SLOT;
 
     for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
     {
@@ -417,12 +442,12 @@ static u8 NextSpawnMonSlot(void)
         {
             // Cycle through so we remove the oldest mon first
             spawnSlot = GetOldestSlot(FALSE);
-            if (spawnSlot == INVALID_SPAWN_SLOT)
-                return INVALID_SPAWN_SLOT;
+            if (spawnSlot == OWE_INVALID_SPAWN_SLOT)
+                return OWE_INVALID_SPAWN_SLOT;
         }
         else
         {
-            return INVALID_SPAWN_SLOT;
+            return OWE_INVALID_SPAWN_SLOT;
         }
     }
     else
@@ -876,27 +901,30 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     If none of these checks succeed, speciesId is set to SPECIES_NONE and FALSE is returned.
     */
 
-    if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist() && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
+    if (*indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
     {
-        *indexRoamerOutbreak = OWE_GetObjectRoamerStatusFromIndex(gEncounteredRoamerIndex);
-    }
-    else if (OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
-    {
-        CreateWildMon(gWildFeebas.species, ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING));
-        if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN)
-            OWE_SetNoDespawnFlag(level);
-    }
-    else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior) && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
-    {
-        SetUpMassOutbreakEncounter(0);
-        *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
-    }
-    else if (!TryGenerateWildMon(wildMonInfo, wildArea, 0))
-    {
-        return FALSE;
+        if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist())
+        {
+            *indexRoamerOutbreak = OWE_GetObjectRoamerStatusFromIndex(gEncounteredRoamerIndex);
+        }
+        else if (OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
+        {
+            CreateWildMon(gWildFeebas.species, ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING));
+            if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN)
+                OWE_SetNoDespawnFlag(level);
+        }
+        else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
+        {
+            SetUpMassOutbreakEncounter(0);
+            *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
+        }
+        else
+        {
+            return TryGenerateWildMon(wildMonInfo, wildArea, 0);
+        }
     }
 
-    return TRUE;
+    return TryGenerateWildMon(wildMonInfo, wildArea, 0);
 }
 
 static bool8 IsSafeToSpawnObjectEvents(void)
@@ -1060,7 +1088,7 @@ u32 RemoveOldestGeneratedOverworldEncounter(void)
 {
     u32 oldestSlot = GetOldestSlot(TRUE);
 
-    if (oldestSlot == INVALID_SPAWN_SLOT)
+    if (oldestSlot == OWE_INVALID_SPAWN_SLOT)
         return OBJECT_EVENTS_COUNT;
 
     u32 objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(oldestSlot));
