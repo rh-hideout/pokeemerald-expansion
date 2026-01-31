@@ -1,6 +1,3 @@
-#include "asm/macros/event.inc"
-
-
 PetalburgCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, PetalburgCity_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, PetalburgCity_OnFrame
@@ -719,6 +716,7 @@ PetalburgCity_EventScript_GuardCatcher::
 	@ Teleport auf Koordinaten (x=13, y=13) innerhalb PetalburgCity
 	warpteleport MAP_PETALBURG_CITY, 13, 13
 	waitstate
+	release
 	end
 
 PetalburgCity_Text_GuardStop:
@@ -765,46 +763,51 @@ PetalburgCity_Text_GuardAllow:
 
 
 
+PetalburgCity_EventScript_BlackhansaEntranceTile::
+	lockall
 
-PetalburgCity_EventScript_LockedDoor::
-    lockall
-    applymovement LOCALID_PLAYER, PetalburgCity_Movement_FaceLeft
-    waitmovement 0
+	@ Wenn bereits freigeschaltet: immer rein
+	goto_if_set FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED, PetalburgCity_BlackhansaEntrance_Warp
 
-    goto_if_set FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED, PetalburgCity_LockedDoor_GoThrough
+	@ Noch nicht freigeschaltet -> Lockpicks prüfen
+	checkitem ITEM_LOCKPICK_SET, 1
+	compare VAR_RESULT, TRUE
+	goto_if_eq PetalburgCity_BlackhansaEntrance_Unlock
 
-    checkitem ITEM_LOCKPICK_SET, 1
-    goto_if_eq VAR_RESULT, TRUE, PetalburgCity_LockedDoor_Unlock
+	msgbox PetalburgCity_Text_DoorLocked, MSGBOX_DEFAULT
+	releaseall
+	end
 
-    msgbox PetalburgCity_Text_DoorLocked, MSGBOX_DEFAULT
-    releaseall
-    end
+PetalburgCity_BlackhansaEntrance_Unlock:
+	removeitem ITEM_LOCKPICK_SET, 1
+	msgbox PetalburgCity_Text_UseLockpick, MSGBOX_DEFAULT
+	setflag FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED
+	@ fallthrough
 
-PetalburgCity_LockedDoor_Unlock:
-    msgbox PetalburgCity_Text_UseLockpick, MSGBOX_DEFAULT
-    setflag FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED
+PetalburgCity_BlackhansaEntrance_Warp:
+	@ dauerhaftes Ziel: Blackhansa_Floor1 x23 y5
+	warpdoor MAP_BLACKHANSA_FLOOR1, 23, 5
+	waitstate
 
-    warpdoor MAP_YOUR_DEST_MAP, 0
-    waitstate
-    releaseall
-    end
+	@ nach dem Port: Blick nach links
+	applymovement LOCALID_PLAYER, PetalburgCity_Movement_PlayerFaceLeft
+	waitmovement 0
 
-PetalburgCity_LockedDoor_GoThrough:
-    warpdoor MAP_YOUR_DEST_MAP, 0
-    waitstate
-    releaseall
-    end
+	releaseall
+	end
 
-PetalburgCity_Movement_FaceLeft::
-    face_left
-    step_end
+PetalburgCity_Movement_PlayerFaceLeft::
+	face_left
+	step_end
 
 PetalburgCity_Text_DoorLocked:
-    .string "This door is locked, but it has a lock.\n"
-    .string "Maybe I can open it with the right tools.$"
+	.string "This door is locked, but it has a\n"
+	.string "lock. Maybe I can open it with the\p"
+	.string "right tools.$"
 
 PetalburgCity_Text_UseLockpick:
-    .string "You use the lockpicking set and open the door.$"
+	.string "You use the lockpicking set and\n"
+	.string "open the door.$"
 
 
 
@@ -821,13 +824,13 @@ PetalburgCity_Text_BlackhansaSign:
 	.string "BLACKHANSA COMPANY$"
 
 
-PetalburgCity_EventScript_LockedDoor::
-	msgbox PetalburgCity_Text_LockedDoor, MSGBOX_SIGN
+PetalburgCity_EventScript_LockedDoorMsg::
+	msgbox PetalburgCity_Text_LockedDoorMsg, MSGBOX_SIGN
 	end
 
-PetalburgCity_Text_LockedDoor:
+PetalburgCity_Text_LockedDoorMsg:
 	.string "This door is locked and has\n"
-	.string "no lock on the outside.".$"
+	.string "no lock on the outside.$"
 
 
 
@@ -897,3 +900,4 @@ PetalburgCity_Text_ImLookingForTalentedTrainers:
 	.string "I'm roaming the land in search of\n"
 	.string "talented TRAINERS.\p"
 	.string "I'm sorry to have taken your time.$"
+

@@ -16,20 +16,6 @@
   "object_events": [],
   "warp_events": [
     {
-      "x": 24,
-      "y": 5,
-      "elevation": 0,
-      "dest_map": "MAP_PETALBURG_CITY",
-      "dest_warp_id": "5"
-    },
-    {
-      "x": 24,
-      "y": 6,
-      "elevation": 0,
-      "dest_map": "MAP_PETALBURG_CITY",
-      "dest_warp_id": "5"
-    },
-    {
       "x": 7,
       "y": 1,
       "elevation": 0,
@@ -37,6 +23,25 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 24,
+      "y": 6,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "Blackhansa_Floor1_EventScript_ReturnToPetalburg"
+    },
+    {
+      "type": "trigger",
+      "x": 24,
+      "y": 5,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "Blackhansa_Floor1_EventScript_ReturnToPetalburg"
+    }
+  ],
   "bg_events": []
 }

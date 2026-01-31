@@ -236,13 +236,6 @@
       "elevation": 0,
       "dest_map": "MAP_PETALBURG_CITY_MART",
       "dest_warp_id": "0"
-    },
-    {
-      "x": 24,
-      "y": 7,
-      "elevation": 0,
-      "dest_map": "MAP_PETALBURG_CITY",
-      "dest_warp_id": "0"
     }
   ],
   "coord_events": [
@@ -343,7 +336,7 @@
       "elevation": 0,
       "var": "VAR_TEMP_1",
       "var_value": "0",
-      "script": "PetalburgCity_EventScript_LockedDoor"
+      "script": "PetalburgCity_EventScript_BlackhansaEntranceTile"
     }
   ],
   "bg_events": [
@@ -417,7 +410,7 @@
       "y": 7,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "PetalburgCity_EventScript_LockedDoor"
+      "script": "PetalburgCity_EventScript_LockedDoorMsg"
     },
     {
       "type": "sign",
@@ -425,7 +418,7 @@
       "y": 7,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "PetalburgCity_EventScript_LockedDoor"
+      "script": "PetalburgCity_EventScript_LockedDoorMsg"
     }
   ]
 }
