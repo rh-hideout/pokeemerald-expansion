@@ -371,14 +371,14 @@ void AnimTask_InitAttackerFadeFromInvisible(u8 taskId)
 
 static void AnimUnusedBagSteal(struct Sprite *sprite)
 {
-    sprite->data[1] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
-    sprite->data[3] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->data[0] = 0x7E;
-    InitSpriteDataForLinearTranslation(sprite);
-    sprite->data[3] = -sprite->data[1];
-    sprite->data[4] = -sprite->data[2];
+    sprite->sInputStartX_lt = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputEndX_lt = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lt = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sInputEndY_lt = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sDuration_lt = 0x7E;
+    InitSpriteLinearTranslation(sprite);
+    sprite->data[3] = -sprite->sXIncrement_lt;
+    sprite->data[4] = -sprite->sYIncrement_lt;
     sprite->data[6] = 0xFFD8;
     sprite->callback = AnimUnusedBagSteal_Step;
     sprite->callback(sprite);
@@ -482,18 +482,18 @@ void AnimTearDrop(struct Sprite *sprite)
         break;
     }
 
-    sprite->data[0] = 32;
-    sprite->data[2] = sprite->x + xOffset;
-    sprite->data[4] = sprite->y + 12;
-    sprite->data[5] = -12;
+    sprite->sDuration_lti = 32;
+    sprite->sInputEndX_lti = sprite->x + xOffset;
+    sprite->sInputEndY_lti = sprite->y + 12;
+    sprite->sArcAmplitude_ati = -12;
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimTearDrop_Step;
 }
 
 static void AnimTearDrop_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroySpriteAndMatrix(sprite);
 }
 

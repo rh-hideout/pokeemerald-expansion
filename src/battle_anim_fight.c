@@ -602,20 +602,20 @@ static void AnimFistOrFootRandomPos_Step(struct Sprite *sprite)
 static void AnimCrossChopHand(struct Sprite *sprite)
 {
     InitSpritePosToAnimTarget(sprite, TRUE);
-    sprite->data[0] = 30;
+    sprite->sDuration_lti = 30;
 
     if (gBattleAnimArgs[2] == 0)
     {
-        sprite->data[2] = sprite->x - 20;
+        sprite->sInputEndX_lti = sprite->x - 20;
     }
     else
     {
-        sprite->data[2] = sprite->x + 20;
+        sprite->sInputEndX_lti = sprite->x + 20;
         sprite->hFlip = 1;
     }
 
-    sprite->data[4] = sprite->y - 20;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->sInputEndY_lti = sprite->y - 20;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, AnimCrossChopHand_Step);
 }
 
@@ -623,15 +623,15 @@ static void AnimCrossChopHand_Step(struct Sprite *sprite)
 {
     if (++sprite->data[5] == 11)
     {
-        sprite->data[2] = sprite->x - sprite->x2;
-        sprite->data[4] = sprite->y - sprite->y2;
-        sprite->data[0] = 8;
+        sprite->sInputEndX_lti = sprite->x - sprite->x2;
+        sprite->sInputEndY_lti = sprite->y - sprite->y2;
+        sprite->sDuration_lti = 8;
         sprite->x += sprite->x2;
         sprite->y += sprite->y2;
         sprite->y2 = 0;
         sprite->x2 = 0;
 
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     }
 }
@@ -640,20 +640,20 @@ static void AnimCrossChopHand_Step(struct Sprite *sprite)
 static void AnimSlidingKick(struct Sprite *sprite)
 {
     if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget && GetBattlerPosition(gBattleAnimTarget) < B_POSITION_PLAYER_RIGHT)
-        gBattleAnimArgs[0] *= -1;
+        gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] *= -1;
 
     InitSpritePosToAnimTarget(sprite, TRUE);
 
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x + gBattleAnimArgs[2];
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = sprite->y;
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = sprite->x + gBattleAnimArgs[2];
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = sprite->y;
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
 
     sprite->data[5] = gBattleAnimArgs[5];
     sprite->data[6] = gBattleAnimArgs[4];
@@ -664,7 +664,7 @@ static void AnimSlidingKick(struct Sprite *sprite)
 
 static void AnimSlidingKick_Step(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->y2 += Sin(sprite->data[7] >> 8, sprite->data[5]);
         sprite->data[7] += sprite->data[6];
@@ -717,11 +717,11 @@ static void AnimStompFoot_Step(struct Sprite *sprite)
 {
     if (--sprite->data[0] == -1)
     {
-        sprite->data[0] = 6;
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->sDuration_lti = 6;
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, AnimStompFoot_End);
     }
 }
@@ -891,15 +891,15 @@ static void AnimSuperpowerOrb_Step(struct Sprite *sprite)
     {
         SetGpuReg(REG_OFFSET_BLDCNT, 0);
 
-        sprite->data[0] = 16;
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = GetBattlerSpriteCoord(sprite->data[7], BATTLER_COORD_X_2);
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = GetBattlerSpriteCoord(sprite->data[7], BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->sDuration_lti = 16;
+        sprite->sInputStartX_lti = sprite->x;
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(sprite->data[7], BATTLER_COORD_X_2);
+        sprite->sInputStartY_lti = sprite->y;
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(sprite->data[7], BATTLER_COORD_Y_PIC_OFFSET);
 
-        InitAnimLinearTranslation(sprite);
+        InitSpriteLinearTranslationIterator(sprite);
         StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
-        sprite->callback = AnimTranslateLinear_WithFollowup;
+        sprite->callback = TranslateSpriteLinear_FromIterator;
     }
 }
 
@@ -987,15 +987,15 @@ void AnimSuperpowerFireball(struct Sprite *sprite)
     else if (IsOnPlayerSide(battler))
         sprite->oam.matrixNum |= (ST_OAM_HFLIP | ST_OAM_VFLIP);
 
-    sprite->data[0] = 16;
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2);
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(battler, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sDuration_lti = 16;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(battler, BATTLER_COORD_Y_PIC_OFFSET);
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = AnimTranslateLinear_WithFollowup;
+    sprite->callback = TranslateSpriteLinear_FromIterator;
 }
 
 static void AnimArmThrustHit_Step(struct Sprite *sprite)
