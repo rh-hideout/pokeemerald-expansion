@@ -1193,7 +1193,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 {
     // The only automatically interacts with an OW Encounter when;
     // Not using a repel or the DexNav is inactive.
-    if (REPEL_STEP_COUNT || FlagGet(DN_FLAG_SEARCHING))
+    if (!WE_OWE_REPEL_DEXNAV_COLLISION && (REPEL_STEP_COUNT || FlagGet(DN_FLAG_SEARCHING)))
         return;
 
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle, OWE_ANY));

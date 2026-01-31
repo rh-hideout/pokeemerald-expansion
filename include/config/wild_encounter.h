@@ -21,6 +21,7 @@
 #define WE_OWE_PREVENT_SHINY_DESPAWN        FALSE   // If TRUE, shiny OW Pokémon objects will not be despawned when off-screen if on the same map as the player, or be replaced if WE_OWE_SPAWN_REPLACEMENT is TRUE.
 #define WE_OWE_PREVENT_FEEBAS_DESPAWN       FALSE   // If TRUE, Feebas OW objects spawned from special Feebas fishing spots (when WE_OWE_FEEBAS_SPOTS is TRUE) will not be despawned when off-screen if on the same map as the player, or be replaced if WE_OWE_SPAWN_REPLACEMENT is TRUE.
 #define WE_OWE_DESPAWN_ON_ENTER_TOWN        TRUE    // If TRUE, despawns all OW wild encounter objects upon entering a city or town (MAP_TYPE_TOWN or MAP_TYPE_CITY).
+#define WE_OWE_REPEL_DEXNAV_COLLISION       FALSE   // If TRUE, overworld wild encounters can still be triggered by a collision if a Repel or the DexNav is active.
 
 // Should Move Other Configs?
 
