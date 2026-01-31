@@ -65,6 +65,8 @@
 #define OWE_INVALID_SPAWN_SLOT          0xFF
 #define OWE_RESTORED_MOVEMENT_FUNC_ID   10
 
+#define OWE_LURE_SPAWN_TIME             0
+
 #if WE_OW_ENCOUNTERS == TRUE && ROAMER_COUNT >= OWE_MAX_ROAMERS
 #error "ROAMER_COUNT needs to be less than OWE_MAX_ROAMERS due to it being stored in the u8 field warpArrowSpriteId"
 #endif
@@ -179,13 +181,7 @@ void UpdateOverworldEncounters(void)
         OverworldWildEncounter_SetMinimumSpawnTimer();
     }
 
-    u16 spawnSlot = NextSpawnMonSlot();
-    if (LURE_STEP_COUNT && spawnSlot != OWE_INVALID_SPAWN_SLOT
-        && (GetNumberActiveOverworldEncounters(OWE_GENERATED) < OWE_MAX_SPAWNS))
-    {
-        OverworldWildEncounter_SetMinimumSpawnTimer();
-    }
-    else if (sOWESpawnCountdown)
+    if (sOWESpawnCountdown)
     {
         sOWESpawnCountdown--;
         return;
@@ -194,6 +190,7 @@ void UpdateOverworldEncounters(void)
     if (!IsSafeToSpawnObjectEvents())
         return;
 
+    u16 spawnSlot = NextSpawnMonSlot();
     s16 x, y;
     if (spawnSlot == OWE_INVALID_SPAWN_SLOT
         || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters())
@@ -259,6 +256,8 @@ static void OWE_SetNewSpawnCountdown(void)
 
     if (WE_OWE_SPAWN_REPLACEMENT && numActive >= OWE_MAX_SPAWNS)
         sOWESpawnCountdown = OWE_SPAWN_TIME_REPLACEMENT;
+    else if (LURE_STEP_COUNT && numActive < OWE_MAX_SPAWNS)
+        sOWESpawnCountdown = OWE_LURE_SPAWN_TIME;
     else
         sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM + (OWE_SPAWN_TIME_PER_ACTIVE * numActive);
 }
@@ -804,6 +803,9 @@ u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, boo
 void OverworldWildEncounter_SetMinimumSpawnTimer(void)
 {
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+    
+    if (LURE_STEP_COUNT && GetNumberActiveOverworldEncounters(OWE_GENERATED) < OWE_MAX_SPAWNS)
+        sOWESpawnCountdown = OWE_LURE_SPAWN_TIME;
 }
 
 static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
