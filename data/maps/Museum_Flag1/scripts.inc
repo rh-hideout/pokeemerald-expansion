@@ -38,17 +38,22 @@
 
 
 Museum_Flag1_MapScripts::
+    map_script MAP_SCRIPT_ON_LOAD, Museum_Flag1_OnLoad
     map_script MAP_SCRIPT_ON_TRANSITION, Museum_Flag1_OnTransition
     map_script MAP_SCRIPT_ON_FRAME_TABLE, Museum_Flag1_OnFrame
     .byte 0
 
-
-Museum_Flag1_OnTransition:
-    @ Tür anwenden, falls schon geöffnet
+Museum_Flag1_OnLoad:
     goto_if_set FLAG_CTF_MUSEUM_DOOR_OPEN, 1f
-    goto 2f
+    end
 1:
     call Museum_Flag1_EventScript_ApplyDoorOpen
+    end
+
+
+Museum_Flag1_OnTransition:
+    goto 2f
+1:
 2:
     call Museum_Flag1_SyncState
 

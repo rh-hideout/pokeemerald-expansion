@@ -575,3 +575,11 @@ leafgreen: all
 # Symbol file (`make syms`)
 $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
+
+
+
+graphics/object_events/pics/people/jessie.4bpp: graphics/object_events/pics/people/jessie.png
+	tools/gbagfx/gbagfx $< $@ -mwidth 2 -mheight 4
+
+graphics/object_events/pics/people/james.4bpp: graphics/object_events/pics/people/james.png
+	tools/gbagfx/gbagfx $< $@ -mwidth 2 -mheight 4
