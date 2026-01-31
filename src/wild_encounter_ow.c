@@ -225,7 +225,7 @@ void UpdateOverworldEncounters(void)
         .elevation = MapGridGetElevationAt(x, y),
         .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
         .trainerType = TRAINER_TYPE_OW_WILD_ENCOUNTER,
-        .script = InteractWithDynamicWildOverworldEncounter,
+        .script = InteractWithDynamicOverworldWildEncounter,
     };
     u32 objectEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
@@ -1105,7 +1105,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
         return FALSE;
 
     if (IsOverworldWildEncounter(object, OWE_MANUAL)
-        && GetObjectEventScriptPointerByObjectEventId(objectEventId) != InteractWithDynamicWildOverworldEncounter
+        && GetObjectEventScriptPointerByObjectEventId(objectEventId) != InteractWithDynamicOverworldWildEncounter
         && GetObjectEventScriptPointerByObjectEventId(objectEventId) != NULL)
         return FALSE;
 
@@ -1641,7 +1641,7 @@ void OWE_StartEncounter(struct ObjectEvent *mon)
     if (mon->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_DOWN && mon->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_RIGHT)
         ClearObjectEventMovement(mon, &gSprites[mon->spriteId]);
 
-    ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
+    ScriptContext_SetupScript(InteractWithDynamicOverworldWildEncounter);
 }
 
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent)

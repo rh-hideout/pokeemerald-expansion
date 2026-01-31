@@ -55,7 +55,7 @@ enum __attribute__((packed)) OverworldEncounterBehaviors
     OWE_SPECIES_BEHAVIOR_COUNT
 };
 
-extern const u8 InteractWithDynamicWildOverworldEncounter[];
+extern const u8 InteractWithDynamicOverworldWildEncounter[];
 
 void UpdateOverworldEncounters(void);
 u32 GetOldestSlot(bool32 forceRemove);

@@ -407,7 +407,7 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
     else if (ShouldRunOverworldEncounterScript(objectEventId))
-        script = InteractWithDynamicWildOverworldEncounter;
+        script = InteractWithDynamicOverworldWildEncounter;
     else
         script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
 
@@ -637,7 +637,7 @@ static const u8 *GetInteractedWaterScript(struct MapPosition *position, u8 metat
     if (IsPlayerFacingSurfableFishableWater() == TRUE && ShouldRunOverworldEncounterScript(objectEventId))
     {
         gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
-        return InteractWithDynamicWildOverworldEncounter;
+        return InteractWithDynamicOverworldWildEncounter;
     }
 
     if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
