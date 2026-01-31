@@ -33,8 +33,17 @@ Special spawns can be one of three types, in decreasing priority: A Roamer, Feeb
 > OWE_MAX_ROAMERS
 
 ### Restricted Despawning
+There are three configs that can be used to restrict the despawning of Generated OWEs.
+
+- If `WE_OWE_PREVENT_SHINY_DESPAWN` is set to `TRUE`, any Generated OWE that spawns as shiny will not be despawned if they go outside of the viewable area. They can still be despawned off-screen if the player goes to another map. This config also ensures that shiny Generated OWEs will never be despawned and replaced if `WE_OWE_SPAWN_REPLACEMENT` is `TRUE`.
+- If `WE_OWE_PREVENT_FEEBAS_DESPAWN` is set to `TRUE`, any Generated OWE that is a Feebas spawned from a Feebas fishing spot will follow the same rules as `WE_OWE_PREVENT_SHINY_DESPAWN` above.
+- If `WE_OWE_DESPAWN_ON_ENTER_TOWN` is set to `TRUE`, all Generated OWEs will be instantly despawned upon the player crossing a map connection into a map with a map type of either `MAP_TYPE_TOWN` or `MAP_TYPE_CITY`, like what happens in Scarlet/Violet.
+
+None of these three configs can prevent the forceful despawning of OWEs to free up limited resources, as is explained in the next section.
+
+
 ## High Priority and Low Priority OWEs
-Low Priority OWEs may not be spawned or even be destroyed in certain situations. There are palettes and object tiles checks to prevent these from spawning if it would fail, as well as similar checks for number of event objects, palettes and object tiles. These checks will despawn the oldest of Low Priority OWEs when other objects event are attempting to be spawned and Low Priority OWEs are using these resources. Low Priority OWEs may also be destroyed by NPC object events colliding with them due to their movement functions or them being in the way of a trainer interaction. High priority OWEs are treated as regular objects and will not be destroyed in the ways outlined above, but may cause the destruction of Generated OWEs and will not face spawning restrictions.
+Low Priority OWEs may not be spawned or even be destroyed in certain situations. There are palettes and object tiles checks to prevent these from spawning if it would fail, as well as similar checks for number of event objects, palettes and object tiles. These checks will despawn the oldest of Low Priority OWEs when other objects event are attempting to be spawned and Low Priority OWEs are using these resources. Low Priority OWEs may also be destroyed by NPC object events colliding with them due to their movements or the OWE being in the way of a trainer interaction. High priority OWEs are treated as regular objects and will not be destroyed in the ways outlined above, but may cause the destruction of Generated OWEs and will not face spawning restrictions.
 These despawn conditions will overwrite the restrictive despawns mentioned above.
 > Is this true? Does it take the oldest or oldest not marked for restriction, what if all are marked to not despawn.
 
