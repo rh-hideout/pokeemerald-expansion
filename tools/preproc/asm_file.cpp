@@ -38,6 +38,7 @@ AsmFile::AsmFile(std::string filename, bool isStdin, bool doEnum) : m_filename(f
     m_lineNum = 1;
     m_lineStart = 0;
 
+    ConsumeLineSkip();
     RemoveComments();
 }
 
@@ -114,28 +115,37 @@ void AsmFile::RemoveComments()
                 }
             }
         }
-        // line skip
-        else if (m_buffer[pos] == '\\')
-        {
-            // skip whitespace
-            int i = pos + 1;
-            while (m_buffer[i] == ' ')
-                i++;
-
-            if (m_buffer[i] == '\n')
-            {
-                m_buffer[pos] = ' ';
-                m_buffer[i] = ' ';
-            }
-
-            pos = i + 1;
-        }
         else
         {
             if (m_buffer[pos] == '"' || m_buffer[pos] == '\'')
                 stringChar = m_buffer[pos];
             pos++;
         }
+    }
+}
+
+void AsmFile::ConsumeLineSkip()
+{
+    long pos = 0;
+
+    while (m_buffer[pos] != 0)
+    {
+        if (m_buffer[pos] == '\\')
+        {
+            long p = pos;
+            pos++;
+
+            while (m_buffer[pos] == ' ')
+                pos++;
+
+            if (m_buffer[pos] == '\n')
+            {
+                m_buffer[p] = ' ';
+                m_buffer[pos] = ' ';
+            }
+        }
+
+        pos++;
     }
 }
 
