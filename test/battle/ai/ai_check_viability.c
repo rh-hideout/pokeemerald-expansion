@@ -553,7 +553,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts")
 
 AI_DOUBLE_BATTLE_TEST("AI scores Order Up's stat boost only with Commander")
 {
-    u32 species = 0;
+    u32 species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     bool32 expectBoost = FALSE;
 
