@@ -35932,5 +35932,3 @@ static const u16 sSuneonTeachableLearnset[] = {
    MOVE_SOLAR_BEAM, //x
    MOVE_UNAVAILABLE, // This is required to determine where the array ends.
 };
-
-#endif
