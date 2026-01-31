@@ -221,7 +221,6 @@ void LoadObjectEvents(void)
     int i;
     u16 graphicsId;
 
-    OverworldWildEncounter_SetMinimumSpawnTimer();
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         gObjectEvents[i] = gSaveBlock1Ptr->objectEvents[i];
@@ -239,6 +238,7 @@ void LoadObjectEvents(void)
             gObjectEvents[i].graphicsId & OBJ_EVENT_MON)
             gObjectEvents[i].active = TRUE;
     }
+    OverworldWildEncounter_SetMinimumSpawnTimer();
 }
 
 void CopyPartyAndObjectsToSave(void)
