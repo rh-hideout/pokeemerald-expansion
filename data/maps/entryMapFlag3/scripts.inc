@@ -64,31 +64,8 @@ EntryMapFlag3_EventScript_DebugCheatStart::
 	additem ITEM_OLD_ROD, 1
 	additem ITEM_GOOD_ROD, 1
 	additem ITEM_SUPER_ROD, 1
-	additem ITEM_WAILMER_PAIL, 1
-	additem ITEM_DEVON_GOODS, 1
-	additem ITEM_LETTER, 1
 	additem ITEM_ITEMFINDER, 1
-	additem ITEM_POKENAV, 1
 	additem ITEM_TOWN_MAP, 1
-	additem ITEM_POKEBLOCK_CASE, 1
-	additem ITEM_COIN_CASE, 1
-	additem ITEM_SS_TICKET, 1
-	additem ITEM_GO_GOGGLES, 1
-	additem ITEM_DEVON_SCOPE, 1
-	additem ITEM_BASEMENT_KEY, 1
-	additem ITEM_STORAGE_KEY, 1
-	additem ITEM_SCANNER, 1
-	additem ITEM_MAGMA_EMBLEM, 1
-	additem ITEM_METEORITE, 1
-	additem ITEM_CONTEST_PASS, 1
-	additem ITEM_SOOT_SACK, 1
-
-
-	@ Event-/Story-Tickets (optional, aber oft praktisch fürs Testen)
-	additem ITEM_EON_TICKET, 1
-	additem ITEM_AURORA_TICKET, 1
-	additem ITEM_MYSTIC_TICKET, 1
-	additem ITEM_OLD_SEA_MAP, 1
 
 	@ Deine neuen Items
 	additem ITEM_RASPBERRY_PI, 1
