@@ -5860,7 +5860,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
     GetBestDmgMovesFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
 
     if (IsSheerForceAffected(move, aiData->abilities[battlerAtk])
-     && !(move == MOVE_ORDER_UP && gBattleStruct->battlerState[battlerAtk].commanderSpecies != SPECIES_NONE))
+     && !(MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_ORDER_UP) && gBattleStruct->battlerState[battlerAtk].commanderSpecies != SPECIES_NONE))
         return score;
 
     // check move additional effects that are likely to happen

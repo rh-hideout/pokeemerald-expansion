@@ -570,8 +570,6 @@ AI_DOUBLE_BATTLE_TEST("AI scores Order Up's stat boost only with Commander")
         OPPONENT(SPECIES_DONDOZO) { Moves(MOVE_ORDER_UP, MOVE_DRAGON_CLAW); }
     } WHEN {
         TURN {
-            MOVE(playerLeft, MOVE_CELEBRATE);
-            MOVE(playerRight, MOVE_CELEBRATE);
             if (expectBoost)
                 SCORE_GT(opponentRight, MOVE_ORDER_UP, MOVE_DRAGON_CLAW, target: playerLeft);
             else
