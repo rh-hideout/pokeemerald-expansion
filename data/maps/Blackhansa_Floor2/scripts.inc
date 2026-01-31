@@ -83,7 +83,6 @@ Blackhansa_Floor2_ServerTap_Success:
 	removeitem ITEM_RASPBERRY_PI, 1
     msgbox Blackhansa_Floor2_Text_Servers_Success, MSGBOX_DEFAULT
     setflag FLAG_BLACKHANSA_SERVER_TAP_DONE
-	removeobjectbyflag FLAG_BLACKHANSA_SERVER_TAP_DONE
     release
     end
 
@@ -139,7 +138,7 @@ Blackhansa_Floor2_Text_WhoAreYou:
 @ “Antwortmenü” via YES/NO Prompts
 Blackhansa_Floor2_Text_Choice1:
 	.string "A: I work in IT and have\n"
-	.string "to maintain the server.\"$"
+	.string "to maintain the server.$"
 
 Blackhansa_Floor2_Text_Choice2:
 	.string "B: Please can you help me? I am \n"
