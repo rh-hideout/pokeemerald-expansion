@@ -444,7 +444,7 @@ static u32 FindMonWithMoveOfEffectiveness(enum BattlerId battler, enum BattlerId
 static bool32 CanMoveAffectTarget(struct BattleContext *ctx)
 {
     if (ctx->move != MOVE_NONE
-        && gAiLogicData->effectiveness[ctx->battlerAtk][ctx->battlerDef][ctx->move] > UQ_4_12(0.0)
+        && AI_GetMoveEffectiveness(ctx->move, ctx->battlerAtk, ctx->battlerDef) > UQ_4_12(0.0)
         && !AI_CanMoveBeBlockedByTarget(ctx))
         return TRUE;
     return FALSE;
@@ -453,7 +453,7 @@ static bool32 CanMoveAffectTarget(struct BattleContext *ctx)
 static bool32 IsMoveBad(struct BattleContext *ctx)
 {
     if (CanMoveAffectTarget(ctx))
-        return TRUE;
+        return FALSE;
     if (!ALL_MOVES_BAD_STATUS_MOVES_BAD || GetMovePower(ctx->move) != 0) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
         return TRUE;
     return FALSE;
