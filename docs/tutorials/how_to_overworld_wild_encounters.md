@@ -53,4 +53,12 @@ Collision between Player and OWE or Interacting with one. Can also interact with
 ## Repel and Lure Behaviours
 ## OWE Behaviour Types
 ## OWE Movements
+While OWE objects can be given any movement type, there are several different custom movement types that were made specifically for OWEs:
+- The basic one is `MOVEMENT_TYPE_WANDER_AROUND_OWE`. All of the other OWE movement types start with this behavior and differentiate into other behavior when they notice the player. Similar to `MOVEMENT_TYPE_WANDER_AROUND`, the object will take steps in random directions at random intervals. The main difference here is that the object will never turn more than 90 degrees from their current facing direction when taking a step. OWEs with this movement type will completely ignore the player until they are directly collided/interacted with.
+- `MOVEMENT_TYPE_CHASE_PLAYER_OWE` will switch the OWE to chasing down the player when it notices the player. The OWE is still blocked by collision, but does have the intelligence to walk around small obstacles. They will go back to wandering if the player goes outside of their sight radius.
+- `MOVEMENT_TYPE_FLEE_PLAYER_OWE` will switch the OWE to fleeing from the player when it notices the player. They use the same pathfinding logic as `MOVEMENT_TYPE_CHASE_PLAYER_OWE`, but in the opposite direction from the player. They will go back to wandering if the player goes outside of their sight radius. If `WE_OWE_FLEE_DESPAWN` is set to `TRUE`, the fleeing OWE will despawn if it is unable to take a step for a short amount of time (ie, if they are cornered).
+- `MOVEMENT_TYPE_WATCH_PLAYER_OWE` will switch the OWE to stand in place and always face in the direction of the player's location when the player is noticed by it. They will go back to wandering if the player goes outside of their sight radius.
+- `MOVEMENT_TYPE_APPROACH_PLAYER_OWE` will switch the OWE to approach the player as if curious when it notices the player. The OWE will try to keep a one tile gap between itself and the player. They may also occasionally do an excited hop. They will go back to wandering if the player goes outside of their sight radius.
+- `MOVEMENT_TYPE_DESPAWN_OWE` will make the OWE do a very brief animation of surprise and then instantly despawn when it notices the player.
+
 ### Restricted Movements
