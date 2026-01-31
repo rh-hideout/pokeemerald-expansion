@@ -1,7 +1,7 @@
-#ifndef GUARD_OVERWORLD_ENCOUNTER_SPECIES_BEHAVIOR_H
-#define GUARD_OVERWORLD_ENCOUNTER_SPECIES_BEHAVIOR_H
+#ifndef GUARD_WILD_ENCOUNTER_OVERWORLD_SPECIES_BEHAVIOR_H
+#define GUARD_WILD_ENCOUNTER_OVERWORLD_SPECIES_BEHAVIOR_H
 
-#include "overworld_encounters.h"
+#include "wild_encounter_overworld.h"
 #include "constants/event_object_movement.h"
 
 static const struct OWESpeciesBehavior sOWESpeciesBehavior[OWE_SPECIES_BEHAVIOR_COUNT] =
@@ -65,4 +65,4 @@ static const struct OWESpeciesBehavior sOWESpeciesBehavior[OWE_SPECIES_BEHAVIOR_
     }
 };
 
-#endif // GUARD_OVERWORLD_ENCOUNTER_SPECIES_BEHAVIOR_H
+#endif // GUARD_WILD_ENCOUNTER_OVERWORLD_SPECIES_BEHAVIOR_H

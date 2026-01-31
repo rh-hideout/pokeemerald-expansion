@@ -1,5 +1,5 @@
 #include "global.h"
-#include "overworld_encounters.h"
+#include "wild_encounter_overworld.h"
 #include "battle_setup.h"
 #include "battle_main.h"
 #include "battle_pike.h"
@@ -55,7 +55,7 @@
 
 #define OWE_SPAWN_TIME_MINIMUM          30  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 #define OWE_SPAWN_TIME_PER_ACTIVE       30  // The number of frames that will be added to the countdown per currently active spawn.
-#define OWE_SPAWN_TIME_REPLACEMENT      240 // The number of frames before an existing spawn will be replaced with a new one (requires OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT).
+#define OWE_SPAWN_TIME_REPLACEMENT      240 // The number of frames before an existing spawn will be replaced with a new one (requires WE_OWE_SPAWN_REPLACEMENT).
 
 #define OWE_MON_SIGHT_WIDTH             3
 #define OWE_MON_SIGHT_LENGTH            4
@@ -65,12 +65,12 @@
 #define OWE_INVALID_SPAWN_SLOT          0xFF
 #define OWE_RESTORED_MOVEMENT_FUNC_ID   10
 
-#if OWE_WILD_ENCOUNTERS_OVERWORLD == TRUE && ROAMER_COUNT >= OWE_MAX_ROAMERS
+#if WE_OW_ENCOUNTERS == TRUE && ROAMER_COUNT >= OWE_MAX_ROAMERS
 #error "ROAMER_COUNT needs to be less than OWE_MAX_ROAMERS due to it being stored in the u8 field warpArrowSpriteId"
 #endif
 
-#if OW_POKEMON_OBJECT_EVENTS == FALSE && OWE_WILD_ENCOUNTERS_OVERWORLD == TRUE
-#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OWE_WILD_ENCOUNTERS_OVERWORLD to work."
+#if OW_POKEMON_OBJECT_EVENTS == FALSE && WE_OW_ENCOUNTERS == TRUE
+#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for WE_OW_ENCOUNTERS to work."
 #endif
 
 
@@ -160,11 +160,11 @@ void UpdateOverworldEncounters(void)
     if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING) || !OWE_CheckActiveEncounterTable(shouldSpawnWaterMons))
         return;
 
-    if (!OWE_WILD_ENCOUNTERS_OVERWORLD
+    if (!WE_OW_ENCOUNTERS
         || FlagGet(OW_FLAG_NO_ENCOUNTER)
         || FlagGet(DN_FLAG_SEARCHING)
-        || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !OWE_WILD_ENCOUNTERS_BATTLE_PIKE)
-        || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR && !OWE_WILD_ENCOUNTERS_BATTLE_PYRAMID)
+        || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !WE_OWE_BATTLE_PIKE)
+        || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR && !WE_OWE_BATTLE_PYRAMID)
         || InTrainerHillChallenge())
     {
         if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
@@ -257,7 +257,7 @@ static void OWE_SetNewSpawnCountdown(void)
 {
     u32 numActive = GetNumberActiveOverworldEncounters(OWE_GENERATED);
 
-    if (OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && numActive >= OWE_MAX_SPAWNS)
+    if (WE_OWE_SPAWN_REPLACEMENT && numActive >= OWE_MAX_SPAWNS)
         sOWESpawnCountdown = OWE_SPAWN_TIME_REPLACEMENT;
     else
         sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM + (OWE_SPAWN_TIME_PER_ACTIVE * numActive);
@@ -281,7 +281,7 @@ bool32 OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Object(u32 localId, u8 
 void OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Palette(void)
 {
     // Should have similar naming convention for these despawn functions based on Num Object Events, Pals & Tiles
-    if (OWE_WILD_ENCOUNTERS_OVERWORLD && CountFreePaletteSlots() < 2)
+    if (WE_OW_ENCOUNTERS && CountFreePaletteSlots() < 2)
     {
         u32 count = GetNumberActiveOverworldEncounters(OWE_GENERATED);
 
@@ -387,7 +387,7 @@ static void OWE_DoSpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animS
     if (!animSpawn && OWE_ShouldPlayMonFleeSound(objectEvent))
         PlaySE(SE_FLEE);
 
-    if (OWE_WILD_ENCOUNTERS_SHINY_SPARKLE && isShiny && animSpawn)
+    if (WE_OWE_SHINY_SPARKLE && isShiny && animSpawn)
     {
         PlaySE(SE_SHINY);
         spawnAnimType = OWE_SPAWN_ANIM_SHINY;
@@ -438,7 +438,7 @@ static u8 NextSpawnMonSlot(void)
     // All mon slots are in use
     if (GetNumberActiveOverworldEncounters(OWE_GENERATED) >= OWE_MAX_SPAWNS)
     {
-        if (OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
+        if (WE_OWE_SPAWN_REPLACEMENT)
         {
             // Cycle through so we remove the oldest mon first
             spawnSlot = GetOldestSlot(FALSE);
@@ -830,7 +830,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     else
         *isFemale = FALSE;
 
-    if ((OWE_WILD_ENCOUNTERS_PREVENT_SHINY_DESPAWN && *isShiny))
+    if ((WE_OWE_PREVENT_SHINY_DESPAWN && *isShiny))
         OWE_SetNoDespawnFlag(level);
 
     ZeroEnemyPartyMons();
@@ -907,10 +907,10 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
         {
             *indexRoamerOutbreak = OWE_GetObjectRoamerStatusFromIndex(gEncounteredRoamerIndex);
         }
-        else if (OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
+        else if (WE_OWE_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
         {
             CreateWildMon(gWildFeebas.species, ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING));
-            if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN)
+            if (WE_OWE_PREVENT_FEEBAS_DESPAWN)
                 OWE_SetNoDespawnFlag(level);
         }
         else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
@@ -1079,7 +1079,7 @@ u32 GetNewestOWEncounterLocalId(void)
 bool32 CanRemoveOverworldEncounter(u32 localId)
 {
     // Include a check for the encounter not being shiny or a roamer.
-    return (OWE_WILD_ENCOUNTERS_OVERWORLD && GetNumberActiveOverworldEncounters(OWE_GENERATED) != 0
+    return (WE_OW_ENCOUNTERS && GetNumberActiveOverworldEncounters(OWE_GENERATED) != 0
         && (localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWNS + 1)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
@@ -1233,7 +1233,7 @@ bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, enum Directi
     if (GetCollisionInDirection(objectEvent, direction))
         return TRUE;
 
-    if (OWE_CanAwareMonSeePlayer(objectEvent) && OWE_WILD_ENCOUNTERS_UNRESTRICT_SIGHT)
+    if (OWE_CanAwareMonSeePlayer(objectEvent) && WE_OWE_UNRESTRICT_SIGHT)
         return FALSE;
 
     s32 xCurrent = objectEvent->currentCoords.x;
@@ -1535,7 +1535,7 @@ static bool32 OWE_DoesRoamerObjectExist(void)
 
 static bool32 OWE_CheckRestrictMovementMetatile(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew)
 {
-    if (!OWE_WILD_ENCOUNTERS_RESTRICT_METATILE)
+    if (!WE_OWE_RESTRICT_METATILE)
         return FALSE;
     u32 metatileBehaviourCurrent = MapGridGetMetatileBehaviorAt(xCurrent, yCurrent);
     u32 metatileBehaviourNew = MapGridGetMetatileBehaviorAt(xNew, yNew);
@@ -1562,7 +1562,7 @@ static bool32 OWE_CheckRestrictMovementMetatile(s32 xCurrent, s32 yCurrent, s32 
 
 static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, s32 xNew, s32 yNew)
 {
-    if (!OWE_WILD_ENCOUNTERS_RESTRICT_MAP)
+    if (!WE_OWE_RESTRICT_MAP)
         return FALSE;
     
     if (objectEvent->mapGroup == gSaveBlock1Ptr->location.mapGroup
@@ -1586,7 +1586,7 @@ static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent)
     if (objectEvent->offScreen)
         return FALSE;
 
-    return OWE_WILD_ENCOUNTERS_DESPAWN_SOUND;
+    return WE_OWE_DESPAWN_SOUND;
 
 }
 
@@ -1614,11 +1614,11 @@ static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
 
 bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void)
 {
-    if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !OWE_WILD_ENCOUNTERS_BATTLE_PIKE)
-        || (CurrentBattlePyramidLocation() && !OWE_WILD_ENCOUNTERS_BATTLE_PYRAMID))
+    if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !WE_OWE_BATTLE_PIKE)
+        || (CurrentBattlePyramidLocation() && !WE_OWE_BATTLE_PYRAMID))
         return FALSE;
 
-    return !OWE_VANILLA_RANDOM_ENCOUNTERS;
+    return !WE_VANILLA_RANDOM;
 }
 
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
@@ -1626,7 +1626,7 @@ static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
     if (!IsOverworldWildEncounter(object, OWE_GENERATED))
         return FALSE;
 
-    return OWE_WILD_ENCOUNTERS_SPAWN_REPLACEMENT && GetNumberActiveOverworldEncounters(OWE_GENERATED) >= OWE_MAX_SPAWNS;
+    return WE_OWE_SPAWN_REPLACEMENT && GetNumberActiveOverworldEncounters(OWE_GENERATED) >= OWE_MAX_SPAWNS;
 }
 
 void OWE_StartEncounter(struct ObjectEvent *mon)
@@ -1717,7 +1717,7 @@ void OWE_ApproachForBattle(void)
 {
     u32 objectEventId = GetObjectEventIdByLocalId(gSpecialVar_LastTalked);
     struct ObjectEvent *objectEvent = &gObjectEvents[objectEventId];
-    if (!OWE_WILD_ENCOUNTERS_APPROACH_FOR_BATTLE || !IsOverworldWildEncounter(objectEvent, OWE_ANY))
+    if (!WE_OWE_APPROACH_FOR_BATTLE || !IsOverworldWildEncounter(objectEvent, OWE_ANY))
     {
         FreezeObjectEvent(objectEvent);
         return;
@@ -1847,13 +1847,13 @@ void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void)
     if (gMain.callback2 != CB2_Overworld)
         return;
 
-    if (!OWE_WILD_ENCOUNTERS_DESPAWN_ON_ENTER_TOWN)
+    if (!WE_OWE_DESPAWN_ON_ENTER_TOWN)
         return;
 
     if (gMapHeader.mapType != MAP_TYPE_CITY && gMapHeader.mapType != MAP_TYPE_TOWN)
         return;
 
-    if (OWE_WILD_ENCOUNTERS_DESPAWN_SOUND)
+    if (WE_OWE_DESPAWN_SOUND)
         PlaySE(SE_FLEE);
         
     RemoveAllOverworldWildEncounterObjects(OWE_ANY);
