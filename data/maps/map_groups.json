@@ -645,7 +645,9 @@
     "HowerClass"
   ],
   "gMapGroup_Flag3": [
-    "entryMapFlag3"
+    "entryMapFlag3",
+    "Blackhansa_Floor1",
+    "Blackhansa_Floor2"
   ],
   "gMapGroup_Flag4": [
     "entryMapFlag4"

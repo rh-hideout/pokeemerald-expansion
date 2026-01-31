@@ -15490,6 +15490,58 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+
+    // CTF ITEMS START HERE
+
+    [ITEM_RASPBERRY_PI] =
+    {
+        .name = ITEM_NAME("Raspberry Pi"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A small computer\n"
+            "for various\n"
+            "tasks."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_LiftKey,
+        .iconPalette = gItemIconPalette_Key,
+    },
+
+    [ITEM_LOCKPICK_SET] =
+    {
+        .name = ITEM_NAME("Lockpick Set"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A set of tools\n"
+            "to unlock\n"
+            "doors."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_LiftKey,
+        .iconPalette = gItemIconPalette_Key,
+    },
+
+    [ITEM_PHONE_CORP_ID] =
+    {
+        .name = ITEM_NAME("Phone Corp ID"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Identifies you\n"
+            "as an employee\n"
+            "of Phone Corp."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_LiftKey,
+        .iconPalette = gItemIconPalette_Key,
+    },
+
+    
 };
 
 #undef ITEM_NAME

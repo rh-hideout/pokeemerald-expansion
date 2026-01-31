@@ -1,3 +1,6 @@
+#include "asm/macros/event.inc"
+
+
 PetalburgCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, PetalburgCity_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, PetalburgCity_OnFrame
@@ -697,6 +700,141 @@ PetalburgCity_Movement_PlayerWatchScottExit3:
 PetalburgCity_EventScript_GymBoy::
 	msgbox PetalburgCity_Text_AreYouRookieTrainer, MSGBOX_NPC
 	end
+
+
+
+@--------------------------------------------
+@--------- CUSTOM CTF EINSTELLUNGEN ---------
+@--------------------------------------------
+
+PetalburgCity_EventScript_GuardCatcher::
+	lock
+	faceplayer
+
+	message PetalburgCity_Text_GuardStop
+	waitmessage
+	waitbuttonpress
+	closemessage
+
+	@ Teleport auf Koordinaten (x=13, y=13) innerhalb PetalburgCity
+	warpteleport MAP_PETALBURG_CITY, 13, 13
+	waitstate
+	end
+
+PetalburgCity_Text_GuardStop:
+	.string "Hey you, stop right there!$"
+
+
+
+
+
+PetalburgCity_EventScript_GuardEntryTile::
+    lockall
+
+    checkitemspace ITEM_PHONE_CORP_ID, 1
+    compare VAR_RESULT, TRUE
+    goto_if_eq PetalburgCity_GuardEntryTile_Allow
+
+    @ Kein Item -> rausschicken
+    msgbox PetalburgCity_Text_GuardNoEntry, MSGBOX_DEFAULT
+    applymovement LOCALID_PLAYER, PetalburgCity_Movement_PlayerStepDownFaceDown
+    waitmovement 0
+    releaseall
+    end
+
+PetalburgCity_GuardEntryTile_Allow:
+    msgbox PetalburgCity_Text_GuardAllow, MSGBOX_DEFAULT
+    releaseall
+    end
+
+PetalburgCity_Movement_PlayerStepDownFaceDown::
+    walk_down
+    face_down
+    step_end
+
+PetalburgCity_Text_GuardNoEntry:
+    .string "GUARD: No entry, please leave.$"
+
+PetalburgCity_Text_GuardAllow:
+    .string "GUARD: Ahh, you're from XX Company.\n"
+    .string "Please come in.\p"
+    .string "{PLAYER}: <I was able to fool the\n"
+	.string "security guard here, but it won't be\p"
+    .string "so easy with the others.>$"
+
+
+
+
+
+PetalburgCity_EventScript_LockedDoor::
+    lockall
+    applymovement LOCALID_PLAYER, PetalburgCity_Movement_FaceLeft
+    waitmovement 0
+
+    goto_if_set FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED, PetalburgCity_LockedDoor_GoThrough
+
+    checkitem ITEM_LOCKPICK_SET, 1
+    goto_if_eq VAR_RESULT, TRUE, PetalburgCity_LockedDoor_Unlock
+
+    msgbox PetalburgCity_Text_DoorLocked, MSGBOX_DEFAULT
+    releaseall
+    end
+
+PetalburgCity_LockedDoor_Unlock:
+    msgbox PetalburgCity_Text_UseLockpick, MSGBOX_DEFAULT
+    setflag FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED
+
+    warpdoor MAP_YOUR_DEST_MAP, 0
+    waitstate
+    releaseall
+    end
+
+PetalburgCity_LockedDoor_GoThrough:
+    warpdoor MAP_YOUR_DEST_MAP, 0
+    waitstate
+    releaseall
+    end
+
+PetalburgCity_Movement_FaceLeft::
+    face_left
+    step_end
+
+PetalburgCity_Text_DoorLocked:
+    .string "This door is locked, but it has a lock.\n"
+    .string "Maybe I can open it with the right tools.$"
+
+PetalburgCity_Text_UseLockpick:
+    .string "You use the lockpicking set and open the door.$"
+
+
+
+
+
+
+
+
+PetalburgCity_EventScript_BlackhansaSign::
+	msgbox PetalburgCity_Text_BlackhansaSign, MSGBOX_SIGN
+	end
+
+PetalburgCity_Text_BlackhansaSign:
+	.string "BLACKHANSA COMPANY$"
+
+
+PetalburgCity_EventScript_LockedDoor::
+	msgbox PetalburgCity_Text_LockedDoor, MSGBOX_SIGN
+	end
+
+PetalburgCity_Text_LockedDoor:
+	.string "This door is locked and has\n"
+	.string "no lock on the outside.".$"
+
+
+
+@--------------------------------------------
+@---------- UNTERHALTUNGEN VANILLA ----------
+@--------------------------------------------
+
 
 PetalburgCity_Text_WhereIsWally:
 	.string "Where has our WALLY gone?\p"

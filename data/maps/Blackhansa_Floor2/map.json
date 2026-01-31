@@ -1,0 +1,131 @@
+{
+  "id": "MAP_BLACKHANSA_FLOOR2",
+  "name": "Blackhansa_Floor2",
+  "layout": "LAYOUT_BLACKHANSA_FLOOR2",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "local_id": "LOCALID_IT_MANAGER",
+      "graphics_id": "OBJ_EVENT_GFX_SCIENTIST_1",
+      "x": 9,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "FLAG_BLACKHANSA_F2_INTRUDER_DONE"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
+      "x": 19,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_VARS",
+      "x": 13,
+      "y": 4,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap",
+      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_VARS",
+      "x": 15,
+      "y": 4,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap",
+      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_VARS",
+      "x": 13,
+      "y": 1,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap",
+      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_VARS",
+      "x": 14,
+      "y": 1,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap",
+      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_VARS",
+      "x": 15,
+      "y": 1,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap",
+      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 7,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_BLACKHANSA_FLOOR1",
+      "dest_warp_id": "2"
+    }
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 14,
+      "y": 8,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "Blackhansa_Floor2_EventScript_IntruderTrigger"
+    }
+  ],
+  "bg_events": []
+}

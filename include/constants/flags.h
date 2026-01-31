@@ -1232,9 +1232,9 @@
 #define FLAG_CTF_GYM1_ROCKET_DEFEATED                               0x49A // Flag1 Event Museum
 #define FLAG_CTF_GYM1_REWARD_TAKEN                                  0x49B // Flag1 Event Museum
 #define FLAG_CTF_MUSEUM_TM_TAKEN                                    0x49C // Flag1 Event Museum
-#define FLAG_UNUSED_0x49D                                           0x49D // Unused Flag
-#define FLAG_UNUSED_0x49E                                           0x49E // Unused Flag
-#define FLAG_UNUSED_0x49F                                           0x49F // Unused Flag
+#define FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED                         0x49D // Blackhansa Tür aufgesperrt
+#define FLAG_BLACKHANSA_F2_INTRUDER_DONE                            0x49E // Blackhansa Social Eng. Event
+#define FLAG_BLACKHANSA_SERVER_TAP_DONE                             0x49F // Blackhansa Server done
 #define FLAG_UNUSED_0x4A0                                           0x4A0 // Unused Flag
 #define FLAG_UNUSED_0x4A1                                           0x4A1 // Unused Flag
 #define FLAG_UNUSED_0x4A2                                           0x4A2 // Unused Flag

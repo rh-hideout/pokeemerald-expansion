@@ -16851,6 +16851,12 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 
 
+/*-------------------------------------*/
+/*------------- CTF START -------------*/
+/*-------------------------------------*/
+
+
+
 === TRAINER_PROF_HEVL ===
 Name: HYVL
 Class: Professor
@@ -16862,25 +16868,25 @@ Double Battle: No
 AI: Basic Trainer
 
 Plusle
-Level: 5
+Level: 1
 Shiny: Yes
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 
 Minun
-Level: 5
+Level: 1
 Shiny: Yes
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 
 SPECIES_UNOWN_H
-Level: 5
+Level: 1
 Shiny: Yes
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 
 
-=== TRAINER_KALI ===
+=== TRAINER_KALI === 
 Name: KALI
 Class: Professor
 Pic: Leader Juan

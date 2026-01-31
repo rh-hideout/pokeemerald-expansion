@@ -4550,6 +4550,26 @@
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/entryMapFlag7/border.bin",
       "blockdata_filepath": "data/layouts/entryMapFlag7/map.bin"
+    },
+    {
+      "id": "LAYOUT_BLACKHANSA_FLOOR1",
+      "name": "Blackhansa_Floor1_Layout",
+      "width": 25,
+      "height": 13,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/Blackhansa_Floor1/border.bin",
+      "blockdata_filepath": "data/layouts/Blackhansa_Floor1/map.bin"
+    },
+    {
+      "id": "LAYOUT_BLACKHANSA_FLOOR2",
+      "name": "Blackhansa_Floor2_Layout",
+      "width": 25,
+      "height": 13,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/Blackhansa_Floor2/border.bin",
+      "blockdata_filepath": "data/layouts/Blackhansa_Floor2/map.bin"
     }
   ]
 }

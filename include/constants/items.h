@@ -1021,7 +1021,12 @@
 #define ITEM_DRAMPANITE 853
 #define ITEM_FALINKSITE 854
 
-#define ITEMS_COUNT 855
+// CTF Items
+#define ITEM_RASPBERRY_PI 855
+#define ITEM_LOCKPICK_SET 856
+#define ITEM_PHONE_CORP_ID 857
+
+#define ITEMS_COUNT 858
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

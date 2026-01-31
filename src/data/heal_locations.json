@@ -23,7 +23,7 @@
     {
       "id": "HEAL_LOCATION_PETALBURG_CITY",
       "map": "MAP_PETALBURG_CITY",
-      "x": 20,
+      "x": 18,
       "y": 17,
       "respawn_map": "MAP_PETALBURG_CITY_POKEMON_CENTER_1F",
       "respawn_npc": "LOCALID_PETALBURG_NURSE"

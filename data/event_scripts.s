@@ -1190,3 +1190,7 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/HowerClass/scripts.inc"
 
 	.include "data/maps/entryMapFlag4/scripts.inc"
+
+	.include "data/maps/Blackhansa_Floor1/scripts.inc"
+
+	.include "data/maps/Blackhansa_Floor2/scripts.inc"
