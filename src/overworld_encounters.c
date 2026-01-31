@@ -901,27 +901,30 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
     If none of these checks succeed, speciesId is set to SPECIES_NONE and FALSE is returned.
     */
 
-    if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist() && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
+    if (*indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
     {
-        *indexRoamerOutbreak = OWE_GetObjectRoamerStatusFromIndex(gEncounteredRoamerIndex);
-    }
-    else if (OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
-    {
-        CreateWildMon(gWildFeebas.species, ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING));
-        if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN)
-            OWE_SetNoDespawnFlag(level);
-    }
-    else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior) && *indexRoamerOutbreak != OWE_INVALID_ROAMER_OUTBREAK)
-    {
-        SetUpMassOutbreakEncounter(0);
-        *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
-    }
-    else if (!TryGenerateWildMon(wildMonInfo, wildArea, 0))
-    {
-        return FALSE;
+        if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist())
+        {
+            *indexRoamerOutbreak = OWE_GetObjectRoamerStatusFromIndex(gEncounteredRoamerIndex);
+        }
+        else if (OWE_WILD_ENCOUNTERS_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
+        {
+            CreateWildMon(gWildFeebas.species, ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING));
+            if (OWE_WILD_ENCOUNTERS_PREVENT_FEEBAS_DESPAWN)
+                OWE_SetNoDespawnFlag(level);
+        }
+        else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
+        {
+            SetUpMassOutbreakEncounter(0);
+            *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
+        }
+        else
+        {
+            return TryGenerateWildMon(wildMonInfo, wildArea, 0);
+        }
     }
 
-    return TRUE;
+    return TryGenerateWildMon(wildMonInfo, wildArea, 0);
 }
 
 static bool8 IsSafeToSpawnObjectEvents(void)
