@@ -1,5 +1,5 @@
-#ifndef GUARD_OVERWORLD_ENCOUNTERS_H
-#define GUARD_OVERWORLD_ENCOUNTERS_H
+#ifndef GUARD_WILD_ENCOUNTER_OVERWORLD_H
+#define GUARD_WILD_ENCOUNTER_OVERWORLD_H
 
 #define OWE_APPROACH_DISTANCE           2
 #define OWE_APPROACH_JUMP_TIMER_MIN     16
@@ -96,4 +96,4 @@ u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType
 bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent);
 void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void);
 
-#endif // GUARD_OVERWORLD_ENCOUNTERS_H
+#endif // GUARD_WILD_ENCOUNTER_OVERWORLD_H
