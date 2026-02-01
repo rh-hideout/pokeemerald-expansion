@@ -3,6 +3,131 @@
 
 TO_DO_BATTLE_TEST("TODO: Write Transform (Move Effect) test titles")
 
+SINGLE_BATTLE_TEST("Transform fails on semi-invulnerable target in Gen2+")
+{
+    u32 genConfig;
+    bool32 expectFail;
+
+    PARAMETRIZE { genConfig = GEN_1; expectFail = FALSE; }
+    PARAMETRIZE { genConfig = GEN_2; expectFail = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_TRANSFORM_SEMI_INV_FAIL, genConfig);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_DIG); }
+        OPPONENT(SPECIES_DITTO) { Speed(10); Moves(MOVE_TRANSFORM); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DIG); MOVE(opponent, MOVE_TRANSFORM); }
+    } SCENE {
+        if (expectFail)
+            MESSAGE("But it failed!");
+        else
+            MESSAGE("The opposing Ditto transformed into Wobbuffet!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Transform fails on transformed target in Gen2+")
+{
+    u32 genConfig;
+    bool32 expectFail;
+
+    PARAMETRIZE { genConfig = GEN_1; expectFail = FALSE; }
+    PARAMETRIZE { genConfig = GEN_2; expectFail = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_TRANSFORM_TARGET_FAIL, genConfig);
+        PLAYER(SPECIES_DITTO) { Speed(50); Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRANSFORM); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRANSFORM); }
+    } SCENE {
+        MESSAGE("Ditto transformed into Wobbuffet!");
+        if (expectFail)
+            MESSAGE("But it failed!");
+        else
+            MESSAGE("The opposing Wobbuffet transformed into Wobbuffet!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Transform fails when the user is already transformed in Gen5+")
+{
+    u32 genConfig;
+    bool32 expectFail;
+
+    PARAMETRIZE { genConfig = GEN_4; expectFail = FALSE; }
+    PARAMETRIZE { genConfig = GEN_5; expectFail = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_TRANSFORM_USER_FAIL, genConfig);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_DITTO) { Speed(10); Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRANSFORM); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRANSFORM); }
+    } SCENE {
+        MESSAGE("The opposing Ditto transformed into Wobbuffet!");
+        if (expectFail)
+            MESSAGE("But it failed!");
+        else
+            MESSAGE("The opposing Ditto transformed into Wobbuffet!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Transform fails on target behind substitute in Gen5+")
+{
+    u32 genConfig;
+    bool32 expectFail;
+
+    PARAMETRIZE { genConfig = GEN_4; expectFail = FALSE; }
+    PARAMETRIZE { genConfig = GEN_5; expectFail = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_TRANSFORM_SUBSTITUTE_FAIL, genConfig);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_SUBSTITUTE); }
+        OPPONENT(SPECIES_DITTO) { Speed(10); Moves(MOVE_TRANSFORM); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_TRANSFORM); }
+    } SCENE {
+        if (expectFail)
+            MESSAGE("But it failed!");
+        else
+            MESSAGE("The opposing Ditto transformed into Wobbuffet!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Transformed Pokemon cannot change forms in Gen5+")
+{
+    u32 genConfig;
+    bool32 expectFormChange;
+
+    PARAMETRIZE { genConfig = GEN_4; expectFormChange = TRUE; }
+    PARAMETRIZE { genConfig = GEN_5; expectFormChange = FALSE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_TRANSFORM_FORM_CHANGES, genConfig);
+        PLAYER(SPECIES_AEGISLASH) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_DITTO) { Moves(MOVE_TRANSFORM); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRANSFORM); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        if (expectFormChange) {
+            ABILITY_POPUP(opponent, ABILITY_STANCE_CHANGE);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponent);
+        } else {
+            NONE_OF {
+                ABILITY_POPUP(opponent, ABILITY_STANCE_CHANGE);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponent);
+            }
+        }
+    } THEN {
+        if (expectFormChange)
+            EXPECT_EQ(opponent->species, SPECIES_AEGISLASH_BLADE);
+        else
+            EXPECT_EQ(opponent->species, SPECIES_AEGISLASH);
+    }
+}
+
 SINGLE_BATTLE_TEST("(TERA) Transform does not copy the target's Tera Type, and if the user is Terastallized it keeps its own Tera Type")
 {
     u32 playerDoTera;
