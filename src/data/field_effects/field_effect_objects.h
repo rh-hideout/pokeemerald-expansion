@@ -1284,6 +1284,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Bubbles = {
     .images = sPicTable_Bubbles,
     .callback = UpdateBubblesFieldEffect,
 };
+
 static const struct SpriteFrameImage sPicTable_ShinySparkle[] = {
     overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 0),
     overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 1),
