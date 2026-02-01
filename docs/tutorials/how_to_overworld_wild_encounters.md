@@ -45,7 +45,6 @@ None of these three configs can prevent the forceful despawning of OWEs to free 
 ## High Priority and Low Priority OWEs
 Low Priority OWEs may not be spawned or even be destroyed in certain situations. There are palettes and object tiles checks to prevent these from spawning if it would fail, as well as similar checks for number of event objects, palettes and object tiles. These checks will despawn the oldest of Low Priority OWEs when other objects event are attempting to be spawned and Low Priority OWEs are using these resources. Low Priority OWEs may also be destroyed by NPC object events colliding with them due to their movements or the OWE being in the way of a trainer interaction. High priority OWEs are treated as regular objects and will not be destroyed in the ways outlined above, but may cause the destruction of Generated OWEs and will not face spawning restrictions.
 These despawn conditions will overwrite the restrictive despawns mentioned above.
-> Is this true? Does it take the oldest or oldest not marked for restriction, what if all are marked to not despawn.
 
 ## Encountering an OWE
 Collision between Player and OWE or Interacting with one. Can also interact with an OWE in the water even when the player is not.
