@@ -4467,7 +4467,7 @@
       "width": 9,
       "height": 8,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_dhbw_gebaeude",
+      "secondary_tileset": "gTileset_Lab",
       "border_filepath": "data/layouts/Museum2_Flag1/border.bin",
       "blockdata_filepath": "data/layouts/Museum2_Flag1/map.bin"
     },
@@ -4517,7 +4517,7 @@
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_EverGrande",
       "border_filepath": "data/layouts/entryMapFlag3/border.bin",
       "blockdata_filepath": "data/layouts/entryMapFlag3/map.bin"
     },

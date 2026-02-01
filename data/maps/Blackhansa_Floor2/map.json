@@ -26,7 +26,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_BLACKHANSA_F2_INTRUDER_DONE"
+      "flag": "FLAG_BLACKHANSA_F2_IT_MANAGER_HIDDEN"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -40,71 +40,6 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
       "flag": "0"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_VARS",
-      "x": 13,
-      "y": 4,
-      "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "Blackhansa_Floor2_EventScript_ServerTap",
-      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_VARS",
-      "x": 15,
-      "y": 4,
-      "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "Blackhansa_Floor2_EventScript_ServerTap",
-      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_VARS",
-      "x": 13,
-      "y": 1,
-      "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "Blackhansa_Floor2_EventScript_ServerTap",
-      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_VARS",
-      "x": 14,
-      "y": 1,
-      "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "Blackhansa_Floor2_EventScript_ServerTap",
-      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_VARS",
-      "x": 15,
-      "y": 1,
-      "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "Blackhansa_Floor2_EventScript_ServerTap",
-      "flag": "FLAG_BLACKHANSA_SERVER_TAP_DONE"
     }
   ],
   "warp_events": [
@@ -113,7 +48,7 @@
       "y": 1,
       "elevation": 0,
       "dest_map": "MAP_BLACKHANSA_FLOOR1",
-      "dest_warp_id": "2"
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [
@@ -127,5 +62,46 @@
       "script": "Blackhansa_Floor2_EventScript_IntruderTrigger"
     }
   ],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 13,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap"
+    },
+    {
+      "type": "sign",
+      "x": 14,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap"
+    },
+    {
+      "type": "sign",
+      "x": 15,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap"
+    },
+    {
+      "type": "sign",
+      "x": 13,
+      "y": 4,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap"
+    },
+    {
+      "type": "sign",
+      "x": 15,
+      "y": 4,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Blackhansa_Floor2_EventScript_ServerTap"
+    }
+  ]
 }

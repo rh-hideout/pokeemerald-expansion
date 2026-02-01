@@ -727,13 +727,19 @@ PetalburgCity_Text_GuardStop:
 
 
 PetalburgCity_EventScript_GuardEntryTile::
+    @ Nur triggern, wenn Player beim Betreten nach NORDEN schaut
+    special GetPlayerFacingDirection
+    compare VAR_RESULT, DIR_NORTH
+    goto_if_eq PetalburgCity_GuardEntryTile_Do
+    end
+
+PetalburgCity_GuardEntryTile_Do:
     lockall
 
-    checkitemspace ITEM_PHONE_CORP_ID, 1
+    checkitem ITEM_PHONE_CORP_ID, 1
     compare VAR_RESULT, TRUE
     goto_if_eq PetalburgCity_GuardEntryTile_Allow
 
-    @ Kein Item -> rausschicken
     msgbox PetalburgCity_Text_GuardNoEntry, MSGBOX_DEFAULT
     applymovement LOCALID_PLAYER, PetalburgCity_Movement_PlayerStepDownFaceDown
     waitmovement 0
@@ -754,8 +760,8 @@ PetalburgCity_Text_GuardNoEntry:
     .string "GUARD: No entry, please leave.$"
 
 PetalburgCity_Text_GuardAllow:
-    .string "GUARD: Ahh, you're from XX Company.\n"
-    .string "Please come in.\p"
+    .string "GUARD: Ahh, you're from the Phone\n"
+    .string "Company. Please come in.\p"
     .string "{PLAYER}: <I was able to fool the\n"
 	.string "security guard here, but it won't be\p"
     .string "so easy with the others.>$"
@@ -785,13 +791,19 @@ PetalburgCity_BlackhansaEntrance_Unlock:
 	@ fallthrough
 
 PetalburgCity_BlackhansaEntrance_Warp:
-	@ dauerhaftes Ziel: Blackhansa_Floor1 x23 y5
-	warpdoor MAP_BLACKHANSA_FLOOR1, 23, 5
+	playse SE_DOOR
+	fadescreen FADE_TO_BLACK
+	waitfadescreen
+
+	@ sofortiger Teleport ohne Warp-SFX
+	warpsilent MAP_BLACKHANSA_FLOOR1, 23, 5
 	waitstate
 
 	@ nach dem Port: Blick nach links
-	applymovement LOCALID_PLAYER, PetalburgCity_Movement_PlayerFaceLeft
-	waitmovement 0
+	turnobject LOCALID_PLAYER, DIR_WEST
+
+	fadescreen FADE_FROM_BLACK
+	waitfadescreen
 
 	releaseall
 	end

@@ -1,81 +1,93 @@
 Blackhansa_Floor2_MapScripts::
-	.byte 0
+    map_script MAP_SCRIPT_ON_LOAD,       Blackhansa_Floor2_OnLoad
+    map_script MAP_SCRIPT_ON_TRANSITION, Blackhansa_Floor2_OnLoad
+    .byte 0
+
+Blackhansa_Floor2_OnLoad:
+    hidesprite LOCALID_IT_MANAGER
+    end
+
 
 Blackhansa_Floor2_EventScript_IntruderTrigger::
-	@ Wenn schon erfolgreich (Antwort 2), Trigger "verschwindet" effektiv
-	goto_if_set FLAG_BLACKHANSA_F2_INTRUDER_DONE, Blackhansa_Floor2_EventScript_IntruderTrigger_End
+    goto_if_set FLAG_BLACKHANSA_F2_INTRUDER_DONE, Blackhansa_Floor2_EventScript_IntruderTrigger_End
 
-	lockall
-	turnobject LOCALID_PLAYER, DIR_SOUTH
+    lockall
 
-	msgbox Blackhansa_Floor2_Text_StopIntruder, MSGBOX_DEFAULT
+    @ IT-Manager soll JETZT erscheinen
+    showsprite LOCALID_IT_MANAGER
 
-	applymovement LOCALID_IT_MANAGER, Blackhansa_Floor2_Movement_ITManager_Approach
-	waitmovement 0
+    turnobject LOCALID_PLAYER, DIR_SOUTH
+    msgbox Blackhansa_Floor2_Text_StopIntruder, MSGBOX_DEFAULT
 
-	turnobject LOCALID_IT_MANAGER, DIR_NORTH
-	turnobject LOCALID_PLAYER, DIR_SOUTH
+    applymovement LOCALID_IT_MANAGER, Blackhansa_Floor2_Movement_ITManager_Approach
+    waitmovement 0
 
-	msgbox Blackhansa_Floor2_Text_WhoAreYou, MSGBOX_DEFAULT
+    turnobject LOCALID_IT_MANAGER, DIR_NORTH
+    turnobject LOCALID_PLAYER, DIR_SOUTH
 
-	@ --- 3 Antworten ohne eigenes Multichoice-List-Setup ---
-	@ Wir fragen Antwort 1 als YES/NO, bei NO fragen wir Antwort 2 als YES/NO,
-	@ ansonsten ist es Antwort 3.
+    msgbox Blackhansa_Floor2_Text_WhoAreYou, MSGBOX_DEFAULT
 
-	msgbox Blackhansa_Floor2_Text_Choice1, MSGBOX_YESNO
-	compare VAR_RESULT, YES
-	goto_if_eq Blackhansa_Floor2_EventScript_Answer1
+    msgbox Blackhansa_Floor2_Text_Choice1, MSGBOX_YESNO
+    compare VAR_RESULT, YES
+    goto_if_eq Blackhansa_Floor2_EventScript_Answer1
 
-	msgbox Blackhansa_Floor2_Text_Choice2, MSGBOX_YESNO
-	compare VAR_RESULT, YES
-	goto_if_eq Blackhansa_Floor2_EventScript_Answer2
+    msgbox Blackhansa_Floor2_Text_Choice2, MSGBOX_YESNO
+    compare VAR_RESULT, YES
+    goto_if_eq Blackhansa_Floor2_EventScript_Answer2
 
-	goto Blackhansa_Floor2_EventScript_Answer3
+    goto Blackhansa_Floor2_EventScript_Answer3
 
 
 Blackhansa_Floor2_EventScript_Answer1::
-	msgbox Blackhansa_Floor2_Text_Answer1_Response, MSGBOX_DEFAULT
-	goto Blackhansa_Floor2_EventScript_KickOut
+    msgbox Blackhansa_Floor2_Text_Answer1_Response, MSGBOX_DEFAULT
+    goto Blackhansa_Floor2_EventScript_KickOut
 
 
 Blackhansa_Floor2_EventScript_Answer3::
-	msgbox Blackhansa_Floor2_Text_Answer3_Response, MSGBOX_DEFAULT
-	goto Blackhansa_Floor2_EventScript_KickOut
+    msgbox Blackhansa_Floor2_Text_Answer3_Response, MSGBOX_DEFAULT
+    goto Blackhansa_Floor2_EventScript_KickOut
 
 
 Blackhansa_Floor2_EventScript_KickOut::
-	closemessage
-	warpteleport MAP_PETALBURG_CITY, 12, 6
-	waitstate
-	releaseall
-	end
+    closemessage
+
+    @ IT-Manager soll wieder sofort verschwinden
+    hidesprite LOCALID_IT_MANAGER
+
+    warpteleport MAP_PETALBURG_CITY, 12, 6
+    waitstate
+    releaseall
+    end
 
 
 Blackhansa_Floor2_EventScript_Answer2::
-	msgbox Blackhansa_Floor2_Text_Answer2_Response, MSGBOX_DEFAULT
+    msgbox Blackhansa_Floor2_Text_Answer2_Response, MSGBOX_DEFAULT
 
-	applymovement LOCALID_IT_MANAGER, Blackhansa_Floor2_Movement_ITManager_Return
-	waitmovement 0
+    applymovement LOCALID_IT_MANAGER, Blackhansa_Floor2_Movement_ITManager_Return
+    waitmovement 0
 
-	@ NPC verschwindet (weil Flag in Porymap am Object hängt)
-	setflag FLAG_BLACKHANSA_F2_INTRUDER_DONE
+    @ sofort verschwinden + Event "done" setzen
+    hidesprite LOCALID_IT_MANAGER
+    setflag FLAG_BLACKHANSA_F2_INTRUDER_DONE
 
-	releaseall
-	end
+    releaseall
+    end
 
 
 Blackhansa_Floor2_EventScript_IntruderTrigger_End::
-	end
+    end
+
 
 
 
 
 Blackhansa_Floor2_EventScript_ServerTap::
+    goto_if_set FLAG_BLACKHANSA_SERVER_TAP_DONE, Blackhansa_Floor2_ServerTap_End
+
     lock
-    goto_if_set FLAG_BLACKHANSA_SERVER_TAP_DONE, Blackhansa_Floor2_ServerTap_AlreadyDone  @ optional
     msgbox Blackhansa_Floor2_Text_Servers_NoDevice, MSGBOX_DEFAULT
 
-    checkitem ITEM_RASPBERRY_PI
+    checkitem ITEM_RASPBERRY_PI, 1
     compare VAR_RESULT, TRUE
     goto_if_eq Blackhansa_Floor2_ServerTap_Success
 
@@ -83,15 +95,15 @@ Blackhansa_Floor2_EventScript_ServerTap::
     end
 
 Blackhansa_Floor2_ServerTap_Success:
-	removeitem ITEM_RASPBERRY_PI, 1
+    removeitem ITEM_RASPBERRY_PI, 1
     msgbox Blackhansa_Floor2_Text_Servers_Success, MSGBOX_DEFAULT
     setflag FLAG_BLACKHANSA_SERVER_TAP_DONE
     release
     end
 
-Blackhansa_Floor2_ServerTap_AlreadyDone:
-    release
+Blackhansa_Floor2_ServerTap_End:
     end
+
 
 
 

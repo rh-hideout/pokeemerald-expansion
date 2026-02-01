@@ -1235,7 +1235,7 @@
 #define FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED                         0x49D // Blackhansa Tür aufgesperrt
 #define FLAG_BLACKHANSA_F2_INTRUDER_DONE                            0x49E // Blackhansa Social Eng. Event
 #define FLAG_BLACKHANSA_SERVER_TAP_DONE                             0x49F // Blackhansa Server done
-#define FLAG_UNUSED_0x4A0                                           0x4A0 // Unused Flag
+#define FLAG_BLACKHANSA_F2_IT_MANAGER_HIDDEN                        0x4A0 // Blackhansa IT Typ
 #define FLAG_UNUSED_0x4A1                                           0x4A1 // Unused Flag
 #define FLAG_UNUSED_0x4A2                                           0x4A2 // Unused Flag
 #define FLAG_UNUSED_0x4A3                                           0x4A3 // Unused Flag

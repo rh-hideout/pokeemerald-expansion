@@ -5,8 +5,8 @@
   "music": "MUS_DUMMY",
   "region_map_section": "MAPSEC_ABANDONED_SHIP",
   "requires_flash": false,
-  "weather": "WEATHER_RAIN_THUNDERSTORM",
-  "map_type": "MAP_TYPE_TOWN",
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
   "allow_cycling": false,
   "allow_escaping": false,
   "allow_running": true,
@@ -18,7 +18,7 @@
       "local_id": "LOCALID_PROF_HEVL",
       "graphics_id": "OBJ_EVENT_GFX_CONTEST_JUDGE",
       "x": 4,
-      "y": 4,
+      "y": 3,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
@@ -27,14 +27,34 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Museum2_Flag1_EventScript_Hevl",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BALL_CUSHION",
+      "x": 4,
+      "y": 1,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "FLAG_BADGE01_GET"
     }
   ],
   "warp_events": [
     {
-      "x": 4,
+      "x": 1,
       "y": 7,
       "elevation": 0,
       "dest_map": "MAP_MUSEUM_FLAG1",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_TESTMAP",
       "dest_warp_id": "0"
     }
   ],

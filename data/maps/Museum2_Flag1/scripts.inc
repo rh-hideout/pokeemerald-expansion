@@ -26,6 +26,7 @@ Museum2_Flag1_EventScript_Hevl::
 
 	@ Sieg: Badge + Fanfare + TM
 	setflag FLAG_BADGE01_GET
+	setflag FLAG_CTF_GYM1_DEFEATED
 
 	msgbox Museum2_Flag1_Text_Win, MSGBOX_DEFAULT
 	closemessage
@@ -73,10 +74,9 @@ Museum2_Flag1_Text_Win::
 	.string "Take this, the FIRST BADGE.$"
 
 Museum2_Flag1_Text_ReceivedBadge::
-	.string "You received the FIRST BADGE!$"
+	.string "You received the MATHS BADGE!$"
 
 Museum2_Flag1_Text_TM::
-	.string "You received a TM!\p"
 	.string "TM01 contains FOCUS PUNCH.$"
 
 Museum2_Flag1_Text_After::

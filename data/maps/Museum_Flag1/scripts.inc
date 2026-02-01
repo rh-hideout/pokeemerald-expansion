@@ -1,11 +1,3 @@
-#include "constants/flags.h"
-#include "constants/items.h"
-#include "constants/opponents.h"
-#include "constants/vars.h"
-#include "constants/field_effects.h"
-#include "constants/songs.h"
-
-
 @ -----------------------
 @ ANPASSEN:
 @ -----------------------
@@ -52,8 +44,11 @@ Museum_Flag1_OnLoad:
 
 
 Museum_Flag1_OnTransition:
+    @ Tür anwenden, falls schon geöffnet
+    goto_if_set FLAG_CTF_MUSEUM_DOOR_OPEN, 1f
     goto 2f
 1:
+    call Museum_Flag1_EventScript_ApplyDoorOpen
 2:
     call Museum_Flag1_SyncState
 
@@ -419,7 +414,5 @@ Museum_Flag1_Text_TerminalAlreadyOpen:
 
 Museum_Flag1_Text_Heal:
     .string "Here, let me heal your POKéMON.$"
-
-
 
 

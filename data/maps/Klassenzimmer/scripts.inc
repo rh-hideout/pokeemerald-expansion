@@ -55,7 +55,8 @@ Klassenzimmer_EventScript_FirstEntry::
 	releaseall
 
 	@ Warp per Koordinate
-	warpsilent MAP_MUSEUM_FLAG1, 255, 17, 6
+	warpsilent MAP_MUSEUM_FLAG1, 255, 13, 4
+	turnobject LOCALID_PLAYER, DIR_EAST
 	end
 
 

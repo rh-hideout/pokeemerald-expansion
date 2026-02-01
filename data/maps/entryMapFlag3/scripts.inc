@@ -81,3 +81,13 @@ EntryMapFlag3_Text_DebugCheatDone:
 	.string "Debug loot granted.$"
 
 
+
+EntryMapFlag3_EventScript_DebugCheatStart::
+	lock
+	givemon SPECIES_SUNEON, 15, ITEM_NONE
+	msgbox EntryMapFlag3_Text_GiveSuneon, MSGBOX_DEFAULT
+	release
+	end
+
+EntryMapFlag3_Text_GiveSuneon:
+	.string "Received Suneon.$"
