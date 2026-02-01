@@ -1,10 +1,9 @@
 Blackhansa_Floor2_MapScripts::
-    map_script MAP_SCRIPT_ON_LOAD,       Blackhansa_Floor2_OnLoad
-    map_script MAP_SCRIPT_ON_TRANSITION, Blackhansa_Floor2_OnLoad
+    map_script MAP_SCRIPT_ON_TRANSITION, Blackhansa_Floor2_OnTransition
     .byte 0
 
-Blackhansa_Floor2_OnLoad:
-    hidesprite LOCALID_IT_MANAGER
+Blackhansa_Floor2_OnTransition:
+    removeobject LOCALID_IT_MANAGER
     end
 
 
@@ -13,8 +12,10 @@ Blackhansa_Floor2_EventScript_IntruderTrigger::
 
     lockall
 
-    @ IT-Manager soll JETZT erscheinen
-    showsprite LOCALID_IT_MANAGER
+    @ IT-Manager JETZT spawnen
+    addobject LOCALID_IT_MANAGER
+    @ optional, aber praktisch: Startposition sicher setzen
+    setobjectxy LOCALID_IT_MANAGER, 9, 3
 
     turnobject LOCALID_PLAYER, DIR_SOUTH
     msgbox Blackhansa_Floor2_Text_StopIntruder, MSGBOX_DEFAULT
@@ -37,28 +38,24 @@ Blackhansa_Floor2_EventScript_IntruderTrigger::
 
     goto Blackhansa_Floor2_EventScript_Answer3
 
-
 Blackhansa_Floor2_EventScript_Answer1::
     msgbox Blackhansa_Floor2_Text_Answer1_Response, MSGBOX_DEFAULT
     goto Blackhansa_Floor2_EventScript_KickOut
-
 
 Blackhansa_Floor2_EventScript_Answer3::
     msgbox Blackhansa_Floor2_Text_Answer3_Response, MSGBOX_DEFAULT
     goto Blackhansa_Floor2_EventScript_KickOut
 
-
 Blackhansa_Floor2_EventScript_KickOut::
     closemessage
 
-    @ IT-Manager soll wieder sofort verschwinden
-    hidesprite LOCALID_IT_MANAGER
+    @ sofort weg (ohne Reload)
+    removeobject LOCALID_IT_MANAGER
 
     warpteleport MAP_PETALBURG_CITY, 12, 6
     waitstate
     releaseall
     end
-
 
 Blackhansa_Floor2_EventScript_Answer2::
     msgbox Blackhansa_Floor2_Text_Answer2_Response, MSGBOX_DEFAULT
@@ -66,16 +63,15 @@ Blackhansa_Floor2_EventScript_Answer2::
     applymovement LOCALID_IT_MANAGER, Blackhansa_Floor2_Movement_ITManager_Return
     waitmovement 0
 
-    @ sofort verschwinden + Event "done" setzen
-    hidesprite LOCALID_IT_MANAGER
+    removeobject LOCALID_IT_MANAGER
     setflag FLAG_BLACKHANSA_F2_INTRUDER_DONE
 
     releaseall
     end
 
-
 Blackhansa_Floor2_EventScript_IntruderTrigger_End::
     end
+
 
 
 
@@ -148,7 +144,9 @@ Blackhansa_Floor2_Text_StopIntruder:
 
 Blackhansa_Floor2_Text_WhoAreYou:
 	.string "Who are you and what are\n"
-	.string "you doing here?$"
+	.string "you doing here?\p"
+    .string "<Choose one of the following\n"
+    .string "answers:>$"
 
 @ “Antwortmenü” via YES/NO Prompts
 Blackhansa_Floor2_Text_Choice1:

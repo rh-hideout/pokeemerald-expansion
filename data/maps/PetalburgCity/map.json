@@ -316,7 +316,7 @@
       "x": 12,
       "y": 11,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
+      "var": "VAR_TEMP_7",
       "var_value": "0",
       "script": "PetalburgCity_EventScript_GuardEntryTile"
     },
@@ -325,7 +325,7 @@
       "x": 13,
       "y": 11,
       "elevation": 0,
-      "var": "VAR_TEMP_0",
+      "var": "VAR_TEMP_7",
       "var_value": "0",
       "script": "PetalburgCity_EventScript_GuardEntryTile"
     },
@@ -337,6 +337,24 @@
       "var": "VAR_TEMP_1",
       "var_value": "0",
       "script": "PetalburgCity_EventScript_BlackhansaEntranceTile"
+    },
+    {
+      "type": "trigger",
+      "x": 13,
+      "y": 12,
+      "elevation": 0,
+      "var": "VAR_TEMP_7",
+      "var_value": "0",
+      "script": "PetalburgCity_EventScript_GuardApproachFromSouth"
+    },
+    {
+      "type": "trigger",
+      "x": 12,
+      "y": 12,
+      "elevation": 0,
+      "var": "VAR_TEMP_7",
+      "var_value": "0",
+      "script": "PetalburgCity_EventScript_GuardApproachFromSouth"
     }
   ],
   "bg_events": [

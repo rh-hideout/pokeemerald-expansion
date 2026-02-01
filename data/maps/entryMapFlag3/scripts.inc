@@ -82,7 +82,7 @@ EntryMapFlag3_Text_DebugCheatDone:
 
 
 
-EntryMapFlag3_EventScript_DebugCheatStart::
+EntryMapFlag3_EventScript_GiveSuneon::
 	lock
 	givemon SPECIES_SUNEON, 15, ITEM_NONE
 	msgbox EntryMapFlag3_Text_GiveSuneon, MSGBOX_DEFAULT
@@ -91,3 +91,5 @@ EntryMapFlag3_EventScript_DebugCheatStart::
 
 EntryMapFlag3_Text_GiveSuneon:
 	.string "Received Suneon.$"
+
+

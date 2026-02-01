@@ -5,6 +5,7 @@ PetalburgCity_MapScripts::
 
 PetalburgCity_OnTransition:
 	setflag FLAG_VISITED_PETALBURG_CITY
+	setvar VAR_TEMP_0, 0
 	call_if_eq VAR_PETALBURG_CITY_STATE, 0, PetalburgCity_EventScript_MoveGymBoyToWestEntrance
 	call_if_eq VAR_PETALBURG_CITY_STATE, 2, PetalburgCity_EventScript_DisableMapNameAndMusic
 	call_if_eq VAR_PETALBURG_CITY_STATE, 4, PetalburgCity_EventScript_DisableMapNameAndMusic
@@ -726,14 +727,46 @@ PetalburgCity_Text_GuardStop:
 
 
 
-PetalburgCity_EventScript_GuardEntryTile::
-    @ Nur triggern, wenn Player beim Betreten nach NORDEN schaut
-    special GetPlayerFacingDirection
-    compare VAR_RESULT, DIR_NORTH
-    goto_if_eq PetalburgCity_GuardEntryTile_Do
+PetalburgCity_EventScript_GuardApproachFromSouth::
+    @ Du stehst auf dem Tile direkt südlich vom Entry
+    setvar VAR_TEMP_0, 1
     end
 
-PetalburgCity_GuardEntryTile_Do:
+PetalburgCity_EventScript_GuardEntry::
+    @ Entry-Tile: nur auslösen, wenn unmittelbar vorher Approach-Tile betreten wurde
+    compare VAR_TEMP_0, 1
+    goto_if_ne PetalburgCity_GuardEntry_End
+
+    @ sofort wieder resetten (damit es wirklich nur “S->N” ist)
+    setvar VAR_TEMP_0, 0
+
+    lockall
+    msgbox PetalburgCity_Text_GuardStop, MSGBOX_DEFAULT
+    closemessage
+
+    @ >>> hier dein “Event passieren” (z.B. teleport/warp) <<<
+    warpteleport MAP_BLACKHANSA_FLOOR1, 12, 6
+    waitstate
+
+    releaseall
+    end
+
+PetalburgCity_GuardEntry_End::
+    end
+
+
+
+
+
+
+
+
+PetalburgCity_EventScript_GuardEntryTile::
+    compare VAR_TEMP_0, 1
+    goto_if_ne PetalburgCity_GuardEntryTile_End
+
+    setvar VAR_TEMP_0, 0  @ sofort resetten
+
     lockall
 
     checkitem ITEM_PHONE_CORP_ID, 1
@@ -749,6 +782,9 @@ PetalburgCity_GuardEntryTile_Do:
 PetalburgCity_GuardEntryTile_Allow:
     msgbox PetalburgCity_Text_GuardAllow, MSGBOX_DEFAULT
     releaseall
+    end
+
+PetalburgCity_GuardEntryTile_End:
     end
 
 PetalburgCity_Movement_PlayerStepDownFaceDown::
@@ -790,23 +826,17 @@ PetalburgCity_BlackhansaEntrance_Unlock:
 	setflag FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED
 	@ fallthrough
 
+
 PetalburgCity_BlackhansaEntrance_Warp:
-	playse SE_DOOR
-	fadescreen FADE_TO_BLACK
-	waitfadescreen
+    playse SE_DOOR
+    waitse
 
-	@ sofortiger Teleport ohne Warp-SFX
-	warpsilent MAP_BLACKHANSA_FLOOR1, 23, 5
-	waitstate
+    warpsilent MAP_BLACKHANSA_FLOOR1, 23, 5
+    waitstate
 
-	@ nach dem Port: Blick nach links
-	turnobject LOCALID_PLAYER, DIR_WEST
-
-	fadescreen FADE_FROM_BLACK
-	waitfadescreen
-
-	releaseall
-	end
+    turnobject LOCALID_PLAYER, DIR_WEST
+    releaseall
+    end
 
 PetalburgCity_Movement_PlayerFaceLeft::
 	face_left
