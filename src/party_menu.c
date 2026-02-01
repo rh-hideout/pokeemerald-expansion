@@ -2867,7 +2867,31 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
     }
 }
 
+// Field moves that can be used via items and should be excluded from the party menu
+static const u16 sItemBasedFieldMoves[] =
+{
+    MOVE_CUT,
+    MOVE_SURF,
+    MOVE_STRENGTH,
+    MOVE_ROCK_SMASH,
+    MOVE_DIVE,
+    MOVE_WATERFALL,
+};
+
+// Check if a field move should be excluded from the party menu (because it has an item alternative)
+static bool8 IsFieldMoveExcludedFromPartyMenu(u16 moveId)
+{
+    u32 i;
+    for (i = 0; i < ARRAY_COUNT(sItemBasedFieldMoves); i++)
+    {
+        if (sItemBasedFieldMoves[i] == moveId)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
+// modified for field move implementation
 {
     u8 i, j;
 
@@ -2880,15 +2904,39 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
      || HasRelearnerTMMoves(&mons[slotId]) || HasRelearnerTutorMoves(&mons[slotId]))))
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUB_MOVES);
 
-    // Add field moves to action list
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    u16 species = GetMonData(&mons[slotId], MON_DATA_SPECIES);
+    if (!GetMonData(&mons[slotId], MON_DATA_IS_EGG))
     {
-        for (j = 0; j != FIELD_MOVES_COUNT; j++)
+        // Loop through all possible field moves
+        for (i = 0; i < FIELD_MOVES_COUNT; i++)
         {
-            if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == FieldMove_GetMoveId(j))
+            u16 moveId = FieldMove_GetMoveId(i);
+
+            // Case 1: Fly and Flash - show if learnable and badge obtained
+            if (moveId == MOVE_FLY || moveId == MOVE_FLASH)
             {
-                AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES);
-                break;
+                if (IsFieldMoveUnlocked(i) && CanLearnTeachableMove(species, moveId))
+                {
+                    AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, i + MENU_FIELD_MOVES);
+                }
+            }
+            // Case 2: Item-based field moves - excluded from party menu
+            else if (IsFieldMoveExcludedFromPartyMenu(moveId))
+            {
+                // Do nothing, effectively removing them from the menu.
+            }
+            // Case 3: All other field moves (Dig, Soft-Boiled, etc.)
+            else
+            {
+                // Use the original logic: check if the Pokémon knows the move.
+                for (j = 0; j < MAX_MON_MOVES; j++)
+                {
+                    if (GetMonData(&mons[slotId], MON_DATA_MOVE1 + j) == moveId)
+                    {
+                        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, i + MENU_FIELD_MOVES);
+                        break; // Move found, stop checking this Pokémon's moves
+                    }
+                }
             }
         }
     }
@@ -4218,7 +4266,7 @@ bool32 SetUpFieldMove_Surf(void)
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF))
         return FALSE;
 
-    if (PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE)
+    if (IsPlayerFacingSurfableFishableWater() == TRUE)
     {
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
         gPostMenuFieldCallback = FieldCallback_Surf;
@@ -4240,10 +4288,16 @@ bool32 SetUpFieldMove_Fly(void)
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
 
+    // First, check if the map allows flying.
     if (Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) == TRUE)
-        return TRUE;
-    else
-        return FALSE;
+        {
+        // If it does, then perform a check for a valid Pokémon or item.
+        if (CanUseFly() == TRUE)
+            return TRUE;
+    }
+
+    // If any check fails, return FALSE.
+    return FALSE;
 }
 
 void CB2_ReturnToPartyMenuFromFlyMap(void)
