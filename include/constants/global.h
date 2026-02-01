@@ -107,7 +107,7 @@ enum Language
 #define GIFT_RIBBONS_COUNT 11
 #define SAVED_TRENDS_COUNT 5
 #define PYRAMID_BAG_ITEMS_COUNT 10
-#define ROAMER_COUNT 1 // Number of maximum concurrent active roamers, stored in a u8 in Struct ObjectEvent when used for Overworld Ecnounters.
+#define ROAMER_COUNT 1 // Number of maximum concurrent active roamers
 
 // Bag constants
 #define BAG_ITEMS_COUNT 30
