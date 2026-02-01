@@ -1530,6 +1530,8 @@ bool8 PartyHasMonWithSurf(void)
         {
             if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
                 break;
+	    if (MonKnowsMove(&gPlayerParty[i], MOVE_SECRET_POWER))
+                return TRUE;
             if (MonKnowsMove(&gPlayerParty[i], MOVE_SURF))
                 return TRUE;
         }

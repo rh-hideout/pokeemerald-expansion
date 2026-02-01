@@ -142,6 +142,29 @@ NewMauville_Inside_EventScript_SetBarrierStateGreenButton::
 
 NewMauville_Inside_EventScript_RedButton::
 	lockall
+	msgbox NewMauville_Inside_Text_SteppedOnSwitchAttacked, MSGBOX_DEFAULT
+	setwildbattle SPECIES_ROTOM, 25
+	waitse
+	playmoncry SPECIES_ROTOM, CRY_MODE_ENCOUNTER
+	delay 40
+	waitmoncry
+	special BattleSetup_StartLegendaryBattle
+	waitstate
+	specialvar VAR_RESULT, GetBattleOutcome
+	goto_if_eq VAR_RESULT, B_OUTCOME_WON, NewMauville_Inside_EventScript_RotomGone
+	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, NewMauville_Inside_EventScript_RotomGone
+	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, NewMauville_Inside_EventScript_RotomGone
+	goto NewMauville_Inside_EventScript_BeatRotom
+	releaseall
+	end
+
+NewMauville_Inside_EventScript_RotomGone::
+	setvar VAR_0x8004, SPECIES_ROTOM
+	goto Common_EventScript_LegendaryFlewAway
+	end
+
+
+NewMauville_Inside_EventScript_BeatRotom::
 	msgbox NewMauville_Inside_Text_SteppedOnSwitchGeneratorStopped, MSGBOX_DEFAULT
 	call NewMauville_Inside_EventScript_SetGeneratorOffMetatiles
 	setvar VAR_NEW_MAUVILLE_STATE, 2
@@ -254,9 +277,15 @@ NewMauville_Inside_Text_GeneratorRadiatingHeat:
 NewMauville_Inside_Text_GeneratorQuietedDown:
 	.string "The generator quieted down.$"
 
-NewMauville_Inside_Text_SteppedOnSwitchGeneratorStopped:
+NewMauville_Inside_Text_SteppedOnSwitchAttacked:
 	.string "{PLAYER} stepped on the switch.\p"
 	.string "Click…\p"
+	.string "… … … … … … … …\n"
+	.string "… … … … … … … …\p"
+	.string "There's a poltergeist hiding\n"
+ 	.string "inside the switch!$"
+
+NewMauville_Inside_Text_SteppedOnSwitchGeneratorStopped:
 	.string "… … … … … … … …\n"
 	.string "… … … … … … … …\p"
 	.string "The generator appears to have\n"

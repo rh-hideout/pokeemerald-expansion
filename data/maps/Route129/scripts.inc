@@ -5,9 +5,16 @@ Route129_MapScripts::
 	.byte 0
 
 Route129_OnLoad:
+	call_if_unset FLAG_REGI_DOORS_OPENED, Route129_EventScript_CloseAncientTomb
 	call_if_eq VAR_ABNORMAL_WEATHER_LOCATION, ABNORMAL_WEATHER_ROUTE_129_WEST, AbnormalWeather_EventScript_PlaceTilesRoute129West
 	call_if_eq VAR_ABNORMAL_WEATHER_LOCATION, ABNORMAL_WEATHER_ROUTE_129_EAST, AbnormalWeather_EventScript_PlaceTilesRoute129East
 	end
+
+
+Route129_EventScript_CloseAncientTomb::
+	setmetatile 24, 5, METATILE_General_RockWall_RockBase, TRUE
+	setmetatile 24, 6, METATILE_General_RockWall_SandBase, TRUE
+	return
 
 Route129_OnTransition:
 	call_if_eq VAR_SHOULD_END_ABNORMAL_WEATHER, 1, AbnormalWeather_EventScript_HideMapNamePopup

@@ -1344,7 +1344,7 @@
     {
       "id": "LAYOUT_PETALBURG_WOODS",
       "name": "PetalburgWoods_Layout",
-      "width": 48,
+      "width": 54,
       "height": 44,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Rustboro",
@@ -4410,6 +4410,116 @@
       "secondary_tileset": "gTileset_MysteryEventsHouse",
       "border_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/border.bin",
       "blockdata_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_C1",
+      "name": "OldHouseC1_Layout",
+      "width": 5,
+      "height": 7,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseC1/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseC1/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_ENTRANCE",
+      "name": "OldHouseEntrance_Layout",
+      "width": 8,
+      "height": 10,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseEntrance/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseEntrance/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_C2",
+      "name": "OldHouseC2_Layout",
+      "width": 27,
+      "height": 26,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseC2/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseC2/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_C1_2",
+      "name": "OldHouseC1_2_Layout",
+      "width": 13,
+      "height": 10,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseC1_2/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseC1_2/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_C2_2",
+      "name": "OldHouseC2_2_Layout",
+      "width": 27,
+      "height": 26,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseC2_2/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseC2_2/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_C1_4",
+      "name": "OldHouseC1_4_Layout",
+      "width": 5,
+      "height": 7,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseC1_4/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseC1_4/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_C1_5",
+      "name": "OldHouseC1_5_Layout",
+      "width": 5,
+      "height": 7,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseC1_5/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseC1_5/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_C1_3",
+      "name": "OldHouseC1_3_Layout",
+      "width": 13,
+      "height": 11,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseC1_3/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseC1_3/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_ROOM1",
+      "name": "OldHouseRoom1_Layout",
+      "width": 10,
+      "height": 9,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseRoom1/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseRoom1/map.bin"
+    },
+    {
+      "id": "LAYOUT_OLD_HOUSE_ROOM1_2",
+      "name": "OldHouseRoom1_2_Layout",
+      "width": 10,
+      "height": 9,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/OldHouseRoom1_2/border.bin",
+      "blockdata_filepath": "data/layouts/OldHouseRoom1_2/map.bin"
+    },
+    {
+      "id": "LAYOUT_FOURTH_SEALED",
+      "name": "FourthSealed_Layout",
+      "width": 17,
+      "height": 33,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/FourthSealed/border.bin",
+      "blockdata_filepath": "data/layouts/FourthSealed/map.bin"
     }
   ]
 }

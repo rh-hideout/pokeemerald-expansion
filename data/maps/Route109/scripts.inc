@@ -360,7 +360,7 @@ Route109_EventScript_Zigzagoon::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
+	playmoncry SPECIES_LILLIPUP, CRY_MODE_NORMAL
 	msgbox Route109_Text_ZigzagoonCry, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -541,7 +541,7 @@ Route109_Text_WereGoingToMakeBigCastle:
 
 Route109_Text_ZigzagoonPicksUpLitter:
 	.string "The water around these parts is clean.\p"
-	.string "But, I get my ZIGZAGOON to pick up\n"
+	.string "But, I get my LILLIPUP to pick up\n"
 	.string "litter from the shoreline at times.\p"
 	.string "Dirty water becomes rain and joins our\n"
 	.string "rivers, which we drink from…\p"
@@ -549,7 +549,7 @@ Route109_Text_ZigzagoonPicksUpLitter:
 	.string "back to haunt us eventually.$"
 
 Route109_Text_ZigzagoonCry:
-	.string "ZIGZAGOON: Guguu?$"
+	.string "LILLIPUP: Yiyip?$"
 
 Route109_Text_SeashoreHouseSign:
 	.string "SEASHORE HOUSE\p"

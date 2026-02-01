@@ -56,7 +56,7 @@ VerdanturfTown_FriendshipRatersHouse_EventScript_Pikachu::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_PIKACHU, CRY_MODE_NORMAL
+	playmoncry SPECIES_PACHIRISU, CRY_MODE_NORMAL
 	msgbox VerdanturfTown_FriendshipRatersHouse_Text_Pikachu, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -100,5 +100,5 @@ VerdanturfTown_FriendshipRatersHouse_Text_DetestsYou:
 	.string "Doesn't that make you uncomfortable?$"
 
 VerdanturfTown_FriendshipRatersHouse_Text_Pikachu:
-	.string "PIKACHU: Pika pika!$"
+	.string "PACHIRISU: Pachu Chu!$"
 

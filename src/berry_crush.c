@@ -561,10 +561,10 @@ static const struct WindowTemplate sWindowTemplates_Results[] =
 
 // The height of the results window depending on the number of players
 // 2 players, 3 players, 4 players, or 5 players
-static const u8 sResultsWindowHeights[][MAX_RFU_PLAYERS - 1] =
+static const u8 sResultsWindowHeights[][MAX_RFU_PLAYERS] =
 {
-    {6, 8, 9, 11},    // "Presses" and "Neatness/Cooperative/Power" pages
-    {12, 14, 15, 16}, // "Crushing" page
+    {6, 6, 8, 9, 11},    // "Presses" and "Neatness/Cooperative/Power" pages
+    {12, 12, 14, 15, 16}, // "Crushing" page
 };
 
 static const u32 sPressingSpeedConversionTable[] =
@@ -592,8 +592,9 @@ static const u8 sBg_Tilemap[]           = INCBIN_U8("graphics/berry_crush/bg.bin
 
 // Takes the number of players - 2 and a player id and returns the
 // index into sPlayerCoords where that player should be seated
-static const u8 sPlayerIdToPosId[MAX_RFU_PLAYERS - 1][MAX_RFU_PLAYERS] =
+static const u8 sPlayerIdToPosId[MAX_RFU_PLAYERS][MAX_RFU_PLAYERS] =
 {
+    {0},
     {1, 3},
     {0, 1, 3},
     {1, 3, 2, 4},
@@ -945,8 +946,9 @@ static u32 (*const sBerryCrushCommands[])(struct BerryCrushGame *game, u8 *data)
 };
 
 // Per group size, the number of A presses required to increase the number of sparkles.
-static const u8 sSparkleThresholds[MAX_RFU_PLAYERS - 1][4] =
+static const u8 sSparkleThresholds[MAX_RFU_PLAYERS][4] =
 {
+    {2,  4,  6,  7}, // 1 players
     {2,  4,  6,  7}, // 2 players
     {3,  5,  8, 11}, // 3 players
     {3,  7, 11, 15}, // 4 players
@@ -954,7 +956,7 @@ static const u8 sSparkleThresholds[MAX_RFU_PLAYERS - 1][4] =
 };
 
 // Per group size, the number of A presses required to get big sparkles
-static const u8 sBigSparkleThresholds[MAX_RFU_PLAYERS - 1] = {5, 7, 9, 12};
+static const u8 sBigSparkleThresholds[MAX_RFU_PLAYERS] = {4, 5, 7, 9, 12};
 
 static const u8 sReceivedPlayerBitmasks[] = {0x03, 0x07, 0x0F, 0x1F};
 
@@ -1082,6 +1084,14 @@ static void SaveResults(void)
 
     switch (sGame->playerCount)
     {
+    case 1:
+        if (sGame->pressingSpeed > gSaveBlock2Ptr->berryCrush.pressingSpeeds[0])
+        {
+            // New 2-player record
+            sGame->newRecord = TRUE;
+            gSaveBlock2Ptr->berryCrush.pressingSpeeds[0] = sGame->pressingSpeed;
+        }
+        break;
     case 2:
         if (sGame->pressingSpeed > gSaveBlock2Ptr->berryCrush.pressingSpeeds[0])
         {

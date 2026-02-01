@@ -13,7 +13,7 @@ SootopolisCity_House4_EventScript_Azumarill::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_AZUMARILL, CRY_MODE_NORMAL
+	playmoncry SPECIES_FLOATZEL, CRY_MODE_NORMAL
 	msgbox SootopolisCity_House4_Text_Azumarill, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -35,5 +35,5 @@ SootopolisCity_House4_Text_StrollUnderwaterWithPokemon:
 	.string "stroll with my POKéMON.$"
 
 SootopolisCity_House4_Text_Azumarill:
-	.string "AZUMARILL: Marurii.$"
+	.string "FLOATZEL: Rurulu.$"
 

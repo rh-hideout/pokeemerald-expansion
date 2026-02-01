@@ -57,6 +57,11 @@ EverGrandeCity_DrakesRoom_EventScript_Defeated::
 	special Script_TryGainNewFanFromCounter
 	setflag FLAG_DEFEATED_ELITE_4_DRAKE
 	call PokemonLeague_EliteFour_SetAdvanceToNextRoomMetatiles
+	goto_if_set FLAG_DRAKE_DRAGON_PULSE, EverGrandeCity_DrakeRoom_EventScript_PostTMSpeech
+	msgbox EverGrandeCity_Drake_Text_PostFirstVictorySpeech, MSGBOX_DEFAULT
+	giveitem ITEM_TM_DRACO_METEOR
+	setflag FLAG_DRAKE_DRAGON_PULSE
+EverGrandeCity_DrakeRoom_EventScript_PostTMSpeech::
 	msgbox EverGrandeCity_DrakesRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
 	release
 	end
@@ -76,6 +81,12 @@ EverGrandeCity_DrakesRoom_Text_IntroSpeech:
 
 EverGrandeCity_DrakesRoom_Text_Defeat:
 	.string "Superb, it should be said.$"
+
+EverGrandeCity_Drake_Text_PostFirstVictorySpeech:
+	.string "Dragonslayer.\n"
+	.string "This is the title you now bear.\p"
+	.string "Behold the spoils of your victory.$"
+
 
 EverGrandeCity_DrakesRoom_Text_PostBattleSpeech:
 	.string "You deserve every credit for coming\n"

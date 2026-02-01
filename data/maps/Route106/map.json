@@ -98,6 +98,14 @@
       "elevation": 0,
       "dest_map": "MAP_GRANITE_CAVE_1F",
       "dest_warp_id": "0"
+    },
+    {
+      "warp_id": "WARP_ID_FLY_ROUTE_106",
+      "x": 58,
+      "y": 13,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE106",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [],
@@ -123,7 +131,7 @@
       "x": 68,
       "y": 15,
       "elevation": 3,
-      "item": "ITEM_HEART_SCALE",
+      "item": "ITEM_ZINC",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_106_HEART_SCALE"
     },
     {

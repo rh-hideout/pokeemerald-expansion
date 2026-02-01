@@ -38,18 +38,18 @@
   "bg_events": [
     {
       "type": "hidden_item",
-      "x": 38,
-      "y": 19,
+      "x": 69,
+      "y": 18,
       "elevation": 3,
       "item": "ITEM_PROTEIN",
       "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_128_PROTEIN"
     },
     {
       "type": "hidden_item",
-      "x": 69,
-      "y": 18,
+      "x": 38,
+      "y": 19,
       "elevation": 3,
-      "item": "ITEM_PEARL",
+      "item": "ITEM_FLYING_GEM",
       "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_128_PEARL"
     }
   ]

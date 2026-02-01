@@ -1,0 +1,84 @@
+{
+  "id": "MAP_OLD_HOUSE_C2",
+  "name": "OldHouseC2",
+  "layout": "LAYOUT_OLD_HOUSE_C2",
+  "music": "MUS_RG_LAVENDER",
+  "region_map_section": "MAPSEC_ROUTE_10_POKECENTER",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_OLD_HOUSE_C1",
+      "offset": 11,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_OLD_HOUSE_C2",
+      "offset": -11,
+      "direction": "left"
+    },
+    {
+      "map": "MAP_OLD_HOUSE_C2",
+      "offset": 0,
+      "direction": "right"
+    },
+    {
+      "map": "MAP_OLD_HOUSE_C1_2",
+      "offset": 14,
+      "direction": "left"
+    }
+  ],
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
+      "x": 19,
+      "y": 12,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_ROOM_SERVICE",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_UNUSED_0x264"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 21,
+      "y": 10,
+      "elevation": 0,
+      "dest_map": "MAP_OLD_HOUSE_C2_2",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 6,
+      "y": 10,
+      "elevation": 0,
+      "dest_map": "MAP_OLD_HOUSE_C2_2",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 6,
+      "y": 21,
+      "elevation": 0,
+      "dest_map": "MAP_OLD_HOUSE_C2_2",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 20,
+      "y": 21,
+      "elevation": 0,
+      "dest_map": "MAP_OLD_HOUSE_C2_2",
+      "dest_warp_id": "3"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

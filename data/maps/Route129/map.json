@@ -96,7 +96,15 @@
       "flag": "0"
     }
   ],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 24,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_FOURTH_SEALED",
+      "dest_warp_id": "0"
+    }
+  ],
   "coord_events": [],
   "bg_events": []
 }

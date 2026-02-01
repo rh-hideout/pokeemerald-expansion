@@ -1,11 +1,26 @@
 Route119_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, Route119_OnResume
 	map_script MAP_SCRIPT_ON_TRANSITION, Route119_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, Route119_OnFrame
 	.byte 0
 
 Route119_OnResume:
 	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, Route119_EventScript_TryRemoveKecleon
 	end
+
+Route119_OnFrame:
+	map_script_2 VAR_PHOTOSTATE, 1, Route119_EventScript_Photo
+	.2byte 0
+
+
+Route119_EventScript_Photo::
+	hideobjectat LOCALID_PLAYER, MAP_ROUTE119
+	delay 150
+	warp MAP_ROUTE130, 18, 35
+	waitstate
+	releaseall
+	end
+
 
 Route119_EventScript_TryRemoveKecleon::
 	specialvar VAR_RESULT, GetBattleOutcome

@@ -16,7 +16,13 @@ PacifidlogTown_PokemonCenter_1F_EventScript_Nurse::
 	end
 
 PacifidlogTown_PokemonCenter_1F_EventScript_Girl::
-	msgbox PacifidlogTown_PokemonCenter_1F_Text_WhatColorTrainerCard, MSGBOX_NPC
+	lock
+	faceplayer
+	waitse
+	playmoncry SPECIES_CHATOT, CRY_MODE_NORMAL
+	msgbox PacifidlogTown_PokemonCenter_1F_Text_WhatColorTrainerCard, MSGBOX_DEFAULT
+	waitmoncry
+	release
 	end
 
 PacifidlogTown_PokemonCenter_1F_EventScript_Woman::
@@ -28,12 +34,12 @@ PacifidlogTown_PokemonCenter_1F_EventScript_OldMan::
 	end
 
 PacifidlogTown_PokemonCenter_1F_Text_WhatColorTrainerCard:
-	.string "What color is your TRAINER CARD?\n"
-	.string "Mine's copper!$"
+	.string "CHATOT: Squawk! We hope to see\n"
+	.string "you again!$"
 
 PacifidlogTown_PokemonCenter_1F_Text_OnColonyOfCorsola:
 	.string "PACIFIDLOG TOWN floats on top of\n"
-	.string "a colony of CORSOLA.\p"
+	.string "a colony of SKRELP.\p"
 	.string "If I told you that, would you believe\n"
 	.string "me?$"
 

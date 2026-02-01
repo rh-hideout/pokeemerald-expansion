@@ -60,9 +60,9 @@ RustboroCity_DevonCorp_2F_EventScript_FossilScientist::
 	goto_if_eq VAR_FOSSIL_RESURRECTION_STATE, 2, RustboroCity_DevonCorp_2F_EventScript_FossilMonReady
 	goto_if_eq VAR_FOSSIL_RESURRECTION_STATE, 1, RustboroCity_DevonCorp_2F_EventScript_StillRegenerating
 	msgbox RustboroCity_DevonCorp_2F_Text_DevelopDeviceToResurrectFossils, MSGBOX_DEFAULT
-	checkitem ITEM_ROOT_FOSSIL
+	checkitem ITEM_SAIL_FOSSIL
 	goto_if_eq VAR_RESULT, TRUE, RustboroCity_DevonCorp_2F_EventScript_NoticeRootFossil
-	checkitem ITEM_CLAW_FOSSIL
+	checkitem ITEM_JAW_FOSSIL
 	goto_if_eq VAR_RESULT, TRUE, RustboroCity_DevonCorp_2F_EventScript_NoticeClawFossil
 	release
 	end
@@ -77,15 +77,15 @@ RustboroCity_DevonCorp_2F_EventScript_NoticeRootFossil::
 	waitmovement 0
 	msgbox RustboroCity_DevonCorp_2F_Text_WantToBringFossilBackToLife, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, RustboroCity_DevonCorp_2F_EventScript_DeclineGiveFossil
-	checkitem ITEM_CLAW_FOSSIL
+	checkitem ITEM_JAW_FOSSIL
 	goto_if_eq VAR_RESULT, TRUE, RustboroCity_DevonCorp_2F_EventScript_ChooseFossil
 	goto RustboroCity_DevonCorp_2F_EventScript_GiveRootFossil
 	end
 
 RustboroCity_DevonCorp_2F_EventScript_GiveRootFossil::
-	bufferitemname STR_VAR_1, ITEM_ROOT_FOSSIL
+	bufferitemname STR_VAR_1, ITEM_SAIL_FOSSIL
 	msgbox RustboroCity_DevonCorp_2F_Text_HandedFossilToResearcher, MSGBOX_DEFAULT
-	removeitem ITEM_ROOT_FOSSIL
+	removeitem ITEM_SAIL_FOSSIL
 	setvar VAR_FOSSIL_RESURRECTION_STATE, 1
 	setvar VAR_WHICH_FOSSIL_REVIVED, 1
 	release
@@ -100,15 +100,15 @@ RustboroCity_DevonCorp_2F_EventScript_NoticeClawFossil::
 	waitmovement 0
 	msgbox RustboroCity_DevonCorp_2F_Text_WantToBringFossilBackToLife, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, RustboroCity_DevonCorp_2F_EventScript_DeclineGiveFossil
-	checkitem ITEM_ROOT_FOSSIL
+	checkitem ITEM_SAIL_FOSSIL
 	goto_if_eq VAR_RESULT, TRUE, RustboroCity_DevonCorp_2F_EventScript_ChooseFossil
 	goto RustboroCity_DevonCorp_2F_EventScript_GiveClawFossil
 	end
 
 RustboroCity_DevonCorp_2F_EventScript_GiveClawFossil::
-	bufferitemname STR_VAR_1, ITEM_CLAW_FOSSIL
+	bufferitemname STR_VAR_1, ITEM_JAW_FOSSIL
 	msgbox RustboroCity_DevonCorp_2F_Text_HandedFossilToResearcher, MSGBOX_DEFAULT
-	removeitem ITEM_CLAW_FOSSIL
+	removeitem ITEM_JAW_FOSSIL
 	setvar VAR_FOSSIL_RESURRECTION_STATE, 1
 	setvar VAR_WHICH_FOSSIL_REVIVED, 2
 	release
@@ -130,20 +130,20 @@ RustboroCity_DevonCorp_2F_EventScript_FossilMonReady::
 	end
 
 RustboroCity_DevonCorp_2F_EventScript_LileepReady::
-	bufferspeciesname STR_VAR_2, SPECIES_LILEEP
+	bufferspeciesname STR_VAR_2, SPECIES_AMAURA
 	msgbox RustboroCity_DevonCorp_2F_Text_FossilizedMonBroughtBackToLife, MSGBOX_DEFAULT
 	goto RustboroCity_DevonCorp_2F_EventScript_ReceiveLileep
 	end
 
 RustboroCity_DevonCorp_2F_EventScript_AnorithReady::
-	bufferspeciesname STR_VAR_2, SPECIES_ANORITH
+	bufferspeciesname STR_VAR_2, SPECIES_TYRUNT
 	msgbox RustboroCity_DevonCorp_2F_Text_FossilizedMonBroughtBackToLife, MSGBOX_DEFAULT
 	goto RustboroCity_DevonCorp_2F_EventScript_ReceiveAnorith
 	end
 
 RustboroCity_DevonCorp_2F_EventScript_ReceiveLileep::
-	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_LILEEP
-	givemon SPECIES_LILEEP, 20
+	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_AMAURA
+	givemon SPECIES_AMAURA, 20
 	goto_if_eq VAR_RESULT, MON_GIVEN_TO_PARTY, RustboroCity_DevonCorp_2F_EventScript_ReceiveLileepParty
 	goto_if_eq VAR_RESULT, MON_GIVEN_TO_PC, RustboroCity_DevonCorp_2F_EventScript_ReceiveLileepPC
 	goto Common_EventScript_NoMoreRoomForPokemon
@@ -172,12 +172,12 @@ RustboroCity_DevonCorp_2F_EventScript_TransferLileepToPC::
 	end
 
 RustboroCity_DevonCorp_2F_EventScript_ReceivedLileepFanfare::
-	bufferspeciesname STR_VAR_2, SPECIES_LILEEP
+	bufferspeciesname STR_VAR_2, SPECIES_AMAURA
 	playfanfare MUS_OBTAIN_ITEM
 	message RustboroCity_DevonCorp_2F_Text_ReceivedMonFromResearcher
 	waitmessage
 	waitfanfare
-	bufferspeciesname STR_VAR_1, SPECIES_LILEEP
+	bufferspeciesname STR_VAR_1, SPECIES_AMAURA
 	return
 
 RustboroCity_DevonCorp_2F_EventScript_FinishReceivingLileep::
@@ -187,8 +187,8 @@ RustboroCity_DevonCorp_2F_EventScript_FinishReceivingLileep::
 	end
 
 RustboroCity_DevonCorp_2F_EventScript_ReceiveAnorith::
-	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_ANORITH
-	givemon SPECIES_ANORITH, 20
+	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_TYRUNT
+	givemon SPECIES_TYRUNT, 20
 	goto_if_eq VAR_RESULT, MON_GIVEN_TO_PARTY, RustboroCity_DevonCorp_2F_EventScript_ReceiveAnorithParty
 	goto_if_eq VAR_RESULT, MON_GIVEN_TO_PC, RustboroCity_DevonCorp_2F_EventScript_ReceiveAnorithPC
 	goto Common_EventScript_NoMoreRoomForPokemon
@@ -217,12 +217,12 @@ RustboroCity_DevonCorp_2F_EventScript_TransferAnorithToPC::
 	end
 
 RustboroCity_DevonCorp_2F_EventScript_ReceivedAnorithFanfare::
-	bufferspeciesname STR_VAR_2, SPECIES_ANORITH
+	bufferspeciesname STR_VAR_2, SPECIES_TYRUNT
 	playfanfare MUS_OBTAIN_ITEM
 	message RustboroCity_DevonCorp_2F_Text_ReceivedMonFromResearcher
 	waitmessage
 	waitfanfare
-	bufferspeciesname STR_VAR_1, SPECIES_ANORITH
+	bufferspeciesname STR_VAR_1, SPECIES_TYRUNT
 	return
 
 RustboroCity_DevonCorp_2F_EventScript_FinishReceivingAnorith::

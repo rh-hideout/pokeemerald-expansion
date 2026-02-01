@@ -16,7 +16,7 @@
   "object_events": [
     {
       "local_id": "LOCALID_FARAWAY_ISLAND_MEW",
-      "graphics_id": "OBJ_EVENT_GFX_MEW",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(MARSHADOW)",
       "x": 13,
       "y": 17,
       "elevation": 3,

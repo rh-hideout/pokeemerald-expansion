@@ -302,7 +302,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_CARBOS",
+      "trainer_sight_or_berry_tree_id": "ITEM_BINDING_BAND",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_121_CARBOS"
     },
@@ -418,6 +418,13 @@
       "elevation": 0,
       "dest_map": "MAP_ROUTE121_SAFARI_ZONE_ENTRANCE",
       "dest_warp_id": "2"
+    },
+    {
+      "x": 37,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE121",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

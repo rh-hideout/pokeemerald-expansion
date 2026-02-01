@@ -1,13 +1,12 @@
 @ Interact with cuttable tree
 EventScript_CutTree::
 	lockall
+	goto_if_unset FLAG_BADGE01_GET, EventScript_CheckTreeCantCut
+	buffermovename STR_VAR_2, MOVE_CUT
 	checkfieldmove FIELD_MOVE_CUT, TRUE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckTreeCantCut
+	call_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckSecretPowerCut
 	setfieldeffectargument 0, VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
-	buffermovename STR_VAR_2, MOVE_CUT
-	msgbox Text_WantToCut, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_CancelCut
 	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
 	closemessage
 EventScript_CutTreeCommon:
@@ -23,6 +22,12 @@ EventScript_CutTreeDown:: @ fallthrough
 	removeobject VAR_LAST_TALKED
 	releaseall
 	end
+
+EventScript_CheckSecretPowerCut::
+	buffermovename STR_VAR_2, MOVE_SECRET_POWER
+	checkfieldmove FIELD_MOVE_SECRET_POWER, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckTreeCantCut
+	return
 
 @ Use cut from party menu
 EventScript_UseCut::
@@ -63,13 +68,12 @@ EventScript_UseRockSmash::
 @ Interact with smashable rock
 EventScript_RockSmash::
 	lockall
+	goto_if_unset FLAG_BADGE03_GET, EventScript_CantSmashRock
+	buffermovename STR_VAR_2, MOVE_ROCK_SMASH
 	checkfieldmove FIELD_MOVE_ROCK_SMASH, TRUE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSmashRock
+	call_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckSecretPowerSmash
 	setfieldeffectargument 0, VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
-	buffermovename STR_VAR_2, MOVE_ROCK_SMASH
-	msgbox Text_WantToSmash, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_CancelSmash
 	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
 	closemessage
 EventScript_RockSmashCommon:
@@ -91,6 +95,12 @@ EventScript_SmashRock:: @ fallthrough
 	waitstate
 	releaseall
 	end
+
+EventScript_CheckSecretPowerSmash::
+	buffermovename STR_VAR_2, MOVE_SECRET_POWER
+	checkfieldmove FIELD_MOVE_SECRET_POWER, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSmashRock
+	return
 
 EventScript_FollowerFieldMove:
 	getdirectiontoface VAR_0x8005, OBJ_EVENT_ID_FOLLOWER, OBJ_EVENT_ID_PLAYER
@@ -224,16 +234,21 @@ Text_CantSmash:
 EventScript_StrengthBoulder::
 	lockall
 	goto_if_set FLAG_SYS_USE_STRENGTH, EventScript_CheckActivatedBoulder
+	goto_if_unset FLAG_BADGE04_GET, EventScript_CantStrength
+	buffermovename STR_VAR_2, MOVE_STRENGTH
 	checkfieldmove FIELD_MOVE_STRENGTH, TRUE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantStrength
+	call_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckSecretPowerSmash
 	setfieldeffectargument 0, VAR_RESULT
-	msgbox Text_WantToStrength, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_CancelStrength
-	closemessage
 	dofieldeffect FLDEFF_USE_STRENGTH
 	waitstate
 	goto EventScript_ActivateStrength
 	end
+
+EventScript_CheckSecretPowerStrength::
+	buffermovename STR_VAR_2, MOVE_SECRET_POWER
+	checkfieldmove FIELD_MOVE_SECRET_POWER, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantStrength
+	return
 
 EventScript_UseStrength::
 	lockall
@@ -244,7 +259,7 @@ EventScript_UseStrength::
 
 EventScript_ActivateStrength::
 	setflag FLAG_SYS_USE_STRENGTH
-	msgbox Text_MonUsedStrength, MSGBOX_DEFAULT
+	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
 	releaseall
 	end
 
@@ -263,12 +278,12 @@ EventScript_CancelStrength::
 	releaseall
 	end
 
-Text_WantToStrength:
+Text_WantToStrength://UNUSED
 	.string "It's a big boulder, but a POKéMON\n"
 	.string "may be able to push it aside.\p"
 	.string "Would you like to use STRENGTH?$"
 
-Text_MonUsedStrength:
+Text_MonUsedStrength://UNUSED
 	.string "{STR_VAR_1} used STRENGTH!\p"
 	.string "{STR_VAR_1}'s STRENGTH made it\n"
 	.string "possible to move boulders around!$"
@@ -278,22 +293,28 @@ Text_CantStrength:
 	.string "may be able to push it aside.$"
 
 Text_StrengthActivated:
-	.string "STRENGTH made it possible to move\n"
-	.string "boulders around.$"
+	.string "It's possible to move boulders\n"
+	.string "around.$"
 
 EventScript_UseWaterfall::
 	lockall
+	goto_if_unset FLAG_BADGE08_GET, EventScript_CantWaterfall
+	buffermovename STR_VAR_2, MOVE_WATERFALL
 	checkfieldmove FIELD_MOVE_WATERFALL
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantWaterfall
+	call_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckSecretPowerFall
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
-	msgbox Text_WantToWaterfall, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_EndWaterfall
-	msgbox Text_MonUsedWaterfall, MSGBOX_DEFAULT
+	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
 	hidefollowernpc
 	dofieldeffect FLDEFF_USE_WATERFALL
 	callnative FollowerNPC_WarpSetEnd
 	goto EventScript_EndWaterfall
+
+EventScript_CheckSecretPowerFall::
+	buffermovename STR_VAR_2, MOVE_SECRET_POWER
+	checkfieldmove FIELD_MOVE_SECRET_POWER
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantWaterfall
+	return
 
 EventScript_CannotUseWaterfall::
 	lockall
@@ -318,21 +339,27 @@ Text_MonUsedWaterfall:
 
 EventScript_UseDive::
 	lockall
+	goto_if_unset FLAG_BADGE07_GET, EventScript_CantDive
+	buffermovename STR_VAR_2, MOVE_DIVE
 	checkfieldmove FIELD_MOVE_DIVE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantDive
+	call_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckSecretPowerDive
 	copyvar 0x8004 VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
 	setfieldeffectargument 1, 1
-	msgbox Text_WantToDive, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_EndDive
-	msgbox Text_MonUsedDive, MSGBOX_DEFAULT
+	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
 	hidefollowernpc
 	setfieldeffectargument 0, VAR_0x8004
 	setfieldeffectargument 1, 1
 	dofieldeffect FLDEFF_USE_DIVE
 	goto EventScript_EndDive
 	end
+
+EventScript_CheckSecretPowerDive::
+	buffermovename STR_VAR_2, MOVE_SECRET_POWER
+	checkfieldmove FIELD_MOVE_SECRET_POWER, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantDive
+	return
 
 EventScript_CantDive::
 	msgbox Text_CantDive, MSGBOX_DEFAULT
@@ -345,18 +372,23 @@ EventScript_EndDive::
 
 EventScript_UseDiveUnderwater::
 	lockall
+	buffermovename STR_VAR_2, MOVE_DIVE
 	checkfieldmove FIELD_MOVE_DIVE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSurface
+	call_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckSecretPowerDiveUnderwater
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
 	setfieldeffectargument 1, 1
-	msgbox Text_WantToSurface, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_NoSurface
-	msgbox Text_MonUsedDive, MSGBOX_DEFAULT
+	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
 	hidefollowernpc
 	dofieldeffect FLDEFF_USE_DIVE
 	goto EventScript_EndSurface
 	end
+
+EventScript_CheckSecretPowerDiveUnderwater::
+	buffermovename STR_VAR_2, MOVE_SECRET_POWER
+	checkfieldmove FIELD_MOVE_SECRET_POWER, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSurface
+	return
 
 EventScript_CantSurface::
 	lockall
@@ -448,8 +480,6 @@ EventScript_UseRockClimb::
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantRockClimb
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
-	msgbox Text_WantToRockClimb, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_EndRockClimb
 	msgbox Text_MonUsedRockClimb, MSGBOX_DEFAULT
 	closemessage
 	dofieldeffect FLDEFF_USE_ROCK_CLIMB

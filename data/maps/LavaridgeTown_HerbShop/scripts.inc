@@ -19,6 +19,44 @@ LavaridgeTown_HerbShop_Pokemart:
 	.2byte ITEM_REVIVAL_HERB
 	pokemartlistend
 
+LavaridgeTown_HerbShop_EventScript_Clerk2::
+	lock
+	faceplayer
+	message LavaridgeTown_HerbShop_Text_WelcomeToMintShop
+	waitmessage
+	pokemart LavaridgeTown_HerbShop_Pokemart2
+	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
+	release
+	end
+
+	.align 2
+LavaridgeTown_HerbShop_Pokemart2:
+	.2byte  ITEM_ADAMANT_MINT
+	.2byte  ITEM_MODEST_MINT 
+	.2byte  ITEM_TIMID_MINT 
+	.2byte  ITEM_JOLLY_MINT 
+	.2byte  ITEM_BOLD_MINT 
+	.2byte  ITEM_IMPISH_MINT 
+	.2byte  ITEM_CALM_MINT 
+	.2byte  ITEM_CAREFUL_MINT 
+	.2byte  ITEM_LONELY_MINT 
+	.2byte  ITEM_BRAVE_MINT 
+	.2byte  ITEM_RELAXED_MINT 
+	.2byte  ITEM_MILD_MINT 
+	.2byte  ITEM_RASH_MINT 
+	.2byte  ITEM_QUIET_MINT 
+	.2byte  ITEM_SASSY_MINT 
+	.2byte  ITEM_NAUGHTY_MINT 
+	.2byte  ITEM_HASTY_MINT 
+	.2byte  ITEM_NAIVE_MINT 
+	.2byte  ITEM_LAX_MINT 
+	.2byte  ITEM_GENTLE_MINT 
+	.2byte  ITEM_SERIOUS_MINT
+
+
+ 
+	pokemartlistend
+
 LavaridgeTown_HerbShop_EventScript_ExpertM::
 	msgbox LavaridgeTown_HerbShop_Text_HerbalMedicineWorksButMonWillDislike, MSGBOX_NPC
 	end
@@ -42,6 +80,10 @@ LavaridgeTown_HerbShop_EventScript_ExplainCharcoal::
 LavaridgeTown_HerbShop_Text_WelcomeToHerbShop:
 	.string "Welcome to the HERB SHOP, home of\n"
 	.string "effective and inexpensive medicine!$"
+
+LavaridgeTown_HerbShop_Text_WelcomeToMintShop:
+	.string "Welcome to the HERB SHOP, home of\n"
+	.string "healthy, tasty herbal mints!$"
 
 LavaridgeTown_HerbShop_Text_YouveComeToLookAtHerbalMedicine:
 	.string "You've come to look at herbal medicine\n"

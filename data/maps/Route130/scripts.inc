@@ -1,6 +1,21 @@
 Route130_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route130_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, Route130_OnFrame
 	.byte 0
+
+Route130_OnFrame:
+	map_script_2 VAR_PHOTOSTATE, 1, Route130_EventScript_Photo
+	.2byte 0
+
+
+Route130_EventScript_Photo::
+	hideobjectat LOCALID_PLAYER, MAP_ROUTE130
+	delay 150
+	warp MAP_ROUTE115, 12, 9
+	waitstate
+	releaseall
+	end
+
 
 Route130_OnTransition:
 	call_if_ge VAR_SOOTOPOLIS_CITY_STATE, 4, Route130_EventScript_CheckSetAbnormalWeather

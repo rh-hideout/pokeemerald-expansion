@@ -279,6 +279,7 @@ SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
             }
             break;
         case ITEM_LIGHT_BALL:
+        case ITEM_HONEY:
             {
                 MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
                 STATUS_ICON(opponent, STATUS1_PARALYSIS);

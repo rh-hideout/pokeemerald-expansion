@@ -19,7 +19,7 @@ Route104_Text_TrainersOftenMakeMonHoldBerries:
 	.string "or use them.$"
 
 Route111_Text_WateredPlantsEveryDayTakeBerry:
-	.string "I watered the plants every day.\n"
+	.string "I weeded the plants every day.\n"
 	.string "They grew lots of flowers.\p"
 	.string "And they gave me lots of BERRIES, too.\p"
 	.string "Here you go!\n"
@@ -50,8 +50,8 @@ Route114_Text_FunToThinkAboutBerries:
 
 Route120_Text_BerriesExpressionOfLoveIsntIt:
 	.string "BERRIES grow by soaking up sunlight.\p"
-	.string "We help the BERRIES grow by watering\n"
-	.string "them regularly.\p"
+	.string "We help the BERRIES grow by weeding\n"
+	.string "and fighting pests regularly.\p"
 	.string "It's an expression of love, isn't it?$"
 
 Route120_Text_YesYouUnderstand:
@@ -179,11 +179,11 @@ Route104_PrettyPetalFlowerShop_Text_WailmerPailExplanation:
 	.string "While BERRY plants are growing,\n"
 	.string "water them with the WAILMER PAIL.\p"
 	.string "Oh, another thing.\p"
-	.string "If you don't pick BERRIES for a while,\n"
-	.string "they'll drop off onto the ground.\l"
-	.string "But they'll sprout again.\p"
+	.string "BUG-type POKéMON can pester BERRY\n"
+	.string "plants as they're growing. But those\l"
+	.string "BUGS all hold nutritious MULCH!\p"
 	.string "Isn't that awesome?\n"
-	.string "It's like they have the will to live.$"
+	.string "It's like they're trying to help!$"
 
 Route104_PrettyPetalFlowerShop_Text_ImGrowingFlowers:
 	.string "I'm trying to be like my big sisters.\n"

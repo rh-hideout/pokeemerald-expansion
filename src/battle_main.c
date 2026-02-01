@@ -1,3 +1,5 @@
+
+
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -4854,6 +4856,12 @@ s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move)
     }
     else if (ability == ABILITY_GALE_WINGS
           && (GetConfig(CONFIG_GALE_WINGS) < GEN_7 || IsBattlerAtMaxHp(battler))
+          && GetMoveType(move) == TYPE_FLYING)
+    {
+        priority++;
+    }
+    else if (ability == ABILITY_KEEN_EYE
+          && (IsBattlerAtMaxHp(battler))
           && GetMoveType(move) == TYPE_FLYING)
     {
         priority++;

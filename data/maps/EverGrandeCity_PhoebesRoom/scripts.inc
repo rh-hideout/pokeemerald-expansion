@@ -54,7 +54,12 @@ EverGrandeCity_PhoebesRoom_EventScript_PostBattleSpeech::
 EverGrandeCity_PhoebesRoom_EventScript_Defeated::
 	setflag FLAG_DEFEATED_ELITE_4_PHOEBE
 	call PokemonLeague_EliteFour_SetAdvanceToNextRoomMetatiles
-	msgbox EverGrandeCity_PhoebesRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
+	goto_if_set FLAG_PHOEBE_PHANTOM_FORCE, EverGrandeCity_PhoebesRoom_EventScript_PostTMSpeech
+	msgbox EverGrandeCity_PhoebesRoom_Text_PostFirstVictorySpeech, MSGBOX_DEFAULT
+	giveitem ITEM_TM_PHANTOM_FORCE
+	setflag FLAG_PHOEBE_PHANTOM_FORCE
+EverGrandeCity_PhoebesRoom_EventScript_PostTMSpeech::
+	msgbox EverGrandeCity_SidneysRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
 	release
 	end
 
@@ -73,11 +78,18 @@ EverGrandeCity_PhoebesRoom_Text_Defeat:
 	.string "Oh, darn.\n"
 	.string "I've gone and lost.$"
 
-EverGrandeCity_PhoebesRoom_Text_PostBattleSpeech:
+EverGrandeCity_PhoebesRoom_Text_PostFirstVictorySpeech:
 	.string "There's a definite bond between you\n"
 	.string "and your POKéMON, too.\p"
 	.string "I didn't recognize it, so it's only\n"
 	.string "natural that I lost.\p"
+	.string "Well. Before you vanish, here's a\n"
+	.string "keepsake.$"
+
+
+EverGrandeCity_PhoebesRoom_Text_PostBattleSpeech:
+	.string "I hope the bond between you and your\n"
+	.string "POKéMON continues to strengthen.\p"
 	.string "Yup, I'd like to see how far your bond\n"
 	.string "will carry you.\p"
 	.string "Go ahead, move on to the next room.$"

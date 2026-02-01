@@ -53,9 +53,9 @@ SealedChamber_OuterRoom_Braille_DigHere:
 SealedChamber_InnerRoom_Braille_FirstWailordLastRelicanth:
 	brailleformat 0, 0, 29, 19, 3, 3
 	.braille "FIRST COMES\n"
-	.braille "WAILORD.\n"
+	.braille "LUMINEON.\n"
 	.braille "LAST COMES\n"
-	.braille "RELICANTH.$"
+	.braille "SIGILYPH.$"
 
 SealedChamber_InnerRoom_Braille_InThisCaveWeHaveLived:
 	brailleformat 2, 0, 26, 19, 5, 3
@@ -115,3 +115,10 @@ AncientTomb_Braille_ShineInTheMiddle:
 	.braille "INHERIT OUR\n"
 	.braille "WILL, SHINE\n"
 	.braille "IN THE MIDDLE.$"
+
+FourthSealed_Braille_ContestWinner:
+	brailleformat 3, 0, 25, 19, 6, 3
+	.braille "BRING FORTH\n"
+	.braille "A RIBBON\n"
+	.braille "OF HYPER\n"
+	.braille "CUTENESS.$"

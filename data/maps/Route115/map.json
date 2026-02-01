@@ -164,7 +164,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_TM_FOCUS_PUNCH",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM_DRAIN_PUNCH",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_115_TM_FOCUS_PUNCH"
     },
@@ -229,7 +229,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_GREAT_BALL",
+      "trainer_sight_or_berry_tree_id": "ITEM_PP_UP",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_115_GREAT_BALL"
     },
@@ -307,7 +307,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_PP_UP",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM_PAIN_SPLIT",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_115_PP_UP"
     },
@@ -345,6 +345,14 @@
       "y": 10,
       "elevation": 0,
       "dest_map": "MAP_TERRA_CAVE_ENTRANCE",
+      "dest_warp_id": "0"
+    },
+    {
+      "warp_id": "WARP_ID_FLY_ROUTE_115",
+      "x": 27,
+      "y": 38,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE115",
       "dest_warp_id": "0"
     }
   ],
@@ -448,8 +456,16 @@
       "x": 15,
       "y": 49,
       "elevation": 3,
-      "item": "ITEM_HEART_SCALE",
+      "item": "ITEM_PEARL",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_115_HEART_SCALE"
+    },
+    {
+      "type": "hidden_item",
+      "x": 12,
+      "y": 9,
+      "elevation": 3,
+      "item": "ITEM_MYSTIC_TICKET",
+      "flag": "FLAG_MYSTICTICKET_ITEM"
     }
   ]
 }

@@ -236,14 +236,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 12,
-      "y": 121,
+      "x": 33,
+      "y": 117,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_SUPER_REPEL",
+      "trainer_sight_or_berry_tree_id": "ITEM_MAX_REPEL",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_119_SUPER_REPEL"
     },
@@ -275,14 +275,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 25,
-      "y": 76,
+      "x": 22,
+      "y": 59,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_LEAF_STONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_ULTRA_BALL",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_119_LEAF_STONE"
     },
@@ -295,14 +295,14 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_RARE_CANDY",
+      "trainer_sight_or_berry_tree_id": "ITEM_TERRAIN_EXTENDER",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_119_RARE_CANDY"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 33,
-      "y": 117,
+      "x": 12,
+      "y": 121,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -432,14 +432,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 3,
-      "y": 56,
+      "x": 25,
+      "y": 76,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_HYPER_POTION",
+      "trainer_sight_or_berry_tree_id": "ITEM_BIG_ROOT",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_119_HYPER_POTION_2"
     },
@@ -470,7 +470,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_KECLEON",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(ZORUA)",
       "x": 31,
       "y": 6,
       "elevation": 3,
@@ -483,7 +483,7 @@
       "flag": "FLAG_HIDE_ROUTE_119_KECLEON_1"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_KECLEON",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(ZORUA)",
       "x": 25,
       "y": 15,
       "elevation": 3,
@@ -601,6 +601,13 @@
       "y": 109,
       "elevation": 0,
       "dest_map": "MAP_ROUTE119_HOUSE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 6,
+      "y": 33,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE119",
       "dest_warp_id": "0"
     }
   ],
@@ -857,7 +864,7 @@
       "x": 38,
       "y": 63,
       "elevation": 3,
-      "item": "ITEM_ULTRA_BALL",
+      "item": "ITEM_LEAF_STONE",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_119_ULTRA_BALL"
     },
     {
@@ -918,6 +925,22 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route119_EventScript_TrainerTipsDecoration"
+    },
+    {
+      "type": "hidden_item",
+      "x": 16,
+      "y": 63,
+      "elevation": 0,
+      "item": "ITEM_CARBOS",
+      "flag": "FLAG_UNUSED_0x26D"
+    },
+    {
+      "type": "hidden_item",
+      "x": 32,
+      "y": 37,
+      "elevation": 3,
+      "item": "ITEM_EON_TICKET",
+      "flag": "FLAG_EONTICKET_ITEM"
     }
   ]
 }

@@ -16,8 +16,19 @@ Route115_OnTransition:
 	end
 
 Route115_OnFrame:
+	map_script_2 VAR_PHOTOSTATE, 1, Route115_EventScript_Photo
 	map_script_2 VAR_SHOULD_END_ABNORMAL_WEATHER, 1, AbnormalWeather_EventScript_EndEventAndCleanup_1
 	.2byte 0
+
+
+Route115_EventScript_Photo::
+	hideobjectat LOCALID_PLAYER, MAP_ROUTE115
+	delay 150
+	setvar VAR_PHOTOSTATE, 0
+	warpwhitefade MAP_ROUTE123, 31, 10
+	waitstate
+	releaseall
+	end
 
 Route115_EventScript_Woman::
 	msgbox Route115_Text_NeverKnowWhenCavePokemonWillAppear, MSGBOX_NPC

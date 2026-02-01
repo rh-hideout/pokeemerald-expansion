@@ -54,7 +54,7 @@ FortreeCity_House1_EventScript_Zigzagoon::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
+	playmoncry SPECIES_LILLIPUP, CRY_MODE_NORMAL
 	msgbox FortreeCity_House1_Text_Zigzagoon, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -94,5 +94,5 @@ FortreeCity_House1_Text_TradingMemoriesWithOthers:
 	.string "memories with other people.$"
 
 FortreeCity_House1_Text_Zigzagoon:
-	.string "ZIGZAGOON: Gumomoh?$"
+	.string "LILLIPUP: Yip yip?$"
 

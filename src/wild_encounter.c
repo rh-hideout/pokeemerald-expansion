@@ -33,7 +33,7 @@ extern const u8 EventScript_SprayWoreOff[];
 
 #define MAX_ENCOUNTER_RATE 2880
 
-#define NUM_FEEBAS_SPOTS 6
+#define NUM_FEEBAS_SPOTS 12
 
 // Number of accessible fishing spots in each section of Route 119
 // Each section is an area of the route between the y coordinates in sRoute119WaterTileData
@@ -66,7 +66,7 @@ EWRAM_DATA u8 gChainFishingDexNavStreak = 0;
 
 #include "data/wild_encounters.h"
 
-static const struct WildPokemon sWildFeebas = {20, 25, SPECIES_FEEBAS};
+static const struct WildPokemon sWildFeebas = {20, 25, SPECIES_BASCULIN_WHITE_STRIPED};
 
 static const u16 sRoute119WaterTileData[] =
 {
@@ -134,10 +134,6 @@ static bool8 CheckFeebas(void)
             route119Section = 1;
         if (y >= sRoute119WaterTileData[3 * 2 + 0] && y <= sRoute119WaterTileData[3 * 2 + 1])
             route119Section = 2;
-
-        // 50% chance of encountering Feebas (assuming this is a Feebas spot)
-        if (Random() % 100 > 49)
-            return FALSE;
 
         FeebasSeedRng(gSaveBlock1Ptr->dewfordTrends[0].rand);
 

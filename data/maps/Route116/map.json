@@ -112,7 +112,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_ETHER",
+      "trainer_sight_or_berry_tree_id": "ITEM_METRONOME",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_116_ETHER"
     },
@@ -426,6 +426,14 @@
       "y": 6,
       "elevation": 0,
       "dest_map": "MAP_TERRA_CAVE_ENTRANCE",
+      "dest_warp_id": "0"
+    },
+    {
+      "warp_id": "WARP_ID_FLY_ROUTE_116",
+      "x": 47,
+      "y": 9,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE116",
       "dest_warp_id": "0"
     }
   ],

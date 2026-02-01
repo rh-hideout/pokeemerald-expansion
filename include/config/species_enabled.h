@@ -13,8 +13,8 @@
 #define P_GEN_5_POKEMON                  TRUE // Generation 5 Pokémon (BW, B2W2)
 #define P_GEN_6_POKEMON                  TRUE // Generation 6 Pokémon (XY, ORAS)
 #define P_GEN_7_POKEMON                  TRUE // Generation 7 Pokémon (SM, USUM, LGPE)
-#define P_GEN_8_POKEMON                  TRUE // Generation 8 Pokémon (SwSh, BDSP, LA)
-#define P_GEN_9_POKEMON                  TRUE // Generation 9 Pokémon (SV)
+#define P_GEN_8_POKEMON                  FALSE // Generation 8 Pokémon (SwSh, BDSP, LA)
+#define P_GEN_9_POKEMON                  FALSE // Generation 9 Pokémon (SV)
 
 // Setting this to TRUE will add the new evolutions to the Regional Dex.
 #define P_NEW_EVOS_IN_REGIONAL_DEX       TRUE
@@ -23,19 +23,19 @@
 #define P_MEGA_EVOLUTIONS                TRUE
 #define P_PRIMAL_REVERSIONS              TRUE // Groudon and Kyogre only.
 #define P_ULTRA_BURST_FORMS              TRUE // Ultra Necrozma only.
-#define P_GIGANTAMAX_FORMS               TRUE
-#define P_TERA_FORMS                     TRUE
+#define P_GIGANTAMAX_FORMS               FALSE
+#define P_TERA_FORMS                     FALSE
 
-#define P_GEN_9_MEGA_EVOLUTIONS          P_MEGA_EVOLUTIONS // Mega Evolutions introduced in Z-A and its DLC
+#define P_GEN_9_MEGA_EVOLUTIONS          FALSE // Mega Evolutions introduced in Z-A and its DLC
 
 // Fusion forms
 #define P_FUSION_FORMS                   TRUE
 
 // Regional Forms. Includes Regional Form evolutions, like Sirfetch'd.
-#define P_REGIONAL_FORMS                 TRUE
+#define P_REGIONAL_FORMS                 FALSE
 #define P_ALOLAN_FORMS                   P_REGIONAL_FORMS
-#define P_GALARIAN_FORMS                 P_REGIONAL_FORMS
-#define P_HISUIAN_FORMS                  P_REGIONAL_FORMS
+#define P_GALARIAN_FORMS                 TRUE
+#define P_HISUIAN_FORMS                  TRUE
 #define P_PALDEAN_FORMS                  P_REGIONAL_FORMS
 
 // Big groups of forms that aren't always desired when choosing families.
@@ -212,7 +212,7 @@
 #define P_FAMILY_PLUSLE                  P_GEN_3_POKEMON
 #define P_FAMILY_MINUN                   P_GEN_3_POKEMON
 #define P_FAMILY_VOLBEAT_ILLUMISE        P_GEN_3_POKEMON
-#define P_FAMILY_ROSELIA                 P_GEN_3_POKEMON
+#define P_FAMILY_ROSELIA                 TRUE
 #define P_FAMILY_GULPIN                  P_GEN_3_POKEMON
 #define P_FAMILY_CARVANHA                P_GEN_3_POKEMON
 #define P_FAMILY_WAILMER                 P_GEN_3_POKEMON

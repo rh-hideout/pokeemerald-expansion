@@ -23,6 +23,8 @@ BerryTree_EventScript_Sparkling::
 BerryTree_EventScript_CheckSoil::
 	lock
 	faceplayer
+BerryTree_EventScript_CheckSoilJump::
+	addobject VAR_LAST_TALKED
 	specialvar VAR_RESULT, PlayerHasBerries
 	goto_if_eq VAR_RESULT, TRUE, BerryTree_EventScript_WantToPlant
 	specialvar VAR_RESULT, PlayerHasMulch
@@ -36,9 +38,9 @@ BerryTree_EventScript_CheckSoil::
 BerryTree_EventScript_WantToPlant::
 	specialvar VAR_RESULT, PlayerHasMulch
 	goto_if_eq VAR_RESULT, TRUE, BerryTree_EventScript_WantToPlantMulch
-	msgbox BerryTree_Text_WantToPlant, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, YES, BerryTree_EventScript_ChooseBerryToPlant
-	goto_if_eq VAR_RESULT, NO, BerryTree_EventScript_CancelPlanting
+	message BerryTree_Text_WantToPlant
+	waitmessage
+	goto BerryTree_EventScript_ChooseBerryToPlant
 	end
 
 BerryTree_EventScript_WantToMulch::
@@ -175,6 +177,7 @@ BerryTree_EventScript_PickBerry::
 .endif
 	special IncrementDailyPickedBerries
 	special ObjectEventInteractionRemoveBerryTree
+	waitse
 	message BerryTree_Text_PickedTheBerry
 	delay 10
 	showberrydescription
@@ -186,7 +189,8 @@ BerryTree_EventScript_PickBerry::
 	waitmessage
 	waitbuttonpress
 	hideitemdescription
-	release
+	removeobject VAR_LAST_TALKED
+	goto BerryTree_EventScript_CheckSoilJump
 	end
 
 BerryTree_EventScript_BerryPocketFull::
@@ -210,6 +214,7 @@ BerryTree_EventScript_ItemUsePlantBerry::
 	releaseall
 	end
 
+@ This does not get run when the wailmer pail is run from the bag, leading to really high yields again. Which is fine, but also a bug. ########################
 BerryTree_EventScript_WantToWater::
 .if OW_BERRY_PESTS == TRUE
 	call BerryTree_EventScript_CheckForPests
@@ -261,7 +266,7 @@ BerryTree_Text_ItsSoftLoamySoil:
 
 BerryTree_Text_WantToPlant:
 	.string "It's soft, loamy soil.\n"
-	.string "Want to plant a BERRY?$"
+	.string "Let's plant a BERRY!$"
 
 BerryTree_Text_PlantedOneBerry:
 	.string "{PLAYER} planted one {STR_VAR_1} in\n"

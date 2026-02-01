@@ -33,7 +33,7 @@ FallarborTown_EventScript_Azurill::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_AZURILL, CRY_MODE_NORMAL
+	playmoncry SPECIES_ZORUA, CRY_MODE_NORMAL
 	msgbox FallarborTown_Text_Azurill, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -65,11 +65,11 @@ FallarborTown_Text_RegionKnownForMeteors:
 
 FallarborTown_Text_MyPreciousAzurill:
 	.string "See! Take a look!\n"
-	.string "This is my precious AZURILL!\p"
-	.string "It's slick and smooth and plushy, too!$"
+	.string "This is my precious ZORUA!\p"
+	.string "It's slick and fluffy and pretty, too!$"
 
 FallarborTown_Text_Azurill:
-	.string "AZURILL: Rooreelooo.$"
+	.string "ZORUA: Zorro zo!$"
 
 FallarborTown_Text_HaveYouChallengedFlannery:
 	.string "Have you already challenged FLANNERY,\n"

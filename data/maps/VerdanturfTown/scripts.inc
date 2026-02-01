@@ -66,7 +66,7 @@ VerdanturfTown_Text_ManTryingToDigTunnel:
 	.string "He says this tunnel is full of\n"
 	.string "timid POKéMON.\p"
 	.string "They get all scared of loud noise and\n"
-	.string "make a big uproar.\p"
+	.string "some make a big uproar.\p"
 	.string "So they had to stop the big tunnel\n"
 	.string "project.\p"
 	.string "But there's one man. He's trying to dig\n"

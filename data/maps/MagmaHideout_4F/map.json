@@ -16,7 +16,7 @@
   "object_events": [
     {
       "local_id": "LOCALID_MAGMA_HIDEOUT_4F_GROUDON",
-      "graphics_id": "OBJ_EVENT_GFX_GROUDON_FRONT",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(RESHIRAM)",
       "x": 16,
       "y": 17,
       "elevation": 0,
@@ -100,7 +100,7 @@
     },
     {
       "local_id": "LOCALID_MAGMA_HIDEOUT_4F_GROUDON_SLEEPING",
-      "graphics_id": "OBJ_EVENT_GFX_GROUDON_ASLEEP",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(RESHIRAM)",
       "x": 16,
       "y": 17,
       "elevation": 3,
@@ -143,5 +143,14 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 45,
+      "y": 24,
+      "elevation": 0,
+      "item": "ITEM_TM_TOXIC_SPIKES",
+      "flag": "FLAG_TOX_SPIKES_0x281"
+    }
+  ]
 }

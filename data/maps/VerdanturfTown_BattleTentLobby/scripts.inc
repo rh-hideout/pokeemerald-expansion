@@ -225,7 +225,7 @@ VerdanturfTown_BattleTentLobby_EventScript_AttractGiver::
 	faceplayer
 	goto_if_set FLAG_RECEIVED_TM_ATTRACT, VerdanturfTown_BattleTentLobby_EventScript_ReceivedAttract
 	msgbox VerdanturfTown_BattleTentLobby_Text_AttractionRunsDeep, MSGBOX_DEFAULT
-	giveitem ITEM_TM_ATTRACT
+	giveitem ITEM_TM_DRAGON_CHEER
 	goto_if_eq VAR_RESULT, 0, Common_EventScript_ShowBagIsFull
 	setflag FLAG_RECEIVED_TM_ATTRACT
 	msgbox VerdanturfTown_BattleTentLobby_Text_AttractionMutual, MSGBOX_DEFAULT
@@ -345,16 +345,16 @@ VerdanturfTown_BattleTentLobby_Text_GentleMonsScaryIfAngry:
 	.string "if it gets angry!$"
 
 VerdanturfTown_BattleTentLobby_Text_AttractionRunsDeep:
-	.string "My feelings toward my POKéMON…\n"
-	.string "The attraction runs deep…\p"
+	.string "The powerful, scaly body of a DRAGON…\n"
+	.string "Fufufu, it could overpower me, and…\p"
 	.string "Oh, hi, you didn't see that, did you?\n"
 	.string "Well, it doesn't matter.\p"
 	.string "How would you like this TM for\n"
 	.string "your POKéMON?$"
 
 VerdanturfTown_BattleTentLobby_Text_AttractionMutual:
-	.string "My feelings toward my POKéMON…\n"
-	.string "I'm sure the attraction is mutual!\p"
+	.string "My DRAGON-type POKéMON…\n"
+	.string "I'm sure I can cheer them up!\p"
 	.string "They battle exactly the way I want\n"
 	.string "them to!$"
 

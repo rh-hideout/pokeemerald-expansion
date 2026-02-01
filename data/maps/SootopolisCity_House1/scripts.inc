@@ -22,7 +22,7 @@ SootopolisCity_House1_EventScript_Kecleon::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_KECLEON, CRY_MODE_NORMAL
+	playmoncry SPECIES_ZORUA, CRY_MODE_NORMAL
 	msgbox SootopolisCity_House1_Text_Kecleon, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -39,5 +39,5 @@ SootopolisCity_House1_Text_ExplainBrickBreak:
 	.string "so horrible that I can't describe it.$"
 
 SootopolisCity_House1_Text_Kecleon:
-	.string "KECLEON: Puu puhyaah.$"
+	.string "ZORUA: Zuuuiiyah.$"
 

@@ -9685,6 +9685,7 @@ void AnimTask_GetCommanderType(u8 taskId)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_ORDER_UP_CURLY;
         break;
     case SPECIES_TATSUGIRI_DROOPY:
+    case SPECIES_DUOSION:
         gBattleAnimArgs[ARG_RET_ID] = ANIM_ORDER_UP_DROOPY;
         break;
     case SPECIES_TATSUGIRI_STRETCHY:

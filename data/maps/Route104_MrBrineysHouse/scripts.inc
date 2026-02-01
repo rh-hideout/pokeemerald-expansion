@@ -88,7 +88,7 @@ Route104_MrBrineysHouse_EventScript_Peeko::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_WINGULL, CRY_MODE_NORMAL
+	playmoncry SPECIES_CHATOT, CRY_MODE_NORMAL
 	msgbox Route104_MrBrineysHouse_Text_Peeko, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -154,5 +154,5 @@ Route104_MrBrineysHouse_Text_TellMeWheneverYouWantToSail:
 	.string "you want to set sail!$"
 
 Route104_MrBrineysHouse_Text_Peeko:
-	.string "PEEKO: Pii piihyoro!$"
+	.string "PEEKO: Pii Perappu!$"
 

@@ -43,10 +43,10 @@ SkyPillar_Top_EventScript_RayquazaFaceDown::
 SkyPillar_Top_EventScript_Rayquaza::
 	lockall
 	waitse
-	playmoncry SPECIES_RAYQUAZA, CRY_MODE_ENCOUNTER
+	playmoncry SPECIES_KYUREM, CRY_MODE_ENCOUNTER
 	delay 40
 	waitmoncry
-	setwildbattle SPECIES_RAYQUAZA, 70
+	setwildbattle SPECIES_KYUREM, 70
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
 	waitstate
@@ -65,7 +65,7 @@ SkyPillar_Top_EventScript_DefeatedRayquaza::
 	end
 
 SkyPillar_Top_EventScript_RanFromRayquaza::
-	setvar VAR_0x8004, SPECIES_RAYQUAZA
+	setvar VAR_0x8004, SPECIES_KYUREM
 	goto SkyPillar_Top_EventScript_RanFromRayquaza2
 	end
 
@@ -134,15 +134,15 @@ SkyPillar_Top_EventScript_AwakenRayquaza::
 @ See comments, or sAnimTable_Rayquaza
 SkyPillar_Top_Movement_RayquazaStir:
 	delay_16
-	walk_in_place_fast_left  @ Coiled, awake
+	walk_in_place_fast_down  @ Coiled, awake
 	delay_16
 	delay_16
 	delay_16
 	delay_16
 	delay_16
-	walk_in_place_left  @ Coiled, mouth open
+	walk_in_place_down  @ Coiled, mouth open
 	delay_16
-	walk_in_place_right  @ Normal, awake
+	walk_in_place_down  @ Normal, awake
 	delay_16
 	delay_16
 	delay_16
@@ -155,7 +155,7 @@ SkyPillar_Top_Movement_RayquazaFlyOff:
 	delay_16
 	walk_in_place_down  @ Coiled, asleep
 	delay_8
-	walk_in_place_right  @ Normal, awake
+	walk_in_place_up  @ Normal, awake
 	delay_8
 	walk_faster_up  @ Fly up
 	slide_up
@@ -179,5 +179,5 @@ SkyPillar_Top_Movement_CameraPanDown:
 	step_end
 
 SkyPillar_Top_Text_RayquazaFlewOff:
-	.string "The awakened RAYQUAZA flew off…$"
+	.string "The awakened KYUREM flew off…$"
 

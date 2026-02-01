@@ -38,7 +38,7 @@ PacifidlogTown_House2_EventScript_ClearReceivedFanClubTM::
 
 PacifidlogTown_House2_EventScript_GiveReturn::
 	msgbox PacifidlogTown_House2_Text_AdoringPokemonTakeThis, MSGBOX_DEFAULT
-	giveitem ITEM_TM_RETURN
+	giveitem ITEM_FLAME_ORB
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	setflag FLAG_RECEIVED_FANCLUB_TM_THIS_WEEK
 	special SetPacifidlogTMReceivedDay
@@ -53,7 +53,7 @@ PacifidlogTown_House2_EventScript_PutInEffort::
 
 PacifidlogTown_House2_EventScript_GiveFrustration::
 	msgbox PacifidlogTown_House2_Text_ViciousPokemonTakeThis, MSGBOX_DEFAULT
-	giveitem ITEM_TM_FRUSTRATION
+	giveitem ITEM_TOXIC_ORB
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	setflag FLAG_RECEIVED_FANCLUB_TM_THIS_WEEK
 	special SetPacifidlogTMReceivedDay
@@ -72,7 +72,7 @@ PacifidlogTown_House2_EventScript_HappyAzurill::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_AZURILL, CRY_MODE_NORMAL
+	playmoncry SPECIES_PURRLOIN, CRY_MODE_NORMAL
 	msgbox PacifidlogTown_House2_Text_Rurii, MSGBOX_DEFAULT
 	waitmoncry
 	msgbox PacifidlogTown_House2_Text_VeryFriendlyWithTrainer, MSGBOX_DEFAULT
@@ -83,7 +83,7 @@ PacifidlogTown_House2_EventScript_UnhappyAzurill::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_AZURILL, CRY_MODE_ENCOUNTER
+	playmoncry SPECIES_PURRLOIN, CRY_MODE_ENCOUNTER
 	msgbox PacifidlogTown_House2_Text_Rururi, MSGBOX_DEFAULT
 	waitmoncry
 	msgbox PacifidlogTown_House2_Text_DoesntLikeTrainerVeryMuch, MSGBOX_DEFAULT
@@ -104,8 +104,8 @@ PacifidlogTown_House2_Text_AhYourPokemon:
 
 PacifidlogTown_House2_Text_AdoringPokemonTakeThis:
 	.string "It clearly likes you very much.\p"
-	.string "A POKéMON that adoring and adorable\n"
-	.string "deserves a TM like this, no?$"
+	.string "A POKéMON with a warm affection\n"
+	.string "deserves an item like this, no?$"
 
 PacifidlogTown_House2_Text_PutInSomeMoreEffort:
 	.string "Hmm…\n"
@@ -114,9 +114,9 @@ PacifidlogTown_House2_Text_PutInSomeMoreEffort:
 	.string "some more effort.$"
 
 PacifidlogTown_House2_Text_ViciousPokemonTakeThis:
-	.string "It has a vicious look to it.\p"
-	.string "A frightening POKéMON like that\n"
-	.string "deserves a TM like this.$"
+	.string "It regards you with a real venom.\p"
+	.string "A toxic POKéMON like that\n"
+	.string "deserves an item like this.$"
 
 PacifidlogTown_House2_Text_ExplainReturnFrustration:
 	.string "If a POKéMON likes you a lot, RETURN's\n"
@@ -131,15 +131,15 @@ PacifidlogTown_House2_Text_GetGoodTMInXDays:
 	.string "I'll give you a TM that's suitable for\l"
 	.string "your POKéMON.$"
 
-PacifidlogTown_House2_Text_Rurii:
-	.string "AZURILL: Rurii.$"
+PacifidlogTown_House2_Text_Rururi:
+	.string "PURRLOIN: HSSSS.$"
 
 PacifidlogTown_House2_Text_VeryFriendlyWithTrainer:
 	.string "It appears to be very friendly with the\n"
 	.string "TRAINER.$"
 
-PacifidlogTown_House2_Text_Rururi:
-	.string "AZURILL: Rururi!$"
+PacifidlogTown_House2_Text_Rurii:
+	.string "PURRLOIN: Prrrow!$"
 
 PacifidlogTown_House2_Text_DoesntLikeTrainerVeryMuch:
 	.string "It doesn't appear to like the TRAINER\n"

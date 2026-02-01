@@ -169,7 +169,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
              && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
              && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
             {
-                SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+                SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_HAIL;
                 BattleScriptExecute(BattleScript_DamagingWeather);
                 effect = TRUE;
@@ -626,10 +626,14 @@ static bool32 HandleEndTurnWrap(u32 battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptExecute(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
-            if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND)
-                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
+            if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND 
+		&& GetBattlerAbility(gBattleMons[battler].volatiles.wrappedBy) == ABILITY_CONSTRICTOR)
+                bindDamage = GetNonDynamaxMaxHP(battler) / 4;
+            else if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND
+		|| GetBattlerAbility(gBattleMons[battler].volatiles.wrappedBy) == ABILITY_CONSTRICTOR)
+                bindDamage = GetNonDynamaxMaxHP(battler) / 6;
             else
-                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
+                bindDamage = GetNonDynamaxMaxHP(battler) / 8;
             SetPassiveDamageAmount(battler, bindDamage);
         }
         else  // broke free
@@ -1100,6 +1104,23 @@ static bool32 HandleEndTurnTrickRoom(u32 battler)
     return effect;
 }
 
+static bool32 HandleEndTurnInverse(u32 battler)
+{
+    bool32 effect = FALSE;
+
+    gBattleStruct->eventState.endTurn++;
+
+    if (gFieldTimers.inverseTimer > 0 && --gFieldTimers.inverseTimer == 0)
+    {
+        gFieldStatuses &= ~STATUS_FIELD_INVERSE;
+        BattleScriptExecute(BattleScript_TrickRoomEnds);
+        effect = TRUE;
+    }
+
+    return effect;
+}
+
+
 static bool32 HandleEndTurnGravity(u32 battler)
 {
     bool32 effect = FALSE;
@@ -1280,7 +1301,10 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         case ABILITY_HARVEST:
         case ABILITY_MOODY:
         case ABILITY_PICKUP:
+        case ABILITY_HONEY_GATHER:
+        case ABILITY_ITEM_GET:
         case ABILITY_SPEED_BOOST:
+        case ABILITY_FOCUS_BOOST:
             if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
                 effect = TRUE;
             break;
@@ -1427,6 +1451,7 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_FORM_CHANGE_ABILITIES] = HandleEndTurnFormChangeAbilities,
     [ENDTURN_EJECT_PACK] = HandleEndTurnEjectPack,
     [ENDTURN_DYNAMAX] = HandleEndTurnDynamax,
+    [ENDTURN_INVERSE] = HandleEndTurnInverse,
 };
 
 u32 DoEndTurnEffects(void)

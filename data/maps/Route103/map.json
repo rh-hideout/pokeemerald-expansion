@@ -184,14 +184,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 50,
-      "y": 5,
+      "x": 64,
+      "y": 7,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_GUARD_SPEC",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM_PSYCHO_CUT",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_103_GUARD_SPEC"
     },
@@ -275,8 +275,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 64,
-      "y": 7,
+      "x": 50,
+      "y": 5,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -293,6 +293,14 @@
       "y": 6,
       "elevation": 0,
       "dest_map": "MAP_ALTERING_CAVE",
+      "dest_warp_id": "0"
+    },
+    {
+      "warp_id": "WARP_ID_FLY_ROUTE_103",
+      "x": 10,
+      "y": 9,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE103",
       "dest_warp_id": "0"
     }
   ],

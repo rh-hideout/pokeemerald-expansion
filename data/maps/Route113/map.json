@@ -260,6 +260,13 @@
       "elevation": 0,
       "dest_map": "MAP_TERRA_CAVE_ENTRANCE",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 33,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE113",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [
@@ -450,7 +457,7 @@
       "x": 22,
       "y": 5,
       "elevation": 3,
-      "item": "ITEM_TM_DOUBLE_TEAM",
+      "item": "ITEM_TM_VENOM_DRENCH",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_113_TM_DOUBLE_TEAM"
     },
     {
@@ -458,7 +465,7 @@
       "x": 73,
       "y": 3,
       "elevation": 3,
-      "item": "ITEM_NUGGET",
+      "item": "ITEM_TM_SPIKES",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_113_NUGGET"
     }
   ]

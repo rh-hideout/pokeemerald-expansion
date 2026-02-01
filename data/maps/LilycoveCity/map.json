@@ -164,7 +164,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_MAX_REPEL",
+      "trainer_sight_or_berry_tree_id": "ITEM_SHINY_STONE",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_LILYCOVE_CITY_MAX_REPEL"
     },
@@ -501,7 +501,7 @@
       "x": 36,
       "y": 31,
       "elevation": 3,
-      "item": "ITEM_HEART_SCALE",
+      "item": "ITEM_TM_SCORCHING_SANDS",
       "flag": "FLAG_HIDDEN_ITEM_LILYCOVE_CITY_HEART_SCALE"
     },
     {

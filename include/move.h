@@ -305,7 +305,7 @@ static inline bool32 IsSoundMove(u32 moveId)
 
 static inline bool32 IsBallisticMove(u32 moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].ballisticMove;
+    return gMovesInfo[SanitizeMoveId(moveId)].pulseMove;
 }
 
 static inline bool32 IsPowderMove(u32 moveId)

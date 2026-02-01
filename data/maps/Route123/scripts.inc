@@ -34,6 +34,30 @@ Route123_EventScript_RouteSign::
 	msgbox Route123_Text_RouteSign, MSGBOX_SIGN
 	end
 
+
+Route123_EventScript_TicketShrine::
+	lockall
+	msgbox Route123_Text_OddShrinePhotographs, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, Route123_EventScript_TicketShrineShowPhotos
+	releaseall
+	end
+
+Route123_EventScript_TicketShrineShowPhotos::
+	goto_if_set FLAG_TICKET_BEGIN Route123_EventScript_TicketShrineBegin
+	clearflag FLAG_AURORATICKET_ITEM
+	clearflag FLAG_EONTICKET_ITEM
+	clearflag FLAG_MYSTICTICKET_ITEM
+	setflag FLAG_TICKET_BEGIN 
+	Route123_EventScript_TicketShrineBegin::
+	setvar VAR_PHOTOSTATE, 1
+	fadescreen FADE_TO_BLACK
+	warp MAP_ROUTE119, 32, 37
+	end
+	warp MAP_ROUTE130, 18, 35
+	warp MAP_ROUTE115, 12, 9
+	warp MAP_ROUTE123, 31, 10
+	end
+
 Route123_EventScript_RouteSignMtPyre::
 	msgbox Route123_Text_RouteSignMtPyre, MSGBOX_SIGN
 	end
@@ -195,4 +219,8 @@ Route123_Text_RouteSignMtPyre:
 
 Route123_Text_BerryMastersHouse:
 	.string "BERRY MASTER'S HOUSE$"
+
+Route123_Text_OddShrinePhotographs:
+	.string "Faint images swirl in the orb.\n"
+	.string "Take a closer look?$"
 

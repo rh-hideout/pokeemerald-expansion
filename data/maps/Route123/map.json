@@ -287,8 +287,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 31,
-      "y": 8,
+      "x": 44,
+      "y": 6,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -450,7 +450,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_ELIXIR",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM_U_TURN",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_123_ELIXIR"
     },
@@ -547,7 +547,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_5",
-      "x": 14,
+      "x": 29,
       "y": 16,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_UP",
@@ -560,7 +560,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
-      "x": 14,
+      "x": 29,
       "y": 12,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WALK_DOWN_AND_UP",
@@ -583,6 +583,19 @@
       "trainer_sight_or_berry_tree_id": "ITEM_REVIVAL_HERB",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_123_REVIVAL_HERB"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_NINJA_BOY",
+      "x": 31,
+      "y": 9,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_INVISIBLE",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Route123_EventScript_TicketShrine",
+      "flag": "0"
     }
   ],
   "warp_events": [
@@ -591,6 +604,13 @@
       "y": 6,
       "elevation": 0,
       "dest_map": "MAP_ROUTE123_BERRY_MASTERS_HOUSE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 22,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE123",
       "dest_warp_id": "0"
     }
   ],
@@ -825,7 +845,7 @@
       "x": 139,
       "y": 15,
       "elevation": 3,
-      "item": "ITEM_PP_UP",
+      "item": "ITEM_SMOKE_BALL",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_123_PP_UP"
     },
     {

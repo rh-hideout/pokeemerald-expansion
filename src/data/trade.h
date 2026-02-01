@@ -987,24 +987,24 @@ static const struct InGameTrade sIngameTrades[] =
     [INGAME_TRADE_SEEDOT] =
     {
         .nickname = _("DOTS"),
-        .species = SPECIES_SEEDOT,
-        .ivs = {5, 4, 5, 4, 4, 4},
-        .abilityNum = 1,
+        .species = SPECIES_GOOMY,
+        .ivs = {25, 24, 28, 24, 31, 31},
+        .abilityNum = 0,
         .otId = 38726,
         .conditions = {30, 5, 5, 5, 5},
         .personality = 0x84,
-        .heldItem = ITEM_CHESTO_BERRY,
+        .heldItem = ITEM_LUM_BERRY,
         .mailNum = -1,
         .otName = _("KOBE"),
         .otGender = MALE,
         .sheen = 10,
-        .requestedSpecies = SPECIES_RALTS
+        .requestedSpecies = SPECIES_FLABEBE
     },
     [INGAME_TRADE_PLUSLE] =
     {
-        .nickname = _("PLUSES"),
-        .species = SPECIES_PLUSLE,
-        .ivs = {4, 4, 4, 5, 5, 4},
+        .nickname = _("HOGBERT"),
+        .species = SPECIES_TOGEDEMARU,
+        .ivs = {31, 4, 24, 31, 13, 31},
         .abilityNum = 0,
         .otId = 73996,
         .conditions = {5, 5, 30, 5, 5},
@@ -1014,13 +1014,13 @@ static const struct InGameTrade sIngameTrades[] =
         .otName = _("ROMAN"),
         .otGender = MALE,
         .sheen = 10,
-        .requestedSpecies = SPECIES_VOLBEAT
+        .requestedSpecies = SPECIES_CHATOT
     },
     [INGAME_TRADE_HORSEA] =
     {
-        .nickname = _("SEASOR"),
-        .species = SPECIES_HORSEA,
-        .ivs = {5, 4, 4, 4, 5, 4},
+        .nickname = _("AK47"),
+        .species = SPECIES_TYPE_NULL,
+        .ivs = {31, 31, 21, 31, 5, 31},
         .abilityNum = 0,
         .otId = 46285,
         .conditions = {5, 5, 5, 5, 30},
@@ -1030,7 +1030,7 @@ static const struct InGameTrade sIngameTrades[] =
         .otName = _("SKYLAR"),
         .otGender = MALE,
         .sheen = 10,
-        .requestedSpecies = SPECIES_BAGON
+        .requestedSpecies = SPECIES_FURFROU
     },
     [INGAME_TRADE_MEOWTH] =
     {
@@ -1056,21 +1056,21 @@ static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =
         EC_WORD_BE,
         EC_WORD_NICE,
         EC_WORD_TO,
-        EC_POKEMON(PLUSLE),
+        EC_POKEMON(TOGEDEMARU),
         EC_WORD_EXCL,
-        EC_POKEMON(VOLBEAT),
-        EC_WORD_WILL,
-        EC_WORD_BE,
-        EC_WORD_FANTASTIC
+        EC_WORD_IT_S,
+        EC_WORD_PROBABLY,
+        EC_WORD_NOT,
+        EC_WORD_TOO_WEAK
     }, {
         EC_WORD_I,
         EC_WORD_WILL,
         EC_WORD_MAKE,
-        EC_POKEMON(BAGON),
-        EC_WORD_TOUGH,
-        EC_WORD_PLEASE,
+        EC_POKEMON(FURFROU),
+        EC_WORD_INVINCIBLE,
+        EC_WORD_EVEN_SO,
         EC_WORD_TRAIN,
-        EC_POKEMON(HORSEA),
+        EC_POKEMON(TYPE_NULL),
         EC_WORD_WELL
     }, {
         EC_WORD_THANK_YOU,

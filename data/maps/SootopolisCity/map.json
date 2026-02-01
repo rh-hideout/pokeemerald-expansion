@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": [],
+  "connections": null,
   "object_events": [
     {
       "local_id": "LOCALID_SOOTOPOLIS_EXPERT",
@@ -127,11 +127,11 @@
     },
     {
       "local_id": "LOCALID_SOOTOPOLIS_GROUDON",
-      "graphics_id": "OBJ_EVENT_GFX_GROUDON_SIDE",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(RESHIRAM)",
       "x": 28,
       "y": 44,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT",
+      "movement_type": "MOVEMENT_TYPE_JOG_IN_PLACE_RIGHT",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
@@ -141,11 +141,11 @@
     },
     {
       "local_id": "LOCALID_SOOTOPOLIS_KYOGRE",
-      "graphics_id": "OBJ_EVENT_GFX_KYOGRE_SIDE",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(ZEKROM)",
       "x": 34,
       "y": 44,
       "elevation": 1,
-      "movement_type": "MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT",
+      "movement_type": "MOVEMENT_TYPE_WALK_IN_PLACE_LEFT",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
@@ -155,7 +155,7 @@
     },
     {
       "local_id": "LOCALID_SOOTOPOLIS_RAYQUAZA",
-      "graphics_id": "OBJ_EVENT_GFX_RAYQUAZA",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(KYUREM)",
       "x": 31,
       "y": 41,
       "elevation": 1,

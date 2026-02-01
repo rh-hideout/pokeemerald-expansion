@@ -339,6 +339,7 @@ bool32 ShouldRecordStatusMove(u32 move)
         case EFFECT_TRICK_ROOM:
         // defoggables / screens and hazards
         case EFFECT_LIGHT_SCREEN:
+        case EFFECT_SCREEN_BURN:
         case EFFECT_REFLECT:
         case EFFECT_SPIKES:
         case EFFECT_STEALTH_ROCK:
@@ -1830,7 +1831,7 @@ u32 AI_GetSwitchinWeather(struct BattlePokemon battleMon)
     case ABILITY_SAND_STREAM:
         return B_WEATHER_SANDSTORM;
     case ABILITY_SNOW_WARNING:
-        return GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
+        return B_WEATHER_SNOW;
     default:
         return gBattleWeather;
     }
@@ -3118,7 +3119,9 @@ static u32 GetTrapDamage(u32 battler)
     u32 damage = 0;
     if (gBattleMons[battler].volatiles.wrapped)
     {
-        if (gAiLogicData->holdEffects[gBattleMons[battler].volatiles.wrappedBy] == HOLD_EFFECT_BINDING_BAND)
+        if (gAiLogicData->holdEffects[gBattleMons[battler].volatiles.wrappedBy] == HOLD_EFFECT_BINDING_BAND && gAiLogicData->abilities[gBattleMons[battler].volatiles.wrappedBy] == ABILITY_CONSTRICTOR )
+            damage = GetNonDynamaxMaxHP(battler) / 4;
+        else if (gAiLogicData->holdEffects[gBattleMons[battler].volatiles.wrappedBy] == HOLD_EFFECT_BINDING_BAND || gAiLogicData->abilities[gBattleMons[battler].volatiles.wrappedBy] == ABILITY_CONSTRICTOR )
             damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
         else
             damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
@@ -3330,7 +3333,11 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, enum Ability defAbility
         && gBattleMons[battlerAtk].ability == ABILITY_ZERO_TO_HERO
         && CountUsablePartyMons(battlerAtk) != 0)
         return SHOULD_PIVOT;
-
+    // Carbink too, if existent
+    if (gBattleMons[battlerAtk].species == SPECIES_CARBINK
+        && gBattleMons[battlerAtk].ability == ABILITY_ZERO_TO_HERO
+        && CountUsablePartyMons(battlerAtk) != 0)
+        return SHOULD_PIVOT;
     battlerToSwitch = gAiLogicData->mostSuitableMonId[battlerAtk];
     // This shouldn't ever happen, but it's there to make sure we don't accidentally read past the gParty array.
     if (battlerToSwitch >= PARTY_SIZE)

@@ -15,32 +15,32 @@ Music: Male
 Back Pic: Steven
 AI: Basic Trainer
 
-Metang
-Brave Nature
+Bronzong
+Quiet Nature
 Level: 42
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
+EVs: 100 SpA / 252 Def / 158 SpD
 - Light Screen
-- Psychic
+- Confusion
 - Reflect
-- Metal Claw
+- Mirror Shot
 
-Skarmory
+Doublade
 Impish Nature
 Level: 43
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 6 SpA / 252 SpD
+EVs: 252 HP / 6 Atk / 252 SpD
 - Toxic
-- Aerial Ace
+- Iron Head
 - Protect
-- Steel Wing
+- Shadow Sneak
 
-Aggron
+Silvally-steel @ Iron Plate
 Adamant Nature
 Level: 44
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 Atk / 252 SpA / 6 SpD
-- Thunder
+- Surf
 - Protect
-- Solar Beam
-- Dragon Claw
+- Thunder Fang
+- Fire Fang

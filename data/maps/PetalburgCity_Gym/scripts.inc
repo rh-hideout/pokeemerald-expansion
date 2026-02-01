@@ -401,7 +401,7 @@ PetalburgCity_Gym_EventScript_NormanBattle::
 	end
 
 PetalburgCity_Gym_EventScript_GiveFacade::
-	giveitem ITEM_TM_FACADE
+	giveitem ITEM_TM_RETURN
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_BagIsFull
 	setflag FLAG_RECEIVED_TM_FACADE
 	msgbox PetalburgCity_Gym_Text_ExplainFacade, MSGBOX_DEFAULT
@@ -1279,20 +1279,17 @@ PetalburgCity_Gym_Text_ReceivedBalanceBadge:
 	.string "from DAD!$"
 
 PetalburgCity_Gym_Text_ExplainBalanceBadgeTakeThis:
-	.string "DAD: With that BADGE, the DEFENSE\n"
-	.string "of all your POKéMON will increase.\p"
+	.string "DAD: The BALANCE BADGE.\p"
 	.string "POKéMON that know the HM move SURF\n"
 	.string "will be able to travel over water.\p"
 	.string "This is my gift to you. {PLAYER}, I'm\n"
 	.string "sure you can use it correctly.$"
 
 PetalburgCity_Gym_Text_ExplainFacade:
-	.string "DAD: TM42 contains FACADE.\p"
-	.string "It doubles the power of moves if\n"
-	.string "the POKéMON is poisoned, paralyzed,\l"
-	.string "or burned.\p"
-	.string "It might be able to turn a bad\n"
-	.string "situation into an advantage.$"
+	.string "DAD: That TM contains RETURN.\p"
+	.string "It rises in power if the POKéMON\n"
+	.string "has a good friendship with you.\p"
+	.string "It's a very stalwart move.$"
 
 PetalburgCity_Gym_Text_DadHappyAndSad:
 	.string "DAD: As the GYM LEADER, I can't\n"

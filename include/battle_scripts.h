@@ -286,6 +286,7 @@ extern const u8 BattleScript_RemoveTerrain[];
 extern const u8 BattleScript_SnowWarningActivatesHail[];
 extern const u8 BattleScript_SnowWarningActivatesSnow[];
 extern const u8 BattleScript_PickupActivates[];
+extern const u8 BattleScript_HoneyGatherActivates[]; ///MINE
 extern const u8 BattleScript_HarvestActivates[];
 extern const u8 BattleScript_ImposterActivates[];
 extern const u8 BattleScript_SelectingNotAllowedMoveAssaultVest[];
@@ -678,6 +679,7 @@ extern const u8 BattleScript_EffectStockpile[];
 extern const u8 BattleScript_EffectSpitUp[];
 extern const u8 BattleScript_EffectSwallow[];
 extern const u8 BattleScript_EffectOverwriteAbility[];
+extern const u8 BattleScript_MoveEffectOverwriteAbility[];
 extern const u8 BattleScript_EffectHail[];
 extern const u8 BattleScript_EffectTorment[];
 extern const u8 BattleScript_EffectFlatter[];
@@ -844,5 +846,12 @@ extern const u8 BattleScript_MetronomeAttackstring[];
 extern const u8 BattleScript_SleepTalkAttackstring[];
 extern const u8 BattleScript_NaturePowerAttackstring[];
 extern const u8 BattleScript_PokemonCantUseTheMove[];
+
+extern const u8 BattleScript_EffectScreenBurn[]; 
+extern const u8 BattleScript_RestComatose[]; 
+extern const u8 BattleScript_OppositeDayActivates[];
+
+// mine
+
 
 #endif // GUARD_BATTLE_SCRIPTS_H

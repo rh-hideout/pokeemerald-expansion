@@ -983,8 +983,8 @@ gText_RegisteredTrainerinPokeNav::
 	.string "in the POKéNAV.$"
 
 gText_ComeBackWithSecretPower::
-	.string "Do you know the TM SECRET POWER?\p"
-	.string "Our group, we love the TM SECRET\n"
+	.string "Do you know the HM SECRET POWER?\p"
+	.string "Our group, we love the HM SECRET\n"
 	.string "POWER.\p"
 	.string "One of our members will give it to you.\n"
 	.string "Come back and show me if you get it.\p"
@@ -1163,3 +1163,25 @@ EventScript_VsSeekerChargingDone::
 	.include "data/scripts/dexnav.inc"
 	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/apricorn_tree.inc"
+
+	.include "data/maps/OldHouseC2/scripts.inc"
+
+	.include "data/maps/OldHouseEntrance/scripts.inc"
+
+	.include "data/maps/OldHouseC1/scripts.inc"
+
+	.include "data/maps/OldHouseC1_2/scripts.inc"
+
+	.include "data/maps/OldHouseC2_2/scripts.inc"
+
+	.include "data/maps/OldHouseC1_3/scripts.inc"
+
+	.include "data/maps/OldHouseC1_4/scripts.inc"
+
+	.include "data/maps/OldHouseC1_5/scripts.inc"
+
+	.include "data/maps/OldHouseRoom1/scripts.inc"
+
+	.include "data/maps/OldHouseRoom1_2/scripts.inc"
+
+	.include "data/maps/FourthSealed/scripts.inc"

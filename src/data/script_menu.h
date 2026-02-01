@@ -265,19 +265,29 @@ static const struct MenuAction MultichoiceList_GameCornerDolls[] =
     {gText_Exit},
 };
 
-static const struct MenuAction MultichoiceList_GameCornerTMs[] =
+static const struct MenuAction MultichoiceList_GameCornerTMs[] = 
 {
-    {COMPOUND_STRING("TM32{CLEAR_TO 0x48}1,500 COINS")},
-    {COMPOUND_STRING("TM29{CLEAR_TO 0x48}3,500 COINS")},
-    {COMPOUND_STRING("TM35{CLEAR_TO 0x48}4,000 COINS")},
-    {COMPOUND_STRING("TM24{CLEAR_TO 0x48}4,000 COINS")},
-    {COMPOUND_STRING("TM13{CLEAR_TO 0x48}4,000 COINS")},
+    {COMPOUND_STRING("LEECH SEED     1,000 COINS")},
+    {COMPOUND_STRING("FLAME CHARGE 1,000 COINS")},
+    {COMPOUND_STRING("AQUA RING       1,000 COINS")},
+    {COMPOUND_STRING("HONE CLAWS     1,600 COINS")},
     {gText_Exit},
 };
 
+static const struct MenuAction MultichoiceList_GameCornerItems[] = 
+{
+    {COMPOUND_STRING("DAMP ROCK       300 COINS")},
+    {COMPOUND_STRING("HEAT ROCK       300 COINS")},
+    {COMPOUND_STRING("SMOOTH ROCK   300 COINS")},
+    {COMPOUND_STRING("ICY ROCK         300 COINS")},
+    {COMPOUND_STRING("LOADED DICE   2,750 COINS")},
+    {gText_Exit},
+};
+
+
 static const struct MenuAction MultichoiceList_GameCornerCoins[] =
 {
-    {COMPOUND_STRING("  50 COINS    ¥1,000")},
+    {COMPOUND_STRING("  50 COINS    ¥1,100")},
     {COMPOUND_STRING("500 COINS  ¥10,000")},
     {gText_Exit},
 };
@@ -722,7 +732,7 @@ static const struct MenuAction MultichoiceList_GoOnRetire[] =
 
 static const struct MenuAction MultichoiceList_TVLati[] =
 {
-    {COMPOUND_STRING("RED")},
+    {COMPOUND_STRING("GREEN")},
     {COMPOUND_STRING("BLUE")},
 };
 
@@ -906,6 +916,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_FALLARBOR_TENT_RULES]       = MULTICHOICE(MultichoiceList_FallarborTentRules),
     [MULTI_TAG_MATCH_TYPE]             = MULTICHOICE(MultichoiceList_TagMatchType),
     [MULTI_BERRY_PLOT]                 = MULTICHOICE(MultichoiceList_BerryPlot),
+    [MULTI_GAME_CORNER_ITEMS]          = MULTICHOICE(MultichoiceList_GameCornerItems)
 };
 
 const u8 *const gStdStrings[] =

@@ -2,9 +2,11 @@ Route111_Text_MakingRoomUseTMToMakeYourOwn:
 	.string "What's that?\n"
 	.string "What am I doing?\p"
 	.string "I'm thinking about making my own room\n"
-	.string "here using a POKéMON move.\p"
-	.string "I know! I'll give you this TM.\n"
-	.string "Will you use it to make your own room?$"
+	.string "here using a secret POKéMON move.\p"
+	.string "It's my SECRET POWER! It works\n"
+	.string "in place of virtually every HM!\p"
+	.string "I know! I'll give you a copy.\n"
+	.string "HMO1 is our group's favourite HM.$"
 
 Route111_Text_ExplainSecretPower:
 	.string "Find a big tree that looks like it might\n"
@@ -17,11 +19,10 @@ Route111_Text_ExplainSecretPower:
 	.string "It'll be your own secret room…\n"
 	.string "A SECRET BASE!\p"
 	.string "You should make one, too.\p"
-	.string "Another thing, you don't always have\n"
-	.string "to make your SECRET BASE in a tree.\p"
-	.string "Try using SECRET POWER on rock walls\n"
-	.string "that have small indents in them.\p"
-	.string "I'm going to look for other places, too.\n"
+	.string "And, it works as any HM, too!\n"
+	.string "Try using SECRET POWER to cut trees,\n"
+	.string "move rocks, surf, and dive underwater.\p"
+	.string "Have fun with this lovely convenience.\n"
 	.string "Okay, bye!$"
 
 Route111_Text_DontWantThis:
@@ -43,7 +44,7 @@ Route111_EventScript_SecretPowerMan::
 	end
 
 Route111_EventScript_GiveSecretPower::
-	giveitem ITEM_TM_SECRET_POWER
+	giveitem ITEM_HM_SECRET_POWER
 	goto_if_eq VAR_RESULT, FALSE, Route111_EventScript_NoRoomForSecretPower
 	msgbox Route111_Text_ExplainSecretPower, MSGBOX_DEFAULT
 	closemessage

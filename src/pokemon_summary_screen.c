@@ -1219,6 +1219,7 @@ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, 
         sMonSummaryScreen->minPageIndex = 0;
         sMonSummaryScreen->maxPageIndex = PSS_PAGE_COUNT - 1;
         break;
+    case SUMMARY_MODE_BATTLING_RELEARNER_BATTLE:
     case SUMMARY_MODE_LOCK_MOVES:
         sMonSummaryScreen->minPageIndex = 0;
         sMonSummaryScreen->maxPageIndex = PSS_PAGE_COUNT - 1;
@@ -1231,7 +1232,7 @@ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, 
         break;
     }
 
-    if (mode == SUMMARY_MODE_RELEARNER_BATTLE)
+    if (mode == SUMMARY_MODE_RELEARNER_BATTLE || mode == SUMMARY_MODE_BATTLING_RELEARNER_BATTLE)
         sMonSummaryScreen->currPageIndex = PSS_PAGE_BATTLE_MOVES;
     else if (mode == SUMMARY_MODE_RELEARNER_CONTEST)
         sMonSummaryScreen->currPageIndex = PSS_PAGE_CONTEST_MOVES;
@@ -1249,6 +1250,8 @@ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, 
 
     SetMainCallback2(CB2_InitSummaryScreen);
 }
+
+
 
 void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void), u16 newMove)
 {
@@ -1565,11 +1568,21 @@ static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
     return FALSE;
 }
 
+
+//POSSIBLY requires refactor to load current mon prior to setting lockmovesflag.
+static bool8 IsMoveRelearnerAbilityActive(void)
+{
+    enum Ability ability = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
+    return (ability == ABILITY_MOVE_RELEARNER && sMonSummaryScreen->curMonIndex != 0 && !(sMonSummaryScreen->curMonIndex == 1 && IsDoubleBattle())); // works when not in slot 0, and in double battle not in slot 1. May have oddities in multibattle, not sure.
+}
+
+
 static void SetDefaultTilemaps(void)
 {
     if ((sMonSummaryScreen->currPageIndex != PSS_PAGE_BATTLE_MOVES && sMonSummaryScreen->currPageIndex != PSS_PAGE_CONTEST_MOVES)
         || sMonSummaryScreen->mode == SUMMARY_MODE_RELEARNER_BATTLE
-        || sMonSummaryScreen->mode == SUMMARY_MODE_RELEARNER_CONTEST)
+        || sMonSummaryScreen->mode == SUMMARY_MODE_RELEARNER_CONTEST
+        || sMonSummaryScreen->mode == SUMMARY_MODE_BATTLING_RELEARNER_BATTLE)
     {
         PositionPowerAccSlidingWindow(0, 0xFF);
         PositionAppealJamSlidingWindow(0, 0xFF, 0);
@@ -1587,7 +1600,7 @@ static void SetDefaultTilemaps(void)
     }
 
     // these blocks handle preparing the gfx to return straight to the respective move info screens
-    if (sMonSummaryScreen->mode == SUMMARY_MODE_RELEARNER_BATTLE)
+    if (sMonSummaryScreen->mode == SUMMARY_MODE_RELEARNER_BATTLE || sMonSummaryScreen->mode == SUMMARY_MODE_BATTLING_RELEARNER_BATTLE)
     {
         SetBgTilemapBuffer(1, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_SKILLS][0]);
         SetBgTilemapBuffer(2, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_BATTLE_MOVES][0]);
@@ -1615,6 +1628,7 @@ static void SetDefaultTilemaps(void)
         PositionStatusSlidingWindow(0, 0xFF);
     else if ((sMonSummaryScreen->currPageIndex != PSS_PAGE_BATTLE_MOVES && sMonSummaryScreen->currPageIndex != PSS_PAGE_CONTEST_MOVES)
             || sMonSummaryScreen->mode == SUMMARY_MODE_RELEARNER_BATTLE
+            || sMonSummaryScreen->mode == SUMMARY_MODE_BATTLING_RELEARNER_BATTLE
             || sMonSummaryScreen->mode == SUMMARY_MODE_RELEARNER_CONTEST)
         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS);
 
@@ -1770,7 +1784,11 @@ static void Task_HandleInput(u8 taskId)
         {
             sMonSummaryScreen->callback = CB2_InitLearnMove;
             gSpecialVar_0x8004 = sMonSummaryScreen->curMonIndex;
-            gRelearnMode = sMonSummaryScreen->currPageIndex;
+	    if (sMonSummaryScreen->lockMovesFlag)
+	    {
+		gRelearnMode = RELEARN_MODE_BATTLING_PSS_PAGE_BATTLE_MOVES;
+	    }
+	    else gRelearnMode = sMonSummaryScreen->currPageIndex;
             StopPokemonAnimations();
             PlaySE(SE_SELECT);
             BeginCloseSummaryScreen(taskId);
@@ -1784,7 +1802,7 @@ static void Task_HandleInput(u8 taskId)
         }
         else if (JOY_NEW(R_BUTTON)) // R means increase. Level -> Egg -> TM -> Tutor
         {
-            if (P_SUMMARY_SCREEN_MOVE_RELEARNER && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES) && !gMain.inBattle)
+            if (P_SUMMARY_SCREEN_MOVE_RELEARNER && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES) && (!gMain.inBattle || IsMoveRelearnerAbilityActive()))
             {
                 TryUpdateRelearnType(TRY_INCREMENT);
                 PlaySE(SE_SELECT);
@@ -1793,7 +1811,7 @@ static void Task_HandleInput(u8 taskId)
         }
         else if (JOY_NEW(L_BUTTON)) // L means decrease. Level <- Egg <- TM <- Tutor
         {
-            if (P_SUMMARY_SCREEN_MOVE_RELEARNER && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES) && !gMain.inBattle)
+            if (P_SUMMARY_SCREEN_MOVE_RELEARNER && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES) && (!gMain.inBattle || IsMoveRelearnerAbilityActive()))
             {
                 TryUpdateRelearnType(TRY_DECREMENT);
                 PlaySE(SE_SELECT);
@@ -2451,7 +2469,7 @@ static void Task_HandleInput_MoveSelect(u8 taskId)
         }
         else if (JOY_NEW(A_BUTTON))
         {
-            if (sMonSummaryScreen->lockMovesFlag == TRUE
+            if (sMonSummaryScreen->lockMovesFlag
                 || (sMonSummaryScreen->newMove == MOVE_NONE && sMonSummaryScreen->firstMoveIndex == MAX_MON_MOVES))
             {
                 PlaySE(SE_SELECT);
@@ -3649,6 +3667,9 @@ static void PrintMonAbilityName(void)
     PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_ABILITY), gAbilitiesInfo[ability].name, 0, 1, 0, 1);
 }
 
+
+
+
 static void PrintMonAbilityDescription(void)
 {
     enum Ability ability = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
@@ -3753,6 +3774,7 @@ static bool8 DoesMonOTMatchOwner(void)
     else
         return TRUE;
 }
+
 
 static bool8 DidMonComeFromGBAGames(void)
 {
@@ -4391,7 +4413,7 @@ static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible)
 
 static void HidePageSpecificSprites(void)
 {
-    // Keeps Pok�mon, caught ball and status sprites visible.
+    // Keeps Pok mon, caught ball and status sprites visible.
     u8 i;
 
     for (i = SPRITE_ARR_ID_TYPE; i < ARRAY_COUNT(sMonSummaryScreen->spriteIds); i++)
@@ -4824,17 +4846,15 @@ static void KeepMoveSelectorVisible(u8 firstSpriteId)
     }
 }
 
-static inline bool32 ShouldShowMoveRelearner(void)
+static inline bool32 ShouldShowMoveRelearner(void) 
 {
     return (P_SUMMARY_SCREEN_MOVE_RELEARNER
-         && !sMonSummaryScreen->lockMovesFlag
          && !sMonSummaryScreen->isBoxMon
          && sMonSummaryScreen->mode != SUMMARY_MODE_BOX
          && sMonSummaryScreen->mode != SUMMARY_MODE_BOX_CURSOR
          && sMonSummaryScreen->hasRelearnableMoves
-         && !InBattleFactory()
-         && !InSlateportBattleTent()
-         && !NoMovesAvailableToRelearn());
+         && !NoMovesAvailableToRelearn()
+         && (IsMoveRelearnerAbilityActive() || (!InBattleFactory() && !InSlateportBattleTent() && !sMonSummaryScreen->lockMovesFlag)));
 }
 
 static inline bool32 ShouldShowRename(void)
@@ -4905,7 +4925,7 @@ static inline void ShowUtilityPrompt(s16 mode)
     else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES
              || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES)
     {
-        if (mode == SUMMARY_MODE_SELECT_MOVE && !sMonSummaryScreen->lockMovesFlag)
+        if (mode == SUMMARY_MODE_SELECT_MOVE && (!sMonSummaryScreen->lockMovesFlag || IsMoveRelearnerAbilityActive()))
             promptText = gText_Switch;
         else
             promptText = gText_Info;

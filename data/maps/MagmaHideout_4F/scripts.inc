@@ -126,18 +126,18 @@ MagmaHideout_4F_EventScript_Tabitha::
 	end
 
 MagmaHideout_4F_Text_Grunt11Intro:
-	.string "I want to see GROUDON, too, but they\n"
+	.string "I want to see RESHIRAM, too, but they\n"
 	.string "won't let me see even its tail…\p"
 	.string "It's got me feeling really frustrated.\p"
 	.string "Oh, no!\n"
-	.string "I blabbed about GROUDON!$"
+	.string "I blabbed about RESHIRAM!$"
 
 MagmaHideout_4F_Text_Grunt11Defeat:
 	.string "I guess it's impossible to win if one\n"
 	.string "doesn't have a calm mind…$"
 
 MagmaHideout_4F_Text_Grunt11PostBattle:
-	.string "I wonder if GROUDON even has a tail?$"
+	.string "I wonder if RESHIRAM has a tail?$"
 
 MagmaHideout_4F_Text_Grunt12Intro:
 	.string "Fuhahaha!\n"
@@ -166,8 +166,8 @@ MagmaHideout_4F_Text_TabithaIntro:
 	.string "Hehehe!\n"
 	.string "You made it this far, so I'll tell you!\p"
 	.string "That's right!\n"
-	.string "Up ahead, GROUDON is sleeping!\p"
-	.string "MAXIE went to GROUDON just seconds\n"
+	.string "Up ahead, RESHIRAM is sleeping!\p"
+	.string "MAXIE went to RESHIRAM just seconds\n"
 	.string "ago!\p"
 	.string "It's going to awaken real soon!\n"
 	.string "Hehe! Hehehe!$"
@@ -178,10 +178,10 @@ MagmaHideout_4F_Text_TabithaDefeat:
 
 MagmaHideout_4F_Text_TabithaPostBattle:
 	.string "…And while you wasted time with me,\n"
-	.string "MAXIE should have awakened GROUDON…$"
+	.string "MAXIE should have woken RESHIRAM…$"
 
 MagmaHideout_4F_Text_MaxieAwakenGroudon:
-	.string "MAXIE: GROUDON…\p"
+	.string "MAXIE: RESHIRAM…\p"
 	.string "Nothing could awaken you from your\n"
 	.string "sleep bathed in magma…\p"
 	.string "This BLUE ORB is what you sought.\n"
@@ -192,10 +192,10 @@ MagmaHideout_4F_Text_MaxieAwakenGroudon:
 	.string "Show me the full extent of your power!$"
 
 MagmaHideout_4F_Text_MaxieGroudonWhatsWrong:
-	.string "MAXIE: GROUDON!\n"
+	.string "MAXIE: RESHIRAM!\n"
 	.string "What's wrong?\p"
 	.string "Wasn't the BLUE ORB the key?\p"
-	.string "GROUDON!\n"
+	.string "RESHIRAM!\n"
 	.string "Where have you gone…$"
 
 MagmaHideout_4F_Text_MaxieOhItWasYou:
@@ -211,14 +211,14 @@ MagmaHideout_4F_Text_MaxieDefeat:
 
 MagmaHideout_4F_Text_MaxieImGoingAfterGroudon:
 	.string "MAXIE: There has to be some reason\n"
-	.string "why GROUDON fled…\p"
+	.string "why RESHIRAM fled…\p"
 	.string "That's what you're trying to say,\n"
 	.string "aren't you?\p"
 	.string "… … … … … …\n"
 	.string "… … … … … …\p"
 	.string "Humph…\n"
 	.string "You think I didn't know that?\p"
-	.string "With GROUDON gone, there is no longer\n"
-	.string "any need for this blasted volcano.\p"
-	.string "I am going after GROUDON, so this\n"
+	.string "With RESHIRAM gone, there is no\n"
+	.string "need for this blasted volcano.\p"
+	.string "I am going after RESHIRAM, so this\n"
 	.string "is where we part!$"

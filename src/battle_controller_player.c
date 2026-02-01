@@ -496,7 +496,7 @@ void HandleInputChooseTarget(u32 battler)
                     i++;
                     break;
                 }
-                if (B_SHOW_EFFECTIVENESS)
+                if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
                     MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, GetBattlerPosition(gMultiUsePlayerCursor)), battler);
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
@@ -547,7 +547,7 @@ void HandleInputChooseTarget(u32 battler)
                     i++;
                     break;
                 }
-                if (B_SHOW_EFFECTIVENESS)
+                if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
                     MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, GetBattlerPosition(gMultiUsePlayerCursor)), battler);
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
@@ -747,7 +747,7 @@ void HandleInputChooseMove(u32 battler)
                 gMultiUsePlayerCursor = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
             else
                 gMultiUsePlayerCursor = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-            if (B_SHOW_EFFECTIVENESS)
+            if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
                 MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, GetBattlerPosition(gMultiUsePlayerCursor)), battler);
 
             gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_ShowAsMoveTarget;
@@ -785,7 +785,7 @@ void HandleInputChooseMove(u32 battler)
             gMoveSelectionCursor[battler] ^= 1;
             PlaySE(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-            if (B_SHOW_EFFECTIVENESS)
+            if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
                 MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
@@ -802,7 +802,7 @@ void HandleInputChooseMove(u32 battler)
             gMoveSelectionCursor[battler] ^= 1;
             PlaySE(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-            if (B_SHOW_EFFECTIVENESS)
+            if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
                 MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
@@ -818,7 +818,7 @@ void HandleInputChooseMove(u32 battler)
             gMoveSelectionCursor[battler] ^= 2;
             PlaySE(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-            if (B_SHOW_EFFECTIVENESS)
+            if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
                 MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
@@ -835,7 +835,7 @@ void HandleInputChooseMove(u32 battler)
             gMoveSelectionCursor[battler] ^= 2;
             PlaySE(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-            if (B_SHOW_EFFECTIVENESS)
+            if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
                 MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
@@ -874,7 +874,7 @@ void HandleInputChooseMove(u32 battler)
             ClearStdWindowAndFrame(B_WIN_MOVE_DESCRIPTION, FALSE);
             CopyWindowToVram(B_WIN_MOVE_DESCRIPTION, COPYWIN_GFX);
             PlaySE(SE_SELECT);
-            if (B_SHOW_EFFECTIVENESS)
+            if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
                 MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
             MoveSelectionDisplayPpNumber(battler);
             MoveSelectionDisplayMoveType(battler);
@@ -913,7 +913,7 @@ static void ReloadMoveNames(u32 battler)
         MoveSelectionDestroyCursorAt(battler);
         MoveSelectionDisplayMoveNames(battler);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-        if (B_SHOW_EFFECTIVENESS)
+        if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
             MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
         MoveSelectionDisplayPpNumber(battler);
         MoveSelectionDisplayMoveType(battler);
@@ -1067,7 +1067,7 @@ void HandleMoveSwitching(u32 battler)
         gBattlerControllerFuncs[battler] = HandleInputChooseMove;
         gMoveSelectionCursor[battler] = gMultiUsePlayerCursor;
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-        if (B_SHOW_EFFECTIVENESS)
+        if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
             MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
         else
             MoveSelectionDisplayPpString(battler);
@@ -1081,7 +1081,7 @@ void HandleMoveSwitching(u32 battler)
         MoveSelectionDestroyCursorAt(gMultiUsePlayerCursor);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
         gBattlerControllerFuncs[battler] = HandleInputChooseMove;
-        if (B_SHOW_EFFECTIVENESS)
+        if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
             MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
         else
             MoveSelectionDisplayPpString(battler);
@@ -2112,7 +2112,7 @@ void InitMoveSelectionsVarsAndStrings(u32 battler)
     MoveSelectionDisplayMoveNames(battler);
     gMultiUsePlayerCursor = 0xFF;
     MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-    if (B_SHOW_EFFECTIVENESS)
+    if (gBattleMons[battler].species == SPECIES_ORANGURU) //B_SHOW_EFFECTIVENESS
         MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
     else
         MoveSelectionDisplayPpString(battler);
@@ -2353,11 +2353,11 @@ enum
 
 static bool32 ShouldShowTypeEffectiveness(u32 targetId)
 {
-    if (B_SHOW_EFFECTIVENESS == SHOW_EFFECTIVENESS_CAUGHT)
-        return GetSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[targetId].species), FLAG_GET_CAUGHT);
+//    if (B_SHOW_EFFECTIVENESS == SHOW_EFFECTIVENESS_CAUGHT)
+//        return GetSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[targetId].species), FLAG_GET_CAUGHT);
 
-    if (B_SHOW_EFFECTIVENESS == SHOW_EFFECTIVENESS_SEEN)
-        return GetSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[targetId].species), FLAG_GET_SEEN);
+//    if (B_SHOW_EFFECTIVENESS == SHOW_EFFECTIVENESS_SEEN)
+//        return GetSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[targetId].species), FLAG_GET_SEEN);
 
     return TRUE;
 }

@@ -161,6 +161,9 @@ LittlerootTown_EventScript_GoInsideWithMom::
 	waitdooranim
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_FAT_MAN
 	clearflag FLAG_HIDE_MAP_NAME_POPUP
+	setflag FLAG_AURORATICKET_ITEM
+	setflag FLAG_EONTICKET_ITEM
+	setflag FLAG_MYSTICTICKET_ITEM
 	return
 
 LittlerootTown_Movement_MomExitHouse:

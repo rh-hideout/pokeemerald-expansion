@@ -2375,6 +2375,12 @@ static const u16 sPalafinFormSpeciesIdTable[] = {
 };
 #endif //P_FAMILY_FINIZEN
 
+static const u16 sCarbinkFormSpeciesIdTable[] = {
+    SPECIES_CARBINK,
+    SPECIES_DIANCIE,
+    FORM_SPECIES_END,
+};
+
 #if P_FAMILY_TATSUGIRI
 static const u16 sTatsugiriFormSpeciesIdTable[] = {
     SPECIES_TATSUGIRI_CURLY,

@@ -54,30 +54,48 @@ EverGrandeCity_GlaciasRoom_EventScript_PostBattleSpeech::
 EverGrandeCity_GlaciasRoom_EventScript_Defeated::
 	setflag FLAG_DEFEATED_ELITE_4_GLACIA
 	call PokemonLeague_EliteFour_SetAdvanceToNextRoomMetatiles
+	goto_if_set FLAG_JUAN_DAZZLING_GLEAM, EverGrandeCity_JuanRoom_EventScript_PostTMSpeech
+	msgbox EverGrandeCity_Juan_Text_PostFirstVictorySpeech, MSGBOX_DEFAULT
+	giveitem ITEM_TM_DAZZLING_GLEAM
+	setflag FLAG_JUAN_DAZZLING_GLEAM
+EverGrandeCity_JuanRoom_EventScript_PostTMSpeech::
 	msgbox EverGrandeCity_GlaciasRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
 	release
 	end
 
 EverGrandeCity_GlaciasRoom_Text_IntroSpeech:
-	.string "Welcome, my name is GLACIA\n"
+	.string "Aha, excellent! You meet with JUAN\n"
 	.string "of the ELITE FOUR.\p"
-	.string "I've traveled from afar to HOENN\n"
-	.string "so that I may hone my ice skills.\p"
-	.string "But all I have seen are challenges by\n"
-	.string "weak TRAINERS and their POKéMON.\p"
-	.string "What about you?\p"
-	.string "It would please me to no end if I could\n"
-	.string "go all out against you!$"
+	.string "Let me ask you.\n"
+	.string "Did you know?\l"
+	.string "Ah, I should not be so coy.\p"
+	.string "It was I who taught WALLACE everything\n"
+	.string "there is to know about POKéMON.\p"
+	.string "In time, I tired of the ways of water\n"
+	.string "and sought novelty… Nay, grace!\p"
+	.string "In endless supply within a wild,\n"
+	.string "fey place! Behold my FAIRY garden.\p"
+	.string "Let us begin our match, shall we?\p"
+	.string "Bear witness, player, to our artistry!$"
 
 EverGrandeCity_GlaciasRoom_Text_Defeat:
-	.string "You and your POKéMON…\n"
-	.string "How hot your spirits burn!\p"
-	.string "The all-consuming heat overwhelms.\p"
-	.string "It's no surprise that my icy skills\n"
-	.string "failed to harm you.$"
+	.string "Ahahaha, excellent!\n"
+	.string "Very well, you are the winner.\p"
+	.string "From you, I sense the brilliant shine\n"
+	.string "of skill that will overcome all.\p"
+
+EverGrandeCity_Juan_Text_PostFirstVictorySpeech:
+	.string "Ah! That reminds me. Here is just a\n"
+	.string "little extra glimmer of style.$"
 
 EverGrandeCity_GlaciasRoom_Text_PostBattleSpeech:
-	.string "Advance to the next room.\p"
-	.string "And there, confirm the truly fearsome\n"
-	.string "side of the POKéMON LEAGUE.$"
+	.string "Even so, compared with me or even\n"
+	.string "WALLACE, you are lacking in elegance.\p"
+	.string "Perhaps I should make you a loan\n"
+	.string "of my outfit?\p"
+	.string "Hahaha, I merely jest! Your outfit\n"
+	.string "needs no tailoring. Advance, friend.\l"
+	.string "It's time for your exquisite finale.\p"
+	.string "Now confirm the truly fearsome side\n"
+	.string "of the POKéMON LEAGUE.$"
 

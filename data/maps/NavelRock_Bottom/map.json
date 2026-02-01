@@ -16,7 +16,7 @@
   "object_events": [
     {
       "local_id": "LOCALID_NAVEL_ROCK_LUGIA",
-      "graphics_id": "OBJ_EVENT_GFX_LUGIA",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(DARKRAI)",
       "x": 11,
       "y": 13,
       "elevation": 0,

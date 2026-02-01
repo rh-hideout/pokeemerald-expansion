@@ -1,3 +1,4 @@
+
 #ifdef __INTELLISENSE__
 const struct SpeciesInfo gSpeciesInfoGen2[] =
 {

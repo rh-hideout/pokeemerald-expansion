@@ -33,7 +33,7 @@ MossdeepCity_House4_EventScript_Skitty::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_SKITTY, CRY_MODE_NORMAL
+	playmoncry SPECIES_LILLIPUP, CRY_MODE_NORMAL
 	msgbox MossdeepCity_House4_Text_Skitty, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -57,5 +57,5 @@ MossdeepCity_House4_Text_MakeSecretBase:
 	.string "somewhere. I'll go find it!$"
 
 MossdeepCity_House4_Text_Skitty:
-	.string "SKITTY: Miyaan?$"
+	.string "LILLIPUP: Pup pup?$"
 

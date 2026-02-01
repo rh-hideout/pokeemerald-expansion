@@ -40,8 +40,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY",
-      "x": 25,
-      "y": 5,
+      "x": 5,
+      "y": 8,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_LEFT_UP",
       "movement_range_x": 2,
@@ -66,7 +66,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ZIGZAGOON_2",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(LILLIPUP)",
       "x": 33,
       "y": 3,
       "elevation": 3,
@@ -79,7 +79,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_KECLEON",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(ROCKRUFF)",
       "x": 39,
       "y": 4,
       "elevation": 3,
@@ -92,7 +92,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_AZUMARILL",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(MUNNA)",
       "x": 42,
       "y": 2,
       "elevation": 3,
@@ -105,7 +105,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_PIKACHU",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(PACHIRISU)",
       "x": 51,
       "y": 1,
       "elevation": 3,
@@ -201,10 +201,10 @@
       "y": 18,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
+      "movement_range_x": 1,
+      "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_GREAT_BALL",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM_AROMATHERAPY",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_117_GREAT_BALL"
     },
@@ -230,7 +230,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_REVIVE",
+      "trainer_sight_or_berry_tree_id": "ITEM_PROTECTIVE_PADS",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_117_REVIVE"
     },
@@ -405,7 +405,7 @@
       "x": 3,
       "y": 18,
       "elevation": 3,
-      "item": "ITEM_REPEL",
+      "item": "ITEM_GREAT_BALL",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_117_REPEL"
     }
   ]

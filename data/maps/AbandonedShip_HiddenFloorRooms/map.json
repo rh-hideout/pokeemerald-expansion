@@ -62,7 +62,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_WATER_STONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_WIDE_LENS",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ABANDONED_SHIP_HIDDEN_FLOOR_ROOM_3_WATER_STONE"
     }

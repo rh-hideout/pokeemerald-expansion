@@ -35,7 +35,7 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_SHOAL_CAVE_ENTRANCE]                = TILE_FLAG_UNUSED,
     [MB_ICE]                                = TILE_FLAG_UNUSED,
     [MB_SAND]                               = TILE_FLAG_UNUSED,
-    [MB_SEAWEED]                            = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
+    [MB_SEAWEED]                            = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,// | TILE_FLAG_SURFABLE
     [MB_UNUSED_23]                          = TILE_FLAG_UNUSED,
     [MB_ASHGRASS]                           = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
     [MB_FOOTPRINTS]                         = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
@@ -43,7 +43,7 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_CRACKED_ICE]                        = TILE_FLAG_UNUSED,
     [MB_HOT_SPRINGS]                        = TILE_FLAG_UNUSED,
     [MB_LAVARIDGE_GYM_B1F_WARP]             = TILE_FLAG_UNUSED,
-    [MB_SEAWEED_NO_SURFACING]               = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
+    [MB_SEAWEED_NO_SURFACING]               = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,//| TILE_FLAG_SURFABLE 
     [MB_REFLECTION_UNDER_BRIDGE]            = TILE_FLAG_UNUSED,
     [MB_IMPASSABLE_EAST]                    = TILE_FLAG_UNUSED,
     [MB_IMPASSABLE_WEST]                    = TILE_FLAG_UNUSED,
@@ -876,9 +876,7 @@ bool8 MetatileBehavior_IsUnableToEmerge(u8 metatileBehavior)
     // To fix change the metatile behavior of the narrower water door with porymap's tileset editor.
     if (metatileBehavior == MB_NO_SURFACING
      || metatileBehavior == MB_SEAWEED_NO_SURFACING
-     #ifdef BUGFIX
      || metatileBehavior == MB_WATER_DOOR
-     #endif
      )
         return TRUE;
     else

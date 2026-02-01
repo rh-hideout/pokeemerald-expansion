@@ -1,0 +1,39 @@
+{
+  "id": "MAP_OLD_HOUSE_C1_3",
+  "name": "OldHouseC1_3",
+  "layout": "LAYOUT_OLD_HOUSE_C1_3",
+  "music": "MUS_RG_LAVENDER",
+  "region_map_section": "MAPSEC_ROUTE_10_POKECENTER",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_OLD_HOUSE_C1_4",
+      "offset": 0,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_OLD_HOUSE_C2_2",
+      "offset": -20,
+      "direction": "right"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 6,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_OLD_HOUSE_ROOM1_2",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

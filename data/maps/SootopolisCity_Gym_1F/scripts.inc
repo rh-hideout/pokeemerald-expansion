@@ -116,14 +116,14 @@ SootopolisCity_Gym_1F_EventScript_JuanDefeated::
 	end
 
 SootopolisCity_Gym_1F_EventScript_GiveWaterPulse::
-	giveitem ITEM_TM_WATER_PULSE
+	giveitem ITEM_TM_HAIL
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_BagIsFull
 	msgbox SootopolisCity_Gym_1F_Text_ExplainWaterPulse, MSGBOX_DEFAULT
 	setflag FLAG_RECEIVED_TM_WATER_PULSE
 	return
 
 SootopolisCity_Gym_1F_EventScript_GiveWaterPulse2::
-	giveitem ITEM_TM_WATER_PULSE
+	giveitem ITEM_TM_AQUA_RING
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	msgbox SootopolisCity_Gym_1F_Text_ExplainWaterPulse, MSGBOX_DEFAULT
 	setflag FLAG_RECEIVED_TM_WATER_PULSE
@@ -178,9 +178,9 @@ SootopolisCity_Gym_1F_EventScript_GymStatue::
 SootopolisCity_Gym_1F_Text_GymGuideAdvice:
 	.string "Yo! How's it going, CHAMPION-\n"
 	.string "bound {PLAYER}?\p"
-	.string "SOOTOPOLIS's GYM LEADER JUAN is\n"
-	.string "a master of WATER-type POKéMON.\p"
-	.string "And, to get to JUAN, an icy floor\n"
+	.string "SOOTOPOLIS's GYM LEADER GLACIA is\n"
+	.string "a master of ICE-type POKéMON.\p"
+	.string "And, to get to GLACIA, an icy floor\n"
 	.string "will hamper your progress…\p"
 	.string "Listen, I'm sorry, but that's all the\n"
 	.string "advice that I have for you.\p"
@@ -188,53 +188,48 @@ SootopolisCity_Gym_1F_Text_GymGuideAdvice:
 	.string "go for it yourself!$"
 
 SootopolisCity_Gym_1F_Text_GymGuidePostVictory:
-	.string "Yow! You've beaten even JUAN, who\n"
+	.string "Yow! You've beaten even GLACIA, who\n"
 	.string "was supposedly the best in all HOENN!\p"
 	.string "Okay! Check out your TRAINER CARD.\p"
 	.string "If you've gotten all the BADGES, you're\n"
 	.string "set for the POKéMON LEAGUE challenge!$"
 
 SootopolisCity_Gym_1F_Text_JuanIntro:
-	.string "Let me ask you.\n"
-	.string "Did you know?\l"
-	.string "Ah, I should not be so coy.\p"
-	.string "It was I who taught WALLACE everything\n"
-	.string "there is to know about POKéMON.\p"
-	.string "Once, I had given up my position as\n"
-	.string "the GYM LEADER.\p"
-	.string "In my place, I had entrusted WALLACE\n"
-	.string "with the GYM.\p"
-	.string "However, a compelling reason arose for\n"
-	.string "me to make a comeback.\p"
-	.string "Ah, but enough chatter.\n"
-	.string "Let us begin our match, shall we?\p"
-	.string "Please, you shall bear witness to\n"
-	.string "our artistry.\p"
-	.string "A grand illusion of water sculpted\n"
-	.string "by POKéMON and myself!$"
+	.string "Oh, bravo you.\n"
+	.string "You solved my little ice puzzle.\l"
+	.string "Ha.\p"
+	.string "Oh, forgive me for being a little cold,\n"
+	.string "my dear. If only you knew how long I've\l"
+	.string "been waiting for a decent challenge!\p"
+	.string "But no dice, darling. No dice.\p"
+	.string "No matter how far I travel across land\n"
+	.string "and sea, what I see… is weakness.\p"
+	.string "It makes one a little icy, I daresay.\n"
+	.string "Cold enough to freeze the very soul.\p"
+	.string "… … … … … …\n"
+	.string "But what about you?\l"
+	.string "Can you weather the blizzard?\p"
+	.string "It'd please me to no end if I could\n"
+	.string "truly go all out against you!$"
 
 @ NOTE: This defeat text actually causes a buffer overflow. It's about 50 bytes too long for
 @ the gDisplayedStringBattle buffer that it's put into, and it stomps all over the gBattleTextBuffs
 @ after, as well as the otherwise unused array after that. One wonders if that's the reason for
 @ the existence of that unused array of ints.
+
 SootopolisCity_Gym_1F_Text_JuanDefeat:
-	.string "Ahahaha, excellent!\n"
-	.string "Very well, you are the winner.\p"
-	.string "From you, I sense the brilliant shine\n"
-	.string "of skill that will overcome all.\p"
-	.string "However, compared with me or even\n"
-	.string "WALLACE, you are lacking in elegance.\p"
-	.string "Perhaps I should make you a loan\n"
-	.string "of my outfit?\p"
-	.string "… … … … … …\n"
-	.string "… … … … … …\p"
-	.string "Hahaha, I merely jest!\p"
-	.string "Rather than my clothes, I shall reward\n"
-	.string "you with this, the RAIN BADGE!$"
+	.string "Ha…\n"
+	.string "Haha……\l"
+	.string "Ahaha! Aahahahaaaa! Ohh, at last!\p"
+	.string "At long, long last, I'm privileged to\n"
+	.string "taste the thrill of defeat, darling.\n"
+	.string "You weathered the storm, melted the\n"
+	.string "bitter snow, and your reward is this.\p"
+	.string "Snow no longer: the RAIN BADGE!$"
 
 SootopolisCity_Gym_1F_Text_ReceivedRainBadge:
 	.string "{PLAYER} received the RAIN BADGE\n"
-	.string "from JUAN.$"
+	.string "from GLACIA.$"
 
 SootopolisCity_Gym_1F_Text_ExplainRainBadgeTakeThis:
 	.string "Having the RAIN BADGE shall assure you\n"
@@ -248,13 +243,13 @@ SootopolisCity_Gym_1F_Text_ExplainRainBadgeTakeThis:
 
 SootopolisCity_Gym_1F_Text_ExplainWaterPulse:
 	.string "The TECHNICAL MACHINE I handed you\n"
-	.string "contains WATER PULSE.\p"
-	.string "In use, it will occasionally confuse\n"
-	.string "the target with ultrasonic waves.\p"
+	.string "contains HAIL.\p"
+	.string "In use, it will summon a particularly\n"
+	.string "unforgiving storm of frost.\p"
 	.string "… … … … … …$"
 
 SootopolisCity_Gym_1F_Text_RegisteredJuan:
-	.string "Registered GYM LEADER JUAN\n"
+	.string "Registered GYM LEADER GLACIA\n"
 	.string "in the POKéNAV.$"
 
 SootopolisCity_Gym_1F_Text_JuanPostBattle:
@@ -265,7 +260,7 @@ SootopolisCity_Gym_1F_Text_JuanPostBattle:
 	.string "Travel to the easternmost reaches\n"
 	.string "of HOENN, to the island EVER GRANDE.\p"
 	.string "There, you shall find the POKéMON\n"
-	.string "LEAGUE.$"
+	.string "LEAGUE. I know it well.$"
 
 SootopolisCity_Gym_1F_Text_GoGetFortreeBadge:
 	.string "There remains but one BADGE to\n"
@@ -279,41 +274,41 @@ SootopolisCity_Gym_1F_Text_GymStatue:
 
 SootopolisCity_Gym_1F_Text_GymStatueCertified:
 	.string "SOOTOPOLIS CITY POKéMON GYM\p"
-	.string "JUAN'S CERTIFIED TRAINERS:\n"
+	.string "GLACIA'S CERTIFIED TRAINERS:\n"
 	.string "{PLAYER}$"
 
 SootopolisCity_Gym_1F_Text_JuanPreRematch:
-	.string "JUAN: Ah, this GYM had returned to its\n"
-	.string "usual state of serenity…\p"
-	.string "But our young typhoon has returned\n"
+	.string "GLACIA: Ah, this GYM had returned to\n"
+	.string "its usual state of frost…\p"
+	.string "But our young heatwave has returned\n"
 	.string "to put us to the test again!\p"
-	.string "Well, my friend, most certainly!\p"
+	.string "Well, my darling, most certainly!\p"
 	.string "I shall be delighted to dance with you\n"
 	.string "as often as you wish!$"
 
 SootopolisCity_Gym_1F_Text_JuanRematchDefeat:
-	.string "Ahahaha, you are the winner!\n"
-	.string "You have defeated me again!$"
+	.string "Ahahaha! You weather the blizzard\n"
+	.string "once more. Well fought, darling.$"
+
 
 SootopolisCity_Gym_1F_Text_JuanPostRematch:
-	.string "JUAN: If I told you to become my\n"
-	.string "apprentice, you will refuse, I am sure.\p"
-	.string "I would like to make a gift of my coat\n"
-	.string "to you.\p"
-	.string "But again, you will refuse.\n"
-	.string "I imagine that to be so.\p"
-	.string "And that, my friend, is a certain sign\n"
-	.string "of nobility!$"
+	.string "GLACIA: Aha! With that, I'm spent!\p"
+	.string "What a pleasure it is to fight\n"
+	.string "to the bitter end!\p"
+	.string "I have no more to give but my heartfelt\n"
+	.string "congratulations, and an invitation,\l" 
+	.string "to, if you so wish, return soon?\p"
+	.string "Ciao for now, darling!$"
 
 SootopolisCity_Gym_1F_Text_JuanRematchNeedTwoMons:
-	.string "JUAN: Ah, this GYM had returned to its\n"
-	.string "usual state of serenity…\p"
-	.string "But our young typhoon has returned\n"
+	.string "GLACIA: Ah, this GYM had returned to\n"
+	.string "its usual state of frost…\p"
+	.string "But our young heatwave has returned\n"
 	.string "to put us to the test again!\p"
 	.string "Well, my friend, most certainly!\n"
 	.string "I shall be delighted to dance with you…\p"
-	.string "Ah, no, no, no.\n"
-	.string "You have with you but one POKéMON.\p"
-	.string "I wish that you would return with\n"
-	.string "two, perhaps more, POKéMON, please.$"
+	.string "Ah, no, no, no. Be serious, darling.\n"
+	.string "You carry only a single partner.\p"
+	.string "We'd have much more fun with\n"
+	.string "a few more POKéMON, no?$"
 

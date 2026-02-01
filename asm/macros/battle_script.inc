@@ -732,8 +732,10 @@
 	.byte 0x81
 	.endm
 
-	.macro unused_0x82
+	.macro tryhealfullhealth battler:req, failInstr:req
 	.byte 0x82
+	.byte \battler
+	.4byte \failInstr
 	.endm
 
 	.macro unused_0x83

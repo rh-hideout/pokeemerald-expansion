@@ -2,13 +2,14 @@ Route113_GlassWorkshop_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route113_GlassWorkshop_OnTransition
 	.byte 0
 
-	.set BLUE_FLUTE_PRICE,   250
-	.set YELLOW_FLUTE_PRICE, 500
-	.set RED_FLUTE_PRICE,    500
-	.set WHITE_FLUTE_PRICE,  1000
-	.set BLACK_FLUTE_PRICE,  1000
-	.set PRETTY_CHAIR_PRICE, 6000
-	.set PRETTY_DESK_PRICE,  8000
+	.set BLUE_FLUTE_PRICE,   100
+	.set YELLOW_FLUTE_PRICE, 100
+	.set RED_FLUTE_PRICE,    250
+	.set WHITE_FLUTE_PRICE,  500
+	.set BLACK_FLUTE_PRICE,  500
+	.set SAND_TOMB_PRICE, 	 500
+	.set PRETTY_CHAIR_PRICE, 1500
+	.set PRETTY_DESK_PRICE,  2500
 	.set LOWEST_ASH_PRICE,   BLUE_FLUTE_PRICE
 
 Route113_GlassWorkshop_OnTransition:
@@ -65,9 +66,10 @@ Route113_GlassWorkshop_EventScript_ChooseGlassItem::
 	case 2, Route113_GlassWorkshop_EventScript_RedFlute
 	case 3, Route113_GlassWorkshop_EventScript_WhiteFlute
 	case 4, Route113_GlassWorkshop_EventScript_BlackFlute
-	case 5, Route113_GlassWorkshop_EventScript_PrettyChair
-	case 6, Route113_GlassWorkshop_EventScript_PrettyDesk
-	case 7, Route113_GlassWorkshop_EventScript_CancelGlassItemSelect
+	case 5, Route113_GlassWorkshop_EventScript_TMSandTomb
+	case 6, Route113_GlassWorkshop_EventScript_PrettyChair
+	case 7, Route113_GlassWorkshop_EventScript_PrettyDesk
+	case 8, Route113_GlassWorkshop_EventScript_CancelGlassItemSelect
 	case MULTI_B_PRESSED, Route113_GlassWorkshop_EventScript_CancelGlassItemSelect
 	end
 
@@ -154,6 +156,20 @@ Route113_GlassWorkshop_EventScript_PrettyDesk::
 	goto_if_eq VAR_RESULT, NO, Route113_GlassWorkshop_EventScript_ChooseDifferentItem
 	setvar VAR_GLASS_WORKSHOP_STATE, 16
 	subvar VAR_ASH_GATHER_COUNT, PRETTY_DESK_PRICE
+	goto Route113_GlassWorkshop_EventScript_MakeGlassItem
+	end
+
+Route113_GlassWorkshop_EventScript_TMSandTomb::
+	goto_if_set FLAG_UNUSED_0x26C, Route113_GlassWorkshop_EventScript_NoRoomForFlute
+	setvar VAR_0x8008, ITEM_TM_SAND_TOMB
+	bufferitemname STR_VAR_1, VAR_0x8008
+	setvar VAR_0x800A, SAND_TOMB_PRICE
+	goto_if_lt VAR_ASH_GATHER_COUNT, SAND_TOMB_PRICE, Route113_GlassWorkshop_EventScript_NotEnoughAshForItem
+	msgbox Route113_GlassWorkshop_Text_IsThatTheItemForYou, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, Route113_GlassWorkshop_EventScript_ChooseDifferentItem
+	setvar VAR_GLASS_WORKSHOP_STATE, 14
+	subvar VAR_ASH_GATHER_COUNT, SAND_TOMB_PRICE
+	setflag FLAG_UNUSED_0x26C
 	goto Route113_GlassWorkshop_EventScript_MakeGlassItem
 	end
 

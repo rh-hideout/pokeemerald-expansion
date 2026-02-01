@@ -286,7 +286,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_RARE_CANDY",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM_PLAY_ROUGH",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_110_RARE_CANDY"
     },
@@ -545,6 +545,14 @@
       "elevation": 0,
       "dest_map": "MAP_ROUTE110_SEASIDE_CYCLING_ROAD_SOUTH_ENTRANCE",
       "dest_warp_id": "2"
+    },
+    {
+      "warp_id": "WARP_ID_FLY_ROUTE_110",
+      "x": 20,
+      "y": 40,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE110",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

@@ -1113,7 +1113,7 @@
 // invalid due to the index looping back to the beginning and not matching the proper value.
 // To allow for higher values on those tables, increase the value of EC_MASK_BITS and the max value
 // will increase to (2 ^ EC_MASK_BITS). Keep in mind that existing saved words will be shifted.
-#define EC_MASK_BITS 9
+#define EC_MASK_BITS 10
 #define EC_MASK_GROUP ((1 << (16 - EC_MASK_BITS)) - 1)
 #define EC_MASK_INDEX ((1 << EC_MASK_BITS) - 1)
 

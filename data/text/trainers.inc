@@ -1639,7 +1639,7 @@ Route113_Text_DillonPostBattle:
 Route113_Text_MadelineIntro:
 	.string "I use this parasol to ward off this\n"
 	.string "filthy, yucky volcanic ash from\l"
-	.string "my dear NUMEL.$"
+	.string "my dear LITLEO.$"
 
 Route113_Text_MadelineDefeat:
 	.string "Huff, huff…\n"
@@ -2030,7 +2030,7 @@ Route115_Text_TimothyPostRematch:
 
 Route115_Text_KoichiIntro:
 	.string "You!\p"
-	.string "My MACHOP!\p"
+	.string "My PANCHAM!\p"
 	.string "Demand a battle!$"
 
 Route115_Text_KoichiDefeat:
@@ -3370,8 +3370,11 @@ Route123_Text_VioletDefeat:
 	.string "I smell the bitter scent of misery…$"
 
 Route123_Text_VioletPostBattle:
-	.string "The BERRY MASTER's garden is filled\n"
-	.string "with uplifting fragrances.$"
+	.string "I planted a purple BERRY and a very\n"
+	.string "rare POKéMON came to visit.\p"
+	.string "Perhaps the unique fragrance lured it?\p"
+	.string "Yes, the BERRY MASTER's garden is\n"
+	.string "filled with uplifting fragrances.$"
 
 Route123_Text_CameronIntro:
 	.string "Being a psychic is about willpower.\p"
@@ -4682,7 +4685,7 @@ Route134_Text_JackPostBattle:
 	.string "currents around these parts.$"
 
 Route134_Text_LaurelIntro:
-	.string "My LUVDISC are looking for a fun\n"
+	.string "My BRUXISH are looking for a fun\n"
 	.string "match. Will you join us?$"
 
 Route134_Text_LaurelDefeat:
@@ -4690,7 +4693,7 @@ Route134_Text_LaurelDefeat:
 
 Route134_Text_LaurelPostBattle:
 	.string "There's a collector who's after\n"
-	.string "the SCALES of LUVDISC.$"
+	.string "the SCALES of ALOMOMOLA.$"
 
 Route134_Text_AlexIntro:
 	.string "Okeydokey! That's enough rest, gang!\n"

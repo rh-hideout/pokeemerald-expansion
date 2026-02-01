@@ -519,7 +519,7 @@ MtPyre_Summit_Text_OrbsHaveBeenTaken:
 
 MtPyre_Summit_Text_GroudonKyogreAwakened:
 	.string "Oh, my goodness…\p"
-	.string "You say that both GROUDON and KYOGRE\n"
+	.string "You say that RESHIRAM and ZEKROM\n"
 	.string "have been awakened?\p"
 	.string "It is said that the BLUE ORB and\n"
 	.string "the RED ORB quelled the rage of\l"
@@ -610,8 +610,8 @@ MtPyre_Summit_Text_HoennTrioTale:
 	.string "fires and vicious storms.\p"
 	.string "It was then that the POKéMON of\n"
 	.string "the sky descended from a storm.\p"
-	.string "The POKéMON, shining a vivid green,\n"
+	.string "The POKéMON, shining a vivid white,\n"
 	.string "becalmed the two enraged POKéMON.\p"
-	.string "Then, its duty done, the green POKéMON\n"
+	.string "Then, its duty done, the white POKéMON\n"
 	.string "flew off into the wild blue yonder…$"
 

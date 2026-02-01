@@ -142,6 +142,7 @@ enum __attribute__((packed)) HoldEffect
     HOLD_EFFECT_OGERPON_MASK,
     // Gen2 hold effect
     HOLD_EFFECT_BERSERK_GENE,
+    HOLD_EFFECT_HONEY,
     HOLD_EFFECT_COUNT
 };
 

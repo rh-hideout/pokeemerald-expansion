@@ -420,7 +420,7 @@ PlayersHouse_1F_Text_LatiEmergencyNewsFlash:
 	.string "news flash!\p"
 	.string "In various HOENN locales, there have\n"
 	.string "been reports of a BZZT…colored\l"
-	.string "POKéMON in flight.\p"
+	.string "genie-like POKéMON in flight.\p"
 	.string "The identity of this POKéMON is\n"
 	.string "currently unknown.\p"
 	.string "We now return you to the regular\n"

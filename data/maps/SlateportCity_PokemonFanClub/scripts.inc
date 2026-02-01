@@ -226,7 +226,7 @@ SlateportCity_PokemonFanClub_EventScript_Skitty::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_SKITTY, CRY_MODE_NORMAL
+	playmoncry SPECIES_MIMIKYU, CRY_MODE_NORMAL
 	msgbox SlateportCity_PokemonFanClub_Text_Skitty, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -236,7 +236,7 @@ SlateportCity_PokemonFanClub_EventScript_Zigzagoon::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
+	playmoncry SPECIES_ROCKRUFF, CRY_MODE_NORMAL
 	msgbox SlateportCity_PokemonFanClub_Text_Zigzagoon, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -246,7 +246,7 @@ SlateportCity_PokemonFanClub_EventScript_Azumarill::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_AZUMARILL, CRY_MODE_NORMAL
+	playmoncry SPECIES_BERGMITE, CRY_MODE_NORMAL
 	msgbox SlateportCity_PokemonFanClub_Text_Azumarill, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -386,15 +386,15 @@ SlateportCity_PokemonFanClub_Text_PokemonDontLikeFainting:
 SlateportCity_PokemonFanClub_Text_MonEnjoyedProtein:
 	.string "Do POKéMON enjoy having items used\n"
 	.string "on them?\p"
-	.string "Mine acted really happy when I gave\n"
+	.string "My PIKACHU was happy when I gave\n"
 	.string "it some PROTEIN.$"
 
 SlateportCity_PokemonFanClub_Text_Skitty:
-	.string "SKITTY: Fffnyaaaah…$"
+	.string "MIMIKYU: …Mi…………Piku?$"
 
 SlateportCity_PokemonFanClub_Text_Zigzagoon:
-	.string "ZIGZAGOON: Kyuuu…$"
+	.string "ROCKRUFF: Rrrrrruff!$"
 
 SlateportCity_PokemonFanClub_Text_Azumarill:
-	.string "AZUMARILL: Marimari?$"
+	.string "BERGMITE: Berg?$"
 

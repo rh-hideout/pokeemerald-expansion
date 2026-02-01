@@ -430,7 +430,7 @@ static void DoBattlePyramidTrainerHillBattle(void)
 // Initiates battle where Wally catches Ralts
 void StartWallyTutorialBattle(void)
 {
-    CreateMaleMon(&gEnemyParty[0], SPECIES_RALTS, 5);
+    CreateMaleMon(&gEnemyParty[0], SPECIES_SHINX, 5);
     LockPlayerFieldControls();
     gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
     gBattleTypeFlags = BATTLE_TYPE_WALLY_TUTORIAL;
@@ -483,14 +483,17 @@ void BattleSetup_StartLegendaryBattle(void)
     {
     default:
     case SPECIES_GROUDON:
+    case SPECIES_ZEKROM:
     case SPECIES_GROUDON_PRIMAL:
         CreateBattleStartTask(B_TRANSITION_GROUDON, MUS_VS_KYOGRE_GROUDON);
         break;
     case SPECIES_KYOGRE:
+    case SPECIES_RESHIRAM:
     case SPECIES_KYOGRE_PRIMAL:
         CreateBattleStartTask(B_TRANSITION_KYOGRE, MUS_VS_KYOGRE_GROUDON);
         break;
     case SPECIES_RAYQUAZA:
+    case SPECIES_KYUREM:
     case SPECIES_RAYQUAZA_MEGA:
         CreateBattleStartTask(B_TRANSITION_RAYQUAZA, MUS_VS_RAYQUAZA);
         break;
@@ -498,13 +501,18 @@ void BattleSetup_StartLegendaryBattle(void)
     case SPECIES_DEOXYS_ATTACK:
     case SPECIES_DEOXYS_DEFENSE:
     case SPECIES_DEOXYS_SPEED:
+    case SPECIES_GENESECT:
         CreateBattleStartTask(B_TRANSITION_BLUR, MUS_RG_VS_DEOXYS);
         break;
     case SPECIES_LUGIA:
     case SPECIES_HO_OH:
+    case SPECIES_CRESSELIA:
+    case SPECIES_DARKRAI:
         CreateBattleStartTask(B_TRANSITION_BLUR, MUS_RG_VS_LEGEND);
         break;
     case SPECIES_MEW:
+    case SPECIES_MARSHADOW:
+    case SPECIES_ROTOM:
         CreateBattleStartTask(B_TRANSITION_GRID_SQUARES, MUS_VS_MEW);
         break;
     }

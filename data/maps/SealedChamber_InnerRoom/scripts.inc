@@ -24,6 +24,10 @@ SealedChamber_InnerRoom_EventScript_BrailleBackWall::
 	waitstate
 	playse SE_DOOR
 	delay 40
+	special DoSealedChamberShakingEffect_Short
+	waitstate
+	playse SE_DOOR
+	delay 40
 	msgbox gText_DoorOpenedFarAway, MSGBOX_DEFAULT
 	closemessage
 	fadeinbgm 0

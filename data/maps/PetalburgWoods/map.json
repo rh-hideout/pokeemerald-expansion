@@ -90,7 +90,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_X_ATTACK",
+      "trainer_sight_or_berry_tree_id": "ITEM_ZOOM_LENS",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_PETALBURG_WOODS_X_ATTACK"
     },
@@ -228,6 +228,20 @@
       "elevation": 0,
       "dest_map": "MAP_ROUTE104",
       "dest_warp_id": "7"
+    },
+    {
+      "x": 49,
+      "y": 11,
+      "elevation": 0,
+      "dest_map": "MAP_OLD_HOUSE_ENTRANCE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 50,
+      "y": 11,
+      "elevation": 0,
+      "dest_map": "MAP_OLD_HOUSE_ENTRANCE",
+      "dest_warp_id": "1"
     }
   ],
   "coord_events": [
@@ -277,10 +291,10 @@
     },
     {
       "type": "hidden_item",
-      "x": 40,
-      "y": 29,
+      "x": 53,
+      "y": 31,
       "elevation": 3,
-      "item": "ITEM_TINY_MUSHROOM",
+      "item": "ITEM_TM_STICKY_WEB",
       "flag": "FLAG_HIDDEN_ITEM_PETALBURG_WOODS_TINY_MUSHROOM_2"
     },
     {
@@ -298,6 +312,14 @@
       "elevation": 3,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PetalburgWoods_EventScript_Sign2"
+    },
+    {
+      "type": "hidden_item",
+      "x": 40,
+      "y": 29,
+      "elevation": 0,
+      "item": "ITEM_TINY_MUSHROOM",
+      "flag": "FLAG_UNUSED_0x26E"
     }
   ]
 }

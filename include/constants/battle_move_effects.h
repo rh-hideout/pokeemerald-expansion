@@ -353,6 +353,7 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_STEEL_ROLLER, // Will fail if there is no terrain up but removes it regardless if attacker is removed from field or not
     EFFECT_STONE_AXE, // Not to be confused with MOVE_EFFECT_STEALTH_ROCK. They have two different activation timings.
     EFFECT_CEASELESS_EDGE, // Same applies to spikes
+    EFFECT_SCREEN_BURN,
     NUM_BATTLE_MOVE_EFFECTS,
 };
 

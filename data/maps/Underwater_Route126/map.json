@@ -46,7 +46,7 @@
       "x": 30,
       "y": 17,
       "elevation": 3,
-      "item": "ITEM_HEART_SCALE",
+      "item": "ITEM_BIG_PEARL",
       "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_126_HEART_SCALE"
     },
     {
@@ -62,7 +62,7 @@
       "x": 63,
       "y": 19,
       "elevation": 3,
-      "item": "ITEM_STARDUST",
+      "item": "ITEM_GREEN_SHARD",
       "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_126_STARDUST"
     },
     {

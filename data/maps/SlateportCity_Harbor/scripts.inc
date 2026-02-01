@@ -327,9 +327,14 @@ SlateportCity_Harbor_EventScript_FerryFinished::
 	end
 
 SlateportCity_Harbor_EventScript_AskToTradeScanner::
-	message SlateportCity_Harbor_Text_WouldYouTradeScanner
-	waitmessage
-	goto SlateportCity_Harbor_EventScript_ChooseScannerTrade
+	msgbox SlateportCity_Harbor_Text_WouldYouTradeScanner, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, SlateportCity_Harbor_EventScript_DeclineTrade
+	giveitem ITEM_OLD_SEA_MAP
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+	removeitem ITEM_SCANNER
+	msgbox SlateportCity_Harbor_Text_HandedScannerToStern, MSGBOX_DEFAULT
+	setflag FLAG_EXCHANGED_SCANNER
+	goto SlateportCity_Harbor_EventScript_TradedScanner
 	end
 
 SlateportCity_Harbor_EventScript_ChooseScannerTrade::
@@ -342,15 +347,7 @@ SlateportCity_Harbor_EventScript_ChooseScannerTrade::
 	end
 
 SlateportCity_Harbor_EventScript_DeepSeaTooth::
-	msgbox SlateportCity_Harbor_Text_TradeForDeepSeaTooth, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, SlateportCity_Harbor_EventScript_ChooseDifferentTrade
-	giveitem ITEM_DEEP_SEA_TOOTH
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	removeitem ITEM_SCANNER
-	msgbox SlateportCity_Harbor_Text_HandedScannerToStern, MSGBOX_DEFAULT
-	setflag FLAG_EXCHANGED_SCANNER
-	goto SlateportCity_Harbor_EventScript_TradedScanner
-	end
+
 
 SlateportCity_Harbor_EventScript_DeepSeaScale::
 	msgbox SlateportCity_Harbor_Text_TradeForDeepSeaScale, MSGBOX_YESNO
@@ -511,18 +508,15 @@ SlateportCity_Harbor_Text_WouldYouTradeScanner:
 	.string "help us on our explorations.\p"
 	.string "{PLAYER}{KUN}, would you trade your\n"
 	.string "SCANNER for something?\p"
-	.string "Like, say, a DEEPSEATOOTH or\n"
-	.string "a DEEPSEASCALE that I have?$"
+	.string "You seem like an adventurous soul.\n"
+	.string "Perhaps you'd trade the SCANNER for\l"
+	.string "this OLD SEA MAP I've been keeping?$"
 
 SlateportCity_Harbor_Text_IfYouWantToTradeLetMeKnow:
 	.string "CAPT. STERN: Are you certain?\n"
 	.string "It's useless to you, {PLAYER}{KUN}…\p"
 	.string "Well, okay, then. If you want to trade\n"
 	.string "your SCANNER, let me know.$"
-
-SlateportCity_Harbor_Text_TradeForDeepSeaTooth:
-	.string "CAPT. STERN: So you'll trade it for\n"
-	.string "my DEEPSEATOOTH?$"
 
 SlateportCity_Harbor_Text_TradeForDeepSeaScale:
 	.string "CAPT. STERN: So you'll trade it for\n"

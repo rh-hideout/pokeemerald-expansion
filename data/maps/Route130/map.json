@@ -80,5 +80,14 @@
   ],
   "warp_events": [],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 18,
+      "y": 34,
+      "elevation": 1,
+      "item": "ITEM_AURORA_TICKET",
+      "flag": "FLAG_AURORATICKET_ITEM"
+    }
+  ]
 }

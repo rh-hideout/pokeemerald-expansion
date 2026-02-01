@@ -429,7 +429,18 @@
     "TerraCave_Entrance",
     "TerraCave_End",
     "AlteringCave",
-    "MeteorFalls_StevensCave"
+    "MeteorFalls_StevensCave",
+    "OldHouseEntrance",
+    "OldHouseC1",
+    "OldHouseC2",
+    "OldHouseC1_2",
+    "OldHouseC2_2",
+    "OldHouseC1_3",
+    "OldHouseC1_4",
+    "OldHouseC1_5",
+    "OldHouseRoom1",
+    "OldHouseRoom1_2",
+    "FourthSealed"
   ],
   "gMapGroup_IndoorDynamic": [
     "SecretBase_RedCave1",

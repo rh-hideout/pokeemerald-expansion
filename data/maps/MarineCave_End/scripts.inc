@@ -29,11 +29,11 @@ MarineCave_End_EventScript_Kyogre::
 	applymovement LOCALID_MARINE_CAVE_KYOGRE, MarineCave_End_Movement_KyogreApproach
 	waitmovement 0
 	waitse
-	playmoncry SPECIES_KYOGRE, CRY_MODE_ENCOUNTER
+	playmoncry SPECIES_ZEKROM, CRY_MODE_ENCOUNTER
 	delay 40
 	waitmoncry
 	setvar VAR_LAST_TALKED, LOCALID_MARINE_CAVE_KYOGRE
-	setwildbattle SPECIES_KYOGRE, 70
+	setwildbattle SPECIES_ZEKROM, 70
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
 	waitstate
@@ -55,7 +55,7 @@ MarineCave_End_EventScript_DefeatedKyogre::
 	end
 
 MarineCave_End_EventScript_RanFromKyogre::
-	setvar VAR_0x8004, SPECIES_KYOGRE
+	setvar VAR_0x8004, SPECIES_ZEKROM
 	goto Common_EventScript_LegendaryFlewAway
 	end
 

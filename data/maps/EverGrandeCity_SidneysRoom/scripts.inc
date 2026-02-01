@@ -60,6 +60,11 @@ EverGrandeCity_SidneysRoom_EventScript_PostBattleSpeech::
 EverGrandeCity_SidneysRoom_EventScript_Defeated::
 	setflag FLAG_DEFEATED_ELITE_4_SIDNEY
 	call PokemonLeague_EliteFour_SetAdvanceToNextRoomMetatiles
+	goto_if_set FLAG_SIDNEY_SUCKER_PUNCH, EverGrandeCity_SidneysRoom_EventScript_PostTMSpeech
+	msgbox EverGrandeCity_SidneysRoom_Text_PostFirstVictorySpeech, MSGBOX_DEFAULT
+	giveitem ITEM_TM_SUCKER_PUNCH
+	setflag FLAG_SIDNEY_SUCKER_PUNCH
+EverGrandeCity_SidneysRoom_EventScript_PostTMSpeech::
 	msgbox EverGrandeCity_SidneysRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
 	release
 	end
@@ -77,6 +82,11 @@ EverGrandeCity_SidneysRoom_Text_IntroSpeech:
 EverGrandeCity_SidneysRoom_Text_Defeat:
 	.string "Well, how do you like that? I lost!\n"
 	.string "Eh, it was fun, so it doesn't matter.$"
+
+EverGrandeCity_SidneysRoom_Text_PostFirstVictorySpeech:
+	.string "First time for everything, huh?\n"
+	.string "Good work, kid. Take this.\p"
+	.string "Sock 'em good, punk.$"
 
 EverGrandeCity_SidneysRoom_Text_PostBattleSpeech:
 	.string "Well, listen to what this loser has\n"

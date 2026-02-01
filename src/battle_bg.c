@@ -664,11 +664,17 @@ static u8 GetBattleEnvironmentOverride(void)
         switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL))
         {
         case SPECIES_GROUDON:
+        case SPECIES_ZEKROM:
+        case SPECIES_RESHIRAM:
             return BATTLE_ENVIRONMENT_GROUDON;
         case SPECIES_KYOGRE:
             return BATTLE_ENVIRONMENT_KYOGRE;
         case SPECIES_RAYQUAZA:
+        case SPECIES_KYUREM:
+        case SPECIES_CRESSELIA:
             return BATTLE_ENVIRONMENT_RAYQUAZA;
+        case SPECIES_ROTOM:
+            return BATTLE_ENVIRONMENT_BUILDING;
         default:
             return gBattleEnvironment;
         }
@@ -1056,13 +1062,19 @@ void DrawBattleEntryBackground(void)
         switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL))
         {
         case SPECIES_GROUDON:
-            LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_CAVE);
+        case SPECIES_RESHIRAM:
+        case SPECIES_ZEKROM:
+            LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_GROUDON);
             break;
         case SPECIES_KYOGRE:
-            LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_UNDERWATER);
+            LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_KYOGRE);
             break;
         case SPECIES_RAYQUAZA:
+        case SPECIES_KYUREM:
+        case SPECIES_CRESSELIA:
             LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_RAYQUAZA);
+        case SPECIES_ROTOM:
+            LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_BUILDING);
             break;
         default:
             DecompressDataWithHeaderVram(gBattleEnvironmentInfo[gBattleEnvironment].background.entryTileset, (void *)(BG_CHAR_ADDR(1)));

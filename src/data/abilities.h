@@ -11,7 +11,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
 
     [ABILITY_STENCH] =
     {
-        .name = _("Stench"),
+        .name = _("Glitz Link"),
         .description = COMPOUND_STRING("May cause a foe to flinch."),
         .aiRating = 1,
     },
@@ -33,7 +33,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_BATTLE_ARMOR] =
     {
         .name = _("Battle Armor"),
-        .description = COMPOUND_STRING("Blocks critical hits."),
+        .description = COMPOUND_STRING("Prevents crits and effects."),
         .aiRating = 2,
         .breakable = TRUE,
     },
@@ -149,7 +149,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_SHIELD_DUST] =
     {
         .name = _("Shield Dust"),
-        .description = COMPOUND_STRING("Prevents added effects."),
+        .description = COMPOUND_STRING("Prevents crits and effects."),
         .aiRating = 5,
         .breakable = TRUE,
     },
@@ -858,7 +858,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_ICE_BODY] =
     {
         .name = _("Ice Body"),
-        .description = COMPOUND_STRING("HP recovery in Hail or Snow."),
+        .description = COMPOUND_STRING("Constantly recovers HP"),
         .aiRating = 3,
     },
 
@@ -1111,7 +1111,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_ANALYTIC] =
     {
         .name = _("Analytic"),
-        .description = COMPOUND_STRING("Moving last boosts power."),
+        .description = COMPOUND_STRING("Going last ups power & aim."),
         .aiRating = 5,
     },
 
@@ -1286,7 +1286,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_BULLETPROOF] =
     {
         .name = _("Bulletproof"),
-        .description = COMPOUND_STRING("Avoids some projectiles."),
+        .description = COMPOUND_STRING("Avoids bombs and pulses."),
         .breakable = TRUE,
         .aiRating = 7,
     },
@@ -1342,7 +1342,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_MEGA_LAUNCHER] =
     {
         .name = _("Mega Launcher"),
-        .description = COMPOUND_STRING("Boosts pulse moves."),
+        .description = COMPOUND_STRING("Boosts bombs and pulses."),
         .aiRating = 7,
     },
 
@@ -1391,7 +1391,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
 
     [ABILITY_PARENTAL_BOND] =
     {
-        .name = _("Parental Bond"),
+        .name = _("Grand Hydra"),
         .description = COMPOUND_STRING("Moves hit twice."),
         .aiRating = 10,
     },
@@ -2051,7 +2051,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_LINGERING_AROMA] =
     {
         .name = _("Lingering Aroma"),
-        .description = COMPOUND_STRING("Spreads with contact."),
+        .description = COMPOUND_STRING("Spreads poison when hit."),
         .aiRating = 5,
     },
 
@@ -2411,5 +2411,75 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeCopied = TRUE,
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_PLANE_SHIFT] =
+    {
+        .name = _("Plane Shift"),
+        .description = COMPOUND_STRING("Extends user's screens."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_ITEM_GET] =
+    {
+        .name = _("Litter Picker"),
+        .description = COMPOUND_STRING("Finds consumable junk."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_GRAND_DEBUT] =
+    {
+        .name = _("Showboater"),
+        .description = COMPOUND_STRING("Halves damage on switch."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_OPPOSITE_DAY] =
+    {
+        .name = _("Opposite Day"),
+        .description = COMPOUND_STRING("Sets 5-turn inverse battle."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_CONSTRICTOR] =
+    {
+        .name = _("Constrictor"),
+        .description = COMPOUND_STRING("Powers trapping moves."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_WHITEOUT] =
+    {
+        .name = _("Whiteout"),
+        .description = COMPOUND_STRING("Starts a hailstorm."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_PARROT] =
+    {
+        .name = _("Echo"),
+        .description = COMPOUND_STRING("Copies sound moves."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_FOCUS_BOOST] =
+    {
+        .name = _("Staring Contest"),
+        .description = COMPOUND_STRING("Gradually ups Accuracy."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_MOVE_RELEARNER] =
+    {
+        .name = _("Infinite Wisdom"),
+        .description = COMPOUND_STRING("Self tutor if switched out."),
+        .aiRating = 8,
+    },
+
+    [ABILITY_DOUBLE_WALLOP] =
+    {
+        .name = _("Double Wallop"),
+        .description = COMPOUND_STRING("Batters foes under 3/4 HP."),
+        .aiRating = 8,
     },
 };

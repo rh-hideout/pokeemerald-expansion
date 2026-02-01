@@ -149,7 +149,7 @@ SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGrunt::
 	applymovement LOCALID_OCEANIC_MUSEUM_FAMILIAR_GRUNT, Common_Movement_Delay48
 	waitmovement 0
 	msgbox SlateportCity_OceanicMuseum_1F_Text_RememberMeTakeThis, MSGBOX_DEFAULT
-	giveitem ITEM_TM_THIEF
+	giveitem ITEM_TM_KNOCK_OFF
 	goto_if_eq VAR_RESULT, 0, SlateportCity_OceanicMuseum_1F_EventScript_NoRoomForThief
 	setflag FLAG_RECEIVED_TM_THIEF
 	msgbox SlateportCity_OceanicMuseum_1F_Text_HopeINeverSeeYouAgain, MSGBOX_DEFAULT
@@ -296,8 +296,8 @@ SlateportCity_OceanicMuseum_1F_Text_RememberMeTakeThis:
 	.string "You have to forgive me!$"
 
 SlateportCity_OceanicMuseum_1F_Text_HopeINeverSeeYouAgain:
-	.string "That TM, it suits you more than it\n"
-	.string "does me.\p"
+	.string "You knocked a real smug look off\n"
+	.string "my face.\p"
 	.string "Hope I never see you again!\n"
 	.string "Wahahaha!$"
 

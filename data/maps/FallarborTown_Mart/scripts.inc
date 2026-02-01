@@ -14,6 +14,7 @@ FallarborTown_Mart_EventScript_Clerk::
 	.align 2
 FallarborTown_Mart_Pokemart:
 	.2byte ITEM_GREAT_BALL
+	.2byte ITEM_DUSK_BALL
 	.2byte ITEM_SUPER_POTION
 	.2byte ITEM_ANTIDOTE
 	.2byte ITEM_PARALYZE_HEAL
@@ -39,7 +40,7 @@ FallarborTown_Mart_EventScript_Skitty::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_SKITTY, CRY_MODE_NORMAL
+	playmoncry SPECIES_MUNNA, CRY_MODE_NORMAL
 	msgbox FallarborTown_Mart_Text_Skitty, MSGBOX_DEFAULT
 	waitmoncry
 	release
@@ -47,7 +48,7 @@ FallarborTown_Mart_EventScript_Skitty::
 
 FallarborTown_Mart_Text_DecidingSkittyEvolve:
 	.string "I'm having a hard time deciding if I\n"
-	.string "should make my SKITTY evolve or not.\p"
+	.string "should make my MUNNA evolve or not.\p"
 	.string "I only have to use this MOON STONE,\n"
 	.string "but it's so hard to decide…\p"
 	.string "If I make it evolve, it will become\n"
@@ -55,7 +56,7 @@ FallarborTown_Mart_Text_DecidingSkittyEvolve:
 	.string "But it will look so different, too.$"
 
 FallarborTown_Mart_Text_Skitty:
-	.string "SKITTY: Miyao?$"
+	.string "MUNNA: Moon?$"
 
 FallarborTown_Mart_Text_SellNuggetIFound:
 	.string "This NUGGET I found here…\n"

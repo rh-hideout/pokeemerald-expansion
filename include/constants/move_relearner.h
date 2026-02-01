@@ -4,7 +4,7 @@
 // Max number of moves shown by the move relearner.
 // Increased from 25 to 60 so Mew can display all TMs/HMs.
 // If you plan on adding more TMs, increase this number too.
-#define MAX_RELEARNER_MOVES 60
+#define MAX_RELEARNER_MOVES 110
 
 // Move Relearner menu change constants
 enum MoveRelearnerStates
@@ -24,6 +24,7 @@ enum RelearnMode
     RELEARN_MODE_PSS_PAGE_BATTLE_MOVES = 2,      // Relearning moves through the summary screen's battle moves page
     RELEARN_MODE_PSS_PAGE_CONTEST_MOVES = 3,     // Relearning moves through the summary screen's contest moves page (defaults to contest page on relearner screen)
     RELEARN_MODE_PARTY_MENU = 4,                 // Relearning moves through the party menu's moves submenu
+    RELEARN_MODE_BATTLING_PSS_PAGE_BATTLE_MOVES = 5,      // Relearning moves through the summary screen's battle moves page during a battle (ABILITY_MOVE_RELEARNER)
 };
 
 #endif // GUARD_CONSTANTS_MOVE_RELEARNER_H

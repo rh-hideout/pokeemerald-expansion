@@ -679,8 +679,8 @@
     {
       "id": "MAPSEC_SKY_PILLAR",
       "name": "SKY PILLAR",
-      "x": 19,
-      "y": 10,
+      "x": 20,
+      "y": 9,
       "width": 1,
       "height": 1
     },
@@ -701,7 +701,7 @@
     },
     {
       "id": "MAPSEC_PEWTER_CITY",
-      "name": "PEWTER CITY"
+      "name": "OLD HOUSE"
     },
     {
       "id": "MAPSEC_CERULEAN_CITY",
@@ -741,7 +741,11 @@
     },
     {
       "id": "MAPSEC_ROUTE_10_POKECENTER",
-      "name": "ROUTE 10"
+      "name": "OLD HOUSE",
+      "x": 0,
+      "y": 8,
+      "width": 1,
+      "height": 1
     },
     {
       "id": "MAPSEC_ROUTE_1",
@@ -1073,7 +1077,7 @@
     },
     {
       "id": "MAPSEC_ALTERING_CAVE_FRLG",
-      "name": "ALTERING CAVE"
+      "name": "MISTY CAIRN"
     },
     {
       "id": "MAPSEC_TANOBY_CHAMBERS",

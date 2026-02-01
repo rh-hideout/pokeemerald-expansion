@@ -58,10 +58,10 @@ DesertRuins_EventScript_Regirock::
 	lock
 	faceplayer
 	waitse
-	playmoncry SPECIES_REGIROCK, CRY_MODE_ENCOUNTER
+	playmoncry SPECIES_TAPU_BULU, CRY_MODE_ENCOUNTER
 	delay 40
 	waitmoncry
-	setwildbattle SPECIES_REGIROCK, 40
+	setwildbattle SPECIES_TAPU_BULU, 40
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special StartRegiBattle
 	waitstate
@@ -80,7 +80,7 @@ DesertRuins_EventScript_DefeatedRegirock::
 	end
 
 DesertRuins_EventScript_RanFromRegirock::
-	setvar VAR_0x8004, SPECIES_REGIROCK
+	setvar VAR_0x8004, SPECIES_TAPU_BULU
 	goto Common_EventScript_LegendaryFlewAway
 	end
 

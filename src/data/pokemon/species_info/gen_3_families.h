@@ -5997,10 +5997,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
     {
         .baseHP        = 50,
         .baseAttack    = 60,
-        .baseDefense   = 45,
+        .baseDefense   = 55,//+10
         .baseSpeed     = 65,
-        .baseSpAttack  = 100,
-        .baseSpDefense = 80,
+        .baseSpAttack  = 120, //+20
+        .baseSpDefense = 90,//+10
         .types = MON_TYPES(TYPE_GRASS, TYPE_POISON),
         .catchRate = 150,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 140 : 152,
@@ -6011,7 +6011,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FAIRY, EGG_GROUP_GRASS),
-        .abilities = { ABILITY_NATURAL_CURE, ABILITY_POISON_POINT, ABILITY_LEAF_GUARD },
+        .abilities = { ABILITY_NATURAL_CURE, ABILITY_POISON_POINT, ABILITY_TECHNICIAN },
         .bodyColor = BODY_COLOR_GREEN,
         .noFlip = TRUE,
         .speciesName = _("Roselia"),
@@ -6083,7 +6083,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
     [SPECIES_ROSERADE] =
     {
         .baseHP        = 60,
-        .baseAttack    = 70,
+        .baseAttack    = 90,
         .baseDefense   = P_UPDATED_STATS >= GEN_6 ? 65 : 55,
         .baseSpeed     = 90,
         .baseSpAttack  = 125,
@@ -6106,7 +6106,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FAIRY, EGG_GROUP_GRASS),
-        .abilities = { ABILITY_NATURAL_CURE, ABILITY_POISON_POINT, ABILITY_TECHNICIAN },
+        .abilities = { ABILITY_NATURAL_CURE, ABILITY_SNIPER, ABILITY_TECHNICIAN },
         .bodyColor = BODY_COLOR_GREEN,
         .noFlip = TRUE,
         .speciesName = _("Roserade"),

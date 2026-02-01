@@ -93,15 +93,25 @@ bool8 CheckRelicanthWailord(void)
 {
     // Emerald change: why did they flip it?
     // First comes Wailord
-    if (GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_WAILORD)
+    if (GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_LUMINEON)
     {
         CalculatePlayerPartyCount();
         // Last comes Relicanth
-        if (GetMonData(&gPlayerParty[gPlayerPartyCount - 1], MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_RELICANTH)
+        if (GetMonData(&gPlayerParty[gPlayerPartyCount - 1], MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_SIGILYPH)
             return TRUE;
     }
     return FALSE;
 }
+
+bool8 CheckContestWinnerFirstSlot(void) // Checks if the first slot has a cute ribbon hyper or cute ribbon master
+{
+    if (GetMonData(&gPlayerParty[0], MON_DATA_CUTE_RIBBON) >= 3 )
+    {
+	return TRUE;
+    }
+    return FALSE;
+}
+
 
 // THEORY: this was caused by block commenting out all of the older R/S braille functions but leaving the call to it itself, which creates the nullsub.
 void ShouldDoBrailleRegirockEffectOld(void)

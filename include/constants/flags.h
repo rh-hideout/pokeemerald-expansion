@@ -43,12 +43,19 @@
 #define TEMP_FLAGS_END   FLAG_TEMP_1F
 #define NUM_TEMP_FLAGS   (TEMP_FLAGS_END - TEMP_FLAGS_START + 1)
 
-#define FLAG_UNUSED_0x020    0x20 // Unused Flag
-#define FLAG_UNUSED_0x021    0x21 // Unused Flag
-#define FLAG_UNUSED_0x022    0x22 // Unused Flag
-#define FLAG_UNUSED_0x023    0x23 // Unused Flag
-#define FLAG_UNUSED_0x024    0x24 // Unused Flag
+#define FLAG_UNUSED_0x020    0x20 
+#define FLAG_FOLLOWERS_OFF FLAG_UNUSED_0x020 // SEE OVERWORLD.H
+#define FLAG_UNUSED_0x021    0x21 	
+#define FLAG_CLOCK_PAUSED FLAG_UNUSED_0x021
+#define FLAG_UNUSED_0x022    0x22 
+#define FLAG_ENCOUNTERS_DISABLED  FLAG_UNUSED_0x022
+#define FLAG_UNUSED_0x023    0x23 
+#define FLAG_BLIND_TRAINERS FLAG_UNUSED_0x023
+#define FLAG_UNUSED_0x024    0x24 
+#define FLAG_NOCLIP FLAG_UNUSED_0x024
+#define FLAG_NO_COLLISION FLAG_UNUSED_0x024
 #define FLAG_UNUSED_0x025    0x25 // Unused Flag
+#define FLAG_FORCE_SHINY FLAG_UNUSED_0x025 
 #define FLAG_UNUSED_0x026    0x26 // Unused Flag
 #define FLAG_UNUSED_0x027    0x27 // Unused Flag
 #define FLAG_UNUSED_0x028    0x28 // Unused Flag
@@ -656,43 +663,43 @@
 #define FLAG_HIDDEN_ITEM_ROUTE_123_RARE_CANDY                (FLAG_HIDDEN_ITEMS_START + 0x6E)
 #define FLAG_HIDDEN_ITEM_ROUTE_105_BIG_PEARL                 (FLAG_HIDDEN_ITEMS_START + 0x6F)
 
-#define FLAG_UNUSED_0x264  0x264 // Unused Flag
-#define FLAG_UNUSED_0x265  0x265 // Unused Flag
-#define FLAG_UNUSED_0x266  0x266 // Unused Flag
-#define FLAG_UNUSED_0x267  0x267 // Unused Flag
-#define FLAG_UNUSED_0x268  0x268 // Unused Flag
-#define FLAG_UNUSED_0x269  0x269 // Unused Flag
-#define FLAG_UNUSED_0x26A  0x26A // Unused Flag
-#define FLAG_UNUSED_0x26B  0x26B // Unused Flag
-#define FLAG_UNUSED_0x26C  0x26C // Unused Flag
-#define FLAG_UNUSED_0x26D  0x26D // Unused Flag
-#define FLAG_UNUSED_0x26E  0x26E // Unused Flag
-#define FLAG_UNUSED_0x26F  0x26F // Unused Flag
-#define FLAG_UNUSED_0x270  0x270 // Unused Flag
-#define FLAG_UNUSED_0x271  0x271 // Unused Flag
-#define FLAG_UNUSED_0x272  0x272 // Unused Flag
-#define FLAG_UNUSED_0x273  0x273 // Unused Flag
-#define FLAG_UNUSED_0x274  0x274 // Unused Flag
-#define FLAG_UNUSED_0x275  0x275 // Unused Flag
-#define FLAG_UNUSED_0x276  0x276 // Unused Flag
-#define FLAG_UNUSED_0x277  0x277 // Unused Flag
-#define FLAG_UNUSED_0x278  0x278 // Unused Flag
-#define FLAG_UNUSED_0x279  0x279 // Unused Flag
-#define FLAG_UNUSED_0x27A  0x27A // Unused Flag
-#define FLAG_UNUSED_0x27B  0x27B // Unused Flag
-#define FLAG_UNUSED_0x27C  0x27C // Unused Flag
-#define FLAG_UNUSED_0x27D  0x27D // Unused Flag
-#define FLAG_UNUSED_0x27E  0x27E // Unused Flag
-#define FLAG_UNUSED_0x27F  0x27F // Unused Flag
-#define FLAG_UNUSED_0x280  0x280 // Unused Flag
-#define FLAG_UNUSED_0x281  0x281 // Unused Flag
-#define FLAG_UNUSED_0x282  0x282 // Unused Flag
-#define FLAG_UNUSED_0x283  0x283 // Unused Flag
-#define FLAG_UNUSED_0x284  0x284 // Unused Flag
-#define FLAG_UNUSED_0x285  0x285 // Unused Flag
-#define FLAG_UNUSED_0x286  0x286 // Unused Flag
-#define FLAG_UNUSED_0x287  0x287 // Unused Flag
-#define FLAG_UNUSED_0x288  0x288 // Unused Flag
+#define FLAG_UNUSED_0x264  0x264 // ROOM SERVICE (old mansion
+#define FLAG_UNUSED_0x265  0x265 // DUSK BALLold mansion
+#define FLAG_UNUSED_0x266  0x266 // TRICK ROOM old mansion
+#define FLAG_UNUSED_0x267  0x267 // OLD GATEAT old mansion
+#define FLAG_UNUSED_0x268  0x268 //  hidden power sky pillar
+#define FLAG_UNUSED_0x269  0x269 // wish fallarbor
+#define FLAG_UNUSED_0x26A  0x26A // soak aqua hieout
+#define FLAG_UNUSED_0x26B  0x26B // Left blank, likely unused
+#define FLAG_UNUSED_0x26C  0x26C // sand tomb ashblower
+#define FLAG_UNUSED_0x26D  0x26D // carbos
+#define FLAG_UNUSED_0x26E  0x26E // sticky web petalburg woods
+#define FLAG_ARTISAN_VOLT_SWITCH  0x26F // 
+#define FLAG_ARTISAN_HYPER_VOICE  0x270 // 
+#define FLAG_ARTISAN_ENERGY_BALL  0x271 // 
+#define FLAG_ARTISAN_STONE_EDGE  0x272 // HIDDEN
+#define FLAG_ARTISAN_LUNGE  0x273 
+#define FLAG_ARTISAN_DARK_PULSE  0x274 // 
+#define FLAG_ARTISAN_IRON_HEAD  0x275 // HIDDEN
+#define FLAG_ARTISAN_AIR_SLASH  0x276 // Unused Flag!!!!!
+#define FLAG_ARTISAN_POLLEN_PUFF  0x277 // 
+#define FLAG_SCORCHING_SANDS  0x278 // Unused Flag
+#define FLAG_DRAIN_KISS  0x279 // SLATEPORT HARBOR
+#define FLAG_SIDNEY_SUCKER_PUNCH  0x27A // 
+#define FLAG_PHOEBE_PHANTOM_FORCE  0x27B // 
+#define FLAG_JUAN_DAZZLING_GLEAM 0x27C // 
+#define FLAG_DRAKE_DRAGON_PULSE  0x27D // actually draco meteor
+#define FLAG_SWORDS_DANCE_0x27E  0x27E // meteor falls steven room items
+#define FLAG_NASTY_PLOT_0x27F  0x27F // meteor falls steven room items
+#define FLAG_DAWN_STONE_METEOR_FALLS 0x280 // 
+#define FLAG_TOX_SPIKES_0x281  0x281 // magma hideoutb hidden
+#define FLAG_DEFEATED_TAPULELE  0x282 // 
+#define FLAG_HIDE_TAPULELE  0x283 // LELE shit
+#define FLAG_AURORATICKET_ITEM 0x284 // 
+#define FLAG_MYSTICTICKET_ITEM 0x285 // 
+#define FLAG_EONTICKET_ITEM  0x286 // 
+#define FLAG_TICKET_BEGIN  0x287 // 
+#define FLAG_TICKET_PHOTO_STATE  0x288 // Unused Flag
 #define FLAG_UNUSED_0x289  0x289 // Unused Flag
 #define FLAG_UNUSED_0x28A  0x28A // Unused Flag
 #define FLAG_UNUSED_0x28B  0x28B // Unused Flag
@@ -1175,7 +1182,7 @@
 #define FLAG_ITEM_NEW_MAUVILLE_FULL_HEAL                            0x462
 #define FLAG_ITEM_NEW_MAUVILLE_PARALYZE_HEAL                        0x463
 #define FLAG_ITEM_AQUA_HIDEOUT_B1F_MASTER_BALL                      0x464
-#define FLAG_ITEM_OLD_MAGMA_HIDEOUT_B1F_MASTER_BALL                 0x465 // Unused Flag, leftover from the Ruby Magma hideout
+#define FLAG_ITEM_ROTOM_CATALOG_MOSSDEEP	                 0x465 // tOTOM CATALOG
 #define FLAG_ITEM_OLD_MAGMA_HIDEOUT_B1F_MAX_ELIXIR                  0x466 // Unused Flag, leftover from the Ruby Magma hideout
 #define FLAG_ITEM_OLD_MAGMA_HIDEOUT_B2F_NEST_BALL                   0x467 // Unused Flag, leftover from the Ruby Magma hideout
 #define FLAG_UNUSED_0x468                                           0x468 // Unused Flag
@@ -1503,7 +1510,7 @@
 #define FLAG_ARRIVED_AT_NAVEL_ROCK                  (SYSTEM_FLAGS + 0x81)
 #define FLAG_LANDMARK_TRAINER_HILL                  (SYSTEM_FLAGS + 0x82)
 
-#define FLAG_UNUSED_0x8E3                           (SYSTEM_FLAGS + 0x83) // Unused Flag
+#define FLAG_SYS_TAPULELE_PUZZLE_COMPLETED                           (SYSTEM_FLAGS + 0x83) //TAPU
 
 #define FLAG_RECEIVED_POKEDEX_FROM_BIRCH            (SYSTEM_FLAGS + 0x84)
 

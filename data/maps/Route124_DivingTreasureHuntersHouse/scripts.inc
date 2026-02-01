@@ -219,22 +219,22 @@ Route124_DivingTreasureHuntersHouse_EventScript_ShardOptionsRYBG::
 
 Route124_DivingTreasureHuntersHouse_EventScript_TradeRedShard::
 	setvar VAR_0x8008, ITEM_RED_SHARD
-	setvar VAR_0x8009, ITEM_FIRE_STONE
+	setvar VAR_0x8009, ITEM_SUN_STONE
 	goto Route124_DivingTreasureHuntersHouse_EventScript_TryTradeShard
 
 Route124_DivingTreasureHuntersHouse_EventScript_TradeYellowShard::
 	setvar VAR_0x8008, ITEM_YELLOW_SHARD
-	setvar VAR_0x8009, ITEM_THUNDER_STONE
+	setvar VAR_0x8009, ITEM_SHINY_STONE
 	goto Route124_DivingTreasureHuntersHouse_EventScript_TryTradeShard
 
 Route124_DivingTreasureHuntersHouse_EventScript_TradeBlueShard::
 	setvar VAR_0x8008, ITEM_BLUE_SHARD
-	setvar VAR_0x8009, ITEM_WATER_STONE
+	setvar VAR_0x8009, ITEM_DUSK_STONE
 	goto Route124_DivingTreasureHuntersHouse_EventScript_TryTradeShard
 
 Route124_DivingTreasureHuntersHouse_EventScript_TradeGreenShard::
 	setvar VAR_0x8008, ITEM_GREEN_SHARD
-	setvar VAR_0x8009, ITEM_LEAF_STONE
+	setvar VAR_0x8009, ITEM_DAWN_STONE
 	goto Route124_DivingTreasureHuntersHouse_EventScript_TryTradeShard
 
 Route124_DivingTreasureHuntersHouse_EventScript_TryTradeShard::
@@ -329,10 +329,10 @@ Route124_DivingTreasureHuntersHouse_Text_ComeBackIfYouChangeMind:
 
 Route124_DivingTreasureHuntersHouse_Text_ShardTradeBoard:
 	.string "{CLEAR_TO 0x0a}Wanted item{CLEAR_TO 0x7c}Trade item\n"
-	.string "{CLEAR_TO 0x0f}RED SHARD{CLEAR_TO 0x59}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 0x7b}FIRE STONE{CLEAR_TO 0xc8}\p"
+	.string "{CLEAR_TO 0x0f}RED SHARD{CLEAR_TO 0x59}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 0x7E}SUN STONE{CLEAR_TO 0xc8}\p"
 	.string "{CLEAR_TO 0x0a}Wanted item{CLEAR_TO 0x7c}Trade item\n"
-	.string "{CLEAR_TO 0x06}YELLOW SHARD{CLEAR_TO 0x59}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 0x73}THUNDERSTONE{CLEAR_TO 0xc8}\p"
+	.string "{CLEAR_TO 0x06}YELLOW SHARD{CLEAR_TO 0x59}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 0x78}SHINY STONE{CLEAR_TO 0xc8}\p"
 	.string "{CLEAR_TO 0x0a}Wanted item{CLEAR_TO 0x7c}Trade item\n"
-	.string "{CLEAR_TO 0x0c}BLUE SHARD{CLEAR_TO 0x59}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 0x79}WATER STONE{CLEAR_TO 0xc8}\p"
+	.string "{CLEAR_TO 0x0c}BLUE SHARD{CLEAR_TO 0x59}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 0x7E}DUSK STONE{CLEAR_TO 0xc8}\p"
 	.string "{CLEAR_TO 0x0a}Wanted item{CLEAR_TO 0x7c}Trade item\n"
-	.string "{CLEAR_TO 0x08}GREEN SHARD{CLEAR_TO 0x59}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 0x7b}LEAF STONE$"
+	.string "{CLEAR_TO 0x08}GREEN SHARD{CLEAR_TO 0x59}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 0x7b}DAWN STONE$"

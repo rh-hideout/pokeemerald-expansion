@@ -82,8 +82,8 @@ MossdeepCity_StevensHouse_EventScript_LeaveBeldum::
 	end
 
 MossdeepCity_StevensHouse_EventScript_GiveBeldum::
-	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_BELDUM
-	givemon SPECIES_BELDUM, 5
+	setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_MANAPHY
+	givemon SPECIES_MANAPHY, 5
 	goto_if_eq VAR_RESULT, MON_GIVEN_TO_PARTY, MossdeepCity_StevensHouse_EventScript_SendBeldumParty
 	goto_if_eq VAR_RESULT, MON_GIVEN_TO_PC, MossdeepCity_StevensHouse_EventScript_SendBeldumPC
 	goto Common_EventScript_NoMoreRoomForPokemon
@@ -112,13 +112,13 @@ MossdeepCity_StevensHouse_EventScript_BeldumTransferredToPC::
 	end
 
 MossdeepCity_StevensHouse_EventScript_ReceivedBeldumFanfare::
-	bufferspeciesname STR_VAR_2, SPECIES_BELDUM
+	bufferspeciesname STR_VAR_2, SPECIES_MANAPHY
 	removeobject LOCALID_STEVENS_HOUSE_BALL
 	playfanfare MUS_OBTAIN_ITEM
 	message MossdeepCity_StevensHouse_Text_ObtainedBeldum
 	waitmessage
 	waitfanfare
-	bufferspeciesname STR_VAR_1, SPECIES_BELDUM
+	bufferspeciesname STR_VAR_1, SPECIES_MANAPHY
 	return
 
 MossdeepCity_StevensHouse_EventScript_ReceivedBeldum::
@@ -177,11 +177,11 @@ MossdeepCity_StevensHouse_Text_UnderwateCavernBetweenMossdeepSootopolis:
 MossdeepCity_StevensHouse_Text_TakeBallContainingBeldum:
 	.string "{PLAYER} checked the POKé BALL.\p"
 	.string "It contained the POKéMON\n"
-	.string "BELDUM.\p"
+	.string "MANAPHY.\p"
 	.string "Take the POKé BALL?$"
 
 MossdeepCity_StevensHouse_Text_ObtainedBeldum:
-	.string "{PLAYER} obtained a BELDUM.$"
+	.string "{PLAYER} obtained a MANAPHY.$"
 
 @ Unused
 MossdeepCity_StevensHouse_Text_NoSpaceForAnotherMon:
@@ -202,8 +202,8 @@ MossdeepCity_StevensHouse_Text_LetterFromSteven:
 	.string "I have a favor to ask of you.\p"
 	.string "I want you to take the POKé BALL on\n"
 	.string "the desk.\p"
-	.string "Inside it is a BELDUM, my favorite\n"
-	.string "POKéMON.\p"
+	.string "Inside it is MANAPHY, WALLACE'S\n"
+	.string "favorite POKéMON.\p"
 	.string "I'm counting on you.\p"
 	.string "May our paths cross someday.\p"
 	.string "STEVEN STONE$"

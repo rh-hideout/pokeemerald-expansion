@@ -646,4 +646,8 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
         .onSwitchIn = TRUE,
         .onSwitchInFirstTurn = TRUE,
     },
+
+    [HOLD_EFFECT_HONEY] =
+    {
+    },
 };
