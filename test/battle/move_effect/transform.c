@@ -1,7 +1,10 @@
 #include "global.h"
 #include "test/battle.h"
 
-TO_DO_BATTLE_TEST("TODO: Write Transform (Move Effect) test titles")
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_TRANSFORM) == EFFECT_TRANSFORM);
+}
 
 SINGLE_BATTLE_TEST("Transform fails on semi-invulnerable target in Gen2+")
 {
@@ -105,11 +108,11 @@ SINGLE_BATTLE_TEST("Transformed Pokemon cannot change forms in Gen5+")
 
     GIVEN {
         WITH_CONFIG(CONFIG_TRANSFORM_FORM_CHANGES, genConfig);
-        PLAYER(SPECIES_AEGISLASH) { Moves(MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_DITTO) { Moves(MOVE_TRANSFORM); }
+        PLAYER(SPECIES_AEGISLASH) { Moves(MOVE_TACKLE, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_DITTO) { Moves(MOVE_TACKLE, MOVE_TRANSFORM); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRANSFORM); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         if (expectFormChange) {
             ABILITY_POPUP(opponent, ABILITY_STANCE_CHANGE);
@@ -167,3 +170,5 @@ SINGLE_BATTLE_TEST("Transform returns the user to normal at the end of the battl
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_DITTO);
     }
 }
+
+TO_DO_BATTLE_TEST("TODO: Write Transform (Move Effect) test titles")
