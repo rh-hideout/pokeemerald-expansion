@@ -701,7 +701,7 @@ struct BattleStruct
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
     u8 preAttackAnimPlayed:1;
-    u8 padding4:1;
+    u8 isLegendaryBattle:1;
     u8 magicCoatActive:1;
     u8 magicBounceActive:1;
     u8 moveBouncer;

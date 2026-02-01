@@ -5744,7 +5744,7 @@ bool32 IsSpeciesInHoennDex(u16 species)
 
 u16 GetBattleBGM(void)
 {
-    if (IsLegendaryBattle())
+    if (gBattleStruct->isLegendaryBattle)
     {
         switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES))
         {
@@ -6055,7 +6055,7 @@ static inline bool32 CanFirstMonBoostHeldItemRarity(void)
 
 void SetWildMonHeldItem(void)
 {
-    if (!(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE) || IsLegendaryBattle()))
+    if (!(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE) || gBattleStruct->isLegendaryBattle))
     {
         u16 rnd;
         u16 species;
@@ -7418,38 +7418,4 @@ void ChangePokemonNicknameWithCallback(void (*callback)(void))
     GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar3);
     GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar2);
     DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, GetBoxMonData(boxMon, MON_DATA_SPECIES), GetBoxMonGender(boxMon), GetBoxMonData(boxMon, MON_DATA_PERSONALITY), callback);
-}
-
-bool32 IsLegendaryBattle(void)
-{
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-        return FALSE;
-
-    u32 species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
-    switch (species)
-    {
-    case SPECIES_LATIOS:
-    case SPECIES_LATIOS_MEGA:
-    case SPECIES_LATIAS:
-    case SPECIES_LATIAS_MEGA:
-    case SPECIES_GROUDON_PRIMAL:
-    case SPECIES_KYOGRE:
-    case SPECIES_KYOGRE_PRIMAL:
-    case SPECIES_RAYQUAZA:
-    case SPECIES_RAYQUAZA_MEGA:
-    case SPECIES_DEOXYS_NORMAL:
-    case SPECIES_DEOXYS_ATTACK:
-    case SPECIES_DEOXYS_DEFENSE:
-    case SPECIES_DEOXYS_SPEED:
-    case SPECIES_LUGIA:
-    case SPECIES_HO_OH:
-    case SPECIES_MEW:
-    case SPECIES_REGIROCK:
-    case SPECIES_REGICE:
-    case SPECIES_REGISTEEL:
-        return TRUE;
-    default:
-        break;
-    }
-    return FALSE;
 }

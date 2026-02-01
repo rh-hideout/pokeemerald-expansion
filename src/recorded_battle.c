@@ -263,7 +263,7 @@ static bool32 IsRecordedBattleSaveValid(struct RecordedBattleSave *save)
 {
     if (save->battleFlags == 0)
         return FALSE;
-    if (save->battleFlags & BATTLE_TYPE_RECORDED_INVALID || IsLegendaryBattle())
+    if (save->battleFlags & BATTLE_TYPE_RECORDED_INVALID || gBattleStruct->isLegendaryBattle)
         return FALSE;
     if (CalcByteArraySum((void *)(save), sizeof(*save) - 4) != save->checksum)
         return FALSE;

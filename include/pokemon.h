@@ -941,6 +941,5 @@ bool32 IsSpeciesOfType(u32 species, enum Type type);
 struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
 void ChangePokemonNicknameWithCallback(void (*callback)(void));
-bool32 IsLegendaryBattle(void);
 
 #endif // GUARD_POKEMON_H
