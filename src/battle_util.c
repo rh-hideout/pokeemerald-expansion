@@ -11106,7 +11106,7 @@ void SetOrClearRageVolatile(void)
         gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
 }
 
-s32 ClampSignedValue(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
+s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
 {
     s32 newValue = currentVal - delta;
     if (newValue > highestVal)
