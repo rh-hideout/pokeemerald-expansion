@@ -3,6 +3,8 @@
 
 #include "sprite.h"
 
+#define HP_EMPTY 0
+
 extern const u8 gMiscBlank_Gfx[]; // unused in Emerald
 
 u8 CreateInvisibleSpriteWithCallback(void (*callback)(struct Sprite *));

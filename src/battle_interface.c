@@ -2100,10 +2100,10 @@ static void MoveBattleBarGraphically(enum BattlerId battler, u8 whichBar)
                                 array, B_HEALTHBAR_PIXELS / 8);
 
             maxValue = gBattleSpritesDataPtr->battleBars[battler].maxValue;
-            currValue = ClampSignedValue(0,
-                                maxValue,
-                                gBattleSpritesDataPtr->battleBars[battler].oldValue,
-                                gBattleSpritesDataPtr->battleBars[battler].receivedValue);
+            currValue = gBattleSpritesDataPtr->battleBars[battler].currValue;
+
+            if (maxValue < B_HEALTHBAR_PIXELS)
+                currValue = Q_24_8_TO_INT(currValue);
         }
 
         switch (GetHPBarLevel(currValue, maxValue))
@@ -2170,7 +2170,7 @@ static s32 CalcNewBarValue(s32 maxValue, s32 oldValue, s32 receivedValue, s32 *c
             *currValue = oldValue;
     }
 
-    newValue = ClampSignedValue(0, maxValue, oldValue, receivedValue);
+    newValue = ClampSignedValue(HP_EMPTY, maxValue, oldValue, receivedValue);
     if (maxValue < scale)
     {
         if (newValue == Q_24_8_TO_INT(*currValue) && (*currValue & 0xFF) == 0)
@@ -2236,7 +2236,7 @@ static u8 CalcBarFilledPixels(s32 maxValue, s32 oldValue, s32 receivedValue, s32
     u8 pixels, filledPixels, totalPixels;
     u8 i;
 
-    s32 newValue = ClampSignedValue(0, maxValue, oldValue, receivedValue);
+    s32 newValue = ClampSignedValue(HP_EMPTY, maxValue, oldValue, receivedValue);
     totalPixels = scale * 8;
 
     for (i = 0; i < scale; i++)
@@ -2281,7 +2281,7 @@ static u8 GetScaledExpFraction(s32 oldValue, s32 receivedValue, s32 maxValue, u8
     s8 oldToMax, newToMax;
 
     scale *= (B_FAST_EXP_GROW) ? 2 : 8;
-    newVal = ClampSignedValue(0, maxValue, oldValue, receivedValue);
+    newVal = ClampSignedValue(HP_EMPTY, maxValue, oldValue, receivedValue);
 
     oldToMax = oldValue * scale / maxValue;
     newToMax = newVal * scale / maxValue;
