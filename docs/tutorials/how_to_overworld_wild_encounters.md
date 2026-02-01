@@ -45,13 +45,39 @@ None of these three configs can prevent the forceful despawning of OWEs to free 
 ## High Priority and Low Priority OWEs
 Low Priority OWEs may not be spawned or even be destroyed in certain situations. There are palettes and object tiles checks to prevent these from spawning if it would fail, as well as similar checks for number of event objects, palettes and object tiles. These checks will despawn the oldest of Low Priority OWEs when other objects event are attempting to be spawned and Low Priority OWEs are using these resources. Low Priority OWEs may also be destroyed by NPC object events colliding with them due to their movements or the OWE being in the way of a trainer interaction. High priority OWEs are treated as regular objects and will not be destroyed in the ways outlined above, but may cause the destruction of Generated OWEs and will not face spawning restrictions.
 These despawn conditions will overwrite the restrictive despawns mentioned above.
-> Is this true? Does it take the oldest or oldest not marked for restriction, what if all are marked to not despawn.
 
 ## Encountering an OWE
 Collision between Player and OWE or Interacting with one. Can also interact with an OWE in the water even when the player is not.
 ### Encounter Types
 ## Repel and Lure Behaviours
+
 ## OWE Behaviour Types
+The behaviors that these OWEs have is set up to be customizable for each individual species. By default, every species is set to `OWE_IGNORE_PLAYER`. To add a different behavior to a species, find their species struct in their `gen_X_families.h` file in the `src/data/pokemon/species_info` folder and add a `.overworldEncounterBehavior = <BEHAVIOR>` to it. `<BEHAVIOR>` should be replaced with the behavior you want them to use. For example, if I wanted to add the `OWE_FLEE_PLAYER_NORMAL` behavior to Mudkip I would open `gen_3_families.h`, find the struct for `SPECIES_MUDKIP`, and add `.overworldEncounterBehavior = OWE_FLEE_PLAYER_NORMAL` to the end of it like so:
+```diff
+        .eggMoveLearnset = sMudkipEggMoveLearnset,
+        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_MARSHTOMP}),
++       .overworldEncounterBehavior = OWE_FLEE_PLAYER_NORMAL
+    },
+
+    [SPECIES_MARSHTOMP] =
+    {
+        .baseHP        = 70,
+```
+
+The behaviors themselves are defined in `src/data/pokemon/wild_encounter_overworld_behavior.h`. These are the customizable parameters:
+- `movementType` is the movement type you want the object event to have. More on these in the next section.
+- `viewDistance` is the number of tiles away the mon is able to notice the player in the cardinal directions (similar to the sight distance of trainers).
+- `viewWidth` is the total width of the area in which the mon will notice the player. For example, if `viewWidth` is set to `3`, the mon will be able to detect the player if they are within 1 tile of either side of the line of sight.
+- `activeDistance` is the max distance away from the mon that the player can be before the mon loses track of them and goes back to wandering.
+- `idleSpeed` is the speed at which the mon will take a step while wandering (player is not noticed). This must be one of the values in `enum OWESpeeds`.
+- `activeSpeed` is the speed at which the mon will take a step while active (player has been noticed). This must be one of the values in `enum OWESpeeds`.
+
+If any of these parameters are not defined, they will be automatically assigned the value of `0`.
+
+A small number of premade behaviors have been provided and are ready to use. You can add as many new custom behaviors as you like, but make sure to add each behavior to `enum OverworldEncounterBehaviors`, making sure that `OWE_SPECIES_BEHAVIOR_COUNT` is always at the end.
+
+The same behavior can be used for multiple different species.
+
 ## OWE Movements
 While OWE objects can be given any movement type, there are several different custom movement types that were made specifically for OWEs:
 - The basic one is `MOVEMENT_TYPE_WANDER_AROUND_OWE`. All of the other OWE movement types start with this behavior and differentiate into other behavior when they notice the player. Similar to `MOVEMENT_TYPE_WANDER_AROUND`, the object will take steps in random directions at random intervals. The main difference here is that the object will never turn more than 90 degrees from their current facing direction when taking a step. OWEs with this movement type will completely ignore the player until they are directly collided/interacted with.
