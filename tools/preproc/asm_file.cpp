@@ -135,7 +135,7 @@ void AsmFile::ConsumeLineSkip()
             long p = pos;
             pos++;
 
-            while (m_buffer[pos] == ' ')
+            while (m_buffer[pos] == ' ' || m_buffer[pos] == '\t')
                 pos++;
 
             if (m_buffer[pos] == '\n')
