@@ -224,7 +224,7 @@ Debug_EventScript_Script_6::
 
 Debug_EventScript_Script_7::
 	msgbox Debug_LevelScaling_Test6_Intro, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_WINONA_1, Debug_LevelScaling_Defeated
+	trainerbattle_no_intro TRAINER_KALI, Debug_LevelScaling_Defeated
 	msgbox Debug_LevelScaling_Test6_Result, MSGBOX_DEFAULT
 	release
 	end

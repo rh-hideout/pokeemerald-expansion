@@ -252,6 +252,10 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornTre
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CtfTerminal;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Jessie;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_James;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Unsichtbar;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Dollarsign;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Cd;
+
 
 
 const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
@@ -501,6 +505,13 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_CTF_TERMINAL] =             &gObjectEventGraphicsInfo_CtfTerminal,
     [OBJ_EVENT_GFX_JESSIE] =                   &gObjectEventGraphicsInfo_Jessie,
     [OBJ_EVENT_GFX_JAMES] =                    &gObjectEventGraphicsInfo_James,
+    [OBJ_EVENT_GFX_MAUVILLE_OLD_MAN_UNUSED1] = &gObjectEventGraphicsInfo_UnusedMauvilleOldMan1,
+    [OBJ_EVENT_GFX_MAUVILLE_OLD_MAN_UNUSED2] = &gObjectEventGraphicsInfo_UnusedMauvilleOldMan2,
+    [OBJ_EVENT_GFX_UNSICHTBAR] =               &gObjectEventGraphicsInfo_Unsichtbar,
+    [OBJ_EVENT_GFX_DOLLARSIGN] =               &gObjectEventGraphicsInfo_Dollarsign,
+    [OBJ_EVENT_GFX_CD] =                       &gObjectEventGraphicsInfo_Cd,
+    
+
 
 };
 

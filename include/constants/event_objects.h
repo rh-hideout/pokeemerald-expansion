@@ -252,13 +252,18 @@
 #define OBJ_EVENT_GFX_CTF_TERMINAL               243
 #define OBJ_EVENT_GFX_JESSIE                     244
 #define OBJ_EVENT_GFX_JAMES                      245
+#define OBJ_EVENT_GFX_MAUVILLE_OLD_MAN_UNUSED1   246
+#define OBJ_EVENT_GFX_MAUVILLE_OLD_MAN_UNUSED2   247
+#define OBJ_EVENT_GFX_UNSICHTBAR                 248
+#define OBJ_EVENT_GFX_DOLLARSIGN                 249
+#define OBJ_EVENT_GFX_CD                         250
 
 // NOTE: The maximum amount of object events has been expanded from 255 to 65535.
 // Since dynamic graphics ids still require at least 16 free values, the actual limit
 // is 65519, but even considering follower Pokémon, this should be more than enough :)
 
 // Muss immer unter allem Neuen stehen und Wert muss dann erhöht werden.
-#define NUM_OBJ_EVENT_GFX                        246
+#define NUM_OBJ_EVENT_GFX                        251
 
 
 
@@ -356,6 +361,10 @@
 #define OBJ_EVENT_PAL_TAG_CTF_TERMINAL            0x1125
 #define OBJ_EVENT_PAL_TAG_JESSIE                  0x1126
 #define OBJ_EVENT_PAL_TAG_JAMES                   0x1127
+#define OBJ_EVENT_PAL_TAG_CD                      0x1128
+#define OBJ_EVENT_PAL_TAG_UNSICHTBAR              0x1129
+#define OBJ_EVENT_PAL_TAG_DOLLARSIGN              0x112A
+
 
 // Moved from src/event_object_movement.c so that they're accesible from other files.
 #define OBJ_EVENT_PAL_TAG_BRENDAN                 0x1100

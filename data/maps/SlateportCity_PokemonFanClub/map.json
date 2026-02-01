@@ -137,15 +137,15 @@
       "x": 6,
       "y": 10,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY",
-      "dest_warp_id": "4"
+      "dest_map": "MAP_LUDWIGSHAFEN",
+      "dest_warp_id": "1"
     },
     {
       "x": 7,
       "y": 10,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY",
-      "dest_warp_id": "4"
+      "dest_map": "MAP_LUDWIGSHAFEN",
+      "dest_warp_id": "1"
     }
   ],
   "coord_events": [],

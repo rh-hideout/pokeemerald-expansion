@@ -1206,3 +1206,15 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Blackhansa_Floor1/scripts.inc"
 
 	.include "data/maps/Blackhansa_Floor2/scripts.inc"
+
+	.include "data/maps/Klassenzimmer_SoEn/scripts.inc"
+
+	.include "data/maps/Flag3_CD/scripts.inc"
+
+	.include "data/maps/Klassenzimmer_4/scripts.inc"
+
+	.include "data/maps/Ludwigshafen/scripts.inc"
+
+	.include "data/maps/Arena_Flag4/scripts.inc"
+
+	.include "data/maps/GlitchHaus/scripts.inc"

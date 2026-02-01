@@ -87,6 +87,13 @@
       "elevation": 0,
       "dest_map": "MAP_MAIN_HUB",
       "dest_warp_id": "2"
+    },
+    {
+      "x": 12,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_KLASSENZIMMER_SO_EN",
+      "dest_warp_id": "1"
     }
   ],
   "coord_events": [],

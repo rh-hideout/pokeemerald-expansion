@@ -1232,20 +1232,20 @@
 #define FLAG_CTF_GYM1_ROCKET_DEFEATED                               0x49A // Flag1 Event Museum
 #define FLAG_CTF_GYM1_REWARD_TAKEN                                  0x49B // Flag1 Event Museum
 #define FLAG_CTF_MUSEUM_TM_TAKEN                                    0x49C // Flag1 Event Museum
-#define FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED                         0x49D // Blackhansa Tür aufgesperrt
-#define FLAG_BLACKHANSA_F2_INTRUDER_DONE                            0x49E // Blackhansa Social Eng. Event
-#define FLAG_BLACKHANSA_SERVER_TAP_DONE                             0x49F // Blackhansa Server done
-#define FLAG_BLACKHANSA_F2_IT_MANAGER_HIDDEN                        0x4A0 // Blackhansa IT Typ
-#define FLAG_UNUSED_0x4A1                                           0x4A1 // Unused Flag
-#define FLAG_UNUSED_0x4A2                                           0x4A2 // Unused Flag
-#define FLAG_UNUSED_0x4A3                                           0x4A3 // Unused Flag
+#define FLAG_PETALBURG_LOCKED_DOOR_UNLOCKED                         0x49D // Flag3 Blackhansa Tür aufgesperrt
+#define FLAG_BLACKHANSA_F2_INTRUDER_DONE                            0x49E // Flag3 Blackhansa Social Eng. Event
+#define FLAG_BLACKHANSA_SERVER_TAP_DONE                             0x49F // Flag3 Blackhansa Server done
+#define FLAG_BLACKHANSA_F2_IT_MANAGER_HIDDEN                        0x4A0 // Flag3 Blackhansa IT Typ
+#define FLAG_CTF_CLASSROOM_APPLES_RASPBERRY                         0x4A1 // Flag3 Raspberry von Apples Event
+#define FLAG_CLASSROOM_STRENGTH_TOOL_SCENE_DONE                     0x4A2 // Flag3 Powerglove erhalten
+#define FLAG_FLAG3_CD_PUZZLE_SOLVED                                 0x4A3 // Flag3 CD Puzzle gelöst
 #define FLAG_UNUSED_0x4A4                                           0x4A4 // Unused Flag
 #define FLAG_UNUSED_0x4A5                                           0x4A5 // Unused Flag
 #define FLAG_UNUSED_0x4A6                                           0x4A6 // Unused Flag
 #define FLAG_UNUSED_0x4A7                                           0x4A7 // Unused Flag
-#define FLAG_UNUSED_0x4A8                                           0x4A8 // Unused Flag
-#define FLAG_UNUSED_0x4A9                                           0x4A9 // Unused Flag
-#define FLAG_UNUSED_0x4AA                                           0x4AA // Unused Flag
+#define FLAG_CTF_CLASSROOM_EARTHMAN_TUBE                            0x4A8 // Flag4 Lapras Tube erhalten
+#define FLAG_LUDWIGSHAFEN_INTRO_DONE                                0x4A9 // Flag4 Ludwigshafen Intro abgespielt
+#define FLAG_CTF_BATTLETENT_LOBBY_FLAG4_DONE                        0x4AA // Flag4 Battle Tent Lobby Event/Terminal
 #define FLAG_UNUSED_0x4AB                                           0x4AB // Unused Flag
 #define FLAG_UNUSED_0x4AC                                           0x4AC // Unused Flag
 #define FLAG_UNUSED_0x4AD                                           0x4AD // Unused Flag

@@ -647,10 +647,16 @@
   "gMapGroup_Flag3": [
     "entryMapFlag3",
     "Blackhansa_Floor1",
-    "Blackhansa_Floor2"
+    "Blackhansa_Floor2",
+    "Klassenzimmer_SoEn",
+    "Flag3_CD"
   ],
   "gMapGroup_Flag4": [
-    "entryMapFlag4"
+    "entryMapFlag4",
+    "Ludwigshafen",
+    "Klassenzimmer_4",
+    "Arena_Flag4",
+    "GlitchHaus"
   ],
   "gMapGroup_Flag5": [
     "entryMapFlag5"

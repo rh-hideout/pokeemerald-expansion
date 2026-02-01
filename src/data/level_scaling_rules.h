@@ -87,12 +87,12 @@ const struct LevelScalingConfig gTrainerLevelScalingRules[TRAINERS_COUNT] =
     },
 
     // Test 6: Evolution management test (should devolve illegal mons)
-    [TRAINER_WINONA_1] = {
-        .mode = LEVEL_SCALING_TO_LEVEL_CAP,
-        .levelAugmentAdd = -20,  // Reduce levels significantly
-        .levelVariation = 0,
-        .manageEvolutions = TRUE,
-    },
+    //[TRAINER_WINONA_1] = {
+    //    .mode = LEVEL_SCALING_TO_LEVEL_CAP,
+    //    .levelAugmentAdd = -20,  // Reduce levels significantly
+    //    .levelVariation = 0,
+     //   .manageEvolutions = TRUE,
+    //},
 
     // Example configurations (commented out by default):
 

@@ -114,7 +114,7 @@ Pokemon fights between semesters are enforced by walking from DHBW to Jungbusch 
 
 ### Flag 8 (BAMBERGER)
 
-Showdown auf dem Wasserturm
+
 
 
 

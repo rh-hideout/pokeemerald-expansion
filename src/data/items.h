@@ -15577,10 +15577,10 @@ const struct Item gItemsInfo[] =
 
     [ITEM_SURF_TOOL] =
     {
-        .name = ITEM_NAME("Surf Item"),
+        .name = ITEM_NAME("Lapras Tube"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A device that lets\n"
+            "An item that lets\n"
             "you travel across\n"
             "water."),
         .importance = 1,
@@ -15593,7 +15593,7 @@ const struct Item gItemsInfo[] =
 
     [ITEM_STRENGTH_TOOL] =
     {
-        .name = ITEM_NAME("Strength Item"),
+        .name = ITEM_NAME("Powerglove"),
         .price = 0,
         .description = COMPOUND_STRING(
             "Grants the power\n"

@@ -476,3 +476,13 @@ const u16 gObjectEventPal_Jessie[] = INCBIN_U16("graphics/object_events/palettes
 
 const u32 gObjectEventPic_James[] = INCBIN_U32("graphics/object_events/pics/people/james.4bpp");
 const u16 gObjectEventPal_James[] = INCBIN_U16("graphics/object_events/palettes/james.gbapal");
+
+const u32 gObjectEventPic_Cd[] = INCBIN_U32("graphics/object_events/pics/misc/cd.4bpp");
+const u16 gObjectEventPal_Cd[] = INCBIN_U16("graphics/object_events/palettes/cd.gbapal");
+
+const u32 gObjectEventPic_Unsichtbar[] = INCBIN_U32("graphics/object_events/pics/misc/unsichtbar.4bpp");
+const u16 gObjectEventPal_Unsichtbar[] = INCBIN_U16("graphics/object_events/palettes/unsichtbar.gbapal");
+
+const u32 gObjectEventPic_Dollarsign[] = INCBIN_U32("graphics/object_events/pics/misc/dollarsign.4bpp");
+const u16 gObjectEventPal_Dollarsign[] = INCBIN_U16("graphics/object_events/palettes/dollarsign.gbapal");
+

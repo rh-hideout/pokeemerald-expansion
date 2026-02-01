@@ -195,7 +195,7 @@
       "id": "LAYOUT_ROUTE104",
       "name": "Route104_Layout",
       "width": 40,
-      "height": 80,
+      "height": 90,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Rustboro",
       "border_filepath": "data/layouts/Route104/border.bin",
@@ -4570,6 +4570,66 @@
       "secondary_tileset": "gTileset_Facility",
       "border_filepath": "data/layouts/Blackhansa_Floor2/border.bin",
       "blockdata_filepath": "data/layouts/Blackhansa_Floor2/map.bin"
+    },
+    {
+      "id": "LAYOUT_KLASSENZIMMER_SO_EN",
+      "name": "Klassenzimmer_SoEn_Layout",
+      "width": 12,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/Klassenzimmer_SoEn/border.bin",
+      "blockdata_filepath": "data/layouts/Klassenzimmer_SoEn/map.bin"
+    },
+    {
+      "id": "LAYOUT_FLAG3_CD",
+      "name": "Flag3_CD_Layout",
+      "width": 15,
+      "height": 15,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/Flag3_CD/border.bin",
+      "blockdata_filepath": "data/layouts/Flag3_CD/map.bin"
+    },
+    {
+      "id": "LAYOUT_KLASSENZIMMER_4",
+      "name": "Klassenzimmer_4_Layout",
+      "width": 12,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/Klassenzimmer_4/border.bin",
+      "blockdata_filepath": "data/layouts/Klassenzimmer_4/map.bin"
+    },
+    {
+      "id": "LAYOUT_LUDWIGSHAFEN",
+      "name": "Ludwigshafen_Layout",
+      "width": 40,
+      "height": 60,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Slateport",
+      "border_filepath": "data/layouts/Ludwigshafen/border.bin",
+      "blockdata_filepath": "data/layouts/Ludwigshafen/map.bin"
+    },
+    {
+      "id": "LAYOUT_ARENA_FLAG4",
+      "name": "Arena_Flag4_Layout",
+      "width": 11,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_SeashoreHouse",
+      "border_filepath": "data/layouts/Arena_Flag4/border.bin",
+      "blockdata_filepath": "data/layouts/Arena_Flag4/map.bin"
+    },
+    {
+      "id": "LAYOUT_GLITCH_HAUS",
+      "name": "GlitchHaus_Layout",
+      "width": 13,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_BattleTent",
+      "border_filepath": "data/layouts/GlitchHaus/border.bin",
+      "blockdata_filepath": "data/layouts/GlitchHaus/map.bin"
     }
   ]
 }

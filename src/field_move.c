@@ -15,42 +15,42 @@ static u8 sFieldMoveSource = FIELD_MOVE_SOURCE_POKEMON;
 
 static bool32 IsFieldMoveUnlocked_Cut(void)
 {
-    return FlagGet(FLAG_BADGE01_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Flash(void)
 {
-    return FlagGet(FLAG_BADGE02_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_RockSmash(void)
 {
-    return FlagGet(FLAG_BADGE03_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Strength(void)
 {
-    return FlagGet(FLAG_BADGE04_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Surf(void)
 {
-    return FlagGet(FLAG_BADGE05_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Fly(void)
 {
-    return FlagGet(FLAG_BADGE06_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Dive(void)
 {
-    return FlagGet(FLAG_BADGE07_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Waterfall(void)
 {
-    return FlagGet(FLAG_BADGE08_GET);
+    return TRUE;
 }
 
 #if OW_ROCK_CLIMB_FIELD_MOVE == TRUE
