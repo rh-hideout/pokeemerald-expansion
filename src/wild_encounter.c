@@ -28,6 +28,7 @@
 #include "constants/items.h"
 #include "constants/layouts.h"
 #include "constants/weather.h"
+#include "level_scaling.h"
 
 extern const u8 EventScript_SprayWoreOff[];
 
@@ -479,6 +480,13 @@ u8 PickWildMonNature(void)
 void CreateWildMon(u16 species, u8 level)
 {
     bool32 checkCuteCharm = TRUE;
+
+    // Apply level scaling for wild encounters
+#if B_LEVEL_SCALING_ENABLED && B_WILD_SCALING_ENABLED
+    level = CalculateWildScaledLevel(species, level);
+    // Apply species scaling (evolution management)
+    species = CalculateWildScaledSpecies(species, level);
+#endif
 
     ZeroEnemyPartyMons();
 
