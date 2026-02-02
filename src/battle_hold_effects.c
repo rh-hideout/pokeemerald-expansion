@@ -902,7 +902,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId, ActivationTiming timing)
     {
         u32 move = GetMonData(mon, MON_DATA_MOVE1 + i);
         u32 currentPP = GetMonData(mon, MON_DATA_PP1 + i);
-        if (!move)
+        if (move == MOVE_NONE)
             continue;
 
         if (currentPP == 0)
