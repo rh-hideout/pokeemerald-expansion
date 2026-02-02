@@ -205,7 +205,7 @@ void UpdateOverworldEncounters(void)
     bool32 isFemale = FALSE;
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
     u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-    u32 level;
+    u32 level = MIN_LEVEL;
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
 
     if (speciesId == SPECIES_NONE
@@ -832,7 +832,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     else
         *isFemale = FALSE;
 
-    if ((WE_OWE_PREVENT_SHINY_DESPAWN && *isShiny))
+    if (WE_OWE_PREVENT_SHINY_DESPAWN && *isShiny)
         OWE_SetNoDespawnFlag(level);
 
     ZeroEnemyPartyMons();
@@ -1126,7 +1126,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     u16 speciesId, speciesTemplate = SanitizeSpeciesId(templateOWE.graphicsId & OBJ_EVENT_MON_SPECIES_MASK);
     bool32 isShiny = FALSE, isShinyTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_SHINY) ? TRUE : FALSE;
     bool32 isFemale = FALSE;
-    u32 level, levelTemplate = templateOWE.sOverworldEncounterLevel;
+    u32 level = MIN_LEVEL, levelTemplate = templateOWE.sOverworldEncounterLevel;
     u32 indexRoamerOutbreak = OWE_INVALID_ROAMER_OUTBREAK;
     u32 x = template->x;
     u32 y = template->y;
