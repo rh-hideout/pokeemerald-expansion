@@ -985,7 +985,7 @@ void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         obj = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(obj, OWE_GENERATED) && obj->active && !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
+        if (IsOverworldWildEncounter(obj, OWE_GENERATED) && obj->active && !OWE_HasNoDespawnFlag(obj) && !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
             RemoveObjectEvent(obj);
     }
 }
