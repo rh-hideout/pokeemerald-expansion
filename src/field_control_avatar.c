@@ -895,7 +895,7 @@ void RestartWildEncounterImmunitySteps(void)
 
 static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
 {
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || WE_VANILLA_RANDOM)
+    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || !WE_VANILLA_RANDOM)
         return FALSE;
 
     if (sWildEncounterImmunitySteps < 4)
