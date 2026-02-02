@@ -802,8 +802,10 @@ u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, boo
 
 void OverworldWildEncounter_SetMinimumSpawnTimer(void)
 {
+    if (!WE_OW_ENCOUNTERS)
+        return;
+
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-    
     if (LURE_STEP_COUNT && GetNumberActiveOverworldEncounters(OWE_GENERATED) < OWE_SPAWNS_MAX)
         sOWESpawnCountdown = OWE_SPAWN_TIME_LURE;
 }
