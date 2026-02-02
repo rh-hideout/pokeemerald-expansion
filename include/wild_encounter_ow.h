@@ -95,5 +95,6 @@ void OWE_PlayAmbientCry(void);
 u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType);
 bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent);
 void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void);
+void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void);
 
 #endif // GUARD_WILD_ENCOUNTER_OW_H
