@@ -60,4 +60,3 @@ __pycache__
 build.log
 notes/
 tools/poryscript/poryscript
-data/maps/**/scripts.inc
