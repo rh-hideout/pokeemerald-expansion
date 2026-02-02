@@ -1474,8 +1474,10 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
         }
     }
 
-    if (GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].tauntTimer != 0 && IsBattleMoveStatus(move)
-     && (GetConfig(CONFIG_TAUNT_ME_FIRST) < GEN_5 || moveEffect != EFFECT_ME_FIRST))
+    if (GetActiveGimmick(battler) != GIMMICK_Z_MOVE
+        && gDisableStructs[battler].tauntTimer != 0
+        && IsBattleMoveStatus(move)
+        && (GetConfig(CONFIG_TAUNT_ME_FIRST) < GEN_5 || moveEffect != EFFECT_ME_FIRST))
     {
         if ((GetActiveGimmick(battler) == GIMMICK_DYNAMAX))
             gCurrentMove = MOVE_MAX_GUARD;
@@ -1710,7 +1712,9 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_TORMENTED && move == gLastMoves[battler] && gBattleMons[battler].volatiles.torment == TRUE)
             unusableMoves |= 1u << i;
         // Taunt
-        else if (check & MOVE_LIMITATION_TAUNT && gDisableStructs[battler].tauntTimer && IsBattleMoveStatus(move)
+        else if (check & MOVE_LIMITATION_TAUNT
+              && gDisableStructs[battler].tauntTimer
+              && IsBattleMoveStatus(move)
               && (GetConfig(CONFIG_TAUNT_ME_FIRST) < GEN_5 || moveEffect != EFFECT_ME_FIRST))
             unusableMoves |= 1u << i;
         // Imprison
@@ -2251,7 +2255,12 @@ static enum MoveCanceler CancelerVolatileBlocked(struct BattleContext *ctx)
 
 static enum MoveCanceler CancelerTaunted(struct BattleContext *ctx)
 {
-    if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE && gDisableStructs[ctx->battlerAtk].tauntTimer && IsBattleMoveStatus(ctx->currentMove))
+    enum BattleMoveEffects moveEffect = GetMoveEffect(ctx->currentMove);
+
+    if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE 
+        && gDisableStructs[ctx->battlerAtk].tauntTimer 
+        && IsBattleMoveStatus(ctx->currentMove)
+        && (GetConfig(CONFIG_TAUNT_ME_FIRST) < GEN_5 || moveEffect != EFFECT_ME_FIRST))
     {
         gProtectStructs[ctx->battlerAtk].unableToUseMove = TRUE;
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
