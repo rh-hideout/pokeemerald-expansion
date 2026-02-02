@@ -25,14 +25,14 @@ GlitchHaus_MapScripts::
 GlitchHaus_OnTransition:
     @ Layout umschalten
     goto_if_set FLAG_CTF_GYM4_DEFEATED, GlitchHaus_OnTransition_UseLayout2
-    setmaplayoutindex LAYOUT_GLITCHHAUS
+    setmaplayoutindex LAYOUT_GLITCH_HAUS
 
     @ DOKTOR_AFTER (FLANNERY) verstecken, solange NICHT defeated
     setflag FLAG_CTF_GLITCHHAUS_DOKTOR_AFTER_HIDDEN
     goto GlitchHaus_OnTransition_AfterLayout
 
 GlitchHaus_OnTransition_UseLayout2:
-    setmaplayoutindex LAYOUT_GLITCHHAUS_LAYOUT_2
+    setmaplayoutindex LAYOUT_GLITCH_HAUS_LAYOUT_2
 
     @ DOKTOR_AFTER sichtbar machen, sobald defeated
     clearflag FLAG_CTF_GLITCHHAUS_DOKTOR_AFTER_HIDDEN

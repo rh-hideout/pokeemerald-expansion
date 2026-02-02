@@ -95,7 +95,7 @@ EntryMapFlag3_Text_GiveSuneon:
 
 EntryMapFlag3_EventScript_GiveCelebi::
 	lock
-	givemon SPECIES_CELEBI, 50, item=ITEM_LEFTOVERS, ball=ITEM_GS, nature=NATURE_MODEST, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=0, defEv=3, speedEv=50, spAtkEv=50, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=15, spAtkIv=11, spDefIv=12, move1=MOVE_GIGA_DRAIN, move2=MOVE_PSYCHIC, move3=MOVE_DAZZLING_GLEAM, move4=MOVE_LEAF_STORM, shinyMode=SHINY_MODE_ALWAYS
+	givemon SPECIES_CELEBI, 50, item=ITEM_LEFTOVERS, ball=ITEM_GS_BALL, nature=NATURE_MODEST, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=0, defEv=3, speedEv=50, spAtkEv=50, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=15, spAtkIv=11, spDefIv=12, move1=MOVE_GIGA_DRAIN, move2=MOVE_PSYCHIC, move3=MOVE_DAZZLING_GLEAM, move4=MOVE_LEAF_STORM, shinyMode=SHINY_MODE_ALWAYS
 	msgbox EntryMapFlag3_Text_GiveCelebi, MSGBOX_DEFAULT
 	release
 	end

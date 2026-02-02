@@ -31,6 +31,7 @@ enum PokeBall
     BALL_PARK = 25,
     BALL_BEAST = 26,
     BALL_CHERISH = 27,
+    BALL_GS = 28,
     POKEBALL_COUNT
 };
 

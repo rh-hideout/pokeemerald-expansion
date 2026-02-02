@@ -614,17 +614,17 @@ const struct Item gItemsInfo[] =
     [ITEM_GS_BALL] =
     {
         .name = ITEM_NAME("GS Ball"),
-        .price = 0,
+        .price = 5000,
         .description = COMPOUND_STRING(
-            "A rare Ball made\n"
-            "in commemoration\n"
-            "of some event."),
+            "A rare Ball \n"
+            "with unknown\n"
+            "origin."),
         .pocket = POCKET_POKE_BALLS,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_GS,
-        .iconPic = gItemIcon_GSBall,
-        .iconPalette = gItemIconPalette_GSBall,
+        .iconPic = gItemIcon_GsBall,
+        .iconPalette = gItemIconPalette_GsBall,
     },
 
 // Medicine

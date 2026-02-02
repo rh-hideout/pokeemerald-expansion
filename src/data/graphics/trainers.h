@@ -296,6 +296,10 @@ const u16 gTrainerBackPicPalette_Leaf[] = INCBIN_U16("graphics/trainers/back_pic
 const u32 gTrainerFrontPic_Rocket[] = INCBIN_U32("graphics/trainers/front_pics/rocket.4bpp.smol");
 const u16 gTrainerPalette_Rocket[] = INCBIN_U16("graphics/trainers/palettes/rocket.gbapal");
 
+const u32 gTrainerFrontPic_Oraggle[] = INCBIN_U32("graphics/trainers/front_pics/oraggle.4bpp.smol");
+const u16 gTrainerPalette_Oraggle[] = INCBIN_U16("graphics/trainers/palettes/oraggle.gbapal");
+
+
 // The first two parameters invoke a front pic and palette by
 // calling a "TRAINER_PIC" constant (e.g. TRAINER_PIC_HIKER), and
 // gTrainerFrontPic/gTrainerPalette pointers, (e.g "gTrainerFrontPic_Hiker" and "gTrainerPalette_Hiker").

@@ -109,7 +109,7 @@ const struct CompressedSpriteSheet gBallSpriteSheets[POKEBALL_COUNT] =
     [BALL_PARK]    = {gBallGfx_Park,    384, GFX_TAG_PARK_BALL},
     [BALL_BEAST]   = {gBallGfx_Beast,   384, GFX_TAG_BEAST_BALL},
     [BALL_CHERISH] = {gBallGfx_Cherish, 384, GFX_TAG_CHERISH_BALL},
-    [BALL_GS]      = {gBallGfx_GS,      384, GFX_TAG_GS_BALL},
+    [BALL_GS]      = {gBallGfx_Gs,      384, GFX_TAG_GS_BALL},
 };
 
 const struct SpritePalette gBallSpritePalettes[POKEBALL_COUNT] =
@@ -142,7 +142,7 @@ const struct SpritePalette gBallSpritePalettes[POKEBALL_COUNT] =
     [BALL_PARK]    = {gBallPal_Park,    GFX_TAG_PARK_BALL},
     [BALL_BEAST]   = {gBallPal_Beast,   GFX_TAG_BEAST_BALL},
     [BALL_CHERISH] = {gBallPal_Cherish, GFX_TAG_CHERISH_BALL},
-    [BALL_GS]      = {gBallPal_GS,      GFX_TAG_GS_BALL},
+    [BALL_GS]      = {gBallPal_Gs,      GFX_TAG_GS_BALL},
 };
 
 static const struct OamData sBallOamData =

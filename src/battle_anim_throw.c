@@ -157,7 +157,6 @@ static const struct CaptureStar sCaptureStars[] =
 #define TAG_PARTICLES_PARKBALL    65055
 #define TAG_PARTICLES_BEASTBALL   65056
 #define TAG_PARTICLES_CHERISHBALL 65057
-#define TAG_PARTICLES_GSBALL      65058
 
 static const struct CompressedSpriteSheet sBallParticleSpriteSheets[] =
 {
@@ -189,7 +188,7 @@ static const struct CompressedSpriteSheet sBallParticleSpriteSheets[] =
     [BALL_PARK]     = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_PARKBALL},
     [BALL_BEAST]    = {gBattleAnimSpriteGfx_Particles,      0x100, TAG_PARTICLES_BEASTBALL},
     [BALL_CHERISH]  = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_CHERISHBALL},
-    [BALL_GS]       = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_GSBALL},
+    [BALL_GS]       = {gBattleAnimSpriteGfx_Particles2,     0x100, TAG_PARTICLES_MASTERBALL},
 };
 
 static const struct SpritePalette sBallParticlePalettes[] =
@@ -222,7 +221,7 @@ static const struct SpritePalette sBallParticlePalettes[] =
     [BALL_PARK]     = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_PARKBALL},
     [BALL_BEAST]    = {gBattleAnimSpritePal_CircleImpact,   TAG_PARTICLES_BEASTBALL},
     [BALL_CHERISH]  = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_CHERISHBALL},
-    [BALL_GS]       = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_GSBALL},
+    [BALL_GS]       = {gBattleAnimSpritePal_Particles2,     TAG_PARTICLES_MASTERBALL},
 };
 
 static const union AnimCmd sAnim_RegularBall[] =
@@ -598,9 +597,9 @@ static const struct SpriteTemplate sBallParticleSpriteTemplates[POKEBALL_COUNT] 
         .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCallbackDummy,
     },
-        [BALL_GS] = {
-        .tileTag = TAG_PARTICLES_GSBALL,
-        .paletteTag = TAG_PARTICLES_GSBALL,
+    [BALL_GS] = {
+        .tileTag = TAG_PARTICLES_MASTERBALL,
+        .paletteTag = TAG_PARTICLES_MASTERBALL,
         .oam = &gOamData_AffineOff_ObjNormal_8x8,
         .anims = sAnims_BallParticles,
         .images = NULL,
