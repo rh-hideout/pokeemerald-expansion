@@ -152,7 +152,6 @@ static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 x
 static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Direction newDirection);
 static void Task_OWE_ApproachForBattle(u8 taskId);
 static bool32 OWE_CheckSpecies(u32 speciesId);
-static void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void);
 
 static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
@@ -172,7 +171,7 @@ void UpdateOverworldEncounters(void)
     {
         if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
         {
-            RemoveAllOverworldWildEncounterObjects(OWE_GENERATED);
+            RemoveAllOverworldWildEncounterObjects(OWE_GENERATED, 0);
             sOWESpawnCountdown = OWE_NO_ENCOUNTER_SET;
         }
         return;
@@ -188,7 +187,7 @@ void UpdateOverworldEncounters(void)
         return;
     }
     
-    RemoveAllRepelRestrictedOverworldWildEncounterObjects();
+    RemoveAllOverworldWildEncounterObjects(OWE_GENERATED, WILD_CHECK_REPEL);
 
     if (!IsSafeToSpawnObjectEvents())
         return;
@@ -959,10 +958,11 @@ static bool32 OWE_ShouldSpawnWaterMons(void)
     return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
-void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType)
+void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType, u32 flags)
 {
     s16 dx = 0;
     s16 dy = 0;
+
     if (gCamera.active)
     {
         dx = gCamera.x;
@@ -972,11 +972,27 @@ void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType ow
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(obj, oweType) && obj->active)
+
+        if (!obj->active)
+            continue;
+
+        if (!IsOverworldWildEncounter(obj, oweType))
+            continue;
+
+        if (flags & WILD_CHECK_REPEL)
         {
-            UpdateObjectEventCoords(obj, dx, dy);
-            RemoveObjectEvent(obj);
+            if (!REPEL_STEP_COUNT)
+                continue;
+
+            if (OWE_HasNoDespawnFlag(obj))
+                continue;
+
+            if (IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
+                continue;
         }
+
+        UpdateObjectEventCoords(obj, dx, dy);
+        RemoveObjectEvent(obj);
     }
 }
 
@@ -1854,24 +1870,7 @@ void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void)
     if (WE_OWE_DESPAWN_SOUND)
         PlaySE(SE_FLEE);
         
-    RemoveAllOverworldWildEncounterObjects(OWE_ANY);
-}
-
-static void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
-{
-    if (!REPEL_STEP_COUNT)
-        return;
-
-    struct ObjectEvent *obj;
-    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
-    {
-        obj = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(obj, OWE_GENERATED)
-            && obj->active
-            && !OWE_HasNoDespawnFlag(obj)
-            && !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
-            RemoveObjectEvent(obj);
-    }
+    RemoveAllOverworldWildEncounterObjects(OWE_ANY, 0);
 }
 
 void OverworldWildEncounter_SetInstantSpawnTimer(void)
