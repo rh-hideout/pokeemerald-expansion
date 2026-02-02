@@ -1614,15 +1614,6 @@ static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
     return status - 1;
 }
 
-bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void)
-{
-    if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !WE_OWE_BATTLE_PIKE)
-        || (CurrentBattlePyramidLocation() && !WE_OWE_BATTLE_PYRAMID))
-        return FALSE;
-
-    return !WE_VANILLA_RANDOM;
-}
-
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
 {
     if (!IsOverworldWildEncounter(object, OWE_GENERATED))
