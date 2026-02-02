@@ -65,6 +65,7 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
 void OverworldWildEncounter_SetMinimumSpawnTimer(void);
 void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType);
+void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);

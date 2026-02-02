@@ -187,6 +187,9 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
+    if (REPEL_STEP_COUNT && GetNumberActiveOverworldEncounters(OWE_GENERATED))
+        RemoveAllRepelRestrictedOverworldWildEncounterObjects();
+
     if (!IsSafeToSpawnObjectEvents())
         return;
 
@@ -975,6 +978,18 @@ void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType ow
     }
 }
 
+void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
+{
+    struct ObjectEvent *obj;
+
+    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
+    {
+        obj = &gObjectEvents[i];
+        if (IsOverworldWildEncounter(obj, OWE_GENERATED) && obj->active && !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
+            RemoveObjectEvent(obj);
+    }
+}
+
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y)
 {
     for (u8 i = 0; i < OBJECT_EVENTS_COUNT; i++)
@@ -1193,9 +1208,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
 
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
-    // The only automatically interacts with an OW Encounter when;
-    // Not using a repel or the DexNav is inactive.
-    if (REPEL_STEP_COUNT || FlagGet(DN_FLAG_SEARCHING))
+    if (FlagGet(DN_FLAG_SEARCHING))
         return;
 
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle, OWE_ANY));
