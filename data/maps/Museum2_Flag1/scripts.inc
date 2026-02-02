@@ -55,7 +55,7 @@ Museum2_Flag1_After::
 
 
 Museum2_Flag1_Text_Intro::
-	.string "PROF. HYVL: You saved XX \n"
+	.string "PROF. HYVL: You saved the MATHALYZER \n"
 	.string "and thus ensured our mathematical\p"
 	.string "superiority.\p"
 	.string "You can now take your exam with\n"

@@ -111,9 +111,10 @@
 
 //CTF
 #define TRAINER_PIC_ROCKET                93
+#define TRAINER_PIC_ORAGGLE               94
 
 //Count immer Erhöhen!
-#define TRAINER_PIC_COUNT                 94
+#define TRAINER_PIC_COUNT                 95
 
 // The player back pics are assumed to alternate according to the gender values (MALE/FEMALE)
 #define TRAINER_BACK_PIC_BRENDAN                0

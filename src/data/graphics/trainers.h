@@ -408,6 +408,7 @@ const struct TrainerSprite gTrainerSprites[] =
 
     //CTF
     TRAINER_SPRITE(TRAINER_PIC_ROCKET, gTrainerFrontPic_Rocket, gTrainerPalette_Rocket),
+    TRAINER_SPRITE(TRAINER_PIC_ORAGGLE, gTrainerFrontPic_Oraggle, gTrainerPalette_Oraggle),
 };
 
 static const union AnimCmd sAnimCmd_Hoenn[] =

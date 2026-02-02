@@ -339,7 +339,9 @@ Museum_Flag1_EventScript_ApplyDoorOpen::
     return
 
 
-@---------- Heal
+@--------------------------------------------------------------------------
+@ Heal
+@--------------------------------------------------------------------------
 
 Museum_Flag1_EventScript_HealGuy::
     lock
@@ -353,6 +355,45 @@ Museum_Flag1_EventScript_HealGuy::
 
     release
     end
+
+
+@--------------------------------------------------------------------------
+@ Schilder
+@--------------------------------------------------------------------------
+
+
+Museum_Flag1_EventScript_Sign_M1::
+	msgbox Museum_Flag1_Text_Sign_M, MSGBOX_DEFAULT
+	end
+
+Museum_Flag1_EventScript_Sign_X::
+	msgbox Museum_Flag1_Text_Sign_X, MSGBOX_DEFAULT
+	end
+
+Museum_Flag1_EventScript_Sign_S::
+	msgbox Museum_Flag1_Text_Sign_S, MSGBOX_DEFAULT
+	end
+
+Museum_Flag1_EventScript_Sign_Q::
+	msgbox Museum_Flag1_Text_Sign_Q, MSGBOX_DEFAULT
+	end
+
+Museum_Flag1_EventScript_Sign_N::
+	msgbox Museum_Flag1_Text_Sign_N, MSGBOX_DEFAULT
+	end
+
+Museum_Flag1_EventScript_Sign_D::
+	msgbox Museum_Flag1_Text_Sign_D, MSGBOX_DEFAULT
+	end
+
+Museum_Flag1_EventScript_Sign_M2::
+	msgbox Museum_Flag1_Text_Sign_M, MSGBOX_DEFAULT
+	end
+
+Museum_Flag1_EventScript_Sign_Roman::
+	msgbox Museum_Flag1_Text_Roman, MSGBOX_DEFAULT
+	end
+
 
 
 
@@ -371,7 +412,7 @@ Museum_Flag1_Text_RocketDialog:
     .string "JESSIE: How rude!\p"
     .string "JAMES: We are TEAM ROCKET and\n"
 	.string "were hired by Business Informatics\p"
-    .string "to steal your XXX!$"
+    .string "to steal your MATHALYZER!$"
 
 Museum_Flag1_Text_RocketPreBattle:
     .string "JESSIE: You want it back?\n"
@@ -384,9 +425,9 @@ Museum_Flag1_Text_RocketBattleStart:
 
 @ Defeat-Text, der nach deinem Sieg im Battle angezeigt wird
 Museum_Flag1_Text_RocketDefeated:
-    .string "JESSIE: Not again!\p"
-    .string "JAMES: Looks like we're...\n"
-    .string "blasting off again!$"
+    .string "JESSIE: Looks like we're...\n"
+    .string "JAMES: blasting off again!$"
+
 
 Museum_Flag1_Text_RocketsGone:
     .string "They already fled.$"
@@ -414,5 +455,30 @@ Museum_Flag1_Text_TerminalAlreadyOpen:
 
 Museum_Flag1_Text_Heal:
     .string "Here, let me heal your POKéMON.$"
+
+
+Museum_Flag1_Text_Sign_M:
+	.string "M$"
+
+Museum_Flag1_Text_Sign_X:
+	.string "X$"
+
+Museum_Flag1_Text_Sign_S:
+	.string "S$"
+
+Museum_Flag1_Text_Sign_Q:
+	.string "Q$"
+
+Museum_Flag1_Text_Sign_N:
+	.string "N$"
+
+Museum_Flag1_Text_Sign_D:
+	.string "D$"
+
+Museum_Flag1_Text_Roman:
+    .string "The only picture that TEAM ROCKET\n"
+	.string "did not destroy. It shows a Roman\p"
+	.string "general.$"
+
 
 
