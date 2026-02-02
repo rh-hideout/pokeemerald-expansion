@@ -23,6 +23,21 @@ GlitchHaus_MapScripts::
     .byte 0
 
 GlitchHaus_OnTransition:
+    @ Layout umschalten
+    goto_if_set FLAG_CTF_GYM4_DEFEATED, GlitchHaus_OnTransition_UseLayout2
+    setmaplayoutindex LAYOUT_GLITCHHAUS
+
+    @ DOKTOR_AFTER (FLANNERY) verstecken, solange NICHT defeated
+    setflag FLAG_CTF_GLITCHHAUS_DOKTOR_AFTER_HIDDEN
+    goto GlitchHaus_OnTransition_AfterLayout
+
+GlitchHaus_OnTransition_UseLayout2:
+    setmaplayoutindex LAYOUT_GLITCHHAUS_LAYOUT_2
+
+    @ DOKTOR_AFTER sichtbar machen, sobald defeated
+    clearflag FLAG_CTF_GLITCHHAUS_DOKTOR_AFTER_HIDDEN
+
+GlitchHaus_OnTransition_AfterLayout:
     goto_if_set FLAG_CTF_BATTLETENT_LOBBY_FLAG4_DONE, GlitchHaus_OnTransition_Apply
     end
 
@@ -38,16 +53,30 @@ GlitchHaus_OnTransition_Apply:
 GlitchHaus_EventScript_Doc::
     lock
     faceplayer
+    goto_if_set FLAG_CTF_GYM4_DEFEATED, GlitchHaus_EventScript_Doc_After
     msgbox GlitchHaus_Text_Doc, MSGBOX_DEFAULT
     release
     end
 
+GlitchHaus_EventScript_Doc_After:
+    msgbox GlitchHaus_Text_Doc_After, MSGBOX_DEFAULT
+    release
+    end
+
+
 GlitchHaus_EventScript_Franziska::
     lock
     faceplayer
+    goto_if_set FLAG_CTF_GYM4_DEFEATED, GlitchHaus_EventScript_Franziska_After
     msgbox GlitchHaus_Text_Franziska, MSGBOX_DEFAULT
     release
     end
+
+GlitchHaus_EventScript_Franziska_After:
+    msgbox GlitchHaus_Text_Franziska_After, MSGBOX_DEFAULT
+    release
+    end
+
 
 GlitchHaus_EventScript_BulletinBoard::
     msgbox GlitchHaus_Text_BulletinBoard, MSGBOX_DEFAULT
@@ -112,16 +141,24 @@ GlitchHaus_EventScript_ApplyFlag4Tiles::
 GlitchHaus_Text_Doc:
     .string "DOC: MPFH HM MPF PFH MPF$"
 
+GlitchHaus_Text_Doc_After:
+    .string "DOC: Ah! Finally stable again.\p"
+    .string "You did this, right?! Thank you!$"
+
 GlitchHaus_Text_Franziska:
-	.string "FRANZISKA: Something went wrong\n"
-	.string "with the experiment and now she's\p"
-	.string "stuck in the ground. Maybe you can\n"
-	.string "find clues on the bulletin board.$"
+    .string "FRANZISKA: Something went wrong\n"
+    .string "with the experiment and now she's\p"
+    .string "stuck in the ground. Maybe you can\n"
+    .string "find clues on the bulletin board.$"
+
+GlitchHaus_Text_Franziska_After:
+    .string "FRANZISKA: The distortion is gone!\p"
+    .string "This place feels… normal again.$"
 
 GlitchHaus_Text_BulletinBoard:
-	.string "You only recognize a lot of\n"
-	.string "scribbles and confusion, something\p"
-	.string "about saving and hexing.$"
+    .string "You only recognize a lot of\n"
+    .string "scribbles and confusion, something\p"
+    .string "about saving and hexing.$"
 
 GlitchHaus_Text_TerminalPrompt:
     .string "Enter the flag.$"

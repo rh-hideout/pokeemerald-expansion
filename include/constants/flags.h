@@ -1246,7 +1246,7 @@
 #define FLAG_CTF_CLASSROOM_EARTHMAN_TUBE                            0x4A8 // Flag4 Lapras Tube erhalten
 #define FLAG_LUDWIGSHAFEN_INTRO_DONE                                0x4A9 // Flag4 Ludwigshafen Intro abgespielt
 #define FLAG_CTF_BATTLETENT_LOBBY_FLAG4_DONE                        0x4AA // Flag4 Battle Tent Lobby Event/Terminal
-#define FLAG_UNUSED_0x4AB                                           0x4AB // Unused Flag
+#define FLAG_CTF_GLITCHHAUS_DOKTOR_AFTER_HIDDEN                     0x4AB // Flag4 Glitchhaus Doktor nach Event
 #define FLAG_UNUSED_0x4AC                                           0x4AC // Unused Flag
 #define FLAG_UNUSED_0x4AD                                           0x4AD // Unused Flag
 #define FLAG_UNUSED_0x4AE                                           0x4AE // Unused Flag

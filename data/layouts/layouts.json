@@ -4630,6 +4630,16 @@
       "secondary_tileset": "gTileset_BattleTent",
       "border_filepath": "data/layouts/GlitchHaus/border.bin",
       "blockdata_filepath": "data/layouts/GlitchHaus/map.bin"
+    },
+    {
+      "id": "LAYOUT_GLITCH_HAUS_LAYOUT_2",
+      "name": "GlitchHaus_Layout_2",
+      "width": 13,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_BattleTent",
+      "border_filepath": "data/layouts/GlitchHaus_Layout_2/border.bin",
+      "blockdata_filepath": "data/layouts/GlitchHaus_Layout_2/map.bin"
     }
   ]
 }
