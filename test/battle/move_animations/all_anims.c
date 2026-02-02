@@ -1,5 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
+#include "battle_anim_scripts.h"
 
 // These tests are very heavy computationally. Only use them to review animation PRs.
 
@@ -557,6 +558,10 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
         { // Opponent needs to choose priority move
             MOVE(attacker, move, target: target);
             MOVE(target, MOVE_QUICK_ATTACK, target: attacker);
+        }
+        else if (effect == EFFECT_ACUPRESSURE)
+        {
+            MOVE(attacker, move, target: attacker);
         }
         else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
         {
