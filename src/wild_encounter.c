@@ -527,7 +527,7 @@ bool32 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildPo
     level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, area);
     if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(level))
         return FALSE;
-    if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && flags & WILD_CHECK_KEEN_EYE && !IsAbilityAllowingEncounter(level, RandomPercentage(RNG_NONE, 50)))
+    if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && flags & WILD_CHECK_KEEN_EYE && !IsAbilityAllowingEncounter(level))
         return FALSE;
 
     CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
@@ -1064,7 +1064,7 @@ bool32 IsWildLevelAllowedByRepel(u8 wildLevel)
     return FALSE;
 }
 
-bool32 IsAbilityAllowingEncounter(u8 level, bool32 chanceTrigger)
+bool32 IsAbilityAllowingEncounter(u8 level)
 {
     enum Ability ability;
 
@@ -1075,7 +1075,7 @@ bool32 IsAbilityAllowingEncounter(u8 level, bool32 chanceTrigger)
     if (ability == ABILITY_KEEN_EYE || ability == ABILITY_INTIMIDATE)
     {
         u8 playerMonLevel = GetMonData(&gPlayerParty[0], MON_DATA_LEVEL);
-        if (playerMonLevel > 5 && level <= playerMonLevel - 5 && chanceTrigger)
+        if (playerMonLevel > 5 && level <= playerMonLevel - 5 && !(Random() % 2))
             return FALSE;
     }
 

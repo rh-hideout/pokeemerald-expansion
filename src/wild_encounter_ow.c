@@ -187,7 +187,7 @@ void UpdateOverworldEncounters(void)
         return;
     }
     
-    RemoveAllOverworldWildEncounterObjects(OWE_GENERATED, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE);
+    RemoveAllOverworldWildEncounterObjects(OWE_GENERATED, WILD_CHECK_REPEL);
 
     if (!IsSafeToSpawnObjectEvents())
         return;
@@ -212,7 +212,7 @@ void UpdateOverworldEncounters(void)
 
     if (speciesId == SPECIES_NONE
         || !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(level))
-        || !IsAbilityAllowingEncounter(OWE_GetEncounterLevel(level), RandomPercentage(RNG_NONE, 50))
+        || !IsAbilityAllowingEncounter(OWE_GetEncounterLevel(level))
         || !OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny, x, y))
     {
         OverworldWildEncounter_SetMinimumSpawnTimer();
@@ -979,7 +979,7 @@ void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType ow
         if (!IsOverworldWildEncounter(obj, oweType))
             continue;
 
-        if (flags & WILD_CHECK_REPEL || flags & WILD_CHECK_KEEN_EYE)
+        if (flags & WILD_CHECK_REPEL)
         {
             if (!REPEL_STEP_COUNT)
                 continue;
@@ -987,12 +987,7 @@ void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType ow
             if (OWE_HasNoDespawnFlag(obj))
                 continue;
 
-            if (flags & WILD_CHECK_REPEL
-                && IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
-                continue;
-
-            if (flags & WILD_CHECK_KEEN_EYE
-                && IsAbilityAllowingEncounter(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel), TRUE))
+            if (IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
                 continue;
         }
 
