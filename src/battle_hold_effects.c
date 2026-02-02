@@ -891,7 +891,6 @@ static u32 ItemRestorePp(u32 battler, u32 itemId, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     struct Pokemon *mon = GetBattlerMon(battler);
-    u32 i;
     u32 changedPP = 0;
     u32 restoreMove = MAX_MON_MOVES;
     u32 missingMove = MAX_MON_MOVES;
@@ -899,7 +898,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId, ActivationTiming timing)
     bool32 override = gBattleScripting.overrideBerryRequirements;
     enum Ability ability = GetBattlerAbility(battler);
 
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
         u32 move = GetMonData(mon, MON_DATA_MOVE1 + i);
         u32 currentPP = GetMonData(mon, MON_DATA_PP1 + i);
