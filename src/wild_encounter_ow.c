@@ -152,6 +152,7 @@ static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 x
 static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Direction newDirection);
 static void Task_OWE_ApproachForBattle(u8 taskId);
 static bool32 OWE_CheckSpecies(u32 speciesId);
+static void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void);
 
 static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
@@ -186,6 +187,8 @@ void UpdateOverworldEncounters(void)
         sOWESpawnCountdown--;
         return;
     }
+    
+    RemoveAllRepelRestrictedOverworldWildEncounterObjects();
 
     if (!IsSafeToSpawnObjectEvents())
         return;
@@ -1854,10 +1857,12 @@ void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void)
     RemoveAllOverworldWildEncounterObjects(OWE_ANY);
 }
 
-void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
+static void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
 {
-    struct ObjectEvent *obj;
+    if (!REPEL_STEP_COUNT)
+        return;
 
+    struct ObjectEvent *obj;
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         obj = &gObjectEvents[i];
@@ -1867,6 +1872,14 @@ void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
             && !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
             RemoveObjectEvent(obj);
     }
+}
+
+void OverworldWildEncounter_SetInstantSpawnTimer(void)
+{
+    if (!WE_OW_ENCOUNTERS)
+        return;
+
+    sOWESpawnCountdown = 0;
 }
 
 #undef sOverworldEncounterLevel
