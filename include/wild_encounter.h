@@ -63,7 +63,7 @@ u16 GetLocalWildMon(bool8 *isWaterMon);
 u16 GetLocalWaterMon(void);
 bool8 UpdateRepelCounter(void);
 bool32 IsWildLevelAllowedByRepel(u8 wildLevel);
-bool32 IsAbilityAllowingEncounter(u8 level);
+bool32 IsAbilityAllowingEncounter(u8 level, bool32 chanceTrigger);
 bool8 TryDoDoubleWildBattle(void);
 bool8 StandardWildEncounter_Debug(void);
 u32 CalculateChainFishingShinyRolls(void);
