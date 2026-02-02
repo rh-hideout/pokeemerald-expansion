@@ -222,7 +222,6 @@ static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
 
 static void StartSlowRunningAnim(struct ObjectEvent *objectEvent, struct Sprite *sprite, enum Direction direction);
 
-
 const u8 gReflectionEffectPaletteMap[16] = {
         [PALSLOT_PLAYER]                 = PALSLOT_PLAYER_REFLECTION,
         [PALSLOT_PLAYER_REFLECTION]      = PALSLOT_PLAYER_REFLECTION,
@@ -781,7 +780,6 @@ static const u16 *const sObjectPaletteTagSets[] = {
 static const s16 sMovementDelaysMedium[] = {32, 64,  96, 128};
 static const s16 sMovementDelaysLong[] =   {32, 64, 128, 192}; // Unused
 static const s16 sMovementDelaysShort[] =  {32, 48,  64,  80};
-
 static const s16 sMovementDelaysOWE[] =    {64, 80,  96, 128};
 
 #include "data/object_events/movement_type_func_tables.h"
@@ -1717,7 +1715,6 @@ void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 static void RemoveObjectEventInternal(struct ObjectEvent *objectEvent)
 {
     struct SpriteFrameImage image;
-
     image.size = GetObjectEventGraphicsInfo(objectEvent->graphicsId)->size;
     gSprites[objectEvent->spriteId].images = &image;
     // It's possible that this function is called while the sprite pointed to `== sDummySprite`, i.e during map resume;
@@ -1942,7 +1939,6 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
 
     OverworldWildEncounter_OnObjectEventSpawned(&gObjectEvents[objectEventId]);
-
     return objectEventId;
 }
 
