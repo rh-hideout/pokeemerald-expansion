@@ -35,7 +35,7 @@
 #include "trainer_hill.h"
 #include "vs_seeker.h"
 #include "wild_encounter.h"
-#include "wild_encounter_overworld.h"
+#include "wild_encounter_ow.h"
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
 #include "constants/field_poison.h"
@@ -407,7 +407,7 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
     else if (ShouldRunOverworldEncounterScript(objectEventId))
-        script = InteractWithDynamicWildOverworldEncounter;
+        script = InteractWithDynamicOverworldWildEncounter;
     else
         script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
 
@@ -637,12 +637,11 @@ static const u8 *GetInteractedWaterScript(struct MapPosition *position, u8 metat
     if (IsPlayerFacingSurfableFishableWater() == TRUE && ShouldRunOverworldEncounterScript(objectEventId))
     {
         gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
-        return InteractWithDynamicWildOverworldEncounter;
+        return InteractWithDynamicOverworldWildEncounter;
     }
 
     if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
         return EventScript_CurrentTooFast;
-
     if (IsFieldMoveUnlocked(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF)
      )
@@ -896,7 +895,7 @@ void RestartWildEncounterImmunitySteps(void)
 
 static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
 {
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || OverworldWildEncounter_ShouldDisableRandomEncounters())
+    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || WE_VANILLA_RANDOM)
         return FALSE;
 
     if (sWildEncounterImmunitySteps < 4)

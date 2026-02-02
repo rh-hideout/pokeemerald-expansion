@@ -69,7 +69,7 @@
 #include "tv.h"
 #include "scanline_effect.h"
 #include "wild_encounter.h"
-#include "wild_encounter_overworld.h"
+#include "wild_encounter_ow.h"
 #include "vs_seeker.h"
 #include "frontier_util.h"
 #include "constants/abilities.h"

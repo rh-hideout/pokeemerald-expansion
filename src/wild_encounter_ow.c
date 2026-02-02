@@ -1,5 +1,5 @@
 #include "global.h"
-#include "wild_encounter_overworld.h"
+#include "wild_encounter_ow.h"
 #include "battle_setup.h"
 #include "battle_main.h"
 #include "battle_pike.h"
@@ -45,29 +45,29 @@
 #define OWE_SAVED_MOVEMENT_STATE_FLAG   OWE_FLAG_BIT
 #define OWE_NO_DESPAWN_FLAG             OWE_FLAG_BIT
 
-#define OWE_MAX_SPAWNS                  4
+#define OWE_SPAWNS_MAX                  4
 #define OWE_SPAWN_DISTANCE_LAND         1   // A spawn cannot happen within this many tiles of the player position.
 #define OWE_SPAWN_DISTANCE_WATER        3   // A spawn cannot happen within this many tiles of the player position (while surfing).
-#define OWE_TOTAL_SPAWN_WIDTH           15  // Width of the on-screen spawn area in tiles.
-#define OWE_TOTAL_SPAWN_HEIGHT          9   // Height of the on-screen spawn area in tiles.
-#define OWE_SPAWN_RADUIS_WIDTH          (OWE_TOTAL_SPAWN_WIDTH - 1) / 2     // Distance from center to left/right edge (not including center).
-#define OWE_SPAWN_RADUIS_HEIGHT         (OWE_TOTAL_SPAWN_HEIGHT - 1) / 2    // Distance from center to top/bottom edge (not including center).
+#define OWE_SPAWN_WIDTH_TOTAL           15  // Width of the on-screen spawn area in tiles.
+#define OWE_SPAWN_HEIGHT_TOTAL          9   // Height of the on-screen spawn area in tiles.
+#define OWE_SPAWN_WIDTH_RADIUS          (OWE_SPAWN_WIDTH_TOTAL - 1) / 2     // Distance from center to left/right edge (not including center).
+#define OWE_SPAWN_HEIGHT_RADIUS         (OWE_SPAWN_HEIGHT_TOTAL - 1) / 2    // Distance from center to top/bottom edge (not including center).
 
+#define OWE_SPAWN_TIME_REPLACEMENT      240 // The number of frames before an existing spawn will be replaced with a new one (requires WE_OWE_SPAWN_REPLACEMENT).
+#define OWE_SPAWN_TIME_LURE             0
 #define OWE_SPAWN_TIME_MINIMUM          30  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 #define OWE_SPAWN_TIME_PER_ACTIVE       30  // The number of frames that will be added to the countdown per currently active spawn.
-#define OWE_SPAWN_TIME_REPLACEMENT      240 // The number of frames before an existing spawn will be replaced with a new one (requires WE_OWE_SPAWN_REPLACEMENT).
 
 #define OWE_MON_SIGHT_WIDTH             3
 #define OWE_MON_SIGHT_LENGTH            4
 #define OWE_CHASE_RANGE                 5
+#define OWE_RESTORED_MOVEMENT_FUNC_ID   10
 
 #define OWE_NO_ENCOUNTER_SET            0xFF
 #define OWE_INVALID_SPAWN_SLOT          0xFF
-#define OWE_RESTORED_MOVEMENT_FUNC_ID   10
 
-#define OWE_LURE_SPAWN_TIME             0
 
-#if WE_OW_ENCOUNTERS == TRUE && ROAMER_COUNT >= OWE_MAX_ROAMERS
+#if WE_OW_ENCOUNTERS == TRUE && ROAMER_COUNT > OWE_MAX_ROAMERS
 #error "ROAMER_COUNT needs to be less than OWE_MAX_ROAMERS due to it being stored in the u8 field warpArrowSpriteId"
 #endif
 
@@ -171,7 +171,7 @@ void UpdateOverworldEncounters(void)
     {
         if (sOWESpawnCountdown != OWE_NO_ENCOUNTER_SET)
         {
-            RemoveAllOverworldWildEncounterObjects(OWE_GENERATED);
+            RemoveAllOverworldWildEncounterObjects(OWE_GENERATED, 0);
             sOWESpawnCountdown = OWE_NO_ENCOUNTER_SET;
         }
         return;
@@ -186,9 +186,8 @@ void UpdateOverworldEncounters(void)
         sOWESpawnCountdown--;
         return;
     }
-
-    if (REPEL_STEP_COUNT && GetNumberActiveOverworldEncounters(OWE_GENERATED))
-        RemoveAllRepelRestrictedOverworldWildEncounterObjects();
+    
+    RemoveAllOverworldWildEncounterObjects(OWE_GENERATED, WILD_CHECK_REPEL);
 
     if (!IsSafeToSpawnObjectEvents())
         return;
@@ -208,7 +207,7 @@ void UpdateOverworldEncounters(void)
     bool32 isFemale = FALSE;
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
     u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-    u32 level;
+    u32 level = MIN_LEVEL;
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
 
     if (speciesId == SPECIES_NONE
@@ -228,7 +227,7 @@ void UpdateOverworldEncounters(void)
         .elevation = MapGridGetElevationAt(x, y),
         .movementType = OWE_GetMovementTypeFromSpecies(speciesId),
         .trainerType = TRAINER_TYPE_OW_WILD_ENCOUNTER,
-        .script = InteractWithDynamicWildOverworldEncounter,
+        .script = InteractWithDynamicOverworldWildEncounter,
     };
     u32 objectEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
@@ -257,10 +256,10 @@ static void OWE_SetNewSpawnCountdown(void)
 {
     u32 numActive = GetNumberActiveOverworldEncounters(OWE_GENERATED);
 
-    if (WE_OWE_SPAWN_REPLACEMENT && numActive >= OWE_MAX_SPAWNS)
+    if (WE_OWE_SPAWN_REPLACEMENT && numActive >= OWE_SPAWNS_MAX)
         sOWESpawnCountdown = OWE_SPAWN_TIME_REPLACEMENT;
-    else if (LURE_STEP_COUNT && numActive < OWE_MAX_SPAWNS)
-        sOWESpawnCountdown = OWE_LURE_SPAWN_TIME;
+    else if (LURE_STEP_COUNT && numActive < OWE_SPAWNS_MAX)
+        sOWESpawnCountdown = OWE_SPAWN_TIME_LURE;
     else
         sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM + (OWE_SPAWN_TIME_PER_ACTIVE * numActive);
 }
@@ -407,7 +406,7 @@ u32 GetOldestSlot(bool32 forceRemove)
     struct ObjectEvent *slotMon, *oldest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
     u32 spawnSlot;
 
-    for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
+    for (spawnSlot = 0; spawnSlot < OWE_SPAWNS_MAX; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && (!OWE_HasNoDespawnFlag(slotMon) || forceRemove == TRUE))
@@ -417,10 +416,10 @@ u32 GetOldestSlot(bool32 forceRemove)
         }
     }
 
-    if (spawnSlot >= OWE_MAX_SPAWNS)
+    if (spawnSlot >= OWE_SPAWNS_MAX)
         return OWE_INVALID_SPAWN_SLOT;
 
-    for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
+    for (spawnSlot = 0; spawnSlot < OWE_SPAWNS_MAX; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && (!OWE_HasNoDespawnFlag(slotMon) || forceRemove == TRUE))
@@ -438,7 +437,7 @@ static u8 NextSpawnMonSlot(void)
     u32 spawnSlot;
 
     // All mon slots are in use
-    if (GetNumberActiveOverworldEncounters(OWE_GENERATED) >= OWE_MAX_SPAWNS)
+    if (GetNumberActiveOverworldEncounters(OWE_GENERATED) >= OWE_SPAWNS_MAX)
     {
         if (WE_OWE_SPAWN_REPLACEMENT)
         {
@@ -454,7 +453,7 @@ static u8 NextSpawnMonSlot(void)
     }
     else
     {
-        for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWNS; spawnSlot++)
+        for (spawnSlot = 0; spawnSlot < OWE_SPAWNS_MAX; spawnSlot++)
         {
             if (GetOverworldSpeciesBySpawnSlot(spawnSlot) == SPECIES_NONE)
                 break;
@@ -485,8 +484,8 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     // Have defines used and then replace MAP_METATILE_VIEW_X/Y with them
     do
     {
-        x = (s16)(Random() % OWE_TOTAL_SPAWN_WIDTH) - OWE_SPAWN_RADUIS_WIDTH;
-        y = (s16)(Random() % OWE_TOTAL_SPAWN_HEIGHT) - OWE_SPAWN_RADUIS_HEIGHT;
+        x = (s16)(Random() % OWE_SPAWN_WIDTH_TOTAL) - OWE_SPAWN_WIDTH_RADIUS;
+        y = (s16)(Random() % OWE_SPAWN_HEIGHT_TOTAL) - OWE_SPAWN_HEIGHT_RADIUS;
     }
     while (abs(x) <= closeDistance && abs(y) <= closeDistance);
 
@@ -714,16 +713,16 @@ struct AgeSort
 static void SortOWEMonAges(void)
 {
     struct ObjectEvent *slotMon;
-    struct AgeSort array[OWE_MAX_SPAWNS];
+    struct AgeSort array[OWE_SPAWNS_MAX];
     struct AgeSort current;
     u32 numActive = GetNumberActiveOverworldEncounters(OWE_GENERATED);
     u32 count = 0;
     s32 i, j;
 
-    if (OWE_MAX_SPAWNS <= 1)
+    if (OWE_SPAWNS_MAX <= 1)
         return;
 
-    for (i = 0; i < OWE_MAX_SPAWNS; i++)
+    for (i = 0; i < OWE_SPAWNS_MAX; i++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE)
@@ -805,10 +804,12 @@ u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, boo
 
 void OverworldWildEncounter_SetMinimumSpawnTimer(void)
 {
+    if (!WE_OW_ENCOUNTERS)
+        return;
+
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-    
-    if (LURE_STEP_COUNT && GetNumberActiveOverworldEncounters(OWE_GENERATED) < OWE_MAX_SPAWNS)
-        sOWESpawnCountdown = OWE_LURE_SPAWN_TIME;
+    if (LURE_STEP_COUNT && GetNumberActiveOverworldEncounters(OWE_GENERATED) < OWE_SPAWNS_MAX)
+        sOWESpawnCountdown = OWE_SPAWN_TIME_LURE;
 }
 
 static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
@@ -835,7 +836,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     else
         *isFemale = FALSE;
 
-    if ((WE_OWE_PREVENT_SHINY_DESPAWN && *isShiny))
+    if (WE_OWE_PREVENT_SHINY_DESPAWN && *isShiny)
         OWE_SetNoDespawnFlag(level);
 
     ZeroEnemyPartyMons();
@@ -957,10 +958,11 @@ static bool32 OWE_ShouldSpawnWaterMons(void)
     return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
-void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType)
+void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType, u32 flags)
 {
     s16 dx = 0;
     s16 dy = 0;
+
     if (gCamera.active)
     {
         dx = gCamera.x;
@@ -970,23 +972,27 @@ void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType ow
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(obj, oweType) && obj->active)
+
+        if (!obj->active)
+            continue;
+
+        if (!IsOverworldWildEncounter(obj, oweType))
+            continue;
+
+        if (flags & WILD_CHECK_REPEL)
         {
-            UpdateObjectEventCoords(obj, dx, dy);
-            RemoveObjectEvent(obj);
+            if (!REPEL_STEP_COUNT)
+                continue;
+
+            if (OWE_HasNoDespawnFlag(obj))
+                continue;
+
+            if (IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
+                continue;
         }
-    }
-}
 
-void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
-{
-    struct ObjectEvent *obj;
-
-    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
-    {
-        obj = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(obj, OWE_GENERATED) && obj->active && !OWE_HasNoDespawnFlag(obj) && !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
-            RemoveObjectEvent(obj);
+        UpdateObjectEventCoords(obj, dx, dy);
+        RemoveObjectEvent(obj);
     }
 }
 
@@ -1045,11 +1051,11 @@ bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldO
     
     case OWE_GENERATED:
         return isOWE && (objectEvent->localId <= LOCALID_OW_ENCOUNTER_END
-            && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWNS));
+            && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - OWE_SPAWNS_MAX));
 
     case OWE_MANUAL:
         return isOWE && (objectEvent->localId > LOCALID_OW_ENCOUNTER_END
-            || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWNS));
+            || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_SPAWNS_MAX));
     }
 }
 
@@ -1080,7 +1086,7 @@ u32 GetNewestOWEncounterLocalId(void)
     struct ObjectEvent *newest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
     u32 i;
     
-    for (i = 0; i < OWE_MAX_SPAWNS; i++)
+    for (i = 0; i < OWE_SPAWNS_MAX; i++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE)
@@ -1097,7 +1103,7 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
 {
     // Include a check for the encounter not being shiny or a roamer.
     return (WE_OW_ENCOUNTERS && GetNumberActiveOverworldEncounters(OWE_GENERATED) != 0
-        && (localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWNS + 1)
+        && (localId <= (LOCALID_OW_ENCOUNTER_END - OWE_SPAWNS_MAX + 1)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
@@ -1120,7 +1126,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
         return FALSE;
 
     if (IsOverworldWildEncounter(object, OWE_MANUAL)
-        && GetObjectEventScriptPointerByObjectEventId(objectEventId) != InteractWithDynamicWildOverworldEncounter
+        && GetObjectEventScriptPointerByObjectEventId(objectEventId) != InteractWithDynamicOverworldWildEncounter
         && GetObjectEventScriptPointerByObjectEventId(objectEventId) != NULL)
         return FALSE;
 
@@ -1131,7 +1137,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
     if (template->trainerType != TRAINER_TYPE_OW_WILD_ENCOUNTER || (template->localId <= LOCALID_OW_ENCOUNTER_END
-        && template->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWNS)))
+        && template->localId > (LOCALID_OW_ENCOUNTER_END - OWE_SPAWNS_MAX)))
         return *template;
 
     struct ObjectEventTemplate templateOWE = *template;
@@ -1141,7 +1147,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     u16 speciesId, speciesTemplate = SanitizeSpeciesId(templateOWE.graphicsId & OBJ_EVENT_MON_SPECIES_MASK);
     bool32 isShiny = FALSE, isShinyTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_SHINY) ? TRUE : FALSE;
     bool32 isFemale = FALSE;
-    u32 level, levelTemplate = templateOWE.sOverworldEncounterLevel;
+    u32 level = MIN_LEVEL, levelTemplate = templateOWE.sOverworldEncounterLevel;
     u32 indexRoamerOutbreak = OWE_INVALID_ROAMER_OUTBREAK;
     u32 x = template->x;
     u32 y = template->y;
@@ -1208,7 +1214,9 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
 
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
-    if (FlagGet(DN_FLAG_SEARCHING))
+    // The only automatically interacts with an OW Encounter when;
+    // Not using a repel or the DexNav is inactive.
+    if (WE_OWE_REPEL_DEXNAV_COLLISION && (FlagGet(DN_FLAG_SEARCHING) || REPEL_STEP_COUNT))
         return;
 
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle, OWE_ANY));
@@ -1512,26 +1520,26 @@ static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
     u32 speciesId = OW_SPECIES(objectEvent);
     s32 distanceX = objectEvent->currentCoords.x - player->currentCoords.x;
     s32 distanceY = objectEvent->currentCoords.y - player->currentCoords.y;
-    u32 distanceMax = OWE_SPAWN_RADUIS_WIDTH + OWE_SPAWN_RADUIS_HEIGHT;
+    u32 distanceMax = OWE_SPAWN_WIDTH_RADIUS + OWE_SPAWN_HEIGHT_RADIUS;
     u32 distance;
     u32 volume;
     s32 pan;
 
-    if (distanceX > OWE_SPAWN_RADUIS_WIDTH)
-        distanceX = OWE_SPAWN_RADUIS_WIDTH;
-    else if (distanceX < -OWE_SPAWN_RADUIS_WIDTH)
-        distanceX = -OWE_SPAWN_RADUIS_WIDTH;
+    if (distanceX > OWE_SPAWN_WIDTH_RADIUS)
+        distanceX = OWE_SPAWN_WIDTH_RADIUS;
+    else if (distanceX < -OWE_SPAWN_WIDTH_RADIUS)
+        distanceX = -OWE_SPAWN_WIDTH_RADIUS;
 
     distanceY = abs(distanceY);
-    if (distanceY > OWE_SPAWN_RADUIS_HEIGHT)
-        distanceY = OWE_SPAWN_RADUIS_HEIGHT;
+    if (distanceY > OWE_SPAWN_HEIGHT_RADIUS)
+        distanceY = OWE_SPAWN_HEIGHT_RADIUS;
 
     distance = abs(distanceX) + distanceY;
     if (distance > distanceMax)
         distance = distanceMax;
 
     volume = 80 - (distance * (80 - 50)) / distanceMax;
-    pan = 212 + ((distanceX + OWE_SPAWN_RADUIS_WIDTH) * (300 - 212)) / (2 * OWE_SPAWN_RADUIS_WIDTH);
+    pan = 212 + ((distanceX + OWE_SPAWN_WIDTH_RADIUS) * (300 - 212)) / (2 * OWE_SPAWN_WIDTH_RADIUS);
     
     PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
 }
@@ -1627,21 +1635,12 @@ static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent)
     return status - 1;
 }
 
-bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void)
-{
-    if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !WE_OWE_BATTLE_PIKE)
-        || (CurrentBattlePyramidLocation() && !WE_OWE_BATTLE_PYRAMID))
-        return FALSE;
-
-    return !WE_VANILLA_RANDOM;
-}
-
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object)
 {
     if (!IsOverworldWildEncounter(object, OWE_GENERATED))
         return FALSE;
 
-    return WE_OWE_SPAWN_REPLACEMENT && GetNumberActiveOverworldEncounters(OWE_GENERATED) >= OWE_MAX_SPAWNS;
+    return WE_OWE_SPAWN_REPLACEMENT && GetNumberActiveOverworldEncounters(OWE_GENERATED) >= OWE_SPAWNS_MAX;
 }
 
 void OWE_StartEncounter(struct ObjectEvent *mon)
@@ -1654,7 +1653,7 @@ void OWE_StartEncounter(struct ObjectEvent *mon)
     if (mon->movementActionId >= MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_DOWN && mon->movementActionId <= MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_RIGHT)
         ClearObjectEventMovement(mon, &gSprites[mon->spriteId]);
 
-    ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
+    ScriptContext_SetupScript(InteractWithDynamicOverworldWildEncounter);
 }
 
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent)
@@ -1871,7 +1870,15 @@ void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void)
     if (WE_OWE_DESPAWN_SOUND)
         PlaySE(SE_FLEE);
         
-    RemoveAllOverworldWildEncounterObjects(OWE_ANY);
+    RemoveAllOverworldWildEncounterObjects(OWE_ANY, 0);
+}
+
+void OverworldWildEncounter_SetInstantSpawnTimer(void)
+{
+    if (!WE_OW_ENCOUNTERS)
+        return;
+
+    sOWESpawnCountdown = 0;
 }
 
 #undef sOverworldEncounterLevel

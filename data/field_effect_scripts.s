@@ -307,10 +307,6 @@ gFieldEffectScript_Bubbles::
 	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect0, FldEff_Bubbles
 	field_eff_end
 
-gFieldEffectScript_OWE_SpawnAnim::
-	field_eff_callnative FldEff_OWE_SpawnAnim
-	field_eff_end
-
 gFieldEffectScript_Sparkle::
 	field_eff_loadfadedpal_callnative gSpritePalette_SmallSparkle, FldEff_Sparkle
 	field_eff_end
@@ -419,4 +415,8 @@ gFieldEffectScript_HallOfFameRecordFrlg::
 
 gFldEffScript_PhotoFlash::
 	field_eff_callnative FldEff_PhotoFlash
+	field_eff_end
+
+gFieldEffectScript_OWE_SpawnAnim::
+	field_eff_callnative FldEff_OWE_SpawnAnim
 	field_eff_end

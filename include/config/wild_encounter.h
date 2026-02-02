@@ -1,5 +1,5 @@
-#ifndef GUARD_CONFIG_WILD_ENCOUNTER_OVERWORLD_H
-#define GUARD_CONFIG_WILD_ENCOUNTER_OVERWORLD_H
+#ifndef GUARD_CONFIG_WILD_ENCOUNTER_OW_H
+#define GUARD_CONFIG_WILD_ENCOUNTER_OW_H
 
 // Vanilla
 #define WE_VANILLA_RANDOM                   TRUE    // If TRUE, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
@@ -21,7 +21,8 @@
 #define WE_OWE_PREVENT_SHINY_DESPAWN        FALSE   // If TRUE, shiny OW Pokémon objects will not be despawned when off-screen if on the same map as the player, or be replaced if WE_OWE_SPAWN_REPLACEMENT is TRUE.
 #define WE_OWE_PREVENT_FEEBAS_DESPAWN       FALSE   // If TRUE, Feebas OW objects spawned from special Feebas fishing spots (when WE_OWE_FEEBAS_SPOTS is TRUE) will not be despawned when off-screen if on the same map as the player, or be replaced if WE_OWE_SPAWN_REPLACEMENT is TRUE.
 #define WE_OWE_DESPAWN_ON_ENTER_TOWN        TRUE    // If TRUE, despawns all OW wild encounter objects upon entering a city or town (MAP_TYPE_TOWN or MAP_TYPE_CITY).
+#define WE_OWE_REPEL_DEXNAV_COLLISION       FALSE   // If TRUE, overworld wild encounters can still be triggered by a collision if a Repel or the DexNav is active.
 
 // Should Move Other Configs?
 
-#endif // GUARD_CONFIG_WILD_ENCOUNTER_OVERWORLD_H
+#endif // GUARD_CONFIG_WILD_ENCOUNTER_OW_H

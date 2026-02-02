@@ -88,3 +88,15 @@ While OWE objects can be given any movement type, there are several different cu
 - `MOVEMENT_TYPE_DESPAWN_OWE` will make the OWE do a very brief animation of surprise and then instantly despawn when it notices the player.
 
 ### Restricted Movements
+### How Data is Saved
+```
+struct ObjectEvent
+{
+    …
+    u8 trainerRange_berryTreeId; // Also stores level for Overworld Encounters.
+    …
+    u8 directionSequenceIndex; // Also stores roamer status for Overworld Encounters.
+    u8 playerCopyableMovement; // COPY_MOVE_*   Also stores age for Overworld Encounters.
+    …
+}
+```

@@ -11,7 +11,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "trig.h"
-#include "wild_encounter_overworld.h"
+#include "wild_encounter_ow.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
 #include "constants/rgb.h"
@@ -1519,57 +1519,6 @@ u32 FldEff_BerryTreeGrowthSparkle(void)
     return spriteId;
 }
 
-u32 FldEff_OWE_SpawnAnim(void)
-{
-    u8 spriteId;
-    u8 visual;
-    s16 xOffset = 0, yOffset = 0;
-    enum OverworldEncounterSpawnAnim spawnAnim = gFieldEffectArguments[2];
-    struct SpritePalette palette = OWE_GetSpawnAnimFldEffPalette(spawnAnim);
-
-    switch (spawnAnim)
-    {
-    case OWE_SPAWN_ANIM_GRASS:
-        visual = FLDEFFOBJ_JUMP_TALL_GRASS;
-        yOffset = 8;
-        break;
-
-    case OWE_SPAWN_ANIM_LONG_GRASS:
-        visual = FLDEFFOBJ_JUMP_LONG_GRASS;
-        break;
-
-    case OWE_SPAWN_ANIM_WATER:
-        visual = FLDEFFOBJ_JUMP_BIG_SPLASH;
-        yOffset = 8;
-        break;
-
-    case OWE_SPAWN_ANIM_UNDERWATER:
-        visual = FLDEFFOBJ_BUBBLES;
-        break;
-
-    case OWE_SPAWN_ANIM_CAVE:
-        visual = FLDEFFOBJ_GROUND_IMPACT_DUST;
-        yOffset = 12;
-        break;
-    
-    case OWE_SPAWN_ANIM_SHINY:
-    default:
-        visual = FLDEFFOBJ_SHINY_SPARKLE;
-        break;
-    }
-
-    FieldEffect_LoadFadedPalette(&palette, COLOR_MAP_DARK_CONTRAST);
-    SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 0);
-    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[visual], gFieldEffectArguments[0] + xOffset, gFieldEffectArguments[1] + yOffset, 82);
-    if (spriteId != MAX_SPRITES)
-    {
-        struct Sprite *sprite = &gSprites[spriteId];
-        sprite->coordOffsetEnabled = TRUE;
-        sprite->oam.priority = 2;
-    }
-    return spriteId;
-}
-
 // Sprite data for FLDEFF_TREE_DISGUISE / FLDEFF_MOUNTAIN_DISGUISE / FLDEFF_SAND_DISGUISE
 #define sState      data[0]
 #define sFldEff     data[1]
@@ -1957,4 +1906,55 @@ static void UpdateGrassFieldEffectSubpriority(struct Sprite *sprite, u8 elevatio
             }
         }
     }
+}
+
+u32 FldEff_OWE_SpawnAnim(void)
+{
+    u8 spriteId;
+    u8 visual;
+    s16 xOffset = 0, yOffset = 0;
+    enum OverworldEncounterSpawnAnim spawnAnim = gFieldEffectArguments[2];
+    struct SpritePalette palette = OWE_GetSpawnAnimFldEffPalette(spawnAnim);
+
+    switch (spawnAnim)
+    {
+    case OWE_SPAWN_ANIM_GRASS:
+        visual = FLDEFFOBJ_JUMP_TALL_GRASS;
+        yOffset = 8;
+        break;
+
+    case OWE_SPAWN_ANIM_LONG_GRASS:
+        visual = FLDEFFOBJ_JUMP_LONG_GRASS;
+        break;
+
+    case OWE_SPAWN_ANIM_WATER:
+        visual = FLDEFFOBJ_JUMP_BIG_SPLASH;
+        yOffset = 8;
+        break;
+
+    case OWE_SPAWN_ANIM_UNDERWATER:
+        visual = FLDEFFOBJ_BUBBLES;
+        break;
+
+    case OWE_SPAWN_ANIM_CAVE:
+        visual = FLDEFFOBJ_GROUND_IMPACT_DUST;
+        yOffset = 12;
+        break;
+    
+    case OWE_SPAWN_ANIM_SHINY:
+    default:
+        visual = FLDEFFOBJ_SHINY_SPARKLE;
+        break;
+    }
+
+    FieldEffect_LoadFadedPalette(&palette, COLOR_MAP_DARK_CONTRAST);
+    SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 0);
+    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[visual], gFieldEffectArguments[0] + xOffset, gFieldEffectArguments[1] + yOffset, 0);
+    if (spriteId != MAX_SPRITES)
+    {
+        struct Sprite *sprite = &gSprites[spriteId];
+        sprite->coordOffsetEnabled = TRUE;
+        sprite->oam.priority = 2;
+    }
+    return spriteId;
 }
