@@ -187,6 +187,9 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
+    if (REPEL_STEP_COUNT && GetNumberActiveOverworldEncounters(OWE_GENERATED))
+        RemoveAllRepelRestrictedOverworldWildEncounterObjects();
+
     if (!IsSafeToSpawnObjectEvents())
         return;
 
@@ -209,8 +212,8 @@ void UpdateOverworldEncounters(void)
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
 
     if (speciesId == SPECIES_NONE
-        || !IsWildLevelAllowedByRepel(level)
-        || !IsAbilityAllowingEncounter(level)
+        || !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(level))
+        || !IsAbilityAllowingEncounter(OWE_GetEncounterLevel(level))
         || !OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny, x, y))
     {
         OverworldWildEncounter_SetMinimumSpawnTimer();
@@ -1195,7 +1198,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 {
     // The only automatically interacts with an OW Encounter when;
     // Not using a repel or the DexNav is inactive.
-    if (!WE_OWE_REPEL_DEXNAV_COLLISION && (REPEL_STEP_COUNT || FlagGet(DN_FLAG_SEARCHING)))
+    if (FlagGet(DN_FLAG_SEARCHING))
         return;
 
     bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle, OWE_ANY));
@@ -1859,6 +1862,18 @@ void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void)
         PlaySE(SE_FLEE);
         
     RemoveAllOverworldWildEncounterObjects(OWE_ANY);
+}
+
+void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
+{
+    struct ObjectEvent *obj;
+
+    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
+    {
+        obj = &gObjectEvents[i];
+        if (IsOverworldWildEncounter(obj, OWE_GENERATED) && obj->active && !OWE_HasNoDespawnFlag(obj) && !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(obj->sOverworldEncounterLevel)))
+            RemoveObjectEvent(obj);
+    }
 }
 
 #undef sOverworldEncounterLevel
