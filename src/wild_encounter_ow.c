@@ -152,6 +152,7 @@ static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 x
 static u32 OWE_CheckPathToPlayerFromCollision(struct ObjectEvent *mon, enum Direction newDirection);
 static void Task_OWE_ApproachForBattle(u8 taskId);
 static bool32 OWE_CheckSpecies(u32 speciesId);
+static void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void);
 
 static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
@@ -1864,7 +1865,7 @@ void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void)
     RemoveAllOverworldWildEncounterObjects(OWE_ANY);
 }
 
-void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
+static void RemoveAllRepelRestrictedOverworldWildEncounterObjects(void)
 {
     struct ObjectEvent *obj;
 
