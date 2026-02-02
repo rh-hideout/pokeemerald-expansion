@@ -209,8 +209,8 @@ void UpdateOverworldEncounters(void)
     u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
 
     if (speciesId == SPECIES_NONE
-        || !IsWildLevelAllowedByRepel(level)
-        || !IsAbilityAllowingEncounter(level)
+        || !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(level))
+        || !IsAbilityAllowingEncounter(OWE_GetEncounterLevel(level))
         || !OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny, x, y))
     {
         OverworldWildEncounter_SetMinimumSpawnTimer();
