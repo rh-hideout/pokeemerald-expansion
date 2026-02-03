@@ -116,6 +116,16 @@ static inline void OWE_SetNoDespawnFlag(u32 *level)
     *level |= OWE_NO_DESPAWN_FLAG;
 }
 
+static inline u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot)
+{
+    return LOCALID_OW_ENCOUNTER_END - spawnSlot;
+}
+
+static inline u32 GetSpawnSlotByLocalId(u32 localId)
+{
+    return LOCALID_OW_ENCOUNTER_END - localId;
+}
+
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
 static bool32 OWE_ShouldSpawnWaterMons(void);
@@ -124,8 +134,6 @@ static bool8 IsSafeToSpawnObjectEvents(void);
 static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
-static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
-static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
 static void OWE_SetNewSpawnCountdown(void);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
@@ -1075,16 +1083,6 @@ static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
         return SPECIES_NONE;
 
     return OW_SPECIES(objectEvent);
-}
-
-static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot)
-{
-    return LOCALID_OW_ENCOUNTER_END - spawnSlot;
-}
-
-static u32 GetSpawnSlotByLocalId(u32 localId)
-{
-    return LOCALID_OW_ENCOUNTER_END - localId;
 }
 
 static UNUSED u32 GetNewestOWEncounterLocalId(void)
