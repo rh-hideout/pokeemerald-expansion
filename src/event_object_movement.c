@@ -11933,8 +11933,7 @@ bool8 MovementType_OverworldWildEncounter_WanderAround_Step3(struct ObjectEvent 
 
 bool8 MovementType_OverworldWildEncounter_WanderAround_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u8 chosenDirection = objectEvent->movementDirection;
-
+    enum Direction chosenDirection = objectEvent->movementDirection;
     if ((Random() & 3) != 0)
         chosenDirection = GetNinetyDegreeDirection(chosenDirection, Random() % 2);
 
@@ -11998,8 +11997,8 @@ bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step10(struct ObjectEvent 
 
 bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u16 speciesId = OW_SPECIES(objectEvent);
-    u8 movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+    u32 speciesId = OW_SPECIES(objectEvent);
+    u32 movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
     sprite->sTypeFuncId = 12;
 
     if (CheckRestrictedOWEMovement(objectEvent, objectEvent->movementDirection))
@@ -12071,8 +12070,8 @@ bool8 MovementType_OverworldWildEncounter_FleePlayer_Step10(struct ObjectEvent *
 
 bool8 MovementType_OverworldWildEncounter_FleePlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u16 speciesId = OW_SPECIES(objectEvent);
-    u8 movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+    u32 speciesId = OW_SPECIES(objectEvent);
+    u32 movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
     if (CheckRestrictedOWEMovement(objectEvent, objectEvent->movementDirection))
     {
         enum Direction newDirection = DirectionOfOWEToPlayerFromCollision(objectEvent);
@@ -12164,8 +12163,8 @@ bool8 MovementType_OverworldWildEncounter_ApproachPlayer_Step11(struct ObjectEve
 {
     bool32 equalDistances = FALSE;
     u32 distance = GetApproachingOWEDistanceToPlayer(objectEvent, &equalDistances);
-    u16 speciesId = OW_SPECIES(objectEvent);
-    u8 movementActionId;
+    u32 speciesId = OW_SPECIES(objectEvent);
+    u32 movementActionId;
     if (distance <= 1)
     {
         SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
