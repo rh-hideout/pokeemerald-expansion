@@ -11921,17 +11921,13 @@ bool8 MovementType_OverworldWildEncounter_WanderAround_Step3(struct ObjectEvent 
         sprite->sTypeFuncId = 4;
         return TRUE;
     }
-    else
-    {
-        if (OW_MON_WANDER_WALK == TRUE && IS_OW_MON_OBJ(objectEvent))
-            UpdateMonMoveInPlace(objectEvent, sprite);
+    
+    if (OW_MON_WANDER_WALK == TRUE && IS_OW_MON_OBJ(objectEvent))
+        UpdateMonMoveInPlace(objectEvent, sprite);
 
-        if (OWE_CanAwareMonSeePlayer(objectEvent))
-        {
-            sprite->sTypeFuncId = 7;
-            return FALSE;
-        }
-    }
+    if (OWE_CanAwareMonSeePlayer(objectEvent))
+        sprite->sTypeFuncId = 7;
+    
     return FALSE;
 }
 
@@ -11971,36 +11967,30 @@ bool8 MovementType_OverworldWildEncounter_Common_Step7(struct ObjectEvent *objec
 bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
     SetObjectEventDirection(objectEvent, direction);
-
-    if (!OWE_IsMonNextToPlayer(objectEvent))
-    {
-        ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK);
-        PlaySE(SE_PIN);
-        sprite->sTypeFuncId = 9;
-    }
-    else
+    if (OWE_IsMonNextToPlayer(objectEvent))
     {
         sprite->sTypeFuncId = 10;
+        return TRUE;
     }
 
+    ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK);
+    PlaySE(SE_PIN);
+    sprite->sTypeFuncId = 9;
     return TRUE;
 }
 
 bool8 MovementType_OverworldWildEncounter_Common_Step9(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
-    {
         sprite->sTypeFuncId = 10;
-    }
+    
     return TRUE;
 }
 
 bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
     SetObjectEventDirection(objectEvent, direction);
     sprite->sTypeFuncId = 11;
     return TRUE;
@@ -12009,9 +11999,7 @@ bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step10(struct ObjectEvent 
 bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     u16 speciesId = OW_SPECIES(objectEvent);
-    u8 movementActionId;
-
-    movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+    u8 movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
     sprite->sTypeFuncId = 12;
 
     if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection))
@@ -12026,9 +12014,9 @@ bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step11(struct ObjectEvent 
             objectEvent->singleMovementActive = TRUE;
             return FALSE;
         }
+
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
         movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
-
         if (OWE_CheckRestrictedMovement(objectEvent, newDirection))
             movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
     }
@@ -12043,14 +12031,12 @@ bool8 MovementType_OverworldWildEncounter_Common_Step12(struct ObjectEvent *obje
     if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
     {
         objectEvent->singleMovementActive = FALSE;
-
+        sprite->sTypeFuncId = 10;
         if (!OWE_IsPlayerInsideMonActiveDistance(objectEvent))
         {
             OWE_ClearSavedMovementState(objectEvent);
             sprite->sTypeFuncId = 0;
-            return FALSE;
         }
-        sprite->sTypeFuncId = 10;
     }
     return FALSE;
 }
@@ -12060,13 +12046,10 @@ movement_type_def(MovementType_OverworldWildEncounter_FleePlayer, gMovementTypeF
 bool8 MovementType_OverworldWildEncounter_FleePlayer_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     enum Direction direction = GetOppositeDirection(DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent));
-
     SetObjectEventDirection(objectEvent, direction);
-
     ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK);
     PlaySE(SE_PIN);
     sprite->sTypeFuncId = 9;
-
     return TRUE;
 }
 
@@ -12081,7 +12064,6 @@ bool8 MovementType_OverworldWildEncounter_FleePlayer_Step10(struct ObjectEvent *
     }
 
     enum Direction direction = GetOppositeDirection(DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent));
-    
     SetObjectEventDirection(objectEvent, direction);
     sprite->sTypeFuncId = 11;
     return TRUE;
@@ -12090,19 +12072,14 @@ bool8 MovementType_OverworldWildEncounter_FleePlayer_Step10(struct ObjectEvent *
 bool8 MovementType_OverworldWildEncounter_FleePlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     u16 speciesId = OW_SPECIES(objectEvent);
-    u8 movementActionId;
-
-    movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
-
+    u8 movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
     if (OWE_CheckRestrictedMovement(objectEvent, objectEvent->movementDirection))
     {
         u8 newDirection = OWE_DirectionToPlayerFromCollision(objectEvent);
-
         if (newDirection != objectEvent->movementDirection)
             newDirection = GetOppositeDirection(newDirection);
         
         movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
-
         if (OWE_CheckRestrictedMovement(objectEvent, newDirection))
         {
             sCollisionTimer++;
@@ -12131,26 +12108,19 @@ movement_type_def(MovementType_OverworldWildEncounter_WatchPlayer, gMovementType
 bool8 MovementType_OverworldWildEncounter_WatchPlayer_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
     SetObjectEventDirection(objectEvent, direction);
-
+    sprite->sTypeFuncId = 10;
     if (!OWE_IsMonNextToPlayer(objectEvent))
     {
         ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_QUESTION_MARK);
         sprite->sTypeFuncId = 9;
     }
-    else
-    {
-        sprite->sTypeFuncId = 10;
-    }
-
     return TRUE;
 }
 
 bool8 MovementType_OverworldWildEncounter_WatchPlayer_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
     SetObjectEventDirection(objectEvent, direction);
     sprite->sTypeFuncId = 11;
     return TRUE;
@@ -12158,7 +12128,6 @@ bool8 MovementType_OverworldWildEncounter_WatchPlayer_Step10(struct ObjectEvent 
 
 bool8 MovementType_OverworldWildEncounter_WatchPlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 12;
@@ -12172,27 +12141,20 @@ movement_type_def(MovementType_OverworldWildEncounter_ApproachPlayer, gMovementT
 bool8 MovementType_OverworldWildEncounter_ApproachPlayer_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
     SetObjectEventDirection(objectEvent, direction);
     sJumpTimer = (Random() % (OWE_APPROACH_JUMP_TIMER_MAX - OWE_APPROACH_JUMP_TIMER_MIN)) + OWE_APPROACH_JUMP_TIMER_MIN;
-
+    sprite->sTypeFuncId = 10;
     if (!OWE_IsMonNextToPlayer(objectEvent))
     {
         ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_QUESTION_MARK);
         sprite->sTypeFuncId = 9;
     }
-    else
-    {
-        sprite->sTypeFuncId = 10;
-    }
-
     return TRUE;
 }
 
 bool8 MovementType_OverworldWildEncounter_ApproachPlayer_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
     SetObjectEventDirection(objectEvent, direction);
     sprite->sTypeFuncId = 11;
     return TRUE;
@@ -12204,7 +12166,6 @@ bool8 MovementType_OverworldWildEncounter_ApproachPlayer_Step11(struct ObjectEve
     u32 distance = OWE_GetApproachingMonDistanceToPlayer(objectEvent, &equalDistances);
     u16 speciesId = OW_SPECIES(objectEvent);
     u8 movementActionId;
-
     if (distance <= 1)
     {
         SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
@@ -12274,20 +12235,17 @@ movement_type_def(MovementType_OverworldWildEncounter_Despawn, gMovementTypeFunc
 bool8 MovementType_OverworldWildEncounter_Despawn_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
     SetObjectEventDirection(objectEvent, direction);
     ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK);
     PlaySE(SE_PIN);
     sDespawnTimer = 0;
     sprite->sTypeFuncId = 9;
-
     return TRUE;
 }
 
 bool8 MovementType_OverworldWildEncounter_Despawn_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
-
     SetObjectEventDirection(objectEvent, direction);
     sprite->sTypeFuncId = 11;
     return TRUE;
@@ -12295,7 +12253,6 @@ bool8 MovementType_OverworldWildEncounter_Despawn_Step10(struct ObjectEvent *obj
 
 bool8 MovementType_OverworldWildEncounter_Despawn_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-
     if (sDespawnTimer == OWE_DESPAWN_FRAMES)
     {
         RemoveObjectEvent(objectEvent);
