@@ -926,7 +926,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
          || gMapHeader.regionMapSectionId != sLastMapSectionId)
             ShowMapNamePopup();
     }
-    OverworldWildEncounter_SetMinimumSpawnTimer();
+    SetMinimumOWESpawnTimer();
 }
 
 static void LoadMapFromWarp(bool32 a1)
@@ -987,7 +987,7 @@ static void LoadMapFromWarp(bool32 a1)
         UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
         InitSecretBaseAppearance(TRUE);
     }
-    OverworldWildEncounter_SetMinimumSpawnTimer();
+    SetMinimumOWESpawnTimer();
 }
 
 void ResetInitialPlayerAvatarState(void)
@@ -1399,13 +1399,13 @@ static bool32 ShouldPlayAmbientCryVanillaOWE(void)
 {
     bool32 owePlayed = FALSE;
 
-    if (GetNumberActiveOverworldEncounters(OWE_ANY))
+    if (GetNumberOfActiveOWEs(OWE_ANY))
     {
         switch (OW_AMBIENT_CRIES)
         {
         case OW_AMBIENT_CRIES_OWE_ONLY:
         case OW_AMBIENT_CRIES_OWE_PRIORITY:
-            OWE_PlayAmbientCry();
+            PlayAmbientOWECry();
             owePlayed = TRUE;
             break;
 
