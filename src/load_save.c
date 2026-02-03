@@ -238,7 +238,7 @@ void LoadObjectEvents(void)
             gObjectEvents[i].graphicsId & OBJ_EVENT_MON)
             gObjectEvents[i].active = TRUE;
     }
-    OverworldWildEncounter_SetMinimumSpawnTimer();
+    SetMinimumOWESpawnTimer();
 }
 
 void CopyPartyAndObjectsToSave(void)

@@ -260,7 +260,7 @@ static void Task_BattleStart(u8 taskId)
             SetMainCallback2(CB2_InitBattle);
             RestartWildEncounterImmunitySteps();
             ClearPoisonStepCounter();
-            OverworldWildEncounter_RemoveObjectOnBattle();
+            DespawnOWEOnBattleStart();
             DestroyTask(taskId);
         }
         break;

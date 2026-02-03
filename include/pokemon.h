@@ -518,7 +518,7 @@ struct SpeciesInfo /*0xC4*/
 #endif //P_GENDER_DIFFERENCES
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
-    enum OverworldEncounterBehaviors overworldEncounterBehavior;
+    enum OverworldWildEncounterBehaviors overworldEncounterBehavior;
 };
 
 struct EggData
@@ -928,7 +928,7 @@ u32 OWE_GetMovementTypeFromSpecies(u32 speciesId);
 u32 OWE_GetViewDistanceFromSpecies(u32 speciesId);
 u32 OWE_GetViewWidthFromSpecies(u32 speciesId);
 u32 OWE_GetViewActiveDistanceFromSpecies(u32 speciesId);
-enum OWESpeeds OWE_GetIdleSpeedFromSpecies(u32 speciesId);
-enum OWESpeeds OWE_GetActiveSpeedFromSpecies(u32 speciesId);
+enum SpeedOWE OWE_GetIdleSpeedFromSpecies(u32 speciesId);
+enum SpeedOWE OWE_GetActiveSpeedFromSpecies(u32 speciesId);
 
 #endif // GUARD_POKEMON_H

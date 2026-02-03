@@ -336,7 +336,6 @@ const u16 gFieldEffectPal_DustCloud[] = INCBIN_U16("graphics/field_effects/palet
 const u32 gFieldEffectObjectPic_AshPuff[] = INCBIN_U32("graphics/field_effects/pics/ash_puff.4bpp");
 const u32 gFieldEffectObjectPic_AshLaunch[] = INCBIN_U32("graphics/field_effects/pics/ash_launch.4bpp");
 const u32 gFieldEffectObjectPic_Bubbles[] = INCBIN_U32("graphics/field_effects/pics/bubbles.4bpp");
-const u32 gFieldEffectObjectPic_ShinySparkle[] = INCBIN_U32("graphics/field_effects/pics/shiny_sparkle.4bpp");
 const u32 gFieldEffectObjectPic_SmallSparkle[] = INCBIN_U32("graphics/field_effects/pics/small_sparkle.4bpp");
 const u16 gFieldEffectPal_SmallSparkle[] = INCBIN_U16("graphics/field_effects/palettes/small_sparkle.gbapal");
 const u32 gFieldEffectObjectPic_Bird[] = INCBIN_U32("graphics/field_effects/pics/bird.4bpp");
@@ -468,6 +467,8 @@ const u32 gFieldEffectObjectPic_CaveDust[] = INCBIN_U32("graphics/field_effects/
 const u16 gFieldEffectObjectPalette_CaveDust[] = INCBIN_U16("graphics/field_effects/palettes/cave_dust.gbapal");
 
 const u32 gObjectEventPic_ApricornTree[] = INCBIN_U32("graphics/object_events/pics/misc/apricorn_tree.4bpp");
+
+const u32 gFieldEffectObjectPic_ShinySparkle[] = INCBIN_U32("graphics/field_effects/pics/shiny_sparkle.4bpp");
 
 #if IS_FRLG
 

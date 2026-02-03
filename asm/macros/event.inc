@@ -2822,12 +2822,12 @@
 
 	@ Starts an Overworld Wild Encounter with a selected object, if possible.
 	.macro tryoverworldwildencounter
-	callnative CreateOverworldWildEncounter
+	callnative StartWildBattleWithOWE
 	.endm
 
 	@ Start a scripted approach for an overworld wild encounter towards the player.
 	.macro overworldwildencounterapproach
-	callnative OWE_ApproachForBattle
+	callnative OWEApproachForBattle
 	.endm
 
 @ FRLG

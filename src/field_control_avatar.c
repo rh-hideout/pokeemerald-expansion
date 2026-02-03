@@ -39,6 +39,7 @@
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
 #include "constants/field_poison.h"
+#include "constants/layouts.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
@@ -406,8 +407,8 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
         script = GetTrainerHillTrainerScript();
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
-    else if (ShouldRunOverworldEncounterScript(objectEventId))
-        script = InteractWithDynamicOverworldWildEncounter;
+    else if (ShouldRunDefaultOWEScript(objectEventId))
+        script = InteractWithOverworldWildEncounter;
     else
         script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
 
@@ -634,10 +635,10 @@ static const u8 *GetInteractedWaterScript(struct MapPosition *position, u8 metat
     // Does this need a define for the surf elevation (1) check?
     // Can be used in sElevationToSubpriority and other places too
     u8 objectEventId = GetObjectEventIdByPosition(position->x, position->y, 1);
-    if (IsPlayerFacingSurfableFishableWater() == TRUE && ShouldRunOverworldEncounterScript(objectEventId))
+    if (IsPlayerFacingSurfableFishableWater() == TRUE && ShouldRunDefaultOWEScript(objectEventId))
     {
         gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
-        return InteractWithDynamicOverworldWildEncounter;
+        return InteractWithOverworldWildEncounter;
     }
 
     if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
@@ -893,9 +894,26 @@ void RestartWildEncounterImmunitySteps(void)
     sWildEncounterImmunitySteps = 0;
 }
 
+static bool32 ShouldDisableRandomEncounters(void)
+{
+    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
+        return TRUE;
+
+    if (!WE_VANILLA_RANDOM && WE_OW_ENCOUNTERS)
+    {
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !WE_OWE_BATTLE_PIKE)
+            return FALSE;
+
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR && !WE_OWE_BATTLE_PYRAMID)
+            return FALSE;
+    }
+
+    return !WE_VANILLA_RANDOM;
+}
+
 static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
 {
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || !WE_VANILLA_RANDOM)
+    if (ShouldDisableRandomEncounters())
         return FALSE;
 
     if (sWildEncounterImmunitySteps < 4)

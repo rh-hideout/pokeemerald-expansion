@@ -1,4 +1,4 @@
-InteractWithDynamicOverworldWildEncounter::
+InteractWithOverworldWildEncounter::
     lock
     overworldwildencounterapproach
     applymovement VAR_LAST_TALKED, Common_Movement_ExclamationMark

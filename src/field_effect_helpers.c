@@ -1913,8 +1913,8 @@ u32 FldEff_OWE_SpawnAnim(void)
     u8 spriteId;
     u8 visual;
     s16 xOffset = 0, yOffset = 0;
-    enum OverworldEncounterSpawnAnim spawnAnim = gFieldEffectArguments[2];
-    struct SpritePalette palette = OWE_GetSpawnAnimFldEffPalette(spawnAnim);
+    enum SpawnDespawnTypeOWE spawnAnim = gFieldEffectArguments[2];
+    struct SpritePalette palette = GetOWESpawnDespawnAnimFldEffPalette(spawnAnim);
 
     switch (spawnAnim)
     {
