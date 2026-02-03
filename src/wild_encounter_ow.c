@@ -599,8 +599,6 @@ void OverworldWildEncounter_SetMinimumSpawnTimer(void)
 
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
-    // The only automatically interacts with an OW Encounter when;
-    // Not using a repel or the DexNav is inactive.
     if (WE_OWE_REPEL_DEXNAV_COLLISION && (FlagGet(DN_FLAG_SEARCHING) || REPEL_STEP_COUNT))
         return;
 
@@ -1118,7 +1116,7 @@ void DespwnAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType ow
 
 bool32 OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Object(u32 localId, u8 *objectEventId)
 {
-    // does this need to be used in OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Palette
+    // does CanRemoveOverworldEncounter need to be used in OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Palette
     if (CanRemoveOverworldEncounter(localId))
     {
         *objectEventId = RemoveOldestGeneratedOverworldEncounter();
@@ -1565,13 +1563,11 @@ u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equal
     s16 distanceX = player->currentCoords.x - mon->currentCoords.x;
     s16 distanceY = player->currentCoords.y - mon->currentCoords.y;
 
-    // Get absolute X distance.
     if (distanceX < 0)
         absX = distanceX * -1;
     else
         absX = distanceX;
 
-    // Get absolute Y distance.
     if (distanceY < 0)
         absY = distanceY * -1;
     else
@@ -1748,7 +1744,6 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
 
     struct ObjectEventTemplate templateOWE = *template;
     
-    // Does this work?
     u32 graphicsId;
     u16 speciesId, speciesTemplate = SanitizeSpeciesId(templateOWE.graphicsId & OBJ_EVENT_MON_SPECIES_MASK);
     bool32 isShiny = FALSE, isShinyTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_SHINY) ? TRUE : FALSE;
@@ -1758,16 +1753,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     u32 x = template->x;
     u32 y = template->y;
 
-    SetOverworldEncounterSpeciesInfo(
-        x,
-        y,
-        &speciesId,
-        &isShiny,
-        &isFemale,
-        &level,
-        &indexRoamerOutbreak
-    );
-
+    SetOverworldEncounterSpeciesInfo(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
     if (speciesTemplate)
         speciesId = speciesTemplate;
 
