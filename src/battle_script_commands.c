@@ -1101,7 +1101,7 @@ static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum
     if (moveEffect == EFFECT_TRIPLE_KICK || moveEffect == EFFECT_POPULATION_BOMB)
         return FALSE;
 
-    return TRUE;
+    return TRUE; // multiHitOn is set so skip Acc check for everything else
 }
 
 static bool32 ShouldBypassAccuracyCheckFrlg(void)
