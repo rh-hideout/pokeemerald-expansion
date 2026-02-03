@@ -1804,7 +1804,6 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
     },
 };
 
-
 static const struct BattleWindowText sTextOnWindowsInfo_KantoTutorial[] =
 {
     [B_WIN_MSG] = {
