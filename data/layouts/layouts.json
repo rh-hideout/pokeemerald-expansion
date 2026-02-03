@@ -4504,10 +4504,10 @@
     {
       "id": "LAYOUT_HOWER_CLASS",
       "name": "HowerClass_Layout",
-      "width": 20,
+      "width": 10,
       "height": 20,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
       "border_filepath": "data/layouts/HowerClass/border.bin",
       "blockdata_filepath": "data/layouts/HowerClass/map.bin"
     },
