@@ -59,6 +59,7 @@ void OverworldWildEncounters_CB(void);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
 void OWE_StartEncounter(struct ObjectEvent *mon);
 void GenerateOverworldWildEncounter(void);
+bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void);
 void OverworldWildEncounter_SetInstantSpawnTimer(void);
 void OverworldWildEncounter_SetMinimumSpawnTimer(void);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);

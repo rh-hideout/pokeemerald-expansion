@@ -582,6 +582,17 @@ static bool32 GenerateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEven
     return FALSE;
 }
 
+bool32 OverworldWildEncounter_ShouldDisableRandomEncounters(void)
+{
+    if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !WE_OWE_BATTLE_PIKE)
+        return FALSE;
+
+    if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR && !WE_OWE_BATTLE_PYRAMID)
+        return FALSE;
+
+    return !WE_VANILLA_RANDOM;
+}
+
 void OverworldWildEncounter_SetInstantSpawnTimer(void)
 {
     if (!WE_OW_ENCOUNTERS)
