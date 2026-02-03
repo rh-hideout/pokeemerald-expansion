@@ -501,7 +501,7 @@
 #define LOCALID_NONE                              0
 #define LOCALID_CAMERA                          127
 #define LOCALID_BERRY_BLENDER_PLAYER_END        240 // This will use 5 (MAX_RFU_PLAYERS) IDs ending at 240, i.e. 236-240
-#define LOCALID_OW_ENCOUNTER_END                252 // This will use 5 (OWE_MAX_SPAWNS) IDs ending at 252, i.e. 249-252
+#define LOCALID_OW_ENCOUNTER_END                252 // This will use 4 (OWE_SPAWNS_MAX) IDs ending at 252, i.e. 249-252
 #define LOCALID_FOLLOWING_POKEMON               254
 #define LOCALID_PLAYER                          255
 #define OBJ_EVENT_ID_FOLLOWER                   0xFE
