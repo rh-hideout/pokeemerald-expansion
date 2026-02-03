@@ -2097,7 +2097,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     u32 batonPassIds = 0, typeMatchupIds = 0, typeMatchupEffectiveIds = 0, defensiveMonIds = 0, trapperIds = 0, healingCandidateIds = 0;
     u32 bestDefensiveMonId = PARTY_SIZE, bestTypeMatchupId = PARTY_SIZE, bestTypeMatchupEffectiveId = PARTY_SIZE, bestDamageMonId = PARTY_SIZE, bestHealGainId = PARTY_SIZE;
     u32 aceMonId = PARTY_SIZE, aceMonCount = 0;
-    s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = 0, damageDealt = 0, bestHealGain = 0;
+    s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = AI_SWITCHIN_DAMAGE_THRESHOLD, damageDealt = 0, bestHealGain = 0;
     enum Move aiMove, bestPlayerMove = MOVE_NONE, bestPlayerPriorityMove = MOVE_NONE;
     u32 hitsToKOAI, hitsToKOPlayer, hitsToKOAIPriority, maxHitsToKO = AI_DEFENSIVE_KO_THRESHOLD;
     u32 bestResist = AI_TYPE_MATCHUP_THRESHOLD, bestResistEffective = AI_TYPE_MATCHUP_THRESHOLD, typeMatchup; // 2.0 is the default "Neutral" matchup from GetBattlerTypeMatchup
@@ -2231,7 +2231,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                     continue;
 
                 // Check that mon isn't one shot and set best damage mon
-                if (damageDealt > 0)
+                if (damageDealt > AI_SWITCHIN_DAMAGE_THRESHOLD)
                 {
                     if ((isFreeSwitch && hitsToKOAI > 1) || hitsToKOAI > 2) // This is a "default", we have uniquely low standards
                     {
