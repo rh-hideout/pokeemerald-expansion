@@ -1263,12 +1263,6 @@ static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent)
 {
     if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return;
-
-    // TESTING: Setting this species can be used as a test to play a consistent sound to check how often the
-    //          code in OverworldWildEncounters_CB runs, as OWE_GetRandomActiveEncounterObject cuurently returns
-    //          NULL.
-    if (objectEvent == NULL)
-        return;
     
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     u32 speciesId = OW_SPECIES(objectEvent);

@@ -7267,7 +7267,6 @@ void ChangePokemonNicknameWithCallback(void (*callback)(void))
 
 u32 OWE_GetMovementTypeFromSpecies(u32 speciesId)
 {
-    // return MOVEMENT_TYPE_WANDER_AROUND_OWE; // Replace for Testing
     speciesId = SanitizeSpeciesId(speciesId);
     enum OverworldEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
     return sOWESpeciesBehavior[behavior].movementType;
