@@ -111,7 +111,7 @@ static inline u32 OWE_GetEncounterLevel(u32 level)
     return level & ~OWE_NO_DESPAWN_FLAG;
 }
 
-static inline void OWE_SetEncounterLevel(u32 *level, u8 newLevel)
+static inline void OWE_SetEncounterLevel(u32 *level, u32 newLevel)
 {
     *level = (*level & OWE_NO_DESPAWN_FLAG) | (newLevel & ~OWE_NO_DESPAWN_FLAG);
 }
@@ -131,7 +131,7 @@ static inline bool32 OWE_ShouldSpawnWaterMons(void)
     return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
-static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
+static bool32 OWE_CreateEnemyPartyMon(u32 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
 static bool32 OWE_DoesRoamerObjectExist(void);
 static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
 static u32 OWE_GetObjectRoamerOutbreakStatus(struct ObjectEvent *objectEvent);
@@ -141,15 +141,15 @@ static bool32 GenerateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOu
 static bool32 GenerateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEvent *objectEvent, u32 headerId);
 static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons);
 static u32 GetOldestSlot(bool32 forceRemove);
-static u8 NextSpawnMonSlot(void);
-static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
-static bool8 TrySelectTile(s16* outX, s16* outY);
-static void SetOverworldEncounterSpeciesInfo(u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
-static u32 GetOverworldEncounterObjectEventGraphicsId(u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex, s32 x, s32 y);
+static u32 NextSpawnMonSlot(void);
+static u32 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
+static bool32 TrySelectTile(s32* outX, s32* outY);
+static void SetOverworldEncounterSpeciesInfo(u32 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
+static u32 GetOverworldEncounterObjectEventGraphicsId(u32 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex, s32 x, s32 y);
 static bool32 CanRemoveOverworldEncounter(u32 localId);
-static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
-static bool32 OWE_CanEncounterBeLoaded_Palette(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
-static bool32 OWE_CanEncounterBeLoaded_Tiles(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
+static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s32 x, s32 y);
+static bool32 OWE_CanEncounterBeLoaded_Palette(u32 speciesId, bool32 isFemale, bool32 isShiny, s32 x, s32 y);
+static bool32 OWE_CanEncounterBeLoaded_Tiles(u32 speciesId, bool32 isFemale, bool32 isShiny, s32 x, s32 y);
 static void SortOWEMonAges(void);
 static u32 RemoveOldestGeneratedOverworldEncounter(void);
 static bool32 OWE_ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
@@ -159,7 +159,7 @@ static enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatile
 static void OWE_PlayMonObjectCry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *OWE_GetRandomActiveEncounterObject(void);
 static bool32 OWE_ShouldPlayMonFleeSound(struct ObjectEvent *objectEvent);
-static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 xNew, s16 yNew, enum Direction newDirection, enum Direction collisionDirection);
+static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s32 xNew, s32 yNew, enum Direction newDirection, enum Direction collisionDirection);
 static bool32 OWE_CheckRestrictMovementMetatile(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew);
 static bool32 OWE_CheckRestrictMovementMap(struct ObjectEvent *objectEvent, s32 xNew, s32 yNew);
 static bool32 OWE_IsLineOfSightClear(struct ObjectEvent *player, enum Direction direction, u32 distance);
@@ -213,8 +213,8 @@ void OverworldWildEncounters_CB(void)
     if (player->currentCoords.x != player->previousCoords.x || player->currentCoords.y != player->previousCoords.y)
         return;
 
-    u16 spawnSlot = NextSpawnMonSlot();
-    s16 x, y;
+    u32 spawnSlot = NextSpawnMonSlot();
+    s32 x, y;
     if (spawnSlot == OWE_INVALID_SPAWN_SLOT
         || (shouldSpawnWaterMons && AreLegendariesInSootopolisPreventingEncounters())
         || !TrySelectTile(&x, &y))
@@ -223,7 +223,7 @@ void OverworldWildEncounters_CB(void)
         return;
     }
 
-    u16 speciesId = SPECIES_NONE;
+    u32 speciesId = SPECIES_NONE;
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
@@ -323,7 +323,7 @@ void GenerateOverworldWildEncounter(void)
     if (indexRoamerOutbreak && GenerateOverworldWildEncounter_CheckRoamer(OWE_GetObjectRoamerOutbreakStatus(object)))
         return;
 
-    u16 speciesId = OW_SPECIES(object);
+    u32 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
     u32 gender = OW_FEMALE(object) ? MON_FEMALE : MON_MALE;
     u32 level = OWE_GetEncounterLevel(object->sOverworldEncounterLevel);
@@ -358,7 +358,7 @@ void GenerateOverworldWildEncounter(void)
     BattleSetup_StartWildBattle();
 }
 
-static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
+static bool32 OWE_CreateEnemyPartyMon(u32 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
 {
     const struct WildPokemonInfo *wildMonInfo;
     enum WildPokemonArea wildArea;
@@ -700,7 +700,7 @@ static u32 GetOldestSlot(bool32 forceRemove)
     return GetSpawnSlotByLocalId(oldest->localId);
 }
 
-static u8 NextSpawnMonSlot(void)
+static u32 NextSpawnMonSlot(void)
 {
     u32 spawnSlot;
 
@@ -731,7 +731,7 @@ static u8 NextSpawnMonSlot(void)
     return spawnSlot;
 }
 
-static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
+static u32 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
 {
     u32 objEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot));
     struct ObjectEvent *objectEvent = &gObjectEvents[objEventId];
@@ -742,13 +742,13 @@ static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
     return OW_SPECIES(objectEvent);
 }
 
-static bool8 TrySelectTile(s16* outX, s16* outY)
+static bool32 TrySelectTile(s32* outX, s32* outY)
 {
-    u8 elevation;
-    u16 tileBehavior;
+    u32 elevation;
+    u32 tileBehavior;
     s16 playerX, playerY;
     s16 x, y;
-    u8 closeDistance;
+    u32 closeDistance;
     bool32 isEncounterTile = FALSE;
 
     // Spawn further away when surfing
@@ -838,7 +838,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     return FALSE;
 }
 
-static void SetOverworldEncounterSpeciesInfo(u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
+static void SetOverworldEncounterSpeciesInfo(u32 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
 {
     u32 personality;
 
@@ -868,11 +868,11 @@ static void SetOverworldEncounterSpeciesInfo(u16 *speciesId, bool32 *isShiny, bo
     ZeroEnemyPartyMons();
 }
 
-static u32 GetOverworldEncounterObjectEventGraphicsId(u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
+static u32 GetOverworldEncounterObjectEventGraphicsId(u32 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
 {
     SetOverworldEncounterSpeciesInfo(speciesId, isShiny, isFemale, level, indexRoamerOutbreak, x, y);
     assertf(OWE_CheckSpecies(*speciesId), "invalid generated overworld encounter\nspecies: %d\ncheck if valid wild mon header exists", speciesId, x, y);
-    u16 graphicsId = *speciesId + OBJ_EVENT_MON;
+    u32 graphicsId = *speciesId + OBJ_EVENT_MON;
 
     if (*isFemale)
         graphicsId += OBJ_EVENT_MON_FEMALE;
@@ -891,7 +891,7 @@ static bool32 CanRemoveOverworldEncounter(u32 localId)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
-static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y)
+static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s32 x, s32 y)
 {
     assertf(OWE_CanEncounterBeLoaded_Palette(speciesId, isFemale, isShiny, x, y), "could not load palette for overworld encounter\nspecies: %d\nfemale: %d\nshiny: %d\ncoords: %d %d", speciesId, isFemale, isShiny, x, y)
     {
@@ -906,7 +906,7 @@ static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 is
     return TRUE;
 }
 
-static bool32 OWE_CanEncounterBeLoaded_Palette(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y)
+static bool32 OWE_CanEncounterBeLoaded_Palette(u32 speciesId, bool32 isFemale, bool32 isShiny, s32 x, s32 y)
 {
     u32 numFreePalSlots = CountFreePaletteSlots();
     u32 tag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
@@ -935,7 +935,7 @@ static bool32 OWE_CanEncounterBeLoaded_Palette(u32 speciesId, bool32 isFemale, b
     return TRUE;
 }
 #define OWE_FIELD_EFFECT_TILE_NUM 16 // Number of tiiles to add for field effect spawning
-static bool32 OWE_CanEncounterBeLoaded_Tiles(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y)
+static bool32 OWE_CanEncounterBeLoaded_Tiles(u32 speciesId, bool32 isFemale, bool32 isShiny, s32 x, s32 y)
 {
     u32 tag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
     // const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(speciesId, isShiny, isFemale);
@@ -1063,7 +1063,7 @@ bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct Obj
     return TRUE;
 }
 
-u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y)
+u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s32 x, s32 y)
 {
     if (!(collision & (1 << (COLLISION_OBJECT_EVENT - 1))))
         return collision;
@@ -1078,8 +1078,7 @@ u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y)
 
 void DespwnAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType, u32 flags)
 {
-    s16 dx = 0;
-    s16 dy = 0;
+    s32 dx = 0, dy = 0;
 
     if (gCamera.active)
     {
@@ -1120,7 +1119,6 @@ bool32 OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Object(u32 localId, u8
     if (CanRemoveOverworldEncounter(localId))
     {
         *objectEventId = RemoveOldestGeneratedOverworldEncounter();
-
         if (*objectEventId == OBJECT_EVENTS_COUNT)
             return TRUE;
         else
@@ -1366,7 +1364,7 @@ bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, enum Directi
     return FALSE;
 }
 
-static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s16 xNew, s16 yNew, enum Direction newDirection, enum Direction collisionDirection)
+static bool32 OWE_CheckRestrictedMovementAtCoords(struct ObjectEvent *mon, s32 xNew, s32 yNew, enum Direction newDirection, enum Direction collisionDirection)
 {
     if (OWE_CheckRestrictMovementMetatile(mon->currentCoords.x, mon->currentCoords.y, xNew, yNew))
         return FALSE;
@@ -1559,9 +1557,9 @@ u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances)
 {
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    s16 absX, absY;
-    s16 distanceX = player->currentCoords.x - mon->currentCoords.x;
-    s16 distanceY = player->currentCoords.y - mon->currentCoords.y;
+    s32 absX, absY;
+    s32 distanceX = player->currentCoords.x - mon->currentCoords.x;
+    s32 distanceY = player->currentCoords.y - mon->currentCoords.y;
 
     if (distanceX < 0)
         absX = distanceX * -1;
@@ -1670,9 +1668,9 @@ static void Task_OWE_ApproachForBattle(u8 taskId)
             return;
         }
 
-        u16 speciesId = OW_SPECIES(OWE);
+        u32 speciesId = OW_SPECIES(OWE);
         enum Direction direction = DetermineObjectEventDirectionFromObject(player, OWE);
-        u8 movementActionId;
+        u32 movementActionId;
     
         SetObjectEventDirection(OWE, direction);
         movementActionId = OWE_GetWalkMovementActionInDirectionWithSpeed(OWE->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
@@ -1745,7 +1743,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     struct ObjectEventTemplate templateOWE = *template;
     
     u32 graphicsId;
-    u16 speciesId, speciesTemplate = SanitizeSpeciesId(templateOWE.graphicsId & OBJ_EVENT_MON_SPECIES_MASK);
+    u32 speciesId, speciesTemplate = SanitizeSpeciesId(templateOWE.graphicsId & OBJ_EVENT_MON_SPECIES_MASK);
     bool32 isShiny = FALSE, isShinyTemplate = (templateOWE.graphicsId & OBJ_EVENT_MON_SHINY) ? TRUE : FALSE;
     bool32 isFemale = FALSE;
     u32 level = MIN_LEVEL, levelTemplate = templateOWE.sOverworldEncounterLevel;

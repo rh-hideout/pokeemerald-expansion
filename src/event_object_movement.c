@@ -6600,7 +6600,7 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
     return FALSE;
 }
 
-bool32 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
+bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
 {
     if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior)
         || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y)))
@@ -10101,7 +10101,7 @@ static void ObjectEventUpdateSubpriority(struct ObjectEvent *objEvent, struct Sp
     SetObjectSubpriorityByElevation(objEvent->previousElevation, sprite, 1);
 }
 
-bool32 AreElevationsCompatible(u32 a, u32 b)
+bool8 AreElevationsCompatible(u8 a, u8 b)
 {
     if (a == 0 || b == 0)
         return TRUE;
@@ -10122,14 +10122,14 @@ void ScriptFaceEachOther(struct ScriptContext *ctx)
 
 enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
 {
-    s16 dx = objectOne->currentCoords.x - objectTwo->currentCoords.x;
-    s16 dy = objectOne->currentCoords.y - objectTwo->currentCoords.y;
+    s32 dx = objectOne->currentCoords.x - objectTwo->currentCoords.x;
+    s32 dy = objectOne->currentCoords.y - objectTwo->currentCoords.y;
 
     if (dx == 0 && dy == 0)
         return DIR_NONE;
 
-    s16 absX = abs(dx);
-    s16 absY = abs(dy);
+    s32 absX = abs(dx);
+    s32 absY = abs(dy);
 
     if (absX > absY && dx < 0)
         return DIR_WEST;

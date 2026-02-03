@@ -1399,7 +1399,7 @@ void GenerateBattlePyramidWildMon(u32 forceSpecies)
     u32 lvl = gSaveBlock2Ptr->frontier.lvlMode;
     u16 round = (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvl] / 7) % TOTAL_PYRAMID_ROUNDS;
     const struct BattlePyramidRequirement *reqs = &sBattlePyramidRequirementsByRound[round];
-    u16 species = forceSpecies;
+    u32 species = forceSpecies;
     u32 bstLim;
     u16 *moves = NULL;
     u16 *abilities = NULL;

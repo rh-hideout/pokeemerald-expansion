@@ -67,7 +67,7 @@ void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent
 void OverworldWildEncounter_OnObjectEventDespawned(struct ObjectEvent *objectEvent);
 bool32 OWE_IsDespawnExempt(struct ObjectEvent *objectEvent);
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent);
-u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
+u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s32 x, s32 y);
 void DespwnAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType, u32 flags);
 bool32 OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Object(u32 localId, u8 *objectEventId);
 void OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Palette(void);
