@@ -126,6 +126,11 @@ static inline void OWE_SetNoDespawnFlag(u32 *level)
     *level |= OWE_NO_DESPAWN_FLAG;
 }
 
+static inline bool32 OWE_ShouldSpawnWaterMons(void)
+{
+    return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
+}
+
 static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
 static bool32 OWE_DoesRoamerObjectExist(void);
 static u32 OWE_GetObjectRoamerStatusFromIndex(u32 index);
@@ -134,7 +139,6 @@ static bool32 GenerateOverworldWildEncounter_CheckRoamer(u32 indexRoamerOutbreak
 static bool32 GenerateOverworldWildEncounter_CheckBattleFrontier(u32 headerId);
 static bool32 GenerateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOutbreak, u32 speciesId);
 static bool32 GenerateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEvent *objectEvent, u32 headerId);
-static bool32 OWE_ShouldSpawnWaterMons(void); // inline?
 static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons);
 static u32 GetOldestSlot(bool32 forceRemove);
 static u8 NextSpawnMonSlot(void);
@@ -633,12 +637,6 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
     gSpecialVar_0x8004 = OW_SPECIES(object);
     return TRUE;
-}
-
-static bool32 OWE_ShouldSpawnWaterMons(void)
-{
-    // Needs refactoring, and this replacing with a check for coords in many cases.
-    return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
 static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons)
