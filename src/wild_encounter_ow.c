@@ -833,7 +833,7 @@ static bool32 TrySelectTile(s32* outX, s32* outY)
         *outX = x;
         *outY = y;
 
-        if (!GetObjectEventIdByPosition(x, y, 0))
+        if (GetObjectEventIdByPosition(x, y, 0) == OBJECT_EVENTS_COUNT)
             return TRUE;
     }
 
