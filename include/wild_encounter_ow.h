@@ -56,17 +56,18 @@ enum __attribute__((packed)) OverworldEncounterBehaviors
 };
 
 void OverworldWildEncounters_CB(void);
+bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
+void OWE_StartEncounter(struct ObjectEvent *mon);
 void GenerateOverworldWildEncounter(void);
 void OverworldWildEncounter_SetInstantSpawnTimer(void);
 void OverworldWildEncounter_SetMinimumSpawnTimer(void);
-bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventDespawned(struct ObjectEvent *objectEvent);
+bool32 OWE_IsDespawnExempt(struct ObjectEvent *objectEvent);
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent);
 u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
-bool32 OWE_IsDespawnExempt(struct ObjectEvent *objectEvent);
 void DespwnAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType, u32 flags);
 bool32 OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Object(u32 localId, u8 *objectEventId);
 void OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Palette(void);
@@ -82,6 +83,7 @@ bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
 u32 OWE_GetWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 speed);
+void OWE_ApproachForBattle(void);
 void OWE_PlayAmbientCry(void);
 u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType);
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
