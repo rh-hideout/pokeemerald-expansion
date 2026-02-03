@@ -912,6 +912,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
         if (TryStartRoamerEncounter() && !OWE_DoesRoamerObjectExist())
         {
             *indexRoamerOutbreak = OWE_GetObjectRoamerStatusFromIndex(gEncounteredRoamerIndex);
+            return TRUE;
         }
         else if (WE_OWE_FEEBAS_SPOTS && MetatileBehavior_IsWaterWildEncounter(metatileBehavior) && CheckFeebasAtCoords(x, y))
         {
@@ -925,6 +926,7 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
         {
             SetUpMassOutbreakEncounter(0);
             *indexRoamerOutbreak = OWE_MASS_OUTBREAK_INDEX;
+            return TRUE;
         }
         else
         {
