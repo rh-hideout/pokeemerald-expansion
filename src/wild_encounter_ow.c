@@ -918,6 +918,8 @@ static bool32 OWE_CreateEnemyPartyMon(u16 *speciesId, u32 *level, u32 *indexRoam
             CreateWildMon(gWildFeebas.species, ChooseWildMonLevel(&gWildFeebas, 0, WILD_AREA_FISHING));
             if (WE_OWE_PREVENT_FEEBAS_DESPAWN)
                 OWE_SetNoDespawnFlag(level);
+
+            return TRUE;
         }
         else if (DoMassOutbreakEncounterTest() && MetatileBehavior_IsLandWildEncounter(metatileBehavior))
         {
