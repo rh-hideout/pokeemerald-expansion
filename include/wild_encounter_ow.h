@@ -55,20 +55,14 @@ enum __attribute__((packed)) OverworldEncounterBehaviors
     OWE_SPECIES_BEHAVIOR_COUNT
 };
 
-extern const u8 InteractWithDynamicOverworldWildEncounter[];
-
-void UpdateOverworldEncounters(void);
-u32 GetOldestSlot(bool32 forceRemove);
+void OverworldWildEncounters_CB(void);
 void CreateOverworldWildEncounter(void);
 void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
-u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
 void OverworldWildEncounter_SetMinimumSpawnTimer(void);
 void RemoveAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType oweType, u32 flags);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
-u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
-bool32 CanRemoveOverworldEncounter(u32 localId);
 u32 RemoveOldestGeneratedOverworldEncounter(void);
 bool32 OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Object(u32 localId, u8 *objectEventId);
 void OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Palette(void);
@@ -81,8 +75,6 @@ bool32 OWE_IsPlayerInsideMonActiveDistance(struct ObjectEvent *mon);
 u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 bool32 OWE_IsMonNextToPlayer(struct ObjectEvent *mon);
 u32 OWE_GetApproachingMonDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDistances);
-void Task_OWE_WaitMovements(u8 taskId);
-enum OverworldEncounterSpawnAnim OWE_GetSpawnDespawnAnimType(u32 metatileBehavior);
 bool32 OWE_DespawnMonDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent);
 u32 OWE_DespawnMonDueToTrainerSight(u32 collision, s16 x, s16 y);
 struct SpritePalette OWE_GetSpawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim);
@@ -95,5 +87,7 @@ u32 GetNumberActiveOverworldEncounters(enum OverworldObjectEncounterType oweType
 bool32 OWE_IsMonRemovalExempt(struct ObjectEvent *objectEvent);
 void OWE_TryRemoveOverworldWildEncountersCrossingMapConnection(void);
 void OverworldWildEncounter_SetInstantSpawnTimer(void);
+
+extern const u8 InteractWithOverworldWildEncounter[];
 
 #endif // GUARD_WILD_ENCOUNTER_OW_H

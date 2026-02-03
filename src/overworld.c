@@ -1851,7 +1851,7 @@ static void OverworldBasic(void)
             ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
-    UpdateOverworldEncounters();
+    OverworldWildEncounters_CB();
 }
 
 // This CB2 is used when starting
