@@ -136,7 +136,6 @@ static bool32 GenerateOverworldWildEncounter_CheckMassOutbreak(u32 indexRoamerOu
 static bool32 GenerateOverworldWildEncounter_CheckDoubleBattle(struct ObjectEvent *objectEvent, u32 headerId);
 static bool32 OWE_ShouldSpawnWaterMons(void); // inline?
 static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons);
-static bool8 IsSafeToSpawnObjectEvents(void); // inline?
 static u32 GetOldestSlot(bool32 forceRemove);
 static u8 NextSpawnMonSlot(void);
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
@@ -206,8 +205,8 @@ void OverworldWildEncounters_CB(void)
     }
     
     DespwnAllOverworldWildEncounterObjects(OWE_GENERATED, WILD_CHECK_REPEL);
-
-    if (!IsSafeToSpawnObjectEvents())
+    struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    if (player->currentCoords.x != player->previousCoords.x || player->currentCoords.y != player->previousCoords.y)
         return;
 
     u16 spawnSlot = NextSpawnMonSlot();
@@ -672,14 +671,6 @@ static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons)
 
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
     return gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo != NULL;
-}
-
-static bool8 IsSafeToSpawnObjectEvents(void)
-{
-    struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
-
-    // Only spawn when player is at a valid tile position
-    return (player->currentCoords.x == player->previousCoords.x && player->currentCoords.y == player->previousCoords.y);
 }
 
 static u32 GetOldestSlot(bool32 forceRemove)
