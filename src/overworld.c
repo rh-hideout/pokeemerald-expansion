@@ -1395,7 +1395,7 @@ void Overworld_FadeOutMapMusic(void)
     FadeOutMapMusic(4);
 }
 
-static bool32 ShouldPlayVanillaAmbientCry(void)
+static bool32 ShouldPlayAmbientCryVanillaOWE(void)
 {
     bool32 owePlayed = FALSE;
 
@@ -1407,6 +1407,9 @@ static bool32 ShouldPlayVanillaAmbientCry(void)
         case OW_AMBIENT_CRIES_OWE_PRIORITY:
             OWE_PlayAmbientCry();
             owePlayed = TRUE;
+            break;
+
+        default:
             break;
         }
     }
@@ -1426,7 +1429,7 @@ static bool32 ShouldPlayVanillaAmbientCry(void)
 
 static void PlayAmbientCry(void)
 {
-    if (!ShouldPlayVanillaAmbientCry())
+    if (!ShouldPlayAmbientCryVanillaOWE())
         return;
     
     s16 x, y;
