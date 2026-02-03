@@ -1331,12 +1331,18 @@ static bool32 OWE_ShouldPlayOWEFleeSound(struct ObjectEvent *owe)
 }
 
 #define sTypeFuncId data[1] // Same as in src/event_object_movement.c
+#define sJumpTimer  sprite->data[7] // Same as in src/event_object_movement.c
 void RestoreSavedOWEBehaviorState(struct ObjectEvent *owe, struct Sprite *sprite)
 {
     if (IsOverworldWildEncounter(owe, OWE_ANY) && HasSavedOWEMovementState(owe))
+    {
         sprite->sTypeFuncId = OWE_RESTORED_MOVEMENT_FUNC_ID;
+        if (owe->movementType == MOVEMENT_TYPE_APPROACH_PLAYER_OWE)
+            sJumpTimer = (Random() % (OWE_APPROACH_JUMP_TIMER_MAX - OWE_APPROACH_JUMP_TIMER_MIN)) + OWE_APPROACH_JUMP_TIMER_MIN;
+    }
 }
 #undef sTypeFuncId
+#undef sJumpTimer
 
 // Returns TRUE if movement is restricted.
 bool32 CheckRestrictedOWEMovement(struct ObjectEvent *owe, enum Direction direction)
