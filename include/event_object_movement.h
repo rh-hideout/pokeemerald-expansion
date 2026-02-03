@@ -534,7 +534,7 @@ bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent);
 u8 GetObjectEventApricornTreeId(u8 objectEventId);
 
 // Overworld Wild Encounter
-bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent);
+bool8 MovementAction_OverworldEncounterSpawn(enum SpawnDespawnTypeOWE spawnAnimType, struct ObjectEvent *objEvent);
 
 void MovementType_OverworldWildEncounter_WanderAround(struct Sprite *sprite);
 void MovementType_OverworldWildEncounter_ChasePlayer(struct Sprite *sprite);

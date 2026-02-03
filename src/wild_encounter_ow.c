@@ -155,7 +155,7 @@ static u32 RemoveOldestGeneratedOWE(void);
 static bool32 ShouldDespawnGeneratedForNewOWE(struct ObjectEvent *object);
 static void SetNewOWESpawnCountdown(void);
 static void DoOWESpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSpawn);
-static enum OverworldEncounterSpawnAnim GetOWESpawnDespawnAnimType(u32 metatileBehavior);
+static enum SpawnDespawnTypeOWE GetOWESpawnDespawnAnimType(u32 metatileBehavior);
 static void PlayOWECry(struct ObjectEvent *objectEvent);
 static struct ObjectEvent *GetOWEObjectEvent(void);
 static bool32 OWE_ShouldPlayOWEFleeSound(struct ObjectEvent *objectEvent);
@@ -273,7 +273,7 @@ void OverworldWildEncounters_CB(void)
     SetNewOWESpawnCountdown();
 }
 
-bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType)
+bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum TypeOWE oweType)
 {
     if (!IS_OW_MON_OBJ(objectEvent))
         return FALSE;
@@ -1079,7 +1079,7 @@ u32 DespawnOWEDueToTrainerSight(u32 collision, s32 x, s32 y)
     return collision & (1 << (COLLISION_OBJECT_EVENT - 1));
 }
 
-void DespwnAllOverworldWildEncounters(enum OverworldObjectEncounterType oweType, u32 flags)
+void DespwnAllOverworldWildEncounters(enum TypeOWE oweType, u32 flags)
 {
     s32 dx = 0, dy = 0;
 
@@ -1218,7 +1218,7 @@ static void DoOWESpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSp
     if (gMain.callback2 != CB2_Overworld)
         return;
     
-    enum OverworldEncounterSpawnAnim spawnAnimType;
+    enum SpawnDespawnTypeOWE spawnAnimType;
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
 
     if (animSpawn)
@@ -1240,7 +1240,7 @@ static void DoOWESpawnDespawnAnim(struct ObjectEvent *objectEvent, bool32 animSp
     MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
 
-static enum OverworldEncounterSpawnAnim GetOWESpawnDespawnAnimType(u32 metatileBehavior)
+static enum SpawnDespawnTypeOWE GetOWESpawnDespawnAnimType(u32 metatileBehavior)
 {
     if (MetatileBehavior_IsPokeGrass(metatileBehavior) || MetatileBehavior_IsAshGrass(metatileBehavior))
         return OWE_SPAWN_ANIM_GRASS;
@@ -1720,7 +1720,7 @@ void PlayAmbientOWECry(void)
     PlayOWECry(GetOWEObjectEvent());
 }
 
-u32 GetNumberOfActiveOWEs(enum OverworldObjectEncounterType oweType)
+u32 GetNumberOfActiveOWEs(enum TypeOWE oweType)
 {
     u32 numActive = 0;
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
@@ -1799,7 +1799,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOWE(const struct Ob
     return templateOWE;
 }
 
-struct SpritePalette GetOWESpawnDespawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim)
+struct SpritePalette GetOWESpawnDespawnAnimFldEffPalette(enum SpawnDespawnTypeOWE spawnAnim)
 {
     struct SpritePalette palette = gSpritePalette_GeneralFieldEffect0;
     switch (spawnAnim)

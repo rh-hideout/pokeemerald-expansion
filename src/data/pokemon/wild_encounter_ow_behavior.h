@@ -4,7 +4,7 @@
 #include "wild_encounter_ow.h"
 #include "constants/event_object_movement.h"
 
-static const struct OWESpeciesBehavior sOWESpeciesBehavior[OWE_SPECIES_BEHAVIOR_COUNT] =
+static const struct BehaviorOWE sOWESpeciesBehavior[OWE_SPECIES_BEHAVIOR_COUNT] =
 {
     [OWE_IGNORE_PLAYER] =
     {

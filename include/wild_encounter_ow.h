@@ -7,7 +7,7 @@
 #define OWE_FLEE_COLLISION_TIME         6   // If a fleeing mon is unable to take a step for this many tries it will despawn. (Multiply this value by 16 to get number of frames.)
 #define OWE_DESPAWN_FRAMES              30  // Number of frames before a mon despawns after noticing the player (OWE_BEHAVIOR_DESPAWN)
 
-enum OverworldEncounterSpawnAnim
+enum SpawnDespawnTypeOWE
 {
     OWE_SPAWN_ANIM_GRASS,
     OWE_SPAWN_ANIM_LONG_GRASS,
@@ -17,7 +17,7 @@ enum OverworldEncounterSpawnAnim
     OWE_SPAWN_ANIM_SHINY
 };
 
-enum OverworldObjectEncounterType
+enum TypeOWE
 {
     OWE_ANY,
     OWE_GENERATED,
@@ -25,7 +25,7 @@ enum OverworldObjectEncounterType
 };
 
 // OWE_SPEED_FASTER seems to visually bug out sometimes.
-enum OWESpeeds
+enum SpeedOWE
 {
     OWE_SPEED_NORMAL,
     OWE_SPEED_SLOW,
@@ -33,18 +33,18 @@ enum OWESpeeds
     OWE_SPEED_FASTER
 };
 
-struct OWESpeciesBehavior
+struct BehaviorOWE
 {
     u32 movementType:8;
     u32 viewDistance:4;
     u32 viewWidth:4;
     u32 activeDistance:4;
     u32 padding:12;
-    enum OWESpeeds idleSpeed;
-    enum OWESpeeds activeSpeed;
+    enum SpeedOWE idleSpeed;
+    enum SpeedOWE activeSpeed;
 };
 
-enum __attribute__((packed)) OverworldEncounterBehaviors
+enum __attribute__((packed)) OverworldWildEncounterBehaviors
 {
     OWE_IGNORE_PLAYER,
     OWE_CHASE_PLAYER_SLOW,
@@ -56,7 +56,7 @@ enum __attribute__((packed)) OverworldEncounterBehaviors
 };
 
 void OverworldWildEncounters_CB(void);
-bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum OverworldObjectEncounterType oweType);
+bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent, enum TypeOWE oweType);
 void StartWildBattleWithOWE(void);
 void SetInstantOWESpawnTimer(void);
 void SetMinimumOWESpawnTimer(void);
@@ -67,7 +67,7 @@ void OnOverworldWildEncounterDespawn(struct ObjectEvent *objectEvent);
 bool32 IsOWEDespawnExempt(struct ObjectEvent *objectEvent);
 bool32 DespawnOWEDueToNPCCollision(struct ObjectEvent *curObject, struct ObjectEvent *objectEvent);
 u32 DespawnOWEDueToTrainerSight(u32 collision, s32 x, s32 y);
-void DespwnAllOverworldWildEncounters(enum OverworldObjectEncounterType oweType, u32 flags);
+void DespwnAllOverworldWildEncounters(enum TypeOWE oweType, u32 flags);
 bool32 TryAndDespawnOldestGeneratedOWE_Object(u32 localId, u8 *objectEventId);
 void TryAndDespawnOldestGeneratedOWE_Palette(void);
 void DespawnOWEOnBattleStart(void);
@@ -84,9 +84,9 @@ u32 GetApproachingOWEDistanceToPlayer(struct ObjectEvent *mon, bool32 *equalDist
 u32 GetOWEWalkMovementActionInDirectionWithSpeed(enum Direction direction, u32 speed);
 void OWEApproachForBattle(void);
 void PlayAmbientOWECry(void);
-u32 GetNumberOfActiveOWEs(enum OverworldObjectEncounterType oweType);
+u32 GetNumberOfActiveOWEs(enum TypeOWE oweType);
 const struct ObjectEventTemplate TryGetObjectEventTemplateForOWE(const struct ObjectEventTemplate *template);
-struct SpritePalette GetOWESpawnDespawnAnimFldEffPalette(enum OverworldEncounterSpawnAnim spawnAnim);
+struct SpritePalette GetOWESpawnDespawnAnimFldEffPalette(enum SpawnDespawnTypeOWE spawnAnim);
 
 extern const u8 InteractWithOverworldWildEncounter[];
 

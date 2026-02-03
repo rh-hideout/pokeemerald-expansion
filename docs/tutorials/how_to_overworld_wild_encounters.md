@@ -69,12 +69,12 @@ The behaviors themselves are defined in `src/data/pokemon/wild_encounter_overwor
 - `viewDistance` is the number of tiles away the mon is able to notice the player in the cardinal directions (similar to the sight distance of trainers).
 - `viewWidth` is the total width of the area in which the mon will notice the player. For example, if `viewWidth` is set to `3`, the mon will be able to detect the player if they are within 1 tile of either side of the line of sight.
 - `activeDistance` is the max distance away from the mon that the player can be before the mon loses track of them and goes back to wandering.
-- `idleSpeed` is the speed at which the mon will take a step while wandering (player is not noticed). This must be one of the values in `enum OWESpeeds`.
-- `activeSpeed` is the speed at which the mon will take a step while active (player has been noticed). This must be one of the values in `enum OWESpeeds`.
+- `idleSpeed` is the speed at which the mon will take a step while wandering (player is not noticed). This must be one of the values in `enum SpeedOWE`.
+- `activeSpeed` is the speed at which the mon will take a step while active (player has been noticed). This must be one of the values in `enum SpeedOWE`.
 
 If any of these parameters are not defined, they will be automatically assigned the value of `0`.
 
-A small number of premade behaviors have been provided and are ready to use. You can add as many new custom behaviors as you like, but make sure to add each behavior to `enum OverworldEncounterBehaviors`, making sure that `OWE_SPECIES_BEHAVIOR_COUNT` is always at the end.
+A small number of premade behaviors have been provided and are ready to use. You can add as many new custom behaviors as you like, but make sure to add each behavior to `enum OverworldWildEncounterBehaviors`, making sure that `OWE_SPECIES_BEHAVIOR_COUNT` is always at the end.
 
 The same behavior can be used for multiple different species.
 
