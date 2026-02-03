@@ -144,8 +144,8 @@ static u32 GetOldestSlot(bool32 forceRemove);
 static u8 NextSpawnMonSlot(void);
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static bool8 TrySelectTile(s16* outX, s16* outY);
-static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak);
-static u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex);
+static void SetOverworldEncounterSpeciesInfo(u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y);
+static u32 GetOverworldEncounterObjectEventGraphicsId(u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *roamerIndex, s32 x, s32 y);
 static bool32 CanRemoveOverworldEncounter(u32 localId);
 static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
 static bool32 OWE_CanEncounterBeLoaded_Palette(u32 speciesId, bool32 isFemale, bool32 isShiny, s16 x, s16 y);
@@ -229,7 +229,7 @@ void OverworldWildEncounters_CB(void)
     u32 indexRoamerOutbreak = OWE_NON_ROAMER_OUTBREAK;
     u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
     u32 level = MIN_LEVEL;
-    u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
+    u32 graphicsId = GetOverworldEncounterObjectEventGraphicsId(&speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak, x, y);
 
     if (speciesId == SPECIES_NONE
         || !IsWildLevelAllowedByRepel(OWE_GetEncounterLevel(level))
@@ -838,7 +838,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     return FALSE;
 }
 
-static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
+static void SetOverworldEncounterSpeciesInfo(u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
 {
     u32 personality;
 
@@ -868,9 +868,9 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
     ZeroEnemyPartyMons();
 }
 
-static u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak)
+static u32 GetOverworldEncounterObjectEventGraphicsId(u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak, s32 x, s32 y)
 {
-    SetOverworldEncounterSpeciesInfo(x, y, speciesId, isShiny, isFemale, level, indexRoamerOutbreak);
+    SetOverworldEncounterSpeciesInfo(speciesId, isShiny, isFemale, level, indexRoamerOutbreak, x, y);
     assertf(OWE_CheckSpecies(*speciesId), "invalid generated overworld encounter\nspecies: %d\ncheck if valid wild mon header exists", speciesId, x, y);
     u16 graphicsId = *speciesId + OBJ_EVENT_MON;
 
@@ -1753,7 +1753,7 @@ const struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(
     u32 x = template->x;
     u32 y = template->y;
 
-    SetOverworldEncounterSpeciesInfo(x, y, &speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak);
+    SetOverworldEncounterSpeciesInfo(&speciesId, &isShiny, &isFemale, &level, &indexRoamerOutbreak, x, y);
     if (speciesTemplate)
         speciesId = speciesTemplate;
 
