@@ -1630,7 +1630,7 @@ u32 LoadSpritePalette(const struct SpritePalette *palette)
 
     if (index == 0xFF)
     {
-        OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Palette();
+        OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Palette();
         index = IndexOfSpritePaletteTag(TAG_NONE);
         
         if (index == 0xFF)

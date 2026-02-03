@@ -1683,7 +1683,7 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
             return TRUE;
     }
     if (i >= OBJECT_EVENTS_COUNT)
-        return OWE_TryAndRemoveOldestGeneratedOverworldEncounter_Object(localId, objectEventId);
+        return OWE_TryAndDespawnOldestGeneratedOverworldEncounter_Object(localId, objectEventId);
     *objectEventId = i;
     for (; i < OBJECT_EVENTS_COUNT; i++)
     {
@@ -1695,7 +1695,7 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
 
 void RemoveObjectEvent(struct ObjectEvent *objectEvent)
 {
-    OverworldWildEncounter_OnObjectEventRemoved(objectEvent);
+    OverworldWildEncounter_OnObjectEventDespawned(objectEvent);
     objectEvent->active = FALSE;
     RemoveObjectEventInternal(objectEvent);
     // zero potential species info
@@ -2983,7 +2983,7 @@ static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
      && objectEvent->initialCoords.y >= top && objectEvent->initialCoords.y <= bottom)
         return;
     
-    if (OWE_IsMonRemovalExempt(objectEvent))
+    if (OWE_IsDespawnExempt(objectEvent))
         return;
 
     RemoveObjectEvent(objectEvent);
