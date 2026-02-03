@@ -132,7 +132,6 @@ static bool32 OWE_ShouldSpawnWaterMons(void);
 static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 *indexRoamerOutbreak);
 static bool8 IsSafeToSpawnObjectEvents(void);
 static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons);
-static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static void SortOWEMonAges(void);
 static void OWE_SetNewSpawnCountdown(void);
@@ -566,7 +565,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
         *outX = x;
         *outY = y;
 
-        if (!CheckForObjectEventAtLocation(x, y))
+        if (!GetObjectEventIdByPosition(x, y, 0))
             return TRUE;
     }
 
@@ -1009,18 +1008,6 @@ void DespwnAllOverworldWildEncounterObjects(enum OverworldObjectEncounterType ow
         UpdateObjectEventCoords(obj, dx, dy);
         RemoveObjectEvent(obj);
     }
-}
-
-static bool8 CheckForObjectEventAtLocation(s16 x, s16 y)
-{
-    for (u8 i = 0; i < OBJECT_EVENTS_COUNT; i++)
-    {
-        if (gObjectEvents[i].active && gObjectEvents[i].currentCoords.x == x
-            && gObjectEvents[i].currentCoords.y == y)
-            return TRUE;
-    }
-
-    return FALSE;
 }
 
 static bool32 OWE_CheckActiveEncounterTable(bool32 shouldSpawnWaterMons)
