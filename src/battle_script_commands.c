@@ -1056,9 +1056,13 @@ static void TryClearChargeVolatile(u32 moveType)
 
 static bool32 IsAnyTargetAffected(void)
 {
+    bool32 isSpreadMove = IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (battler == gBattlerAttacker)
+            continue;
+
+        if (battler != gBattlerTarget && !isSpreadMove)
             continue;
 
         if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT))

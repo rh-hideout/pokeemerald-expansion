@@ -274,6 +274,30 @@ DOUBLE_BATTLE_TEST("Dancer doesn't trigger when an ally snatches the move")
     }
 }
 
+DOUBLE_BATTLE_TEST("Dancer doesn't activate if the original move missed") // Doubles test since there was a bug with IsAnyTargetAffected
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DOUBLE_TEAM) == EFFECT_EVASION_UP);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ORICORIO);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_DOUBLE_TEAM); MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft, hit: FALSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_TEAM, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        MESSAGE("Wobbuffet's attack missed!");
+        NONE_OF {
+            ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, opponentLeft);
+        }
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_EVASION], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
 SINGLE_BATTLE_TEST("Dancer-called moves can be reflected by Magic Bounce")
 {
     GIVEN {
