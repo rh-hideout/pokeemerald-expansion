@@ -1101,7 +1101,7 @@ static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum
     if (abilityAtk == ABILITY_SKILL_LINK || holdEffectAtk == HOLD_EFFECT_LOADED_DICE)
         return TRUE;
 
-    return FALSE;
+    return TRUE;
 }
 
 static bool32 ShouldBypassAccuracyCheckFrlg(void)
