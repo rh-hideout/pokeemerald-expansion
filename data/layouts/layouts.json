@@ -4650,6 +4650,16 @@
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/Zwischenstueck/border.bin",
       "blockdata_filepath": "data/layouts/Zwischenstueck/map.bin"
+    },
+    {
+      "id": "LAYOUT_HALLWAY_TO_SECRETARIAT",
+      "name": "HALLWAY_TO_SECRETARIAT_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/HALLWAY_TO_SECRETARIAT/border.bin",
+      "blockdata_filepath": "data/layouts/HALLWAY_TO_SECRETARIAT/map.bin"
     }
   ]
 }

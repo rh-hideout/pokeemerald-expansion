@@ -643,7 +643,8 @@
     "MainHub"
   ],
   "gMapGroup_Flag2": [
-    "HowerClass"
+    "HowerClass",
+    "HALLWAY_TO_SECRETARIAT"
   ],
   "gMapGroup_Flag3": [
     "entryMapFlag3",

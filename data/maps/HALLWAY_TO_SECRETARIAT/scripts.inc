@@ -1,0 +1,2 @@
+HALLWAY_TO_SECRETARIAT_MapScripts::
+	.byte 0

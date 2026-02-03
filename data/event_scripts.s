@@ -1220,3 +1220,5 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/GlitchHaus/scripts.inc"
 
 	.include "data/maps/Zwischenstueck/scripts.inc"
+
+	.include "data/maps/HALLWAY_TO_SECRETARIAT/scripts.inc"
