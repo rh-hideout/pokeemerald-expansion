@@ -85,17 +85,17 @@ enum BattleSide
 #define BATTLE_TYPE_MULTI              (1 << 6)
 #define BATTLE_TYPE_SAFARI             (1 << 7)
 #define BATTLE_TYPE_BATTLE_TOWER       (1 << 8)
-#define BATTLE_TYPE_CATCH_TUTORIAL     (1 << 9) 
+#define BATTLE_TYPE_CATCH_TUTORIAL     (1 << 9)
 #define BATTLE_TYPE_ROAMER             (1 << 10)
 #define BATTLE_TYPE_EREADER_TRAINER    (1 << 11)
 #define BATTLE_TYPE_RAID               (1 << 12)
 #define BATTLE_TYPE_LEGENDARY          (1 << 13)
 #define BATTLE_TYPE_14                 (1 << 14)
-#define BATTLE_TYPE_TWO_OPPONENTS      (1 << 15) 
-#define BATTLE_TYPE_DOME               (1 << 16) 
-#define BATTLE_TYPE_PALACE             (1 << 17) 
-#define BATTLE_TYPE_ARENA              (1 << 18) 
-#define BATTLE_TYPE_FACTORY            (1 << 19) 
+#define BATTLE_TYPE_TWO_OPPONENTS      (1 << 15)
+#define BATTLE_TYPE_DOME               (1 << 16)
+#define BATTLE_TYPE_PALACE             (1 << 17)
+#define BATTLE_TYPE_ARENA              (1 << 18)
+#define BATTLE_TYPE_FACTORY            (1 << 19)
 #define BATTLE_TYPE_PIKE               (1 << 20)
 #define BATTLE_TYPE_PYRAMID            (1 << 21)
 #define BATTLE_TYPE_INGAME_PARTNER     (1 << 22)
@@ -661,8 +661,9 @@ enum BattleEnvironments
 #define BATTLE_RUN_FORBIDDEN      1
 #define BATTLE_RUN_FAILURE        2
 
-#define B_WIN_TYPE_NORMAL 0
-#define B_WIN_TYPE_ARENA  1
+#define B_WIN_TYPE_NORMAL         0
+#define B_WIN_TYPE_ARENA          1
+#define B_WIN_TYPE_KANTO_TUTORIAL 2
 
 // Window Ids for sStandardBattleWindowTemplates / sBattleArenaWindowTemplates
 #define B_WIN_MSG                 0
