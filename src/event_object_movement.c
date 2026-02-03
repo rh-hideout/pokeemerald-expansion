@@ -10122,85 +10122,42 @@ void ScriptFaceEachOther(struct ScriptContext *ctx)
 
 enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
 {
-    s16 absX, absY;
-    s16 distanceX = objectOne->currentCoords.x - objectTwo->currentCoords.x;
-    s16 distanceY = objectOne->currentCoords.y - objectTwo->currentCoords.y;
+    s16 dx = objectOne->currentCoords.x - objectTwo->currentCoords.x;
+    s16 dy = objectOne->currentCoords.y - objectTwo->currentCoords.y;
 
-    if (distanceX == 0 && distanceY == 0)
+    if (dx == 0 && dy == 0)
         return DIR_NONE;
 
-    // Get absolute X distance.
-    if (distanceX < 0)
-        absX = distanceX * -1;
+    s16 absX = abs(dx);
+    s16 absY = abs(dy);
+
+    if (absX > absY && dx < 0)
+        return DIR_WEST;
+    else if (absX > absY && dx > 0)
+        return DIR_EAST;
+    else if (absY > absX && dy < 0)
+        return DIR_NORTH;
+    else if (absY > absX && dy > 0)
+        return DIR_SOUTH;
+
+    enum Direction directionOne, directionTwo;
+    
+    if (dx < 0)
+        directionTwo = DIR_WEST;
     else
-        absX = distanceX;
+        directionTwo = DIR_EAST;
 
-    // Get absolute Y distance.
-    if (distanceY < 0)
-        absY = distanceY * -1;
+    if (dy < 0)
+        directionOne = DIR_NORTH;
     else
-        absY = distanceY;
+        directionOne = DIR_SOUTH;
 
-    if (absX > absY)
-    {
-        if (distanceX < 0)
-            return DIR_WEST;
-        else
-            return DIR_EAST;
-    }
-    else
-    {
-        if (absX < absY)
-        {
-            if (distanceY < 0)
-                return DIR_NORTH;
-            else
-                return DIR_SOUTH;
-        }
-        else
-        {
-            if (distanceY < 0)
-            {
-                if (objectTwo->movementDirection == DIR_NORTH)
-                    return DIR_NORTH;
+    if (objectTwo->facingDirection == directionOne)
+        return directionOne;
+    else if (objectTwo->facingDirection == directionTwo)
+        return directionTwo;
 
-                if (distanceX < 0)
-                {
-                    if (objectTwo->movementDirection == DIR_WEST)
-                        return DIR_WEST;
-                    else
-                        return (Random() % 2) == 0 ? DIR_NORTH : DIR_WEST;
-                }
-                else
-                {
-                    if (objectTwo->movementDirection == DIR_EAST)
-                        return DIR_EAST;
-                    else
-                        return (Random() % 2) == 0 ? DIR_NORTH : DIR_EAST;
-                }
-            }
-            else
-            {
-                if (objectTwo->movementDirection == DIR_SOUTH)
-                    return DIR_SOUTH;
-
-                if (distanceX < 0)
-                {
-                    if (objectTwo->movementDirection == DIR_WEST)
-                        return DIR_WEST;
-                    else
-                        return (Random() % 2) == 0 ? DIR_SOUTH : DIR_WEST;
-                }
-                else
-                {
-                    if (objectTwo->movementDirection == DIR_EAST)
-                        return DIR_EAST;
-                    else
-                        return (Random() % 2) == 0 ? DIR_SOUTH : DIR_EAST;
-                }
-            }
-        }
-    }
+    return (Random() % 2) ? directionOne : directionTwo;
 }
 
 void ObjectEventsTurnToEachOther(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
