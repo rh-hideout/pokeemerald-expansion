@@ -574,6 +574,9 @@ void CreateOverworldWildEncounter(void)
         return;
     }
 
+    if (IsOverworldWildEncounter(object, OWE_MANUAL))
+        FlagSet(GetObjectEventFlagIdByLocalIdAndMap(object->localId, object->mapNum, object->mapGroup));
+
     if (indexRoamerOutbreak && CreateOverworldWildEncounter_CheckRoamer(OWE_GetObjectRoamerOutbreakStatus(object)))
         return;
 
@@ -776,9 +779,6 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
 {
     if (!IsOverworldWildEncounter(objectEvent, OWE_ANY))
         return;
-
-    if (IsOverworldWildEncounter(objectEvent, OWE_MANUAL))
-        FlagSet(GetObjectEventFlagIdByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup));
 
     objectEvent->sOverworldEncounterLevel = 0;
     objectEvent->sAge = 0;
