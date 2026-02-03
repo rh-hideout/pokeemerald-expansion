@@ -1839,25 +1839,6 @@ static bool32 OWE_CheckSpecies(u32 speciesId)
     return TRUE;
 }
 
-static UNUSED u32 GetNewestOWEncounterLocalId(void)
-{
-    struct ObjectEvent *slotMon;
-    struct ObjectEvent *newest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
-    u32 i;
-    
-    for (i = 0; i < OWE_SPAWNS_MAX; i++)
-    {
-        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE)
-        {
-            if (newest->sAge > slotMon->sAge)
-                newest = slotMon;
-        }
-    }
-
-    return GetSpawnSlotByLocalId(newest->localId);
-}
-
 #undef sOverworldEncounterLevel
 #undef sAge
 #undef sRoamerOutbreakStatus
