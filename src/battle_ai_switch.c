@@ -35,15 +35,16 @@ struct IncomingHealInfo
 static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler);
 static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flags, u32 moduloPercent);
 static u32 GetSwitchinHazardsDamage(enum BattlerId battler);
+static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerId opposingBattler, s32 currentHP);
 static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, enum BattlerId opposingBattler);
 static u32 GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler);
 static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const struct IncomingHealInfo *healInfo, u32 originalHp);
 static void GetIncomingHealInfo(enum BattlerId battler, struct IncomingHealInfo *healInfo);
 static u32 GetWishHealAmountForBattler(enum BattlerId battler);
-static void SetBattlerStatusForSwitchin(enum BattlerId battlerAi);
-static void SetBattlerStatStagesForSwitchin(enum BattlerId battlerAi, enum BattlerId battlerTarget, u32 fieldStatus);
-static void SetBattlerHPChangeForSwitch(enum BattlerId battlerAi);
-static void SetBattlerVolatilesForSwitchin(enum BattlerId battlerAi, u32 weather, u32 fieldStatus);
+static void SetBattlerStatusForSwitchin(enum BattlerId battler);
+static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, u32 fieldStatus);
+static void SetBattlerHPChangeForSwitch(enum BattlerId battler, enum BattlerId opposingBattler);
+static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, u32 fieldStatus);
 
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, struct Pokemon *mon)
 {
@@ -55,12 +56,12 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, struct P
     u32 switchinFieldStatus = AI_GetSwitchinFieldStatus(switchinBattler);
     SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinFieldStatus);
     SetBattlerStatusForSwitchin(switchinBattler);
-    SetBattlerHPChangeForSwitch(switchinBattler);
     for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
         if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
             continue;
         SetBattlerStatStagesForSwitchin(switchinBattler, battlerIndex, switchinFieldStatus);
+        SetBattlerHPChangeForSwitch(switchinBattler, battlerIndex);
         CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, switchinWeather, switchinFieldStatus);
         CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinFieldStatus);
     }
@@ -1485,6 +1486,50 @@ bool32 IsSwitchinValid(enum BattlerId battler)
     return TRUE;
 }
 
+static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerId opposingBattler, s32 currentHP)
+{
+    enum Item aiItem = gAiLogicData->items[battler];
+    u32 maxHP = gBattleMons[battler].maxHP;
+    s32 itemHeal = 0;
+    
+    // Check if we're at a single use healing item threshold
+    if (currentHP > 0 && gAiLogicData->abilities[battler] != ABILITY_KLUTZ
+        && !(gAiLogicData->abilities[opposingBattler] == ABILITY_UNNERVE && GetItemPocket(aiItem) == POCKET_BERRIES))
+    {
+        switch (GetItemHoldEffect(aiItem))
+        {
+        case HOLD_EFFECT_RESTORE_HP:
+            if (currentHP < maxHP / 2)
+                itemHeal = GetItemHoldEffectParam(aiItem);
+            break;
+        case HOLD_EFFECT_RESTORE_PCT_HP:
+            if (currentHP < maxHP / 2)
+            {
+                itemHeal = maxHP / GetItemHoldEffectParam(aiItem);
+                if (itemHeal == 0)
+                    itemHeal = 1;
+            }
+            break;
+        case HOLD_EFFECT_CONFUSE_SPICY:
+        case HOLD_EFFECT_CONFUSE_DRY:
+        case HOLD_EFFECT_CONFUSE_SWEET:
+        case HOLD_EFFECT_CONFUSE_BITTER:
+        case HOLD_EFFECT_CONFUSE_SOUR:
+            if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
+            {
+                itemHeal = maxHP / GetItemHoldEffectParam(aiItem);
+                if (itemHeal == 0)
+                    itemHeal = 1;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    return itemHeal;
+}
+
 // Gets hazard damage
 static u32 GetSwitchinHazardsDamage(enum BattlerId battler)
 {
@@ -1767,7 +1812,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     u32 statusDamage = GetSwitchinStatusDamage(battler);
     u32 hitsToKO = 0;
     u16 maxHP = gBattleMons[battler].maxHP, item = gAiLogicData->items[battler], heldItemEffect = GetItemHoldEffect(item);
-    u8 weatherDuration = gBattleStruct->weatherDuration, holdEffectParam = GetItemHoldEffectParam(item);
+    u8 weatherDuration = gBattleStruct->weatherDuration;
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
     enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->abilities[battler];
     bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility);
@@ -1801,37 +1846,9 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
             currentHP = currentHP - weatherImpact;
 
         // Check if we're at a single use healing item threshold
-        if (currentHP > 0 && gAiLogicData->abilities[battler] != ABILITY_KLUTZ && usedSingleUseHealingItem == FALSE
-         && !(opposingAbility == ABILITY_UNNERVE && GetItemPocket(item) == POCKET_BERRIES))
+        if (usedSingleUseHealingItem == FALSE)
         {
-            switch (heldItemEffect)
-            {
-            case HOLD_EFFECT_RESTORE_HP:
-                if (currentHP < maxHP / 2)
-                    singleUseItemHeal = holdEffectParam;
-                break;
-            case HOLD_EFFECT_RESTORE_PCT_HP:
-                if (currentHP < maxHP / 2)
-                {
-                    singleUseItemHeal = maxHP / holdEffectParam;
-                    if (singleUseItemHeal == 0)
-                        singleUseItemHeal = 1;
-                }
-                break;
-            case HOLD_EFFECT_CONFUSE_SPICY:
-            case HOLD_EFFECT_CONFUSE_DRY:
-            case HOLD_EFFECT_CONFUSE_SWEET:
-            case HOLD_EFFECT_CONFUSE_BITTER:
-            case HOLD_EFFECT_CONFUSE_SOUR:
-                if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
-                {
-                    singleUseItemHeal = maxHP / holdEffectParam;
-                    if (singleUseItemHeal == 0)
-                        singleUseItemHeal = 1;
-                }
-                break;
-            }
-
+            singleUseItemHeal = GetSwitchinSingleUseItemHealing(battler, opposingBattler, currentHP);
             // If we used one, apply it without overcapping our maxHP
             if (singleUseItemHeal > 0)
             {
@@ -2563,36 +2580,36 @@ u32 AI_SelectRevivalBlessingMon(enum BattlerId battler)
     return bestMonId;
 }
 
-static void SetBattlerStatusForSwitchin(enum BattlerId battlerAi)
+static void SetBattlerStatusForSwitchin(enum BattlerId battler)
 {
-    u32 tSpikesLayers = gSideTimers[GetBattlerSide(battlerAi)].toxicSpikesAmount;
-    if (tSpikesLayers != 0 && IsBattlerTSpikesAffected(battlerAi))
+    u32 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
+    if (tSpikesLayers != 0 && IsBattlerTSpikesAffected(battler))
     {
         if (tSpikesLayers == 1)
-            gBattleMons[battlerAi].status1 = STATUS1_POISON;
+            gBattleMons[battler].status1 = STATUS1_POISON;
         if (tSpikesLayers == 2)
         {
-            gBattleMons[battlerAi].status1 = STATUS1_TOXIC_POISON;
-            gBattleMons[battlerAi].status1 += STATUS1_TOXIC_TURN(1);
+            gBattleMons[battler].status1 = STATUS1_TOXIC_POISON;
+            gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
         }
     } 
 }
 
-static void SetBattlerStatStagesForSwitchin(enum BattlerId battlerAi, enum BattlerId battlerTarget, u32 fieldStatus)
+static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, u32 fieldStatus)
 {
-    u32 aiAbility = gAiLogicData->abilities[battlerAi];
-    enum Item aiItem = gAiLogicData->items[battlerAi];
-    bool32 isStickyWebsAffected = (IsHazardOnSide(GetBattlerSide(battlerAi), HAZARDS_STICKY_WEB) && IsBattlerAffectedByHazards(battlerAi, GetItemHoldEffect(aiItem), FALSE) && IsBattlerGrounded(battlerAi, gAiLogicData->abilities[battlerAi], GetItemHoldEffect(aiItem)));
+    u32 aiAbility = gAiLogicData->abilities[battler];
+    enum Item aiItem = gAiLogicData->items[battler];
+    bool32 isStickyWebsAffected = (IsHazardOnSide(GetBattlerSide(battler), HAZARDS_STICKY_WEB) && IsBattlerAffectedByHazards(battler, GetItemHoldEffect(aiItem), FALSE) && IsBattlerGrounded(battler, gAiLogicData->abilities[battler], GetItemHoldEffect(aiItem)));
     bool32 opponentStatDrop = FALSE;
 
     // Ability stat changes
     switch(aiAbility)
     {
     case ABILITY_INTREPID_SWORD:
-        gBattleMons[battlerAi].statStages[STAT_ATK] += 1;
+        gBattleMons[battler].statStages[STAT_ATK] += 1;
         break;
     case ABILITY_DAUNTLESS_SHIELD:
-        gBattleMons[battlerAi].statStages[STAT_DEF] += 1;
+        gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
     case ABILITY_SUPREME_OVERLORD:
         ///////////////////////////////////
@@ -2600,59 +2617,59 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battlerAi, enum Battl
         //////////////////////////////////
         break;
     case ABILITY_DOWNLOAD:
-        gBattleMons[battlerAi].statStages[GetDownloadStat(battlerAi)] += 1;
+        gBattleMons[battler].statStages[GetDownloadStat(battler)] += 1;
         break;
     case ABILITY_INTIMIDATE:
-        if (CanLowerStat(battlerAi, battlerTarget, gAiLogicData, STAT_ATK))
+        if (CanLowerStat(battler, opposingBattler, gAiLogicData, STAT_ATK))
         {
-            if (gAiLogicData->abilities[battlerTarget] == ABILITY_CONTRARY)
+            if (gAiLogicData->abilities[opposingBattler] == ABILITY_CONTRARY)
             {
-                gBattleMons[battlerTarget].statStages[STAT_ATK] += 1;
+                gBattleMons[opposingBattler].statStages[STAT_ATK] += 1;
             }
             else
             {
                 opponentStatDrop = TRUE;
-                gBattleMons[battlerTarget].statStages[STAT_ATK] -= 1;
-                if (gAiLogicData->abilities[battlerTarget] == ABILITY_DEFIANT)
-                    gBattleMons[battlerTarget].statStages[STAT_ATK] += 2;
-                if (gAiLogicData->abilities[battlerTarget] == ABILITY_COMPETITIVE)
-                    gBattleMons[battlerTarget].statStages[STAT_SPATK] += 2;
+                gBattleMons[opposingBattler].statStages[STAT_ATK] -= 1;
+                if (gAiLogicData->abilities[opposingBattler] == ABILITY_DEFIANT)
+                    gBattleMons[opposingBattler].statStages[STAT_ATK] += 2;
+                if (gAiLogicData->abilities[opposingBattler] == ABILITY_COMPETITIVE)
+                    gBattleMons[opposingBattler].statStages[STAT_SPATK] += 2;
             }
         }
         break;
     case ABILITY_SUPERSWEET_SYRUP:
-        if (CanLowerStat(battlerAi, battlerTarget, gAiLogicData, STAT_EVASION))
+        if (CanLowerStat(battler, opposingBattler, gAiLogicData, STAT_EVASION))
         {
-            if (gAiLogicData->abilities[battlerTarget] == ABILITY_CONTRARY)
+            if (gAiLogicData->abilities[opposingBattler] == ABILITY_CONTRARY)
             {
-                gBattleMons[battlerTarget].statStages[STAT_EVASION] += 1;
+                gBattleMons[opposingBattler].statStages[STAT_EVASION] += 1;
             }
             else
             {
                 opponentStatDrop = TRUE;
-                gBattleMons[battlerTarget].statStages[STAT_EVASION] -= 1;
-                if (gAiLogicData->abilities[battlerTarget] == ABILITY_DEFIANT)
-                    gBattleMons[battlerTarget].statStages[STAT_ATK] += 2;
-                if (gAiLogicData->abilities[battlerTarget] == ABILITY_COMPETITIVE)
-                    gBattleMons[battlerTarget].statStages[STAT_SPATK] += 2;
+                gBattleMons[opposingBattler].statStages[STAT_EVASION] -= 1;
+                if (gAiLogicData->abilities[opposingBattler] == ABILITY_DEFIANT)
+                    gBattleMons[opposingBattler].statStages[STAT_ATK] += 2;
+                if (gAiLogicData->abilities[opposingBattler] == ABILITY_COMPETITIVE)
+                    gBattleMons[opposingBattler].statStages[STAT_SPATK] += 2;
             }
         }
         break;
     case ABILITY_WIND_RIDER:
-        if (gSideStatuses[GetBattlerSide(battlerAi)] & SIDE_STATUS_TAILWIND)
-            gBattleMons[battlerAi].statStages[STAT_ATK] += 1;
+        if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_TAILWIND)
+            gBattleMons[battler].statStages[STAT_ATK] += 1;
         break;
     case ABILITY_DEFIANT:
         if (isStickyWebsAffected)
-            gBattleMons[battlerAi].statStages[STAT_ATK] += 2;
+            gBattleMons[battler].statStages[STAT_ATK] += 2;
         break;
     case ABILITY_COMPETITIVE:
         if (isStickyWebsAffected)
-            gBattleMons[battlerAi].statStages[STAT_SPATK] += 2;
+            gBattleMons[battler].statStages[STAT_SPATK] += 2;
         break;
     case ABILITY_CONTRARY:
         if (isStickyWebsAffected)
-            gBattleMons[battlerAi].statStages[STAT_SPEED] += 1;
+            gBattleMons[battler].statStages[STAT_SPEED] += 1;
     default:
         break;
     }
@@ -2666,36 +2683,36 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battlerAi, enum Battl
             || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN))
             || (seedParam == HOLD_EFFECT_PARAM_MISTY_TERRAIN && (fieldStatus & STATUS_FIELD_MISTY_TERRAIN))
             || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)))
-            gBattleMons[battlerAi].statStages[STAT_DEF] += 1;
+            gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
     case HOLD_EFFECT_ATTACK_UP:
-        if (HasEnoughHpToEatBerry(battlerAi, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
-            gBattleMons[battlerAi].statStages[STAT_ATK] += 1;
+        if (HasEnoughHpToEatBerry(battler, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
+            gBattleMons[battler].statStages[STAT_ATK] += 1;
         break;
     case HOLD_EFFECT_DEFENSE_UP:
-        if (HasEnoughHpToEatBerry(battlerAi, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
-            gBattleMons[battlerAi].statStages[STAT_DEF] += 1;
+        if (HasEnoughHpToEatBerry(battler, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
+            gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
     case HOLD_EFFECT_SPEED_UP:
-        if (HasEnoughHpToEatBerry(battlerAi, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
-            gBattleMons[battlerAi].statStages[STAT_SPEED] += 1;
+        if (HasEnoughHpToEatBerry(battler, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
+            gBattleMons[battler].statStages[STAT_SPEED] += 1;
         break;
     case HOLD_EFFECT_SP_ATTACK_UP:
-        if (HasEnoughHpToEatBerry(battlerAi, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
-            gBattleMons[battlerAi].statStages[STAT_SPATK] += 1;
+        if (HasEnoughHpToEatBerry(battler, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
+            gBattleMons[battler].statStages[STAT_SPATK] += 1;
         break;
     case HOLD_EFFECT_SP_DEFENSE_UP:
-        if (HasEnoughHpToEatBerry(battlerAi, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
-            gBattleMons[battlerAi].statStages[STAT_SPDEF] += 1;
+        if (HasEnoughHpToEatBerry(battler, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
+            gBattleMons[battler].statStages[STAT_SPDEF] += 1;
         break;
     case HOLD_EFFECT_ROOM_SERVICE:
         if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
-            gBattleMons[battlerAi].statStages[STAT_SPEED] -= 1;
+            gBattleMons[battler].statStages[STAT_SPEED] -= 1;
     case HOLD_EFFECT_MIRROR_HERB:
-        if (opponentStatDrop && gAiLogicData->abilities[battlerTarget] == ABILITY_DEFIANT)
-            gBattleMons[battlerAi].statStages[STAT_ATK] += 2;
-        if (opponentStatDrop && gAiLogicData->abilities[battlerTarget] == ABILITY_COMPETITIVE)
-            gBattleMons[battlerAi].statStages[STAT_SPATK] += 2;
+        if (opponentStatDrop && gAiLogicData->abilities[opposingBattler] == ABILITY_DEFIANT)
+            gBattleMons[battler].statStages[STAT_ATK] += 2;
+        if (opponentStatDrop && gAiLogicData->abilities[opposingBattler] == ABILITY_COMPETITIVE)
+            gBattleMons[battler].statStages[STAT_SPATK] += 2;
         break;
     default:
         break;
@@ -2703,45 +2720,53 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battlerAi, enum Battl
 
     // Hazard stat changes
     if (isStickyWebsAffected && GetItemHoldEffect(aiItem) != HOLD_EFFECT_WHITE_HERB)
-        gBattleMons[battlerAi].statStages[STAT_SPEED] -= 1;
+        gBattleMons[battler].statStages[STAT_SPEED] -= 1;
 }
 
-static void SetBattlerHPChangeForSwitch(enum BattlerId battlerAi)
+static void SetBattlerHPChangeForSwitch(enum BattlerId battler, enum BattlerId opposingBattler)
 {
-    // Apply hazard damage (store this for reuse in 1v1 calc?)
-    // Apply held item healing (if HP - hazard damage are enough to proc it and hazards exist)
-    // Anticipate incoming wish
+    s32 maxHP = gBattleMons[battler].maxHP;
+    s32 currentHP = gBattleMons[battler].hp - GetSwitchinHazardsDamage(battler);
+    s32 itemHeal = GetSwitchinSingleUseItemHealing(battler, opposingBattler, currentHP);
+
+    if (itemHeal > 0)
+    {
+        if ((currentHP + itemHeal) > maxHP)
+            currentHP = maxHP;
+        else
+            currentHP = currentHP + itemHeal;
+    }
 }
 
 // Set potential field effect from ability for switch in
-static void SetBattlerVolatilesForSwitchin(enum BattlerId battlerAi, u32 weather, u32 fieldStatus)
+static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, u32 fieldStatus)
 {
-    enum Item aiItem = gAiLogicData->items[battlerAi];
-    switch (gAiLogicData->abilities[battlerAi])
+    enum Item aiItem = gAiLogicData->items[battler];
+    switch (gAiLogicData->abilities[battler])
     {
     case ABILITY_VESSEL_OF_RUIN:
-        gBattleMons[battlerAi].volatiles.vesselOfRuin = TRUE;
+        gBattleMons[battler].volatiles.vesselOfRuin = TRUE;
         break;
     case ABILITY_SWORD_OF_RUIN:
-        gBattleMons[battlerAi].volatiles.swordOfRuin = TRUE;
+        gBattleMons[battler].volatiles.swordOfRuin = TRUE;
         break;
     case ABILITY_TABLETS_OF_RUIN:
-        gBattleMons[battlerAi].volatiles.tabletsOfRuin = TRUE;
+        gBattleMons[battler].volatiles.tabletsOfRuin = TRUE;
         break;
     case ABILITY_BEADS_OF_RUIN:
-        gBattleMons[battlerAi].volatiles.beadsOfRuin = TRUE;
+        gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
         break;
     case ABILITY_QUARK_DRIVE:
         if ((fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN) & B_WEATHER_SUN || GetItemHoldEffect(aiItem) == HOLD_EFFECT_BOOSTER_ENERGY)
-            gBattleMons[battlerAi].volatiles.boosterEnergyActivated = TRUE;
+            gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         break;
     case ABILITY_PROTOSYNTHESIS:
         if (((weather & B_WEATHER_SUN) && HasWeatherEffect()) || GetItemHoldEffect(aiItem) == HOLD_EFFECT_BOOSTER_ENERGY)
-            gBattleMons[battlerAi].volatiles.boosterEnergyActivated = TRUE;
+            gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         break;
     case ABILITY_WIND_POWER:
-        if (gSideStatuses[GetBattlerSide(battlerAi)] & SIDE_STATUS_TAILWIND)
-            gBattleMons[battlerAi].volatiles.chargeTimer = 2;
+        if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_TAILWIND)
+            gBattleMons[battler].volatiles.chargeTimer = 2;
         break;
     default:
         break;
