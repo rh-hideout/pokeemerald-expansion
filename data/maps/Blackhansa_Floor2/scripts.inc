@@ -13,7 +13,9 @@ Blackhansa_Floor2_EventScript_IntruderTrigger::
     lockall
 
     @ IT-Manager JETZT spawnen
+    clearflag FLAG_BLACKHANSA_F2_IT_MANAGER_HIDDEN 
     addobject LOCALID_IT_MANAGER
+    showobjectat LOCALID_IT_MANAGER, MAP_BLACKHANSA_FLOOR2
     @ optional, aber praktisch: Startposition sicher setzen
     setobjectxy LOCALID_IT_MANAGER, 9, 3
 
@@ -52,7 +54,7 @@ Blackhansa_Floor2_EventScript_KickOut::
     @ sofort weg (ohne Reload)
     removeobject LOCALID_IT_MANAGER
 
-    warpteleport MAP_PETALBURG_CITY, 12, 6
+    warpteleport MAP_PETALBURG_CITY, 12, 13
     waitstate
     releaseall
     end
@@ -140,7 +142,7 @@ Blackhansa_Floor2_Movement_ITManager_Return::
 @ Texte
 @ --------------------
 Blackhansa_Floor2_Text_StopIntruder:
-	.string "Stop intruder$"
+	.string "Stop intruder!$"
 
 Blackhansa_Floor2_Text_WhoAreYou:
 	.string "Who are you and what are\n"
@@ -167,6 +169,8 @@ Blackhansa_Floor2_Text_Answer2_Response:
 	.string "in front of you!$"
 
 Blackhansa_Floor2_Text_Answer3_Response:
+    .string "C: I was told to clean the bosses'\n"
+    .string "office!\p"
 	.string "That was just cleaned half an hour\n"
 	.string "ago, now get lost!$"
 

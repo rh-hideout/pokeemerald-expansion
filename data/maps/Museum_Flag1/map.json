@@ -79,7 +79,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Museum_Flag1_Girl",
       "flag": "FLAG_HIDE_MUSEUM_FLAG1_STUDENT"
     },
     {
@@ -109,8 +109,8 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 11,
-      "y": 6,
+      "x": 10,
+      "y": 8,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "Museum_Flag1_EventScript_Sign_M1"
@@ -149,8 +149,8 @@
     },
     {
       "type": "sign",
-      "x": 3,
-      "y": 6,
+      "x": 2,
+      "y": 8,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Museum_Flag1_EventScript_Sign_D"

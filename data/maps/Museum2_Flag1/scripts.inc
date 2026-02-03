@@ -27,6 +27,7 @@ Museum2_Flag1_EventScript_Hevl::
 	@ Sieg: Badge + Fanfare + TM
 	setflag FLAG_BADGE01_GET
 	setflag FLAG_CTF_GYM1_DEFEATED
+	removeobject LOCALID_BLOCKER
 
 	msgbox Museum2_Flag1_Text_Win, MSGBOX_DEFAULT
 	closemessage

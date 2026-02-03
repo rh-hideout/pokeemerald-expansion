@@ -4424,7 +4424,7 @@
     {
       "id": "LAYOUT_TESTMAP",
       "name": "Testmap_Layout",
-      "width": 26,
+      "width": 30,
       "height": 20,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_dhbw_gebaeude",
@@ -4640,6 +4640,16 @@
       "secondary_tileset": "gTileset_BattleTent",
       "border_filepath": "data/layouts/GlitchHaus_Layout_2/border.bin",
       "blockdata_filepath": "data/layouts/GlitchHaus_Layout_2/map.bin"
+    },
+    {
+      "id": "LAYOUT_ZWISCHENSTUECK",
+      "name": "Zwischenstueck_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/Zwischenstueck/border.bin",
+      "blockdata_filepath": "data/layouts/Zwischenstueck/map.bin"
     }
   ]
 }

@@ -1,5 +1,10 @@
 Blackhansa_Floor1_MapScripts::
-	.byte 0
+    map_script MAP_SCRIPT_ON_TRANSITION, Blackhansa_Floor1_OnTransition
+    .byte 0
+
+Blackhansa_Floor1_OnTransition:
+	setflag FLAG_BLACKHANSA_F2_IT_MANAGER_HIDDEN
+	end
 
 
 Blackhansa_Floor1_EventScript_ReturnToPetalburg::

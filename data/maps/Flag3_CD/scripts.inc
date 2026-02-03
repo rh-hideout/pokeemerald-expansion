@@ -1,35 +1,86 @@
 Flag3_CD_MapScripts::
     map_script MAP_SCRIPT_ON_TRANSITION, Flag3_CD_OnTransition
+    map_script MAP_SCRIPT_ON_FRAME_TABLE, Flag3_CD_OnFrame
     .byte 0
 
 @ ---------------------------------------------------------
 @ OnTransition:
 @ - Progress reset
-@ - Boulder reset (immer)
+@ - Boulder reset (nur wenn Puzzle NICHT gelöst)
 @ - Exit-Tiles je nach Puzzle-Flag setzen
 @ ---------------------------------------------------------
 Flag3_CD_OnTransition:
-    setvar VAR_TEMP_0, 0 @ progress: 0 = cd noch nicht korrekt, 1 = cd korrekt
+    setflag FLAG_SONGFLAGROOM_BETRETEN
 
-    call Flag3_CD_ResetBoulders
+    @ OnFrame-Apply beim Betreten 1x ausführen (fix für Tür-Tiles beim Re-Enter)
+    setvar VAR_TEMP_2, 0
 
     goto_if_set FLAG_FLAG3_CD_PUZZLE_SOLVED, Flag3_CD_OnTransition_Solved
+
+    setvar VAR_TEMP_0, 0 @ progress: 0 = cd noch nicht korrekt, 1 = cd korrekt
+    call Flag3_CD_ResetBoulders
 
     @ Puzzle nicht gelöst -> Ausgang wieder "zu" (0x218)
     call Flag3_CD_HideExit_NoRedraw
     end
 
 Flag3_CD_OnTransition_Solved:
-    @ Puzzle gelöst -> Ausgang offen halten
-    call Flag3_CD_RevealExit_NoRedraw
+    @ Puzzle gelöst -> Objekte in Lösung spawnen und fixieren
+    call Flag3_CD_SetSolvedState
     end
+
+
+@ ---------------------------------------------------------
+@ OnFrame:
+@ - Tür-Tiles NACH dem Laden setzen, damit sie beim Re-Enter sichtbar bleiben
+@ ---------------------------------------------------------
+Flag3_CD_OnFrame:
+    map_script_2 VAR_TEMP_2, 0, Flag3_CD_ApplyDoorTiles_AfterLoad
+    .2byte 0
+
+Flag3_CD_ApplyDoorTiles_AfterLoad:
+    setvar VAR_TEMP_2, 1
+
+    goto_if_set FLAG_FLAG3_CD_PUZZLE_SOLVED, Flag3_CD_ApplyDoorTiles_Solved
+
+    call Flag3_CD_HideExit_NoRedraw
+    special DrawWholeMapView
+    return
+
+Flag3_CD_ApplyDoorTiles_Solved:
+    call Flag3_CD_RevealExit_NoRedraw
+    special DrawWholeMapView
+    return
 
 
 @ =========================================================
 @ RESET: Boulder beim (Neu-)Betreten zurücksetzen
-@ (remove + add -> spawnt wieder an map.json Startpositionen)
+@ (perm coords zurücksetzen + remove/add -> spawnt wieder korrekt)
 @ =========================================================
+
+#define START_CD_X      3
+#define START_CD_Y      3
+#define START_DOT1_X    2
+#define START_DOT1_Y    12
+#define START_DOT2_X    12
+#define START_DOT2_Y    3
+
+@ Ziel 1 (cd)
+#define TARGET_CD_X        7
+#define TARGET_CD_Y        4
+
+@ Ziel 2 & 3 (die beiden .-Boulder, egal welcher welcher)
+#define TARGET_DOT_A_X     8
+#define TARGET_DOT_A_Y     4
+#define TARGET_DOT_B_X     9
+#define TARGET_DOT_B_Y     4
+
 Flag3_CD_ResetBoulders:
+    @ perm spawn position zurück auf Start (wichtig!)
+    setobjectxyperm LOCALID_FLAG3_CD_BOULDER_CD,   START_CD_X,   START_CD_Y
+    setobjectxyperm LOCALID_FLAG3_CD_BOULDER_DOT1, START_DOT1_X, START_DOT1_Y
+    setobjectxyperm LOCALID_FLAG3_CD_BOULDER_DOT2, START_DOT2_X, START_DOT2_Y
+
     removeobject LOCALID_FLAG3_CD_BOULDER_CD
     removeobject LOCALID_FLAG3_CD_BOULDER_DOT1
     removeobject LOCALID_FLAG3_CD_BOULDER_DOT2
@@ -41,17 +92,46 @@ Flag3_CD_ResetBoulders:
 
 
 @ =========================================================
+@ SOLVED STATE: Tür offen + Boulder auf Lösung + nicht mehr schiebbar
+@ (wichtig für "Map verlassen und wieder rein")
+@ =========================================================
+Flag3_CD_SetSolvedState:
+    @ Tür offen (mit Redraw, damit es sicher sichtbar ist)
+    call Flag3_CD_RevealExit_Redraw
+
+    @ Boulder auf Lösung setzen (CD fix, Dots auf A/B)
+    setobjectxyperm LOCALID_FLAG3_CD_BOULDER_CD,   TARGET_CD_X,    TARGET_CD_Y
+    setobjectxyperm LOCALID_FLAG3_CD_BOULDER_DOT1, TARGET_DOT_A_X, TARGET_DOT_A_Y
+    setobjectxyperm LOCALID_FLAG3_CD_BOULDER_DOT2, TARGET_DOT_B_X, TARGET_DOT_B_Y
+
+    @ Neu spawnen, damit sie sicher an der perm-Pos stehen
+    removeobject LOCALID_FLAG3_CD_BOULDER_CD
+    removeobject LOCALID_FLAG3_CD_BOULDER_DOT1
+    removeobject LOCALID_FLAG3_CD_BOULDER_DOT2
+
+    addobject LOCALID_FLAG3_CD_BOULDER_CD
+    addobject LOCALID_FLAG3_CD_BOULDER_DOT1
+    addobject LOCALID_FLAG3_CD_BOULDER_DOT2
+
+    @ Danach nicht mehr schiebbar
+    setobjectmovementtype LOCALID_FLAG3_CD_BOULDER_CD,   MOVEMENT_TYPE_NONE
+    setobjectmovementtype LOCALID_FLAG3_CD_BOULDER_DOT1, MOVEMENT_TYPE_NONE
+    setobjectmovementtype LOCALID_FLAG3_CD_BOULDER_DOT2, MOVEMENT_TYPE_NONE
+    return
+
+
+@ =========================================================
 @ EXIT-TILES: Metatiles tauschen
 @ =========================================================
 
-@ Ausgang "zu" (dein aktuelles 0x218 überall)
+@ Ausgang "zu" (dein aktuelles 0x219 überall)
 Flag3_CD_HideExit_NoRedraw:
-    setmetatile 6, 0, 0x218, TRUE
-    setmetatile 7, 0, 0x218, TRUE
-    setmetatile 8, 0, 0x218, TRUE
-    setmetatile 6, 1, 0x218, TRUE
-    setmetatile 7, 1, 0x218, TRUE
-    setmetatile 8, 1, 0x218, TRUE
+    setmetatile 6, 0, 0x219, TRUE
+    setmetatile 7, 0, 0x219, TRUE
+    setmetatile 8, 0, 0x219, TRUE
+    setmetatile 6, 1, 0x219, TRUE
+    setmetatile 7, 1, 0x219, TRUE
+    setmetatile 8, 1, 0x219, TRUE
     return
 
 @ Ausgang "auf" (deine gewünschten Tiles)
@@ -79,6 +159,7 @@ Flag3_CD_RevealExit_Redraw:
 @ =========================================================
 
 Flag3_CD_EventScript_Push_CD::
+    goto_if_set FLAG_FLAG3_CD_PUZZLE_SOLVED, Flag3_CD_Push_Disabled
     lock
     call Flag3_CD_TryPush_CD
     call Flag3_CD_CheckPuzzle
@@ -86,6 +167,7 @@ Flag3_CD_EventScript_Push_CD::
     end
 
 Flag3_CD_EventScript_Push_Dot1::
+    goto_if_set FLAG_FLAG3_CD_PUZZLE_SOLVED, Flag3_CD_Push_Disabled
     lock
     call Flag3_CD_TryPush_Dot1
     call Flag3_CD_CheckPuzzle
@@ -93,10 +175,15 @@ Flag3_CD_EventScript_Push_Dot1::
     end
 
 Flag3_CD_EventScript_Push_Dot2::
+    goto_if_set FLAG_FLAG3_CD_PUZZLE_SOLVED, Flag3_CD_Push_Disabled
     lock
     call Flag3_CD_TryPush_Dot2
     call Flag3_CD_CheckPuzzle
     release
+    end
+
+Flag3_CD_Push_Disabled:
+    msgbox Flag3_CD_Text_AlreadySolved, MSGBOX_DEFAULT
     end
 
 
@@ -126,6 +213,9 @@ Flag3_CD_PushCD_W:
     applymovement LOCALID_FLAG3_CD_BOULDER_CD, Flag3_CD_Movement_Push_W
 Flag3_CD_PushCD_Wait:
     waitmovement 0
+    @ neue Position "permanent" setzen, damit es im Raum nicht zurückspringt
+    getobjectxy LOCALID_FLAG3_CD_BOULDER_CD, CURRENT_POSITION, VAR_0x8000, VAR_0x8001
+    setobjectxyperm LOCALID_FLAG3_CD_BOULDER_CD, VAR_0x8000, VAR_0x8001
     return
 
 Flag3_CD_TryPush_Dot1:
@@ -149,6 +239,9 @@ Flag3_CD_PushD1_W:
     applymovement LOCALID_FLAG3_CD_BOULDER_DOT1, Flag3_CD_Movement_Push_W
 Flag3_CD_PushD1_Wait:
     waitmovement 0
+    @ neue Position "permanent" setzen, damit es im Raum nicht zurückspringt
+    getobjectxy LOCALID_FLAG3_CD_BOULDER_DOT1, CURRENT_POSITION, VAR_0x8000, VAR_0x8001
+    setobjectxyperm LOCALID_FLAG3_CD_BOULDER_DOT1, VAR_0x8000, VAR_0x8001
     return
 
 Flag3_CD_TryPush_Dot2:
@@ -172,6 +265,9 @@ Flag3_CD_PushD2_W:
     applymovement LOCALID_FLAG3_CD_BOULDER_DOT2, Flag3_CD_Movement_Push_W
 Flag3_CD_PushD2_Wait:
     waitmovement 0
+    @ neue Position "permanent" setzen, damit es im Raum nicht zurückspringt
+    getobjectxy LOCALID_FLAG3_CD_BOULDER_DOT2, CURRENT_POSITION, VAR_0x8000, VAR_0x8001
+    setobjectxyperm LOCALID_FLAG3_CD_BOULDER_DOT2, VAR_0x8000, VAR_0x8001
     return
 
 
@@ -179,16 +275,6 @@ Flag3_CD_PushD2_Wait:
 @ PUZZLE-CHECK
 @ Reihenfolge-Logik: CD muss korrekt sein, dann DOTs (egal welcher wo)
 @ =========================================================
-
-@ Ziel 1 (cd)
-#define TARGET_CD_X        7
-#define TARGET_CD_Y        4
-
-@ Ziel 2 & 3 (die beiden .-Boulder, egal welcher welcher)
-#define TARGET_DOT_A_X     8
-#define TARGET_DOT_A_Y     4
-#define TARGET_DOT_B_X     9
-#define TARGET_DOT_B_Y     4
 
 Flag3_CD_CheckPuzzle:
     goto_if_set FLAG_FLAG3_CD_PUZZLE_SOLVED, Flag3_CD_CheckPuzzle_End
@@ -217,12 +303,22 @@ Flag3_CD_CheckPuzzle_Reset:
     goto Flag3_CD_CheckPuzzle_End
 
 Flag3_CD_PuzzleSolved:
+    @ Klick wenn alles richtig liegt
+    playse SE_SELECT
+
     setflag FLAG_FLAG3_CD_PUZZLE_SOLVED
+
+    @ "Steinpassage öffnet" Sound (kein klassischer Türsound)
+    playse SE_M_STRENGTH
+
     msgbox Flag3_CD_Text_DoorOpens, MSGBOX_DEFAULT
     closemessage
 
     @ Ausgang sofort sichtbar machen
     call Flag3_CD_RevealExit_Redraw
+
+    @ Objekte in Lösung fixieren (sofort + auch für spätere Re-Entries)
+    call Flag3_CD_SetSolvedState
     return
 
 Flag3_CD_CheckPuzzle_End:
@@ -262,11 +358,11 @@ Flag3_CD_AreDots_End:
 
 
 Flag3_CD_WallSign::
-	lock
-	msgbox Flag3_CD_Text_WallText, MSGBOX_DEFAULT
-	closemessage
-	release
-	end
+    lock
+    msgbox Flag3_CD_Text_WallText, MSGBOX_DEFAULT
+    closemessage
+    release
+    end
 
 
 @ =========================================================
@@ -297,5 +393,8 @@ Flag3_CD_Text_DoorOpens:
     .string "A passage opened!$"
 
 Flag3_CD_Text_WallText:
-	.string "Sometimes you have to take a step\n"
-	.string "back to come forward.$"
+    .string "Sometimes you have to take a step\n"
+    .string "back to come forward.$"
+
+Flag3_CD_Text_AlreadySolved:
+    .string "It won't budge anymore.$"

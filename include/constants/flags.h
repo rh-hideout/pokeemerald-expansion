@@ -1238,8 +1238,8 @@
 #define FLAG_BLACKHANSA_F2_IT_MANAGER_HIDDEN                        0x4A0 // Flag3 Blackhansa IT Typ
 #define FLAG_CTF_CLASSROOM_APPLES_RASPBERRY                         0x4A1 // Flag3 Raspberry von Apples Event
 #define FLAG_CLASSROOM_STRENGTH_TOOL_SCENE_DONE                     0x4A2 // Flag3 Powerglove erhalten
-#define FLAG_FLAG3_CD_PUZZLE_SOLVED                                 0x4A3 // Flag3 CD Puzzle gelöst
-#define FLAG_UNUSED_0x4A4                                           0x4A4 // Unused Flag
+#define FLAG_UNUSED_0x4A3                                           0x4A3 // Unused Flag
+#define FLAG_RECEIVED_LOCKPICK_SET                                  0x4A4 // Flag3 Lockpick Set erhalten
 #define FLAG_UNUSED_0x4A5                                           0x4A5 // Unused Flag
 #define FLAG_UNUSED_0x4A6                                           0x4A6 // Unused Flag
 #define FLAG_UNUSED_0x4A7                                           0x4A7 // Unused Flag
@@ -1278,9 +1278,9 @@
 #define FLAG_UNUSED_0x4C8                                           0x4C8 // Unused Flag
 #define FLAG_UNUSED_0x4C9                                           0x4C9 // Unused Flag
 #define FLAG_UNUSED_0x4CA                                           0x4CA // Unused Flag
-#define FLAG_UNUSED_0x4CB                                           0x4CB // Unused Flag
-#define FLAG_UNUSED_0x4CC                                           0x4CC // Unused Flag
-#define FLAG_CTF_SONGROOM_ROCK_REMOVED                              0x4CD // FLag 6 Song Höhle Fels entfernt
+#define FLAG_FLAG3_CD_PUZZLE_SOLVED                                 0x4CB // Flag 6 CD Puzzle gelöst
+#define FLAG_SONGFLAGROOM_BETRETEN                                  0x4CC // Flag 6 Song Höhle betreten Stein auf 104 entfernt
+#define FLAG_CTF_SONGROOM_ROCK_REMOVED                              0x4CD // Flag 6 Song Höhle Fels entfernt
 #define FLAG_UNUSED_0x4CE                                           0x4CE // Unused Flag
 #define FLAG_UNUSED_0x4CF                                           0x4CF // Unused Flag
 #define FLAG_UNUSED_0x4D0                                           0x4D0 // Unused Flag

@@ -2324,45 +2324,17 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
     enum FieldMove fieldMove = ScriptReadByte(ctx);
     u16 move = FieldMove_GetMoveId(fieldMove);
     u16 keyItem = GetKeyItemForFieldMove(move);
-    u32 i;
 
-    // 1. Check for a party Pokémon that can learn the move.
-    for (i = 0; i < gPlayerPartyCount; i++)
-    {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
-        {
-            u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
-            if (CanLearnTeachableMove(species, move))
-            {
-                // Pokémon found. Check for the badge flag.
-                if (IsFieldMoveUnlocked(fieldMove))
-                {
-                    gSpecialVar_Result = i; // Return party slot
-                    SetFieldMoveSource(FIELD_MOVE_SOURCE_POKEMON);
-                    return FALSE; // Continue script execution
-                }
-                // Found a Pokémon but don't have the badge, so fail completely.
-                gSpecialVar_Result = PARTY_SIZE;
-                return FALSE;
-            }
-        }
-    }
-
-    // 2. If no Pokémon is found, check for the key item.
+    // Nur Item-Logik: wenn das Tool-Item vorhanden ist -> nutzbar.
     if (keyItem != ITEM_NONE && CheckBagHasItem(keyItem, 1))
     {
-        // Key item found. Check for the badge flag.
-        if (IsFieldMoveUnlocked(fieldMove))
-        {
-            gSpecialVar_Result = PARTY_SIZE + 1; // Special value indicating item use
-            SetFieldMoveSource(FIELD_MOVE_SOURCE_ITEM);
-            return FALSE;
-        }
+        gSpecialVar_Result = PARTY_SIZE + 1; // "Item-Use"
+        SetFieldMoveSource(FIELD_MOVE_SOURCE_ITEM);
+        return FALSE; // Script läuft weiter
     }
 
-    // 3. If neither is found, or badge check fails, fail.
+    // Kein Item -> nicht nutzbar
     gSpecialVar_Result = PARTY_SIZE;
-
     return FALSE;
 }
 

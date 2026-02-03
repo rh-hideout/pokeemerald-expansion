@@ -4732,7 +4732,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CtfTerminal = {
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Jessie = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_JESSIE,
-    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
     .size = 256,
     .width = 16,
     .height = 32,
@@ -4751,7 +4751,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Jessie = {
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_James = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_JAMES,
-    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
     .size = 256,
     .width = 16,
     .height = 32,
@@ -4767,21 +4767,38 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_James = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+static const struct SpriteFrameImage sPicTable_Cd[];
+
+static const union AnimCmd sAnim_Cd_Still[] =
+{
+    ANIMCMD_FRAME(0, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd *const sAnimTable_Cd[] =
+{
+    sAnim_Cd_Still, // down
+    sAnim_Cd_Still, // up
+    sAnim_Cd_Still, // left
+    sAnim_Cd_Still, // right
+};
+
+
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Cd = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_CD,
-    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
-    .size = 256,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 128,
     .width = 16,
     .height = 16,
-    .paletteSlot = PALSLOT_NPC_2,
-    .shadowSize = SHADOW_SIZE_M,
-    .inanimate = FALSE,
+    .paletteSlot = PALSLOT_NPC_4,
+    .shadowSize = SHADOW_SIZE_S,
+    .inanimate = TRUE,
     .compressed = FALSE,
-    .tracks = TRACKS_FOOT,
+    .tracks = TRACKS_NONE,
     .oam = &gObjectEventBaseOam_16x16,
     .subspriteTables = sOamTables_16x16,
-    .anims = sAnimTable_Standard,
+    .anims = sAnimTable_Cd,
     .images = sPicTable_Cd,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
@@ -4789,15 +4806,15 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Cd = {
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Dollarsign = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_DOLLARSIGN,
-    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
-    .size = 256,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 128,
     .width = 16,
     .height = 16,
     .paletteSlot = PALSLOT_NPC_2,
-    .shadowSize = SHADOW_SIZE_M,
-    .inanimate = FALSE,
+    .shadowSize = SHADOW_SIZE_NONE,
+    .inanimate = TRUE,
     .compressed = FALSE,
-    .tracks = TRACKS_FOOT,
+    .tracks = TRACKS_NONE,
     .oam = &gObjectEventBaseOam_16x16,
     .subspriteTables = sOamTables_16x16,
     .anims = sAnimTable_Standard,
@@ -4808,15 +4825,15 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Dollarsign = {
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Unsichtbar = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_UNSICHTBAR,
-    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
     .size = 256,
     .width = 16,
     .height = 16,
     .paletteSlot = PALSLOT_NPC_2,
-    .shadowSize = SHADOW_SIZE_M,
-    .inanimate = FALSE,
+    .shadowSize = SHADOW_SIZE_NONE,
+    .inanimate = TRUE,
     .compressed = FALSE,
-    .tracks = TRACKS_FOOT,
+    .tracks = TRACKS_NONE,
     .oam = &gObjectEventBaseOam_16x16,
     .subspriteTables = sOamTables_16x16,
     .anims = sAnimTable_Standard,

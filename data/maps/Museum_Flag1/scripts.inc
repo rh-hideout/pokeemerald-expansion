@@ -340,7 +340,7 @@ Museum_Flag1_EventScript_ApplyDoorOpen::
 
 
 @--------------------------------------------------------------------------
-@ Heal
+@ Heal und Girl nach Kampf
 @--------------------------------------------------------------------------
 
 Museum_Flag1_EventScript_HealGuy::
@@ -356,6 +356,11 @@ Museum_Flag1_EventScript_HealGuy::
     release
     end
 
+Museum_Flag1_Girl::
+    msgbox Museum_Flag1_Text_Girl, MSGBOX_DEFAULT
+    release
+    end
+
 
 @--------------------------------------------------------------------------
 @ Schilder
@@ -364,34 +369,42 @@ Museum_Flag1_EventScript_HealGuy::
 
 Museum_Flag1_EventScript_Sign_M1::
 	msgbox Museum_Flag1_Text_Sign_M, MSGBOX_DEFAULT
+    release
 	end
 
 Museum_Flag1_EventScript_Sign_X::
 	msgbox Museum_Flag1_Text_Sign_X, MSGBOX_DEFAULT
+    release
 	end
 
 Museum_Flag1_EventScript_Sign_S::
 	msgbox Museum_Flag1_Text_Sign_S, MSGBOX_DEFAULT
+    release
 	end
 
 Museum_Flag1_EventScript_Sign_Q::
 	msgbox Museum_Flag1_Text_Sign_Q, MSGBOX_DEFAULT
+    release
 	end
 
 Museum_Flag1_EventScript_Sign_N::
 	msgbox Museum_Flag1_Text_Sign_N, MSGBOX_DEFAULT
+    release
 	end
 
 Museum_Flag1_EventScript_Sign_D::
 	msgbox Museum_Flag1_Text_Sign_D, MSGBOX_DEFAULT
+    release
 	end
 
 Museum_Flag1_EventScript_Sign_M2::
 	msgbox Museum_Flag1_Text_Sign_M, MSGBOX_DEFAULT
+    release
 	end
 
 Museum_Flag1_EventScript_Sign_Roman::
 	msgbox Museum_Flag1_Text_Roman, MSGBOX_DEFAULT
+    release
 	end
 
 
@@ -412,7 +425,10 @@ Museum_Flag1_Text_RocketDialog:
     .string "JESSIE: How rude!\p"
     .string "JAMES: We are TEAM ROCKET and\n"
 	.string "were hired by Business Informatics\p"
-    .string "to steal your MATHALYZER!$"
+    .string "to steal your MATHALYZER!\p"
+    .string "PROF. FARMER: Go {PLAYER}.\n"
+    .string "Attack those punks and teach them\p"
+    .string "some manners!$"
 
 Museum_Flag1_Text_RocketPreBattle:
     .string "JESSIE: You want it back?\n"
@@ -455,6 +471,10 @@ Museum_Flag1_Text_TerminalAlreadyOpen:
 
 Museum_Flag1_Text_Heal:
     .string "Here, let me heal your POKéMON.$"
+
+Museum_Flag1_Text_Girl:
+    .string "{PLAYER}, I'm scared.\n"
+    .string "Please find a way out.$"
 
 
 Museum_Flag1_Text_Sign_M:

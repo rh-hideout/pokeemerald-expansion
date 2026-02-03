@@ -29,17 +29,18 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_BLOCKER",
       "graphics_id": "OBJ_EVENT_GFX_BALL_CUSHION",
       "x": 4,
       "y": 1,
-      "elevation": 0,
+      "elevation": 1,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_BADGE01_GET"
+      "flag": "FLAG_CTF_GYM1_DEFEATED"
     }
   ],
   "warp_events": [

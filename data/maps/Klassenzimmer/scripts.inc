@@ -75,7 +75,7 @@ Klassenzimmer_Text_Welcome:
 	.string "especially for you.$"
 
 Klassenzimmer_Text_Museum:
-	.string "PRO. FARMER: Today we will\n"
+	.string "PROF. FARMER: Today we will\n"
 	.string "visit the museum...\p"
 	.string "(Platzhaltertext)$"
 

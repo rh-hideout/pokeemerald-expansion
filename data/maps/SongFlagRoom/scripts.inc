@@ -1,6 +1,11 @@
 SongFlagRoom_MapScripts::
 	.byte 0
 
+SongFlagRoom_OnTransition:
+	setflag FLAG_SONGFLAGROOM_BETRETEN
+	end
+
+
 @ ========== NPC  ==========
 SongFlagRoom_EventScript_Hiker::
 	msgbox SongFlagRoom_Text_Hiker, MSGBOX_NPC

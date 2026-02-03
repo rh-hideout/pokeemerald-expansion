@@ -1218,3 +1218,5 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Arena_Flag4/scripts.inc"
 
 	.include "data/maps/GlitchHaus/scripts.inc"
+
+	.include "data/maps/Zwischenstueck/scripts.inc"

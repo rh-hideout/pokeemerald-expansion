@@ -1485,7 +1485,8 @@ static bool8 KeyboardKeyHandler_Character(u8 input)
     {
         bool8 textFull = AddTextCharacter();
 
-        SwapKeyboardToLowerAfterFirstCapitalLetter();
+        // No auto-switch to lowercase after first letter
+        // SwapKeyboardToLowerAfterFirstCapitalLetter();
 
         SquishCursor();
         if (textFull)
@@ -1496,6 +1497,7 @@ static bool8 KeyboardKeyHandler_Character(u8 input)
     }
     return FALSE;
 }
+
 
 static void SwapKeyboardToLowerAfterFirstCapitalLetter(void)
 {
