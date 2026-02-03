@@ -574,9 +574,6 @@ void CreateOverworldWildEncounter(void)
         return;
     }
 
-    if (IsOverworldWildEncounter(object, OWE_MANUAL))
-        FlagSet(GetObjectEventFlagIdByLocalIdAndMap(object->localId, object->mapNum, object->mapGroup));
-
     if (indexRoamerOutbreak && CreateOverworldWildEncounter_CheckRoamer(OWE_GetObjectRoamerOutbreakStatus(object)))
         return;
 
@@ -1246,12 +1243,15 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 void OverworldWildEncounter_RemoveObjectOnBattle(void)
 {
     struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
-    if (IsOverworldWildEncounter(object, OWE_ANY))
-    {
-        RemoveObjectEvent(object);
-        OWE_SetNewSpawnCountdown();
-        gSpecialVar_LastTalked = LOCALID_NONE;
-    }
+    if (!IsOverworldWildEncounter(object, OWE_ANY))
+        return;
+
+    if (IsOverworldWildEncounter(object, OWE_MANUAL))
+        FlagSet(GetObjectEventFlagIdByLocalIdAndMap(object->localId, object->mapNum, object->mapGroup));
+
+    RemoveObjectEvent(object);
+    OWE_SetNewSpawnCountdown();
+    gSpecialVar_LastTalked = LOCALID_NONE;
 }
 
 // Returns TRUE if movement is restricted.
