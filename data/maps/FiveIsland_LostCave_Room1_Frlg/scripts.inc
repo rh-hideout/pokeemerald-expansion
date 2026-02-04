@@ -1,4 +1,4 @@
-FiveIsland_LostCave_Room1_MapScripts::
+FiveIsland_LostCave_Room1_Frlg_MapScripts::
 	.byte 0
 
 FiveIsland_LostCave_Room1_EventScript_Lawson::

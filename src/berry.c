@@ -15,11 +15,12 @@
 #include "constants/event_object_movement.h"
 #include "constants/items.h"
 
-static u16 BerryTypeToItemId(u16 berry);
+static enum Item BerryTypeToItemId(u16 berry);
 static u8 BerryTreeGetNumStagesWatered(struct BerryTree *tree);
 static u8 GetNumStagesWateredByBerryTreeId(u8 id);
 static u8 CalcBerryYieldInternal(u16 max, u16 min, u8 water);
 static u8 CalcBerryYield(struct BerryTree *tree);
+static u32 GetBerryTreeAge(u8 id, u8 stage);
 static u8 GetBerryCountByBerryTreeId(u8 id);
 static u16 GetStageDurationByBerryType(u8);
 static u8 GetDrainRateByBerryType(u8);
@@ -1965,8 +1966,15 @@ void PlantBerryTree(u8 id, u8 berry, u8 stage, bool8 allowGrowth)
     tree->stage = stage;
     tree->moistureLevel = 100;
     if (OW_BERRY_ALWAYS_WATERABLE)
-        tree->berryYield = GetBerryInfo(berry)->maxYield;
-    if (stage == BERRY_STAGE_BERRIES)
+    {
+        // We simulate a tree having grown without water
+        u32 berryTreeAge = GetBerryTreeAge(id, stage);
+        if (GetBerryInfo(berry)->maxYield - berryTreeAge * GetBerryInfo(berry)->maxYield / 5 < GetBerryInfo(berry)->minYield)
+            tree->berryYield = GetBerryInfo(berry)->minYield;
+        else
+            tree->berryYield = GetBerryInfo(berry)->maxYield - berryTreeAge * GetBerryInfo(berry)->maxYield / 5;
+    }
+    else if (stage == BERRY_STAGE_BERRIES)
     {
         tree->berryYield = CalcBerryYield(tree);
         tree->minutesUntilNextStage *= ((tree->mulch == ITEM_TO_MULCH(ITEM_STABLE_MULCH)) ? 6 : 4);
@@ -2000,7 +2008,7 @@ u8 GetMulchByBerryTreeId(u8 id)
     return gSaveBlock1Ptr->berryTrees[id].mulch;
 }
 
-u8 ItemIdToBerryType(u16 item)
+u8 ItemIdToBerryType(enum Item item)
 {
     u16 berry = item - FIRST_BERRY_INDEX;
 
@@ -2010,9 +2018,9 @@ u8 ItemIdToBerryType(u16 item)
         return ITEM_TO_BERRY(item);
 }
 
-static u16 BerryTypeToItemId(u16 berry)
+static enum Item BerryTypeToItemId(u16 berry)
 {
-    u16 item = berry - 1;
+    enum Item item = berry - 1;
 
     if (item > LAST_BERRY_INDEX - FIRST_BERRY_INDEX)
         return FIRST_BERRY_INDEX;
@@ -2096,6 +2104,17 @@ static u8 CalcBerryYield(struct BerryTree *tree)
         result = CalcBerryYieldInternal(max, min, BerryTreeGetNumStagesWatered(tree));
 
     return result;
+}
+
+static u32 GetBerryTreeAge(u8 id, u8 stage)
+{
+    if (stage == BERRY_STAGE_TRUNK)
+        stage = 5;
+    else if (stage == BERRY_STAGE_BUDDING)
+        stage = 6;
+    else if (stage > 0)
+        stage -= 1;
+    return GetBerryInfo(id)->growthDuration * stage / (OW_BERRY_SIX_STAGES ? 6 : 4);
 }
 
 static u8 GetBerryCountByBerryTreeId(u8 id)
@@ -2335,7 +2354,6 @@ static const u8 sBerryMutations[][3] = {
     {ITEM_TO_BERRY(ITEM_IAPAPA_BERRY), ITEM_TO_BERRY(ITEM_MAGO_BERRY),   ITEM_TO_BERRY(ITEM_POMEG_BERRY)},
     {ITEM_TO_BERRY(ITEM_CHESTO_BERRY), ITEM_TO_BERRY(ITEM_PERSIM_BERRY), ITEM_TO_BERRY(ITEM_KELPSY_BERRY)},
     {ITEM_TO_BERRY(ITEM_ORAN_BERRY),   ITEM_TO_BERRY(ITEM_PECHA_BERRY),  ITEM_TO_BERRY(ITEM_QUALOT_BERRY)},
-    {ITEM_TO_BERRY(ITEM_CHESTO_BERRY), ITEM_TO_BERRY(ITEM_PERSIM_BERRY), ITEM_TO_BERRY(ITEM_KELPSY_BERRY)},
     {ITEM_TO_BERRY(ITEM_ASPEAR_BERRY), ITEM_TO_BERRY(ITEM_LEPPA_BERRY),  ITEM_TO_BERRY(ITEM_HONDEW_BERRY)},
     {ITEM_TO_BERRY(ITEM_AGUAV_BERRY),  ITEM_TO_BERRY(ITEM_FIGY_BERRY),   ITEM_TO_BERRY(ITEM_GREPA_BERRY)},
     {ITEM_TO_BERRY(ITEM_LUM_BERRY),    ITEM_TO_BERRY(ITEM_SITRUS_BERRY), ITEM_TO_BERRY(ITEM_TAMATO_BERRY)},

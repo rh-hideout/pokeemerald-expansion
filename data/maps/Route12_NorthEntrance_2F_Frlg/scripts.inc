@@ -1,4 +1,4 @@
-Route12_NorthEntrance_2F_MapScripts::
+Route12_NorthEntrance_2F_Frlg_MapScripts::
 	.byte 0
 
 Route12_NorthEntrance_2F_EventScript_LeftBinoculars::

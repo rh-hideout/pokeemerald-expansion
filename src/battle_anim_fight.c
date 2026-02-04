@@ -494,7 +494,7 @@ static void AnimFistOrFootRandomPos(struct Sprite *sprite)
         return;
     }
 
-    u8 battler;
+    enum BattlerId battler;
     s16 xMod, yMod;
     s16 x, y;
 
@@ -924,7 +924,7 @@ static void AnimSuperpowerRock_Step2(struct Sprite *sprite)
 
 void AnimSuperpowerFireball(struct Sprite *sprite)
 {
-    u8 battler;
+    enum BattlerId battler;
 
     if (gBattleAnimArgs[0] == ANIM_ATTACKER)
     {

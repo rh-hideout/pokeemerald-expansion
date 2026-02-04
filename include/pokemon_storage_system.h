@@ -43,9 +43,6 @@ u32 GetBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request);
 void SetBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request, const void *value);
 u32 GetCurrentBoxMonData(u8 boxPosition, s32 request);
 void SetCurrentBoxMonData(u8 boxPosition, s32 request, const void *value);
-void GetBoxMonNickAt(u8 boxId, u8 boxPosition, u8 *dst);
-u32 GetBoxMonLevelAt(u8 boxId, u8 boxPosition);
-void SetBoxMonNickAt(u8 boxId, u8 boxPosition, const u8 *nick);
 u32 GetAndCopyBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request, void *dst);
 void SetBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *src);
 void CopyBoxMonAt(u8 boxId, u8 boxPosition, struct BoxPokemon *dst);
@@ -73,8 +70,8 @@ u8 *GetWaldaPhrasePtr(void);
 void SetWaldaPhrase(const u8 *src);
 bool32 IsWaldaPhraseEmpty(void);
 
-void EnterPokeStorage(u8 boxOption);
+void ChooseMonFromStorage();
 u32 CountPartyNonEggMons(void);
-void ChooseBoxMon(void);
+void RemoveSelectedPcMon(struct Pokemon *mon);
 
 #endif // GUARD_POKEMON_STORAGE_SYSTEM_H

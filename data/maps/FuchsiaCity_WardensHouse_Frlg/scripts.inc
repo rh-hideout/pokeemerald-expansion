@@ -1,4 +1,4 @@
-FuchsiaCity_WardensHouse_MapScripts::
+FuchsiaCity_WardensHouse_Frlg_MapScripts::
 	.byte 0
 
 FuchsiaCity_WardensHouse_EventScript_Warden::

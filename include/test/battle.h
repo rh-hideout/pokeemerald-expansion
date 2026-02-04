@@ -621,7 +621,7 @@ enum
 
 struct QueuedAbilityEvent
 {
-    u8 battlerId;
+    enum BattlerId battlerId;
     enum Ability ability;
 };
 
@@ -638,14 +638,14 @@ enum { EXP_EVENT_NEW_EXP, EXP_EVENT_DELTA_EXP };
 
 struct QueuedHPEvent
 {
-    u32 battlerId:3;
+    enum BattlerId battlerId:3;
     u32 type:1;
     u32 address:28;
 };
 
 struct QueuedSubHitEvent
 {
-    u32 battlerId:3;
+    enum BattlerId battlerId:3;
     u32 checkBreak:1;
     u32 breakSub:1;
     u32 address:27;
@@ -653,7 +653,7 @@ struct QueuedSubHitEvent
 
 struct QueuedExpEvent
 {
-    u32 battlerId:3;
+    enum BattlerId battlerId:3;
     u32 type:1;
     u32 address:28;
 };
@@ -665,7 +665,7 @@ struct QueuedMessageEvent
 
 struct QueuedStatusEvent
 {
-    u32 battlerId:3;
+    enum BattlerId battlerId:3;
     u32 mask:29;
 };
 
@@ -775,18 +775,18 @@ struct BattleTestData
 
     u8 playerPartySize;
     u8 opponentPartySize;
-    u8 explicitMoves[MAX_BATTLERS_COUNT];
+    u8 explicitMoves[MAX_BATTLE_TRAINERS];
     bool8 hasExplicitSpeeds;
-    u8 explicitSpeeds[MAX_BATTLERS_COUNT];
+    u8 explicitSpeeds[MAX_BATTLE_TRAINERS];
     u16 slowerThan[NUM_BATTLE_SIDES][PARTY_SIZE];
-    u8 currentPosition;
+    enum BattleTrainer battleTrainer;
     u8 currentPartyIndex;
     struct Pokemon *currentMon;
     u8 gender;
     u8 nature;
     bool8 isShiny;
-    enum Ability forcedAbilities[MAX_BATTLERS_COUNT][PARTY_SIZE];
-    u8 chosenGimmick[MAX_BATTLERS_COUNT][PARTY_SIZE];
+    enum Ability forcedAbilities[MAX_BATTLE_TRAINERS][PARTY_SIZE];
+    u8 chosenGimmick[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 forcedEnvironment;
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
@@ -1014,12 +1014,12 @@ struct moveWithPP {
 #define VAR_SET(varId, value) SetVarForTest(__LINE__, varId, value)
 #define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, configTag, value)
 
-#define PLAYER(species) for (OpenPokemon(__LINE__, B_POSITION_PLAYER_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define OPPONENT(species) for (OpenPokemon(__LINE__, B_POSITION_OPPONENT_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_PLAYER(species) for (OpenPokemonMulti(__LINE__, B_POSITION_PLAYER_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_OPPONENT_A(species) for (OpenPokemonMulti(__LINE__, B_POSITION_OPPONENT_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_PARTNER(species) for (OpenPokemonMulti(__LINE__, B_POSITION_PLAYER_RIGHT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_OPPONENT_B(species) for (OpenPokemonMulti(__LINE__, B_POSITION_OPPONENT_RIGHT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT(species) for (OpenPokemon(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_PLAYER(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_OPPONENT_A(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_PARTNER(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_2, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_OPPONENT_B(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_3, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 
 #define Gender(gender) Gender_(__LINE__, gender)
 #define Nature(nature) Nature_(__LINE__, nature)
@@ -1058,13 +1058,13 @@ void TieBreakScore(u32 sourceLine, enum RandomTag rngTag, enum ScoreTieResolutio
 void TieBreakTarget(u32 sourceLine, enum TargetTieResolution targetTieRes, u32 value);
 void ClearFlagAfterTest(void);
 void ClearVarAfterTest(void);
-void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species);
-void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species);
+void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, u32 species);
+void OpenPokemonMulti(u32 sourceLine, enum BattleTrainer trainer, u32 species);
 void ClosePokemon(u32 sourceLine);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
 void AIFlags_(u32 sourceLine, u64 flags);
-void BattlerAIFlags_(u32 sourceLine, u32 battler, u64 flags);
+void BattlerAIFlags_(u32 sourceLine, enum BattlerId battler, u64 flags);
 void AILogScores(u32 sourceLine);
 void Gender_(u32 sourceLine, u32 gender);
 void Nature_(u32 sourceLine, u32 nature);
@@ -1098,18 +1098,14 @@ void Environment_(u32 sourceLine, u32 environment);
 
 static inline bool8 IsMultibattleTest(void)
 {
-    if (TESTING)
+    #if TESTING
     {
         if (((gBattleTypeFlags & BATTLE_MULTI_TEST) == BATTLE_MULTI_TEST)
-        || ((gBattleTypeFlags & BATTLE_TWO_VS_ONE_TEST) == BATTLE_TWO_VS_ONE_TEST))
+         || ((gBattleTypeFlags & BATTLE_TWO_VS_ONE_TEST) == BATTLE_TWO_VS_ONE_TEST))
             return TRUE;
-        else
-            return FALSE;
     }
-    else
-    {
-        return FALSE;
-    }
+    #endif
+    return FALSE;
 }
 
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
@@ -1194,7 +1190,7 @@ struct MoveContext
 
 struct ItemContext
 {
-    u16 itemId;
+    enum Item itemId;
     u16 explicitItemId:1;
     u16 partyIndex;
     u16 explicitPartyIndex:1;

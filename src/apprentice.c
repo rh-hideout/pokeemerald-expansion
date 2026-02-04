@@ -1237,7 +1237,7 @@ static void GetShouldApprenticeLeave(void)
     gSpecialVar_0x8004 = TRUE;
 }
 
-const u8 *GetApprenticeNameInLanguage(u32 apprenticeId, s32 language)
+const u8 *GetApprenticeNameInLanguage(u32 apprenticeId, enum Language language)
 {
     const struct ApprenticeTrainer *apprentice = &gApprentices[apprenticeId];
 

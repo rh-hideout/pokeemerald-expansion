@@ -1,4 +1,4 @@
-SixIsland_Mart_MapScripts::
+SixIsland_Mart_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_Mart_EventScript_Clerk::

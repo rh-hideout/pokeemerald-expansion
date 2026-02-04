@@ -21,6 +21,7 @@
 #include "constants/pokemon.h"
 #include "constants/easy_chat.h"
 #include "constants/trainer_hill.h"
+#include "constants/trainer_tower.h"
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "config/save.h"
@@ -312,7 +313,7 @@ struct BerryPickingResults
 
 struct PyramidBag
 {
-    u16 itemId[FRONTIER_LVL_MODE_COUNT][PYRAMID_BAG_ITEMS_COUNT];
+    enum Item itemId[FRONTIER_LVL_MODE_COUNT][PYRAMID_BAG_ITEMS_COUNT];
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
     u16 quantity[FRONTIER_LVL_MODE_COUNT][PYRAMID_BAG_ITEMS_COUNT];
 #else
@@ -331,7 +332,7 @@ struct ApprenticeMon
 {
     u16 species;
     enum Move moves[MAX_MON_MOVES];
-    u16 item;
+    enum Item item;
 };
 
 // This is for past players Apprentices or Apprentices received via Record Mix.
@@ -670,7 +671,7 @@ struct WarpData
 
 struct ItemSlot
 {
-    u16 itemId;
+    enum Item itemId;
     u16 quantity;
 };
 
@@ -822,7 +823,7 @@ struct RecordMixingGiftData
 {
     u8 unk0;
     u8 quantity;
-    u16 itemId;
+    enum Item itemId;
     u8 filler4[8];
 };
 
@@ -851,7 +852,7 @@ struct Mail
     /*0x12*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
     /*0x1A*/ u8 trainerId[TRAINER_ID_LENGTH];
     /*0x1E*/ u16 species;
-    /*0x20*/ u16 itemId;
+    /*0x20*/ enum Item itemId;
 };
 
 struct DaycareMail
@@ -902,7 +903,7 @@ struct LilycoveLadyFavor
     /*0x004*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
     /*0x00C*/ u8 favorId;
     /*0x00D*/ //u8 padding1;
-    /*0x00E*/ u16 itemId;
+    /*0x00E*/ enum Item itemId;
     /*0x010*/ u16 bestItem;
     /*0x012*/ u8 language;
     /*0x013*/ //u8 padding2;
@@ -959,6 +960,20 @@ struct TrainerHillSave
                u16 field_3D6E_0f:1;
                u16 mode:2; // HILL_MODE_*
                //u16 padding:8;
+};
+
+struct TrainerTower
+{
+    u32 timer;
+    u32 bestTime;
+    u8 floorsCleared;
+    u8 unk9;
+    bool8 receivedPrize:1;
+    bool8 checkedFinalTime:1;
+    bool8 spokeToOwner:1;
+    bool8 hasLost:1;
+    bool8 unkA_4:1;
+    bool8 validated:1;
 };
 
 struct WonderNewsMetadata
@@ -1181,6 +1196,14 @@ struct SaveBlock1
     /*0x3???*/ struct TrainerHillSave trainerHill;
 #endif //FREE_TRAINER_HILL
     /*0x3???*/ struct WaldaPhrase waldaPhrase;
+#if FREE_TRAINER_TOWER == FALSE && IS_FRLG
+    u32 towerChallengeId;
+    struct TrainerTower trainerTower[NUM_TOWER_CHALLENGE_TYPES];
+#endif //FREE_TRAINER_TOWER
+#if IS_FRLG
+    u8 rivalName[PLAYER_NAME_LENGTH + 1];
+    struct DaycareMon route5DayCareMon;
+#endif
     // sizeof: 0x3???
 };
 

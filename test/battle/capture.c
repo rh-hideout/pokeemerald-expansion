@@ -140,7 +140,7 @@ WILD_BATTLE_TEST("Capture: Missing badge malus apply correcly in gen 9")
 
 WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, capture of owned pokemon always appear critical")
 {
-    u32 item;
+    enum Item item;
     bool32 alreadyOwned;
     u32 catchingChance;
 
@@ -214,7 +214,7 @@ WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
     u32 item = ITEM_NONE;
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
-        PARAMETRIZE(item = gBallItemIds[ballId]);
+        PARAMETRIZE(item = gPokeBalls[ballId].itemId);
     }
 
     GIVEN {

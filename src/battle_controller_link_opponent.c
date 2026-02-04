@@ -31,17 +31,17 @@
 #include "recorded_battle.h"
 #include "random.h"
 
-static void LinkOpponentHandleDrawTrainerPic(u32 battler);
-static void LinkOpponentHandleTrainerSlide(u32 battler);
-static void LinkOpponentHandleTrainerSlideBack(u32 battler);
-static void LinkOpponentHandleIntroTrainerBallThrow(u32 battler);
-static void LinkOpponentHandleDrawPartyStatusSummary(u32 battler);
-static void LinkOpponentHandleLinkStandbyMsg(u32 battler);
-static void LinkOpponentHandleEndLinkBattle(u32 battler);
+static void LinkOpponentHandleDrawTrainerPic(enum BattlerId battler);
+static void LinkOpponentHandleTrainerSlide(enum BattlerId battler);
+static void LinkOpponentHandleTrainerSlideBack(enum BattlerId battler);
+static void LinkOpponentHandleIntroTrainerBallThrow(enum BattlerId battler);
+static void LinkOpponentHandleDrawPartyStatusSummary(enum BattlerId battler);
+static void LinkOpponentHandleLinkStandbyMsg(enum BattlerId battler);
+static void LinkOpponentHandleEndLinkBattle(enum BattlerId battler);
 
-static void LinkOpponentBufferRunCommand(u32 battler);
+static void LinkOpponentBufferRunCommand(enum BattlerId battler);
 
-static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
+static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(enum BattlerId battler) =
 {
     [CONTROLLER_GETMONDATA]               = BtlController_HandleGetMonData,
     [CONTROLLER_GETRAWMONDATA]            = BtlController_Empty,
@@ -98,14 +98,14 @@ static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 batt
     [CONTROLLER_TERMINATOR_NOP]           = BtlController_TerminatorNop
 };
 
-void SetControllerToLinkOpponent(u32 battler)
+void SetControllerToLinkOpponent(enum BattlerId battler)
 {
     gBattlerBattleController[battler] = BATTLE_CONTROLLER_LINK_OPPONENT;
     gBattlerControllerEndFuncs[battler] = LinkOpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = LinkOpponentBufferRunCommand;
 }
 
-static void LinkOpponentBufferRunCommand(u32 battler)
+static void LinkOpponentBufferRunCommand(enum BattlerId battler)
 {
     if (IsBattleControllerActiveOnLocal(battler))
     {
@@ -116,7 +116,7 @@ static void LinkOpponentBufferRunCommand(u32 battler)
     }
 }
 
-static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
+static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
 {
     bool32 healthboxAnimDone = FALSE;
     bool32 twoMons = FALSE;
@@ -170,7 +170,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
     }
 }
 
-static void Intro_TryShinyAnimShowHealthbox(u32 battler)
+static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 {
     bool32 bgmRestored = FALSE;
 
@@ -258,7 +258,7 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
     }
 }
 
-void LinkOpponentBufferExecCompleted(u32 battler)
+void LinkOpponentBufferExecCompleted(enum BattlerId battler)
 {
     gBattlerControllerFuncs[battler] = LinkOpponentBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
@@ -274,21 +274,22 @@ void LinkOpponentBufferExecCompleted(u32 battler)
     }
 }
 
-static void LinkOpponentHandleDrawTrainerPic(u32 battler)
+static void LinkOpponentHandleDrawTrainerPic(enum BattlerId battler)
 {
     s16 xPos;
     enum TrainerPicID trainerPicId;
+    enum BattlerPosition position = GetBattlerPosition(battler);
 
     if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
-        if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
+        if ((position & BIT_FLANK) != 0) // second mon
             xPos = 152;
         else // first mon
             xPos = 200;
 
         if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
         {
-            if (battler == B_POSITION_OPPONENT_LEFT)
+            if (position == B_POSITION_OPPONENT_LEFT)
                 trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
             else
                 trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentB);
@@ -349,11 +350,11 @@ static void LinkOpponentHandleDrawTrainerPic(u32 battler)
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, TRUE, xPos, 40, -1);
 }
 
-static void LinkOpponentHandleTrainerSlide(u32 battler)
+static void LinkOpponentHandleTrainerSlide(enum BattlerId battler)
 {
     enum TrainerPicID trainerPicId;
 
-    if (battler == B_POSITION_OPPONENT_LEFT)
+    if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
     else
         trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentB);
@@ -362,28 +363,28 @@ static void LinkOpponentHandleTrainerSlide(u32 battler)
     BtlController_Complete(battler); // Possibly a bug, because execution should be completed after the slide in finishes. See Controller_WaitForTrainerPic.
 }
 
-static void LinkOpponentHandleTrainerSlideBack(u32 battler)
+static void LinkOpponentHandleTrainerSlideBack(enum BattlerId battler)
 {
     BtlController_HandleTrainerSlideBack(battler, 35, FALSE);
 }
 
-static void LinkOpponentHandleIntroTrainerBallThrow(u32 battler)
+static void LinkOpponentHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     BtlController_HandleIntroTrainerBallThrow(battler, 0, NULL, 0, Intro_TryShinyAnimShowHealthbox);
 }
 
-static void LinkOpponentHandleDrawPartyStatusSummary(u32 battler)
+static void LinkOpponentHandleDrawPartyStatusSummary(enum BattlerId battler)
 {
     BtlController_HandleDrawPartyStatusSummary(battler, B_SIDE_OPPONENT, TRUE);
 }
 
-static void LinkOpponentHandleLinkStandbyMsg(u32 battler)
+static void LinkOpponentHandleLinkStandbyMsg(enum BattlerId battler)
 {
     RecordedBattle_RecordAllBattlerData(&gBattleResources->bufferA[battler][2]);
     BtlController_Complete(battler);
 }
 
-static void LinkOpponentHandleEndLinkBattle(u32 battler)
+static void LinkOpponentHandleEndLinkBattle(enum BattlerId battler)
 {
     RecordedBattle_RecordAllBattlerData(&gBattleResources->bufferA[battler][4]);
 

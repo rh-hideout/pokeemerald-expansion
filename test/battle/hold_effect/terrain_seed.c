@@ -17,7 +17,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Electric Seed raises the holder's Defense on Electric Terrain")
 {
     enum Ability ability;
-    u32 item;
+    enum Item item;
     PARAMETRIZE { ability = ABILITY_TELEPATHY; item = ITEM_NONE; }
     PARAMETRIZE { ability = ABILITY_TELEPATHY; item = ITEM_ELECTRIC_SEED; }
     PARAMETRIZE { ability = ABILITY_ELECTRIC_SURGE; item = ITEM_NONE; }
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Electric Seed raises the holder's Defense on Electric Terrai
 SINGLE_BATTLE_TEST("Grassy Seed raises the holder's Defense on Grassy Terrain")
 {
     enum Ability ability;
-    u32 item;
+    enum Item item;
     PARAMETRIZE { ability = ABILITY_TELEPATHY; item = ITEM_NONE; }
     PARAMETRIZE { ability = ABILITY_TELEPATHY; item = ITEM_GRASSY_SEED; }
     PARAMETRIZE { ability = ABILITY_GRASSY_SURGE; item = ITEM_NONE; }
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Grassy Seed raises the holder's Defense on Grassy Terrain")
 SINGLE_BATTLE_TEST("Misty Seed raises the holder's Sp. Defense on Misty Terrain")
 {
     enum Ability ability;
-    u32 item;
+    enum Item item;
     PARAMETRIZE { ability = ABILITY_TELEPATHY; item = ITEM_NONE; }
     PARAMETRIZE { ability = ABILITY_TELEPATHY; item = ITEM_MISTY_SEED; }
     PARAMETRIZE { ability = ABILITY_MISTY_SURGE; item = ITEM_NONE; }
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Misty Seed raises the holder's Sp. Defense on Misty Terrain"
 SINGLE_BATTLE_TEST("Psychic Seed raises the holder's Sp. Defense on Psychic Terrain")
 {
     enum Ability ability;
-    u32 item;
+    enum Item item;
     PARAMETRIZE { ability = ABILITY_TELEPATHY; item = ITEM_NONE; }
     PARAMETRIZE { ability = ABILITY_TELEPATHY; item = ITEM_PSYCHIC_SEED; }
     PARAMETRIZE { ability = ABILITY_PSYCHIC_SURGE; item = ITEM_NONE; }

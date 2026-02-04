@@ -181,7 +181,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special attack by 30% if it is the 
 {
     u32 species;
     enum Ability ability;
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_BOOSTER_ENERGY; }
@@ -207,7 +207,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the
 {
     u32 species;
     enum Ability ability;
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_BOOSTER_ENERGY; }
@@ -225,21 +225,8 @@ SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponent);
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.7), results[1].damage);
-    }
-}
-
-SINGLE_BATTLE_TEST("Booster Energy can't be flung if a Paradox species is involved")
-{
-    GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_IRON_MOTH].isParadox == TRUE);
-        PLAYER(SPECIES_IRON_MOTH);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_FLING); }
-    } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, opponent);
-        MESSAGE("But it failed!");
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.77), results[1].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(0.77), results[3].damage);
     }
 }
 

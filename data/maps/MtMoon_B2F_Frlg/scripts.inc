@@ -1,4 +1,4 @@
-MtMoon_B2F_MapScripts::
+MtMoon_B2F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, MtMoon_B2F_OnTransition
 	.byte 0
 

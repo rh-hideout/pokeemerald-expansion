@@ -216,15 +216,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_OHKO] =
     {
-        .battleScript = BattleScript_EffectOHKO,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_HIGH_RISK,
-    },
-
-    [EFFECT_SHEER_COLD] =
-    {
-        .battleScript = BattleScript_EffectOHKO,
-        .battleTvScore = 7,
     },
 
     [EFFECT_FUSION_COMBO] =
@@ -340,7 +334,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_TRANSFORM] =
     {
         .battleScript = BattleScript_EffectTransform,
-        .battleTvScore = 0, // TODO: Assign points
+        .battleTvScore = 0, // Natural 0
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
@@ -403,7 +397,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TWO_TURNS_ATTACK] =
     {
-        .battleScript = BattleScript_EffectTwoTurnsAttack,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
         .twoTurnEffect = TRUE,
     },
@@ -508,7 +502,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SNORE] =
     {
-        .battleScript = BattleScript_EffectSnore,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
     },
 
@@ -721,7 +715,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_MAGNITUDE] =
     {
-        .battleScript = BattleScript_EffectMagnitude,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
     },
 
@@ -819,7 +813,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SOLAR_BEAM] =
     {
-        .battleScript = BattleScript_EffectTwoTurnsAttack,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
         .twoTurnEffect = TRUE,
     },
@@ -832,13 +826,13 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_BEAT_UP] =
     {
-        .battleScript = BattleScript_EffectBeatUp,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 2,
     },
 
     [EFFECT_SEMI_INVULNERABLE] =
     {
-        .battleScript = BattleScript_EffectTwoTurnsAttack,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
         .twoTurnEffect = TRUE,
         .semiInvulnerableEffect = TRUE,
@@ -882,7 +876,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SPIT_UP] =
     {
-        .battleScript = BattleScript_EffectSpitUp,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
         .encourageEncore = TRUE,
     },
@@ -954,7 +948,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_NATURE_POWER] =
     {
         .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 0, // TODO: Assign points
+        .battleTvScore = 0, // Natural 0
     },
 
     [EFFECT_CHARGE] =
@@ -1204,7 +1198,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_NATURAL_GIFT] =
     {
-        .battleScript = BattleScript_EffectNaturalGift,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
@@ -1671,7 +1665,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SYNCHRONOISE] =
     {
-        .battleScript = BattleScript_EffectSynchronoise,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -2043,13 +2037,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_ATTACK_UP_USER_ALLY] =
-    {
-        .battleScript = BattleScript_EffectAttackUpUserAlly,
-        .battleTvScore = 0, // TODO: Assign points
-        .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
-    },
-
     [EFFECT_SHELL_TRAP] =
     {
         .battleScript = BattleScript_EffectShellTrap,
@@ -2102,7 +2089,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_MAX_MOVE] =
     {
-        .battleScript = BattleScript_EffectMaxMove,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -2138,7 +2125,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FICKLE_BEAM] =
     {
-        .battleScript = BattleScript_EffectFickleBeam,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 

@@ -1411,20 +1411,20 @@ static void AnimSmallWaterOrb(struct Sprite *sprite)
     }
 }
 
-#define tRainState data[0] 
-#define tWaterSpoutPower data[1] 
-#define tDropTaskDelay data[2] 
-#define tDropInitialXPos data[4] 
-#define tDropXRange data[5] 
-#define tDropEndYPos data[6] 
-#define tDropXPos data[7] 
-#define tSineTableIndex data[8] 
-#define tCurrentDropSprites data[9] 
-#define tDropHasHit data[10] 
-#define tCreatedDropSprites data[11] 
-#define tMaxDropSprites data[12] 
-#define tShakeTasksCreated data[13] 
-#define tDropInitialYPos data[14] 
+#define tRainState data[0]
+#define tWaterSpoutPower data[1]
+#define tDropTaskDelay data[2]
+#define tDropInitialXPos data[4]
+#define tDropXRange data[5]
+#define tDropEndYPos data[6]
+#define tDropXPos data[7]
+#define tSineTableIndex data[8]
+#define tCurrentDropSprites data[9]
+#define tDropHasHit data[10]
+#define tCreatedDropSprites data[11]
+#define tMaxDropSprites data[12]
+#define tShakeTasksCreated data[13]
+#define tDropInitialYPos data[14]
 
 void AnimTask_BrineRain(u8 taskId)
 {

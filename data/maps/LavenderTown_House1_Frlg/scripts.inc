@@ -1,4 +1,4 @@
-LavenderTown_House1_MapScripts::
+LavenderTown_House1_Frlg_MapScripts::
 	.byte 0
 
 LavenderTown_House1_EventScript_CooltrainerF::

@@ -309,7 +309,7 @@ static void WhenSingles(enum Move move, struct BattlePokemon *attacker, struct B
             MOVE(attacker, move);
             MOVE(defender, MOVE_SWORDS_DANCE);
         }
-        else if (effect == EFFECT_OHKO || effect == EFFECT_SHEER_COLD)
+        else if (effect == EFFECT_OHKO)
         { // defender needs to send out a different team member
             MOVE(attacker, move);
             SEND_OUT(defender, 1);
@@ -527,7 +527,7 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
             MOVE(attacker, move, target: target);
             MOVE(target, MOVE_SWORDS_DANCE);
         }
-        else if (effect == EFFECT_OHKO || effect == EFFECT_SHEER_COLD)
+        else if (effect == EFFECT_OHKO)
         { // Opponent needs to send out a different team member
             MOVE(attacker, move, target: target);
             SEND_OUT(target, 2);
@@ -558,6 +558,10 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
         { // Opponent needs to choose priority move
             MOVE(attacker, move, target: target);
             MOVE(target, MOVE_QUICK_ATTACK, target: attacker);
+        }
+        else if (effect == EFFECT_ACUPRESSURE)
+        {
+            MOVE(attacker, move, target: attacker);
         }
         else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
         {

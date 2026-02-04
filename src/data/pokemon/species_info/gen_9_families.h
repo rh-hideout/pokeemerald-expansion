@@ -3407,7 +3407,11 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .abilities = { ABILITY_CHLOROPHYLL, ABILITY_INSOMNIA, ABILITY_MOODY },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Scovillain"),
-        .cryId = CRY_SCOVILLAIN, //CRY_SCOVILLAIN_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_SCOVILLAIN_MEGA,
+    #else
+        .cryId = CRY_SCOVILLAIN,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_SCOVILLAIN,
         .categoryName = _("Spicy Pepper"),
         .height = 12,
@@ -3416,22 +3420,22 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             "Mega Evolution has dialed up this\n"
             "Pokémon's spiciness. It swings its\n"
             "“necktie” around to wallop its foes."),
-        .frontPic = gMonBackPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
-        .iconPalIndex = 0,
+        //.frontPic = gMonBackPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        //.iconSprite = gMonIcon_QuestionMark,
+        //.iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Scovillain)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sScovillainLevelUpLearnset,
         .teachableLearnset = sScovillainTeachableLearnset,
@@ -4701,7 +4705,11 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .abilities = { ABILITY_TOXIC_DEBRIS, ABILITY_NONE, ABILITY_CORROSION },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Glimmora"),
-        .cryId = CRY_GLIMMORA, //CRY_GLIMMORA_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_GLIMMORA_MEGA,
+    #else
+        .cryId = CRY_GLIMMORA,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_GLIMMORA,
         .categoryName = _("Ore"),
         .height = 15,
@@ -4711,22 +4719,23 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             "separated from its main body-rotate\n"
             "around it to provide defense while\n"
             "cattering poisonous fragments."),
-        .frontPic = gMonBackPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
+        .frontPic = gMonFrontPic_GlimmoraMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
         .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 7,
+        .backPic = gMonBackPic_GlimmoraMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_GlimmoraMega,
+        .shinyPalette = gMonShinyPalette_GlimmoraMega,
+        .iconSprite = gMonIcon_GlimmoraMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Glimmora)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(1, 18, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sGlimmoraLevelUpLearnset,
         .teachableLearnset = sGlimmoraTeachableLearnset,
@@ -5414,7 +5423,11 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .abilities = { ABILITY_STORM_DRAIN, ABILITY_NONE, ABILITY_STORM_DRAIN },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Tatsugiri"),
-        .cryId = CRY_TATSUGIRI_CURLY, //CRY_TATSUGIRI_CURLY_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_TATSUGIRI_MEGA,
+    #else
+        .cryId = CRY_TATSUGIRI_CURLY,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_TATSUGIRI,
         .categoryName = _("Mimicry"),
         .height = 6,
@@ -5424,22 +5437,22 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             "by Mega Evolution, making it even\n"
             "wilier. It can create and command\n"
             "copies of itself."),
-        .frontPic = gMonBackPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        //.frontPic = gMonBackPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .iconSprite = gMonIcon_TatsugiriCurlyMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Tatsugiri)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sTatsugiriLevelUpLearnset,
         .teachableLearnset = sTatsugiriTeachableLearnset,
@@ -5468,7 +5481,11 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .abilities = { ABILITY_STORM_DRAIN, ABILITY_NONE, ABILITY_STORM_DRAIN },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Tatsugiri"),
-        .cryId = CRY_TATSUGIRI_DROOPY, //CRY_TATSUGIRI_DROOPY_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_TATSUGIRI_MEGA,
+    #else
+        .cryId = CRY_TATSUGIRI_DROOPY,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_TATSUGIRI,
         .categoryName = _("Mimicry"),
         .height = 6,
@@ -5478,22 +5495,22 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             "building up an overflowing pile to launch\n"
             "as projectiles. These projectiles explode\n"
             "on contact."),
-        .frontPic = gMonBackPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        //.frontPic = gMonBackPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .iconSprite = gMonIcon_TatsugiriDroopyMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Tatsugiri)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sTatsugiriLevelUpLearnset,
         .teachableLearnset = sTatsugiriTeachableLearnset,
@@ -5522,7 +5539,11 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .abilities = { ABILITY_STORM_DRAIN, ABILITY_NONE, ABILITY_STORM_DRAIN },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Tatsugiri"),
-        .cryId = CRY_TATSUGIRI_STRETCHY, //CRY_TATSUGIRI_STRETCHY_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_TATSUGIRI_MEGA,
+    #else
+        .cryId = CRY_TATSUGIRI_STRETCHY,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_TATSUGIRI,
         .categoryName = _("Mimicry"),
         .height = 6,
@@ -5532,22 +5553,22 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             "creates a dish to ride upon, allowing it\n"
             "to move with total freedom-even through\n"
             "the air."),
-        .frontPic = gMonBackPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        //.frontPic = gMonBackPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .iconSprite = gMonIcon_TatsugiriStretchyMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Tatsugiri)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sTatsugiriLevelUpLearnset,
         .teachableLearnset = sTatsugiriTeachableLearnset,
@@ -6582,7 +6603,11 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .abilities = { ABILITY_THERMAL_EXCHANGE, ABILITY_NONE, ABILITY_ICE_BODY },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Baxcalibur"),
-        .cryId = CRY_BAXCALIBUR, //CRY_BAXCALIBUR_MEGA
+    #if P_MODIFIED_MEGA_CRIES
+        .cryId = CRY_BAXCALIBUR_MEGA,
+    #else
+        .cryId = CRY_BAXCALIBUR,
+    #endif // P_MODIFIED_MEGA_CRIES
         .natDexNum = NATIONAL_DEX_BAXCALIBUR,
         .categoryName = _("Ice Dragon"),
         .height = 21,
@@ -6592,22 +6617,22 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             "more massive thanks to Mega Evolution.\n"
             "This Pokémon fires beams from the hilt\n"
             "at its solar plexus."),
-        .frontPic = gMonBackPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        //.frontPic = gMonBackPic_CircledQuestionMark,
+        //.frontPicSize = MON_COORDS_SIZE(40, 40),
+        //.frontPicYOffset = 12,
+        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.backPic = gMonBackPic_CircledQuestionMark,
+        //.backPicSize = MON_COORDS_SIZE(40, 40),
+        //.backPicYOffset = 12,
+        //.backAnimId = BACK_ANIM_NONE,
+        //.palette = gMonPalette_CircledQuestionMark,
+        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .iconSprite = gMonIcon_BaxcaliburMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Baxcalibur)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        //SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sBaxcaliburLevelUpLearnset,
         .teachableLearnset = sBaxcaliburTeachableLearnset,
@@ -8000,7 +8025,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .levelUpLearnset = sOgerponLevelUpLearnset,                                                                     \
         .teachableLearnset = sOgerponTeachableLearnset,                                                                 \
         .formSpeciesIdTable = sOgerponFormSpeciesIdTable,                                                               \
-        .formChangeTable = sOgerponFormChangeTable,                                                                     \
+        .formChangeTable = sOgerpon##Form1##FormChangeTable,                                                            \
         .isSubLegendary = TRUE,                                                                                         \
         .isTeraForm = isTeraform,                                                                                       \
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,                                                                   \
