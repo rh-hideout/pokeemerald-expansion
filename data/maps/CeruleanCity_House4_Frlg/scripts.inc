@@ -1,7 +1,7 @@
 .set REWARD_TYPE, VAR_0x8004
 .set REWARD_ITEM, VAR_0x8008
 
-CeruleanCity_House4_MapScripts::
+CeruleanCity_House4_Frlg_MapScripts::
 	.byte 0
 
 CeruleanCity_House4_EventScript_WonderNewsBerryMan::

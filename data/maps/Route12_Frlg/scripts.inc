@@ -1,4 +1,4 @@
-Route12_MapScripts::
+Route12_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, Route12_OnResume
 	.byte 0
 

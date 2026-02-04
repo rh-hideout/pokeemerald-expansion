@@ -4,6 +4,6 @@
 void ReshowBattleScreenDummy(void);
 void ReshowBattleScreenAfterMenu(void);
 void ReshowBlankBattleScreenAfterMenu(void);
-void CreateBattlerSprite(u32 battler);
+void CreateBattlerSprite(enum BattlerId battler);
 
 #endif // GUARD_RESHOW_BATTLE_SCREEN_H

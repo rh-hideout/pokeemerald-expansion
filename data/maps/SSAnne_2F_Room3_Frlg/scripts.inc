@@ -1,4 +1,4 @@
-SSAnne_2F_Room3_MapScripts::
+SSAnne_2F_Room3_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_2F_Room3_EventScript_Gentleman::

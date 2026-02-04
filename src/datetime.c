@@ -3,7 +3,7 @@
 #include "rtc.h"
 
 
-const struct DateTime gGen3Epoch = 
+const struct DateTime gGen3Epoch =
 {
     .year = 2000,
     .month = MONTH_JAN,

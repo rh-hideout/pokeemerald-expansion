@@ -1,4 +1,4 @@
-SevenIsland_TanobyRuins_MapScripts::
+SevenIsland_TanobyRuins_Frlg_MapScripts::
 	.byte 0
 
 SevenIsland_TanobyRuins_Text_BrandonIntro::

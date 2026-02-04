@@ -1,4 +1,4 @@
-SaffronCity_MrPsychicsHouse_MapScripts::
+SaffronCity_MrPsychicsHouse_Frlg_MapScripts::
 	.byte 0
 
 SaffronCity_MrPsychicsHouse_EventScript_MrPsychic::

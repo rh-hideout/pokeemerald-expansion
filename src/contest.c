@@ -5394,12 +5394,12 @@ static void CreateInvisibleBattleTargetSprite(void)
 
 static void SetBattleTargetSpritePosition(void)
 {
-    struct Sprite *sprite = &gSprites[gBattlerSpriteIds[B_POSITION_OPPONENT_RIGHT]];
+    struct Sprite *sprite = &gSprites[gBattlerSpriteIds[B_BATTLER_3]];
 
     sprite->x2 = 0;
     sprite->y2 = 0;
-    sprite->x = GetBattlerSpriteCoord(B_POSITION_OPPONENT_RIGHT, BATTLER_COORD_X);
-    sprite->y = GetBattlerSpriteCoord(B_POSITION_OPPONENT_RIGHT, BATTLER_COORD_Y);
+    sprite->x = GetBattlerSpriteCoord(B_BATTLER_3, BATTLER_COORD_X);
+    sprite->y = GetBattlerSpriteCoord(B_BATTLER_3, BATTLER_COORD_Y);
     sprite->invisible = TRUE;
 }
 
@@ -5408,7 +5408,7 @@ static void SetMoveTargetPosition(enum Move move)
     switch (GetBattlerMoveTargetType(gBattlerAttacker, move))
     {
     case TARGET_USER:
-        gBattlerTarget = B_POSITION_PLAYER_RIGHT;
+        gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
         break;
     case TARGET_OPPONENT:
     case TARGET_SELECTED:
@@ -5418,7 +5418,7 @@ static void SetMoveTargetPosition(enum Move move)
     case TARGET_FOES_AND_ALLY:
     case TARGET_USER_AND_ALLY:
     default:
-        gBattlerTarget = B_POSITION_OPPONENT_RIGHT;
+        gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
         break;
     }
 }

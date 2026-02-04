@@ -1,4 +1,4 @@
-Route18_EastEntrance_2F_MapScripts::
+Route18_EastEntrance_2F_Frlg_MapScripts::
 	.byte 0
 
 Route18_EastEntrance_2F_EventScript_LeftBinoculars::

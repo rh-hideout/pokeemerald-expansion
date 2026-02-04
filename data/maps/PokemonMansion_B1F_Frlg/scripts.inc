@@ -1,4 +1,4 @@
-PokemonMansion_B1F_MapScripts::
+PokemonMansion_B1F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, PokemonMansion_B1F_OnLoad
 	.byte 0
 

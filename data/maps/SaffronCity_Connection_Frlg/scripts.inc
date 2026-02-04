@@ -1,2 +1,2 @@
-SaffronCity_Connection_MapScripts::
+SaffronCity_Connection_Frlg_MapScripts::
 	.byte 0

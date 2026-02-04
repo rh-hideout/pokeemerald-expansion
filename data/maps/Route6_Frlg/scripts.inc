@@ -1,4 +1,4 @@
-Route6_MapScripts::
+Route6_Frlg_MapScripts::
 	.byte 0
 
 Route6_EventScript_UndergroundPathSign::

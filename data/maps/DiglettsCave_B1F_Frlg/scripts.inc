@@ -1,4 +1,4 @@
-DiglettsCave_B1F_MapScripts::
+DiglettsCave_B1F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, DiglettsCave_B1F_OnTransition
 	.byte 0
 

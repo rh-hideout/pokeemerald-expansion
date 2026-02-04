@@ -1,4 +1,4 @@
-FiveIsland_LostCave_Room4_MapScripts::
+FiveIsland_LostCave_Room4_Frlg_MapScripts::
 	.byte 0
 
 FiveIsland_LostCave_Room4_EventScript_Laura::
