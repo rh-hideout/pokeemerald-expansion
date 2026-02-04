@@ -134,3 +134,24 @@ SINGLE_BATTLE_TEST("Absorb does not drain any HP if the move is blocked by Disgu
     }
 }
 
+SINGLE_BATTLE_TEST("Absorb does not play the draining message at full HP in Gen5+")
+{
+    u32 genConfig = 0;
+
+    PARAMETRIZE { genConfig = GEN_4; }
+    PARAMETRIZE { genConfig = GEN_5; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ABSORB_MESSAGE, genConfig);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ABSORB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
+        if (genConfig < GEN_5)
+            MESSAGE("The opposing Wobbuffet had its energy drained!");
+        else
+            NOT MESSAGE("The opposing Wobbuffet had its energy drained!");
+    }
+}
