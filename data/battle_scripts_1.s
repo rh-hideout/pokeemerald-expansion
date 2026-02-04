@@ -914,7 +914,7 @@ BattleScript_EffectStrengthSap::
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed
 	accuracycheck BattleScript_MoveMissedPause
-	jumpifstat BS_TARGET, CMP_EQUAL, STAT_ATK, MIN_STAT_STAGE, BattleScript_StrengthSapPrintStatMessage
+	jumpifstatignorecontrary BS_TARGET, CMP_EQUAL, STAT_ATK, MIN_STAT_STAGE, BattleScript_StrengthSapPrintStatMessage
 	attackanimation
 	waitanimation
 	getstatvalue STAT_ATK

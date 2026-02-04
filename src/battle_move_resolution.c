@@ -1759,25 +1759,6 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
     return result;
 }
 
-static void SetAbsorbScript(s32 healAmount, enum BattleMoveEffects moveEffect)
-{
-    healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
-
-    if ((moveEffect == EFFECT_DREAM_EATER && GetConfig(CONFIG_DREAM_EATER_LIQUID_OOZE) < GEN_5)
-        || GetBattlerAbility(gBattlerTarget) != ABILITY_LIQUID_OOZE)
-    {
-        SetHealAmount(gBattlerAttacker, healAmount);
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
-        BattleScriptCall(BattleScript_EffectAbsorb);
-    }
-    else // Liquid Ooze damage
-    {
-        SetPassiveDamageAmount(gBattlerAttacker, healAmount);
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
-        BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
-    }
-}
-
 static enum MoveEndResult MoveEndAbsorb(void)
 {
     if (gBattleStruct->unableToUseMove)
@@ -1806,7 +1787,18 @@ static enum MoveEndResult MoveEndAbsorb(void)
         if (gBattleStruct->passiveHpUpdate[gBattlerAttacker] > 0)
         {
             s32 healAmount = gBattleStruct->passiveHpUpdate[gBattlerAttacker];
-            SetAbsorbScript(healAmount, moveEffect);
+            if (GetBattlerAbility(gBattlerTarget) == ABILITY_LIQUID_OOZE)
+            {
+                SetPassiveDamageAmount(gBattlerAttacker, healAmount);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
+                BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
+            }
+            else if (!IsBattlerAtMaxHp(gBattlerAttacker))
+            {
+                SetHealAmount(gBattlerAttacker, healAmount);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
+                BattleScriptCall(BattleScript_EffectAbsorb);
+            }
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
@@ -1817,7 +1809,19 @@ static enum MoveEndResult MoveEndAbsorb(void)
          && IsBattlerAlive(gBattlerAttacker))
         {
             s32 healAmount = (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
-            SetAbsorbScript(healAmount, moveEffect);
+            if ((moveEffect == EFFECT_DREAM_EATER && GetConfig(CONFIG_DREAM_EATER_LIQUID_OOZE) < GEN_5)
+                || GetBattlerAbility(gBattlerTarget) != ABILITY_LIQUID_OOZE)
+            {
+                SetHealAmount(gBattlerAttacker, healAmount);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
+                BattleScriptCall(BattleScript_EffectAbsorb);
+            }
+            else // Liquid Ooze damage
+            {
+                SetPassiveDamageAmount(gBattlerAttacker, healAmount);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
+                BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
+            }
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;

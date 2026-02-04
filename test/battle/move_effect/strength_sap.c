@@ -141,8 +141,7 @@ SINGLE_BATTLE_TEST("Strength Sap fails if target is at -6 Atk")
     }
 }
 
-// Is the test description correct?
-TO_DO_BATTLE_TEST("Strength Sap doesn't fail if target has Contrary and is at +6 Atk, restoring HP based on +5 Atk")
+TO_DO_BATTLE_TEST("Strength Sap will restore hp if target has Contrary and is at +6 Atk")
 
 SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
 {
@@ -169,7 +168,7 @@ SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
     }
 }
 
-SINGLE_BATTLE_TEST("Strength Sap will not drain users hp due to Uiquid Ooze")
+SINGLE_BATTLE_TEST("Strength Sap will not drain users hp due to Liquid Ooze")
 {
     GIVEN {
         PLAYER(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
@@ -186,9 +185,6 @@ SINGLE_BATTLE_TEST("Strength Sap will not drain users hp due to Uiquid Ooze")
 SINGLE_BATTLE_TEST("Strength Sap does not fail if target has Contrary and is at +6 Atk")
 {
     GIVEN {
-        // No idea why this does not work the code checks for min stage but goes into the fail branch regardless.
-        // However this didn't work prior to the refactor either
-        KNOWN_FAILING;
         PLAYER(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
@@ -230,3 +226,33 @@ SINGLE_BATTLE_TEST("Strength Sap fails if Heal Block applies")
     }
 }
 
+SINGLE_BATTLE_TEST("Strangth Sap will drain users HP if target has Liquid Ooze")
+{
+    s16 lostHp;
+    s32 atkStat;
+
+    PARAMETRIZE { atkStat = 100; }
+    PARAMETRIZE { atkStat = 490; } // Checks that attacker can faint with no problems.
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_TENTACOOL) { Attack(atkStat); Ability(ABILITY_LIQUID_OOZE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STRENGTH_SAP); if (atkStat == 490) { SEND_OUT(player, 1); } }
+    } SCENE {
+        MESSAGE("Wobbuffet used Strength Sap!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Tentacool's Attack fell!");
+        ABILITY_POPUP(opponent, ABILITY_LIQUID_OOZE);
+        HP_BAR(player, captureDamage: &lostHp);
+        MESSAGE("Wobbuffet sucked up the liquid ooze!");
+        if (atkStat >= 490) {
+            MESSAGE("Wobbuffet fainted!");
+            SEND_IN_MESSAGE("Wobbuffet");
+        }
+    } THEN {
+        EXPECT_EQ(lostHp, atkStat);
+    }
+}

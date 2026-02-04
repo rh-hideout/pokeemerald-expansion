@@ -616,6 +616,7 @@ void HandleAction_UseMove(void)
     gBattleStruct->eventState.atkCanceler = 0;
     ClearDamageCalcResults();
     gMultiHitCounter = 0;
+    gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
     gBattleCommunication[MISS_TYPE] = 0;
 
     moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);

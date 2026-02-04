@@ -133,3 +133,4 @@ SINGLE_BATTLE_TEST("Absorb does not drain any HP if the move is blocked by Disgu
         EXPECT_EQ(player->hp, 1);
     }
 }
+

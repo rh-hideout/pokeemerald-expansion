@@ -13391,13 +13391,6 @@ void BS_GetStatValue(void)
 {
     NATIVE_ARGS(u8 stat);
 
-    if (IsBattlerAtMaxHp(gBattlerAttacker))
-    {
-        gBattleStruct->passiveHpUpdate[gBattlerAttacker] = 0;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-
     u32 stat = cmd->stat;
     u32 healAmount = 0;
     switch (stat)
