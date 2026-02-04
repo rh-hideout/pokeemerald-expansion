@@ -3697,13 +3697,11 @@ static void Cmd_setadditionaleffects(void)
                         gBattlescriptCurrInstr,
                         flags
                     );
-
-                    gBattleStruct->additionalEffectsCounter++;
-				    return;
                 }
             }
 
             gBattleStruct->additionalEffectsCounter++;
+            return;
         }
     }
 
@@ -6353,7 +6351,7 @@ static u32 GetPossibleNextTarget(u32 currTarget)
 
     while (i < MAX_BATTLERS_COUNT)
     {
-        enum BattlerId battler = targetOrder[i];
+        enum BattlerId battler = targetOrder[i++];
 
         if (!IsBattlerAlive(battler))
             continue;
@@ -6361,8 +6359,6 @@ static u32 GetPossibleNextTarget(u32 currTarget)
         if (!gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler]
          && !IsBattlerUnaffectedByMove(battler))
             return battler;
-
-        i++;
     }
 
     return MAX_BATTLERS_COUNT;

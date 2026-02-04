@@ -665,7 +665,7 @@ static bool32 IsTargetingSelfAndAlly(enum BattlerId battlerAtk, enum BattlerId b
             gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_NO_EFFECT;
         return skipFailure;
     }
-    return checkFailure; // In Gen3 the user checks it's own failure. Unclear because no such moves exists
+    return checkFailure;
 }
 
 static bool32 IsTargetingSelfOrAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
@@ -737,7 +737,7 @@ static bool32 ShouldCheckTargetMoveFailure(enum BattlerId battlerAtk, enum Battl
 #undef checkFailure
 #undef skipFailure
 
-static inline bool32 IsDragonDartsConsecutiveHit(enum BattlerId battlerAtk, enum Move move)
+static inline bool32 IsSmartTargetMoveConsecutiveHit(enum BattlerId battlerAtk, enum Move move)
 {
     if (GetBattlerMoveTargetType(battlerAtk, move) != TARGET_SMART)
         return FALSE;
@@ -754,7 +754,7 @@ bool32 IsAffectedByFollowMe(enum BattlerId battlerAtk, enum BattleSide defSide, 
     enum BattleMoveEffects effect = GetMoveEffect(move);
 
     if (gSideTimers[defSide].followmeTimer == 0
-        || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsConsecutiveHit(battlerAtk, move))
+        || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsSmartTargetMoveConsecutiveHit(battlerAtk, move))
         || effect == EFFECT_SNIPE_SHOT
         || effect == EFFECT_SKY_DROP
         || IsAbilityAndRecord(battlerAtk, ability, ABILITY_PROPELLER_TAIL)
