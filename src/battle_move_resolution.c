@@ -1787,6 +1787,7 @@ static enum MoveEndResult MoveEndAbsorb(void)
         if (gBattleStruct->passiveHpUpdate[gBattlerAttacker] > 0)
         {
             s32 healAmount = gBattleStruct->passiveHpUpdate[gBattlerAttacker];
+            healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
             if (GetBattlerAbility(gBattlerTarget) == ABILITY_LIQUID_OOZE)
             {
                 SetPassiveDamageAmount(gBattlerAttacker, healAmount);
@@ -1809,6 +1810,7 @@ static enum MoveEndResult MoveEndAbsorb(void)
          && IsBattlerAlive(gBattlerAttacker))
         {
             s32 healAmount = (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
+            healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
             if ((moveEffect == EFFECT_DREAM_EATER && GetConfig(CONFIG_DREAM_EATER_LIQUID_OOZE) < GEN_5)
                 || GetBattlerAbility(gBattlerTarget) != ABILITY_LIQUID_OOZE)
             {
