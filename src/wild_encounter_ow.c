@@ -184,6 +184,7 @@ void OverworldWildEncounters_CB(void)
         return;
 
     if (!WE_OW_ENCOUNTERS
+     || FlagGet(WE_OWE_FLAG_DISABLED)
      || FlagGet(OW_FLAG_NO_ENCOUNTER)
      || FlagGet(DN_FLAG_SEARCHING)
      || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !WE_OWE_BATTLE_PIKE)
