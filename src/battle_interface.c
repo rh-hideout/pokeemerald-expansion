@@ -2082,33 +2082,47 @@ static void MoveBattleBarGraphically(enum BattlerId battler, u8 whichBar)
     switch (whichBar)
     {
     case HEALTH_BAR:
-    if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
-    {
-        maxValue = B_HEALTHBAR_PIXELS;
-        currValue = CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
-                            gBattleSpritesDataPtr->battleBars[battler].oldValue,
-                            gBattleSpritesDataPtr->battleBars[battler].receivedValue,
-                            &gBattleSpritesDataPtr->battleBars[battler].currValue,
-                            array, B_HEALTHBAR_PIXELS / 8);
-    }
-    else
-    {
-        CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
-                            gBattleSpritesDataPtr->battleBars[battler].oldValue,
-                            gBattleSpritesDataPtr->battleBars[battler].receivedValue,
-                            &gBattleSpritesDataPtr->battleBars[battler].currValue,
-                            array, B_HEALTHBAR_PIXELS / 8);
-
-        maxValue  = gBattleSpritesDataPtr->battleBars[battler].maxValue;
-        currValue = gBattleSpritesDataPtr->battleBars[battler].currValue;
-    }
-
-        if (currValue > (maxValue * 50 / 100)) // more than 50% hp
-            barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
-        else if (currValue > (maxValue * 20 / 100)) // more than 20% hp
-            barElementId = HEALTHBOX_GFX_HP_BAR_YELLOW;
+        if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
+        {
+            maxValue = B_HEALTHBAR_PIXELS;
+            currValue = CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
+                                gBattleSpritesDataPtr->battleBars[battler].oldValue,
+                                gBattleSpritesDataPtr->battleBars[battler].receivedValue,
+                                &gBattleSpritesDataPtr->battleBars[battler].currValue,
+                                array, B_HEALTHBAR_PIXELS / 8);
+        }
         else
-            barElementId = HEALTHBOX_GFX_HP_BAR_RED; // 20% or less
+        {
+            CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
+                                gBattleSpritesDataPtr->battleBars[battler].oldValue,
+                                gBattleSpritesDataPtr->battleBars[battler].receivedValue,
+                                &gBattleSpritesDataPtr->battleBars[battler].currValue,
+                                array, B_HEALTHBAR_PIXELS / 8);
+
+            maxValue = gBattleSpritesDataPtr->battleBars[battler].maxValue;
+            currValue = gBattleSpritesDataPtr->battleBars[battler].currValue;
+
+            if (maxValue < B_HEALTHBAR_PIXELS)
+                currValue = Q_24_8_TO_INT(currValue);
+        }
+
+        switch (GetHPBarLevel(currValue, maxValue))
+        {
+        case HP_BAR_FULL:
+        case HP_BAR_GREEN:
+            barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
+            break;
+        case HP_BAR_YELLOW:
+            barElementId = HEALTHBOX_GFX_HP_BAR_YELLOW;
+            break;
+        default:
+        case HP_BAR_RED:
+            if (maxValue > 1) // handling for wonder guard
+                barElementId = HEALTHBOX_GFX_HP_BAR_RED;
+            else
+                barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
+            break;
+        }
 
         for (i = 0; i < 6; i++)
         {
@@ -2159,12 +2173,7 @@ static s32 CalcNewBarValue(s32 maxValue, s32 oldValue, s32 receivedValue, s32 *c
             *currValue = oldValue;
     }
 
-    newValue = oldValue - receivedValue;
-    if (newValue < 0)
-        newValue = 0;
-    else if (newValue > maxValue)
-        newValue = maxValue;
-
+    newValue = SubtractClamped(HP_EMPTY, maxValue, oldValue, receivedValue);
     if (maxValue < scale)
     {
         if (newValue == Q_24_8_TO_INT(*currValue) && (*currValue & 0xFF) == 0)
@@ -2230,12 +2239,7 @@ static u8 CalcBarFilledPixels(s32 maxValue, s32 oldValue, s32 receivedValue, s32
     u8 pixels, filledPixels, totalPixels;
     u8 i;
 
-    s32 newValue = oldValue - receivedValue;
-    if (newValue < 0)
-        newValue = 0;
-    else if (newValue > maxValue)
-        newValue = maxValue;
-
+    s32 newValue = SubtractClamped(HP_EMPTY, maxValue, oldValue, receivedValue);
     totalPixels = scale * 8;
 
     for (i = 0; i < scale; i++)
@@ -2280,12 +2284,7 @@ static u8 GetScaledExpFraction(s32 oldValue, s32 receivedValue, s32 maxValue, u8
     s8 oldToMax, newToMax;
 
     scale *= (B_FAST_EXP_GROW) ? 2 : 8;
-    newVal = oldValue - receivedValue;
-
-    if (newVal < 0)
-        newVal = 0;
-    else if (newVal > maxValue)
-        newVal = maxValue;
+    newVal = SubtractClamped(HP_EMPTY, maxValue, oldValue, receivedValue);
 
     oldToMax = oldValue * scale / maxValue;
     newToMax = newVal * scale / maxValue;
