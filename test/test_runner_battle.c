@@ -197,8 +197,6 @@ static void InvokeTestFunction(const struct BattleTest *test)
         break;
     case BATTLE_TEST_MULTI:
     case BATTLE_TEST_AI_MULTI:
-    case BATTLE_TEST_TWELVES:
-    case BATTLE_TEST_AI_TWELVES:
         InvokeMultiTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.multi, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_TWO_VS_ONE:
@@ -227,7 +225,6 @@ static bool32 IsAITest(void)
     case BATTLE_TEST_AI_MULTI:
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_AI_ONE_VS_TWO:
-    case BATTLE_TEST_AI_TWELVES:
         return TRUE;
     }
     return FALSE;
@@ -279,8 +276,6 @@ static void BattleTest_SetUp(void *data)
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
-    case BATTLE_TEST_TWELVES:
-    case BATTLE_TEST_AI_TWELVES:
         STATE->battlersCount = 4;
         break;
     }
@@ -406,17 +401,6 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         DATA.hasAI = TRUE;
         break;
-    case BATTLE_TEST_AI_TWELVES:
-        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TWELVES;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
-        DATA.recordedBattle.opponentB = TRAINER_RED;
-        DATA.hasAI = TRUE;
-        DATA.currentMonIndexes[0] = 0; // Player first mon
-        DATA.currentMonIndexes[1] = 0; // Opponent A first mon
-        DATA.currentMonIndexes[2] = 0; // Player partner first mon
-        DATA.currentMonIndexes[3] = 0; // Opponent B first mon
-        break;
     case BATTLE_TEST_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
@@ -457,16 +441,6 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent A first mon
         DATA.currentMonIndexes[2] = 1; // Player second mon
-        DATA.currentMonIndexes[3] = 0; // Opponent B first mon
-        break;
-    case BATTLE_TEST_TWELVES:
-        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TWELVES;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
-        DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
-        DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
-        DATA.currentMonIndexes[0] = 0; // Player first mon
-        DATA.currentMonIndexes[1] = 0; // Opponent A first mon
-        DATA.currentMonIndexes[2] = 0; // Player partner first mon
         DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         break;
     }

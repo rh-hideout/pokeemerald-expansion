@@ -35,7 +35,7 @@ void FillPartnerParty(u16 trainerId)
 
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
-        s32 lastIndex = (gBattleTypeFlags & BATTLE_TYPE_TWELVES) ? PARTY_SIZE : MULTI_PARTY_SIZE;
+        s32 lastIndex = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
 
         for (i = 0; i < lastIndex && i < gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].partySize; i++)
         {

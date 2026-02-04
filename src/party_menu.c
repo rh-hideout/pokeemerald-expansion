@@ -3126,7 +3126,7 @@ static void CB2_ShowPokemonSummaryScreen(void)
 {
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !AreMultiPartiesFullTeams())
             GetMultiPartyForSummaryScreen();
         else
             UpdatePartyToBattleOrder();
@@ -3145,7 +3145,7 @@ static void CB2_ShowPokemonSummaryScreen(void)
 
 void CB2_ReturnToPartyMenuFromSummaryScreen(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !AreMultiPartiesFullTeams())
         RestoreMultiPartyFromSummaryScreen();
     gPaletteFade.bufferTransferDisabled = TRUE;
     gPartyMenu.slotId = gLastViewedMonIndex;
@@ -7458,7 +7458,7 @@ void ChooseMonForWirelessMinigame(void)
 
 static u8 GetPartyLayoutFromBattleType(void)
 {
-    if (IsMultiBattle() == TRUE && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+    if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams())
         return PARTY_LAYOUT_MULTI;
     if (!IsDoubleBattle() || gPartiesCount[B_TRAINER_0] == 1) // Draw the single layout in a double battle where the player has only one pokemon.
         return PARTY_LAYOUT_SINGLE;
@@ -7512,7 +7512,7 @@ static bool8 TrySwitchInPokemon(void) // grintoul TO DO - currently bugged as mo
     GetPartyAndSlotFromPartyMenuId(slot, &party, &partySlot);
 
     // In a multi battle, slots 1, 4, and 5 are the partner's Pokémon
-    if (IsMultiBattle() == TRUE && (slot == 1 || slot == 4 || slot == 5) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+    if (IsMultiBattle() == TRUE && (slot == 1 || slot == 4 || slot == 5) && !AreMultiPartiesFullTeams())
     {
         StringCopy(gStringVar1, GetTrainerPartnerName());
         StringExpandPlaceholders(gStringVar4, gText_CantSwitchWithAlly);

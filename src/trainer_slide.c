@@ -244,14 +244,14 @@ static void SetTrainerSlideParameters(enum BattlerId battler, u32* firstId, u32*
             if (GetBattlerTrainer(battler) == B_TRAINER_3)
             {
                 *firstId = 0;
-                *lastId = (gBattleTypeFlags & BATTLE_TYPE_TWELVES) ? PARTY_SIZE : MULTI_PARTY_SIZE;
+                *lastId = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
                 *trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentB);
                 *retValue = TRAINER_SLIDE_TARGET_TRAINER_B;
             }
             else
             {
                 *firstId = 0;
-                *lastId = (gBattleTypeFlags & BATTLE_TYPE_TWELVES) ? PARTY_SIZE : MULTI_PARTY_SIZE;
+                *lastId = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
                 *trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentA);
             }
         }
@@ -265,7 +265,7 @@ static void SetTrainerSlideParameters(enum BattlerId battler, u32* firstId, u32*
     else if (GetBattlerTrainer(battler) == B_TRAINER_2 && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
         *firstId = 0;
-        *lastId = (gBattleTypeFlags & BATTLE_TYPE_TWELVES) ? PARTY_SIZE : MULTI_PARTY_SIZE;
+        *lastId = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
         *trainerId = SanitizeTrainerId(gPartnerTrainerId);
         *retValue = TRAINER_SLIDE_TARGET_TRAINER_PARTNER;
     }

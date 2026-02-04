@@ -4368,14 +4368,14 @@ bool32 NoAliveMonsForPlayer(void)
 
     if (B_MULTI_BATTLE_WHITEOUT > GEN_3)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_TWELVES && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (AreMultiPartiesFullTeams() && gBattleTypeFlags & BATTLE_TYPE_MULTI)
             maxIneligible = 12;
         else
             maxIneligible = 6;
     }
     else
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !AreMultiPartiesFullTeams())
             maxIneligible = 3;
         else
             maxIneligible = 6;
@@ -5294,7 +5294,7 @@ bool32 CanBattlerSwitch(enum BattlerId battler)
     bool32 ret = FALSE;
     struct Pokemon *party = GetBattlerParty(battler);
 
-    if (BattleSideHasTwoTrainers(GetBattlerSide(battler)) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES)) 
+    if (BattleSideHasTwoTrainers(GetBattlerSide(battler)) && !AreMultiPartiesFullTeams()) 
         lastMonId = MULTI_PARTY_SIZE;
     else
         lastMonId = PARTY_SIZE;
@@ -11663,7 +11663,7 @@ u8 GetFirstFaintedPartyIndex(enum BattlerId battler)
     struct Pokemon *party = GetBattlerParty(battler);
 
     // Check whether partner is separate trainer.
-    if (BattleSideHasTwoTrainers(battler & BIT_SIDE) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+    if (BattleSideHasTwoTrainers(battler & BIT_SIDE) && !AreMultiPartiesFullTeams())
         end = PARTY_SIZE / 2;
     else
         end = PARTY_SIZE;

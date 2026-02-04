@@ -10034,6 +10034,30 @@ bool32 IsSleepClauseEnabled(void)
     return FALSE;
 }
 
+bool32 AreMultiPartiesFullTeams(void)
+{
+    if (!B_MULTI_FULL_TEAMS)
+    {
+        gSpecialVar_Result = FALSE;
+        return FALSE;
+    }
+
+    enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
+    if (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentA].multiTeamSize == MULTI_TEAM_SIZE_HALF)
+    {
+        gSpecialVar_Result = FALSE;
+        return FALSE;
+    }
+    if (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentB].multiTeamSize == MULTI_TEAM_SIZE_HALF)
+    {
+        gSpecialVar_Result = FALSE;
+        return FALSE;
+    }
+    
+    gSpecialVar_Result = TRUE;
+    return TRUE;
+}
+
 void ClearDamageCalcResults(void)
 {
     for (enum BattlerId battler = 0; battler < MAX_BATTLERS_COUNT; battler++)

@@ -88,6 +88,12 @@ enum TrainerBattleType
     TRAINER_BATTLE_TYPE_DOUBLES,
 };
 
+enum MultiTeamSize
+{
+    MULTI_TEAM_SIZE_FULL,
+    MULTI_TEAM_SIZE_HALF,
+};
+
 #define UNPACK_STARTING_STATUSES_STRUCT(_enum, _fieldName, _typeMaxValue, ...) INVOKE_WITH_(UNPACK_STARTING_STATUSES_STRUCT_, _fieldName, UNPACK_B(_typeMaxValue));
 #define UNPACK_STARTING_STATUSES_STRUCT_(_fieldName, _type, ...) _type FIRST(__VA_OPT__(_fieldName:BIT_SIZE(FIRST(__VA_ARGS__)),) _fieldName)
 
@@ -130,6 +136,7 @@ struct Trainer
     u8 poolRuleIndex;
     u8 poolPickIndex;
     u8 poolPruneIndex;
+    u8 multiTeamSize;
     u16 overrideTrainer;
     enum TrainerPicID trainerBackPic;
 };

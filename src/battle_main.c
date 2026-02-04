@@ -1484,7 +1484,7 @@ static void CB2_PreInitIngamePlayerPartnerBattle(void)
         *savedBattleTypeFlags = gBattleTypeFlags;
         gMain.savedCallback = CB2_PreInitIngamePlayerPartnerBattle;
         if ((!PlayerHasFollowerNPC() || !FollowerNPCIsBattlePartner() || (FNPC_NPC_FOLLOWER_PARTY_PREVIEW && FollowerNPCIsBattlePartner()))
-         && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+         && !AreMultiPartiesFullTeams())
         {
             ShowPartyMenuToShowcaseMultiBattleParty();
         }
@@ -2099,7 +2099,7 @@ static enum BattleTrainer GetBattlerTrainerFromParty(struct Pokemon *party)
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 {
     u8 retVal; 
-    bool32 halfTeam = (BattleSideHasTwoTrainers(GetBattlerTrainerFromParty(party) & BIT_SIDE) && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES));
+    bool32 halfTeam = (BattleSideHasTwoTrainers(GetBattlerTrainerFromParty(party) & BIT_SIDE) && !AreMultiPartiesFullTeams());
 
     if (trainerNum == TRAINER_SECRET_BASE)
         return 0;
@@ -3625,7 +3625,7 @@ static void DoBattleIntro(void)
 
             if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
             {
-                if (!(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+                if (!AreMultiPartiesFullTeams())
                 {
                     for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {
@@ -3712,7 +3712,7 @@ static void DoBattleIntro(void)
 
             if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
             {
-                if (!(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+                if (!AreMultiPartiesFullTeams())
                 {
                     for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {

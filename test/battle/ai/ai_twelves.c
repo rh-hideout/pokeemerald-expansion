@@ -2,7 +2,7 @@
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
-AI_TWELVES_BATTLE_TEST("TWELVES: AI can use all 6 party slots (battler 1)")
+AI_MULTI_BATTLE_TEST("12v12: AI can use all 6 party slots in a 12v12 (battler 1)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -44,7 +44,7 @@ AI_TWELVES_BATTLE_TEST("TWELVES: AI can use all 6 party slots (battler 1)")
     }
 }
 
-AI_TWELVES_BATTLE_TEST("TWELVES: AI can use all 6 party slots (battler 2)")
+AI_MULTI_BATTLE_TEST("12v12: AI can use all 6 party slots in a 12v12 (battler 2)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -86,7 +86,7 @@ AI_TWELVES_BATTLE_TEST("TWELVES: AI can use all 6 party slots (battler 2)")
     }
 }
 
-AI_TWELVES_BATTLE_TEST("TWELVES: AI can use all 6 party slots (battler 3)")
+AI_MULTI_BATTLE_TEST("12v12: AI can use all 6 party slots in a 12v12 (battler 3)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
