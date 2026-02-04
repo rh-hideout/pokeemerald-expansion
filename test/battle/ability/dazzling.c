@@ -122,6 +122,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean act
     }
 }
 
+// Listed on Bulbapedia as "Moves that target all Pokémon (except Perish Song [Confirmed], Flower Shield, and Rototiller),"
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
 {
     u32 species;

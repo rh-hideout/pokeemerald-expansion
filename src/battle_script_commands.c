@@ -3584,6 +3584,12 @@ static void Cmd_setpreattackadditionaleffect(void)
 {
     CMD_ARGS();
 
+    if (gBattleStruct->preAttackEffectHappened)
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
+
     while (gEffectBattler != MAX_BATTLERS_COUNT)
     {
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
@@ -3614,6 +3620,7 @@ static void Cmd_setpreattackadditionaleffect(void)
 
     gEffectBattler = gBattlerAttacker;
     gBattleStruct->additionalEffectsCounter = 0;
+    gBattleStruct->preAttackEffectHappened = TRUE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -6344,7 +6351,7 @@ static u32 GetPossibleNextTarget(u32 currTarget)
         i++;
     }
 
-    for ( ; i < MAX_BATTLERS_COUNT; i++)
+    while (i < MAX_BATTLERS_COUNT)
     {
         enum BattlerId battler = targetOrder[i];
 
@@ -6354,6 +6361,8 @@ static u32 GetPossibleNextTarget(u32 currTarget)
         if (!gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler]
          && !IsBattlerUnaffectedByMove(battler))
             return battler;
+
+        i++;
     }
 
     return MAX_BATTLERS_COUNT;
@@ -12682,9 +12691,7 @@ void BS_CheckTeaTimeTargets(void)
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsTeatimeAffected(i))
-        {
             count++;
-        }
     }
     if (count == 0)
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -14705,13 +14712,9 @@ void BS_GetRototillerTargets(void)
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (IsRototillerAffected(battler, gCurrentMove))
-        {
             count++;
-        }
         else
-        {
             gBattleStruct->moveResultFlags[battler] = MOVE_RESULT_NO_EFFECT;
-        }
     }
 
     if (count == 0)
