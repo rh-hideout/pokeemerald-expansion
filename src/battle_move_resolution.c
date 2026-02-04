@@ -1829,14 +1829,13 @@ static enum MoveEndResult MoveEndAbilitiesAttacker(void)
 
 static enum MoveEndResult MoveEndDancerFlag(void)
 {
-    if (!IsAbilityOnField(ABILITY_DANCER)
-     || gBattleStruct->unableToUseMove
-     || !IsDanceMove(gCurrentMove)
+    if (!IsDanceMove(gCurrentMove)
      || gBattleStruct->snatchedMoveIsUsed
      || gBattleStruct->bouncedMoveIsUsed)
         return MOVEEND_RESULT_CONTINUE;
     
-    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove && IsBattlerUnaffectedByMove(gBattlerTarget))
+    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove
+     && (IsBattlerUnaffectedByMove(gBattlerTarget) || gBattleStruct->unableToUseMove))
         return MOVEEND_RESULT_CONTINUE;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)

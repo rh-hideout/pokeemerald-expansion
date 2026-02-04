@@ -524,7 +524,7 @@ struct BattlerState
     u16 hpOnSwitchout;
     u16 switchIn:1;
     u16 fainted:1;
-    u16 activateDancer
+    u16 activateDancer:1;
     u16 isFirstTurn:2;
     u16 padding:11;
 };
