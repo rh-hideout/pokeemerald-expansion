@@ -577,11 +577,13 @@ enum {
     BATTLE_TEST_MULTI,
     BATTLE_TEST_TWO_VS_ONE,
     BATTLE_TEST_ONE_VS_TWO,
+    BATTLE_TEST_TWELVES,
     BATTLE_TEST_AI_SINGLES,
     BATTLE_TEST_AI_DOUBLES,
     BATTLE_TEST_AI_MULTI,
     BATTLE_TEST_AI_TWO_VS_ONE,
-    BATTLE_TEST_AI_ONE_VS_TWO
+    BATTLE_TEST_AI_ONE_VS_TWO,
+    BATTLE_TEST_AI_TWELVES
 };
 
 typedef void (*SingleBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *);
@@ -974,6 +976,9 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 #define ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_ONE_VS_TWO, __VA_ARGS__)
 #define AI_ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_AI_ONE_VS_TWO, __VA_ARGS__)
 
+#define TWELVES_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_MULTI(_name, BATTLE_TEST_TWELVES, __VA_ARGS__)
+#define AI_TWELVES_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_MULTI(_name, BATTLE_TEST_AI_TWELVES, __VA_ARGS__)
+
 /* Parametrize */
 
 #undef PARAMETRIZE // Override test/test.h's implementation.
@@ -1088,18 +1093,6 @@ void TeraType_(u32 sourceLine, enum Type teraType);
 void Shadow_(u32 sourceLine, bool32 isShadow);
 void Shiny_(u32 sourceLine, bool32 isShiny);
 void Environment_(u32 sourceLine, u32 environment);
-
-static inline bool8 IsMultibattleTest(void)
-{
-    #if TESTING
-    {
-        if (((gBattleTypeFlags & BATTLE_MULTI_TEST) == BATTLE_MULTI_TEST)
-         || ((gBattleTypeFlags & BATTLE_TWO_VS_ONE_TEST) == BATTLE_TWO_VS_ONE_TEST))
-            return TRUE;
-    }
-    #endif
-    return FALSE;
-}
 
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
 struct FourMoves

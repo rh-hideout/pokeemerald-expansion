@@ -207,7 +207,7 @@ static void InitBtlControllersInternal(void)
 
     if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
-        || (IsMultibattleTest())
+        || (TESTING && isMulti)
         || (!isLink && !isRecorded)
         || (isLink && !isDouble))
     {
@@ -268,7 +268,7 @@ static void InitBtlControllersInternal(void)
             // Opponent 1
             bool32 isOpponent1Recorded;
             if (isDouble)
-                isOpponent1Recorded = ((!isInGamePartner && isRecorded && !isMulti && isRecordedLink) || (IsMultibattleTest() && isRecordedLink));
+                isOpponent1Recorded = ((!isInGamePartner && isRecorded && !isMulti && isRecordedLink) || ((TESTING && isMulti) && isRecordedLink));
             else
                 isOpponent1Recorded = isRecorded && isRecordedLink;
 
@@ -278,11 +278,11 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToOpponent;
 
             // Player 2
-            if (IsMultibattleTest() && isRecordedLink)
+            if ((TESTING && isMulti) && isRecordedLink)
             {
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPartner;
             }
-            else if (IsMultibattleTest() && isRecorded && !isRecordedLink)
+            else if ((TESTING && isMulti) && isRecorded && !isRecordedLink)
             { // Sets to PlayerPartner if EXPECT_XXXX used in test for partner trainer, else sets to RecordedPartner.
                 if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_2][0].actionSet == TRUE)
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
@@ -304,7 +304,7 @@ static void InitBtlControllersInternal(void)
             }
 
             // Opponent 2
-            if (IsMultibattleTest() && isRecordedLink)
+            if ((TESTING && isMulti) && isRecordedLink)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToRecordedOpponent;
             else if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToOpponent;

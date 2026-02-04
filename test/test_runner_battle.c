@@ -197,6 +197,8 @@ static void InvokeTestFunction(const struct BattleTest *test)
         break;
     case BATTLE_TEST_MULTI:
     case BATTLE_TEST_AI_MULTI:
+    case BATTLE_TEST_TWELVES:
+    case BATTLE_TEST_AI_TWELVES:
         InvokeMultiTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.multi, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_TWO_VS_ONE:
@@ -225,6 +227,7 @@ static bool32 IsAITest(void)
     case BATTLE_TEST_AI_MULTI:
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_AI_ONE_VS_TWO:
+    case BATTLE_TEST_AI_TWELVES:
         return TRUE;
     }
     return FALSE;
@@ -276,6 +279,8 @@ static void BattleTest_SetUp(void *data)
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
+    case BATTLE_TEST_TWELVES:
+    case BATTLE_TEST_AI_TWELVES:
         STATE->battlersCount = 4;
         break;
     }
@@ -401,6 +406,17 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         DATA.hasAI = TRUE;
         break;
+    case BATTLE_TEST_AI_TWELVES:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TWELVES;
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
+        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.opponentB = TRAINER_RED;
+        DATA.hasAI = TRUE;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent A first mon
+        DATA.currentMonIndexes[2] = 0; // Player partner first mon
+        DATA.currentMonIndexes[3] = 0; // Opponent B first mon
+        break;
     case BATTLE_TEST_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
@@ -441,6 +457,16 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent A first mon
         DATA.currentMonIndexes[2] = 1; // Player second mon
+        DATA.currentMonIndexes[3] = 0; // Opponent B first mon
+        break;
+    case BATTLE_TEST_TWELVES:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TWELVES;
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
+        DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
+        DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent A first mon
+        DATA.currentMonIndexes[2] = 0; // Player partner first mon
         DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         break;
     }
@@ -1911,7 +1937,7 @@ void RNGSeed_(u32 sourceLine, rng_value_t seed)
 
 void AIFlags_(u32 sourceLine, u64 flags)
 {
-    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
+    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWELVES_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         DATA.recordedBattle.AI_scripts[i] = flags;
@@ -1921,14 +1947,14 @@ void AIFlags_(u32 sourceLine, u64 flags)
 
 void BattlerAIFlags_(u32 sourceLine, enum BattlerId battler, u64 flags)
 {
-    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
+    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWELVES_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     DATA.recordedBattle.AI_scripts[battler] |= flags;
     DATA.hasAI = TRUE;
 }
 
 void AILogScores(u32 sourceLine)
 {
-    INVALID_IF(!IsAITest(), "AI_LOG is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
+    INVALID_IF(!IsAITest(), "AI_LOG is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWELVES_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     DATA.logAI = TRUE;
 }
 
@@ -2822,10 +2848,14 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
-         || (IsMultibattleTest() && battlerId == B_BATTLER_2)))
+         || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && battlerId == B_BATTLER_2)))
+        {
             SetAiActionToPass(sourceLine, battlerId);
+        }
         else
+        {
             Move(sourceLine, battler, (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });
+        }
     }
 
     DATA.currentMonIndexes[battlerId] = partyIndex;

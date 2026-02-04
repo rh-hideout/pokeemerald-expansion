@@ -443,7 +443,7 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
                     {
                         if (!IsValidForBattle(&party[monToSwitchId]))
                             continue;
-                        if (IsPartyMonOnFieldOrChosenToSwitch(monToSwitchId, battlerIn1, battlerIn2))
+                        if (IsPartyMonOnFieldOrChosenToSwitch(battler, monToSwitchId, battlerIn1, battlerIn2))
                             continue;
                         if (IsAceMon(battler, monToSwitchId))
                             continue;

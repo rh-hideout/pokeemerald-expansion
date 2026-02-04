@@ -4362,9 +4362,24 @@ bool32 NoAliveMonsForBattlerSide(enum BattlerId battler)
 bool32 NoAliveMonsForPlayer(void)
 {
     u32 i;
-    u32 maxIneligible = (B_MULTI_BATTLE_WHITEOUT > GEN_3) ? 12 : 6;
+    u32 maxIneligible = PARTY_SIZE;
     u32 HP_count = 0;
     u32 ineligibleMonsCount = 0;
+
+    if (B_MULTI_BATTLE_WHITEOUT > GEN_3)
+    {
+        if (gBattleTypeFlags & BATTLE_TYPE_TWELVES && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            maxIneligible = 12;
+        else
+            maxIneligible = 6;
+    }
+    else
+    {
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !(gBattleTypeFlags & BATTLE_TYPE_TWELVES))
+            maxIneligible = 3;
+        else
+            maxIneligible = 6;
+    }
 
     // Get total HP for the player's party to determine if the player has lost
     for (i = 0; i < PARTY_SIZE; i++)
@@ -4396,7 +4411,7 @@ bool32 NoAliveMonsForPlayer(void)
                 ineligibleMonsCount++;
         }
 
-        if(!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || (IsMultibattleTest()))
+        if(!(gBattleTypeFlags & BATTLE_TYPE_ARENA || (TESTING && gBattleTypeFlags & BATTLE_TYPE_MULTI)))
         {
             for (i = 0; i < PARTY_SIZE; i++)
             {
