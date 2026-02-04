@@ -1843,7 +1843,7 @@ void CalculateMonStats(struct Pokemon *mon)
         return;
 #endif
 
-    if (species == SPECIES_SHEDINJA)
+    if (GetSpeciesBaseHP(species) == 1)
     {
         newMaxHP = 1;
     }
