@@ -1903,11 +1903,17 @@ static enum MoveEndResult MoveEndDancerFlag(void)
     if (!IsDanceMove(gCurrentMove)
      || gBattleStruct->snatchedMoveIsUsed
      || gBattleStruct->bouncedMoveIsUsed)
+    {
+        gBattleScripting.moveendState++;
         return MOVEEND_RESULT_CONTINUE;
+    }
     
     if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove
      && (IsBattlerUnaffectedByMove(gBattlerTarget) || gBattleStruct->unableToUseMove))
+    {
+        gBattleScripting.moveendState++;
         return MOVEEND_RESULT_CONTINUE;
+    }
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
@@ -1918,6 +1924,7 @@ static enum MoveEndResult MoveEndDancerFlag(void)
             gBattleStruct->battlerState[battler].activateDancer = TRUE;
     }
 
+    gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
 
