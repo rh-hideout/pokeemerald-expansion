@@ -1827,6 +1827,30 @@ static enum MoveEndResult MoveEndAbilitiesAttacker(void)
     return result;
 }
 
+static enum MoveEndResult MoveEndDancerFlag(void)
+{
+    if (!IsAbilityOnField(ABILITY_DANCER)
+     || gBattleStruct->unableToUseMove
+     || !IsDanceMove(gCurrentMove)
+     || gBattleStruct->snatchedMoveIsUsed
+     || gBattleStruct->bouncedMoveIsUsed)
+        return MOVEEND_RESULT_CONTINUE;
+    
+    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove && IsBattlerUnaffectedByMove(gBattlerTarget))
+        return MOVEEND_RESULT_CONTINUE;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (battler == gBattlerAttacker || !IsBattlerAlive(battler))
+            continue;
+
+        if (GetBattlerAbility(battler) == ABILITY_DANCER)
+            gBattleStruct->battlerState[battler].activateDancer = TRUE;
+    }
+
+    return MOVEEND_RESULT_CONTINUE;
+}
+
 static enum MoveEndResult MoveEndStatusImmunityAbilities(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
@@ -3239,10 +3263,11 @@ static enum MoveEndResult MoveEndClearBits(void)
         }
     }
 
-    // Need to check a specific battle during the end turn and dancer
+    // Need to check a specific battle during the end turn
     gBattleMons[gBattlerAttacker].volatiles.unableToUseMove = gBattleStruct->unableToUseMove;
-    gBattleScripting.moveendState++;
+    ClearDamageCalcResults();
 
+    gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
 
@@ -3250,44 +3275,33 @@ static enum MoveEndResult MoveEndDancer(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (IsDanceMove(gCurrentMove) && !gBattleStruct->snatchedMoveIsUsed)
+    u32 battler, nextDancer = 0;
+    for (battler = 0; battler < gBattlersCount; battler++)
     {
-        u32 battler, nextDancer = 0;
-        bool32 hasDancerTriggered = FALSE;
-
-        for (battler = 0; battler < gBattlersCount; battler++)
+        if (gBattleStruct->battlerState[battler].activateDancer && !gSpecialStatuses[battler].dancerUsedMove)
         {
-            if (gSpecialStatuses[battler].dancerUsedMove)
-            {
-                // in case a battler fails to act on a Dancer-called move
-                hasDancerTriggered = TRUE;
-                break;
-            }
-        }
-
-        if (!(!IsAnyTargetAffected()
-         || (gBattleStruct->unableToUseMove && !hasDancerTriggered)
-         || (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove && gBattleStruct->bouncedMoveIsUsed)))
-        {   // Dance move succeeds
-            // Set target for other Dancer mons; set bit so that mon cannot activate Dancer off of its own move
-            if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
-            {
-                gBattleScripting.savedBattler = gBattlerTarget | 0x4;
-                gBattleScripting.savedBattler |= (gBattlerAttacker << 4);
-                gSpecialStatuses[gBattlerAttacker].dancerUsedMove = TRUE;
-            }
-            for (battler = 0; battler < gBattlersCount; battler++)
-            {
-                if (GetBattlerAbility(battler) == ABILITY_DANCER && !gSpecialStatuses[battler].dancerUsedMove)
-                {
-                    if (!nextDancer || (gBattleMons[battler].speed < gBattleMons[nextDancer & 0x3].speed))
-                        nextDancer = battler | 0x4;
-                }
-            }
-            if (nextDancer && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer & 0x3, 0, gCurrentMove, TRUE))
-                result = MOVEEND_RESULT_RUN_SCRIPT;
+            if (!nextDancer || (gBattleMons[battler].speed < gBattleMons[nextDancer & 0x3].speed))
+                nextDancer = battler | 0x4;
         }
     }
+
+    if (!nextDancer) // no dancer was found
+    {
+        gBattleScripting.moveendState++;
+        return result;
+    }
+
+    // Dance move succeeds
+    // Set target for other Dancer mons; set bit so that mon cannot activate Dancer off of its own move
+    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
+    {
+        gBattleScripting.savedBattler = gBattlerTarget | 0x4;
+        gBattleScripting.savedBattler |= (gBattlerAttacker << 4);
+        gSpecialStatuses[gBattlerAttacker].dancerUsedMove = TRUE;
+    }
+
+    if (nextDancer && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer & 0x3, 0, gCurrentMove, TRUE))
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -3332,6 +3346,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_SYNCHRONIZE_TARGET] = MoveEndSynchronizeTarget,
     [MOVEEND_ABILITIES] = MoveEndAbilities,
     [MOVEEND_ABILITIES_ATTACKER] = MoveEndAbilitiesAttacker,
+    [MOVEEND_DANCER_FLAG] = MoveEndDancerFlag,
     [MOVEEND_STATUS_IMMUNITY_ABILITIES] = MoveEndStatusImmunityAbilities,
     [MOVEEND_SYNCHRONIZE_ATTACKER] = MoveEndSynchronizeAttacker,
     [MOVEEND_ATTACKER_INVISIBLE] = MoveEndAttackerInvisible,
