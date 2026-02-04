@@ -131,6 +131,25 @@ HowerClass_EventScript_LookStudent::
 	release
 	end
 
+HowerClass_EventScript_MemoryStudent::
+	lock
+	faceplayer
+	msgbox HowerClass_Text_Memory, MSGBOX_DEFAULT
+	applymovement VAR_LAST_TALKED, Common_Movement_FaceUp
+	waitmovement 0
+	release
+	end
+
+HowerClass_EventScript_RememberStudent::
+	lock
+	faceplayer
+	msgbox HowerClass_Text_RememberIntro, MSGBOX_DEFAULT
+	msgbox HowerClass_Text_RememberPunchline, MSGBOX_DEFAULT
+	applymovement VAR_LAST_TALKED, Common_Movement_FaceUp
+	waitmovement 0
+	release
+	end
+
 HowerClass_Text_StudentIntro:
 	.string "DHBW sounded great on paper.\p"
 	.string "Theory at university, practice at\n"
@@ -231,3 +250,14 @@ HowerClass_Text_LookIntro:
 HowerClass_Text_LookPunchline:
 	.string "You just have to know where to\n"
 	.string "look.$"
+
+HowerClass_Text_Memory:
+	.string "It's funny...\p"
+	.string "Some faces stick with you long\n"
+	.string "before you know their names.$"
+
+HowerClass_Text_RememberIntro:
+	.string "I don't think we've met.$"
+
+HowerClass_Text_RememberPunchline:
+	.string "And yet... I remember you.$"

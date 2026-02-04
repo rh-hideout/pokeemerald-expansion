@@ -4505,7 +4505,7 @@
       "id": "LAYOUT_HOWER_CLASS",
       "name": "HowerClass_Layout",
       "width": 10,
-      "height": 20,
+      "height": 21,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_PokemonSchool",
       "border_filepath": "data/layouts/HowerClass/border.bin",
@@ -4655,9 +4655,9 @@
       "id": "LAYOUT_HALLWAY_TO_SECRETARIAT",
       "name": "HALLWAY_TO_SECRETARIAT_Layout",
       "width": 20,
-      "height": 20,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "height": 8,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_GenericBuilding",
       "border_filepath": "data/layouts/HALLWAY_TO_SECRETARIAT/border.bin",
       "blockdata_filepath": "data/layouts/HALLWAY_TO_SECRETARIAT/map.bin"
     }
