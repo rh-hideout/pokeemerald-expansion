@@ -2117,10 +2117,15 @@ static void MoveBattleBarGraphically(enum BattlerId battler, u8 whichBar)
             break;
         default:
         case HP_BAR_RED:
-            if (maxValue > 1) // handling for wonder guard
+            if (maxValue > 1 || B_HPBAR_COLOR_THRESHOLD < GEN_9) // handling for wonder guard
+            {
                 barElementId = HEALTHBOX_GFX_HP_BAR_RED;
+            }
             else
-                barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
+            {
+                if (B_HPBAR_COLOR_THRESHOLD >= GEN_9)
+                    barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
+            }
             break;
         }
 
