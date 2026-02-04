@@ -1,0 +1,43 @@
+#include "global.h"
+#include "test/battle.h"
+#include "battle_ai_util.h"
+
+/*AI_TWELVES_BATTLE_TEST("TWELVES: AI can use all 6 party slots (12v12)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(4); }
+        PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(3); }
+        PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(3); }
+        PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(3); }
+        PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(3); }
+        PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(3); }
+        PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(3); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(2); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(2); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(2); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(2); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(2); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(2); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(1); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(1); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(1); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(1); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(1); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_HEALING_WISH); Speed(1); }
+    } WHEN {
+        TURN { 
+            MOVE(playerLeft, MOVE_HEALING_WISH); 
+            SEND_OUT(playerLeft, 1); 
+            EXPECT_SEND_OUT(playerRight, 5);
+            EXPECT_SEND_OUT(opponentLeft, 5);
+            EXPECT_SEND_OUT(opponentRight, 4);
+        }
+    }
+}*/
+
