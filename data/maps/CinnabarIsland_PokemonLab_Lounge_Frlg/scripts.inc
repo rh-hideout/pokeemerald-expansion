@@ -1,4 +1,4 @@
-CinnabarIsland_PokemonLab_Lounge_MapScripts::
+CinnabarIsland_PokemonLab_Lounge_Frlg_MapScripts::
 	.byte 0
 
 CinnabarIsland_PokemonLab_Lounge_EventScript_Scientist::

@@ -1,4 +1,4 @@
-SaffronCity_Dojo_MapScripts::
+SaffronCity_Dojo_Frlg_MapScripts::
 	.byte 0
 
 SaffronCity_Dojo_EventScript_TriggerMasterBattleLeft::

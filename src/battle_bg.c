@@ -381,6 +381,245 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
+static const struct WindowTemplate sKantoTutorialBattleWindowTemplates[] =
+{
+    [B_WIN_MSG] = {
+        .bg = 0,
+        .tilemapLeft = 2,
+        .tilemapTop = 15,
+        .width = 26,
+        .height = 4,
+        .paletteNum = 0,
+        .baseBlock = 0x0090,
+    },
+    [B_WIN_ACTION_PROMPT] = {
+        .bg = 0,
+        .tilemapLeft = 1,
+        .tilemapTop = 35,
+        .width = 14,
+        .height = 4,
+        .paletteNum = 0,
+        .baseBlock = 0x01c0,
+    },
+    [B_WIN_ACTION_MENU] = {
+        .bg = 0,
+        .tilemapLeft = 17,
+        .tilemapTop = 35,
+        .width = 12,
+        .height = 4,
+        .paletteNum = 5,
+        .baseBlock = 0x0190,
+    },
+    [B_WIN_MOVE_NAME_1] = {
+        .bg = 0,
+        .tilemapLeft = 2,
+        .tilemapTop = 55,
+        .width = 16,    //for z move names
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0300,
+    },
+    [B_WIN_MOVE_NAME_2] = {
+        .bg = 0,
+        .tilemapLeft = 11,
+        .tilemapTop = 55,
+        .width = 8,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0318,
+    },
+    [B_WIN_MOVE_NAME_3] = {
+        .bg = 0,
+        .tilemapLeft = 2,
+        .tilemapTop = 57,
+        .width = 16,    //for z effect descriptions
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0328,
+    },
+    [B_WIN_MOVE_NAME_4] = {
+        .bg = 0,
+        .tilemapLeft = 11,
+        .tilemapTop = 57,
+        .width = 8,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0340,
+    },
+    [B_WIN_PP] = {
+        .bg = 0,
+        .tilemapLeft = 21,
+        .tilemapTop = 55,
+        .width = 4,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0290,
+    },
+    [B_WIN_DUMMY] = {
+        .bg = 0,
+        .tilemapLeft = 21,
+        .tilemapTop = 57,
+        .width = 0,
+        .height = 0,
+        .paletteNum = 5,
+        .baseBlock = 0x0298,
+    },
+    [B_WIN_PP_REMAINING] = {
+        .bg = 0,
+        .tilemapLeft = 25,
+        .tilemapTop = 55,
+        .width = 4,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0298,
+    },
+    [B_WIN_MOVE_TYPE] = {
+        .bg = 0,
+        .tilemapLeft = 21,
+        .tilemapTop = 57,
+        .width = 8,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x02a0,
+    },
+    [B_WIN_SWITCH_PROMPT] = {
+        .bg = 0,
+        .tilemapLeft = 21,
+        .tilemapTop = 55,
+        .width = 8,
+        .height = 4,
+        .paletteNum = 5,
+        .baseBlock = 0x02b0,
+    },
+    [B_WIN_YESNO] = {
+        .bg = 0,
+        .tilemapLeft = 26,
+        .tilemapTop = 9,
+        .width = 3,
+        .height = 4,
+        .paletteNum = 5,
+        .baseBlock = 0x0100,
+    },
+    [B_WIN_LEVEL_UP_BOX] = {
+        .bg = 1,
+        .tilemapLeft = 19,
+        .tilemapTop = 8,
+        .width = 10,
+        .height = 11,
+        .paletteNum = 5,
+        .baseBlock = 0x0100,
+    },
+    [B_WIN_LEVEL_UP_BANNER] = {
+        .bg = 2,
+        .tilemapLeft = 18,
+        .tilemapTop = 0,
+        .width = 12,
+        .height = 3,
+        .paletteNum = 6,
+        .baseBlock = 0x016e,
+    },
+    [B_WIN_VS_PLAYER] = {
+        .bg = 1,
+        .tilemapLeft = 2,
+        .tilemapTop = 3,
+        .width = 6,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0020,
+    },
+    [B_WIN_VS_OPPONENT] = {
+        .bg = 2,
+        .tilemapLeft = 2,
+        .tilemapTop = 3,
+        .width = 6,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0040,
+    },
+    [B_WIN_VS_MULTI_PLAYER_1] = {
+        .bg = 1,
+        .tilemapLeft = 2,
+        .tilemapTop = 2,
+        .width = 6,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0020,
+    },
+    [B_WIN_VS_MULTI_PLAYER_2] = {
+        .bg = 2,
+        .tilemapLeft = 2,
+        .tilemapTop = 2,
+        .width = 6,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0040,
+    },
+    [B_WIN_VS_MULTI_PLAYER_3] = {
+        .bg = 1,
+        .tilemapLeft = 2,
+        .tilemapTop = 6,
+        .width = 6,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0060,
+    },
+    [B_WIN_VS_MULTI_PLAYER_4] = {
+        .bg = 2,
+        .tilemapLeft = 2,
+        .tilemapTop = 6,
+        .width = 6,
+        .height = 2,
+        .paletteNum = 5,
+        .baseBlock = 0x0080,
+    },
+    [B_WIN_VS_OUTCOME_DRAW] = {
+        .bg = 0,
+        .tilemapLeft = 12,
+        .tilemapTop = 2,
+        .width = 6,
+        .height = 2,
+        .paletteNum = 0,
+        .baseBlock = 0x00a0,
+    },
+    [B_WIN_VS_OUTCOME_LEFT] = {
+        .bg = 0,
+        .tilemapLeft = 4,
+        .tilemapTop = 2,
+        .width = 7,
+        .height = 2,
+        .paletteNum = 0,
+        .baseBlock = 0x00a0,
+    },
+    [B_WIN_VS_OUTCOME_RIGHT] = {
+        .bg = 0,
+        .tilemapLeft = 19,
+        .tilemapTop = 2,
+        .width = 7,
+        .height = 2,
+        .paletteNum = 0,
+        .baseBlock = 0x00b0,
+    },
+    [B_WIN_MOVE_DESCRIPTION] = {
+        .bg = 0,
+        .tilemapLeft = 1,
+        .tilemapTop = 47,
+        .width = 18,
+        .height = 6,
+        .paletteNum = 5,
+        .baseBlock = 0x0350,
+    },
+    [B_WIN_OAK_OLD_MAN] = {
+        .bg = 0,
+        .tilemapLeft = 2,
+        .tilemapTop = 15,
+        .width = 26,
+        .height = 4,
+        .paletteNum = 7,
+        .baseBlock = 0x090
+    },
+    DUMMY_WIN_TEMPLATE
+};
+
 static const struct WindowTemplate sBattleArenaWindowTemplates[] =
 {
     [B_WIN_MSG] = {
@@ -606,6 +845,7 @@ const struct WindowTemplate *const gBattleWindowTemplates[] =
 {
     [B_WIN_TYPE_NORMAL] = sStandardBattleWindowTemplates,
     [B_WIN_TYPE_ARENA]  = sBattleArenaWindowTemplates,
+    [B_WIN_TYPE_KANTO_TUTORIAL] = sKantoTutorialBattleWindowTemplates,
 };
 
 // If current map scene equals any of the values in sMapBattleSceneMapping,
@@ -629,7 +869,7 @@ static void LoadBattleEnvironmentGfx(u16 environment)
     // Copy to bg3
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.tileset, (void *)(BG_CHAR_ADDR(2)));
     DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
-    LoadPalette(gBattleEnvironmentInfo[environment].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+    LoadPalette(gBattleEnvironmentInfo[environment].palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
 }
 
 // Loads the entry associated with the battle environment.
@@ -639,8 +879,8 @@ static void LoadBattleEnvironmentEntryGfx(u16 environment)
     if (environment >= NELEMS(gBattleEnvironmentInfo))
         environment = BATTLE_ENVIRONMENT_PLAIN;
     // Copy to bg1
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.entryTileset, (void *)BG_CHAR_ADDR(1));
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.entryTilemap, (void *)BG_SCREEN_ADDR(28));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].entry.tileset, (void *)BG_CHAR_ADDR(1));
+    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].entry.tilemap, (void *)BG_SCREEN_ADDR(28));
 }
 
 static u8 GetBattleEnvironmentOverride(void)
@@ -695,6 +935,10 @@ void BattleInitBgsAndWindows(void)
         SetBgTilemapBuffer(1, gBattleAnimBgTilemapBuffer);
         SetBgTilemapBuffer(2, gBattleAnimBgTilemapBuffer);
     }
+    else if (IS_FRLG && (gBattleTypeFlags == (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE) || gBattleTypeFlags == BATTLE_TYPE_CATCH_TUTORIAL))
+    {
+        gBattleScripting.windowsType = B_WIN_TYPE_KANTO_TUTORIAL;
+    }
     else
     {
         gBattleScripting.windowsType = B_WIN_TYPE_NORMAL;
@@ -721,7 +965,8 @@ void LoadBattleMenuWindowGfx(void)
     LoadUserWindowBorderGfx(2, 0x22, BG_PLTT_ID(1));
     LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if ((gBattleTypeFlags & (BATTLE_TYPE_ARENA | BATTLE_TYPE_POKEDUDE))
+    || (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)))
     {
         // Load graphics for the Battle Arena referee's mid-battle messages.
         Menu_LoadStdPalAt(BG_PLTT_ID(7));
@@ -1090,7 +1335,7 @@ bool8 LoadChosenBattleElement(u8 caseId)
         DecompressDataWithHeaderVram(gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
         break;
     case 5:
-        LoadPalette(gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].background.palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+        LoadPalette(gBattleEnvironmentInfo[GetBattleEnvironmentOverride()].palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
         break;
     case 6:
         LoadBattleMenuWindowGfx();

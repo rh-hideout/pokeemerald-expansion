@@ -93,6 +93,7 @@
 #define B_MINIMIZE_EVASION          GEN_LATEST // In Gen5+, Minimize raises evasion by 2 stages instead of 1.
 #define B_GROWTH_STAT_RAISE         GEN_LATEST // In Gen5+, Growth raises Attack in addition to Special Attack by 1 stage each. Under the effects of the sun, it raises them by 2 stages each instead.
 #define B_FOCUS_ENERGY_CRIT_RATIO   GEN_LATEST // In Gen3+, Focus Energy increases critical hit ratio by 2 instead of 1.
+#define B_PSYCH_UP_CRIT_RATIO       GEN_LATEST // In Gen6+, Psych Up also copies the target's critical hit ratio.
 
 // Other move settings
 #define B_INCINERATE_GEMS           GEN_LATEST // In Gen6+, Incinerate can destroy Gems.
@@ -148,7 +149,7 @@
 #define B_COUNTER_MIRROR_COAT_ALLY  GEN_LATEST // In Gen5+, an ally's attack does not count for uses of Counter/Mirror Coat/Metal Burst. In Gen4-, if the last attack taken was from an ally, Counter/Mirror Coat/Metal Burst would fail.
 #define B_COUNTER_TRY_HIT_PARTNER   GEN_LATEST // In Gen5+, if the user of the last attack is not on the field, it will be redirected to the partner. In Gen4-, Counter/Mirror Coat/Metal Burst would fail.
 #define B_RAGE_BUILDS               GEN_LATEST // In Gen4+, Rage's effect only sets in when it successfully hits. In Gen3, Rage's effect sets in regardless of whether it hits, misses or fails.
-#define B_CHECK_USER_FAILURE        GEN_LATEST // In Gen5+, The user no longer checks it's own failure, e.g. Soundproof will not block it's own Perish Song             
+#define B_CHECK_USER_FAILURE        GEN_LATEST // In Gen5+, The user no longer checks it's own failure, e.g. Soundproof will not block it's own Perish Song
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+ requires full HP to trigger.

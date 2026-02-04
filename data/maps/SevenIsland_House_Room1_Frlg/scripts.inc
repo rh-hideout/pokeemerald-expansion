@@ -1,6 +1,6 @@
 .equ TRAINER_VISITING, VAR_TEMP_1
 
-SevenIsland_House_Room1_MapScripts::
+SevenIsland_House_Room1_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SevenIsland_House_Room1_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, SevenIsland_House_Room1_OnFrame
 	.byte 0
@@ -93,7 +93,7 @@ SevenIsland_House_Room1_EventScript_TrainerVisiting::
 	msgbox SevenIsland_House_Room1_Text_SaveProgressBeforeBattle, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, SevenIsland_House_Room1_EventScript_DeclineBattle
 	special LoadPlayerParty
-	call CableClubSaveGame
+	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, SevenIsland_House_Room1_EventScript_DeclineBattle
 	special SavePlayerParty
 	special ReducePlayerPartyToSelectedMons

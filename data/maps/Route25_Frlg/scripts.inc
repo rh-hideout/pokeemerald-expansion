@@ -1,4 +1,4 @@
-Route25_MapScripts::
+Route25_Frlg_MapScripts::
 	.byte 0
 
 Route25_EventScript_SeaCottageSign::

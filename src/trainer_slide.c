@@ -40,20 +40,20 @@
 #include "trainer_slide.h"
 #include "battle_message.h"
 
-static u32 BattlerHPPercentage(u32 battler, u32 operation, u32 threshold);
+static u32 BattlerHPPercentage(enum BattlerId battler, u32 operation, u32 threshold);
 static u32 GetPartyMonCount(u32 firstId, u32 lastId, struct Pokemon *party, bool32 onlyAlive);
 static bool32 DoesTrainerHaveSlideMessage(enum DifficultyLevel difficulty, u32 trainerId, u32 slideId);
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstCriticalHit(u32 battler, enum TrainerSlideType slideId);
-static bool32 ShouldRunTrainerSlideEnemyLandsFirstCriticalHit(u32 battler, enum TrainerSlideType slideId);
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstSuperEffectiveHit(u32 battler, enum TrainerSlideType slideId);
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstSTABMove(u32 firstId, u32 lastId, u32 battler, enum TrainerSlideType slideId);
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstCriticalHit(enum BattlerId battler, enum TrainerSlideType slideId);
+static bool32 ShouldRunTrainerSlideEnemyLandsFirstCriticalHit(enum BattlerId battler, enum TrainerSlideType slideId);
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstSuperEffectiveHit(enum BattlerId battler, enum TrainerSlideType slideId);
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstSTABMove(u32 firstId, u32 lastId, enum BattlerId battler, enum TrainerSlideType slideId);
 static bool32 ShouldRunTrainerSlidePlayerLandsFirstDown(u32 firstId, u32 lastId, enum BattlerId battler);
-static bool32 ShouldRunTrainerSlideEnemyMonUnaffected(u32 firstId, u32 lastId, u32 battler, enum TrainerSlideType slideId);
-static bool32 ShouldRunTrainerSlideLastSwitchIn(u32 battler);
-static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, u32 battler);
-static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, u32 battler);
-static void SetTrainerSlideParameters(u32 battler, u32* firstId, u32* lastId, u32* trainerId, u32* retValue);
-static bool32 IsSlideInitalizedOrPlayed(u32 battler, enum TrainerSlideType slideId);
+static bool32 ShouldRunTrainerSlideEnemyMonUnaffected(u32 firstId, u32 lastId, enum BattlerId battler, enum TrainerSlideType slideId);
+static bool32 ShouldRunTrainerSlideLastSwitchIn(enum BattlerId battler);
+static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, enum BattlerId battler);
+static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, enum BattlerId battler);
+static void SetTrainerSlideParameters(enum BattlerId battler, u32* firstId, u32* lastId, u32* trainerId, u32* retValue);
+static bool32 IsSlideInitalizedOrPlayed(enum BattlerId battler, enum TrainerSlideType slideId);
 
 // Partner trainers must be added as TRAINER_PARTNER(PARTNER_XXXX)
 static const u8* const sTrainerSlides[DIFFICULTY_COUNT][TRAINER_PARTNER(PARTNER_COUNT)][TRAINER_SLIDE_COUNT] =
@@ -70,12 +70,12 @@ static const u8* const sFrontierTrainerSlides[DIFFICULTY_COUNT][FRONTIER_TRAINER
     },
 };
 
-static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][TRAINER_PARTNER(PARTNER_COUNT)][TRAINER_SLIDE_COUNT] =
+static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][MAX_TRAINERS_COUNT_EMERALD + PARTNER_COUNT][TRAINER_SLIDE_COUNT] =
 {
 #include "../test/battle/trainer_slides.h"
 };
 
-static u32 BattlerHPPercentage(u32 battler, u32 operation, u32 threshold)
+static u32 BattlerHPPercentage(enum BattlerId battler, u32 operation, u32 threshold)
 {
     switch (operation)
     {
@@ -116,7 +116,7 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, struct Pokemon *party, bool
 }
 
 static const u8* const *GetTrainerSlideArray(enum DifficultyLevel difficulty, u32 trainerId, u32 slideId)
-{ 
+{
 #if TESTING
     return (FlagGet(TESTING_FLAG_TRAINER_SLIDES) ? sTestTrainerSlides[difficulty][trainerId] : NULL);
 #else
@@ -163,17 +163,17 @@ void SetTrainerSlideMessage(enum DifficultyLevel difficulty, u32 trainerId, u32 
         gBattleStruct->trainerSlideMsg = trainerSlidesNormal[slideId];
 }
 
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstCriticalHit(u32 battler, enum TrainerSlideType slideId)
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstCriticalHit(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     return IsTrainerSlideInitialized(battler, slideId);
 }
 
-static bool32 ShouldRunTrainerSlideEnemyLandsFirstCriticalHit(u32 battler, enum TrainerSlideType slideId)
+static bool32 ShouldRunTrainerSlideEnemyLandsFirstCriticalHit(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     return IsTrainerSlideInitialized(battler, slideId);
 }
 
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstSuperEffectiveHit(u32 battler, enum TrainerSlideType slideId)
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstSuperEffectiveHit(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     if (!IsTrainerSlideInitialized(battler, slideId))
         return FALSE;
@@ -184,7 +184,7 @@ static bool32 ShouldRunTrainerSlidePlayerLandsFirstSuperEffectiveHit(u32 battler
     return TRUE;
 }
 
-static bool32 ShouldRunTrainerSlidePlayerLandsFirstSTABMove(u32 firstId, u32 lastId, u32 battler, enum TrainerSlideType slideId)
+static bool32 ShouldRunTrainerSlidePlayerLandsFirstSTABMove(u32 firstId, u32 lastId, enum BattlerId battler, enum TrainerSlideType slideId)
 {
     if (!IsTrainerSlideInitialized(battler, slideId))
         return FALSE;
@@ -200,7 +200,7 @@ static bool32 ShouldRunTrainerSlidePlayerLandsFirstDown(u32 firstId, u32 lastId,
     return ((GetPartyMonCount(firstId, lastId, GetBattlerParty(battler), TRUE) == (GetPartyMonCount(firstId, lastId, GetBattlerParty(battler), FALSE) - 1)));
 }
 
-static bool32 ShouldRunTrainerSlideEnemyMonUnaffected(u32 firstId, u32 lastId, u32 battler, enum TrainerSlideType slideId)
+static bool32 ShouldRunTrainerSlideEnemyMonUnaffected(u32 firstId, u32 lastId, enum BattlerId battler, enum TrainerSlideType slideId)
 {
     if (!IsTrainerSlideInitialized(battler, slideId))
         return FALSE;
@@ -208,12 +208,12 @@ static bool32 ShouldRunTrainerSlideEnemyMonUnaffected(u32 firstId, u32 lastId, u
     return (GetPartyMonCount(firstId, lastId, GetBattlerParty(battler), TRUE) == GetPartyMonCount(firstId, lastId, GetBattlerParty(battler), FALSE));
 }
 
-static bool32 ShouldRunTrainerSlideLastSwitchIn(u32 battler)
+static bool32 ShouldRunTrainerSlideLastSwitchIn(enum BattlerId battler)
 {
     return !CanBattlerSwitch(battler);
 }
 
-static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, u32 battler)
+static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, enum BattlerId battler)
 {
     if (GetPartyMonCount(firstId, lastId, GetBattlerParty(battler), TRUE) != 1)
         return FALSE;
@@ -224,7 +224,7 @@ static bool32 ShouldRunTrainerSlideLastHalfHP(u32 firstId, u32 lastId, u32 battl
     return (BattlerHPPercentage(battler, GREATER_THAN, 4));
 }
 
-static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, u32 battler)
+static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, enum BattlerId battler)
 {
     if (GetPartyMonCount(firstId, lastId, GetBattlerParty(battler), TRUE) != 1)
         return FALSE;
@@ -235,7 +235,7 @@ static bool32 ShouldRunTrainerSlideLastLowHp(u32 firstId, u32 lastId, u32 battle
     return (BattlerHPPercentage(battler, LESS_THAN_OR_EQUAL, 4));
 }
 
-static void SetTrainerSlideParameters(u32 battler, u32* firstId, u32* lastId, u32* trainerId, u32* retValue)
+static void SetTrainerSlideParameters(enum BattlerId battler, u32* firstId, u32* lastId, u32* trainerId, u32* retValue)
 {
     if ((battler & BIT_SIDE) == B_SIDE_OPPONENT)
     {
@@ -271,7 +271,7 @@ static void SetTrainerSlideParameters(u32 battler, u32* firstId, u32* lastId, u3
     }
 }
 
-enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType slideId)
+enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     u32 firstId = 0, lastId = PARTY_SIZE, trainerId = 0;
     u32 retValue = TRAINER_SLIDE_TARGET_TRAINER_A;
@@ -343,13 +343,13 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType
     {
         MarkTrainerSlideAsPlayed(BATTLE_PARTNER(battler), slideId);
     }
-    
+
     MarkTrainerSlideAsPlayed(battler, slideId);
     SetTrainerSlideMessage(difficulty,trainerId,slideId);
     return retValue;
 }
 
-static bool32 IsSlideInitalizedOrPlayed(u32 battler, enum TrainerSlideType slideId)
+static bool32 IsSlideInitalizedOrPlayed(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     if (IsTrainerSlideInitialized(battler, slideId))
         return TRUE;
@@ -360,7 +360,7 @@ static bool32 IsSlideInitalizedOrPlayed(u32 battler, enum TrainerSlideType slide
     return FALSE;
 }
 
-void TryInitializeFirstSTABMoveTrainerSlide(u32 battlerDef, u32 battlerAtk, enum Type moveType)
+void TryInitializeFirstSTABMoveTrainerSlide(enum BattlerId battlerDef, enum BattlerId battlerAtk, enum Type moveType)
 {
     enum TrainerSlideType slideId = TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE;
 
@@ -428,7 +428,7 @@ void TryInitializeTrainerSlideEnemyMonUnaffected(u32 target)
     InitalizeTrainerSlide(target, slideId);
 }
 
-bool32 IsTrainerSlideInitialized(u32 battler, enum TrainerSlideType slideId)
+bool32 IsTrainerSlideInitialized(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     u32 arrayIndex = slideId / TRAINER_SLIDES_PER_ARRAY;
     u32 bitPosition = slideId % TRAINER_SLIDES_PER_ARRAY;
@@ -436,7 +436,7 @@ bool32 IsTrainerSlideInitialized(u32 battler, enum TrainerSlideType slideId)
     return (gBattleStruct->slideMessageStatus.messageInitalized[battler][arrayIndex] & (1 << bitPosition)) != 0;
 }
 
-bool32 IsTrainerSlidePlayed(u32 battler, enum TrainerSlideType slideId)
+bool32 IsTrainerSlidePlayed(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     u32 arrayIndex = slideId / TRAINER_SLIDES_PER_ARRAY;
     u32 bitPosition = slideId % TRAINER_SLIDES_PER_ARRAY;
@@ -444,7 +444,7 @@ bool32 IsTrainerSlidePlayed(u32 battler, enum TrainerSlideType slideId)
     return (gBattleStruct->slideMessageStatus.messagePlayed[battler][arrayIndex] & (1 << bitPosition)) != 0;
 }
 
-void InitalizeTrainerSlide(u32 battler, enum TrainerSlideType slideId)
+void InitalizeTrainerSlide(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     u32 arrayIndex = slideId / TRAINER_SLIDES_PER_ARRAY;
     u32 bitPosition = slideId % TRAINER_SLIDES_PER_ARRAY;
@@ -452,7 +452,7 @@ void InitalizeTrainerSlide(u32 battler, enum TrainerSlideType slideId)
     gBattleStruct->slideMessageStatus.messageInitalized[battler][arrayIndex] |= (1 << bitPosition);
 }
 
-void MarkInitializedTrainerSlidesAsPlayed(u32 battler, enum TrainerSlideType slideId)
+void MarkInitializedTrainerSlidesAsPlayed(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     u32 arrayIndex = slideId / TRAINER_SLIDES_PER_ARRAY;
     u32 bitPosition = slideId % TRAINER_SLIDES_PER_ARRAY;
@@ -461,7 +461,7 @@ void MarkInitializedTrainerSlidesAsPlayed(u32 battler, enum TrainerSlideType sli
         gBattleStruct->slideMessageStatus.messagePlayed[battler][arrayIndex] |= (1 << bitPosition);
 }
 
-void MarkTrainerSlideAsPlayed(u32 battler, enum TrainerSlideType slideId)
+void MarkTrainerSlideAsPlayed(enum BattlerId battler, enum TrainerSlideType slideId)
 {
     u32 arrayIndex = slideId / TRAINER_SLIDES_PER_ARRAY;
     u32 bitPosition = slideId % TRAINER_SLIDES_PER_ARRAY;

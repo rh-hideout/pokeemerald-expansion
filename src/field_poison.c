@@ -138,7 +138,7 @@ s32 DoPoisonFieldEffect(void)
             hp = GetMonData(pokemon, MON_DATA_HP);
             if (OW_POISON_DAMAGE < GEN_4 && (hp == 0 || --hp == 0))
             {
-                TryFormChange(i, B_SIDE_PLAYER, FORM_CHANGE_FAINT);
+                TryFormChange(&gParties[B_TRAINER_0][i], FORM_CHANGE_FAINT, B_TRAINER_0);
                 numFainted++;
             }
             else if (OW_POISON_DAMAGE >= GEN_4 && (hp == 1 || --hp == 1))

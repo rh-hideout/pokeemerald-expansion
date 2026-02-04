@@ -1,2 +1,2 @@
-FiveIsland_LostCave_Room14_MapScripts::
+FiveIsland_LostCave_Room14_Frlg_MapScripts::
 	.byte 0

@@ -403,6 +403,36 @@ AI_SINGLE_BATTLE_TEST("AI will switch out if it has no move that affects the pla
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI will switch out if it has no moves that affect either of the player's battlers")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_RATTATA);
+        PLAYER(SPECIES_RATTATA);
+        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_SCRATCH);}
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentLeft, 2); EXPECT_MOVE(opponentRight, MOVE_SCRATCH); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI will not switch out if it's moves can still affect one of the player's battlers")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GASTLY);
+        PLAYER(SPECIES_RATTATA);
+        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_SCRATCH);}
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_SHADOW_BALL); EXPECT_MOVE(opponentRight, MOVE_SCRATCH); }
+    }
+}
+
+
 AI_SINGLE_BATTLE_TEST("When AI switches out due to having no move that affects the player, AI will send in a mon that can hit the player, even if not ideal")
 {
     GIVEN {

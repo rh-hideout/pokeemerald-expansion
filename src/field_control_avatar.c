@@ -223,6 +223,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
     if (input->pressedStartButton)
     {
+        FlagSet(FLAG_OPENED_START_MENU);
         PlaySE(SE_WIN_OPEN);
         ShowStartMenu();
         return TRUE;
@@ -290,6 +291,7 @@ static bool8 TryStartInteractionScript(struct MapPosition *position, u16 metatil
     // Don't play interaction sound for certain scripts.
     if (script != LittlerootTown_BrendansHouse_2F_EventScript_PC
      && script != LittlerootTown_MaysHouse_2F_EventScript_PC
+     && script != EventScript_PalletTown_PlayersHouse_2F_TurnOnPC
      && script != SecretBase_EventScript_PC
      && script != SecretBase_EventScript_RecordMixingPC
      && script != SecretBase_EventScript_DollInteract
@@ -446,8 +448,11 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
     case 5:
     case 6:
     case BG_EVENT_HIDDEN_ITEM:
-        gSpecialVar_0x8004 = ((u32)bgEvent->bgUnion.script >> 16) + FLAG_HIDDEN_ITEMS_START;
-        gSpecialVar_0x8005 = (u32)bgEvent->bgUnion.script;
+        if (bgEvent->bgUnion.hiddenItem.underfoot == TRUE)
+            return NULL;
+        gSpecialVar_0x8004 = bgEvent->bgUnion.hiddenItem.hiddenItemId + FLAG_HIDDEN_ITEMS_START;
+        gSpecialVar_0x8005 = bgEvent->bgUnion.hiddenItem.item;
+        gSpecialVar_0x8009 = bgEvent->bgUnion.hiddenItem.quantity;
         if (FlagGet(gSpecialVar_0x8004) == TRUE)
             return NULL;
         return EventScript_HiddenItemScript;
@@ -508,6 +513,66 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         return EventScript_Questionnaire;
     if (MetatileBehavior_IsTrainerHillTimer(metatileBehavior) == TRUE)
         return EventScript_TrainerHillTimer;
+    if (IS_FRLG)
+    {
+        if (MetatileBehavior_IsFood(metatileBehavior) == TRUE)
+            return EventScript_Food;
+        if (MetatileBehavior_IsImpressiveMachine(metatileBehavior) == TRUE)
+            return EventScript_ImpressiveMachine;
+        if (MetatileBehavior_IsBlueprints(metatileBehavior) == TRUE)
+            return EventScript_Blueprints;
+        if (MetatileBehavior_IsVideoGame(metatileBehavior) == TRUE)
+            return EventScript_VideoGame;
+        if (MetatileBehavior_IsBurglary(metatileBehavior) == TRUE)
+            return EventScript_Burglary;
+        if (MetatileBehavior_IsTrainerTowerMonitor(metatileBehavior) == TRUE)
+            return TrainerTower_EventScript_ShowTime;
+        if (MetatileBehavior_IsComputer(metatileBehavior) == TRUE)
+            return EventScript_Computer;
+        if (MetatileBehavior_IsCabinet(metatileBehavior) == TRUE)
+            return EventScript_Cabinet;
+        if (MetatileBehavior_IsKitchen(metatileBehavior) == TRUE)
+            return EventScript_Kitchen;
+        if (MetatileBehavior_IsDresser(metatileBehavior) == TRUE)
+            return EventScript_Dresser;
+        if (MetatileBehavior_IsSnacks(metatileBehavior) == TRUE)
+            return EventScript_Snacks;
+        if (MetatileBehavior_IsPainting(metatileBehavior) == TRUE)
+            return EventScript_Painting;
+        if (MetatileBehavior_IsPowerPlantMachine(metatileBehavior) == TRUE)
+            return EventScript_PowerPlantMachine;
+        if (MetatileBehavior_IsTelephone(metatileBehavior) == TRUE)
+            return EventScript_Telephone;
+        if (MetatileBehavior_IsAdvertisingPoster(metatileBehavior) == TRUE)
+            return EventScript_AdvertisingPoster;
+        if (MetatileBehavior_IsTastyFood(metatileBehavior) == TRUE)
+            return EventScript_TastyFood;
+        if (MetatileBehavior_IsCup(metatileBehavior) == TRUE)
+            return EventScript_Cup;
+        if (MetatileBehavior_IsBlinkingLights(metatileBehavior) == TRUE)
+            return EventScript_BlinkingLights;
+        if (MetatileBehavior_IsNeatlyLinedUpTools(metatileBehavior) == TRUE)
+            return EventScript_NeatlyLinedUpTools;
+        if (MetatileBehavior_IsPlayerFacingCableClubWirelessMonitor(metatileBehavior, direction) == TRUE)
+            return CableClub_EventScript_ShowWirelessCommunicationScreen_Frlg;
+        if (MetatileBehavior_IsPlayerFacingBattleRecords(metatileBehavior, direction) == TRUE)
+            return CableClub_EventScript_ShowBattleRecords_Frlg;
+        if (MetatileBehavior_IsIndigoPlateauSign1(metatileBehavior) == TRUE)
+        {
+            if(direction != DIR_NORTH)
+                return NULL;
+            SetMsgSignPostAndVarFacing(direction);
+            return EventScript_Indigo_UltimateGoal;
+        }
+        if (MetatileBehavior_IsIndigoPlateauSign2(metatileBehavior) == TRUE)
+        {
+            if(direction != DIR_NORTH)
+                return NULL;
+            SetMsgSignPostAndVarFacing(direction);
+            return EventScript_Indigo_HighestAuthority;
+        }
+    }
+
     if (MetatileBehavior_IsPokeMartSign(metatileBehavior) == TRUE)
     {
         if(direction != DIR_NORTH)
@@ -563,6 +628,8 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
 
 static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metatileBehavior, enum Direction direction)
 {
+    if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+        return EventScript_CurrentTooFast;
     if (IsFieldMoveUnlocked(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF)
      )
@@ -616,7 +683,7 @@ static bool8 TryStartStepBasedScript(struct MapPosition *position, u16 metatileB
         return TRUE;
     if (TryStartStepCountScript(metatileBehavior) == TRUE)
         return TRUE;
-    if (UpdateRepelCounter() == TRUE)
+    if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_FORCED_MOVE) && !MetatileBehavior_IsForcedMovementTile(metatileBehavior) && UpdateRepelCounter() == TRUE)
         return TRUE;
     if (OnStep_DexNavSearch())
         return TRUE;
@@ -1296,4 +1363,40 @@ void CancelSignPostMessageBox(struct FieldInput *input)
         return;
 
     CreateTask(Task_OpenStartMenu, 8);
+}
+
+u16 GetBoulderRevealFlagByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
+{
+    // Pushable boulder object events store the flag to reveal the boulder
+    // on the floor below in their trainer type field.
+    return GetObjectEventTemplateByLocalIdAndMap(localId, mapNum, mapGroup)->trainerType;
+}
+
+void HandleBoulderFallThroughHole(struct ObjectEvent * object)
+{
+    if (MapGridGetMetatileBehaviorAt(object->currentCoords.x, object->currentCoords.y) == MB_MT_PYRE_HOLE)
+    {
+        PlaySE(SE_FALL);
+        RemoveObjectEventByLocalIdAndMap(object->localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+        FlagClear(GetBoulderRevealFlagByLocalIdAndMap(object->localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup));
+    }
+}
+
+void HandleBoulderActivateVictoryRoadSwitch(u16 x, u16 y)
+{
+    int i;
+    const struct CoordEvent * events = gMapHeader.events->coordEvents;
+    int n = gMapHeader.events->coordEventCount;
+
+    if (MapGridGetMetatileBehaviorAt(x, y) == MB_STRENGTH_BUTTON)
+    {
+        for (i = 0; i < n; i++)
+        {
+            if (events[i].x + MAP_OFFSET == x && events[i].y + MAP_OFFSET == y)
+            {
+                ScriptContext_SetupScript(events[i].script);
+                LockPlayerFieldControls();
+            }
+        }
+    }
 }

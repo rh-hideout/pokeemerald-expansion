@@ -1,4 +1,4 @@
-ViridianCity_Mart_MapScripts::
+ViridianCity_Mart_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, ViridianCity_Mart_OnLoad
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, ViridianCity_Mart_OnFrame
 	.byte 0

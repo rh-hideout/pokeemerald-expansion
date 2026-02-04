@@ -298,7 +298,9 @@ void ItemUseOutOfBattle_Bike(u8 taskId)
 
 static void ItemUseOnFieldCB_Bike(u8 taskId)
 {
-    if (GetItemSecondaryId(gSpecialVar_ItemId) == MACH_BIKE)
+    if (GetItemSecondaryId(gSpecialVar_ItemId) == STANDARD_BIKE)
+        GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE);
+    else if (GetItemSecondaryId(gSpecialVar_ItemId) == MACH_BIKE)
         GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE);
     else // ACRO_BIKE
         GetOnOffBike(PLAYER_AVATAR_FLAG_ACRO_BIKE);
@@ -1227,7 +1229,7 @@ void ItemUseInBattle_PartyMenuChooseMove(u8 taskId)
     ItemUseInBattle_ShowPartyMenu(taskId);
 }
 
-static bool32 IteamHealsMonVolatile(u32 battler, enum Item itemId)
+static bool32 IteamHealsMonVolatile(enum BattlerId battler, enum Item itemId)
 {
     const u8 *effect = GetItemEffect(itemId);
     if (effect[3] & ITEM3_STATUS_ALL)

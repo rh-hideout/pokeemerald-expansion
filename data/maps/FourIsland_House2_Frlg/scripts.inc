@@ -1,2 +1,2 @@
-FourIsland_House2_MapScripts::
+FourIsland_House2_Frlg_MapScripts::
 	.byte 0

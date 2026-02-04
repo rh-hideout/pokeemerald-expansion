@@ -423,20 +423,22 @@
 #define ANIM_TAG_TATSUGIRI_CURLY            (ANIM_SPRITES_START + 409)
 #define ANIM_TAG_TATSUGIRI_DROOPY           (ANIM_SPRITES_START + 410)
 #define ANIM_TAG_TATSUGIRI_STRETCHY         (ANIM_SPRITES_START + 411)
-#define ANIM_TAG_COUNT                      GET_TRUE_SPRITE_INDEX(ANIM_TAG_TATSUGIRI_STRETCHY + 1)
+#define ANIM_TAG_SAFARI_BAIT                (ANIM_SPRITES_START + 412)
+#define ANIM_TAG_COUNT                      GET_TRUE_SPRITE_INDEX(ANIM_TAG_SAFARI_BAIT + 1)
 
 // battlers
-#define ANIM_ATTACKER         0
-#define ANIM_TARGET           1
-#define ANIM_ATK_PARTNER      2
-#define ANIM_DEF_PARTNER      3
-
-// Below are used by AnimTask_ShakeMon2 and AnimTask_SetGrayscaleOrOriginalPal
-#define ANIM_PLAYER_LEFT      (MAX_BATTLERS_COUNT + 0)
-#define ANIM_OPPONENT_LEFT    (MAX_BATTLERS_COUNT + 1)
-#define ANIM_PLAYER_RIGHT     (MAX_BATTLERS_COUNT + 2)
-#define ANIM_OPPONENT_RIGHT   (MAX_BATTLERS_COUNT + 3)
-#define ANIM_ATTACKER_FORCE   (MAX_BATTLERS_COUNT + 4)
+enum AnimBattler
+{
+    ANIM_ATTACKER,
+    ANIM_TARGET,
+    ANIM_ATK_PARTNER,
+    ANIM_DEF_PARTNER,
+    ANIM_PLAYER_LEFT = MAX_BATTLERS_COUNT,
+    ANIM_OPPONENT_LEFT,
+    ANIM_PLAYER_RIGHT,
+    ANIM_OPPONENT_RIGHT,
+    ANIM_ATTACKER_FORCE,
+};
 
 // stereo panning constants [0-255]
 //
@@ -596,7 +598,14 @@
 #define B_ANIM_POWER_CONSTRUCT          53
 #define B_ANIM_SWAP_TO_SUBSTITUTE       54
 #define B_ANIM_SWAP_FROM_SUBSTITUTE     55
-#define NUM_B_ANIMS_GENERAL             56
+#define B_ANIM_MON_SCARED               56
+#define B_ANIM_GHOST_GET_OUT            57
+#define B_ANIM_SILPH_SCOPED             58
+#define B_ANIM_ROCK_THROW               59
+#define B_ANIM_SAFARI_REACTION          60
+#define B_ANIM_FORM_CHANGE_INSTANT      61
+#define B_ANIM_FORM_CHANGE_DISGUISE     62
+#define NUM_B_ANIMS_GENERAL             63
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0
@@ -677,7 +686,9 @@ enum SpeciesGfxChange
 {
     SPECIES_GFX_CHANGE_TRANSFORM,
     SPECIES_GFX_CHANGE_FORM_CHANGE,
+    SPECIES_GFX_CHANGE_FORM_CHANGE_INSTANT,
     SPECIES_GFX_CHANGE_ILLUSION_OFF,
+    SPECIES_GFX_CHANGE_GHOST_UNVEIL,
 };
 
 // Flags given to various functions to indicate which palettes to consider.
