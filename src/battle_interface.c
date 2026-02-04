@@ -2123,7 +2123,7 @@ static void MoveBattleBarGraphically(enum BattlerId battler, u8 whichBar)
             }
             else // handling for mons with 1 max HP, ie Shedinja
             {
-                if (B_HPBAR_COLOR_THRESHOLD >= GEN_9)
+                if (B_HPBAR_COLOR_THRESHOLD >= GEN_8)
                     barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
                 else
                     barElementId = HEALTHBOX_GFX_HP_BAR_RED;
