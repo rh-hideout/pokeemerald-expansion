@@ -352,6 +352,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
 static void ResetValuesForCalledMove(void);
 static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 static void PlayAnimation(enum BattlerId battler, u8 animId, const u16 *argPtr, const u8 *nextInstr);
+static u32 GetPossibleNextTarget(u32 currTarget);
 
 static void Cmd_attackcanceler(void);
 static void Cmd_accuracycheck(void);
@@ -939,6 +940,7 @@ bool32 ProteanTryChangeType(enum BattlerId battler, enum Ability ability, enum M
 {
       if ((ability == ABILITY_PROTEAN || ability == ABILITY_LIBERO)
          && !gBattleMons[gBattlerAttacker].volatiles.usedProteanLibero
+         && !gBattleStruct->bouncedMoveIsUsed
          && (gBattleMons[battler].types[0] != moveType || gBattleMons[battler].types[1] != moveType
              || (gBattleMons[battler].types[2] != moveType && gBattleMons[battler].types[2] != TYPE_MYSTERY))
          && move != MOVE_STRUGGLE
@@ -1009,8 +1011,8 @@ static bool32 ShouldSkipToMoveEnd(void)
 static void Cmd_attackcanceler(void)
 {
     CMD_ARGS();
-    assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
-    assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
+    assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S\nattackCanceler = %d", gBattlerAttacker, GetMoveName(gCurrentMove), gBattleStruct->eventState.atkCanceler);
+    assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S\nattackCanceler = %d", gBattlerTarget, GetMoveName(gCurrentMove), gBattleStruct->eventState.atkCanceler);
 
     if (gBattleStruct->battlerState[gBattlerAttacker].usedEjectItem)
     {
@@ -1561,7 +1563,7 @@ static void Cmd_attackanimation(void)
         moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(gBattleStruct->moveResultFlags[gBattlerTarget]);
 
     bool32 isAnimDisabled = (gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION)
-                          || gBattleStruct->preAttackAnimPlayed);
+                          || gBattleStruct->attackAnimPlayed);
     if (isAnimDisabled
         && effect != EFFECT_TRANSFORM
         && effect != EFFECT_SUBSTITUTE
@@ -3492,7 +3494,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             	gSideStatuses[i] &= ~SIDE_STATUS_SCREEN_ANY;
             	gBattleScripting.animTurn = 1;
             	gBattleScripting.animTargetsHit = 1;
-            	gBattleStruct->preAttackAnimPlayed = TRUE; // The whole brick break animation is covered by the move so don't play twice
+            	gBattleStruct->attackAnimPlayed = TRUE; // The whole brick break animation is covered by the move so don't play twice
             	BattleScriptPush(battleScript);
             	gBattlescriptCurrInstr = BattleScript_BreakScreens;
         	}
@@ -3546,7 +3548,6 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
 
             if (gBattleStruct->stolenStats[0] != 0)
             {
-                gBattleStruct->preAttackAnimPlayed = FALSE; // if set by the previous move effect, reset it for final Spectral Thief anim
                 BattleScriptPush(battleScript);
                 gBattlescriptCurrInstr = BattleScript_StealStats;
             }
@@ -3583,26 +3584,35 @@ static void Cmd_setpreattackadditionaleffect(void)
 {
     CMD_ARGS();
 
-    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
-    if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
+    while (gEffectBattler != MAX_BATTLERS_COUNT)
     {
-        const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-        gBattleStruct->additionalEffectsCounter++;
+        u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
+        if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
+        {
+            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            gBattleStruct->additionalEffectsCounter++;
 
-        if (!additionalEffect->preAttackEffect)
+            if (!additionalEffect->preAttackEffect)
+                return;
+
+            if ((gEffectBattler == gBattlerAttacker) != additionalEffect->self)
+                return;
+
+            SetMoveEffect(
+                gBattlerAttacker,
+                gEffectBattler,
+                additionalEffect->moveEffect,
+                gBattlescriptCurrInstr,
+                EFFECT_PRIMARY
+            );
+
             return;
-
-        SetMoveEffect(
-        	gBattlerAttacker,
-        	additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
-        	additionalEffect->moveEffect,
-        	gBattlescriptCurrInstr,
-        	EFFECT_PRIMARY
-        );
-
-        return;
+        }
+        gEffectBattler = GetPossibleNextTarget(gEffectBattler);
+        gBattleStruct->additionalEffectsCounter = 0;
     }
 
+    gEffectBattler = gBattlerAttacker;
     gBattleStruct->additionalEffectsCounter = 0;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -6262,7 +6272,6 @@ static void ResetValuesForCalledMove(void)
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
-    DetermineTarget(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), FALSE);
     ClearDamageCalcResults();
 }
 
@@ -6315,8 +6324,9 @@ static void Cmd_futuresighttargetfailure(void)
 }
 #undef DONE_TARGET_FAILURE
 
-static u32 GetPossibleNextTarget(void)
+static u32 GetPossibleNextTarget(u32 currTarget)
 {
+    u32 i = 0;
     const u8 targetOrder[MAX_BATTLERS_COUNT] = {
         gBattlerAttacker,
         BATTLE_PARTNER(gBattlerAttacker),
@@ -6324,7 +6334,17 @@ static u32 GetPossibleNextTarget(void)
         RIGHT_FOE(gBattlerAttacker),
     };
 
-    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
+    if (currTarget != MAX_BATTLERS_COUNT)
+    {
+        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+        {
+            if (targetOrder[i] == currTarget)
+                break;
+        }
+        i++;
+    }
+
+    for ( ; i < MAX_BATTLERS_COUNT; i++)
     {
         enum BattlerId battler = targetOrder[i];
 
@@ -6343,7 +6363,7 @@ static void Cmd_getpossiblenexttarget(void)
 {
     CMD_ARGS(const u8 *jumpInstr);
 
-    u32 nextTarget = GetPossibleNextTarget();
+    u32 nextTarget = GetPossibleNextTarget(MAX_BATTLERS_COUNT);
     if (nextTarget != MAX_BATTLERS_COUNT)
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget;
@@ -12627,9 +12647,8 @@ void BS_SetMagicCoatTarget(void)
     gBattleStruct->attackerBeforeBounce = gBattleScripting.battler = gBattlerAttacker;
     gBattlerAttacker = gBattlerTarget;
     gBattlerTarget = gBattleStruct->attackerBeforeBounce;
-    DetermineTarget(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), FALSE);
     ClearDamageCalcResults();
-    gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
+    gBattleStruct->eventState.atkCanceler = CANCELER_SET_TARGETS;
     gBattleStruct->eventState.atkCancelerBattler = 0;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -12663,7 +12682,9 @@ void BS_CheckTeaTimeTargets(void)
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsTeatimeAffected(i))
+        {
             count++;
+        }
     }
     if (count == 0)
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -14684,9 +14705,13 @@ void BS_GetRototillerTargets(void)
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (IsRototillerAffected(battler, gCurrentMove))
+        {
             count++;
+        }
         else
+        {
             gBattleStruct->moveResultFlags[battler] = MOVE_RESULT_NO_EFFECT;
+        }
     }
 
     if (count == 0)

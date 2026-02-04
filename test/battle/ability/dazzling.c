@@ -122,8 +122,6 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean act
     }
 }
 
-// Listed on Bulbapedia as "Moves that target all Pokémon (except Perish Song, Flower Shield, and Rototiller),"
-// Despite the fact that there's only 2 remaining moves from that list, being Haze and Teatime
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
 {
     u32 species;
@@ -143,8 +141,8 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HAZE, player);
         NOT ABILITY_POPUP(opponent, ability);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HAZE, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
@@ -167,8 +165,8 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Teatim
     } WHEN {
         TURN { MOVE(player, MOVE_TEATIME); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
         NOT ABILITY_POPUP(opponent, ability);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
         EXPECT_EQ(opponent->item, ITEM_NONE);
