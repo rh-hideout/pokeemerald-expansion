@@ -2021,6 +2021,7 @@ extern const u32 gBattleArenaJudgmentSymbolsGfx[];
 extern const u16 gBattleArenaJudgmentSymbolsPalette[];
 
 extern const u16 gBattleWindowTextPalette[];
+extern const u16 gBattleStatusTextPalette[];
 
 extern const u16 gContest2Pal[];
 

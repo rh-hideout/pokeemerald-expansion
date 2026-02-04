@@ -40,6 +40,8 @@ void HideGimmickTriggerSprite(void);
 void DestroyGimmickTriggerSprite(void);
 
 void LoadIndicatorSpritesGfx(void);
+const u32 *GetIndicatorSpriteSrc(enum BattlerId battler);
+const u32 *GetTeraIndicatorSpriteSrc(enum Type type);
 u32 GetIndicatorPalTag(enum BattlerId battler);
 void UpdateIndicatorVisibilityAndType(u32 healthboxId, bool32 invisible);
 void UpdateIndicatorOamPriority(u32 healthboxId, u32 oamPriority);
