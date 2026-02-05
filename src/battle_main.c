@@ -1428,7 +1428,7 @@ static void CB2_PreInitMultiBattle(void)
             *savedBattleTypeFlags = gBattleTypeFlags;
             gMain.savedCallback = CB2_PreInitMultiBattle;
             if (AreMultiPartiesFullTeams())
-                ShowPartyMenuToShowcaseMultiBattleFullParties();
+                ShowPartyMenuToShowcaseMultiBattleFullParty();
             else
                 ShowPartyMenuToShowcaseMultiBattleParty();
         }
@@ -1489,7 +1489,7 @@ static void CB2_PreInitIngamePlayerPartnerBattle(void)
         if ((!PlayerHasFollowerNPC() || !FollowerNPCIsBattlePartner() || (FNPC_NPC_FOLLOWER_PARTY_PREVIEW && FollowerNPCIsBattlePartner())))
         {
             if (AreMultiPartiesFullTeams())
-                ShowPartyMenuToShowcaseMultiBattleFullParties();
+                ShowPartyMenuToShowcaseMultiBattleFullParty();
             else
                 ShowPartyMenuToShowcaseMultiBattleParty();
         }

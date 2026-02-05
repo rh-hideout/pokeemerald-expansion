@@ -445,12 +445,11 @@ static void Task_ContinueChoosingHalfParty(u8);
 static void BufferBattlePartyOrder(u8 *, bool8);
 static void BufferBattlePartyOrderBySide(u8 *, u8, enum BattlerId);
 static void Task_InitMultiPartnerPartySlideIn(u8);
-static void Task_InitMultiPartnerFullPartySlideIn(u8);
 static void Task_MultiPartnerPartySlideIn(u8);
-static void Task_MultiPartnerFullPartySlideIn(u8);
 static void SlideMultiPartyMenuBoxSpritesOneStep(u8);
-static void SlideMultiFullPartyMenuBoxSpritesOneStep(u8);
 static void Task_WaitAfterMultiPartnerPartySlideIn(u8);
+static void Task_WaitBeforeMultiPartnerFullParty(u8);
+static void Task_WaitAfterMultiPartnerFullParty(u8);
 static void BufferMonSelection(void);
 static void Task_PartyMenuWaitForFade(u8 taskId);
 static void Task_ChooseContestMon(u8 taskId);
@@ -592,6 +591,7 @@ static void RefreshPartyMenu(void) //Refreshes the party menu without restarting
         sPartyMenuInternal->windowId[i] = WINDOW_NONE;
     gTextFlags.autoScroll = 0;
     CalculatePlayerPartyCount();
+    gMain.state = 0;
     SetMainCallback2(CB2_ReloadPartyMenu);
 }
 
@@ -987,28 +987,12 @@ static void LoadPartyMenuBoxes(u8 layout)
         sPartyMenuBoxes[i].statusSpriteId = SPRITE_NONE;
     }
 
-    if (layout == PARTY_LAYOUT_MULTI_FULL)
-    {
-        for (i = PARTY_SIZE; i < PARTY_SIZE + PARTY_SIZE; i++)
-        {
-            sPartyMenuBoxes[i].infoRects = &sPartyBoxInfoRects[PARTY_BOX_RIGHT_COLUMN];
-            sPartyMenuBoxes[i].spriteCoords = sPartyMenuSpriteCoords[layout][i - PARTY_SIZE];
-            sPartyMenuBoxes[i].windowId = i;
-            sPartyMenuBoxes[i].monSpriteId = SPRITE_NONE;
-            sPartyMenuBoxes[i].itemSpriteId = SPRITE_NONE;
-            sPartyMenuBoxes[i].pokeballSpriteId = SPRITE_NONE;
-            sPartyMenuBoxes[i].statusSpriteId = SPRITE_NONE;
-        }
-    }
     // The first party mon goes in the left column
     sPartyMenuBoxes[0].infoRects = &sPartyBoxInfoRects[PARTY_BOX_LEFT_COLUMN];
 
-    // Partner first mon also goes in left column
-    if (layout == PARTY_LAYOUT_MULTI_FULL)
-        sPartyMenuBoxes[PARTY_SIZE].infoRects = &sPartyBoxInfoRects[PARTY_BOX_LEFT_COLUMN];
-    else if (layout == PARTY_LAYOUT_MULTI_SHOWCASE)
+    if (layout == PARTY_LAYOUT_MULTI_SHOWCASE)
         sPartyMenuBoxes[3].infoRects = &sPartyBoxInfoRects[PARTY_BOX_LEFT_COLUMN];
-    else if (layout != PARTY_LAYOUT_SINGLE)
+    else if (layout == PARTY_LAYOUT_DOUBLE || layout == PARTY_LAYOUT_MULTI)
         sPartyMenuBoxes[1].infoRects = &sPartyBoxInfoRects[PARTY_BOX_LEFT_COLUMN];
 }
 
@@ -1018,10 +1002,10 @@ static void RenderPartyMenuBox(u8 slot)
     s8 partySlot = 0;
     GetPartyAndSlotFromPartyMenuId(slot, &party, &partySlot);
 
-    if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE && slot > PARTY_SIZE)
+    if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE && gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER)
     {
         DisplayPartyPokemonDataForMultiBattle(slot);
-        if (gMultiPartnerParty[slot - PARTY_SIZE].species == SPECIES_NONE)
+        if (gMultiPartnerParty[slot].species == SPECIES_NONE)
             LoadPartyBoxPalette(&sPartyMenuBoxes[slot], PARTY_PAL_NO_MON);
         else
             LoadPartyBoxPalette(&sPartyMenuBoxes[slot], PARTY_PAL_MULTI_ALT);
@@ -1063,8 +1047,7 @@ static void RenderPartyMenuBox(u8 slot)
             else if (!DisplayPartyPokemonDataForMoveTutorOrEvolutionItem(slot))
                 DisplayPartyPokemonData(slot);
 
-            if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_SHOWCASE
-             || gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE)
+            if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_SHOWCASE || gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE)
                 AnimatePartySlot(slot, 0);
             else if (gPartyMenu.slotId == slot)
                 AnimatePartySlot(slot, 1);
@@ -1233,7 +1216,11 @@ static void DisplayPartyPokemonDataToTeachMove(u8 slot, enum Move move)
 static void DisplayPartyPokemonDataForMultiBattle(u8 slot)
 {
     struct PartyMenuBox *menuBox = &sPartyMenuBoxes[slot];
-    u8 actualSlot = slot - MULTI_PARTY_SIZE;
+    u8 actualSlot;
+    if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER)
+        actualSlot = slot;
+    else
+        actualSlot = slot - MULTI_PARTY_SIZE;
 
     if (gMultiPartnerParty[actualSlot].species == SPECIES_NONE)
     {
@@ -1274,7 +1261,7 @@ static void CreatePartyMonSprites(u8 slot)
     s8 partySlot = 0;
     GetPartyAndSlotFromPartyMenuId(slot, &party, &partySlot);
 
-    if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE && slot >= PARTY_SIZE)
+    if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE && gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER)
     {
         u8 status;
 
@@ -1326,7 +1313,8 @@ static bool8 CreatePartyMonSpritesLoop(void)
 
 static void CreateCancelConfirmPokeballSprites(void)
 {
-    if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_SHOWCASE)
+    if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_SHOWCASE
+     || gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE)
     {
         // The showcase has no Cancel/Confirm buttons
         FillBgTilemapBufferRect(1, 14, 23, 17, 7, 2, 1);
@@ -1423,7 +1411,7 @@ static u8 GetPartyBoxPaletteFlags(u8 slot, u8 animNum)
 
 static bool8 PartyBoxPal_ParnterOrDisqualifiedInArena(u8 slot)
 {
-    if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL && slot >= PARTY_SIZE)
+    if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER || gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER)
         return TRUE;
 
     if (gPartyMenu.layout == PARTY_LAYOUT_MULTI && (slot == 1 || slot == 4 || slot == 5))
@@ -2382,6 +2370,10 @@ static void InitPartyMenuWindows(u8 layout)
     switch (layout)
     {
     case PARTY_LAYOUT_SINGLE:
+    case PARTY_LAYOUT_MULTI_FULL:
+    case PARTY_LAYOUT_MULTI_FULL_PARTNER:
+    case PARTY_LAYOUT_MULTI_FULL_SHOWCASE:
+    case PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER:
         InitWindows(sSinglePartyMenuWindowTemplate);
         break;
     case PARTY_LAYOUT_DOUBLE:
@@ -2389,9 +2381,6 @@ static void InitPartyMenuWindows(u8 layout)
         break;
     case PARTY_LAYOUT_MULTI:
         InitWindows(sMultiPartyMenuWindowTemplate);
-        break;
-    case PARTY_LAYOUT_MULTI_FULL:
-        InitWindows(sShowcaseMultiFullPartyMenuWindowTemplate);
         break;
     default: // PARTY_LAYOUT_MULTI_SHOWCASE
         InitWindows(sShowcaseMultiPartyMenuWindowTemplate);
@@ -2418,7 +2407,8 @@ static void CreateCancelConfirmWindows(bool8 chooseHalf)
     u8 offset;
     u8 mainOffset;
 
-    if (gPartyMenu.menuType != PARTY_MENU_TYPE_MULTI_SHOWCASE)
+    if (gPartyMenu.menuType != PARTY_MENU_TYPE_MULTI_SHOWCASE
+     && gPartyMenu.menuType != PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE)
     {
         if (chooseHalf == TRUE)
         {
@@ -3077,6 +3067,7 @@ static u8 GetPartyMenuActionsType(struct Pokemon *mon)
     // PARTY_MENU_TYPE_CONTEST
     // PARTY_MENU_TYPE_CHOOSE_MON
     // PARTY_MENU_TYPE_MULTI_SHOWCASE
+    // PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE
     // PARTY_MENU_TYPE_MOVE_RELEARNER
     // PARTY_MENU_TYPE_MINIGAME
     default:
@@ -7951,9 +7942,14 @@ void ShowPartyMenuToShowcaseMultiBattleParty(void)
     InitPartyMenu(PARTY_MENU_TYPE_MULTI_SHOWCASE, PARTY_LAYOUT_MULTI_SHOWCASE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_NONE, Task_InitMultiPartnerPartySlideIn, gMain.savedCallback);
 }
 
-void ShowPartyMenuToShowcaseMultiBattleFullParties(void)
+void ShowPartyMenuToShowcaseMultiBattleFullParty(void)
 {
-    InitPartyMenu(PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE, PARTY_LAYOUT_MULTI_FULL, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_NONE, Task_InitMultiPartnerFullPartySlideIn, gMain.savedCallback);
+    InitPartyMenu(PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE, PARTY_LAYOUT_MULTI_FULL_SHOWCASE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_NONE, Task_WaitBeforeMultiPartnerFullParty, gMain.savedCallback);
+}
+
+void ShowPartyMenuToShowcaseMultiBattlePartnerFullParty(void)
+{
+    InitPartyMenu(PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE, PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_NONE, Task_WaitAfterMultiPartnerFullParty, gPartyMenu.exitCallback);
 }
 
 #define tXPos  data[0]
@@ -7965,15 +7961,6 @@ static void Task_InitMultiPartnerPartySlideIn(u8 taskId)
     SlideMultiPartyMenuBoxSpritesOneStep(taskId);
     ChangeBgX(2, 0x10000, BG_COORD_SET);
     gTasks[taskId].func = Task_MultiPartnerPartySlideIn;
-}
-
-static void Task_InitMultiPartnerFullPartySlideIn(u8 taskId)
-{
-    // The first slide step also sets the sprites offscreen
-    gTasks[taskId].tXPos = 256;
-    SlideMultiFullPartyMenuBoxSpritesOneStep(taskId);
-    ChangeBgX(2, 0x10000, BG_COORD_SET);
-    gTasks[taskId].func = Task_MultiPartnerFullPartySlideIn;
 }
 
 static void Task_MultiPartnerPartySlideIn(u8 taskId)
@@ -7998,25 +7985,33 @@ static void Task_MultiPartnerPartySlideIn(u8 taskId)
     }
 }
 
-static void Task_MultiPartnerFullPartySlideIn(u8 taskId)
+static void Task_WaitAfterMultiPartnerFullParty(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    u8 i;
 
-    if (!gPaletteFade.active)
+    if (data[0] == 0)
+        PlaySE(SE_M_HARDEN); // The Harden SE plays once the partners party mons have slid on screen
+
+    // data[0] used as a timer afterwards rather than the x pos
+    if (FollowerNPCIsBattlePartner()) {
+        if (++data[0] == 128)
+            Task_ClosePartyMenu(taskId);
+    }
+    else if (++data[0] == 256)
+        Task_ClosePartyMenu(taskId);
+}
+
+static void Task_WaitBeforeMultiPartnerFullParty(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    // data[0] used as a timer afterwards rather than the x pos
+    if (++data[0] == 64)
     {
-        tXPos -= 8;
-        SlideMultiFullPartyMenuBoxSpritesOneStep(taskId);
-        if (tXPos == 0)
-        {
-            for (i = 0; i < PARTY_SIZE; i++)
-            {
-                if (gMultiPartnerParty[i].species != SPECIES_NONE)
-                    AnimateSelectedPartyIcon(sPartyMenuBoxes[i + PARTY_SIZE].monSpriteId, 0);
-            }
-            PlaySE(SE_M_HARDEN); // The Harden SE plays once the partners party mons have slid on screen
-            gTasks[taskId].func = Task_WaitAfterMultiPartnerPartySlideIn;
-        }
+        gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER;
+        RefreshPartyMenu();
+        data[0] = 0;
+        gTasks[taskId].func = Task_WaitAfterMultiPartnerFullParty;
     }
 }
 
@@ -8052,29 +8047,6 @@ static void SlideMultiPartyMenuBoxSpritesOneStep(u8 taskId)
             MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].itemSpriteId, tXPos - 8);
             MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].pokeballSpriteId, tXPos - 8);
             MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].statusSpriteId, tXPos - 8);
-        }
-    }
-    ChangeBgX(2, 0x800, BG_COORD_ADD);
-}
-
-static void SlideMultiFullPartyMenuBoxSpritesOneStep(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-    u8 i;
-
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].monSpriteId, tXPos - 256 - 8);
-        MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].itemSpriteId, tXPos - 256 - 8);
-        MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].pokeballSpriteId, tXPos - 256 - 8);
-        MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i].statusSpriteId, tXPos - 256 - 8);
-
-        if (gMultiPartnerParty[i].species != SPECIES_NONE)
-        {
-            MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i + PARTY_SIZE].monSpriteId, tXPos - 8);
-            MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i + PARTY_SIZE].itemSpriteId, tXPos - 8);
-            MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i + PARTY_SIZE].pokeballSpriteId, tXPos - 8);
-            MoveMultiPartyMenuBoxSprite(sPartyMenuBoxes[i + PARTY_SIZE].statusSpriteId, tXPos - 8);
         }
     }
     ChangeBgX(2, 0x800, BG_COORD_ADD);
@@ -8501,23 +8473,10 @@ static void GetPartyAndSlotFromPartyMenuId(s8 menuId, struct Pokemon **party, s8
 {
     switch (gPartyMenu.layout)
     {
-    case PARTY_LAYOUT_MULTI_FULL:
-        switch (menuId)
-        {
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-        case 11:
-            *party = gParties[B_TRAINER_2];
-            *partySlot = menuId - PARTY_SIZE;
-            break;
-        default:
-            *party = gParties[B_TRAINER_0];
-            *partySlot = menuId;
-            break;
-        }
+    case PARTY_LAYOUT_MULTI_FULL_PARTNER:
+    case PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER:
+        *party = gParties[B_TRAINER_2];
+        *partySlot = menuId;
         break;
     case PARTY_LAYOUT_MULTI_SHOWCASE:
         switch (menuId)
