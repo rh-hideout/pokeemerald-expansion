@@ -111,13 +111,31 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
     if (IsOnPlayerSide(battler))
     {
         s32 i;
-        for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
-            gBattlePartyCurrentOrder[i] = *(i + (u8 *)(gBattleStruct->battlerPartyOrders));
+        u8 battlerPartyId = gBattlerPartyIndexes[battler];
+        u8 switchInPartyId = arg1;
+        enum BattleTrainer trainer = GetBattlerTrainer(battler);
 
-        SwitchPartyMonSlots(GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[battler]), GetPartyIdFromBattlePartyId(arg1));
+        // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_2]
+        // and uses indexes 0-2, but we still use the combined party order.
+        if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && trainer == B_TRAINER_2)
+        {
+            battlerPartyId += PARTY_SIZE / 2;
+            switchInPartyId += PARTY_SIZE / 2;
+        }
 
-        for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
-            *(i + (u8 *)(gBattleStruct->battlerPartyOrders)) = gBattlePartyCurrentOrder[i];
+        for (enum BattlerId battlerId = 0; battlerId < gBattlersCount; battlerId++)
+        {
+            if (!IsOnPlayerSide(battlerId))
+                continue;
+
+            for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
+                gBattlePartyCurrentOrder[i] = gBattleStruct->battlerPartyOrders[battlerId][i];
+
+            SwitchPartyMonSlots(GetPartyIdFromBattlePartyId(battlerPartyId), GetPartyIdFromBattlePartyId(switchInPartyId));
+
+            for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
+                gBattleStruct->battlerPartyOrders[battlerId][i] = gBattlePartyCurrentOrder[i];
+        }
     }
 }
 

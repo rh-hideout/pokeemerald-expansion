@@ -94,6 +94,7 @@ void SwitchPartyOrderLinkMulti(enum BattlerId battler, u8 slot, u8 slot2);
 void SwitchPartyMonSlots(u8 slot, u8 slot2);
 u8 GetPartyIdFromBattlePartyId(u8 battlePartyId);
 void ShowPartyMenuToShowcaseMultiBattleParty(void);
+void ShowPartyMenuToShowcaseMultiBattleFullParties(void);
 void ChooseMonForDaycare(void);
 bool8 CB2_FadeFromPartyMenu(void);
 void CB2_ReturnToPartyMenuFromSummaryScreen(void);

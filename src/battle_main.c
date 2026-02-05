@@ -149,7 +149,7 @@ EWRAM_DATA u8 gBattleTextBuff2[TEXT_BUFF_ARRAY_COUNT] = {0};
 EWRAM_DATA u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT + 13] = {0};   // expanded for stupidly long z move names
 EWRAM_DATA u32 gBattleTypeFlags = 0;
 EWRAM_DATA u8 gBattleEnvironment = 0;
-EWRAM_DATA struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE] = {0};
+EWRAM_DATA struct MultiPartnerMenuPokemon gMultiPartnerParty[PARTY_SIZE] = {0};
 EWRAM_DATA static struct MultiPartnerMenuPokemon *sMultiPartnerPartyBuffer = NULL;
 EWRAM_DATA u8 *gBattleAnimBgTileBuffer = NULL;
 EWRAM_DATA u8 *gBattleAnimBgTilemapBuffer = NULL;
@@ -1348,7 +1348,7 @@ static void SetMultiPartnerMenuParty(u8 offset)
 {
     s32 i;
 
-    for (i = 0; i < MULTI_PARTY_SIZE; i++)
+    for (i = 0; i < PARTY_SIZE; i++)
     {
         gMultiPartnerParty[i].species     = GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_SPECIES);
         gMultiPartnerParty[i].heldItem    = GetMonData(&gParties[B_TRAINER_2][offset + i], MON_DATA_HELD_ITEM);
@@ -1427,7 +1427,10 @@ static void CB2_PreInitMultiBattle(void)
             *savedCallback = gMain.savedCallback;
             *savedBattleTypeFlags = gBattleTypeFlags;
             gMain.savedCallback = CB2_PreInitMultiBattle;
-            ShowPartyMenuToShowcaseMultiBattleParty();
+            if (AreMultiPartiesFullTeams())
+                ShowPartyMenuToShowcaseMultiBattleFullParties();
+            else
+                ShowPartyMenuToShowcaseMultiBattleParty();
         }
         break;
     case 2:
@@ -1483,10 +1486,12 @@ static void CB2_PreInitIngamePlayerPartnerBattle(void)
         *savedCallback = gMain.savedCallback;
         *savedBattleTypeFlags = gBattleTypeFlags;
         gMain.savedCallback = CB2_PreInitIngamePlayerPartnerBattle;
-        if ((!PlayerHasFollowerNPC() || !FollowerNPCIsBattlePartner() || (FNPC_NPC_FOLLOWER_PARTY_PREVIEW && FollowerNPCIsBattlePartner()))
-         && !AreMultiPartiesFullTeams())
+        if ((!PlayerHasFollowerNPC() || !FollowerNPCIsBattlePartner() || (FNPC_NPC_FOLLOWER_PARTY_PREVIEW && FollowerNPCIsBattlePartner())))
         {
-            ShowPartyMenuToShowcaseMultiBattleParty();
+            if (AreMultiPartiesFullTeams())
+                ShowPartyMenuToShowcaseMultiBattleFullParties();
+            else
+                ShowPartyMenuToShowcaseMultiBattleParty();
         }
 
         break;
