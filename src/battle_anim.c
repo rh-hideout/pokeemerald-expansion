@@ -84,6 +84,7 @@ static void Cmd_createspriteontargets(void);
 static void Cmd_createspriteontargets_onpos(void);
 static void Cmd_jumpifmovetypeequal(void);
 static void Cmd_createdragondartsprite(void);
+static void Cmd_unloadallspritepals(void);
 static void RunAnimScriptCommand(void);
 static void Task_UpdateMonBg(u8 taskId);
 static void FlipBattlerBgTiles(void);
@@ -178,6 +179,7 @@ static void (*const sScriptCmdTable[])(void) =
     Cmd_createspriteontargets_onpos, // 0x32
     Cmd_jumpifmovetypeequal,         // 0x33
     Cmd_createdragondartsprite,      // 0x34
+    Cmd_unloadallspritepals,        // 0x35
 };
 
 static const u16 sMovesWithQuietBGM[] =
@@ -658,6 +660,20 @@ static void Cmd_unloadspritepal(void)
     {
         FreeSpritePaletteByTag(index);
         ClearSpritePalIndex(index);
+    }
+}
+
+static void Cmd_unloadallspritepals(void)
+{
+    sBattleAnimScriptPtr++;
+    for (u32 i = 0; i < ANIM_SPRITE_PAL_COUNT; i++)
+    {
+        if (sAnimSpritePalTags[i] != 0xFFFF)
+        {
+            u32 index = sAnimSpritePalTags[i];
+            FreeSpritePaletteByTag(index);
+            sAnimSpritePalTags[i] = 0xFFFF;
+        }
     }
 }
 
