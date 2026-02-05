@@ -2037,7 +2037,7 @@ gBattleAnimMove_Avalanche::
 	loadspritegfx ANIM_TAG_ROCKS
 	loadspritegfx ANIM_TAG_ICE_CHUNK
 	monbg ANIM_DEF_PARTNER
-	shake_mon_or_platform velocity=7, shake_timer=1, shake_duration=11, type=1
+	shake_mon_or_platform velocity=7, shake_timer=1, shake_duration=11, type=SHAKE_BG_Y
 	createsprite gAvalancheSpriteTemplate, ANIM_TARGET, 2, -5, 1, -5, 1
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	delay 2
@@ -2246,7 +2246,7 @@ gBattleAnimMove_ShadowSneak::
 	waitforvisualfinish
 	playsewithpan SE_M_FAINT_ATTACK, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 18, 6, 1, 3
-	attacker_fade_to_invisible priority=0x2, step_delay=0x1
+	attacker_fade_to_invisible priority=2, step_delay=1
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	invisible ANIM_ATTACKER
@@ -3882,22 +3882,22 @@ gBattleAnimMove_SeedFlare::
 	delay 30
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 40, 1
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 10, 0x900, 0x60, 1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=0x16, wave_amplitude=20, target_both=1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=0x16, wave_amplitude=-20, target_both=1
+	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=1
+	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=1
 	delay 2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 0x5a, 0x800, 0x60, 1
 	delay 8
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 0x32, 0xa00, 0x60, 1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=0x16, wave_amplitude=20, target_both=1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=0x16, wave_amplitude=-20, target_both=1
+	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=1
+	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=1
 	delay 2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 20, 0x900, 0x60, 1
 	delay 8
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 0x46, 0x7c0, 0x60, 1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=0x16, wave_amplitude=20, target_both=1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=0x16, wave_amplitude=-20, target_both=1
+	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=1
+	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=1
 	delay 2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	delay 8
@@ -4603,19 +4603,19 @@ FlameChargeSwirl:
 gBattleAnimMove_Coil::
 	loadspritegfx ANIM_TAG_TENDRILS
 	loopsewithpan SE_M_SCRATCH, SOUND_PAN_TARGET, 0x6, 0x4
-	create_constrict_binding_sprite ANIM_TARGET, 4, initial_x=0x0, initial_y=0x10, affine_animation=0x0, squeezes=0x2
+	create_constrict_binding_sprite ANIM_TARGET, 4, initial_x=0, initial_y=16, affine_animation=0, squeezes=2
 	delay 7
-	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0x0, initial_y=0x0, affine_animation=0x0, squeezes=0x2
-	create_constrict_binding_sprite ANIM_TARGET, 2, initial_x=0x0, initial_y=0x8, affine_animation=0x1, squeezes=0x2
+	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0, initial_y=0, affine_animation=0, squeezes=2
+	create_constrict_binding_sprite ANIM_TARGET, 2, initial_x=0, initial_y=8, affine_animation=1, squeezes=2
 	delay 7
-	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0x0, initial_y=0xfff8, affine_animation=0x1, squeezes=0x2
+	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0, initial_y=-8, affine_animation=1, squeezes=2
 	delay 8
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 3, 0, 6, 1
 	delay 20
 	createvisualtask AnimTask_ShakeMon2, 131, ANIM_TARGET, 4, 0, 5, 1
-	createvisualtask AnimTask_StretchTargetUp, 0x3
+	createvisualtask AnimTask_StretchTargetUp, 3
 	playsewithpan SE_M_BIND, SOUND_PAN_TARGET
-	setarg 0x7 0xffff
+	setarg 7, -1
 	waitforvisualfinish
 	end
 
@@ -5955,37 +5955,37 @@ gBattleAnimMove_DrillRun::
 	playse 0x14
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 2, 0, 40, 1
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 10, 0, 40, 1
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x0, y=0x0, relative_to=0x1, animation=0x3
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0, y=0, relative_to=1, animation=3
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x0, y=0x2, relative_to=0x1, animation=0x3
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0, y=2, relative_to=1, animation=3
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0xfffc, y=0x3, relative_to=0x1, animation=0x3
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-4, y=3, relative_to=1, animation=3
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0xfff8, y=0xfffb, relative_to=0x1, animation=0x3
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-8, y=-5, relative_to=1, animation=3
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x4, y=0xfff4, relative_to=0x1, animation=0x3
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=4, y=-12, relative_to=1, animation=3
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x10, y=0x0, relative_to=0x1, animation=0x3
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=16, y=0, relative_to=1, animation=3
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x5, y=0x12, relative_to=0x1, animation=0x3
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=5, y=18, relative_to=1, animation=3
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0xffef, y=0xc, relative_to=0x1, animation=0x2
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-17, y=12, relative_to=1, animation=2
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0xffeb, y=0xfff1, relative_to=0x1, animation=0x2
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-21, y=-15, relative_to=1, animation=2
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x8, y=0xffe5, relative_to=0x1, animation=0x2
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=8, y=-27, relative_to=1, animation=2
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x20, y=0x0, relative_to=0x1, animation=0x2
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=32, y=0, relative_to=1, animation=2
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
 	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 0x2
@@ -6037,7 +6037,7 @@ gBattleAnimMove_HornLeech::
 	createsprite gHornLeechHornTemplate, ANIM_TARGET, 2, 0x0, 0x0, 0x25
 	waitforvisualfinish
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 5, 0, 6, 1
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x0, y=0x0, relative_to=0x1, animation=0x1
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0, y=0, relative_to=1, animation=1
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	call GigaDrainAbsorbEffect
 	waitforvisualfinish
@@ -6322,7 +6322,7 @@ gBattleAnimMove_HeadCharge::
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_ATTACKER, 2, 0, 4, 1
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 5, 0, 6, 1
 	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 0x2
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x0, y=0x0, relative_to=0x1, animation=0x1
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0, y=0, relative_to=1, animation=1
 	playsewithpan SE_M_VITAL_THROW2, SOUND_PAN_TARGET
 	waitforvisualfinish
 	restorebg
@@ -7435,8 +7435,8 @@ gBattleAnimMove_VCreate::
 	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x10, 0x10, 0x1, 0x1
 	waitforvisualfinish
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 0x4, 0x4
-	create_claw_slash_sprite ANIM_TARGET, 2, x=0xfff6, y=0xfff6, animation=0x0
-	create_claw_slash_sprite ANIM_TARGET, 2, x=0xa, y=0xfff6, animation=0x1
+	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=-10, animation=0
+	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=-10, animation=1
 	waitforvisualfinish
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 4, 0, 12, 1
 	waitforvisualfinish
@@ -7971,9 +7971,9 @@ gBattleAnimMove_PetalBlizzard::
 	playsewithpan SE_M_TWISTER, SOUND_PAN_TARGET
 	create_twister_leaf_sprite ANIM_TARGET, 2, duration=120, distance_y=70, wave_period=5, wave_amplitude=70, speed_up_on_frame=30
 	delay 1
-	create_twister_leaf_sprite ANIM_TARGET, 2, duration=0x73, distance_y=0x37, wave_period=0x6, wave_amplitude=0x3c, speed_up_on_frame=0x19
+	create_twister_leaf_sprite ANIM_TARGET, 2, duration=115, distance_y=55, wave_period=6, wave_amplitude=60, speed_up_on_frame=25
 	delay 1
-	create_twister_leaf_sprite ANIM_TARGET, 2, duration=0x73, distance_y=0x3c, wave_period=0x7, wave_amplitude=0x3c, speed_up_on_frame=0x1e
+	create_twister_leaf_sprite ANIM_TARGET, 2, duration=115, distance_y=60, wave_period=7, wave_amplitude=60, speed_up_on_frame=30
 	createsprite gPetalBlizzardTwister1Template, ANIM_TARGET, 2, 0x73, 0x37, 0xA, 0x3c, 0x1e
 	delay 3
 	createsprite gPetalBlizzardTwister1Template, ANIM_TARGET, 2, 0x64, 0x32, 0x4, 0x32, 0x1A
@@ -7983,12 +7983,12 @@ gBattleAnimMove_PetalBlizzard::
 	createsprite gPetalBlizzardTwister1Template, ANIM_TARGET, 2, 0x73, 0x28, 0xA, 0x30, 0x1E
 	delay 3
 	createsprite gPetalBlizzardTwister1Template, ANIM_TARGET, 2, 0x78, 0x1E, 0x6, 0x2d, 0x19
-	create_twister_leaf_sprite ANIM_TARGET, 2, duration=0x73, distance_y=0x23, wave_period=0xA, wave_amplitude=0x3c, speed_up_on_frame=0x1e
+	create_twister_leaf_sprite ANIM_TARGET, 2, duration=115, distance_y=35, wave_period=10, wave_amplitude=60, speed_up_on_frame=30
 	delay 3
 	createsprite gPetalBlizzardTwister2Template, ANIM_TARGET, 2, 0x69, 0x14, 0x8, 0x28, 0x0
 	delay 3
-	create_twister_leaf_sprite ANIM_TARGET, 2, duration=0x14, distance_y=0xff, wave_period=0xf, wave_amplitude=0x20, speed_up_on_frame=0x0
-	create_twister_leaf_sprite ANIM_TARGET, 2, duration=0x6e, distance_y=0xA, wave_period=0x8, wave_amplitude=0x20, speed_up_on_frame=0x14
+	create_twister_leaf_sprite ANIM_TARGET, 2, duration=20, distance_y=255, wave_period=15, wave_amplitude=32, speed_up_on_frame=0
+	create_twister_leaf_sprite ANIM_TARGET, 2, duration=110, distance_y=10, wave_period=8, wave_amplitude=32, speed_up_on_frame=20
 	waitforvisualfinish
 	create_basic_hitsplat_sprite ANIM_TARGET, 3, x=-32, y=-16, relative_to=ANIM_TARGET, animation=3
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
@@ -8188,23 +8188,23 @@ gBattleAnimMove_FlowerShield::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 8, RGB(29, 19, 27)
 	waitforvisualfinish
 	playsewithpan SE_M_PETAL_DANCE, SOUND_PAN_ATTACKER
-	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0x0, initial_y=0xffe8, target_y=0x8, duration=0x8c
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0x10, initial_y=0xffe8, target_y=0x8, duration=0x64
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0xfff0, initial_y=0xffe8, target_y=0x8, duration=0x64
+	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0, initial_y=-24, target_y=8, duration=140
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=16, initial_y=-24, target_y=8, duration=100
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-16, initial_y=-24, target_y=8, duration=100
 	delay 15
-	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0x0, initial_y=0xffe8, target_y=0x8, duration=0x8c
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0x20, initial_y=0xffe8, target_y=0x8, duration=0x64
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0xffe0, initial_y=0xffe8, target_y=0x8, duration=0x64
+	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0, initial_y=-24, target_y=8, duration=140
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=32, initial_y=-24, target_y=8, duration=100
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-32, initial_y=-24, target_y=8, duration=100
 	delay 15
-	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0x0, initial_y=0xffe8, target_y=0x8, duration=0x8c
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0x18, initial_y=0xffe8, target_y=0x8, duration=0x64
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0xffe8, initial_y=0xffe8, target_y=0x8, duration=0x64
+	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0, initial_y=-24, target_y=8, duration=140
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=24, initial_y=-24, target_y=8, duration=100
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-24, initial_y=-24, target_y=8, duration=100
 	delay 30
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0x10, initial_y=0xffe8, target_y=0x0, duration=0x64
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0xfff0, initial_y=0xffe8, target_y=0x0, duration=0x64
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=16, initial_y=-24, target_y=0, duration=100
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-16, initial_y=-24, target_y=0, duration=100
 	delay 30
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0x14, initial_y=0xfff0, target_y=0xe, duration=0x50
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=0xffec, initial_y=0xfff2, target_y=0x10, duration=0x50
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=20, initial_y=-16, target_y=14, duration=80
+	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-20, initial_y=-18, target_y=16, duration=80
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 8, 0, RGB(29, 19, 27)
 	waitforvisualfinish
@@ -10495,9 +10495,9 @@ gBattleAnimMove_Leafage::
 	loadspritegfx ANIM_TAG_IMPACT @hit
 	monbg ANIM_DEF_PARTNER
 	playsewithpan SE_M_RAZOR_WIND2, SOUND_PAN_ATTACKER
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=0x14, initial_y=0xfff6, target_x=0x14, target_y=0x0, duration=0x16, wave_amplitude=0x14, target_both=0x1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=0x14, initial_y=0xfff6, target_x=0x14, target_y=0x0, duration=0x16, wave_amplitude=0xffec, target_both=0x1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=0x14, initial_y=0xfff6, target_x=0x14, target_y=0x0, duration=0x16, wave_amplitude=0x0, target_both=0x1
+	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=1
+	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=1
+	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=0, target_both=1
 	delay 20
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	createsprite gLeafageImpactTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x1, 0x2
@@ -12412,15 +12412,15 @@ gBattleAnimMove_TearfulLook::
 	delay 53
 	loopsewithpan SE_M_TAIL_WHIP, SOUND_PAN_ATTACKER, 0xC, 0x2
 	delay 8
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0x1, type=0x0
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0x1, type=0x1
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0x1, type=0x2
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0x1, type=0x3
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=0
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=1
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=2
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=3
 	delay 8
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0x1, type=0x0
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0x1, type=0x1
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0x1, type=0x2
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0x1, type=0x3
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=0
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=1
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=2
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=3
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 5, 0, RGB(0, 15, 31)
 	waitforvisualfinish
@@ -12751,8 +12751,8 @@ gBattleAnimMove_PhotonGeyser::
 	setalpha 12, 8
 	createsprite gPhotonGeyserChargeTemplate, ANIM_ATTACKER, 2, 0x0
 	call PhotonGeyserSparks1
-	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=0xffd8, y=0xffd8, duration=0x10
-	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=0x0, y=0x28, duration=0x10
+	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=-40, y=-40, duration=16
+	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=0, y=40, duration=16
 	delay 10
 	call PhotonGeyserSparks2
 	delay 10
@@ -12761,8 +12761,8 @@ gBattleAnimMove_PhotonGeyser::
 	call PhotonGeyserSparks2
 	delay 10
 	call PhotonGeyserSparks1
-	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=0x0, y=0xffd8, duration=0x10
-	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=0x28, y=0x14, duration=0x10
+	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=0, y=-40, duration=16
+	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=40, y=20, duration=16
 	delay 10
 	call PhotonGeyserSparks2
 	delay 10
@@ -12771,8 +12771,8 @@ gBattleAnimMove_PhotonGeyser::
 	call PhotonGeyserSparks2
 	delay 10
 	call PhotonGeyserSparks1
-	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=0xffd8, y=0x0, duration=0x10
-	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=0x28, y=0x0, duration=0x10
+	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=-40, y=0, duration=16
+	create_power_absorption_orb_sprite ANIM_ATTACKER, 2, x=40, y=0, duration=16
 	delay 10
 	call PhotonGeyserSparks2
 	delay 10
@@ -13235,7 +13235,7 @@ gBattleAnimMove_DoubleIronBash::
 	loadspritegfx ANIM_TAG_GUST
 	loadspritegfx ANIM_TAG_IMPACT
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 0x1c, 0x2
-	metallic_shine priority=0x5, permanent=0x0
+	metallic_shine priority=5, permanent=0
 	waitforvisualfinish
 	monbg ANIM_DEF_PARTNER
 	splitbgprio ANIM_TARGET
@@ -13290,7 +13290,7 @@ gBattleAnimMove_DynamaxCannon::
 	waitbgfadein
 	blend_color_cycle selector=F_PAL_TARGET, delay=4, num_blends=4, initial_blend_y=0, target_blend_y=12, color=RGB(31, 4, 10)@Pinkish Red
 	panse SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER SOUND_PAN_TARGET 2 0
-	shake_mon_or_platform velocity=4, shake_timer=1, shake_duration=180, type=1
+	shake_mon_or_platform velocity=4, shake_timer=1, shake_duration=180, type=SHAKE_BG_Y
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_ATTACKER, 0, 4, 87, 1
 	call DynamaxCannonLaunch
 	call DynamaxCannonLaunch
@@ -13392,14 +13392,14 @@ POST_BERRY_EAT:
 	waitforvisualfinish
 	end
 BitePlayer:
-	playsewithpan SE_M_BITE, 0x3f
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0x27, y=0xffD0, animation=0x0, x_velocity=0x0/256, y_velocity=0x333/256, half_duration=0xa
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0x27, y=0x10, animation=0x4, x_velocity=0x0/256, y_velocity=0xfccd/256, half_duration=0xa
+	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=39, y=-48, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=39, y=16, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
 	return
 BiteOpponent:
-	playsewithpan SE_M_BITE, 0x3f
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0xffDF, y=0xffD0, animation=0x0, x_velocity=0x0/256, y_velocity=0x333/256, half_duration=0xa
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0xffDF, y=0x10, animation=0x4, x_velocity=0x0/256, y_velocity=0xfccd/256, half_duration=0xa
+	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=33, y=-48, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=33, y=16, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
 	return
 
 gBattleAnimMove_NoRetreat::
@@ -13423,7 +13423,7 @@ gBattleAnimMove_TarShot::
 	delay 15
 	createvisualtask AnimTask_ShakeMon2, 5, ANIM_TARGET, 2, 0, 10, 1
 	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=16, color=RGB_BLACK@;Black
-	createsprite gAppleAcidDripTemplate, ANIM_TARGET, 2, 0xffe6, 0xffe8, 0x0, 0xf, 0x37
+	createsprite gAppleAcidDripTemplate, ANIM_TARGET, 2, -26, -24, 0, 15, 55
 	playsewithpan SE_M_BUBBLE, SOUND_PAN_TARGET
 	delay 10
 	createsprite gAppleAcidDripTemplate, ANIM_TARGET, 2, 0xf, 0xffe5, 0x0, 0xC, 0x32
@@ -13439,24 +13439,24 @@ gBattleAnimMove_MagicPowder::
 	loadspritegfx ANIM_TAG_POISON_POWDER
 	loadspritegfx ANIM_TAG_WATER_GUN
 	loopsewithpan SE_M_MORNING_SUN, SOUND_PAN_ATTACKER 0xE 0x8
-	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=0xffe2, y=0xffea, duration=0x75, y_velocity=0x50/256, wave_amplitude=0x5, wave_speed=0x1
-	createsprite gMagicPowderBluePowderTemplate, ANIM_TARGET, 2, 0xa, 0xffea, 0x75, 0x50, 0xfffb, 0x1
-	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=0xffe7, y=0xffea, duration=0x75, y_velocity=0x70/256, wave_amplitude=0x5, wave_speed=0x3
+	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=-30, y=-22, duration=117, y_velocity=80/256, wave_amplitude=5, wave_speed=1
+	create_magic_powder_particle_sprite ANIM_TARGET, 2, x=10, y=-22, duration=117, y_velocity=80/256, wave_amplitude=-5, wave_speed=1
+	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=-25, y=-22, duration=117, y_velocity=112/256, wave_amplitude=5, wave_speed=3
 	delay 15
-	createsprite gMagicPowderBluePowderTemplate, ANIM_TARGET, 2, 0xfffb, 0xffea, 0x75, 0x50, 0xfffb, 0x1
-	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=0x5, y=0xffea, duration=0x75, y_velocity=0x60/256, wave_amplitude=0x5, wave_speed=0x1
-	createsprite gMagicPowderBluePowderTemplate, ANIM_TARGET, 2, 0x0, 0xffea, 0x75, 0x45, 0xfffb, 0x1
-	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=0xfff1, y=0xffea, duration=0x75, y_velocity=0x70/256, wave_amplitude=0x5, wave_speed=0x2
+	create_magic_powder_particle_sprite ANIM_TARGET, 2, x=-5, y=-22, duration=117, y_velocity=80/256, wave_amplitude=-5, wave_speed=1
+	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=5, y=-22, duration=117, y_velocity=96/256, wave_amplitude=5, wave_speed=1
+	create_magic_powder_particle_sprite ANIM_TARGET, 2, x=0, y=-22, duration=117, y_velocity=69/256, wave_amplitude=-5, wave_speed=1
+	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=-15, y=-22, duration=117, y_velocity=112/256, wave_amplitude=5, wave_speed=2
 	delay 30
-	createsprite gMagicPowderBluePowderTemplate, ANIM_TARGET, 2, 0xfff1, 0xffea, 0x75, 0x70, 0x5, 0x2
-	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=0xf, y=0xffea, duration=0x75, y_velocity=0x50/256, wave_amplitude=0xfffb, wave_speed=0x1
-	createsprite gMagicPowderBluePowderTemplate, ANIM_TARGET, 2, 0xfff6, 0xffea, 0x75, 0x60, 0x7, 0x2
-	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=0xfffb, y=0xffea, duration=0x75, y_velocity=0x5a/256, wave_amplitude=0xfff8, wave_speed=0x0
+	create_magic_powder_particle_sprite ANIM_TARGET, 2, x=-15, y=-22, duration=117, y_velocity=112/256, wave_amplitude=5, wave_speed=2
+	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=15, y=-22, duration=117, y_velocity=80/256, wave_amplitude=-5, wave_speed=1
+	create_magic_powder_particle_sprite ANIM_TARGET, 2, x=-10, y=-22, duration=117, y_velocity=96/256, wave_amplitude=7, wave_speed=2
+	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=-5, y=-22, duration=117, y_velocity=90/256, wave_amplitude=-8, wave_speed=0
 	delay 20
-	createsprite gMagicPowderBluePowderTemplate, ANIM_TARGET, 2, 0xfff6, 0xffea, 0x75, 0x50, 0xfffb, 0x1
-	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=0x0, y=0xffea, duration=0x75, y_velocity=0x59/256, wave_amplitude=0x5, wave_speed=0x2
-	createsprite gMagicPowderBluePowderTemplate, ANIM_TARGET, 2, 0x14, 0xffea, 0x75, 0x70, 0xfff8, 0x2
-	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=0x5, y=0xffea, duration=0x75, y_velocity=0x50/256, wave_amplitude=0x5, wave_speed=0x1
+	create_magic_powder_particle_sprite ANIM_TARGET, 2, x=-10, y=-22, duration=117, y_velocity=80/256, wave_amplitude=-5, wave_speed=1
+	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=0, y=-22, duration=117, y_velocity=89/256, wave_amplitude=5, wave_speed=2
+	create_magic_powder_particle_sprite ANIM_TARGET, 2, x=20, y=-22, duration=117, y_velocity=112/256, wave_amplitude=-8, wave_speed=2
+	create_poison_powder_particle_sprite ANIM_TARGET, 2, x=5, y=-22, duration=117, y_velocity=80/256, wave_amplitude=5, wave_speed=1
 	waitforvisualfinish
 	playsewithpan SE_M_SUPERSONIC, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -6, -6, 15, ANIM_TARGET, 1
@@ -13495,18 +13495,18 @@ gBattleAnimMove_Octolock::
 	loadspritegfx ANIM_TAG_TENDRILS
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_TENDRILS, 0, 12, 12, RGB(24, 12, 15)    @Pinkish Red
 	loopsewithpan SE_M_SCRATCH, SOUND_PAN_TARGET 0x6 0x4
-	create_constrict_binding_sprite ANIM_TARGET, 4, initial_x=0x0, initial_y=0x10, affine_animation=0x0, squeezes=0x2
+	create_constrict_binding_sprite ANIM_TARGET, 4, initial_x=0, initial_y=16, affine_animation=0, squeezes=2
 	delay 7
-	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0x0, initial_y=0x0, affine_animation=0x0, squeezes=0x2
-	create_constrict_binding_sprite ANIM_TARGET, 2, initial_x=0x0, initial_y=0x8, affine_animation=0x1, squeezes=0x2
+	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0, initial_y=0, affine_animation=0, squeezes=2
+	create_constrict_binding_sprite ANIM_TARGET, 2, initial_x=0, initial_y=8, affine_animation=1, squeezes=2
 	delay 7
-	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0x0, initial_y=0xfff8, affine_animation=0x1, squeezes=0x2
+	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0, initial_y=-8, affine_animation=1, squeezes=2
 	delay 8
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 3, 0, 6, 1
 	delay 20
 	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=8, color=RGB_RED
 	playsewithpan SE_M_BIND, SOUND_PAN_TARGET
-	setarg 0x7 0xffff
+	setarg 7, -1
 	waitforvisualfinish
 	end
 
@@ -13524,7 +13524,7 @@ gBattleAnimMove_BoltBeak::
 	delay 4
 	createsprite gHornHitSpriteTemplate, 0x84, 0x3, 0x8, 0x8, 0xa
 	waitforvisualfinish
-	create_flashing_hitsplat_sprite 0x83, 0x4, x=0x0, y=0x0, relative_to=0x1, animation=0x1
+	create_flashing_hitsplat_sprite 131, 4, x=0, y=0, relative_to=1, animation=1
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 6, 1
 	waitforvisualfinish
@@ -13711,10 +13711,10 @@ gBattleAnimMove_DrumBeating::
 	call BellyDrumLeft
 	createsprite gSlowFlyingMusicNotesSpriteTemplate, ANIM_ATTACKER, 2, 0x1, 0x0, 0x3, 0x0
 	playsewithpan SE_M_BELLY_DRUM, SOUND_PAN_ATTACKER
-	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=0x55, offset_x=0x10, offset_y=0x6, subpriority=0x0, animation=0x3, duration=0x50
+	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=85, offset_x=16, offset_y=6, subpriority=0, animation=3, duration=80
 	playsewithpan SE_M_SCRATCH, SOUND_PAN_TARGET
 	delay 5
-	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=0x55, offset_x=0xfff0, offset_y=0xfffa, subpriority=0x0, animation=0x2, duration=0x4b
+	create_frenzy_plant_root_sprite ANIM_ATTACKER, 2, interpolate_percent=85, offset_x=-16, offset_y=-6, subpriority=0, animation=2, duration=75
 	playsewithpan SE_M_SCRATCH, SOUND_PAN_TARGET
 	delay 5
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=-10, y=-10, relative_to=ANIM_TARGET, animation=3
@@ -14077,7 +14077,7 @@ gBattleAnimMove_BranchPoke::
 	createsprite gBranchPokeBranchTemplate, ANIM_TARGET, 2, 0x0, 0x0, 0x25
 	waitforvisualfinish
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 5, 0, 6, 1
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0x0, y=0x0, relative_to=0x1, animation=0x1
+	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0, y=0, relative_to=1, animation=1
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	waitforvisualfinish
 	end
@@ -14309,7 +14309,7 @@ gBattleAnimMove_FalseSurrender::
 	delay 0
 	playsewithpan SE_M_FAINT_ATTACK, 0xc0
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 18, 6, 1, 3
-	attacker_fade_to_invisible priority=0x2, step_delay=0x1
+	attacker_fade_to_invisible priority=2, step_delay=1
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	invisible ANIM_ATTACKER
@@ -14330,7 +14330,7 @@ gBattleAnimMove_FalseSurrender::
 	delay 1
 	createvisualtask AnimTask_InitAttackerFadeFromInvisible, 0x2,
 	monbg ANIM_ATTACKER
-	attacker_fade_from_invisible priority=0x2, step_delay=0x1
+	attacker_fade_from_invisible priority=2, step_delay=1
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	delay 1
@@ -15148,7 +15148,7 @@ gBattleAnimMove_CorrosiveGas::
 	loopsewithpan SE_M_FLAME_WHEEL2, SOUND_PAN_ATTACKER, 0x8, 0x3
 	delay 0
 	blend_color_cycle selector=F_PAL_ATTACKER, delay=1, num_blends=2, initial_blend_y=0, target_blend_y=15, color=RGB(15, 15, 6)@;Garbage green
-	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 0x7a, 0x3, 0xfff2, 0x12, 0x2e
+	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 122, 3, -14, 18, 46
 	delay 0
 	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 0x79, 0x3, 0xe, 0xfff2, 0x2e
 	delay 0
@@ -15329,28 +15329,28 @@ gBattleAnimMove_JungleHealing::
 	loadspritegfx ANIM_TAG_SPARKLE_2
 	fadetobg BG_SNUGGLE_FOREVER
 	waitbgfadeout
-	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=0x10, offset_y=0x1a, subpriority=0xffff, animation=0x2, duration=0x96
+	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=16, offset_y=26, subpriority=-1, animation=2, duration=150
 	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
 	delay 10
-	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=0xffe0, offset_y=0x14, subpriority=0x1, animation=0x1, duration=0x8c
+	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=-32, offset_y=20, subpriority=1, animation=1, duration=140
 	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
 	delay 10
-	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=0x20, offset_y=0x16, subpriority=0x1, animation=0x0, duration=0x82
+	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=32, offset_y=22, subpriority=1, animation=0, duration=130
 	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
 	delay 10
-	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=0xfff0, offset_y=0x19, subpriority=0xffff, animation=0x3, duration=0x78
+	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=-16, offset_y=25, subpriority=-1, animation=3, duration=120
 	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
 	delay 40
-	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=0x20, initial_y=0x1a, velocity_x=0xffff, wave_amplitude=0x3, duration=0x1e
+	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=32, initial_y=26, velocity_x=-1, wave_amplitude=3, duration=30
 	delay 5
 	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
 	delay 5
-	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=0xffd0, initial_y=0x14, velocity_x=0x1, wave_amplitude=0x2, duration=0x1e
+	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=-48, initial_y=20, velocity_x=1, wave_amplitude=2, duration=30
 	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
 	delay 5
 	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
 	delay 5
-	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=0x30, initial_y=0x1a, velocity_x=0xfffe, wave_amplitude=0x3, duration=0x12
+	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=48, initial_y=26, velocity_x=-2, wave_amplitude=3, duration=18
 	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
 	delay 10
 	playsewithpan SE_M_STAT_INCREASE, 0xc0
@@ -16242,12 +16242,12 @@ gBattleAnimMove_VictoryDance::
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
 	delay 8
 	createvisualtask AnimTask_BlendPalInAndOutByTag, 5, ANIM_TAG_HOLLOW_ORB, RGB(29, 24, 2), 14, 0, 3 @;Light orange
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0x0/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0x2b/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0x55/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0x80/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0xaa/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0xd5/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=43/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=85/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=128/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=170/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=213/256
 	delay 30
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
 	delay 30
@@ -18114,7 +18114,7 @@ gBattleAnimMove_MakeItRain::
 	jumprettrue MakingItRainOnPlayer
 MakingItRainContinue:
 	waitbgfadeout
-	shake_mon_or_platform velocity=7, shake_timer=1, shake_duration=11, type=1
+	shake_mon_or_platform velocity=7, shake_timer=1, shake_duration=11, type=SHAKE_BG_Y
 	loopsewithpan SE_M_PAY_DAY, SOUND_PAN_TARGET, 8, 15
 	createsprite gMakingItRainTemplate, ANIM_TARGET, 2, -5, 0, -5, 1
 	delay 2
@@ -22838,7 +22838,7 @@ gBattleAnimMove_MeanLook::
 
 gBattleAnimMove_RockThrow::
 	loadspritegfx ANIM_TAG_ROCKS
-	shake_mon_or_platform unused_anim_battler=ANIM_TARGET, velocity=6, shake_timer=1, shake_duration=15, type=1
+	shake_mon_or_platform unused_anim_battler=ANIM_TARGET, velocity=6, shake_timer=1, shake_duration=15, type=SHAKE_BG_Y
 	createsprite gFallingRockSpriteTemplate, ANIM_TARGET, 2, 0, 1, 0, 0
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	delay 6
@@ -22860,7 +22860,7 @@ gBattleAnimMove_RockThrow::
 gBattleAnimMove_RockSlide::
 	loadspritegfx ANIM_TAG_ROCKS
 	monbg ANIM_DEF_PARTNER
-	shake_mon_or_platform velocity=7, shake_timer=1, shake_duration=11, type=1
+	shake_mon_or_platform velocity=7, shake_timer=1, shake_duration=11, type=SHAKE_BG_Y
 	createsprite gFallingRockSpriteTemplate, ANIM_TARGET, 2, -5, 1, -5, 1
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	delay 2
@@ -23654,7 +23654,7 @@ gBattleAnimMove_Barrage::
 	createvisualtask AnimTask_BarrageBall, 3
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
 	delay 24
-	shake_mon_or_platform velocity=8, shake_timer=1, shake_duration=40, type=1
+	shake_mon_or_platform velocity=8, shake_timer=1, shake_duration=40, type=SHAKE_BG_Y
 	createvisualtask AnimTask_ShakeMon, 3, ANIM_TARGET, 0, 4, 20, 1
 	createvisualtask AnimTask_ShakeMon, 3, ANIM_DEF_PARTNER, 0, 4, 20, 1
 	loopsewithpan SE_M_STRENGTH, SOUND_PAN_TARGET, 8, 2
@@ -24401,7 +24401,7 @@ gBattleAnimMove_Superpower::
 	createsprite gSuperpowerOrbSpriteTemplate, ANIM_TARGET, 2, ANIM_ATTACKER
 	playsewithpan SE_M_MEGA_KICK, SOUND_PAN_ATTACKER
 	delay 20
-	shake_mon_or_platform velocity=4, shake_timer=1, shake_duration=180, type=1
+	shake_mon_or_platform velocity=4, shake_timer=1, shake_duration=180, type=SHAKE_BG_Y
 	createvisualtask SoundTask_PlaySE2WithPanning, 5, SE_M_EARTHQUAKE, 0
 	delay 40
 	createsprite gSuperpowerRockSpriteTemplate, ANIM_ATTACKER, 41, 200, 96, 1, 120
@@ -25744,7 +25744,7 @@ SnoreEffect:
 	playsewithpan SE_M_SNORE, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 7, ANIM_ATTACKER, 1
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 7, 1
-	shake_mon_or_platform velocity=6, shake_timer=1, shake_duration=14, type=0
+	shake_mon_or_platform velocity=6, shake_timer=1, shake_duration=14, type=SHAKE_BG_X
 	createsprite gSnoreZSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, -42, -38, 24, 0, 0
 	createsprite gSnoreZSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 0, -42, 24, 0, 0
 	createsprite gSnoreZSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 42, -38, 24, 0, 0
@@ -27592,7 +27592,7 @@ gBattleAnimMove_AncientPower::
 	loadspritegfx ANIM_TAG_IMPACT
 	monbg ANIM_DEF_PARTNER
 	setalpha 12, 8
-	shake_mon_or_platform velocity=4, shake_timer=1, shake_duration=10, type=1
+	shake_mon_or_platform velocity=4, shake_timer=1, shake_duration=10, type=SHAKE_BG_Y
 	createsprite gAncientPowerRockSpriteTemplate, ANIM_ATTACKER, 2, 20, 32, -48, 50, 2
 	createsprite gAncientPowerRockSpriteTemplate, ANIM_ATTACKER, 2, 0, 32, -38, 25, 5
 	createsprite gAncientPowerRockSpriteTemplate, ANIM_ATTACKER, 2, 32, 32, -28, 40, 3
@@ -28017,14 +28017,14 @@ gBattleAnimMove_MetalClaw::
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=-10, animation=0
 	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=10, animation=0
-	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=3, battler_selector=1
+	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=SHAKE_MON_Y, battler_selector=SHAKE_MON_TARGET
 	delay 8
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 6, 4
 	delay 2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=-10, animation=1
 	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=10, animation=1
-	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=3, battler_selector=1
+	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=SHAKE_MON_Y, battler_selector=SHAKE_MON_TARGET
 	waitforvisualfinish
 	end
 
@@ -28352,7 +28352,7 @@ gBattleAnimMove_Constrict::
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 3, 0, 6, 1
 	delay 20
 	playsewithpan SE_M_BIND, SOUND_PAN_TARGET
-	setarg 7, 0xFFFF
+	setarg 7, -1
 	waitforvisualfinish
 	end
 
@@ -29363,7 +29363,7 @@ gBattleAnimMove_DragonClaw::
 	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=-10, animation=0
 	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=10, animation=0
-	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=3, battler_selector=1
+	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=SHAKE_MON_Y, battler_selector=SHAKE_MON_TARGET
 	createsprite gFireSpinSpriteTemplate, ANIM_ATTACKER, 2, 0, 32, 480, 20, 16, -46, ANIM_ATTACKER
 	delay 2
 	createsprite gFireSpinSpriteTemplate, ANIM_ATTACKER, 2, 0, 33, 576, 20, 8, 42, ANIM_ATTACKER
@@ -29376,7 +29376,7 @@ gBattleAnimMove_DragonClaw::
 	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=-10, animation=1
 	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=10, animation=1
-	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=3, battler_selector=1
+	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=SHAKE_MON_Y, battler_selector=SHAKE_MON_TARGET
 	createsprite gFireSpinSpriteTemplate, ANIM_ATTACKER, 2, 0, 33, 464, 30, 15, -50, ANIM_ATTACKER
 	delay 2
 	createsprite gFireSpinSpriteTemplate, ANIM_ATTACKER, 2, 0, 28, 528, 30, 13, 50, ANIM_ATTACKER
@@ -36663,11 +36663,11 @@ gBattleAnimMove_LetsSnuggleForever::
 	end
 LetsSnuggleForeverTears:
 	playsewithpan SE_M_TAIL_WHIP, SOUND_PAN_TARGET
-	create_tear_drop_sprite ANIM_TARGET, 2, relative_to=ANIM_TARGET, type=0x0
-	create_tear_drop_sprite ANIM_TARGET, 2, relative_to=ANIM_TARGET, type=0x1
+	create_tear_drop_sprite ANIM_TARGET, 2, relative_to=ANIM_TARGET, type=0
+	create_tear_drop_sprite ANIM_TARGET, 2, relative_to=ANIM_TARGET, type=1
 	delay 8
-	create_tear_drop_sprite ANIM_TARGET, 2, relative_to=ANIM_TARGET, type=0x2
-	create_tear_drop_sprite ANIM_TARGET, 2, relative_to=ANIM_TARGET, type=0x3
+	create_tear_drop_sprite ANIM_TARGET, 2, relative_to=ANIM_TARGET, type=2
+	create_tear_drop_sprite ANIM_TARGET, 2, relative_to=ANIM_TARGET, type=3
 	return
 LetsSnuggleForeverImpacts:
 	create_basic_hitsplat_sprite ANIM_TARGET, 3, x=0, y=-12, relative_to=ANIM_TARGET, animation=0
