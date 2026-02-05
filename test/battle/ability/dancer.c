@@ -329,23 +329,36 @@ DOUBLE_BATTLE_TEST("Dancer doesn't activate after Neutralizing Gas leaves the fi
     }
 }
 
-DOUBLE_BATTLE_TEST("Dancer activates after Neutralizing Gas enters the field on move execution")
+DOUBLE_BATTLE_TEST("Dancer can activate after Neutralizing Gas enters the field on move execution")
 {
+    u32 speedPlayerRight;
+    PARAMETRIZE { speedPlayerRight = 3; }
+    PARAMETRIZE { speedPlayerRight = 7; }
+
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
-        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(speedPlayerRight); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); Speed(3); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Speed(3); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentRight); SEND_OUT(opponentRight, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
         ABILITY_POPUP(opponentRight, ABILITY_NEUTRALIZING_GAS);
+        if (speedPlayerRight < 5) {
+            ABILITY_POPUP(playerRight, ABILITY_DANCER);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        }
         ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, opponentLeft);
+        if (speedPlayerRight > 5) {
+            ABILITY_POPUP(playerRight, ABILITY_DANCER);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        }
     }
 }
 

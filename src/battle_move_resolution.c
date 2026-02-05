@@ -1898,18 +1898,14 @@ static enum MoveEndResult MoveEndAbilitiesAttacker(void)
     return result;
 }
 
-static enum MoveEndResult MoveEndDancerFlag(void)
+static enum MoveEndResult MoveEndQueueDancer(void)
 {
     if (!IsDanceMove(gCurrentMove)
+     || IsBattlerUnaffectedByMove(gBattlerTarget)
+     || gBattleStruct->unableToUseMove
+     || gSpecialStatuses[gBattlerAttacker].dancerUsedMove
      || gBattleStruct->snatchedMoveIsUsed
      || gBattleStruct->bouncedMoveIsUsed)
-    {
-        gBattleScripting.moveendState++;
-        return MOVEEND_RESULT_CONTINUE;
-    }
-    
-    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove
-     && (IsBattlerUnaffectedByMove(gBattlerTarget) || gBattleStruct->unableToUseMove))
     {
         gBattleScripting.moveendState++;
         return MOVEEND_RESULT_CONTINUE;
@@ -3426,7 +3422,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_ABILITIES] = MoveEndAbilities,
     [MOVEEND_FORM_CHANGE_ON_HIT] = MoveEndFormChangeOnHit,
     [MOVEEND_ABILITIES_ATTACKER] = MoveEndAbilitiesAttacker,
-    [MOVEEND_DANCER_FLAG] = MoveEndDancerFlag,
+    [MOVEEND_QUEUE_DANCER] = MoveEndQueueDancer,
     [MOVEEND_STATUS_IMMUNITY_ABILITIES] = MoveEndStatusImmunityAbilities,
     [MOVEEND_SYNCHRONIZE_ATTACKER] = MoveEndSynchronizeAttacker,
     [MOVEEND_ATTACKER_INVISIBLE] = MoveEndAttackerInvisible,
