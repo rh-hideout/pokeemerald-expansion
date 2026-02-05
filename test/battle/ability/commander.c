@@ -478,6 +478,7 @@ DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to s
 DOUBLE_BATTLE_TEST("Commander clears when Dondozo is replaced and Tatsugiri can be hit")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_VOLT_SWITCH) == EFFECT_HIT_ESCAPE);
         PLAYER(SPECIES_DONDOZO) { HP(1); Speed(1); }
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); Speed(2); }
         PLAYER(SPECIES_SEADRA) { Speed(3); }
