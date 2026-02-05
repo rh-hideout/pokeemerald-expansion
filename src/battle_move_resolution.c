@@ -3362,7 +3362,7 @@ static enum MoveEndResult MoveEndDancer(void)
         }
     }
 
-    if (!anyDancerQueued) // no dancer was found
+    if (!anyDancerQueued)
     {
         gBattleScripting.moveendState++;
         return result;
