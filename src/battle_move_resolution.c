@@ -1917,7 +1917,7 @@ static enum MoveEndResult MoveEndQueueDancer(void)
             continue;
 
         if (GetBattlerAbility(battler) == ABILITY_DANCER)
-            gBattleStruct->battlerState[battler].activateDancer = TRUE;
+            gBattleMons[battler].volatiles.activateDancer = TRUE;
     }
 
     gBattleScripting.moveendState++;
@@ -3349,18 +3349,20 @@ static enum MoveEndResult MoveEndClearBits(void)
 static enum MoveEndResult MoveEndDancer(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    bool32 anyDancerQueued = FALSE;
+    enum BattlerId nextDancer = 0;
 
-    u32 nextDancer = 0;
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (gBattleStruct->battlerState[battler].activateDancer && !gSpecialStatuses[battler].dancerUsedMove)
+        if (gBattleMons[battler].volatiles.activateDancer && !gSpecialStatuses[battler].dancerUsedMove)
         {
-            if (!nextDancer || (gBattleMons[battler].speed < gBattleMons[nextDancer & 0x3].speed))
-                nextDancer = battler | 0x4;
+            if (!anyDancerQueued || (gBattleMons[battler].speed < gBattleMons[nextDancer].speed))
+                nextDancer = battler;
+            anyDancerQueued = TRUE;
         }
     }
 
-    if (!nextDancer) // no dancer was found
+    if (!anyDancerQueued) // no dancer was found
     {
         gBattleScripting.moveendState++;
         return result;
@@ -3375,7 +3377,7 @@ static enum MoveEndResult MoveEndDancer(void)
         gSpecialStatuses[gBattlerAttacker].dancerUsedMove = TRUE;
     }
 
-    if (nextDancer && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer & 0x3, ABILITY_DANCER, gCurrentMove, TRUE))
+    if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer, ABILITY_DANCER, gCurrentMove, TRUE))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;

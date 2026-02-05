@@ -661,7 +661,7 @@ void HandleAction_UseMove(void)
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
-        gBattleStruct->battlerState[i].activateDancer = FALSE;
+        gBattleMons[i].volatiles.activateDancer = FALSE;
     }
 
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
@@ -4598,7 +4598,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 // Set bit and save Dancer mon's original target
                 gSpecialStatuses[battler].dancerUsedMove = TRUE;
                 gSpecialStatuses[battler].dancerOriginalTarget = gBattleStruct->moveTarget[battler] | 0x4;
-                gBattleStruct->battlerState[battler].activateDancer = FALSE;
+                gBattleMons[battler].volatiles.activateDancer = FALSE;
                 gBattlerAttacker = gBattlerAbility = battler;
                 gCalledMove = move;
 
