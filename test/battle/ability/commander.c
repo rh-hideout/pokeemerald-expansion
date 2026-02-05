@@ -478,12 +478,12 @@ DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to s
 DOUBLE_BATTLE_TEST("Commander ends when Dondozo faints and Tatsugiri can be hit")
 {
     GIVEN {
-        PLAYER(SPECIES_DONDOZO) { HP(1); }
-        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
-        PLAYER(SPECIES_SEADRA);
-        OPPONENT(SPECIES_VENUSAUR);
-        OPPONENT(SPECIES_LUXRAY);
-        OPPONENT(SPECIES_BUTTERFREE);
+        PLAYER(SPECIES_DONDOZO) { HP(1); Speed(1); }
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); Speed(2); }
+        PLAYER(SPECIES_SEADRA) { Speed(3); }
+        OPPONENT(SPECIES_VENUSAUR) { Speed(6); }
+        OPPONENT(SPECIES_LUXRAY) { Speed(5); }
+        OPPONENT(SPECIES_BUTTERFREE) { Speed(4); }
     } WHEN {
         TURN {
             MOVE(opponentRight, MOVE_VOLT_SWITCH, target: playerLeft);
