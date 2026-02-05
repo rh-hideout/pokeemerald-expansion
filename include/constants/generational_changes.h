@@ -49,12 +49,11 @@
     /* Turn settings */ \
     F(BINDING_TURNS,             bindingTurns,            (u32, GEN_COUNT - 1)) \
     F(UPROAR_TURNS,              uproarTurns,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(UPROAR_IGNORE_SOUNDPROOF,  uproarIgnoreSoundproof,  (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(DISABLE_TURNS,             disableTurns,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(TAILWIND_TURNS,            tailwindTurns,           (u32, GEN_COUNT - 1)) \
     F(SLEEP_TURNS,               sleepTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(TAUNT_TURNS,               tauntTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(ENCORE_TURNS,              encoreTurns,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(TAUNT_TURNS,               tauntTurns,              (u32, GEN_COUNT - 1)) \
+    F(ENCORE_TURNS,              encoreTurns,             (u32, GEN_COUNT - 1)) \
     F(SPORT_TURNS,               sportTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_COUNT - 1)) \
     F(RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_COUNT - 1)) \
@@ -89,6 +88,7 @@
     /* Other move settings */ \
     F(INCINERATE_GEMS,           incinerateGems,          (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(CAN_SPITE_FAIL,            canSpiteFail,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(UPROAR_IGNORE_SOUNDPROOF,  uproarIgnoreSoundproof,  (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(CRASH_IF_TARGET_IMMUNE,    crashIfTargetImmune,     (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(MEMENTO_FAIL,              mementoFail,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(PARTING_SHOT_SWITCH,       partingShotSwitch,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

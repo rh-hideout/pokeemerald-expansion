@@ -11528,19 +11528,19 @@ static void Cmd_trysetencore(void)
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
         u8 turns;
-        if (B_ENCORE_TURNS >= GEN_5)
+        if (GetConfig(CONFIG_ENCORE_TURNS) >= GEN_5)
         {
             turns = 3;
             if (HasBattlerActedThisTurn(gBattlerTarget))
                 turns++; // If the target already moved this turn, Encore lasts for four turns
         }
-        else if (B_ENCORE_TURNS >= GEN_4)
+        else if (GetConfig(CONFIG_ENCORE_TURNS) >= GEN_4)
         {
-            turns = (Random() % 5) + 3; // 3-7 turns
+            turns = RandomUniform(RNG_ENCORE_TURNS, 3, 7);
         }
         else
         {
-            turns = (Random() % 5) + 2; // 2-6 turns
+            turns = RandomUniform(RNG_ENCORE_TURNS, 2, 6);
         }
 
         gDisableStructs[gBattlerTarget].encoreTimer = turns;
@@ -12667,15 +12667,15 @@ static void Cmd_settaunt(void)
     else if (gDisableStructs[gBattlerTarget].tauntTimer == 0)
     {
         u8 turns;
-        if (B_TAUNT_TURNS >= GEN_5)
+        if (GetConfig(CONFIG_TAUNT_TURNS) >= GEN_5)
         {
             turns = 4;
             if (!HasBattlerActedThisTurn(gBattlerTarget))
                 turns--; // If the target hasn't yet moved this turn, Taunt lasts for only three turns (source: Bulbapedia)
         }
-        else if (B_TAUNT_TURNS >= GEN_4)
+        else if (GetConfig(CONFIG_TAUNT_TURNS) >= GEN_4)
         {
-            turns = (Random() % 3) + 3;
+            turns = RandomUniform(RNG_TAUNT_TURNS, 3, 5);
         }
         else
         {
