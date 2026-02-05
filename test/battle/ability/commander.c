@@ -474,3 +474,36 @@ DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to s
         NOT ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
     }
 }
+
+DOUBLE_BATTLE_TEST("Commander ends when Dondozo faints and Tatsugiri can be hit")
+{
+    GIVEN {
+        PLAYER(SPECIES_DONDOZO) { HP(1); }
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_SEADRA);
+        OPPONENT(SPECIES_VENUSAUR);
+        OPPONENT(SPECIES_LUXRAY);
+        OPPONENT(SPECIES_BUTTERFREE);
+    } WHEN {
+        TURN {
+            MOVE(opponentRight, MOVE_VOLT_SWITCH, target: playerLeft);
+            SEND_OUT(opponentRight, 2);
+            SEND_OUT(playerLeft, 2);
+        }
+        TURN {
+            MOVE(opponentLeft, MOVE_SEED_BOMB, target: playerRight);
+            MOVE(opponentRight, MOVE_BUG_BUZZ, target: playerRight);
+        }
+    } SCENE {
+        ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, opponentRight);
+        MESSAGE("Dondozo fainted!");
+        MESSAGE("2 sent out Butterfree!");
+        MESSAGE("Go! Seadra!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SEED_BOMB, opponentLeft);
+        HP_BAR(playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BUZZ, opponentRight);
+        HP_BAR(playerRight);
+    }
+}

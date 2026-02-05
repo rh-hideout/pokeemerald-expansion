@@ -7171,7 +7171,8 @@ static void Cmd_moveend(void)
                 gBattleStruct->battlerState[gBattlerAttacker].targetsDone[i] = FALSE;
                 gDisableStructs[i].tryEjectPack = FALSE;
 
-                if (gBattleStruct->battlerState[i].commanderSpecies != SPECIES_NONE && !IsBattlerAlive(i))
+                if (gBattleStruct->battlerState[i].commanderSpecies != SPECIES_NONE
+                 && (!IsBattlerAlive(i) || gBattleMons[i].species != SPECIES_DONDOZO))
                 {
                     u32 partner = BATTLE_PARTNER(i);
                     gBattleStruct->battlerState[i].commanderSpecies = SPECIES_NONE;
