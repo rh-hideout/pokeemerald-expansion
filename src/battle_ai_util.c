@@ -6,6 +6,7 @@
 #include "battle_ai_field_statuses.h"
 #include "battle_ai_util.h"
 #include "battle_ai_main.h"
+#include "battle_stat_change.h"
 #include "battle_controllers.h"
 #include "battle_factory.h"
 #include "battle_setup.h"
@@ -2954,32 +2955,27 @@ bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect)
 {
     switch (effect)
     {
-    case EFFECT_ATTACK_UP:
-    case EFFECT_ATTACK_UP_2:
-    case EFFECT_ATTACK_ACCURACY_UP:
-    case EFFECT_ATTACK_SPATK_UP:
-    case EFFECT_DRAGON_DANCE:
-    case EFFECT_COIL:
-    case EFFECT_BELLY_DRUM:
-    case EFFECT_BULK_UP:
+    // case EFFECT_ATTACK_UP:
+    // case EFFECT_ATTACK_UP_2:
+    // case EFFECT_ATTACK_ACCURACY_UP:
+    // case EFFECT_ATTACK_SPATK_UP:
+    // case EFFECT_DRAGON_DANCE:
+    // case EFFECT_COIL:
+    // case EFFECT_BULK_UP:
+    case EFFECT_STAT_CHANGE_HALF_HP:
     case EFFECT_GROWTH:
-    case EFFECT_FILLET_AWAY:
         return TRUE;
     default:
         return FALSE;
     }
 }
 
-bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
-{
-    switch (effect)
-    {
+/*
     case EFFECT_ATTACK_UP:
     case EFFECT_ATTACK_UP_2:
     case EFFECT_DEFENSE_UP:
     case EFFECT_DEFENSE_UP_2:
     case EFFECT_DEFENSE_UP_3:
-    case EFFECT_AUTOTOMIZE:
     case EFFECT_SPEED_UP:
     case EFFECT_SPEED_UP_2:
     case EFFECT_SPECIAL_ATTACK_UP:
@@ -2987,27 +2983,34 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
     case EFFECT_SPECIAL_ATTACK_UP_3:
     case EFFECT_SPECIAL_DEFENSE_UP:
     case EFFECT_SPECIAL_DEFENSE_UP_2:
+    case EFFECT_ATTACK_ACCURACY_UP:
     case EFFECT_ACCURACY_UP:
     case EFFECT_ACCURACY_UP_2:
     case EFFECT_EVASION_UP:
     case EFFECT_EVASION_UP_2:
-    case EFFECT_MINIMIZE:
-    case EFFECT_DEFENSE_CURL:
     case EFFECT_CALM_MIND:
     case EFFECT_COSMIC_POWER:
     case EFFECT_DRAGON_DANCE:
-    case EFFECT_ACUPRESSURE:
-    case EFFECT_SHELL_SMASH:
-    case EFFECT_SHIFT_GEAR:
-    case EFFECT_ATTACK_ACCURACY_UP:
     case EFFECT_ATTACK_SPATK_UP:
-    case EFFECT_GROWTH:
     case EFFECT_COIL:
     case EFFECT_QUIVER_DANCE:
-    case EFFECT_BULK_UP:
-    case EFFECT_GEOMANCY:
-    case EFFECT_STOCKPILE:
     case EFFECT_VICTORY_DANCE:
+    case EFFECT_BULK_UP:
+    case EFFECT_DEFENSE_CURL:
+    case EFFECT_MINIMIZE:
+    case EFFECT_SHIFT_GEAR:
+*/
+bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
+{
+    switch (effect)
+    {
+
+    case EFFECT_STOCKPILE:
+    case EFFECT_GROWTH:
+    case EFFECT_ACUPRESSURE:
+    case EFFECT_STAT_CHANGE_MAGNETIC:
+    case EFFECT_GEOMANCY:
+    case EFFECT_STAT_CHANGE_USER:
         return TRUE;
     case EFFECT_CHARGE:
         return B_CHARGE_SPDEF_RAISE >= GEN_5;
@@ -3015,29 +3018,30 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
         return FALSE;
     }
 }
-
+/*
+    case EFFECT_ATTACK_DOWN:
+    case EFFECT_ATTACK_DOWN_2:
+    case EFFECT_SPECIAL_ATTACK_DOWN:
+    case EFFECT_SPECIAL_ATTACK_DOWN_2:
+    case EFFECT_DEFENSE_DOWN:
+    case EFFECT_DEFENSE_DOWN_2:
+    case EFFECT_SPECIAL_DEFENSE_DOWN:
+    case EFFECT_SPECIAL_DEFENSE_DOWN_2:
+    case EFFECT_SPEED_DOWN:
+    case EFFECT_SPEED_DOWN_2:
+    case EFFECT_ACCURACY_DOWN:
+    case EFFECT_ACCURACY_DOWN_2:
+    case EFFECT_EVASION_DOWN:
+    case EFFECT_EVASION_DOWN_2:
+    case EFFECT_TICKLE:
+    case EFFECT_NOBLE_ROAR:
+*/
 bool32 IsStatLoweringEffect(enum BattleMoveEffects effect)
 {
     // ignore other potentially-beneficial effects like defog, gravity
     switch (effect)
     {
-    case EFFECT_ATTACK_DOWN:
-    case EFFECT_DEFENSE_DOWN:
-    case EFFECT_SPEED_DOWN:
-    case EFFECT_SPECIAL_ATTACK_DOWN:
-    case EFFECT_SPECIAL_DEFENSE_DOWN:
-    case EFFECT_ACCURACY_DOWN:
-    case EFFECT_EVASION_DOWN:
-    case EFFECT_ATTACK_DOWN_2:
-    case EFFECT_DEFENSE_DOWN_2:
-    case EFFECT_SPEED_DOWN_2:
-    case EFFECT_SPECIAL_ATTACK_DOWN_2:
-    case EFFECT_SPECIAL_DEFENSE_DOWN_2:
-    case EFFECT_ACCURACY_DOWN_2:
-    case EFFECT_EVASION_DOWN_2:
-    case EFFECT_TICKLE:
     case EFFECT_CAPTIVATE:
-    case EFFECT_NOBLE_ROAR:
     case EFFECT_MEMENTO:
         return TRUE;
     default:
@@ -4744,78 +4748,13 @@ static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHi
     return FALSE;
 }
 
-static enum Stat GetStatBeingChanged(enum StatChange statChange)
-{
-    switch(statChange)
-    {
-        case STAT_CHANGE_ATK:
-        case STAT_CHANGE_ATK_2:
-        case STAT_CHANGE_ATK_3:
-        case STAT_CHANGE_ATK_MAX:
-            return STAT_ATK;
-        case STAT_CHANGE_DEF:
-        case STAT_CHANGE_DEF_2:
-        case STAT_CHANGE_DEF_3:
-            return STAT_DEF;
-        case STAT_CHANGE_SPEED:
-        case STAT_CHANGE_SPEED_2:
-        case STAT_CHANGE_SPEED_3:
-            return STAT_SPEED;
-        case STAT_CHANGE_SPATK:
-        case STAT_CHANGE_SPATK_2:
-        case STAT_CHANGE_SPATK_3:
-            return STAT_SPATK;
-        case STAT_CHANGE_SPDEF:
-        case STAT_CHANGE_SPDEF_2:
-        case STAT_CHANGE_SPDEF_3:
-            return STAT_SPDEF;
-        case STAT_CHANGE_ACC:
-            return STAT_ACC;
-        case STAT_CHANGE_EVASION:
-            return STAT_EVASION;
-    }
-    return 0; // STAT_HP, should never be getting changed
-}
-
-static u32 GetStagesOfStatChange(enum StatChange statChange)
-{
-    switch(statChange)
-    {
-        case STAT_CHANGE_ATK:
-        case STAT_CHANGE_DEF:
-        case STAT_CHANGE_SPEED:
-        case STAT_CHANGE_SPATK:
-        case STAT_CHANGE_SPDEF:
-        case STAT_CHANGE_ACC:
-        case STAT_CHANGE_EVASION:
-            return 1;
-        case STAT_CHANGE_ATK_2:
-        case STAT_CHANGE_DEF_2:
-        case STAT_CHANGE_SPEED_2:
-        case STAT_CHANGE_SPATK_2:
-        case STAT_CHANGE_SPDEF_2:
-            return 2;
-        case STAT_CHANGE_ATK_3:
-        case STAT_CHANGE_DEF_3:
-        case STAT_CHANGE_SPEED_3:
-        case STAT_CHANGE_SPATK_3:
-        case STAT_CHANGE_SPDEF_3:
-            return 3;
-        case STAT_CHANGE_ATK_MAX:
-            return 6;
-    }
-    return 0; // STAT_HP, should never be getting changed
-}
-
-static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statChange, bool32 considerContrary)
+static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat statId, u32 stages, bool32 considerContrary)
 {
     enum AIScore tempScore = NO_INCREASE;
     u32 noOfHitsToFaint = NoOfHitsForTargetToFaintBattler(battlerDef, battlerAtk, DONT_CONSIDER_ENDURE);
     enum Move predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, MOVE_NONE, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY); // Don't care about the priority of our setup move, care about outspeeding otherwise
     bool32 shouldSetUp = ((noOfHitsToFaint >= 2 && aiIsFaster) || (noOfHitsToFaint >= 3 && !aiIsFaster) || noOfHitsToFaint == UNKNOWN_NO_OF_HITS);
-    enum Stat statId = GetStatBeingChanged(statChange);
-    u32 stages = GetStagesOfStatChange(statChange);
 
     if (considerContrary && gAiLogicData->abilities[battlerAtk] == ABILITY_CONTRARY)
         return NO_INCREASE;
@@ -4952,14 +4891,14 @@ bool32 HasHPForDamagingSetup(enum BattlerId battlerAtk, enum BattlerId battlerDe
     return FALSE;
 }
 
-enum AIScore IncreaseStatUpScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statChange)
+enum AIScore IncreaseStatUpScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat, u32 stage)
 {
-    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, TRUE);
+    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, stat, stage, TRUE);
 }
 
-enum AIScore IncreaseStatUpScoreContrary(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statChange)
+enum AIScore IncreaseStatUpScoreContrary(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat, u32 stage)
 {
-    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, FALSE);
+    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, stat, stage, FALSE);
 }
 
 void IncreasePoisonScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score)
@@ -5211,8 +5150,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
 
         switch (baseEffect)
         {
-        case EFFECT_BELLY_DRUM:
-        case EFFECT_FILLET_AWAY:
+        case EFFECT_STAT_CHANGE_HALF_HP:
             if (isSlower)
                 return TRUE;
             isEager = TRUE;
@@ -5241,7 +5179,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
         if (IsBattleMoveStatus(chosenMove))
         {
             enum ZEffect zEffect = GetMoveZEffect(chosenMove);
-            enum StatChange statChange = 0;
+            u32 statChange = 0;
 
             if (zEffect == Z_EFFECT_CURSE)
             {
@@ -5279,40 +5217,41 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case Z_EFFECT_ACC_UP_1:
             case Z_EFFECT_ACC_UP_2:
             case Z_EFFECT_ACC_UP_3:
-                statChange = STAT_CHANGE_ACC;
+                statChange = STAT_ACC;
                 break;
             case Z_EFFECT_EVSN_UP_1:
             case Z_EFFECT_EVSN_UP_2:
             case Z_EFFECT_EVSN_UP_3:
-                statChange = STAT_CHANGE_EVASION;
+                statChange = STAT_EVASION;
                 break;
             case Z_EFFECT_ATK_UP_1:
             case Z_EFFECT_DEF_UP_1:
             case Z_EFFECT_SPD_UP_1:
             case Z_EFFECT_SPATK_UP_1:
             case Z_EFFECT_SPDEF_UP_1:
-                statChange = STAT_CHANGE_ATK + zEffect - Z_EFFECT_ATK_UP_1;
+                statChange = zEffect - Z_EFFECT_ATK_UP_1 + 1;
                 break;
             case Z_EFFECT_ATK_UP_2:
             case Z_EFFECT_DEF_UP_2:
             case Z_EFFECT_SPD_UP_2:
             case Z_EFFECT_SPATK_UP_2:
             case Z_EFFECT_SPDEF_UP_2:
-                statChange = STAT_CHANGE_ATK_2 + zEffect - Z_EFFECT_ATK_UP_2;
+                statChange = zEffect - Z_EFFECT_ATK_UP_2 + 1;
                 break;
             case Z_EFFECT_ATK_UP_3:
             case Z_EFFECT_DEF_UP_3:
             case Z_EFFECT_SPD_UP_3:
             case Z_EFFECT_SPATK_UP_3:
             case Z_EFFECT_SPDEF_UP_3:
-                statChange = STAT_CHANGE_ATK_2 + zEffect - Z_EFFECT_ATK_UP_3;
+                statChange = zEffect - Z_EFFECT_ATK_UP_3 + 1;
                 break;
             default:
                 return FALSE;
             }
 
-            if (statChange != 0 && (isEager || IncreaseStatUpScoreContrary(battlerAtk, battlerDef, statChange) > 0))
-                return TRUE;
+            // TODO
+            // if (statChange != 0 && (isEager || IncreaseStatUpScoreContrary(battlerAtk, battlerDef, statChange) > 0))
+            //     return TRUE;
 
         }
         else if (GetMoveEffect(zMove) == EFFECT_EXTREME_EVOBOOST)
@@ -5729,10 +5668,10 @@ bool32 AI_ShouldSpicyExtract(enum BattlerId battlerAtk, enum BattlerId battlerAt
 
     switch (GetMoveEffect(aiData->partnerMove))
     {
-    case EFFECT_DEFENSE_UP:
-    case EFFECT_DEFENSE_UP_2:
-    case EFFECT_DEFENSE_UP_3:
-    case EFFECT_BULK_UP:
+    // case EFFECT_DEFENSE_UP:
+    // case EFFECT_DEFENSE_UP_2:
+    // case EFFECT_DEFENSE_UP_3:
+    // case EFFECT_BULK_UP:
     case EFFECT_STOCKPILE:
         if (!preventsStatLoss)
             return FALSE;
@@ -6430,3 +6369,160 @@ bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, enum BattlerId battlerI
         return TRUE;
     return FALSE;
 }
+
+s32 GetSelfStatChangeScore(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    s32 score = 0;
+    bool32 foundStatToIncrease = FALSE;
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
+    u32 additionalEffectsCounter = 0;
+
+    while (additionalEffectsCounter < numAdditionalEffects)
+    {
+        while (gBattleStruct->currStatToChange < NUM_STATS)
+        {
+            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            u32 stat = gBattleStruct->currStatToChange++;
+
+            if (!IsStatSet(stat, additionalEffect))
+                continue;
+
+            if (IsStatDecreaseEffect(additionalEffect->moveEffect))
+            {
+                if (gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_WHITE_HERB)
+                    ADJUST_SCORE(WEAK_EFFECT);
+            }
+            else if (IsStatIncreaseEffect(additionalEffect->moveEffect))
+            {
+                u32 stage = additionalEffect->moveEffect - STAT_CHANGE_EFFECT_PLUS_1 + 1;
+                score = IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage);
+                foundStatToIncrease = TRUE;
+            }
+        }
+
+        additionalEffectsCounter++;
+    }
+
+    if (!foundStatToIncrease)
+        return 0; // Incase there was a white herb score increase, but no stats to increase were found
+
+    if (score > BEST_EFFECT)
+        score = BEST_EFFECT;
+
+    return score;
+}
+
+#if 0
+s32 GetAllyStatChangeScore(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    s32 score = 0;
+    bool32 canLowerStat = FALSE;
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
+    u32 additionalEffectsCounter = 0;
+
+    while (additionalEffectsCounter < numAdditionalEffects)
+    {
+        while (gBattleStruct->currStatToChange < NUM_STATS)
+        {
+            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            u32 stat = gBattleStruct->currStatToChange++;
+
+            if (!IsStatSet(stat, additionalEffect))
+                continue;
+
+            if (IsStatDecreaseEffect(additionalEffect->moveEffect))
+            {
+                canLowerStat = CanLowerStat(battlerAtk, battlerAtkPartner, gAiLogicData, stat);
+            }
+            else if (IsStatIncreaseEffect(additionalEffect->moveEffect))
+            {
+                u32 stage = additionalEffect->moveEffect - STAT_CHANGE_EFFECT_PLUS_1 + 1;
+                score = IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage);
+            }
+        }
+
+        additionalEffectsCounter++;
+    }
+
+    if (canLowerStat)
+        return 0;
+
+    if (score > BEST_EFFECT)
+        score = BEST_EFFECT;
+
+    return score;
+}
+
+bool32 ShouldDecreaseAllyStat(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Stat stat)
+{
+    if (!CanLowerStat(battlerAtk, battlerAtkPartner, gAiLogicData, stat))
+        return TRUE;
+
+    if (!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk])
+     && DoesAbilityRaiseStatsWhenLowered(gAiLogicData->abilities[battlerAtkPartner]))
+        return TRUE;
+
+    if (gAiLogicData->holdEffects[battlerAtkPartner] == HOLD_EFFECT_WHITE_HERB)
+        return TRUE;
+
+    switch (stat)
+    {
+    case STAT_ATK:
+        if (!HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL))
+            return TRUE;
+
+        break;
+    case STAT_DEF:
+    {
+        enum BattlerId foe = LEFT_FOE(battlerAtk);
+
+        if (HasBattlerSideMoveWithEffect(foe, EFFECT_PSYSHOCK))
+            return FALSE;
+
+        if (IsBattlerAlive(foe) && HasMoveWithCategory(foe, DAMAGE_CATEGORY_PHYSICAL))
+            return FALSE;
+
+        foe = RIGHT_FOE(battlerAtk);
+
+        if (IsBattlerAlive(foe) && HasMoveWithCategory(foe, DAMAGE_CATEGORY_PHYSICAL))
+            return FALSE;
+
+        return TRUE;
+    }
+    case STAT_SPEED:
+        if (HasMoveWithEffect(battlerAtkPartner, EFFECT_GYRO_BALL))
+            return TRUE;
+
+        if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
+            return TRUE;
+
+        break;
+    case STAT_SPATK:
+        if (!HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_SPECIAL))
+            return TRUE;
+
+        break;
+    case STAT_SPDEF:
+    {
+        enum BattlerId foe = LEFT_FOE(battlerAtk);
+
+        if (HasSideMoveWithCategory(foe, DAMAGE_CATEGORY_SPECIAL))
+        if (IsBattlerAlive(foe) && HasMoveWithCategory(foe, DAMAGE_CATEGORY_SPECIAL))
+            return FALSE;
+
+        foe = RIGHT_FOE(battlerAtk);
+
+        if (IsBattlerAlive(foe) && HasMoveWithCategory(foe, DAMAGE_CATEGORY_SPECIAL))
+            return FALSE;
+
+        return TRUE;
+    }
+    case STAT_ACC:
+    case STAT_EVASION:
+    default:
+        break;
+    }
+
+    return FALSE;
+}
+#endif

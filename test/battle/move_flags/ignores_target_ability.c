@@ -21,8 +21,8 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility moves do not ignore the attacker's own 
     PARAMETRIZE { move = MOVE_PHOTON_GEYSER; ability = ABILITY_UNAWARE; }
 
     ASSUME(gAbilitiesInfo[ABILITY_UNAWARE].breakable);
-    ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
-    ASSUME(GetMoveEffect(MOVE_AMNESIA) == EFFECT_SPECIAL_DEFENSE_UP_2);
+    ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_STAT_CHANGE_USER);
+    ASSUME(GetMoveEffect(MOVE_AMNESIA) == EFFECT_STAT_CHANGE_USER);
 
     GIVEN {
         PLAYER(SPECIES_CLEFABLE) { Speed(1); Ability(ability); }

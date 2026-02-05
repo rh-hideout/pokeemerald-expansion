@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_DEFENSE_CURL) == EFFECT_DEFENSE_CURL);
+    ASSUME(GetMoveEffect(MOVE_DEFENSE_CURL) == EFFECT_STAT_CHANGE_USER);
 }
 
 SINGLE_BATTLE_TEST("Defense Curl raises Defense by 1 stage", s16 damage)

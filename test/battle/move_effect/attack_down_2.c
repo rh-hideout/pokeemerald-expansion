@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_ATTACK_DOWN_2);
+    ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_STAT_CHANGE_TARGET);
 }
 
 SINGLE_BATTLE_TEST("Charm lowers Attack by 2 stages", s16 damage)

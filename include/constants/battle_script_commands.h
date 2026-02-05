@@ -76,7 +76,6 @@ enum BattleScriptOpcode
     B_SCR_OP_JUMPFIFSEMIINVULNERABLE,
     B_SCR_OP_TRAINERSLIDEIN,
     B_SCR_OP_MOVEEND,
-    B_SCR_OP_SETHEALBLOCK,
     B_SCR_OP_RETURNATKTOBALL,
     B_SCR_OP_GETSWITCHEDMONDATA,
     B_SCR_OP_SWITCHINDATAUPDATE,
@@ -225,9 +224,9 @@ enum BattleScriptOpcode
     B_SCR_OP_SETTELEKINESIS,
     B_SCR_OP_SWAPSTATSTAGES,
     B_SCR_OP_AVERAGESTATS,
-    B_SCR_OP_JUMPIFCAPTIVATEAFFECTED,
     B_SCR_OP_SETNONVOLATILESTATUS,
     B_SCR_OP_TRYOVERWRITEABILITY,
+    B_SCR_OP_TRYANYSTATCHANGE,
 
     // Expansion users, please don't use any of the unused commands.
     // They are reserved for expansion usage.
@@ -262,6 +261,7 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_28,
     B_SCR_OP_UNUSED_29,
     B_SCR_OP_UNUSED_30,
+    B_SCR_OP_UNUSED_31,
     B_SCR_OP_CALLNATIVE,
 };
 
@@ -355,25 +355,6 @@ enum BattleScriptOpcode
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
-
-// Cmd_statbuffchange
-#define STAT_CHANGE_ALLOW_PTR               (1 << 0)   // If set, allow use of jumpptr. If not set and unable to raise/lower stats, jump to failInstr.
-#define STAT_CHANGE_MIRROR_ARMOR            (1 << 1)   // Stat change redirection caused by Mirror Armor ability.
-#define STAT_CHANGE_ONLY_CHECKING           (1 << 2)   // Checks if the stat change can occur. Does not change stats or play stat change animation.
-#define STAT_CHANGE_NOT_PROTECT_AFFECTED    (1 << 3)
-#define STAT_CHANGE_UPDATE_MOVE_EFFECT      (1 << 4)
-#define STAT_CHANGE_CHECK_PREVENTION        (1 << 5)
-#define STAT_CHANGE_CERTAIN                 (1 << 6)
-
-// stat flags for TryPlayStatChangeAnimation
-#define BIT_HP                      (1 << 0)
-#define BIT_ATK                     (1 << 1)
-#define BIT_DEF                     (1 << 2)
-#define BIT_SPEED                   (1 << 3)
-#define BIT_SPATK                   (1 << 4)
-#define BIT_SPDEF                   (1 << 5)
-#define BIT_ACC                     (1 << 6)
-#define BIT_EVASION                 (1 << 7)
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 

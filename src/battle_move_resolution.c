@@ -5,6 +5,7 @@
 #include "battle_ai_util.h"
 #include "battle_util.h"
 #include "battle_move_resolution.h"
+#include "battle_stat_change.h"
 #include "battle_scripts.h"
 #include "battle_z_move.h"
 #include "item.h"
@@ -782,6 +783,15 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
          && gBattleMons[ctx->battlerAtk].species != SPECIES_MORPEKO_HANGRY)
             battleScript = BattleScript_PokemonCantUseTheMove;
         break;
+    case EFFECT_HYPERSPACE_FURY:
+        if (gBattleMons[ctx->battlerAtk].species == SPECIES_HOOPA_CONFINED)
+            battleScript = BattleScript_ButHoopaCantUseIt;
+        else if (gBattleMons[ctx->battlerAtk].species != SPECIES_HOOPA_UNBOUND)
+            battleScript = BattleScript_PokemonCantUseTheMove;
+        break;
+    case EFFECT_DARK_VOID:
+        if (B_DARK_VOID_FAIL >= GEN_7 && gBattleMons[ctx->battlerAtk].species != SPECIES_DARKRAI)
+            battleScript = BattleScript_PokemonCantUseTheMove;
     case EFFECT_AURORA_VEIL:
         if (!(gBattleWeather & B_WEATHER_ICY_ANY && HasWeatherEffect()))
             battleScript = BattleScript_ButItFailed;
@@ -937,6 +947,26 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
          || ctx->abilityAtk == ABILITY_KLUTZ
          || gBattleMons[ctx->battlerAtk].volatiles.embargo)
             battleScript = BattleScript_ButItFailed;
+    case EFFECT_CAPTIVATE:
+        if (ctx->abilityDef == ABILITY_OBLIVIOUS)
+        {
+            battleScript = BattleScript_NotAffectedAbilityPopUp;
+            gLastUsedAbility = ABILITY_OBLIVIOUS;
+            RecordAbilityBattle(ctx->battlerAtk, ABILITY_OBLIVIOUS);
+        }
+        else if (AreBattlersOfSameGender(ctx->battlerAtk, ctx->battlerAtk))
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
+        break;
+    case EFFECT_STAT_CHANGE_MAGNETIC:
+        if (ctx->abilityAtk != ABILITY_PLUS
+         && ctx->abilityAtk != ABILITY_MINUS
+         && GetBattlerAbility(BATTLE_PARTNER(ctx->battlerAtk)) != ABILITY_PLUS
+         && GetBattlerAbility(BATTLE_PARTNER(ctx->battlerAtk)) != ABILITY_MINUS)
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
         break;
     default:
         break;
@@ -1118,7 +1148,6 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
             gBattlescriptCurrInstr = BattleScript_MoveEnd;
             result = CANCELER_RESULT_BREAK;
         }
-
     }
 
     return result;

@@ -3894,14 +3894,14 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
     switch(effect)
     {
     case EFFECT_REFLECT_DAMAGE:
-    case EFFECT_EVASION_UP:
-    case EFFECT_DEFENSE_UP:
-    case EFFECT_DEFENSE_UP_2:
-    case EFFECT_SPECIAL_DEFENSE_UP:
-    case EFFECT_SPECIAL_DEFENSE_UP_2:
-    case EFFECT_MINIMIZE:
-    case EFFECT_ACCURACY_DOWN:
-    case EFFECT_DEFENSE_CURL:
+    // case EFFECT_EVASION_UP:
+    // case EFFECT_DEFENSE_UP:
+    // case EFFECT_DEFENSE_UP_2:
+    // case EFFECT_SPECIAL_DEFENSE_UP:
+    // case EFFECT_SPECIAL_DEFENSE_UP_2:
+    // case EFFECT_MINIMIZE:
+    // case EFFECT_ACCURACY_DOWN:
+    // case EFFECT_DEFENSE_CURL:
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:
     case EFFECT_AURORA_VEIL:
@@ -3979,9 +3979,9 @@ static bool32 IsDomePopularMove(enum Move move)
     {
     case EFFECT_PROTECT:
     case EFFECT_MAT_BLOCK:
-    case EFFECT_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_3:
+    // case EFFECT_ATTACK_UP_2:
+    // case EFFECT_SPECIAL_ATTACK_UP_2:
+    // case EFFECT_SPECIAL_ATTACK_UP_3:
         return TRUE;
     default:
         return FALSE;
@@ -4078,19 +4078,9 @@ static bool32 IsDomeComboMove(enum Move move)
     case EFFECT_SLEEP_TALK:
     case EFFECT_SNORE:
     // Anything that ups offensive stats by more than one
-    case EFFECT_ATTACK_UP:
-    case EFFECT_ATTACK_UP_2:
-    case EFFECT_ATTACK_SPATK_UP:
-    case EFFECT_SPECIAL_ATTACK_UP:
-    case EFFECT_SPECIAL_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_3:
-    case EFFECT_CALM_MIND:
-    case EFFECT_DRAGON_DANCE:
-    case EFFECT_BELLY_DRUM:
+    case EFFECT_STAT_CHANGE_USER:
+    case EFFECT_STAT_CHANGE_HALF_HP:
     case EFFECT_CHARGE:
-    case EFFECT_BULK_UP:
-    case EFFECT_ATTACK_ACCURACY_UP:
-    case EFFECT_FILLET_AWAY:
     // Others
     case EFFECT_FOCUS_ENERGY:
     case EFFECT_LOCK_ON:

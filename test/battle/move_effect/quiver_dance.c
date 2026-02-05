@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_QUIVER_DANCE) == EFFECT_QUIVER_DANCE);
+    ASSUME(GetMoveEffect(MOVE_QUIVER_DANCE) == EFFECT_STAT_CHANGE_USER);
 }
 
 SINGLE_BATTLE_TEST("Quiver Dance increases the user's Sp. Attack, Sp. Defense and Speed by 1 stage each")

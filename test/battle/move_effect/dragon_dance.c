@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_DRAGON_DANCE) == EFFECT_DRAGON_DANCE);
+    ASSUME(GetMoveEffect(MOVE_DRAGON_DANCE) == EFFECT_STAT_CHANGE_USER);
 }
 
 SINGLE_BATTLE_TEST("Dragon Dance increases the user's Attack and Speed by 1 stage each")

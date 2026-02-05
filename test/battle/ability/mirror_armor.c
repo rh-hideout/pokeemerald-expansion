@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
             MESSAGE("The opposing Wynaut's Attack fell!");
             break;
         case STAT_EVASION:
-            if (GetMoveEffect(move) == EFFECT_EVASION_DOWN_2) {
+            if (GetMoveEffect(move) == EFFECT_STAT_CHANGE_TARGET) {
                 MESSAGE("The opposing Wynaut's evasiveness harshly fell!");
             } else {
                 MESSAGE("The opposing Wynaut's evasiveness fell!");
@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
         }
     } THEN {
         EXPECT_EQ(player->statStages[statId], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(opponent->statStages[statId], (statId == STAT_SPDEF || (statId == STAT_EVASION && GetMoveEffect(move) == EFFECT_EVASION_DOWN_2)) ? DEFAULT_STAT_STAGE - 2 : DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->statStages[statId], (statId == STAT_SPDEF || (statId == STAT_EVASION && GetMoveEffect(move) == EFFECT_STAT_CHANGE_TARGET)) ? DEFAULT_STAT_STAGE - 2 : DEFAULT_STAT_STAGE - 1);
     }
 }
 

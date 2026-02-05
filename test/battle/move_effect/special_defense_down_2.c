@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_FAKE_TEARS) == EFFECT_SPECIAL_DEFENSE_DOWN_2);
+    ASSUME(GetMoveEffect(MOVE_FAKE_TEARS) == EFFECT_STAT_CHANGE_TARGET);
 }
 
 SINGLE_BATTLE_TEST("Fake Tears reduces the target's Sp. Defense by 2 stages")

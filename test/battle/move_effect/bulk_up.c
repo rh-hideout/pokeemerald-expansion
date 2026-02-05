@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_BULK_UP) == EFFECT_BULK_UP);
+    ASSUME(GetMoveEffect(MOVE_BULK_UP) == EFFECT_STAT_CHANGE_USER);
 }
 
 SINGLE_BATTLE_TEST("Bulk Up increases the user's Attack and Defense by 1 stage each")

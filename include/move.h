@@ -35,10 +35,25 @@ struct AdditionalEffect
     u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
     u8 preAttackEffect:1;
     u8 padding:3;
+
     union PACKED {
         enum WrappedStringID wrapped;
     } multistring;
-    u8 chance; // 0% = effect certain, primary effect
+
+    union PACKED {
+        u8 chance; // 0% = effect certain, primary effect
+        u8 stats;
+        struct PACKED {
+            u8 hp:1; // unused, to avoid shifting
+            u8 attack:1;
+            u8 defense:1;
+            u8 speed:1;
+            u8 spAtk:1;
+            u8 spDef:1;
+            u8 evasion:1;
+            u8 accuracy:1;
+        };
+    };
 };
 
 enum ProtectType

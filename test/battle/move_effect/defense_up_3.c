@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_COTTON_GUARD) == EFFECT_DEFENSE_UP_3);
+    ASSUME(GetMoveEffect(MOVE_COTTON_GUARD) == EFFECT_STAT_CHANGE_USER);
 }
 
 SINGLE_BATTLE_TEST("Cotton Guard raises Defense by 3 stages", s16 damage)

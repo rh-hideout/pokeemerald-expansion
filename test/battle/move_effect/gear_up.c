@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_GEAR_UP) == EFFECT_GEAR_UP);
+    ASSUME(GetMoveEffect(MOVE_GEAR_UP) == EFFECT_STAT_CHANGE_MAGNETIC);
 }
 
 SINGLE_BATTLE_TEST("Gear Up raises Attack and Sp. Attack of the user with Plus/Minus in singles")

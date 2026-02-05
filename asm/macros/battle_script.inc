@@ -462,11 +462,6 @@
 	moveend 2, \to
 	.endm
 
-	.macro sethealblock failInstr:req
-	.byte B_SCR_OP_SETHEALBLOCK
-	.4byte \failInstr
-	.endm
-
 	.macro returnatktoball
 	.byte B_SCR_OP_RETURNATKTOBALL
 	.endm
@@ -955,9 +950,8 @@
 	.byte \flag
 	.endm
 
-	.macro halvehp failInstr:req
+	.macro halvehp
 	.byte B_SCR_OP_HALVEHP
-	.4byte \failInstr
 	.endm
 
 	.macro copyfoestats
@@ -1199,11 +1193,6 @@
 	.byte \stat
 	.endm
 
-	.macro jumpifcaptivateaffected jumpInstr:req
-	.byte B_SCR_OP_JUMPIFCAPTIVATEAFFECTED
-	.4byte \jumpInstr
-	.endm
-
 	.macro setnonvolatilestatus trigger:req
 	.byte B_SCR_OP_SETNONVOLATILESTATUS
 	.byte \trigger
@@ -1214,9 +1203,18 @@
 	.4byte \failInstr
 	.endm
 
+	.macro tryanystatchange
+	.byte B_SCR_OP_TRYANYSTATCHANGE
+	.endm
+
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
 	.4byte \func
+	.endm
+
+	.macro trystatchange failInstr:req
+	callnative BS_TryStatChange
+	.4byte \failInstr
 	.endm
 
 	.macro savetarget
@@ -1984,11 +1982,6 @@
 	.byte \battler
 	.byte \caseId
 	.byte \bufferSpeciesName
-	.endm
-
-	.macro tryautotomize failInstr:req
-	callnative BS_TryAutotomize
-	.4byte \failInstr
 	.endm
 
 	.macro tryinstruct failInstr:req

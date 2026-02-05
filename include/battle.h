@@ -555,6 +555,10 @@ struct BattleStruct
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
+    u8 currStatToChange:6;
+    u8 statChangeMoveAnimPlayed:2;
+    u8 statChanges[NUM_STAT_SIGNS][NUM_BATTLE_STATS];
+    s8 statsToChange[NUM_BATTLE_STATS];
     u8 weatherDuration;
     u8 expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
     u8 expGetterMonId;
@@ -601,7 +605,8 @@ struct BattleStruct
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
-    u8 unused:4;
+    u8 statCheckFailureDone:1;
+    u8 unused:3;
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];

@@ -752,9 +752,9 @@ SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
     PARAMETRIZE { move = MOVE_DECORATE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_SPECIAL_ATTACK_DOWN);
+        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_STAT_CHANGE_TARGET);
         ASSUME(MoveIgnoresProtect(MOVE_CONFIDE));
-        ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
+        ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_STAT_CHANGE_USER);
         ASSUME(MoveIgnoresProtect(MOVE_DECORATE));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -774,9 +774,9 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
     PARAMETRIZE { move = MOVE_DECORATE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_SPECIAL_ATTACK_DOWN);
+        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_STAT_CHANGE_TARGET);
         ASSUME(MoveIgnoresProtect(MOVE_CONFIDE));
-        ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
+        ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_STAT_CHANGE_USER);
         ASSUME(MoveIgnoresProtect(MOVE_DECORATE));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);

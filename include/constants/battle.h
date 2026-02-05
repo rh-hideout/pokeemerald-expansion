@@ -538,6 +538,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_LIGHT_SCREEN,
     MOVE_EFFECT_SALT_CURE,
     MOVE_EFFECT_EERIE_SPELL,
+    MOVE_EFFECT_DECREASE_WEIGHT,
 
     // Max move effects happen earlier in the execution chain.
     // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.
@@ -585,7 +586,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_AROMATHERAPY,
     MOVE_EFFECT_CONFUSE_SIDE,
     MOVE_EFFECT_STEELSURGE, // Steel type rocks
-    MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused for rocks set up from Ceasless Edge (same but differ in execution order)
+    MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused with rocks set up from Ceasless Edge (same but differ in execution order)
     MOVE_EFFECT_TORMENT_SIDE,
     MOVE_EFFECT_LOWER_SPEED_2_SIDE,
     MOVE_EFFECT_FIRE_SPIN_SIDE,
@@ -596,6 +597,22 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_BREAK_SCREEN,
     MOVE_EFFECT_STEAL_STATS,
     MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2,3 and 4
+    MOVE_EFFECT_DEFENSE_CURL_VOLATILE,
+    MOVE_EFFECT_MINIMIZE_VOLATILE,
+
+    // Used for EFFECT_STAT_CHANGE_USER / EFFECT_STAT_CHANGE_TARGET
+    STAT_CHANGE_EFFECT_PLUS_1,
+    STAT_CHANGE_EFFECT_PLUS_2,
+    STAT_CHANGE_EFFECT_PLUS_3,
+    STAT_CHANGE_EFFECT_PLUS_4,
+    STAT_CHANGE_EFFECT_PLUS_5,
+    STAT_CHANGE_EFFECT_PLUS_6,
+    STAT_CHANGE_EFFECT_MINUS_1,
+    STAT_CHANGE_EFFECT_MINUS_2,
+    STAT_CHANGE_EFFECT_MINUS_3,
+    STAT_CHANGE_EFFECT_MINUS_4,
+    STAT_CHANGE_EFFECT_MINUS_5,
+    STAT_CHANGE_EFFECT_MINUS_6,
 
     NUM_MOVE_EFFECTS
 };
@@ -829,6 +846,13 @@ enum SubmoveState
     SUBMOVE_NO_EFFECT,
     SUBMOVE_SUCCESS,
     SUBMOVE_FAILURE,
+};
+
+enum StatChangeSign
+{
+    SIGN_POSITIVE,
+    SIGN_NEGATIVE,
+    NUM_STAT_SIGNS
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_H

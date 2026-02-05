@@ -43,7 +43,7 @@ static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies, u32 var
         *pMove = j;
         *pSpecies = SPECIES_JOLTEON;
     }
-    else if (effect == EFFECT_MAGNETIC_FLUX || effect == EFFECT_GEAR_UP) // User needs to have Plus
+    else if (effect == EFFECT_STAT_CHANGE_MAGNETIC) // User needs to have Plus
     {
         *pMove = j;
         *pSpecies = SPECIES_KLINKLANG;
@@ -406,9 +406,8 @@ static void SceneSingles(enum Move move, struct BattlePokemon *mon)
      || effect == EFFECT_AFTER_YOU
      || effect == EFFECT_ALLY_SWITCH
      || effect == EFFECT_AROMATIC_MIST
-     || move == MOVE_HOLD_HANDS // Hack here because it shares its effect with Splash and Celebrate
-     || effect == EFFECT_COACHING
-     || effect == EFFECT_DRAGON_CHEER)
+     || effect == EFFECT_DRAGON_CHEER
+     || GetMoveTarget(move) == TARGET_ALLY)
     {
         // Moves that fail in Single Battles
     }
@@ -630,7 +629,7 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
 static void DoublesScene(enum Move move, struct BattlePokemon *attacker)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (effect == EFFECT_MAGNETIC_FLUX || effect == EFFECT_GEAR_UP) // For some reason, Magnetic Flux and Gear Up are failing in Double Battles here
+    if (effect == EFFECT_STAT_CHANGE_MAGNETIC) // For some reason, Magnetic Flux and Gear Up are failing in Double Battles here
     {
         // Moves that fail in Double Battles
     }

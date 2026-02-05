@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Toxic Thread both reduces speed and inflicts Poison")
 SINGLE_BATTLE_TEST("Toxic Thread still inflicts Poison if speed can't go lower")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_SPEED_DOWN_2);
+        ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_STAT_CHANGE_TARGET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

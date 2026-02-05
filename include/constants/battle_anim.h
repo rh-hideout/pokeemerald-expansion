@@ -2,6 +2,7 @@
 #define GUARD_CONSTANTS_BATTLE_ANIM_H
 
 #include "battle_anim_scripts.h"
+#include "battle.h"
 
 // Sprites start at 10000 and thus must be subtracted of 10000 to account for the true index.
 #define GET_TRUE_SPRITE_INDEX(i) ((i - ANIM_SPRITES_START))

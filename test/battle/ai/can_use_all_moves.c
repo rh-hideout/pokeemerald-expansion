@@ -147,7 +147,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
         case EFFECT_NIGHTMARE:
         case EFFECT_SNORE:
         case EFFECT_SKETCH:
-        case EFFECT_BELLY_DRUM:
+        case EFFECT_STAT_CHANGE_HALF_HP:
         case EFFECT_DESTINY_BOND:
         case EFFECT_MIRROR_MOVE:
         case EFFECT_REST:
@@ -536,8 +536,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_ELECTRIC_TERRAIN:
         case EFFECT_PSYCHIC_TERRAIN:
         case EFFECT_AURORA_VEIL:
-        case EFFECT_GEAR_UP:
-        case EFFECT_MAGNETIC_FLUX:
+        case EFFECT_STAT_CHANGE_MAGNETIC:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
@@ -592,9 +591,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
         //TODO: AI HANDLING
         case EFFECT_CLANGOROUS_SOUL:
         case EFFECT_POLTERGEIST:
-        case EFFECT_COACHING:
         case EFFECT_REVIVAL_BLESSING:
-        case EFFECT_FILLET_AWAY:
 
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:

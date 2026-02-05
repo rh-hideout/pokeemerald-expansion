@@ -119,7 +119,7 @@ SINGLE_BATTLE_TEST("Echoed Voice's power is increased even if it misses")
     s16 damage[3];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
+        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_STAT_CHANGE_TARGET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -5,6 +5,7 @@
 #include "battle_controllers.h"
 #include "battle_util.h"
 #include "battle_hold_effects.h"
+#include "battle_stat_change.h"
 #include "battle_scripts.h"
 #include "item.h"
 #include "string_util.h"

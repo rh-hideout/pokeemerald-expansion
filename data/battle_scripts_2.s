@@ -2,6 +2,7 @@
 #include "constants/global.h"
 #include "constants/battle.h"
 #include "constants/battle_script_commands.h"
+#include "constants/battle_stat_change.h"
 #include "constants/battle_anim.h"
 #include "constants/battle_string_ids.h"
 #include "constants/moves.h"

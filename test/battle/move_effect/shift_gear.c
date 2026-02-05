@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SHIFT_GEAR) == EFFECT_SHIFT_GEAR);
+    ASSUME(GetMoveEffect(MOVE_SHIFT_GEAR) == EFFECT_STAT_CHANGE_USER);
 }
 
 SINGLE_BATTLE_TEST("Shift Gear increases the user's Speed by 2 stages and Attack by 1 stage")

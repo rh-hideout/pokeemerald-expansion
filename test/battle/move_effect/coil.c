@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_COIL) == EFFECT_COIL);
+    ASSUME(GetMoveEffect(MOVE_COIL) == EFFECT_STAT_CHANGE_USER);
 }
 
 SINGLE_BATTLE_TEST("Coil increases the user's Attack, Defense and Accuracy by 1 stage each")

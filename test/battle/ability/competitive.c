@@ -277,7 +277,7 @@ SINGLE_BATTLE_TEST("Competitive activates before White Herb")
 SINGLE_BATTLE_TEST("Competitive activates for each stat that is lowered")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
+        ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_STAT_CHANGE_TARGET);
         PLAYER(SPECIES_IGGLYBUFF) { Ability(ABILITY_COMPETITIVE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
