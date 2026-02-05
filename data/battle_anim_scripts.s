@@ -14300,7 +14300,8 @@ gBattleAnimMove_Eternabeam::
 	call OblivionWingBeam
 	call OblivionWingBeam
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
-	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=4, initial_blend_y=0, target_blend_y=12, color=RGB(31, 4, 10)@Pinkish Red	call OblivionWingBeam
+	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=4, initial_blend_y=0, target_blend_y=12, color=RGB(31, 4, 10)@Pinkish Red
+	call OblivionWingBeam
 	call OblivionWingBeam
 	call OblivionWingBeam
 	call OblivionWingBeam
