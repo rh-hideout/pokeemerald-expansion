@@ -460,6 +460,10 @@
 	createsprite gPoisonPowderParticleSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, 256 * \y_velocity, \wave_amplitude, \wave_speed
 	.endm
 
+	.macro create_magic_powder_particle_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, y_velocity:req, wave_amplitude:req, wave_speed:req
+	createsprite gMagicPowderBluePowderTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, 256 * \y_velocity, \wave_amplitude, \wave_speed
+	.endm
+
 	.macro create_power_absorption_orb_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req
 	createsprite gPowerAbsorptionOrbSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration
 	.endm
