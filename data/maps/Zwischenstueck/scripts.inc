@@ -11,3 +11,4 @@ Zwischenstueck_Text_TownSign::
 	.string " Left: DHBW\n"
 	.string "Right: JUNGBUSCH$"
 	return
+

@@ -1220,3 +1220,7 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/GlitchHaus/scripts.inc"
 
 	.include "data/maps/Zwischenstueck/scripts.inc"
+
+	.include "data/maps/Lagerhalle/scripts.inc"
+
+	.include "data/maps/LuTransfer/scripts.inc"

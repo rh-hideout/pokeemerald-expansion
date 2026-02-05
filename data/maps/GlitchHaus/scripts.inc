@@ -156,9 +156,10 @@ GlitchHaus_Text_Franziska_After:
     .string "This place feels… normal again.$"
 
 GlitchHaus_Text_BulletinBoard:
-    .string "You only recognize a lot of\n"
-    .string "scribbles and confusion, something\p"
-    .string "about saving and hexing.$"
+    .string "Among all the scribbles is a haiku:\p"
+	.string "Soft rain on the glass, \n"
+	.string "a paused world waits in silence,\p"
+	.string "I keep my progress safe.$"
 
 GlitchHaus_Text_TerminalPrompt:
     .string "Enter the flag.$"

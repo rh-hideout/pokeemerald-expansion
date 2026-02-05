@@ -6,7 +6,7 @@
   "region_map_section": "MAPSEC_ABANDONED_SHIP",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
-  "map_type": "MAP_TYPE_NONE",
+  "map_type": "MAP_TYPE_ROUTE",
   "allow_cycling": false,
   "allow_escaping": false,
   "allow_running": false,
@@ -30,7 +30,7 @@
       "x": 9,
       "y": 15,
       "elevation": 0,
-      "dest_map": "MAP_ZWISCHENSTUECK",
+      "dest_map": "MAP_LAGERHALLE",
       "dest_warp_id": "0"
     }
   ],

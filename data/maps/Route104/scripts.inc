@@ -1,22 +1,59 @@
 Route104_MapScripts::
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, Route104_OnFrame
-	map_script MAP_SCRIPT_ON_TRANSITION, Route104_OnTransition
-	.byte 0
+    map_script MAP_SCRIPT_ON_FRAME_TABLE, Route104_OnFrame
+    map_script MAP_SCRIPT_ON_LOAD, Route104_OnLoad
+    map_script MAP_SCRIPT_ON_TRANSITION, Route104_OnTransition
+    .byte 0
 
 Route104_OnFrame:
-	map_script_2 VAR_BOARD_BRINEY_BOAT_STATE, 1, Route104_EventScript_StartSailToDewford
-	.2byte 0
+    map_script_2 VAR_BOARD_BRINEY_BOAT_STATE, 1, Route104_EventScript_StartSailToDewford
+    .2byte 0
 
 Route104_EventScript_StartSailToDewford::
-	lockall
-	goto Route104_EventScript_SailToDewford
-	end
+    lockall
+    goto Route104_EventScript_SailToDewford
+    end
+
+
+Route104_OnLoad:
+    @ Standardzustand: alles aus der Cutscene ist weg
+    setflag FLAG_HIDE_ROUTE104_OFFICER_M
+    setflag FLAG_HIDE_ROUTE104_OFFICER_F
+    setflag FLAG_HIDE_ROUTE104_PHONE_CORP_ID
+
+    @ WICHTIG: falls sie schon gespawnt wurden -> despawnen
+    removeobject LOCALID_OFFICER_M
+    removeobject LOCALID_OFFICER_F
+    removeobject LOCALID_PHONE_CORP_ID
+
+    @ Nach Cutscene: Phone anzeigen, falls noch nicht aufgehoben
+    goto_if_unset FLAG_ROUTE104_TRUCK_CUTSCENE_DONE, Route104_OnLoad_End
+    goto_if_set FLAG_ROUTE104_GOT_PHONE_CORP_ID, Route104_OnLoad_End
+    clearflag FLAG_HIDE_ROUTE104_PHONE_CORP_ID
+    addobject LOCALID_PHONE_CORP_ID
+
+Route104_OnLoad_End:
+    end
+
+
+
+Route104_OnLoad_AfterCutscene:
+    @ Nach Cutscene: Phone nur zeigen, wenn nicht aufgehoben
+    goto_if_set FLAG_ROUTE104_GOT_PHONE_CORP_ID, Route104_OnLoad_HidePhone
+    showobjectat LOCALID_PHONE_CORP_ID, MAP_ROUTE104
+    end
+
+Route104_OnLoad_HidePhone:
+    hideobjectat LOCALID_PHONE_CORP_ID, MAP_ROUTE104
+    end
+
 
 Route104_OnTransition:
-	call Common_EventScript_SetupRivalGfxId
-	call Route104_EventScript_TrySetRivalPos
-	call Route104_EventScript_ShowOrHideWhiteHerbFlorist
-	end
+    call Common_EventScript_SetupRivalGfxId
+    call Route104_EventScript_TrySetRivalPos
+    call Route104_EventScript_ShowOrHideWhiteHerbFlorist
+    end
+
+
 
 Route104_EventScript_ShowOrHideWhiteHerbFlorist::
 	goto_if_unset FLAG_MET_PRETTY_PETAL_SHOP_OWNER, Route104_EventScript_HideWhiteHerbFlorist
@@ -993,6 +1030,217 @@ Route104_EventScript_Darian::
 	trainerbattle_single TRAINER_DARIAN, Route104_Text_DarianIntro, Route104_Text_DarianDefeat
 	msgbox Route104_Text_DarianPostBattle, MSGBOX_AUTOCLOSE
 	end
+
+
+
+@ =========================================================
+
+Route104_OnTransition_AfterCutscene:
+    @ Nach Cutscene: Truck weg, Item nur falls noch nicht eingesammelt
+    hideobjectat LOCALID_TRUCK, MAP_ROUTE104
+    goto_if_set FLAG_ROUTE104_GOT_PHONE_CORP_ID, Route104_OnTransition_HidePhone
+    showobjectat LOCALID_PHONE_CORP_ID, MAP_ROUTE104
+    end
+
+Route104_OnTransition_HidePhone:
+    hideobjectat LOCALID_PHONE_CORP_ID, MAP_ROUTE104
+    end
+
+
+@ =========================================================
+@ 3 Coord Trigger Events (x39 y63 / y62 / y61)
+@ =========================================================
+
+Route104_EventScript_TruckTrigger_39_63::
+    goto_if_set FLAG_ROUTE104_TRUCK_CUTSCENE_DONE, Route104_EventScript_TruckTrigger_End
+    lockall
+    msgbox Route104_Text_TruckDoingHere, MSGBOX_AUTOCLOSE
+    applymovement LOCALID_PLAYER, Route104_Movement_From39_63
+    waitmovement 0
+    goto Route104_EventScript_TruckCutscene_Main
+
+Route104_EventScript_TruckTrigger_39_62::
+    goto_if_set FLAG_ROUTE104_TRUCK_CUTSCENE_DONE, Route104_EventScript_TruckTrigger_End
+    lockall
+    msgbox Route104_Text_TruckDoingHere, MSGBOX_AUTOCLOSE
+    applymovement LOCALID_PLAYER, Route104_Movement_From39_62
+    waitmovement 0
+    goto Route104_EventScript_TruckCutscene_Main
+
+Route104_EventScript_TruckTrigger_39_61::
+    goto_if_set FLAG_ROUTE104_TRUCK_CUTSCENE_DONE, Route104_EventScript_TruckTrigger_End
+    lockall
+    msgbox Route104_Text_TruckDoingHere, MSGBOX_AUTOCLOSE
+    applymovement LOCALID_PLAYER, Route104_Movement_From39_61
+    waitmovement 0
+    goto Route104_EventScript_TruckCutscene_Main
+
+Route104_EventScript_TruckTrigger_End:
+    end
+
+
+@ =========================================================
+@ Gemeinsamer Cutscene-Teil (nachdem alle an gleicher Stelle sind)
+@ Player steht danach effektiv bei x33 y62 und schaut nach oben.
+@ =========================================================
+
+Route104_EventScript_TruckCutscene_Main::
+    msgbox Route104_Text_DriverDead, MSGBOX_AUTOCLOSE
+
+    @ --- Blackout #1 ---
+    fadescreen FADE_TO_BLACK
+    waitstate
+
+    @ Player nach x34 y63, schaut nach links
+    applymovement LOCALID_PLAYER, Route104_Movement_ToPoliceStaging
+
+
+    @ Officers erscheinen 
+	clearflag FLAG_HIDE_ROUTE104_OFFICER_M
+	clearflag FLAG_HIDE_ROUTE104_OFFICER_F
+	addobject LOCALID_OFFICER_M
+	addobject LOCALID_OFFICER_F
+
+    applymovement LOCALID_OFFICER_M, Route104_Movement_FaceRight
+    applymovement LOCALID_OFFICER_F, Route104_Movement_FaceRight
+
+    fadescreen FADE_FROM_BLACK
+    waitstate
+
+    msgbox Route104_Text_OfficerTalk, MSGBOX_AUTOCLOSE
+	
+
+    @ --- Blackout #2 ---
+    fadescreen FADE_TO_BLACK
+	waitstate
+
+    @ Alles wieder weg: Officers + Truck
+	setflag FLAG_HIDE_ROUTE104_OFFICER_M
+	setflag FLAG_HIDE_ROUTE104_OFFICER_F
+	removeobject LOCALID_OFFICER_M
+	removeobject LOCALID_OFFICER_F
+
+	setflag FLAG_ROUTE104_TRUCK_CUTSCENE_DONE
+	removeobject LOCALID_TRUCK
+
+
+    @ Item erscheint (x34 y61)
+    clearflag FLAG_HIDE_ROUTE104_PHONE_CORP_ID
+	addobject LOCALID_PHONE_CORP_ID
+
+
+    @ Player schaut nach oben
+    applymovement LOCALID_PLAYER, Route104_Movement_FaceUp
+    fadescreen FADE_FROM_BLACK
+    waitstate
+
+    releaseall
+    end
+
+
+@ =========================================================
+@ Item Script: Phone Corp ID
+@ Extra Text -> danach normales Obtain
+@ =========================================================
+
+Route104_EventScript_PhoneCorpId::
+    lock
+    msgbox Route104_Text_PhoneFoundIntro, MSGBOX_DEFAULT
+
+    giveitem ITEM_PHONE_CORP_ID, 1
+    compare VAR_RESULT, 0
+    goto_if_eq Route104_EventScript_PhoneCorpId_BagFull
+
+	setflag FLAG_ROUTE104_GOT_PHONE_CORP_ID
+	setflag FLAG_HIDE_ROUTE104_PHONE_CORP_ID
+	removeobject LOCALID_PHONE_CORP_ID
+
+    release
+    end
+
+Route104_EventScript_PhoneCorpId_BagFull::
+    msgbox Route104_Text_BagFull, MSGBOX_DEFAULT
+    release
+    end
+
+
+
+@ =========================================================
+@ Movements
+@ =========================================================
+
+Route104_Movement_From39_63:
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_up
+    step_end
+
+Route104_Movement_From39_62:
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    face_up
+    step_end
+
+Route104_Movement_From39_61:
+    walk_left
+    walk_left
+    walk_left
+    walk_down
+    walk_left
+    walk_left
+    walk_left
+    face_up
+    step_end
+
+@ von x33 y62 -> x34 y63 + face left
+Route104_Movement_ToPoliceStaging:
+    walk_right
+    walk_down
+    face_left
+    step_end
+
+Route104_Movement_FaceRight:
+    face_right
+    step_end
+
+Route104_Movement_FaceUp:
+    face_up
+    step_end
+
+
+@ =========================================================
+@ Texts
+@ =========================================================
+
+Route104_Text_TruckDoingHere:
+    .string "{PLAYER}: Huh, what's that Truck doing here?$"
+
+Route104_Text_DriverDead:
+	.string "{PLAYER}: FUCK, he is dead! The\n"
+	.string "driver is fucking dead! Better\p"
+	.string "call the Police!$"
+
+Route104_Text_OfficerTalk:
+    .string "blablaba\n"
+	.string "afasfsafasf$"
+
+Route104_Text_PhoneFoundIntro:
+    .string "{PLAYER}: Hmm, they must have left this here.$"
+
+Route104_Text_BagFull:
+    .string "Your BAG is full.$"
+
+
+
+
 
 Route104_Text_BrineyLivesInSeasideCottage:
 	.string "That seaside cottage is where\n"

@@ -490,3 +490,8 @@ const u16 gObjectEventPal_Unsichtbar[] = INCBIN_U16("graphics/object_events/pale
 const u32 gObjectEventPic_Dollarsign[] = INCBIN_U32("graphics/object_events/pics/misc/dollarsign.4bpp");
 const u16 gObjectEventPal_Dollarsign[] = INCBIN_U16("graphics/object_events/palettes/dollarsign.gbapal");
 
+const u32 gObjectEventPic_OfficerM[] = INCBIN_U32("graphics/object_events/pics/people/officer_m.4bpp");
+const u16 gObjectEventPal_OfficerM[] = INCBIN_U16("graphics/object_events/palettes/officer_m.gbapal");
+
+const u32 gObjectEventPic_OfficerF[] = INCBIN_U32("graphics/object_events/pics/people/officer_f.4bpp");
+const u16 gObjectEventPal_OfficerF[] = INCBIN_U16("graphics/object_events/palettes/officer_f.gbapal");

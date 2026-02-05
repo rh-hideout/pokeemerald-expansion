@@ -21,13 +21,23 @@ Ludwigshafen_EventScript_IntroTrigger::
     @ Beide laufen 23 nach links, Spieler läuft hinterher
     applymovement LOCALID_WANDA,  Ludwigshafen_Movement_WalkLeft23
     applymovement LOCALID_AMANDA, Ludwigshafen_Movement_WalkLeft23
+
     applymovement LOCALID_PLAYER, Ludwigshafen_Movement_WalkLeft23
+
+    waitmovement 0
+
+    applymovement LOCALID_AMANDA, Ludwigshafen_Movement_FaceRight
+    applymovement LOCALID_WANDA,  Ludwigshafen_Movement_FaceRight
 
     waitmovement 0
 
     msgbox Ludwigshafen_Text_Both_Glitchy, MSGBOX_DEFAULT
 
     setflag FLAG_LUDWIGSHAFEN_INTRO_DONE
+
+Ludwigshafen_Movement_FaceRight:
+    face_right
+    step_end
 
 Ludwigshafen_Intro_Done:
     releaseall

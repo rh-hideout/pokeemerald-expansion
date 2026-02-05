@@ -4650,6 +4650,26 @@
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/Zwischenstueck/border.bin",
       "blockdata_filepath": "data/layouts/Zwischenstueck/map.bin"
+    },
+    {
+      "id": "LAYOUT_LAGERHALLE",
+      "name": "Lagerhalle_Layout",
+      "width": 30,
+      "height": 15,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/Lagerhalle/border.bin",
+      "blockdata_filepath": "data/layouts/Lagerhalle/map.bin"
+    },
+    {
+      "id": "LAYOUT_LU_TRANSFER",
+      "name": "LuTransfer_Layout",
+      "width": 20,
+      "height": 50,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Slateport",
+      "border_filepath": "data/layouts/LuTransfer/border.bin",
+      "blockdata_filepath": "data/layouts/LuTransfer/map.bin"
     }
   ]
 }

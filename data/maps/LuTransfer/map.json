@@ -1,0 +1,31 @@
+{
+  "id": "MAP_LU_TRANSFER",
+  "name": "LuTransfer",
+  "layout": "LAYOUT_LU_TRANSFER",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_LUDWIGSHAFEN",
+      "offset": -5,
+      "direction": "left"
+    },
+    {
+      "map": "MAP_ROUTE104",
+      "offset": -39,
+      "direction": "right"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
+}

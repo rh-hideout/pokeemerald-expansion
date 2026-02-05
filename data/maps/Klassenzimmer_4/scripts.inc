@@ -1,14 +1,22 @@
 Klassenzimmer_4_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, Klassenzimmer_4_OnTransition
-	.byte 0
+    map_script MAP_SCRIPT_ON_TRANSITION, Klassenzimmer_4_OnTransition
+    map_script MAP_SCRIPT_ON_FRAME_TABLE, Klassenzimmer_4_OnFrame
+    .byte 0
 
 Klassenzimmer_4_OnTransition:
-	goto_if_set FLAG_CTF_CLASSROOM_INTRO_DONE, Klassenzimmer_4_OnTransition_End
-	setvar VAR_TEMP_0, 0
-	end
+    @ default: nicht triggern
+    setvar VAR_TEMP_0, 1
 
-Klassenzimmer_4_OnTransition_End:
-	end
+    @ wenn noch nicht passiert -> triggern
+    goto_if_set FLAG_CTF_CLASSROOM_EARTHMAN_TUBE, 1f
+    setvar VAR_TEMP_0, 0
+1:
+    end
+
+Klassenzimmer_4_OnFrame:
+    map_script_2 VAR_TEMP_0, 0, Klassenzimmer_4_EventScript_FirstEntry
+    .2byte 0
+
 
 
 @ Erstes Betreten des Klassenzimmers

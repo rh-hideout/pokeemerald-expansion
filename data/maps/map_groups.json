@@ -650,14 +650,16 @@
     "Blackhansa_Floor1",
     "Blackhansa_Floor2",
     "Klassenzimmer_SoEn",
-    "Flag3_CD"
+    "Flag3_CD",
+    "Lagerhalle"
   ],
   "gMapGroup_Flag4": [
     "entryMapFlag4",
     "Ludwigshafen",
     "Klassenzimmer_4",
     "Arena_Flag4",
-    "GlitchHaus"
+    "GlitchHaus",
+    "LuTransfer"
   ],
   "gMapGroup_Flag5": [
     "entryMapFlag5"

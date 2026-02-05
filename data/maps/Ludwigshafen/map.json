@@ -14,8 +14,8 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_ROUTE104",
-      "offset": -29,
+      "map": "MAP_LU_TRANSFER",
+      "offset": 5,
       "direction": "right"
     }
   ],
@@ -119,7 +119,7 @@
       "x": 10,
       "y": 12,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY_BATTLE_TENT_LOBBY",
+      "dest_map": "MAP_GLITCH_HAUS",
       "dest_warp_id": "0"
     },
     {
@@ -201,7 +201,7 @@
       "elevation": 0,
       "var": "VAR_TEMP_0",
       "var_value": "0",
-      "script": "NULL"
+      "script": "Ludwigshafen_EventScript_IntroTrigger"
     },
     {
       "type": "trigger",
@@ -210,7 +210,7 @@
       "elevation": 0,
       "var": "VAR_TEMP_0",
       "var_value": "0",
-      "script": "NULL"
+      "script": "Ludwigshafen_EventScript_IntroTrigger"
     }
   ],
   "bg_events": [
