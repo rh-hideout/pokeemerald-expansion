@@ -475,7 +475,7 @@ DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to s
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander ends when Dondozo faints and Tatsugiri can be hit")
+DOUBLE_BATTLE_TEST("Commander clears when Dondozo is replaced and Tatsugiri can be hit")
 {
     GIVEN {
         PLAYER(SPECIES_DONDOZO) { HP(1); Speed(1); }
