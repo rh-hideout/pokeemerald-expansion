@@ -297,12 +297,7 @@ gBattleAnimMove_NaturalGift::
 	playsewithpan SE_M_TELEPORT, -64
 	delay 8
 	createvisualtask AnimTask_BlendPalInAndOutByTag, 5, ANIM_TAG_HOLLOW_ORB, RGB(0, 0, 19), 14, 0, 3
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=43/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=85/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=128/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=170/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=213/256
+	call CreateDragonDanceOrbs
 	delay 30
 	playsewithpan SE_M_TELEPORT, -64
 	delay 30
@@ -1864,21 +1859,7 @@ gBattleAnimMove_EarthPower::
 	waitbgfadein
 	loopsewithpan 145, SOUND_PAN_TARGET 11, 3
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 3, 25, 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=5, y=0
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=-10, y=-15
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=0, y=25
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=15, y=5
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=-25, y=0
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=30, y=30
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=-27, y=25
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=0, y=8
+	call CreateDragonRageFirePlumes
 	waitforvisualfinish
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_TARGET, 66, 0, 0, 4
 	waitforvisualfinish
@@ -1893,29 +1874,7 @@ gBattleAnimMove_Switcheroo::
 	waitbgfadein
 	loadspritegfx ANIM_TAG_ITEM_BAG
 	loadspritegfx ANIM_TAG_SPEED_DUST
-	create_trick_bag_sprite ANIM_ATTACKER, 2, initial_y=-39, wave_offset=80
-	create_trick_bag_sprite ANIM_ATTACKER, 2, initial_y=-39, wave_offset=208
-	delay 16
-	playsewithpan SE_M_SKETCH, 0
-	createvisualtask AnimTask_StretchTargetUp, 3
-	createvisualtask AnimTask_StretchAttackerUp, 3
-	delay 30
-	playsewithpan SE_M_DOUBLE_TEAM, 0
-	delay 24
-	playsewithpan SE_M_DOUBLE_TEAM, 0
-	delay 16
-	playsewithpan SE_M_DOUBLE_TEAM, 0
-	delay 16
-	playsewithpan SE_M_DOUBLE_TEAM, 0
-	delay 16
-	playsewithpan SE_M_DOUBLE_TEAM, 0
-	delay 16
-	playsewithpan SE_M_DOUBLE_TEAM, 0
-	delay 16
-	playsewithpan SE_M_ATTRACT, 0
-	createvisualtask AnimTask_ShakeMon, 3, ANIM_ATTACKER, 5, 0, 7, 2
-	createvisualtask AnimTask_ShakeMon, 3, ANIM_TARGET, 5, 0, 7, 2
-	waitforvisualfinish
+	call SwapItems
 	restorebg
 	waitbgfadein
 	end
@@ -2120,12 +2079,10 @@ gBattleAnimMove_ShadowClaw::
 	createsprite gHorizontalLungeSpriteTemplate ANIM_ATTACKER, 2, 6, 4
 	delay 4
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 18, 1
-	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=-10, animation=0
-	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=10, animation=0
+	call CreateClawSlashes1
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	delay 12
-	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=-10, animation=1
-	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=10, animation=1
+	call CreateClawSlashes2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	waitforvisualfinish
 	restorebg
@@ -2151,9 +2108,7 @@ gBattleAnimMove_ThunderFang::
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_ATTACKER, 2, 0, 16
 	delay 1
-	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=-32, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=32, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
+	call CreateBite
 	delay 1
 	playsewithpan SE_M_TRI_ATTACK2, SOUND_PAN_TARGET
 	invert_screen_color scenery=0x1 | 0x2 | 0x4
@@ -2188,9 +2143,7 @@ gBattleAnimMove_IceFang::
 	createsprite gIceCrystalSpiralInwardLarge, ANIM_ATTACKER, 2, 96
 	createsprite gIceCrystalSpiralInwardLarge, ANIM_ATTACKER, 2, 160
 	createsprite gIceCrystalSpiralInwardLarge, ANIM_ATTACKER, 2, 224
-	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=-32, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=32, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
+	call CreateBite
 	waitforvisualfinish
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=2
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 4, 7, 1
@@ -2217,9 +2170,7 @@ gBattleAnimMove_FireFang::
 	createsprite gFireSpiralInwardSpriteTemplate, ANIM_TARGET, 1, 64
 	createsprite gFireSpiralInwardSpriteTemplate, ANIM_TARGET, 1, 128
 	createsprite gFireSpiralInwardSpriteTemplate, ANIM_TARGET, 1, 196
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=-32, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=32, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
-	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
+	call CreateBite
 	delay 10
 	waitforvisualfinish
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=2
@@ -2246,7 +2197,7 @@ gBattleAnimMove_ShadowSneak::
 	waitforvisualfinish
 	playsewithpan SE_M_FAINT_ATTACK, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 18, 6, 1, 3
-	attacker_fade_to_invisible priority=2, step_delay=1
+	attacker_fade_to_invisible step_delay=1
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	invisible ANIM_ATTACKER
@@ -3736,12 +3687,7 @@ gBattleAnimMove_LunarDance::
 	playsewithpan 203, SOUND_PAN_ATTACKER
 	delay 8
 	createvisualtask AnimTask_BlendPalInAndOutByTag, 5, ANIM_TAG_HOLLOW_ORB, RGB(0, 0, 19), 14, 0, 3
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=43/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=85/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=128/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=170/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=213/256
+	call CreateDragonDanceOrbs
 	delay 30
 	playsewithpan 203, SOUND_PAN_ATTACKER
 	delay 30
@@ -3882,22 +3828,19 @@ gBattleAnimMove_SeedFlare::
 	delay 30
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 40, 1
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 10, 0x900, 0x60, 1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=1
+	call CreateRazorLeafCutters
 	delay 2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 0x5a, 0x800, 0x60, 1
 	delay 8
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 0x32, 0xa00, 0x60, 1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=1
+	call CreateRazorLeafCutters
 	delay 2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 20, 0x900, 0x60, 1
 	delay 8
 	createsprite gSeedFlareGreenWavesTemplate, ANIM_ATTACKER, 0x28, 0x46, 0x7c0, 0x60, 1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=1
+	call CreateRazorLeafCutters
 	delay 2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	delay 8
@@ -4421,12 +4364,7 @@ gBattleAnimMove_QuiverDance::
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
 	delay 8
 	createvisualtask AnimTask_BlendPalInAndOutByTag, 5, ANIM_TAG_HOLLOW_ORB, RGB_GREEN, 14, 0, 3
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=43/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=85/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=128/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=170/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=213/256
+	call CreateDragonDanceOrbs
 	delay 30
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
 	delay 30
@@ -4602,16 +4540,7 @@ FlameChargeSwirl:
 
 gBattleAnimMove_Coil::
 	loadspritegfx ANIM_TAG_TENDRILS
-	loopsewithpan SE_M_SCRATCH, SOUND_PAN_TARGET, 0x6, 0x4
-	create_constrict_binding_sprite ANIM_TARGET, 4, initial_x=0, initial_y=16, affine_animation=0, squeezes=2
-	delay 7
-	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0, initial_y=0, affine_animation=0, squeezes=2
-	create_constrict_binding_sprite ANIM_TARGET, 2, initial_x=0, initial_y=8, affine_animation=1, squeezes=2
-	delay 7
-	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0, initial_y=-8, affine_animation=1, squeezes=2
-	delay 8
-	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 3, 0, 6, 1
-	delay 20
+	call CreateConstrictBinding
 	createvisualtask AnimTask_ShakeMon2, 131, ANIM_TARGET, 4, 0, 5, 1
 	createvisualtask AnimTask_StretchTargetUp, 3
 	playsewithpan SE_M_BIND, SOUND_PAN_TARGET
@@ -8188,23 +8117,7 @@ gBattleAnimMove_FlowerShield::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 8, RGB(29, 19, 27)
 	waitforvisualfinish
 	playsewithpan SE_M_PETAL_DANCE, SOUND_PAN_ATTACKER
-	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0, initial_y=-24, target_y=8, duration=140
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=16, initial_y=-24, target_y=8, duration=100
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-16, initial_y=-24, target_y=8, duration=100
-	delay 15
-	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0, initial_y=-24, target_y=8, duration=140
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=32, initial_y=-24, target_y=8, duration=100
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-32, initial_y=-24, target_y=8, duration=100
-	delay 15
-	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0, initial_y=-24, target_y=8, duration=140
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=24, initial_y=-24, target_y=8, duration=100
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-24, initial_y=-24, target_y=8, duration=100
-	delay 30
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=16, initial_y=-24, target_y=0, duration=100
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-16, initial_y=-24, target_y=0, duration=100
-	delay 30
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=20, initial_y=-16, target_y=14, duration=80
-	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-20, initial_y=-18, target_y=16, duration=80
+	call CreatePetals
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 8, 0, RGB(29, 19, 27)
 	waitforvisualfinish
@@ -10495,8 +10408,7 @@ gBattleAnimMove_Leafage::
 	loadspritegfx ANIM_TAG_IMPACT @hit
 	monbg ANIM_DEF_PARTNER
 	playsewithpan SE_M_RAZOR_WIND2, SOUND_PAN_ATTACKER
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=1
-	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=1
+	call CreateRazorLeafCutters
 	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=0, target_both=1
 	delay 20
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
@@ -11894,17 +11806,11 @@ PsychicFangsShatteredWall:
 	goto PsychicFangsEnd
 
 PsychicFangsCommon:
-	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=-32, y=-32, animation=1, x_velocity=819/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=32, y=32, animation=5, x_velocity=-819/256, y_velocity=-819/256, half_duration=10
-	delay 10
+	call CreateCrunch1
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=-8, y=0, relative_to=ANIM_TARGET, animation=1
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 5, 2
 	delay 16
-	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=32, y=-32, animation=7, x_velocity=-819/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=-32, y=32, animation=3, x_velocity=819/256, y_velocity=-819/256, half_duration=10
-	delay 10
+	call CreateCrunch2
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=8, y=0, relative_to=ANIM_TARGET, animation=1
 	return
 
@@ -12412,15 +12318,15 @@ gBattleAnimMove_TearfulLook::
 	delay 53
 	loopsewithpan SE_M_TAIL_WHIP, SOUND_PAN_ATTACKER, 0xC, 0x2
 	delay 8
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=0
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=1
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=2
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=3
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, type=0
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, type=1
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, type=2
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, type=3
 	delay 8
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=0
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=1
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=2
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=1, type=3
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, type=0
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, type=1
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, type=2
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, type=3
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 5, 0, RGB(0, 15, 31)
 	waitforvisualfinish
@@ -13235,7 +13141,7 @@ gBattleAnimMove_DoubleIronBash::
 	loadspritegfx ANIM_TAG_GUST
 	loadspritegfx ANIM_TAG_IMPACT
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 0x1c, 0x2
-	metallic_shine priority=5, permanent=0
+	metallic_shine permanent=0
 	waitforvisualfinish
 	monbg ANIM_DEF_PARTNER
 	splitbgprio ANIM_TARGET
@@ -13494,16 +13400,7 @@ gBattleAnimMove_Teatime::
 gBattleAnimMove_Octolock::
 	loadspritegfx ANIM_TAG_TENDRILS
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_TENDRILS, 0, 12, 12, RGB(24, 12, 15)    @Pinkish Red
-	loopsewithpan SE_M_SCRATCH, SOUND_PAN_TARGET 0x6 0x4
-	create_constrict_binding_sprite ANIM_TARGET, 4, initial_x=0, initial_y=16, affine_animation=0, squeezes=2
-	delay 7
-	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0, initial_y=0, affine_animation=0, squeezes=2
-	create_constrict_binding_sprite ANIM_TARGET, 2, initial_x=0, initial_y=8, affine_animation=1, squeezes=2
-	delay 7
-	create_constrict_binding_sprite ANIM_TARGET, 3, initial_x=0, initial_y=-8, affine_animation=1, squeezes=2
-	delay 8
-	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 3, 0, 6, 1
-	delay 20
+	call CreateConstrictBinding
 	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=8, color=RGB_RED
 	playsewithpan SE_M_BIND, SOUND_PAN_TARGET
 	setarg 7, -1
@@ -13748,9 +13645,7 @@ gBattleAnimMove_SnapTrap::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SHARP_TEETH, 0, 10, 10, RGB(8, 20, 1)
 	monbg ANIM_TARGET
 	setalpha 12, 8
-	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=-32, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=32, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
+	call CreateBite
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 4, 0, 6, 1
 	playsewithpan SE_M_VITAL_THROW2, SOUND_PAN_TARGET
 	delay 10
@@ -14104,7 +13999,7 @@ OverdriveRings:
 	createsprite gHyperVoiceRingSpriteTemplate, ANIM_ATTACKER, 0, 0x2d, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 1, 0, 6, 1
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_DEF_PARTNER, 1, 0, 6, 1
-	shake_battle_platforms priority=0x2, x_offset=0x1, y_offset=0x0, shakes=0x6, delay=0x1
+	shake_battle_platforms priority=2, x_offset=1, y_offset=0, shakes=6, delay=1
 	createvisualtask SoundTask_WaitForCry, 0x5
 	return
 
@@ -14330,7 +14225,7 @@ gBattleAnimMove_FalseSurrender::
 	delay 1
 	createvisualtask AnimTask_InitAttackerFadeFromInvisible, 0x2,
 	monbg ANIM_ATTACKER
-	attacker_fade_from_invisible priority=2, step_delay=1
+	attacker_fade_from_invisible step_delay=1
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	delay 1
@@ -15329,30 +15224,8 @@ gBattleAnimMove_JungleHealing::
 	loadspritegfx ANIM_TAG_SPARKLE_2
 	fadetobg BG_SNUGGLE_FOREVER
 	waitbgfadeout
-	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=16, offset_y=26, subpriority=-1, animation=2, duration=150
-	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
-	delay 10
-	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=-32, offset_y=20, subpriority=1, animation=1, duration=140
-	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
-	delay 10
-	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=32, offset_y=22, subpriority=1, animation=0, duration=130
-	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
-	delay 10
-	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=-16, offset_y=25, subpriority=-1, animation=3, duration=120
-	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
-	delay 40
-	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=32, initial_y=26, velocity_x=-1, wave_amplitude=3, duration=30
-	delay 5
-	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
-	delay 5
-	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=-48, initial_y=20, velocity_x=1, wave_amplitude=2, duration=30
-	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
-	delay 5
-	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
-	delay 5
-	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=48, initial_y=26, velocity_x=-2, wave_amplitude=3, duration=18
-	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
-	delay 10
+	call CreateIngrainRoots
+	call CreateIngrainOrbs
 	playsewithpan SE_M_STAT_INCREASE, 0xc0
 	createvisualtask AnimTask_StatusClearedEffect, 0x2, 0x1
 	waitforvisualfinish
@@ -16234,20 +16107,13 @@ MountainGaleIceRock:
 	createsprite gSpriteTemplate_MountainGaleRock, ANIM_ATTACKER, 2, 0x14, 0xfff8, 0xfff8, 0xfff8, 0x14, 0xffe0
 	return
 
-
-
 gBattleAnimMove_VictoryDance::
 	loadspritegfx ANIM_TAG_HOLLOW_ORB
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 40, 6, 3, 3
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
 	delay 8
 	createvisualtask AnimTask_BlendPalInAndOutByTag, 5, ANIM_TAG_HOLLOW_ORB, RGB(29, 24, 2), 14, 0, 3 @;Light orange
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=43/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=85/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=128/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=170/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=213/256
+	call CreateDragonDanceOrbs
 	delay 30
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
 	delay 30
@@ -20008,21 +19874,7 @@ TeraBlastGround:
 	delay 40
 	loopsewithpan SE_M_FLAME_WHEEL2, SOUND_PAN_TARGET 11, 3
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 3, 25, 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=5, y=0
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=-10, y=-15
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=0, y=25
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=15, y=5
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=-25, y=0
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=30, y=30
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=-27, y=25
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=0, y=8
+	call CreateDragonRageFirePlumes
 	delay 1
 	loopsewithpan SE_M_FLAME_WHEEL2, SOUND_PAN_TARGET 11, 3
 	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=5, y=0
@@ -20042,21 +19894,7 @@ TeraBlastGround:
 	loopsewithpan SE_M_FLAME_WHEEL2, SOUND_PAN_TARGET 11, 3
 	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=0, y=8
 	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=5, y=0
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=-10, y=-15
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=0, y=25
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=15, y=5
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=-25, y=0
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=30, y=30
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=-27, y=25
-	delay 1
-	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=0, y=8
+	call CreateDragonRageFirePlumes
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
 	call EternabeamGeyser
 	delay 5
@@ -24849,17 +24687,25 @@ gBattleAnimMove_CrushClaw::
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 6, 4
 	delay 4
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 18, 1
-	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=-10, animation=0
-	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=10, animation=0
+	call CreateClawSlashes1
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	delay 12
-	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=-10, animation=1
-	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=10, animation=1
+	call CreateClawSlashes2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	waitforvisualfinish
 	blendoff
 	clearmonbg ANIM_TARGET
 	end
+
+CreateClawSlashes1:
+	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=-10, animation=0
+	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=10, animation=0
+	return
+
+CreateClawSlashes2:
+	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=-10, animation=1
+	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=10, animation=1
+	return
 
 gBattleAnimMove_Aromatherapy::
 	playsewithpan SE_M_PETAL_DANCE, 0
@@ -24909,17 +24755,17 @@ gBattleAnimMove_FakeTears::
 	createvisualtask AnimTask_RockMonBackAndForth, 5, ANIM_ATTACKER, 2, 1
 	loopsewithpan SE_M_TAIL_WHIP, SOUND_PAN_ATTACKER, 12, 4
 	delay 8
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0, type=0
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0, type=1
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_ATTACKER, type=0
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_ATTACKER, type=1
 	delay 8
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0, type=2
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0, type=3
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_ATTACKER, type=2
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_ATTACKER, type=3
 	delay 8
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0, type=0
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0, type=1
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_ATTACKER, type=0
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_ATTACKER, type=1
 	delay 8
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0, type=2
-	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=0, type=3
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_ATTACKER, type=2
+	create_tear_drop_sprite ANIM_ATTACKER, 2, relative_to=ANIM_ATTACKER, type=3
 	waitforvisualfinish
 	end
 
@@ -25258,12 +25104,7 @@ gBattleAnimMove_DragonDance::
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
 	delay 8
 	createvisualtask AnimTask_BlendPalInAndOutByTag, 5, ANIM_TAG_HOLLOW_ORB, RGB(0, 0, 19), 14, 0, 3
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=43/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=85/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=128/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=170/256
-	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=213/256
+	call CreateDragonDanceOrbs
 	delay 30
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
 	delay 30
@@ -25272,6 +25113,15 @@ gBattleAnimMove_DragonDance::
 	clearmonbg ANIM_ATTACKER
 	delay 1
 	end
+
+CreateDragonDanceOrbs:
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=0/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=43/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=85/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=128/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=170/256
+	create_dragon_dance_orb_sprite ANIM_ATTACKER, 2, angle=213/256
+	return
 
 gBattleAnimMove_ShockWave::
 	loadspritegfx ANIM_TAG_ELECTRIC_ORBS
@@ -25979,6 +25829,13 @@ gBattleAnimMove_DragonRage::
 	waitforvisualfinish
 	loopsewithpan SE_M_FLAME_WHEEL2, SOUND_PAN_TARGET, 11, 3
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 3, 25, 1
+	call CreateDragonRageFirePlumes
+	waitforvisualfinish
+	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_TARGET, 66, 0, 0, 4
+	waitforvisualfinish
+	end
+
+CreateDragonRageFirePlumes:
 	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=5, y=0
 	delay 1
 	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=-10, y=-15
@@ -25994,10 +25851,7 @@ gBattleAnimMove_DragonRage::
 	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 2, relative_to=1, x=-27, y=25
 	delay 1
 	create_dragon_rage_fire_plume_sprite ANIM_TARGET, 66, relative_to=1, x=0, y=8
-	waitforvisualfinish
-	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_TARGET, 66, 0, 0, 4
-	waitforvisualfinish
-	end
+	return
 
 gBattleAnimMove_RainDance::
 	loadspritegfx ANIM_TAG_RAIN_DROPS
@@ -26018,9 +25872,7 @@ gBattleAnimMove_Bite::
 	loadspritegfx ANIM_TAG_IMPACT
 	monbg ANIM_TARGET
 	setalpha 12, 8
-	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=-32, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=32, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
+	call CreateBite
 	delay 10
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=2
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 4, 7, 1
@@ -26030,6 +25882,12 @@ gBattleAnimMove_Bite::
 	delay 1
 	end
 
+CreateBite:
+	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=-32, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=0, y=32, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
+	return
+
 gBattleAnimMove_Crunch::
 	loadspritegfx ANIM_TAG_SHARP_TEETH
 	loadspritegfx ANIM_TAG_IMPACT
@@ -26037,17 +25895,11 @@ gBattleAnimMove_Crunch::
 	fadetobg BG_DARK
 	waitbgfadein
 	setalpha 12, 8
-	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=-32, y=-32, animation=1, x_velocity=819/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=32, y=32, animation=5, x_velocity=-819/256, y_velocity=-819/256, half_duration=10
-	delay 10
+	call CreateCrunch1
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=-8, y=0, relative_to=ANIM_TARGET, animation=1
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 5, 2
 	waitforvisualfinish
-	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=32, y=-32, animation=7, x_velocity=-819/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=-32, y=32, animation=3, x_velocity=819/256, y_velocity=-819/256, half_duration=10
-	delay 10
+	call CreateCrunch2
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=8, y=0, relative_to=ANIM_TARGET, animation=1
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 8, 4, 2
 	waitforvisualfinish
@@ -26058,14 +25910,26 @@ gBattleAnimMove_Crunch::
 	waitbgfadein
 	end
 
+CreateCrunch1:
+	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=-32, y=-32, animation=1, x_velocity=819/256, y_velocity=819/256, half_duration=10
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=32, y=32, animation=5, x_velocity=-819/256, y_velocity=-819/256, half_duration=10
+	delay 10
+	return
+
+CreateCrunch2:
+	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=32, y=-32, animation=7, x_velocity=-819/256, y_velocity=819/256, half_duration=10
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=-32, y=32, animation=3, x_velocity=819/256, y_velocity=-819/256, half_duration=10
+	delay 10
+	return
+
 gBattleAnimMove_Clamp::
 	loadspritegfx ANIM_TAG_CLAMP
 	loadspritegfx ANIM_TAG_IMPACT
 	monbg ANIM_TARGET
 	setalpha 12, 8
-	playsewithpan SE_M_VICEGRIP, SOUND_PAN_TARGET
-	create_clamp_jaw_sprite ANIM_ATTACKER, 2, x=-32, y=0, animation=2, x_velocity=819/256, y_velocity=0/256, half_duration=10
-	create_clamp_jaw_sprite ANIM_ATTACKER, 2, x=32, y=0, animation=6, x_velocity=-819/256, y_velocity=0/256, half_duration=10
+	call CreateClampJaw
 	delay 10
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=2
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 3, 0, 5, 1
@@ -26074,6 +25938,12 @@ gBattleAnimMove_Clamp::
 	blendoff
 	waitforvisualfinish
 	end
+
+CreateClampJaw:
+	playsewithpan SE_M_VICEGRIP, SOUND_PAN_TARGET
+	create_clamp_jaw_sprite ANIM_ATTACKER, 2, x=-32, y=0, animation=2, x_velocity=819/256, y_velocity=0/256, half_duration=10
+	create_clamp_jaw_sprite ANIM_ATTACKER, 2, x=32, y=0, animation=6, x_velocity=-819/256, y_velocity=0/256, half_duration=10
+	return
 
 gBattleAnimMove_IceBeam::
 	monbg ANIM_TARGET
@@ -27513,6 +27383,22 @@ gBattleAnimMove_PetalDance::
 	setalpha 12, 8
 	playsewithpan SE_M_PETAL_DANCE, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 12, 6, 6, 3
+	call CreatePetals
+	waitforvisualfinish
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 24, 0, 0, 5
+	delay 3
+	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
+	create_basic_hitsplat_sprite ANIM_ATTACKER, 3, x=0, y=0, relative_to=ANIM_TARGET, animation=0
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 6, 0, 8, 1
+	waitforvisualfinish
+	delay 8
+	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 7
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
+	blendoff
+	end
+
+CreatePetals:
 	create_petal_dance_big_flower_sprite ANIM_ATTACKER, 2, initial_x=0, initial_y=-24, target_y=8, duration=140
 	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=16, initial_y=-24, target_y=8, duration=100
 	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-16, initial_y=-24, target_y=8, duration=100
@@ -27530,19 +27416,7 @@ gBattleAnimMove_PetalDance::
 	delay 30
 	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=20, initial_y=-16, target_y=14, duration=80
 	create_petal_dance_small_flower_sprite ANIM_ATTACKER, 2, initial_x=-20, initial_y=-14, target_y=16, duration=80
-	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 24, 0, 0, 5
-	delay 3
-	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
-	create_basic_hitsplat_sprite ANIM_ATTACKER, 3, x=0, y=0, relative_to=ANIM_TARGET, animation=0
-	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 6, 0, 8, 1
-	waitforvisualfinish
-	delay 8
-	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 7
-	waitforvisualfinish
-	clearmonbg ANIM_DEF_PARTNER
-	blendoff
-	end
+	return
 
 gBattleAnimMove_RazorLeaf::
 	loadspritegfx ANIM_TAG_LEAF
@@ -27552,6 +27426,20 @@ gBattleAnimMove_RazorLeaf::
 	setalpha 12, 8
 	delay 1
 	loopsewithpan SE_M_POISON_POWDER, SOUND_PAN_ATTACKER, 10, 5
+	call CreateRazorLeaves
+	delay 60
+	playsewithpan SE_M_RAZOR_WIND2, SOUND_PAN_ATTACKER
+	call CreateRazorLeafCutters
+	delay 20
+	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 8, 1
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_DEF_PARTNER, 2, 0, 8, 1
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
+	blendoff
+	end
+
+CreateRazorLeaves:
 	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=-3, upward_delta_y=-2, upward_duration=10
 	delay 2
 	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=-1, upward_delta_y=-1, upward_duration=15
@@ -27571,18 +27459,12 @@ gBattleAnimMove_RazorLeaf::
 	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=2, upward_delta_y=-6, upward_duration=11
 	delay 2
 	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=-3, upward_delta_y=-5, upward_duration=8
-	delay 60
-	playsewithpan SE_M_RAZOR_WIND2, SOUND_PAN_ATTACKER
+	return
+
+CreateRazorLeafCutters:
 	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=1
 	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=1
-	delay 20
-	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
-	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 8, 1
-	createvisualtask AnimTask_ShakeMon2, 2, ANIM_DEF_PARTNER, 2, 0, 8, 1
-	waitforvisualfinish
-	clearmonbg ANIM_DEF_PARTNER
-	blendoff
-	end
+	return
 
 gBattleAnimMove_NaturePower::
 	@ No actual animation, uses the animation of a move from src/data/battle_environment.h instead
@@ -28015,15 +27897,13 @@ gBattleAnimMove_MetalClaw::
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 6, 4
 	delay 2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
-	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=-10, animation=0
-	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=10, animation=0
+	call CreateClawSlashes1
 	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=SHAKE_MON_Y, battler_selector=SHAKE_MON_TARGET
 	delay 8
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 6, 4
 	delay 2
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
-	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=-10, animation=1
-	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=10, animation=1
+	call CreateClawSlashes2
 	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=SHAKE_MON_Y, battler_selector=SHAKE_MON_TARGET
 	waitforvisualfinish
 	end
@@ -28341,6 +28221,13 @@ gBattleAnimMove_Mimic::
 
 gBattleAnimMove_Constrict::
 	loadspritegfx ANIM_TAG_TENDRILS
+	call CreateConstrictBinding
+	playsewithpan SE_M_BIND, SOUND_PAN_TARGET
+	setarg 7, -1
+	waitforvisualfinish
+	end
+
+CreateConstrictBinding:
 	loopsewithpan SE_M_SCRATCH, SOUND_PAN_TARGET, 6, 4
 	create_constrict_binding_sprite ANIM_TARGET, 4, initial_x=0, initial_y=16, affine_animation=0, squeezes=2
 	delay 7
@@ -28351,10 +28238,7 @@ gBattleAnimMove_Constrict::
 	delay 8
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 3, 0, 6, 1
 	delay 20
-	playsewithpan SE_M_BIND, SOUND_PAN_TARGET
-	setarg 7, -1
-	waitforvisualfinish
-	end
+	return
 
 gBattleAnimMove_Curse::
 	choosetwoturnanim CurseGhost, CurseStats
@@ -28555,6 +28439,12 @@ gBattleAnimMove_FurySwipes::
 gBattleAnimMove_Ingrain::
 	loadspritegfx ANIM_TAG_ROOTS
 	loadspritegfx ANIM_TAG_ORBS
+	call CreateIngrainRoots
+	call CreateIngrainOrbs
+	waitforvisualfinish
+	end
+
+CreateIngrainRoots:
 	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=16, offset_y=26, subpriority=-1, animation=2, duration=150
 	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
 	delay 10
@@ -28567,6 +28457,9 @@ gBattleAnimMove_Ingrain::
 	create_ingrain_root_sprite ANIM_ATTACKER, 2, offset_x=-16, offset_y=25, subpriority=-1, animation=3, duration=120
 	playsewithpan SE_M_SCRATCH, SOUND_PAN_ATTACKER
 	delay 40
+	return
+
+CreateIngrainOrbs:
 	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=32, initial_y=26, velocity_x=-1, wave_amplitude=3, duration=30
 	delay 5
 	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
@@ -28579,8 +28472,7 @@ gBattleAnimMove_Ingrain::
 	create_ingrain_orb_sprite ANIM_ATTACKER, 3, initial_x=48, initial_y=26, velocity_x=-2, wave_amplitude=3, duration=18
 	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
 	delay 10
-	waitforvisualfinish
-	end
+	return
 
 gBattleAnimMove_Present::
 	loadspritegfx ANIM_TAG_ITEM_BAG
@@ -28846,6 +28738,10 @@ gBattleAnimMove_Encore::
 gBattleAnimMove_Trick::
 	loadspritegfx ANIM_TAG_ITEM_BAG
 	loadspritegfx ANIM_TAG_SPEED_DUST
+	call SwapItems
+	end
+
+SwapItems:
 	create_trick_bag_sprite ANIM_ATTACKER, 2, initial_y=-40, wave_offset=80
 	create_trick_bag_sprite ANIM_ATTACKER, 2, initial_y=-40, wave_offset=208
 	delay 16
@@ -28869,7 +28765,7 @@ gBattleAnimMove_Trick::
 	createvisualtask AnimTask_ShakeMon, 3, ANIM_ATTACKER, 5, 0, 7, 2
 	createvisualtask AnimTask_ShakeMon, 3, ANIM_TARGET, 5, 0, 7, 2
 	waitforvisualfinish
-	end
+	return
 
 gBattleAnimMove_Wish::
 	loadspritegfx ANIM_TAG_GOLD_STARS
@@ -29361,8 +29257,7 @@ gBattleAnimMove_DragonClaw::
 	createsprite gFireSpinSpriteTemplate, ANIM_ATTACKER, 2, 0, 28, 528, 30, 13, 50, ANIM_ATTACKER
 	delay 2
 	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_RAZOR_WIND, SOUND_PAN_TARGET
-	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=-10, animation=0
-	create_claw_slash_sprite ANIM_TARGET, 2, x=-10, y=10, animation=0
+	call CreateClawSlashes1
 	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=SHAKE_MON_Y, battler_selector=SHAKE_MON_TARGET
 	createsprite gFireSpinSpriteTemplate, ANIM_ATTACKER, 2, 0, 32, 480, 20, 16, -46, ANIM_ATTACKER
 	delay 2
@@ -29374,8 +29269,7 @@ gBattleAnimMove_DragonClaw::
 	createsprite gFireSpinSpriteTemplate, ANIM_ATTACKER, 2, 0, 28, 512, 25, 16, 46, ANIM_ATTACKER
 	delay 2
 	createvisualtask SoundTask_PlaySE1WithPanning, 5, SE_M_RAZOR_WIND, SOUND_PAN_TARGET
-	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=-10, animation=1
-	create_claw_slash_sprite ANIM_TARGET, 2, x=10, y=10, animation=1
+	call CreateClawSlashes2
 	shake_mon_or_platform velocity=-4, shake_timer=1, shake_duration=10, type=SHAKE_MON_Y, battler_selector=SHAKE_MON_TARGET
 	createsprite gFireSpinSpriteTemplate, ANIM_ATTACKER, 2, 0, 33, 464, 30, 15, -50, ANIM_ATTACKER
 	delay 2
@@ -30426,25 +30320,7 @@ gBattleAnimMove_MagicalLeaf::
 	delay 1
 	loopsewithpan SE_M_POISON_POWDER, SOUND_PAN_ATTACKER, 10, 5
 	createvisualtask AnimTask_CycleMagicalLeafPal, 5
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=-3, upward_delta_y=-2, upward_duration=10
-	delay 2
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=-1, upward_delta_y=-1, upward_duration=15
-	delay 2
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=-4, upward_delta_y=-4, upward_duration=7
-	delay 2
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=3, upward_delta_y=-3, upward_duration=11
-	delay 2
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=-1, upward_delta_y=-6, upward_duration=8
-	delay 2
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=2, upward_delta_y=-1, upward_duration=12
-	delay 2
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=-3, upward_delta_y=-4, upward_duration=13
-	delay 2
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=4, upward_delta_y=-5, upward_duration=7
-	delay 2
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=2, upward_delta_y=-6, upward_duration=11
-	delay 2
-	create_razor_leaf_particle_sprite ANIM_ATTACKER, 2, upward_delta_x=-3, upward_delta_y=-5, upward_duration=8
+	call CreateRazorLeaves
 	delay 60
 	playsewithpan SE_M_RAZOR_WIND2, SOUND_PAN_ATTACKER
 	create_razor_leaf_cutter_sprite ANIM_TARGET, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=32, wave_amplitude=20, target_both=0
@@ -31175,9 +31051,7 @@ Status_Clamp:
 	loadspritegfx ANIM_TAG_IMPACT
 	monbg ANIM_TARGET
 	setalpha 12, 8
-	playsewithpan SE_M_VICEGRIP, SOUND_PAN_TARGET
-	create_clamp_jaw_sprite ANIM_ATTACKER, 2, x=-32, y=0, animation=2, x_velocity=819/256, y_velocity=0/256, half_duration=10
-	create_clamp_jaw_sprite ANIM_ATTACKER, 2, x=32, y=0, animation=6, x_velocity=-819/256, y_velocity=0/256, half_duration=10
+	call CreateClampJaw
 	delay 10
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=2
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 3, 0, 5, 1
