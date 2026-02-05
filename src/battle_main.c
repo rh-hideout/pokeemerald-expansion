@@ -3249,6 +3249,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->moveResultFlags[battler] = 0;
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
     gBattleStruct->battlerState[battler].fainted = FALSE;
+    gBattleStruct->battlerState[battler].activateDancer = FALSE;
     gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
