@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
     }
 }
 
-SINGLE_BATTLE_TEST("Strength Sap will not drain users hp due to Liquid Ooze")
+SINGLE_BATTLE_TEST("Strength Sap will not drain users hp due to Liquid Ooze if user is Magic Guard protected")
 {
     GIVEN {
         PLAYER(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
@@ -226,7 +226,7 @@ SINGLE_BATTLE_TEST("Strength Sap fails if Heal Block applies")
     }
 }
 
-SINGLE_BATTLE_TEST("Strangth Sap will drain users HP if target has Liquid Ooze")
+SINGLE_BATTLE_TEST("Strength Sap will drain users HP if target has Liquid Ooze")
 {
     s16 lostHp;
     s32 atkStat;
