@@ -8108,10 +8108,7 @@ static void Cmd_forcerandomswitch(void)
             }
 
             if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-            {
-            DebugPrintf("%s",__func__);
                 SwitchPartyOrderInGameMulti(gBattlerTarget, gBattleStruct->monToSwitchIntoId[gBattlerTarget]);
-            }
         }
     }
     else

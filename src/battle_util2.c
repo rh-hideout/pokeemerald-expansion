@@ -128,6 +128,12 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
             if (!IsOnPlayerSide(battlerId))
                 continue;
 
+            // Don't update battler's orders for party menu if the switching battler and updating battler
+            // don't share a party, unless it's a 6v6 multi where player and partner party are temporarily
+            // merged for party menu and summary screen viewing
+            if (!(IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams()) && !BattlersShareParty(battler, battlerId))
+                continue;
+
             for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
                 gBattlePartyCurrentOrder[i] = gBattleStruct->battlerPartyOrders[battlerId][i];
 

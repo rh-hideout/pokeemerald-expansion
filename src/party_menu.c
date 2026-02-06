@@ -237,6 +237,7 @@ static void CB2_InitPartyMenu(void);
 static void CB2_ReloadPartyMenu(void);
 static bool8 ShowPartyMenu(void);
 static bool8 ReloadPartyMenu(void);
+static void LoadBattlePartyCurrentOrderForLayout(u8 layout);
 static void SetPartyMonsAllowedInMinigame(void);
 static void ExitPartyMenu(void);
 static bool8 AllocPartyMenuBg(void);
@@ -558,6 +559,9 @@ static void InitPartyMenu(u8 menuType, u8 layout, u8 partyAction, bool8 keepCurs
         if (layout != KEEP_PARTY_LAYOUT)
             gPartyMenu.layout = layout;
 
+        if (menuType == PARTY_MENU_TYPE_IN_BATTLE && IsMultiBattle() == TRUE)
+            LoadBattlePartyCurrentOrderForLayout(gPartyMenu.layout);
+
         for (i = 0; i < ARRAY_COUNT(sPartyMenuInternal->data); i++)
             sPartyMenuInternal->data[i] = 0;
         for (i = 0; i < ARRAY_COUNT(sPartyMenuInternal->windowId); i++)
@@ -580,6 +584,22 @@ static void InitPartyMenu(u8 menuType, u8 layout, u8 partyAction, bool8 keepCurs
         CalculatePlayerPartyCount();
         SetMainCallback2(CB2_InitPartyMenu);
     }
+}
+
+static void LoadBattlePartyCurrentOrderForLayout(u8 layout)
+{
+    enum BattlerId battler;
+
+    if (!gMain.inBattle || IsMultiBattle() != TRUE || gBattleStruct == NULL)
+        return;
+
+    if (layout == PARTY_LAYOUT_MULTI_FULL_PARTNER || layout == PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER)
+        battler = B_BATTLER_2;
+    else
+        battler = B_BATTLER_0;
+
+    if (battler < gBattlersCount)
+        memcpy(gBattlePartyCurrentOrder, gBattleStruct->battlerPartyOrders[battler], sizeof(gBattlePartyCurrentOrder));
 }
 
 static void RefreshPartyMenu(void) //Refreshes the party menu without restarting tasks
@@ -1504,19 +1524,18 @@ void Task_HandleChooseMonInput(u8 taskId)
                 MoveCursorToConfirm();
             }
             break;
-        case R_BUTTON:
+        case R_BUTTON: // Only used in full-team multis to cycle player/partner parties
+            PlaySE(SE_M_HARDEN);
+            UpdatePartyToFieldOrder();
+
             if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL)
-            {
-                PlaySE(SE_M_HARDEN);
-                RefreshPartyMenu();
                 gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL_PARTNER;
-            }
-            else if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER)
-            {
-                PlaySE(SE_M_HARDEN);
-                RefreshPartyMenu();
+            else
                 gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL;
-            }
+
+            LoadBattlePartyCurrentOrderForLayout(gPartyMenu.layout);
+            UpdatePartyToBattleOrder();
+            RefreshPartyMenu();
             break;
         }
     }
@@ -3197,22 +3216,28 @@ static void CursorCb_Summary(u8 taskId)
 
 static void CB2_ShowPokemonSummaryScreen(void)
 {
-    if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER)
-    {
-        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_2], gPartyMenu.slotId, CalculatePartyCount(B_TRAINER_2) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
-    }
-    else if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL)
-    {
-        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_0], gPartyMenu.slotId, CalculatePartyCount(B_TRAINER_0) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
-    }
-    else if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
+    if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !AreMultiPartiesFullTeams())
-            GetMultiPartyForSummaryScreen();
-        else if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+        {
+            // Keep summary and return-to-menu consistent with the current in-battle switch order.
+            LoadBattlePartyCurrentOrderForLayout(gPartyMenu.layout);
             UpdatePartyToBattleOrder();
+            GetMultiPartyForSummaryScreen();
+        }
+        else
+        {
+            if (IsMultiBattle() == TRUE)
+                LoadBattlePartyCurrentOrderForLayout(gPartyMenu.layout);
+            UpdatePartyToBattleOrder();
+        }
 
-        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_0], gPartyMenu.slotId, CalculatePartyCountOfSide(B_BATTLER_0) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
+        if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER)
+            ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_2], gPartyMenu.slotId, CalculatePartyCount(B_TRAINER_2) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
+        else if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL)
+            ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_0], gPartyMenu.slotId, CalculatePartyCount(B_TRAINER_0) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
+        else
+            ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_0], gPartyMenu.slotId, CalculatePartyCountOfSide(B_BATTLER_0) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
     }
     else if (gPartyMenu.menuType == PARTY_MENU_TYPE_CHOOSE_HALF)
     {
