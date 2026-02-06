@@ -100,16 +100,16 @@
 
 	.macro multi_do type:req
 	callnative AreMultiPartiesFullTeams
-	.if VAR_RESULT != TRUE
+	goto_if_eq VAR_RESULT, TRUE, MultiDoPlayerPartyReduceBypass
 		special ReducePlayerPartyToSelectedMons
-	.endif
+	MultiDoPlayerPartyReduceBypass:
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA
 	setvar VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER
 	special CallFrontierUtilFunc @ saves the mon order, so the non-selected mons get restored afterwards
 	setvar VAR_0x8004, SPECIAL_BATTLE_MULTI
-	.if VAR_RESULT != TRUE
+	goto_if_eq VAR_RESULT, TRUE, MultiDoChooseMonsBypass
 		setvar VAR_0x8005, \type | MULTI_BATTLE_CHOOSE_MONS
-	.endif
+	MultiDoChooseMonsBypass:
 	special DoSpecialTrainerBattle
 	waitstate
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY
