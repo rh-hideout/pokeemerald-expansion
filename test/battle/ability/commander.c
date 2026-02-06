@@ -480,19 +480,19 @@ DOUBLE_BATTLE_TEST("Commander clears when Dondozo is replaced and Tatsugiri can 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_VOLT_SWITCH) == EFFECT_HIT_ESCAPE);
         PLAYER(SPECIES_DONDOZO) { HP(1); Speed(1); }
-        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); Speed(2); }
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); MaxHP(400); HP(400); Speed(2); }
         PLAYER(SPECIES_SEADRA) { Speed(3); }
-        OPPONENT(SPECIES_VENUSAUR) { Speed(6); }
-        OPPONENT(SPECIES_LUXRAY) { Speed(5); }
+        OPPONENT(SPECIES_VENUSAUR) { Speed(5); }
+        OPPONENT(SPECIES_LUXRAY) { Speed(6); }
         OPPONENT(SPECIES_BUTTERFREE) { Speed(4); }
     } WHEN {
         TURN {
+            MOVE(opponentLeft, MOVE_SEED_BOMB, target: playerRight);
             MOVE(opponentRight, MOVE_VOLT_SWITCH, target: playerLeft);
             SEND_OUT(opponentRight, 2);
             SEND_OUT(playerLeft, 2);
         }
         TURN {
-            MOVE(opponentLeft, MOVE_SEED_BOMB, target: playerRight);
             MOVE(opponentRight, MOVE_BUG_BUZZ, target: playerRight);
         }
     } SCENE {
@@ -500,8 +500,6 @@ DOUBLE_BATTLE_TEST("Commander clears when Dondozo is replaced and Tatsugiri can 
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, opponentRight);
         MESSAGE("Dondozo fainted!");
-        MESSAGE("2 sent out Butterfree!");
-        MESSAGE("Go! Seadra!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEED_BOMB, opponentLeft);
         HP_BAR(playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BUZZ, opponentRight);

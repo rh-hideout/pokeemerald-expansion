@@ -7389,15 +7389,6 @@ static void Cmd_switchindataupdate(void)
 
     SwitchInClearSetData(battler, &oldData.volatiles);
 
-    if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
-    {
-        u32 partner = BATTLE_PARTNER(battler);
-        gBattleStruct->battlerState[battler].commanderSpecies = SPECIES_NONE;
-        gBattleStruct->battlerState[partner].commandingDondozo = FALSE;
-        if (IsBattlerAlive(partner))
-            gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
-    }
-
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE
         && gBattleMons[battler].maxHP / 2 >= gBattleMons[battler].hp
         && IsBattlerAlive(battler)
