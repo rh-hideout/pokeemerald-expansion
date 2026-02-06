@@ -119,8 +119,8 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
         // and uses indexes 0-2, but we still use the combined party order.
         if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && trainer == B_TRAINER_2)
         {
-            battlerPartyId += PARTY_SIZE / 2;
-            switchInPartyId += PARTY_SIZE / 2;
+            battlerPartyId += MULTI_PARTY_SIZE;
+            switchInPartyId += MULTI_PARTY_SIZE;
         }
 
         for (enum BattlerId battlerId = 0; battlerId < gBattlersCount; battlerId++)

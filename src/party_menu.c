@@ -1504,6 +1504,20 @@ void Task_HandleChooseMonInput(u8 taskId)
                 MoveCursorToConfirm();
             }
             break;
+        case R_BUTTON:
+            if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL)
+            {
+                PlaySE(SE_M_HARDEN);
+                RefreshPartyMenu();
+                gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL_PARTNER;
+            }
+            else if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER)
+            {
+                PlaySE(SE_M_HARDEN);
+                RefreshPartyMenu();
+                gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL;
+            }
+            break;
         }
     }
 }
@@ -1783,6 +1797,14 @@ static u16 PartyMenuButtonHandler(s8 *slotPtr)
     if (JOY_NEW(START_BUTTON))
         return START_BUTTON;
 
+    // Cycling player and party teams for in-battle party menu in full-team multis
+    if ((gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL
+     || gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER)
+     && (JOY_NEW(R_BUTTON) || JOY_NEW(L_BUTTON)))
+    {
+        return R_BUTTON;
+    }
+
     if (movementDir && gPartiesCount[B_TRAINER_0] != 0)
     {
         UpdateCurrentPartySelection(slotPtr, movementDir);
@@ -1801,10 +1823,16 @@ static void UpdateCurrentPartySelection(s8 *slotPtr, s8 movementDir)
     s8 newSlotId = *slotPtr;
     u8 layout = gPartyMenu.layout;
 
-    if (layout == PARTY_LAYOUT_SINGLE)
+    if (layout == PARTY_LAYOUT_SINGLE
+     || layout == PARTY_LAYOUT_MULTI_FULL
+     || layout == PARTY_LAYOUT_MULTI_FULL_PARTNER)
+    {
         UpdatePartySelectionSingleLayout(slotPtr, movementDir);
+    }
     else
+    {
         UpdatePartySelectionDoubleLayout(slotPtr, movementDir);
+    }
 
     if (*slotPtr != newSlotId)
     {
@@ -3169,11 +3197,19 @@ static void CursorCb_Summary(u8 taskId)
 
 static void CB2_ShowPokemonSummaryScreen(void)
 {
-    if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
+    if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER)
+    {
+        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_2], gPartyMenu.slotId, CalculatePartyCount(B_TRAINER_2) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
+    }
+    else if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL)
+    {
+        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_0], gPartyMenu.slotId, CalculatePartyCountOfSide(B_BATTLER_0) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
+    }
+    else if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !AreMultiPartiesFullTeams())
             GetMultiPartyForSummaryScreen();
-        else
+        else if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
             UpdatePartyToBattleOrder();
 
         ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_0], gPartyMenu.slotId, CalculatePartyCountOfSide(B_BATTLER_0) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
@@ -7505,6 +7541,8 @@ static u8 GetPartyLayoutFromBattleType(void)
 {
     if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams())
         return PARTY_LAYOUT_MULTI;
+    if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams())
+        return PARTY_LAYOUT_MULTI_FULL;
     if (!IsDoubleBattle() || gPartiesCount[B_TRAINER_0] == 1) // Draw the single layout in a double battle where the player has only one pokemon.
         return PARTY_LAYOUT_SINGLE;
     return PARTY_LAYOUT_DOUBLE;
@@ -7537,7 +7575,9 @@ void ChooseMonForInBattleItem(void)
 
 static u8 GetPartyMenuActionsTypeInBattle(struct Pokemon *mon)
 {
-    if (GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_SPECIES) != SPECIES_NONE && GetMonData(mon, MON_DATA_IS_EGG) == FALSE)
+    if (GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_SPECIES) != SPECIES_NONE
+     && GetMonData(mon, MON_DATA_IS_EGG) == FALSE
+     && gPartyMenu.layout != PARTY_LAYOUT_MULTI_FULL_PARTNER)
     {
         if (gPartyMenu.action == PARTY_ACTION_SEND_OUT)
             return ACTIONS_SEND_OUT;
@@ -7608,10 +7648,8 @@ static bool8 TrySwitchInPokemon(void) // grintoul TO DO - currently bugged as mo
     }
     gSelectedMonPartyId = battlePartyId;
     gPartyMenuUseExitCallback = TRUE;
-    DebugPrintf("gBattlerInMenuId %d partyIndex %d", gBattlerInMenuId, gBattlerPartyIndexes[gBattlerInMenuId]);
     newSlot = GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[gBattlerInMenuId]);
     GetPartyAndSlotFromPartyMenuId(newSlot, &party, &newPartySlot);
-    DebugPrintf("slot %d, newSlot %d, partySlot %d, newPartySlot %d modSlot %d modNewSlot %d modParty %d, modNewParty %d", slot, newSlot, partySlot, newPartySlot, GetPartyIdFromBattleSlot(slot), GetPartyIdFromBattleSlot(newSlot), GetPartyIdFromBattleSlot(partySlot), GetPartyIdFromBattleSlot(newPartySlot));
     SwitchPartyMonSlots(newSlot, slot);
     SwapPartyPokemon(&party[newPartySlot], &party[partySlot]);
     return TRUE;
@@ -7627,7 +7665,14 @@ static void BufferBattlePartyOrder(u8 *partyBattleOrder, u8 flankId)
     u8 partyIds[PARTY_SIZE];
     int i, j;
 
-    if (IsMultiBattle() == TRUE)
+    if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams() == TRUE)
+    {
+        partyBattleOrder[0] = (0 << 4) | 1;
+        partyBattleOrder[1] = (2 << 4) | 3;
+        partyBattleOrder[2] = (4 << 4) | 5;
+        return;
+    }
+    else if (IsMultiBattle() == TRUE)
     {
         // Party ids are packed in 4 bits at a time
         // i.e. the party id order below would be 0, 3, 5, 4, 2, 1, and the two parties would be 0,5,4 and 3,2,1
@@ -7693,7 +7738,14 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, enum 
     else
         leftBattler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
 
-    if (IsMultiBattle() == TRUE)
+    if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams() == TRUE)
+    {
+        partyBattleOrder[0] = (0 << 4) | 1;
+        partyBattleOrder[1] = (2 << 4) | 3;
+        partyBattleOrder[2] = (4 << 4) | 5;
+        return;
+    }
+    else if (IsMultiBattle() == TRUE)
     {
         if (flankId != 0)
         {
@@ -8008,8 +8060,8 @@ static void Task_WaitBeforeMultiPartnerFullParty(u8 taskId)
     // data[0] used as a timer afterwards rather than the x pos
     if (++data[0] == 64)
     {
-        gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER;
         RefreshPartyMenu();
+        gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER;
         data[0] = 0;
         gTasks[taskId].func = Task_WaitAfterMultiPartnerFullParty;
     }
