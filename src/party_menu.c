@@ -3203,7 +3203,7 @@ static void CB2_ShowPokemonSummaryScreen(void)
     }
     else if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL)
     {
-        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_0], gPartyMenu.slotId, CalculatePartyCountOfSide(B_BATTLER_0) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
+        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, gParties[B_TRAINER_0], gPartyMenu.slotId, CalculatePartyCount(B_TRAINER_0) - 1, CB2_ReturnToPartyMenuFromSummaryScreen);
     }
     else if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
     {
