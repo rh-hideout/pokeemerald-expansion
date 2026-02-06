@@ -132,3 +132,33 @@ SINGLE_BATTLE_TEST("Absorb does not drain any HP if the move is blocked by Disgu
         EXPECT_EQ(player->hp, 1);
     }
 }
+
+DOUBLE_BATTLE_TEST("Spread Move: Heals the correct amount from all Pokemon")
+{
+    s16 damage[3];
+    s16 healed[3];
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PARABOLIC_CHARGE) == EFFECT_ABSORB);
+        PLAYER(SPECIES_RAICHU) { HP(1); }
+        PLAYER(SPECIES_SQUIRTLE);
+        OPPONENT(SPECIES_SQUIRTLE);
+        OPPONENT(SPECIES_SQUIRTLE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_PARABOLIC_CHARGE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PARABOLIC_CHARGE, playerLeft);
+
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        HP_BAR(playerRight, captureDamage: &damage[1]);
+        HP_BAR(opponentRight, captureDamage: &damage[2]);
+
+        HP_BAR(playerLeft, captureDamage: &healed[0]);
+        HP_BAR(playerLeft, captureDamage: &healed[1]);
+        HP_BAR(playerLeft, captureDamage: &healed[2]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(-0.5), healed[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(-0.5), healed[1]);
+        EXPECT_MUL_EQ(damage[2], Q_4_12(-0.5), healed[2]);
+    }
+}

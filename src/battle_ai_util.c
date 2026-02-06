@@ -3829,24 +3829,21 @@ bool32 HasChoiceEffect(u32 battler)
     }
 }
 
-static u32 FindMoveUsedXTurnsAgo(u32 battlerId, u32 x)
-{
-    s32 i, index = gBattleHistory->moveHistoryIndex[battlerId];
-    for (i = 0; i < x; i++)
-    {
-        if (--index < 0)
-            index = AI_MOVE_HISTORY_COUNT - 1;
-    }
-    return gBattleHistory->moveHistory[battlerId][index];
-}
-
 bool32 IsWakeupTurn(u32 battler)
 {
-    // Check if rest was used 2 turns ago
-    if ((gBattleMons[battler].status1 & STATUS1_SLEEP) == 1 && GetMoveEffect(FindMoveUsedXTurnsAgo(battler, 2)) == EFFECT_REST)
-        return TRUE;
-    else // no way to know
+    u32 sleepTurns = gBattleMons[battler].status1 & STATUS1_SLEEP;
+    u32 toSub;
+
+    if (sleepTurns == 0)
         return FALSE;
+
+    // Early Bird reduces the sleep timer twice as fast.
+    if (gAiLogicData->abilities[battler] == ABILITY_EARLY_BIRD)
+        toSub = 2;
+    else
+        toSub = 1;
+
+    return sleepTurns <= toSub;
 }
 
 bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)

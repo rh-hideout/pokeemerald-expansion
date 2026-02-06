@@ -3335,12 +3335,43 @@ static void ForewarnChooseMove(u32 battler)
         }
     }
 
-    for (bestId = 0, i = 1; i < count; i++)
+    if (count == 0)
     {
-        if (data[i].power > data[bestId].power)
+        Free(data);
+        return;
+    }
+
+    u32 tieCount = 1;
+    u8 bestPower = data[0].power;
+
+    bestId = 0;
+    for (i = 1; i < count; i++)
+    {
+        if (data[i].power > bestPower)
+        {
+            bestPower = data[i].power;
             bestId = i;
-        else if (data[i].power == data[bestId].power && Random() & 1)
-            bestId = i;
+            tieCount = 1;
+        }
+        else if (data[i].power == bestPower)
+        {
+            tieCount++;
+        }
+    }
+
+    if (tieCount > 1)
+    {
+        u32 tieIndex = RandomUniform(RNG_FOREWARN, 0, tieCount - 1);
+        for (i = 0, bestId = 0; i < count; i++)
+        {
+            if (data[i].power != bestPower)
+                continue;
+            if (tieIndex-- == 0)
+            {
+                bestId = i;
+                break;
+            }
+        }
     }
 
     gEffectBattler = data[bestId].battler;
@@ -4155,7 +4186,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             return effect; // Note: It returns effect as to not record the ability if Frisk does not activate.
         case ABILITY_FOREWARN:
-            if (!gSpecialStatuses[battler].switchInAbilityDone)
+            if (!gSpecialStatuses[battler].switchInAbilityDone && !IsOpposingSideEmpty(battler))
             {
                 ForewarnChooseMove(battler);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_FOREWARN;
@@ -4602,6 +4633,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
              && IsBattlerAlive(battler)
              && gBattleStruct->battlerState[partner].commanderSpecies == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
+             && (gChosenActionByBattler[partner] != B_ACTION_SWITCH || HasBattlerActedThisTurn(partner))
              && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
             {
                 SaveBattlerAttacker(gBattlerAttacker);
@@ -6082,6 +6114,17 @@ bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
     return FALSE;
 }
 
+bool32 IsSafeguardProtected(u32 battlerAtk, u32 battlerDef, u32 abilityAtk)
+{
+    if (!(gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD))
+        return FALSE;
+    if (IsBattlerAlly(battlerAtk, battlerDef))
+        return TRUE;
+    if (abilityAtk == ABILITY_INFILTRATOR)
+        return FALSE;
+    return TRUE;
+}
+
 bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect effect, enum FunctionCallOption option)
 {
     const u8 *battleScript = NULL;
@@ -6236,7 +6279,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abil
         abilityDef = ABILITY_FLOWER_VEIL;
         battleScript = BattleScript_FlowerVeilProtects;
     }
-    else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
+    else if (IsSafeguardProtected(battlerAtk, battlerDef, abilityAtk))
     {
         battleScript = BattleScript_SafeguardProtected;
     }
@@ -8262,7 +8305,7 @@ static inline uq4_12_t GetScreensModifier(struct DamageContext *ctx)
     {
         return UQ_4_12(1.0);
     }
-    if (ctx->abilityAtk == ABILITY_INFILTRATOR)
+    if (ctx->abilityAtk == ABILITY_INFILTRATOR && !IsBattlerAlly(ctx->battlerAtk, ctx->battlerDef))
     {
         if (ctx->updateFlags)
             RecordAbilityBattle(ctx->battlerAtk, ctx->abilityDef);
@@ -9809,6 +9852,7 @@ bool32 CanFling(u32 battler)
       || (GetConfig(B_KLUTZ_FLING_INTERACTION) >= GEN_5 && GetBattlerAbility(battler) == ABILITY_KLUTZ)
       || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
       || gBattleMons[battler].volatiles.embargo
+      || (GetItemTMHMIndex(item) != 0 && GetItemImportance(item) == 1) // don't fling reusable TMs
       || GetFlingPowerFromItemId(item) == 0
       || !CanBattlerGetOrLoseItem(battler, item))
         return FALSE;

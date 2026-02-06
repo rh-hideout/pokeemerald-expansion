@@ -2851,7 +2851,7 @@ static void Cmd_printselectionstringfromtable(void)
 bool32 HasBattlerActedThisTurn(u32 battler)
 {
     u32 i;
-    for (i = 0; i < gCurrentTurnActionNumber; i++)
+    for (i = 0; i <= gCurrentTurnActionNumber; i++)
     {
         if (gBattlerByTurnOrder[i] == battler)
             return TRUE;
@@ -3094,7 +3094,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     case MOVE_EFFECT_PARALYSIS:
     case MOVE_EFFECT_TOXIC:
     case MOVE_EFFECT_FROSTBITE:
-        if (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !primary)
+        if (IsSafeguardProtected(gBattlerAttacker, gEffectBattler, GetBattlerAbility(gBattlerAttacker)) && !primary)
             gBattlescriptCurrInstr = battleScript;
         else if (CanSetNonVolatileStatus(
                     gBattlerAttacker,
@@ -3108,7 +3108,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     case MOVE_EFFECT_CONFUSION:
         if (!CanBeConfused(gEffectBattler)
          || gBattleMons[gEffectBattler].volatiles.confusionTurns
-         || (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !primary))
+         || (IsSafeguardProtected(gBattlerAttacker, gEffectBattler, GetBattlerAbility(gBattlerAttacker)) && !primary))
         {
             gBattlescriptCurrInstr = battleScript;
         }
@@ -3497,8 +3497,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         gBattlescriptCurrInstr = battleScript;
         break;
     case MOVE_EFFECT_INCINERATE:
-        if ((gBattleMons[gEffectBattler].item >= FIRST_BERRY_INDEX && gBattleMons[gEffectBattler].item <= LAST_BERRY_INDEX)
-         || (B_INCINERATE_GEMS >= GEN_6 && GetBattlerHoldEffect(gEffectBattler) == HOLD_EFFECT_GEMS))
+        if (((gBattleMons[gEffectBattler].item >= FIRST_BERRY_INDEX && gBattleMons[gEffectBattler].item <= LAST_BERRY_INDEX)
+          || (B_INCINERATE_GEMS >= GEN_6 && GetBattlerHoldEffect(gEffectBattler) == HOLD_EFFECT_GEMS))
+         && battlerAbility != ABILITY_STICKY_HOLD)
         {
             gLastUsedItem = gBattleMons[gEffectBattler].item;
             gBattleMons[gEffectBattler].item = 0;
@@ -6848,7 +6849,9 @@ static void Cmd_moveend(void)
 
                 for (i = 0; i < gBattlersCount; i++)
                 {
-                    if (IsBattlerTurnDamaged(i) && EmergencyExitCanBeTriggered(i))
+                    if (!IsBattleMoveStatus(gCurrentMove)
+                     && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+                     && EmergencyExitCanBeTriggered(i))
                     {
                         emergencyExitBattlers |= 1u << i;
                         numEmergencyExitBattlers++;
@@ -7001,11 +7004,21 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_PICKPOCKET:
+        {
+            u16 attackerItem = gBattleMons[gBattlerAttacker].item;
+            bool32 hasPendingStolenItem = FALSE;
+
+            if (attackerItem == ITEM_NONE
+             && GetMoveEffect(gCurrentMove) == EFFECT_STEAL_ITEM
+             && gBattleStruct->changedItems[gBattlerAttacker] != ITEM_NONE)
+            {
+                attackerItem = gBattleStruct->changedItems[gBattlerAttacker];
+                hasPendingStolenItem = TRUE;
+            }
+
             if (IsBattlerAlive(gBattlerAttacker)
-              && gBattleMons[gBattlerAttacker].item != ITEM_NONE        // Attacker must be holding an item
-              && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker]))   // But not knocked off
-              && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)    // Pickpocket requires contact
-              && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))           // Obviously attack needs to have worked
+              && attackerItem != ITEM_NONE        // Attacker must have an item (including pending stolen item)
+              && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker])))   // But not knocked off
             {
                 u8 battlers[4] = {0, 1, 2, 3};
                 SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
@@ -7016,12 +7029,19 @@ static void Cmd_moveend(void)
                     if (battler != gBattlerAttacker                                                     // Cannot pickpocket yourself
                       && GetBattlerAbility(battler) == ABILITY_PICKPOCKET                               // Target must have pickpocket ability
                       && IsBattlerTurnDamaged(battler)                                                  // Target needs to have been damaged
+                      && IsMoveMakingContact(gBattlerAttacker, battler, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)    // Pickpocket requires contact
+                      && !(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)             // Move needs to have affected this battler
                       && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)              // Subsitute unaffected
                       && IsBattlerAlive(battler)                                                        // Battler must be alive to pickpocket
                       && gBattleMons[battler].item == ITEM_NONE                                         // Pickpocketer can't have an item already
-                      && CanStealItem(battler, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))   // Cannot steal plates, mega stones, etc
+                      && CanStealItem(battler, gBattlerAttacker, attackerItem))                         // Cannot steal plates, mega stones, etc
                     {
                         gBattlerTarget = gBattlerAbility = battler;
+                        if (hasPendingStolenItem)
+                        {
+                            gBattleMons[gBattlerAttacker].item = attackerItem;
+                            gBattleStruct->changedItems[gBattlerAttacker] = ITEM_NONE;
+                        }
                         // Battle scripting is super brittle so we shall do the item exchange now (if possible)
                         if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
                             StealTargetItem(gBattlerTarget, gBattlerAttacker);  // Target takes attacker's item
@@ -7035,6 +7055,7 @@ static void Cmd_moveend(void)
             }
             gBattleScripting.moveendState++;
             break;
+        }
         case MOVEEND_THIRD_MOVE_BLOCK:
             switch (moveEffect)
             {
@@ -10302,7 +10323,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
     {
         if (gSideTimers[GetBattlerSide(battler)].mistTimer
             && !flags.certain && gCurrentMove != MOVE_CURSE
-            && !(battler == gBattlerTarget && GetBattlerAbility(gBattlerAttacker) == ABILITY_INFILTRATOR))
+            && !(battler == gBattlerTarget && GetBattlerAbility(gBattlerAttacker) == ABILITY_INFILTRATOR && !IsBattlerAlly(gBattlerAttacker, battler)))
         {
             if (flags.allowPtr)
             {
@@ -11245,6 +11266,7 @@ static void Cmd_transformdataexecution(void)
     gChosenMove = MOVE_UNAVAILABLE;
     gBattlescriptCurrInstr = cmd->nextInstr;
     if (gBattleMons[gBattlerTarget].volatiles.transformed
+        || DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove)
         || gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON
         || IsSemiInvulnerable(gBattlerTarget, EXCLUDE_COMMANDER))
     {
@@ -13382,6 +13404,10 @@ bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, u32 move)
         return FALSE;
     else if (MoveIgnoresSubstitute(move))
         return FALSE;
+    else if (GetConfig(B_INFILTRATOR_SUBSTITUTE) < GEN_6)
+        return TRUE;
+    else if (GetMoveEffect(move) == EFFECT_TRANSFORM || GetMoveEffect(move) == EFFECT_SKY_DROP)
+        return TRUE;
     else if (IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_INFILTRATOR))
         return FALSE;
     else
@@ -17365,21 +17391,26 @@ void BS_TryInstruct(void)
         gSpecialStatuses[gBattlerTarget].instructedChosenTarget = gBattleStruct->moveTarget[gBattlerTarget] | 0x4;
         gCalledMove = move;
         u32 moveIndex;
+        bool32 foundMove = FALSE;
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             if (gBattleMons[gBattlerTarget].moves[moveIndex] == gCalledMove)
             {
-                gCurrMovePos = moveIndex;
-                moveIndex = MAX_MON_MOVES;
+                foundMove = TRUE;
                 break;
             }
         }
-        if (moveIndex != MAX_MON_MOVES || gBattleMons[gBattlerTarget].pp[gCurrMovePos] == 0)
+        if (!foundMove)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
+        else if (gBattleMons[gBattlerTarget].pp[moveIndex] == 0)
         {
             gBattlescriptCurrInstr = cmd->failInstr;
         }
         else
         {
+            gCurrMovePos = moveIndex;
             gBattleScripting.battler = gBattlerAttacker; // for message
             gEffectBattler = gBattleStruct->lastMoveTarget[gBattlerTarget];
             gBattlescriptCurrInstr = cmd->nextInstr;
