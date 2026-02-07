@@ -1136,7 +1136,7 @@ static inline bool32 IsBattlerUsingBeakBlast(u32 battler)
     return !HasBattlerActedThisTurn(battler);
 }
 
-static inline bool32 IsBattlerUsingInstructBannedChargingMove(u32 battler)
+static inline bool32 IsInstructBannedChargingMove(u32 battler)
 {
     enum BattleMoveEffects moveEffect;
 
@@ -17392,7 +17392,8 @@ void BS_TryInstruct(void)
     u16 move = gLastPrintedMoves[gBattlerTarget];
     if (move == MOVE_NONE || move == MOVE_UNAVAILABLE || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_RECHARGE)
         || IsMoveInstructBanned(move)
-        || IsBattlerUsingInstructBannedChargingMove(gBattlerTarget)
+        || IsInstructBannedChargingMove(gBattlerTarget)
+        || gBattleMons[gBattlerTarget].volatiles.semiInvulnerable == STATE_SKY_DROP
         || gBattleMoveEffects[GetMoveEffect(move)].twoTurnEffect
         || (GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX)
         || IsZMove(move)
