@@ -1136,6 +1136,19 @@ static inline bool32 IsBattlerUsingBeakBlast(u32 battler)
     return !HasBattlerActedThisTurn(battler);
 }
 
+static inline bool32 IsBattlerUsingInstructBannedChargingMove(u32 battler)
+{
+    enum BattleMoveEffects moveEffect;
+
+    if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE || HasBattlerActedThisTurn(battler))
+        return FALSE;
+
+    moveEffect = GetMoveEffect(gChosenMoveByBattler[battler]);
+    return moveEffect == EFFECT_FOCUS_PUNCH
+        || moveEffect == EFFECT_BEAK_BLAST
+        || moveEffect == EFFECT_SHELL_TRAP;
+}
+
 static void Cmd_attackcanceler(void)
 {
     CMD_ARGS();
@@ -17379,6 +17392,7 @@ void BS_TryInstruct(void)
     u16 move = gLastPrintedMoves[gBattlerTarget];
     if (move == MOVE_NONE || move == MOVE_UNAVAILABLE || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_RECHARGE)
         || IsMoveInstructBanned(move)
+        || IsBattlerUsingInstructBannedChargingMove(gBattlerTarget)
         || gBattleMoveEffects[GetMoveEffect(move)].twoTurnEffect
         || (GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX)
         || IsZMove(move)

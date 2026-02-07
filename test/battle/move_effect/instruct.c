@@ -52,6 +52,37 @@ DOUBLE_BATTLE_TEST("Instruct fails if move is banned by Instruct")
     }
 }
 
+DOUBLE_BATTLE_TEST("Instruct fails if target is preparing Focus Punch, Beak Blast or Shell Trap")
+{
+    u32 move, Anim;
+    PARAMETRIZE { move = MOVE_FOCUS_PUNCH; Anim = B_ANIM_FOCUS_PUNCH_SETUP; }
+    PARAMETRIZE { move = MOVE_BEAK_BLAST; Anim = B_ANIM_BEAK_BLAST_SETUP; }
+    PARAMETRIZE { move = MOVE_SHELL_TRAP; Anim = B_ANIM_SHELL_TRAP_SETUP; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
+        ASSUME(GetMoveEffect(MOVE_BEAK_BLAST) == EFFECT_BEAK_BLAST);
+        ASSUME(GetMoveEffect(MOVE_SHELL_TRAP) == EFFECT_SHELL_TRAP);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_INSTRUCT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_POUND, move); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_POUND, target: opponentLeft); }
+        TURN {
+            if (move == MOVE_SHELL_TRAP)
+                MOVE(playerRight, move);
+            else
+                MOVE(playerRight, move, target: opponentLeft);
+            MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, Anim, playerRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Instruct-called move targets the target of the move picked on its last use")
 {
     GIVEN {
