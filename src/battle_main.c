@@ -3263,7 +3263,6 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
-    gBattleStruct->battlerState[battler].stompingTantrumTimer = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
     gBattleStruct->battlerState[battler].canPickupItem = FALSE;
     gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
@@ -4001,8 +4000,8 @@ void BattleTurnPassed(void)
         gBattleMons[battler].volatiles.flinched = FALSE;
         gBattleMons[battler].volatiles.powder = FALSE;
 
-        if (gBattleStruct->battlerState[battler].stompingTantrumTimer > 0)
-            gBattleStruct->battlerState[battler].stompingTantrumTimer--;
+        if (gBattleMons[battler].volatiles.stompingTantrumTimer > 0)
+            gBattleMons[battler].volatiles.stompingTantrumTimer--;
     }
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)

@@ -872,7 +872,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         if (battleScript != NULL)
         {
             gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses = 0;
-            gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+            gBattleMons[gBattlerAttacker].volatiles.stompingTantrumTimer = 2;
         }
         break;
     case EFFECT_REST:
@@ -3293,7 +3293,7 @@ static enum MoveEndResult MoveEndClearBits(void)
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
     if (ShouldSetStompingTantrumTimer())
-        gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+        gBattleMons[gBattlerAttacker].volatiles.stompingTantrumTimer = 2;
 
     if (gSpecialStatuses[gBattlerAttacker].instructedChosenTarget)
         gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].instructedChosenTarget & 0x3;

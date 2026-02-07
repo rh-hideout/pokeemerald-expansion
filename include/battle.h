@@ -494,19 +494,18 @@ struct BattlerState
     u32 sleepClauseEffectExempt:1; // Stores whether effect should be exempt from triggering Sleep Clause (Effect Spore)
     u32 usedMicleBerry:1;
     u32 pursuitTarget:1;
-    u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
     u32 ateBoost:1;
     u32 wasAboveHalfHp:1; // For Berserk, Emergency Exit, Wimp Out and Anger Shell.
     u32 commanderSpecies:11;
     u32 selectionScriptFinished:1;
     u32 lastMoveTarget:3; // The last target on which each mon used a move, for the sake of Instruct
-    // End of Word
-    u16 hpOnSwitchout;
     u16 switchIn:1;
     u16 fainted:1;
+    // End of Word
+    u16 hpOnSwitchout;
     u16 isFirstTurn:2;
-    u16 padding:12;
+    u16 padding:14;
 };
 
 struct PartyState

@@ -1097,7 +1097,7 @@ static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum
 
 	if (abilityAtk == ABILITY_SKILL_LINK || holdEffectAtk == HOLD_EFFECT_LOADED_DICE)
         return TRUE;
-	
+
     if (moveEffect == EFFECT_TRIPLE_KICK || moveEffect == EFFECT_POPULATION_BOMB)
         return FALSE;
 
@@ -1205,7 +1205,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
     if (numTargets != 0 && numTargets == numMisses)
     {
         SetOrClearRageVolatile();
-        gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+        gBattleMons[gBattlerAttacker].volatiles.stompingTantrumTimer = 2;
     }
 
     if (calcSpreadMove)

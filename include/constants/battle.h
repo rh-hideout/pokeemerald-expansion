@@ -268,6 +268,7 @@ enum VolatileFlags
     F(VOLATILE_THROAT_CHOP_TIMER,           throatChopTimer,               (u32, B_THROAT_CHOP_TIMER)) \
     F(VOLATILE_WRAP_TURNS,                  wrapTurns,                     (u32, B_WRAP_TURNS)) \
     F(VOLATILE_SYRUP_BOMB_TIMER,            syrupBombTimer,                (u32, B_SYRUP_BOMB_TIMER)) \
+    F(VOLATILE_STOMPING_TANTRUM_TIMER,      stompingTantrumTimer,          (u32, 2)) \
     F(VOLATILE_USED_MOVES,                  usedMoves,                     (u32, MAX_BITS(MAX_MON_MOVES))) \
     F(VOLATILE_TRUANT_COUNTER,              truantCounter,                 (u32, 1)) \
     F(VOLATILE_TRUANT_SWITCH_IN_HACK,       truantSwitchInHack,            (u32, 1)) \

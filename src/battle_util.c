@@ -6737,7 +6737,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
         break;
     case EFFECT_STOMPING_TANTRUM:
-        if (gBattleStruct->battlerState[battlerAtk].stompingTantrumTimer == 1)
+        if (gBattleMons[battlerAtk].volatiles.stompingTantrumTimer == 1)
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_MAGNITUDE:
