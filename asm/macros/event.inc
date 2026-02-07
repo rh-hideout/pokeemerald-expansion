@@ -2815,6 +2815,21 @@
 	.byte \status
 	.endm
 
+	@ Makes the player and selected object (if there is one) face one another.
+	.macro facetogether
+	callnative ScriptFaceEachOther
+	.endm
+
+	@ Starts an Overworld Wild Encounter with a selected object, if possible.
+	.macro tryoverworldwildencounter
+	callnative StartWildBattleWithOWE
+	.endm
+
+	@ Start a scripted approach for an overworld wild encounter towards the player.
+	.macro overworldwildencounterapproach
+	callnative OWEApproachForBattle
+	.endm
+
 @ FRLG
 
 
