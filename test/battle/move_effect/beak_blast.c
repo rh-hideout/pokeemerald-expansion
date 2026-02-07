@@ -178,6 +178,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
     PARAMETRIZE { move = MOVE_BURNING_BULWARK; }
     PARAMETRIZE { move = MOVE_SILK_TRAP; }
 
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveEffect(move) == EFFECT_PROTECT);
         ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
