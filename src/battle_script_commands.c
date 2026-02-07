@@ -1097,7 +1097,7 @@ static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum
 
 	if (abilityAtk == ABILITY_SKILL_LINK || holdEffectAtk == HOLD_EFFECT_LOADED_DICE)
         return TRUE;
-	
+
     if (moveEffect == EFFECT_TRIPLE_KICK || moveEffect == EFFECT_POPULATION_BOMB)
         return FALSE;
 
@@ -3119,6 +3119,61 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
 
                 BattleScriptPush(battleScript);
                 gBattlescriptCurrInstr = BattleScript_MoveEffectEerieSpell;
+            }
+        }
+        break;
+    case MOVE_EFFECT_FLING:
+        if (CanFling(gBattlerAttacker, abilities[gBattlerAttacker]))
+        {
+            const u8 *storedBattleScript = battleScript;
+            gLastUsedItem = gBattleMons[gBattlerAttacker].item;
+            enum HoldEffect holdEffect = GetItemHoldEffect(gLastUsedItem);
+            gBattleStruct->flungItem = TRUE;
+
+            if (GetItemPocket(gLastUsedItem) == POCKET_BERRIES)
+            {
+                BattleScriptPush(battleScript);
+                gBattlescriptCurrInstr = BattleScript_EffectFlingConsumeBerry;
+                break;
+            }
+
+            if (IsMoveEffectBlockedByTarget(abilities[gBattlerTarget]))
+            {
+                BattleScriptPush(battleScript);
+                gBattlescriptCurrInstr = BattleScript_FlingBlockedByShieldDust;
+                break;
+            }
+
+            switch (holdEffect)
+            {
+            case HOLD_EFFECT_FLAME_ORB:
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_BURN, battleScript, NO_FLAGS);
+                break;
+            case HOLD_EFFECT_TOXIC_ORB:
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_TOXIC, battleScript, NO_FLAGS);
+                break;
+            case HOLD_EFFECT_LIGHT_BALL:
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_PARALYSIS, battleScript, NO_FLAGS);
+                break;
+            case HOLD_EFFECT_TYPE_POWER:
+                if (GetItemSecondaryId(gLastUsedItem) == TYPE_POISON)
+                    SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_POISON, battleScript, NO_FLAGS);
+                break;
+            case HOLD_EFFECT_FLINCH:
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, battleScript, NO_FLAGS);
+                break;
+            case HOLD_EFFECT_MENTAL_HERB:
+                if (ItemBattleEffects(gBattlerTarget, 0, holdEffect, IsOnFlingActivation))
+                    BattleScriptPush(storedBattleScript);
+                break;
+            case HOLD_EFFECT_WHITE_HERB:
+                if (ItemBattleEffects(gBattlerTarget, 0, holdEffect, IsOnFlingActivation))
+                    BattleScriptPush(storedBattleScript);
+                break;
+            default:
+                BattleScriptPush(battleScript);
+                gBattlescriptCurrInstr = BattleScript_RemoveItem;
+                break;
             }
         }
         break;
@@ -6454,14 +6509,22 @@ static void Cmd_removeitem(void)
     enum BattlerId battler;
     enum Item itemId = 0;
 
-    if (gBattleScripting.overrideBerryRequirements)
+    if (gBattleStruct->flungItem)
+    {
+        battler = gBattlerAttacker;
+        gBattleStruct->flungItem = FALSE;
+    }
+    else if (gBattleScripting.overrideBerryRequirements)
     {
         // bug bite / pluck - don't remove current item
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
+    else
+    {
+        battler = GetBattlerForBattleScript(cmd->battler);
+    }
 
-    battler = GetBattlerForBattleScript(cmd->battler);
     itemId = gBattleMons[battler].item;
 
     // Popped Air Balloon cannot be restored by any means.
@@ -13190,61 +13253,6 @@ void BS_JumpIfCanGigantamax(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_TryFlingHoldEffect(void)
-{
-    NATIVE_ARGS();
-    enum HoldEffect holdEffect = GetItemHoldEffect(gBattleStruct->flingItem);
-
-    if (GetItemPocket(gBattleStruct->flingItem) == POCKET_BERRIES)
-    {
-        gBattlescriptCurrInstr = BattleScript_EffectFlingConsumeBerry;
-        return;
-    }
-
-    if (IsMoveEffectBlockedByTarget(GetBattlerAbility(gBattlerTarget)))
-    {
-        gBattlescriptCurrInstr = BattleScript_FlingBlockedByShieldDust;
-        return;
-    }
-
-    switch (holdEffect)
-    {
-    case HOLD_EFFECT_FLAME_ORB:
-        SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_BURN, cmd->nextInstr, NO_FLAGS);
-        break;
-    case HOLD_EFFECT_TOXIC_ORB:
-        SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_TOXIC, cmd->nextInstr, NO_FLAGS);
-        break;
-    case HOLD_EFFECT_LIGHT_BALL:
-        SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_PARALYSIS, cmd->nextInstr, NO_FLAGS);
-        break;
-    case HOLD_EFFECT_TYPE_POWER:
-        if (GetItemSecondaryId(gBattleStruct->flingItem) != TYPE_POISON)
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        else
-            SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_POISON, cmd->nextInstr, NO_FLAGS);
-        break;
-    case HOLD_EFFECT_FLINCH:
-        SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, cmd->nextInstr, NO_FLAGS);
-        break;
-    case HOLD_EFFECT_MENTAL_HERB:
-        if (ItemBattleEffects(gBattlerTarget, 0, holdEffect, IsOnFlingActivation))
-            return;
-        else
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        break;
-    case HOLD_EFFECT_WHITE_HERB:
-        if (ItemBattleEffects(gBattlerTarget, 0, holdEffect, IsOnFlingActivation))
-            return;
-        else
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        break;
-    default:
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        break;
-    }
-}
-
 void BS_JumpIfNoWhiteOut(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
@@ -13381,7 +13389,6 @@ void BS_SetLastUsedItem(void)
 {
     NATIVE_ARGS(u8 battler);
     gLastUsedItem = gBattleMons[GetBattlerForBattleScript(cmd->battler)].item;
-    gBattleStruct->flingItem = gLastUsedItem;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -14704,7 +14711,7 @@ void BS_GetRototillerTargets(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-// TODO: There might be a way to do it without a flag
+// NOTE: There might be a way to do it without a flag
 void BS_ConsumeBerry(void)
 {
     NATIVE_ARGS(u8 battler, bool8 fromBattler);
