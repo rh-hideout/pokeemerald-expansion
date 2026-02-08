@@ -157,6 +157,17 @@ EntryMapFlag3_Text_GiveSuneon:
 	.string "Received Suneon.$"
 
 
+EntryMapFlag3_EventScript_GiveZigzagoon::
+	lock
+	givemon SPECIES_ZIGZAGOON, 15, ITEM_NONE, ball=2
+	msgbox EntryMapFlag3_Text_GiveZigzagoon, MSGBOX_DEFAULT
+	release
+	end
+
+EntryMapFlag3_Text_GiveZigzagoon:
+	.string "Received Zigzagoon.$"
+
+
 EntryMapFlag3_EventScript_GiveCelebi::
 	lock
 	givemon SPECIES_CELEBI, 50, item=ITEM_LEFTOVERS, ball=28, nature=NATURE_MODEST, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=0, defEv=3, speedEv=50, spAtkEv=50, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=15, spAtkIv=11, spDefIv=12, move1=MOVE_GIGA_DRAIN, move2=MOVE_PSYCHIC, move3=MOVE_DAZZLING_GLEAM, move4=MOVE_LEAF_STORM, shinyMode=SHINY_MODE_ALWAYS

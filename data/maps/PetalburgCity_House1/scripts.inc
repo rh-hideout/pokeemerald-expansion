@@ -5,24 +5,119 @@ PetalburgCity_House1_EventScript_Man::
 	msgbox PetalburgCity_House1_Text_TravelingIsWonderful, MSGBOX_NPC
 	end
 
-PetalburgCity_House1_EventScript_Woman::
-	msgbox PetalburgCity_House1_Text_GoOnAdventure, MSGBOX_NPC
-	end
+    .include "constants/global.inc"
+
+
+
+
+PetalburgCity_House1_EventScript_ZigzagoonForSecretPhoto::
+    lock
+    faceplayer
+
+    checkflag FLAG_CTF_PETALBURG_HOUSE1_SECRET_PHOTO
+    goto_if_eq VAR_RESULT, TRUE, PetalburgCity_House1_ZigzagoonForSecretPhoto_AlreadyDone
+
+    msgbox PetalburgCity_House1_Text_Offer, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, PetalburgCity_House1_ZigzagoonForSecretPhoto_Cancel
+
+    @ Erst checken, ob Platz im Beutel ist
+    checkitemspace ITEM_SECRET_PHOTO, 1
+    goto_if_eq VAR_RESULT, 0, PetalburgCity_House1_ZigzagoonForSecretPhoto_BagFull
+
+    @ (optional) Sicherheitscheck: Party leer?
+    getpartysize
+    goto_if_eq VAR_RESULT, 0, PetalburgCity_House1_ZigzagoonForSecretPhoto_NoPokemon
+
+PetalburgCity_House1_ZigzagoonForSecretPhoto_ChooseMon:
+    msgbox PetalburgCity_House1_Text_Choose, MSGBOX_DEFAULT
+
+    special ChoosePartyMon
+    waitstate
+    goto_if_ge VAR_0x8004, PARTY_SIZE, PetalburgCity_House1_ZigzagoonForSecretPhoto_Cancel
+
+    specialvar VAR_RESULT, ScriptGetPartyMonSpecies
+    goto_if_ne VAR_RESULT, SPECIES_ZIGZAGOON, PetalburgCity_House1_ZigzagoonForSecretPhoto_WrongMon
+
+    @ Nimmt GENAU den gewählten Slot (dein C-Special + def_special)
+    special Special_TakeChosenPartyMon
+
+    msgbox PetalburgCity_House1_Text_Thanks, MSGBOX_DEFAULT
+    giveitem ITEM_SECRET_PHOTO, 1
+
+    setflag FLAG_CTF_PETALBURG_HOUSE1_SECRET_PHOTO
+    msgbox PetalburgCity_House1_Text_Done, MSGBOX_DEFAULT
+    release
+    end
+
+PetalburgCity_House1_ZigzagoonForSecretPhoto_WrongMon:
+    msgbox PetalburgCity_House1_Text_WrongMon, MSGBOX_DEFAULT
+    goto PetalburgCity_House1_ZigzagoonForSecretPhoto_ChooseMon
+
+PetalburgCity_House1_ZigzagoonForSecretPhoto_BagFull:
+    msgbox PetalburgCity_House1_Text_BagFull, MSGBOX_DEFAULT
+    release
+    end
+
+PetalburgCity_House1_ZigzagoonForSecretPhoto_NoPokemon:
+    msgbox PetalburgCity_House1_Text_NoPokemon, MSGBOX_DEFAULT
+    release
+    end
+
+PetalburgCity_House1_ZigzagoonForSecretPhoto_AlreadyDone:
+    msgbox PetalburgCity_House1_Text_AlreadyDone, MSGBOX_DEFAULT
+    release
+    end
+
+PetalburgCity_House1_ZigzagoonForSecretPhoto_Cancel:
+    msgbox PetalburgCity_House1_Text_Cancel, MSGBOX_DEFAULT
+    release
+    end
+
+
+PetalburgCity_House1_Text_Offer:
+	.string "Psst... I collect ZIGZAGOON! If\n"
+	.string "you give me one, you'll get this\p"
+	.string "photo I found at the last\n"
+	.string "BLACKHANSA parade.$"
+
+PetalburgCity_House1_Text_Choose:
+	.string "Which ZIGZAGOON would you like to\n"
+	.string "give me?$"
+
+PetalburgCity_House1_Text_WrongMon:
+	.string "Hmm... that's not a ZIGZAGOON. It\n"
+	.string "has to be a ZIGZAGOON!$"
+
+PetalburgCity_House1_Text_Thanks:
+	.string "Ohh, perfect! That's exactly what\n"
+	.string "I was looking for!$"
+
+PetalburgCity_House1_Text_Done:
+	.string "Here is the PHOTO.$"
+
+PetalburgCity_House1_Text_BagFull:
+    .string "Your bag is full.\n"
+    .string "Make some space first.$"
+
+PetalburgCity_House1_Text_NoPokemon:
+    .string "You don't have any POKéMON$"
+
+PetalburgCity_House1_Text_AlreadyDone:
+    .string "Thanks, I have enough for now.$"
+
+PetalburgCity_House1_Text_Cancel:
+    .string "Okay, maybe later.$"
+
+
+
+
 
 PetalburgCity_House1_Text_TravelingIsWonderful:
-	.string "Traveling is wonderful!\p"
-	.string "When I was young, I roamed the seas\n"
-	.string "and the mountains!$"
+	.string "Did you know that the BLACKHANSA\n"
+	.string "BOSS likes to travel? He has \p"
+	.string "three favorite destinations that\n"
+	.string "he visits again and again. But\p"
+	.string "he keeps the exact locations to\n"
+	.string "himself.$"
 
-PetalburgCity_House1_Text_GoOnAdventure:
-	.string "Sigh…\p"
-	.string "I wish I could go on an adventure\n"
-	.string "with some POKéMON…\p"
-	.string "Crawl through some damp grass…\n"
-	.string "Climb rocky, rugged mountains…\p"
-	.string "Cross the raging seas…\n"
-	.string "Wander about in dark caves…\p"
-	.string "And, sometimes, even get a little\n"
-	.string "homesick…\p"
-	.string "It must be fabulous to travel!$"
 

@@ -422,6 +422,8 @@ extern const u16 gItemIconPalette_CherishBall[];
 //CTF
 extern const u32 gItemIcon_GsBall[];
 extern const u16 gItemIconPalette_GsBall[];
+extern const u32 gItemIcon_SecretPhoto[];
+
 // Medicine
 extern const u32 gItemIcon_Potion[];
 extern const u16 gItemIconPalette_Potion[];

@@ -4497,7 +4497,7 @@
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_FRLG_SSANNE",
       "border_filepath": "data/layouts/entryMapFlag5/border.bin",
       "blockdata_filepath": "data/layouts/entryMapFlag5/map.bin"
     },
@@ -4670,6 +4670,16 @@
       "secondary_tileset": "gTileset_Slateport",
       "border_filepath": "data/layouts/LuTransfer/border.bin",
       "blockdata_filepath": "data/layouts/LuTransfer/map.bin"
+    },
+    {
+      "id": "LAYOUT_BRIDGEROOM",
+      "name": "Bridgeroom_Layout",
+      "width": 15,
+      "height": 10,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/Bridgeroom/border.bin",
+      "blockdata_filepath": "data/layouts/Bridgeroom/map.bin"
     }
   ]
 }

@@ -392,6 +392,6 @@ OldaleTown_Text_BrendanLetsGoBack:
 	.string "{PLAYER}, you should hustle back, too.$"
 
 OldaleTown_Text_TownSign:
-	.string "OLDALE TOWN\n"
-	.string "“Where things start off scarce.”$"
+	.string "NEUOSTHEIM: Access to the Neckar\n"
+	.string "River and the City Airport.$"
 

@@ -633,14 +633,9 @@ PetalburgCity_Text_FullPartyExplanation:
 	.string "It is automatically sent to a STORAGE\n"
 	.string "BOX over a PC connection.$"
 
-PetalburgCity_Text_GymSign:
-	.string "PETALBURG CITY POKéMON GYM\n"
-	.string "LEADER: NORMAN\l"
-	.string "“A man in pursuit of power!”$"
-
 PetalburgCity_Text_CitySign:
-	.string "PETALBURG CITY\n"
-	.string "“Where people mingle with nature.”$"
+	.string "OSTSTADT: High quality of life and\n"
+	.string "cultural highlights.$"
 
 PetalburgCity_Text_WallyHouseSign:
 	.string "WALLY'S HOUSE$"

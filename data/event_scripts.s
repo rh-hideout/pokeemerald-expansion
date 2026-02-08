@@ -1224,3 +1224,5 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Lagerhalle/scripts.inc"
 
 	.include "data/maps/LuTransfer/scripts.inc"
+
+	.include "data/maps/Bridgeroom/scripts.inc"

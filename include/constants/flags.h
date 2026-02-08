@@ -1245,7 +1245,7 @@
 #define FLAG_HIDE_ROUTE104_OFFICER_F                                0x4A7 // Flag3 Officer F auf Route 104
 #define FLAG_HIDE_ROUTE104_PHONE_CORP_ID                            0x4A8 // Flag3 Phone Corp ID auf Route 104
 #define FLAG_CTF_FLAG3_CORRECT                                      0x4A9 // Flag3 Correct Flag
-#define FLAG_UNUSED_0x4AA                                           0x4AA // Unused Flag
+#define FLAG_CTF_PETALBURG_HOUSE1_SECRET_PHOTO                      0x4AA // Flag3 Secret Photo Trade in Petalburg House 1 erhalten
 #define FLAG_UNUSED_0x4AB                                           0x4AB // Unused Flag
 #define FLAG_UNUSED_0x4AC                                           0x4AC // Unused Flag
 #define FLAG_UNUSED_0x4AD                                           0x4AD // Unused Flag
@@ -1313,7 +1313,7 @@
 #define FLAG_UNUSED_0x4EB                                           0x4EB // Unused Flag
 #define FLAG_UNUSED_0x4EC                                           0x4EC // Unused Flag
 #define FLAG_UNUSED_0x4ED                                           0x4ED // Unused Flag
-#define FLAG_UNUSED_0x4EE                                           0x4EE // Unused Flag
+#define FLAG_FLAG8_BRIDGE_SET                                       0x4EE // Flag 8 Brücke muss in Savegame gesetzt werden
 #define FLAG_UNUSED_0x4EF                                           0x4EF // Unused Flag
 
 #define FLAG_DEFEATED_RUSTBORO_GYM                                  0x4F0

@@ -55,12 +55,13 @@ Klassenzimmer_4_Movement_PlayerToSeat:
 	walk_up
 	walk_left
 	walk_left
+	walk_left
 	face_up
 	step_end
 
 
 Klassenzimmer_4_Text_StudentReceivesTube:
-	.string "You received a LAPRAS TUBE!$"
+	.string "You received a SURFBOARD!$"
 
 
 Klassenzimmer_4_Text_ComeIn:
@@ -72,7 +73,7 @@ Klassenzimmer_4_Text_Story:
 	.string "weather is so beautiful today,\p"
 	.string "I'll let you leave a few minutes\n"
 	.string "early. You'll also all get this\p"
-	.string "Lapras Tube from me, so you can\n"
+	.string "SURFBOARD from me, so you can\n"
 	.string "float down the Rhine and maybe\p"
 	.string "visit Ludwigshafen. Keep surfing\n"
 	.string "and shaka brah!$"

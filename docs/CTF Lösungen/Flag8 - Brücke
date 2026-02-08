@@ -1,0 +1,235 @@
+# CTF Bridge Challenge — Full Solution (Bridgeroom)
+
+Goal: Make the bridge appear in **Bridgeroom** by setting the save flag  
+`FLAG_FLAG8_BRIDGE_SET` with ID **0x4EE**.
+
+The ROM checks this flag on **map load**. If it’s set, the map script places the bridge metatiles and redraws the map immediately.  
+So the correct workflow is: **edit save → fix checksum → load save → bridge appears instantly**.
+
+---
+
+## What you need
+
+- Your emulator `.sav` file (make a backup!)
+- A hex editor (HxD / ImHex / 010 Editor / etc.)
+- A way to compute a 16-bit section checksum (either:
+  - a calculator + careful manual steps, or
+  - a tiny script/tool you run locally)
+
+---
+
+## Step 0 — Make a clean “before” save
+
+1. Stand in **Bridgeroom** where the missing bridge should be.
+2. Save the game normally.
+3. Close the emulator completely (so it flushes the `.sav`).
+4. Copy the `.sav` file and keep a backup (e.g. `save_before_bridge.sav`).
+
+---
+
+## Step 1 — Understand the Gen-III save layout (what you must find in the hex editor)
+
+Gen-III saves keep **two** complete game-save blocks (A and B). The game loads the **newest** one.
+
+Each block:
+- is **0xE000** bytes long
+- is split into **14 sections**, each **0x1000** bytes
+
+Inside each 0x1000-byte section:
+- section data: `0x0000 .. 0x0F7F` (mostly)
+- footer at the end:
+  - `+0x0FF4` = Section ID (u16, little-endian)
+  - `+0x0FF6` = Section checksum (u16, little-endian)  ← you must update this
+  - `+0x0FF8` = Signature (u32). Bytes are: `25 20 01 08`
+  - `+0x0FFC` = Save Index (u32, little-endian)         ← tells which block is newest
+
+---
+
+## Step 2 — Find the newest save block (A or B)
+
+1. Open the `.sav` in the hex editor.
+2. Look at the two candidate block bases:
+   - Block A base = `0x00000`
+   - Block B base = `0x0E000`
+
+3. For each block, pick *any* section inside it (for example the first one at `block_base + 0x0000`).
+4. Confirm it’s a real section by checking the signature:
+   - At `section_base + 0x0FF8` you should see `25 20 01 08`
+
+5. Read the **Save Index** at:
+   - `section_base + 0x0FFC` (4 bytes, little-endian)
+
+6. Compare the Save Index of block A vs block B:
+   - The block with the **higher** Save Index is the **newest** block and the one you must patch.
+
+From here on, call that base address:
+
+- `ACTIVE_BLOCK_BASE`
+
+---
+
+## Step 3 — Compute which bit to set for flag 0x4EE
+
+Flags are bit-packed: **8 flags per byte**.
+
+Flag ID: `0x4EE`
+
+1. Convert to decimal if you like:
+   - `0x4EE = 1262`
+
+2. Compute:
+   - `byte_index = flag_id / 8`
+   - `bit_index  = flag_id % 8`
+   - `bit_mask   = 1 << bit_index`
+
+For `0x4EE`:
+- `byte_index = 1262 / 8 = 157` → `0x9D`
+- `bit_index  = 1262 % 8 = 6`
+- `bit_mask   = 1 << 6 = 0x40`
+
+So you must set:
+- **byte at offset `flags_base + 0x9D`**
+- by OR-ing it with **0x40**
+
+Meaning:
+- `flags[0x9D] = flags[0x9D] | 0x40`
+
+---
+
+## Step 4 — Find the flags array inside the active save block (the “real work”)
+
+You need the **start of the flags array** in the save block:
+- call it `FLAGS_BASE` (absolute file offset)
+
+There are two common ways to get it. A real “CTF solution writeup” usually includes one of them.
+
+### Method A (recommended for a writeup): derive the offset from the ROM (reverse engineering)
+
+1. Open the ROM in Ghidra / IDA.
+2. Find the function used by scripts to test flags (commonly named `FlagGet`, `FlagSet`, or similar).
+3. Locate where it reads from the saveblock flags bitfield:
+   - you want the offset of `flags[]` within the main save structure (SaveBlock1).
+4. Then locate where SaveBlock1 lives within the 14 save sections:
+   - the code that loads/serializes sections reveals which section IDs contain SaveBlock1 chunks and their ordering.
+
+At the end of this, you will know:
+- which section ID contains the portion of SaveBlock1 that includes the flags array
+- the exact `FLAGS_BASE` offset (absolute file offset) to the first byte of flags[]
+
+Once you have that, continue to Step 5.
+
+### Method B (source-based, if you ship the challenge with code access)
+
+If challengers have the project source:
+1. Find `struct SaveBlock1` (commonly in `include/save.h`).
+2. Find the `flags` field inside it.
+3. Compute its offset (e.g., with `offsetof(struct SaveBlock1, flags)`).
+4. Use the save serialization code (often in `src/save.c`) to map SaveBlock1 bytes into sections.
+
+This yields the same thing as method A:
+- exact `FLAGS_BASE`
+
+---
+
+## Step 5 — Patch the flag byte
+
+Once you know `FLAGS_BASE`:
+
+1. Compute the target byte address:
+   - `TARGET = FLAGS_BASE + 0x9D`
+
+2. Read the original value at `TARGET`.
+3. Set bit 6:
+   - new_value = old_value OR `0x40`
+
+Example:
+- if old byte is `00`, it becomes `40`
+- if old byte is `41`, it stays `41`
+
+Write the byte back.
+
+---
+
+## Step 6 — Update the correct SECTION CHECKSUM (mandatory)
+
+If you don’t update the checksum, the game will treat that section as invalid and may load the other save block.
+
+### 6.1 Identify which section you modified
+
+You changed a byte at absolute offset `TARGET`.
+
+Compute:
+- `SECTION_BASE = (TARGET - ACTIVE_BLOCK_BASE) & 0xFFFFF000` + `ACTIVE_BLOCK_BASE`
+
+In other words:
+- find which 0x1000 chunk inside the active block contains `TARGET`
+
+### 6.2 Read the Section ID (to know the checksum size)
+
+At:
+- `SECTION_BASE + 0x0FF4` (u16 little-endian) = `SECTION_ID`
+
+### 6.3 Determine the “checksum length” for that Section ID
+
+Important:
+- The checksum is NOT always computed over all 0x0FF4 bytes.
+- Gen-III uses a section-size table keyed by Section ID.
+
+You must obtain the length for `SECTION_ID` (from ROM RE or from source).
+
+Call it:
+- `CHECK_LEN` bytes
+
+(Your terminal hint text already points players to section IDs and checksums; the missing piece is this per-section size.)
+
+### 6.4 Compute the checksum
+
+Algorithm (standard Gen-III section checksum approach):
+
+- Take the section data starting at:
+  - `SECTION_BASE + 0x0000`
+- For `CHECK_LEN` bytes, interpret them as **little-endian 32-bit words**
+- Sum all 32-bit words into a 32-bit accumulator `sum`
+- Fold it down to 16-bit:
+  - `checksum = (sum & 0xFFFF) + (sum >> 16)`
+  - `checksum = checksum & 0xFFFF`
+
+Write that `checksum` (u16 little-endian) to:
+- `SECTION_BASE + 0x0FF6`
+
+Notes:
+- If `CHECK_LEN` is not divisible by 4, pad the final partial word with zeros (this depends on your implementation; the canonical implementations typically ensure lengths are multiples of 4).
+
+---
+
+## Step 7 — Save, load, verify
+
+1. Save the patched `.sav`.
+2. Start the emulator and load the game.
+3. As soon as **Bridgeroom** loads, the ON_LOAD map script runs:
+   - it checks `FLAG_FLAG8_BRIDGE_SET`
+   - places bridge metatiles
+   - redraws the entire map
+
+Expected result:
+- The bridge appears immediately (no need to leave/re-enter).
+
+If it does NOT appear, the usual causes are:
+- you edited the **older** save block (wrong Save Index)
+- you changed the wrong section/byte (wrong FLAGS_BASE)
+- you didn’t update the checksum correctly (or used wrong CHECK_LEN for that section ID)
+- you accidentally patched the other save slot (some emulators keep multiple files; ensure you edited the right `.sav`)
+
+---
+
+## Quick reference (the key math)
+
+- Flag ID: `0x4EE`
+- Byte index: `0x9D`
+- Bit index: `6`
+- Mask: `0x40`
+- Patch: `flags[0x9D] |= 0x40`
+- Then recompute checksum for the section containing that byte and write it at:
+  - `SECTION_BASE + 0x0FF6` (u16 little-endian)
+
+---

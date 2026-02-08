@@ -15593,7 +15593,7 @@ const struct Item gItemsInfo[] =
 
     [ITEM_SURF_TOOL] =
     {
-        .name = ITEM_NAME("Lapras Tube"),
+        .name = ITEM_NAME("Surfboard"),
         .price = 0,
         .description = COMPOUND_STRING(
             "An item that lets\n"
@@ -15685,6 +15685,21 @@ const struct Item gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_Dive,
         .iconPic = gItemIcon_QuestionMark,
         .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_SECRET_PHOTO] =
+    {
+        .name = ITEM_NAME("Secret Photo"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A mysterious photo.\n"
+            "Press B to close."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseCB_SecretPhoto,   // <-- unser Viewer-Callback
+        .iconPic = gItemIcon_SecretPhoto,            // Platzhalter (erstmal)
+        .iconPalette = gItemIconPalette_TownMap, // Platzhalter (erstmal)
     },
 };
 
