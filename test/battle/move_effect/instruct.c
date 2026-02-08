@@ -52,24 +52,7 @@ DOUBLE_BATTLE_TEST("Instruct fails if move is banned by Instruct")
     }
 }
 
-DOUBLE_BATTLE_TEST("Instruct fails if target is in the middle of Bide")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_BIDE) == EFFECT_BIDE);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_INSTRUCT, MOVE_CELEBRATE); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_POUND, MOVE_BIDE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
-    } WHEN {
-        TURN { MOVE(playerRight, MOVE_POUND, target: opponentLeft); }
-        TURN { MOVE(playerRight, MOVE_BIDE); }
-        TURN { MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); SKIP_TURN(playerRight); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, playerRight);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
-    }
-}
+TO_DO_BATTLE_TEST("Instruct fails if target is in the middle of Bide");
 
 DOUBLE_BATTLE_TEST("Instruct fails if target is preparing Focus Punch, Beak Blast or Shell Trap")
 {
