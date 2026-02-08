@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Cloud Nine/Air Lock prevent basic weather effects, but witho
     }
 }
 
-SINGLE_BATTLE_TEST("Cloud Nine does not reactivate if it is skill swapped")
+SINGLE_BATTLE_TEST("Cloud Nine does not reactivate when obtained via Skill Swap")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
