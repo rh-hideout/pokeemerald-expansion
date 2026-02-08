@@ -3164,10 +3164,14 @@ static u32 GetPoisonDamage(u32 battlerId)
 
 static bool32 BattlerAffectedBySandstorm(u32 battlerId, enum Ability ability)
 {
+    if (!(AI_GetWeather() & B_WEATHER_SANDSTORM))
+        return FALSE;
+
     if (!IS_BATTLER_ANY_TYPE(battlerId, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
       && ability != ABILITY_SAND_VEIL
       && ability != ABILITY_SAND_FORCE
       && ability != ABILITY_SAND_RUSH
+      && ability != ABILITY_MAGIC_GUARD
       && ability != ABILITY_OVERCOAT)
         return TRUE;
     return FALSE;
@@ -3175,10 +3179,14 @@ static bool32 BattlerAffectedBySandstorm(u32 battlerId, enum Ability ability)
 
 static bool32 BattlerAffectedByHail(u32 battlerId, enum Ability ability)
 {
+    if (!(AI_GetWeather() & B_WEATHER_HAIL))
+        return FALSE;
+
     if (!IS_BATTLER_OF_TYPE(battlerId, TYPE_ICE)
       && ability != ABILITY_SNOW_CLOAK
-      && ability != ABILITY_OVERCOAT
-      && ability != ABILITY_ICE_BODY)
+      && ability != ABILITY_ICE_BODY
+      && ability != ABILITY_MAGIC_GUARD
+      && ability != ABILITY_OVERCOAT)
         return TRUE;
     return FALSE;
 }
@@ -3238,8 +3246,11 @@ u32 GetBattlerSecondaryDamage(u32 battlerId)
 
 bool32 BattlerWillFaintFromWeather(u32 battler, enum Ability ability)
 {
+    if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SAFETY_GOGGLES)
+        return FALSE;
+
     if ((BattlerAffectedBySandstorm(battler, ability) || BattlerAffectedByHail(battler, ability))
-      && gBattleMons[battler].hp <= max(1, gBattleMons[battler].maxHP / 16))
+      && gBattleMons[battler].hp <= max(1, GetNonDynamaxMaxHP(battler) / 16))
         return TRUE;
 
     return FALSE;
