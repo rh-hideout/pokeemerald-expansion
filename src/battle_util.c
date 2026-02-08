@@ -9703,8 +9703,11 @@ u32 TryImmunityAbilityHealStatus(u32 battler, enum AbilityEffect caseID)
         }
 
         gBattleScripting.battler = gBattlerAbility = battler;
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
-        MarkBattlerForControllerExec(battler);
+        if (effect == 1) // Only primary status changes should sync party status.
+        {
+            BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
+            MarkBattlerForControllerExec(battler);
+        }
         return effect;
     }
 
