@@ -10883,7 +10883,7 @@ static void Cmd_handleballthrow(void)
             return;
         }
 
-        if (!gHasFetchedBall)
+        if (!gBattleStruct->hasFetchedBall)
             gLastUsedBall = gLastUsedItem;
 
         if (IsCriticalCapture())
