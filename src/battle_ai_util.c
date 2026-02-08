@@ -3162,7 +3162,7 @@ static u32 GetPoisonDamage(u32 battlerId)
     return damage;
 }
 
-static bool32 BattlerAffectedBySandstorm(u32 battlerId, enum Ability ability)
+static bool32 DoesBattlerTakeSandstormDamage(u32 battlerId, enum Ability ability)
 {
     if (!(AI_GetWeather() & B_WEATHER_SANDSTORM))
         return FALSE;
@@ -3177,7 +3177,7 @@ static bool32 BattlerAffectedBySandstorm(u32 battlerId, enum Ability ability)
     return FALSE;
 }
 
-static bool32 BattlerAffectedByHail(u32 battlerId, enum Ability ability)
+static bool32 DoesBattlerTakeHailDamage(u32 battlerId, enum Ability ability)
 {
     if (!(AI_GetWeather() & B_WEATHER_HAIL))
         return FALSE;
@@ -3202,7 +3202,7 @@ static u32 GetWeatherDamage(u32 battlerId)
 
     if (weather & B_WEATHER_SANDSTORM)
     {
-        if (BattlerAffectedBySandstorm(battlerId, ability)
+        if (DoesBattlerTakeSandstormDamage(battlerId, ability)
           && gBattleMons[battlerId].volatiles.semiInvulnerable != STATE_UNDERGROUND
           && gBattleMons[battlerId].volatiles.semiInvulnerable != STATE_UNDERWATER
           && holdEffect != HOLD_EFFECT_SAFETY_GOGGLES)
@@ -3214,7 +3214,7 @@ static u32 GetWeatherDamage(u32 battlerId)
     }
     if ((weather & B_WEATHER_HAIL) && ability != ABILITY_ICE_BODY)
     {
-        if (BattlerAffectedByHail(battlerId, ability)
+        if (DoesBattlerTakeHailDamage(battlerId, ability)
           && gBattleMons[battlerId].volatiles.semiInvulnerable != STATE_UNDERGROUND
           && gBattleMons[battlerId].volatiles.semiInvulnerable != STATE_UNDERWATER
           && holdEffect != HOLD_EFFECT_SAFETY_GOGGLES)
@@ -3249,7 +3249,7 @@ bool32 BattlerWillFaintFromWeather(u32 battler, enum Ability ability)
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SAFETY_GOGGLES)
         return FALSE;
 
-    if ((BattlerAffectedBySandstorm(battler, ability) || BattlerAffectedByHail(battler, ability))
+    if ((DoesBattlerTakeSandstormDamage(battler, ability) || DoesBattlerTakeHailDamage(battler, ability))
       && gBattleMons[battler].hp <= max(1, GetNonDynamaxMaxHP(battler) / 16))
         return TRUE;
 
