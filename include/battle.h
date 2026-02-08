@@ -604,7 +604,6 @@ struct BattleStruct
     u8 unused:3;
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
-    u16 choicedMove[MAX_BATTLERS_COUNT];
     u8 switchInBattlerCounter;
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]
     union {

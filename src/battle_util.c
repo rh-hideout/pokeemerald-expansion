@@ -1563,7 +1563,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     u8 moveId = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
     enum Move move = gBattleMons[battler].moves[moveId];
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-    u16 *choicedMove = &gBattleStruct->choicedMove[battler];
+    enum Move choicedMove = gBattleMons[battler].volatiles.choicedMove;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if (GetConfig(CONFIG_ENCORE_TARGET) >= GEN_5
@@ -1740,9 +1740,9 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     }
 
     gPotentialItemEffectBattler = battler;
-    if (DYNAMAX_BYPASS_CHECK && IsHoldEffectChoice(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
+    if (DYNAMAX_BYPASS_CHECK && IsHoldEffectChoice(holdEffect) && choicedMove != MOVE_NONE && choicedMove != MOVE_UNAVAILABLE && choicedMove != move)
     {
-        gCurrentMove = *choicedMove;
+        gCurrentMove = choicedMove;
         gLastUsedItem = gBattleMons[battler].item;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         {
@@ -1773,10 +1773,9 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
             limitations++;
         }
     }
-    if (DYNAMAX_BYPASS_CHECK && (GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS) && *choicedMove != MOVE_NONE
-              && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
+    if (DYNAMAX_BYPASS_CHECK && (GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS) && choicedMove != MOVE_NONE && choicedMove != MOVE_UNAVAILABLE && choicedMove != move)
     {
-        gCurrentMove = *choicedMove;
+        gCurrentMove = choicedMove;
         gLastUsedItem = gBattleMons[battler].item;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         {
@@ -1825,7 +1824,7 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
     enum Move move;
     enum BattleMoveEffects moveEffect;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-    u16 *choicedMove = &gBattleStruct->choicedMove[battler];
+    enum Move choicedMove = gBattleMons[battler].volatiles.choicedMove;
     s32 i;
 
     gPotentialItemEffectBattler = battler;
@@ -1859,7 +1858,7 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_ENCORE && gBattleMons[battler].volatiles.encoreTimer && gBattleMons[battler].volatiles.encoredMove != move)
             unusableMoves |= 1u << i;
         // Choice Items
-        else if (check & MOVE_LIMITATION_CHOICE_ITEM && IsHoldEffectChoice(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
+        else if (check & MOVE_LIMITATION_CHOICE_ITEM && IsHoldEffectChoice(holdEffect) && choicedMove != MOVE_NONE && choicedMove != MOVE_UNAVAILABLE && choicedMove != move)
             unusableMoves |= 1u << i;
         // Assault Vest
         else if (check & MOVE_LIMITATION_ASSAULT_VEST && holdEffect == HOLD_EFFECT_ASSAULT_VEST && IsBattleMoveStatus(move) && moveEffect != EFFECT_ME_FIRST)
@@ -1880,7 +1879,7 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_STUFF_CHEEKS && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
             unusableMoves |= 1u << i;
         // Gorilla Tactics
-        else if (check & MOVE_LIMITATION_CHOICE_ITEM && GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
+        else if (check & MOVE_LIMITATION_CHOICE_ITEM && GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS && choicedMove != MOVE_NONE && choicedMove != MOVE_UNAVAILABLE && choicedMove != move)
             unusableMoves |= 1u << i;
         // Can't Use Twice flag
         else if (check & MOVE_LIMITATION_CANT_USE_TWICE && MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
