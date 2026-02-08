@@ -305,13 +305,13 @@ static void InitBtlControllersInternal(void)
             switch (gLinkPlayers[i].id)
             {
             case 0:
-            case 3:
+            case 1:
                 BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 0);
                 gBattlerPositions[gLinkPlayers[i].id] = linkPositionLeft;
                 gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
                 break;
-            case 1:
             case 2:
+            case 3:
                 BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 1);
                 gBattlerPositions[gLinkPlayers[i].id] = linkPositionRight;
                 gBattlerPartyIndexes[gLinkPlayers[i].id] = 3;
