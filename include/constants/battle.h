@@ -310,6 +310,7 @@ enum VolatileFlags
     F(VOLATILE_ARENA_MIND_POINTS,           arenaMindPoints,               (s32, UINT8_MAX)) \
     F(VOLATILE_ARENA_SKILL_POINTS,          arenaSkillPoints,              (s32, UINT8_MAX)) \
     F(VOLATILE_ARENA_START_HP,              arenaStartHP,                  (u32, UINT16_MAX)) \
+    F(VOLATILE_SUPREME_OVERLORD_COUNTER,    supremeOverlordCounter,        (u32, 5)) \
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
 #define GET_VOLATILE_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeMaxValue)
