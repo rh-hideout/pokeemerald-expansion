@@ -471,7 +471,7 @@ static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler)
     ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
 
     // Switch if no moves affect opponents
-    if (HasTwoOpponents(battler))
+    if (IsDoubleBattle())
     {
         enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
