@@ -1563,11 +1563,11 @@ static void CB2_HandleStartMultiBattle(void)
                     switch (gLinkPlayers[id].id)
                     {
                     case 0:
-                    case 3:
+                    case 1:
                         memcpy(gPlayerParty, gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
                         break;
-                    case 1:
                     case 2:
+                    case 3:
                         memcpy(gPlayerParty + MULTI_PARTY_SIZE, gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
                         break;
                     }
@@ -1580,11 +1580,11 @@ static void CB2_HandleStartMultiBattle(void)
                         switch (gLinkPlayers[id].id)
                         {
                         case 0:
-                        case 3:
+                        case 1:
                             memcpy(gPlayerParty, gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
                             break;
-                        case 1:
                         case 2:
+                        case 3:
                             memcpy(gPlayerParty + MULTI_PARTY_SIZE, gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
                             break;
                         }
@@ -1594,11 +1594,11 @@ static void CB2_HandleStartMultiBattle(void)
                         switch (gLinkPlayers[id].id)
                         {
                         case 0:
-                        case 3:
+                        case 1:
                             memcpy(gEnemyParty, gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
                             break;
-                        case 1:
                         case 2:
+                        case 3:
                             memcpy(gEnemyParty + MULTI_PARTY_SIZE, gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
                             break;
                         }
@@ -1626,11 +1626,11 @@ static void CB2_HandleStartMultiBattle(void)
                     switch (gLinkPlayers[id].id)
                     {
                     case 0:
-                    case 3:
+                    case 1:
                         memcpy(gPlayerParty + 2, gBlockRecvBuffer[id], sizeof(struct Pokemon));
                         break;
-                    case 1:
                     case 2:
+                    case 3:
                         memcpy(gPlayerParty + 5, gBlockRecvBuffer[id], sizeof(struct Pokemon));
                         break;
                     }
@@ -1643,11 +1643,11 @@ static void CB2_HandleStartMultiBattle(void)
                         switch (gLinkPlayers[id].id)
                         {
                         case 0:
-                        case 3:
+                        case 1:
                             memcpy(gPlayerParty + 2, gBlockRecvBuffer[id], sizeof(struct Pokemon));
                             break;
-                        case 1:
                         case 2:
+                        case 3:
                             memcpy(gPlayerParty + 5, gBlockRecvBuffer[id], sizeof(struct Pokemon));
                             break;
                         }
@@ -1657,11 +1657,11 @@ static void CB2_HandleStartMultiBattle(void)
                         switch (gLinkPlayers[id].id)
                         {
                         case 0:
-                        case 3:
+                        case 1:
                             memcpy(gEnemyParty + 2, gBlockRecvBuffer[id], sizeof(struct Pokemon));
                             break;
-                        case 1:
                         case 2:
+                        case 3:
                             memcpy(gEnemyParty + 5, gBlockRecvBuffer[id], sizeof(struct Pokemon));
                             break;
                         }

@@ -5141,11 +5141,11 @@ u8 GetPlayerFlankId(void)
     switch (gLinkPlayers[GetMultiplayerId()].id)
     {
     case 0:
-    case 3:
+    case 1:
         flankId = 0;
         break;
-    case 1:
     case 2:
+    case 3:
         flankId = 1;
         break;
     }
@@ -5158,11 +5158,11 @@ u16 GetLinkTrainerFlankId(u8 linkPlayerId)
     switch (gLinkPlayers[linkPlayerId].id)
     {
     case 0:
-    case 3:
+    case 1:
         flankId = 0;
         break;
-    case 1:
     case 2:
+    case 3:
         flankId = 1;
         break;
     }
@@ -6581,7 +6581,7 @@ static u8 UNUSED GetOwnOpposingLinkMultiBattlerId(bool8 rightSide)
     {
     case 0:
     case 2:
-        battler = rightSide ? 1 : 3;
+        battler = rightSide ? 3 : 1;
         break;
     case 1:
     case 3:
@@ -6604,7 +6604,7 @@ u8 GetOpposingLinkMultiBattlerId(bool8 rightSide, u8 multiplayerId)
     {
     case 0:
     case 2:
-        battler = rightSide ? 1 : 3;
+        battler = rightSide ? 3 : 1;
         break;
     case 1:
     case 3:
