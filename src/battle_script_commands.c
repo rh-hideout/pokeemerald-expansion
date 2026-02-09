@@ -12125,7 +12125,7 @@ static void Cmd_presentdamagecalculation(void)
     }
     else
     {
-        gBattleStruct->moveResultFlags[gBattlerTarget] &= ~MOVE_RESULT_DOESNT_AFFECT_FOE;
+        gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_MISSED | MOVE_RESULT_DOESNT_AFFECT_FOE);
         gBattlescriptCurrInstr = BattleScript_PresentHealTarget;
     }
 }
