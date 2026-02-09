@@ -181,6 +181,8 @@ enum VolatileFlags
     F(VOLATILE_UPROAR,                      uproarTurns,                   (u32, 5)) \
     F(VOLATILE_TORMENT,                     torment,                       (u32, 1)) \
     F(VOLATILE_BIDE,                        bideTurns,                     (u32, 3)) \
+    F(VOLATILE_BIDE_DAMAGE,                 bideDmg,                       (s32, UINT16_MAX)) /* To allow all 16 bits */ \
+    F(VOLATILE_BIDE_TARGET,                 bideTarget,                    (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_RAMPAGE_TURNS,               rampageTurns,                  (u32, B_RAMPAGE_TURNS + 1)) \
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \

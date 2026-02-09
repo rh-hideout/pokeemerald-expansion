@@ -464,10 +464,10 @@ static enum CancelerResult CancelerBide(struct BattleContext *ctx)
         {
             // This is removed in FRLG and Emerald for some reason
             //gBattleMons[gBattlerAttacker].volatiles.multipleTurns = FALSE;
-            if (gBideDmg[ctx->battlerAtk])
+            if (gBattleMons[ctx->battlerAtk].volatiles.bideDmg)
             {
                 gCurrentMove = MOVE_BIDE;
-                gBattlerTarget = gBideTarget[ctx->battlerAtk];
+                gBattlerTarget = gBattleMons[ctx->battlerAtk].volatiles.bideTarget;
                 if (!IsBattlerAlive(ctx->battlerDef))
                     gBattlerTarget = GetBattleMoveTarget(MOVE_BIDE, TARGET_SELECTED);
                 gBattlescriptCurrInstr = BattleScript_BideAttack;

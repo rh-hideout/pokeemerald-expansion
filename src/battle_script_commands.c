@@ -1810,8 +1810,8 @@ static void MoveDamageDataHpUpdate(enum BattlerId battler, u32 scriptBattler, co
         }
         else
         {
-            gBideDmg[battler] += gBattleStruct->moveDamage[battler];
-            gBideTarget[battler] = gBattlerAttacker;
+            gBattleMons[battler].volatiles.bideDmg += gBattleStruct->moveDamage[battler];
+            gBattleMons[battler].volatiles.bideTarget = gBattlerAttacker;
 
             // Deal damage to the battler
             if (gBattleMons[battler].hp > gBattleStruct->moveDamage[battler])
@@ -7955,7 +7955,7 @@ static void Cmd_setbide(void)
 
     gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
     gBattleMons[gBattlerAttacker].volatiles.lockedMove = gCurrentMove;
-    gBideDmg[gBattlerAttacker] = 0;
+    gBattleMons[gBattlerAttacker].volatiles.bideDmg = 0;
     gBattleMons[gBattlerAttacker].volatiles.bideTurns = 2;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -8345,7 +8345,7 @@ static void Cmd_checknonvolatiletrigger(void)
 static void Cmd_copybidedmg(void)
 {
     CMD_ARGS();
-    gBattleStruct->moveDamage[gBattlerTarget] = gBideDmg[gBattlerAttacker] * 2;
+    gBattleStruct->moveDamage[gBattlerTarget] = gBattleMons[gBattlerAttacker].volatiles.bideDmg * 2;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
