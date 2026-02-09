@@ -1054,6 +1054,7 @@ extern bool8 gLastUsedBallMenuPresent;
 extern u8 gPartyCriticalHits[PARTY_SIZE];
 extern u8 gCategoryIconSpriteId;
 struct Pokemon *GetBattlerParty(enum BattlerId battler);
+struct Pokemon *GetTrainerParty(enum BattleTrainer trainer);
 struct Pokemon* GetBattlerMon(enum BattlerId battler);
 
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
