@@ -3239,12 +3239,6 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
     gBattleStruct->battlerState[battler].fainted = FALSE;
     gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
-    gBattleMons[battler].volatiles.lastMove = MOVE_NONE;
-    gBattleMons[battler].volatiles.lastLandedMove = MOVE_NONE;
-    gBattleMons[battler].volatiles.lastHitByType = TYPE_NONE;
-    gBattleMons[battler].volatiles.lastUsedMoveType = TYPE_NONE;
-    gBattleMons[battler].volatiles.lastResultingMove = MOVE_NONE;
-    gBattleMons[battler].volatiles.lastPrintedMove = MOVE_NONE;
     gBattleMons[battler].volatiles.lastHitBy = MAX_BATTLERS_COUNT;
 
     gBattleStruct->lastTakenMove[battler] = 0;
@@ -3346,15 +3340,8 @@ const u8* FaintClearSetData(enum BattlerId battler)
 
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
 
-    gBattleMons[battler].volatiles.lastMove = MOVE_NONE;
-    gBattleMons[battler].volatiles.lastLandedMove = MOVE_NONE;
-    gBattleMons[battler].volatiles.lastHitByType = TYPE_NONE;
-    gBattleMons[battler].volatiles.lastUsedMoveType = TYPE_NONE;
-    gBattleMons[battler].volatiles.lastResultingMove = MOVE_NONE;
-    gBattleMons[battler].volatiles.lastPrintedMove = MOVE_NONE;
     gBattleMons[battler].volatiles.lastHitBy = MAX_BATTLERS_COUNT;
 
-    gBattleMons[battler].volatiles.choicedMove = MOVE_NONE;
     gBattleStruct->lastTakenMove[battler] = MOVE_NONE;
     gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
