@@ -1786,12 +1786,6 @@
 	callnative BS_UpdateNick
 	.endm
 
-	.macro jumpifnotberry battler:req, jumpInstr:req
-	callnative BS_JumpIfNotBerry
-	.byte \battler
-	.4byte \jumpInstr
-	.endm
-
 	.macro gravityonairbornemons
 	callnative BS_GravityOnAirborneMons
 	.endm
