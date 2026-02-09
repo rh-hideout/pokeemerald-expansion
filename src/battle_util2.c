@@ -237,14 +237,14 @@ u32 BattlePalace_TryEscapeStatus(enum BattlerId battler)
 
 struct Pokemon *GetBattlerParty(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI))
+    if ((gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
         return GetSideParty(GetBattlerSide(battler));
     return gParties[GetBattlerTrainer(battler)];
 }
 
 struct Pokemon *GetTrainerParty(enum BattleTrainer trainer)
 {
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI))
+    if ((gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
         return gParties[trainer & BIT_SIDE];
     return gParties[trainer];
 }

@@ -149,7 +149,7 @@ EWRAM_DATA u8 gBattleTextBuff2[TEXT_BUFF_ARRAY_COUNT] = {0};
 EWRAM_DATA u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT + 13] = {0};   // expanded for stupidly long z move names
 EWRAM_DATA u32 gBattleTypeFlags = 0;
 EWRAM_DATA u8 gBattleEnvironment = 0;
-EWRAM_DATA struct MultiPartnerMenuPokemon gMultiPartnerParty[PARTY_SIZE] = {0};
+EWRAM_DATA struct MultiPartnerMenuPokemon *gMultiPartnerParty = NULL;
 EWRAM_DATA u8 *gBattleAnimBgTileBuffer = NULL;
 EWRAM_DATA u8 *gBattleAnimBgTilemapBuffer = NULL;
 EWRAM_DATA u32 gBattleControllerExecFlags = 0;
@@ -1393,8 +1393,9 @@ static void CB2_PreInitMultiBattle(void)
     case 0:
         if (gReceivedRemoteLinkPlayers && IsLinkTaskFinished())
         {
+            gMultiPartnerParty = Alloc(sizeof(struct MultiPartnerMenuPokemon) * PARTY_SIZE); // only 3 mons actually used for link multis
             SetMultiPartnerMenuParty(B_TRAINER_0);
-            SendBlock(BitmaskAllOtherLinkPlayers(), gMultiPartnerParty, sizeof(struct MultiPartnerMenuPokemon) * 3);
+            SendBlock(BitmaskAllOtherLinkPlayers(), gMultiPartnerParty, sizeof(struct MultiPartnerMenuPokemon) * PARTY_SIZE);
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;
@@ -1412,12 +1413,12 @@ static void CB2_PreInitMultiBattle(void)
                     if ((!(gLinkPlayers[i].id & 1) && !(gLinkPlayers[playerMultiplierId].id & 1))
                         || (gLinkPlayers[i].id & 1 && gLinkPlayers[playerMultiplierId].id & 1))
                     {
-                        memcpy(gMultiPartnerParty, gBlockRecvBuffer[i], sizeof(gMultiPartnerParty));
+                        memcpy(gMultiPartnerParty, gBlockRecvBuffer[i], sizeof(struct MultiPartnerMenuPokemon) * PARTY_SIZE);
                     }
                 }
                 else
                 {
-                    memcpy(gMultiPartnerParty, gBlockRecvBuffer[i], sizeof(gMultiPartnerParty));
+                    memcpy(gMultiPartnerParty, gBlockRecvBuffer[i], sizeof(struct MultiPartnerMenuPokemon) * PARTY_SIZE);
                 }
             }
             gBattleCommunication[MULTIUSE_STATE]++;
@@ -1448,6 +1449,7 @@ static void CB2_PreInitMultiBattle(void)
                 gBattleTypeFlags = *savedBattleTypeFlags;
                 gMain.savedCallback = *savedCallback;
                 SetMainCallback2(CB2_InitBattleInternal);
+                FREE_AND_SET_NULL(gMultiPartnerParty);
             }
         }
         else if (gReceivedRemoteLinkPlayers == 0)
@@ -1455,6 +1457,7 @@ static void CB2_PreInitMultiBattle(void)
             gBattleTypeFlags = *savedBattleTypeFlags;
             gMain.savedCallback = *savedCallback;
             SetMainCallback2(CB2_InitBattleInternal);
+            FREE_AND_SET_NULL(gMultiPartnerParty);
         }
         break;
     }
@@ -1476,6 +1479,7 @@ static void CB2_PreInitIngamePlayerPartnerBattle(void)
     {
     case 0:
         DebugPrintf("CB2_PreInitIngamePlayerPartnerBattle SetMultiPartnerMenuParty");
+        gMultiPartnerParty = Alloc(sizeof(struct MultiPartnerMenuPokemon) * PARTY_SIZE); // Up to 6 Pokemon for Ingame Partner multis
         SetMultiPartnerMenuParty(B_TRAINER_2);
         gBattleCommunication[MULTIUSE_STATE]++;
         *savedCallback = gMain.savedCallback;
@@ -1497,6 +1501,7 @@ static void CB2_PreInitIngamePlayerPartnerBattle(void)
             gBattleTypeFlags = *savedBattleTypeFlags;
             gMain.savedCallback = *savedCallback;
             SetMainCallback2(CB2_InitBattleInternal);
+            FREE_AND_SET_NULL(gMultiPartnerParty);
         }
         break;
     }
