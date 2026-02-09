@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
     } WHEN {
         TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Using Starf Berry, the Attack of Wobbuffet sharply rose!");
     } THEN {
@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
         int boostedStats = 0;
@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
         int boostedStats = 0;
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_RIPEN);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
         int boostedStats = 0;

@@ -23,7 +23,7 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
         MESSAGE("A sea of fire enveloped the opposing team!");
         MESSAGE("The opposing Wynaut was hurt by the sea of fire!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
     }
 }
@@ -56,7 +56,7 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing after a recoil mo
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAKE_DOWN, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(opponentLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         HP_BAR(opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Sitrus Berry restores HP immediately after Leech Seed damage
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, player);
         HP_BAR(player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         HP_BAR(player);
     }
 }

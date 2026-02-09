@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Berserk will not activate if the last multi hit move activat
             NOT ABILITY_POPUP(player, ABILITY_BERSERK);
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_SLAP, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         NOT ABILITY_POPUP(player, ABILITY_BERSERK);
 
     } THEN {
@@ -129,7 +129,7 @@ SINGLE_BATTLE_TEST("Berserk activates before the hp can be restored on non multi
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_BERSERK);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }

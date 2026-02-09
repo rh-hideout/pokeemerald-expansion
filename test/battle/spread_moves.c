@@ -65,9 +65,9 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         MESSAGE("The Chilan Berry weakened the damage to the opposing Raichu!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
