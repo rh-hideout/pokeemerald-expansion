@@ -53,31 +53,20 @@ const u32 gObjectEventPic_James[]  = INCBIN_U32("graphics/object_events/pics/peo
 const u16 gObjectEventPal_James[]  = INCBIN_U16("graphics/object_events/palettes/james.gbapal");
 ~~~
 
----
 
-## 4) PaletteTag definieren (`OBJ_EVENT_PAL_TAG_...`) in event_objects.h weit unten
-
-Stelle sicher, dass du passende Tags definiert hast, z. B.:
-#define OBJ_EVENT_PAL_TAG_JESSIE                  0x1126  (Hex ändern)
-#define OBJ_EVENT_PAL_TAG_JAMES                   0x1127
-
-(Einfach in den jeweiligen Dateien passende Einträge kopieren, aber auf korrekte Details achten!)
-
----
-
-## 5) PaletteTag → Paletten-Daten registrieren in `object_event_movement.c`
+## 4) PaletteTag → Paletten-Daten registrieren in `event_object_movement.c`
 
 Der `.paletteTag` in `ObjectEventGraphicsInfo` ist **nur ein Verweis**.  
 Damit die Engine die Palette laden kann, muss sie in der Palette-Tabelle stehen:
 
 ~~~c
-{ gObjectEventPal_Jessie, OBJ_EVENT_PAL_TAG_JESSIE },
-{ gObjectEventPal_James,  OBJ_EVENT_PAL_TAG_JAMES  },
+{gObjectEventPal_Jessie, OBJ_EVENT_PAL_TAG_JESSIE},
+{gObjectEventPal_James,  OBJ_EVENT_PAL_TAG_JAMES},
 ~~~
 
 ---
 
-## 6) Graphics-ID definieren in `event_objects.h`
+## 5) Graphics-ID definieren in `event_objects.h`
 
 ~~~c
 #define OBJ_EVENT_GFX_JESSIE  244
@@ -88,9 +77,15 @@ Damit die Engine die Palette laden kann, muss sie in der Palette-Tabelle stehen:
 
 **Wichtig:** `NUM_OBJ_EVENT_GFX` muss immer **>= höchster OBJ_EVENT_GFX + 1** sein.
 
+Stelle sicher, dass du passende Tags definiert hast, z. B.:
+#define OBJ_EVENT_PAL_TAG_JESSIE                  0x1126  (Hex ändern)
+#define OBJ_EVENT_PAL_TAG_JAMES                   0x1127
+
+(Einfach in den jeweiligen Dateien passende Einträge kopieren, aber auf korrekte Details achten!)
+
 ---
 
-## 7) PicTables erstellen (`object_event_pic_tables.h`)
+## 6) PicTables erstellen (`object_event_pic_tables.h`)
 
 Du nutzt bei dir Makros, z. B.:
 
@@ -108,7 +103,7 @@ static const struct SpriteFrameImage sPicTable_James[] = {
 
 ---
 
-## 8) ObjectEventGraphicsInfo definieren (`object_event_graphics_info.h`)
+## 7) ObjectEventGraphicsInfo definieren (`object_event_graphics_info.h`)
 
 Beispiel (Jessie/James):
 
@@ -172,7 +167,7 @@ Porymap zeigt den “N”-Platzhalter meist, wenn es die Zuordnung nicht parsen 
 
 ---
 
-## 9) Graphics-ID → GraphicsInfo zuordnen (`object_event_graphics_info_pointers.h`)
+## 8) Graphics-ID → GraphicsInfo zuordnen (`object_event_graphics_info_pointers.h`)
 
 Damit die Engine (und Porymap) wirklich weiß, welche GraphicsInfo zu welcher ID gehört:
 
@@ -190,7 +185,7 @@ Ohne diesen Eintrag kann dein Sprite in Porymap/Engine als “unbekannt” aufta
 
 ---
 
-## 10) Map-Event in Porymap / `map.json`
+## 9) Map-Event in Porymap / `map.json`
 
 Du machst das bereits korrekt:
 
@@ -202,7 +197,7 @@ Das ist **statisch** (nicht dynamic).
 
 ---
 
-## 11) Build & Debug-Checkliste
+## 10) Build & Debug-Checkliste
 
 1. `make clean` (optional, aber bei Sprite-Problemen oft hilfreich)
 2. `make -j`

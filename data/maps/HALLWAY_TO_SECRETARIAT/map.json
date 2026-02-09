@@ -14,7 +14,64 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
   "object_events": [],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 0,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 19,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "4"
+    },
+    {
+      "x": 19,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "5"
+    },
+    {
+      "x": 19,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "6"
+    },
+    {
+      "x": 19,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "7"
+    }
+  ],
   "coord_events": [],
   "bg_events": []
 }

@@ -255,9 +255,7 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_James;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Unsichtbar;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Dollarsign;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Cd;
-
-
-
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Houvert;
 const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_BRENDAN_NORMAL] =           &gObjectEventGraphicsInfo_BrendanNormal,
     [OBJ_EVENT_GFX_BRENDAN_MACH_BIKE] =        &gObjectEventGraphicsInfo_BrendanMachBike,
@@ -510,7 +508,8 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_UNSICHTBAR] =               &gObjectEventGraphicsInfo_Unsichtbar,
     [OBJ_EVENT_GFX_DOLLARSIGN] =               &gObjectEventGraphicsInfo_Dollarsign,
     [OBJ_EVENT_GFX_CD] =                       &gObjectEventGraphicsInfo_Cd,
-    
+    [OBJ_EVENT_GFX_HOUVERT] =                  &gObjectEventGraphicsInfo_Houvert,
+
 
 
 };

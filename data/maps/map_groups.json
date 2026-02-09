@@ -644,7 +644,14 @@
   ],
   "gMapGroup_Flag2": [
     "HowerClass",
-    "HALLWAY_TO_SECRETARIAT"
+    "HALLWAY_TO_SECRETARIAT",
+    "Hallwaycurvedright",
+    "HALLWAY_TO_SECRETARIAT_2",
+    "Hallwaycurvedleft",
+    "Administration_Office",
+    "ClassroomOpeningLeft",
+    "ClassroomOpeningLeft_2",
+    "secreteRoomwithCode"
   ],
   "gMapGroup_Flag3": [
     "entryMapFlag3",

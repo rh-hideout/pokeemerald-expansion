@@ -112,3 +112,4 @@ $(LIB): $(ASM_OBJS)
 
 $(ASM_OBJS): libagbsyscall.s
 	$(AS) $(ASFLAGS) --defsym L_$(*F)=1 -o $@ $<
+

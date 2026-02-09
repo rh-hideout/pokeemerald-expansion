@@ -4657,9 +4657,79 @@
       "width": 20,
       "height": 8,
       "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_GenericBuilding",
+      "secondary_tileset": "gTileset_DHBWFLOORS",
       "border_filepath": "data/layouts/HALLWAY_TO_SECRETARIAT/border.bin",
       "blockdata_filepath": "data/layouts/HALLWAY_TO_SECRETARIAT/map.bin"
+    },
+    {
+      "id": "LAYOUT_HALLWAY_TO_SECRETARIAT_2",
+      "name": "HALLWAY_TO_SECRETARIAT_2_Layout",
+      "width": 20,
+      "height": 8,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_DHBWFLOORS",
+      "border_filepath": "data/layouts/HALLWAY_TO_SECRETARIAT_2/border.bin",
+      "blockdata_filepath": "data/layouts/HALLWAY_TO_SECRETARIAT_2/map.bin"
+    },
+    {
+      "id": "LAYOUT_HALLWAYCURVEDLEFT",
+      "name": "Hallwaycurvedleft_Layout",
+      "width": 6,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_DHBWFLOORS",
+      "border_filepath": "data/layouts/Hallwaycurvedleft/border.bin",
+      "blockdata_filepath": "data/layouts/Hallwaycurvedleft/map.bin"
+    },
+    {
+      "id": "LAYOUT_HALLWAYCURVEDRIGHT",
+      "name": "Hallwaycurvedright_Layout",
+      "width": 6,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_DHBWFLOORS",
+      "border_filepath": "data/layouts/Hallwaycurvedright/border.bin",
+      "blockdata_filepath": "data/layouts/Hallwaycurvedright/map.bin"
+    },
+    {
+      "id": "LAYOUT_ADMINISTRATION_OFFICE",
+      "name": "Administration_Office_Layout",
+      "width": 13,
+      "height": 8,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Lab",
+      "border_filepath": "data/layouts/Administration_Office/border.bin",
+      "blockdata_filepath": "data/layouts/Administration_Office/map.bin"
+    },
+    {
+      "id": "LAYOUT_CLASSROOM_OPENING_LEFT_2",
+      "name": "ClassroomOpeningLeft_2_Layout",
+      "width": 10,
+      "height": 12,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/ClassroomOpeningLeft_2/border.bin",
+      "blockdata_filepath": "data/layouts/ClassroomOpeningLeft_2/map.bin"
+    },
+    {
+      "id": "LAYOUT_CLASSROOM_OPENING_LEFT",
+      "name": "ClassroomOpeningLeft_Layout",
+      "width": 10,
+      "height": 12,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/ClassroomOpeningLeft/border.bin",
+      "blockdata_filepath": "data/layouts/ClassroomOpeningLeft/map.bin"
+    },
+    {
+      "id": "LAYOUT_SECRETE_ROOMWITH_CODE",
+      "name": "secreteRoomwithCode_Layout",
+      "width": 11,
+      "height": 8,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_SecretBaseBlueCave",
+      "border_filepath": "data/layouts/secreteRoomwithCode/border.bin",
+      "blockdata_filepath": "data/layouts/secreteRoomwithCode/map.bin"
     }
   ]
 }

@@ -1222,3 +1222,17 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Zwischenstueck/scripts.inc"
 
 	.include "data/maps/HALLWAY_TO_SECRETARIAT/scripts.inc"
+
+	.include "data/maps/HALLWAY_TO_SECRETARIAT_2/scripts.inc"
+
+	.include "data/maps/Hallwaycurvedleft/scripts.inc"
+
+	.include "data/maps/Hallwaycurvedright/scripts.inc"
+
+	.include "data/maps/ClassroomOpeningLeft_2/scripts.inc"
+
+	.include "data/maps/Administration_Office/scripts.inc"
+
+	.include "data/maps/ClassroomOpeningLeft/scripts.inc"
+
+	.include "data/maps/secreteRoomwithCode/scripts.inc"

@@ -1,0 +1,91 @@
+{
+  "id": "MAP_HALLWAY_TO_SECRETARIAT_2",
+  "name": "HALLWAY_TO_SECRETARIAT_2",
+  "layout": "LAYOUT_HALLWAY_TO_SECRETARIAT_2",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 19,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 19,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 19,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 19,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "4"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "5"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "6"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "7"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_HOWER_CLASS",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 13,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_SECRETE_ROOMWITH_CODE",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

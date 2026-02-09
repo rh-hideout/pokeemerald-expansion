@@ -1381,6 +1381,9 @@ static const struct SpriteFrameImage sPicTable_Cd[] =
     { .data = (u8 *)gObjectEventPic_Cd, .size = 128 },
 };
 
+static const struct SpriteFrameImage sPicTable_Houvert[] = {
+    overworld_ascending_frames(gObjectEventPic_Houvert, 2, 4),
+};
 
 static const struct SpriteFrameImage sPicTable_Unsichtbar[] = {
     overworld_ascending_frames(gObjectEventPic_Unsichtbar, 2, 2),

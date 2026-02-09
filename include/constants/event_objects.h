@@ -257,13 +257,14 @@
 #define OBJ_EVENT_GFX_UNSICHTBAR                 248
 #define OBJ_EVENT_GFX_DOLLARSIGN                 249
 #define OBJ_EVENT_GFX_CD                         250
+#define OBJ_EVENT_GFX_HOUVERT                    251
 
 // NOTE: The maximum amount of object events has been expanded from 255 to 65535.
 // Since dynamic graphics ids still require at least 16 free values, the actual limit
 // is 65519, but even considering follower Pokémon, this should be more than enough :)
 
 // Muss immer unter allem Neuen stehen und Wert muss dann erhöht werden.
-#define NUM_OBJ_EVENT_GFX                        251
+#define NUM_OBJ_EVENT_GFX                        252
 
 
 
@@ -364,6 +365,7 @@
 #define OBJ_EVENT_PAL_TAG_CD                      0x1128
 #define OBJ_EVENT_PAL_TAG_UNSICHTBAR              0x1129
 #define OBJ_EVENT_PAL_TAG_DOLLARSIGN              0x112A
+#define OBJ_EVENT_PAL_TAG_HOUVERT                 0x112B
 
 
 // Moved from src/event_object_movement.c so that they're accesible from other files.

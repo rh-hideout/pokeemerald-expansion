@@ -216,3 +216,6 @@ const u16 gMetatileAttributes_dhbw_gebaeude[] = INCBIN_U16("data/tilesets/second
 
 const u16 gMetatiles_FRLG_SSANNE[] = INCBIN_U16("data/tilesets/secondary/frlg_ssanne/metatiles.bin");
 const u16 gMetatileAttributes_FRLG_SSANNE[] = INCBIN_U16("data/tilesets/secondary/frlg_ssanne/metatile_attributes.bin");
+
+const u16 gMetatiles_DHBWFLOORS[] = INCBIN_U16("data/tilesets/secondary/dhbwfloors/metatiles.bin");
+const u16 gMetatileAttributes_DHBWFLOORS[] = INCBIN_U16("data/tilesets/secondary/dhbwfloors/metatile_attributes.bin");
