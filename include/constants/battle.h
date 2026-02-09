@@ -185,7 +185,7 @@ enum VolatileFlags
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
     F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BATTLERS_COUNT)) \
-    F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL - 1)) \
+    F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (enum Move, MOVES_COUNT_ALL)) \
     F(VOLATILE_POWDER,                      powder,                        (u32, 1)) \
     F(VOLATILE_UNUSED,                      padding,                       (u32, 1)) \
     F(VOLATILE_INFATUATION,                 infatuation,                   (enum BattlerId, MAX_BATTLERS_COUNT + 1)) \
@@ -236,9 +236,22 @@ enum VolatileFlags
     F(VOLATILE_BEADS_OF_RUIN,               beadsOfRuin,                   (u32, 1)) \
     F(VOLATILE_IS_TRANSFORMED_MON_SHINY,    isTransformedMonShiny,         (u32, 1)) \
     F(VOLATILE_TRANSFORMED_MON_PID,         transformedMonPID,             (u32, UINT32_MAX)) \
-    F(VOLATILE_DISABLED_MOVE,               disabledMove,                  (u32, MOVES_COUNT_ALL)) \
-    F(VOLATILE_ENCORED_MOVE,                encoredMove,                   (u32, MOVES_COUNT_ALL)) \
-    F(VOLATILE_CHOICED_MOVE,                choicedMove,                   (u32, MOVES_COUNT_ALL)) \
+    F(VOLATILE_DISABLED_MOVE,               disabledMove,                  (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_ENCORED_MOVE,                encoredMove,                   (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_CHOICED_MOVE,                choicedMove,                   (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LOCKED_MOVE,                 lockedMove,                    (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_CHOSEN_MOVE,                 chosenMove,                    (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_MOVE,                   lastMove,                      (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_PRINTED_MOVE,           lastPrintedMove,               (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_LANDED_MOVE,            lastLandedMove,                (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_RESULTING_MOVE,         lastResultingMove,             (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_HIT_BY_TYPE,            lastHitByType,                 (enum Type, NUMBER_OF_MON_TYPES)) \
+    F(VOLATILE_LAST_USED_MOVE_TYPE,         lastUsedMoveType,              (enum Type, NUMBER_OF_MON_TYPES)) \
+    F(VOLATILE_LAST_HIT_BY,                 lastHitBy,                     (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_MOVE_TARGET,                 moveTarget,                    (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_MOVE_SELECTION_CURSOR,       moveSelectionCursor,           (u32, MAX_MON_MOVES)) \
+    F(VOLATILE_CHOSEN_MOVE_POS,             chosenMovePos,                 (u32, MAX_MON_MOVES)) \
+    F(VOLATILE_ENCORED_MOVE_POS,            encoredMovePos,                (u32, MAX_MON_MOVES)) \
     F(VOLATILE_PROTECT_USES,                consecutiveMoveUses,           (u32, UINT8_MAX)) \
     F(VOLATILE_STOCKPILE_COUNTER,           stockpileCounter,              (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_DEF,               stockpileDef,                  (u32, MAX_STAT_STAGE)) \
@@ -246,7 +259,6 @@ enum VolatileFlags
     F(VOLATILE_STOCKPILE_BEFORE_DEF,        stockpileBeforeDef,            (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_BEFORE_SP_DEF,     stockpileBeforeSpDef,          (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_SUBSTITUTE_HP,               substituteHP,                  (u32, UINT8_MAX)) \
-    F(VOLATILE_ENCORED_MOVE_POS,            encoredMovePos,                (u32, MAX_MON_MOVES)) \
     F(VOLATILE_DISABLE_TIMER,               disableTimer,                  (u32, B_DISABLE_TIMER)) \
     F(VOLATILE_ENCORE_TIMER,                encoreTimer,                   (u32, B_ENCORE_TIMER)) \
     F(VOLATILE_PERISH_SONG_TIMER,           perishSongTimer,               (u32, B_PERISH_SONG_TIMER)) \

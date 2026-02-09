@@ -3966,8 +3966,8 @@ void SetPpNumbersPaletteInMoveSelection(enum BattlerId battler)
     u8 var;
 
     if (!gBattleStruct->zmove.viewing)
-        var = GetCurrentPpToMaxPpState(chooseMoveStruct->currentPp[gMoveSelectionCursor[battler]],
-                         chooseMoveStruct->maxPp[gMoveSelectionCursor[battler]]);
+        var = GetCurrentPpToMaxPpState(chooseMoveStruct->currentPp[gBattleMons[battler].volatiles.moveSelectionCursor],
+                         chooseMoveStruct->maxPp[gBattleMons[battler].volatiles.moveSelectionCursor]);
     else
         var = 3;
 

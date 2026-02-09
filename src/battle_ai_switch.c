@@ -1016,13 +1016,13 @@ static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flag
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING)
         return FALSE;
 
-    if (gLastLandedMoves[battler] == MOVE_NONE)
+    if (gBattleMons[battler].volatiles.lastLandedMove == MOVE_NONE)
         return FALSE;
-    if (gLastLandedMoves[battler] == MOVE_UNAVAILABLE)
+    if (gBattleMons[battler].volatiles.lastLandedMove == MOVE_UNAVAILABLE)
         return FALSE;
-    if (gLastHitBy[battler] == 0xFF)
+    if (gBattleMons[battler].volatiles.lastHitBy == MAX_BATTLERS_COUNT)
         return FALSE;
-    if (IsBattleMoveStatus(gLastLandedMoves[battler]))
+    if (IsBattleMoveStatus(gBattleMons[battler].volatiles.lastLandedMove))
         return FALSE;
 
     GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
@@ -1046,11 +1046,11 @@ static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flag
 
         species = GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG);
         monAbility = GetMonAbility(&party[monIndex]);
-        typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(gLastLandedMoves[battler], species, monAbility);
+        typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(gBattleMons[battler].volatiles.lastLandedMove, species, monAbility);
         UpdateMoveResultFlags(typeMultiplier, &moveFlags);
         if (moveFlags & flags)
         {
-            battlerIn1 = gLastHitBy[battler];
+            battlerIn1 = gBattleMons[battler].volatiles.lastHitBy;
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {

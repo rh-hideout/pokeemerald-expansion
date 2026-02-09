@@ -6680,25 +6680,6 @@ static void TrySwapAttractBattlerIds(enum BattlerId battlerAtk, enum BattlerId b
     }
 }
 
-static void SwapBattlerMoveData(enum BattlerId battler1, enum BattlerId battler2)
-{
-    u32 temp;
-    SWAP(gBattleStruct->chosenMovePositions[battler1], gBattleStruct->chosenMovePositions[battler2], temp);
-    SWAP(gChosenMoveByBattler[battler1], gChosenMoveByBattler[battler2], temp);
-    SWAP(gBattleStruct->moveTarget[battler1], gBattleStruct->moveTarget[battler2], temp);
-    SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], temp);
-    SWAP(gLockedMoves[battler1], gLockedMoves[battler2], temp);
-
-    // update last moves
-    SWAP(gLastPrintedMoves[battler1],   gLastPrintedMoves[battler2], temp);
-    SWAP(gLastMoves[battler1],          gLastMoves[battler2], temp);
-    SWAP(gLastLandedMoves[battler1],    gLastLandedMoves[battler2], temp);
-    SWAP(gLastHitByType[battler1],      gLastHitByType[battler2], temp);
-    SWAP(gLastUsedMoveType[battler1],   gLastUsedMoveType[battler2], temp);
-    SWAP(gLastResultingMoves[battler1], gLastResultingMoves[battler2], temp);
-    SWAP(gLastHitBy[battler1],          gLastHitBy[battler2], temp);
-}
-
 static void AnimTask_AllySwitchDataSwap(u8 taskId)
 {
     enum BattlerId i, j;
@@ -6723,8 +6704,6 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SWAP(gBattleSpritesDataPtr->battlerData[battlerAtk].invisible, gBattleSpritesDataPtr->battlerData[battlerPartner].invisible, temp);
     SWAP(gTransformedPersonalities[battlerAtk], gTransformedPersonalities[battlerPartner], temp);
     SWAP(gTransformedShininess[battlerAtk], gTransformedShininess[battlerPartner], temp);
-
-    SwapBattlerMoveData(battlerAtk, battlerPartner);
 
     // Swap turn order, so that all the battlers take action
     SWAP(gChosenActionByBattler[battlerAtk], gChosenActionByBattler[battlerPartner], temp);
@@ -6757,11 +6736,11 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     {
         enum Ability ability = GetBattlerAbility(i);
         // if not targeting a slot that got switched, continue
-        if (!IsBattlerAlly(gBattleStruct->moveTarget[i], battlerAtk))
+        if (!IsBattlerAlly(gBattleMons[i].volatiles.moveTarget, battlerAtk))
             continue;
 
-        if (GetMoveEffect(gChosenMoveByBattler[i]) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
-            gBattleStruct->moveTarget[i] ^= BIT_FLANK;
+        if (GetMoveEffect(gBattleMons[i].volatiles.chosenMove) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
+            gBattleMons[i].volatiles.moveTarget ^= BIT_FLANK;
     }
 
     // For some reason the order in which the sprites are created matters. Looks like an issue with the sprite system, potentially with the Sprite Template.
