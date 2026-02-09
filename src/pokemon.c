@@ -3490,13 +3490,7 @@ u8 CalculatePartyCount(enum BattleTrainer trainer)
 
 u8 CalculatePartyCountOfSide(enum BattlerId battler)
 {
-    enum BattleTrainer battlerTrainer = GetBattlerTrainer(battler);
-    enum BattleTrainer partnerTrainer = GetBattlerTrainer(BATTLE_PARTNER(battler));
-
-    if (battlerTrainer == partnerTrainer)
-        return CalculatePartyCount(battlerTrainer);
-    else
-        return CalculatePartyCount(battlerTrainer) + CalculatePartyCount(partnerTrainer);
+    return CalculatePartyCount(GetBattlerTrainer(battler)) + CalculatePartyCount(GetAllyTrainerFromBattler(battler));
 }
 
 u8 CalculatePlayerPartyCount(void)
@@ -3508,12 +3502,8 @@ u8 CalculatePlayerPartyCount(void)
 u8 CalculateEnemyPartyCount(void)
 {
     gPartiesCount[B_TRAINER_1] = CalculatePartyCount(B_TRAINER_1);
-    return gPartiesCount[B_TRAINER_1];
-}
-
-u8 CalculateEnemyPartyCountInSide(enum BattlerId battler)
-{
-    return CalculatePartyCountOfSide(battler);
+    gPartiesCount[B_TRAINER_3] = CalculatePartyCount(B_TRAINER_3);
+    return gPartiesCount[B_TRAINER_1] + gPartiesCount[B_TRAINER_3];
 }
 
 u8 GetMonsStateToDoubles(void)

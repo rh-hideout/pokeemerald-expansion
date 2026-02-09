@@ -2181,7 +2181,7 @@ static void BufferPartyVsScreenHealth_AtEnd(u8 taskId)
     u32 flags;
     s32 i;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI) // grintoul TO DO
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
         switch (gLinkPlayers[multiplayerId].id)
         {
