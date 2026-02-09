@@ -1320,8 +1320,6 @@ void CreateMonWithIVs(struct Pokemon *mon, u16 species, u8 level, u32 personalit
 void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
 {
     u32 i, value;
-    enum Stat availableIVs[NUM_STATS];
-    enum Stat selectedIvs[NUM_STATS];
 
     if (fixedIV < USE_RANDOM_IVS)
     {
@@ -1351,21 +1349,28 @@ void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
     iv = (value & (MAX_IV_MASK << 10)) >> 10;
     SetBoxMonData(mon, MON_DATA_SPDEF_IV, &iv);
 
-    if (gSpeciesInfo[species].perfectIVCount != 0)
-    {
-        iv = MAX_PER_STAT_IVS;
-        // Initialize a list of IV indices.
-        for (i = 0; i < NUM_STATS; i++)
-            availableIVs[i] = i;
+    SetBoxMonPerfectIVs(mon, gSpeciesInfo[species].perfectIVCount);
+}
 
-        // Select the IVs that will be perfected.
-        for (i = 0; i < NUM_STATS && i < gSpeciesInfo[species].perfectIVCount; i++)
-        {
-            u8 index = Random() % (NUM_STATS - i);
-            selectedIvs[i] = availableIVs[index];
-            RemoveIVIndexFromList(availableIVs, index);
-            SetBoxMonData(mon, MON_DATA_HP_IV + selectedIvs[i], &iv);
-        }
+void SetBoxMonPerfectIVs(struct BoxPokemon *mon, u32 numPerfect)
+{
+    if (!numPerfect)
+        return;
+
+    enum Stat availableIVs[NUM_STATS];
+    enum Stat selectedIvs[NUM_STATS];
+    u32 i, iv = MAX_PER_STAT_IVS;
+    // Initialize a list of IV indices.
+    for (i = 0; i < NUM_STATS; i++)
+        availableIVs[i] = i;
+
+    // Select the IVs that will be perfected.
+    for (i = 0; i < NUM_STATS && i < numPerfect; i++)
+    {
+        u8 index = Random() % (NUM_STATS - i);
+        selectedIvs[i] = availableIVs[index];
+        RemoveIVIndexFromList(availableIVs, index);
+        SetBoxMonData(mon, MON_DATA_HP_IV + selectedIvs[i], &iv);
     }
 }
 

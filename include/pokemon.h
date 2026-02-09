@@ -736,6 +736,7 @@ void CreateRandomMonWithIVs(struct Pokemon *mon, u16 species, u8 level, u8 fixed
 void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u32 personality, struct OriginalTrainerId);
 void CreateMonWithIVs(struct Pokemon *mon, u16 species, u8 level, u32 personality, struct OriginalTrainerId trainerId, u8 fixedIV);
 void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV);
+void SetBoxMonPerfectIVs(struct BoxPokemon *mon, u32 numPerfect);
 void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level);
 void CreateMonWithIVsPersonality(struct Pokemon *mon, u16 species, u8 level, u32 ivs, u32 personality);
 void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src);
