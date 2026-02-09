@@ -1124,6 +1124,17 @@ static inline u32 GetOpposingSideBattler(enum BattlerId battler)
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler)));
 }
 
+static inline struct Pokemon *GetSideParty(enum BattleSide side)
+{
+    switch (side)
+    {
+        case B_SIDE_OPPONENT:
+            return gParties[B_TRAINER_1];
+        default:
+            return gParties[B_TRAINER_0];
+    }
+}
+
 static inline struct PartyState *GetBattlerPartyState(enum BattlerId battler)
 {
     return &gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];

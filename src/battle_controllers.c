@@ -370,16 +370,16 @@ static void InitBtlControllersInternal(void)
             switch (gLinkPlayers[i].id)
             {
             case 0:
-            case 3:
+            case 1:
                 BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 0);
                 gBattlerPositions[gLinkPlayers[i].id] = linkPositionLeft;
                 gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
                 break;
-            case 1:
             case 2:
+            case 3:
                 BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 1);
                 gBattlerPositions[gLinkPlayers[i].id] = linkPositionRight;
-                gBattlerPartyIndexes[gLinkPlayers[i].id] = 3;
+                gBattlerPartyIndexes[gLinkPlayers[i].id] = MULTI_PARTY_SIZE;
                 break;
             }
         }
@@ -3318,6 +3318,26 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
             return B_TRAINER_1;
     default:
         return B_TRAINER_1;
+    }
+}
+
+enum BattleTrainer GetAllyTrainerFromBattler(enum BattlerId battler)
+{
+    return GetBattlerTrainer(BATTLE_PARTNER(battler));
+}
+
+enum BattleTrainer GetAllyTrainerFromTrainer(enum BattleTrainer trainer)
+{
+    switch (trainer)
+    {
+        case B_TRAINER_1:
+            return B_TRAINER_3;
+        case B_TRAINER_2:
+            return B_TRAINER_0;
+        case B_TRAINER_3:
+            return B_TRAINER_1;
+        default:
+            return B_TRAINER_2;
     }
 }
 

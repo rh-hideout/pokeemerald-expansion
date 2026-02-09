@@ -8574,13 +8574,29 @@ static void GetPartyAndSlotFromPartyMenuId(s8 menuId, struct Pokemon **party, s8
         switch (menuId)
         {
         case 1:
-            *party = gParties[B_TRAINER_2];
-            *partySlot = 0;
+            if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+            {
+                *party = gParties[B_TRAINER_0];
+                *partySlot = 3;
+            }
+            else
+            {
+                *party = gParties[B_TRAINER_2];
+                *partySlot = 0;
+            }
             break;
         case 4:
         case 5:
-            *party = gParties[B_TRAINER_2];
-            *partySlot = menuId - MULTI_PARTY_SIZE;
+            if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+            {
+                *party = gParties[B_TRAINER_0];
+                *partySlot = menuId;
+            }
+            else
+            {
+                *party = gParties[B_TRAINER_2];
+                *partySlot = menuId - MULTI_PARTY_SIZE;
+            }
             break;
         case 2:
         case 3:

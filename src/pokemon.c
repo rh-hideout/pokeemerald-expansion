@@ -6982,7 +6982,7 @@ bool32 SpeciesHasGenderDifferences(u16 species)
 
 static struct PartyState *GetBattlerPartyStateByPokemon(struct Pokemon *partyMon, enum BattleTrainer trainer)
 {
-    struct Pokemon *party = gParties[trainer];
+    struct Pokemon *party = GetTrainerParty(trainer);
     
     if (gBattleStruct == NULL)
         return NULL;

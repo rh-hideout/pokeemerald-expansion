@@ -10051,7 +10051,9 @@ bool32 IsSleepClauseEnabled(void)
 
 bool32 AreMultiPartiesFullTeams(void)
 {
-    if (!B_MULTI_FULL_TEAMS)
+    if (!B_MULTI_FULL_TEAMS
+     || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
+     || TRAINER_BATTLE_PARAM.opponentB == TRAINER_LINK_OPPONENT)
     {
         gSpecialVar_Result = FALSE;
         return FALSE;

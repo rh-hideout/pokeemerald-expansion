@@ -5146,7 +5146,7 @@ static bool32 IsValidSwitchIn(enum BattleTrainer trainer, u32 index)
     if (index >= PARTY_SIZE)
         return FALSE;
 
-    struct Pokemon *party = gParties[trainer];
+    struct Pokemon *party = GetTrainerParty(trainer); 
     if (!IsValidForBattle(&party[index]))
         return FALSE;
 
