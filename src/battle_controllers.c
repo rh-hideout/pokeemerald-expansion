@@ -3366,5 +3366,5 @@ bool32 BattleSideHasTwoTrainers(enum BattleSide side)
 
 bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
 {
-    return (GetBattlerTrainer(battler1) == GetBattlerTrainer(battler2));
+    return (GetBattlerParty(battler1) == GetBattlerParty(battler2));
 }
