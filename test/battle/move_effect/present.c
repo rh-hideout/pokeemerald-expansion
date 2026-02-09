@@ -45,8 +45,6 @@ DOUBLE_BATTLE_TEST("Present healing is blocked by Telepathy on an ally target")
 
 SINGLE_BATTLE_TEST("Present with Parental Bond hits twice when damaging, but only once when healing")
 {
-    s16 firstHit, secondHit, heal;
-
     GIVEN {
         ASSUME(GetSpeciesAbility(SPECIES_KANGASKHAN_MEGA, 0) == ABILITY_PARENTAL_BOND);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
@@ -56,10 +54,10 @@ SINGLE_BATTLE_TEST("Present with Parental Bond hits twice when damaging, but onl
         TURN { MOVE(player, MOVE_PRESENT, WITH_RNG(RNG_PRESENT, 254)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRESENT, player);
-        HP_BAR(opponent, captureDamage: &firstHit);
-        HP_BAR(opponent, captureDamage: &secondHit);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRESENT, player);
-        HP_BAR(opponent, captureDamage: &heal);
+        HP_BAR(opponent);
         NOT HP_BAR(opponent);
     }
 }
