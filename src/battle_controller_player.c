@@ -2104,7 +2104,7 @@ void HandleChooseMoveAfterDma3(enum BattlerId battler)
 
 static void PlayerChooseMoveInBattlePalace(enum BattlerId battler)
 {
-    if (--gBattleStruct->arenaMindPoints[battler] == 0)
+    if (--gBattleMons[battler].volatiles.arenaMindPoints == 0)
     {
         gBattlePalaceMoveSelectionRngValue = gRngValue;
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, ChooseMoveAndTargetInBattlePalace(battler));
@@ -2116,7 +2116,7 @@ void PlayerHandleChooseMove(enum BattlerId battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
     {
-        gBattleStruct->arenaMindPoints[battler] = 8;
+        gBattleMons[battler].volatiles.arenaMindPoints = 8;
         gBattlerControllerFuncs[battler] = PlayerChooseMoveInBattlePalace;
     }
     else

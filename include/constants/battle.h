@@ -306,8 +306,10 @@ enum VolatileFlags
     F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
     F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1)) \
-    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1))
-
+    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1)) \
+    F(VOLATILE_ARENA_MIND_POINTS,           arenaMindPoints,               (s32, UINT8_MAX)) \
+    F(VOLATILE_ARENA_SKILL_POINTS,          arenaSkillPoints,              (s32, UINT8_MAX)) \
+    F(VOLATILE_ARENA_START_HP,              arenaStartHP,                  (u32, UINT16_MAX)) \
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
 #define GET_VOLATILE_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeMaxValue)

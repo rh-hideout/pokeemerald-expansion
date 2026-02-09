@@ -617,9 +617,6 @@ struct BattleStruct
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     u8 AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
-    s8 arenaMindPoints[NUM_BATTLE_SIDES];
-    s8 arenaSkillPoints[NUM_BATTLE_SIDES];
-    u16 arenaStartHp[NUM_BATTLE_SIDES];
     u8 arenaLostPlayerMons; // Bits for party member, lost as in referee's decision, not by fainting.
     u8 arenaLostOpponentMons;
     u8 debugBattler;
