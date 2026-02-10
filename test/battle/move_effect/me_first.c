@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Me First can be selected under Taunt in Gen5+")
     PARAMETRIZE { gen = GEN_5; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_TAUNT_ME_FIRST, gen);
+        WITH_CONFIG(B_TAUNT_ME_FIRST, gen);
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_ME_FIRST, MOVE_TACKLE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_TAUNT, MOVE_TACKLE); }
     } WHEN {
