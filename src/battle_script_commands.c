@@ -3095,7 +3095,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     case MOVE_EFFECT_TOXIC:
     case MOVE_EFFECT_FROSTBITE:
         if (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !primary)
+        {
             gBattlescriptCurrInstr = battleScript;
+        }
         else if (CanSetNonVolatileStatus(
                     gBattlerAttacker,
                     gEffectBattler,
@@ -3103,7 +3105,13 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
                     battlerAbility,
                     moveEffect,
                     CHECK_TRIGGER))
+        {
             SetNonVolatileStatus(gEffectBattler, moveEffect, battleScript, TRIGGER_ON_MOVE);
+        }
+        else
+        {
+            gBattlescriptCurrInstr = battleScript;
+        }
         break;
     case MOVE_EFFECT_CONFUSION:
         if (!CanBeConfused(gEffectBattler)
@@ -15637,32 +15645,6 @@ void BS_TryActivateGulpMissile(void)
         }
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_TryGulpMissleStatus(void)
-{
-    NATIVE_ARGS(u8 battler);
-    bool32 canInflictStatus = TRUE;
-
-    if (!CanSetNonVolatileStatus(
-                gBattlerTarget,
-                gBattlerAttacker,
-                GetBattlerAbility(gBattlerTarget),
-                GetBattlerAbility(gBattlerAttacker),
-                MOVE_EFFECT_PARALYSIS,
-                CHECK_TRIGGER)
-            )
-    {
-        canInflictStatus = FALSE;
-    }
-
-    if (canInflictStatus && DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
-        canInflictStatus = FALSE;
-
-    if (canInflictStatus)
-        SetMoveEffect(gBattlerTarget, gBattlerAttacker, MOVE_EFFECT_PARALYSIS, cmd->nextInstr, EFFECT_PRIMARY);
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_TryQuash(void)

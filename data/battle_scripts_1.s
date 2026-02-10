@@ -5320,7 +5320,7 @@ BattleScript_GulpMissileNoDmgGorging:
 	handleformchange BS_TARGET, 0
 	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
 	waitanimation
-	trygulpmisslestatus
+	seteffectprimary BS_TARGET, BS_ATTACKER, MOVE_EFFECT_PARALYSIS
 	return
 BattleScript_GulpMissileNoSecondEffectGorging:
 	handleformchange BS_TARGET, 0
