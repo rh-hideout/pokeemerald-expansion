@@ -1608,7 +1608,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
     {
         ctx->battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
 
-        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, ctx->battlerDef), FALSE)
+        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, ctx->battlerDef, FALSE))
             continue;
 
         ctx->abilityDef = GetBattlerAbility(ctx->battlerDef);
