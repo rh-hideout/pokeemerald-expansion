@@ -664,7 +664,7 @@ static bool32 ShouldSwitchIfTrapperInParty(u32 battler)
     for (i = firstId; i < lastId; i++)
     {
         if (IsAceMon(battler, i))
-            return FALSE;
+            continue;
 
         monAbility = GetMonAbility(&party[i]);
 
