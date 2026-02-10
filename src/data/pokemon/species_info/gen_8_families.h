@@ -3159,7 +3159,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .teachableLearnset = sCramorantTeachableLearnset,
         .eggMoveLearnset = sCramorantEggMoveLearnset,
         .formSpeciesIdTable = sCramorantFormSpeciesIdTable,
-        .formChangeTable = sCramorantFormChangeTable,
+        .formChangeTable = sCramorantGulpingFormChangeTable,
     },
 
     [SPECIES_CRAMORANT_GORGING] =
@@ -3216,7 +3216,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .teachableLearnset = sCramorantTeachableLearnset,
         .eggMoveLearnset = sCramorantEggMoveLearnset,
         .formSpeciesIdTable = sCramorantFormSpeciesIdTable,
-        .formChangeTable = sCramorantFormChangeTable,
+        .formChangeTable = sCramorantGorgingFormChangeTable,
     },
 #endif //P_FAMILY_CRAMORANT
 
