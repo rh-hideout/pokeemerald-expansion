@@ -31,6 +31,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
 static bool32 CanAbilityTrapOpponent(enum Ability ability, u32 opponent);
 static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 static u32 GetBattleMonTypeMatchup(struct BattlePokemon opposingBattleMon, struct BattlePokemon battleMon);
+static bool32 IsOpponentMoveChargingOrInvulnerable(u32 opposingBattler, u32 incomingMove);
 
 static void InitializeSwitchinCandidate(struct Pokemon *mon)
 {
@@ -480,7 +481,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
     enum Type incomingType = CheckDynamicMoveType(GetBattlerMon(opposingBattler), incomingMove, opposingBattler, MON_IN_BATTLE);
-    bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
+    bool32 isOpposingBattlerChargingOrInvulnerable = IsOpponentMoveChargingOrInvulnerable(opposingBattler, incomingMove);
     s32 i, j;
 
     if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
@@ -618,7 +619,7 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(u32 battler)
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
 
-    bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
+    bool32 isOpposingBattlerChargingOrInvulnerable = IsOpponentMoveChargingOrInvulnerable(opposingBattler, incomingMove);
 
     if (IsDoubleBattle() || !(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
@@ -628,6 +629,21 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(u32 battler)
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
     return FALSE;
+}
+
+static bool32 IsOpponentMoveChargingOrInvulnerable(u32 opposingBattler, u32 incomingMove)
+{
+    enum BattleMoveEffects effect = GetMoveEffect(incomingMove);
+
+    if (IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove))
+        return TRUE;
+
+    // Dive/Fly/Bounce style two-turn moves are charging only if user is not already semi-invulnerable.
+    if ((effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP)
+     && !IsSemiInvulnerable(opposingBattler, CHECK_ALL))
+        return TRUE;
+
+    return !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove);
 }
 
 static bool32 ShouldSwitchIfTrapperInParty(u32 battler)
