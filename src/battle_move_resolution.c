@@ -1083,8 +1083,9 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
 {
     const u8 *battleScript = NULL;
     u32 numAffectedTargets = 0;
+    bool32 failureDueToTarget = TRUE;
 
-    while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
+    while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount && failureDueToTarget)
     {
         enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
 
@@ -1097,7 +1098,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             if (!CanFling(ctx->battlerAtk))
             {
                 battleScript = BattleScript_ButItFailed;
-                gBattleStruct->eventState.atkCancelerBattler = gBattlersCount; // no need to check this 4 times
+                failureDueToTarget = FALSE;
             }
             else if (!IsBattlerAlive(battlerDef)) // Edge case for removing a mon's item when there is no target available after using Fling.
             {
@@ -1124,7 +1125,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
             {
                 battleScript = BattleScript_ButItFailed;
-                gBattleStruct->eventState.atkCancelerBattler = gBattlersCount; // no need to check this 4 times
+                failureDueToTarget = FALSE;
             }
             else if (gBattleMons[battlerDef].item == ITEM_NONE
                   || GetBattlerAbility(battlerDef) == ABILITY_KLUTZ)
@@ -1179,11 +1180,12 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             }
             break;
         default:
-            gBattleStruct->eventState.atkCancelerBattler = gBattlersCount; // no need to check this 4 times
+            failureDueToTarget = FALSE;
             continue;
         }
 
-        gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
+        if (failureDueToTarget)
+            gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_FAILED;
     }
 
     switch (GetMoveEffect(ctx->move))
@@ -1366,7 +1368,7 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleContext *ctx)
     s32 priority = GetChosenMovePriority(ctx->battlerAtk, ctx->abilityAtk);
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move);
 
-    if (priority <= 0 || GetMoveEffect(ctx->move) == EFFECT_TEATIME || moveTarget == TARGET_FIELD || moveTarget == TARGET_OPPONENTS_FIELD)
+    if (priority <= 0 || moveTarget == TARGET_FIELD || moveTarget == TARGET_OPPONENTS_FIELD)
         return CANCELER_RESULT_SUCCESS;
 
     enum BattlerId battler;

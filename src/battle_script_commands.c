@@ -1011,8 +1011,8 @@ static bool32 ShouldSkipToMoveEnd(void)
 static void Cmd_attackcanceler(void)
 {
     CMD_ARGS();
-    assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S\nattackCanceler = %d", gBattlerAttacker, GetMoveName(gCurrentMove), gBattleStruct->eventState.atkCanceler);
-    assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S\nattackCanceler = %d", gBattlerTarget, GetMoveName(gCurrentMove), gBattleStruct->eventState.atkCanceler);
+    assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
+    assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
 
     if (gBattleStruct->battlerState[gBattlerAttacker].usedEjectItem)
     {
@@ -3604,14 +3604,25 @@ static void Cmd_setpreattackadditionaleffect(void)
             if ((gEffectBattler == gBattlerAttacker) != additionalEffect->self)
                 return;
 
-            SetMoveEffect(
-                gBattlerAttacker,
-                gEffectBattler,
-                additionalEffect->moveEffect,
-                gBattlescriptCurrInstr,
-                EFFECT_PRIMARY
-            );
+            u32 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), additionalEffect);
 
+            // Activate effect if it's primary (chance == 0) or if RNGesus says so
+            if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
+            {
+                gBattleCommunication[MULTISTRING_CHOOSER] = *((u8 *) &additionalEffect->multistring);
+
+                enum SetMoveEffectFlags flags = NO_FLAGS;
+                if (percentChance == 0) flags |= EFFECT_PRIMARY;
+                if (percentChance >= 100) flags |= EFFECT_CERTAIN;
+
+                SetMoveEffect(
+                    gBattlerAttacker,
+                    gEffectBattler,
+                    additionalEffect->moveEffect,
+                    gBattlescriptCurrInstr,
+                    flags
+                );
+            }
             return;
         }
         gEffectBattler = GetPossibleNextTarget(gEffectBattler);
@@ -6339,6 +6350,7 @@ static u32 GetPossibleNextTarget(u32 currTarget)
         RIGHT_FOE(gBattlerAttacker),
     };
 
+    // currTarget allows for a starting point without relying on values for previous targets being set
     if (currTarget != MAX_BATTLERS_COUNT)
     {
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
@@ -6346,7 +6358,7 @@ static u32 GetPossibleNextTarget(u32 currTarget)
             if (targetOrder[i] == currTarget)
                 break;
         }
-        i++;
+        i++; // next target after finding currTarget
     }
 
     while (i < MAX_BATTLERS_COUNT)
