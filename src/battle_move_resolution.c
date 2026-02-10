@@ -2722,6 +2722,7 @@ static enum MoveEndResult MoveEndMultihitMove(void)
      && gMultiHitCounter)
     {
         enum MoveTarget target = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+        gBattleStruct->preAttackEffectHappened = FALSE;
         gMultiHitCounter--;
         if (!IsBattlerAlive(gBattlerTarget) && target != TARGET_SMART)
             gMultiHitCounter = 0;

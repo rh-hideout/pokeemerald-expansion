@@ -116,7 +116,6 @@ SINGLE_BATTLE_TEST("Magic Coat reflection doesn't activate Protean/Libero")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_PROTEAN);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
         ONE_OF {
             MESSAGE("Greninja bounced the Spikes back!");
             MESSAGE("Cinderace bounced the Spikes back!");
