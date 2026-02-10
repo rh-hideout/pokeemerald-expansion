@@ -2079,3 +2079,121 @@ AI_SINGLE_BATTLE_TEST("AI_SMART_MON_CHOICES: AI sees its own terrain setting abi
         TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 1); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will consider all mons that meet the specified threshold (damage)")
+{
+    u64 aiFlag = 0;
+    PARAMETRIZE { aiFlag = 0; }
+    PARAMETRIZE { aiFlag = AI_FLAG_RANDOMIZE_SWITCHIN; }
+    if (aiFlag == AI_FLAG_RANDOMIZE_SWITCHIN)
+        PASSES_RANDOMLY(1, 5, RNG_AI_RANDOM_SWITCHIN_POST_KO);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | aiFlag | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_PROTECT, MOVE_BODY_SLAM); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
+    } WHEN {
+        if (aiFlag == AI_FLAG_RANDOMIZE_SWITCHIN)
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 5); }
+        else
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will consider all mons that meet the specified threshold (type matchup)")
+{
+    u64 aiFlag = 0;
+    PARAMETRIZE { aiFlag = 0; }
+    PARAMETRIZE { aiFlag = AI_FLAG_RANDOMIZE_SWITCHIN; }
+    if (aiFlag == AI_FLAG_RANDOMIZE_SWITCHIN)
+        PASSES_RANDOMLY(1, 5, RNG_AI_RANDOM_SWITCHIN_POST_KO);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | aiFlag | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_PROTECT, MOVE_BODY_SLAM); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ARON) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_SCRATCH); }
+    } WHEN {
+        if (aiFlag == AI_FLAG_RANDOMIZE_SWITCHIN)
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 5); }
+        else
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will consider all mons that meet the specified threshold (type matchup effective move)")
+{
+    u64 aiFlag = 0;
+    PARAMETRIZE { aiFlag = 0; }
+    PARAMETRIZE { aiFlag = AI_FLAG_RANDOMIZE_SWITCHIN; }
+    if (aiFlag == AI_FLAG_RANDOMIZE_SWITCHIN)
+        PASSES_RANDOMLY(1, 5, RNG_AI_RANDOM_SWITCHIN_POST_KO);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | aiFlag | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_PROTECT, MOVE_BODY_SLAM); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_GEODUDE) { Level(70); Moves(MOVE_KARATE_CHOP); }
+        OPPONENT(SPECIES_ARON) { Level(70); Moves(MOVE_KARATE_CHOP); }
+        OPPONENT(SPECIES_GEODUDE) { Level(70); Moves(MOVE_KARATE_CHOP); }
+        OPPONENT(SPECIES_GEODUDE) { Level(70); Moves(MOVE_KARATE_CHOP); }
+        OPPONENT(SPECIES_GEODUDE) { Level(70); Moves(MOVE_KARATE_CHOP); }
+    } WHEN {
+        if (aiFlag == AI_FLAG_RANDOMIZE_SWITCHIN)
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 5); }
+        else
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will consider all mons that meet the specified threshold (defensive)")
+{
+    u64 aiFlag = 0;
+    PARAMETRIZE { aiFlag = 0; }
+    PARAMETRIZE { aiFlag = AI_FLAG_RANDOMIZE_SWITCHIN; }
+    if (aiFlag == AI_FLAG_RANDOMIZE_SWITCHIN)
+        PASSES_RANDOMLY(1, 5, RNG_AI_RANDOM_SWITCHIN_MID_BATTLE);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | aiFlag | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(2); Moves(MOVE_U_TURN); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); SpDefense(150); Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); SpDefense(400); Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); SpDefense(150); Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); SpDefense(150); Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); SpDefense(150); Moves(MOVE_WATER_GUN); }
+    } WHEN {
+        if (aiFlag == AI_FLAG_RANDOMIZE_SWITCHIN)
+            TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 5); }
+        else
+            TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI will not switch out if the opposite battler is absent and its moves can still affect the other opponent")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { HP(41); Speed(1); }
+        MULTI_PARTNER(SPECIES_DRAKLOAK) { HP(41); MaxHP(100); Speed(4); Item(ITEM_LIFE_ORB); Moves(MOVE_DRAGON_RAGE, MOVE_SHADOW_BALL); }
+        MULTI_PARTNER(SPECIES_DRAGAPULT) { Speed(4); Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_A(SPECIES_CYCLIZAR) { HP(41); MaxHP(100); Speed(3); Item(ITEM_LIFE_ORB); Moves(MOVE_BODY_SLAM, MOVE_DRAGON_RAGE); }
+        MULTI_OPPONENT_A(SPECIES_DRAMPA) { Speed(3); Moves(MOVE_BODY_SLAM); }
+        MULTI_OPPONENT_B(SPECIES_WYNAUT) { Speed(2); HP(41); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_BODY_SLAM, target: playerLeft); 
+            EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target: opponentRight); 
+        }
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_DRAGON_RAGE, target: playerRight);
+            EXPECT_MOVE(playerRight, MOVE_DRAGON_RAGE, target: opponentLeft);
+        }
+    }
+}

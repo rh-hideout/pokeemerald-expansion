@@ -1,8 +1,6 @@
 #ifndef GUARD_CONSTANTS_EVENT_OBJECT_MOVEMENT_H
 #define GUARD_CONSTANTS_EVENT_OBJECT_MOVEMENT_H
 
-#define MOVEMENT_TYPE_WANDER_AROUND_SLOWER MOVEMENT_TYPE_WANDER_AROUND
-
 
 #define MOVEMENT_TYPE_NONE                             0x0
 #define MOVEMENT_TYPE_LOOK_AROUND                      0x1
@@ -86,7 +84,8 @@
 #define MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT        0x4F
 #define MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT       0x50
 #define MOVEMENT_TYPE_FOLLOW_PLAYER                    0x51
-#define NUM_MOVEMENT_TYPES                             0x52
+#define MOVEMENT_TYPE_WANDER_AROUND_SLOWER             0x52
+#define NUM_MOVEMENT_TYPES                             0x53
 
 #define MOVEMENT_ACTION_FACE_DOWN                       0x0
 #define MOVEMENT_ACTION_FACE_UP                         0x1
