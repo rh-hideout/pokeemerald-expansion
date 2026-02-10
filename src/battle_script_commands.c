@@ -12087,7 +12087,6 @@ static void Cmd_presentdamagecalculation(void)
     CMD_ARGS();
 
     u32 rand = RandomUniform(RNG_PRESENT, 0, 0xFF);
-    bool32 blockedByTelepathy = GetBattlerAbility(gBattlerTarget) == ABILITY_TELEPATHY && gBattlerTarget == BATTLE_PARTNER(gBattlerAttacker);
 
     /* Don't reroll present effect/power for the second hit of Parental Bond.
      * Not sure if this is the correct behaviour, but bulbapedia states
@@ -12120,7 +12119,7 @@ static void Cmd_presentdamagecalculation(void)
     {
         gBattlescriptCurrInstr = BattleScript_HitFromCritCalc;
     }
-    else if (blockedByTelepathy)
+    else if (GetBattlerAbility(gBattlerTarget) == ABILITY_TELEPATHY && gBattlerTarget == BATTLE_PARTNER(gBattlerAttacker))
     {
         gBattlescriptCurrInstr = BattleScript_MoveMissedPause;
     }
