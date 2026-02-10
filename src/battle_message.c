@@ -2590,7 +2590,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             {
                 if (BattlerIsLink(battler)) // Link Partner
                 {
-                    stringPtr = sText_LinkTrainer1WithdrewPkmn;
+                    stringPtr = sText_LinkPartnerWithdrewPkmn2;
                 }
                 else // In-game Partner
                 {
@@ -2600,7 +2600,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             else if (BattlerIsLink(battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || TRAINER_BATTLE_PARAM.opponentB == TRAINER_LINK_OPPONENT || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent B and test opponent
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || gBattleTypeFlags & BATTLE_TYPE_MULTI)
                     stringPtr = sText_LinkTrainer2WithdrewPkmn;
                 else
                     stringPtr = sText_LinkTrainer1WithdrewPkmn;
@@ -2667,17 +2667,17 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             {
                 if (BattlerIsLink(gBattleScripting.battler)) // Link Partner
                 {
-                    stringPtr = sText_LinkPartnerSentOutPkmn1;
+                    stringPtr = sText_LinkPartnerSentOutPkmn2;
                 }
                 else // In-game Partner
                 {
-                    stringPtr = sText_InGamePartnerSentOutPkmn1;
+                    stringPtr = sText_InGamePartnerSentOutPkmn2;
                 }
             }
             else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || TRAINER_BATTLE_PARAM.opponentB == TRAINER_LINK_OPPONENT || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent B and test opponent
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || gBattleTypeFlags & BATTLE_TYPE_MULTI)
                     stringPtr = sText_LinkTrainer2SentOutPkmn2;
                 else
                     stringPtr = sText_LinkTrainerSentOutPkmn2;
