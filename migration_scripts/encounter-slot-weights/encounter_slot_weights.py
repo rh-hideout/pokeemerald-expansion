@@ -2,7 +2,7 @@ import json
 import re
 import sys
 
-interactive = len(sys.argv) > 1 and sys.argv[1] == "--interactive"
+auto = len(sys.argv) > 1 and (sys.argv[1] == "--auto" or sys.argv[1] == "-a")
 
 # no need to be fully accurate, we just want a sensible ordering
 # sorts alternate forms after every base form pokemon, but this is good enough
@@ -66,13 +66,13 @@ for group in wild_encounters["wild_encounter_groups"]:
             if "groups" in field:
                 encounter_groups[field["type"]] = {}
                 for group_name, group_slots in field["groups"].items():
-                    if interactive:
+                    if auto:
+                        new_name = f"{field['type']}_{group_name}"
+                        print(f"Split group {group_name} from field {field['type']} into new field {new_name}")
+                    else:
                         new_name = input(f"Name for new field from field {field['type']}'s group {group_name} (default: {field['type']}_{group_name}):")
                         if not new_name:
                             new_name = f"{field['type']}_{group_name}"
-                    else:
-                        new_name = f"{field['type']}_{group_name}"
-                        print(f"Split group {group_name} from field {field['type']} into new field {new_name}")
                     encounter_groups[field["type"]][group_name] = {
                         "new_name": new_name,
                         "slots": group_slots
@@ -86,11 +86,11 @@ for encounter_type, groups in encounter_groups.items():
     for _, group in groups.items():
         encounter_rates[group["new_name"]] = [encounter_rates[encounter_type][i] for i in group["slots"]]
 
-optimize = True
+optimize = False
 sort = True
-if (interactive):
-    inp = input("Optimize encounter slots for space? [Y(es)/n(o)] (default: yes) ")
-    optimize = bool(not inp or inp.lower() in ['y', 'yes'])
+if (not auto):
+    inp = input("Optimize encounter slots for space (affects encounter rates with Lure active, saves 2KB on vanilla Emerald)? [y(es)/N(o)] (default: no) ")
+    optimize = bool(inp and inp.lower() in ['y', 'yes'])
     inp = input("Sort encounter slots by species ID and level? [Y(es)/n(o)] (default: yes) ")
     sort = bool(not inp or inp.lower() in ['y', 'yes'])
 
