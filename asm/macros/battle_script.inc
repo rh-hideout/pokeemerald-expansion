@@ -1635,6 +1635,10 @@
 	callnative BS_TryActivateGulpMissile
 	.endm
 
+	.macro trygulpmisslestatus
+	callnative BS_TryGulpMissleStatus
+	.endm
+
 	.macro tryquash failInstr:req
 	callnative BS_TryQuash
 	.4byte \failInstr
