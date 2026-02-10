@@ -114,13 +114,13 @@ SINGLE_BATTLE_TEST("Magic Coat reflection doesn't activate Protean/Libero")
     } WHEN {
         TURN { MOVE(player, MOVE_MAGIC_COAT); MOVE(opponent, MOVE_SPIKES); }
     } SCENE {
-        ABILITY_POPUP(player, ABILITY_PROTEAN);
+        ABILITY_POPUP(player, ability);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
         ONE_OF {
             MESSAGE("Greninja bounced the Spikes back!");
             MESSAGE("Cinderace bounced the Spikes back!");
         }
-        NOT ABILITY_POPUP(player, ABILITY_PROTEAN);
+        NOT ABILITY_POPUP(player, ability);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
     } THEN {
         EXPECT_EQ(player->types[0], TYPE_PSYCHIC);
