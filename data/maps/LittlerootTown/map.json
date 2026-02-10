@@ -23,8 +23,8 @@
     {
       "local_id": "LOCALID_LITTLEROOT_TWIN",
       "graphics_id": "OBJ_EVENT_GFX_TWIN",
-      "x": 16,
-      "y": 10,
+      "x": 12,
+      "y": 2,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 1,
@@ -36,7 +36,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FAT_MAN",
-      "x": 12,
+      "x": 16,
       "y": 13,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
@@ -50,7 +50,7 @@
     {
       "graphics_id": "OBJ_EVENT_GFX_BOY_2",
       "x": 14,
-      "y": 17,
+      "y": 19,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 2,
@@ -131,22 +131,22 @@
   ],
   "warp_events": [
     {
-      "x": 14,
-      "y": 8,
+      "x": 16,
+      "y": 6,
       "elevation": 0,
       "dest_map": "MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F",
       "dest_warp_id": "1"
     },
     {
       "x": 5,
-      "y": 8,
+      "y": 6,
       "elevation": 0,
       "dest_map": "MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F",
       "dest_warp_id": "1"
     },
     {
       "x": 7,
-      "y": 16,
+      "y": 21,
       "elevation": 0,
       "dest_map": "MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB",
       "dest_warp_id": "0"
@@ -182,8 +182,8 @@
     },
     {
       "type": "trigger",
-      "x": 8,
-      "y": 9,
+      "x": 11,
+      "y": 7,
       "elevation": 3,
       "var": "VAR_LITTLEROOT_TOWN_STATE",
       "var_value": "3",
@@ -191,8 +191,8 @@
     },
     {
       "type": "trigger",
-      "x": 9,
-      "y": 9,
+      "x": 12,
+      "y": 7,
       "elevation": 3,
       "var": "VAR_LITTLEROOT_TOWN_STATE",
       "var_value": "3",
@@ -233,21 +233,22 @@
       "var": "VAR_LITTLEROOT_TOWN_STATE",
       "var_value": "3",
       "script": "LittlerootTown_EventScript_GiveRunningShoesTrigger1"
+    },
+    {
+      "type": "trigger",
+      "x": 10,
+      "y": 7,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "LittlerootTown_EventScript_GiveRunningShoesTrigger3"
     }
   ],
   "bg_events": [
     {
       "type": "sign",
-      "x": 15,
-      "y": 13,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LittlerootTown_EventScript_TownSign"
-    },
-    {
-      "type": "sign",
       "x": 6,
-      "y": 17,
+      "y": 22,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LittlerootTown_EventScript_BirchsLabSign"
@@ -255,15 +256,15 @@
     {
       "type": "sign",
       "x": 7,
-      "y": 8,
+      "y": 6,
       "elevation": 3,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LittlerootTown_EventScript_BrendansHouseSign"
     },
     {
       "type": "sign",
-      "x": 12,
-      "y": 8,
+      "x": 14,
+      "y": 6,
       "elevation": 3,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LittlerootTown_EventScript_MaysHouseSign"
