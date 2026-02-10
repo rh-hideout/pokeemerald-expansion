@@ -31,7 +31,6 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
 static bool32 CanAbilityTrapOpponent(enum Ability ability, u32 opponent);
 static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 static u32 GetBattleMonTypeMatchup(struct BattlePokemon opposingBattleMon, struct BattlePokemon battleMon);
-static bool32 IsOpponentMoveChargingOrInvulnerable(u32 opposingBattler, u32 incomingMove);
 
 static void InitializeSwitchinCandidate(struct Pokemon *mon)
 {
@@ -481,7 +480,6 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
     enum Type incomingType = CheckDynamicMoveType(GetBattlerMon(opposingBattler), incomingMove, opposingBattler, MON_IN_BATTLE);
-    bool32 isOpposingBattlerChargingOrInvulnerable = IsOpponentMoveChargingOrInvulnerable(opposingBattler, incomingMove);
     s32 i, j;
 
     if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
@@ -531,42 +529,42 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_FLASH_FIRE;
     }
-    if (incomingType == TYPE_WATER || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_WATER))
+    if (incomingType == TYPE_WATER)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_WATER_ABSORB;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_DRY_SKIN;
         if (GetConfig(B_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_STORM_DRAIN;
     }
-    if (incomingType == TYPE_ELECTRIC || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_ELECTRIC))
+    if (incomingType == TYPE_ELECTRIC)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_VOLT_ABSORB;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_MOTOR_DRIVE;
         if (GetConfig(B_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_LIGHTNING_ROD;
     }
-    if (incomingType == TYPE_GRASS || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_GRASS))
+    if (incomingType == TYPE_GRASS)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_SAP_SIPPER;
     }
-    if (incomingType == TYPE_GROUND || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_GROUND))
+    if (incomingType == TYPE_GROUND)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_EARTH_EATER;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_LEVITATE;
     }
-    if (IsSoundMove(incomingMove) || (isOpposingBattlerChargingOrInvulnerable && IsSoundMove(incomingMove)))
+    if (IsSoundMove(incomingMove))
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_SOUNDPROOF;
     }
-    if (IsBallisticMove(incomingMove) || (isOpposingBattlerChargingOrInvulnerable && IsBallisticMove(incomingMove)))
+    if (IsBallisticMove(incomingMove))
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_BULLETPROOF;
     }
-    if (IsWindMove(incomingMove) || (isOpposingBattlerChargingOrInvulnerable && IsWindMove(incomingMove)))
+    if (IsWindMove(incomingMove))
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_WIND_RIDER;
     }
-    if (IsPowderMove(incomingMove) || (isOpposingBattlerChargingOrInvulnerable && IsPowderMove(incomingMove)))
+    if (IsPowderMove(incomingMove))
     {
         if (GetConfig(B_POWDER_OVERCOAT) >= GEN_6)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_OVERCOAT;
@@ -618,32 +616,28 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(u32 battler)
 {
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
-
-    bool32 isOpposingBattlerChargingOrInvulnerable = IsOpponentMoveChargingOrInvulnerable(opposingBattler, incomingMove);
+    enum BattleMoveEffects effect = GetMoveEffect(incomingMove);
 
     if (IsDoubleBattle() || !(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
+    if (gAiLogicData->mostSuitableMonId[battler] == PARTY_SIZE)
+        return FALSE;
+
+    // Two-turn attacks that charge without entering semi-invulnerable state (e.g. Solar Beam).
+    // First turn of Fly/Dive/Bounce/Sky Drop: move is selected this turn but user is not yet semi-invulnerable.
+    // Opponent is already semi-invulnerable and the predicted incoming move would not hit this turn.
+    if (!(IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove)
+        || ((effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP) && !IsSemiInvulnerable(opposingBattler, CHECK_ALL))
+        || !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove)))
+    {
+        return FALSE;
+    }
 
     // In a world with a unified ShouldSwitch function, also want to check whether we already win 1v1 and if we do don't switch; not worth doubling the HasBadOdds computation for now
-    if (isOpposingBattlerChargingOrInvulnerable && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE && RandomPercentage(RNG_AI_SWITCH_FREE_TURN, GetSwitchChance(SHOULD_SWITCH_FREE_TURN)))
+    if (RandomPercentage(RNG_AI_SWITCH_FREE_TURN, GetSwitchChance(SHOULD_SWITCH_FREE_TURN)))
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
     return FALSE;
-}
-
-static bool32 IsOpponentMoveChargingOrInvulnerable(u32 opposingBattler, u32 incomingMove)
-{
-    enum BattleMoveEffects effect = GetMoveEffect(incomingMove);
-
-    if (IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove))
-        return TRUE;
-
-    // Dive/Fly/Bounce style two-turn moves are charging only if user is not already semi-invulnerable.
-    if ((effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP)
-     && !IsSemiInvulnerable(opposingBattler, CHECK_ALL))
-        return TRUE;
-
-    return !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove);
 }
 
 static bool32 ShouldSwitchIfTrapperInParty(u32 battler)
