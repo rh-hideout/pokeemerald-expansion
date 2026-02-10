@@ -1357,15 +1357,22 @@ void SetBoxMonPerfectIVs(struct BoxPokemon *mon, u32 numPerfect)
     if (!numPerfect)
         return;
 
+    u32 i, iv = MAX_PER_STAT_IVS;
+    if (numPerfect >= NUM_STATS)
+    {
+        for (i = 0; i < NUM_STATS; i++)
+            SetBoxMonData(mon, MON_DATA_HP_IV + i, &iv);
+        return;
+    }
+
     enum Stat availableIVs[NUM_STATS];
     enum Stat selectedIvs[NUM_STATS];
-    u32 i, iv = MAX_PER_STAT_IVS;
     // Initialize a list of IV indices.
     for (i = 0; i < NUM_STATS; i++)
         availableIVs[i] = i;
 
     // Select the IVs that will be perfected.
-    for (i = 0; i < NUM_STATS && i < numPerfect; i++)
+    for (i = 0; i < numPerfect; i++)
     {
         u8 index = Random() % (NUM_STATS - i);
         selectedIvs[i] = availableIVs[index];
