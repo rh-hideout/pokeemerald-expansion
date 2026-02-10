@@ -3312,7 +3312,7 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
         else
             return B_TRAINER_0;
     case B_BATTLER_3:
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
             return B_TRAINER_3;
         else
             return B_TRAINER_1;

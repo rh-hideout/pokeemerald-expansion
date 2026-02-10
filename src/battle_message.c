@@ -99,8 +99,8 @@ static const u8 sText_TwoLinkTrainersWantToBattle[] = _("You are challenged by {
 static const u8 sText_Trainer1SentOutPkmn[] = _("{B_TRAINER1_NAME_WITH_CLASS} sent out {B_OPPONENT_MON1_NAME}!");
 static const u8 sText_Trainer1SentOutTwoPkmn[] = _("{B_TRAINER1_NAME_WITH_CLASS} sent out {B_OPPONENT_MON1_NAME} and {B_OPPONENT_MON2_NAME}!");
 static const u8 sText_Trainer1SentOutPkmn2[] = _("{B_TRAINER1_NAME_WITH_CLASS} sent out {B_BUFF1}!");
-static const u8 sText_LinkTrainerSentOutPkmn[] = _("{B_LINK_OPPONENT1_NAME} sent out {B_OPPONENT_MON1_NAME}!");
-static const u8 sText_LinkTrainer2SentOutPkmn2[] = _("{B_LINK_OPPONENT2_NAME} sent out {B_OPPONENT_MON2_NAME}!");
+static const u8 sText_LinkTrainerSentOutPkmn[] = _("{B_LINK_OPPONENT1_NAME} sent out {B_BUFF1}!");
+static const u8 sText_LinkTrainer2SentOutPkmn2[] = _("{B_LINK_OPPONENT2_NAME} sent out {B_BUFF1}!");
 static const u8 sText_LinkTrainerSentOutTwoPkmn[] = _("{B_LINK_OPPONENT1_NAME} sent out {B_OPPONENT_MON1_NAME} and {B_OPPONENT_MON2_NAME}!");
 static const u8 sText_TwoLinkTrainersSentOutPkmn[] = _("{B_LINK_OPPONENT1_NAME} sent out {B_LINK_OPPONENT_MON1_NAME}! {B_LINK_OPPONENT2_NAME} sent out {B_LINK_OPPONENT_MON2_NAME}!");
 static const u8 sText_LinkTrainerSentOutPkmn2[] = _("{B_LINK_OPPONENT1_NAME} sent out {B_BUFF1}!");
@@ -2477,7 +2477,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
                 {
-                    if (BattlerIsPlayer(battler)) // Player is battler 0
+                    if (BattlerIsPlayer(battler) && (battler & BIT_FLANK) == B_FLANK_LEFT) // Player is battler 0
                         stringPtr = sText_InGamePartnerSentOutZGoN;
                     else // Player is battler 2
                         stringPtr = sText_InGamePartnerSentOutNGoZ;
@@ -2488,10 +2488,17 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                 }
                 else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                 {
-                    if (BattlerIsPlayer(battler)) // Player is battler 0
+                        DebugPrintf("%d STRINGID_INTROSENDOUT gBattleTypeFlags & BATTLE_TYPE_MULTI", battler);
+                    if (BattlerIsPlayer(battler))
+                    {
+                        DebugPrintf("%d STRINGID_INTROSENDOUT gBattleTypeFlags & BATTLE_TYPE_MULTI BattlerIsPlayer(battler)", battler);
                         stringPtr = sText_LinkPartnerSentOutPkmn2GoPkmn;
-                    else // Player is battler 2
+                    }
+                    else
+                    {
+                        DebugPrintf("%d STRINGID_INTROSENDOUT gBattleTypeFlags & BATTLE_TYPE_MULTI !BattlerIsPlayer(battler)", battler);
                         stringPtr = sText_LinkPartnerSentOutPkmn1GoPkmn;
+                    }
                 }
                 else
                 {
@@ -2583,7 +2590,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             {
                 if (BattlerIsLink(battler)) // Link Partner
                 {
-                    stringPtr = sText_LinkPartnerWithdrewPkmn2;
+                    stringPtr = sText_LinkTrainer1WithdrewPkmn;
                 }
                 else // In-game Partner
                 {
@@ -2660,11 +2667,11 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             {
                 if (BattlerIsLink(gBattleScripting.battler)) // Link Partner
                 {
-                    stringPtr = sText_LinkPartnerSentOutPkmn2;
+                    stringPtr = sText_LinkPartnerSentOutPkmn1;
                 }
                 else // In-game Partner
                 {
-                    stringPtr = sText_InGamePartnerSentOutPkmn2;
+                    stringPtr = sText_InGamePartnerSentOutPkmn1;
                 }
             }
             else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
@@ -3205,19 +3212,23 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 toCpy = text;
                 break;
             case B_TXT_LINK_PLAYER_MON1_NAME: // link first player poke name
-                GetBattlerNick(gLinkPlayers[multiplayerId].id, text);
+                DebugPrintf("B_TXT_LINK_PLAYER_MON1_NAME GetBattlerAtPosition(B_POSITION_PLAYER_LEFT) %d", GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
+                GetBattlerNick(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT), text);
                 toCpy = text;
                 break;
             case B_TXT_LINK_OPPONENT_MON1_NAME: // link first opponent poke name
-                GetBattlerNick(gLinkPlayers[multiplayerId].id ^ 1, text);
+                DebugPrintf("B_TXT_LINK_OPPONENT_MON1_NAME GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT) %d", GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
+                GetBattlerNick(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), text);
                 toCpy = text;
                 break;
             case B_TXT_LINK_PLAYER_MON2_NAME: // link second player poke name
-                GetBattlerNick(gLinkPlayers[multiplayerId].id ^ 2, text);
+                DebugPrintf("B_TXT_LINK_PLAYER_MON2_NAME GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT) %d", GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT));
+                GetBattlerNick(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), text);
                 toCpy = text;
                 break;
             case B_TXT_LINK_OPPONENT_MON2_NAME: // link second opponent poke name
-                GetBattlerNick(gLinkPlayers[multiplayerId].id ^ 3, text);
+                DebugPrintf("B_TXT_LINK_OPPONENT_MON2_NAME GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT) %d", GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT));
+                GetBattlerNick(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), text);
                 toCpy = text;
                 break;
             case B_TXT_ATK_NAME_WITH_PREFIX_MON1: // Unused, to change into sth else.
@@ -3356,10 +3367,10 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 toCpy = gLinkPlayers[GetBattlerMultiplayerId(BATTLE_PARTNER(gLinkPlayers[multiplayerId].id))].name;
                 break;
             case B_TXT_LINK_OPPONENT1_NAME: // link opponent 1 name
-                toCpy = gLinkPlayers[GetBattlerMultiplayerId(BATTLE_OPPOSITE(gLinkPlayers[multiplayerId].id))].name;
+                toCpy = gLinkPlayers[GetBattlerMultiplayerId(LEFT_FOE(gLinkPlayers[multiplayerId].id))].name;
                 break;
             case B_TXT_LINK_OPPONENT2_NAME: // link opponent 2 name
-                toCpy = gLinkPlayers[GetBattlerMultiplayerId(BATTLE_PARTNER(BATTLE_OPPOSITE(gLinkPlayers[multiplayerId].id)))].name;
+                toCpy = gLinkPlayers[GetBattlerMultiplayerId(RIGHT_FOE(gLinkPlayers[multiplayerId].id))].name;
                 break;
             case B_TXT_LINK_SCR_TRAINER_NAME: // link scripting active name
                 toCpy = gLinkPlayers[GetBattlerMultiplayerId(gBattleScripting.battler)].name;
