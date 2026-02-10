@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Transform fails on semi-invulnerable target in Gen2+")
     PARAMETRIZE { genConfig = GEN_2; expectFail = TRUE; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_TRANSFORM_SEMI_INV_FAIL, genConfig);
+        WITH_CONFIG(B_TRANSFORM_SEMI_INV_FAIL, genConfig);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_DIG); }
         OPPONENT(SPECIES_DITTO) { Speed(10); Moves(MOVE_TRANSFORM); }
     } WHEN {
@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Transform fails on transformed target in Gen2+")
     PARAMETRIZE { genConfig = GEN_2; expectFail = TRUE; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_TRANSFORM_TARGET_FAIL, genConfig);
+        WITH_CONFIG(B_TRANSFORM_TARGET_FAIL, genConfig);
         PLAYER(SPECIES_DITTO) { Speed(50); Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
     } WHEN {
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Transform fails when the user is already transformed in Gen5
     PARAMETRIZE { genConfig = GEN_5; expectFail = TRUE; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_TRANSFORM_USER_FAIL, genConfig);
+        WITH_CONFIG(B_TRANSFORM_USER_FAIL, genConfig);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_DITTO) { Speed(10); Moves(MOVE_TRANSFORM, MOVE_CELEBRATE); }
     } WHEN {
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Transform fails on target behind substitute in Gen5+")
     PARAMETRIZE { genConfig = GEN_5; expectFail = TRUE; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_TRANSFORM_SUBSTITUTE_FAIL, genConfig);
+        WITH_CONFIG(B_TRANSFORM_SUBSTITUTE_FAIL, genConfig);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_SUBSTITUTE); }
         OPPONENT(SPECIES_DITTO) { Speed(10); Moves(MOVE_TRANSFORM); }
     } WHEN {
