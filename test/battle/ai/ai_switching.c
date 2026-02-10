@@ -1742,9 +1742,10 @@ AI_DOUBLE_BATTLE_TEST("AI will not choose to switch out Dondozo with Commander T
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_ZIGZAGOON) { Moves (MOVE_CELEBRATE); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_PERISH_SONG); }
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); }
-        TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); }
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_WATER_GUN); }
+        // Commander Tatsugiri cannot act while swallowed, so skip its turn explicitly.
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_PERISH_SONG); SKIP_TURN(opponentRight); }
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); SKIP_TURN(opponentRight); }
+        TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); SKIP_TURN(opponentRight); }
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_WATER_GUN); SKIP_TURN(opponentRight); }
     }
 }
