@@ -2434,32 +2434,39 @@ gBattleAnimMove_DracoMeteor::
 	call DracoMeteor2
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=32@; For Meteor 1	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=32@; For Meteor 1
+	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
 	delay 7
 	call DracoMeteor3
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=32@; For Meteor 2	delay 7
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=32@; For Meteor 2
+	delay 7
 	call DracoMeteor4
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=32@; For Meteor 3	delay 7
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=32@; For Meteor 3
+	delay 7
 	call DracoMeteor1
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=32@; For Meteor 4	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=32@; For Meteor 4
+	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
 	delay 7
 	call DracoMeteor2
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=32@; For Meteor 1	delay 7
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=32@; For Meteor 1
+	delay 7
 	call DracoMeteor3
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=32@; For Meteor 3	delay 15
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=32@; For Meteor 3
+	delay 15
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=32@; For Meteor 3	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 2, 1
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=32@; For Meteor 3
+	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 2, 1
 	delay 7
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 12, 0, RGB(1, 2, 11)
 	waitforvisualfinish
@@ -4918,7 +4925,8 @@ gBattleAnimMove_Hex::
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 2, 0, 37, 1
 	playsewithpan SE_M_NIGHTMARE, SOUND_PAN_TARGET
 	delay 32
-	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=12, color=RGB(10, 2, 19)@;Deep purple	createsprite gCurseGhostSpriteTemplate, ANIM_TARGET, 4
+	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=12, color=RGB(10, 2, 19)@;Deep purple
+	createsprite gCurseGhostSpriteTemplate, ANIM_TARGET, 4
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 0, 16, 0, RGB(10, 2, 19) @;Deep purple
@@ -7706,7 +7714,8 @@ gBattleAnimMove_TrickOrTreat::
 	createvisualtask AnimTask_ScaryFace, 5
 	delay 13
 	waitforvisualfinish
-	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=12, color=RGB(10, 2, 19)@;Deep purple	playsewithpan SE_M_NIGHTMARE, SOUND_PAN_TARGET
+	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=12, color=RGB(10, 2, 19)@;Deep purple
+	playsewithpan SE_M_NIGHTMARE, SOUND_PAN_TARGET
 	createsprite gCurseGhostSpriteTemplate, ANIM_TARGET, 2
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 14, 1
 	waitforvisualfinish
@@ -9278,7 +9287,8 @@ gBattleAnimMove_OblivionWing::
 	call OblivionWingBeam
 	call OblivionWingBeam
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 40, 1
-	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=4, initial_blend_y=0, target_blend_y=12, color=RGB(31, 4, 10)@Pinkish Red	call OblivionWingBeam
+	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=4, initial_blend_y=0, target_blend_y=12, color=RGB(31, 4, 10)@Pinkish Red
+	call OblivionWingBeam
 	call OblivionWingBeam
 	call OblivionWingBeam
 	call OblivionWingBeam
@@ -13183,7 +13193,8 @@ gBattleAnimMove_DynamaxCannon::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 2, 15, 0, 0
 	fadetobg BG_DYNAMAX_CANNON
 	waitbgfadein
-	blend_color_cycle selector=F_PAL_TARGET, delay=4, num_blends=4, initial_blend_y=0, target_blend_y=12, color=RGB(31, 4, 10)@Pinkish Red	panse SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER SOUND_PAN_TARGET 2 0
+	blend_color_cycle selector=F_PAL_TARGET, delay=4, num_blends=4, initial_blend_y=0, target_blend_y=12, color=RGB(31, 4, 10)@Pinkish Red
+	panse SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER SOUND_PAN_TARGET 2 0
 	shake_mon_or_platform velocity=4, shake_timer=1, shake_duration=180, type=1
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_ATTACKER, 0, 4, 87, 1
 	call DynamaxCannonLaunch
@@ -13316,7 +13327,8 @@ gBattleAnimMove_TarShot::
 	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
 	delay 15
 	createvisualtask AnimTask_ShakeMon2, 5, ANIM_TARGET, 2, 0, 10, 1
-	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=16, color=RGB_BLACK@;Black	createsprite gAppleAcidDripTemplate, ANIM_TARGET, 2, 0xffe6, 0xffe8, 0x0, 0xf, 0x37
+	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=16, color=RGB_BLACK@;Black
+	createsprite gAppleAcidDripTemplate, ANIM_TARGET, 2, 0xffe6, 0xffe8, 0x0, 0xf, 0x37
 	playsewithpan SE_M_BUBBLE, SOUND_PAN_TARGET
 	delay 10
 	createsprite gAppleAcidDripTemplate, ANIM_TARGET, 2, 0xf, 0xffe5, 0x0, 0xC, 0x32
@@ -14288,7 +14300,8 @@ gBattleAnimMove_Eternabeam::
 	call OblivionWingBeam
 	call OblivionWingBeam
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
-	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=4, initial_blend_y=0, target_blend_y=12, color=RGB(31, 4, 10)@Pinkish Red	call OblivionWingBeam
+	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=4, initial_blend_y=0, target_blend_y=12, color=RGB(31, 4, 10)@Pinkish Red
+	call OblivionWingBeam
 	call OblivionWingBeam
 	call OblivionWingBeam
 	call OblivionWingBeam
@@ -15039,7 +15052,8 @@ gBattleAnimMove_CorrosiveGas::
 	monbg ANIM_ATTACKER
 	loopsewithpan SE_M_FLAME_WHEEL2, SOUND_PAN_ATTACKER, 0x8, 0x3
 	delay 0
-	blend_color_cycle selector=F_PAL_ATTACKER, delay=1, num_blends=2, initial_blend_y=0, target_blend_y=15, color=RGB(15, 15, 6)@;Garbage green	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 0x7a, 0x3, 0xfff2, 0x12, 0x2e
+	blend_color_cycle selector=F_PAL_ATTACKER, delay=1, num_blends=2, initial_blend_y=0, target_blend_y=15, color=RGB(15, 15, 6)@;Garbage green
+	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 0x7a, 0x3, 0xfff2, 0x12, 0x2e
 	delay 0
 	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 0x79, 0x3, 0xe, 0xfff2, 0x2e
 	delay 0
@@ -15052,7 +15066,8 @@ gBattleAnimMove_CorrosiveGas::
 	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 0x7b, 0x3, 0x4, 0x4, 0x1e
 	waitforvisualfinish
 	playsewithpan SE_M_TOXIC, SOUND_PAN_TARGET
-	blend_color_cycle selector=(F_PAL_BG | F_PAL_TARGET | F_PAL_ATK_PARTNER | F_PAL_DEF_PARTNER), delay=1, num_blends=2, initial_blend_y=0, target_blend_y=14, color=RGB(15, 15, 6)@;Garbage green	waitforvisualfinish
+	blend_color_cycle selector=(F_PAL_BG | F_PAL_TARGET | F_PAL_ATK_PARTNER | F_PAL_DEF_PARTNER), delay=1, num_blends=2, initial_blend_y=0, target_blend_y=14, color=RGB(15, 15, 6)@;Garbage green
+	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	end
 
@@ -15432,7 +15447,8 @@ gBattleAnimMove_DragonEnergy::
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_HYDRO_PUMP, 0, 12, 12, RGB(30, 2, 11) @;Regidrago Reddish Reddish, Purple
 	monbg ANIM_TARGET
 	playsewithpan SE_M_MEGA_KICK, SOUND_PAN_ATTACKER
-	blend_color_cycle selector=F_PAL_ATTACKER, delay=0, num_blends=4, initial_blend_y=0, target_blend_y=11, color=RGB(31, 28, 31)@;Pinkish White	waitforvisualfinish
+	blend_color_cycle selector=F_PAL_ATTACKER, delay=0, num_blends=4, initial_blend_y=0, target_blend_y=11, color=RGB(31, 28, 31)@;Pinkish White
+	waitforvisualfinish
 	playsewithpan SE_M_DETECT, SOUND_PAN_TARGET
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 1, 16, 0, RGB(30, 2, 11) @;Regidrago Reddish Reddish, Purple
 	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, -120, 0, 0, 1 @;Slide off off, screen
@@ -15494,7 +15510,8 @@ gBattleAnimMove_FreezingGlare::
 	createvisualtask AnimTask_GlareEyeDots, 0x5, 0x0
 	playsewithpan SE_M_PSYBEAM2, SOUND_PAN_ATTACKER
 	waitforvisualfinish
-	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=12, color=RGB(12, 26, 31)@;Ice blue	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 4, 28, 1
+	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=12, color=RGB(12, 26, 31)@;Ice blue
+	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 4, 28, 1
 	call IceCrystalEffectShort
 	waitforvisualfinish
 	call UnsetPsychicBg
@@ -19776,28 +19793,34 @@ TeraBlastRock:
 	call TeraBlastRock2
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=16@; For Meteor 1	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=16@; For Meteor 1
+	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
 	delay 3
 	call TeraBlastRock3
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=16@; For Meteor 2	delay 3
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=16@; For Meteor 2
+	delay 3
 	call TeraBlastRock4
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=16@; For Meteor 3	delay 3
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=16@; For Meteor 3
+	delay 3
 	call TeraBlastRock1
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=16@; For Meteor 4	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=16@; For Meteor 4
+	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
 	delay 3
 	call TeraBlastRock2
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=16@; For Meteor 1	delay 3
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=16@; For Meteor 1
+	delay 3
 	call TeraBlastRock3
 	playsewithpan SE_M_ROCK_THROW, SOUND_PAN_TARGET
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=16@; For Meteor 3	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=16@; For Meteor 3
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
 	call EternabeamGeyser
 	delay 5
 	call EternabeamGeyser
@@ -20229,28 +20252,34 @@ TeraBlastWater:
 	call TeraBlastWater2
 	playsewithpan SE_M_WATERFALL, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=16@; For Meteor 1	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=16@; For Meteor 1
+	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
 	delay 3
 	call TeraBlastWater3
 	playsewithpan SE_M_WATERFALL, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=16@; For Meteor 2	delay 3
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=16@; For Meteor 2
+	delay 3
 	call TeraBlastWater4
 	playsewithpan SE_M_WATERFALL, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=16@; For Meteor 3	delay 3
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=16@; For Meteor 3
+	delay 3
 	call TeraBlastWater1
 	playsewithpan SE_M_WATERFALL, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=16@; For Meteor 4	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=-8, y=16@; For Meteor 4
+	createvisualtask AnimTask_HorizontalShake, 5, 5, 2, 1
 	delay 3
 	call TeraBlastWater2
 	playsewithpan SE_M_WATERFALL, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 7, 4, 2
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=16@; For Meteor 1	delay 3
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=40, y=16@; For Meteor 1
+	delay 3
 	call TeraBlastWater3
 	playsewithpan SE_M_WATERFALL, SOUND_PAN_TARGET
-	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=16@; For Meteor 3	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
+	create_dragon_rage_fire_plume_sprite ANIM_ATTACKER, 2, relative_to=ANIM_TARGET, x=21, y=16@; For Meteor 3
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
 	call EternabeamGeyser
 	delay 5
 	call EternabeamGeyser
@@ -34851,7 +34880,8 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x14, 0x2c, SOUND_PAN_ATTACKER, 0x28, 0x2, 0x3
 	delay 16
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	invert_screen_color scenery=0x101@thunder flash	createsprite gGrowingChargeOrbSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER	@ charge
+	invert_screen_color scenery=0x101@thunder flash
+	createsprite gGrowingChargeOrbSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER	@ charge
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, 64, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, 64, -20
@@ -34865,7 +34895,8 @@ gBattleAnimMove_10000000VoltThunderbolt::
 @	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x18, 0x2c, SOUND_PAN_ATTACKER, 0x28, 0x2, 0x3
 	delay 20
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	invert_screen_color scenery=0x101@thunder flash	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -64, -36
+	invert_screen_color scenery=0x101@thunder flash
+	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -64, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -64, -20
 	delay 1
@@ -34878,7 +34909,8 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x1c, 0x2c, SOUND_PAN_ATTACKER, 0x28, 0x2, 0x3
 	delay 20
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	invert_screen_color scenery=0x101@thunder flash	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -112, -36
+	invert_screen_color scenery=0x101@thunder flash
+	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -112, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -112, -20
 	delay 1
@@ -34891,7 +34923,8 @@ gBattleAnimMove_10000000VoltThunderbolt::
 @	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x20, 0x2c, SOUND_PAN_ATTACKER, 0x28, 0x2, 0x3
 	delay 16
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	invert_screen_color scenery=0x101@thunder flash	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -48, -36
+	invert_screen_color scenery=0x101@thunder flash
+	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -48, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -48, -20
 	delay 1
@@ -34912,7 +34945,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	loadspritegfx ANIM_TAG_POISON_BUBBLE @purple
 	loopsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_ATTACKER, 0x5, 0xA
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_ATTACKER, 0, 4, 50, 1
-flash_anim_tag_with_color tag=ANIM_TAG_ORBS, delay=1, num_blends=12, color1=RGB_RED, blend_y1=16, color2=0, blend_y2=0
+	@flash_anim_tag_with_color tag=ANIM_TAG_ORBS, delay=1, num_blends=12, color1=RGB_RED, blend_y1=16, color2=0, blend_y2=0
 	call TenMillionVoltThunderboltBeamRed
 	call TenMillionVoltThunderboltBeamBlue
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 50, 1
@@ -35400,7 +35433,8 @@ PulverizingPancakeFinish:
 	createsprite gBounceBallLandSpriteTemplate, ANIM_TARGET, 3
 	delay 7
 	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
-	create_basic_hitsplat_sprite ANIM_TARGET, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=0@big hit marker	delay 0
+	create_basic_hitsplat_sprite ANIM_TARGET, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=0@big hit marker
+	delay 0
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 4, 44
 	createsprite gPulverizingPancakeYellowRingSpriteTemplate, ANIM_TARGET, 3, 0x0, 0x0, 0x100, 0x0
 	delay 5

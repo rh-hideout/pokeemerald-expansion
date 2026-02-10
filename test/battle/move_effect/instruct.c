@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Instruct fails if target doesn't know the last move it used"
     GIVEN {
         ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_ORICORIO) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -110,6 +110,27 @@ DOUBLE_BATTLE_TEST("Instruct fails if target doesn't know the last move it used"
             ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerRight);
         }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Instruct fails if the instructed move's PP is depleted")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); Moves(MOVE_INSTRUCT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); MovesWithPP({MOVE_SCRATCH, 1}, {MOVE_CELEBRATE, 10}); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        }
+    } THEN {
+        EXPECT_EQ(playerRight->pp[0], 0);
     }
 }
 
@@ -239,7 +260,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected and absorbed by Lightning
     PARAMETRIZE { moveTarget = opponentLeft; }
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
@@ -296,7 +317,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after inst
     PARAMETRIZE { moveTarget = opponentLeft; }
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
-        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
+        WITH_CONFIG(B_POWDER_GRASS, GEN_6);
         ASSUME(GetMoveEffect(MOVE_RAGE_POWDER) == EFFECT_FOLLOW_ME);
         ASSUME(IsPowderMove(MOVE_RAGE_POWDER) == TRUE);
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
