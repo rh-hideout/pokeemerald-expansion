@@ -107,7 +107,7 @@ SINGLE_BATTLE_TEST("Transformed Pokemon cannot change forms in Gen5+")
     PARAMETRIZE { genConfig = GEN_5; expectFormChange = FALSE; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_TRANSFORM_FORM_CHANGES, genConfig);
+        WITH_CONFIG(B_TRANSFORM_FORM_CHANGES, genConfig);
         PLAYER(SPECIES_AEGISLASH) { Moves(MOVE_TACKLE, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_DITTO) { Moves(MOVE_TACKLE, MOVE_TRANSFORM); }
     } WHEN {
