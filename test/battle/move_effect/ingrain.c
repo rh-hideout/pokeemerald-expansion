@@ -4,11 +4,23 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_INGRAIN) == EFFECT_INGRAIN);
-    ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-    ASSUME(gItemsInfo[ITEM_BIG_ROOT].holdEffect == HOLD_EFFECT_BIG_ROOT);
 }
 
-TO_DO_BATTLE_TEST("TODO: Write Ingrain (Move Effect) test titles")
+SINGLE_BATTLE_TEST("Ingrain fails if already rooted")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_INGRAIN); }
+        TURN { MOVE(player, MOVE_INGRAIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
+        MESSAGE("Wobbuffet planted its roots!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
+        MESSAGE("But it failed!");
+    }
+}
 
 SINGLE_BATTLE_TEST("Ingrain restores 1/16th HP at the end of turn")
 {
@@ -32,6 +44,7 @@ SINGLE_BATTLE_TEST("Ingrain restores 30% more HP when holding Big Root")
     PARAMETRIZE { item = ITEM_BIG_ROOT; expectedHp = 60; }
 
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_BIG_ROOT].holdEffect == HOLD_EFFECT_BIG_ROOT);
         PLAYER(SPECIES_WOBBUFFET) { HP(50); MaxHP(128); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -43,39 +56,73 @@ SINGLE_BATTLE_TEST("Ingrain restores 30% more HP when holding Big Root")
     }
 }
 
-SINGLE_BATTLE_TEST("Ingrain fails if already rooted")
+SINGLE_BATTLE_TEST("Ingrain can be used under Heal Block but will not heal the user")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
+        PLAYER(SPECIES_WOBBUFFET) { HP(50); MaxHP(128); Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
-        TURN { MOVE(player, MOVE_INGRAIN); }
-        TURN { MOVE(player, MOVE_INGRAIN); }
+        TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_INGRAIN); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
-        MESSAGE("Wobbuffet planted its roots!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
-        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT_EQ(player->hp, 50);
     }
 }
 
-SINGLE_BATTLE_TEST("Ingrain prevents the user from switching out")
+SINGLE_BATTLE_TEST("Ingrain prevents regular switching out")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INGRAIN, MOVE_BATON_PASS); }
+        PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_INGRAIN); }
-        TURN { MOVE(player, MOVE_BATON_PASS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
-            SEND_IN_MESSAGE("Wynaut");
-        }
-        MESSAGE("But it failed!");
     } THEN {
-        EXPECT_EQ(player->species, SPECIES_WOBBUFFET);
+        u32 battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+        EXPECT_EQ(CanBattlerEscape(battler), FALSE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Ingrain does not prevent switching out with Flip Turn")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLIP_TURN) == EFFECT_HIT_ESCAPE);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INGRAIN, MOVE_FLIP_TURN); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_INGRAIN); }
+        TURN { MOVE(player, MOVE_FLIP_TURN); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLIP_TURN, player);
+        HP_BAR(opponent);
+        SEND_IN_MESSAGE("Wynaut");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_WYNAUT);
+    }
+}
+
+SINGLE_BATTLE_TEST("Ingrain's effect is passed by Baton Pass")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INGRAIN, MOVE_BATON_PASS); }
+        PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(128); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_INGRAIN); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        SEND_IN_MESSAGE("Wynaut");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_WYNAUT);
+        EXPECT_EQ(player->hp, 58);
     }
 }
