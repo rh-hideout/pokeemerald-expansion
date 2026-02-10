@@ -3213,9 +3213,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
 
 static bool32 IsRestrictedAbility(enum BattlerId battler, enum Ability ability)
 {
-    return GetSpeciesAbility(gBattleMons[battler].species, 0) == ABILITY_POISON_PUPPETEER
-        || GetSpeciesAbility(gBattleMons[battler].species, 1) == ABILITY_POISON_PUPPETEER
-        || GetSpeciesAbility(gBattleMons[battler].species, 2) == ABILITY_POISON_PUPPETEER;
+    return GetSpeciesAbility(gBattleMons[battler].species, 0) == ability
+        || GetSpeciesAbility(gBattleMons[battler].species, 1) == ability
+        || GetSpeciesAbility(gBattleMons[battler].species, 2) == ability;
 }
 
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
