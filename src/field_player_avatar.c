@@ -277,9 +277,9 @@ static const u8 sRSAvatarGfxIds[GENDER_COUNT] =
     [FEMALE] = OBJ_EVENT_GFX_LINK_RS_MAY
 };
 
-static const struct __attribute__((packed))
+static const struct PACKED
 {
-    u8 graphicsId;
+    u16 graphicsId;
     u8 playerFlag;
 } sPlayerAvatarGfxToStateFlag[GENDER_COUNT][5] =
 {
