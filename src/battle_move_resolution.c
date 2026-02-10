@@ -1040,11 +1040,11 @@ static enum CancelerResult CancelerWeatherPrimal(struct BattleContext *ctx)
     return result;
 }
 
-static bool32 ShouldSkipFailureCheckOnBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static bool32 ShouldSkipFailureCheckOnBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, bool32 checkResultFlag)
 {
     if (gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
         return TRUE;
-    if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
+    if (checkResultFlag && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
         return TRUE;
     if (GetConfig(CONFIG_CHECK_USER_FAILURE) >= GEN_5 && battlerAtk == battlerDef)
         return TRUE;
@@ -1089,7 +1089,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
     {
         enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
 
-        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, battlerDef))
+        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, battlerDef, TRUE))
             continue;
 
         switch (GetMoveEffect(ctx->move))
@@ -1377,8 +1377,8 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleContext *ctx)
     {
         if (!IsBattlerAlive(battler) || IsBattlerAlly(ctx->battlerAtk, battler))
             continue;
-        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, battler)
-         && (!IsDoubleBattle() || ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, BATTLE_PARTNER(battler)))) // either battler or partner is affected
+        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, battler, TRUE)
+         && (!IsDoubleBattle() || ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, BATTLE_PARTNER(battler), TRUE))) // either battler or partner is affected
             continue;
 
         ability = GetBattlerAbility(battler);
@@ -1608,7 +1608,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
     {
         ctx->battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
 
-        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, ctx->battlerDef))
+        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, ctx->battlerDef), FALSE)
             continue;
 
         ctx->abilityDef = GetBattlerAbility(ctx->battlerDef);
@@ -1728,6 +1728,9 @@ static enum CancelerResult CancelerNotFullyProtected(struct BattleContext *ctx)
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
     {
         enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
+
+        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, battlerDef, TRUE))
+            continue;
 
         if (CantFullyProtectFromMove(battlerDef))
         {
