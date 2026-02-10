@@ -109,9 +109,7 @@ SINGLE_BATTLE_TEST("Magic Coat reflection doesn't activate Protean/Libero")
         ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
         ASSUME(GetMoveType(MOVE_MAGIC_COAT) == TYPE_PSYCHIC);
         ASSUME(GetMoveType(MOVE_SPIKES) != TYPE_PSYCHIC);
-        PLAYER(SPECIES_GRENINJA) { Ability(ABILITY_PROTEAN); }
-        PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_ZIGZAGOON);
+        PLAYER(species) { Ability(ability); }
         OPPONENT(SPECIES_ZIGZAGOON);
     } WHEN {
         TURN { MOVE(player, MOVE_MAGIC_COAT); MOVE(opponent, MOVE_SPIKES); }
