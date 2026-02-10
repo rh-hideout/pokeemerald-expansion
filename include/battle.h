@@ -132,6 +132,8 @@ struct SideTimer
 {
     u16 reflectTimer;
     u16 lightscreenTimer;
+    u16 reflectTimerTotal;
+    u16 lightscreenTimerTotal;
     u16 mistTimer;
     u16 safeguardTimer;
     u8 spikesAmount:4;
@@ -139,6 +141,7 @@ struct SideTimer
     u8 stickyWebBattlerId;
     u8 stickyWebBattlerSide; // Used for Court Change
     u16 auroraVeilTimer;
+    u16 auroraVeilTimerTotal;
     u16 tailwindTimer;
     u16 luckyChantTimer;
     // Timers below this point are not swapped by Court Change
@@ -161,6 +164,8 @@ struct FieldTimer
     u16 magicRoomTimer;
     u16 trickRoomTimer;
     u16 terrainTimer;
+    u16 terrainTimerTotal;
+    u8 terrainSide;
     u16 gravityTimer;
     u16 fairyLockTimer;
 };
@@ -556,6 +561,8 @@ struct BattleStruct
     u32 expShareExpValue;
     u32 expValue;
     u8 weatherDuration;
+    u8 weatherDurationTotal;
+    u8 weatherSide;
     u8 expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
     u8 expGetterMonId;
     u8 expOrderId:3;
