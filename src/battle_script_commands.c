@@ -12119,7 +12119,7 @@ static void Cmd_presentdamagecalculation(void)
     {
         gBattlescriptCurrInstr = BattleScript_HitFromCritCalc;
     }
-    else if (GetBattlerAbility(gBattlerTarget) == ABILITY_TELEPATHY && gBattlerTarget == BATTLE_PARTNER(gBattlerAttacker))
+    else if (gBattlerTarget == BATTLE_PARTNER(gBattlerAttacker) && GetBattlerAbility(gBattlerTarget) == ABILITY_TELEPATHY)
     {
         gBattlescriptCurrInstr = BattleScript_MoveMissedPause;
     }
