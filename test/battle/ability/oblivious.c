@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Taunt (Gen6+)")
     PARAMETRIZE { gen = GEN_5; }
     PARAMETRIZE { gen = GEN_6; }
     GIVEN {
-        WITH_CONFIG(CONFIG_OBLIVIOUS_TAUNT, gen);
+        WITH_CONFIG(B_OBLIVIOUS_TAUNT, gen);
         ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
         PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Taunt (Gen6+)")
 SINGLE_BATTLE_TEST("Oblivious doesn't prevent Intimidate (Gen3-7)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_7);
+        WITH_CONFIG(B_UPDATED_INTIMIDATE, GEN_7);
         PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Oblivious doesn't prevent Intimidate (Gen3-7)")
 SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_8);
+        WITH_CONFIG(B_UPDATED_INTIMIDATE, GEN_8);
         PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
@@ -97,5 +97,31 @@ SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+)")
         ABILITY_POPUP(player, ABILITY_OBLIVIOUS);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player); }
         MESSAGE("Slowpoke's Oblivious prevents stat loss!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Oblivious cured infatuation should not persist toxic counter after switching")
+{
+    s16 firstTick, secondTick, postSwitchTick;
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ATTRACT) == EFFECT_ATTRACT);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); Status1(STATUS1_TOXIC_POISON); MaxHP(160); HP(160); Speed(100); }
+        PLAYER(SPECIES_WYNAUT) { Speed(90); }
+        OPPONENT(SPECIES_SLOWPOKE) { Gender(MON_FEMALE); Ability(ABILITY_OBLIVIOUS); Speed(80); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ATTRACT); }
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
+    } SCENE {
+        HP_BAR(player, captureDamage: &firstTick);
+        HP_BAR(player, captureDamage: &secondTick);
+        HP_BAR(player, captureDamage: &postSwitchTick);
+    } THEN {
+        EXPECT_EQ(firstTick, 10);
+        EXPECT_EQ(secondTick, 20);
+        EXPECT_EQ(postSwitchTick, 10);
     }
 }

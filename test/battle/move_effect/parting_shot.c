@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Mirror Armor switches even if reflected stats 
 SINGLE_BATTLE_TEST("Parting Shot: Does not switch if both stats are at minimum (Gen7+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_7);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_7);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT, MOVE_TOPSY_TURVY, MOVE_CELEBRATE); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_OMASTAR) { Moves(MOVE_SHELL_SMASH, MOVE_CELEBRATE); }
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Does not switch if both stats are at minimum (
 SINGLE_BATTLE_TEST("Parting Shot: Does not switch if Contrary is at maximum stats (Gen7+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_7);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_7);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT, MOVE_TOPSY_TURVY, MOVE_CELEBRATE); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_INKAY) { Ability(ABILITY_CONTRARY); Moves(MOVE_SHELL_SMASH, MOVE_CELEBRATE); }
@@ -213,7 +213,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items does n
     PARAMETRIZE { species = SPECIES_LUCARIO;   ability = ABILITY_INNER_FOCUS;     item = ITEM_CLEAR_AMULET; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_7);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_7);
         ASSUME(gItemsInfo[ITEM_CLEAR_AMULET].holdEffect == HOLD_EFFECT_CLEAR_AMULET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT); }
         PLAYER(SPECIES_WYNAUT);
@@ -232,7 +232,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items does n
 SINGLE_BATTLE_TEST("Parting Shot: Mist prevents stat drops and does not switch (Gen7+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_7);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_7);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT, MOVE_CELEBRATE); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_MIST, MOVE_CELEBRATE); }
@@ -252,7 +252,7 @@ DOUBLE_BATTLE_TEST("Parting Shot: Flower Veil prevents stat drops and does not s
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_BULBASAUR, 0) == TYPE_GRASS);
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_7);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_7);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT); }
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WYNAUT);
@@ -272,7 +272,7 @@ DOUBLE_BATTLE_TEST("Parting Shot: Flower Veil prevents stat drops and does not s
 SINGLE_BATTLE_TEST("Parting Shot: Switches if both stats are at minimum (Gen6)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_6);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_6);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT, MOVE_TOPSY_TURVY, MOVE_CELEBRATE); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_OMASTAR) { Moves(MOVE_SHELL_SMASH, MOVE_CELEBRATE); }
@@ -295,7 +295,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Switches if both stats are at minimum (Gen6)")
 SINGLE_BATTLE_TEST("Parting Shot: Switches if Contrary is at maximum stats (Gen6)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_6);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_6);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT, MOVE_TOPSY_TURVY, MOVE_CELEBRATE); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_INKAY) { Ability(ABILITY_CONTRARY); Moves(MOVE_SHELL_SMASH, MOVE_CELEBRATE); }
@@ -325,7 +325,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items switch
     PARAMETRIZE { species = SPECIES_LUCARIO;   ability = ABILITY_INNER_FOCUS;     item = ITEM_CLEAR_AMULET; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_6);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_6);
         ASSUME(gItemsInfo[ITEM_CLEAR_AMULET].holdEffect == HOLD_EFFECT_CLEAR_AMULET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT); }
         PLAYER(SPECIES_WYNAUT);
@@ -345,7 +345,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items switch
 SINGLE_BATTLE_TEST("Parting Shot: Mist prevents stat drops and switches (Gen6)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_6);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_6);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT, MOVE_CELEBRATE); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_MIST, MOVE_CELEBRATE); }
@@ -365,7 +365,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Mist prevents stat drops and switches (Gen6)")
 DOUBLE_BATTLE_TEST("Parting Shot: Flower Veil prevents stat drops and switches (Gen6)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PARTING_SHOT_SWITCH, GEN_6);
+        WITH_CONFIG(B_PARTING_SHOT_SWITCH, GEN_6);
         ASSUME(GetSpeciesType(SPECIES_BULBASAUR, 0) == TYPE_GRASS);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT); }
         PLAYER(SPECIES_WYNAUT);

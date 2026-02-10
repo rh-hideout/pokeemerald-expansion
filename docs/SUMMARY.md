@@ -44,6 +44,7 @@
   - [Vs. Seeker](tutorials/vs_seeker.md)
 - [Changelog](./CHANGELOG.md)
     - [1.14.x]()
+        - [Version 1.14.3](changelogs/1.14.x/1.14.3.md)
         - [Version 1.14.2](changelogs/1.14.x/1.14.2.md)
         - [Version 1.14.1](changelogs/1.14.x/1.14.1.md)
         - [Version 1.14.0](changelogs/1.14.x/1.14.0.md)

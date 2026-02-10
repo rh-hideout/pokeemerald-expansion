@@ -71,7 +71,7 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Attack (Gen4+)", s16 damage)
     }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_LIGHT_BALL_ATTACK_BOOST, config);
+        WITH_CONFIG(B_LIGHT_BALL_ATTACK_BOOST, config);
         ASSUME(GetMoveCategory(MOVE_SPARK) == DAMAGE_CATEGORY_PHYSICAL);
         if (species == SPECIES_PIKACHU_GMAX) {
             PLAYER(SPECIES_PIKACHU) { Item(item); GigantamaxFactor(TRUE); }
