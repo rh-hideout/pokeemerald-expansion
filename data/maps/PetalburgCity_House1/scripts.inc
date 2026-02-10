@@ -14,17 +14,14 @@ PetalburgCity_House1_EventScript_ZigzagoonForSecretPhoto::
     lock
     faceplayer
 
-    checkflag FLAG_CTF_PETALBURG_HOUSE1_SECRET_PHOTO
-    goto_if_eq VAR_RESULT, TRUE, PetalburgCity_House1_ZigzagoonForSecretPhoto_AlreadyDone
+    goto_if_set FLAG_CTF_PETALBURG_HOUSE1_SECRET_PHOTO, PetalburgCity_House1_ZigzagoonForSecretPhoto_AlreadyDone
 
     msgbox PetalburgCity_House1_Text_Offer, MSGBOX_YESNO
     goto_if_eq VAR_RESULT, NO, PetalburgCity_House1_ZigzagoonForSecretPhoto_Cancel
 
-    @ Erst checken, ob Platz im Beutel ist
     checkitemspace ITEM_SECRET_PHOTO, 1
     goto_if_eq VAR_RESULT, 0, PetalburgCity_House1_ZigzagoonForSecretPhoto_BagFull
 
-    @ (optional) Sicherheitscheck: Party leer?
     getpartysize
     goto_if_eq VAR_RESULT, 0, PetalburgCity_House1_ZigzagoonForSecretPhoto_NoPokemon
 
@@ -38,7 +35,6 @@ PetalburgCity_House1_ZigzagoonForSecretPhoto_ChooseMon:
     specialvar VAR_RESULT, ScriptGetPartyMonSpecies
     goto_if_ne VAR_RESULT, SPECIES_ZIGZAGOON, PetalburgCity_House1_ZigzagoonForSecretPhoto_WrongMon
 
-    @ Nimmt GENAU den gewählten Slot (dein C-Special + def_special)
     special Special_TakeChosenPartyMon
 
     msgbox PetalburgCity_House1_Text_Thanks, MSGBOX_DEFAULT
@@ -48,6 +44,7 @@ PetalburgCity_House1_ZigzagoonForSecretPhoto_ChooseMon:
     msgbox PetalburgCity_House1_Text_Done, MSGBOX_DEFAULT
     release
     end
+
 
 PetalburgCity_House1_ZigzagoonForSecretPhoto_WrongMon:
     msgbox PetalburgCity_House1_Text_WrongMon, MSGBOX_DEFAULT
@@ -72,6 +69,53 @@ PetalburgCity_House1_ZigzagoonForSecretPhoto_Cancel:
     msgbox PetalburgCity_House1_Text_Cancel, MSGBOX_DEFAULT
     release
     end
+
+
+PetalburgCity_House1_EventScript_GiftZigzagoon::
+    lock
+    faceplayer
+
+    goto_if_set FLAG_CTF_PETALBURG_HOUSE1_GOT_ZIGZAGOON, PetalburgCity_House1_Text_Gifter_After
+
+    getpartysize
+    goto_if_ge VAR_RESULT, PARTY_SIZE, PetalburgCity_House1_Text_Gifter_PartyFull
+
+    msgbox PetalburgCity_House1_Text_Gifter_Intro, MSGBOX_DEFAULT
+    closemessage
+
+    givemon SPECIES_ZIGZAGOON, 5
+
+    setflag FLAG_CTF_PETALBURG_HOUSE1_GOT_ZIGZAGOON
+    msgbox PetalburgCity_House1_Text_Gifter_Given, MSGBOX_DEFAULT
+    release
+    end
+
+PetalburgCity_House1_Text_Gifter_PartyFull:
+    msgbox PetalburgCity_House1_Text_Gifter_PartyFullText, MSGBOX_DEFAULT
+    release
+    end
+
+
+PetalburgCity_House1_Text_Gifter_Intro:
+    .string "Hey!\n"
+    .string "You look like you could use a\n"
+    .string "reliable little runner.\p"
+    .string "Take this ZIGZAGOON - consider it\n"
+    .string "a starter tool for your journey.$"
+
+PetalburgCity_House1_Text_Gifter_Given:
+    .string "ZIGZAGOON joined your team!\n"
+    .string "Treat it well - it will pay you\n"
+    .string "back in surprises.$"
+
+PetalburgCity_House1_Text_Gifter_PartyFullText:
+    .string "Your party is full.\n"
+    .string "Make room and talk to me again.$"
+
+PetalburgCity_House1_Text_Gifter_After:
+    .string "Use that ZIGZAGOON wisely.\n"
+    .string "Sometimes the smallest tools open\n"
+    .string "the biggest doors.$"
 
 
 PetalburgCity_House1_Text_Offer:

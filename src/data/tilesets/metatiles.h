@@ -214,7 +214,5 @@ const u16 gMetatileAttributes_Mannheim[] = INCBIN_U16("data/tilesets/primary/man
 const u16 gMetatiles_dhbw_gebaeude[] = INCBIN_U16("data/tilesets/secondary/dhbw_gebaeude/metatiles.bin");
 const u16 gMetatileAttributes_dhbw_gebaeude[] = INCBIN_U16("data/tilesets/secondary/dhbw_gebaeude/metatile_attributes.bin");
 
-const u16 gMetatiles_FRLG_SSANNE[] = INCBIN_U16("data/tilesets/secondary/frlg_ssanne/metatiles.bin");
-const u16 gMetatileAttributes_FRLG_SSANNE[] = INCBIN_U16("data/tilesets/secondary/frlg_ssanne/metatile_attributes.bin");
 
 

@@ -11,39 +11,53 @@
 #define CTF_TILE_X_BOTTOM  6
 #define CTF_TILE_Y_BOTTOM  1
 
-#define CTF_METATILE_TOP       0x253
-#define CTF_METATILE_BOTTOM    0x25B
+#define CTF_METATILE_TOP       0x263
+#define CTF_METATILE_BOTTOM    0x26B
 
 @ =========================================================
 @ Map Scripts
 @ =========================================================
 
+@ =========================================================
+@ Map Scripts (permanenter Tileswitch)
+@ =========================================================
+
 GlitchHaus_MapScripts::
-    map_script MAP_SCRIPT_ON_TRANSITION, GlitchHaus_OnTransition
+    map_script MAP_SCRIPT_ON_TRANSITION,  GlitchHaus_OnTransition
+    map_script MAP_SCRIPT_ON_FRAME_TABLE, GlitchHaus_OnFrame
     .byte 0
 
 GlitchHaus_OnTransition:
+    @ OnFrame soll genau 1x beim Betreten laufen
+    setvar VAR_TEMP_0, 0
+
     @ Layout umschalten
     goto_if_set FLAG_CTF_GYM4_DEFEATED, GlitchHaus_OnTransition_UseLayout2
     setmaplayoutindex LAYOUT_GLITCH_HAUS
 
-    @ DOKTOR_AFTER (FLANNERY) verstecken, solange NICHT defeated
+    @ DOKTOR_AFTER verstecken, solange NICHT defeated
     setflag FLAG_CTF_GLITCHHAUS_DOKTOR_AFTER_HIDDEN
-    goto GlitchHaus_OnTransition_AfterLayout
+    end
 
 GlitchHaus_OnTransition_UseLayout2:
     setmaplayoutindex LAYOUT_GLITCH_HAUS_LAYOUT_2
-
-    @ DOKTOR_AFTER sichtbar machen, sobald defeated
     clearflag FLAG_CTF_GLITCHHAUS_DOKTOR_AFTER_HIDDEN
-
-GlitchHaus_OnTransition_AfterLayout:
-    goto_if_set FLAG_CTF_BATTLETENT_LOBBY_FLAG4_DONE, GlitchHaus_OnTransition_Apply
     end
 
-GlitchHaus_OnTransition_Apply:
+GlitchHaus_OnFrame:
+    @ Wenn VAR_TEMP_0 == 0, dann einmalig ausführen
+    map_script_2 VAR_TEMP_0, 0, GlitchHaus_OnFrame_ApplyIfSolved
+    .2byte 0
+
+GlitchHaus_OnFrame_ApplyIfSolved:
+    setvar VAR_TEMP_0, 1
+
+    goto_if_unset FLAG_CTF_BATTLETENT_LOBBY_FLAG4_DONE, GlitchHaus_OnFrame_End
     call GlitchHaus_EventScript_ApplyFlag4Tiles
+
+GlitchHaus_OnFrame_End:
     end
+
 
 
 @ =========================================================
@@ -80,6 +94,7 @@ GlitchHaus_EventScript_Franziska_After:
 
 GlitchHaus_EventScript_BulletinBoard::
     msgbox GlitchHaus_Text_BulletinBoard, MSGBOX_DEFAULT
+    release
     end
 
 

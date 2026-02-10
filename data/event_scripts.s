@@ -1226,3 +1226,11 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/LuTransfer/scripts.inc"
 
 	.include "data/maps/Bridgeroom/scripts.inc"
+
+	.include "data/maps/BlackhansaFinale/scripts.inc"
+
+	.include "data/maps/FinaleFarmer/scripts.inc"
+
+	.include "data/maps/Quadrate/scripts.inc"
+
+	.include "data/maps/SeckenheimerLandstrasse/scripts.inc"

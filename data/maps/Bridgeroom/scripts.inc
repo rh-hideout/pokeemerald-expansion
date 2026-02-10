@@ -1,32 +1,38 @@
 Bridgeroom_MapScripts::
-    map_script MAP_SCRIPT_ON_LOAD, Bridgeroom_OnLoad
+    map_script MAP_SCRIPT_ON_LOAD,       Bridgeroom_OnLoad
+    map_script MAP_SCRIPT_ON_TRANSITION, Bridgeroom_OnTransition
     .byte 0
 
 Bridgeroom_OnLoad:
-    goto_if_unset FLAG_FLAG8_BRIDGE_SET, Bridgeroom_OnLoad_End
+    call Bridgeroom_ApplyBridgeIfFlagSet
+    end
+
+Bridgeroom_OnTransition:
+    call Bridgeroom_ApplyBridgeIfFlagSet
+    end
+
+Bridgeroom_ApplyBridgeIfFlagSet:
+    goto_if_unset FLAG_FLAG8_BRIDGE_SET, .LBridgeroom_NoBridge
     call Bridgeroom_SetBridgeMetatiles
     special DrawWholeMapView
-Bridgeroom_OnLoad_End:
-    end
+.LBridgeroom_NoBridge:
+    return
+
 
 Bridgeroom_SetBridgeMetatiles:
     @ Row y = 4
-    setmetatile  4, 4, 0x260, FALSE
     setmetatile  5, 4, 0x261, FALSE
     setmetatile  6, 4, 0x261, FALSE
     setmetatile  7, 4, 0x261, FALSE
     setmetatile  8, 4, 0x261, FALSE
     setmetatile  9, 4, 0x261, FALSE
-    setmetatile 10, 4, 0x262, FALSE
 
     @ Row y = 5
-    setmetatile  4, 5, 0x268, FALSE
     setmetatile  5, 5, 0x269, FALSE
     setmetatile  6, 5, 0x269, FALSE
     setmetatile  7, 5, 0x269, FALSE
     setmetatile  8, 5, 0x269, FALSE
     setmetatile  9, 5, 0x269, FALSE
-    setmetatile 10, 5, 0x26A, FALSE
     return
 
 Bridgeroom_EventScript_HintNPC::
@@ -40,18 +46,22 @@ Bridgeroom_EventScript_HintNPC::
 Bridgeroom_EventScript_Terminal::
     lock
     faceplayer
+
+    setflag FLAG_FLAG8_BRIDGE_SET
     goto_if_set FLAG_FLAG8_BRIDGE_SET, Bridgeroom_Terminal_FlagSet
+
     msgbox Bridgeroom_Text_Terminal_Intro, MSGBOX_DEFAULT
-    msgbox Bridgeroom_Text_Terminal_SaveBlocks, MSGBOX_DEFAULT
-    msgbox Bridgeroom_Text_Terminal_Sections, MSGBOX_DEFAULT
-    msgbox Bridgeroom_Text_Terminal_Checksum, MSGBOX_DEFAULT
     release
     end
 
+
 Bridgeroom_Terminal_FlagSet:
+    call Bridgeroom_SetBridgeMetatiles
+    special DrawWholeMapView
     msgbox Bridgeroom_Text_Terminal_FlagSet, MSGBOX_DEFAULT
     release
     end
+
 
 Bridgeroom_Text_HintNPC_1:
     .string "This plateau used to have a bridge.\n"

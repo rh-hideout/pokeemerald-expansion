@@ -16,7 +16,7 @@ PetalburgCity_House2_EventScript_LockpickGuy::
 
     @ 1. Frage: Locksport interessiert?
     msgbox PetalburgCity_House2_Text_AskInterest, MSGBOX_YESNO
-    compare VAR_RESULT, 0 @ 0 = Yes, 1 = No
+    compare VAR_RESULT, 1
     goto_if_eq PetalburgCity_House2_LockpickGuy_InterestYes
 
 PetalburgCity_House2_LockpickGuy_InterestNo:
@@ -27,7 +27,7 @@ PetalburgCity_House2_LockpickGuy_InterestNo:
 PetalburgCity_House2_LockpickGuy_InterestYes:
     @ 2. Frage: Lockpickset zum Ausprobieren?
     msgbox PetalburgCity_House2_Text_AskSet, MSGBOX_YESNO
-    compare VAR_RESULT, 0
+    compare VAR_RESULT, 1
     goto_if_eq PetalburgCity_House2_LockpickGuy_GiveSet
 
 PetalburgCity_House2_LockpickGuy_SetNo:

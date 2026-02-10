@@ -466,7 +466,7 @@
     },
     {
       "id": "MAPSEC_BATTLE_FRONTIER",
-      "name": "BATTLE FRONTIER",
+      "name": "Old Water Tower",
       "x": 22,
       "y": 12,
       "width": 1,
@@ -490,7 +490,7 @@
     },
     {
       "id": "MAPSEC_ABANDONED_SHIP",
-      "name": "RHINE",
+      "name": "Quadrate",
       "x": 6,
       "y": 14,
       "width": 1,

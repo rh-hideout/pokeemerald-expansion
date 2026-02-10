@@ -71,6 +71,7 @@ EntryMapFlag3_EventScript_DebugCheatStart::
 	additem ITEM_RASPBERRY_PI, 1
 	additem ITEM_LOCKPICK_SET, 1
 	additem ITEM_PHONE_CORP_ID, 1
+	additem ITEM_SURF_TOOL, 1
 
 
 	msgbox EntryMapFlag3_Text_DebugCheatDone, MSGBOX_DEFAULT

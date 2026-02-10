@@ -4,7 +4,7 @@
 #include "global.h"
 
 #define CTF_GYM_COUNT 8
-#define CTF_FLAG_COUNT (CTF_GYM_COUNT + 1)
+#define CTF_FLAG_COUNT (CTF_GYM_COUNT + 2)
 
 // Neue Flag-ID (für VAR_0x8000 am Terminal)
 #define CTF_FLAG_TUTORIAL 9

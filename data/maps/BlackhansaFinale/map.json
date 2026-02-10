@@ -1,0 +1,73 @@
+{
+  "id": "MAP_BLACKHANSA_FINALE",
+  "name": "BlackhansaFinale",
+  "layout": "LAYOUT_BLACKHANSA_FINALE",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_CTF_TERMINAL",
+      "x": 5,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "BlackhansaFinale_EventScript_CtfTerminal_Flag8",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_BLACKHANSA_FINALE_BOSS",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHIE",
+      "x": 7,
+      "y": 5,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "BlackhansaFinale_EventScript_BossTalk",
+      "flag": "FLAG_HIDE_BLACKHANSA_BOSS"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 7,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_BRIDGEROOM",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 7,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_FINALE_FARMER",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 7,
+      "y": 13,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "BlackhansaFinale_EventScript_IntroTrigger"
+    }
+  ],
+  "bg_events": []
+}

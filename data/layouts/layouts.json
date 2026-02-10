@@ -4497,7 +4497,7 @@
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_FRLG_SSANNE",
+      "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/entryMapFlag5/border.bin",
       "blockdata_filepath": "data/layouts/entryMapFlag5/map.bin"
     },
@@ -4680,6 +4680,46 @@
       "secondary_tileset": "gTileset_MeteorFalls",
       "border_filepath": "data/layouts/Bridgeroom/border.bin",
       "blockdata_filepath": "data/layouts/Bridgeroom/map.bin"
+    },
+    {
+      "id": "LAYOUT_BLACKHANSA_FINALE",
+      "name": "BlackhansaFinale_Layout",
+      "width": 15,
+      "height": 15,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/BlackhansaFinale/border.bin",
+      "blockdata_filepath": "data/layouts/BlackhansaFinale/map.bin"
+    },
+    {
+      "id": "LAYOUT_FINALE_FARMER",
+      "name": "FinaleFarmer_Layout",
+      "width": 34,
+      "height": 23,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_BattlePyramid",
+      "border_filepath": "data/layouts/FinaleFarmer/border.bin",
+      "blockdata_filepath": "data/layouts/FinaleFarmer/map.bin"
+    },
+    {
+      "id": "LAYOUT_QUADRATE",
+      "name": "Quadrate_Layout",
+      "width": 30,
+      "height": 30,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Rustboro",
+      "border_filepath": "data/layouts/Quadrate/border.bin",
+      "blockdata_filepath": "data/layouts/Quadrate/map.bin"
+    },
+    {
+      "id": "LAYOUT_SECKENHEIMER_LANDSTRASSE",
+      "name": "SeckenheimerLandstrasse_Layout",
+      "width": 16,
+      "height": 36,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Rustboro",
+      "border_filepath": "data/layouts/SeckenheimerLandstrasse/border.bin",
+      "blockdata_filepath": "data/layouts/SeckenheimerLandstrasse/map.bin"
     }
   ]
 }

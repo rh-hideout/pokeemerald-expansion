@@ -570,4 +570,6 @@ gSpecials::
 	def_special ObjectEventInteractionGetApricornTreeData
 	def_special ObjectEventInteractionPickApricornTree
 	def_special Special_TakeChosenPartyMon
+	def_special Special_FakeTradeEvolveSelectedToTarget
+	def_special Special_PartyContainsSpecies
 

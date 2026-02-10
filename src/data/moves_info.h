@@ -22906,4 +22906,15 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresProtect = TRUE,
         .battleAnimScript = gBattleAnimMove_GMaxRapidFlow,
     },
+
+
+    [MOVE_TERMINAL_FLAG] =
+    {
+    .name = COMPOUND_STRING("FLAG(RKTSNC)"),
+    .description = COMPOUND_STRING("..."),
+    .effect = EFFECT_CELEBRATE,    
+    .pp = 0,                      
+    .target = MOVE_TARGET_USER, 
+},
+
 };

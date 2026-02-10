@@ -216,9 +216,6 @@ PetalburgCity_Movement_WallyTutorialWally:
 	walk_in_place_faster_right
 	step_end
 
-PetalburgCity_EventScript_GymSign::
-	msgbox PetalburgCity_Text_GymSign, MSGBOX_SIGN
-	end
 
 PetalburgCity_EventScript_CitySign::
 	msgbox PetalburgCity_Text_CitySign, MSGBOX_SIGN

@@ -450,11 +450,12 @@ Museum_Flag1_Text_RocketsGone:
 
 Museum_Flag1_Text_StudentDialog:
     .string "They've barricaded the door.\n"
-    .string "How are we going to get out\n"
+    .string "How are we going to get out\p"
     .string "of here?$"
 
 Museum_Flag1_Text_NotEnoughMons:
-    .string "You need at least two POKéMON to battle!$"
+    .string "You need at least two POKéMON\n"
+    .string "to battle!$"
 
 Museum_Flag1_Text_TerminalPrompt:
     .string "TERMINAL: Enter the code.$"

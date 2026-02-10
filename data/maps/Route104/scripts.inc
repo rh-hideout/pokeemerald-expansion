@@ -1089,50 +1089,50 @@ Route104_EventScript_TruckCutscene_Main::
 
     @ --- Blackout #1 ---
     fadescreen FADE_TO_BLACK
-    waitstate
+    delay 60
 
     @ Player nach x34 y63, schaut nach links
     applymovement LOCALID_PLAYER, Route104_Movement_ToPoliceStaging
+    waitmovement 0
 
-
-    @ Officers erscheinen 
-	clearflag FLAG_HIDE_ROUTE104_OFFICER_M
-	clearflag FLAG_HIDE_ROUTE104_OFFICER_F
-	addobject LOCALID_OFFICER_M
-	addobject LOCALID_OFFICER_F
+    @ Officers erscheinen
+    clearflag FLAG_HIDE_ROUTE104_OFFICER_M
+    clearflag FLAG_HIDE_ROUTE104_OFFICER_F
+    addobject LOCALID_OFFICER_M
+    addobject LOCALID_OFFICER_F
 
     applymovement LOCALID_OFFICER_M, Route104_Movement_FaceRight
     applymovement LOCALID_OFFICER_F, Route104_Movement_FaceRight
+    waitmovement 0
 
     fadescreen FADE_FROM_BLACK
-    waitstate
+    delay 60
 
     msgbox Route104_Text_OfficerTalk, MSGBOX_AUTOCLOSE
-	
 
     @ --- Blackout #2 ---
     fadescreen FADE_TO_BLACK
-	waitstate
+    delay 60
 
     @ Alles wieder weg: Officers + Truck
-	setflag FLAG_HIDE_ROUTE104_OFFICER_M
-	setflag FLAG_HIDE_ROUTE104_OFFICER_F
-	removeobject LOCALID_OFFICER_M
-	removeobject LOCALID_OFFICER_F
+    setflag FLAG_HIDE_ROUTE104_OFFICER_M
+    setflag FLAG_HIDE_ROUTE104_OFFICER_F
+    removeobject LOCALID_OFFICER_M
+    removeobject LOCALID_OFFICER_F
 
-	setflag FLAG_ROUTE104_TRUCK_CUTSCENE_DONE
-	removeobject LOCALID_TRUCK
-
+    setflag FLAG_ROUTE104_TRUCK_CUTSCENE_DONE
+    removeobject LOCALID_TRUCK
 
     @ Item erscheint (x34 y61)
     clearflag FLAG_HIDE_ROUTE104_PHONE_CORP_ID
-	addobject LOCALID_PHONE_CORP_ID
-
+    addobject LOCALID_PHONE_CORP_ID
 
     @ Player schaut nach oben
     applymovement LOCALID_PLAYER, Route104_Movement_FaceUp
+    waitmovement 0
+
     fadescreen FADE_FROM_BLACK
-    waitstate
+    delay 60
 
     releaseall
     end

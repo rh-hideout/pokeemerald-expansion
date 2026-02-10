@@ -71,6 +71,7 @@
 #include "follower_npc.h"
 #include "load_save.h"
 #include "test/test_runner_battle.h"
+#include "constants/flags.h"
 
 // Helper for accessing command arguments and advancing gBattlescriptCurrInstr.
 //
@@ -11237,6 +11238,35 @@ static void Cmd_setfocusenergy(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+static bool32 TargetHasFinalFlagMove(u8 targetBattler)
+{
+    int i;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (gBattleMons[targetBattler].moves[i] == MOVE_TERMINAL_FLAG) 
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static void TrySetBlackhansaDittoCopiedFlag(u16 attackerSpeciesBeforeTransform)
+{
+    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+        return;
+
+    if (GetBattlerSide(gBattlerAttacker) != B_SIDE_PLAYER)
+        return;
+
+    if (attackerSpeciesBeforeTransform != SPECIES_DITTO)
+        return;
+
+    if (!TargetHasFinalFlagMove(gBattlerTarget))
+        return;
+
+    FlagSet(FLAG_BLACKHANSA_DITTO_COPIED);
+}
+
+
 static void Cmd_transformdataexecution(void)
 {
     CMD_ARGS();
@@ -11255,6 +11285,9 @@ static void Cmd_transformdataexecution(void)
         s32 i;
         u8 *battleMonAttacker, *battleMonTarget;
         u8 timesGotHit;
+
+        u16 attackerSpeciesBeforeTransform = gBattleMons[gBattlerAttacker].species;
+        TrySetBlackhansaDittoCopiedFlag(attackerSpeciesBeforeTransform);
 
         gBattleMons[gBattlerAttacker].volatiles.transformed = TRUE;
         gDisableStructs[gBattlerAttacker].disabledMove = MOVE_NONE;

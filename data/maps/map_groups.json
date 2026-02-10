@@ -665,10 +665,14 @@
     "entryMapFlag5"
   ],
   "gMapGroup_Flag7": [
-    "entryMapFlag7"
+    "entryMapFlag7",
+    "Quadrate",
+    "SeckenheimerLandstrasse"
   ],
   "gMapGroup_Flag8": [
     "entryMapFlag8",
-    "Bridgeroom"
+    "Bridgeroom",
+    "BlackhansaFinale",
+    "FinaleFarmer"
   ]
 }

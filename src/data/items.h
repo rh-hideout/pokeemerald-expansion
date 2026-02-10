@@ -15698,7 +15698,7 @@ const struct Item gItemsInfo[] =
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseCB_SecretPhoto,   // <-- unser Viewer-Callback
-        .iconPic = gItemIcon_SecretPhoto,            // Platzhalter (erstmal)
+        .iconPic = gItemIcon_TownMap,            // Platzhalter (erstmal)
         .iconPalette = gItemIconPalette_TownMap, // Platzhalter (erstmal)
     },
 };

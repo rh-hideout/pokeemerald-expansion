@@ -17,6 +17,7 @@ static const u8 sFlagWords[CTF_FLAG_COUNT][PLAYER_NAME_LENGTH + 1] =
     _("SHELL"),   // 7 Gym 7
     _("ROOT"),    // 8 Gym 8
     _("BANG"),   // 9 Tutorial
+    _("RKTSNC"), // 10 Finale Farmer
 };
 
 static u8 Ctf_ToUpper(u8 c)
