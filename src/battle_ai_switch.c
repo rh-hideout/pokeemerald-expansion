@@ -474,7 +474,7 @@ static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler)
     ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
 
     // Switch if no moves affect opponents
-    if (HasTwoOpponents(battler))
+    if (IsDoubleBattle())
     {
         enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
@@ -1007,7 +1007,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler)
     if (CanUseSuperEffectiveMoveAgainstOpponent(battler, opposingBattler))
         return TRUE;
 
-    if (HasTwoOpponents(battler) && CanUseSuperEffectiveMoveAgainstOpponent(battler, BATTLE_PARTNER(BATTLE_OPPOSITE(battler))))
+    if (IsDoubleBattle() && CanUseSuperEffectiveMoveAgainstOpponent(battler, BATTLE_PARTNER(BATTLE_OPPOSITE(battler))))
         return TRUE;
 
     return FALSE;
@@ -1168,7 +1168,7 @@ static bool32 ShouldSwitchIfBadChoiceLock(enum BattlerId battler)
 
     u32 moveIndex = GetMoveIndex(battler, choicedMove);
 
-    if (HasTwoOpponents(battler))
+    if (IsDoubleBattle())
     {
         enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
         if (IsHoldEffectChoice(ctx.holdEffectAtk) && IsBattlerItemEnabled(battler))
@@ -1368,7 +1368,7 @@ bool32 ShouldSwitchIfAllScoresBad(enum BattlerId battler)
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (HasTwoOpponents(battler))
+        if (IsDoubleBattle())
         {
             u32 score1 = gAiBattleData->finalScore[battler][opposingBattler][moveIndex];
             u32 score2 = gAiBattleData->finalScore[battler][BATTLE_PARTNER(opposingBattler)][moveIndex];
@@ -1407,7 +1407,7 @@ bool32 ShouldStayInToUseMove(enum BattlerId battler)
                 continue;
 
             if (gAiBattleData->finalScore[battler][opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD
-                || (HasTwoOpponents(battler) && gAiBattleData->finalScore[battler][BATTLE_PARTNER(opposingBattler)][moveIndex] > AI_GOOD_SCORE_THRESHOLD))
+                || (IsDoubleBattle() && gAiBattleData->finalScore[battler][BATTLE_PARTNER(opposingBattler)][moveIndex] > AI_GOOD_SCORE_THRESHOLD))
                 return TRUE;
         }
     }

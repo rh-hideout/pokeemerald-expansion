@@ -310,3 +310,20 @@ SINGLE_BATTLE_TEST("Pickpocket does not prevent King's Rock or Razor Fang flinch
         EXPECT(player->item == ITEM_NONE);
     }
 }
+
+SINGLE_BATTLE_TEST("Pickpocket activates after an Item was knocked off")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POTION); }
+        OPPONENT(SPECIES_SNEASEL) { Item(ITEM_POTION); Ability(ABILITY_PICKPOCKET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
+        ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+    } THEN {
+        EXPECT(opponent->item == ITEM_POTION);
+        EXPECT(player->item == ITEM_NONE);
+    }
+}
