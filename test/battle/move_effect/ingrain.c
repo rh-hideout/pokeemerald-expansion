@@ -127,44 +127,4 @@ SINGLE_BATTLE_TEST("Ingrain's effect is passed by Baton Pass")
     }
 }
 
-SINGLE_BATTLE_TEST("Ingrain does not prevent switching out with Flip Turn")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLIP_TURN) == EFFECT_HIT_ESCAPE);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INGRAIN, MOVE_FLIP_TURN); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_INGRAIN); }
-        TURN { MOVE(player, MOVE_FLIP_TURN); SEND_OUT(player, 1); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLIP_TURN, player);
-        HP_BAR(opponent);
-        SEND_IN_MESSAGE("Wynaut");
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_WYNAUT);
-    }
-}
-
-SINGLE_BATTLE_TEST("Ingrain's effect is passed by Baton Pass")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INGRAIN, MOVE_BATON_PASS); }
-        PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(128); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_INGRAIN); }
-        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
-        SEND_IN_MESSAGE("Wynaut");
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_WYNAUT);
-        EXPECT_EQ(player->hp, 58);
-    }
-}
-
 TO_DO_BATTLE_TEST("Red Card and forced switch moves (Roar/Whirlwind) cannot force out a rooted Pokémon");
