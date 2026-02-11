@@ -651,7 +651,11 @@
     "Administration_Office",
     "ClassroomOpeningLeft",
     "ClassroomOpeningLeft_2",
-    "secreteRoomwithCode"
+    "secreteRoomwithCode",
+    "ClassroomOpeningRight",
+    "ClassroomOpeningRight_2",
+    "ClassroomOpeninTop",
+    "ClassroomOpeninTop_2"
   ],
   "gMapGroup_Flag3": [
     "entryMapFlag3",

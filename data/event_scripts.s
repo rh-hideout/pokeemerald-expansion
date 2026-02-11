@@ -1236,3 +1236,11 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/ClassroomOpeningLeft/scripts.inc"
 
 	.include "data/maps/secreteRoomwithCode/scripts.inc"
+
+	.include "data/maps/ClassroomOpeningRight/scripts.inc"
+
+	.include "data/maps/ClassroomOpeningRight_2/scripts.inc"
+
+	.include "data/maps/ClassroomOpeninTop/scripts.inc"
+
+	.include "data/maps/ClassroomOpeninTop_2/scripts.inc"

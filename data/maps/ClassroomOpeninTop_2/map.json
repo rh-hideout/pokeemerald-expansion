@@ -1,7 +1,7 @@
 {
-  "id": "MAP_CLASSROOM_OPENING_LEFT_2",
-  "name": "ClassroomOpeningLeft_2",
-  "layout": "LAYOUT_CLASSROOM_OPENING_LEFT_2",
+  "id": "MAP_CLASSROOM_OPENIN_TOP_2",
+  "name": "ClassroomOpeninTop_2",
+  "layout": "LAYOUT_CLASSROOM_OPENIN_TOP_2",
   "music": "MUS_DUMMY",
   "region_map_section": "MAPSEC_ABANDONED_SHIP",
   "requires_flash": false,
@@ -19,14 +19,14 @@
       "x": 4,
       "y": 11,
       "elevation": 0,
-      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_map": "MAP_HALLWAY_TO_SECRETARIAT",
       "dest_warp_id": "9"
     },
     {
       "x": 5,
       "y": 11,
       "elevation": 0,
-      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
       "dest_warp_id": "9"
     }
   ],

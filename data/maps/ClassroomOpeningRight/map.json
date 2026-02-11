@@ -1,7 +1,7 @@
 {
-  "id": "MAP_CLASSROOM_OPENING_LEFT",
-  "name": "ClassroomOpeningLeft",
-  "layout": "LAYOUT_CLASSROOM_OPENING_LEFT",
+  "id": "MAP_CLASSROOM_OPENING_RIGHT",
+  "name": "ClassroomOpeningRight",
+  "layout": "LAYOUT_CLASSROOM_OPENING_RIGHT",
   "music": "MUS_DUMMY",
   "region_map_section": "MAPSEC_ABANDONED_SHIP",
   "requires_flash": false,
@@ -24,7 +24,20 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "ClassroomOpeningLeft_EventScript_ComplainingStudent",
+      "script": "ClassroomOpeningRight_EventScript_Guy1",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
+      "x": 3,
+      "y": 6,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ClassroomOpeningRight_EventScript_Guy2",
       "flag": "0"
     }
   ],
@@ -33,14 +46,14 @@
       "x": 4,
       "y": 11,
       "elevation": 0,
-      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
       "dest_warp_id": "8"
     },
     {
       "x": 5,
       "y": 11,
       "elevation": 0,
-      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
       "dest_warp_id": "8"
     }
   ],

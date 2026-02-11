@@ -70,6 +70,20 @@
       "elevation": 0,
       "dest_map": "MAP_HALLWAY_TO_SECRETARIAT_2",
       "dest_warp_id": "7"
+    },
+    {
+      "x": 4,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_CLASSROOM_OPENING_LEFT",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 4,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_CLASSROOM_OPENING_LEFT_2",
+      "dest_warp_id": "1"
     }
   ],
   "coord_events": [],

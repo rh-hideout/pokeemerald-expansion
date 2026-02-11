@@ -70,6 +70,20 @@
       "elevation": 0,
       "dest_map": "MAP_HALLWAYCURVEDLEFT",
       "dest_warp_id": "7"
+    },
+    {
+      "x": 5,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_CLASSROOM_OPENIN_TOP",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 14,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_CLASSROOM_OPENIN_TOP_2",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [],

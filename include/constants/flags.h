@@ -1247,7 +1247,7 @@
 #define FLAG_LUDWIGSHAFEN_INTRO_DONE                                0x4A9 // Flag4 Ludwigshafen Intro abgespielt
 #define FLAG_CTF_BATTLETENT_LOBBY_FLAG4_DONE                        0x4AA // Flag4 Battle Tent Lobby Event/Terminal
 #define FLAG_CTF_GLITCHHAUS_DOKTOR_AFTER_HIDDEN                     0x4AB // Flag4 Glitchhaus Doktor nach Event
-#define FLAG_UNUSED_0x4AC                                           0x4AC // Unused Flag
+#define FLAG_ITEM_CLASSROOM_OPENIN_TOP_TM_SECRET_POWER              0x4AC // Flag4 Secret Power TM pickup
 #define FLAG_UNUSED_0x4AD                                           0x4AD // Unused Flag
 #define FLAG_UNUSED_0x4AE                                           0x4AE // Unused Flag
 #define FLAG_UNUSED_0x4AF                                           0x4AF // Unused Flag
@@ -1689,7 +1689,10 @@
 #define FLAG_CTF_GYM8_DEFEATED      FLAG_UNUSED_0x036
 #define FLAG_CTF_GYM8_TELEPORT      FLAG_UNUSED_0x037
 
+#define FLAG_CTF_ENROLLMENT_TERMINAL_DONE FLAG_UNUSED_0x038
 #define FLAG_CTF_TUTORIAL_DONE      FLAG_UNUSED_0x039
+#define FLAG_CTF_SECRETROOM_HINT    FLAG_UNUSED_0x03A
+#define FLAG_CTF_ADMIN_OFFICE_INTRO FLAG_UNUSED_0x03B
 
 
 // Temp flag aliases

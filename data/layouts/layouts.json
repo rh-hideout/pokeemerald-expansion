@@ -4730,6 +4730,46 @@
       "secondary_tileset": "gTileset_SecretBaseBlueCave",
       "border_filepath": "data/layouts/secreteRoomwithCode/border.bin",
       "blockdata_filepath": "data/layouts/secreteRoomwithCode/map.bin"
+    },
+    {
+      "id": "LAYOUT_CLASSROOM_OPENING_RIGHT",
+      "name": "ClassroomOpeningRight_Layout",
+      "width": 10,
+      "height": 12,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/ClassroomOpeningRight/border.bin",
+      "blockdata_filepath": "data/layouts/ClassroomOpeningRight/map.bin"
+    },
+    {
+      "id": "LAYOUT_CLASSROOM_OPENING_RIGHT_2",
+      "name": "ClassroomOpeningRight_2_Layout",
+      "width": 10,
+      "height": 12,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/ClassroomOpeningRight_2/border.bin",
+      "blockdata_filepath": "data/layouts/ClassroomOpeningRight_2/map.bin"
+    },
+    {
+      "id": "LAYOUT_CLASSROOM_OPENIN_TOP_2",
+      "name": "ClassroomOpeninTop_2_Layout",
+      "width": 10,
+      "height": 12,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/ClassroomOpeninTop_2/border.bin",
+      "blockdata_filepath": "data/layouts/ClassroomOpeninTop_2/map.bin"
+    },
+    {
+      "id": "LAYOUT_CLASSROOM_OPENIN_TOP",
+      "name": "ClassroomOpeninTop_Layout",
+      "width": 10,
+      "height": 12,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/ClassroomOpeninTop/border.bin",
+      "blockdata_filepath": "data/layouts/ClassroomOpeninTop/map.bin"
     }
   ]
 }
