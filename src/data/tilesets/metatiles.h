@@ -216,3 +216,6 @@ const u16 gMetatileAttributes_dhbw_gebaeude[] = INCBIN_U16("data/tilesets/second
 
 
 
+
+const u16 gMetatiles_wasserturm[] = INCBIN_U16("data/tilesets/secondary/wasserturm/metatiles.bin");
+const u16 gMetatileAttributes_wasserturm[] = INCBIN_U16("data/tilesets/secondary/wasserturm/metatile_attributes.bin");

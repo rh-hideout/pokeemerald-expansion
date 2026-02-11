@@ -1234,3 +1234,9 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Quadrate/scripts.inc"
 
 	.include "data/maps/SeckenheimerLandstrasse/scripts.inc"
+
+	.include "data/maps/Waldhof/scripts.inc"
+
+	.include "data/maps/Wasserturm/scripts.inc"
+
+	.include "data/maps/WasserturmLobby/scripts.inc"

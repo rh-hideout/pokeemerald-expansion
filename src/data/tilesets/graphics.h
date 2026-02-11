@@ -1672,3 +1672,22 @@ const u16 gTilesetPalettes_dhbw_gebaeude[][16] =
 };
 
 const u32 gTilesetTiles_dhbw_gebaeude[] = INCBIN_U32("data/tilesets/secondary/dhbw_gebaeude/tiles.4bpp.lz");
+
+const u16 gTilesetPalettes_wasserturm[][16] =
+{
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/00.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/01.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/02.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/03.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/04.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/05.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/06.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/07.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/08.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/09.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/10.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/11.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/wasserturm/palettes/12.gbapal"),
+};
+
+const u32 gTilesetTiles_wasserturm[] = INCBIN_U32("data/tilesets/secondary/wasserturm/tiles.4bpp.lz");

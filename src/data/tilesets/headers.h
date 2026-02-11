@@ -855,3 +855,14 @@ const struct Tileset gTileset_dhbw_gebaeude =
 
 
 
+
+const struct Tileset gTileset_wasserturm =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_wasserturm,
+    .palettes = gTilesetPalettes_wasserturm,
+    .metatiles = gMetatiles_wasserturm,
+    .metatileAttributes = gMetatileAttributes_wasserturm,
+    .callback = NULL,
+};

@@ -4645,7 +4645,7 @@
       "id": "LAYOUT_ZWISCHENSTUECK",
       "name": "Zwischenstueck_Layout",
       "width": 20,
-      "height": 20,
+      "height": 21,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/Zwischenstueck/border.bin",
@@ -4720,6 +4720,36 @@
       "secondary_tileset": "gTileset_Rustboro",
       "border_filepath": "data/layouts/SeckenheimerLandstrasse/border.bin",
       "blockdata_filepath": "data/layouts/SeckenheimerLandstrasse/map.bin"
+    },
+    {
+      "id": "LAYOUT_WALDHOF",
+      "name": "Waldhof_Layout",
+      "width": 30,
+      "height": 30,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_BattleFrontierOutsideWest",
+      "border_filepath": "data/layouts/Waldhof/border.bin",
+      "blockdata_filepath": "data/layouts/Waldhof/map.bin"
+    },
+    {
+      "id": "LAYOUT_WASSERTURM",
+      "name": "Wasserturm_Layout",
+      "width": 14,
+      "height": 10,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_wasserturm",
+      "border_filepath": "data/layouts/Wasserturm/border.bin",
+      "blockdata_filepath": "data/layouts/Wasserturm/map.bin"
+    },
+    {
+      "id": "LAYOUT_WASSERTURM_LOBBY",
+      "name": "WasserturmLobby_Layout",
+      "width": 15,
+      "height": 15,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_BattlePyramid",
+      "border_filepath": "data/layouts/WasserturmLobby/border.bin",
+      "blockdata_filepath": "data/layouts/WasserturmLobby/map.bin"
     }
   ]
 }

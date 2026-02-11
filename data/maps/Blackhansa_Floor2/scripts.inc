@@ -96,6 +96,8 @@ Blackhansa_Floor2_ServerTap_Success:
     removeitem ITEM_RASPBERRY_PI, 1
     msgbox Blackhansa_Floor2_Text_Servers_Success, MSGBOX_DEFAULT
     setflag FLAG_BLACKHANSA_SERVER_TAP_DONE
+    playse SE_POKENAV_CALL
+    msgbox Blackhansa_Floor2_Text_Mail, MSGBOX_DEFAULT
     release
     end
 
@@ -212,4 +214,10 @@ Blackhansa_Floor2_Text_Plaque::
 	.string "The plaque reads: \n"
 	.string "Maspalomas Lighthouse$"
 
+Blackhansa_Floor2_Text_Mail::
+	.string "You intercepted a message already.\p"
+	.string "It's addressed to the Blackhansa\n"
+	.string "Boss. \p"
+    .string "''...today at the old warehouse.\n"
+	.string " The password is CASSEROLE...''$"
 
