@@ -557,6 +557,17 @@ string generate_events_text(Json groups_data, vector<string> &invalid_maps, stri
     return text.str();
 }
 
+Json parse_required_map_defines(void) {
+    string json_err;
+
+    string json_text = read_text_file("tools/mapjson/required_map_defines.json");
+
+    Json json_data = Json::parse(json_text, json_err);
+    if (json_data == Json())
+        FATAL_ERROR("%s\n", json_err.c_str());
+    return json_data;
+}
+
 string generate_map_constants_text(string groups_filepath, Json groups_data) {
     string file_dir = file_parent(groups_filepath) + sep;
 
@@ -572,7 +583,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
 
     int group_num = 0;
     vector<int> map_count_vec; //DEBUG
-
+    vector<string> all_map_ids;
     for (auto &group : groups_data["group_order"].array_items()) {
         string groupName = json_to_string(group);
         text << "    // " << groupName << "\n";
@@ -589,6 +600,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
                 FATAL_ERROR("%s: %s\n", map_filepath.c_str(), err_str.c_str());
             string id = json_to_string(map_data, "id", true);
             map_ids.push_back(id);
+            all_map_ids.push_back(id);
             if (id.length() > max_length)
                 max_length = id.length();
             map_count++; //DEBUG
@@ -599,6 +611,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
             text << "    " << map_id << string(max_length - map_id.length(), ' ')
                  << " = (" << map_id_num++ << " | (" << group_num << " << 8)),\n";
         }
+
         text << "\n";
 
         group_num++;
@@ -606,6 +619,17 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
     }
 
     text << "};\n\n";
+
+    //size_t max_length = 30;
+    Json required_map_defines = parse_required_map_defines();
+    for (auto required_map_id : required_map_defines[version].array_items()) {
+        string map_id = json_to_string(required_map_id);
+        auto it = find(all_map_ids.begin(), all_map_ids.end(), map_id);
+        if (it == all_map_ids.end()) {
+            text << "#define " << map_id << string(5, ' ')
+                 << "( 0xFF | (0xFF << 8))\n";
+        }
+    }
 
     text << "#define MAP_GROUPS_COUNT " << group_num << "\n\n";
     text << get_include_guard_end(guard_name);
