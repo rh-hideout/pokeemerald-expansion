@@ -97,7 +97,7 @@ Zwischenstueck_EventScript_Lagerhaus::
 	end
 
 Zwischenstueck_Text_TownSign::
-	.string " Left: DHBW\n"
+	.string "Left: DHBW\n"
 	.string "Right: JUNGBUSCH$"
 
 Zwischenstueck_Text_Lagerhaus::

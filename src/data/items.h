@@ -15559,7 +15559,7 @@ const struct Item gItemsInfo[] =
 
     
 
-     [ITEM_CUT_TOOL] =
+    [ITEM_CUT_TOOL] =
     {
         .name = ITEM_NAME("Cut Item"),
         .price = 0,

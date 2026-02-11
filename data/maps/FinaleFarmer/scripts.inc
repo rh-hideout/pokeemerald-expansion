@@ -65,7 +65,7 @@ FinaleFarmer_CheckPartyForGastlyLine:
     setvar VAR_RESULT, 0
 
     setvar VAR_0x8004, SPECIES_GASTLY
-    specialvar VAR_0x8005, PARTY_CONTAINS_SPECIES
+    specialvar VAR_0x8005, Special_PartyContainsSpecies
     compare VAR_0x8005, 1
     goto_if_eq .found
 

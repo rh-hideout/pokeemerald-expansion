@@ -1307,7 +1307,7 @@
 #define FLAG_UNUSED_0x4E5                                           0x4E5 // Unused Flag
 #define FLAG_UNUSED_0x4E6                                           0x4E6 // Unused Flag
 #define FLAG_UNUSED_0x4E7                                           0x4E7 // Unused Flag
-#define FLAG_UNUSED_0x4E8                                           0x4E8 // Unused Flag
+#define FLAG_I3C_AND_CAUGHT                                         0x4E8 // Flag for I3C_And caught
 #define CTF_FLAG_ID_BLACKHANSA_FINALE                               0x4E9 // Flag 8 Blackhansa Finale Event/Terminal
 #define FLAG_BLACKHANSA_DITTO_COPIED                                0x4EA // Flag 8 Blackhansa Ditto kopiert
 #define FLAG_BLACKHANSA_INTRO_DONE                                  0x4EB // Flag 8 Blackhansa Intro abgespielt
