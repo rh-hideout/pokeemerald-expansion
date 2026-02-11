@@ -15,36 +15,10 @@
   "connections": null,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
-      "x": 19,
-      "y": 10,
-      "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "EventScript_CutTree",
-      "flag": "FLAG_TEMP_11"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
-      "x": 19,
-      "y": 11,
-      "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "EventScript_CutTree",
-      "flag": "FLAG_TEMP_12"
-    },
-    {
       "local_id": "LOCALID_PETALBURG_WOODS_GRUNT",
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
-      "x": 26,
-      "y": 17,
+      "x": 31,
+      "y": 16,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
@@ -57,8 +31,8 @@
     {
       "local_id": "LOCALID_PETALBURG_WOODS_DEVON_EMPLOYEE",
       "graphics_id": "OBJ_EVENT_GFX_MAN_2",
-      "x": 26,
-      "y": 20,
+      "x": 36,
+      "y": 16,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -70,8 +44,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 45,
-      "y": 7,
+      "x": 47,
+      "y": 8,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
@@ -83,8 +57,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 35,
-      "y": 20,
+      "x": 43,
+      "y": 18,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
@@ -96,7 +70,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 4,
+      "x": 2,
       "y": 8,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
@@ -109,8 +83,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BOY_2",
-      "x": 15,
-      "y": 19,
+      "x": 9,
+      "y": 24,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
       "movement_range_x": 1,
@@ -122,10 +96,10 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
-      "x": 7,
-      "y": 32,
+      "x": 22,
+      "y": 26,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN_LEFT_AND_RIGHT",
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -135,21 +109,21 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
-      "x": 4,
-      "y": 14,
+      "x": 39,
+      "y": 28,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN_UP_AND_RIGHT",
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
+      "trainer_sight_or_berry_tree_id": "1",
       "script": "PetalburgWoods_EventScript_James",
       "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BOY_3",
-      "x": 30,
-      "y": 34,
+      "x": 42,
+      "y": 36,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 2,
@@ -161,8 +135,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 4,
-      "y": 26,
+      "x": 21,
+      "y": 23,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -174,12 +148,12 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GIRL_2",
-      "x": 33,
+      "x": 42,
       "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PetalburgWoods_EventScript_Girl",
@@ -228,13 +202,27 @@
       "elevation": 0,
       "dest_map": "MAP_ROUTE104",
       "dest_warp_id": "7"
+    },
+    {
+      "x": 32,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE104",
+      "dest_warp_id": "8"
+    },
+    {
+      "x": 33,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE104",
+      "dest_warp_id": "9"
     }
   ],
   "coord_events": [
     {
       "type": "trigger",
-      "x": 26,
-      "y": 23,
+      "x": 35,
+      "y": 16,
       "elevation": 3,
       "var": "VAR_PETALBURG_WOODS_STATE",
       "var_value": "0",
@@ -242,8 +230,8 @@
     },
     {
       "type": "trigger",
-      "x": 27,
-      "y": 23,
+      "x": 35,
+      "y": 17,
       "elevation": 3,
       "var": "VAR_PETALBURG_WOODS_STATE",
       "var_value": "0",
@@ -253,15 +241,15 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 14,
-      "y": 32,
+      "x": 4,
+      "y": 37,
       "elevation": 3,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PetalburgWoods_EventScript_Sign1"
     },
     {
       "type": "hidden_item",
-      "x": 39,
+      "x": 42,
       "y": 35,
       "elevation": 3,
       "item": "ITEM_POTION",
@@ -277,8 +265,8 @@
     },
     {
       "type": "hidden_item",
-      "x": 40,
-      "y": 29,
+      "x": 45,
+      "y": 21,
       "elevation": 3,
       "item": "ITEM_TINY_MUSHROOM",
       "flag": "FLAG_HIDDEN_ITEM_PETALBURG_WOODS_TINY_MUSHROOM_2"
@@ -286,15 +274,15 @@
     {
       "type": "hidden_item",
       "x": 4,
-      "y": 19,
+      "y": 25,
       "elevation": 3,
       "item": "ITEM_POKE_BALL",
       "flag": "FLAG_HIDDEN_ITEM_PETALBURG_WOODS_POKE_BALL"
     },
     {
       "type": "sign",
-      "x": 11,
-      "y": 8,
+      "x": 22,
+      "y": 12,
       "elevation": 3,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PetalburgWoods_EventScript_Sign2"

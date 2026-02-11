@@ -45,7 +45,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GIRL_2",
-      "x": 25,
+      "x": 22,
       "y": 49,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
@@ -58,34 +58,21 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LASS",
-      "x": 31,
-      "y": 24,
+      "x": 26,
+      "y": 22,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "7",
+      "trainer_sight_or_berry_tree_id": "2",
       "script": "Route104_EventScript_Haley",
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY_1",
-      "x": 27,
-      "y": 63,
-      "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
-      "movement_range_x": 0,
-      "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "Route104_EventScript_Boy1",
-      "flag": "0"
-    },
-    {
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_2",
-      "x": 30,
-      "y": 50,
+      "x": 29,
+      "y": 64,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 1,
@@ -97,8 +84,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GIRL_3",
-      "x": 28,
-      "y": 74,
+      "x": 18,
+      "y": 70,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
@@ -138,14 +125,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FISHERMAN",
-      "x": 29,
+      "x": 30,
       "y": 8,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "0",
+      "trainer_sight_or_berry_tree_id": "2",
       "script": "Route104_EventScript_Ivan",
       "flag": "0"
     },
@@ -321,7 +308,7 @@
     {
       "graphics_id": "OBJ_EVENT_GFX_TWIN",
       "x": 27,
-      "y": 15,
+      "y": 14,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
@@ -334,7 +321,7 @@
     {
       "graphics_id": "OBJ_EVENT_GFX_TWIN",
       "x": 28,
-      "y": 15,
+      "y": 14,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
@@ -346,14 +333,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_RICH_BOY",
-      "x": 21,
-      "y": 25,
+      "x": 23,
+      "y": 26,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_ROTATE_COUNTERCLOCKWISE",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
+      "trainer_sight_or_berry_tree_id": "2",
       "script": "Route104_EventScript_Winston",
       "flag": "0"
     },
@@ -372,8 +359,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 29,
-      "y": 53,
+      "x": 24,
+      "y": 58,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -385,14 +372,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
-      "x": 18,
-      "y": 67,
+      "x": 33,
+      "y": 52,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_UP_LEFT",
-      "movement_range_x": 5,
-      "movement_range_y": 6,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "2",
+      "trainer_sight_or_berry_tree_id": "3",
       "script": "Route104_EventScript_Billy",
       "flag": "0"
     },
@@ -424,8 +411,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 5,
-      "y": 8,
+      "x": 13,
+      "y": 7,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -450,14 +437,14 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FISHERMAN",
-      "x": 15,
-      "y": 59,
+      "x": 29,
+      "y": 71,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "0",
+      "trainer_sight_or_berry_tree_id": "5",
       "script": "Route104_EventScript_Darian",
       "flag": "0"
     },
@@ -532,6 +519,20 @@
       "elevation": 3,
       "dest_map": "MAP_PETALBURG_WOODS",
       "dest_warp_id": "5"
+    },
+    {
+      "x": 24,
+      "y": 28,
+      "elevation": 0,
+      "dest_map": "MAP_PETALBURG_WOODS",
+      "dest_warp_id": "6"
+    },
+    {
+      "x": 25,
+      "y": 28,
+      "elevation": 0,
+      "dest_map": "MAP_PETALBURG_WOODS",
+      "dest_warp_id": "7"
     }
   ],
   "coord_events": [
@@ -556,24 +557,16 @@
     },
     {
       "type": "sign",
-      "x": 27,
-      "y": 66,
+      "x": 26,
+      "y": 58,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route104_EventScript_RouteSignPetalburg"
     },
     {
       "type": "sign",
-      "x": 23,
-      "y": 5,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "Route104_EventScript_RouteSignRustboro"
-    },
-    {
-      "type": "sign",
-      "x": 7,
-      "y": 20,
+      "x": 11,
+      "y": 12,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route104_EventScript_FlowerShopSign"
@@ -588,16 +581,16 @@
     },
     {
       "type": "hidden_item",
-      "x": 7,
-      "y": 6,
+      "x": 19,
+      "y": 10,
       "elevation": 3,
       "item": "ITEM_SUPER_POTION",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_104_SUPER_POTION"
     },
     {
       "type": "hidden_item",
-      "x": 3,
-      "y": 9,
+      "x": 12,
+      "y": 17,
       "elevation": 3,
       "item": "ITEM_POKE_BALL",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_104_POKE_BALL"
