@@ -1068,15 +1068,84 @@ static bool32 CanTwoTurnMoveFireThisTurn(struct BattleContext *ctx)
     return TRUE;
 }
 
+static enum CancelerResult HandleSkyDropResult(struct BattleContext *ctx)
+{
+    if (gBattleMons[ctx->battlerAtk].volatiles.multipleTurns) // Second turn
+    {
+        gBattleScripting.animTurn = 1;
+        gBattleScripting.animTargetsHit = 0;
+        gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = FALSE;
+        gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
+        gBattleMons[ctx->battlerDef].volatiles.semiInvulnerable = STATE_NONE;
+        gBattleStruct->skyDropTargets[gBattlerTarget] = SKY_DROP_NO_TARGET;
+
+        // Sky Drop fails if target already fainted
+        if (gBattleStruct->skyDropTargets[ctx->battlerAtk] == SKY_DROP_NO_TARGET)
+        {
+            gBattlescriptCurrInstr = BattleScript_SkyDropChangedTarget;
+            return CANCELER_RESULT_FAILURE;
+        }
+
+        gBattleStruct->skyDropTargets[ctx->battlerAtk] = SKY_DROP_NO_TARGET;
+        return CANCELER_RESULT_SUCCESS;
+    }
+
+    if (IsBattlerAlly(ctx->battlerAtk, ctx->battlerDef))
+    {
+        gBattlescriptCurrInstr = BattleScript_ButItFailed;
+        return CANCELER_RESULT_FAILURE;
+    }
+    else if (gBattleMons[ctx->battlerDef].volatiles.semiInvulnerable != STATE_NONE)
+    {
+        gBattlescriptCurrInstr = BattleScript_ButItFailed;
+        return CANCELER_RESULT_FAILURE;
+    }
+    else if (DoesSubstituteBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->move))
+    {
+        gBattlescriptCurrInstr = BattleScript_ButItFailed;
+        return CANCELER_RESULT_FAILURE;
+    }
+    else if (GetBattlerWeight(gBattlerTarget) >= 2000)
+    {
+        gBattlescriptCurrInstr = BattleScript_SkyDropTargetToHeavy;
+        return CANCELER_RESULT_FAILURE;
+    }
+
+    // First turn
+
+    gBattleMons[ctx->battlerDef].volatiles.multipleTurns = 0;
+    gBattleMons[ctx->battlerDef].volatiles.uproarTurns = 0;
+    gBattleMons[ctx->battlerDef].volatiles.bideTurns = 0;
+    gBattleMons[ctx->battlerDef].volatiles.rolloutTimer = 0;
+    gBattleMons[ctx->battlerDef].volatiles.furyCutterCounter = 0;
+
+    if (gSideTimers[GetBattlerSide(ctx->battlerDef)].followmeTimer != 0 && gSideTimers[GetBattlerSide(ctx->battlerDef)].followmeTarget == ctx->battlerDef)
+        gSideTimers[GetBattlerSide(ctx->battlerDef)].followmeTimer = 0;
+
+    gBattleStruct->skyDropTargets[ctx->battlerAtk] = ctx->battlerDef;
+    gBattleStruct->skyDropTargets[ctx->battlerDef] = ctx->battlerAtk;
+    gLockedMoves[ctx->battlerAtk] = ctx->move;
+    gProtectStructs[ctx->battlerAtk].chargingTurn = TRUE;
+    gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = TRUE;
+    gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_ON_AIR;
+    gBattleMons[ctx->battlerDef].volatiles.semiInvulnerable = STATE_SKY_DROP;
+
+    gBattlescriptCurrInstr = BattleScript_SkyDropCharging;
+    return CANCELER_RESULT_BREAK;
+}
+
 static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
 {
-    if (!gBattleMoveEffects[GetMoveEffect(ctx->move)].twoTurnEffect
-     || GetMoveEffect(ctx->move) == EFFECT_SKY_DROP)
+    if (!gBattleMoveEffects[GetMoveEffect(ctx->move)].twoTurnEffect)
         return CANCELER_RESULT_SUCCESS;
 
     enum CancelerResult result = CANCELER_RESULT_SUCCESS;
 
-    if (gBattleMons[ctx->battlerAtk].volatiles.multipleTurns) // Second turn
+    if (GetMoveEffect(ctx->move) == EFFECT_SKY_DROP)
+    {
+        result = HandleSkyDropResult(ctx);
+    }
+    else if (gBattleMons[ctx->battlerAtk].volatiles.multipleTurns) // Second turn
     {
     	gBattleScripting.animTurn = 1;
     	gBattleScripting.animTargetsHit = 0;
@@ -1400,6 +1469,14 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
         {
             gBattleStruct->moveResultFlags[ctx->battlerDef] = MOVE_RESULT_NO_EFFECT;
             BattleScriptCall(BattleScript_ItDoesntAffectFoe);
+            targetAvoidedAttack = TRUE;
+        }
+        else if (GetMoveEffect(ctx->move) == EFFECT_SKY_DROP
+              && !gProtectStructs[ctx->battlerAtk].chargingTurn
+              && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING))
+        {
+            gBattleStruct->moveResultFlags[ctx->battlerDef] = MOVE_RESULT_NO_EFFECT;
+            BattleScriptCall(BattleScript_SkyDropFlyingType);
             targetAvoidedAttack = TRUE;
         }
         else
@@ -1984,7 +2061,7 @@ static enum MoveEndResult MoveEndAttackerVisible(void)
 
     if (IsBattlerUnaffectedByMove(gBattlerTarget)
         || !IsSemiInvulnerable(gBattlerAttacker, CHECK_ALL)
-        || gBattleStruct->unableToUseMove)
+        || (gBattleStruct->unableToUseMove && gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable != STATE_SKY_DROP))
     {
         BtlController_EmitSpriteInvisibility(gBattlerAttacker, B_COMM_TO_CONTROLLER, FALSE);
         MarkBattlerForControllerExec(gBattlerAttacker);
@@ -2001,8 +2078,8 @@ static enum MoveEndResult MoveEndTargetVisible(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (!gSpecialStatuses[gBattlerTarget].restoredBattlerSprite && gBattlerTarget < gBattlersCount
-        && !IsSemiInvulnerable(gBattlerTarget, CHECK_ALL))
+    if (!gSpecialStatuses[gBattlerTarget].restoredBattlerSprite
+     && !IsSemiInvulnerable(gBattlerTarget, CHECK_ALL))
     {
         BtlController_EmitSpriteInvisibility(gBattlerTarget, B_COMM_TO_CONTROLLER, FALSE);
         MarkBattlerForControllerExec(gBattlerTarget);
