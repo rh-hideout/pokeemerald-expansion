@@ -354,7 +354,7 @@ static u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent);
 static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 usedMove);
 static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u8 *failInstr, u16 move);
 static void ResetValuesForCalledMove(void);
-static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd);
+static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd, const u8 *nextInstr);
 static bool32 CanAbilityShieldActivateForBattler(u32 battler);
 static void TryClearChargeVolatile(u32 moveType);
 static bool32 IsAnyTargetAffected(void);
@@ -7114,7 +7114,7 @@ static void Cmd_moveend(void)
                     MarkBattlerForControllerExec(gBattlerAttacker);
                     ClearBattlerItemEffectHistory(gBattlerAttacker);
 
-                    if (!TrySymbiosis(gBattlerAttacker, item, TRUE))
+                    if (!TrySymbiosis(gBattlerAttacker, item, TRUE, NULL))
                         effect = TRUE;
                 }
             default:
@@ -8855,7 +8855,6 @@ static bool32 TryCheekPouch(u32 battler, u32 itemId, const u8 *nextInstr)
     if (GetItemPocket(itemId) == POCKET_BERRIES
         && GetBattlerAbility(battler) == ABILITY_CHEEK_POUCH
         && !gBattleMons[battler].volatiles.healBlock
-        && GetBattlerPartyState(battler)->ateBerry
         && !IsBattlerAtMaxHp(battler))
     {
         gBattlerAbility = battler;
@@ -8884,7 +8883,7 @@ static void BestowItem(u32 battlerAtk, u32 battlerDef)
 }
 
 // Called by Cmd_removeitem. itemId represents the item that was removed, not being given.
-static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd)
+static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd, const u8 *nextInstr)
 {
     if (!gBattleStruct->itemLost[B_SIDE_PLAYER][gBattlerPartyIndexes[battler]].stolen
         && gBattleStruct->changedItems[battler] == ITEM_NONE
@@ -8902,7 +8901,7 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd)
         if (moveEnd)
             BattleScriptPushCursor();
         else
-            BattleScriptPush(gBattlescriptCurrInstr + 2);
+            BattleScriptPush(nextInstr);
         gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
         return TRUE;
     }
@@ -8911,7 +8910,7 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd)
 
 static void Cmd_removeitem(void)
 {
-    CMD_ARGS(u8 battler);
+    CMD_ARGS(u8 battler, bool8 consumedBerry);
 
     u32 battler;
     u16 itemId = 0;
@@ -8940,7 +8939,8 @@ static void Cmd_removeitem(void)
     MarkBattlerForControllerExec(battler);
 
     ClearBattlerItemEffectHistory(battler);
-    if (!TryCheekPouch(battler, itemId, cmd->nextInstr) && !TrySymbiosis(battler, itemId, FALSE))
+    if ((!cmd->consumedBerry || !TryCheekPouch(battler, itemId, cmd->nextInstr))
+        && !TrySymbiosis(battler, itemId, FALSE, cmd->nextInstr))
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

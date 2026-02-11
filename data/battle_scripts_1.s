@@ -506,7 +506,7 @@ BattleScript_TeatimeLoop:
 	setbyte sBERRY_OVERRIDE, TRUE   @ override the requirements for eating berries
 	consumeberry BS_TARGET, TRUE  @ consume the berry, then restore the item from changedItems
 	setbyte sBERRY_OVERRIDE, FALSE
-	removeitem BS_TARGET
+	removeitem BS_TARGET, TRUE
 	moveendto MOVEEND_NEXT_TARGET
 	jumpifnexttargetvalid BattleScript_TeatimeLoop
 	moveendcase MOVEEND_CLEAR_BITS
@@ -857,7 +857,7 @@ BattleScript_EffectStuffCheeks::
 	consumeberry BS_ATTACKER, TRUE
 	bicword gHitMarker, HITMARKER_DISABLE_ANIMATION
 	setbyte sBERRY_OVERRIDE, 0
-	removeitem BS_ATTACKER
+	removeitem BS_ATTACKER, TRUE
 	setstatchanger STAT_DEF, 2, FALSE
 	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_StuffCheeksEnd
 	printfromtable gStatUpStringIds
@@ -7651,7 +7651,7 @@ BattleScript_BerryCureStatusRet::
 	printfromtable CureStatusBerryEffectStringID
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_SCRIPTING
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 	return
 
 BattleScript_GemActivates::
@@ -7669,7 +7669,7 @@ BattleScript_BerryReduceDmg::
 	setlastuseditem BS_SCRIPTING
 	printstring STRINGID_BERRYDMGREDUCES
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 	return
 
 BattleScript_BerryCureConfusionEnd2::
@@ -7680,7 +7680,7 @@ BattleScript_BerryCureConfusionRet::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_PKMNSITEMSNAPPEDOUT
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 	return
 
 BattleScript_MentalHerbCureRet::
@@ -7717,7 +7717,7 @@ BattleScript_ItemHealHP_RemoveItemRet_Anim:
 	waitmessage B_WAIT_TIME_LONG
 	healthbarupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 	return
 
 BattleScript_ItemHealHP_RemoveItemEnd2::
@@ -7731,7 +7731,7 @@ BattleScript_ItemHealHP_RemoveItemEnd2_Anim:
 	waitmessage B_WAIT_TIME_LONG
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
-	removeitem BS_ATTACKER
+	removeitem BS_ATTACKER, TRUE
 	end2
 
 BattleScript_BerryPPHealRet::
@@ -7743,7 +7743,7 @@ BattleScript_BerryPPHeal_Anim:
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_PKMNSITEMRESTOREDPP
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 	return
 
 BattleScript_BerryPPHealEnd2::
@@ -7845,7 +7845,7 @@ BattleScript_BerryConfuseHealEnd2_Anim:
 	healthbarupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	seteffectprimary BS_SCRIPTING, BS_SCRIPTING, MOVE_EFFECT_CONFUSION
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 	end2
 
 BattleScript_BerryConfuseHealRet::
@@ -7860,7 +7860,7 @@ BattleScript_BerryConfuseHealRet_Anim:
 	healthbarupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	seteffectprimary BS_SCRIPTING, BS_SCRIPTING, MOVE_EFFECT_CONFUSION
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 	return
 
 BattleScript_ConsumableStatRaiseEnd2::
@@ -7882,7 +7882,7 @@ BattleScript_ConsumableStatRaiseRet_Anim:
 	copybyte gBattlerTarget, sBATTLER @ BattleScript_StatUp uses target as a message arg
 	call BattleScript_StatUp
 	restoretarget
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 BattleScript_ConsumableStatRaiseRet_End:
 	return
 
@@ -7890,7 +7890,7 @@ BattleScript_BerryFocusEnergyRet::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_PKMNUSEDXTOGETPUMPED
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 	return
 
 BattleScript_BerryFocusEnergyEnd2::
@@ -8148,7 +8148,7 @@ BattleScript_CustapBerryActivation::
 	waitanimation
 	printstring STRINGID_CANACTFASTERTHANKSTO
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_ATTACKER
+	removeitem BS_ATTACKER, TRUE
 	end2
 
 BattleScript_MicleBerryActivateEnd2::
@@ -8160,7 +8160,7 @@ BattleScript_MicleBerryActivateEnd2_Anim:
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_MICLEBERRYACTIVATES
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_ATTACKER
+	removeitem BS_ATTACKER, TRUE
 	end2
 
 BattleScript_MicleBerryActivateRet::
@@ -8172,7 +8172,7 @@ BattleScript_MicleBerryActivateRet_Anim:
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_MICLEBERRYACTIVATES
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_SCRIPTING
+	removeitem BS_SCRIPTING, TRUE
 	return
 
 BattleScript_JabocaRowapBerryActivates::
@@ -8186,7 +8186,7 @@ BattleScript_JabocaRowapBerryActivate_Anim:
 	waitanimation
 BattleScript_JabocaRowapBerryActivate_Dmg:
 	call BattleScript_HurtAttacker
-	removeitem BS_TARGET
+	removeitem BS_TARGET, TRUE
 	return
 
 @ z moves / effects
