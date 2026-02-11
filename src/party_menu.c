@@ -596,7 +596,7 @@ static void LoadBattlePartyCurrentOrderForLayout(u8 layout)
     if (layout == PARTY_LAYOUT_MULTI_FULL_PARTNER || layout == PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER)
         battler = B_BATTLER_2;
     else
-        battler = B_BATTLER_0;
+        battler = gBattlerInMenuId;
 
     if (battler < gBattlersCount)
         memcpy(gBattlePartyCurrentOrder, gBattleStruct->battlerPartyOrders[battler], sizeof(gBattlePartyCurrentOrder));
@@ -7916,15 +7916,34 @@ static void UpdatePartyToBattleOrder(void)
     struct Pokemon *partyBuffer = Alloc(sizeof(gParties[B_TRAINER_0]));
     u8 i;
 
-    static const u8 sMultiBattlePartyIdToMenuId[PARTY_SIZE] =
+    static const u8 sMultiBattlePartyIdToMenuId_LeftBattler[PARTY_SIZE] =
     {
-        [0] = 0, // player 0
-        [1] = 2, // player 1
-        [2] = 3, // player 2
-        [3] = 1, // partner 0
-        [4] = 4, // partner 1
-        [5] = 5, // partner 2
+        // Top half (0,2,3) party ids 0-2
+        [0] = 0,
+        [1] = 2,
+        [2] = 3,
+        // Bottom half (1,4,5) party ids 3-5
+        [3] = 1,
+        [4] = 4,
+        [5] = 5,
     };
+    static const u8 sMultiBattlePartyIdToMenuId_RightBattler[PARTY_SIZE] =
+    {
+        // Top half (0,2,3) party ids 3-5
+        [3] = 0,
+        [4] = 2,
+        [5] = 3,
+        // Bottom half (1,4,5) party ids 0-2
+        [0] = 1,
+        [1] = 4,
+        [2] = 5,
+    };
+    const u8 *multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_LeftBattler;
+    if ((gBattleTypeFlags & BATTLE_TYPE_LINK)
+     && ((gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT))
+    {
+        multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_RightBattler;
+    }
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -7934,7 +7953,7 @@ static void UpdatePartyToBattleOrder(void)
         u8 srcMenuId = battlePartyId;
 
         if (gPartyMenu.layout == PARTY_LAYOUT_MULTI && battlePartyId < PARTY_SIZE)
-            srcMenuId = sMultiBattlePartyIdToMenuId[battlePartyId];
+            srcMenuId = multiBattlePartyIdToMenuId[battlePartyId];
 
         GetPartyAndSlotFromPartyMenuId(srcMenuId, &srcParty, &srcPartySlot);
         memcpy(&partyBuffer[i], &srcParty[srcPartySlot], sizeof(struct Pokemon));
@@ -7954,15 +7973,30 @@ static void UpdatePartyToFieldOrder(void)
     struct Pokemon *partyBuffer = Alloc(sizeof(gParties[B_TRAINER_0]));
     u8 i;
 
-    static const u8 sMultiBattlePartyIdToMenuId[PARTY_SIZE] =
+    static const u8 sMultiBattlePartyIdToMenuId_Left[PARTY_SIZE] =
     {
-        [0] = 0, // player 0
-        [1] = 2, // player 1
-        [2] = 3, // player 2
-        [3] = 1, // partner 0
-        [4] = 4, // partner 1
-        [5] = 5, // partner 2
+        [0] = 0,
+        [1] = 2,
+        [2] = 3,
+        [3] = 1,
+        [4] = 4,
+        [5] = 5,
     };
+    static const u8 sMultiBattlePartyIdToMenuId_Right[PARTY_SIZE] =
+    {
+        [3] = 0,
+        [4] = 2,
+        [5] = 3,
+        [0] = 1,
+        [1] = 4,
+        [2] = 5,
+    };
+    const u8 *multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Left;
+    if ((gBattleTypeFlags & BATTLE_TYPE_LINK)
+     && ((gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT))
+    {
+        multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Right;
+    }
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -7980,7 +8014,7 @@ static void UpdatePartyToFieldOrder(void)
         u8 dstMenuId = battlePartyId;
 
         if (gPartyMenu.layout == PARTY_LAYOUT_MULTI && battlePartyId < PARTY_SIZE)
-            dstMenuId = sMultiBattlePartyIdToMenuId[battlePartyId];
+            dstMenuId = multiBattlePartyIdToMenuId[battlePartyId];
 
         GetPartyAndSlotFromPartyMenuId(dstMenuId, &dstParty, &dstPartySlot);
         memcpy(&dstParty[dstPartySlot], &partyBuffer[i], sizeof(struct Pokemon));
