@@ -3,7 +3,7 @@
 Goal: Make the bridge appear in **Bridgeroom** by setting the save flag  
 `FLAG_FLAG8_BRIDGE_SET` with ID **0x4EE**.
 
-Your ROM checks this flag on **map load**. If it’s set, the map script places the bridge metatiles and redraws the map immediately.  
+Your ROM checks this flag on **map load**. If it’s set, the map script places the bridge metatiles and redraws the map after checking the terminal.  
 So the correct workflow is: **edit save → fix checksum → load save → bridge appears instantly**.
 
 ---
@@ -19,7 +19,7 @@ So the correct workflow is: **edit save → fix checksum → load save → bridg
 ## Step 0 — Make a clean “before” save
 
 1. Stand in **Bridgeroom** where the missing bridge should be.
-2. Save the game normally.
+2. Save the game normally (no save states).
 3. Close the emulator completely (so it flushes the `.sav`).
 4. Copy the `.sav` file and keep a backup (e.g. `save_before_bridge.sav`).
 
