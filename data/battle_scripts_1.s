@@ -7717,7 +7717,11 @@ BattleScript_ItemHealHP_RemoveItemRet_Anim:
 	waitmessage B_WAIT_TIME_LONG
 	healthbarupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
+	jumpifnotberry BS_SCRIPTING, BattleScript_ItemHealHP_RemoveItemRet_RemoveNonBerry
 	removeitem BS_SCRIPTING, TRUE
+	return
+BattleScript_ItemHealHP_RemoveItemRet_RemoveNonBerry:
+	removeitem BS_SCRIPTING
 	return
 
 BattleScript_ItemHealHP_RemoveItemEnd2::
@@ -7731,7 +7735,11 @@ BattleScript_ItemHealHP_RemoveItemEnd2_Anim:
 	waitmessage B_WAIT_TIME_LONG
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	jumpifnotberry BS_ATTACKER, BattleScript_ItemHealHP_RemoveItemEnd2_RemoveNonBerry
 	removeitem BS_ATTACKER, TRUE
+	end2
+BattleScript_ItemHealHP_RemoveItemEnd2_RemoveNonBerry:
+	removeitem BS_ATTACKER
 	end2
 
 BattleScript_BerryPPHealRet::
@@ -7882,7 +7890,11 @@ BattleScript_ConsumableStatRaiseRet_Anim:
 	copybyte gBattlerTarget, sBATTLER @ BattleScript_StatUp uses target as a message arg
 	call BattleScript_StatUp
 	restoretarget
+	jumpifnotberry BS_SCRIPTING, BattleScript_ConsumableStatRaiseRet_RemoveNonBerry
 	removeitem BS_SCRIPTING, TRUE
+	return
+BattleScript_ConsumableStatRaiseRet_RemoveNonBerry:
+	removeitem BS_SCRIPTING
 BattleScript_ConsumableStatRaiseRet_End:
 	return
 
