@@ -2463,7 +2463,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
     case DEX_MODE_NATIONAL:
         if (IsNationalPokedexEnabled())
         {
-            temp_dexCount = REGIONAL_DEX_COUNT;
+            temp_dexCount = NATIONAL_DEX_COUNT;
             temp_isHoennDex = FALSE;
         }
         else
