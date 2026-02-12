@@ -1237,6 +1237,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
 
 static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleContext *ctx)
 {
+    const u8 *battleScript = NULL;
     u32 numAffectedTargets = 0;
 
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
@@ -1911,6 +1912,8 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCo
     [CANCELER_FOCUS_PRE_GEN5] = CancelerFocusPreGen5,
     [CANCELER_BIDE] = CancelerBide,
     [CANCELER_MOVE_FAILURE] = CancelerMoveFailure,
+    [CANCELER_MOVE_EFFECT_FAILURE_TARGET] = CancelerMoveEffectFailureTarget,
+    [CANCELER_SET_FLING_ITEM] = CancelerSetFlingItem,
     [CANCELER_POWDER_STATUS] = CancelerPowderStatus,
     [CANCELER_PRIORITY_BLOCK] = CancelerPriorityBlock,
     [CANCELER_PROTEAN] = CancelerProtean,
