@@ -3628,18 +3628,26 @@ static void DoBattleIntro(void)
                             hpStatus[0][i].status = GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_STATUS);
                         }
                     }
+
+                    enum BattleTrainer trainer = B_TRAINER_3;
+                    u32 offset = 0;
+                    if (gBattleTypeFlags & BATTLE_TYPE_LINK && !(gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)) // Link multis use the same party
+                    {
+                        trainer = B_TRAINER_1;
+                        offset = MULTI_PARTY_SIZE;
+                    }
                     for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {
-                        if (GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                        || GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        if (GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
                         {
-                            hpStatus[0][i + MULTI_PARTY_SIZE].hp = HP_EMPTY_SLOT;
-                            hpStatus[0][i + MULTI_PARTY_SIZE].status = 0;
+                            hpStatus[1][i].hp = HP_EMPTY_SLOT;
+                            hpStatus[1][i].status = 0;
                         }
                         else
                         {
-                            hpStatus[0][i + MULTI_PARTY_SIZE].hp = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_HP);
-                            hpStatus[0][i + MULTI_PARTY_SIZE].status = GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_STATUS);
+                            hpStatus[1][i].hp = GetMonData(&gParties[trainer][i + offset], MON_DATA_HP);
+                            hpStatus[1][i].status = GetMonData(&gParties[trainer][i + offset], MON_DATA_STATUS);
                         }
                     }
                 }
@@ -3692,9 +3700,13 @@ static void DoBattleIntro(void)
                     }
                 }
             }
-
+            
             battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[0], PARTY_SUMM_SKIP_DRAW_DELAY);
+            MarkBattlerForControllerExec(battler);
+
+            battler = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+            BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[1], PARTY_SUMM_SKIP_DRAW_DELAY);
             MarkBattlerForControllerExec(battler);
 
             if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
@@ -3715,18 +3727,26 @@ static void DoBattleIntro(void)
                             hpStatus[0][i].status = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS);
                         }
                     }
+
+                    enum BattleTrainer trainer = B_TRAINER_2;
+                    u32 offset = 0;
+                    if (gBattleTypeFlags & BATTLE_TYPE_LINK) // Link multis use the same party even in Battle Tower
+                    {
+                        trainer = B_TRAINER_0;
+                        offset = MULTI_PARTY_SIZE;
+                    }
                     for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {
-                        if (GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                        || GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                        if (GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+                        || GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
                         {
-                            hpStatus[0][i + MULTI_PARTY_SIZE].hp = HP_EMPTY_SLOT;
-                            hpStatus[0][i + MULTI_PARTY_SIZE].status = 0;
+                            hpStatus[1][i].hp = HP_EMPTY_SLOT;
+                            hpStatus[1][i].status = 0;
                         }
                         else
                         {
-                            hpStatus[0][i + MULTI_PARTY_SIZE].hp = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_HP);
-                            hpStatus[0][i + MULTI_PARTY_SIZE].status = GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_STATUS);
+                            hpStatus[1][i].hp = GetMonData(&gParties[trainer][i + offset], MON_DATA_HP);
+                            hpStatus[1][i].status = GetMonData(&gParties[trainer][i + offset], MON_DATA_STATUS);
                         }
                     }
                 }
@@ -3782,6 +3802,10 @@ static void DoBattleIntro(void)
 
             battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
             BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[0], PARTY_SUMM_SKIP_DRAW_DELAY);
+            MarkBattlerForControllerExec(battler);
+
+            battler = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
+            BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[1], PARTY_SUMM_SKIP_DRAW_DELAY);
             MarkBattlerForControllerExec(battler);
 
             gBattleStruct->eventState.battleIntro++;

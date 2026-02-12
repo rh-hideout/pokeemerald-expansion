@@ -1212,34 +1212,64 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
     u8 ballIconSpritesIds[PARTY_SIZE];
     u8 taskId;
 
-    if (!skipPlayer || GetBattlerPosition(battler) != B_POSITION_OPPONENT_RIGHT)
+
+    if (!skipPlayer)
     {
         if (IsOnPlayerSide(battler))
         {
             isOpponent = FALSE;
-            bar_X = 136, bar_Y = 96;
+            bar_X = 136;
+            if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
+                bar_Y = GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT ? 90 : 106;
+            else
+                bar_Y = 96;
             bar_pos2_X = 100;
             bar_data0 = -5;
+            DebugPrintf("CreatePartyStatusSummarySprites battler %d X %d Y %d 2 trainers %d position %d", battler, bar_X, bar_Y, (u8)BattleSideHasTwoTrainers(B_SIDE_PLAYER), GetBattlerPosition(battler));
         }
         else
         {
             isOpponent = TRUE;
 
             if (!skipPlayer || GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES)
+            {
                 bar_X = 104, bar_Y = 40;
+                if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
+                    bar_Y = 24;
+                else
+                    bar_Y = 40;
+            }
             else
-                bar_X = 104, bar_Y = 16;
+            {
+                bar_X = 104;
+                if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
+                    bar_Y = 16;
+                else
+                    bar_Y = 32;
+            }
 
             bar_pos2_X = -100;
             bar_data0 = 5;
+            DebugPrintf("CreatePartyStatusSummarySprites battler %d X %d Y %d 2 trainers %d position %d", battler, bar_X, bar_Y, (u8)BattleSideHasTwoTrainers(B_SIDE_OPPONENT), GetBattlerPosition(battler));
         }
     }
     else
     {
         isOpponent = TRUE;
-        bar_X = 104, bar_Y = 40;
+        bar_X = 104;
+        if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
+        {
+            DebugPrintf("battler %d", battler);
+            bar_Y = 24;
+        }
+        else
+        {
+            DebugPrintf("battler %d", battler);
+            bar_Y = 40;
+        }
         bar_pos2_X = -100;
         bar_data0 = 5;
+        DebugPrintf("CreatePartyStatusSummarySprites battler %d X %d Y %d 2 trainers %d position %d", battler, bar_X, bar_Y, (u8)BattleSideHasTwoTrainers(B_SIDE_OPPONENT), GetBattlerPosition(battler));
     }
 
     LoadCompressedSpriteSheetUsingHeap(&sStatusSummaryBarSpriteSheet);
