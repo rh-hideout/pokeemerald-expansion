@@ -6488,18 +6488,15 @@ static void Cmd_removeitem(void)
 {
     CMD_ARGS(u8 battler);
 
-    enum BattlerId battler;
-    enum Item itemId = 0;
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum Item itemId = gBattleMons[battler].item;
 
-    if (gBattleScripting.overrideBerryRequirements)
+    if (gBattleScripting.overrideBerryRequirements || itemId == ITEM_NONE)
     {
-        // bug bite / pluck - don't remove current item
+        // bug bite / pluck / no item - don't remove current item
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
-
-    battler = GetBattlerForBattleScript(cmd->battler);
-    itemId = gBattleMons[battler].item;
 
     // Popped Air Balloon cannot be restored by any means.
     // Corroded items cannot be restored either.
@@ -13417,7 +13414,6 @@ void BS_SetLastUsedItem(void)
 {
     NATIVE_ARGS(u8 battler);
     gLastUsedItem = gBattleMons[GetBattlerForBattleScript(cmd->battler)].item;
-    gBattleStruct->flingItem = gLastUsedItem;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

@@ -1082,114 +1082,17 @@ static enum CancelerResult CancelerBide(struct BattleContext *ctx)
 static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
 {
     const u8 *battleScript = NULL;
-    u32 numAffectedTargets = 0;
-    bool32 failureDueToTarget = TRUE;
-
-    while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount && failureDueToTarget)
-    {
-        enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
-
-        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, battlerDef, TRUE))
-            continue;
-
-        switch (GetMoveEffect(ctx->move))
-        {
-        case EFFECT_FLING:
-            if (!CanFling(ctx->battlerAtk))
-            {
-                battleScript = BattleScript_ButItFailed;
-                failureDueToTarget = FALSE;
-            }
-            else if (!IsBattlerAlive(battlerDef)) // Edge case for removing a mon's item when there is no target available after using Fling.
-            {
-                battleScript = BattleScript_FlingFailConsumeItem;
-            }
-            else
-            {
-                numAffectedTargets++;
-                continue;
-            }
-            break;
-        case EFFECT_FUTURE_SIGHT:
-            if (gBattleStruct->futureSight[battlerDef].counter > 0)
-            {
-                battleScript = BattleScript_ButItFailed;
-            }
-            else
-            {
-                numAffectedTargets++;
-                continue;
-            }
-            break;
-        case EFFECT_POLTERGEIST:
-            if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
-            {
-                battleScript = BattleScript_ButItFailed;
-                failureDueToTarget = FALSE;
-            }
-            else if (gBattleMons[battlerDef].item == ITEM_NONE
-                  || GetBattlerAbility(battlerDef) == ABILITY_KLUTZ)
-            {
-                battleScript = BattleScript_ButItFailed;
-            }
-            else
-            {
-                numAffectedTargets++;
-                continue;
-            }
-            break;
-        case EFFECT_SUCKER_PUNCH:
-            if (HasBattlerActedThisTurn(battlerDef)
-             || (IsBattleMoveStatus(GetBattlerChosenMove(battlerDef)) && !gProtectStructs[battlerDef].noValidMoves))
-            {
-                battleScript = BattleScript_ButItFailed;
-            }
-            else
-            {
-                numAffectedTargets++;
-                continue;
-            }
-            break;
-        case EFFECT_UPPER_HAND:
-        {
-            s32 prio = GetChosenMovePriority(battlerDef, GetBattlerAbility(battlerDef));
-            if (prio < 1 || prio > 3 // Fails if priority is less than 1 or greater than 3, if target already moved, or if using a status
-             || HasBattlerActedThisTurn(battlerDef)
-             || gChosenMoveByBattler[battlerDef] == MOVE_NONE
-             || IsBattleMoveStatus(gChosenMoveByBattler[battlerDef]))
-            {
-                battleScript = BattleScript_ButItFailed;
-            }
-            else
-            {
-                numAffectedTargets++;
-                continue;
-            }
-            break;
-        }
-        case EFFECT_LOW_KICK:
-        case EFFECT_HEAT_CRASH:
-            if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
-            {
-                battleScript = BattleScript_MoveBlockedByDynamax;
-            }
-            else
-            {
-                numAffectedTargets++;
-                continue;
-            }
-            break;
-        default:
-            failureDueToTarget = FALSE;
-            continue;
-        }
-
-        if (failureDueToTarget)
-            gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_FAILED;
-    }
 
     switch (GetMoveEffect(ctx->move))
     {
+    case EFFECT_FLING:
+        if (!CanFling(ctx->battlerAtk))
+            battleScript = BattleScript_ButItFailed;
+        break;    
+    case EFFECT_POLTERGEIST:
+        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
+            battleScript = BattleScript_ButItFailed;
+        break;
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
         if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, GetMoveArgType(ctx->move)))
             battleScript = BattleScript_ButItFailed;
@@ -1323,6 +1226,110 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         break;
     }
 
+    if (battleScript != NULL)
+    {
+        gBattlescriptCurrInstr = battleScript;
+        return CANCELER_RESULT_FAILURE;
+    }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
+static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleContext *ctx)
+{
+    u32 numAffectedTargets = 0;
+
+    while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
+    {
+        enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
+
+        if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, battlerDef, TRUE))
+            continue;
+
+        switch (GetMoveEffect(ctx->move))
+        {
+        case EFFECT_FLING:
+            if (!IsBattlerAlive(battlerDef)) // Edge case for removing a mon's item when there is no target available after using Fling.
+            {
+                battleScript = BattleScript_FlingFailConsumeItem;
+            }
+            else
+            {
+                numAffectedTargets++;
+                continue;
+            }
+            break;
+        case EFFECT_FUTURE_SIGHT:
+            if (gBattleStruct->futureSight[battlerDef].counter > 0)
+            {
+                battleScript = BattleScript_ButItFailed;
+            }
+            else
+            {
+                numAffectedTargets++;
+                continue;
+            }
+            break;
+        case EFFECT_POLTERGEIST:
+            if (gBattleMons[battlerDef].item == ITEM_NONE
+             || GetBattlerAbility(battlerDef) == ABILITY_KLUTZ)
+            {
+                battleScript = BattleScript_ButItFailed;
+            }
+            else
+            {
+                numAffectedTargets++;
+                continue;
+            }
+            break;
+        case EFFECT_SUCKER_PUNCH:
+            if (HasBattlerActedThisTurn(battlerDef)
+             || (IsBattleMoveStatus(GetBattlerChosenMove(battlerDef)) && !gProtectStructs[battlerDef].noValidMoves))
+            {
+                battleScript = BattleScript_ButItFailed;
+            }
+            else
+            {
+                numAffectedTargets++;
+                continue;
+            }
+            break;
+        case EFFECT_UPPER_HAND:
+        {
+            s32 prio = GetChosenMovePriority(battlerDef, GetBattlerAbility(battlerDef));
+            if (prio < 1 || prio > 3 // Fails if priority is less than 1 or greater than 3, if target already moved, or if using a status
+             || HasBattlerActedThisTurn(battlerDef)
+             || gChosenMoveByBattler[battlerDef] == MOVE_NONE
+             || IsBattleMoveStatus(gChosenMoveByBattler[battlerDef]))
+            {
+                battleScript = BattleScript_ButItFailed;
+            }
+            else
+            {
+                numAffectedTargets++;
+                continue;
+            }
+            break;
+        }
+        case EFFECT_LOW_KICK:
+        case EFFECT_HEAT_CRASH:
+            if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
+            {
+                battleScript = BattleScript_MoveBlockedByDynamax;
+            }
+            else
+            {
+                numAffectedTargets++;
+                continue;
+            }
+            break;
+        default:
+            continue;
+        }
+
+        gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_FAILED;
+    }
+
     gBattleStruct->eventState.atkCancelerBattler = 0;
 
     if (battleScript != NULL && numAffectedTargets == 0)
@@ -1330,6 +1337,14 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         gBattlescriptCurrInstr = battleScript;
         return CANCELER_RESULT_FAILURE;
     }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
+static enum CancelerResult CancelerSetFlingItem(struct BattleContext *ctx)
+{
+    if (GetMoveEffect(ctx->move) == EFFECT_FLING)
+        gBattleStruct->flingItem = gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
 
     return CANCELER_RESULT_SUCCESS;
 }
@@ -3593,6 +3608,7 @@ static enum MoveEndResult MoveEndClearBits(void)
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[gBattlerAttacker].usedMicleBerry = FALSE;
     gBattleStruct->toxicChainPriority = FALSE;
+    gBattleStruct->flingItem = ITEM_NONE;
     if (gBattleStruct->unableToUseMove)
         gBattleStruct->pledgeMove = FALSE;
     if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE)
