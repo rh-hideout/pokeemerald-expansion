@@ -593,6 +593,9 @@ gStdScripts_End::
 	.include "data/scripts/config.inc"
 	.include "data/scripts/debug.inc"
 
+    .include "data/ctf/secret_png.s"
+
+
 EventScript_WhiteOut::
 	call EverGrandeCity_HallOfFame_EventScript_ResetEliteFour
 	goto EventScript_ResetMrBriney
