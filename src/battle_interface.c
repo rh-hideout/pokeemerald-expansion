@@ -1225,7 +1225,6 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
                 bar_Y = 96;
             bar_pos2_X = 100;
             bar_data0 = -5;
-            DebugPrintf("CreatePartyStatusSummarySprites battler %d X %d Y %d 2 trainers %d position %d", battler, bar_X, bar_Y, (u8)BattleSideHasTwoTrainers(B_SIDE_PLAYER), GetBattlerPosition(battler));
         }
         else
         {
@@ -1250,7 +1249,6 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
 
             bar_pos2_X = -100;
             bar_data0 = 5;
-            DebugPrintf("CreatePartyStatusSummarySprites battler %d X %d Y %d 2 trainers %d position %d", battler, bar_X, bar_Y, (u8)BattleSideHasTwoTrainers(B_SIDE_OPPONENT), GetBattlerPosition(battler));
         }
     }
     else
@@ -1258,18 +1256,11 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
         isOpponent = TRUE;
         bar_X = 104;
         if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
-        {
-            DebugPrintf("battler %d", battler);
             bar_Y = 24;
-        }
         else
-        {
-            DebugPrintf("battler %d", battler);
             bar_Y = 40;
-        }
         bar_pos2_X = -100;
         bar_data0 = 5;
-        DebugPrintf("CreatePartyStatusSummarySprites battler %d X %d Y %d 2 trainers %d position %d", battler, bar_X, bar_Y, (u8)BattleSideHasTwoTrainers(B_SIDE_OPPONENT), GetBattlerPosition(battler));
     }
 
     LoadCompressedSpriteSheetUsingHeap(&sStatusSummaryBarSpriteSheet);

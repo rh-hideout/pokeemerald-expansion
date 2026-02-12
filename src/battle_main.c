@@ -3700,14 +3700,17 @@ static void DoBattleIntro(void)
                     }
                 }
             }
-            
+
             battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[0], PARTY_SUMM_SKIP_DRAW_DELAY);
             MarkBattlerForControllerExec(battler);
 
-            battler = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-            BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[1], PARTY_SUMM_SKIP_DRAW_DELAY);
-            MarkBattlerForControllerExec(battler);
+            if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
+            {
+                battler = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+                BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[1], PARTY_SUMM_SKIP_DRAW_DELAY);
+                MarkBattlerForControllerExec(battler);
+            }
 
             if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
             {
@@ -3804,9 +3807,12 @@ static void DoBattleIntro(void)
             BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[0], PARTY_SUMM_SKIP_DRAW_DELAY);
             MarkBattlerForControllerExec(battler);
 
-            battler = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
-            BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[1], PARTY_SUMM_SKIP_DRAW_DELAY);
-            MarkBattlerForControllerExec(battler);
+            if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
+            {
+                battler = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
+                BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[1], PARTY_SUMM_SKIP_DRAW_DELAY);
+                MarkBattlerForControllerExec(battler);
+            }
 
             gBattleStruct->eventState.battleIntro++;
         }
