@@ -272,17 +272,13 @@ PlayersHouse_2F_EventScript_GameCube::
 
 PlayersHouse_2F_Text_ClockIsStopped:
 	.string "The clock is stopped…\p"
-	.string "Better set it and start it!$"
+	.string "Better set it before leaving.$"
 
 PlayersHouse_2F_Text_HowDoYouLikeYourRoom:
-	.string "MOM: {PLAYER}, how do you like your\n"
-	.string "new room?\p"
-	.string "Good! Everything's put away neatly!\p"
-	.string "They finished moving everything in\n"
-	.string "downstairs, too.\p"
-	.string "POKéMON movers are so convenient!\p"
-	.string "Oh, you should make sure that\n"
-	.string "everything's all there on your desk.$"
+	.string "MOM: {PLAYER}, are you ready?\n"
+	.string "The truck is waiting outside.\p"
+	.string "You should set your clock so you\n"
+	.string "don't lose track of time!$"
 
 PlayersHouse_2F_Text_Notebook:
 	.string "{PLAYER} flipped open the notebook.\p"
