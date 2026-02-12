@@ -2488,17 +2488,10 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                 }
                 else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                 {
-                        DebugPrintf("%d STRINGID_INTROSENDOUT gBattleTypeFlags & BATTLE_TYPE_MULTI", battler);
                     if (BattlerIsPlayer(battler))
-                    {
-                        DebugPrintf("%d STRINGID_INTROSENDOUT gBattleTypeFlags & BATTLE_TYPE_MULTI BattlerIsPlayer(battler)", battler);
                         stringPtr = sText_LinkPartnerSentOutPkmn2GoPkmn;
-                    }
                     else
-                    {
-                        DebugPrintf("%d STRINGID_INTROSENDOUT gBattleTypeFlags & BATTLE_TYPE_MULTI !BattlerIsPlayer(battler)", battler);
                         stringPtr = sText_LinkPartnerSentOutPkmn1GoPkmn;
-                    }
                 }
                 else
                 {
@@ -3212,22 +3205,18 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 toCpy = text;
                 break;
             case B_TXT_LINK_PLAYER_MON1_NAME: // link first player poke name
-                DebugPrintf("B_TXT_LINK_PLAYER_MON1_NAME GetBattlerAtPosition(B_POSITION_PLAYER_LEFT) %d", GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
                 GetBattlerNick(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT), text);
                 toCpy = text;
                 break;
             case B_TXT_LINK_OPPONENT_MON1_NAME: // link first opponent poke name
-                DebugPrintf("B_TXT_LINK_OPPONENT_MON1_NAME GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT) %d", GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
                 GetBattlerNick(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), text);
                 toCpy = text;
                 break;
             case B_TXT_LINK_PLAYER_MON2_NAME: // link second player poke name
-                DebugPrintf("B_TXT_LINK_PLAYER_MON2_NAME GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT) %d", GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT));
                 GetBattlerNick(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), text);
                 toCpy = text;
                 break;
             case B_TXT_LINK_OPPONENT_MON2_NAME: // link second opponent poke name
-                DebugPrintf("B_TXT_LINK_OPPONENT_MON2_NAME GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT) %d", GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT));
                 GetBattlerNick(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), text);
                 toCpy = text;
                 break;

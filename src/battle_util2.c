@@ -263,7 +263,6 @@ struct Pokemon *GetTrainerParty(enum BattleTrainer trainer)
 struct Pokemon* GetBattlerMon(enum BattlerId battler)
 {
     u32 index = gBattlerPartyIndexes[battler];
-    DebugPrintf("battler %d, index %d, trainer %d", battler, index, GetBattlerTrainer(battler));
 
     return &GetBattlerParty(battler)[index];
 }

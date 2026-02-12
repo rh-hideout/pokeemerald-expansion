@@ -559,9 +559,6 @@ static void InitPartyMenu(u8 menuType, u8 layout, u8 partyAction, bool8 keepCurs
         if (layout != KEEP_PARTY_LAYOUT)
             gPartyMenu.layout = layout;
 
-        if (menuType == PARTY_MENU_TYPE_IN_BATTLE && IsMultiBattle() == TRUE)
-            LoadBattlePartyCurrentOrderForLayout(gPartyMenu.layout);
-
         for (i = 0; i < ARRAY_COUNT(sPartyMenuInternal->data); i++)
             sPartyMenuInternal->data[i] = 0;
         for (i = 0; i < ARRAY_COUNT(sPartyMenuInternal->windowId); i++)
@@ -3218,7 +3215,7 @@ static void CB2_ShowPokemonSummaryScreen(void)
 {
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !AreMultiPartiesFullTeams() && !(gBattleTypeFlags & BATTLE_TYPE_LINK))
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !AreMultiPartiesFullTeams())
         {
             LoadBattlePartyCurrentOrderForLayout(gPartyMenu.layout);
             UpdatePartyToBattleOrder();
@@ -7611,7 +7608,7 @@ static u8 GetPartyMenuActionsTypeInBattle(struct Pokemon *mon)
     return ACTIONS_SUMMARY_ONLY;
 }
 
-static bool8 TrySwitchInPokemon(void) // grintoul TO DO - currently bugged as mon is switched on return to battle before actual switch happens. Think the issue lies elsewhere however.
+static bool8 TrySwitchInPokemon(void)
 {
     u8 slot = GetCursorSelectionMonId();
     struct Pokemon *party = NULL;
@@ -7638,7 +7635,7 @@ static bool8 TrySwitchInPokemon(void) // grintoul TO DO - currently bugged as mo
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsOnPlayerSide(i)
-         && gParties[GetBattlerTrainer(i)] == party
+         && GetBattlerParty(i) == party
          && battlePartyId == gBattlerPartyIndexes[i])
         {
             GetMonNickname(&party[partySlot], gStringVar1);
@@ -7676,6 +7673,7 @@ static bool8 TrySwitchInPokemon(void) // grintoul TO DO - currently bugged as mo
     GetPartyAndSlotFromPartyMenuId(newSlot, &party, &newPartySlot);
     SwitchPartyMonSlots(newSlot, slot);
     SwapPartyPokemon(&party[newPartySlot], &party[partySlot]);
+
     return TRUE;
 }
 
@@ -7918,22 +7916,18 @@ static void UpdatePartyToBattleOrder(void)
 
     static const u8 sMultiBattlePartyIdToMenuId_LeftBattler[PARTY_SIZE] =
     {
-        // Top half (0,2,3) party ids 0-2
         [0] = 0,
         [1] = 2,
         [2] = 3,
-        // Bottom half (1,4,5) party ids 3-5
         [3] = 1,
         [4] = 4,
         [5] = 5,
     };
     static const u8 sMultiBattlePartyIdToMenuId_RightBattler[PARTY_SIZE] =
     {
-        // Top half (0,2,3) party ids 3-5
         [3] = 0,
         [4] = 2,
         [5] = 3,
-        // Bottom half (1,4,5) party ids 0-2
         [0] = 1,
         [1] = 4,
         [2] = 5,
@@ -8669,24 +8663,72 @@ static void GetPartyAndSlotFromPartyMenuId(s8 menuId, struct Pokemon **party, s8
 static void GetMultiPartyForSummaryScreen(void)
 {
     // Consolidate player and partner party into player party for summary screen
-    gParties[B_TRAINER_0][3] = gParties[B_TRAINER_0][2];
-    gParties[B_TRAINER_0][2] = gParties[B_TRAINER_0][1];
-    gParties[B_TRAINER_0][1] = gParties[B_TRAINER_2][0];
-    gParties[B_TRAINER_0][4] = gParties[B_TRAINER_2][1];
-    gParties[B_TRAINER_0][5] = gParties[B_TRAINER_2][2];
+    if (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    {
+        struct Pokemon party[PARTY_SIZE] = {0};
+        memcpy(party, gParties[B_TRAINER_0], sizeof(gParties[B_TRAINER_0]));
+
+        if ((gBattlerInMenuId & BIT_FLANK) == B_FLANK_LEFT)
+        {
+            gParties[B_TRAINER_0][1] = party[3];
+            gParties[B_TRAINER_0][2] = party[1];
+            gParties[B_TRAINER_0][3] = party[2];
+        }
+        else
+        {
+            gParties[B_TRAINER_0][0] = party[3];
+            gParties[B_TRAINER_0][1] = party[0];
+            gParties[B_TRAINER_0][2] = party[4];
+            gParties[B_TRAINER_0][3] = party[5];
+            gParties[B_TRAINER_0][4] = party[1];
+            gParties[B_TRAINER_0][5] = party[2];
+        }
+    }
+    else // In-game 6v6
+    {
+        gParties[B_TRAINER_0][3] = gParties[B_TRAINER_0][2];
+        gParties[B_TRAINER_0][2] = gParties[B_TRAINER_0][1];
+        gParties[B_TRAINER_0][1] = gParties[B_TRAINER_2][0];
+        gParties[B_TRAINER_0][4] = gParties[B_TRAINER_2][1];
+        gParties[B_TRAINER_0][5] = gParties[B_TRAINER_2][2];
+    }
 }
 
 
 static void RestoreMultiPartyFromSummaryScreen(void)
 {
     // Restore player mons
-    gParties[B_TRAINER_0][1] = gParties[B_TRAINER_0][2];
-    gParties[B_TRAINER_0][2] = gParties[B_TRAINER_0][3];
-    
-    // Clear partner mons from back of player party
-    for (u32 i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
+    if (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
-        ZeroMonData(&gParties[B_TRAINER_0][i]);
+        struct Pokemon party[PARTY_SIZE] = {0};
+        memcpy(party, gParties[B_TRAINER_0], sizeof(gParties[B_TRAINER_0]));
+
+        if ((gBattlerInMenuId & BIT_FLANK) == B_FLANK_LEFT)
+        {
+            gParties[B_TRAINER_0][1] = party[2];
+            gParties[B_TRAINER_0][2] = party[3];
+            gParties[B_TRAINER_0][3] = party[1];
+        }
+        else
+        {
+            gParties[B_TRAINER_0][0] = party[1];
+            gParties[B_TRAINER_0][1] = party[4];
+            gParties[B_TRAINER_0][2] = party[5];
+            gParties[B_TRAINER_0][3] = party[0];
+            gParties[B_TRAINER_0][4] = party[2];
+            gParties[B_TRAINER_0][5] = party[3];
+        }
+    }
+    else // In-game 6v6
+    {
+        gParties[B_TRAINER_0][1] = gParties[B_TRAINER_0][2];
+        gParties[B_TRAINER_0][2] = gParties[B_TRAINER_0][3];
+        
+        // Clear partner mons from back of player party
+        for (u32 i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
+        {
+            ZeroMonData(&gParties[B_TRAINER_0][i]);
+        }
     }
 }
 

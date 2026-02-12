@@ -1478,7 +1478,6 @@ static void CB2_PreInitIngamePlayerPartnerBattle(void)
     switch (gBattleCommunication[MULTIUSE_STATE])
     {
     case 0:
-        DebugPrintf("CB2_PreInitIngamePlayerPartnerBattle SetMultiPartnerMenuParty");
         gMultiPartnerParty = Alloc(sizeof(struct MultiPartnerMenuPokemon) * PARTY_SIZE); // Up to 6 Pokemon for Ingame Partner multis
         SetMultiPartnerMenuParty(B_TRAINER_2);
         gBattleCommunication[MULTIUSE_STATE]++;
