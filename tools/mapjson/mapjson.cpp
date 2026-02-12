@@ -568,7 +568,7 @@ Json parse_required_map_defines(void) {
     return json_data;
 }
 
-string generate_map_constants_text(string groups_filepath, Json groups_data) {
+string generate_map_constants_text(string groups_filepath, Json groups_data, vector<string> &valid_map_ids) {
     string file_dir = file_parent(groups_filepath) + sep;
 
     string guard_name = "CONSTANTS_MAP_GROUPS";
@@ -583,7 +583,6 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
 
     int group_num = 0;
     vector<int> map_count_vec; //DEBUG
-    vector<string> all_map_ids;
     for (auto &group : groups_data["group_order"].array_items()) {
         string groupName = json_to_string(group);
         text << "    // " << groupName << "\n";
@@ -600,7 +599,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
                 FATAL_ERROR("%s: %s\n", map_filepath.c_str(), err_str.c_str());
             string id = json_to_string(map_data, "id", true);
             map_ids.push_back(id);
-            all_map_ids.push_back(id);
+            valid_map_ids.push_back(id);
             if (id.length() > max_length)
                 max_length = id.length();
             map_count++; //DEBUG
@@ -621,14 +620,21 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
     text << "};\n\n";
 
     //size_t max_length = 30;
+    int map_id_num = 0;
+    int base_index = 0xFF7F;
     Json required_map_defines = parse_required_map_defines();
     for (auto required_map_id : required_map_defines[version].array_items()) {
         string map_id = json_to_string(required_map_id);
-        auto it = find(all_map_ids.begin(), all_map_ids.end(), map_id);
-        if (it == all_map_ids.end()) {
-            text << "#define " << map_id << string(5, ' ')
-                 << "( 0xFF | (0xFF << 8))\n";
+        auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map_id);
+        if (it == valid_map_ids.end()) {
+            text << "#define " << map_id << string(50 - map_id.length(), ' ')
+                 << base_index - (map_id_num++) << "\n";
         }
+        if (map_id_num == 128) {
+            base_index -= 256;
+            map_id_num = 0;
+        }
+
     }
 
     text << "#define MAP_GROUPS_COUNT " << group_num << "\n\n";
@@ -645,6 +651,33 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
     return text.str();
 }
 
+void clean_heal_locations(vector<string> &valid_map_ids)
+{
+    string err;
+    Json heal_locations = Json::parse(read_text_file("src/data/heal_locations.json"), err);
+    //fprintf(stderr, "err");
+    std::vector<Json> new_locations;
+    for (auto heal_location : heal_locations["heal_locations"].array_items()) {
+        string map = json_to_string(heal_location["map"]);
+        string respawn_map = json_to_string(heal_location["respawn_map"]);
+        //fprintf(stderr, "map");
+        auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map);
+        auto it2 = find(valid_map_ids.begin(), valid_map_ids.end(), respawn_map);
+        if (it == valid_map_ids.end() || it2 == valid_map_ids.end()) {
+            Json::object json_obj = heal_location.object_items();
+            json_obj["respawn_npc"] = "0";
+            new_locations.push_back(Json(json_obj));
+        }
+        else {
+            new_locations.push_back(heal_location);
+        }
+    }
+    Json new_data = Json::object {
+        {"heal_locations", Json(new_locations)}
+    };
+    write_text_file("src/data/heal_locations.json", new_data.dump());
+}
+
 // Output paths are directories with trailing path separators
 void process_groups(string groups_filepath, vector<string> &map_filepaths, string output_asm, string output_c) {
     output_asm = strip_trailing_separator(output_asm); // Remove separator if existing.
@@ -653,6 +686,7 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     string err;
     Json groups_data = Json::parse(read_text_file(groups_filepath), err);
     vector<string> invalid_maps;
+    vector<string> valid_map_ids;
 
     for (const string &filepath : map_filepaths) {
         string err;
@@ -681,8 +715,9 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm);
     string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm);
     string events_text = generate_events_text(groups_data, invalid_maps, output_asm);
-    string map_header_text = generate_map_constants_text(groups_filepath, groups_data);
+    string map_header_text = generate_map_constants_text(groups_filepath, groups_data, valid_map_ids);
 
+    clean_heal_locations(valid_map_ids);
     write_text_file(output_asm + sep + "groups.inc", groups_text);
     write_text_file(output_asm + sep + "connections.inc", connections_text);
     write_text_file(output_asm + sep + "headers.inc", headers_text);
