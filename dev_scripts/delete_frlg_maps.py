@@ -3,9 +3,10 @@ import json
 
 fileInput = "data/event_scripts.s"
 allLines = list()
+print("Deleting FRLG maps from data/event_scripts.s")
 with open(fileInput, 'r', encoding='UTF-8') as file:
     while line:=file.readline():
-        if re.search(r"data/maps/+_Frlg", line):
+        if re.search(r"data/maps/\w+_Frlg", line):
             pass
         else:
             allLines.append(line)
@@ -15,6 +16,7 @@ with open(fileInput, 'w', encoding='UTF-8') as file:
         file.write(line)
 
 fileInput = "data/maps/map_groups.json"
+print("Deleting FRLG maps from data/maps/map_groups.json")
 with open(fileInput, 'r') as f:
     map_data = json.load(f)
 
