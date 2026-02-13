@@ -1,7 +1,6 @@
 import re
 import json
 
-"""
 fileInput = "data/event_scripts.s"
 allLines = list()
 with open(fileInput, 'r', encoding='UTF-8') as file:
@@ -14,9 +13,6 @@ with open(fileInput, 'r', encoding='UTF-8') as file:
 with open(fileInput, 'w', encoding='UTF-8') as file:
     for line in allLines:
         file.write(line)
-"""
-
-
 
 fileInput = "data/maps/map_groups.json"
 with open(fileInput, 'r') as f:
