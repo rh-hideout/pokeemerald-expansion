@@ -353,26 +353,28 @@ static void CompleteWhenChoseItem(enum BattlerId battler)
 
 static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 {
+    struct Pokemon *party = GetBattlerParty(battler);
+    
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
-        TryShinyAnimation(battler, &gParties[B_TRAINER_0][gBattlerPartyIndexes[battler]]);
+        TryShinyAnimation(battler, &party[gBattlerPartyIndexes[battler]]);
     if (!gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive)
-        TryShinyAnimation(BATTLE_PARTNER(battler), &gParties[B_TRAINER_0][gBattlerPartyIndexes[BATTLE_PARTNER(battler)]]);
+        TryShinyAnimation(BATTLE_PARTNER(battler), &party[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]]);
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive)
     {
         if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         {
             DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
             UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)],
-                                     &gParties[B_TRAINER_0][gBattlerPartyIndexes[BATTLE_PARTNER(battler)]],
+                                     &party[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]],
                                      HEALTHBOX_ALL);
             StartHealthboxSlideIn(BATTLE_PARTNER(battler));
             SetHealthboxSpriteVisible(gHealthboxSpriteIds[BATTLE_PARTNER(battler)]);
         }
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
         UpdateHealthboxAttribute(gHealthboxSpriteIds[battler],
-                                 &gParties[B_TRAINER_0][gBattlerPartyIndexes[battler]],
+                                 &party[gBattlerPartyIndexes[battler]],
                                  HEALTHBOX_ALL);
         StartHealthboxSlideIn(battler);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
@@ -384,6 +386,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
 {
     bool32 r4 = FALSE;
+    struct Pokemon *party = GetBattlerParty(battler);
 
     if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
         r4 = TRUE;
@@ -398,7 +401,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
         FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
         FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
         CreateTask(Task_PlayerController_RestoreBgmAfterCry, 10);
-        HandleLowHpMusicChange(&gParties[B_TRAINER_0][gBattlerPartyIndexes[battler]], battler);
+        HandleLowHpMusicChange(&party[gBattlerPartyIndexes[battler]], battler);
         gBattlerControllerFuncs[battler] = PrintOakText_ForPetesSake;
     }
 }
@@ -846,7 +849,8 @@ static void OakOldManHandlePlaySE(enum BattlerId battler)
 
 static void OakOldManHandleFaintingCry(enum BattlerId battler)
 {
-    u16 species = GetMonData(&gParties[B_TRAINER_0][gBattlerPartyIndexes[battler]], MON_DATA_SPECIES);
+    struct Pokemon *party = GetBattlerParty(battler);
+    u16 species = GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
     OakOldManBufferExecCompleted(battler);
