@@ -621,21 +621,25 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
 
     text << "};\n\n";
 
-    //size_t max_length = 30;
+    text << "//Constants for unused maps\n";
     int map_id_num = 0;
-    int base_index = 0xFF7F;
+    int old_map_group;
     Json required_map_defines = parse_required_map_defines();
-    for (auto required_map_id : required_map_defines[version].array_items()) {
-        string map_id = json_to_string(required_map_id);
+    for (auto required_map_id : required_map_defines["required_maps"].array_items()) {
+        string map_id = json_to_string(required_map_id[0]);
         auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map_id);
+        int current_map_group = required_map_id[1].int_value();
         if (it == valid_map_ids.end()) {
             text << "#define " << map_id << string(50 - map_id.length(), ' ')
-                 << base_index - (map_id_num++) << "\n";
+                 //<< "(" << map_id_num << " | (" << json_to_string(required_map_id[1]) << " << 8)),\n";
+                 << (map_id_num + 256 * current_map_group) << "\n";
         }
-        if (map_id_num == 128) {
-            base_index -= 256;
+        if (old_map_group != current_map_group) {
             map_id_num = 0;
+        } else {
+            map_id_num++;
         }
+        old_map_group = current_map_group;
 
     }
 
