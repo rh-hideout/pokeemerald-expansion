@@ -533,46 +533,28 @@ void Ai_InitPartyStruct(void)
     }
 
     // Find fainted mons
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
-        if (GetMonData(&gParties[B_TRAINER_0][monIndex], MON_DATA_SPECIES) == SPECIES_NONE)
-            continue;
-
-        mon = &gParties[B_TRAINER_0][monIndex];
-        if (GetMonData(&gParties[B_TRAINER_0][monIndex], MON_DATA_HP) == 0)
-            gAiPartyData->mons[B_TRAINER_0][monIndex].isFainted = TRUE;
-
-        if (isOmniscient || hasPartyKnowledge)
-            gAiPartyData->mons[B_TRAINER_0][monIndex].species = GetMonData(mon, MON_DATA_SPECIES);
-
-        if (isOmniscient)
+        for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
         {
-            gAiPartyData->mons[B_TRAINER_0][monIndex].item = GetMonData(mon, MON_DATA_HELD_ITEM);
-            gAiPartyData->mons[B_TRAINER_0][monIndex].heldEffect = GetItemHoldEffect(gAiPartyData->mons[B_TRAINER_0][monIndex].item);
-            gAiPartyData->mons[B_TRAINER_0][monIndex].ability = GetMonAbility(mon);
-            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-                gAiPartyData->mons[B_TRAINER_0][monIndex].moves[moveIndex] = GetMonData(mon, MON_DATA_MOVE1 + moveIndex);
-        }
-    }
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
-    {
-        if (GetMonData(&gParties[B_TRAINER_2][monIndex], MON_DATA_SPECIES) == SPECIES_NONE)
-            continue;
+            if (GetMonData(&gParties[trainer][monIndex], MON_DATA_SPECIES) == SPECIES_NONE)
+                continue;
 
-        mon = &gParties[B_TRAINER_2][monIndex];
-        if (GetMonData(&gParties[B_TRAINER_2][monIndex], MON_DATA_HP) == 0)
-            gAiPartyData->mons[B_TRAINER_2][monIndex].isFainted = TRUE;
+            mon = &gParties[trainer][monIndex];
+            if (GetMonData(&gParties[trainer][monIndex], MON_DATA_HP) == 0)
+                gAiPartyData->mons[trainer][monIndex].isFainted = TRUE;
 
-        if (isOmniscient || hasPartyKnowledge)
-            gAiPartyData->mons[B_TRAINER_2][monIndex].species = GetMonData(mon, MON_DATA_SPECIES);
+            if (isOmniscient || hasPartyKnowledge)
+                gAiPartyData->mons[trainer][monIndex].species = GetMonData(mon, MON_DATA_SPECIES);
 
-        if (isOmniscient)
-        {
-            gAiPartyData->mons[B_TRAINER_2][monIndex].item = GetMonData(mon, MON_DATA_HELD_ITEM);
-            gAiPartyData->mons[B_TRAINER_2][monIndex].heldEffect = GetItemHoldEffect(gAiPartyData->mons[B_TRAINER_2][monIndex].item);
-            gAiPartyData->mons[B_TRAINER_2][monIndex].ability = GetMonAbility(mon);
-            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-                gAiPartyData->mons[B_TRAINER_2][monIndex].moves[moveIndex] = GetMonData(mon, MON_DATA_MOVE1 + moveIndex);
+            if (isOmniscient)
+            {
+                gAiPartyData->mons[trainer][monIndex].item = GetMonData(mon, MON_DATA_HELD_ITEM);
+                gAiPartyData->mons[trainer][monIndex].heldEffect = GetItemHoldEffect(gAiPartyData->mons[B_TRAINER_0][monIndex].item);
+                gAiPartyData->mons[trainer][monIndex].ability = GetMonAbility(mon);
+                for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+                    gAiPartyData->mons[trainer][monIndex].moves[moveIndex] = GetMonData(mon, MON_DATA_MOVE1 + moveIndex);
+            }
         }
     }
 }
