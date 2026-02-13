@@ -163,8 +163,8 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Teatim
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TEATIME) == EFFECT_TEATIME);
         ASSUME(GetItemHoldEffect(ITEM_ORAN_BERRY) == HOLD_EFFECT_RESTORE_HP);
-        PLAYER(SPECIES_MURKROW) { Ability(ABILITY_PRANKSTER); Item(ITEM_ORAN_BERRY); HP(1); MaxHP(100); }
-        OPPONENT(species) { Ability(ability); Item(ITEM_ORAN_BERRY); HP(1); MaxHP(100); }
+        PLAYER(SPECIES_MURKROW) { Ability(ABILITY_PRANKSTER); Item(ITEM_ORAN_BERRY); HP(60); MaxHP(100); }
+        OPPONENT(species) { Ability(ability); Item(ITEM_ORAN_BERRY); HP(60); MaxHP(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_TEATIME); }
     } SCENE {
