@@ -1759,6 +1759,24 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
     return result;
 }
 
+static void SetHealScript(s32 healAmount)
+{
+    healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
+    if (GetBattlerAbility(gBattlerTarget) == ABILITY_LIQUID_OOZE
+     && (GetMoveEffect(gCurrentMove) != EFFECT_DREAM_EATER || GetConfig(CONFIG_DREAM_EATER_LIQUID_OOZE) >= GEN_5))
+    {
+        SetPassiveDamageAmount(gBattlerAttacker, healAmount);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
+        BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
+    }
+    else if (!IsBattlerAtMaxHp(gBattlerAttacker) || GetConfig(CONFIG_ABSORB_MESSAGE) < GEN_5)
+    {
+        SetHealAmount(gBattlerAttacker, healAmount);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
+        BattleScriptCall(BattleScript_EffectAbsorb);
+    }
+}
+
 static enum MoveEndResult MoveEndAbsorb(void)
 {
     if (gBattleStruct->unableToUseMove)
@@ -1783,28 +1801,22 @@ static enum MoveEndResult MoveEndAbsorb(void)
 
     switch (moveEffect)
     {
+    case EFFECT_STRENGTH_SAP:
+        if (gBattleStruct->passiveHpUpdate[gBattlerAttacker] > 0)
+        {
+            s32 healAmount = gBattleStruct->passiveHpUpdate[gBattlerAttacker];
+            SetHealScript(healAmount);
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+        }
+        break;
     case EFFECT_ABSORB:
     case EFFECT_DREAM_EATER:
-        if (!gBattleMons[gBattlerAttacker].volatiles.healBlock
-         && gBattleStruct->moveDamage[gBattlerTarget] > 0
+        if (gBattleStruct->moveDamage[gBattlerTarget] > 0
          && IsBattlerTurnDamaged(gBattlerTarget)
          && IsBattlerAlive(gBattlerAttacker))
         {
             s32 healAmount = (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
-            healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
-            if ((moveEffect == EFFECT_DREAM_EATER && GetConfig(CONFIG_DREAM_EATER_LIQUID_OOZE) < GEN_5)
-                || GetBattlerAbility(gBattlerTarget) != ABILITY_LIQUID_OOZE)
-            {
-                SetHealAmount(gBattlerAttacker, healAmount);
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
-                BattleScriptCall(BattleScript_EffectAbsorb);
-            }
-            else // Liquid Ooze damage
-            {
-                SetPassiveDamageAmount(gBattlerAttacker, healAmount);
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
-                BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
-            }
+            SetHealScript(healAmount);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
@@ -1896,6 +1908,32 @@ static enum MoveEndResult MoveEndAbilitiesAttacker(void)
 
     gBattleScripting.moveendState++;
     return result;
+}
+
+static enum MoveEndResult MoveEndQueueDancer(void)
+{
+    if (!IsDanceMove(gCurrentMove)
+     || IsBattlerUnaffectedByMove(gBattlerTarget)
+     || gBattleStruct->unableToUseMove
+     || gSpecialStatuses[gBattlerAttacker].dancerUsedMove
+     || gBattleStruct->snatchedMoveIsUsed
+     || gBattleStruct->bouncedMoveIsUsed)
+    {
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (battler == gBattlerAttacker || !IsBattlerAlive(battler))
+            continue;
+
+        if (GetBattlerAbility(battler) == ABILITY_DANCER)
+            gBattleMons[battler].volatiles.activateDancer = TRUE;
+    }
+
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndStatusImmunityAbilities(void)
@@ -3130,46 +3168,6 @@ static enum MoveEndResult MoveEndMirrorHerb(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEndPickpocket(void)
-{
-    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-
-    if (IsBattlerAlive(gBattlerAttacker)
-     && gBattleMons[gBattlerAttacker].item != ITEM_NONE
-     && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
-    {
-        enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
-        SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
-        for (u32 i = 0; i < gBattlersCount; i++)
-        {
-            enum BattlerId battlerDef = battlers[i];
-            if (battlerDef != gBattlerAttacker
-              && !IsBattlerUnaffectedByMove(battlerDef)
-              && GetBattlerAbility(battlerDef) == ABILITY_PICKPOCKET
-              && IsMoveMakingContact(gBattlerAttacker, battlerDef, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)
-              && IsBattlerTurnDamaged(battlerDef)
-              && !DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove)
-              && IsBattlerAlive(battlerDef)
-              && gBattleMons[battlerDef].item == ITEM_NONE
-              && CanStealItem(battlerDef, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))
-            {
-                gBattlerTarget = gBattlerAbility = battlerDef;
-                // Battle scripting is super brittle so we shall do the item exchange now (if possible)
-                if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
-                    StealTargetItem(battlerDef, gBattlerAttacker);  // Target takes attacker's item
-
-                gEffectBattler = gBattlerAttacker;
-                BattleScriptCall(BattleScript_Pickpocket);   // Includes sticky hold check to print separate string
-                result = MOVEEND_RESULT_RUN_SCRIPT;
-                break; // Pickpocket activates on fastest mon, so exit loop.
-            }
-        }
-    }
-
-    gBattleScripting.moveendState++;
-    return result;
-}
-
 static enum MoveEndResult MoveEndThirdMoveBlock(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
@@ -3218,6 +3216,46 @@ static enum MoveEndResult MoveEndThirdMoveBlock(void)
         break;
     default:
         break;
+    }
+
+    gBattleScripting.moveendState++;
+    return result;
+}
+
+static enum MoveEndResult MoveEndPickpocket(void)
+{
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+
+    if (IsBattlerAlive(gBattlerAttacker)
+     && gBattleMons[gBattlerAttacker].item != ITEM_NONE
+     && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
+    {
+        enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
+        SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
+        for (u32 i = 0; i < gBattlersCount; i++)
+        {
+            enum BattlerId battlerDef = battlers[i];
+            if (battlerDef != gBattlerAttacker
+              && !IsBattlerUnaffectedByMove(battlerDef)
+              && GetBattlerAbility(battlerDef) == ABILITY_PICKPOCKET
+              && IsMoveMakingContact(gBattlerAttacker, battlerDef, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)
+              && IsBattlerTurnDamaged(battlerDef)
+              && !DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove)
+              && IsBattlerAlive(battlerDef)
+              && gBattleMons[battlerDef].item == ITEM_NONE
+              && CanStealItem(battlerDef, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))
+            {
+                gBattlerTarget = gBattlerAbility = battlerDef;
+                // Battle scripting is super brittle so we shall do the item exchange now (if possible)
+                if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
+                    StealTargetItem(battlerDef, gBattlerAttacker);  // Target takes attacker's item
+
+                gEffectBattler = gBattlerAttacker;
+                BattleScriptCall(BattleScript_Pickpocket);   // Includes sticky hold check to print separate string
+                result = MOVEEND_RESULT_RUN_SCRIPT;
+                break; // Pickpocket activates on fastest mon, so exit loop.
+            }
+        }
     }
 
     gBattleScripting.moveendState++;
@@ -3312,56 +3350,47 @@ static enum MoveEndResult MoveEndClearBits(void)
         }
     }
 
-    // Need to check a specific battle during the end turn and dancer
+    // Need to check a specific battle during the end turn
     gBattleMons[gBattlerAttacker].volatiles.unableToUseMove = gBattleStruct->unableToUseMove;
-    gBattleScripting.moveendState++;
+    ClearDamageCalcResults();
 
+    gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndDancer(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    bool32 anyDancerQueued = FALSE;
+    enum BattlerId nextDancer = 0;
 
-    if (IsDanceMove(gCurrentMove) && !gBattleStruct->snatchedMoveIsUsed)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        enum BattlerId battler;
-        u32 nextDancer = 0;
-        bool32 hasDancerTriggered = FALSE;
-
-        for (battler = 0; battler < gBattlersCount; battler++)
+        if (gBattleMons[battler].volatiles.activateDancer && !gSpecialStatuses[battler].dancerUsedMove)
         {
-            if (gSpecialStatuses[battler].dancerUsedMove)
-            {
-                // in case a battler fails to act on a Dancer-called move
-                hasDancerTriggered = TRUE;
-                break;
-            }
-        }
-
-        if (!(!IsAnyTargetAffected()
-         || (gBattleStruct->unableToUseMove && !hasDancerTriggered)
-         || (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove && gBattleStruct->bouncedMoveIsUsed)))
-        {   // Dance move succeeds
-            // Set target for other Dancer mons; set bit so that mon cannot activate Dancer off of its own move
-            if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
-            {
-                gBattleScripting.savedBattler = gBattlerTarget | 0x4;
-                gBattleScripting.savedBattler |= (gBattlerAttacker << 4);
-                gSpecialStatuses[gBattlerAttacker].dancerUsedMove = TRUE;
-            }
-            for (battler = 0; battler < gBattlersCount; battler++)
-            {
-                if (GetBattlerAbility(battler) == ABILITY_DANCER && !gSpecialStatuses[battler].dancerUsedMove)
-                {
-                    if (!nextDancer || (gBattleMons[battler].speed < gBattleMons[nextDancer & 0x3].speed))
-                        nextDancer = battler | 0x4;
-                }
-            }
-            if (nextDancer && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer & 0x3, 0, gCurrentMove, TRUE))
-                result = MOVEEND_RESULT_RUN_SCRIPT;
+            if (!anyDancerQueued || (gBattleMons[battler].speed < gBattleMons[nextDancer].speed))
+                nextDancer = battler;
+            anyDancerQueued = TRUE;
         }
     }
+
+    if (!anyDancerQueued)
+    {
+        gBattleScripting.moveendState++;
+        return result;
+    }
+
+    // Dance move succeeds
+    // Set target for other Dancer mons; set bit so that mon cannot activate Dancer off of its own move
+    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
+    {
+        gBattleScripting.savedBattler = gBattlerTarget | 0x4;
+        gBattleScripting.savedBattler |= (gBattlerAttacker << 4);
+        gSpecialStatuses[gBattlerAttacker].dancerUsedMove = TRUE;
+    }
+
+    if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer, ABILITY_DANCER, gCurrentMove, TRUE))
+        result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
     return result;
@@ -3407,6 +3436,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_ABILITIES] = MoveEndAbilities,
     [MOVEEND_FORM_CHANGE_ON_HIT] = MoveEndFormChangeOnHit,
     [MOVEEND_ABILITIES_ATTACKER] = MoveEndAbilitiesAttacker,
+    [MOVEEND_QUEUE_DANCER] = MoveEndQueueDancer,
     [MOVEEND_STATUS_IMMUNITY_ABILITIES] = MoveEndStatusImmunityAbilities,
     [MOVEEND_SYNCHRONIZE_ATTACKER] = MoveEndSynchronizeAttacker,
     [MOVEEND_ATTACKER_INVISIBLE] = MoveEndAttackerInvisible,
@@ -3441,8 +3471,8 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_WHITE_HERB] = MoveEndWhiteHerb,
     [MOVEEND_OPPORTUNIST] = MoveEndOpportunist,
     [MOVEEND_MIRROR_HERB] = MoveEndMirrorHerb,
-    [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
     [MOVEEND_THIRD_MOVE_BLOCK] = MoveEndThirdMoveBlock,
+    [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
     [MOVEEND_CLEAR_BITS] = MoveEndClearBits,
     [MOVEEND_DANCER] = MoveEndDancer,
     [MOVEEND_PURSUIT_NEXT_ACTION] = MoveEndPursuitNextAction,

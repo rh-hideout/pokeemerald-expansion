@@ -349,9 +349,7 @@ enum BattleScriptOpcode
 #define CMP_NO_COMMON_BITS      5
 
 // Cmd_manipulatedamage
-#define DMG_CHANGE_SIGN         1
-#define DMG_1_8_TARGET_HP       2
-#define DMG_BIG_ROOT            3
+#define DMG_1_8_TARGET_HP       0 // Used by bad dreams
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)

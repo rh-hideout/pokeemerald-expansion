@@ -169,25 +169,51 @@ def create_tutor_moves_array(tutors):
     with open("./src/data/tutor_moves.h", "w") as f:
         f.write(header + "\n".join(lines))
 
+def make_move_tutors(build_dir, special_movesets):
+    SOURCE_TUTORS_JSON = build_dir / "all_tutors.json"
+
+    assert SOURCE_TUTORS_JSON.exists(), f"{SOURCE_TUTORS_JSON=} does not exist"
+    assert SOURCE_TUTORS_JSON.is_file(), f"{SOURCE_TUTORS_JSON=} is not a file"
+
+    with open(SOURCE_TUTORS_JSON, "r") as fp:
+        repo_tutors = json.load(fp)
+
+    repo_tutors = sorted(repo_tutors + special_movesets["extraTutors"])
+    create_tutor_moves_array(repo_tutors)
+
+    return repo_tutors
+
 def main():
     if not enabled():
         quit()
 
-    if len(sys.argv) < 2:
-        print("Missing required arguments", file=sys.stderr)
+    tutor_mode = False
+    if len(sys.argv) < 2 or len(sys.argv) > 3:
+        print("Invalid number of arguments", file=sys.stderr)
         print(__doc__, file=sys.stderr)
         quit(1)
 
-    SOURCE_DIR = pathlib.Path(sys.argv[1])
+    if len(sys.argv) == 2:
+        SOURCE_DIR = pathlib.Path(sys.argv[1])
+    elif len(sys.argv) == 3:
+        if sys.argv[1] != "--tutors":
+            print("Unknown make_teachables mode", file=sys.stderr)
+            quit(1)
+        tutor_mode = True
+        SOURCE_DIR = pathlib.Path(sys.argv[2])
+
+    with open("src/data/pokemon/special_movesets.json", "r") as file:
+        special_movesets = json.load(file)
+
+    repo_tutors = make_move_tutors(SOURCE_DIR, special_movesets)
+    if tutor_mode:
+        quit(0)
+
     SOURCE_LEARNSETS_JSON = pathlib.Path("./src/data/pokemon/all_learnables.json")
-    SOURCE_TUTORS_JSON = SOURCE_DIR / "all_tutors.json"
     SOURCE_TEACHING_TYPES_JSON = SOURCE_DIR / "all_teaching_types.json"
 
     assert SOURCE_LEARNSETS_JSON.exists(), f"{SOURCE_LEARNSETS_JSON=} does not exist"
     assert SOURCE_LEARNSETS_JSON.is_file(), f"{SOURCE_LEARNSETS_JSON=} is not a file"
-
-    assert SOURCE_TUTORS_JSON.exists(), f"{SOURCE_TUTORS_JSON=} does not exist"
-    assert SOURCE_TUTORS_JSON.is_file(), f"{SOURCE_TUTORS_JSON=} is not a file"
 
     assert SOURCE_TEACHING_TYPES_JSON.exists(), f"{SOURCE_TEACHING_TYPES_JSON=} does not exist"
     assert SOURCE_TEACHING_TYPES_JSON.is_file(), f"{SOURCE_TEACHING_TYPES_JSON=} is not a file"
@@ -201,14 +227,6 @@ def main():
         if cfg_defined is None or cfg_defined.group("cfg_val") in ("FALSE", "0"):
             repo_tms = sorted(repo_tms)
 
-    with open(SOURCE_TUTORS_JSON, "r") as fp:
-        repo_tutors = json.load(fp)
-
-    with open("src/data/pokemon/special_movesets.json", "r") as file:
-        special_movesets = json.load(file)
-
-    repo_tutors = sorted(repo_tutors + special_movesets["extraTutors"])
-    create_tutor_moves_array(repo_tutors)
     h_align = max(map(lambda move: len(move), chain(special_movesets["universalMoves"], repo_tms, repo_tutors))) + 2
     header = prepare_header(h_align, repo_tms, repo_tutors, special_movesets["universalMoves"])
 

@@ -545,7 +545,7 @@ void RunTextPrinters(void)
         {
             if (currentPrinter->active)
             {
-                for (u32 repeat = 0; repeat < textRepeats; repeat++)
+                for (u32 repeat = 0; repeat < textRepeats || isInstantText; repeat++)
                 {
                     u32 renderState = RenderFont(currentPrinter);
                     switch (renderState)

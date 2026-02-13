@@ -24,6 +24,7 @@ SINGLE_BATTLE_TEST("Absorb recovers 50% of the damage dealt")
     }
 }
 
+// The animation makes the recording freeze. Changing it fixes it
 SINGLE_BATTLE_TEST("Absorb fails if Heal Block applies")
 {
     GIVEN {
@@ -130,5 +131,58 @@ SINGLE_BATTLE_TEST("Absorb does not drain any HP if the move is blocked by Disgu
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
     } THEN {
         EXPECT_EQ(player->hp, 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Move: Heals the correct amount from all Pokemon")
+{
+    s16 damage[3];
+    s16 healed[3];
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PARABOLIC_CHARGE) == EFFECT_ABSORB);
+        PLAYER(SPECIES_RAICHU) { HP(1); }
+        PLAYER(SPECIES_SQUIRTLE);
+        OPPONENT(SPECIES_SQUIRTLE);
+        OPPONENT(SPECIES_SQUIRTLE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_PARABOLIC_CHARGE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PARABOLIC_CHARGE, playerLeft);
+
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        HP_BAR(playerRight, captureDamage: &damage[1]);
+        HP_BAR(opponentRight, captureDamage: &damage[2]);
+
+        HP_BAR(playerLeft, captureDamage: &healed[0]);
+        HP_BAR(playerLeft, captureDamage: &healed[1]);
+        HP_BAR(playerLeft, captureDamage: &healed[2]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(-0.5), healed[0]);
+        EXPECT_MUL_EQ(damage[1], Q_4_12(-0.5), healed[1]);
+        EXPECT_MUL_EQ(damage[2], Q_4_12(-0.5), healed[2]);
+    }
+}
+
+
+SINGLE_BATTLE_TEST("Absorb does not play the draining message at full HP in Gen5+")
+{
+    u32 genConfig = 0;
+
+    PARAMETRIZE { genConfig = GEN_4; }
+    PARAMETRIZE { genConfig = GEN_5; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ABSORB_MESSAGE, genConfig);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ABSORB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
+        if (genConfig < GEN_5)
+            MESSAGE("The opposing Wobbuffet had its energy drained!");
+        else
+            NOT MESSAGE("The opposing Wobbuffet had its energy drained!");
     }
 }
