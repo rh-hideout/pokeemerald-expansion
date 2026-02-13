@@ -1,6 +1,7 @@
 LittlerootTown_MaysHouse_2F_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, LittlerootTown_MaysHouse_2F_OnTransition
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, LittlerootTown_MaysHouse_2F_OnWarp
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, LittlerootTown_MaysHouse_2F_OnFrame
 	.byte 0
 
 LittlerootTown_MaysHouse_2F_OnTransition:
@@ -164,6 +165,9 @@ LittlerootTown_MaysHouse_2F_Movement_MayApproachPlayerSouth:
 	walk_right
 	walk_right
 	walk_right
+	walk_down
+	walk_down
+	walk_down
 	step_end
 
 LittlerootTown_MaysHouse_2F_Movement_MayWalkToPCSouth:
@@ -395,3 +399,53 @@ RivalsHouse_2F_Text_BrendanWhereShouldIGoNext:
 	.string "Hey, {PLAYER}, if I see you while I'm out\n"
 	.string "catching POKéMON, I can pitch you a\l"
 	.string "battle if you'd like.$"
+
+.set LOCALID_MOM, 14
+
+LittlerootTown_MaysHouse_2F_OnFrame:
+	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 1, LittlerootTown_MaysHouse_2F_EventScript_WakeUp
+	.2byte 0
+
+LittlerootTown_MaysHouse_2F_EventScript_WakeUp::
+	lockall
+	delay 30
+	playse SE_PIN
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_ExclamationMark
+	waitmovement 0
+	delay 30
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM
+	addobject LOCALID_MOM
+	applymovement LOCALID_MOM, LittlerootTown_MaysHouse_2F_Movement_MomEnters
+	waitmovement 0
+	msgbox PlayersHouse_2F_Text_HowDoYouLikeYourRoom, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_MOM, LittlerootTown_MaysHouse_2F_Movement_MomExits
+	waitmovement 0
+	removeobject LOCALID_MOM
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM
+	setvar VAR_LITTLEROOT_INTRO_STATE, 2
+	releaseall
+	end
+
+LittlerootTown_MaysHouse_2F_Movement_MomEnters:
+	walk_down
+	walk_down
+	walk_down
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_in_place_faster_right
+	step_end
+
+LittlerootTown_MaysHouse_2F_Movement_MomExits:
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_up
+	walk_up
+	walk_up
+	step_end

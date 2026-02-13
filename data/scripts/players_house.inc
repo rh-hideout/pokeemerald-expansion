@@ -62,8 +62,8 @@ PlayersHouse_2F_EventScript_WallClock::
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2
 	checkplayergender
-	call_if_eq VAR_RESULT, MALE, PlayersHouse_2F_EventScript_MomComesUpstairsMale
-	call_if_eq VAR_RESULT, FEMALE, PlayersHouse_2F_EventScript_MomComesUpstairsFemale
+	@ call_if_eq VAR_RESULT, MALE, PlayersHouse_2F_EventScript_MomComesUpstairsMale
+	@ call_if_eq VAR_RESULT, FEMALE, PlayersHouse_2F_EventScript_MomComesUpstairsFemale
 	playse SE_EXIT
 	removeobject VAR_0x8008
 	releaseall
@@ -673,3 +673,36 @@ PlayersHouse_1F_Movement_PlayerApproachTVForLatiFemale:
 EventScript_RunningShoesManual::
 	msgbox PlayersHouse_1F_Text_RunningShoesManual, MSGBOX_SIGN
 	end
+
+PlayersHouse_2F_EventScript_CheckClockSetBlocking::
+	lockall
+	compare VAR_LITTLEROOT_INTRO_STATE, 6
+	goto_if_ge PlayersHouse_2F_EventScript_WarpTo1F
+	msgbox PlayersHouse_2F_Text_CantLeaveYet, MSGBOX_DEFAULT
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, PlayersHouse_2F_Movement_PushFromStairs
+	waitmovement 0
+	releaseall
+	end
+
+PlayersHouse_2F_Movement_PushFromStairs:
+	walk_down
+	step_end
+
+PlayersHouse_2F_EventScript_WarpTo1F::
+	checkplayergender
+	compare VAR_RESULT, MALE
+	goto_if_eq PlayersHouse_2F_EventScript_WarpToBrendans1F
+	warp MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F, 2, 0, 0
+	waitstate
+	releaseall
+	end
+
+PlayersHouse_2F_EventScript_WarpToBrendans1F::
+	warp MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F, 2, 0, 0
+	waitstate
+	releaseall
+	end
+
+PlayersHouse_2F_Text_CantLeaveYet:
+	.string "MOM: Wait, {PLAYER}! Go set the clock!$"

@@ -1,7 +1,14 @@
 LittlerootTown_BrendansHouse_2F_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, LittlerootTown_BrendansHouse_2F_OnTransition
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, LittlerootTown_BrendansHouse_2F_OnWarp
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, LittlerootTown_BrendansHouse_2F_OnFrame
 	.byte 0
+
+.set LOCALID_MOM, 14
+
+LittlerootTown_BrendansHouse_2F_OnFrame:
+	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 1, LittlerootTown_BrendansHouse_2F_EventScript_WakeUp
+	.2byte 0
 
 LittlerootTown_BrendansHouse_2F_OnTransition:
 	call_if_lt VAR_LITTLEROOT_RIVAL_STATE, 2, LittlerootTown_BrendansHouse_2F_EventScript_CheckSetReadyToMeetBrendan
@@ -275,10 +282,11 @@ PlayersHouse_2F_Text_ClockIsStopped:
 	.string "Better set it before leaving.$"
 
 PlayersHouse_2F_Text_HowDoYouLikeYourRoom:
-	.string "MOM: {PLAYER}, are you ready?\n"
-	.string "The truck is waiting outside.\p"
-	.string "You should set your clock so you\n"
-	.string "don't lose track of time!$"
+	.string "MOM: {PLAYER}, wake up!\p"
+	.string "You overslept!\p"
+	.string "The power went out so the clock\n"
+	.string "is stopped.\p"
+	.string "Go set it, quick!$"
 
 PlayersHouse_2F_Text_Notebook:
 	.string "{PLAYER} flipped open the notebook.\p"
@@ -296,3 +304,47 @@ PlayersHouse_2F_Text_ItsAGameCube:
 	.string "It's a Nintendo GameCube.\p"
 	.string "A Game Boy Advance is connected to\n"
 	.string "serve as the Controller.$"
+
+LittlerootTown_BrendansHouse_2F_EventScript_WakeUp::
+	lockall
+	delay 30
+	playse SE_PIN
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_ExclamationMark
+	waitmovement 0
+	delay 30
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM
+	addobject LOCALID_MOM
+	applymovement LOCALID_MOM, LittlerootTown_BrendansHouse_2F_Movement_MomEnters
+	waitmovement 0
+	msgbox PlayersHouse_2F_Text_HowDoYouLikeYourRoom, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_MOM, LittlerootTown_BrendansHouse_2F_Movement_MomExits
+	waitmovement 0
+	removeobject LOCALID_MOM
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM
+	setvar VAR_LITTLEROOT_INTRO_STATE, 2
+	releaseall
+	end
+
+LittlerootTown_BrendansHouse_2F_Movement_MomEnters:
+	walk_down
+	walk_down
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_in_place_faster_left
+	step_end
+
+LittlerootTown_BrendansHouse_2F_Movement_MomExits:
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_up
+	walk_up
+	walk_up
+	step_end
