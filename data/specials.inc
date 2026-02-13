@@ -97,6 +97,7 @@ gSpecials::
 	def_special GetContestWinnerId
 	def_special GetContestPlayerId
 	def_special GetNpcContestantLocalId
+	def_special SetWallClockTo6AM
 	def_special BufferContestWinnerTrainerName
 	def_special BufferContestWinnerMonName
 	def_special BufferContestTrainerAndMonNames

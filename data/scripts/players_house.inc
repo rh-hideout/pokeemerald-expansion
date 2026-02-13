@@ -10,7 +10,9 @@ PlayersHouse_1F_EventScript_EnterHouseMovingIn::
 	call_if_eq VAR_0x8005, FEMALE, PlayersHouse_1F_EventScript_MomFacePlayerMovingInFemale
 	msgbox PlayersHouse_1F_Text_MoversPokemonGoSetClock, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_LITTLEROOT_INTRO_STATE, 4
+	special SetWallClockTo6AM
+	setflag FLAG_SET_WALL_CLOCK
+	setvar VAR_LITTLEROOT_INTRO_STATE, 6
 	applymovement LOCALID_PLAYER, PlayersHouse_1F_Movement_PlayerWalkIn
 	applymovement VAR_0x8004, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
@@ -104,9 +106,9 @@ PlayersHouse_2F_EventScript_CheckWallClock::
 	end
 
 PlayersHouse_2F_EventScript_SetWallClock::
-	fadescreen FADE_TO_BLACK
-	special StartWallClock
-	waitstate
+	@ fadescreen FADE_TO_BLACK
+	special SetWallClockTo6AM
+	@ waitstate
 	return
 
 PlayersHouse_2F_Movement_MomEntersMale:

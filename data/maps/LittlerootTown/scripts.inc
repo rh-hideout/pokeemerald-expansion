@@ -260,12 +260,10 @@ LittlerootTown_EventScript_Twin::
 	end
 
 LittlerootTown_EventScript_GoSaveBirch::
-	special GetPlayerBigGuyGirlString
-	msgbox LittlerootTown_Text_CanYouGoSeeWhatsHappening, MSGBOX_DEFAULT
+	msgbox LittlerootTown_Text_YouShouldGoToLab, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_LITTLEROOT_TWIN, Common_Movement_FaceOriginalDirection
+	applymovement LOCALID_LITTLEROOT_TWIN, Common_Movement_FaceDown
 	waitmovement 0
-	setvar VAR_LITTLEROOT_TOWN_STATE, 2
 	release
 	end
 
@@ -378,12 +376,12 @@ LittlerootTown_EventScript_GoSaveBirchTrigger::
 	waitmovement 0
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
-	special GetPlayerBigGuyGirlString
-	msgbox LittlerootTown_Text_CanYouGoSeeWhatsHappening, MSGBOX_DEFAULT
+	msgbox LittlerootTown_Text_YouShouldGoToLab, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_LITTLEROOT_TWIN, Common_Movement_FaceOriginalDirection
 	waitmovement 0
-	setvar VAR_LITTLEROOT_TOWN_STATE, 2
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PushPlayerBackFromRoute
+	waitmovement 0
 	releaseall
 	end
 
@@ -1013,4 +1011,8 @@ LittlerootTown_Text_BirchSomethingToShowYouAtLab:
 	.string "I gave you?\p"
 	.string "I have something to show you.\n"
 	.string "Let's go to my LAB.$"
+
+LittlerootTown_Text_YouShouldGoToLab:
+	.string "If you're looking for PROF. BIRCH,\n"
+	.string "he's in his LAB.$"
 

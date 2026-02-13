@@ -106,3 +106,11 @@ void StartWallClock(void)
     SetMainCallback2(CB2_StartWallClock);
     gMain.savedCallback = ReturnFromStartWallClock;
 }
+
+void SetWallClockTo6AM(void)
+{
+    gLocalTime.hours = 6;
+    gLocalTime.minutes = 0;
+    gLocalTime.seconds = 0;
+    InitTimeBasedEvents();
+}

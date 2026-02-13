@@ -387,6 +387,11 @@ LittlerootTown_MaysHouse_2F_OnFrame:
 
 LittlerootTown_MaysHouse_2F_EventScript_WakeUp::
 	lockall
+	special SetWallClockTo6AM
+	setvar VAR_LITTLEROOT_INTRO_STATE, 6
+	setflag FLAG_SET_WALL_CLOCK
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2
 	delay 30
 	playse SE_PIN
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_ExclamationMark
@@ -402,7 +407,7 @@ LittlerootTown_MaysHouse_2F_EventScript_WakeUp::
 	waitmovement 0
 	removeobject LOCALID_MOM
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_BEDROOM_MOM
-	setvar VAR_LITTLEROOT_INTRO_STATE, 5
+	setvar VAR_LITTLEROOT_INTRO_STATE, 6
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2
 	releaseall

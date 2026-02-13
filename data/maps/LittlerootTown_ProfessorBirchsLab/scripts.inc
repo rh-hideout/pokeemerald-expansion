@@ -12,6 +12,8 @@ LittlerootTown_ProfessorBirchsLab_MapScripts::
 	@ 5: Birch told player to choose Johto starter
 	@ 6: Chose Johto starter
 
+
+
 	@ State descriptions for VAR_BIRCH_LAB_STATE
 	@ 1: Never occurs
 	@ 2: Chose starter
@@ -113,13 +115,19 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent::
 	waitfanfare
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_WhyNotGiveNicknameToMon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, LittlerootTown_ProfessorBirchsLab_EventScript_NicknameStarter
-	goto_if_eq VAR_RESULT, NO, LittlerootTown_ProfessorBirchsLab_EventScript_GoSeeRival
+	goto_if_eq VAR_RESULT, NO, LittlerootTown_ProfessorBirchsLab_EventScript_EndStarterEvent
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_NicknameStarter::
 	setvar VAR_0x8004, 0
 	call Common_EventScript_NameReceivedPartyMon
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_GoSeeRival
+	goto LittlerootTown_ProfessorBirchsLab_EventScript_EndStarterEvent
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_EndStarterEvent::
+	clearflag FLAG_HIDE_ROUTE_101_BOY
+	setvar VAR_BIRCH_LAB_STATE, 3
+	releaseall
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_GoSeeRival::
@@ -463,6 +471,7 @@ LittlerootTown_ProfessorBirchsLab_EventScript_ReceivedJohtoStarter::
 LittlerootTown_ProfessorBirchsLab_EventScript_Birch::
 	lock
 	faceplayer
+	goto_if_eq VAR_BIRCH_LAB_STATE, 0, LittlerootTown_ProfessorBirchsLab_EventScript_BirchsBag
 	goto_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 5, LittlerootTown_ProfessorBirchsLab_EventScript_CanHaveAnyOneOfRarePokemon
 	goto_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2, LittlerootTown_ProfessorBirchsLab_EventScript_GrassyPatchWaiting
 	goto_if_unset FLAG_HAS_MATCH_CALL, LittlerootTown_ProfessorBirchsLab_EventScript_TryRatePokedexOrRegister
@@ -691,9 +700,9 @@ LittlerootTown_ProfessorBirchsLab_Text_LikeYouToHavePokemon:
 	.string "you pulled it off with aplomb!\p"
 	.string "I guess you have your father's blood\n"
 	.string "in your veins after all!\p"
-	.string "Oh, yes. As thanks for rescuing me,\n"
+	.string "Oh, yes. As thanks for your help,\n"
 	.string "I'd like you to have the POKéMON you\l"
-	.string "used earlier.\p"
+	.string "picked earlier.\p"
 	.string "{PLAYER} received the {STR_VAR_1}!$"
 
 LittlerootTown_ProfessorBirchsLab_Text_WhyNotGiveNicknameToMon:
@@ -728,16 +737,9 @@ LittlerootTown_ProfessorBirchsLab_Text_BirchRivalGoneHome:
 	.string "you should get some rest at home.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_HeardYouBeatRivalTakePokedex:
-	.string "PROF. BIRCH: Oh, hi, {PLAYER}{KUN}!\p"
-	.string "I heard you beat {RIVAL} on\n"
-	.string "your first try. That's excellent!\p"
-	.string "{RIVAL}'s been helping with my research\n"
-	.string "for a long time.\p"
-	.string "{RIVAL} has an extensive history as\n"
-	.string "a TRAINER already.\p"
 	.string "Here, {PLAYER}{KUN}, I ordered this for my\n"
 	.string "research, but I think you should have\l"
-	.string "this POKéDEX.$"
+	.string "this POKéDEX as well.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_ReceivedPokedex:
 	.string "{PLAYER} received the POKéDEX!$"
@@ -992,3 +994,60 @@ LittlerootTown_ProfessorBirchsLab_Text_ScottAboardSSTidalCall:
 	.string "we meet. I'll be waiting!\p"
 	.string "… … … … … …\n"
 	.string "… … … … … Click!$"
+
+LittlerootTown_ProfessorBirchsLab_EventScript_BirchsBag::
+	lock
+	faceplayer
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_Bodyguard, MSGBOX_DEFAULT
+	setflag FLAG_SYS_POKEMON_GET
+	setflag FLAG_RESCUED_BIRCH
+	fadescreen FADE_TO_BLACK
+	special ChooseStarter
+	waitstate
+	bufferleadmonspeciesname STR_VAR_1
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_WhyNotGiveNicknameToMon, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, LittlerootTown_ProfessorBirchsLab_EventScript_SkipNickname
+	setvar VAR_0x8004, 0
+	call Common_EventScript_NameReceivedPartyMon
+LittlerootTown_ProfessorBirchsLab_EventScript_SkipNickname::
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_HeardYouBeatRivalTakePokedex, MSGBOX_DEFAULT
+	call LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex
+	special HealPlayerParty
+	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
+	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
+	setflag FLAG_HIDE_BIRCHS_LAB_BAG
+	removeobject 7
+	setvar VAR_BIRCH_LAB_STATE, 3
+	setvar VAR_ROUTE101_STATE, 3
+	clearflag FLAG_HIDE_MAP_NAME_POPUP
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, LittlerootTown_ProfessorBirchsLab_EventScript_HideMayInBedroom
+	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_ProfessorBirchsLab_EventScript_HideBrendanInBedroom
+	release
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_HideMayInBedroom::
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM
+	return
+
+LittlerootTown_ProfessorBirchsLab_EventScript_HideBrendanInBedroom::
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM
+	return
+
+LittlerootTown_ProfessorBirchsLab_Text_Bodyguard:
+	.string "PROF. BIRCH: We'll miss seeing you\n"
+	.string "around, but since you're going to the\l"
+	.string "ranch, the POKéMON are more dangerous\l"
+	.string "there.\p"
+	.string "So I have prepared a POKéMON Bodyguard\n"
+	.string "for you. Please pick one.$"
+
+LittlerootTown_ProfessorBirchsLab_Text_YouMinx:
+	.string "PROF. BIRCH: I've been waiting for you.\n"
+	.string "Your father told me you were coming.\p"
+	.string "I was just about to go out for field\n"
+	.string "work, but I seem to have misplaced it.\p"
+	.string "Since you found it, why don't you\n"
+	.string "keep that POKéMON?$"
+
