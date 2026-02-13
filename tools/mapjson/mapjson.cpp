@@ -27,6 +27,8 @@ using std::numeric_limits;
 #include "json11.h"
 using json11::Json;
 
+#include <regex>
+
 #include "mapjson.h"
 
 string version;
@@ -653,29 +655,30 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
 
 void clean_heal_locations(vector<string> &valid_map_ids)
 {
-    string err;
-    Json heal_locations = Json::parse(read_text_file("src/data/heal_locations.json"), err);
-    //fprintf(stderr, "err");
-    std::vector<Json> new_locations;
-    for (auto heal_location : heal_locations["heal_locations"].array_items()) {
-        string map = json_to_string(heal_location["map"]);
-        string respawn_map = json_to_string(heal_location["respawn_map"]);
-        //fprintf(stderr, "map");
-        auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map);
-        auto it2 = find(valid_map_ids.begin(), valid_map_ids.end(), respawn_map);
-        if (it == valid_map_ids.end() || it2 == valid_map_ids.end()) {
-            Json::object json_obj = heal_location.object_items();
-            json_obj["respawn_npc"] = "0";
-            new_locations.push_back(Json(json_obj));
+    std::stringstream new_json;
+    std::ifstream infile("src/data/heal_locations.json");
+    bool deleted_flag;
+
+    std::regex map_regex("MAP_\\w+");
+    std::regex npc_regex("LOCALID_\\w+");
+    std::smatch map_match;
+    string line;
+    while (std::getline(infile, line))
+    {
+        if (std::regex_search(line, map_match, map_regex) && !deleted_flag) {
+            auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map_match[0]);
+            if (it == valid_map_ids.end())
+                deleted_flag = true;
         }
-        else {
-            new_locations.push_back(heal_location);
+        if (deleted_flag && std::regex_search(line, npc_regex)) {
+            deleted_flag = false;
+            new_json << std::regex_replace(line, npc_regex, "0") << "\n";
+        } else {
+            new_json << line << "\n";
         }
     }
-    Json new_data = Json::object {
-        {"heal_locations", Json(new_locations)}
-    };
-    write_text_file("src/data/heal_locations.json", new_data.dump());
+
+    write_text_file("src/data/heal_locations.json", new_json.str());
 }
 
 // Output paths are directories with trailing path separators
