@@ -75,7 +75,6 @@ enum
 #define BSTATUS_TILEMAP_WIDTH           32
 #define BSTATUS_TILEMAP_HEIGHT          32
 
-#define BSTATUS_BG_TILE_TRANSPARENT     0x00
 #define BSTATUS_BG_TILE_FILL            0x01
 #define BSTATUS_BG_TILE_HEADER_CORNER   0x02
 #define BSTATUS_BG_TILE_HEADER_SIDE     0x03
@@ -108,20 +107,9 @@ enum
 #define BSTATUS_ROW_Y_ENEMY             24
 #define BSTATUS_ROW_Y_PLAYER            80
 
-#define BSTATUS_DETAIL_ICON_X           33
-#define BSTATUS_DETAIL_ICON_Y           52
-#define BSTATUS_DETAIL_TYPE_Y           17
-#define BSTATUS_DETAIL_TYPE_W           32
-#define BSTATUS_DETAIL_TYPE_H           16
-#define BSTATUS_DETAIL_TYPE_GAP_X       33
-
-#define BSTATUS_CARD_GAP_TILES          0
-#define BSTATUS_MIN_GAP_TILES           0
-
 #define BSTATUS_SAFE_LEFT_TILE          1
 #define BSTATUS_SAFE_RIGHT_TILE         30
 
-#define BSTATUS_LABEL_PAD_Y             16
 #define BSTATUS_LABEL_TILE_H            3
 #define BSTATUS_LABEL_H                 (BSTATUS_LABEL_TILE_H * 8)
 #define BSTATUS_LABEL_BOTTOM_TILE_TOP   ((DISPLAY_HEIGHT / 8) - BSTATUS_LABEL_TILE_H)
@@ -140,49 +128,13 @@ enum
 #define BSTATUS_DETAIL_EFFECTS_WIN_H    12
 #define BSTATUS_DETAIL_DESC_WIN_W       13
 #define BSTATUS_DETAIL_DESC_WIN_H       8
-// Detail windows are only active on the detail page; keep their tile data in a compact range
-// to avoid BG0 char data overflow/corruption with large detail layouts.
 #define BSTATUS_WIN_DETAIL_HEADER_BASE  1
 #define BSTATUS_WIN_DETAIL_ITEM_BASE    (BSTATUS_WIN_DETAIL_HEADER_BASE + (BSTATUS_DETAIL_HEADER_WIN_W * BSTATUS_DETAIL_HEADER_WIN_H))
 #define BSTATUS_WIN_DETAIL_STATS_BASE   (BSTATUS_WIN_DETAIL_ITEM_BASE + (BSTATUS_DETAIL_ITEM_WIN_W * BSTATUS_DETAIL_ITEM_WIN_H))
 #define BSTATUS_WIN_DETAIL_EFFECTS_BASE (BSTATUS_WIN_DETAIL_STATS_BASE + (BSTATUS_DETAIL_STATS_WIN_W * BSTATUS_DETAIL_STATS_WIN_H))
 #define BSTATUS_WIN_DETAIL_DESC_BASE    (BSTATUS_WIN_DETAIL_EFFECTS_BASE + (BSTATUS_DETAIL_EFFECTS_WIN_W * BSTATUS_DETAIL_EFFECTS_WIN_H))
 
-#define BSTATUS_NAME_X                  4
-#define BSTATUS_NAME_Y                  2
-#define BSTATUS_STATUS_FROM_ICON_X      (BSTATUS_DETAIL_STATUS_X - BSTATUS_DETAIL_ICON_X)
-#define BSTATUS_STATUS_FROM_ICON_Y      (BSTATUS_DETAIL_STATUS_Y - BSTATUS_DETAIL_ICON_Y)
-
-#define BSTATUS_GENDER_PAD_X            2
-#define BSTATUS_GENDER_PAD_Y            2
 #define BSTATUS_GENDER_W                8
-#define BSTATUS_DETAIL_HEADER_NAME_Y    2
-#define BSTATUS_DETAIL_HEADER_LV_X      2
-#define BSTATUS_DETAIL_HEADER_LV_Y      14
-#define BSTATUS_DETAIL_HEADER_RIGHT_INFO_Y BSTATUS_DETAIL_HEADER_NAME_Y
-#define BSTATUS_DETAIL_HEADER_RIGHT_PAD_X 2
-#define BSTATUS_DETAIL_HEADER_LEVEL_GENDER_GAP_X 2
-#define BSTATUS_DETAIL_HEADER_GIMMICK_X 2
-#define BSTATUS_DETAIL_HEADER_GIMMICK_Y 37
-#define BSTATUS_DETAIL_HEADER_TERA_LABEL_X 2
-#define BSTATUS_DETAIL_HEADER_TERA_LABEL_Y 14
-#define BSTATUS_DETAIL_HEADER_TERA_ICON_X 24
-#define BSTATUS_DETAIL_HEADER_TERA_ICON_Y 23
-#define BSTATUS_DETAIL_INFO_ITEM_X_OFFSET ((7 - 1) * 8)
-#define BSTATUS_DETAIL_INFO_ITEM_Y_OFFSET (4 * 8)
-#define BSTATUS_DETAIL_INFO_ITEM_TEXT_X   (BSTATUS_DETAIL_INFO_ITEM_X_OFFSET + 2)
-#define BSTATUS_DETAIL_INFO_HELD_ITEM_LABEL_Y (BSTATUS_DETAIL_INFO_ITEM_Y_OFFSET + 1)
-#define BSTATUS_DETAIL_INFO_HELD_ITEM_VALUE_Y (BSTATUS_DETAIL_INFO_ITEM_Y_OFFSET + 11)
-#define BSTATUS_DETAIL_INFO_ABILITY_LABEL_Y   (BSTATUS_DETAIL_INFO_ITEM_Y_OFFSET + 24)
-#define BSTATUS_DETAIL_INFO_ABILITY_VALUE_Y   (BSTATUS_DETAIL_INFO_ITEM_Y_OFFSET + 34)
-
-#define BSTATUS_HP_BAR_X                -16
-#define BSTATUS_HP_BAR_Y                (BSTATUS_CARD_H - 10)
-
-#define BSTATUS_UPDATE_ICON_W           8
-#define BSTATUS_UPDATE_ICON_H           8
-#define BSTATUS_UPDATE_ICON_PAD_X       2
-#define BSTATUS_UPDATE_ICON_PAD_Y       2
 
 #define BSTATUS_HP_BAR_TILE_TAG_BASE    0xD7C0
 #define BSTATUS_HP_BAR_PAL_TAG          0xD7C4
@@ -195,10 +147,8 @@ enum
 #define BSTATUS_DETAIL_HP_BAR_SEGMENTS  5
 
 #define BSTATUS_UPDATE_ICON_TILE_TAG    0xD7D0
-#define BSTATUS_UPDATE_ICON_PAL_TAG     0xD7D1
 
 #define BSTATUS_CURSOR_TILE_TAG         0xD7E0
-#define BSTATUS_CURSOR_PAL_TAG          0xD7E1
 #define BSTATUS_DETAIL_GIMMICK_TILE_TAG 0xD7E2
 #define BSTATUS_DETAIL_HP_BAR_TILE_TAG  0xD7E3
 #define BSTATUS_DETAIL_TERA_TYPE_TILE_TAG 0xD7F0
@@ -209,52 +159,30 @@ enum
 #define BSTATUS_DETAIL_STAT_PIP_PAL_TAG      0xD7EF
 #define BSTATUS_DETAIL_STAT_PIP_PAL_NUM      12
 #define BSTATUS_DETAIL_EFFECTS_SCROLLBAR_TILE_TAG 0xD7EB
-#define BSTATUS_DETAIL_EFFECTS_SCROLLBAR_PAL_TAG  0xD7F1
-#define BSTATUS_DETAIL_EFFECTS_SCROLLBAR_PAL_NUM  9
 #define BSTATUS_MOVE_TYPES_PAL_TAG_1       0xD7ED
 #define BSTATUS_MOVE_TYPES_PAL_TAG_2       0xD7EE
+
+#define BSTATUS_DEBUG_UPDATE_REASON_LOG FALSE
+#define BSTATUS_TRACKED_SIDE_STATUS_BITS (SIDE_STATUS_MIST          \
+                                        | SIDE_STATUS_SAFEGUARD     \
+                                        | SIDE_STATUS_LUCKY_CHANT   \
+                                        | SIDE_STATUS_TAILWIND      \
+                                        | SIDE_STATUS_LIGHTSCREEN   \
+                                        | SIDE_STATUS_REFLECT       \
+                                        | SIDE_STATUS_AURORA_VEIL   \
+                                        | SIDE_STATUS_RAINBOW       \
+                                        | SIDE_STATUS_SWAMP         \
+                                        | SIDE_STATUS_SEA_OF_FIRE   \
+                                        | SIDE_STATUS_DAMAGE_NON_TYPES)
 
 #define BSTATUS_DETAIL_WINDOW_COUNT     5
 #define BSTATUS_DETAIL_GIMMICK_W        8
 #define BSTATUS_DETAIL_GIMMICK_H        16
 #define BSTATUS_DETAIL_GIMMICK_GFX_SIZE ((BSTATUS_DETAIL_GIMMICK_W * BSTATUS_DETAIL_GIMMICK_H) / 2)
-#define BSTATUS_DETAIL_HP_BAR_X         (BSTATUS_DETAIL_ICON_X - 12)
-#define BSTATUS_DETAIL_HP_BAR_Y         (BSTATUS_DETAIL_ICON_Y + 18)
-#define BSTATUS_DETAIL_STATUS_X         (BSTATUS_DETAIL_ICON_X + 13)
-#define BSTATUS_DETAIL_STATUS_Y         (BSTATUS_DETAIL_HP_BAR_Y - 4)
 #define BSTATUS_DETAIL_STAT_ROW_COUNT   7
 #define BSTATUS_DETAIL_STAT_PIPS_PER_ROW 6
-#define BSTATUS_DETAIL_STAT_LABEL_X     2
-#define BSTATUS_DETAIL_STAT_ROW_START_Y 15
-#define BSTATUS_DETAIL_STAT_ROW_SPACING_Y 9
-#define BSTATUS_DETAIL_STAT_EXTRA_GAP_BEFORE_ACC 3
-#define BSTATUS_DETAIL_STAT_PIP_START_X 56
-#define BSTATUS_DETAIL_STAT_PIP_SPACING_X 8
-#define BSTATUS_DETAIL_STAT_PIP_Y_OFFSET 8
 #define BSTATUS_DETAIL_MAX_ACTIVE_EFFECTS 64
-#define BSTATUS_DETAIL_EFFECTS_HEADER_Y 2
-#define BSTATUS_DETAIL_EFFECTS_CURSOR_X 2
-#define BSTATUS_DETAIL_EFFECTS_TEXT_X 10
-#define BSTATUS_DETAIL_EFFECTS_LIST_START_Y 16
-#define BSTATUS_DETAIL_EFFECTS_ROW_HEIGHT 12
 #define BSTATUS_DETAIL_EFFECTS_VISIBLE_ROWS 6
-#define BSTATUS_DETAIL_EFFECTS_SCROLLBAR_X_INSET 6
-#define BSTATUS_DETAIL_EFFECTS_FRACTION_PADDING 2
-#define BSTATUS_DETAIL_BUTTON_GLYPH_Y_OFFSET 5
-#define BSTATUS_DETAIL_L_BUTTON_EXTRA_Y_OFFSET 2
-#define BSTATUS_DETAIL_L_BUTTON_NUDGE_DOWN 1
-#define BSTATUS_DETAIL_R_BUTTON_NUDGE_UP 1
-#define BSTATUS_HEADER_TEXT_Y_OFFSET    -2
-
-#define BSTATUS_HP_BAR_ENDCAP_X_OFFSET  16
-#define BSTATUS_HP_BAR_ENDCAP_Y_OFFSET  4
-#define BSTATUS_HP_BAR_LEFT_ENDCAP_FINE_X  (0)
-#define BSTATUS_HP_BAR_RIGHT_ENDCAP_FINE_X (0)
-#define BSTATUS_TOP_ROW_CONTENT_Y_OFFSET   (-2)
-#define BSTATUS_OVERVIEW_NAME_X_OFFSET      2
-#define BSTATUS_OVERVIEW_GIMMICK_X_OFFSET   3
-#define BSTATUS_OVERVIEW_GIMMICK_Y_OFFSET  -3
-#define BSTATUS_OVERVIEW_UPDATE_X_OFFSET   -1
 
 #define BSTATUS_EFFECT_FLAG_HAS_DURATION    (1 << 0)
 #define BSTATUS_EFFECT_FLAG_EXTENDABLE      (1 << 1)
@@ -271,8 +199,7 @@ struct BattleStatusEffectEntry
     u8 flags;
     u8 stackCount;
 };
-#define BSTATUS_DETAIL_DESC_TEXT_X 2
-#define BSTATUS_DETAIL_DESC_TEXT_Y 2
+
 #define BSTATUS_DETAIL_TEXT_BUFFER_SIZE 512
 
 #define TAG_STATUS_ICONS                1202
@@ -311,6 +238,9 @@ struct BattleStatusMenuState
     u8 detailGimmickSpriteId;
     u8 detailTypeIconSpriteIds[2];
     u8 detailStatPipSpriteIds[BSTATUS_DETAIL_STAT_ROW_COUNT][BSTATUS_DETAIL_STAT_PIPS_PER_ROW];
+    u8 initialSlotsPlayer;
+    u8 initialSlotsEnemy;
+    bool8 initialSlotsInitialized;
     u8 playerCount;
     u8 enemyCount;
     enum BattlerId selectedBattlerId;
@@ -333,6 +263,97 @@ struct BattleStatusMenuState
     u8 detailEffectsScrollbarSpriteId;
     u16 detailEffectsScroll;
     u8 detailWindowIds[BSTATUS_DETAIL_WINDOW_COUNT];
+};
+
+enum BattleStatusUpdateReason
+{
+    BSTATUS_UPDATE_REASON_NONE                  = 0,
+    BSTATUS_UPDATE_REASON_STATUS                = (1 << 0),
+    BSTATUS_UPDATE_REASON_VOLATILE_GAIN         = (1 << 1),
+    BSTATUS_UPDATE_REASON_VOLATILE_STACK_RAISE  = (1 << 2),
+    BSTATUS_UPDATE_REASON_HAZARD_GAIN           = (1 << 3),
+    BSTATUS_UPDATE_REASON_HAZARD_LAYER_RAISE    = (1 << 4),
+    BSTATUS_UPDATE_REASON_SIDE_STATUS_GAIN      = (1 << 5),
+    BSTATUS_UPDATE_REASON_FORM_CHANGE           = (1 << 6),
+    BSTATUS_UPDATE_REASON_TYPE_CHANGE           = (1 << 7),
+    BSTATUS_UPDATE_REASON_GIMMICK_ACTIVATED     = (1 << 8),
+    BSTATUS_UPDATE_REASON_ALLY_ITEM             = (1 << 9),
+    BSTATUS_UPDATE_REASON_ALLY_ABILITY          = (1 << 10),
+    BSTATUS_UPDATE_REASON_STAT_STAGE            = (1 << 11),
+    BSTATUS_UPDATE_REASON_GIMMICK_MEGA          = (1 << 12),
+    BSTATUS_UPDATE_REASON_GIMMICK_DYNAMAX       = (1 << 13),
+    BSTATUS_UPDATE_REASON_GIMMICK_TERA          = (1 << 14),
+};
+
+enum BattleStatusTrackedVolatile
+{
+    BSTATUS_TRACKED_VOLATILE_CRIT_BOOST,
+    BSTATUS_TRACKED_VOLATILE_CONFUSION,
+    BSTATUS_TRACKED_VOLATILE_INFATUATION,
+    BSTATUS_TRACKED_VOLATILE_NIGHTMARE,
+    BSTATUS_TRACKED_VOLATILE_DROWSY,
+    BSTATUS_TRACKED_VOLATILE_ENCORE,
+    BSTATUS_TRACKED_VOLATILE_TORMENT,
+    BSTATUS_TRACKED_VOLATILE_GRUDGE,
+    BSTATUS_TRACKED_VOLATILE_HEAL_BLOCK,
+    BSTATUS_TRACKED_VOLATILE_IDENTIFIED,
+    BSTATUS_TRACKED_VOLATILE_CANT_ESCAPE,
+    BSTATUS_TRACKED_VOLATILE_LOCK_ON,
+    BSTATUS_TRACKED_VOLATILE_EMBARGO,
+    BSTATUS_TRACKED_VOLATILE_CHARGE,
+    BSTATUS_TRACKED_VOLATILE_TAUNT,
+    BSTATUS_TRACKED_VOLATILE_TELEKINESIS,
+    BSTATUS_TRACKED_VOLATILE_MAGNET_RISE,
+    BSTATUS_TRACKED_VOLATILE_WISH,
+    BSTATUS_TRACKED_VOLATILE_INGRAIN,
+    BSTATUS_TRACKED_VOLATILE_CURSE,
+    BSTATUS_TRACKED_VOLATILE_DESTINY_BOND,
+    BSTATUS_TRACKED_VOLATILE_BOUND,
+    BSTATUS_TRACKED_VOLATILE_BIDE,
+    BSTATUS_TRACKED_VOLATILE_FUTURE_ATTACK,
+    BSTATUS_TRACKED_VOLATILE_UPROAR,
+    BSTATUS_TRACKED_VOLATILE_AQUA_RING,
+    BSTATUS_TRACKED_VOLATILE_AUTOTOMIZE,
+    BSTATUS_TRACKED_VOLATILE_SMACK_DOWN,
+    BSTATUS_TRACKED_VOLATILE_THROAT_CHOP,
+    BSTATUS_TRACKED_VOLATILE_LASER_FOCUS,
+    BSTATUS_TRACKED_VOLATILE_TAR_SHOT,
+    BSTATUS_TRACKED_VOLATILE_OCTOLOCK,
+    BSTATUS_TRACKED_VOLATILE_FIXATED,
+    BSTATUS_TRACKED_VOLATILE_STANCE_SWAP,
+    BSTATUS_TRACKED_VOLATILE_SLOW_START,
+    BSTATUS_TRACKED_VOLATILE_SALT_CURE,
+    BSTATUS_TRACKED_VOLATILE_SYRUPY,
+    BSTATUS_TRACKED_VOLATILE_RAMPAGING,
+    BSTATUS_TRACKED_VOLATILE_COUNT,
+};
+
+struct BattleStatusSnapshot
+{
+    u8 majorStatus;
+    u64 volatileMask;
+    u8 critBoostLevel;
+    u8 autotomizeCount;
+    u8 statStages[NUM_BATTLE_STATS];
+    u16 species;
+    u8 type1;
+    u8 type2;
+    u8 activeGimmick;
+    bool8 isPrimal;
+    bool8 isMega;
+    bool8 isDynamaxed;
+    u8 dynamaxTurns;
+    bool8 isTera;
+    u8 teraType;
+    u32 sideStatusBits;
+    u8 spikesLayers;
+    u8 toxicSpikesLayers;
+    bool8 stealthRock;
+    bool8 stickyWeb;
+    bool8 allyItemKnown;
+    u16 allyItem;
+    bool8 allyAbilityKnown;
+    u16 allyAbility;
 };
 
 enum BattleStatusEffectId
@@ -448,6 +469,7 @@ struct BattleStatusEffectData
 static void BattleStatusMenu_VBlankCB(void);
 static void BattleStatusMenu_MainCB(void);
 static void BattleStatusMenu_Init(void);
+static void BattleStatus_OverviewInitInitialSlots(void);
 static void BattleStatus_OverviewEnter(void);
 static void BattleStatus_OverviewExit(void);
 static void BattleStatus_OverviewBuildBattlerLists(void);
@@ -463,6 +485,7 @@ static u8 BattleStatus_GetBestFitNameFont(const u8 *name, s16 maxWidth);
 static void BattleStatus_OverviewSetBgTile(u16 *tilemap, s16 x, s16 y, u16 tileNum, u16 attrs);
 static void BattleStatus_OverviewFillBgRect(u16 *tilemap, s16 x, s16 y, s16 width, s16 height, u16 tileNum, u16 attrs);
 static void BattleStatus_BackdropLoadBaseTilemap(const u16 *baseTilemap);
+static void BattleStatus_LoadBackdropAssets(void);
 static void BattleStatus_OverviewComputeHeaderLayout(s16 rowCenter, s16 labelWidth, u8 *outTextLenTiles, s16 *outHeaderX, s16 *outHeaderWidth);
 static void BattleStatus_OverviewDrawStatusCard(u16 *tilemap, s16 x, s16 y, u8 width, u8 height, bool8 isActive, bool8 isBottomRow);
 static void BattleStatus_OverviewDrawHeaderBox(u16 *tilemap, s16 x, s16 y, u8 textLenTiles);
@@ -475,6 +498,7 @@ static void BattleStatus_OverviewCreateWindows(void);
 static void BattleStatus_OverviewClearWindows(void);
 static void BattleStatus_OverviewInitCursor(void);
 static void BattleStatus_OverviewUpdateCursorPos(void);
+static void BattleStatus_OverviewGetCursorPos(const struct BattleStatusCard *card, s16 *outX, s16 *outY);
 static void BattleStatus_OverviewHandleInput(void);
 static void BattleStatus_RequestPageTransition(u8 targetPage);
 static void BattleStatus_ProcessPageTransition(void);
@@ -534,6 +558,7 @@ static void BattleStatus_DetailDestroyEffectsCursor(void);
 static void BattleStatus_DetailDestroyEffectsScrollbar(void);
 static void BattleStatus_DetailUpdateEffectsCursor(void);
 static void BattleStatus_DetailUpdateScrollbarLane(bool8 hasScrollbar);
+static void BattleStatus_DetailSetDescriptionPlaceholder(enum BattleStatusEffectId effectId);
 static void BattleStatus_DetailFormatDescriptionText(enum BattleStatusEffectId effectId, u8 *dst);
 static void BattleStatus_DetailClampTextLines(u8 *text, u8 maxLines);
 static void BattleStatus_DetailDrawWindowFrame(u8 windowId);
@@ -543,6 +568,7 @@ static u8 BattleStatus_GetOpponentTrainerCount(void);
 static bool8 BattleStatus_HasPlayerPartnerTrainer(void);
 static void BattleStatus_OverviewUpdateHpBars(void);
 static void BattleStatusMenu_Destroy(void);
+static void BattleStatus_DestroyOverviewCardSprites(struct BattleStatusCard *card, bool8 freeHpBarTile);
 
 static u8 BattleStatus_CreateHpBarSprite(u16 tileTag, s16 x, s16 y);
 static void BattleStatus_DestroyHpBarEndcaps(u8 *leftEndcapSpriteId, u8 *rightEndcapSpriteId);
@@ -555,12 +581,16 @@ static u8 BattleStatus_GetBarGfxId(s16 hp, s16 maxHp);
 static void BattleStatus_GetNickname(enum BattlerId battler, u8 *dst);
 static u8 BattleStatus_GetAilmentFromBattler(enum BattlerId battler);
 static void BattleStatus_RefreshUnreadUpdates(void);
-static u32 BattleStatus_CalcBattlerUpdateHash(enum BattlerId battler);
+static void BattleStatus_PrimeSnapshotsFromCurrentState(void);
 static u32 BattleStatus_GetBattlerIdentity(enum BattlerId battler);
-static u32 BattleStatus_HashBytes(u32 hash, const void *data, u32 size);
-static void BattleStatus_GetActiveEffectsMask(enum BattlerId battler, u64 *mask);
-static bool8 BattleStatus_IsEffectPersonal(enum BattleStatusEffectId effectId);
+static u64 BattleStatus_GetTrackedVolatileMask(enum BattlerId battler);
+static void BattleStatus_BuildSnapshotForBattler(enum BattlerId battler, struct BattleStatusSnapshot *snapshot);
+static u16 BattleStatus_GetUpdateReasons(enum BattlerId battler, const struct BattleStatusSnapshot *previous, const struct BattleStatusSnapshot *current);
+static void BattleStatus_LogUpdateReasons(enum BattlerId battler, u16 reasons);
 static bool8 BattleStatus_BattlerHasUnreadUpdates(enum BattlerId battler);
+static void BattleStatus_ClearUnreadUpdatesForNewTurn(void);
+static void BattleStatus_SnapshotResetEntry(u8 battler);
+static void BattleStatus_SnapshotStoreEntry(u8 battler, u32 identity, const struct BattleStatusSnapshot *snapshot);
 
 EWRAM_DATA static u8 sBattleStatusMenuState = 0;
 EWRAM_DATA static struct BattleStatusMenuState sBattleStatusMenu = {0};
@@ -569,13 +599,21 @@ EWRAM_DATA static u16 sBattleStatusMenuBg1Tilemap[BG_SCREEN_SIZE] = {0};
 EWRAM_DATA static u8 sBattleStatusDetailTextBuffer[BSTATUS_DETAIL_TEXT_BUFFER_SIZE] = {0};
 EWRAM_DATA static u16 sBattleStatusSnapshotTurn = 0;
 EWRAM_DATA static bool8 sBattleStatusSnapshotInitialized = FALSE;
-EWRAM_DATA static u32 sBattleStatusLastTurnSnapshotHash[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA static bool8 sBattleStatusLastTurnSnapshotValid[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA static struct BattleStatusSnapshot sBattleStatusLastSnapshot[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA static bool8 sBattleStatusLastSnapshotValid[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA static u32 sBattleStatusLastMonIdentity[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA static bool8 sBattleStatusLastMonIdentityValid[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA static bool8 sBattleStatusUnreadUpdates[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA static u16 sBattleStatusUpdateReasons[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA static u16 sBattleStatusUpdateLatchedTurn[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA static bool8 sBattleStatusJustSwitchedIn[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA static u8 sBattleStatusPendingPage = 0;
 EWRAM_DATA static bool8 sBattleStatusTransitionUnloaded = FALSE;
+EWRAM_DATA static u8 sBattleStatusInitialSlotsPlayer = 0;
+EWRAM_DATA static u8 sBattleStatusInitialSlotsEnemy = 0;
+EWRAM_DATA static bool8 sBattleStatusInitialSlotsInitialized = FALSE;
+EWRAM_DATA static enum BattlerId sBattleStatusInitialPlayerBattlers[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA static enum BattlerId sBattleStatusInitialEnemyBattlers[MAX_BATTLERS_COUNT] = {0};
 
 static const u8 sTextColor_BattleStatus_Default[] =
 {
@@ -1074,7 +1112,7 @@ static const struct SpriteTemplate sSpriteTemplate_BattleStatusDetailEffectsScro
     .callback = SpriteCallbackDummy,
 };
 
-static const u32 sBattleStatusCursorGfx[] = INCBIN_U32("graphics/interface/arrow_cursor.4bpp.smol");
+static const u8 sBattleStatusCursorGfx[] = INCBIN_U8("graphics/battle_interface/arrow_indicator.4bpp");
 
 static const struct OamData sOamData_BattleStatusCursor =
 {
@@ -1099,6 +1137,11 @@ static const struct SpriteTemplate sSpriteTemplate_BattleStatusCursor =
     .paletteTag = TAG_MISC_INDICATOR_PAL,
     .oam = &sOamData_BattleStatusCursor,
     .callback = SpriteCallbackDummy
+};
+
+static const struct SpriteSheet sSpriteSheet_BattleStatusCursor =
+{
+    sBattleStatusCursorGfx, sizeof(sBattleStatusCursorGfx), BSTATUS_CURSOR_TILE_TAG
 };
 
 static const struct OamData sOamData_BattleStatusDetailGimmick =
@@ -1139,8 +1182,6 @@ static const struct BgTemplate sBattleStatusMenuBgTemplates[] =
     },
     [BSTATUS_BACKDROP_BG] = {
         .bg = 1,
-        // BG0 windows consume enough tile blocks on detail to spill into charblock 2.
-        // Keep backdrop tiles in charblock 3 so BG0 text tile uploads never clobber BG1 art.
         .charBaseIndex = 3,
         .mapBaseIndex = 30,
         .screenSize = 0,
@@ -1150,7 +1191,6 @@ static const struct BgTemplate sBattleStatusMenuBgTemplates[] =
     },
 };
 
-// Window templates
 enum
 {
     WIN_LABEL_TOP,
@@ -1290,15 +1330,50 @@ void CB2_BattleStatusMenuFromBattle(void)
     ShowBg(BSTATUS_BACKDROP_BG);
     ShowBg(BSTATUS_TEXT_BG);
     SetGpuReg(REG_OFFSET_BLDCNT, 0);
-    BlendPalettes(PALETTES_ALL, 16, RGB_BLACK);
     InitWindows((const struct WindowTemplate[]){DUMMY_WIN_TEMPLATE});
     DeactivateAllTextPrinters();
     BattleStatusMenu_Init();
+    BlendPalettes(PALETTES_ALL, 16, RGB_BLACK);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
     gPaletteFade.bufferTransferDisabled = FALSE;
     sBattleStatusMenuState = BATTLE_STATUS_MENU_STATE_FADE_IN;
     SetVBlankCallback(BattleStatusMenu_VBlankCB);
     SetMainCallback2(BattleStatusMenu_MainCB);
+}
+
+void BattleStatusMenu_ResetUpdateTracker(void)
+{
+    u8 battler;
+
+    sBattleStatusSnapshotTurn = 0;
+    sBattleStatusSnapshotInitialized = FALSE;
+    sBattleStatusInitialSlotsPlayer = 0;
+    sBattleStatusInitialSlotsEnemy = 0;
+    sBattleStatusInitialSlotsInitialized = FALSE;
+    for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+    {
+        BattleStatus_SnapshotResetEntry(battler);
+        sBattleStatusInitialPlayerBattlers[battler] = 0;
+        sBattleStatusInitialEnemyBattlers[battler] = 0;
+    }
+#if BSTATUS_DEBUG_UPDATE_REASON_LOG
+    DebugPrintf("BattleStatus tracker reset");
+#endif
+}
+
+void BattleStatusMenu_PrimeUpdateTracker(void)
+{
+    BattleStatus_OverviewInitInitialSlots();
+
+    if (sBattleStatusSnapshotInitialized)
+        return;
+
+    BattleStatus_PrimeSnapshotsFromCurrentState();
+}
+
+void BattleStatusMenu_TrackUpdateIndicators(void)
+{
+    BattleStatus_RefreshUnreadUpdates();
 }
 
 static void BattleStatusMenu_VBlankCB(void)
@@ -1380,6 +1455,9 @@ static void BattleStatusMenu_Init(void)
     sBattleStatusMenu.detailEffectsScrollbarSpriteId = SPRITE_NONE;
     sBattleStatusMenu.detailTypeIconSpriteIds[0] = SPRITE_NONE;
     sBattleStatusMenu.detailTypeIconSpriteIds[1] = SPRITE_NONE;
+    sBattleStatusMenu.initialSlotsPlayer = 0;
+    sBattleStatusMenu.initialSlotsEnemy = 0;
+    sBattleStatusMenu.initialSlotsInitialized = FALSE;
     for (i = 0; i < BSTATUS_DETAIL_STAT_ROW_COUNT; i++)
     {
         for (j = 0; j < BSTATUS_DETAIL_STAT_PIPS_PER_ROW; j++)
@@ -1415,9 +1493,7 @@ static void BattleStatusMenu_Init(void)
     LoadSpritePaletteInSlot(&(struct SpritePalette){ .data = gMoveTypes_Pal + 16, .tag = BSTATUS_MOVE_TYPES_PAL_TAG_1 }, 14);
     LoadSpritePaletteInSlot(&(struct SpritePalette){ .data = gMoveTypes_Pal + 32, .tag = BSTATUS_MOVE_TYPES_PAL_TAG_2 }, 15);
     LoadSpriteSheet(&sSpriteSheet_BattleStatusDetailEffectsScrollbar);
-    LoadCompressedSpriteSheet(&(struct CompressedSpriteSheet){
-        sBattleStatusCursorGfx, 0x80, BSTATUS_CURSOR_TILE_TAG
-    });
+    LoadSpriteSheet(&sSpriteSheet_BattleStatusCursor);
     LoadIndicatorSpritesGfx();
 
     BattleStatus_OverviewCreateWindows();
@@ -1427,9 +1503,7 @@ static void BattleStatusMenu_Init(void)
 static void BattleStatus_OverviewEnter(void)
 {
     sBattleStatusMenu.page = BATTLE_STATUS_PAGE_OVERVIEW;
-    // Reinitialize the shared backdrop layer when coming back from detail.
-    LoadBgTiles(BSTATUS_BACKDROP_BG, sBattleStatusMenuBgTiles, sizeof(sBattleStatusMenuBgTiles), 0);
-    LoadPalette(sBattleStatusMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleStatusMenuBgPalette));
+    BattleStatus_LoadBackdropAssets();
     BattleStatus_OverviewClearWindows();
     BattleStatus_OverviewBuildBattlerLists();
     BattleStatus_RefreshUnreadUpdates();
@@ -1453,30 +1527,7 @@ static void BattleStatus_OverviewExit(void)
     sBattleStatusMenu.cursorSpriteId = SPRITE_NONE;
 
     for (i = 0; i < sBattleStatusMenu.cardCount; i++)
-    {
-        struct BattleStatusCard *card = &sBattleStatusMenu.cards[i];
-
-        if (card->hpBarSpriteId != SPRITE_NONE)
-            DestroySprite(&gSprites[card->hpBarSpriteId]);
-        BattleStatus_DestroyHpBarEndcaps(&card->hpBarLeftEndcapSpriteId, &card->hpBarRightEndcapSpriteId);
-        if (card->statusSpriteId != SPRITE_NONE)
-            DestroySprite(&gSprites[card->statusSpriteId]);
-        if (card->updateSpriteId != SPRITE_NONE)
-            DestroySprite(&gSprites[card->updateSpriteId]);
-        if (card->monIconSpriteId != SPRITE_NONE)
-            FreeAndDestroyMonIconSprite(&gSprites[card->monIconSpriteId]);
-        if (card->gimmickSpriteId != SPRITE_NONE)
-            DestroySprite(&gSprites[card->gimmickSpriteId]);
-        if (card->gimmickTileTag != 0)
-            FreeSpriteTilesByTag(card->gimmickTileTag);
-
-        card->hpBarSpriteId = SPRITE_NONE;
-        card->statusSpriteId = SPRITE_NONE;
-        card->updateSpriteId = SPRITE_NONE;
-        card->monIconSpriteId = SPRITE_NONE;
-        card->gimmickSpriteId = SPRITE_NONE;
-        card->gimmickTileTag = 0;
-    }
+        BattleStatus_DestroyOverviewCardSprites(&sBattleStatusMenu.cards[i], FALSE);
 
     BattleStatus_OverviewClearWindows();
 }
@@ -1554,9 +1605,7 @@ static void BattleStatus_DetailEnter(void)
     sBattleStatusMenu.detailStatusSpriteId = SPRITE_NONE;
     sBattleStatusMenu.detailTeraTypeSpriteId = SPRITE_NONE;
     sBattleStatusMenu.detailGimmickSpriteId = SPRITE_NONE;
-    // Load the details backdrop data on the shared background layer.
-    LoadBgTiles(BSTATUS_BACKDROP_BG, sBattleStatusMenuBgTiles, sizeof(sBattleStatusMenuBgTiles), 0);
-    LoadPalette(sBattleStatusMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleStatusMenuBgPalette));
+    BattleStatus_LoadBackdropAssets();
     BattleStatus_BackdropLoadBaseTilemap(sBattleStatusMenuDetailsBaseTilemap);
     FillBgTilemapBufferRect(BSTATUS_TEXT_BG, 0, 0, 0, BSTATUS_TILEMAP_WIDTH, BSTATUS_TILEMAP_HEIGHT, 0);
     CopyBgTilemapBufferToVram(BSTATUS_TEXT_BG);
@@ -1652,7 +1701,6 @@ static void BattleStatus_DetailCreateWindows(void)
             BattleStatus_DetailDrawWindowFrame(sBattleStatusMenu.detailWindowIds[i]);
     }
 
-    // Merge header + item/ability into one continuous info window.
     sBattleStatusMenu.detailWindowIds[WIN_DETAIL_ITEM_ABILITY] = sBattleStatusMenu.detailWindowIds[WIN_DETAIL_HEADER];
 }
 
@@ -1705,7 +1753,7 @@ static void BattleStatus_DetailDrawStaticWindows(void)
         BattleStatus_DetailDrawWindowFrame(windowId);
         for (i = 0; i < BSTATUS_DETAIL_STAT_ROW_COUNT; i++)
         {
-            AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROW, BSTATUS_DETAIL_STAT_LABEL_X,
+            AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROW, 2,
                                          BattleStatus_DetailGetStatRowTextY(i), 0, 0,
                                          sTextColor_BattleStatus_Default, TEXT_SKIP_DRAW,
                                          sBattleStatusDetailStatLabels[i]);
@@ -1775,8 +1823,8 @@ static void BattleStatus_DetailRefreshHpBar(void)
     if (sBattleStatusMenu.detailHpBarSpriteId == SPRITE_NONE)
     {
         sBattleStatusMenu.detailHpBarSpriteId = BattleStatus_CreateHpBarSprite(BSTATUS_DETAIL_HP_BAR_TILE_TAG,
-                                                                                BSTATUS_DETAIL_HP_BAR_X,
-                                                                                BSTATUS_DETAIL_HP_BAR_Y);
+                                                                                21,
+                                                                                70);
         if (sBattleStatusMenu.detailHpBarSpriteId == SPRITE_NONE)
             return;
         BattleStatus_CreateHpBarEndcaps(&sBattleStatusMenu.detailHpBarLeftEndcapSpriteId,
@@ -1784,8 +1832,8 @@ static void BattleStatus_DetailRefreshHpBar(void)
     }
 
     sprite = &gSprites[sBattleStatusMenu.detailHpBarSpriteId];
-    sprite->x = BSTATUS_DETAIL_HP_BAR_X;
-    sprite->y = BSTATUS_DETAIL_HP_BAR_Y;
+    sprite->x = 21;
+    sprite->y = 70;
     if (maxHp <= 0)
     {
         sprite->invisible = TRUE;
@@ -1801,7 +1849,7 @@ static void BattleStatus_DetailRefreshHpBar(void)
     sprite->invisible = FALSE;
     BattleStatus_UpdateHpBarEndcaps(sBattleStatusMenu.detailHpBarLeftEndcapSpriteId,
                                     sBattleStatusMenu.detailHpBarRightEndcapSpriteId,
-                                    BSTATUS_DETAIL_HP_BAR_X, BSTATUS_DETAIL_HP_BAR_Y,
+                                    21, 70,
                                     BSTATUS_DETAIL_HP_BAR_SEGMENTS);
 }
 
@@ -1821,8 +1869,8 @@ static void BattleStatus_DetailRefreshStatusIcon(void)
         return;
 
     sBattleStatusMenu.detailStatusSpriteId = CreateSprite(&gSpriteTemplate_StatusIcons,
-                                                          BSTATUS_DETAIL_STATUS_X,
-                                                          BSTATUS_DETAIL_STATUS_Y, 0);
+                                                          46,
+                                                          66, 0);
     if (sBattleStatusMenu.detailStatusSpriteId != SPRITE_NONE)
     {
         StartSpriteAnim(&gSprites[sBattleStatusMenu.detailStatusSpriteId], ailment - 1);
@@ -1865,15 +1913,13 @@ static void BattleStatus_DetailDrawLRButtonGlyphs(void)
     itemAbsTop = GetWindowAttribute(itemWindowId, WINDOW_TILEMAP_TOP) * 8;
     statsAbsTop = GetWindowAttribute(statsWindowId, WINDOW_TILEMAP_TOP) * 8;
 
-    // Keep R in the bottom-right of item/ability and align L horizontally with it.
     itemY = itemWindowHeight - glyphHeight - 1;
-    itemY -= BSTATUS_DETAIL_BUTTON_GLYPH_Y_OFFSET;
+    itemY -= 5;
     if (itemY < 1)
         itemY = 1;
     alignedAbsY = itemAbsTop + itemY;
     statsY = alignedAbsY - statsAbsTop;
-    statsY -= BSTATUS_DETAIL_L_BUTTON_EXTRA_Y_OFFSET;
-    statsY += BSTATUS_DETAIL_L_BUTTON_NUDGE_DOWN;
+    statsY -= 1;
     if (statsY < 0)
         statsY = 0;
 
@@ -1881,7 +1927,7 @@ static void BattleStatus_DetailDrawLRButtonGlyphs(void)
     itemX = itemWindowWidth - rGlyphWidth - 2;
     if (itemX < 1)
         itemX = 1;
-    itemY -= BSTATUS_DETAIL_R_BUTTON_NUDGE_UP;
+    itemY -= 1;
     if (itemY < 0)
         itemY = 0;
 
@@ -1930,8 +1976,8 @@ static void BattleStatus_DetailRefreshTeraTypeIndicator(void)
     windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
     windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
     sBattleStatusMenu.detailTeraTypeSpriteId = CreateSprite(&template,
-                                                            windowLeftPx + BSTATUS_DETAIL_HEADER_TERA_ICON_X + (BSTATUS_DETAIL_GIMMICK_W / 2),
-                                                            windowTopPx + BSTATUS_DETAIL_HEADER_TERA_ICON_Y, 0);
+                                                            windowLeftPx + 24 + (BSTATUS_DETAIL_GIMMICK_W / 2),
+                                                            windowTopPx + 23, 0);
     if (sBattleStatusMenu.detailTeraTypeSpriteId != SPRITE_NONE)
         gSprites[sBattleStatusMenu.detailTeraTypeSpriteId].oam.priority = 0;
 }
@@ -1984,8 +2030,8 @@ static void BattleStatus_DetailRefreshGimmickIndicator(void)
     template.paletteTag = palTag;
     windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
     windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
-    indicatorLeftPx = windowLeftPx + BSTATUS_DETAIL_HEADER_GIMMICK_X;
-    indicatorTopPx = windowTopPx + BSTATUS_DETAIL_HEADER_GIMMICK_Y - 4;
+    indicatorLeftPx = windowLeftPx + 2;
+    indicatorTopPx = windowTopPx + 33;
 
     sBattleStatusMenu.detailGimmickSpriteId = CreateSprite(&template,
                                                            indicatorLeftPx + (BSTATUS_DETAIL_GIMMICK_W / 2),
@@ -2022,13 +2068,13 @@ static void BattleStatus_DetailRefreshItemAbilityWindow(void)
         itemFont = BattleStatus_DetailGetBestFitSmallFont(itemText, maxValueWidth);
         abilityFont = BattleStatus_DetailGetBestFitSmallFont(abilityText, maxValueWidth);
 
-        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROW, BSTATUS_DETAIL_INFO_ITEM_TEXT_X, BSTATUS_DETAIL_INFO_HELD_ITEM_LABEL_Y, 0, 0, sTextColor_BattleStatus_Default,
+        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROW, 50, 33, 0, 0, sTextColor_BattleStatus_Default,
                                      TEXT_SKIP_DRAW, sText_BattleStatus_DetailHeldItemLabel);
-        AddTextPrinterParameterized4(windowId, itemFont, BSTATUS_DETAIL_INFO_ITEM_TEXT_X, BSTATUS_DETAIL_INFO_HELD_ITEM_VALUE_Y, 0, 0, sTextColor_BattleStatus_Default,
+        AddTextPrinterParameterized4(windowId, itemFont, 50, 43, 0, 0, sTextColor_BattleStatus_Default,
                                      TEXT_SKIP_DRAW, itemText);
-        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROW, BSTATUS_DETAIL_INFO_ITEM_TEXT_X, BSTATUS_DETAIL_INFO_ABILITY_LABEL_Y, 0, 0, sTextColor_BattleStatus_Default,
+        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROW, 50, 56, 0, 0, sTextColor_BattleStatus_Default,
                                      TEXT_SKIP_DRAW, sText_BattleStatus_DetailAbilityLabel);
-        AddTextPrinterParameterized4(windowId, abilityFont, BSTATUS_DETAIL_INFO_ITEM_TEXT_X, BSTATUS_DETAIL_INFO_ABILITY_VALUE_Y, 0, 0, sTextColor_BattleStatus_Default,
+        AddTextPrinterParameterized4(windowId, abilityFont, 50, 66, 0, 0, sTextColor_BattleStatus_Default,
                                      TEXT_SKIP_DRAW, abilityText);
     }
 
@@ -2066,13 +2112,13 @@ static void BattleStatus_DetailRefreshHeader(void)
     level = GetMonData(mon, MON_DATA_LEVEL);
 
     BattleStatus_DetailDrawWindowFrame(windowId);
-    genderX = WindowWidthPx(windowId) - BSTATUS_DETAIL_HEADER_RIGHT_PAD_X - BSTATUS_GENDER_W;
+    genderX = WindowWidthPx(windowId) - 2 - BSTATUS_GENDER_W;
 
     maxLevelText[0] = CHAR_EXTRA_SYMBOL;
     maxLevelText[1] = CHAR_LV_2;
     ConvertIntToDecimalStringN(maxLevelText + 2, 999, STR_CONV_MODE_LEFT_ALIGN, 3);
     levelMaxWidth = GetStringWidth(FONT_SMALL, maxLevelText, 0);
-    levelX = genderX - BSTATUS_DETAIL_HEADER_LEVEL_GENDER_GAP_X - levelMaxWidth;
+    levelX = genderX - 2 - levelMaxWidth;
     if (levelX < 2)
         levelX = 2;
 
@@ -2081,17 +2127,16 @@ static void BattleStatus_DetailRefreshHeader(void)
     if (maxNameWidth < 16)
         maxNameWidth = 16;
     nameFont = BattleStatus_GetBestFitNameFont(monName, maxNameWidth);
-    AddTextPrinterParameterized4(windowId, nameFont, 2, BSTATUS_DETAIL_HEADER_NAME_Y, 0, 0, sTextColor_BattleStatus_Default,
+    AddTextPrinterParameterized4(windowId, nameFont, 2, 2, 0, 0, sTextColor_BattleStatus_Default,
                                  TEXT_SKIP_DRAW, monName);
-    // Clear gimmick slot before updating tera icon to avoid transient icon overlap/flicker.
     BattleStatus_DetailDestroyGimmickIndicator();
     if (B_FLAG_TERA_ORB_CHARGED != 0
      && FlagGet(B_FLAG_TERA_ORB_CHARGED)
      && IsOnPlayerSide(sBattleStatusMenu.selectedBattlerId))
     {
         AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROWER,
-                                     BSTATUS_DETAIL_HEADER_TERA_LABEL_X,
-                                     BSTATUS_DETAIL_HEADER_TERA_LABEL_Y,
+                                     2,
+                                     14,
                                      0, 0, sTextColor_BattleStatus_Default,
                                      TEXT_SKIP_DRAW, sText_BattleStatus_DetailTeraTypeLabel);
         BattleStatus_DetailRefreshTeraTypeIndicator();
@@ -2106,7 +2151,7 @@ static void BattleStatus_DetailRefreshHeader(void)
     levelText[1] = CHAR_LV_2;
     ConvertIntToDecimalStringN(levelText + 2, level, STR_CONV_MODE_LEFT_ALIGN, 3);
 
-    AddTextPrinterParameterized4(windowId, FONT_SMALL, levelX, BSTATUS_DETAIL_HEADER_RIGHT_INFO_Y, 0, 0, sTextColor_BattleStatus_Default,
+    AddTextPrinterParameterized4(windowId, FONT_SMALL, levelX, 2, 0, 0, sTextColor_BattleStatus_Default,
                                  TEXT_SKIP_DRAW, levelText);
 
     if (gender == MON_MALE || gender == MON_FEMALE)
@@ -2115,7 +2160,7 @@ static void BattleStatus_DetailRefreshHeader(void)
 
         genderSymbol[0] = (gender == MON_MALE) ? CHAR_MALE : CHAR_FEMALE;
         genderSymbol[1] = EOS;
-        AddTextPrinterParameterized4(windowId, FONT_SMALL, genderX, BSTATUS_DETAIL_HEADER_RIGHT_INFO_Y, 0, 0,
+        AddTextPrinterParameterized4(windowId, FONT_SMALL, genderX, 2, 0, 0,
                                      colors, TEXT_SKIP_DRAW, genderSymbol);
     }
 
@@ -2141,7 +2186,7 @@ static void BattleStatus_DetailRefreshIcon(void)
         return;
 
     sBattleStatusMenu.detailIconSpriteId = CreateMonIcon(species, SpriteCallbackDummy,
-                                                         BSTATUS_DETAIL_ICON_X, BSTATUS_DETAIL_ICON_Y, 0, personality);
+                                                         33, 52, 0, personality);
     if (sBattleStatusMenu.detailIconSpriteId != SPRITE_NONE)
         gSprites[sBattleStatusMenu.detailIconSpriteId].oam.priority = 0;
 }
@@ -2175,7 +2220,6 @@ static void BattleStatus_DetailRefreshTypeIcons(void)
     if (windowId == WINDOW_NONE)
         return;
 
-    // Terastallized battlers should display their single defensive Tera type.
     if (GetActiveGimmick(battler) == GIMMICK_TERA)
     {
         type1 = GetBattlerTeraType(battler);
@@ -2190,14 +2234,13 @@ static void BattleStatus_DetailRefreshTypeIcons(void)
     windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
     windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
 
-    // Right edge of the rightmost type icon matches the gimmick indicator's right edge.
     rightAlignedTypeRightPx = windowLeftPx + WindowWidthPx(windowId) - 2;
-    type2LeftPx = rightAlignedTypeRightPx - BSTATUS_DETAIL_TYPE_W;
-    type1LeftPx = type2LeftPx - BSTATUS_DETAIL_TYPE_GAP_X;
+    type2LeftPx = rightAlignedTypeRightPx - 32;
+    type1LeftPx = type2LeftPx - 33;
 
     spriteId = CreateSprite(&gSpriteTemplate_MoveTypes,
-                            type1LeftPx + (BSTATUS_DETAIL_TYPE_W / 2),
-                            windowTopPx + BSTATUS_DETAIL_TYPE_Y + (BSTATUS_DETAIL_TYPE_H / 2), 0);
+                            type1LeftPx + 16,
+                            windowTopPx + 25, 0);
     if (spriteId != SPRITE_NONE)
     {
         StartSpriteAnim(&gSprites[spriteId], type1);
@@ -2210,8 +2253,8 @@ static void BattleStatus_DetailRefreshTypeIcons(void)
         return;
 
     spriteId = CreateSprite(&gSpriteTemplate_MoveTypes,
-                            type2LeftPx + (BSTATUS_DETAIL_TYPE_W / 2),
-                            windowTopPx + BSTATUS_DETAIL_TYPE_Y + (BSTATUS_DETAIL_TYPE_H / 2), 0);
+                            type2LeftPx + 16,
+                            windowTopPx + 25, 0);
     if (spriteId != SPRITE_NONE)
     {
         StartSpriteAnim(&gSprites[spriteId], type2);
@@ -2223,11 +2266,10 @@ static void BattleStatus_DetailRefreshTypeIcons(void)
 
 static s16 BattleStatus_DetailGetStatRowTextY(u8 row)
 {
-    s16 y = BSTATUS_DETAIL_STAT_ROW_START_Y + row * BSTATUS_DETAIL_STAT_ROW_SPACING_Y;
+    s16 y = 15 + row * 9;
 
-    // Add extra room between Speed (row 4) and Accuracy (row 5).
     if (row >= 5)
-        y += BSTATUS_DETAIL_STAT_EXTRA_GAP_BEFORE_ACC;
+        y += 3;
 
     return y;
 }
@@ -2270,12 +2312,12 @@ static void BattleStatus_DetailCreateStatPips(void)
 
     for (row = 0; row < BSTATUS_DETAIL_STAT_ROW_COUNT; row++)
     {
-        s16 rowY = windowTopPx + BattleStatus_DetailGetStatRowTextY(row) + BSTATUS_DETAIL_STAT_PIP_Y_OFFSET;
+        s16 rowY = windowTopPx + BattleStatus_DetailGetStatRowTextY(row) + 8;
 
         for (col = 0; col < BSTATUS_DETAIL_STAT_PIPS_PER_ROW; col++)
         {
             u8 spriteId = CreateSprite(&sSpriteTemplate_BattleStatusDetailStatPip,
-                                       windowLeftPx + BSTATUS_DETAIL_STAT_PIP_START_X + col * BSTATUS_DETAIL_STAT_PIP_SPACING_X,
+                                       windowLeftPx + 56 + col * 8,
                                        rowY, 0);
             sBattleStatusMenu.detailStatPipSpriteIds[row][col] = spriteId;
             if (spriteId != SPRITE_NONE)
@@ -2343,7 +2385,6 @@ static void BattleStatus_DetailCycleBattler(s8 direction)
     if (sBattleStatusMenu.cardCount == 0)
         return;
 
-    // Clear previous battler's gimmick/tera sprites immediately to avoid stale icon flicker.
     BattleStatus_DetailDestroyGimmickIndicator();
     BattleStatus_DetailDestroyTeraTypeIndicator();
 
@@ -2962,13 +3003,13 @@ static void BattleStatus_DetailRefreshEffectsWindow(void)
     if (windowId == WINDOW_NONE)
         return;
 
-    if (GetFontAttribute(fractionFont, FONTATTR_MAX_LETTER_HEIGHT) < BSTATUS_DETAIL_EFFECTS_ROW_HEIGHT)
+    if (GetFontAttribute(fractionFont, FONTATTR_MAX_LETTER_HEIGHT) < 12)
     {
-        fractionYOffset = (BSTATUS_DETAIL_EFFECTS_ROW_HEIGHT - GetFontAttribute(fractionFont, FONTATTR_MAX_LETTER_HEIGHT)) / 2;
+        fractionYOffset = (12 - GetFontAttribute(fractionFont, FONTATTR_MAX_LETTER_HEIGHT)) / 2;
     }
 
     BattleStatus_DetailDrawWindowFrame(windowId);
-    AddTextPrinterParameterized4(windowId, FONT_NARROWER, 2, BSTATUS_DETAIL_EFFECTS_HEADER_Y, 0, 0, sTextColor_BattleStatus_Default,
+    AddTextPrinterParameterized4(windowId, FONT_NARROWER, 2, 2, 0, 0, sTextColor_BattleStatus_Default,
                                  TEXT_SKIP_DRAW, sText_BattleStatus_DetailEffectsHeader);
 
     if (sBattleStatusMenu.detailActiveEffectsCount != 0)
@@ -2993,10 +3034,10 @@ static void BattleStatus_DetailRefreshEffectsWindow(void)
             if (effectData == NULL || effectData->name == NULL)
                 continue;
 
-            y = BSTATUS_DETAIL_EFFECTS_LIST_START_Y + row * BSTATUS_DETAIL_EFFECTS_ROW_HEIGHT;
+            y = 16 + row * 12;
             if (index == sBattleStatusMenu.detailEffectsCursor)
             {
-                AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROWER, BSTATUS_DETAIL_EFFECTS_CURSOR_X, y, 0, 0,
+                AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROWER, 2, y, 0, 0,
                                              sTextColor_BattleStatus_Default, TEXT_SKIP_DRAW, gText_SelectorArrow2);
             }
             hasFraction = BattleStatus_DetailGetDisplayedDuration(entry, viewerSide, &remaining, &total);
@@ -3012,17 +3053,17 @@ static void BattleStatus_DetailRefreshEffectsWindow(void)
 
                 BattleStatus_DetailBuildTurnFractionText(fractionText, remaining, total);
                 fractionWidth = GetStringWidth(fractionFont, fractionText, 0);
-                fractionX = windowWidth - BSTATUS_DETAIL_EFFECTS_SCROLLBAR_X_INSET
-                            - BSTATUS_DETAIL_EFFECTS_FRACTION_PADDING - fractionWidth;
-                if (fractionX < BSTATUS_DETAIL_EFFECTS_TEXT_X)
-                    fractionX = BSTATUS_DETAIL_EFFECTS_TEXT_X;
+                fractionX = windowWidth - 6
+                            - 2 - fractionWidth;
+                if (fractionX < 10)
+                    fractionX = 10;
 
-                maxNameWidth = fractionX - BSTATUS_DETAIL_EFFECTS_TEXT_X - BSTATUS_DETAIL_EFFECTS_FRACTION_PADDING;
+                maxNameWidth = fractionX - 10 - 2;
                 if (maxNameWidth < 0)
                     maxNameWidth = 0;
                 BattleStatus_DetailCopyTextToFit(nameBuffer, effectData->name, FONT_SHORT_NARROWER, maxNameWidth);
 
-                AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, BSTATUS_DETAIL_EFFECTS_TEXT_X, y, 0, 0,
+                AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, 10, y, 0, 0,
                                              sTextColor_BattleStatus_Default, TEXT_SKIP_DRAW, nameBuffer);
                 fractionY = y + fractionYOffset;
                 AddTextPrinterParameterized4(windowId, fractionFont, fractionX, fractionY, 0, 0,
@@ -3046,17 +3087,17 @@ static void BattleStatus_DetailRefreshEffectsWindow(void)
                     *stackPtr = EOS;
 
                     stackWidth = GetStringWidth(fractionFont, stackText, 0);
-                    stackX = windowWidth - BSTATUS_DETAIL_EFFECTS_SCROLLBAR_X_INSET
-                           - BSTATUS_DETAIL_EFFECTS_FRACTION_PADDING - stackWidth;
-                    if (stackX < BSTATUS_DETAIL_EFFECTS_TEXT_X)
-                        stackX = BSTATUS_DETAIL_EFFECTS_TEXT_X;
+                    stackX = windowWidth - 6
+                           - 2 - stackWidth;
+                    if (stackX < 10)
+                        stackX = 10;
 
-                    maxNameWidth = stackX - BSTATUS_DETAIL_EFFECTS_TEXT_X - BSTATUS_DETAIL_EFFECTS_FRACTION_PADDING;
+                    maxNameWidth = stackX - 10 - 2;
                     if (maxNameWidth < 0)
                         maxNameWidth = 0;
                     BattleStatus_DetailCopyTextToFit(nameBuffer, effectData->name, FONT_SHORT_NARROWER, maxNameWidth);
 
-                    AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, BSTATUS_DETAIL_EFFECTS_TEXT_X, y, 0, 0,
+                    AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, 10, y, 0, 0,
                                                  sTextColor_BattleStatus_Default, TEXT_SKIP_DRAW, nameBuffer);
                     stackY = y + fractionYOffset;
                     AddTextPrinterParameterized4(windowId, fractionFont, stackX, stackY, 0, 0,
@@ -3064,7 +3105,7 @@ static void BattleStatus_DetailRefreshEffectsWindow(void)
                 }
                 else
                 {
-                    AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, BSTATUS_DETAIL_EFFECTS_TEXT_X, y, 0, 0,
+                    AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, 10, y, 0, 0,
                                                  sTextColor_BattleStatus_Default, TEXT_SKIP_DRAW, effectData->name);
                 }
             }
@@ -3099,9 +3140,9 @@ static void BattleStatus_DetailRefreshEffectsScrollbar(void)
 
     windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
     windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
-    scrollbarX = windowLeftPx + WindowWidthPx(windowId) - BSTATUS_DETAIL_EFFECTS_SCROLLBAR_X_INSET;
-    scrollbarMinY = windowTopPx + BSTATUS_DETAIL_EFFECTS_LIST_START_Y + 7;
-    scrollbarMaxY = scrollbarMinY + 3 + (BSTATUS_DETAIL_EFFECTS_VISIBLE_ROWS - 1) * BSTATUS_DETAIL_EFFECTS_ROW_HEIGHT;
+    scrollbarX = windowLeftPx + WindowWidthPx(windowId) - 6;
+    scrollbarMinY = windowTopPx + 16 + 7;
+    scrollbarMaxY = scrollbarMinY + 3 + (BSTATUS_DETAIL_EFFECTS_VISIBLE_ROWS - 1) * 12;
     maxScroll = sBattleStatusMenu.detailActiveEffectsCount - BSTATUS_DETAIL_EFFECTS_VISIBLE_ROWS;
     if (sBattleStatusMenu.detailEffectsScroll > maxScroll)
         sBattleStatusMenu.detailEffectsScroll = maxScroll;
@@ -3133,9 +3174,9 @@ static void BattleStatus_DetailUpdateScrollbarLane(bool8 hasScrollbar)
         return;
 
     laneX = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT)
-            + (WindowWidthPx(windowId) - BSTATUS_DETAIL_EFFECTS_SCROLLBAR_X_INSET) / 8;
-    laneYStart = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) + (BSTATUS_DETAIL_EFFECTS_LIST_START_Y / 8);
-    laneTileCount = ((BSTATUS_DETAIL_EFFECTS_VISIBLE_ROWS * BSTATUS_DETAIL_EFFECTS_ROW_HEIGHT) + 7) / 8;
+            + (WindowWidthPx(windowId) - 6) / 8;
+    laneYStart = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) + (16 / 8);
+    laneTileCount = ((BSTATUS_DETAIL_EFFECTS_VISIBLE_ROWS * 12) + 7) / 8;
     laneTileCount++;
     laneYStart++;
     laneTileCount -= 2;
@@ -3188,17 +3229,8 @@ static void BattleStatus_DetailUpdateScrollbarLane(bool8 hasScrollbar)
     CopyBgTilemapBufferToVram(BSTATUS_BACKDROP_BG);
 }
 
-static void BattleStatus_DetailFormatDescriptionText(enum BattleStatusEffectId effectId, u8 *dst)
+static void BattleStatus_DetailSetDescriptionPlaceholder(enum BattleStatusEffectId effectId)
 {
-    const struct BattleStatusEffectData *effectData = BattleStatus_GetEffectData(effectId);
-
-    if (effectData == NULL || effectData->description == NULL)
-    {
-        dst[0] = EOS;
-        return;
-    }
-
-    // Keep placeholder expansion centralized so dynamic words can be filled in per effect.
     gStringVar1[0] = EOS;
     switch (effectId)
     {
@@ -3223,7 +3255,19 @@ static void BattleStatus_DetailFormatDescriptionText(enum BattleStatusEffectId e
     default:
         break;
     }
+}
 
+static void BattleStatus_DetailFormatDescriptionText(enum BattleStatusEffectId effectId, u8 *dst)
+{
+    const struct BattleStatusEffectData *effectData = BattleStatus_GetEffectData(effectId);
+
+    if (effectData == NULL || effectData->description == NULL)
+    {
+        dst[0] = EOS;
+        return;
+    }
+
+    BattleStatus_DetailSetDescriptionPlaceholder(effectId);
     StringExpandPlaceholders(dst, effectData->description);
 }
 
@@ -3273,12 +3317,12 @@ static void BattleStatus_DetailRefreshDescriptionWindow(void)
         BattleStatus_DetailFormatDescriptionText(effectId, sBattleStatusDetailTextBuffer);
     }
 
-    wrapWidth = WindowWidthPx(windowId) - (BSTATUS_DETAIL_DESC_TEXT_X * 2) - 2;
+    wrapWidth = WindowWidthPx(windowId) - (2 * 2) - 2;
     if (wrapWidth < 8)
         wrapWidth = 8;
 
     windowHeightPx = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-    availableHeight = (windowHeightPx > BSTATUS_DETAIL_DESC_TEXT_Y + 1) ? windowHeightPx - BSTATUS_DETAIL_DESC_TEXT_Y - 1 : 1;
+    availableHeight = (windowHeightPx > 2 + 1) ? windowHeightPx - 2 - 1 : 1;
     lineHeight = GetFontAttribute(descFont, FONTATTR_MAX_LETTER_HEIGHT) + GetFontAttribute(descFont, FONTATTR_LINE_SPACING);
     if (lineHeight == 0)
         lineHeight = 1;
@@ -3286,7 +3330,6 @@ static void BattleStatus_DetailRefreshDescriptionWindow(void)
     if (maxLines == 0)
         maxLines = 1;
 
-    // Wrap words into new lines to keep long strings from wrapping over themselves in-window.
     BreakStringAutomatic(sBattleStatusDetailTextBuffer, wrapWidth, maxLines, descFont, HIDE_SCROLL_PROMPT);
 
     end = sBattleStatusDetailTextBuffer + StringLength(sBattleStatusDetailTextBuffer);
@@ -3295,7 +3338,7 @@ static void BattleStatus_DetailRefreshDescriptionWindow(void)
 
     if (sBattleStatusDetailTextBuffer[0] != EOS)
     {
-        AddTextPrinterParameterized4(windowId, descFont, BSTATUS_DETAIL_DESC_TEXT_X, BSTATUS_DETAIL_DESC_TEXT_Y, 0, 0,
+        AddTextPrinterParameterized4(windowId, descFont, 2, 2, 0, 0,
                                      sTextColor_BattleStatus_Default, TEXT_SKIP_DRAW, sBattleStatusDetailTextBuffer);
     }
 
@@ -3328,37 +3371,63 @@ static void BattleStatus_DetailDestroyEffectsScrollbar(void)
 
 static void BattleStatus_DetailUpdateEffectsCursor(void)
 {
-    // Detail effects list uses a text cursor glyph instead of an OAM sprite.
     BattleStatus_DetailDestroyEffectsCursor();
 }
 
 static void BattleStatus_DetailDrawWindowFrame(u8 windowId)
 {
-    // Keep detail windows fully transparent so the shared backdrop layer remains visible.
     FillWindowPixelBuffer(windowId, PIXEL_FILL(BSTATUS_TEXT_COLOR_TRANSPARENT));
+}
+
+static void BattleStatus_OverviewInitInitialSlots(void)
+{
+    enum BattlerId battler;
+
+    if (sBattleStatusInitialSlotsInitialized)
+        return;
+    if (gBattlersCount == 0)
+        return;
+
+    sBattleStatusInitialSlotsPlayer = 0;
+    sBattleStatusInitialSlotsEnemy = 0;
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (IsOnPlayerSide(battler))
+            sBattleStatusInitialPlayerBattlers[sBattleStatusInitialSlotsPlayer++] = battler;
+        else
+            sBattleStatusInitialEnemyBattlers[sBattleStatusInitialSlotsEnemy++] = battler;
+    }
+
+    BattleStatus_OverviewSortBattlersByScreenOrder(sBattleStatusInitialPlayerBattlers, sBattleStatusInitialSlotsPlayer);
+    BattleStatus_OverviewSortBattlersByScreenOrder(sBattleStatusInitialEnemyBattlers, sBattleStatusInitialSlotsEnemy);
+    sBattleStatusInitialSlotsInitialized = TRUE;
 }
 
 static void BattleStatus_OverviewBuildBattlerLists(void)
 {
-    enum BattlerId battler;
+    u8 i;
 
-    sBattleStatusMenu.playerCount = 0;
-    sBattleStatusMenu.enemyCount = 0;
+    BattleStatus_OverviewInitInitialSlots();
 
-    for (battler = 0; battler < gBattlersCount; battler++)
+    sBattleStatusMenu.initialSlotsPlayer = sBattleStatusInitialSlotsPlayer;
+    sBattleStatusMenu.initialSlotsEnemy = sBattleStatusInitialSlotsEnemy;
+    sBattleStatusMenu.initialSlotsInitialized = sBattleStatusInitialSlotsInitialized;
+    sBattleStatusMenu.playerCount = sBattleStatusMenu.initialSlotsPlayer;
+    sBattleStatusMenu.enemyCount = sBattleStatusMenu.initialSlotsEnemy;
+
+    for (i = 0; i < sBattleStatusMenu.playerCount; i++)
     {
-        if (!IsBattlerAlive(battler))
-            continue;
-
+        enum BattlerId battler = sBattleStatusInitialPlayerBattlers[i];
+        sBattleStatusMenu.playerBattlers[i] = battler;
         BattleStatus_GetNickname(battler, sBattleStatusMenu.battlerNames[battler]);
-        if (IsOnPlayerSide(battler))
-            sBattleStatusMenu.playerBattlers[sBattleStatusMenu.playerCount++] = battler;
-        else
-            sBattleStatusMenu.enemyBattlers[sBattleStatusMenu.enemyCount++] = battler;
     }
 
-    BattleStatus_OverviewSortBattlersByScreenOrder(sBattleStatusMenu.playerBattlers, sBattleStatusMenu.playerCount);
-    BattleStatus_OverviewSortBattlersByScreenOrder(sBattleStatusMenu.enemyBattlers, sBattleStatusMenu.enemyCount);
+    for (i = 0; i < sBattleStatusMenu.enemyCount; i++)
+    {
+        enum BattlerId battler = sBattleStatusInitialEnemyBattlers[i];
+        sBattleStatusMenu.enemyBattlers[i] = battler;
+        BattleStatus_GetNickname(battler, sBattleStatusMenu.battlerNames[battler]);
+    }
 }
 
 static void BattleStatus_OverviewBufferLabelText(void)
@@ -3406,7 +3475,7 @@ static u8 BattleStatus_OverviewGetBattlerSortOrder(enum BattlerId battler)
 static void BattleStatus_OverviewComputeRowLayout(const enum BattlerId *battlers, u8 count, s16 *outXs,
                                                   s16 *outRowLeft, s16 *outRowRight, s16 *outRowCenter)
 {
-    s16 gapTiles = BSTATUS_CARD_GAP_TILES;
+    s16 gapTiles = 0;
     s16 totalWidthTiles;
     s16 startXTile;
     s16 i;
@@ -3426,7 +3495,7 @@ static void BattleStatus_OverviewComputeRowLayout(const enum BattlerId *battlers
     totalWidthTiles = count * BSTATUS_CARD_TILE_W + (count - 1) * gapTiles;
     if (totalWidthTiles > safeWidthTiles)
     {
-        gapTiles = BSTATUS_MIN_GAP_TILES;
+        gapTiles = 0;
         totalWidthTiles = count * BSTATUS_CARD_TILE_W + (count - 1) * gapTiles;
     }
 
@@ -3449,15 +3518,17 @@ static void BattleStatus_OverviewComputeRowLayout(const enum BattlerId *battlers
 static void BattleStatus_OverviewCreateCards(void)
 {
     u8 i;
+    u8 enemySlots = sBattleStatusMenu.initialSlotsEnemy;
+    u8 playerSlots = sBattleStatusMenu.initialSlotsPlayer;
     s16 rowXs[MAX_BATTLERS_COUNT];
 
     sBattleStatusMenu.cardCount = 0;
 
-    BattleStatus_OverviewComputeRowLayout(sBattleStatusMenu.enemyBattlers, sBattleStatusMenu.enemyCount,
+    BattleStatus_OverviewComputeRowLayout(sBattleStatusMenu.enemyBattlers, enemySlots,
                                       rowXs, &sBattleStatusMenu.enemyRowLeft, &sBattleStatusMenu.enemyRowRight,
                                       &sBattleStatusMenu.enemyRowCenter);
 
-    for (i = 0; i < sBattleStatusMenu.enemyCount; i++)
+    for (i = 0; i < enemySlots; i++)
     {
         struct BattleStatusCard *card = &sBattleStatusMenu.cards[sBattleStatusMenu.cardCount++];
         card->battlerId = sBattleStatusMenu.enemyBattlers[i];
@@ -3465,11 +3536,11 @@ static void BattleStatus_OverviewCreateCards(void)
         card->y = BSTATUS_ROW_Y_ENEMY;
     }
 
-    BattleStatus_OverviewComputeRowLayout(sBattleStatusMenu.playerBattlers, sBattleStatusMenu.playerCount,
+    BattleStatus_OverviewComputeRowLayout(sBattleStatusMenu.playerBattlers, playerSlots,
                                       rowXs, &sBattleStatusMenu.playerRowLeft, &sBattleStatusMenu.playerRowRight,
                                       &sBattleStatusMenu.playerRowCenter);
 
-    for (i = 0; i < sBattleStatusMenu.playerCount; i++)
+    for (i = 0; i < playerSlots; i++)
     {
         struct BattleStatusCard *card = &sBattleStatusMenu.cards[sBattleStatusMenu.cardCount++];
         card->battlerId = sBattleStatusMenu.playerBattlers[i];
@@ -3496,7 +3567,7 @@ static void BattleStatus_OverviewDrawCard(struct BattleStatusCard *card)
     struct SpriteSheet gimmickSheet;
     s16 localX = card->x;
     s16 localY = card->y;
-    s16 contentYOffset = (card->y == BSTATUS_ROW_Y_ENEMY) ? BSTATUS_TOP_ROW_CONTENT_Y_OFFSET : 0;
+    s16 contentYOffset = (card->y == BSTATUS_ROW_Y_ENEMY) ? -2 : 0;
     s16 maxNameWidth;
     s16 iconCenterX;
     s16 iconCenterY;
@@ -3514,22 +3585,22 @@ static void BattleStatus_OverviewDrawCard(struct BattleStatusCard *card)
     else
         localY -= (BSTATUS_ROW_Y_PLAYER / 8) * 8;
 
-    maxNameWidth = BSTATUS_CARD_W - BSTATUS_NAME_X - 2;
+    maxNameWidth = BSTATUS_CARD_W - 6;
     if (gender == MON_MALE || gender == MON_FEMALE)
-        maxNameWidth -= BSTATUS_GENDER_W + BSTATUS_GENDER_PAD_X + 2;
+        maxNameWidth -= BSTATUS_GENDER_W + 4;
     nameFont = BattleStatus_GetBestFitNameFont(name, maxNameWidth);
 
     FillWindowPixelRect(windowId, PIXEL_FILL(BSTATUS_TEXT_COLOR_TRANSPARENT), localX, localY, BSTATUS_CARD_W, BSTATUS_CARD_H);
 
-    AddTextPrinterParameterized4(windowId, nameFont, localX + BSTATUS_NAME_X + BSTATUS_OVERVIEW_NAME_X_OFFSET, localY + BSTATUS_NAME_Y + contentYOffset, 0, 0,
+    AddTextPrinterParameterized4(windowId, nameFont, localX + 6, localY + 2 + contentYOffset, 0, 0,
                                  sTextColor_BattleStatus_OverviewDefault, TEXT_SKIP_DRAW, name);
 
     if (gender == MON_MALE || gender == MON_FEMALE)
     {
         u8 genderSymbol[2];
         const u8 *colors = (gender == MON_MALE) ? sTextColor_BattleStatus_Male : sTextColor_BattleStatus_Female;
-        u8 genderX = localX + BSTATUS_CARD_W - BSTATUS_GENDER_W - BSTATUS_GENDER_PAD_X;
-        u8 genderY = localY + BSTATUS_GENDER_PAD_Y + contentYOffset;
+        u8 genderX = localX + BSTATUS_CARD_W - BSTATUS_GENDER_W - 2;
+        u8 genderY = localY + 2 + contentYOffset;
 
         genderSymbol[0] = (gender == MON_MALE) ? CHAR_MALE : CHAR_FEMALE;
         genderSymbol[1] = EOS;
@@ -3541,7 +3612,7 @@ static void BattleStatus_OverviewDrawCard(struct BattleStatusCard *card)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     iconCenterX = card->x + (BSTATUS_CARD_W / 2);
-    iconCenterY = card->y + ((BSTATUS_NAME_Y + 8 + BSTATUS_HP_BAR_Y) / 2) + contentYOffset;
+    iconCenterY = card->y + 28 + contentYOffset;
 
     if (species != SPECIES_NONE)
     {
@@ -3569,16 +3640,16 @@ static void BattleStatus_OverviewDrawCard(struct BattleStatusCard *card)
         LoadSpriteSheet(&gimmickSheet);
 
         card->gimmickSpriteId = CreateSprite(&gimmickTemplate,
-                                             card->x + (BSTATUS_DETAIL_GIMMICK_W / 2) + 2 + BSTATUS_OVERVIEW_GIMMICK_X_OFFSET,
-                                             iconCenterY - (BSTATUS_DETAIL_GIMMICK_H / 2) + BSTATUS_OVERVIEW_GIMMICK_Y_OFFSET, 0);
+                                             card->x + (BSTATUS_DETAIL_GIMMICK_W / 2) + 5,
+                                             iconCenterY - (BSTATUS_DETAIL_GIMMICK_H / 2) - 3, 0);
         if (card->gimmickSpriteId != SPRITE_NONE)
             gSprites[card->gimmickSpriteId].oam.priority = 0;
     }
 
     if (ailment != AILMENT_NONE && ailment != AILMENT_PKRS)
     {
-        s16 statusX = iconCenterX + BSTATUS_STATUS_FROM_ICON_X;
-        s16 statusY = iconCenterY + BSTATUS_STATUS_FROM_ICON_Y;
+        s16 statusX = iconCenterX + 13;
+        s16 statusY = iconCenterY + 14;
 
         card->statusSpriteId = CreateSprite(&gSpriteTemplate_StatusIcons, statusX, statusY, 0);
         if (card->statusSpriteId != SPRITE_NONE)
@@ -3589,8 +3660,8 @@ static void BattleStatus_OverviewDrawCard(struct BattleStatusCard *card)
     }
 
     card->hpBarTileTag = BSTATUS_HP_BAR_TILE_TAG_BASE + card->battlerId;
-    card->hpBarSpriteId = BattleStatus_CreateHpBarSprite(card->hpBarTileTag, card->x + BSTATUS_HP_BAR_X,
-                                                         card->y + BSTATUS_HP_BAR_Y + contentYOffset);
+    card->hpBarSpriteId = BattleStatus_CreateHpBarSprite(card->hpBarTileTag, card->x - 16,
+                                                         card->y + 46 + contentYOffset);
     if (card->hpBarSpriteId != SPRITE_NONE)
         BattleStatus_CreateHpBarEndcaps(&card->hpBarLeftEndcapSpriteId, &card->hpBarRightEndcapSpriteId);
     else
@@ -3602,7 +3673,7 @@ static void BattleStatus_OverviewDrawCard(struct BattleStatusCard *card)
 
     if (BattleStatus_BattlerHasUnreadUpdates(card->battlerId))
     {
-        s16 updateX = card->x + BSTATUS_CARD_W - BSTATUS_UPDATE_ICON_W + BSTATUS_OVERVIEW_UPDATE_X_OFFSET;
+        s16 updateX = card->x + BSTATUS_CARD_W - 9;
         s16 updateY = iconCenterY - 8;
 
         card->updateSpriteId = CreateSprite(&sSpriteTemplate_BattleStatusUpdateIcon, updateX, updateY, 0);
@@ -3628,6 +3699,12 @@ static void BattleStatus_OverviewSetBgTile(u16 *tilemap, s16 x, s16 y, u16 tileN
     tilemap[y * BSTATUS_TILEMAP_WIDTH + x] = tileNum | attrs;
 }
 
+static void BattleStatus_LoadBackdropAssets(void)
+{
+    LoadBgTiles(BSTATUS_BACKDROP_BG, sBattleStatusMenuBgTiles, sizeof(sBattleStatusMenuBgTiles), 0);
+    LoadPalette(sBattleStatusMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleStatusMenuBgPalette));
+}
+
 static void BattleStatus_BackdropLoadBaseTilemap(const u16 *baseTilemap)
 {
     if (baseTilemap == NULL)
@@ -3640,7 +3717,6 @@ static void BattleStatus_BackdropLoadBaseTilemap(const u16 *baseTilemap)
 
 static void BattleStatus_DetailDrawEntryBoxes(void)
 {
-    // Entry background boxes are intentionally disabled while validating details base tilemap layout.
 }
 
 static void BattleStatus_OverviewFillBgRect(u16 *tilemap, s16 x, s16 y, s16 width, s16 height, u16 tileNum, u16 attrs)
@@ -3891,7 +3967,7 @@ static void BattleStatus_OverviewDrawLabels(void)
     if (labelHeight <= 0 || labelHeight > BSTATUS_LABEL_H)
         labelHeight = 8;
     labelY = (BSTATUS_LABEL_H - labelHeight) / 2;
-    labelY += BSTATUS_HEADER_TEXT_Y_OFFSET;
+    labelY -= 2;
     if (labelY < 0)
         labelY = 0;
 
@@ -3945,6 +4021,33 @@ static void BattleStatus_OverviewUpdateHpBars(void)
         BattleStatus_DrawHpBarSprite(&sBattleStatusMenu.cards[i]);
 }
 
+static void BattleStatus_DestroyOverviewCardSprites(struct BattleStatusCard *card, bool8 freeHpBarTile)
+{
+    if (card->hpBarSpriteId != SPRITE_NONE)
+        DestroySprite(&gSprites[card->hpBarSpriteId]);
+    BattleStatus_DestroyHpBarEndcaps(&card->hpBarLeftEndcapSpriteId, &card->hpBarRightEndcapSpriteId);
+    if (card->statusSpriteId != SPRITE_NONE)
+        DestroySprite(&gSprites[card->statusSpriteId]);
+    if (card->updateSpriteId != SPRITE_NONE)
+        DestroySprite(&gSprites[card->updateSpriteId]);
+    if (card->monIconSpriteId != SPRITE_NONE)
+        FreeAndDestroyMonIconSprite(&gSprites[card->monIconSpriteId]);
+    if (card->gimmickSpriteId != SPRITE_NONE)
+        DestroySprite(&gSprites[card->gimmickSpriteId]);
+
+    if (freeHpBarTile && card->hpBarTileTag != 0)
+        FreeSpriteTilesByTag(card->hpBarTileTag);
+    if (card->gimmickTileTag != 0)
+        FreeSpriteTilesByTag(card->gimmickTileTag);
+
+    card->hpBarSpriteId = SPRITE_NONE;
+    card->statusSpriteId = SPRITE_NONE;
+    card->updateSpriteId = SPRITE_NONE;
+    card->monIconSpriteId = SPRITE_NONE;
+    card->gimmickSpriteId = SPRITE_NONE;
+    card->gimmickTileTag = 0;
+}
+
 static void BattleStatusMenu_Destroy(void)
 {
     u8 i;
@@ -3967,33 +4070,7 @@ static void BattleStatusMenu_Destroy(void)
     sBattleStatusMenu.detailIconSpriteId = SPRITE_NONE;
 
     for (i = 0; i < sBattleStatusMenu.cardCount; i++)
-    {
-        struct BattleStatusCard *card = &sBattleStatusMenu.cards[i];
-
-        if (card->hpBarSpriteId != SPRITE_NONE)
-            DestroySprite(&gSprites[card->hpBarSpriteId]);
-        BattleStatus_DestroyHpBarEndcaps(&card->hpBarLeftEndcapSpriteId, &card->hpBarRightEndcapSpriteId);
-        if (card->statusSpriteId != SPRITE_NONE)
-            DestroySprite(&gSprites[card->statusSpriteId]);
-        if (card->updateSpriteId != SPRITE_NONE)
-            DestroySprite(&gSprites[card->updateSpriteId]);
-        if (card->monIconSpriteId != SPRITE_NONE)
-            FreeAndDestroyMonIconSprite(&gSprites[card->monIconSpriteId]);
-        if (card->gimmickSpriteId != SPRITE_NONE)
-            DestroySprite(&gSprites[card->gimmickSpriteId]);
-
-        if (card->hpBarTileTag != 0)
-            FreeSpriteTilesByTag(card->hpBarTileTag);
-        if (card->gimmickTileTag != 0)
-            FreeSpriteTilesByTag(card->gimmickTileTag);
-
-        card->hpBarSpriteId = SPRITE_NONE;
-        card->statusSpriteId = SPRITE_NONE;
-        card->updateSpriteId = SPRITE_NONE;
-        card->monIconSpriteId = SPRITE_NONE;
-        card->gimmickSpriteId = SPRITE_NONE;
-        card->gimmickTileTag = 0;
-    }
+        BattleStatus_DestroyOverviewCardSprites(&sBattleStatusMenu.cards[i], TRUE);
 
     RemoveWindow(WIN_LABEL_TOP);
     RemoveWindow(WIN_LABEL_BOTTOM);
@@ -4081,14 +4158,14 @@ static void BattleStatus_UpdateHpBarEndcaps(u8 leftEndcapSpriteId, u8 rightEndca
 
     if (leftEndcapSpriteId != SPRITE_NONE)
     {
-        gSprites[leftEndcapSpriteId].x = leftEdge + 4 + BSTATUS_HP_BAR_ENDCAP_X_OFFSET + BSTATUS_HP_BAR_LEFT_ENDCAP_FINE_X;
-        gSprites[leftEndcapSpriteId].y = barY + BSTATUS_HP_BAR_ENDCAP_Y_OFFSET;
+        gSprites[leftEndcapSpriteId].x = leftEdge + 20;
+        gSprites[leftEndcapSpriteId].y = barY + 4;
         gSprites[leftEndcapSpriteId].invisible = FALSE;
     }
     if (rightEndcapSpriteId != SPRITE_NONE)
     {
-        gSprites[rightEndcapSpriteId].x = rightEndcapStart + 4 + BSTATUS_HP_BAR_ENDCAP_X_OFFSET + BSTATUS_HP_BAR_RIGHT_ENDCAP_FINE_X;
-        gSprites[rightEndcapSpriteId].y = barY + BSTATUS_HP_BAR_ENDCAP_Y_OFFSET;
+        gSprites[rightEndcapSpriteId].x = rightEndcapStart + 20;
+        gSprites[rightEndcapSpriteId].y = barY + 4;
         gSprites[rightEndcapSpriteId].invisible = FALSE;
     }
 }
@@ -4160,14 +4237,14 @@ static void BattleStatus_DrawHpBarSprite(struct BattleStatusCard *card)
     struct Sprite *sprite;
     s16 hp = gBattleMons[card->battlerId].hp;
     s16 maxHp = gBattleMons[card->battlerId].maxHP;
-    s16 contentYOffset = (card->y == BSTATUS_ROW_Y_ENEMY) ? BSTATUS_TOP_ROW_CONTENT_Y_OFFSET : 0;
+    s16 contentYOffset = (card->y == BSTATUS_ROW_Y_ENEMY) ? -2 : 0;
 
     if (card->hpBarSpriteId == SPRITE_NONE)
         return;
 
     sprite = &gSprites[card->hpBarSpriteId];
-    sprite->x = card->x + (BSTATUS_CARD_W / 2) + BSTATUS_HP_BAR_X;
-    sprite->y = card->y + BSTATUS_HP_BAR_Y + contentYOffset;
+    sprite->x = card->x + (BSTATUS_CARD_W / 2) - 16;
+    sprite->y = card->y + 46 + contentYOffset;
 
     BattleStatus_UpdateHpBarTiles(card->hpBarSpriteId, hp, maxHp);
     BattleStatus_UpdateHpBarEndcaps(card->hpBarLeftEndcapSpriteId, card->hpBarRightEndcapSpriteId,
@@ -4202,9 +4279,305 @@ static void BattleStatus_GetNickname(enum BattlerId battler, u8 *dst)
 
 static u8 BattleStatus_GetAilmentFromBattler(enum BattlerId battler)
 {
-    u32 status = gBattleMons[battler].status1;
+    u32 status;
 
+    if (gBattleMons[battler].hp == 0)
+        return AILMENT_FNT;
+
+    status = gBattleMons[battler].status1;
     return GetAilmentFromStatus(status);
+}
+
+static void BattleStatus_SnapshotResetEntry(u8 battler)
+{
+    memset(&sBattleStatusLastSnapshot[battler], 0, sizeof(sBattleStatusLastSnapshot[battler]));
+    sBattleStatusLastSnapshotValid[battler] = FALSE;
+    sBattleStatusLastMonIdentity[battler] = 0;
+    sBattleStatusLastMonIdentityValid[battler] = FALSE;
+    sBattleStatusUnreadUpdates[battler] = FALSE;
+    sBattleStatusUpdateReasons[battler] = BSTATUS_UPDATE_REASON_NONE;
+    sBattleStatusUpdateLatchedTurn[battler] = 0;
+    sBattleStatusJustSwitchedIn[battler] = FALSE;
+}
+
+static void BattleStatus_SnapshotStoreEntry(u8 battler, u32 identity, const struct BattleStatusSnapshot *snapshot)
+{
+    sBattleStatusLastSnapshot[battler] = *snapshot;
+    sBattleStatusLastSnapshotValid[battler] = TRUE;
+    sBattleStatusLastMonIdentity[battler] = identity;
+    sBattleStatusLastMonIdentityValid[battler] = TRUE;
+}
+
+static u64 BattleStatus_GetTrackedVolatileMask(enum BattlerId battler)
+{
+    const struct BattlePokemon *mon = &gBattleMons[battler];
+    u64 mask = 0;
+
+#define TRACK_VOLATILE(bit, condition)          \
+    do                                          \
+    {                                           \
+        if (condition)                          \
+            mask |= ((u64)1 << (bit));          \
+    } while (0)
+
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_CRIT_BOOST,
+                   mon->volatiles.focusEnergy
+                || mon->volatiles.dragonCheer
+                || mon->volatiles.bonusCritStages > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_CONFUSION,
+                   mon->volatiles.confusionTurns > 0 || mon->volatiles.infiniteConfusion);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_INFATUATION, mon->volatiles.infatuation);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_NIGHTMARE, mon->volatiles.nightmare);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_DROWSY, mon->volatiles.yawn);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_ENCORE, mon->volatiles.encoreTimer > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_TORMENT, mon->volatiles.torment);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_GRUDGE, mon->volatiles.grudge);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_HEAL_BLOCK, mon->volatiles.healBlock);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_IDENTIFIED, mon->volatiles.foresight || mon->volatiles.miracleEye);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_CANT_ESCAPE, mon->volatiles.escapePrevention || mon->volatiles.noRetreat);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_LOCK_ON, mon->volatiles.lockOn);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_EMBARGO, mon->volatiles.embargo);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_CHARGE, mon->volatiles.chargeTimer > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_TAUNT, mon->volatiles.tauntTimer > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_TELEKINESIS, mon->volatiles.telekinesis);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_MAGNET_RISE, mon->volatiles.magnetRise);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_WISH, gBattleStruct->wish[battler].counter > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_INGRAIN, mon->volatiles.root);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_CURSE, mon->volatiles.cursed);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_DESTINY_BOND, mon->volatiles.destinyBond);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_BOUND, mon->volatiles.wrapped);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_BIDE, mon->volatiles.bideTurns > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_FUTURE_ATTACK, gBattleStruct->futureSight[battler].counter > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_UPROAR, mon->volatiles.uproarTurns > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_AQUA_RING, mon->volatiles.aquaRing);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_AUTOTOMIZE, mon->volatiles.autotomizeCount > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_SMACK_DOWN, mon->volatiles.smackDown);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_THROAT_CHOP, mon->volatiles.throatChopTimer > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_LASER_FOCUS, mon->volatiles.laserFocus || mon->volatiles.laserFocusTimer > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_TAR_SHOT, mon->volatiles.tarShot);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_OCTOLOCK, mon->volatiles.octolock);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_FIXATED, mon->volatiles.glaiveRush);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_STANCE_SWAP, mon->volatiles.powerTrick);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_SLOW_START, mon->volatiles.slowStartTimer > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_SALT_CURE, mon->volatiles.saltCure);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_SYRUPY, mon->volatiles.syrupBomb || mon->volatiles.syrupBombTimer > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_RAMPAGING, mon->volatiles.rampageTurns > 0);
+
+#undef TRACK_VOLATILE
+
+    return mask;
+}
+
+static void BattleStatus_BuildSnapshotForBattler(enum BattlerId battler, struct BattleStatusSnapshot *snapshot)
+{
+    const struct BattlePokemon *mon = &gBattleMons[battler];
+    enum BattleSide side = GetBattlerSide(battler);
+    enum Gimmick activeGimmick = GetActiveGimmick(battler);
+    u32 sideStatuses = gSideStatuses[side] & BSTATUS_TRACKED_SIDE_STATUS_BITS;
+
+    memset(snapshot, 0, sizeof(*snapshot));
+    snapshot->majorStatus = GetAilmentFromStatus(mon->status1);
+    snapshot->volatileMask = BattleStatus_GetTrackedVolatileMask(battler);
+    snapshot->critBoostLevel = mon->volatiles.bonusCritStages;
+    snapshot->autotomizeCount = mon->volatiles.autotomizeCount;
+    memcpy(snapshot->statStages, mon->statStages, sizeof(snapshot->statStages));
+    snapshot->species = mon->species;
+    snapshot->type1 = mon->types[0];
+    snapshot->type2 = mon->types[1];
+    snapshot->activeGimmick = (u8)activeGimmick;
+    snapshot->isPrimal = IsBattlerPrimalReverted(battler);
+    snapshot->isMega = (activeGimmick == GIMMICK_MEGA);
+    snapshot->isDynamaxed = (activeGimmick == GIMMICK_DYNAMAX);
+    if (snapshot->isDynamaxed)
+        snapshot->dynamaxTurns = gBattleStruct->dynamax.dynamaxTurns[battler];
+    snapshot->isTera = (activeGimmick == GIMMICK_TERA);
+    if (snapshot->isTera)
+        snapshot->teraType = GetBattlerTeraType(battler);
+    else
+        snapshot->teraType = TYPE_NONE;
+    snapshot->sideStatusBits = sideStatuses;
+    snapshot->stealthRock = IsHazardOnSide(side, HAZARDS_STEALTH_ROCK);
+    snapshot->stickyWeb = IsHazardOnSide(side, HAZARDS_STICKY_WEB);
+    if (IsHazardOnSide(side, HAZARDS_SPIKES))
+        snapshot->spikesLayers = gSideTimers[side].spikesAmount;
+    if (IsHazardOnSide(side, HAZARDS_TOXIC_SPIKES))
+        snapshot->toxicSpikesLayers = gSideTimers[side].toxicSpikesAmount;
+
+    if (IsOnPlayerSide(battler))
+    {
+        snapshot->allyItemKnown = TRUE;
+        snapshot->allyItem = mon->item;
+        snapshot->allyAbilityKnown = TRUE;
+        if (mon->ability != ABILITY_NONE && mon->ability < ABILITIES_COUNT)
+            snapshot->allyAbility = mon->ability;
+        else
+            snapshot->allyAbility = ABILITY_NONE;
+    }
+}
+
+static u16 BattleStatus_GetUpdateReasons(enum BattlerId battler, const struct BattleStatusSnapshot *previous, const struct BattleStatusSnapshot *current)
+{
+    u16 reasons = BSTATUS_UPDATE_REASON_NONE;
+    bool8 gimmickEnded = FALSE;
+    bool8 megaActivated;
+    bool8 dynamaxActivated;
+    bool8 teraActivated;
+    bool8 teraTypeChangedWhileActive;
+    u64 gainedVolatiles = current->volatileMask & ~previous->volatileMask;
+    u32 gainedSideStatuses = current->sideStatusBits & ~previous->sideStatusBits;
+
+    if ((previous->activeGimmick != GIMMICK_NONE && current->activeGimmick == GIMMICK_NONE)
+     || (previous->isPrimal && !current->isPrimal))
+        gimmickEnded = TRUE;
+
+    megaActivated = (!previous->isMega && current->isMega);
+    dynamaxActivated = (!previous->isDynamaxed && current->isDynamaxed);
+    teraActivated = (!previous->isTera && current->isTera);
+    teraTypeChangedWhileActive = (previous->isTera && current->isTera && previous->teraType != current->teraType);
+
+    if (current->majorStatus != previous->majorStatus && current->majorStatus != AILMENT_NONE)
+        reasons |= BSTATUS_UPDATE_REASON_STATUS;
+
+    if (gainedVolatiles != 0)
+        reasons |= BSTATUS_UPDATE_REASON_VOLATILE_GAIN;
+    if (current->critBoostLevel > previous->critBoostLevel
+     || current->autotomizeCount > previous->autotomizeCount)
+        reasons |= BSTATUS_UPDATE_REASON_VOLATILE_STACK_RAISE;
+
+    if (!previous->stealthRock && current->stealthRock)
+        reasons |= BSTATUS_UPDATE_REASON_HAZARD_GAIN;
+    if (!previous->stickyWeb && current->stickyWeb)
+        reasons |= BSTATUS_UPDATE_REASON_HAZARD_GAIN;
+    if (current->spikesLayers > previous->spikesLayers
+     || current->toxicSpikesLayers > previous->toxicSpikesLayers)
+        reasons |= BSTATUS_UPDATE_REASON_HAZARD_LAYER_RAISE;
+
+    if (gainedSideStatuses != 0)
+        reasons |= BSTATUS_UPDATE_REASON_SIDE_STATUS_GAIN;
+
+    if (memcmp(previous->statStages, current->statStages, sizeof(current->statStages)) != 0)
+        reasons |= BSTATUS_UPDATE_REASON_STAT_STAGE;
+
+    if (!gimmickEnded
+     && (current->species != previous->species
+      || (!previous->isPrimal && current->isPrimal)))
+        reasons |= BSTATUS_UPDATE_REASON_FORM_CHANGE;
+    if (!gimmickEnded
+     && (current->type1 != previous->type1 || current->type2 != previous->type2))
+        reasons |= BSTATUS_UPDATE_REASON_TYPE_CHANGE;
+    if (!gimmickEnded
+     && ((previous->activeGimmick != current->activeGimmick && current->activeGimmick != GIMMICK_NONE)
+      || teraTypeChangedWhileActive))
+        reasons |= BSTATUS_UPDATE_REASON_GIMMICK_ACTIVATED;
+    if (megaActivated)
+        reasons |= BSTATUS_UPDATE_REASON_GIMMICK_MEGA;
+    if (dynamaxActivated)
+        reasons |= BSTATUS_UPDATE_REASON_GIMMICK_DYNAMAX;
+    if (teraActivated || teraTypeChangedWhileActive)
+        reasons |= BSTATUS_UPDATE_REASON_GIMMICK_TERA;
+
+    if (IsOnPlayerSide(battler))
+    {
+        if ((!previous->allyItemKnown && current->allyItemKnown)
+         || (previous->allyItemKnown && current->allyItemKnown && previous->allyItem != current->allyItem))
+            reasons |= BSTATUS_UPDATE_REASON_ALLY_ITEM;
+
+        if ((!previous->allyAbilityKnown && current->allyAbilityKnown)
+         || (previous->allyAbilityKnown && current->allyAbilityKnown && previous->allyAbility != current->allyAbility))
+            reasons |= BSTATUS_UPDATE_REASON_ALLY_ABILITY;
+    }
+
+    return reasons;
+}
+
+static void BattleStatus_LogUpdateReasons(enum BattlerId battler, u16 reasons)
+{
+#if BSTATUS_DEBUG_UPDATE_REASON_LOG
+    if (reasons & BSTATUS_UPDATE_REASON_STATUS)
+        DebugPrintf("BattleStatus upd battler=%d STATUS", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_VOLATILE_GAIN)
+        DebugPrintf("BattleStatus upd battler=%d VOLATILE_GAIN", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_VOLATILE_STACK_RAISE)
+        DebugPrintf("BattleStatus upd battler=%d VOLATILE_STACK", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_HAZARD_GAIN)
+        DebugPrintf("BattleStatus upd battler=%d HAZARD_GAIN", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_HAZARD_LAYER_RAISE)
+        DebugPrintf("BattleStatus upd battler=%d HAZARD_LAYER", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_SIDE_STATUS_GAIN)
+        DebugPrintf("BattleStatus upd battler=%d SIDE_STATUS", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_FORM_CHANGE)
+        DebugPrintf("BattleStatus upd battler=%d FORM", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_TYPE_CHANGE)
+        DebugPrintf("BattleStatus upd battler=%d TYPE", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_STAT_STAGE)
+        DebugPrintf("BattleStatus upd battler=%d STAT_STAGE", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_GIMMICK_ACTIVATED)
+        DebugPrintf("BattleStatus upd battler=%d GIMMICK", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_GIMMICK_MEGA)
+        DebugPrintf("BattleStatus upd battler=%d MEGA", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_GIMMICK_DYNAMAX)
+        DebugPrintf("BattleStatus upd battler=%d DYNAMAX", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_GIMMICK_TERA)
+        DebugPrintf("BattleStatus upd battler=%d TERA", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_ALLY_ITEM)
+        DebugPrintf("BattleStatus upd battler=%d ALLY_ITEM", battler);
+    if (reasons & BSTATUS_UPDATE_REASON_ALLY_ABILITY)
+        DebugPrintf("BattleStatus upd battler=%d ALLY_ABILITY", battler);
+#else
+    (void)battler;
+    (void)reasons;
+#endif
+}
+
+static void BattleStatus_PrimeSnapshotsFromCurrentState(void)
+{
+    u8 battler;
+
+    for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+    {
+        if (battler < gBattlersCount && IsBattlerAlive(battler))
+        {
+            struct BattleStatusSnapshot snapshot;
+            u32 identity = BattleStatus_GetBattlerIdentity(battler);
+
+            BattleStatus_BuildSnapshotForBattler(battler, &snapshot);
+            BattleStatus_SnapshotStoreEntry(battler, identity, &snapshot);
+            sBattleStatusUnreadUpdates[battler] = FALSE;
+            sBattleStatusUpdateReasons[battler] = BSTATUS_UPDATE_REASON_NONE;
+            sBattleStatusUpdateLatchedTurn[battler] = gBattleTurnCounter;
+            sBattleStatusJustSwitchedIn[battler] = FALSE;
+        }
+        else
+        {
+            BattleStatus_SnapshotResetEntry(battler);
+        }
+    }
+
+    sBattleStatusSnapshotInitialized = TRUE;
+    sBattleStatusSnapshotTurn = gBattleTurnCounter;
+#if BSTATUS_DEBUG_UPDATE_REASON_LOG
+    DebugPrintf("BattleStatus snapshots initialized turn=%d battlers=%d", sBattleStatusSnapshotTurn, gBattlersCount);
+#endif
+}
+
+static void BattleStatus_ClearUnreadUpdatesForNewTurn(void)
+{
+    u8 battler;
+    u16 turn = gBattleTurnCounter;
+
+    for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+    {
+        if (sBattleStatusUnreadUpdates[battler]
+         && (u16)(turn - sBattleStatusUpdateLatchedTurn[battler]) > 1)
+        {
+            sBattleStatusUnreadUpdates[battler] = FALSE;
+            sBattleStatusUpdateReasons[battler] = BSTATUS_UPDATE_REASON_NONE;
+        }
+        sBattleStatusJustSwitchedIn[battler] = FALSE;
+    }
+#if BSTATUS_DEBUG_UPDATE_REASON_LOG
+    DebugPrintf("BattleStatus unread updates clear pass for turn=%d", gBattleTurnCounter);
+#endif
 }
 
 static void BattleStatus_RefreshUnreadUpdates(void)
@@ -4212,250 +4585,80 @@ static void BattleStatus_RefreshUnreadUpdates(void)
     u8 battler;
     u16 turn = gBattleTurnCounter;
 
-    // New battle/session guard: turn counter wrapped or reset.
     if (sBattleStatusSnapshotInitialized && turn < sBattleStatusSnapshotTurn)
         sBattleStatusSnapshotInitialized = FALSE;
 
     if (!sBattleStatusSnapshotInitialized)
+        BattleStatus_PrimeSnapshotsFromCurrentState();
+    else if (turn != sBattleStatusSnapshotTurn)
     {
-        bool8 markUnreadOnInit = (turn == 1);
-
-        for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
-        {
-            if (battler < gBattlersCount)
-            {
-                sBattleStatusLastTurnSnapshotHash[battler] = BattleStatus_CalcBattlerUpdateHash(battler);
-                sBattleStatusLastTurnSnapshotValid[battler] = TRUE;
-                sBattleStatusLastMonIdentity[battler] = BattleStatus_GetBattlerIdentity(battler);
-                sBattleStatusLastMonIdentityValid[battler] = TRUE;
-                sBattleStatusUnreadUpdates[battler] = markUnreadOnInit;
-            }
-            else
-            {
-                sBattleStatusLastTurnSnapshotHash[battler] = 0;
-                sBattleStatusLastTurnSnapshotValid[battler] = FALSE;
-                sBattleStatusLastMonIdentity[battler] = 0;
-                sBattleStatusLastMonIdentityValid[battler] = FALSE;
-                sBattleStatusUnreadUpdates[battler] = FALSE;
-            }
-        }
+        BattleStatus_ClearUnreadUpdatesForNewTurn();
         sBattleStatusSnapshotTurn = turn;
-        sBattleStatusSnapshotInitialized = TRUE;
-        return;
     }
 
-    // New turn: compare against previous turn's baseline, then set new baseline.
-    if (sBattleStatusSnapshotTurn != turn)
+    for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
     {
-        for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+        struct BattleStatusSnapshot currentSnapshot;
+        u32 identity;
+        u16 reasons;
+        u16 newReasons;
+
+        if (battler >= gBattlersCount || !IsBattlerAlive(battler))
         {
-            if (battler < gBattlersCount)
-            {
-                u32 identity = BattleStatus_GetBattlerIdentity(battler);
-                u32 hash = BattleStatus_CalcBattlerUpdateHash(battler);
-
-                if (sBattleStatusLastMonIdentityValid[battler]
-                 && identity != sBattleStatusLastMonIdentity[battler])
-                {
-                    sBattleStatusUnreadUpdates[battler] = FALSE;
-                }
-                else if (sBattleStatusLastTurnSnapshotValid[battler])
-                {
-                    sBattleStatusUnreadUpdates[battler] = (hash != sBattleStatusLastTurnSnapshotHash[battler]);
-                }
-                else
-                {
-                    sBattleStatusUnreadUpdates[battler] = FALSE;
-                }
-
-                sBattleStatusLastTurnSnapshotHash[battler] = hash;
-                sBattleStatusLastTurnSnapshotValid[battler] = TRUE;
-                sBattleStatusLastMonIdentity[battler] = identity;
-                sBattleStatusLastMonIdentityValid[battler] = TRUE;
-            }
-            else
-            {
-                sBattleStatusUnreadUpdates[battler] = FALSE;
-                sBattleStatusLastTurnSnapshotHash[battler] = 0;
-                sBattleStatusLastTurnSnapshotValid[battler] = FALSE;
-                sBattleStatusLastMonIdentity[battler] = 0;
-                sBattleStatusLastMonIdentityValid[battler] = FALSE;
-            }
-        }
-
-        sBattleStatusSnapshotTurn = turn;
-        return;
-    }
-
-    // Same turn: detect live changes (e.g. battle debug edits) against current turn baseline.
-    for (battler = 0; battler < gBattlersCount; battler++)
-    {
-        u32 identity = BattleStatus_GetBattlerIdentity(battler);
-        u32 hash = BattleStatus_CalcBattlerUpdateHash(battler);
-
-        if (sBattleStatusLastMonIdentityValid[battler]
-         && identity != sBattleStatusLastMonIdentity[battler])
-        {
-            sBattleStatusUnreadUpdates[battler] = FALSE;
-            sBattleStatusLastTurnSnapshotHash[battler] = hash;
-            sBattleStatusLastTurnSnapshotValid[battler] = TRUE;
-            sBattleStatusLastMonIdentity[battler] = identity;
-            sBattleStatusLastMonIdentityValid[battler] = TRUE;
+            BattleStatus_SnapshotResetEntry(battler);
             continue;
         }
 
-        if (sBattleStatusLastTurnSnapshotValid[battler] && hash != sBattleStatusLastTurnSnapshotHash[battler])
+        identity = BattleStatus_GetBattlerIdentity(battler);
+        BattleStatus_BuildSnapshotForBattler(battler, &currentSnapshot);
+
+        if (!sBattleStatusLastMonIdentityValid[battler] || !sBattleStatusLastSnapshotValid[battler])
+        {
+            BattleStatus_SnapshotStoreEntry(battler, identity, &currentSnapshot);
+            sBattleStatusUnreadUpdates[battler] = FALSE;
+            sBattleStatusUpdateReasons[battler] = BSTATUS_UPDATE_REASON_NONE;
+            sBattleStatusUpdateLatchedTurn[battler] = turn;
+            sBattleStatusJustSwitchedIn[battler] = FALSE;
+            continue;
+        }
+
+        if (identity != sBattleStatusLastMonIdentity[battler])
+        {
+            sBattleStatusUnreadUpdates[battler] = FALSE;
+            sBattleStatusUpdateReasons[battler] = BSTATUS_UPDATE_REASON_NONE;
+            sBattleStatusUpdateLatchedTurn[battler] = turn;
+            sBattleStatusJustSwitchedIn[battler] = TRUE;
+            BattleStatus_SnapshotStoreEntry(battler, identity, &currentSnapshot);
+#if BSTATUS_DEBUG_UPDATE_REASON_LOG
+            DebugPrintf("BattleStatus battler=%d SWITCH BASELINE SET turn=%d", battler, turn);
+#endif
+            continue;
+        }
+
+        reasons = BattleStatus_GetUpdateReasons(battler, &sBattleStatusLastSnapshot[battler], &currentSnapshot);
+        if (reasons != BSTATUS_UPDATE_REASON_NONE)
+            sBattleStatusUpdateLatchedTurn[battler] = turn;
+        newReasons = reasons & ~sBattleStatusUpdateReasons[battler];
+        if (newReasons != BSTATUS_UPDATE_REASON_NONE)
+        {
             sBattleStatusUnreadUpdates[battler] = TRUE;
+            sBattleStatusUpdateReasons[battler] |= newReasons;
+            if (sBattleStatusJustSwitchedIn[battler])
+            {
+#if BSTATUS_DEBUG_UPDATE_REASON_LOG
+                DebugPrintf("BattleStatus battler=%d POST_SWITCH_DIFF reasons=0x%X", battler, newReasons);
+#endif
+                sBattleStatusJustSwitchedIn[battler] = FALSE;
+            }
+            BattleStatus_LogUpdateReasons(battler, newReasons);
+        }
+        BattleStatus_SnapshotStoreEntry(battler, identity, &currentSnapshot);
     }
 }
 
 static u32 BattleStatus_GetBattlerIdentity(enum BattlerId battler)
 {
-    const struct BattlePokemon *mon = &gBattleMons[battler];
-    u32 hash = 2166136261u;
-
-    hash = BattleStatus_HashBytes(hash, &mon->personality, sizeof(mon->personality));
-    hash = BattleStatus_HashBytes(hash, &mon->species, sizeof(mon->species));
-    return hash;
-}
-
-static u32 BattleStatus_CalcBattlerUpdateHash(enum BattlerId battler)
-{
-    const struct BattlePokemon *mon = &gBattleMons[battler];
-    const enum Gimmick activeGimmick = GetActiveGimmick(battler);
-    const bool8 isPlayerSide = IsOnPlayerSide(battler);
-    const bool8 isPrimal = IsBattlerPrimalReverted(battler);
-    u64 effectsMask[(BSTATUS_EFFECT_COUNT + 63) / 64];
-    u32 hash = 2166136261u;
-    enum BattleStatusEffectId effectId;
-
-    // Opponent ability/item are hidden, so only track these on player side.
-    if (isPlayerSide)
-    {
-        hash = BattleStatus_HashBytes(hash, &mon->ability, sizeof(mon->ability));
-        hash = BattleStatus_HashBytes(hash, &mon->item, sizeof(mon->item));
-    }
-
-    // Species/form tracks gimmick changes like Mega/Primal form swaps.
-    hash = BattleStatus_HashBytes(hash, &mon->species, sizeof(mon->species));
-    hash = BattleStatus_HashBytes(hash, &mon->types, sizeof(mon->types));
-    hash = BattleStatus_HashBytes(hash, &mon->status1, sizeof(mon->status1));
-    // Intentionally ignore HP deltas so direct damage/healing alone does not trigger update indicators.
-    hash = BattleStatus_HashBytes(hash, &mon->statStages, sizeof(mon->statStages));
-    hash = BattleStatus_HashBytes(hash, &activeGimmick, sizeof(activeGimmick));
-    hash = BattleStatus_HashBytes(hash, &isPrimal, sizeof(isPrimal));
-
-    if (B_FLAG_TERA_ORB_CHARGED != 0)
-    {
-        enum Type teraType = GetBattlerTeraType(battler);
-        hash = BattleStatus_HashBytes(hash, &teraType, sizeof(teraType));
-    }
-
-    BattleStatus_GetActiveEffectsMask(battler, effectsMask);
-    for (effectId = 0; effectId < BSTATUS_EFFECT_COUNT; effectId++)
-    {
-        if (!BattleStatus_IsEffectPersonal(effectId))
-            continue;
-
-        if (effectsMask[effectId / 64] & ((u64)1 << (effectId % 64)))
-            hash = BattleStatus_HashBytes(hash, &effectId, sizeof(effectId));
-    }
-
-    return hash;
-}
-
-static bool8 BattleStatus_IsEffectPersonal(enum BattleStatusEffectId effectId)
-{
-    switch (effectId)
-    {
-    case BSTATUS_EFFECT_CRITICAL_HIT_BOOST:
-    case BSTATUS_EFFECT_CONFUSION:
-    case BSTATUS_EFFECT_INFATUATION:
-    case BSTATUS_EFFECT_NIGHTMARE:
-    case BSTATUS_EFFECT_DROWSY:
-    case BSTATUS_EFFECT_ENCORE:
-    case BSTATUS_EFFECT_TORMENT:
-    case BSTATUS_EFFECT_GRUDGE:
-    case BSTATUS_EFFECT_HEALING_PREVENTED:
-    case BSTATUS_EFFECT_IDENTIFIED:
-    case BSTATUS_EFFECT_MOVE_DISABLED:
-    case BSTATUS_EFFECT_CANT_ESCAPE:
-    case BSTATUS_EFFECT_LOCK_ON:
-    case BSTATUS_EFFECT_EMBARGO:
-    case BSTATUS_EFFECT_CHARGE:
-    case BSTATUS_EFFECT_TAUNT:
-    case BSTATUS_EFFECT_TELEKINESIS:
-    case BSTATUS_EFFECT_MAGNET_RISE:
-    case BSTATUS_EFFECT_WISH:
-    case BSTATUS_EFFECT_INGRAIN:
-    case BSTATUS_EFFECT_CURSE:
-    case BSTATUS_EFFECT_DESTINY_BOND:
-    case BSTATUS_EFFECT_BOUND:
-    case BSTATUS_EFFECT_BIDE:
-    case BSTATUS_EFFECT_FUTURE_ATTACK:
-    case BSTATUS_EFFECT_UPROAR:
-    case BSTATUS_EFFECT_AQUA_RING:
-    case BSTATUS_EFFECT_AUTOTOMIZE:
-    case BSTATUS_EFFECT_SMACK_DOWN:
-    case BSTATUS_EFFECT_THROAT_CHOP:
-    case BSTATUS_EFFECT_LASER_FOCUS:
-    case BSTATUS_EFFECT_TAR_SHOT:
-    case BSTATUS_EFFECT_OCTOLOCK:
-    case BSTATUS_EFFECT_FIXATED:
-    case BSTATUS_EFFECT_STANCE_SWAP:
-    case BSTATUS_EFFECT_SLOW_START:
-    case BSTATUS_EFFECT_SALT_CURE:
-    case BSTATUS_EFFECT_SYRUPY:
-    case BSTATUS_EFFECT_RAMPAGING:
-    case BSTATUS_EFFECT_POISONED:
-    case BSTATUS_EFFECT_BADLY_POISONED:
-    case BSTATUS_EFFECT_PARALYZED:
-    case BSTATUS_EFFECT_BURNED:
-    case BSTATUS_EFFECT_FROSTBITE:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
-static u32 BattleStatus_HashBytes(u32 hash, const void *data, u32 size)
-{
-    const u8 *bytes = data;
-    u32 i;
-
-    for (i = 0; i < size; i++)
-        hash = (hash * 16777619u) ^ bytes[i];
-
-    return hash;
-}
-
-static void BattleStatus_GetActiveEffectsMask(enum BattlerId battler, u64 *mask)
-{
-    u8 maskWords = (BSTATUS_EFFECT_COUNT + 63) / 64;
-    enum BattlerId savedBattler = sBattleStatusMenu.selectedBattlerId;
-    u8 savedCount = sBattleStatusMenu.detailActiveEffectsCount;
-    struct BattleStatusEffectEntry savedEffects[BSTATUS_DETAIL_MAX_ACTIVE_EFFECTS];
-    u8 i;
-
-    for (i = 0; i < maskWords; i++)
-        mask[i] = 0;
-
-    memcpy(savedEffects, sBattleStatusMenu.detailActiveEffects, sizeof(savedEffects));
-
-    sBattleStatusMenu.selectedBattlerId = battler;
-    sBattleStatusMenu.detailActiveEffectsCount = 0;
-    BattleStatus_DetailBuildActiveEffects();
-
-    for (i = 0; i < sBattleStatusMenu.detailActiveEffectsCount; i++)
-    {
-        u8 effectId = sBattleStatusMenu.detailActiveEffects[i].effectId;
-        if (effectId < BSTATUS_EFFECT_COUNT)
-            mask[effectId / 64] |= (u64)1 << (effectId % 64);
-    }
-
-    sBattleStatusMenu.selectedBattlerId = savedBattler;
-    sBattleStatusMenu.detailActiveEffectsCount = savedCount;
-    memcpy(sBattleStatusMenu.detailActiveEffects, savedEffects, sizeof(savedEffects));
+    return gBattleMons[battler].personality;
 }
 
 static bool8 BattleStatus_BattlerHasUnreadUpdates(enum BattlerId battler)
@@ -4464,6 +4667,12 @@ static bool8 BattleStatus_BattlerHasUnreadUpdates(enum BattlerId battler)
         return FALSE;
 
     return sBattleStatusUnreadUpdates[battler];
+}
+
+static void BattleStatus_OverviewGetCursorPos(const struct BattleStatusCard *card, s16 *outX, s16 *outY)
+{
+    *outX = card->x + 2;
+    *outY = card->y + (BSTATUS_CARD_H / 2) + 2;
 }
 
 static void BattleStatus_OverviewInitCursor(void)
@@ -4481,8 +4690,7 @@ static void BattleStatus_OverviewInitCursor(void)
 
     BattleStatus_OverviewSyncSelectedBattler();
 
-    cursorX = sBattleStatusMenu.cards[sBattleStatusMenu.selectedCardIndex].x - 8;
-    cursorY = sBattleStatusMenu.cards[sBattleStatusMenu.selectedCardIndex].y + (BSTATUS_CARD_H / 2);
+    BattleStatus_OverviewGetCursorPos(&sBattleStatusMenu.cards[sBattleStatusMenu.selectedCardIndex], &cursorX, &cursorY);
     sBattleStatusMenu.cursorSpriteId = CreateSprite(&sSpriteTemplate_BattleStatusCursor, cursorX, cursorY, 0);
     if (sBattleStatusMenu.cursorSpriteId != SPRITE_NONE)
         gSprites[sBattleStatusMenu.cursorSpriteId].oam.priority = 0;
@@ -4498,8 +4706,7 @@ static void BattleStatus_OverviewUpdateCursorPos(void)
         return;
 
     card = &sBattleStatusMenu.cards[sBattleStatusMenu.selectedCardIndex];
-    gSprites[sBattleStatusMenu.cursorSpriteId].x = card->x - 8;
-    gSprites[sBattleStatusMenu.cursorSpriteId].y = card->y + (BSTATUS_CARD_H / 2);
+    BattleStatus_OverviewGetCursorPos(card, &gSprites[sBattleStatusMenu.cursorSpriteId].x, &gSprites[sBattleStatusMenu.cursorSpriteId].y);
 }
 
 static void BattleStatus_RequestPageTransition(u8 targetPage)
@@ -4523,7 +4730,6 @@ static void BattleStatus_ProcessPageTransition(void)
     if (sBattleStatusPendingPage == BATTLE_STATUS_PAGE_NONE)
         return;
 
-    // Ensure at least one frame passes after teardown so old OAM/text is gone before backdrop swap.
     if (!sBattleStatusTransitionUnloaded)
     {
         sBattleStatusTransitionUnloaded = TRUE;
