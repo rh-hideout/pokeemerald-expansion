@@ -44,8 +44,8 @@ gText_Birch_SoItsPlayer::
 gText_Birch_YourePlayer::
 	.string "Ah, okay!\p"
 	.string "You're {PLAYER}{KUN} who lives\n"
-	.string "next door.\p"
-	.string "You are helping out at your\n"
+	.string "next door. So today's the day?\p"
+	.string "You are moving out to your\n"
 	.string "grandparents' ranch, right?\p"
 	.string "Make sure to stop by my LAB later.\n"
 	.string "I have a parting gift for you.\p"
