@@ -19,10 +19,10 @@ Route101_EventScript_HideMapNamePopup::
 Route101_EventScript_StartBirchRescue::
 	lockall
 	playbgm MUS_HELP, TRUE
+	setobjectxy LOCALID_ROUTE101_BIRCH, 9, 14
+	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 10, 14
 	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
 	closemessage
-	setobjectxy LOCALID_ROUTE101_BIRCH, 8, 16
-	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 9, 16
 	applymovement LOCALID_PLAYER, Route101_Movement_EnterScene
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchRunAway1
 	applymovement LOCALID_ROUTE101_ZIGZAGOON, Route101_Movement_ZigzagoonChase1
@@ -111,6 +111,9 @@ Route101_Movement_ZigzagoonChaseInCircles:
 	step_end
 
 Route101_Movement_ZigzagoonChase1:
+	walk_fast_left
+	walk_fast_down
+	walk_fast_down
 	jump_in_place_left
 	jump_in_place_left
 	step_end
@@ -164,6 +167,9 @@ Route101_Movement_BirchRunInCircles:
 	step_end
 
 Route101_Movement_BirchRunAway1:
+	walk_fast_down
+	walk_fast_down
+	walk_fast_left
 	jump_in_place_right
 	jump_in_place_right
 	step_end
@@ -208,7 +214,7 @@ Route101_EventScript_BirchsBag::
 	setflag FLAG_RESCUED_BIRCH
 	fadescreen FADE_TO_BLACK
 	removeobject LOCALID_ROUTE101_ZIGZAGOON
-	setobjectxy LOCALID_PLAYER, 6, 13
+	setobjectxy LOCALID_PLAYER, 8, 16
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
 	special ChooseStarter
