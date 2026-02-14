@@ -158,15 +158,18 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.4byte NULL\n";
 
-    text << "\t.2byte " << json_to_string(map_data, "music") << "\n"
-         << "\t.2byte " << json_to_string(layout, "id") << "\n"
+    text << "\t.2byte " << json_to_string(map_data, "music") << "\n";
+
+    text << "\t.2byte " << json_to_string(layout, "id") << "\n"
          << "\t.byte "  << json_to_string(map_data, "region_map_section") << "\n"
          << "\t.byte "  << json_to_string(map_data, "requires_flash") << "\n"
          << "\t.byte "  << json_to_string(map_data, "weather") << "\n"
          << "\t.byte "  << json_to_string(map_data, "map_type") << "\n";
 
-    if (version != "firered")
-        text << "\t.2byte 0\n";
+    if (!map_data["NightSong"].is_null())
+        text << "\t.2byte " << json_to_string(map_data, "NightSong") << "\n";
+    else
+        text << "\t.2byte MUS_NONE\n";
 
     if (version == "ruby")
         text << "\t.byte " << json_to_string(map_data, "show_map_name") << "\n";
