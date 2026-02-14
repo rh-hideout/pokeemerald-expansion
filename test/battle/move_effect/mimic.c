@@ -13,7 +13,8 @@ SINGLE_BATTLE_TEST("Mimic doesn't error when the last move used by the target re
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MIMIC, player);
     } THEN {
-        EXPECT_EQ(gLastMoves[1], MOVE_UNAVAILABLE); // This test depends on the current implementation of Transform, if this changes, the test should be changed
+        enum Move lastMove = gBattleMons[1].volatiles.lastMove;
+        EXPECT_EQ(lastMove, MOVE_UNAVAILABLE); // This test depends on the current implementation of Transform, if this changes, the test should be changed
     }
 }
 

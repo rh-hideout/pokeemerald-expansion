@@ -169,7 +169,6 @@ EWRAM_DATA u8 gChosenMovePos = 0;
 EWRAM_DATA u16 gCurrentMove = 0;
 EWRAM_DATA u16 gChosenMove = 0;
 EWRAM_DATA u16 gCalledMove = 0;
-EWRAM_DATA s32 gBideDmg[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastUsedItem = 0;
 EWRAM_DATA enum Ability gLastUsedAbility = 0;
 EWRAM_DATA enum BattlerId gBattlerAttacker = 0;
@@ -183,18 +182,8 @@ EWRAM_DATA const u8 *gBattlescriptCurrInstr = NULL;
 EWRAM_DATA u8 gChosenActionByBattler[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA const u8 *gSelectionBattleScripts[MAX_BATTLERS_COUNT] = {NULL};
 EWRAM_DATA const u8 *gPalaceSelectionBattleScripts[MAX_BATTLERS_COUNT] = {NULL};
-EWRAM_DATA u16 gLastPrintedMoves[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u16 gLastMoves[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u16 gLastLandedMoves[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u16 gLastHitByType[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u16 gLastUsedMoveType[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u16 gLastResultingMoves[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u16 gLockedMoves[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastUsedMove = 0;
-EWRAM_DATA u8 gLastHitBy[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u16 gChosenMoveByBattler[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u32 gHitMarker = 0;
-EWRAM_DATA u8 gBideTarget[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u32 gSideStatuses[NUM_BATTLE_SIDES] = {0};
 EWRAM_DATA struct SideTimer gSideTimers[NUM_BATTLE_SIDES] = {0};
 EWRAM_DATA u16 gPauseCounterBattle = 0;
@@ -220,7 +209,6 @@ EWRAM_DATA u8 *gLinkBattleSendBuffer = NULL;
 EWRAM_DATA u8 *gLinkBattleRecvBuffer = NULL;
 EWRAM_DATA struct BattleResources *gBattleResources = NULL;
 EWRAM_DATA u8 gActionSelectionCursor[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u8 gMoveSelectionCursor[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gBattlerStatusSummaryTaskId[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gBattlerInMenuId = 0;
 EWRAM_DATA bool8 gDoingBattleAnim = FALSE;
@@ -236,7 +224,6 @@ EWRAM_DATA struct FieldTimer gFieldTimers = {0};
 EWRAM_DATA u16 gBattleTurnCounter = 0;
 EWRAM_DATA enum BattlerId gBattlerAbility = 0;
 EWRAM_DATA struct QueuedStatBoost gQueuedStatBoosts[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA bool8 gHasFetchedBall = FALSE;
 EWRAM_DATA u16 gLastUsedBall = 0;
 EWRAM_DATA u16 gLastThrownBall = 0;
 EWRAM_DATA u16 gBallToDisplay = 0;
@@ -3060,18 +3047,18 @@ static void BattleStartClearSetData(void)
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         gBattleStruct->battlerState[i].isFirstTurn = 2;
-        gLastMoves[i] = MOVE_NONE;
-        gLastLandedMoves[i] = MOVE_NONE;
-        gLastHitByType[i] = 0;
-        gLastUsedMoveType[i] = 0;
-        gLastResultingMoves[i] = MOVE_NONE;
-        gLastHitBy[i] = 0xFF;
-        gLockedMoves[i] = MOVE_NONE;
-        gLastPrintedMoves[i] = MOVE_NONE;
+        gBattleMons[i].volatiles.lastMove = MOVE_NONE;
+        gBattleMons[i].volatiles.lastLandedMove = MOVE_NONE;
+        gBattleMons[i].volatiles.lastHitByType = TYPE_NONE;
+        gBattleMons[i].volatiles.lastUsedMoveType = TYPE_NONE;
+        gBattleMons[i].volatiles.lastResultingMove = MOVE_NONE;
+        gBattleMons[i].volatiles.lastHitBy = MAX_BATTLERS_COUNT;
+        gBattleMons[i].volatiles.lockedMove = MOVE_NONE;
+        gBattleMons[i].volatiles.lastPrintedMove = MOVE_NONE;
         gSelectionBattleScripts[i] = NULL;
         gPalaceSelectionBattleScripts[i] = NULL;
         gBattleStruct->lastTakenMove[i] = MOVE_NONE;
-        gBattleStruct->choicedMove[i] = MOVE_NONE;
+        gBattleMons[i].volatiles.choicedMove = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][0] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][1] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][2] = MOVE_NONE;
@@ -3083,7 +3070,7 @@ static void BattleStartClearSetData(void)
     gLastUsedMove = 0;
     gFieldStatuses = 0;
 
-    gHasFetchedBall = FALSE;
+    gBattleStruct->hasFetchedBall = FALSE;
     gLastUsedBall = 0;
 
     gBattlerAttacker = 0;
@@ -3226,7 +3213,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     }
 
     gActionSelectionCursor[battler] = 0;
-    gMoveSelectionCursor[battler] = 0;
+    gBattleMons[battler].volatiles.moveSelectionCursor = 0;
 
     if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
         gProtectStructs[battler].protected = PROTECT_NONE;
@@ -3250,20 +3237,13 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
     gBattleStruct->battlerState[battler].fainted = FALSE;
     gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
-    gLastMoves[battler] = MOVE_NONE;
-    gLastLandedMoves[battler] = MOVE_NONE;
-    gLastHitByType[battler] = 0;
-    gLastUsedMoveType[battler] = 0;
-    gLastResultingMoves[battler] = MOVE_NONE;
-    gLastPrintedMoves[battler] = MOVE_NONE;
-    gLastHitBy[battler] = 0xFF;
+    gBattleMons[battler].volatiles.lastHitBy = MAX_BATTLERS_COUNT;
 
     gBattleStruct->lastTakenMove[battler] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
-    gBattleStruct->battlerState[battler].stompingTantrumTimer = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
     gBattleStruct->battlerState[battler].canPickupItem = FALSE;
     gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
@@ -3286,7 +3266,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
     }
 
-    gBattleStruct->choicedMove[battler] = MOVE_NONE;
+    gBattleMons[battler].volatiles.choicedMove = MOVE_NONE;
     gBattleStruct->eventState.arenaTurn = 0xFF;
 
     // Reset damage to prevent things like red card activating if the switched-in mon is holding it
@@ -3341,7 +3321,7 @@ const u8* FaintClearSetData(enum BattlerId battler)
     }
 
     gActionSelectionCursor[battler] = 0;
-    gMoveSelectionCursor[battler] = 0;
+    gBattleMons[battler].volatiles.moveSelectionCursor = 0;
 
     if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
         gProtectStructs[battler].protected = PROTECT_NONE;
@@ -3358,15 +3338,8 @@ const u8* FaintClearSetData(enum BattlerId battler)
 
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
 
-    gLastMoves[battler] = MOVE_NONE;
-    gLastLandedMoves[battler] = MOVE_NONE;
-    gLastHitByType[battler] = 0;
-    gLastUsedMoveType[battler] = 0;
-    gLastResultingMoves[battler] = MOVE_NONE;
-    gLastPrintedMoves[battler] = MOVE_NONE;
-    gLastHitBy[battler] = 0xFF;
+    gBattleMons[battler].volatiles.lastHitBy = MAX_BATTLERS_COUNT;
 
-    gBattleStruct->choicedMove[battler] = MOVE_NONE;
     gBattleStruct->lastTakenMove[battler] = MOVE_NONE;
     gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
@@ -3901,7 +3874,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         {
             gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
             gChosenActionByBattler[battler] = B_ACTION_NONE;
-            gChosenMoveByBattler[battler] = MOVE_NONE;
+            gBattleMons[battler].volatiles.chosenMove = MOVE_NONE;
         }
         TurnValuesCleanUp(FALSE);
         memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
@@ -3995,14 +3968,14 @@ void BattleTurnPassed(void)
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         gChosenActionByBattler[battler] = B_ACTION_NONE;
-        gChosenMoveByBattler[battler] = MOVE_NONE;
+        gBattleMons[battler].volatiles.chosenMove = MOVE_NONE;
         gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleMons[battler].volatiles.electrified = FALSE;
         gBattleMons[battler].volatiles.flinched = FALSE;
         gBattleMons[battler].volatiles.powder = FALSE;
 
-        if (gBattleStruct->battlerState[battler].stompingTantrumTimer > 0)
-            gBattleStruct->battlerState[battler].stompingTantrumTimer--;
+        if (gBattleMons[battler].volatiles.stompingTantrumTimer > 0)
+            gBattleMons[battler].volatiles.stompingTantrumTimer--;
     }
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
@@ -4221,13 +4194,13 @@ static void HandleTurnActionSelectionState(void)
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
                         gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
-                        gBattleStruct->moveTarget[battler] = gBattleResources->bufferB[battler][3];
+                        gBattleMons[battler].volatiles.moveTarget = gBattleResources->bufferB[battler][3];
                         return;
                     }
                     else if (GetConfig(CONFIG_ENCORE_TARGET) < GEN_5 && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
                     {
-                        gChosenMoveByBattler[battler] = gBattleMons[battler].volatiles.encoredMove;
-                        gBattleStruct->chosenMovePositions[battler] = gBattleMons[battler].volatiles.encoredMovePos;
+                        gBattleMons[battler].volatiles.chosenMove = gBattleMons[battler].volatiles.encoredMove;
+                        gBattleMons[battler].volatiles.chosenMovePos = gBattleMons[battler].volatiles.encoredMovePos;
                         gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
                         if (gTestRunnerEnabled)
                         {
@@ -4467,10 +4440,10 @@ static void HandleTurnActionSelectionState(void)
                             }
 
                             // Get the chosen move position (and thus the chosen move) and target from the returned buffer.
-                            gBattleStruct->chosenMovePositions[battler] = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
-                            gChosenMoveByBattler[battler] = GetBattlerChosenMove(battler);
-                            gBattleStruct->moveTarget[battler] = gBattleResources->bufferB[battler][3];
-                            if (IsBattleMoveStatus(gChosenMoveByBattler[battler]) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
+                            gBattleMons[battler].volatiles.chosenMovePos = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
+                            gBattleMons[battler].volatiles.chosenMove = GetBattlerChosenMove(battler);
+                            gBattleMons[battler].volatiles.moveTarget = gBattleResources->bufferB[battler][3];
+                            if (IsBattleMoveStatus(gBattleMons[battler].volatiles.chosenMove) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
                                 gProtectStructs[battler].myceliumMight = TRUE;
                             if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LAGGING_TAIL)
                                 gProtectStructs[battler].laggingTail = TRUE;
@@ -4491,7 +4464,7 @@ static void HandleTurnActionSelectionState(void)
                                 UNUSED enum Gimmick gimmick = GIMMICK_NONE;
                                 if (gBattleResources->bufferB[battler][2] & RET_GIMMICK)
                                     gimmick = gBattleStruct->gimmick.usableGimmick[battler];
-                                TestRunner_Battle_CheckChosenMove(battler, gChosenMoveByBattler[battler], gBattleStruct->moveTarget[battler], gimmick);
+                                TestRunner_Battle_CheckChosenMove(battler, gBattleMons[battler].volatiles.chosenMove, gBattleMons[battler].volatiles.moveTarget, gimmick);
                             }
                         }
                         break;
@@ -5199,7 +5172,7 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
             {
                 gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
                 gBattlerAttacker = battler;
-                switch (GetMoveEffect(gChosenMoveByBattler[gBattlerAttacker]))
+                switch (GetMoveEffect(gBattleMons[gBattlerAttacker].volatiles.chosenMove))
                 {
                 case EFFECT_FOCUS_PUNCH:
                     BattleScriptExecute(BattleScript_FocusPunchSetUp);
@@ -5259,7 +5232,7 @@ static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32
 
     // Battler 1
     // Quick Draw
-    if (ability1 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gChosenMoveByBattler[battler1]) && quickDrawRandom[battler1])
+    if (ability1 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gBattleMons[battler1].volatiles.chosenMove) && quickDrawRandom[battler1])
         gProtectStructs[battler1].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler1].quickDraw
@@ -5269,7 +5242,7 @@ static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32
 
     // Battler 2
     // Quick Draw
-    if (ability2 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gChosenMoveByBattler[battler2]) && quickDrawRandom[battler2])
+    if (ability2 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gBattleMons[battler2].volatiles.chosenMove) && quickDrawRandom[battler2])
         gProtectStructs[battler2].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler2].quickDraw
@@ -5289,7 +5262,7 @@ static void CheckChangingTurnOrderEffects(void)
             battler = gBattlerAttacker = gBattleStruct->quickClawBattlerId;
             gBattleStruct->quickClawBattlerId++;
             if (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
-             && GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
+             && GetMoveEffect(gBattleMons[battler].volatiles.chosenMove) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
              && (gProtectStructs[battler].usedCustapBerry || gProtectStructs[battler].quickDraw)
              && !(gBattleMons[battler].status1 & STATUS1_SLEEP)
              && !(gBattleMons[gBattlerAttacker].volatiles.truantCounter)

@@ -621,7 +621,7 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
     aiData->items[battler] = gBattleMons[battler].item;
     holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
     aiData->holdEffectParams[battler] = GetBattlerHoldEffectParam(battler);
-    aiData->lastUsedMove[battler] = (gLastMoves[battler] == MOVE_UNAVAILABLE) ? MOVE_NONE : gLastMoves[battler];
+    aiData->lastUsedMove[battler] = (gBattleMons[battler].volatiles.lastMove == MOVE_UNAVAILABLE) ? MOVE_NONE : gBattleMons[battler].volatiles.lastMove;
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
     aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);
@@ -2886,7 +2886,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                  || IsMoveInstructBanned(instructedMove)
                  || MoveHasAdditionalEffectSelf(instructedMove, MOVE_EFFECT_RECHARGE)
                  || IsZMove(instructedMove)
-                 || (gLockedMoves[battlerDef] != MOVE_NONE && gLockedMoves[battlerDef] != MOVE_UNAVAILABLE)
+                 || (gBattleMons[battlerDef].volatiles.lockedMove != MOVE_NONE && gBattleMons[battlerDef].volatiles.lockedMove != MOVE_UNAVAILABLE)
                  || gBattleMons[battlerDef].volatiles.multipleTurns
                  || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 {
