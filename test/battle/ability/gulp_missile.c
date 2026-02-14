@@ -1,6 +1,32 @@
 #include "global.h"
 #include "test/battle.h"
 
+SINGLE_BATTLE_TEST("Gulp Missile: Cramorant cannot change between Gorging and Gulping Forms")
+{
+    u32 species, hp;
+    enum Move move;
+    PARAMETRIZE { species = SPECIES_CRAMORANT_GULPING; hp = 240; move = MOVE_BELLY_DRUM; }
+    PARAMETRIZE { species = SPECIES_CRAMORANT_GORGING; hp = 120; move = MOVE_RECOVER; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
+        PLAYER(SPECIES_CRAMORANT) { HP(hp); MaxHP(250); Ability(ABILITY_GULP_MISSILE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SURF); }
+        TURN { MOVE(player, move); }
+        TURN { MOVE(player, MOVE_SURF); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE_INSTANT, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE_INSTANT, player);
+    } THEN {
+        EXPECT_EQ(player->species, species);
+    }
+}
+
 SINGLE_BATTLE_TEST("Gulp Missile: If base Cramorant hits target with Surf it transforms into Gulping form if max HP is over 1/2")
 {
     GIVEN {
