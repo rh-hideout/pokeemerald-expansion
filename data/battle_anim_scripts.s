@@ -13354,6 +13354,7 @@ gBattleAnimMove_JawLock::
 	delay 1
 	end
 
+gBattleAnimGeneral_HeldItemBerry::
 gBattleAnimMove_StuffCheeks::
 	loadspritegfx ANIM_TAG_BERRY_NORMAL
 	loadspritegfx ANIM_TAG_SHARP_TEETH

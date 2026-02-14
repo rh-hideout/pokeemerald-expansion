@@ -22,12 +22,12 @@ SINGLE_BATTLE_TEST("Maranga Berry raises the holder's Sp. Def by one stage when 
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
         if (move == MOVE_SWIFT) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
             MESSAGE("Using Maranga Berry, the Sp. Def of the opposing Wobbuffet rose!");
         }
         else {
             NONE_OF {
-                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
                 MESSAGE("Using Maranga Berry, the Sp. Def of the opposing Wobbuffet rose!");
             }
         }
@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Maranga Berry raises the holder's Sp. Def by two stages with
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWIFT, player);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         MESSAGE("Using Maranga Berry, the Sp. Def of the opposing Applin sharply rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Maranga Berry doesn't trigger if the item hold user used a s
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWIFT, player);
         HP_BAR(opponent);
         NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
             MESSAGE("Using Maranga Berry, the Sp. Def of Applin sharply rose!");
         }
     } THEN {
@@ -84,7 +84,7 @@ DOUBLE_BATTLE_TEST("Maranga Berry doesn't trigger if partner was hit")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
     } THEN {
         EXPECT(opponentRight->item == ITEM_MARANGA_BERRY);
     }
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Maranga Berry doesn't trigger if the move was boosted by She
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PUNCH, opponent);
         HP_BAR(player);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
     }
