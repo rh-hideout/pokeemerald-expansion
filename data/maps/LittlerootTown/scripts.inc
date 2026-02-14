@@ -40,6 +40,7 @@ LittlerootTown_OnTransition:
 	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 2, LittlerootTown_EventScript_MoveMomToMaysDoor
 	call_if_unset FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_SetTwinPos
 	call_if_eq VAR_LITTLEROOT_TOWN_STATE, 3, LittlerootTown_EventScript_SetMomStandingInFrontOfDoorPos
+	call_if_eq VAR_LITTLEROOT_TOWN_STATE, 3, LittlerootTown_EventScript_ShowMovingTruck
 	call_if_eq VAR_LITTLEROOT_HOUSES_STATE_MAY, 4, LittlerootTown_EventScript_SetExitedHouseAfterLatiSSTicketEvent
 	call_if_eq VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 4, LittlerootTown_EventScript_SetExitedHouseAfterLatiSSTicketEvent
 	call_if_eq VAR_OLDALE_RIVAL_STATE, 1, LittlerootTown_EventScript_MoveRivalFromOldale
@@ -47,6 +48,20 @@ LittlerootTown_OnTransition:
 	call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1, LittlerootTown_EventScript_HideMapNamePopup
 	call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2, LittlerootTown_EventScript_LeftLabAfterDexUpgrade
 	end
+
+LittlerootTown_EventScript_ShowMovingTruck::
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_ShowBrendanTruck
+	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_ShowMayTruck
+	return
+
+LittlerootTown_EventScript_ShowBrendanTruck::
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK
+	return
+
+LittlerootTown_EventScript_ShowMayTruck::
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK
+	return
 
 LittlerootTown_EventScript_LeftLabAfterDexUpgrade::
 	setvar VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 3
@@ -476,11 +491,7 @@ LittlerootTown_EventScript_GiveRunningShoesTrigger::
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_MomApproachPlayerMale
 	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_MomApproachPlayerFemale
-	call LittlerootTown_EventScript_GiveRunningShoes
-	checkplayergender
-	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_MomReturnHomeMale
-	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_MomReturnHomeFemale
-	goto LittlerootTown_EventScript_SetReceivedRunningShoes
+	goto LittlerootTown_EventScript_GiveRunningShoes
 	end
 
 LittlerootTown_EventScript_SetHomeDoorCoordsMale::
@@ -598,6 +609,9 @@ LittlerootTown_EventScript_MomReturnHomeMale::
 	call_if_eq VAR_0x8008, 3, LittlerootTown_EventScript_MomReturnHomeMale3
 	call_if_eq VAR_0x8008, 4, LittlerootTown_EventScript_MomReturnHomeMale4
 	call_if_eq VAR_0x8008, 5, LittlerootTown_EventScript_MomReturnHomeMale5
+	call_if_eq VAR_0x8008, 6, LittlerootTown_EventScript_MomReturnHomeMale6
+	call_if_eq VAR_0x8008, 7, LittlerootTown_EventScript_MomReturnHomeMale7
+	call_if_eq VAR_0x8008, 8, LittlerootTown_EventScript_MomReturnHomeMale8
 	return
 
 LittlerootTown_EventScript_MomReturnHomeFemale::
@@ -607,24 +621,31 @@ LittlerootTown_EventScript_MomReturnHomeFemale::
 	call_if_eq VAR_0x8008, 3, LittlerootTown_EventScript_MomReturnHomeFemale3
 	call_if_eq VAR_0x8008, 4, LittlerootTown_EventScript_MomReturnHomeFemale4
 	call_if_eq VAR_0x8008, 5, LittlerootTown_EventScript_MomReturnHomeFemale5
+	call_if_eq VAR_0x8008, 6, LittlerootTown_EventScript_MomReturnHomeFemale6
+	call_if_eq VAR_0x8008, 7, LittlerootTown_EventScript_MomReturnHomeFemale7
+	call_if_eq VAR_0x8008, 8, LittlerootTown_EventScript_MomReturnHomeFemale8
 	return
 
 LittlerootTown_EventScript_MomReturnHome0::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHome0
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHome0
 	waitmovement 0
 	return
 
 LittlerootTown_EventScript_MomReturnHome1::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHome1
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHome1
 	waitmovement 0
 	return
 
 LittlerootTown_EventScript_MomReturnHomeMale2::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHomeMale2
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHomeMale2
 	waitmovement 0
 	opendoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
 	closedoor VAR_0x8009, VAR_0x800A
@@ -633,10 +654,12 @@ LittlerootTown_EventScript_MomReturnHomeMale2::
 
 LittlerootTown_EventScript_MomReturnHomeMale3::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHomeMale3
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHomeMale3
 	waitmovement 0
 	opendoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
 	closedoor VAR_0x8009, VAR_0x800A
@@ -645,10 +668,12 @@ LittlerootTown_EventScript_MomReturnHomeMale3::
 
 LittlerootTown_EventScript_MomReturnHomeMale4::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHomeMale4
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHomeMale4
 	waitmovement 0
 	opendoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
 	closedoor VAR_0x8009, VAR_0x800A
@@ -657,60 +682,75 @@ LittlerootTown_EventScript_MomReturnHomeMale4::
 
 LittlerootTown_EventScript_MomReturnHomeMale5::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHomeMale5
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHomeMale5
 	waitmovement 0
 	opendoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
 	closedoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	return
 
 LittlerootTown_EventScript_MomReturnHomeFemale2::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHomeFemale2
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHomeFemale2
 	waitmovement 0
 	opendoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
 	closedoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	return
 
 LittlerootTown_EventScript_MomReturnHomeFemale3::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHomeFemale3
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHomeFemale3
 	waitmovement 0
 	opendoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
 	closedoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	return
 
 LittlerootTown_EventScript_MomReturnHomeFemale4::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHomeFemale4
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHomeFemale4
 	waitmovement 0
 	opendoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
 	closedoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	return
 
 LittlerootTown_EventScript_MomReturnHomeFemale5::
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHomeFemale5
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHomeFemale5
 	waitmovement 0
 	opendoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
 	closedoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	return
@@ -865,12 +905,119 @@ LittlerootTown_Movement_MomExitThroughDoor:
 	walk_up
 	step_end
 
+LittlerootTown_Movement_PlayerExitThroughDoor:
+	walk_up
+	walk_up
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHome0:
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHome1:
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHomeMale2:
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHomeMale3:
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHomeMale4:
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHomeMale5:
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHomeFemale2:
+	walk_down
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHomeFemale3:
+	walk_down
+	walk_right
+	walk_right
+	walk_right
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHomeFemale4:
+	walk_down
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHomeFemale5:
+	walk_down
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	step_end
+
 LittlerootTown_EventScript_Mom::
 	lock
 	faceplayer
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_SetHomeDoorCoordsMale
 	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_SetHomeDoorCoordsFemale
+	call LittlerootTown_EventScript_SetMomDirectTalkTrigger
 	call LittlerootTown_EventScript_GiveRunningShoes
 	applymovement LOCALID_LITTLEROOT_MOM, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
@@ -884,6 +1031,129 @@ LittlerootTown_EventScript_Mom::
 	goto LittlerootTown_EventScript_SetReceivedRunningShoes
 	end
 
+LittlerootTown_EventScript_SetMomDirectTalkTrigger::
+	compare VAR_FACING, DIR_NORTH
+	call_if_eq LittlerootTown_EventScript_SetMomTrigger6
+	compare VAR_FACING, DIR_EAST
+	call_if_eq LittlerootTown_EventScript_SetMomTrigger7
+	compare VAR_FACING, DIR_WEST
+	call_if_eq LittlerootTown_EventScript_SetMomTrigger8
+	return
+
+LittlerootTown_EventScript_SetMomTrigger6::
+	setvar VAR_0x8008, 6
+	return
+
+LittlerootTown_EventScript_SetMomTrigger7::
+	setvar VAR_0x8008, 7
+	return
+
+LittlerootTown_EventScript_SetMomTrigger8::
+	setvar VAR_0x8008, 8
+	return
+
+LittlerootTown_EventScript_MomReturnHomeMale6::
+	applymovement LOCALID_LITTLEROOT_MOM, Common_Movement_WalkInPlaceFasterUp
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
+	waitmovement 0
+	opendoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
+	waitmovement 0
+	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
+	closedoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	return
+
+LittlerootTown_EventScript_MomReturnHomeMale7::
+	applymovement LOCALID_LITTLEROOT_MOM, Common_Movement_WalkInPlaceFasterUp
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHome7
+	waitmovement 0
+	opendoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
+	waitmovement 0
+	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
+	closedoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	return
+
+LittlerootTown_EventScript_MomReturnHomeMale8::
+	applymovement LOCALID_LITTLEROOT_MOM, Common_Movement_WalkInPlaceFasterUp
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHome8
+	waitmovement 0
+	opendoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
+	waitmovement 0
+	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
+	closedoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	return
+
+LittlerootTown_EventScript_MomReturnHomeFemale6::
+	applymovement LOCALID_LITTLEROOT_MOM, Common_Movement_WalkInPlaceFasterUp
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
+	waitmovement 0
+	opendoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
+	waitmovement 0
+	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
+	closedoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	return
+
+LittlerootTown_EventScript_MomReturnHomeFemale7::
+	applymovement LOCALID_LITTLEROOT_MOM, Common_Movement_WalkInPlaceFasterUp
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHome7
+	waitmovement 0
+	opendoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
+	waitmovement 0
+	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
+	closedoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	return
+
+LittlerootTown_EventScript_MomReturnHomeFemale8::
+	applymovement LOCALID_LITTLEROOT_MOM, Common_Movement_WalkInPlaceFasterUp
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerReturnHome8
+	waitmovement 0
+	opendoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
+	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
+	waitmovement 0
+	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
+	closedoor VAR_0x8009, VAR_0x800A
+	waitdooranim
+	return
+
+LittlerootTown_Movement_PlayerReturnHome7:
+	walk_down
+	walk_right
+	walk_in_place_faster_up
+	step_end
+
+LittlerootTown_Movement_PlayerReturnHome8:
+	walk_down
+	walk_left
+	walk_in_place_faster_up
+	step_end
+
 LittlerootTown_EventScript_SetReceivedRunningShoes::
 	removeobject LOCALID_LITTLEROOT_MOM
 	setflag FLAG_SYS_B_DASH
@@ -892,16 +1162,43 @@ LittlerootTown_EventScript_SetReceivedRunningShoes::
 	end
 
 LittlerootTown_EventScript_GiveRunningShoes::
+	msgbox LittlerootTown_Text_TruckIsHere, MSGBOX_DEFAULT
 	msgbox LittlerootTown_Text_WearTheseRunningShoes, MSGBOX_DEFAULT
 	playfanfare MUS_OBTAIN_ITEM
 	message LittlerootTown_Text_SwitchShoesWithRunningShoes
 	waitfanfare
 	setflag FLAG_RECEIVED_RUNNING_SHOES
+	setflag FLAG_SYS_B_DASH
 	msgbox LittlerootTown_Text_ExplainRunningShoes, MSGBOX_DEFAULT
 	msgbox LittlerootTown_Text_ComeHomeIfAnythingHappens, MSGBOX_DEFAULT
+	msgbox LittlerootTown_Text_HelpPack, MSGBOX_DEFAULT
 	closemessage
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_MomReturnHomeMale
+	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_MomReturnHomeFemale
 	delay 30
-	return
+	fadescreen FADE_TO_BLACK
+	playse SE_BANG
+	delay 60
+	playse SE_WALL_HIT
+	delay 60
+	setvar VAR_LITTLEROOT_TOWN_STATE, 4
+	removeobject LOCALID_LITTLEROOT_MOM
+	warpsilent MAP_INSIDE_OF_TRUCK, 2, 2
+	waitstate
+	release
+	end
+
+LittlerootTown_Text_TruckIsHere:
+	.string "MOM: Oh, {PLAYER}! The moving truck\n"
+	.string "arrived while you were at the LAB!\p"
+	.string "Everything is so hectic right now!\n"
+	.string "But I saw you with PROF. BIRCH…$"
+
+LittlerootTown_Text_HelpPack:
+	.string "MOM: Anyway, since you are here,\n"
+	.string "why don't you help me pack?\p"
+	.string "Come inside, let's get organized!$"
 
 LittlerootTown_Text_OurNewHomeLetsGoInside:
 	.string "MOM: {PLAYER}, we're here, honey!\p"
