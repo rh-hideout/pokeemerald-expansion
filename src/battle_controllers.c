@@ -32,6 +32,7 @@
 
 static EWRAM_DATA u8 sLinkSendTaskId = 0;
 static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
+static EWRAM_DATA bool8 sRogueBattleInputStarted = FALSE;
 
 COMMON_DATA void (*gBattlerControllerFuncs[MAX_BATTLERS_COUNT])(u32 battler) = {0};
 COMMON_DATA u8 gBattleControllerData[MAX_BATTLERS_COUNT] = {0}; // Used by the battle controllers to store misc sprite/task IDs for each battler
@@ -3081,17 +3082,21 @@ void BtlController_HandleSwitchInTryShinyAnim(u32 battler)
 
 u32 Rogue_GetBattleSpeedScale(bool32 forHealthbar)
 {
-    u8 battleSceneOption = VarGet(B_BATTLE_SPEED); // Originally GetBattleSceneOption() with a saveblock stored value;
+    u8 battleSceneOption = VarGet(VAR_BATTLE_SPEED); // Originally GetBattleSceneOption() with a saveblock stored value;
 
     // Hold L to slow down
     if(JOY_HELD(L_BUTTON))
         return 1;
 
+    // Reset for intros/new battles until move selection starts.
+    if (!InBattleChoosingMoves() && !InBattleRunningActions())
+        sRogueBattleInputStarted = FALSE;
+
     // We want to speed up all anims until input selection starts
     if(InBattleChoosingMoves())
-        gBattleStruct->hasBattleInputStarted = TRUE;
+        sRogueBattleInputStarted = TRUE;
 
-    if(gBattleStruct->hasBattleInputStarted)
+    if(sRogueBattleInputStarted)
     {
         // Always run at 1x speed here
         if(InBattleChoosingMoves())
@@ -3119,7 +3124,7 @@ u32 Rogue_GetBattleSpeedScale(bool32 forHealthbar)
 
     // Print text at a readable speed still
     case OPTIONS_BATTLE_SCENE_DISABLED:
-        if(gBattleStruct->hasBattleInputStarted)
+        if(sRogueBattleInputStarted)
             return forHealthbar ? 10 : 1;
         else
             return 4;
