@@ -76,8 +76,8 @@ enum FollowerNPCCreateDebugMenu
     DEBUG_FNPC_STEVEN,
     DEBUG_FNPC_WALLY,
     DEBUG_FNPC_RED,
-    DEBUG_FNPC_LEAF,
-    DEBUG_FNPC_COUNT,
+    DEBUG_FNPC_LEAF
+    #define DEBUG_FNPC_COUNT (DEBUG_FNPC_LEAF + 1)
 };
 
 enum FlagsVarsDebugMenu
@@ -1624,8 +1624,6 @@ void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
         case TIME_EVENING:
         case TIME_NIGHT:
             StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[timeOfDay]);
-            break;
-        case TIMES_OF_DAY_COUNT:
             break;
     }
 }
@@ -4137,8 +4135,8 @@ static void DebugAction_Party_ClearParty(u8 taskId)
 enum DebugTrainerIds
 {
     DEBUG_TRAINER_PLAYER,
-    DEBUG_TRAINER_AI,
-    DEBUG_TRAINERS_COUNT
+    DEBUG_TRAINER_AI
+    #define DEBUG_TRAINERS_COUNT (DEBUG_TRAINER_AI + 1)
 };
 
 const struct Trainer sDebugTrainers[DIFFICULTY_COUNT][DEBUG_TRAINERS_COUNT] =

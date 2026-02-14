@@ -133,8 +133,8 @@ enum {
 enum {
     RESULTS_PAGE_PRESSES,
     RESULTS_PAGE_RANDOM,
-    RESULTS_PAGE_CRUSHING,
-    NUM_RESULTS_PAGES,
+    RESULTS_PAGE_CRUSHING
+    #define NUM_RESULTS_PAGES (RESULTS_PAGE_CRUSHING + 1)
 };
 // Random pages, see above
 // "Neatness" is how many of the player's inputs were at a regular interval
@@ -143,8 +143,8 @@ enum {
 enum {
     RESULTS_PAGE_NEATNESS,
     RESULTS_PAGE_COOPERATIVE,
-    RESULTS_PAGE_POWER,
-    NUM_RANDOM_RESULTS_PAGES
+    RESULTS_PAGE_POWER
+    #define NUM_RANDOM_RESULTS_PAGES (RESULTS_PAGE_POWER + 1)
 };
 
 #define PLAY_AGAIN_YES        0

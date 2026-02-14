@@ -71,8 +71,8 @@ STATIC_ASSERT(DN_VAR_STEP_COUNTER != 0, DNVarStepCounter_Must_Not_Be_Zero);
 enum WindowIds
 {
     WINDOW_INFO,
-    WINDOW_REGISTERED,
-    WINDOW_COUNT,
+    WINDOW_REGISTERED
+    #define WINDOW_COUNT (WINDOW_REGISTERED + 1)
 };
 
 enum Statuses
