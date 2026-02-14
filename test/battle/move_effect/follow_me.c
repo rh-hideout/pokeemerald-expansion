@@ -34,6 +34,47 @@ DOUBLE_BATTLE_TEST("Follow Me redirects single target moves used by opponents to
     }
 }
 
+DOUBLE_BATTLE_TEST("Follow Me redirects random target moves used by opponents to user")
+{
+    PASSES_RANDOMLY(2, 2, RNG_RANDOM_TARGET);
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_OUTRAGE) == MOVE_TARGET_RANDOM);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, MOVE_OUTRAGE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_OUTRAGE, opponentLeft);
+        HP_BAR(playerRight);
+        NOT HP_BAR(playerLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Follow Me does not change Me First's copy target but redirects the copied move")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_ME_FIRST) == MOVE_TARGET_OPPONENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
+        PLAYER(SPECIES_WYNAUT) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(120); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_FOLLOW_ME);
+               MOVE(playerLeft, MOVE_ME_FIRST, target: opponentLeft);
+               MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ME_FIRST, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        HP_BAR(opponentRight);
+        NOT HP_BAR(opponentLeft);
+    }
+}
+
 TO_DO_BATTLE_TEST("Follow Me doesn't redirect opponent moves that can't affect opponents") //Eg. Helping Hand
 TO_DO_BATTLE_TEST("Follow Me no longer redirects if the center of attention faints mid-turn")
 TO_DO_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")

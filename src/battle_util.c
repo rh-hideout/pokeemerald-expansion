@@ -401,7 +401,9 @@ bool32 HandleMoveTargetRedirection(void)
     enum Ability ability = GetBattlerAbility(gBattleStruct->moveTarget[gBattlerAttacker]);
 
     if (IsAffectedByFollowMe(gBattlerAttacker, side, gCurrentMove)
-     && moveTarget == MOVE_TARGET_SELECTED
+     && moveEffect != EFFECT_ME_FIRST
+     && moveEffect != EFFECT_COPYCAT
+     && (moveTarget == MOVE_TARGET_SELECTED || moveTarget == MOVE_TARGET_OPPONENT || moveTarget & MOVE_TARGET_RANDOM)
      && !IsBattlerAlly(gBattlerAttacker, gSideTimers[side].followmeTarget))
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = gSideTimers[side].followmeTarget; // follow me moxie fix
