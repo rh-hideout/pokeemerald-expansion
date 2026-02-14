@@ -1088,6 +1088,8 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
     case EFFECT_FLING:
         if (!CanFling(ctx->battlerAtk))
             battleScript = BattleScript_ButItFailed;
+        else // set fling item
+            gBattleStruct->flingItem = gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
         break;    
     case EFFECT_POLTERGEIST:
         if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
@@ -1338,14 +1340,6 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleContext 
         gBattlescriptCurrInstr = battleScript;
         return CANCELER_RESULT_FAILURE;
     }
-
-    return CANCELER_RESULT_SUCCESS;
-}
-
-static enum CancelerResult CancelerSetFlingItem(struct BattleContext *ctx)
-{
-    if (GetMoveEffect(ctx->move) == EFFECT_FLING)
-        gBattleStruct->flingItem = gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
 
     return CANCELER_RESULT_SUCCESS;
 }
@@ -1913,7 +1907,6 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCo
     [CANCELER_BIDE] = CancelerBide,
     [CANCELER_MOVE_FAILURE] = CancelerMoveFailure,
     [CANCELER_MOVE_EFFECT_FAILURE_TARGET] = CancelerMoveEffectFailureTarget,
-    [CANCELER_SET_FLING_ITEM] = CancelerSetFlingItem,
     [CANCELER_POWDER_STATUS] = CancelerPowderStatus,
     [CANCELER_PRIORITY_BLOCK] = CancelerPriorityBlock,
     [CANCELER_PROTEAN] = CancelerProtean,
