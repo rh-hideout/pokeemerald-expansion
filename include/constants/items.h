@@ -1100,9 +1100,11 @@ enum __attribute__((packed)) Item
 #define MAX_PYRAMID_ITEM_DIGITS ((MAX_PYRAMID_BAG_ITEM_CAPACITY > 99) ? 3 : 2)
 
 // Secondary IDs for rods
-#define OLD_ROD   0
-#define GOOD_ROD  1
-#define SUPER_ROD 2
+enum FishingRod {
+    OLD_ROD = 0,
+    GOOD_ROD,
+    SUPER_ROD,
+};
 
 // Secondary IDs for bikes
 #define MACH_BIKE 0

@@ -16,78 +16,77 @@ ARGS = [
     "--copy",
 ]
 
-TIME_OF_DAY_DEFAULT = 0
 
-
-def GetWildEncounterFile():
+def get_wild_encounter_file():
     if not os.path.exists("Makefile"):
         print("Please run this script from the project's root folder.")
         quit()
 
-    wFile = open("src/data/wild_encounters.json")
-    wData = json.load(wFile)
+    file = open("src/data/wild_encounters.json")
+    data = json.load(file)
+    config = Config('include/config/overworld.h', 'include/constants/rtc.h', data)
 
-    config = Config('include/config/overworld.h', 'include/constants/rtc.h', wData)
-    timeOfDay = config.times_of_day
+    data_backup = json.dumps(data, indent=2)
+    file_backup = open("src/data/wild_encounters.json.bak", mode="w", encoding="utf-8")
+    file_backup.write(data_backup)
 
-
-    wBackupData = json.dumps(wData, indent=2)
-    wBackupFile = open("src/data/wild_encounters.json.bak", mode="w", encoding="utf-8")
-    wBackupFile.write(wBackupData)
-
-    global COPY_FULL_ENCOUNTER
-    COPY_FULL_ENCOUNTER = False
+    copy_full_encounter = False
+    time_of_day_default = 0
 
     for arg in ARGS:
         if len(sys.argv) > 1:
             if arg in sys.argv[1:3]:
                 if arg == ARGS[0]:
-                    COPY_FULL_ENCOUNTER = True
+                    copy_full_encounter = True
 
-    encounterCount = 0
-    for group in wData["wild_encounter_groups"]:
-        wEncounters = wData["wild_encounter_groups"][encounterCount]["encounters"]
-        editMap = True
+    encounter_count = 0
+    for group in data["wild_encounter_groups"]:
+        encounters = data["wild_encounter_groups"][encounter_count]["encounters"]
+        edit_map = True
 
-        wEncounters_New = list()
-        for map in wEncounters:
-            for suffix in timeOfDay.values():
-                tempSuffix = "_" + suffix
-                if tempSuffix in map["base_label"]:
-                    editMap = False
+        encounters_new = list()
+        for encounter_map in encounters:
+            for suffix in config.times_of_day.values():
+                temp_suffix = "_" + suffix
+                if temp_suffix in encounter_map["base_label"]:
+                    edit_map = False
                     break
                 else:
-                    editMap = True
+                    edit_map = True
 
-            if editMap:
+            if edit_map:
                 k = 0
-                for suffix in timeOfDay.values():
-                    tempDict = dict()
-                    if k == TIME_OF_DAY_DEFAULT or COPY_FULL_ENCOUNTER:
-                        tempDict = map.copy()
+                for suffix in config.times_of_day.values():
+                    temp_dict = dict()
+                    if k == time_of_day_default or copy_full_encounter:
+                        temp_dict = encounter_map.copy()
 
-                    tempMapLabel = ""
-                    if "map" in map:
-                        tempMapLabel = map["map"]
-                        tempDict["map"] = tempMapLabel
+                    temp_map_label = ""
+                    if "map" in encounter_map:
+                        temp_map_label = encounter_map["map"]
+                        temp_dict["map"] = temp_map_label
 
-                    tempLabel = map["base_label"] + "_" + suffix
-                    tempDict["base_label"] = tempLabel
-                    wEncounters_New.append(tempDict)
-                    if map["base_label"] in wEncounters_New:
-                        wEncounters_New[map["base_label"]].pop()
+                    temp_label = encounter_map["base_label"] + "_" + suffix
+                    temp_dict["base_label"] = temp_label
 
-                    print(tempLabel + " added")
+                    if "encounter_sets" not in temp_dict:
+                        temp_dict["encounter_sets"] = dict()
+
+                    encounters_new.append(temp_dict)
+
+                    if encounter_map["base_label"] in encounters_new:
+                        encounters_new[encounter_map["base_label"]].pop()
+
                     k += 1
             else:
-                wEncounters_New.append(map.copy())
+                encounters_new.append(encounter_map.copy())
 
-        wData["wild_encounter_groups"][encounterCount]["encounters"] = wEncounters_New
-        encounterCount += 1
+        data["wild_encounter_groups"][encounter_count]["encounters"] = encounters_new
+        encounter_count += 1
 
-    wNewData = json.dumps(wData, indent=2)
-    wNewFile = open("src/data/wild_encounters.json", mode="w", encoding="utf-8")
-    wNewFile.write(wNewData)
+    data_new = json.dumps(data, indent=2)
+    file_new = open("src/data/wild_encounters.json", mode="w", encoding="utf-8")
+    file_new.write(data_new)
 
 
-GetWildEncounterFile()
+get_wild_encounter_file()

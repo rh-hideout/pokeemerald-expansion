@@ -122,7 +122,7 @@ static void SetAreaHasMon(u16, u16);
 static void SetSpecialMapHasMon(u16, u16);
 static mapsec_u16_t GetRegionMapSectionId(u8, u8);
 static bool8 MapHasSpecies(const struct WildEncounterTypes *, u16);
-static bool8 MonListHasSpecies(const struct WildPokemonInfo *, u16, u16);
+static bool8 MonListHasSpecies(const struct WildPokemonInfo *, u16);
 static void DoAreaGlow(void);
 static void Task_ShowPokedexAreaScreen(u8 taskId);
 static void Task_UpdatePokedexAreaScreen(u8 taskId);
@@ -450,29 +450,27 @@ static bool8 MapHasSpecies(const struct WildEncounterTypes *info, u16 species)
             return FALSE;
     }
 
-    if (MonListHasSpecies(info->landMonsInfo, species, LAND_WILD_COUNT))
+    if (MonListHasSpecies(info->landMonsInfo, species))
         return TRUE;
-    if (MonListHasSpecies(info->waterMonsInfo, species, WATER_WILD_COUNT))
+    if (MonListHasSpecies(info->waterMonsInfo, species))
         return TRUE;
-// When searching the fishing encounters, this incorrectly uses the size of the land encounters.
-// As a result it's reading out of bounds of the fishing encounters tables.
-#ifdef BUGFIX
-    if (MonListHasSpecies(info->fishingMonsInfo, species, FISH_WILD_COUNT))
-#else
-    if (MonListHasSpecies(info->fishingMonsInfo, species, LAND_WILD_COUNT))
-#endif
+    if (MonListHasSpecies(info->fishingMonsOldRodInfo, species))
         return TRUE;
-    if (MonListHasSpecies(info->rockSmashMonsInfo, species, ROCK_WILD_COUNT))
+    if (MonListHasSpecies(info->fishingMonsGoodRodInfo, species))
+        return TRUE;
+    if (MonListHasSpecies(info->fishingMonsSuperRodInfo, species))
+        return TRUE;
+    if (MonListHasSpecies(info->rockSmashMonsInfo, species))
         return TRUE;
     return FALSE;
 }
 
-static bool8 MonListHasSpecies(const struct WildPokemonInfo *info, u16 species, u16 size)
+static bool8 MonListHasSpecies(const struct WildPokemonInfo *info, u16 species)
 {
     u16 i;
     if (info != NULL)
     {
-        for (i = 0; i < size; i++)
+        for (i = 0; i < info->numSlots; i++)
         {
             if (info->wildPokemon[i].species == species)
                 return TRUE;
