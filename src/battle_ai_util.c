@@ -1923,6 +1923,7 @@ u32 AI_GetSwitchinWeather(enum BattlerId battler)
     case ABILITY_DRIZZLE:
         return B_WEATHER_RAIN_NORMAL;
     case ABILITY_DROUGHT:
+    case ABILITY_ORICHALCUM_PULSE:
         return B_WEATHER_SUN_NORMAL;
     case ABILITY_SAND_STREAM:
         return B_WEATHER_SANDSTORM;
@@ -4512,26 +4513,22 @@ void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData)
     Free(savedAiLogicData);
 }
 
-// Set potential field effect from ability for switch in
-void SetBattlerFieldStatusForSwitchin(enum BattlerId battler)
+bool32 IsBattlerTSpikesAffected(enum BattlerId battler)
 {
-    switch (gAiLogicData->abilities[battler])
+    enum Ability ability = gAiLogicData->abilities[battler];
+    u32 status = gBattleMons[battler].status1;
+    enum HoldEffect heldItemEffect = gAiLogicData->holdEffects[battler];
+    if ((IS_BATTLER_OF_TYPE(battler, TYPE_POISON)
+        && ability != ABILITY_IMMUNITY && ability != ABILITY_POISON_HEAL
+        && status == 0
+        && !(heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS
+            && (((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ)))
+        && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
+        && AI_IsBattlerGrounded(battler)))
     {
-    case ABILITY_VESSEL_OF_RUIN:
-        gBattleMons[battler].volatiles.vesselOfRuin = TRUE;
-        break;
-    case ABILITY_SWORD_OF_RUIN:
-        gBattleMons[battler].volatiles.swordOfRuin = TRUE;
-        break;
-    case ABILITY_TABLETS_OF_RUIN:
-        gBattleMons[battler].volatiles.tabletsOfRuin = TRUE;
-        break;
-    case ABILITY_BEADS_OF_RUIN:
-        gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
-        break;
-    default:
-        break;
+        return TRUE;
     }
+    return FALSE;
 }
 
 // party logic
