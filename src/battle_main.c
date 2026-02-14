@@ -2009,7 +2009,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             SetMonData(&party[i], MON_DATA_ABILITY_NUM, &abilityNum);
             SetMonData(&party[i], MON_DATA_FRIENDSHIP, &(partyData[monIndex].friendship));
-            if (partyData[monIndex].ball != ITEM_NONE)
+            if (partyData[monIndex].ball < POKEBALL_COUNT)
             {
                 ball = partyData[monIndex].ball;
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
