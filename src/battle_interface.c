@@ -2117,10 +2117,12 @@ static void MoveBattleBarGraphically(enum BattlerId battler, u8 whichBar)
             break;
         default:
         case HP_BAR_RED:
-            if (maxValue > 1) // handling for wonder guard
+            if (maxValue > 1)
                 barElementId = HEALTHBOX_GFX_HP_BAR_RED;
-            else
+            else if (B_HPBAR_COLOR_THRESHOLD >= GEN_8) // handling for mons with 1 max HP, ie Shedinja
                 barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
+            else
+                barElementId = HEALTHBOX_GFX_HP_BAR_RED;
             break;
         }
 
