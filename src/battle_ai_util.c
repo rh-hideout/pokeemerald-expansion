@@ -54,7 +54,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
         if (moveTargetType == MOVE_TARGET_BOTH && battlerAtk == BATTLE_PARTNER(battlerDef))
             continue;
 
-        if (IsBattlerAlive(battlerDef) && !IsSemiInvulnerable(battlerDef, move))
+        if (IsBattlerAlive(battlerDef) && (!IsSemiInvulnerable(battlerDef, CHECK_ALL) || BreaksThroughSemiInvulnerablity(battlerDef, move)))
             numOfTargets++;
     }
 
