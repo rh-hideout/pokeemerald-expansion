@@ -213,6 +213,7 @@ void NewGameInitData(void)
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
+    AddBagItem(ITEM_INFINITE_REPEL, 1);
 }
 
 static void ResetMiniGamesRecords(void)

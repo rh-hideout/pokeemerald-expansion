@@ -1007,6 +1007,33 @@ static void Task_UseRepel(u8 taskId)
             DisplayItemMessageInBattlePyramid(taskId, gStringVar4, Task_CloseBattlePyramidBagMessage);
     }
 }
+
+void ItemUseOutOfBattle_InfiniteRepel(u8 taskId)
+{
+    if (FlagGet(FLAG_INFINITE_REPEL_ACTIVE))
+    {
+        FlagClear(FLAG_INFINITE_REPEL_ACTIVE);
+        PlaySE(SE_PC_OFF);
+        if (gTasks[taskId].tUsingRegisteredKeyItem) {
+            DisplayItemMessageOnField(taskId, gText_InfiniteRepelDeactivated, Task_CloseCantUseKeyItemMessage);
+        }
+        else {
+            DisplayItemMessage(taskId, 1, gText_InfiniteRepelDeactivated, CloseItemMessage);
+        }
+    }
+    else
+    {
+        FlagSet(FLAG_INFINITE_REPEL_ACTIVE);
+        PlaySE(SE_REPEL);
+        if (gTasks[taskId].tUsingRegisteredKeyItem) {
+            DisplayItemMessageOnField(taskId, gText_InfiniteRepelActivated, Task_CloseCantUseKeyItemMessage);
+        }
+        else {
+            DisplayItemMessage(taskId, 1, gText_InfiniteRepelActivated, CloseItemMessage);
+        }
+    }
+}
+
 void HandleUseExpiredRepel(struct ScriptContext *ctx)
 {
 #if VAR_LAST_REPEL_LURE_USED != 0
