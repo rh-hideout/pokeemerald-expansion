@@ -2,12 +2,17 @@ import json
 import re
 
 class Config:
-    def __init__(self, config_file_name, rtc_constants_file_name, encounters_json_data):
+    def __init__(self, encounters_json_data):
+        ow_config_file_name = 'include/config/overworld.h'
+        frlg_config_file_name = 'include/config/frlg.h'
+        rtc_constants_file_name = 'include/constants/rtc.h'
+
         self.times_of_day = None
         self.mon_types = None
         self.time_encounters = None
         self.disable_time_fallback = None
         self.time_fallback = None
+        self.use_firered_wild = None
 
         self.ParseTimeEnum(rtc_constants_file_name)
         if self.times_of_day == None:
@@ -17,18 +22,26 @@ class Config:
         if self.mon_types == None:
             raise Exception("No fields defined in 'wild_encounters.json'")
 
-        with open(config_file_name, 'r') as config_file:
+        with open(ow_config_file_name, 'r') as config_file:
             lines = config_file.readlines()
             for line in lines:
                 self.ParseTimeConfig(line)
-        
+
         if self.time_encounters == None:
             raise Exception("OW_TIME_OF_DAY_ENCOUNTERS not defined.")
         if self.disable_time_fallback == None:
             raise Exception("OW_TIME_OF_DAY_DISABLE_FALLBACK not defined.")
         if self.time_fallback == None:
             raise Exception("OW_TIME_OF_DAY_FALLBACK not defined.")
-    
+
+        with open(frlg_config_file_name, 'r') as config_file:
+            lines = config_file.readlines()
+            for line in lines:
+                self.ParseFRLGConfig(line)
+
+        if self.use_firered_wild == None:
+            raise Exception("FRLG_KANTO_MAP_WILD_PKMN not defined.")
+
     def ParseTimeEnum(self, rtc_constants_file_name):
         with open(rtc_constants_file_name, 'r') as rtc_constants_file:
             DEFAULT_TIME_PAT = re.compile(r"enum\s+TimeOfDay\s*\{(?P<rtc_val>[\s*\w+,\=\d*]+)\s*\}\s*\;")
@@ -64,13 +77,17 @@ class Config:
         if m:
             self.time_fallback = m.group(1)
 
+    def ParseFRLGConfig(self, line):
+        m = re.search(r'#define FRLG_KANTO_MAP_WILD_PKMN\s+(\w+)', line)
+        if m:
+            self.use_firered_wild = m.group(1)
 
 class WildEncounterAssembler:
     def __init__(self, output_file, json_data, config):
         self.output_file = output_file
         self.json_data = json_data
         self.config = config
-    
+
     def WriteLine(self, line="", indents = 0):
         self.output_file.write(4 * indents * " " + line + "\n")
 
@@ -101,7 +118,7 @@ class WildEncounterAssembler:
                         for group_name, indices in groups.items():
                             for index in indices:
                                 group_name_mapping[index] = "_" + group_name.upper()
-                    
+
                     for idx, rate in enumerate(encounter_rates):
                         macro_name = macro_base + group_name_mapping[idx] + "_SLOT_" + str(idx)
                         macro_value = str(rate)
@@ -118,7 +135,7 @@ class WildEncounterAssembler:
                             self.WriteMacro(macro_total_name, "(" + previous_macro + ")")
                     macro_total_name = macro_base + group_name_mapping[-1] + "_TOTAL"
                     self.WriteLine()
-    
+
     def WriteMonInfos(self, name, mons, encounter_rate):
         info_name = name + "Info"
         self.WriteLine(f"const struct WildPokemon {name}[] =")
@@ -133,7 +150,7 @@ class WildEncounterAssembler:
         self.WriteLine()
         self.WriteLine(f"const struct WildPokemonInfo {info_name} = {{ {encounter_rate}, {name} }};")
         self.WriteLine()
-    
+
     def WriteTerminator(self):
         self.WriteLine("{", 1)
         self.WriteLine(".mapGroup = MAP_GROUP(MAP_UNDEFINED),", 2)
@@ -163,13 +180,18 @@ class WildEncounterAssembler:
             encounter_data = map_data
             map_group = map_data["mapGroup"]
             map_num = map_data["mapNum"]
-            version = "EMERALD"
+
+            defined = '#if defined(EMERALD) || FRLG_INCLUDE_HOENN_MAPS'
             if "FireRed" in shared_label:
-                version = "FIRERED"
+                defined = '#if defined(FIRERED)'
+                if self.config.use_firered_wild == 'FIRE_RED':
+                    defined += ' || FRLG_INCLUDE_KANTO_MAPS'
             elif "LeafGreen" in shared_label:
-                version = "LEAFGREEN"
-            
-            self.WriteLine(f"#ifdef {version}")
+                defined = '#if defined(LEAFGREEN)'
+                if self.config.use_firered_wild == 'LEAF_GREEN':
+                    defined += ' || FRLG_INCLUDE_KANTO_MAPS'
+
+            self.WriteLine(f"{defined}")
 
             self.WriteLine("{", 1)
             self.WriteLine(f".mapGroup = {map_group},", 2)
@@ -192,7 +214,7 @@ class WildEncounterAssembler:
                     self.WriteLine(f".{member_name} = {value},", 5)
 
                 self.WriteLine("},", 3)
-            
+
             self.WriteLine("},", 2)
             self.WriteLine("},", 1)
             self.WriteLine(f"#endif")
@@ -236,17 +258,23 @@ class WildEncounterAssembler:
                 headers["data"][shared_label]["mapGroup"] = map_group
                 headers["data"][shared_label]["mapNum"] = map_num
 
-                version = "EMERALD"
+                defined = '#if defined(EMERALD) || FRLG_INCLUDE_HOENN_MAPS'
                 if "FireRed" in shared_label:
-                    version = "FIRERED"
+                    defined = '#if defined(FIRERED)'
+                    if self.config.use_firered_wild == 'FIRE_RED':
+                        defined += ' || FRLG_INCLUDE_KANTO_MAPS'
                 elif "LeafGreen" in shared_label:
-                    version = "LEAFGREEN"
-                self.WriteLine(f"#ifdef {version}")
+                    defined = '#if defined(LEAFGREEN)'
+                    if self.config.use_firered_wild == 'LEAF_GREEN':
+                        defined += ' || FRLG_INCLUDE_KANTO_MAPS'
+
+                self.WriteLine(f"{defined}")
+
                 for mon_type in self.config.mon_types:
                     if mon_type not in map_encounters:
                         headers["data"][shared_label][mon_type] = "NULL"
                         continue
-                    
+
                     mons_entry = map_encounters[mon_type]
                     encounter_rate = mons_entry["encounter_rate"]
                     mons = mons_entry["mons"]
@@ -261,7 +289,7 @@ class WildEncounterAssembler:
 
 def ConvertToHeaderFile(json_data):
     with open('src/data/wild_encounters.h', 'w') as output_file:
-        config = Config('include/config/overworld.h', 'include/constants/rtc.h', json_data)
+        config = Config(json_data)
         assembler = WildEncounterAssembler(output_file, json_data, config)
         assembler.WriteHeader()
         assembler.WriteMacros()
@@ -271,7 +299,7 @@ def main():
     with open('src/data/wild_encounters.json', 'r') as json_file:
         json_data = json.load(json_file)
         ConvertToHeaderFile(json_data)
-        
+
 
 if __name__ == '__main__':
     main()

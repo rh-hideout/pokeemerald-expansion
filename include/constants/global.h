@@ -23,6 +23,7 @@
 #include "config/debug.h"
 #include "config/dexnav.h"
 #include "config/follower_npc.h"
+#include "config/frlg.h"
 #include "config/general.h"
 #include "config/item.h"
 #include "config/overworld.h"
