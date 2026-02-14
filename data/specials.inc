@@ -568,3 +568,5 @@ gSpecials::
 	def_special SetAbility
 	def_special ObjectEventInteractionGetApricornTreeData
 	def_special ObjectEventInteractionPickApricornTree
+	def_special ExecuteTruckSequence
+	def_special ExecuteTruckSequence_NoFade

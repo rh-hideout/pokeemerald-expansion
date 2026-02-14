@@ -268,6 +268,85 @@ void ExecuteTruckSequence(void)
     CreateTask(Task_HandleTruckSequence, 0xA);
 }
 
+static void Task_HandleTruckSequence_NoFade(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    switch (tState)
+    {
+    case 0:
+        // Skip calling SetCameraPanningCallback(NULL) and PlaySE(SE_TRUCK_MOVE) 
+        // if we want to jump straight to shaking, but we probably want to init the task 
+        // correctly anyway.
+        // Actually, let's keep the setup but jump to state 2 directly?
+        // State 0 setups Task_Truck1 (shaking).
+        SetCameraPanningCallback(NULL);
+        tTimer = 0;
+        tTaskId1 = CreateTask(Task_Truck1, 0xA);
+        PlaySE(SE_TRUCK_MOVE);
+        // Previously went to state 1 (wait 150 frames, fade in).
+        // Now go to state 2, which waits 300 frames then stops.
+        tState = 2; 
+        break;
+    case 1:
+        // Skipped
+        break;
+    case 2:
+        tTimer++;
+        if (!gPaletteFade.active && tTimer > 300)
+        {
+            tTimer = 0;
+            DestroyTask(tTaskId1);
+            tTaskId2 = CreateTask(Task_Truck2, 0xA);
+            tState = 3;
+            PlaySE(SE_TRUCK_STOP);
+        }
+        break;
+    case 3:
+        if (!gTasks[tTaskId2].isActive)
+        {
+            // Task_Truck2 / Task_Truck3 has finished
+            InstallCameraPanAheadCallback();
+            tTimer = 0;
+            tState = 4;
+        }
+        break;
+    case 4:
+        tTimer++;
+        if (tTimer == 90)
+        {
+            PlaySE(SE_TRUCK_UNLOAD);
+            tTimer = 0;
+            tState = 5;
+        }
+        break;
+    case 5:
+        tTimer++;
+        if (tTimer == 120)
+        {
+            MapGridSetMetatileIdAt(4 + MAP_OFFSET, 1 + MAP_OFFSET, METATILE_InsideOfTruck_ExitLight_Top);
+            MapGridSetMetatileIdAt(4 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_InsideOfTruck_ExitLight_Mid);
+            MapGridSetMetatileIdAt(4 + MAP_OFFSET, 3 + MAP_OFFSET, METATILE_InsideOfTruck_ExitLight_Bottom);
+            DrawWholeMapView();
+            PlaySE(SE_TRUCK_DOOR);
+            DestroyTask(taskId);
+            UnlockPlayerFieldControls();
+        }
+        break;
+    }
+}
+
+void ExecuteTruckSequence_NoFade(void)
+{
+    MapGridSetMetatileIdAt(4 + MAP_OFFSET, 1 + MAP_OFFSET, METATILE_InsideOfTruck_DoorClosedFloor_Top);
+    MapGridSetMetatileIdAt(4 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_InsideOfTruck_DoorClosedFloor_Mid);
+    MapGridSetMetatileIdAt(4 + MAP_OFFSET, 3 + MAP_OFFSET, METATILE_InsideOfTruck_DoorClosedFloor_Bottom);
+    DrawWholeMapView();
+    LockPlayerFieldControls();
+    // CpuFastFill(0, gPlttBufferFaded, PLTT_SIZE); // Removed: Don't black out screen
+    CreateTask(Task_HandleTruckSequence_NoFade, 0xA);
+}
+
 void EndTruckSequence(u8 taskId)
 {
     if (!FuncIsActiveTask(Task_HandleTruckSequence))

@@ -1,7 +1,21 @@
 InsideOfTruck_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, InsideOfTruck_OnLoad
 	map_script MAP_SCRIPT_ON_RESUME, InsideOfTruck_OnResume
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, InsideOfTruck_OnFrame
 	.byte 0
+
+InsideOfTruck_OnFrame:
+	map_script_2 VAR_LITTLEROOT_TOWN_STATE, 4, InsideOfTruck_EventScript_TruckSequence
+	.2byte 0
+
+InsideOfTruck_EventScript_TruckSequence::
+	lockall
+	special ExecuteTruckSequence_NoFade
+	setvar VAR_LITTLEROOT_TOWN_STATE, 5
+	setdynamicwarp MAP_ROUTE117, WARP_ID_NONE, 47, 5
+	waitstate
+	releaseall
+	end
 
 InsideOfTruck_OnLoad:
 	setmetatile 4, 1, METATILE_InsideOfTruck_ExitLight_Top, FALSE

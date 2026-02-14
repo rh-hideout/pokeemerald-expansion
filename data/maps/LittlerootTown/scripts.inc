@@ -648,6 +648,7 @@ LittlerootTown_EventScript_MomReturnHomeMale2::
 	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
 	closedoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	return
@@ -662,6 +663,7 @@ LittlerootTown_EventScript_MomReturnHomeMale3::
 	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
 	closedoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	return
@@ -676,6 +678,7 @@ LittlerootTown_EventScript_MomReturnHomeMale4::
 	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerExitThroughDoor
 	waitmovement 0
 	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
+	hideplayer
 	closedoor VAR_0x8009, VAR_0x800A
 	waitdooranim
 	return
@@ -1021,13 +1024,9 @@ LittlerootTown_EventScript_Mom::
 	call LittlerootTown_EventScript_GiveRunningShoes
 	applymovement LOCALID_LITTLEROOT_MOM, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
-	opendoor VAR_0x8009, VAR_0x800A
-	waitdooranim
-	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomExitThroughDoor
-	waitmovement 0
-	hideobjectat LOCALID_LITTLEROOT_MOM, MAP_LITTLEROOT_TOWN
-	closedoor VAR_0x8009, VAR_0x800A
-	waitdooranim
+	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_MomReturnHomeMale
+	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_MomReturnHomeFemale
+
 	goto LittlerootTown_EventScript_SetReceivedRunningShoes
 	end
 
@@ -1178,15 +1177,26 @@ LittlerootTown_EventScript_GiveRunningShoes::
 	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_MomReturnHomeFemale
 	delay 30
 	fadescreen FADE_TO_BLACK
+	delay 30
 	playse SE_BANG
 	delay 60
 	playse SE_WALL_HIT
+	delay 30
+	playse SE_WALL_HIT
+	delay 30
+	playse SE_BANG
+	delay 60
+	playse SE_WALL_HIT
+	delay 20
+	playse SE_WALL_HIT
+	delay 20
+	playse SE_WALL_HIT
+	delay 60
+	playse SE_BANG
 	delay 60
 	setvar VAR_LITTLEROOT_TOWN_STATE, 4
 	removeobject LOCALID_LITTLEROOT_MOM
 	warpsilent MAP_INSIDE_OF_TRUCK, 2, 2
-	waitstate
-	release
 	end
 
 LittlerootTown_Text_TruckIsHere:
