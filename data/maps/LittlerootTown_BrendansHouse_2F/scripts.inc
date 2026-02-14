@@ -284,9 +284,11 @@ PlayersHouse_2F_Text_ClockIsStopped:
 PlayersHouse_2F_Text_HowDoYouLikeYourRoom:
 	.string "MOM: {PLAYER}, wake up!\p"
 	.string "You overslept!\p"
-	.string "The power went out so the clock\n"
-	.string "is stopped.\p"
-	.string "Go set it, quick!$"
+	.string "You need to go say your goodbyes to\n"
+	.string "everyone before we move out.\p"
+	.string "You should get to it so you can focus\n"
+	.string "on loading the moving truck once it\l"
+	.string "arrives.$"
 
 PlayersHouse_2F_Text_Notebook:
 	.string "{PLAYER} flipped open the notebook.\p"
