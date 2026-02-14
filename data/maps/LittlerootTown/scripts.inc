@@ -253,8 +253,7 @@ LittlerootTown_EventScript_Twin::
 	lock
 	faceplayer
 	goto_if_set FLAG_ADVENTURE_STARTED, LittlerootTown_EventScript_GoodLuck
-	goto_if_set FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_YouSavedBirch
-	goto_if_ne VAR_LITTLEROOT_TOWN_STATE, 0, LittlerootTown_EventScript_GoSaveBirch
+	goto_if_eq VAR_LITTLEROOT_TOWN_STATE, 2, LittlerootTown_EventScript_GoSaveBirch
 	msgbox LittlerootTown_Text_IfYouGoInGrassPokemonWillJumpOut, MSGBOX_DEFAULT
 	release
 	end
@@ -262,7 +261,7 @@ LittlerootTown_EventScript_Twin::
 LittlerootTown_EventScript_GoSaveBirch::
 	msgbox LittlerootTown_Text_YouShouldGoToLab, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_LITTLEROOT_TWIN, Common_Movement_FaceDown
+	applymovement LOCALID_LITTLEROOT_TWIN, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	release
 	end
@@ -379,6 +378,8 @@ LittlerootTown_EventScript_GoSaveBirchTrigger::
 	msgbox LittlerootTown_Text_YouShouldGoToLab, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_LITTLEROOT_TWIN, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	applymovement LOCALID_PLAYER, Common_Movement_FaceDown
 	waitmovement 0
 	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PushPlayerBackFromRoute
 	waitmovement 0
