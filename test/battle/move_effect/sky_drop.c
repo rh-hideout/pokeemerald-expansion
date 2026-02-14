@@ -68,7 +68,7 @@ DOUBLE_BATTLE_TEST("Sky Drop is cancelled if Gravity activated")
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop fails on heavy targets")
+SINGLE_BATTLE_TEST("Sky Drop fails on targets heavier or equal than 200kg")
 {
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_METAGROSS].weight >= 2000);
