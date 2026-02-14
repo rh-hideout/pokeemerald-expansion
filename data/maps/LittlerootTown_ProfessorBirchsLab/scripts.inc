@@ -1012,14 +1012,25 @@ LittlerootTown_ProfessorBirchsLab_EventScript_BirchsBag::
 LittlerootTown_ProfessorBirchsLab_EventScript_SkipNickname::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_HeardYouBeatRivalTakePokedex, MSGBOX_DEFAULT
 	call LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex
+	
 	special HealPlayerParty
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 	setflag FLAG_HIDE_BIRCHS_LAB_BAG
-	removeobject 7
-	setvar VAR_BIRCH_LAB_STATE, 3
+	@ removeobject 7
+	setflag FLAG_RESCUED_BIRCH
+	setflag FLAG_SYS_POKEMON_GET
 	setvar VAR_ROUTE101_STATE, 3
+	setvar VAR_BIRCH_LAB_STATE, 5
+	setflag FLAG_ADVENTURE_STARTED
+	setvar VAR_OLDALE_TOWN_STATE, 1
+	setflag FLAG_DEFEATED_RIVAL_ROUTE103
+	setflag FLAG_HIDE_ROUTE_103_RIVAL
+	setvar VAR_OLDALE_RIVAL_STATE, 1
+	clearflag FLAG_HIDE_OLDALE_TOWN_RIVAL
+	setvar VAR_LITTLEROOT_RIVAL_STATE, 4
+	setvar VAR_LITTLEROOT_TOWN_STATE, 3
 	clearflag FLAG_HIDE_MAP_NAME_POPUP
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, LittlerootTown_ProfessorBirchsLab_EventScript_HideMayInBedroom
