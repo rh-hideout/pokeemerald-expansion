@@ -557,39 +557,22 @@ BattleScript_SkyDropFlyingAlreadyConfused:
 
 BattleScript_EffectFling::
 	attackcanceler
-	setlastuseditem BS_ATTACKER
+    setlastuseditem BS_ATTACKER
 	accuracycheck BattleScript_FlingMissed
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNFLUNG
 	waitmessage B_WAIT_TIME_SHORT
-	damagecalc
-	removeitem BS_ATTACKER
-	attackanimation
-	waitanimation
-	effectivenesssound
-	hitanimation BS_TARGET
-	waitstate
-	healthbarupdate BS_TARGET, MOVE_DAMAGE_HP_UPDATE
-	datahpupdate BS_TARGET, MOVE_DAMAGE_HP_UPDATE
-	critmessage
-	waitmessage B_WAIT_TIME_MED
-	resultmessage
-	waitmessage B_WAIT_TIME_MED
-	tryflingholdeffect
-	goto BattleScript_FlingEnd
+    goto BattleScript_HitFromDamageCalc
 
 BattleScript_EffectFlingConsumeBerry::
-	savebattleritem
-	battleritemtolastuseditem
 	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
 	orword gHitMarker, HITMARKER_DISABLE_ANIMATION
 	consumeberry BS_TARGET, FALSE
 	bicword gHitMarker, HITMARKER_DISABLE_ANIMATION
 	setbyte sBERRY_OVERRIDE, 0
-	restorebattleritem
 BattleScript_FlingEnd:
 	trysymbiosis BS_ATTACKER
-	goto BattleScript_MoveEnd
+    return
 
 BattleScript_FlingFailConsumeItem::
 	removeitem BS_ATTACKER
@@ -605,11 +588,16 @@ BattleScript_TargetAvoidsAttackConsumeFlingItem::
 BattleScript_FlingBlockedByShieldDust::
 	printstring STRINGID_ITEMWASUSEDUP
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_FlingEnd
+	removeitem BS_ATTACKER
+    return
 
 BattleScript_FlingMissed:
 	removeitem BS_ATTACKER
 	goto BattleScript_MoveMissedPause
+
+BattleScript_RemoveItem::
+	removeitem BS_ATTACKER
+    return
 
 BattleScript_EffectClangorousSoul::
 	attackcanceler
@@ -689,6 +677,7 @@ BattleScript_BothCanNoLongerEscape::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+@ TODO: Remove
 BattleScript_EffectHyperspaceFury::
 	jumpifspecies SPECIES_HOOPA_UNBOUND, BattleScript_EffectHit
 	jumpifspecies SPECIES_HOOPA_CONFINED, BattleScript_ButHoopaCantUseIt
@@ -4868,9 +4857,7 @@ BattleScript_GulpMissileGorging::
 	tryfaintmon BS_ATTACKER
 	jumpiffainted BS_ATTACKER, TRUE, BattleScript_GulpMissileNoSecondEffectGorging
 BattleScript_GulpMissileNoDmgGorging:
-	swapattackerwithtarget
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_PARALYSIS
-	swapattackerwithtarget
+	seteffectprimary BS_TARGET, BS_ATTACKER, MOVE_EFFECT_PARALYSIS
 BattleScript_GulpMissileNoSecondEffectGorging:
 	return
 

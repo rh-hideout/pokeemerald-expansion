@@ -160,7 +160,9 @@ static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler, ActivationT
     }
     if (effect != ITEM_NO_EFFECT)
     {
-        if (timing == IsWhiteHerbActivation || timing == IsOnFlingActivation)
+        if (timing == IsOnFlingActivation)
+            gBattlescriptCurrInstr = BattleScript_WhiteHerbRet; // prevent next instruction
+        if (timing == IsWhiteHerbActivation)
             BattleScriptCall(BattleScript_WhiteHerbRet);
         else
             BattleScriptExecute(BattleScript_WhiteHerbEnd2);
@@ -412,7 +414,7 @@ static enum ItemEffect TryBlunderPolicy(enum BattlerId battlerAtk)
     return effect;
 }
 
-static enum ItemEffect TryMentalHerb(enum BattlerId battler)
+static enum ItemEffect TryMentalHerb(enum BattlerId battler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -467,7 +469,12 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler)
     }
 
     if (effect)
-        BattleScriptCall(BattleScript_MentalHerbCureRet);
+    {
+        if (timing == IsOnFlingActivation)
+            gBattlescriptCurrInstr = BattleScript_MentalHerbCureRet; // prevent next instruction
+        else
+            BattleScriptCall(BattleScript_MentalHerbCureRet);
+    }
 
     return effect;
 }
@@ -1092,7 +1099,7 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
         effect = TryBlunderPolicy(itemBattler);
         break;
     case HOLD_EFFECT_MENTAL_HERB:
-        effect = TryMentalHerb(itemBattler);
+        effect = TryMentalHerb(itemBattler, timing);
         break;
     case HOLD_EFFECT_THROAT_SPRAY:
         effect = TryThroatSpray(itemBattler);

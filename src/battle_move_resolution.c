@@ -822,7 +822,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FLING:
-        if (!CanFling(ctx->battlerAtk))
+        if (!CanFling(ctx->battlerAtk, ctx->abilityAtk))
             battleScript = BattleScript_ButItFailed;
         else if (!IsBattlerAlive(ctx->battlerDef)) // Edge case for removing a mon's item when there is no target available after using Fling.
             battleScript = BattleScript_FlingFailConsumeItem;
@@ -3322,6 +3322,8 @@ static enum MoveEndResult MoveEndClearBits(void)
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[gBattlerAttacker].usedMicleBerry = FALSE;
     gBattleStruct->toxicChainPriority = FALSE;
+    gBattleStruct->flungItem = FALSE;
+
     if (gBattleStruct->unableToUseMove)
         gBattleStruct->pledgeMove = FALSE;
     if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE)
@@ -3350,7 +3352,7 @@ static enum MoveEndResult MoveEndClearBits(void)
         }
     }
 
-    // Need to check a specific battle during the end turn
+    // Need to check a specific battler during the end turn
     gBattleMons[gBattlerAttacker].volatiles.unableToUseMove = gBattleStruct->unableToUseMove;
     ClearDamageCalcResults();
 
