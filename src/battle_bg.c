@@ -895,7 +895,7 @@ static u8 GetBattleEnvironmentOverride(void)
     }
     else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_EREADER_TRAINER))
         return BATTLE_ENVIRONMENT_FRONTIER;
-    else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+    else if (gBattleStruct->isLegendaryBattle)
     {
         switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES))
         {
@@ -1292,7 +1292,7 @@ void DrawBattleEntryBackground(void)
             CopyBgTilemapBufferToVram(2);
         }
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+    else if (gBattleStruct->isLegendaryBattle)
     {
         LoadBattleEnvironmentEntryGfx(GetBattleEnvironmentOverride());
     }

@@ -5744,7 +5744,7 @@ bool32 IsSpeciesInHoennDex(u16 species)
 
 u16 GetBattleBGM(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+    if (gBattleStruct->isLegendaryBattle)
     {
         switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES))
         {
@@ -6055,7 +6055,7 @@ static inline bool32 CanFirstMonBoostHeldItemRarity(void)
 
 void SetWildMonHeldItem(void)
 {
-    if (!(gBattleTypeFlags & (BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_TRAINER | BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE)))
+    if (!(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE) || gBattleStruct->isLegendaryBattle))
     {
         u16 rnd;
         u16 species;
