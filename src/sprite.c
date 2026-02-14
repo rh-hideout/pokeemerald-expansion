@@ -1924,7 +1924,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
         {
             //  End of area starting on even tile
             currWidth = remainingWidth;
-            srcMask = 0xFFFFFFFF >> (BITS_PER_PIXEL * currWidth);
+            srcMask = 0xFFFFFFFF >> (BITS_PER_PIXEL * (PIXELS_PER_TILE - currWidth));
             dstMask = ~srcMask;
         }
         else if (remainingWidth > PIXELS_PER_TILE || remainingWidth + currStart % PIXELS_PER_TILE == PIXELS_PER_TILE)
