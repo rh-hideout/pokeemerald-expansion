@@ -625,9 +625,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro removeitem battler:req
+	.macro removeitem battler:req, consumedBerry=FALSE
 	.byte 0x6a
 	.byte \battler
+	.byte \consumedBerry
 	.endm
 
 	.macro atknameinbuff1
