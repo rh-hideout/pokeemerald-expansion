@@ -18,14 +18,13 @@ Pic: Brendan
 Gender: Male
 Music: Male
 
-Buffie (Wobbuffet)
-Brave Nature
-Level: 100
+yuzu (Jirachi)
+Jolly Nature
+Level: 50
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
-- Earthquake
-- Flamethrower
-- Celebrate
+- Iron Head
+- Zen Headbutt
+- Follow Me
 - Celebrate
 
 === DEBUG_TRAINER_AI ===
