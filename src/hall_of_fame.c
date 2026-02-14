@@ -435,14 +435,14 @@ static void Task_Hof_InitMonData(u8 taskId)
     for (i = 0; i < PARTY_SIZE; i++)
     {
         u8 nickname[POKEMON_NAME_LENGTH + 1];
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
         {
-            sHofMonPtr->mon[i].species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
-            sHofMonPtr->mon[i].tid = GetMonData(&gPlayerParty[i], MON_DATA_OT_ID);
-            sHofMonPtr->mon[i].isShiny = GetMonData(&gPlayerParty[i], MON_DATA_IS_SHINY);
-            sHofMonPtr->mon[i].personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
-            sHofMonPtr->mon[i].lvl = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
-            GetMonData(&gPlayerParty[i], MON_DATA_NICKNAME, nickname);
+            sHofMonPtr->mon[i].species = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG);
+            sHofMonPtr->mon[i].tid = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_OT_ID);
+            sHofMonPtr->mon[i].isShiny = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_SHINY);
+            sHofMonPtr->mon[i].personality = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_PERSONALITY);
+            sHofMonPtr->mon[i].lvl = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_LEVEL);
+            GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_NICKNAME, nickname);
             for (j = 0; j < POKEMON_NAME_LENGTH; j++)
                 sHofMonPtr->mon[i].nickname[j] = nickname[j];
             gTasks[taskId].tMonNumber++;

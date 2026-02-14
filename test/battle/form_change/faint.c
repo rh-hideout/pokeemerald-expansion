@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon fainting (start as Shi
         SWITCH_OUT_MESSAGE("Wobbuffet")
         SEND_IN_MESSAGE("Aegislash");
     } THEN {
-        // We do not check gPlayerParty data to avoid triggering FORM_CHANGE_END_BATTLE.
+        // We do not check gParties[B_TRAINER_0] data to avoid triggering FORM_CHANGE_END_BATTLE.
         EXPECT_EQ(player->species, SPECIES_AEGISLASH_SHIELD);
     }
 }
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon fainting (start as Bla
         SWITCH_OUT_MESSAGE("Wobbuffet")
         SEND_IN_MESSAGE("Aegislash");
     } THEN {
-        // We do not check gPlayerParty data to avoid triggering FORM_CHANGE_END_BATTLE.
+        // We do not check gParties[B_TRAINER_0] data to avoid triggering FORM_CHANGE_END_BATTLE.
         EXPECT_EQ(player->species, SPECIES_AEGISLASH_SHIELD);
     }
 }

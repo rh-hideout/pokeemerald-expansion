@@ -1770,11 +1770,11 @@ static void Select_CopyMonsToPlayerParty(void)
         {
             if (sFactorySelectScreen->mons[j].selectedId == i + 1)
             {
-                gPlayerParty[i] = sFactorySelectScreen->mons[j].monData;
+                gParties[B_TRAINER_0][i] = sFactorySelectScreen->mons[j].monData;
                 gSaveBlock2Ptr->frontier.rentalMons[i].monId = sFactorySelectScreen->mons[j].monId;
-                gSaveBlock2Ptr->frontier.rentalMons[i].personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
-                gSaveBlock2Ptr->frontier.rentalMons[i].abilityNum = GetBoxMonData(&gPlayerParty[i].box, MON_DATA_ABILITY_NUM);
-                gSaveBlock2Ptr->frontier.rentalMons[i].ivs = GetBoxMonData(&gPlayerParty[i].box, MON_DATA_ATK_IV);
+                gSaveBlock2Ptr->frontier.rentalMons[i].personality = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_PERSONALITY);
+                gSaveBlock2Ptr->frontier.rentalMons[i].abilityNum = GetBoxMonData(&gParties[B_TRAINER_0][i].box, MON_DATA_ABILITY_NUM);
+                gSaveBlock2Ptr->frontier.rentalMons[i].ivs = GetBoxMonData(&gParties[B_TRAINER_0][i].box, MON_DATA_ATK_IV);
                 break;
             }
         }
@@ -2305,13 +2305,13 @@ static void CopySwappedMonData(void)
 {
     u8 friendship;
 
-    gPlayerParty[sFactorySwapScreen->playerMonId] = gEnemyParty[sFactorySwapScreen->enemyMonId];
+    gParties[B_TRAINER_0][sFactorySwapScreen->playerMonId] = gParties[B_TRAINER_1][sFactorySwapScreen->enemyMonId];
     friendship = 0;
-    SetMonData(&gPlayerParty[sFactorySwapScreen->playerMonId], MON_DATA_FRIENDSHIP, &friendship);
+    SetMonData(&gParties[B_TRAINER_0][sFactorySwapScreen->playerMonId], MON_DATA_FRIENDSHIP, &friendship);
     gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].monId = gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->enemyMonId + FRONTIER_PARTY_SIZE].monId;
     gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].ivs = gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->enemyMonId + FRONTIER_PARTY_SIZE].ivs;
-    gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].personality = GetMonData(&gEnemyParty[sFactorySwapScreen->enemyMonId], MON_DATA_PERSONALITY);
-    gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].abilityNum = GetBoxMonData(&gEnemyParty[sFactorySwapScreen->enemyMonId].box, MON_DATA_ABILITY_NUM);
+    gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].personality = GetMonData(&gParties[B_TRAINER_1][sFactorySwapScreen->enemyMonId], MON_DATA_PERSONALITY);
+    gSaveBlock2Ptr->frontier.rentalMons[sFactorySwapScreen->playerMonId].abilityNum = GetBoxMonData(&gParties[B_TRAINER_1][sFactorySwapScreen->enemyMonId].box, MON_DATA_ABILITY_NUM);
 }
 
 // Main swap states
@@ -2355,7 +2355,7 @@ static void Swap_Task_OpenSummaryScreen(u8 taskId)
         DestroyTask(taskId);
         sFactorySwapScreen->fromSummaryScreen = TRUE;
         sFactorySwapScreen->speciesNameColorBackup = gPlttBufferUnfaded[BG_PLTT_ID(PALNUM_TEXT) + 4];
-        ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gPlayerParty, sFactorySwapScreen->cursorPos, FRONTIER_PARTY_SIZE - 1, CB2_InitSwapScreen);
+        ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gParties[B_TRAINER_0], sFactorySwapScreen->cursorPos, FRONTIER_PARTY_SIZE - 1, CB2_InitSwapScreen);
         break;
     }
 }
@@ -3740,9 +3740,9 @@ static void Swap_PrintMonSpecies(void)
     {
         u8 monId = sFactorySwapScreen->cursorPos;
         if (!sFactorySwapScreen->inEnemyScreen)
-            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_0][monId], MON_DATA_SPECIES);
         else
-            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_1][monId], MON_DATA_SPECIES);
         StringCopy(gStringVar4, GetSpeciesName(species));
         x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 86);
         AddTextPrinterParameterized3(SWAP_WIN_SPECIES, FONT_NORMAL, x, 1, sSwapSpeciesNameTextColors, 0, gStringVar4);
@@ -3849,9 +3849,9 @@ static void Swap_PrintMonSpeciesAtFade(void)
     {
         u8 monId = sFactorySwapScreen->cursorPos;
         if (!sFactorySwapScreen->inEnemyScreen)
-            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_0][monId], MON_DATA_SPECIES);
         else
-            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_1][monId], MON_DATA_SPECIES);
         StringCopy(gStringVar4, GetSpeciesName(species));
         x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 86);
         AddTextPrinterParameterized3(SWAP_WIN_SPECIES_AT_FADE, FONT_NORMAL, x, 1, sSwapSpeciesNameTextColors, 0, gStringVar4);
@@ -3876,9 +3876,9 @@ static void Swap_PrintMonSpeciesForTransition(void)
     {
         u8 monId = sFactorySwapScreen->cursorPos;
         if (!sFactorySwapScreen->inEnemyScreen)
-            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_0][monId], MON_DATA_SPECIES);
         else
-            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_1][monId], MON_DATA_SPECIES);
         StringCopy(gStringVar4, GetSpeciesName(species));
         x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 86);
         AddTextPrinterParameterized3(SWAP_WIN_SPECIES, FONT_NORMAL, x, 1, sSwapSpeciesNameTextColors, 0, gStringVar4);
@@ -3902,9 +3902,9 @@ static void Swap_PrintMonCategory(void)
     {
         PutWindowTilemap(SWAP_WIN_MON_CATEGORY);
         if (!sFactorySwapScreen->inEnemyScreen)
-            species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_0][monId], MON_DATA_SPECIES);
         else
-            species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_1][monId], MON_DATA_SPECIES);
         CopyMonCategoryText(species, text);
         x = GetStringRightAlignXOffset(FONT_NORMAL, text, 118);
         AddTextPrinterParameterized(SWAP_WIN_MON_CATEGORY, FONT_NORMAL, text, x, 1, 0, NULL);
@@ -4036,7 +4036,7 @@ static void Swap_ShowSummaryMonSprite(void)
     sFactorySwapScreen->monPic.bgSpriteId = CreateSprite(&sSpriteTemplate_Swap_MonPicBgAnim, 120, 64, 1);
     StartSpriteAffineAnim(&gSprites[sFactorySwapScreen->monPic.bgSpriteId], 2);
 
-    mon = &gPlayerParty[sFactorySwapScreen->cursorPos];
+    mon = &gParties[B_TRAINER_0][sFactorySwapScreen->cursorPos];
     species = GetMonData(mon, MON_DATA_SPECIES);
     personality = GetMonData(mon, MON_DATA_PERSONALITY);
     isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
@@ -4113,11 +4113,11 @@ static void Swap_TaskCantHaveSameMons(u8 taskId)
 static bool8 Swap_AlreadyHasSameSpecies(u8 monId)
 {
     u8 i;
-    u16 species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
+    u16 species = GetMonData(&gParties[B_TRAINER_1][monId], MON_DATA_SPECIES);
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        if (i != sFactorySwapScreen->playerMonId && (u16)(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES)) == species)
+        if (i != sFactorySwapScreen->playerMonId && (u16)(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES)) == species)
             return TRUE;
     }
     return FALSE;
@@ -4250,9 +4250,9 @@ static void Swap_CreateMonSprite(void)
     bool8 isShiny;
 
     if (!sFactorySwapScreen->inEnemyScreen)
-        mon = &gPlayerParty[sFactorySwapScreen->cursorPos];
+        mon = &gParties[B_TRAINER_0][sFactorySwapScreen->cursorPos];
     else
-        mon = &gEnemyParty[sFactorySwapScreen->cursorPos];
+        mon = &gParties[B_TRAINER_1][sFactorySwapScreen->cursorPos];
 
     species = GetMonData(mon, MON_DATA_SPECIES);
     personality = GetMonData(mon, MON_DATA_PERSONALITY);

@@ -26,7 +26,7 @@ TEST("(Pokerus) No infection when POKERUS_ENABLED is false")
     CalculatePlayerPartyCount();
     RandomlyGivePartyPokerus();
 
-    EXPECT_EQ((GetMonData(&gPlayerParty[0], MON_DATA_POKERUS) > 0), enabled);
+    EXPECT_EQ((GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS) > 0), enabled);
 }
 
 TEST("(Pokerus) RandomlyGivePartyPokerus doesn't freeze if the party is empty")
@@ -38,7 +38,7 @@ TEST("(Pokerus) RandomlyGivePartyPokerus doesn't freeze if the party is empty")
     CalculatePlayerPartyCount();
     RandomlyGivePartyPokerus();
 
-    EXPECT_EQ(gPlayerPartyCount, 0);
+    EXPECT_EQ(gPartiesCount[B_TRAINER_0], 0);
 }
 
 TEST("(Pokerus) Eggs can only be infected if POKERUS_INFECT_EGG is TRUE")
@@ -55,14 +55,14 @@ TEST("(Pokerus) Eggs can only be infected if POKERUS_INFECT_EGG is TRUE")
     );
 
     bool32 isEgg = TRUE;
-    SetMonData(&gPlayerParty[0], MON_DATA_IS_EGG, &isEgg);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_IS_EGG, &isEgg);
 
     SET_RNG(RNG_POKERUS_INFECTION, 0);
 
     CalculatePlayerPartyCount();
     RandomlyGivePartyPokerus();
 
-    EXPECT_EQ((GetMonData(&gPlayerParty[0], MON_DATA_POKERUS) > 0), infectEgg);
+    EXPECT_EQ((GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS) > 0), infectEgg);
 }
 
 TEST("(Pokerus) No infection when POKERUS_INFECT_AGAIN is false and you already have active pokerus in party")
@@ -80,14 +80,14 @@ TEST("(Pokerus) No infection when POKERUS_INFECT_AGAIN is false and you already 
     );
 
     u8 pokerus = 1;
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS, &pokerus);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS, &pokerus);
 
     SET_RNG(RNG_POKERUS_INFECTION, 0);
 
     CalculatePlayerPartyCount();
     RandomlyGivePartyPokerus();
 
-    EXPECT_EQ((GetMonData(&gPlayerParty[1], MON_DATA_POKERUS) > 0), infectAgain == GEN_2);
+    EXPECT_EQ((GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS) > 0), infectAgain == GEN_2);
 }
 
 TEST("(Pokerus) Test POKERUS_HERD_IMMUNITY config in RandomlyGivePartyPokerus")
@@ -106,7 +106,7 @@ TEST("(Pokerus) Test POKERUS_HERD_IMMUNITY config in RandomlyGivePartyPokerus")
     );
 
     u8 pokerus = 1;
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS, &pokerus);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS, &pokerus);
 
     SET_RNG(RNG_POKERUS_INFECTION, 0);
     SET_RNG(RNG_POKERUS_PARTY_MEMBER, 0);
@@ -114,7 +114,7 @@ TEST("(Pokerus) Test POKERUS_HERD_IMMUNITY config in RandomlyGivePartyPokerus")
     CalculatePlayerPartyCount();
     RandomlyGivePartyPokerus();
 
-    EXPECT_EQ((GetMonData(&gPlayerParty[1], MON_DATA_POKERUS) == 0), herdImmunity);
+    EXPECT_EQ((GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS) == 0), herdImmunity);
 }
 
 #if P_POKERUS_FLAG_INFECTION
@@ -132,7 +132,7 @@ TEST("(Pokerus) No infection when P_POKERUS_FLAG_INFECTION is clear")
     );
 
     u8 pokerus = 1;
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS, &pokerus);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS, &pokerus);
 
     if (flag)
         FlagSet(P_POKERUS_FLAG_INFECTION);
@@ -144,7 +144,7 @@ TEST("(Pokerus) No infection when P_POKERUS_FLAG_INFECTION is clear")
     CalculatePlayerPartyCount();
     RandomlyGivePartyPokerus();
 
-    EXPECT_EQ((GetMonData(&gPlayerParty[1], MON_DATA_POKERUS) > 0), flag);
+    EXPECT_EQ((GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS) > 0), flag);
 }
 #endif
 
@@ -166,10 +166,10 @@ TEST("(Pokerus) Test GetMonData for MON_DATA_POKERUS_DAYS_LEFT and MON_DATA_POKE
     );
 
     u8 pokerus = (strain << 4) | daysLeft;
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS, &pokerus);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS, &pokerus);
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS_STRAIN), strain);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS_DAYS_LEFT), daysLeft);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_STRAIN), strain);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_DAYS_LEFT), daysLeft);
 }
 
 TEST("(Pokerus) Test SetMonData for MON_DATA_POKERUS_DAYS_LEFT and MON_DATA_POKERUS_STRAIN")
@@ -189,11 +189,11 @@ TEST("(Pokerus) Test SetMonData for MON_DATA_POKERUS_DAYS_LEFT and MON_DATA_POKE
         givemon SPECIES_PIKACHU, 100;
     );
 
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS_STRAIN, &strain);
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS_DAYS_LEFT, &daysLeft);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_STRAIN, &strain);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_DAYS_LEFT, &daysLeft);
 
     u8 pokerus = (strain << 4) | daysLeft;
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS), pokerus);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS), pokerus);
 }
 
 TEST("(Pokerus) Test IsPokerusInParty general behavior")
@@ -224,7 +224,7 @@ TEST("(Pokerus) Test IsPokerusInParty general behavior")
     EXPECT_EQ(IsPokerusInParty(), FALSE);
 
     u32 tmp = pokerus;
-    SetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS, &tmp);
+    SetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS, &tmp);
 
     EXPECT_EQ(IsPokerusInParty(), enabled);
 }
@@ -250,12 +250,12 @@ TEST("(Pokerus) Test CheckMonPokerus general behavior")
         givemon SPECIES_PIKACHU, 100
     );
 
-    EXPECT_EQ(CheckMonPokerus(&gPlayerParty[0]), FALSE);
+    EXPECT_EQ(CheckMonPokerus(&gParties[B_TRAINER_0][0]), FALSE);
 
     u32 tmp = pokerus;
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS, &tmp);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS, &tmp);
 
-    EXPECT_EQ(CheckMonPokerus(&gPlayerParty[0]), enabled);
+    EXPECT_EQ(CheckMonPokerus(&gParties[B_TRAINER_0][0]), enabled);
 }
 
 TEST("(Pokerus) Test CheckMonHasHadPokerus general behavior")
@@ -278,12 +278,12 @@ TEST("(Pokerus) Test CheckMonHasHadPokerus general behavior")
     );
 
 
-    EXPECT_EQ(CheckMonHasHadPokerus(&gPlayerParty[0]), FALSE);
+    EXPECT_EQ(CheckMonHasHadPokerus(&gParties[B_TRAINER_0][0]), FALSE);
 
     u32 tmp = pokerus;
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS, &tmp);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS, &tmp);
 
-    EXPECT_EQ(CheckMonHasHadPokerus(&gPlayerParty[0]), enabled);
+    EXPECT_EQ(CheckMonHasHadPokerus(&gParties[B_TRAINER_0][0]), enabled);
 }
 
 TEST("(Pokerus) Test UpdatePartyPokerusTime general behavior")
@@ -311,8 +311,8 @@ TEST("(Pokerus) Test UpdatePartyPokerusTime general behavior")
     );
 
 
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS_STRAIN, &strain);
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS_DAYS_LEFT, &daysLeft);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_STRAIN, &strain);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_DAYS_LEFT, &daysLeft);
     UpdatePartyPokerusTime(daysPassed);
 
     if (enabled)
@@ -321,15 +321,15 @@ TEST("(Pokerus) Test UpdatePartyPokerusTime general behavior")
             && (daysLeft > 0)
             && ((daysLeft - daysPassed) <= 0)
            )
-            EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS_STRAIN), 1);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_STRAIN), 1);
         else
-            EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS_STRAIN), strain);
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS_DAYS_LEFT), max(0, daysLeft - daysPassed));
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_STRAIN), strain);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_DAYS_LEFT), max(0, daysLeft - daysPassed));
     } 
     else
     {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS_STRAIN), strain);
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS_DAYS_LEFT), daysLeft);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_STRAIN), strain);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS_DAYS_LEFT), daysLeft);
     }
 }
 
@@ -359,32 +359,32 @@ TEST("(Pokerus) Test PartySpreadPokerus general behavior")
         );
     }
 
-    SetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS, &pokerus);
+    SetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS, &pokerus);
     SET_RNG(RNG_POKERUS_SPREAD, 0);
     PartySpreadPokerus();
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS), pokerus);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS), pokerus);
     if (partyMember == 0)
     {
-        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKERUS), pokerus);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS), pokerus);
         for (u32 i = 2; i < PARTY_SIZE; i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
 
     }
     else if (partyMember == PARTY_SIZE - 1)
     {
-        EXPECT_EQ(GetMonData(&gPlayerParty[PARTY_SIZE - 2], MON_DATA_POKERUS), pokerus);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][PARTY_SIZE - 2], MON_DATA_POKERUS), pokerus);
         for (u32 i = 0; i < (PARTY_SIZE - 2); i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
     }
     else
     {
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {
             if ((i < (partyMember - 1)) || (i > (partyMember + 1)))
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
             else
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), pokerus);
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), pokerus);
         }
     }
 }
@@ -413,35 +413,35 @@ TEST("(Pokerus) Test PartySpreadPokerus: Pokerus can spread to and from eggs")
             givemon SPECIES_PIKACHU, 100
         );
         bool32 isEgg = TRUE;
-        SetMonData(&gPlayerParty[i], MON_DATA_IS_EGG, &isEgg);
+        SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG, &isEgg);
     }
 
-    SetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS, &pokerus);
+    SetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS, &pokerus);
     SET_RNG(RNG_POKERUS_SPREAD, 0);
     PartySpreadPokerus();
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS), pokerus);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS), pokerus);
     if (partyMember == 0)
     {
-        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKERUS), pokerus);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS), pokerus);
         for (u32 i = 2; i < PARTY_SIZE; i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
 
     }
     else if (partyMember == PARTY_SIZE - 1)
     {
-        EXPECT_EQ(GetMonData(&gPlayerParty[PARTY_SIZE - 2], MON_DATA_POKERUS), pokerus);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][PARTY_SIZE - 2], MON_DATA_POKERUS), pokerus);
         for (u32 i = 0; i < (PARTY_SIZE - 2); i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
     }
     else
     {
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {
             if ((i < (partyMember - 1)) || (i > (partyMember + 1)))
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
             else
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), pokerus);
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), pokerus);
         }
     }
 }
@@ -469,14 +469,14 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread inactive pokerus")
         );
     }
 
-    SetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS, &pokerus);
+    SetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS, &pokerus);
     SET_RNG(RNG_POKERUS_SPREAD, 0);
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS), pokerus);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS), pokerus);
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         if (i != partyMember)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
     }
 }
 
@@ -502,15 +502,15 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread if POKERUS_ENABLED is fal
         );
     }
 
-    SetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS, &pokerus);
+    SetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS, &pokerus);
     SET_RNG(RNG_POKERUS_SPREAD, 0);
     PartySpreadPokerus();
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS), pokerus);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS), pokerus);
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         if (i != partyMember)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
     }
 }
 
@@ -534,12 +534,12 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread to pokemon who got pokeru
         givemon SPECIES_PIKACHU, 100;
     );
 
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS, &pokerus1);
-    SetMonData(&gPlayerParty[1], MON_DATA_POKERUS, &pokerus2);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS, &pokerus1);
+    SetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS, &pokerus2);
     SET_RNG(RNG_POKERUS_SPREAD, 0);
     PartySpreadPokerus();
 
-    EXPECT_NE(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS), GetMonData(&gPlayerParty[1], MON_DATA_POKERUS));
+    EXPECT_NE(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS), GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS));
 }
 
 TEST("(Pokerus) Test PartySpreadPokerus: strain 0 can be spread to if POKERUS_WEAK_VARIANT is true")
@@ -563,15 +563,15 @@ TEST("(Pokerus) Test PartySpreadPokerus: strain 0 can be spread to if POKERUS_WE
     );
 
     u32 pokerus1 = 1;
-    SetMonData(&gPlayerParty[0], MON_DATA_POKERUS, &pokerus1);
-    SetMonData(&gPlayerParty[1], MON_DATA_POKERUS, &pokerus2);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS, &pokerus1);
+    SetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS, &pokerus2);
     SET_RNG(RNG_POKERUS_SPREAD, 0);
     PartySpreadPokerus();
 
     if (weakVariant)
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS), GetMonData(&gPlayerParty[1], MON_DATA_POKERUS));
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS), GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS));
     else
-        EXPECT_NE(GetMonData(&gPlayerParty[0], MON_DATA_POKERUS), GetMonData(&gPlayerParty[1], MON_DATA_POKERUS));
+        EXPECT_NE(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKERUS), GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS));
 }
 
 TEST("(Pokerus) Test PartySpreadPokerus when POKERUS_SPREAD_DAYS_LEFT is set to GEN2")
@@ -601,38 +601,38 @@ TEST("(Pokerus) Test PartySpreadPokerus when POKERUS_SPREAD_DAYS_LEFT is set to 
         );
     }
 
-    SetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS_STRAIN, &strain);
-    SetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS_DAYS_LEFT, &daysLeft);
+    SetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS_STRAIN, &strain);
+    SetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS_DAYS_LEFT, &daysLeft);
     SET_RNG(RNG_POKERUS_SPREAD, 0);
     PartySpreadPokerus();
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS_STRAIN), strain);
-    EXPECT_EQ(GetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS_DAYS_LEFT), daysLeft);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS_STRAIN), strain);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS_DAYS_LEFT), daysLeft);
     if (partyMember == 0)
     {
-        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKERUS_STRAIN), strain);
-        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKERUS_DAYS_LEFT), GetDaysLeftBasedOnStrain(strain));
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS_STRAIN), strain);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS_DAYS_LEFT), GetDaysLeftBasedOnStrain(strain));
         for (u32 i = 2; i < PARTY_SIZE; i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
 
     }
     else if (partyMember == PARTY_SIZE - 1)
     {
-        EXPECT_EQ(GetMonData(&gPlayerParty[PARTY_SIZE - 2], MON_DATA_POKERUS_STRAIN), strain);
-        EXPECT_EQ(GetMonData(&gPlayerParty[PARTY_SIZE - 2], MON_DATA_POKERUS_DAYS_LEFT), GetDaysLeftBasedOnStrain(strain));
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][PARTY_SIZE - 2], MON_DATA_POKERUS_STRAIN), strain);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][PARTY_SIZE - 2], MON_DATA_POKERUS_DAYS_LEFT), GetDaysLeftBasedOnStrain(strain));
         for (u32 i = 0; i < (PARTY_SIZE - 2); i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
     }
     else
     {
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {
             if ((i < (partyMember - 1)) || (i > (partyMember + 1)))
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
             else if (i != partyMember)
             {
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS_STRAIN), strain);
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS_DAYS_LEFT), GetDaysLeftBasedOnStrain(strain));
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS_STRAIN), strain);
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS_DAYS_LEFT), GetDaysLeftBasedOnStrain(strain));
             }
         }
     }
@@ -665,40 +665,40 @@ TEST("(Pokerus) Test PartySpreadPokerus using gen2 adjacency")
         );
     }
 
-    SetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS, &pokerus);
+    SetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS, &pokerus);
 
     SET_RNG(RNG_POKERUS_SPREAD, 0);
     SET_RNG(RNG_POKERUS_SPREAD_SIDE, spreadUp);
 
     PartySpreadPokerus();
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[partyMember], MON_DATA_POKERUS), pokerus);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][partyMember], MON_DATA_POKERUS), pokerus);
     if (partyMember == 0)
     {
         if (spreadUp)
-            EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKERUS), pokerus);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS), pokerus);
         else
-            EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_POKERUS), 0);
         for (u32 i = 2; i < PARTY_SIZE; i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
 
     }
     else if (partyMember == PARTY_SIZE - 1)
     {
-        EXPECT_EQ(GetMonData(&gPlayerParty[PARTY_SIZE - 2], MON_DATA_POKERUS), pokerus);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][PARTY_SIZE - 2], MON_DATA_POKERUS), pokerus);
         for (u32 i = 0; i < (PARTY_SIZE - 2); i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
     }
     else
     {
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {
             if (!spreadUp && (i == (partyMember - 1)))
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), pokerus);
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), pokerus);
             else if (spreadUp && (i == (partyMember + 1)))
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), pokerus);
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), pokerus);
             else if (i != partyMember)
-                EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_POKERUS), 0);
+                EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS), 0);
         }
     }
 }

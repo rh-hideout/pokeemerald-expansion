@@ -34,7 +34,6 @@
 #include "constants/songs.h"
 #include "test/battle.h"
 #include "test/test.h"
-#include "test/test_runner_battle.h"
 
 static EWRAM_DATA u8 sLinkSendTaskId = 0;
 static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
@@ -170,7 +169,7 @@ void InitBattleControllers(void)
 
     InitBtlControllersInternal();
 
-    SetBattlePartyIds();
+    SetBattlePartyIds(); // grintoul TO DO 
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
     {
@@ -208,7 +207,7 @@ static void InitBtlControllersInternal(void)
 
     if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
-        || (IsMultibattleTest())
+        || (TESTING && isMulti)
         || (!isLink && !isRecorded)
         || (isLink && !isDouble))
     {
@@ -269,7 +268,7 @@ static void InitBtlControllersInternal(void)
             // Opponent 1
             bool32 isOpponent1Recorded;
             if (isDouble)
-                isOpponent1Recorded = ((!isInGamePartner && isRecorded && !isMulti && isRecordedLink) || (IsMultibattleTest() && isRecordedLink));
+                isOpponent1Recorded = ((!isInGamePartner && isRecorded && !isMulti && isRecordedLink) || ((TESTING && isMulti) && isRecordedLink));
             else
                 isOpponent1Recorded = isRecorded && isRecordedLink;
 
@@ -279,11 +278,11 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToOpponent;
 
             // Player 2
-            if (IsMultibattleTest() && isRecordedLink)
+            if ((TESTING && isMulti) && isRecordedLink)
             {
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPartner;
             }
-            else if (IsMultibattleTest() && isRecorded && !isRecordedLink)
+            else if ((TESTING && isMulti) && isRecorded && !isRecordedLink)
             { // Sets to PlayerPartner if EXPECT_XXXX used in test for partner trainer, else sets to RecordedPartner.
                 if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_2][0].actionSet == TRUE)
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
@@ -305,7 +304,7 @@ static void InitBtlControllersInternal(void)
             }
 
             // Opponent 2
-            if (IsMultibattleTest() && isRecordedLink)
+            if ((TESTING && isMulti) && isRecordedLink)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToRecordedOpponent;
             else if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToOpponent;
@@ -329,11 +328,14 @@ static void InitBtlControllersInternal(void)
 
             gBattlerPartyIndexes[0] = 0;
             gBattlerPartyIndexes[1] = 0;
-            gBattlerPartyIndexes[2] = 3;
-            if (!isLink && isInGamePartner && (BATTLE_TWO_VS_ONE_OPPONENT || WILD_DOUBLE_BATTLE))
-                gBattlerPartyIndexes[3] = 1;
+            if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
+                gBattlerPartyIndexes[2] = 0;
             else
-                gBattlerPartyIndexes[3] = 3;
+                gBattlerPartyIndexes[2] = 1;
+            if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
+                gBattlerPartyIndexes[3] = 0;
+            else
+                gBattlerPartyIndexes[3] = 1;
         }
     }
     else
@@ -368,16 +370,16 @@ static void InitBtlControllersInternal(void)
             switch (gLinkPlayers[i].id)
             {
             case 0:
-            case 3:
+            case 1:
                 BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 0);
                 gBattlerPositions[gLinkPlayers[i].id] = linkPositionLeft;
                 gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
                 break;
-            case 1:
             case 2:
+            case 3:
                 BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 1);
                 gBattlerPositions[gLinkPlayers[i].id] = linkPositionRight;
-                gBattlerPartyIndexes[gLinkPlayers[i].id] = 3;
+                gBattlerPartyIndexes[gLinkPlayers[i].id] = MULTI_PARTY_SIZE;
                 break;
             }
         }
@@ -481,7 +483,7 @@ static void SetBattlePartyIds(void)
                 }
                 else
                 {
-                    if (gBattlerPartyIndexes[i - 2] == j)
+                    if (gBattlerPartyIndexes[i - 2] == j && BattlersShareParty(i - 2, i))
                     {
                         // Exclude already assigned pokemon;
                     }
@@ -510,7 +512,7 @@ static void SetBattlePartyIds(void)
         }
 
         if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-            gBattlerPartyIndexes[1] = 0, gBattlerPartyIndexes[3] = 3;
+            gBattlerPartyIndexes[1] = 0, gBattlerPartyIndexes[3] = 0;
     }
 }
 
@@ -1332,7 +1334,7 @@ void BtlController_EmitIntroTrainerBallThrow(enum BattlerId battler, u32 bufferI
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitDrawPartyStatusSummary(enum BattlerId battler, u32 bufferId, struct HpAndStatus *hpAndStatus, u8 flags)
+void BtlController_EmitDrawPartyStatusSummary(enum BattlerId battler, u32 bufferId, struct HpAndStatus *hpAndStatus, u8 flags) // grintoul TO DO - how the hell to make this work
 {
     s32 i;
 
@@ -3310,11 +3312,59 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
         else
             return B_TRAINER_0;
     case B_BATTLER_3:
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
             return B_TRAINER_3;
         else
             return B_TRAINER_1;
     default:
         return B_TRAINER_1;
     }
+}
+
+enum BattleTrainer GetAllyTrainerFromBattler(enum BattlerId battler)
+{
+    return GetBattlerTrainer(BATTLE_PARTNER(battler));
+}
+
+enum BattleTrainer GetAllyTrainerFromTrainer(enum BattleTrainer trainer)
+{
+    switch (trainer)
+    {
+    case B_TRAINER_1:
+        return B_TRAINER_3;
+    case B_TRAINER_2:
+        return B_TRAINER_0;
+    case B_TRAINER_3:
+        return B_TRAINER_1;
+    default:
+        return B_TRAINER_2;
+    }
+}
+
+enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position)
+{
+    return GetBattlerTrainer(GetBattlerAtPosition(position));
+}
+
+bool32 BattleSideHasTwoTrainers(enum BattleSide side)
+{
+    switch (side)
+    {
+    case B_SIDE_PLAYER:
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            return TRUE;
+        break;
+    case B_SIDE_OPPONENT:
+    default:
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+            return TRUE;
+        break;
+    }
+
+    return FALSE;
+}
+
+bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
+{
+    return (GetBattlerParty(battler1) == GetBattlerParty(battler2));
 }

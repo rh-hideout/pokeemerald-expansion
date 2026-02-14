@@ -112,8 +112,8 @@ WILD_BATTLE_TEST("Large exp gains are supported", s32 exp) // #1455
         MESSAGE("The wild Blissey fainted!");
         EXPERIENCE_BAR(player, captureGainedExp: &results[i].exp);
     } THEN {
-        EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL) > 1);
-        EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_EXP) > 1);
+        EXPECT(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_LEVEL) > 1);
+        EXPECT(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EXP) > 1);
     } FINALLY {
         EXPECT_GT(results[1].exp, results[0].exp);
         EXPECT_GT(results[2].exp, results[1].exp);
@@ -142,9 +142,9 @@ WILD_BATTLE_TEST("Exp Share(held) gives Experience to mons which did not partici
         NOT MESSAGE("The rest of your team gained EXP. Points thanks to the Exp. Share!");
     } THEN {
         if (item == ITEM_EXP_SHARE)
-            EXPECT_GT(GetMonData(&gPlayerParty[1], MON_DATA_EXP), gExperienceTables[gSpeciesInfo[SPECIES_WYNAUT].growthRate][40]);
+            EXPECT_GT(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_EXP), gExperienceTables[gSpeciesInfo[SPECIES_WYNAUT].growthRate][40]);
         else
-            EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_EXP), gExperienceTables[gSpeciesInfo[SPECIES_WYNAUT].growthRate][40]);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_EXP), gExperienceTables[gSpeciesInfo[SPECIES_WYNAUT].growthRate][40]);
     }
 }
 

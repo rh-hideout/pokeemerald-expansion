@@ -14,12 +14,16 @@
 #define AILMENT_FNT   7
 #define AILMENT_FRB   8
 
-#define PARTY_LAYOUT_SINGLE          0
-#define PARTY_LAYOUT_DOUBLE          1
-#define PARTY_LAYOUT_MULTI           2
-#define PARTY_LAYOUT_MULTI_SHOWCASE  3  // The layout during the screen that appears just before a multi battle
-#define PARTY_LAYOUT_COUNT           4
-#define KEEP_PARTY_LAYOUT            0xFF
+#define PARTY_LAYOUT_SINGLE                         0
+#define PARTY_LAYOUT_DOUBLE                         1
+#define PARTY_LAYOUT_MULTI                          2
+#define PARTY_LAYOUT_MULTI_SHOWCASE                 3  // The layout during the screen that appears just before a multi battle
+#define PARTY_LAYOUT_MULTI_FULL                     4
+#define PARTY_LAYOUT_MULTI_FULL_PARTNER             5
+#define PARTY_LAYOUT_MULTI_FULL_SHOWCASE            6  // The layout used to present player team in full-team multi intro
+#define PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER    7  // The layout used to present partner team in full-team multi intro
+#define PARTY_LAYOUT_COUNT                          8
+#define KEEP_PARTY_LAYOUT                   0xFF
 
 #define PARTY_MENU_TYPE_FIELD                     0
 #define PARTY_MENU_TYPE_IN_BATTLE                 1
@@ -34,6 +38,7 @@
 #define PARTY_MENU_TYPE_SPIN_TRADE                10 // Unused beta for Gen IV's Spin Trade
 #define PARTY_MENU_TYPE_MINIGAME                  11
 #define PARTY_MENU_TYPE_STORE_PYRAMID_HELD_ITEMS  12
+#define PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE       13
 
 #define PARTY_ACTION_CHOOSE_MON         0
 #define PARTY_ACTION_SEND_OUT           1

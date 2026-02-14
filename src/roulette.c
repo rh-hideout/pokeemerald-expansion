@@ -1157,7 +1157,7 @@ static void InitRouletteTableData(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        switch (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG))
+        switch (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG))
         {
         case SPECIES_SHROOMISH:
             sRoulette->partySpeciesFlags |= HAS_SHROOMISH;

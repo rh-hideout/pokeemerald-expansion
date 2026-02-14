@@ -29,7 +29,6 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "test/battle.h"
-#include "test/test_runner_battle.h"
 
 static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler);
 static void RecordedPlayerHandleTrainerSlideBack(enum BattlerId battler);
@@ -275,8 +274,7 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
     s16 xPos, yPos;
     enum TrainerPicID trainerPicId;
 
-    // Sets Multibattle test player sprites to not be Hiker
-    if (IsMultibattleTest())
+    if (TESTING)
     {
         trainerPicId = TRAINER_PIC_BACK_BRENDAN;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)

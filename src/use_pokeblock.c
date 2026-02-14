@@ -771,7 +771,7 @@ static void ShowPokeblockResults(void)
     switch (sInfo->mainState)
     {
     case 0:
-        sInfo->mon = gPlayerParty;
+        sInfo->mon = gParties[B_TRAINER_0];
         sInfo->mon += sMenu->party[sMenu->info.curSelection].monId;
         DestroyConditionSparkleSprites(sMenu->sparkles);
         sInfo->mainState++;
@@ -868,7 +868,7 @@ static void AskUsePokeblock(void)
 {
     u8 stringBuffer[0x40];
 
-    GetMonData(&gPlayerParty[GetPartyIdFromSelectionId(sMenu->info.curSelection)], MON_DATA_NICKNAME, stringBuffer);
+    GetMonData(&gParties[B_TRAINER_0][GetPartyIdFromSelectionId(sMenu->info.curSelection)], MON_DATA_NICKNAME, stringBuffer);
     StringGet_Nickname(stringBuffer);
     StringAppend(stringBuffer, sText_GetsAPokeBlockQuestion);
     StringCopy(gStringVar4, stringBuffer);
@@ -1027,7 +1027,7 @@ static void AddPokeblockToConditions(struct Pokeblock *pokeblock, struct Pokemon
 static void CalculateConditionEnhancements(void)
 {
     u16 i;
-    struct Pokemon *mon = gPlayerParty;
+    struct Pokemon *mon = gParties[B_TRAINER_0];
     mon += sMenu->party[sMenu->info.curSelection].monId;
 
     GetMonConditions(mon, sInfo->conditionsBeforeBlock);
@@ -1085,7 +1085,7 @@ static u8 GetPartyIdFromSelectionId(u8 selectionId)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
+        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG))
         {
             if (selectionId == 0)
                 return i;
@@ -1102,7 +1102,7 @@ static u8 GetSelectionIdFromPartyId(u8 partyId)
     u8 i, numEggs;
     for (i = 0, numEggs = 0; i < partyId; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG))
             numEggs++;
     }
 
@@ -1162,7 +1162,7 @@ static void LoadPartyInfo(void)
 
     for (i = 0, numMons = 0; i < CalculatePlayerPartyCount(); i++)
     {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
+        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG))
         {
             sMenu->party[numMons].boxId = TOTAL_BOXES_COUNT;
             sMenu->party[numMons].monId = i;
@@ -1392,7 +1392,7 @@ static void UpdateMonInfoText(u16 loadId, bool8 firstPrint)
     {
         AddTextPrinterParameterized(WIN_NAME, FONT_NORMAL, sMenu->monNameStrings[loadId], 0, 1, 0, NULL);
         partyIndex = GetPartyIdFromSelectionId(sMenu->info.curSelection);
-        nature = GetNature(&gPlayerParty[partyIndex]);
+        nature = GetNature(&gParties[B_TRAINER_0][partyIndex]);
         str = StringCopy(sMenu->info.natureText, sText_NatureSlash);
         str = StringCopy(str, gNaturesInfo[nature].name);
         AddTextPrinterParameterized3(WIN_NATURE, FONT_NORMAL, 2, 1, sNatureTextColors, 0, sMenu->info.natureText);
@@ -1599,7 +1599,7 @@ static void SpriteCB_SelectionIconCancel(struct Sprite *sprite)
 // is the total number of sparkles that appear
 static void CalculateNumAdditionalSparkles(u8 monIndex)
 {
-    u8 sheen = GetMonData(&gPlayerParty[monIndex], MON_DATA_SHEEN);
+    u8 sheen = GetMonData(&gParties[B_TRAINER_0][monIndex], MON_DATA_SHEEN);
     sMenu->numSparkles[sMenu->curLoadId] = GET_NUM_CONDITION_SPARKLES(sheen);
 }
 

@@ -33,7 +33,6 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "test/battle.h"
-#include "test/test_runner_battle.h"
 
 static void RecordedOpponentHandleDrawTrainerPic(enum BattlerId battler);
 static void RecordedOpponentHandleTrainerSlideBack(enum BattlerId battler);
@@ -276,8 +275,7 @@ static void RecordedOpponentHandleDrawTrainerPic(enum BattlerId battler)
     enum TrainerPicID trainerPicId;
     enum BattlerPosition position = GetBattlerPosition(battler);
 
-    // Sets Multibattle test opponent sprites to not be Hiker
-    if (IsMultibattleTest())
+    if (TESTING)
     {
         if (position == B_POSITION_OPPONENT_LEFT)
         {

@@ -968,22 +968,22 @@ static void BuildEnemyParty(void)
         {
             monIdx = sSingleBattleChallengeMonIdxs[floorIdx][i];
             CURR_FLOOR.trainers[trainerIdx].mons[monIdx].level = level;
-            CreateBattleTowerMon(&gEnemyParty[i], &CURR_FLOOR.trainers[trainerIdx].mons[monIdx]);
+            CreateBattleTowerMon(&gParties[B_TRAINER_1][i], &CURR_FLOOR.trainers[trainerIdx].mons[monIdx]);
         }
         break;
     case CHALLENGE_TYPE_DOUBLE:
         monIdx = sDoubleBattleChallengeMonIdxs[floorIdx][0];
         CURR_FLOOR.trainers[0].mons[monIdx].level = level;
-        CreateBattleTowerMon(&gEnemyParty[0], &CURR_FLOOR.trainers[0].mons[monIdx]);
+        CreateBattleTowerMon(&gParties[B_TRAINER_1][0], &CURR_FLOOR.trainers[0].mons[monIdx]);
 
         monIdx = sDoubleBattleChallengeMonIdxs[floorIdx][1];
         CURR_FLOOR.trainers[1].mons[monIdx].level = level;
-        CreateBattleTowerMon(&gEnemyParty[1], &CURR_FLOOR.trainers[1].mons[monIdx]);
+        CreateBattleTowerMon(&gParties[B_TRAINER_1][1], &CURR_FLOOR.trainers[1].mons[monIdx]);
         break;
     case CHALLENGE_TYPE_KNOCKOUT:
         monIdx = sKnockoutChallengeMonIdxs[floorIdx][trainerIdx];
         CURR_FLOOR.trainers[trainerIdx].mons[monIdx].level = level;
-        CreateBattleTowerMon(&gEnemyParty[0], &CURR_FLOOR.trainers[trainerIdx].mons[monIdx]);
+        CreateBattleTowerMon(&gParties[B_TRAINER_1][0], &CURR_FLOOR.trainers[trainerIdx].mons[monIdx]);
         break;
     }
 }
@@ -995,9 +995,9 @@ static s32 GetPartyMaxLevel(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) != 0 && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_EGG)
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES, NULL) != 0 && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_EGG)
         {
-            s32 currLevel = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL, NULL);
+            s32 currLevel = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_LEVEL, NULL);
             if (currLevel > topLevel)
                 topLevel = currLevel;
         }
