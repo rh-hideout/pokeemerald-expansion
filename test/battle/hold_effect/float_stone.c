@@ -28,3 +28,5 @@ SINGLE_BATTLE_TEST("Float Stone halves the holder's weight", s16 damage)
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
     }
 }
+
+TO_DO_BATTLE_TEST("Float Stone doesn't affect Heavy Ball's multiplier")

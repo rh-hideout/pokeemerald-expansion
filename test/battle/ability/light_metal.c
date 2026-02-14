@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Light Metal and Heavy Metal affects the power of Low Kick", s16 damage)
+SINGLE_BATTLE_TEST("Light Metal and Heavy Metal affect the power of Low Kick", s16 damage)
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_LIGHT_METAL; } //  10.0 - 24.9 kg  (40 power)
@@ -26,3 +26,5 @@ SINGLE_BATTLE_TEST("Light Metal and Heavy Metal affects the power of Low Kick", 
             EXPECT_MUL_EQ(results[0].damage, Q_4_12((i * 0.5) + 1), results[i].damage);
     }
 }
+
+TO_DO_BATTLE_TEST("Light Metal and Heavy Metal don't affect Heavy Ball's multiplier")

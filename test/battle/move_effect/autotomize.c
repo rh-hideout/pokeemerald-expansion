@@ -42,3 +42,4 @@ TO_DO_BATTLE_TEST("Autotomize's weight reduction cannot be removed by Haze");
 TO_DO_BATTLE_TEST("Autotomize's weight reduction is reset upon form change (Gen6+)");
 TO_DO_BATTLE_TEST("Autotomize's weight reduction is reset upon switch");
 TO_DO_BATTLE_TEST("Autotomize's weight reduction is reset upon fainting");
+TO_DO_BATTLE_TEST("Autotomize doesn't affect Heavy Ball's multiplier")
