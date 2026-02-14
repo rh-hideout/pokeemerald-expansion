@@ -32,26 +32,6 @@ extern const u8 gText_Smart[];
 extern const u8 gText_Tough[];
 
 extern const u8 gText_Normal[];
-extern const u8 gText_Super[];
-extern const u8 gText_Hyper[];
-extern const u8 gText_Master[];
-
-extern const u8 gText_Cool2[];
-extern const u8 gText_Beauty2[];
-extern const u8 gText_Cute2[];
-extern const u8 gText_Smart2[];
-extern const u8 gText_Tough2[];
-
-extern const u8 gText_Items[];
-extern const u8 gText_Key_Items[];
-extern const u8 gText_Poke_Balls[];
-extern const u8 gText_TMs_Hms[];
-extern const u8 gText_Berries2[];
-
-extern const u8 gText_Single2[];
-extern const u8 gText_Double2[];
-extern const u8 gText_Multi[];
-extern const u8 gText_MultiLink[];
 
 extern const u8 gText_Single[];
 extern const u8 gText_Double[];
@@ -696,10 +676,6 @@ extern const u8 gText_SomeonesPC[];
 extern const u8 gText_PlayersPC[];
 extern const u8 gText_WhichPCShouldBeAccessed[];
 
-extern const u8 gText_Info2[];
-extern const u8 gText_Decoration2[];
-extern const u8 gText_PackUp[];
-extern const u8 gText_Registry[];
 extern const u8 gText_Information[];
 extern const u8 gText_Yes[];
 extern const u8 gText_No[];
@@ -753,31 +729,6 @@ extern const u8 gText_DexEmptyString[];
 extern const u8 gText_DexSearchDontSpecify[];
 extern const u8 gText_DexSearchTypeNone[];
 
-extern const u8 gText_LilycoveCity[];
-extern const u8 gText_RedShard[];
-extern const u8 gText_YellowShard[];
-extern const u8 gText_BlueShard[];
-extern const u8 gText_GreenShard[];
-extern const u8 gText_Opponent[];
-extern const u8 gText_Tourney_Tree[];
-extern const u8 gText_ReadyToStart[];
-extern const u8 gText_Record2[];
-extern const u8 gText_Rest[];
-extern const u8 gText_Retire[];
-extern const u8 gText_TradeCenter[];
-extern const u8 gText_Colosseum[];
-extern const u8 gText_RecordCorner[];
-extern const u8 gText_BerryCrush3[];
-extern const u8 gText_Blank[];
-extern const u8 gText_BattleRules[];
-extern const u8 gText_JudgeMind[];
-extern const u8 gText_JudgeSkill[];
-extern const u8 gText_JudgeBody[];
-extern const u8 gText_BasicRules[];
-extern const u8 gText_SwapPartners[];
-extern const u8 gText_SwapNumber[];
-extern const u8 gText_SwapNotes[];
-extern const u8 gText_GoOn[];
 extern const u8 gText_BattlePokemon[];
 extern const u8 gText_NormalTagMatch[];
 extern const u8 gText_VarietyTagMatch[];
