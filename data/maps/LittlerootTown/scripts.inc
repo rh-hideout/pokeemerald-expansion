@@ -1202,13 +1202,12 @@ LittlerootTown_EventScript_GiveRunningShoes::
 LittlerootTown_Text_TruckIsHere:
 	.string "MOM: Oh, {PLAYER}! The moving truck\n"
 	.string "arrived while you were at the LAB!\p"
-	.string "Everything is so hectic right now!\n"
-	.string "But I saw you with PROF. BIRCH…$"
+	.string "Everything is so hectic right now!$"
 
 LittlerootTown_Text_HelpPack:
 	.string "MOM: Anyway, since you are here,\n"
-	.string "why don't you help me pack?\p"
-	.string "Come inside, let's get organized!$"
+	.string "I'll go ahead and help you pack.\p"
+	.string "Come inside, let's get things loaded!$"
 
 LittlerootTown_Text_OurNewHomeLetsGoInside:
 	.string "MOM: {PLAYER}, we're here, honey!\p"
@@ -1226,12 +1225,10 @@ LittlerootTown_Text_WaitPlayer:
 	.string "MOM: Wait, {PLAYER}!$"
 
 LittlerootTown_Text_WearTheseRunningShoes:
-	.string "MOM: {PLAYER}! {PLAYER}! Did you\n"
-	.string "introduce yourself to PROF. BIRCH?\p"
 	.string "Oh! What an adorable POKéMON!\n"
 	.string "You got it from PROF. BIRCH. How nice!\p"
-	.string "You're your father's child, all right.\n"
-	.string "You look good together with POKéMON!\p"
+	.string "Your POKéMON will keep you safe.\n"
+	.string "You look good together!\p"
 	.string "Here, honey! If you're going out on an\n"
 	.string "adventure, wear these RUNNING SHOES.\p"
 	.string "They'll put a zip in your step!$"
@@ -1251,12 +1248,11 @@ LittlerootTown_Text_ExplainRunningShoes:
 LittlerootTown_Text_ComeHomeIfAnythingHappens:
 	.string "… … … … … … … …\n"
 	.string "… … … … … … … …\p"
-	.string "To think that you have your very own\n"
-	.string "POKéMON now…\l"
-	.string "Your father will be overjoyed.\p"
+	.string "To think that you are leaving\n"
+	.string "so soon…\l"
+	.string "Your grandparents will be overjoyed.\p"
 	.string "…But please be careful.\n"
-	.string "If anything happens, you can come home.\p"
-	.string "Go on, go get them, honey!$"
+	.string "If anything happens, you can come home.$"
 
 LittlerootTown_Text_CanUsePCToStoreItems:
 	.string "If you use a PC, you can store items\n"
