@@ -75,8 +75,46 @@ DOUBLE_BATTLE_TEST("Follow Me does not change Me First's copy target but redirec
     }
 }
 
-TO_DO_BATTLE_TEST("Follow Me doesn't redirect opponent moves that can't affect opponents") //Eg. Helping Hand
-TO_DO_BATTLE_TEST("Follow Me no longer redirects if the center of attention faints mid-turn")
+DOUBLE_BATTLE_TEST("Follow Me doesn't redirect opponent moves that can't affect opponents")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_AROMATIC_MIST) == EFFECT_AROMATIC_MIST);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, MOVE_AROMATIC_MIST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATIC_MIST, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+    } THEN {
+        EXPECT_EQ(opponentRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(playerRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Follow Me no longer redirects if the center of attention faints mid-turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(60); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(40); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft);
+               MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        HP_BAR(playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        HP_BAR(playerLeft);
+    }
+}
 TO_DO_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
 TO_DO_BATTLE_TEST("Follow Me can only redirect Future Sight/Doom Desire on the turn they were selected (Gen3-5)")
 TO_DO_BATTLE_TEST("Follow Me does not redirect Future Sight/Doom Desire (Gen 6+)")
