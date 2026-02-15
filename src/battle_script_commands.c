@@ -4571,6 +4571,7 @@ static bool32 BattleTypeAllowsExp(void)
               | BATTLE_TYPE_TRAINER_HILL
               | BATTLE_TYPE_FRONTIER
               | BATTLE_TYPE_SAFARI
+              | BATTLE_TYPE_BODYGUARD
               | BATTLE_TYPE_BATTLE_TOWER
               | BATTLE_TYPE_EREADER_TRAINER))
         return FALSE;
@@ -13643,7 +13644,7 @@ static void Cmd_handleballthrow(void)
         u32 ballId = ItemIdToBallId(gLastUsedItem);
 
         gBallToDisplay = gLastThrownBall = gLastUsedItem;
-        if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+        if (gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_BODYGUARD))
             catchRate = gBattleStruct->safariCatchFactor * 1275 / 100;
         else
             catchRate = gSpeciesInfo[gBattleMons[gBattlerTarget].species].catchRate;

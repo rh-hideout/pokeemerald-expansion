@@ -55,6 +55,7 @@ static s32 AI_AttacksPartner(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
 static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
+static s32 AI_Bodyguard(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_Safari(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_FirstBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
@@ -124,7 +125,7 @@ static s32 (*const sBattleAiFuncTable[])(u32, u32, u32, s32) =
     [56] = NULL,                     // Unused
     [57] = NULL,                     // Unused
     [58] = NULL,                     // Unused
-    [59] = NULL,                     // Unused
+    [59] = AI_Bodyguard,            // AI_FLAG_BODYGUARD
     [60] = AI_DynamicFunc,          // AI_FLAG_DYNAMIC_FUNC
     [61] = AI_Roaming,              // AI_FLAG_ROAMING
     [62] = AI_Safari,               // AI_FLAG_SAFARI
@@ -190,7 +191,12 @@ static u64 GetAiFlags(u16 trainerId, u32 battler)
         return 0;
     if (trainerId == 0xFFFF)
     {
-        flags = GetWildAiFlags();
+        if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+            flags = AI_FLAG_SAFARI;
+        else if (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD)
+            flags = AI_FLAG_BODYGUARD | GetWildAiFlags();
+        else
+            flags = GetWildAiFlags();
     }
     else
     {
@@ -198,6 +204,8 @@ static u64 GetAiFlags(u16 trainerId, u32 battler)
             flags = GetAiScriptsInRecordedBattle(battler);
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
             flags = AI_FLAG_SAFARI;
+        else if (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD)
+            flags = AI_FLAG_BODYGUARD;
         else if (gBattleTypeFlags & BATTLE_TYPE_ROAMER)
             flags = AI_FLAG_ROAMING;
         else if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
@@ -6812,6 +6820,19 @@ static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         return score;
 
     AI_Flee();
+    return score;
+}
+
+// Bodyguard pokemon logic
+static s32 AI_Bodyguard(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+{
+    u32 safariFleeRate = gBattleStruct->safariEscapeFactor * 5; // Use same flee logic as Safari for now
+
+    if ((Random() % 100) < safariFleeRate)
+        AI_Flee();
+    // else
+    //    AI_Watch(); // Don't watch, allow standard AI to pick a move
+
     return score;
 }
 

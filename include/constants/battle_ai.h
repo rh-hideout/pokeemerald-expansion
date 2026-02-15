@@ -47,6 +47,7 @@
 #define AI_FLAG_ASSUMPTIONS           (AI_FLAG_ASSUME_STAB | AI_FLAG_ASSUME_STATUS_MOVES | AI_FLAG_WEIGH_ABILITY_PREDICTION)
 
 // 'other' ai logic flags
+#define AI_FLAG_BODYGUARD             AI_FLAG(59)
 #define AI_FLAG_DYNAMIC_FUNC          AI_FLAG(60)  // Create custom AI functions for specific battles via "setdynamicaifunc" cmd
 #define AI_FLAG_ROAMING               AI_FLAG(61)
 #define AI_FLAG_SAFARI                AI_FLAG(62)

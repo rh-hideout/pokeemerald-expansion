@@ -413,6 +413,10 @@ void PlayerPartnerBufferExecCompleted(u32 battler);
 void SetControllerToSafari(u32 battler);
 void SafariBufferExecCompleted(u32 battler);
 
+// bodyguard controller
+void SetControllerToBodyguard(u32 battler);
+void BodyguardBufferExecCompleted(u32 battler);
+
 // wally controller
 void SetControllerToWally(u32 battler);
 void WallyBufferExecCompleted(u32 battler);

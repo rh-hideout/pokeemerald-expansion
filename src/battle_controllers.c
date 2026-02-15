@@ -196,6 +196,8 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToRecordedPlayer;
             else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToSafari;
+            else if (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD)
+                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToBodyguard;
             else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToWally;
             else if (isAIvsAI)

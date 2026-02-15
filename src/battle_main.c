@@ -382,6 +382,11 @@ static void (*const sTurnActionsFuncsTable[])(void) =
     [B_ACTION_SAFARI_POKEBLOCK]       = HandleAction_ThrowPokeblock,
     [B_ACTION_SAFARI_GO_NEAR]         = HandleAction_GoNear,
     [B_ACTION_SAFARI_RUN]             = HandleAction_SafariZoneRun,
+    [B_ACTION_BODYGUARD_WATCH_CAREFULLY] = HandleAction_BodyguardWatchesCarefully,
+    [B_ACTION_BODYGUARD_BALL]            = HandleAction_BodyguardBallThrow,
+    [B_ACTION_BODYGUARD_POKEBLOCK]       = HandleAction_BodyguardPokeblockThrow,
+    [B_ACTION_BODYGUARD_GO_NEAR]         = HandleAction_BodyguardGoNear,
+    [B_ACTION_BODYGUARD_RUN]             = HandleAction_BodyguardRun,
     [B_ACTION_WALLY_THROW]            = HandleAction_WallyBallThrow,
     [B_ACTION_EXEC_SCRIPT]            = HandleAction_RunBattleScript,
     [B_ACTION_TRY_FINISH]             = HandleAction_TryFinish,
@@ -4381,7 +4386,25 @@ static void HandleTurnActionSelectionState(void)
                         return;
                     }
                     break;
+                case B_ACTION_BODYGUARD_BALL:
+                    if (IsPlayerPartyAndPokemonStorageFull())
+                    {
+                        gSelectionBattleScripts[battler] = BattleScript_PrintFullBox;
+                        gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
+                        gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                        gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
+                        return;
+                    }
+                    else
+                    {
+                        gBattleCommunication[battler]++;
+                    }
+                    break;
                 case B_ACTION_SAFARI_POKEBLOCK:
+                    BtlController_EmitChooseItem(battler, B_COMM_TO_CONTROLLER, gBattleStruct->battlerPartyOrders[battler]);
+                    MarkBattlerForControllerExec(battler);
+                    break;
+                case B_ACTION_BODYGUARD_POKEBLOCK:
                     BtlController_EmitChooseItem(battler, B_COMM_TO_CONTROLLER, gBattleStruct->battlerPartyOrders[battler]);
                     MarkBattlerForControllerExec(battler);
                     break;
@@ -4580,7 +4603,13 @@ static void HandleTurnActionSelectionState(void)
                 case B_ACTION_SAFARI_WATCH_CAREFULLY:
                     gBattleCommunication[battler]++;
                     break;
+                case B_ACTION_BODYGUARD_WATCH_CAREFULLY:
+                    gBattleCommunication[battler]++;
+                    break;
                 case B_ACTION_SAFARI_BALL:
+                    gBattleCommunication[battler]++;
+                    break;
+                case B_ACTION_BODYGUARD_BALL:
                     gBattleCommunication[battler]++;
                     break;
                 case B_ACTION_THROW_BALL:
@@ -4593,10 +4622,23 @@ static void HandleTurnActionSelectionState(void)
                     else
                         gBattleCommunication[battler] = STATE_BEFORE_ACTION_CHOSEN;
                     break;
+                case B_ACTION_BODYGUARD_POKEBLOCK:
+                    if ((gBattleResources->bufferB[battler][1] | (gBattleResources->bufferB[battler][2] << 8)) != 0)
+                        gBattleCommunication[battler]++;
+                    else
+                        gBattleCommunication[battler] = STATE_BEFORE_ACTION_CHOSEN;
+                    break;
                 case B_ACTION_SAFARI_GO_NEAR:
                     gBattleCommunication[battler]++;
                     break;
+                case B_ACTION_BODYGUARD_GO_NEAR:
+                    gBattleCommunication[battler]++;
+                    break;
                 case B_ACTION_SAFARI_RUN:
+                    gHitMarker |= HITMARKER_RUN;
+                    gBattleCommunication[battler]++;
+                    break;
+                case B_ACTION_BODYGUARD_RUN:
                     gHitMarker |= HITMARKER_RUN;
                     gBattleCommunication[battler]++;
                     break;
@@ -5017,7 +5059,7 @@ static void SetActionsAndBattlersTurnOrder(void)
     s32 turnOrderId = 0;
     s32 i, j, battler;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+    if (gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_BODYGUARD))
     {
         for (battler = 0; battler < gBattlersCount; battler++)
         {
@@ -5573,6 +5615,7 @@ static void HandleEndTurn_FinishBattle(void)
                                   | BATTLE_TYPE_RECORDED_LINK
                                   | BATTLE_TYPE_FIRST_BATTLE
                                   | BATTLE_TYPE_SAFARI
+                                  | BATTLE_TYPE_BODYGUARD
                                   | BATTLE_TYPE_EREADER_TRAINER
                                   | BATTLE_TYPE_WALLY_TUTORIAL
                                   | BATTLE_TYPE_FRONTIER)))
@@ -5622,6 +5665,7 @@ static void HandleEndTurn_FinishBattle(void)
                                   | BATTLE_TYPE_TRAINER
                                   | BATTLE_TYPE_FIRST_BATTLE
                                   | BATTLE_TYPE_SAFARI
+                                  | BATTLE_TYPE_BODYGUARD
                                   | BATTLE_TYPE_FRONTIER
                                   | BATTLE_TYPE_EREADER_TRAINER
                                   | BATTLE_TYPE_WALLY_TUTORIAL))
@@ -5684,6 +5728,7 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
                                   | BATTLE_TYPE_RECORDED_LINK
                                   | BATTLE_TYPE_FIRST_BATTLE
                                   | BATTLE_TYPE_SAFARI
+                                  | BATTLE_TYPE_BODYGUARD
                                   | BATTLE_TYPE_FRONTIER
                                   | BATTLE_TYPE_EREADER_TRAINER
                                   | BATTLE_TYPE_WALLY_TUTORIAL))

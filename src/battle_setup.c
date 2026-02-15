@@ -307,12 +307,79 @@ static void CreateBattleStartTask_Debug(u8 transition, u16 song)
 #undef tState
 #undef tTransition
 
+static void DoBodyguardBattle(void);
+static void CB2_EndBodyguardBattle(void);
+
+static bool32 ShouldTriggerBodyguardBattle(void)
+{
+    u8 badgeCount = 0;
+    u8 i;
+    u8 leadLevel;
+    
+    // Count badges
+    if (FlagGet(FLAG_BADGE01_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE02_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE03_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE04_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE05_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE06_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE07_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE08_GET)) badgeCount++;
+
+    // Get lead pokemon level
+    leadLevel = GetMonData(&gPlayerParty[0], MON_DATA_LEVEL);
+
+    // Simple trigger condition: 
+    // If player has at least 1 badge and lead pokemon level is high enough relative to badges.
+    // This is a placeholder logic that can be refined.
+    if (badgeCount > 0 && leadLevel > (badgeCount * 10 + 10))
+    {
+         // 5% chance to trigger if conditions met
+         if ((Random() % 100) < 100)
+            return TRUE;
+    }
+    else if (badgeCount == 0 && leadLevel > 15)
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 void BattleSetup_StartWildBattle(void)
 {
     if (GetSafariZoneFlag())
         DoSafariBattle();
+    else if (ShouldTriggerBodyguardBattle())
+        DoBodyguardBattle();
     else
         DoStandardWildBattle(FALSE);
+}
+
+static void DoBodyguardBattle(void)
+{
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+    StopPlayerAvatar();
+    gMain.savedCallback = CB2_EndBodyguardBattle;
+    gBattleTypeFlags = BATTLE_TYPE_BODYGUARD;
+    CreateBattleStartTask(GetWildBattleTransition(), 0);
+}
+
+static void CB2_EndBodyguardBattle(void)
+{
+    CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
+    ResetOamRange(0, 128);
+
+    if (IsPlayerDefeated(gBattleOutcome) == TRUE)
+    {
+        SetMainCallback2(CB2_WhiteOut);
+    }
+    else
+    {
+        SetMainCallback2(CB2_ReturnToField);
+        gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
+    }
 }
 
 void BattleSetup_StartDoubleWildBattle(void)

@@ -1018,7 +1018,7 @@ LittlerootTown_ProfessorBirchsLab_EventScript_SkipNickname::
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 	setflag FLAG_HIDE_BIRCHS_LAB_BAG
-	@ removeobject 7
+	givemon SPECIES_BEWEAR, 21, ITEM_NONE
 	setflag FLAG_RESCUED_BIRCH
 	setflag FLAG_SYS_POKEMON_GET
 	setvar VAR_ROUTE101_STATE, 3

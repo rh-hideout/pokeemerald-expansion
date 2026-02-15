@@ -299,3 +299,27 @@ BattleScript_TrainerBSlideMsgRet::
 BattleScript_TrainerBSlideMsgEnd2::
 	call BattleScript_TrainerBSlideMsgRet
 	end2
+
+	.align 2
+gBattlescriptsForBodyguardActions::
+	.4byte BattleScript_BodyguardWatchesCarefully
+	.4byte BattleScript_BodyguardGetNear
+	.4byte BattleScript_BodyguardThrowPokeblock
+
+BattleScript_BodyguardWatchesCarefully:
+	printstring STRINGID_PKMNWATCHINGCAREFULLY
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_BodyguardGetNear:
+	printfromtable gSafariGetNearStringIds
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_BodyguardThrowPokeblock:
+	printstring STRINGID_THREWPOKEBLOCKATPKMN
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_ATTACKER, B_ANIM_POKEBLOCK_THROW, NULL
+	printfromtable gSafariPokeblockResultStringIds
+	waitmessage B_WAIT_TIME_LONG
+	end2
