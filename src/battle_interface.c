@@ -1212,7 +1212,6 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
     u8 ballIconSpritesIds[PARTY_SIZE];
     u8 taskId;
 
-
     if (!skipPlayer)
     {
         if (IsOnPlayerSide(battler))
