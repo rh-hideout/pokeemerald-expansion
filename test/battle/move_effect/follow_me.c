@@ -115,6 +115,7 @@ DOUBLE_BATTLE_TEST("Follow Me no longer redirects if the center of attention fai
         HP_BAR(playerLeft);
     }
 }
+
 TO_DO_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
 TO_DO_BATTLE_TEST("Follow Me can only redirect Future Sight/Doom Desire on the turn they were selected (Gen3-5)")
 TO_DO_BATTLE_TEST("Follow Me does not redirect Future Sight/Doom Desire (Gen 6+)")
@@ -123,8 +124,47 @@ TO_DO_BATTLE_TEST("Follow Me prioritizes the first Pokémon that used it") // Th
 //TO_DO_BATTLE_TEST("Triples: Follow Me can only draw non-adjacent moves if they use a long-range move")
 TO_DO_BATTLE_TEST("Follow Me can be used in Single Battles (Gen3-SwSh)")
 TO_DO_BATTLE_TEST("Follow Me fails in Single Battles (BDSP+)")
-TO_DO_BATTLE_TEST("Follow Me cannot redirect Sky Drop")
-TO_DO_BATTLE_TEST("Follow Me does not draw attack when the user is being Sky-Dropped")
+
+DOUBLE_BATTLE_TEST("Follow Me cannot redirect Sky Drop")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, MOVE_SKY_DROP, target: playerLeft); }
+        TURN { SKIP_TURN(opponentLeft); SKIP_TURN(playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerRight);
+        MESSAGE("The opposing Wobbuffet took Wynaut into the sky!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Follow Me does not draw attack when the user is being Sky-Dropped")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(60); }
+        PLAYER(SPECIES_WYNAUT) { Speed(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(90); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(80); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, MOVE_SKY_DROP, target: playerRight);
+               MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft);
+               MOVE(playerLeft, MOVE_SPLASH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        HP_BAR(playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, playerLeft);
+    }
+}
 
 DOUBLE_BATTLE_TEST("Spotlight redirects single target moves used by the opposing side to Spotlight's target")
 {
