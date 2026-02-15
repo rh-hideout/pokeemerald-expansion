@@ -357,7 +357,7 @@
 #define B_TRY_CATCH_TRAINER_BALL        GEN_LATEST // In Gen4+, trying to catch a Trainer's Pokémon does not consume the Poké Ball.
 #define B_SLEEP_CLAUSE                  FALSE      // Enables Sleep Clause all the time in every case, overriding B_FLAG_SLEEP_CLAUSE. Use that for modularity.
 #define B_PARTNER_MONS_MARKED_SEEN      FALSE      // If TRUE, if your double battle partner sends out a Pokémon you haven't encountered yet, it will be marked as SEEN in your Pokédex.
-#define B_MULTI_FULL_TEAMS              TRUE       // (12v12s) If FALSE, trainers will be capped at 3 Pokémon each when there are 2 trainers on one side in a battle.
+#define B_MULTI_FULL_TEAMS              TRUE       // If FALSE, trainers will be capped at 3 Pokémon each when there are 2 trainers on one side in a battle. If TRUE, per-battle capping may still be set using `Multi Team: Half` in `trainers.party`
 
 #define NUM_BEEPS_GEN_LATEST            4                    // Loops 4 times
 #define NUM_BEEPS_GEN_3                 -1                   // Loops infinitely
