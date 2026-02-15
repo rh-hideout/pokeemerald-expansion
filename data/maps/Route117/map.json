@@ -22,6 +22,16 @@
       "map": "MAP_MAUVILLE_CITY",
       "offset": 0,
       "direction": "right"
+    },
+    {
+      "map": "MAP_DAY_CARE_RANCH",
+      "offset": 10,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_ROUTE111",
+      "offset": -140,
+      "direction": "right"
     }
   ],
   "object_events": [

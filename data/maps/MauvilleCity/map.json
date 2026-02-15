@@ -32,6 +32,11 @@
       "map": "MAP_ROUTE118",
       "offset": 0,
       "direction": "right"
+    },
+    {
+      "map": "MAP_DAY_CARE_RANCH",
+      "offset": -20,
+      "direction": "left"
     }
   ],
   "object_events": [
