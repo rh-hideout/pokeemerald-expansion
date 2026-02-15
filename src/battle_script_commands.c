@@ -4950,7 +4950,8 @@ bool32 NoAliveMonsForPlayer(void)
     for (i = 0; i < maxI; i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)
-            && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i))))
+            && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i)))
+            && ((gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&gPlayerParty[i])))
         {
             HP_count += GetMonData(&gPlayerParty[i], MON_DATA_HP);
         }

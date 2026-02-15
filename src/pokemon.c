@@ -2050,6 +2050,43 @@ u8 GetMonGender(struct Pokemon *mon)
     return GetBoxMonGender(&mon->box);
 }
 
+bool32 IsBodyguardPokemon(struct Pokemon *mon)
+{
+    u8 badgeCount = 0;
+    u8 level;
+
+    if (GetMonData(mon, MON_DATA_SPECIES, NULL) == SPECIES_NONE)
+        return FALSE;
+    
+    if (GetMonData(mon, MON_DATA_IS_EGG))
+        return FALSE;
+
+    // Count badges
+    if (FlagGet(FLAG_BADGE01_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE02_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE03_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE04_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE05_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE06_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE07_GET)) badgeCount++;
+    if (FlagGet(FLAG_BADGE08_GET)) badgeCount++;
+
+    level = GetMonData(mon, MON_DATA_LEVEL, NULL);
+
+    // Trigger condition from original code:
+    // If player has at least 1 badge and lead pokemon level is high enough relative to badges.
+    if (badgeCount > 0 && level > (badgeCount * 10 + 10))
+    {
+         return TRUE;
+    }
+    else if (badgeCount == 0 && level > 15)
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 u8 GetBoxMonGender(struct BoxPokemon *boxMon)
 {
     u16 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);

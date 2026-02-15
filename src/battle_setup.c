@@ -312,35 +312,29 @@ static void CB2_EndBodyguardBattle(void);
 
 static bool32 ShouldTriggerBodyguardBattle(void)
 {
-    u8 badgeCount = 0;
-    u8 i;
-    u8 leadLevel;
-    
-    // Count badges
-    if (FlagGet(FLAG_BADGE01_GET)) badgeCount++;
-    if (FlagGet(FLAG_BADGE02_GET)) badgeCount++;
-    if (FlagGet(FLAG_BADGE03_GET)) badgeCount++;
-    if (FlagGet(FLAG_BADGE04_GET)) badgeCount++;
-    if (FlagGet(FLAG_BADGE05_GET)) badgeCount++;
-    if (FlagGet(FLAG_BADGE06_GET)) badgeCount++;
-    if (FlagGet(FLAG_BADGE07_GET)) badgeCount++;
-    if (FlagGet(FLAG_BADGE08_GET)) badgeCount++;
+    int i;
+    struct Pokemon *mon = NULL;
 
-    // Get lead pokemon level
-    leadLevel = GetMonData(&gPlayerParty[0], MON_DATA_LEVEL);
+    // Find first alive Pokemon
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE
+         && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)
+         && GetMonData(&gPlayerParty[i], MON_DATA_HP) > 0)
+        {
+            mon = &gPlayerParty[i];
+            break;
+        }
+    }
 
-    // Simple trigger condition: 
-    // If player has at least 1 badge and lead pokemon level is high enough relative to badges.
-    // This is a placeholder logic that can be refined.
-    if (badgeCount > 0 && leadLevel > (badgeCount * 10 + 10))
+    if (mon == NULL)
+        return FALSE; // Should not trigger if no alive mons? Or maybe it triggers and we lose immediately? Assuming valid party for now.
+
+    if (IsBodyguardPokemon(mon))
     {
          // 5% chance to trigger if conditions met
          if ((Random() % 100) < 100)
             return TRUE;
-    }
-    else if (badgeCount == 0 && leadLevel > 15)
-    {
-        return TRUE;
     }
 
     return FALSE;

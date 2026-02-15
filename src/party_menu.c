@@ -3127,10 +3127,23 @@ static void CursorCb_Switch(u8 taskId)
 #define tSlot1SlideDir data[10]
 #define tSlot2SlideDir data[11]
 
+static const u8 gText_BodyguardBlockSwitch[] = _("They won't listen to you in battle.");
+
 static void SwitchSelectedMons(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     u8 windowIds[2];
+
+    if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE && 
+        !(gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) &&
+        (IsBodyguardPokemon(&gPlayerParty[gPartyMenu.slotId]) || IsBodyguardPokemon(&gPlayerParty[gPartyMenu.slotId2]))) 
+    {
+        PlaySE(SE_FAILURE);
+        DisplayPartyMenuMessage(gText_BodyguardBlockSwitch, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
+        return;
+    }
 
     if (gPartyMenu.slotId2 == gPartyMenu.slotId)
     {
@@ -7461,6 +7474,12 @@ static bool8 TrySwitchInPokemon(void)
     u8 slot = GetCursorSelectionMonId();
     u8 newSlot;
     u8 i;
+
+    if (!(gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) && IsBodyguardPokemon(&gPlayerParty[slot]))
+    {
+        StringExpandPlaceholders(gStringVar4, gText_BodyguardBlockSwitch);
+        return FALSE;
+    }
 
     // In a multi battle, slots 1, 4, and 5 are the partner's Pokémon
     if (IsMultiBattle() == TRUE && (slot == 1 || slot == 4 || slot == 5))

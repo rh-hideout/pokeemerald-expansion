@@ -12,7 +12,7 @@ InsideOfTruck_EventScript_TruckSequence::
 	lockall
 	special ExecuteTruckSequence_NoFade
 	setvar VAR_LITTLEROOT_TOWN_STATE, 5
-	setdynamicwarp MAP_ROUTE117, WARP_ID_NONE, 47, 5
+	setdynamicwarp MAP_DAY_CARE_RANCH, WARP_ID_NONE, 4, 17
 	waitstate
 	releaseall
 	end

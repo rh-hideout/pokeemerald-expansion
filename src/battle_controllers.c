@@ -406,7 +406,8 @@ static void SetBattlePartyIds(void)
                 {
                     if (IsOnPlayerSide(i))
                     {
-                        if (IsValidForBattle(&gPlayerParty[j]))
+                        if (IsValidForBattle(&gPlayerParty[j]) &&
+                            ((gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&gPlayerParty[j])))
                         {
                             gBattlerPartyIndexes[i] = j;
                             break;
@@ -429,7 +430,8 @@ static void SetBattlePartyIds(void)
                         {
                             // Exclude already assigned pokemon;
                         }
-                        else if (IsValidForBattle(&gPlayerParty[j]))
+                        else if (IsValidForBattle(&gPlayerParty[j]) &&
+                                 ((gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&gPlayerParty[j])))
                         {
                             gBattlerPartyIndexes[i] = j;
                             break;
