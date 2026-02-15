@@ -123,7 +123,20 @@ TO_DO_BATTLE_TEST("Follow Me draws Electric/Water moves even if there's a Pokém
 TO_DO_BATTLE_TEST("Follow Me prioritizes the first Pokémon that used it") // There can be 2 centers of attention. If the first is gone, the 2nd is used
 //TO_DO_BATTLE_TEST("Triples: Follow Me can only draw non-adjacent moves if they use a long-range move")
 TO_DO_BATTLE_TEST("Follow Me can be used in Single Battles (Gen3-SwSh)")
-TO_DO_BATTLE_TEST("Follow Me fails in Single Battles (BDSP+)")
+
+SINGLE_BATTLE_TEST("Follow Me fails in Single Battles (BDSP+)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOLLOW_ME); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Follow Me!");
+        MESSAGE("But it failed!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, player);
+    }
+}
 
 DOUBLE_BATTLE_TEST("Follow Me cannot redirect Sky Drop")
 {
