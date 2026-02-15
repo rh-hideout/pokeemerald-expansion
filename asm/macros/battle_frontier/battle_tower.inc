@@ -129,20 +129,6 @@
 	multi_do MULTI_BATTLE_2_VS_1
 	.endm
 
-	.macro multi_12_vs_12 trainer1Id:req, trainer1LoseText:req, trainer2Id:req, trainer2LoseText:req, partnerId:req
-	special SavePlayerParty
-	setmultitrainerbattle \trainer1Id, \trainer1LoseText, \trainer2Id, \trainer2LoseText, \partnerId
-	setvar VAR_0x8008, TRUE
-	multi_do MULTI_BATTLE_2_VS_2
-	.endm
-
-	.macro multi_12_vs_6 trainer1Id:req, trainer1LoseText:req, partnerId:req
-	special SavePlayerParty
-	setmultitrainerbattle \trainer1Id, \trainer1LoseText, TRAINER_NONE, NULL, \partnerId
-	setvar VAR_0x8008, TRUE
-	multi_do MULTI_BATTLE_2_VS_1
-	.endm
-
 	@ Wild mons need to be assigned to opponent party 0 and 3 slots, other slots need to be cleared out.
 	.macro multi_wild partnerId:req
 	special SavePlayerParty
