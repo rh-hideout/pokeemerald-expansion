@@ -336,23 +336,16 @@
  *
  * For tests using MULTI_BATTLE_TEST, AI_MULTI_BATTLE_TEST, TWO_VS_ONE_BATTLE_TEST,
  * AI_TWO_VS_ONE_BATTLE_TEST, ONE_VS_TWO_BATTLE_TEST, and AI_ONE_VS_TWO_BATTLE_TEST,
- * the below must be used instead of PLAYER(species) and OPPONENT(species).
+ * the below must be used.
  * PLAYER(species), PARTNER(species), OPPONENT_A(species), and
- * OPPONENT_B(species) Adds the species to the player's, player partner's,
- * opponent A's, or opponent B's party, respectively.
+ * OPPONENT_B(species) Adds the species to the player's (B_TRAINER_0), player partner's (B_TRAINER_2),
+ * opponent A's (B_TRAINER_1), or opponent B's (B_TRAINER_3) party, respectively.
  * Pokemon can be customised as per the guidance for PLAYER(species) and OPPONENT(species).
  * The functions assign the Pokémon to the party of the trainer at B_POSITION_PLAYER_LEFT,
  * B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_LEFT, and B_POSITION_OPPONENT_RIGHT, respectively.
- * PLAYER(species) and OPPONENT_A(species) set Pokémon starting at party index 0,
- * while PARTNER(species) and OPPONENT_B(species) set Pokémon starting at party
- * index 3.
  * For ONE_VS_TWO tests, PLAYER(species) must be used for all player-side Pokémon,
  * and for TWO_VS_ONE tests, OPPONENT_A(species) or OPPONENT(species) must be used for all opponent-side
  * Pokémon.
- * Note where a side in a test has two trainers, the test setup manages the assigning of correct
- * multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A
- * Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B
- * Pokémon may be referenced using indexes 3, 4, and 5.
  *
  * AI_FLAGS
  * Specifies which AI flags are run for all battlers during the test. Has use only for AI tests.
