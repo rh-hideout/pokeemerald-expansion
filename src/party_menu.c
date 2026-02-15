@@ -1814,9 +1814,9 @@ static u16 PartyMenuButtonHandler(s8 *slotPtr)
         return START_BUTTON;
 
     // Cycling player and party teams for in-battle party menu in full-team multis
-    if ((gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL
-     || gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER)
-     && (JOY_NEW(R_BUTTON) || JOY_NEW(L_BUTTON)))
+    bool32 isLayout = gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL || gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER;
+    bool32 isButton = JOY_NEW(R_BUTTON) || JOY_NEW(L_BUTTON);
+    if (isLayout && isButton)
     {
         return R_BUTTON;
     }
