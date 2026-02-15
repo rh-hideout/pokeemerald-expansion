@@ -182,6 +182,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->tookStep)
     {
         IncrementGameStat(GAME_STAT_STEPS);
+        FakeRtc_TickTimeForward();
         IncrementBirthIslandRockStepCount();
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
             return TRUE;

@@ -48,7 +48,7 @@ void PlayTimeCounter_Update(void)
 
     gSaveBlock2Ptr->playTimeVBlanks = 0;
     gSaveBlock2Ptr->playTimeSeconds++;
-    FakeRtc_TickTimeForward();
+    //FakeRtc_TickTimeForward();
 
     if (gSaveBlock2Ptr->playTimeSeconds < 60)
         return;
