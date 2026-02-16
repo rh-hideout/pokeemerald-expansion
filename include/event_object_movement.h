@@ -3,6 +3,10 @@
 
 #include "constants/event_object_movement.h"
 
+#if OW_BATTLE_ONLY_FORMS && !OW_POKEMON_OBJECT_EVENTS
+#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_BATTLE_ONLY_FORMS to work."
+#endif
+
 #if OW_POKEMON_OBJECT_EVENTS == FALSE && OW_FOLLOWERS_ENABLED == TRUE
 #error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_FOLLOWERS_ENABLED to work."
 #endif

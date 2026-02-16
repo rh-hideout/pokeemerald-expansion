@@ -236,7 +236,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with the best possible score, chosen ran
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(5); };
+        PLAYER(SPECIES_WOBBUFFET) { HP(5); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_SLUDGE_BOMB, MOVE_TAKE_DOWN); }
     } WHEN {
@@ -253,7 +253,7 @@ AI_SINGLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two
         ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_HORN_ATTACK) == DAMAGE_CATEGORY_PHYSICAL);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(277); };
+        PLAYER(SPECIES_WOBBUFFET) { HP(277); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KANGASKHAN) { Moves(MOVE_STRENGTH, MOVE_HORN_ATTACK, MOVE_SWORDS_DANCE); }
     } WHEN {
@@ -292,7 +292,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
         OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Item(holdItemAtk); }
     } WHEN {
         TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
-                else {EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1);}
+                else { EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1); }
              }
     }
     SCENE {
@@ -322,7 +322,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
         OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Item(holdItemAtk); }
     } WHEN {
         TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
-                else {EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1);}
+                else { EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1); }
              }
     }
     SCENE {
@@ -490,7 +490,7 @@ AI_SINGLE_BATTLE_TEST("AI will only choose Surf 1/3 times if the opposing mon ha
     GIVEN {
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); };
+        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
         OPPONENT(SPECIES_LANTURN) { Moves(MOVE_THUNDERBOLT, MOVE_ICE_BEAM, MOVE_SURF); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
@@ -507,7 +507,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Thunderbolt then Surf 2/3 times if the opp
     GIVEN {
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); };
+        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
         OPPONENT(SPECIES_LANTURN) { Moves(MOVE_THUNDERBOLT, MOVE_ICE_BEAM, MOVE_SURF); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_THUNDERBOLT); }
@@ -522,8 +522,8 @@ AI_SINGLE_BATTLE_TEST("AI will choose Scratch over Power-up Punch with Contrary"
 {
     enum Ability ability;
 
-    PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
-    PARAMETRIZE {ability = ABILITY_CONTRARY; }
+    PARAMETRIZE { ability = ABILITY_SUCTION_CUPS; }
+    PARAMETRIZE { ability = ABILITY_CONTRARY; }
     GIVEN {
         ASSUME(GetMovePower(MOVE_SCRATCH) == 40);
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
@@ -548,8 +548,8 @@ AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
 {
     enum Ability ability;
 
-    PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
-    PARAMETRIZE {ability = ABILITY_CONTRARY; }
+    PARAMETRIZE { ability = ABILITY_SUCTION_CUPS; }
+    PARAMETRIZE { ability = ABILITY_CONTRARY; }
     GIVEN {
         ASSUME(GetMovePower(MOVE_SUPERPOWER) == 120);
         ASSUME(GetMoveType(MOVE_SUPERPOWER) == TYPE_FIGHTING);
@@ -944,10 +944,10 @@ AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
     GIVEN {
         WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
-        PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); };
+        PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); }
         OPPONENT(SPECIES_GLOOM) { Moves(MOVE_MEGA_DRAIN, MOVE_STUN_SPORE, MOVE_LEECH_SEED, MOVE_SYNTHESIS); }
     } WHEN {
-        TURN { MOVE(player, MOVE_ABSORB); EXPECT_MOVE(opponent, MOVE_MEGA_DRAIN);}
+        TURN { MOVE(player, MOVE_ABSORB); EXPECT_MOVE(opponent, MOVE_MEGA_DRAIN); }
     }
 }
 

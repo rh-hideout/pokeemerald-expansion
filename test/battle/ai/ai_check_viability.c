@@ -135,6 +135,25 @@ AI_SINGLE_BATTLE_TEST("AI will only use Dream Eater if target is asleep")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI chooses Sleep Talk only when it will not wake up with Early Bird")
+{
+    enum Ability ability;
+
+    PARAMETRIZE { ability = ABILITY_RUN_AWAY; }
+    PARAMETRIZE { ability = ABILITY_EARLY_BIRD; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_DODRIO) { Ability(ability); Status1(STATUS1_SLEEP_TURN(2)); Moves(MOVE_SLEEP_TALK, MOVE_TACKLE); }
+    } WHEN {
+        if (ability == ABILITY_EARLY_BIRD)
+            TURN { EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_SLEEP_TALK); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI sees increased base power of Spit Up")
 {
     GIVEN {
@@ -456,7 +475,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(fieldStatus, MOVE_RETURN, MOVE_TAUNT); }
-        OPPONENT(species) { Ability(ability); Moves(MOVE_HYPER_VOICE);  }
+        OPPONENT(species) { Ability(ability); Moves(MOVE_HYPER_VOICE); }
     } WHEN {
         if (ability != ABILITY_NONE)
             TURN { EXPECT_MOVE(opponentLeft, fieldStatus); }

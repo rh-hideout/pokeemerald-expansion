@@ -79,10 +79,10 @@ DOUBLE_BATTLE_TEST("Misty Explosion causes everyone to faint in a double battle"
 SINGLE_BATTLE_TEST("Misty Explosion does not trigger Destiny Bond")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); };
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_DESTINY_BOND); MOVE(opponent, MOVE_MISTY_EXPLOSION);}
+        TURN { MOVE(player, MOVE_DESTINY_BOND); MOVE(opponent, MOVE_MISTY_EXPLOSION); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DESTINY_BOND, player);
         HP_BAR(opponent);

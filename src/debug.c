@@ -1,12 +1,3 @@
-//CREDITS
-//TheXaman:             https://github.com/TheXaman/pokeemerald/tree/tx_debug_system
-//CODE USED FROM:
-//ketsuban:             https://github.com/pret/pokeemerald/wiki/Add-a-debug-menu
-//Pyredrid:             https://github.com/Pyredrid/pokeemerald/tree/debugmenu
-//AsparagusEduardo:     https://github.com/AsparagusEduardo/pokeemerald/tree/InfusedEmerald_v2
-//Ghoulslash:           https://github.com/ghoulslash/pokeemerald
-//Jaizu:                https://jaizu.moe/
-//AND OTHER RHH POKEEMERALD-EXPANSION CONTRIBUTORS
 #include "global.h"
 #include "battle.h"
 #include "battle_setup.h"
@@ -2086,7 +2077,7 @@ static void Debug_Display_ItemInfo(u32 itemId, u32 digit, u8 windowId)
     else if (CheckIfItemIsTMHMOrEvolutionStone(itemId) == 1)
     {
         end = StringCopy(end, COMPOUND_STRING(" None"));
-    } 
+    }
 
     WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
     StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
@@ -2264,7 +2255,7 @@ static void DebugAction_Give_PokemonSimple(u8 taskId)
     gTasks[taskId].tIsComplex = FALSE;
 
     FreeMonIconPalettes();
-    LoadMonIconPalette(gTasks[taskId].tInput);
+    LoadMonIconPalettePersonality(gTasks[taskId].tInput, 0);
     gTasks[taskId].tSpriteId = CreateMonIcon(gTasks[taskId].tInput, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0);
     gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
 }
@@ -2298,7 +2289,7 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
     gTasks[taskId].tIsComplex = TRUE;
 
     FreeMonIconPalettes();
-    LoadMonIconPalette(gTasks[taskId].tInput);
+    LoadMonIconPalettePersonality(gTasks[taskId].tInput, 0);
     gTasks[taskId].tSpriteId = CreateMonIcon(gTasks[taskId].tInput, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0);
     gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
     gTasks[taskId].tIterator = 0;
@@ -2322,7 +2313,7 @@ static void DebugAction_Give_Pokemon_SelectId(u8 taskId)
         Debug_Display_SpeciesInfo(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
         FreeMonIconPalettes();
-        LoadMonIconPalette(gTasks[taskId].tInput);
+        LoadMonIconPalettePersonality(gTasks[taskId].tInput, 0);
         gTasks[taskId].tSpriteId = CreateMonIcon(gTasks[taskId].tInput, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0);
         gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
     }

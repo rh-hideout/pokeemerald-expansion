@@ -2426,7 +2426,7 @@ static bool8 Mugshot_WaitPlayerSlide(struct Task *task)
     sTransitionData->BG0HOFS_Lower -= 8;
     sTransitionData->BG0HOFS_Upper += 8;
 
-    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) 
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
         if (IsTrainerPicSlideDone(task->tPartnerSpriteId))
         {
@@ -2446,7 +2446,7 @@ static bool8 Mugshot_WaitPlayerSlide(struct Task *task)
         else
         {
             return FALSE;
-        } 
+        }
     }
     else
     {
@@ -2468,7 +2468,7 @@ static bool8 Mugshot_WaitPlayerSlide(struct Task *task)
         else
         {
             return FALSE;
-        } 
+        }
     }
     return FALSE;
 }
@@ -2615,11 +2615,11 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
                                                   0, NULL);
 
     gReservedSpritePaletteCount = 12;
-    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) 
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
-        task->tPartnerSpriteId = CreateTrainerSprite(partnerPicId, 
-                                                DISPLAY_WIDTH + 240, 
-                                                106, 
+        task->tPartnerSpriteId = CreateTrainerSprite(partnerPicId,
+                                                DISPLAY_WIDTH + 240,
+                                                106,
                                                 0, NULL);
         partnerSprite = &gSprites[task->tPartnerSpriteId];
         partnerSprite->callback = SpriteCB_MugshotTrainerPicPartner;
@@ -2631,10 +2631,10 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
         SetOamMatrixRotationScaling(partnerSprite->oam.matrixNum, -512, 512, 0);
     }
 
-    task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), 
-                                                DISPLAY_WIDTH + 32, 
-                                                106, 
-                                                0, NULL); 
+    task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender),
+                                                DISPLAY_WIDTH + 32,
+                                                106,
+                                                0, NULL);
 
     opponentSpriteA = &gSprites[task->tOpponentSpriteAId];
     playerSprite = &gSprites[task->tPlayerSpriteId];

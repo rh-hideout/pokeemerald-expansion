@@ -1,13 +1,13 @@
-# `pokemerald-expansion` Vs. Seeker 
+# `pokemerald-expansion` Vs. Seeker
 
 ## What is the Vs. Seeker?
-The Vs. Seeker is a Key Item that is used to battle Trainers that the player has battled previously. 
+The Vs. Seeker is a Key Item that is used to battle Trainers that the player has battled previously.
 
-When used, the Vs. Seeker sends out a signal that allows the player to find other Trainers who want a rematch. This signal affects all Trainers that are on-screen. Once used on Trainers that can be rematched, the device cannot be used again until it is charged. The player does this by walking a specific number of steps. The effect on the Trainers wears off if they are battled, the player leaves the area, or the player walks a specific number of steps. If the player attempts to use the Vs. Seeker when it is not fully charged, the player will be told how many steps remain until it is. After the player uses the Vs. Seeker, some Trainers may have their team changed from their first battle. 
+When used, the Vs. Seeker sends out a signal that allows the player to find other Trainers who want a rematch. This signal affects all Trainers that are on-screen. Once used on Trainers that can be rematched, the device cannot be used again until it is charged. The player does this by walking a specific number of steps. The effect on the Trainers wears off if they are battled, the player leaves the area, or the player walks a specific number of steps. If the player attempts to use the Vs. Seeker when it is not fully charged, the player will be told how many steps remain until it is. After the player uses the Vs. Seeker, some Trainers may have their team changed from their first battle.
 
 ## How is the Vs. Seeker enabled?
 ### Users
-Vs. Seeker functionality is enabled by setting `I_VS_SEEKER_CHARGING` to `TRUE`. 
+Vs. Seeker functionality is enabled by setting `I_VS_SEEKER_CHARGING` to `TRUE`.
 
 ### Players
 `ITEM_VS_SEEKER` can only be used outside of battle. It can be used from the bag or registered to be used from the field.
@@ -26,7 +26,7 @@ When `I_VS_SEEKER_CHARGING` is enabled, the Match Call does not function at all.
 
 ## How does the Vs. Seeker choose a Trainer?
 
-When the Vs. Seeker is successfully used, every Trainer on screen is individually queried. There is a 31% chance that the Trainer will want a rematch. 
+When the Vs. Seeker is successfully used, every Trainer on screen is individually queried. There is a 31% chance that the Trainer will want a rematch.
 Objects listed in `regularTrainersOnLand` or `regularTrainersInWater` are considered Land/Water objects.
 
 | Status | Is Land/Water Object | Emote | New Movement Type |
@@ -34,7 +34,7 @@ Objects listed in `regularTrainersOnLand` or `regularTrainersInWater` are consid
 | Wants Rematch | Yes | `MOVEMENT_ACTION_EMOTE_DOUBLE_EXCL_MARK` | `MOVEMENT_TYPE_COUNTER_CLOCKWISE` |
 | Wants Rematch | No | `MOVEMENT_ACTION_EMOTE_DOUBLE_EXCL_MARK` | `MOVEMENT_TYPE_FACE_DOWN` |
 | Does Not Want Rematch | - | `MOVEMENT_ACTION_EMOTE_X` | none |
-| Has Not Been Fought | - | `MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK` | none | 
+| Has Not Been Fought | - | `MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK` | none |
 
 ###  Rematch Table
 
@@ -58,7 +58,7 @@ The game determines which version of the Trainer you'll fight next by following 
 No extra work is required. With the exception of Wally, Gym Leaders and Elite Four, all of the rematchable Trainers in Emerald will work with the Vs. Seeker without any changes.
 ### New Trainers
 #### Party / `gRematchTable`
-Each of the rematches for the Trainer must be defined as seperate Trainers in `src/data/trainers.party` and `include/constants/opponents`. For example, `TRAINER_CALVIN_1` also has `TRAINER_CALVIN_2`,`TRAINER_CALVIN_3`,`TRAINER_CALVIN_4`, and `TRAINER_CALVIN_5`.  
+Each of the rematches for the Trainer must be defined as seperate Trainers in `src/data/trainers.party` and `include/constants/opponents`. For example, `TRAINER_CALVIN_1` also has `TRAINER_CALVIN_2`,`TRAINER_CALVIN_3`,`TRAINER_CALVIN_4`, and `TRAINER_CALVIN_5`.
 
 Once all of those constants and parties are defined, a new row must be added to `gRematchTable` (located in in `src/battle_setup.c`). The row header should be a rematch ID, which can be added in `include/constants/rematches.h`. The row contents must be the five constants created for the new parties, with the lat argument being the constant of the map (`include/constants/map_groups.h`) where the Trainer is placed.
 

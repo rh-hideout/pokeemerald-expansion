@@ -243,7 +243,7 @@ void LoadTypeIcons(u32 battler)
     struct Pokemon* mon = GetBattlerMon(battler);
     u32 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
 
-    if (B_SHOW_TYPES == SHOW_TYPES_NEVER 
+    if (B_SHOW_TYPES == SHOW_TYPES_NEVER
         || (B_SHOW_TYPES == SHOW_TYPES_SEEN && !GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN)))
         return;
 
@@ -566,4 +566,3 @@ static s32 GetTypeIconBounceMovement(s32 originalY, u32 position)
     struct Sprite *healthbox = &gSprites[gHealthboxSpriteIds[GetBattlerAtPosition(position)]];
     return originalY + healthbox->y2;
 }
-

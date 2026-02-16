@@ -1,12 +1,12 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Primal reversion happens for Groudon only when holding Red Orb")
+SINGLE_BATTLE_TEST("Primal Reversion happens for Groudon only when holding Red Orb")
 {
     u16 heldItem;
-    PARAMETRIZE { heldItem = ITEM_NONE;}
-    PARAMETRIZE { heldItem = ITEM_RED_ORB;}
-    PARAMETRIZE { heldItem = ITEM_BLUE_ORB;}
+    PARAMETRIZE { heldItem = ITEM_NONE; }
+    PARAMETRIZE { heldItem = ITEM_RED_ORB; }
+    PARAMETRIZE { heldItem = ITEM_BLUE_ORB; }
     GIVEN {
         PLAYER(SPECIES_GROUDON) { Item(heldItem); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -33,12 +33,12 @@ SINGLE_BATTLE_TEST("Primal reversion happens for Groudon only when holding Red O
     }
 }
 
-SINGLE_BATTLE_TEST("Primal reversion happens for Kyogre only when holding Blue Orb")
+SINGLE_BATTLE_TEST("Primal Reversion happens for Kyogre only when holding Blue Orb")
 {
     u16 heldItem;
-    PARAMETRIZE { heldItem = ITEM_NONE;}
-    PARAMETRIZE { heldItem = ITEM_RED_ORB;}
-    PARAMETRIZE { heldItem = ITEM_BLUE_ORB;}
+    PARAMETRIZE { heldItem = ITEM_NONE; }
+    PARAMETRIZE { heldItem = ITEM_RED_ORB; }
+    PARAMETRIZE { heldItem = ITEM_BLUE_ORB; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KYOGRE) { Item(heldItem); }
@@ -65,11 +65,11 @@ SINGLE_BATTLE_TEST("Primal reversion happens for Kyogre only when holding Blue O
     }
 }
 
-DOUBLE_BATTLE_TEST("Primal reversion's order is determined by Speed - opponent faster")
+DOUBLE_BATTLE_TEST("Primal Reversion's order is determined by Speed - opponent faster")
 {
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(5); };
-        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(15); };
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(5); }
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(15); }
         OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(10); }
         OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(20); }
     } WHEN {
@@ -91,11 +91,11 @@ DOUBLE_BATTLE_TEST("Primal reversion's order is determined by Speed - opponent f
     }
 }
 
-DOUBLE_BATTLE_TEST("Primal reversion's order is determined by Speed - player faster")
+DOUBLE_BATTLE_TEST("Primal Reversion's order is determined by Speed - player faster")
 {
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(20); };
-        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(30); };
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(20); }
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(30); }
         OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(10); }
         OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(2); }
     } WHEN {
@@ -117,11 +117,11 @@ DOUBLE_BATTLE_TEST("Primal reversion's order is determined by Speed - player fas
     }
 }
 
-SINGLE_BATTLE_TEST("Primal reversion happens after a mon is sent out after a mon is fainted")
+SINGLE_BATTLE_TEST("Primal Reversion happens after a mon is sent out after a mon is fainted")
 {
     GIVEN {
         ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
-        PLAYER(SPECIES_WOBBUFFET) {HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Primal reversion happens after a mon is sent out after a mon
     }
 }
 
-SINGLE_BATTLE_TEST("Primal reversion happens after a mon is switched in")
+SINGLE_BATTLE_TEST("Primal Reversion happens after a mon is switched in")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -153,12 +153,12 @@ SINGLE_BATTLE_TEST("Primal reversion happens after a mon is switched in")
     }
 }
 
-SINGLE_BATTLE_TEST("Primal reversion happens after a switch-in caused by Eject Button")
+SINGLE_BATTLE_TEST("Primal Reversion happens after a switch-in caused by Eject Button")
 {
     GIVEN {
         ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
         ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
-        PLAYER(SPECIES_WOBBUFFET) {Item(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -174,14 +174,14 @@ SINGLE_BATTLE_TEST("Primal reversion happens after a switch-in caused by Eject B
     }
 }
 
-SINGLE_BATTLE_TEST("Primal reversion happens after a switch-in caused by Red Card")
+SINGLE_BATTLE_TEST("Primal Reversion happens after a switch-in caused by Red Card")
 {
     GIVEN {
         ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
         ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET) {Item(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Primal reversion happens after a switch-in caused by Red Car
     }
 }
 
-SINGLE_BATTLE_TEST("Primal reversion happens after the entry hazards damage")
+SINGLE_BATTLE_TEST("Primal Reversion happens after the entry hazards damage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
@@ -203,7 +203,7 @@ SINGLE_BATTLE_TEST("Primal reversion happens after the entry hazards damage")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SPIKES); }
-        TURN { MOVE(opponent, MOVE_SPIKES); SWITCH(player, 1);}
+        TURN { MOVE(opponent, MOVE_SPIKES); SWITCH(player, 1); }
     } SCENE {
         SEND_IN_MESSAGE("Groudon");
         HP_BAR(player);
@@ -215,7 +215,7 @@ SINGLE_BATTLE_TEST("Primal reversion happens after the entry hazards damage")
     }
 }
 
-SINGLE_BATTLE_TEST("Primal reversion happens immediately if it was brought in by U-turn")
+SINGLE_BATTLE_TEST("Primal Reversion happens immediately if it was brought in by U-turn")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -236,7 +236,7 @@ SINGLE_BATTLE_TEST("Primal reversion happens immediately if it was brought in by
 }
 
 
-DOUBLE_BATTLE_TEST("Primal reversion triggers for multiple battlers if multiple fainted the previous turn")
+DOUBLE_BATTLE_TEST("Primal Reversion triggers for multiple battlers if multiple fainted the previous turn")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
@@ -259,7 +259,7 @@ DOUBLE_BATTLE_TEST("Primal reversion triggers for multiple battlers if multiple 
     }
 }
 
-DOUBLE_BATTLE_TEST("Primal reversion triggers for all battlers if multiple fainted the previous turn")
+DOUBLE_BATTLE_TEST("Primal Reversion triggers for all battlers if multiple fainted the previous turn")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
@@ -287,7 +287,7 @@ DOUBLE_BATTLE_TEST("Primal reversion triggers for all battlers if multiple faint
     }
 }
 
-DOUBLE_BATTLE_TEST("Primal reversion and other switch-in effects trigger for all battlers if multiple fainted the previous turn")
+DOUBLE_BATTLE_TEST("Primal Reversion and other switch-in effects trigger for all battlers if multiple fainted the previous turn")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
@@ -330,5 +330,42 @@ DOUBLE_BATTLE_TEST("Primal reversion and other switch-in effects trigger for all
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(opponentLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Primal Reversion is reverted upon battle end")
+{
+    u32 species, item;
+    PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }
+    PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; }
+    GIVEN {
+        PLAYER(species) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), species);
+    }
+}
+
+SINGLE_BATTLE_TEST("Primal Reversion is NOT reverted upon fainting")
+{
+    u32 species, item, targetSpecies;
+    PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB;  targetSpecies = SPECIES_GROUDON_PRIMAL; }
+    PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; targetSpecies = SPECIES_KYOGRE_PRIMAL;  }
+    GIVEN {
+        PLAYER(species) { HP(1); Item(item); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, targetSpecies);
     }
 }

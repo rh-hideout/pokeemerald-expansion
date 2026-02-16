@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Before First Turn")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         MESSAGE("This message plays before the first turn.{PAUSE_UNTIL_PRESS}");
     }
@@ -157,8 +157,8 @@ SINGLE_BATTLE_TEST("Trainer Slide: Last Low Hp")
     gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_LAST_LOW_HP;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
-        PLAYER(SPECIES_WOBBUFFET) { Attack(999);}
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(1);}
+        PLAYER(SPECIES_WOBBUFFET) { Attack(999); }
+        OPPONENT(SPECIES_WOBBUFFET) { Defense(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_FALSE_SWIPE); }
     } SCENE {
@@ -172,7 +172,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution")
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_LOPUNNY) {Item(ITEM_LOPUNNITE); };
+        OPPONENT(SPECIES_LOPUNNY) { Item(ITEM_LOPUNNITE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {

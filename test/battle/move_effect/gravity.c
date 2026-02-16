@@ -73,7 +73,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gravity")
         PLAYER(SPECIES_WOBBUFFET) { Item(foeItem); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_GRAVITY, MOVE_HEADBUTT, MOVE_TAUNT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_EARTH_POWER); Item(friendItem);  }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_EARTH_POWER); Item(friendItem); }
     } WHEN {
     if (move == MOVE_THUNDER || (foeItem == ITEM_AIR_BALLOON && friendItem != ITEM_AIR_BALLOON))
         TURN { EXPECT_MOVE(opponentLeft, MOVE_GRAVITY); }

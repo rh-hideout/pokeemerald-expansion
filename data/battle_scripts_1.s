@@ -1171,23 +1171,58 @@ BattleScript_EffectSpectralThiefFromDamage:
 BattleScript_EffectPartingShot::
 	attackcanceler
 	jumpifstat BS_TARGET, CMP_GREATER_THAN, STAT_ATK, MIN_STAT_STAGE, BattleScript_EffectPartingShotTryAtk
-	jumpifstat BS_TARGET, CMP_EQUAL, STAT_SPATK, MIN_STAT_STAGE, BattleScript_CantLowerMultipleStats
+	jumpifstat BS_TARGET, CMP_EQUAL, STAT_SPATK, MIN_STAT_STAGE, BattleScript_EffectPartingShotCantLowerMultipleStats
 BattleScript_EffectPartingShotTryAtk:
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	attackanimation
 	waitanimation
+	setbyte sB_ANIM_TARGETS_HIT, 0
 	setstatchanger STAT_ATK, 1, TRUE
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_EffectPartingShotTrySpAtk, BIT_SPATK
-	printfromtable gStatDownStringIds
-	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_EffectPartingShotMaybePrintStat
 BattleScript_EffectPartingShotTrySpAtk:
 	setstatchanger STAT_SPATK, 1, TRUE
-	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_EffectPartingShotSwitch
-	printfromtable gStatDownStringIds
-	waitmessage B_WAIT_TIME_LONG
+	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_EffectPartingShotMaybeSwitch
+	call BattleScript_EffectPartingShotMaybePrintStat
+BattleScript_EffectPartingShotMaybeSwitch:
+	jumpifgenconfiglowerthan CONFIG_PARTING_SHOT_SWITCH, GEN_7, BattleScript_EffectPartingShotSwitch
+	jumpifbyte CMP_NOT_EQUAL, sB_ANIM_TARGETS_HIT, 0, BattleScript_EffectPartingShotSwitch
+	goto BattleScript_MoveEnd
+
 BattleScript_EffectPartingShotSwitch:
 	moveendall
 	goto BattleScript_MoveSwitchPursuitEnd
+
+BattleScript_EffectPartingShotCantLowerMultipleStats:
+	pause B_WAIT_TIME_SHORT
+	setmoveresultflags MOVE_RESULT_FAILED
+	call BattleScript_EffectPartingShotPrintWontDecrease
+	setbyte sB_ANIM_TARGETS_HIT, 0
+	goto BattleScript_EffectPartingShotMaybeSwitch
+
+BattleScript_EffectPartingShotMaybePrintStat:
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_ATTACKER_STAT_CHANGED, BattleScript_EffectPartingShotPrintStat
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_DEFENDER_STAT_CHANGED, BattleScript_EffectPartingShotPrintStat
+	return
+
+BattleScript_EffectPartingShotPrintStat:
+	setbyte sB_ANIM_TARGETS_HIT, 1
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_EffectPartingShotPrintWontDecrease:
+	jumpifability BS_TARGET, ABILITY_CONTRARY, BattleScript_EffectPartingShotPrintWontDecreaseContrary
+	printstring STRINGID_STATSWONTDECREASE2
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_EffectPartingShotPrintWontDecreaseContrary:
+	swapattackerwithtarget
+	printstring STRINGID_STATSWONTDECREASE2
+	waitmessage B_WAIT_TIME_LONG
+	swapattackerwithtarget
+	return
 
 BattleScript_EffectPowder::
 	attackcanceler
@@ -1224,6 +1259,7 @@ BattleScript_EffectAromaticMistWontGoHigher:
 
 BattleScript_EffectMagneticFlux::
 	attackcanceler
+	savetarget
 	setbyte gBattleCommunication, 0
 BattleScript_EffectMagneticFluxStart:
 	jumpifability BS_TARGET, ABILITY_MINUS, BattleScript_EffectMagneticFluxCheckStats
@@ -1252,13 +1288,16 @@ BattleScript_EffectMagneticFluxTrySpDef:
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_EffectMagneticFluxLoop:
 	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_EffectMagneticFluxEnd
+	jumpifnoally BS_ATTACKER, BattleScript_EffectMagneticFluxEnd
 	setallytonexttarget BattleScript_EffectMagneticFluxStart
 BattleScript_EffectMagneticFluxEnd:
+	restoretarget
 	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, 0, BattleScript_MoveEnd
 	goto BattleScript_ButItFailed
 
 BattleScript_EffectGearUp::
 	attackcanceler
+	savetarget
 	setbyte gBattleCommunication, 0
 BattleScript_EffectGearUpStart:
 	jumpifability BS_TARGET, ABILITY_MINUS, BattleScript_EffectGearUpCheckStats
@@ -1287,8 +1326,10 @@ BattleScript_EffectGearUpTrySpAtk:
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_EffectGearUpLoop:
 	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_EffectGearUpEnd
+	jumpifnoally BS_ATTACKER, BattleScript_EffectGearUpEnd
 	setallytonexttarget BattleScript_EffectGearUpStart
 BattleScript_EffectGearUpEnd:
+	restoretarget
 	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, 0, BattleScript_MoveEnd
 	goto BattleScript_ButItFailed
 
@@ -2316,6 +2357,9 @@ BattleScript_TryTailwindAbilitiesLoop_WindPower:
 BattleScript_EffectMiracleEye::
 	attackcanceler
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
+	jumpifgenconfiglowerthan CONFIG_MIRACLE_EYE_FAIL, GEN_5, BattleScript_MiracleEyeSet
+	jumpifvolatile BS_TARGET, VOLATILE_MIRACLE_EYE, BattleScript_ButItFailed
+BattleScript_MiracleEyeSet:
 	setvolatile BS_TARGET, VOLATILE_MIRACLE_EYE
 	goto BattleScript_IdentifiedFoe
 
@@ -3336,9 +3380,9 @@ BattleScript_EffectMeanLook::
 	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
 	jumpifvolatile BS_TARGET, VOLATILE_ESCAPE_PREVENTION, BattleScript_ButItFailed
 	jumpifsubstituteblocks BattleScript_ButItFailed
-.if B_GHOSTS_ESCAPE >= GEN_6
+	jumpifgenconfiglowerthan CONFIG_GHOSTS_ESCAPE, GEN_6, BattleScript_EffectMeanLookGen5
 	jumpiftype BS_TARGET, TYPE_GHOST, BattleScript_ButItFailed
-.endif
+BattleScript_EffectMeanLookGen5:
 	attackanimation
 	waitanimation
 	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_PREVENT_ESCAPE
@@ -3349,6 +3393,7 @@ BattleScript_EffectMeanLook::
 BattleScript_EffectNightmare::
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed
+	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	jumpifvolatile BS_TARGET, VOLATILE_NIGHTMARE, BattleScript_ButItFailed
 	jumpifstatus BS_TARGET, STATUS1_SLEEP, BattleScript_NightmareWorked
 	jumpifability BS_TARGET, ABILITY_COMATOSE, BattleScript_NightmareWorked
@@ -3438,7 +3483,11 @@ BattleScript_EffectSpikes::
 BattleScript_EffectForesight::
 	attackcanceler
 	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
+	jumpifgenconfiglowerthan CONFIG_FORESIGHT_FAIL, GEN_3, BattleScript_ForesightFailCheck
+	jumpifgenconfiglowerthan CONFIG_FORESIGHT_FAIL, GEN_5, BattleScript_ForesightSet
+BattleScript_ForesightFailCheck:
 	jumpifvolatile BS_TARGET, VOLATILE_FORESIGHT, BattleScript_ButItFailed
+BattleScript_ForesightSet:
 	setvolatile BS_TARGET, VOLATILE_FORESIGHT
 BattleScript_IdentifiedFoe:
 	attackanimation
@@ -3719,6 +3768,7 @@ BattleScript_EffectBellyDrum::
 
 BattleScript_EffectPsychUp::
 	attackcanceler
+	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	copyfoestats
 	attackanimation
 	waitanimation
@@ -4958,6 +5008,7 @@ BattleScript_LeechSeedTurnDrain:
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	tryfaintmon BS_ATTACKER
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_HP_THRESHOLD
 	return
 
 BattleScript_BideStoringEnergy::
@@ -6294,6 +6345,7 @@ BattleScript_YawnMakesAsleepEnd2::
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
+	tryactivateitem BS_EFFECT_BATTLER, ACTIVATION_ON_STATUS_CHANGE
 	jumpfifsemiinvulnerable BS_EFFECT_BATTLER, STATE_SKY_DROP, BattleScript_YawnEnd
 	makevisible BS_EFFECT_BATTLER
 	skydropyawn

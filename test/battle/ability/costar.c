@@ -119,5 +119,60 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost")
 }
 
 // Copy from Ruin ability tests
-TO_DO_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Player");
-TO_DO_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Opponent");
+DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Player")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
+        PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_EXPLOSION);
+            SEND_OUT(playerLeft, 2);
+            SEND_OUT(opponentLeft, 2);
+            SEND_OUT(playerRight, 3);
+            SEND_OUT(opponentRight, 3);
+        }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Explosion!");
+        ABILITY_POPUP(playerLeft, ABILITY_INTREPID_SWORD);
+        MESSAGE("Zacian's Intrepid Sword raised its Attack!");
+        ABILITY_POPUP(playerRight, ABILITY_COSTAR);
+        MESSAGE("Flamigo copied Zacian's stat changes!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Opponent")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
+        OPPONENT(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_EXPLOSION);
+            SEND_OUT(playerLeft, 2);
+            SEND_OUT(opponentLeft, 2);
+            SEND_OUT(playerRight, 3);
+            SEND_OUT(opponentRight, 3);
+        }
+    } SCENE {
+        MESSAGE("Wobbuffet used Explosion!");
+        ABILITY_POPUP(opponentLeft, ABILITY_INTREPID_SWORD);
+        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        ABILITY_POPUP(opponentRight, ABILITY_COSTAR);
+        MESSAGE("The opposing Flamigo copied the opposing Zacian's stat changes!");
+    }
+}

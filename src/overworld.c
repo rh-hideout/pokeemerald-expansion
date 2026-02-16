@@ -715,7 +715,7 @@ static bool32 IsWhiteoutCutscene(void)
 {
     if (OW_WHITEOUT_CUTSCENE < GEN_4)
         return FALSE;
-    return GetHealNpcLocalId(GetHealLocationIndexByWarpData(&gSaveBlock1Ptr->lastHealLocation)) > 0;
+    return GetHealNpcLocalId(GetHealLocationIndexByWarpData(&gSaveBlock1Ptr->lastHealLocation)) != LOCALID_NONE;
 }
 
 void SetWarpDestinationToLastHealLocation(void)
@@ -724,6 +724,11 @@ void SetWarpDestinationToLastHealLocation(void)
         SetWhiteoutRespawnWarpAndHealerNPC(&sWarpDestination);
     else
         sWarpDestination = gSaveBlock1Ptr->lastHealLocation;
+}
+
+void SetWarpDestinationForTeleport(void)
+{
+    sWarpDestination = gSaveBlock1Ptr->lastHealLocation;
 }
 
 void SetLastHealLocationWarp(u8 healLocationId)

@@ -84,6 +84,6 @@ AI_DOUBLE_BATTLE_TEST("AI uses Flower Shield")
         OPPONENT(SPECIES_TANGELA) { Moves(MOVE_FLOWER_SHIELD, MOVE_POUND); }
         OPPONENT(SPECIES_TANGELA);
     } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, MOVE_FLOWER_SHIELD); }
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_FLOWER_SHIELD); }
     }
 }

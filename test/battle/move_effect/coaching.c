@@ -99,7 +99,7 @@ DOUBLE_BATTLE_TEST("Coaching fails if there's no ally")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { HP(1); };
+        PLAYER(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -132,7 +132,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Coaching")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move); }
     } WHEN {
         if (move == MOVE_HEADBUTT)
-            TURN {  EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
         else
             TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
     }

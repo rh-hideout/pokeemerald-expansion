@@ -1599,8 +1599,8 @@ static void AnimHailBegin(struct Sprite *sprite)
         sprite->data[0] = spriteId;
         if (spriteId != MAX_SPRITES)
         {
-            // The sprite template we're using is shared amongst a few other 
-            // places, which make the sprite flicker. That's not what we want 
+            // The sprite template we're using is shared amongst a few other
+            // places, which make the sprite flicker. That's not what we want
             // here, though. Override the callback.
             gSprites[sprite->data[0]].callback = AnimHailContinue;
             gSprites[sprite->data[0]].sOwnerTaskId = sprite->sOwnerTaskId;

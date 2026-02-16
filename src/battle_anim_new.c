@@ -9629,7 +9629,6 @@ void AnimTask_RandomBool(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-// Credit to Skeli
 #define PRIMAL_PULSE_SCALE_SIZE 16
 #define PRIMAL_PULSE_FRAME_COUNT 4
 static const union AffineAnimCmd sSpriteAffineAnim_PrimalSymbol[] =

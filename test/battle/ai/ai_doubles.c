@@ -23,11 +23,12 @@ AI_DOUBLE_BATTLE_TEST("AI won't use a Weather changing move if partner already c
         OPPONENT(SPECIES_WOBBUFFET) { Moves(weatherMoveLeft); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, weatherMoveRight); }
     } WHEN {
-            TURN {  NOT_EXPECT_MOVE(opponentRight, weatherMoveRight);
-                    SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:playerLeft);
-                    SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:playerRight);
-                    SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:opponentLeft);
-                 }
+        TURN {
+            NOT_EXPECT_MOVE(opponentRight, weatherMoveRight);
+            SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:playerLeft);
+            SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:playerRight);
+            SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:opponentLeft);
+        }
     }
 }
 
@@ -46,11 +47,12 @@ AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move1, move2, move3, move4); }
     } WHEN {
-            TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND);
-                    SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:playerLeft);
-                    SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:playerRight);
-                    SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:opponentLeft);
-                 }
+        TURN {
+            NOT_EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND);
+            SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:playerLeft);
+            SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:playerRight);
+            SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:opponentLeft);
+        }
     } SCENE {
         NOT MESSAGE("The opposing Wobbuffet used Helping Hand!");
     }
@@ -94,23 +96,16 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow around Sticky Hold")
+AI_DOUBLE_BATTLE_TEST("AI skips Trick around Sticky Hold")
 {
-    u16 move = MOVE_NONE, atkItem = ITEM_ORAN_BERRY, targetItem = ITEM_NONE;
-    enum Ability atkAbility = ABILITY_PRESSURE, targetAbility = ABILITY_PRESSURE;
-
-    PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE; targetItem = ITEM_LEFTOVERS; }
-    PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_PRESSURE;  targetAbility = ABILITY_STICKY_HOLD; targetItem = ITEM_LEFTOVERS; }
-    PARAMETRIZE { move = MOVE_BESTOW; atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE;  targetItem = ITEM_NONE; }
-
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(targetAbility); Item(targetItem); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_LEFTOVERS); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(atkAbility); Item(atkItem); Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_PRESSURE); Item(ITEM_ORAN_BERRY); Moves(MOVE_TRICK, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
     } WHEN {
-        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
+        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TRICK); }
     }
 }
 
@@ -157,12 +152,13 @@ AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose He
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND, MOVE_EXPLOSION); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); }
     } WHEN {
-            TURN {  EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND);
-                    NOT_EXPECT_MOVE(opponentRight, statusMove);
-                    SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:playerLeft);
-                    SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:playerRight);
-                    SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:opponentLeft);
-                 }
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND);
+            NOT_EXPECT_MOVE(opponentRight, statusMove);
+            SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:playerLeft);
+            SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:playerRight);
+            SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:opponentLeft);
+        }
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Helping Hand!");
     }
@@ -415,7 +411,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills both opposing mons"
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_PARAS) { Moves(MOVE_CELEBRATE); HP(1);  }
+        OPPONENT(SPECIES_PARAS) { Moves(MOVE_CELEBRATE); HP(1); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
     }
@@ -437,7 +433,7 @@ AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Weakness Policy")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_STOMPING_TANTRUM); }
-        OPPONENT(species) { Moves(MOVE_CELEBRATE); Item(ITEM_WEAKNESS_POLICY);  }
+        OPPONENT(species) { Moves(MOVE_CELEBRATE); Item(ITEM_WEAKNESS_POLICY); }
     } WHEN {
         if (species == SPECIES_INCINEROAR)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
@@ -655,7 +651,7 @@ AI_DOUBLE_BATTLE_TEST("AI sets up terrain for its ally")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(goodTerrain, badTerrain, MOVE_RETURN, MOVE_TAUNT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(terrainTrigger, MOVE_EARTH_POWER);  }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(terrainTrigger, MOVE_EARTH_POWER); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, goodTerrain); }
     }
@@ -724,12 +720,12 @@ AI_DOUBLE_BATTLE_TEST("AI uses Trick Room with both battlers on the turn it expi
         OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_TRICK_ROOM, MOVE_PSYCHIC); Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TRICK_ROOM, MOVE_PSYCHIC); Speed(1); }
     } WHEN {
-            TURN {  EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); NOT_EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
-            TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); NOT_EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
-            TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); NOT_EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
-            TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); NOT_EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
-            TURN {  EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
-        }
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); NOT_EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
+        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); NOT_EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
+        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); NOT_EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
+        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); NOT_EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_TRICK_ROOM); EXPECT_MOVE(opponentRight, MOVE_TRICK_ROOM); }
+    }
 }
 
 AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if it's about to die")
@@ -747,10 +743,10 @@ AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if it's about to die")
         OPPONENT(SPECIES_WOBBUFFET) { HP(hp); Moves(MOVE_HELPING_HAND, MOVE_MUDDY_WATER); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_MUDDY_WATER); }
     } WHEN {
-    if (hp == 1)
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND); }
-    else
-        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND); }
+        if (hp == 1)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND); }
     }
 }
 
@@ -784,27 +780,33 @@ AI_DOUBLE_BATTLE_TEST("AI does not use Helping Hand on Good as Gold ally")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI uses Tailwind")
+AI_DOUBLE_BATTLE_TEST("AI uses Tailwind based on speed matchups")
 {
     u32 speed1, speed2, speed3, speed4;
+    bool32 expectTailwind;
 
-    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 = 20; speed4 = 20; }
-    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 =  5; speed4 =  5; }
-    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 = 15; speed4 = 15; }
-    PARAMETRIZE { speed1 =  1; speed2 =  1; speed3 =  5; speed4 =  5; }
-    PARAMETRIZE { speed1 =  1; speed2 = 20; speed3 = 15; speed4 = 15; }
-    PARAMETRIZE { speed1 =  1; speed2 = 20; speed3 = 20; speed4 = 15; }
+    // All four comparisons qualify -> tailwindScore = 5
+    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 = 20; speed4 = 20; expectTailwind = TRUE; }
+    // Only the attacker flips one foe matchup -> tailwindScore = 2
+    PARAMETRIZE { speed1 = 20; speed2 = 40; speed3 = 20; speed4 = 50; expectTailwind = TRUE; }
+    // Only the partner flips one foe matchup -> tailwindScore = 2
+    PARAMETRIZE { speed1 = 10; speed2 = 29; speed3 = 50; speed4 = 15; expectTailwind = TRUE; }
+    // Too slow: even after doubling, still slower than both foes -> tailwindScore = 0.
+    PARAMETRIZE { speed1 = 40; speed2 = 40; speed3 = 10; speed4 = 10; expectTailwind = FALSE; }
+    // Already faster: Tailwind doesn't improve matchups -> tailwindScore = 0.
+    PARAMETRIZE { speed1 =  5; speed2 =  5; speed3 = 10; speed4 = 10; expectTailwind = FALSE; }
+    // Boundary: speed*2 == foe speed does not count -> tailwindScore = 0.
+    PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 = 10; speed4 = 30; expectTailwind = FALSE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_AFTER_YOU) == EFFECT_AFTER_YOU);
-        ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speed1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(speed2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speed3); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speed4); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
     } WHEN {
-        if (speed3 > 10)
+        if (expectTailwind)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }
         else
             TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TAILWIND); }
@@ -876,5 +878,31 @@ AI_DOUBLE_BATTLE_TEST("AI prefers to Fake Out the opponent vulnerable to flinchi
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_FAKE_OUT, target:playerRight); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI uses Gear Up")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_KLINKLANG) { Ability(ABILITY_PLUS); Moves(MOVE_GEAR_UP, MOVE_WATER_GUN, MOVE_POUND); }
+        OPPONENT(SPECIES_KLINKLANG) { Ability(ABILITY_PLUS); Moves(MOVE_GEAR_UP, MOVE_WATER_GUN, MOVE_POUND); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_GEAR_UP); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI uses Magnetic Flux")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_KLINK) { Ability(ABILITY_PLUS); Moves(MOVE_MAGNETIC_FLUX, MOVE_POUND); }
+        OPPONENT(SPECIES_KLINK) { Ability(ABILITY_PLUS); Moves(MOVE_MAGNETIC_FLUX, MOVE_POUND); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_MAGNETIC_FLUX); }
     }
 }

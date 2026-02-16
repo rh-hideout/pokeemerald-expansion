@@ -907,7 +907,7 @@ _NOTE: At the top of this file, you will probably see this warning:_
 // DO NOT MODIFY THIS FILE! It is auto-generated from tools/learnset_helpers/teachable.py`
 //
 ```
-From version 1.9 onwards, pokeemerald-expansion includes a tool called the learnset helper, which aims to automate the generation of valid teachable moves. At the time of writing, this tool only supports generating TM and Tutor learnsets. However, in the future it may be expanded to deal with level up learnsets and egg moves. 
+From version 1.9 onwards, pokeemerald-expansion includes a tool called the learnset helper, which aims to automate the generation of valid teachable moves. At the time of writing, this tool only supports generating TM and Tutor learnsets. However, in the future it may be expanded to deal with level up learnsets and egg moves.
 
 Ignore the warning shown above the first time you're adding your teachable moves (as otherwise the compiler will complain about the array not existing), but in the future (if you're using the learnset helper) simply edit what teachable moves your Pokémon can learn in one of the JSON files found in `tools/learnset_helpers/porymoves_files`. It doesn't really matter which one you add your new Pokémon to, as the tool pulls from all of the files in this folder.
 
@@ -1075,7 +1075,8 @@ These tables, unlike the regular form tables, registers how Pokémon can switch 
 
 ```c
 #if P_FAMILY_GASTLY
-static const struct FormChange sGengarFormChangeTable[] = {
+static const struct FormChange sGengarFormChangeTable[] =
+{
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, SPECIES_GENGAR_MEGA, ITEM_GENGARITE},
     {FORM_CHANGE_BATTLE_GIGANTAMAX,          SPECIES_GENGAR_GIGANTAMAX},
     {FORM_CHANGE_TERMINATOR},
