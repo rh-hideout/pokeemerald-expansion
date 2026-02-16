@@ -283,7 +283,7 @@
 #define OBJ_EVENT_GFX_GREEN_VS_SEEKER            256
 #define OBJ_EVENT_GFX_GREEN_VS_SEEKER_BIKE       257
 #define OBJ_EVENT_GFX_BOY                        258
-#define OBJ_EVENT_GFX_BATTLE_GIRL                259
+#define OBJ_EVENT_GFX_CRUSH_GIRL                 259
 #define OBJ_EVENT_GFX_MAN                        260
 #define OBJ_EVENT_GFX_ROCKER                     261
 #define OBJ_EVENT_GFX_BALDING_MAN                262
