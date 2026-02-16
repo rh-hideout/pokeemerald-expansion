@@ -1469,7 +1469,8 @@ static void CB2_EndTrainerBattle(void)
     }
     else if (DidPlayerForfeitNormalTrainerBattle())
     {
-        if (FlagGet(B_FLAG_NO_WHITEOUT))
+        if (FlagGet(B_FLAG_NO_WHITEOUT) || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge())
+
             SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
         else
             SetMainCallback2(CB2_WhiteOut);
