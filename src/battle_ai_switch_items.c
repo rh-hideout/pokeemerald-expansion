@@ -623,7 +623,7 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(u32 battler)
 
     // Two-turn attacks that charge without entering semi-invulnerable state (e.g. Solar Beam).
     // First turn of Fly/Dive/Bounce/Sky Drop: move is selected this turn but user is not yet semi-invulnerable.
-    // Opponent is already semi-invulnerable and the predicted incoming move would not hit this turn.
+    // Opponent is already semi-invulnerable.
     if (!(IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove)
         || ((effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP) && !IsSemiInvulnerable(opposingBattler, CHECK_ALL))
         || IsSemiInvulnerable(opposingBattler, CHECK_ALL)))
