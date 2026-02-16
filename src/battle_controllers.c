@@ -2397,7 +2397,7 @@ void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 is
             if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
                 gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
 
-            gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = (battler);
+            gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = battler;
         }
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].x2 = DISPLAY_WIDTH;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sSpeedX = -2;
@@ -2422,7 +2422,7 @@ void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId)
                                                          30);
         if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
             gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = (battler);
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = battler;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].x2 = -96;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sSpeedX = 2;
     }
@@ -2770,7 +2770,7 @@ void BtlController_HandleIntroTrainerBallThrow(u32 battler, u16 tagTrainerPal, c
 
         paletteNum = AllocSpritePalette(tagTrainerPal);
         LoadPalette(trainerPal, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = (paletteNum);
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = paletteNum;
     }
     else
     {
