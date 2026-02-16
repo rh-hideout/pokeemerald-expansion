@@ -346,7 +346,7 @@
 //     // LANCE
 //     OBJ_EVENT_GFX_LANCE,
 //     OBJ_EVENT_GFX_LANCE,
-//     OBJ_EVENT_GFX_BATTLE_GIRL,
+//     OBJ_EVENT_GFX_CRUSH_GIRL,
 //     OBJ_EVENT_GFX_WOMAN_1_FRLG,
 //     OBJ_EVENT_GFX_CLIPBOARD,
 //     OBJ_EVENT_GFX_COOLTRAINER_M,
@@ -1231,7 +1231,7 @@ void UpdatePickStateFromSpecialVar8005(void)
     // {
     //     if (gSpecialVar_0x8005 == FCPICKSTATE_NO_DRAW)
     //         return;
-    //     if (   gSpecialVar_0x8005 == FCPICKSTATE_SILHOUETTE 
+    //     if (   gSpecialVar_0x8005 == FCPICKSTATE_SILHOUETTE
     //         && gSaveBlock1Ptr->fameChecker[gSpecialVar_0x8004].pickState == FCPICKSTATE_COLORED
     //        )
     //         return;

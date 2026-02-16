@@ -94,7 +94,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
+      "graphics_id": "OBJ_EVENT_GFX_CRUSH_GIRL",
       "x": 9,
       "y": 53,
       "elevation": 3,
@@ -108,7 +108,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
+      "graphics_id": "OBJ_EVENT_GFX_CRUSH_GIRL",
       "x": 18,
       "y": 105,
       "elevation": 4,
@@ -192,7 +192,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
+      "graphics_id": "OBJ_EVENT_GFX_CRUSH_GIRL",
       "x": 9,
       "y": 68,
       "elevation": 3,
