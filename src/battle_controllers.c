@@ -11,6 +11,7 @@
 #include "battle_setup.h"
 #include "battle_tv.h"
 #include "cable_club.h"
+#include "event_data.h"
 #include "event_object_movement.h"
 #include "item.h"
 #include "link.h"
