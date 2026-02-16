@@ -115,16 +115,51 @@ BattleFrontier_BattleFactoryLobby_EventScript_ResumeChallenge::
 BattleFrontier_BattleFactoryLobby_EventScript_SinglesAttendant::
 	lock
 	faceplayer
+	clearflag FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE
 	setvar VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_FACTORY
 	setvar VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
 	goto BattleFrontier_BattleFactoryLobby_EventScript_Attendant
 	end
 
 BattleFrontier_BattleFactoryLobby_EventScript_DoublesAttendant::
+	clearflag FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE
 	setvar VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_FACTORY
 	setvar VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES
 	goto BattleFrontier_BattleFactoryLobby_EventScript_Attendant
 	end
+
+BattleFrontier_BattleFactoryLobby_EventScript_RandomBattlesAttendant::
+	lock
+	faceplayer
+	setflag FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE
+	setvar VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_FACTORY
+	setvar VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
+	goto BattleFrontier_BattleFactoryLobby_EventScript_RandomBattlesAttendantMain
+	end
+
+BattleFrontier_BattleFactoryLobby_EventScript_RandomBattlesAttendantMain::
+	special SavePlayerParty
+	msgbox BattleFrontier_BattleFactoryLobby_Text_WelcomeForRandomBattle, MSGBOX_DEFAULT
+	message BattleFrontier_BattleFactoryLobby_Text_TakeRandomChallenge
+	waitmessage
+	multichoice 17, 6, MULTI_CHALLENGEINFO, FALSE
+	switch VAR_RESULT
+	case 0, BattleFrontier_BattleFactoryLobby_EventScript_RandomBattlesTryEnterChallenge
+	case 1, BattleFrontier_BattleFactoryLobby_EventScript_RandomBattlesExplainChallenge
+	case 2, BattleFrontier_BattleFactoryLobby_EventScript_CancelChallenge
+	case MULTI_B_PRESSED, BattleFrontier_BattleFactoryLobby_EventScript_CancelChallenge
+
+BattleFrontier_BattleFactoryLobby_EventScript_RandomBattlesExplainChallenge::
+	msgbox BattleFrontier_BattleFactoryLobby_Text_ExplainRandomChallenge, MSGBOX_DEFAULT
+	goto BattleFrontier_BattleFactoryLobby_EventScript_RandomBattlesAttendantMain
+
+BattleFrontier_BattleFactoryLobby_EventScript_RandomBattlesTryEnterChallenge::
+	frontier_set FRONTIER_DATA_LVL_MODE, FRONTIER_LVL_OPEN
+	msgbox BattleFrontier_BattleFactoryLobby_Text_OkayToSaveBeforeChallenge, MSGBOX_YESNO
+	switch VAR_RESULT
+	case NO, BattleFrontier_BattleFactoryLobby_EventScript_LoadPartyAndCancelChallenge
+	case YES, BattleFrontier_BattleFactoryLobby_EventScript_SaveBeforeChallenge
+	case MULTI_B_PRESSED, BattleFrontier_BattleFactoryLobby_EventScript_LoadPartyAndCancelChallenge
 
 BattleFrontier_BattleFactoryLobby_EventScript_Attendant::
 	special SavePlayerParty
@@ -171,8 +206,10 @@ BattleFrontier_BattleFactoryLobby_EventScript_EnterChallenge::
 	special SavePlayerParty
 	msgbox BattleFrontier_BattleFactoryLobby_Text_StepThisWay, MSGBOX_DEFAULT
 	closemessage
+	goto_if_set FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE, BattleFrontier_BattleFactoryLobby_EventScript_UseCurrentTalkedNpc
 	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattleFactoryLobby_EventScript_TalkedToSinglesAttendant
 	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattleFactoryLobby_EventScript_TalkedToDoublesAttendant
+BattleFrontier_BattleFactoryLobby_EventScript_UseCurrentTalkedNpc::
 	applymovement VAR_LAST_TALKED, BattleFrontier_BattleFactoryLobby_Movement_AttendantEnterDoor
 	applymovement LOCALID_PLAYER, BattleFrontier_BattleFactoryLobby_Movement_PlayerEnterDoor
 	waitmovement 0
@@ -452,6 +489,27 @@ BattleFrontier_BattleFactoryLobby_Text_ExplainDoublesChallenge:
 	.string "If you don't save before interrupting,\n"
 	.string "you will be disqualified.$"
 
+BattleFrontier_BattleFactoryLobby_Text_WelcomeForRandomBattle:
+	.string "Where the intelligence of TRAINERS\n"
+	.string "is put to the test!\p"
+	.string "Welcome to the BATTLE FACTORY!\p"
+	.string "I am your guide to the Random\n"
+	.string "Battles challenge.$"
+
+BattleFrontier_BattleFactoryLobby_Text_TakeRandomChallenge:
+	.string "Would you like to take the Random\n"
+	.string "Battles challenge?$"
+
+BattleFrontier_BattleFactoryLobby_Text_ExplainRandomChallenge:
+	.string "This challenge uses rental POKeMON\n"
+	.string "sets from a Random Battles pool.\p"
+	.string "Unlike Level 50 or Open Level modes,\n"
+	.string "each rental set has its own level,\l"
+	.string "balanced for that set.\p"
+	.string "Rules for battling and swapping are\n"
+	.string "otherwise the same as the regular\l"
+	.string "Battle Swap challenge.$"
+
 BattleFrontier_BattleFactoryLobby_Text_CongratsForDefeatingHead:
 	.string "Congratulations for defeating\n"
 	.string "the FACTORY HEAD and winning\l"
@@ -563,7 +621,7 @@ script BattleFrontier_BattleFactoryLobby_Noland {
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions {
-	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "GIMMICK OPTIONS", "MUSIC OPTIONS", "BACKGROUND OPTIONS", "BATTLE MODE", "CANCEL")
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "GIMMICK OPTIONS", "MUSIC OPTIONS", "BACKGROUND OPTIONS", "CANCEL")
 	switch(var(VAR_RESULT)) {
 		case 0: #
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions)
@@ -572,38 +630,11 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions {
         case 2:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandBackgroundOptions)
 		case 3:
-            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandBattleModeOptions)
-		case 4:
 		    releaseall
         default:
 			releaseall
 	}
 	releaseall
-}
-
-script BattleFrontier_BattleFactoryLobby_EventScript_NolandBattleModeOptions {
-    if(flag(FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE) == TRUE) {
-        msgbox(format("BATTLE MODE is currently set to RANDOM BATTLES."))
-    }
-    else {
-        msgbox(format("BATTLE MODE is currently set to CLASSIC FACTORY."))
-    }
-    msgbox(format("Choose which BATTLE MODE to use in the BATTLE FACTORY."))
-    dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "CLASSIC FACTORY", "RANDOM BATTLES", "BACK")
-    switch(var(VAR_RESULT)) {
-        case 0:
-            clearflag(FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE)
-            msgbox(format("Classic Factory mode selected."))
-            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
-        case 1:
-            setflag(FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE)
-            msgbox(format("Random Battles mode selected."))
-            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
-        case 2:
-            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
-        default:
-            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
-    }
 }
 
 // TODO tomorrow - add another set of options here for music choices, by setting VAR_FRONTIER_BGM

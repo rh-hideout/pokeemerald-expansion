@@ -43,7 +43,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_CAMPER",
-      "x": 14,
+      "x": 18,
       "y": 11,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
@@ -56,7 +56,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PICNICKER",
-      "x": 13,
+      "x": 17,
       "y": 11,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
@@ -97,7 +97,7 @@
     {
       "graphics_id": "OBJ_EVENT_GFX_NOLAND",
       "x": 18,
-      "y": 7,
+      "y": 5,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 1,
@@ -108,29 +108,30 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRAWLY",
-      "x": 0,
-      "y": 9,
+      "local_id": "LOCALID_FACTORY_ATTENDANT_RANDOMBATTLES",
+      "graphics_id": "OBJ_EVENT_GFX_SCIENTIST_1",
+      "x": 22,
+      "y": 7,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "BattleFrontier_BattleFactoryLobby_EventScript_RandomBattlesAttendant",
       "flag": "0"
     }
   ],
   "warp_events": [
     {
-      "x": 9,
+      "x": 13,
       "y": 11,
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST",
       "dest_warp_id": "2"
     },
     {
-      "x": 10,
+      "x": 14,
       "y": 11,
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST",
