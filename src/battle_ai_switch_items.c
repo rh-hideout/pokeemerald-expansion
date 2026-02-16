@@ -626,7 +626,7 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(u32 battler)
     // Opponent is already semi-invulnerable and the predicted incoming move would not hit this turn.
     if (!(IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove)
         || ((effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP) && !IsSemiInvulnerable(opposingBattler, CHECK_ALL))
-        || !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove)))
+        || IsSemiInvulnerable(opposingBattler, CHECK_ALL)))
     {
         return FALSE;
     }
