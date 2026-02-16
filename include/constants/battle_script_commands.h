@@ -31,7 +31,7 @@
 #define sSPECIAL_TRAINER_BATTLE_TYPE (gBattleScripting + 0x26) // specialTrainerBattleType
 #define sMON_CAUGHT                  (gBattleScripting + 0x27) // monCaught
 #define sSAVED_DMG                   (gBattleScripting + 0x28) // savedDmg
-#define sSAVED_MOVE_EFFECT           (gBattleScripting + 0x2C) // savedMoveEffect
+#define sUNUSED_0x2C                 (gBattleScripting + 0x2C) // unused_0x2c
 #define sMOVE_EFFECT                 (gBattleScripting + 0x2E) // moveEffect
 #define sMULTIHIT_EFFECT             (gBattleScripting + 0x30) // multihitMoveEffect
 #define sILLUSION_NICK_HACK          (gBattleScripting + 0x32) // illusionNickHack
@@ -96,10 +96,9 @@ enum CmdVarious
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN         1
-#define DMG_DOUBLED             2
-#define DMG_1_8_TARGET_HP       3
-#define DMG_FULL_ATTACKER_HP    4
-#define DMG_BIG_ROOT            5
+#define DMG_1_8_TARGET_HP       2
+#define DMG_FULL_ATTACKER_HP    3
+#define DMG_BIG_ROOT            4
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)

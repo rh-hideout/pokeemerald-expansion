@@ -391,35 +391,33 @@ def PrintWildMonHeadersContent():
                             timeCounter += 1
                         PrintEncounterHeaders(TabStr(2) + "},")
                 PrintEncounterHeaders(tabStr + "},")
-
-                if labelCount + 1 == headerStructTable[group][label]["encounterTotalCount"]:
-                    PrintEncounterHeaders(tabStr + "{")
-                    PrintEncounterHeaders(f"{TabStr(2)}.mapGroup = {GetMapGroupEnum(MAP_UNDEFINED)},")
-                    PrintEncounterHeaders(f"{TabStr(2)}.mapNum = {GetMapGroupEnum(MAP_UNDEFINED, labelCount + 1)},")
-
-                    nullCount = 0
-                    while nullCount < TIMES_OF_DAY_COUNT:
-                        if nullCount == 0:
-                            PrintEncounterHeaders(f"{TabStr(2)}.encounterTypes =")
-                            PrintEncounterHeaders(TabStr(2)+ "{")
-
-                        PrintEncounterHeaders(f"{TabStr(3)}[{TIME_OF_DAY.vals[nullCount]}] = ")
-
-                        nullIndex = 0
-                        while nullIndex <= len(fieldData) - 1:
-                            if nullIndex == 0:
-                                PrintEncounterHeaders(TabStr(3) + "{")
-
-                            PrintEncounterHeaders(f"{TabStr(4)}{GetIMonInfoStringFromIndex(nullIndex)} = NULL,")
-
-                            if nullIndex == len(fieldData) - 1:
-                                PrintEncounterHeaders(TabStr(3) + "},")
-
-                            nullIndex += 1
-                        nullCount += 1
-                    PrintEncounterHeaders(TabStr(2) + "},")
-                    PrintEncounterHeaders(tabStr + "},")
                 labelCount += 1
+        PrintEncounterHeaders(tabStr + "{")
+        PrintEncounterHeaders(f"{TabStr(2)}.mapGroup = {GetMapGroupEnum(MAP_UNDEFINED)},")
+        PrintEncounterHeaders(f"{TabStr(2)}.mapNum = {GetMapGroupEnum(MAP_UNDEFINED, labelCount + 1)},")
+
+        nullCount = 0
+        while nullCount < TIMES_OF_DAY_COUNT:
+            if nullCount == 0:
+                PrintEncounterHeaders(f"{TabStr(2)}.encounterTypes =")
+                PrintEncounterHeaders(TabStr(2)+ "{")
+
+            PrintEncounterHeaders(f"{TabStr(3)}[{TIME_OF_DAY.vals[nullCount]}] = ")
+
+            nullIndex = 0
+            while nullIndex <= len(fieldData) - 1:
+                if nullIndex == 0:
+                    PrintEncounterHeaders(TabStr(3) + "{")
+
+                PrintEncounterHeaders(f"{TabStr(4)}{GetIMonInfoStringFromIndex(nullIndex)} = NULL,")
+
+                if nullIndex == len(fieldData) - 1:
+                    PrintEncounterHeaders(TabStr(3) + "},")
+
+                nullIndex += 1
+            nullCount += 1
+        PrintEncounterHeaders(TabStr(2) + "},")
+        PrintEncounterHeaders(tabStr + "},")
         groupCount += 1
         PrintEncounterHeaders("};")
 

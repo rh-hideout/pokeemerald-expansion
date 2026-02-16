@@ -19,6 +19,7 @@
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
+#include "constants/script_commands.h"
 #include "constants/trainer_types.h"
 
 // this file's functions
@@ -447,7 +448,7 @@ static u8 CheckTrainer(u8 objectEventId)
         struct ScriptContext ctx;
         if (RunScriptImmediatelyUntilEffect(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE | SCREFF_TRAINERBATTLE, trainerBattlePtr, &ctx))
         {
-            if (*ctx.scriptPtr == 0x5c) // trainerbattle
+            if (*ctx.scriptPtr == SCR_OP_TRAINERBATTLE)
                 trainerBattlePtr = ctx.scriptPtr;
             else
                 trainerBattlePtr = NULL;
@@ -471,7 +472,18 @@ static u8 CheckTrainer(u8 objectEventId)
     else if (trainerBattlePtr)
     {
         if (GetTrainerFlagFromScriptPointer(trainerBattlePtr))
-            return 0;
+        {
+            //If there is a rematch, we want to trigger the approach sequence
+            if (I_VS_SEEKER_CHARGING && GetRematchFromScriptPointer(trainerBattlePtr))
+            {
+                trainerBattlePtr = NULL;
+                numTrainers = 0xFF;
+            }
+            else
+            {
+                 return 0;
+            }
+        }
     }
     else
     {
@@ -510,6 +522,9 @@ static u8 GetTrainerApproachDistance(struct ObjectEvent *trainerObj)
     PlayerGetDestCoords(&x, &y);
     if (trainerObj->trainerType == TRAINER_TYPE_NORMAL)  // can only see in one direction
     {
+        // Disable trainer approach while moving diagonally (usually moving on sideway stairs)
+        if (trainerObj->facingDirection > DIR_EAST)
+            return 0;
         approachDistance = sDirectionalApproachDistanceFuncs[trainerObj->facingDirection - 1](trainerObj, trainerObj->trainerRange_berryTreeId, x, y);
         return CheckPathBetweenTrainerAndPlayer(trainerObj, approachDistance, trainerObj->facingDirection);
     }

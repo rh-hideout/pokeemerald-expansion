@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_HEAL_BELL].effect == EFFECT_HEAL_BELL);
-    ASSUME(gMovesInfo[MOVE_AROMATHERAPY].effect == EFFECT_HEAL_BELL);
+    ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
+    ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
     ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
 }
 
@@ -162,5 +162,55 @@ SINGLE_BATTLE_TEST("Heal Bell cures a Soundproof user (Gen5, Gen8+)")
         } else {
             MESSAGE("Exploud was hurt by its poisoning!");
         }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
+{
+    u32 ability, config;
+
+    PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_4; }
+    PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_5; }
+    PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_6; }
+    PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_8; }
+
+    GIVEN {
+        ASSUME(!IsSoundMove(MOVE_AROMATHERAPY));
+        WITH_CONFIG(GEN_CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); Status1(STATUS1_POISON); };
+        PLAYER(SPECIES_EXPLOUD) { Ability(ability); Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_AROMATHERAPY, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATHERAPY, playerLeft);
+        NONE_OF {
+            MESSAGE("Exploud was hurt by its poisoning!");
+            MESSAGE("Wobbuffet was hurt by its poisoning!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Aromatherapy cures inactive Soundproof Pokemon regardless of config")
+{
+    u32 config, ability;
+
+    PARAMETRIZE { config = GEN_4, ability = ABILITY_SOUNDPROOF; }
+    PARAMETRIZE { config = GEN_5, ability = ABILITY_SOUNDPROOF; }
+
+    GIVEN {
+        ASSUME(!IsSoundMove(MOVE_AROMATHERAPY));
+        WITH_CONFIG(GEN_CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        PLAYER(SPECIES_WOBBUFFET) { }
+        PLAYER(SPECIES_EXPLOUD) { Ability(ability); Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_AROMATHERAPY, target: player); }
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATHERAPY, player);
+        SEND_IN_MESSAGE("Exploud");
+        NOT MESSAGE("Exploud was hurt by its poisoning!");
     }
 }

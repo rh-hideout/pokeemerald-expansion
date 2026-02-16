@@ -29,3 +29,27 @@ DOUBLE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly")
     }
 }
 
+DOUBLE_BATTLE_TEST("End Turn Effects: Effects are applied by Speed Order")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT)      { MaxHP(200); HP(100); Speed(3); }
+        PLAYER(SPECIES_RILLABOOM)   { MaxHP(200); HP(100); Speed(1); Ability(ABILITY_GRASSY_SURGE); }
+        OPPONENT(SPECIES_MEWTWO)    { MaxHP(200); HP(100); Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(200); HP(100); Speed(4); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerLeft);
+            MOVE(playerRight, MOVE_FAKE_OUT, target: opponentRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentLeft);
+        HP_BAR(playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, playerRight);
+        HP_BAR(opponentRight);
+
+        HP_BAR(opponentRight);
+        HP_BAR(playerLeft);
+        HP_BAR(opponentLeft);
+        HP_BAR(playerRight);
+    }
+}

@@ -387,7 +387,7 @@ static u32 FindMonWithMoveOfEffectiveness(u32 battler, u32 opposingBattler, uq4_
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
             move = GetMonData(&party[i], MON_DATA_MOVE1 + j);
-            if (move != MOVE_NONE && AI_GetMoveEffectiveness(move, battler, opposingBattler) >= effectiveness && gMovesInfo[move].power != 0)
+            if (move != MOVE_NONE && AI_GetMoveEffectiveness(move, battler, opposingBattler) >= effectiveness && GetMovePower(move) != 0)
                 return SetSwitchinAndSwitch(battler, i);
         }
     }
@@ -422,7 +422,7 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
             if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) > UQ_4_12(0.0) && aiMove != MOVE_NONE
                 && !CanAbilityAbsorbMove(battler, opposingBattler, gAiLogicData->abilities[opposingBattler], aiMove, GetBattleMoveType(aiMove), AI_CHECK)
                 && !CanAbilityBlockMove(battler, opposingBattler, gBattleMons[battler].ability, gAiLogicData->abilities[opposingBattler], aiMove, AI_CHECK)
-                && (!ALL_MOVES_BAD_STATUS_MOVES_BAD || gMovesInfo[aiMove].power != 0)) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
+                && (!ALL_MOVES_BAD_STATUS_MOVES_BAD || GetMovePower(aiMove) != 0)) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
                 return FALSE;
         }
     }
@@ -2240,7 +2240,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 
                 // Check if current mon can revenge kill in some capacity
                 // If AI mon can one shot
-                if (damageDealt > playerMonHP)
+                if (damageDealt >= playerMonHP)
                 {
                     if (canSwitchinWin1v1)
                     {
@@ -2252,7 +2252,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 }
 
                 // If AI mon can two shot
-                if (damageDealt > playerMonHP / 2)
+                if (damageDealt >= (playerMonHP / 2 + playerMonHP % 2)) // Modulo to handle odd numbers in non-decimal division
                 {
                     if (canSwitchinWin1v1)
                     {
@@ -2413,6 +2413,9 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
         bestMonId = GetBestMonBatonPass(party, firstId, lastId, invalidMons, aliveCount, battler, opposingBattler);
         if (bestMonId != PARTY_SIZE)
             return bestMonId;
+
+        if (aceMonId != PARTY_SIZE && aliveCount == 0)
+            return aceMonId;
 
         bestMonId = GetBestMonTypeMatchup(party, firstId, lastId, invalidMons, battler, opposingBattler);
         if (bestMonId != PARTY_SIZE)

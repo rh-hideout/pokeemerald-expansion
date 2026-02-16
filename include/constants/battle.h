@@ -160,7 +160,6 @@ enum VolatileFlags
     F(VOLATILE_INFATUATION,                 infatuation,                   (enum BattlerId, MAX_BITS(4))) \
     F(VOLATILE_DEFENSE_CURL,                defenseCurl,                   (u32, 1)) \
     F(VOLATILE_TRANSFORMED,                 transformed,                   (u32, 1)) \
-    F(VOLATILE_RECHARGE,                    recharge,                      (u32, 1)) \
     F(VOLATILE_RAGE,                        rage,                          (u32, 1)) \
     F(VOLATILE_SUBSTITUTE,                  substitute,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, 1)) \
@@ -170,7 +169,7 @@ enum VolatileFlags
     F(VOLATILE_FORESIGHT,                   foresight,                     (u32, 1)) \
     F(VOLATILE_DRAGON_CHEER,                dragonCheer,                   (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FOCUS_ENERGY,                focusEnergy,                   (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (u32, 5)) \
+    F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (u32, SEMI_INVULNERABLE_COUNT - 1)) \
     F(VOLATILE_ELECTRIFIED,                 electrified,                   (u32, 1)) \
     F(VOLATILE_MUD_SPORT,                   mudSport,                      (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_WATER_SPORT,                 waterSport,                    (u32, 1), V_BATON_PASSABLE) \
@@ -225,6 +224,7 @@ enum SemiInvulnerableState
     STATE_PHANTOM_FORCE,
     STATE_SKY_DROP,
     STATE_COMMANDER,
+    SEMI_INVULNERABLE_COUNT,
 };
 
 enum SemiInvulnerableExclusion

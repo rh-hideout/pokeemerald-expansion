@@ -6,6 +6,7 @@
 #include "constants/battle.h"
 #include "constants/cries.h"
 #include "constants/form_change_types.h"
+#include "constants/hold_effects.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
 #include "constants/regions.h"
@@ -654,10 +655,10 @@ extern const struct Fusion *const gFusionTablePointers[NUM_SPECIES];
 #if P_FUSION_FORMS
 #if P_FAMILY_KYUREM
 #if P_FAMILY_RESHIRAM
-extern const u16 gKyurenWhiteSwapMoveTable[][2];
+extern const u16 gKyuremWhiteSwapMoveTable[][2];
 #endif //P_FAMILY_RESHIRAM
 #if P_FAMILY_ZEKROM
-extern const u16 gKyurenBlackSwapMoveTable[][2];
+extern const u16 gKyuremBlackSwapMoveTable[][2];
 #endif //P_FAMILY_ZEKROM
 #endif //P_FAMILY_KYUREM
 #endif //P_FUSION_FORMS
@@ -825,6 +826,7 @@ s32 GetBattlerMultiplayerId(u16 id);
 u8 GetTrainerEncounterMusicId(u16 trainerOpponentId);
 u16 ModifyStatByNature(u8 nature, u16 stat, u8 statIndex);
 void AdjustFriendship(struct Pokemon *mon, u8 event);
+u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum ItemHoldEffect itemHoldEffect);
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 void RandomlyGivePartyPokerus(struct Pokemon *party);

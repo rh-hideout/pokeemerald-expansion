@@ -53,7 +53,7 @@ AI_SINGLE_BATTLE_TEST("AI sees on-field player ability correctly and does not se
         OPPONENT(SPECIES_BOMBIRDIER) {Level(42); Moves(MOVE_ROCK_SLIDE); }
         OPPONENT(SPECIES_IRON_THORNS) {Level(43); Moves(MOVE_SUPERCELL_SLAM, MOVE_ICE_PUNCH); }
     } WHEN {
-        TURN { 
+        TURN {
             MOVE(player, MOVE_VOLT_SWITCH);
             SEND_OUT(player, 1);
             EXPECT_MOVE(opponent, MOVE_SCRATCH);
@@ -636,6 +636,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has bee
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
+        ASSUME(GetMovePower(MOVE_AURA_SPHERE) == 80); // Gen 5's 90 power causes too much damage
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH, MOVE_CELEBRATE, MOVE_TOXIC, MOVE_AURA_SPHERE); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
@@ -939,6 +940,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will stay in if Encore'd into
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
+        ASSUME(GetSpeciesType(SPECIES_AZURILL, 0) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_AZURILL, 1) == TYPE_FAIRY);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_AZURILL) { Moves(MOVE_SCRATCH, MOVE_ENCORE); }
         OPPONENT(SPECIES_ODDISH) { Moves(MOVE_ACID); }
@@ -950,6 +953,22 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will stay in if Encore'd into
 }
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if Encore'd into neutral move with good switchin 50% of the time")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_ENCORE_DAMAGE_PERCENTAGE, 100, RNG_AI_SWITCH_ENCORE);
+    GIVEN {
+        WITH_CONFIG(GEN_CONFIG_ENCORE_TARGET, GEN_3);
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
+        PLAYER(SPECIES_AZURILL) { Moves(MOVE_SCRATCH, MOVE_ENCORE); }
+        OPPONENT(SPECIES_ODDISH) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ARON) { Moves(MOVE_METAL_CLAW); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_ENCORE); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if Encore'd into neutral move with good switchin 50% of the time (Gen 5+)")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ENCORE_DAMAGE_PERCENTAGE, 100, RNG_AI_SWITCH_ENCORE);
     GIVEN {
@@ -1328,6 +1347,8 @@ AI_SINGLE_BATTLE_TEST("AI_SMART_MON_CHOICES: AI sees its own weather setting abi
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will properly consider immunities when determining switchin type matchup")
 {
     GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_WHIMSICOTT, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_WHIMSICOTT, 1) == TYPE_FAIRY); // Gen 5's pure Grass type makes the test fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_POLIWRATH) { Moves(MOVE_WATER_GUN, MOVE_KARATE_CHOP); }
         OPPONENT(SPECIES_ZIGZAGOON) { Level(1); Moves(MOVE_SCRATCH); }
@@ -1436,5 +1457,25 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will consider choice-locked
         OPPONENT(SPECIES_PHEROMOSA) { Speed(6); HP(1); Moves(MOVE_EARTHQUAKE); }
     } WHEN {
         TURN { MOVE(player, MOVE_MIGHTY_CLEAVE); EXPECT_MOVE(opponent, MOVE_TACKLE); item == ITEM_NONE ? EXPECT_SEND_OUT(opponent, 1) : EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI considers both meeting and exceeding KO thresholds correctly")
+{
+    u32 hp;
+    PARAMETRIZE { hp = 40; }
+    PARAMETRIZE { hp = 80; }
+    PARAMETRIZE { hp = 79; }
+    PARAMETRIZE { hp = 81; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(5); HP(hp); Moves(MOVE_PROTECT, MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(6); Moves(MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(6); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_BELDUM) { Speed(4); Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); hp > 80 ? EXPECT_SEND_OUT(opponent, 2) : EXPECT_SEND_OUT(opponent, 1); }
     }
 }

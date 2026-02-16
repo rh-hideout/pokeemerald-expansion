@@ -5720,7 +5720,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresProtect = TRUE,
         .ignoresSubstitute = TRUE,
         .mirrorMoveBanned = TRUE,
-        .soundMove = B_UPDATED_MOVE_FLAGS != GEN_5,
+        .soundMove = TRUE,
         .contestEffect = CONTEST_EFFECT_BETTER_IF_LAST,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = COMBO_STARTER_HEAL_BELL,
@@ -6706,12 +6706,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Uproar"),
         .description = COMPOUND_STRING(
-                                    #if B_UPROAR_TURNS >= GEN_5
-                                       "Causes an uproar for 2 to 5\n"
-                                    #else
-                                       "Causes an uproar for 3\n"
-                                    #endif
-                                       "turns and prevents sleep."),
+        #if B_UPROAR_TURNS >= GEN_5
+            "Causes an uproar for 3\n"
+        #else
+            "Causes an uproar for 2 to 5\n"
+        #endif
+            "turns and prevents sleep."),
         .effect = EFFECT_UPROAR,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 90 : 50,
         .type = TYPE_NORMAL,
@@ -18672,8 +18672,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Lash Out"),
         .description = COMPOUND_STRING(
-            "If stats lowered during this\n"
-            "turn, power is doubled."),
+            "If user's stats were lowered\n"
+            "this turn, power is doubled."),
         .effect = EFFECT_LASH_OUT,
         .power = 75,
         .type = TYPE_DARK,
