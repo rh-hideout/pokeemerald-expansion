@@ -12624,9 +12624,21 @@ static void Cmd_setforcedtarget(void)
 {
     CMD_ARGS();
 
-    gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTimer = 1;
-    gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTarget = gBattlerTarget;
-    gSideTimers[GetBattlerSide(gBattlerTarget)].followmePowder = IsPowderMove(gCurrentMove);
+    u32 side = GetBattlerSide(gBattlerTarget);
+    bool32 shouldSet = TRUE;
+
+    if (gSideTimers[side].followmeTimer != 0 && IsBattlerAlive(gSideTimers[side].followmeTarget))
+    {
+        if (GetBattlerTurnOrderNum(gSideTimers[side].followmeTarget) <= GetBattlerTurnOrderNum(gBattlerTarget))
+            shouldSet = FALSE;
+    }
+
+    if (shouldSet)
+    {
+        gSideTimers[side].followmeTimer = 1;
+        gSideTimers[side].followmeTarget = gBattlerTarget;
+        gSideTimers[side].followmePowder = IsPowderMove(gCurrentMove);
+    }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

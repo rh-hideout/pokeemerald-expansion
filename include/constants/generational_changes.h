@@ -116,6 +116,7 @@
     F(B_QUICK_GUARD,               quickGuard,              (u32, GEN_COUNT - 1)) \
     F(B_IMPRISON,                  imprison,                (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_TAUNT_ME_FIRST,            tauntMeFirst,            (u32, GEN_COUNT - 1)) \
+    F(B_FOLLOW_ME_FUTURE_SIGHT,    followMeFutureSight,     (u32, GEN_COUNT - 1)) \
     F(B_ALLY_SWITCH_FAIL_CHANCE,   allySwitchFailChance,    (u32, GEN_COUNT - 1)) \
     F(B_SKETCH_BANS,               sketchBans,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_KNOCK_OFF_REMOVAL,         knockOffRemoval,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

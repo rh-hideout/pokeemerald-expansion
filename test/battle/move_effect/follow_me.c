@@ -116,13 +116,73 @@ DOUBLE_BATTLE_TEST("Follow Me no longer redirects if the center of attention fai
     }
 }
 
-TO_DO_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
-TO_DO_BATTLE_TEST("Follow Me can only redirect Future Sight/Doom Desire on the turn they were selected (Gen3-5)")
-TO_DO_BATTLE_TEST("Follow Me does not redirect Future Sight/Doom Desire (Gen 6+)")
-TO_DO_BATTLE_TEST("Follow Me draws Electric/Water moves even if there's a Pokémon with Lightning Rod/Storm Drain")
-TO_DO_BATTLE_TEST("Follow Me prioritizes the first Pokémon that used it") // There can be 2 centers of attention. If the first is gone, the 2nd is used
-//TO_DO_BATTLE_TEST("Triples: Follow Me can only draw non-adjacent moves if they use a long-range move")
-TO_DO_BATTLE_TEST("Follow Me can be used in Single Battles (Gen3-SwSh)")
+DOUBLE_BATTLE_TEST("Follow Me does not redirect Future Sight (Gen 6+)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FOLLOW_ME_FUTURE_SIGHT, GEN_6);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_FOLLOW_ME);
+               MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN { }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, playerLeft);
+        MESSAGE("The opposing Wobbuffet took the Future Sight attack!");
+        HP_BAR(opponentLeft);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Follow Me can only redirect Future Sight on the turn they were selected (Gen3-5)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FOLLOW_ME_FUTURE_SIGHT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_FOLLOW_ME);
+               MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN { }
+        TURN { MOVE(opponentLeft, MOVE_FOLLOW_ME); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, opponentLeft);
+        MESSAGE("The opposing Wynaut took the Future Sight attack!");
+        HP_BAR(opponentRight);
+        NOT HP_BAR(opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Follow Me prioritizes the first Pokémon that used it") // There can be 2 centers of attention. If the first is gone, the 2nd is used
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FOLLOW_ME);
+               MOVE(opponentRight, MOVE_FOLLOW_ME);
+               MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        HP_BAR(opponentLeft);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
 
 SINGLE_BATTLE_TEST("Follow Me fails in Single Battles (BDSP+)")
 {
@@ -214,3 +274,8 @@ DOUBLE_BATTLE_TEST("Spotlight redirects single target moves used by the opposing
             HP_BAR(playerLeft);
     }
 }
+
+TO_DO_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
+TO_DO_BATTLE_TEST("Follow Me draws Electric/Water moves even if there's a Pokémon with Lightning Rod/Storm Drain")
+TO_DO_BATTLE_TEST("Follow Me can be used in Single Battles (Gen3-SwSh)")
+//TO_DO_BATTLE_TEST("Triples: Follow Me can only draw non-adjacent moves if they use a long-range move")
