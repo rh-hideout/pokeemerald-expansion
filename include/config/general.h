@@ -83,6 +83,9 @@
 #define UNITS                        UNITS_IMPERIAL
 #define CHAR_DEC_SEPARATOR           CHAR_PERIOD // CHAR_PERIOD is used as a decimal separator only in the UK and the US. The rest of the world uses CHAR_COMMA.
 
+// Backward-compatibility alias for forks still using the legacy macro name.
+#define SUMMARY_SCREEN_NATURE_COLORS P_SUMMARY_SCREEN_NATURE_COLORS
+
 // Naming Screen
 #define AUTO_LOWERCASE_KEYBOARD      GEN_LATEST  // Starting in GEN_6, after entering the first uppercase character, the keyboard switches to lowercase letters.
 
