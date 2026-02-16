@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Tough Claws boosts contact moves when user has Protective Pa
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MACH_PUNCH, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
-    } THEN {
+    } FINALLY {
         EXPECT_MUL_EQ(results[1].damage, UQ_4_12(1.3), results[0].damage);
     }
 }

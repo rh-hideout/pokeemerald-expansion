@@ -8,7 +8,6 @@ ASSUMPTIONS
     ASSUME(MoveMakesContact(MOVE_SCRATCH));
     ASSUME(MoveMakesContact(MOVE_FIRE_PUNCH));
     ASSUME(GetMoveType(MOVE_FIRE_PUNCH) == TYPE_FIRE);
-    ASSUME(MoveMakesContact(MOVE_THUNDER_PUNCH));
 }
 
 SINGLE_BATTLE_TEST("Fluffy halves damage taken from moves that make direct contact", s16 damage)
@@ -71,6 +70,7 @@ SINGLE_BATTLE_TEST("Fluffy halves damage taken from moves that make direct conta
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
+        ASSUME(MoveMakesContact(MOVE_THUNDER_PUNCH));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {
@@ -89,6 +89,7 @@ SINGLE_BATTLE_TEST("Fluffy does not halve damage taken from moves that make dire
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
+        ASSUME(MoveMakesContact(MOVE_THUNDER_PUNCH));
         ASSUME(IsPunchingMove(MOVE_THUNDER_PUNCH));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PUNCHING_GLOVE); }
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
@@ -108,6 +109,7 @@ SINGLE_BATTLE_TEST("Fluffy does not halve damage taken from moves that make dire
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
+        ASSUME(MoveMakesContact(MOVE_THUNDER_PUNCH));
         PLAYER(SPECIES_ROWLET) { Ability(ABILITY_LONG_REACH); }
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {
