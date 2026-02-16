@@ -20,6 +20,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "test_runner.h"
 #include "text_window.h"
 #include "trig.h"
 #include "window.h"
