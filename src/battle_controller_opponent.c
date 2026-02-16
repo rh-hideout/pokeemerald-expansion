@@ -567,12 +567,14 @@ static void OpponentHandleChoosePokemon(u32 battler)
             }
         }
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
+        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
     else
     {
         chosenMonId = gBattleStruct->AI_monToSwitchIntoId[battler];
         gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
+        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
     #if TESTING
     TestRunner_Battle_CheckSwitch(battler, chosenMonId);

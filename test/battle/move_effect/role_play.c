@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Role Play copies target's ability")
     } THEN {
         EXPECT_EQ(player->ability, ABILITY_BLAZE);
         EXPECT_EQ(opponent->ability, ABILITY_BLAZE);
-    } 
+    }
 }
 
 DOUBLE_BATTLE_TEST("Role Play copies target's current ability even if it changed during that turn")
@@ -93,7 +93,8 @@ SINGLE_BATTLE_TEST("Role Play fails if user's ability can't be suppressed")
     u32 species, ability;
 
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }
-    PARAMETRIZE { species = SPECIES_DARMANITAN; ability = ABILITY_ZEN_MODE; }
+    if (B_UPDATED_ABILITY_DATA >= GEN_7)
+        PARAMETRIZE { species = SPECIES_DARMANITAN; ability = ABILITY_ZEN_MODE; }
     PARAMETRIZE { species = SPECIES_AEGISLASH; ability = ABILITY_STANCE_CHANGE; }
     PARAMETRIZE { species = SPECIES_MINIOR; ability = ABILITY_SHIELDS_DOWN; }
     PARAMETRIZE { species = SPECIES_WISHIWASHI; ability = ABILITY_SCHOOLING; }

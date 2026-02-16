@@ -78,3 +78,19 @@ SINGLE_BATTLE_TEST("Ceaseless Edge fails to set up hazards if user faints")
         NOT MESSAGE("Spikes were scattered on the ground all around the opposing team!");
     }
 }
+
+SINGLE_BATTLE_TEST("Ceaseless Edge does not set up hazards if target was not hit")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PROTECT);  MOVE(player, MOVE_CEASELESS_EDGE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CEASELESS_EDGE, player);
+            MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+        }
+    }
+}
