@@ -28,6 +28,11 @@ $(CRY_BIN_DIR)/%.bin: $(CRY_SUBDIR)/%.wav
 $(CRY_BIN_DIR)/uncomp_%.bin: $(CRY_SUBDIR)/uncomp_%.aif
 	$(AIF) $< $@
 
+# Legacy direct sound samples kept as .aif in some branches.
+# Use the legacy converter for these so `make` works without manual conversion.
+$(SOUND_BIN_DIR)/direct_sound_samples/%.bin: sound/direct_sound_samples/%.aif
+	$(AIF) $< $@ --compress
+
 # Uncompressed sounds
 $(SOUND_BIN_DIR)/%.bin: sound/%.wav
 	$(WAV2AGB) -b $< $@

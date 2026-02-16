@@ -324,7 +324,6 @@ static void GenerateOpponentMons(void)
     int i, j, k;
     u16 species[FRONTIER_PARTY_SIZE];
     u16 heldItems[FRONTIER_PARTY_SIZE];
-    int firstMonId = 0;
     u16 trainerId = 0;
     u8 facilityClass = 0;
     u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
@@ -396,21 +395,21 @@ static void GenerateOpponentMons(void)
             continue;
 
         // Ensure this species hasn't already been chosen for the opponent
-        for (k = firstMonId; k < firstMonId + i; k++)
+        for (k = 0; k < i; k++)
         {
             if (species[k] == gFacilityTrainerMons[monId].species)
                 break;
         }
-        if (k != firstMonId + i)
+        if (k != i)
             continue;
 
         // Ensure held items don't repeat on the opponent's team
-        for (k = firstMonId; k < firstMonId + i; k++)
+        for (k = 0; k < i; k++)
         {
             if (heldItems[k] != ITEM_NONE && heldItems[k] == gFacilityTrainerMons[monId].heldItem)
                 break;
         }
-        if (k != firstMonId + i)
+        if (k != i)
             continue;
 
         // Successful selection
@@ -501,7 +500,6 @@ static void GenerateInitialRentalMons(void)
     u8 rentalRank = GetNumPastRentalsRank(battleMode, lvlMode);
     u16 monId;
     u16 species[PARTY_SIZE];
-    u16 monIds[PARTY_SIZE];
     u16 heldItems[PARTY_SIZE];
 
     DebugPrintf("GenerateInitialRentalMons");
@@ -512,7 +510,6 @@ static void GenerateInitialRentalMons(void)
     for (i = 0; i < PARTY_SIZE; i++)
     {
         species[i] = SPECIES_NONE;
-        monIds[i] = 0;
         heldItems[i] = ITEM_NONE;
     }
 
@@ -574,7 +571,6 @@ static void GenerateInitialRentalMons(void)
         gSaveBlock2Ptr->frontier.rentalMons[i].monId = monId;
         species[i] = thisSpecies;
         heldItems[i] = item;
-        monIds[i] = monId;
         DebugPrintf("✅ Selected monId %d", monId);
         i++;
     }
@@ -1046,7 +1042,7 @@ const u8 *GetFacilityClassTypeWhitelist(u8 facilityClass, u8 *count)
             *count = FACILITY_CLASS_BATTLE_GIRL_TYPE_COUNT;
             return gSpeciesListFacilityClassBattleGirlType;
         default:
-            DebugPrintf("facilityClass not found: $s", facilityClass);
+            DebugPrintf("facilityClass not found: %d", facilityClass);
             *count = FACILITY_CLASS_DEFAULT_TYPE_COUNT;
             return gSpeciesListFacilityClassDefaultType;
     }

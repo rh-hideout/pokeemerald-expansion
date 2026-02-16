@@ -6018,17 +6018,29 @@ static void CopyRandomOnePerSpecies(u16 *dest, u16 *destCount, const u16 *src, u
             seenSpecies[species] = monId;
     }
 
-    *destCount = 0;
     for (int s = 1; s < NUM_SPECIES; s++) // start from 1 to skip SPECIES_NONE
     {
         if (seenSpecies[s] != 0)
         {
-            if (*destCount < FACTORY_RANK_POOL_MAX_SIZE)
-                dest[(*destCount)++] = seenSpecies[s];
-            else
+            bool8 alreadyInDest = FALSE;
+            for (int i = 0; i < *destCount; i++)
             {
-                DebugPrintf("‼️ Final rank pool overflow — more than %d unique species", FACTORY_RANK_POOL_MAX_SIZE);
-                break;
+                if (gBattleFrontierMons[dest[i]].species == s)
+                {
+                    alreadyInDest = TRUE;
+                    break;
+                }
+            }
+
+            if (!alreadyInDest)
+            {
+                if (*destCount < FACTORY_RANK_POOL_MAX_SIZE)
+                    dest[(*destCount)++] = seenSpecies[s];
+                else
+                {
+                    DebugPrintf("‼️ Final rank pool overflow — more than %d unique species", FACTORY_RANK_POOL_MAX_SIZE);
+                    break;
+                }
             }
         }
     }
