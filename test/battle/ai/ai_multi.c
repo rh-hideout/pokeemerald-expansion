@@ -222,3 +222,31 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
         EXPECT_EQ(SPECIES_VENUSAUR, opponentLeft->species);
     }
 }
+
+AI_MULTI_BATTLE_TEST("Pollen Puff: AI correctly scores moves with EFFECT_HIT_ENEMY_HEAL_ALLY as damaging opponents but not allies")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        ASSUME(GetMoveEffect(MOVE_POLLEN_PUFF) == EFFECT_HIT_ENEMY_HEAL_ALLY);
+        // Speed tie so all think they are faster
+        MULTI_PLAYER(SPECIES_WOBBUFFET)     { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF, MOVE_CELEBRATE); }
+        MULTI_PARTNER(SPECIES_WOBBUFFET)    { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
+    } WHEN {
+        TURN { 
+            // Targeting ally
+            SCORE_EQ_VAL(opponentLeft,  MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + WEAK_EFFECT, target:opponentRight);
+            SCORE_EQ_VAL(playerRight,   MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + WEAK_EFFECT, target:playerLeft);
+            SCORE_EQ_VAL(opponentRight, MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + WEAK_EFFECT, target:opponentLeft);
+
+            // Targeting opponent
+            SCORE_EQ_VAL(opponentLeft,  MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL, target:playerLeft);
+            SCORE_EQ_VAL(opponentLeft,  MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL, target:playerRight);
+            SCORE_EQ_VAL(playerRight,   MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL, target:opponentLeft);
+            SCORE_EQ_VAL(playerRight,   MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL, target:opponentRight);
+            SCORE_EQ_VAL(opponentRight, MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL, target:playerLeft);
+            SCORE_EQ_VAL(opponentRight, MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL, target:playerRight);
+        }
+    }
+}

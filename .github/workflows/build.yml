@@ -31,11 +31,11 @@ jobs:
         env:
           COMPARE: 0
         run: make -j${nproc} -O all
-        
-      - name: LTO
+
+      - name: Release
         run: |
           make tidy
-          make -j${nproc} LTO=1
+          make -j${nproc} release
         # make tidy to purge previous build
 
       - name: Test
@@ -43,6 +43,18 @@ jobs:
           TEST: 1
         run: |
           make -j${nproc} check
+
+  docs_validate:
+    if: github.actor != 'allcontributors[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Check that SUMMARY.md includes markdown doc files
+        run: |
+          .github/docs_validate/inclusive_summary.py
+
   allcontributors:
     if: github.actor == 'allcontributors[bot]'
     runs-on: ubuntu-latest

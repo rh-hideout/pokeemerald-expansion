@@ -4,7 +4,6 @@
 #include "battle_ai_util.h"
 #include "battle_anim.h"
 #include "battle_arena.h"
-#include "battle_main.h"
 #include "battle_controllers.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_interface.h"
@@ -13,10 +12,11 @@
 #include "battle_tv.h"
 #include "cable_club.h"
 #include "event_object_movement.h"
-#include "event_data.h"
+#include "item.h"
 #include "link.h"
 #include "link_rfu.h"
 #include "m4a.h"
+#include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "recorded_battle.h"
@@ -27,6 +27,7 @@
 #include "util.h"
 #include "text.h"
 #include "constants/abilities.h"
+#include "constants/item_effects.h"
 #include "constants/songs.h"
 #include "test/battle.h"
 #include "test/test.h"
@@ -35,7 +36,6 @@
 
 static EWRAM_DATA u8 sLinkSendTaskId = 0;
 static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
-static EWRAM_DATA bool8 sRogueBattleInputStarted = FALSE;
 
 COMMON_DATA void (*gBattlerControllerFuncs[MAX_BATTLERS_COUNT])(u32 battler) = {0};
 COMMON_DATA u8 gBattleControllerData[MAX_BATTLERS_COUNT] = {0}; // Used by the battle controllers to store misc sprite/task IDs for each battler
@@ -330,6 +330,14 @@ bool32 IsValidForBattle(struct Pokemon *mon)
          && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
 }
 
+bool32 IsValidForBattleButDead(struct Pokemon *mon)
+{
+    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    return (species != SPECIES_NONE
+         && species != SPECIES_EGG
+         && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
+}
+
 static inline bool32 IsControllerPlayer(u32 battler)
 {
     return (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted);
@@ -415,21 +423,41 @@ static void SetBattlePartyIds(void)
                 {
                     if (IsOnPlayerSide(i))
                     {
-                        if (IsValidForBattle(&gPlayerParty[j]) && gBattlerPartyIndexes[i - 2] != j)
+                        if (gBattlerPartyIndexes[i - 2] == j)
+                        {
+                            // Exclude already assigned pokemon;
+                        }
+                        else if (IsValidForBattle(&gPlayerParty[j]))
                         {
                             gBattlerPartyIndexes[i] = j;
                             break;
+                        }
+                        else if (IsValidForBattleButDead(&gPlayerParty[j]) && gBattlerPartyIndexes[i] < PARTY_SIZE)
+                        {
+                            // Put an "option" on a dead mon that can be revived;
+                            gBattlerPartyIndexes[i] = j + PARTY_SIZE;
                         }
                     }
                     else
                     {
-                        if (IsValidForBattle(&gEnemyParty[j]) && gBattlerPartyIndexes[i - 2] != j)
+                        if (gBattlerPartyIndexes[i - 2] == j)
+                        {
+                            // Exclude already assigned pokemon;
+                        }
+                        else if (IsValidForBattle(&gEnemyParty[j]))
                         {
                             gBattlerPartyIndexes[i] = j;
                             break;
                         }
+                        else if (IsValidForBattleButDead(&gEnemyParty[j]) && gBattlerPartyIndexes[i] < PARTY_SIZE)
+                        {
+                            // Put an "option" on a dead mon that can be revived;
+                            gBattlerPartyIndexes[i] = j + PARTY_SIZE;
+                        }
                     }
 
+                    if (gBattlerPartyIndexes[i] >= PARTY_SIZE)
+                        continue;
                     // No valid mons were found. Add the empty slot.
                     if (gBattlerPartyIndexes[i - 2] == 0)
                         gBattlerPartyIndexes[i] = 1;
@@ -437,6 +465,8 @@ static void SetBattlePartyIds(void)
                         gBattlerPartyIndexes[i] = 0;
                 }
             }
+            if (gBattlerPartyIndexes[i] >= PARTY_SIZE)
+                gBattlerPartyIndexes[i] -= PARTY_SIZE;
         }
 
         if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
@@ -1408,10 +1438,10 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         #if TESTING
         if (gTestRunnerEnabled)
         {
-            u32 side = GetBattlerSide(battler);
+            u32 array = (!IsPartnerMonFromSameTrainer(battler)) ? battler : GetBattlerSide(battler);
             u32 partyIndex = gBattlerPartyIndexes[battler];
-            if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+            if (TestRunner_Battle_GetForcedAbility(array, partyIndex))
+                gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(array, partyIndex);
         }
         #endif
         break;
@@ -2609,7 +2639,7 @@ void BtlController_HandleStatusAnimation(u32 battler)
 
 void BtlController_HandleHitAnimation(u32 battler)
 {
-    if (gSprites[gBattlerSpriteIds[battler]].invisible == TRUE)
+    if (gSprites[gBattlerSpriteIds[battler]].invisible == TRUE || (gTestRunnerHeadless && !gBattleTestRunnerState->forceMoveAnim))
     {
         BtlController_Complete(battler);
     }
@@ -2624,6 +2654,11 @@ void BtlController_HandleHitAnimation(u32 battler)
 
 void BtlController_HandlePlaySE(u32 battler)
 {
+    if (gTestRunnerHeadless && !gBattleTestRunnerState->forceMoveAnim)
+    {
+        BtlController_Complete(battler);
+        return;
+    }
     s32 pan = IsOnPlayerSide(battler) ? SOUND_PAN_ATTACKER : SOUND_PAN_TARGET;
 
     PlaySE12WithPanning(gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8), pan);
@@ -2632,6 +2667,11 @@ void BtlController_HandlePlaySE(u32 battler)
 
 void BtlController_HandlePlayFanfareOrBGM(u32 battler)
 {
+    if (gTestRunnerHeadless && !gBattleTestRunnerState->forceMoveAnim)
+    {
+        BtlController_Complete(battler);
+        return;
+    }
     if (gBattleResources->bufferA[battler][3])
     {
         BattleStopLowHpSound();
@@ -2898,7 +2938,7 @@ void AnimateMonAfterPokeBallFail(u32 battler)
 {
     if (B_ANIMATE_MON_AFTER_FAILED_POKEBALL == FALSE)
         return;
-    
+
     LaunchKOAnimation(battler, ReturnAnimIdForBattler(TRUE, battler), TRUE);
     TryShinyAnimation(gBattlerTarget, GetBattlerMon(gBattlerTarget));
 }
@@ -2923,6 +2963,8 @@ static void LaunchKOAnimation(u32 battlerId, u16 animId, bool32 isFront)
 {
     u32 species = GetBattlerVisualSpecies(battlerId);
     u32 spriteId = gBattlerSpriteIds[battlerId];
+
+    gBattleStruct->battlerKOAnimsRunning++;
 
     if (isFront)
     {
@@ -3108,57 +3150,30 @@ void BtlController_HandleSwitchInTryShinyAnim(u32 battler)
     }
 }
 
-u32 Rogue_GetBattleSpeedScale(bool32 forHealthbar)
+void UpdateFriendshipFromXItem(u32 battler)
 {
-    u8 battleSceneOption = VarGet(VAR_BATTLE_SPEED); // Originally GetBattleSceneOption() with a saveblock stored value;
+    struct Pokemon *party = GetBattlerParty(battler);
 
-    // Hold L to slow down
-    if(JOY_HELD(L_BUTTON))
-        return 1;
+    u8 friendship;
+    gBattleResources->bufferA[battler][1] = REQUEST_FRIENDSHIP_BATTLE;
+    GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], &friendship);
 
-    // Reset for intros/new battles until move selection starts.
-    if (!InBattleChoosingMoves() && !InBattleRunningActions())
-        sRogueBattleInputStarted = FALSE;
+    u16 heldItem;
+    gBattleResources->bufferA[battler][1] = REQUEST_HELDITEM_BATTLE;
+    GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], (u8*)&heldItem);
 
-    // We want to speed up all anims until input selection starts
-    if(InBattleChoosingMoves())
-        sRogueBattleInputStarted = TRUE;
-
-    if(sRogueBattleInputStarted)
+    if (friendship < X_ITEM_MAX_FRIENDSHIP)
     {
-        // Always run at 1x speed here
-        if(InBattleChoosingMoves())
-            return 1;
+        friendship += CalculateFriendshipBonuses(GetBattlerMon(battler), X_ITEM_FRIENDSHIP_INCREASE, GetItemHoldEffect(heldItem));
 
-        // When battle anims are turned off, it's a bit too hard to read text, so force running at normal speed
-        if(!forHealthbar && battleSceneOption == OPTIONS_BATTLE_SCENE_DISABLED && InBattleRunningActions())
-            return 1;
+        if (friendship > MAX_FRIENDSHIP)
+            friendship = MAX_FRIENDSHIP;
+
+        gBattleMons[battler].friendship = friendship;
+        gBattleResources->bufferA[battler][3] = friendship;
+        gBattleResources->bufferA[battler][1] = REQUEST_FRIENDSHIP_BATTLE;
+        SetBattlerMonData(battler, GetBattlerParty(battler), gBattlerPartyIndexes[battler]);
     }
-
-    // We don't need to speed up health bar anymore as that passively happens now
-    switch (battleSceneOption)
-    {
-    case OPTIONS_BATTLE_SCENE_1X:
-        return forHealthbar ? 1 : 1;
-
-    case OPTIONS_BATTLE_SCENE_2X:
-        return forHealthbar ? 1 : 2;
-
-    case OPTIONS_BATTLE_SCENE_3X:
-        return forHealthbar ? 1 : 3;
-
-    case OPTIONS_BATTLE_SCENE_4X:
-        return forHealthbar ? 1 : 4;
-
-    // Print text at a readable speed still
-    case OPTIONS_BATTLE_SCENE_DISABLED:
-        if(sRogueBattleInputStarted)
-            return forHealthbar ? 10 : 1;
-        else
-            return 4;
-    }
-
-    return 1;
 }
 
 bool32 ShouldBattleRestrictionsApply(u32 battler)

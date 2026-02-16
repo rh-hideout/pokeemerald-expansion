@@ -353,6 +353,7 @@ struct Volatiles
     // u32 foresight:1;
     // u32 dragonCheer:1;
     // u32 focusEnergy:1;
+    // u32 bonusCritStages:3;
 };
 
 struct BattlePokemon
@@ -722,7 +723,6 @@ void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPok
 void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId);
 void CreateMonWithEVSpreadNatureOTID(struct Pokemon *mon, u16 species, u8 level, u8 nature, u8 fixedIV, u8 evSpread, u32 otId);
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest);
-bool8 ShouldIgnoreDeoxysForm(u8 caseId, u8 battler);
 u16 GetUnionRoomTrainerPic(void);
 enum TrainerClassID GetUnionRoomTrainerClass(void);
 void CreateEnemyEventMon(void);
@@ -840,14 +840,14 @@ void UpdatePartyPokerusTime(u16 days);
 void PartySpreadPokerus(struct Pokemon *party);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
 u8 CanLearnTeachableMove(u16 species, u16 move);
-u8 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves);
-u8 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves);
-u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves);
-u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves);
-u8 GetNumberOfLevelUpMoves(struct Pokemon *mon);
-u8 GetNumberOfEggMoves(struct Pokemon *mon);
-u8 GetNumberOfTMMoves(struct Pokemon *mon);
-u8 GetNumberOfTutorMoves(struct Pokemon *mon);
+u32 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves);
+u32 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves);
+bool32 HasRelearnerLevelUpMoves(struct Pokemon *mon);
+bool32 HasRelearnerEggMoves(struct Pokemon *mon);
+bool32 HasRelearnerTMMoves(struct Pokemon *mon);
+bool32 HasRelearnerTutorMoves(struct Pokemon *mon);
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves);
 u16 SpeciesToPokedexNum(u16 species);
 bool32 IsSpeciesInHoennDex(u16 species);

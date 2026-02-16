@@ -5158,7 +5158,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
                 typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(moves[i * 4 + j], targetSpecies, targetAbility);
                 if (typeMultiplier == UQ_4_12(0))
                     moveScores[i * MAX_MON_MOVES + j] += 0;
-                else if (typeMultiplier >= UQ_4_12(2))
+                else if (typeMultiplier >= UQ_4_12(2.0))
                     moveScores[i * MAX_MON_MOVES + j] += movePower * 2;
                 else if (typeMultiplier <= UQ_4_12(0.5))
                     moveScores[i * MAX_MON_MOVES + j] += movePower / 2;

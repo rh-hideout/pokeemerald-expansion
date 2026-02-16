@@ -98,3 +98,82 @@ SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
         MESSAGE("The extremely harsh sunlight faded!");
     }
 }
+
+SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves")
+{
+    u16 move;
+    PARAMETRIZE { move = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { move = MOVE_RAIN_DANCE; }
+    PARAMETRIZE { move = MOVE_SANDSTORM; }
+    PARAMETRIZE { move = MOVE_HAIL; }
+    PARAMETRIZE { move = MOVE_SNOWSCAPE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_SUNNY_DAY);
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+        ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_SUN_PRIMAL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land prevents other weather abilities")
+{
+    u16 ability, species;
+    PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
+    PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
+    PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
+    PARAMETRIZE { ability = ABILITY_SNOW_WARNING; species = SPECIES_ABOMASNOW; }
+
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ability);
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_SUN_PRIMAL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land can be replaced by Delta Stream")
+{
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DELTA_STREAM);
+        MESSAGE("Mysterious strong winds are protecting Flying-type Pokémon!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_STRONG_WINDS);
+    }
+}
+
+SINGLE_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea")
+{
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_PRIMORDIAL_SEA);
+        MESSAGE("A heavy rain began to fall!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_RAIN_PRIMAL);
+    }
+}
