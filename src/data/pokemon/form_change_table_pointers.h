@@ -34,3 +34,22 @@ const struct Fusion *const gFusionTablePointers[NUM_SPECIES] =
 #endif //P_FAMILY_CALYREX
 #endif //P_FUSION_FORMS
 };
+
+#if P_FUSION_FORMS
+#if P_FAMILY_KYUREM
+#if P_FAMILY_RESHIRAM
+const u16 gKyurenWhiteSwapMoveTable[][2] =
+{
+    {MOVE_SCARY_FACE, MOVE_FUSION_FLARE},
+    {MOVE_GLACIATE, MOVE_ICE_BURN},
+};
+#endif //P_FAMILY_RESHIRAM
+#if P_FAMILY_ZEKROM
+const u16 gKyurenBlackSwapMoveTable[][2] =
+{
+    {MOVE_SCARY_FACE, MOVE_FUSION_BOLT},
+    {MOVE_GLACIATE, MOVE_FREEZE_SHOCK},
+};
+#endif //P_FAMILY_ZEKROM
+#endif //P_FAMILY_KYUREM
+#endif //P_FUSION_FORMS

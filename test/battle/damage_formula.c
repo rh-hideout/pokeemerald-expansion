@@ -101,6 +101,7 @@ SINGLE_BATTLE_TEST("Damage calculation matches Gen5+ (Marshadow vs Mawile)")
     PARAMETRIZE { expectedDamage = 123; }
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SPECTRAL_THIEF) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(B_UPDATED_TYPE_MATCHUPS >= GEN_6); // Steel resists Ghost in Gen2-5
         PLAYER(SPECIES_MARSHADOW) { Level(100); Attack(286); }
         OPPONENT(SPECIES_MAWILE) { Level(100); Defense(226); HP(241); }
     } WHEN {
@@ -196,6 +197,7 @@ SINGLE_BATTLE_TEST("Gem boosted Damage calculation")
 {
     s16 dmg;
     s16 expectedDamage;
+#if I_GEM_BOOST_POWER >= GEN_6
     PARAMETRIZE { expectedDamage = 240; }
     PARAMETRIZE { expectedDamage = 237; }
     PARAMETRIZE { expectedDamage = 234; }
@@ -212,6 +214,25 @@ SINGLE_BATTLE_TEST("Gem boosted Damage calculation")
     PARAMETRIZE { expectedDamage = 208; }
     PARAMETRIZE { expectedDamage = 205; }
     PARAMETRIZE { expectedDamage = 204; }
+#else
+    KNOWN_FAILING;
+    PARAMETRIZE { expectedDamage = 273; }
+    PARAMETRIZE { expectedDamage = 270; }
+    PARAMETRIZE { expectedDamage = 267; }
+    PARAMETRIZE { expectedDamage = 264; }
+    PARAMETRIZE { expectedDamage = 261; }
+    PARAMETRIZE { expectedDamage = 258; }
+    PARAMETRIZE { expectedDamage = 256; }
+    PARAMETRIZE { expectedDamage = 253; }
+    PARAMETRIZE { expectedDamage = 250; }
+    PARAMETRIZE { expectedDamage = 247; }
+    PARAMETRIZE { expectedDamage = 244; }
+    PARAMETRIZE { expectedDamage = 241; }
+    PARAMETRIZE { expectedDamage = 240; }
+    PARAMETRIZE { expectedDamage = 237; }
+    PARAMETRIZE { expectedDamage = 234; }
+    PARAMETRIZE { expectedDamage = 231; }
+#endif
     GIVEN {
         PLAYER(SPECIES_MAKUHITA) { Item(ITEM_FIGHTING_GEM); }
         OPPONENT(SPECIES_MAKUHITA);

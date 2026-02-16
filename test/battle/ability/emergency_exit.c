@@ -108,3 +108,69 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
 }
+
+WILD_BATTLE_TEST("Emergency Exit makes the pokemon flee during wild battle")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(262); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUPER_FANG);}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPER_FANG, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    } THEN {
+        EXPECT_EQ(gBattleOutcome, B_OUTCOME_MON_TELEPORTED);
+    }
+}
+
+WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp (wild battle)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); Status1(STATUS1_BURN); };
+    } WHEN {
+        TURN { }
+    } SCENE {
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    } THEN {
+        EXPECT_EQ(gBattleOutcome, B_OUTCOME_MON_TELEPORTED);
+    }
+}
+
+WILD_BATTLE_TEST("Emergency Exit makes the player ran during wild battle")
+{
+    GIVEN {
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(262); };
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUPER_FANG);}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPER_FANG, opponent);
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
+    } THEN {
+        EXPECT_EQ(gBattleOutcome, B_OUTCOME_PLAYER_TELEPORTED);
+    }
+}
+
+WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp (wild battle player side)")
+{
+    GIVEN {
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); };
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SANDSTORM);}
+    } SCENE {
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
+    } THEN {
+        EXPECT_EQ(gBattleOutcome, B_OUTCOME_PLAYER_TELEPORTED);
+    }
+}

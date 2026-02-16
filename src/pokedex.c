@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle_main.h"
+#include "battle_script_commands.h"
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
@@ -4021,8 +4022,8 @@ static void HighlightSubmenuScreenSelectBarItem(u8 a, u16 b)
 #define tPalTimer      data[2]
 #define tMonSpriteId   data[3]
 #define tIsShiny       data[13]
-#define tPersonalityLo data[14]
-#define tPersonalityHi data[15]
+#define tPersonalityLo 14
+#define tPersonalityHi 15
 
 u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
 {
@@ -4035,9 +4036,27 @@ u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
     gTasks[taskId].tState = 0;
     gTasks[taskId].tSpecies = species;
     gTasks[taskId].tIsShiny = isShiny;
-    gTasks[taskId].tPersonalityLo = personality;
-    gTasks[taskId].tPersonalityHi = personality >> 16;
+    gTasks[taskId].data[tPersonalityLo] = personality;
+    gTasks[taskId].data[tPersonalityHi] = personality >> 16;
     return taskId;
+}
+
+static void LoadDexMonPalette(u32 taskId, bool32 isShiny)
+{
+    const u16 *paletteData = GetMonSpritePalFromSpeciesAndPersonality(gTasks[taskId].tSpecies, isShiny, GetWordTaskArg(taskId, tPersonalityLo));
+    u32 paletteNum = gSprites[gTasks[taskId].tMonSpriteId].oam.paletteNum;
+    LoadPalette(paletteData, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+}
+
+u32 Pokedex_CreateCaughtMonSprite(u32 species, s32 x, s32 y)
+{
+    u32 spriteId;
+
+    SetMultiuseSpriteTemplateToPokemon(species, GetCatchingBattler());
+    spriteId = CreateSprite(&gMultiuseSpriteTemplate, x, y, 0);
+    gSprites[spriteId].oam.priority = 0;
+    gSprites[spriteId].callback = SpriteCallbackDummy;
+    return spriteId;
 }
 
 static void Task_DisplayCaughtMonDexPage(u8 taskId)
@@ -4087,11 +4106,13 @@ static void Task_DisplayCaughtMonDexPage(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 4:
-        spriteId = CreateMonPicSprite(species, FALSE, ((u16)gTasks[taskId].tPersonalityHi << 16) | (u16)gTasks[taskId].tPersonalityLo, TRUE, MON_PAGE_X, MON_PAGE_Y, 0, TAG_NONE);
+        // We're using a different mon sprite creation method, because we don't have enough memory to safely use CreateMonPicSprite.
+        spriteId = Pokedex_CreateCaughtMonSprite(species, MON_PAGE_X, MON_PAGE_Y);
+        gTasks[taskId].tMonSpriteId = spriteId;
+        LoadDexMonPalette(taskId, FALSE);
         gSprites[spriteId].oam.priority = 0;
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
         SetVBlankCallback(gPokedexVBlankCB);
-        gTasks[taskId].tMonSpriteId = spriteId;
         gTasks[taskId].tState++;
         break;
     case 5:
@@ -4138,9 +4159,6 @@ static void Task_ExitCaughtMonPage(u8 taskId)
     if (!gPaletteFade.active)
     {
         bool32 isShiny;
-        u32 personality;
-        u8 paletteNum;
-        const u16 *paletteData;
         void *buffer;
 
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
@@ -4153,10 +4171,7 @@ static void Task_ExitCaughtMonPage(u8 taskId)
             Free(buffer);
 
         isShiny = (bool8)gTasks[taskId].tIsShiny;
-        personality = ((u16)gTasks[taskId].tPersonalityHi << 16) | (u16)gTasks[taskId].tPersonalityLo;
-        paletteNum = gSprites[gTasks[taskId].tMonSpriteId].oam.paletteNum;
-        paletteData = GetMonSpritePalFromSpeciesAndPersonality(gTasks[taskId].tSpecies, isShiny, personality);
-        LoadPalette(paletteData, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+        LoadDexMonPalette(taskId, isShiny);
         DestroyTask(taskId);
     }
 }
