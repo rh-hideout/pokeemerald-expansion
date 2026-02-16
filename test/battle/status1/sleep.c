@@ -52,7 +52,8 @@ SINGLE_BATTLE_TEST("Sleep: Spore doesn't affect grass types (Gen6+)")
 
 AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep")
 {
-    u32 species, ability;
+    u32 species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_HOOTHOOT; ability = ABILITY_INSOMNIA; }
     PARAMETRIZE { species = SPECIES_MANKEY; ability = ABILITY_VITAL_SPIRIT; }

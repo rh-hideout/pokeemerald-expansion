@@ -651,6 +651,13 @@ static u8 GetBattleEnvironmentOverride(void)
 {
     u8 battleScene = GetCurrentMapBattleScene();
 
+    if (TestRunner_Battle_GetForcedEnvironment()
+     && gBattleEnvironmentInfo[gBattleEnvironment].background.tilemap
+     && gBattleEnvironmentInfo[gBattleEnvironment].background.tileset)
+    {
+        return gBattleEnvironment;
+    }
+
     if ((gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL)) && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK))
         return gBattleEnvironment;
 
@@ -1147,4 +1154,3 @@ void DrawTerrainTypeBattleBackground(void)
         break;
     }
 }
-

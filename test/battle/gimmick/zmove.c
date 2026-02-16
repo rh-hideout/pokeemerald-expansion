@@ -585,7 +585,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Extreme Evoboost boosts all the user's stats by two
 SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GENESIS_SUPERNOVA) == EFFECT_HIT_SET_TERRAIN);
+        ASSUME(MoveHasAdditionalEffect(MOVE_GENESIS_SUPERNOVA, MOVE_EFFECT_PSYCHIC_TERRAIN));
         PLAYER(SPECIES_MEW) { Item(ITEM_MEWNIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -595,7 +595,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GENESIS_SUPERNOVA, player);
         NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player); }
-        MESSAGE("Mew cannot use Quick Attack!");
+        MESSAGE("The opposing Wobbuffet is protected by the Psychic Terrain!");
     }
 }
 

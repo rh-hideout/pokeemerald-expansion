@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Purifying Salt halves damage from Ghost-type moves", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STURDY; }
     PARAMETRIZE { ability = ABILITY_PURIFYING_SALT; }
     GIVEN {
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Purifying Salt halves damage from Ghost-type moves", s16 dam
 
 SINGLE_BATTLE_TEST("Purifying Salt halves damage from dynamic Ghost-type moves", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STURDY; }
     PARAMETRIZE { ability = ABILITY_PURIFYING_SALT; }
     GIVEN {

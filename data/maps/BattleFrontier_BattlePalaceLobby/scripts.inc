@@ -202,10 +202,14 @@ BattleFrontier_BattlePalaceLobby_EventScript_NotEnoughValidMons::
 
 BattleFrontier_BattlePalaceLobby_EventScript_NotEnoughValidMonsLv50::
 	msgbox BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsLv50, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePalaceLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePalaceLobby_EventScript_NotEnoughValidMonsLvOpen::
 	msgbox BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsLvOpen, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePalaceLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePalaceLobby_EventScript_CancelChallengeSaveFailed::
@@ -427,7 +431,9 @@ BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsLv50:
 	.string "Level 50 or lower.\p"
 	.string "They also must not be holding\n"
 	.string "the same kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
+	.string "EGGS{STR_VAR_1}.$"
+
+BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsEnd:
 	.string "Come back when you have made\n"
 	.string "your preparations.$"
 
@@ -439,9 +445,7 @@ BattleFrontier_BattlePalaceLobby_Text_NotEnoughValidMonsLvOpen:
 	.string "different kinds of POKéMON.\p"
 	.string "They also must not be holding\n"
 	.string "the same kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
-	.string "Come back when you have made\n"
-	.string "your preparations.$"
+	.string "EGGS{STR_VAR_1}.$"
 
 BattleFrontier_BattlePalaceLobby_Text_NowSelectThreeMons:
 	.string "Good. Now, you must select your\n"

@@ -3361,6 +3361,7 @@ gBattleAnimMove_AquaJet::
 	visible ANIM_ATTACKER
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
+	setarg 7, 0x1000
 	end
 
 gBattleAnimMove_AttackOrder::
@@ -31079,6 +31080,17 @@ gBattleAnimStatus_Nightmare::
 	playsewithpan SE_M_NIGHTMARE, SOUND_PAN_TARGET
 	createsprite gNightmareDevilSpriteTemplate, ANIM_TARGET, 2
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 14, 1
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
+	end
+
+gBattleAnimStatus_Frostbite::
+	playsewithpan SE_M_ICY_WIND, 0
+	loadspritegfx ANIM_TAG_ICE_CRYSTALS
+	monbg ANIM_DEF_PARTNER
+	splitbgprio ANIM_TARGET
+	call IceCrystalEffectShort
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_TARGET, 5, 7, 0, RGB(0, 20, 31)
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
 	end

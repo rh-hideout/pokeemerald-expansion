@@ -64,14 +64,14 @@ struct TrainerMon
     u16 moves[4];
     u16 species;
     u16 heldItem;
-    u16 ability;
+    enum Ability ability;
     u8 lvl;
     u8 ball;
     u8 friendship;
     u8 nature:5;
     bool8 gender:2;
     bool8 isShiny:1;
-    u8 teraType:5;
+    enum Type teraType:5;
     bool8 gigantamaxFactor:1;
     u8 shouldUseDynamax:1;
     u8 padding1:1;
@@ -82,7 +82,7 @@ struct TrainerMon
 
 #define TRAINER_PARTY(partyArray) partyArray, .partySize = ARRAY_COUNT(partyArray)
 
-enum TrainerBattleType 
+enum TrainerBattleType
 {
     TRAINER_BATTLE_TYPE_SINGLES,
     TRAINER_BATTLE_TYPE_DOUBLES,

@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Strength Sap users to lose HP instead of 
  */
 SINGLE_BATTLE_TEST("Liquid Ooze causes leech seed victim to faint before seeder")
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { ability = ABILITY_LIQUID_OOZE; }
     GIVEN {

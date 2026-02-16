@@ -178,7 +178,7 @@ AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted mov
 
 AI_SINGLE_BATTLE_TEST("AI chooses moves with secondary effect that have a 100% chance to trigger")
 {
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_NONE; }
     PARAMETRIZE { ability = ABILITY_SERENE_GRACE; }
@@ -234,7 +234,8 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 
 AI_SINGLE_BATTLE_TEST("AI chooses moves that cure inactive party members")
 {
-    u32 status, ability, config;
+    u32 status, config;
+    enum Ability ability;
 
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; ability = ABILITY_SCRAPPY; }
     PARAMETRIZE { status = STATUS1_NONE;         ability = ABILITY_SCRAPPY; }
@@ -314,7 +315,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Worry Seed against Rest")
 
 AI_SINGLE_BATTLE_TEST("AI uses Simple Beam against Contrary Leaf Storm")
 {
-    u32 ability, move;
+    enum Ability ability, move;
     PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_LEAF_STORM; }
     PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_CHARGE_BEAM; }
     PARAMETRIZE { ability = ABILITY_OVERGROW; move = MOVE_CHARGE_BEAM; }
@@ -391,5 +392,71 @@ AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake when opponent would
         OPPONENT(SPECIES_RATTATA) { Moves(MOVE_WIDE_GUARD, MOVE_TACKLE); }
     } WHEN {
         TURN { MOVE(player, MOVE_EARTHQUAKE); EXPECT_MOVE(opponent, MOVE_WIDE_GUARD); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees Shield Dust immunity to additional effects")
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_SHIELD_DUST; }
+    PARAMETRIZE { ability = ABILITY_TINTED_LENS; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_VENOMOTH) { Ability(ability); Moves(MOVE_CELEBRATE, MOVE_POUND); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CHILLING_WATER, MOVE_BRINE); }
+    } WHEN {
+    if (ability == ABILITY_SHIELD_DUST)
+        TURN { EXPECT_MOVE(opponent, MOVE_BRINE); }
+    else
+        TURN { EXPECT_MOVE(opponent, MOVE_CHILLING_WATER); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
+{
+    u32 species, fieldStatus, ability;
+    u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
+
+    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
+    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
+    PARAMETRIZE { fieldStatus = MOVE_ELECTRIC_TERRAIN; species = SPECIES_GEODUDE_ALOLA; ability = ABILITY_GALVANIZE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  fieldStatus = MOVE_ELECTRIC_TERRAIN; species = SPECIES_GEODUDE_ALOLA; ability = ABILITY_GALVANIZE; }
+
+    GIVEN {
+        AI_FLAGS(aiFlags);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(fieldStatus, MOVE_RETURN, MOVE_TAUNT); }
+        OPPONENT(species) { Ability(ability); Moves(MOVE_HYPER_VOICE);  }
+    } WHEN {
+        if (ability != ABILITY_NONE)
+            TURN { EXPECT_MOVE(opponentLeft, fieldStatus); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponentLeft, fieldStatus); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts")
+{
+    u32 ability;
+
+    PARAMETRIZE { ability = ABILITY_GUTS; }
+    PARAMETRIZE { ability = ABILITY_BULLETPROOF; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_URSALUNA) { Ability(ability); Moves(MOVE_HEADLONG_RUSH, MOVE_CELEBRATE); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_PRIMARINA) { Moves(MOVE_SPARKLING_ARIA, MOVE_SCALD); }
+    } WHEN {
+        if (ability == ABILITY_GUTS)
+            TURN { EXPECT_MOVE(opponent, MOVE_SPARKLING_ARIA); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_SCALD); }
     }
 }

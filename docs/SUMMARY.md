@@ -39,6 +39,8 @@
   - [How to use Trainer Party Pools](tutorials/how_to_trainer_party_pool.md)
   - [Vs. Seeker](tutorials/vs_seeker.md)
 - [Changelog](./CHANGELOG.md)
+    - [1.14.x]()
+        - [Version 1.14.0](changelogs/1.14.x/1.14.0.md)
     - [1.13.x]()
         - [Version 1.13.4](changelogs/1.13.x/1.13.4.md)
         - [Version 1.13.3](changelogs/1.13.x/1.13.3.md)

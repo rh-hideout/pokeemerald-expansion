@@ -2,6 +2,7 @@
 #include "battle_main.h"
 #include "battle_util.h"
 #include "bg.h"
+#include "contest.h"
 #include "contest_effect.h"
 #include "data.h"
 #include "daycare.h"
@@ -360,9 +361,9 @@ struct PokemonStats
     u8  eggCycles;
     u16 expYield;
     u8  friendship;
-    u16 ability0;
-    u16 ability1;
-    u16 abilityHidden;
+    enum Ability ability0;
+    enum Ability ability1;
+    enum Ability abilityHidden;
 };
 
 struct EvoScreenData
@@ -1913,7 +1914,7 @@ static const u8 sOrderOptions[] =
     ORDER_SMALLEST,
 };
 
-static const u8 sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
+static const enum Type sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
 {
     TYPE_NONE,
     TYPE_NORMAL,
@@ -4340,14 +4341,7 @@ static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible)
 {
     gSprites[sPokedexView->typeIconSpriteIds[spriteArrayId]].invisible = invisible;
 }
-static const u8 sContestCategoryToOamPaletteNum[CONTEST_CATEGORIES_COUNT] =
-{
-    [CONTEST_CATEGORY_COOL] = 13,
-    [CONTEST_CATEGORY_BEAUTY] = 14,
-    [CONTEST_CATEGORY_CUTE] = 14,
-    [CONTEST_CATEGORY_SMART] = 15,
-    [CONTEST_CATEGORY_TOUGH] = 13,
-};
+
 static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
 {
     struct Sprite *sprite;
@@ -4357,14 +4351,14 @@ static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
     if (typeId < NUMBER_OF_MON_TYPES)
         sprite->oam.paletteNum = gTypesInfo[typeId].palette + TYPE_INFO_PALETTE_NUM_OFFSET;
     else
-        sprite->oam.paletteNum = sContestCategoryToOamPaletteNum[typeId - NUMBER_OF_MON_TYPES] + TYPE_INFO_PALETTE_NUM_OFFSET;
+        sprite->oam.paletteNum = gContestCategoryInfo[typeId - NUMBER_OF_MON_TYPES].palette;
     sprite->x = x + 16;
     sprite->y = y + 8;
     SetSpriteInvisibility(spriteArrayId, FALSE);
 }
 static void PrintCurrentSpeciesTypeInfo(u8 newEntry, u16 species)
 {
-    u8 type1, type2;
+    enum Type type1, type2;
 
     if (!newEntry)
     {
@@ -5294,7 +5288,7 @@ static void PrintStatsScreen_Moves_Description(u8 taskId)
     }
     else
     {
-        StringCopy(gStringVar4, gContestEffectDescriptionPointers[GetMoveContestEffect(move)]);
+        StringCopy(gStringVar4, gContestEffects[GetMoveContestEffect(move)].description);
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_DESCRIPTION, gStringVar4, moves_x, moves_y);
     }
 }
@@ -5881,9 +5875,9 @@ static void PrintStatsScreen_Abilities(u8 taskId)
 {
     u8 abilities_x = 5;
     u8 abilities_y = 3;
-    u16 ability0;
-    u16 ability1;
-    u16 abilityHidden;
+    enum Ability ability0;
+    enum Ability ability1;
+    enum Ability abilityHidden;
 
     //Abilitie(s)
 
@@ -6637,7 +6631,8 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                     StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 }
 
-                switch((enum EvolutionConditions)evolutions[i].params[j].condition)
+                enum EvolutionConditions condition = evolutions[i].params[j].condition;
+                switch(condition)
                 {
                 // Gen 2
                 case IF_GENDER:
@@ -6694,10 +6689,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 case IF_PID_UPPER_MODULO_10_EQ:
                 case IF_PID_UPPER_MODULO_10_LT:
                     arg = evolutions[i].params[j].arg1;
-                        if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_GT
+                        if (condition == IF_PID_UPPER_MODULO_10_GT
                             && arg < 10 && arg >= 0)
                             arg = 9 - arg;
-                        else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_EQ
+                        else if (condition == IF_PID_UPPER_MODULO_10_EQ
                              && arg < 10 && arg >= 0)
                             arg = 1;
                     ConvertIntToDecimalStringN(gStringVar2, arg * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -6756,6 +6751,33 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                     StringAppend(gStringVar4, gTypesInfo[evolutions[i].params[j].arg1].name);
                     StringAppend(gStringVar4, COMPOUND_STRING(" move"));
                     break;
+                case IF_REGION:
+                case IF_NOT_REGION:
+                {
+                    if (condition == IF_REGION)
+                        StringAppend(gStringVar4, COMPOUND_STRING("in "));
+                    else if (condition == IF_NOT_REGION)
+                        StringAppend(gStringVar4, COMPOUND_STRING("out of "));
+
+                    switch ((enum Region)evolutions[i].params[j].arg1)
+                    {
+                    case REGION_NONE:
+                    case REGIONS_COUNT:
+                        StringAppend(gStringVar4, COMPOUND_STRING("???"));
+                        break;
+                    case REGION_KANTO: StringAppend(gStringVar4, COMPOUND_STRING("Kanto")); break;
+                    case REGION_JOHTO: StringAppend(gStringVar4, COMPOUND_STRING("Johto")); break;
+                    case REGION_HOENN: StringAppend(gStringVar4, COMPOUND_STRING("Hoenn")); break;
+                    case REGION_SINNOH: StringAppend(gStringVar4, COMPOUND_STRING("Sinnoh")); break;
+                    case REGION_UNOVA: StringAppend(gStringVar4, COMPOUND_STRING("Unova")); break;
+                    case REGION_KALOS: StringAppend(gStringVar4, COMPOUND_STRING("Kalos")); break;
+                    case REGION_ALOLA: StringAppend(gStringVar4, COMPOUND_STRING("Alola")); break;
+                    case REGION_GALAR: StringAppend(gStringVar4, COMPOUND_STRING("Galar")); break;
+                    case REGION_HISUI: StringAppend(gStringVar4, COMPOUND_STRING("Hisui")); break;
+                    case REGION_PALDEA: StringAppend(gStringVar4, COMPOUND_STRING("Paldea")); break;
+                    }
+                    break;
+                }
                 // Gen 8
                 case IF_NATURE:
                     StringCopy(gStringVar2, gNaturesInfo[evolutions[i].params[j].arg1].name);
@@ -6807,10 +6829,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 case IF_PID_MODULO_100_EQ:
                 case IF_PID_MODULO_100_LT:
                     arg = evolutions[i].params[j].arg1;
-                        if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_GT
+                        if (condition == IF_PID_MODULO_100_GT
                             && arg < 100 && arg >= 0)
                             arg = 99 - arg;
-                        else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_EQ
+                        else if (condition == IF_PID_MODULO_100_EQ
                                  && arg < 100 && arg >= 0)
                             arg = 1;
                     ConvertIntToDecimalStringN(gStringVar2, arg, STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -7814,12 +7836,12 @@ static void Task_ClosePokedexFromSearchResultsStartMenu(u8 taskId)
 //*        Search code               *
 //*                                  *
 //************************************
-static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, u8 type1, u8 type2)
+static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, enum Type type1, enum Type type2)
 {
     u16 species;
     u16 i;
     u16 resultsCount;
-    u8 types[2];
+    enum Type types[2];
 
     CreatePokedexList(dexMode, order);
 
@@ -8231,8 +8253,8 @@ static void Task_StartPokedexSearch(u8 taskId)
     u8 order = GetSearchModeSelection(taskId, SEARCH_ORDER);
     u8 abcGroup = GetSearchModeSelection(taskId, SEARCH_NAME);
     enum BodyColor bodyColor = GetSearchModeSelection(taskId, SEARCH_COLOR);
-    u8 type1 = GetSearchModeSelection(taskId, SEARCH_TYPE_LEFT);
-    u8 type2 = GetSearchModeSelection(taskId, SEARCH_TYPE_RIGHT);
+    enum Type type1 = GetSearchModeSelection(taskId, SEARCH_TYPE_LEFT);
+    enum Type type2 = GetSearchModeSelection(taskId, SEARCH_TYPE_RIGHT);
 
     DoPokedexSearch(dexMode, order, abcGroup, bodyColor, type1, type2);
     gTasks[taskId].func = Task_WaitAndCompleteSearch;

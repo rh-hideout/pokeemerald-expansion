@@ -156,3 +156,20 @@ DOUBLE_BATTLE_TEST("Upper Hand fails if the target has attempted to act even if 
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, playerLeft);
     }
 }
+
+SINGLE_BATTLE_TEST("Upper Hand failing will prevent Protean activation")
+{
+    GIVEN {
+        WITH_CONFIG(GEN_PROTEAN_LIBERO, GEN_6);
+        PLAYER(SPECIES_REGIROCK);
+        OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_UPPER_HAND); }
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_PROTEAN);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
+        }
+    }
+}
