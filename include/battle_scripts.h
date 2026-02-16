@@ -514,9 +514,9 @@ extern const u8 BattleScript_BeatUpAttackMessage[];
 extern const u8 BattleScript_MagnitudeMessage[];
 extern const u8 BattleScript_FickleBeamMessage[];
 extern const u8 BattleScript_BeforeSnoreMessage[];
-extern const u8 BattleScript_SkyDropTargetToHeavy[];
+extern const u8 BattleScript_SkyDropTargetTooHeavy[];
 extern const u8 BattleScript_SkyDropFlyingType[];
-extern const u8 BattleScript_SkyDropChangedTarget[];
+extern const u8 BattleScript_SkyDropNoTarget[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];

@@ -2836,7 +2836,7 @@ BattleScript_TwoTurnMovesSecondTurnRet:
 	clearsemiinvulnerablebit @ only for moves with EFFECT_SEMI_INVULNERABLE/EFFECT_SKY_DROP
 	return
 
-BattleScript_SkyDropTargetToHeavy::
+BattleScript_SkyDropTargetTooHeavy::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_TARGETTOOHEAVY
 	waitmessage B_WAIT_TIME_LONG
@@ -2861,7 +2861,7 @@ BattleScript_SkyDropFlyingAlreadyConfused:
 BattleScript_SkyDropFlyingAlreadyConfusedRet:
 	return
 
-BattleScript_SkyDropChangedTarget::
+BattleScript_SkyDropNoTarget::
 	pause B_WAIT_TIME_SHORT
 	setmoveresultflags MOVE_RESULT_FAILED
 	resultmessage

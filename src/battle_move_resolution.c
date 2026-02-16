@@ -1082,7 +1082,7 @@ static enum CancelerResult HandleSkyDropResult(struct BattleContext *ctx)
         // Sky Drop fails if target already fainted
         if (gBattleStruct->skyDropTargets[ctx->battlerAtk] == SKY_DROP_NO_TARGET)
         {
-            gBattlescriptCurrInstr = BattleScript_SkyDropChangedTarget;
+            gBattlescriptCurrInstr = BattleScript_SkyDropNoTarget;
             return CANCELER_RESULT_FAILURE;
         }
 
@@ -1107,12 +1107,11 @@ static enum CancelerResult HandleSkyDropResult(struct BattleContext *ctx)
     }
     else if (GetBattlerWeight(gBattlerTarget) >= 2000)
     {
-        gBattlescriptCurrInstr = BattleScript_SkyDropTargetToHeavy;
+        gBattlescriptCurrInstr = BattleScript_SkyDropTargetTooHeavy;
         return CANCELER_RESULT_FAILURE;
     }
 
     // First turn
-
     gBattleMons[ctx->battlerDef].volatiles.multipleTurns = 0;
     gBattleMons[ctx->battlerDef].volatiles.uproarTurns = 0;
     gBattleMons[ctx->battlerDef].volatiles.bideTurns = 0;
