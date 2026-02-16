@@ -1800,7 +1800,6 @@ static void FillFactoryTrainerParty(void)
 static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
 {
     u8 i;
-    u8 level;
     u8 fixedIV;
     u32 otID;
 
@@ -1839,13 +1838,12 @@ static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
         fixedIV = MAX_PER_STAT_IVS;
     }
 
-    level = SetFacilityPtrsGetLevel();
     otID = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
         u16 monId = gFrontierTempParty[i];
         CreateFacilityMon(&gFacilityTrainerMons[monId],
-                level, fixedIV, otID, FLAG_FRONTIER_MON_FACTORY,
+                GetBattleFactoryMonLevel(monId), fixedIV, otID, FLAG_FRONTIER_MON_FACTORY,
                 &gEnemyParty[firstMonId + i]);
     }
 }

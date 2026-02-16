@@ -563,7 +563,7 @@ script BattleFrontier_BattleFactoryLobby_Noland {
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions {
-	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "GIMMICK OPTIONS", "MUSIC OPTIONS", "BACKGROUND OPTIONS", "CANCEL")
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "GIMMICK OPTIONS", "MUSIC OPTIONS", "BACKGROUND OPTIONS", "BATTLE MODE", "CANCEL")
 	switch(var(VAR_RESULT)) {
 		case 0: #
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions)
@@ -572,11 +572,38 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions {
         case 2:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandBackgroundOptions)
 		case 3:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandBattleModeOptions)
+		case 4:
 		    releaseall
         default:
 			releaseall
 	}
 	releaseall
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandBattleModeOptions {
+    if(flag(FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE) == TRUE) {
+        msgbox(format("BATTLE MODE is currently set to RANDOM BATTLES."))
+    }
+    else {
+        msgbox(format("BATTLE MODE is currently set to CLASSIC FACTORY."))
+    }
+    msgbox(format("Choose which BATTLE MODE to use in the BATTLE FACTORY."))
+    dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "CLASSIC FACTORY", "RANDOM BATTLES", "BACK")
+    switch(var(VAR_RESULT)) {
+        case 0:
+            clearflag(FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE)
+            msgbox(format("Classic Factory mode selected."))
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+        case 1:
+            setflag(FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE)
+            msgbox(format("Random Battles mode selected."))
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+        case 2:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+        default:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
 }
 
 // TODO tomorrow - add another set of options here for music choices, by setting VAR_FRONTIER_BGM

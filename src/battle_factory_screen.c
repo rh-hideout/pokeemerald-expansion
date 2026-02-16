@@ -1738,7 +1738,6 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
 {
     u8 i = 0;
     u8 ivs = 0;
-    u8 level = 0;
     u32 otId = 0;
     u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
     u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
@@ -1746,10 +1745,6 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
     u8 rentalRank = 0;
 
     gFacilityTrainerMons = gBattleFrontierMons;
-    if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
-        level = FRONTIER_MAX_LEVEL_OPEN;
-    else
-        level = FRONTIER_MAX_LEVEL_50;
 
     rentalRank = GetNumPastRentalsRank(battleMode, lvlMode);
     otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
@@ -1764,7 +1759,7 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
             ivs = GetFactoryMonFixedIV(challengeNum, FALSE);
 
         CreateFacilityMon(&gFacilityTrainerMons[monId],
-                level, ivs, otId, FLAG_FRONTIER_MON_FACTORY,
+                GetBattleFactoryMonLevel(monId), ivs, otId, FLAG_FRONTIER_MON_FACTORY,
                 &sFactorySelectScreen->mons[i + firstMonId].monData);
     }
 }

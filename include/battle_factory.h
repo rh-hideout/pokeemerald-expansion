@@ -9,6 +9,8 @@ u8 GetFactoryMonFixedIV(u8 challengeNum, bool8 isLastBattle);
 void FillFactoryBrainParty(void);
 u8 GetNumPastRentalsRank(u8 battleMode, u8 lvlMode);
 u64 GetAiScriptsInBattleFactory(void);
+bool8 IsBattleFactoryRandomBattlesModeEnabled(void);
+u8 GetBattleFactoryMonLevel(u16 monId);
 void SetMonMoveAvoidReturn(struct Pokemon *mon, u16 moveArg, u8 moveSlot);
 void DebugAction_FactoryWinChallenge(void);
 void MarkAllFactorySpeciesAsSeen(void);
