@@ -9,6 +9,7 @@ SINGLE_BATTLE_TEST("Tough Claws boosts contact moves when user has Protective Pa
 
     PARAMETRIZE { item = ITEM_PROTECTIVE_PADS; }
     PARAMETRIZE { item = ITEM_PUNCHING_GLOVE; }
+    PARAMETRIZE { item = ITEM_NONE; }
 
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_MACH_PUNCH));
@@ -23,6 +24,7 @@ SINGLE_BATTLE_TEST("Tough Claws boosts contact moves when user has Protective Pa
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MACH_PUNCH, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[1].damage, UQ_4_12(1.3), results[0].damage);
+        EXPECT_MUL_EQ(results[2].damage, UQ_4_12(1.3), results[0].damage); // Tough Claws boost
+        EXPECT_MUL_EQ(results[2].damage, UQ_4_12(1.1), results[1].damage); // Punching Glove boost
     }
 }
