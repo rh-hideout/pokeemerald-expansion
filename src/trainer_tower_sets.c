@@ -97,12 +97,14 @@
 #define DUMMY_TOWER_MON(iv) {.hpIV = iv, .attackIV = iv, .defenseIV = iv, .speedIV = iv, .spAttackIV = iv, .spDefenseIV = iv, .nickname = _("$$$$$$$$$$")}
 #define DUMMY_TOWER_TEAM(iv) {.name = _(""), .textColor = 1, .speechBefore = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, .speechWin = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, .speechLose = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, .speechAfter = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, .mons = {DUMMY_TOWER_MON(iv), DUMMY_TOWER_MON(iv), DUMMY_TOWER_MON(iv), DUMMY_TOWER_MON(iv), DUMMY_TOWER_MON(iv), DUMMY_TOWER_MON(iv)}}
 
-static const struct TrainerTowerFloor sTrainerTowerFloor_Single_4 = {
+static const struct TrainerTowerFloor sTrainerTowerFloor_Single_4 =
+{
     .id = 1,
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_WHITE_HERB,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("COLE"),
             .facilityClass = FACILITY_CLASS_YOUNGSTER_FRLG,
@@ -111,7 +113,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_4 = {
             .speechWin = {EC_WORD_ALL_RIGHT, EC_WORD_EXCL, EC_WORD_BYE_BYE, EC_WORD_EXCL, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_HIYAH, EC_WORD_EXCL_EXCL, EC_WORD_DONE, EC_WORD_IN, EC_WORD_TOTALLY, EC_WORD_EXCL_EXCL},
             .speechAfter = {EC_WORD_TCH, EC_WORD_TCH, EC_WORD_YOU_RE, EC_WORD_TOO_STRONG, 0xFFFF, 0xFFFF},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_RATICATE,
                     .heldItem = ITEM_SITRUS_BERRY,
@@ -252,12 +255,14 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_4 = {
     .checksum = 0x00016aab
 };
 
-static const struct TrainerTowerFloor sTrainerTowerFloor_Single_7 = {
+static const struct TrainerTowerFloor sTrainerTowerFloor_Single_7 =
+{
     .id = 2,
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_DRAGON_SCALE,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("JAC"),
             .facilityClass = FACILITY_CLASS_BURGLAR_FRLG,
@@ -266,7 +271,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_7 = {
             .speechWin = {EC_WORD_YOU_VE, EC_WORD_GOT, EC_WORD_NOTHING, EC_WORD_THAT, EC_WORD_I, EC_WORD_WANT},
             .speechLose = {EC_WORD_EEK, EC_WORD_EXCL_EXCL, EC_WORD_I_AM, EC_WORD_SORRY, EC_WORD_I, EC_WORD_SURRENDER},
             .speechAfter = {EC_WORD_I, EC_WORD_WILL, EC_WORD_STOP, EC_WORD_BEING, EC_WORD_A, EC_MOVE2(THIEF)},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MEOWTH,
                     .heldItem = ITEM_LIECHI_BERRY,
@@ -407,12 +413,14 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_7 = {
     .checksum = 0x00016456
 };
 
-static const struct TrainerTowerFloor sTrainerTowerFloor_Single_Unused = {
+static const struct TrainerTowerFloor sTrainerTowerFloor_Single_Unused =
+{
     .id = 3,
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_IRON,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("MILY"),
             .facilityClass = FACILITY_CLASS_PSYCHIC_F_FRLG,
@@ -421,7 +429,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_Unused = {
             .speechWin = {EC_WORD_ISN_T, EC_WORD_IT, EC_WORD_INCREDIBLE, EC_WORD_QUES, EC_WORD_POKEMON, EC_WORD_POWER},
             .speechLose = {EC_WORD_THIS, EC_WORD_IS, EC_WORD_AN, EC_WORD_AWFUL, EC_MOVE(NIGHTMARE), EC_WORD_ELLIPSIS_EXCL},
             .speechAfter = {EC_WORD_THIS, EC_WORD_IS, EC_WORD_A, EC_WORD_DREAM, EC_WORD_NOTHING, EC_WORD_MORE},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_CHANSEY,
                     .heldItem = ITEM_ORAN_BERRY,
@@ -567,7 +576,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_5 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_CHOICE_BAND,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("JOS & ANNE"),
             .facilityClass = FACILITY_CLASS_COOL_COUPLE_FRLG,
@@ -576,7 +586,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_5 = {
             .speechWin = {EC_WORD_VERY, EC_WORD_WELL, EC_WORD_DONE, EC_WORD_EXCL, EC_WORD_GOOD, EC_WORD_BATTLE},
             .speechLose = {EC_WORD_UNBELIEVABLE, EC_WORD_ELLIPSIS, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_WORD_I_AM, EC_WORD_DISAPPOINTED, EC_WORD_BUT, EC_WORD_YOU, EC_WORD_WIN, EC_WORD_ELLIPSIS},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_RAPIDASH,
                     .heldItem = ITEM_WHITE_HERB,
@@ -719,7 +730,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_5 = {
             .speechWin = {EC_WORD_PERFECT, EC_WORD_EXCL, EC_WORD_WE, EC_WORD_GET, EC_WORD_THE, EC_WORD_WIN},
             .speechLose = {EC_WORD_LOST, EC_WORD_QUES_EXCL, EC_WORD_YOU, EC_WORD_MUST_BE, EC_WORD_JOKING, EC_WORD_EXCL},
             .speechAfter = {EC_WORD_HOW, EC_WORD_COULD, EC_WORD_I, EC_WORD_LOSE, EC_WORD_THIS, EC_WORD_QUES},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_HOUNDOOM,
                     .heldItem = ITEM_CHARCOAL,
@@ -864,7 +876,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_6 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_CALCIUM,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("EMY & ALEK"),
             .facilityClass = FACILITY_CLASS_YOUNG_COUPLE_FRLG,
@@ -873,7 +886,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_6 = {
             .speechWin = {EC_WORD_OH, EC_WORD_OH, EC_WORD_HE, EC_WORD_IS, EC_WORD_REALLY, EC_WORD_AWESOME},
             .speechLose = {EC_WORD_AIYEEH, EC_WORD_EXCL_EXCL, EC_WORD_YOU_RE, EC_WORD_NOT, EC_WORD_SERIOUS, EC_WORD_QUES},
             .speechAfter = {EC_WORD_WHO, EC_WORD_ARE, EC_WORD_YOU, EC_WORD_QUES, 0xFFFF, 0xFFFF},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_TAUROS,
                     .heldItem = ITEM_LUM_BERRY,
@@ -1016,7 +1030,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_6 = {
             .speechWin = {EC_WORD_SIGH, EC_WORD_ELLIPSIS, EC_WORD_MY, EC_WORD_GIRL, EC_WORD_IS, EC_WORD_CUTE},
             .speechLose = {EC_WORD_WAAAH, EC_WORD_EXCL_EXCL, EC_WORD_YOU, EC_WORD_CAN_T, EC_WORD_BE, EC_WORD_SERIOUS},
             .speechAfter = {EC_WORD_WAIT, EC_WORD_ELLIPSIS, EC_WORD_WHO, EC_WORD_ARE, EC_WORD_YOU, EC_WORD_QUES},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_LICKITUNG,
                     .heldItem = ITEM_SHELL_BELL,
@@ -1161,7 +1176,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_2 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_HP_UP,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("JO & HALEY"),
             .facilityClass = FACILITY_CLASS_CRUSH_KIN_FRLG,
@@ -1170,7 +1186,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_2 = {
             .speechWin = {EC_WORD_YAY, EC_WORD_WE, EC_WORD_WON, EC_WORD_EXCL, EC_WORD_SORRY, EC_WORD_EXCL},
             .speechLose = {EC_WORD_AWW, EC_WORD_EXCL, EC_WORD_THAT_WAS, EC_WORD_REALLY, EC_WORD_TERRIBLE, EC_WORD_EXCL},
             .speechAfter = {EC_WORD_ALL, EC_WORD_I, EC_WORD_DO, EC_WORD_IS, EC_WORD_LOSE, EC_WORD_ELLIPSIS},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_SNEASEL,
                     .heldItem = ITEM_SALAC_BERRY,
@@ -1313,7 +1330,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_2 = {
             .speechWin = {EC_WORD_YOU_RE, EC_WORD_NOT, EC_WORD_JOKING, EC_WORD_QUES, EC_WORD_WE, EC_WORD_WON},
             .speechLose = {EC_WORD_WIMPY, EC_WORD_ELLIPSIS, EC_WORD_WE, EC_WORD_WERE, EC_WORD_WEAK, EC_WORD_ELLIPSIS},
             .speechAfter = {EC_WORD_HAHAHA, EC_WORD_ELLIPSIS, EC_WORD_WE_RE, EC_WORD_TOTALLY, EC_WORD_USELESS, EC_WORD_ELLIPSIS},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_HYPNO,
                     .heldItem = ITEM_FOCUS_BAND,
@@ -1458,7 +1476,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_1 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_KNOCKOUT,
     .prize = TTPRIZE_METAL_COAT,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("JORDY"),
             .facilityClass = FACILITY_CLASS_BIKER_FRLG,
@@ -1467,7 +1486,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_1 = {
             .speechWin = {EC_WORD_WHAT, EC_WORD_A_LITTLE, EC_WORD_PUSHOVER, EC_WORD_YOU, EC_WORD_ARE, EC_WORD_EXCL},
             .speechLose = {EC_WORD_YOU, EC_WORD_WERE, EC_WORD_READY, EC_WORD_TO, EC_WORD_ROCK, EC_WORD_EXCL},
             .speechAfter = {EC_WORD_DARN, EC_WORD_EXCL, EC_WORD_I, EC_WORD_DON_T, EC_WORD_GET, EC_WORD_IT},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MAGBY,
                     .heldItem = ITEM_LAX_INCENSE,
@@ -1610,7 +1630,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_1 = {
             .speechWin = {EC_WORD_NOT, EC_WORD_GUTSY, EC_WORD_ENOUGH, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_WHY, EC_WORD_DID, EC_WORD_YOU, EC_WORD_CRUSH, EC_WORD_ME, EC_WORD_QUES},
             .speechAfter = {EC_WORD_I_AM, EC_WORD_BEAT, EC_WORD_I, EC_WORD_NEED, EC_WORD_A, EC_WORD_NAP},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_CLEFFA,
                     .heldItem = ITEM_QUICK_CLAW,
@@ -1753,7 +1774,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_1 = {
             .speechWin = {EC_WORD_I_AM, EC_WORD_INVINCIBLE, EC_WORD_YOU, EC_WORD_GOT, EC_WORD_THAT, EC_WORD_QUES},
             .speechLose = {EC_WORD_WHAT, EC_WORD_WAS, EC_WORD_THAT, EC_WORD_QUES, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_WORD_I_AM, EC_WORD_GOING, EC_WORD_TO, EC_WORD_WIN, EC_WORD_NEXT, EC_WORD_TIME},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_PICHU,
                     .heldItem = ITEM_BRIGHT_POWDER,
@@ -1897,7 +1919,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_2 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_KNOCKOUT,
     .prize = TTPRIZE_UP_GRADE,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("MIKE"),
             .facilityClass = FACILITY_CLASS_HIKER_FRLG,
@@ -1906,7 +1929,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_2 = {
             .speechWin = {EC_WORD_WHAT_S_UP_QUES, EC_WORD_WHERE, EC_WORD_IS, EC_WORD_YOUR, EC_WORD_POWER, EC_WORD_QUES},
             .speechLose = {EC_WORD_YOU, EC_WORD_GOT, EC_WORD_ME, EC_WORD_WITH, EC_WORD_YOUR, EC_MOVE2(FAKE_OUT)},
             .speechAfter = {EC_WORD_OH_YEAH, EC_WORD_EXCL, EC_WORD_THAT_S, EC_WORD_PRETTY, EC_WORD_EXCELLENT, EC_WORD_EXCL},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_PINSIR,
                     .heldItem = ITEM_SCOPE_LENS,
@@ -2049,7 +2073,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_2 = {
             .speechWin = {EC_WORD_IT_S, EC_WORD_TOO, EC_WORD_BAD, EC_WORD_BUT, EC_WORD_I_AM, EC_WORD_OVERWHELMING},
             .speechLose = {EC_WORD_ARRGH, EC_WORD_EXCL_EXCL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_WORD_YOU, EC_WORD_ANGER, EC_WORD_ME, EC_WORD_BUT, EC_WORD_YOU_RE, EC_WORD_TOUGH},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_SANDSLASH,
                     .heldItem = ITEM_SILK_SCARF,
@@ -2192,7 +2217,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_2 = {
             .speechWin = {EC_WORD_YOU_RE, EC_WORD_TOO_WEAK, EC_WORD_TO, EC_WORD_EVER, EC_WORD_BEAT, EC_WORD_ME},
             .speechLose = {EC_WORD_WHY, EC_WORD_COULDN_T, EC_WORD_I, EC_WORD_BEAT, EC_WORD_YOU, EC_WORD_QUES},
             .speechAfter = {EC_WORD_I, EC_WORD_HAVE, EC_WORD_TO, EC_WORD_TRAIN, EC_WORD_SOME, EC_WORD_MORE},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_HITMONLEE,
                     .heldItem = ITEM_KINGS_ROCK,
@@ -2336,7 +2362,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_5 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_HP_UP,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("JOEY"),
             .facilityClass = FACILITY_CLASS_CAMPER_FRLG,
@@ -2345,7 +2372,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_5 = {
             .speechWin = {EC_WORD_WERE, EC_WORD_MY, EC_WORD_POKEMON, EC_WORD_TOO, EC_WORD_MUCH, EC_WORD_QUES},
             .speechLose = {EC_WORD_YOUR, EC_WORD_POKEMON, EC_WORD_ARE, EC_WORD_WAY, EC_WORD_TOO_STRONG, EC_WORD_EXCL},
             .speechAfter = {EC_WORD_THE, EC_WORD_WAY, EC_WORD_POKEMON, EC_WORD_MATCH_UP, EC_WORD_IS, EC_WORD_IMPORTANT},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MURKROW,
                     .heldItem = ITEM_BLACK_GLASSES,
@@ -2491,7 +2519,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_8 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_METAL_COAT,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("LILY"),
             .facilityClass = FACILITY_CLASS_PKMN_BREEDER_FRLG,
@@ -2500,7 +2529,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_8 = {
             .speechWin = {EC_WORD_I, EC_WORD_BELIEVE, EC_WORD_IN, EC_WORD_MY, EC_WORD_POKEMON, EC_WORD_EXCL},
             .speechLose = {EC_WORD_I, EC_WORD_NEED, EC_WORD_SOMETHING, EC_WORD_IN, EC_MOVE(RETURN), EC_WORD_ELLIPSIS},
             .speechAfter = {EC_WORD_MY, EC_WORD_POKEMON, EC_WORD_HAVE, EC_WORD_MY, EC_WORD_TRUST, EC_WORD_FOREVER},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_CLEFAIRY,
                     .heldItem = ITEM_SITRUS_BERRY,
@@ -2646,7 +2676,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_2 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_UP_GRADE,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("BRANDON"),
             .facilityClass = FACILITY_CLASS_BUG_CATCHER_FRLG,
@@ -2655,7 +2686,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_2 = {
             .speechWin = {EC_WORD_SEE, EC_WORD_QUES, EC_WORD_ISN_T, EC_WORD_POISON, EC_WORD_TERRIBLE, EC_WORD_QUES},
             .speechLose = {EC_WORD_HUH_QUES, EC_WORD_OUR, EC_WORD_POISON, EC_WORD_DIDN_T, EC_WORD_WORK, EC_WORD_QUES},
             .speechAfter = {EC_WORD_POISON, EC_WORD_IS, EC_WORD_A, EC_WORD_TERRIBLE, EC_MOVE(TORMENT), EC_WORD_ISN_T_IT_QUES},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_BUTTERFREE,
                     .heldItem = ITEM_BRIGHT_POWDER,
@@ -2801,7 +2833,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_3 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_IRON,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("RIC & RENE"),
             .facilityClass = FACILITY_CLASS_CRUSH_KIN_FRLG,
@@ -2810,7 +2843,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_3 = {
             .speechWin = {EC_WORD_MY, EC_WORD_BIG, EC_WORD_BROTHER, EC_WORD_IS, EC_WORD_TOO, EC_WORD_AWESOME},
             .speechLose = {EC_WORD_MY, EC_WORD_BIG, EC_WORD_BROTHER, EC_WORD_ISN_T, EC_WORD_AWESOME, EC_WORD_QUES},
             .speechAfter = {EC_WORD_BIG, EC_WORD_BROTHER, EC_WORD_FIGHT, EC_WORD_EXCL, 0xFFFF, 0xFFFF},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_HITMONLEE,
                     .heldItem = ITEM_SCOPE_LENS,
@@ -2953,7 +2987,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_3 = {
             .speechWin = {EC_WORD_I_AM, EC_WORD_TOO, EC_WORD_AWESOME, EC_WORD_EXCL, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_HUH_QUES, 0xFFFF, EC_WORD_I_AM, EC_WORD_NOT_VERY, EC_WORD_AWESOME, EC_WORD_QUES},
             .speechAfter = {EC_WORD_I, EC_WORD_WILL, EC_WORD_DO, EC_WORD_MY, EC_WORD_BEST, EC_WORD_EXCL},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MACHAMP,
                     .heldItem = ITEM_SCOPE_LENS,
@@ -3098,7 +3133,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_1 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_DRAGON_SCALE,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("JEN & KIRA"),
             .facilityClass = FACILITY_CLASS_TWINS_FRLG,
@@ -3107,7 +3143,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_1 = {
             .speechWin = {EC_WORD_EHEHE, EC_WORD_YAY, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_WAAAH, EC_WORD_EXCL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_WORD_I, EC_WORD_WILL, EC_WORD_TRY, EC_WORD_TO, EC_WORD_GET, EC_WORD_BETTER},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_JOLTEON,
                     .heldItem = ITEM_QUICK_CLAW,
@@ -3250,7 +3287,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_1 = {
             .speechWin = {EC_WORD_GIGGLE, EC_WORD_ELLIPSIS, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_WAAAH, EC_WORD_EXCL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_WORD_WE, EC_WORD_HAVE, EC_WORD_TO, EC_WORD_WORK, EC_WORD_BETTER, 0xFFFF},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_JOLTEON,
                     .heldItem = ITEM_BRIGHT_POWDER,
@@ -3395,7 +3433,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_4 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_MENTAL_HERB,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("ISAC & MAG"),
             .facilityClass = FACILITY_CLASS_COOL_COUPLE_FRLG,
@@ -3404,7 +3443,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_4 = {
             .speechWin = {EC_WORD_FEELING, EC_WORD_SHAKY, EC_WORD_HUH_QUES, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_I_AM, EC_WORD_ALL, EC_WORD_SHAKY, EC_WORD_ELLIPSIS, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_WORD_MY, EC_WORD_GIRL, EC_WORD_ISN_T, EC_WORD_SHAKY, EC_WORD_SHE_IS, EC_WORD_LOVEY_DOVEY},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_NIDOKING,
                     .heldItem = ITEM_SOFT_SAND,
@@ -3547,7 +3587,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_4 = {
             .speechWin = {EC_WORD_SEE, EC_WORD_QUES, EC_WORD_I, EC_WORD_DIDN_T, EC_WORD_LIE, EC_WORD_EXCL},
             .speechLose = {EC_WORD_HUH_QUES, EC_WORD_YOU, EC_WORD_LEFT, EC_WORD_ME, EC_WORD_FEELING, EC_WORD_SHAKY},
             .speechAfter = {EC_WORD_I_AM, EC_WORD_LOVEY_DOVEY, EC_WORD_FOR, EC_WORD_HIM, EC_WORD_NOT, EC_WORD_SHAKY},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_SKARMORY,
                     .heldItem = ITEM_KINGS_ROCK,
@@ -3692,7 +3733,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_8 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_KNOCKOUT,
     .prize = TTPRIZE_BRIGHT_POWDER,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("CHELSEA"),
             .facilityClass = FACILITY_CLASS_PKMN_RANGER_F_FRLG,
@@ -3701,7 +3743,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_8 = {
             .speechWin = {EC_WORD_YOU, EC_WORD_TAKE, EC_WORD_THE, EC_WORD_LOSS, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_BE, EC_WORD_KIND, EC_WORD_TO, EC_WORD_THE, EC_WORD_GREEN, EC_WORD_WORLD},
             .speechAfter = {EC_WORD_DON_T, EC_WORD_EVER, EC_WORD_POISON, EC_WORD_THE, EC_WORD_GREEN, EC_WORD_WORLD},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_VILEPLUME,
                     .heldItem = ITEM_PETAYA_BERRY,
@@ -3844,7 +3887,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_8 = {
             .speechWin = {EC_WORD_TAKE_THAT, EC_WORD_EXCL, EC_WORD_THE, EC_WORD_LOSS, EC_WORD_IS, EC_WORD_YOURS},
             .speechLose = {EC_MOVE2(PROTECT), EC_WORD_THE, EC_WORD_GREEN, EC_WORD_WORLD, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_MOVE2(PROTECT), EC_WORD_AND, EC_WORD_RESUSCITATE, EC_WORD_THE, EC_WORD_GREEN, EC_WORD_WORLD},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_GYARADOS,
                     .heldItem = ITEM_SITRUS_BERRY,
@@ -3987,7 +4031,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_8 = {
             .speechWin = {EC_WORD_YOU_RE, EC_WORD_TOO_WEAK, EC_WORD_TO, EC_WORD_MAKE, EC_WORD_THINGS, EC_WORD_EXCITING},
             .speechLose = {EC_WORD_YOU_RE, EC_WORD_STRONG, EC_WORD_THAT_WAS, EC_WORD_WILD, EC_WORD_AND, EC_WORD_EXCITING},
             .speechAfter = {EC_WORD_I_AM, EC_WORD_TIRED, EC_WORD_AFTER, EC_WORD_THAT, EC_WORD_EXCITING, EC_WORD_MATCH},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_KINGDRA,
                     .heldItem = ITEM_SALAC_BERRY,
@@ -4131,7 +4176,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_3 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_KNOCKOUT,
     .prize = TTPRIZE_CALCIUM,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("CAMRYN"),
             .facilityClass = FACILITY_CLASS_PICNICKER_FRLG,
@@ -4140,7 +4186,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_3 = {
             .speechWin = {EC_WORD_I, EC_WORD_SAID, EC_WORD_THAT, EC_WORD_I, EC_WORD_WOULD, EC_WORD_WIN},
             .speechLose = {EC_WORD_OH_QUES, EC_WORD_ELLIPSIS_ELLIPSIS_ELLIPSIS, EC_WORD_DID, EC_WORD_I, EC_WORD_LOSE, EC_WORD_QUES},
             .speechAfter = {EC_WORD_YOU_RE, EC_WORD_TOO_STRONG, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MURKROW,
                     .heldItem = ITEM_BLACK_GLASSES,
@@ -4283,7 +4330,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_3 = {
             .speechWin = {EC_WORD_WASN_T, EC_WORD_THAT, EC_WORD_NICE, EC_WORD_QUES, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_THAT, EC_WORD_WASN_T, EC_WORD_GOOD, EC_WORD_QUES, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_WORD_I, EC_MOVE2(REFRESH), EC_WORD_THINGS, EC_WORD_WITH, EC_WORD_REFRESHING, EC_MOVE(AROMATHERAPY)},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_BELLOSSOM,
                     .heldItem = ITEM_PERSIM_BERRY,
@@ -4426,7 +4474,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_3 = {
             .speechWin = {EC_WORD_SORRY, EC_WORD_ELLIPSIS, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_THIS, EC_WORD_IS, EC_WORD_HARD, EC_WORD_TO, EC_WORD_BELIEVE, EC_WORD_ELLIPSIS},
             .speechAfter = {EC_WORD_YOU, EC_WORD_HAVE, EC_WORD_PURE_POWER, EC_WORD_THAT, EC_WORD_IS, EC_WORD_NATURAL},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MAROWAK,
                     .heldItem = ITEM_LUM_BERRY,
@@ -4570,7 +4619,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_6 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_CARBOS,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("BRADEN"),
             .facilityClass = FACILITY_CLASS_SWIMMER_M_FRLG,
@@ -4579,7 +4629,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_6 = {
             .speechWin = {EC_WORD_WROOOAAR_EXCL, 0xFFFF, EC_WORD_SERIOUSLY, EC_WORD_I, EC_WORD_WON, EC_WORD_QUES},
             .speechLose = {EC_WORD_YOU, EC_WORD_SHOCKED, EC_WORD_ME, EC_WORD_OUT, EC_WORD_OF, EC_WORD_HAPPINESS},
             .speechAfter = {EC_WORD_NICE, EC_WORD_WORK, EC_WORD_YOU, EC_WORD_EXCL, EC_WORD_YOU_RE, EC_WORD_FABULOUS},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_VAPOREON,
                     .heldItem = ITEM_CHERI_BERRY,
@@ -4725,7 +4776,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Mixed_1 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_KINGS_ROCK,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("ALLYSON"),
             .facilityClass = FACILITY_CLASS_COOLTRAINER_F_FRLG,
@@ -4734,7 +4786,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Mixed_1 = {
             .speechWin = {EC_WORD_YES, EC_WORD_EXCL_EXCL, EC_WORD_I, EC_WORD_ADORE, EC_WORD_MYSELF, EC_WORD_TODAY},
             .speechLose = {EC_WORD_I_WAS, EC_WORD_CONFUSED, EC_WORD_ABOUT, EC_WORD_THINGS, EC_WORD_I, EC_WORD_THINK},
             .speechAfter = {EC_WORD_YOU_RE, EC_WORD_TOO, EC_WORD_STRONG, EC_WORD_TODAY, EC_WORD_THAT_S, EC_WORD_ALL},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_STARMIE,
                     .heldItem = ITEM_LUM_BERRY,
@@ -4880,7 +4933,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_1 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_UP_GRADE,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("ALBERTO"),
             .facilityClass = FACILITY_CLASS_SAILOR_FRLG,
@@ -4889,7 +4943,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_1 = {
             .speechWin = {EC_WORD_YO, EC_WORD_EXCL_EXCL, EC_WORD_YOU, EC_WORD_GIVE_UP, EC_WORD_NOW, EC_WORD_EH_QUES},
             .speechLose = {EC_WORD_IT_S, EC_WORD_ALL, EC_WORD_OVER, EC_WORD_ELLIPSIS, EC_WORD_I, EC_WORD_SURRENDER},
             .speechAfter = {EC_WORD_OKAY, EC_WORD_I, EC_WORD_CONCEDE, EC_WORD_ELLIPSIS, EC_WORD_I, EC_WORD_LOST},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_FERALIGATR,
                     .heldItem = ITEM_FOCUS_BAND,
@@ -5035,7 +5090,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Mixed_5 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_METAL_COAT,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("KAT & KIPP"),
             .facilityClass = FACILITY_CLASS_SIS_AND_BRO_FRLG,
@@ -5044,7 +5100,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Mixed_5 = {
             .speechWin = {EC_WORD_WAY, EC_WORD_TO, EC_WORD_GO, EC_WORD_MY, EC_WORD_AWESOME, EC_WORD_BROTHER},
             .speechLose = {EC_WORD_SIGH, EC_WORD_ELLIPSIS, EC_WORD_THAT_S, EC_WORD_HOW, EC_WORD_IT, EC_WORD_GOES},
             .speechAfter = {EC_WORD_OKAY, EC_WORD_MY, EC_WORD_AWESOME, EC_WORD_BROTHER, EC_WORD_FIGHT, EC_WORD_FIGHT},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_SNEASEL,
                     .heldItem = ITEM_RAWST_BERRY,
@@ -5187,7 +5244,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Mixed_5 = {
             .speechWin = {EC_WORD_FUFUFU, EC_WORD_ELLIPSIS, EC_WORD_WE_RE, EC_WORD_TOO_STRONG, EC_WORD_TO, EC_WORD_LOSE},
             .speechLose = {EC_WORD_WHAT, EC_WORD_HUH_QUES, EC_WORD_ARE, EC_WORD_YOU, EC_WORD_JOKING, EC_WORD_QUES},
             .speechAfter = {EC_WORD_WAAAH, EC_WORD_WAAAH, EC_WORD_OH, EC_WORD_BIG, EC_WORD_SISTER, EC_WORD_EXCL},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_FURRET,
                     .heldItem = ITEM_KINGS_ROCK,
@@ -5332,7 +5390,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_8 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_MENTAL_HERB,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("GEB&MEGAN"),
             .facilityClass = FACILITY_CLASS_COOL_COUPLE_FRLG,
@@ -5341,7 +5400,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_8 = {
             .speechWin = {EC_WORD_HAHAHA, EC_WORD_SORRY, EC_WORD_MY, EC_WORD_FRIEND, EC_WORD_TOUGH, EC_WORD_LOSS},
             .speechLose = {EC_WORD_YOU_RE, EC_WORD_SERIOUS, EC_WORD_AREN_T, EC_WORD_YOU, EC_WORD_FRIEND, EC_WORD_QUES},
             .speechAfter = {EC_WORD_WON_T, EC_WORD_YOU, EC_WORD_GET, EC_WORD_LOST, EC_WORD_PLEASE, EC_WORD_QUES},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_POLITOED,
                     .heldItem = ITEM_KINGS_ROCK,
@@ -5484,7 +5544,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_8 = {
             .speechWin = {EC_WORD_GIGGLE, EC_WORD_ELLIPSIS, EC_WORD_I_AM, EC_WORD_SO, EC_WORD_SORRY, 0xFFFF},
             .speechLose = {EC_WORD_MY, EC_WORD_WORD, EC_WORD_THIS, EC_WORD_IS, EC_WORD_JUST, EC_WORD_INCREDIBLE},
             .speechAfter = {EC_WORD_WE, EC_WORD_NEED, EC_WORD_TO, EC_WORD_TRAIN, EC_WORD_SOME, EC_WORD_MORE},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MAROWAK,
                     .heldItem = ITEM_SALAC_BERRY,
@@ -5629,7 +5690,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_Unused1 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_ZINC,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("LISA&LEAH"),
             .facilityClass = FACILITY_CLASS_TWINS_FRLG,
@@ -5638,7 +5700,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_Unused1 = {
             .speechWin = {EC_WORD_YEAH_YEAH, EC_WORD_EXCL_EXCL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF},
             .speechLose = {EC_WORD_AWW, EC_WORD_EXCL, EC_WORD_WAAAH, EC_WORD_EXCL_EXCL, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_WORD_EXCUSE_ME, EC_WORD_BUT, EC_WORD_YOU_RE, EC_WORD_ALL, EC_WORD_TOO_STRONG, 0xFFFF},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_POLIWAG,
                     .heldItem = ITEM_CHERI_BERRY,
@@ -5781,7 +5844,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_Unused1 = {
             .speechWin = {EC_WORD_YEAH_YEAH, EC_WORD_EXCL_EXCL, EC_WORD_YOU, EC_WORD_MAKE, EC_WORD_ME, EC_WORD_HAPPY},
             .speechLose = {EC_WORD_AWW, EC_WORD_EXCL, EC_WORD_WAAAH, EC_WORD_EXCL_EXCL, 0xFFFF, 0xFFFF},
             .speechAfter = {EC_WORD_YOU, EC_WORD_SHOULD, EC_WORD_NOT, EC_MOVE2(BEAT_UP), EC_WORD_ON, EC_WORD_CHILDREN},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_WOOPER,
                     .heldItem = ITEM_LEFTOVERS,
@@ -5926,7 +5990,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_7 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_KNOCKOUT,
     .prize = TTPRIZE_PROTEIN,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("PRISCILLA"),
             .facilityClass = FACILITY_CLASS_TUBER_FRLG,
@@ -5935,7 +6000,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_7 = {
             .speechWin = {EC_WORD_WAAAH, EC_WORD_EXCL, EC_WORD_DID, EC_WORD_I, EC_WORD_WIN, EC_WORD_QUES},
             .speechLose = {EC_WORD_OH_DEAR, EC_WORD_ELLIPSIS, EC_WORD_I, EC_WORD_COULDN_T, EC_WORD_WIN, EC_WORD_ELLIPSIS},
             .speechAfter = {EC_WORD_YOU_RE, EC_WORD_A, EC_WORD_NICE, EC_WORD_TRAINER, EC_WORD_THANK_YOU, EC_WORD_EXCL},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_GOLDEEN,
                     .heldItem = ITEM_SITRUS_BERRY,
@@ -6078,7 +6144,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_7 = {
             .speechWin = {EC_WORD_OH, EC_WORD_MY, EC_WORD_MY, EC_WORD_ELLIPSIS, EC_WORD_I_AM, EC_WORD_SORRY},
             .speechLose = {EC_WORD_YOU_RE, EC_WORD_BETTER, EC_WORD_THAN, EC_WORD_A, EC_WORD_POKEMON, EC_WORD_LADY},
             .speechAfter = {EC_WORD_HOHOHO, EC_WORD_THANK_YOU, EC_WORD_FOR, EC_WORD_AN, EC_WORD_AMUSING, EC_WORD_BATTLE},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_OCTILLERY,
                     .heldItem = ITEM_SITRUS_BERRY,
@@ -6221,7 +6288,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_7 = {
             .speechWin = {EC_WORD_AHAHA, EC_WORD_NO, EC_WORD_WAY, EC_WORD_YOU_RE, EC_WORD_TOO_WEAK, EC_WORD_SERIOUSLY},
             .speechLose = {EC_WORD_WHY, EC_WORD_QUES_EXCL, EC_WORD_YOU, EC_WORD_SHOULD, EC_WORD_NOT, EC_WORD_LIE},
             .speechAfter = {EC_WORD_NICE, EC_WORD_BATTLE, EC_WORD_THANKS, EC_WORD_FOR, EC_WORD_ENTERTAINING, EC_WORD_ME},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MANTINE,
                     .heldItem = ITEM_BRIGHT_POWDER,
@@ -6365,7 +6433,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_4 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_KNOCKOUT,
     .prize = TTPRIZE_DRAGON_SCALE,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("BRENNAN"),
             .facilityClass = FACILITY_CLASS_SAILOR_FRLG,
@@ -6374,7 +6443,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_4 = {
             .speechWin = {EC_WORD_YOU, EC_WORD_LOSE, EC_WORD_IF, EC_WORD_YOU, EC_WORD_GIVE_UP, EC_WORD_EXCL},
             .speechLose = {EC_WORD_OOPS, EC_WORD_YOU, EC_WORD_GOT, EC_WORD_AN, EC_WORD_EASY, EC_WORD_WIN},
             .speechAfter = {EC_WORD_I, EC_WORD_DON_T, EC_MOVE(GRUDGE), EC_WORD_YOU, EC_WORD_BUT, EC_WORD_ELLIPSIS},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_LAPRAS,
                     .heldItem = ITEM_CHESTO_BERRY,
@@ -6517,7 +6587,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_4 = {
             .speechWin = {EC_WORD_MY, EC_WORD_FANTASTIC, EC_WORD_FASHION, EC_WORD_APPEAL, EC_WORD_WINS, EC_WORD_OUT},
             .speechLose = {EC_WORD_UH_OH, EC_WORD_ELLIPSIS, EC_WORD_I, EC_WORD_SEE, EC_WORD_I, EC_WORD_LOST},
             .speechAfter = {EC_WORD_FASHION, EC_WORD_APPEAL, EC_WORD_WON_T, EC_WORD_GET, EC_WORD_ME, EC_WORD_WINS},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_CHINCHOU,
                     .heldItem = ITEM_MAGNET,
@@ -6660,7 +6731,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_4 = {
             .speechWin = {EC_WORD_I, EC_WORD_SEE, EC_WORD_I, EC_WORD_WASN_T, EC_WORD_RIGHT, EC_WORD_ELLIPSIS},
             .speechLose = {EC_WORD_YOU, EC_WORD_TRULY, EC_WORD_ARE, EC_WORD_A, EC_WORD_MASTER, EC_WORD_TRAINER},
             .speechAfter = {EC_WORD_I_AM, EC_WORD_SORRY, EC_WORD_THAT, EC_WORD_I_WAS, EC_WORD_YOUR, EC_WORD_OPPONENT},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_VAPOREON,
                     .heldItem = ITEM_SHELL_BELL,
@@ -6804,7 +6876,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_3 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_METAL_COAT,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("JARRETT"),
             .facilityClass = FACILITY_CLASS_JUGGLER_FRLG,
@@ -6813,7 +6886,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_3 = {
             .speechWin = {EC_WORD_CONGRATS, EC_WORD_FOR, EC_WORD_YOUR, EC_WORD_LOSS, EC_WORD_PARTY, EC_WORD_KID},
             .speechLose = {EC_WORD_NICE, EC_MOVE(SELF_DESTRUCT), EC_WORD_THERE, EC_WORD_EXCL, EC_WORD_YOU_RE, EC_WORD_PERFECT},
             .speechAfter = {EC_WORD_WANT, EC_WORD_TO, EC_WORD_PARTY, EC_WORD_SOME, EC_WORD_MORE, EC_WORD_QUES},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_ELECTRODE,
                     .heldItem = ITEM_FOCUS_BAND,
@@ -6959,7 +7033,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Mixed_3 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_DRAGON_SCALE,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("OWEN"),
             .facilityClass = FACILITY_CLASS_SUPER_NERD_FRLG,
@@ -6968,7 +7043,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Mixed_3 = {
             .speechWin = {EC_WORD_ACCEPT, EC_WORD_MY, EC_MOVE2(PRESENT), EC_WORD_OF, EC_MOVE2(THUNDER_WAVE), EC_WORD_EXCL},
             .speechLose = {EC_MOVE2(WRAP), EC_MOVE(BIND), EC_WORD_ELECTRIC, EC_MOVE2(WHIRLWIND), EC_WORD_SPIRALING, EC_WORD_AROUND},
             .speechAfter = {EC_MOVE2(WHIRLWIND), EC_WORD_SPIRALING, 0xFFFF, 0xFFFF, EC_WORD_SPIRALING, EC_MOVE2(WHIRLWIND)},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MAGNETON,
                     .heldItem = ITEM_LEFTOVERS,
@@ -7114,7 +7190,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Mixed_2 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_SINGLE,
     .prize = TTPRIZE_PROTEIN,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("LORENZO"),
             .facilityClass = FACILITY_CLASS_PSYCHIC_M_FRLG,
@@ -7123,7 +7200,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Mixed_2 = {
             .speechWin = {EC_WORD_NO, EC_WORD_KEEN_EYE, EC_WORD_CAN, EC_WORD_STOP, EC_WORD_MY, EC_WORD_POWER},
             .speechLose = {EC_WORD_HERE_IT_IS, EC_WORD_EXCL, EC_MOVE(KINESIS), EC_WORD_EXCL, EC_WORD_ELLIPSIS, EC_WORD_WHAT},
             .speechAfter = {EC_WORD_I, EC_WORD_WILL, EC_WORD_MAKE, EC_WORD_THE, EC_MOVE(KINESIS), EC_WORD_HALL_OF_FAME},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MR_MIME,
                     .heldItem = ITEM_QUICK_CLAW,
@@ -7269,7 +7347,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_Unused2 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_SCOPE_LENS,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("NIA & CARL"),
             .facilityClass = FACILITY_CLASS_COOL_COUPLE_FRLG,
@@ -7278,7 +7357,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_Unused2 = {
             .speechWin = {EC_WORD_THAT_S, EC_WORD_THE, EC_WORD_DIGITAL, EC_WORD_HYPER, EC_WORD_MODE, EC_WORD_POWER},
             .speechLose = {EC_WORD_MY, EC_WORD_PERFECT, EC_WORD_STRATEGY, EC_WORD_WAS, EC_MOVE2(BEAT_UP), EC_WORD_QUES},
             .speechAfter = {EC_WORD_MY, EC_WORD_INVINCIBLE, EC_WORD_STRATEGY, EC_WORD_WAS, EC_WORD_DESTROYED, EC_WORD_ELLIPSIS},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_MUK,
                     .heldItem = ITEM_CHOICE_BAND,
@@ -7421,7 +7501,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_Unused2 = {
             .speechWin = {EC_WORD_THAT_S_IT_EXCL, EC_WORD_THE, EC_WORD_POWER, EC_WORD_OF, EC_WORD_OUR, EC_WORD_SYSTEM},
             .speechLose = {EC_WORD_OKAY, EC_WORD_EXCL, EC_MOVE(THUNDERBOLT), EC_WORD_RUN_AWAY, EC_WORD_SYSTEM, EC_WORD_START},
             .speechAfter = {EC_WORD_GO, EC_WORD_ON, EC_WORD_PLEASE, EC_WORD_EXCL, EC_WORD_TCH, EC_WORD_ELLIPSIS},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_KANGASKHAN,
                     .heldItem = ITEM_SALAC_BERRY,
@@ -7566,7 +7647,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_7 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_CARBOS,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("AXE & REN"),
             .facilityClass = FACILITY_CLASS_SIS_AND_BRO_FRLG,
@@ -7575,7 +7657,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_7 = {
             .speechWin = {EC_WORD_THAT_S, EC_WORD_THAT, EC_WORD_MAN, EC_WORD_I_AM, EC_WORD_COLD, EC_WORD_EXCL},
             .speechLose = {EC_WORD_I, EC_WORD_CAN_T_WIN, EC_WORD_IN, EC_WORD_THIS, EC_MOVE(SHEER_COLD), EC_WORD_ELLIPSIS},
             .speechAfter = {EC_WORD_THIS, EC_MOVE(SHEER_COLD), EC_WORD_HAS, EC_WORD_ME, EC_WORD_FEELING, EC_WORD_SHAKY},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_LANTURN,
                     .heldItem = ITEM_BRIGHT_POWDER,
@@ -7718,7 +7801,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_7 = {
             .speechWin = {EC_WORD_I, EC_WORD_WON, EC_WORD_BUT, EC_WORD_I_AM, EC_WORD_NOT, EC_WORD_HOT},
             .speechLose = {EC_WORD_I_AM, EC_WORD_HUNGRY, EC_WORD_FOR, EC_WORD_ANY, EC_WORD_HOT, EC_WORD_EATS},
             .speechAfter = {EC_WORD_SISTER, EC_WORD_I, EC_WORD_NEED, EC_WORD_SOMETHING, EC_WORD_HOT, EC_WORD_PLEASE},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_ELECTABUZZ,
                     .heldItem = ITEM_SCOPE_LENS,
@@ -7863,7 +7947,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_Unused3 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_DOUBLE,
     .prize = TTPRIZE_ZINC,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("KATI & GEB"),
             .facilityClass = FACILITY_CLASS_YOUNG_COUPLE_FRLG,
@@ -7872,7 +7957,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_Unused3 = {
             .speechWin = {EC_WORD_LALALA, EC_WORD_LALALA, EC_WORD_OUR, EC_WORD_LOVEY_DOVEY, EC_WORD_LALALA, EC_WORD_LIFE},
             .speechLose = {EC_WORD_I, EC_WORD_NEED, EC_WORD_TO, EC_WORD_LOSE, EC_WORD_MY, EC_MOVE2(FRUSTRATION)},
             .speechAfter = {EC_WORD_YOU_RE, EC_WORD_JUST, EC_WORD_A_LITTLE, EC_WORD_KID, EC_WORD_AHAHA, EC_WORD_EXCL},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_FLAAFFY,
                     .heldItem = ITEM_LEFTOVERS,
@@ -8015,7 +8101,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Double_Unused3 = {
             .speechWin = {EC_WORD_DON_T, EC_WORD_STOP, EC_WORD_OUR, EC_WORD_LOVEY_DOVEY, EC_WORD_LOCOMOTIVE, EC_WORD_EXCL},
             .speechLose = {EC_WORD_HIS, EC_WORD_CRY, EC_WORD_HAS, EC_WORD_CUTE_CHARM, EC_WORD_TOO, EC_WORD_EXCL},
             .speechAfter = {EC_WORD_YOU, EC_WORD_HAVE, EC_WORD_TIME, EC_WORD_TO, EC_WORD_TALK, EC_WORD_QUES},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_PICHU,
                     .heldItem = ITEM_FOCUS_BAND,
@@ -8160,7 +8247,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_6 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_KNOCKOUT,
     .prize = TTPRIZE_WHITE_HERB,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("BEN"),
             .facilityClass = FACILITY_CLASS_ROCKER_FRLG,
@@ -8169,7 +8257,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_6 = {
             .speechWin = {EC_WORD_STATIC, EC_WORD_IS, EC_WORD_ELECTRIC, EC_WORD_YES, EC_WORD_IT, EC_WORD_IS},
             .speechLose = {EC_WORD_ELECTRIC, EC_WORD_ABOUT, EC_WORD_MY, EC_WORD_DIGITAL, EC_WORD_TELEVISION, EC_WORD_I_AM},
             .speechAfter = {EC_WORD_ELECTRIC, EC_WORD_EXCL, EC_WORD_IT_S, EC_WORD_A, EC_WORD_NATURAL, EC_WORD_POWER},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_ELECTRODE,
                     .heldItem = ITEM_LIECHI_BERRY,
@@ -8312,7 +8401,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_6 = {
             .speechWin = {EC_WORD_A, EC_MOVE(THUNDERBOLT), EC_WORD_IS, EC_WORD_ELECTRIC, EC_WORD_TOO, EC_WORD_EXCL},
             .speechLose = {EC_WORD_ELECTRIC, EC_WORD_EXCL, EC_WORD_IT_S, EC_WORD_ABOUT, EC_WORD_WIRELESS, EC_WORD_LINK},
             .speechAfter = {EC_WORD_ELECTRIC, EC_WORD_EXCL, EC_WORD_IT_S, EC_WORD_A, EC_WORD_TREASURE, EC_WORD_EXCL},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_GRANBULL,
                     .heldItem = ITEM_CHOICE_BAND,
@@ -8455,7 +8545,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_6 = {
             .speechWin = {EC_MOVE2(THUNDER_SHOCK), EC_WORD_IS, EC_WORD_ELECTRIC, EC_WORD_YOU, EC_WORD_KNOW, EC_WORD_QUES},
             .speechLose = {EC_WORD_ELECTRIC, EC_WORD_EXCL, EC_MOVE2(FLASH), EC_MOVE2(FLASH), EC_MOVE2(FLASH), EC_WORD_EXCL_EXCL},
             .speechAfter = {EC_WORD_ALL, EC_WORD_TOGETHER, EC_WORD_NOW, EC_WORD_EXCL, EC_MOVE(SPARK), EC_MOVE(SPARK)},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_WEEZING,
                     .heldItem = ITEM_CHOICE_BAND,
@@ -8599,7 +8690,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_5 = {
     .floorIdx = MAX_TRAINER_TOWER_FLOORS,
     .challengeType = CHALLENGE_TYPE_KNOCKOUT,
     .prize = TTPRIZE_UP_GRADE,
-    .trainers = {
+    .trainers =
+    {
         {
             .name = _("MAURA"),
             .facilityClass = FACILITY_CLASS_BEAUTY_FRLG,
@@ -8608,7 +8700,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_5 = {
             .speechWin = {EC_WORD_WHAT, EC_WORD_AM, EC_WORD_I, EC_WORD_LEADER, EC_WORD_OF, EC_WORD_QUES},
             .speechLose = {EC_WORD_I_AM, EC_WORD_NO, EC_WORD_LEADER, EC_WORD_IT_S, EC_WORD_A_LITTLE, EC_WORD_LIE},
             .speechAfter = {EC_WORD_HEY, EC_WORD_EXCL, EC_WORD_THE, EC_WORD_GROUND, EC_WORD_IS, EC_WORD_SLIMY},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_PICHU,
                     .heldItem = ITEM_FOCUS_BAND,
@@ -8751,7 +8844,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_5 = {
             .speechWin = {EC_WORD_NEVER, EC_WORD_SAID, EC_WORD_WHAT, EC_WORD_I_AM, EC_WORD_NO_1, EC_WORD_AT},
             .speechLose = {EC_WORD_NEXT, EC_WORD_TIME, EC_WORD_I, EC_WORD_WILL, EC_WORD_BE, EC_WORD_OVERWHELMING},
             .speechAfter = {EC_WORD_YOU, EC_MOVE2(SPIT_UP), EC_WORD_ME, EC_WORD_AS_IF, EC_WORD_I_AM, EC_WORD_NOTHING},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_NIDORINO,
                     .heldItem = ITEM_CHOICE_BAND,
@@ -8894,7 +8988,8 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Knockout_5 = {
             .speechWin = {EC_WORD_I_VE, EC_WORD_WON, EC_WORD_THIS, EC_MOVE2(MILK_DRINK), EC_WORD_MATCH, EC_WORD_EXCL},
             .speechLose = {EC_WORD_I, EC_WORD_CAN_T, EC_WORD_DRINK, EC_WORD_ANY, EC_WORD_MORE, EC_WORD_DRINKS},
             .speechAfter = {EC_WORD_WHOAH, EC_WORD_EXCL, EC_WORD_I_AM, EC_WORD_DROOLING, EC_WORD_ALL, EC_WORD_OVER},
-            .mons = {
+            .mons =
+            {
                 {
                     .species = SPECIES_WIGGLYTUFF,
                     .heldItem = ITEM_CHOICE_BAND,
