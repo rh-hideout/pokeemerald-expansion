@@ -97973,3 +97973,4 @@ const struct TrainerMon gBattleFrontierMons[NUM_FRONTIER_MONS] =
 
 
 
+

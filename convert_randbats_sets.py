@@ -29,6 +29,17 @@ ABILITY_NAME_MAP = {
     "AS_ONE_SPECTRIER": "AS_ONE_SHADOW_RIDER",
 }
 
+EV_BASELINE = {
+    "hp": 84,
+    "atk": 84,
+    "def": 84,
+    "spe": 84,
+    "spa": 84,
+    "spd": 84,
+}
+EV_SIGNATURE_ORDER = ("hp", "atk", "def", "spa", "spd", "spe")
+NON_STELLAR_TYPES = lambda defined_types: {t for t in defined_types if t != "STELLAR"}
+
 
 def sanitize_name(name):
     name = str(name).replace("'", "").replace("é", "e").replace("É", "E")
@@ -147,14 +158,7 @@ def format_evs(evs):
 
 def merged_evs(base_evs, override_evs):
     # Randbats baseline is flat 84 EVs in each stat, with sparse overrides.
-    evs = {
-        "hp": 84,
-        "atk": 84,
-        "def": 84,
-        "spe": 84,
-        "spa": 84,
-        "spd": 84,
-    }
+    evs = dict(EV_BASELINE)
     if isinstance(base_evs, dict):
         for k, v in base_evs.items():
             if k in evs:
@@ -226,11 +230,126 @@ def normalize_options_for_constants(options, defined_set, mapper=None, max_count
     return out[:max_count]
 
 
+def load_defined_constants():
+    return {
+        "abilities": parse_defined_constants(ABILITIES_FILE, "ABILITY_"),
+        "items": parse_defined_constants(ITEMS_FILE, "ITEM_"),
+        "moves": parse_defined_constants(MOVES_FILE, "MOVE_"),
+        "types": parse_defined_constants(TYPES_FILE, "TYPE_"),
+    }
+
+
+def resolve_role_options(role_payload, base_options, defined):
+    abilities = normalize_options_for_constants(
+        normalize_weighted_options(role_payload.get("abilities")) or base_options["abilities"],
+        defined["abilities"],
+        mapper=ABILITY_NAME_MAP,
+        max_count=MAX_ABILITY_OPTIONS,
+        allow_none=True,
+    )
+    if not abilities:
+        abilities = [(None, 1.0)]
+
+    items = normalize_options_for_constants(
+        normalize_weighted_options(role_payload.get("items")) or base_options["items"],
+        defined["items"],
+        max_count=MAX_ITEM_OPTIONS,
+        allow_none=True,
+    )
+    if not items:
+        items = [(None, 1.0)]
+
+    tera_types = normalize_options_for_constants(
+        normalize_weighted_options(role_payload.get("teraTypes")) or base_options["tera_types"],
+        NON_STELLAR_TYPES(defined["types"]),
+        max_count=MAX_TERA_OPTIONS,
+        allow_none=True,
+    )
+    if not tera_types:
+        tera_types = [(None, 1.0)]
+
+    return abilities, items, tera_types
+
+
+def build_role_candidates(species, role, role_level, role_evs, move_combos, abilities, items, tera_types, defined_moves):
+    dedup = {}
+    for combo, combo_weight in move_combos:
+        if any(m != "NONE" and m not in defined_moves for m in combo):
+            continue
+        for ability, ability_weight in abilities:
+            for item, item_weight in items:
+                for tera_type, tera_weight in tera_types:
+                    signature = (
+                        combo,
+                        tuple(int(role_evs.get(k, 0)) for k in EV_SIGNATURE_ORDER),
+                        ability,
+                        item,
+                        role_level,
+                        tera_type,
+                    )
+                    score = combo_weight * ability_weight * item_weight * tera_weight
+                    existing = dedup.get(signature)
+                    if existing is None or score > existing["score"]:
+                        dedup[signature] = {
+                            "species": species,
+                            "role": role,
+                            "moves": list(combo),
+                            "evs": role_evs,
+                            "ability": ability,
+                            "item": item,
+                            "level": role_level,
+                            "tera_type": tera_type,
+                            "score": score,
+                        }
+
+    return list(dedup.values())
+
+
+def select_species_entries(species_candidates):
+    # Guarantee at least one high-quality entry per role when possible.
+    role_groups = {}
+    for candidate in species_candidates:
+        role_groups.setdefault(candidate["role"], []).append(candidate)
+    for role in role_groups:
+        role_groups[role].sort(key=lambda c: c["score"], reverse=True)
+
+    seeded = []
+    for role in sorted(role_groups.keys()):
+        if len(seeded) >= MAX_VARIANTS_PER_SPECIES:
+            break
+        seeded.append(role_groups[role].pop(0))
+
+    remaining_capacity = MAX_VARIANTS_PER_SPECIES - len(seeded)
+    leftovers = []
+    for role in role_groups:
+        leftovers.extend(role_groups[role])
+
+    selected_species_entries = list(seeded)
+    if remaining_capacity > 0 and leftovers:
+        extra = select_diverse_candidates(
+            [(c, c["score"]) for c in leftovers],
+            remaining_capacity,
+            key_fn=lambda payload: payload["moves"] + [payload["ability"] or "", payload["item"] or "", payload["tera_type"] or ""],
+        )
+        selected_species_entries.extend(extra)
+
+    return selected_species_entries
+
+
+def finalize_variant_numbers(all_entries):
+    role_counters = {}
+    final_entries = []
+    for entry in sorted(all_entries, key=lambda e: (e["species"], e["role"], -e["score"])):
+        key = (entry["species"], entry["role"])
+        role_counters[key] = role_counters.get(key, 0) + 1
+        entry = dict(entry)
+        entry["variant_num"] = role_counters[key]
+        final_entries.append(entry)
+    return final_entries
+
+
 def build_randbats_entries(data):
-    defined_abilities = parse_defined_constants(ABILITIES_FILE, "ABILITY_")
-    defined_items = parse_defined_constants(ITEMS_FILE, "ITEM_")
-    defined_moves = parse_defined_constants(MOVES_FILE, "MOVE_")
-    defined_types = parse_defined_constants(TYPES_FILE, "TYPE_")
+    defined = load_defined_constants()
 
     all_entries = []
 
@@ -240,10 +359,12 @@ def build_randbats_entries(data):
 
         species = sanitize_name(species_name)
         level = int(species_payload.get("level", 80))
-        base_abilities = normalize_weighted_options(species_payload.get("abilities"))
-        base_items = normalize_weighted_options(species_payload.get("items"))
+        base_options = {
+            "abilities": normalize_weighted_options(species_payload.get("abilities")),
+            "items": normalize_weighted_options(species_payload.get("items")),
+            "tera_types": normalize_weighted_options(species_payload.get("teraTypes")),
+        }
         base_evs = species_payload.get("evs", {})
-        base_tera = normalize_weighted_options(species_payload.get("teraTypes"))
         roles = species_payload.get("roles", {})
         if not isinstance(roles, dict):
             continue
@@ -263,65 +384,19 @@ def build_randbats_entries(data):
             if not move_combos:
                 continue
 
-            abilities = normalize_options_for_constants(
-                normalize_weighted_options(role_payload.get("abilities")) or base_abilities,
-                defined_abilities,
-                mapper=ABILITY_NAME_MAP,
-                max_count=MAX_ABILITY_OPTIONS,
-                allow_none=True,
+            abilities, items, tera_types = resolve_role_options(role_payload, base_options, defined)
+
+            role_candidates = build_role_candidates(
+                species,
+                role,
+                role_level,
+                role_evs,
+                move_combos,
+                abilities,
+                items,
+                tera_types,
+                defined["moves"],
             )
-            if not abilities:
-                abilities = [(None, 1.0)]
-
-            items = normalize_options_for_constants(
-                normalize_weighted_options(role_payload.get("items")) or base_items,
-                defined_items,
-                max_count=MAX_ITEM_OPTIONS,
-                allow_none=True,
-            )
-            if not items:
-                items = [(None, 1.0)]
-
-            tera_types = normalize_options_for_constants(
-                normalize_weighted_options(role_payload.get("teraTypes")) or base_tera,
-                {t for t in defined_types if t != "STELLAR"},
-                max_count=MAX_TERA_OPTIONS,
-                allow_none=True,
-            )
-            if not tera_types:
-                tera_types = [(None, 1.0)]
-
-            dedup = {}
-            for combo, combo_weight in move_combos:
-                if any(m != "NONE" and m not in defined_moves for m in combo):
-                    continue
-                for ability, ability_weight in abilities:
-                    for item, item_weight in items:
-                        for tera_type, tera_weight in tera_types:
-                            signature = (
-                                combo,
-                                tuple(int(role_evs.get(k, 0)) for k in ("hp", "atk", "def", "spa", "spd", "spe")),
-                                ability,
-                                item,
-                                role_level,
-                                tera_type,
-                            )
-                            score = combo_weight * ability_weight * item_weight * tera_weight
-                            existing = dedup.get(signature)
-                            if existing is None or score > existing["score"]:
-                                dedup[signature] = {
-                                    "species": species,
-                                    "role": role,
-                                    "moves": list(combo),
-                                    "evs": role_evs,
-                                    "ability": ability,
-                                    "item": item,
-                                    "level": role_level,
-                                    "tera_type": tera_type,
-                                    "score": score,
-                                }
-
-            role_candidates = list(dedup.values())
             if not role_candidates:
                 continue
 
@@ -335,45 +410,9 @@ def build_randbats_entries(data):
         if not species_candidates:
             continue
 
-        # First, guarantee at least one high-quality set from each role if space allows.
-        role_groups = {}
-        for candidate in species_candidates:
-            role_groups.setdefault(candidate["role"], []).append(candidate)
-        for role in role_groups:
-            role_groups[role].sort(key=lambda c: c["score"], reverse=True)
+        all_entries.extend(select_species_entries(species_candidates))
 
-        seeded = []
-        for role in sorted(role_groups.keys()):
-            if len(seeded) >= MAX_VARIANTS_PER_SPECIES:
-                break
-            seeded.append(role_groups[role].pop(0))
-
-        remaining_capacity = MAX_VARIANTS_PER_SPECIES - len(seeded)
-        leftovers = []
-        for role in role_groups:
-            leftovers.extend(role_groups[role])
-
-        selected_species_entries = list(seeded)
-        if remaining_capacity > 0 and leftovers:
-            extra = select_diverse_candidates(
-                [(c, c["score"]) for c in leftovers],
-                remaining_capacity,
-                key_fn=lambda payload: payload["moves"] + [payload["ability"] or "", payload["item"] or "", payload["tera_type"] or ""],
-            )
-            selected_species_entries.extend(extra)
-        all_entries.extend(selected_species_entries)
-
-    # Renumber variants per species-role after pruning.
-    role_counters = {}
-    final_entries = []
-    for entry in sorted(all_entries, key=lambda e: (e["species"], e["role"], -e["score"])):
-        key = (entry["species"], entry["role"])
-        role_counters[key] = role_counters.get(key, 0) + 1
-        entry = dict(entry)
-        entry["variant_num"] = role_counters[key]
-        final_entries.append(entry)
-
-    return final_entries
+    return finalize_variant_numbers(all_entries)
 
 
 def update_mons_file(entries):
