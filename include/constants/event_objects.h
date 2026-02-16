@@ -303,9 +303,9 @@
 #define OBJ_EVENT_GFX_ROCKET_M                   276
 #define OBJ_EVENT_GFX_ROCKET_F                   277
 #define OBJ_EVENT_GFX_GBA_KID                    278
-#define OBJ_EVENT_GFX_SUPER_NERD                 279
+#define OBJ_EVENT_GFX_POKE_MANIAC_FRLG           279
 #define OBJ_EVENT_GFX_BIKER                      280
-#define OBJ_EVENT_GFX_BLACKBELT                  281
+#define OBJ_EVENT_GFX_BLACK_BELT_FRLG            281
 #define OBJ_EVENT_GFX_SCIENTIST                  282
 #define OBJ_EVENT_GFX_FISHER                     283
 #define OBJ_EVENT_GFX_CHANNELER                  284
