@@ -310,3 +310,32 @@ SINGLE_BATTLE_TEST("Pickpocket does not prevent King's Rock or Razor Fang flinch
         EXPECT(player->item == ITEM_NONE);
     }
 }
+
+SINGLE_BATTLE_TEST("Pickpocket activates when user has Protective Pads, but not with Punching Glove or Long Reach")
+{
+    u32 item, ability;
+
+    PARAMETRIZE { item = ITEM_PROTECTIVE_PADS; ability = ABILITY_OVERGROW;   }
+    PARAMETRIZE { item = ITEM_PUNCHING_GLOVE;  ability = ABILITY_OVERGROW;   }
+    PARAMETRIZE { item = ITEM_NONE;            ability = ABILITY_LONG_REACH; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_MACH_PUNCH));
+        ASSUME(IsPunchingMove(MOVE_MACH_PUNCH));
+        ASSUME(GetItemHoldEffect(ITEM_PROTECTIVE_PADS) == HOLD_EFFECT_PROTECTIVE_PADS);
+        ASSUME(GetItemHoldEffect(ITEM_PUNCHING_GLOVE) == HOLD_EFFECT_PUNCHING_GLOVE);
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        PLAYER(SPECIES_DECIDUEYE) { Ability(ability); Item(item); }
+        OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_MACH_PUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MACH_PUNCH, player);
+
+        if (item == ITEM_PROTECTIVE_PADS) {
+            ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+        } else {
+            NOT ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+        }
+    }
+}
