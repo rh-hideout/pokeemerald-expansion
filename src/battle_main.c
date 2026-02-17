@@ -3519,10 +3519,11 @@ static void DoBattleIntro(void)
             {
                 if (!AreMultiPartiesFullTeams())
                 {
-                    for (i = 0; i < MULTI_PARTY_SIZE; i++)
+                    for (i = 0; i < PARTY_SIZE; i++)
                     {
                         if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                        || GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                         || GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
+                         || i >= MULTI_PARTY_SIZE)
                         {
                             hpStatus[0][i].hp = HP_EMPTY_SLOT;
                             hpStatus[0][i].status = 0;
@@ -3536,10 +3537,11 @@ static void DoBattleIntro(void)
 
                     enum BattleTrainer trainer = B_TRAINER_3;
                     u32 offset = 0;
-                    for (i = 0; i < MULTI_PARTY_SIZE; i++)
+                    for (i = 0; i < PARTY_SIZE; i++)
                     {
                         if (GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                        || GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                         || GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
+                         || i >= MULTI_PARTY_SIZE)
                         {
                             hpStatus[1][i].hp = HP_EMPTY_SLOT;
                             hpStatus[1][i].status = 0;
@@ -3616,10 +3618,11 @@ static void DoBattleIntro(void)
             {
                 if (!AreMultiPartiesFullTeams())
                 {
-                    for (i = 0; i < MULTI_PARTY_SIZE; i++)
+                    for (i = 0; i < PARTY_SIZE; i++)
                     {
                         if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                        || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                         || GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
+                         || i >= MULTI_PARTY_SIZE)
                         {
                             hpStatus[0][i].hp = HP_EMPTY_SLOT;
                             hpStatus[0][i].status = 0;
@@ -3633,10 +3636,11 @@ static void DoBattleIntro(void)
 
                     enum BattleTrainer trainer = B_TRAINER_2;
                     u32 offset = 0;
-                    for (i = 0; i < MULTI_PARTY_SIZE; i++)
+                    for (i = 0; i < PARTY_SIZE; i++)
                     {
                         if (GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                        || GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+                         || GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
+                         || i >= MULTI_PARTY_SIZE)
                         {
                             hpStatus[1][i].hp = HP_EMPTY_SLOT;
                             hpStatus[1][i].status = 0;
