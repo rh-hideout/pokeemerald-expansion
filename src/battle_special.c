@@ -45,7 +45,7 @@ static void HandleSpecialTrainerBattleEnd(void)
         CopyEReaderTrainerFarewellMessage();
         break;
     case SPECIAL_BATTLE_MULTI:
-        if (!AreMultiPartiesFullTeams()) // grintoul TO DO - test
+        if (!AreMultiPartiesFullTeams())
         {
             for (i = 0; i < 3; i++)
             {

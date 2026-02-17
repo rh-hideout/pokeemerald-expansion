@@ -3720,11 +3720,11 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
     return dstID;
 }
 
-static void IllusionNickHack(enum BattlerId battler, u32 partyId, u8 *dst) // grintoul TO DO
+static void IllusionNickHack(enum BattlerId battler, u32 partyId, u8 *dst)
 {
     u32 id = PARTY_SIZE;
-    // we know it's gParties[B_TRAINER_1]
-    struct Pokemon *mon = &gParties[B_TRAINER_1][partyId], *partnerMon;
+    struct Pokemon *party = GetBattlerParty(battler);
+    struct Pokemon *mon = &party[partyId], *partnerMon;
 
     if (GetMonAbility(mon) == ABILITY_ILLUSION)
     {
@@ -3733,11 +3733,11 @@ static void IllusionNickHack(enum BattlerId battler, u32 partyId, u8 *dst) // gr
         else
             partnerMon = mon;
 
-        id = GetIllusionMonPartyId(gParties[B_TRAINER_1], mon, partnerMon, battler);
+        id = GetIllusionMonPartyId(party, mon, partnerMon, battler);
     }
 
     if (id != PARTY_SIZE)
-        GetMonData(&gParties[B_TRAINER_1][id], MON_DATA_NICKNAME, dst);
+        GetMonData(&party[id], MON_DATA_NICKNAME, dst);
     else
         GetMonData(mon, MON_DATA_NICKNAME, dst);
 }

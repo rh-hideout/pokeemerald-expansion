@@ -3870,7 +3870,6 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
 
 void CopyPartyMonToBattleData(enum BattlerId battler, u32 partyIndex)
 {
-    //enum BattleSide side = GetBattlerSide(battler); // grintoul TO DO - check
     struct Pokemon *party = GetBattlerParty(battler);
     PokemonToBattleMon(&party[partyIndex], &gBattleMons[battler]);
     gBattleStruct->battlerState[battler].hpOnSwitchout = gBattleMons[battler].hp;

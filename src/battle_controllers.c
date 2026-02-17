@@ -169,7 +169,7 @@ void InitBattleControllers(void)
 
     InitBtlControllersInternal();
 
-    SetBattlePartyIds(); // grintoul TO DO 
+    SetBattlePartyIds();
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
     {
@@ -1351,7 +1351,7 @@ void BtlController_EmitIntroTrainerBallThrow(enum BattlerId battler, u32 bufferI
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitDrawPartyStatusSummary(enum BattlerId battler, u32 bufferId, struct HpAndStatus *hpAndStatus, u8 flags) // grintoul TO DO - how the hell to make this work
+void BtlController_EmitDrawPartyStatusSummary(enum BattlerId battler, u32 bufferId, struct HpAndStatus *hpAndStatus, u8 flags)
 {
     s32 i;
 

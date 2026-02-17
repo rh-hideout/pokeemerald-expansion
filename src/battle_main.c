@@ -1164,7 +1164,7 @@ static void CB2_HandleStartMultiPartnerBattle(void)
         break;
     case 3:
         // Link battle, send/receive party Pokémon in groups
-        if (IsLinkTaskFinished()) // grintoul TO DO - do we want to change the parties here? Currently resolved at the end; depends on if want to make 12v12 possible
+        if (IsLinkTaskFinished())
         {
             // Send Pokémon 1-2
             SendBlock(BitmaskAllOtherLinkPlayers(), gParties[B_TRAINER_0], sizeof(struct Pokemon) * 2);
@@ -3510,7 +3510,7 @@ static void DoBattleIntro(void)
         else // Skip party summary since it is a wild battle.
             gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_INTRO_TEXT;
         break;
-    case BATTLE_INTRO_STATE_DRAW_PARTY_SUMMARY: // grintoul TO DO
+    case BATTLE_INTRO_STATE_DRAW_PARTY_SUMMARY:
         if (!gBattleControllerExecFlags)
         {
             struct HpAndStatus hpStatus[MAX_BATTLE_TRAINERS/2][PARTY_SIZE];
@@ -5632,7 +5632,7 @@ static void HandleEndTurn_MonFled(void)
     gBattleMainFunc = HandleEndTurn_FinishBattle;
 }
 
-static void HandleEndTurn_FinishBattle(void) //grintoul TO DO
+static void HandleEndTurn_FinishBattle(void)
 {
     if (gCurrentActionFuncId == B_ACTION_TRY_FINISH || gCurrentActionFuncId == B_ACTION_FINISHED)
     {

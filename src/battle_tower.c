@@ -1172,7 +1172,7 @@ static void BattleTowerNop2(void)
 
 }
 
-static void GetApprenticeMultiPartnerParty(u16 trainerId) // grintoul TO DO - what is this
+static void GetApprenticeMultiPartnerParty(u16 trainerId)
 {
     s32 i, count;
     u32 validSpecies[MULTI_PARTY_SIZE];
@@ -1197,7 +1197,7 @@ static void GetApprenticeMultiPartnerParty(u16 trainerId) // grintoul TO DO - wh
     } while (gFrontierTempParty[0] == gFrontierTempParty[1]);
 }
 
-static void GetRecordMixFriendMultiPartnerParty(u16 trainerId) // grintoul TO DO - what is this
+static void GetRecordMixFriendMultiPartnerParty(u16 trainerId)
 {
     s32 i, count;
     u32 validSpecies[3];
@@ -1225,7 +1225,7 @@ static void GetRecordMixFriendMultiPartnerParty(u16 trainerId) // grintoul TO DO
     } while (gFrontierTempParty[2] == gFrontierTempParty[3]);
 }
 
-static void LoadMultiPartnerCandidatesData(void) // grintoul TO DO - what is this
+static void LoadMultiPartnerCandidatesData(void)
 {
     s32 i, j, k;
     u32 spArray[5];

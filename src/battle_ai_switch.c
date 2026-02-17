@@ -186,7 +186,7 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
     }
 }
 
-bool32 IsAceMon(enum BattlerId battler, u32 monPartyId) // grintoul TO DO - Does this work if there are two trainers but only one with Ace?
+bool32 IsAceMon(enum BattlerId battler, u32 monPartyId)
 {
     enum BattleTrainer trainer = GetBattlerTrainer(battler);
 
@@ -2502,7 +2502,7 @@ u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switc
 
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SEQUENCE_SWITCHING)
     {
-        bestMonId = GetNextMonInParty(battler, party, firstId, lastId, battlerIn1, battlerIn2); // grintoul TO DO
+        bestMonId = GetNextMonInParty(battler, party, firstId, lastId, battlerIn1, battlerIn2);
         return bestMonId;
     }
 
