@@ -369,10 +369,38 @@ static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler)
     return FALSE;
 }
 
+static bool32 IsChargingTwoTurnMove(u32 battlerAtk, u32 move)
+{
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+
+    if (!gBattleMoveEffects[effect].twoTurnEffect)
+        return FALSE;
+    // If already in the second turn, it's no longer charging.
+    if (gBattleMons[battlerAtk].volatiles.multipleTurns)
+        return FALSE;
+    // Power Herb skips the charge turn.
+    if (GetBattlerHoldEffect(battlerAtk) == HOLD_EFFECT_POWER_HERB)
+        return FALSE;
+    // Semi-invulnerable moves always charge unless Power Herb was used.
+    if (gBattleMoveEffects[effect].semiInvulnerableEffect)
+        return TRUE;
+    // Moves with charge-turn-only additional effects must charge.
+    if (MoveHasChargeTurnAdditionalEffect(move))
+        return TRUE;
+    // Weather-based two-turn moves can fire immediately.
+    if (IsBattlerWeatherAffected(battlerAtk, GetMoveTwoTurnAttackWeather(move)))
+        return FALSE;
+
+    return TRUE;
+}
+
 bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
 {
     enum Ability ability = GetBattlerAbility(battlerAtk);
     enum BattleMoveEffects effect = GetMoveEffect(move);
+
+    if (IsChargingTwoTurnMove(battlerAtk, move))
+        return FALSE;
 
     if (gSideTimers[defSide].followmeTimer == 0
         || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit(effect))

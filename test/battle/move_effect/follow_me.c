@@ -289,6 +289,40 @@ DOUBLE_BATTLE_TEST("Spotlight redirects single target moves used by the opposing
     }
 }
 
-TO_DO_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
+DOUBLE_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
+{
+    bool32 useFollowMeTurn2;
+    PARAMETRIZE { useFollowMeTurn2 = FALSE; }
+    PARAMETRIZE { useFollowMeTurn2 = TRUE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); }
+        PLAYER(SPECIES_WYNAUT) { Moves(MOVE_FOLLOW_ME, MOVE_SPLASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FLY); }
+        OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_SPLASH); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, MOVE_FLY, target: playerLeft);
+               MOVE(playerLeft, MOVE_SPLASH);
+               MOVE(opponentRight, MOVE_SPLASH); }
+        TURN { if (useFollowMeTurn2)
+                   MOVE(playerRight, MOVE_FOLLOW_ME);
+               else
+                   MOVE(playerRight, MOVE_SPLASH);
+               SKIP_TURN(opponentLeft);
+               MOVE(playerLeft, MOVE_SPLASH);
+               MOVE(opponentRight, MOVE_SPLASH); }
+    } SCENE {
+        if (useFollowMeTurn2)
+            HP_BAR(playerRight);
+        else
+            HP_BAR(playerLeft);
+        if (useFollowMeTurn2)
+            NOT HP_BAR(playerLeft);
+        else
+            NOT HP_BAR(playerRight);
+    }
+}
+
 TO_DO_BATTLE_TEST("Follow Me draws Electric/Water moves even if there's a Pokémon with Lightning Rod/Storm Drain")
 //TO_DO_BATTLE_TEST("Triples: Follow Me can only draw non-adjacent moves if they use a long-range move")
