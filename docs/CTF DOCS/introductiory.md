@@ -29,7 +29,8 @@ Each of the game's terminals are tied to a specific flag, hindering the player t
 ## About the environment
 **`pokeemerald-expansion`** is a GBA ROM hack base that equips developers with a comprehensive toolkit for creating Pokémon ROM hacks. **`pokeemerald-expansion`** is built on top of [pret's `pokeemerald`](https://github.com/pret/pokeemerald) decompilation project. **It is not a playable Pokémon game on its own.**
 
-- tiny overview of changed files, deri
+- tiny overview of changed files, derivations ... 
+- mby about used programming languages and their purpose
 
 ## Additional background information
 Pokemon Emerald was originally developed by Game Freak and published by The Pokemon Company and Nintendo in the year 2004. It is the fifth game of the Pokemon video game series and the last of the third generation.
