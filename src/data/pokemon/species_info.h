@@ -315,4 +315,141 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .teachableLearnset = sSuneonTeachableLearnset,
     },
 
+        [SPECIES_I3C_AND] =
+    {
+        .baseHP        = 65,
+        .baseAttack    = 65,
+        .baseDefense   = 60,
+        .baseSpeed     = 130,
+        .baseSpAttack  = 110,
+        .baseSpDefense = P_UPDATED_STATS >= GEN_2 ? 95 : 110,
+        .types = MON_TYPES(TYPE_ELECTRIC),
+        .catchRate = 45,
+        .expYield = 197,
+        .evYield_Speed = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 35,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_CHLOROPHYLL },
+        .bodyColor = BODY_COLOR_WHITE,
+        .speciesName = _("I3C AND"),
+        .cryId = CRY_EEVEE,
+        .natDexNum = NATIONAL_DEX_I3C_AND,
+        .categoryName = _("Circuit"),
+        .height = 13,
+        .weight = 192,
+        .description = COMPOUND_STRING(
+            "Its cells generate weak power that is\n"
+            "amplified by its fur's static electricity\n"
+            "to drop thunderbolts. The bristling fur is\n"
+            "made of electrically charged needles."),
+        .pokemonScale = 283,
+        .pokemonOffset = 8,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_I3c_And,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_SHAKE_GLOW_WHITE_SLOW,
+        .frontAnimDelay = 15,
+        .enemyMonElevation = 6,
+        .backPic = gMonBackPic_I3c_And,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 0,
+        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .palette = gMonPalette_I3c_And,
+        .shinyPalette = gMonShinyPalette_I3c_And,
+        .iconSprite = gMonIcon_I3c_And,
+        .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 2,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 2, SHADOW_SIZE_M)
+        FOOTPRINT(Jolteon)
+        OVERWORLD(
+            sPicTable_Jolteon,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Jolteon,
+            gShinyOverworldPalette_Jolteon
+        )
+        .levelUpLearnset = sI3cAndLevelUpLearnset,
+        .teachableLearnset = sI3cAndTeachableLearnset,
+        .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_I3C_NAND}),
+    },
+
+
+        [SPECIES_I3C_NAND] =
+    {
+        .baseHP        = 65,
+        .baseAttack    = 65,
+        .baseDefense   = 60,
+        .baseSpeed     = 130,
+        .baseSpAttack  = 110,
+        .baseSpDefense = P_UPDATED_STATS >= GEN_2 ? 95 : 110,
+        .types = MON_TYPES(TYPE_FLYING),
+        .catchRate = 45,
+        .expYield = 197,
+        .evYield_Speed = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 35,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_CHLOROPHYLL },
+        .bodyColor = BODY_COLOR_WHITE,
+        .speciesName = _("I3C NAND"),
+        .cryId = CRY_EEVEE,
+        .natDexNum = NATIONAL_DEX_I3C_NAND,
+        .categoryName = _("Circuit"),
+        .height = 13,
+        .weight = 192,
+        .description = COMPOUND_STRING(
+            "Its cells generate weak power that is\n"
+            "amplified by its fur's static electricity\n"
+            "to drop thunderbolts. The bristling fur is\n"
+            "made of electrically charged needles."),
+        .pokemonScale = 283,
+        .pokemonOffset = 8,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_I3c_Nand,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_SHAKE_GLOW_WHITE_SLOW,
+        .frontAnimDelay = 15,
+        .enemyMonElevation = 6,
+        .backPic = gMonBackPic_I3c_Nand,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 0,
+        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .palette = gMonPalette_I3c_Nand,
+        .shinyPalette = gMonShinyPalette_I3c_Nand,
+        .iconSprite = gMonIcon_I3c_Nand,
+        .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 0 : 2,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 2, SHADOW_SIZE_M)
+        FOOTPRINT(Jolteon)
+        OVERWORLD(
+            sPicTable_Jolteon,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Jolteon,
+            gShinyOverworldPalette_Jolteon
+        )
+        .levelUpLearnset = sI3cNandLevelUpLearnset,
+        .teachableLearnset = sI3cNandTeachableLearnset,
+    },
+
+
 };

@@ -35932,3 +35932,25 @@ static const u16 sSuneonTeachableLearnset[] = {
    MOVE_SOLAR_BEAM, //x
    MOVE_UNAVAILABLE, // This is required to determine where the array ends.
 };
+
+
+static const u16 sI3cAndTeachableLearnset[] = {
+
+   MOVE_HIDDEN_POWER,
+   MOVE_FLY, //x
+   MOVE_TAILWIND, //x
+   MOVE_SUNNY_DAY, //x
+   MOVE_SOLAR_BEAM, //x
+   MOVE_UNAVAILABLE, // This is required to determine where the array ends.
+};
+
+
+static const u16 sI3cNandTeachableLearnset[] = {
+
+   MOVE_HIDDEN_POWER,
+   MOVE_FLY, //x
+   MOVE_TAILWIND, //x
+   MOVE_SUNNY_DAY, //x
+   MOVE_SOLAR_BEAM, //x
+   MOVE_UNAVAILABLE, // This is required to determine where the array ends.
+};

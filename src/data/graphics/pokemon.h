@@ -26798,3 +26798,17 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u16 gMonShinyPalette_Suneon[] = INCBIN_U16("graphics/pokemon/suneon/shiny.gbapal");
     const u8 gMonIcon_Suneon[] = INCBIN_U8("graphics/pokemon/suneon/icon.4bpp");
     const u8 gMonFootprint_Suneon[] = INCBIN_U8("graphics/pokemon/suneon/footprint.1bpp");
+
+    const u32 gMonFrontPic_I3c_And[] = INCBIN_U32("graphics/pokemon/i3c_and/anim_front.4bpp.lz");
+    const u32 gMonBackPic_I3c_And[] = INCBIN_U32("graphics/pokemon/i3c_and/back.4bpp.lz");
+    const u16 gMonPalette_I3c_And[] = INCBIN_U16("graphics/pokemon/i3c_and/normal.gbapal");
+    const u16 gMonShinyPalette_I3c_And[] = INCBIN_U16("graphics/pokemon/i3c_and/shiny.gbapal");
+    const u8 gMonIcon_I3c_And[] = INCBIN_U8("graphics/pokemon/i3c_and/icon.4bpp");
+    const u8 gMonFootprint_I3c_And[] = INCBIN_U8("graphics/pokemon/i3c_and/footprint.1bpp");
+
+    const u32 gMonFrontPic_I3c_Nand[] = INCBIN_U32("graphics/pokemon/i3c_nand/anim_front.4bpp.lz");
+    const u32 gMonBackPic_I3c_Nand[] = INCBIN_U32("graphics/pokemon/i3c_nand/back.4bpp.lz");
+    const u16 gMonPalette_I3c_Nand[] = INCBIN_U16("graphics/pokemon/i3c_nand/normal.gbapal");
+    const u16 gMonShinyPalette_I3c_Nand[] = INCBIN_U16("graphics/pokemon/i3c_nand/shiny.gbapal");
+    const u8 gMonIcon_I3c_Nand[] = INCBIN_U8("graphics/pokemon/i3c_nand/icon.4bpp");
+    const u8 gMonFootprint_I3c_Nand[] = INCBIN_U8("graphics/pokemon/i3c_nand/footprint.1bpp");
