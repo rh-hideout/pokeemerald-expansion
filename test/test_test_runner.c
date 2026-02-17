@@ -172,3 +172,20 @@ SINGLE_BATTLE_TEST("EXPECT_FAIL: Incorrect use of SUB_HIT results in test failur
         }
     }
 }
+
+MULTI_BATTLE_TEST("Celebrate does not need to be explicitly set in a non-AI test")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PARTNER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+    }
+}

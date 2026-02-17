@@ -141,7 +141,7 @@ AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon when running out")
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
-        PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO, MOVE_CELEBRATE); } // grintoul TO DO - previously did not have to set Celebrate here
+        PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO);         }
         OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -161,8 +161,8 @@ AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon to delay using their a
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
-        PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO, MOVE_CELEBRATE); } // grintoul TO DO - previously did not have to set Celebrate here
-        PARTNER(SPECIES_METAGROSS) { Moves(MOVE_CELEBRATE); }
+        PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO);         }
+        PARTNER(SPECIES_METAGROSS) { Moves(MOVE_CELEBRATE);    }
         OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -238,7 +238,7 @@ AI_MULTI_BATTLE_TEST("Pollen Puff: AI correctly scores moves with EFFECT_HIT_ENE
         ASSUME(GetMoveEffect(MOVE_POLLEN_PUFF) == EFFECT_HIT_ENEMY_HEAL_ALLY);
         // Speed tie so all think they are faster
         PLAYER(SPECIES_WOBBUFFET)     { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF, MOVE_CELEBRATE); }
-        PARTNER(SPECIES_WOBBUFFET)    { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF, MOVE_CELEBRATE); } // grintoul TO DO - previously did not have to set Celebrate here
+        PARTNER(SPECIES_WOBBUFFET)    { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
     } WHEN {

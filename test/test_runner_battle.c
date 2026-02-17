@@ -184,6 +184,8 @@ NAKED static void InvokeOneVsTwoTestFunctionWithStack(void *results, u32 i, stru
 static void InvokeTestFunction(const struct BattleTest *test)
 {
     STATE->parametersCount = 0;
+    DATA.battler0Trainer = B_TRAINER_0;
+    DATA.battler1Trainer = B_TRAINER_1;
     switch (test->type)
     {
     case BATTLE_TEST_SINGLES:
@@ -193,18 +195,26 @@ static void InvokeTestFunction(const struct BattleTest *test)
         break;
     case BATTLE_TEST_DOUBLES:
     case BATTLE_TEST_AI_DOUBLES:
+        DATA.battler2Trainer = B_TRAINER_0;
+        DATA.battler3Trainer = B_TRAINER_1;
         InvokeDoubleTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.doubles, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_MULTI:
     case BATTLE_TEST_AI_MULTI:
+        DATA.battler2Trainer = B_TRAINER_2;
+        DATA.battler3Trainer = B_TRAINER_3;
         InvokeMultiTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.multi, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_TWO_VS_ONE:
     case BATTLE_TEST_AI_TWO_VS_ONE:
+        DATA.battler2Trainer = B_TRAINER_2;
+        DATA.battler3Trainer = B_TRAINER_1;
         InvokeTwoVsOneTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.two_vs_one, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
+        DATA.battler2Trainer = B_TRAINER_0;
+        DATA.battler3Trainer = B_TRAINER_3;
         InvokeOneVsTwoTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.one_vs_two, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     }
@@ -2011,7 +2021,7 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, u32 species)
     party = DATA.recordedBattle.parties[trainer];
 
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
-    DATA.battleTrainer = trainer;
+    DATA.battlerParty = trainer;
     DATA.currentPartyIndex = *partySize;
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
@@ -2057,10 +2067,10 @@ void ClosePokemon(u32 sourceLine)
 {
     s32 i;
     u32 data;
-    INVALID_IF(DATA.hasExplicitSpeeds && !(DATA.explicitSpeeds[DATA.battleTrainer] & (1 << DATA.currentPartyIndex)), "Speed required");
+    INVALID_IF(DATA.hasExplicitSpeeds && !(DATA.explicitSpeeds[DATA.battlerParty] & (1 << DATA.currentPartyIndex)), "Speed required");
     for (i = 0; i < STATE->battlersCount; i++)
     {
-        if (i == DATA.battleTrainer
+        if (i == DATA.battlerParty
          && DATA.currentMonIndexes[i] == DATA.currentPartyIndex)
         {
             INVALID_IF(GetMonData(DATA.currentMon, MON_DATA_HP) == 0, "Battlers cannot be fainted");
@@ -2131,7 +2141,7 @@ void Ability_(u32 sourceLine, enum Ability ability)
     // Store forced ability to be set when the battle starts if invalid.
     if (i == NUM_ABILITY_SLOTS)
     {
-        DATA.forcedAbilities[DATA.battleTrainer][DATA.currentPartyIndex] = ability;
+        DATA.forcedAbilities[DATA.battlerParty][DATA.currentPartyIndex] = ability;
     }
 }
 
@@ -2209,7 +2219,7 @@ void Speed_(u32 sourceLine, u32 speed)
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPEED, &hyperTrainingFlag);
     DATA.hasExplicitSpeeds = TRUE;
-    DATA.explicitSpeeds[DATA.battleTrainer] |= 1 << DATA.currentPartyIndex;
+    DATA.explicitSpeeds[DATA.battlerParty] |= 1 << DATA.currentPartyIndex;
 }
 
 void HPIV_(u32 sourceLine, u32 hpIV)
@@ -2262,10 +2272,10 @@ void Item_(u32 sourceLine, u32 item)
     switch (GetItemHoldEffect(item))
     {
     case HOLD_EFFECT_MEGA_STONE:
-        SetGimmick(sourceLine, DATA.battleTrainer, DATA.currentPartyIndex, GIMMICK_MEGA);
+        SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_MEGA);
         break;
     case HOLD_EFFECT_Z_CRYSTAL:
-        SetGimmick(sourceLine, DATA.battleTrainer, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
+        SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
         break;
     default:
         break;
@@ -2285,7 +2295,7 @@ void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES])
         u32 pp = GetMovePP(moves[i]);
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &pp);
     }
-    DATA.explicitMoves[DATA.battleTrainer] |= 1 << DATA.currentPartyIndex;
+    DATA.explicitMoves[DATA.battlerParty] |= 1 << DATA.currentPartyIndex;
 }
 
 void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES])
@@ -2300,7 +2310,7 @@ void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES])
         SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &moveWithPP[i].moveId);
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &moveWithPP[i].pp);
     }
-    DATA.explicitMoves[DATA.battleTrainer] |= 1 << DATA.currentPartyIndex;
+    DATA.explicitMoves[DATA.battlerParty] |= 1 << DATA.currentPartyIndex;
 }
 
 void Friendship_(u32 sourceLine, u32 friendship)
@@ -2327,21 +2337,21 @@ void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel)
     INVALID_IF(!DATA.currentMon, "DynamaxLevel outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_DYNAMAX_LEVEL, &dynamaxLevel);
     if (dynamaxLevel >= 0)
-        SetGimmick(sourceLine, DATA.battleTrainer, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
+        SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor)
 {
     INVALID_IF(!DATA.currentMon, "GigantamaxFactor outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_GIGANTAMAX_FACTOR, &gigantamaxFactor);
-    SetGimmick(sourceLine, DATA.battleTrainer, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
+    SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void TeraType_(u32 sourceLine, enum Type teraType)
 {
     INVALID_IF(!DATA.currentMon, "TeraType outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_TERA_TYPE, &teraType);
-    SetGimmick(sourceLine, DATA.battleTrainer, DATA.currentPartyIndex, GIMMICK_TERA);
+    SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_TERA);
 }
 
 void Shadow_(u32 sourceLine, bool32 isShadow)
@@ -2621,7 +2631,10 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
             }
             else if (*moveId == MOVE_NONE)
             {
-                INVALID_IF(DATA.explicitMoves[GetBattlerTrainer(battlerId)] & (1 << DATA.currentMonIndexes[battlerId]), "Missing explicit %S", GetMoveName(ctx->move));
+                // TURN {} defaults to Celebrate; allow it even when a mon has explicit moves set.
+                INVALID_IF(ctx->move != MOVE_CELEBRATE
+                           && (DATA.explicitMoves[GetBattlerTrainer(battlerId)] & (1 << DATA.currentMonIndexes[battlerId])),
+                           "Missing explicit %S", GetMoveName(ctx->move));
                 SetMonData(mon, MON_DATA_MOVE1 + i, &ctx->move);
                 u32 pp = GetMovePP(ctx->move);
                 SetMonData(mon, MON_DATA_PP1 + i, &pp);
@@ -2822,7 +2835,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
-         || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && battlerId == B_BATTLER_2)))
+         || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && battlerId == B_TRAINER_2)))
         {
             SetAiActionToPass(sourceLine, battlerId);
         }

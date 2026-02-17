@@ -3317,6 +3317,21 @@ void FreeShinyStars(void)
 
 enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
 {
+#if TESTING
+    switch (battler)
+    {
+    case B_BATTLER_0:
+        return gBattleTestRunnerState->data.battler0Trainer;
+    case B_BATTLER_1:
+        return gBattleTestRunnerState->data.battler1Trainer;
+    case B_BATTLER_2:
+        return gBattleTestRunnerState->data.battler2Trainer;
+    case B_BATTLER_3:
+        return gBattleTestRunnerState->data.battler3Trainer;
+    default:
+        return B_TRAINER_0;
+    }
+#else
     if (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
         switch (gBattlerBattleController[battler])
@@ -3355,6 +3370,7 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
     default:
         return B_TRAINER_1;
     }
+#endif
 }
 
 enum BattleTrainer GetAllyTrainerFromBattler(enum BattlerId battler)

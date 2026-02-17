@@ -767,7 +767,11 @@ struct BattleTestData
     bool8 hasExplicitSpeeds;
     u8 explicitSpeeds[MAX_BATTLE_TRAINERS];
     u32 slowerThan[MAX_BATTLE_TRAINERS][PARTY_SIZE];
-    enum BattleTrainer battleTrainer;
+    enum BattleTrainer battlerParty;
+    u8 battler0Trainer:2;
+    u8 battler1Trainer:2;
+    u8 battler2Trainer:2;
+    u8 battler3Trainer:2;
     u8 currentPartyIndex;
     struct Pokemon *currentMon;
     u8 gender;
