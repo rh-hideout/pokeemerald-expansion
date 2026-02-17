@@ -1644,7 +1644,7 @@ static u32 GetSwitchinRecurringDamage(enum BattlerId battler)
     // Items
     if (ability != ABILITY_MAGIC_GUARD && ability != ABILITY_KLUTZ)
     {
-        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && !IS_BATTLER_OF_TYPE(battler, TYPE_POISON,))
+        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && !IS_BATTLER_OF_TYPE(battler, TYPE_POISON))
         {
             passiveDamage = maxHP / 8;
             if (passiveDamage == 0)
