@@ -152,6 +152,41 @@ DOUBLE_BATTLE_TEST("Follow Me no longer redirects if the center of attention fai
     }
 }
 
+DOUBLE_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
+{
+    bool32 useFollowMeTurn2;
+    PARAMETRIZE { useFollowMeTurn2 = FALSE; }
+    PARAMETRIZE { useFollowMeTurn2 = TRUE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); }
+        PLAYER(SPECIES_WYNAUT) { Moves(MOVE_FOLLOW_ME, MOVE_SPLASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FLY); }
+        OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_SPLASH); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, MOVE_FLY, target: playerLeft);
+               MOVE(playerLeft, MOVE_SPLASH);
+               MOVE(opponentRight, MOVE_SPLASH); }
+        TURN { if (useFollowMeTurn2)
+                   MOVE(playerRight, MOVE_FOLLOW_ME);
+               else
+                   MOVE(playerRight, MOVE_SPLASH);
+               SKIP_TURN(opponentLeft);
+               MOVE(playerLeft, MOVE_SPLASH);
+               MOVE(opponentRight, MOVE_SPLASH); }
+    } SCENE {
+        if (useFollowMeTurn2)
+            HP_BAR(playerRight);
+        else
+            HP_BAR(playerLeft);
+        if (useFollowMeTurn2)
+            NOT HP_BAR(playerLeft);
+        else
+            NOT HP_BAR(playerRight);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Follow Me does not redirect Future Sight (Gen 6+)")
 {
     GIVEN {
@@ -196,6 +231,58 @@ DOUBLE_BATTLE_TEST("Follow Me can only redirect Future Sight on the turn they we
         MESSAGE("The opposing Wynaut took the Future Sight attack!");
         HP_BAR(opponentRight);
         NOT HP_BAR(opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Follow Me draws single-target Electric/Water moves even if there's a Pokémon with Lightning Rod/Storm Drain")
+{
+    u16 move, species;
+    enum Ability ability;
+
+    PARAMETRIZE { move = MOVE_THUNDERBOLT; ability = ABILITY_LIGHTNING_ROD; species = SPECIES_PIKACHU; }
+    PARAMETRIZE { move = MOVE_WATER_GUN; ability = ABILITY_STORM_DRAIN; species = SPECIES_GASTRODON; }
+
+    GIVEN {
+        ASSUME(GetMoveTarget(move) == MOVE_TARGET_SELECTED);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, move, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        HP_BAR(playerLeft);
+        NONE_OF {
+            HP_BAR(playerRight);
+            ABILITY_POPUP(opponentRight, ability);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Follow Me doesn't redirect spread Electric/Water moves even with Lightning Rod/Storm Drain")
+{
+    u16 move, species;
+    enum Ability ability;
+
+    PARAMETRIZE { move = MOVE_OVERDRIVE; ability = ABILITY_LIGHTNING_ROD; species = SPECIES_PIKACHU; }
+    PARAMETRIZE { move = MOVE_ORIGIN_PULSE; ability = ABILITY_STORM_DRAIN; species = SPECIES_GASTRODON; }
+
+    GIVEN {
+        ASSUME(GetMoveTarget(move) == MOVE_TARGET_BOTH);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(species) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerLeft);
+        HP_BAR(playerLeft);
+        ABILITY_POPUP(playerRight, ability);
     }
 }
 
@@ -286,93 +373,6 @@ DOUBLE_BATTLE_TEST("Follow Me does not draw attack when the user is being Sky-Dr
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         HP_BAR(playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, playerLeft);
-    }
-}
-
-DOUBLE_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
-{
-    bool32 useFollowMeTurn2;
-    PARAMETRIZE { useFollowMeTurn2 = FALSE; }
-    PARAMETRIZE { useFollowMeTurn2 = TRUE; }
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); }
-        PLAYER(SPECIES_WYNAUT) { Moves(MOVE_FOLLOW_ME, MOVE_SPLASH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FLY); }
-        OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_SPLASH); }
-    } WHEN {
-        TURN { MOVE(playerRight, MOVE_FOLLOW_ME);
-               MOVE(opponentLeft, MOVE_FLY, target: playerLeft);
-               MOVE(playerLeft, MOVE_SPLASH);
-               MOVE(opponentRight, MOVE_SPLASH); }
-        TURN { if (useFollowMeTurn2)
-                   MOVE(playerRight, MOVE_FOLLOW_ME);
-               else
-                   MOVE(playerRight, MOVE_SPLASH);
-               SKIP_TURN(opponentLeft);
-               MOVE(playerLeft, MOVE_SPLASH);
-               MOVE(opponentRight, MOVE_SPLASH); }
-    } SCENE {
-        if (useFollowMeTurn2)
-            HP_BAR(playerRight);
-        else
-            HP_BAR(playerLeft);
-        if (useFollowMeTurn2)
-            NOT HP_BAR(playerLeft);
-        else
-            NOT HP_BAR(playerRight);
-    }
-}
-
-DOUBLE_BATTLE_TEST("Follow Me draws single-target Electric/Water moves even if there's a Pokémon with Lightning Rod/Storm Drain")
-{
-    u16 move, species;
-    enum Ability ability;
-
-    PARAMETRIZE { move = MOVE_THUNDERBOLT; ability = ABILITY_LIGHTNING_ROD; species = SPECIES_PIKACHU; }
-    PARAMETRIZE { move = MOVE_WATER_GUN; ability = ABILITY_STORM_DRAIN; species = SPECIES_GASTRODON; }
-
-    GIVEN {
-        ASSUME(GetMoveTarget(move) == MOVE_TARGET_SELECTED);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Ability(ability); }
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_FOLLOW_ME);
-               MOVE(opponentLeft, move, target: playerRight); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
-        HP_BAR(playerLeft);
-        NONE_OF {
-            HP_BAR(playerRight);
-            ABILITY_POPUP(opponentRight, ability);
-        }
-    }
-}
-
-DOUBLE_BATTLE_TEST("Follow Me doesn't redirect spread Electric/Water moves even with Lightning Rod/Storm Drain")
-{
-    u16 move, species;
-    enum Ability ability;
-
-    PARAMETRIZE { move = MOVE_OVERDRIVE; ability = ABILITY_LIGHTNING_ROD; species = SPECIES_PIKACHU; }
-    PARAMETRIZE { move = MOVE_ORIGIN_PULSE; ability = ABILITY_STORM_DRAIN; species = SPECIES_GASTRODON; }
-
-    GIVEN {
-        ASSUME(GetMoveTarget(move) == MOVE_TARGET_BOTH);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_FOLLOW_ME);
-               MOVE(opponentLeft, move); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerLeft);
-        HP_BAR(playerLeft);
-        ABILITY_POPUP(playerRight, ability);
     }
 }
 
