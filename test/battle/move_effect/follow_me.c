@@ -34,6 +34,42 @@ DOUBLE_BATTLE_TEST("Follow Me redirects single target moves used by opponents to
     }
 }
 
+DOUBLE_BATTLE_TEST("Spotlight redirects single target moves used by the opposing side to Spotlight's target")
+{
+    struct BattlePokemon *moveTarget = NULL;
+    PARAMETRIZE { moveTarget = playerRight; }
+    PARAMETRIZE { moveTarget = opponentLeft; }
+    PARAMETRIZE { moveTarget = opponentRight; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SPOTLIGHT, target: moveTarget);
+               MOVE(playerRight, MOVE_SCRATCH, target: opponentRight);
+               MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);
+               MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPOTLIGHT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        if (moveTarget != playerRight)
+            HP_BAR(moveTarget);
+        else
+            HP_BAR(opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        if (moveTarget == playerRight)
+            HP_BAR(moveTarget);
+        else
+            HP_BAR(playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        if (moveTarget == playerRight)
+            HP_BAR(moveTarget);
+        else
+            HP_BAR(playerLeft);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Follow Me redirects random target moves used by opponents to user")
 {
     PASSES_RANDOMLY(2, 2, RNG_RANDOM_TARGET);
@@ -253,42 +289,6 @@ DOUBLE_BATTLE_TEST("Follow Me does not draw attack when the user is being Sky-Dr
     }
 }
 
-DOUBLE_BATTLE_TEST("Spotlight redirects single target moves used by the opposing side to Spotlight's target")
-{
-    struct BattlePokemon *moveTarget = NULL;
-    PARAMETRIZE { moveTarget = playerRight; }
-    PARAMETRIZE { moveTarget = opponentLeft; }
-    PARAMETRIZE { moveTarget = opponentRight; }
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SPOTLIGHT, target: moveTarget);
-               MOVE(playerRight, MOVE_SCRATCH, target: opponentRight);
-               MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);
-               MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPOTLIGHT, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
-        if (moveTarget != playerRight)
-            HP_BAR(moveTarget);
-        else
-            HP_BAR(opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        if (moveTarget == playerRight)
-            HP_BAR(moveTarget);
-        else
-            HP_BAR(playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
-        if (moveTarget == playerRight)
-            HP_BAR(moveTarget);
-        else
-            HP_BAR(playerLeft);
-    }
-}
-
 DOUBLE_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
 {
     bool32 useFollowMeTurn2;
@@ -324,5 +324,56 @@ DOUBLE_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that 
     }
 }
 
-TO_DO_BATTLE_TEST("Follow Me draws Electric/Water moves even if there's a Pokémon with Lightning Rod/Storm Drain")
+DOUBLE_BATTLE_TEST("Follow Me draws single-target Electric/Water moves even if there's a Pokémon with Lightning Rod/Storm Drain")
+{
+    u16 move, species;
+    enum Ability ability;
+
+    PARAMETRIZE { move = MOVE_THUNDERBOLT; ability = ABILITY_LIGHTNING_ROD; species = SPECIES_PIKACHU; }
+    PARAMETRIZE { move = MOVE_WATER_GUN; ability = ABILITY_STORM_DRAIN; species = SPECIES_GASTRODON; }
+
+    GIVEN {
+        ASSUME(GetMoveTarget(move) == MOVE_TARGET_SELECTED);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, move, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        HP_BAR(playerLeft);
+        NONE_OF {
+            HP_BAR(playerRight);
+            ABILITY_POPUP(opponentRight, ability);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Follow Me doesn't redirect spread Electric/Water moves even with Lightning Rod/Storm Drain")
+{
+    u16 move, species;
+    enum Ability ability;
+
+    PARAMETRIZE { move = MOVE_OVERDRIVE; ability = ABILITY_LIGHTNING_ROD; species = SPECIES_PIKACHU; }
+    PARAMETRIZE { move = MOVE_ORIGIN_PULSE; ability = ABILITY_STORM_DRAIN; species = SPECIES_GASTRODON; }
+
+    GIVEN {
+        ASSUME(GetMoveTarget(move) == MOVE_TARGET_BOTH);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(species) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FOLLOW_ME);
+               MOVE(opponentLeft, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerLeft);
+        HP_BAR(playerLeft);
+        ABILITY_POPUP(playerRight, ability);
+    }
+}
+
 //TO_DO_BATTLE_TEST("Triples: Follow Me can only draw non-adjacent moves if they use a long-range move")
