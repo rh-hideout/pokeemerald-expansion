@@ -114,6 +114,7 @@ enum {
     MENU_CATALOG_MOWER,
     MENU_CHANGE_FORM,
     MENU_CHANGE_ABILITY,
+    MENU_LEVEL_CAP,
     MENU_FIELD_MOVES
 };
 
@@ -498,6 +499,8 @@ static void CursorCb_CatalogFan(u8);
 static void CursorCb_CatalogMower(u8);
 static void CursorCb_ChangeForm(u8);
 static void CursorCb_ChangeAbility(u8);
+static void CursorCb_LevelCap(u8);
+static void Task_HandleLevelCapInput(u8);
 void TryItemHoldFormChange(struct Pokemon *mon, s8 slotId);
 static void ShowMoveSelectWindow(u8 slot);
 static void Task_HandleWhichMoveInput(u8 taskId);
@@ -2902,6 +2905,9 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
         else
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_ITEM);
     }
+    if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE
+     && !GetMonData(&mons[slotId], MON_DATA_IS_EGG))
+        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_LEVEL_CAP);
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_CANCEL1);
 }
 
@@ -5761,7 +5767,8 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
     u8 holdEffectParam = GetItemHoldEffectParam(*itemPtr);
 
     sInitialLevel = GetMonData(mon, MON_DATA_LEVEL);
-    if (!(B_RARE_CANDY_CAP && sInitialLevel >= GetCurrentLevelCap()))
+    if (!(B_RARE_CANDY_CAP && sInitialLevel >= GetCurrentLevelCap())
+     && sInitialLevel < GetMonLevelCap(mon))
     {
         BufferMonStatsToTaskData(mon, arrayPtr);
         cannotUseEffect = ExecuteTableBasedItemEffect(mon, *itemPtr, gPartyMenu.slotId, 0);
@@ -8299,4 +8306,109 @@ static void FieldCallback_RockClimb(void)
 {
     gFieldEffectArguments[0] = GetCursorSelectionMonId();
     FieldEffectStart(FLDEFF_USE_ROCK_CLIMB);
+}
+
+static void UpdateLevelCapValueText(u8 capTens)
+{
+    if (capTens == 0)
+        StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("LEVEL CAP: OFF\n{UP_ARROW}{DOWN_ARROW}to change, confirm w/ A"));
+    else
+    {
+        ConvertIntToDecimalStringN(gStringVar1, capTens * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
+        StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("LEVEL CAP: {STR_VAR_1}\n{UP_ARROW}{DOWN_ARROW}to change, confirm w/ A"));
+    }
+    FillWindowPixelBuffer(WIN_MSG, PIXEL_FILL(1));
+    AddTextPrinterParameterized2(WIN_MSG, FONT_NORMAL, gStringVar4, 0, 0, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    CopyWindowToVram(WIN_MSG, COPYWIN_GFX);
+}
+
+static void CursorCb_LevelCap(u8 taskId)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    u8 currentCapTens;
+
+    PlaySE(SE_SELECT);
+    PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
+    PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
+
+    currentCapTens = GetMonData(mon, MON_DATA_LEVEL_CAP, NULL);
+
+    // Store current selection in task data
+    gTasks[taskId].data[0] = currentCapTens;
+
+    // Draw frame once
+    DrawStdFrameWithCustomTileAndPalette(WIN_MSG, FALSE, 0x4F, 13);
+    UpdateLevelCapValueText(currentCapTens);
+    ScheduleBgCopyTilemapToVram(2);
+
+    gTasks[taskId].func = Task_HandleLevelCapInput;
+}
+
+static void Task_HandleLevelCapInput(u8 taskId)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    s16 *data = gTasks[taskId].data;
+    u8 monLevel = GetMonData(mon, MON_DATA_LEVEL, NULL);
+    u8 minCapTens = (monLevel + 9) / 10; // Round up to nearest 10's digit
+
+    // Clamp: if mon is level 100 or min would be >= 10, no cap can be set
+    if (minCapTens > 9)
+        minCapTens = 0; // Only OFF is valid
+
+    if (JOY_NEW(DPAD_UP))
+    {
+        PlaySE(SE_SELECT);
+        if (data[0] == 0) // OFF -> wrap to minimum
+        {
+            data[0] = (minCapTens > 0) ? minCapTens : 1;
+        }
+        else
+        {
+            data[0]++;
+            if (data[0] > 9)
+                data[0] = 0; // wrap to OFF
+        }
+        UpdateLevelCapValueText(data[0]);
+    }
+    else if (JOY_NEW(DPAD_DOWN))
+    {
+        PlaySE(SE_SELECT);
+        if (data[0] == 0) // OFF -> wrap to 90
+        {
+            data[0] = 9;
+        }
+        else
+        {
+            data[0]--;
+            if (data[0] != 0 && data[0] < minCapTens)
+                data[0] = 0; // wrap to OFF
+        }
+        UpdateLevelCapValueText(data[0]);
+    }
+    else if (JOY_NEW(A_BUTTON))
+    {
+        u8 newCap = data[0];
+        PlaySE(SE_SELECT);
+        SetMonData(mon, MON_DATA_LEVEL_CAP, &newCap);
+
+        if (newCap == 0)
+            StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("LEVEL CAP removed."));
+        else
+        {
+            ConvertIntToDecimalStringN(gStringVar1, newCap * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
+            StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("LEVEL CAP set to {STR_VAR_1}."));
+        }
+        DisplayPartyMenuMessage(gStringVar4, FALSE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = Task_HandleChooseMonInput;
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        ClearStdWindowAndFrameToTransparent(WIN_MSG, FALSE);
+        ClearWindowTilemap(WIN_MSG);
+        ScheduleBgCopyTilemapToVram(2);
+        DisplayPartyMenuStdMessage(PARTY_MSG_CHOOSE_MON);
+        gTasks[taskId].func = Task_HandleChooseMonInput;
+    }
 }

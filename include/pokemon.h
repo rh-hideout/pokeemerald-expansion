@@ -126,6 +126,7 @@ enum MonData {
     MON_DATA_GIGANTAMAX_FACTOR,
     MON_DATA_TERA_TYPE,
     MON_DATA_EVOLUTION_TRACKER,
+    MON_DATA_LEVEL_CAP,
 };
 
 struct PokemonSubstruct0
@@ -133,7 +134,8 @@ struct PokemonSubstruct0
     u16 species:11; // 2047 species.
     enum Type teraType:5; // 30 types.
     u16 heldItem:10; // 1023 items.
-    u16 unused_02:6;
+    u16 levelCapTens:4; // 0 = OFF/100, 1-9 = 10-90.
+    u16 unused_02:2;
     u32 experience:21;
     u32 nickname11:8; // 11th character of nickname.
     u32 unused_04:3;
@@ -748,6 +750,7 @@ u8 GetBoxMonGender(struct BoxPokemon *boxMon);
 u8 GetGenderFromSpeciesAndPersonality(u16 species, u32 personality);
 u8 GetObedienceLevel(void);
 bool32 IsBodyguardPokemon(struct Pokemon *mon);
+u8 GetMonLevelCap(struct Pokemon *mon);
 bool32 IsPersonalityFemale(u16 species, u32 personality);
 u32 GetUnownSpeciesId(u32 personality);
 void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition);

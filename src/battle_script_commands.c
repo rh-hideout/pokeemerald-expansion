@@ -4764,6 +4764,23 @@ static void Cmd_getexp(void)
                             gBattleStruct->battlerExpReward = gExperienceTables[growthRate][levelCap] - currentExp;
                     }
 
+                    // Per-Pokémon level cap
+                    if (gBattleStruct->battlerExpReward != 0)
+                    {
+                        u8 monLevelCap = GetMonLevelCap(&gPlayerParty[*expMonId]);
+                        if (monLevelCap < MAX_LEVEL)
+                        {
+                            enum GrowthRate growthRate = gSpeciesInfo[GetMonData(&gPlayerParty[*expMonId], MON_DATA_SPECIES)].growthRate;
+                            u32 currentExp = GetMonData(&gPlayerParty[*expMonId], MON_DATA_EXP);
+                            u32 maxExp = gExperienceTables[growthRate][monLevelCap + 1] - 1;
+
+                            if (GetMonData(&gPlayerParty[*expMonId], MON_DATA_LEVEL) >= monLevelCap)
+                                gBattleStruct->battlerExpReward = 0;
+                            else if (currentExp + gBattleStruct->battlerExpReward > maxExp)
+                                gBattleStruct->battlerExpReward = maxExp - currentExp;
+                        }
+                    }
+
                     if (IsTradedMon(&gPlayerParty[*expMonId]))
                     {
                         // check if the Pokémon doesn't belong to the player

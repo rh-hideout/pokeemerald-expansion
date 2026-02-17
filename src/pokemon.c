@@ -2083,6 +2083,14 @@ bool32 IsBodyguardPokemon(struct Pokemon *mon)
     return GetMonData(mon, MON_DATA_LEVEL, NULL) > GetObedienceLevel();
 }
 
+u8 GetMonLevelCap(struct Pokemon *mon)
+{
+    u8 capTens = GetMonData(mon, MON_DATA_LEVEL_CAP, NULL);
+    if (capTens == 0 || capTens > 9)
+        return MAX_LEVEL;
+    return capTens * 10;
+}
+
 u8 GetBoxMonGender(struct BoxPokemon *boxMon)
 {
     u16 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
@@ -2736,6 +2744,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
                 }.combinedValue;
             }
             break;
+        case MON_DATA_LEVEL_CAP:
+            retVal = GetSubstruct0(boxMon)->levelCapTens;
+            break;
         default:
             break;
         }
@@ -3162,6 +3173,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             substruct1->evolutionTracker2 = evoTracker.tracker2;
             break;
         }
+        case MON_DATA_LEVEL_CAP:
+            SET8(GetSubstruct0(boxMon)->levelCapTens);
+            break;
         default:
             break;
         }
