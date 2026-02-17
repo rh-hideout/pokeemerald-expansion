@@ -2063,8 +2063,8 @@ static void SecretBaseVisit_CalculatePartyData(TVShow *show)
     // (average level, and one randomly selected species / move)
     u16 monIndex = Random() % numPokemon;
     show->secretBaseVisit.avgLevel = sum / numPokemon;
-    show->secretBaseVisit.species  = secretBaseVisitMonsTemp[monIndex].species;
-    show->secretBaseVisit.move     = secretBaseVisitMonsTemp[monIndex].move;
+    show->secretBaseVisit.species = secretBaseVisitMonsTemp[monIndex].species;
+    show->secretBaseVisit.move = secretBaseVisitMonsTemp[monIndex].move;
 }
 
 void TryPutSecretBaseVisitOnAir(void)
@@ -6553,7 +6553,7 @@ static void DoTVShowSecretBaseSecrets(void)
     show = &gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004];
     gSpecialVar_Result = FALSE;
     state = sTVShowState;
-    
+
     u8 tvSecretBaseSecretsRandomValues[3] = {};
 
     switch (state)
