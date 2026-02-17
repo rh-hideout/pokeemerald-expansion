@@ -115,7 +115,7 @@ DOUBLE_BATTLE_TEST("Follow Me does not change Me First's copy target but redirec
 DOUBLE_BATTLE_TEST("Follow Me doesn't redirect moves that can't target opponents")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_AROMATIC_MIST) == MOVE_TARGET_OPPONENT);
+        ASSUME(GetMoveTarget(MOVE_AROMATIC_MIST) == MOVE_TARGET_ALLY);
         ASSUME(GetMoveEffect(MOVE_AROMATIC_MIST) == EFFECT_AROMATIC_MIST);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
