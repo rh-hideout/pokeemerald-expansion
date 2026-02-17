@@ -3135,6 +3135,7 @@ static void SwitchSelectedMons(u8 taskId)
     u8 windowIds[2];
 
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE && 
+        !IS_WILD_BATTLE &&
         !(gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) &&
         (IsBodyguardPokemon(&gPlayerParty[gPartyMenu.slotId]) || IsBodyguardPokemon(&gPlayerParty[gPartyMenu.slotId2]))) 
     {
@@ -7475,7 +7476,7 @@ static bool8 TrySwitchInPokemon(void)
     u8 newSlot;
     u8 i;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) && IsBodyguardPokemon(&gPlayerParty[slot]))
+    if (!IS_WILD_BATTLE && !(gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) && IsBodyguardPokemon(&gPlayerParty[slot]))
     {
         StringExpandPlaceholders(gStringVar4, gText_BodyguardBlockSwitch);
         return FALSE;

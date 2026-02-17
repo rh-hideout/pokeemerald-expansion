@@ -307,74 +307,15 @@ static void CreateBattleStartTask_Debug(u8 transition, u16 song)
 #undef tState
 #undef tTransition
 
-static void DoBodyguardBattle(void);
-static void CB2_EndBodyguardBattle(void);
-
-static bool32 ShouldTriggerBodyguardBattle(void)
-{
-    int i;
-    struct Pokemon *mon = NULL;
-
-    // Find first alive Pokemon
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE
-         && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)
-         && GetMonData(&gPlayerParty[i], MON_DATA_HP) > 0)
-        {
-            mon = &gPlayerParty[i];
-            break;
-        }
-    }
-
-    if (mon == NULL)
-        return FALSE; // Should not trigger if no alive mons? Or maybe it triggers and we lose immediately? Assuming valid party for now.
-
-    if (IsBodyguardPokemon(mon))
-    {
-         // 5% chance to trigger if conditions met
-         if ((Random() % 100) < 100)
-            return TRUE;
-    }
-
-    return FALSE;
-}
 
 void BattleSetup_StartWildBattle(void)
 {
     if (GetSafariZoneFlag())
         DoSafariBattle();
-    else if (ShouldTriggerBodyguardBattle())
-        DoBodyguardBattle();
     else
         DoStandardWildBattle(FALSE);
 }
 
-static void DoBodyguardBattle(void)
-{
-    LockPlayerFieldControls();
-    FreezeObjectEvents();
-    StopPlayerAvatar();
-    gMain.savedCallback = CB2_EndBodyguardBattle;
-    gBattleTypeFlags = BATTLE_TYPE_BODYGUARD;
-    CreateBattleStartTask(GetWildBattleTransition(), 0);
-}
-
-static void CB2_EndBodyguardBattle(void)
-{
-    CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
-    ResetOamRange(0, 128);
-
-    if (IsPlayerDefeated(gBattleOutcome) == TRUE)
-    {
-        SetMainCallback2(CB2_WhiteOut);
-    }
-    else
-    {
-        SetMainCallback2(CB2_ReturnToField);
-        gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
-    }
-}
 
 void BattleSetup_StartDoubleWildBattle(void)
 {

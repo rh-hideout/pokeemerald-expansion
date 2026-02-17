@@ -4951,7 +4951,7 @@ bool32 NoAliveMonsForPlayer(void)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)
             && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i)))
-            && ((gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&gPlayerParty[i])))
+            && ((gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || IS_WILD_BATTLE || !IsBodyguardPokemon(&gPlayerParty[i])))
         {
             HP_count += GetMonData(&gPlayerParty[i], MON_DATA_HP);
         }
@@ -7423,6 +7423,25 @@ static void Cmd_switchindataupdate(void)
     gBattleScripting.battler = battler;
 
     PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
+
+    // In wild battles, dynamically toggle BATTLE_TYPE_BODYGUARD when the player switches Pokémon.
+    // If the new mon is a Bodyguard, enter Bodyguard mode; if not, return to standard wild.
+    if (IS_WILD_BATTLE && IsOnPlayerSide(battler))
+    {
+        struct Pokemon *mon = &GetBattlerParty(battler)[gBattlerPartyIndexes[battler]];
+        bool32 isBodyguard = IsBodyguardPokemon(mon);
+
+        if (isBodyguard && !(gBattleTypeFlags & BATTLE_TYPE_BODYGUARD))
+        {
+            gBattleTypeFlags |= BATTLE_TYPE_BODYGUARD;
+            SetControllerToBodyguard(battler);
+        }
+        else if (!isBodyguard && (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD))
+        {
+            gBattleTypeFlags &= ~BATTLE_TYPE_BODYGUARD;
+            SetControllerToPlayer(battler);
+        }
+    }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

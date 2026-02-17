@@ -111,6 +111,18 @@ void InitBattleControllers(void)
 
     SetBattlePartyIds();
 
+    // In wild battles, if the lead Pokémon is a Bodyguard, dynamically set BATTLE_TYPE_BODYGUARD
+    // and reassign the player's controller to the Bodyguard controller.
+    if (IS_WILD_BATTLE && !(gBattleTypeFlags & BATTLE_TYPE_BODYGUARD))
+    {
+        u32 playerBattler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+        if (IsBodyguardPokemon(&gPlayerParty[gBattlerPartyIndexes[playerBattler]]))
+        {
+            gBattleTypeFlags |= BATTLE_TYPE_BODYGUARD;
+            SetControllerToBodyguard(playerBattler);
+        }
+    }
+
     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
     {
         for (i = 0; i < gBattlersCount; i++)
@@ -385,6 +397,11 @@ static inline bool32 IsControllerLinkPartner(u32 battler)
     return (gBattlerControllerEndFuncs[battler] == LinkPartnerBufferExecCompleted);
 }
 
+static inline bool32 IsControllerBodyguard(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == BodyguardBufferExecCompleted);
+}
+
 bool32 ShouldUpdateTvData(u32 battler)
 {
     return (IsControllerPlayer(battler)
@@ -407,7 +424,7 @@ static void SetBattlePartyIds(void)
                     if (IsOnPlayerSide(i))
                     {
                         if (IsValidForBattle(&gPlayerParty[j]) &&
-                            ((gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&gPlayerParty[j])))
+                            (IS_WILD_BATTLE || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&gPlayerParty[j])))
                         {
                             gBattlerPartyIndexes[i] = j;
                             break;
@@ -431,7 +448,7 @@ static void SetBattlePartyIds(void)
                             // Exclude already assigned pokemon;
                         }
                         else if (IsValidForBattle(&gPlayerParty[j]) &&
-                                 ((gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&gPlayerParty[j])))
+                                 (IS_WILD_BATTLE || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&gPlayerParty[j])))
                         {
                             gBattlerPartyIndexes[i] = j;
                             break;
@@ -2311,7 +2328,8 @@ void BtlController_HandleSwitchInAnim(u32 battler)
                         || IsControllerPlayerPartner(battler)
                         || IsControllerRecordedPlayer(battler)
                         || IsControllerRecordedPartner(battler)
-                        || IsControllerLinkPartner(battler));
+                        || IsControllerLinkPartner(battler)
+                        || IsControllerBodyguard(battler));
 
     if (IsControllerPlayer(battler))
     {
@@ -2606,7 +2624,8 @@ void BtlController_HandleHealthBarUpdate(u32 battler)
         if (IsControllerPlayer(battler)
          || IsControllerRecordedPlayer(battler)
          || IsControllerRecordedPartner(battler)
-         || IsControllerWally(battler))
+         || IsControllerWally(battler)
+         || IsControllerBodyguard(battler))
             UpdateHpTextInHealthbox(gHealthboxSpriteIds[battler], HP_CURRENT, 0, maxHP);
         TestRunner_Battle_RecordHP(battler, curHP, 0);
     }

@@ -3,24 +3,9 @@
 
 Route117_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route117_OnTransition
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, Route117_OnLoad
 	.byte 0
 
-Route117_OnLoad:
-	map_script_2 VAR_LITTLEROOT_TOWN_STATE, 5, Route117_EventScript_HopOutTruck
-	.2byte 0
 
-Route117_EventScript_HopOutTruck::
-	lockall
-	applymovement OBJ_EVENT_ID_PLAYER, Route117_Movement_HopOutTruck
-	waitmovement 0
-	setvar VAR_LITTLEROOT_TOWN_STATE, 6
-	releaseall
-	end
-
-Route117_Movement_HopOutTruck:
-	jump_down
-	step_end
 
 Route117_OnTransition:
 	call Route117_EventScript_TryMoveDayCareMan

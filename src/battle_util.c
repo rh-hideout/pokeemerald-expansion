@@ -3194,7 +3194,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
         for (i = 0; i < PARTY_SIZE; i++)
         {
             if (IsValidForBattle(&party[i])
-             && (!isPlayerside || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&party[i]))
+             && (!isPlayerside || IS_WILD_BATTLE || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&party[i]))
              && i != partyIdBattlerOn1 && i != partyIdBattlerOn2
              && i != gBattleStruct->monToSwitchIntoId[flankId] && i != playerId[gBattleStruct->monToSwitchIntoId])
                 break;
@@ -3228,7 +3228,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
             playerId = ((battler & BIT_FLANK) / 2);
             for (i = playerId * MULTI_PARTY_SIZE; i < playerId * MULTI_PARTY_SIZE + MULTI_PARTY_SIZE; i++)
             {
-                if (IsValidForBattle(&party[i]) && (!isPlayerside || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&party[i])))
+                if (IsValidForBattle(&party[i]) && (!isPlayerside || IS_WILD_BATTLE || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&party[i])))
                     break;
             }
             return (i == playerId * MULTI_PARTY_SIZE + MULTI_PARTY_SIZE);
@@ -3262,7 +3262,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
 
         for (i = playerId * MULTI_PARTY_SIZE; i < playerId * MULTI_PARTY_SIZE + MULTI_PARTY_SIZE; i++)
         {
-            if (IsValidForBattle(&party[i]) && (!isPlayerside || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&party[i])))
+            if (IsValidForBattle(&party[i]) && (!isPlayerside || IS_WILD_BATTLE || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&party[i])))
                 break;
         }
         return (i == playerId * MULTI_PARTY_SIZE + MULTI_PARTY_SIZE);
@@ -3306,7 +3306,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
         for (i = 0; i < PARTY_SIZE; i++)
         {
             if (IsValidForBattle(&party[i])
-             && (!isPlayerside || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&party[i]))
+             && (!isPlayerside || IS_WILD_BATTLE || (gBattleTypeFlags & BATTLE_TYPE_BODYGUARD) || !IsBodyguardPokemon(&party[i]))
              && i != partyIdBattlerOn1 && i != partyIdBattlerOn2
              && i != gBattleStruct->monToSwitchIntoId[flankId] && i != playerId[gBattleStruct->monToSwitchIntoId])
                 break;
