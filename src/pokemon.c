@@ -2050,18 +2050,13 @@ u8 GetMonGender(struct Pokemon *mon)
     return GetBoxMonGender(&mon->box);
 }
 
-bool32 IsBodyguardPokemon(struct Pokemon *mon)
+// Returns the maximum level at which Pokémon will obey,
+// based on the player's total badge count.
+// With all 8 badges, returns MAX_LEVEL (all Pokémon obey).
+u8 GetObedienceLevel(void)
 {
     u8 badgeCount = 0;
-    u8 level;
 
-    if (GetMonData(mon, MON_DATA_SPECIES, NULL) == SPECIES_NONE)
-        return FALSE;
-    
-    if (GetMonData(mon, MON_DATA_IS_EGG))
-        return FALSE;
-
-    // Count badges
     if (FlagGet(FLAG_BADGE01_GET)) badgeCount++;
     if (FlagGet(FLAG_BADGE02_GET)) badgeCount++;
     if (FlagGet(FLAG_BADGE03_GET)) badgeCount++;
@@ -2071,20 +2066,21 @@ bool32 IsBodyguardPokemon(struct Pokemon *mon)
     if (FlagGet(FLAG_BADGE07_GET)) badgeCount++;
     if (FlagGet(FLAG_BADGE08_GET)) badgeCount++;
 
-    level = GetMonData(mon, MON_DATA_LEVEL, NULL);
+    if (badgeCount >= 8)
+        return MAX_LEVEL;
 
-    // Trigger condition from original code:
-    // If player has at least 1 badge and lead pokemon level is high enough relative to badges.
-    if (badgeCount > 0 && level > (badgeCount * 10 + 10))
-    {
-         return TRUE;
-    }
-    else if (badgeCount == 0 && level > 15)
-    {
-        return TRUE;
-    }
+    return (badgeCount + 1) * 10;
+}
 
-    return FALSE;
+bool32 IsBodyguardPokemon(struct Pokemon *mon)
+{
+    if (GetMonData(mon, MON_DATA_SPECIES, NULL) == SPECIES_NONE)
+        return FALSE;
+
+    if (GetMonData(mon, MON_DATA_IS_EGG))
+        return FALSE;
+
+    return GetMonData(mon, MON_DATA_LEVEL, NULL) > GetObedienceLevel();
 }
 
 u8 GetBoxMonGender(struct BoxPokemon *boxMon)
