@@ -1174,18 +1174,10 @@ static void CB2_HandleStartMultiPartnerBattle(void)
     case 4:
         if ((GetBlockReceivedStatus() & 3) == 3)
         {
-            // Recv partner's Pokémon 1-2, and copy partner's and own Pokémon into party positions
+            // Recv partner's Pokémon 1-2, put each player's mons in their own party
             ResetBlockReceivedFlags();
-            if (gLinkPlayers[playerMultiplayerId].id != 0)
-            {
-                memcpy(gParties[B_TRAINER_0], gBlockRecvBuffer[partnerMultiplayerId], sizeof(struct Pokemon) * 2);
-                memcpy(&gParties[B_TRAINER_0][MULTI_PARTY_SIZE], gBlockRecvBuffer[playerMultiplayerId], sizeof(struct Pokemon) * 2);
-            }
-            else
-            {
-                memcpy(gParties[B_TRAINER_0], gBlockRecvBuffer[playerMultiplayerId], sizeof(struct Pokemon) * 2);
-                memcpy(&gParties[B_TRAINER_0][MULTI_PARTY_SIZE], gBlockRecvBuffer[partnerMultiplayerId], sizeof(struct Pokemon) * 2);
-            }
+            memcpy(gParties[B_TRAINER_0], gBlockRecvBuffer[playerMultiplayerId], sizeof(struct Pokemon) * 2);
+            memcpy(gParties[B_TRAINER_2], gBlockRecvBuffer[partnerMultiplayerId], sizeof(struct Pokemon) * 2);
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;
@@ -1200,18 +1192,10 @@ static void CB2_HandleStartMultiPartnerBattle(void)
     case 6:
         if ((GetBlockReceivedStatus() & 3) == 3)
         {
-            // Recv partner's Pokémon 3, and copy partner's and own Pokémon into party positions
+            // Recv partner's Pokémon 3, put each player's mon in their own party
             ResetBlockReceivedFlags();
-            if (gLinkPlayers[playerMultiplayerId].id != 0)
-            {
-                memcpy(&gParties[B_TRAINER_0][2], gBlockRecvBuffer[partnerMultiplayerId], sizeof(struct Pokemon));
-                memcpy(&gParties[B_TRAINER_0][2 + MULTI_PARTY_SIZE], gBlockRecvBuffer[playerMultiplayerId], sizeof(struct Pokemon));
-            }
-            else
-            {
-                memcpy(&gParties[B_TRAINER_0][2], gBlockRecvBuffer[playerMultiplayerId], sizeof(struct Pokemon));
-                memcpy(&gParties[B_TRAINER_0][2 + MULTI_PARTY_SIZE], gBlockRecvBuffer[partnerMultiplayerId], sizeof(struct Pokemon));
-            }
+            memcpy(&gParties[B_TRAINER_0][2], gBlockRecvBuffer[playerMultiplayerId], sizeof(struct Pokemon));
+            memcpy(&gParties[B_TRAINER_2][2], gBlockRecvBuffer[partnerMultiplayerId], sizeof(struct Pokemon));
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;
@@ -1270,9 +1254,9 @@ static void CB2_HandleStartMultiPartnerBattle(void)
             TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][0]);
             TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][1]);
             TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][2]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][3]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][4]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][5]);
+            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_2][0]);
+            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_2][1]);
+            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_2][2]);
             TryCorrectShedinjaLanguage(&gParties[B_TRAINER_1][0]);
             TryCorrectShedinjaLanguage(&gParties[B_TRAINER_1][1]);
             TryCorrectShedinjaLanguage(&gParties[B_TRAINER_1][2]);
@@ -1284,15 +1268,9 @@ static void CB2_HandleStartMultiPartnerBattle(void)
         break;
     case 13:
         s32 i;
-        // Move received mons to appropriate parties if ally party currently empty (Link battle)
-        if (BattleSideHasTwoTrainers(B_SIDE_PLAYER) && (GetMonData(&gParties[B_TRAINER_2][0], MON_DATA_SPECIES) == SPECIES_NONE))
-        {
-            for (i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
-            {
-                CopyMon(&gParties[B_TRAINER_2][i - MULTI_PARTY_SIZE], &gParties[B_TRAINER_0][i], sizeof(gParties[B_TRAINER_0][i]));
-                ZeroMonData(&gParties[B_TRAINER_0][i]);
-            }
-        }
+        // Move received mons to appropriate parties if ally party currently empty
+        // For link multi, player-side parties are already separated (B_TRAINER_0 and B_TRAINER_2).
+        // Only the enemy side still needs splitting from the shared B_TRAINER_1 party.
         if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && (GetMonData(&gParties[B_TRAINER_3][0], MON_DATA_SPECIES) == SPECIES_NONE))
         {
             for (i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
@@ -1615,52 +1593,18 @@ static void CB2_HandleStartMultiBattle(void)
             ResetBlockReceivedFlags();
             for (id = 0; id < MAX_LINK_PLAYERS; id++)
             {
+                bool32 sameSide = (!(gLinkPlayers[id].id & 1) && !(gLinkPlayers[playerMultiplayerId].id & 1))
+                               || ((gLinkPlayers[id].id & 1) && (gLinkPlayers[playerMultiplayerId].id & 1));
+                enum BattleTrainer trainer;
                 if (id == playerMultiplayerId)
-                {
-                    switch (gLinkPlayers[id].id)
-                    {
-                    case 0:
-                    case 1:
-                        memcpy(gParties[B_TRAINER_0], gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
-                        break;
-                    case 2:
-                    case 3:
-                        memcpy(gParties[B_TRAINER_0] + MULTI_PARTY_SIZE, gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
-                        break;
-                    }
-                }
+                    trainer = B_TRAINER_0;
+                else if (sameSide)
+                    trainer = B_TRAINER_2;
+                else if (gLinkPlayers[id].id <= 1)
+                    trainer = B_TRAINER_1;
                 else
-                {
-                    if ((!(gLinkPlayers[id].id & 1) && !(gLinkPlayers[playerMultiplayerId].id & 1))
-                     || ((gLinkPlayers[id].id & 1) && (gLinkPlayers[playerMultiplayerId].id & 1)))
-                    {
-                        switch (gLinkPlayers[id].id)
-                        {
-                        case 0:
-                        case 1:
-                            memcpy(gParties[B_TRAINER_0], gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
-                            break;
-                        case 2:
-                        case 3:
-                            memcpy(gParties[B_TRAINER_0] + MULTI_PARTY_SIZE, gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        switch (gLinkPlayers[id].id)
-                        {
-                        case 0:
-                        case 1:
-                            memcpy(gParties[B_TRAINER_1], gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
-                            break;
-                        case 2:
-                        case 3:
-                            memcpy(gParties[B_TRAINER_1] + MULTI_PARTY_SIZE, gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
-                            break;
-                        }
-                    }
-                }
+                    trainer = B_TRAINER_3;
+                memcpy(gParties[trainer], gBlockRecvBuffer[id], sizeof(struct Pokemon) * 2);
             }
             gBattleCommunication[MULTIUSE_STATE]++;
         }
@@ -1678,66 +1622,27 @@ static void CB2_HandleStartMultiBattle(void)
             ResetBlockReceivedFlags();
             for (id = 0; id < MAX_LINK_PLAYERS; id++)
             {
+                bool32 sameSide = (!(gLinkPlayers[id].id & 1) && !(gLinkPlayers[playerMultiplayerId].id & 1))
+                               || ((gLinkPlayers[id].id & 1) && (gLinkPlayers[playerMultiplayerId].id & 1));
+                enum BattleTrainer trainer;
                 if (id == playerMultiplayerId)
-                {
-                    switch (gLinkPlayers[id].id)
-                    {
-                    case 0:
-                    case 1:
-                        memcpy(gParties[B_TRAINER_0] + 2, gBlockRecvBuffer[id], sizeof(struct Pokemon));
-                        break;
-                    case 2:
-                    case 3:
-                        memcpy(gParties[B_TRAINER_0] + 5, gBlockRecvBuffer[id], sizeof(struct Pokemon));
-                        break;
-                    }
-                }
+                    trainer = B_TRAINER_0;
+                else if (sameSide)
+                    trainer = B_TRAINER_2;
+                else if (gLinkPlayers[id].id <= 1)
+                    trainer = B_TRAINER_1;
                 else
+                    trainer = B_TRAINER_3;
+                memcpy(&gParties[trainer][2], gBlockRecvBuffer[id], sizeof(struct Pokemon));
+            }
+
+            for (enum BattleTrainer j = B_TRAINER_0; j < MAX_BATTLE_TRAINERS; j++)
+            {
+                for (id = 0; id < MULTI_PARTY_SIZE; id++)
                 {
-                    if ((!(gLinkPlayers[id].id & 1) && !(gLinkPlayers[playerMultiplayerId].id & 1))
-                     || ((gLinkPlayers[id].id & 1) && (gLinkPlayers[playerMultiplayerId].id & 1)))
-                    {
-                        switch (gLinkPlayers[id].id)
-                        {
-                        case 0:
-                        case 1:
-                            memcpy(gParties[B_TRAINER_0] + 2, gBlockRecvBuffer[id], sizeof(struct Pokemon));
-                            break;
-                        case 2:
-                        case 3:
-                            memcpy(gParties[B_TRAINER_0] + 5, gBlockRecvBuffer[id], sizeof(struct Pokemon));
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        switch (gLinkPlayers[id].id)
-                        {
-                        case 0:
-                        case 1:
-                            memcpy(gParties[B_TRAINER_1] + 2, gBlockRecvBuffer[id], sizeof(struct Pokemon));
-                            break;
-                        case 2:
-                        case 3:
-                            memcpy(gParties[B_TRAINER_1] + 5, gBlockRecvBuffer[id], sizeof(struct Pokemon));
-                            break;
-                        }
-                    }
+                    TryCorrectShedinjaLanguage(&gParties[j][id]);
                 }
             }
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][0]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][1]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][2]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][3]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][4]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_0][5]);
-
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_1][0]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_1][1]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_1][2]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_1][3]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_1][4]);
-            TryCorrectShedinjaLanguage(&gParties[B_TRAINER_1][5]);
 
             gBattleCommunication[MULTIUSE_STATE]++;
         }
@@ -3631,11 +3536,6 @@ static void DoBattleIntro(void)
 
                     enum BattleTrainer trainer = B_TRAINER_3;
                     u32 offset = 0;
-                    if (gBattleTypeFlags & BATTLE_TYPE_LINK && !(gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)) // Link multis use the same party
-                    {
-                        trainer = B_TRAINER_1;
-                        offset = MULTI_PARTY_SIZE;
-                    }
                     for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {
                         if (GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
@@ -3733,11 +3633,6 @@ static void DoBattleIntro(void)
 
                     enum BattleTrainer trainer = B_TRAINER_2;
                     u32 offset = 0;
-                    if (gBattleTypeFlags & BATTLE_TYPE_LINK) // Link multis use the same party even in Battle Tower
-                    {
-                        trainer = B_TRAINER_0;
-                        offset = MULTI_PARTY_SIZE;
-                    }
                     for (i = 0; i < MULTI_PARTY_SIZE; i++)
                     {
                         if (GetMonData(&gParties[trainer][i + offset], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
@@ -5804,7 +5699,7 @@ static void HandleEndTurn_FinishBattle(void) //grintoul TO DO
         if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE || B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
             TryRestoreHeldItems();
 
-        for (u32 i = 0; i < PARTY_SIZE; i++) // grintoul TO DO - link battles when player on right?
+        for (u32 i = 0; i < PARTY_SIZE; i++)
         {
             bool32 changedForm = TryRevertPartyMonFormChange(i);
 

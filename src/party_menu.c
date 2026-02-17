@@ -514,6 +514,8 @@ static void Task_FirstBattleEnterParty_StartPrintMsg2(u8 taskId);
 static void Task_FirstBattleEnterParty_RunPrinterMsg2(u8 taskId);
 static void Task_FirstBattleEnterParty_FadeNormal(u8 taskId);
 static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId);
+static u8 CombinedToIndividualPartyId(u8 index);
+static u8 IndividualToCombinedPartyId(u8 index, enum BattlerId battler);
 
 static const u8 sText_askText[] = _("Would you like to change {STR_VAR_1}'s\nability to {STR_VAR_2}?");
 static const u8 sText_doneText[] = _("{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
@@ -1629,7 +1631,7 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
             else
             {
                 PlaySE(SE_SELECT);
-                gSelectedMonPartyId = partyId;
+                gSelectedMonPartyId = CombinedToIndividualPartyId(partyId);
                 Task_ClosePartyMenu(taskId);
             }
             break;
@@ -7636,7 +7638,7 @@ static bool8 TrySwitchInPokemon(void)
     {
         if (IsOnPlayerSide(i)
          && GetBattlerParty(i) == party
-         && battlePartyId == gBattlerPartyIndexes[i])
+         && CombinedToIndividualPartyId(battlePartyId) == gBattlerPartyIndexes[i])
         {
             GetMonNickname(&party[partySlot], gStringVar1);
             StringExpandPlaceholders(gStringVar4, gText_PkmnAlreadyInBattle);
@@ -7663,13 +7665,13 @@ static bool8 TrySwitchInPokemon(void)
     if (gPartyMenu.action == PARTY_ACTION_CANT_SWITCH)
     {
         u8 currBattler = gBattlerInMenuId;
-        GetMonNickname(&party[GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[currBattler])], gStringVar1);
+        GetMonNickname(&party[GetPartyIdFromBattlePartyId(IndividualToCombinedPartyId(gBattlerPartyIndexes[currBattler], currBattler))], gStringVar1);
         StringExpandPlaceholders(gStringVar4, gText_PkmnCantSwitchOut);
         return FALSE;
     }
-    gSelectedMonPartyId = battlePartyId;
+    gSelectedMonPartyId = CombinedToIndividualPartyId(battlePartyId);
     gPartyMenuUseExitCallback = TRUE;
-    newSlot = GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[gBattlerInMenuId]);
+    newSlot = GetPartyIdFromBattlePartyId(IndividualToCombinedPartyId(gBattlerPartyIndexes[gBattlerInMenuId], gBattlerInMenuId));
     GetPartyAndSlotFromPartyMenuId(newSlot, &party, &newPartySlot);
     SwitchPartyMonSlots(newSlot, slot);
     SwapPartyPokemon(&party[newPartySlot], &party[partySlot]);
@@ -8601,54 +8603,22 @@ static void GetPartyAndSlotFromPartyMenuId(s8 menuId, struct Pokemon **party, s8
         switch (menuId)
         {
         case 1:
-            if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-            {
-                *party = gParties[B_TRAINER_0];
-                *partySlot = (gBattlerInMenuId & BIT_FLANK) == B_FLANK_LEFT ? 3 : 0;
-            }
-            else
-            {
-                *party = gParties[B_TRAINER_2];
-                *partySlot = 0;
-            }
+            *party = gParties[B_TRAINER_2];
+            *partySlot = 0;
             break;
         case 4:
         case 5:
-            if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-            {
-                *party = gParties[B_TRAINER_0];
-                *partySlot = (gBattlerInMenuId & BIT_FLANK) == B_FLANK_LEFT ? menuId : menuId - MULTI_PARTY_SIZE;
-            }
-            else
-            {
-                *party = gParties[B_TRAINER_2];
-                *partySlot = menuId - MULTI_PARTY_SIZE;
-            }
+            *party = gParties[B_TRAINER_2];
+            *partySlot = menuId - MULTI_PARTY_SIZE;
             break;
         case 2:
         case 3:
-            if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-            {
-                *party = gParties[B_TRAINER_0];
-                *partySlot = (gBattlerInMenuId & BIT_FLANK) == B_FLANK_LEFT ? menuId - 1 : menuId - 1 + MULTI_PARTY_SIZE;
-            }
-            else
-            {
-                *party = gParties[B_TRAINER_0];
-                *partySlot = menuId - 1;
-            }
+            *party = gParties[B_TRAINER_0];
+            *partySlot = menuId - 1;
             break;
         default:
-            if (gBattleTypeFlags & BATTLE_TYPE_LINK)
-            {
-                *party = gParties[B_TRAINER_0];
-                *partySlot = (gBattlerInMenuId & BIT_FLANK) == B_FLANK_LEFT ? menuId: menuId + MULTI_PARTY_SIZE;
-            }
-            else
-            {
-                *party = gParties[B_TRAINER_0];
-                *partySlot = menuId;
-            }
+            *party = gParties[B_TRAINER_0];
+            *partySlot = menuId;
             break;
         }
         break;
@@ -8663,72 +8633,24 @@ static void GetPartyAndSlotFromPartyMenuId(s8 menuId, struct Pokemon **party, s8
 static void GetMultiPartyForSummaryScreen(void)
 {
     // Consolidate player and partner party into player party for summary screen
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
-    {
-        struct Pokemon party[PARTY_SIZE] = {0};
-        memcpy(party, gParties[B_TRAINER_0], sizeof(gParties[B_TRAINER_0]));
-
-        if ((gBattlerInMenuId & BIT_FLANK) == B_FLANK_LEFT)
-        {
-            gParties[B_TRAINER_0][1] = party[3];
-            gParties[B_TRAINER_0][2] = party[1];
-            gParties[B_TRAINER_0][3] = party[2];
-        }
-        else
-        {
-            gParties[B_TRAINER_0][0] = party[3];
-            gParties[B_TRAINER_0][1] = party[0];
-            gParties[B_TRAINER_0][2] = party[4];
-            gParties[B_TRAINER_0][3] = party[5];
-            gParties[B_TRAINER_0][4] = party[1];
-            gParties[B_TRAINER_0][5] = party[2];
-        }
-    }
-    else // In-game 6v6
-    {
-        gParties[B_TRAINER_0][3] = gParties[B_TRAINER_0][2];
-        gParties[B_TRAINER_0][2] = gParties[B_TRAINER_0][1];
-        gParties[B_TRAINER_0][1] = gParties[B_TRAINER_2][0];
-        gParties[B_TRAINER_0][4] = gParties[B_TRAINER_2][1];
-        gParties[B_TRAINER_0][5] = gParties[B_TRAINER_2][2];
-    }
+    gParties[B_TRAINER_0][3] = gParties[B_TRAINER_0][2];
+    gParties[B_TRAINER_0][2] = gParties[B_TRAINER_0][1];
+    gParties[B_TRAINER_0][1] = gParties[B_TRAINER_2][0];
+    gParties[B_TRAINER_0][4] = gParties[B_TRAINER_2][1];
+    gParties[B_TRAINER_0][5] = gParties[B_TRAINER_2][2];
 }
 
 
 static void RestoreMultiPartyFromSummaryScreen(void)
 {
     // Restore player mons
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
-    {
-        struct Pokemon party[PARTY_SIZE] = {0};
-        memcpy(party, gParties[B_TRAINER_0], sizeof(gParties[B_TRAINER_0]));
+    gParties[B_TRAINER_0][1] = gParties[B_TRAINER_0][2];
+    gParties[B_TRAINER_0][2] = gParties[B_TRAINER_0][3];
 
-        if ((gBattlerInMenuId & BIT_FLANK) == B_FLANK_LEFT)
-        {
-            gParties[B_TRAINER_0][1] = party[2];
-            gParties[B_TRAINER_0][2] = party[3];
-            gParties[B_TRAINER_0][3] = party[1];
-        }
-        else
-        {
-            gParties[B_TRAINER_0][0] = party[1];
-            gParties[B_TRAINER_0][1] = party[4];
-            gParties[B_TRAINER_0][2] = party[5];
-            gParties[B_TRAINER_0][3] = party[0];
-            gParties[B_TRAINER_0][4] = party[2];
-            gParties[B_TRAINER_0][5] = party[3];
-        }
-    }
-    else // In-game 6v6
+    // Clear partner mons from back of player party
+    for (u32 i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
     {
-        gParties[B_TRAINER_0][1] = gParties[B_TRAINER_0][2];
-        gParties[B_TRAINER_0][2] = gParties[B_TRAINER_0][3];
-        
-        // Clear partner mons from back of player party
-        for (u32 i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
-        {
-            ZeroMonData(&gParties[B_TRAINER_0][i]);
-        }
+        ZeroMonData(&gParties[B_TRAINER_0][i]);
     }
 }
 
@@ -8838,4 +8760,19 @@ static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId)
             DisplayPartyMenuStdMessage(PARTY_MSG_CHOOSE_MON);
         gTasks[taskId].func = Task_HandleChooseMonInput;
     }
+}
+
+// Functions for 4-party link multi battle handling
+static u8 CombinedToIndividualPartyId(u8 index)
+{
+    if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && index >= MULTI_PARTY_SIZE)
+        return index - MULTI_PARTY_SIZE;
+    return index;
+}
+
+static u8 IndividualToCombinedPartyId(u8 index, enum BattlerId battler)
+{
+    if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && (GetBattlerPosition(battler) & BIT_FLANK))
+        return index + MULTI_PARTY_SIZE;
+    return index;
 }

@@ -248,6 +248,22 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToLinkPartner;
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToOpponent;
             }
+
+            // Set gBattlerBattleController early for link multis so GetBattlerTrainer can use it
+            if (isDouble && isMulti)
+            {
+                for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)
+                {
+                    if (gBattlerControllerFuncs[i] == SetControllerToPlayer)
+                        gBattlerBattleController[i] = BATTLE_CONTROLLER_PLAYER;
+                    else if (gBattlerControllerFuncs[i] == SetControllerToLinkPartner)
+                        gBattlerBattleController[i] = BATTLE_CONTROLLER_LINK_PARTNER;
+                    else if (gBattlerControllerFuncs[i] == SetControllerToLinkOpponent)
+                        gBattlerBattleController[i] = BATTLE_CONTROLLER_LINK_OPPONENT;
+                    else if (gBattlerControllerFuncs[i] == SetControllerToOpponent)
+                        gBattlerBattleController[i] = BATTLE_CONTROLLER_OPPONENT;
+                }
+            }
         }
         else
         {
@@ -366,7 +382,8 @@ static void InitBtlControllersInternal(void)
                 linkPositionRight = B_POSITION_OPPONENT_RIGHT;
                 linkBtlControllerFunc = isLink ? SetControllerToLinkOpponent : SetControllerToRecordedOpponent;
             }
-            gBattlerControllerFuncs[gLinkPlayers[i].id] = linkBtlControllerFunc;
+            // Set early to set gBattlerBattleController for GetBattlerTrainer
+            linkBtlControllerFunc(gLinkPlayers[i].id);
             switch (gLinkPlayers[i].id)
             {
             case 0:
@@ -379,7 +396,7 @@ static void InitBtlControllersInternal(void)
             case 3:
                 BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 1);
                 gBattlerPositions[gLinkPlayers[i].id] = linkPositionRight;
-                gBattlerPartyIndexes[gLinkPlayers[i].id] = MULTI_PARTY_SIZE;
+                gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
                 break;
             }
         }
@@ -3300,6 +3317,25 @@ void FreeShinyStars(void)
 
 enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
 {
+    if (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    {
+        switch (gBattlerBattleController[battler])
+        {
+        case BATTLE_CONTROLLER_PLAYER:
+        case BATTLE_CONTROLLER_RECORDED_PLAYER:
+            return B_TRAINER_0;
+        case BATTLE_CONTROLLER_LINK_PARTNER:
+        case BATTLE_CONTROLLER_RECORDED_PARTNER:
+            return B_TRAINER_2;
+        case BATTLE_CONTROLLER_LINK_OPPONENT:
+        case BATTLE_CONTROLLER_RECORDED_OPPONENT:
+        case BATTLE_CONTROLLER_OPPONENT:
+            return (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT) ? B_TRAINER_1 : B_TRAINER_3;
+        default:
+            break;
+        }
+    }
+
     switch (battler)
     {
     case B_BATTLER_0:
@@ -3356,7 +3392,7 @@ bool32 BattleSideHasTwoTrainers(enum BattleSide side)
         break;
     case B_SIDE_OPPONENT:
     default:
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
             return TRUE;
         break;
     }
