@@ -43,9 +43,10 @@ body:
       label: Version
       description: What version of pokeemerald-expansion are you using?
       options:
-        - 1.14.2 (Latest release)
+        - 1.14.3 (Latest release)
         - master (default, unreleased bugfixes)
         - upcoming (Edge)
+        - 1.14.2
         - 1.14.1
         - 1.14.0
         - 1.13.4

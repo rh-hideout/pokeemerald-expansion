@@ -1981,7 +1981,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SKY_DROP] =
     {
-        .battleScript = BattleScript_EffectSkyDrop,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
         .twoTurnEffect = TRUE,
         .semiInvulnerableEffect = TRUE,
