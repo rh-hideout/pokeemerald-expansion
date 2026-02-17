@@ -50,6 +50,8 @@ EventScript_DoNoIntroTrainerBattle::
 	applymovement VAR_LAST_TALKED, Movement_RevealTrainer
 	waitmovement 0
 	clearflag FLAG_SAFE_FOLLOWER_MOVEMENT
+	special HasNonBodyguardBattleMon
+	goto_if_eq VAR_RESULT, FALSE, EventScript_BodyguardOnlyNoBattle
 	special PlayTrainerEncounterMusic
 	dotrainerbattle
 	gotopostbattlescript
@@ -111,9 +113,24 @@ EventScript_ShowTrainerIntroMsg::
 	special ShowTrainerIntroSpeech
 	waitmessage
 	waitbuttonpress
+	special HasNonBodyguardBattleMon
+	goto_if_eq VAR_RESULT, FALSE, EventScript_BodyguardOnlyNoBattle
 	special TryPrepareSecondApproachingTrainer
 	goto_if_eq VAR_RESULT, TRUE, EventScript_TrainerApproach
 	goto EventScript_DoTrainerBattle
+
+EventScript_BodyguardOnlyNoBattle::
+	message Text_BodyguardOnlyNoBattle
+	waitmessage
+	waitbuttonpress
+	special RestoreTrainerMovementType
+	fadedefaultbgm
+	releaseall
+	end
+
+Text_BodyguardOnlyNoBattle:
+	.string "Oh, you don't have a team ready to\n"
+	.string "battle… Nevermind then…$"
 
 EventScript_DoTrainerBattle::
 	dotrainerbattle
@@ -135,3 +152,4 @@ Std_MsgboxAutoclose::
 	waitbuttonpress
 	release
 	return
+

@@ -3392,6 +3392,22 @@ u8 GetMonsStateToDoubles_2(void)
     return (aliveCount > 1) ? PLAYER_HAS_TWO_USABLE_MONS : PLAYER_HAS_ONE_USABLE_MON;
 }
 
+bool32 PlayerHasNonBodyguardBattleMon(void)
+{
+    s32 i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        u32 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL);
+        if (species != SPECIES_EGG && species != SPECIES_NONE
+         && GetMonData(&gPlayerParty[i], MON_DATA_HP, NULL) != 0
+         && !IsBodyguardPokemon(&gPlayerParty[i]))
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
 enum Ability GetAbilityBySpecies(u16 species, u8 abilityNum)
 {
     int i;

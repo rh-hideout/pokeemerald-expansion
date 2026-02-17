@@ -89,6 +89,11 @@ void HasEnoughMonsForDoubleBattle(void)
     }
 }
 
+void HasNonBodyguardBattleMon(void)
+{
+    gSpecialVar_Result = PlayerHasNonBodyguardBattleMon();
+}
+
 static bool8 CheckPartyMonHasHeldItem(u16 item)
 {
     int i;

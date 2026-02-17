@@ -775,6 +775,7 @@ u8 CalculateEnemyPartyCount(void);
 u8 CalculateEnemyPartyCountInSide(u32 battler);
 u8 GetMonsStateToDoubles(void);
 u8 GetMonsStateToDoubles_2(void);
+bool32 PlayerHasNonBodyguardBattleMon(void);
 enum Ability GetAbilityBySpecies(u16 species, u8 abilityNum);
 enum Ability GetMonAbility(struct Pokemon *mon);
 void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord);

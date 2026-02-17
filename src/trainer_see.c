@@ -367,6 +367,9 @@ bool8 CheckForTrainersWantingBattle(void)
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
 
+    if (!PlayerHasNonBodyguardBattleMon())
+        return FALSE;
+
     gNoOfApproachingTrainers = 0;
     gApproachingTrainerId = 0;
 
@@ -1099,4 +1102,14 @@ void PlayerFaceTrainerAfterBattle(void)
     }
 
     SetMovingNpcId(LOCALID_PLAYER);
+}
+
+void RestoreTrainerMovementType(void)
+{
+    struct ObjectEvent *objEvent = &gObjectEvents[gSelectedObjectEvent];
+    const struct ObjectEventTemplate *template = GetObjectEventTemplateByLocalIdAndMap(
+        objEvent->localId, objEvent->mapNum, objEvent->mapGroup);
+
+    if (template != NULL)
+        SetTrainerMovementType(objEvent, template->movementType);
 }
