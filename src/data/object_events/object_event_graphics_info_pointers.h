@@ -258,6 +258,8 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OfficerF;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Unsichtbar;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Dollarsign;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Cd;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_TrainLeft;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_TrainRight;
 
 
 
@@ -515,6 +517,8 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_CD] =                       &gObjectEventGraphicsInfo_Cd,
     [OBJ_EVENT_GFX_OFFICER_M] =                &gObjectEventGraphicsInfo_OfficerM,
     [OBJ_EVENT_GFX_OFFICER_F] =                &gObjectEventGraphicsInfo_OfficerF,
+    [OBJ_EVENT_GFX_TRAIN_LEFT] =               &gObjectEventGraphicsInfo_TrainLeft,
+    [OBJ_EVENT_GFX_TRAIN_RIGHT] =              &gObjectEventGraphicsInfo_TrainRight,
     
 
 
