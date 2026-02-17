@@ -1770,7 +1770,7 @@ static u32 GetSwitchinStatusDamage(enum BattlerId battler)
 
     // Apply hypothetical poisoning from Toxic Spikes, which means the first turn of damage already added in GetSwitchinHazardsDamage
     // Do this last to skip one iteration of Poison / Toxic damage, and start counting Toxic damage one turn later.
-    if (tSpikesLayers != 0 && IsBattlerTSpikesAffected(battler))
+    if (tSpikesLayers != 0 && IsSwitchinTSpikesAffected(battler))
     {
         if (tSpikesLayers == 1)
         {
@@ -2610,7 +2610,7 @@ u32 AI_SelectRevivalBlessingMon(enum BattlerId battler)
 static void SetBattlerStatusForSwitchin(enum BattlerId battler)
 {
     u32 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
-    if (tSpikesLayers != 0 && IsBattlerTSpikesAffected(battler))
+    if (tSpikesLayers != 0 && IsSwitchinTSpikesAffected(battler))
     {
         if (tSpikesLayers == 1)
             gBattleMons[battler].status1 = STATUS1_POISON;
