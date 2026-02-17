@@ -49,7 +49,7 @@
 #define OBJ_EVENT_GFX_POKEMON_BREEDER_F           OBJ_EVENT_GFX_WOMAN_2
 #define OBJ_EVENT_GFX_LADY                        OBJ_EVENT_GFX_WOMAN_2
 #define OBJ_EVENT_GFX_AROMA_LADY                  OBJ_EVENT_GFX_WOMAN_2
-#define OBJ_EVENT_GFX_PARASOL_LADY_2              OBJ_EVENT_GFX_WOMAN_2
+#define OBJ_EVENT_GFX_PARASOL_LADY_2              OBJ_EVENT_GFX_WOMAN_2 //Used by two Parasol Ladies new to Emerald
 #define OBJ_EVENT_GFX_EXPERT_M                    21
 #define OBJ_EVENT_GFX_EXPERT_F                    22
 #define OBJ_EVENT_GFX_MAN_2                       23
@@ -69,7 +69,7 @@
 #define OBJ_EVENT_GFX_ACE_TRAINER_M               OBJ_EVENT_GFX_MAN_3
 #define OBJ_EVENT_GFX_WOMAN_5                     34
 #define OBJ_EVENT_GFX_ACE_TRAINER_F               OBJ_EVENT_GFX_WOMAN_5
-#define OBJ_EVENT_GFX_PARASOL_LADY                OBJ_EVENT_GFX_WOMAN_5
+#define OBJ_EVENT_GFX_PARASOL_LADY                OBJ_EVENT_GFX_WOMAN_5 //Used by the Parasol Ladies that were also in Ruby and Sapphire
 #define OBJ_EVENT_GFX_YOUNGSTER                   35
 #define OBJ_EVENT_GFX_BUG_CATCHER                 36
 #define OBJ_EVENT_GFX_PSYCHIC_M                   37
@@ -309,16 +309,24 @@
 #define OBJ_EVENT_GFX_GREEN_VS_SEEKER            256
 #define OBJ_EVENT_GFX_GREEN_VS_SEEKER_BIKE       257
 #define OBJ_EVENT_GFX_BOY                        258
+#define OBJ_EVENT_GFX_PSYCHIC_M_SEVII_ISLANDS    OBJ_EVENT_GFX_BOY //Psychic Dario on Seven Island and the Psychics in the Trainer Tower
 #define OBJ_EVENT_GFX_CRUSH_GIRL                 259
 #define OBJ_EVENT_GFX_MAN                        260
+#define OBJ_EVENT_GFX_TAMER                      OBJ_EVENT_GFX_MAN
+#define OBJ_EVENT_GFX_YOUNG_COUPLE_M_FRLG        OBJ_EVENT_GFX_MAN
 #define OBJ_EVENT_GFX_ROCKER                     261
+#define OBJ_EVENT_GFX_BIRD_KEEPER_FRLG           OBJ_EVENT_GFX_ROCKER
+#define OBJ_EVENT_GFX_JUGGLER                    OBJ_EVENT_GFX_ROCKER
 #define OBJ_EVENT_GFX_BALDING_MAN                262
+#define OBJ_EVENT_GFX_ENGINEER                   OBJ_EVENT_GFX_BALDING_MAN
 #define OBJ_EVENT_GFX_OLD_MAN_1                  263
+#define OBJ_EVENT_GFX_GAMER                      OBJ_EVENT_GFX_OLD_MAN_1
 #define OBJ_EVENT_GFX_OLD_MAN_2                  264
 #define OBJ_EVENT_GFX_OLD_MAN_LYING_DOWN         265
 #define OBJ_EVENT_GFX_TUBER_M_WATER              266
 #define OBJ_EVENT_GFX_TUBER_M_LAND               267
 #define OBJ_EVENT_GFX_COOLTRAINER_M              268
+#define OBJ_EVENT_GFX_PSYCHIC_M_FRLG             OBJ_EVENT_GFX_COOLTRAINER_M
 #define OBJ_EVENT_GFX_COOLTRAINER_F              269
 #define OBJ_EVENT_GFX_SWIMMER_M_WATER            270
 #define OBJ_EVENT_GFX_SWIMMER_F_WATER            271
@@ -330,9 +338,12 @@
 #define OBJ_EVENT_GFX_ROCKET_F                   277
 #define OBJ_EVENT_GFX_GBA_KID                    278
 #define OBJ_EVENT_GFX_POKE_MANIAC_FRLG           279
+#define OBJ_EVENT_GFX_BURGLAR                    OBJ_EVENT_GFX_POKE_MANIAC_FRLG
 #define OBJ_EVENT_GFX_BIKER                      280
+#define OBJ_EVENT_GFX_CUE_BALL                   OBJ_EVENT_GFX_BIKER
 #define OBJ_EVENT_GFX_BLACK_BELT_FRLG            281
 #define OBJ_EVENT_GFX_SCIENTIST                  282
+#define OBJ_EVENT_GFX_SUPER_NERD                 OBJ_EVENT_GFX_SCIENTIST
 #define OBJ_EVENT_GFX_FISHER                     283
 #define OBJ_EVENT_GFX_CHANNELER                  284
 #define OBJ_EVENT_GFX_CHEF                       285
@@ -367,20 +378,30 @@
 #define OBJ_EVENT_GFX_POKEDEX                    314
 #define OBJ_EVENT_GFX_LITTLE_BOY_FRLG            315
 #define OBJ_EVENT_GFX_LITTLE_GIRL_FRLG           316
+#define OBJ_EVENT_GFX_TWIN_FRLG                  OBJ_EVENT_GFX_LITTLE_GIRL_FRLG
 #define OBJ_EVENT_GFX_YOUNGSTER_FRLG             317
 #define OBJ_EVENT_GFX_BUG_CATCHER_FRLG           318
 #define OBJ_EVENT_GFX_LASS_FRLG                  319
+#define OBJ_EVENT_GFX_PAINTER                    OBJ_EVENT_GFX_LASS_FRLG
 #define OBJ_EVENT_GFX_WOMAN_1_FRLG               320
+#define OBJ_EVENT_GFX_PSYCHIC_F_FRLG             OBJ_EVENT_GFX_WOMAN_1_FRLG
 #define OBJ_EVENT_GFX_FAT_MAN_FRLG               321
 #define OBJ_EVENT_GFX_WOMAN_2_FRLG               322
+#define OBJ_EVENT_GFX_LADY_FRLG                  OBJ_EVENT_GFX_WOMAN_2_FRLG
+#define OBJ_EVENT_GFX_AROMA_LADY_FRLG            OBJ_EVENT_GFX_WOMAN_2_FRLG
+#define OBJ_EVENT_GFX_POKEMON_BREEDER_FRLG       OBJ_EVENT_GFX_WOMAN_2_FRLG
 #define OBJ_EVENT_GFX_BEAUTY_FRLG                323
+#define OBJ_EVENT_GFX_YOUNG_COUPLE_F_FRLG        OBJ_EVENT_GFX_BEAUTY_FRLG
 #define OBJ_EVENT_GFX_WOMAN_3_FRLG               324
 #define OBJ_EVENT_GFX_OLD_WOMAN_FRLG             325
 #define OBJ_EVENT_GFX_CAMPER_FRLG                326
+#define OBJ_EVENT_GFX_POKEMON_RANGER_M_FRLG      OBJ_EVENT_GFX_CAMPER_FRLG
 #define OBJ_EVENT_GFX_PICNICKER_FRLG             327
+#define OBJ_EVENT_GFX_POKEMON_RANGER_F_FRLG      OBJ_EVENT_GFX_PICNICKER_FRLG
 #define OBJ_EVENT_GFX_MOM_FRLG                   328
 #define OBJ_EVENT_GFX_TUBER_F_FRLG               329
 #define OBJ_EVENT_GFX_HIKER_FRLG                 330
+#define OBJ_EVENT_GFX_RUIN_MANIAC_FRLG           OBJ_EVENT_GFX_HIKER_FRLG
 #define OBJ_EVENT_GFX_GENTLEMAN_FRLG             331
 #define OBJ_EVENT_GFX_SAILOR_FRLG                332
 #define OBJ_EVENT_GFX_NURSE_FRLG                 333
