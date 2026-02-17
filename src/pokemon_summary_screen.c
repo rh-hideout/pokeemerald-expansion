@@ -4826,15 +4826,28 @@ static void KeepMoveSelectorVisible(u8 firstSpriteId)
 
 static inline bool32 ShouldShowMoveRelearner(void)
 {
-    return (P_SUMMARY_SCREEN_MOVE_RELEARNER
-         && !sMonSummaryScreen->lockMovesFlag
-         && !sMonSummaryScreen->isBoxMon
-         && sMonSummaryScreen->mode != SUMMARY_MODE_BOX
-         && sMonSummaryScreen->mode != SUMMARY_MODE_BOX_CURSOR
-         && sMonSummaryScreen->hasRelearnableMoves
-         && !InBattleFactory()
-         && !InSlateportBattleTent()
-         && !NoMovesAvailableToRelearn());
+    if (!P_SUMMARY_SCREEN_MOVE_RELEARNER)
+        return FALSE;
+
+    if ((sMonSummaryScreen->lockMovesFlag) || (sMonSummaryScreen->isBoxMon))
+        return FALSE;
+
+    if ((sMonSummaryScreen->mode == SUMMARY_MODE_BOX) || (sMonSummaryScreen->mode == SUMMARY_MODE_BOX_CURSOR))
+        return FALSE;
+
+    if (sMonSummaryScreen->hasRelearnableMoves == FALSE)
+        return FALSE;
+
+    if (InBattleFactory())
+        return FALSE;
+
+    if (InSlateportBattleTent())
+        return FALSE;
+
+    if (NoMovesAvailableToRelearn())
+        return FALSE;
+
+    return TRUE;
 }
 
 static inline bool32 ShouldShowRename(void)
