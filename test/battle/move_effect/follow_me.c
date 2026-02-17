@@ -187,14 +187,28 @@ DOUBLE_BATTLE_TEST("Follow Me prioritizes the first Pokémon that used it") // T
 SINGLE_BATTLE_TEST("Follow Me fails in Single Battles (BDSP+)")
 {
     GIVEN {
+        WITH_CONFIG(B_FOLLOW_ME_SINGLES_FAIL, TRUE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FOLLOW_ME); }
     } SCENE {
-        MESSAGE("Wobbuffet used Follow Me!");
-        MESSAGE("But it failed!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, player);
+        MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Follow Me can be used in Single Battles (Gen3-SwSh)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FOLLOW_ME_SINGLES_FAIL, FALSE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOLLOW_ME); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, player);
+        NOT MESSAGE("But it failed!");
     }
 }
 
@@ -277,5 +291,4 @@ DOUBLE_BATTLE_TEST("Spotlight redirects single target moves used by the opposing
 
 TO_DO_BATTLE_TEST("Follow Me can only redirect charging moves on the turn that they would hit")
 TO_DO_BATTLE_TEST("Follow Me draws Electric/Water moves even if there's a Pokémon with Lightning Rod/Storm Drain")
-TO_DO_BATTLE_TEST("Follow Me can be used in Single Battles (Gen3-SwSh)")
 //TO_DO_BATTLE_TEST("Triples: Follow Me can only draw non-adjacent moves if they use a long-range move")
