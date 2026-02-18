@@ -1034,8 +1034,11 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
     enum Ability abilityDef = gAiLogicData->abilities[battlerDef];
     enum Ability abilityAtk = gAiLogicData->abilities[battlerAtk];
 
-    if (IsSheerForceAffected(move, abilityAtk))
+    if (IsSheerForceAffected(move, abilityAtk)
+     && !(GetMoveEffect(move) == EFFECT_ORDER_UP && gBattleStruct->battlerState[battlerAtk].commanderSpecies != SPECIES_NONE))
+    {
         return FALSE;
+    }
 
     switch (GetMoveEffect(move))
     {

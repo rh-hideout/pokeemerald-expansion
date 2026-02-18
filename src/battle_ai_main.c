@@ -5694,8 +5694,11 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
     u32 i;
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
 
-    if (IsSheerForceAffected(move, aiData->abilities[battlerAtk]))
+    if (IsSheerForceAffected(move, aiData->abilities[battlerAtk])
+     && !(GetMoveEffect(move) == EFFECT_ORDER_UP && gBattleStruct->battlerState[battlerAtk].commanderSpecies != SPECIES_NONE))
+    {
         return score;
+    }
 
     // check move additional effects that are likely to happen
     for (i = 0; i < additionalEffectCount; i++)
