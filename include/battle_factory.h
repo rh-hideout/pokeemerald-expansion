@@ -13,6 +13,7 @@ bool8 IsBattleFactoryRandomBattlesModeEnabled(void);
 u8 GetBattleFactoryMonLevel(u16 monId);
 void SetMonMoveAvoidReturn(struct Pokemon *mon, u16 moveArg, u8 moveSlot);
 void DebugAction_FactoryWinChallenge(void);
+void DebugAction_TriggerNolandBattle(void);
 void MarkAllFactorySpeciesAsSeen(void);
 void MarkFactoryWinningPartyAsCaught(void);
 

@@ -267,7 +267,7 @@
 #define VAR_BATTLE_SPEED                                 0x40F7 // Used for PokeAbbie's battle speed mod
 #define VAR_FRONTIER_BGM                                 0x40F8 // Custom Frontier / Trainer Hill Battle BGM (Default: 0)
 #define VAR_FRONTIER_ENVIRONMENT                         0x40F9 // Custom Frontier / Trainer Hill Battle Environment (Default: 0)
-#define VAR_UNUSED_0x40FA                                0x40FA // Unused Var
+#define VAR_FACTORY_TOTAL_WINS                           0x40FA // Lifetime Battle Factory wins
 #define VAR_UNUSED_0x40FB                                0x40FB // Unused Var
 #define VAR_UNUSED_0x40FC                                0x40FC // Unused Var
 #define VAR_UNUSED_0x40FD                                0x40FD // Unused Var
