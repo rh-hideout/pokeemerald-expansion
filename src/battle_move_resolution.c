@@ -1089,7 +1089,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         if (!CanFling(ctx->battlerAtk, ctx->abilityAtk))
             battleScript = BattleScript_ButItFailed;
         else // set fling item
-         gBattleStruct->flingItem = gBattleMons[ctx->battlerAtk].item;
+         gBattleStruct->flingItem = gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
         break;
     case EFFECT_POLTERGEIST:
         if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
