@@ -105,9 +105,9 @@ enum MoveEndState
     MOVEEND_HP_THRESHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_ITEM_EFFECTS_ATTACKER_2,
+    MOVEEND_DEFROST,
     MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
     MOVEEND_MOVE_BLOCK,
-    MOVEEND_DEFROST,
     MOVEEND_ABILITY_EFFECT_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
     MOVEEND_SHELL_TRAP,
     MOVEEND_COLOR_CHANGE, // Color Change / Berserk / Anger Shell

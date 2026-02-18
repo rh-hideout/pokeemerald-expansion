@@ -2842,6 +2842,52 @@ static enum MoveEndResult MoveEndItemEffectsAttacker2(void)
     return result;
 }
 
+static enum MoveEndResult MoveEndDefrost(void)
+{
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
+
+    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
+    {
+        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
+
+        if (battler == gBattlerAttacker)
+            continue;
+        
+        if (gBattleMons[battler].status1 & STATUS1_FREEZE
+        && IsBattlerTurnDamaged(battler)
+        && IsBattlerAlive(battler)
+        && (GetBattleMoveType(gCurrentMove) == TYPE_FIRE || CanBurnHitThaw(abilityAtk, gCurrentMove)))
+        {
+            gBattleScripting.battler = battler;
+            gBattleMons[battler].status1 &= ~STATUS1_FREEZE;
+            BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
+            MarkBattlerForControllerExec(battler);
+            BattleScriptCall(BattleScript_DefrostedViaFireMove);
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+        }
+        else if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
+            && IsBattlerTurnDamaged(battler)
+            && IsBattlerAlive(battler)
+            && MoveThawsUser(GetOriginallyUsedMove(gChosenMove)))
+        {
+            gBattleScripting.battler = battler;
+            gBattleMons[battler].status1 &= ~STATUS1_FROSTBITE;
+            BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
+            MarkBattlerForControllerExec(battler);
+            BattleScriptCall(BattleScript_FrostbiteHealedViaFireMove);
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+        }
+
+        if (result != MOVEEND_RESULT_CONTINUE)
+            return result;
+    }
+
+    gBattleStruct->eventState.moveEndBattler = 0;
+    gBattleScripting.moveendState++;
+    return result;
+}
+
 static enum MoveEndResult MoveEndSheerForce(void)
 {
     if (IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
@@ -3107,50 +3153,6 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         break;
     }
 
-    gBattleScripting.moveendState++;
-    return result;
-}
-
-static enum MoveEndResult MoveEndDefrost(void)
-{
-    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-
-    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
-    {
-        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
-
-        if (gBattleMons[battler].status1 & STATUS1_FREEZE
-        && IsBattlerTurnDamaged(battler)
-        && IsBattlerAlive(battler)
-        && gBattlerAttacker != battler
-        && (GetBattleMoveType(gCurrentMove) == TYPE_FIRE || CanBurnHitThaw(gCurrentMove)))
-        {
-            gBattleScripting.battler = battler;
-            gBattleMons[battler].status1 &= ~STATUS1_FREEZE;
-            BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
-            MarkBattlerForControllerExec(battler);
-            BattleScriptCall(BattleScript_DefrostedViaFireMove);
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-        }
-        else if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
-            && IsBattlerTurnDamaged(battler)
-            && IsBattlerAlive(battler)
-            && gBattlerAttacker != battler
-            && MoveThawsUser(GetOriginallyUsedMove(gChosenMove)))
-        {
-            gBattleScripting.battler = battler;
-            gBattleMons[battler].status1 &= ~STATUS1_FROSTBITE;
-            BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
-            MarkBattlerForControllerExec(battler);
-            BattleScriptCall(BattleScript_FrostbiteHealedViaFireMove);
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-        }
-
-        if (result != MOVEEND_RESULT_CONTINUE)
-            return result;
-    }
-
-    gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
     return result;
 }
@@ -3821,9 +3823,9 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_HP_THRESHOLD_ITEMS_TARGET] = MoveEndHpThresholdItemsTarget,
     [MOVEEND_MULTIHIT_MOVE] = MoveEndMultihitMove,
     [MOVEEND_ITEM_EFFECTS_ATTACKER_2] = MoveEndItemEffectsAttacker2,
+    [MOVEEND_DEFROST] = MoveEndDefrost,
     [MOVEEND_SHEER_FORCE] = MoveEndSheerForce,
     [MOVEEND_MOVE_BLOCK] = MoveEndMoveBlock,
-    [MOVEEND_DEFROST] = MoveEndDefrost,
     [MOVEEND_ABILITY_EFFECT_FOES_FAINTED] = MoveEndAbilityEffectFoesFainted,
     [MOVEEND_SHELL_TRAP] = MoveEndShellTrap,
     [MOVEEND_COLOR_CHANGE] = MoveEndColorChange,

@@ -11650,11 +11650,11 @@ static bool32 CanAbilityPreventStatLoss(enum Ability abilityDef)
     return FALSE;
 }
 
-bool32 CanBurnHitThaw(enum Move move)
+bool32 CanBurnHitThaw(enum Ability abilityAtk, enum Move move)
 {
     u8 i;
 
-    if (GetConfig(CONFIG_BURN_HIT_THAW) >= GEN_6)
+    if (GetConfig(CONFIG_BURN_HIT_THAW) >= GEN_6 && abilityAtk != ABILITY_SHEER_FORCE)
     {
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
         for (i = 0; i < numAdditionalEffects; i++)
