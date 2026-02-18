@@ -45,13 +45,13 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Quadrate_Train_EventScript_Board",
       "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_OFFICER_F",
-      "x": 8,
-      "y": 12,
+      "x": 9,
+      "y": 13,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
@@ -59,7 +59,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Quadrate_EventScript_LockedTrain",
-      "flag": "0"
+      "flag": "FLAG_DEFEATED_SOOTOPOLIS_GYM"
     }
   ],
   "warp_events": [],

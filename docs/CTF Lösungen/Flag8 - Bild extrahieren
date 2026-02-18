@@ -32,12 +32,12 @@ Ein PNG endet mit dem IEND-Chunk, dessen letzte 12 Bytes üblicherweise so ausse
 - Öffne die `.gba` in ImHex (z. B. `myhack.gba`).
 
 ### 2) Marker finden (nur zur Orientierung)
-- `Ctrl+F` → **Text/ASCII** → suche nach: `CTF_SECRET_PNG_START`
+- `Ctrl+F` → **Text/ASCII** → suche nach: `TEAM_ROCKET_RANSOM_LETTER_START`
 - Du landest in der Nähe des eingebetteten Blocks.
 
 ### 3) PNG-Start finden (exakter Startpunkt)
 - `Ctrl+F` → **Hex** → suche nach: `89504E470D0A1A0A`
-- Achte darauf, dass du den Treffer **nach** `CTF_SECRET_PNG_START` nimmst.
+- Achte darauf, dass du den Treffer **nach** `TEAM_ROCKET_RANSOM_LETTER_START` nimmst.
 - Der Export muss **genau beim Byte `89`** starten.
 
 **Check:**
@@ -48,7 +48,7 @@ Wenn davor z. B. `00 00 ...` oder ASCII wie `43 54 46 ...` kommt, ist der Start 
 
 ### 4) PNG-Ende finden (exakter Endpunkt)
 Option A (robuster):
-- Suche zuerst nach dem Textmarker: `CTF_SECRET_PNG_END`
+- Suche zuerst nach dem Textmarker: `TEAM_ROCKET_RANSOM_LETTER_END`
 - Setze den Cursor kurz **vor** diesen Marker
 - Suche dann (Hex) nach: `0000000049454E44AE426082`
   - Ziel: Das IEND-Muster direkt vor dem Endmarker finden

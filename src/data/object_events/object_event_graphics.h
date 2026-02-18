@@ -497,7 +497,6 @@ const u32 gObjectEventPic_OfficerF[] = INCBIN_U32("graphics/object_events/pics/p
 const u16 gObjectEventPal_OfficerF[] = INCBIN_U16("graphics/object_events/palettes/officer_f.gbapal");
 
 const u32 gObjectEventPic_TrainLeft[] = INCBIN_U32("graphics/object_events/pics/misc/train_left.4bpp");
-const u16 gObjectEventPal_TrainLeft[] = INCBIN_U16("graphics/object_events/palettes/train.gbapal");
-
+const u16 gObjectEventPal_Train[] = INCBIN_U16("graphics/object_events/palettes/train.gbapal");
 const u32 gObjectEventPic_TrainRight[] = INCBIN_U32("graphics/object_events/pics/misc/train_right.4bpp");
-const u16 gObjectEventPal_TrainRight[] = INCBIN_U16("graphics/object_events/palettes/train.gbapal");
+

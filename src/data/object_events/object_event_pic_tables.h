@@ -1403,9 +1403,9 @@ static const struct SpriteFrameImage sPicTable_OfficerF[] = {
 };
 
 static const struct SpriteFrameImage sPicTable_TrainLeft[] = {
-    overworld_ascending_frames(gObjectEventPic_TrainLeft, 4, 2, 0),
+    overworld_ascending_frames(gObjectEventPic_TrainLeft, 8, 4),
 };
 
 static const struct SpriteFrameImage sPicTable_TrainRight[] = {
-    overworld_ascending_frames(gObjectEventPic_TrainRight, 4, 2, 0),
+    overworld_ascending_frames(gObjectEventPic_TrainRight, 8, 4),
 };
