@@ -4513,24 +4513,6 @@ void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData)
     Free(savedAiLogicData);
 }
 
-bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
-{
-    enum Ability ability = gAiLogicData->abilities[battler];
-    u32 status = gBattleMons[battler].status1;
-    enum HoldEffect heldItemEffect = gAiLogicData->holdEffects[battler];
-    if ((!IS_BATTLER_ANY_TYPE(battler, TYPE_POISON, TYPE_STEEL)
-        && ability != ABILITY_IMMUNITY && ability != ABILITY_POISON_HEAL && ability != ABILITY_PASTEL_VEIL
-        && status == 0
-        && !(heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS
-            && (((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ)))
-        && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
-        && AI_IsBattlerGrounded(battler)))
-    {
-        return TRUE;
-    }
-    return FALSE;
-}
-
 // party logic
 s32 CountUsablePartyMons(enum BattlerId battlerId)
 {

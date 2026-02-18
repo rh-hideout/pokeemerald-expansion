@@ -45,6 +45,7 @@ static void SetBattlerStatusForSwitchin(enum BattlerId battler);
 static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, u32 fieldStatus);
 static void SetBattlerHPChangeForSwitch(enum BattlerId battler, enum BattlerId opposingBattler);
 static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, u32 fieldStatus);
+bool32 IsSwitchinTSpikesAffected(enum BattlerId battler);
 
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, struct Pokemon *mon)
 {
@@ -222,6 +223,24 @@ static bool32 AreStatsRaised(enum BattlerId battler)
     }
 
     return (buffedStatsValue > STAY_IN_STATS_RAISED);
+}
+
+bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
+{
+    enum Ability ability = gAiLogicData->abilities[battler];
+    u32 status = gBattleMons[battler].status1;
+    enum HoldEffect heldItemEffect = gAiLogicData->holdEffects[battler];
+    if ((!IS_BATTLER_ANY_TYPE(battler, TYPE_POISON, TYPE_STEEL)
+        && ability != ABILITY_IMMUNITY && ability != ABILITY_POISON_HEAL && ability != ABILITY_PASTEL_VEIL
+        && status == 0
+        && !(heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS
+            && (((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ)))
+        && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
+        && AI_IsBattlerGrounded(battler)))
+    {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 static inline bool32 SetSwitchinAndSwitch(enum BattlerId battler, u32 switchinId)
@@ -2763,6 +2782,7 @@ static void SetBattlerHPChangeForSwitch(enum BattlerId battler, enum BattlerId o
         else
             currentHP = currentHP + itemHeal;
     }
+    gBattleMons[battler].hp = currentHP;
 }
 
 // Set potential field effect from ability for switch in
