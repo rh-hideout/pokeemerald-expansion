@@ -837,7 +837,7 @@ u8 *StringCopyUppercase(u8 *dest, const u8 *src)
     return dest;
 }
 
-bool8 DoesStringProperlyTerminate(const u8 *str, u32 last)
+bool32 DoesStringProperlyTerminate(const u8 *str, u32 last)
 {
     u32 checkSum = 0;
 
