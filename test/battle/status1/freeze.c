@@ -26,6 +26,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         MESSAGE("Wobbuffet thawed out!");
         STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }
 
@@ -41,6 +42,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks even if She
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         MESSAGE("Wobbuffet thawed out!");
         STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }
 
@@ -57,6 +59,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's attack that can burn (Gen 6+)
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALD, opponent);
         MESSAGE("Wobbuffet thawed out!");
         STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }
 SINGLE_BATTLE_TEST("Freeze isn't thawed by opponent's attack that can burn if Sheer Force affected (Gen 6+)")
@@ -67,7 +70,7 @@ SINGLE_BATTLE_TEST("Freeze isn't thawed by opponent's attack that can burn if Sh
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_SCALD); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(opponent, MOVE_SCALD); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALD, opponent);
         NONE_OF {
