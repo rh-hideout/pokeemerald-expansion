@@ -208,3 +208,61 @@ DOUBLE_BATTLE_TEST("Sky Drop does not trigger Volt Absorb on it's charge turn")
     }
 }
 
+
+SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_THRASH); MOVE(opponent, MOVE_SKY_DROP);}
+        TURN { SKIP_TURN(opponent); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately (attacker faints due to status)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(120); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_THRASH);
+            MOVE(opponent, MOVE_SKY_DROP);
+            SEND_OUT(opponent, 1);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately (attacker faints due to target ability)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SHARPEDO) { Ability(ABILITY_ROUGH_SKIN); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(370); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_THRASH);
+            MOVE(opponent, MOVE_SKY_DROP);
+        }
+        TURN {
+            SKIP_TURN(opponent);
+            ABILITY_POPUP(player, ABILITY_ROUGH_SKIN);
+            SEND_OUT(opponent, 1);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+    }
+}

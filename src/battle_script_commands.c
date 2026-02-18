@@ -579,6 +579,7 @@ static void Cmd_averagestats(void);
 static void Cmd_jumpifcaptivateaffected(void);
 static void Cmd_setnonvolatilestatus(void);
 static void Cmd_tryoverwriteability(void);
+static void Cmd_tryconfusionafterskydrop(void);
 static void Cmd_dummy(void);
 static void Cmd_callnative(void);
 
@@ -809,6 +810,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPIFCAPTIVATEAFFECTED]               = Cmd_jumpifcaptivateaffected,
     [B_SCR_OP_SETNONVOLATILESTATUS]                  = Cmd_setnonvolatilestatus,
     [B_SCR_OP_TRYOVERWRITEABILITY]                   = Cmd_tryoverwriteability,
+    [B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP]          = Cmd_tryconfusionafterskydrop,
     [B_SCR_OP_UNUSED_1]                              = Cmd_dummy,
     [B_SCR_OP_UNUSED_2]                              = Cmd_dummy,
     [B_SCR_OP_UNUSED_3]                              = Cmd_dummy,
@@ -838,7 +840,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_27]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_28]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_29]                             = Cmd_dummy,
-    [B_SCR_OP_UNUSED_30]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -2306,14 +2307,8 @@ static void SetNonVolatileStatus(enum BattlerId effectBattler, enum MoveEffect e
 {
     gEffectBattler = effectBattler;
 
-    if (effect == MOVE_EFFECT_SLEEP
-     || effect == MOVE_EFFECT_FREEZE)
-    {
-        const u8 *cancelMultiTurnMovesResult = NULL;
-        cancelMultiTurnMovesResult = CancelMultiTurnMoves(effectBattler, SKY_DROP_STATUS_FREEZE_SLEEP);
-        if (cancelMultiTurnMovesResult)
-            gBattlescriptCurrInstr = cancelMultiTurnMovesResult;
-    }
+    if (effect == MOVE_EFFECT_SLEEP || effect == MOVE_EFFECT_FREEZE)
+        CancelMultiTurnMoves(effectBattler);
 
     BattleScriptPush(battleScript);
 
@@ -2462,20 +2457,8 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         else
         {
             gBattleMons[gEffectBattler].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
-
-            // If the confusion is activating due to being released from Sky Drop, go to "confused due to fatigue" script.
-            // Otherwise, do normal confusion script.
-            if (GetMoveEffect(gCurrentMove) == EFFECT_SKY_DROP)
-            {
-                gBattleMons[gEffectBattler].volatiles.rampageTurns = 0;
-                gBattlerAttacker = gEffectBattler;
-                gBattlescriptCurrInstr = BattleScript_ThrashConfuses;
-            }
-            else
-            {
-                BattleScriptPush(battleScript);
-                gBattlescriptCurrInstr = BattleScript_MoveEffectConfusion;
-            }
+            BattleScriptPush(battleScript);
+            gBattlescriptCurrInstr = BattleScript_MoveEffectConfusion;
         }
         break;
     case MOVE_EFFECT_FLINCH:
@@ -3116,8 +3099,8 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                     MarkBattlerForControllerExec(gBattlerTarget);
                 }
 
-                if (gBattleMons[gBattlerTarget].pp[i] == 0 && gBattleStruct->skyDropTargets[gBattlerTarget] == SKY_DROP_NO_TARGET)
-                    CancelMultiTurnMoves(gBattlerTarget, SKY_DROP_IGNORE);
+                if (gBattleMons[gBattlerTarget].pp[i] == 0)
+                    CancelMultiTurnMoves(gBattlerTarget);
 
                 BattleScriptPush(battleScript);
                 gBattlescriptCurrInstr = BattleScript_MoveEffectEerieSpell;
@@ -3848,7 +3831,6 @@ static void Cmd_cleareffectsonfaint(void)
     if (gBattleControllerExecFlags == 0)
     {
         enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-        const u8 *clearDataResult = NULL;
         if (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !IsBattlerAlive(battler))
         {
             gBattleMons[battler].status1 = 0;
@@ -3856,11 +3838,8 @@ static void Cmd_cleareffectsonfaint(void)
             MarkBattlerForControllerExec(battler);
         }
 
-        clearDataResult = FaintClearSetData(battler); // Effects like attractions, trapping, etc.
-        if (clearDataResult)
-            gBattlescriptCurrInstr = clearDataResult;
-        else
-            gBattlescriptCurrInstr = cmd->nextInstr;
+        FaintClearSetData(battler); // Effects like attractions, trapping, etc.
+        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 
@@ -8986,9 +8965,8 @@ static void Cmd_tryspiteppreduce(void)
 
             gBattlescriptCurrInstr = cmd->nextInstr;
 
-            // Don't cut off Sky Drop if pp is brought to zero.
-            if (gBattleMons[gBattlerTarget].pp[i] == 0 && gBattleStruct->skyDropTargets[gBattlerTarget] == SKY_DROP_NO_TARGET)
-                CancelMultiTurnMoves(gBattlerTarget, SKY_DROP_IGNORE);
+            if (gBattleMons[gBattlerTarget].pp[i] == 0)
+                CancelMultiTurnMoves(gBattlerTarget);
         }
         else
         {
@@ -11511,6 +11489,43 @@ static void Cmd_tryoverwriteability(void)
     }
 }
 
+// If target was dropped due to attacker fainting and was previously rampaging, try to confuse
+static void Cmd_tryconfusionafterskydrop(void)
+{
+    CMD_ARGS(u8 battler);
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum BattlerId skyDropTarget = gBattleMons[battler].volatiles.skyDropTarget - 1;
+    bool32 shouldConfuse = FALSE;
+
+    if (gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_ATTACKER)
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    else if (gBattleMons[skyDropTarget].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
+    {
+        BtlController_EmitSpriteInvisibility(skyDropTarget, B_COMM_TO_CONTROLLER, FALSE);
+        MarkBattlerForControllerExec(skyDropTarget);
+        gBattleMons[skyDropTarget].volatiles.semiInvulnerable = STATE_NONE;
+        gSpecialStatuses[skyDropTarget].restoredBattlerSprite = TRUE;
+
+        if (gBattleMons[skyDropTarget].volatiles.confuseAfterSkyDrop)
+        {
+            gBattleMons[skyDropTarget].volatiles.confuseAfterSkyDrop = FALSE;
+
+            if (CanBeConfused(skyDropTarget))
+            {
+                shouldConfuse  = TRUE;
+                gBattleScripting.battler = skyDropTarget;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_RampageConfuseSkyDrop;
+            }
+        }
+    }
+
+    if (!shouldConfuse)
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 static void Cmd_dummy(void)
 {
 }
@@ -13526,10 +13541,6 @@ void BS_JumpIfNotBerry(void)
 void BS_GravityOnAirborneMons(void)
 {
     NATIVE_ARGS();
-    // Cancel all multiturn moves of IN_AIR Pokemon except those being targeted by Sky Drop.
-    if (gBattleMons[gBattlerTarget].volatiles.semiInvulnerable == STATE_ON_AIR)
-        CancelMultiTurnMoves(gBattlerTarget, SKY_DROP_GRAVITY_ON_AIRBORNE);
-
     gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_NONE;
     gBattleMons[gBattlerTarget].volatiles.magnetRise = FALSE;
     gBattleMons[gBattlerTarget].volatiles.telekinesis = FALSE;
@@ -13565,11 +13576,8 @@ void BS_TryAcupressure(void)
 void BS_CancelMultiTurnMoves(void)
 {
     NATIVE_ARGS();
-    const u8 *result = CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_CANCEL_MULTI_TURN_MOVES);
-    if (result)
-        gBattlescriptCurrInstr = result;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
+    CancelMultiTurnMoves(gBattlerAttacker);
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_IsRunningImpossible(void)
@@ -14539,37 +14547,6 @@ void BS_TryHealQuarterHealth(void)
         gBattlescriptCurrInstr = cmd->failInstr;    // fail
     else
         gBattlescriptCurrInstr = cmd->nextInstr;   // can heal
-}
-
-void BS_SkyDropYawn(void)
-{
-    NATIVE_ARGS();
-    if (gBattleStruct->skyDropTargets[gEffectBattler] != SKY_DROP_NO_TARGET && gBattleMons[gEffectBattler].volatiles.semiInvulnerable != STATE_SKY_DROP)
-    {
-        // Set the target of Sky Drop as gEffectBattler
-        gEffectBattler = gBattleStruct->skyDropTargets[gEffectBattler];
-
-        // Clear skyDropTargets data
-        gBattleStruct->skyDropTargets[gBattleStruct->skyDropTargets[gEffectBattler]] = SKY_DROP_NO_TARGET;
-        gBattleStruct->skyDropTargets[gEffectBattler] = SKY_DROP_NO_TARGET;
-
-        // If the target was in the middle of Outrage/Thrash/etc. when targeted by Sky Drop, confuse them on release and do proper animation
-        if (gBattleMons[gEffectBattler].volatiles.rampageTurns && CanBeConfused(gEffectBattler))
-        {
-            gBattleMons[gEffectBattler].volatiles.rampageTurns = 0;
-            gBattlerAttacker = gEffectBattler;
-            gBattleMons[gBattlerTarget].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
-            gBattlescriptCurrInstr = BattleScript_ThrashConfuses;
-        }
-        else
-        {
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
 }
 
 void BS_JumpIfPranksterBlocked(void)

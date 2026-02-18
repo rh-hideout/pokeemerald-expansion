@@ -3077,7 +3077,6 @@ static void BattleStartClearSetData(void)
         gBattleStruct->lastTakenMoveFrom[i][2] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][3] = MOVE_NONE;
         gBattleStruct->AI_monToSwitchIntoId[i] = PARTY_SIZE;
-        gBattleStruct->skyDropTargets[i] = SKY_DROP_NO_TARGET;
     }
 
     gLastUsedMove = 0;
@@ -3313,10 +3312,8 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     Ai_UpdateSwitchInData(battler);
 }
 
-const u8* FaintClearSetData(enum BattlerId battler)
+void FaintClearSetData(enum BattlerId battler)
 {
-    const u8 *result = NULL;
-
     for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
@@ -3409,48 +3406,6 @@ const u8* FaintClearSetData(enum BattlerId battler)
 
     Ai_UpdateFaintData(battler);
     TryBattleFormChange(battler, FORM_CHANGE_FAINT, GetBattlerAbility(battler));
-
-    // If the fainted mon was involved in a Sky Drop
-    if (gBattleStruct->skyDropTargets[battler] != SKY_DROP_NO_TARGET)
-    {
-        // Get battler id of the other Pokemon involved in this Sky Drop
-        u8 otherSkyDropper = gBattleStruct->skyDropTargets[battler];
-
-        // Clear Sky Drop data
-        gBattleStruct->skyDropTargets[battler] = SKY_DROP_NO_TARGET;
-        gBattleStruct->skyDropTargets[otherSkyDropper] = SKY_DROP_NO_TARGET;
-
-        // If the other Pokemon involved in this Sky Drop was the target, not the attacker
-        if (gBattleMons[otherSkyDropper].volatiles.semiInvulnerable == STATE_SKY_DROP)
-        {
-            // Release the target and take them out of the semi-invulnerable state
-            gBattleMons[otherSkyDropper].volatiles.semiInvulnerable = STATE_NONE;
-
-            // Make the target's sprite visible
-            gSprites[gBattlerSpriteIds[otherSkyDropper]].invisible = FALSE;
-
-            // If the target was sky dropped in the middle of using Outrage/Petal Dance/Thrash,
-            // confuse them upon release and print "confused via fatigue" message and animation.
-            if (gBattleMons[otherSkyDropper].volatiles.rampageTurns)
-            {
-                gBattleMons[otherSkyDropper].volatiles.rampageTurns = 0;
-
-                // If the released mon can be confused, do so.
-                // Don't use CanBeConfused here, since it can cause issues in edge cases.
-                enum Ability ability = GetBattlerAbility(otherSkyDropper);
-                if (!(ability == ABILITY_OWN_TEMPO
-                    || gBattleMons[otherSkyDropper].volatiles.confusionTurns
-                    || IsMistyTerrainAffected(otherSkyDropper, ability, GetBattlerHoldEffect(otherSkyDropper), gFieldStatuses)))
-                {
-                    gBattleMons[otherSkyDropper].volatiles.confusionTurns = ((Random()) % 4) + 2;
-                    gBattlerAttacker = otherSkyDropper;
-                    result = BattleScript_ThrashConfuses;
-                }
-            }
-        }
-    }
-
-    return result;
 }
 
 static void DoBattleIntro(void)
@@ -3945,7 +3900,7 @@ static void HandleEndTurn_ContinueBattle(void)
         {
             gBattleMons[battler].volatiles.flinched = FALSE;
             if ((gBattleMons[battler].status1 & STATUS1_SLEEP) && (gBattleMons[battler].volatiles.multipleTurns))
-                CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
+                CancelMultiTurnMoves(battler);
         }
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler = 0;
@@ -4279,7 +4234,7 @@ static void HandleTurnActionSelectionState(void)
                                             | BATTLE_TYPE_RECORDED_LINK))
                                             && !gTestRunnerEnabled)
                                             // Or if currently held by Sky Drop
-                                            || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
+                                            || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
                     {
                         RecordedBattle_ClearBattlerAction(battler, 1);
                         gSelectionBattleScripts[battler] = BattleScript_ActionSelectionItemsCantBeUsed;

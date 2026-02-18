@@ -154,18 +154,7 @@ enum SleepClauseBlock
     BLOCKED_BY_SLEEP_CLAUSE,
 };
 
-enum SkyDropState
-{
-    SKY_DROP_IGNORE,
-    SKY_DROP_ATTACKCANCELER_CHECK,
-    SKY_DROP_GRAVITY_ON_AIRBORNE,
-    SKY_DROP_CANCEL_MULTI_TURN_MOVES,
-    SKY_DROP_STATUS_YAWN,
-    SKY_DROP_STATUS_FREEZE_SLEEP,
-};
-
 #define SKY_DROP_NO_TARGET 0xFF
-#define SKY_DROP_RELEASED_TARGET 0xFE
 
 enum EjectPackTiming
 {
@@ -199,7 +188,7 @@ enum BattlerId GetBattlerForBattleScript(u8 caseId);
 bool32 IsBattlerMarkedForControllerExec(enum BattlerId battler);
 void MarkBattlerForControllerExec(enum BattlerId battler);
 void MarkBattlerReceivedLinkData(enum BattlerId battler);
-const u8 *CancelMultiTurnMoves(enum BattlerId battler, enum SkyDropState skyDropState);
+void CancelMultiTurnMoves(enum BattlerId battler);
 bool32 IsLastMonToMove(enum BattlerId battler);
 bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability ability);
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler);
@@ -406,6 +395,7 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv);
 bool32 DoesMoveMissTarget(struct BattleCalcValues *cv);
 bool32 IsSemiInvulnerable(enum BattlerId battler, enum SemiInvulnerableExclusion excludeCommander);
 bool32 BreaksThroughSemiInvulnerablity(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move);
+bool32 IsBattlerOnAir(enum BattlerId battler);
 bool32 HasPartnerTrainer(enum BattlerId battler);
 bool32 IsAffectedByPowderMove(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
 enum Move GetNaturePowerMove(void);
