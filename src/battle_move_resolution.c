@@ -2855,9 +2855,9 @@ static enum MoveEndResult MoveEndDefrost(void)
             continue;
         
         if (gBattleMons[battler].status1 & STATUS1_FREEZE
-        && IsBattlerTurnDamaged(battler)
-        && IsBattlerAlive(battler)
-        && (GetBattleMoveType(gCurrentMove) == TYPE_FIRE || CanBurnHitThaw(abilityAtk, gCurrentMove)))
+         && IsBattlerTurnDamaged(battler)
+         && IsBattlerAlive(battler)
+         && (GetBattleMoveType(gCurrentMove) == TYPE_FIRE || CanBurnHitThaw(abilityAtk, gCurrentMove)))
         {
             gBattleScripting.battler = battler;
             gBattleMons[battler].status1 &= ~STATUS1_FREEZE;
@@ -2867,9 +2867,9 @@ static enum MoveEndResult MoveEndDefrost(void)
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         else if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
-            && IsBattlerTurnDamaged(battler)
-            && IsBattlerAlive(battler)
-            && MoveThawsUser(GetOriginallyUsedMove(gChosenMove)))
+              && IsBattlerTurnDamaged(battler)
+              && IsBattlerAlive(battler)
+              && MoveThawsUser(GetOriginallyUsedMove(gChosenMove)))
         {
             gBattleScripting.battler = battler;
             gBattleMons[battler].status1 &= ~STATUS1_FROSTBITE;
