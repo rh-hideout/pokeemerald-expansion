@@ -617,18 +617,75 @@ BattleFrontier_BattleFactoryLobby_Text_ExplainOpenLvRules:
 script BattleFrontier_BattleFactoryLobby_Noland {
     faceplayer
     msgbox(format("Hey, {PLAYER}. Can't handle the heat? Or just fancy a new challenge? Let me know and I'll adjust some things for ya."))
+    call(BattleFrontier_BattleFactoryLobby_EventScript_NolandCheckUnlockNotices)
     goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions)
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions {
-	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "GIMMICK OPTIONS", "MUSIC OPTIONS", "BACKGROUND OPTIONS", "CANCEL")
+    if(var(VAR_FACTORY_TOTAL_WINS) < 10) {
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions_PreMusic)
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) < 20) {
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions_PreBackground)
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) < 30) {
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions_PreGimmicks)
+    }
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "GIMMICK OPTIONS", "MUSIC OPTIONS", "BACKGROUND OPTIONS", "TOTAL WINS", "CANCEL")
 	switch(var(VAR_RESULT)) {
-		case 0: #
+		case 0:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions)
         case 1:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
         case 2:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandBackgroundOptions)
+		case 3:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandShowTotalWins)
+		case 4:
+		    releaseall
+        default:
+			releaseall
+	}
+	releaseall
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions_PreMusic {
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "TOTAL WINS", "CANCEL")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandShowTotalWins)
+		case 1:
+		    releaseall
+        default:
+			releaseall
+	}
+	releaseall
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions_PreBackground {
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "MUSIC OPTIONS", "TOTAL WINS", "CANCEL")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+		case 1:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandShowTotalWins)
+		case 2:
+		    releaseall
+        default:
+			releaseall
+	}
+	releaseall
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions_PreGimmicks {
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "MUSIC OPTIONS", "BACKGROUND OPTIONS", "TOTAL WINS", "CANCEL")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+        case 1:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandBackgroundOptions)
+		case 2:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandShowTotalWins)
 		case 3:
 		    releaseall
         default:
@@ -637,14 +694,91 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions {
 	releaseall
 }
 
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandShowTotalWins {
+    buffernumberstring(STR_VAR_1, VAR_FACTORY_TOTAL_WINS)
+    msgbox(format("You've won {STR_VAR_1} Battle Factory battle(s) in total."))
+    if(var(VAR_FACTORY_TOTAL_WINS) < 10) {
+        msgbox(format("Next unlock at 10 wins: MUSIC OPTIONS."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) < 20) {
+        msgbox(format("Next unlock at 20 wins: BACKGROUND OPTIONS."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) < 30) {
+        msgbox(format("Next unlock at 30 wins: MEGA EVOLUTION."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) < 40) {
+        msgbox(format("Next unlock at 40 wins: Z-MOVES."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) < 50) {
+        msgbox(format("Next unlock at 50 wins: TERASTALLISATION."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
+    msgbox(format("All current Noland options are unlocked."))
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandCheckUnlockNotices {
+    if(var(VAR_FACTORY_TOTAL_WINS) >= 10) {
+        if(flag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_MUSIC) == FALSE) {
+            playfanfare(MUS_OBTAIN_B_POINTS)
+            waitfanfare
+            msgbox(format("Hey, nice going! You've unlocked MUSIC OPTIONS!\pFrom now on, I can tune your battles however you like--pick your tracks or let me shuffle them."))
+            setflag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_MUSIC)
+        }
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) >= 20) {
+        if(flag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_BACKGROUND) == FALSE) {
+            playfanfare(MUS_OBTAIN_B_POINTS)
+            waitfanfare
+            msgbox(format("Whoa! You're on a roll--BACKGROUND OPTIONS unlocked!\pNow you can pick your battle scenery, or leave it to chance with a shuffle."))
+            setflag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_BACKGROUND)
+        }
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) >= 30) {
+        if(flag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_MEGA) == FALSE) {
+            playfanfare(MUS_OBTAIN_B_POINTS)
+            waitfanfare
+            msgbox(format("Now that's battle sense! MEGA EVOLUTION is unlocked!\pWant mega power in your runs? Just tell me and I'll switch it on--or off."))
+            setflag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_MEGA)
+        }
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) >= 40) {
+        if(flag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_Z_MOVES) == FALSE) {
+            playfanfare(MUS_OBTAIN_B_POINTS)
+            waitfanfare
+            msgbox(format("You're really heating up! Z-MOVES are unlocked!\pIf you want high-impact finishes, I can enable them for your Factory runs anytime."))
+            setflag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_Z_MOVES)
+        }
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) >= 50) {
+        if(flag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_TERA) == FALSE) {
+            playfanfare(MUS_OBTAIN_B_POINTS)
+            waitfanfare
+            msgbox(format("Outstanding battling! You've unlocked TERASTALLISATION!\pYou've got the full set now--I can toggle it on or off for your next challenge."))
+            setflag(FLAG_BATTLE_FACTORY_UNLOCK_NOTICE_TERA)
+        }
+    }
+    return
+}
+
 // TODO tomorrow - add another set of options here for music choices, by setting VAR_FRONTIER_BGM
 // TODO another time - select rental pool options here
 // TODO here - set other rules (trick room, random weather, random terrain, inverse battles)
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions {
     msgbox(format("Interested in spicing up your battles?"))
+    if(var(VAR_FACTORY_TOTAL_WINS) < 40) {
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions_MegaOnly)
+    }
+    if(var(VAR_FACTORY_TOTAL_WINS) < 50) {
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions_MegaAndZ)
+    }
 	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "TERASTALLISATION", "MEGA EVOLUTION", "Z-MOVES", "CANCEL")
 	switch(var(VAR_RESULT)) {
-		case 0: #
+		case 0:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseTeraMode)
         case 1:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseMegaMode)
@@ -658,7 +792,39 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions {
     goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
 }
 
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions_MegaOnly {
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "MEGA EVOLUTION", "CANCEL")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseMegaMode)
+		case 1:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+        default:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+	}
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions_MegaAndZ {
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "MEGA EVOLUTION", "Z-MOVES", "CANCEL")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseMegaMode)
+        case 1:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseZMoveMode)
+		case 2:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+        default:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+	}
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+}
+
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseTeraMode {
+    if(var(VAR_FACTORY_TOTAL_WINS) < 50) {
+        msgbox(format("TERASTALLISATION unlocks at 50 total Battle Factory wins."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
     if(flag(FLAG_BATTLE_FACTORY_ALLOW_TERASTALLISATION) == TRUE) {
         msgbox(format("TERASTALLISATION is currently ENABLED."))
     }
@@ -679,6 +845,10 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseTeraMode {
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseMegaMode {
+    if(var(VAR_FACTORY_TOTAL_WINS) < 30) {
+        msgbox(format("MEGA EVOLUTION unlocks at 30 total Battle Factory wins."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
     if(flag(FLAG_BATTLE_FACTORY_ALLOW_MEGA_EVOLUTION) == TRUE) {
        msgbox(format("MEGA EVOLUTION is currently ENABLED."))
     }
@@ -699,6 +869,10 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseMegaMode {
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseZMoveMode {
+    if(var(VAR_FACTORY_TOTAL_WINS) < 40) {
+        msgbox(format("Z-MOVES unlock at 40 total Battle Factory wins."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
     if(flag(FLAG_BATTLE_FACTORY_ALLOW_Z_MOVES) == TRUE) {
        msgbox(format("Z-MOVES are currently ENABLED."))
     }
@@ -719,6 +893,10 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseZMoveMode {
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
+    if(var(VAR_FACTORY_TOTAL_WINS) < 10) {
+        msgbox(format("Music options unlock at 10 total Battle Factory wins."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
     msgbox(format("I can change the music that plays during your battles!"))
 	dynmultichoice(0, 0, FALSE, 4, 0, DYN_MULTICHOICE_CB_NONE,
 	 "R/S/E MUSIC", "FR/LG MUSIC", "D/P MUSIC", "PLATINUM MUSIC", "HG/SS MUSIC", "BLACK/WHITE MUSIC", "SHUFFLE", "CANCEL")
@@ -996,6 +1174,10 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_BlackWhi
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandBackgroundOptions {
+    if(var(VAR_FACTORY_TOTAL_WINS) < 20) {
+        msgbox(format("Background options unlock at 20 total Battle Factory wins."))
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    }
     msgbox(format("Fancy a new lick of paint on your battles?"))
     	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
     	 "DEFAULT", "SHUFFLE", "GRASS", "LONG GRASS", "SAND", "UNDERWATER", "WATER",

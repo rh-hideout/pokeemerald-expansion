@@ -6161,6 +6161,10 @@ u16 GetBattleBGM(void)
         frontierBGM = VarGet(VAR_FRONTIER_BGM);
     }
 
+    // Frontier Brain battles should always use boss music.
+    if ((gBattleTypeFlags & BATTLE_TYPE_FRONTIER) && TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
+        return MUS_VS_FRONTIER_BRAIN;
+
     // Custom battle frontier bgm is set
     if (frontierBGM <= ARRAY_COUNT(customFrontierSongs) && (
         gBattleTypeFlags & BATTLE_TYPE_FRONTIER ||

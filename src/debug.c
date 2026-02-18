@@ -63,6 +63,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/species.h"
+#include "constants/vars.h"
 #include "constants/weather.h"
 #include "siirtc.h"
 #include "rtc.h"
@@ -317,6 +318,9 @@ static void DebugAction_Give_Decoration_SelectId(u8 taskId);
 static void DebugAction_Give_MaxMoney(u8 taskId);
 static void DebugAction_Give_MaxCoins(u8 taskId);
 static void DebugAction_Give_MaxBattlePoints(u8 taskId);
+static void DebugAction_Give_FactoryWinsAdd1(u8 taskId);
+static void DebugAction_Give_FactoryWinsAdd10(u8 taskId);
+static void DebugAction_Give_FactoryWinsReset(u8 taskId);
 static void DebugAction_Give_DayCareEgg(u8 taskId);
 
 static void DebugAction_Sound_SE(u8 taskId);
@@ -592,6 +596,9 @@ static const struct DebugMenuOption sDebugMenu_Actions_Give[] =
     { COMPOUND_STRING("Max Money"),         DebugAction_Give_MaxMoney },
     { COMPOUND_STRING("Max Coins"),         DebugAction_Give_MaxCoins },
     { COMPOUND_STRING("Max Battle Points"), DebugAction_Give_MaxBattlePoints },
+    { COMPOUND_STRING("Factory Wins +1"),   DebugAction_Give_FactoryWinsAdd1 },
+    { COMPOUND_STRING("Factory Wins +10"),  DebugAction_Give_FactoryWinsAdd10 },
+    { COMPOUND_STRING("Factory Wins Reset"), DebugAction_Give_FactoryWinsReset },
     { COMPOUND_STRING("Daycare Egg"),       DebugAction_Give_DayCareEgg },
     { NULL }
 };
@@ -3052,6 +3059,27 @@ static void DebugAction_Give_MaxCoins(u8 taskId)
 static void DebugAction_Give_MaxBattlePoints(u8 taskId)
 {
     gSaveBlock2Ptr->frontier.battlePoints = MAX_BATTLE_FRONTIER_POINTS;
+}
+
+static void DebugAction_Give_FactoryWinsAdd1(u8 taskId)
+{
+    u16 wins = VarGet(VAR_FACTORY_TOTAL_WINS);
+    if (wins < UINT16_MAX)
+        VarSet(VAR_FACTORY_TOTAL_WINS, wins + 1);
+}
+
+static void DebugAction_Give_FactoryWinsAdd10(u8 taskId)
+{
+    u16 wins = VarGet(VAR_FACTORY_TOTAL_WINS);
+    if (wins > UINT16_MAX - 10)
+        VarSet(VAR_FACTORY_TOTAL_WINS, UINT16_MAX);
+    else
+        VarSet(VAR_FACTORY_TOTAL_WINS, wins + 10);
+}
+
+static void DebugAction_Give_FactoryWinsReset(u8 taskId)
+{
+    VarSet(VAR_FACTORY_TOTAL_WINS, 0);
 }
 
 static void DebugAction_Give_DayCareEgg(u8 taskId)

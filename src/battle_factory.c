@@ -59,6 +59,7 @@ static void RestorePlayerPartyHeldItems(void);
 static u16 GetFactoryMonId(u8 lvlMode, u8 challengeNum, bool8 useBetterRange);
 static u8 GetMoveBattleStyle(u16 move);
 void DebugAction_FactoryWinChallenge(void);
+void DebugAction_TriggerNolandBattle(void);
 const u8 *GetFacilityClassTypeWhitelist(u8 facilityClass, u8 *count);
 static void GetOpponentFrontierClass();
 void GetOpponentFrontierClassInternal(u8 trainerId);
@@ -914,6 +915,31 @@ void DebugAction_FactoryWinChallenge(void)
         gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE);
 
     // Now end the battle
+    BattleDebug_WonBattle();
+}
+
+void DebugAction_TriggerNolandBattle(void)
+{
+    u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+
+    if (!InBattleFactory())
+    {
+        DebugPrintf("Trigger Noland ignored (not in Battle Factory)");
+        return;
+    }
+
+    // Queue the run state so the next battle is Noland:
+    // after this forced win, streak becomes 20 and battleNum becomes 6.
+    gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] = 19;
+    gSaveBlock2Ptr->frontier.curChallengeBattleNum = 5;
+    gSaveBlock2Ptr->frontier.winStreakActiveFlags |= sWinStreakFlags[battleMode][lvlMode];
+
+    DebugPrintf("Noland trigger queued");
+    DebugPrintf("Factory streak=%d, battleNum=%d",
+                gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode],
+                gSaveBlock2Ptr->frontier.curChallengeBattleNum);
+
     BattleDebug_WonBattle();
 }
 

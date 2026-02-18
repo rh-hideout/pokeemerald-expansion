@@ -114,6 +114,7 @@ enum
     LIST_ITEM_VARIOUS,
     LIST_ITEM_INSTANT_WIN,
     LIST_ITEM_COMPLETE_FACTORY_CHALLENGE,
+    LIST_ITEM_TRIGGER_NOLAND_BATTLE,
     LIST_ITEM_COUNT
 };
 
@@ -315,6 +316,7 @@ static const struct ListMenuItem sMainListItems[] =
 {
     {COMPOUND_STRING("Instant Win"),  LIST_ITEM_INSTANT_WIN},
     {COMPOUND_STRING("Win Factory"), LIST_ITEM_COMPLETE_FACTORY_CHALLENGE},
+    {COMPOUND_STRING("Trigger Noland"), LIST_ITEM_TRIGGER_NOLAND_BATTLE},
     {COMPOUND_STRING("Moves"),        LIST_ITEM_MOVES},
     {sText_Ability,                   LIST_ITEM_ABILITY},
     {sText_HeldItem,                  LIST_ITEM_HELD_ITEM},
@@ -1220,6 +1222,14 @@ static void Task_DebugMenuProcessInput(u8 taskId)
             {
                 DebugPrintf("Complete factory challenge triggered");
                 DebugAction_FactoryWinChallenge();
+                BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+                gTasks[taskId].func = Task_DebugMenuFadeOut;
+                return;
+            }
+            else if (listItemId == LIST_ITEM_TRIGGER_NOLAND_BATTLE && JOY_NEW(A_BUTTON))
+            {
+                DebugPrintf("Trigger Noland battle");
+                DebugAction_TriggerNolandBattle();
                 BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
                 gTasks[taskId].func = Task_DebugMenuFadeOut;
                 return;

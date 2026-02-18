@@ -91,6 +91,7 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyLost::
 	goto BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedOpponent::
+	addvar VAR_FACTORY_TOTAL_WINS, 1
 	factory_get FACTORY_DATA_WIN_STREAK_SWAPS
 	goto_if_eq VAR_RESULT, MAX_STREAK, BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementWinStreak
 	addvar VAR_RESULT, 1
@@ -178,6 +179,7 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_DoNolandBattle::
 	return
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedNoland::
+	addvar VAR_FACTORY_TOTAL_WINS, 1
 	factory_get FACTORY_DATA_WIN_STREAK_SWAPS
 	goto_if_eq VAR_RESULT, MAX_STREAK, BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementWinStreak
 	addvar VAR_RESULT, 1
@@ -311,4 +313,3 @@ BattleFrontier_BattleFactoryBattleRoom_Text_LastTimeILoseToYou:
 	.string "That's absolutely the last time\n"
 	.string "I lose to you!\p"
 	.string "We have to do this again, hey?$"
-

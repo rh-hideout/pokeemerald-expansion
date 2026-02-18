@@ -30,6 +30,7 @@
 #include "constants/abilities.h"
 #include "constants/item_effects.h"
 #include "constants/songs.h"
+#include "constants/trainers.h"
 #include "test/battle.h"
 #include "test/test.h"
 #include "test/test_runner_battle.h"
@@ -54,6 +55,16 @@ static void SpriteCB_FreeOpponentSprite(struct Sprite *sprite);
 static u32 ReturnAnimIdForBattler(bool32 isPlayerSide, u32 specificBattler);
 static void LaunchKOAnimation(u32 battlerId, u16 animId, bool32 isFront);
 static void AnimateMonAfterKnockout(u32 battler);
+static bool32 IsBossBattleForSpeedup(void);
+
+static bool32 IsBossBattleForSpeedup(void)
+{
+    // Keep this centralized so it's easy to extend boss rules later.
+    if ((gBattleTypeFlags & BATTLE_TYPE_FRONTIER) && TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
+        return TRUE;
+
+    return FALSE;
+}
 
 void HandleLinkBattleSetup(void)
 {
@@ -3155,6 +3166,9 @@ void BtlController_HandleSwitchInTryShinyAnim(u32 battler)
 u32 Rogue_GetBattleSpeedScale(bool32 forHealthbar)
 {
     u8 battleSceneOption = VarGet(VAR_BATTLE_SPEED); // Originally GetBattleSceneOption() with a saveblock stored value;
+
+    if (IsBossBattleForSpeedup())
+        return 1;
 
     // Hold L to slow down
     if (JOY_HELD(L_BUTTON))
