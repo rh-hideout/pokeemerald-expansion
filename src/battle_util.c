@@ -9152,12 +9152,12 @@ static u32 GetFlingPowerFromItemId(enum Item itemId)
         return GetItemFlingPower(itemId);
 }
 
-bool32 CanFling(enum BattlerId battlerAtk)
+bool32 CanFling(enum BattlerId battlerAtk, enum Ability abilityAtk)
 {
     enum Item item = gBattleMons[battlerAtk].item;
 
     if (item == ITEM_NONE
-      || (GetConfig(CONFIG_KLUTZ_FLING_INTERACTION) >= GEN_5 && GetBattlerAbility(battlerAtk) == ABILITY_KLUTZ)
+      || (GetConfig(CONFIG_KLUTZ_FLING_INTERACTION) >= GEN_5 && abilityAtk == ABILITY_KLUTZ)
       || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
       || gBattleMons[battlerAtk].volatiles.embargo
       || (GetItemTMHMIndex(item) != 0 && GetItemImportance(item) == 1) // don't fling reusable TMs
@@ -10076,8 +10076,7 @@ bool32 TrySymbiosis(enum BattlerId battler, enum Item itemId, bool32 moveEnd)
         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_EJECT_BUTTON
         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_EJECT_PACK
         && (GetConfig(CONFIG_SYMBIOSIS_GEMS) < GEN_7 || !(gSpecialStatuses[battler].gemBoost))
-        && GetMoveEffect(gCurrentMove) != EFFECT_FLING //Fling and damage-reducing berries are handled separately.
-        && !gSpecialStatuses[battler].berryReduced
+        && !gSpecialStatuses[battler].berryReduced //Fling and damage-reducing berries are handled separately.
         && TryTriggerSymbiosis(battler, BATTLE_PARTNER(battler)))
     {
         BestowItem(BATTLE_PARTNER(battler), battler);
