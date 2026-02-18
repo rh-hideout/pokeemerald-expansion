@@ -3127,11 +3127,14 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     case MOVE_EFFECT_FLING:
         if (CanFling(gBattlerAttacker, abilities[gBattlerAttacker]))
         {
-            gLastUsedItem = gBattleMons[gBattlerAttacker].item;
-            enum HoldEffect holdEffect = GetItemHoldEffect(gLastUsedItem);
-            gBattleStruct->flungItem = TRUE;
+            u32 item = gBattleStruct->flingItem;
+            if (item == ITEM_NONE) // flingItem could be none if not used with EFFECT_FLING
+                item = gBattleStruct->flingItem = gBattleMons[gBattlerAttacker].item;
+            gLastUsedItem = item;
 
-            if (GetItemPocket(gLastUsedItem) == POCKET_BERRIES)
+            enum HoldEffect holdEffect = GetItemHoldEffect(item);
+
+            if (GetItemPocket(item) == POCKET_BERRIES)
             {
                 BattleScriptPush(battleScript);
                 gBattlescriptCurrInstr = BattleScript_EffectFlingConsumeBerry;
@@ -3145,42 +3148,31 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                 break;
             }
 
+            BattleScriptPush(battleScript);
+            gBattlescriptCurrInstr = BattleScript_RemoveItem;
             switch (holdEffect)
             {
             case HOLD_EFFECT_FLAME_ORB:
-                BattleScriptPush(battleScript);
-                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_BURN, BattleScript_RemoveItem, NO_FLAGS);
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_BURN, gBattlescriptCurrInstr, NO_FLAGS);
                 break;
             case HOLD_EFFECT_TOXIC_ORB:
-                BattleScriptPush(battleScript);
-                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_TOXIC, BattleScript_RemoveItem, NO_FLAGS);
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_TOXIC, gBattlescriptCurrInstr, NO_FLAGS);
                 break;
             case HOLD_EFFECT_LIGHT_BALL:
-                BattleScriptPush(battleScript);
-                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_PARALYSIS, BattleScript_RemoveItem, NO_FLAGS);
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_PARALYSIS, gBattlescriptCurrInstr, NO_FLAGS);
                 break;
             case HOLD_EFFECT_TYPE_POWER:
-                if (GetItemSecondaryId(gLastUsedItem) == TYPE_POISON)
-                {
-                    BattleScriptPush(battleScript);
-                    SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_POISON, BattleScript_RemoveItem, NO_FLAGS);
-                }
+                if (GetItemSecondaryId(item) == TYPE_POISON)
+                    SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_POISON, gBattlescriptCurrInstr, NO_FLAGS);
                 break;
             case HOLD_EFFECT_FLINCH:
-                BattleScriptPush(battleScript);
-                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, BattleScript_RemoveItem, NO_FLAGS);
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
                 break;
             case HOLD_EFFECT_MENTAL_HERB:
-                if (ItemBattleEffects(gBattlerTarget, 0, holdEffect, IsOnFlingActivation))
-                    BattleScriptPush(battleScript);
-                break;
             case HOLD_EFFECT_WHITE_HERB:
-                if (ItemBattleEffects(gBattlerTarget, 0, holdEffect, IsOnFlingActivation))
-                    BattleScriptPush(battleScript);
+                ItemBattleEffects(gBattlerTarget, 0, holdEffect, IsOnFlingActivation);
                 break;
             default:
-                BattleScriptPush(battleScript);
-                gBattlescriptCurrInstr = BattleScript_RemoveItem;
                 break;
             }
         }
@@ -6552,11 +6544,15 @@ static void Cmd_removeitem(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     enum Item itemId = gBattleMons[battler].item;
 
-    if (gBattleStruct->flungItem)
+    if (gBattleStruct->flingItem != ITEM_NONE)
     {
+        if (gBattleMons[gBattlerAttacker].item == ITEM_NONE) // Avoid the else branch
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            return;
+        }
         battler = gBattlerAttacker;
-        itemId = gBattleMons[battler].item;
-        gBattleStruct->flungItem = FALSE;
+        itemId = gBattleStruct->flingItem;
     }
     else if (gBattleScripting.overrideBerryRequirements || itemId == ITEM_NONE)
     {

@@ -1089,7 +1089,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         if (!CanFling(ctx->battlerAtk, ctx->abilityAtk))
             battleScript = BattleScript_ButItFailed;
         else // set fling item
-            gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
+         gBattleStruct->flingItem = gBattleMons[ctx->battlerAtk].item;
         break;
     case EFFECT_POLTERGEIST:
         if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
@@ -3679,7 +3679,7 @@ static enum MoveEndResult MoveEndClearBits(void)
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[gBattlerAttacker].usedMicleBerry = FALSE;
     gBattleStruct->toxicChainPriority = FALSE;
-    gBattleStruct->flungItem = FALSE;
+    gBattleStruct->flingItem = ITEM_NONE;
 
     if (gBattleStruct->unableToUseMove)
         gBattleStruct->pledgeMove = FALSE;
