@@ -29,6 +29,23 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks")
     }
 }
 
+SINGLE_BATTLE_TEST("Freeze isn't thawed by opponent's Fire-type attacks if Sheer Force boosted")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBER); MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Ember!");
+        NONE_OF {
+            MESSAGE("Wobbuffet thawed out!");
+            STATUS_ICON(player, none: TRUE);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Freeze is thawed by user's Flame Wheel")
 {
     GIVEN {
