@@ -93,6 +93,8 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
     }
 }
 
+TO_DO_BATTLE_TEST("Rapid Spin blows away Wrap, hazards, but doesn't raise Speed when Sheer Force boosted (Gen 8)");
+
 SINGLE_BATTLE_TEST("Rapid Spin doesn't blow away Wrap, hazards or raise Speed when Sheer Force boosted (Gen 9+)")
 {
     GIVEN {
