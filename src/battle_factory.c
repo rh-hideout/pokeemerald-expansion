@@ -29,6 +29,7 @@
 #include "constants/moves.h"
 #include "constants/items.h"
 #include "constants/factory_pools.h"
+#include "constants/flags.h"
 #include "constants/rgb.h"
 #include "data/battle_frontier/facility_classes_types.h"
 
@@ -201,6 +202,26 @@ static void EnsureFactoryPoolsReady(void)
         InitFactoryRankPools();
         sFactoryPoolsReady = TRUE;
     }
+}
+
+bool8 IsBattleFactoryRandomBattlesModeEnabled(void)
+{
+    return (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_TENT
+         && FlagGet(FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE));
+}
+
+u8 GetBattleFactoryMonLevel(u16 monId)
+{
+    if (gSaveBlock2Ptr->frontier.lvlMode == FRONTIER_LVL_TENT)
+        return TENT_MIN_LEVEL;
+
+    if (IsBattleFactoryRandomBattlesModeEnabled())
+        return gBattleFrontierMons[monId].lvl;
+
+    if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
+        return FRONTIER_MAX_LEVEL_OPEN;
+
+    return FRONTIER_MAX_LEVEL_50;
 }
 
 void CallBattleFactoryFunction(void)
@@ -447,22 +468,16 @@ static void SetRentalsToOpponentParty(void)
 static void SetPlayerAndOpponentParties(void)
 {
     int i;
-    u8 monLevel;
     u16 monId;
     u8 ivs;
 
     if (gSaveBlock2Ptr->frontier.lvlMode == FRONTIER_LVL_TENT)
     {
         gFacilityTrainerMons = gSlateportBattleTentMons;
-        monLevel = TENT_MIN_LEVEL;
     }
     else
     {
         gFacilityTrainerMons = gBattleFrontierMons;
-        if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
-            monLevel = FRONTIER_MAX_LEVEL_OPEN;
-        else
-            monLevel = FRONTIER_MAX_LEVEL_50;
     }
 
     if (gSpecialVar_0x8005 < 2)
@@ -473,7 +488,7 @@ static void SetPlayerAndOpponentParties(void)
             monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
             ivs = gSaveBlock2Ptr->frontier.rentalMons[i].ivs;
 
-            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, OT_ID_PLAYER_ID, FLAG_FRONTIER_MON_FACTORY, &gPlayerParty[i]);
+            CreateFacilityMon(&gFacilityTrainerMons[monId], GetBattleFactoryMonLevel(monId), ivs, OT_ID_PLAYER_ID, FLAG_FRONTIER_MON_FACTORY, &gPlayerParty[i]);
         }
     }
 
@@ -485,7 +500,7 @@ static void SetPlayerAndOpponentParties(void)
         {
             monId = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].monId;
             ivs = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].ivs;
-            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, OT_ID_PLAYER_ID, FLAG_FRONTIER_MON_FACTORY, &gEnemyParty[i]);
+            CreateFacilityMon(&gFacilityTrainerMons[monId], GetBattleFactoryMonLevel(monId), ivs, OT_ID_PLAYER_ID, FLAG_FRONTIER_MON_FACTORY, &gEnemyParty[i]);
         }
         break;
     }
@@ -741,7 +756,6 @@ void FillFactoryBrainParty(void)
     int i, j, k;
     u16 species[FRONTIER_PARTY_SIZE];
     u16 heldItems[FRONTIER_PARTY_SIZE];
-    int monLevel;
     u8 fixedIV;
     u32 otId;
 
@@ -749,7 +763,6 @@ void FillFactoryBrainParty(void)
     u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
     u8 challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
     fixedIV = GetFactoryMonFixedIV(challengeNum + 2, FALSE);
-    monLevel = SetFacilityPtrsGetLevel();
     i = 0;
     otId = T1_READ_32(gSaveBlock2Ptr->playerTrainerId);
 
@@ -787,7 +800,7 @@ void FillFactoryBrainParty(void)
         species[i] = gFacilityTrainerMons[monId].species;
         heldItems[i] = gFacilityTrainerMons[monId].heldItem;
         CreateFacilityMon(&gFacilityTrainerMons[monId],
-                monLevel, fixedIV, otId, FLAG_FRONTIER_MON_FACTORY,
+                GetBattleFactoryMonLevel(monId), fixedIV, otId, FLAG_FRONTIER_MON_FACTORY,
                 &gEnemyParty[i]);
         i++;
     }
@@ -818,6 +831,13 @@ static const u16 *GetFactoryRentalPool(u8 lvlMode, u8 challengeNum, u16 *poolSiz
 static u16 GetFactoryMonId(u8 lvlMode, u8 challengeNum, bool8 useBetterRange)
 {
     DebugPrintf("GetFactoryMonId");
+
+    if (IsBattleFactoryRandomBattlesModeEnabled())
+    {
+        u16 monId = FRONTIER_MON_GEN9RANDOMBATTLE_FIRST + (Random() % FRONTIER_MON_GEN9RANDOMBATTLE_COUNT);
+        DebugPrintf("BF randbats selected monId = %d", monId);
+        return monId;
+    }
 
     EnsureFactoryPoolsReady();
 
