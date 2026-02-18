@@ -836,3 +836,15 @@ u8 *StringCopyUppercase(u8 *dest, const u8 *src)
     *dest = EOS;
     return dest;
 }
+
+bool8 DoesStringProperlyTerminate(const u8 *str, u32 last)
+{
+    u32 checkSum = 0;
+
+    for (u32 i = 0; i < last; i++)
+    {
+        checkSum |= (str[i] == EOS) << i;
+    }
+
+    return (checkSum != 0);
+}
