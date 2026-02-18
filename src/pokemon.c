@@ -4371,7 +4371,7 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, enum BattlerId bat
             if((healMask & STATUS1_SLEEP))
             {
                 u32 battlerSide = GetBattlerSide(battler);
-                struct Pokemon *party = GetBattlerParty(battler); // grintoul TO DO - check
+                struct Pokemon *party = GetBattlerParty(battler);
 
                 for (u32 i = 0; i < PARTY_SIZE; i++)
                 {
