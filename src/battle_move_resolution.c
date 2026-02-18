@@ -2,7 +2,7 @@
 #include "battle.h"
 #include "battle_environment.h"
 #include "battle_hold_effects.h"
-#include "battle_ai_util.h"
+#include "battle_ai_record.h"
 #include "battle_util.h"
 #include "battle_move_resolution.h"
 #include "battle_scripts.h"
@@ -3384,7 +3384,7 @@ static inline bool32 CanEjectPackTrigger(enum BattlerId battlerAtk, enum Battler
     if (gBattleMons[battlerDef].volatiles.tryEjectPack
      && GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_PACK
      && IsBattlerAlive(battlerDef)
-     && CountUsablePartyMons(battlerDef) > 0
+     && CanBattlerSwitch(battlerDef)
      && !gProtectStructs[battlerDef].disableEjectPack
      && !(moveEffect == EFFECT_HIT_SWITCH_TARGET && CanBattlerSwitch(battlerAtk))
      && !(moveEffect == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))

@@ -7,6 +7,7 @@
 #include "battle_ai_items.h"
 #include "battle_ai_switch.h"
 #include "battle_ai_main.h"
+#include "battle_ai_record.h"
 #include "battle_controllers.h"
 #include "battle_factory.h"
 #include "battle_setup.h"
@@ -141,6 +142,35 @@ static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Mo
 };
 
 // Functions
+void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler)
+{
+    u32 moveLimitations;
+    u64 flags[MAX_BATTLERS_COUNT];
+
+    // Clear AI data but preserve the flags.
+    memcpy(&flags[0], &gAiThinkingStruct->aiFlags[0], sizeof(u64) * MAX_BATTLERS_COUNT);
+    memset(gAiThinkingStruct, 0, sizeof(struct AiThinkingStruct));
+    memcpy(&gAiThinkingStruct->aiFlags[0], &flags[0], sizeof(u64) * MAX_BATTLERS_COUNT);
+
+    moveLimitations = gAiLogicData->moveLimitations[battler];
+
+    // Conditional score reset, unlike Ruby.
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (moveLimitations & (1u << moveIndex))
+            SET_SCORE(battler, moveIndex, 0);
+        else if (defaultScoreMoves & 1)
+            SET_SCORE(battler, moveIndex, AI_SCORE_DEFAULT);
+        else
+            SET_SCORE(battler, moveIndex, 0);
+
+        defaultScoreMoves >>= 1;
+    }
+
+    gBattlerTarget = SetRandomTarget(battler);
+    gAiBattleData->chosenTarget[battler] = gBattlerTarget;
+}
+
 void BattleAI_SetupItems(void)
 {
     u8 *data = (u8 *)gBattleHistory;
@@ -292,35 +322,6 @@ void BattleAI_SetupFlags(void)
         gAiThinkingStruct->aiFlags[B_BATTLER_2] = aiFlags;
         gAiThinkingStruct->aiFlags[B_BATTLER_0] = aiFlags;
     }
-}
-
-void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler)
-{
-    u32 moveLimitations;
-    u64 flags[MAX_BATTLERS_COUNT];
-
-    // Clear AI data but preserve the flags.
-    memcpy(&flags[0], &gAiThinkingStruct->aiFlags[0], sizeof(u64) * MAX_BATTLERS_COUNT);
-    memset(gAiThinkingStruct, 0, sizeof(struct AiThinkingStruct));
-    memcpy(&gAiThinkingStruct->aiFlags[0], &flags[0], sizeof(u64) * MAX_BATTLERS_COUNT);
-
-    moveLimitations = gAiLogicData->moveLimitations[battler];
-
-    // Conditional score reset, unlike Ruby.
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-    {
-        if (moveLimitations & (1u << moveIndex))
-            SET_SCORE(battler, moveIndex, 0);
-        else if (defaultScoreMoves & 1)
-            SET_SCORE(battler, moveIndex, AI_SCORE_DEFAULT);
-        else
-            SET_SCORE(battler, moveIndex, 0);
-
-        defaultScoreMoves >>= 1;
-    }
-
-    gBattlerTarget = SetRandomTarget(battler);
-    gAiBattleData->chosenTarget[battler] = gBattlerTarget;
 }
 
 bool32 BattlerChooseNonMoveAction(void)

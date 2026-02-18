@@ -124,9 +124,9 @@ enum MoveComparisonResult
     return score;                   \
 }
 
+void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler);
 void BattleAI_SetupItems(void);
 void BattleAI_SetupFlags(void);
-void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler);
 void ComputeBattlerDecisions(enum BattlerId battler);
 u32 BattleAI_ChooseMoveIndex(enum BattlerId battler);
 void Ai_InitPartyStruct(void);
