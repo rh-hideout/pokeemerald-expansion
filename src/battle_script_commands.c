@@ -3514,8 +3514,11 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         break;
     case MOVE_EFFECT_THROAT_CHOP:
-        gDisableStructs[gEffectBattler].throatChopTimer = 2;
-        gBattlescriptCurrInstr = battleScript;
+        if (gDisableStructs[gEffectBattler].throatChopTimer == 0)
+        {
+            gDisableStructs[gEffectBattler].throatChopTimer = 2;
+            gBattlescriptCurrInstr = battleScript;
+        }
         break;
     case MOVE_EFFECT_INCINERATE:
         if (((gBattleMons[gEffectBattler].item >= FIRST_BERRY_INDEX && gBattleMons[gEffectBattler].item <= LAST_BERRY_INDEX)
