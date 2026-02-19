@@ -1600,10 +1600,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryflingholdeffect
-	callnative BS_TryFlingHoldEffect
-	.endm
-
 	.macro swapsidestatuses
 	callnative BS_CourtChangeSwapSideStatuses
 	.endm
