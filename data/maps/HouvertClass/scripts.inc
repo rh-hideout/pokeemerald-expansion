@@ -38,8 +38,6 @@ HouvertClass_EventScript_ProfHouvertExam_Start:
 	msgbox HouvertClass_Text_ProfHouvertSitDown, MSGBOX_DEFAULT
 	applymovement LOCALID_PLAYER, HouvertClass_Movement_PlayerWalkToSeat
 	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_FaceUp
-	waitmovement 0
 	delay 20
 	msgbox HouvertClass_Text_ProfHouvertExamRules, MSGBOX_DEFAULT
 	msgbox HouvertClass_Text_ProfHouvertRegistrationRequest, MSGBOX_DEFAULT
@@ -237,30 +235,41 @@ HouvertClass_EventScript_ReturnFromFlashback::
 	fadescreenswapbuffers FADE_FROM_BLACK
 	msgbox HouvertClass_Text_HouvertTimeUp, MSGBOX_DEFAULT
 	msgbox HouvertClass_Text_HouvertPensDown, MSGBOX_DEFAULT
-	msgbox HouvertClass_Text_HouvertPassPapers, MSGBOX_DEFAULT
+	waitmovement 0
 	applymovement LOCALID_HOUVERT, HouvertClass_Movement_HouvertApproachSeat
 	waitmovement 0
-	applymovement LOCALID_HOUVERT, Common_Movement_FaceDown
-	applymovement LOCALID_PLAYER, Common_Movement_FaceUp
-	applymovement LOCALID_PLAYER, HouvertClass_Movement_PlayerHandInExam
+	applymovement LOCALID_PLAYER, Common_Movement_FaceRight
 	waitmovement 0
-	applymovement LOCALID_HOUVERT, HouvertClass_Movement_HouvertReturnToPodium
+	msgbox HouvertClass_Text_HouvertPassPapers, MSGBOX_DEFAULT
+	applymovement LOCALID_PLAYER, Common_Movement_FaceUp
+	waitmovement 0
+	applymovement LOCALID_HOUVERT, HouvertClass_Movement_walkDeskAndBack
+	waitmovement 0
+	applymovement LOCALID_PLAYER, Common_Movement_FaceRight
 	waitmovement 0
 	msgbox HouvertClass_Text_HouvertFail, MSGBOX_DEFAULT
 	msgbox HouvertClass_Text_PlayerWhat, MSGBOX_DEFAULT
 	msgbox HouvertClass_Text_HouvertTrivial, MSGBOX_DEFAULT
 	msgbox HouvertClass_Text_HouvertCritique, MSGBOX_DEFAULT
 	msgbox HouvertClass_Text_HouvertHowever, MSGBOX_DEFAULT
-	applymovement LOCALID_HOUVERT, HouvertClass_Movement_HouvertStepForward
-	waitmovement 0
 	msgbox HouvertClass_Text_HouvertBattleChallenge, MSGBOX_DEFAULT
-	trainerbattle_single TRAINER_HOUVERT, HouvertClass_Text_HouvertBattleIntro, HouvertClass_Text_HouvertBattleDefeat, HouvertClass_EventScript_HouvertPostBattle
+	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT, LOCALID_HOUVERT, TRAINER_HOUVERT, HouvertClass_Text_HouvertBattleIntro, HouvertClass_Text_HouvertBattleDefeat, HouvertClass_EventScript_HouvertPostBattle, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
 	end
 
 HouvertClass_EventScript_HouvertPostBattle::
 	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
+	applymovement LOCALID_PLAYER, Common_Movement_FaceRight
+	applymovement LOCALID_HOUVERT, Common_Movement_FaceDown
+	msgbox HouvertClass_Text_HouvertPassConfirmation, MSGBOX_DEFAULT
+	message HouvertClass_Text_HouvertBadgeReward
+	waitmessage
+	call Common_EventScript_PlayGymBadgeFanfare
+	msgbox HouvertClass_Text_HouvertBadgeInfo, MSGBOX_DEFAULT
+	setflag FLAG_BADGE02_GET
 	setflag FLAG_CTF_HOUVERT_EXAM_COMPLETED
+	waitmovement 0
+	applymovement LOCALID_HOUVERT, HouvertClass_Movement_HouvertReturnToPodium
+	waitmovement 0
 	releaseall
 	end
 
@@ -279,34 +288,40 @@ HouvertClass_Movement_PlayerWalkToSeat:
 	walk_down
 	walk_down
 	walk_left
-	step_end
-
-HouvertClass_Movement_PlayerHandInExam:
-	walk_in_place_faster_up
-	walk_in_place_faster_down
-	step_end
-
-HouvertClass_Movement_HouvertStepForward:
-	walk_down
-	walk_up
+	face_up
 	step_end
 
 HouvertClass_Movement_HouvertApproachSeat:
 	walk_down
-	walk_down
 	walk_right
 	walk_right
 	walk_down
-	walk_left
+	walk_down
+	walk_down
+	face_left
 	step_end
 
 HouvertClass_Movement_HouvertReturnToPodium:
+	walk_up
+	walk_up
+	walk_up
+	walk_left
+	walk_left
+	face_down
+	step_end
+
+HouvertClass_Movement_walkDeskAndBack:
+	walk_up
+	walk_up
+	walk_up
+	walk_left
+	walk_left
 	walk_right
-	walk_up
-	walk_left
-	walk_left
-	walk_up
-	walk_up
+	walk_right
+	walk_down
+	walk_down
+	walk_down
+	face_left
 	step_end
 
 HouvertClass_Text_ProfHouvertComeToFront:
@@ -334,6 +349,14 @@ HouvertClass_Text_HouvertPensDown:
 HouvertClass_Text_HouvertPassPapers:
 	.string "DR. PROF. HOUVERT: Pass your papers\n"
 	.string "forward.$"
+
+HouvertClass_Text_HouvertBadgeReward:
+	.string "DR. PROF. HOUVERT: You may claim the\n"
+	.string "second badge.$"
+
+HouvertClass_Text_HouvertBadgeInfo:
+	.string "It proves you survived this exam.\p"
+	.string "Keep it safe.$"
 
 HouvertClass_Text_HouvertFail:
 	.string "DR. PROF. HOUVERT: Hmm...\p"
@@ -370,9 +393,15 @@ HouvertClass_Text_HouvertBattleDefeat:
 	.string "Very well.\p"
 	.string "You pass.$"
 
+HouvertClass_Text_HouvertPassConfirmation:
+	.string "DR. PROF. HOUVERT: Very well. You\n"
+	.string "have passed this examination.$"
+
 HouvertClass_Text_HouvertAfterPass:
-	.string "DR. PROF. HOUVERT: Return to your seat.\p"
-	.string "Your evaluation continues... always.$"
+	.string "DR. PROF. HOUVERT: Tomorrow I captain\n"
+	.string "Germany's national squad.\p"
+	.string "We'll defend the table football title\n"
+	.string "with the same edge you showed today.$"
 
 HouvertClass_Text_ProfHouvertArrival:
 	.string "DR. PROF. HOUVERT: Good. You're\n"

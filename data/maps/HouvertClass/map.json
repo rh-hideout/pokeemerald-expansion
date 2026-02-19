@@ -251,13 +251,6 @@
       "elevation": 0,
       "dest_map": "MAP_MAIN_HUB",
       "dest_warp_id": "1"
-    },
-    {
-      "x": 9,
-      "y": 4,
-      "elevation": 0,
-      "dest_map": "MAP_HALLWAY_TO_SECRETARIAT_2",
-      "dest_warp_id": "8"
     }
   ],
   "coord_events": [],

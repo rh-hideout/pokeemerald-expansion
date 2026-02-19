@@ -299,6 +299,9 @@ const u16 gTrainerPalette_Rocket[] = INCBIN_U16("graphics/trainers/palettes/rock
 const u32 gTrainerFrontPic_Oraggle[] = INCBIN_U32("graphics/trainers/front_pics/oraggle.4bpp.smol");
 const u16 gTrainerPalette_Oraggle[] = INCBIN_U16("graphics/trainers/palettes/oraggle.gbapal");
 
+const u32 gTrainerFrontPic_Houvert[] = INCBIN_U32("graphics/trainers/front_pics/houvert.4bpp.smol");
+const u16 gTrainerPalette_Houvert[] = INCBIN_U16("graphics/trainers/palettes/houvert.gbapal");
+
 
 // The first two parameters invoke a front pic and palette by
 // calling a "TRAINER_PIC" constant (e.g. TRAINER_PIC_HIKER), and
@@ -413,6 +416,7 @@ const struct TrainerSprite gTrainerSprites[] =
     //CTF
     TRAINER_SPRITE(TRAINER_PIC_ROCKET, gTrainerFrontPic_Rocket, gTrainerPalette_Rocket),
     TRAINER_SPRITE(TRAINER_PIC_ORAGGLE, gTrainerFrontPic_Oraggle, gTrainerPalette_Oraggle),
+    TRAINER_SPRITE(TRAINER_PIC_HOUVERT, gTrainerFrontPic_Houvert, gTrainerPalette_Houvert),
 };
 
 static const union AnimCmd sAnimCmd_Hoenn[] =
