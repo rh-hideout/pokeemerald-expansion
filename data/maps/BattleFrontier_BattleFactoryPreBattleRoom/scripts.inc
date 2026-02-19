@@ -73,7 +73,14 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_ReturnToRoomFromBattle::
 	closemessage
 	applymovement LOCALID_FACTORY_PRE_BATTLE_ATTENDANT, BattleFrontier_BattleFactoryPreBattleRoom_Movement_AttendantReturnToPlayer
 	waitmovement 0
+	copyvar VAR_RESULT, VAR_FACTORY_ACTIVE_BOSS
+	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_BossCallFactoryHead
+	special BufferFactoryBossCallText
+	msgbox gStringVar4, MSGBOX_DEFAULT
+	goto BattleFrontier_BattleFactoryPreBattleRoom_EventScript_BossCallDone
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_BossCallFactoryHead::
 	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_MessageFromHeadComeRightNow, MSGBOX_DEFAULT
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_BossCallDone::
 	closemessage
 	delay 16
 	goto BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForHead
@@ -505,7 +512,13 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_StyleFlexible::
 	return
 
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForHead::
+	copyvar VAR_RESULT, VAR_FACTORY_ACTIVE_BOSS
+	goto_if_eq VAR_RESULT, 1, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForPowerfulTrainer
 	message BattleFrontier_BattleFactoryPreBattleRoom_Text_PreparedToFaceHead
+	goto BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForHeadPrompt
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForPowerfulTrainer::
+	message BattleFrontier_BattleFactoryPreBattleRoom_Text_PreparedToFacePowerfulTrainer
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForHeadPrompt::
 	waitmessage
 	call BattleFrontier_EventScript_GetCantRecordBattle
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForHeadNoRecord
@@ -526,7 +539,13 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForHeadNoRecord::
 	case MULTI_B_PRESSED, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForHead
 
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskSwapBeforeHead::
+	copyvar VAR_RESULT, VAR_FACTORY_ACTIVE_BOSS
+	goto_if_eq VAR_RESULT, 1, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskSwapBeforePowerfulTrainer
 	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_CantTellAnythingAboutHead, MSGBOX_DEFAULT
+	goto BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskSwapBeforeHeadConfirm
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskSwapBeforePowerfulTrainer::
+	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_CantTellAnythingAboutPowerfulTrainer, MSGBOX_DEFAULT
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskSwapBeforeHeadConfirm::
 	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_LikeToSwapMon, MSGBOX_YESNO
 	switch VAR_RESULT
 	case NO, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_EnterBattleRoom
@@ -859,6 +878,22 @@ BattleFrontier_BattleFactoryPreBattleRoom_Text_PreparedToFaceHead:
 BattleFrontier_BattleFactoryPreBattleRoom_Text_CantTellAnythingAboutHead:
 	.string "I'm terribly sorry, but I can't tell you\n"
 	.string "anything about the FACTORY HEAD.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_MessageFromPowerfulTrainerComeRightNow:
+	.string "Oh, my…\n"
+	.string "Sorry to keep you waiting!\p"
+	.string "I have a message from a powerful\n"
+	.string "TRAINER who wants to battle you.\p"
+	.string "He says, “We're going to do it!\n"
+	.string "Come here right now!”$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_PreparedToFacePowerfulTrainer:
+	.string "A powerful TRAINER is demanding you.\n"
+	.string "Are you prepared to face him?$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_CantTellAnythingAboutPowerfulTrainer:
+	.string "I'm terribly sorry, but I can't tell you\n"
+	.string "anything about that powerful TRAINER.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassYoungster:
 	.string "The TRAINER battles with youth!\n"

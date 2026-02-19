@@ -9,6 +9,7 @@
 #include "data.h"
 #include "event_data.h"
 #include "frontier_util.h"
+#include "factory_boss.h"
 #include "graphics.h"
 #include "international_string_util.h"
 #include "item.h"
@@ -25,6 +26,7 @@
 #include "line_break.h"
 #include "constants/abilities.h"
 #include "constants/battle_dome.h"
+#include "constants/battle_frontier.h"
 #include "constants/battle_string_ids.h"
 #include "constants/frontier_util.h"
 #include "constants/items.h"
@@ -239,6 +241,7 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType
     u32 firstId, lastId, trainerId;
     u32 retValue = TRAINER_SLIDE_TARGET_TRAINER_A;
     bool32 shouldRun = FALSE;
+    const struct FactoryBossProfile *bossProfile = NULL;
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) || IsOnPlayerSide(battler))
         return TRAINER_SLIDE_TARGET_NONE;
@@ -247,6 +250,37 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
 
     gBattleScripting.battler = battler;
+
+    if ((gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+        && VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_FACTORY
+        && TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
+    {
+        bossProfile = GetActiveFactoryBossProfile();
+    }
+
+    if (slideId == TRAINER_SLIDE_LAST_SWITCHIN
+        && bossProfile != NULL
+        && bossProfile->text != NULL
+        && bossProfile->text->lastSwitchInSlideText != NULL
+        && !IsTrainerSlidePlayed(slideId)
+        && ShouldRunTrainerSlideLastSwitchIn(battler))
+    {
+        gBattleStruct->trainerSlideMsg = bossProfile->text->lastSwitchInSlideText;
+        MarkTrainerSlideAsPlayed(slideId);
+        return retValue;
+    }
+
+    if (slideId == TRAINER_SLIDE_LAST_LOW_HP
+        && bossProfile != NULL
+        && bossProfile->text != NULL
+        && bossProfile->text->lastLowHpSlideText != NULL
+        && !IsTrainerSlidePlayed(slideId)
+        && ShouldRunTrainerSlideLastLowHp(firstId, lastId, battler))
+    {
+        gBattleStruct->trainerSlideMsg = bossProfile->text->lastLowHpSlideText;
+        MarkTrainerSlideAsPlayed(slideId);
+        return retValue;
+    }
 
     if (IsTrainerSlidePlayed(slideId))
         return TRAINER_SLIDE_TARGET_NONE;

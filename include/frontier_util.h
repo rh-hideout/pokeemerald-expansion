@@ -24,6 +24,13 @@ u16 GetFrontierBrainMonMove(u8 monId, u8 moveSlotId);
 u8 GetFrontierBrainMonNature(u8 monId);
 u8 GetFrontierBrainMonEvs(u8 monId, u8 evStatId);
 s32 GetFronterBrainSymbol(void);
+void SetFactoryDebugStevenBossEnabled(bool8 enabled);
+bool8 IsFactoryDebugStevenBossEnabled(void);
+void BufferFactoryBossCallText(void);
+void BufferFactoryBossBattleIntroText(void);
+void BufferFactoryBossBattleStartText(void);
+void BufferFactoryBossBattlePostWinText(void);
+void PlayFactoryBossPreBattleRoomBgmIfSet(void);
 void ClearEnemyPartyAfterChallenge(void);
 void ShowBattleFrontierCaughtBannedSpecies(void);
 

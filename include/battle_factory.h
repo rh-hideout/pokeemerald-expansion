@@ -14,6 +14,8 @@ u8 GetBattleFactoryMonLevel(u16 monId);
 void SetMonMoveAvoidReturn(struct Pokemon *mon, u16 moveArg, u8 moveSlot);
 void DebugAction_FactoryWinChallenge(void);
 void DebugAction_TriggerNolandBattle(void);
+void DebugAction_TriggerStevenBattle(void);
+void DebugAction_TriggerFactoryBoss(u8 bossId);
 void MarkAllFactorySpeciesAsSeen(void);
 void MarkFactoryWinningPartyAsCaught(void);
 

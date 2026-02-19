@@ -22,6 +22,7 @@
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
 #include "battle_factory.h"
+#include "factory_boss.h"
 #include "list_menu.h"
 #include "decompress.h"
 #include "trainer_pokemon_sprites.h"
@@ -35,6 +36,7 @@
 #include "constants/party_menu.h"
 #include "constants/moves.h"
 #include "constants/items.h"
+#include "constants/factory_boss.h"
 #include "constants/rgb.h"
 
 #define MAX_MODIFY_DIGITS 4
@@ -80,6 +82,9 @@ struct BattleDebugMenu
 
     u8 aiMonSpriteId;
     u8 aiMovesWindowId;
+    u8 bossTriggerBossIds[FACTORY_BOSS_COUNT];
+    struct ListMenuItem bossTriggerListItems[FACTORY_BOSS_COUNT];
+    u8 bossTriggerCount;
 
     union
     {
@@ -114,7 +119,7 @@ enum
     LIST_ITEM_VARIOUS,
     LIST_ITEM_INSTANT_WIN,
     LIST_ITEM_COMPLETE_FACTORY_CHALLENGE,
-    LIST_ITEM_TRIGGER_NOLAND_BATTLE,
+    LIST_ITEM_TRIGGER_BOSS,
     LIST_ITEM_COUNT
 };
 
@@ -239,6 +244,7 @@ static const u8 sText_Ability[] = _("Ability");
 static const u8 sText_HeldItem[] = _("Held Item");
 static const u8 sText_HoldEffect[] = _("Hold Effect");
 static const u8 sText_EmptyString[] = _("");
+static const u8 sText_BossNoland[] = _("Noland");
 
 static const struct BitfieldInfo sStatus1Bitfield[] =
 {
@@ -316,7 +322,7 @@ static const struct ListMenuItem sMainListItems[] =
 {
     {COMPOUND_STRING("Instant Win"),  LIST_ITEM_INSTANT_WIN},
     {COMPOUND_STRING("Win Factory"), LIST_ITEM_COMPLETE_FACTORY_CHALLENGE},
-    {COMPOUND_STRING("Trigger Noland"), LIST_ITEM_TRIGGER_NOLAND_BATTLE},
+    {COMPOUND_STRING("Trigger Boss"), LIST_ITEM_TRIGGER_BOSS},
     {COMPOUND_STRING("Moves"),        LIST_ITEM_MOVES},
     {sText_Ability,                   LIST_ITEM_ABILITY},
     {sText_HeldItem,                  LIST_ITEM_HELD_ITEM},
@@ -610,6 +616,7 @@ static void PrintOnBattlerWindow(u8 windowId, u8 battlerId);
 static void UpdateWindowsOnChangedBattler(struct BattleDebugMenu *data);
 static void CreateSecondaryListMenu(struct BattleDebugMenu *data);
 static void PrintSecondaryEntries(struct BattleDebugMenu *data);
+static void BuildBossTriggerListItems(struct BattleDebugMenu *data);
 static void DestroyModifyArrows(struct BattleDebugMenu *data);
 static void PrintDigitChars(struct BattleDebugMenu *data);
 static void SetUpModifyArrows(struct BattleDebugMenu *data);
@@ -1226,21 +1233,15 @@ static void Task_DebugMenuProcessInput(u8 taskId)
                 gTasks[taskId].func = Task_DebugMenuFadeOut;
                 return;
             }
-            else if (listItemId == LIST_ITEM_TRIGGER_NOLAND_BATTLE && JOY_NEW(A_BUTTON))
+            if (JOY_NEW(A_BUTTON))
             {
-                DebugPrintf("Trigger Noland battle");
-                DebugAction_TriggerNolandBattle();
-                BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
-                gTasks[taskId].func = Task_DebugMenuFadeOut;
-                return;
+                data->currentMainListItemId = listItemId;
+
+                // Create the secondary menu list.
+                CreateSecondaryListMenu(data);
+                PrintSecondaryEntries(data);
+                data->activeWindow = ACTIVE_WIN_SECONDARY;
             }
-
-            data->currentMainListItemId = listItemId;
-
-            // Create the secondary menu list.
-            CreateSecondaryListMenu(data);
-            PrintSecondaryEntries(data);
-            data->activeWindow = ACTIVE_WIN_SECONDARY;
         }
     }
     // Secondary list is active, handle input.
@@ -1257,6 +1258,29 @@ static void Task_DebugMenuProcessInput(u8 taskId)
         }
         else if (listItemId != LIST_NOTHING_CHOSEN)
         {
+            if (data->currentMainListItemId == LIST_ITEM_TRIGGER_BOSS)
+            {
+                u8 bossId;
+
+                if (listItemId >= data->bossTriggerCount)
+                    return;
+
+                bossId = data->bossTriggerBossIds[listItemId];
+                if (bossId == FACTORY_BOSS_NONE)
+                    DebugPrintf("Trigger Noland battle");
+                else
+                    DebugPrintf("Trigger boss battle (bossId=%d)", bossId);
+
+                if (bossId == FACTORY_BOSS_NONE)
+                    DebugAction_TriggerNolandBattle();
+                else
+                    DebugAction_TriggerFactoryBoss(bossId);
+
+                BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+                gTasks[taskId].func = Task_DebugMenuFadeOut;
+                return;
+            }
+
             data->currentSecondaryListItemId = listItemId;
             data->modifyWindowId = AddWindow(&sModifyWindowTemplate);
             PutWindowTilemap(data->modifyWindowId);
@@ -1427,6 +1451,11 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
         listTemplate.items = sSideStatusListItems;
         itemsCount = ARRAY_COUNT(sSideStatusListItems);
         break;
+    case LIST_ITEM_TRIGGER_BOSS:
+        BuildBossTriggerListItems(data);
+        listTemplate.items = data->bossTriggerListItems;
+        itemsCount = data->bossTriggerCount;
+        break;
     case LIST_ITEM_INSTANT_WIN:
     case LIST_ITEM_AI_MOVES_PTS:
     case LIST_ITEM_AI_INFO:
@@ -1444,6 +1473,35 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
 
     data->secondaryListTaskId = ListMenuInit(&listTemplate, 0, 0);
     CopyWindowToVram(data->secondaryListWindowId, COPYWIN_FULL);
+}
+
+static void BuildBossTriggerListItems(struct BattleDebugMenu *data)
+{
+    u8 listCount = 0;
+    u8 bossId;
+    const struct FactoryBossProfile *bossProfile;
+
+    data->bossTriggerListItems[listCount].name = sText_BossNoland;
+    data->bossTriggerListItems[listCount].id = listCount;
+    data->bossTriggerBossIds[listCount] = FACTORY_BOSS_NONE;
+    listCount++;
+
+    for (bossId = FACTORY_BOSS_NONE + 1; bossId < FACTORY_BOSS_COUNT; bossId++)
+    {
+        bossProfile = GetFactoryBossProfile(bossId);
+        if (bossProfile == NULL || bossProfile->debugMenuName == NULL)
+            continue;
+
+        if (listCount >= ARRAY_COUNT(data->bossTriggerListItems))
+            break;
+
+        data->bossTriggerListItems[listCount].name = bossProfile->debugMenuName;
+        data->bossTriggerListItems[listCount].id = listCount;
+        data->bossTriggerBossIds[listCount] = bossId;
+        listCount++;
+    }
+
+    data->bossTriggerCount = listCount;
 }
 
 static void PadString(const u8 *src, u8 *dst)

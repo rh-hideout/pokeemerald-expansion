@@ -1,0 +1,45 @@
+    [FACTORY_BOSS_NONE] =
+    {
+        .enabled = FALSE,
+    },
+    [FACTORY_BOSS_STEVEN] =
+    {
+        .enabled = TRUE,
+        .debugMenuName = sText_DebugBossName_Steven,
+        .text = &sFactoryBossTextSet_Steven,
+        .trainerId = TRAINER_STEVEN,
+        .objEventGfx = OBJ_EVENT_GFX_STEVEN,
+        .battleBgm = MUS_VS_CHAMPION,
+        .awardSymbol = FALSE,
+        .acePolicy = FACTORY_BOSS_ACE_SPECIES_ANCHOR_LAST,
+        .aceSpecies = SPECIES_METAGROSS,
+        .preferRandbatsPool = TRUE,
+    },
+    [FACTORY_BOSS_WALLY] =
+    {
+        .enabled = TRUE,
+        .debugMenuName = sText_DebugBossName_Wally,
+        .text = &sFactoryBossTextSet_Wally,
+        .trainerId = TRAINER_WALLY_VR_2,
+        .objEventGfx = OBJ_EVENT_GFX_WALLY,
+        .battleBgm = MUS_VS_RIVAL,
+        .preBattleRoomBgm = MUS_ENCOUNTER_RICH,
+        .awardSymbol = FALSE,
+        .acePolicy = FACTORY_BOSS_ACE_SPECIES_ANCHOR_LAST,
+        .aceSpecies = SPECIES_GALLADE,
+        .preferRandbatsPool = TRUE,
+    },
+    [FACTORY_BOSS_RED] =
+    {
+        .enabled = TRUE,
+        .debugMenuName = sText_DebugBossName_Red,
+        .text = &sFactoryBossTextSet_Red,
+        .trainerId = TRAINER_RED,
+        .objEventGfx = OBJ_EVENT_GFX_RED,
+        .battleBgm = MUS_HG_VS_CHAMPION,
+        .preBattleRoomBgm = MUS_RG_ENCOUNTER_RIVAL,
+        .awardSymbol = FALSE,
+        .acePolicy = FACTORY_BOSS_ACE_SPECIES_ANCHOR_FIRST,
+        .aceSpecies = SPECIES_PIKACHU,
+        .preferRandbatsPool = TRUE,
+    },

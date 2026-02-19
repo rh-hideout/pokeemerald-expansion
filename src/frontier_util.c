@@ -24,7 +24,9 @@
 #include "data.h"
 #include "record_mixing.h"
 #include "strings.h"
+#include "sound.h"
 #include "malloc.h"
+#include "factory_boss.h"
 #include "save.h"
 #include "load_save.h"
 #include "battle_dome.h"
@@ -36,6 +38,7 @@
 #include "constants/game_stat.h"
 #include "constants/moves.h"
 #include "constants/items.h"
+#include "constants/songs.h"
 #include "constants/event_objects.h"
 #include "party_menu.h"
 #include "list_menu.h"
@@ -60,6 +63,8 @@ struct FrontierBrain
     u16 battledBit[2];
     u8 streakAppearances[4];
 };
+
+extern const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES];
 
 // This file's functions.
 static void GetChallengeStatus(void);
@@ -97,6 +102,36 @@ static void CopyFrontierBrainText(bool8 playerWonText);
 static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies);
 static void PrintBannedSpeciesName(u8 windowId, u32 itemId, u8 y);
 static void Task_BannedSpeciesWindowInput(u8 taskId);
+static u16 GetActiveFrontierBrainTrainerId(s32 facility);
+static u8 GetActiveFrontierBrainObjEventGfx(s32 facility);
+
+static u16 GetActiveFrontierBrainTrainerId(s32 facility)
+{
+    const struct FactoryBossProfile *bossProfile;
+
+    if (facility == FRONTIER_FACILITY_FACTORY)
+    {
+        bossProfile = GetActiveFactoryBossProfile();
+        if (bossProfile != NULL)
+            return bossProfile->trainerId;
+    }
+
+    return gFrontierBrainInfo[facility].trainerId;
+}
+
+static u8 GetActiveFrontierBrainObjEventGfx(s32 facility)
+{
+    const struct FactoryBossProfile *bossProfile;
+
+    if (facility == FRONTIER_FACILITY_FACTORY)
+    {
+        bossProfile = GetActiveFactoryBossProfile();
+        if (bossProfile != NULL)
+            return bossProfile->objEventGfx;
+    }
+
+    return gFrontierBrainInfo[facility].objEventGfx;
+}
 
 // battledBit: Flags to change the conversation when the Frontier Brain is encountered for a battle
 // First bit is has battled them before and not won yet, second bit is has battled them and won (obtained a Symbol)
@@ -2521,7 +2556,7 @@ u8 GetFrontierBrainTrainerPicIndex(void)
     else
         facility = VarGet(VAR_FRONTIER_FACILITY);
 
-    return GetTrainerPicFromId(gFrontierBrainInfo[facility].trainerId);
+    return GetTrainerPicFromId(GetActiveFrontierBrainTrainerId(facility));
 }
 
 enum TrainerClassID GetFrontierBrainTrainerClass(void)
@@ -2533,7 +2568,7 @@ enum TrainerClassID GetFrontierBrainTrainerClass(void)
     else
         facility = VarGet(VAR_FRONTIER_FACILITY);
 
-    return GetTrainerClassFromId(gFrontierBrainInfo[facility].trainerId);
+    return GetTrainerClassFromId(GetActiveFrontierBrainTrainerId(facility));
 }
 
 void CopyFrontierBrainTrainerName(u8 *dst)
@@ -2547,7 +2582,7 @@ void CopyFrontierBrainTrainerName(u8 *dst)
     else
         facility = VarGet(VAR_FRONTIER_FACILITY);
 
-    trainerName = GetTrainerNameFromId(gFrontierBrainInfo[facility].trainerId);
+    trainerName = GetTrainerNameFromId(GetActiveFrontierBrainTrainerId(facility));
     for (i = 0; i < PLAYER_NAME_LENGTH; i++)
         dst[i] = trainerName[i];
 
@@ -2563,7 +2598,7 @@ bool8 IsFrontierBrainFemale(void)
 void SetFrontierBrainObjEventGfx_2(void)
 {
     s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    VarSet(VAR_OBJ_GFX_ID_0, gFrontierBrainInfo[facility].objEventGfx);
+    VarSet(VAR_OBJ_GFX_ID_0, GetActiveFrontierBrainObjEventGfx(facility));
 }
 
 #define FRONTIER_BRAIN_OTID 61226
@@ -2628,7 +2663,26 @@ u16 GetFrontierBrainMonSpecies(u8 monId)
 void SetFrontierBrainObjEventGfx(u8 facility)
 {
     TRAINER_BATTLE_PARAM.opponentA = TRAINER_FRONTIER_BRAIN;
-    VarSet(VAR_OBJ_GFX_ID_0, gFrontierBrainInfo[facility].objEventGfx);
+    VarSet(VAR_OBJ_GFX_ID_0, GetActiveFrontierBrainObjEventGfx(facility));
+}
+
+void SetFactoryDebugStevenBossEnabled(bool8 enabled)
+{
+    if (enabled)
+    {
+        VarSet(VAR_FACTORY_ACTIVE_BOSS, FACTORY_BOSS_STEVEN);
+        FlagSet(FLAG_BATTLE_FACTORY_DEBUG_STEVEN_BOSS);
+    }
+    else
+    {
+        VarSet(VAR_FACTORY_ACTIVE_BOSS, FACTORY_BOSS_NONE);
+        FlagClear(FLAG_BATTLE_FACTORY_DEBUG_STEVEN_BOSS);
+    }
+}
+
+bool8 IsFactoryDebugStevenBossEnabled(void)
+{
+    return (GetActiveFactoryBossId() == FACTORY_BOSS_STEVEN);
 }
 
 u16 GetFrontierBrainMonMove(u8 monId, u8 moveSlotId)
@@ -2674,11 +2728,75 @@ s32 GetFronterBrainSymbol(void)
     return symbol;
 }
 
+static const u8 sText_DefaultFactoryBossCall[] = COMPOUND_STRING(
+    "There is a message from a powerful\n"
+    "TRAINER.\p"
+    "Come to the battle room right now.");
+static const u8 sText_DefaultFactoryBossIntro[] = COMPOUND_STRING(
+    "A powerful TRAINER appears before you!");
+static const u8 sText_DefaultFactoryBossStart[] = COMPOUND_STRING(
+    "Let's battle!");
+static const u8 sText_DefaultFactoryBossPostWin[] = COMPOUND_STRING(
+    "Well done.\n"
+    "That was an excellent battle.");
+
+void BufferFactoryBossCallText(void)
+{
+    const struct FactoryBossProfile *bossProfile = GetActiveFactoryBossProfile();
+
+    if (bossProfile != NULL && bossProfile->text != NULL && bossProfile->text->preBattleCallText != NULL)
+        StringCopy(gStringVar4, bossProfile->text->preBattleCallText);
+    else
+        StringCopy(gStringVar4, sText_DefaultFactoryBossCall);
+}
+
+void BufferFactoryBossBattleIntroText(void)
+{
+    const struct FactoryBossProfile *bossProfile = GetActiveFactoryBossProfile();
+
+    if (bossProfile != NULL && bossProfile->text != NULL && bossProfile->text->battleIntroText != NULL)
+        StringCopy(gStringVar4, bossProfile->text->battleIntroText);
+    else
+        StringCopy(gStringVar4, sText_DefaultFactoryBossIntro);
+}
+
+void BufferFactoryBossBattleStartText(void)
+{
+    const struct FactoryBossProfile *bossProfile = GetActiveFactoryBossProfile();
+
+    if (bossProfile != NULL && bossProfile->text != NULL && bossProfile->text->battleStartText != NULL)
+        StringCopy(gStringVar4, bossProfile->text->battleStartText);
+    else
+        StringCopy(gStringVar4, sText_DefaultFactoryBossStart);
+}
+
+void BufferFactoryBossBattlePostWinText(void)
+{
+    const struct FactoryBossProfile *bossProfile = GetActiveFactoryBossProfile();
+
+    if (bossProfile != NULL && bossProfile->text != NULL && bossProfile->text->battlePostWinText != NULL)
+        StringCopy(gStringVar4, bossProfile->text->battlePostWinText);
+    else
+        StringCopy(gStringVar4, sText_DefaultFactoryBossPostWin);
+}
+
+void PlayFactoryBossPreBattleRoomBgmIfSet(void)
+{
+    const struct FactoryBossProfile *bossProfile = GetActiveFactoryBossProfile();
+
+    if (bossProfile == NULL || bossProfile->preBattleRoomBgm == MUS_NONE)
+        return;
+
+    if (bossProfile->preBattleRoomBgm != GetCurrentMapMusic())
+        PlayNewMapMusic(bossProfile->preBattleRoomBgm);
+}
+
 // Called for intro speech as well despite the fact that its handled in the map scripts files instead
 static void CopyFrontierBrainText(bool8 playerWonText)
 {
     s32 facility;
     s32 symbol;
+    const struct FactoryBossProfile *bossProfile = NULL;
 
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
     {
@@ -2691,13 +2809,22 @@ static void CopyFrontierBrainText(bool8 playerWonText)
         symbol = GetFronterBrainSymbol();
     }
 
+    if (facility == FRONTIER_FACILITY_FACTORY)
+        bossProfile = GetActiveFactoryBossProfile();
+
     switch (playerWonText)
     {
     case FALSE:
-        StringCopy(gStringVar4, gFrontierBrainInfo[facility].wonTexts[symbol]);
+        if (bossProfile != NULL && bossProfile->text != NULL && bossProfile->text->battleSpeechPlayerLost != NULL)
+            StringCopy(gStringVar4, bossProfile->text->battleSpeechPlayerLost);
+        else
+            StringCopy(gStringVar4, gFrontierBrainInfo[facility].wonTexts[symbol]);
         break;
     case TRUE:
-        StringCopy(gStringVar4, gFrontierBrainInfo[facility].lostTexts[symbol]);
+        if (bossProfile != NULL && bossProfile->text != NULL && bossProfile->text->battleSpeechPlayerWon != NULL)
+            StringCopy(gStringVar4, bossProfile->text->battleSpeechPlayerWon);
+        else
+            StringCopy(gStringVar4, gFrontierBrainInfo[facility].lostTexts[symbol]);
         break;
     }
 }

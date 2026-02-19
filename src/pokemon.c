@@ -48,6 +48,7 @@
 #include "task.h"
 #include "test_runner.h"
 #include "text.h"
+#include "factory_boss.h"
 #include "trainer_hill.h"
 #include "util.h"
 #include "constants/abilities.h"
@@ -59,6 +60,7 @@
 #include "constants/cries.h"
 #include "constants/event_objects.h"
 #include "constants/form_change_types.h"
+#include "constants/flags.h"
 #include "constants/item_effects.h"
 #include "constants/items.h"
 #include "constants/layouts.h"
@@ -6163,7 +6165,16 @@ u16 GetBattleBGM(void)
 
     // Frontier Brain battles should always use boss music.
     if ((gBattleTypeFlags & BATTLE_TYPE_FRONTIER) && TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
+    {
+        if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_FACTORY)
+        {
+            const struct FactoryBossProfile *bossProfile = GetActiveFactoryBossProfile();
+            if (bossProfile != NULL)
+                return bossProfile->battleBgm;
+        }
+
         return MUS_VS_FRONTIER_BRAIN;
+    }
 
     // Custom battle frontier bgm is set
     if (frontierBGM <= ARRAY_COUNT(customFrontierSongs) && (

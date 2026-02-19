@@ -49,6 +49,7 @@ BattleFrontier_BattleFactoryBattleRoom_OnFrame:
 	.2byte 0
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_EnterRoomFactoryHeadBattle::
+	special PlayFactoryBossPreBattleRoomBgmIfSet
 	msgbox BattleFrontier_BattleFactoryBattleRoom_Text_GetAMoveOn, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_FACTORY_BATTLE_OPPONENT, BattleFrontier_BattleFactoryBattleRoom_Movement_NolandMoveToBattle
@@ -113,6 +114,8 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyWon::
 	goto BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleNoland::
+	copyvar VAR_RESULT, VAR_FACTORY_ACTIVE_BOSS
+	goto_if_ne VAR_RESULT, 0, BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleCustomBoss
 	switch VAR_TEMP_F
 	case FRONTIER_BRAIN_GOLD, BattleFrontier_BattleFactoryBattleRoom_EventScript_IntroNolandGold
 	case FRONTIER_BRAIN_STREAK, BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleNolandSilver
@@ -178,6 +181,26 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_DoNolandBattle::
 	waitstate
 	return
 
+BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleCustomBoss::
+	frontier_get FRONTIER_DATA_HEARD_BRAIN_SPEECH
+	goto_if_ne VAR_RESULT, FALSE, BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleCustomBossStart
+	special BufferFactoryBossBattleIntroText
+	msgbox gStringVar4, MSGBOX_DEFAULT
+	frontier_set FRONTIER_DATA_HEARD_BRAIN_SPEECH
+BattleFrontier_BattleFactoryBattleRoom_EventScript_BattleCustomBossStart::
+	special BufferFactoryBossBattleStartText
+	msgbox gStringVar4, MSGBOX_DEFAULT
+	call BattleFrontier_BattleFactoryBattleRoom_EventScript_DoNolandBattle
+	setvar VAR_FACTORY_ACTIVE_BOSS, 0
+	clearflag FLAG_BATTLE_FACTORY_DEBUG_STEVEN_BOSS
+	goto_if_eq VAR_RESULT, 1, BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedCustomBoss
+	goto BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyLost
+
+BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedCustomBoss::
+	special BufferFactoryBossBattlePostWinText
+	msgbox gStringVar4, MSGBOX_DEFAULT
+	goto BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedNoland
+
 BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedNoland::
 	addvar VAR_FACTORY_TOTAL_WINS, 1
 	factory_get FACTORY_DATA_WIN_STREAK_SWAPS
@@ -224,6 +247,7 @@ BattleFrontier_BattleFactoryBattleRoom_Movement_NolandMoveToBattle:
 	step_end
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby::
+	goto_if_set FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE, BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyRandom
 	copyvar VAR_RESULT, VAR_FRONTIER_BATTLE_MODE
 	goto_if_eq VAR_RESULT, FRONTIER_MODE_DOUBLES, BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyDoubles
 	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY, 4, 8
@@ -232,6 +256,11 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby::
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyDoubles::
 	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY, 14, 8
+	waitstate
+	end
+
+BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyRandom::
+	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY, 22, 8
 	waitstate
 	end
 
@@ -313,3 +342,29 @@ BattleFrontier_BattleFactoryBattleRoom_Text_LastTimeILoseToYou:
 	.string "That's absolutely the last time\n"
 	.string "I lose to you!\p"
 	.string "We have to do this again, hey?$"
+
+BattleFrontier_BattleFactoryBattleRoom_Text_StevenIntro:
+	.string "I'm STEVEN.\n"
+	.string "I heard you've done well in this place.\p"
+	.string "Battles fought with borrowed teams\n"
+	.string "still demand sharp judgment.\p"
+	.string "Let's see how your decisions hold\n"
+	.string "up under pressure.$"
+
+BattleFrontier_BattleFactoryBattleRoom_Text_StevenSilverStart:
+	.string "Show me the strength of your\n"
+	.string "strategy. I'm ready.$"
+
+BattleFrontier_BattleFactoryBattleRoom_Text_StevenSymbolLine:
+	.string "Excellent.\n"
+	.string "Show me your FRONTIER PASS.$"
+
+BattleFrontier_BattleFactoryBattleRoom_Text_StevenAfterSymbol:
+	.string "A refined battle.\p"
+	.string "Keep honing your style,\n"
+	.string "and we'll meet again.$"
+
+BattleFrontier_BattleFactoryBattleRoom_Text_StevenPostWin:
+	.string "Impressive.\p"
+	.string "You read the flow of battle well.\n"
+	.string "I won't fall behind next time.$"

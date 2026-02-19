@@ -6,6 +6,7 @@
 #include "battle_setup.h"
 #include "overworld.h"
 #include "frontier_util.h"
+#include "factory_boss.h"
 #include "battle_tower.h"
 #include "random.h"
 #include "pokedex.h"
@@ -30,6 +31,7 @@
 #include "constants/items.h"
 #include "constants/factory_pools.h"
 #include "constants/flags.h"
+#include "constants/vars.h"
 #include "constants/rgb.h"
 #include "data/battle_frontier/facility_classes_types.h"
 
@@ -60,6 +62,8 @@ static u16 GetFactoryMonId(u8 lvlMode, u8 challengeNum, bool8 useBetterRange);
 static u8 GetMoveBattleStyle(u16 move);
 void DebugAction_FactoryWinChallenge(void);
 void DebugAction_TriggerNolandBattle(void);
+void DebugAction_TriggerStevenBattle(void);
+void DebugAction_TriggerFactoryBoss(u8 bossId);
 const u8 *GetFacilityClassTypeWhitelist(u8 facilityClass, u8 *count);
 static void GetOpponentFrontierClass();
 void GetOpponentFrontierClassInternal(u8 trainerId);
@@ -67,6 +71,9 @@ static void SelectRewardMonFromParty();
 static void GiveRewardMonFromParty();
 static void CB2_SelectReward();
 static void CB2_GiveReward();
+static bool8 CanUseFactoryBrainMonId(u16 monId, s32 partyCount, const u16 *species, const u16 *heldItems);
+static bool8 CanUseBossAceMonIdForSlot(u16 monId, s32 aceSlot, const u16 *species, const u16 *heldItems);
+static u16 ChooseBossAceMonId(const struct FactoryBossProfile *bossProfile);
 
 // Number of moves needed on the team to be considered using a certain battle style
 static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
@@ -213,16 +220,24 @@ bool8 IsBattleFactoryRandomBattlesModeEnabled(void)
 
 u8 GetBattleFactoryMonLevel(u16 monId)
 {
+    u8 defaultLevel;
+
     if (gSaveBlock2Ptr->frontier.lvlMode == FRONTIER_LVL_TENT)
         return TENT_MIN_LEVEL;
 
+    defaultLevel = (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
+        ? FRONTIER_MAX_LEVEL_OPEN
+        : FRONTIER_MAX_LEVEL_50;
+
     if (IsBattleFactoryRandomBattlesModeEnabled())
-        return gBattleFrontierMons[monId].lvl;
+    {
+        // Some legacy non-randbats entries can have lvl 0; fall back to normal facility level.
+        if (gBattleFrontierMons[monId].lvl != 0)
+            return gBattleFrontierMons[monId].lvl;
+        return defaultLevel;
+    }
 
-    if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
-        return FRONTIER_MAX_LEVEL_OPEN;
-
-    return FRONTIER_MAX_LEVEL_50;
+    return defaultLevel;
 }
 
 void CallBattleFactoryFunction(void)
@@ -257,6 +272,7 @@ static void InitFactoryChallenge(void) {
 
     SetDynamicWarp(0, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, WARP_ID_NONE);
     TRAINER_BATTLE_PARAM.opponentA = 0;
+    SetFactoryDebugStevenBossEnabled(FALSE);
 }
 
 static void GetBattleFactoryData(void) {
@@ -754,9 +770,16 @@ u8 GetFactoryMonFixedIV(u8 challengeNum, bool8 isLastBattle)
 
 void FillFactoryBrainParty(void)
 {
-    int i, j, k;
+    int i;
+    s32 aceSlot = -1;
     u16 species[FRONTIER_PARTY_SIZE];
     u16 heldItems[FRONTIER_PARTY_SIZE];
+    const struct FactoryBossProfile *bossProfile = GetActiveFactoryBossProfile();
+    const bool8 hasBossAce = (bossProfile != NULL
+        && (bossProfile->acePolicy == FACTORY_BOSS_ACE_SPECIES_ANCHOR_LAST
+         || bossProfile->acePolicy == FACTORY_BOSS_ACE_SPECIES_ANCHOR_FIRST)
+        && bossProfile->aceSpecies != SPECIES_NONE);
+    const u16 bossAceMonId = hasBossAce ? ChooseBossAceMonId(bossProfile) : 0xFFFF;
     u8 fixedIV;
     u32 otId;
 
@@ -769,33 +792,11 @@ void FillFactoryBrainParty(void)
 
     while (i != FRONTIER_PARTY_SIZE)
     {
-        u16 monId = GetFactoryMonId(lvlMode, challengeNum, FALSE);
+        u16 monId;
 
-        if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
-            continue;
+        monId = GetFactoryMonId(lvlMode, challengeNum, FALSE);
 
-        for (j = 0; j < (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons); j++)
-        {
-            if (monId == gSaveBlock2Ptr->frontier.rentalMons[j].monId)
-                break;
-        }
-        if (j != (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons))
-            continue;
-
-        for (k = 0; k < i; k++)
-        {
-            if (species[k] == gFacilityTrainerMons[monId].species)
-                break;
-        }
-        if (k != i)
-            continue;
-
-        for (k = 0; k < i; k++)
-        {
-            if (heldItems[k] != ITEM_NONE && heldItems[k] == gFacilityTrainerMons[monId].heldItem)
-                break;
-        }
-        if (k != i)
+        if (!CanUseFactoryBrainMonId(monId, i, species, heldItems))
             continue;
 
         species[i] = gFacilityTrainerMons[monId].species;
@@ -805,6 +806,114 @@ void FillFactoryBrainParty(void)
                 &gEnemyParty[i]);
         i++;
     }
+
+    // Keep normal stable generation, then promote the configured boss ace into the configured anchor slot when possible.
+    if (hasBossAce
+        && bossAceMonId != 0xFFFF)
+    {
+        aceSlot = (bossProfile->acePolicy == FACTORY_BOSS_ACE_SPECIES_ANCHOR_FIRST)
+            ? 0
+            : FRONTIER_PARTY_SIZE - 1;
+
+        if (!CanUseBossAceMonIdForSlot(bossAceMonId, aceSlot, species, heldItems))
+            return;
+
+        species[aceSlot] = gFacilityTrainerMons[bossAceMonId].species;
+        heldItems[aceSlot] = gFacilityTrainerMons[bossAceMonId].heldItem;
+        CreateFacilityMon(&gFacilityTrainerMons[bossAceMonId],
+                GetBattleFactoryMonLevel(bossAceMonId), fixedIV, otId, FLAG_FRONTIER_MON_FACTORY,
+                &gEnemyParty[aceSlot]);
+    }
+}
+
+static bool8 CanUseFactoryBrainMonId(u16 monId, s32 partyCount, const u16 *species, const u16 *heldItems)
+{
+    s32 j, k;
+
+    if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
+        return FALSE;
+
+    for (j = 0; j < ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons); j++)
+    {
+        if (monId == gSaveBlock2Ptr->frontier.rentalMons[j].monId)
+            return FALSE;
+    }
+
+    for (k = 0; k < partyCount; k++)
+    {
+        if (species[k] == gFacilityTrainerMons[monId].species)
+            return FALSE;
+    }
+
+    for (k = 0; k < partyCount; k++)
+    {
+        if (heldItems[k] != ITEM_NONE && heldItems[k] == gFacilityTrainerMons[monId].heldItem)
+            return FALSE;
+    }
+
+    return TRUE;
+}
+
+static bool8 CanUseBossAceMonIdForSlot(u16 monId, s32 aceSlot, const u16 *species, const u16 *heldItems)
+{
+    s32 k;
+
+    if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
+        return FALSE;
+
+    for (k = 0; k < ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons); k++)
+    {
+        if (monId == gSaveBlock2Ptr->frontier.rentalMons[k].monId)
+            return FALSE;
+    }
+
+    for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
+    {
+        if (k == aceSlot)
+            continue;
+        if (species[k] == gFacilityTrainerMons[monId].species)
+            return FALSE;
+    }
+
+    for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
+    {
+        if (k == aceSlot)
+            continue;
+        if (heldItems[k] != ITEM_NONE && heldItems[k] == gFacilityTrainerMons[monId].heldItem)
+            return FALSE;
+    }
+
+    return TRUE;
+}
+
+static u16 ChooseBossAceMonId(const struct FactoryBossProfile *bossProfile)
+{
+    s32 i;
+    s32 firstMonId = 0;
+    s32 lastMonId = NUM_FRONTIER_MONS - 1;
+    u16 count = 0;
+    u16 chosenMonId = 0xFFFF;
+
+    if (bossProfile->preferRandbatsPool && IsBattleFactoryRandomBattlesModeEnabled())
+    {
+        firstMonId = FRONTIER_MON_GEN9RANDOMBATTLE_FIRST;
+        lastMonId = FRONTIER_MON_GEN9RANDOMBATTLE_LAST;
+    }
+
+    for (i = firstMonId; i <= lastMonId; i++)
+    {
+        if (gFacilityTrainerMons[i].species != bossProfile->aceSpecies)
+            continue;
+        if (!CanUseFactoryBrainMonId(i, 0, NULL, NULL))
+            continue;
+
+        // Reservoir sample to choose uniformly from all valid Metagross sets.
+        count++;
+        if ((Random() % count) == 0)
+            chosenMonId = i;
+    }
+
+    return chosenMonId;
 }
 
 static const u16 *GetFactoryRentalPool(u8 lvlMode, u8 challengeNum, u16 *poolSize)
@@ -931,11 +1040,54 @@ void DebugAction_TriggerNolandBattle(void)
 
     // Queue the run state so the next battle is Noland:
     // after this forced win, streak becomes 20 and battleNum becomes 6.
+    SetFactoryDebugStevenBossEnabled(FALSE);
     gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] = 19;
     gSaveBlock2Ptr->frontier.curChallengeBattleNum = 5;
     gSaveBlock2Ptr->frontier.winStreakActiveFlags |= sWinStreakFlags[battleMode][lvlMode];
 
     DebugPrintf("Noland trigger queued");
+    DebugPrintf("Factory streak=%d, battleNum=%d",
+                gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode],
+                gSaveBlock2Ptr->frontier.curChallengeBattleNum);
+
+    BattleDebug_WonBattle();
+}
+
+void DebugAction_TriggerStevenBattle(void)
+{
+    DebugAction_TriggerFactoryBoss(FACTORY_BOSS_STEVEN);
+}
+
+void DebugAction_TriggerFactoryBoss(u8 bossId)
+{
+    u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+    const struct FactoryBossProfile *bossProfile = GetFactoryBossProfile(bossId);
+
+    if (!InBattleFactory())
+    {
+        DebugPrintf("Trigger boss ignored (not in Battle Factory)");
+        return;
+    }
+
+    if (bossProfile == NULL)
+    {
+        DebugPrintf("Trigger boss ignored (invalid bossId=%d)", bossId);
+        return;
+    }
+
+    // Queue the run state so the next battle is the Frontier Brain, then skin it as the selected boss.
+    VarSet(VAR_FACTORY_ACTIVE_BOSS, bossId);
+    if (bossId == FACTORY_BOSS_STEVEN)
+        FlagSet(FLAG_BATTLE_FACTORY_DEBUG_STEVEN_BOSS);
+    else
+        FlagClear(FLAG_BATTLE_FACTORY_DEBUG_STEVEN_BOSS);
+
+    gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] = 19;
+    gSaveBlock2Ptr->frontier.curChallengeBattleNum = 5;
+    gSaveBlock2Ptr->frontier.winStreakActiveFlags |= sWinStreakFlags[battleMode][lvlMode];
+
+    DebugPrintf("Boss trigger queued (bossId=%d, trainerId=%d)", bossId, bossProfile->trainerId);
     DebugPrintf("Factory streak=%d, battleNum=%d",
                 gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode],
                 gSaveBlock2Ptr->frontier.curChallengeBattleNum);

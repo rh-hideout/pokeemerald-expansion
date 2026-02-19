@@ -268,7 +268,7 @@
 #define VAR_FRONTIER_BGM                                 0x40F8 // Custom Frontier / Trainer Hill Battle BGM (Default: 0)
 #define VAR_FRONTIER_ENVIRONMENT                         0x40F9 // Custom Frontier / Trainer Hill Battle Environment (Default: 0)
 #define VAR_FACTORY_TOTAL_WINS                           0x40FA // Lifetime Battle Factory wins
-#define VAR_UNUSED_0x40FB                                0x40FB // Unused Var
+#define VAR_FACTORY_ACTIVE_BOSS                          0x40FB // Active Battle Factory boss override (see FACTORY_BOSS_*)
 #define VAR_UNUSED_0x40FC                                0x40FC // Unused Var
 #define VAR_UNUSED_0x40FD                                0x40FD // Unused Var
 #define VAR_UNUSED_0x40FE                                0x40FE // Unused Var
