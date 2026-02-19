@@ -129,8 +129,8 @@ enum MoveEndState
     MOVEEND_PURSUIT_NEXT_ACTION,
     MOVEEND_COUNT,
 
-    // This guarantees a correct jump if new moveends are added directly after MOVEEND_PICKPOCKET (for Sheer Force)
-    MOVEEND_JUMP_TO_PICKPOCKET_PLUS_ONE = (MOVEEND_PICKPOCKET + 1),
+    // This guarantees a correct jump if new moveends are added directly after MOVEEND_HIT_ESCAPE
+    MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE = (MOVEEND_HIT_ESCAPE + 1),
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_MOVE_RESOLUTION_H

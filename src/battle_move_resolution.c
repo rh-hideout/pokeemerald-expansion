@@ -2886,7 +2886,7 @@ static enum MoveEndResult MoveEndDefrost(void)
 static enum MoveEndResult MoveEndSheerForce(void)
 {
     if (IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
-        gBattleScripting.moveendState = MOVEEND_PICKPOCKET_PLUS_ONE;
+        gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
     else
         gBattleScripting.moveendState++;
 
