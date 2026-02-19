@@ -16560,6 +16560,12 @@ void BS_JumpIfAbilityCantBeReactivated(void)
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     u32 ability = gBattleMons[battler].ability;
 
+    if (GetBattlerHoldEffectIgnoreAbility(battler) == HOLD_EFFECT_ABILITY_SHIELD)
+    {
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+        return;
+    }
+
     switch (ability)
     {
     case ABILITY_IMPOSTER:
