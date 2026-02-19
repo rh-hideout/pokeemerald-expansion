@@ -2448,9 +2448,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             SetNonVolatileStatus(gEffectBattler, moveEffect, battleScript, TRIGGER_ON_MOVE);
         break;
     case MOVE_EFFECT_CONFUSION:
-        if (!CanBeConfused(gEffectBattler)
-         || gBattleMons[gEffectBattler].volatiles.confusionTurns
-         || (IsSafeguardProtected(gBattlerAttacker, gEffectBattler, GetBattlerAbility(gBattlerAttacker)) && !primary))
+        if (!CanBeConfused(gBattlerAttacker, gEffectBattler))
         {
             gBattlescriptCurrInstr = battleScript;
         }
@@ -11493,11 +11491,11 @@ static void Cmd_tryoverwriteability(void)
 static void Cmd_tryconfusionafterskydrop(void)
 {
     CMD_ARGS(u8 battler);
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum BattlerId skyDropTarget = gBattleMons[battler].volatiles.skyDropTarget - 1;
+    enum BattlerId faintBattler = GetBattlerForBattleScript(cmd->battler);
+    enum BattlerId skyDropTarget = gBattleMons[faintBattler].volatiles.skyDropTarget - 1;
     bool32 shouldConfuse = FALSE;
 
-    if (gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_ATTACKER)
+    if (gBattleMons[faintBattler].volatiles.semiInvulnerable != STATE_SKY_DROP_ATTACKER)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
@@ -11508,16 +11506,16 @@ static void Cmd_tryconfusionafterskydrop(void)
         gBattleMons[skyDropTarget].volatiles.semiInvulnerable = STATE_NONE;
         gSpecialStatuses[skyDropTarget].restoredBattlerSprite = TRUE;
 
-        if (gBattleMons[skyDropTarget].volatiles.confuseAfterSkyDrop)
+        if (gBattleMons[skyDropTarget].volatiles.rampageTurns > 0)
         {
-            gBattleMons[skyDropTarget].volatiles.confuseAfterSkyDrop = FALSE;
+            gBattleMons[skyDropTarget].volatiles.rampageTurns = 0;
 
-            if (CanBeConfused(skyDropTarget))
+            if (CanBeConfused(skyDropTarget, skyDropTarget))
             {
                 shouldConfuse  = TRUE;
                 gBattleScripting.battler = skyDropTarget;
                 BattleScriptPush(cmd->nextInstr);
-                gBattlescriptCurrInstr = BattleScript_RampageConfuseSkyDrop;
+                gBattlescriptCurrInstr = BattleScript_ConfusionAfterRampage;
             }
         }
     }
@@ -13052,7 +13050,7 @@ void BS_TrySetConfusion(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
 
-    if (CanBeConfused(gBattlerTarget))
+    if (CanBeConfused(gBattlerAttacker, gBattlerTarget))
     {
         gBattleMons[gBattlerTarget].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
         gBattleCommunication[MULTIUSE_STATE] = 1;

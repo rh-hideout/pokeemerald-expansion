@@ -1079,25 +1079,26 @@ void CancelMultiTurnMoves(enum BattlerId battler)
 {
     gBattleMons[battler].volatiles.uproarTurns = 0;
     gBattleMons[battler].volatiles.bideTurns = 0;
+    gBattleMons[battler].volatiles.rolloutTimer = 0;
+    gBattleMons[battler].volatiles.furyCutterCounter = 0;
 
     if (B_RAMPAGE_CANCELLING < GEN_5)
     {
+        gLockedMoves[battler] = MOVE_NONE;
         gBattleMons[battler].volatiles.multipleTurns = 0;
         gBattleMons[battler].volatiles.rampageTurns = 0;
     }
-    else if (gBattleMons[battler].volatiles.rampageTurns > 1)
+    else if (gBattleMons[battler].volatiles.multipleTurns)
     {
-        gBattleMons[battler].volatiles.multipleTurns = 0;
+        gLockedMoves[battler] = MOVE_NONE;
+        gBattleMons[battler].volatiles.multipleTurns = FALSE;
     }
 
     // Clear battler's semi-invulnerable bits if they are not held by Sky Drop.
     if (gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
         gBattleMons[battler].volatiles.semiInvulnerable = STATE_NONE;
 
-    gBattleMons[battler].volatiles.rolloutTimer = 0;
-    gBattleMons[battler].volatiles.furyCutterCounter = 0;
 }
-
 
 // Returns TRUE if no other battler after this one in turn order will use a move
 bool32 IsLastMonToMove(enum BattlerId battler)
@@ -4285,7 +4286,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_POISON_PUPPETEER:
             if (gBattleMons[gBattlerAttacker].species == SPECIES_PECHARUNT
              && gBattleStruct->poisonPuppeteerConfusion == TRUE
-             && CanBeConfused(gBattlerTarget))
+             && CanBeConfused(gBattlerAttacker, gBattlerTarget))
             {
                 gBattleStruct->poisonPuppeteerConfusion = FALSE;
                 gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
@@ -5450,13 +5451,16 @@ static bool32 CanSleepDueToSleepClause(enum BattlerId battlerAtk, enum BattlerId
     return FALSE;
 }
 
-bool32 CanBeConfused(enum BattlerId battler)
+bool32 CanBeConfused(enum BattlerId battlerAtk, enum BattlerId effectBattler)
 {
-    enum Ability ability = GetBattlerAbility(battler);
-    if (gBattleMons[battler].volatiles.confusionTurns > 0
-     || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldStatuses)
-     || IsAbilityAndRecord(battler, ability, ABILITY_OWN_TEMPO))
+    enum Ability effectAbility = GetBattlerAbility(effectBattler);
+
+    if (gBattleMons[effectBattler].volatiles.confusionTurns > 0
+     || IsSafeguardProtected(battlerAtk, effectBattler, GetBattlerAbility(battlerAtk))
+     || IsMistyTerrainAffected(effectBattler, effectAbility, GetBattlerHoldEffect(effectBattler), gFieldStatuses)
+     || IsAbilityAndRecord(effectBattler, effectAbility, ABILITY_OWN_TEMPO))
         return FALSE;
+
     return TRUE;
 }
 

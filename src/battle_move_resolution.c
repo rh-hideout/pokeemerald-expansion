@@ -1505,24 +1505,15 @@ static enum CancelerResult HandleSkyDropResult(struct BattleContext *ctx)
     }
 
     // First turn
-    if (gBattleMons[ctx->battlerDef].volatiles.rampageTurns > 0)
-    {
-        gLockedMoves[ctx->battlerDef] = MOVE_NONE;
-        gBattleMons[ctx->battlerDef].volatiles.rampageTurns = 0;
-        gBattleMons[ctx->battlerDef].volatiles.confuseAfterSkyDrop = TRUE;
-    }
-
     CancelMultiTurnMoves(ctx->battlerDef);
-
-    if (gSideTimers[GetBattlerSide(ctx->battlerDef)].followmeTimer != 0 && gSideTimers[GetBattlerSide(ctx->battlerDef)].followmeTarget == ctx->battlerDef)
-        gSideTimers[GetBattlerSide(ctx->battlerDef)].followmeTimer = 0;
-
     gLockedMoves[ctx->battlerAtk] = ctx->move;
     gProtectStructs[ctx->battlerAtk].chargingTurn = TRUE;
     gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = TRUE;
     gBattleMons[ctx->battlerAtk].volatiles.skyDropTarget = ctx->battlerDef + 1;
     gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_SKY_DROP_ATTACKER;
     gBattleMons[ctx->battlerDef].volatiles.semiInvulnerable = STATE_SKY_DROP_TARGET;
+    if (gSideTimers[GetBattlerSide(ctx->battlerDef)].followmeTimer != 0 && gSideTimers[GetBattlerSide(ctx->battlerDef)].followmeTarget == ctx->battlerDef)
+        gSideTimers[GetBattlerSide(ctx->battlerDef)].followmeTimer = 0;
 
     gBattlescriptCurrInstr = BattleScript_SkyDropCharging;
     return CANCELER_RESULT_BREAK;
@@ -3611,8 +3602,6 @@ static bool32 ShouldSetStompingTantrumTimer(void)
     return numNotAffectedTargets == gBattleStruct->numSpreadTargets;
 }
 
-
-
 static enum MoveEndResult MoveEndRampage(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
@@ -3623,10 +3612,11 @@ static enum MoveEndResult MoveEndRampage(void)
     }
     else if (--gBattleMons[gBattlerAttacker].volatiles.rampageTurns == 0)
     {
-        // TODO: Write test for the fallback
-        if (CanBeConfused(gBattlerAttacker))
+        if (CanBeConfused(gBattlerAttacker, gBattlerAttacker))
         {
-            BattleScriptCall(BattleScript_ThrashConfusesRet);
+            gBattleScripting.battler = gBattlerAttacker;
+            gBattleMons[gBattlerAttacker].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
+            BattleScriptCall(BattleScript_ConfusionAfterRampage);
             result = MOVEEND_RESULT_BREAK;
         }
     }
@@ -3640,20 +3630,20 @@ static enum MoveEndResult MoveEndRampage(void)
     return result;
 }
 
-// TODO: Test against Rough Skin
 static enum MoveEndResult MoveEndConfusionAfterSkyDrop(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (gBattleMons[gBattlerTarget].volatiles.confuseAfterSkyDrop
+    if (gBattleMons[gBattlerTarget].volatiles.rampageTurns > 0
      && gBattleMons[gBattlerTarget].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
     {
-        gBattleMons[gBattlerTarget].volatiles.confuseAfterSkyDrop = FALSE;
+        gBattleMons[gBattlerTarget].volatiles.rampageTurns  = 0;
 
-        if (CanBeConfused(gBattlerTarget))
+        if (CanBeConfused(gBattlerTarget, gBattlerTarget))
         {
             gBattleScripting.battler = gBattlerTarget;
-            BattleScriptCall(BattleScript_RampageConfuseSkyDrop);
+            gBattleMons[gBattlerTarget].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
+            BattleScriptCall(BattleScript_ConfusionAfterRampage);
             result = MOVEEND_RESULT_BREAK;
         }
     }

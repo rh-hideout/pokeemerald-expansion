@@ -266,3 +266,21 @@ SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confus
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
     }
 }
+
+SINGLE_BATTLE_TEST("Sky Drop: Flying types will still get confused if they rampaged before being dropped")
+{
+    GIVEN {
+        ASSUME(gSpeciesInfo[SPECIES_PIDGEY].weight < 2000);
+        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIDGEY);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_THRASH); MOVE(player, MOVE_SKY_DROP); }
+        TURN { SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+        NOT HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+    }
+}
