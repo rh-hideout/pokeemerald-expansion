@@ -1719,8 +1719,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, e
         PLAYER(SPECIES_MILCERY) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_WOBBUFFET)
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_MOONBLAST, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
@@ -1742,8 +1742,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
         PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_WOBBUFFET)
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_STUFF_CHEEKS); \
                MOVE(playerRight, MOVE_STUFF_CHEEKS); \
