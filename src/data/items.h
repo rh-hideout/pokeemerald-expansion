@@ -15701,6 +15701,22 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_TownMap,            // Platzhalter (erstmal)
         .iconPalette = gItemIconPalette_TownMap, // Platzhalter (erstmal)
     },
+
+    [ITEM_GAME_BOY_CART] =
+    {
+        .name = ITEM_NAME("GameBoy Cartridge"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A GameBoy Cartridge\n"
+            "with NOTE\n"
+            "written on it."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_GameBoyCart,
+        .iconPic = gItemIcon_Drive,
+        .iconPalette = gItemIconPalette_DouseDrive,
+    },
 };
 
 #undef ITEM_NAME

@@ -317,7 +317,8 @@ Text_WantToUseWaterfallWithItem:
     .string "It's a large waterfall.\n"
     .string "Use the {STR_VAR_2}?$"
 Text_PlayerUsedWaterfallItem:
-    .string "You used the {STR_VAR_2} to scale the waterfall!$"
+    .string "You used the {STR_VAR_2} to\n"
+    .string "scale the waterfall!$"
 
 Text_CantWaterfall:
     .string "A wall of water is crashing down with\n"

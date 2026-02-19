@@ -653,7 +653,6 @@ void CB2_InitTitleScreen(void)
         EnableInterrupts(INTR_FLAG_VBLANK);
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_1
                         | DISPCNT_OBJ_1D_MAP
-                        | DISPCNT_BG0_ON
                         | DISPCNT_BG2_ON
                         | DISPCNT_OBJ_ON
                         | DISPCNT_WIN0_ON

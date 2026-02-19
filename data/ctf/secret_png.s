@@ -3,7 +3,7 @@
 
     .global gCtfSecretPngMarkerStart
 gCtfSecretPngMarkerStart:
-    .asciz  "TEAM_ROCKET_RANSOM_LETTER_START"
+    .asciz  "TEAM_ROCKET_NOTE_LETTER_START"
 
     .global gCtfSecretPng
 gCtfSecretPng:
@@ -11,6 +11,6 @@ gCtfSecretPng:
 
     .global gCtfSecretPngMarkerEnd
 gCtfSecretPngMarkerEnd:
-    .asciz  "TEAM_ROCKET_RANSOM_LETTER_END"
+    .asciz  "TEAM_ROCKET_NOTE_LETTER_END"
 
     .align 2

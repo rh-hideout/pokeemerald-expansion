@@ -1243,3 +1243,13 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Wasserturm/scripts.inc"
 
 	.include "data/maps/WasserturmLobby/scripts.inc"
+
+	.include "data/maps/Klassenzimmer_Finale/scripts.inc"
+
+	.include "data/maps/Neckar/scripts.inc"
+
+	.include "data/maps/Stadium1/scripts.inc"
+
+	.include "data/maps/Stadium2/scripts.inc"
+
+	.include "data/maps/Stadium3/scripts.inc"

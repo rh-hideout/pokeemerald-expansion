@@ -1293,28 +1293,28 @@
 #define FLAG_UNUSED_0x4D7                                           0x4D7 // Unused Flag
 #define FLAG_UNUSED_0x4D8                                           0x4D8 // Unused Flag
 #define FLAG_UNUSED_0x4D9                                           0x4D9 // Unused Flag
-#define FLAG_UNUSED_0x4DA                                           0x4DA // Unused Flag
-#define FLAG_UNUSED_0x4DB                                           0x4DB // Unused Flag
-#define FLAG_UNUSED_0x4DC                                           0x4DC // Unused Flag
-#define FLAG_UNUSED_0x4DD                                           0x4DD // Unused Flag
-#define FLAG_UNUSED_0x4DE                                           0x4DE // Unused Flag
-#define FLAG_UNUSED_0x4DF                                           0x4DF // Unused Flag
-#define FLAG_UNUSED_0x4E0                                           0x4E0 // Unused Flag
-#define FLAG_UNUSED_0x4E1                                           0x4E1 // Unused Flag
-#define FLAG_UNUSED_0x4E2                                           0x4E2 // Unused Flag
-#define FLAG_UNUSED_0x4E3                                           0x4E3 // Unused Flag
-#define FLAG_UNUSED_0x4E4                                           0x4E4 // Unused Flag
-#define FLAG_UNUSED_0x4E5                                           0x4E5 // Unused Flag
-#define FLAG_UNUSED_0x4E6                                           0x4E6 // Unused Flag
-#define FLAG_UNUSED_0x4E7                                           0x4E7 // Unused Flag
+#define FLAG_STADIUM2_NO_CATCHING                                   0x4DA // Flag 8 Stadium2 No Catching
+#define FLAG_STADIUM2_SCENE_DONE                                    0x4DB // Flag 8 Stadium2 Scene abgeschlossen
+#define FLAG_HIDE_STADIUM2_JESSIE                                   0x4DC // Flag 8 Stadium2 Jessie verstecken
+#define FLAG_HIDE_STADIUM2_BOSS                                     0x4DD // Flag 8 Stadium2 Boss verstecken
+#define FLAG_HIDE_STADIUM2_MISSINGNO                                0x4DE // Flag 8 Stadium2 Missingno verstecken
+#define FLAG_KF_INTRO_DONE                                          0x4DF // Flag 8 Klassenzimmer Intro abgespielt
+#define FLAG_HIDE_KF_JESSIE                                         0x4E0 // Flag 8 Klassenzimmer Jessie verstecken
+#define FLAG_HIDE_KF_JAMES                                          0x4E1 // Flag 8 Klassenzimmer James verstecken
+#define FLAG_HIDE_KF_RANSOM_LETTER_BALL                             0x4E2 // Flag 8 Klassenzimmer Ransom Letter Ball verstecken
+#define FLAG_HIDE_KF_PROFESSOR                                      0x4E3 // Flag 8 Klassenzimmer Professor verstecken
+#define FLAG_HIDE_KF_MEOWTH                                         0x4E4 // Flag 8 Klassenzimmer Meowth verstecken
+#define FLAG_HIDE_KF_ARBOK                                          0x4E5 // Flag 8 Klassenzimmer Arbok verstecken
+#define FLAG_HIDE_KF_WEEZING                                        0x4E6 // Flag 8 Klassenzimmer Weezing verstecken
+#define FLAG_STADIUM2_TERMINAL_SOLVED                               0x4E7 // Flag 8 Stadium2 Terminal gelöst
 #define FLAG_I3C_AND_CAUGHT                                         0x4E8 // Flag for I3C_And caught
-#define CTF_FLAG_ID_BLACKHANSA_FINALE                               0x4E9 // Flag 8 Blackhansa Finale Event/Terminal
-#define FLAG_BLACKHANSA_DITTO_COPIED                                0x4EA // Flag 8 Blackhansa Ditto kopiert
-#define FLAG_BLACKHANSA_INTRO_DONE                                  0x4EB // Flag 8 Blackhansa Intro abgespielt
-#define FLAG_HIDE_BLACKHANSA_BOSS                                   0x4EC // Flag 8 Blackhansa Boss verstecken nach Sieg
-#define FLAG_ENTRYMAPFLAG8_GOT_DITTO                                0x4ED // Flag 8 Ditto erhalten
-#define FLAG_FLAG8_BRIDGE_SET                                       0x4EE // Flag 8 Brücke muss in Savegame gesetzt werden
-#define FLAG_CTF_BLACKHANSA_FINALE_FLAG8_DONE                       0x4EF // Flag 8 Blackhansa Finale Event/Terminal
+#define CTF_FLAG_ID_BLACKHANSA_FINALE                               0x4E9 // Flag Finale Blackhansa Finale Event/Terminal
+#define FLAG_BLACKHANSA_DITTO_COPIED                                0x4EA // Flag Finale Blackhansa Ditto kopiert
+#define FLAG_BLACKHANSA_INTRO_DONE                                  0x4EB // Flag Finale Blackhansa Intro abgespielt
+#define FLAG_HIDE_BLACKHANSA_BOSS                                   0x4EC // Flag Finale Blackhansa Boss verstecken nach Sieg
+#define FLAG_ENTRYMAPFLAG8_GOT_DITTO                                0x4ED // Flag Finale Ditto erhalten
+#define FLAG_FLAG8_BRIDGE_SET                                       0x4EE // Flag Finale Brücke muss in Savegame gesetzt werden
+#define FLAG_CTF_BLACKHANSA_FINALE_FLAG8_DONE                       0x4EF // Flag Finale Blackhansa Finale Event/Terminal
 
 #define FLAG_DEFEATED_RUSTBORO_GYM                                  0x4F0
 #define FLAG_DEFEATED_DEWFORD_GYM                                   0x4F1

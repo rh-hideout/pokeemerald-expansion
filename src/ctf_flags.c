@@ -15,9 +15,10 @@ static const u8 sFlagWords[CTF_FLAG_COUNT][PLAYER_NAME_LENGTH + 1] =
     _("STACK"),   // 5 Gym 5
     _("SLEEP"),    // 6 Gym 6
     _("SHELL"),   // 7 Gym 7
-    _("ROOT"),    // 8 Gym 8
+    _("SMISH"),    // 8 Gym 8
     _("BANG"),   // 9 Tutorial
     _("RKTSNC"), // 10 Finale Farmer
+    _("STADIUM"), // 11 Klassenzimmer Finale
 };
 
 static u8 Ctf_ToUpper(u8 c)

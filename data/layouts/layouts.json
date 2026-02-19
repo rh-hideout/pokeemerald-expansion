@@ -4534,10 +4534,10 @@
     {
       "id": "LAYOUT_ENTRY_MAP_FLAG8",
       "name": "entryMapFlag8_Layout",
-      "width": 20,
-      "height": 20,
+      "width": 40,
+      "height": 40,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_Mossdeep",
       "border_filepath": "data/layouts/entryMapFlag8/border.bin",
       "blockdata_filepath": "data/layouts/entryMapFlag8/map.bin"
     },
@@ -4750,6 +4750,56 @@
       "secondary_tileset": "gTileset_BattlePyramid",
       "border_filepath": "data/layouts/WasserturmLobby/border.bin",
       "blockdata_filepath": "data/layouts/WasserturmLobby/map.bin"
+    },
+    {
+      "id": "LAYOUT_KLASSENZIMMER_FINALE",
+      "name": "Klassenzimmer_Finale_Layout",
+      "width": 12,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/Klassenzimmer_Finale/border.bin",
+      "blockdata_filepath": "data/layouts/Klassenzimmer_Finale/map.bin"
+    },
+    {
+      "id": "LAYOUT_NECKAR",
+      "name": "Neckar_Layout",
+      "width": 10,
+      "height": 60,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_BattleFrontierOutsideWest",
+      "border_filepath": "data/layouts/Neckar/border.bin",
+      "blockdata_filepath": "data/layouts/Neckar/map.bin"
+    },
+    {
+      "id": "LAYOUT_STADIUM1",
+      "name": "Stadium1_Layout",
+      "width": 29,
+      "height": 30,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/Stadium1/border.bin",
+      "blockdata_filepath": "data/layouts/Stadium1/map.bin"
+    },
+    {
+      "id": "LAYOUT_STADIUM2",
+      "name": "Stadium2_Layout",
+      "width": 15,
+      "height": 15,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_EliteFour",
+      "border_filepath": "data/layouts/Stadium2/border.bin",
+      "blockdata_filepath": "data/layouts/Stadium2/map.bin"
+    },
+    {
+      "id": "LAYOUT_STADIUM3",
+      "name": "Stadium3_Layout",
+      "width": 10,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonDayCare",
+      "border_filepath": "data/layouts/Stadium3/border.bin",
+      "blockdata_filepath": "data/layouts/Stadium3/map.bin"
     }
   ]
 }

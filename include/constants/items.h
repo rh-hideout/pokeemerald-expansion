@@ -1036,8 +1036,8 @@
 #define ITEM_PHONE_CORP_ID 865
 #define ITEM_GS_BALL 866
 #define ITEM_SECRET_PHOTO 867
-
-#define ITEMS_COUNT 868
+#define ITEM_GAME_BOY_CART 868
+#define ITEMS_COUNT 869
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

@@ -3162,18 +3162,7 @@ Sharpedo
 Level: 39
 IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
 
-=== TRAINER_TAKAO ===
-Name: TAKAO
-Class: Black Belt
-Pic: Black Belt
-Gender: Male
-Music: Intense
-Double Battle: No
-AI: Check Bad Move
 
-Machop
-Level: 13
-IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe
 
 === TRAINER_HITOSHI ===
 Name: HITOSHI
@@ -16904,8 +16893,8 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 
 
 === TRAINER_AARON ===
-Name: BLACKHANSA
-Class: Dragon Tamer
+Name: GRUNT
+Class: Blackhansa
 Pic: Dragon Tamer
 Gender: Male
 Music: Intense
@@ -16921,8 +16910,8 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 - Ember
 
 === TRAINER_PERRY ===
-Name: BLACKHANSA
-Class: Bird Keeper
+Name: GRUNT
+Class: Blackhansa
 Pic: Bird Keeper
 Gender: Male
 Music: Cool
@@ -16934,8 +16923,8 @@ Level: 1
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_HUGH ===
-Name: BLACKHANSA
-Class: Bird Keeper
+Name: GRUNT
+Class: Blackhansa
 Pic: Bird Keeper
 Gender: Male
 Music: Cool
@@ -16949,7 +16938,7 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_PHIL ===
 Name: BOSS
-Class: Bird Keeper
+Class: Blackhansa
 Pic: Bird Keeper
 Gender: Male
 Music: Cool
@@ -16965,11 +16954,11 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 
 /*-------------------------------------*/
-/*-----------Flag 8 Blackhansa und Farmer----------------*/
+/*-----------Flag FINALE Blackhansa und Farmer----------------*/
 
 === TRAINER_MARLEY ===
 Name: MARLEY
-Class: Cooltrainer
+Class: Blackhansa
 Pic: Cooltrainer F
 Gender: Female
 Music: Cool
@@ -16988,7 +16977,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 
 === TRAINER_PHILLIP ===
 Name: FARMER
-Class: Sailor
+Class: Professor
 Pic: Sailor
 Gender: Male
 Music: Male
@@ -17002,4 +16991,23 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Machoke
 Level: 1
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+
+
+/*-------------------------------------*/
+/*-----------Flag 8 Bamberger----------------*/
+
+=== TRAINER_TAKAO ===
+Name: BAMBERGER
+Class: Professor
+Pic: Black Belt
+Gender: Male
+Music: Intense
+Double Battle: No
+AI: Check Bad Move
+
+Machop
+Level: 1
+IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe
 
