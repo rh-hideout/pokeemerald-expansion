@@ -36,3 +36,5 @@ Each of the game's terminals are tied to a specific flag, hindering the player t
 Pokemon Emerald was originally developed by Game Freak and published by The Pokemon Company and Nintendo in the year 2004. It is the fifth game of the Pokemon video game series and the last of the third generation.
 
 A CTF is a gamified version of applying techniques to reach specified goals (flags). To "capture" a flag, the laid out puzzle needs to be solved whether with the technical skills hands-on or with the knowledge accompanying it, which often but not only, includes hidden information the unknowing would either not notice or not be able to utilize effectively.
+
+Pokémon-fights:
