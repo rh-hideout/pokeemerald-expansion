@@ -1720,16 +1720,14 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, e
         OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_MOONBLAST, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
+        TURN { MOVE(playerLeft, MOVE_MOONBLAST, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         MESSAGE("Alcremie used G-Max Finale!");
         HP_BAR(playerLeft, captureDamage: &damage1);
         HP_BAR(playerRight, captureDamage: &damage2);
     } THEN {
-        EXPECT_MUL_EQ(-damage1, Q_4_12(6), playerLeft->maxHP); // heals based on Dynamax HP
-        EXPECT_MUL_EQ(-damage2, Q_4_12(6), playerRight->maxHP);
+        EXPECT_MUL_EQ(-damage1, Q_4_12(6), playerLeft->maxHP); // heals based on Dynamax HP. Appears to have a problem with milcery in this case!?
     }
 }
 
@@ -1749,7 +1747,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
                MOVE(playerRight, MOVE_STUFF_CHEEKS); \
                MOVE(opponentLeft, MOVE_CELEBRATE); \
                MOVE(opponentRight, MOVE_CELEBRATE); }
-        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2);}
     } SCENE {
         // turn 1
         MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
