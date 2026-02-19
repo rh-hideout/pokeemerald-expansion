@@ -7361,7 +7361,7 @@ static inline uq4_12_t GetDiveModifier(enum Move move, enum BattlerId battlerDef
 
 static inline uq4_12_t GetAirborneModifier(enum Move move, enum BattlerId battlerDef)
 {
-    if (MoveDamagesAirborneDoubleDamage(move) && IsBattlerOnAir(battlerDef));
+    if (MoveDamagesAirborneDoubleDamage(move) && IsBattlerOnAir(battlerDef))
         return UQ_4_12(2.0);
     return UQ_4_12(1.0);
 }
