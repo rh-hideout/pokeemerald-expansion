@@ -236,7 +236,7 @@ Go talk to Bella to restore your Pokémon's health.
 
 Leave your home and head north. To reach your rival at Route 103, you will pass tall grass and fight against Pokémon.
 For details on fighting Pokémon, refer to the guide in the introduction.
-Walk past the point of the fight with BUM and head east through tall grass, as cliffs cannot be crossed south of them.
+Walk past the point of the fight with BUM and head east through the tall grass, as cliffs cannot be crossed south of them.
 Directly pass the NPC and head northwest to find NEUOSTHEIM further north. 
 Visit the Pokémon Center to rest your Pokémon and head further north to enter Route 103.
 
