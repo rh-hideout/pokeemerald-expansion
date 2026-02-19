@@ -397,15 +397,17 @@ BattleScript_EffectRevivalBlessingSendOut:
 	goto BattleScript_MoveEnd
 
 BattleScript_StealthRockActivates::
-	setstealthrock BattleScript_MoveEnd
+	setstealthrock BattleScript_StealthRockActivatesRet
 	printfromtable gDmgHazardsStringIds
 	waitmessage B_WAIT_TIME_LONG
+BattleScript_StealthRockActivatesRet:
 	return
 
 BattleScript_SpikesActivates::
-	trysetspikes BattleScript_MoveEnd
+	trysetspikes BattleScript_SpikesActivatesRet
 	printfromtable gDmgHazardsStringIds
 	waitmessage B_WAIT_TIME_LONG
+BattleScript_SpikesActivatesRet:
 	return
 
 BattleScript_EffectTeatime::
@@ -503,61 +505,8 @@ BattleScript_BeakBlastBurn::
 	call BattleScript_MoveEffectBurn
 	return
 
-BattleScript_EffectSkyDrop::
-	attackcanceler
-	jumpifvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS, BattleScript_SkyDropTurn2
-	accuracycheck BattleScript_MoveMissedPause
-	jumpifsubstituteblocks BattleScript_ButItFailed
-	jumpiftargetally BattleScript_ButItFailed
-	jumpifunder200 BattleScript_SkyDropWork
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_TARGETTOOHEAVY
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_SkyDropWork:
-	setskydrop
-	call BattleScript_FirstChargingTurnAfterAttackString
-	goto BattleScript_MoveEnd
-BattleScript_SkyDropTurn2:
-	call BattleScript_TwoTurnMovesSecondTurnRet
-	clearskydrop BattleScript_SkyDropChangedTarget
-	jumpiftype BS_TARGET, TYPE_FLYING, BattleScript_SkyDropFlyingType
-	goto BattleScript_HitFromDamageCalc
-BattleScript_SkyDropFlyingType:
-	makevisible BS_TARGET
-	printstring STRINGID_ITDOESNTAFFECT
-	waitmessage B_WAIT_TIME_LONG
-	makevisible BS_ATTACKER
-	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_SkyDropFlyingAlreadyConfused
-	jumpifvolatile BS_TARGET, VOLATILE_RAMPAGE_TURNS, BattleScript_SkyDropFlyingConfuseLock
-	goto BattleScript_MoveEnd
-BattleScript_SkyDropChangedTarget:
-	pause B_WAIT_TIME_SHORT
-	setmoveresultflags MOVE_RESULT_FAILED
-	resultmessage
-	waitmessage B_WAIT_TIME_LONG
-	makevisible BS_ATTACKER
-	goto BattleScript_MoveEnd
-
-BattleScript_FirstChargingTurnAfterAttackString:
-	setsemiinvulnerablebit @ only for moves with EFFECT_SEMI_INVULNERABLE/EFFECT_SKY_DROP
-	setchargingturn
-	twoturnmoveschargestringandanimation
-	setadditionaleffects @ only onChargeTurnOnly effects will work here
-	return
-
-BattleScript_SkyDropFlyingConfuseLock:
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_CONFUSION
-BattleScript_SkyDropFlyingAlreadyConfused:
-	clearvolatile BS_TARGET, VOLATILE_RAMPAGE_TURNS
-	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_MoveEnd
-	setbyte BS_ATTACKER, BS_TARGET
-	goto BattleScript_ThrashConfuses
-
 BattleScript_EffectFling::
 	attackcanceler
-	setlastuseditem BS_ATTACKER
 	accuracycheck BattleScript_FlingMissed
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNFLUNG
@@ -2239,6 +2188,7 @@ BattleScript_EffectHit::
 	attackcanceler
 BattleScript_HitFromAccCheck::
 	accuracycheck BattleScript_MoveMissedPause
+	copybyte gEffectBattler, gBattlerAttacker
 	setpreattackadditionaleffect
 BattleScript_HitFromDamageCalc::
 	damagecalc
@@ -2249,6 +2199,7 @@ BattleScript_MoveEnd::
 
 BattleScript_EffectHit_RetFromAccCheck::
 	accuracycheck BattleScript_MoveMissedPause
+	copybyte gEffectBattler, gBattlerAttacker
 	setpreattackadditionaleffect
 	damagecalc
 BattleScript_Hit_RetFromAtkAnimation::
@@ -2834,14 +2785,6 @@ BattleScript_AlreadyParalyzed::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_PowerHerbActivation::
-	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
-	printstring STRINGID_POWERHERB
-	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_ATTACKER
-	trytwoturnmovespowerherbformchange @ Edge case for Cramorant ability Gulp Missile
-	return
-
 BattleScript_EffectGeomancy::
 	attackcanceler
 	jumpifstat BS_ATTACKER, CMP_LESS_THAN, STAT_SPATK, MAX_STAT_STAGE, BattleScript_GeomancyDoMoveAnim
@@ -2870,21 +2813,22 @@ BattleScript_GeomancyTrySpeed::
 BattleScript_GeomancyEnd::
 	goto BattleScript_MoveEnd
 
+BattleScript_PowerHerbActivation::
+	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
+	printstring STRINGID_POWERHERB
+	waitmessage B_WAIT_TIME_LONG
+	removeitem BS_ATTACKER
+	return
+
 BattleScript_TwoTurnMoveCharging::
 	waitmessage B_WAIT_TIME_LONG
 	twoturnmoveschargestringandanimation
 	setadditionaleffects @ only onChargeTurnOnly effects will work here
 	return
 
-BattleScript_FromTwoTurnMovesSecondTurnRet:
-	call BattleScript_TwoTurnMovesSecondTurnRet
-	accuracycheck BattleScript_MoveMissedPause
-	goto BattleScript_HitFromDamageCalc
-
-BattleScript_TwoTurnMovesSecondTurn::
-	attackcanceler
-	call BattleScript_TwoTurnMovesSecondTurnRet
-	goto BattleScript_HitFromAccCheck
+BattleScript_SkyDropCharging::
+	call BattleScript_TwoTurnMoveCharging
+	goto BattleScript_MoveEnd
 
 BattleScript_TwoTurnMovesSecondTurnRet:
 	setbyte sB_ANIM_TURN, 1
@@ -2892,6 +2836,39 @@ BattleScript_TwoTurnMovesSecondTurnRet:
 	clearvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS
 	clearsemiinvulnerablebit @ only for moves with EFFECT_SEMI_INVULNERABLE/EFFECT_SKY_DROP
 	return
+
+BattleScript_SkyDropTargetTooHeavy::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_TARGETTOOHEAVY
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
+BattleScript_SkyDropFlyingType::
+	makevisible BS_TARGET
+	printstring STRINGID_ITDOESNTAFFECT
+	waitmessage B_WAIT_TIME_LONG
+	makevisible BS_ATTACKER
+	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_SkyDropFlyingAlreadyConfused
+	jumpifvolatile BS_TARGET, VOLATILE_RAMPAGE_TURNS, BattleScript_SkyDropFlyingConfuseLock
+	return
+
+BattleScript_SkyDropFlyingConfuseLock:
+	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_CONFUSION
+BattleScript_SkyDropFlyingAlreadyConfused:
+	clearvolatile BS_TARGET, VOLATILE_RAMPAGE_TURNS
+	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_SkyDropFlyingAlreadyConfusedRet
+	setbyte BS_ATTACKER, BS_TARGET
+	call BattleScript_ThrashConfusesRet
+BattleScript_SkyDropFlyingAlreadyConfusedRet:
+	return
+
+BattleScript_SkyDropNoTarget::
+	pause B_WAIT_TIME_SHORT
+	setmoveresultflags MOVE_RESULT_FAILED
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	makevisible BS_ATTACKER
+	goto BattleScript_MoveEnd
 
 BattleScript_EffectSubstitute::
 	attackcanceler
@@ -5434,10 +5411,6 @@ BattleScript_UltraBurst::
 	switchinabilities BS_SCRIPTING
 	end3
 
-BattleScript_TwoTurnMovesSecondTurnFormChange::
-	call BattleScript_BattlerFormChangeInstant
-	goto BattleScript_FromTwoTurnMovesSecondTurnRet
-
 BattleScript_BattlerFormChange::
 	pause 5
 	call BattleScript_AbilityPopUpScripting
@@ -5451,12 +5424,6 @@ BattleScript_BattlerFormChangeFromAfterAnimation::
 	switchinabilities BS_SCRIPTING
 	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
-
-BattleScript_BattlerFormChangeInstant::
-	handleformchange BS_SCRIPTING, 0
-	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE_INSTANT
-	waitanimation
-	goto BattleScript_BattlerFormChangeFromAfterAnimation
 
 BattleScript_BattlerFormChangeDisguise::
 	call BattleScript_AbilityPopUpScripting
@@ -5693,13 +5660,13 @@ BattleScript_MoveUsedUnfrostbite::
 BattleScript_DefrostedViaFireMove::
 	printstring STRINGID_PKMNWASDEFROSTED
 	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_TARGET
+	updatestatusicon BS_SCRIPTING
 	return
 
 BattleScript_FrostbiteHealedViaFireMove::
 	printstring STRINGID_PKMNFROSTBITEHEALED
 	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_TARGET
+	updatestatusicon BS_SCRIPTING
 	return
 
 BattleScript_MoveUsedIsParalyzed::

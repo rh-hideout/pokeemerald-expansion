@@ -1462,10 +1462,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro trytwoturnmovespowerherbformchange
-	callnative BS_TryTwoTurnMovesPowerHerbFormChange
-	.endm
-
 	.macro tryquash failInstr:req
 	callnative BS_TryQuash
 	.4byte \failInstr
@@ -2097,20 +2093,6 @@
 	.macro tryhealquarterhealth battler:req, failInstr:req
 	callnative BS_TryHealQuarterHealth
 	.byte \battler
-	.4byte \failInstr
-	.endm
-
-	.macro jumpifunder200 jumpInstr:req
-	callnative BS_JumpIfUnder200
-	.4byte \jumpInstr
-	.endm
-
-	.macro setskydrop
-	callnative BS_SetSkyDrop
-	.endm
-
-	.macro clearskydrop failInstr:req
-	callnative BS_ClearSkyDrop
 	.4byte \failInstr
 	.endm
 
