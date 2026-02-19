@@ -213,20 +213,24 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
      || MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH))
         return effect;
 
-    enum Ability ability = GetBattlerAbility(battlerAtk);
-    u32 holdEffectParam = GetItemHoldEffectParam(item);
+    // DETERMINISTIC_FLINCH
+    // enum Ability ability = GetBattlerAbility(battlerAtk);
+    // u32 holdEffectParam = GetItemHoldEffectParam(item);
 
-    if (B_SERENE_GRACE_BOOST >= GEN_5 && ability == ABILITY_SERENE_GRACE)
-        holdEffectParam *= 2;
-    if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_RAINBOW && gCurrentMove != MOVE_SECRET_POWER)
-        holdEffectParam *= 2;
-    if (ability != ABILITY_STENCH && RandomPercentage(RNG_HOLD_EFFECT_FLINCH, holdEffectParam))
-    {
-        SetMoveEffect(battlerAtk, battlerDef, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
-        effect = ITEM_EFFECT_OTHER;
-    }
+    // if (B_SERENE_GRACE_BOOST >= GEN_5 && ability == ABILITY_SERENE_GRACE)
+    //     holdEffectParam *= 2;
+    // if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_RAINBOW && gCurrentMove != MOVE_SECRET_POWER)
+    //     holdEffectParam *= 2;
+    // if (ability != ABILITY_STENCH && RandomPercentage(RNG_HOLD_EFFECT_FLINCH, holdEffectParam))
+    // {
+    //     SetMoveEffect(battlerAtk, battlerDef, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
+    //     effect = ITEM_EFFECT_OTHER;
+    // }
 
-    return effect;
+    // return effect;
+    BattleScriptCall(BattleScript_FlinchItemConsumed);
+
+    return ITEM_EFFECT_OTHER;
 }
 
 static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
@@ -1012,15 +1016,39 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId,
     return effect;
 }
 
+// DETERMINISTIC_CRITICAL_HITS
 static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId, ActivationTiming timing)
 {
+    if (gBattleMons[battler].volatiles.dragonCheer
+     || gBattleMons[battler].volatiles.focusEnergy
+     || gBattleMons[battler].volatiles.laserFocus)
+        return ITEM_NO_EFFECT;
+
+    bool32 canActivate = TRUE;
+
+    if (itemId == ITEM_LANSAT_BERRY)
+    {
+        canActivate = HasEnoughHpToEatBerry(battler, GetBattlerAbility(battler), GetItemHoldEffectParam(itemId), itemId);
+    }
+    else if (itemId == ITEM_LUCKY_PUNCH)
+    {
+        canActivate = gBattleMons[battler].species == SPECIES_CHANSEY;
+    }
+    else if (itemId == ITEM_LEEK)
+    {
+        canActivate = GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_FARFETCHD || gBattleMons[battler].species == SPECIES_SIRFETCHD;
+    }
+
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (!gBattleMons[battler].volatiles.focusEnergy
-     && !gBattleMons[battler].volatiles.dragonCheer
-     && HasEnoughHpToEatBerry(battler, GetBattlerAbility(battler), GetItemHoldEffectParam(itemId), itemId))
+    if (canActivate)
+    // if (!gBattleMons[battler].volatiles.focusEnergy
+    //  && !gBattleMons[battler].volatiles.dragonCheer
+    //  && HasEnoughHpToEatBerry(battler, GetBattlerAbility(battler), GetItemHoldEffectParam(itemId), itemId))
     {
-        gBattleMons[battler].volatiles.focusEnergy = TRUE;
+        gDisableStructs[battler].laserFocusTimer = 1;
+        // gBattleMons[battler].volatiles.focusEnergy = TRUE;
+        gBattleMons[battler].volatiles.laserFocus = TRUE;
         if (timing == IsOnSwitchInFirstTurnActivation)
             BattleScriptExecute(BattleScript_BerryFocusEnergyEnd2);
         else

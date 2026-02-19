@@ -340,6 +340,9 @@ const u8 gText_Learned[] = _("LEARNED");
 const u8 gText_Have[] = _("HAVE");
 const u8 gText_DontHave[] = _("DON'T HAVE");
 const u8 gText_Fourth[] = _("FOURTH");
+// FRONTIER_SELECT_SIX
+const u8 gText_Fifth[] = _("FIFTH");
+const u8 gText_Sixth[] = _("SIXTH");
 const u8 gText_PkmnCantParticipate[] = _("That POKéMON can't participate.{PAUSE_UNTIL_PRESS}");
 const u8 gText_CancelParticipation[] = _("Cancel participation?");
 const u8 gText_CancelBattle[] = _("Cancel the battle?");

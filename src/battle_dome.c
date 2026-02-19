@@ -4266,7 +4266,8 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
     textPrinter.letterSpacing = 0;
 
     // Print names of the party mons
-    for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    // TODO_YASIN
+    for (i = 0; i < min(FRONTIER_PARTY_SIZE, 3); i++)
     {
         textPrinter.currentY = sSpeciesNameTextYCoords[i];
         if (trainerId == TRAINER_PLAYER)

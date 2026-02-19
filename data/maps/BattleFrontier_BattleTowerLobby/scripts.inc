@@ -10,6 +10,8 @@ BattleFrontier_BattleTowerLobby_OnResume:
 	end
 
 BattleFrontier_BattleTowerLobby_OnTransition:
+	@ FRONTIER_KEEP_BATTLING
+	call BattleFrontier_BattleTowerLobby_EventScript_GetChallengeStatus
 	call BattleFrontier_BattleTowerLobby_EventScript_ShowOrHideReporter
 	apprentice_shouldcheckgone
 	goto_if_eq VAR_0x8004, FALSE, BattleFrontier_BattleTowerLobby_EventScript_ShowApprentice  @ VAR_0x8004 always TRUE here
@@ -34,9 +36,11 @@ BattleFrontier_BattleTowerLobby_EventScript_PlayerFaceNorth::
 	end
 
 BattleFrontier_BattleTowerLobby_OnFrame:
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, 0, BattleFrontier_BattleTowerLobby_EventScript_GetChallengeStatus
+	@ FRONTIER_KEEP_BATTLING
+	@ map_script_2 VAR_TEMP_CHALLENGE_STATUS, 0, BattleFrontier_BattleTowerLobby_EventScript_GetChallengeStatus
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING, BattleFrontier_BattleTowerLobby_EventScript_QuitWithoutSaving
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattleTowerLobby_EventScript_ResumeChallenge
+	@ map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattleTowerLobby_EventScript_ResumeChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattleTowerLobby_EventScript_ReleasePause
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattleTowerLobby_EventScript_WonChallenge
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattleTowerLobby_EventScript_LostChallenge
 	.2byte 0
@@ -55,6 +59,13 @@ BattleFrontier_BattleTowerLobby_EventScript_QuitWithoutSaving::
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, 0
 	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	release
+	end
+
+@ FRONTIER_KEEP_BATTLING
+BattleFrontier_BattleTowerLobby_EventScript_ReleasePause::
+	frontier_getstatus
+	setvar VAR_TEMP_CHALLENGE_STATUS, 0
+	releaseall
 	end
 
 BattleFrontier_BattleTowerLobby_EventScript_WonChallenge::
@@ -171,6 +182,10 @@ BattleFrontier_BattleTowerLobby_EventScript_SinglesAttendant::
 	faceplayer
 	setvar VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_TOWER
 	special SavePlayerParty
+	@ FRONTIER_KEEP_BATTLING
+	frontier_get FRONTIER_DATA_CHALLENGE_STATUS
+	compare VAR_RESULT, CHALLENGE_STATUS_PAUSED
+	goto_if_eq BattleFrontier_BattleTowerLobby_EventScript_TryEnterSinglesChallenge
 	msgbox BattleFrontier_BattleTowerLobby_Text_WelcomSingleBattle, MSGBOX_DEFAULT
 BattleFrontier_BattleTowerLobby_EventScript_AskEnterSinglesChallenge::
 	message BattleFrontier_BattleTowerLobby_Text_TakeSinglesChallenge
@@ -184,20 +199,26 @@ BattleFrontier_BattleTowerLobby_EventScript_AskEnterSinglesChallenge::
 
 BattleFrontier_BattleTowerLobby_EventScript_TryEnterSinglesChallenge::
 	setvar VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
-	message BattleFrontier_BattleTowerLobby_Text_WhichLevelMode
-	waitmessage
-	multichoice 17, 6, MULTI_LEVEL_MODE, FALSE
-	switch VAR_RESULT
-	case FRONTIER_LVL_TENT, BattleFrontier_BattleTowerLobby_EventScript_CancelChallenge
-	case MULTI_B_PRESSED, BattleFrontier_BattleTowerLobby_EventScript_CancelChallenge
+	@ FRONTIER_ALWAYS_100
+	@ message BattleFrontier_BattleTowerLobby_Text_WhichLevelMode
+	@ waitmessage
+	@ multichoice 17, 6, MULTI_LEVEL_MODE, FALSE
+	@ switch VAR_RESULT
+	@ case FRONTIER_LVL_TENT, BattleFrontier_BattleTowerLobby_EventScript_CancelChallenge
+	@ case MULTI_B_PRESSED, BattleFrontier_BattleTowerLobby_EventScript_CancelChallenge
+	setvar VAR_RESULT, FRONTIER_LVL_OPEN 
 	frontier_checkineligible
 	goto_if_eq VAR_0x8004, TRUE, BattleFrontier_BattleTowerLobby_EventScript_NotEnoughValidMons
 	frontier_set FRONTIER_DATA_LVL_MODE, VAR_RESULT
-	msgbox BattleFrontier_BattleTowerLobby_Text_SelectThreeMons, MSGBOX_DEFAULT
+	@ FRONTIER_SELECT_SIX
+	@ msgbox BattleFrontier_BattleTowerLobby_Text_SelectThreeMons, MSGBOX_DEFAULT
+	msgbox BattleFrontier_BattleTowerLobby_Text_SelectSixMons, MSGBOX_DEFAULT 
 	fadescreen FADE_TO_BLACK
 	callnative RemoveFollowingPokemon
-	call BattleFrontier_EventScript_GetLvlMode
-	copyvar VAR_0x8004, VAR_RESULT
+	@ FRONTIER_ALWAYS_100
+	@ call BattleFrontier_EventScript_GetLvlMode
+	@ copyvar VAR_0x8004, VAR_RESULT
+	setvar VAR_0x8004, FRONTIER_LVL_OPEN
 	setvar VAR_0x8005, FRONTIER_PARTY_SIZE
 	special ChoosePartyForBattleFrontier
 	waitstate
@@ -1194,6 +1215,11 @@ BattleFrontier_BattleTowerLobby_Text_SelectThreeMons:
 	.string "Now please select the three POKéMON\n"
 	.string "that are to be entered.$"
 
+@ FRONTIER_SELECT_SIX
+BattleFrontier_BattleTowerLobby_Text_SelectSixMons:
+	.string "Now please select the six POKéMON\n"
+	.string "that are to be entered.$"
+
 BattleFrontier_BattleTowerLobby_Text_WelcomeDoubleBattle:
 	.string "Where the talents of TRAINERS\n"
 	.string "are put to the test!\p"
@@ -1354,8 +1380,9 @@ BattleFrontier_BattleTowerLobby_Text_AwardYouTheseBattlePoints:
 	.string "In recognition of your infinite talent,\n"
 	.string "we award you these Battle Point(s).$"
 
+@ FRONTIER_KEEP_BATTLING
 BattleFrontier_Text_ObtainedXBattlePoints:
-	.string "{PLAYER} obtained {STR_VAR_1} Battle Point(s).$"
+	.string "{PLAYER} obtained {STR_VAR_1} Battle Points.$"
 
 BattleFrontier_BattleTowerLobby_Text_RulesAreListed:
 	.string "The BATTLE TOWER rules are listed.$"

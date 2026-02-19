@@ -680,6 +680,19 @@ static const u8 *const sDescriptionStringTable[] =
     [PARTYBOX_DESC_LEARNED]    = gText_Learned,
     [PARTYBOX_DESC_HAVE]       = gText_Have,
     [PARTYBOX_DESC_DONT_HAVE]  = gText_DontHave,
+    // FRONTIER_SELECT_SIX
+    [PARTYBOX_DESC_FIFTH]      = gText_Fifth,
+    [PARTYBOX_DESC_SIXTH]      = gText_Sixth,
+};
+
+// FRONTIER_SELECT_SIX
+static const u8 sSelectionTextIds[] = {
+    PARTYBOX_DESC_FIRST,
+    PARTYBOX_DESC_SECOND,
+    PARTYBOX_DESC_THIRD,
+    PARTYBOX_DESC_FOURTH,
+    PARTYBOX_DESC_FIFTH,
+    PARTYBOX_DESC_SIXTH,
 };
 
 static const u16 sUnusedData[] =

@@ -844,5 +844,8 @@ extern const u8 BattleScript_MetronomeAttackstring[];
 extern const u8 BattleScript_SleepTalkAttackstring[];
 extern const u8 BattleScript_NaturePowerAttackstring[];
 extern const u8 BattleScript_PokemonCantUseTheMove[];
+// DETERMINISTIC_FLINCH
+extern const u8 BattleScript_FlinchSpamFailed[];
+extern const u8 BattleScript_FlinchItemConsumed[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

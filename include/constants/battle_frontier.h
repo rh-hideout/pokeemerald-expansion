@@ -54,7 +54,7 @@
 
 // This is the default number of battles (or floors, in Battle Pyramid) per challenge.
 // There are 2 facilities that differ: Battle Dome (DOME_ROUNDS_COUNT) and Battle Pike (NUM_PIKE_ROOMS).
-#define FRONTIER_STAGES_PER_CHALLENGE 7
+#define FRONTIER_STAGES_PER_CHALLENGE 10
 
 // These sets of facility ids would be redundant if the order was consistent
 // The order is important for this set so that all the non-link records can be continuous

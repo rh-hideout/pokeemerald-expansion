@@ -116,7 +116,9 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
             COMPOUND_STRING("I'm terribly sorry…")       //Gold
         },
         .battledBit = {1 << 0, 1 << 1},
-        .streakAppearances = {35, 70, 35, 1},
+        // FRONTIER_KEEP_BATTLING
+        // .streakAppearances = {35, 70, 35, 1},
+        .streakAppearances = {50, 100, 50, 1}, 
     },
     [FRONTIER_FACILITY_DOME] =
     {
@@ -282,9 +284,59 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
                 .evs = {152, 152, 0, 0, 106, 100},
                 .moves = {MOVE_BODY_SLAM, MOVE_BELLY_DRUM, MOVE_YAWN, MOVE_SHADOW_BALL},
             },
+            // FRONTIER_SELECT_SIX
+            {
+                .species = SPECIES_RAIKOU,
+                .heldItem = ITEM_LUM_BERRY,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_MODEST,
+                .evs = {158, 0, 252, 100, 0, 0},
+                .moves = {MOVE_THUNDERBOLT, MOVE_CALM_MIND, MOVE_REFLECT, MOVE_REST},
+            },
+            {
+                .species = SPECIES_LATIOS,
+                .heldItem = ITEM_BRIGHT_POWDER,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_MODEST,
+                .evs = {252, 0, 252, 6, 0, 0},
+                .moves = {MOVE_PSYCHIC, MOVE_CALM_MIND, MOVE_RECOVER, MOVE_DRAGON_CLAW},
+            },
+            {
+                .species = SPECIES_SNORLAX,
+                .heldItem = ITEM_CHESTO_BERRY,
+                .fixedIV = MAX_PER_STAT_IVS,
+                .nature = NATURE_ADAMANT,
+                .evs = {252, 252, 0, 0, 6, 0},
+                .moves = {MOVE_CURSE, MOVE_RETURN, MOVE_REST, MOVE_SHADOW_BALL},
+            },
         },
         // Gold Symbol.
         {
+            // FRONTIER_SELECT_SIX
+            {
+                .species = SPECIES_ALAKAZAM,
+                .heldItem = ITEM_BRIGHT_POWDER,
+                .fixedIV = 24,
+                .nature = NATURE_MODEST,
+                .evs = {106, 0, 152, 152, 100, 0},
+                .moves = {MOVE_THUNDER_PUNCH, MOVE_FIRE_PUNCH, MOVE_ICE_PUNCH, MOVE_DISABLE},
+            },
+            {
+                .species = SPECIES_ENTEI,
+                .heldItem = ITEM_LUM_BERRY,
+                .fixedIV = 24,
+                .nature = NATURE_LONELY,
+                .evs = {100, 152, 152, 0, 100, 6},
+                .moves = {MOVE_FIRE_BLAST, MOVE_CALM_MIND, MOVE_RETURN, MOVE_ROAR},
+            },
+            {
+                .species = SPECIES_SNORLAX,
+                .heldItem = ITEM_QUICK_CLAW,
+                .fixedIV = 24,
+                .nature = NATURE_ADAMANT,
+                .evs = {152, 152, 0, 0, 106, 100},
+                .moves = {MOVE_BODY_SLAM, MOVE_BELLY_DRUM, MOVE_YAWN, MOVE_SHADOW_BALL},
+            },
             {
                 .species = SPECIES_RAIKOU,
                 .heldItem = ITEM_LUM_BERRY,
@@ -888,7 +940,9 @@ static void GetFrontierData(void)
         gSpecialVar_Result = gSaveBlock2Ptr->frontier.lvlMode;
         break;
     case FRONTIER_DATA_BATTLE_NUM:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+        // FRONTIER_KEEP_BATTLING
+        // gSpecialVar_Result = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
+        gSpecialVar_Result = GetCurrentFacilityWinStreak();
         break;
     case FRONTIER_DATA_PAUSED:
         gSpecialVar_Result = gSaveBlock2Ptr->frontier.challengePaused;
@@ -1757,9 +1811,9 @@ void CopyFrontierTrainerText(u8 whichText, u16 trainerId)
     #if FREE_BATTLE_TOWER_E_READER == FALSE
         if (trainerId == TRAINER_EREADER)
             FrontierSpeechToString(gSaveBlock2Ptr->frontier.ereaderTrainer.greeting);
-        else if (trainerId == TRAINER_FRONTIER_BRAIN)
+        else if (trainerId == TRAINER_FRONTIER_BRAIN || trainerId == TRAINER_BOSS_BATTLE)
     #else
-        if (trainerId == TRAINER_FRONTIER_BRAIN)
+        if (trainerId == TRAINER_FRONTIER_BRAIN || trainerId == TRAINER_BOSS_BATTLE)
     #endif //FREE_BATTLE_TOWER_E_READER
             CopyFrontierBrainText(FALSE);
         else if (trainerId < FRONTIER_TRAINERS_COUNT)
@@ -1775,9 +1829,9 @@ void CopyFrontierTrainerText(u8 whichText, u16 trainerId)
         {
             FrontierSpeechToString(gSaveBlock2Ptr->frontier.ereaderTrainer.farewellPlayerLost);
         }
-        else if (trainerId == TRAINER_FRONTIER_BRAIN)
+        else if (trainerId == TRAINER_FRONTIER_BRAIN || trainerId == TRAINER_BOSS_BATTLE)
     #else
-        if (trainerId == TRAINER_FRONTIER_BRAIN)
+        if (trainerId == TRAINER_FRONTIER_BRAIN || trainerId == TRAINER_BOSS_BATTLE)
     #endif //FREE_BATTLE_TOWER_E_READER
         {
             CopyFrontierBrainText(FALSE);
@@ -1808,7 +1862,7 @@ void CopyFrontierTrainerText(u8 whichText, u16 trainerId)
             FrontierSpeechToString(gSaveBlock2Ptr->frontier.ereaderTrainer.farewellPlayerWon);
         #endif //FREE_BATTLE_TOWER_E_READER
         }
-        else if (trainerId == TRAINER_FRONTIER_BRAIN)
+        else if (trainerId == TRAINER_FRONTIER_BRAIN || trainerId == TRAINER_BOSS_BATTLE)
         {
             CopyFrontierBrainText(TRUE);
         }
@@ -1919,61 +1973,69 @@ u8 GetPlayerSymbolCountForFacility(u8 facility)
 
 static void GiveBattlePoints(void)
 {
-    s32 challengeNum = 0;
+    // FRONTIER_KEEP_BATTLING
+    // s32 challengeNum = 0;
     s32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     s32 facility = VarGet(VAR_FRONTIER_FACILITY);
     s32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
     s32 points;
 
-    switch (facility)
-    {
-    case FRONTIER_FACILITY_TOWER:
-        challengeNum = gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
-        break;
-    case FRONTIER_FACILITY_DOME:
-        challengeNum = gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode];
-        break;
-    case FRONTIER_FACILITY_PALACE:
-        challengeNum = gSaveBlock2Ptr->frontier.palaceWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
-        break;
-    case FRONTIER_FACILITY_ARENA:
-        challengeNum = gSaveBlock2Ptr->frontier.arenaWinStreaks[lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
-        break;
-    case FRONTIER_FACILITY_FACTORY:
-        challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
-        break;
-    case FRONTIER_FACILITY_PIKE:
-        challengeNum = gSaveBlock2Ptr->frontier.pikeWinStreaks[lvlMode] / NUM_PIKE_ROOMS;
-        break;
-    case FRONTIER_FACILITY_PYRAMID:
-        challengeNum = gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
-        break;
-    }
+    // switch (facility)
+    // {
+    // case FRONTIER_FACILITY_TOWER:
+    //     challengeNum = gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
+    //     break;
+    // case FRONTIER_FACILITY_DOME:
+    //     challengeNum = gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode];
+    //     break;
+    // case FRONTIER_FACILITY_PALACE:
+    //     challengeNum = gSaveBlock2Ptr->frontier.palaceWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
+    //     break;
+    // case FRONTIER_FACILITY_ARENA:
+    //     challengeNum = gSaveBlock2Ptr->frontier.arenaWinStreaks[lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
+    //     break;
+    // case FRONTIER_FACILITY_FACTORY:
+    //     challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
+    //     break;
+    // case FRONTIER_FACILITY_PIKE:
+    //     challengeNum = gSaveBlock2Ptr->frontier.pikeWinStreaks[lvlMode] / NUM_PIKE_ROOMS;
+    //     break;
+    // case FRONTIER_FACILITY_PYRAMID:
+    //     challengeNum = gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
+    //     break;
+    // }
 
-    if (challengeNum != 0)
-        challengeNum--;
-    if (challengeNum >= ARRAY_COUNT(sBattlePointAwards[0][0]))
-        challengeNum = ARRAY_COUNT(sBattlePointAwards[0][0]) - 1;
+    // if (challengeNum != 0)
+    //     challengeNum--;
+    // if (challengeNum >= ARRAY_COUNT(sBattlePointAwards[0][0]))
+    //     challengeNum = ARRAY_COUNT(sBattlePointAwards[0][0]) - 1;
 
-    points = sBattlePointAwards[facility][battleMode][challengeNum];
+    // points = sBattlePointAwards[facility][battleMode][challengeNum];
+    points = sBattlePointAwards[facility][battleMode][0];
+    u16 currentStreak = gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode];
+    points += (currentStreak / FRONTIER_STAGES_PER_CHALLENGE) * 2 + 1;
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
         points += 10;
     gSaveBlock2Ptr->frontier.battlePoints += points;
-    ConvertIntToDecimalStringN(gStringVar1, points, STR_CONV_MODE_LEFT_ALIGN, 2);
+    ConvertIntToDecimalStringN(gStringVar1, points, STR_CONV_MODE_LEFT_ALIGN, 3/*2*/);
     if (gSaveBlock2Ptr->frontier.battlePoints > MAX_BATTLE_FRONTIER_POINTS)
         gSaveBlock2Ptr->frontier.battlePoints = MAX_BATTLE_FRONTIER_POINTS;
 
-    points = gSaveBlock2Ptr->frontier.cardBattlePoints;
-    points += sBattlePointAwards[facility][battleMode][challengeNum];
-    IncrementDailyBattlePoints(sBattlePointAwards[facility][battleMode][challengeNum]);
-    if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
-    {
-        points += 10;
-        IncrementDailyBattlePoints(10);
-    }
-    if (points > 0xFFFF)
-        points = 0xFFFF;
-    gSaveBlock2Ptr->frontier.cardBattlePoints = points;
+    // points = gSaveBlock2Ptr->frontier.cardBattlePoints;
+    // points += sBattlePointAwards[facility][battleMode][challengeNum];
+    IncrementDailyBattlePoints(points/*sBattlePointAwards[facility][battleMode][challengeNum]*/);
+    // if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
+    // {
+    //     points += 10;
+    //     IncrementDailyBattlePoints(10);
+    // }
+    // if (points > 0xFFFF)
+    //     points = 0xFFFF;
+    // gSaveBlock2Ptr->frontier.cardBattlePoints = points;
+    if (gSaveBlock2Ptr->frontier.cardBattlePoints + points > 0xFFFF)
+        gSaveBlock2Ptr->frontier.cardBattlePoints = 0xFFFF;
+    else
+        gSaveBlock2Ptr->frontier.cardBattlePoints += points;
 }
 
 static void GetFacilitySymbolCount(void)
@@ -2020,8 +2082,9 @@ static void AppendIfValid(u16 species, u16 heldItem, u16 hp, u8 lvlMode, u8 monL
 
     if (species == SPECIES_EGG || species == SPECIES_NONE)
         return;
-    if (gSpeciesInfo[species].isFrontierBanned)
-        return;
+    // FRONTIER_NO_BANS
+    // if (gSpeciesInfo[species].isFrontierBanned)
+    //     return;
     if (lvlMode == FRONTIER_LVL_50 && monLevel > FRONTIER_MAX_LEVEL_50)
         return;
 
@@ -2106,39 +2169,41 @@ static void CheckPartyIneligibility(void)
 
     if (numEligibleMons < toChoose)
     {
-        u32 i, j;
-        u32 baseSpecies = 0;
+        u32 i/*, j*/;
+        // u32 baseSpecies = 0;
         u32 totalCaughtBanned = 0;
         u32 totalPartyBanned = 0;
         u32 partyBanned[PARTY_SIZE] = {0};
 
-        for (i = 0; i < NUM_SPECIES; i++)
-        {
-            baseSpecies = GET_BASE_SPECIES_ID(i);
-            if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
-            {
-                if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
-                    totalCaughtBanned++;
-            }
-        }
+        // FRONTIER_NO_BANS
+        // for (i = 0; i < NUM_SPECIES; i++)
+        // {
+        //     baseSpecies = GET_BASE_SPECIES_ID(i);
+        //     if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
+        //     {
+        //         if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
+        //             totalCaughtBanned++;
+        //     }
+        // }
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
             u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
             if (species == SPECIES_EGG || species == SPECIES_NONE)
                 continue;
-            if (gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned)
-            {
-                bool32 addToList = TRUE;
-                for (j = 0; j < totalPartyBanned; j++)
-                    if (partyBanned[j] == species)
-                        addToList = FALSE;
-                if (addToList)
-                {
-                    partyBanned[totalPartyBanned] = species;
-                    totalPartyBanned++;
-                }
-            }
+            // FRONTIER_NO_BANS
+            // if (gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned)
+            // {
+            //     bool32 addToList = TRUE;
+            //     for (j = 0; j < totalPartyBanned; j++)
+            //         if (partyBanned[j] == species)
+            //             addToList = FALSE;
+            //     if (addToList)
+            //     {
+            //         partyBanned[totalPartyBanned] = species;
+            //         totalPartyBanned++;
+            //     }
+            // }
         }
 
         gStringVar1[0] = EOS;
@@ -2612,6 +2677,10 @@ void CreateFrontierBrainPokemon(void)
                 friendship = 0;
         }
         SetMonData(&gEnemyParty[monPartyId], MON_DATA_FRIENDSHIP, &friendship);
+        // FRONTIER_MAX_PP
+        u8 maxPP = 0xFF;
+        SetMonData(&gEnemyParty[monPartyId], MON_DATA_PP_BONUSES, &maxPP);
+        MonRestorePP(&gEnemyParty[monPartyId]);
         CalculateMonStats(&gEnemyParty[monPartyId]);
         monPartyId++;
     }
@@ -2721,20 +2790,21 @@ void ClearEnemyPartyAfterChallenge()
 
 static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies)
 {
-    u32 count = 0;
+    // FRONTIER_NO_BANS
+    // u32 count = 0;
     u16 *list = AllocZeroed(sizeof(u16) * totalBannedSpecies);
-    for (u32 i = 0; i < NUM_SPECIES; i++)
-    {
-        u32 baseSpecies = GET_BASE_SPECIES_ID(i);
-        if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
-        {
-            if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
-            {
-                list[count] = i;
-                count++;
-            }
-        }
-    }
+    // for (u32 i = 0; i < NUM_SPECIES; i++)
+    // {
+    //     u32 baseSpecies = GET_BASE_SPECIES_ID(i);
+    //     if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
+    //     {
+    //         if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
+    //         {
+    //             list[count] = i;
+    //             count++;
+    //         }
+    //     }
+    // }
     return list;
 }
 

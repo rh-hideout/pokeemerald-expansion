@@ -195,6 +195,8 @@ struct DebugMenuOption
 struct DebugMonData
 {
     u16 species;
+    // FEATURE_DEBUG
+    u8 gender;
     u8 level;
     bool8 isShiny:1;
     u8 nature:5;
@@ -301,6 +303,8 @@ static void DebugAction_Give_Item_SelectQuantity(u8 taskId);
 static void DebugAction_Give_PokemonSimple(u8 taskId);
 static void DebugAction_Give_PokemonComplex(u8 taskId);
 static void DebugAction_Give_Pokemon_SelectId(u8 taskId);
+// FEATURE_DEBUG
+static void DebugAction_Give_Pokemon_SelectGender(u8 taskId);
 static void DebugAction_Give_Pokemon_SelectLevel(u8 taskId);
 static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId);
 static void DebugAction_Give_Pokemon_SelectNature(u8 taskId);
@@ -2196,6 +2200,8 @@ static void DebugAction_Give_Item_SelectQuantity(u8 taskId)
 static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
 {
     sDebugMonData->species          = 1;
+    // FEATURE_DEBUG
+    sDebugMonData->gender           = MON_GENDERLESS;
     sDebugMonData->level            = MIN_LEVEL;
     sDebugMonData->isShiny          = FALSE;
     sDebugMonData->nature           = 0;
@@ -2295,6 +2301,19 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
     gTasks[taskId].tIterator = 0;
 }
 
+// FEATURE_DEBUG
+static void Debug_Display_Gender(u8 gender, u8 windowId)
+{
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    if (gender == MON_GENDERLESS)
+        AddTextPrinterParameterized(windowId, 1, COMPOUND_STRING("Gender: None"), 0, 1, 0, NULL);
+    else if (gender == MON_FEMALE)
+        AddTextPrinterParameterized(windowId, 1, COMPOUND_STRING("Gender: Female"), 0, 1, 0, NULL);
+    else
+        AddTextPrinterParameterized(windowId, 1, COMPOUND_STRING("Gender: Male"), 0, 1, 0, NULL);
+    CopyWindowToVram(windowId, 3);
+}
+
 static void Debug_Display_Level(u32 level, u32 digit, u8 windowId)
 {
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
@@ -2321,12 +2340,22 @@ static void DebugAction_Give_Pokemon_SelectId(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         sDebugMonData->species = gTasks[taskId].tInput;
-        gTasks[taskId].tInput = 1;
-        gTasks[taskId].tDigit = 0;
+        // FEATURE_DEBUG
+        if (gTasks[taskId].tIsComplex == TRUE)
+        {
+            sDebugMonData->gender = MON_GENDERLESS;
+            Debug_Display_Gender(sDebugMonData->gender, gTasks[taskId].tSubWindowId);
+            gTasks[taskId].func = DebugAction_Give_Pokemon_SelectGender;
+        }
+        else
+        {
+            gTasks[taskId].tInput = 1;
+            gTasks[taskId].tDigit = 0;
 
-        Debug_Display_Level(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+            Debug_Display_Level(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
 
-        gTasks[taskId].func = DebugAction_Give_Pokemon_SelectLevel;
+            gTasks[taskId].func = DebugAction_Give_Pokemon_SelectLevel;
+        }
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -2347,6 +2376,41 @@ static void Debug_Display_TrueFalse(bool32 value, u8 windowId, const u8 *titleSt
     StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
     StringExpandPlaceholders(gStringVar4, titleStr);
     AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+// FEATURE_DEBUG
+static void DebugAction_Give_Pokemon_SelectGender(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        if (sDebugMonData->gender == MON_GENDERLESS)
+            sDebugMonData->gender = MON_FEMALE;
+        else if (sDebugMonData->gender == MON_FEMALE)
+            sDebugMonData->gender = MON_MALE;
+        else
+            sDebugMonData->gender = MON_GENDERLESS;
+        Debug_Display_Gender(sDebugMonData->gender, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        gTasks[taskId].tInput = 1; 
+        gTasks[taskId].tDigit = 0;
+
+        Debug_Display_Level(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+
+        gTasks[taskId].func = DebugAction_Give_Pokemon_SelectLevel;
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        Free(sDebugMonData);
+        FreeMonIconPalettes();
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
+        DebugAction_DestroyExtraWindow(taskId);
+    }
 }
 
 static void DebugAction_Give_Pokemon_SelectLevel(u8 taskId)
@@ -2840,6 +2904,8 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     u8 EVs[NUM_STATS];
     u8 ev_val;
     u16 species     = sDebugMonData->species;
+    // FEATURE_DEBUG
+    u8 gender       = sDebugMonData->gender;
     u8 level        = sDebugMonData->level;
     bool8 isShiny   = sDebugMonData->isShiny;
     u8 nature       = sDebugMonData->nature;
@@ -2860,7 +2926,9 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     //Nature
     if (nature == NUM_NATURES || nature == 0xFF)
         nature = Random() % NUM_NATURES;
-    CreateMonWithNature(&mon, species, level, USE_RANDOM_IVS, nature);
+    // FEATURE_DEBUG
+    // CreateMonWithNature(&mon, species, level, USE_RANDOM_IVS, nature);
+    CreateMonWithGenderNatureLetter(&mon, species, level, USE_RANDOM_IVS, gender, nature, 0);
 
     //Shininess
     SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
@@ -2904,6 +2972,10 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
 
         SetMonMoveSlot(&mon, moves[i], i);
     }
+    // FEATURE_DEBUG
+    u8 maxPP = 0xFF;
+    SetMonData(&mon, MON_DATA_PP_BONUSES, &maxPP);
+    MonRestorePP(&mon);
 
     //Ability
     if (abilityNum == 0xFF || GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE)

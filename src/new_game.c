@@ -52,7 +52,8 @@
 extern const u8 EventScript_ResetAllMapFlags[];
 
 static void ClearFrontierRecord(void);
-static void WarpToTruck(void);
+// FEATURE_FRONTIER_START
+// static void WarpToTruck(void);
 static void ResetMiniGamesRecords(void);
 static void ResetItemFlags(void);
 static void ResetDexNav(void);
@@ -95,10 +96,14 @@ static void InitPlayerTrainerId(void)
 // L=A isnt set here for some reason.
 static void SetDefaultOptions(void)
 {
-    gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
+    // SKIP_CHATTY_NPCS
+    // gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
+    gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsWindowFrameType = 0;
     gSaveBlock2Ptr->optionsSound = OPTIONS_SOUND_MONO;
-    gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SHIFT;
+    // FEATURE_DIFFICULTY
+    // gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SHIFT;
+    gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
     gSaveBlock2Ptr->optionsBattleSceneOff = FALSE;
     gSaveBlock2Ptr->regionMapZoom = FALSE;
 }
@@ -129,11 +134,12 @@ static void ClearFrontierRecord(void)
     gSaveBlock2Ptr->frontier.opponentNames[1][0] = EOS;
 }
 
-static void WarpToTruck(void)
-{
-    SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
-    WarpIntoMap();
-}
+// FEATURE_FRONTIER_START
+// static void WarpToTruck(void)
+// {
+//     SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
+//     WarpIntoMap();
+// }
 
 void Sav2_ClearSetDefault(void)
 {
@@ -175,7 +181,8 @@ void NewGameInitData(void)
     ResetGabbyAndTy();
     ClearSecretBases();
     ClearBerryTrees();
-    SetMoney(&gSaveBlock1Ptr->money, 3000);
+    // FEATURE_DIFFICULTY
+    SetMoney(&gSaveBlock1Ptr->money, 0/*3000*/);
     SetCoins(0);
     ResetLinkContestBoolean();
     ResetGameStats();
@@ -197,7 +204,10 @@ void NewGameInitData(void)
     InitDewfordTrend();
     ResetFanClub();
     ResetLotteryCorner();
-    WarpToTruck();
+    // FEATURE_FRONTIER_START
+    // WarpToTruck();
+    SetWarpDestination(MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST), MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST), WARP_ID_NONE, 19, 67);
+    WarpIntoMap();
     RunScriptImmediately(EventScript_ResetAllMapFlags);
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
@@ -213,6 +223,23 @@ void NewGameInitData(void)
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
+
+    // FEATURE_FRONTIER_START
+    AddBagItem(ITEM_DYNAMAX_BAND, 1);
+    AddBagItem(ITEM_EXP_SHARE, 1);
+    AddBagItem(ITEM_MEGA_RING, 1);
+    AddBagItem(ITEM_TERA_ORB, 1);
+    AddBagItem(ITEM_Z_POWER_RING, 1);
+    FlagSet(FLAG_SYS_B_DASH);
+    FlagSet(FLAG_SYS_GAME_CLEAR);
+    FlagSet(FLAG_SYS_NATIONAL_DEX);
+    FlagSet(FLAG_SYS_PC_LANETTE);
+    FlagSet(FLAG_SYS_POKEDEX_GET);
+    FlagSet(FLAG_SYS_POKEMON_GET);
+    FlagSet(FLAG_SYS_RIBBON_GET);
+    FlagSet(FLAG_UNUSED_0x264);
+    for (int i = FLAG_BADGE01_GET; i <= FLAG_BADGE08_GET; i++) FlagSet(i);
+    EnableNationalPokedex();
 }
 
 static void ResetMiniGamesRecords(void)

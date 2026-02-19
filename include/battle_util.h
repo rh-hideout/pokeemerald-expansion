@@ -114,6 +114,8 @@ enum MoveSuccessOrder
     CANCELER_CONFUSED,
     CANCELER_PARALYZED,
     CANCELER_INFATUATION,
+    // DETERMINISTIC_FLINCH
+    CANCELER_FLINCH_SPAM,
     CANCELER_BIDE,
     CANCELER_Z_MOVES,
     CANCELER_CHOICE_LOCK,
@@ -440,5 +442,7 @@ bool32 IsDazzlingAbility(enum Ability ability);
 bool32 IsAllowedToUseBag(void);
 bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsMimikyuDisguised(u32 battler);
+// FEATURE_INNATE_ABILITIES
+bool32 SpeciesHasInnateAbility(u16 species, enum Ability ability);
 
 #endif // GUARD_BATTLE_UTIL_H

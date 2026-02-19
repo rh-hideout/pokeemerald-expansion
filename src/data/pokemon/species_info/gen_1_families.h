@@ -11847,7 +11847,9 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
-        .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
+        // .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
+        .abilities = { ABILITY_CURSED_BODY, ABILITY_NONE, ABILITY_NONE },
+        .innateAbilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Gastly"),
         .cryId = CRY_GASTLY,
@@ -11921,7 +11923,9 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
-        .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
+        // .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
+        .abilities = { ABILITY_CURSED_BODY, ABILITY_NONE, ABILITY_NONE },
+        .innateAbilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Haunter"),
         .cryId = CRY_HAUNTER,
@@ -12011,6 +12015,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
         .abilities = GENGAR_ABILITIES,
+        .innateAbilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Gengar"),
         .cryId = CRY_GENGAR,
@@ -14059,11 +14064,13 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
-    #if P_UPDATED_ABILITIES >= GEN_8
-        .abilities = { ABILITY_LEVITATE, ABILITY_NEUTRALIZING_GAS, ABILITY_STENCH },
-    #else
-        .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
-    #endif
+    // #if P_UPDATED_ABILITIES >= GEN_8
+    //     .abilities = { ABILITY_LEVITATE, ABILITY_NEUTRALIZING_GAS, ABILITY_STENCH },
+    // #else
+    //     .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
+    // #endif
+        .abilities = { ABILITY_NEUTRALIZING_GAS, ABILITY_NONE, ABILITY_STENCH },
+        .innateAbilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Koffing"),
         .cryId = CRY_KOFFING,
@@ -14137,11 +14144,13 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
-    #if P_UPDATED_ABILITIES >= GEN_8
-        .abilities = { ABILITY_LEVITATE, ABILITY_NEUTRALIZING_GAS, ABILITY_STENCH },
-    #else
-        .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
-    #endif
+    // #if P_UPDATED_ABILITIES >= GEN_8
+    //     .abilities = { ABILITY_LEVITATE, ABILITY_NEUTRALIZING_GAS, ABILITY_STENCH },
+    // #else
+    //     .abilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
+    // #endif
+        .abilities = { ABILITY_NEUTRALIZING_GAS, ABILITY_NONE, ABILITY_STENCH },
+        .innateAbilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_PURPLE,
         .noFlip = TRUE,
         .speciesName = _("Weezing"),
@@ -14215,7 +14224,9 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
-        .abilities = { ABILITY_LEVITATE, ABILITY_NEUTRALIZING_GAS, ABILITY_MISTY_SURGE },
+        // .abilities = { ABILITY_LEVITATE, ABILITY_NEUTRALIZING_GAS, ABILITY_MISTY_SURGE },
+        .abilities = { ABILITY_NEUTRALIZING_GAS, ABILITY_NONE, ABILITY_MISTY_SURGE },
+        .innateAbilities = { ABILITY_LEVITATE, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_GRAY,
         .noFlip = TRUE,
         .speciesName = _("Weezing"),

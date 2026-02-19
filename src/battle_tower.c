@@ -804,6 +804,142 @@ static const u16 sRecordTrainerSpeechLost[] =
     EC_WORD_TOO, EC_WORD_BAD, EC_WORD_ELLIPSIS, EC_WORD_WE, EC_WORD_LOST, EC_WORD_ELLIPSIS
 };
 
+// FRONTIER_KEEP_BATTLING
+static u8 sBossBattleIdx;
+
+struct BossBattleMon
+{
+    u16 species;
+    u16 heldItem;
+    u8 fixedIV;
+    u8 nature;
+    u8 evs[NUM_STATS];
+    u16 moves[MAX_MON_MOVES];
+};
+
+struct BossBattle {
+    u16 trainerId;
+    u16 gfxId;
+    u8 isFemale;
+    const u8 *introSpeech;
+    struct BossBattleMon party[FRONTIER_PARTY_SIZE];
+};
+
+static const struct BossBattle sBossBattles[] = {
+    [0] = {
+        .trainerId = TRAINER_ROXANNE_1,
+        .gfxId = OBJ_EVENT_GFX_ROXANNE,
+        .isFemale = TRUE,
+        .introSpeech = COMPOUND_STRING("I'm Roxanne, the GYM LEADER.\nI wish to see your skills!"),
+        .party = {
+            { .species = SPECIES_PROBOPASS, .heldItem = ITEM_AIR_BALLOON, .evs = {252, 0, 252, 4, 0, 0}, .moves = {MOVE_STEALTH_ROCK, MOVE_POWER_GEM, MOVE_EARTH_POWER, MOVE_VOLT_SWITCH}, .nature = NATURE_MODEST, .fixedIV = 31 },
+            { .species = SPECIES_AGGRON, .heldItem = ITEM_AGGRONITE, .evs = {252, 252, 0, 0, 4, 0}, .moves = {MOVE_HEAVY_SLAM, MOVE_HEAD_SMASH, MOVE_EARTHQUAKE, MOVE_ICE_PUNCH}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_TYRANITAR, .heldItem = ITEM_CHOPLE_BERRY, .evs = {252, 252, 4, 0, 0, 0}, .moves = {MOVE_STONE_EDGE, MOVE_CRUNCH, MOVE_FIRE_PUNCH, MOVE_DRAGON_DANCE}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_CARRACOSTA, .heldItem = ITEM_WHITE_HERB, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_SHELL_SMASH, MOVE_LIQUIDATION, MOVE_STONE_EDGE, MOVE_AQUA_JET}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_ARCHEOPS, .heldItem = ITEM_FLYING_GEM, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_ACROBATICS, MOVE_STONE_EDGE, MOVE_EARTHQUAKE, MOVE_U_TURN}, .nature = NATURE_JOLLY, .fixedIV = 31 },
+            { .species = SPECIES_AURORUS, .heldItem = ITEM_FOCUS_SASH, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_FREEZE_DRY, MOVE_BLIZZARD, MOVE_EARTH_POWER, MOVE_HYPER_VOICE}, .nature = NATURE_MODEST, .fixedIV = 31 },
+        }
+    },
+    [1] = {
+        .trainerId = TRAINER_BRAWLY_1,
+        .gfxId = OBJ_EVENT_GFX_BRAWLY,
+        .isFemale = FALSE,
+        .introSpeech = COMPOUND_STRING("I'm Brawly, the GYM LEADER.\nI wish to see your skills!"),
+        .party = {
+            { .species = SPECIES_HARIYAMA, .heldItem = ITEM_FLAME_ORB, .evs = {252, 252, 4, 0, 0, 0}, .moves = {MOVE_FAKE_OUT, MOVE_CLOSE_COMBAT, MOVE_KNOCK_OFF, MOVE_FACADE}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_BRELOOM, .heldItem = ITEM_FOCUS_SASH, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_SPORE, MOVE_BULLET_SEED, MOVE_MACH_PUNCH, MOVE_ROCK_TOMB}, .nature = NATURE_JOLLY, .fixedIV = 31 },
+            { .species = SPECIES_MEDICHAM, .heldItem = ITEM_MEDICHAMITE, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_HIGH_JUMP_KICK, MOVE_ZEN_HEADBUTT, MOVE_ICE_PUNCH, MOVE_FAKE_OUT}, .nature = NATURE_JOLLY, .fixedIV = 31 },
+            { .species = SPECIES_MACHAMP, .heldItem = ITEM_ASSAULT_VEST, .evs = {252, 252, 0, 0, 4, 0}, .moves = {MOVE_DYNAMIC_PUNCH, MOVE_STONE_EDGE, MOVE_KNOCK_OFF, MOVE_BULLET_PUNCH}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_HERACROSS, .heldItem = ITEM_CHOICE_SCARF, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_CLOSE_COMBAT, MOVE_MEGAHORN, MOVE_STONE_EDGE, MOVE_FACADE}, .nature = NATURE_JOLLY, .fixedIV = 31 },
+            { .species = SPECIES_POLIWRATH, .heldItem = ITEM_SITRUS_BERRY, .evs = {252, 252, 4, 0, 0, 0}, .moves = {MOVE_BELLY_DRUM, MOVE_LIQUIDATION, MOVE_DRAIN_PUNCH, MOVE_ICE_PUNCH}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+        }
+    },
+    [2] = {
+        .trainerId = TRAINER_WATTSON_1,
+        .gfxId = OBJ_EVENT_GFX_WATTSON,
+        .isFemale = FALSE,
+        .introSpeech = COMPOUND_STRING("I'm Wattson, the GYM LEADER.\nI wish to see your skills!"),
+        .party = {
+            { .species = SPECIES_MANECTRIC, .heldItem = ITEM_MANECTITE, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_VOLT_SWITCH, MOVE_OVERHEAT, MOVE_THUNDERBOLT, MOVE_HIDDEN_POWER}, .nature = NATURE_TIMID, .fixedIV = 31 },
+            { .species = SPECIES_MAGNEZONE, .heldItem = ITEM_CHOICE_SPECS, .evs = {252, 0, 0, 252, 4, 0}, .moves = {MOVE_FLASH_CANNON, MOVE_THUNDERBOLT, MOVE_VOLT_SWITCH, MOVE_TRI_ATTACK}, .nature = NATURE_MODEST, .fixedIV = 31 },
+            { .species = SPECIES_ROTOM_WASH, .heldItem = ITEM_LEFTOVERS, .evs = {252, 0, 0, 0, 252, 4}, .moves = {MOVE_HYDRO_PUMP, MOVE_VOLT_SWITCH, MOVE_WILL_O_WISP, MOVE_PAIN_SPLIT}, .nature = NATURE_CALM, .fixedIV = 31 },
+            { .species = SPECIES_RAICHU_ALOLA, .heldItem = ITEM_FOCUS_SASH, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_RISING_VOLTAGE, MOVE_PSYCHIC, MOVE_FAKE_OUT, MOVE_NASTY_PLOT}, .nature = NATURE_TIMID, .fixedIV = 31 },
+            { .species = SPECIES_ELECTIVIRE, .heldItem = ITEM_LIFE_ORB, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_PLASMA_FISTS, MOVE_ICE_PUNCH, MOVE_EARTHQUAKE, MOVE_CROSS_CHOP}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_VIKAVOLT, .heldItem = ITEM_THROAT_SPRAY, .evs = {252, 0, 0, 252, 4, 0}, .moves = {MOVE_BUG_BUZZ, MOVE_THUNDERBOLT, MOVE_STICKY_WEB, MOVE_ENERGY_BALL}, .nature = NATURE_MODEST, .fixedIV = 31 },
+        }
+    },
+    [3] = {
+        .trainerId = TRAINER_FLANNERY_1,
+        .gfxId = OBJ_EVENT_GFX_FLANNERY,
+        .isFemale = TRUE,
+        .introSpeech = COMPOUND_STRING("I'm Flannery, the GYM LEADER.\nI wish to see your skills!"),
+        .party = {
+            { .species = SPECIES_TORKOAL, .heldItem = ITEM_HEAT_ROCK, .evs = {252, 0, 252, 0, 4, 0}, .moves = {MOVE_STEALTH_ROCK, MOVE_LAVA_PLUME, MOVE_SOLAR_BEAM, MOVE_YAWN}, .nature = NATURE_BOLD, .fixedIV = 31 },
+            { .species = SPECIES_CAMERUPT, .heldItem = ITEM_CAMERUPTITE, .evs = {252, 0, 4, 252, 0, 0}, .moves = {MOVE_ERUPTION, MOVE_EARTH_POWER, MOVE_FIRE_BLAST, MOVE_ROCK_SLIDE}, .nature = NATURE_QUIET, .fixedIV = 31 },
+            { .species = SPECIES_BLAZIKEN, .heldItem = ITEM_LIFE_ORB, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_FLARE_BLITZ, MOVE_CLOSE_COMBAT, MOVE_KNOCK_OFF, MOVE_PROTECT}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_CHANDELURE, .heldItem = ITEM_CHOICE_SCARF, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_SHADOW_BALL, MOVE_FIRE_BLAST, MOVE_ENERGY_BALL, MOVE_TRICK}, .nature = NATURE_TIMID, .fixedIV = 31 },
+            { .species = SPECIES_DARMANITAN, .heldItem = ITEM_CHOICE_BAND, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_FLARE_BLITZ, MOVE_U_TURN, MOVE_ROCK_SLIDE, MOVE_EARTHQUAKE}, .nature = NATURE_JOLLY, .fixedIV = 31 },
+            { .species = SPECIES_VOLCARONA, .heldItem = ITEM_CHARTI_BERRY, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_QUIVER_DANCE, MOVE_FIERY_DANCE, MOVE_BUG_BUZZ, MOVE_GIGA_DRAIN}, .nature = NATURE_TIMID, .fixedIV = 31 },
+        }
+    },
+    [4] = {
+        .trainerId = TRAINER_NORMAN_1,
+        .gfxId = OBJ_EVENT_GFX_NORMAN,
+        .isFemale = FALSE,
+        .introSpeech = COMPOUND_STRING("I'm Norman, the GYM LEADER.\nI wish to see your skills!"),
+        .party = {
+            { .species = SPECIES_SLAKING, .heldItem = ITEM_CHOICE_BAND, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_GIGA_IMPACT, MOVE_EARTHQUAKE, MOVE_NIGHT_SLASH, MOVE_HAMMER_ARM}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_BEARTIC, .heldItem = ITEM_LIFE_ORB, .evs = {252, 252, 4, 0, 0, 0}, .moves = {MOVE_ICICLE_CRASH, MOVE_SUPERPOWER, MOVE_PLAY_ROUGH, MOVE_AQUA_JET}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_KANGASKHAN, .heldItem = ITEM_KANGASKHANITE, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_FAKE_OUT, MOVE_BODY_SLAM, MOVE_SUCKER_PUNCH, MOVE_POWER_UP_PUNCH}, .nature = NATURE_JOLLY, .fixedIV = 31 },
+            { .species = SPECIES_STARAPTOR, .heldItem = ITEM_CHOICE_SCARF, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_BRAVE_BIRD, MOVE_CLOSE_COMBAT, MOVE_DOUBLE_EDGE, MOVE_U_TURN}, .nature = NATURE_JOLLY, .fixedIV = 31 },
+            { .species = SPECIES_PORYGON_Z, .heldItem = ITEM_SILK_SCARF, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_TRI_ATTACK, MOVE_DARK_PULSE, MOVE_ICE_BEAM, MOVE_NASTY_PLOT}, .nature = NATURE_TIMID, .fixedIV = 31 },
+            { .species = SPECIES_SNORLAX, .heldItem = ITEM_FIGY_BERRY, .evs = {252, 0, 252, 0, 4, 0}, .moves = {MOVE_BODY_SLAM, MOVE_CRUNCH, MOVE_RECYCLE, MOVE_BELLY_DRUM}, .nature = NATURE_IMPISH, .fixedIV = 31 },
+        }
+    },
+    [5] = {
+        .trainerId = TRAINER_WINONA_1,
+        .gfxId = OBJ_EVENT_GFX_WINONA,
+        .isFemale = TRUE,
+        .introSpeech = COMPOUND_STRING("I'm Winona, the GYM LEADER.\nI wish to see your skills!"),
+        .party = {
+            { .species = SPECIES_PELIPPER, .heldItem = ITEM_DAMP_ROCK, .evs = {252, 0, 252, 4, 0, 0}, .moves = {MOVE_SCALD, MOVE_ROOST, MOVE_U_TURN, MOVE_HURRICANE}, .nature = NATURE_BOLD, .fixedIV = 31 },
+            { .species = SPECIES_ALTARIA, .heldItem = ITEM_ALTARIANITE, .evs = {252, 0, 4, 0, 252, 0}, .moves = {MOVE_HYPER_VOICE, MOVE_FIRE_BLAST, MOVE_ROOST, MOVE_COTTON_GUARD}, .nature = NATURE_CALM, .fixedIV = 31 },
+            { .species = SPECIES_SKARMORY, .heldItem = ITEM_ROCKY_HELMET, .evs = {252, 0, 252, 0, 4, 0}, .moves = {MOVE_STEALTH_ROCK, MOVE_SPIKES, MOVE_WHIRLWIND, MOVE_ROOST}, .nature = NATURE_IMPISH, .fixedIV = 31 },
+            { .species = SPECIES_GLISCOR, .heldItem = ITEM_TOXIC_ORB, .evs = {252, 0, 184, 0, 0, 72}, .moves = {MOVE_EARTHQUAKE, MOVE_ROOST, MOVE_TOXIC, MOVE_PROTECT}, .nature = NATURE_JOLLY, .fixedIV = 31 },
+            { .species = SPECIES_SALAMENCE, .heldItem = ITEM_LUM_BERRY, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_DRAGON_DANCE, MOVE_OUTRAGE, MOVE_DUAL_WINGBEAT, MOVE_EARTHQUAKE}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_CORVIKNIGHT, .heldItem = ITEM_LEFTOVERS, .evs = {252, 0, 0, 0, 252, 4}, .moves = {MOVE_IRON_HEAD, MOVE_BODY_PRESS, MOVE_DEFOG, MOVE_ROOST}, .nature = NATURE_CAREFUL, .fixedIV = 31 },
+        }
+    },
+    [6] = {
+        .trainerId = TRAINER_TATE_AND_LIZA_1,
+        .gfxId = OBJ_EVENT_GFX_TATE,
+        .isFemale = TRUE,
+        .introSpeech = COMPOUND_STRING("We're Tate and Liza, the GYM LEADERs.\nI wish to see your skills!"),
+        .party = {
+            { .species = SPECIES_SOLROCK, .heldItem = ITEM_FOCUS_SASH, .evs = {252, 252, 4, 0, 0, 0}, .moves = {MOVE_STEALTH_ROCK, MOVE_EXPLOSION, MOVE_STONE_EDGE, MOVE_FLARE_BLITZ}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_LUNATONE, .heldItem = ITEM_LIFE_ORB, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_PSYCHIC, MOVE_POWER_GEM, MOVE_EARTH_POWER, MOVE_ICE_BEAM}, .nature = NATURE_MODEST, .fixedIV = 31 },
+            { .species = SPECIES_METAGROSS, .heldItem = ITEM_METAGROSSITE, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_METEOR_MASH, MOVE_ZEN_HEADBUTT, MOVE_EARTHQUAKE, MOVE_BULLET_PUNCH}, .nature = NATURE_JOLLY, .fixedIV = 31 },
+            { .species = SPECIES_GARDEVOIR, .heldItem = ITEM_CHOICE_SCARF, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_MOONBLAST, MOVE_PSYCHIC, MOVE_MYSTICAL_FIRE, MOVE_TRICK}, .nature = NATURE_TIMID, .fixedIV = 31 },
+            { .species = SPECIES_ALAKAZAM, .heldItem = ITEM_FOCUS_SASH, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_PSYCHIC, MOVE_SHADOW_BALL, MOVE_FOCUS_BLAST, MOVE_NASTY_PLOT}, .nature = NATURE_TIMID, .fixedIV = 31 },
+            { .species = SPECIES_BRONZONG, .heldItem = ITEM_LEFTOVERS, .evs = {252, 0, 4, 0, 252, 0}, .moves = {MOVE_GYRO_BALL, MOVE_TOXIC, MOVE_PROTECT, MOVE_TRICK_ROOM}, .nature = NATURE_SASSY, .fixedIV = 31 },
+        }
+    },
+    [7] = {
+        .trainerId = TRAINER_JUAN_1,
+        .gfxId = OBJ_EVENT_GFX_JUAN,
+        .isFemale = FALSE,
+        .introSpeech = COMPOUND_STRING("I'm Juan, the GYM LEADER.\nI wish to see your skills!"),
+        .party = {
+            { .species = SPECIES_POLITOED, .heldItem = ITEM_DAMP_ROCK, .evs = {252, 0, 252, 0, 4, 0}, .moves = {MOVE_SCALD, MOVE_TOXIC, MOVE_ENCORE, MOVE_REST}, .nature = NATURE_BOLD, .fixedIV = 31 },
+            { .species = SPECIES_KINGDRA, .heldItem = ITEM_CHOICE_SPECS, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_HYDRO_PUMP, MOVE_DRAGON_PULSE, MOVE_ICE_BEAM, MOVE_SURF}, .nature = NATURE_MODEST, .fixedIV = 31 },
+            { .species = SPECIES_SWAMPERT, .heldItem = ITEM_SWAMPERTITE, .evs = {0, 252, 4, 0, 0, 252}, .moves = {MOVE_LIQUIDATION, MOVE_EARTHQUAKE, MOVE_ICE_PUNCH, MOVE_POWER_UP_PUNCH}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_LUDICOLO, .heldItem = ITEM_LIFE_ORB, .evs = {0, 0, 4, 252, 0, 252}, .moves = {MOVE_GIGA_DRAIN, MOVE_HYDRO_PUMP, MOVE_ICE_BEAM, MOVE_FAKE_OUT}, .nature = NATURE_MODEST, .fixedIV = 31 },
+            { .species = SPECIES_WHISCASH, .heldItem = ITEM_LEFTOVERS, .evs = {252, 252, 4, 0, 0, 0}, .moves = {MOVE_DRAGON_DANCE, MOVE_EARTHQUAKE, MOVE_LIQUIDATION, MOVE_STONE_EDGE}, .nature = NATURE_ADAMANT, .fixedIV = 31 },
+            { .species = SPECIES_MILOTIC, .heldItem = ITEM_FLAME_ORB, .evs = {252, 0, 252, 4, 0, 0}, .moves = {MOVE_SCALD, MOVE_RECOVER, MOVE_ICE_BEAM, MOVE_MIRROR_COAT}, .nature = NATURE_BOLD, .fixedIV = 31 },
+        }
+    },
+};
+
 // code
 void CallBattleTowerFunc(void)
 {
@@ -815,13 +951,21 @@ static void InitTowerChallenge(void)
     u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
+    // FRONTIER_KEEP_BATTLING
+    // gSaveBlock2Ptr->frontier.challengeStatus = CHALLENGE_STATUS_SAVING;
+    if (gSaveBlock2Ptr->frontier.challengeStatus != CHALLENGE_STATUS_PAUSED)
+    {
+        gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
+        // gSaveBlock2Ptr->frontier.challengePaused = FALSE;
+        // gSaveBlock2Ptr->frontier.disableRecordBattle = FALSE;
+        ResetFrontierTrainerIds();
+        if (!(gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[battleMode][lvlMode]))
+            gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] = 0;
+    }
+
     gSaveBlock2Ptr->frontier.challengeStatus = CHALLENGE_STATUS_SAVING;
-    gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
     gSaveBlock2Ptr->frontier.challengePaused = FALSE;
     gSaveBlock2Ptr->frontier.disableRecordBattle = FALSE;
-    ResetFrontierTrainerIds();
-    if (!(gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[battleMode][lvlMode]))
-        gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] = 0;
 
     ValidateBattleTowerRecordChecksums();
     SetDynamicWarp(0, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, WARP_ID_NONE);
@@ -885,6 +1029,12 @@ static void SetTowerBattleWon(void)
         gSaveBlock2Ptr->frontier.towerNumWins++;
 
     gSaveBlock2Ptr->frontier.curChallengeBattleNum++;
+    // FRONTIER_KEEP_BATTLING
+    if (gSaveBlock2Ptr->frontier.curChallengeBattleNum > FRONTIER_STAGES_PER_CHALLENGE)
+    {
+        gSaveBlock2Ptr->frontier.curChallengeBattleNum = 1;
+        ResetFrontierTrainerIds();
+    }
     SaveCurrentWinStreak();
     gSpecialVar_Result = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
 }
@@ -900,6 +1050,13 @@ static bool8 ChooseSpecialBattleTowerTrainer(void)
 
     if (VarGet(VAR_FRONTIER_FACILITY) != FRONTIER_FACILITY_TOWER)
         return FALSE;
+
+    // FRONTIER_KEEP_BATTLING
+    if (gSaveBlock2Ptr->frontier.curChallengeBattleNum == FRONTIER_STAGES_PER_CHALLENGE - 1)
+    {
+        TRAINER_BATTLE_PARAM.opponentA = TRAINER_BOSS_BATTLE;
+        return TRUE;
+    }
 
     winStreak = GetCurrentBattleTowerWinStreak(lvlMode, battleMode);
     for (i = 0; i < BATTLE_TOWER_RECORD_COUNT; i++)
@@ -1074,6 +1231,27 @@ void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId)
     u8 trainerObjectGfxId;
 
     SetFacilityPtrsGetLevel();
+
+    // FRONTIER_KEEP_BATTLING
+    if (trainerId == TRAINER_BOSS_BATTLE)
+    {
+        sBossBattleIdx = Random() % ARRAY_COUNT(sBossBattles);
+        trainerObjectGfxId = sBossBattles[sBossBattleIdx].gfxId;
+        switch (tempVarId)
+        {
+        case 0:
+        default:
+            VarSet(VAR_OBJ_GFX_ID_0, trainerObjectGfxId);
+            return;
+        case 1:
+            VarSet(VAR_OBJ_GFX_ID_1, trainerObjectGfxId);
+            return;
+        case 15:
+            VarSet(VAR_OBJ_GFX_ID_E, trainerObjectGfxId);
+            return;
+        }
+    }
+
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     if (trainerId == TRAINER_EREADER)
     {
@@ -1322,6 +1500,12 @@ u8 GetFrontierTrainerFrontSpriteId(u16 trainerId)
 {
     SetFacilityPtrsGetLevel();
 
+    // FRONTIER_KEEP_BATTLING
+    if (trainerId == TRAINER_BOSS_BATTLE)
+    {
+        return GetTrainerPicFromId(sBossBattles[sBossBattleIdx].trainerId);
+    }
+
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     if (trainerId == TRAINER_EREADER)
     {
@@ -1359,6 +1543,12 @@ enum TrainerClassID GetFrontierOpponentClass(u16 trainerId)
     enum TrainerClassID trainerClass = 0;
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
+
+    // FRONTIER_KEEP_BATTLING
+    if (trainerId == TRAINER_BOSS_BATTLE)
+    {
+        return GetTrainerClassFromId(sBossBattles[sBossBattleIdx].trainerId);
+    }
 
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     if (trainerId == TRAINER_EREADER)
@@ -1459,6 +1649,16 @@ void GetFrontierTrainerName(u8 *dst, u16 trainerId)
         CopyFrontierBrainTrainerName(dst);
         return;
     }
+    // FRONTIER_KEEP_BATTLING
+    else if (trainerId == TRAINER_BOSS_BATTLE)
+    {
+        const u8 *trainerName;
+        trainerName = GetTrainerNameFromId(sBossBattles[sBossBattleIdx].trainerId);
+        for (i = 0; i < PLAYER_NAME_LENGTH; i++)
+            dst[i] = trainerName[i];
+        dst[i] = EOS;
+        return;
+    }
     else if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
         for (i = 0; gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i] != EOS; i++)
@@ -1511,6 +1711,13 @@ static bool8 IsFrontierTrainerFemale(u16 trainerId)
     u8 facilityClass;
 
     SetFacilityPtrsGetLevel();
+
+    // FRONTIER_KEEP_BATTLING
+    if (trainerId == TRAINER_BOSS_BATTLE)
+    {
+        return sBossBattles[sBossBattleIdx].isFemale;
+    }
+
     if (trainerId == TRAINER_EREADER)
     {
     #if FREE_BATTLE_TOWER_E_READER == FALSE
@@ -1653,7 +1860,49 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 
     if (ball != BALL_STRANGE)
         SetMonData(dst, MON_DATA_POKEBALL, &ball);
+
+    // FRONTIER_MAX_PP
+    u8 maxPP = 0xFF;
+    SetMonData(dst, MON_DATA_PP_BONUSES, &maxPP);
+    MonRestorePP(dst);
+
     CalculateMonStats(dst);
+}
+
+// FRONTIER_KEEP_BATTLING
+void CreateBossBattlePokemon(u8 bossBattleIdx)
+{
+    s32 i, j, k;
+    u8 friendship;
+    u32 personality;
+    u8 monLevel = SetFacilityPtrsGetLevel();
+    if (bossBattleIdx >= ARRAY_COUNT(sBossBattles))
+        bossBattleIdx = 0;
+    const struct BossBattle *boss = &sBossBattles[bossBattleIdx];
+    for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    {
+        const struct BossBattleMon *bossMon = &boss->party[i];
+        struct Pokemon *mon = &gEnemyParty[i];
+        do {
+            personality = Random32();
+        } while (bossMon->nature != GetNatureFromPersonality(personality));
+        CreateMon(mon, bossMon->species, monLevel, bossMon->fixedIV, TRUE, personality, OT_ID_PRESET, 61226);
+        SetMonData(mon, MON_DATA_HELD_ITEM, &bossMon->heldItem);
+        for (j = 0; j < NUM_STATS; j++)
+            SetMonData(mon, MON_DATA_HP_EV + j, &bossMon->evs[j]);
+        friendship = MAX_FRIENDSHIP;
+        for (k = 0; k < MAX_MON_MOVES; k++)
+        {
+            SetMonMoveSlot(mon, bossMon->moves[k], k);
+            if (GetMoveEffect(bossMon->moves[k]) == EFFECT_FRUSTRATION)
+                friendship = 0;
+        }
+        SetMonData(mon, MON_DATA_FRIENDSHIP, &friendship);
+        u8 maxPP = 0xFF;
+        SetMonData(mon, MON_DATA_PP_BONUSES, &maxPP);
+        MonRestorePP(mon);
+        CalculateMonStats(mon);
+    }
 }
 
 static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
@@ -1662,7 +1911,9 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
     u16 chosenMonIndices[MAX_FRONTIER_PARTY_SIZE];
     u8 level = SetFacilityPtrsGetLevel();
     u8 fixedIV = 0;
-    u8 bfMonCount;
+    // FEATURE_FRONTIER_MONS
+    // u8 bfMonCount;
+    u16 bfMonCount;
     const u16 *monSet = NULL;
     u32 otID = 0;
 
@@ -1683,6 +1934,12 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
     else if (trainerId == TRAINER_FRONTIER_BRAIN)
     {
         CreateFrontierBrainPokemon();
+        return;
+    }
+    // FRONTIER_KEEP_BATTLING
+    else if (trainerId == TRAINER_BOSS_BATTLE)
+    {
+        CreateBossBattlePokemon(sBossBattleIdx);
         return;
     }
     else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
@@ -1733,14 +1990,35 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
             continue;
 
         // Ensure this Pokemon's held item isn't a duplicate.
+        u16 heldItem = gFacilityTrainerMons[monId].heldItem;
         for (j = 0; j < i + firstMonId; j++)
         {
             if (GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM, NULL) != ITEM_NONE
-             && GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM, NULL) == gFacilityTrainerMons[monId].heldItem)
+             && GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM, NULL) == heldItem)
                 break;
         }
         if (j != i + firstMonId)
             continue;
+        // FEATURE_FRONTIER_MONS
+        if (heldItem != ITEM_NONE)
+        {
+            bool32 isMega = (GetItemHoldEffect(heldItem) == HOLD_EFFECT_MEGA_STONE);
+            bool32 isZCrystal = (GetItemHoldEffect(heldItem) == HOLD_EFFECT_Z_CRYSTAL);
+            if (isMega || isZCrystal)
+            {
+                for (j = 0; j < i + firstMonId; j++)
+                {
+                    u16 existingItem = GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM, NULL);
+                    
+                    if (isMega && GetItemHoldEffect(existingItem) == HOLD_EFFECT_MEGA_STONE)
+                        break;
+                    if (isZCrystal && GetItemHoldEffect(existingItem) == HOLD_EFFECT_Z_CRYSTAL)
+                        break;
+                }
+                if (j != i + firstMonId)
+                    continue;
+            }
+        }
 
         // Ensure this exact Pokémon index isn't a duplicate. This check doesn't seem necessary
         // because the species and held items were already checked directly above.
@@ -1892,6 +2170,13 @@ static void GetOpponentIntroSpeech(void)
         trainerId = TRAINER_BATTLE_PARAM.opponentB;
     else
         trainerId = TRAINER_BATTLE_PARAM.opponentA;
+
+    // FRONTIER_KEEP_BATTLING
+    if (trainerId == TRAINER_BOSS_BATTLE)
+    {
+        StringCopy(gStringVar4, sBossBattles[sBossBattleIdx].introSpeech);
+        return;
+    }
 
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     if (trainerId == TRAINER_EREADER)

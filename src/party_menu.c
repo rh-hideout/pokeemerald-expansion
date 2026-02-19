@@ -3841,9 +3841,10 @@ static void CursorCb_Enter(u8 taskId)
         {
             PlaySE(SE_SELECT);
             gSelectedOrderFromParty[i] = gPartyMenu.slotId + 1;
-            DisplayPartyPokemonDescriptionText(i + PARTYBOX_DESC_FIRST, &sPartyMenuBoxes[gPartyMenu.slotId], 1);
+            // FRONTIER_SELECT_SIX
+            DisplayPartyPokemonDescriptionText(sSelectionTextIds[i]/*i + PARTYBOX_DESC_FIRST*/, &sPartyMenuBoxes[gPartyMenu.slotId], 1);
             if (i == (maxBattlers - 1))
-                MoveCursorToConfirm();
+                MoveCursorToConfirm();        
             DisplayPartyMenuStdMessage(PARTY_MSG_CHOOSE_MON);
             gTasks[taskId].func = Task_HandleChooseMonInput;
             return;
@@ -3878,15 +3879,17 @@ static void CursorCb_NoEntry(u8 taskId)
         {
             for (j = i; j < (maxBattlers - 1); j++)
                 gSelectedOrderFromParty[j] = gSelectedOrderFromParty[j + 1];
-            gSelectedOrderFromParty[j] = 0;
+            // FRONTIER_SELECT_SIX
+            gSelectedOrderFromParty[maxBattlers - 1/*j*/] = 0;
             break;
         }
     }
     DisplayPartyPokemonDescriptionText(PARTYBOX_DESC_ABLE_3, &sPartyMenuBoxes[gPartyMenu.slotId], 1);
-    for (i = 0; i < (maxBattlers - 1); i++)
+    // FRONTIER_SELECT_SIX
+    for (i = 0; i < (maxBattlers /*- 1*/); i++)
     {
         if (gSelectedOrderFromParty[i] != 0)
-            DisplayPartyPokemonDescriptionText(i + PARTYBOX_DESC_FIRST, &sPartyMenuBoxes[gSelectedOrderFromParty[i] - 1], 1);
+            DisplayPartyPokemonDescriptionText(sSelectionTextIds[i]/*i + PARTYBOX_DESC_FIRST*/, &sPartyMenuBoxes[gSelectedOrderFromParty[i] - 1], 1);
     }
     DisplayPartyMenuStdMessage(PARTY_MSG_CHOOSE_MON);
     gTasks[taskId].func = Task_HandleChooseMonInput;
@@ -7245,7 +7248,7 @@ static u8 GetPartySlotEntryStatus(s8 slot)
 
 static bool8 GetBattleEntryEligibility(struct Pokemon *mon)
 {
-    u32 species;
+    // u32 species;
 
     if (GetMonData(mon, MON_DATA_IS_EGG)
         || GetMonData(mon, MON_DATA_LEVEL) > GetBattleEntryLevelCap()
@@ -7265,9 +7268,10 @@ static bool8 GetBattleEntryEligibility(struct Pokemon *mon)
     case FACILITY_UNION_ROOM:
         return TRUE;
     default: // Battle Frontier
-        species = GetMonData(mon, MON_DATA_SPECIES);
-        if (gSpeciesInfo[species].isFrontierBanned)
-            return FALSE;
+        // FRONTIER_NO_BANS
+        // species = GetMonData(mon, MON_DATA_SPECIES);
+        // if (gSpeciesInfo[species].isFrontierBanned)
+        //     return FALSE;
         return TRUE;
     }
 }

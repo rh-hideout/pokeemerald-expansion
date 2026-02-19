@@ -8133,6 +8133,8 @@ BattleScript_QuickClawActivation::
 	waitanimation
 	printstring STRINGID_CANACTFASTERTHANKSTO
 	waitmessage B_WAIT_TIME_LONG
+	@ DETERMINISTIC_QUICK_CLAW
+	removeitem BS_ATTACKER
 	end2
 
 BattleScript_QuickDrawActivation::
@@ -8945,4 +8947,19 @@ BattleScript_SwapToSubstituteContinue:
 	playanimation BS_SCRIPTING, B_ANIM_SWAP_TO_SUBSTITUTE
 	waitanimation
 BattleScript_SwapToSubstituteReturn:
+	return
+
+@ DETERMINISTIC_FLINCH
+BattleScript_FlinchSpamFailed::
+	printattackstring
+	pause B_WAIT_TIME_SHORT
+	setmoveresultflags MOVE_RESULT_FAILED
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
+@ DETERMINISTIC_FLINCH
+BattleScript_FlinchItemConsumed::
+	seteffectsecondary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_FLINCH
+	removeitem BS_ATTACKER
 	return

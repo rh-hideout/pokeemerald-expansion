@@ -77,6 +77,10 @@ struct DisableStruct
     u16 rolloutTimer;
     u16 rolloutTimerStartValue;
     u16 tauntTimer;
+    // DETERMINISTIC_ATTRACTION
+    u16 attractTimer;
+    // DETERMINISTIC_FLINCH
+    u16 lastFlinchTurn;
     u8 furyCutterCounter;
     u8 battlerPreventingEscape;
     u8 battlerWithSureHit;

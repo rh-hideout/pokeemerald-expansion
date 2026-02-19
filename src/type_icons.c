@@ -39,7 +39,9 @@ const struct Coords16 sTypeIconPositions[][2] =
 {
     [B_POSITION_PLAYER_LEFT] =
     {
-        [FALSE] = {221, 86},
+        // UX_ICONS_LEFT
+        // [FALSE] = {221, 86},
+        [FALSE] = {121, 86},
         [TRUE] = {144, 71},
     },
     [B_POSITION_OPPONENT_LEFT] =
@@ -393,6 +395,10 @@ static void SetTypeIconXY(s32* x, s32* y, u32 position, bool32 useDoubleBattleCo
 {
     *x = sTypeIconPositions[position][useDoubleBattleCoords].x;
     *y = sTypeIconPositions[position][useDoubleBattleCoords].y + (11 * typeNum);
+
+    // UX_ICONS_LEFT
+    if (position == B_POSITION_PLAYER_LEFT)
+        *x += 32;
 }
 
 static void CreateSpriteAndSetTypeSpriteAttributes(enum Type type, u32 x, u32 y, u32 position, u32 battler, bool32 useDoubleBattleCoords)
@@ -416,9 +422,16 @@ static void CreateSpriteAndSetTypeSpriteAttributes(enum Type type, u32 x, u32 y,
 
 static bool32 ShouldFlipTypeIcon(bool32 useDoubleBattleCoords, u32 position, enum Type typeId)
 {
-    enum BattleSide side = (useDoubleBattleCoords) ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
+    // UX_ICONS_LEFT
+    // enum BattleSide side = (useDoubleBattleCoords) ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
 
-    if (GetBattlerSide(GetBattlerAtPosition(position)) != side)
+    // if (GetBattlerSide(GetBattlerAtPosition(position)) != side)
+    u32 side = GetBattlerSide(GetBattlerAtPosition(position));
+
+    if (side == B_SIDE_PLAYER)
+        return FALSE;
+
+    if (side == B_SIDE_OPPONENT)
         return FALSE;
 
     return !gTypesInfo[typeId].isSpecialCaseType;
@@ -521,27 +534,31 @@ static s32 GetTypeIconHideMovement(bool32 useDoubleBattleCoords, u32 position)
             return -1;
     }
 
-    if (position == B_POSITION_PLAYER_LEFT)
-        return -1;
-    else
-        return 1;
+    // UX_ICONS_LEFT
+    // if (position == B_POSITION_PLAYER_LEFT)
+    //     return -1;
+    // else
+    //     return 1;
+    return 1;
 }
 
 static s32 GetTypeIconSlideMovement(bool32 useDoubleBattleCoords, u32 position, s32 xPos)
 {
+    s32 targetX = sTypeIconPositions[position][useDoubleBattleCoords].x;
+
     if (useDoubleBattleCoords)
     {
         switch (position)
         {
             case B_POSITION_PLAYER_LEFT:
             case B_POSITION_PLAYER_RIGHT:
-                if (xPos > sTypeIconPositions[position][useDoubleBattleCoords].x - 10)
+                if (xPos > targetX - 10)
                     return -1;
                 break;
             default:
             case B_POSITION_OPPONENT_LEFT:
             case B_POSITION_OPPONENT_RIGHT:
-                if (xPos < sTypeIconPositions[position][useDoubleBattleCoords].x + 10)
+                if (xPos < targetX + 10)
                     return 1;
                 break;
         }
@@ -550,12 +567,13 @@ static s32 GetTypeIconSlideMovement(bool32 useDoubleBattleCoords, u32 position, 
 
     if (position == B_POSITION_PLAYER_LEFT)
     {
-        if (xPos < sTypeIconPositions[position][useDoubleBattleCoords].x + 10)
-            return 1;
+        // UX_ICONS_LEFT
+        if (xPos > targetX + 10)
+            return -1;
     }
     else
     {
-        if (xPos > sTypeIconPositions[position][useDoubleBattleCoords].x - 10)
+        if (xPos > targetX - 10)
             return -1;
     }
     return 0;

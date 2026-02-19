@@ -63,7 +63,8 @@ functions instead of at the top of the file with the other declarations.
 static bool32 TryRemoveScreens(u32 battler);
 static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler);
 static u32 GetFlingPowerFromItemId(u32 itemId);
-static void SetRandomMultiHitCounter();
+// DETERMINISTIC_MULTI_HIT
+// static void SetRandomMultiHitCounter();
 static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, enum Ability abilityDef, bool32 abilityAffected, const u8 *battleScript, enum FunctionCallOption option);
 static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum FunctionCallOption option);
 static bool32 IsOpposingSideEmpty(u32 battler);
@@ -1141,7 +1142,8 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
             || IsBattlerTerrainAffected(otherSkyDropper, ability, GetBattlerHoldEffect(otherSkyDropper), STATUS_FIELD_MISTY_TERRAIN)))
         {
             // Set confused status
-            gBattleMons[otherSkyDropper].volatiles.confusionTurns = ((Random()) % 4) + 2;
+            // DETERMINISTIC_CONFUSION
+            gBattleMons[otherSkyDropper].volatiles.confusionTurns = /*((Random()) % 4) + */2;
 
             if (skyDropState == SKY_DROP_ATTACKCANCELER_CHECK)
             {
@@ -2288,38 +2290,47 @@ static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.confusionTurns)
     {
-        if (!gBattleMons[ctx->battlerAtk].volatiles.infiniteConfusion)
-            gBattleMons[ctx->battlerAtk].volatiles.confusionTurns--;
-        if (gBattleMons[ctx->battlerAtk].volatiles.confusionTurns)
+        // DETERMINISTIC_CONFUSION
+        // if (!gBattleMons[ctx->battlerAtk].volatiles.infiniteConfusion)
+        //     gBattleMons[ctx->battlerAtk].volatiles.confusionTurns--;
+        // if (gBattleMons[ctx->battlerAtk].volatiles.confusionTurns)
+        // {
+        u32 category = GetBattleMoveCategory(gCurrentMove);
+
+        if (gBattleMons[ctx->battlerAtk].volatiles.confusionTurns > 1 && category != DAMAGE_CATEGORY_STATUS)
         {
-             // confusion dmg
-            if (RandomPercentage(RNG_CONFUSION, (GetConfig(B_CONFUSION_SELF_DMG_CHANCE) >= GEN_7 ? 33 : 50)))
-            {
-                gBattleCommunication[MULTISTRING_CHOOSER] = TRUE;
-                struct DamageContext dmgCtx = {0};
-                dmgCtx.battlerAtk = dmgCtx.battlerDef = ctx->battlerAtk;
-                dmgCtx.move = dmgCtx.chosenMove = MOVE_NONE;
-                dmgCtx.moveType = TYPE_MYSTERY;
-                dmgCtx.isCrit = FALSE;
-                dmgCtx.randomFactor = FALSE;
-                dmgCtx.updateFlags = TRUE;
-                dmgCtx.isSelfInflicted = TRUE;
-                dmgCtx.fixedBasePower = 40;
-                gBattleStruct->passiveHpUpdate[ctx->battlerAtk] = CalculateMoveDamage(&dmgCtx);
-                gProtectStructs[ctx->battlerAtk].confusionSelfDmg = TRUE;
-                gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
-                gBattlescriptCurrInstr = BattleScript_MoveUsedIsConfused;
-                return MOVE_STEP_FAILURE;
-            }
-            else
-            {
-                gBattleCommunication[MULTISTRING_CHOOSER] = FALSE;
-                BattleScriptCall(BattleScript_MoveUsedIsConfused);
-                return MOVE_STEP_BREAK;
-            }
+            gBattleMons[ctx->battlerAtk].volatiles.confusionTurns = 1;
+            gBattleMons[ctx->battlerAtk].volatiles.infiniteConfusion = FALSE;
+            // confusion dmg
+            // if (RandomPercentage(RNG_CONFUSION, (GetConfig(B_CONFUSION_SELF_DMG_CHANCE) >= GEN_7 ? 33 : 50)))
+            // {
+            gBattleCommunication[MULTISTRING_CHOOSER] = TRUE;
+            struct DamageContext dmgCtx = {0};
+            dmgCtx.battlerAtk = dmgCtx.battlerDef = ctx->battlerAtk;
+            dmgCtx.move = dmgCtx.chosenMove = MOVE_NONE;
+            dmgCtx.moveType = TYPE_MYSTERY;
+            dmgCtx.isCrit = FALSE;
+            dmgCtx.randomFactor = FALSE;
+            dmgCtx.updateFlags = TRUE;
+            dmgCtx.isSelfInflicted = TRUE;
+            dmgCtx.fixedBasePower = 40;
+            gBattleStruct->passiveHpUpdate[ctx->battlerAtk] = CalculateMoveDamage(&dmgCtx);
+            gProtectStructs[ctx->battlerAtk].confusionSelfDmg = TRUE;
+            gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
+            gBattlescriptCurrInstr = BattleScript_MoveUsedIsConfused;
+            return MOVE_STEP_FAILURE;
+            // }
+            // else
+            // {
+            //     gBattleCommunication[MULTISTRING_CHOOSER] = FALSE;
+            //     BattleScriptCall(BattleScript_MoveUsedIsConfused);
+            //     return MOVE_STEP_BREAK;
+            // }
         }
         else // snapped out of confusion
         {
+            gBattleMons[ctx->battlerAtk].volatiles.confusionTurns = 0;
+            gBattleMons[ctx->battlerAtk].volatiles.infiniteConfusion = FALSE;
             BattleScriptCall(BattleScript_MoveUsedIsConfusedNoMore);
             return MOVE_STEP_BREAK;
         }
@@ -2329,17 +2340,18 @@ static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
 
 static enum MoveCanceler CancelerParalyzed(struct BattleContext *ctx)
 {
-    if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_PARALYSIS
-        && !(B_MAGIC_GUARD == GEN_4 && IsAbilityAndRecord(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ABILITY_MAGIC_GUARD))
-        && !RandomPercentage(RNG_PARALYSIS, 75))
-    {
-        gProtectStructs[ctx->battlerAtk].nonVolatileStatusImmobility = TRUE;
-        // This is removed in FRLG and Emerald for some reason
-        //CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELER_CHECK);
-        gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalyzed;
-        gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
-        return MOVE_STEP_FAILURE;
-    }
+    // DETERMINISTIC_PARALYSIS
+    // if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_PARALYSIS
+    //     && !(B_MAGIC_GUARD == GEN_4 && IsAbilityAndRecord(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ABILITY_MAGIC_GUARD))
+    //     && !RandomPercentage(RNG_PARALYSIS, 75))
+    // {
+    //     gProtectStructs[ctx->battlerAtk].nonVolatileStatusImmobility = TRUE;
+    //     // This is removed in FRLG and Emerald for some reason
+    //     //CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELER_CHECK);
+    //     gBattlescriptCurrInstr = BattleScript_MoveUsedIsParalyzed;
+    //     gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
+    //     return MOVE_STEP_FAILURE;
+    // }
     return MOVE_STEP_SUCCESS;
 }
 
@@ -2348,18 +2360,22 @@ static enum MoveCanceler CancelerInfatuation(struct BattleContext *ctx)
     if (gBattleMons[ctx->battlerAtk].volatiles.infatuation)
     {
         gBattleScripting.battler = gBattleMons[ctx->battlerAtk].volatiles.infatuation - 1;
-        if (!RandomPercentage(RNG_INFATUATION, 50))
+        // DETERMINISTIC_ATTRACTION
+        // if (!RandomPercentage(RNG_INFATUATION, 50))
+        if (IsBattleMoveStatus(ctx->currentMove))
         {
-            BattleScriptCall(BattleScript_MoveUsedIsInLove);
-            return MOVE_STEP_BREAK;
+            // BattleScriptCall(BattleScript_MoveUsedIsInLove);
+            // return MOVE_STEP_BREAK;
+            return MOVE_STEP_SUCCESS;
         }
         else
         {
-            BattleScriptPush(BattleScript_MoveUsedIsInLoveCantAttack);
+            // BattleScriptPush(BattleScript_MoveUsedIsInLoveCantAttack);
             gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
             gProtectStructs[ctx->battlerAtk].unableToUseMove = TRUE;
             CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
-            gBattlescriptCurrInstr = BattleScript_MoveUsedIsInLove;
+            // gBattlescriptCurrInstr = BattleScript_MoveUsedIsInLove;
+            gBattlescriptCurrInstr = BattleScript_MoveUsedIsInLoveCantAttack;
             return MOVE_STEP_FAILURE;
         }
     }
@@ -2550,9 +2566,19 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
     s32 ppToDeduct = 1;
     u32 moveTarget = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->currentMove);
     u32 movePosition = gCurrMovePos;
+    // DETERMINISTIC_ACCURACY_EVASION
+    u16 atkAbility = ctx->abilities[ctx->battlerAtk];
+    u16 defAbility = ctx->abilities[ctx->battlerDef];
+    u32 atkAlly = BATTLE_PARTNER(ctx->battlerAtk);
 
     if (gBattleStruct->submoveAnnouncement == SUBMOVE_SUCCESS)
         movePosition = gChosenMovePos;
+
+    // DETERMINISTIC_PARALYSIS
+    if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_PARALYSIS)
+    {
+        ppToDeduct++;
+    }
 
     if (moveTarget == MOVE_TARGET_BOTH
      || moveTarget == MOVE_TARGET_FOES_AND_ALLY
@@ -2567,7 +2593,7 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
     }
     else if (moveTarget != MOVE_TARGET_OPPONENTS_FIELD)
     {
-        if (ctx->battlerAtk != ctx->battlerDef && ctx->abilities[ctx->battlerDef] == ABILITY_PRESSURE)
+        if (ctx->battlerAtk != ctx->battlerDef && defAbility == ABILITY_PRESSURE)
              ppToDeduct++;
     }
 
@@ -2575,10 +2601,59 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
     if (ctx->currentMove != gLastResultingMoves[ctx->battlerAtk] || WasUnableToUseMove(ctx->battlerAtk))
         gBattleStruct->metronomeItemCounter[ctx->battlerAtk] = 0;
 
-    if (gBattleMons[ctx->battlerAtk].pp[movePosition] > ppToDeduct)
-        gBattleMons[ctx->battlerAtk].pp[movePosition] -= ppToDeduct;
-    else
-        gBattleMons[ctx->battlerAtk].pp[movePosition] = 0;
+    // DETERMINISTIC_ACCURACY_EVASION
+    // if (gBattleMons[ctx->battlerAtk].pp[movePosition] > ppToDeduct)
+    //     gBattleMons[ctx->battlerAtk].pp[movePosition] -= ppToDeduct;
+    // else
+    //     gBattleMons[ctx->battlerAtk].pp[movePosition] = 0;
+    u16 defenderHoldEffect = GetBattlerHoldEffect(gBattlerTarget);
+    if (defenderHoldEffect == HOLD_EFFECT_EVASION_UP)
+    {
+        ppToDeduct++;
+    }
+    if (atkAbility == ABILITY_HUSTLE)
+    {
+        ppToDeduct++;
+    }
+    if (defAbility == ABILITY_TANGLED_FEET && gBattleMons[ctx->battlerDef].volatiles.confusionTurns > 0)
+    {
+        ppToDeduct++;
+    }
+    if (gBattleStruct->battlerState[ctx->battlerAtk].usedMicleBerry)
+    {
+        ppToDeduct--;
+    }
+    u16 move = gBattleMons[ctx->battlerAtk].moves[movePosition];
+    if (gMovesInfo[ctx->currentMove].accuracy != 0)
+    {
+        if (defAbility == ABILITY_WONDER_SKIN && IsBattleMoveStatus(move))
+        {
+            ppToDeduct++;
+        }
+        u16 holdEffect = GetBattlerHoldEffect(ctx->battlerAtk);
+        bool32 ignoreEvasion = (holdEffect == HOLD_EFFECT_WIDE_LENS 
+                             || holdEffect == HOLD_EFFECT_ZOOM_LENS
+                             || atkAbility == ABILITY_COMPOUND_EYES
+                             || atkAbility == ABILITY_KEEN_EYE
+                             || atkAbility == ABILITY_MINDS_EYE
+                             || atkAbility == ABILITY_VICTORY_STAR
+                             || GetBattlerAbility(atkAlly) == ABILITY_VICTORY_STAR
+                             || defAbility == ABILITY_NO_GUARD
+                             || gBattleMons[ctx->battlerAtk].volatiles.lockOn);
+
+        s8 accStage = gBattleMons[ctx->battlerAtk].statStages[STAT_ACC] - 6;
+        s8 evaStage = ignoreEvasion ? 0 : gBattleMons[ctx->battlerDef].statStages[STAT_EVASION] - 6;
+        ppToDeduct += (evaStage - accStage);
+    }
+    u8 basePP = gMovesInfo[move].pp;
+    u8 ppBonuses = (gBattleMons[ctx->battlerAtk].ppBonuses >> (movePosition * 2)) & 3;
+    u8 maxPP = basePP + (basePP / 5) * ppBonuses;
+    s32 newPP = (s32)gBattleMons[ctx->battlerAtk].pp[movePosition] - ppToDeduct;
+    if (newPP < 0)
+        newPP = 0;
+    else if (newPP > maxPP)
+        newPP = maxPP;
+    gBattleMons[ctx->battlerAtk].pp[movePosition] = (u8)newPP;
 
     if (MOVE_IS_PERMANENT(ctx->battlerAtk, movePosition))
     {
@@ -2807,6 +2882,45 @@ static enum MoveCanceler CancelerPowderStatus(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
+// DETERMINISTIC_FLINCH
+static bool32 MoveHasFlinchEffect(u16 move)
+{
+    if (move == MOVE_NONE)
+        return FALSE;
+
+    if ((u32)gMovesInfo[move].effect == MOVE_EFFECT_FLINCH)
+        return TRUE;
+
+    if (gMovesInfo[move].additionalEffects != NULL)
+    {
+        for (u32 i = 0; gMovesInfo[move].additionalEffects[i].moveEffect != MOVE_EFFECT_NONE; i++)
+        {
+            if (gMovesInfo[move].additionalEffects[i].moveEffect == MOVE_EFFECT_FLINCH)
+                return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+// DETERMINISTIC_FLINCH
+static enum MoveCanceler CancelerFlinchSpam(struct BattleContext *ctx)
+{
+    // u32 battler = ctx->battlerAtk;
+    // u16 currentTurn = gBattleResults.battleTurnCounter;
+    
+    if (gCurrentMove == MOVE_NONE || gCurrentMove == MOVE_FAKE_OUT || !MoveHasFlinchEffect(gCurrentMove))
+        return MOVE_STEP_SUCCESS;
+
+    // if (currentTurn > 0 && gDisableStructs[battler].lastFlinchTurn == currentTurn)
+    // {
+    //     gBattlescriptCurrInstr = BattleScript_FlinchSpamFailed;
+    //     return MOVE_STEP_FAILURE;
+    // }
+
+    return MOVE_STEP_SUCCESS;
+}
+
 bool32 IsDazzlingAbility(enum Ability ability)
 {
     switch (ability)
@@ -2888,25 +3002,38 @@ static enum MoveCanceler CancelerExplodingDamp(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
+// DETERMINISTIC_MULTI_HIT
 static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
 {
     if (GetMoveEffect(ctx->currentMove) == EFFECT_MULTI_HIT)
     {
         enum Ability ability = ctx->abilities[ctx->battlerAtk];
+        bool8 hasLoadedDice = (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_LOADED_DICE);
 
         if (ability == ABILITY_SKILL_LINK)
         {
-            gMultiHitCounter = 5;
+            if (hasLoadedDice)
+                gMultiHitCounter = 6;
+            else
+                gMultiHitCounter = 5;
         }
         else if (ability == ABILITY_BATTLE_BOND
               && ctx->currentMove == MOVE_WATER_SHURIKEN
               && gBattleMons[ctx->battlerAtk].species == SPECIES_GRENINJA_ASH)
         {
-            gMultiHitCounter = 3;
+            if (hasLoadedDice)
+                gMultiHitCounter = 6;
+            else
+                // gMultiHitCounter = 3;
+                gMultiHitCounter = 4;
         }
         else
         {
-            SetRandomMultiHitCounter();
+            // SetRandomMultiHitCounter();
+            if (hasLoadedDice)
+                gMultiHitCounter = 6;
+            else
+                gMultiHitCounter = 3;
         }
 
         PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
@@ -2915,7 +3042,8 @@ static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
     {
         if (GetMoveEffect(ctx->currentMove) == EFFECT_POPULATION_BOMB && GetBattlerHoldEffect(ctx->battlerAtk) == HOLD_EFFECT_LOADED_DICE)
         {
-            gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 10);
+            // gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 10);
+            gMultiHitCounter = 10;
         }
         else
         {
@@ -3029,6 +3157,8 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_CONFUSED] = CancelerConfused,
     [CANCELER_PARALYZED] = CancelerParalyzed,
     [CANCELER_INFATUATION] = CancelerInfatuation,
+    // DETERMINISTIC_FLINCH
+    [CANCELER_FLINCH_SPAM] = CancelerFlinchSpam,
     [CANCELER_BIDE] = CancelerBide,
     [CANCELER_Z_MOVES] = CancelerZMoves,
     [CANCELER_CHOICE_LOCK] = CancelerChoiceLock,
@@ -4683,11 +4813,16 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 }
                 break;
             case ABILITY_HARVEST:
-                if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
-                 && gBattleMons[battler].item == ITEM_NONE
+                // DETERMINISTIC_ABILITIES
+                if (/*(IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
+                 && */gBattleMons[battler].item == ITEM_NONE
                  && gBattleStruct->changedItems[battler] == ITEM_NONE   // Will not inherit an item
                  && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
                 {
+                    if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN) && !IsBattlerAtMaxHp(battler))
+                    {
+                        SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+                    }
                     gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
                     BattleScriptExecute(BattleScript_HarvestActivates);
                     effect++;
@@ -4729,7 +4864,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 break;
             case ABILITY_SHED_SKIN:
                 if ((gBattleMons[battler].status1 & STATUS1_ANY)
-                 && (GetConfig(B_ABILITY_TRIGGER_CHANCE) == GEN_4 ? RandomPercentage(RNG_SHED_SKIN, 30) : RandomChance(RNG_SHED_SKIN, 1, 3)))
+                 // DETERMINISTIC_ABILITIES
+                 /*&& (GetConfig(B_ABILITY_TRIGGER_CHANCE) == GEN_4 ? RandomPercentage(RNG_SHED_SKIN, 30) : RandomChance(RNG_SHED_SKIN, 1, 3))*/)
                 {
                 ABILITY_HEAL_MON_STATUS:
                     if (gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON))
@@ -4824,7 +4960,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 gBattleScripting.battler = BATTLE_PARTNER(battler);
                 if (IsBattlerAlive(gBattleScripting.battler)
                     && gBattleMons[gBattleScripting.battler].status1 & STATUS1_ANY
-                    && RandomPercentage(RNG_HEALER, 30))
+                    // DETERMINISTIC_ABILITIES
+                    /*&& RandomPercentage(RNG_HEALER, 30)*/)
                 {
                     BattleScriptExecute(BattleScript_HealerActivates);
                     effect++;
@@ -5012,7 +5149,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
              && IsBattlerAlive(gBattlerAttacker)
              && !IsAbilityOnSide(gBattlerAttacker, ABILITY_AROMA_VEIL)
              && gChosenMove != MOVE_STRUGGLE
-             && RandomPercentage(RNG_CURSED_BODY, 30))
+             // DETERMINISTIC_ABILITIES
+             /*&& RandomPercentage(RNG_CURSED_BODY, 30)*/)
             {
                 gDisableStructs[gBattlerAttacker].disabledMove = gChosenMove;
                 gDisableStructs[gBattlerAttacker].disableTimer = 4;
@@ -5151,28 +5289,29 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             enum HoldEffect holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker);
             if (IsAffectedByPowderMove(gBattlerAttacker, abilityAtk, holdEffectAtk))
             {
-                u32 poison, paralysis, sleep;
+                // DETERMINISTIC_ABILITIES
+                // u32 poison, paralysis, sleep;
 
-                if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_5)
-                {
-                    poison = 9;
-                    paralysis = 19;
-                }
-                else
-                {
-                    poison = 10;
-                    paralysis = 20;
-                }
-                sleep = 30;
+                // if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_5)
+                // {
+                //     poison = 9;
+                //     paralysis = 19;
+                // }
+                // else
+                // {
+                //     poison = 10;
+                //     paralysis = 20;
+                // }
+                // sleep = 30;
 
-                i = RandomUniform(RNG_EFFECT_SPORE, 0, GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? 99 : 299);
-                if (i < poison)
-                    goto POISON_POINT;
-                if (i < paralysis)
-                    goto STATIC;
+                // i = RandomUniform(RNG_EFFECT_SPORE, 0, GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? 99 : 299);
+                // if (i < poison)
+                //     goto POISON_POINT;
+                // if (i < paralysis)
+                //     goto STATIC;
                 // Sleep
-                if (i < sleep
-                 && IsBattlerAlive(gBattlerAttacker)
+                if (/*i < sleep
+                 && */IsBattlerAlive(gBattlerAttacker)
                  && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
                  && IsBattlerTurnDamaged(gBattlerTarget)
                  && CanBeSlept(gBattlerTarget, gBattlerAttacker, abilityAtk, NOT_BLOCKED_BY_SLEEP_CLAUSE)
@@ -5182,7 +5321,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                         gBattleStruct->battlerState[gBattlerAttacker].sleepClauseEffectExempt = TRUE;
                     gEffectBattler = gBattlerAttacker;
                     gBattleScripting.battler = gBattlerTarget;
-                    gBattleScripting.moveEffect = MOVE_EFFECT_SLEEP;
+                    // gBattleScripting.moveEffect = MOVE_EFFECT_SLEEP;
+                    gBattleScripting.moveEffect = MOVE_EFFECT_YAWN_FOE;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     effect++;
@@ -5191,56 +5331,59 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         }
             break;
         case ABILITY_POISON_POINT:
-            if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_POISON_POINT, 30) : RandomChance(RNG_POISON_POINT, 1, 3))
+            // DETERMINISTIC_ABILITIES
+            // if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_POISON_POINT, 30) : RandomChance(RNG_POISON_POINT, 1, 3))
+            // {
+            // POISON_POINT:
+            // {
+            // enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
+            if (IsBattlerAlive(gBattlerAttacker)
+            && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+            && IsBattlerTurnDamaged(gBattlerTarget)
+            && CanBePoisoned(gBattlerTarget, gBattlerAttacker, gLastUsedAbility, GetBattlerAbility(gBattlerAttacker)/*abilityAtk*/)
+            && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker)/*abilityAtk*/, GetBattlerHoldEffect(gBattlerAttacker), move))
             {
-            POISON_POINT:
-            {
-                enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
-                if (IsBattlerAlive(gBattlerAttacker)
-                && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
-                && IsBattlerTurnDamaged(gBattlerTarget)
-                && CanBePoisoned(gBattlerTarget, gBattlerAttacker, gLastUsedAbility, abilityAtk)
-                && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerHoldEffect(gBattlerAttacker), move))
-                {
-                    gEffectBattler = gBattlerAttacker;
-                    gBattleScripting.battler = gBattlerTarget;
-                    gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
-                    BattleScriptCall(BattleScript_AbilityStatusEffect);
-                    effect++;
-                }
+                gEffectBattler = gBattlerAttacker;
+                gBattleScripting.battler = gBattlerTarget;
+                gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
+                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                BattleScriptCall(BattleScript_AbilityStatusEffect);
+                effect++;
             }
-            }
+            // }
+            // }
             break;
         case ABILITY_STATIC:
-            if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_STATIC, 30) : RandomChance(RNG_STATIC, 1, 3))
+            // DETERMINISTIC_ABILITIES
+            // if (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_STATIC, 30) : RandomChance(RNG_STATIC, 1, 3))
+            // {
+            // STATIC:
+            // {
+            // enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
+            if (IsBattlerAlive(gBattlerAttacker)
+            && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+            && IsBattlerTurnDamaged(gBattlerTarget)
+            && CanBeParalyzed(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)/*abilityAtk*/)
+            && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker)/*abilityAtk*/, GetBattlerHoldEffect(gBattlerAttacker), move))
             {
-            STATIC:
-            {
-                enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
-                if (IsBattlerAlive(gBattlerAttacker)
-                && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
-                && IsBattlerTurnDamaged(gBattlerTarget)
-                && CanBeParalyzed(gBattlerTarget, gBattlerAttacker, abilityAtk)
-                && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerHoldEffect(gBattlerAttacker), move))
-                {
-                    gEffectBattler = gBattlerAttacker;
-                    gBattleScripting.battler = gBattlerTarget;
-                    gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
-                    BattleScriptCall(BattleScript_AbilityStatusEffect);
-                    effect++;
-                }
+                gEffectBattler = gBattlerAttacker;
+                gBattleScripting.battler = gBattlerTarget;
+                gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
+                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                BattleScriptCall(BattleScript_AbilityStatusEffect);
+                effect++;
             }
-            }
+            // }
+            // }
             break;
         case ABILITY_FLAME_BODY:
             if (IsBattlerAlive(gBattlerAttacker)
              && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
              && IsBattlerTurnDamaged(gBattlerTarget)
-             && CanBeBurned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
-             && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
+             && CanBeBurned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)))
+             // DETERMINISTIC_ABILITIES
+             // && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
             {
                 gEffectBattler = gBattlerAttacker;
                 gBattleScripting.battler = gBattlerTarget;
@@ -5255,9 +5398,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
              && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
              && IsBattlerTurnDamaged(gBattlerTarget)
              && IsBattlerAlive(gBattlerTarget)
-             && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_CUTE_CHARM, 30) : RandomChance(RNG_CUTE_CHARM, 1, 3))
+             // DETERMINISTIC_ABILITIES
+             // && (GetConfig(B_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_CUTE_CHARM, 30) : RandomChance(RNG_CUTE_CHARM, 1, 3))
              && !(gBattleMons[gBattlerAttacker].volatiles.infatuation)
-             && AreBattlersOfOppositeGender(gBattlerAttacker, gBattlerTarget)
+             // && AreBattlersOfOppositeGender(gBattlerAttacker, gBattlerTarget)
              && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_OBLIVIOUS)
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
              && !IsAbilityOnSide(gBattlerAttacker, ABILITY_AROMA_VEIL))
@@ -5420,7 +5564,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
              && CanBePoisoned(gBattlerAttacker, gBattlerTarget, gLastUsedAbility, GetBattlerAbility(gBattlerTarget))
              && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
              && IsBattlerTurnDamaged(gBattlerTarget) // Need to actually hit the target
-             && RandomPercentage(RNG_POISON_TOUCH, 30))
+             // DETERMINISTIC_ABILITIES
+             /*&& RandomPercentage(RNG_POISON_TOUCH, 30)*/)
             {
                 gEffectBattler = gBattlerTarget;
                 gBattleScripting.battler = gBattlerAttacker;
@@ -5445,7 +5590,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_STENCH:
             if (IsBattlerAlive(gBattlerTarget)
              && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
-             && RandomChance(RNG_STENCH, 1, 10)
+             // DETERMINISTIC_ABILITIES
+             // && RandomChance(RNG_STENCH, 1, 10)
+             && gDisableStructs[gBattlerAttacker].isFirstTurn
              && IsBattlerTurnDamaged(gBattlerTarget)
              && !MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH))
             {
@@ -5560,10 +5707,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 BattleScriptCall(BattleScript_SynchronizeActivates);
                 effect++;
             }
-            else // Synchronize ability pop up still shows up even if status fails
-            {
-                BattleScriptCall(BattleScript_AbilityPopUp);
-            }
+            // HIDE_SYNCHRONIZE_POP_UPS
+            // else // Synchronize ability pop up still shows up even if status fails
+            // {
+            //     BattleScriptCall(BattleScript_AbilityPopUp);
+            // }
             gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
         }
         break;
@@ -5593,10 +5741,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 BattleScriptCall(BattleScript_SynchronizeActivates);
                 effect++;
             }
-            else // Synchronize ability pop up still shows up even if status fails
-            {
-                BattleScriptCall(BattleScript_AbilityPopUp);
-            }
+            // HIDE_SYNCHRONIZE_POP_UPS
+            // else // Synchronize ability pop up still shows up even if status fails
+            // {
+            //     BattleScriptCall(BattleScript_AbilityPopUp);
+            // }
             gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
         }
         break;
@@ -6819,6 +6968,11 @@ static bool32 IsBattlerGroundedInverseCheck(u32 battler, enum Ability ability, e
         return FALSE;
     if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (checkInverse != INVERSE_BATTLE || !FlagGet(B_FLAG_INVERSE_BATTLE)))
         return FALSE;
+
+    // FEATURE_INNATE_ABILITIES
+    if (SpeciesHasInnateAbility(gBattleMons[battler].species, ABILITY_LEVITATE))
+        return FALSE;
+
     return TRUE;
 }
 
@@ -7469,9 +7623,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         break;
     case ABILITY_RIVALRY:
-        if (AreBattlersOfSameGender(battlerAtk, battlerDef))
+        // DETERMINISTIC_ABILITIES
+        if (/*AreBattlersOfSameGender*/DoBattlersShareType(battlerAtk, battlerDef))
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.25));
-        else if (AreBattlersOfOppositeGender(battlerAtk, battlerDef))
+        else /*if (AreBattlersOfOppositeGender(battlerAtk, battlerDef))*/
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
         break;
     case ABILITY_ANALYTIC:
@@ -8108,6 +8263,23 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
                 modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         }
         break;
+    // DETERMINISTIC_ACCURACY_EVASION
+    case ABILITY_SAND_VEIL:
+        if (IsBattlerWeatherAffected(battlerDef, B_WEATHER_SANDSTORM))
+        {
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+            if (ctx->updateFlags)
+                RecordAbilityBattle(battlerDef, ABILITY_SAND_VEIL);
+        }
+        break;
+    case ABILITY_SNOW_CLOAK:
+        if (IsBattlerWeatherAffected(battlerDef, (B_WEATHER_HAIL | B_WEATHER_SNOW)))
+        {
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+            if (ctx->updateFlags)
+                RecordAbilityBattle(battlerDef, ABILITY_SNOW_CLOAK);
+        }
+        break;
     default:
         break;
     }
@@ -8551,16 +8723,23 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
     DAMAGE_APPLY_MODIFIER(GetCriticalModifier(ctx->isCrit));
     DAMAGE_APPLY_MODIFIER(GetGlaiveRushModifier(ctx->battlerDef));
 
-    if (ctx->randomFactor)
+    // DETERMINISTIC_DAMAGE
+    // if (ctx->randomFactor)
+    // {
+    //     dmg *= DMG_ROLL_PERCENT_HI - RandomUniform(RNG_DAMAGE_MODIFIER, 0, DMG_ROLL_PERCENT_HI - DMG_ROLL_PERCENT_LO);
+    //     dmg /= 100;
+    // }
+    // else // Apply rest of modifiers in the ai function
+    // {
+    //     if (dmg == 0)
+    //         dmg = 1;
+    //     return dmg;
+    // }
+    u32 turnModifier = 92 + gBattleResults.battleTurnCounter;
+    dmg = (dmg * turnModifier) / 100;
+    if (!ctx->randomFactor)
     {
-        dmg *= DMG_ROLL_PERCENT_HI - RandomUniform(RNG_DAMAGE_MODIFIER, 0, DMG_ROLL_PERCENT_HI - DMG_ROLL_PERCENT_LO);
-        dmg /= 100;
-    }
-    else // Apply rest of modifiers in the ai function
-    {
-        if (dmg == 0)
-            dmg = 1;
-        return dmg;
+        return (dmg == 0) ? 1 : dmg;
     }
 
     dmg = ApplyModifiersAfterDmgRoll(ctx, dmg);
@@ -10149,15 +10328,16 @@ bool32 CanTargetBattler(u32 battlerAtk, u32 battlerDef, u16 move)
     return TRUE;
 }
 
-static void SetRandomMultiHitCounter()
-{
-    if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_LOADED_DICE)
-        gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 5);
-    else if (GetConfig(B_MULTI_HIT_CHANCE) >= GEN_5)
-        gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 7, 7, 3, 3); // 35%: 2 hits, 35%: 3 hits, 15% 4 hits, 15% 5 hits.
-    else
-        gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 3, 3, 1, 1); // 37.5%: 2 hits, 37.5%: 3 hits, 12.5% 4 hits, 12.5% 5 hits.
-}
+// DETERMINISTIC_MULTI_HIT
+// static void SetRandomMultiHitCounter()
+// {
+//     if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_LOADED_DICE)
+//         gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 5);
+//     else if (GetConfig(B_MULTI_HIT_CHANCE) >= GEN_5)
+//         gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 7, 7, 3, 3); // 35%: 2 hits, 35%: 3 hits, 15% 4 hits, 15% 5 hits.
+//     else
+//         gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 3, 3, 1, 1); // 37.5%: 2 hits, 37.5%: 3 hits, 12.5% 4 hits, 12.5% 5 hits.
+// }
 
 void CopyMonLevelAndBaseStatsToBattleMon(u32 battler, struct Pokemon *mon)
 {
@@ -10956,131 +11136,132 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abil
 u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkAbility, enum Ability defAbility, enum HoldEffect atkHoldEffect, enum HoldEffect defHoldEffect)
 {
     u32 calc, moveAcc;
-    s8 buff, accStage, evasionStage;
-    u32 atkParam = GetBattlerHoldEffectParam(battlerAtk);
-    u32 defParam = GetBattlerHoldEffectParam(battlerDef);
+    // DETERMINISTIC_ACCURACY_EVASION
+    s8 buff = DEFAULT_STAT_STAGE;//, accStage, evasionStage;
+    // u32 atkParam = GetBattlerHoldEffectParam(battlerAtk);
+    // u32 defParam = GetBattlerHoldEffectParam(battlerDef);
 
     gPotentialItemEffectBattler = battlerDef;
-    accStage = gBattleMons[battlerAtk].statStages[STAT_ACC];
-    evasionStage = gBattleMons[battlerDef].statStages[STAT_EVASION];
-    if (atkAbility == ABILITY_UNAWARE || atkAbility == ABILITY_KEEN_EYE || atkAbility == ABILITY_MINDS_EYE
-            || (GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && atkAbility == ABILITY_ILLUMINATE))
-        evasionStage = DEFAULT_STAT_STAGE;
-    if (MoveIgnoresDefenseEvasionStages(move))
-        evasionStage = DEFAULT_STAT_STAGE;
-    if (defAbility == ABILITY_UNAWARE)
-        accStage = DEFAULT_STAT_STAGE;
+    // accStage = gBattleMons[battlerAtk].statStages[STAT_ACC];
+    // evasionStage = gBattleMons[battlerDef].statStages[STAT_EVASION];
+    // if (atkAbility == ABILITY_UNAWARE || atkAbility == ABILITY_KEEN_EYE || atkAbility == ABILITY_MINDS_EYE
+    //         || (GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && atkAbility == ABILITY_ILLUMINATE))
+    //     evasionStage = DEFAULT_STAT_STAGE;
+    // if (MoveIgnoresDefenseEvasionStages(move))
+    //     evasionStage = DEFAULT_STAT_STAGE;
+    // if (defAbility == ABILITY_UNAWARE)
+    //     accStage = DEFAULT_STAT_STAGE;
 
-    if (gBattleMons[battlerDef].volatiles.foresight || gBattleMons[battlerDef].volatiles.miracleEye)
-        buff = accStage;
-    else
-        buff = accStage + DEFAULT_STAT_STAGE - evasionStage;
+    // if (gBattleMons[battlerDef].volatiles.foresight || gBattleMons[battlerDef].volatiles.miracleEye)
+    //     buff = accStage;
+    // else
+    //     buff = accStage + DEFAULT_STAT_STAGE - evasionStage;
 
-    if (buff < MIN_STAT_STAGE)
-        buff = MIN_STAT_STAGE;
-    if (buff > MAX_STAT_STAGE)
-        buff = MAX_STAT_STAGE;
+    // if (buff < MIN_STAT_STAGE)
+    //     buff = MIN_STAT_STAGE;
+    // if (buff > MAX_STAT_STAGE)
+    //     buff = MAX_STAT_STAGE;
 
     moveAcc = GetMoveAccuracy(move);
     // Check Thunder and Hurricane on sunny weather.
-    if (IsBattlerWeatherAffected(battlerDef, B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))
-        moveAcc = 50;
+    // if (IsBattlerWeatherAffected(battlerDef, B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))
+    //     moveAcc = 50;
     // Check Wonder Skin.
-    if (defAbility == ABILITY_WONDER_SKIN && IsBattleMoveStatus(move) && moveAcc > 50)
-        moveAcc = 50;
+    // if (defAbility == ABILITY_WONDER_SKIN && IsBattleMoveStatus(move) && moveAcc > 50)
+    //     moveAcc = 50;
 
     calc = gAccuracyStageRatios[buff].dividend * moveAcc;
     calc /= gAccuracyStageRatios[buff].divisor;
 
     // Attacker's ability
-    switch (atkAbility)
-    {
-    case ABILITY_COMPOUND_EYES:
-        calc = (calc * 130) / 100; // 1.3 compound eyes boost
-        break;
-    case ABILITY_VICTORY_STAR:
-        calc = (calc * 110) / 100; // 1.1 victory star boost
-        break;
-    case ABILITY_HUSTLE:
-        if (IsBattleMovePhysical(move))
-            calc = (calc * 80) / 100; // 1.2 hustle loss
-        break;
-    default:
-        break;
-    }
+    // switch (atkAbility)
+    // {
+    // case ABILITY_COMPOUND_EYES:
+    //     calc = (calc * 130) / 100; // 1.3 compound eyes boost
+    //     break;
+    // case ABILITY_VICTORY_STAR:
+    //     calc = (calc * 110) / 100; // 1.1 victory star boost
+    //     break;
+    // case ABILITY_HUSTLE:
+    //     if (IsBattleMovePhysical(move))
+    //         calc = (calc * 80) / 100; // 1.2 hustle loss
+    //     break;
+    // default:
+    //     break;
+    // }
 
     // Target's ability
-    switch (defAbility)
-    {
-    case ABILITY_SAND_VEIL:
-        if (gBattleWeather & B_WEATHER_SANDSTORM && HasWeatherEffect())
-            calc = (calc * 80) / 100; // 1.2 sand veil loss
-        break;
-    case ABILITY_SNOW_CLOAK:
-        if ((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) && HasWeatherEffect())
-            calc = (calc * 80) / 100; // 1.2 snow cloak loss
-        break;
-    case ABILITY_TANGLED_FEET:
-        if (gBattleMons[battlerDef].volatiles.confusionTurns)
-            calc = (calc * 50) / 100; // 1.5 tangled feet loss
-        break;
-    default:
-        break;
-    }
+    // switch (defAbility)
+    // {
+    // case ABILITY_SAND_VEIL:
+    //     if (gBattleWeather & B_WEATHER_SANDSTORM && HasWeatherEffect())
+    //         calc = (calc * 80) / 100; // 1.2 sand veil loss
+    //     break;
+    // case ABILITY_SNOW_CLOAK:
+    //     if ((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) && HasWeatherEffect())
+    //         calc = (calc * 80) / 100; // 1.2 snow cloak loss
+    //     break;
+    // case ABILITY_TANGLED_FEET:
+    //     if (gBattleMons[battlerDef].volatiles.confusionTurns)
+    //         calc = (calc * 50) / 100; // 1.5 tangled feet loss
+    //     break;
+    // default:
+    //     break;
+    // }
 
     // Attacker's ally's ability
-    u32 atkAlly = BATTLE_PARTNER(battlerAtk);
-    switch (GetBattlerAbility(atkAlly))
-    {
-    case ABILITY_VICTORY_STAR:
-        if (IsBattlerAlive(atkAlly))
-            calc = (calc * 110) / 100; // 1.1 ally's victory star boost
-        break;
-    default:
-        break;
-    }
+    // u32 atkAlly = BATTLE_PARTNER(battlerAtk);
+    // switch (GetBattlerAbility(atkAlly))
+    // {
+    // case ABILITY_VICTORY_STAR:
+    //     if (IsBattlerAlive(atkAlly))
+    //         calc = (calc * 110) / 100; // 1.1 ally's victory star boost
+    //     break;
+    // default:
+    //     break;
+    // }
 
     // Attacker's hold effect
-    switch (atkHoldEffect)
-    {
-    case HOLD_EFFECT_WIDE_LENS:
-        calc = (calc * (100 + atkParam)) / 100;
-        break;
-    case HOLD_EFFECT_ZOOM_LENS:
-        if (HasBattlerActedThisTurn(battlerDef))
-            calc = (calc * (100 + atkParam)) / 100;
-        break;
-    default:
-        break;
-    }
+    // switch (atkHoldEffect)
+    // {
+    // case HOLD_EFFECT_WIDE_LENS:
+    //     calc = (calc * (100 + atkParam)) / 100;
+    //     break;
+    // case HOLD_EFFECT_ZOOM_LENS:
+    //     if (HasBattlerActedThisTurn(battlerDef))
+    //         calc = (calc * (100 + atkParam)) / 100;
+    //     break;
+    // default:
+    //     break;
+    // }
 
     // Target's hold effect
-    switch (defHoldEffect)
-    {
-    case HOLD_EFFECT_EVASION_UP:
-        calc = (calc * (100 - defParam)) / 100;
-        break;
-    default:
-        break;
-    }
+    // switch (defHoldEffect)
+    // {
+    // case HOLD_EFFECT_EVASION_UP:
+    //     calc = (calc * (100 - defParam)) / 100;
+    //     break;
+    // default:
+    //     break;
+    // }
 
-    if (gBattleStruct->battlerState[battlerAtk].usedMicleBerry)
-    {
-        // TODO: Is this true?
-        if (atkAbility == ABILITY_RIPEN)
-            calc = (calc * 140) / 100;  // ripen gives 40% acc boost
-        else
-            calc = (calc * 120) / 100;  // 20% acc boost
-    }
+    // if (gBattleStruct->battlerState[battlerAtk].usedMicleBerry)
+    // {
+    //     // TODO: Is this true?
+    //     if (atkAbility == ABILITY_RIPEN)
+    //         calc = (calc * 140) / 100;  // ripen gives 40% acc boost
+    //     else
+    //         calc = (calc * 120) / 100;  // 20% acc boost
+    // }
 
-    if (gFieldStatuses & STATUS_FIELD_GRAVITY)
-        calc = (calc * 5) / 3; // 1.66 Gravity acc boost
+    // if (gFieldStatuses & STATUS_FIELD_GRAVITY)
+    //     calc = (calc * 5) / 3; // 1.66 Gravity acc boost
 
-    if (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerDef) == AFFECTION_FIVE_HEARTS)
-        calc = (calc * 90) / 100;
+    // if (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerDef) == AFFECTION_FIVE_HEARTS)
+    //     calc = (calc * 90) / 100;
 
-    if (HasWeatherEffect() && gBattleWeather & B_WEATHER_FOG)
-        calc = (calc * 60) / 100; // modified by 3/5
+    // if (HasWeatherEffect() && gBattleWeather & B_WEATHER_FOG)
+    //     calc = (calc * 60) / 100; // modified by 3/5
 
     return calc;
 }
@@ -11379,4 +11560,18 @@ bool32 IsMimikyuDisguised(u32 battler)
 {
     return gBattleMons[battler].species == SPECIES_MIMIKYU_DISGUISED
         || gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED;
+}
+
+// FEATURE_INNATE_ABILITIES
+bool32 SpeciesHasInnateAbility(u16 species, enum Ability ability)
+{
+    if (ability == ABILITY_NONE || species == SPECIES_NONE)
+        return FALSE;
+
+    for (u32 i = 0; i < 5; i++)
+    {
+        if (gSpeciesInfo[species].innateAbilities[i] == ability)
+            return TRUE;
+    }
+    return FALSE;
 }

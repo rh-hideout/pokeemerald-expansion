@@ -7919,7 +7919,9 @@ const struct Item gItemsInfo[] =
     {
         .name = ITEM_NAME("Leek"),
         .price = (I_PRICE >= GEN_7) ? 1000 : 200,
-        .holdEffect = HOLD_EFFECT_LEEK,
+        // DETERMINISTIC_CRITICAL_HITS
+        // .holdEffect = HOLD_EFFECT_LEEK,
+        .holdEffect = HOLD_EFFECT_CRITICAL_UP,
         .description = COMPOUND_STRING(
             "A hold item that\n"
             "raises Farfetch'd's\n"
@@ -7956,7 +7958,9 @@ const struct Item gItemsInfo[] =
         .name = ITEM_NAME("Lucky Punch"),
         .pluralName = ITEM_PLURAL_NAME("Lucky Punches"),
         .price = (I_PRICE >= GEN_7) ? 1000 : 10,
-        .holdEffect = HOLD_EFFECT_LUCKY_PUNCH,
+        // DETERMINISTIC_CRITICAL_HITS
+        // .holdEffect = HOLD_EFFECT_LUCKY_PUNCH,
+        .holdEffect = HOLD_EFFECT_CRITICAL_UP,
         .description = COMPOUND_STRING(
             "A hold item that\n"
             "raises Chansey's\n"
@@ -9581,7 +9585,9 @@ const struct Item gItemsInfo[] =
     #else
         .price = 100,
     #endif
-        .holdEffect = HOLD_EFFECT_SCOPE_LENS,
+        // DETERMINISTIC_CRITICAL_HITS
+        // .holdEffect = HOLD_EFFECT_SCOPE_LENS,
+        .holdEffect = HOLD_EFFECT_CRITICAL_UP,
         .description = COMPOUND_STRING(
             "A hold item that\n"
             "improves the\n"
@@ -9632,7 +9638,9 @@ const struct Item gItemsInfo[] =
         .price = 200,
     #endif
         .holdEffect = HOLD_EFFECT_SHELL_BELL,
-        .holdEffectParam = 8,
+        // BUFF_SHELL_BELL
+        // .holdEffectParam = 8,
+        .holdEffectParam = 4,
         .description = COMPOUND_STRING(
             "A hold item that\n"
             "restores HP upon\n"
@@ -10096,7 +10104,9 @@ const struct Item gItemsInfo[] =
     #else
         .price = 2100,
     #endif
-        .holdEffect = HOLD_EFFECT_SCOPE_LENS,
+        // DETERMINISTIC_CRITICAL_HITS
+        // .holdEffect = HOLD_EFFECT_SCOPE_LENS,
+        .holdEffect = HOLD_EFFECT_CRITICAL_UP,
         .description = COMPOUND_STRING(
             "A hooked claw that\n"
             "ups the holder's\n"

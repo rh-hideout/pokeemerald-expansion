@@ -721,6 +721,25 @@ static bool32 HandleEndTurnTaunt(u32 battler)
     return effect;
 }
 
+// DETERMINISTIC_ATTRACTION
+static bool32 HandleEndTurnAttract(u32 battler)
+{
+    bool32 effect = FALSE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (gDisableStructs[battler].attractTimer && --gDisableStructs[battler].attractTimer == 0)
+    {
+        gBattleMons[battler].volatiles.infatuation = 0;
+        gBattleScripting.battler = battler;
+        BattleScriptExecute(BattleScript_BufferEndTurn);
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_ATTRACT);
+        effect = TRUE;
+    }
+
+    return effect;
+}
+
 static bool32 HandleEndTurnTorment(u32 battler)
 {
     bool32 effect = FALSE;
@@ -907,12 +926,14 @@ static bool32 HandleEndTurnYawn(u32 battler)
             }
             else
             {
-                if (B_SLEEP_TURNS >= GEN_5)
-                    gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 4));
-                else if (B_SLEEP_TURNS >= GEN_3)
-                    gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 5));
-                else
-                    gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 8));
+                // DETERMINISTIC_SLEEP
+                // if (B_SLEEP_TURNS >= GEN_5)
+                //     gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 4));
+                // else if (B_SLEEP_TURNS >= GEN_3)
+                //     gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 5));
+                // else
+                //     gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 8));
+                gBattleMons[battler].status1 |= 2;
 
                 CancelMultiTurnMoves(battler, SKY_DROP_STATUS_YAWN);
                 TryActivateSleepClause(battler, gBattlerPartyIndexes[battler]);
@@ -1405,6 +1426,8 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_OCTOLOCK] = HandleEndTurnOctolock,
     [ENDTURN_SYRUP_BOMB] = HandleEndTurnSyrupBomb,
     [ENDTURN_TAUNT] = HandleEndTurnTaunt,
+    // DETERMINISTIC_ATTRACTION
+    [ENDTURN_ATTRACT] = HandleEndTurnAttract,
     [ENDTURN_TORMENT] = HandleEndTurnTorment,
     [ENDTURN_ENCORE] = HandleEndTurnEncore,
     [ENDTURN_DISABLE] = HandleEndTurnDisable,

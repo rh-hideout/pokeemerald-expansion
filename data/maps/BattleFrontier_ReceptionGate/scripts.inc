@@ -27,15 +27,17 @@ BattleFrontier_ReceptionGate_EventScript_FirstTimeEntering::
 	end
 
 BattleFrontier_ReceptionGate_EventScript_ScottScene::
-	msgbox BattleFrontier_ReceptionGate_Text_WelcomeToBattleFrontier, MSGBOX_DEFAULT
-	msgbox BattleFrontier_ReceptionGate_Text_IssueFrontierPass, MSGBOX_DEFAULT
+	@ SKIP_CHATTY_NPCS
+	@ msgbox BattleFrontier_ReceptionGate_Text_WelcomeToBattleFrontier, MSGBOX_DEFAULT
+	@ msgbox BattleFrontier_ReceptionGate_Text_IssueFrontierPass, MSGBOX_DEFAULT
 	playfanfare MUS_OBTAIN_ITEM
 	message BattleFrontier_ReceptionGate_Text_ObtainedFrontierPass
 	waitfanfare
 	waitmessage
 	msgbox BattleFrontier_ReceptionGate_Text_PlacedTrainerCardInFrontierPass, MSGBOX_DEFAULT
 	setflag FLAG_SYS_FRONTIER_PASS
-	msgbox BattleFrontier_ReceptionGate_Text_EnjoyBattleFrontier, MSGBOX_DEFAULT
+	@ SKIP_CHATTY_NPCS
+	@ msgbox BattleFrontier_ReceptionGate_Text_EnjoyBattleFrontier, MSGBOX_DEFAULT
 	msgbox BattleFrontier_ReceptionGate_Text_IfItIsntPlayerYouCame, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_FRONTIER_RECEPTION_GREETER, Common_Movement_WalkInPlaceFasterUp

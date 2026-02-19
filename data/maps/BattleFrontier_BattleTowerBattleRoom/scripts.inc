@@ -52,7 +52,8 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_DefeatedOpponent::
 	call BattleFrontier_EventScript_IncrementWinStreak
 	tower_setbattlewon
 	switch VAR_RESULT
-	case 7, BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobbyWon
+	@ FRONTIER_KEEP_BATTLING
+	@ case 7, BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobbyWon
 	applymovement LOCALID_TOWER_BATTLE_OPPONENT, BattleFrontier_BattleTowerBattleRoom_Movement_OpponentExit
 	waitmovement 0
 	removeobject LOCALID_TOWER_BATTLE_OPPONENT
@@ -66,12 +67,20 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_DefeatedOpponent::
 	playfanfare MUS_HEAL
 	waitfanfare
 	special HealPlayerParty
+	@ FRONTIER_KEEP_BATTLING
+	frontier_givepoints
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_GETPOINTS
 BattleFrontier_BattleTowerBattleRoom_EventScript_AskReadyForOpponent::
 	frontier_getbrainstatus
 	copyvar VAR_TEMP_F, VAR_RESULT
 	goto_if_ne VAR_RESULT, FRONTIER_BRAIN_NOT_READY, BattleFrontier_BattleTowerBattleRoom_EventScript_MaidenUpNext
 	frontier_get FRONTIER_DATA_BATTLE_NUM
-	call BattleFrontier_BattleTowerBattleRoom_EventScript_ReadyForOpponent
+	@ FRONTIER_KEEP_BATTLING
+	addvar VAR_RESULT, 1
+	buffernumberstring 0, VAR_RESULT
+	message BattleFrontier_BattleTowerBattleRoom_Text_ReadyForOpponent
+	waitmessage
+	@ call BattleFrontier_BattleTowerBattleRoom_EventScript_ReadyForOpponent
 	call BattleFrontier_EventScript_GetCantRecordBattle
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleTowerBattleRoom_EventScript_AskReadyForOpponentNoRecord
 	multichoice 19, 4, MULTI_GO_ON_RECORD_REST_RETIRE, TRUE
@@ -127,6 +136,11 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_ContinueChallenge::
 	waitmovement 0
 	goto BattleFrontier_BattleTowerBattleRoom_EventScript_OpponentEnter
 
+@ FRONTIER_KEEP_BATTLING
+BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobbyPaused::
+	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED
+	goto BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobby
+
 BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobbyWon::
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_WON
 	tower_set TOWER_DATA_LVL_MODE
@@ -140,8 +154,10 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_PauseChallenge::
 	tower_save CHALLENGE_STATUS_PAUSED
 	playse SE_SAVE
 	waitse
-	fadescreen FADE_TO_BLACK
-	frontier_reset
+	@ FRONTIER_KEEP_BATTLING
+	@ fadescreen FADE_TO_BLACK
+	@ frontier_reset
+	goto BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobbyPaused
 	end
 
 BattleFrontier_BattleTowerBattleRoom_EventScript_ReadyForOpponent::
@@ -437,7 +453,7 @@ BattleFrontier_BattleTowerBattleRoom_Text_RestoreMonsToFullHealth:
 	.string "We will restore your POKéMON to\n"
 	.string "full health.$"
 
-@ Unused
+@ FRONTIER_KEEP_BATTLING
 BattleFrontier_BattleTowerBattleRoom_Text_ReadyForOpponent:
 	.string "You will be facing opponent no. {STR_VAR_1}.\n"
 	.string "Are you ready?$"

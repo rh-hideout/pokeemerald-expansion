@@ -1377,6 +1377,9 @@ void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src)
     SetMonData(mon, MON_DATA_SPATK_IV, &value);
     value = src->spDefenseIV;
     SetMonData(mon, MON_DATA_SPDEF_IV, &value);
+    // FRONTIER_MAX_PP
+    u8 maxPP = 0xFF;
+    SetMonData(mon, MON_DATA_PP_BONUSES, &maxPP);
     MonRestorePP(mon);
     CalculateMonStats(mon);
 }
@@ -1439,6 +1442,9 @@ void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPok
     SetMonData(mon, MON_DATA_SPATK_IV, &value);
     value = src->spDefenseIV;
     SetMonData(mon, MON_DATA_SPDEF_IV, &value);
+    // FRONTIER_MAX_PP
+    u8 maxPP = 0xFF;
+    SetMonData(mon, MON_DATA_PP_BONUSES, &maxPP);
     MonRestorePP(mon);
     CalculateMonStats(mon);
 }

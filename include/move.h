@@ -29,7 +29,10 @@ struct AdditionalEffect
     u8 onlyIfTargetRaisedStats:1;
     u8 onChargeTurnOnly:1;
     u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
-    u8 padding:4;
+    // DETERMINISTIC_ADDITIONAL_EFFECTS
+    u8 onlyIfSuperEffective:1;
+    // u8 padding:4;
+    u8 padding:3;
     union PACKED {
         enum WrappedStringID wrapped;
     } multistring;

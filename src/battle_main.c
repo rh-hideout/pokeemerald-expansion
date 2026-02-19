@@ -3432,7 +3432,8 @@ const u8* FaintClearSetData(u32 battler)
                     || gBattleMons[otherSkyDropper].volatiles.confusionTurns
                     || IsBattlerTerrainAffected(otherSkyDropper, ability, GetBattlerHoldEffect(otherSkyDropper), STATUS_FIELD_MISTY_TERRAIN)))
                 {
-                    gBattleMons[otherSkyDropper].volatiles.confusionTurns = ((Random()) % 4) + 2;
+                    // DETERMINISTIC_CONFUSION
+                    gBattleMons[otherSkyDropper].volatiles.confusionTurns = /*((Random()) % 4) + */2;
                     gBattlerAttacker = otherSkyDropper;
                     result = BattleScript_ThrashConfuses;
                 }
@@ -4820,8 +4821,9 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
         speed *= 2;
 
     // paralysis drop
-    if (gBattleMons[battler].status1 & STATUS1_PARALYSIS && ability != ABILITY_QUICK_FEET)
-        speed /= GetConfig(B_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
+    // DETERMINISTIC_PARALYSIS
+    // if (gBattleMons[battler].status1 & STATUS1_PARALYSIS && ability != ABILITY_QUICK_FEET)
+    //     speed /= GetConfig(B_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
 
     if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SWAMP)
         speed /= 4;
@@ -4879,6 +4881,12 @@ s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move)
         priority += 3;
     }
 
+    // DETERMINISTIC_PARALYSIS
+    if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
+    {
+        priority -= 1;
+    }
+
     return priority;
 }
 
@@ -4910,10 +4918,36 @@ s32 GetWhichBattlerFasterArgs(struct BattleContext *ctx, bool32 ignoreChosenMove
             strikesFirst = 1;
         else
         {
+            // DETERMINISTIC_SPEED_TIES
             if (speedBattler1 == speedBattler2)
             {
-                // same speeds, same priorities
-                strikesFirst = 0;
+                if (gBattleMons[ctx->battlerAtk].speed != gBattleMons[ctx->battlerDef].speed)
+                {
+                    strikesFirst = (gBattleMons[ctx->battlerAtk].speed > gBattleMons[ctx->battlerDef].speed) ? 1 : -1;
+                }
+                else
+                {
+                    u32 hpPerc1 = (gBattleMons[ctx->battlerAtk].hp * 100) / gBattleMons[ctx->battlerAtk].maxHP;
+                    u32 hpPerc2 = (gBattleMons[ctx->battlerDef].hp * 100) / gBattleMons[ctx->battlerDef].maxHP;
+                    if (hpPerc1 != hpPerc2)
+                    {
+                        strikesFirst = (hpPerc1 > hpPerc2) ? 1 : -1;
+                    }
+                    else
+                    {
+                        u16 weight1 = gSpeciesInfo[gBattleMons[ctx->battlerAtk].species].weight;
+                        u16 weight2 = gSpeciesInfo[gBattleMons[ctx->battlerDef].species].weight;
+                        if (weight1 != weight2)
+                        {
+                            strikesFirst = (weight1 < weight2) ? 1 : -1;
+                        }
+                        else
+                        {
+                            // same speeds, same priorities
+                            strikesFirst = 0;
+                        }
+                    }
+                }
             }
             else if (speedBattler1 < speedBattler2)
             {
@@ -5301,21 +5335,25 @@ static void TryChangingTurnOrderEffects(struct BattleContext *ctx, u32 *quickCla
 
     // Battler 1
     // Quick Draw
-    if (ability1 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gChosenMoveByBattler[battler1]) && quickDrawRandom[battler1])
+    // DETERMINISTIC_ABILITIES
+    if (ability1 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gChosenMoveByBattler[battler1]) && gDisableStructs[battler1].isFirstTurn/*quickDrawRandom[battler1]*/)
         gProtectStructs[battler1].quickDraw = TRUE;
     // Quick Claw and Custap Berry
+    // DETERMINISTIC_QUICK_CLAW
     if (!gProtectStructs[battler1].quickDraw
-     && ((holdEffectBattler1 == HOLD_EFFECT_QUICK_CLAW && quickClawRandom[battler1])
+     && ((holdEffectBattler1 == HOLD_EFFECT_QUICK_CLAW/* && quickClawRandom[battler1]*/)
      || (holdEffectBattler1 == HOLD_EFFECT_CUSTAP_BERRY && HasEnoughHpToEatBerry(battler1, ability1, 4, gBattleMons[battler1].item))))
         gProtectStructs[battler1].usedCustapBerry = TRUE;
 
     // Battler 2
     // Quick Draw
-    if (ability2 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gChosenMoveByBattler[battler2]) && quickDrawRandom[battler2])
+    // DETERMINISTIC_ABILITIES
+    if (ability2 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gChosenMoveByBattler[battler2]) && gDisableStructs[battler2].isFirstTurn/*quickDrawRandom[battler2]*/)
         gProtectStructs[battler2].quickDraw = TRUE;
     // Quick Claw and Custap Berry
+    // DETERMINISTIC_QUICK_CLAW
     if (!gProtectStructs[battler2].quickDraw
-     && ((holdEffectBattler2 == HOLD_EFFECT_QUICK_CLAW && quickClawRandom[battler2])
+     && ((holdEffectBattler2 == HOLD_EFFECT_QUICK_CLAW/* && quickClawRandom[battler2]*/)
      || (holdEffectBattler2 == HOLD_EFFECT_CUSTAP_BERRY && HasEnoughHpToEatBerry(battler2, ability2, 4, gBattleMons[battler2].item))))
         gProtectStructs[battler2].usedCustapBerry = TRUE;
 }
@@ -5348,7 +5386,8 @@ static void CheckChangingTurnOrderEffects(void)
                     }
                     else
                     {
-                        RecordItemEffectBattle(battler, GetBattlerHoldEffect(battler));
+                        // DETERMINISTIC_QUICK_CLAW
+                        // RecordItemEffectBattle(battler, GetBattlerHoldEffect(battler));
                         BattleScriptExecute(BattleScript_QuickClawActivation);
                     }
                 }
