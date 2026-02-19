@@ -351,6 +351,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
 static void ResetValuesForCalledMove(void);
 static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 static void PlayAnimation(enum BattlerId battler, u8 animId, const u16 *argPtr, const u8 *nextInstr);
+static u32 GetPossibleNextTarget(u32 currTarget);
 
 static void Cmd_attackcanceler(void);
 static void Cmd_accuracycheck(void);
@@ -938,6 +939,7 @@ bool32 ProteanTryChangeType(enum BattlerId battler, enum Ability ability, enum M
 {
       if ((ability == ABILITY_PROTEAN || ability == ABILITY_LIBERO)
          && !gBattleMons[gBattlerAttacker].volatiles.usedProteanLibero
+         && !gBattleStruct->bouncedMoveIsUsed
          && (gBattleMons[battler].types[0] != moveType || gBattleMons[battler].types[1] != moveType
              || (gBattleMons[battler].types[2] != moveType && gBattleMons[battler].types[2] != TYPE_MYSTERY))
          && move != MOVE_STRUGGLE
@@ -1096,7 +1098,7 @@ static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum
 
 	if (abilityAtk == ABILITY_SKILL_LINK || holdEffectAtk == HOLD_EFFECT_LOADED_DICE)
         return TRUE;
-	
+
     if (moveEffect == EFFECT_TRIPLE_KICK || moveEffect == EFFECT_POPULATION_BOMB)
         return FALSE;
 
@@ -1116,7 +1118,7 @@ static bool32 ShouldBypassAccuracyCheckFrlg(void)
         return TRUE;
     }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_POKEDUDE);
+    if (gBattleTypeFlags & BATTLE_TYPE_POKEDUDE)
         return TRUE;
 
     return FALSE;
@@ -1560,7 +1562,7 @@ static void Cmd_attackanimation(void)
         moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(gBattleStruct->moveResultFlags[gBattlerTarget]);
 
     bool32 isAnimDisabled = (gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION)
-                          || gBattleStruct->preAttackAnimPlayed);
+                          || gBattleStruct->attackAnimPlayed);
     if (isAnimDisabled
         && effect != EFFECT_TRANSFORM
         && effect != EFFECT_SUBSTITUTE
@@ -3492,7 +3494,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             	gSideStatuses[i] &= ~SIDE_STATUS_SCREEN_ANY;
             	gBattleScripting.animTurn = 1;
             	gBattleScripting.animTargetsHit = 1;
-            	gBattleStruct->preAttackAnimPlayed = TRUE; // The whole brick break animation is covered by the move so don't play twice
+            	gBattleStruct->attackAnimPlayed = TRUE; // The whole brick break animation is covered by the move so don't play twice
             	BattleScriptPush(battleScript);
             	gBattlescriptCurrInstr = BattleScript_BreakScreens;
         	}
@@ -3546,7 +3548,6 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
 
             if (gBattleStruct->stolenStats[0] != 0)
             {
-                gBattleStruct->preAttackAnimPlayed = FALSE; // if set by the previous move effect, reset it for final Spectral Thief anim
                 BattleScriptPush(battleScript);
                 gBattlescriptCurrInstr = BattleScript_StealStats;
             }
@@ -3583,27 +3584,54 @@ static void Cmd_setpreattackadditionaleffect(void)
 {
     CMD_ARGS();
 
-    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
-    if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
+    if (gBattleStruct->preAttackEffectHappened)
     {
-        const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-        gBattleStruct->additionalEffectsCounter++;
-
-        if (!additionalEffect->preAttackEffect)
-            return;
-
-        SetMoveEffect(
-        	gBattlerAttacker,
-        	additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
-        	additionalEffect->moveEffect,
-        	gBattlescriptCurrInstr,
-        	EFFECT_PRIMARY
-        );
-
+        gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
 
+    while (gEffectBattler != MAX_BATTLERS_COUNT)
+    {
+        u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
+        if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
+        {
+            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            gBattleStruct->additionalEffectsCounter++;
+
+            if (!additionalEffect->preAttackEffect)
+                return;
+
+            if ((gEffectBattler == gBattlerAttacker) != additionalEffect->self)
+                return;
+
+            u32 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), additionalEffect);
+
+            // Activate effect if it's primary (chance == 0) or if RNGesus says so
+            if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
+            {
+                gBattleCommunication[MULTISTRING_CHOOSER] = *((u8 *) &additionalEffect->multistring);
+
+                enum SetMoveEffectFlags flags = NO_FLAGS;
+                if (percentChance == 0) flags |= EFFECT_PRIMARY;
+                if (percentChance >= 100) flags |= EFFECT_CERTAIN;
+
+                SetMoveEffect(
+                    gBattlerAttacker,
+                    gEffectBattler,
+                    additionalEffect->moveEffect,
+                    gBattlescriptCurrInstr,
+                    flags
+                );
+            }
+            return;
+        }
+        gEffectBattler = GetPossibleNextTarget(gEffectBattler);
+        gBattleStruct->additionalEffectsCounter = 0;
+    }
+
+    gEffectBattler = gBattlerAttacker;
     gBattleStruct->additionalEffectsCounter = 0;
+    gBattleStruct->preAttackEffectHappened = TRUE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -3680,13 +3708,11 @@ static void Cmd_setadditionaleffects(void)
                         gBattlescriptCurrInstr,
                         flags
                     );
-
-                    gBattleStruct->additionalEffectsCounter++;
-				    return;
                 }
             }
 
             gBattleStruct->additionalEffectsCounter++;
+            return;
         }
     }
 
@@ -6188,7 +6214,6 @@ static void ResetValuesForCalledMove(void)
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
-    DetermineTarget(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), FALSE);
     ClearDamageCalcResults();
 }
 
@@ -6241,8 +6266,9 @@ static void Cmd_futuresighttargetfailure(void)
 }
 #undef DONE_TARGET_FAILURE
 
-static u32 GetPossibleNextTarget(void)
+static u32 GetPossibleNextTarget(u32 currTarget)
 {
+    u32 i = 0;
     const u8 targetOrder[MAX_BATTLERS_COUNT] = {
         gBattlerAttacker,
         BATTLE_PARTNER(gBattlerAttacker),
@@ -6250,9 +6276,20 @@ static u32 GetPossibleNextTarget(void)
         RIGHT_FOE(gBattlerAttacker),
     };
 
-    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
+    // currTarget allows for a starting point without relying on values for previous targets being set
+    if (currTarget != MAX_BATTLERS_COUNT)
     {
-        enum BattlerId battler = targetOrder[i];
+        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+        {
+            if (targetOrder[i] == currTarget)
+                break;
+        }
+        i++; // next target after finding currTarget
+    }
+
+    while (i < MAX_BATTLERS_COUNT)
+    {
+        enum BattlerId battler = targetOrder[i++];
 
         if (!IsBattlerAlive(battler))
             continue;
@@ -6269,7 +6306,7 @@ static void Cmd_getpossiblenexttarget(void)
 {
     CMD_ARGS(const u8 *jumpInstr);
 
-    u32 nextTarget = GetPossibleNextTarget();
+    u32 nextTarget = GetPossibleNextTarget(MAX_BATTLERS_COUNT);
     if (nextTarget != MAX_BATTLERS_COUNT)
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget;
@@ -6376,18 +6413,15 @@ static void Cmd_removeitem(void)
 {
     CMD_ARGS(u8 battler);
 
-    enum BattlerId battler;
-    enum Item itemId = 0;
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum Item itemId = gBattleMons[battler].item;
 
-    if (gBattleScripting.overrideBerryRequirements)
+    if (gBattleScripting.overrideBerryRequirements || itemId == ITEM_NONE)
     {
-        // bug bite / pluck - don't remove current item
+        // bug bite / pluck / no item - don't remove current item
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
-
-    battler = GetBattlerForBattleScript(cmd->battler);
-    itemId = gBattleMons[battler].item;
 
     // Popped Air Balloon cannot be restored by any means.
     // Corroded items cannot be restored either.
@@ -11533,11 +11567,11 @@ static bool32 CanAbilityPreventStatLoss(enum Ability abilityDef)
     return FALSE;
 }
 
-bool32 CanBurnHitThaw(enum Move move)
+bool32 CanBurnHitThaw(enum Ability abilityAtk, enum Move move)
 {
     u8 i;
 
-    if (GetConfig(CONFIG_BURN_HIT_THAW) >= GEN_6)
+    if (GetConfig(CONFIG_BURN_HIT_THAW) >= GEN_6 && abilityAtk != ABILITY_SHEER_FORCE)
     {
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
         for (i = 0; i < numAdditionalEffects; i++)
@@ -12364,22 +12398,6 @@ void BS_TryTidyUp(void)
     }
 }
 
-void BS_TryTwoTurnMovesPowerHerbFormChange(void)
-{
-    NATIVE_ARGS();
-
-    if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT_DURING_MOVE, GetBattlerAbility(gBattlerAttacker)))
-    {
-        // Doesn't need to set B_ANIM_FORM_CHANGE_INSTANT, as it was already handled on the first turn
-        gBattleScripting.battler = gBattlerAttacker;
-        gBattlescriptCurrInstr = BattleScript_TwoTurnMovesSecondTurnFormChange;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 void BS_TryQuash(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
@@ -12534,9 +12552,8 @@ void BS_SetMagicCoatTarget(void)
     gBattleStruct->attackerBeforeBounce = gBattleScripting.battler = gBattlerAttacker;
     gBattlerAttacker = gBattlerTarget;
     gBattlerTarget = gBattleStruct->attackerBeforeBounce;
-    DetermineTarget(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), FALSE);
     ClearDamageCalcResults();
-    gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
+    gBattleStruct->eventState.atkCanceler = CANCELER_SET_TARGETS;
     gBattleStruct->eventState.atkCancelerBattler = 0;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -13291,7 +13308,6 @@ void BS_SetLastUsedItem(void)
 {
     NATIVE_ARGS(u8 battler);
     gLastUsedItem = gBattleMons[GetBattlerForBattleScript(cmd->battler)].item;
-    gBattleStruct->flingItem = gLastUsedItem;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -14433,62 +14449,6 @@ void BS_TryHealQuarterHealth(void)
         gBattlescriptCurrInstr = cmd->failInstr;    // fail
     else
         gBattlescriptCurrInstr = cmd->nextInstr;   // can heal
-}
-
-void BS_JumpIfUnder200(void)
-{
-    NATIVE_ARGS(const u8 *jumpInstr);
-    // If the Pokemon is less than 200 kg, or weighing less than 441 lbs, then Sky Drop will work. Otherwise, it will fail.
-    if (GetBattlerWeight(gBattlerTarget) < 2000)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_SetSkyDrop(void)
-{
-    NATIVE_ARGS();
-    gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_SKY_DROP;
-    /* skyDropTargets holds the information of who is in a particular instance of Sky Drop.
-       This is needed in the case that multiple Pokemon use Sky Drop in the same turn or if
-       the target of a Sky Drop faints while in the air.*/
-    gBattleStruct->skyDropTargets[gBattlerAttacker] = gBattlerTarget;
-    gBattleStruct->skyDropTargets[gBattlerTarget] = gBattlerAttacker;
-
-    // End any multiturn effects caused by the target except VOLATILE_RAMPAGE_TURNS
-    gBattleMons[gBattlerTarget].volatiles.multipleTurns = 0;
-    gBattleMons[gBattlerTarget].volatiles.uproarTurns = 0;
-    gBattleMons[gBattlerTarget].volatiles.bideTurns = 0;
-    gBattleMons[gBattlerTarget].volatiles.rolloutTimer = 0;
-    gBattleMons[gBattlerTarget].volatiles.furyCutterCounter = 0;
-
-    // End any Follow Me/Rage Powder effects caused by the target
-    if (gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTimer != 0 && gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTarget == gBattlerTarget)
-        gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTimer = 0;
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_ClearSkyDrop(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    // Check to see if the initial target of this Sky Drop fainted before the 2nd turn of Sky Drop.
-    // If so, make the move fail. If not, clear all of the statuses and continue the move.
-    if (gBattleStruct->skyDropTargets[gBattlerAttacker] == SKY_DROP_NO_TARGET)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        gBattleStruct->skyDropTargets[gBattlerAttacker] = SKY_DROP_NO_TARGET;
-        gBattleStruct->skyDropTargets[gBattlerTarget] = SKY_DROP_NO_TARGET;
-        gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_NONE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-
-    // Confuse target if they were in the middle of Petal Dance/Outrage/Thrash when targeted.
-    if (gBattleMons[gBattlerTarget].volatiles.rampageTurns)
-        gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
 }
 
 void BS_SkyDropYawn(void)

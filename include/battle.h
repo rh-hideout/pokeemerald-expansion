@@ -700,8 +700,8 @@ struct BattleStruct
     u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
-    u8 preAttackAnimPlayed:1;
-    u8 padding4:1;
+    u8 attackAnimPlayed:1;
+    u8 preAttackEffectHappened:1;
     u8 magicCoatActive:1;
     u8 magicBounceActive:1;
     u8 moveBouncer;
