@@ -1510,7 +1510,7 @@
 #define FLAG_CTF_HOUVERT_EXAM_FLASHBACK             (SYSTEM_FLAGS + 0x85) // Houvert exam flashback active
 #define FLAG_CTF_HOUVERT_EXAM_RESUME                (SYSTEM_FLAGS + 0x86) // Resume Houvert exam after registration
 #define FLAG_CTF_HOUVERT_EXAM_COMPLETED             (SYSTEM_FLAGS + 0x87) // Houvert exam cleared
-#define FLAG_UNUSED_0x8E8                           (SYSTEM_FLAGS + 0x88) // Unused Flag
+#define FLAG_CTF_HOUVERT_FLASHBACK_INTRO_SEEN       (SYSTEM_FLAGS + 0x88) // Houvert hallway flashback already played
 #define FLAG_UNUSED_0x8E9                           (SYSTEM_FLAGS + 0x89) // Unused Flag
 #define FLAG_UNUSED_0x8EA                           (SYSTEM_FLAGS + 0x8A) // Unused Flag
 #define FLAG_UNUSED_0x8EB                           (SYSTEM_FLAGS + 0x8B) // Unused Flag

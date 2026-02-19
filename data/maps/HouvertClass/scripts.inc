@@ -222,6 +222,7 @@ HouvertClass_EventScript_ReturnFromFlashback::
 	setvar VAR_TEMP_B, 1
 	clearflag FLAG_CTF_HOUVERT_EXAM_RESUME
 	clearflag FLAG_CTF_HOUVERT_EXAM_FLASHBACK
+	clearflag FLAG_CTF_HOUVERT_FLASHBACK_INTRO_SEEN
 	lockall
 	setobjectxy LOCALID_PLAYER, 7, 7
 	applymovement LOCALID_PLAYER, Common_Movement_FaceUp
