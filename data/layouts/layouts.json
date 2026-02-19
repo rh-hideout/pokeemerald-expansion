@@ -4502,14 +4502,14 @@
       "blockdata_filepath": "data/layouts/entryMapFlag5/map.bin"
     },
     {
-      "id": "LAYOUT_HOWER_CLASS",
-      "name": "HowerClass_Layout",
+      "id": "LAYOUT_HOUVERT_CLASS",
+      "name": "HouvertClass_Layout",
       "width": 10,
       "height": 21,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_PokemonSchool",
-      "border_filepath": "data/layouts/HowerClass/border.bin",
-      "blockdata_filepath": "data/layouts/HowerClass/map.bin"
+      "border_filepath": "data/layouts/HouvertClass/border.bin",
+      "blockdata_filepath": "data/layouts/HouvertClass/map.bin"
     },
     {
       "id": "LAYOUT_ENTRY_MAP_FLAG3",

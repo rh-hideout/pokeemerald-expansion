@@ -1199,7 +1199,7 @@ EventScript_VsSeekerChargingDone::
 
 	.include "data/maps/entryMapFlag5/scripts.inc"
 
-	.include "data/maps/HowerClass/scripts.inc"
+	.include "data/maps/HouvertClass/scripts.inc"
 
 	.include "data/maps/entryMapFlag4/scripts.inc"
 

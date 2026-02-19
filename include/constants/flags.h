@@ -1253,9 +1253,9 @@
 #define FLAG_UNUSED_0x4AF                                           0x4AF // Unused Flag
 #define FLAG_UNUSED_0x4B0                                           0x4B0 // Unused Flag
 #define FLAG_UNUSED_0x4B1                                           0x4B1 // Unused Flag
-#define FLAG_UNUSED_0x4B2                                           0x4B2 // Unused Flag
-#define FLAG_UNUSED_0x4B3                                           0x4B3 // Unused Flag
-#define FLAG_UNUSED_0x4B4                                           0x4B4 // Unused Flag
+#define FLAG_CTF_HOUVERT_EXAM_FLASHBACK                             0x4B2 // Houvert exam flashback active
+#define FLAG_CTF_HOUVERT_EXAM_RESUME                                0x4B3 // Resume Houvert exam after registration
+#define FLAG_CTF_HOUVERT_EXAM_COMPLETED                             0x4B4 // Houvert exam cleared
 #define FLAG_UNUSED_0x4B5                                           0x4B5 // Unused Flag
 #define FLAG_UNUSED_0x4B6                                           0x4B6 // Unused Flag
 #define FLAG_UNUSED_0x4B7                                           0x4B7 // Unused Flag
@@ -1281,8 +1281,8 @@
 #define FLAG_FLAG3_CD_PUZZLE_SOLVED                                 0x4CB // Flag 6 CD Puzzle gelöst
 #define FLAG_SONGFLAGROOM_BETRETEN                                  0x4CC // Flag 6 Song Höhle betreten Stein auf 104 entfernt
 #define FLAG_CTF_SONGROOM_ROCK_REMOVED                              0x4CD // Flag 6 Song Höhle Fels entfernt
-#define FLAG_UNUSED_0x4CE                                           0x4CE // Unused Flag
-#define FLAG_UNUSED_0x4CF                                           0x4CF // Unused Flag
+#define FLAG_SECRETARIAT_HIDDEN_DOOR_OPEN                           0x4CE // Hallway secret door revealed
+#define FLAG_HIDE_SECRETARIAT_HINT_NPC                              0x4CF // Hide hallway secret hint NPC
 #define FLAG_UNUSED_0x4D0                                           0x4D0 // Unused Flag
 #define FLAG_UNUSED_0x4D1                                           0x4D1 // Unused Flag
 #define FLAG_UNUSED_0x4D2                                           0x4D2 // Unused Flag

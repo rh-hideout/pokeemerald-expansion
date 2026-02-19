@@ -117,6 +117,16 @@
 #define METATILE_Building_TV_Off  0x002
 #define METATILE_Building_TV_On   0x003
 
+// gTileset_DHBWFLOORS
+#define METATILE_DHBWFLOORS_Wall_Top                 0x605
+#define METATILE_DHBWFLOORS_Wall_Bottom              0x60D
+#define METATILE_DHBWFLOORS_SecretDoor_TopLeft       0x6ED
+#define METATILE_DHBWFLOORS_SecretDoor_TopMid        0x6EE
+#define METATILE_DHBWFLOORS_SecretDoor_TopRight      0x6EF
+#define METATILE_DHBWFLOORS_SecretDoor_BottomLeft    0x6F5
+#define METATILE_DHBWFLOORS_SecretDoor_BottomMid     0x32F6
+#define METATILE_DHBWFLOORS_SecretDoor_BottomRight   0x6F7
+
 // gTileset_Cave
 #define METATILE_Cave_CrackedFloor                       0x22F
 #define METATILE_Cave_CrackedFloor_Hole                  0x206
