@@ -3606,7 +3606,7 @@ static enum MoveEndResult MoveEndRampage(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (gBattleMons[gBattlerAttacker].volatiles.rampageTurns == 0 || B_RAMPAGE_CANCELLING < GEN_5)
+    if (gBattleMons[gBattlerAttacker].volatiles.rampageTurns == 0 || B_RAMPAGE_CONFUSION< GEN_5)
     {
         result = MOVEEND_RESULT_CONTINUE;
     }

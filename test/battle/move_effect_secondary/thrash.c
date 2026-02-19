@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Thrash does not confuse the user if it is canceled on turn 2
 SINGLE_BATTLE_TEST("Thrash confuses the user if it is canceled on turn 3 of 3, Protect")
 {
     GIVEN {
-        ASSUME(B_RAMPAGE_CANCELLING >= GEN_5);
+        ASSUME(B_RAMPAGE_CONFUSION>= GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Thrash confuses the user if it is canceled on turn 3 of 3, P
 SINGLE_BATTLE_TEST("Thrash confuses the user if it is canceled on turn 3 of 3, Immunity")
 {
     GIVEN {
-        ASSUME(B_RAMPAGE_CANCELLING >= GEN_5);
+        ASSUME(B_RAMPAGE_CONFUSION>= GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GENGAR);

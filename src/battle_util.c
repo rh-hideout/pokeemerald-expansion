@@ -1082,19 +1082,20 @@ void CancelMultiTurnMoves(enum BattlerId battler)
     gBattleMons[battler].volatiles.rolloutTimer = 0;
     gBattleMons[battler].volatiles.furyCutterCounter = 0;
 
-    if (B_RAMPAGE_CANCELLING < GEN_5)
+    if (B_RAMPAGE_CONFUSION< GEN_5)
     {
         gLockedMoves[battler] = MOVE_NONE;
         gBattleMons[battler].volatiles.multipleTurns = 0;
         gBattleMons[battler].volatiles.rampageTurns = 0;
     }
-    else if (gBattleMons[battler].volatiles.multipleTurns)
+    else if (gBattleMons[battler].volatiles.rampageTurns > 0)
     {
         gLockedMoves[battler] = MOVE_NONE;
         gBattleMons[battler].volatiles.multipleTurns = FALSE;
     }
 
     // Clear battler's semi-invulnerable bits if they are not held by Sky Drop.
+    // Is the check here needed?
     if (gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
         gBattleMons[battler].volatiles.semiInvulnerable = STATE_NONE;
 

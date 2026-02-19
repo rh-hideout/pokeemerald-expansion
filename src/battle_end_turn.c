@@ -329,7 +329,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_THRASH:
-        if (B_RAMPAGE_CANCELLING < GEN_5
+        if (B_RAMPAGE_CONFUSION< GEN_5
          && gBattleMons[battler].volatiles.rampageTurns
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
         {
