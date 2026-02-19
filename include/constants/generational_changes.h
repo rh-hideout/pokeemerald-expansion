@@ -132,6 +132,7 @@
     F(FOCUS_PUNCH_FAILURE,       focusPunchFailure,       (u32, GEN_COUNT - 1)) \
     F(RAGE_BUILDS,               rageBuilds,              (u32, GEN_COUNT - 1)) \
     F(CHECK_USER_FAILURE,        checkUserFailure,        (u32, GEN_COUNT - 1)) \
+    F(ABSORB_MESSAGE,            absorbMessge,            (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

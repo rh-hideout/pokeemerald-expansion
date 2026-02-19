@@ -270,6 +270,7 @@ void CopyObjectGraphicsInfoToSpriteTemplate(u16 graphicsId, void (*callback)(str
 void MovementType_None(struct Sprite *sprite);
 void MovementType_LookAround(struct Sprite *sprite);
 void MovementType_WanderAround(struct Sprite *sprite);
+void MovementType_WanderAroundSlower(struct Sprite *sprite);
 void MovementType_WanderUpAndDown(struct Sprite *sprite);
 void MovementType_WanderLeftAndRight(struct Sprite *sprite);
 void MovementType_FaceDirection(struct Sprite *sprite);
@@ -335,6 +336,7 @@ u8 MovementType_WanderAround_Step2(struct ObjectEvent *objectEvent, struct Sprit
 u8 MovementType_Wander_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_WanderAround_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_WanderAround_Step5(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WanderAround_Step5Slower(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_WanderAround_Step6(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 enum Direction GetVectorDirection(s16 dx, s16 dy, s16 absdx, s16 absdy);
 enum Direction GetLimitedVectorDirection_SouthNorth(s16 dx, s16 dy, s16 absdx, s16 absdy);

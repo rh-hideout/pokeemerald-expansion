@@ -348,10 +348,10 @@ static void BufferFanClubTrainerName(u8 whichLinkTrainer, u8 whichNPCTrainer)
         break;
 #endif
     case 1:
-        StringCopy(gStringVar1, gText_LtSurge);
+        StringCopy(gStringVar1, sText_LtSurge);
         break;
     case 2:
-        StringCopy(gStringVar1, gText_Koga);
+        StringCopy(gStringVar1, sText_Koga);
         break;
     }
 }
