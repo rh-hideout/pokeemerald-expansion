@@ -1090,10 +1090,6 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         else // set fling item
             gBattleStruct->flingItem = gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
-        break;    
-    case EFFECT_POLTERGEIST:
-        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
-            battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
         if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, GetMoveArgType(ctx->move)))
@@ -1274,8 +1270,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleContext 
             }
             break;
         case EFFECT_POLTERGEIST:
-            if (gBattleMons[battlerDef].item == ITEM_NONE
-             || GetBattlerAbility(battlerDef) == ABILITY_KLUTZ)
+            if (gBattleMons[battlerDef].item == ITEM_NONE)
             {
                 battleScript = BattleScript_ButItFailed;
             }
