@@ -7,6 +7,8 @@
 #include "overworld.h"
 #include "frontier_util.h"
 #include "factory_boss.h"
+#include "factory_boss_team.h"
+#include "factory_reward.h"
 #include "battle_tower.h"
 #include "random.h"
 #include "pokedex.h"
@@ -29,6 +31,7 @@
 #include "constants/trainers.h"
 #include "constants/moves.h"
 #include "constants/items.h"
+#include "constants/pokemon.h"
 #include "constants/factory_pools.h"
 #include "constants/flags.h"
 #include "constants/vars.h"
@@ -37,6 +40,8 @@
 
 static bool8 sPerformedRentalSwap;
 static struct Pokemon sFactoryRewardBuffer;
+static u8 sLastGeneratedFactoryBossId;
+static u8 sPendingFactoryRewardBossId;
 extern const u8 BattleFrontier_BattleFactoryLobby_EventScript_FactoryRewardResumeScript[];
 extern const u8 BattleFrontier_BattleFactoryLobby_EventScript_FactoryRewardSaveAndExitScript[];
 static bool8 sFactoryPoolsReady = FALSE;
@@ -72,8 +77,6 @@ static void GiveRewardMonFromParty();
 static void CB2_SelectReward();
 static void CB2_GiveReward();
 static bool8 CanUseFactoryBrainMonId(u16 monId, s32 partyCount, const u16 *species, const u16 *heldItems);
-static bool8 CanUseBossAceMonIdForSlot(u16 monId, s32 aceSlot, const u16 *species, const u16 *heldItems);
-static u16 ChooseBossAceMonId(const struct FactoryBossProfile *bossProfile);
 
 // Number of moves needed on the team to be considered using a certain battle style
 static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
@@ -272,6 +275,8 @@ static void InitFactoryChallenge(void) {
 
     SetDynamicWarp(0, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, WARP_ID_NONE);
     TRAINER_BATTLE_PARAM.opponentA = 0;
+    sLastGeneratedFactoryBossId = FACTORY_BOSS_NONE;
+    sPendingFactoryRewardBossId = FACTORY_BOSS_NONE;
     SetFactoryDebugStevenBossEnabled(FALSE);
 }
 
@@ -775,11 +780,17 @@ void FillFactoryBrainParty(void)
     u16 species[FRONTIER_PARTY_SIZE];
     u16 heldItems[FRONTIER_PARTY_SIZE];
     const struct FactoryBossProfile *bossProfile = GetActiveFactoryBossProfile();
+    sLastGeneratedFactoryBossId = GetActiveFactoryBossId();
     const bool8 hasBossAce = (bossProfile != NULL
         && (bossProfile->acePolicy == FACTORY_BOSS_ACE_SPECIES_ANCHOR_LAST
          || bossProfile->acePolicy == FACTORY_BOSS_ACE_SPECIES_ANCHOR_FIRST)
         && bossProfile->aceSpecies != SPECIES_NONE);
-    const u16 bossAceMonId = hasBossAce ? ChooseBossAceMonId(bossProfile) : 0xFFFF;
+    const u16 bossAceMonId = hasBossAce
+        ? ChooseFactoryBossAceMonId(bossProfile,
+                                    gFacilityTrainerMons,
+                                    gSaveBlock2Ptr->frontier.rentalMons,
+                                    IsBattleFactoryRandomBattlesModeEnabled())
+        : 0xFFFF;
     u8 fixedIV;
     u32 otId;
 
@@ -815,14 +826,23 @@ void FillFactoryBrainParty(void)
             ? 0
             : FRONTIER_PARTY_SIZE - 1;
 
-        if (!CanUseBossAceMonIdForSlot(bossAceMonId, aceSlot, species, heldItems))
+        if (!FactoryBossCanUseAceMonIdForSlot(gFacilityTrainerMons,
+                                              gSaveBlock2Ptr->frontier.rentalMons,
+                                              bossAceMonId,
+                                              aceSlot,
+                                              species,
+                                              heldItems))
             return;
 
-        species[aceSlot] = gFacilityTrainerMons[bossAceMonId].species;
-        heldItems[aceSlot] = gFacilityTrainerMons[bossAceMonId].heldItem;
-        CreateFacilityMon(&gFacilityTrainerMons[bossAceMonId],
-                GetBattleFactoryMonLevel(bossAceMonId), fixedIV, otId, FLAG_FRONTIER_MON_FACTORY,
-                &gEnemyParty[aceSlot]);
+        if (!BuildFactoryBossAceMon(sLastGeneratedFactoryBossId, GetBattleFactoryMonLevel(bossAceMonId), fixedIV, &gEnemyParty[aceSlot]))
+        {
+            CreateFacilityMon(&gFacilityTrainerMons[bossAceMonId],
+                    GetBattleFactoryMonLevel(bossAceMonId), fixedIV, otId, FLAG_FRONTIER_MON_FACTORY,
+                    &gEnemyParty[aceSlot]);
+        }
+
+        species[aceSlot] = GetMonData(&gEnemyParty[aceSlot], MON_DATA_SPECIES);
+        heldItems[aceSlot] = GetMonData(&gEnemyParty[aceSlot], MON_DATA_HELD_ITEM);
     }
 }
 
@@ -852,68 +872,6 @@ static bool8 CanUseFactoryBrainMonId(u16 monId, s32 partyCount, const u16 *speci
     }
 
     return TRUE;
-}
-
-static bool8 CanUseBossAceMonIdForSlot(u16 monId, s32 aceSlot, const u16 *species, const u16 *heldItems)
-{
-    s32 k;
-
-    if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
-        return FALSE;
-
-    for (k = 0; k < ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons); k++)
-    {
-        if (monId == gSaveBlock2Ptr->frontier.rentalMons[k].monId)
-            return FALSE;
-    }
-
-    for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
-    {
-        if (k == aceSlot)
-            continue;
-        if (species[k] == gFacilityTrainerMons[monId].species)
-            return FALSE;
-    }
-
-    for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
-    {
-        if (k == aceSlot)
-            continue;
-        if (heldItems[k] != ITEM_NONE && heldItems[k] == gFacilityTrainerMons[monId].heldItem)
-            return FALSE;
-    }
-
-    return TRUE;
-}
-
-static u16 ChooseBossAceMonId(const struct FactoryBossProfile *bossProfile)
-{
-    s32 i;
-    s32 firstMonId = 0;
-    s32 lastMonId = NUM_FRONTIER_MONS - 1;
-    u16 count = 0;
-    u16 chosenMonId = 0xFFFF;
-
-    if (bossProfile->preferRandbatsPool && IsBattleFactoryRandomBattlesModeEnabled())
-    {
-        firstMonId = FRONTIER_MON_GEN9RANDOMBATTLE_FIRST;
-        lastMonId = FRONTIER_MON_GEN9RANDOMBATTLE_LAST;
-    }
-
-    for (i = firstMonId; i <= lastMonId; i++)
-    {
-        if (gFacilityTrainerMons[i].species != bossProfile->aceSpecies)
-            continue;
-        if (!CanUseFactoryBrainMonId(i, 0, NULL, NULL))
-            continue;
-
-        // Reservoir sample to choose uniformly from all valid Metagross sets.
-        count++;
-        if ((Random() % count) == 0)
-            chosenMonId = i;
-    }
-
-    return chosenMonId;
 }
 
 static const u16 *GetFactoryRentalPool(u8 lvlMode, u8 challengeNum, u16 *poolSize)
@@ -1269,6 +1227,22 @@ void GetOpponentFrontierClassInternal(u8 trainerId)
 
 static void SelectRewardMonFromParty(void)
 {
+    u8 rewardBossId = FACTORY_BOSS_NONE;
+
+    if (TryBuildFactoryRewardFromBoss(GetActiveFactoryBossId(),
+                                      sLastGeneratedFactoryBossId,
+                                      gSaveBlock2Ptr->frontier.lvlMode,
+                                      &sFactoryRewardBuffer,
+                                      &rewardBossId))
+    {
+        sPendingFactoryRewardBossId = rewardBossId;
+        ScriptContext_SetupScript(BattleFrontier_BattleFactoryLobby_EventScript_FactoryRewardResumeScript);
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        return;
+    }
+
+    sPendingFactoryRewardBossId = FACTORY_BOSS_NONE;
+
     // gFactoryRewardMode = TRUE;
     // DoBattleFactorySelectScreen();
     gStarterSelectionOverride = gPlayerParty;
@@ -1309,8 +1283,39 @@ static void CB2_SelectReward(void)
 
 static void CB2_GiveReward(void)
 {
+    bool8 rebuiltBossReward = FALSE;
+    u8 rebuiltPendingBossId = sPendingFactoryRewardBossId;
+
+    rebuiltBossReward = TryRebuildFactoryRewardForGrant(GetActiveFactoryBossId(),
+                                                        sLastGeneratedFactoryBossId,
+                                                        sPendingFactoryRewardBossId,
+                                                        gSaveBlock2Ptr->frontier.lvlMode,
+                                                        &sFactoryRewardBuffer,
+                                                        &rebuiltPendingBossId,
+                                                        NULL);
+    if (!rebuiltBossReward && sPendingFactoryRewardBossId != FACTORY_BOSS_NONE)
+    {
+        DebugPrintfLevel(MGBA_LOG_FATAL, "Failed to rebuild pending boss reward (bossId=%d)", sPendingFactoryRewardBossId);
+        AGB_ASSERT(FALSE);
+    }
+    sPendingFactoryRewardBossId = rebuiltPendingBossId;
+
+    if (!IsFactoryRewardMonValid(&sFactoryRewardBuffer, GetActiveFactoryBossId()))
+    {
+        DebugPrintfLevel(MGBA_LOG_FATAL,
+                         "Reward mon invalid after rebuild check (activeBoss=%d lastBoss=%d pendingBoss=%d rebuilt=%d)",
+                         GetActiveFactoryBossId(),
+                         sLastGeneratedFactoryBossId,
+                         sPendingFactoryRewardBossId,
+                         rebuiltBossReward);
+        ScriptContext_SetupScript(BattleFrontier_BattleFactoryLobby_EventScript_FactoryRewardSaveAndExitScript);
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        return;
+    }
+
     u8 result = GiveMonToPlayer(&sFactoryRewardBuffer);
     DebugPrintf("GiveMonToPlayer: %d", result);
+    sPendingFactoryRewardBossId = FACTORY_BOSS_NONE;
 
     u16 species = GetMonData(&sFactoryRewardBuffer, MON_DATA_SPECIES);
     u16 nationalDexNum = SpeciesToNationalPokedexNum(species);
