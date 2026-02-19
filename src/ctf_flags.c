@@ -8,7 +8,7 @@
 
 #define CTF_STATIC_FLAG_COUNT CTF_FLAG_TUTORIAL
 
-static const u8 sFlagWords[CTF_STATIC_FLAG_COUNT][PLAYER_NAME_LENGTH + 1] =
+static const u8 sFlagWords[][PLAYER_NAME_LENGTH + 1] =
 {
     // ACHTUNG: Die Flags müssen <=7 lang sein!
     _("ALGEBRA"),   // 1 Gym 1
@@ -23,6 +23,8 @@ static const u8 sFlagWords[CTF_STATIC_FLAG_COUNT][PLAYER_NAME_LENGTH + 1] =
     _("RKTSNC"), // 10 Finale Farmer
     _("STADIUM"), // 11 Klassenzimmer Finale
 };
+
+#define CTF_STATIC_FLAG_COUNT ARRAY_COUNT(sFlagWords)
 
 #define ENROLLMENT_INPUT_BUFFER  (PLAYER_NAME_LENGTH + 16)
 #define ENROLLMENT_CODE_STR_SIZE 9
