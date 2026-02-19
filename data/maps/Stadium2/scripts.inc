@@ -25,6 +25,7 @@ Stadium2_OnTransition:
     @ OnTransition nur vorbereiten (kein msgbox / keine Bewegungen)
     goto_if_set FLAG_STADIUM2_SCENE_DONE, Stadium2_OnTransition_End
     setvar VAR_TEMP_0, 0
+	turnobject LOCALID_PLAYER, DIR_NORTH
     end
 
 Stadium2_OnTransition_End:
@@ -44,6 +45,8 @@ Stadium2_EventScript_Intro::
     setvar VAR_TEMP_0, 1
 
     lockall
+
+	turnobject LOCALID_PLAYER, DIR_NORTH
 
     @ sicherstellen, dass die drei oben richtig schauen
     turnobject LOCALID_S_JESSIE, DIR_NORTH

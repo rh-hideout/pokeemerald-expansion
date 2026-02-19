@@ -71,8 +71,8 @@ Klassenzimmer_Movement_PlayerToSeat:
 
 
 Klassenzimmer_Text_Welcome:
-	.string "Ahh {PLAYER}, we waited\n"
-	.string "especially for you.$"
+	.string "PROF. FARMER: Ahh {PLAYER},\n"
+	.string "we waited especially for you.$"
 
 Klassenzimmer_Text_Museum:
 	.string "PROF. FARMER: Today we will\n"

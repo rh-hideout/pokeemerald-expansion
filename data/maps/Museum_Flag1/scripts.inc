@@ -138,6 +138,7 @@ Museum_Flag1_EventScript_RocketCutscene::
     setobjectxy LOCALID_MUSEUM_JAMES,  ROCKET_SPAWN_X, JAMES_SPAWN_Y
 
 	special DrawWholeMapView
+    playbgm MUS_RG_ENCOUNTER_ROCKET, TRUE
 
     turnobject LOCALID_MUSEUM_JESSIE, DIR_WEST
     turnobject LOCALID_MUSEUM_JAMES,  DIR_WEST
@@ -151,9 +152,11 @@ Museum_Flag1_EventScript_RocketCutscene::
     msgbox Museum_Flag1_Text_RocketDialog, MSGBOX_DEFAULT
     closemessage
 
-    @ NICHT verschwinden -> jetzt ansprechbar
-    releaseall
-    end
+    @ Spieler automatisch 2 Felder nach rechts
+    applymovement LOCALID_PLAYER, Museum_Flag1_Movement_PlayerAutoToBattle
+    waitmovement 0
+    turnobject LOCALID_PLAYER, DIR_EAST
+    goto Museum_Flag1_Rockets_AutoBattle
 
 
 Museum_Flag1_Movement_RocketEnter:
@@ -174,6 +177,47 @@ Museum_Flag1_Movement_StudentEnter:
     walk_left
     step_end
 
+Museum_Flag1_Movement_PlayerAutoToBattle:
+    walk_right
+    walk_right
+    step_end
+
+
+@ --------------------------------------------------------------------------
+@ AUTO-BATTLE nach Cutscene (wie Ansprechen, aber ohne freie Bewegung)
+@ --------------------------------------------------------------------------
+Museum_Flag1_Rockets_AutoBattle:
+    checktrainerflag TRAINER_ROCKET_DUO
+    goto_if_eq VAR_RESULT, 1, Museum_Flag1_Rockets_Auto_End
+
+    getpartysize
+    goto_if_lt VAR_RESULT, 2, Museum_Flag1_Rockets_Auto_NotEnoughMons
+
+    turnobject LOCALID_PLAYER, DIR_EAST
+    msgbox Museum_Flag1_Text_RocketPreBattle, MSGBOX_DEFAULT
+    closemessage
+
+    turnobject LOCALID_PLAYER, DIR_EAST
+    msgbox Museum_Flag1_Text_RocketBattleStart, MSGBOX_DEFAULT
+    closemessage
+
+    @ WICHTIG: no-intro battle script, aber als DOUBLE (isDoubleBattle = TRUE)
+    trainerbattle TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT, LOCALID_MUSEUM_JESSIE, TRAINER_ROCKET_DUO, NULL, Museum_Flag1_Text_RocketDefeated, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, Museum_Flag1_Text_NotEnoughMons, TRUE, TRUE, FALSE, FALSE
+
+    @ Nach dem Kampf hier weiter (PostBattleScript = nächste Instruktion)
+    goto Museum_Flag1_EventScript_Rockets_AfterBattle
+
+
+Museum_Flag1_Rockets_Auto_NotEnoughMons:
+    msgbox Museum_Flag1_Text_NotEnoughMons, MSGBOX_DEFAULT
+    releaseall
+    end
+
+Museum_Flag1_Rockets_Auto_End:
+    releaseall
+    end
+
+
 
 @ --------------------------------------------------------------------------
 @ ROCKETS: Ansprechen -> Text -> DOUBLE Kampf 
@@ -183,33 +227,33 @@ Museum_Flag1_EventScript_Rockets::
     lockall
     faceplayer
 
-    @ schon besiegt?
     checktrainerflag TRAINER_ROCKET_DUO
     goto_if_eq VAR_RESULT, 1, Museum_Flag1_Rockets_AlreadyGone
 
-    @ Double-Battle requires 2 Pokémon -> sonst kein trainerbattle call (sonst Softlock-Risiko)
-	getpartysize
-	goto_if_lt VAR_RESULT, 2, Museum_Flag1_Rockets_NotEnoughMons
-
+    getpartysize
+    goto_if_lt VAR_RESULT, 2, Museum_Flag1_Rockets_NotEnoughMons
 
     msgbox Museum_Flag1_Text_RocketPreBattle, MSGBOX_DEFAULT
     closemessage
 
-    @ Startet Double Battle; Defeat-Text kommt nach Sieg im Battle,
-    @ danach springt das Spiel in AfterBattle.
-    trainerbattle_double TRAINER_ROCKET_DUO, Museum_Flag1_Text_RocketBattleStart, Museum_Flag1_Text_RocketDefeated, Museum_Flag1_Text_NotEnoughMons, Museum_Flag1_EventScript_Rockets_AfterBattle
-    end
+    turnobject LOCALID_PLAYER, DIR_EAST
+    msgbox Museum_Flag1_Text_RocketBattleStart, MSGBOX_DEFAULT
+    closemessage
+
+    trainerbattle TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT, LOCALID_MUSEUM_JESSIE, TRAINER_ROCKET_DUO, NULL, Museum_Flag1_Text_RocketDefeated, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, Museum_Flag1_Text_NotEnoughMons, TRUE, TRUE, FALSE, FALSE
+    goto Museum_Flag1_EventScript_Rockets_AfterBattle
+
 
 Museum_Flag1_Rockets_NotEnoughMons:
     msgbox Museum_Flag1_Text_NotEnoughMons, MSGBOX_DEFAULT
     releaseall
     end
 
-
 Museum_Flag1_Rockets_AlreadyGone:
     msgbox Museum_Flag1_Text_RocketsGone, MSGBOX_DEFAULT
     releaseall
     end
+
 
 
 @ --------------------------------------------------------------------------
@@ -236,16 +280,23 @@ Museum_Flag1_EventScript_Rockets_AfterBattle::
     removeobject LOCALID_MUSEUM_JESSIE
     removeobject LOCALID_MUSEUM_JAMES
 
+    fadedefaultbgm
+
     @ TM drop (Itemball erscheint)
-	clearflag FLAG_CTF_MUSEUM_TM_TAKEN
-	addobject OBJ_MUSEUM_TM
+    clearflag FLAG_CTF_MUSEUM_TM_TAKEN
+    addobject OBJ_MUSEUM_TM
     special DrawWholeMapView
+
+    @ Spieler schaut JETZT nach links (erst nach dem Kampf + Rockets weg)
+    turnobject LOCALID_PLAYER, DIR_WEST
+    msgbox Museum_Flag1_Text_FarmerAfterRocket, MSGBOX_DEFAULT
+    closemessage
 
     @ Jetzt Studentin rein + Dialog
     clearflag FLAG_HIDE_MUSEUM_FLAG1_STUDENT
-	addobject LOCALID_MUSEUM_STUDENT
+    addobject LOCALID_MUSEUM_STUDENT
     setobjectxy LOCALID_MUSEUM_STUDENT, STUDENT_SPAWN_X, STUDENT_SPAWN_Y
-	special DrawWholeMapView
+    special DrawWholeMapView
     turnobject LOCALID_MUSEUM_STUDENT, DIR_WEST
 
     applymovement LOCALID_MUSEUM_STUDENT, Museum_Flag1_Movement_StudentEnter
@@ -255,6 +306,7 @@ Museum_Flag1_EventScript_Rockets_AfterBattle::
     closemessage
 
     setflag FLAG_CTF_MUSEUM_ROCKET_SCENE_DONE
+
 
 Museum_Flag1_Rockets_End:
     releaseall
@@ -317,6 +369,8 @@ Museum_Flag1_Terminal_Correct:
     closemessage
 
     setflag FLAG_CTF_MUSEUM_DOOR_OPEN
+    playse SE_DOOR
+    waitse
     call Museum_Flag1_EventScript_ApplyDoorOpen
     special DrawWholeMapView
 
@@ -479,27 +533,35 @@ Museum_Flag1_Text_Girl:
 
 
 Museum_Flag1_Text_Sign_M:
-	.string "M$"
+	.string "O$"
 
 Museum_Flag1_Text_Sign_X:
-	.string "X$"
+	.string "Z$"
 
 Museum_Flag1_Text_Sign_S:
-	.string "S$"
+	.string "F$"
 
 Museum_Flag1_Text_Sign_Q:
-	.string "Q$"
+	.string "U$"
 
 Museum_Flag1_Text_Sign_N:
-	.string "N$"
+	.string "P$"
 
 Museum_Flag1_Text_Sign_D:
-	.string "D$"
+	.string "S$"
 
 Museum_Flag1_Text_Roman:
     .string "The only picture that TEAM ROCKET\n"
 	.string "did not destroy. It shows a Roman\p"
 	.string "general.$"
 
+Museum_Flag1_Text_FarmerAfterRocket:
+	.string "PROF. FARMER: Perfect, {PLAYER},\n"
+	.string "you managed to scare them away,\p"
+	.string "and they left the MATHALYZER here.\p"
+	.string "Talk to me to heal your POKéMON.$"
+
+Museum_Flag1_Text_Empty:
+    .string "$"
 
 
