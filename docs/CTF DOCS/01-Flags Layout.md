@@ -50,7 +50,7 @@ Pokemon fights between semesters are enforced by walking from DHBW to Jungbusch 
 
 
 
-### Flag4 (ASHGASH)
+### Flag4 (Schultheis? Senta?)
 - Story hinted auf Savegame
 - Obfuskation von Flagge in savegame
 - Flaggename: {is_it_save?}
