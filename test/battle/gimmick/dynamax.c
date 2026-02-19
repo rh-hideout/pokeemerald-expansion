@@ -1710,5 +1710,58 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
     }
 }
 
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, even if it faints the foe")
+{
+    s16 damage1, damage2;
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_FINALE, MOVE_EFFECT_HEAL_TEAM));
+        PLAYER(SPECIES_ALCREMIE) { HP(1); GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_MILCERY) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET)
+        OPPONENT(SPECIES_WOBBUFFET)
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_MOONBLAST, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        MESSAGE("Alcremie used G-Max Finale!");
+        HP_BAR(playerLeft, captureDamage: &damage1);
+        HP_BAR(playerRight, captureDamage: &damage2);
+    } THEN {
+        EXPECT_MUL_EQ(-damage1, Q_4_12(6), playerLeft->maxHP); // heals based on Dynamax HP
+        EXPECT_MUL_EQ(-damage2, Q_4_12(6), playerRight->maxHP);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of the time, even if it faints the foe")
+{
+    PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        PLAYER(SPECIES_SNORLAX) { Item(ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_APICOT_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_APICOT_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET)
+        OPPONENT(SPECIES_WOBBUFFET)
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_STUFF_CHEEKS); \
+               MOVE(playerRight, MOVE_STUFF_CHEEKS); \
+               MOVE(opponentLeft, MOVE_STUFF_CHEEKS); \
+               MOVE(opponentRight, MOVE_STUFF_CHEEKS); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        // turn 1
+        MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
+        MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
+        MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
+        MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
+        // turn 2
+        MESSAGE("Snorlax used G-Max Replenish!");
+        MESSAGE("Snorlax found one Apicot Berry!");
+        MESSAGE("Munchlax found one Apicot Berry!");
+    }
+}
+
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-lowering Max Moves, without showing a message")
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-increasing Max Moves, without showing a message")
