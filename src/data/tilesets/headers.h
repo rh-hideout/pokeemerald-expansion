@@ -853,14 +853,17 @@ const struct Tileset gTileset_dhbw_gebaeude =
     .callback = NULL,
 };
 
-const struct Tileset gTileset_FRLG_SSANNE =
+
+
+
+const struct Tileset gTileset_wasserturm =
 {
     .isCompressed = TRUE,
     .isSecondary = TRUE,
-    .tiles = gTilesetTiles_FRLG_SSANNE,
-    .palettes = gTilesetPalettes_FRLG_SSANNE,
-    .metatiles = gMetatiles_FRLG_SSANNE,
-    .metatileAttributes = gMetatileAttributes_FRLG_SSANNE,
+    .tiles = gTilesetTiles_wasserturm,
+    .palettes = gTilesetPalettes_wasserturm,
+    .metatiles = gMetatiles_wasserturm,
+    .metatileAttributes = gMetatileAttributes_wasserturm,
     .callback = NULL,
 };
 

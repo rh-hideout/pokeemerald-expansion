@@ -22,6 +22,11 @@
       "map": "MAP_ZWISCHENSTUECK",
       "offset": 0,
       "direction": "right"
+    },
+    {
+      "map": "MAP_SECKENHEIMER_LANDSTRASSE",
+      "offset": 4,
+      "direction": "up"
     }
   ],
   "object_events": [

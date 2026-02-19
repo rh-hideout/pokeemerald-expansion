@@ -58,7 +58,7 @@ SongFlagRoom_Text_Hiker:
 	.string "Almost like a melody.$"
 
 SongFlagRoom_Text_TerminalPrompt::
-    .string "Enter access code.$"
+    .string "Enter the Flag.$"
 
 SongFlagRoom_Text_TerminalWrong::
     .string "ACCESS DENIED.$"

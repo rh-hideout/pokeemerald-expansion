@@ -4534,10 +4534,10 @@
     {
       "id": "LAYOUT_ENTRY_MAP_FLAG8",
       "name": "entryMapFlag8_Layout",
-      "width": 20,
-      "height": 20,
+      "width": 40,
+      "height": 40,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_Mossdeep",
       "border_filepath": "data/layouts/entryMapFlag8/border.bin",
       "blockdata_filepath": "data/layouts/entryMapFlag8/map.bin"
     },
@@ -4645,7 +4645,7 @@
       "id": "LAYOUT_ZWISCHENSTUECK",
       "name": "Zwischenstueck_Layout",
       "width": 20,
-      "height": 20,
+      "height": 21,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/Zwischenstueck/border.bin",
@@ -4770,6 +4770,156 @@
       "secondary_tileset": "gTileset_PokemonSchool",
       "border_filepath": "data/layouts/ClassroomOpeninTop/border.bin",
       "blockdata_filepath": "data/layouts/ClassroomOpeninTop/map.bin"
+    },
+    {
+      "id": "LAYOUT_LAGERHALLE",
+      "name": "Lagerhalle_Layout",
+      "width": 30,
+      "height": 15,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Facility",
+      "border_filepath": "data/layouts/Lagerhalle/border.bin",
+      "blockdata_filepath": "data/layouts/Lagerhalle/map.bin"
+    },
+    {
+      "id": "LAYOUT_LU_TRANSFER",
+      "name": "LuTransfer_Layout",
+      "width": 20,
+      "height": 50,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Slateport",
+      "border_filepath": "data/layouts/LuTransfer/border.bin",
+      "blockdata_filepath": "data/layouts/LuTransfer/map.bin"
+    },
+    {
+      "id": "LAYOUT_BRIDGEROOM",
+      "name": "Bridgeroom_Layout",
+      "width": 15,
+      "height": 10,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/Bridgeroom/border.bin",
+      "blockdata_filepath": "data/layouts/Bridgeroom/map.bin"
+    },
+    {
+      "id": "LAYOUT_BLACKHANSA_FINALE",
+      "name": "BlackhansaFinale_Layout",
+      "width": 15,
+      "height": 15,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/BlackhansaFinale/border.bin",
+      "blockdata_filepath": "data/layouts/BlackhansaFinale/map.bin"
+    },
+    {
+      "id": "LAYOUT_FINALE_FARMER",
+      "name": "FinaleFarmer_Layout",
+      "width": 34,
+      "height": 23,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_BattlePyramid",
+      "border_filepath": "data/layouts/FinaleFarmer/border.bin",
+      "blockdata_filepath": "data/layouts/FinaleFarmer/map.bin"
+    },
+    {
+      "id": "LAYOUT_QUADRATE",
+      "name": "Quadrate_Layout",
+      "width": 30,
+      "height": 30,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Rustboro",
+      "border_filepath": "data/layouts/Quadrate/border.bin",
+      "blockdata_filepath": "data/layouts/Quadrate/map.bin"
+    },
+    {
+      "id": "LAYOUT_SECKENHEIMER_LANDSTRASSE",
+      "name": "SeckenheimerLandstrasse_Layout",
+      "width": 16,
+      "height": 36,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Rustboro",
+      "border_filepath": "data/layouts/SeckenheimerLandstrasse/border.bin",
+      "blockdata_filepath": "data/layouts/SeckenheimerLandstrasse/map.bin"
+    },
+    {
+      "id": "LAYOUT_WALDHOF",
+      "name": "Waldhof_Layout",
+      "width": 30,
+      "height": 30,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_BattleFrontierOutsideWest",
+      "border_filepath": "data/layouts/Waldhof/border.bin",
+      "blockdata_filepath": "data/layouts/Waldhof/map.bin"
+    },
+    {
+      "id": "LAYOUT_WASSERTURM",
+      "name": "Wasserturm_Layout",
+      "width": 14,
+      "height": 10,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_wasserturm",
+      "border_filepath": "data/layouts/Wasserturm/border.bin",
+      "blockdata_filepath": "data/layouts/Wasserturm/map.bin"
+    },
+    {
+      "id": "LAYOUT_WASSERTURM_LOBBY",
+      "name": "WasserturmLobby_Layout",
+      "width": 15,
+      "height": 15,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_BattlePyramid",
+      "border_filepath": "data/layouts/WasserturmLobby/border.bin",
+      "blockdata_filepath": "data/layouts/WasserturmLobby/map.bin"
+    },
+    {
+      "id": "LAYOUT_KLASSENZIMMER_FINALE",
+      "name": "Klassenzimmer_Finale_Layout",
+      "width": 12,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonSchool",
+      "border_filepath": "data/layouts/Klassenzimmer_Finale/border.bin",
+      "blockdata_filepath": "data/layouts/Klassenzimmer_Finale/map.bin"
+    },
+    {
+      "id": "LAYOUT_NECKAR",
+      "name": "Neckar_Layout",
+      "width": 10,
+      "height": 60,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_BattleFrontierOutsideWest",
+      "border_filepath": "data/layouts/Neckar/border.bin",
+      "blockdata_filepath": "data/layouts/Neckar/map.bin"
+    },
+    {
+      "id": "LAYOUT_STADIUM1",
+      "name": "Stadium1_Layout",
+      "width": 29,
+      "height": 30,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/Stadium1/border.bin",
+      "blockdata_filepath": "data/layouts/Stadium1/map.bin"
+    },
+    {
+      "id": "LAYOUT_STADIUM2",
+      "name": "Stadium2_Layout",
+      "width": 15,
+      "height": 15,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_EliteFour",
+      "border_filepath": "data/layouts/Stadium2/border.bin",
+      "blockdata_filepath": "data/layouts/Stadium2/map.bin"
+    },
+    {
+      "id": "LAYOUT_STADIUM3",
+      "name": "Stadium3_Layout",
+      "width": 10,
+      "height": 10,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonDayCare",
+      "border_filepath": "data/layouts/Stadium3/border.bin",
+      "blockdata_filepath": "data/layouts/Stadium3/map.bin"
     }
   ]
 }

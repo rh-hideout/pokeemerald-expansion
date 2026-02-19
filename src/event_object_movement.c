@@ -526,6 +526,7 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_Lugia,                 OBJ_EVENT_PAL_TAG_LUGIA},
     {gObjectEventPal_RubySapphireBrendan,   OBJ_EVENT_PAL_TAG_RS_BRENDAN},
     {gObjectEventPal_RubySapphireMay,       OBJ_EVENT_PAL_TAG_RS_MAY},
+    //CTF
     {gObjectEventPal_CtfTerminal,           OBJ_EVENT_PAL_TAG_CTF_TERMINAL},
     {gObjectEventPal_Jessie,                OBJ_EVENT_PAL_TAG_JESSIE},
     {gObjectEventPal_James,                 OBJ_EVENT_PAL_TAG_JAMES},
@@ -533,6 +534,9 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_Dollarsign,            OBJ_EVENT_PAL_TAG_DOLLARSIGN},
     {gObjectEventPal_Unsichtbar,            OBJ_EVENT_PAL_TAG_UNSICHTBAR},
     {gObjectEventPal_Houvert,                OBJ_EVENT_PAL_TAG_HOUVERT},
+    {gObjectEventPal_OfficerM,              OBJ_EVENT_PAL_TAG_OFFICER_M},
+    {gObjectEventPal_OfficerF,              OBJ_EVENT_PAL_TAG_OFFICER_F},
+    {gObjectEventPal_Train,                 OBJ_EVENT_PAL_TAG_TRAIN},
 
 #if OW_FOLLOWERS_POKEBALLS
     {gObjectEventPal_MasterBall,            OBJ_EVENT_PAL_TAG_BALL_MASTER},

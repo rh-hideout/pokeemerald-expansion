@@ -15559,7 +15559,7 @@ const struct Item gItemsInfo[] =
 
     
 
-     [ITEM_CUT_TOOL] =
+    [ITEM_CUT_TOOL] =
     {
         .name = ITEM_NAME("Cut Item"),
         .price = 0,
@@ -15593,7 +15593,7 @@ const struct Item gItemsInfo[] =
 
     [ITEM_SURF_TOOL] =
     {
-        .name = ITEM_NAME("Lapras Tube"),
+        .name = ITEM_NAME("Surfboard"),
         .price = 0,
         .description = COMPOUND_STRING(
             "An item that lets\n"
@@ -15685,6 +15685,37 @@ const struct Item gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_Dive,
         .iconPic = gItemIcon_QuestionMark,
         .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_SECRET_PHOTO] =
+    {
+        .name = ITEM_NAME("Secret Photo"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A mysterious photo.\n"
+            "Press B to close."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseCB_SecretPhoto,   // <-- unser Viewer-Callback
+        .iconPic = gItemIcon_TownMap,            // Platzhalter (erstmal)
+        .iconPalette = gItemIconPalette_TownMap, // Platzhalter (erstmal)
+    },
+
+    [ITEM_GAME_BOY_CART] =
+    {
+        .name = ITEM_NAME("GameBoy Cartridge"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A GameBoy Cartridge\n"
+            "with NOTE\n"
+            "written on it."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_GameBoyCart,
+        .iconPic = gItemIcon_Drive,
+        .iconPalette = gItemIconPalette_DouseDrive,
     },
 };
 

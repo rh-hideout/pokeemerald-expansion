@@ -1,0 +1,101 @@
+# CTF-Komplettlösung: Verstecktes PNG aus der GBA-ROM extrahieren (Hex-Editor / ImHex)
+
+Diese Anleitung zeigt, wie du ein in einer GBA-ROM eingebettetes PNG manuell extrahierst, **ohne Skripte**, nur mit einem Hex-Editor (z. B. **ImHex**).  
+In der ROM existieren Marker-Strings:
+
+- `TEAM_ROCKET_RANSOM_LETTER_START`
+- `TEAM_ROCKET_RANSOM_LETTER_END`
+
+Zwischen diesen Markern liegt ein **vollständiges PNG** als roher Byte-Block.
+
+---
+
+## Was du suchen musst
+
+### PNG-Start (Signatur / Header)
+Ein PNG beginnt **immer** mit diesen 8 Bytes:
+
+- Hex: `89 50 4E 47 0D 0A 1A 0A`
+
+### PNG-Ende (IEND-Chunk)
+Ein PNG endet mit dem IEND-Chunk, dessen letzte 12 Bytes üblicherweise so aussehen:
+
+- Hex: `00 00 00 00 49 45 4E 44 AE 42 60 82`
+
+> Wichtig: Du musst **inklusive** dieser 12 Bytes exportieren (das letzte Byte ist `82`).
+
+---
+
+## Schritt-für-Schritt in ImHex
+
+### 1) ROM öffnen
+- Öffne die `.gba` in ImHex (z. B. `myhack.gba`).
+
+### 2) Marker finden (nur zur Orientierung)
+- `Ctrl+F` → **Text/ASCII** → suche nach: `TEAM_ROCKET_RANSOM_LETTER_START`
+- Du landest in der Nähe des eingebetteten Blocks.
+
+### 3) PNG-Start finden (exakter Startpunkt)
+- `Ctrl+F` → **Hex** → suche nach: `89504E470D0A1A0A`
+- Achte darauf, dass du den Treffer **nach** `TEAM_ROCKET_RANSOM_LETTER_START` nimmst.
+- Der Export muss **genau beim Byte `89`** starten.
+
+**Check:**
+- Wenn du ab deinem Start exportierst, müssen die ersten 8 Bytes der exportierten Datei genau das sein:
+  `89 50 4E 47 0D 0A 1A 0A`
+
+Wenn davor z. B. `00 00 ...` oder ASCII wie `43 54 46 ...` kommt, ist der Start falsch.
+
+### 4) PNG-Ende finden (exakter Endpunkt)
+Option A (robuster):
+- Suche zuerst nach dem Textmarker: `TEAM_ROCKET_RANSOM_LETTER_END`
+- Setze den Cursor kurz **vor** diesen Marker
+- Suche dann (Hex) nach: `0000000049454E44AE426082`
+  - Ziel: Das IEND-Muster direkt vor dem Endmarker finden
+
+Option B:
+- Ab PNG-Start vorwärts suchen (Hex): `0000000049454E44AE426082`
+
+Der Export muss **genau beim letzten Byte `82`** enden.
+
+**Check:**
+- Die letzten 12 Bytes der exportierten Datei müssen exakt sein:
+  `00 00 00 00 49 45 4E 44 AE 42 60 82`
+
+---
+
+## Bereich markieren und speichern
+
+### Markierung
+- **Start:** erstes Byte `89` der PNG-Signatur
+- **Ende:** letztes Byte `82` der IEND-Sequenz
+
+### Export (empfohlen)
+- Markiere den kompletten Bereich (Start → Ende)
+- **Edit → Open selection view**
+- Im neuen Tab: **File → Save As…**
+- Speichern zB als: `secret.png` (Name ist egal, .png ist wichtig)
+
+---
+
+## Typische Fehler & Fixes
+
+### Fehler: Datei ist kein PNG / Windows kann es nicht öffnen
+Ursachen:
+1. **Zu früh gestartet** (z. B. beim Marker oder davor)  
+   → Datei beginnt mit `00 00 ...` oder `CTF...` statt `89 50 4E 47 ...`
+2. **Falsches Ende** (zu früh abgeschnitten oder zu viel drangehängt)  
+   → Ende muss mit `... IEND AE 42 60 82` enden
+
+Fix:
+- Start neu auf den **echten PNG-Header** setzen (`89 50 4E 47 ...`)
+- Ende neu auf das **letzte Byte `82`** der IEND-Sequenz setzen
+
+---
+
+## Mini-Validierung (optional, ohne Tools)
+Öffne die exportierte `secret.png` nochmal in ImHex:
+- Anfang muss mit `89 50 4E 47 0D 0A 1A 0A` starten
+- Ende muss mit `00 00 00 00 49 45 4E 44 AE 42 60 82` enden
+
+Wenn beides stimmt, lässt sich das Bild normal öffnen.

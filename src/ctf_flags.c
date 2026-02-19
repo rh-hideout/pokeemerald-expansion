@@ -12,14 +12,16 @@ static const u8 sFlagWords[CTF_STATIC_FLAG_COUNT][PLAYER_NAME_LENGTH + 1] =
 {
     // ACHTUNG: Die Flags müssen <=7 lang sein!
     _("ALGEBRA"),   // 1 Gym 1
-    _("DOZE"),     // 2 Gym 2
-    _("CIPHER"),   // 3 Gym 3
-    _("PACKET"),   // 4 Gym 4
-    _("STACK"),    // 5 Gym 5
+    _("DOZE"),    // 2 Gym 2
+    _("5864"),  // 3 Gym 3
+    _("PACKET"),  // 4 Gym 4
+    _("STACK"),   // 5 Gym 5
     _("SLEEP"),    // 6 Gym 6
-    _("SHELL"),    // 7 Gym 7
-    _("ROOT"),     // 8 Gym 8
-    _("BANG"),     // 9 Tutorial
+    _("SHELL"),   // 7 Gym 7
+    _("SMISH"),    // 8 Gym 8
+    _("BANG"),   // 9 Tutorial
+    _("RKTSNC"), // 10 Finale Farmer
+    _("STADIUM"), // 11 Klassenzimmer Finale
 };
 
 #define ENROLLMENT_INPUT_BUFFER  (PLAYER_NAME_LENGTH + 16)

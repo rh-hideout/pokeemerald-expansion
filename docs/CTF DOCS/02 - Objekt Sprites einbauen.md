@@ -147,10 +147,10 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_James = {
 };
 ~~~
 
-### Wichtige Erkenntnisse aus unserer Fehlersuche
+### Wichtige Erkenntnisse aus der Fehlersuche
 
 #### A) `.size` muss die **gesamte** Sheet-Größe in Bytes sein
-Dein Beispiel-Sheet war **144×32 px** = **9 Frames** à 16×32.
+Das Beispiel-Sheet war **144×32 px** = **9 Frames** à 16×32.
 
 - 16×32 @ 4bpp → `16*32/2 = 256 bytes` pro Frame
 - 9 Frames → `9 * 256 = 2304 bytes`
@@ -185,15 +185,14 @@ Ohne diesen Eintrag kann dein Sprite in Porymap/Engine als “unbekannt” aufta
 
 ---
 
-## 9) Map-Event in Porymap / `map.json`
+## 9) Eventuell bei Grafikfehlern in `Makefile` die Build-Regeln anpassen
 
-Du machst das bereits korrekt:
 
-~~~json
-"graphics_id": "OBJ_EVENT_GFX_JESSIE"
-~~~
+graphics/object_events/pics/people/jessie.4bpp: graphics/object_events/pics/people/jessie.png
+	tools/gbagfx/gbagfx $< $@ -mwidth 2 -mheight 4
 
-Das ist **statisch** (nicht dynamic).
+graphics/object_events/pics/people/james.4bpp: graphics/object_events/pics/people/james.png
+	tools/gbagfx/gbagfx $< $@ -mwidth 2 -mheight 4
 
 ---
 

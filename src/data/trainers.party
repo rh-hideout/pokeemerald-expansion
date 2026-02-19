@@ -3162,18 +3162,7 @@ Sharpedo
 Level: 39
 IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
 
-=== TRAINER_TAKAO ===
-Name: TAKAO
-Class: Black Belt
-Pic: Black Belt
-Gender: Male
-Music: Intense
-Double Battle: No
-AI: Check Bad Move
 
-Machop
-Level: 13
-IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe
 
 === TRAINER_HITOSHI ===
 Name: HITOSHI
@@ -7232,65 +7221,7 @@ Shelgon @ Dragon Fang
 Level: 49
 IVs: 17 HP / 17 Atk / 17 Def / 17 SpA / 17 SpD / 17 Spe
 
-=== TRAINER_AARON ===
-Name: AARON
-Class: Dragon Tamer
-Pic: Dragon Tamer
-Gender: Male
-Music: Intense
-Double Battle: No
-AI: Check Bad Move
 
-Bagon
-Level: 34
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Dragon Breath
-- Headbutt
-- Focus Energy
-- Ember
-
-=== TRAINER_PERRY ===
-Name: PERRY
-Class: Bird Keeper
-Pic: Bird Keeper
-Gender: Male
-Music: Cool
-Double Battle: No
-AI: Check Bad Move
-
-Wingull
-Level: 26
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_HUGH ===
-Name: HUGH
-Class: Bird Keeper
-Pic: Bird Keeper
-Gender: Male
-Music: Cool
-Double Battle: No
-AI: Check Bad Move
-
-Wingull
-Level: 25
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Tropius
-Level: 25
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_PHIL ===
-Name: PHIL
-Class: Bird Keeper
-Pic: Bird Keeper
-Gender: Male
-Music: Cool
-Double Battle: No
-AI: Check Bad Move
-
-Swellow
-Level: 26
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_JARED ===
 Name: JARED
@@ -8956,22 +8887,7 @@ Tentacool
 Level: 11
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_PHILLIP ===
-Name: PHILLIP
-Class: Sailor
-Pic: Sailor
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
 
-Tentacruel
-Level: 44
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Machoke
-Level: 44
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_LEONARD ===
 Name: LEONARD
@@ -9215,23 +9131,7 @@ Spheal
 Level: 33
 IVs: 18 HP / 18 Atk / 18 Def / 18 SpA / 18 SpD / 18 Spe
 
-=== TRAINER_MARLEY ===
-Name: MARLEY
-Class: Cooltrainer
-Pic: Cooltrainer F
-Gender: Female
-Music: Cool
-Items: Hyper Potion
-Double Battle: No
-AI: Basic Trainer
 
-Manectric
-Level: 34
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-- Bite
-- Roar
-- Thunder Wave
-- Thunderbolt
 
 === TRAINER_REYNA ===
 Name: REYNA
@@ -17011,3 +16911,129 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Dragon Breath
 - Dragon Dance
 - Aerial Ace
+
+
+/*-------------------------------------*/
+/*-----------LAGERHALLE----------------*/
+
+
+=== TRAINER_AARON ===
+Name: GRUNT
+Class: Blackhansa
+Pic: Dragon Tamer
+Gender: Male
+Music: Intense
+Double Battle: No
+AI: Check Bad Move
+
+Bagon
+Level: 1
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Dragon Breath
+- Headbutt
+- Focus Energy
+- Ember
+
+=== TRAINER_PERRY ===
+Name: GRUNT
+Class: Blackhansa
+Pic: Bird Keeper
+Gender: Male
+Music: Cool
+Double Battle: No
+AI: Check Bad Move
+
+Wingull
+Level: 1
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_HUGH ===
+Name: GRUNT
+Class: Blackhansa
+Pic: Bird Keeper
+Gender: Male
+Music: Cool
+Double Battle: No
+AI: Check Bad Move
+
+Wingull
+Level: 1
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+=== TRAINER_PHIL ===
+Name: BOSS
+Class: Blackhansa
+Pic: Bird Keeper
+Gender: Male
+Music: Cool
+Double Battle: No
+AI: Check Bad Move
+
+Swellow
+Level: 1
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+
+
+
+/*-------------------------------------*/
+/*-----------Flag FINALE Blackhansa und Farmer----------------*/
+
+=== TRAINER_MARLEY ===
+Name: MARLEY
+Class: Blackhansa
+Pic: Cooltrainer F
+Gender: Female
+Music: Cool
+Items: Hyper Potion
+Double Battle: No
+AI: Basic Trainer
+
+Manectric
+Level: 1
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- MOVE_TERMINAL_FLAG
+- Roar
+- Thunder Wave
+- Thunderbolt
+
+
+=== TRAINER_PHILLIP ===
+Name: FARMER
+Class: Professor
+Pic: Sailor
+Gender: Male
+Music: Male
+Double Battle: No
+AI: Check Bad Move
+
+Tentacruel
+Level: 1
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Machoke
+Level: 1
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+
+
+/*-------------------------------------*/
+/*-----------Flag 8 Bamberger----------------*/
+
+=== TRAINER_TAKAO ===
+Name: BAMBERGER
+Class: Professor
+Pic: Black Belt
+Gender: Male
+Music: Intense
+Double Battle: No
+AI: Check Bad Move
+
+Machop
+Level: 1
+IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe
+
+

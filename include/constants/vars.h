@@ -271,7 +271,7 @@
 #define VAR_CTF_CLASSROOM_TOP_VISITS                     0x40FB
 #define VAR_CTF_CLASSROOM_TOP2_VISITS                    0x40FC
 #define VAR_CTF_ADMIN_OFFICE_VISITS                      0x40FD
-#define VAR_UNUSED_0x40FE                                0x40FE // Unused Var
+#define VAR_KF_STADIUM_SOLVED                            0x40FE // CTF
 #define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
 
 #define VARS_END                                         0x40FF

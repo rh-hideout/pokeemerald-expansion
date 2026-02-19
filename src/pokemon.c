@@ -362,6 +362,8 @@ static const enum NationalDexOrder sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
     HOENN_TO_NATIONAL(RAYQUAZA),
     HOENN_TO_NATIONAL(JIRACHI),
     HOENN_TO_NATIONAL(DEOXYS),
+    HOENN_TO_NATIONAL(I3C_AND),
+    HOENN_TO_NATIONAL(I3C_NAND),
     HOENN_TO_NATIONAL(SUNEON), //CTF
 };
 
@@ -6113,6 +6115,8 @@ u16 GetBattleBGM(void)
         case TRAINER_CLASS_MAGMA_ADMIN:
             return MUS_VS_AQUA_MAGMA;
         case TRAINER_CLASS_TEAM_ROCKET:
+            return MUS_VS_AQUA_MAGMA;
+        case TRAINER_CLASS_BLACKHANSA:
             return MUS_VS_AQUA_MAGMA;
         case TRAINER_CLASS_LEADER:
             return MUS_VS_GYM_LEADER;

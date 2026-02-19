@@ -1364,6 +1364,10 @@ static const struct SpriteFrameImage sPicTable_ApricornTree[] = {
     overworld_frame(gObjectEventPic_ApricornTree, 2, 2, 0),
 };
 
+
+//CTF
+
+
 static const struct SpriteFrameImage sPicTable_CtfTerminal[] = {
     overworld_frame(gObjectEventPic_CtfTerminal, 2, 4, 0),
 };
@@ -1391,4 +1395,20 @@ static const struct SpriteFrameImage sPicTable_Unsichtbar[] = {
 
 static const struct SpriteFrameImage sPicTable_Dollarsign[] = {
     overworld_ascending_frames(gObjectEventPic_Dollarsign, 2, 2),
+};
+
+static const struct SpriteFrameImage sPicTable_OfficerM[] = {
+    overworld_ascending_frames(gObjectEventPic_OfficerM, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_OfficerF[] = {
+    overworld_ascending_frames(gObjectEventPic_OfficerF, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_TrainLeft[] = {
+    overworld_ascending_frames(gObjectEventPic_TrainLeft, 8, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_TrainRight[] = {
+    overworld_ascending_frames(gObjectEventPic_TrainRight, 8, 4),
 };

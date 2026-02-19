@@ -14,8 +14,8 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_ROUTE104",
-      "offset": -29,
+      "map": "MAP_LU_TRANSFER",
+      "offset": 5,
       "direction": "right"
     }
   ],
@@ -112,6 +112,58 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Ludwigshafen_EventScript_Amanda_After",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_GAMEBOY_KID",
+      "x": 12,
+      "y": 17,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Ludwigshafen_EventScript_FakeTradeEvo_HaunterToGengar",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_GAMEBOY_KID",
+      "x": 13,
+      "y": 17,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Ludwigshafen_EventScript_FakeTradeEvo_HaunterToGengar",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BRAWLY",
+      "x": 17,
+      "y": 19,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Ludwigshafen_EventScript_GiftHaunter",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BIG_WAILMER_DOLL",
+      "x": 15,
+      "y": 12,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Ludwigshafen_EventScript_DebugGiftFlagToggle",
+      "flag": "0"
     }
   ],
   "warp_events": [
@@ -119,7 +171,7 @@
       "x": 10,
       "y": 12,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY_BATTLE_TENT_LOBBY",
+      "dest_map": "MAP_GLITCH_HAUS",
       "dest_warp_id": "0"
     },
     {
@@ -201,7 +253,7 @@
       "elevation": 0,
       "var": "VAR_TEMP_0",
       "var_value": "0",
-      "script": "NULL"
+      "script": "Ludwigshafen_EventScript_IntroTrigger"
     },
     {
       "type": "trigger",
@@ -210,7 +262,7 @@
       "elevation": 0,
       "var": "VAR_TEMP_0",
       "var_value": "0",
-      "script": "NULL"
+      "script": "Ludwigshafen_EventScript_IntroTrigger"
     }
   ],
   "bg_events": [

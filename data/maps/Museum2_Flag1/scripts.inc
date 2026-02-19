@@ -84,4 +84,3 @@ Museum2_Flag1_Text_After::
 	.string "PROF. HYVL: Our proof is complete.\n"
 	.string "Keep studying.$"
 
-
