@@ -2804,7 +2804,7 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
         gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
         break;
     case ABILITY_QUARK_DRIVE:
-        if ((fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN) & B_WEATHER_SUN || GetItemHoldEffect(aiItem) == HOLD_EFFECT_BOOSTER_ENERGY)
+        if ((fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN) || GetItemHoldEffect(aiItem) == HOLD_EFFECT_BOOSTER_ENERGY)
             gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         break;
     case ABILITY_PROTOSYNTHESIS:
