@@ -17,7 +17,7 @@ static enum Move GetOriginallyUsedMove(enum Move chosenMove);
 static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect);
 static void TryClearChargeVolatile(enum Type moveType);
 static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler);
-static void RequestNonVolatileChangee(enum BattlerId battlerAtk);
+static void RequestNonVolatileChange(enum BattlerId battlerAtk);
 static bool32 CanBattlerBounceBackMove(struct BattleContext *ctx);
 static bool32 TryMagicBounce(struct BattleContext *ctx);
 static bool32 TryMagicCoat(struct BattleContext *ctx);
@@ -97,6 +97,13 @@ static enum CancelerResult CancelerChillyReception(struct BattleContext *ctx)
     return CANCELER_RESULT_SUCCESS;
 }
 
+static void DefrostBattler(enum BattlerId battler, u32 status)
+{
+    gBattleScripting.battler = battler;
+    gBattleMons[battler].status1 &= ~status;
+    RequestNonVolatileChange(battler);
+}
+
 static enum CancelerResult CancelerAsleepOrFrozen(struct BattleContext *ctx)
 {
     enum CancelerResult result = CANCELER_RESULT_BREAK;
@@ -153,7 +160,7 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleContext *ctx)
                 BattleScriptCall(BattleScript_MoveUsedWokeUp);
             }
         }
-        RequestNonVolatileChangee(ctx->battlerAtk);
+        RequestNonVolatileChange(ctx->battlerAtk);
     }
     else if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_FREEZE && !MoveThawsUser(ctx->move))
     {
@@ -164,12 +171,11 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleContext *ctx)
         }
         else // unfreeze
         {
-            gBattleMons[ctx->battlerAtk].status1 &= ~STATUS1_FREEZE;
+            DefrostBattler(ctx->battlerAtk, STATUS1_FREEZE);
             result = CANCELER_RESULT_BREAK;
-            BattleScriptCall(BattleScript_MoveUsedUnfroze);
+            BattleScriptCall(BattleScript_BattlerDefrosted);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
         }
-        RequestNonVolatileChangee(ctx->battlerAtk);
     }
 
     return result;
@@ -561,35 +567,36 @@ static enum CancelerResult CancelerThaw(struct BattleContext *ctx)
 {
     enum CancelerResult result = CANCELER_RESULT_BREAK;
 
-    if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_FREEZE)
+    if (MoveThawsUser(ctx->move))
     {
-        if (!(IsMoveEffectRemoveSpeciesType(ctx->move, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) && !IS_BATTLER_OF_TYPE(ctx->battlerAtk, TYPE_FIRE)))
+        if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_FREEZE)
         {
-            gBattleMons[ctx->battlerAtk].status1 &= ~STATUS1_FREEZE;
-            result = CANCELER_RESULT_BREAK;
-            BattleScriptCall(BattleScript_MoveUsedUnfroze);
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED_BY_MOVE;
+            if (!IsMoveEffectRemoveSpeciesType(ctx->move, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) || IS_BATTLER_OF_TYPE(ctx->battlerAtk, TYPE_FIRE))
+            {
+                DefrostBattler(ctx->battlerAtk, STATUS1_FREEZE);
+                result = CANCELER_RESULT_BREAK;
+                BattleScriptCall(BattleScript_BattlerDefrosted);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED_BY_MOVE;
+            }
+            else
+            {
+                result = CANCELER_RESULT_FAILURE;
+            }
         }
-        else
+        else if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_FROSTBITE)
         {
-            result = CANCELER_RESULT_FAILURE;
+            if (!IsMoveEffectRemoveSpeciesType(ctx->move, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) || IS_BATTLER_OF_TYPE(ctx->battlerAtk, TYPE_FIRE))
+            {
+                DefrostBattler(ctx->battlerAtk, STATUS1_FROSTBITE);
+                result = CANCELER_RESULT_BREAK;
+                BattleScriptCall(BattleScript_BattlerFrostbiteHealed);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FROSTBITE_HEALED_BY_MOVE;
+            }
+            else
+            {
+                result = CANCELER_RESULT_FAILURE;
+            }
         }
-        RequestNonVolatileChangee(ctx->battlerAtk);
-    }
-    else if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_FROSTBITE && MoveThawsUser(ctx->move))
-    {
-        if (!(IsMoveEffectRemoveSpeciesType(ctx->move, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) && !IS_BATTLER_OF_TYPE(ctx->battlerAtk, TYPE_FIRE)))
-        {
-            gBattleMons[ctx->battlerAtk].status1 &= ~STATUS1_FROSTBITE;
-            result = CANCELER_RESULT_BREAK;
-            BattleScriptCall(BattleScript_MoveUsedUnfrostbite);
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FROSTBITE_HEALED_BY_MOVE;
-        }
-        else
-        {
-            result = CANCELER_RESULT_FAILURE;
-        }
-        RequestNonVolatileChangee(ctx->battlerAtk);
     }
     return result;
 }
@@ -2824,17 +2831,10 @@ static enum MoveEndResult MoveEndMultihitMove(void)
     return result;
 }
 
-static void DefrostBattler(enum BattlerId battler, u32 status)
-{
-    gBattleScripting.battler = battler;
-    gBattleMons[battler].status1 &= ~status;
-    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
-    MarkBattlerForControllerExec(battler);
-}
-
 static enum MoveEndResult MoveEndDefrost(void)
 {
     enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
+    const u8 *battleScript = NULL;
 
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
@@ -2842,33 +2842,30 @@ static enum MoveEndResult MoveEndDefrost(void)
 
         if (battler == gBattlerAttacker)
             continue;
-        
-        if (gBattleMons[battler].status1 & STATUS1_FREEZE
-         && IsBattlerTurnDamaged(battler)
-         && IsBattlerAlive(battler)
-         && GetBattleMoveType(gCurrentMove) == TYPE_FIRE)
+
+        if (!gBattleMons[battler].status1 & STATUS1_ICY_ANY
+         || !IsBattlerTurnDamaged(battler)
+         || !IsBattlerAlive(battler))
+            continue;
+
+        if (gBattleMons[battler].status1 & STATUS1_FREEZE)
+            battleScript = BattleScript_BattlerDefrosted;
+        else
+            battleScript = BattleScript_BattlerFrostbiteHealed;
+
+        if (CanFireMoveThawTarget(gCurrentMove) || CanBurnHitThaw(gCurrentMove))
         {
-            DefrostBattler(battler, STATUS1_FREEZE);
-            BattleScriptCall(BattleScript_DefrostedViaFireMove);
+            DefrostBattler(battler, gBattleMons[battler].status1);
+            BattleScriptCall(battleScript);
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
             return MOVEEND_RESULT_RUN_SCRIPT;
         }
-        else if (gBattleMons[battler].status1 & STATUS1_FREEZE
-              && IsBattlerTurnDamaged(battler)
-              && IsBattlerAlive(battler)
-              && IsBattlerAlive(gBattlerAttacker)
-              && CanBurnHitThaw(abilityAtk, gCurrentMove))
+        else if (IsBattlerAlive(gBattlerAttacker)
+              && CanMoveThawTarget(abilityAtk, gCurrentMove))
         {
-            DefrostBattler(battler, STATUS1_FREEZE);
-            BattleScriptCall(BattleScript_DefrostedViaFireMove);
-            return MOVEEND_RESULT_RUN_SCRIPT;
-        }
-        else if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
-              && IsBattlerTurnDamaged(battler)
-              && IsBattlerAlive(battler)
-              && MoveThawsUser(GetOriginallyUsedMove(gChosenMove)))
-        {
-            DefrostBattler(battler, STATUS1_FROSTBITE);
-            BattleScriptCall(BattleScript_FrostbiteHealedViaFireMove);
+            DefrostBattler(battler, gBattleMons[battler].status1);
+            BattleScriptCall(battleScript);
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
             return MOVEEND_RESULT_RUN_SCRIPT;
         }
     }
@@ -3961,14 +3958,14 @@ void MoveValuesCleanUp(void)
     gBattleCommunication[MISS_TYPE] = 0;
 }
 
-static void RequestNonVolatileChangee(enum BattlerId battlerAtk)
+static void RequestNonVolatileChange(enum BattlerId battlerAtk)
 {
     BtlController_EmitSetMonData(
         battlerAtk,
         B_COMM_TO_CONTROLLER,
         REQUEST_STATUS_BATTLE,
         0,
-        4,
+        sizeof(gBattleMons[battlerAtk].status1),
         &gBattleMons[battlerAtk].status1);
     MarkBattlerForControllerExec(battlerAtk);
 }

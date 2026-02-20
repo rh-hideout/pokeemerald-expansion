@@ -936,6 +936,13 @@ static const struct PickupItem sPickupTable[] =
 
 #undef _
 
+static const u8 sTriAttackEffects[] =
+{
+    MOVE_EFFECT_BURN,
+    MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+    MOVE_EFFECT_PARALYSIS
+};
+
 bool32 ProteanTryChangeType(enum BattlerId battler, enum Ability ability, enum Move move, enum Type moveType)
 {
       if ((ability == ABILITY_PROTEAN || ability == ABILITY_LIBERO)
@@ -2568,12 +2575,6 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         else
         {
-            static const u8 sTriAttackEffects[] =
-            {
-                MOVE_EFFECT_BURN,
-                MOVE_EFFECT_FREEZE_OR_FROSTBITE,
-                MOVE_EFFECT_PARALYSIS
-            };
             SetMoveEffect(battlerAtk, effectBattler, RandomElement(RNG_TRI_ATTACK, sTriAttackEffects), battleScript, effectFlags);
         }
         break;
@@ -11650,11 +11651,11 @@ static bool32 CanAbilityPreventStatLoss(enum Ability abilityDef)
     return FALSE;
 }
 
-bool32 CanBurnHitThaw(enum Ability abilityAtk, enum Move move)
+bool32 CanBurnHitThaw(enum Move move)
 {
     u8 i;
 
-    if (GetConfig(CONFIG_BURN_HIT_THAW) >= GEN_6 && abilityAtk != ABILITY_SHEER_FORCE)
+    if (GetConfig(CONFIG_HIT_THAW) <= GEN_2)
     {
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
         for (i = 0; i < numAdditionalEffects; i++)
@@ -11662,9 +11663,21 @@ bool32 CanBurnHitThaw(enum Ability abilityAtk, enum Move move)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
             if (additionalEffect->moveEffect == MOVE_EFFECT_BURN)
                 return TRUE;
+            if (additionalEffect->moveEffect == MOVE_EFFECT_TRI_ATTACK && RandomElement(RNG_TRI_ATTACK, sTriAttackEffects) == MOVE_EFFECT_BURN)
+                return TRUE;
         }
     }
     return FALSE;
+}
+
+bool32 CanMoveThawTarget(enum Ability abilityAtk, enum Move move)
+{
+    return GetConfig(CONFIG_HIT_THAW) >= GEN_6 && !IsSheerForceAffected(move, abilityAtk) && MoveThawsUser(move);
+}
+
+bool32 CanFireMoveThawTarget(enum Move move)
+{
+    return GetConfig(CONFIG_HIT_THAW) >= GEN_3 && GetMoveType(move) == TYPE_FIRE && GetMovePower(move) != 0;
 }
 
 void BS_CheckParentalBondCounter(void)
