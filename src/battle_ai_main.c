@@ -1203,13 +1203,13 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     }
 
     // Don't use anything but super effective thawing moves if target is frozen if any other attack available
-    if (((GetMoveType(move) == TYPE_FIRE && GetMovePower(move) != 0) || CanBurnHitThaw(move)) && effectiveness < UQ_4_12(2.0) && (gBattleMons[battlerDef].status1 & STATUS1_ICY_ANY))
+    if (((GetMoveType(move) == TYPE_FIRE && GetMovePower(move) != 0) || CanBurnHitThaw(abilityAtk, move)) && effectiveness < UQ_4_12(2.0) && (gBattleMons[battlerDef].status1 & STATUS1_ICY_ANY))
     {
         enum Move aiMove;
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             aiMove = gBattleMons[battlerAtk].moves[moveIndex];
-            if (GetMoveType(aiMove) != TYPE_FIRE && !CanBurnHitThaw(aiMove) && GetMovePower(gBattleMons[battlerAtk].moves[moveIndex]) != 0)
+            if (GetMoveType(aiMove) != TYPE_FIRE && !CanBurnHitThaw(abilityAtk, aiMove) && GetMovePower(gBattleMons[battlerAtk].moves[moveIndex]) != 0)
             {
                 ADJUST_SCORE(-1);
                 break;
@@ -2042,10 +2042,6 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_MAGNITUDE:
-            if (aiData->abilities[battlerDef] == ABILITY_LEVITATE)
-                ADJUST_SCORE(-10);
-            break;
         case EFFECT_PARTING_SHOT:
             if (CountUsablePartyMons(battlerAtk) == 0)
                 ADJUST_SCORE(-10);
@@ -2764,7 +2760,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FLING:
-            if (!CanFling(battlerAtk, battlerDef))
+            if (!CanFling(battlerAtk))
             {
                 ADJUST_SCORE(-10);
             }
@@ -3318,10 +3314,35 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         else
         {
-            ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtk), STAT_CHANGE_ATK));
-            ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtk), STAT_CHANGE_DEF));
-            ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), STAT_CHANGE_ATK));
-            ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), STAT_CHANGE_DEF));
+            s32 statUpScore = 0;
+            s32 tempScore = 0;
+            enum BattlerId foe = LEFT_FOE(battlerAtk);
+
+            if (IsBattlerAlive(foe))
+            {
+                tempScore += IncreaseStatUpScore(battlerAtkPartner, foe, STAT_CHANGE_ATK);
+                tempScore += IncreaseStatUpScore(battlerAtkPartner, foe, STAT_CHANGE_DEF);
+                if (tempScore == 0)
+                    break;
+                statUpScore += tempScore;
+            }
+
+            tempScore = 0;
+            foe = RIGHT_FOE(battlerAtk);
+
+            if (IsBattlerAlive(foe))
+            {
+                tempScore += IncreaseStatUpScore(battlerAtkPartner, foe, STAT_CHANGE_ATK);
+                tempScore += IncreaseStatUpScore(battlerAtkPartner, foe, STAT_CHANGE_DEF);
+                if (tempScore == 0)
+                    break;
+                statUpScore += tempScore;
+            }
+
+            if (statUpScore > BEST_EFFECT)
+                ADJUST_SCORE(BEST_EFFECT);
+            else
+                ADJUST_SCORE(statUpScore);
         }
         break;
     default:
@@ -3929,7 +3950,6 @@ static bool32 DoesAbilityBenefitFromSunOrRain(enum BattlerId battler, enum Abili
         return (weather & B_WEATHER_RAIN);
     case ABILITY_HARVEST:
         if (GetItemPocket(gAiLogicData->items[battler]) != POCKET_BERRIES
-            && GetItemPocket(gBattleStruct->changedItems[battler]) != POCKET_BERRIES
             && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) != POCKET_BERRIES)
         {
             return FALSE;

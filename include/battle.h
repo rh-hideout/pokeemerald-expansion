@@ -605,7 +605,6 @@ struct BattleStruct
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
-    u16 changedItems[MAX_BATTLERS_COUNT];
     u8 switchInBattlerCounter;
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]
     union {
@@ -701,8 +700,8 @@ struct BattleStruct
     u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
-    u8 preAttackAnimPlayed:1;
-    u8 padding4:1;
+    u8 attackAnimPlayed:1;
+    u8 preAttackEffectHappened:1;
     u8 magicCoatActive:1;
     u8 magicBounceActive:1;
     u8 moveBouncer;

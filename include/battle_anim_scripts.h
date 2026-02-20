@@ -976,6 +976,8 @@ extern const u8 gBattleAnimGeneral_WishHeal[];
 extern const u8 gBattleAnimGeneral_MegaEvolution[];
 extern const u8 gBattleAnimGeneral_IllusionOff[];
 extern const u8 gBattleAnimGeneral_FormChange[];
+extern const u8 gBattleAnimGeneral_FormChangeInstant[];
+extern const u8 gBattleAnimGeneral_FormChangeDisguise[];
 extern const u8 gBattleAnimGeneral_SlideOffScreen[];
 extern const u8 gBattleAnimGeneral_RestoreBg[];
 extern const u8 gBattleAnimGeneral_TotemFlare[];

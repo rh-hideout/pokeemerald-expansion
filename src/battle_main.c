@@ -613,8 +613,8 @@ static void CB2_InitBattleInternal(void)
         AdjustFriendship(&gPlayerParty[i], FRIENDSHIP_EVENT_LEAGUE_BATTLE);
 
         // Apply party-wide start-of-battle form changes for both sides.
-        TryFormChange(i, B_SIDE_PLAYER, FORM_CHANGE_BEGIN_BATTLE);
-        TryFormChange(i, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_BATTLE);
+        TryFormChange(&gPlayerParty[i], FORM_CHANGE_BEGIN_BATTLE);
+        TryFormChange(&gEnemyParty[i], FORM_CHANGE_BEGIN_BATTLE);
     }
 
     #if TESTING
@@ -2009,7 +2009,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             SetMonData(&party[i], MON_DATA_ABILITY_NUM, &abilityNum);
             SetMonData(&party[i], MON_DATA_FRIENDSHIP, &(partyData[monIndex].friendship));
-            if (partyData[monIndex].ball != ITEM_NONE)
+            if (partyData[monIndex].ball < POKEBALL_COUNT)
             {
                 ball = partyData[monIndex].ball;
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
@@ -3068,10 +3068,10 @@ static void BattleStartClearSetData(void)
         gLastHitBy[i] = 0xFF;
         gLockedMoves[i] = MOVE_NONE;
         gLastPrintedMoves[i] = MOVE_NONE;
-        gPalaceSelectionBattleScripts[i] = 0;
+        gSelectionBattleScripts[i] = NULL;
+        gPalaceSelectionBattleScripts[i] = NULL;
         gBattleStruct->lastTakenMove[i] = MOVE_NONE;
         gBattleStruct->choicedMove[i] = MOVE_NONE;
-        gBattleStruct->changedItems[i] = 0;
         gBattleStruct->lastTakenMoveFrom[i][0] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][1] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][2] = MOVE_NONE;
@@ -3321,8 +3321,10 @@ const u8* FaintClearSetData(enum BattlerId battler)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
     bool32 keepGastroAcid = gBattleMons[battler].volatiles.gastroAcid;
+    bool32 keepTransformed = gBattleMons[battler].volatiles.transformed;
     memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
     gBattleMons[battler].volatiles.gastroAcid = keepGastroAcid; // Edge case: Keep Gastro Acid if pokemon's ability can have effect after fainting, for example Innards Out.
+    gBattleMons[battler].volatiles.transformed = keepTransformed; // Edge case: Keep Transformed status to prevent triggering FORM_CHANGE_FAINT on transformed mons.
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
@@ -3371,6 +3373,8 @@ const u8* FaintClearSetData(enum BattlerId battler)
     gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
+    if (battler == gBattlerAttacker)
+        gBattleStruct->moldBreakerActive = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
@@ -3404,7 +3408,7 @@ const u8* FaintClearSetData(enum BattlerId battler)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;
 
     Ai_UpdateFaintData(battler);
-    TryBattleFormChange(battler, FORM_CHANGE_FAINT);
+    TryBattleFormChange(battler, FORM_CHANGE_FAINT, GetBattlerAbility(battler));
 
     // If the fainted mon was involved in a Sky Drop
     if (gBattleStruct->skyDropTargets[battler] != SKY_DROP_NO_TARGET)
