@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Eviolite only boosts based on the original species", s16 dam
     u16 species;
     enum Ability ability;
     enum Item item;
-    PARAMETRIZE { species = SPECIES_WYNAUT; ability = ABILITY_NONE; item = ITEM_EVIOLITE; }
+    PARAMETRIZE { species = SPECIES_WYNAUT; ability = ABILITY_SHADOW_TAG; item = ITEM_EVIOLITE; }
     PARAMETRIZE { species = SPECIES_DITTO; ability = ABILITY_IMPOSTER; item = ITEM_EVIOLITE; }
 
     GIVEN {

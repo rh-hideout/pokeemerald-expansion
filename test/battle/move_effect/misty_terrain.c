@@ -104,10 +104,10 @@ SINGLE_BATTLE_TEST("Misty Terrain will fail if there is one already on the field
 SINGLE_BATTLE_TEST("Misty Terrain does not decrease the power of Dragon-type moves against flying targets", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_NONE; }
+    PARAMETRIZE { ability = ABILITY_HEATPROOF; }
     PARAMETRIZE { ability = ABILITY_LEVITATE; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); }
+        PLAYER(SPECIES_BRONZONG) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_MISTY_TERRAIN); }

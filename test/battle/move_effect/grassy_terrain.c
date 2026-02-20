@@ -109,8 +109,8 @@ SINGLE_BATTLE_TEST("Grassy Terrain does not heal levitating Pokémon")
 {
     u16 species;
     enum Ability ability;
-    PARAMETRIZE { species = SPECIES_PIDGEOT; ability = ABILITY_NONE; }
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_LEVITATE; }
+    PARAMETRIZE { species = SPECIES_PIDGEOT; ability = ABILITY_KEEN_EYE; }
+    PARAMETRIZE { species = SPECIES_FLYGON; ability = ABILITY_LEVITATE; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
