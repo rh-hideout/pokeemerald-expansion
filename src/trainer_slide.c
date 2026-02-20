@@ -262,28 +262,28 @@ static void SetTrainerSlideParameters(enum BattlerId battler, u32* firstId, u32*
             {
                 *firstId = MULTI_PARTY_SIZE;
                 *lastId = PARTY_SIZE;
-                *trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentB);
+                *trainerId = TRAINER_BATTLE_PARAM.opponentB;
                 *retValue = TRAINER_SLIDE_TARGET_TRAINER_B;
             }
             else
             {
                 *firstId = 0;
                 *lastId = MULTI_PARTY_SIZE;
-                *trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentA);
+                *trainerId = TRAINER_BATTLE_PARAM.opponentA;
             }
         }
         else
         {
             *firstId = 0;
             *lastId = PARTY_SIZE;
-            *trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentA);
+            *trainerId = TRAINER_BATTLE_PARAM.opponentA;
         }
     }
     else if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
         *firstId = MULTI_PARTY_SIZE;
         *lastId = PARTY_SIZE;
-        *trainerId = SanitizeTrainerId(gPartnerTrainerId);
+        *trainerId = gPartnerTrainerId;
         *retValue = TRAINER_SLIDE_TARGET_TRAINER_PARTNER;
     }
 }
@@ -302,6 +302,8 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
         return TRAINER_SLIDE_TARGET_NONE;
 
     SetTrainerSlideParameters(battler, &firstId, &lastId, &trainerId, &retValue);
+     if (IsSpecialTrainer(trainerId))
+        trainerId = TRAINER_NONE;
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
 
     gBattleScripting.battler = battler;
