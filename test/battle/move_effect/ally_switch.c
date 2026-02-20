@@ -349,7 +349,7 @@ DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
     }
 }
 
-DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
+DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed position")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
@@ -399,6 +399,61 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position")
         MESSAGE("Wynaut took the Future Sight attack!");
         HP_BAR(playerLeft);
         NOT HP_BAR(playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally Switch does not update Wish recovery position")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WISH) == EFFECT_WISH);
+        PLAYER(SPECIES_WOBBUFFET) { HP(50); MaxHP(100); }
+        PLAYER(SPECIES_WYNAUT) { HP(20); MaxHP(100); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_WISH); }
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WISH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
+        HP_BAR(playerLeft);
+        NOT HP_BAR(playerRight);
+    } THEN {
+        EXPECT_EQ(playerLeft->hp, 70);
+        EXPECT_EQ(playerRight->hp, 50);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally Switch does not update Healing Wish/Lunar Dance recovery position")
+{
+    u16 wishMove;
+
+    PARAMETRIZE { wishMove = MOVE_HEALING_WISH; }
+    PARAMETRIZE { wishMove = MOVE_LUNAR_DANCE; }
+
+    GIVEN {
+        WITH_CONFIG(B_HEALING_WISH_SWITCH, GEN_9);
+        ASSUME(GetMoveEffect(MOVE_HEALING_WISH) == EFFECT_HEALING_WISH);
+        ASSUME(GetMoveEffect(MOVE_LUNAR_DANCE) == EFFECT_LUNAR_DANCE);
+        PLAYER(SPECIES_GARDEVOIR);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { HP(100); MaxHP(100); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(50); Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, wishMove); SEND_OUT(playerLeft, 2); }
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
+        TURN { SWITCH(playerLeft, 3); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, wishMove, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
+        HP_BAR(playerLeft);
+        NOT HP_BAR(playerRight);
+    } THEN {
+        EXPECT_EQ(playerLeft->hp, 50);
+        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+        EXPECT_EQ(playerRight->hp, 100);
     }
 }
 
