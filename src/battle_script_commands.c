@@ -2569,7 +2569,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         gBattlescriptCurrInstr = battleScript;
         break;
     case MOVE_EFFECT_TRI_ATTACK:
-        gBattleStruct->triAttackEffect = RandomUniform(RNG_TRI_ATTACK, 0, ARRAY_COUNT(sTriAttackEffects)) + 1;
+        gBattleStruct->triAttackEffect = RandomUniform(RNG_TRI_ATTACK, 0, ARRAY_COUNT(sTriAttackEffects) - 1) + 1; // +1 to differentiate when this is uninitialized and when pulling from array slot 0
 
         if (!gBattleMons[effectBattler].status1)
             SetMoveEffect(battlerAtk, effectBattler, sTriAttackEffects[gBattleStruct->triAttackEffect - 1], battleScript, effectFlags);
