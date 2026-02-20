@@ -2569,14 +2569,10 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         gBattlescriptCurrInstr = battleScript;
         break;
     case MOVE_EFFECT_TRI_ATTACK:
-        if (gBattleMons[gEffectBattler].status1)
-        {
-            gBattlescriptCurrInstr = battleScript;
-        }
-        else
-        {
-            SetMoveEffect(battlerAtk, effectBattler, RandomElement(RNG_TRI_ATTACK, sTriAttackEffects), battleScript, effectFlags);
-        }
+        gBattleStruct->triAttackEffect = RandomUniform(RNG_TRI_ATTACK, 0, ARRAY_COUNT(sTriAttackEffects)) + 1;
+
+        if (!gBattleMons[effectBattler].status1)
+            SetMoveEffect(battlerAtk, effectBattler, sTriAttackEffects[gBattleStruct->triAttackEffect - 1], battleScript, effectFlags);
         break;
     case MOVE_EFFECT_WRAP:
         if (gBattleMons[gEffectBattler].volatiles.wrapped)
@@ -11664,7 +11660,10 @@ bool32 CanBurnHitThaw(enum Move move)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
             if (additionalEffect->moveEffect == MOVE_EFFECT_BURN)
                 return TRUE;
-            if (additionalEffect->moveEffect == MOVE_EFFECT_TRI_ATTACK && RandomElement(RNG_TRI_ATTACK, sTriAttackEffects) == MOVE_EFFECT_BURN)
+
+            if (additionalEffect->moveEffect == MOVE_EFFECT_TRI_ATTACK
+             && gBattleStruct->triAttackEffect != 0
+             && sTriAttackEffects[gBattleStruct->triAttackEffect - 1] == MOVE_EFFECT_BURN)
                 return TRUE;
         }
     }
