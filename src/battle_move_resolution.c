@@ -2843,7 +2843,7 @@ static enum MoveEndResult MoveEndDefrost(void)
         if (battler == gBattlerAttacker)
             continue;
 
-        if (!gBattleMons[battler].status1 & STATUS1_ICY_ANY
+        if (!(gBattleMons[battler].status1 & STATUS1_ICY_ANY)
          || !IsBattlerTurnDamaged(battler)
          || !IsBattlerAlive(battler))
             continue;
