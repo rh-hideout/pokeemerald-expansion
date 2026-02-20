@@ -55,12 +55,12 @@ DOUBLE_BATTLE_TEST("Ability Shield prevents Intimidate from reactivating after N
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
         HP_BAR(opponentLeft);
         MESSAGE("The effects of the neutralizing gas wore off!");
-        MESSAGE("The opposing Koffing fainted!");
         NONE_OF {
             ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         }
+        MESSAGE("The opposing Koffing fainted!");
     } THEN {
         EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
