@@ -495,17 +495,17 @@ u32 ScriptGiveMon(u16 species, u8 level, enum Item item)
 
 void ScrCmd_createmon(struct ScriptContext *ctx)
 {
-    u8 side           = ScriptReadByte(ctx);
-    u8 slot           = ScriptReadByte(ctx);
-    u16 species       = VarGet(ScriptReadHalfword(ctx));
-    u8 level          = VarGet(ScriptReadHalfword(ctx));
+    u8 side            = ScriptReadByte(ctx);
+    u8 slot            = ScriptReadByte(ctx);
+    u16 species        = VarGet(ScriptReadHalfword(ctx));
+    u8 level           = VarGet(ScriptReadHalfword(ctx));
 
-    u32 flags         = ScriptReadWord(ctx);
-    enum Item item    = PARSE_FLAG(0, ITEM_NONE);
-    u8 ball           = PARSE_FLAG(1, ITEM_POKE_BALL);
-    u8 nature         = PARSE_FLAG(2, NATURE_RANDOM);
-    u8 abilityNum     = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
-    u8 gender         = PARSE_FLAG(4, MON_GENDER_RANDOM);
+    u32 flags          = ScriptReadWord(ctx);
+    enum Item item     = PARSE_FLAG(0, ITEM_NONE);
+    enum PokeBall ball = PARSE_FLAG(1, BALL_POKE);
+    u8 nature          = PARSE_FLAG(2, NATURE_RANDOM);
+    u8 abilityNum      = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
+    u8 gender          = PARSE_FLAG(4, MON_GENDER_RANDOM);
 
     u32 i;
     u16 evs[NUM_STATS];

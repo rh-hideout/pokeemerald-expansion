@@ -1051,7 +1051,7 @@
 	.ifnb \dmaxLevel; .set givemon_flags, givemon_flags | (1 << 24); .endif
 	.4byte givemon_flags
 	.ifnb \item; .2byte \item; .endif
-	.ifnb \ball; .2byte \ball; .endif
+	.ifnb \ball; .byte \ball; .endif
 	.ifnb \nature; .2byte \nature; .else; .2byte NATURE_MAY_SYNCHRONIZE; .endif
 	.ifnb \abilityNum; .2byte \abilityNum; .endif
 	.ifnb \gender; .2byte \gender; .else; .2byte MON_GENDER_MAY_CUTE_CHARM; .endif
@@ -1113,7 +1113,7 @@
 	.ifnb \dmaxLevel; .set givemon_flags, givemon_flags | (1 << 24); .endif
 	.4byte givemon_flags
 	.ifnb \item; .2byte \item; .endif
-	.ifnb \ball; .2byte \ball; .endif
+	.ifnb \ball; .byte \ball; .endif
 	.ifnb \nature; .2byte \nature; .endif
 	.ifnb \abilityNum; .2byte \abilityNum; .endif
 	.ifnb \gender; .2byte \gender; .endif
