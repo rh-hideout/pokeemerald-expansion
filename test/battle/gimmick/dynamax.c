@@ -1759,5 +1759,28 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
     }
 }
 
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes other opponent even if its target faints")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYZE_SIDE));
+        PLAYER(SPECIES_PIKACHU) { GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_PICHU);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); } 
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_THUNDERBOLT, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2); }
+    } SCENE {
+        MESSAGE("Pikachu used G-Max Volt Crash!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponentLeft);
+            STATUS_ICON(opponentLeft, paralysis: TRUE);
+        }
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponentRight);
+        MESSAGE("The opposing Wynaut is paralyzed, so it may be unable to move!");
+        STATUS_ICON(opponentRight, paralysis: TRUE);
+    }
+}
+
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-lowering Max Moves, without showing a message")
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-increasing Max Moves, without showing a message")
