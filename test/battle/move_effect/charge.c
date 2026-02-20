@@ -154,3 +154,26 @@ SINGLE_BATTLE_TEST("Charge will expire if user flinches while using an electric 
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
+
+SINGLE_BATTLE_TEST("Charge does not apply its damage boost to Electro Shot on its second turn charge")
+{
+    s16 dmgBefore, dmgAfter;
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CHARGE); }
+        TURN { MOVE(player, MOVE_ELECTRO_SHOT); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_HAZE); }
+        TURN { MOVE(player, MOVE_CHARGE); MOVE(opponent, MOVE_RAIN_DANCE); }
+        TURN { MOVE(player, MOVE_ELECTRO_SHOT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
+        HP_BAR(opponent, captureDamage: &dmgBefore);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
+        HP_BAR(opponent, captureDamage: &dmgAfter);
+    } THEN {
+        EXPECT_MUL_EQ(dmgBefore, Q_4_12(2.0), dmgAfter);
+    }
+}

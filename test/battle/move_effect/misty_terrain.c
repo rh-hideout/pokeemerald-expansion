@@ -100,3 +100,22 @@ SINGLE_BATTLE_TEST("Misty Terrain will fail if there is one already on the field
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MISTY_TERRAIN, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Misty Terrain does not increase the power of Dragon-type moves against flying targets", s16 damage)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_NONE; }
+    PARAMETRIZE { ability = ABILITY_LEVITATE; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_MISTY_TERRAIN); }
+        TURN { MOVE(opponent, MOVE_DRAGON_CLAW); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Dragon Claw!");
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[1].damage, Q_4_12(0.5), results[0].damage);
+    }
+}
