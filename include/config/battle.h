@@ -126,7 +126,7 @@
 #define B_IMPRISON                  GEN_LATEST // In Gen5+, Imprison doesn't fail if opposing pokemon don't have any moves the user knows.
 #define B_TAUNT_ME_FIRST            GEN_LATEST // In Gen5+, Taunt does not block Me First.
 #define B_FOLLOW_ME_FUTURE_SIGHT    GEN_LATEST // In Gen6+, Follow Me does not redirect Future Sight/Doom Desire. In Gen3-5, it can redirect only on the turn they are selected.
-#define B_FOLLOW_ME_SINGLES_FAIL    TRUE       // TRUE: Follow Me fails in Single Battles (BDSP+). FALSE: Follow Me works in Single Battles (Gen3-SwSh).
+#define B_FOLLOW_ME_SINGLES_FAIL    GEN_LATEST // In Gen8+, Follow Me fails in Single Battles.
 #define B_ALLY_SWITCH_FAIL_CHANCE   GEN_LATEST // In Gen9+, using Ally Switch consecutively decreases the chance of success for each consecutive use.
 #define B_SKETCH_BANS               GEN_LATEST // In Gen9+, Sketch is unable to copy more moves than in previous generations.
 #define B_KNOCK_OFF_REMOVAL         GEN_LATEST // In Gen5+, Knock Off removes the foe's item instead of rendering it unusable.

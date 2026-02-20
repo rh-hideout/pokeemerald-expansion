@@ -309,10 +309,10 @@ DOUBLE_BATTLE_TEST("Follow Me prioritizes the first Pokémon that used it") // T
 }
 
 
-SINGLE_BATTLE_TEST("Follow Me fails in Single Battles (BDSP+)")
+SINGLE_BATTLE_TEST("Follow Me fails in Single Battles (Gen8+)")
 {
     GIVEN {
-        WITH_CONFIG(B_FOLLOW_ME_SINGLES_FAIL, TRUE);
+        WITH_CONFIG(B_FOLLOW_ME_SINGLES_FAIL, GEN_8);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -323,10 +323,10 @@ SINGLE_BATTLE_TEST("Follow Me fails in Single Battles (BDSP+)")
     }
 }
 
-SINGLE_BATTLE_TEST("Follow Me can be used in Single Battles (Gen3-SwSh)")
+SINGLE_BATTLE_TEST("Follow Me can be used in Single Battles (Gen3-7)")
 {
     GIVEN {
-        WITH_CONFIG(B_FOLLOW_ME_SINGLES_FAIL, FALSE);
+        WITH_CONFIG(B_FOLLOW_ME_SINGLES_FAIL, GEN_7);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
