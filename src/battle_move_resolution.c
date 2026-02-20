@@ -1090,10 +1090,6 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         else // set fling item
             gBattleStruct->flingItem = gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
-        break;    
-    case EFFECT_POLTERGEIST:
-        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
-            battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
         if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, GetMoveArgType(ctx->move)))
@@ -1274,8 +1270,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleContext 
             }
             break;
         case EFFECT_POLTERGEIST:
-            if (gBattleMons[battlerDef].item == ITEM_NONE
-             || GetBattlerAbility(battlerDef) == ABILITY_KLUTZ)
+            if (gBattleMons[battlerDef].item == ITEM_NONE)
             {
                 battleScript = BattleScript_ButItFailed;
             }
@@ -2684,41 +2679,6 @@ static enum MoveEndResult MoveEndMirrorMove(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEndDefrost(void)
-{
-    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-
-    if (gBattleMons[gBattlerTarget].status1 & STATUS1_FREEZE
-        && IsBattlerTurnDamaged(gBattlerTarget)
-        && IsBattlerAlive(gBattlerTarget)
-        && gBattlerAttacker != gBattlerTarget
-        && (GetBattleMoveType(gCurrentMove) == TYPE_FIRE || CanBurnHitThaw(gCurrentMove))
-        && !IsBattlerUnaffectedByMove(gBattlerTarget))
-    {
-        gBattleMons[gBattlerTarget].status1 &= ~STATUS1_FREEZE;
-        BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].status1), &gBattleMons[gBattlerTarget].status1);
-        MarkBattlerForControllerExec(gBattlerTarget);
-        BattleScriptCall(BattleScript_DefrostedViaFireMove);
-        result = MOVEEND_RESULT_RUN_SCRIPT;
-    }
-    else if (gBattleMons[gBattlerTarget].status1 & STATUS1_FROSTBITE
-          && IsBattlerTurnDamaged(gBattlerTarget)
-          && IsBattlerAlive(gBattlerTarget)
-          && gBattlerAttacker != gBattlerTarget
-          && MoveThawsUser(GetOriginallyUsedMove(gChosenMove))
-          && !IsBattlerUnaffectedByMove(gBattlerTarget))
-    {
-        gBattleMons[gBattlerTarget].status1 &= ~STATUS1_FROSTBITE;
-        BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].status1), &gBattleMons[gBattlerTarget].status1);
-        MarkBattlerForControllerExec(gBattlerTarget);
-        BattleScriptCall(BattleScript_FrostbiteHealedViaFireMove);
-        result = MOVEEND_RESULT_RUN_SCRIPT;
-    }
-
-    gBattleScripting.moveendState++;
-    return result;
-}
-
 static enum MoveEndResult MoveEndNextTarget(void)
 {
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
@@ -2862,6 +2822,70 @@ static enum MoveEndResult MoveEndMultihitMove(void)
     gSpecialStatuses[gBattlerAttacker].multiHitOn = 0;
     gBattleScripting.moveendState++;
     return result;
+}
+
+static void DefrostBattler(enum BattlerId battler, u32 status)
+{
+    gBattleScripting.battler = battler;
+    gBattleMons[battler].status1 &= ~status;
+    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
+    MarkBattlerForControllerExec(battler);
+}
+
+static enum MoveEndResult MoveEndDefrost(void)
+{
+    enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
+
+    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
+    {
+        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
+
+        if (battler == gBattlerAttacker)
+            continue;
+        
+        if (gBattleMons[battler].status1 & STATUS1_FREEZE
+         && IsBattlerTurnDamaged(battler)
+         && IsBattlerAlive(battler)
+         && GetBattleMoveType(gCurrentMove) == TYPE_FIRE)
+        {
+            DefrostBattler(battler, STATUS1_FREEZE);
+            BattleScriptCall(BattleScript_DefrostedViaFireMove);
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        }
+        else if (gBattleMons[battler].status1 & STATUS1_FREEZE
+              && IsBattlerTurnDamaged(battler)
+              && IsBattlerAlive(battler)
+              && IsBattlerAlive(gBattlerAttacker)
+              && CanBurnHitThaw(abilityAtk, gCurrentMove))
+        {
+            DefrostBattler(battler, STATUS1_FREEZE);
+            BattleScriptCall(BattleScript_DefrostedViaFireMove);
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        }
+        else if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
+              && IsBattlerTurnDamaged(battler)
+              && IsBattlerAlive(battler)
+              && MoveThawsUser(GetOriginallyUsedMove(gChosenMove)))
+        {
+            DefrostBattler(battler, STATUS1_FROSTBITE);
+            BattleScriptCall(BattleScript_FrostbiteHealedViaFireMove);
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        }
+    }
+
+    gBattleStruct->eventState.moveEndBattler = 0;
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
+}
+
+static enum MoveEndResult MoveEndSheerForce(void)
+{
+    if (IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
+        gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
+    else
+        gBattleScripting.moveendState++;
+
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndMoveBlock(void)
@@ -3147,16 +3171,6 @@ static enum MoveEndResult MoveEndAbilityEffectFoesFainted(void)
     return result;
 }
 
-static enum MoveEndResult MoveEndSheerForce(void)
-{
-    if (IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
-        gBattleScripting.moveendState = MOVEEND_EJECT_PACK;
-    else
-        gBattleScripting.moveendState++;
-
-    return MOVEEND_RESULT_CONTINUE;
-}
-
 static enum MoveEndResult MoveEndShellTrap(void)
 {
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -3379,68 +3393,6 @@ static enum MoveEndResult MoveEndEmergencyExit(void)
     return result;
 }
 
-static inline bool32 CanEjectPackTrigger(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum BattleMoveEffects moveEffect)
-{
-    if (gBattleMons[battlerDef].volatiles.tryEjectPack
-     && GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_PACK
-     && IsBattlerAlive(battlerDef)
-     && CountUsablePartyMons(battlerDef) > 0
-     && !gProtectStructs[battlerDef].disableEjectPack
-     && !(moveEffect == EFFECT_HIT_SWITCH_TARGET && CanBattlerSwitch(battlerAtk))
-     && !(moveEffect == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))
-        return TRUE;
-    return FALSE;
-}
-
-static enum MoveEndResult MoveEndEjectPack(void)
-{
-    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-    u32 ejectPackBattlers = 0;
-    u32 numEjectPackBattlers = 0;
-
-    // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (CanEjectPackTrigger(gBattlerAttacker, i, GetMoveEffect(gCurrentMove)))
-        {
-            ejectPackBattlers |= 1u << i;
-            numEjectPackBattlers++;
-        }
-    }
-
-    if (numEjectPackBattlers == 0)
-    {
-        gBattleScripting.moveendState++;
-        return result;
-    }
-
-    enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
-    if (numEjectPackBattlers > 1)
-        SortBattlersBySpeed(battlers, FALSE);
-
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-        gBattleMons[i].volatiles.tryEjectPack = FALSE;
-
-    for (u32 i = 0; i < gBattlersCount; i++)
-    {
-        enum BattlerId battler = battlers[i];
-
-        if (!(ejectPackBattlers & 1u << battler))
-            continue;
-
-        gBattleScripting.battler = battler;
-        gLastUsedItem = gBattleMons[battler].item;
-        gBattleStruct->battlerState[battler].usedEjectItem = TRUE;
-        BattleScriptCall(BattleScript_EjectPackActivates);
-        gAiLogicData->ejectPackSwitch = TRUE;
-        result = MOVEEND_RESULT_RUN_SCRIPT;
-        break; // Only the fastest Eject item activates
-    }
-
-    gBattleScripting.moveendState++;
-    return result;
-}
-
 static enum MoveEndResult MoveEndHitEscape(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
@@ -3453,6 +3405,46 @@ static enum MoveEndResult MoveEndHitEscape(void)
     {
         result = MOVEEND_RESULT_RUN_SCRIPT;
         BattleScriptCall(BattleScript_EffectHitEscape);
+    }
+
+    gBattleScripting.moveendState++;
+    return result;
+}
+
+static enum MoveEndResult MoveEndPickpocket(void)
+{
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+
+    if (IsBattlerAlive(gBattlerAttacker)
+     && gBattleMons[gBattlerAttacker].item != ITEM_NONE
+     && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
+    {
+        enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
+        SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
+        for (u32 i = 0; i < gBattlersCount; i++)
+        {
+            enum BattlerId battlerDef = battlers[i];
+            if (battlerDef != gBattlerAttacker
+              && !IsBattlerUnaffectedByMove(battlerDef)
+              && GetBattlerAbility(battlerDef) == ABILITY_PICKPOCKET
+              && IsMoveMakingContact(gBattlerAttacker, battlerDef, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)
+              && IsBattlerTurnDamaged(battlerDef)
+              && !DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove)
+              && IsBattlerAlive(battlerDef)
+              && gBattleMons[battlerDef].item == ITEM_NONE
+              && CanStealItem(battlerDef, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))
+            {
+                gBattlerTarget = gBattlerAbility = battlerDef;
+                // Battle scripting is super brittle so we shall do the item exchange now (if possible)
+                if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
+                    StealTargetItem(battlerDef, gBattlerAttacker);  // Target takes attacker's item
+
+                gEffectBattler = gBattlerAttacker;
+                BattleScriptCall(BattleScript_Pickpocket);   // Includes sticky hold check to print separate string
+                result = MOVEEND_RESULT_RUN_SCRIPT;
+                break; // Pickpocket activates on fastest mon, so exit loop.
+            }
+        }
     }
 
     gBattleScripting.moveendState++;
@@ -3579,40 +3571,62 @@ static enum MoveEndResult MoveEndThirdMoveBlock(void)
     return result;
 }
 
-static enum MoveEndResult MoveEndPickpocket(void)
+static inline bool32 CanEjectPackTrigger(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum BattleMoveEffects moveEffect)
+{
+    if (gBattleMons[battlerDef].volatiles.tryEjectPack
+     && GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_PACK
+     && IsBattlerAlive(battlerDef)
+     && CountUsablePartyMons(battlerDef) > 0
+     && !gProtectStructs[battlerDef].disableEjectPack
+     && !(moveEffect == EFFECT_HIT_SWITCH_TARGET && CanBattlerSwitch(battlerAtk))
+     && !(moveEffect == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))
+        return TRUE;
+    return FALSE;
+}
+
+static enum MoveEndResult MoveEndEjectPack(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    u32 ejectPackBattlers = 0;
+    u32 numEjectPackBattlers = 0;
 
-    if (IsBattlerAlive(gBattlerAttacker)
-     && gBattleMons[gBattlerAttacker].item != ITEM_NONE
-     && !GetBattlerPartyState(gBattlerAttacker)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
+    // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
-        enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
-        SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
-        for (u32 i = 0; i < gBattlersCount; i++)
+        if (CanEjectPackTrigger(gBattlerAttacker, i, GetMoveEffect(gCurrentMove)))
         {
-            enum BattlerId battlerDef = battlers[i];
-            if (battlerDef != gBattlerAttacker
-              && !IsBattlerUnaffectedByMove(battlerDef)
-              && GetBattlerAbility(battlerDef) == ABILITY_PICKPOCKET
-              && IsMoveMakingContact(gBattlerAttacker, battlerDef, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)
-              && IsBattlerTurnDamaged(battlerDef)
-              && !DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove)
-              && IsBattlerAlive(battlerDef)
-              && gBattleMons[battlerDef].item == ITEM_NONE
-              && CanStealItem(battlerDef, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))
-            {
-                gBattlerTarget = gBattlerAbility = battlerDef;
-                // Battle scripting is super brittle so we shall do the item exchange now (if possible)
-                if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
-                    StealTargetItem(battlerDef, gBattlerAttacker);  // Target takes attacker's item
-
-                gEffectBattler = gBattlerAttacker;
-                BattleScriptCall(BattleScript_Pickpocket);   // Includes sticky hold check to print separate string
-                result = MOVEEND_RESULT_RUN_SCRIPT;
-                break; // Pickpocket activates on fastest mon, so exit loop.
-            }
+            ejectPackBattlers |= 1u << i;
+            numEjectPackBattlers++;
         }
+    }
+
+    if (numEjectPackBattlers == 0)
+    {
+        gBattleScripting.moveendState++;
+        return result;
+    }
+
+    enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
+    if (numEjectPackBattlers > 1)
+        SortBattlersBySpeed(battlers, FALSE);
+
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
+        gBattleMons[i].volatiles.tryEjectPack = FALSE;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        enum BattlerId battler = battlers[i];
+
+        if (!(ejectPackBattlers & 1u << battler))
+            continue;
+
+        gBattleScripting.battler = battler;
+        gLastUsedItem = gBattleMons[battler].item;
+        gBattleStruct->battlerState[battler].usedEjectItem = TRUE;
+        BattleScriptCall(BattleScript_EjectPackActivates);
+        gAiLogicData->ejectPackSwitch = TRUE;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
+        break; // Only the fastest Eject item activates
     }
 
     gBattleScripting.moveendState++;
@@ -3808,14 +3822,14 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_SKY_DROP_CONFUSE] = MoveEndSkyDropConfuse,
     [MOVEEND_UPDATE_LAST_MOVES] = MoveEndUpdateLastMoves,
     [MOVEEND_MIRROR_MOVE] = MoveEndMirrorMove,
-    [MOVEEND_DEFROST] = MoveEndDefrost,
     [MOVEEND_NEXT_TARGET] = MoveEndNextTarget,
     [MOVEEND_HP_THRESHOLD_ITEMS_TARGET] = MoveEndHpThresholdItemsTarget,
     [MOVEEND_MULTIHIT_MOVE] = MoveEndMultihitMove,
+    [MOVEEND_DEFROST] = MoveEndDefrost,
+    [MOVEEND_SHEER_FORCE] = MoveEndSheerForce,
     [MOVEEND_MOVE_BLOCK] = MoveEndMoveBlock,
     [MOVEEND_ITEM_EFFECTS_ATTACKER_2] = MoveEndItemEffectsAttacker2,
     [MOVEEND_ABILITY_EFFECT_FOES_FAINTED] = MoveEndAbilityEffectFoesFainted,
-    [MOVEEND_SHEER_FORCE] = MoveEndSheerForce,
     [MOVEEND_SHELL_TRAP] = MoveEndShellTrap,
     [MOVEEND_COLOR_CHANGE] = MoveEndColorChange,
     [MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET] = MoveEndKeeMarangaHpThresholdItemTarget,
