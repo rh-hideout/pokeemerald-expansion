@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Tri Attack 1/3 of the time (G
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TRI_ATTACK); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(opponent, MOVE_TRI_ATTACK); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRI_ATTACK, opponent);
         MESSAGE("Wobbuffet thawed out!");
