@@ -16,7 +16,6 @@ struct FactoryBossProfile
     bool8 awardSymbol;
     u8 acePolicy;
     u16 aceSpecies;
-    bool8 preferRandbatsPool;
 };
 
 struct FactoryBossTextSet

@@ -777,6 +777,7 @@ void FillFactoryBrainParty(void)
 {
     int i;
     s32 aceSlot = -1;
+    const bool8 isSingles = (VarGet(VAR_FRONTIER_BATTLE_MODE) == FRONTIER_MODE_SINGLES);
     u16 species[FRONTIER_PARTY_SIZE];
     u16 heldItems[FRONTIER_PARTY_SIZE];
     const struct FactoryBossProfile *bossProfile = GetActiveFactoryBossProfile();
@@ -788,8 +789,7 @@ void FillFactoryBrainParty(void)
     const u16 bossAceMonId = hasBossAce
         ? ChooseFactoryBossAceMonId(bossProfile,
                                     gFacilityTrainerMons,
-                                    gSaveBlock2Ptr->frontier.rentalMons,
-                                    IsBattleFactoryRandomBattlesModeEnabled())
+                                    gSaveBlock2Ptr->frontier.rentalMons)
         : 0xFFFF;
     u8 fixedIV;
     u32 otId;
@@ -825,6 +825,14 @@ void FillFactoryBrainParty(void)
         aceSlot = (bossProfile->acePolicy == FACTORY_BOSS_ACE_SPECIES_ANCHOR_FIRST)
             ? 0
             : FRONTIER_PARTY_SIZE - 1;
+
+        // In standard singles mode, prefer a boss's reward build as its ace template.
+        if (isSingles && BuildFactoryBossRewardMon(sLastGeneratedFactoryBossId, lvlMode, &gEnemyParty[aceSlot]))
+        {
+            species[aceSlot] = GetMonData(&gEnemyParty[aceSlot], MON_DATA_SPECIES);
+            heldItems[aceSlot] = GetMonData(&gEnemyParty[aceSlot], MON_DATA_HELD_ITEM);
+            return;
+        }
 
         if (!FactoryBossCanUseAceMonIdForSlot(gFacilityTrainerMons,
                                               gSaveBlock2Ptr->frontier.rentalMons,

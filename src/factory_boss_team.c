@@ -51,19 +51,9 @@ u16 ChooseFactoryBossAceMonIdInRange(const struct FactoryBossProfile *bossProfil
 
 u16 ChooseFactoryBossAceMonId(const struct FactoryBossProfile *bossProfile,
                               const struct TrainerMon *facilityMons,
-                              const struct RentalMon *rentalMons,
-                              bool8 randomBattlesModeEnabled)
+                              const struct RentalMon *rentalMons)
 {
-    s32 firstMonId = 0;
-    s32 lastMonId = NUM_FRONTIER_MONS - 1;
-
-    if (bossProfile->preferRandbatsPool && randomBattlesModeEnabled)
-    {
-        firstMonId = FRONTIER_MON_GEN9RANDOMBATTLE_FIRST;
-        lastMonId = FRONTIER_MON_GEN9RANDOMBATTLE_LAST;
-    }
-
-    return ChooseFactoryBossAceMonIdInRange(bossProfile, facilityMons, rentalMons, firstMonId, lastMonId);
+    return ChooseFactoryBossAceMonIdInRange(bossProfile, facilityMons, rentalMons, 0, NUM_FRONTIER_MONS - 1);
 }
 
 bool8 FactoryBossCanUseAceMonIdForSlot(const struct TrainerMon *facilityMons,

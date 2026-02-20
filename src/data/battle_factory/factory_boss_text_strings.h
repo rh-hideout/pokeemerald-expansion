@@ -1,3 +1,4 @@
+// Steven
 static const u8 sText_DebugBossName_Steven[] = COMPOUND_STRING("Steven");
 static const u8 sText_StevenPreBattleCall[] = COMPOUND_STRING(
     "A message just came in from STEVEN.\p"
@@ -18,7 +19,7 @@ static const u8 sText_StevenLastMonSlide[] = COMPOUND_STRING(
     "Now see how I battle at full focus!");
 static const u8 sText_StevenLastMonLowHpSlide[] = COMPOUND_STRING(
     "Outstanding...!\n"
-    "Then I'll answer with everything I've got!");
+    "I'll answer with everything I've got!");
 static const u8 sText_StevenBattlePostWin[] = COMPOUND_STRING(
     "Impressive.\p"
     "You read the flow of battle well.\n"
@@ -29,6 +30,35 @@ static const u8 sText_StevenBattleSpeechPlayerLost[] = COMPOUND_STRING(
     "Battles are won by skill,\n"
     "preparation, and resolve.");
 
+// Norman
+static const u8 sText_DebugBossName_Norman[] = COMPOUND_STRING("Norman");
+static const u8 sText_NormanPreBattleCall[] = COMPOUND_STRING(
+    "A message from NORMAN just came in.\p"
+    "He wants to battle at full strength!\n"
+    "He's waiting for you now!");
+static const u8 sText_NormanBattleIntro[] = COMPOUND_STRING(
+    "Didn't expect to see me here, huh?\n"
+    "Your old man has a few tricks up\n"
+    "his sleeve");
+static const u8 sText_NormanBattleStart[] = COMPOUND_STRING(
+    "Show me everything you've learned!\n"
+    "Don't hold back!");
+static const u8 sText_NormanLastMonSlide[] = COMPOUND_STRING(
+    "Here we go, GALLADE!.\n"
+    "Don't let me down now!");
+static const u8 sText_NormanLastMonLowHpSlide[] = COMPOUND_STRING(
+    "Well battled. Now finish it!");
+static const u8 sText_NormanBattlePostWin[] = COMPOUND_STRING(
+    "I'm so proud of you.\p"
+    "You are a true POKeMON master.");
+static const u8 sText_NormanBattleSpeechPlayerWon[] = COMPOUND_STRING(
+    "Wow! What a battle!\n"
+    "Well fought.");
+static const u8 sText_NormanBattleSpeechPlayerLost[] = COMPOUND_STRING(
+    "I'm disappointed...\n"
+    "You could do far better!");
+
+// Wally
 static const u8 sText_DebugBossName_Wally[] = COMPOUND_STRING("Wally");
 static const u8 sText_WallyPreBattleCall[] = COMPOUND_STRING(
     "A message from WALLY just came in.\p"
@@ -57,6 +87,7 @@ static const u8 sText_WallyBattleSpeechPlayerLost[] = COMPOUND_STRING(
     "I did it...!\n"
     "I've gotten so much stronger!");
 
+// Red
 static const u8 sText_DebugBossName_Red[] = COMPOUND_STRING("Red");
 static const u8 sText_RedPreBattleCall[] = COMPOUND_STRING(
     "A message from RED just came in.\p"

@@ -66,6 +66,25 @@ TEST("Factory boss reward: Red reward is a valid Pikachu set with Electric Tera 
     EXPECT_EQ(GetMonData(&reward, MON_DATA_MOVE4), MOVE_SURF);
 }
 
+TEST("Factory boss reward: Norman reward is a valid Mega Kangaskhan set")
+{
+    struct Pokemon reward = {0};
+    bool8 built = BuildFactoryBossRewardMon(FACTORY_BOSS_NORMAN, FRONTIER_LVL_50, &reward);
+
+    EXPECT(built);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_SANITY_IS_BAD_EGG), FALSE);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_SANITY_HAS_SPECIES), TRUE);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_SPECIES), SPECIES_KANGASKHAN);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_HELD_ITEM), ITEM_KANGASKHANITE);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_ABILITY_NUM), 1);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_TERA_TYPE), TYPE_NORMAL);
+    EXPECT_EQ(GetNature(&reward), NATURE_JOLLY);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_MOVE1), MOVE_FAKE_OUT);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_MOVE2), MOVE_RETURN);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_MOVE3), MOVE_SUCKER_PUNCH);
+    EXPECT_EQ(GetMonData(&reward, MON_DATA_MOVE4), MOVE_POWER_UP_PUNCH);
+}
+
 TEST("Factory boss reward: FACTORY_BOSS_NONE has no reward build")
 {
     struct Pokemon reward = {0};

@@ -12,8 +12,7 @@ u16 ChooseFactoryBossAceMonIdInRange(const struct FactoryBossProfile *bossProfil
                                      s32 lastMonId);
 u16 ChooseFactoryBossAceMonId(const struct FactoryBossProfile *bossProfile,
                               const struct TrainerMon *facilityMons,
-                              const struct RentalMon *rentalMons,
-                              bool8 randomBattlesModeEnabled);
+                              const struct RentalMon *rentalMons);
 bool8 FactoryBossCanUseAceMonIdForSlot(const struct TrainerMon *facilityMons,
                                        const struct RentalMon *rentalMons,
                                        u16 monId,

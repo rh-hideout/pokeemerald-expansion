@@ -14,7 +14,6 @@
         .awardSymbol = FALSE,
         .acePolicy = FACTORY_BOSS_ACE_SPECIES_ANCHOR_LAST,
         .aceSpecies = SPECIES_METAGROSS,
-        .preferRandbatsPool = TRUE,
     },
     [FACTORY_BOSS_WALLY] =
     {
@@ -28,7 +27,19 @@
         .awardSymbol = FALSE,
         .acePolicy = FACTORY_BOSS_ACE_SPECIES_ANCHOR_LAST,
         .aceSpecies = SPECIES_GALLADE,
-        .preferRandbatsPool = TRUE,
+    },
+    [FACTORY_BOSS_NORMAN] =
+    {
+        .enabled = TRUE,
+        .debugMenuName = sText_DebugBossName_Norman,
+        .text = &sFactoryBossTextSet_Norman,
+        .trainerId = TRAINER_NORMAN_1,
+        .objEventGfx = OBJ_EVENT_GFX_NORMAN,
+        .battleBgm = MUS_VS_GYM_LEADER,
+        .preBattleRoomBgm = MUS_ENCOUNTER_INTENSE,
+        .awardSymbol = FALSE,
+        .acePolicy = FACTORY_BOSS_ACE_SPECIES_ANCHOR_LAST,
+        .aceSpecies = SPECIES_KANGASKHAN,
     },
     [FACTORY_BOSS_RED] =
     {
@@ -42,5 +53,4 @@
         .awardSymbol = FALSE,
         .acePolicy = FACTORY_BOSS_ACE_SPECIES_ANCHOR_FIRST,
         .aceSpecies = SPECIES_PIKACHU,
-        .preferRandbatsPool = TRUE,
     },

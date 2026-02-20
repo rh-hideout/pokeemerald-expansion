@@ -494,7 +494,9 @@ BattleFrontier_BattleFactoryLobby_Text_WelcomeForRandomBattle:
 	.string "is put to the test!\p"
 	.string "Welcome to the BATTLE FACTORY!\p"
 	.string "I am your guide to the Random\n"
-	.string "Battles challenge.$"
+	.string "Battles challenge.\p"
+	.string "Please note: this mode is still under\n"
+	.string "development and may contain bugs.$"
 
 BattleFrontier_BattleFactoryLobby_Text_TakeRandomChallenge:
 	.string "Would you like to take the Random\n"
@@ -503,6 +505,8 @@ BattleFrontier_BattleFactoryLobby_Text_TakeRandomChallenge:
 BattleFrontier_BattleFactoryLobby_Text_ExplainRandomChallenge:
 	.string "This challenge uses rental POKeMON\n"
 	.string "sets from a Random Battles pool.\p"
+	.string "Please note: this mode is under\n"
+	.string "development, so issues may occur.\p"
 	.string "Unlike Level 50 or Open Level modes,\n"
 	.string "each rental set has its own level,\l"
 	.string "balanced for that set.\p"

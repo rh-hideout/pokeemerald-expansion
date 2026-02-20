@@ -86,7 +86,6 @@ TEST("Factory boss team: chooser returns matching ace mon when exactly one valid
     mons[3].species = SPECIES_SQUIRTLE;
 
     bossProfile.aceSpecies = SPECIES_METAGROSS;
-    bossProfile.preferRandbatsPool = FALSE;
 
     aceMonId = ChooseFactoryBossAceMonIdInRange(&bossProfile, mons, rentals, 0, 3);
     EXPECT_EQ(aceMonId, 1);
@@ -106,7 +105,6 @@ TEST("Factory boss team: chooser returns none when candidate is blocked by renta
     rentals[0].monId = 1;
 
     bossProfile.aceSpecies = SPECIES_METAGROSS;
-    bossProfile.preferRandbatsPool = FALSE;
 
     aceMonId = ChooseFactoryBossAceMonIdInRange(&bossProfile, mons, rentals, 0, 2);
     EXPECT_EQ(aceMonId, 0xFFFF);

@@ -3,6 +3,7 @@
 #include "factory_boss.h"
 #include "constants/flags.h"
 #include "constants/vars.h"
+#include "constants/battle_frontier.h"
 #include "constants/opponents.h"
 #include "constants/event_objects.h"
 #include "constants/songs.h"
@@ -15,9 +16,21 @@ static const struct FactoryBossProfile sFactoryBossProfiles[FACTORY_BOSS_COUNT] 
 #include "data/battle_factory/factory_boss_profiles.h"
 };
 
+static bool8 IsFactoryBossModeSupported(void)
+{
+    if (VarGet(VAR_FRONTIER_BATTLE_MODE) != FRONTIER_MODE_SINGLES)
+        return FALSE;
+    if (FlagGet(FLAG_BATTLE_FACTORY_RANDOM_BATTLES_MODE))
+        return FALSE;
+    return TRUE;
+}
+
 u8 GetActiveFactoryBossId(void)
 {
     u16 bossId = VarGet(VAR_FACTORY_ACTIVE_BOSS);
+
+    if (!IsFactoryBossModeSupported())
+        return FACTORY_BOSS_NONE;
 
     if (bossId < FACTORY_BOSS_COUNT)
         return bossId;

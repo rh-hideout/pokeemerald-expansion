@@ -24,6 +24,18 @@ static const struct FactoryBossTextSet sFactoryBossTextSet_Wally =
     .battleSpeechPlayerLost = sText_WallyBattleSpeechPlayerLost,
 };
 
+static const struct FactoryBossTextSet sFactoryBossTextSet_Norman =
+{
+    .preBattleCallText = sText_NormanPreBattleCall,
+    .battleIntroText = sText_NormanBattleIntro,
+    .battleStartText = sText_NormanBattleStart,
+    .lastSwitchInSlideText = sText_NormanLastMonSlide,
+    .lastLowHpSlideText = sText_NormanLastMonLowHpSlide,
+    .battlePostWinText = sText_NormanBattlePostWin,
+    .battleSpeechPlayerWon = sText_NormanBattleSpeechPlayerWon,
+    .battleSpeechPlayerLost = sText_NormanBattleSpeechPlayerLost,
+};
+
 static const struct FactoryBossTextSet sFactoryBossTextSet_Red =
 {
     .preBattleCallText = sText_RedPreBattleCall,
