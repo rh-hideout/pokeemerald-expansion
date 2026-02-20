@@ -101,7 +101,7 @@ SINGLE_BATTLE_TEST("Misty Terrain will fail if there is one already on the field
     }
 }
 
-SINGLE_BATTLE_TEST("Misty Terrain does not increase the power of Dragon-type moves against flying targets", s16 damage)
+SINGLE_BATTLE_TEST("Misty Terrain does not decrease the power of Dragon-type moves against flying targets", s16 damage)
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_NONE; }
