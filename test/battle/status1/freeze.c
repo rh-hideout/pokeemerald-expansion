@@ -105,6 +105,7 @@ SINGLE_BATTLE_TEST("Freeze isn't thawed by opponent's attack that can thaw the u
     GIVEN {
         WITH_CONFIG(CONFIG_HIT_THAW, GEN_6);
         ASSUME(MoveThawsUser(MOVE_SCALD));
+        ASSUME(MoveIsAffectedBySheerForce(MOVE_SCALD));
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
