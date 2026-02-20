@@ -45,3 +45,28 @@ SINGLE_BATTLE_TEST("Throat Chop prevents sound base moves for 2 turns")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Throat Chop does not reapply while the target is Throat Chopped")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HYPER_VOICE, MOVE_ALLURING_VOICE, MOVE_OVERDRIVE, MOVE_ROUND); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HYPER_VOICE); MOVE(player, MOVE_THROAT_CHOP); }
+        TURN { FORCED_MOVE(opponent); MOVE(player, MOVE_THROAT_CHOP); }
+        TURN { MOVE(opponent, MOVE_HYPER_VOICE); MOVE(player, MOVE_THROAT_CHOP); }
+        TURN { FORCED_MOVE(opponent); MOVE(player, MOVE_THROAT_CHOP); }
+        TURN { MOVE(opponent, MOVE_HYPER_VOICE); MOVE(player, MOVE_THROAT_CHOP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, player);
+    }
+}
