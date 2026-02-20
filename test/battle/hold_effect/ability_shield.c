@@ -52,7 +52,7 @@ DOUBLE_BATTLE_TEST("Ability Shield prevents Intimidate from reactivating after N
         ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         HP_BAR(opponentLeft);
         MESSAGE("The effects of the neutralizing gas wore off!");
         NONE_OF {
