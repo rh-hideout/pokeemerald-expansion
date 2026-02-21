@@ -6,7 +6,6 @@ notes on ideas:
 - 
 
 notes on fixes: guide on counting NPC's (Route 101 Nr.2: R101-2)
-- Bella is talking after moving truck, but name is only written once and not after every new paragraph
 - Bellas name is written twice in the tutorials TV scene
 - the notebook says to open the menu with start, mby say you have to press "enter"
 - BIRCH home characters monologues are not introduced by the speakers names
@@ -46,6 +45,7 @@ notes on fixes: guide on counting NPC's (Route 101 Nr.2: R101-2)
   - to move the character and the cursor inside any menu, the keyboard's arrows are used
   - to open the game menu, e.g. to save progress, press the keyboard's "Enter"-button
   - to return to former pages or cancel actions, the "Y"-button is used
+  - holding down "Y" while in the game world's environment allows for moving the character faster
 - the game ties objects to in-game tiles, usually not passable, the player can interact with any to prompt a descriptive text
 - although some might, interacting with objects does not necessarily output any result
 - if not announced otherwise beforehand, messages in the conversation window are describing the current game's context
@@ -345,4 +345,45 @@ Defeat Prof. Hyvl.
 
 ...teleported to DHBW outside area, by passing through door
 ...DHBW main entrance exit is not the same as DHBW main entrance when entering - moving castle vibes
+
+------some flags later (door3)-----
+> [NAME]: Sorry, the train was late.
+> APPLES: For today's project, we are using a Raspberry Pi. We will
+> use it to program a small script that allows us to record data. The
+> best script wins a Powerglove!
+> [NAME]: Wow! A Raspberry Pi! Thank you, Mister Apples!
+
+> APPLES: Now write a script that
+> collects something measurable.
+> Come back when you have real results.
+
+----door 4----
+> [NAME]: <Fuck, I'm late today, Class is almost over.>
+> EARTHMAN: ... and because the weather is so beautiful today,
+> I'll let you leave a few minutes early. You'll also all get this
+> SURFBOARD from me, so you can float down the Rhine and maybe 
+> visit Ludwigshafen. Keep surfing and shaka brah!
+
+---door 6---
+door 6 exit: flag with CD
+full_guide:
+Enter the cave.
+Read the hint carved in the wall.
+Find a weird field on the ground.
+Solve the puzzle.
+Exit the first section of the cave.
+Enter the second section of the cave.
+Talk to the NPC on your right hand side.
+Solve the puzzle to exit the cave.
+Talk to KALI.
+> I am KALI.
+> Show me your strength in battle!
+> 
+
+...
+...traveling by surfboard westwards
+bumped into some guys "BOTH"
+>...
+
+flag ?
 

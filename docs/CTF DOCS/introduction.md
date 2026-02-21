@@ -5,11 +5,6 @@
 - understand shiping the project via VM etc.
 - finalize pixel arts
 - brainstorming about last two flags: ideas, scenarios, context of story
-#### before submission
-- credit RHH as stated in original readme: "If you use **`pokeemerald-expansion`**, please credit **RHH (Rom Hacking Hideout)**. Optionally, include the version number for clarity."
-- test CTF inside submission environment (VM with emulator etc.), direclty comparing walkthrough guide with CTF step-by-step, eventually third-party tester
-- test VM image delivery on different VM software / on the one Riebl uses and his OS 
-
 
 # pre-requisites
 - for a fully guided walk-through including explanation on the games key bindings and beginner tips, refer to full_walkthrough.md

@@ -72,3 +72,16 @@
 5. Defeat JESSIE and JAMES.
 6. Talk to the newly appeared NPC.
 7. Solve the puzzle to exit the museum
+
+### flag 3
+`upon flag entry`
+Enter the cave.
+Read the hint carved in the wall.
+Find a weird field on the ground.
+Solve the puzzle.
+Exit the first section of the cave.
+Enter the second section of the cave.
+Talk to the NPC on your right hand side.
+Solve the puzzle to exit the cave.
+Talk to KALI.
+Defeat KALI.
