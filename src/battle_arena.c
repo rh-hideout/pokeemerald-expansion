@@ -286,23 +286,20 @@ static void ShowJudgmentSprite(u8 x, u8 y, u8 category, enum BattlerId battler)
     int animNum = 0;
     int pointsPlayer = 0;
     int pointsOpponent = 0;
-    s8 *mindPoints = gBattleStruct->arenaMindPoints;
-    s8 *skillPoints = gBattleStruct->arenaSkillPoints;
-    u16 *hpAtStart = gBattleStruct->arenaStartHp;
 
     switch (category)
     {
     case ARENA_CATEGORY_MIND:
-        pointsPlayer = mindPoints[battler];
-        pointsOpponent = mindPoints[BATTLE_OPPOSITE(battler)];
+        pointsPlayer = gBattleMons[battler].volatiles.arenaMindPoints;
+        pointsOpponent = gBattleMons[BATTLE_OPPOSITE(battler)].volatiles.arenaMindPoints;
         break;
     case ARENA_CATEGORY_SKILL:
-        pointsPlayer = skillPoints[battler];
-        pointsOpponent = skillPoints[BATTLE_OPPOSITE(battler)];
+        pointsPlayer = gBattleMons[battler].volatiles.arenaSkillPoints;
+        pointsOpponent = gBattleMons[BATTLE_OPPOSITE(battler)].volatiles.arenaSkillPoints;
         break;
     case ARENA_CATEGORY_BODY:
-        pointsPlayer = (gBattleMons[battler].hp * 100) / hpAtStart[battler];
-        pointsOpponent = (gBattleMons[BATTLE_OPPOSITE(battler)].hp * 100) / hpAtStart[BATTLE_OPPOSITE(battler)];
+        pointsPlayer = (gBattleMons[battler].hp * 100) / gBattleMons[battler].volatiles.arenaStartHP;
+        pointsOpponent = (gBattleMons[BATTLE_OPPOSITE(battler)].hp * 100) / gBattleMons[BATTLE_OPPOSITE(battler)].volatiles.arenaStartHP;
         break;
     }
 
@@ -341,16 +338,12 @@ static void SpriteCB_JudgmentIcon(struct Sprite *sprite)
 
 void BattleArena_InitPoints(void)
 {
-    s8 *mindPoints = gBattleStruct->arenaMindPoints;
-    s8 *skillPoints = gBattleStruct->arenaSkillPoints;
-    u16 *hpAtStart = gBattleStruct->arenaStartHp;
-
-    mindPoints[0] = 0;
-    mindPoints[1] = 0;
-    skillPoints[0] = 0;
-    skillPoints[1] = 0;
-    hpAtStart[0] = gBattleMons[0].hp;
-    hpAtStart[1] = gBattleMons[1].hp;
+    gBattleMons[B_BATTLER_0].volatiles.arenaMindPoints = 0;
+    gBattleMons[B_BATTLER_1].volatiles.arenaMindPoints = 0;
+    gBattleMons[B_BATTLER_0].volatiles.arenaSkillPoints = 0;
+    gBattleMons[B_BATTLER_1].volatiles.arenaSkillPoints = 0;
+    gBattleMons[B_BATTLER_0].volatiles.arenaStartHP = gBattleMons[B_BATTLER_0].hp;
+    gBattleMons[B_BATTLER_1].volatiles.arenaStartHP = gBattleMons[B_BATTLER_1].hp;
 }
 
 void BattleArena_AddMindPoints(enum BattlerId battler)
@@ -366,55 +359,54 @@ void BattleArena_AddMindPoints(enum BattlerId battler)
      || effect == EFFECT_PROTECT
      || effect == EFFECT_ENDURE)
     {
-        gBattleStruct->arenaMindPoints[battler]--;
+        gBattleMons[battler].volatiles.arenaMindPoints--;
     }
     else if (!IsBattleMoveStatus(gCurrentMove)
           && effect != EFFECT_REFLECT_DAMAGE
           && effect != EFFECT_BIDE)
     {
-        gBattleStruct->arenaMindPoints[battler]++;
+        gBattleMons[battler].volatiles.arenaMindPoints++;
     }
 }
 
 void BattleArena_AddSkillPoints(enum BattlerId battler)
 {
-    s8 *skillPoints = gBattleStruct->arenaSkillPoints;
+    s8 skillPoints = gBattleMons[battler].volatiles.arenaSkillPoints;
 
     if (!gBattleStruct->unableToUseMove)
     {
         if (gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt)
         {
             gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt = FALSE;
-            skillPoints[battler] -= 2;
+            skillPoints -= 2;
         }
         else if (IsBattlerUnaffectedByMove(gBattlerTarget))
         {
             if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED) || gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
-                skillPoints[battler] -= 2;
+                skillPoints -= 2;
         }
         else if ((gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_SUPER_EFFECTIVE) && (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NOT_VERY_EFFECTIVE))
         {
-            skillPoints[battler] += 1;
+            skillPoints += 1;
         }
         else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_SUPER_EFFECTIVE)
         {
-            skillPoints[battler] += 2;
+            skillPoints += 2;
         }
         else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NOT_VERY_EFFECTIVE)
         {
-            skillPoints[battler] -= 1;
+            skillPoints -= 1;
         }
         else if (!gProtectStructs[battler].protected)
         {
-            skillPoints[battler] += 1;
+            skillPoints += 1;
         }
+        gBattleMons[battler].volatiles.arenaSkillPoints = skillPoints;
     }
 }
 
 void BattleArena_DeductSkillPoints(enum BattlerId battler, enum StringID stringId)
 {
-    s8 *skillPoints = gBattleStruct->arenaSkillPoints;
-
     switch (stringId)
     {
     case STRINGID_PKMNSXMADEYUSELESS:
@@ -432,20 +424,11 @@ void BattleArena_DeductSkillPoints(enum BattlerId battler, enum StringID stringI
     case STRINGID_PKMNANCHORSITSELFWITH:
     case STRINGID_PKMNPREVENTSSTATLOSSWITH:
     case STRINGID_PKMNSTAYEDAWAKEUSING:
-        skillPoints[battler] -= 3;
+        gBattleMons[battler].volatiles.arenaSkillPoints -= 3;
         break;
     default:
         break;
     }
-}
-
-static void UNUSED UpdateHPAtStart(enum BattlerId battler)
-{
-    u16 *hpAtStart = gBattleStruct->arenaStartHp;
-
-    hpAtStart[battler] = gBattleMons[battler].hp;
-    if (hpAtStart[BATTLE_OPPOSITE(battler)] > gBattleMons[BATTLE_OPPOSITE(battler)].hp)
-        hpAtStart[BATTLE_OPPOSITE(battler)] = gBattleMons[BATTLE_OPPOSITE(battler)].hp;
 }
 
 static void InitArenaChallenge(void)

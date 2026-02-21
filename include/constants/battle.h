@@ -181,14 +181,16 @@ enum VolatileFlags
     F(VOLATILE_UPROAR,                      uproarTurns,                   (u32, 5)) \
     F(VOLATILE_TORMENT,                     torment,                       (u32, 1)) \
     F(VOLATILE_BIDE,                        bideTurns,                     (u32, 3)) \
+    F(VOLATILE_BIDE_DAMAGE,                 bideDmg,                       (s32, UINT16_MAX)) /* To allow all 16 bits */ \
+    F(VOLATILE_BIDE_TARGET,                 bideTarget,                    (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_RAMPAGE_TURNS,               rampageTurns,                  (u32, B_RAMPAGE_TURNS + 1)) \
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
-    F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
-    F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL - 1)) \
+    F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (enum Move, MOVES_COUNT_ALL)) \
     F(VOLATILE_POWDER,                      powder,                        (u32, 1)) \
     F(VOLATILE_UNUSED,                      padding,                       (u32, 1)) \
-    F(VOLATILE_INFATUATION,                 infatuation,                   (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_INFATUATION,                 infatuation,                   (enum BattlerId, MAX_BATTLERS_COUNT + 1)) \
     F(VOLATILE_DEFENSE_CURL,                defenseCurl,                   (u32, 1)) \
     F(VOLATILE_TRANSFORMED,                 transformed,                   (u32, 1)) \
     F(VOLATILE_RAGE,                        rage,                          (u32, 1)) \
@@ -208,9 +210,9 @@ enum VolatileFlags
     F(VOLATILE_INFINITE_CONFUSION,          infiniteConfusion,             (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_SALT_CURE,                   saltCure,                      (u32, 1)) \
     F(VOLATILE_SYRUP_BOMB,                  syrupBomb,                     (u32, 1)) \
-    F(VOLATILE_STICKY_SYRUPED_BY,           stickySyrupedBy,               (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_STICKY_SYRUPED_BY,           stickySyrupedBy,               (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_GLAIVE_RUSH,                 glaiveRush,                    (u32, 1)) \
-    F(VOLATILE_LEECH_SEED,                  leechSeed,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT)), V_BATON_PASSABLE) \
+    F(VOLATILE_LEECH_SEED,                  leechSeed,                     (enum BattlerId, MAX_BATTLERS_COUNT + 1), V_BATON_PASSABLE) \
     F(VOLATILE_LOCK_ON,                     lockOn,                        (u32, 2), V_BATON_PASSABLE) \
     F(VOLATILE_PERISH_SONG,                 perishSong,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_MINIMIZE,                    minimize,                      (u32, 1)) \
@@ -236,8 +238,22 @@ enum VolatileFlags
     F(VOLATILE_BEADS_OF_RUIN,               beadsOfRuin,                   (u32, 1)) \
     F(VOLATILE_IS_TRANSFORMED_MON_SHINY,    isTransformedMonShiny,         (u32, 1)) \
     F(VOLATILE_TRANSFORMED_MON_PID,         transformedMonPID,             (u32, UINT32_MAX)) \
-    F(VOLATILE_DISABLED_MOVE,               disabledMove,                  (u32, MOVES_COUNT_ALL)) \
-    F(VOLATILE_ENCORED_MOVE,                encoredMove,                   (u32, MOVES_COUNT_ALL)) \
+    F(VOLATILE_DISABLED_MOVE,               disabledMove,                  (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_ENCORED_MOVE,                encoredMove,                   (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_CHOICED_MOVE,                choicedMove,                   (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LOCKED_MOVE,                 lockedMove,                    (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_CHOSEN_MOVE,                 chosenMove,                    (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_MOVE,                   lastMove,                      (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_PRINTED_MOVE,           lastPrintedMove,               (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_LANDED_MOVE,            lastLandedMove,                (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_RESULTING_MOVE,         lastResultingMove,             (enum Move, MOVES_COUNT_ALL)) \
+    F(VOLATILE_LAST_HIT_BY_TYPE,            lastHitByType,                 (enum Type, NUMBER_OF_MON_TYPES)) \
+    F(VOLATILE_LAST_USED_MOVE_TYPE,         lastUsedMoveType,              (enum Type, NUMBER_OF_MON_TYPES)) \
+    F(VOLATILE_LAST_HIT_BY,                 lastHitBy,                     (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_MOVE_TARGET,                 moveTarget,                    (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_MOVE_SELECTION_CURSOR,       moveSelectionCursor,           (u32, MAX_MON_MOVES)) \
+    F(VOLATILE_CHOSEN_MOVE_POS,             chosenMovePos,                 (u32, MAX_MON_MOVES)) \
+    F(VOLATILE_ENCORED_MOVE_POS,            encoredMovePos,                (u32, MAX_MON_MOVES)) \
     F(VOLATILE_PROTECT_USES,                consecutiveMoveUses,           (u32, UINT8_MAX)) \
     F(VOLATILE_STOCKPILE_COUNTER,           stockpileCounter,              (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_DEF,               stockpileDef,                  (u32, MAX_STAT_STAGE)) \
@@ -245,15 +261,14 @@ enum VolatileFlags
     F(VOLATILE_STOCKPILE_BEFORE_DEF,        stockpileBeforeDef,            (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_BEFORE_SP_DEF,     stockpileBeforeSpDef,          (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_SUBSTITUTE_HP,               substituteHP,                  (u32, UINT8_MAX)) \
-    F(VOLATILE_ENCORED_MOVE_POS,            encoredMovePos,                (u32, MAX_BITS(MAX_MON_MOVES))) \
     F(VOLATILE_DISABLE_TIMER,               disableTimer,                  (u32, B_DISABLE_TIMER)) \
     F(VOLATILE_ENCORE_TIMER,                encoreTimer,                   (u32, B_ENCORE_TIMER)) \
     F(VOLATILE_PERISH_SONG_TIMER,           perishSongTimer,               (u32, B_PERISH_SONG_TIMER)) \
     F(VOLATILE_ROLLOUT_TIMER,               rolloutTimer,                  (u32, UINT8_MAX)) \
     F(VOLATILE_FURY_CUTTER_COUNTER,         furyCutterCounter,             (u32, UINT8_MAX)) \
     F(VOLATILE_METRONOME_ITEM_COUNTER,      metronomeItemCounter,          (u32, UINT8_MAX)) \
-    F(VOLATILE_BATTLER_PREVENTING_ESCAPE,   battlerPreventingEscape,       (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
-    F(VOLATILE_BATTLER_WITH_SURE_HIT,       battlerWithSureHit,            (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_BATTLER_PREVENTING_ESCAPE,   battlerPreventingEscape,       (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_BATTLER_WITH_SURE_HIT,       battlerWithSureHit,            (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_MIMICKED_MOVES,              mimickedMoves,                 (u32, MAX_BITS(MAX_MON_MOVES))) \
     F(VOLATILE_RECHARGE_TIMER,              rechargeTimer,                 (u32, 2)) \
     F(VOLATILE_AUTOTOMIZE_COUNT,            autotomizeCount,               (u32, UINT8_MAX)) \
@@ -268,6 +283,7 @@ enum VolatileFlags
     F(VOLATILE_THROAT_CHOP_TIMER,           throatChopTimer,               (u32, B_THROAT_CHOP_TIMER)) \
     F(VOLATILE_WRAP_TURNS,                  wrapTurns,                     (u32, B_WRAP_TURNS)) \
     F(VOLATILE_SYRUP_BOMB_TIMER,            syrupBombTimer,                (u32, B_SYRUP_BOMB_TIMER)) \
+    F(VOLATILE_STOMPING_TANTRUM_TIMER,      stompingTantrumTimer,          (u32, 2)) \
     F(VOLATILE_USED_MOVES,                  usedMoves,                     (u32, MAX_BITS(MAX_MON_MOVES))) \
     F(VOLATILE_TRUANT_COUNTER,              truantCounter,                 (u32, 1)) \
     F(VOLATILE_TRUANT_SWITCH_IN_HACK,       truantSwitchInHack,            (u32, 1)) \
@@ -287,11 +303,14 @@ enum VolatileFlags
     F(VOLATILE_UNNERVE_ACTIVATED,           unnerveActivated,              (u32, 1)) \
     F(VOLATILE_ENDURED,                     endured,                       (u32, 1)) \
     F(VOLATILE_TRY_EJECT_PACK,              tryEjectPack,                  (u32, 1)) \
-    F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
     F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1)) \
-    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1))
-
+    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1)) \
+    F(VOLATILE_ARENA_MIND_POINTS,           arenaMindPoints,               (s32, UINT8_MAX)) \
+    F(VOLATILE_ARENA_SKILL_POINTS,          arenaSkillPoints,              (s32, UINT8_MAX)) \
+    F(VOLATILE_ARENA_START_HP,              arenaStartHP,                  (u32, UINT16_MAX)) \
+    F(VOLATILE_SUPREME_OVERLORD_COUNTER,    supremeOverlordCounter,        (u32, 5)) \
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
 #define GET_VOLATILE_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeMaxValue)
