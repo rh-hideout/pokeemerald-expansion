@@ -25,6 +25,7 @@ SINGLE_BATTLE_TEST("Venom Drench lowers stats of a poisoned target")
 SINGLE_BATTLE_TEST("Venom Drench is blocked by Substitute")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_VENOM_DRENCH, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SUBSTITUTE, MOVE_CELEBRATE); Status1(STATUS1_POISON); }
     } WHEN {
