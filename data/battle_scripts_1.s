@@ -1652,6 +1652,7 @@ BattleScript_ToxicThreadTryPsn::
 
 BattleScript_EffectVenomDrench::
 	attackcanceler
+	jumpifsubstituteblocks BattleScript_ButItFailed
 	jumpifstatus BS_TARGET, STATUS1_PSN_ANY, BattleScript_EffectVenomDrenchCanBeUsed
 	goto BattleScript_ButItFailed
 BattleScript_EffectVenomDrenchCanBeUsed:
