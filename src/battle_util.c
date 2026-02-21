@@ -2732,10 +2732,13 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_InsomniaProtects;
         break;
     case EFFECT_SUCKER_PUNCH:
+    {
+        u32 defMove = GetChosenMoveFromPosition(ctx->battlerDef);
         if (HasBattlerActedThisTurn(ctx->battlerDef)
-         || (IsBattleMoveStatus(GetChosenMoveFromPosition(ctx->battlerDef)) && !gProtectStructs[ctx->battlerDef].noValidMoves))
+         || (IsBattleMoveStatus(defMove) && !gProtectStructs[ctx->battlerDef].noValidMoves && defMove != MOVE_ME_FIRST))
             battleScript = BattleScript_ButItFailed;
         break;
+    }
     case EFFECT_UPPER_HAND:
     {
         u32 prio = GetChosenMovePriority(ctx->battlerDef, ctx->abilities[ctx->battlerDef]);

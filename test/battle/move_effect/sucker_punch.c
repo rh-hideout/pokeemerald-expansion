@@ -1,6 +1,11 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_SUCKER_PUNCH) == EFFECT_SUCKER_PUNCH);
+}
+
 SINGLE_BATTLE_TEST("Sucker Punch hits targets that are about to attack")
 {
     GIVEN {
@@ -31,6 +36,25 @@ SINGLE_BATTLE_TEST("Sucker Punch doesn't hit targets using status moves")
             HP_BAR(opponent);
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sucker Punch hits targets using Me First")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ME_FIRST) == EFFECT_ME_FIRST);
+        ASSUME(GetMovePriority(MOVE_SUCKER_PUNCH) > GetMovePriority(MOVE_ME_FIRST));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUCKER_PUNCH); MOVE(opponent, MOVE_ME_FIRST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ME_FIRST, opponent);
+            HP_BAR(player);
+        }        
     }
 }
 
