@@ -11215,11 +11215,21 @@ static u32 GetAssistMove(void)
     u32 move = MOVE_NONE;
     s32 chooseableMovesNo = 0;
     struct Pokemon *party;
+    u8 battlerByPartyId[PARTY_SIZE];
     u16 *validMoves = Alloc(sizeof(u16) * PARTY_SIZE * MAX_MON_MOVES);
 
     if (validMoves != NULL)
     {
         party = GetBattlerParty(gBattlerAttacker);
+        for (u32 i = 0; i < PARTY_SIZE; i++)
+            battlerByPartyId[i] = MAX_BATTLERS_COUNT;
+        for (u32 battler = 0; battler < gBattlersCount; battler++)
+        {
+            if (GetBattlerSide(battler) != GetBattlerSide(gBattlerAttacker))
+                continue;
+            if (gBattlerPartyIndexes[battler] < PARTY_SIZE)
+                battlerByPartyId[gBattlerPartyIndexes[battler]] = battler;
+        }
 
         for (u32 monId = 0; monId < PARTY_SIZE; monId++)
         {
@@ -11232,7 +11242,12 @@ static u32 GetAssistMove(void)
 
             for (u32 moveId = 0; moveId < MAX_MON_MOVES; moveId++)
             {
-                u16 move = GetMonData(&party[monId], MON_DATA_MOVE1 + moveId);
+                u16 move;
+
+                if (battlerByPartyId[monId] != MAX_BATTLERS_COUNT)
+                    move = gBattleMons[battlerByPartyId[monId]].moves[moveId];
+                else
+                    move = GetMonData(&party[monId], MON_DATA_MOVE1 + moveId);
 
                 if (IsMoveAssistBanned(move))
                     continue;
