@@ -582,10 +582,10 @@ static void CB2_InitBattleInternal(void)
         TryFormChange(i, B_SIDE_PLAYER, FORM_CHANGE_BEGIN_BATTLE);
         TryFormChange(i, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_BATTLE);
     }
-    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER)) //  (BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)??
+    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
     {
-        TryFormChange(0, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_WILD_ENCOUNTER);// We check only for minior in the first two opposing slots, assuming these are the only opposing slots that can be occupied in a wild battle.
-        TryFormChange(1, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_WILD_ENCOUNTER);// friendly minior are unaffected and indeed should always be in core anyway.
+        TryFormChange(0, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_WILD_ENCOUNTER);
+        TryFormChange(1, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_WILD_ENCOUNTER);// Only tries to change the first two opposing slots, assuming these are the only ones occupied in a wild battle.
     }
     if (TESTING)
     {
