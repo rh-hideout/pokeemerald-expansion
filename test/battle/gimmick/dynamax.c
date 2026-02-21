@@ -997,6 +997,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes both opponents")
         TURN { MOVE(playerLeft, MOVE_THUNDERBOLT, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
         MESSAGE("Pikachu used G-Max Volt Crash!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_VOLT_CRASH, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponentLeft);
         MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
         STATUS_ICON(opponentLeft, paralysis: TRUE);
@@ -1309,6 +1310,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
     PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        ASSUME(GetItemHoldEffect(ITEM_APICOT_BERRY) == HOLD_EFFECT_SP_DEFENSE_UP);
         PLAYER(SPECIES_SNORLAX) { Item(ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_APICOT_BERRY); }
@@ -1321,12 +1323,14 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
         // turn 1
+
         MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
         MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
         MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
         MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
         // turn 2
         MESSAGE("Snorlax used G-Max Replenish!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_REPLENISH, player);
         MESSAGE("Snorlax found one Apicot Berry!");
         MESSAGE("Munchlax found one Apicot Berry!");
     }
@@ -1369,6 +1373,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health")
         TURN { MOVE(playerLeft, MOVE_MOONBLAST, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
         MESSAGE("Alcremie used G-Max Finale!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_FINALE, player);
         HP_BAR(playerLeft, captureDamage: &damage1);
         HP_BAR(playerRight, captureDamage: &damage2);
     } THEN {
@@ -1724,6 +1729,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, e
         TURN { MOVE(playerLeft, MOVE_MOONBLAST, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         MESSAGE("Alcremie used G-Max Finale!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_FINALE, player);
         HP_BAR(playerLeft, captureDamage: &damage1);
         HP_BAR(playerRight, captureDamage: &damage2);
     } THEN {
@@ -1736,6 +1742,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
     PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        ASSUME(GetItemHoldEffect(ITEM_APICOT_BERRY) == HOLD_EFFECT_SP_DEFENSE_UP);
         PLAYER(SPECIES_SNORLAX) { Item(ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
@@ -1753,6 +1760,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
         MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
         MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
         // turn 2
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_REPLENISH, player);
         MESSAGE("Snorlax used G-Max Replenish!");
         MESSAGE("Snorlax found one Apicot Berry!");
         MESSAGE("Munchlax found one Apicot Berry!");
@@ -1772,6 +1780,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes other opponent even if i
         TURN { MOVE(playerLeft, MOVE_THUNDERBOLT, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         MESSAGE("Pikachu used G-Max Volt Crash!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_VOLT_CRASH, player);
         NONE_OF {
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponentLeft);
             STATUS_ICON(opponentLeft, paralysis: TRUE);
