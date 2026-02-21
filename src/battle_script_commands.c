@@ -936,13 +936,6 @@ static const struct PickupItem sPickupTable[] =
 
 #undef _
 
-static const u8 sTriAttackEffects[] =
-{
-    MOVE_EFFECT_BURN,
-    MOVE_EFFECT_FREEZE_OR_FROSTBITE,
-    MOVE_EFFECT_PARALYSIS
-};
-
 bool32 ProteanTryChangeType(enum BattlerId battler, enum Ability ability, enum Move move, enum Type moveType)
 {
       if ((ability == ABILITY_PROTEAN || ability == ABILITY_LIBERO)
@@ -2569,11 +2562,21 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         gBattlescriptCurrInstr = battleScript;
         break;
     case MOVE_EFFECT_TRI_ATTACK:
-        gBattleStruct->triAttackEffect = RandomUniform(RNG_TRI_ATTACK, 0, ARRAY_COUNT(sTriAttackEffects) - 1) + 1; // +1 to differentiate when this is uninitialized and when pulling from array slot 0
+    {
+        static const u8 sTriAttackEffects[] =
+        {
+            MOVE_EFFECT_BURN,
+            MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+            MOVE_EFFECT_PARALYSIS
+        };
+        u32 chosenMoveEffect = RandomUniform(RNG_TRI_ATTACK, 0, ARRAY_COUNT(sTriAttackEffects) - 1);
+        if (sTriAttackEffects[chosenMoveEffect] == MOVE_EFFECT_BURN)
+            gBattleStruct->triAttackBurn = TRUE;
 
         if (!gBattleMons[effectBattler].status1)
-            SetMoveEffect(battlerAtk, effectBattler, sTriAttackEffects[gBattleStruct->triAttackEffect - 1], battleScript, effectFlags);
+            SetMoveEffect(battlerAtk, effectBattler, sTriAttackEffects[chosenMoveEffect], battleScript, effectFlags);
         break;
+    }
     case MOVE_EFFECT_WRAP:
         if (gBattleMons[gEffectBattler].volatiles.wrapped)
         {
@@ -11662,8 +11665,7 @@ bool32 CanBurnHitThaw(enum Move move)
                 return TRUE;
 
             if (additionalEffect->moveEffect == MOVE_EFFECT_TRI_ATTACK
-             && gBattleStruct->triAttackEffect != 0
-             && sTriAttackEffects[gBattleStruct->triAttackEffect - 1] == MOVE_EFFECT_BURN)
+             && gBattleStruct->triAttackBurn)
                 return TRUE;
         }
     }
