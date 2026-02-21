@@ -6,45 +6,55 @@ ASSUMPTIONS
     ASSUME(gItemsInfo[ITEM_EVIOLITE].holdEffect == HOLD_EFFECT_EVIOLITE);
 }
 
-SINGLE_BATTLE_TEST("Eviolite boosts Defense for unevolved Pokemon", s16 damage)
+SINGLE_BATTLE_TEST("Eviolite boosts Defense and Sp. Def for unevolved Pokemon", s16 damage)
 {
+    u16 move;
     u32 item;
 
-    PARAMETRIZE { item = ITEM_EVIOLITE; }
-    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { move = MOVE_SCRATCH;   item = ITEM_EVIOLITE; }
+    PARAMETRIZE { move = MOVE_SCRATCH;   item = ITEM_NONE; }
+    PARAMETRIZE { move = MOVE_WATER_GUN; item = ITEM_EVIOLITE; }
+    PARAMETRIZE { move = MOVE_WATER_GUN; item = ITEM_NONE; }
 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_PIKACHU) { Item(item); }
-        OPPONENT(SPECIES_MAGIKARP) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_MAGIKARP) { Moves(MOVE_SCRATCH, MOVE_WATER_GUN); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, move); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[3].damage);
     }
 }
 
-SINGLE_BATTLE_TEST("Eviolite boosts Sp. Def for unevolved Pokemon", s16 damage)
+SINGLE_BATTLE_TEST("Eviolite does not boost Defense or Sp. Def for evolved Pokemon", s16 damage)
 {
+    u16 move;
     u32 item;
 
-    PARAMETRIZE { item = ITEM_EVIOLITE; }
-    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { move = MOVE_SCRATCH;   item = ITEM_EVIOLITE; }
+    PARAMETRIZE { move = MOVE_SCRATCH;   item = ITEM_NONE; }
+    PARAMETRIZE { move = MOVE_WATER_GUN; item = ITEM_EVIOLITE; }
+    PARAMETRIZE { move = MOVE_WATER_GUN; item = ITEM_NONE; }
 
     GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_PIKACHU) { Item(item); }
-        OPPONENT(SPECIES_MAGIKARP) { Moves(MOVE_WATER_GUN); }
+        PLAYER(SPECIES_RAICHU) { Item(item); }
+        OPPONENT(SPECIES_MAGIKARP) { Moves(MOVE_SCRATCH, MOVE_WATER_GUN); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_WATER_GUN); }
+        TURN { MOVE(opponent, move); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.0), results[1].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.0), results[3].damage);
     }
 }
 
