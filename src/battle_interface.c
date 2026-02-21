@@ -1709,7 +1709,7 @@ void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon)
     gSprites[healthboxSpriteId].data[1] = healthboxSpriteId2;
     gSprites[healthboxSpriteId2].data[1] = SPRITE_NONE;
 
-    u32 fontId = GetFontIdToFit(ptr, FONT_SMALL, 0, 55);
+    u32 fontId = GetFontIdToFit(gDisplayedStringBattle, FONT_SMALL, 0, 55);
 
     if (IsOnPlayerSide(gSprites[healthboxSpriteId].data[6]))
     {

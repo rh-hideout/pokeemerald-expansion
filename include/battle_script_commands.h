@@ -68,7 +68,7 @@ bool32 ProteanTryChangeType(enum BattlerId battler, enum Ability ability, enum M
 u8 GetFirstFaintedPartyIndex(enum BattlerId battler);
 void SaveBattlerTarget(enum BattlerId battler);
 void SaveBattlerAttacker(enum BattlerId battler);
-bool32 CanBurnHitThaw(enum Move move);
+bool32 CanBurnHitThaw(enum Ability abilityAtk, enum Move move);
 
 extern void (*const gBattleScriptingCommandsTable[])(void);
 extern const struct StatFractions gAccuracyStageRatios[];

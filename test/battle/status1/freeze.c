@@ -23,9 +23,60 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks")
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Ember!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         MESSAGE("Wobbuffet thawed out!");
         STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks even if Sheer Force affected")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBER); MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        MESSAGE("Wobbuffet thawed out!");
+        STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Freeze is thawed by opponent's attack that can burn (Gen 6+)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_BURN_HIT_THAW, GEN_6);
+        ASSUME(MoveHasAdditionalEffect(MOVE_SCALD, MOVE_EFFECT_BURN));
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCALD); MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALD, opponent);
+        MESSAGE("Wobbuffet thawed out!");
+        STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+SINGLE_BATTLE_TEST("Freeze isn't thawed by opponent's attack that can burn if Sheer Force affected (Gen 6+)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_BURN_HIT_THAW, GEN_6);
+        ASSUME(MoveHasAdditionalEffect(MOVE_SCALD, MOVE_EFFECT_BURN));
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCALD); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALD, opponent);
+        NONE_OF {
+            MESSAGE("Wobbuffet thawed out!");
+            STATUS_ICON(player, none: TRUE);
+        }
     }
 }
 

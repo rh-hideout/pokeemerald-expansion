@@ -1331,7 +1331,6 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if mon has Truant and oppon
     }
 }
 
-#if 0
 AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if mon has Truant and opponent has invulnerability move and is faster")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_TRUANT_PERCENTAGE, 100, RNG_AI_SWITCH_TRUANT);
@@ -1345,7 +1344,6 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if mon has Truant and oppon
         TURN { SKIP_TURN(player); EXPECT_SWITCH(opponent, 1); }
     }
 }
-#endif
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attacking stat lowered by 2 stages with good switchin candidate 50% of the time")
 {
@@ -2173,5 +2171,27 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will consider all mons tha
             TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 5); }
         else
             TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_MOVE(opponent, MOVE_U_TURN); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI will not switch out if the opposite battler is absent and its moves can still affect the other opponent")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { HP(41); Speed(1); }
+        MULTI_PARTNER(SPECIES_DRAKLOAK) { HP(41); MaxHP(100); Speed(4); Item(ITEM_LIFE_ORB); Moves(MOVE_DRAGON_RAGE, MOVE_SHADOW_BALL); }
+        MULTI_PARTNER(SPECIES_DRAGAPULT) { Speed(4); Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_A(SPECIES_CYCLIZAR) { HP(41); MaxHP(100); Speed(3); Item(ITEM_LIFE_ORB); Moves(MOVE_BODY_SLAM, MOVE_DRAGON_RAGE); }
+        MULTI_OPPONENT_A(SPECIES_DRAMPA) { Speed(3); Moves(MOVE_BODY_SLAM); }
+        MULTI_OPPONENT_B(SPECIES_WYNAUT) { Speed(2); HP(41); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_BODY_SLAM, target: playerLeft); 
+            EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target: opponentRight); 
+        }
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_DRAGON_RAGE, target: playerRight);
+            EXPECT_MOVE(playerRight, MOVE_DRAGON_RAGE, target: opponentLeft);
+        }
     }
 }
