@@ -8145,8 +8145,13 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     case HOLD_EFFECT_EVIOLITE:
-        if (CanEvolve(gBattleMons[battlerDef].species))
+        {
+            u16 species = gBattleMons[battlerDef].species;
+            if (gBattleMons[battlerDef].volatiles.transformed && gDisableStructs[battlerDef].transformedMonSpecies != SPECIES_NONE)
+                species = gDisableStructs[battlerDef].transformedMonSpecies;
+            if (CanEvolve(species))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+        }
         break;
     case HOLD_EFFECT_ASSAULT_VEST:
         if (!usesDefStat)

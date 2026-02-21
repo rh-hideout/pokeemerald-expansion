@@ -11309,6 +11309,7 @@ static void Cmd_transformdataexecution(void)
         gBattleMons[gBattlerAttacker].volatiles.transformed = TRUE;
         gDisableStructs[gBattlerAttacker].disabledMove = MOVE_NONE;
         gDisableStructs[gBattlerAttacker].disableTimer = 0;
+        gDisableStructs[gBattlerAttacker].transformedMonSpecies = gBattleMons[gBattlerAttacker].species;
         gDisableStructs[gBattlerAttacker].transformedMonPersonality = gBattleMons[gBattlerTarget].personality;
         if (B_TRANSFORM_SHINY >= GEN_4)
             gDisableStructs[gBattlerAttacker].transformedMonShininess = gBattleMons[gBattlerTarget].isShiny;
