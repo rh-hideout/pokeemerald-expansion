@@ -2735,7 +2735,7 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
     {
         u32 defMove = GetChosenMoveFromPosition(ctx->battlerDef);
         if (HasBattlerActedThisTurn(ctx->battlerDef)
-         || (IsBattleMoveStatus(defMove) && !gProtectStructs[ctx->battlerDef].noValidMoves && defMove != MOVE_ME_FIRST))
+         || (IsBattleMoveStatus(defMove) && !gProtectStructs[ctx->battlerDef].noValidMoves && GetMoveEffect(defMove) != EFFECT_ME_FIRST))
             battleScript = BattleScript_ButItFailed;
         break;
     }
