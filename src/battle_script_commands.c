@@ -8513,8 +8513,9 @@ static void Cmd_transformdataexecution(void)
     else
     {
         s32 i;
-        u8 *battleMonAttacker, *battleMonTarget;
         u8 timesGotHit;
+        struct BattlePokemon *battleMonAttacker;
+        struct BattlePokemon *battleMonTarget;
 
         gBattleMons[gBattlerAttacker].volatiles.transformed = TRUE;
         gBattleMons[gBattlerAttacker].volatiles.disabledMove = MOVE_NONE;
@@ -8533,11 +8534,26 @@ static void Cmd_transformdataexecution(void)
 
         PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].species)
 
-        battleMonAttacker = (u8 *)(&gBattleMons[gBattlerAttacker]);
-        battleMonTarget = (u8 *)(&gBattleMons[gBattlerTarget]);
+        battleMonAttacker = &gBattleMons[gBattlerAttacker];
+        battleMonTarget = &gBattleMons[gBattlerTarget];
 
-        for (i = 0; i < offsetof(struct BattlePokemon, pp); i++)
-            battleMonAttacker[i] = battleMonTarget[i];
+        battleMonAttacker->species = battleMonTarget->species;
+        battleMonAttacker->attack = battleMonTarget->attack;
+        battleMonAttacker->defense = battleMonTarget->defense;
+        battleMonAttacker->speed = battleMonTarget->speed;
+        battleMonAttacker->spAttack = battleMonTarget->spAttack;
+        battleMonAttacker->spDefense = battleMonTarget->spDefense;
+        memcpy(battleMonAttacker->moves, battleMonTarget->moves, sizeof(battleMonAttacker->moves));
+        battleMonAttacker->hpIV = battleMonTarget->hpIV;
+        battleMonAttacker->attackIV = battleMonTarget->attackIV;
+        battleMonAttacker->defenseIV = battleMonTarget->defenseIV;
+        battleMonAttacker->speedIV = battleMonTarget->speedIV;
+        battleMonAttacker->spAttackIV = battleMonTarget->spAttackIV;
+        battleMonAttacker->spDefenseIV = battleMonTarget->spDefenseIV;
+        battleMonAttacker->abilityNum = battleMonTarget->abilityNum;
+        memcpy(battleMonAttacker->statStages, battleMonTarget->statStages, sizeof(battleMonAttacker->statStages));
+        battleMonAttacker->ability = battleMonTarget->ability;
+        memcpy(battleMonAttacker->types, battleMonTarget->types, sizeof(battleMonAttacker->types));
 
         gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = GetBattlerAbility(gBattlerTarget);
         for (i = 0; i < MAX_MON_MOVES; i++)
