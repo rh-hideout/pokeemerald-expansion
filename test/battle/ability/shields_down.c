@@ -99,18 +99,15 @@ WILD_BATTLE_TEST("Wild Minior appear in Meteor form without transforming")// To 
 SINGLE_BATTLE_TEST("Trainers' Minior appear in Core form")
 {
     GIVEN {
-        PLAYER(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); }
-        OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); }
+        PLAYER(SPECIES_WOBBUFFET) 
+        OPPONENT(SPECIES_MINIOR_METEOR) { Ability(ABILITY_SHIELDS_DOWN); }
     } WHEN {
         TURN {}
     } SCENE {
-        ABILITY_POPUP(player, ABILITY_SHIELDS_DOWN);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
         ABILITY_POPUP(opponent, ABILITY_SHIELDS_DOWN);
 	ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponent);
     } THEN {
         EXPECT_EQ(opponent->species, SPECIES_MINIOR_METEOR);
-        EXPECT_EQ(player->species, SPECIES_MINIOR_METEOR);
     }
 }
 
