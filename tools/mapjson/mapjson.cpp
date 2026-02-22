@@ -683,14 +683,14 @@ void clean_heal_locations(vector<string> &valid_map_ids)
     std::ifstream infile("src/data/heal_locations.json");
     bool deleted_flag;
 
-    std::regex map_regex("MAP_\\w+");
+    std::regex map_regex("\"respawn_map\"\\s*:\\s*\"(MAP_\\w+)\"");
     std::regex npc_regex("LOCALID_\\w+");
     std::smatch map_match;
     string line;
     while (std::getline(infile, line))
     {
         if (std::regex_search(line, map_match, map_regex) && !deleted_flag) {
-            auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map_match[0]);
+            auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map_match[1]);
             if (it == valid_map_ids.end())
                 deleted_flag = true;
         }
