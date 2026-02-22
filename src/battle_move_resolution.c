@@ -1223,6 +1223,19 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
          || gBattleMons[ctx->battlerAtk].volatiles.embargo)
             battleScript = BattleScript_ButItFailed;
         break;
+    case EFFECT_PRESENT:
+    {
+        u32 rand = RandomUniform(RNG_PRESENT, 0, 0xFF);
+        if (rand < 102)
+            gBattleStruct->presentBasePower = 40;
+        else if (rand < 178)
+            gBattleStruct->presentBasePower = 80;
+        else if (rand < 204)
+            gBattleStruct->presentBasePower = 120;
+        else
+            gBattleStruct->presentBasePower = 0; // Healing
+    }
+        break;
     default:
         break;
     }
@@ -1837,6 +1850,7 @@ static bool32 IsMoveParentalBondAffected(struct BattleContext *ctx)
      || GetMoveEffect(ctx->move) == EFFECT_SEMI_INVULNERABLE
      || GetMoveEffect(ctx->move) == EFFECT_TWO_TURNS_ATTACK
      || GetActiveGimmick(ctx->battlerAtk) == GIMMICK_Z_MOVE
+     || (GetMoveEffect(ctx->move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0)
      || ctx->move == MOVE_STRUGGLE)
         return FALSE;
     return TRUE;

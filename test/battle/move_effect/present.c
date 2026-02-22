@@ -8,7 +8,6 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Present healing through Wonder Guard is still considered to have affected the target")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIRROR_MOVE) == EFFECT_MIRROR_MOVE);
         PLAYER(SPECIES_WOBBUFFET);
