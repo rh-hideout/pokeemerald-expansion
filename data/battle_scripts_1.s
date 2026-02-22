@@ -5424,6 +5424,17 @@ BattleScript_BattlerFormChangeFromAfterAnimation::
 	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
 
+BattleScript_ZenMode::
+	flushtextbox
+	call BattleScript_AbilityPopUpScripting
+	handleformchange BS_SCRIPTING, 0
+	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
+	waitanimation
+	handleformchange BS_SCRIPTING, 1
+	printstring STRINGID_ZENMODETRIGGERED
+	waitmessage B_WAIT_TIME_SHORT
+	end2
+
 BattleScript_BattlerFormChangeDisguise::
 	call BattleScript_AbilityPopUpScripting
 	pause B_WAIT_TIME_LONG

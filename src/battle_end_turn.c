@@ -1328,6 +1328,8 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
             BattleScriptExecute(BattleScript_PowerConstruct);
         else if (ability == ABILITY_HUNGER_SWITCH)
             BattleScriptExecute(BattleScript_BattlerFormChangeEnd3NoPopup);
+        else if (ability == ABILITY_ZEN_MODE)
+            BattleScriptExecute(BattleScript_ZenMode);
         else
             BattleScriptExecute(BattleScript_BattlerFormChangeEnd2); // Generic animation
         effect = TRUE;
