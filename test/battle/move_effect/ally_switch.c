@@ -423,7 +423,49 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update Wish recovery position")
         EXPECT_EQ(playerRight->hp, 50);
     }
 }
-TO_DO_BATTLE_TEST("Ally Switch does not update Healing Wish/Lunar Dance recovery position")
+
+DOUBLE_BATTLE_TEST("Ally Switch does not update Healing Wish/Lunar Dance recovery position")
+{
+    u16 move = MOVE_NONE;
+    struct BattlePokemon *switchTarget = NULL;
+
+    PARAMETRIZE { move = MOVE_HEALING_WISH; switchTarget = playerLeft; }
+    PARAMETRIZE { move = MOVE_HEALING_WISH; switchTarget = playerRight; }
+    PARAMETRIZE { move = MOVE_LUNAR_DANCE;  switchTarget = playerLeft; }
+    PARAMETRIZE { move = MOVE_LUNAR_DANCE;  switchTarget = playerRight; }
+
+    GIVEN {
+        WITH_CONFIG(B_HEALING_WISH_SWITCH, GEN_8);
+        ASSUME(GetMoveEffect(MOVE_HEALING_WISH) == EFFECT_HEALING_WISH);
+        ASSUME(GetMoveEffect(MOVE_LUNAR_DANCE) == EFFECT_LUNAR_DANCE);
+        PLAYER(SPECIES_GARDEVOIR);
+        PLAYER(SPECIES_ABRA);
+        PLAYER(SPECIES_WOBBUFFET) { HP(100); MaxHP(100); }
+        PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(80); Status1(STATUS1_PARALYSIS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, move); SEND_OUT(playerLeft, 2); }
+        TURN { MOVE(playerRight, MOVE_ALLY_SWITCH); }
+        TURN { SWITCH(switchTarget, 3); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        if (switchTarget == playerLeft) {
+            HP_BAR(playerLeft, hp: 80);
+            STATUS_ICON(playerLeft, none: TRUE);
+        } else {
+            NOT HP_BAR(playerRight);
+        }
+    } THEN {
+        if (switchTarget == playerLeft) {
+            EXPECT_EQ(playerLeft->hp, 80);
+            EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+        } else {
+            EXPECT_EQ(playerRight->hp, 50);
+            EXPECT_EQ(playerRight->status1, STATUS1_PARALYSIS);
+        }
+    }
+}
 
 DOUBLE_BATTLE_TEST("Ally Switch updates attract battler")
 {
