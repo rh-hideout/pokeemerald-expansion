@@ -313,9 +313,8 @@ DOUBLE_BATTLE_TEST("Ally switch swaps opposing sky drop targets if partner is be
 DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ALLY_SWITCH) == EFFECT_ALLY_SWITCH);
         PLAYER(SPECIES_HOOPA);
-        PLAYER(SPECIES_ZOROARK);
+        PLAYER(SPECIES_ZOROARK) {Ability(ABILITY_ILLUSION); }
         PLAYER(SPECIES_MAMOSWINE); // the third member here is required for zoroark
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -329,6 +328,7 @@ DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
 DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MIMIC) == EFFECT_MIMIC);
         PLAYER(SPECIES_XATU)     { Speed(100); }
         PLAYER(SPECIES_RIOLU)    { Speed(150); }
         OPPONENT(SPECIES_FEAROW) { Speed(20); }
@@ -348,9 +348,10 @@ DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
     }
 }
 
-DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
+DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed position")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_SOLOSIS);
         OPPONENT(SPECIES_BULBASAUR) { HP(50); MaxHP(100); }
@@ -378,6 +379,50 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
         EXPECT_GT(opponentRight->hp, 50);
     }
 }
+
+DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ABRA);
+        OPPONENT(SPECIES_RALTS);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FUTURE_SIGHT, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
+        MESSAGE("Wynaut took the Future Sight attack!");
+        HP_BAR(playerLeft);
+        NOT HP_BAR(playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally Switch does not update Wish recovery position")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WISH) == EFFECT_WISH);
+        PLAYER(SPECIES_WOBBUFFET) { HP(50); MaxHP(100); }
+        PLAYER(SPECIES_WYNAUT) { HP(20); MaxHP(100); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_WISH); }
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WISH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
+        HP_BAR(playerLeft);
+        NOT HP_BAR(playerRight);
+    } THEN {
+        EXPECT_EQ(playerLeft->hp, 70);
+        EXPECT_EQ(playerRight->hp, 50);
+    }
+}
+TO_DO_BATTLE_TEST("Ally Switch does not update Healing Wish/Lunar Dance recovery position")
 
 DOUBLE_BATTLE_TEST("Ally Switch updates attract battler")
 {
