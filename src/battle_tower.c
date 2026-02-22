@@ -686,7 +686,7 @@ static const u8 *const *const sPartnerApprenticeTextTables[NUM_APPRENTICES] =
 
 #include "data/battle_frontier/battle_tent.h"
 
-static void (* const sBattleTowerFuncs[])(void) =
+static void (*const sBattleTowerFuncs[])(void) =
 {
     [BATTLE_TOWER_FUNC_INIT]                = InitTowerChallenge,
     [BATTLE_TOWER_FUNC_GET_DATA]            = GetTowerData,
