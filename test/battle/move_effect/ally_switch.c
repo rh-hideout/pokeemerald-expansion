@@ -402,6 +402,28 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position")
     }
 }
 
+DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position when attacker side switches")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ABRA);
+        OPPONENT(SPECIES_RALTS);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FUTURE_SIGHT, target: playerLeft); }
+        TURN { SWITCH(opponentLeft, 2); MOVE(opponentRight, MOVE_ALLY_SWITCH); }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight);
+        MESSAGE("Wobbuffet took the Future Sight attack!");
+        HP_BAR(playerLeft);
+        NOT HP_BAR(playerRight);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Ally Switch does not update Wish recovery position")
 {
     GIVEN {
