@@ -686,6 +686,15 @@ static const u8 *const *const sPartnerApprenticeTextTables[NUM_APPRENTICES] =
 
 #include "data/battle_frontier/battle_tent.h"
 
+#include "data/partner_parties.h"
+
+#if !TESTING
+const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
+{
+    #include "data/battle_partners.h"
+};
+#endif
+
 static void (*const sBattleTowerFuncs[])(void) =
 {
     [BATTLE_TOWER_FUNC_INIT]                = InitTowerChallenge,
