@@ -5431,7 +5431,7 @@ BattleScript_ZenMode::
 	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
 	handleformchange BS_SCRIPTING, 1
-	printstring STRINGID_ZENMODETRIGGERED
+	printfromtable gZenModeStringIds
 	waitmessage B_WAIT_TIME_SHORT
 	end2
 
