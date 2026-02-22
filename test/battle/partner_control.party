@@ -1,46 +1,50 @@
-=== PARTNER_NONE ===
-Name:
-Class: Pkmn Trainer 1
-Pic: Brendan
-Gender: Male
-Music: Male
-Back Pic: Brendan
-
-=== PARTNER_STEVEN ===
-Name: STEVEN
+=== 0 ===
+Name: Test1
 Class: Rival
 Pic: Steven
 Gender: Male
 Music: Male
 Back Pic: Steven
-AI: Basic Trainer
+Battle Type: Singles
+Difficulty: Normal
 
-Metang
-Brave Nature
-Level: 42
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
-- Light Screen
-- Psychic
-- Reflect
-- Metal Claw
+Mewtwo
+Level: 5
 
-Skarmory
-Impish Nature
-Level: 43
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 6 SpA / 252 SpD
-- Toxic
-- Aerial Ace
-- Protect
-- Steel Wing
+=== 1 ===
+Name: Test2
+Class: Rival
+Pic: Steven
+Gender: Male
+Music: Male
+Back Pic: Steven
+Difficulty: Normal
 
-Aggron
-Adamant Nature
-Level: 44
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 SpA / 6 SpD
-- Thunder
-- Protect
-- Solar Beam
-- Dragon Claw
+Mewtwo
+Level: 50
+
+=== 1 ===
+Name: Test2
+Class: Rival
+Pic: Steven
+Gender: Male
+Music: Male
+Back Pic: Steven
+Battle Type: Singles
+Difficulty: Easy
+
+Metapod
+Level: 1
+
+=== 1 ===
+Name: Test2
+Class: Rival
+Pic: Steven
+Gender: Male
+Music: Male
+Back Pic: Steven
+Battle Type: Singles
+Difficulty: Hard
+
+Arceus
+Level: 99
