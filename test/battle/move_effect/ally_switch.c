@@ -92,24 +92,24 @@ DOUBLE_BATTLE_TEST("Ally Switch does not redirect the target of Snipe Shot")
 
 DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with Stalwart and Propeller Tail")
 {
+    u16 species;
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_STALWART; }
-    PARAMETRIZE { ability = ABILITY_PROPELLER_TAIL; }
-    PARAMETRIZE { ability = ABILITY_TELEPATHY; }
+    PARAMETRIZE { species = SPECIES_DURALUDON; ability = ABILITY_STALWART; }
+    PARAMETRIZE { species = SPECIES_ARROKUDA;  ability = ABILITY_PROPELLER_TAIL; }
+    PARAMETRIZE { species = SPECIES_RALTS;     ability = ABILITY_TELEPATHY; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET); // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_KADABRA) { Ability(ability); }
+        OPPONENT(species) { Ability(ability); }
         OPPONENT(SPECIES_ABRA);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(opponentLeft, MOVE_SCRATCH, target:playerRight); } // Kadabra targets playerRight Wynaut.
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(opponentLeft, MOVE_SCRATCH, target:playerRight); } // Opponent targets playerRight Wynaut.
     } SCENE {
         MESSAGE("Wobbuffet used Ally Switch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
         MESSAGE("Wobbuffet and Wynaut switched places!");
 
-        MESSAGE("The opposing Kadabra used Scratch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR((ability == ABILITY_STALWART || ability == ABILITY_PROPELLER_TAIL) ? playerLeft : playerRight);
     }
@@ -218,6 +218,7 @@ DOUBLE_BATTLE_TEST("Ally Switch increases the Protect-like moves counter (Gen9+)
 DOUBLE_BATTLE_TEST("Ally Switch works if ally used two-turn move like Dig")
 {
     GIVEN {
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
