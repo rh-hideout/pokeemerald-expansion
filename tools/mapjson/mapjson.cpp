@@ -31,6 +31,8 @@ using json11::Json;
 
 #include "mapjson.h"
 
+#include <filesystem>
+
 string version;
 // System directory separator
 string sep;
@@ -187,17 +189,35 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     return text.str();
 }
 
+vector<string> get_existing_maps() {
+    vector<string> v = {};
+    string map_constants = read_text_file("include/constants/map_groups.h");
+
+    std::regex map_regex("(MAP_\\w+)\\s+=\\s+\\(\\d+");
+
+    for (std::smatch sm; regex_search(map_constants, sm, map_regex);)
+    {
+        v.push_back(sm[1]);
+        map_constants = sm.suffix();
+    }
+    return v;
+}
+
 string generate_map_connections_text(Json map_data) {
     if (map_data["connections"] == Json())
         return string("\n");
 
     string mapName = json_to_string(map_data, "name");
 
+    vector<string> existing_maps = get_existing_maps();
     ostringstream text;
     text << get_generated_warning("data/maps/" + mapName + "/map.json", true);
     text << mapName << "_MapConnectionsList:\n";
 
     for (auto &connection : map_data["connections"].array_items()) {
+        auto it = find(existing_maps.begin(), existing_maps.end(), json_to_string(connection, "map"));
+        if (it == existing_maps.end())
+            continue;
         text << "\tconnection "
              << json_to_string(connection, "direction") << ", "
              << json_to_string(connection, "offset") << ", "
@@ -739,6 +759,8 @@ string generate_layout_headers_text(Json layouts_data) {
 
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (layout == Json::object()) continue;
+        if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
+            continue;
         string layout_version = json_to_string(layout, "layout_version");
         if ((version == "emerald" && layout_version != "emerald")
          || (version == "firered" && layout_version != "frlg"))
@@ -789,6 +811,8 @@ string generate_layouts_table_text(Json layouts_data) {
          << json_to_string(layouts_data, "layouts_table_label") << "::\n";
 
     for (auto &layout : layouts_data["layouts"].array_items()) {
+        if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
+            continue;
         string layout_version = json_to_string(layout, "layout_version");
         if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg")) {
             text << "\t.4byte NULL\n";
