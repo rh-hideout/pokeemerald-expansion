@@ -1,4 +1,4 @@
-### Note: This guide was written for version 1.15.0. And the processes described here will likely become obsolete at some point
+### Disclaimer: This page is a work-in-progess and the processes described here are not fully tested and will likely break your game
 
 # Deleting vanilla maps
 
@@ -7,6 +7,10 @@ If you want to delete a map, you will need to remove 4 things:
 - the map folder in `data/layouts`
 - the include of the mapscript in `data/event_scripts.s`
 - the name of the map in `data/maps/map_groups.json`
+
+After deleting the layout folder, you will need to run
+`touch data/layouts/layouts.json`
+in order for some things to update properly during compilation
 
 Because vanilla maps are referenced all over the C code, deleting references to them can prevent the project to compile. To avoid this, mapjson will check if vanilla maps are missing and create dummy values for them.
 
