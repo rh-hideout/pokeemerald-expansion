@@ -1,5 +1,16 @@
-import re
 import json
+import os
+import re
+
+if not os.path.exists("Makefile"):
+    print("Please run this script from your root folder.")
+    quit()
+
+os.system("rm -R data/layouts/*_Frlg")
+print("rm -R data/layouts/*_Frlg")
+os.system("touch data/layouts/layouts.json")
+os.system("rm -R data/maps/*_Frlg")
+print("rm -R data/maps/*_Frlg")
 
 fileInput = "data/event_scripts.s"
 allLines = list()
