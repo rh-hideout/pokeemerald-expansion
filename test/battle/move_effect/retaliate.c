@@ -132,7 +132,7 @@ SINGLE_BATTLE_TEST("Retaliate works with Perish Song (Gen3 Perish Song)")
 {
     s16 damage[2];
     GIVEN {
-        WITH_CONFIG(CONFIG_CHECK_USER_FAILURE, GEN_3);
+        WITH_CONFIG(B_CHECK_USER_FAILURE, GEN_3);
         ASSUME(GetMoveEffect(MOVE_PERISH_SONG) == EFFECT_PERISH_SONG);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WOBBUFFET);

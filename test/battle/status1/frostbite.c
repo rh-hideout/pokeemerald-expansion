@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Frostbite deals 1/8th damage (Gen1-6) or 1/16th (Gen7+) per 
     PARAMETRIZE { config = GEN_7; value = 16; }
     PARAMETRIZE { config = GEN_6; value = 8; }
     GIVEN {
-        WITH_CONFIG(CONFIG_BURN_DAMAGE, config);
+        WITH_CONFIG(B_BURN_DAMAGE, config);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_FROSTBITE); }
     } WHEN {

@@ -402,22 +402,38 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, e
     CalculateMonStats(&mon);
 
     // moves
+    bool32 all_default_flag = TRUE;
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[i] == MOVE_NONE)
+        if (moves[i] != MOVE_DEFAULT)
+        {
+            all_default_flag = FALSE;
             break;
-        if (moves[i] < MOVES_COUNT)
-        {
-            SetMonMoveSlot(&mon, moves[i], i);
         }
-        else if (moves[i] == MOVE_DEFAULT)
+    }
+    if (all_default_flag)
+    {
+        GiveMonInitialMoveset(&mon);
+    }
+    else
+    {
+        for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            GiveMonDefaultMove(&mon, i);
-            continue;
-        }
-        else
-        {
-            assertf(FALSE, "invalid move: %d", moves[i]) {}
+            if (moves[i] == MOVE_NONE)
+                break;
+            if (moves[i] < MOVES_COUNT)
+            {
+                SetMonMoveSlot(&mon, moves[i], i);
+            }
+            else if (moves[i] == MOVE_DEFAULT)
+            {
+                GiveMonDefaultMove(&mon, i);
+                continue;
+            }
+            else
+            {
+                assertf(FALSE, "invalid move: %d", moves[i]) {}
+            }
         }
     }
 

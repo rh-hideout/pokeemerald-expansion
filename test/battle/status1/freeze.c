@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Freeze has a 20% chance of being thawed")
 SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks (Gen 3+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HIT_THAW, GEN_3);
+        WITH_CONFIG(B_HIT_THAW, GEN_3);
         ASSUME(GetMoveType(MOVE_FIRE_SPIN) == TYPE_FIRE);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks (Gen 3+)")
 SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks even if Sheer Force affected (Gen 3+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HIT_THAW, GEN_3);
+        WITH_CONFIG(B_HIT_THAW, GEN_3);
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks even if She
 SINGLE_BATTLE_TEST("Freeze is thawed by opponent's attack that can burn (Gen 1-2)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HIT_THAW, GEN_2);
+        WITH_CONFIG(B_HIT_THAW, GEN_2);
         ASSUME(MoveHasAdditionalEffect(MOVE_EMBER, MOVE_EFFECT_BURN));
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Tri Attack 1/3 of the time (G
 {
     PASSES_RANDOMLY(1, 3, RNG_TRI_ATTACK);
     GIVEN {
-        WITH_CONFIG(CONFIG_HIT_THAW, GEN_2);
+        WITH_CONFIG(B_HIT_THAW, GEN_2);
         ASSUME(MoveHasAdditionalEffect(MOVE_TRI_ATTACK, MOVE_EFFECT_TRI_ATTACK));
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Tri Attack 1/3 of the time (G
 SINGLE_BATTLE_TEST("Freeze is thawed by opponent's attack that can thaw the user (Gen 6+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HIT_THAW, GEN_6);
+        WITH_CONFIG(B_HIT_THAW, GEN_6);
         ASSUME(MoveThawsUser(MOVE_SCALD));
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's attack that can thaw the user
 SINGLE_BATTLE_TEST("Freeze isn't thawed by opponent's attack that can thaw the user if Sheer Force affected (Gen 6+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HIT_THAW, GEN_6);
+        WITH_CONFIG(B_HIT_THAW, GEN_6);
         ASSUME(MoveThawsUser(MOVE_SCALD));
         ASSUME(MoveIsAffectedBySheerForce(MOVE_SCALD));
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
@@ -123,7 +123,7 @@ SINGLE_BATTLE_TEST("Freeze isn't thawed by opponent's attack that can thaw the u
 SINGLE_BATTLE_TEST("Freeze is thawed by opponent's attack that can thaw the user if not Sheer Force affected (Gen 6+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HIT_THAW, GEN_6);
+        WITH_CONFIG(B_HIT_THAW, GEN_6);
         ASSUME(MoveThawsUser(MOVE_HYDRO_STEAM));
         ASSUME(!MoveIsAffectedBySheerForce(MOVE_HYDRO_STEAM));
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
