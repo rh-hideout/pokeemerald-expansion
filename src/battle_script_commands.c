@@ -8537,23 +8537,8 @@ static void Cmd_transformdataexecution(void)
         battleMonAttacker = &gBattleMons[gBattlerAttacker];
         battleMonTarget = &gBattleMons[gBattlerTarget];
 
-        battleMonAttacker->species = battleMonTarget->species;
-        battleMonAttacker->attack = battleMonTarget->attack;
-        battleMonAttacker->defense = battleMonTarget->defense;
-        battleMonAttacker->speed = battleMonTarget->speed;
-        battleMonAttacker->spAttack = battleMonTarget->spAttack;
-        battleMonAttacker->spDefense = battleMonTarget->spDefense;
-        memcpy(battleMonAttacker->moves, battleMonTarget->moves, sizeof(battleMonAttacker->moves));
-        battleMonAttacker->hpIV = battleMonTarget->hpIV;
-        battleMonAttacker->attackIV = battleMonTarget->attackIV;
-        battleMonAttacker->defenseIV = battleMonTarget->defenseIV;
-        battleMonAttacker->speedIV = battleMonTarget->speedIV;
-        battleMonAttacker->spAttackIV = battleMonTarget->spAttackIV;
-        battleMonAttacker->spDefenseIV = battleMonTarget->spDefenseIV;
-        battleMonAttacker->abilityNum = battleMonTarget->abilityNum;
-        memcpy(battleMonAttacker->statStages, battleMonTarget->statStages, sizeof(battleMonAttacker->statStages));
-        battleMonAttacker->ability = battleMonTarget->ability;
-        memcpy(battleMonAttacker->types, battleMonTarget->types, sizeof(battleMonAttacker->types));
+        // Fields before pp are copied by Transform. Keep new transformable fields above pp.
+        memcpy(battleMonAttacker, battleMonTarget, offsetof(struct BattlePokemon, pp));
 
         gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = GetBattlerAbility(gBattlerTarget);
         for (i = 0; i < MAX_MON_MOVES; i++)
