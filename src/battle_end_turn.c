@@ -1324,21 +1324,26 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
     {
         gBattleScripting.battler = battler;
         gBattleScripting.abilityPopupOverwrite = ability; // To prevent the new form's ability from pop up
-        if (ability == ABILITY_POWER_CONSTRUCT) // Special animation
-            BattleScriptExecute(BattleScript_PowerConstruct);
-        else if (ability == ABILITY_HUNGER_SWITCH)
-            BattleScriptExecute(BattleScript_BattlerFormChangeEnd3NoPopup);
-        else if (ability == ABILITY_ZEN_MODE)
+        switch (ability)
         {
+        case ABILITY_POWER_CONSTRUCT: // Special animation
+            BattleScriptExecute(BattleScript_PowerConstruct);
+            break;
+        case ABILITY_HUNGER_SWITCH:
+            BattleScriptExecute(BattleScript_BattlerFormChangeEnd3NoPopup);
+            break;
+        case ABILITY_ZEN_MODE:
             if (gBattleMons[battler].species == SPECIES_DARMANITAN_ZEN
                 || gBattleMons[battler].species == SPECIES_DARMANITAN_GALAR_ZEN)
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ZEN_MODE_TRIGGERED;
             else
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ZEN_MODE_ENDED;
             BattleScriptExecute(BattleScript_ZenMode);
-        }
-        else
+            break;
+        default:
             BattleScriptExecute(BattleScript_BattlerFormChangeEnd2); // Generic animation
+			break;
+        }
         effect = TRUE;
     }
 
