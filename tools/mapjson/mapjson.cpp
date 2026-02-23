@@ -643,7 +643,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
 
     text << "//Constants for unused maps\n";
     int map_id_num = 0;
-    int old_map_group;
+    int old_map_group = -1;
     Json required_map_defines = parse_required_map_defines();
     for (auto required_map_id : required_map_defines["required_maps"].array_items()) {
         string map_id = json_to_string(required_map_id[0]);
@@ -681,7 +681,7 @@ void clean_heal_locations(vector<string> &valid_map_ids)
 {
     std::stringstream new_json;
     std::ifstream infile("src/data/heal_locations.json");
-    bool deleted_flag;
+    bool deleted_flag = false;
 
     std::regex map_regex("\"respawn_map\"\\s*:\\s*\"(MAP_\\w+)\"");
     std::regex npc_regex("LOCALID_\\w+");
