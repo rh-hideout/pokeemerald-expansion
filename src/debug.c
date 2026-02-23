@@ -2430,9 +2430,9 @@ static void DebugAction_FlagsVars_PokedexFlags_Reset(u8 taskId)
     // Add party Pokemon to Pokedex
     for (partyId = 0; partyId < PARTY_SIZE; partyId++)
     {
-        if (GetMonData(&gPlayerParty[partyId], MON_DATA_SANITY_HAS_SPECIES))
+        if (GetMonData(&gParties[B_TRAINER_0][partyId], MON_DATA_SANITY_HAS_SPECIES))
         {
-            species = GetMonData(&gPlayerParty[partyId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_0][partyId], MON_DATA_SPECIES);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_CAUGHT);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN);
         }
@@ -4685,7 +4685,7 @@ static void DebugAction_Party_HealParty(u8 taskId)
 
 void DebugNative_GetAbilityNames(void)
 {
-    u32 species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES);
+    u32 species = GetMonData(&gParties[B_TRAINER_0][gSpecialVar_0x8004], MON_DATA_SPECIES);
     StringCopy(gStringVar1, gAbilitiesInfo[GetAbilityBySpecies(species, 0)].name);
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, 1)].name);
     StringCopy(gStringVar3, gAbilitiesInfo[GetAbilityBySpecies(species, 2)].name);
@@ -4709,7 +4709,7 @@ static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tFriendship = gTasks[taskId].tInput;
-        SetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -4727,7 +4727,7 @@ static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
 static void DebugNativeStep_Party_SetFriendshipMain(u8 taskId)
 {
     u8 windowId = DebugNativeStep_CreateDebugWindow();
-    u32 friendship = GetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP);
+    u32 friendship = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP);
 
     // Display initial flag
     Debug_Display_FriendshipInfo(friendship, friendship, 0, windowId);
@@ -4773,7 +4773,7 @@ static void DebugNativeStep_Party_SetPokerusDaysLeftSelect(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        SetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
         DebugNativeStep_CloseDebugWindow(taskId);
         return;
     }
@@ -4804,8 +4804,8 @@ static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tStrain = gTasks[taskId].tInput;
-        SetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
-        gTasks[taskId].tInput = GetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
+        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
+        gTasks[taskId].tInput = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
         Debug_Display_PokerusDaysLeftInfo(gTasks[taskId].tInput, gTasks[taskId].tStrain, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         gTasks[taskId].func = DebugNativeStep_Party_SetPokerusDaysLeftSelect;
         return;
@@ -4826,7 +4826,7 @@ static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
 static void DebugNativeStep_Party_SetPokerusMain(u8 taskId)
 {
     u8 windowId = DebugNativeStep_CreateDebugWindow();
-    u32 strain = GetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN);
+    u32 strain = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN);
 
     // Display initial flag
     Debug_Display_PokerusStrainInfo(strain, 0, windowId);
@@ -4861,10 +4861,10 @@ static void DebugAction_Party_ClearPokerus(u8 taskId)
 {
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
+        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
             continue;
         u32 data = 0;
-        SetMonData(&gPlayerParty[i], MON_DATA_POKERUS, &data);
+        SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS, &data);
     }
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
@@ -4897,7 +4897,7 @@ const struct Trainer* GetDebugAiTrainer(void)
 static void DebugAction_Party_SetParty(u8 taskId)
 {
     ZeroPlayerPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_0], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
 }
@@ -4906,8 +4906,8 @@ static void DebugAction_Party_BattleSingle(u8 taskId)
 {
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
-    CreateNPCTrainerPartyFromTrainer(gEnemyParty, GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_0], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_1], GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
 
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     gDebugAIFlags = sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_AI].aiFlags;

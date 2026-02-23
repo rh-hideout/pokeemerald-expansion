@@ -38,17 +38,20 @@ static void HandleSpecialTrainerBattleEnd(void)
         for (i = 0; i < PARTY_SIZE; i++)
         {
             enum Item itemBefore = GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_HELD_ITEM);
-            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &itemBefore);
+            SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HELD_ITEM, &itemBefore);
         }
         break;
     case SPECIAL_BATTLE_EREADER:
         CopyEReaderTrainerFarewellMessage();
         break;
     case SPECIAL_BATTLE_MULTI:
-        for (i = 0; i < 3; i++)
+        if (!AreMultiPartiesFullTeams())
         {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
-                gSaveBlock1Ptr->playerParty[i] = gPlayerParty[i];
+            for (i = 0; i < 3; i++)
+            {
+                if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
+                    gSaveBlock1Ptr->playerParty[i] = gParties[B_TRAINER_0][i];
+            }
         }
         break;
     }
@@ -76,7 +79,7 @@ void DoSpecialTrainerBattle(void)
     case SPECIAL_BATTLE_SECRET_BASE:
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            enum Item itemBefore = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
+            enum Item itemBefore = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HELD_ITEM);
             SetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_HELD_ITEM, &itemBefore);
         }
         CreateTask(Task_StartBattleAfterTransition, 1);
@@ -87,7 +90,7 @@ void DoSpecialTrainerBattle(void)
     #if FREE_BATTLE_TOWER_E_READER == FALSE
         ZeroEnemyPartyMons();
         for (i = 0; i < (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.ereaderTrainer.party); i++)
-            CreateBattleTowerMon(&gEnemyParty[i], &gSaveBlock2Ptr->frontier.ereaderTrainer.party[i]);
+            CreateBattleTowerMon(&gParties[B_TRAINER_1][i], &gSaveBlock2Ptr->frontier.ereaderTrainer.party[i]);
         gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_EREADER_TRAINER;
         TRAINER_BATTLE_PARAM.opponentA = 0;
         CreateTask(Task_StartBattleAfterTransition, 1);
@@ -163,7 +166,7 @@ static void UNUSED FillEReaderTrainerWithPlayerData(void)
     }
 
     for (i = 0; i < (int)ARRAY_COUNT(ereaderTrainer->party); i++)
-        ConvertPokemonToBattleTowerPokemon(&gPlayerParty[i], &ereaderTrainer->party[i]);
+        ConvertPokemonToBattleTowerPokemon(&gParties[B_TRAINER_0][i], &ereaderTrainer->party[i]);
 
     SetEReaderTrainerChecksum(ereaderTrainer);
 #endif //FREE_BATTLE_TOWER_E_READER

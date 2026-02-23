@@ -153,13 +153,13 @@ TEST("Status1 round-trips through BoxPokemon")
 TEST("canhypertrain/hypertrain affect MON_DATA_HYPER_TRAINED_* and recalculate stats")
 {
     u32 atk, friendship = 0;
-    CreateRandomMonWithIVs(&gPlayerParty[0], SPECIES_WOBBUFFET, 100, 0);
+    CreateRandomMonWithIVs(&gParties[B_TRAINER_0][0], SPECIES_WOBBUFFET, 100, 0);
 
     // Consider B_FRIENDSHIP_BOOST.
-    SetMonData(&gPlayerParty[0], MON_DATA_FRIENDSHIP, &friendship);
-    CalculateMonStats(&gPlayerParty[0]);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_FRIENDSHIP, &friendship);
+    CalculateMonStats(&gParties[B_TRAINER_0][0]);
 
-    atk = GetMonData(&gPlayerParty[0], MON_DATA_ATK);
+    atk = GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_ATK);
 
     RUN_OVERWORLD_SCRIPT(
         canhypertrain STAT_ATK, 0;
@@ -170,14 +170,14 @@ TEST("canhypertrain/hypertrain affect MON_DATA_HYPER_TRAINED_* and recalculate s
         hypertrain STAT_ATK, 0;
         canhypertrain STAT_ATK, 0;
     );
-    EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HYPER_TRAINED_ATK));
-    EXPECT_EQ(atk + 31, GetMonData(&gPlayerParty[0], MON_DATA_ATK));
+    EXPECT(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HYPER_TRAINED_ATK));
+    EXPECT_EQ(atk + 31, GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_ATK));
     EXPECT(!VarGet(VAR_RESULT));
 }
 
 TEST("hasgigantamaxfactor/togglegigantamaxfactor affect MON_DATA_GIGANTAMAX_FACTOR")
 {
-    CreateRandomMonWithIVs(&gPlayerParty[0], SPECIES_WOBBUFFET, 100, 0);
+    CreateRandomMonWithIVs(&gParties[B_TRAINER_0][0], SPECIES_WOBBUFFET, 100, 0);
 
     RUN_OVERWORLD_SCRIPT(
         hasgigantamaxfactor 0;
@@ -189,19 +189,19 @@ TEST("hasgigantamaxfactor/togglegigantamaxfactor affect MON_DATA_GIGANTAMAX_FACT
         hasgigantamaxfactor 0;
     );
     EXPECT(VarGet(VAR_RESULT));
-    EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_GIGANTAMAX_FACTOR));
+    EXPECT(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_GIGANTAMAX_FACTOR));
 
     RUN_OVERWORLD_SCRIPT(
         togglegigantamaxfactor 0;
         hasgigantamaxfactor 0;
     );
     EXPECT(!VarGet(VAR_RESULT));
-    EXPECT(!GetMonData(&gPlayerParty[0], MON_DATA_GIGANTAMAX_FACTOR));
+    EXPECT(!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_GIGANTAMAX_FACTOR));
 }
 
 TEST("togglegigantamaxfactor fails for Melmetal")
 {
-    CreateRandomMonWithIVs(&gPlayerParty[0], SPECIES_MELMETAL, 100, 0);
+    CreateRandomMonWithIVs(&gParties[B_TRAINER_0][0], SPECIES_MELMETAL, 100, 0);
 
     RUN_OVERWORLD_SCRIPT(
         hasgigantamaxfactor 0;
@@ -212,7 +212,7 @@ TEST("togglegigantamaxfactor fails for Melmetal")
         togglegigantamaxfactor 0;
     );
     EXPECT(!VarGet(VAR_RESULT));
-    EXPECT(!GetMonData(&gPlayerParty[0], MON_DATA_GIGANTAMAX_FACTOR));
+    EXPECT(!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_GIGANTAMAX_FACTOR));
 }
 
 TEST("givemon [simple]")
@@ -223,8 +223,8 @@ TEST("givemon [simple]")
         givemon SPECIES_WOBBUFFET, 100;
     );
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_LEVEL), 100);
 }
 
 TEST("givemon respects perfectIVCount")
@@ -248,23 +248,23 @@ TEST("givemon respects perfectIVCount")
         givemon SPECIES_DIANCIE, 100;
     );
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_MEW);
-    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_CELEBI);
-    EXPECT_EQ(GetMonData(&gPlayerParty[2], MON_DATA_SPECIES), SPECIES_JIRACHI);
-    EXPECT_EQ(GetMonData(&gPlayerParty[3], MON_DATA_SPECIES), SPECIES_MANAPHY);
-    EXPECT_EQ(GetMonData(&gPlayerParty[4], MON_DATA_SPECIES), SPECIES_VICTINI);
-    EXPECT_EQ(GetMonData(&gPlayerParty[5], MON_DATA_SPECIES), SPECIES_DIANCIE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[2], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[3], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[4], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[5], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_MEW);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_SPECIES), SPECIES_CELEBI);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][2], MON_DATA_SPECIES), SPECIES_JIRACHI);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][3], MON_DATA_SPECIES), SPECIES_MANAPHY);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][4], MON_DATA_SPECIES), SPECIES_VICTINI);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][5], MON_DATA_SPECIES), SPECIES_DIANCIE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][2], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][3], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][4], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][5], MON_DATA_LEVEL), 100);
     for (u32 j = 0; j < 6; j++)
     {
         for (u32 k = 0; k < NUM_STATS; k++)
         {
-            if (GetMonData(&gPlayerParty[j], MON_DATA_HP_IV + k) == MAX_PER_STAT_IVS)
+            if (GetMonData(&gParties[B_TRAINER_0][j], MON_DATA_HP_IV + k) == MAX_PER_STAT_IVS)
                 perfectIVs[j]++;
         }
         EXPECT_GE(perfectIVs[j], 3);
@@ -280,12 +280,12 @@ TEST("givemon respects perfectIVCount but does overwrite fixed IVs (1)")
         givemon SPECIES_MEW, 100, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12
     );
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_IV), 7);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_IV), 8);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF_IV), 9);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED_IV), 10);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK_IV), 11);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF_IV), 12);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP_IV), 7);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_ATK_IV), 8);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_DEF_IV), 9);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPEED_IV), 10);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPATK_IV), 11);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPDEF_IV), 12);
 }
 
 TEST("givemon respects perfectIVCount but does overwrite fixed IVs (2)")
@@ -297,12 +297,12 @@ TEST("givemon respects perfectIVCount but does overwrite fixed IVs (2)")
         givemon SPECIES_MEW, 100, hpIv=7, atkIv=8, defIv=9
     );
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_IV), 7);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_IV), 8);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF_IV), 9);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED_IV), MAX_PER_STAT_IVS);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK_IV), MAX_PER_STAT_IVS);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF_IV), MAX_PER_STAT_IVS);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP_IV), 7);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_ATK_IV), 8);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_DEF_IV), 9);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPEED_IV), MAX_PER_STAT_IVS);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPATK_IV), MAX_PER_STAT_IVS);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPDEF_IV), MAX_PER_STAT_IVS);
 }
 
 TEST("givemon respects FORM_CHANGE_ITEM_HOLD")
@@ -316,10 +316,10 @@ TEST("givemon respects FORM_CHANGE_ITEM_HOLD")
         givemon SPECIES_GIRATINA_ORIGIN, 100, item=ITEM_POTION;
     );
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
-    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
-    EXPECT_EQ(GetMonData(&gPlayerParty[2], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
-    EXPECT_EQ(GetMonData(&gPlayerParty[3], MON_DATA_SPECIES), SPECIES_GIRATINA_ALTERED);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][1], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][2], MON_DATA_SPECIES), SPECIES_ARCEUS_ELECTRIC);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][3], MON_DATA_SPECIES), SPECIES_GIRATINA_ALTERED);
 }
 
 TEST("givemon [moves]")
@@ -330,12 +330,12 @@ TEST("givemon [moves]")
         givemon SPECIES_WOBBUFFET, 100, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_NONE, move4=MOVE_NONE;
     );
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), MOVE_SCRATCH);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), MOVE_SPLASH);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), MOVE_NONE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), MOVE_NONE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE1), MOVE_SCRATCH);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE2), MOVE_SPLASH);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE3), MOVE_NONE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_NONE);
 }
 
 TEST("givemon [moves (default)]")
@@ -352,12 +352,12 @@ TEST("givemon [moves (default)]")
     {
         ; // we just want to get length of the learnset array
     }
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_PYUKUMUKU);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), learnset[learnsetLength - 1].move);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), learnset[learnsetLength - 2].move);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), learnset[learnsetLength - 3].move);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), learnset[learnsetLength - 4].move);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_PYUKUMUKU);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE1), learnset[learnsetLength - 1].move);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE2), learnset[learnsetLength - 2].move);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE3), learnset[learnsetLength - 3].move);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), learnset[learnsetLength - 4].move);
 }
 
 TEST("givemon [all]")
@@ -368,33 +368,33 @@ TEST("givemon [all]")
         givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=ITEM_MASTER_BALL, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
     );
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKEBALL), BALL_MASTER);
-    EXPECT_EQ(GetNature(&gPlayerParty[0]), NATURE_BOLD);
-    EXPECT_EQ(GetMonAbility(&gPlayerParty[0]), GetSpeciesAbility(SPECIES_WOBBUFFET, 2));
-    EXPECT_EQ(GetMonGender(&gPlayerParty[0]), MON_MALE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 1);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_EV), 2);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF_EV), 3);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED_EV), 4);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK_EV), 5);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF_EV), 6);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_IV), 7);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_IV), 8);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF_IV), 9);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED_IV), 10);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK_IV), 11);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF_IV), 12);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), MOVE_SCRATCH);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), MOVE_SPLASH);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), MOVE_CELEBRATE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), MOVE_EXPLOSION);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY), TRUE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_GIGANTAMAX_FACTOR), TRUE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_TERA_TYPE), TYPE_FIRE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DYNAMAX_LEVEL), 7);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), BALL_MASTER);
+    EXPECT_EQ(GetNature(&gParties[B_TRAINER_0][0]), NATURE_BOLD);
+    EXPECT_EQ(GetMonAbility(&gParties[B_TRAINER_0][0]), GetSpeciesAbility(SPECIES_WOBBUFFET, 2));
+    EXPECT_EQ(GetMonGender(&gParties[B_TRAINER_0][0]), MON_MALE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP_EV), 1);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_ATK_EV), 2);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_DEF_EV), 3);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPEED_EV), 4);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPATK_EV), 5);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPDEF_EV), 6);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP_IV), 7);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_ATK_IV), 8);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_DEF_IV), 9);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPEED_IV), 10);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPATK_IV), 11);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPDEF_IV), 12);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE1), MOVE_SCRATCH);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE2), MOVE_SPLASH);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE3), MOVE_CELEBRATE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_EXPLOSION);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_IS_SHINY), TRUE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_GIGANTAMAX_FACTOR), TRUE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_TERA_TYPE), TYPE_FIRE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_DYNAMAX_LEVEL), 7);
 }
 
 TEST("givemon [vars]")
@@ -433,38 +433,38 @@ TEST("givemon [vars]")
         givemon VAR_TEMP_C, VAR_TEMP_D, item=VAR_0x8000, ball=VAR_0x8001, nature=VAR_0x8002, abilityNum=VAR_0x8003, gender=VAR_0x8004, hpEv=VAR_0x8005, atkEv=VAR_0x8006, defEv=VAR_0x8007, speedEv=VAR_0x8008, spAtkEv=VAR_0x8009, spDefEv=VAR_0x800A, hpIv=VAR_0x800B, atkIv=VAR_TEMP_0, defIv=VAR_TEMP_1, speedIv=VAR_TEMP_2, spAtkIv=VAR_TEMP_3, spDefIv=VAR_TEMP_4, move1=VAR_TEMP_5, move2=VAR_TEMP_6, move3=VAR_TEMP_7, move4=VAR_TEMP_8, shinyMode=VAR_TEMP_9, gmaxFactor=VAR_TEMP_A, teraType=VAR_TEMP_B, dmaxLevel=VAR_TEMP_E;
     );
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_POKEBALL), BALL_MASTER);
-    EXPECT_EQ(GetNature(&gPlayerParty[0]), NATURE_BOLD);
-    EXPECT_EQ(GetMonAbility(&gPlayerParty[0]), GetSpeciesAbility(SPECIES_WOBBUFFET, 2));
-    EXPECT_EQ(GetMonGender(&gPlayerParty[0]), MON_MALE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 1);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_EV), 2);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF_EV), 3);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED_EV), 4);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK_EV), 5);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF_EV), 6);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_IV), 7);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK_IV), 8);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF_IV), 9);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED_IV), 10);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK_IV), 11);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF_IV), 12);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), MOVE_SCRATCH);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), MOVE_SPLASH);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), MOVE_CELEBRATE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), MOVE_EXPLOSION);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY), TRUE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_GIGANTAMAX_FACTOR), TRUE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_TERA_TYPE), TYPE_FIRE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DYNAMAX_LEVEL), 7);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), BALL_MASTER);
+    EXPECT_EQ(GetNature(&gParties[B_TRAINER_0][0]), NATURE_BOLD);
+    EXPECT_EQ(GetMonAbility(&gParties[B_TRAINER_0][0]), GetSpeciesAbility(SPECIES_WOBBUFFET, 2));
+    EXPECT_EQ(GetMonGender(&gParties[B_TRAINER_0][0]), MON_MALE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP_EV), 1);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_ATK_EV), 2);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_DEF_EV), 3);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPEED_EV), 4);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPATK_EV), 5);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPDEF_EV), 6);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP_IV), 7);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_ATK_IV), 8);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_DEF_IV), 9);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPEED_IV), 10);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPATK_IV), 11);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPDEF_IV), 12);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE1), MOVE_SCRATCH);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE2), MOVE_SPLASH);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE3), MOVE_CELEBRATE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_EXPLOSION);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_IS_SHINY), TRUE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_GIGANTAMAX_FACTOR), TRUE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_TERA_TYPE), TYPE_FIRE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_DYNAMAX_LEVEL), 7);
 }
 
 TEST("checkteratype/setteratype work")
 {
-    CreateRandomMonWithIVs(&gPlayerParty[0], SPECIES_WOBBUFFET, 100, 0);
+    CreateRandomMonWithIVs(&gParties[B_TRAINER_0][0], SPECIES_WOBBUFFET, 100, 0);
 
     RUN_OVERWORLD_SCRIPT(
         checkteratype 0;
@@ -487,10 +487,10 @@ TEST("createmon [simple]")
         createmon 1, 1, SPECIES_WYNAUT, 10;
     );
 
-    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
-    EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_SPECIES), SPECIES_WYNAUT);
-    EXPECT_EQ(GetMonData(&gEnemyParty[1], MON_DATA_LEVEL), 10);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL), 100);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][1], MON_DATA_SPECIES), SPECIES_WYNAUT);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][1], MON_DATA_LEVEL), 10);
 }
 
 TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNER_MOVES")
@@ -515,26 +515,26 @@ TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNE
 
 TEST("Optimised GetMonData")
 {
-    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, Random32(), OTID_STRUCT_PRESET(0x12345678));
+    CreateMon(&gParties[B_TRAINER_0][0], SPECIES_WOBBUFFET, 5, Random32(), OTID_STRUCT_PRESET(0x12345678));
     u32 exp = 0x123456;
-    SetMonData(&gPlayerParty[0], MON_DATA_EXP, &exp);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EXP, &exp);
     struct Benchmark optimised,
         vanilla = (struct Benchmark) { .ticks = 137 }; // From prior testing
     u32 expGet = 0;
-    BENCHMARK(&optimised) { expGet = GetMonData(&gPlayerParty[0], MON_DATA_EXP); }
+    BENCHMARK(&optimised) { expGet = GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EXP); }
     EXPECT_EQ(exp, expGet);
     EXPECT_FASTER(optimised, vanilla);
 }
 
 TEST("Optimised SetMonData")
 {
-    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, Random32(), OTID_STRUCT_PRESET(0x12345678));
+    CreateMon(&gParties[B_TRAINER_0][0], SPECIES_WOBBUFFET, 5, Random32(), OTID_STRUCT_PRESET(0x12345678));
     u32 exp = 0x123456;
     struct Benchmark optimised,
         vanilla = (struct Benchmark) { .ticks = 205 }; // From prior testing
-    BENCHMARK(&optimised) { SetMonData(&gPlayerParty[0], MON_DATA_EXP, &exp); }
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_BAD_EGG), FALSE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EXP), exp);
+    BENCHMARK(&optimised) { SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EXP, &exp); }
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_BAD_EGG), FALSE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_EXP), exp);
     EXPECT_FASTER(optimised, vanilla);
 }
 
@@ -547,12 +547,12 @@ TEST("CalculateMonStats")
         givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=ITEM_MASTER_BALL, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
     );
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MAX_HP), 497);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK), 71);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF), 143);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED), 82);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK), 83);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF), 134);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MAX_HP), 497);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_ATK), 71);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_DEF), 143);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPEED), 82);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPATK), 83);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPDEF), 134);
 
 }
 

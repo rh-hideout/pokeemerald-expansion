@@ -580,7 +580,7 @@ static bool8 LoadPokeblockFeedScene(void)
         gMain.state++;
         break;
     case 7:
-        if (LoadMonAndSceneGfx(&gPlayerParty[gPokeblockMonId]))
+        if (LoadMonAndSceneGfx(&gParties[B_TRAINER_0][gPokeblockMonId]))
             gMain.state++;
         break;
     case 8:
@@ -588,7 +588,7 @@ static bool8 LoadPokeblockFeedScene(void)
         gMain.state++;
         break;
     case 9:
-        sPokeblockFeed->monSpriteId = CreateMonSprite(&gPlayerParty[gPokeblockMonId]);
+        sPokeblockFeed->monSpriteId = CreateMonSprite(&gParties[B_TRAINER_0][gPokeblockMonId]);
         gMain.state++;
         break;
     case 10:
@@ -787,7 +787,7 @@ static void Task_WaitForAtePokeblockMessage(u8 taskId)
 
 static void Task_PrintAtePokeblockMessage(u8 taskId)
 {
-    struct Pokemon *mon = &gPlayerParty[gPokeblockMonId];
+    struct Pokemon *mon = &gParties[B_TRAINER_0][gPokeblockMonId];
     struct Pokeblock *pokeblock = &gSaveBlock1Ptr->pokeblocks[gSpecialVar_ItemId];
 
     gPokeblockGain = PokeblockGetGain(GetNature(mon), pokeblock);

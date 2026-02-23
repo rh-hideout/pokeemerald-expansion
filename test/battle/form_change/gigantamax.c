@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Dynamax: Venusaur returns its base Form upon battle end afte
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_VENUSAUR);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_VENUSAUR);
     }
 }
 

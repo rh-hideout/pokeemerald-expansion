@@ -165,7 +165,7 @@ TEST("Trainer Class Balls apply to the entire party")
     ASSUME(B_TRAINER_CLASS_POKE_BALLS >= GEN_8);
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
     u32 j;
-    CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainers[DIFFICULTY_NORMAL][11], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainers[DIFFICULTY_NORMAL][11], FALSE, BATTLE_TYPE_TRAINER);
     for(j = 0; j < 6; j++)
     {
         EXPECT(GetMonData(&testParty[j], MON_DATA_POKEBALL, 0) == gTrainerClasses[sTestTrainers[DIFFICULTY_NORMAL][11].trainerClass].ball);

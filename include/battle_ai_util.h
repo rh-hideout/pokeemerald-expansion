@@ -302,7 +302,7 @@ bool32 PartyHasMoveCategory(enum BattlerId battlerId, enum DamageCategory catego
 bool32 SideHasMoveCategory(enum BattlerId battlerId, enum DamageCategory category);
 void GetAIPartyIndexes(enum BattlerId battlerId, s32 *firstId, s32 *lastId);
 u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum BattlerId *battlerIn2);
-bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
+bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
 
 // score increases
 enum AIScore IncreaseStatUpScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statId);

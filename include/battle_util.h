@@ -374,6 +374,7 @@ void TryActivateSleepClause(enum BattlerId battler, u32 indexInParty);
 void TryDeactivateSleepClause(enum BattleSide battlerSide, u32 indexInParty);
 bool32 IsSleepClauseActiveForSide(enum BattleSide battlerSide);
 bool32 IsSleepClauseEnabled(void);
+bool32 AreMultiPartiesFullTeams(void);
 void ClearDamageCalcResults(void);
 u32 DoesDestinyBondFail(enum BattlerId battler);
 bool32 IsMoveEffectBlockedByTarget(enum Ability ability);

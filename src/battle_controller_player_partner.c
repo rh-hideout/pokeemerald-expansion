@@ -34,7 +34,6 @@
 #include "constants/party_menu.h"
 #include "constants/trainers.h"
 #include "test/battle.h"
-#include "test/test_runner_battle.h"
 
 static void PlayerPartnerHandleDrawTrainerPic(enum BattlerId battler);
 static void PlayerPartnerHandleTrainerSlide(enum BattlerId battler);
@@ -221,7 +220,7 @@ static void PlayerPartnerHandleDrawTrainerPic(enum BattlerId battler)
 
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
 
-    if (IsMultibattleTest())
+    if (TESTING)
     {
         trainerPicId = TRAINER_PIC_BACK_STEVEN;
         xPos = 90;
@@ -317,20 +316,19 @@ static void PlayerPartnerHandleChoosePokemon(enum BattlerId battler)
         chosenMonId = gSelectedMonPartyId = GetFirstFaintedPartyIndex(battler);
     }
     // Switching out
-    else if (gBattleStruct->monToSwitchIntoId[battler] >= PARTY_SIZE || !IsValidForBattle(&gPlayerParty[gBattleStruct->monToSwitchIntoId[battler]]))
+    else if (gBattleStruct->monToSwitchIntoId[battler] >= PARTY_SIZE || !IsValidForBattle(&gParties[B_TRAINER_2][gBattleStruct->monToSwitchIntoId[battler]]))
     {
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, SWITCH_AFTER_KO);
-        if (chosenMonId == PARTY_SIZE || !IsValidForBattle(&gPlayerParty[chosenMonId])) // just switch to the next mon
+        if (chosenMonId == PARTY_SIZE || !IsValidForBattle(&gParties[B_TRAINER_2][chosenMonId])) // just switch to the next mon
         {
-            s32 firstId = (IsAiVsAiBattle()) ? 0 : (PARTY_SIZE / 2);
             enum BattlerId battler1 = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
             enum BattlerId battler2 = IsDoubleBattle() ? GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT) : battler1;
 
-            for (chosenMonId = firstId; chosenMonId < PARTY_SIZE; chosenMonId++)
+            for (chosenMonId = 0; chosenMonId < PARTY_SIZE; chosenMonId++)
             {
-                if (GetMonData(&gPlayerParty[chosenMonId], MON_DATA_HP) != 0
-                    && chosenMonId != gBattlerPartyIndexes[battler1]
-                    && chosenMonId != gBattlerPartyIndexes[battler2])
+                if (GetMonData(&gParties[B_TRAINER_2][chosenMonId], MON_DATA_HP) != 0
+                    && !(chosenMonId == gBattlerPartyIndexes[battler1] && BattlersShareParty(battler, battler1))
+                    && !(chosenMonId == gBattlerPartyIndexes[battler2] && BattlersShareParty(battler, battler2)))
                 {
                     break;
                 }

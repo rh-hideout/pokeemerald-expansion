@@ -11,7 +11,7 @@ struct PartyMenu
     MainCallback exitCallback;
     TaskFunc task;
     u8 menuType:4;
-    u8 layout:2;
+    u8 layout:4;
     s8 slotId;
     s8 slotId2;
     u8 action;
@@ -94,6 +94,7 @@ void SwitchPartyOrderLinkMulti(enum BattlerId battler, u8 slot, u8 slot2);
 void SwitchPartyMonSlots(u8 slot, u8 slot2);
 u8 GetPartyIdFromBattlePartyId(u8 battlePartyId);
 void ShowPartyMenuToShowcaseMultiBattleParty(void);
+void ShowPartyMenuToShowcaseMultiBattleFullParty(void);
 void ChooseMonForDaycare(void);
 bool8 CB2_FadeFromPartyMenu(void);
 void CB2_ReturnToPartyMenuFromSummaryScreen(void);

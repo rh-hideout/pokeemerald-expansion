@@ -336,26 +336,16 @@
  *
  * For tests using MULTI_BATTLE_TEST, AI_MULTI_BATTLE_TEST, TWO_VS_ONE_BATTLE_TEST,
  * AI_TWO_VS_ONE_BATTLE_TEST, ONE_VS_TWO_BATTLE_TEST, and AI_ONE_VS_TWO_BATTLE_TEST,
- * the below must be used instead of PLAYER(species) and OPPONENT(species).
- * MULTI_PLAYER(species), MULTI_PARTNER(species), MULTI_OPPONENT_A(species), and
- * MULTI_OPPONENT_B(species) Adds the species to the player's, player partner's,
- * opponent A's, or opponent B's party, respectively.
+ * the below must be used.
+ * PLAYER(species), PARTNER(species), OPPONENT_A(species), and
+ * OPPONENT_B(species) Adds the species to the player's (B_TRAINER_0), player partner's (B_TRAINER_2),
+ * opponent A's (B_TRAINER_1), or opponent B's (B_TRAINER_3) party, respectively.
  * Pokemon can be customised as per the guidance for PLAYER(species) and OPPONENT(species).
  * The functions assign the Pokémon to the party of the trainer at B_POSITION_PLAYER_LEFT,
  * B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_LEFT, and B_POSITION_OPPONENT_RIGHT, respectively.
- * MULTI_PLAYER(species) and MULTI_OPPONENT_A(species) set Pokémon starting at party index 0,
- * while MULTI_PARTNER(species) and MULTI_OPPONENT_B(species) set Pokémon starting at party
- * index 3.
- * For ONE_VS_TWO tests, MULTI_PLAYER(species) must be used for all player-side Pokémon,
- * and for TWO_VS_ONE tests, MULTI_OPPONENT_A(species) must be used for all opponent-side
+ * For ONE_VS_TWO tests, PLAYER(species) must be used for all player-side Pokémon,
+ * and for TWO_VS_ONE tests, OPPONENT_A(species) or OPPONENT(species) must be used for all opponent-side
  * Pokémon.
- * All MULTI_PLAYER(species) Pokémon must be set before any MULTI_PARTNER(species) Pokémon,
- * and all MULTI_OPPONENT_A(species) must be set before any MULTI_OPPONENT_B(species) Pokémon,
- * else Pokémon will be set in the incorrect parties in the test.
- * Note where a side in a test has two trainers, the test setup manages the assigning of correct
- * multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A
- * Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B
- * Pokémon may be referenced using indexes 3, 4, and 5.
  *
  * AI_FLAGS
  * Specifies which AI flags are run for all battlers during the test. Has use only for AI tests.
@@ -772,14 +762,16 @@ extern struct BattleTrialData gBattleTrialData;
 struct BattleTestData
 {
     u8 stack[BATTLE_TEST_STACK_SIZE];
-
-    u8 playerPartySize;
-    u8 opponentPartySize;
+    u8 partySizes[MAX_BATTLE_TRAINERS];
     u8 explicitMoves[MAX_BATTLE_TRAINERS];
     bool8 hasExplicitSpeeds;
     u8 explicitSpeeds[MAX_BATTLE_TRAINERS];
-    u16 slowerThan[NUM_BATTLE_SIDES][PARTY_SIZE];
-    enum BattleTrainer battleTrainer;
+    u32 slowerThan[MAX_BATTLE_TRAINERS][PARTY_SIZE];
+    enum BattleTrainer battlerParty;
+    u8 battler0Trainer:2;
+    u8 battler1Trainer:2;
+    u8 battler2Trainer:2;
+    u8 battler3Trainer:2;
     u8 currentPartyIndex;
     struct Pokemon *currentMon;
     u8 gender;
@@ -1015,11 +1007,10 @@ struct moveWithPP {
 #define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, CONFIG_##configTag, value)
 
 #define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define OPPONENT(species) for (OpenPokemon(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_PLAYER(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_OPPONENT_A(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_PARTNER(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_2, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_OPPONENT_B(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_3, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT_A(species) for (OpenPokemon(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT OPPONENT_A
+#define PARTNER(species) for (OpenPokemon(__LINE__, B_TRAINER_2, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT_B(species) for (OpenPokemon(__LINE__, B_TRAINER_3, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 
 #define Gender(gender) Gender_(__LINE__, gender)
 #define Nature(nature) Nature_(__LINE__, nature)
@@ -1059,7 +1050,6 @@ void TieBreakTarget(u32 sourceLine, enum TargetTieResolution targetTieRes, u32 v
 void ClearFlagAfterTest(void);
 void ClearVarAfterTest(void);
 void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, u32 species);
-void OpenPokemonMulti(u32 sourceLine, enum BattleTrainer trainer, u32 species);
 void ClosePokemon(u32 sourceLine);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
@@ -1096,18 +1086,6 @@ void Shadow_(u32 sourceLine, bool32 isShadow);
 void Shiny_(u32 sourceLine, bool32 isShiny);
 void Environment_(u32 sourceLine, u32 environment);
 
-static inline bool8 IsMultibattleTest(void)
-{
-    #if TESTING
-    {
-        if (((gBattleTypeFlags & BATTLE_MULTI_TEST) == BATTLE_MULTI_TEST)
-         || ((gBattleTypeFlags & BATTLE_TWO_VS_ONE_TEST) == BATTLE_TWO_VS_ONE_TEST))
-            return TRUE;
-    }
-    #endif
-    return FALSE;
-}
-
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
 struct FourMoves
 {
@@ -1124,8 +1102,11 @@ struct TestAIScoreStruct
     bool8 explicitTarget;
 };
 
-#define PLAYER_PARTY (gBattleTestRunnerState->data.recordedBattle.playerParty)
-#define OPPONENT_PARTY (gBattleTestRunnerState->data.recordedBattle.opponentParty)
+#define PLAYER_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_0])
+#define OPPONENT_A_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_1])
+#define OPPONENT_PARTY OPPONENT_A_PARTY
+#define PARTNER_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_2])
+#define OPPONENT_B_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_3])
 
 /* When */
 
