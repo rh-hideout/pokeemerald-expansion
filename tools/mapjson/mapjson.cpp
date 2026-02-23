@@ -826,9 +826,27 @@ string generate_layouts_table_text(Json layouts_data) {
     return text.str();
 }
 
+vector<string> parse_required_layout_defines()
+{
+    vector<string> v;
+    string json_err;
+
+    string json_text = read_text_file("tools/mapjson/required_map_defines.json");
+
+    Json json_data = Json::parse(json_text, json_err);
+    if (json_data == Json())
+        FATAL_ERROR("%s\n", json_err.c_str());
+
+    for (auto required_layout : json_data["required_layouts"].array_items()) {
+        v.push_back(json_to_string(required_layout));
+    }
+
+    return v;
+}
 string generate_layouts_constants_text(Json layouts_data) {
     string guard_name = "CONSTANTS_LAYOUTS";
     ostringstream text;
+    vector<string> defined_layouts;
     text << get_include_guard_start(guard_name) << get_generated_warning("data/layouts/layouts.json", false);
 
     int i = 1;
@@ -836,11 +854,26 @@ string generate_layouts_constants_text(Json layouts_data) {
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
         if (layout != Json::object())
+        {
             text << "#define " << json_to_string(layout, "id") << " " << i << "\n";
+            defined_layouts.push_back(json_to_string(layout, "id"));
+        }
         i++;
     }
 
-    text << get_include_guard_end(guard_name);
+    text << "\n//Constants for unused layouts\n";
+    vector<string> required_layout_defines = parse_required_layout_defines();
+    for (auto &layout : required_layout_defines) {
+        auto it = find(defined_layouts.begin(), defined_layouts.end(), layout);
+        if (it == defined_layouts.end()) {
+            text << "#define " << layout << string(50 - layout.length(), ' ')
+                 //<< "(" << map_id_num << " | (" << json_to_string(required_map_id[1]) << " << 8)),\n";
+                 << "0xFFFF\n";
+        }
+
+    }
+
+    text << "\n" << get_include_guard_end(guard_name);
 
     return text.str();
 }
