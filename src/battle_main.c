@@ -582,7 +582,11 @@ static void CB2_InitBattleInternal(void)
         TryFormChange(i, B_SIDE_PLAYER, FORM_CHANGE_BEGIN_BATTLE);
         TryFormChange(i, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_BATTLE);
     }
-
+    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+    {
+        TryFormChange(0, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_WILD_ENCOUNTER);
+        TryFormChange(1, B_SIDE_OPPONENT, FORM_CHANGE_BEGIN_WILD_ENCOUNTER);// Only tries to change the first two opposing slots, assuming these are the only ones occupied in a wild battle.
+    }
     if (TESTING)
     {
         gPlayerPartyCount = CalculatePartyCount(gPlayerParty);
