@@ -13,20 +13,10 @@
 #include "constants/battle.h"
 #include "constants/battle_ai.h"
 
-const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
-{
-    #include "trainer_control.h"
-};
-
-const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
-{
-    #include "partner_control.h"
-};
-
 TEST("CreateNPCTrainerPartyForTrainer generates customized Pokémon")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 0;
+    u32 currTrainer = 2;
     u8 nickBuffer[20];
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(IsMonShiny(&testParty[0]));
@@ -103,7 +93,7 @@ TEST("CreateNPCTrainerPartyForTrainer generates customized Pokémon")
 TEST("CreateNPCTrainerPartyForTrainer generates different personalities for different mons")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 0;
+    u32 currTrainer = 2;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(testParty[0].box.personality != testParty[1].box.personality);
     Free(testParty);
@@ -175,7 +165,7 @@ TEST("Difficulty default to Normal if the trainer doesn't have a member for the 
 {
     SetCurrentDifficultyLevel(DIFFICULTY_EASY);
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 1;
+    u32 currTrainer = 3;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_MEWTWO);
     Free(testParty);
@@ -186,7 +176,7 @@ TEST("Difficulty changes which party is used for enemy trainer if defined for th
 {
     SetCurrentDifficultyLevel(DIFFICULTY_EASY);
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 2;
+    u32 currTrainer = 4;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_METAPOD);
     EXPECT(GetMonData(&testParty[0], MON_DATA_LEVEL) == 1);
@@ -198,7 +188,7 @@ TEST("Difficulty changes which party is used for enemy trainer if defined for th
 {
     SetCurrentDifficultyLevel(DIFFICULTY_HARD);
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 2;
+    u32 currTrainer = 4;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_ARCEUS);
     EXPECT(GetMonData(&testParty[0], MON_DATA_LEVEL) == 99);
@@ -210,7 +200,7 @@ TEST("Difficulty changes which party is used for enemy trainer if defined for th
 {
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 2;
+    u32 currTrainer = 4;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_MEWTWO);
     EXPECT(GetMonData(&testParty[0], MON_DATA_LEVEL) == 50);
@@ -223,7 +213,7 @@ TEST("Difficulty default to Normal if the partner doesn't have a member for the 
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
     u32 currTrainer = TRAINER_PARTNER(0);
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_MEWTWO);
+    EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_METANG);
     Free(testParty);
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 }
@@ -266,7 +256,7 @@ TEST("Difficulty changes which party is used for partner if defined for the diff
 TEST("Trainer Party Pool generates a party from the trainer pool")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 3;
+    u32 currTrainer = 5;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_EEVEE);
     Free(testParty);
@@ -275,7 +265,7 @@ TEST("Trainer Party Pool generates a party from the trainer pool")
 TEST("Trainer Party Pool picks a random lead and a random ace if tags exist in the pool")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 4;
+    u32 currTrainer = 6;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_ARON);    //  Lead
     EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES) == SPECIES_WYNAUT);  //  Not Lead or Ace
@@ -286,7 +276,7 @@ TEST("Trainer Party Pool picks a random lead and a random ace if tags exist in t
 TEST("Trainer Party Pool picks according to custom rules")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 5;
+    u32 currTrainer = 7;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_TORKOAL);    //  Lead + Weather Setter
     EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES) == SPECIES_BULBASAUR);  //  Lead + Weather Abuser
@@ -297,7 +287,7 @@ TEST("Trainer Party Pool picks according to custom rules")
 TEST("Trainer Party Pool uses standard party creation if pool is illegal")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 6;
+    u32 currTrainer = 8;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_WYNAUT);
     EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES) == SPECIES_WOBBUFFET);
@@ -307,7 +297,7 @@ TEST("Trainer Party Pool uses standard party creation if pool is illegal")
 TEST("Trainer Party Pool can be pruned before picking")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 7;
+    u32 currTrainer = 9;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_EEVEE);
     EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES) == SPECIES_WYNAUT);
@@ -317,7 +307,7 @@ TEST("Trainer Party Pool can be pruned before picking")
 TEST("Trainer Party Pool can choose which functions to use for picking mons")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    u32 currTrainer = 8;
+    u32 currTrainer = 10;
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_WYNAUT);
     EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES) == SPECIES_WOBBUFFET);
@@ -327,8 +317,8 @@ TEST("Trainer Party Pool can choose which functions to use for picking mons")
 TEST("trainerproc supports both Double Battle: Yes and Battle Type: Doubles")
 {
     u32 currTrainer;
-    PARAMETRIZE { currTrainer = 9; }
-    PARAMETRIZE { currTrainer = 10; }
+    PARAMETRIZE { currTrainer = 11; }
+    PARAMETRIZE { currTrainer = 12; }
     const struct Trainer *trainer = GetTrainerStructFromId(currTrainer);
     EXPECT(trainer->battleType == TRAINER_BATTLE_TYPE_DOUBLES);
 }

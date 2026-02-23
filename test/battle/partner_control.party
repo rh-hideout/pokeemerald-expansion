@@ -1,15 +1,41 @@
-=== 0 ===
-Name: Test1
+=== PARTNER_STEVEN_TEST ===
+Name: STEVEN
 Class: Rival
 Pic: Steven
 Gender: Male
 Music: Male
 Back Pic: Steven
-Battle Type: Singles
-Difficulty: Normal
+AI: Basic Trainer
 
-Mewtwo
-Level: 5
+Metang
+Brave Nature
+Level: 42
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 Def / 6 SpA
+- Light Screen
+- Psychic
+- Reflect
+- Metal Claw
+
+Skarmory
+Impish Nature
+Level: 43
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 6 SpA / 252 SpD
+- Toxic
+- Aerial Ace
+- Protect
+- Steel Wing
+
+Aggron
+Adamant Nature
+Level: 44
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Atk / 252 SpA / 6 SpD
+- Thunder
+- Protect
+- Solar Beam
+- Dragon Claw
 
 === 1 ===
 Name: Test2
