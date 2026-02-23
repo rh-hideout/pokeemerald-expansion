@@ -833,6 +833,8 @@ string generate_layouts_constants_text(Json layouts_data) {
 
     int i = 1;
     for (auto &layout : layouts_data["layouts"].array_items()) {
+        if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
+            continue;
         if (layout != Json::object())
             text << "#define " << json_to_string(layout, "id") << " " << i << "\n";
         i++;
