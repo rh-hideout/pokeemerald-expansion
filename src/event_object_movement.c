@@ -9600,8 +9600,8 @@ static void UpdateObjectEventVisibility(struct ObjectEvent *objectEvent, struct 
 
 static void UpdateObjectEventOffscreen(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u16 x, y;
-    u16 x2, y2;
+    s32 x, y;
+    s32 x2, y2;
     const struct ObjectEventGraphicsInfo *graphicsInfo;
 
     objectEvent->offScreen = FALSE;
@@ -9617,15 +9617,17 @@ static void UpdateObjectEventOffscreen(struct ObjectEvent *objectEvent, struct S
         x = sprite->x + sprite->x2 + sprite->centerToCornerVecX;
         y = sprite->y + sprite->y2 + sprite->centerToCornerVecY;
     }
-    x2 = graphicsInfo->width;
-    x2 += x;
-    y2 = y;
-    y2 += graphicsInfo->height;
+    x2 = x + graphicsInfo->width;
+    y2 = y + graphicsInfo->height;
 
-    if ((s16)x >= DISPLAY_WIDTH + 16 || (s16)x2 < -16)
+    s32 minX = -16;
+    if (objectEvent->graphicsId == OBJ_EVENT_GFX_SS_ANNE)
+        minX = -32;
+
+    if (x >= DISPLAY_WIDTH + 16 || x2 < minX)
         objectEvent->offScreen = TRUE;
 
-    if ((s16)y >= DISPLAY_HEIGHT + 16 || (s16)y2 < -16)
+    if (y >= DISPLAY_HEIGHT + 16 || y2 < -16)
         objectEvent->offScreen = TRUE;
 }
 
