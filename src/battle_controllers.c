@@ -2566,6 +2566,7 @@ void BtlController_HandleFaintAnimation(enum BattlerId battler)
             {
                 PlaySE12WithPanning(SE_FAINT, SOUND_PAN_TARGET);
                 gSprites[gBattlerSpriteIds[battler]].callback = SpriteCB_FaintOpponentMon;
+                gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
                 gBattlerControllerFuncs[battler] = Controller_FaintOpponentMon;
             }
             // The player's sprite callback just slides the mon, the opponent's removes the sprite.
