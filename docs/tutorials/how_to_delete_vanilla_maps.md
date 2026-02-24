@@ -1,4 +1,4 @@
-### Disclaimer: This page is a work-in-progess and the processes described here are not fully tested and will likely break your game
+### Disclaimer: This page is a work-in-progess and the processes described here are not fully tested and will likely break your game! Use at your own risk.
 
 # Deleting vanilla maps
 
@@ -15,9 +15,9 @@ in order for some things to update properly during compilation
 Because vanilla maps are referenced all over the C code, deleting references to them can prevent the project to compile. To avoid this, mapjson will check if vanilla maps are missing and create dummy values for them.
 
 **NOTE**:
-- mapjson will _not_ function correctly unless all four of the aforementioned are edited.
-- mapjson will also modify heal_locations.json if one of the deleted map contained a heal_location.
-- when creating connections between maps, mapjson will check if the connected map exist and will not add a connection for a missing map
+- `mapjson` will _not_ function correctly unless all four of the aforementioned are edited.
+- `mapjson` will also modify `heal_locations.json` if one of the deleted map contained a heal_location.
+- when creating connections between maps, `mapjson` will check if the connected map exist and will not add a connection for a missing map.
 
 ## Exceptions
 
