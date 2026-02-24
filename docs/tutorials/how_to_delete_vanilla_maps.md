@@ -1,15 +1,26 @@
 ### Disclaimer: This page is a work-in-progess and the processes described here are not fully tested and will likely break your game! Use at your own risk.
 
+# Deleting all FRLG maps
+
+A command was added to delete all FRLG maps at once. This doesn't save space in the ROM because the maps are not compiled in the ROM if you are compiling in "emerald mode". This solely exists for users that want to clean up their repo. The command is
+
+```shell
+python dev_scripts/delete_frlg_maps.py
+```
+It should take care of all the map constants but you will need to fix mention the to fuschia city entrance in the `safari_zone.inc` script.
+
 # Deleting vanilla maps
 
-If you want to delete a map, you will need to remove 4 things:
+Separately, if you want to delete a singular map, you will need to remove 4 things:
 - the map folder in `data/maps/`
 - the map folder in `data/layouts`
 - the include of the mapscript in `data/event_scripts.s`
 - the name of the map in `data/maps/map_groups.json`
 
 After deleting the layout folder, you will need to run
-`touch data/layouts/layouts.json`
+```shell
+touch data/layouts/layouts.json
+```
 in order for some things to update properly during compilation
 
 Because vanilla maps are referenced all over the C code, deleting references to them can prevent the project to compile. To avoid this, mapjson will check if vanilla maps are missing and create dummy values for them.
@@ -19,15 +30,7 @@ Because vanilla maps are referenced all over the C code, deleting references to 
 - `mapjson` will also modify `heal_locations.json` if one of the deleted map contained a heal_location.
 - when creating connections between maps, `mapjson` will check if the connected map exist and will not add a connection for a missing map.
 
-## Exceptions
+## Known issues
 
-Some maps may still be referenced in ways that cause compilation issues. Usually, it will be scripts that directly reference the old map names. For example the following script: `data/scripts/safari_zone.inc` references the entrance to the safari zone where the player needs to be warped to when the safari is over.
-You can simply remove the lines referencing the maps to fix the issue, remove the entire script (assuming you deleted the safari entrance map because you remove the safari zone from your game).
-
-## Deleting all FRLG maps
-
-A command was added to delete all FRLG maps at once. This doesn't save space in the ROM because the maps are not compiled in the ROM if you are compiling in "emerald mode". This solely exists for users that want to clean up their repo.
-
-Running `make delete-frlg` will delete all FRLG maps from the repo.
-
-Users will still need to fix the safari zone script issue mentioned in the previous paragraph.
+- Some maps may still be referenced in ways that cause compilation issues. Usually, it will be scripts that directly reference the old map names.
+- If you try to enter a map that used to be connected to a deleted map, the game will freeze.
