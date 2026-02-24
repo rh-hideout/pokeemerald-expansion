@@ -8673,7 +8673,7 @@ static void Cmd_disablelastusedattack(void)
     CMD_ARGS(const u8 *failInstr);
 
     s32 i;
-    enum Move moveToDisable = MOVE_NONE;
+    enum Move moveToDisable = gLastMoves[gBattlerTarget];
 
     if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_1)
     {
@@ -8695,46 +8695,35 @@ static void Cmd_disablelastusedattack(void)
     {
         moveToDisable = gLastMoves[gBattlerTarget];
     }
-
+    if (moveToDisable == MOVE_NONE || gBattleMons[gBattlerTarget].volatiles.disabledMove != MOVE_NONE)
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+        return;
+    }
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (gBattleMons[gBattlerTarget].moves[i] == MOVE_NONE)
-            continue;
         if (gBattleMons[gBattlerTarget].moves[i] == moveToDisable)
             break;
     }
     if (gBattleMons[gBattlerTarget].volatiles.disabledMove == MOVE_NONE
         && i != MAX_MON_MOVES && gBattleMons[gBattlerTarget].pp[i] != 0)
     {
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].moves[i])
-
-        gBattleMons[gBattlerTarget].volatiles.disabledMove = gBattleMons[gBattlerTarget].moves[i];
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, moveToDisable)
 
         if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_1)
-        {
             gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 0, 7);
-
-            // If timer set to zero turns, need to release disabledMove also
-            if (gBattleMons[gBattlerTarget].volatiles.disableTimer == 0)
-                gBattleMons[gBattlerTarget].volatiles.disabledMove = MOVE_NONE;
-        }
         else if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_2)
-        {
             gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 1, 7);
-        }
         else if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_3)
-        {
             gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 2, 5);
-        }
         else if (GetConfig(CONFIG_DISABLE_TURNS) == GEN_4)
-        {
             gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, B_DISABLE_TIMER, 7);
-        }
         else // GEN_5+
-        {
             gBattleMons[gBattlerTarget].volatiles.disableTimer = B_DISABLE_TIMER;
-        }
-        
+        // If timer set to zero turns, don't set disabledMove
+        if (gBattleMons[gBattlerTarget].volatiles.disableTimer != 0)
+            gBattleMons[gBattlerTarget].volatiles.disabledMove = moveToDisable;
+
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
