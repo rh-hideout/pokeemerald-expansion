@@ -357,6 +357,7 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     s16 currY = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y;
     u8 currBehavior = MapGridGetMetatileBehaviorAt(currX, currY);
 
+    gSpecialVar_Facing = direction;
     switch (direction)
     {
     case DIR_EAST:
@@ -399,7 +400,6 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
 
     gSelectedObjectEvent = objectEventId;
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
-    gSpecialVar_Facing = direction;
 
     if (InTrainerHill() == TRUE)
         script = GetTrainerHillTrainerScript();
