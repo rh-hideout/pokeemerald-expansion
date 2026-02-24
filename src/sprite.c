@@ -680,6 +680,44 @@ s16 AllocSpriteTiles(u16 tileCount)
     return start;
 }
 
+bool32 CanAllocSpriteTiles(u16 tileCount)
+{
+    u16 i;
+    u16 numTilesFound;
+
+    if (tileCount == 0)
+        return TRUE;
+
+    i = gReservedSpriteTileCount;
+
+    for (;;)
+    {
+        while (SPRITE_TILE_IS_ALLOCATED(i))
+        {
+            i++;
+            if (i == TOTAL_OBJ_TILE_COUNT)
+                return FALSE;
+        }
+
+        numTilesFound = 1;
+
+        while (numTilesFound != tileCount)
+        {
+            i++;
+            if (i == TOTAL_OBJ_TILE_COUNT)
+                return FALSE;
+
+            if (!SPRITE_TILE_IS_ALLOCATED(i))
+                numTilesFound++;
+            else
+                break;
+        }
+
+        if (numTilesFound == tileCount)
+            return TRUE;
+    }
+}
+
 u8 SpriteTileAllocBitmapOp(u16 bit, u8 op)
 {
     u8 index = bit / 8;
@@ -1592,14 +1630,16 @@ u32 LoadSpritePalette(const struct SpritePalette *palette)
 
     if (index == 0xFF)
     {
-        return 0xFF;
+        TryAndDespawnOldestGeneratedOWE_Palette();
+        index = IndexOfSpritePaletteTag(TAG_NONE);
+        
+        if (index == 0xFF)
+            return 0xFF;
     }
-    else
-    {
-        sSpritePaletteTags[index] = palette->tag;
-        DoLoadSpritePalette(palette->data, PLTT_ID(index));
-        return index;
-    }
+
+    sSpritePaletteTags[index] = palette->tag;
+    DoLoadSpritePalette(palette->data, PLTT_ID(index));
+    return index;
 }
 
 u32 LoadSpritePaletteWithTag(const u16 *pal, u16 tag)
@@ -2104,4 +2144,15 @@ inline u32 GetSpriteWidth(struct Sprite *sprite)
 inline u32 GetSpriteHeight(struct Sprite *sprite)
 {
     return gOamDimensions[sprite->oam.shape][sprite->oam.size].height;
+}
+
+u32 CountFreePaletteSlots(void)
+{
+    u32 i, count = 0;
+
+    for (i = gReservedSpritePaletteCount; i < 16; i++)
+        if (sSpritePaletteTags[i] == TAG_NONE)
+            count++;
+
+    return count;
 }

@@ -307,6 +307,7 @@ u16 LoadSpriteSheet(const struct SpriteSheet *sheet);
 u16 LoadSpriteSheetByTemplate(const struct SpriteTemplate *template, u32 frame, s32 offset);
 void LoadSpriteSheets(const struct SpriteSheet *sheets);
 s16 AllocSpriteTiles(u16 tileCount);
+bool32 CanAllocSpriteTiles(u16 tileCount);
 void FreeSpriteTilesByTag(u16 tag);
 void FreeSpriteTileRanges(void);
 u16 GetSpriteTileStartByTag(u16 tag);
@@ -339,5 +340,6 @@ void SetupSpritesForTextPrinting(u8 *spriteIds, const u32 **spriteSrc, u32 numSp
 u32 *GetSrcPtrFromSprite(struct Sprite *sprite);
 u32 GetSpriteWidth(struct Sprite *sprite);
 u32 GetSpriteHeight(struct Sprite *sprite);
+u32 CountFreePaletteSlots(void);
 
 #endif //GUARD_SPRITE_H

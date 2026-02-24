@@ -859,6 +859,13 @@ void FieldEffectScript_LoadFadedPalette(u8 **script)
     UpdateSpritePaletteWithWeather(paletteSlot, ShouldFieldEffectBeFogBlended(*script));
 }
 
+void FieldEffect_LoadFadedPalette(struct SpritePalette *palette, enum ColorMapType colorMap)
+{
+    u32 paletteSlot = LoadSpritePalette(palette);
+    SetPaletteColorMapType(paletteSlot + 16, colorMap);
+    UpdateSpritePaletteWithWeather(paletteSlot, TRUE);
+}
+
 void FieldEffectScript_LoadPalette(u8 **script)
 {
     struct SpritePalette *palette = (struct SpritePalette *)FieldEffectScript_ReadWord(script);

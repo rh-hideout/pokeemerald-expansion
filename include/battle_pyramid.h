@@ -7,7 +7,7 @@ void CallBattlePyramidFunction(void);
 u16 LocalIdToPyramidTrainerId(u8 localId);
 bool8 GetBattlePyramidTrainerFlag(u8 eventId);
 void MarkApproachingPyramidTrainersAsBattled(void);
-void GenerateBattlePyramidWildMon(void);
+void GenerateBattlePyramidWildMon(u32 forceSpecies);
 u8 GetPyramidRunMultiplier(void);
 u8 CurrentBattlePyramidLocation(void);
 bool8 InBattlePyramid_(void);
