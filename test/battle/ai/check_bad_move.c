@@ -63,6 +63,30 @@ AI_SINGLE_BATTLE_TEST("AI sees No Guard affects semi-invulnerable moves")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI predicts semi-invulnerable entry and chooses a move that can still hit")
+{
+    enum Move playerMove, expectedMove = MOVE_NONE;
+
+    PARAMETRIZE { playerMove = MOVE_WATER_GUN; expectedMove = MOVE_THUNDERBOLT; }
+    PARAMETRIZE { playerMove = MOVE_DIVE;      expectedMove = MOVE_SURF; } // Faster Dive should make AI avoid moves that miss underwater
+
+    PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DIVE) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(GetMoveTwoTurnAttackStatus(MOVE_DIVE) == STATE_UNDERWATER);
+        ASSUME(!MoveDamagesUnderWater(MOVE_THUNDERBOLT));
+        ASSUME(MoveDamagesUnderWater(MOVE_SURF));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        PLAYER(SPECIES_MAGIKARP) { Speed(2); Moves(playerMove); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_THUNDERBOLT, MOVE_SURF); }
+    } WHEN {
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, expectedMove);
+        }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact (Single)")
 {
     static const enum Move protectMoves[] =

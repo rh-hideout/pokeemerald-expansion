@@ -47,6 +47,7 @@ static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
 static bool32 DoesAbilityBenefitFromSunOrRain(enum BattlerId battler, enum Ability ability, u32 weather);
 static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static u32 GetWindAbilityScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct AiLogicData *aiData);
+static bool32 BreaksThroughSemiInvulnerableState(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum SemiInvulnerableState state);
 
 // ewram
 EWRAM_DATA const u8 *gAIScriptPtr = NULL;   // Still used in contests
@@ -1175,11 +1176,28 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     if (IsPowderMove(move) && !IsAffectedByPowderMove(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef]))
         RETURN_SCORE_MINUS(10);
 
+    // Don't use moves that miss against already semi-invulnerable targets when we move first.
     if (!BreaksThroughSemiInvulnerablity(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move)
      && moveEffect != EFFECT_SEMI_INVULNERABLE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
      && abilityAtk != ABILITY_NO_GUARD && abilityDef != ABILITY_NO_GUARD)
+    {
         RETURN_SCORE_MINUS(10);
+    }
 
+    // Don't use moves that miss if a faster foe is predicted to enter a semi-invulnerable state this turn.
+    if (!IsSemiInvulnerable(battlerDef, CHECK_ALL)
+     && predictedMoveSpeedCheck != MOVE_NONE
+     && predictedMoveSpeedCheck != MOVE_UNAVAILABLE
+     && (GetMoveEffect(predictedMoveSpeedCheck) == EFFECT_SEMI_INVULNERABLE || GetMoveEffect(predictedMoveSpeedCheck) == EFFECT_SKY_DROP)
+     && AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
+     && moveEffect != EFFECT_SEMI_INVULNERABLE
+     && aiData->holdEffects[battlerDef] != HOLD_EFFECT_POWER_HERB)
+    {
+        if (!BreaksThroughSemiInvulnerableState(battlerAtk, battlerDef, abilityAtk, abilityDef, move, GetMoveTwoTurnAttackStatus(predictedMoveSpeedCheck)))
+            RETURN_SCORE_MINUS(10);
+    }
+
+    // Don't choose slow two-turn moves or semi-invulnerable moves that fail under No Guard if the foe can KO us.
     if (CanTargetFaintAi(battlerDef, battlerAtk))
     {
         if (IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move))
@@ -1194,10 +1212,10 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
     // Don't setup into expected Focus Punch.
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS
-        && nonVolatileStatus != MOVE_EFFECT_SLEEP
-        && GetMoveEffect(predictedMove) != EFFECT_FOCUS_PUNCH
-        && BestDmgMoveHasEffect(battlerDef, battlerAtk, AI_DEFENDING, EFFECT_FOCUS_PUNCH)
-        && RandomPercentage(RNG_AI_STATUS_FOCUS_PUNCH, STATUS_MOVE_FOCUS_PUNCH_CHANCE))
+     && nonVolatileStatus != MOVE_EFFECT_SLEEP
+     && GetMoveEffect(predictedMove) != EFFECT_FOCUS_PUNCH
+     && BestDmgMoveHasEffect(battlerDef, battlerAtk, AI_DEFENDING, EFFECT_FOCUS_PUNCH)
+     && RandomPercentage(RNG_AI_STATUS_FOCUS_PUNCH, STATUS_MOVE_FOCUS_PUNCH_CHANCE))
     {
         RETURN_SCORE_MINUS(20);
     }
@@ -1228,8 +1246,10 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     if (hasTwoOpponents
      && !IsFlinchGuaranteed(battlerAtk, battlerDef, move) && IsFlinchGuaranteed(battlerAtk, BATTLE_PARTNER(battlerDef), move)
      && aiData->effectiveness[battlerAtk][BATTLE_PARTNER(battlerDef)][gAiThinkingStruct->movesetIndex] != UQ_4_12(0.0))
+    {
         ADJUST_SCORE(-5);
-
+    }
+   
     // check non-user target
     if (moveTarget != TARGET_USER)
     {
@@ -4091,6 +4111,39 @@ static bool32 ShouldCompareMove(enum BattlerId battlerAtk, enum BattlerId battle
     if (gAiThinkingStruct->aiFlags[battlerAtk] & (AI_FLAG_RISKY | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE) && IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
         return FALSE;
     return TRUE;
+}
+
+static bool32 BreaksThroughSemiInvulnerableState(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum SemiInvulnerableState state)
+{
+    if (state != STATE_COMMANDER)
+    {
+        if (MoveAlwaysHitsOnSameType(move) && IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move)))
+            return TRUE;
+        if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
+            return TRUE;
+        if (gBattleMons[battlerDef].volatiles.lockOn && gBattleMons[battlerDef].volatiles.battlerWithSureHit == battlerAtk)
+            return TRUE;
+    }
+
+    switch (state)
+    {
+    case STATE_UNDERGROUND:
+        return MoveDamagesUnderground(move);
+    case STATE_UNDERWATER:
+        return MoveDamagesUnderWater(move);
+    case STATE_ON_AIR:
+    case STATE_SKY_DROP:
+        return MoveDamagesAirborne(move) || MoveDamagesAirborneDoubleDamage(move);
+    case STATE_PHANTOM_FORCE:
+        return FALSE;
+    case STATE_COMMANDER:
+        return GetMoveEffect(move) == EFFECT_TRANSFORM;
+    case STATE_NONE:
+    case SEMI_INVULNERABLE_COUNT:
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId battlerDef)
