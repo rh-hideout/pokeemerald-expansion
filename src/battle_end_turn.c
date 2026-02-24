@@ -770,7 +770,7 @@ static bool32 HandleEndTurnDisable(enum BattlerId battler)
             if (gBattleMons[battler].volatiles.disabledMove == gBattleMons[battler].moves[moveIndex])
                 break;
         }
-        if (!(GetConfig(CONFIG_DISABLE_TURNS) <= GEN_2
+        if (!(GetConfig(B_DISABLE_TURNS) <= GEN_2
          && gBattleMons[battler].volatiles.unableToUseMove
          && (gBattleMons[battler].volatiles.disabledMove != gChosenMoveByBattler[battler]))) // Timer increments still if fast disable blocked move
         {

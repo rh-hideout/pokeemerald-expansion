@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Disable prevents the target from using a random move (Gen 1)
 {
     PASSES_RANDOMLY(1, 3, RNG_DISABLE_MOVE);
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_1);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_1);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_FLAMETHROWER, MOVE_THUNDERBOLT, MOVE_ICE_BEAM); }
     } WHEN {
@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Disable prevents the target from using a random move (Gen 1)
 SINGLE_BATTLE_TEST("Disable prevents the target from using the last move used (Gen 2+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_2);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_2);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Disable fails if one of the target's moves is already disabl
     PARAMETRIZE { config = GEN_2; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, config);
+        WITH_CONFIG(B_DISABLE_TURNS, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_WYNAUT) { Speed(2); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
     } WHEN {
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Disable fails if one of the target's moves is already disabl
 SINGLE_BATTLE_TEST("Disable fails if the target haven't used a move yet (Gen 2+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_2);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_2);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
     } WHEN {
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Disable fails if the target haven't used a move yet (Gen 2+)
 SINGLE_BATTLE_TEST("Disable fails if the last move used was Struggle (Gen 2+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_2);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_2);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_WYNAUT) { Speed(2); MovesWithPP({MOVE_SCRATCH, 1}, {MOVE_CELEBRATE, 40}); Item(ITEM_CHOICE_BAND); }
     } WHEN {
@@ -186,7 +186,7 @@ SINGLE_BATTLE_TEST("Disable lasts 0-7 turns (Gen 1)")
 {
     PASSES_RANDOMLY(1, 8, RNG_DISABLE_TURNS);
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_1);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_1);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
@@ -215,7 +215,7 @@ SINGLE_BATTLE_TEST("Disable has a 1 in 8 chance for the target to still use its 
 {
     PASSES_RANDOMLY(1, 8, RNG_DISABLE_TURNS);
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_1);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_1);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
@@ -232,7 +232,7 @@ SINGLE_BATTLE_TEST("Disable lasts 1-7 turns (Gen 2)")
 {
     PASSES_RANDOMLY(1, 7, RNG_DISABLE_TURNS);
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_2);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_2);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
@@ -265,7 +265,7 @@ SINGLE_BATTLE_TEST("Disable lasts 2-5 turns (Gen 3)")
 {
     PASSES_RANDOMLY(1, 4, RNG_DISABLE_TURNS);
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_3);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_3);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
@@ -295,7 +295,7 @@ SINGLE_BATTLE_TEST("Disable lasts 4-7 turns (Gen 4)")
 {
     PASSES_RANDOMLY(1, 4, RNG_DISABLE_TURNS);
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_4);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
@@ -331,7 +331,7 @@ SINGLE_BATTLE_TEST("Disable lasts 4 turns (Gen 5+)")
 {
     PASSES_RANDOMLY(10, 10, RNG_DISABLE_TURNS);
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_5);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
@@ -375,7 +375,7 @@ SINGLE_BATTLE_TEST("Disable's timer only counts down when trying to use a move (
     PARAMETRIZE { config = GEN_2; move = MOVE_THUNDERBOLT;  }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, config);
+        WITH_CONFIG(B_DISABLE_TURNS, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(move, MOVE_DISABLE, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
     } WHEN {
@@ -420,7 +420,7 @@ SINGLE_BATTLE_TEST("Disable's timer counts down regardless of the action (Gen 3+
     PARAMETRIZE { move = MOVE_THUNDERBOLT;  }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_DISABLE_TURNS, GEN_3);
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_3);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(move, MOVE_DISABLE, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
     } WHEN {
