@@ -818,6 +818,13 @@ void AnimElectricity(struct Sprite *sprite)
 // The vertical falling thunder bolt used in Thunder Wave/Shock/Bolt
 void AnimTask_ElectricBolt(u8 taskId)
 {
+    if (!(TryLoadGfx(gElectricBoltSegmentSpriteTemplate.tileTag)
+       && TryLoadPal(gElectricBoltSegmentSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     gTasks[taskId].data[0] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X) + gBattleAnimArgs[0];
     gTasks[taskId].data[1] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + gBattleAnimArgs[1];
     gTasks[taskId].data[2] = gBattleAnimArgs[2];
@@ -942,6 +949,20 @@ static void AnimThunderWave_Step(struct Sprite *sprite)
 // Animates small electric orbs moving from around the battler inward. For Charge/Shock Wave
 void AnimTask_ElectricChargingParticles(u8 taskId)
 {
+    const struct SpriteTemplate *template;
+    if (gAnimMoveIndex == MOVE_FLASH_CANNON || gAnimMoveIndex == MOVE_STEEL_BEAM)
+        template = &gLightOfRuinGrayChargeTemplate;
+    else
+        template = &gElectricChargingParticlesSpriteTemplate;
+
+    if (!(TryLoadGfx(template->tileTag)
+       && TryLoadPal(template->paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
+
     struct Task *task = &gTasks[taskId];
 
     if (gBattleAnimArgs[0] == ANIM_ATTACKER)
@@ -1167,6 +1188,27 @@ void AnimTask_VoltTackleBolt(u8 taskId)
     switch(task->data[0])
     {
     case 0:
+    {
+        const struct SpriteTemplate *template;
+        switch(gAnimMoveIndex)
+        {
+        case MOVE_FAIRY_LOCK:
+            template = &gFairyLockChainsSpriteTemplate;
+            break;
+        case MOVE_COLLISION_COURSE:
+            template = &gCollisionCourseSpriteTemplate;
+            break;
+        default:
+            template = &gVoltTackleBoltSpriteTemplate;
+        }
+
+        if (!(TryLoadGfx(template->tileTag)
+           && TryLoadPal(template->paletteTag)))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         task->data[1] = IsOnPlayerSide(gBattleAnimAttacker) ? 1 : -1;
 
         switch (gBattleAnimArgs[0])
@@ -1220,6 +1262,7 @@ void AnimTask_VoltTackleBolt(u8 taskId)
 
         task->data[0]++;
         break;
+    }
     case 1:
         if (++task->data[2] > 0)
         {
@@ -1317,6 +1360,13 @@ void AnimTask_ShockWaveProgressingBolt(u8 taskId)
     switch (task->data[0])
     {
     case 0:
+        if (!(TryLoadGfx(gVoltTackleBoltSpriteTemplate.tileTag)
+           && TryLoadPal(gVoltTackleBoltSpriteTemplate.paletteTag)))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         task->data[6] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
         task->data[7] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
         task->data[8] = 4;
@@ -1444,6 +1494,13 @@ void AnimTask_ShockWaveLightning(u8 taskId)
     switch (task->data[0])
     {
     case 0:
+        if (!(TryLoadGfx(gLightningSpriteTemplate.tileTag)
+           && TryLoadPal(gLightningSpriteTemplate.paletteTag)))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         task->data[15] = GetBattlerSpriteCoord(target, BATTLER_COORD_Y) + 32;
         task->data[14] = task->data[15];
         while (task->data[14] > 16)
@@ -1502,7 +1559,12 @@ static void AnimShockWaveLightning(struct Sprite *sprite)
 // arg 2: duration
 void AnimTask_CreateIons(u8 taskId)
 {
-    u8 x, y;
+    if (!(TryLoadGfx(gIonSpriteTemplate.tileTag)
+       && TryLoadPal(gIonSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     if (gTasks[taskId].data[0] == 0)
     {
@@ -1513,8 +1575,8 @@ void AnimTask_CreateIons(u8 taskId)
     gTasks[taskId].data[0]++;
     if (gTasks[taskId].data[0] % gTasks[taskId].data[2] == 1)
     {
-        x = Random2() % DISPLAY_WIDTH;
-        y = Random2() % (DISPLAY_HEIGHT / 2);
+        u32 x = Random2() % DISPLAY_WIDTH;
+        u32 y = Random2() % (DISPLAY_HEIGHT / 2);
         CreateSprite(&gIonSpriteTemplate, x, y, 4);
     }
     if (gTasks[taskId].data[0] == gTasks[taskId].data[3])

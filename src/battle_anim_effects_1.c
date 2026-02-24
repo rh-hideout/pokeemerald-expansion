@@ -3147,6 +3147,13 @@ void AnimTask_CreateSmallSolarBeamOrbs(u8 taskId)
 {
     if (--gTasks[taskId].data[0] == -1)
     {
+        if (!(TryLoadGfx(gSolarBeamSmallOrbSpriteTemplate.tileTag)
+           && TryLoadPal(gSolarBeamSmallOrbSpriteTemplate.paletteTag)))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gTasks[taskId].data[1]++;
         gTasks[taskId].data[0] = 6;
         gBattleAnimArgs[0] = 15;
@@ -4549,6 +4556,13 @@ static void AnimTrickBag_Step3(struct Sprite *sprite)
 void AnimTask_LeafBlade(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+
+    if (!(TryLoadGfx(gLeafBladeSpriteTemplate.tileTag)
+       && TryLoadPal(gLeafBladeSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     task->data[4] = GetBattlerSpriteSubpriority(gBattleAnimTarget) - 1;
     task->data[6] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
@@ -7373,6 +7387,13 @@ void AnimTask_CreateSmallSteelBeamOrbs(u8 taskId)
 {
     if (--gTasks[taskId].data[0] == -1)
     {
+        if (!(TryLoadGfx(gSteelBeamSmallOrbSpriteTemplate.tileTag)
+           && TryLoadPal(gSteelBeamSmallOrbSpriteTemplate.paletteTag)))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gTasks[taskId].data[1]++;
         gTasks[taskId].data[0] = 6;
         gBattleAnimArgs[0] = 15;

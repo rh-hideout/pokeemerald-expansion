@@ -4,6 +4,8 @@
 #include "palette.h"
 #include "string_util.h"
 #include "text.h"
+#include "battle_anim.h"
+#include "test/test.h"
 
 #define MAX_SPRITE_COPY_REQUESTS 64
 
@@ -28,11 +30,11 @@
 
 #define SPRITE_TILE_IS_ALLOCATED(n) ((sSpriteTileAllocBitmap[(n) / 8] >> ((n) % 8)) & 1)
 
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
 EWRAM_DATA bool32 gLoadFail = FALSE;
 EWRAM_DATA bool32 gCountAllocs = FALSE;
 EWRAM_DATA s32 gSpriteAllocs = 0;
-#endif // T_SHOULD_RUN_MOVE_ANIM
+#endif // TESTING
 
 struct SpriteCopyRequest
 {
@@ -467,6 +469,14 @@ u32 CreateInvisibleSprite(void (*callback)(struct Sprite *))
 
 u32 CreateSpriteAt(u32 index, const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
+    if (TESTING && template->tileTag > ANIM_SPRITES_START && template->tileTag < ANIM_TAG_COUNT && !IsGfxLoaded(template->tileTag))
+    {
+        assertf(FALSE, "createsprite with unloaded gfx: %u", template->tileTag);
+    }
+    if (TESTING && template->paletteTag > ANIM_SPRITES_START && template->paletteTag < ANIM_TAG_COUNT && !IsPalLoaded(template->paletteTag))
+    {
+        assertf(FALSE, "createsprite with unloaded pal: %u", template->paletteTag);
+    }
     struct Sprite *sprite = &gSprites[index];
 
     ResetSprite(sprite);
@@ -1495,13 +1505,13 @@ void LoadSpriteSheets(const struct SpriteSheet *sheets)
 
 void FreeSpriteTilesByTag(u16 tag)
 {
-#if T_SHOULD_RUN_MOVE_ANIM
-    if (gCountAllocs)
-        gSpriteAllocs--;
-#endif
     u8 index = IndexOfSpriteTileTag(tag);
     if (index != 0xFF)
     {
+#if TESTING
+        if (gCountAllocs)
+            gSpriteAllocs--;
+#endif
         u16 i;
         u16 *rangeStarts;
         u16 *rangeCounts;
@@ -1564,7 +1574,7 @@ u16 GetSpriteTileTagByTileStart(u16 start)
 
 void AllocSpriteTileRange(u16 tag, u16 start, u16 count)
 {
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
     if (gCountAllocs)
         gSpriteAllocs++;
 #endif

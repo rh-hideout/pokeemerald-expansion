@@ -713,4 +713,9 @@ enum SpeciesGfxChange
 enum { SHAKE_BG_X, SHAKE_BG_Y, SHAKE_MON_X, SHAKE_MON_Y };
 enum { SHAKE_MON_ATTACKER, SHAKE_MON_TARGET, SHAKE_MON_BOTH };
 
+//  Max number of tile and palette allocations for battle animations
+//  These values must be even
+#define ANIM_SPRITE_GFX_COUNT 8
+#define ANIM_SPRITE_PAL_COUNT 8
+
 #endif // GUARD_CONSTANTS_BATTLE_ANIM_H

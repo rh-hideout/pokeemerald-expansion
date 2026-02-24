@@ -933,14 +933,21 @@ static void AnimWhirlwindLine_Step(struct Sprite *sprite)
         DestroyAnimSprite(sprite);
 }
 
-void AnimTask_DrillPeckHitSplats(u8 task)
+void AnimTask_DrillPeckHitSplats(u8 taskId)
 {
-    if (!(gTasks[task].data[0] % 32))
+    if (!(gTasks[taskId].data[0] % 32))
     {
+        if (!(TryLoadGfx(gFlashingHitSplatSpriteTemplate.tileTag)
+           && TryLoadPal(gFlashingHitSplatSpriteTemplate.paletteTag)))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gAnimVisualTaskCount++;
 
-        gBattleAnimArgs[0] = Sin(gTasks[task].data[0], -13);
-        gBattleAnimArgs[1] = Cos(gTasks[task].data[0], -13);
+        gBattleAnimArgs[0] = Sin(gTasks[taskId].data[0], -13);
+        gBattleAnimArgs[1] = Cos(gTasks[taskId].data[0], -13);
         gBattleAnimArgs[2] = 1;
         gBattleAnimArgs[3] = 3;
 
@@ -950,10 +957,10 @@ void AnimTask_DrillPeckHitSplats(u8 task)
                                3);
     }
 
-    gTasks[task].data[0] += 8;
+    gTasks[taskId].data[0] += 8;
 
-    if (gTasks[task].data[0] > 255)
-        DestroyAnimVisualTask(task);
+    if (gTasks[taskId].data[0] > 255)
+        DestroyAnimVisualTask(taskId);
 }
 
 static void AnimBounceBallShrink(struct Sprite *sprite)

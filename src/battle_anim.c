@@ -31,10 +31,8 @@
     battle_anim_script.inc and used in battle_anim_scripts.s
 */
 
-#define ANIM_SPRITE_INDEX_COUNT 8
-
-static void Cmd_loadspritegfx(void);
 static void Cmd_unloadspritegfx(void);
+static void Cmd_unloadspritepal(void);
 static void Cmd_createsprite(void);
 static void Cmd_createvisualtask(void);
 static void Cmd_delay(void);
@@ -86,6 +84,7 @@ static void Cmd_createspriteontargets(void);
 static void Cmd_createspriteontargets_onpos(void);
 static void Cmd_jumpifmovetypeequal(void);
 static void Cmd_createdragondartsprite(void);
+static void Cmd_unloadallspritepals(void);
 static void RunAnimScriptCommand(void);
 static void Task_UpdateMonBg(u8 taskId);
 static void FlipBattlerBgTiles(void);
@@ -107,7 +106,8 @@ EWRAM_DATA u8 gAnimSoundTaskCount = 0;
 EWRAM_DATA struct LinkBattleAnim *gAnimDisableStructPtr = NULL;
 EWRAM_DATA s32 gAnimMoveDmg = 0;
 EWRAM_DATA u16 gAnimMovePower = 0;
-EWRAM_DATA static u16 sAnimSpriteIndexArray[ANIM_SPRITE_INDEX_COUNT] = {0};
+ALIGNED(4) EWRAM_DATA static u16 sAnimSpriteGfxTags[ANIM_SPRITE_GFX_COUNT] = {0};
+ALIGNED(4) EWRAM_DATA static u16 sAnimSpritePalTags[ANIM_SPRITE_GFX_COUNT] = {0};
 EWRAM_DATA u8 gAnimFriendship = 0;
 EWRAM_DATA u16 gWeatherMoveAnim = 0;
 EWRAM_DATA s16 gBattleAnimArgs[ANIM_ARGS_COUNT] = {0};
@@ -126,8 +126,8 @@ EWRAM_DATA static bool8 sAnimHideHpBoxes = FALSE;
 
 static void (*const sScriptCmdTable[])(void) =
 {
-    Cmd_loadspritegfx,        // 0x00
-    Cmd_unloadspritegfx,      // 0x01
+    Cmd_unloadspritegfx,      // 0x00
+    Cmd_unloadspritepal,      // 0x01
     Cmd_createsprite,         // 0x02
     Cmd_createvisualtask,     // 0x03
     Cmd_delay,                // 0x04
@@ -179,6 +179,7 @@ static void (*const sScriptCmdTable[])(void) =
     Cmd_createspriteontargets_onpos, // 0x32
     Cmd_jumpifmovetypeequal,         // 0x33
     Cmd_createdragondartsprite,      // 0x34
+    Cmd_unloadallspritepals,        // 0x35
 };
 
 static const u16 sMovesWithQuietBGM[] =
@@ -281,8 +282,6 @@ static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =
 
 void ClearBattleAnimationVars(void)
 {
-    s32 i;
-
     sAnimFramesToWait = 0;
     gAnimScriptActive = FALSE;
     gAnimVisualTaskCount = 0;
@@ -293,11 +292,14 @@ void ClearBattleAnimationVars(void)
     gAnimFriendship = 0;
 
     // Clear index array.
-    for (i = 0; i < ANIM_SPRITE_INDEX_COUNT; i++)
-        sAnimSpriteIndexArray[i] = 0xFFFF;
+    for (u32 i = 0; i < ANIM_SPRITE_GFX_COUNT; i++)
+        sAnimSpriteGfxTags[i] = 0xFFFF;
+
+    for (u32 i = 0; i < ANIM_SPRITE_PAL_COUNT; i++)
+        sAnimSpritePalTags[i] = 0xFFFF;
 
     // Clear anim args.
-    for (i = 0; i < ANIM_ARGS_COUNT; i++)
+    for (u32 i = 0; i < ANIM_ARGS_COUNT; i++)
         gBattleAnimArgs[i] = 0;
 
     sMonAnimTaskIdArray[0] = TASK_NONE;
@@ -449,8 +451,11 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
     sAnimFramesToWait = 0;
     gAnimScriptCallback = RunAnimScriptCommand;
 
-    for (i = 0; i < ANIM_SPRITE_INDEX_COUNT; i++)
-        sAnimSpriteIndexArray[i] = 0xFFFF;
+    for (u32 i = 0; i < ANIM_SPRITE_GFX_COUNT; i++)
+        sAnimSpriteGfxTags[i] = 0xFFFF;
+
+    for (u32 i = 0; i < ANIM_SPRITE_PAL_COUNT; i++)
+        sAnimSpritePalTags[i] = 0xFFFF;
 
     if (animType == ANIM_TYPE_MOVE)
     {
@@ -489,31 +494,103 @@ void DestroyAnimSoundTask(u8 taskId)
     gAnimSoundTaskCount--;
 }
 
-static void AddSpriteIndex(u16 index)
+bool32 StoreGfxTag(u32 tag)
 {
-    s32 i;
-
-    for (i = 0; i < ANIM_SPRITE_INDEX_COUNT; i++)
+    for (u32 i = 0; i < ANIM_SPRITE_GFX_COUNT; i++)
     {
-        if (sAnimSpriteIndexArray[i] == 0xFFFF)
+        if (sAnimSpriteGfxTags[i] == 0xFFFF)
         {
-            sAnimSpriteIndexArray[i] = index;
-            return;
+            sAnimSpriteGfxTags[i] = tag;
+            return TRUE;
         }
+    }
+    return FALSE;
+}
+
+bool32 StorePalTag(u32 tag)
+{
+    for (u32 i = 0; i < ANIM_SPRITE_PAL_COUNT; i++)
+    {
+        if (sAnimSpritePalTags[i] == 0xFFFF)
+        {
+            sAnimSpritePalTags[i] = tag;
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+__attribute__((optimize("-O3"))) bool32 IsGfxLoaded(u32 tag)
+{
+    u32 tag2 = (tag << 16) | tag;
+    u32 *tag2s = (u32 *)sAnimSpriteGfxTags;
+
+    for (u32 i = 0; i < ANIM_SPRITE_GFX_COUNT / 2; i++)
+    {
+        u32 xor = tag2 ^ tag2s[i];
+        if ((xor << 16) == 0)
+            return 1;
+        if ((xor >> 16) == 0)
+            return 1;
+    }
+    return 0;
+}
+
+__attribute__((optimize("-O3"))) bool32 IsPalLoaded(u32 tag)
+{
+    u32 tag2 = (tag << 16) | tag;
+    u32 *tag2s = (u32 *)sAnimSpritePalTags;
+
+    for (u32 i = 0; i < ANIM_SPRITE_PAL_COUNT / 2; i++)
+    {
+        u32 xor = tag2 ^ tag2s[i];
+        if ((xor << 16) == 0)
+            return 1;
+        if ((xor >> 16) == 0)
+            return 1;
+    }
+    return 0;
+}
+
+bool32 TryLoadGfx(u32 tag)
+{
+    if (!IsGfxLoaded(tag))
+    {
+        if (StoreGfxTag(tag))
+        {
+            LoadCompressedSpriteSheetUsingHeap(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(tag)].pic);
+            return TRUE;
+        }
+        else
+        {
+            assertf(FALSE, "failed to store gfx: %u", tag);
+            return FALSE;
+        }
+    }
+    else
+    {
+        return TRUE;
     }
 }
 
-static void ClearSpriteIndex(u16 index)
+bool32 TryLoadPal(u32 tag)
 {
-    s32 i;
-
-    for (i = 0; i < ANIM_SPRITE_INDEX_COUNT; i++)
+    if (!IsPalLoaded(tag))
     {
-        if (sAnimSpriteIndexArray[i] == index)
+        if (StorePalTag(tag))
         {
-            sAnimSpriteIndexArray[i] = 0xFFFF;
-            return;
+            LoadSpritePalette(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(tag)].palette);
+            return TRUE;
         }
+        else
+        {
+            assertf(FALSE, "failed to store pal: %u", tag);
+            return FALSE;
+        }
+    }
+    else
+    {
+        return TRUE;
     }
 }
 
@@ -538,30 +615,66 @@ static void RunAnimScriptCommand(void)
     } while (sAnimFramesToWait == 0 && gAnimScriptActive);
 }
 
-static void Cmd_loadspritegfx(void)
+static void ClearSpriteGfxIndex(u32 tag)
 {
-    u16 index;
+    for (u32 i = 0; i < ANIM_SPRITE_GFX_COUNT; i++)
+    {
+        if (tag == sAnimSpriteGfxTags[i])
+        {
+            sAnimSpriteGfxTags[i] = 0xFFFF;
+            return;
+        }
+    }
+}
 
-    sBattleAnimScriptPtr++;
-    index = T1_READ_16(sBattleAnimScriptPtr);
-    LoadCompressedSpriteSheetUsingHeap(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(index)].pic);
-    LoadSpritePalette(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(index)].palette);
-    sBattleAnimScriptPtr += 2;
-    AddSpriteIndex(GET_TRUE_SPRITE_INDEX(index));
-    sAnimFramesToWait = 1;
-    gAnimScriptCallback = WaitAnimFrameCount;
+static void ClearSpritePalIndex(u32 tag)
+{
+    for (u32 i = 0; i < ANIM_SPRITE_PAL_COUNT; i++)
+    {
+        if (tag == sAnimSpritePalTags[i])
+        {
+            sAnimSpritePalTags[i] = 0xFFFF;
+            return;
+        }
+    }
 }
 
 static void Cmd_unloadspritegfx(void)
 {
-    u16 index;
-
     sBattleAnimScriptPtr++;
-    index = T1_READ_16(sBattleAnimScriptPtr);
-    FreeSpriteTilesByTag(gBattleAnimTable[GET_TRUE_SPRITE_INDEX(index)].pic.tag);
-    FreeSpritePaletteByTag(gBattleAnimTable[GET_TRUE_SPRITE_INDEX(index)].pic.tag);
+    u16 index = T1_READ_16(sBattleAnimScriptPtr);
     sBattleAnimScriptPtr += 2;
-    ClearSpriteIndex(GET_TRUE_SPRITE_INDEX(index));
+    if (IsGfxLoaded(index))
+    {
+        FreeSpriteTilesByTag(index);
+        ClearSpriteGfxIndex(index);
+    }
+}
+
+static void Cmd_unloadspritepal(void)
+{
+    sBattleAnimScriptPtr++;
+    u16 index = T1_READ_16(sBattleAnimScriptPtr);
+    sBattleAnimScriptPtr += 2;
+    if (IsPalLoaded(index))
+    {
+        FreeSpritePaletteByTag(index);
+        ClearSpritePalIndex(index);
+    }
+}
+
+static void Cmd_unloadallspritepals(void)
+{
+    sBattleAnimScriptPtr++;
+    for (u32 i = 0; i < ANIM_SPRITE_PAL_COUNT; i++)
+    {
+        if (sAnimSpritePalTags[i] != 0xFFFF)
+        {
+            u32 index = sAnimSpritePalTags[i];
+            FreeSpritePaletteByTag(index);
+            sAnimSpritePalTags[i] = 0xFFFF;
+        }
+    }
 }
 
 static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, enum BattlerId *targets)
@@ -670,6 +783,13 @@ static void Cmd_createsprite(void)
         sBattleAnimScriptPtr += 2;
     }
 
+    if (template->tileTag != 0)
+        if (!TryLoadGfx(template->tileTag))
+            return;
+    if (template->paletteTag != 0)
+        if (!TryLoadPal(template->paletteTag))
+            return;
+
     subpriority = GetSubpriorityForMoveAnim(argVar);
 
     if (CreateSpriteAndAnimate(template,
@@ -738,6 +858,13 @@ static void Cmd_createspriteontargets_onpos(void)
     argsCount = sBattleAnimScriptPtr[0];
     sBattleAnimScriptPtr++;
 
+    if (!(TryLoadGfx(template->tileTag)
+       && TryLoadPal(template->paletteTag)))
+    {
+        sBattleAnimScriptPtr += 2 * argsCount;
+        return;
+    }
+
     CreateSpriteOnTargets(template, argVar, battlerArgIndex, argsCount, FALSE);
 }
 
@@ -761,6 +888,13 @@ static void Cmd_createspriteontargets(void)
 
     argsCount = sBattleAnimScriptPtr[0];
     sBattleAnimScriptPtr++;
+
+    if (!(TryLoadGfx(template->tileTag)
+       && TryLoadPal(template->paletteTag)))
+    {
+        sBattleAnimScriptPtr += 2 * argsCount;
+        return;
+    }
 
     CreateSpriteOnTargets(template, argVar, battlerArgIndex, argsCount, TRUE);
 }
@@ -874,7 +1008,6 @@ static void Cmd_nop2(void)
 
 static void Cmd_end(void)
 {
-    s32 i;
     bool32 continuousAnim = FALSE;
 
     // Keep waiting as long as there are animations to be done.
@@ -904,13 +1037,23 @@ static void Cmd_end(void)
     // The SE has halted, so set the SE Frame Counter to 0 and continue.
     sSoundAnimFramesToWait = 0;
 
-    for (i = 0; i < ANIM_SPRITE_INDEX_COUNT; i++)
+    for (u32 i = 0; i < ANIM_SPRITE_GFX_COUNT; i++)
     {
-        if (sAnimSpriteIndexArray[i] != 0xFFFF)
+        if (sAnimSpriteGfxTags[i] != 0xFFFF)
         {
-            FreeSpriteTilesByTag(gBattleAnimTable[sAnimSpriteIndexArray[i]].pic.tag);
-            FreeSpritePaletteByTag(gBattleAnimTable[sAnimSpriteIndexArray[i]].pic.tag);
-            sAnimSpriteIndexArray[i] = 0xFFFF; // set terminator.
+            u32 index = sAnimSpriteGfxTags[i];
+            FreeSpriteTilesByTag(index);
+            sAnimSpriteGfxTags[i] = 0xFFFF;
+        }
+    }
+
+    for (u32 i = 0; i < ANIM_SPRITE_PAL_COUNT; i++)
+    {
+        if (sAnimSpritePalTags[i] != 0xFFFF)
+        {
+            u32 index = sAnimSpritePalTags[i];
+            FreeSpritePaletteByTag(index);
+            sAnimSpritePalTags[i] = 0xFFFF;
         }
     }
 
@@ -2315,6 +2458,10 @@ static void Cmd_createdragondartsprite(void)
     template.images = NULL;
     template.affineAnims = gDummySpriteAffineAnimTable;
     template.callback = AnimShadowBall;
+
+    if (!(TryLoadGfx(template.tileTag)
+       && TryLoadPal(template.paletteTag)))
+        return;
 
     if (CreateSpriteAndAnimate(&template,
         GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2),

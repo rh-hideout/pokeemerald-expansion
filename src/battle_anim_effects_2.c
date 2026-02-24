@@ -1580,6 +1580,13 @@ static void AirCutterProjectileStep1(u8 taskId)
 
 void AnimTask_AirCutterProjectile(u8 taskId)
 {
+    if (!(TryLoadGfx(gAirWaveProjectileSpriteTemplate.tileTag)
+       && TryLoadPal(gAirWaveProjectileSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     s16 attackerY = 0;
     s16 attackerX = 0;
     s16 targetX = 0;
@@ -2865,6 +2872,13 @@ static void AnimTask_ExtremeSpeedMonReappear_Step(u8 taskId)
 
 void AnimTask_SpeedDust(u8 taskId)
 {
+    if (!(TryLoadGfx(gSpeedDustSpriteTemplate.tileTag)
+       && TryLoadPal(gSpeedDustSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
     task->data[0] = 0;
     task->data[1] = 4;

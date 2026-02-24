@@ -1965,6 +1965,13 @@ static void RapinSpinMonElevation_Step(u8 taskId)
 
 void AnimTask_TormentAttacker(u8 taskId)
 {
+    if (!(TryLoadGfx(gThoughtBubbleSpriteTemplate.tileTag)
+       && TryLoadPal(gThoughtBubbleSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     task->data[0] = 0;
@@ -3960,7 +3967,10 @@ static void AnimTask_SquishAndSweatDroplets_Step(u8 taskId)
 
 static void CreateSweatDroplets(u8 taskId, bool8 lowerDroplets)
 {
-    u8 i;
+    if (!(TryLoadGfx(gFacadeSweatDropSpriteTemplate.tileTag)
+       && TryLoadPal(gFacadeSweatDropSpriteTemplate.paletteTag)))
+        return;
+
     s8 xOffset, yOffset;
     struct Task *task;
     s16 xCoords[4];
@@ -3985,7 +3995,7 @@ static void CreateSweatDroplets(u8 taskId, bool8 lowerDroplets)
     yCoords[0] = task->tBaseY + yOffset;
     yCoords[1] = task->tBaseY + yOffset + 6;
 
-    for (i = 0; i < 4; i++)
+    for (u32 i = 0; i < 4; i++)
     {
         u8 spriteId = CreateSprite(&gFacadeSweatDropSpriteTemplate, xCoords[i], yCoords[i & 1], task->tSubpriority - 5);
         if (spriteId != MAX_SPRITES)
@@ -4146,6 +4156,13 @@ static void AnimRoarNoiseLine_Step(struct Sprite *sprite)
 // arg 0: unused
 void AnimTask_GlareEyeDots(u8 taskId)
 {
+    if (!(TryLoadGfx(gGlareEyeDotSpriteTemplate.tileTag)
+       && TryLoadPal(gGlareEyeDotSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     if (IsContest())
@@ -4315,6 +4332,13 @@ void AnimAssistPawprint(struct Sprite *sprite)
 // No args.
 void AnimTask_BarrageBall(u8 taskId)
 {
+    if (!(TryLoadGfx(gBarrageBallSpriteTemplate.tileTag)
+       && TryLoadPal(gBarrageBallSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     task->data[11] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
