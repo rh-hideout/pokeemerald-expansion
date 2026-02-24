@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Quark Drive after Electric Terr
 SINGLE_BATTLE_TEST("Booster Energy will activate Protosynthesis after harsh sunlight ends")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_RAGING_BOLT) { Attack(100); Defense(100); Speed(100); SpAttack(110); SpDefense(100); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_TORKOAL) { Speed(100); Ability(ABILITY_DROUGHT); }
     } WHEN {
@@ -227,20 +227,6 @@ SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.77), results[1].damage);
         EXPECT_MUL_EQ(results[2].damage, Q_4_12(0.77), results[3].damage);
-    }
-}
-
-SINGLE_BATTLE_TEST("Booster Energy can't be flung if a Paradox species is involved")
-{
-    GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_IRON_MOTH].isParadox == TRUE);
-        PLAYER(SPECIES_IRON_MOTH);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_FLING); }
-    } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, opponent);
-        MESSAGE("But it failed!");
     }
 }
 

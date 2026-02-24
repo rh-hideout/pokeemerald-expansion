@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Rayquaza can Mega Evolve knowing Dragon Ascent")
 SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_6);
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_6);
         PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
 SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_7);
         PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
 SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn order")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_7);
         ASSUME(GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 0) != ABILITY_STALL
             && GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 1) != ABILITY_STALL);
         PLAYER(SPECIES_SABLEYE) { Item(ITEM_SABLENITE); Ability(ABILITY_STALL); Speed(105); }
@@ -214,5 +214,43 @@ SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon battle end after Mega Ev
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_RAYQUAZA);
+    }
+}
+
+SINGLE_BATTLE_TEST("Venusaur returns its base Form upon fainting end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_VENUSAUR) { HP(1); Item(ITEM_VENUSAURITE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_VENUSAUR);
+    }
+}
+
+SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon fainting end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { HP(1); Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_RAYQUAZA);
     }
 }

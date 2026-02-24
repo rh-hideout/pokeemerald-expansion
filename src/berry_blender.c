@@ -117,7 +117,7 @@ struct BlenderBerry
 {
     enum Item itemId;
     u8 name[BERRY_NAME_LENGTH + 1];
-    u8 flavors[FLAVOR_COUNT + 1]; // 5 flavors, + 1 for feel
+    enum Flavor flavors[FLAVOR_COUNT + 1]; // 5 flavors, + 1 for feel
 };
 
 struct TimeAndRPM
@@ -3442,7 +3442,7 @@ static bool8 PrintBlendingResults(void)
     s32 xPos, yPos;
 
     struct Pokeblock pokeblock;
-    u8 flavors[FLAVOR_COUNT + 1];
+    enum Flavor flavors[FLAVOR_COUNT + 1];
     u8 text[40];
     u16 UNUSED berryIds[4];
 

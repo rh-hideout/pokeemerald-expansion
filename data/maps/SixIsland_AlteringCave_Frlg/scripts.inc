@@ -1,4 +1,4 @@
-SixIsland_AlteringCave_MapScripts::
+SixIsland_AlteringCave_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SixIsland_AlteringCave_OnTransition
 	.byte 0
 

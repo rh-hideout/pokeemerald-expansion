@@ -1,4 +1,4 @@
-SixIsland_WaterPath_MapScripts::
+SixIsland_WaterPath_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_WaterPath_EventScript_HornWantedSign::

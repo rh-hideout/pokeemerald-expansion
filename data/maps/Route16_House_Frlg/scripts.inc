@@ -1,4 +1,4 @@
-Route16_House_MapScripts::
+Route16_House_Frlg_MapScripts::
 	.byte 0
 
 Route16_House_EventScript_Woman::

@@ -1,6 +1,6 @@
 .equ RECEIVED_TOWN_MAP, VAR_TEMP_1
 
-PalletTown_RivalsHouse_MapScripts::
+PalletTown_RivalsHouse_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, PalletTown_RivalsHouse_OnTransition
 	.byte 0
 

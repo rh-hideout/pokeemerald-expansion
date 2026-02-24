@@ -163,7 +163,7 @@ WILD_BATTLE_TEST("Comatose boosts Dream Ball's multiplier")
     GIVEN {
         ASSUME(B_DREAM_BALL_MODIFIER >= GEN_8);
         ASSUME(gSpeciesInfo[species].catchRate == 45);
-        WITH_CONFIG(CONFIG_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); MaxHP(100); HP(1); }
     } WHEN {

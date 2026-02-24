@@ -1,6 +1,7 @@
 #ifndef GUARD_CONSTANTS_EVENT_OBJECT_MOVEMENT_H
 #define GUARD_CONSTANTS_EVENT_OBJECT_MOVEMENT_H
 
+
 #define MOVEMENT_TYPE_NONE                             0x0
 #define MOVEMENT_TYPE_LOOK_AROUND                      0x1
 #define MOVEMENT_TYPE_WANDER_AROUND                    0x2
@@ -83,7 +84,8 @@
 #define MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT        0x4F
 #define MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT       0x50
 #define MOVEMENT_TYPE_FOLLOW_PLAYER                    0x51
-#define NUM_MOVEMENT_TYPES                             0x52
+#define MOVEMENT_TYPE_WANDER_AROUND_SLOWER             0x52
+#define NUM_MOVEMENT_TYPES                             0x53
 
 #define MOVEMENT_ACTION_FACE_DOWN                       0x0
 #define MOVEMENT_ACTION_FACE_UP                         0x1
@@ -264,6 +266,10 @@
 #define MOVEMENT_ACTION_WALK_FAST_DIAGONAL_UP_RIGHT     0xAF
 #define MOVEMENT_ACTION_WALK_FAST_DIAGONAL_DOWN_LEFT    0xB0
 #define MOVEMENT_ACTION_WALK_FAST_DIAGONAL_DOWN_RIGHT   0xB1
+#define MOVEMENT_ACTION_SPIN_DOWN                       0xB2
+#define MOVEMENT_ACTION_SPIN_UP                         0xB3
+#define MOVEMENT_ACTION_SPIN_LEFT                       0xB4
+#define MOVEMENT_ACTION_SPIN_RIGHT                      0xB5
 
 #define MOVEMENT_ACTION_STEP_END 0xFE
 #define MOVEMENT_ACTION_NONE     0xFF
@@ -289,6 +295,16 @@
 #define ANIM_STD_GO_FASTEST_WEST  18
 #define ANIM_STD_GO_FASTEST_EAST  19
 #define ANIM_STD_COUNT            20
+
+#define ANIM_RUN_SOUTH                   (ANIM_STD_COUNT + 0)
+#define ANIM_RUN_NORTH                   (ANIM_STD_COUNT + 1)
+#define ANIM_RUN_WEST                    (ANIM_STD_COUNT + 2)
+#define ANIM_RUN_EAST                    (ANIM_STD_COUNT + 3)
+#define ANIM_SPIN_SOUTH                  (ANIM_STD_COUNT + 4)
+#define ANIM_SPIN_NORTH                  (ANIM_STD_COUNT + 5)
+#define ANIM_SPIN_WEST                   (ANIM_STD_COUNT + 6)
+#define ANIM_SPIN_EAST                   (ANIM_STD_COUNT + 7)
+#define ANIM_SHAKE_HEAD_OR_WALK_IN_PLACE (ANIM_STD_COUNT + 8)
 
 #define ANIM_RUN_SOUTH (ANIM_STD_COUNT + 0)
 #define ANIM_RUN_NORTH (ANIM_STD_COUNT + 1)

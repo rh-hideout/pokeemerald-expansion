@@ -49,7 +49,7 @@ static void ContestEffect_ExciteAudienceInAnyContest(void);
 static void ContestEffect_BadlyStartleMonsWithGoodAppeals(void);
 static void ContestEffect_BetterWhenAudienceExcited(void);
 static void ContestEffect_DontExciteAudience(void);
-static void JamByMoveCategory(u8);
+static void JamByMoveCategory(enum ContestCategories);
 static bool8 CanUnnerveContestant(u8);
 static u8 WasAtLeastOneOpponentJammed(void);
 static void JamContestant(u8, u8);
@@ -973,7 +973,7 @@ static void ContestEffect_DontExciteAudience(void)
     }
 }
 
-static void JamByMoveCategory(u8 category)
+static void JamByMoveCategory(enum ContestCategories category)
 {
     int i;
     int numJammed = 0;

@@ -74,10 +74,10 @@ DOUBLE_BATTLE_TEST("Magic Coat reflects hazards regardless of the user's positio
     struct BattlePokemon *coatUser = NULL;
     PARAMETRIZE { coatUser = playerLeft; }
     PARAMETRIZE { coatUser = playerRight; }
-    ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
-    ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
+        ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -95,5 +95,35 @@ DOUBLE_BATTLE_TEST("Magic Coat reflects hazards regardless of the user's positio
         EXPECT(!IsHazardOnSide(B_SIDE_PLAYER, HAZARDS_SPIKES));
         EXPECT(IsHazardOnSide(B_SIDE_OPPONENT, HAZARDS_STEALTH_ROCK));
         EXPECT(IsHazardOnSide(B_SIDE_OPPONENT, HAZARDS_SPIKES));
+    }
+}
+
+SINGLE_BATTLE_TEST("Magic Coat reflection doesn't activate Protean/Libero")
+{
+    u32 species, ability;
+
+    PARAMETRIZE { species = SPECIES_GRENINJA; ability = ABILITY_PROTEAN; }
+    PARAMETRIZE { species = SPECIES_CINDERACE; ability = ABILITY_LIBERO; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
+        ASSUME(GetMoveType(MOVE_MAGIC_COAT) == TYPE_PSYCHIC);
+        ASSUME(GetMoveType(MOVE_SPIKES) != TYPE_PSYCHIC);
+        PLAYER(species) { Ability(ability); }
+        OPPONENT(SPECIES_ZIGZAGOON);
+    } WHEN {
+        TURN { MOVE(player, MOVE_MAGIC_COAT); MOVE(opponent, MOVE_SPIKES); }
+    } SCENE {
+        ABILITY_POPUP(player, ability);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
+        ONE_OF {
+            MESSAGE("Greninja bounced the Spikes back!");
+            MESSAGE("Cinderace bounced the Spikes back!");
+        }
+        NOT ABILITY_POPUP(player, ability);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
+    } THEN {
+        EXPECT_EQ(player->types[0], TYPE_PSYCHIC);
+        EXPECT_EQ(player->types[1], TYPE_PSYCHIC);
     }
 }

@@ -1,4 +1,4 @@
-SafariZone_SecretHouse_MapScripts::
+SafariZone_SecretHouse_Frlg_MapScripts::
 	.byte 0
 
 SafariZone_SecretHouse_EventScript_Attendant::

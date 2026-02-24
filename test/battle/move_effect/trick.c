@@ -184,10 +184,22 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
     }
 }
 
+SINGLE_BATTLE_TEST("Trick can be used against targets with an active form change that doesn't require items")
+{
+    GIVEN {
+        PLAYER(SPECIES_XERNEAS);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TRICK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
+    }
+}
+
 SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the target and use are holding choice items before Gen 5")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, GEN_4);
+        WITH_CONFIG(B_MODERN_TRICK_CHOICE_LOCK, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); MovesWithPP({MOVE_TRICK, 1}, {MOVE_CELEBRATE, 10}); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); }
     }
@@ -204,7 +216,7 @@ SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the tar
 SINGLE_BATTLE_TEST("Trick removes the user's choice lock if both the target and use are holding choice items from Gen 5 onwards")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, GEN_5);
+        WITH_CONFIG(B_MODERN_TRICK_CHOICE_LOCK, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); MovesWithPP({MOVE_TRICK, 1}, {MOVE_CELEBRATE, 10}); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); }
     }

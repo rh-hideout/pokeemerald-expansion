@@ -3,8 +3,6 @@
 
 ASSUMPTIONS
 {
-    ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
-    ASSUME(!IsBattleMoveStatus(MOVE_GUST));
     ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
     ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
 }
@@ -19,7 +17,7 @@ SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 1 (Gen5-6
     PARAMETRIZE { move = MOVE_GUST;    gen = GEN_7; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_WEAK_ARMOR_SPEED, gen);
+        WITH_CONFIG(B_WEAK_ARMOR_SPEED, gen);
         PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -85,7 +83,7 @@ SINGLE_BATTLE_TEST("Weak Armor still boosts Speed if Defense can't go any lower"
     PARAMETRIZE { gen = GEN_6; }
     PARAMETRIZE { gen = GEN_7; }
     GIVEN {
-        WITH_CONFIG(CONFIG_WEAK_ARMOR_SPEED, gen);
+        WITH_CONFIG(B_WEAK_ARMOR_SPEED, gen);
         PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -145,7 +143,7 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Defense can'
 {
     u32 j;
     GIVEN {
-        WITH_CONFIG(CONFIG_WEAK_ARMOR_SPEED, GEN_7);
+        WITH_CONFIG(B_WEAK_ARMOR_SPEED, GEN_7);
         PLAYER(SPECIES_MAGCARGO) { Ability(ABILITY_WEAK_ARMOR); Defense(999); }
         OPPONENT(SPECIES_CLOYSTER) { Ability(ABILITY_SKILL_LINK); }
     } WHEN {
@@ -184,7 +182,7 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Speed can't 
 {
     u32 j;
     GIVEN {
-        WITH_CONFIG(CONFIG_WEAK_ARMOR_SPEED, GEN_7);
+        WITH_CONFIG(B_WEAK_ARMOR_SPEED, GEN_7);
         PLAYER(SPECIES_MAGCARGO) { Ability(ABILITY_WEAK_ARMOR); Defense(999); }
         OPPONENT(SPECIES_CLOYSTER) { Ability(ABILITY_SKILL_LINK); }
     } WHEN {
