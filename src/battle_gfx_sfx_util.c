@@ -701,8 +701,7 @@ void DecompressTrainerBackPic(enum TrainerPicID backPicId, enum BattlerId battle
 {
     enum BattlerPosition position = GetBattlerPosition(battler);
     CopyTrainerBackspriteFramesToDest(backPicId, gMonSpritesGfxPtr->spritesGfx[position]);
-    LoadPalette(gTrainerBacksprites[backPicId].palette.data,
-                          OBJ_PLTT_ID(14 + battler / 2), PLTT_SIZE_4BPP);
+    LoadSpritePalette(&gTrainerBacksprites[backPicId].palette);
 }
 
 void FreeTrainerFrontPicPalette(u16 frontPicId)
@@ -746,7 +745,6 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
         {
             LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
             LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
-            LoadIndicatorSpritesGfx();
             CategoryIcons_LoadSpritesGfx();
         }
         else if (!IsDoubleBattle())
