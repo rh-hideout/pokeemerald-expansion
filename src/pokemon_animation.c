@@ -501,7 +501,12 @@ static void Task_HandleMonAnimation(u8 taskId)
 
     if (gTasks[taskId].tState == 0)
     {
-        gTasks[taskId].tBattlerId = sprite->data[0];
+        enum BattlerId spriteBattler = 0;
+        if (sprite->oam.paletteNum > 3)
+            spriteBattler = (sprite->oam.paletteNum - 14) * 2;
+        else
+            spriteBattler = sprite->oam.paletteNum;
+        gTasks[taskId].tBattlerId = spriteBattler;
         gTasks[taskId].tSpeciesId = sprite->data[2];
         sprite->sDontFlip = TRUE;
         sprite->data[0] = 0;
