@@ -503,9 +503,9 @@ static void Task_HandleMonAnimation(u8 taskId)
     {
         enum BattlerId spriteBattler = 0;
         if (sprite->oam.paletteNum > 3)
-            spriteBattler = (sprite->oam.paletteNum - 14) * 2;
+            spriteBattler = (sprite->oam.paletteNum - 14) * 2; // Player side (14 + battler / 2) if player side palette hard-coding is ever changed, this line will need changing
         else
-            spriteBattler = sprite->oam.paletteNum;
+            spriteBattler = sprite->oam.paletteNum; // Opponent side
         gTasks[taskId].tBattlerId = spriteBattler;
         gTasks[taskId].tSpeciesId = sprite->data[2];
         sprite->sDontFlip = TRUE;
