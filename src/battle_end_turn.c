@@ -1326,7 +1326,7 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
         gBattleScripting.abilityPopupOverwrite = ability; // To prevent the new form's ability from pop up
         switch (ability)
         {
-        case ABILITY_POWER_CONSTRUCT: // Special animation
+        case ABILITY_POWER_CONSTRUCT:
             BattleScriptExecute(BattleScript_PowerConstruct);
             break;
         case ABILITY_HUNGER_SWITCH:
