@@ -4670,12 +4670,20 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         else if (ShouldRecover(battlerAtk, battlerDef, move, 100))
         {
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_CURE_SLP
-              || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_CURE_STATUS
-              || HasUsableWhileAsleepMove(battlerAtk)
-              || aiData->abilities[battlerAtk] == ABILITY_SHED_SKIN
-              || aiData->abilities[battlerAtk] == ABILITY_EARLY_BIRD
-              || (AI_GetWeather() & B_WEATHER_RAIN && gBattleStruct->weatherDuration != 1 && aiData->abilities[battlerAtk] == ABILITY_HYDRATION && aiData->holdEffects[battlerAtk] != HOLD_EFFECT_UTILITY_UMBRELLA))
+             || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_CURE_STATUS
+             || (AI_GetWeather() & B_WEATHER_RAIN && gBattleStruct->weatherDuration != 1 && aiData->abilities[battlerAtk] == ABILITY_HYDRATION && aiData->holdEffects[battlerAtk] != HOLD_EFFECT_UTILITY_UMBRELLA))
+            {
+                ADJUST_SCORE(BEST_EFFECT);
+            }
+            else if (HasMoveUsableWhileAsleep(battlerAtk))
+            {
                 ADJUST_SCORE(GOOD_EFFECT);
+            }
+            else if (aiData->abilities[battlerAtk] == ABILITY_SHED_SKIN
+                  || aiData->abilities[battlerAtk] == ABILITY_EARLY_BIRD)
+            {
+                ADJUST_SCORE(DECENT_EFFECT);
+            }
         }
         break;
     case EFFECT_OHKO:
@@ -4794,9 +4802,9 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(BEST_EFFECT);
         break;
     }
-    case EFFECT_SLEEP_TALK:
     case EFFECT_SNORE:
-        if (!IsWakeupTurn(battlerAtk) && gBattleMons[battlerAtk].status1 & STATUS1_SLEEP)
+    case EFFECT_SLEEP_TALK:
+        if (!IsWakeupTurn(battlerAtk) && AI_IsBattlerAsleepOrComatose(battlerAtk))
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_LOCK_ON:

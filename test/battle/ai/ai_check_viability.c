@@ -154,6 +154,23 @@ AI_SINGLE_BATTLE_TEST("AI chooses Sleep Talk only when it will not wake up with 
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI uses Snore or Sleep Talk after using Rest")
+{
+    enum Move sleepMove;
+
+    PARAMETRIZE { sleepMove = MOVE_SNORE; }
+    PARAMETRIZE { sleepMove = MOVE_SLEEP_TALK; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); HP(1); MaxHP(100); Moves(MOVE_REST, sleepMove, MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_REST); }
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, sleepMove); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI sees increased base power of Spit Up")
 {
     GIVEN {
