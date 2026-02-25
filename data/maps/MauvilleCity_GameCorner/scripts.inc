@@ -21,7 +21,7 @@ MauvilleCity_GameCorner_EventScript_CoinsClerk::
 	message MauvilleCity_GameCorner_Text_WereYouLookingForCoins
 	waitmessage
 	showmoneybox 0, 0
-	showcoinsbox 0, 5
+	showcoinsbox 1, 6
 	goto MauvilleCity_GameCorner_EventScript_ChooseCoinsDefault50
 
 MauvilleCity_GameCorner_EventScript_ChooseCoinsDefault50::
@@ -112,7 +112,7 @@ MauvilleCity_GameCorner_EventScript_ChooseDollPrizeMessage::
 	message MauvilleCity_GameCorner_Text_WhichPrize
 	waitmessage
 	setvar VAR_TEMP_1, 0
-	showcoinsbox 0, 0
+	showcoinsbox 1, 1
 	goto MauvilleCity_GameCorner_EventScript_ChooseDollPrize
 
 MauvilleCity_GameCorner_EventScript_ReturnToChooseDollPrize::
@@ -225,7 +225,7 @@ MauvilleCity_GameCorner_EventScript_ChooseTMPrizeMessage::
 	message MauvilleCity_GameCorner_Text_WhichPrize
 	waitmessage
 	setvar VAR_TEMP_1, 0
-	showcoinsbox 0, 0
+	showcoinsbox 1, 1
 	goto MauvilleCity_GameCorner_EventScript_ChooseTMPrize
 
 MauvilleCity_GameCorner_EventScript_ReturnToChooseTMPrize::
