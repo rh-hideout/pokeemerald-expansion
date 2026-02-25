@@ -8673,10 +8673,6 @@ static void Cmd_disablelastusedattack(void)
         if (eligibleMovesCount > 0)
             moveToDisable = eligibleMoves[RandomUniform(RNG_DISABLE_MOVE, 0, (eligibleMovesCount - 1))];
     }
-    else
-    {
-        moveToDisable = gLastMoves[gBattlerTarget];
-    }
     if (moveToDisable == MOVE_NONE || gBattleMons[gBattlerTarget].volatiles.disabledMove != MOVE_NONE)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
