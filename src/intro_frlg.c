@@ -157,17 +157,13 @@ struct IntroSequenceData
 }; // size: 0x28BC
 
 static EWRAM_DATA struct GcmbStruct sGcmb = {0};
-static EWRAM_DATA u16 sUnusedScene3Var0 = 0; // Set but never read
-static EWRAM_DATA u16 sUnusedScene3Var1 = 0; // Set but never read
 static EWRAM_DATA u16 sNidorinoJumpMult = 0;
 static EWRAM_DATA u16 sNidorinoAnimDelayTime = 0;
 static EWRAM_DATA u16 sNidorinoJumpDiv = 0;
 static EWRAM_DATA u16 sNidorinoRecoilReturnTime = 0;
-static EWRAM_DATA u16 sNidorinoUnusedVar = 0; // Set but never read
 static EWRAM_DATA u16 sStarSpeedX = 0;
 static EWRAM_DATA u16 sStarSpeedY = 0;
 static EWRAM_DATA u16 sStarSparklesXmodMask = 0;
-static EWRAM_DATA u16 sStarSparklesUnusedVar = 0; // Set but never read
 static EWRAM_DATA u16 sStarSparklesSpawnRate = 0;
 static EWRAM_DATA u16 sStarSparklesFlickerStartTime = 0;
 static EWRAM_DATA u16 sStarSparklesDestroySpriteTime = 0;
@@ -1570,8 +1566,6 @@ static void IntroCB_Scene3_Entrance(struct IntroSequenceData * this)
         {
             DecompressAndCopyTileDataToVram(BG_SCENE3_GENGAR, sScene3_GengarAnim_Gfx, 0, 0, 0);
             DecompressAndCopyTileDataToVram(BG_SCENE3_GENGAR, sScene3_GengarAnim_Map, 0, 0, 1);
-            sUnusedScene3Var0 = 4;
-            sUnusedScene3Var1 = 52;
             ChangeBgX(BG_SCENE3_GENGAR, 0x00001800, BG_COORD_SET);
             ChangeBgY(BG_SCENE3_GENGAR, 0x0001F000, BG_COORD_SET);
             this->state++;
@@ -1946,7 +1940,6 @@ static void GFScene_LoadGfxCreateStar(void)
     sStarSpeedX = 96;
     sStarSpeedY = 16;
     sStarSparklesXmodMask = 0x07;
-    sStarSparklesUnusedVar = 5;
     sStarSparklesSpawnRate = 8;
     sStarSparklesFlickerStartTime = 90;
     sStarSparklesDestroySpriteTime = 120;
@@ -2738,7 +2731,6 @@ static void Scene3_StartNidorinoAttack(struct IntroSequenceData * ptr)
     ptr->scene3NidorinoSprite->data[5] = 0; // Unused
     ptr->scene3NidorinoSprite->x += ptr->scene3NidorinoSprite->x2;
     ptr->scene3NidorinoSprite->x2 = 0;
-    sNidorinoUnusedVar = 36;
     sNidorinoAnimDelayTime = 40;
     sNidorinoJumpMult = 3;
     sNidorinoJumpDiv = 4;

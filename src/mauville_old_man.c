@@ -33,7 +33,6 @@ static u8 sSelectedStory;
 
 COMMON_DATA struct BardSong gBardSong = {0};
 
-static EWRAM_DATA u16 sUnusedPitchTableIndex = 0;
 static EWRAM_DATA struct MauvilleManStoryteller *sStorytellerPtr = NULL;
 static EWRAM_DATA u8 sStorytellerWindowId = 0;
 
@@ -634,12 +633,6 @@ static void Task_BardSong(u8 taskId)
             str++;
             wordLen++;
         }
-
-        // sUnusedPitchTableIndex is never read. For debugging perhaps, or one of the other languages.
-        if (!task->tUseNewSongLyrics)
-            sUnusedPitchTableIndex = WORD_TO_PITCH_TABLE_INDEX(bard->songLyrics[task->tLyricsIndex]);
-        else
-            sUnusedPitchTableIndex = WORD_TO_PITCH_TABLE_INDEX(bard->newSongLyrics[task->tLyricsIndex]);
 
         gBardSong.length /= wordLen;
         if (gBardSong.length <= 0)
