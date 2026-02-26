@@ -2898,15 +2898,15 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         BattleScriptPush(battleScript);
         switch (type)
         {
-            case TYPE_FIRE: // Burn Up
-                gBattlescriptCurrInstr = BattleScript_RemoveFireType;
-                break;
-            case TYPE_ELECTRIC: // Double Shot
-                gBattlescriptCurrInstr = BattleScript_RemoveElectricType;
-                break;
-            default:
-                gBattlescriptCurrInstr = BattleScript_RemoveGenericType;
-                break;
+        case TYPE_FIRE: // Burn Up
+            gBattlescriptCurrInstr = BattleScript_RemoveFireType;
+            break;
+        case TYPE_ELECTRIC: // Double Shot
+            gBattlescriptCurrInstr = BattleScript_RemoveElectricType;
+            break;
+        default:
+            gBattlescriptCurrInstr = BattleScript_RemoveGenericType;
+            break;
         }
         RemoveBattlerType(gEffectBattler, type);
         break;
@@ -3177,17 +3177,17 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             u32 stage = 1;
             switch (moveEffect)
             {
-                case MOVE_EFFECT_LOWER_SPEED_2_SIDE:
-                    statId = STAT_SPEED;
-                    stage = 2;
-                    break;
-                case MOVE_EFFECT_LOWER_EVASIVENESS_SIDE:
-                    statId = STAT_EVASION;
-                    break;
-                default:
-                    // Max Effects are ordered by stat ID.
-                    statId = moveEffect - MOVE_EFFECT_LOWER_ATTACK_SIDE + 1;
-                    break;
+            case MOVE_EFFECT_LOWER_SPEED_2_SIDE:
+                statId = STAT_SPEED;
+                stage = 2;
+                break;
+            case MOVE_EFFECT_LOWER_EVASIVENESS_SIDE:
+                statId = STAT_EVASION;
+                break;
+            default:
+                // Max Effects are ordered by stat ID.
+                statId = moveEffect - MOVE_EFFECT_LOWER_ATTACK_SIDE + 1;
+                break;
             }
             SET_STATCHANGER(statId, stage, TRUE);
             BattleScriptPush(battleScript);
@@ -3202,32 +3202,32 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         u8 weather = 0, msg = 0;
         switch (moveEffect)
         {
-            case MOVE_EFFECT_SUN:
-                weather = BATTLE_WEATHER_SUN;
-                msg = B_MSG_STARTED_SUNLIGHT;
-                break;
-            case MOVE_EFFECT_RAIN:
-                weather = BATTLE_WEATHER_RAIN;
-                msg = B_MSG_STARTED_RAIN;
-                break;
-            case MOVE_EFFECT_SANDSTORM:
-                weather = BATTLE_WEATHER_SANDSTORM;
-                msg = B_MSG_STARTED_SANDSTORM;
-                break;
-            case MOVE_EFFECT_HAIL:
-                if (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW)
-                {
-                    weather = BATTLE_WEATHER_SNOW;
-                    msg = B_MSG_STARTED_SNOW;
-                }
-                else
-                {
-                    weather = BATTLE_WEATHER_HAIL;
-                    msg = B_MSG_STARTED_HAIL;
-                }
-                break;
-            default:
-                break;
+        case MOVE_EFFECT_SUN:
+            weather = BATTLE_WEATHER_SUN;
+            msg = B_MSG_STARTED_SUNLIGHT;
+            break;
+        case MOVE_EFFECT_RAIN:
+            weather = BATTLE_WEATHER_RAIN;
+            msg = B_MSG_STARTED_RAIN;
+            break;
+        case MOVE_EFFECT_SANDSTORM:
+            weather = BATTLE_WEATHER_SANDSTORM;
+            msg = B_MSG_STARTED_SANDSTORM;
+            break;
+        case MOVE_EFFECT_HAIL:
+            if (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW)
+            {
+                weather = BATTLE_WEATHER_SNOW;
+                msg = B_MSG_STARTED_SNOW;
+            }
+            else
+            {
+                weather = BATTLE_WEATHER_HAIL;
+                msg = B_MSG_STARTED_HAIL;
+            }
+            break;
+        default:
+            break;
         }
         if (TryChangeBattleWeather(gBattlerAttacker, weather, ABILITY_NONE))
         {
@@ -3245,24 +3245,24 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         u32 statusFlag = 0;
         switch (moveEffect)
         {
-            case MOVE_EFFECT_MISTY_TERRAIN:
-                statusFlag = STATUS_FIELD_MISTY_TERRAIN;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
-                break;
-            case MOVE_EFFECT_GRASSY_TERRAIN:
-                statusFlag = STATUS_FIELD_GRASSY_TERRAIN;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
-                break;
-            case MOVE_EFFECT_ELECTRIC_TERRAIN:
-                statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
-                break;
-            case MOVE_EFFECT_PSYCHIC_TERRAIN:
-                statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
-                break;
-            default:
-                break;
+        case MOVE_EFFECT_MISTY_TERRAIN:
+            statusFlag = STATUS_FIELD_MISTY_TERRAIN;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
+            break;
+        case MOVE_EFFECT_GRASSY_TERRAIN:
+            statusFlag = STATUS_FIELD_GRASSY_TERRAIN;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+            break;
+        case MOVE_EFFECT_ELECTRIC_TERRAIN:
+            statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
+            break;
+        case MOVE_EFFECT_PSYCHIC_TERRAIN:
+            statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
+            break;
+        default:
+            break;
         }
         if (TryChangeBattleTerrain(gBattlerAttacker, statusFlag))
         {
@@ -11837,18 +11837,18 @@ void BS_ItemRestoreHP(void)
         // Get amount to heal.
         switch (healParam)
         {
-            case ITEM6_HEAL_HP_FULL:
-                healAmount = maxHP;
-                break;
-            case ITEM6_HEAL_HP_HALF:
-                healAmount = maxHP / 2;
-                break;
-            case ITEM6_HEAL_HP_QUARTER:
-                healAmount = maxHP / 4;
-                break;
-            default:
-                healAmount = healParam;
-                break;
+        case ITEM6_HEAL_HP_FULL:
+            healAmount = maxHP;
+            break;
+        case ITEM6_HEAL_HP_HALF:
+            healAmount = maxHP / 2;
+            break;
+        case ITEM6_HEAL_HP_QUARTER:
+            healAmount = maxHP / 4;
+            break;
+        default:
+            healAmount = healParam;
+            break;
         }
         if (hp + healAmount > maxHP)
             healAmount = maxHP - hp;

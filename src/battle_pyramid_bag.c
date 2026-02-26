@@ -458,85 +458,85 @@ static bool8 LoadPyramidBagMenu(void)
 {
     switch (gMain.state)
     {
-        case 0:
-            SetVBlankHBlankCallbacksToNull();
-            ClearScheduledBgCopiesToVram();
+    case 0:
+        SetVBlankHBlankCallbacksToNull();
+        ClearScheduledBgCopiesToVram();
+        gMain.state++;
+        break;
+    case 1:
+        ScanlineEffect_Stop();
+        gMain.state++;
+        break;
+    case 2:
+        FreeAllSpritePalettes();
+        gMain.state++;
+        break;
+    case 3:
+        ResetPaletteFade();
+        gPaletteFade.bufferTransferDisabled = TRUE;
+        gMain.state++;
+        break;
+    case 4:
+        ResetSpriteData();
+        gMain.state++;
+        break;
+    case 5:
+        if (!MenuHelpers_IsLinkActive())
+            ResetTasks();
+        gMain.state++;
+        break;
+    case 6:
+        InitPyramidBagBgs();
+        gPyramidBagMenu->state = 0;
+        gMain.state++;
+        break;
+    case 7:
+        if (LoadPyramidBagGfx())
             gMain.state++;
-            break;
-        case 1:
-            ScanlineEffect_Stop();
-            gMain.state++;
-            break;
-        case 2:
-            FreeAllSpritePalettes();
-            gMain.state++;
-            break;
-        case 3:
-            ResetPaletteFade();
-            gPaletteFade.bufferTransferDisabled = TRUE;
-            gMain.state++;
-            break;
-        case 4:
-            ResetSpriteData();
-            gMain.state++;
-            break;
-        case 5:
-            if (!MenuHelpers_IsLinkActive())
-                ResetTasks();
-            gMain.state++;
-            break;
-        case 6:
-            InitPyramidBagBgs();
-            gPyramidBagMenu->state = 0;
-            gMain.state++;
-            break;
-        case 7:
-            if (LoadPyramidBagGfx())
-                gMain.state++;
-            break;
-        case 8:
-            InitPyramidBagWindows();
-            gMain.state++;
-            break;
-        case 9:
-            UpdatePyramidBagList();
-            UpdatePyramidBagCursorPos();
-            InitPyramidBagScroll();
-            gMain.state++;
-            break;
-        case 10:
-            SetBagItemsListTemplate();
-            gMain.state++;
-            break;
-        case 11:
-            CreatePyramidBagInputTask();
-            gMain.state++;
-            break;
-        case 12:
-            CreatePyramidBagSprite();
-            gMain.state++;
-            break;
-        case 13:
-            AddScrollArrows();
-            gMain.state++;
-            break;
-        case 14:
-            CreateSwapLine();
-            gMain.state++;
-            break;
-        case 15:
-            BlendPalettes(PALETTES_ALL, 16, 0);
-            gMain.state++;
-            break;
-        case 16:
-            BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
-            gPaletteFade.bufferTransferDisabled = FALSE;
-            gMain.state++;
-            break;
-        default:
-            SetVBlankCallback(VBlankCB_PyramidBag);
-            SetMainCallback2(CB2_PyramidBag);
-            return TRUE;
+        break;
+    case 8:
+        InitPyramidBagWindows();
+        gMain.state++;
+        break;
+    case 9:
+        UpdatePyramidBagList();
+        UpdatePyramidBagCursorPos();
+        InitPyramidBagScroll();
+        gMain.state++;
+        break;
+    case 10:
+        SetBagItemsListTemplate();
+        gMain.state++;
+        break;
+    case 11:
+        CreatePyramidBagInputTask();
+        gMain.state++;
+        break;
+    case 12:
+        CreatePyramidBagSprite();
+        gMain.state++;
+        break;
+    case 13:
+        AddScrollArrows();
+        gMain.state++;
+        break;
+    case 14:
+        CreateSwapLine();
+        gMain.state++;
+        break;
+    case 15:
+        BlendPalettes(PALETTES_ALL, 16, 0);
+        gMain.state++;
+        break;
+    case 16:
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+        gPaletteFade.bufferTransferDisabled = FALSE;
+        gMain.state++;
+        break;
+    default:
+        SetVBlankCallback(VBlankCB_PyramidBag);
+        SetMainCallback2(CB2_PyramidBag);
+        return TRUE;
     }
     return FALSE;
 }

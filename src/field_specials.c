@@ -4328,27 +4328,27 @@ static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer)
 {
     switch (whichNPCTrainer)
     {
-        case 0:
-            StringCopy(gStringVar1, sText_Wallace);
-            break;
-        case 1:
-            StringCopy(gStringVar1, sText_Steven);
-            break;
-        case 2:
-            StringCopy(gStringVar1, sText_Brawly);
-            break;
-        case 3:
-            StringCopy(gStringVar1, sText_Winona);
-            break;
-        case 4:
-            StringCopy(gStringVar1, sText_Phoebe);
-            break;
-        case 5:
-            StringCopy(gStringVar1, sText_Glacia);
-            break;
-        default:
-            StringCopy(gStringVar1, sText_Wallace);
-            break;
+    case 0:
+        StringCopy(gStringVar1, sText_Wallace);
+        break;
+    case 1:
+        StringCopy(gStringVar1, sText_Steven);
+        break;
+    case 2:
+        StringCopy(gStringVar1, sText_Brawly);
+        break;
+    case 3:
+        StringCopy(gStringVar1, sText_Winona);
+        break;
+    case 4:
+        StringCopy(gStringVar1, sText_Phoebe);
+        break;
+    case 5:
+        StringCopy(gStringVar1, sText_Glacia);
+        break;
+    default:
+        StringCopy(gStringVar1, sText_Wallace);
+        break;
     }
 }
 #endif //FREE_LINK_BATTLE_RECORDS
@@ -4630,18 +4630,18 @@ u8 GetLeadMonFriendship(void)
         return 0;
 }
 
-u16 GetFirstPartnerMove(u16 species)
+enum Move GetFirstPartnerMove(u16 species)
 {
     switch(species)
     {
-        case SPECIES_VENUSAUR:
-            return MOVE_FRENZY_PLANT;
-        case SPECIES_CHARIZARD:
-            return MOVE_BLAST_BURN;
-        case SPECIES_BLASTOISE:
-            return MOVE_HYDRO_CANNON;
-        default:
-            return MOVE_NONE;
+    case SPECIES_VENUSAUR:
+        return MOVE_FRENZY_PLANT;
+    case SPECIES_CHARIZARD:
+        return MOVE_BLAST_BURN;
+    case SPECIES_BLASTOISE:
+        return MOVE_HYDRO_CANNON;
+    default:
+        return MOVE_NONE;
     }
 }
 
@@ -4665,17 +4665,17 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
     moveId = GetFirstPartnerMove(GetMonData(leadMon, MON_DATA_SPECIES_OR_EGG));
     switch(moveId)
     {
-        case MOVE_FRENZY_PLANT:
-            tutorFlag = FLAG_TUTOR_FRENZY_PLANT;
-            break;
-        case MOVE_BLAST_BURN:
-            tutorFlag = FLAG_TUTOR_BLAST_BURN;
-            break;
-        case MOVE_HYDRO_CANNON:
-            tutorFlag = FLAG_TUTOR_HYDRO_CANNON;
-            break;
-        default:
-            return FALSE;
+    case MOVE_FRENZY_PLANT:
+        tutorFlag = FLAG_TUTOR_FRENZY_PLANT;
+        break;
+    case MOVE_BLAST_BURN:
+        tutorFlag = FLAG_TUTOR_BLAST_BURN;
+        break;
+    case MOVE_HYDRO_CANNON:
+        tutorFlag = FLAG_TUTOR_HYDRO_CANNON;
+        break;
+    default:
+        return FALSE;
     }
 
     StringCopy(gStringVar2, gMovesInfo[moveId].name);
@@ -4697,15 +4697,15 @@ bool8 HasLearnedAllMovesFromCapeBrinkTutor(void)
     // 8005 is set by CapeBrinkGetMoveToTeachLeadPokemon
     switch (gSpecialVar_0x8005)
     {
-        case MOVE_FRENZY_PLANT:
-            FlagSet(FLAG_TUTOR_FRENZY_PLANT);
-            break;
-        case MOVE_BLAST_BURN:
-            FlagSet(FLAG_TUTOR_BLAST_BURN);
-            break;
-        case MOVE_HYDRO_CANNON:
-            FlagSet(FLAG_TUTOR_HYDRO_CANNON);
-            break;
+    case MOVE_FRENZY_PLANT:
+        FlagSet(FLAG_TUTOR_FRENZY_PLANT);
+        break;
+    case MOVE_BLAST_BURN:
+        FlagSet(FLAG_TUTOR_BLAST_BURN);
+        break;
+    case MOVE_HYDRO_CANNON:
+        FlagSet(FLAG_TUTOR_HYDRO_CANNON);
+        break;
     }
 
     return (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)

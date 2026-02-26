@@ -1298,84 +1298,84 @@ static void AnimTask_MoveHeatWaveTargets_Step(u8 taskId)
 
     switch (task->data[0])
     {
-        case 0:
-            task->data[10] += task->data[12] * 2;
-            if (++task->data[1] >= 2)
-            {
-                task->data[1] = 0;
-                task->data[2]++;
-                if (task->data[2] & 1)
-                    task->data[11] = 2;
-                else
-                    task->data[11] = -2;
-            }
+    case 0:
+        task->data[10] += task->data[12] * 2;
+        if (++task->data[1] >= 2)
+        {
+            task->data[1] = 0;
+            task->data[2]++;
+            if (task->data[2] & 1)
+                task->data[11] = 2;
+            else
+                task->data[11] = -2;
+        }
 
-            for (task->data[3] = 0; task->data[3] < task->data[13]; task->data[3]++)
-            {
-                gSprites[task->data[task->data[3] + 14]].x2 = task->data[10] + task->data[11];
-            }
+        for (task->data[3] = 0; task->data[3] < task->data[13]; task->data[3]++)
+        {
+            gSprites[task->data[task->data[3] + 14]].x2 = task->data[10] + task->data[11];
+        }
 
-            if (++task->data[9] == 16)
-            {
-                task->data[9] = 0;
-                task->data[0]++;
-            }
-            break;
-        case 1:
-            if (++task->data[1] >= 5)
-            {
-                task->data[1] = 0;
-                task->data[2]++;
+        if (++task->data[9] == 16)
+        {
+            task->data[9] = 0;
+            task->data[0]++;
+        }
+        break;
+    case 1:
+        if (++task->data[1] >= 5)
+        {
+            task->data[1] = 0;
+            task->data[2]++;
 
-                if (task->data[2] & 1)
-                    task->data[11] = 2;
-                else
-                    task->data[11] = -2;
-            }
+            if (task->data[2] & 1)
+                task->data[11] = 2;
+            else
+                task->data[11] = -2;
+        }
 
-            for (task->data[3] = 0; task->data[3] < task->data[13]; task->data[3]++)
-            {
-                gSprites[task->data[task->data[3] + 14]].x2 = task->data[10] + task->data[11];
-            }
+        for (task->data[3] = 0; task->data[3] < task->data[13]; task->data[3]++)
+        {
+            gSprites[task->data[task->data[3] + 14]].x2 = task->data[10] + task->data[11];
+        }
 
-            if (++task->data[9] == 96)
-            {
-                task->data[9] = 0;
-                task->data[0]++;
-            }
-            break;
-        case 2:
-            task->data[10] -= task->data[12] * 2;
+        if (++task->data[9] == 96)
+        {
+            task->data[9] = 0;
+            task->data[0]++;
+        }
+        break;
+    case 2:
+        task->data[10] -= task->data[12] * 2;
 
-            if (++task->data[1] >= 2)
-            {
-                task->data[1] = 0;
-                task->data[2]++;
+        if (++task->data[1] >= 2)
+        {
+            task->data[1] = 0;
+            task->data[2]++;
 
-                if (task->data[2] & 1)
-                    task->data[11] = 2;
-                else
-                    task->data[11] = -2;
-            }
+            if (task->data[2] & 1)
+                task->data[11] = 2;
+            else
+                task->data[11] = -2;
+        }
 
-            for (task->data[3] = 0; task->data[3] < task->data[13]; task->data[3]++)
-            {
-                gSprites[task->data[task->data[3] + 14]].x2 = task->data[10] + task->data[11];
-            }
+        for (task->data[3] = 0; task->data[3] < task->data[13]; task->data[3]++)
+        {
+            gSprites[task->data[task->data[3] + 14]].x2 = task->data[10] + task->data[11];
+        }
 
-            if (++task->data[9] == 16)
-            {
-                task->data[0]++;
-            }
-            break;
-        case 3:
-            for (task->data[3] = 0; task->data[3] < task->data[13]; task->data[3]++)
-            {
-                gSprites[task->data[task->data[3] + 14]].x2 = 0;
-            }
+        if (++task->data[9] == 16)
+        {
+            task->data[0]++;
+        }
+        break;
+    case 3:
+        for (task->data[3] = 0; task->data[3] < task->data[13]; task->data[3]++)
+        {
+            gSprites[task->data[task->data[3] + 14]].x2 = 0;
+        }
 
-            DestroyAnimVisualTask(taskId);
-            break;
+        DestroyAnimVisualTask(taskId);
+        break;
     }
 }
 

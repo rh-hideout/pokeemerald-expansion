@@ -214,63 +214,63 @@ static void BerryFix_Main(void)
 {
     switch (sBerryFix->state)
     {
-        case MAINSTATE_INIT:
-            BerryFix_GpuSet();
-            sBerryFix->state = MAINSTATE_BEGIN;
-            break;
-        case MAINSTATE_BEGIN:
-            if (TryScene(SCENE_BEGIN) && JOY_NEW(A_BUTTON))
-                sBerryFix->state = MAINSTATE_CONNECT;
-            break;
-        case MAINSTATE_CONNECT:
-            if (TryScene(SCENE_ENSURE_CONNECT) && JOY_NEW(A_BUTTON))
-                sBerryFix->state = MAINSTATE_INIT_MULTIBOOT;
-            break;
-        case MAINSTATE_INIT_MULTIBOOT:
-            if (TryScene(SCENE_TURN_OFF_POWER))
-            {
-                sBerryFix->mb.masterp = gMultiBootProgram_BerryGlitchFix_Start;
-                sBerryFix->mb.server_type = 0;
-                MultiBootInit(&sBerryFix->mb);
-                sBerryFix->timer = 0;
-                sBerryFix->state = MAINSTATE_MULTIBOOT;
-            }
-            break;
-        case MAINSTATE_MULTIBOOT:
+    case MAINSTATE_INIT:
+        BerryFix_GpuSet();
+        sBerryFix->state = MAINSTATE_BEGIN;
+        break;
+    case MAINSTATE_BEGIN:
+        if (TryScene(SCENE_BEGIN) && JOY_NEW(A_BUTTON))
+            sBerryFix->state = MAINSTATE_CONNECT;
+        break;
+    case MAINSTATE_CONNECT:
+        if (TryScene(SCENE_ENSURE_CONNECT) && JOY_NEW(A_BUTTON))
+            sBerryFix->state = MAINSTATE_INIT_MULTIBOOT;
+        break;
+    case MAINSTATE_INIT_MULTIBOOT:
+        if (TryScene(SCENE_TURN_OFF_POWER))
+        {
+            sBerryFix->mb.masterp = gMultiBootProgram_BerryGlitchFix_Start;
+            sBerryFix->mb.server_type = 0;
+            MultiBootInit(&sBerryFix->mb);
+            sBerryFix->timer = 0;
+            sBerryFix->state = MAINSTATE_MULTIBOOT;
+        }
+        break;
+    case MAINSTATE_MULTIBOOT:
+        MultiBootMain(&sBerryFix->mb);
+        if (sBerryFix->mb.probe_count != 0 || (!(sBerryFix->mb.response_bit & 2) || !(sBerryFix->mb.client_bit & 2)))
+        {
+            sBerryFix->timer = 0;
+        }
+        else if (++sBerryFix->timer > 180)
+        {
+            MultiBootStartMaster(&sBerryFix->mb,
+                                 gMultiBootProgram_BerryGlitchFix_Start + ROM_HEADER_SIZE,
+                                 (u32)(gMultiBootProgram_BerryGlitchFix_End - (gMultiBootProgram_BerryGlitchFix_Start + ROM_HEADER_SIZE)),
+                                 4,
+                                 1);
+            sBerryFix->state = MAINSTATE_TRANSMIT;
+        }
+        break;
+    case MAINSTATE_TRANSMIT:
+        if (TryScene(SCENE_TRANSMITTING))
+        {
             MultiBootMain(&sBerryFix->mb);
-            if (sBerryFix->mb.probe_count != 0 || (!(sBerryFix->mb.response_bit & 2) || !(sBerryFix->mb.client_bit & 2)))
-            {
-                sBerryFix->timer = 0;
-            }
-            else if (++sBerryFix->timer > 180)
-            {
-                MultiBootStartMaster(&sBerryFix->mb,
-                                     gMultiBootProgram_BerryGlitchFix_Start + ROM_HEADER_SIZE,
-                                     (u32)(gMultiBootProgram_BerryGlitchFix_End - (gMultiBootProgram_BerryGlitchFix_Start + ROM_HEADER_SIZE)),
-                                     4,
-                                     1);
-                sBerryFix->state = MAINSTATE_TRANSMIT;
-            }
-            break;
-        case MAINSTATE_TRANSMIT:
-            if (TryScene(SCENE_TRANSMITTING))
-            {
-                MultiBootMain(&sBerryFix->mb);
 
-                if (MultiBootCheckComplete(&sBerryFix->mb))
-                    sBerryFix->state = MAINSTATE_EXIT;
-                else if (!(sBerryFix->mb.client_bit & 2))
-                    sBerryFix->state = MAINSTATE_FAILED;
-            }
-            break;
-        case MAINSTATE_EXIT:
-            if (TryScene(SCENE_FOLLOW_INSTRUCT) && JOY_NEW(A_BUTTON))
-                DoSoftReset();
-            break;
-        case MAINSTATE_FAILED:
-            if (TryScene(SCENE_TRANSMIT_FAILED) && JOY_NEW(A_BUTTON))
-                sBerryFix->state = MAINSTATE_BEGIN;
-            break;
+            if (MultiBootCheckComplete(&sBerryFix->mb))
+                sBerryFix->state = MAINSTATE_EXIT;
+            else if (!(sBerryFix->mb.client_bit & 2))
+                sBerryFix->state = MAINSTATE_FAILED;
+        }
+        break;
+    case MAINSTATE_EXIT:
+        if (TryScene(SCENE_FOLLOW_INSTRUCT) && JOY_NEW(A_BUTTON))
+            DoSoftReset();
+        break;
+    case MAINSTATE_FAILED:
+        if (TryScene(SCENE_TRANSMIT_FAILED) && JOY_NEW(A_BUTTON))
+            sBerryFix->state = MAINSTATE_BEGIN;
+        break;
     }
 }
 

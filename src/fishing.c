@@ -296,14 +296,14 @@ static bool32 Fishing_ChangeMinigame(struct Task *task)
 {
     switch (I_FISHING_MINIGAME)
     {
-        case GEN_1:
-        case GEN_2:
-            task->tStep = FISHING_A_PRESS_NO_MINIGAME;
-            break;
-        case GEN_3:
-        default:
-            task->tStep = FISHING_WAIT_FOR_A;
-            break;
+    case GEN_1:
+    case GEN_2:
+        task->tStep = FISHING_A_PRESS_NO_MINIGAME;
+        break;
+    case GEN_3:
+    default:
+        task->tStep = FISHING_WAIT_FOR_A;
+        break;
     }
     return TRUE;
 }
@@ -473,11 +473,11 @@ static bool32 DoesFishingMinigameAllowCancel(void)
 {
     switch(I_FISHING_MINIGAME)
     {
-        case GEN_1:
-        case GEN_2:
-            return FALSE;
-        case GEN_3:
-        default:
+    case GEN_1:
+    case GEN_2:
+        return FALSE;
+    case GEN_3:
+    default:
             return TRUE;
     }
 }

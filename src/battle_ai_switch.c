@@ -122,70 +122,70 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
     // Modify these cases if you want unique behaviour based on other data (trainer class, difficulty, etc.)
     switch(shouldSwitchScenario)
     {
-        case SHOULD_SWITCH_WONDER_GUARD:
-            return SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE;
-        case SHOULD_SWITCH_ABSORBS_MOVE:
-            return SHOULD_SWITCH_ABSORBS_MOVE_PERCENTAGE;
-        case SHOULD_SWITCH_TRAPPER:
-            return SHOULD_SWITCH_TRAPPER_PERCENTAGE;
-        case SHOULD_SWITCH_FREE_TURN:
-            return SHOULD_SWITCH_FREE_TURN_PERCENTAGE;
-        case SHOULD_SWITCH_TRUANT:
-            return SHOULD_SWITCH_TRUANT_PERCENTAGE;
-        case SHOULD_SWITCH_ALL_MOVES_BAD:
-            return SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE;
-        case SHOULD_SWITCH_PERISH_SONG:
-            return SHOULD_SWITCH_PERISH_SONG_PERCENTAGE;
-        case SHOULD_SWITCH_YAWN:
-            return SHOULD_SWITCH_YAWN_PERCENTAGE;
-        case SHOULD_SWITCH_BADLY_POISONED:
-            return SHOULD_SWITCH_BADLY_POISONED_PERCENTAGE;
-        case SHOULD_SWITCH_BADLY_POISONED_STATS_RAISED:
-            return SHOULD_SWITCH_BADLY_POISONED_STATS_RAISED_PERCENTAGE;
-        case SHOULD_SWITCH_CURSED:
-            return SHOULD_SWITCH_CURSED_PERCENTAGE;
-        case SHOULD_SWITCH_CURSED_STATS_RAISED:
-            return SHOULD_SWITCH_CURSED_STATS_RAISED_PERCENTAGE;
-        case SHOULD_SWITCH_NIGHTMARE:
-            return SHOULD_SWITCH_NIGHTMARE_PERCENTAGE;
-        case SHOULD_SWITCH_NIGHTMARE_STATS_RAISED:
-            return SHOULD_SWITCH_NIGHTMARE_STATS_RAISED_PERCENTAGE;
-        case SHOULD_SWITCH_SEEDED:
-            return SHOULD_SWITCH_SEEDED_PERCENTAGE;
-        case SHOULD_SWITCH_SEEDED_STATS_RAISED:
-            return SHOULD_SWITCH_SEEDED_STATS_RAISED_PERCENTAGE;
-        case SHOULD_SWITCH_INFATUATION:
-            return SHOULD_SWITCH_INFATUATION_PERCENTAGE;
-        case SHOULD_SWITCH_HASBADODDS:
-            return SHOULD_SWITCH_HASBADODDS_PERCENTAGE;
-        case SHOULD_SWITCH_NATURAL_CURE_STRONG:
-            return SHOULD_SWITCH_NATURAL_CURE_STRONG_PERCENTAGE;
-        case SHOULD_SWITCH_NATURAL_CURE_STRONG_STATS_RAISED:
-            return SHOULD_SWITCH_NATURAL_CURE_STRONG_STATS_RAISED_PERCENTAGE;
-        case SHOULD_SWITCH_NATURAL_CURE_WEAK:
-            return SHOULD_SWITCH_NATURAL_CURE_WEAK_PERCENTAGE;
-        case SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED:
-            return SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED_PERCENTAGE;
-        case SHOULD_SWITCH_REGENERATOR:
-            return SHOULD_SWITCH_REGENERATOR_PERCENTAGE;
-        case SHOULD_SWITCH_REGENERATOR_STATS_RAISED:
-            return SHOULD_SWITCH_REGENERATOR_STATS_RAISED_PERCENTAGE;
-        case SHOULD_SWITCH_ENCORE_STATUS:
-            return SHOULD_SWITCH_ENCORE_STATUS_PERCENTAGE;
-        case SHOULD_SWITCH_ENCORE_DAMAGE:
-            return SHOULD_SWITCH_ENCORE_DAMAGE_PERCENTAGE;
-        case SHOULD_SWITCH_CHOICE_LOCKED:
-            return SHOULD_SWITCH_CHOICE_LOCKED_PERCENTAGE;
-        case SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO:
-            return SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO_PERCENTAGE;
-        case SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS:
-            return SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE;
-        case SHOULD_SWITCH_ALL_SCORES_BAD:
-            return SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE;
-        case SHOULD_SWITCH_DYN_FUNC:
-            return SHOULD_SWITCH_DYN_FUNC_PERCENTAGE;
-        default:
-            return 100;
+    case SHOULD_SWITCH_WONDER_GUARD:
+        return SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE;
+    case SHOULD_SWITCH_ABSORBS_MOVE:
+        return SHOULD_SWITCH_ABSORBS_MOVE_PERCENTAGE;
+    case SHOULD_SWITCH_TRAPPER:
+        return SHOULD_SWITCH_TRAPPER_PERCENTAGE;
+    case SHOULD_SWITCH_FREE_TURN:
+        return SHOULD_SWITCH_FREE_TURN_PERCENTAGE;
+    case SHOULD_SWITCH_TRUANT:
+        return SHOULD_SWITCH_TRUANT_PERCENTAGE;
+    case SHOULD_SWITCH_ALL_MOVES_BAD:
+        return SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE;
+    case SHOULD_SWITCH_PERISH_SONG:
+        return SHOULD_SWITCH_PERISH_SONG_PERCENTAGE;
+    case SHOULD_SWITCH_YAWN:
+        return SHOULD_SWITCH_YAWN_PERCENTAGE;
+    case SHOULD_SWITCH_BADLY_POISONED:
+        return SHOULD_SWITCH_BADLY_POISONED_PERCENTAGE;
+    case SHOULD_SWITCH_BADLY_POISONED_STATS_RAISED:
+        return SHOULD_SWITCH_BADLY_POISONED_STATS_RAISED_PERCENTAGE;
+    case SHOULD_SWITCH_CURSED:
+        return SHOULD_SWITCH_CURSED_PERCENTAGE;
+    case SHOULD_SWITCH_CURSED_STATS_RAISED:
+        return SHOULD_SWITCH_CURSED_STATS_RAISED_PERCENTAGE;
+    case SHOULD_SWITCH_NIGHTMARE:
+        return SHOULD_SWITCH_NIGHTMARE_PERCENTAGE;
+    case SHOULD_SWITCH_NIGHTMARE_STATS_RAISED:
+        return SHOULD_SWITCH_NIGHTMARE_STATS_RAISED_PERCENTAGE;
+    case SHOULD_SWITCH_SEEDED:
+        return SHOULD_SWITCH_SEEDED_PERCENTAGE;
+    case SHOULD_SWITCH_SEEDED_STATS_RAISED:
+        return SHOULD_SWITCH_SEEDED_STATS_RAISED_PERCENTAGE;
+    case SHOULD_SWITCH_INFATUATION:
+        return SHOULD_SWITCH_INFATUATION_PERCENTAGE;
+    case SHOULD_SWITCH_HASBADODDS:
+        return SHOULD_SWITCH_HASBADODDS_PERCENTAGE;
+    case SHOULD_SWITCH_NATURAL_CURE_STRONG:
+        return SHOULD_SWITCH_NATURAL_CURE_STRONG_PERCENTAGE;
+    case SHOULD_SWITCH_NATURAL_CURE_STRONG_STATS_RAISED:
+        return SHOULD_SWITCH_NATURAL_CURE_STRONG_STATS_RAISED_PERCENTAGE;
+    case SHOULD_SWITCH_NATURAL_CURE_WEAK:
+        return SHOULD_SWITCH_NATURAL_CURE_WEAK_PERCENTAGE;
+    case SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED:
+        return SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED_PERCENTAGE;
+    case SHOULD_SWITCH_REGENERATOR:
+        return SHOULD_SWITCH_REGENERATOR_PERCENTAGE;
+    case SHOULD_SWITCH_REGENERATOR_STATS_RAISED:
+        return SHOULD_SWITCH_REGENERATOR_STATS_RAISED_PERCENTAGE;
+    case SHOULD_SWITCH_ENCORE_STATUS:
+        return SHOULD_SWITCH_ENCORE_STATUS_PERCENTAGE;
+    case SHOULD_SWITCH_ENCORE_DAMAGE:
+        return SHOULD_SWITCH_ENCORE_DAMAGE_PERCENTAGE;
+    case SHOULD_SWITCH_CHOICE_LOCKED:
+        return SHOULD_SWITCH_CHOICE_LOCKED_PERCENTAGE;
+    case SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO:
+        return SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO_PERCENTAGE;
+    case SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS:
+        return SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE;
+    case SHOULD_SWITCH_ALL_SCORES_BAD:
+        return SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE;
+    case SHOULD_SWITCH_DYN_FUNC:
+        return SHOULD_SWITCH_DYN_FUNC_PERCENTAGE;
+    default:
+        return 100;
     }
 }
 
@@ -925,55 +925,55 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
 
     switch(gAiLogicData->abilities[battler])
     {
-        case ABILITY_NATURAL_CURE:
-            //Attempt to cure bad ailment
-            if (gBattleMons[battler].status1 & (STATUS1_SLEEP | STATUS1_FREEZE | STATUS1_TOXIC_POISON)
-                && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
-                && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_STRONG_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_STRONG))))
-                break;
-            //Attempt to cure lesser ailment
-            if ((gBattleMons[battler].status1 & STATUS1_ANY)
-                && (gBattleMons[battler].hp >= gBattleMons[battler].maxHP / 2)
-                && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
-                && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_WEAK))))
-                break;
-
-            return FALSE;
-
-        case ABILITY_REGENERATOR:
-            //Don't switch if ailment
-            if (gBattleMons[battler].status1 & STATUS1_ANY)
-                return FALSE;
-            if ((gBattleMons[battler].hp <= ((gBattleMons[battler].maxHP * 2) / 3))
-                 && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
-                 && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_REGENERATOR, GetSwitchChance(SHOULD_SWITCH_REGENERATOR_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_REGENERATOR, GetSwitchChance(SHOULD_SWITCH_REGENERATOR))))
-                break;
-
-            return FALSE;
-
-        case ABILITY_ZERO_TO_HERO:
-        {
-            enum Move hitEscapeMove = MOVE_NONE;
-
-            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-            {
-                enum Move move = gBattleMons[battler].moves[moveIndex];
-
-                if (move != MOVE_NONE && GetMoveEffect(move) == EFFECT_HIT_ESCAPE)
-                {
-                    hitEscapeMove = move;
-                    break;
-                }
-            }
-
-            // Prefer to use a hit escape move if Palafin will move first and can hit
-            if (hitEscapeMove != MOVE_NONE && GetHitEscapeTransformState(battler, hitEscapeMove))
-                return FALSE;
+    case ABILITY_NATURAL_CURE:
+        //Attempt to cure bad ailment
+        if (gBattleMons[battler].status1 & (STATUS1_SLEEP | STATUS1_FREEZE | STATUS1_TOXIC_POISON)
+            && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
+            && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_STRONG_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_STRONG))))
             break;
+        //Attempt to cure lesser ailment
+        if ((gBattleMons[battler].status1 & STATUS1_ANY)
+            && (gBattleMons[battler].hp >= gBattleMons[battler].maxHP / 2)
+            && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
+            && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_WEAK))))
+            break;
+
+        return FALSE;
+
+    case ABILITY_REGENERATOR:
+        //Don't switch if ailment
+        if (gBattleMons[battler].status1 & STATUS1_ANY)
+            return FALSE;
+        if ((gBattleMons[battler].hp <= ((gBattleMons[battler].maxHP * 2) / 3))
+             && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
+             && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_REGENERATOR, GetSwitchChance(SHOULD_SWITCH_REGENERATOR_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_REGENERATOR, GetSwitchChance(SHOULD_SWITCH_REGENERATOR))))
+            break;
+
+        return FALSE;
+
+    case ABILITY_ZERO_TO_HERO:
+    {
+        enum Move hitEscapeMove = MOVE_NONE;
+
+        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+        {
+            enum Move move = gBattleMons[battler].moves[moveIndex];
+
+            if (move != MOVE_NONE && GetMoveEffect(move) == EFFECT_HIT_ESCAPE)
+            {
+                hitEscapeMove = move;
+                break;
+            }
         }
 
-        default:
+        // Prefer to use a hit escape move if Palafin will move first and can hit
+        if (hitEscapeMove != MOVE_NONE && GetHitEscapeTransformState(battler, hitEscapeMove))
             return FALSE;
+        break;
+    }
+
+    default:
+        return FALSE;
     }
 
     return SetSwitchinAndSwitch(battler, PARTY_SIZE);

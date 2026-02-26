@@ -79,19 +79,19 @@ static u32 BattlerHPPercentage(enum BattlerId battler, u32 operation, u32 thresh
 {
     switch (operation)
     {
-        case LESS_THAN:
-            return gBattleMons[battler].hp < (gBattleMons[battler].maxHP / threshold);
-        case EQUAL:
-            return gBattleMons[battler].hp == (gBattleMons[battler].maxHP / threshold);
-        case GREATER_THAN:
-            return gBattleMons[battler].hp > (gBattleMons[battler].maxHP / threshold);
-        case LESS_THAN_OR_EQUAL:
-            return gBattleMons[battler].hp <= (gBattleMons[battler].maxHP / threshold);
-        case GREATER_THAN_OR_EQUAL:
-            return gBattleMons[battler].hp >= (gBattleMons[battler].maxHP / threshold);
-        case NOT_EQUAL:
-        default:
-            return gBattleMons[battler].hp != (gBattleMons[battler].maxHP / threshold);
+    case LESS_THAN:
+        return gBattleMons[battler].hp < (gBattleMons[battler].maxHP / threshold);
+    case EQUAL:
+        return gBattleMons[battler].hp == (gBattleMons[battler].maxHP / threshold);
+    case GREATER_THAN:
+        return gBattleMons[battler].hp > (gBattleMons[battler].maxHP / threshold);
+    case LESS_THAN_OR_EQUAL:
+        return gBattleMons[battler].hp <= (gBattleMons[battler].maxHP / threshold);
+    case GREATER_THAN_OR_EQUAL:
+        return gBattleMons[battler].hp >= (gBattleMons[battler].maxHP / threshold);
+    case NOT_EQUAL:
+    default:
+        return gBattleMons[battler].hp != (gBattleMons[battler].maxHP / threshold);
     }
 }
 
@@ -314,40 +314,40 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
 
     switch (slideId)
     {
-        case TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT:
-            shouldRun = ShouldRunTrainerSlidePlayerLandsFirstCriticalHit(battler, slideId);
-            break;
-        case TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT:
-            shouldRun = ShouldRunTrainerSlideEnemyLandsFirstCriticalHit(battler, slideId);
-            break;
-        case TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT:
-            shouldRun = ShouldRunTrainerSlidePlayerLandsFirstSuperEffectiveHit(battler, slideId);
-            break;
-        case TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE:
-            shouldRun = ShouldRunTrainerSlidePlayerLandsFirstSTABMove(firstId, lastId, side, battler, slideId);
-            break;
-        case TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN:
-            shouldRun = ShouldRunTrainerSlidePlayerLandsFirstDown(firstId, lastId, side);
-            break;
-        case TRAINER_SLIDE_ENEMY_MON_UNAFFECTED:
-            shouldRun = ShouldRunTrainerSlideEnemyMonUnaffected(firstId, lastId, side, battler, slideId);
-            break;
-        case TRAINER_SLIDE_LAST_SWITCHIN:
-            shouldRun = ShouldRunTrainerSlideLastSwitchIn(battler);
-            break;
-        case TRAINER_SLIDE_LAST_HALF_HP:
-            shouldRun = ShouldRunTrainerSlideLastHalfHP(firstId, lastId, side, battler);
-            break;
-        case TRAINER_SLIDE_LAST_LOW_HP:
-            shouldRun = ShouldRunTrainerSlideLastLowHp(firstId, lastId, side, battler);
-            break;
-        case TRAINER_SLIDE_BEFORE_FIRST_TURN:
-        case TRAINER_SLIDE_MEGA_EVOLUTION:
-        case TRAINER_SLIDE_Z_MOVE:
-        case TRAINER_SLIDE_DYNAMAX:
-            shouldRun = TRUE;
-            break;
-        default:
+    case TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT:
+        shouldRun = ShouldRunTrainerSlidePlayerLandsFirstCriticalHit(battler, slideId);
+        break;
+    case TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT:
+        shouldRun = ShouldRunTrainerSlideEnemyLandsFirstCriticalHit(battler, slideId);
+        break;
+    case TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT:
+        shouldRun = ShouldRunTrainerSlidePlayerLandsFirstSuperEffectiveHit(battler, slideId);
+        break;
+    case TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE:
+        shouldRun = ShouldRunTrainerSlidePlayerLandsFirstSTABMove(firstId, lastId, side, battler, slideId);
+        break;
+    case TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN:
+        shouldRun = ShouldRunTrainerSlidePlayerLandsFirstDown(firstId, lastId, side);
+        break;
+    case TRAINER_SLIDE_ENEMY_MON_UNAFFECTED:
+        shouldRun = ShouldRunTrainerSlideEnemyMonUnaffected(firstId, lastId, side, battler, slideId);
+        break;
+    case TRAINER_SLIDE_LAST_SWITCHIN:
+        shouldRun = ShouldRunTrainerSlideLastSwitchIn(battler);
+        break;
+    case TRAINER_SLIDE_LAST_HALF_HP:
+        shouldRun = ShouldRunTrainerSlideLastHalfHP(firstId, lastId, side, battler);
+        break;
+    case TRAINER_SLIDE_LAST_LOW_HP:
+        shouldRun = ShouldRunTrainerSlideLastLowHp(firstId, lastId, side, battler);
+        break;
+    case TRAINER_SLIDE_BEFORE_FIRST_TURN:
+    case TRAINER_SLIDE_MEGA_EVOLUTION:
+    case TRAINER_SLIDE_Z_MOVE:
+    case TRAINER_SLIDE_DYNAMAX:
+        shouldRun = TRUE;
+        break;
+    default:
             return TRAINER_SLIDE_TARGET_NONE;
     }
 

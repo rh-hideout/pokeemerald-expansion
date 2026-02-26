@@ -2464,24 +2464,24 @@ static u16 GetBerryPestSpecies(u8 berryId)
     const struct Berry *berry = GetBerryInfo(berryId);
     switch(berry->color)
     {
-        case BERRY_COLOR_RED:
-            return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_BLUE:
-            return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_VOLBEAT : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_PURPLE:
-            return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_ILLUMISE : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_GREEN:
-            return P_FAMILY_BURMY ? SPECIES_BURMY_PLANT : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_YELLOW:
-            return P_FAMILY_COMBEE ? SPECIES_COMBEE : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_PINK:
-            return P_FAMILY_SCATTERBUG ? SPECIES_SPEWPA : SPECIES_NONE;
-            break;
+    case BERRY_COLOR_RED:
+        return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_BLUE:
+        return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_VOLBEAT : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_PURPLE:
+        return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_ILLUMISE : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_GREEN:
+        return P_FAMILY_BURMY ? SPECIES_BURMY_PLANT : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_YELLOW:
+        return P_FAMILY_COMBEE ? SPECIES_COMBEE : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_PINK:
+        return P_FAMILY_SCATTERBUG ? SPECIES_SPEWPA : SPECIES_NONE;
+        break;
     }
 #endif
     return SPECIES_NONE;

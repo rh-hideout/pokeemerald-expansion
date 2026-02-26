@@ -3325,13 +3325,13 @@ u8 LoadPlayerObjectEventPalette(enum Gender gender)
     u16 paletteTag;
     switch (gender)
     {
-        default:
-        case MALE:
-            paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN;
-            break;
-        case FEMALE:
-            paletteTag = OBJ_EVENT_PAL_TAG_MAY;
-            break;
+    default:
+    case MALE:
+        paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN;
+        break;
+    case FEMALE:
+        paletteTag = OBJ_EVENT_PAL_TAG_MAY;
+        break;
     }
     return LoadObjectEventPalette(paletteTag);
 }
@@ -6758,16 +6758,16 @@ static u8 TryUpdateMovementActionOnStairs(struct ObjectEvent *objectEvent, u8 mo
 
     switch (movementActionId)
     {
-        case MOVEMENT_ACTION_WALK_NORMAL_DOWN:
-            return MOVEMENT_ACTION_WALK_SLOW_STAIRS_DOWN;
-        case MOVEMENT_ACTION_WALK_NORMAL_UP:
-            return MOVEMENT_ACTION_WALK_SLOW_STAIRS_UP;
-        case MOVEMENT_ACTION_WALK_NORMAL_LEFT:
-            return MOVEMENT_ACTION_WALK_SLOW_STAIRS_LEFT;
-        case MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
-            return MOVEMENT_ACTION_WALK_SLOW_STAIRS_RIGHT;
-        default:
-            return movementActionId;
+    case MOVEMENT_ACTION_WALK_NORMAL_DOWN:
+        return MOVEMENT_ACTION_WALK_SLOW_STAIRS_DOWN;
+    case MOVEMENT_ACTION_WALK_NORMAL_UP:
+        return MOVEMENT_ACTION_WALK_SLOW_STAIRS_UP;
+    case MOVEMENT_ACTION_WALK_NORMAL_LEFT:
+        return MOVEMENT_ACTION_WALK_SLOW_STAIRS_LEFT;
+    case MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
+        return MOVEMENT_ACTION_WALK_SLOW_STAIRS_RIGHT;
+    default:
+        return movementActionId;
     }
 }
 
@@ -7484,13 +7484,13 @@ static bool8 DoJumpInPlaceAnim(struct ObjectEvent *objectEvent, struct Sprite *s
 {
     switch (DoJumpAnimStep(objectEvent, sprite))
     {
-        case JUMP_FINISHED:
-            return TRUE;
-        case JUMP_HALFWAY:
-            SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
-            SetStepAnim(objectEvent, sprite, GetMoveDirectionAnimNum(objectEvent->facingDirection));
-        default:
-            return FALSE;
+    case JUMP_FINISHED:
+        return TRUE;
+    case JUMP_HALFWAY:
+        SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
+        SetStepAnim(objectEvent, sprite, GetMoveDirectionAnimNum(objectEvent->facingDirection));
+    default:
+        return FALSE;
     }
 }
 

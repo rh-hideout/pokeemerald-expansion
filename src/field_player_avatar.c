@@ -2072,36 +2072,36 @@ static void Task_DoPlayerSpinExit(u8 taskId)
 
     switch (tState)
     {
-        case 0: // Init
-            if (!ObjectEventClearHeldMovementIfFinished(object))
-                return;
+    case 0: // Init
+        if (!ObjectEventClearHeldMovementIfFinished(object))
+            return;
 
-            SetSpinStartFacingDir(object->facingDirection);
-            tSpinDelayTimer = 0;
-            tSpeed = 1;
-            tCurY = (u16)(sprite->y + sprite->y2) << 4;
-            sprite->y2 = 0;
-            CameraObjectFreeze();
-            object->fixedPriority = TRUE;
-            sprite->oam.priority = 0;
-            sprite->subpriority = 0;
-            sprite->subspriteMode = SUBSPRITES_OFF;
+        SetSpinStartFacingDir(object->facingDirection);
+        tSpinDelayTimer = 0;
+        tSpeed = 1;
+        tCurY = (u16)(sprite->y + sprite->y2) << 4;
+        sprite->y2 = 0;
+        CameraObjectFreeze();
+        object->fixedPriority = TRUE;
+        sprite->oam.priority = 0;
+        sprite->subpriority = 0;
+        sprite->subspriteMode = SUBSPRITES_OFF;
+        tState++;
+    case 1: // Spin while rising
+        TrySpinPlayerForWarp(object, &tSpinDelayTimer);
+
+        // Rise and accelerate
+        tCurY -= tSpeed;
+        tSpeed += 3;
+        sprite->y = tCurY >> 4;
+
+        // Check if offscreen
+        if (sprite->y + (s16)gTotalCameraPixelOffsetY < -32)
             tState++;
-        case 1: // Spin while rising
-            TrySpinPlayerForWarp(object, &tSpinDelayTimer);
-
-            // Rise and accelerate
-            tCurY -= tSpeed;
-            tSpeed += 3;
-            sprite->y = tCurY >> 4;
-
-            // Check if offscreen
-            if (sprite->y + (s16)gTotalCameraPixelOffsetY < -32)
-                tState++;
-            break;
-        case 2:
-            DestroyTask(taskId);
-            break;
+        break;
+    case 2:
+        DestroyTask(taskId);
+        break;
     }
 }
 
@@ -2137,58 +2137,58 @@ static void Task_DoPlayerSpinEntrance(u8 taskId)
 
     switch (tState)
     {
-        case 0:
-            // Because the spin start facing direction is never set for this
-            // warp type, the player will always exit the warp facing South.
-            // This may have been intentional, unclear
-            tStartDir = GetSpinStartFacingDir();
-            ObjectEventForceSetHeldMovement(object, GetFaceDirectionMovementAction(sSpinDirections[tStartDir]));
-            tSpinDelayTimer = 0;
-            tSpeed = 116;
-            tDestY = sprite->y;
-            tPriority = sprite->oam.priority;
-            tSubpriority = sprite->subpriority;
-            tCurY = -((u16)sprite->y2 + 32) * 16;
-            sprite->y2 = 0;
-            CameraObjectFreeze();
-            object->fixedPriority = TRUE;
-            sprite->oam.priority = 1;
-            sprite->subpriority = 0;
-            sprite->subspriteMode = SUBSPRITES_OFF;
+    case 0:
+        // Because the spin start facing direction is never set for this
+        // warp type, the player will always exit the warp facing South.
+        // This may have been intentional, unclear
+        tStartDir = GetSpinStartFacingDir();
+        ObjectEventForceSetHeldMovement(object, GetFaceDirectionMovementAction(sSpinDirections[tStartDir]));
+        tSpinDelayTimer = 0;
+        tSpeed = 116;
+        tDestY = sprite->y;
+        tPriority = sprite->oam.priority;
+        tSubpriority = sprite->subpriority;
+        tCurY = -((u16)sprite->y2 + 32) * 16;
+        sprite->y2 = 0;
+        CameraObjectFreeze();
+        object->fixedPriority = TRUE;
+        sprite->oam.priority = 1;
+        sprite->subpriority = 0;
+        sprite->subspriteMode = SUBSPRITES_OFF;
+        tState++;
+    case 1: // Spin while descending
+        TrySpinPlayerForWarp(object, &tSpinDelayTimer);
+
+        // Fall and decelerate
+        tCurY += tSpeed;
+        tSpeed -= 3;
+        if (tSpeed < 4)
+            tSpeed = 4;
+        sprite->y = tCurY >> 4;
+
+        // Check if reached dest
+        if (sprite->y >= tDestY)
+        {
+            sprite->y = tDestY;
+            tGroundTimer = 0;
             tState++;
-        case 1: // Spin while descending
-            TrySpinPlayerForWarp(object, &tSpinDelayTimer);
-
-            // Fall and decelerate
-            tCurY += tSpeed;
-            tSpeed -= 3;
-            if (tSpeed < 4)
-                tSpeed = 4;
-            sprite->y = tCurY >> 4;
-
-            // Check if reached dest
-            if (sprite->y >= tDestY)
-            {
-                sprite->y = tDestY;
-                tGroundTimer = 0;
-                tState++;
-            }
-            break;
-        case 2: // Spin on ground
-            TrySpinPlayerForWarp(object, &tSpinDelayTimer);
-            if (++tGroundTimer > 8)
-                tState++;
-            break;
-        case 3: // Spin until facing original direction
-            if (tStartDir == TrySpinPlayerForWarp(object, &tSpinDelayTimer))
-            {
-                object->fixedPriority = 0;
-                sprite->oam.priority = tPriority;
-                sprite->subpriority = tSubpriority;
-                CameraObjectReset();
-                DestroyTask(taskId);
-            }
-            break;
+        }
+        break;
+    case 2: // Spin on ground
+        TrySpinPlayerForWarp(object, &tSpinDelayTimer);
+        if (++tGroundTimer > 8)
+            tState++;
+        break;
+    case 3: // Spin until facing original direction
+        if (tStartDir == TrySpinPlayerForWarp(object, &tSpinDelayTimer))
+        {
+            object->fixedPriority = 0;
+            sprite->oam.priority = tPriority;
+            sprite->subpriority = tSubpriority;
+            CameraObjectReset();
+            DestroyTask(taskId);
+        }
+        break;
     }
 }
 

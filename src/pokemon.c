@@ -1463,13 +1463,13 @@ static bool32 IsValidGender(u32 gender)
 {
     switch (gender)
     {
-        case MON_MALE:
-        case MON_FEMALE:
-        case MON_GENDERLESS:
-        case MON_GENDER_RANDOM:
-            return TRUE;
-        default:
-            return FALSE;
+    case MON_MALE:
+    case MON_FEMALE:
+    case MON_GENDERLESS:
+    case MON_GENDER_RANDOM:
+        return TRUE;
+    default:
+        return FALSE;
     }
 }
 
@@ -4564,24 +4564,24 @@ u8 *UseStatIncreaseItem(enum Item itemId)
 
     switch (itemEffect[1])
     {
-        case ITEM1_X_ATTACK:
-            BufferStatRoseMessage(STAT_ATK);
-            break;
-        case ITEM1_X_DEFENSE:
-            BufferStatRoseMessage(STAT_DEF);
-            break;
-        case ITEM1_X_SPEED:
-            BufferStatRoseMessage(STAT_SPEED);
-            break;
-        case ITEM1_X_SPATK:
-            BufferStatRoseMessage(STAT_SPATK);
-            break;
-        case ITEM1_X_SPDEF:
-            BufferStatRoseMessage(STAT_SPDEF);
-            break;
-        case ITEM1_X_ACCURACY:
-            BufferStatRoseMessage(STAT_ACC);
-            break;
+    case ITEM1_X_ATTACK:
+        BufferStatRoseMessage(STAT_ATK);
+        break;
+    case ITEM1_X_DEFENSE:
+        BufferStatRoseMessage(STAT_DEF);
+        break;
+    case ITEM1_X_SPEED:
+        BufferStatRoseMessage(STAT_SPEED);
+        break;
+    case ITEM1_X_SPATK:
+        BufferStatRoseMessage(STAT_SPATK);
+        break;
+    case ITEM1_X_SPDEF:
+        BufferStatRoseMessage(STAT_SPDEF);
+        break;
+    case ITEM1_X_ACCURACY:
+        BufferStatRoseMessage(STAT_ACC);
+        break;
     }
 
     if (itemEffect[3] & ITEM3_GUARD_SPEC)

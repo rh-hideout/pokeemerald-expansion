@@ -2068,12 +2068,12 @@ static void Task_ReceiveChatMessage(u8 taskId)
         buffer = (u8 *)gBlockRecvBuffer[tI];
         switch (buffer[0])
         {
-            default:
-            case CHAT_MESSAGE_CHAT:    tNextState = 3; break;
-            case CHAT_MESSAGE_JOIN:    tNextState = 3; break;
-            case CHAT_MESSAGE_LEAVE:   tNextState = 4; break;
-            case CHAT_MESSAGE_DROP:    tNextState = 5; break;
-            case CHAT_MESSAGE_DISBAND: tNextState = 6; break;
+        default:
+        case CHAT_MESSAGE_CHAT:    tNextState = 3; break;
+        case CHAT_MESSAGE_JOIN:    tNextState = 3; break;
+        case CHAT_MESSAGE_LEAVE:   tNextState = 4; break;
+        case CHAT_MESSAGE_DROP:    tNextState = 5; break;
+        case CHAT_MESSAGE_DISBAND: tNextState = 6; break;
         }
 
         if (ProcessReceivedChatMessage(sChat->receivedMessage, (u8 *)gBlockRecvBuffer[tI]))

@@ -4200,33 +4200,33 @@ static void Task_MoveDeoxysRock(u8 taskId)
     struct Sprite *sprite = &gSprites[tSpriteId];
     switch (tState)
     {
-        case 0:
-            tCurX = sprite->x << 4;
-            tCurY = sprite->y << 4;
-            tVelocityX = SAFE_DIV(tTargetX * 16 - tCurX, tMoveSteps);
-            tVelocityY = SAFE_DIV(tTargetY * 16 - tCurY, tMoveSteps);
-            tState++;
-            // fallthrough
-        case 1:
-            if (tMoveSteps != 0)
-            {
-                tMoveSteps--;
-                tCurX += tVelocityX;
-                tCurY += tVelocityY;
-                sprite->x = tCurX >> 4;
-                sprite->y = tCurY >> 4;
-            }
-            else
-            {
-                struct ObjectEvent *object = &gObjectEvents[tObjEventId];
-                sprite->x = tTargetX;
-                sprite->y = tTargetY;
-                ShiftStillObjectEventCoords(object);
-                object->triggerGroundEffectsOnStop = TRUE;
-                FieldEffectActiveListRemove(FLDEFF_MOVE_DEOXYS_ROCK);
-                DestroyTask(taskId);
-            }
-            break;
+    case 0:
+        tCurX = sprite->x << 4;
+        tCurY = sprite->y << 4;
+        tVelocityX = SAFE_DIV(tTargetX * 16 - tCurX, tMoveSteps);
+        tVelocityY = SAFE_DIV(tTargetY * 16 - tCurY, tMoveSteps);
+        tState++;
+        // fallthrough
+    case 1:
+        if (tMoveSteps != 0)
+        {
+            tMoveSteps--;
+            tCurX += tVelocityX;
+            tCurY += tVelocityY;
+            sprite->x = tCurX >> 4;
+            sprite->y = tCurY >> 4;
+        }
+        else
+        {
+            struct ObjectEvent *object = &gObjectEvents[tObjEventId];
+            sprite->x = tTargetX;
+            sprite->y = tTargetY;
+            ShiftStillObjectEventCoords(object);
+            object->triggerGroundEffectsOnStop = TRUE;
+            FieldEffectActiveListRemove(FLDEFF_MOVE_DEOXYS_ROCK);
+            DestroyTask(taskId);
+        }
+        break;
     }
 }
 

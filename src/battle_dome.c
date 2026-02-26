@@ -3880,9 +3880,9 @@ static bool32 IsDomeHealingMove(enum Move move)
     // Check extra effects not considered plain healing by AI
     switch (GetMoveEffect(move))
     {
-        case EFFECT_INGRAIN:
-        case EFFECT_REFRESH:
-        case EFFECT_AQUA_RING:
+    case EFFECT_INGRAIN:
+    case EFFECT_REFRESH:
+    case EFFECT_AQUA_RING:
         return TRUE;
     default:
         return FALSE;

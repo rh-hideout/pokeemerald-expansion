@@ -1072,88 +1072,88 @@ static bool32 AI_IsMoveEffectInPlus(enum BattlerId battlerAtk, enum BattlerId ba
         {
             switch (additionalEffect->moveEffect)
             {
-                case MOVE_EFFECT_ATK_MINUS_1:
-                case MOVE_EFFECT_ATK_MINUS_2:
-                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
+            case MOVE_EFFECT_ATK_MINUS_1:
+            case MOVE_EFFECT_ATK_MINUS_2:
+                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_DEF_MINUS_1:
+            case MOVE_EFFECT_DEF_MINUS_2:
+                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_SPD_MINUS_1:
+            case MOVE_EFFECT_SPD_MINUS_2:
+                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_SP_ATK_MINUS_1:
+            case MOVE_EFFECT_SP_ATK_MINUS_2:
+                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPATK))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_SP_DEF_MINUS_1:
+            case MOVE_EFFECT_SP_DEF_MINUS_2:
+                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPDEF))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_EVS_MINUS_1:
+            case MOVE_EFFECT_EVS_MINUS_2:
+                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_EVASION))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_ACC_MINUS_1:
+            case MOVE_EFFECT_ACC_MINUS_2:
+                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ACC))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_ATK_DEF_DOWN:
+                if (abilityAtk == ABILITY_CONTRARY && (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK) || BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF)))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_DEF_SPDEF_DOWN:
+                if (abilityAtk == ABILITY_CONTRARY && (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF) || BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPDEF)))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_ATK_PLUS_1:
+            case MOVE_EFFECT_ATK_PLUS_2:
+                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_DEF_PLUS_1:
+            case MOVE_EFFECT_DEF_PLUS_2:
+                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_SPD_PLUS_1:
+            case MOVE_EFFECT_SPD_PLUS_2:
+                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPEED))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_SP_ATK_PLUS_1:
+            case MOVE_EFFECT_SP_ATK_PLUS_2:
+                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPATK))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_EVS_PLUS_1:
+            case MOVE_EFFECT_EVS_PLUS_2:
+                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_EVASION))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_ACC_PLUS_1:
+            case MOVE_EFFECT_ACC_PLUS_2:
+                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ACC))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_ALL_STATS_UP:
+                for (enum Stat statId = STAT_ATK; statId <= NUM_STATS; statId++)
+                {
+                    if (BattlerStatCanRise(battlerAtk, abilityAtk, statId))
                         return TRUE;
-                    break;
-                case MOVE_EFFECT_DEF_MINUS_1:
-                case MOVE_EFFECT_DEF_MINUS_2:
-                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_SPD_MINUS_1:
-                case MOVE_EFFECT_SPD_MINUS_2:
-                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_SP_ATK_MINUS_1:
-                case MOVE_EFFECT_SP_ATK_MINUS_2:
-                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPATK))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_SP_DEF_MINUS_1:
-                case MOVE_EFFECT_SP_DEF_MINUS_2:
-                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPDEF))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_EVS_MINUS_1:
-                case MOVE_EFFECT_EVS_MINUS_2:
-                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_EVASION))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_ACC_MINUS_1:
-                case MOVE_EFFECT_ACC_MINUS_2:
-                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ACC))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_ATK_DEF_DOWN:
-                    if (abilityAtk == ABILITY_CONTRARY && (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK) || BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF)))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_DEF_SPDEF_DOWN:
-                    if (abilityAtk == ABILITY_CONTRARY && (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF) || BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPDEF)))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_ATK_PLUS_1:
-                case MOVE_EFFECT_ATK_PLUS_2:
-                    if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_DEF_PLUS_1:
-                case MOVE_EFFECT_DEF_PLUS_2:
-                    if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_SPD_PLUS_1:
-                case MOVE_EFFECT_SPD_PLUS_2:
-                    if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPEED))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_SP_ATK_PLUS_1:
-                case MOVE_EFFECT_SP_ATK_PLUS_2:
-                    if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPATK))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_EVS_PLUS_1:
-                case MOVE_EFFECT_EVS_PLUS_2:
-                    if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_EVASION))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_ACC_PLUS_1:
-                case MOVE_EFFECT_ACC_PLUS_2:
-                    if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ACC))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_ALL_STATS_UP:
-                    for (enum Stat statId = STAT_ATK; statId <= NUM_STATS; statId++)
-                    {
-                        if (BattlerStatCanRise(battlerAtk, abilityAtk, statId))
-                            return TRUE;
-                    }
-                    break;
-                default:
-                    break;
+                }
+                break;
+            default:
+                break;
             }
         }
         else // consider move effects that hinder the target
@@ -1163,53 +1163,53 @@ static bool32 AI_IsMoveEffectInPlus(enum BattlerId battlerAtk, enum BattlerId ba
 
             switch (additionalEffect->moveEffect)
             {
-                case MOVE_EFFECT_POISON:
-                case MOVE_EFFECT_TOXIC:
-                    if (AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, MOVE_NONE))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_BURN:
-                    if (AI_CanBurn(battlerAtk, battlerDef, abilityDef, BATTLE_PARTNER(battlerAtk), move, MOVE_NONE))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_FREEZE_OR_FROSTBITE:
-                    if (CanBeFrozen(battlerAtk, battlerDef, abilityDef))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_PARALYSIS:
-                    if (AI_CanParalyze(battlerAtk, battlerDef, abilityDef, move, MOVE_NONE))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_CONFUSION:
-                    if (AI_CanConfuse(battlerAtk, battlerDef, abilityDef, BATTLE_PARTNER(battlerAtk), move, MOVE_NONE))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_FLINCH:
-                    if (ShouldTryToFlinch(battlerAtk, battlerDef, abilityAtk, abilityDef, move))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_ATK_MINUS_1:
-                case MOVE_EFFECT_DEF_MINUS_1:
-                case MOVE_EFFECT_SPD_MINUS_1:
-                case MOVE_EFFECT_SP_ATK_MINUS_1:
-                case MOVE_EFFECT_SP_DEF_MINUS_1:
-                case MOVE_EFFECT_ACC_MINUS_1:
-                case MOVE_EFFECT_EVS_MINUS_1:
-                    if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1)) && noOfHitsToKo > 1)
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_ATK_MINUS_2:
-                case MOVE_EFFECT_DEF_MINUS_2:
-                case MOVE_EFFECT_SPD_MINUS_2:
-                case MOVE_EFFECT_SP_ATK_MINUS_2:
-                case MOVE_EFFECT_SP_DEF_MINUS_2:
-                case MOVE_EFFECT_ACC_MINUS_2:
-                case MOVE_EFFECT_EVS_MINUS_2:
-                    if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo > 1)
-                        return TRUE;
-                    break;
-                default:
-                    break;
+            case MOVE_EFFECT_POISON:
+            case MOVE_EFFECT_TOXIC:
+                if (AI_CanPoison(battlerAtk, battlerDef, abilityDef, move, MOVE_NONE))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_BURN:
+                if (AI_CanBurn(battlerAtk, battlerDef, abilityDef, BATTLE_PARTNER(battlerAtk), move, MOVE_NONE))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_FREEZE_OR_FROSTBITE:
+                if (CanBeFrozen(battlerAtk, battlerDef, abilityDef))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_PARALYSIS:
+                if (AI_CanParalyze(battlerAtk, battlerDef, abilityDef, move, MOVE_NONE))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_CONFUSION:
+                if (AI_CanConfuse(battlerAtk, battlerDef, abilityDef, BATTLE_PARTNER(battlerAtk), move, MOVE_NONE))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_FLINCH:
+                if (ShouldTryToFlinch(battlerAtk, battlerDef, abilityAtk, abilityDef, move))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_ATK_MINUS_1:
+            case MOVE_EFFECT_DEF_MINUS_1:
+            case MOVE_EFFECT_SPD_MINUS_1:
+            case MOVE_EFFECT_SP_ATK_MINUS_1:
+            case MOVE_EFFECT_SP_DEF_MINUS_1:
+            case MOVE_EFFECT_ACC_MINUS_1:
+            case MOVE_EFFECT_EVS_MINUS_1:
+                if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1)) && noOfHitsToKo > 1)
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_ATK_MINUS_2:
+            case MOVE_EFFECT_DEF_MINUS_2:
+            case MOVE_EFFECT_SPD_MINUS_2:
+            case MOVE_EFFECT_SP_ATK_MINUS_2:
+            case MOVE_EFFECT_SP_DEF_MINUS_2:
+            case MOVE_EFFECT_ACC_MINUS_2:
+            case MOVE_EFFECT_EVS_MINUS_2:
+                if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo > 1)
+                    return TRUE;
+                break;
+            default:
+                break;
             }
         }
     }
@@ -1269,50 +1269,50 @@ static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId b
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, effectIndex);
             switch (additionalEffect->moveEffect)
             {
-                case MOVE_EFFECT_ATK_MINUS_1:
-                case MOVE_EFFECT_DEF_MINUS_1:
-                case MOVE_EFFECT_SPD_MINUS_1:
-                case MOVE_EFFECT_SP_ATK_MINUS_1:
-                case MOVE_EFFECT_SP_DEF_MINUS_1:
-                case MOVE_EFFECT_EVS_MINUS_1:
-                case MOVE_EFFECT_ACC_MINUS_1:
-                case MOVE_EFFECT_ATK_MINUS_2:
-                case MOVE_EFFECT_DEF_MINUS_2:
-                case MOVE_EFFECT_SPD_MINUS_2:
-                case MOVE_EFFECT_SP_ATK_MINUS_2:
-                case MOVE_EFFECT_SP_DEF_MINUS_2:
-                case MOVE_EFFECT_EVS_MINUS_2:
-                case MOVE_EFFECT_ACC_MINUS_2:
-                case MOVE_EFFECT_V_CREATE:
-                case MOVE_EFFECT_ATK_DEF_DOWN:
-                case MOVE_EFFECT_DEF_SPDEF_DOWN:
-                    if ((additionalEffect->self && abilityAtk != ABILITY_CONTRARY)
-                        || (noOfHitsToKo > 1 && !additionalEffect->self && abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move)))
-                        return TRUE;
-                    break;
-                case MOVE_EFFECT_RECHARGE:
-                    return additionalEffect->self;
-                case MOVE_EFFECT_ATK_PLUS_1:
-                case MOVE_EFFECT_DEF_PLUS_1:
-                case MOVE_EFFECT_SPD_PLUS_1:
-                case MOVE_EFFECT_SP_ATK_PLUS_1:
-                case MOVE_EFFECT_SP_DEF_PLUS_1:
-                case MOVE_EFFECT_EVS_PLUS_1:
-                case MOVE_EFFECT_ACC_PLUS_1:
-                case MOVE_EFFECT_ATK_PLUS_2:
-                case MOVE_EFFECT_DEF_PLUS_2:
-                case MOVE_EFFECT_SPD_PLUS_2:
-                case MOVE_EFFECT_SP_ATK_PLUS_2:
-                case MOVE_EFFECT_SP_DEF_PLUS_2:
-                case MOVE_EFFECT_EVS_PLUS_2:
-                case MOVE_EFFECT_ACC_PLUS_2:
-                case MOVE_EFFECT_ALL_STATS_UP:
-                    if ((additionalEffect->self && abilityAtk == ABILITY_CONTRARY)
-                        || (noOfHitsToKo > 1 && !additionalEffect->self && !(abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))))
-                        return TRUE;
-                    break;
-                default:
-                    break;
+            case MOVE_EFFECT_ATK_MINUS_1:
+            case MOVE_EFFECT_DEF_MINUS_1:
+            case MOVE_EFFECT_SPD_MINUS_1:
+            case MOVE_EFFECT_SP_ATK_MINUS_1:
+            case MOVE_EFFECT_SP_DEF_MINUS_1:
+            case MOVE_EFFECT_EVS_MINUS_1:
+            case MOVE_EFFECT_ACC_MINUS_1:
+            case MOVE_EFFECT_ATK_MINUS_2:
+            case MOVE_EFFECT_DEF_MINUS_2:
+            case MOVE_EFFECT_SPD_MINUS_2:
+            case MOVE_EFFECT_SP_ATK_MINUS_2:
+            case MOVE_EFFECT_SP_DEF_MINUS_2:
+            case MOVE_EFFECT_EVS_MINUS_2:
+            case MOVE_EFFECT_ACC_MINUS_2:
+            case MOVE_EFFECT_V_CREATE:
+            case MOVE_EFFECT_ATK_DEF_DOWN:
+            case MOVE_EFFECT_DEF_SPDEF_DOWN:
+                if ((additionalEffect->self && abilityAtk != ABILITY_CONTRARY)
+                    || (noOfHitsToKo > 1 && !additionalEffect->self && abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move)))
+                    return TRUE;
+                break;
+            case MOVE_EFFECT_RECHARGE:
+                return additionalEffect->self;
+            case MOVE_EFFECT_ATK_PLUS_1:
+            case MOVE_EFFECT_DEF_PLUS_1:
+            case MOVE_EFFECT_SPD_PLUS_1:
+            case MOVE_EFFECT_SP_ATK_PLUS_1:
+            case MOVE_EFFECT_SP_DEF_PLUS_1:
+            case MOVE_EFFECT_EVS_PLUS_1:
+            case MOVE_EFFECT_ACC_PLUS_1:
+            case MOVE_EFFECT_ATK_PLUS_2:
+            case MOVE_EFFECT_DEF_PLUS_2:
+            case MOVE_EFFECT_SPD_PLUS_2:
+            case MOVE_EFFECT_SP_ATK_PLUS_2:
+            case MOVE_EFFECT_SP_DEF_PLUS_2:
+            case MOVE_EFFECT_EVS_PLUS_2:
+            case MOVE_EFFECT_ACC_PLUS_2:
+            case MOVE_EFFECT_ALL_STATS_UP:
+                if ((additionalEffect->self && abilityAtk == ABILITY_CONTRARY)
+                    || (noOfHitsToKo > 1 && !additionalEffect->self && !(abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))))
+                    return TRUE;
+                break;
+            default:
+                break;
             }
         }
         break;
@@ -4333,9 +4333,9 @@ static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move)
             break;
         case MOVE_EFFECT_GRAVITY:
             aiEffect |= AI_EFFECT_GRAVITY;
-			break;
+            break;
         case MOVE_EFFECT_BREAK_SCREEN:
-        	aiEffect |= AI_EFFECT_BREAK_SCREENS;
+            aiEffect |= AI_EFFECT_BREAK_SCREENS;
             break;
         default:
             break;
@@ -4763,31 +4763,31 @@ static enum Stat GetStatBeingChanged(enum StatChange statChange)
 {
     switch(statChange)
     {
-        case STAT_CHANGE_ATK:
-        case STAT_CHANGE_ATK_2:
-        case STAT_CHANGE_ATK_3:
-        case STAT_CHANGE_ATK_MAX:
-            return STAT_ATK;
-        case STAT_CHANGE_DEF:
-        case STAT_CHANGE_DEF_2:
-        case STAT_CHANGE_DEF_3:
-            return STAT_DEF;
-        case STAT_CHANGE_SPEED:
-        case STAT_CHANGE_SPEED_2:
-        case STAT_CHANGE_SPEED_3:
-            return STAT_SPEED;
-        case STAT_CHANGE_SPATK:
-        case STAT_CHANGE_SPATK_2:
-        case STAT_CHANGE_SPATK_3:
-            return STAT_SPATK;
-        case STAT_CHANGE_SPDEF:
-        case STAT_CHANGE_SPDEF_2:
-        case STAT_CHANGE_SPDEF_3:
-            return STAT_SPDEF;
-        case STAT_CHANGE_ACC:
-            return STAT_ACC;
-        case STAT_CHANGE_EVASION:
-            return STAT_EVASION;
+    case STAT_CHANGE_ATK:
+    case STAT_CHANGE_ATK_2:
+    case STAT_CHANGE_ATK_3:
+    case STAT_CHANGE_ATK_MAX:
+        return STAT_ATK;
+    case STAT_CHANGE_DEF:
+    case STAT_CHANGE_DEF_2:
+    case STAT_CHANGE_DEF_3:
+        return STAT_DEF;
+    case STAT_CHANGE_SPEED:
+    case STAT_CHANGE_SPEED_2:
+    case STAT_CHANGE_SPEED_3:
+        return STAT_SPEED;
+    case STAT_CHANGE_SPATK:
+    case STAT_CHANGE_SPATK_2:
+    case STAT_CHANGE_SPATK_3:
+        return STAT_SPATK;
+    case STAT_CHANGE_SPDEF:
+    case STAT_CHANGE_SPDEF_2:
+    case STAT_CHANGE_SPDEF_3:
+        return STAT_SPDEF;
+    case STAT_CHANGE_ACC:
+        return STAT_ACC;
+    case STAT_CHANGE_EVASION:
+        return STAT_EVASION;
     }
     return 0; // STAT_HP, should never be getting changed
 }
@@ -4796,27 +4796,27 @@ static u32 GetStagesOfStatChange(enum StatChange statChange)
 {
     switch(statChange)
     {
-        case STAT_CHANGE_ATK:
-        case STAT_CHANGE_DEF:
-        case STAT_CHANGE_SPEED:
-        case STAT_CHANGE_SPATK:
-        case STAT_CHANGE_SPDEF:
-        case STAT_CHANGE_ACC:
-        case STAT_CHANGE_EVASION:
-            return 1;
-        case STAT_CHANGE_ATK_2:
-        case STAT_CHANGE_DEF_2:
-        case STAT_CHANGE_SPEED_2:
-        case STAT_CHANGE_SPATK_2:
-        case STAT_CHANGE_SPDEF_2:
-            return 2;
-        case STAT_CHANGE_ATK_3:
-        case STAT_CHANGE_DEF_3:
-        case STAT_CHANGE_SPEED_3:
-        case STAT_CHANGE_SPATK_3:
-        case STAT_CHANGE_SPDEF_3:
-            return 3;
-        case STAT_CHANGE_ATK_MAX:
+    case STAT_CHANGE_ATK:
+    case STAT_CHANGE_DEF:
+    case STAT_CHANGE_SPEED:
+    case STAT_CHANGE_SPATK:
+    case STAT_CHANGE_SPDEF:
+    case STAT_CHANGE_ACC:
+    case STAT_CHANGE_EVASION:
+        return 1;
+    case STAT_CHANGE_ATK_2:
+    case STAT_CHANGE_DEF_2:
+    case STAT_CHANGE_SPEED_2:
+    case STAT_CHANGE_SPATK_2:
+    case STAT_CHANGE_SPDEF_2:
+        return 2;
+    case STAT_CHANGE_ATK_3:
+    case STAT_CHANGE_DEF_3:
+    case STAT_CHANGE_SPEED_3:
+    case STAT_CHANGE_SPATK_3:
+    case STAT_CHANGE_SPDEF_3:
+        return 3;
+    case STAT_CHANGE_ATK_MAX:
             return 6;
     }
     return 0; // STAT_HP, should never be getting changed

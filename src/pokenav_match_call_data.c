@@ -717,18 +717,18 @@ static u32 MatchCallGetFunctionIndex(match_call_t matchCall)
 {
     switch (matchCall.common->type)
     {
-        default:
-        case MC_TYPE_NPC:
-            return 0;
-        case MC_TYPE_TRAINER:
-        case MC_TYPE_LEADER:
-            return 1;
-        case MC_TYPE_WALLY:
-            return 2;
-        case MC_TYPE_RIVAL:
-            return 3;
-        case MC_TYPE_BIRCH:
-            return 4;
+    default:
+    case MC_TYPE_NPC:
+        return 0;
+    case MC_TYPE_TRAINER:
+    case MC_TYPE_LEADER:
+        return 1;
+    case MC_TYPE_WALLY:
+        return 2;
+    case MC_TYPE_RIVAL:
+        return 3;
+    case MC_TYPE_BIRCH:
+        return 4;
     }
 }
 

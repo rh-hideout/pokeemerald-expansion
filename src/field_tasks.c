@@ -1011,72 +1011,72 @@ static void IcefallCaveIcePerStepCallback(u8 taskId)
     s16 *data = gTasks[taskId].data;
     switch (tState)
     {
-        case 0:
-            PlayerGetDestCoords(&x, &y);
-            tPrevX = x;
-            tPrevY = y;
-            tState = 1;
-            break;
-        case 1:
-            PlayerGetDestCoords(&x, &y);
-            // End if player hasn't moved
-            if (x == tPrevX && y == tPrevY)
-                return;
+    case 0:
+        PlayerGetDestCoords(&x, &y);
+        tPrevX = x;
+        tPrevY = y;
+        tState = 1;
+        break;
+    case 1:
+        PlayerGetDestCoords(&x, &y);
+        // End if player hasn't moved
+        if (x == tPrevX && y == tPrevY)
+            return;
 
-            tPrevX = x;
-            tPrevY = y;
-            tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-            if (MetatileBehavior_IsThinIce(tileBehavior) == TRUE)
-            {
-                // Thin ice, set it to cracked ice
-                MarkIcefallCavePuzzleCoordVisited(x, y);
-                tDelay = 4;
-                tState = 2;
-                tIceX = x;
-                tIceY = y;
-            }
-            else if (MetatileBehavior_IsCrackedIce(tileBehavior) == TRUE)
-            {
-                // Cracked ice, set it to broken ice
-                tDelay = 4;
-                tState = 3;
-                tIceX = x;
-                tIceY = y;
-            }
-            break;
-        case 2:
-            if (tDelay != 0)
-            {
-                tDelay--;
-            }
-            else
-            {
-                // Crack ice
-                x = tIceX;
-                y = tIceY;
-                PlaySE(SE_ICE_CRACK);
-                MapGridSetMetatileIdAt(x, y, METATILE_SeafoamIslands_CrackedIce);
-                CurrentMapDrawMetatileAt(x, y);
-                tState = 1;
-            }
-            break;
-        case 3:
-            if (tDelay != 0)
-            {
-                tDelay--;
-            }
-            else
-            {
-                // Break ice
-                x = tIceX;
-                y = tIceY;
-                PlaySE(SE_ICE_BREAK);
-                MapGridSetMetatileIdAt(x, y, METATILE_SeafoamIslands_IceHole);
-                CurrentMapDrawMetatileAt(x, y);
-                VarSet(VAR_TEMP_1, 1);
-                tState = 1;
-            }
-            break;
+        tPrevX = x;
+        tPrevY = y;
+        tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+        if (MetatileBehavior_IsThinIce(tileBehavior) == TRUE)
+        {
+            // Thin ice, set it to cracked ice
+            MarkIcefallCavePuzzleCoordVisited(x, y);
+            tDelay = 4;
+            tState = 2;
+            tIceX = x;
+            tIceY = y;
+        }
+        else if (MetatileBehavior_IsCrackedIce(tileBehavior) == TRUE)
+        {
+            // Cracked ice, set it to broken ice
+            tDelay = 4;
+            tState = 3;
+            tIceX = x;
+            tIceY = y;
+        }
+        break;
+    case 2:
+        if (tDelay != 0)
+        {
+            tDelay--;
+        }
+        else
+        {
+            // Crack ice
+            x = tIceX;
+            y = tIceY;
+            PlaySE(SE_ICE_CRACK);
+            MapGridSetMetatileIdAt(x, y, METATILE_SeafoamIslands_CrackedIce);
+            CurrentMapDrawMetatileAt(x, y);
+            tState = 1;
+        }
+        break;
+    case 3:
+        if (tDelay != 0)
+        {
+            tDelay--;
+        }
+        else
+        {
+            // Break ice
+            x = tIceX;
+            y = tIceY;
+            PlaySE(SE_ICE_BREAK);
+            MapGridSetMetatileIdAt(x, y, METATILE_SeafoamIslands_IceHole);
+            CurrentMapDrawMetatileAt(x, y);
+            VarSet(VAR_TEMP_1, 1);
+            tState = 1;
+        }
+        break;
     }
 }
 

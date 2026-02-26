@@ -5998,28 +5998,28 @@ static void InitCursorMove(void)
 
     switch (sStorage->cursorVerticalWrap)
     {
-        default: // No wrap
-            yDistance = sStorage->cursorTargetY - sStorage->cursorSprite->y;
-            break;
-        case -1: // Wrap from top to bottom
-            yDistance = sStorage->cursorTargetY - 192 - sStorage->cursorSprite->y;
-            break;
-        case 1: // Wrap from bottom to top
-            yDistance = sStorage->cursorTargetY + 192 - sStorage->cursorSprite->y;
-            break;
+    default: // No wrap
+        yDistance = sStorage->cursorTargetY - sStorage->cursorSprite->y;
+        break;
+    case -1: // Wrap from top to bottom
+        yDistance = sStorage->cursorTargetY - 192 - sStorage->cursorSprite->y;
+        break;
+    case 1: // Wrap from bottom to top
+        yDistance = sStorage->cursorTargetY + 192 - sStorage->cursorSprite->y;
+        break;
     }
 
     switch (sStorage->cursorHorizontalWrap)
     {
-        default: // No Wrap
-            xDistance = sStorage->cursorTargetX - sStorage->cursorSprite->x;
-            break;
-        case -1: // Wrap from left to right
-            xDistance = sStorage->cursorTargetX - 192 - sStorage->cursorSprite->x;
-            break;
-        case 1: // Wrap from right to left
-            xDistance = sStorage->cursorTargetX + 192 - sStorage->cursorSprite->x;
-            break;
+    default: // No Wrap
+        xDistance = sStorage->cursorTargetX - sStorage->cursorSprite->x;
+        break;
+    case -1: // Wrap from left to right
+        xDistance = sStorage->cursorTargetX - 192 - sStorage->cursorSprite->x;
+        break;
+    case 1: // Wrap from right to left
+        xDistance = sStorage->cursorTargetX + 192 - sStorage->cursorSprite->x;
+        break;
     }
 
     yDistance <<= 8;

@@ -1598,12 +1598,12 @@ u16 copy_decompressed_tile_data_to_vram(u8 bgId, const void *src, u16 size, u16 
 {
     switch (mode)
     {
-        case 0:
-            return LoadBgTiles(bgId, src, size, offset);
-        case 1:
-            return LoadBgTilemap(bgId, src, size, offset);
-        default:
-            return -1;
+    case 0:
+        return LoadBgTiles(bgId, src, size, offset);
+    case 1:
+        return LoadBgTilemap(bgId, src, size, offset);
+    default:
+        return -1;
     }
 }
 
@@ -1860,16 +1860,16 @@ void ListMenuLoadStdPalAt(u8 palOffset, u8 palId)
 
     switch (palId)
     {
-        case 0:
-        default:
-            palette = gMenuInfoElements1_Pal;
-            break;
-        case 1:
-            palette = gMenuInfoElements2_Pal;
-            break;
-        case 2:
-            palette = gMenuInfoElements3_Pal;
-            break;
+    case 0:
+    default:
+        palette = gMenuInfoElements1_Pal;
+        break;
+    case 1:
+        palette = gMenuInfoElements2_Pal;
+        break;
+    case 2:
+        palette = gMenuInfoElements3_Pal;
+        break;
     }
 
     LoadPalette(palette, palOffset, PLTT_SIZE_4BPP);
@@ -1896,33 +1896,33 @@ void BufferSaveMenuText(u8 textId, u8 *dest, u8 color)
 
     switch (textId)
     {
-        case SAVE_MENU_NAME:
-            StringCopy(string, gSaveBlock2Ptr->playerName);
-            break;
-        case SAVE_MENU_CAUGHT:
-            if (IsNationalPokedexEnabled())
-                string = ConvertIntToDecimalStringN(string, GetNationalPokedexCount(FLAG_GET_CAUGHT), STR_CONV_MODE_LEFT_ALIGN, 4);
-            else
-                string = ConvertIntToDecimalStringN(string, GetRegionalPokedexCount(FLAG_GET_CAUGHT), STR_CONV_MODE_LEFT_ALIGN, 3);
-            *string = EOS;
-            break;
-        case SAVE_MENU_PLAY_TIME:
-            string = ConvertIntToDecimalStringN(string, gSaveBlock2Ptr->playTimeHours, STR_CONV_MODE_LEFT_ALIGN, 3);
-            *(string++) = CHAR_COLON;
-            ConvertIntToDecimalStringN(string, gSaveBlock2Ptr->playTimeMinutes, STR_CONV_MODE_LEADING_ZEROS, 2);
-            break;
-        case SAVE_MENU_LOCATION:
-            GetMapNameGeneric(string, gMapHeader.regionMapSectionId);
-            break;
-        case SAVE_MENU_BADGES:
-            for (curFlag = FLAG_BADGE01_GET, flagCount = 0, endOfString = string + 1; curFlag < FLAG_BADGE01_GET + NUM_BADGES; curFlag++)
-            {
-                if (FlagGet(curFlag))
-                    flagCount++;
-            }
-            *string = flagCount + CHAR_0;
-            *endOfString = EOS;
-            break;
+    case SAVE_MENU_NAME:
+        StringCopy(string, gSaveBlock2Ptr->playerName);
+        break;
+    case SAVE_MENU_CAUGHT:
+        if (IsNationalPokedexEnabled())
+            string = ConvertIntToDecimalStringN(string, GetNationalPokedexCount(FLAG_GET_CAUGHT), STR_CONV_MODE_LEFT_ALIGN, 4);
+        else
+            string = ConvertIntToDecimalStringN(string, GetRegionalPokedexCount(FLAG_GET_CAUGHT), STR_CONV_MODE_LEFT_ALIGN, 3);
+        *string = EOS;
+        break;
+    case SAVE_MENU_PLAY_TIME:
+        string = ConvertIntToDecimalStringN(string, gSaveBlock2Ptr->playTimeHours, STR_CONV_MODE_LEFT_ALIGN, 3);
+        *(string++) = CHAR_COLON;
+        ConvertIntToDecimalStringN(string, gSaveBlock2Ptr->playTimeMinutes, STR_CONV_MODE_LEADING_ZEROS, 2);
+        break;
+    case SAVE_MENU_LOCATION:
+        GetMapNameGeneric(string, gMapHeader.regionMapSectionId);
+        break;
+    case SAVE_MENU_BADGES:
+        for (curFlag = FLAG_BADGE01_GET, flagCount = 0, endOfString = string + 1; curFlag < FLAG_BADGE01_GET + NUM_BADGES; curFlag++)
+        {
+            if (FlagGet(curFlag))
+                flagCount++;
+        }
+        *string = flagCount + CHAR_0;
+        *endOfString = EOS;
+        break;
     }
 }
 

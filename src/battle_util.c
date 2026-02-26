@@ -10137,13 +10137,13 @@ ARM_FUNC u32 GetBattlerVolatile(enum BattlerId battler, enum Volatile _volatile)
 {
     switch (_volatile)
     {
-        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_GETTERS)
-        /* Expands to:
-        case VOLATILE_CONFUSION:
-            return gBattleMons[battler].volatiles.confusionTurns;
-        */
-        default: // Invalid volatile status
-            return 0;
+    VOLATILE_DEFINITIONS(UNPACK_VOLATILE_GETTERS)
+    /* Expands to:
+    case VOLATILE_CONFUSION:
+        return gBattleMons[battler].volatiles.confusionTurns;
+    */
+    default: // Invalid volatile status
+        return 0;
     }
 }
 
@@ -10157,11 +10157,11 @@ void SetMonVolatile(enum BattlerId battler, enum Volatile _volatile, u32 newValu
     {
         VOLATILE_DEFINITIONS(UNPACK_VOLATILE_SETTERS)
         /* Expands to:
-        case VOLATILE_CONFUSION:
+    case VOLATILE_CONFUSION:
             gBattleMons[battler].volatiles.confusionTurns = min(MAX_BITS(3), newValue);
             break;
         */
-        default: // Invalid volatile status
+    default: // Invalid volatile status
             return;
     }
 }
