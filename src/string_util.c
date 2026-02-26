@@ -843,8 +843,9 @@ bool32 DoesStringProperlyTerminate(const u8 *str, u32 last)
 
     for (u32 i = 0; i < last; i++)
     {
-        checkSum |= (str[i] == EOS) << i;
+        if (str[i] == EOS)
+            return TRUE;
     }
 
-    return (checkSum != 0);
+    return FALSE
 }
