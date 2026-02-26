@@ -157,6 +157,16 @@ Walk downstairs again.
 > PROF. BIRCH is his name.
 > He lives right next door, so you should go over and introduce yourself.
 
+
+----------------------
+INTERACTING WITH GIRL OUTSIDE TO bums PATH MAKES HER INSIST ON CATCHING POKEMON FIRST:
+BUT PLAYER just needs to enter rivals home beforehand
+
+choosing either male or female also switches  player homes position.
+
+
+
+
 ### inside PROFESSOR BIRCH's home
 Walk outside the house by walking towards the orange matt in the bottom left hand corner.
 Walk westwards to PROFESSOR BIRCH's home and enter through the front door.
