@@ -470,7 +470,7 @@ static inline bool32 MoveAlwaysHitsInHailSnow(enum Move moveId)
 static inline bool32 MoveAlwaysHitsOnSameType(enum Move moveId)
 {
     #if TESTING
-    if (moveId == MOVE_TOXIC && GetConfig(CONFIG_TOXIC_NEVER_MISS) < GEN_6)
+    if (moveId == MOVE_TOXIC && GetConfig(B_TOXIC_NEVER_MISS) < GEN_6)
        return FALSE;
     #endif
     return gMovesInfo[SanitizeMoveId(moveId)].alwaysHitsOnSameType;
@@ -479,7 +479,7 @@ static inline bool32 MoveAlwaysHitsOnSameType(enum Move moveId)
 static inline bool32 MoveHasNoEffectOnSameType(enum Move moveId)
 {
     #if TESTING
-    if (moveId == MOVE_SHEER_COLD && GetConfig(CONFIG_SHEER_COLD_IMMUNITY) < GEN_7)
+    if (moveId == MOVE_SHEER_COLD && GetConfig(B_SHEER_COLD_IMMUNITY) < GEN_7)
        return FALSE;
     #endif
     return gMovesInfo[SanitizeMoveId(moveId)].noAffectOnSameTypeTarget;

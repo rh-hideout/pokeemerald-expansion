@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Foresight fails if the target is already under its effect (G
     PARAMETRIZE { genConfig = GEN_2; }
     PARAMETRIZE { genConfig = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_FORESIGHT_FAIL, genConfig);
+        WITH_CONFIG(B_FORESIGHT_FAIL, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -101,7 +101,7 @@ SINGLE_BATTLE_TEST("Foresight doesn't fail if the target is already under its ef
     PARAMETRIZE { genConfig = GEN_3; }
     PARAMETRIZE { genConfig = GEN_4; }
     GIVEN {
-        WITH_CONFIG(CONFIG_FORESIGHT_FAIL, genConfig);
+        WITH_CONFIG(B_FORESIGHT_FAIL, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

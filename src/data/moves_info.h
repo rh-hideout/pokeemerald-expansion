@@ -22857,7 +22857,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("G-Max Centiferno"),
         .description = COMPOUND_STRING(
-            "G-max Toxtricity attack.\n"
+            "G-max Centiskorch attack.\n"
             "Traps foes in flames."),    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,

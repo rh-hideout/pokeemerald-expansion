@@ -144,6 +144,7 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn fire types")
 {
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_ARCANINE].types[0] == TYPE_FIRE || gSpeciesInfo[SPECIES_ARCANINE].types[1] == TYPE_FIRE);
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_ARCANINE);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -159,6 +160,7 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn after being used")
 {
     GIVEN {
         ASSUME(GetMovePriority(MOVE_COUNTER) < GetMovePriority(MOVE_BEAK_BLAST));
+        ASSUME(MoveMakesContact(MOVE_COUNTER));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -169,44 +171,29 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn after being used")
     }
 }
 
-DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected")
+DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Mat Block")
 {
-    u32 move;
-
-    PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
-    PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }
-    PARAMETRIZE { move = MOVE_BURNING_BULWARK; }
-    PARAMETRIZE { move = MOVE_SILK_TRAP; }
-
     GIVEN {
-        ASSUME(GetMoveEffect(move) == EFFECT_PROTECT);
-        ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
-        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) > GetMovePriority(MOVE_TRICK_ROOM));
+        ASSUME(GetMoveEffect(MOVE_MAT_BLOCK) == EFFECT_MAT_BLOCK);
+        ASSUME(GetMoveProtectMethod(MOVE_MAT_BLOCK) == PROTECT_MAT_BLOCK);
+        ASSUME(MoveMakesContact(MOVE_POUND));
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WYNAUT) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
-        TURN { MOVE(opponentLeft, move); }
-        TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft, WITH_RNG(RNG_PROTECT_FAIL, 0));
-               MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
-               MOVE(playerRight, MOVE_TRICK_ROOM);
-               MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
+        TURN {
+            MOVE(opponentRight, MOVE_MAT_BLOCK);
+            MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
+            MOVE(playerLeft, MOVE_POUND, target: opponentLeft);
+        }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
-        if (move == MOVE_SPIKY_SHIELD) {
-            HP_BAR(playerLeft);
-        } else if (move == MOVE_BANEFUL_BUNKER) {
-            STATUS_ICON(playerLeft, STATUS1_POISON);
-        } else if (move == MOVE_BURNING_BULWARK) {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAT_BLOCK, opponentRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
             STATUS_ICON(playerLeft, STATUS1_BURN);
-        } else if (move == MOVE_SILK_TRAP) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         }
-        NOT STATUS_ICON(playerLeft, STATUS1_BURN);
     }
 }
 
@@ -216,6 +203,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Quick 
         ASSUME(GetMoveEffect(MOVE_QUICK_GUARD) == EFFECT_PROTECT);
         ASSUME(GetMoveProtectMethod(MOVE_QUICK_GUARD) == PROTECT_QUICK_GUARD);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) > 0);
+        ASSUME(MoveMakesContact(MOVE_QUICK_ATTACK));
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WYNAUT) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }

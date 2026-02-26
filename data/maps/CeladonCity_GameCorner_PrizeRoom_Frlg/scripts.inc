@@ -13,7 +13,7 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_PrizeClerkMons::
 	lock
 	faceplayer
 	goto_if_unset FLAG_GOT_COIN_CASE, CeladonCity_GameCorner_PrizeRoom_EventScript_NeedCoinCase
-	showcoinsbox 0, 0
+	showcoinsbox 1, 1
 	msgbox CeladonCity_GameCorner_PrizeRoom_Text_WeExchangeCoinsForPrizes
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ChoosePrizeMon
 	end
@@ -240,7 +240,7 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_PrizeClerkTMs::
 	lock
 	faceplayer
 	goto_if_unset FLAG_GOT_COIN_CASE, CeladonCity_GameCorner_PrizeRoom_EventScript_NeedCoinCase
-	showcoinsbox 0, 0
+	showcoinsbox 1, 1
 	msgbox CeladonCity_GameCorner_PrizeRoom_Text_WeExchangeCoinsForPrizes
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ChoosePrizeTM
 	end
@@ -330,7 +330,7 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_PrizeClerkItems::
 	lock
 	faceplayer
 	goto_if_unset FLAG_GOT_COIN_CASE, CeladonCity_GameCorner_PrizeRoom_EventScript_NeedCoinCase
-	showcoinsbox 0, 0
+	showcoinsbox 1, 1
 	msgbox CeladonCity_GameCorner_PrizeRoom_Text_WeExchangeCoinsForPrizes
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ChoosePrizeItem
 	end

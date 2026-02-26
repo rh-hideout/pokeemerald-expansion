@@ -642,6 +642,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "LogicalLlama",
+      "name": "LogicalLlama",
+      "avatar_url": "https://avatars.githubusercontent.com/u/248230900?v=4",
+      "profile": "https://github.com/LogicalLlama",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,

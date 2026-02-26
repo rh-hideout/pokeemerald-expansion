@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Absorb does not play the draining message at full HP in Gen5
     PARAMETRIZE { genConfig = GEN_5; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_ABSORB_MESSAGE, genConfig);
+        WITH_CONFIG(B_ABSORB_MESSAGE, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

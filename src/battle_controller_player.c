@@ -473,6 +473,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
         }
         else
         {
+            bool32 validTarget = FALSE;
             do
             {
                 enum BattlerPosition currSelIdentity = GetBattlerPosition(gMultiUsePlayerCursor);
@@ -484,34 +485,37 @@ void HandleInputChooseTarget(enum BattlerId battler)
                 }
                 do
                 {
-                    if (--i < 0)
+                    if (i == 0)
                         i = MAX_BATTLERS_COUNT - 1;
+                    else
+                        i--;
                     gMultiUsePlayerCursor = GetBattlerAtPosition(identities[i]);
-                } while (gMultiUsePlayerCursor == gBattlersCount);
+                } while (gMultiUsePlayerCursor >= gBattlersCount);
 
-                i = 0;
                 switch (GetBattlerPosition(gMultiUsePlayerCursor))
                 {
                 case B_POSITION_PLAYER_LEFT:
                 case B_POSITION_PLAYER_RIGHT:
                     if (battler != gMultiUsePlayerCursor)
-                        i++;
+                        validTarget = TRUE;
                     break;
                 case B_POSITION_OPPONENT_LEFT:
                 case B_POSITION_OPPONENT_RIGHT:
-                    i++;
+                    validTarget = TRUE;
                     break;
                 default:
                     break;
                 }
-                if (B_SHOW_EFFECTIVENESS)
-                    MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, gMultiUsePlayerCursor), battler);
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
                  || (moveTarget == TARGET_OPPONENT && IsOnPlayerSide(gMultiUsePlayerCursor)))
-                    i = 0;
-            } while (i == 0);
+                    validTarget = FALSE;
+                
+                if (B_SHOW_EFFECTIVENESS && validTarget)
+                    MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, gMultiUsePlayerCursor), battler);
+
+            } while (!validTarget);
         }
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_ShowAsMoveTarget;
     }

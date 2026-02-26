@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Sturdy prevents OHKOs (Gen5+)")
     PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_STURDY, config);
+        WITH_CONFIG(B_STURDY, config);
         PLAYER(SPECIES_GEODUDE) { Ability(ABILITY_STURDY); MaxHP(100); HP(100); }
         PLAYER(SPECIES_GEODUDE);
         OPPONENT(SPECIES_WOBBUFFET);

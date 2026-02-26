@@ -52,6 +52,57 @@ DOUBLE_BATTLE_TEST("Instruct fails if move is banned by Instruct")
     }
 }
 
+TO_DO_BATTLE_TEST("Instruct fails if target is in the middle of Bide");
+
+DOUBLE_BATTLE_TEST("Instruct fails if target is preparing Focus Punch, Beak Blast or Shell Trap")
+{
+    u32 move, Anim;
+    PARAMETRIZE { move = MOVE_FOCUS_PUNCH; Anim = B_ANIM_FOCUS_PUNCH_SETUP; }
+    PARAMETRIZE { move = MOVE_BEAK_BLAST; Anim = B_ANIM_BEAK_BLAST_SETUP; }
+    PARAMETRIZE { move = MOVE_SHELL_TRAP; Anim = B_ANIM_SHELL_TRAP_SETUP; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
+        ASSUME(GetMoveEffect(MOVE_BEAK_BLAST) == EFFECT_BEAK_BLAST);
+        ASSUME(GetMoveEffect(MOVE_SHELL_TRAP) == EFFECT_SHELL_TRAP);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_INSTRUCT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_POUND, move); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_POUND, target: opponentLeft); }
+        TURN {
+            if (move == MOVE_SHELL_TRAP)
+                MOVE(playerRight, move);
+            else
+                MOVE(playerRight, move, target: opponentLeft);
+            MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, Anim, playerRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Instruct fails if target is picked up by Sky Drop even if one of the battlers has No Guard")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_INSTRUCT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_MACHAMP) { Speed(2); Ability(ABILITY_NO_GUARD); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_SKY_DROP, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
+        TURN { MOVE(opponentLeft, MOVE_SKY_DROP, target: playerRight); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Instruct-called move targets the target of the move picked on its last use")
 {
     GIVEN {
@@ -260,7 +311,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected and absorbed by Lightning
     PARAMETRIZE { moveTarget = opponentLeft; }
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
@@ -317,7 +368,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after inst
     PARAMETRIZE { moveTarget = opponentLeft; }
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
-        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
+        WITH_CONFIG(B_POWDER_GRASS, GEN_6);
         ASSUME(GetMoveEffect(MOVE_RAGE_POWDER) == EFFECT_FOLLOW_ME);
         ASSUME(IsPowderMove(MOVE_RAGE_POWDER) == TRUE);
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);

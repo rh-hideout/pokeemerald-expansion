@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying berries")
 SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying gems")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_INCINERATE_GEMS, GEN_6);
+        WITH_CONFIG(B_INCINERATE_GEMS, GEN_6);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INCINERATE); }
         OPPONENT(SPECIES_GASTRODON) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_GHOST_GEM); }
     } WHEN {

@@ -670,7 +670,6 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
 
 AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (gen 4)")
 {
-    KNOWN_FAILING;
     ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
     ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
@@ -717,7 +716,7 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
         ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE);
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, config);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_HEADBUTT); }

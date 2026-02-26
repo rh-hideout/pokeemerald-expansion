@@ -66,7 +66,7 @@ DOUBLE_BATTLE_TEST("Perish Song will be blocked by users Soundproof in gen3")
     PARAMETRIZE { config = GEN_5; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_CHECK_USER_FAILURE, config);
+        WITH_CONFIG(B_CHECK_USER_FAILURE, config);
         PLAYER(SPECIES_VOLTORB) { Ability(ABILITY_SOUNDPROOF); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
