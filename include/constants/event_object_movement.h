@@ -374,7 +374,7 @@
 #define COPY_MOVE_JUMP_IN_PLACE  6
 #define COPY_MOVE_JUMP           7
 #define COPY_MOVE_JUMP2          8
-#define COPY_MOVE_EMPTY_1        9
-#define COPY_MOVE_EMPTY_2       10
+#define COPY_MOVE_WALK_COLLIDE   9
+#define COPY_MOVE_UNUSED        10
 
 #endif // GUARD_CONSTANTS_EVENT_OBJECT_MOVEMENT_H
