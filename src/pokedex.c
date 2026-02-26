@@ -4245,7 +4245,7 @@ static u32 GetMeasurementTextPositions(u32 textElement)
     if (!POKEDEX_PLUS_HGSS)
         return textElement;
 
-    switch(textElement)
+    switch (textElement)
     {
         case DEX_HEADER_X:
             return (DEX_HEADER_X + DEX_HGSS_HEADER_X_PADDING);

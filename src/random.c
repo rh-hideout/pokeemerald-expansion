@@ -33,7 +33,7 @@ static void SFC32_Seed(struct Sfc32State *state, u32 seed, u8 stream)
     state->a = state->b = 0;
     state->c = seed;
     state->ctr = stream;
-    for(i = 0; i < 16; i++)
+    for (i = 0; i < 16; i++)
     {
         _SFC32_Next_Stream(state, stream);
     }

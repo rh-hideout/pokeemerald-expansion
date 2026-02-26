@@ -725,7 +725,7 @@ static void AnimZapCannonSpark_Step(struct Sprite *sprite)
         sprite->x2 += Sin(sprite->data[7], sprite->data[5]);
         sprite->y2 += Cos(sprite->data[7], sprite->data[5]);
         sprite->data[7] = (sprite->data[7] + sprite->data[6]) & 0xFF;
-        if(!(sprite->data[7] % 3))
+        if (!(sprite->data[7] % 3))
             sprite->invisible ^= 1;
     }
     else
@@ -1013,7 +1013,7 @@ static void AnimTask_ElectricChargingParticles_Step(u8 taskId)
             }
         }
     }
-    else if(task->data[7] == 0)
+    else if (task->data[7] == 0)
     {
         DestroyAnimVisualTask(taskId);
     }
@@ -1164,7 +1164,7 @@ void AnimTask_VoltTackleBolt(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
-    switch(task->data[0])
+    switch (task->data[0])
     {
     case 0:
         task->data[1] = IsOnPlayerSide(gBattleAnimAttacker) ? 1 : -1;
@@ -1237,7 +1237,7 @@ void AnimTask_VoltTackleBolt(u8 taskId)
 static bool8 CreateVoltTackleBolt(struct Task *task, u8 taskId)
 {
     u32 spriteId;
-    switch(gAnimMoveIndex)
+    switch (gAnimMoveIndex)
     {
         case MOVE_FAIRY_LOCK:
             spriteId = CreateSprite(&gFairyLockChainsSpriteTemplate, task->data[3], task->data[5] + 10, 35);

@@ -1672,7 +1672,7 @@ static void OpenSubmenu(u32 submenu, u8 taskId)
     PrintInstructionsOnWindow(data);
     SetArrowInvisibility(data);
 
-    switch(submenu)
+    switch (submenu)
     {
     case SUBMENU_SPECIES:
     case SUBMENU_ANIMS_BG:
@@ -1737,7 +1737,7 @@ static void HandleInput_PokemonSpriteVisualizer(u8 taskId)
     {
         data->isShiny = !data->isShiny;
 
-        if(data->isShiny)
+        if (data->isShiny)
             PlaySE(SE_SHINY);
 
         ReloadPokemonSprites(data);

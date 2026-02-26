@@ -6546,11 +6546,11 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 }
 
                 enum EvolutionConditions condition = evolutions[i].params[j].condition;
-                switch(condition)
+                switch (condition)
                 {
                 // Gen 2
                 case IF_GENDER:
-                    switch(evolutions[i].params[j].arg1)
+                    switch (evolutions[i].params[j].arg1)
                     {
                         case MON_MALE:   StringAppend(gStringVar4, COMPOUND_STRING("Male"));   break;
                         case MON_FEMALE: StringAppend(gStringVar4, COMPOUND_STRING("Female")); break;
@@ -6569,7 +6569,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                     StringAppend(gStringVar4, COMPOUND_STRING("Atk < Def"));
                     break;
                 case IF_TIME:
-                    switch(evolutions[i].params[j].arg1)
+                    switch (evolutions[i].params[j].arg1)
                     {
                     case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("Morning")); break;
                     case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("Day"));     break;
@@ -6578,7 +6578,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                     }
                     break;
                 case IF_NOT_TIME:
-                    switch(evolutions[i].params[j].arg1)
+                    switch (evolutions[i].params[j].arg1)
                     {
                     case TIME_MORNING: StringAppend(gStringVar4, COMPOUND_STRING("NOT Morning")); break;
                     case TIME_DAY:     StringAppend(gStringVar4, COMPOUND_STRING("NOT Day"));     break;

@@ -987,7 +987,7 @@ void ItemStorage_RefreshListMenu(void)
     u16 i;
 
     // Copy item names for all entries but the last (which is Cancel)
-    for(i = 0; i < gPlayerPCItemPageInfo.count - 1; i++)
+    for (i = 0; i < gPlayerPCItemPageInfo.count - 1; i++)
     {
         CopyItemName_PlayerPC(&sItemStorageMenu->itemNames[i][0], gSaveBlock1Ptr->pcItems[i].itemId);
         sItemStorageMenu->listItems[i].name = &sItemStorageMenu->itemNames[i][0];

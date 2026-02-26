@@ -120,7 +120,7 @@ static void GetIncomingHealInfo(enum BattlerId battler, struct IncomingHealInfo 
 u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
 {
     // Modify these cases if you want unique behaviour based on other data (trainer class, difficulty, etc.)
-    switch(shouldSwitchScenario)
+    switch (shouldSwitchScenario)
     {
         case SHOULD_SWITCH_WONDER_GUARD:
             return SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE;
@@ -923,7 +923,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
         || IsNeutralizingGasOnField())
         return FALSE;
 
-    switch(gAiLogicData->abilities[battler])
+    switch (gAiLogicData->abilities[battler])
     {
         case ABILITY_NATURAL_CURE:
             //Attempt to cure bad ailment

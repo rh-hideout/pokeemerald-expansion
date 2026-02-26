@@ -359,7 +359,7 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move)
     u32 strikeCount = GetMoveStrikeCount(move);
     if (strikeCount >= 2 && strikeCount <= 5)
     {
-        switch(GetMovePower(move))
+        switch (GetMovePower(move))
         {
             case 0 ... 25:  return MAX_POWER_TIER_2;
             case 26 ... 30: return MAX_POWER_TIER_3;
@@ -372,7 +372,7 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move)
 
     if (IsMultiHitMove(move))
     {
-        switch(GetMovePower(move))
+        switch (GetMovePower(move))
         {
             case 0 ... 15:    return MAX_POWER_TIER_1;
             case 16 ... 18:   return MAX_POWER_TIER_2;

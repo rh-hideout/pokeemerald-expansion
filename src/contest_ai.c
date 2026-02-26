@@ -343,7 +343,7 @@ static void ContestAI_DoAIProcessing(void)
 {
     while (eContestAI.aiState != CONTESTAI_FINISHED)
     {
-        switch(eContestAI.aiState)
+        switch (eContestAI.aiState)
         {
             case CONTESTAI_DO_NOT_PROCESS:
                 break;

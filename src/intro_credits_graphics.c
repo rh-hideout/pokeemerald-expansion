@@ -1050,7 +1050,7 @@ static void CreateMovingScenerySprites(bool8 hasVerticalMove, const struct Intro
 {
     u8 i;
 
-    for(i = 0; i < numSprites; i++)
+    for (i = 0; i < numSprites; i++)
     {
         u8 sprite = CreateSprite(&sSpriteTemplate_MovingScenery, metadata[i].x, metadata[i].y, metadata[i].subpriority);
         CalcCenterToCornerVec(&gSprites[sprite], metadata[i].shape, metadata[i].size, ST_OAM_AFFINE_OFF);

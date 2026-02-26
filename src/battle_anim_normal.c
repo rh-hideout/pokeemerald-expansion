@@ -289,7 +289,7 @@ static void AnimMovePowerSwapGuardSwapWait(struct Sprite *sprite)
 static void AnimMovePowerSwapGuardSwap(struct Sprite *sprite)
 {
     StartSpriteAnim(sprite, gBattleAnimArgs[2]);
-    if(gBattleAnimArgs[3] == 0)
+    if (gBattleAnimArgs[3] == 0)
     {
         InitSpritePosToAnimAttacker(sprite, TRUE);
         sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);

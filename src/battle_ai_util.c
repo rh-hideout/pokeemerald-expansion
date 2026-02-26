@@ -1922,7 +1922,7 @@ u32 AI_GetSwitchinWeather(enum BattlerId battler)
         return gBattleWeather;
 
     // Switchin will introduce new weather
-    switch(ability)
+    switch (ability)
     {
     case ABILITY_DRIZZLE:
         return B_WEATHER_RAIN_NORMAL;
@@ -1957,7 +1957,7 @@ u32 AI_GetSwitchinFieldStatus(enum BattlerId battler)
     enum Ability ability = gBattleMons[battler].ability;
     u32 startingFieldStatus = gFieldStatuses;
     // Switchin will introduce new terrain
-    switch(ability)
+    switch (ability)
     {
     case ABILITY_ELECTRIC_SURGE:
     case ABILITY_HADRON_ENGINE:
@@ -3177,7 +3177,7 @@ static inline bool32 IsMoveSleepClauseTrigger(enum Move move)
     default:
         break;
     }
-    switch(GetMoveNonVolatileStatus(move))
+    switch (GetMoveNonVolatileStatus(move))
     {
     case MOVE_EFFECT_SLEEP:
         return TRUE;
@@ -4761,7 +4761,7 @@ static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHi
 
 static enum Stat GetStatBeingChanged(enum StatChange statChange)
 {
-    switch(statChange)
+    switch (statChange)
     {
         case STAT_CHANGE_ATK:
         case STAT_CHANGE_ATK_2:
@@ -4794,7 +4794,7 @@ static enum Stat GetStatBeingChanged(enum StatChange statChange)
 
 static u32 GetStagesOfStatChange(enum StatChange statChange)
 {
-    switch(statChange)
+    switch (statChange)
     {
         case STAT_CHANGE_ATK:
         case STAT_CHANGE_DEF:

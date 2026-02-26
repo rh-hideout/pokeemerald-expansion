@@ -72,7 +72,7 @@ u32 GetConfigInternal(enum ConfigTag _genConfig)
 u32 GetClampedValue(enum ConfigTag _genConfig, u32 newValue)
 {
     u32 clampedValue = 0;
-    switch(_genConfig)
+    switch (_genConfig)
     {
         BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_CLAMPER)
         POKEMON_CONFIG_DEFINITIONS(UNPACK_CONFIG_CLAMPER)

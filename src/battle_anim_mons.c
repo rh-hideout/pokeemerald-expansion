@@ -1459,7 +1459,7 @@ void AnimSpriteOnMonPos(struct Sprite *sprite)
         else
             respectMonPicOffsets = FALSE;
 
-        switch(gBattleAnimArgs[2])
+        switch (gBattleAnimArgs[2])
         {
             case 0:
                 InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
@@ -1471,7 +1471,7 @@ void AnimSpriteOnMonPos(struct Sprite *sprite)
                 InitSpritePosToAnimAttackerPartner(sprite, respectMonPicOffsets);
                 break;
             case 3:
-                if(IsDoubleBattle())
+                if (IsDoubleBattle())
                     InitSpritePosToAnimBothTargets(sprite, respectMonPicOffsets);
                 else
                     InitSpritePosToAnimTarget(sprite, respectMonPicOffsets);
