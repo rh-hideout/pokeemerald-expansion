@@ -102,10 +102,10 @@ enum {
     MENU_TRADE1,
     MENU_TRADE2,
     MENU_LEVEL_UP_MOVES,
-	MENU_EGG_MOVES,
+    MENU_EGG_MOVES,
     MENU_TM_MOVES,
     MENU_TUTOR_MOVES,
-	MENU_SUB_MOVES,
+    MENU_SUB_MOVES,
     MENU_TOSS,
     MENU_CATALOG_BULB,
     MENU_CATALOG_OVEN,
@@ -8068,7 +8068,7 @@ void IsLastMonThatKnowsSurf(void)
 static void CursorCb_ChangeLevelUpMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
-	gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
+    gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
     gRelearnMode = RELEARN_MODE_PARTY_MENU;
     gLastViewedMonIndex = gPartyMenu.slotId;
     gSpecialVar_0x8004 = gLastViewedMonIndex;
@@ -8079,7 +8079,7 @@ static void CursorCb_ChangeLevelUpMoves(u8 taskId)
 static void CursorCb_ChangeEggMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
-	gMoveRelearnerState = MOVE_RELEARNER_EGG_MOVES;
+    gMoveRelearnerState = MOVE_RELEARNER_EGG_MOVES;
     gRelearnMode = RELEARN_MODE_PARTY_MENU;
     gLastViewedMonIndex = gPartyMenu.slotId;
     gSpecialVar_0x8004 = gLastViewedMonIndex;
@@ -8090,7 +8090,7 @@ static void CursorCb_ChangeEggMoves(u8 taskId)
 static void CursorCb_ChangeTMMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
-	gMoveRelearnerState = MOVE_RELEARNER_TM_MOVES;
+    gMoveRelearnerState = MOVE_RELEARNER_TM_MOVES;
     gRelearnMode = RELEARN_MODE_PARTY_MENU;
     gLastViewedMonIndex = gPartyMenu.slotId;
     gSpecialVar_0x8004 = gLastViewedMonIndex;
@@ -8101,7 +8101,7 @@ static void CursorCb_ChangeTMMoves(u8 taskId)
 static void CursorCb_ChangeTutorMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
-	gMoveRelearnerState = MOVE_RELEARNER_TUTOR_MOVES;
+    gMoveRelearnerState = MOVE_RELEARNER_TUTOR_MOVES;
     gRelearnMode = RELEARN_MODE_PARTY_MENU;
     gLastViewedMonIndex = gPartyMenu.slotId;
     gSpecialVar_0x8004 = gLastViewedMonIndex;

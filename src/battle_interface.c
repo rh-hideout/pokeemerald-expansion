@@ -2646,11 +2646,11 @@ static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
             xCoord += ABILITY_POP_UP_POS_X_DIFF;
 
         if (fullX == xCoord)
-	{
+        {
             sTimer = ABILITY_POP_UP_WAIT_FRAMES;
             sState = APU_STATE_IDLE;
             break;
-	}
+        }
 
         speed = sIsPlayerSide ? ABILITY_POP_UP_POS_X_SPEED : -ABILITY_POP_UP_POS_X_SPEED;
         sprite->x2 += speed;
@@ -2672,10 +2672,10 @@ static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
     case APU_STATE_SLIDE_OUT:
     {
         if (fullX == sprite->x)
-	{
+    {
             sState = APU_STATE_END;
             break;
-	}
+    }
 
         speed = sIsPlayerSide ? -ABILITY_POP_UP_POS_X_SPEED : ABILITY_POP_UP_POS_X_SPEED;
         sprite->x2 += speed;

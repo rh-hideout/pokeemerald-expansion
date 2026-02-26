@@ -6204,17 +6204,17 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     else
                         ADJUST_SCORE(BAD_EFFECT);
                 }
-				break;
+                break;
             case MOVE_EFFECT_BREAK_SCREEN:
-            	if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_REFLECT)
-            		ADJUST_SCORE(DECENT_EFFECT);
-            	if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_LIGHTSCREEN)
-            		ADJUST_SCORE(DECENT_EFFECT);
-            	if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_AURORA_VEIL)
-            		ADJUST_SCORE(DECENT_EFFECT);
-            	break;
+                if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_REFLECT)
+                    ADJUST_SCORE(DECENT_EFFECT);
+                if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_LIGHTSCREEN)
+                    ADJUST_SCORE(DECENT_EFFECT);
+                if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_AURORA_VEIL)
+                    ADJUST_SCORE(DECENT_EFFECT);
+                break;
             case MOVE_EFFECT_STEAL_STATS:
-            	ADJUST_SCORE(AI_ShouldCopyStatChanges(battlerAtk, battlerDef));
+                ADJUST_SCORE(AI_ShouldCopyStatChanges(battlerAtk, battlerDef));
                 break;
             default:
                 break;

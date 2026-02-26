@@ -1558,8 +1558,8 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
     }
     else if (gBattleMons[ctx->battlerAtk].volatiles.multipleTurns) // Second turn
     {
-    	gBattleScripting.animTurn = 1;
-    	gBattleScripting.animTargetsHit = 0;
+        gBattleScripting.animTurn = 1;
+        gBattleScripting.animTargetsHit = 0;
         gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = FALSE;
         if (gBattleMoveEffects[GetMoveEffect(ctx->move)].semiInvulnerableEffect)
             gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;

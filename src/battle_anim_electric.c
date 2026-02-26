@@ -1548,40 +1548,40 @@ static void AnimIon_Step(struct Sprite *sprite)
 //arg 5: wave amplitude
 static void VoltSwitch_Step(struct Sprite* sprite)
 {
-	sprite->invisible = FALSE;
+    sprite->invisible = FALSE;
 
-	if (TranslateAnimHorizontalArc(sprite))
-	{
-		//Merge coords into one
-		sprite->x += sprite->x2;
-		sprite->y += sprite->y2;
-		sprite->x2 = 0;
-		sprite->y2 = 0;
+    if (TranslateAnimHorizontalArc(sprite))
+    {
+        //Merge coords into one
+        sprite->x += sprite->x2;
+        sprite->y += sprite->y2;
+        sprite->x2 = 0;
+        sprite->y2 = 0;
 
-		//Come straight back to the attacker
-		sprite->data[0] = 0x14; //Duration
-		sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
-		sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+        //Come straight back to the attacker
+        sprite->data[0] = 0x14; //Duration
+        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
 
-		sprite->callback = StartAnimLinearTranslation;
-		StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-	}
+        sprite->callback = StartAnimLinearTranslation;
+        StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
+    }
 }
 
 void AnimTask_VoltSwitch(struct Sprite* sprite)
 {
-	InitSpritePosToAnimAttacker(sprite, FALSE);
+    InitSpritePosToAnimAttacker(sprite, FALSE);
 
-	if (!IsOnPlayerSide(gBattleAnimAttacker))
-		gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-	else
-		sprite->y += 10; //Move slightly down
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
+        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+    else
+        sprite->y += 10; //Move slightly down
 
-	sprite->data[0] = gBattleAnimArgs[4];
-	sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2]; //Target X
-	sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3]; //Target Y
-	sprite->data[5] = gBattleAnimArgs[5];
-	InitAnimArcTranslation(sprite);
+    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2]; //Target X
+    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3]; //Target Y
+    sprite->data[5] = gBattleAnimArgs[5];
+    InitAnimArcTranslation(sprite);
 
-	sprite->callback = VoltSwitch_Step;
+    sprite->callback = VoltSwitch_Step;
 }

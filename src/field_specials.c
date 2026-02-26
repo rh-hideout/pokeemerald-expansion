@@ -2672,14 +2672,14 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
     },
     [SCROLL_MULTI_BADGES] =
     {
-		gText_Boulderbadge,
-		gText_Cascadebadge,
-		gText_Thunderbadge,
-		gText_Rainbowbadge,
-		gText_Soulbadge,
-		gText_Marshbadge,
-		gText_Volcanobadge,
-		gText_Earthbadge,
+        gText_Boulderbadge,
+        gText_Cascadebadge,
+        gText_Thunderbadge,
+        gText_Rainbowbadge,
+        gText_Soulbadge,
+        gText_Marshbadge,
+        gText_Volcanobadge,
+        gText_Earthbadge,
         gText_Exit,
     },
     [SCROLL_MULTI_SILPHCO_FLOORS] =

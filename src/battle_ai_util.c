@@ -4333,9 +4333,9 @@ static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move)
             break;
         case MOVE_EFFECT_GRAVITY:
             aiEffect |= AI_EFFECT_GRAVITY;
-			break;
+            break;
         case MOVE_EFFECT_BREAK_SCREEN:
-        	aiEffect |= AI_EFFECT_BREAK_SCREENS;
+            aiEffect |= AI_EFFECT_BREAK_SCREENS;
             break;
         default:
             break;
