@@ -620,7 +620,6 @@ static void Task_BardSong(u8 taskId)
         break;
     case BARD_STATE_GET_WORD:
     {
-        struct MauvilleManBard *bard = &gSaveBlock1Ptr->oldMan.bard;
         u8 *str = &gStringVar4[task->tCharIndex];
         u16 wordLen = 0;
 
