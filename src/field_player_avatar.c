@@ -1337,7 +1337,7 @@ void PlayerOnBikeCollideWithFarawayIslandMew(enum Direction direction)
 static void PlayerNotOnBikeCollide(enum Direction direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);
-    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_WALK_COLLIDE);
+    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_WALK_COLLIDE_SLOW);
 }
 
 static void PlayerNotOnBikeCollideWithFarawayIslandMew(enum Direction direction)
