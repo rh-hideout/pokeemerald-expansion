@@ -4887,31 +4887,18 @@ static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum 
         break;
     case STAT_DEF:
     {
-        enum AIScore defenseScore = NO_INCREASE;
-        enum AIScore bodyPressScore = NO_INCREASE;
+        bool32 defRelevant = (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL) || !HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));
+        bool32 bodyPressCheck = (HasMoveWithEffect(battlerAtk, EFFECT_BODY_PRESS) && !(gFieldStatuses & STATUS_FIELD_WONDER_ROOM) && shouldSetUp);
 
-        if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL) || !HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL))
+        if (defRelevant || bodyPressCheck)
         {
-            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_STALL)
-                defenseScore += WEAK_EFFECT;
+            if (defRelevant && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_STALL))
+                tempScore += WEAK_EFFECT;
             if (stages == 1)
-                defenseScore += WEAK_EFFECT;
+                tempScore += bodyPressCheck ? DECENT_EFFECT : WEAK_EFFECT;
             else
-                defenseScore += DECENT_EFFECT;
+                tempScore += bodyPressCheck ? GOOD_EFFECT : DECENT_EFFECT;
         }
-
-        if (HasMoveWithEffect(battlerAtk, EFFECT_BODY_PRESS) && !(gFieldStatuses & STATUS_FIELD_WONDER_ROOM) && shouldSetUp)
-        {
-            if (stages == 1)
-                bodyPressScore += DECENT_EFFECT;
-            else
-                bodyPressScore += GOOD_EFFECT;
-        }
-
-        if (bodyPressScore > defenseScore)
-            defenseScore = bodyPressScore;
-
-        tempScore += defenseScore;
         break;
     }
     case STAT_SPEED:
@@ -4934,32 +4921,19 @@ static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum 
         break;
     case STAT_SPDEF:
     {
-        enum AIScore spDefScore = NO_INCREASE;
-        enum AIScore bodyPressScore = NO_INCREASE;
-
-        if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL) || !HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
-        {
-            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_STALL)
-                spDefScore += WEAK_EFFECT;
-            if (stages == 1)
-                spDefScore += WEAK_EFFECT;
-            else
-                spDefScore += DECENT_EFFECT;
-        }
-
+        bool32 spDefRelevant = (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL) || !HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL));
         // Wonder Room makes Body Press use Sp. Def stages for its damage calculation.
-        if (HasMoveWithEffect(battlerAtk, EFFECT_BODY_PRESS) && (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) && shouldSetUp)
+        bool32 bodyPressCheck = (HasMoveWithEffect(battlerAtk, EFFECT_BODY_PRESS) && (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) && shouldSetUp);
+
+        if (spDefRelevant || bodyPressCheck)
         {
+            if (spDefRelevant && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_STALL))
+                tempScore += WEAK_EFFECT;
             if (stages == 1)
-                bodyPressScore += DECENT_EFFECT;
+                tempScore += bodyPressCheck ? DECENT_EFFECT : WEAK_EFFECT;
             else
-                bodyPressScore += GOOD_EFFECT;
+                tempScore += bodyPressCheck ? GOOD_EFFECT : DECENT_EFFECT;
         }
-
-        if (bodyPressScore > spDefScore)
-            spDefScore = bodyPressScore;
-
-        tempScore += spDefScore;
         break;
     }
     case STAT_ACC:
