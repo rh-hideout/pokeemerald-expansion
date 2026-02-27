@@ -2571,11 +2571,11 @@ static bool32 CanMoveIndexHitAnyOpponent(enum BattlerId battler, u32 moveIndex, 
     return FALSE;
 }
 
-bool32 ShouldBeatUpForJustified(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Move move, enum Type moveType, bool32 wouldPartnerFaint, bool32 partnerProtecting, struct AiLogicData *aiData)
+bool32 ShouldBeatUpForJustified(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Move move, enum Type moveType, bool32 wouldPartnerFaint, struct AiLogicData *aiData)
 {
     enum Ability atkPartnerAbility = aiData->abilities[battlerAtkPartner];
 
-    if (partnerProtecting || gBattleMons[battlerAtkPartner].volatiles.substitute)
+    if (gBattleMons[battlerAtkPartner].volatiles.substitute)
         return FALSE;
 
     return (atkPartnerAbility == ABILITY_JUSTIFIED
@@ -2587,11 +2587,11 @@ bool32 ShouldBeatUpForJustified(enum BattlerId battlerAtk, enum BattlerId battle
          && !wouldPartnerFaint);
 }
 
-bool32 ShouldBeatUpForRageFist(enum BattlerId battlerAtkPartner, enum Move move, bool32 wouldPartnerFaint, bool32 partnerProtecting, struct AiLogicData *aiData)
+bool32 ShouldBeatUpForRageFist(enum BattlerId battlerAtkPartner, enum Move move, bool32 wouldPartnerFaint, struct AiLogicData *aiData)
 {
     u32 rageFistMoveIndex = GetUsableMoveIndexWithEffect(battlerAtkPartner, EFFECT_RAGE_FIST, aiData->moveLimitations[battlerAtkPartner]);
 
-    if (partnerProtecting || gBattleMons[battlerAtkPartner].volatiles.substitute)
+    if (gBattleMons[battlerAtkPartner].volatiles.substitute)
         return FALSE;
 
     return (rageFistMoveIndex != MAX_MON_MOVES
