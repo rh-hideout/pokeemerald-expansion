@@ -142,7 +142,7 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
             COMPOUND_STRING("My DOME ACE title isn't just for show!") //Gold
         },
         .battledBit = {1 << 2, 1 << 3},
-        .streakAppearances = {1, 2, 5, 0},
+        .streakAppearances = {4, 9, 5, 0},
     },
     [FRONTIER_FACILITY_PALACE] =
     {

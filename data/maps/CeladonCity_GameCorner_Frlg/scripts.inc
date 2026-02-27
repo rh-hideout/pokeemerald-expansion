@@ -22,7 +22,7 @@ CeladonCity_GameCorner_EventScript_CoinsClerk::
 	lock
 	faceplayer
 	showmoneybox 0, 0
-	showcoinsbox 0, 5
+	showcoinsbox 1, 6
 	message CeladonCity_GameCorner_Text_WelcomeBuySomeCoins
 	waitmessage
 	multichoice 13, 0, MULTI_GAME_CORNER_COIN_PURCHASE_COUNTER, FALSE

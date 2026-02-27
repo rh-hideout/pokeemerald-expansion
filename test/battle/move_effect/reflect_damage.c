@@ -112,7 +112,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Counter ignores ally Pokémon's attack from 
     PARAMETRIZE { config = GEN_5; }
     PARAMETRIZE { config = GEN_4; }
     GIVEN {
-        WITH_CONFIG(CONFIG_COUNTER_MIRROR_COAT_ALLY, config);
+        WITH_CONFIG(B_COUNTER_MIRROR_COAT_ALLY, config);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -190,7 +190,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Counter respects Follow me")
 DOUBLE_BATTLE_TEST("Reflect Damage: Counter fails if mon that damaged Counter user is no longer on the field (Gen 1-4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_COUNTER_TRY_HIT_PARTNER, GEN_4);
+        WITH_CONFIG(B_COUNTER_TRY_HIT_PARTNER, GEN_4);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
@@ -250,7 +250,7 @@ SINGLE_BATTLE_TEST("Reflect Damage: Counter works when surviving OHKO move with 
 {
     s16 counterDmg;
     GIVEN {
-        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_8);
+        WITH_CONFIG(B_DISGUISE_HP_LOSS, GEN_8);
         ASSUME(GetMoveCategory(MOVE_FISSURE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); MaxHP(64); HP(64);};
         OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
@@ -306,7 +306,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Mirror Coat ignores ally Pokémon's attack f
     PARAMETRIZE { config = GEN_5; }
     PARAMETRIZE { config = GEN_4; }
     GIVEN {
-        WITH_CONFIG(CONFIG_COUNTER_MIRROR_COAT_ALLY, config);
+        WITH_CONFIG(B_COUNTER_MIRROR_COAT_ALLY, config);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -384,7 +384,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Mirror Coat respects Follow Me")
 DOUBLE_BATTLE_TEST("Reflect Damage: Mirror Coat fails if mon that damaged Mirror Coat user is no longer on the field (Gen 1-4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_COUNTER_TRY_HIT_PARTNER, GEN_4);
+        WITH_CONFIG(B_COUNTER_TRY_HIT_PARTNER, GEN_4);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
@@ -444,7 +444,7 @@ SINGLE_BATTLE_TEST("Reflect Damage: Mirror Coat works when surviving OHKO move w
 {
     s16 mirrorCoatDmg;
     GIVEN {
-        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_8);
+        WITH_CONFIG(B_DISGUISE_HP_LOSS, GEN_8);
         ASSUME(GetMoveCategory(MOVE_SHEER_COLD) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); MaxHP(64); HP(64);};
         OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
@@ -484,7 +484,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Metal Burst ignores ally Pokémon's attack f
     PARAMETRIZE { config = GEN_5; }
     PARAMETRIZE { config = GEN_4; }
     GIVEN {
-        WITH_CONFIG(CONFIG_COUNTER_MIRROR_COAT_ALLY, config);
+        WITH_CONFIG(B_COUNTER_MIRROR_COAT_ALLY, config);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -562,7 +562,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Metal Burst respects Follow Me")
 DOUBLE_BATTLE_TEST("Reflect Damage: Metal Burst fails if mon that damaged Metal Burst user is no longer on the field (Gen 1-4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_COUNTER_TRY_HIT_PARTNER, GEN_4);
+        WITH_CONFIG(B_COUNTER_TRY_HIT_PARTNER, GEN_4);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
@@ -620,7 +620,7 @@ SINGLE_BATTLE_TEST("Reflect Damage: Metal Burst works when surviving OHKO move w
 {
     s16 metalBurstDmg;
     GIVEN {
-        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_8);
+        WITH_CONFIG(B_DISGUISE_HP_LOSS, GEN_8);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); MaxHP(64); HP(64);};
         OPPONENT(SPECIES_WOBBUFFET) {MaxHP(500); HP(500);};
     } WHEN {

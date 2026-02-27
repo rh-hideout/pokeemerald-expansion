@@ -4,7 +4,7 @@
 #include "constants/generational_changes.h"
 #include "config/pokerus.h"
 
-#define UNPACK_BATTLE_CONFIG_GEN_CHANGES(_name, _field, ...) ._field = B_##_name,
+#define UNPACK_BATTLE_CONFIG_GEN_CHANGES(_name, _field, ...) ._field = _name,
 #define UNPACK_POKEMON_CONFIG_GEN_CHANGES(_name, _field, ...) ._field = P_##_name,
 
 const struct GenChanges sConfigChanges =
@@ -32,7 +32,9 @@ EWRAM_DATA struct GenChanges *gConfigChangesTestOverride = NULL;
 #define UNPACK_CONFIG_SETTERS(_name, _field, ...) case CONFIG_##_name: return;
 #endif
 
-u32 GetConfig(enum ConfigTag _genConfig)
+// Gets the value of a volatile status flag for a certain battler
+// Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
+u32 GetConfigInternal(enum ConfigTag _genConfig)
 {
 #if TESTING
     if (gConfigChangesTestOverride == NULL)

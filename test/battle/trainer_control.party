@@ -14,7 +14,7 @@ IVs: 25 HP / 26 Atk / 27 Def / 29 SpA / 30 SpD / 28 Spe
 EVs: 252 HP / 4 SpA / 252 Spe
 Happiness: 42
 Shiny: Yes
-Ball: Master Ball
+Ball: Master
 Dynamax Level: 5
 - Air Slash
 - Barrier
@@ -239,3 +239,24 @@ Party Size: 2
 Wynaut
 
 Wobbuffet
+
+=== 11 ===
+Name: Test11
+Class: Black Belt
+Pic: Red
+Gender: Male
+Music: Male
+Battle Type: Singles
+Party Size: 6
+
+Wynaut
+
+Wobbuffet
+
+Eevee
+
+Mew
+
+Oddish
+
+Aron

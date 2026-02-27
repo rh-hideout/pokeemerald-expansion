@@ -309,7 +309,7 @@
  * of `enum ConfigTag`
  * Example:
  *     GIVEN {
- *         WITH_CONFIG(CONFIG_GALE_WINGS, GEN_6);
+ *         WITH_CONFIG(B_GALE_WINGS, GEN_6);
  *     }
  * The `value` may be inferred from a local variable, e.g. set by
  * PARAMETRIZE.
@@ -1012,7 +1012,7 @@ struct moveWithPP {
 
 #define FLAG_SET(flagId) SetFlagForTest(__LINE__, flagId)
 #define VAR_SET(varId, value) SetVarForTest(__LINE__, varId, value)
-#define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, configTag, value)
+#define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, CONFIG_##configTag, value)
 
 #define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 #define OPPONENT(species) for (OpenPokemon(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))

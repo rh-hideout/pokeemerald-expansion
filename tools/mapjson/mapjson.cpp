@@ -27,7 +27,11 @@ using std::numeric_limits;
 #include "json11.h"
 using json11::Json;
 
+#include <regex>
+
 #include "mapjson.h"
+
+#include <filesystem>
 
 string version;
 // System directory separator
@@ -185,17 +189,35 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     return text.str();
 }
 
+vector<string> get_existing_maps() {
+    vector<string> v = {};
+    string map_constants = read_text_file("include/constants/map_groups.h");
+
+    std::regex map_regex("(MAP_\\w+)\\s+=\\s+\\(\\d+");
+
+    for (std::smatch sm; regex_search(map_constants, sm, map_regex);)
+    {
+        v.push_back(sm[1]);
+        map_constants = sm.suffix();
+    }
+    return v;
+}
+
 string generate_map_connections_text(Json map_data) {
     if (map_data["connections"] == Json())
         return string("\n");
 
     string mapName = json_to_string(map_data, "name");
 
+    vector<string> existing_maps = get_existing_maps();
     ostringstream text;
     text << get_generated_warning("data/maps/" + mapName + "/map.json", true);
     text << mapName << "_MapConnectionsList:\n";
 
     for (auto &connection : map_data["connections"].array_items()) {
+        auto it = find(existing_maps.begin(), existing_maps.end(), json_to_string(connection, "map"));
+        if (it == existing_maps.end())
+            continue;
         text << "\tconnection "
              << json_to_string(connection, "direction") << ", "
              << json_to_string(connection, "offset") << ", "
@@ -557,7 +579,18 @@ string generate_events_text(Json groups_data, vector<string> &invalid_maps, stri
     return text.str();
 }
 
-string generate_map_constants_text(string groups_filepath, Json groups_data) {
+Json parse_required_map_defines(void) {
+    string json_err;
+
+    string json_text = read_text_file("tools/mapjson/required_map_defines.json");
+
+    Json json_data = Json::parse(json_text, json_err);
+    if (json_data == Json())
+        FATAL_ERROR("%s\n", json_err.c_str());
+    return json_data;
+}
+
+string generate_map_constants_text(string groups_filepath, Json groups_data, vector<string> &valid_map_ids) {
     string file_dir = file_parent(groups_filepath) + sep;
 
     string guard_name = "CONSTANTS_MAP_GROUPS";
@@ -572,7 +605,6 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
 
     int group_num = 0;
     vector<int> map_count_vec; //DEBUG
-
     for (auto &group : groups_data["group_order"].array_items()) {
         string groupName = json_to_string(group);
         text << "    // " << groupName << "\n";
@@ -589,6 +621,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
                 FATAL_ERROR("%s: %s\n", map_filepath.c_str(), err_str.c_str());
             string id = json_to_string(map_data, "id", true);
             map_ids.push_back(id);
+            valid_map_ids.push_back(id);
             if (id.length() > max_length)
                 max_length = id.length();
             map_count++; //DEBUG
@@ -599,6 +632,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
             text << "    " << map_id << string(max_length - map_id.length(), ' ')
                  << " = (" << map_id_num++ << " | (" << group_num << " << 8)),\n";
         }
+
         text << "\n";
 
         group_num++;
@@ -606,6 +640,28 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
     }
 
     text << "};\n\n";
+
+    text << "//Constants for unused maps\n";
+    int map_id_num = 0;
+    int old_map_group = -1;
+    Json required_map_defines = parse_required_map_defines();
+    for (auto required_map_id : required_map_defines["required_maps"].array_items()) {
+        string map_id = json_to_string(required_map_id[0]);
+        auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map_id);
+        int current_map_group = required_map_id[1].int_value();
+        if (it == valid_map_ids.end()) {
+            text << "#define " << map_id << string(50 - map_id.length(), ' ')
+                 //<< "(" << map_id_num << " | (" << json_to_string(required_map_id[1]) << " << 8)),\n";
+                 << (map_id_num + 256 * current_map_group) << "\n";
+        }
+        if (old_map_group != current_map_group) {
+            map_id_num = 0;
+        } else {
+            map_id_num++;
+        }
+        old_map_group = current_map_group;
+
+    }
 
     text << "#define MAP_GROUPS_COUNT " << group_num << "\n\n";
     text << get_include_guard_end(guard_name);
@@ -621,6 +677,34 @@ string generate_map_constants_text(string groups_filepath, Json groups_data) {
     return text.str();
 }
 
+void clean_heal_locations(vector<string> &valid_map_ids)
+{
+    std::stringstream new_json;
+    std::ifstream infile("src/data/heal_locations.json");
+    bool deleted_flag = false;
+
+    std::regex map_regex("\"respawn_map\"\\s*:\\s*\"(MAP_\\w+)\"");
+    std::regex npc_regex("LOCALID_\\w+");
+    std::smatch map_match;
+    string line;
+    while (std::getline(infile, line))
+    {
+        if (std::regex_search(line, map_match, map_regex) && !deleted_flag) {
+            auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map_match[1]);
+            if (it == valid_map_ids.end())
+                deleted_flag = true;
+        }
+        if (deleted_flag && std::regex_search(line, npc_regex)) {
+            deleted_flag = false;
+            new_json << std::regex_replace(line, npc_regex, "0") << "\n";
+        } else {
+            new_json << line << "\n";
+        }
+    }
+
+    write_text_file("src/data/heal_locations.json", new_json.str());
+}
+
 // Output paths are directories with trailing path separators
 void process_groups(string groups_filepath, vector<string> &map_filepaths, string output_asm, string output_c) {
     output_asm = strip_trailing_separator(output_asm); // Remove separator if existing.
@@ -629,6 +713,7 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     string err;
     Json groups_data = Json::parse(read_text_file(groups_filepath), err);
     vector<string> invalid_maps;
+    vector<string> valid_map_ids;
 
     for (const string &filepath : map_filepaths) {
         string err;
@@ -657,8 +742,9 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm);
     string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm);
     string events_text = generate_events_text(groups_data, invalid_maps, output_asm);
-    string map_header_text = generate_map_constants_text(groups_filepath, groups_data);
+    string map_header_text = generate_map_constants_text(groups_filepath, groups_data, valid_map_ids);
 
+    clean_heal_locations(valid_map_ids);
     write_text_file(output_asm + sep + "groups.inc", groups_text);
     write_text_file(output_asm + sep + "connections.inc", connections_text);
     write_text_file(output_asm + sep + "headers.inc", headers_text);
@@ -673,6 +759,8 @@ string generate_layout_headers_text(Json layouts_data) {
 
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (layout == Json::object()) continue;
+        if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
+            continue;
         string layout_version = json_to_string(layout, "layout_version");
         if ((version == "emerald" && layout_version != "emerald")
          || (version == "firered" && layout_version != "frlg"))
@@ -723,6 +811,8 @@ string generate_layouts_table_text(Json layouts_data) {
          << json_to_string(layouts_data, "layouts_table_label") << "::\n";
 
     for (auto &layout : layouts_data["layouts"].array_items()) {
+        if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
+            continue;
         string layout_version = json_to_string(layout, "layout_version");
         if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg")) {
             text << "\t.4byte NULL\n";
@@ -736,19 +826,54 @@ string generate_layouts_table_text(Json layouts_data) {
     return text.str();
 }
 
+vector<string> parse_required_layout_defines()
+{
+    vector<string> v;
+    string json_err;
+
+    string json_text = read_text_file("tools/mapjson/required_map_defines.json");
+
+    Json json_data = Json::parse(json_text, json_err);
+    if (json_data == Json())
+        FATAL_ERROR("%s\n", json_err.c_str());
+
+    for (auto required_layout : json_data["required_layouts"].array_items()) {
+        v.push_back(json_to_string(required_layout));
+    }
+
+    return v;
+}
 string generate_layouts_constants_text(Json layouts_data) {
     string guard_name = "CONSTANTS_LAYOUTS";
     ostringstream text;
+    vector<string> defined_layouts;
     text << get_include_guard_start(guard_name) << get_generated_warning("data/layouts/layouts.json", false);
 
     int i = 1;
     for (auto &layout : layouts_data["layouts"].array_items()) {
+        if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
+            continue;
         if (layout != Json::object())
+        {
             text << "#define " << json_to_string(layout, "id") << " " << i << "\n";
+            defined_layouts.push_back(json_to_string(layout, "id"));
+        }
         i++;
     }
 
-    text << get_include_guard_end(guard_name);
+    text << "\n//Constants for unused layouts\n";
+    vector<string> required_layout_defines = parse_required_layout_defines();
+    for (auto &layout : required_layout_defines) {
+        auto it = find(defined_layouts.begin(), defined_layouts.end(), layout);
+        if (it == defined_layouts.end()) {
+            text << "#define " << layout << string(50 - layout.length(), ' ')
+                 //<< "(" << map_id_num << " | (" << json_to_string(required_map_id[1]) << " << 8)),\n";
+                 << "0xFFFF\n";
+        }
+
+    }
+
+    text << "\n" << get_include_guard_end(guard_name);
 
     return text.str();
 }
