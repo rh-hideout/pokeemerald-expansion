@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Pecha and Lum Berries cure poison")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_POWDER, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, poison: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, poison: FALSE);
     }
 }
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Pecha and Lum Berries cure bad poison")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, badPoison: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, badPoison: FALSE);
     }
 }
@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Rawst and Lum Berries cure burn")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
         STATUS_ICON(opponent, burn: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, burn: FALSE);
     }
 }
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Aspear and Lum Berries cure freeze or frostbite")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_PUNCH, player);
         ANIMATION(ANIM_TYPE_STATUS, (B_USE_FROSTBITE ? B_ANIM_STATUS_FRB : B_ANIM_STATUS_FRZ), opponent);
         FREEZE_OR_FROSTBURN_STATUS(opponent, TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         FREEZE_OR_FROSTBURN_STATUS(opponent, FALSE);
     }
 }
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Chesto and Lum Berries cure sleep")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPNOSIS, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         STATUS_ICON(opponent, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, sleep: FALSE);
     }
 }
@@ -130,7 +130,7 @@ SINGLE_BATTLE_TEST("Chesto Berry cures sleep when Yawn takes effect")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_YAWN, opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
         STATUS_ICON(player, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         STATUS_ICON(player, sleep: FALSE);
     }
 }
@@ -150,7 +150,7 @@ SINGLE_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comat
     } WHEN {
         TURN { }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     } THEN {
         EXPECT_EQ(opponent->item, item);
     }
@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Cheri and Lum Berries cure paralysis")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
         STATUS_ICON(opponent, paralysis: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, paralysis: FALSE);
     }
 }
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Perism and Lum Berries cure confusion")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -221,8 +221,8 @@ SINGLE_BATTLE_TEST("Berry hold effect cures status if a Pokémon enters a battle
     } WHEN {
         TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -251,7 +251,7 @@ SINGLE_BATTLE_TEST("Opponent Pokemon can be further poisoned with Toxic spikes a
         MESSAGE("2 sent out Wynaut!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, poison: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         if (item == ITEM_PECHA_BERRY) {
             MESSAGE("The opposing Wynaut's Pecha Berry cured its poison!");
         } else {
@@ -292,7 +292,7 @@ SINGLE_BATTLE_TEST("Player Pokemon can be further poisoned with Toxic spikes aft
         SEND_IN_MESSAGE("Wobbuffet");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, poison: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         if (item == ITEM_PECHA_BERRY) {
             MESSAGE("Wobbuffet's Pecha Berry cured its poison!");
         } else {
@@ -350,7 +350,7 @@ SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by a non-volatil
         TURN { MOVE(opponent, MOVE_CONFUSE_RAY); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, 0)); }
         TURN { MOVE(opponent, MOVE_SWITCHEROO); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         MESSAGE("Wobbuffet's Lum Berry normalized its status!");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);

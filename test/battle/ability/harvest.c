@@ -234,9 +234,9 @@ SINGLE_BATTLE_TEST("Harvest can restore a Berry that was transferred from anothe
         TURN { MOVE(opponent, MOVE_TRICK); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         ABILITY_POPUP(opponent, ABILITY_HARVEST);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     } THEN {
         EXPECT_GT(opponent->hp, opponent->maxHP / 2); // eats 2 Sitrus
     }
@@ -252,11 +252,11 @@ SINGLE_BATTLE_TEST("Harvest can only restore the newest berry consumed that was 
     } WHEN {
         TURN { MOVE(opponent, MOVE_TRICK); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         ABILITY_POPUP(opponent, ABILITY_HARVEST);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     } THEN {
         EXPECT_GT(opponent->hp, opponent->maxHP / 2); // eats 2 Sitrus
     }
