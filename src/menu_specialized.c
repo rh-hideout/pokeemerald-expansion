@@ -704,7 +704,7 @@ void ConditionGraph_CalcPositions(u8 *conditions, struct UCoords16 *positions)
 // Move relearner
 //----------------
 
-void InitMoveRelearnerWindows(bool8 useContestWindow)
+void InitMoveRelearnerWindows(bool32 useContestWindow)
 {
     u8 i;
 
@@ -717,15 +717,10 @@ void InitMoveRelearnerWindows(bool8 useContestWindow)
         FillWindowPixelBuffer(i, PIXEL_FILL(1));
 
     if (!useContestWindow)
-    {
-        PutWindowTilemap(RELEARNERWIN_DESC_BATTLE);
         DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_DESC_BATTLE, FALSE, 0x1, 0xE);
-    }
     else
-    {
-        PutWindowTilemap(RELEARNERWIN_DESC_CONTEST);
         DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_DESC_CONTEST, FALSE, 1, 0xE);
-    }
+
     PutWindowTilemap(RELEARNERWIN_MOVE_LIST);
     PutWindowTilemap(RELEARNERWIN_MSG);
     DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_MOVE_LIST, FALSE, 1, 0xE);
@@ -864,12 +859,6 @@ void MoveRelearnerPrintMessage(u8 *str)
     gTextFlags.canABSpeedUpPrint = TRUE;
     speed = GetPlayerTextSpeedDelay();
     AddTextPrinterParameterized2(RELEARNERWIN_MSG, FONT_NORMAL, str, speed, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, 3);
-}
-
-bool16 MoveRelearnerRunTextPrinters(void)
-{
-    RunTextPrinters();
-    return IsTextPrinterActiveOnWindow(RELEARNERWIN_MSG);
 }
 
 void MoveRelearnerCreateYesNoMenu(void)

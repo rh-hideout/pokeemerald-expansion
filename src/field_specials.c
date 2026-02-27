@@ -4509,6 +4509,7 @@ static void UIEndTask(u8 taskId)
 #define tState         data[0]
 #define tPartyIndex    data[1]
 #define tMove          data[2]
+#define tRecoverPp     data[3]
 
 static void UIShowMoveList(u8 taskId)
 {
@@ -4547,6 +4548,7 @@ void CanTeachMoveBoxMon(void)
     gTasks[taskId].tState = GetLearnMoveStartState();
     gTasks[taskId].tPartyIndex = gSpecialVar_0x8004;
     gTasks[taskId].tMove = gSpecialVar_0x8005;
+    gTasks[taskId].tRecoverPp = TRUE;
 }
 
 static void FieldCB_ContinueLearningMove(void)

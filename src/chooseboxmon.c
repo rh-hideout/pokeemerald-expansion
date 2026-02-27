@@ -38,7 +38,7 @@ static u32 NoFilter(struct BoxPokemon *boxmon);
 static u32 IsNotEgg(struct BoxPokemon *boxmon);
 static u32 IsMatchingSpecies(struct BoxPokemon *boxmon);
 static u32 CanMonDeleteMove(struct BoxPokemon *boxmon);
-static u32 CanMonLearnMove(struct BoxPokemon *boxmon);
+static u32 CanMonLearnSpecialVarMove(struct BoxPokemon *boxmon);
 static u32 CanRelearnMoves(struct BoxPokemon *boxmon);
 
 static const struct PcMonSelection sPcMonSelectionTypes[] =
@@ -46,7 +46,7 @@ static const struct PcMonSelection sPcMonSelectionTypes[] =
     [SELECT_PC_MON_NORMAL] = {ChoosePartyMon, NoFilter, NULL, FALSE},
     [SELECT_PC_MON_TRADE] = {ChoosePartyMon, IsMatchingSpecies, NULL, FALSE},
     [SELECT_PC_MON_DAYCARE] = {ChooseSendDaycareMon, IsNotEgg, NULL, TRUE},
-    [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, CanMonLearnMove, MoveTutor_AfterChooseBoxMon, FALSE},
+    [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, CanMonLearnSpecialVarMove, MoveTutor_AfterChooseBoxMon, FALSE},
     [SELECT_PC_MON_MOVE_DELETER] = {ChoosePartyMon, CanMonDeleteMove, NULL, FALSE},
     [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, CanRelearnMoves, NULL, FALSE}
 };
@@ -65,9 +65,10 @@ static u32 IsNotEgg(struct BoxPokemon *boxmon)
 
 static u32 CanRelearnMoves(struct BoxPokemon *boxmon)
 {
+    gRelearnMode = RELEARN_MODE_SCRIPT;
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return INVALID_MON;
-    if (CanBoxMonRelearnMoves(boxmon, gMoveRelearnerState))
+    if (HasMoveToRelearn(boxmon, gMoveRelearnerState))
         return VALID_MON;
     return INVALID_MON;
 }
@@ -88,15 +89,20 @@ static u32 CanMonDeleteMove(struct BoxPokemon *boxmon)
     return VALID_MON;
 }
 
-static u32 CanMonLearnMove(struct BoxPokemon *boxmon)
+static u32 CanMonLearnMove(struct BoxPokemon *boxmon, enum Move move)
 {
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return CANNOT_LEARN_MOVE_IS_EGG;
-    if (BoxMonKnowsMove(boxmon, gSpecialVar_0x8005))
+    if (BoxMonKnowsMove(boxmon, move))
         return ALREADY_KNOWS_MOVE;
-    if (CanLearnTeachableMove(GetBoxMonData(boxmon, MON_DATA_SPECIES), gSpecialVar_0x8005))
+    if (CanLearnTeachableMove(GetBoxMonData(boxmon, MON_DATA_SPECIES), move))
         return VALID_MON;
     return CANNOT_LEARN_MOVE;
+}
+
+static u32 CanMonLearnSpecialVarMove(struct BoxPokemon *boxmon)
+{
+     return CanMonLearnMove(boxmon, gSpecialVar_0x8005);
 }
 
 u32 IsBoxMonExcluded(struct BoxPokemon *boxmon)
@@ -144,7 +150,10 @@ enum LearnMoveState
 {
     LEARN_MOVE_END,
 
-    MON_CAN_LEARN, //Start
+    VALIDATE_BEFORE_LEARNING, //Start for OW move turors
+
+    PROMPT_BEFORE_LEARNING_1, //Start for move relearner
+    PROMPT_BEFORE_LEARNING_2,
 
     LEARN_MOVE,
 
@@ -183,6 +192,7 @@ static struct BoxPokemon *LearnMove_GetBoxMonFromTaskData(u8 partyIndex)
 #define state         gTasks[taskId].data[0]
 #define partyIndex    gTasks[taskId].data[1]
 #define move          gTasks[taskId].data[2]
+#define recoverPP     gTasks[taskId].data[3]
 // MoveLearnUI does not contain a waitMessage function and LearnMove assumes the calling task will wait when a printer is active
 // Remember to update Task_LearnMove is you wish to change to an explicit waitMessage system
 s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
@@ -190,11 +200,24 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
     struct BoxPokemon *boxmon = LearnMove_GetBoxMonFromTaskData(partyIndex);
     switch (state)
     {
-    case MON_CAN_LEARN:
+    case PROMPT_BEFORE_LEARNING_1:
+        ui->askConfirmation();
+        return PROMPT_BEFORE_LEARNING_2;
+    case PROMPT_BEFORE_LEARNING_2:
+        switch (ui->waitConfirmation())
+        {
+        case 0: // Yes
+            return LEARN_MOVE;
+        case 1: // No
+        case MENU_B_PRESSED:
+            return LEARN_MOVE_END;
+        }
+        return state;
+    case VALIDATE_BEFORE_LEARNING:
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = FALSE;
-        switch(CanMonLearnMove(boxmon))
+        switch(CanMonLearnMove(boxmon, move))
         {
         case VALID_MON:
             return LEARN_MOVE;
@@ -276,9 +299,11 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
     {
         u32 slot = GetMoveSlotToReplace();
         RemoveBoxMonPPBonus(boxmon, slot);
+        u32 originalPP = GetBoxMonData(boxmon, MON_DATA_PP1 + slot);
         u32 pp = GetMovePP(move);
         SetBoxMonData(boxmon, MON_DATA_MOVE1 + slot, &move);
-        SetBoxMonData(boxmon, MON_DATA_PP1 + slot, &pp);
+        if (recoverPP || (pp < originalPP))
+            SetBoxMonData(boxmon, MON_DATA_PP1 + slot, &pp);
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = TRUE;
@@ -301,7 +326,12 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
 
 s32 GetLearnMoveStartState(void)
 {
-    return MON_CAN_LEARN;
+    return VALIDATE_BEFORE_LEARNING;
+}
+
+s32 GetLearnMoveStartAfterPromptState(void)
+{
+    return PROMPT_BEFORE_LEARNING_1;
 }
 
 //At the time of writing code for this, there was no prescribed way to make a task persist between scenes
