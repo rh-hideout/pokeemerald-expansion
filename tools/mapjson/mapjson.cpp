@@ -645,25 +645,31 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
     int map_id_num = 0;
     int old_map_group = -1;
     Json required_map_defines = parse_required_map_defines();
+    map <int, string> filtered_map_defines;
+    size_t max_length = 0;
     for (auto required_map_id : required_map_defines["required_maps"].array_items()) {
         string map_id = json_to_string(required_map_id[0]);
         auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map_id);
         int current_map_group = required_map_id[1].int_value();
-        if (it == valid_map_ids.end()) {
-            text << "#define " << map_id << string(50 - map_id.length(), ' ')
-                 //<< "(" << map_id_num << " | (" << json_to_string(required_map_id[1]) << " << 8)),\n";
-                 << (map_id_num + 256 * current_map_group) << "\n";
-        }
         if (old_map_group != current_map_group) {
             map_id_num = 0;
         } else {
             map_id_num++;
         }
+        if (it == valid_map_ids.end()) {
+            filtered_map_defines[(map_id_num + 256 * current_map_group)] = map_id;
+            if (map_id.length() > max_length)
+                max_length = map_id.length();
+        }
         old_map_group = current_map_group;
-
     }
 
-    text << "#define MAP_GROUPS_COUNT " << group_num << "\n\n";
+    for ( const auto &[map_value, map_id]: filtered_map_defines) {
+        text << "#define " << map_id << string(max_length - map_id.length(), ' ')
+             << "  " << map_value << "\n";
+    }
+
+    text << "\n#define MAP_GROUPS_COUNT " << group_num << "\n\n";
     text << get_include_guard_end(guard_name);
 
     char s = file_dir.back();
@@ -863,16 +869,21 @@ string generate_layouts_constants_text(Json layouts_data) {
 
     text << "\n//Constants for unused layouts\n";
     vector<string> required_layout_defines = parse_required_layout_defines();
+    vector<string> filtered_layout_defines;
+    int max_length = 0;
     for (auto &layout : required_layout_defines) {
         auto it = find(defined_layouts.begin(), defined_layouts.end(), layout);
         if (it == defined_layouts.end()) {
-            text << "#define " << layout << string(50 - layout.length(), ' ')
-                 //<< "(" << map_id_num << " | (" << json_to_string(required_map_id[1]) << " << 8)),\n";
-                 << "0xFFFF\n";
+            filtered_layout_defines.push_back(layout);
+            if (layout.length() > max_length)
+                max_length = layout.length();
         }
-
     }
 
+    for (auto &layout : filtered_layout_defines) {
+        text << "#define " << layout << string(max_length - layout.length(), ' ')
+             << "  0xFFFF\n";
+    }
     text << "\n" << get_include_guard_end(guard_name);
 
     return text.str();
