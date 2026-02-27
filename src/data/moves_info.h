@@ -21302,6 +21302,265 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_MalignantChain,
     },
 
+    [MOVE_TENTACLE_WHIP] =
+    {
+        .name = COMPOUND_STRING("Tentacle Whip"),
+        .description = COMPOUND_STRING(
+            "Fearsome tentacles strike,\n"
+            "hitting 2 to 5 times."),
+        .effect = EFFECT_MULTI_HIT,
+        .power = 25,
+        .type = TYPE_WATER,
+        .accuracy = B_UPDATED_MOVE_DATA >= GEN_6 ? 95 : 85,
+        .pp = 20,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_Crabhammer,
+    },
+
+    [MOVE_VACUUM_BURST] =
+    {
+        .name = COMPOUND_STRING("Vacuum Burst"),
+        .description = COMPOUND_STRING(
+            "User unleashes a strong\n"
+            "air bullet. May lower DEF."),
+        .effect = EFFECT_HIT,
+        .power = 90,
+        .type = TYPE_FLYING,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_DEF_MINUS_1,
+            .chance = 20,
+        }),
+        .pulseMove = TRUE,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_Aeroblast,
+    },
+
+    [MOVE_TOXIC_FUMES] =
+    {
+        .name = COMPOUND_STRING("Toxic Fumes"),
+        .description = COMPOUND_STRING(
+            "User releases a blast of\n"
+            "toxic gases. May poison."),
+        .effect = EFFECT_HIT,
+        .power = 90,
+        .type = TYPE_POISON,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_POISON,
+            .chance = 30,
+        }),
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_GMaxMalodor,
+    },
+
+    [MOVE_SCALE_DUST] =
+    {
+        .name = COMPOUND_STRING("Scale Dust"),
+        .description = COMPOUND_STRING(
+            "Flaps wings 2 to 5 times,\n"
+            "spraying dust at foes."),
+        .effect = EFFECT_MULTI_HIT,
+        .power = 20,
+        .type = TYPE_BUG,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .powderMove = TRUE,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_MagicPowder,
+    },
+
+    [MOVE_PYRO_BONE] =
+    {
+        .name = COMPOUND_STRING("Pyro Bone"),
+        .description = COMPOUND_STRING(
+            "Strikes with a flaming\n"
+            "bone 3 times."),
+        .effect = EFFECT_HIT,
+        .power = 30,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .strikeCount = 3,
+        .makesContact = TRUE,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_PyroBone,
+    },
+
+    [MOVE_FLASH_KICK] =
+    {
+        .name = COMPOUND_STRING("Flash Kick"),
+        .description = COMPOUND_STRING(
+            "Uses a lightning-fast kick\n"
+            "to hit. Has priority."),
+        .effect = EFFECT_HIT,
+        .power = 70,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .makesContact = TRUE,
+        .priority = 1,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_FlashKick,
+    },
+
+    [MOVE_WIND_SCYTHE] =
+    {
+        .name = COMPOUND_STRING("Wind Scythe"),
+        .description = COMPOUND_STRING(
+            "Slashes the foe with a wind\n"
+            "augmented blade. Hi-crit."),
+        .effect = EFFECT_HIT,
+        .power = 70,
+        .type = TYPE_FLYING,
+        .criticalHitStage = 1,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_WindScythe,
+    },
+
+    [MOVE_LONG_NIGHT] =
+    {
+        .name = COMPOUND_STRING("Long Night"),
+        .description = COMPOUND_STRING(
+            "Boosts the Def and Sp.Def of \n"
+            "GHOST and DARK types for 5 turns."),
+        .effect = EFFECT_LONG_NIGHT,
+        .power = 0,
+        .type = TYPE_DARK,
+        .accuracy = 0,
+        .pp = 5,
+        .target = MOVE_TARGET_ALL_BATTLERS,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = {.effect = Z_EFFECT_SPD_UP_1 },
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .contestEffect = CONTEST_EFFECT_BETTER_WHEN_AUDIENCE_EXCITED,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = COMBO_STARTER_SUNNY_DAY,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimGeneral_Darkness,
+        .validApprenticeMove = TRUE,
+    },
+
+    [MOVE_SAVAGE_SPIN] =
+    {
+        .name = COMPOUND_STRING("Savage Spin"),
+        .description = COMPOUND_STRING(
+            "A high-speed spin that does\n"
+            "more damage to faster foes."),
+        .effect = EFFECT_GYRO_BALL,
+        .power = 1,
+        .type = TYPE_BUG,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .ballisticMove = TRUE,
+        .contestEffect = CONTEST_EFFECT_BETTER_IF_LAST,
+        .contestCategory = CONTEST_CATEGORY_BEAUTY,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_SavageSpin,
+    },
+
+    [MOVE_DESERT_TORNADO] =
+    {
+        .name = COMPOUND_STRING("Desert Tornado"),
+        .description = COMPOUND_STRING(
+            "Whips a vicious dust tornado.\n"
+            "Always hits in sandstorm."),
+        .effect = EFFECT_HIT,
+        .power = 110,
+        .type = TYPE_GROUND,
+        .accuracy = 75,
+        .pp = 10,
+        .target = MOVE_TARGET_BOTH,
+        .damagesAirborne = TRUE,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .windMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_DustTornado,
+    },
+
+    [MOVE_CUTE_CHOMP] =
+    {
+        .name = COMPOUND_STRING("Cute Chomp"),
+        .description = COMPOUND_STRING(
+            "Distract with cuteness and.\n"
+            "bites hard. "),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_FAIRY,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .bitingMove = TRUE,
+            .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_DEF_MINUS_1,
+            .chance = 20,
+        }),
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_SCARY_FACE},
+        .battleAnimScript = gBattleAnimMove_CuteChomp,
+        .validApprenticeMove = TRUE,
+    },
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {
