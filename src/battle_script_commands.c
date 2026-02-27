@@ -8519,8 +8519,9 @@ static void Cmd_transformdataexecution(void)
     else
     {
         s32 i;
-        u8 *battleMonAttacker, *battleMonTarget;
         u8 timesGotHit;
+        struct BattlePokemon *battleMonAttacker;
+        struct BattlePokemon *battleMonTarget;
 
         gBattleMons[gBattlerAttacker].volatiles.transformed = TRUE;
         gBattleMons[gBattlerAttacker].volatiles.disabledMove = MOVE_NONE;
@@ -8539,11 +8540,11 @@ static void Cmd_transformdataexecution(void)
 
         PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].species)
 
-        battleMonAttacker = (u8 *)(&gBattleMons[gBattlerAttacker]);
-        battleMonTarget = (u8 *)(&gBattleMons[gBattlerTarget]);
+        battleMonAttacker = &gBattleMons[gBattlerAttacker];
+        battleMonTarget = &gBattleMons[gBattlerTarget];
 
-        for (i = 0; i < offsetof(struct BattlePokemon, pp); i++)
-            battleMonAttacker[i] = battleMonTarget[i];
+        // Fields before pp are copied by Transform. Keep new transformable fields above pp.
+        memcpy(battleMonAttacker, battleMonTarget, offsetof(struct BattlePokemon, pp));
 
         gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = GetBattlerAbility(gBattlerTarget);
         for (i = 0; i < MAX_MON_MOVES; i++)
