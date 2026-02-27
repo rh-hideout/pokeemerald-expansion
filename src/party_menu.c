@@ -7649,11 +7649,11 @@ void SwitchPartyOrderLinkMulti(enum BattlerId battler, u8 slot, u8 slot2)
 
 static u8 GetPartyIdFromBattleSlot(u8 slot)
 {
-    u8 modResult = slot & 1;
+    bool32 modResult = slot & 1;
     u8 retVal;
 
     slot /= 2;
-    if (modResult != 0)
+    if (modResult)
         retVal = gBattlePartyCurrentOrder[slot] & 0xF;
     else
         retVal = gBattlePartyCurrentOrder[slot] >> 4;
@@ -7665,7 +7665,7 @@ static void SetPartyIdAtBattleSlot(u8 slot, u8 setVal)
     bool32 modResult = slot & 1;
 
     slot /= 2;
-    if (modResult != 0)
+    if (modResult)
         gBattlePartyCurrentOrder[slot] = (gBattlePartyCurrentOrder[slot] & 0xF0) | setVal;
     else
         gBattlePartyCurrentOrder[slot] = (gBattlePartyCurrentOrder[slot] & 0xF) | (setVal << 4);

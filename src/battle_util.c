@@ -629,7 +629,7 @@ bool32 TryRunFromBattle(enum BattlerId battler)
         gBattleStruct->runTries++;
     }
 
-    if (effect != 0)
+    if (effect)
     {
         gCurrentTurnActionNumber = gBattlersCount;
         gBattleOutcome = B_OUTCOME_RAN;

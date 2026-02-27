@@ -573,7 +573,7 @@ static void Task_BindSurfBlobToFollowerNPC(u8 taskId)
     struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
     // Wait for the jump animation.
     bool32 animStatus = ObjectEventClearHeldMovementIfFinished(npc);
-    if (animStatus == 0)
+    if (!animStatus)
         return;
 
     // Bind the blob to the follower.
@@ -590,7 +590,7 @@ static void Task_FinishSurfDismount(u8 taskId)
     // Wait for the animation to finish.
     bool32 animStatus = ObjectEventClearHeldMovementIfFinished(npc);
 
-    if (animStatus == 0)
+    if (!animStatus)
     {
         // Temporarily stop running.
         if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
@@ -611,7 +611,7 @@ static void Task_FinishSurfDismount(u8 taskId)
 static void Task_ReallowPlayerMovement(u8 taskId)
 {
     bool32 animStatus = ObjectEventClearHeldMovementIfFinished(&gObjectEvents[GetFollowerNPCObjectId()]);
-    if (animStatus == 0)
+    if (!animStatus)
     {
         // Temporarily stop running.
         if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)

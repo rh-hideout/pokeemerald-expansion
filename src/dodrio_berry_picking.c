@@ -1300,7 +1300,7 @@ static void EndLink(void)
             sGame->state++;
         break;
     default:
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
         {
             SetGameFunc(FUNC_EXIT);
         }
@@ -1393,7 +1393,7 @@ static void ResetGame(void)
         CreateDodrioGameTask(Task_NewGameIntro);
         ResetGfxState();
         InitDodrioGame(sGame);
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
             sGame->numPlayers = 1;
 
         SetRandomPrize();
