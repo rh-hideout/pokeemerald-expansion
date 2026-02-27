@@ -761,7 +761,11 @@ string generate_layout_headers_text(Json layouts_data) {
         if (layout == Json::object()) continue;
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
-        string layout_version = json_to_string(layout, "layout_version");
+        string layout_version = json_to_string(layout, "layout_version", true);
+
+        if (layout_version.empty()) {
+            layout_version = "emerald";
+        }
         if ((version == "emerald" && layout_version != "emerald")
          || (version == "firered" && layout_version != "frlg"))
             continue;
@@ -813,7 +817,10 @@ string generate_layouts_table_text(Json layouts_data) {
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
-        string layout_version = json_to_string(layout, "layout_version");
+        string layout_version = json_to_string(layout, "layout_version", true);
+        if (layout_version.empty()) {
+            layout_version = "emerald";
+        }
         if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg")) {
             text << "\t.4byte NULL\n";
         } else {

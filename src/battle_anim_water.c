@@ -810,7 +810,7 @@ void AnimFlyUpTarget(struct Sprite *sprite)
 
 static void AnimFlyUpTarget_Step(struct Sprite *sprite)
 {
-    if(sprite->y2 <= sprite->data[0])
+    if (sprite->y2 <= sprite->data[0])
     {
         DestroyAnimSprite(sprite);
         return;

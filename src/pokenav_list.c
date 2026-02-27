@@ -100,8 +100,6 @@ static const u8 gText_PokenavMatchCall_Strategy[] = _("STRATEGY");
 static const u8 gText_PokenavMatchCall_TrainerPokemon[] = _("TRAINER'S POKéMON");
 static const u8 gText_PokenavMatchCall_SelfIntroduction[] = _("SELF-INTRODUCTION");
 
-static EWRAM_DATA u32 sMoveWindowDownIndex = 0; // Read, but pointlessly
-
 bool32 CreatePokenavList(const struct BgTemplate *bgTemplate, struct PokenavListTemplate *listTemplate, s32 tileOffset)
 {
     struct PokenavList *list = AllocSubstruct(POKENAV_SUBSTRUCT_LIST, sizeof(struct PokenavList));
@@ -282,7 +280,7 @@ static void MoveListWindow(s32 delta, bool32 printItems)
     }
     else if (printItems)
     {
-        s32 index = sMoveWindowDownIndex = windowState->windowTopIndex + windowState->entriesOnscreen;
+        s32 index = windowState->windowTopIndex + windowState->entriesOnscreen;
         if (index + delta >= windowState->listLength)
             delta = windowState->listLength - index;
 

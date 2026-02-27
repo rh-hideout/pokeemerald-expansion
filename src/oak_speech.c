@@ -844,7 +844,7 @@ static void Task_ControlsGuide_HandleInput(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
-        if(JOY_NEW((A_BUTTON | B_BUTTON)))
+        if (JOY_NEW((A_BUTTON | B_BUTTON)))
         {
             if (JOY_NEW(A_BUTTON))
             {

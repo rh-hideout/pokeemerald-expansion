@@ -2789,7 +2789,7 @@ static void SpriteCB_TextCursor(struct Sprite *sprite)
     else
     {
         sprite->sDelay = 8;
-        switch(sprite->sState)
+        switch (sprite->sState)
         {
         case 0:
             sprite->y2 = 0;
