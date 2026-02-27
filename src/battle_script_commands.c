@@ -3757,7 +3757,7 @@ static void Cmd_tryfaintmon(void)
     enum BattlerId battler;
 
     battler = GetBattlerForBattleScript(cmd->battler);
-    if (cmd->isSpikes != 0)
+    if (cmd->isSpikes)
     {
         if (gHitMarker & HITMARKER_FAINTED(battler))
         {

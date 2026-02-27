@@ -294,7 +294,7 @@ bool8 IsWritingMailAllowed(enum Item itemId)
 
 bool8 MenuHelpers_IsLinkActive(void)
 {
-    if (IsOverworldLinkActive() == TRUE || gReceivedRemoteLinkPlayers == 1)
+    if (IsOverworldLinkActive() == TRUE || gReceivedRemoteLinkPlayers)
         return TRUE;
     else
         return FALSE;

@@ -3884,7 +3884,7 @@ bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyI
 
 #define UPDATE_FRIENDSHIP_FROM_ITEM()                                                                   \
 {                                                                                                       \
-    if ((retVal == 0 || friendshipOnly) && !ShouldSkipFriendshipChange() && friendshipChange == 0)      \
+    if ((!retVal || friendshipOnly) && !ShouldSkipFriendshipChange() && friendshipChange == 0)      \
     {                                                                                                   \
         friendshipChange = itemEffect[itemEffectParam];                                                 \
         friendship = GetMonData(mon, MON_DATA_FRIENDSHIP);                                        \

@@ -136,7 +136,7 @@ void STWI_set_Callback_ID(void (*func)(void)) // name in SDK, but is actually se
 
 u16 STWI_poll_CommandEnd(void)
 {
-    while (gSTWIStatus->sending == 1)
+    while (gSTWIStatus->sending)
         ;
     return gSTWIStatus->error;
 }
@@ -552,7 +552,7 @@ static u16 STWI_init(u8 request)
             gSTWIStatus->callbackM(request, gSTWIStatus->error);
         return TRUE;
     }
-    else if (gSTWIStatus->sending == 1)
+    else if (gSTWIStatus->sending)
     {
         // Already sending something. Cancel and error.
         gSTWIStatus->error = ERR_REQ_CMD_SENDING;

@@ -565,7 +565,7 @@ void PlayBGM(u16 songNum)
 
 void PlaySE(u16 songNum)
 {
-    if (gDisableMapMusicChangeOnMapLoad == 0)
+    if (!gDisableMapMusicChangeOnMapLoad)
         m4aSongNumStart(songNum);
 }
 

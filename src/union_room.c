@@ -1840,7 +1840,7 @@ static void Task_RunScriptAndFadeToActivity(u8 taskId)
         data[0] = 8;
         break;
     case 8:
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
         {
             DestroyWirelessStatusIndicatorSprite();
             ScriptContext_Enable();
