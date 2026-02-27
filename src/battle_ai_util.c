@@ -55,7 +55,7 @@ static bool32 AI_IsDoubleSpreadMove(enum BattlerId battlerAtk, enum Move move)
             continue;
 
         if (!IsSemiInvulnerable(battlerDef, CHECK_ALL)
-         || BreaksThroughSemiInvulnerablity(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], move))
+         || CanBreakThroughSemiInvulnerablity(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], move))
             numOfTargets++;
     }
 

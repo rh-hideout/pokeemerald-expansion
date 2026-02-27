@@ -47,7 +47,6 @@ static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
 static bool32 DoesAbilityBenefitFromSunOrRain(enum BattlerId battler, enum Ability ability, u32 weather);
 static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static u32 GetWindAbilityScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct AiLogicData *aiData);
-static bool32 BreaksThroughSemiInvulnerableState(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum SemiInvulnerableState state);
 
 // ewram
 EWRAM_DATA const u8 *gAIScriptPtr = NULL;   // Still used in contests
@@ -1177,7 +1176,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         RETURN_SCORE_MINUS(10);
 
     // Don't use moves that miss against already semi-invulnerable targets when we move first.
-    if (!BreaksThroughSemiInvulnerablity(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move)
+    if (!CanBreakThroughSemiInvulnerablity(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move)
      && moveEffect != EFFECT_SEMI_INVULNERABLE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
      && abilityAtk != ABILITY_NO_GUARD && abilityDef != ABILITY_NO_GUARD)
     {
@@ -4111,39 +4110,6 @@ static bool32 ShouldCompareMove(enum BattlerId battlerAtk, enum BattlerId battle
     if (gAiThinkingStruct->aiFlags[battlerAtk] & (AI_FLAG_RISKY | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE) && IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
         return FALSE;
     return TRUE;
-}
-
-static bool32 BreaksThroughSemiInvulnerableState(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum SemiInvulnerableState state)
-{
-    if (state != STATE_COMMANDER)
-    {
-        if (MoveAlwaysHitsOnSameType(move) && IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move)))
-            return TRUE;
-        if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
-            return TRUE;
-        if (gBattleMons[battlerDef].volatiles.lockOn && gBattleMons[battlerDef].volatiles.battlerWithSureHit == battlerAtk)
-            return TRUE;
-    }
-
-    switch (state)
-    {
-    case STATE_UNDERGROUND:
-        return MoveDamagesUnderground(move);
-    case STATE_UNDERWATER:
-        return MoveDamagesUnderWater(move);
-    case STATE_ON_AIR:
-    case STATE_SKY_DROP:
-        return MoveDamagesAirborne(move) || MoveDamagesAirborneDoubleDamage(move);
-    case STATE_PHANTOM_FORCE:
-        return FALSE;
-    case STATE_COMMANDER:
-        return GetMoveEffect(move) == EFFECT_TRANSFORM;
-    case STATE_NONE:
-    case SEMI_INVULNERABLE_COUNT:
-        return TRUE;
-    }
-
-    return FALSE;
 }
 
 static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId battlerDef)
