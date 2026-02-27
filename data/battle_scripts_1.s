@@ -8862,6 +8862,12 @@ BattleScript_EffectSnow::
 	setfieldweather BATTLE_WEATHER_SNOW
 	goto BattleScript_MoveWeatherChange
 
+BattleScript_EffectDarkness::
+	attackcanceler
+	call BattleScript_CheckPrimalWeather
+	setfieldweather BATTLE_WEATHER_DARKNESS
+	goto BattleScript_MoveWeatherChange
+
 BattleScript_SleepClauseBlocked::
 	pause B_WAIT_TIME_SHORT
 	setmoveresultflags MOVE_RESULT_FAILED

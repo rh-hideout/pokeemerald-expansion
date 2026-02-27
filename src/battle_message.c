@@ -873,6 +873,17 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_POWERCONSTRUCTPRESENCEOFMANY]         = COMPOUND_STRING("You sense the presence of many!"),
     [STRINGID_POWERCONSTRUCTTRANSFORM]              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} transformed into its Complete Forme!"),
     [STRINGID_ABILITYSHIELDPROTECTS]                = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s Ability is protected by the effects of its {B_LAST_ITEM}!"),
+    [STRINGID_PKMNCUTSDEFENSEWITH]                  = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} cuts {B_DEF_NAME_WITH_PREFIX2}'s Defense!"), //not in gen 5+, ability popup
+    [STRINGID_MAGMAAURAENTERS]                      = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is radiating a blazing aura!"),
+    [STRINGID_SHADOWAURAENTERS]                     = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is radiating a ghostly aura!"),
+    [STRINGID_DARKLIFTED]                           = COMPOUND_STRING("The dark is lifted."),
+    [STRINGID_DARKNESSENGULFS]                      = COMPOUND_STRING("The dark continues to engulf."),
+    [STRINGID_DARKNESSSTARTS]                       = COMPOUND_STRING("The darkness engulfs the field."),
+    [STRINGID_PKMNSXDARKNESSENGULFS]                = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} plunged the field into darkness!"), //not in gen 5+, ability popup
+    [STRINGID_LIGHTRAISESACCURACY]                  = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} raises their teams' accuracy!"), //not in gen 5+, ability popup
+    [STRINGID_DAMPENTERS]                           = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} humidifies the field!"), //not in gen 5+, ability popup
+    [STRINGID_JUMPSCAREENTERS]                      = COMPOUND_STRING("{B_DEF_TEAM1} team is too scared to use items!"), //not in gen 5+, ability popup
+    [STRINGID_PKMNCUTSSPATKWITH]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} cuts {B_DEF_NAME_WITH_PREFIX2}'s Special Attack!"), //not in gen 5+, ability popup
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -970,6 +981,10 @@ const u16 gSwitchInAbilityStringIds[] =
     [B_MSG_SWITCHIN_CURIOUS_MEDICINE] = STRINGID_CURIOUSMEDICINEENTERS,
     [B_MSG_SWITCHIN_PASTEL_VEIL] = STRINGID_PASTELVEILENTERS,
     [B_MSG_SWITCHIN_NEUTRALIZING_GAS] = STRINGID_NEUTRALIZINGGASENTERS,
+    [B_MSG_SWITCHIN_MAGMAAURA] = STRINGID_MAGMAAURAENTERS,
+    [B_MSG_SWITCHIN_SHADOWAURA] = STRINGID_SHADOWAURAENTERS,
+    [B_MSG_SWITCHIN_DAMP] = STRINGID_DAMPENTERS,
+    [B_MSG_SWITCHIN_JUMPSCARE] = STRINGID_JUMPSCAREENTERS,
 };
 
 const u16 gMissStringIds[] =
@@ -1000,6 +1015,7 @@ const u16 gMoveWeatherChangeStringIds[] =
     [B_MSG_STARTED_HAIL]      = STRINGID_STARTEDHAIL,
     [B_MSG_STARTED_SNOW]      = STRINGID_STARTEDSNOW,
     [B_MSG_STARTED_FOG]       = STRINGID_FOGCREPTUP, // Unused, can use for custom moves that set fog
+    [B_MSG_STARTED_DARKNESS]  = STRINGID_DARKNESSSTARTS,
 };
 
 const u16 gWeatherEndsStringIds[B_MSG_WEATHER_END_COUNT] =
@@ -1011,6 +1027,7 @@ const u16 gWeatherEndsStringIds[B_MSG_WEATHER_END_COUNT] =
     [B_MSG_WEATHER_END_SNOW]         = STRINGID_SNOWSTOPPED,
     [B_MSG_WEATHER_END_FOG]          = STRINGID_FOGLIFTED,
     [B_MSG_WEATHER_END_STRONG_WINDS] = STRINGID_STRONGWINDSDISSIPATED,
+    [B_MSG_WEATHER_END_DARKNESS]     = STRINGID_DARKLIFTED,
 };
 
 const u16 gWeatherTurnStringIds[] =
@@ -1023,6 +1040,7 @@ const u16 gWeatherTurnStringIds[] =
     [B_MSG_WEATHER_TURN_SNOW]         = STRINGID_SNOWCONTINUES,
     [B_MSG_WEATHER_TURN_FOG]          = STRINGID_FOGISDEEP,
     [B_MSG_WEATHER_TURN_STRONG_WINDS] = STRINGID_MYSTERIOUSAIRCURRENTBLOWSON,
+    [B_MSG_WEATHER_TURN_DARKNESS]     = STRINGID_DARKNESSENGULFS,
 };
 
 const u16 gSandStormHailDmgStringIds[] =

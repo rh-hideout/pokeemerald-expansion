@@ -9984,6 +9984,9 @@ static void Cmd_setfieldweather(void)
     case BATTLE_WEATHER_SNOW:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SNOW;
         break;
+    case BATTLE_WEATHER_DARKNESS:
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_DARKNESS;
+        break;
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;

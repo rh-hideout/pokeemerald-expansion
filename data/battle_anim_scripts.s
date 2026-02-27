@@ -37963,3 +37963,55 @@ gBattleAnimGeneral_DynamaxGrowth:: @ PORTED FROM CFRU
 	createvisualtask AnimTask_DynamaxGrowth, 0x5, 0x1, 0x0
 	waitforvisualfinish
 	end
+
+gBattleAnimGeneral_Darkness::
+	goto gBattleAnimMove_Darkness
+
+gBattleAnimMove_Darkness::
+	loadspritegfx ANIM_TAG_MOON
+	loadspritegfx ANIM_TAG_GREEN_SPARKLE
+	setalpha 0, 16
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 1, 0, 16, RGB_BLACK
+	waitforvisualfinish
+	createsprite gMoonSpriteTemplate, ANIM_ATTACKER, 2, 120, 56
+	createvisualtask AnimTask_AlphaFadeIn, 3, 0, 16, 16, 0, 1
+	delay 40
+	playsewithpan SE_M_BARRIER, 0
+	call MoonLightRay
+	delay 10
+	call MoonLightRay
+	delay 10
+	call MoonLightRay
+	delay 10
+	call MoonLightRay
+	delay 20
+	createvisualtask AnimTask_MoonlightEndFade, 2
+	waitforvisualfinish
+	end
+
+MoonLightRay:
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, -72
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 50, -40
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, -24
+	delay 4
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 60
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 50
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, 20
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 10
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 0
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, 24
+	delay 4
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 30
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 94
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 130
+	delay 4
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 150
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 50
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, 48
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 72
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 50, 40
+	delay 4
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, 24
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 60
+	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 50
+	return

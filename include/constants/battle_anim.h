@@ -594,7 +594,9 @@
 #define B_ANIM_POWER_CONSTRUCT          53
 #define B_ANIM_SWAP_TO_SUBSTITUTE       54
 #define B_ANIM_SWAP_FROM_SUBSTITUTE     55
-#define NUM_B_ANIMS_GENERAL             56
+#define B_ANIM_DARKNESS	                56
+
+#define NUM_B_ANIMS_GENERAL             57
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0
