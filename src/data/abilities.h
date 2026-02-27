@@ -49,7 +49,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_DAMP] =
     {
         .name = _("Damp"),
-        .description = COMPOUND_STRING("Prevents self-destruction."),
+        .description = COMPOUND_STRING("Prevents self-destruction and boost Water moves."),
         .aiRating = 2,
         .breakable = TRUE,
     },
@@ -57,7 +57,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_LIMBER] =
     {
         .name = _("Limber"),
-        .description = COMPOUND_STRING("Prevents paralysis."),
+        .description = COMPOUND_STRING("Prevents paralysis and Speed reduction."),
         .aiRating = 3,
         .breakable = TRUE,
     },
@@ -194,7 +194,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_WONDER_GUARD] =
     {
         .name = _("Wonder Guard"),
-        .description = COMPOUND_STRING("Only “Supereffective” hits."),
+        .description = COMPOUND_STRING("“Supereffective” hits."),
         .aiRating = 10,
         .cantBeCopied = TRUE,
         .cantBeSwapped = TRUE,
@@ -241,7 +241,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_LIGHTNING_ROD] =
     {
         .name = _("Lightning Rod"),
-        .description = COMPOUND_STRING("Draws electrical moves."),
+        .description = COMPOUND_STRING("Draws electrical moves and ups Sp.Atk."),
         .aiRating = 7,
         .breakable = TRUE,
     },
@@ -582,7 +582,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_TANGLED_FEET] =
     {
         .name = _("Tangled Feet"),
-        .description = COMPOUND_STRING("Ups evasion if confused."),
+        .description = COMPOUND_STRING("Ups evasion if confused. Can't hurt itself."),
         .aiRating = 2,
         .breakable = TRUE,
     },
@@ -679,7 +679,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_POISON_HEAL] =
     {
         .name = _("Poison Heal"),
-        .description = COMPOUND_STRING("Restores HP if poisoned."),
+        .description = COMPOUND_STRING("Restores HP if poisoned. Resist Poison moves."),
         .aiRating = 8,
     },
 
@@ -1030,7 +1030,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_TOXIC_BOOST] =
     {
         .name = _("Toxic Boost"),
-        .description = COMPOUND_STRING("Ups Attack if poisoned."),
+        .description = COMPOUND_STRING("Ups Speed and boost physical moves if poisoned."),
         .aiRating = 6,
     },
 
@@ -1251,7 +1251,6 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Flower Veil"),
         .description = COMPOUND_STRING("Protects Grass-types."),
         .aiRating = 0,
-        .breakable = TRUE,
     },
 
     [ABILITY_CHEEK_POUCH] =
@@ -1287,7 +1286,6 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Bulletproof"),
         .description = COMPOUND_STRING("Avoids some projectiles."),
-        .breakable = TRUE,
         .aiRating = 7,
     },
 
@@ -1399,14 +1397,14 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_DARK_AURA] =
     {
         .name = _("Dark Aura"),
-        .description = COMPOUND_STRING("Boosts Dark moves."),
+        .description = COMPOUND_STRING("Boosts Dark moves for all POKEMON."),
         .aiRating = 6,
     },
 
     [ABILITY_FAIRY_AURA] =
     {
         .name = _("Fairy Aura"),
-        .description = COMPOUND_STRING("Boosts Fairy moves."),
+        .description = COMPOUND_STRING("Boosts Fairy moves for all POKEMON."),
         .aiRating = 6,
     },
 
@@ -1415,7 +1413,6 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Aura Break"),
         .description = COMPOUND_STRING("Reverse aura abilities."),
         .aiRating = 3,
-        .breakable = TRUE,
     },
 
     [ABILITY_PRIMORDIAL_SEA] =
@@ -1498,7 +1495,6 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Water Bubble"),
         .description = COMPOUND_STRING("Guards from fire and burns."),
         .aiRating = 8,
-        .breakable = TRUE,
     },
 
     [ABILITY_STEELWORKER] =
@@ -1959,7 +1955,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_PASTEL_VEIL] =
     {
         .name = _("Pastel Veil"),
-        .description = COMPOUND_STRING("Protects team from poison."),
+        .description = COMPOUND_STRING("Weakens Sp.Atk moves for team in Misty Terrain."),
         .aiRating = 4,
         .breakable = TRUE,
     },
@@ -2180,7 +2176,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_GOOD_AS_GOLD] =
     {
         .name = _("Good as Gold"),
-        .description = COMPOUND_STRING("Avoids status moves."),
+        .description = COMPOUND_STRING("Avoids status problems."),
         .aiRating = 8,
         .breakable = TRUE,
     },
@@ -2188,7 +2184,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_VESSEL_OF_RUIN] =
     {
         .name = _("Vessel of Ruin"),
-        .description = COMPOUND_STRING("Lowers foes' sp. damage."),
+        .description = COMPOUND_STRING("Lowers all PKMN Sp.Atk except itself."),
         .aiRating = 5,
         .breakable = TRUE,
     },
@@ -2196,7 +2192,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_SWORD_OF_RUIN] =
     {
         .name = _("Sword of Ruin"),
-        .description = COMPOUND_STRING("Lowers foes' Defense."),
+        .description = COMPOUND_STRING("Lowers all PKMN Def except itself."),
         .aiRating = 5,
         .breakable = TRUE,
     },
@@ -2204,7 +2200,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_TABLETS_OF_RUIN] =
     {
         .name = _("Tablets of Ruin"),
-        .description = COMPOUND_STRING("Lowers foes' damage."),
+        .description = COMPOUND_STRING("Lowers all PKMN Atk except itself."),
         .aiRating = 5,
         .breakable = TRUE,
     },
@@ -2212,7 +2208,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_BEADS_OF_RUIN] =
     {
         .name = _("Beads of Ruin"),
-        .description = COMPOUND_STRING("Lowers foes' Sp. Defense."),
+        .description = COMPOUND_STRING("Lowers all PKMN Sp.Def except itself."),
         .aiRating = 5,
         .breakable = TRUE,
     },
@@ -2411,5 +2407,274 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeCopied = TRUE,
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_DESERT_SPIRIT] =
+    {
+        .name = _("Desert Spirit"),
+        .description = COMPOUND_STRING("Sand Stream, Levitate, Ground STAB."),
+        .aiRating = 9,
+        .breakable = TRUE,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_FULL_MOON] =
+    {
+        .name = _("Full Moon"),
+        .description = COMPOUND_STRING("Psy STAB,Levitate,Sp.Atk boosted in Mist."),
+        .aiRating = 7,
+        .breakable = TRUE,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_CRUEL_SUN] =
+    {
+        .name = _("Cruel Sun"),
+        .description = COMPOUND_STRING("Psy STAB, Levitate, Atk boosted in Sun."),
+        .aiRating = 7,
+        .breakable = TRUE,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_AERODYNAMIC] =
+    {
+        .name = _("Aerodynamic"),
+        .description = COMPOUND_STRING("Levitate. Boost Flying moves."),
+        .aiRating = 7,
+        .breakable = TRUE,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_COMBUSTION] =
+    {
+        .name = _("Combustion"),
+        .description = COMPOUND_STRING("Normal moves become Fire."),
+        .aiRating = 8,
+    },
+    [ABILITY_MIME_BARRIER] =
+    {
+        .name = _("Mime Barrier"),
+        .description = COMPOUND_STRING("Sets Light Screen and Reflect on entering."),
+        .aiRating = 8,
+    },
+    [ABILITY_EFFECT_DUST] =
+    {
+        .name = _("Effect Dust"),
+        .description = COMPOUND_STRING("Attacks may cause status."),
+        .aiRating = 8,
+    },
+    [ABILITY_NOXIOUS_GAS] =
+    {
+        .name = _("Noxious Gas"),
+        .description = COMPOUND_STRING("Lowers the foe's Defense."),
+        .aiRating = 8,
+    },
+    [ABILITY_HELLFIRE] =
+    {
+        .name = _("Hellfire"),
+        .description = COMPOUND_STRING("Fire moves not resisted. Immune to Fire moves."),
+        .aiRating = 8,
+        .breakable = TRUE,
+    },
+    [ABILITY_MAGNETIC_RISE] =
+    {
+        .name = _("Magnetic Rise"),
+        .description = COMPOUND_STRING("Levitate. Boost Elec moves in Elec Terrain."),
+        .aiRating = 8,
+        .breakable = TRUE,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_SLUDGE_BODY] =
+    {
+        .name = _("Sludge Body"),
+        .description = COMPOUND_STRING("Poison Point. Reduce damage from contact moves."),
+        .aiRating = 8,
+    },
+    [ABILITY_HYPNOTISER] =
+    {
+        .name = _("Hypnotiser"),
+        .description = COMPOUND_STRING("Attacks may inflict drowsiness."),
+        .aiRating = 8,
+    },
+    [ABILITY_SPIRIT_GUARDIAN] =
+    {
+        .name = _("Spirit Guardian"),
+        .description = COMPOUND_STRING("Bone moves hit an extra time."),
+        .aiRating = 8,
+    },
+    [ABILITY_FARADAY_CAGE] =
+    {
+        .name = _("Faraday Cage"),
+        .description = COMPOUND_STRING("Draws electrical moves and ups Sp.Def."),
+        .aiRating = 7,
+        .breakable = TRUE,
+    },
+    [ABILITY_RAPID_FIST] =
+    {
+        .name = _("Rapid Fist"),
+        .description = COMPOUND_STRING("Punching moves go first."),
+        .aiRating = 7,
+    },
+    [ABILITY_GEM_OF_THE_SEA] =
+    {
+        .name = _("Gem Of The Sea"),
+        .description = COMPOUND_STRING("Keen Eye. Psy moves can hit Dark types."),
+        .aiRating = 7,
+    },
+    [ABILITY_MAGMA_AURA] =
+    {
+        .name = _("Magma Aura"),
+        .description = COMPOUND_STRING("Boosts Fire moves for all POKEMON."),
+        .aiRating = 6,
+    },
+    [ABILITY_SHADOW_AURA] =
+    {
+        .name = _("Shadow Aura"),
+        .description = COMPOUND_STRING("Boosts Ghost moves for all POKEMON."),
+        .aiRating = 6,
+    },
+    [ABILITY_SILENT_HUNTER] =
+    {
+        .name = _("Silent Hunter"),
+        .description = COMPOUND_STRING("Attacks always crit in Darkness."),
+        .aiRating = 6,
+    },
+    [ABILITY_NOCTURNAL] =
+    {
+        .name = _("Nocturnal"),
+        .description = COMPOUND_STRING("Insomnia, Compound Eyes, Keen Eye."),
+        .aiRating = 6,
+    },
+    [ABILITY_ECLIPSE] =
+    {
+        .name = _("Eclipse"),
+        .description = COMPOUND_STRING("Summons darkness in battle."),
+        .aiRating = 6,
+    },
+    [ABILITY_STAR_POWER] =
+    {
+        .name = _("Star Power"),
+        .description = COMPOUND_STRING("Boost Atk and Sp.Atk in darkness."),
+        .aiRating = 6,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_SPIDER_FANGS] =
+    {
+        .name = _("Spider Fangs"),
+        .description = COMPOUND_STRING("Boost Bug moves. May poison foes on contact."),
+        .aiRating = 6,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_CHRONOVISION] =
+    {
+        .name = _("Chronovision"),
+        .description = COMPOUND_STRING("Lowers all PKMN Speed except itself."),
+        .aiRating = 6,
+    },
+    [ABILITY_GUIDING_LIGHT] =
+    {
+        .name = _("Guiding Light"),
+        .description = COMPOUND_STRING("Raises allies and own accuracy."),
+        .aiRating = 6,
+    },
+    [ABILITY_COTTON_DRIFT] =
+    {
+        .name = _("Cotton Drift"),
+        .description = COMPOUND_STRING("Protects from priority."),
+        .aiRating = 5,
+        .breakable = TRUE,
+    },
+    [ABILITY_DEFLECTOR] =
+    {
+        .name = _("Deflector"),
+        .description = COMPOUND_STRING("Takes less damage from non-contact moves."),
+        .aiRating = 5,
+        .breakable = TRUE,
+    },
+    [ABILITY_SOLAR_FORCE] =
+    {
+        .name = _("Solar Force"),
+        .description = COMPOUND_STRING("Boosts Speed, Def, and Grass moves in sun."),
+        .aiRating = 7,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_BAD_LUCK_OMEN] =
+    {
+        .name = _("Bad Luck Omen"),
+        .description = COMPOUND_STRING("Makes foes more likely to have bad luck."),
+        .aiRating = 7,
+    },
+    [ABILITY_MURKROW_SHIELD] =
+    {
+        .name = _("Murkrow Shield"),
+        .description = COMPOUND_STRING("Murkrow lackeys protect it once."),
+        .aiRating = 8,
+        .breakable = TRUE,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .cantBeSuppressed = TRUE,
+        .cantBeOverwritten = TRUE,
+        .failsOnImposter = TRUE,
+    },
+    [ABILITY_JUMP_SCARE] =
+    {
+        .name = _("Jump Scare"),
+        .description = COMPOUND_STRING("Prevent foes from using items."),
+        .aiRating = 7,
+    },
+    [ABILITY_SHADOW_STEP] =
+    {
+        .name = _("Shadow Step"),
+        .description = COMPOUND_STRING("Raises Speed in darkness."),
+        .aiRating = 6,
+    },
+    [ABILITY_CURSED_CHANT] =
+    {
+        .name = _("Cursed Chant"),
+        .description = COMPOUND_STRING("Lowers the foe's Special Attack."),
+        .aiRating = 7,
+    },
+    [ABILITY_SHELL_BURST] =
+    {
+        .name = _("Shell Burst"),
+        .description = COMPOUND_STRING("Throws steel spikes if hit."),
+        .aiRating = 4,
+    },
+    [ABILITY_STEEL_COAT] =
+    {
+        .name = _("Steel Coat"),
+        .description = COMPOUND_STRING("Blocks weather, powder, and doubles weight."),
+        .aiRating = 5,
+        .breakable = TRUE,
+    },
+    [ABILITY_VENOM_GLANDS] =
+    {
+        .name = _("Venom Glands"),
+        .description = COMPOUND_STRING("Boost Poison moves. Contact moves may badly poison."),
+        .aiRating = 6,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_POISON_BARBS] =
+    {
+        .name = _("Poison Barbs"),
+        .description = COMPOUND_STRING("Hurts to touch. May poison on contact."),
+        .aiRating = 6,
     },
 };
