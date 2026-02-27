@@ -369,13 +369,42 @@ static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler)
     return FALSE;
 }
 
+static bool32 IsChargingTwoTurnMove(u32 battlerAtk, u32 move)
+{
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+
+    if (!gBattleMoveEffects[effect].twoTurnEffect)
+        return FALSE;
+    // If already in the second turn, it's no longer charging.
+    if (gBattleMons[battlerAtk].volatiles.multipleTurns)
+        return FALSE;
+    // Power Herb skips the charge turn.
+    if (GetBattlerHoldEffect(battlerAtk) == HOLD_EFFECT_POWER_HERB)
+        return FALSE;
+    // Semi-invulnerable moves always charge unless Power Herb was used.
+    if (gBattleMoveEffects[effect].semiInvulnerableEffect)
+        return TRUE;
+    // Moves with charge-turn-only additional effects must charge.
+    if (MoveHasChargeTurnAdditionalEffect(move))
+        return TRUE;
+    // Weather-based two-turn moves can fire immediately.
+    if (IsBattlerWeatherAffected(battlerAtk, GetMoveTwoTurnAttackWeather(move)))
+        return FALSE;
+
+    return TRUE;
+}
+
 bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
 {
     enum Ability ability = GetBattlerAbility(battlerAtk);
     enum BattleMoveEffects effect = GetMoveEffect(move);
 
+    if (IsChargingTwoTurnMove(battlerAtk, move))
+        return FALSE;
+
     if (gSideTimers[defSide].followmeTimer == 0
         || (!IsBattlerAlive(gSideTimers[defSide].followmeTarget) && !IsDragonDartsSecondHit(effect))
+        || (GetConfig(B_FOLLOW_ME_FUTURE_SIGHT) >= GEN_6 && effect == EFFECT_FUTURE_SIGHT)
         || effect == EFFECT_SNIPE_SHOT
         || effect == EFFECT_SKY_DROP
         || IsAbilityAndRecord(battlerAtk, ability, ABILITY_PROPELLER_TAIL)
@@ -401,7 +430,9 @@ bool32 HandleMoveTargetRedirection(void)
     enum Ability ability = GetBattlerAbility(gBattleStruct->moveTarget[gBattlerAttacker]);
 
     if (IsAffectedByFollowMe(gBattlerAttacker, side, gCurrentMove)
-     && moveTarget == MOVE_TARGET_SELECTED
+     && moveEffect != EFFECT_ME_FIRST
+     && moveEffect != EFFECT_COPYCAT
+     && (moveTarget == MOVE_TARGET_SELECTED || moveTarget == MOVE_TARGET_OPPONENT || moveTarget & MOVE_TARGET_RANDOM)
      && !IsBattlerAlly(gBattlerAttacker, gSideTimers[side].followmeTarget))
     {
         gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = gSideTimers[side].followmeTarget; // follow me moxie fix
@@ -2696,7 +2727,7 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FOLLOW_ME:
-        if (B_UPDATED_MOVE_DATA >= GEN_8 && !(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
+        if (GetConfig(B_FOLLOW_ME_SINGLES_FAIL) >= GEN_8 && !(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FUTURE_SIGHT:
