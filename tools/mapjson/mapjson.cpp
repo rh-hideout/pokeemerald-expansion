@@ -870,7 +870,7 @@ string generate_layouts_constants_text(Json layouts_data) {
     text << "\n//Constants for unused layouts\n";
     vector<string> required_layout_defines = parse_required_layout_defines();
     vector<string> filtered_layout_defines;
-    int max_length = 0;
+    size_t max_length = 0;
     for (auto &layout : required_layout_defines) {
         auto it = find(defined_layouts.begin(), defined_layouts.end(), layout);
         if (it == defined_layouts.end()) {
