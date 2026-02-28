@@ -20140,10 +20140,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_FloetteMega[] = INCBIN_U32("graphics/pokemon/floette/mega/front.4bpp.smol");
-//    const u16 gMonPalette_FloetteMega[] = INCBIN_U16("graphics/pokemon/floette/mega/normal.gbapal");
-//    const u32 gMonBackPic_FloetteMega[] = INCBIN_U32("graphics/pokemon/floette/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_FloetteMega[] = INCBIN_U16("graphics/pokemon/floette/mega/shiny.gbapal");
+    const u32 gMonFrontPic_FloetteMega[] = INCBIN_U32("graphics/pokemon/floette/mega/front.4bpp.smol");
+    const u16 gMonPalette_FloetteMega[] = INCBIN_U16("graphics/pokemon/floette/mega/normal.gbapal");
+    const u32 gMonBackPic_FloetteMega[] = INCBIN_U32("graphics/pokemon/floette/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_FloetteMega[] = INCBIN_U16("graphics/pokemon/floette/mega/shiny.gbapal");
     const u8 gMonIcon_FloetteMega[] = INCBIN_U8("graphics/pokemon/floette/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_FloetteMega[] = INCBIN_COMP("graphics/pokemon/floette/mega/overworld.4bpp");
