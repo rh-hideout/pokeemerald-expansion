@@ -567,7 +567,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Emboar)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-4, 12, SHADOW_SIZE_L)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sEmboarLevelUpLearnset,
         .teachableLearnset = sEmboarTeachableLearnset,
@@ -2884,7 +2884,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Excadrill)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(5, 13, SHADOW_SIZE_XL_BATTLE_ONLY)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sExcadrillLevelUpLearnset,
         .teachableLearnset = sExcadrillTeachableLearnset,
