@@ -552,22 +552,22 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             "shaped like a serpentine spear,\n"
             "it rushes in to save its\n"
             "imperiled allies."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_EmboarMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .backPic = gMonBackPic_EmboarMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 0,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .palette = gMonPalette_EmboarMega,
+        .shinyPalette = gMonShinyPalette_EmboarMega,
         .iconSprite = gMonIcon_EmboarMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Emboar)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-1, 0, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sEmboarLevelUpLearnset,
         .teachableLearnset = sEmboarTeachableLearnset,
