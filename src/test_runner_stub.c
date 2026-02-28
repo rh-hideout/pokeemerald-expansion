@@ -10,4 +10,4 @@ const bool8 gTestRunnerEnabled = FALSE;
 #if TESTING
 const bool8 gTestRunnerHeadless = FALSE;
 #endif
-const bool8 gTestRunnerSkipIsFail = FALSE;
+const bool8 gTestRunnerIsRHH = FALSE;

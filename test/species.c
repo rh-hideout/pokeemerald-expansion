@@ -195,3 +195,17 @@ TEST("Every species has a description")
 
     EXPECT_NE(StringCompare(GetSpeciesPokedexDescription(species), gFallbackPokedexText), 0);
 }
+
+TEST("Test species data is equal to original species data")
+{
+    if (gTestRunnerIsRHH)
+    {
+        bool32 allSpeciesUnchanged = TRUE;
+        for (u32 i = 1; i < NUM_SPECIES; i++)
+        {
+            if (CheckSpeciesIsChanged(i))
+                allSpeciesUnchanged = FALSE;
+        }
+        EXPECT_EQ(allSpeciesUnchanged, TRUE);
+    }
+}
