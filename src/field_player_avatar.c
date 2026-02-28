@@ -1240,12 +1240,12 @@ static bool8 PlayerCheckIfAnimFinishedOrInactive(void)
     return ObjectEventCheckHeldMovementStatus(&gObjectEvents[gPlayerAvatar.objectEventId]);
 }
 
-static void PlayerSetCopyableMovement(u8 movement)
+static void PlayerSetCopyableMovement(enum CopyMovement movement)
 {
     gObjectEvents[gPlayerAvatar.objectEventId].playerCopyableMovement = movement;
 }
 
-u8 PlayerGetCopyableMovement(void)
+enum CopyMovement PlayerGetCopyableMovement(void)
 {
     return gObjectEvents[gPlayerAvatar.objectEventId].playerCopyableMovement;
 }
@@ -1255,7 +1255,7 @@ static void PlayerForceSetHeldMovement(u8 movementActionId)
     ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], movementActionId);
 }
 
-void PlayerSetAnimId(u8 movementActionId, u8 copyableMovement)
+void PlayerSetAnimId(u8 movementActionId, enum CopyMovement copyableMovement)
 {
     if (!PlayerIsAnimActive())
     {
