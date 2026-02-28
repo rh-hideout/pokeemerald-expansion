@@ -13269,27 +13269,15 @@ void BS_TryBoosterEnergy(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_JumpIfAbilityCantBeReactivated(void)
+void BS_JumpIfAbilityCantBeSuppressed(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     u32 ability = gBattleMons[battler].ability;
-
-    switch (ability)
-    {
-    case ABILITY_IMPOSTER:
-    case ABILITY_NEUTRALIZING_GAS:
-    case ABILITY_AIR_LOCK:
-    case ABILITY_CLOUD_NINE:
+    if (gAbilitiesInfo[ability].cantBeSuppressed)
         gBattlescriptCurrInstr = cmd->jumpInstr;
-        break;
-    default:
-        if (gAbilitiesInfo[ability].cantBeSuppressed)
-            gBattlescriptCurrInstr = cmd->jumpInstr;
-        else
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        break;
-    }
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_TryActivateAbilityShield(void)
@@ -13832,9 +13820,23 @@ void BS_StatTextBuffer(void)
 void BS_SwitchinAbilities(void)
 {
     NATIVE_ARGS(u8 battler);
+
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    u32 ability = GetBattlerAbility(battler);
+    enum Ability ability = GetBattlerAbility(battler);
+
     gBattlescriptCurrInstr = cmd->nextInstr;
+
+    switch (ability)
+    {
+    case ABILITY_IMPOSTER:
+    case ABILITY_NEUTRALIZING_GAS:
+    case ABILITY_AIR_LOCK:
+    case ABILITY_CLOUD_NINE:
+        return;
+    default:
+        break;
+    }
+
     AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, battler, ability, MOVE_NONE, TRUE);
     AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, ability, MOVE_NONE, TRUE);
     AbilityBattleEffects(ABILITYEFFECT_UNNERVE, battler, ability, MOVE_NONE, TRUE);
