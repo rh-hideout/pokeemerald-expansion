@@ -528,6 +528,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     if (incomingType == TYPE_FIRE)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_FLASH_FIRE;
+        absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_WELL_BAKED_BODY;
     }
     if (incomingType == TYPE_WATER)
     {
