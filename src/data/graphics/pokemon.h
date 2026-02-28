@@ -6406,10 +6406,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_DragoniteMega[] = INCBIN_U32("graphics/pokemon/dragonite/mega/front.4bpp.smol");
-//    const u16 gMonPalette_DragoniteMega[] = INCBIN_U16("graphics/pokemon/dragonite/mega/normal.gbapal");
-//    const u32 gMonBackPic_DragoniteMega[] = INCBIN_U32("graphics/pokemon/dragonite/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_DragoniteMega[] = INCBIN_U16("graphics/pokemon/dragonite/mega/shiny.gbapal");
+    const u32 gMonFrontPic_DragoniteMega[] = INCBIN_U32("graphics/pokemon/dragonite/mega/front.4bpp.smol");
+    const u16 gMonPalette_DragoniteMega[] = INCBIN_U16("graphics/pokemon/dragonite/mega/normal.gbapal");
+    const u32 gMonBackPic_DragoniteMega[] = INCBIN_U32("graphics/pokemon/dragonite/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_DragoniteMega[] = INCBIN_U16("graphics/pokemon/dragonite/mega/shiny.gbapal");
     const u8 gMonIcon_DragoniteMega[] = INCBIN_U8("graphics/pokemon/dragonite/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_DragoniteMega[] = INCBIN_COMP("graphics/pokemon/dragonite/mega/overworld.4bpp");
